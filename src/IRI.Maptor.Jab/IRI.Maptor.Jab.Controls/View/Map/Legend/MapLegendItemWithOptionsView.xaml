@@ -93,9 +93,9 @@
             </DataTemplate>
             <my:ILayerToLegendConverter x:Key="iLayerToLegendConverter"/>
         </Grid.Resources>
-        <Grid.RowDefinitions>
+        <!--<Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
+        </Grid.RowDefinitions>-->
         <TextBlock MinWidth="30" VerticalAlignment="Center" Margin="4"  
                    Text="{Binding ElementName=root, Path=Title}" 
                    FontSize="{Binding ElementName=root, Path=TitleFontSize}"
@@ -153,30 +153,32 @@
                     <Border.InputBindings>
                         <MouseBinding MouseAction="LeftClick" Command="{Binding ChangeSymbologyCommand}" CommandParameter="{Binding}"/>
                     </Border.InputBindings>
-                    <Grid>
-                        <Path Margin="1" Data="{Binding Type, Converter={StaticResource iLayerToLegendConverter}}" x:Name="OriginalPath"
+                    <!--<Grid>-->
+                    <Path Margin="1" Data="{Binding Type, Converter={StaticResource iLayerToLegendConverter}}" x:Name="OriginalPath"
                             Fill="{Binding ElementName=root, Path=Symbology.Fill}" Stroke="{Binding ElementName=root, Path=Symbology.Stroke}"
                             StrokeThickness="{Binding ElementName=root, Path=Symbology.StrokeThickness}"
                             HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="{Binding Opacity}">
-                            <!--<Path.RenderTransform>
+                        <!--<Path.RenderTransform>
                                 <TranslateTransform X="0"/>
                             </Path.RenderTransform>-->
-                        </Path>
+                    </Path>
 
-                        <iconPacks:PackIconMaterial x:Name="HoverIcon"
+                    <!--<iconPacks:PackIconMaterial x:Name="HoverIcon"
                                   Kind="Palette"
                                   Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                   HorizontalAlignment="Center"
                                   VerticalAlignment="Center"
                                   Opacity="0">
-                            <!--<iconPacks:PackIconMaterial.RenderTransform>
+                            -->
+                    <!--<iconPacks:PackIconMaterial.RenderTransform>
                                 <TranslateTransform X="-10"/>
                             </iconPacks:PackIconMaterial.RenderTransform>-->
-                        </iconPacks:PackIconMaterial>
-                    </Grid>
-                    <Border.Triggers>
-                        <!-- On MouseOver, fade out Path and fade in Icon -->
-                        <EventTrigger RoutedEvent="Mouse.MouseEnter">
+                    <!--
+                        </iconPacks:PackIconMaterial>-->
+                    <!--</Grid>-->
+                    <!--<Border.Triggers>-->
+                    <!-- On MouseOver, fade out Path and fade in Icon -->
+                    <!--EventTrigger RoutedEvent="Mouse.MouseEnter">
                             <BeginStoryboard>
                                 <Storyboard>
                                     <DoubleAnimation Storyboard.TargetName="OriginalPath"
@@ -188,9 +190,11 @@
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
-                        
 
-                        <!-- On MouseLeave, reverse -->
+
+                        -->
+                    <!-- On MouseLeave, reverse -->
+                    <!--
                         <EventTrigger RoutedEvent="Mouse.MouseLeave">
                             <BeginStoryboard>
                                 <Storyboard>
@@ -202,13 +206,15 @@
                                      To="0" Duration="0:0:0.2"/>
                                 </Storyboard>
                             </BeginStoryboard>
-                        </EventTrigger>
-                        
-                        
-                        <!--<EventTrigger RoutedEvent="Mouse.MouseEnter">
+                        </EventTrigger>-->
+
+
+                    <!--<EventTrigger RoutedEvent="Mouse.MouseEnter">
                             <BeginStoryboard>
                                 <Storyboard>
-                                    --><!-- Path fades out and moves slightly right --><!--
+                                    -->
+                    <!-- Path fades out and moves slightly right -->
+                    <!--
                                     <DoubleAnimation Storyboard.TargetName="OriginalPath"
                                      Storyboard.TargetProperty="Opacity"
                                      To="0" Duration="0:0:0.25"/>
@@ -216,7 +222,9 @@
                                      Storyboard.TargetProperty="RenderTransform.(TranslateTransform.X)"
                                      To="20" Duration="0:0:0.25"/>
 
-                                    --><!-- Icon fades in and slides in from left --><!--
+                                    -->
+                    <!-- Icon fades in and slides in from left -->
+                    <!--
                                     <DoubleAnimation Storyboard.TargetName="HoverIcon"
                                      Storyboard.TargetProperty="Opacity"
                                      To="1" Duration="0:0:0.25"/>
@@ -227,11 +235,13 @@
                             </BeginStoryboard>
                         </EventTrigger>-->
 
-                        <!-- On MouseLeave: reverse animation -->
-                        <!--<EventTrigger RoutedEvent="Mouse.MouseLeave">
+                    <!-- On MouseLeave: reverse animation -->
+                    <!--<EventTrigger RoutedEvent="Mouse.MouseLeave">
                             <BeginStoryboard>
                                 <Storyboard>
-                                    --><!-- Path fades back in and resets position --><!--
+                                    -->
+                    <!-- Path fades back in and resets position -->
+                    <!--
                                     <DoubleAnimation Storyboard.TargetName="OriginalPath"
                                      Storyboard.TargetProperty="Opacity"
                                      To="1" Duration="0:0:0.25"/>
@@ -239,7 +249,9 @@
                                      Storyboard.TargetProperty="RenderTransform.(TranslateTransform.X)"
                                      To="0" Duration="0:0:0.25"/>
 
-                                    --><!-- Icon fades out and slides back left --><!--
+                                    -->
+                    <!-- Icon fades out and slides back left -->
+                    <!--
                                     <DoubleAnimation Storyboard.TargetName="HoverIcon"
                                      Storyboard.TargetProperty="Opacity"
                                      To="0" Duration="0:0:0.25"/>
@@ -249,7 +261,7 @@
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>-->
-                    </Border.Triggers>
+                    <!--</Border.Triggers>-->
                 </Border>
                 <Slider x:Name="opacitySlider" VerticalAlignment="Center" Width="50" Minimum="0" Maximum="1" SmallChange=".1" LargeChange=".2"                         
                             TickFrequency=".2" Value="{Binding Opacity, Mode=TwoWay}"/>
@@ -275,8 +287,43 @@
                         </Style>
                     </TextBox.Resources>
                 </TextBox>
+                
+                <ToggleButton ClickMode="Release"  Name="palette" Margin="0" Padding="0" Cursor="Hand" Background="Transparent" VerticalAlignment="Center"
+                              Width="16" Height="16" Visibility="{Binding HasMultiSymbolizers, Converter={StaticResource boolToVisibilityConverter}}">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton">
+                            <Setter Property="UIElement.Focusable" Value="false" />
+                            <Setter Property="FrameworkElement.Width" Value="24" />
+                            <Setter Property="FrameworkElement.Height" Value="24" />
+                            <Setter Property="Control.Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <iconPacks:PackIconMaterial VerticalAlignment="Center" Margin="0">
+                                            <iconPacks:PackIconMaterial.Style>
+                                                <Style TargetType="iconPacks:PackIconMaterial">
+                                                    <Setter Property="Kind" Value="PaletteOutline" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ElementName=palette, Path=IsChecked}" Value="True">
+                                                            <Setter Property="Kind" Value="Palette" />
+                                                        </DataTrigger>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </iconPacks:PackIconMaterial.Style>
+                                        </iconPacks:PackIconMaterial>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+
+              
             </StackPanel>
-            <!--laye options shown only when layer is selected in the toc-->
             <ItemsControl Visibility="{Binding IsChecked, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}" BorderBrush="Black" BorderThickness="0,0,0,0"
                             Margin="6,0,0,0" ItemsSource="{Binding ElementName=root, Path=Commands}" >
                 <!--<ItemsControl.Resources>

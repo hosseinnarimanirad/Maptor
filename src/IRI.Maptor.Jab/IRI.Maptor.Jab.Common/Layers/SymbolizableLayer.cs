@@ -61,6 +61,7 @@ public abstract class SymbolizableLayer : BaseLayer
     public override bool IsSymbolizable => true;
 
     public override bool HasMultiSymbolizers => Symbolizers?.Count(s => s is not LabelSymbolizer) > 1;
+    //public override bool HasMultiSymbolizers => true;
 
     public VisualParameters? DefaultSymbology => _visualParameters?.FirstOrDefault(s => !s.IsLabelParameters );
 

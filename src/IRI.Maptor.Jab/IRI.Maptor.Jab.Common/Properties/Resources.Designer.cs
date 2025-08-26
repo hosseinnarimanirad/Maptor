@@ -296,6 +296,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Symbology.
+        /// </summary>
+        public static string legend_symbologyExpanderHeaderText {
+            get {
+                return ResourceManager.GetString("legend_symbologyExpanderHeaderText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pan.
         /// </summary>
         public static string map_pan {

@@ -36,6 +36,9 @@ public enum LocalizationResourceKeys
 
     goto_dialogTitle,
 
+    // todo: check if not used in future
+    legend_symbologyExpanderHeaderText,
+
     map_pan,
     map_zoomTo,
 

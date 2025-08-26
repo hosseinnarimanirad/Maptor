@@ -199,6 +199,9 @@
   <data name="goto_dialogTitle" xml:space="preserve">
     <value>بروبه مختصات</value>
   </data>
+  <data name="legend_symbologyExpanderHeaderText" xml:space="preserve">
+    <value>سمبل‌گذاری</value>
+  </data>
   <data name="mapPanel_currentPoint" xml:space="preserve">
     <value>نقطه جاری</value>
   </data>
