@@ -865,7 +865,7 @@ public abstract class MapPresenter : BasePresenter
 
     public Func<List<Geometry<Point>>, VisualParameters, string, Geometry, Task> RequestSelectGeometries;
 
-    public Func<List<Geometry<Point>>, string, VisualParameters, Task> RequestAddGeometries;
+    public Func<string, List<Geometry<Point>>, VisualParameters, Task>? RequestAddGeometries;
 
     //public Func<GeometryLabelPairs, string, VisualParameters, LabelParameters, Task> RequestDrawGeometryLablePairs;
 
@@ -1273,7 +1273,7 @@ public abstract class MapPresenter : BasePresenter
 
     public async Task DrawGeometriesAsync(List<Geometry<Point>> geometry, string name, VisualParameters parameters)
     {
-        await RequestAddGeometries?.Invoke(geometry, name, parameters);
+        await RequestAddGeometries?.Invoke(name, geometry, parameters);
     }
 
     public async Task DrawGeometryAsync(Geometry<Point> geometry, string name, VisualParameters parameters)

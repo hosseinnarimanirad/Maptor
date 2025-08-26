@@ -724,10 +724,7 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
         //      this.ClearLayer(i, true);
         //  };
 
-        presenter.RequestRemovePolyBezierLayers = () =>
-        {
-            RemovePolyBezierLayers();
-        };
+        presenter.RequestRemovePolyBezierLayers = RemovePolyBezierLayers;
 
         presenter.RequestAddPolyBezier = (name, points, geometry, showSymbolOnly, decorationVisuals) =>
           {
@@ -746,10 +743,7 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
               this.AddPolyBezierLayer(layer);
           };
 
-        presenter.RequestAddGeometries = (geometries, layerName, visualParameters) =>
-        {
-            return this.DrawGeometriesAsync(geometries, layerName, visualParameters);
-        };
+        presenter.RequestAddGeometries = this.DrawGeometriesAsync;
 
         //presenter.RequestDrawGeometryLablePairs = DrawGeometryLablePairsAsync;
 
@@ -928,7 +922,7 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
 
     #region Public Layer Management
 
-    public void SetClusteredLayer(ScaleInterval scaleInterval, string imageDirectory, string layerName, Func<string, FrameworkElement> viewMaker, Action<object> mouseDownHandler = null)
+    public void SetClusteredLayer(string layerName, ScaleInterval scaleInterval, string imageDirectory, Func<string, FrameworkElement> viewMaker, Action<object> mouseDownHandler = null)
     {
         var layer = ClusteredPointLayer.Create(imageDirectory, viewMaker);
 
@@ -946,7 +940,7 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
         this.AddComplexLayer(layer.GetLayer(MapScale), true);
     }
 
-    public void SetRasterLayer(ScaleInterval scaleInterval, IDataSource dataSource, string layerName, double opacity, bool isBaseMap = false, bool isPyramid = false, RenderMode rendering = RenderMode.Default)
+    public void SetRasterLayer(string layerName, ScaleInterval scaleInterval, IDataSource dataSource, double opacity, bool isBaseMap = false, bool isPyramid = false, RenderMode rendering = RenderMode.Default)
     {
         if (dataSource == null)
         {
@@ -1020,9 +1014,9 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
     }
 
     public void SetVectorLayer(
+        string layerName,
         ScaleInterval scaleInterval,
         IVectorDataSource dataSource,
-        string layerName,
         VisualParameters visualElements,
         RenderMode renderMode = RenderMode.Default,
         Func<Geometry<sb.Point>, sb.Point>? positionFunc = null,
@@ -1074,12 +1068,12 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
         this._layerManager.Remove(layer, true);
     }
 
-    public void SetSpecialPointLayer(ScaleInterval scaleInterval, string layerName, List<Locateable> items, double opacity = 1)
+    public void SetSpecialPointLayer(string layerName, ScaleInterval scaleInterval, List<Locateable> items, double opacity = 1)
     {
         this._layerManager.Add(new SpecialPointLayer(layerName, items, opacity, scaleInterval, LayerType.Complex), 1.0 / _mapScale);
     }
 
-    public void AddSpecialPointLayerToMap(ScaleInterval scaleInterval, string layerName, List<Locateable> items)
+    public void AddSpecialPointLayerToMap(string layerName, ScaleInterval scaleInterval, List<Locateable> items)
     {
         var specialLayer = new SpecialPointLayer(layerName, items, visibleRange: scaleInterval);
 
@@ -2704,8 +2698,8 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
 
     //Get the FontFamily in method parameters
     public async Task DrawGeometriesAsync(
-        List<Geometry<sb.Point>> geometries,
         string layerName,
+        List<Geometry<sb.Point>> geometries,
         VisualParameters visualElements)
     //List<object>? labels = null,
     //Func<Geometry<sb.Point>, sb.Point>? positionFunc = null,

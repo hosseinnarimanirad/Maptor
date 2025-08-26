@@ -7,7 +7,8 @@
 
     <DockPanel>
         <CheckBox Name="layerVisibility" DockPanel.Dock="Left" IsChecked="True" VerticalAlignment="Center" Checked="CheckBox_Checked" Unchecked="layerVisibility_Unchecked" />
-        <Slider Name="layerOpacity" Value="1" DockPanel.Dock="Left" Width="50" Minimum="0" Maximum="1"  SmallChange="0.05" ValueChanged="layerOpacity_ValueChanged" LargeChange="0.2" />
+        <Slider Name="layerOpacity" Value="1" DockPanel.Dock="Left" Width="50" Minimum="0" Maximum="1"  SmallChange="0.05" ValueChanged="layerOpacity_ValueChanged" LargeChange="0.2"
+                Style="{DynamicResource MahApps.Styles.Slider.Flat}"/>
         <Border Width="20" Height="20" Name="layerSymbol" DockPanel.Dock="Right" HorizontalAlignment="Right" MouseUp="layerSymbol_MouseUp" BorderThickness="1" BorderBrush="Black">
             <Border.LayoutTransform>
                 <ScaleTransform x:Name="scaleTransform" CenterX="20" CenterY="20"/>

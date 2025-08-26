@@ -179,9 +179,13 @@ public abstract class BaseLayer : Notifier, ILayer
     }
 
 
+    public virtual bool IsSymbolizable => false;
+
+    public virtual bool HasMultiSymbolizers => false;
+
     #endregion
 
-    private double _opacity;
+    private double _opacity = 1.0;
     public double Opacity
     {
         get { return _opacity; }
@@ -199,7 +203,7 @@ public abstract class BaseLayer : Notifier, ILayer
         set
         {
             _visibility = value;
-            //RaisePropertyChanged();
+            RaisePropertyChanged();
             SetVisibility(value);
         }
     }
@@ -263,8 +267,6 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public void SetVisibility(Visibility visibility)
     {
-        //this.VisualParameters.Visibility = visibility;
-
         if (!SubLayers.IsNullOrEmpty())
         {
             foreach (var item in SubLayers)
@@ -343,7 +345,7 @@ public abstract class BaseLayer : Notifier, ILayer
         get
         {
             if (_toggleExpandCommand == null)
-            { 
+            {
                 _toggleExpandCommand = new RelayCommand(param => { this.IsExpandedInToc = !this.IsExpandedInToc; });
             }
 

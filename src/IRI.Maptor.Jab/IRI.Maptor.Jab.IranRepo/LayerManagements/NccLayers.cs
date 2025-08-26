@@ -2,7 +2,6 @@
 
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Jab.Common.Cartography;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Models.Legend;

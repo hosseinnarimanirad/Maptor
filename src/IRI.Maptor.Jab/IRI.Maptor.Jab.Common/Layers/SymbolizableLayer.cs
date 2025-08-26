@@ -10,6 +10,9 @@ namespace IRI.Maptor.Jab.Common;
 
 public abstract class SymbolizableLayer : BaseLayer
 {
+    public event EventHandler<CustomEventArgs<VisualParameters>>? OnLabelChanged;
+
+
     protected List<VisualParameters> _visualParameters = [];
 
     //public List<ISymbolizer> Symbolizers { get; protected set; } = [];
@@ -50,9 +53,16 @@ public abstract class SymbolizableLayer : BaseLayer
         }
 
         this._symbolizers.Add(symbolizer);
+
+        RaisePropertyChanged(nameof(HasMultiSymbolizers));
+        RaisePropertyChanged(nameof(DefaultSymbology));
     }
 
-    public event EventHandler<CustomEventArgs<VisualParameters>>? OnLabelChanged;
+    public override bool IsSymbolizable => true;
+
+    public override bool HasMultiSymbolizers => Symbolizers?.Count(s => s is not LabelSymbolizer) > 1;
+
+    public VisualParameters? DefaultSymbology => _visualParameters?.FirstOrDefault(s => !s.IsLabelParameters );
 
     //public bool CanRenderLabels(double mapScale)
     //{

@@ -188,6 +188,7 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
 
     public event EventHandler<CustomEventArgs<VisualParameters>> OnIsOnChanged;
 
+    public bool IsLabelParameters => FontFamily != null;
 
     private int _fontSize;
     public int FontSize
@@ -201,8 +202,8 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
     }
 
 
-    private Brush _foreground;
-    public Brush Foreground
+    private Brush? _foreground;
+    public Brush? Foreground
     {
         get { return _foreground; }
         set
@@ -213,8 +214,8 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
     }
 
 
-    private FontFamily _fontFamily;
-    public FontFamily FontFamily
+    private FontFamily? _fontFamily;
+    public FontFamily? FontFamily
     {
         get { return _fontFamily; }
         set
@@ -523,7 +524,7 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
     }
 
 
-    public static VisualParameters GetDefaultForHighlight(Feature<IRI.Maptor.Sta.Common.Primitives.Point> sqlGeometryAware)
+    public static VisualParameters GetDefaultForHighlight(Feature<Sb.Point> sqlGeometryAware)
     {
         VisualParameters result;
 

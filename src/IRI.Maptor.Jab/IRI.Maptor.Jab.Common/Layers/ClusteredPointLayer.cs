@@ -23,7 +23,7 @@ public class ClusteredPointLayer : BaseLayer
     ClusteredGeoTaggedImageSource? _source;
 
     Func<string, System.Windows.FrameworkElement>? _viewMaker;
-
+     
     private ClusteredPointLayer()
     {
 

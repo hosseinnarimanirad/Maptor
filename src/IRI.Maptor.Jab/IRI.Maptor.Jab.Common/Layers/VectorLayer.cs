@@ -32,8 +32,8 @@ public class VectorLayer : SymbolizableLayer
 
     public IVectorDataSource DataSource { get; protected set; }
 
-    private FrameworkElement _element;
-    public FrameworkElement Element
+    private FrameworkElement? _element;
+    public FrameworkElement? Element
     {
         get { return this._element; }
 
@@ -96,6 +96,7 @@ public class VectorLayer : SymbolizableLayer
         get { return NumberOfSelectedFeatures > 0; }
     }
 
+    public override bool IsSymbolizable => true;
 
     //public bool IsValid { get; set; }
 
@@ -254,12 +255,15 @@ public class VectorLayer : SymbolizableLayer
         return $"{Enum.GetName(this.Type)} - {this.DataSource?.ToString()}";
     }
 
-    public void BindWithFrameworkElement(FrameworkElement element)
+    public void BindWithFrameworkElement(FrameworkElement? element)
     {
-        Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Visibility"), Mode = BindingMode.TwoWay };
+        if (element is null)
+            return;
+
+        Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
         element.SetBinding(Path.VisibilityProperty, binding4);
 
-        Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Opacity"), Mode = BindingMode.TwoWay };
+        Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
         element.SetBinding(Path.OpacityProperty, binding5);
     }
 

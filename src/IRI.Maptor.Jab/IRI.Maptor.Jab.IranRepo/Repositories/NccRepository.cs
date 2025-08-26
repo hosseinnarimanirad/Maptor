@@ -22,6 +22,7 @@ public static class NccRepository
         {
             ShowInToc = false,
             CanUserDelete = false,
+            Visibility = System.Windows.Visibility.Collapsed
         };
 
         if (label is not null)

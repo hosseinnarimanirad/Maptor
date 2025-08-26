@@ -37,7 +37,7 @@ public partial class MapLegendWithOptionsView : UserControl
 
     // Using a DependencyProperty as the backing store for EnableFilterMode.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty EnableFilterModeProperty =
-        DependencyProperty.Register("EnableFilterMode", typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
+        DependencyProperty.Register(nameof(EnableFilterMode), typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
 
 
     public bool ShowVectorLayers
@@ -48,7 +48,7 @@ public partial class MapLegendWithOptionsView : UserControl
 
     // Using a DependencyProperty as the backing store for ShowVectorLayers.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowVectorLayersProperty =
-        DependencyProperty.Register("ShowVectorLayers", typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
+        DependencyProperty.Register(nameof(ShowVectorLayers), typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
 
 
 
@@ -60,7 +60,7 @@ public partial class MapLegendWithOptionsView : UserControl
 
     // Using a DependencyProperty as the backing store for ShowRasterLayers.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowRasterLayersProperty =
-        DependencyProperty.Register("ShowRasterLayers", typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
+        DependencyProperty.Register(nameof(ShowRasterLayers), typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
 
 
 
@@ -74,46 +74,17 @@ public partial class MapLegendWithOptionsView : UserControl
     public static readonly DependencyProperty TitleFontSizeProperty =
         DependencyProperty.Register(nameof(TitleFontSize), typeof(double), typeof(MapLegendWithOptionsView), new PropertyMetadata(13.0));
 
-
-
-
-    //public bool ShowDrawingLayers
-    //{
-    //    get { return (bool)GetValue(ShowDrawingLayersProperty); }
-    //    set { SetValue(ShowDrawingLayersProperty, value); }
-    //}
-
-    //// Using a DependencyProperty as the backing store for ShowDrawingLayers.  This enables animation, styling, binding, etc...
-    //public static readonly DependencyProperty ShowDrawingLayersProperty =
-    //    DependencyProperty.Register("ShowDrawingLayers", typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(false));
-
-
-
-
-    //public bool IsDrawingToc
-    //{
-    //    get { return (bool)GetValue(IsDrawingTocProperty); }
-    //    set { SetValue(IsDrawingTocProperty, value); }
-    //}
-
-    //// Using a DependencyProperty as the backing store for IsDrawingToc.  This enables animation, styling, binding, etc...
-    //public static readonly DependencyProperty IsDrawingTocProperty =
-    //    DependencyProperty.Register("IsDrawingToc", typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(false, (dpO, dp) =>
-    //    {
-
-    //    }));
-
-
-
     private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
     {
         //var item = e.Item as MapLegendItemWithOptionsModel;
         var item = e.Item as ILayer;
 
-        if (!EnableFilterMode)
-        {
+        if (item is null)
+            e.Accepted = false;
+
+        else if (!EnableFilterMode)
             e.Accepted = true;
-        }
+
         else
         {
             e.Accepted =

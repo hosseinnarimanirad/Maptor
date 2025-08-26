@@ -26,13 +26,21 @@ public class TileServiceLayer : BaseLayer
         notFoundImage = IRI.Maptor.Jab.Common.Helpers.ImageUtility.AsByteArray(Properties.Resources.whiteImage);
     }
 
-    private TileServices.TileCacheAddress _cache;
+    private readonly TileCacheAddress _cache;
 
-    private TileServices.TileMapProvider _mapProvider;
+    private readonly TileMapProvider _mapProvider;
+     
+    public override RenderMode RenderMode => RenderMode.Tiled;
 
+    public override LayerType Type => LayerType.BaseMap;
+     
+    public override BoundingBox Extent
+    {
+        get => BoundingBox.NaN;
+        protected set => throw new NotImplementedException();
+    }
 
     private bool _isCacheEnabled;
-
     public bool IsCacheEnabled
     {
         get { return _isCacheEnabled; }
@@ -47,50 +55,28 @@ public class TileServiceLayer : BaseLayer
     {
         get { return _mapProvider.FullName; }
     }
-
-    //public TileServices.TileType TileType
-    //{
-    //    get { return _mapProvider.TileType; }
-    //}
-
+     
     public bool IsOffline { get; set; }
 
 
     public TileServiceLayer(TileMapProvider mapProvider, double opacity, Func<TileInfo, string>? getFileName = null)
-    {
-        //this.Provider = TileServices.MapProviderType.Custom;
-
+    { 
         this._cache = new TileCacheAddress(mapProvider.ProviderEn, mapProvider.MapTypeEn, getFileName);
-
-        //this.VisualParameters = new VisualParameters(System.Windows.Media.Colors.Transparent);
-
+         
         this.Opacity = opacity;
 
         this._mapProvider = mapProvider;
     }
 
-    public override BoundingBox Extent
-    {
-        get => BoundingBox.NaN;
-        protected set => throw new NotImplementedException();
-    }
 
-
-    public override RenderMode RenderMode => RenderMode.Tiled;
-
-
-    public override LayerType Type => LayerType.BaseMap;
-     
-
-    private FrameworkElement? _frameworkElement;
-
+    private FrameworkElement? _element;
     public FrameworkElement? Element
     {
-        get { return this._frameworkElement; }
+        get { return this._element; }
 
         set
         {
-            this._frameworkElement = value;
+            this._element = value;
 
             this.BindWithFrameworkElement(value);
 
@@ -98,23 +84,26 @@ public class TileServiceLayer : BaseLayer
         }
     }
 
-    public void BindWithFrameworkElement(FrameworkElement element)
+    public void BindWithFrameworkElement(FrameworkElement? element)
     {
+        if (element is null)
+            return;
+        
         if (element is Path || element is Rectangle)
         {
-            Binding binding1 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Stroke"), Mode = BindingMode.TwoWay };
-            element.SetBinding(Path.StrokeProperty, binding1);
+            //Binding binding1 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Stroke"), Mode = BindingMode.TwoWay };
+            //element.SetBinding(Path.StrokeProperty, binding1);
 
             //Binding binding2 = new Binding() { Source = this._parent, Path = new PropertyPath("VisualParameters.Fill"), Mode = BindingMode.TwoWay };
             //element.SetBinding(Path.FillProperty, binding2);
 
-            Binding binding3 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.StrokeThickness"), Mode = BindingMode.TwoWay };
-            element.SetBinding(Path.StrokeThicknessProperty, binding3);
+            //Binding binding3 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.StrokeThickness"), Mode = BindingMode.TwoWay };
+            //element.SetBinding(Path.StrokeThicknessProperty, binding3);
 
-            Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Visibility"), Mode = BindingMode.TwoWay };
+            Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
             element.SetBinding(Path.VisibilityProperty, binding4);
 
-            Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Opacity"), Mode = BindingMode.TwoWay };
+            Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
             element.SetBinding(Path.OpacityProperty, binding5);
         }
         else
