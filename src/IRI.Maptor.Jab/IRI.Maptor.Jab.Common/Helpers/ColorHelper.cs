@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Media;
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Helpers;
 
 namespace IRI.Maptor.Jab.Common.Helpers;
@@ -71,4 +72,5 @@ public static class ColorHelper
         "#FFE4C802", //yellow
         "#FF835A2C", //brown 
     };
+      
 }

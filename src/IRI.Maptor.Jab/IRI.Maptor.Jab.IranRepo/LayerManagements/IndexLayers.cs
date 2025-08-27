@@ -95,7 +95,7 @@ public static class IndexLayers
 
         var source = OrdinaryJsonListSource.CreateFromJsonString<Index25k>(jsonString, i => i.AsFeature()/*, i => i.SheetNumber*/);
 
-        VisualParameters parameters = new VisualParameters(null, "#88FF8130", 2, .8) { Visibility = System.Windows.Visibility.Collapsed, DashStyle = DashStyles.Dot };
+        VisualParameters parameters = new VisualParameters(null, "#88FF8130", 2, .8) { DashStyle = DashStyles.Dot };
 
         return new VectorLayer("اندکس ۲۵ هزار", source, parameters, LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.Create(10))
         {

@@ -232,7 +232,7 @@ public class EditableFeatureLayerOptions : Notifier
 
     public ScaleInterval VisibleRange { get; set; } = ScaleInterval.All;
 
-    public VisualParameters Visual { get; set; } = new VisualParameters(_fill, _stroke, 4, .9, Visibility.Visible);
+    public VisualParameters Visual { get; set; } = new VisualParameters(_fill, _stroke, 4, .9);
 
     public Func<FrameworkElement> MakePrimaryVertex { get; set; } = () => new View.MapMarkers.Circle(1);
 

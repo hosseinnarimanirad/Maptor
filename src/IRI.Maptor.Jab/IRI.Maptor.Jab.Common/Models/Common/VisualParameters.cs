@@ -16,7 +16,7 @@ using Sb = IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Jab.Common;
 
-public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
+public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 {
     private event EventHandler<CustomEventArgs<Visibility>>? _onVisibilityChanged;
 
@@ -32,145 +32,25 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
 
     public event EventHandler<CustomEventArgs<VisualParameters>>? OnChanged;
 
-    // ************************************* Fill *********************************************
-    public Brush Fill
+    public event EventHandler<CustomEventArgs<VisualParameters>> OnIsInScaleRangeChanged;
+
+    public event EventHandler<CustomEventArgs<VisualParameters>> OnIsOnChanged;
+
+    #region General Properties
+
+    private string _title = string.Empty;
+    public string Title
     {
-        get { return (Brush)GetValue(FillProperty); }
-        set { SetValue(FillProperty, value); }
-    }
-
-    public static readonly DependencyProperty FillProperty =
-        DependencyProperty.Register(nameof(Fill), typeof(Brush), typeof(VisualParameters), new PropertyMetadata());
-
-
-    // ************************************* Stroke ********************************************
-    public Brush Stroke
-    {
-        get { return (Brush)GetValue(StrokeProperty); }
-        set { SetValue(StrokeProperty, value); }
-    }
-
-    public static readonly DependencyProperty StrokeProperty =
-        DependencyProperty.Register(nameof(Stroke), typeof(Brush), typeof(VisualParameters), new PropertyMetadata(null));
-
-
-    // ************************************* StrokeThickness ********************************************
-    public double StrokeThickness
-    {
-        get { return (double)GetValue(StrokeThicknessProperty); }
-        set { SetValue(StrokeThicknessProperty, value); }
-    }
-
-    public static readonly DependencyProperty StrokeThicknessProperty =
-        DependencyProperty.Register(nameof(StrokeThickness), typeof(double), typeof(VisualParameters));
-
-
-    // ************************************* Opacity********************************************
-    public double Opacity
-    {
-        get { return (double)GetValue(OpacityProperty); }
-        set { SetValue(OpacityProperty, value); }
-    }
-
-    public static readonly DependencyProperty OpacityProperty =
-        DependencyProperty.Register(nameof(Opacity), typeof(double), typeof(VisualParameters));
-
-
-    // ************************************* Visibility *********************************************
-    public Visibility Visibility
-    {
-        get { return (Visibility)GetValue(VisibilityProperty); }
-        set { SetValue(VisibilityProperty, value); }
-    }
-
-    public static readonly DependencyProperty VisibilityProperty =
-        DependencyProperty.Register(nameof(Visibility),
-                                    typeof(Visibility),
-                                    typeof(VisualParameters),
-                                    new PropertyMetadata(Visibility.Visible, new PropertyChangedCallback((dp, dpE) =>
-                                    {
-                                        var obj = dp as VisualParameters;
-
-                                        if (obj is null)
-                                            return;
-
-                                        var newVisibility = (Visibility)dpE.NewValue;
-
-                                        var oldVisibility = (Visibility)dpE.OldValue;
-
-                                        if (newVisibility == oldVisibility) { }
-                                        else
-                                        {
-                                            obj._onVisibilityChanged?.Invoke(obj, new CustomEventArgs<Visibility>(newVisibility));
-                                        }
-                                    })));
-
-
-    // ************************************* Order **********************************************
-    public int Order
-    {
-        get { return (int)GetValue(OrderProperty); }
-        set { SetValue(OrderProperty, value); }
-    }
-
-    // Using a DependencyProperty as the backing store for Order.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty OrderProperty =
-        DependencyProperty.Register(nameof(Order), typeof(int), typeof(VisualParameters));
-
-
-    //// ************************************* DashType *********************************************
-    //public DoubleCollection DashType
-    //{
-    //    get { return (DoubleCollection)GetValue(DashTypeProperty); }
-    //    set { SetValue(DashTypeProperty, value); }
-    //}
-
-    //public static readonly DependencyProperty DashTypeProperty =
-    //    DependencyProperty.Register(nameof(DashType), typeof(DoubleCollection), typeof(VisualParameters));
-
-
-    // ************************************* DashStyle *********************************************
-    public DashStyle DashStyle
-    {
-        get { return (DashStyle)GetValue(DashStyleProperty); }
-        set { SetValue(DashStyleProperty, value); }
-    }
-
-    public static readonly DependencyProperty DashStyleProperty =
-        DependencyProperty.Register(nameof(DashStyle), typeof(DashStyle), typeof(VisualParameters), new PropertyMetadata(null));
-
-
-    public PenLineCap PenLineCap { get; set; }
-    public PenLineJoin PenLineJoin { get; set; }
-
-    // ************************************* IsInScaleRange *******************************************
-    public bool IsInScaleRange
-    {
-        get { return (bool)GetValue(IsInScaleRangeProperty); }
-        set { SetValue(IsInScaleRangeProperty, value); }
-    }
-
-    public static readonly DependencyProperty IsInScaleRangeProperty =
-        DependencyProperty.Register(nameof(IsInScaleRange), typeof(bool), typeof(VisualParameters), new PropertyMetadata(true, new PropertyChangedCallback((dp, dpE) =>
+        get { return _title; }
+        set
         {
-            var obj = dp as VisualParameters;
-
-            var newIsInScaleRange = ((bool)dpE.NewValue);
-
-            var oldIsInScaleRange = ((bool)dpE.OldValue);
-
-            if (newIsInScaleRange != oldIsInScaleRange)
-            {
-                obj.OnChanged?.Invoke(obj, new CustomEventArgs<VisualParameters>(obj));
+            _title = value;
+            RaisePropertyChanged();
+        }
+    }
 
 
-                obj.OnIsInScaleRangeChanged?.Invoke(obj, new CustomEventArgs<VisualParameters>(obj));
-            }
-        })));
-
-
-
-    private ScaleInterval _visibleRange;
+    private ScaleInterval _visibleRange = ScaleInterval.All;
     public ScaleInterval VisibleRange
     {
         get { return _visibleRange; }
@@ -182,11 +62,151 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
     }
 
 
-    #region Labeling
+    private double _opacity = 1;
+    public double Opacity
+    {
+        get { return _opacity; }
+        set
+        {
+            _opacity = value;
+            RaisePropertyChanged();
+        }
+    }
 
-    public event EventHandler<CustomEventArgs<VisualParameters>> OnIsInScaleRangeChanged;
 
-    public event EventHandler<CustomEventArgs<VisualParameters>> OnIsOnChanged;
+    private bool _isEnabled;
+    public bool IsEnabled
+    {
+        get { return _isEnabled; }
+        set
+        {
+            _isEnabled = value;
+            RaisePropertyChanged();
+
+            this.OnChanged?.Invoke(this, new CustomEventArgs<VisualParameters>(this));
+
+            this.OnIsInScaleRangeChanged?.Invoke(this, new CustomEventArgs<VisualParameters>(this));
+        }
+    }
+
+
+    private bool _isOn;
+    public bool IsOn
+    {
+        get { return _isOn; }
+        set
+        {
+            _isOn = value;
+            RaisePropertyChanged();
+            OnIsOnChanged?.Invoke(this, new CustomEventArgs<VisualParameters>(this));
+        }
+    }
+
+    //private Visibility _visibility;
+    //public Visibility Visibility
+    //{
+    //    get { return _visibility; }
+    //    set
+    //    {
+    //        if (_visibility == value)
+    //            return;
+
+    //        _visibility = value;
+    //        RaisePropertyChanged();
+    //        this._onVisibilityChanged?.Invoke(this, new CustomEventArgs<Visibility>(value));
+    //    }
+    //}
+
+    #endregion
+
+
+    #region Brush & Stroke
+
+    private Brush? _fill;
+    public Brush? Fill
+    {
+        get { return _fill; }
+        set
+        {
+            _fill = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private Brush? _stroke;
+    public Brush? Stroke
+    {
+        get { return _stroke; }
+        set
+        {
+            _stroke = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private double _strokeThickness;
+    public double StrokeThickness
+    {
+        get { return _strokeThickness; }
+        set
+        {
+            _strokeThickness = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private DashStyle _dashStyle = DashStyles.Solid;
+
+    /// <summary>
+    /// Gets or sets a value that describes the pattern of dashes generated by this Pen. 
+    /// The default is Solid, which indicates that there should be no dashes.
+    /// </summary>
+    public DashStyle DashStyle
+    {
+        get { return _dashStyle; }
+        set
+        {
+            _dashStyle = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// The type of shape that starts the stroke. The default value is Flat.
+    /// </summary>
+    public PenLineCap PenStartLineCap { get; set; } = PenLineCap.Flat;
+
+    /// <summary>
+    /// The type of shape that ends the stroke. The default value is Flat.
+    /// </summary>
+    public PenLineCap PenEndLineCap { get; set; } = PenLineCap.Flat;
+
+    // Gets or sets a value that specifies how the ends of each dash are drawn.
+    // The default value is Square.
+    public PenLineCap PenDashCap { get; set; } = PenLineCap.Square;
+
+    /// <summary>
+    /// The type of joint used at the vertices of a shape's outline. 
+    /// The default value is Miter.
+    /// </summary>
+    public PenLineJoin PenLineJoin { get; set; } = PenLineJoin.Miter;
+
+    /// <summary>
+    /// The limit on the ratio of the miter length to half the pen's Thickness. 
+    /// This value is always a positive number greater than or equal to 1. 
+    /// The default value is 10.0.
+    /// </summary>
+    public double PenMiterLimit { get; set; } = 10;
+
+    #endregion
+
+
+    #region Label
+
+    public Func<Geometry<Sb.Point>, Sb.Point>? PositionFunc { get; set; }
 
     public bool IsLabelParameters => FontFamily != null;
 
@@ -214,6 +234,18 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
     }
 
 
+    private Brush? _background;
+    public Brush? Background
+    {
+        get { return _background; }
+        set
+        {
+            _background = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
     private FontFamily? _fontFamily;
     public FontFamily? FontFamily
     {
@@ -224,27 +256,6 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
             RaisePropertyChanged();
         }
     }
-
-
-    //private bool _isInScaleRange = true;
-    //public bool IsInScaleRange
-    //{
-    //    get
-    //    {
-    //        return _isInScaleRange;
-    //    }
-    //    set
-    //    {
-    //        if (_isInScaleRange == value)
-    //        {
-    //            return;
-    //        }
-
-    //        _isInScaleRange = value;
-    //        RaisePropertyChanged();
-    //        OnIsInScaleRangeChanged?.Invoke(this, new CustomEventArgs<LabelParameters>(this));
-    //    }
-    //}
 
 
     private bool _isRtl = true;
@@ -258,34 +269,10 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
         }
     }
 
-
-    private bool _isOn;
-    public bool IsOn
-    {
-        get { return _isOn; }
-        set
-        {
-            _isOn = value;
-            RaisePropertyChanged();
-            OnIsOnChanged?.Invoke(this, new CustomEventArgs<VisualParameters>(this));
-        }
-    }
-
-
-    public bool IsLabeled(double inverseMapScale)
-    {
-        return VisibleRange.IsInRange(inverseMapScale) && IsOn;
-    }
-
-    public Func<Geometry<Sb.Point>, Sb.Point> PositionFunc { get; set; }
-
-
     #endregion
 
 
-    // ************************************* PointSymbol ********************************************
     private SimplePointSymbolizer _pointSymbol = new SimplePointSymbolizer() { SymbolWidth = 4, SymbolHeight = 4 };
-
     public SimplePointSymbolizer PointSymbol
     {
         get { return _pointSymbol; }
@@ -296,16 +283,150 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
         }
     }
 
-    private VisualParameters()
-    {
 
+    #region Old codes
+
+    //private int _order;
+    //public int Order
+    //{
+    //    get { return _order; }
+    //    set
+    //    {
+    //        _order = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
+
+
+    //public Brush Fill
+    //{
+    //    get { return (Brush)GetValue(FillProperty); }
+    //    set { SetValue(FillProperty, value); }
+    //}
+
+    //public static readonly DependencyProperty FillProperty =
+    //    DependencyProperty.Register(nameof(Fill), typeof(Brush), typeof(VisualParameters), new PropertyMetadata());
+
+    //public Brush Stroke
+    //{
+    //    get { return (Brush)GetValue(StrokeProperty); }
+    //    set { SetValue(StrokeProperty, value); }
+    //}
+
+    //public static readonly DependencyProperty StrokeProperty =
+    //    DependencyProperty.Register(nameof(Stroke), typeof(Brush), typeof(VisualParameters), new PropertyMetadata(null));
+
+    //public double StrokeThickness
+    //{
+    //    get { return (double)GetValue(StrokeThicknessProperty); }
+    //    set { SetValue(StrokeThicknessProperty, value); }
+    //}
+
+    //public static readonly DependencyProperty StrokeThicknessProperty =
+    //    DependencyProperty.Register(nameof(StrokeThickness), typeof(double), typeof(VisualParameters));
+
+    //public double Opacity
+    //{
+    //    get { return (double)GetValue(OpacityProperty); }
+    //    set { SetValue(OpacityProperty, value); }
+    //}
+
+    //public static readonly DependencyProperty OpacityProperty =
+    //    DependencyProperty.Register(nameof(Opacity), typeof(double), typeof(VisualParameters));
+
+    //public Visibility Visibility
+    //{
+    //    get { return (Visibility)GetValue(VisibilityProperty); }
+    //    set { SetValue(VisibilityProperty, value); }
+    //}
+
+    //public static readonly DependencyProperty VisibilityProperty =
+    //    DependencyProperty.Register(nameof(Visibility),
+    //                                typeof(Visibility),
+    //                                typeof(VisualParameters),
+    //                                new PropertyMetadata(Visibility.Visible, new PropertyChangedCallback((dp, dpE) =>
+    //                                {
+    //                                    var obj = dp as VisualParameters;
+
+    //                                    if (obj is null)
+    //                                        return;
+
+    //                                    var newVisibility = (Visibility)dpE.NewValue;
+
+    //                                    var oldVisibility = (Visibility)dpE.OldValue;
+
+    //                                    if (newVisibility == oldVisibility) { }
+    //                                    else
+    //                                    {
+    //                                        obj._onVisibilityChanged?.Invoke(obj, new CustomEventArgs<Visibility>(newVisibility));
+    //                                    }
+    //                                })));
+
+    //public int Order
+    //{
+    //    get { return (int)GetValue(OrderProperty); }
+    //    set { SetValue(OrderProperty, value); }
+    //}
+
+    //// Using a DependencyProperty as the backing store for Order.  This enables animation, styling, binding, etc...
+    //public static readonly DependencyProperty OrderProperty =
+    //    DependencyProperty.Register(nameof(Order), typeof(int), typeof(VisualParameters));
+
+
+    //// ************************************* DashType *********************************************
+    //public DoubleCollection DashType
+    //{
+    //    get { return (DoubleCollection)GetValue(DashTypeProperty); }
+    //    set { SetValue(DashTypeProperty, value); }
+    //}
+
+    //public static readonly DependencyProperty DashTypeProperty =
+    //    DependencyProperty.Register(nameof(DashType), typeof(DoubleCollection), typeof(VisualParameters));
+
+
+    //public DashStyle DashStyle
+    //{
+    //    get { return (DashStyle)GetValue(DashStyleProperty); }
+    //    set { SetValue(DashStyleProperty, value); }
+    //}
+
+    //public static readonly DependencyProperty DashStyleProperty =
+    //    DependencyProperty.Register(nameof(DashStyle), typeof(DashStyle), typeof(VisualParameters), new PropertyMetadata(null));
+
+    //public bool IsInScaleRange
+    //{
+    //    get { return (bool)GetValue(IsInScaleRangeProperty); }
+    //    set { SetValue(IsInScaleRangeProperty, value); }
+    //}
+
+    //public static readonly DependencyProperty IsInScaleRangeProperty =
+    //    DependencyProperty.Register(nameof(IsInScaleRange), typeof(bool), typeof(VisualParameters), new PropertyMetadata(true, new PropertyChangedCallback((dp, dpE) =>
+    //{
+    //    var obj = dp as VisualParameters;
+
+    //    var newIsInScaleRange = ((bool)dpE.NewValue);
+
+    //    var oldIsInScaleRange = ((bool)dpE.OldValue);
+
+    //    if (newIsInScaleRange != oldIsInScaleRange)
+    //    {
+    //        obj.OnChanged?.Invoke(obj, new CustomEventArgs<VisualParameters>(obj));
+
+
+    //        obj.OnIsInScaleRangeChanged?.Invoke(obj, new CustomEventArgs<VisualParameters>(obj));
+    //    }
+    //})));
+
+    #endregion
+
+
+    private VisualParameters() { }
+
+    private VisualParameters(double opacity) : this(BrushHelper.PickBrush(), BrushHelper.PickBrush(), 1, opacity, isOn: true)
+    {
     }
 
-    private VisualParameters(double opacity) : this(BrushHelper.PickBrush(), BrushHelper.PickBrush(), 1, opacity)
-    {
-    }
-
-    public VisualParameters(Brush? fill, Brush stroke, double strokeThickness, double opacity, Visibility visibility = Visibility.Visible)
+    public VisualParameters(Brush? fill, Brush? stroke, double strokeThickness, double opacity, bool isOn = true /*, Visibility visibility = Visibility.Visible*/)
     {
         this.Fill = fill ?? Brushes.Transparent;
 
@@ -315,72 +436,55 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
 
         this.Opacity = opacity;
 
-        this.Visibility = visibility;
+        //this.Visibility = visibility;
 
-        //this.DashType = dashType;
+        this.IsOn = isOn;
     }
 
     public VisualParameters(Color fill, Color? stroke = null, double strokeThickness = 1, double opacity = 1)
-        : this(new SolidColorBrush(fill), stroke.HasValue ? new SolidColorBrush(stroke.Value) : null, strokeThickness, opacity)
+        : this(new SolidColorBrush(fill), stroke.HasValue ? new SolidColorBrush(stroke.Value) : null, strokeThickness, opacity, isOn: true)
     {
 
     }
 
     public VisualParameters(string hexFill, string hexStroke, double strokeThickness = 1, double opacity = 1) :
-        this(BrushHelper.CreateBrush(hexFill), BrushHelper.CreateBrush(hexStroke), strokeThickness, opacity)
+        this(BrushHelper.CreateBrush(hexFill), BrushHelper.CreateBrush(hexStroke), strokeThickness, opacity, isOn: true)
     {
 
     }
 
+
+    public bool IsInScaleRange(double inverseMapScale)
+    {
+        return VisibleRange.IsInRange(inverseMapScale) && IsOn;
+    }
 
     public VisualParameters Clone()
     {
-        return new VisualParameters(Fill, Stroke, StrokeThickness, Opacity, Visibility);
+        return new VisualParameters(Fill, Stroke, StrokeThickness, Opacity, IsOn);
     }
 
+    // todo: check if necassary to apply the opacity
     public Pen? GetWpfPen()
     {
         var result = Stroke != null ? new Pen(Stroke, StrokeThickness) : null;
 
-        if (result != null && DashStyle != null)
-            result.DashStyle = DashStyle;
+        if (result is null)
+            return null;
 
-        if (result != null)
-            result.LineJoin = PenLineJoin.Round;
-
-        return result;
-    }
-
-    public System.Drawing.Pen? GetGdiPlusPen(double? opacity = null)
-    {
-        var result = Stroke != null ? new System.Drawing.Pen(Stroke.AsGdiBrush(opacity), (int)StrokeThickness) : null;
-
-        if (result != null && DashStyle != null)
-            result.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-
-        if (result != null)
-            result.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
+        result.DashStyle = DashStyle;
+        result.StartLineCap = PenStartLineCap;
+        result.EndLineCap = PenEndLineCap;
+        result.DashCap = PenDashCap;
+        result.LineJoin = PenLineJoin;
+        result.MiterLimit = PenMiterLimit;
 
         return result;
     }
 
-    public System.Drawing.Brush GetGdiPlusFillBrush(double? opacity = null)
-    {
-        return Fill.AsGdiBrush(opacity);
-    }
+    public System.Drawing.Pen? GetGdiPlusPen() => GetWpfPen().AsGdiPen();
 
-
-
-    #region INotifyPropertyChanged
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    #endregion
+    public System.Drawing.Brush? GetGdiPlusFillBrush(double? opacity = null) => Fill?.AsGdiBrush(opacity);
 
 
     #region Builders
@@ -399,7 +503,7 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
         this.StrokeThickness = strokeThickness;
 
         this.PenLineJoin = strokeLineJoin.Parse();
-        this.PenLineCap = strokeLineCap.Parse();
+        this.PenDashCap = strokeLineCap.Parse();
 
         if (strokeDashArray is not null)
             this.DashStyle = new System.Windows.Media.DashStyle(strokeDashArray.ToList(), strokeDashOffset);
@@ -418,6 +522,7 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
     }
 
     #endregion
+
 
     #region Static 
 
@@ -440,7 +545,7 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
             fill = BrushHelper.PickGoodBrush();
         }
 
-        return new VisualParameters(fill, BrushHelper.PickBrush(), strokeThickness, opacity);
+        return new VisualParameters(fill, BrushHelper.PickBrush(), strokeThickness, opacity, isOn: true);
     }
 
     public static VisualParameters CreateLabel(ScaleInterval visibleRange, int fontSize, Brush foreground, FontFamily fontFamily, Func<Geometry<Sb.Point>, Sb.Point> positionFunc, bool isRtl)
@@ -574,12 +679,7 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
     public static VisualParameters GetDefaultForMeasurements()
     {
 
-        return new VisualParameters(
-            BrushHelper.CreateBrush(ColorHelper.ToWpfColor("#FBB03B"), 0.3),
-            BrushHelper.CreateBrush("#FBB03B"),
-            3,
-            1,
-            System.Windows.Visibility.Visible)
+        return new VisualParameters(BrushHelper.CreateBrush(ColorHelper.ToWpfColor("#FBB03B"), 0.3), BrushHelper.CreateBrush("#FBB03B"), 3, 1)
         {
             DashStyle = VisualParameters.GetDefaultDashStyleForMeasurements()
         };
@@ -603,4 +703,17 @@ public partial class VisualParameters : DependencyObject, INotifyPropertyChanged
     }
 
     #endregion
+
+
+    #region INotifyPropertyChanged
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    #endregion
+
 }

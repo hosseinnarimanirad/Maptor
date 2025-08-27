@@ -90,7 +90,7 @@ public class DrawingVisualRenderStrategy : RenderStrategy
 
                 case LabelSymbolizer labelSymbolizer:
 
-                    if (labelSymbolizer.Param?.IsLabeled(1.0 / mapScale) == true)
+                    if (labelSymbolizer.Param?.IsInScaleRange(1.0 / mapScale) == true)
                     {
                         var renderedLabels = DrawLabels(filteredFeatures, labelSymbolizer.Param);
 

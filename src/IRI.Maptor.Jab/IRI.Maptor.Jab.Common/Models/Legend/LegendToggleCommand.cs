@@ -122,7 +122,7 @@ public class LegendToggleCommand : Notifier, ILegendCommand
         {
             if (e.Arg != null)
             {
-                result.IsEnabled = e.Arg.IsInScaleRange;
+                result.IsEnabled = e.Arg.IsEnabled;
             }
         };
 

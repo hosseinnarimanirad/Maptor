@@ -65,6 +65,8 @@ public abstract class SymbolizableLayer : BaseLayer
 
     public VisualParameters? DefaultSymbology => _visualParameters?.FirstOrDefault(s => !s.IsLabelParameters );
 
+    public VisualParameters? DefaultLabel => _visualParameters?.FirstOrDefault(s => s.IsLabelParameters);
+
     //public bool CanRenderLabels(double mapScale)
     //{
     //    return this.Labels?.IsLabeled(1.0 / mapScale) == true;

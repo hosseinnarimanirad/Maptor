@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Media;
-
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Helpers;
 
 namespace IRI.Maptor.Jab.Common.Helpers;
@@ -88,5 +88,13 @@ public static class BrushHelper
 
         return new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(alpha: alpha, red: color.R, green: color.G, blue: color.B));
     }
+
+    public static System.Drawing.Brush? ToGdiBrush(Brush brush, double? opacity = null)
+    {
+        var solidColor = brush.AsSolidColor()?.AsGdiColor(opacity);
+
+        return solidColor != null ? new System.Drawing.SolidBrush(solidColor.Value) : null;
+    }
+
 
 }

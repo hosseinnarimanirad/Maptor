@@ -54,7 +54,7 @@ public class WriteableBitmapRenderStrategy : RenderStrategy
                     break;
 
                 case LabelSymbolizer labelSymbolizer:
-                    if (labelSymbolizer.Param?.IsLabeled(1.0 / mapScale) == true)
+                    if (labelSymbolizer.Param?.IsInScaleRange(1.0 / mapScale) == true)
                     {
                         //this.DrawLabel(labels, geometries, image, transform);
                     }

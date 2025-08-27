@@ -79,7 +79,7 @@ public class GdiBitmapRenderStrategy : RenderStrategy
                         break;
 
                     case LabelSymbolizer labelSymbolizer:
-                        if (labelSymbolizer.Param?.IsLabeled(1.0 / mapScale) == true)
+                        if (labelSymbolizer.Param?.IsInScaleRange(1.0 / mapScale) == true)
                         {
                             DrawLabels(filteredFeatures, graphics, labelSymbolizer.Param);
                         }

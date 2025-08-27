@@ -117,7 +117,7 @@ public class VectorLayer : SymbolizableLayer
                         LayerType type,
                         RenderMode renderMode,
                         RasterizationMethod rasterizationMethod)
-        : this(layerName, features, new VisualParameters(BrushHelper.PickBrush(), BrushHelper.PickBrush(), 1, 1, Visibility.Visible), type, renderMode, rasterizationMethod)
+        : this(layerName, features, new VisualParameters(BrushHelper.PickBrush(), BrushHelper.PickBrush(), 1, 1), type, renderMode, rasterizationMethod)
     {
     }
 
