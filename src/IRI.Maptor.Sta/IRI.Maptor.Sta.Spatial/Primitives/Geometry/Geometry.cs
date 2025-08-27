@@ -1330,7 +1330,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
             return;
         }
 
-        for (int i = Geometries.Count; i >= 0; i--)
+        for (int i = Geometries.Count - 1; i >= 0; i--)
         {
             if (Geometries[i].HasAnyPoint())
             {
