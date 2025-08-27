@@ -52,7 +52,7 @@
             <Button Style="{StaticResource menuCircleButton}" VerticalAlignment="Center" Margin="1" Cursor="Hand" Command="{Binding RemoveAllDrawingItemsCommand}"  
                         BorderThickness="0" Focusable="False" ToolTip="{Binding ElementName=root, Path=RemoveAllDrawingItemsLabel}">
                 <!--<Path Data="{StaticResource appbarDelete}" Stretch="Uniform" Fill="White" Width="18" Height="18" FlowDirection="LeftToRight"/>-->
-                <iconPacks:PackIconModern Kind="VectorPen" />
+                <iconPacks:PackIconModern Kind="Delete" />
             </Button>
             <Button Style="{StaticResource menuCircleButton}" VerticalAlignment="Center" Margin="1" Cursor="Hand" Command="{Binding AddGeoJsonToDrawingItemsCommand}"  
                         BorderThickness="0" Focusable="False" ToolTip="{Binding ElementName=root, Path=AddGeoJsonToDrawingItemsLabel}">
