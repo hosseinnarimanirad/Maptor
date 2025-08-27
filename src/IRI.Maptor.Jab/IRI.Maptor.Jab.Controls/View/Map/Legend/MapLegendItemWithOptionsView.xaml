@@ -76,7 +76,7 @@
                                         <Setter Property="Data" Value="{Binding PathMarkup}"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Path=IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton, Mode=FindAncestor}}" Value="False">
-                                        <Setter Property="Data" Value="{Binding NotCheckedPathMarkup}"/>
+                                        <Setter Property="Data" Value="{Binding NotSelectedPathMarkup}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

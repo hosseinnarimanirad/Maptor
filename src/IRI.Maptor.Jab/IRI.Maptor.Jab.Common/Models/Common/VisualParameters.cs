@@ -18,23 +18,24 @@ namespace IRI.Maptor.Jab.Common;
 
 public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 {
-    private event EventHandler<CustomEventArgs<Visibility>>? _onVisibilityChanged;
+    //private event EventHandler<CustomEventArgs<Visibility>>? _onVisibilityChanged;
 
-    public event EventHandler<CustomEventArgs<Visibility>> OnVisibilityChanged
-    {
-        remove { this._onVisibilityChanged -= value; }
-        add
-        {
-            if (this._onVisibilityChanged == null)
-                this._onVisibilityChanged += value;
-        }
-    }
+    //public event EventHandler<CustomEventArgs<Visibility>> OnVisibilityChanged
+    //{
+    //    remove { this._onVisibilityChanged -= value; }
+    //    add
+    //    {
+    //        if (this._onVisibilityChanged == null)
+    //            this._onVisibilityChanged += value;
+    //    }
+    //}
 
-    public event EventHandler<CustomEventArgs<VisualParameters>>? OnChanged;
+    //public event EventHandler<CustomEventArgs<VisualParameters>>? OnChanged;
 
-    public event EventHandler<CustomEventArgs<VisualParameters>> OnIsInScaleRangeChanged;
+    //public event EventHandler<CustomEventArgs<VisualParameters>>? OnIsInScaleRangeChanged;
 
-    public event EventHandler<CustomEventArgs<VisualParameters>> OnIsOnChanged;
+    //public event EventHandler<CustomEventArgs<VisualParameters>>? OnIsOnChanged;
+     
 
     #region General Properties
 
@@ -83,22 +84,22 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
             _isEnabled = value;
             RaisePropertyChanged();
 
-            this.OnChanged?.Invoke(this, new CustomEventArgs<VisualParameters>(this));
+            //this.OnChanged?.Invoke(this, new CustomEventArgs<VisualParameters>(this));
 
-            this.OnIsInScaleRangeChanged?.Invoke(this, new CustomEventArgs<VisualParameters>(this));
+            //this.OnIsInScaleRangeChanged?.Invoke(this, new CustomEventArgs<VisualParameters>(this));
         }
     }
 
 
-    private bool _isOn;
-    public bool IsOn
+    private bool _isSelected;
+    public bool IsSelected
     {
-        get { return _isOn; }
+        get { return _isSelected; }
         set
         {
-            _isOn = value;
+            _isSelected = value;
             RaisePropertyChanged();
-            OnIsOnChanged?.Invoke(this, new CustomEventArgs<VisualParameters>(this));
+            //OnIsOnChanged?.Invoke(this, new CustomEventArgs<VisualParameters>(this));
         }
     }
 
@@ -120,7 +121,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
     #endregion
 
 
-    #region Brush & Stroke
+    #region Brush & Stroke Properties
 
     private Brush? _fill;
     public Brush? Fill
@@ -204,7 +205,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
     #endregion
 
 
-    #region Label
+    #region Label Fields & Properties 
 
     public Func<Geometry<Sb.Point>, Sb.Point>? PositionFunc { get; set; }
 
@@ -438,7 +439,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 
         //this.Visibility = visibility;
 
-        this.IsOn = isOn;
+        this.IsSelected = isOn;
     }
 
     public VisualParameters(Color fill, Color? stroke = null, double strokeThickness = 1, double opacity = 1)
@@ -454,14 +455,19 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
     }
 
 
+    public bool IsInScaleRangeAndSelected(double inverseMapScale)
+    {
+        return VisibleRange.IsInRange(inverseMapScale) && IsSelected;
+    }
+
     public bool IsInScaleRange(double inverseMapScale)
     {
-        return VisibleRange.IsInRange(inverseMapScale) && IsOn;
+        return VisibleRange.IsInRange(inverseMapScale) ;
     }
 
     public VisualParameters Clone()
     {
-        return new VisualParameters(Fill, Stroke, StrokeThickness, Opacity, IsOn);
+        return new VisualParameters(Fill, Stroke, StrokeThickness, Opacity, IsSelected);
     }
 
     // todo: check if necassary to apply the opacity
