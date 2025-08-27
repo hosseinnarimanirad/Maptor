@@ -358,9 +358,9 @@ public abstract class BaseLayer : Notifier, ILayer
 
     #region Events
 
-    private event EventHandler<CustomEventArgs<Visibility>>? _onVisibilityChanged;
+    private event EventHandler<CustomEventArgs<VisualParameters>>? _onVisibilityChanged;
 
-    public event EventHandler<CustomEventArgs<Visibility>> OnVisibilityChanged
+    public event EventHandler<CustomEventArgs<VisualParameters>> OnVisibilityChanged
     {
         remove { this._onVisibilityChanged -= value; }
         add
@@ -392,9 +392,9 @@ public abstract class BaseLayer : Notifier, ILayer
 
     #endregion
 
-    protected void RaiseVisibilityChanged(object? sender, CustomEventArgs<Visibility> e)
-    {
-        this._onVisibilityChanged?.Invoke(this, e);
-    }
+    //protected void RaiseVisibilityChanged(object? sender, CustomEventArgs<VisualParameters> e)
+    //{
+    //    this._onVisibilityChanged?.Invoke(this, e);
+    //}
 
 }

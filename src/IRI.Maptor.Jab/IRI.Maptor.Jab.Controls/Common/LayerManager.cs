@@ -38,7 +38,6 @@ public class LayerManager : Notifier
             return;
 
         layer.OnVisibilityChanged -= RefreshLayerVisibility;
-
         layer.OnVisibilityChanged += RefreshLayerVisibility;
 
         UpdateIsInRange(layer, inverseMapScale);

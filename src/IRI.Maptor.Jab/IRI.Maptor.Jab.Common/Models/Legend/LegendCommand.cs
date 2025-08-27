@@ -5,6 +5,7 @@ using MahApps.Metro.IconPacks;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Spatial.Helpers;
+using IRI.Maptor.Jab.Common.Presenters;
 using IRI.Maptor.Jab.Common.Models.Map;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
@@ -13,99 +14,21 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
-using IRI.Maptor.Jab.Common.Presenters;
 
 namespace IRI.Maptor.Jab.Common.Models.Legend;
 
-public class LegendCommand : Notifier, ILegendCommand
+public class LegendCommand : LegendCommandBase
 {
-    //private const string _exportAsBitmapToolTip = "خروجی عکسی";
-
-    //private const string _exportAsShapefileToolTip = "خروجی در قالب شیپ‌فایل";
-
-    //private const string _exportAsGeoJsonToolTip = "خروجی در قالب GeoJson";
-
-    private RelayCommand _command;
-    public RelayCommand Command
-    {
-        get { return _command; }
-        set
-        {
-            _command = value;
-            RaisePropertyChanged();
-        }
-    }
-
-
-    private string _pathMarkup;
-    public string PathMarkup
-    {
-        get { return _pathMarkup; }
-        set
-        {
-            _pathMarkup = value;
-            RaisePropertyChanged();
-        }
-    }
-
-
-    private bool _isEnabled = true;
-    public bool IsEnabled
-    {
-        get { return _isEnabled; }
-        set
-        {
-            _isEnabled = value;
-            RaisePropertyChanged();
-        }
-    }
-
-
-    //private string _toolTip;
-    //public string ToolTip
-    //{
-    //    get { return _toolTip; }
-    //    set
-    //    {
-    //        _toolTip = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
-
-    private string ToolTipResourceKey { get; set; }
-    public string ToolTip => LocalizationManager.Instance[ToolTipResourceKey];
-
-
-
-    private bool _isCommandVisible = true;
-    public bool IsCommandVisible
-    {
-        get { return _isCommandVisible; }
-        set
-        {
-            _isCommandVisible = value;
-            RaisePropertyChanged();
-        }
-    }
-
-
-    public ILayer Layer { get; set; }
-
-
+   
     private LegendCommand()
     {
-        Localization.LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
+
     }
 
-    public LegendCommand(LocalizationResourceKeys tooltipResourceKey) : this()
+    public LegendCommand(LocalizationResourceKeys tooltipResourceKey) : base(tooltipResourceKey)
     {
-        this.ToolTipResourceKey = tooltipResourceKey.ToString();
     }
 
-    private void Instance_LanguageChanged()
-    {
-        RaisePropertyChanged(nameof(ToolTip));
-    }
 
     #region Defaults for ILayer
 

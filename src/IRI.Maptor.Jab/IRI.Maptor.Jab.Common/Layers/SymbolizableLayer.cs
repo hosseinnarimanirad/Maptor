@@ -10,7 +10,7 @@ namespace IRI.Maptor.Jab.Common;
 
 public abstract class SymbolizableLayer : BaseLayer
 {
-    public event EventHandler<CustomEventArgs<VisualParameters>>? OnLabelChanged;
+    //public event EventHandler<CustomEventArgs<VisualParameters>>? OnLabelChanged;
 
 
     protected List<VisualParameters> _visualParameters = [];
@@ -46,8 +46,8 @@ public abstract class SymbolizableLayer : BaseLayer
     {
         if (symbolizer.Param is not null)
         {
-            symbolizer.Param.OnVisibilityChanged -= RaiseVisibilityChanged;
-            symbolizer.Param.OnVisibilityChanged += RaiseVisibilityChanged;
+            //symbolizer.Param.OnIsOnChanged -= RaiseVisibilityChanged;
+            //symbolizer.Param.OnIsOnChanged += RaiseVisibilityChanged;
 
             this._visualParameters.Add(symbolizer.Param);
         }

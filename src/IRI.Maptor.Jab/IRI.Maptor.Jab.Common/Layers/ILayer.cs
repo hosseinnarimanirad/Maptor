@@ -66,7 +66,7 @@ public interface ILayer
 
     RelayCommand ChangeSymbologyCommand { get; }
 
-    event EventHandler<CustomEventArgs<Visibility>> OnVisibilityChanged;
+    event EventHandler<CustomEventArgs<VisualParameters>> OnVisibilityChanged;
 
     //event EventHandler<CustomEventArgs<VisualParameters>> OnLabelChanged;
 
