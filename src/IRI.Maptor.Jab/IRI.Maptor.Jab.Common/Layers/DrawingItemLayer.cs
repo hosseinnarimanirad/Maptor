@@ -17,8 +17,6 @@ public class DrawingItemLayer : VectorLayer//, IIdentifiable
 {
     public Action<DrawingItemLayer>? RequestHighlightGeometry;
 
-    public Action<DrawingItemLayer>? RequestChangeVisibility;
-
 
     //public int Id { get; set; }
 

@@ -32,20 +32,32 @@ public class VectorLayer : SymbolizableLayer
 
     public IVectorDataSource DataSource { get; protected set; }
 
-    private FrameworkElement? _element;
-    public FrameworkElement? Element
-    {
-        get { return this._element; }
+    //private FrameworkElement? _element;
+    //public FrameworkElement? Element
+    //{
+    //    get { return this._element; }
 
-        set
-        {
-            this._element = value;
+    //    set
+    //    {
+    //        this._element = value;
 
-            BindWithFrameworkElement(value);
+    //        BindWithFrameworkElement(value);
 
-            RaisePropertyChanged();
-        }
-    }
+    //        RaisePropertyChanged();
+    //    }
+    //}
+
+    //public void BindWithFrameworkElement(FrameworkElement? element)
+    //{
+    //    if (element is null)
+    //        return;
+
+    //    Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
+    //    element.SetBinding(Path.VisibilityProperty, binding4);
+
+    //    Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
+    //    element.SetBinding(Path.OpacityProperty, binding5);
+    //}
 
     protected LayerType _type;
     public override LayerType Type
@@ -253,18 +265,6 @@ public class VectorLayer : SymbolizableLayer
     public override string ToString()
     {
         return $"{Enum.GetName(this.Type)} - {this.DataSource?.ToString()}";
-    }
-
-    public void BindWithFrameworkElement(FrameworkElement? element)
-    {
-        if (element is null)
-            return;
-
-        Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
-        element.SetBinding(Path.VisibilityProperty, binding4);
-
-        Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
-        element.SetBinding(Path.OpacityProperty, binding5);
     }
 
     public static Func<Point, Point> CreateMapToScreenMapFunc(BoundingBox mapExtent, double screenWidth, double screenHeight)

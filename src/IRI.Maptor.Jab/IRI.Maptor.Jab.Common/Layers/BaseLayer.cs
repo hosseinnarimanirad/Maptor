@@ -9,6 +9,8 @@ using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands;
+using System.Windows.Data;
+using System.Windows.Shapes;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -251,6 +253,56 @@ public abstract class BaseLayer : Notifier, ILayer
     //    }
     //}
 
+
+    private FrameworkElement? _element;
+    public FrameworkElement? Element
+    {
+        get { return this._element; }
+
+        set
+        {
+            this._element = value;
+
+            if (Element is not null)
+            {
+                BindWithFrameworkElement(value);
+            }
+
+            RaisePropertyChanged();
+        }
+    }
+
+    public Action<ILayer>? RequestChangeVisibility { get; set; }
+
+    protected virtual void BindWithFrameworkElement(FrameworkElement? element)
+    {
+        if (element is null)
+            return;
+
+        Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
+        element.SetBinding(Path.VisibilityProperty, binding4);
+
+        Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
+        element.SetBinding(Path.OpacityProperty, binding5);
+    }
+
+    //public void BindWithFrameworkElement(FrameworkElement? element)
+    //{
+    //    if (element is null)
+    //        return;
+
+    //    if (element is Path || element is Rectangle)
+    //    {
+    //        Binding binding4 = new Binding() { Source = this._parent, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
+    //        element.SetBinding(Path.VisibilityProperty, binding4);
+
+    //        Binding binding5 = new Binding() { Source = this._parent, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
+    //        element.SetBinding(Path.OpacityProperty, binding5);
+    //    } 
+    //    else
+    //        throw new NotImplementedException();
+    //} 
+
     #region Methods
 
     //public virtual void Invalidate() => IsValid = false;
@@ -274,6 +326,11 @@ public abstract class BaseLayer : Notifier, ILayer
                 item.Visibility = visibility;
             }
         }
+
+        if (this.Element is null && visibility == Visibility.Visible)
+        {
+            this.RequestChangeVisibility?.Invoke(this);
+        }
     }
 
     public void ToggleVisibility()
@@ -290,7 +347,7 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public bool CanRenderLayer(double mapScale)
     {
-        return this?.Visibility == Visibility.Visible && this.VisibleRange.IsInRange(1.0 / mapScale);
+        return this.Visibility == Visibility.Visible && this.VisibleRange.IsInRange(1.0 / mapScale);
     }
 
     //public bool CanRenderLabels(double mapScale)

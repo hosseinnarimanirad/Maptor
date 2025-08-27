@@ -23,20 +23,21 @@ public class RasterLayer : BaseLayer
 
     public IDataSource DataSource { get; private set; }
 
-    private FrameworkElement? _element;
-    public FrameworkElement? Element
-    {
-        get { return this._element; }
+    //private FrameworkElement? _element;
+    //public FrameworkElement? Element
+    //{
+    //    get { return this._element; }
 
-        set
-        {
-            this._element = value;
+    //    set
+    //    {
+    //        this._element = value;
 
-            this.BindWithFrameworkElement(value);
+    //        this.BindWithFrameworkElement(value);
 
-            RaisePropertyChanged();
-        }
-    }
+    //        RaisePropertyChanged();
+    //    }
+    //}
+
 
     private LayerType _type;
     public override LayerType Type
@@ -62,40 +63,24 @@ public class RasterLayer : BaseLayer
 
     public BitmapImage Image { get; set; }
 
-    public void BindWithFrameworkElement(FrameworkElement? element)
+
+    protected override void BindWithFrameworkElement(FrameworkElement? element)
     {
         if (element is null)
             return;
 
         if (element is Path || element is Rectangle)
         {
-            //Binding binding1 = new Binding() { Source = this._parent, Path = new PropertyPath("VisualParameters.Stroke"), Mode = BindingMode.TwoWay };
-            //element.SetBinding(Path.StrokeProperty, binding1);
-
-            //If uncomment no DrawingBrush will work any more for raster layers
-            //Binding binding2 = new Binding() { Source = this._parent, Path = new PropertyPath("VisualParameters.Fill"), Mode = BindingMode.TwoWay };
-            //element.SetBinding(Path.FillProperty, binding2);
-
-            //Binding binding3 = new Binding() { Source = this._parent, Path = new PropertyPath("VisualParameters.StrokeThickness"), Mode = BindingMode.TwoWay };
-            //element.SetBinding(Path.StrokeThicknessProperty, binding3);
-
             Binding binding4 = new Binding() { Source = this._parent, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
             element.SetBinding(Path.VisibilityProperty, binding4);
 
             Binding binding5 = new Binding() { Source = this._parent, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
             element.SetBinding(Path.OpacityProperty, binding5);
         }
-        //else if (element is System.Windows.Controls.Image)
-        //{
-        //    Binding binding4 = new Binding() { Source = this._parent, Path = new PropertyPath("VisualParameters.Visibility"), Mode = BindingMode.TwoWay };
-        //    element.SetBinding(Path.VisibilityProperty, binding4);
-
-        //    Binding binding5 = new Binding() { Source = this._parent, Path = new PropertyPath("VisualParameters.Opacity"), Mode = BindingMode.TwoWay };
-        //    element.SetBinding(Path.OpacityProperty, binding5);
-        //}
         else
             throw new NotImplementedException();
     }
+
 
     private async Task<List<RasterLayer>> GetRasterLayer(BoundingBox region, double mapScale, double unitDistance)
     {

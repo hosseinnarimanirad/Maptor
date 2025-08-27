@@ -1996,16 +1996,18 @@ public abstract class MapPresenter : BasePresenter
          };
 
         layer.RequestChangeVisibility = async di =>
-         {
+        {
+            DrawingItemLayer drawingLayer = (DrawingItemLayer) di;
+
              RefreshLayerVisibility(di);
 
-             if (di.CanShowHighlightGeometry())
+             if (drawingLayer.CanShowHighlightGeometry())
              {
-                 await SelectDrawingItem(di);
+                 await SelectDrawingItem(drawingLayer);
              }
              else
              {
-                 ClearLayer(di.HighlightGeometryKey.ToString(), true, true);
+                 ClearLayer(drawingLayer.HighlightGeometryKey.ToString(), true, true);
              }
          };
 

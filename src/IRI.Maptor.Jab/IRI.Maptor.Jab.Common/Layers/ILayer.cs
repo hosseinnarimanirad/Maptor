@@ -47,7 +47,7 @@ public interface ILayer
     bool IsSelectedInToc { get; set; }
 
     bool IsExpandedInToc { get; set; }
-      
+
     bool ShowInToc { get; set; }
 
     int TocOrder { get; set; }
@@ -57,12 +57,18 @@ public interface ILayer
     bool IsInScaleRange { get; set; }
 
     double Opacity { get; set; }
+
     Visibility Visibility { get; set; }
+    
     ScaleInterval VisibleRange { get; set; }
 
+    FrameworkElement? Element { get; set; }
+
     List<ILegendCommand> Commands { get; set; }
-     
+
     List<IFeatureTableCommand> FeatureTableCommands { get; set; }
+
+    Action<ILayer>? RequestChangeVisibility { get; set; }
 
     RelayCommand ChangeSymbologyCommand { get; }
 

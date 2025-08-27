@@ -44,6 +44,7 @@ using IRI.Maptor.Jab.Common.Presenters;
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
+using IRI.Maptor.Sta.Ogc.WMS;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
@@ -697,6 +698,8 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
 
             //return this.AddNonTiledLayer(l);
             this.AddLayer(l);
+
+
         };
 
         presenter.RequestTransformScreenGeometryToWebMercatorGeometry = (screenGeo) =>
@@ -1055,6 +1058,9 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
 
     public void SetLayer(ILayer layer)
     {
+        if (layer.RequestChangeVisibility is null)
+            layer.RequestChangeVisibility = RefreshLayerVisibility;
+
         this._layerManager.Add(layer, 1.0 / _mapScale);
     }
 
@@ -1152,7 +1158,11 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
         // 1401.12.20
         //if (layer.VisualParameters == null || layer.VisualParameters.Visibility != Visibility.Visible)
         if (!layer.CanRenderLayer(mapScale))
+        {
+            layer.Element = null;
+
             return;
+        }
 
         if (layer.RenderMode == RenderMode.Tiled)
             return;
@@ -1402,7 +1412,11 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
         var mapScale = MapScale;
 
         if (!layer.CanRenderLayer(mapScale))
+        {
+            layer.Element = null;
+
             return;
+        }
 
         Action action = async () =>
         {
@@ -1750,7 +1764,11 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
             foreach (ILayer item in infos)
             {
                 if (!item.CanRenderLayer(mapScale))
+                {
+                    item.Element = null;
+
                     continue;
+                }
 
                 if (this.CurrentTileInfos == null || !this.CurrentTileInfos.Contains(tile))
                     return;
@@ -1847,7 +1865,11 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
             Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-Proccessing {item.LayerName}");
 
             if (!item.CanRenderLayer(mapScale))
+            {
+                item.Element = null;
+
                 continue;
+            }
 
             if (MapScale != mapScale)
                 return;
