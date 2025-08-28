@@ -371,6 +371,9 @@
   <data name="ui_addShapefile" xml:space="preserve">
     <value>افزودن شیپ‌فایل</value>
   </data>
+  <data name="ui_addTextToMap" xml:space="preserve">
+    <value>اضافه کردن متن</value>
+  </data>
   <data name="ui_baseMaps" xml:space="preserve">
     <value>نقشه‌های پایه</value>
   </data>

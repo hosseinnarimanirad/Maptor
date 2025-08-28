@@ -1417,7 +1417,7 @@ public abstract class MapPresenter : BasePresenter
                    layer => LegendCommand.CreateRemoveDrawingItemLayer(this, layer),
                    layer => LegendCommand.CreateEditDrawingItemLayer(this, layer),
                    layer => LegendCommand.CreateExportDrawingItemLayerAsShapefile(this, layer),
-                   //layer => DrawingItemLegendCommands.CreateExportDrawingItemLayerAsGeoJson(this,layer),
+                   layer => LegendCommand.CreateExportDrawingItemLayerAsGeoJson(this,layer),
                    layer => LegendToggleCommand.CreateToggleLayerLabelCommand(this, layer/*, layer.Labels*/)
                 };
             }

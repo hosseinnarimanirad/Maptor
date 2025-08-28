@@ -800,6 +800,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Text.
+        /// </summary>
+        public static string ui_addTextToMap {
+            get {
+                return ResourceManager.GetString("ui_addTextToMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Base Maps.
         /// </summary>
         public static string ui_baseMaps {

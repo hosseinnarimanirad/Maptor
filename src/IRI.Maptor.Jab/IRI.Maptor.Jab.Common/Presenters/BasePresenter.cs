@@ -111,8 +111,9 @@ public class BasePresenter : Notifier
         RaisePropertyChanged(nameof(ClearText));
         RaisePropertyChanged(nameof(DrawingsText));
         RaisePropertyChanged(nameof(DrawPointText));
-        RaisePropertyChanged(nameof(DrawPolygonText));
         RaisePropertyChanged(nameof(DrawPolylineText));
+        RaisePropertyChanged(nameof(DrawPolygonText));
+        RaisePropertyChanged(nameof(AddTextToMap));
         RaisePropertyChanged(nameof(FullExtentText));
         RaisePropertyChanged(nameof(GoToText));
         RaisePropertyChanged(nameof(LayersText));
@@ -143,8 +144,9 @@ public class BasePresenter : Notifier
     public string ClearText => LocalizationManager.Instance[ui_clear.ToString()];
     public string DrawingsText => LocalizationManager.Instance[ui_drawings.ToString()];
     public string DrawPointText => LocalizationManager.Instance[ui_drawPoint.ToString()];
-    public string DrawPolygonText => LocalizationManager.Instance[ui_drawPolygon.ToString()];
     public string DrawPolylineText => LocalizationManager.Instance[ui_drawPolyline.ToString()];
+    public string DrawPolygonText => LocalizationManager.Instance[ui_drawPolygon.ToString()];
+    public string AddTextToMap => LocalizationManager.Instance[ui_addTextToMap.ToString()];
     public string FullExtentText => LocalizationManager.Instance[ui_fullExtent.ToString()];
     public string GoToText => LocalizationManager.Instance[ui_goTo.ToString()];
     public string LayersText => LocalizationManager.Instance[ui_layers.ToString()];

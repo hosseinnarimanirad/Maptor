@@ -105,6 +105,7 @@ public enum LocalizationResourceKeys
     ui_drawings,
     ui_drawPoint,
     ui_drawPolygon,
+    ui_addTextToMap,
     ui_drawPolyline,
     ui_fullExtent,
     ui_goTo,

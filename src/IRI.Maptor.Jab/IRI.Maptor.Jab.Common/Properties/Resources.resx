@@ -390,6 +390,9 @@
   <data name="ui_addShapefile" xml:space="preserve">
     <value>Add Shapefile</value>
   </data>
+  <data name="ui_addTextToMap" xml:space="preserve">
+    <value>Add Text</value>
+  </data>
   <data name="ui_baseMaps" xml:space="preserve">
     <value>Base Maps</value>
   </data>
