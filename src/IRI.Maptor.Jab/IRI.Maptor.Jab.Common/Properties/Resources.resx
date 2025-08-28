@@ -117,6 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="cmd_addShapefile" xml:space="preserve">
+    <value>Add Shapefile</value>
+  </data>
+  <data name="cmd_addTextToMap" xml:space="preserve">
+    <value>Add Text</value>
+  </data>
+  <data name="cmd_clearAll" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="cmd_drawPoint" xml:space="preserve">
+    <value>Draw Point</value>
+  </data>
+  <data name="cmd_drawPolygon" xml:space="preserve">
+    <value>Draw Polygon</value>
+  </data>
+  <data name="cmd_drawPolyline" xml:space="preserve">
+    <value>Draw Polyline</value>
+  </data>
+  <data name="cmd_fullExtent" xml:space="preserve">
+    <value>Full Extent</value>
+  </data>
+  <data name="cmd_goTo" xml:space="preserve">
+    <value>Go To</value>
+  </data>
   <data name="cmd_legend_boundary" xml:space="preserve">
     <value>Boundary</value>
     <comment>drawing layer</comment>
@@ -181,6 +205,12 @@
   </data>
   <data name="cmd_legend_zoomToExtent" xml:space="preserve">
     <value>Zoom To Extent</value>
+  </data>
+  <data name="cmd_measureArea" xml:space="preserve">
+    <value>Measure Area</value>
+  </data>
+  <data name="cmd_measureLength" xml:space="preserve">
+    <value>Measure Length</value>
   </data>
   <data name="draw_addPointText" xml:space="preserve">
     <value>Add Point</value>
@@ -387,18 +417,6 @@
   <data name="tile_provider_yandex" xml:space="preserve">
     <value>YANDEX</value>
   </data>
-  <data name="ui_addShapefile" xml:space="preserve">
-    <value>Add Shapefile</value>
-  </data>
-  <data name="ui_addTextToMap" xml:space="preserve">
-    <value>Add Text</value>
-  </data>
-  <data name="ui_baseMaps" xml:space="preserve">
-    <value>Base Maps</value>
-  </data>
-  <data name="ui_clear" xml:space="preserve">
-    <value>Clear</value>
-  </data>
   <data name="ui_drawingLegend_addGeoJson" xml:space="preserve">
     <value>Add GeoJson</value>
   </data>
@@ -417,32 +435,14 @@
   <data name="ui_drawingLegend_removeAll" xml:space="preserve">
     <value>Remove All</value>
   </data>
-  <data name="ui_drawings" xml:space="preserve">
+  <data name="ui_header_baseMaps" xml:space="preserve">
+    <value>Base Maps</value>
+  </data>
+  <data name="ui_header_drawingLegend" xml:space="preserve">
     <value>Drawings</value>
   </data>
-  <data name="ui_drawPoint" xml:space="preserve">
-    <value>Draw Point</value>
-  </data>
-  <data name="ui_drawPolygon" xml:space="preserve">
-    <value>Draw Polygon</value>
-  </data>
-  <data name="ui_drawPolyline" xml:space="preserve">
-    <value>Draw Polyline</value>
-  </data>
-  <data name="ui_fullExtent" xml:space="preserve">
-    <value>Full Extent</value>
-  </data>
-  <data name="ui_goTo" xml:space="preserve">
-    <value>Go To</value>
-  </data>
-  <data name="ui_layers" xml:space="preserve">
+  <data name="ui_header_layerLegend" xml:space="preserve">
     <value>Layers</value>
-  </data>
-  <data name="ui_measureArea" xml:space="preserve">
-    <value>Measure Area</value>
-  </data>
-  <data name="ui_measureLength" xml:space="preserve">
-    <value>Measure Length</value>
   </data>
   <data name="whiteImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Assets\Images\whiteImage.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

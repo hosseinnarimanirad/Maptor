@@ -117,6 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="cmd_addShapefile" xml:space="preserve">
+    <value>افزودن شیپ‌فایل</value>
+  </data>
+  <data name="cmd_addTextToMap" xml:space="preserve">
+    <value>اضافه کردن متن</value>
+  </data>
+  <data name="cmd_clearAll" xml:space="preserve">
+    <value>پاک کردن همه</value>
+  </data>
+  <data name="cmd_drawPoint" xml:space="preserve">
+    <value>ترسیم نقطه</value>
+  </data>
+  <data name="cmd_drawPolygon" xml:space="preserve">
+    <value>ترسیم چندضلعی</value>
+  </data>
+  <data name="cmd_drawPolyline" xml:space="preserve">
+    <value>ترسیم خط</value>
+  </data>
+  <data name="cmd_fullExtent" xml:space="preserve">
+    <value>نمای کل</value>
+  </data>
+  <data name="cmd_goTo" xml:space="preserve">
+    <value>برو به...</value>
+  </data>
   <data name="cmd_legend_boundary" xml:space="preserve">
     <value>مرز</value>
     <comment>drawing layer</comment>
@@ -180,6 +204,12 @@
   </data>
   <data name="cmd_legend_zoomToExtent" xml:space="preserve">
     <value>محدودهٔ لایه</value>
+  </data>
+  <data name="cmd_measureArea" xml:space="preserve">
+    <value>محاسبه مساحت</value>
+  </data>
+  <data name="cmd_measureLength" xml:space="preserve">
+    <value>محاسبه فاصله</value>
   </data>
   <data name="draw_addPointText" xml:space="preserve">
     <value>افزودن نقطه</value>
@@ -368,18 +398,6 @@
   <data name="tile_provider_yandex" xml:space="preserve">
     <value>یاندکس</value>
   </data>
-  <data name="ui_addShapefile" xml:space="preserve">
-    <value>افزودن شیپ‌فایل</value>
-  </data>
-  <data name="ui_addTextToMap" xml:space="preserve">
-    <value>اضافه کردن متن</value>
-  </data>
-  <data name="ui_baseMaps" xml:space="preserve">
-    <value>نقشه‌های پایه</value>
-  </data>
-  <data name="ui_clear" xml:space="preserve">
-    <value>پاک کردن</value>
-  </data>
   <data name="ui_drawingLegend_addGeoJson" xml:space="preserve">
     <value>بارگذاری عارضه ژئوجی‌سان</value>
   </data>
@@ -398,31 +416,13 @@
   <data name="ui_drawingLegend_removeAll" xml:space="preserve">
     <value>حذف تمام عوارض ترسیمی</value>
   </data>
-  <data name="ui_drawings" xml:space="preserve">
+  <data name="ui_header_baseMaps" xml:space="preserve">
+    <value>نقشه‌های پایه</value>
+  </data>
+  <data name="ui_header_drawingLegend" xml:space="preserve">
     <value>عوارض ترسیمی</value>
   </data>
-  <data name="ui_drawPoint" xml:space="preserve">
-    <value>ترسیم نقطه</value>
-  </data>
-  <data name="ui_drawPolygon" xml:space="preserve">
-    <value>ترسیم چندضلعی</value>
-  </data>
-  <data name="ui_drawPolyline" xml:space="preserve">
-    <value>ترسیم خط</value>
-  </data>
-  <data name="ui_fullExtent" xml:space="preserve">
-    <value>نمای کل</value>
-  </data>
-  <data name="ui_goTo" xml:space="preserve">
-    <value>برو به...</value>
-  </data>
-  <data name="ui_layers" xml:space="preserve">
+  <data name="ui_header_layerLegend" xml:space="preserve">
     <value>لایه‌ها</value>
-  </data>
-  <data name="ui_measureArea" xml:space="preserve">
-    <value>محاسبه مساحت</value>
-  </data>
-  <data name="ui_measureLength" xml:space="preserve">
-    <value>محاسبه فاصله</value>
   </data>
 </root>
