@@ -27,6 +27,53 @@ public class DrawingItemLayer : VectorLayer//, IIdentifiable
         get => Feature?.TheGeometry;
     }
 
+    public override BoundingBox Extent
+    {
+        get
+        {
+            if (Feature is not null)
+            {
+                return Feature.TheGeometry?.GetBoundingBox() ?? BoundingBox.NaN;
+            }
+            else if(SpecialPointLayer is not null)
+            {
+                return SpecialPointLayer.Extent;
+            }
+
+            return BoundingBox.NaN;
+        }
+        protected set
+        {
+            throw new NotImplementedException("DrawingItemLayer > Extent ");
+        }
+    }
+
+    public override System.Windows.Visibility Visibility
+    {
+        get => base.Visibility;
+        set
+        {
+            base.Visibility = value;
+
+            if (SpecialPointLayer != null)
+            {
+                SpecialPointLayer.Visibility = value;
+            }
+        }
+    }
+
+    public override double Opacity
+    {
+        get => base.Opacity; set
+        {
+            base.Opacity = value;
+            if (SpecialPointLayer != null)
+            {
+                SpecialPointLayer.Opacity = value;
+            }
+        }
+    }
+
     private Feature<Point>? _feature;
     public Feature<Point>? Feature
     {
@@ -38,13 +85,13 @@ public class DrawingItemLayer : VectorLayer//, IIdentifiable
 
             if (_feature is null)
             {
-                this.Extent = BoundingBox.NaN;
+                //this.Extent = BoundingBox.NaN;
             }
             else
             {
                 this.DataSource = new MemoryDataSource([_feature]);
 
-                this.Extent = _feature.TheGeometry.GetBoundingBox();
+                //this.Extent = _feature.TheGeometry.GetBoundingBox();
             }
         }
     }
@@ -120,8 +167,7 @@ public class DrawingItemLayer : VectorLayer//, IIdentifiable
     {
         DrawingItemLayer result = new DrawingItemLayer(layerName, /*id,*/ RasterizationMethod.DrawingVisual)
         {
-            Extent = BoundingBox.CalculateBoundingBox(locateables.Select(l => new Point() { X = l.Location.X, Y = l.Location.Y })),
-            //VisualParameters = VisualParameters.GetDefaultForDrawingItems(),
+            //Extent = BoundingBox.CalculateBoundingBox(locateables.Select(l => new Point() { X = l.Location.X, Y = l.Location.Y })),
             _type = LayerType.MoveableItem,
         };
 

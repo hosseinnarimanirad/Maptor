@@ -1955,7 +1955,9 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
         if (this.mapView.Children.Contains(element))
             return;
 
-        element.Opacity = specialPointLayer.Opacity;
+        //element.Opacity = specialPointLayer.Opacity;
+
+        specialPointLayer.Element = element;
 
         var height = double.IsNaN(element.Height) ? element.ActualHeight : element.Height;
         var width = double.IsNaN(element.Width) ? element.ActualWidth : element.Width;
@@ -1972,7 +1974,7 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
         {
             element.RenderTransformOrigin = new Point(0, 0);
         }
-
+         
         var scaleTransform = ((TransformGroup)(element.RenderTransform)).Children.First();
 
         ((TransformGroup)(element.RenderTransform)).Children.Clear();

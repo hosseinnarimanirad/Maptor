@@ -11,6 +11,7 @@ using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using System.Windows.Data;
 using System.Windows.Shapes;
+using IRI.Maptor.Sta.Common.Contracts.Google;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -181,14 +182,20 @@ public abstract class BaseLayer : Notifier, ILayer
     }
 
 
-    public virtual bool IsSymbolizable => false;
+    public virtual bool IsSymbolizable
+    {
+        get
+        {
+            return this.Type.HasFlag(LayerType.Point) || this.Type.HasFlag(LayerType.Polyline) || this.Type.HasFlag(LayerType.Polygon);
+        }
+    }
 
     public virtual bool HasMultiSymbolizers => false;
 
     #endregion
 
-    private double _opacity = 1.0;
-    public double Opacity
+    protected double _opacity = 1.0;
+    public virtual double Opacity
     {
         get { return _opacity; }
         set
@@ -199,7 +206,7 @@ public abstract class BaseLayer : Notifier, ILayer
     }
 
     private Visibility _visibility;
-    public Visibility Visibility
+    public virtual Visibility Visibility
     {
         get { return _visibility; }
         set
@@ -263,7 +270,7 @@ public abstract class BaseLayer : Notifier, ILayer
         {
             this._element = value;
 
-            if (Element is not null)
+            if (value is not null)
             {
                 BindWithFrameworkElement(value);
             }
@@ -279,12 +286,13 @@ public abstract class BaseLayer : Notifier, ILayer
         if (element is null)
             return;
 
-        Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
-        element.SetBinding(Path.VisibilityProperty, binding4);
+        Binding binding4 = new Binding() { Source = this, Path = new PropertyPath(nameof(Visibility)), Mode = BindingMode.TwoWay };
+        element.SetBinding(FrameworkElement.VisibilityProperty, binding4);
 
-        Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
-        element.SetBinding(Path.OpacityProperty, binding5);
+        Binding binding5 = new Binding() { Source = this, Path = new PropertyPath(nameof(Opacity)), Mode = BindingMode.TwoWay };
+        element.SetBinding(FrameworkElement.OpacityProperty, binding5);
     }
+
 
     //public void BindWithFrameworkElement(FrameworkElement? element)
     //{
