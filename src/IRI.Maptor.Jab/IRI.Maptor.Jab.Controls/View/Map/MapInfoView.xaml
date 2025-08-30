@@ -159,25 +159,25 @@
                 <DockPanel DockPanel.Dock="Right" LastChildFill="False"
                             Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}">
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Left" Margin="2" 
-                            ToolTip="{Binding ElementName=root, Path=AddPointText}"
+                            ToolTip="{Binding ElementName=root, Path=Ltxt_map_draw_addPoint}"
                             Command="{Binding AddPointToNewDrawingCommand}"
                             Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Path Data="{StaticResource appbarAdd}"/>
                     </Button>
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Left" Margin="2,0,10,0" 
-                        ToolTip="{Binding ElementName=root, Path=FinishDrawingPartText}"
+                        ToolTip="{Binding ElementName=root, Path=Ltxt_map_draw_finishDrawingPart}"
                         Command="{Binding FinishDrawingPartCommand}"
                             Visibility="{Binding MapPanel.Options.IsMultiPartSupportAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Path Data="{StaticResource appbarCheckmark}"/>
                     </Button>
 
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" Margin="2" 
-                        ToolTip="{Binding ElementName=root, Path=FinishDrawingText}"
+                        ToolTip="{Binding ElementName=root, Path=Ltxt_map_draw_finishDrawing}"
                         Command="{Binding FinishNewDrawingCommand}" >
                         <Path Data="{StaticResource appbarCheck}"/>
                     </Button>
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" Margin="2" 
-                        ToolTip="{Binding ElementName=root, Path=CancelDrawingText}"
+                        ToolTip="{Binding ElementName=root, Path=Ltxt_map_draw_cancelDrawing}"
                         Command="{Binding CancelNewDrawingCommand}" >
                         <Path Data="{StaticResource appbarClose}"/>
                     </Button>
@@ -218,7 +218,7 @@
             </DockPanel>
 
 
-            <TextBlock Text="{Binding ElementName=root, Path=NewDrawingText}" VerticalAlignment="Center" Margin="8,0" Foreground="{StaticResource  MahApps.Brushes.Accent2}"
+            <TextBlock Text="{Binding ElementName=root, Path=Ltxt_map_draw_newDrawing}" VerticalAlignment="Center" Margin="8,0" Foreground="{StaticResource  MahApps.Brushes.Accent2}"
                         Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}" HorizontalAlignment="Center" TextDecorations="Underline"/>
             <StackPanel >
                 <StackPanel.Visibility>
@@ -230,7 +230,7 @@
                 </StackPanel.Visibility>
                 <TabControl SelectedIndex="2" Background="Transparent"  >
                     <TabControl.Items>
-                        <TabItem Header="{Binding ElementName=root, Path=MapPanel_CurrentPoint}" Cursor="Hand"><!--Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">-->
+                        <TabItem Header="{Binding ElementName=root, Path=Ltxt_mapPanel_header_currentPoint}" Cursor="Hand"><!--Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">-->
                             <TabItem.Visibility>
                                 <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
                                     <!--<Binding Path="IsEditMode"/>-->
@@ -271,7 +271,7 @@
                             </StackPanel>
                         </TabItem>
 
-                        <TabItem Header="{Binding ElementName=root, Path=MapPanel_MultiPart}" Cursor="Hand" ><!--Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">-->
+                        <TabItem Header="{Binding ElementName=root, Path=Ltxt_mapPanel_header_multiPart}" Cursor="Hand" ><!--Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">-->
                             <TabItem.Visibility>
                                 <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
                                     <!--<Binding Path="IsEditMode"/>-->
@@ -304,9 +304,9 @@
                             </StackPanel>
                         </TabItem>
 
-                        <TabItem Header="{Binding ElementName=root, Path=MapPanel_Srs}" Cursor="Hand">
+                        <TabItem Header="{Binding ElementName=root, Path=Ltxt_mapPanel_header_srs}" Cursor="Hand">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <RadioButton GroupName="A" ToolTip="{Binding ElementName=root, Path=GeodeticWgs84Text}" Foreground="White" Margin="4,2" 
+                                <RadioButton GroupName="A" ToolTip="{Binding ElementName=root, Path=Ltxt_srs_geodeticWgs84Title}" Foreground="White" Margin="4,2" 
                                      IsChecked="{Binding MapPanel.IsGeodeticWgs84EditingMode, Mode=TwoWay}" Width="Auto" Height="Auto"  
                                      HorizontalContentAlignment="Center" Style="{StaticResource simpleToggle}" >
 
@@ -331,7 +331,7 @@
                                 </RadioButton>-->
                                 <TextBlock DockPanel.Dock="Left" Margin="4"
                                             Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}"
-                                            Text="{Binding ElementName=root, Path=UtmZone}"/>
+                                            Text="{Binding ElementName=root, Path=Ltxt_srs_utmZone}"/>
                                 <TextBox DockPanel.Dock="Left" BorderThickness="1" FlowDirection="LeftToRight" MinWidth="30" Margin="2" VerticalAlignment="Center"
                                             Text="{Binding MapPanel.CurrentEditingZone, Mode=TwoWay}" MaxWidth="30"
                                             Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}">

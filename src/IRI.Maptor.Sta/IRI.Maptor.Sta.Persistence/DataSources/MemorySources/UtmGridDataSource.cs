@@ -41,25 +41,7 @@ public class UtmGridDataSource : VectorDataSource/*<UtmSheet>*/
     {
         return $"UtmGridDataSource {Type.GetName()}";
     }
-
-
-    // Get GeometryAwares [GENERIC]
-    //public List<UtmSheet> GetGeometryAwares(BoundingBox boundingBox)
-    //{
-    //    var geographicBoundingBox = boundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84);
-
-    //    return UtmIndexes.GetIndexSheets(geographicBoundingBox, Type, UtmZone);
-    //}
-
-    //public List<UtmSheet> GetGeometryAwares(Geometry<Point>? geometry)
-    //{
-    //    var geographicBoundingBox = geometry?.GetBoundingBox().Transform(MapProjects.WebMercatorToGeodeticWgs84) ?? GeodeticWgs84Extent;
-
-    //    return UtmIndexes.GetIndexSheets(geographicBoundingBox, Type, UtmZone)
-    //                        .Where(s => s.TheGeometry?.Intersects(geometry) == true)
-    //                        .ToList();
-    //}
-
+      
 
     // Get as FeatureSet of Point
     public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
@@ -121,81 +103,4 @@ public class UtmGridDataSource : VectorDataSource/*<UtmSheet>*/
 
         return result;
     }
-
-    #region Old code
-
-    //public override List<Geometry<Point>> GetGeometries(Geometry<Point> geometry)
-    //{
-    //    //var geographicBoundingBox = geometry.GetBoundingBox().Transform(MapProjects.WebMercatorToGeodeticWgs84);
-
-    //    //return MapIndexes.GetIndexLines(geographicBoundingBox, this.Type)
-    //    //        .Select(g => g.AsSqlGeometry().Transform(MapProjects.GeodeticWgs84ToWebMercator, SridHelper.WebMercator))
-    //    //        .ToList();
-
-    //    return GetGeometries(geometry.GetBoundingBox());
-    //}
-
-    //public override List<Geometry<Point>> GetGeometries(BoundingBox boundingBox)
-    //{
-    //    var geographicBoundingBox = boundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84);
-
-    //    return UtmIndexes.GetIndexLines(geographicBoundingBox, this.Type, UtmZone)
-    //           .Select(g => g.Transform(MapProjects.GeodeticWgs84ToWebMercator, SridHelper.WebMercator))
-    //           .ToList();
-    //}
-
-    //public override List<Geometry<Point>> GetGeometriesForDisplay(double mapScale, BoundingBox boundingBox)
-    //{
-    //    var geographicBoundingBox = boundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84);
-
-    //    return UtmIndexes.GetIndexLines(geographicBoundingBox, this.Type, UtmZone)
-    //           .Select(g => g.Transform(MapProjects.GeodeticWgs84ToWebMercator, SridHelper.WebMercator))
-    //           .ToList();
-    //}
-
-    //public override List<NamedGeometry> GetGeometryLabelPairs(Geometry<Point> geometry)
-    //{
-    //    var geographicBoundingBox = geometry.GetBoundingBox().Transform(MapProjects.WebMercatorToGeodeticWgs84);
-
-    //    return UtmIndexes.GetIndexSheets(geographicBoundingBox, this.Type, UtmZone)
-    //                   .Select(sheet => new NamedGeometry(sheet.TheGeometry, sheet.SheetName))
-    //                    .Where(s => s.TheGeometry?.Intersects(geometry) == true)
-    //                   .ToList();
-    //}
-
-    //public override List<UtmSheet> GetFeatures(Geometry<Point> geometry)
-    //{
-
-    //}
-
-
-    //public override FeatureSet<Point> GetSqlFeatures(Geometry<Point> geometry)
-    //{
-    //    var geographicBoundingBox = geometry.GetBoundingBox().Transform(MapProjects.WebMercatorToGeodeticWgs84);
-
-    //    var features = UtmIndexes.GetIndexSheets(geographicBoundingBox, this.Type, UtmZone)
-    //                        .Where(s => s.TheGeometry?.Intersects(geometry) == true)
-    //                        .Select(s => new Feature()
-    //                        {
-    //                            TheGeometry = s.TheGeometry,
-    //                            LabelAttribute = nameof(s.SheetName),
-    //                            Id = s.Id,
-    //                            Attributes = new Dictionary<string, object>()
-    //                            {
-    //                                {nameof(s.Column), s.Column},
-    //                                {nameof(s.Id), s.Id},
-    //                                {nameof(s.Row), s.Row},
-    //                                {nameof(s.SheetName), s.SheetName},
-    //                                {nameof(s.UtmZone), s.UtmZone},
-    //                                {nameof(s.Type), s.Type},
-    //                                {nameof(s.Row), s.Row},
-    //                            }
-    //                        })
-    //                        .ToList();
-
-    //    return new FeatureSet<Point>(features.Cast<Feature<Point>>().ToList());
-    //}
-
-
-    #endregion
 }

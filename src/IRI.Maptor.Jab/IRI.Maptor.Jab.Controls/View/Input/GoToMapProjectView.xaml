@@ -14,7 +14,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="{Binding ElementName=root, Path=UtmZoneLabel}" Margin="4" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding ElementName=root, Path=Ltxt_srs_utmZone}" Margin="4" VerticalAlignment="Center"/>
         <mahApp:NumericUpDown Grid.Column="1" HorizontalAlignment="Left" Margin="4" Minimum="0" Maximum="60" mahApp:TextBoxHelper.SelectAllOnFocus="True"
                               Value="{Binding UtmZone, Mode=TwoWay, StringFormat={}{0:00}}" MinWidth="75"/>
         

@@ -253,29 +253,41 @@
   <data name="dialog_goto_zoomTo" xml:space="preserve">
     <value>بزرگ‌نمایی</value>
   </data>
-  <data name="draw_addPointText" xml:space="preserve">
-    <value>افزودن نقطه</value>
+  <data name="dialog_symbology_fill" xml:space="preserve">
+    <value>رنگ سطح</value>
   </data>
-  <data name="draw_cancelDrawingText" xml:space="preserve">
-    <value>لغو ترسیم</value>
+  <data name="dialog_symbology_stroke" xml:space="preserve">
+    <value>رنگ مرز</value>
   </data>
-  <data name="draw_finishDrawingPartText" xml:space="preserve">
-    <value>تکمیل بخش</value>
+  <data name="dialog_symbology_strokeWidth" xml:space="preserve">
+    <value>ضخامت مرز</value>
   </data>
-  <data name="draw_finishDrawingText" xml:space="preserve">
-    <value>پایان ترسیم</value>
+  <data name="dialog_symbology_title" xml:space="preserve">
+    <value>سمبل لایه</value>
   </data>
-  <data name="draw_newDrawingText" xml:space="preserve">
-    <value>برای اتمام ترسیم روی نقطهٔ آخر مجدد کلیک کنید.</value>
-  </data>
-  <data name="mapPanel_currentPoint" xml:space="preserve">
+  <data name="mapPanel_header_currentPoint" xml:space="preserve">
     <value>نقطه جاری</value>
   </data>
-  <data name="mapPanel_multiPart" xml:space="preserve">
+  <data name="mapPanel_header_multiPart" xml:space="preserve">
     <value>عوارض چندتکه‌ای</value>
   </data>
-  <data name="mapPanel_srs" xml:space="preserve">
+  <data name="mapPanel_header_srs" xml:space="preserve">
     <value>سیستم مرجع مکانی</value>
+  </data>
+  <data name="map_draw_addPoint" xml:space="preserve">
+    <value>افزودن نقطه</value>
+  </data>
+  <data name="map_draw_cancelDrawing" xml:space="preserve">
+    <value>لغو ترسیم</value>
+  </data>
+  <data name="map_draw_finishDrawing" xml:space="preserve">
+    <value>پایان ترسیم</value>
+  </data>
+  <data name="map_draw_finishDrawingPart" xml:space="preserve">
+    <value>تکمیل بخش</value>
+  </data>
+  <data name="map_draw_newDrawing" xml:space="preserve">
+    <value>برای اتمام ترسیم روی نقطهٔ آخر مجدد کلیک کنید.</value>
   </data>
   <data name="srs_ceaSubTitle" xml:space="preserve">
     <value>ceaSubTitle</value>
@@ -337,18 +349,6 @@
   <data name="String1" xml:space="preserve">
     <value />
     <comment>Drawing Layer download google, bing, etc images</comment>
-  </data>
-  <data name="symbology_fillLabel" xml:space="preserve">
-    <value>رنگ سطح</value>
-  </data>
-  <data name="symbology_strokeLabel" xml:space="preserve">
-    <value>رنگ مرز</value>
-  </data>
-  <data name="symbology_strokeWidthLabel" xml:space="preserve">
-    <value>ضخامت مرز</value>
-  </data>
-  <data name="symbology_title" xml:space="preserve">
-    <value>سمبل لایه</value>
   </data>
   <data name="tile_mapType_BlackWhite" xml:space="preserve">
     <value>سیاه‌سفید</value>

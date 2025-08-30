@@ -18,11 +18,10 @@ public partial class GoToMapProjectView : NotifiableUserControl, IDisposable
 
     private void Instance_LanguageChanged()
     {
-        RaisePropertyChanged(nameof(UtmZoneLabel));
+        RaisePropertyChanged(nameof(Ltxt_srs_utmZone));
     }
 
-    public string UtmZoneLabel => LocalizationManager.Instance[LocalizationResourceKeys.srs_utmZone.ToString()];
-    //public string UtmZone { get; set; }
+    public string Ltxt_srs_utmZone => LocalizationManager.Instance[LocalizationResourceKeys.srs_utmZone.ToString()];
 
     #region IDispose
 

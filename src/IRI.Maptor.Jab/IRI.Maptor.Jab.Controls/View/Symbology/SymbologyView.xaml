@@ -5,7 +5,7 @@
                     x:Name="root"
                     WindowStyle="ToolWindow" ShowIconOnTitleBar="False" ShowInTaskbar="False"
                     FlowDirection="{Binding ElementName=root, Path=CurrentFlowDirection}" FontFamily="{StaticResource iranSans}"
-                    Title="{Binding ElementName=root, Path=WindowTitle}"  GlowBrush="{DynamicResource MahApps.Brushes.Accent}" ShowMaxRestoreButton="False" ShowMinButton="False"
+                    Title="{Binding ElementName=root, Path=Ltxt_dialog_symbology_title}"  GlowBrush="{DynamicResource MahApps.Brushes.Accent}" ShowMaxRestoreButton="False" ShowMinButton="False"
                     WindowTransitionsEnabled="False" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.Resources>
@@ -53,7 +53,7 @@
         </Grid.ColumnDefinitions>
         <mahApp:ColorPicker Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="4" FlowDirection="LeftToRight" Width="230"
                           SelectedColor="{Binding Symbology.Fill, Mode=TwoWay, Converter={StaticResource solidColorBrushToColorConverter}}"
-                          mahApp:TextBoxHelper.Watermark="{Binding ElementName=root, Path=FillLabel}"
+                          mahApp:TextBoxHelper.Watermark="{Binding ElementName=root, Path=Ltxt_dialog_symbology_fill}"
                           mahApp:TextBoxHelper.ClearTextButton="True"
                           mahApp:TextBoxHelper.UseFloatingWatermark="True"                            
                           mahApp:TextBoxHelper.WatermarkAlignment="Center"/>
@@ -70,7 +70,7 @@
 
         <mahApp:ColorPicker Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="4" FlowDirection="LeftToRight" Width="230"
                             SelectedColor="{Binding Symbology.Stroke, Mode=TwoWay, Converter={StaticResource solidColorBrushToColorConverter}}"
-                            mahApp:TextBoxHelper.Watermark="{Binding ElementName=root, Path=StrokeLabel}" 
+                            mahApp:TextBoxHelper.Watermark="{Binding ElementName=root, Path=Ltxt_dialog_symbology_stroke}" 
                             mahApp:TextBoxHelper.ClearTextButton="True" 
                             mahApp:TextBoxHelper.UseFloatingWatermark="True" 
                             mahApp:TextBoxHelper.WatermarkAlignment="Center"/>
@@ -85,7 +85,7 @@
             </Border>
         </Popup>-->
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding ElementName=root, Path=StrokeWidthLabel}" VerticalAlignment="Center" Margin="4"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding ElementName=root, Path=Ltxt_dialog_symbology_strokeWidth}" VerticalAlignment="Center" Margin="4"/>
         <mahApp:NumericUpDown Grid.Row="1" Grid.Column="1" HideUpDownButtons="True" Width="80" Margin="4" Minimum="0" 
                                 mahApp:TextBoxHelper.SelectAllOnFocus="True" Value="{Binding Symbology.StrokeThickness, Mode=TwoWay}"/>
  

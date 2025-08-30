@@ -448,47 +448,38 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add Point.
+        ///   Looks up a localized string similar to Fill.
         /// </summary>
-        public static string draw_addPointText {
+        public static string dialog_symbology_fill {
             get {
-                return ResourceManager.GetString("draw_addPointText", resourceCulture);
+                return ResourceManager.GetString("dialog_symbology_fill", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cancel Drawing.
+        ///   Looks up a localized string similar to Stroke.
         /// </summary>
-        public static string draw_cancelDrawingText {
+        public static string dialog_symbology_stroke {
             get {
-                return ResourceManager.GetString("draw_cancelDrawingText", resourceCulture);
+                return ResourceManager.GetString("dialog_symbology_stroke", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Finish Drawing Part.
+        ///   Looks up a localized string similar to Stroke width.
         /// </summary>
-        public static string draw_finishDrawingPartText {
+        public static string dialog_symbology_strokeWidth {
             get {
-                return ResourceManager.GetString("draw_finishDrawingPartText", resourceCulture);
+                return ResourceManager.GetString("dialog_symbology_strokeWidth", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Finish Drawing.
+        ///   Looks up a localized string similar to Layer Symbology.
         /// </summary>
-        public static string draw_finishDrawingText {
+        public static string dialog_symbology_title {
             get {
-                return ResourceManager.GetString("draw_finishDrawingText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Click on the last point to finish drawing..
-        /// </summary>
-        public static string draw_newDrawingText {
-            get {
-                return ResourceManager.GetString("draw_newDrawingText", resourceCulture);
+                return ResourceManager.GetString("dialog_symbology_title", resourceCulture);
             }
         }
         
@@ -503,29 +494,74 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Point.
+        /// </summary>
+        public static string map_draw_addPoint {
+            get {
+                return ResourceManager.GetString("map_draw_addPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel Drawing.
+        /// </summary>
+        public static string map_draw_cancelDrawing {
+            get {
+                return ResourceManager.GetString("map_draw_cancelDrawing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finish Drawing.
+        /// </summary>
+        public static string map_draw_finishDrawing {
+            get {
+                return ResourceManager.GetString("map_draw_finishDrawing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finish Drawing Part.
+        /// </summary>
+        public static string map_draw_finishDrawingPart {
+            get {
+                return ResourceManager.GetString("map_draw_finishDrawingPart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click on the last point to finish drawing..
+        /// </summary>
+        public static string map_draw_newDrawing {
+            get {
+                return ResourceManager.GetString("map_draw_newDrawing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current Point.
         /// </summary>
-        public static string mapPanel_currentPoint {
+        public static string mapPanel_header_currentPoint {
             get {
-                return ResourceManager.GetString("mapPanel_currentPoint", resourceCulture);
+                return ResourceManager.GetString("mapPanel_header_currentPoint", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Multi part.
         /// </summary>
-        public static string mapPanel_multiPart {
+        public static string mapPanel_header_multiPart {
             get {
-                return ResourceManager.GetString("mapPanel_multiPart", resourceCulture);
+                return ResourceManager.GetString("mapPanel_header_multiPart", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Spatial Reference System.
         /// </summary>
-        public static string mapPanel_srs {
+        public static string mapPanel_header_srs {
             get {
-                return ResourceManager.GetString("mapPanel_srs", resourceCulture);
+                return ResourceManager.GetString("mapPanel_header_srs", resourceCulture);
             }
         }
         
@@ -697,42 +733,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string srs_webMercatorTitle {
             get {
                 return ResourceManager.GetString("srs_webMercatorTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Fill.
-        /// </summary>
-        public static string symbology_fillLabel {
-            get {
-                return ResourceManager.GetString("symbology_fillLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Stroke.
-        /// </summary>
-        public static string symbology_strokeLabel {
-            get {
-                return ResourceManager.GetString("symbology_strokeLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Stroke width.
-        /// </summary>
-        public static string symbology_strokeWidthLabel {
-            get {
-                return ResourceManager.GetString("symbology_strokeWidthLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Layer Symbology.
-        /// </summary>
-        public static string symbology_title {
-            get {
-                return ResourceManager.GetString("symbology_title", resourceCulture);
             }
         }
         

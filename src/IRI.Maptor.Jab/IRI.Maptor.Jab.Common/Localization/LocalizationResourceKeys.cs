@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IRI.Maptor.Jab.Common.Localization;
+﻿namespace IRI.Maptor.Jab.Common.Localization;
 
 public enum LocalizationResourceKeys
 {
@@ -52,22 +46,24 @@ public enum LocalizationResourceKeys
     cmd_legend_toggleLayerLabel,
     cmd_legend_zoomToExtent,
 
-    draw_addPointText,
-    draw_cancelDrawingText,
-    draw_finishDrawingPartText,
-    draw_finishDrawingText,
-    draw_newDrawingText,
+    map_draw_addPoint,
+    map_draw_cancelDrawing,
+    map_draw_finishDrawingPart,
+    map_draw_finishDrawing,
+    map_draw_newDrawing,
 
     dialog_goto_title,
     dialog_goto_panTo,
     dialog_goto_zoomTo,
 
-    // todo: check if not used in future
-    //legend_symbologyExpanderHeaderText,
-
-    mapPanel_currentPoint,
-    mapPanel_multiPart,
-    mapPanel_srs,
+    dialog_symbology_title,
+    dialog_symbology_fill,
+    dialog_symbology_stroke,
+    dialog_symbology_strokeWidth,
+     
+    mapPanel_header_currentPoint,
+    mapPanel_header_multiPart,
+    mapPanel_header_srs,
 
     srs_ceaSubTitle,
     srs_ceaTitle,
@@ -88,11 +84,6 @@ public enum LocalizationResourceKeys
     srs_utmZone,
     srs_webMercatorTitle,
     srs_webMercatorSubTitle,
-
-    symbology_fillLabel,
-    symbology_strokeLabel,
-    symbology_strokeWidthLabel,
-    symbology_title,
 
     tile_provider_bing,
     tile_provider_carto,
@@ -120,31 +111,8 @@ public enum LocalizationResourceKeys
     tile_mapType_Watercolor,
     tile_mapType_Dark,
     tile_mapType_Comic,
-
-
+     
     ui_header_baseMaps,
     ui_header_drawingLegend,
     ui_header_layerLegend,
-
 }
-
-//public static class LocalizationResourceKeys
-//{
-//    public const string UtmZone = "srs_utmZone";
-
-//    public const string UtmTitle = "srs_utmTitle";
-
-//    public const string GeodeticWgs84Title = "srs_geodeticTitle";
-
-//    public const string Draw_NewDrawingText = "draw_newDrawingText";
-//    public const string Draw_CancelDrawingText = "draw_cancelDrawingText";
-//    public const string Draw_FinishDrawingText = "draw_finishDrawingText";
-//    public const string Draw_FinishDrawingPartText = "draw_finishDrawingPartText";
-//    public const string Draw_AddPointText = "draw_addPointText";
-
-//    public const string MapPanel_currentPoint = "mapPanel_currentPoint";
-//    public static LocalizationResourceKeys()
-//    {
-//        IRI.Maptor.Jab.Common.Properties.Resources.draw_addPointText
-//    }
-//}
