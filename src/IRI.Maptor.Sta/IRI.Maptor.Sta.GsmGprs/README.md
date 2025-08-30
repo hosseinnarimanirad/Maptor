@@ -1,4 +1,4 @@
-﻿\# 📡 IRI.Maptor.Sta.GsmGprs
+﻿# 📡 IRI.Maptor.Sta.GsmGprs
 
 
 
@@ -18,7 +18,7 @@ It provides high-level abstractions for \*\*AT commands\*\*, enabling developers
 
 
 
-\## ✨ Features
+## ✨ Features
 
 
 
@@ -40,7 +40,7 @@ It provides high-level abstractions for \*\*AT commands\*\*, enabling developers
 
 
 
-\## ⚙️ Installation
+## ⚙️ Installation
 
 
 
@@ -56,11 +56,11 @@ dotnet add package IRI.Maptor.Sta.GsmGprs
 
 
 
-\## 💻 Usage Examples
+## 💻 Usage Examples
 
 
 
-\### Example 1 – Connecting to GSM Modem
+### Example 1 – Connecting to GSM Modem
 
 ```csharp
 
@@ -84,7 +84,7 @@ Console.WriteLine("Connected to GSM modem.");
 
 
 
-\### Example 2 – Sending an SMS
+### Example 2 – Sending an SMS
 
 ```csharp
 
@@ -102,7 +102,7 @@ Console.WriteLine("SMS Sent successfully.");
 
 
 
-\### Example 3 – Receiving SMS
+### Example 3 – Receiving SMS
 
 ```csharp
 
@@ -122,7 +122,7 @@ gsm.SmsReceived += (sender, sms) =>
 
 
 
-\### Example 4 – Executing USSD Command
+### Example 4 – Executing USSD Command
 
 ```csharp
 
@@ -138,7 +138,7 @@ Console.WriteLine("USSD Response: " + response);
 
 
 
-\### Example 5 – Sending Raw AT Command
+### Example 5 – Sending Raw AT Command
 
 ```csharp
 
@@ -154,7 +154,7 @@ Console.WriteLine("Signal Strength: " + atResponse);
 
 
 
-\## 📂 Project Structure
+## 📂 Project Structure
 
 ```
 
@@ -180,7 +180,7 @@ IRI.Maptor.Sta.GsmGprs/
 
 
 
-\## 🤝 Contributing
+## 🤝 Contributing
 
 Contributions are welcome!  
 
@@ -192,7 +192,7 @@ Please include tests and documentation updates when submitting pull requests.
 
 
 
-\## 📜 License
+## 📜 License
 
 This project is licensed under the \[MIT License](LICENSE).
 
