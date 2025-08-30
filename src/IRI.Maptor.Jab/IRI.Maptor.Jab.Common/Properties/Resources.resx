@@ -117,29 +117,68 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="cmd_addShapefile" xml:space="preserve">
+  <data name="cmd_drawingLegend_addGeoJson" xml:space="preserve">
+    <value>Add GeoJson</value>
+  </data>
+  <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
+    <value>Add Lat/Long Text</value>
+  </data>
+  <data name="cmd_drawingLegend_addShapefile" xml:space="preserve">
     <value>Add Shapefile</value>
   </data>
-  <data name="cmd_addTextToMap" xml:space="preserve">
+  <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
+    <value>Move Down</value>
+  </data>
+  <data name="cmd_drawingLegend_moveUp" xml:space="preserve">
+    <value>Move Up</value>
+  </data>
+  <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
+    <value>Remove All</value>
+  </data>
+  <data name="cmd_general_addShapefile" xml:space="preserve">
+    <value>Add Shapefile</value>
+  </data>
+  <data name="cmd_general_addTextToMap" xml:space="preserve">
     <value>Add Text</value>
   </data>
-  <data name="cmd_clearAll" xml:space="preserve">
+  <data name="cmd_general_clearAll" xml:space="preserve">
     <value>Clear All</value>
   </data>
-  <data name="cmd_drawPoint" xml:space="preserve">
+  <data name="cmd_general_drawPoint" xml:space="preserve">
     <value>Draw Point</value>
   </data>
-  <data name="cmd_drawPolygon" xml:space="preserve">
+  <data name="cmd_general_drawPolygon" xml:space="preserve">
     <value>Draw Polygon</value>
   </data>
-  <data name="cmd_drawPolyline" xml:space="preserve">
+  <data name="cmd_general_drawPolyline" xml:space="preserve">
     <value>Draw Polyline</value>
   </data>
-  <data name="cmd_fullExtent" xml:space="preserve">
+  <data name="cmd_general_fullExtent" xml:space="preserve">
     <value>Full Extent</value>
   </data>
-  <data name="cmd_goTo" xml:space="preserve">
+  <data name="cmd_general_goTo" xml:space="preserve">
     <value>Go To</value>
+  </data>
+  <data name="cmd_general_measureArea" xml:space="preserve">
+    <value>Measure Area</value>
+  </data>
+  <data name="cmd_general_measureLength" xml:space="preserve">
+    <value>Measure Length</value>
+  </data>
+  <data name="cmd_general_pan" xml:space="preserve">
+    <value>Pan</value>
+  </data>
+  <data name="cmd_general_zoomIn" xml:space="preserve">
+    <value>Zoom In</value>
+  </data>
+  <data name="cmd_general_zoomNext" xml:space="preserve">
+    <value>Zoom Next</value>
+  </data>
+  <data name="cmd_general_zoomOut" xml:space="preserve">
+    <value>Zoom out</value>
+  </data>
+  <data name="cmd_general_zoomPrevious" xml:space="preserve">
+    <value>Zoom Previous</value>
   </data>
   <data name="cmd_legend_boundary" xml:space="preserve">
     <value>Boundary</value>
@@ -206,11 +245,14 @@
   <data name="cmd_legend_zoomToExtent" xml:space="preserve">
     <value>Zoom To Extent</value>
   </data>
-  <data name="cmd_measureArea" xml:space="preserve">
-    <value>Measure Area</value>
+  <data name="dialog_goto_panTo" xml:space="preserve">
+    <value>Pan to</value>
   </data>
-  <data name="cmd_measureLength" xml:space="preserve">
-    <value>Measure Length</value>
+  <data name="dialog_goto_title" xml:space="preserve">
+    <value>Go To</value>
+  </data>
+  <data name="dialog_goto_zoomTo" xml:space="preserve">
+    <value>Zoom to</value>
   </data>
   <data name="draw_addPointText" xml:space="preserve">
     <value>Add Point</value>
@@ -227,15 +269,9 @@
   <data name="draw_newDrawingText" xml:space="preserve">
     <value>Click on the last point to finish drawing.</value>
   </data>
-  <data name="goto_dialogTitle" xml:space="preserve">
-    <value>Go To</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="imageNotFound" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Assets\Images\imageNotFound.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="legend_symbologyExpanderHeaderText" xml:space="preserve">
-    <value>Symbology</value>
   </data>
   <data name="mapPanel_currentPoint" xml:space="preserve">
     <value>Current Point</value>
@@ -245,12 +281,6 @@
   </data>
   <data name="mapPanel_srs" xml:space="preserve">
     <value>Spatial Reference System</value>
-  </data>
-  <data name="map_pan" xml:space="preserve">
-    <value>Pan</value>
-  </data>
-  <data name="map_zoomTo" xml:space="preserve">
-    <value>Zoom To</value>
   </data>
   <data name="srs_ceaSubTitle" xml:space="preserve">
     <value>Cylindrical Equal Area</value>
@@ -416,24 +446,6 @@
   </data>
   <data name="tile_provider_yandex" xml:space="preserve">
     <value>YANDEX</value>
-  </data>
-  <data name="ui_drawingLegend_addGeoJson" xml:space="preserve">
-    <value>Add GeoJson</value>
-  </data>
-  <data name="ui_drawingLegend_addLatLongTxt" xml:space="preserve">
-    <value>Add Lat/Long Text</value>
-  </data>
-  <data name="ui_drawingLegend_addShapefile" xml:space="preserve">
-    <value>Add Shapefile</value>
-  </data>
-  <data name="ui_drawingLegend_moveDown" xml:space="preserve">
-    <value>Move Down</value>
-  </data>
-  <data name="ui_drawingLegend_moveUp" xml:space="preserve">
-    <value>Move Up</value>
-  </data>
-  <data name="ui_drawingLegend_removeAll" xml:space="preserve">
-    <value>Remove All</value>
   </data>
   <data name="ui_header_baseMaps" xml:space="preserve">
     <value>Base Maps</value>

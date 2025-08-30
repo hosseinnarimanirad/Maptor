@@ -29,11 +29,11 @@ public partial class GoToMetroWindow : MetroWindow, IDisposable, INotifyProperty
 
     private void Instance_LanguageChanged()
     {
-        RaisePropertyChanged(nameof(WindowTitle));
+        RaisePropertyChanged(nameof(Ltxt_dialog_goto_title));
         RaisePropertyChanged(nameof(CurrentFlowDirection));
     }
 
-    public string WindowTitle => LocalizationManager.Instance[LocalizationResourceKeys.goto_dialogTitle.ToString()];
+    public string Ltxt_dialog_goto_title => LocalizationManager.Instance[LocalizationResourceKeys.dialog_goto_title.ToString()];
 
     #region INotifyPropertyChanged
 

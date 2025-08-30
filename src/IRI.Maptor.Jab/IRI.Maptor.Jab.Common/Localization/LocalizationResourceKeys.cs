@@ -8,6 +8,30 @@ namespace IRI.Maptor.Jab.Common.Localization;
 
 public enum LocalizationResourceKeys
 {
+    cmd_drawingLegend_addGeoJson,
+    cmd_drawingLegend_addLatLongTxt,
+    cmd_drawingLegend_addShapefile,
+    cmd_drawingLegend_moveDown,
+    cmd_drawingLegend_moveUp,
+    cmd_drawingLegend_removeAll,
+
+    cmd_general_addShapefile,
+    cmd_general_addTextToMap,
+    cmd_general_clearAll,
+    cmd_general_drawPoint,
+    cmd_general_drawPolygon,
+    cmd_general_drawPolyline,
+    cmd_general_fullExtent,
+    cmd_general_goTo,
+    cmd_general_measureArea,
+    cmd_general_measureLength,
+
+    cmd_general_pan,
+    cmd_general_zoomIn,
+    cmd_general_zoomOut,
+    cmd_general_zoomPrevious,
+    cmd_general_zoomNext,
+
     cmd_legend_boundary,
     cmd_legend_breakIntoGeometries,
     cmd_legend_breakIntoPoints,
@@ -34,13 +58,12 @@ public enum LocalizationResourceKeys
     draw_finishDrawingText,
     draw_newDrawingText,
 
-    goto_dialogTitle,
+    dialog_goto_title,
+    dialog_goto_panTo,
+    dialog_goto_zoomTo,
 
     // todo: check if not used in future
-    legend_symbologyExpanderHeaderText,
-
-    map_pan,
-    map_zoomTo,
+    //legend_symbologyExpanderHeaderText,
 
     mapPanel_currentPoint,
     mapPanel_multiPart,
@@ -99,28 +122,10 @@ public enum LocalizationResourceKeys
     tile_mapType_Comic,
 
 
-    cmd_addShapefile,
-    cmd_addTextToMap,
-
     ui_header_baseMaps,
-
-    cmd_clearAll,
     ui_header_drawingLegend,
-    cmd_drawPoint,
-    cmd_drawPolygon,
-    cmd_drawPolyline,
-    cmd_fullExtent,
-    cmd_goTo,
     ui_header_layerLegend,
-    cmd_measureArea,
-    cmd_measureLength,
 
-    ui_drawingLegend_removeAll,
-    ui_drawingLegend_addGeoJson,
-    ui_drawingLegend_addShapefile,
-    ui_drawingLegend_addLatLongTxt,
-    ui_drawingLegend_moveDown,
-    ui_drawingLegend_moveUp
 }
 
 //public static class LocalizationResourceKeys

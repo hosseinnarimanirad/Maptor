@@ -79,12 +79,12 @@ public partial class MapDrawingLegendView : NotifiableUserControl, IDisposable
 
 
 
-    public string RemoveAllDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.ui_drawingLegend_removeAll.ToString()];
-    public string AddGeoJsonToDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.ui_drawingLegend_addGeoJson.ToString()];
-    public string AddLongLatTxtToDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.ui_drawingLegend_addLatLongTxt.ToString()];
-    public string AddShapefileToDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.ui_drawingLegend_addShapefile.ToString()];
-    public string MoveDrawingItemDownLabel => LocalizationManager.Instance[LocalizationResourceKeys.ui_drawingLegend_moveDown.ToString()];
-    public string MoveDrawingItemUpLabel => LocalizationManager.Instance[LocalizationResourceKeys.ui_drawingLegend_moveUp.ToString()];
+    public string RemoveAllDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_removeAll.ToString()];
+    public string AddGeoJsonToDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_addGeoJson.ToString()];
+    public string AddLongLatTxtToDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_addLatLongTxt.ToString()];
+    public string AddShapefileToDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_addShapefile.ToString()];
+    public string MoveDrawingItemDownLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_moveDown.ToString()];
+    public string MoveDrawingItemUpLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_moveUp.ToString()];
 
     #region IDispose
 
