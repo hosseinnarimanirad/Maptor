@@ -1,4 +1,4 @@
-﻿<userControl:NotifiableUserControl x:Class="IRI.Maptor.Jab.Controls.View.GoToGeodeticView"
+﻿<userControl:LocalizedUserControl x:Class="IRI.Maptor.Jab.Controls.View.GoToGeodeticView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
@@ -30,4 +30,4 @@
                  mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
        
     </Grid> 
-</userControl:NotifiableUserControl>
+</userControl:LocalizedUserControl>

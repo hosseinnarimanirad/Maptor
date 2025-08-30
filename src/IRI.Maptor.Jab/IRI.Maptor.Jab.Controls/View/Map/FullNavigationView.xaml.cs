@@ -1,30 +1,20 @@
-﻿using IRI.Maptor.Jab.Common.Events;
-using System;
-using System.ComponentModel;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
+
+using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Common.Events;
 
 namespace IRI.Maptor.Jab.Controls.View;
 
 /// <summary>
 /// Interaction logic for FullNavigationView.xaml
 /// </summary>
-public partial class FullNavigationView : UserControl, INotifyPropertyChanged
-{
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    protected void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+public partial class FullNavigationView : NotifiableUserControl
+{ 
 
     private static readonly double panStep = 40;
-
-    //Dictionary<double, double> zoomLevels;
-
-    //IRI.MapViewer.MapViewer mapViewer;
-
+     
     public event MouseButtonEventHandler OnMoveLeft;
 
     public event MouseButtonEventHandler OnMoveRight;
@@ -36,12 +26,7 @@ public partial class FullNavigationView : UserControl, INotifyPropertyChanged
     public event MouseButtonEventHandler OnZoomIn;
 
     public event MouseButtonEventHandler OnZoomOut;
-
-
-    //public event IRI.Maptor.Jab.Common.ZoomEventHandler OnZoomChanged;
-
-    //public event IRI.Maptor.Jab.Common.PanEventHandler OnPanTriggered;
-
+     
     public event EventHandler<ZoomEventArgs> OnZoomChanged;
 
     public event EventHandler<PanEventArgs> OnPanTriggered;
@@ -134,12 +119,7 @@ public partial class FullNavigationView : UserControl, INotifyPropertyChanged
         //this.zoom.Value--;
         this.ZoomLevel = this.ZoomLevel - 1;
     }
-
-    //public double ZoomLevel
-    //{
-    //    get { return this.zoom.Value; }
-    //}
-
+     
     public double ZoomLevel
     {
         get { return (double)GetValue(ZoomLevelProperty); }
@@ -152,7 +132,7 @@ public partial class FullNavigationView : UserControl, INotifyPropertyChanged
 
             SetValue(ZoomLevelProperty, value);
 
-            OnPropertyChanged(nameof(ZoomLevel));
+            RaisePropertyChanged(nameof(ZoomLevel));
             //this.zoom.Value = value;
         }
     }

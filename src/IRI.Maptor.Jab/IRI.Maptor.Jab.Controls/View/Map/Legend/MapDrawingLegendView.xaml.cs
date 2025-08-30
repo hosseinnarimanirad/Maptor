@@ -11,16 +11,16 @@ namespace IRI.Maptor.Jab.Controls.View;
 /// <summary>
 /// Interaction logic for MapDrawingLegendView.xaml
 /// </summary>
-public partial class MapDrawingLegendView : NotifiableUserControl, IDisposable
+public partial class MapDrawingLegendView : LocalizedUserControl
 {
-    public MapDrawingLegendView()
+    public MapDrawingLegendView():base()
     {
         InitializeComponent();
 
-        LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
+        //LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
 
-    private void Instance_LanguageChanged()
+    protected override void Instance_LanguageChanged()
     {
         RaisePropertyChanged(nameof(RemoveAllDrawingItemsLabel));
         RaisePropertyChanged(nameof(AddGeoJsonToDrawingItemsLabel));
@@ -86,30 +86,30 @@ public partial class MapDrawingLegendView : NotifiableUserControl, IDisposable
     public string MoveDrawingItemDownLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_moveDown.ToString()];
     public string MoveDrawingItemUpLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_moveUp.ToString()];
 
-    #region IDispose
+    //#region IDispose
 
-    private bool _disposed = false;
+    //private bool _disposed = false;
 
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                // Dispose managed resources
-                LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
-            }
+    //protected virtual void Dispose(bool disposing)
+    //{
+    //    if (!_disposed)
+    //    {
+    //        if (disposing)
+    //        {
+    //            // Dispose managed resources
+    //            LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
+    //        }
 
-            // Dispose unmanaged resources here if any
-            _disposed = true;
-        }
-    }
+    //        // Dispose unmanaged resources here if any
+    //        _disposed = true;
+    //    }
+    //}
 
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
+    //public void Dispose()
+    //{
+    //    Dispose(true);
+    //    GC.SuppressFinalize(this);
+    //}
 
-    #endregion
+    //#endregion
 }

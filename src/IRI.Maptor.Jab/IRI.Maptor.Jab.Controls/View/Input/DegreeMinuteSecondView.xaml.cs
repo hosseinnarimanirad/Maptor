@@ -77,32 +77,5 @@ public partial class DegreeMinuteSecondView : NotifiableUserControl/*, IDisposab
             RaisePropertyChanged();
         }
     }
-
      
-    //#region IDispose
-
-    //private bool _disposed = false;
-
-    //protected virtual void Dispose(bool disposing)
-    //{
-    //    if (!_disposed)
-    //    {
-    //        if (disposing)
-    //        {
-    //            // Dispose managed resources
-    //            LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
-    //        }
-
-    //        // Dispose unmanaged resources here if any
-    //        _disposed = true;
-    //    }
-    //}
-
-    //public void Dispose()
-    //{
-    //    Dispose(true);
-    //    GC.SuppressFinalize(this);
-    //}
-
-    //#endregion
 }

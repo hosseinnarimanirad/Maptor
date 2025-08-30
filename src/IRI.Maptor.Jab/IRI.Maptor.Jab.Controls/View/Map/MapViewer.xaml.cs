@@ -2,69 +2,66 @@
 // ALLAHOMAAJJELLEVALIEKALFARAJ
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
+using System.Net.Http;
+using System.Threading;
+using System.Diagnostics;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Windows.Media.Animation;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Windows.Threading;
 using System.Threading.Tasks;
-using System.Threading;
-using System.Net.Http;
+using System.Windows.Controls;
+using System.Windows.Threading;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows.Media.Animation;
 
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Controls.Model;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Services;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Persistence.DataSources;
-using IRI.Maptor.Jab.Controls.Model;
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.TileServices;
+using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Jab.Common.Models.Spatialable;
 
-using sb = IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Persistence.RasterDataSources;
 using IRI.Maptor.Sta.Common.Enums;
-using IRI.Maptor.Jab.Common.Assets.Data;
+using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Sta.Spatial.Helpers;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Sta.Persistence.Abstractions;
-using IRI.Maptor.Jab.Common.Cartography.Symbologies;
-using IRI.Maptor.Jab.Common.Presenters;
-using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Sta.Spatial.Analysis;
+using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.Assets.Data;
+using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.RasterDataSources;
 using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
-using IRI.Maptor.Sta.Ogc.WMS;
+
+using sb = IRI.Maptor.Sta.Common.Primitives;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
 namespace IRI.Maptor.Jab.Controls.View;
 
-public partial class MapViewer : UserControl, INotifyPropertyChanged
+public partial class MapViewer : NotifiableUserControl
 {
-    #region INotifyPropertyChanged
+    //#region INotifyPropertyChanged
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    //public event PropertyChangedEventHandler PropertyChanged;
 
-    protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChangedEventHandler handler = PropertyChanged;
+    //protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+    //{
+    //    PropertyChangedEventHandler handler = PropertyChanged;
 
-        if (handler != null)
-            handler(this, new PropertyChangedEventArgs(propertyName));
-    }
+    //    if (handler != null)
+    //        handler(this, new PropertyChangedEventArgs(propertyName));
+    //}
 
-    #endregion
+    //#endregion
 
 
     #region Debugging
@@ -87,7 +84,7 @@ public partial class MapViewer : UserControl, INotifyPropertyChanged
     #endregion
 
 
-    #region events
+    #region Events
 
     public event MouseEventHandler OnMapMouseMove;
 
