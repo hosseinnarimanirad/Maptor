@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IRI.Maptor.Sta.Spatial.Model;
+using IRI.Maptor.Jab.Common.Events;
 
 namespace IRI.Maptor.Jab.Controls.Model;
 

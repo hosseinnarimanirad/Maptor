@@ -1,5 +1,5 @@
-﻿// besmellahe rahmane rahim
-// Allahomma ajjel le-valiyek al-faraj
+﻿// BESMELLAHE RAHMANE RAHIM
+// ALLAHOMMA AJJEL LE-VALIYEK AL-FARAJ
 
 using System;
 using System.Collections.Generic; 
@@ -31,8 +31,7 @@ public class DepthFirstSearch<TNode, TWeight>
     {
         get { return backEdges.Count > 0; }
     }
-
-    //SortedList<TNode, NodeInfo<TNode, TimeStamp>> labels;
+     
     SortedList<TNode, FastDepthFirstSearchNode<TNode>> labels;
 
     TNode startNode;

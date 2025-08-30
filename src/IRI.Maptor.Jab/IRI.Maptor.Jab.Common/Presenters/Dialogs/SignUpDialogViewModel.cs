@@ -1,14 +1,9 @@
-﻿using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Model.Security;
-using IRI.Maptor.Sta.Common.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace IRI.Maptor.Jab.Common.ViewModel.Dialogs;
+using IRI.Maptor.Jab.Common.Assets.Commands;
+using IRI.Maptor.Jab.Common.Models.Security;
+
+namespace IRI.Maptor.Jab.Common.Presenters;
 
 public class SignUpDialogViewModel : DialogViewModelBase
 {
@@ -70,7 +65,7 @@ public class SignUpDialogViewModel : DialogViewModelBase
     {
         //this.Model = new SimpleUserEmailPasswordModel();
 
-        this.RequestClose = requestClose;
+        RequestClose = requestClose;
     }
 
     private RelayCommand _signUpCommand;
@@ -97,15 +92,15 @@ public class SignUpDialogViewModel : DialogViewModelBase
                         return;
                     }
 
-                    this.Model = new SimpleUserEmailPasswordModel(model.NewPassword) { UserNameOrEmail = model.UserNameOrEmail };
+                    Model = new SimpleUserEmailPasswordModel(model.NewPassword) { UserNameOrEmail = model.UserNameOrEmail };
 
                     //this.Model.UserName = model.UserNameOrEmail;
 
                     //this.Model.Password = SecureStringHelper.GetString(model.NewPassword);
 
-                    this.IsOk = true;
+                    IsOk = true;
 
-                    this.RequestClose?.Invoke();
+                    RequestClose?.Invoke();
                 });
             }
 
@@ -124,9 +119,9 @@ public class SignUpDialogViewModel : DialogViewModelBase
             {
                 _cancelCommand = new RelayCommand(param =>
                 {
-                    this.IsOk = false;
+                    IsOk = false;
 
-                    this.RequestClose?.Invoke();
+                    RequestClose?.Invoke();
                 });
             }
 

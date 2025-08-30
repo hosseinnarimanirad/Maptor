@@ -1,17 +1,16 @@
 ﻿using System;
-using IRI.Maptor.Jab.Common.Enums;
-using IRI.Maptor.Jab.Common.Model;
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Jab.Common;
 
 public class GroupLayer : BaseLayer
 {
-    public override LayerType Type { get => LayerType.GroupLayer; protected set => throw new NotImplementedException(); }
+    public override LayerType Type => LayerType.GroupLayer;
 
     public override BoundingBox Extent { get => BoundingBox.NaN; protected set => throw new NotImplementedException(); }
 
-    public override RenderingApproach Rendering { get => RenderingApproach.Default; protected set => throw new NotImplementedException(); }
+    //public override RenderingApproach Rendering { get => RenderingApproach.Default; protected set => throw new NotImplementedException(); }
 
     public GroupLayer(string title)
     {
@@ -25,7 +24,7 @@ public class GroupLayer : BaseLayer
 
         this.ShowInToc = true;
 
-        this.VisualParameters.Visibility = System.Windows.Visibility.Collapsed;
+        this.Visibility = System.Windows.Visibility.Collapsed;
     }
 
     public void AddSubLayer(ILayer layer)

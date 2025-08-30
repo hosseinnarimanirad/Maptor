@@ -5,25 +5,27 @@ using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Input;
-using IRI.Maptor.Jab.Common.Model;
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Abstractions;
-using IRI.Maptor.Jab.Common.Model.DataStructure;
+using IRI.Maptor.Jab.Common.Models.DataStructure;
 
 using WpfPoint = System.Windows.Point;
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 using LineSegment = System.Windows.Media.LineSegment;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Jab.Common.Enums;
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Sta.Spatial.Analysis;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 namespace IRI.Maptor.Jab.Common;
 
-public class EditableFeatureLayer : BaseLayer
+public class EditableFeatureLayer : SymbolizableLayer
 {
     //static readonly Brush _stroke = BrushHelper.FromHex("#FF1CA1E2");
     //static readonly Brush _fill = BrushHelper.FromHex("#661CA1E2");
@@ -33,7 +35,7 @@ public class EditableFeatureLayer : BaseLayer
     string _cancel = "لغو";
     string _displayCoordinates = "نمایش مختصات";
 
-    public Model.EditableFeatureLayerOptions Options { get; }
+    public EditableFeatureLayerOptions Options { get; }
 
     private Geometry _webMercatorGeometry;
 
@@ -107,42 +109,19 @@ public class EditableFeatureLayer : BaseLayer
 
     public override BoundingBox Extent
     {
-        get
-        {
-            return _webMercatorGeometry.GetBoundingBox();
-        }
+        get => _webMercatorGeometry.GetBoundingBox();
 
-        protected set
-        {
-            throw new NotImplementedException();
-        }
+        protected set => throw new NotImplementedException();
     }
 
-    public override RenderingApproach Rendering
-    {
-        get
-        {
-            return RenderingApproach.Default;
-        }
+    //public override RenderingApproach Rendering
+    //{
+    //    get => RenderingApproach.Default;
 
-        protected set
-        {
-            throw new NotImplementedException();
-        }
-    }
+    //    protected set => throw new NotImplementedException();
+    //}
 
-    public override LayerType Type
-    {
-        get
-        {
-            return LayerType.EditableItem;
-        }
-
-        protected set
-        {
-            throw new NotImplementedException();
-        }
-    }
+    public override LayerType Type => LayerType.EditableItem;
 
     private WpfPoint ToScreen(WpfPoint point)
     {
@@ -156,7 +135,7 @@ public class EditableFeatureLayer : BaseLayer
     /// <param name="name"></param>
     /// <param name="mercatorPoints"></param>
     /// <param name="isClosed"></param>
-    public EditableFeatureLayer(string name, List<Point> mercatorPoints, Transform toScreen, Func<double, double> screenToMap, GeometryType type, Model.EditableFeatureLayerOptions options = null)
+    public EditableFeatureLayer(string name, List<Point> mercatorPoints, Transform toScreen, Func<double, double> screenToMap, GeometryType type, EditableFeatureLayerOptions options = null)
         : this(name, Geometry.Create(mercatorPoints/*.Cast<IPoint>().ToArray()*/, type, SridHelper.WebMercator), toScreen, screenToMap, options)
     {
 
@@ -168,16 +147,12 @@ public class EditableFeatureLayer : BaseLayer
     /// <param name="name"></param>
     /// <param name="mercatorPoints"></param>
     /// <param name="isClosed"></param>
-    public EditableFeatureLayer(string name, Geometry mercatorGeometry, Transform toScreen, Func<double, double> screenToMap, Model.EditableFeatureLayerOptions options = null)
+    public EditableFeatureLayer(string name, Geometry mercatorGeometry, Transform toScreen, Func<double, double> screenToMap, EditableFeatureLayerOptions options = null)
     {
         //this._isNewDrawingMode = isNewDrawing;
-        this.Options = options ?? Model.EditableFeatureLayerOptions.CreateDefault();
+        this.Options = options ?? EditableFeatureLayerOptions.CreateDefault();
 
-        this.Options.RequestHandleIsEdgeLabelVisibleChanged = () =>
-        {
-            //what if editable feature layer was already removed from map?
-            UpdateEdgeLables();
-        };
+        this.Options.RequestHandleIsEdgeLabelVisibleChanged = UpdateEdgeLables;
 
         this.LayerName = name;
 
@@ -189,10 +164,11 @@ public class EditableFeatureLayer : BaseLayer
 
         this._screenToMap = screenToMap;
 
-        this.VisibleRange = ScaleInterval.All;
+        VisibleRange = ScaleInterval.All;
 
         //this.VisualParameters = new VisualParameters(_mercatorGeometry.IsRingBase() ? _fill : null, _stroke, 3, 1);
-        this.VisualParameters = Options.Visual;
+        //this.VisualParameters = Options.Visual;
+        this.SetSymbolizer(new SimpleSymbolizer(Options.Visual));
 
 
         this._feature = GetDefaultEditingPath();
@@ -356,7 +332,7 @@ public class EditableFeatureLayer : BaseLayer
 
             var offset = _screenToMap(20);
 
-            _edgeLabelLayer.Items.Add(new Locateable(Model.AncherFunctionHandlers.BottomCenter)
+            _edgeLabelLayer.Items.Add(new Locateable(AncherFunctionHandlers.BottomCenter)
             {
                 Element = element,
                 X = point.X + offset,
@@ -505,7 +481,7 @@ public class EditableFeatureLayer : BaseLayer
 
         var element = Options.MakePrimaryVertex();
 
-        var locateable = new Locateable(Model.AncherFunctionHandlers.CenterCenter)
+        var locateable = new Locateable(AncherFunctionHandlers.CenterCenter)
         {
             Element = element,
             X = webMercatorPoint.X,
@@ -526,7 +502,7 @@ public class EditableFeatureLayer : BaseLayer
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
-                    this.OnRequestFinishDrawing.SafeInvoke(this);
+                    this.OnRequestFinishDrawing?.Invoke(this, EventArgs.Empty);
 
                     e.Handled = true;
                 }
@@ -566,7 +542,7 @@ public class EditableFeatureLayer : BaseLayer
         //var element = new View.MapMarkers.Circle(.6);
         var element = Options.MakeSecondaryVertex();
 
-        var locateable = new Locateable(Model.AncherFunctionHandlers.CenterCenter) { Element = element, X = webMercatorPoint.X, Y = webMercatorPoint.Y };
+        var locateable = new Locateable(AncherFunctionHandlers.CenterCenter) { Element = element, X = webMercatorPoint.X, Y = webMercatorPoint.Y };
 
         element.MouseLeftButtonDown += (sender, e) =>
         {
@@ -585,7 +561,7 @@ public class EditableFeatureLayer : BaseLayer
 
     private void RegisterMapOptionsForVertices(MouseButtonEventArgs e, IPoint point, Locateable locateable)
     {
-        var presenter = new Jab.Common.Presenters.MapOptions.MapOptionsPresenter(
+        var presenter = new MapOptionsPresenter(
             rightToolTip: _copy,
             leftToolTip: _displayCoordinates,
             middleToolTip: _delete,
@@ -594,9 +570,9 @@ public class EditableFeatureLayer : BaseLayer
             //leftSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.CustomShapes.xY,
             //middleSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarDelete);
 
-            rightSymbol:  MahApps.Metro.IconPacks.PackIconModernKind.PageCopy,
-            leftSymbol:  MahApps.Metro.IconPacks.PackIconModernKind.AxisXy,
-            middleSymbol:  MahApps.Metro.IconPacks.PackIconModernKind.Delete);
+            rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.PageCopy,
+            leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.AxisXy,
+            middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Delete);
 
         presenter.RightCommandAction = i =>
         {
@@ -618,7 +594,7 @@ public class EditableFeatureLayer : BaseLayer
             {
                 var element = new View.MapMarkers.CoordinateMarker(locateable.X, locateable.Y);
 
-                var auxLocateable = new Locateable(Model.AncherFunctionHandlers.CenterLeft) { Element = element, X = point.X, Y = point.Y, Id = locateable.Id };
+                var auxLocateable = new Locateable(AncherFunctionHandlers.CenterLeft) { Element = element, X = point.X, Y = point.Y, Id = locateable.Id };
 
                 _primaryVerticesLabelLayer.Items.Add(auxLocateable);
             }
@@ -666,7 +642,7 @@ public class EditableFeatureLayer : BaseLayer
 
     private void RegisterMapOptionsForEditPath(MouseButtonEventArgs e)
     {
-        var presenter = new Jab.Common.Presenters.MapOptions.MapOptionsPresenter(
+        var presenter = new MapOptionsPresenter(
             leftToolTip: _cancel,
             rightToolTip: _finish,
             middleToolTip: _delete,
@@ -675,9 +651,9 @@ public class EditableFeatureLayer : BaseLayer
             //rightSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarCheck,
             //middleSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarDelete);
 
-            leftSymbol:  MahApps.Metro.IconPacks.PackIconModernKind.Close,
-            rightSymbol:  MahApps.Metro.IconPacks.PackIconModernKind.Check,
-            middleSymbol:  MahApps.Metro.IconPacks.PackIconModernKind.Delete);
+            leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Close,
+            rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Check,
+            middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Delete);
 
         presenter.RightCommandAction = i =>
         {
@@ -1001,11 +977,11 @@ public class EditableFeatureLayer : BaseLayer
 
         var edge = new LineSegment<Point>(first, second);
 
-        var element = new View.MapMarkers.RectangleLabelMarker(edge.GetLengthLabel(toGeodeticWgs84));
+        var element = new View.MapMarkers.RectangleLabelMarker(SpatialUtility.GetLengthLabel(edge, toGeodeticWgs84));
 
         //var offset = _screenToMap(15);
 
-        return new Locateable(Model.AncherFunctionHandlers.BottomCenter) { Element = element, X = edge.Middle.X, Y = edge.Middle.Y };
+        return new Locateable(AncherFunctionHandlers.BottomCenter) { Element = element, X = edge.Middle.X, Y = edge.Middle.Y };
     }
 
     #endregion
@@ -1020,22 +996,22 @@ public class EditableFeatureLayer : BaseLayer
 
     public double MeasureValue
     {
-        get { return _webMercatorGeometry.GetMeasure(MapProjects.WebMercatorToGeodeticWgs84); }
+        get { return SpatialUtility.GetMeasure(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84); }
     }
 
     public string MeasureLabel
     {
-        get { return _webMercatorGeometry.GetMeasureLabel(MapProjects.WebMercatorToGeodeticWgs84); }
+        get { return SpatialUtility.GetMeasureLabel(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84); }
     }
 
     public string AreaLabel
     {
-        get { return UnitHelper.GetAreaLabel(_webMercatorGeometry.GetTrueArea(MapProjects.WebMercatorToGeodeticWgs84)); }
+        get { return UnitHelper.GetAreaLabel(SpatialUtility.CalculateGroundArea(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84)); }
     }
 
     public string LengthLabel
     {
-        get { return UnitHelper.GetAreaLabel(_webMercatorGeometry.GetLength(MapProjects.WebMercatorToGeodeticWgs84)); }
+        get { return UnitHelper.GetAreaLabel(_webMercatorGeometry.CalculateGroundLength(MapProjects.WebMercatorToGeodeticWgs84)); }
     }
 
     public Path GetPath(Transform transform)

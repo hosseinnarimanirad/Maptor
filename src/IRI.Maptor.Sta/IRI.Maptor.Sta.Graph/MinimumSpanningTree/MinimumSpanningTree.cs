@@ -1,5 +1,5 @@
-﻿// besmellahe rahmane rahim
-// Allahomma ajjel le-valiyek al-faraj
+﻿// BESMELLAHE RAHMANE RAHIM
+// ALLAHOMMA AJJEL LE-VALIYEK AL-FARAJ
 
 using IRI.Maptor.Sta.DataStructures.CustomStructures;
 using System;

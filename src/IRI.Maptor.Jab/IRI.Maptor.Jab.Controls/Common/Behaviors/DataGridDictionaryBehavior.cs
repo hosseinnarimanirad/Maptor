@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Jab.Common.Model.Map;
+﻿using IRI.Maptor.Jab.Common.Models.Map;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using System.Collections;
 using System.Collections.Generic;

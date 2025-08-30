@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-//using Microsoft.SqlServer.Types;
 
 namespace IRI.Maptor.Jab.Controls.View;
 

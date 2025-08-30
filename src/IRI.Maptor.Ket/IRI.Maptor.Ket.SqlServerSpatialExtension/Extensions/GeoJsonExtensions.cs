@@ -11,11 +11,7 @@ namespace IRI.Maptor.Extensions;
 public static class GeoJsonExtensions
 {
     const int minimumPolygonPoints = 3;
-    //public static ShapefileFormat.EsriType.IShape ParseToSqlGeometry(this IGeoJsonGeometry geometry, bool isLongitudeFirst = true, int srid = 0)
-    //{
-
-    //}
-
+    
     #region SqlGeometry
 
     public static SqlGeometry AsSqlGeometry(this IGeoJsonGeometry geometry, bool isLongitudeFirst = true, int srid = 0)
@@ -458,13 +454,6 @@ public static class GeoJsonExtensions
 
         builder.EndFigure();
     }
-
-    #endregion
-
-
-    #region Shapefile
-
-    // implemented in IRI.Maptor.Sta.ShapefileFormat
 
     #endregion
 }

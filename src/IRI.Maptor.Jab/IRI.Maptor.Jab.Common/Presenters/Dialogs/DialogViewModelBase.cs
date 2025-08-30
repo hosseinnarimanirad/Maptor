@@ -1,11 +1,7 @@
-﻿using IRI.Maptor.Jab.Common.Presenter;
+﻿using IRI.Maptor.Jab.Common.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IRI.Maptor.Jab.Common.ViewModel.Dialogs;
+namespace IRI.Maptor.Jab.Common.Presenters;
 
 public abstract class DialogViewModelBase : BasePresenter
 {
@@ -21,9 +17,9 @@ public abstract class DialogViewModelBase : BasePresenter
         {
             _dialogResult = value;
 
-            this.OnSetResult?.Invoke(this, new CustomEventArgs<bool?>(value));
+            OnSetResult?.Invoke(this, new CustomEventArgs<bool?>(value));
         }
     }
-     
+
     public event EventHandler<CustomEventArgs<bool?>> OnSetResult;
 }

@@ -25,7 +25,6 @@ public static class GoogleMapsGeolocationService
                 }).ToArray();
 
             //
-            //System.IO.File.WriteAllText("vezarat.txt", Newtonsoft.Json.JsonConvert.SerializeObject(wifiAccessPoints));
             foreach (var item in wifiAccessPoints)
             {
                 Debug.WriteLine($"mac: {item.macAddress}, signal:{item.signalStrength}, channel: {item.channel}");

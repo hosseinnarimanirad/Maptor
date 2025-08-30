@@ -58,7 +58,7 @@
                 HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4" Grid.Row="1" Padding="4">
             <!--<Image Stretch="Uniform" Source="/IRI.Smaja.ZaminNegarAja;component/Images/appbar.add24.png"></Image>-->
             <!--<Path Data="{StaticResource appbarAdd}" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>-->
-            <iconPacks:MaterialDesign Kind="Add" Width="16"/>
+            <iconPacks:Modern Kind="Add" Width="16"/>
         </Button>
         <Label Name="note" Grid.Row="4" Grid.ColumnSpan="5" FontStyle="Italic" Foreground="DarkGray">توجه: مختصات ها به صورت طول و عرض جغرافیایی می باشند</Label>
         <DataGrid Name="pointList" AutoGenerateColumns="False" AlternatingRowBackground="LightBlue" ItemsSource="{Binding PointCollection}"

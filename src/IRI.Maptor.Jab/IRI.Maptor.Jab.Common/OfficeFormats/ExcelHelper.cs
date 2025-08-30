@@ -1,12 +1,11 @@
-﻿using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using System;
+﻿using System;
+using System.Linq; 
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IRI.Maptor.Sta.Common.OfficeFormats;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+
+namespace IRI.Maptor.Jab.Common.OfficeFormats;
 
 public static class ExcelHelper
 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text; 
 using IRI.Maptor.Sta.Common.Helpers;
 
 namespace IRI.Maptor.Sta.Graph;
@@ -27,18 +26,16 @@ public static class MinimumCut
 
         Edge<TNode, TWeight> randomEdge = GetRandomEdge(graph);
 
-        return GetMinCut<TNode, TWeight>(EdgeContraction<TNode, TWeight>(graph, randomEdge));
+        return GetMinCut(EdgeContraction(graph, randomEdge));
     }
 
     private static Edge<TNode, TWeight> GetRandomEdge<TNode, TWeight>(AdjacencyList<TNode, TWeight> graph)
     { 
         int startNode = RandomHelper.Get(graph.NumberOfEdges);
-
-        int temp = 0;
-
+         
         for (int i = 0; i < graph.NumberOfNodes; i++)
         {
-            temp = graph.GetConnectionsByNodeIndex(i).Count;
+            int temp = graph.GetConnectionsByNodeIndex(i).Count;
 
             if (temp > startNode)
             {

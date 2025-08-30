@@ -163,7 +163,7 @@ public static class SqlSpatialHelper
         return new BoundingBox(xValues.Min(), yValues.Min(), xValues.Max(), yValues.Max());
     }
 
-    public static SqlGeometry CreateLineStringFromPoints(List<SqlGeometry> geometries)
+    public static SqlGeometry? CreateLineStringFromPoints(List<SqlGeometry> geometries)
     {
         if (geometries?.Any() != true)
         {
@@ -171,8 +171,7 @@ public static class SqlSpatialHelper
         }
 
         var points = geometries.Select(g => g.AsPoint()).ToList();
-
-        //Geometry<Point> result = new Geometry<Point>()
+         
         return Geometry<Point>.CreatePointOrLineString(points, geometries.SkipWhile(g => g.STSrid.IsNull)?.FirstOrDefault()?.STSrid.Value ?? 0).AsSqlGeometry();
     }
 
@@ -181,7 +180,7 @@ public static class SqlSpatialHelper
 
     #region SqlGeography
 
-    public static void AddEmptySqlGeometry(SqlGeographyBuilder builder, GeometryType type)
+    public static void AddEmptySqlGeography(SqlGeographyBuilder builder, GeometryType type)
     {
         switch (type)
         {
@@ -322,15 +321,6 @@ public static class SqlSpatialHelper
 
         return new BoundingBox(xValues.Min(), yValues.Min(), xValues.Max(), yValues.Max());
     }
-
-
-
-    #endregion
-
-
-    #region Geometry<T>
-
-
-
-    #endregion
+     
+    #endregion 
 }

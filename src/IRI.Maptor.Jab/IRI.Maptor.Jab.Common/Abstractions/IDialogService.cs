@@ -1,9 +1,9 @@
-﻿using IRI.Maptor.Jab.Common.Model.Security;
-using IRI.Maptor.Jab.Common.ViewModel.Dialogs;
+﻿using IRI.Maptor.Jab.Common.Models.Security;
 
 using System;
 using System.Windows;
 using System.Threading.Tasks;
+using IRI.Maptor.Jab.Common.Presenters;
 
 namespace IRI.Maptor.Jab.Common.Abstractions;
 
@@ -80,7 +80,7 @@ public interface IDialogService
     // ********************************************************************
     //                          Show Dialog
     // ********************************************************************
-    Task<bool?> ShowDialgAsync<TParent>(Window view, DialogViewModelBase viewModel);
+    Task<bool?> ShowDialogAsync<TParent>(Window view, DialogViewModelBase viewModel);
 
     Task<bool?> ShowDialogAsync<TParent>(object ownerWindow, Window view, DialogViewModelBase viewModel);
 

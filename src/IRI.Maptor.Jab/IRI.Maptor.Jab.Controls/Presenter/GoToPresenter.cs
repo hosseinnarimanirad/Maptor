@@ -7,10 +7,10 @@ using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Controls.View;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Controls.Model.GoTo;
-using IRI.Maptor.Jab.Common.Presenter.Map;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections; 
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Jab.Common.Presenters;
 
 namespace IRI.Maptor.Jab.Controls.Presenter;
 

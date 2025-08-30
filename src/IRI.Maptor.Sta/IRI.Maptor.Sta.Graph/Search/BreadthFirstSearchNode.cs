@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System; 
 
 namespace IRI.Maptor.Sta.Graph;
 
-public class BreadthFirstSearchNode<TNode> : IComparable<BreadthFirstSearchNode<TNode>>
-//where TValue : IComparable<TValue>
-{
-
-    //private NodeInfo<TNode, TValue> m_Predecessor;
+public class BreadthFirstSearchNode<TNode> : IComparable<BreadthFirstSearchNode<TNode>> 
+{ 
     private BreadthFirstSearchNode<TNode> m_Predecessor;
 
     private NodeStatus m_Status;
-
-    //private TValue m_Value;
+     
     private double m_Value;
 
     public BreadthFirstSearchNode<TNode> Predecessor

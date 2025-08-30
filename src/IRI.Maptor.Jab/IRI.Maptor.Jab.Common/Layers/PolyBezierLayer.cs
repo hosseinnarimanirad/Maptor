@@ -6,64 +6,42 @@ using System.Windows.Shapes;
 using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common.Model;
+using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Jab.Common.Presenters;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Common.View.MapMarkers;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 using LineSegment = System.Windows.Media.LineSegment;
 using WpfPoint = System.Windows.Point;
-using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Jab.Common.Enums;
-using IRI.Maptor.Extensions;
 
 namespace IRI.Maptor.Jab.Common;
 
-public class PolyBezierLayer : BaseLayer
+public class PolyBezierLayer : SymbolizableLayer
 {
     static readonly Brush _stroke = BrushHelper.CreateBrush("#FF1CA1E2");
 
     #region ILayerMembers
 
-    public override LayerType Type
-    {
-        get
-        {
-            return LayerType.EditableItem;
-        }
-
-        protected set
-        {
-            throw new NotImplementedException();
-        }
-    }
+    public override LayerType Type => LayerType.EditableItem;
 
     public override BoundingBox Extent
     {
-        get
-        {
-            return BoundingBox.CalculateBoundingBox(mercatorPolyline);
-        }
+        get => BoundingBox.CalculateBoundingBox(mercatorPolyline);
 
-        protected set
-        {
-            throw new NotImplementedException();
-        }
+        protected set => throw new NotImplementedException();
     }
 
-    public override RenderingApproach Rendering
-    {
-        get
-        {
-            return RenderingApproach.Default;
-        }
+    //public override RenderingApproach Rendering
+    //{
+    //    get => RenderingApproach.Default;
 
-        protected set
-        {
-            throw new NotImplementedException();
-        }
-    }
+    //    protected set => throw new NotImplementedException();
+    //}
 
     #endregion
 
@@ -107,14 +85,15 @@ public class PolyBezierLayer : BaseLayer
 
     public Action<ILayer> RequestRemoveLayer;
 
-    private PolyBezierLayer(VisualParameters parameters)
+    private PolyBezierLayer(VisualParameters? parameters)
     {
         this.LayerId = Guid.NewGuid();
 
         this.VisibleRange = ScaleInterval.All;
 
         //this.VisualParameters = new VisualParameters(Colors.Black, Colors.Gray, 2, .9);
-        this.VisualParameters = parameters ?? VisualParameters.CreateNew(1);
+        //this.VisualParameters = parameters ?? VisualParameters.CreateNew(1);
+        this.SetSymbolizer(new SimpleSymbolizer(parameters ?? VisualParameters.CreateNew()));
     }
 
     public PolyBezierLayer(List<Point> mercatorPolyline, Transform toScreen, System.Windows.Media.Geometry decoration, VisualParameters parameters) : this(parameters)
@@ -263,7 +242,7 @@ public class PolyBezierLayer : BaseLayer
     {
         var mainLocateable = sender as Locateable;
 
-        var presenter = new Jab.Common.Presenters.MapOptions.MapOptionsPresenter(
+        var presenter = new MapOptionsPresenter(
             rightToolTip: string.Empty,
             leftToolTip: string.Empty,
             middleToolTip: string.Empty,
@@ -504,7 +483,7 @@ public class PolyBezierLayer : BaseLayer
 
     private void _mainPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
-        var presenter = new Jab.Common.Presenters.MapOptions.MapOptionsPresenter(
+        var presenter = new MapOptionsPresenter(
             rightToolTip: string.Empty,
             leftToolTip: string.Empty,
             middleToolTip: string.Empty,
@@ -588,9 +567,12 @@ public class PolyBezierLayer : BaseLayer
         //}
     }
 
-    private void mainLocateable_OnPositionChanged(object sender, ChangeEventArgs<WpfPoint> e)
+    private void mainLocateable_OnPositionChanged(object? sender, ChangeEventArgs<WpfPoint> e)
     {
         var locateable = sender as Locateable;
+
+        if (locateable is null)
+            return;
 
         var index = _mainLocateables.IndexOf(locateable);
 
@@ -619,7 +601,7 @@ public class PolyBezierLayer : BaseLayer
         }
         else
         {
-            (_mainPath.Data as PathGeometry).Figures.First().StartPoint = _toScreen.Transform(locateable.Location);
+            (_mainPath.Data as PathGeometry)!.Figures.First().StartPoint = _toScreen.Transform(locateable.Location);
 
             this._controlLines[0].StartPoint = _toScreen.Transform(locateable.Location);
 

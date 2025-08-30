@@ -3,11 +3,11 @@ using System.Windows;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-using IRI.Maptor.Jab.Common.Model;
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Common.Model.Legend;
+using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Enums;
+using IRI.Maptor.Jab.Common.Events;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -15,60 +15,68 @@ public interface ILayer
 {
     Guid LayerId { get; }
 
+    Guid ParentLayerId { get; set; }
+
     string LayerName { get; set; }
 
     LayerType Type { get; }
 
     BoundingBox Extent { get; }
 
+    RenderMode RenderMode { get; }
+
+    RasterizationMethod RasterizationMethod { get; }
+
+    bool IsGroupLayer { get; set; }
+
+    ObservableCollection<ILayer> SubLayers { get; set; }
+
     int ZIndex { get; set; }
 
-    ScaleInterval VisibleRange { get; set; }
+    // is layer discoverable in identify
+    bool IsSearchable { get; set; }
 
-    RenderingApproach Rendering { get; }
+    //VisualParameters VisualParameters { get; set; }
 
-    RasterizationApproach ToRasterTechnique { get; }
+    //LabelParameters Labels { get; set; }
 
-    VisualParameters VisualParameters { get; set; }
+    //bool IsValid { get; set; }
 
-    LabelParameters Labels { get; set; }
-
-    bool IsValid { get; set; }
-
-    void Invalidate();
+    //void Invalidate();
 
     bool IsSelectedInToc { get; set; }
 
     bool IsExpandedInToc { get; set; }
 
-    bool IsGroupLayer { get; set; }
-
-    // is layer discoverable in identify
-    bool IsSearchable { get; set; }  
-
-    Guid ParentLayerId { get; set; }
-
     bool ShowInToc { get; set; }
+
+    int TocOrder { get; set; }
 
     bool CanUserDelete { get; }
 
-    int NumberOfSelectedFeatures { get; set; }
+    bool IsInScaleRange { get; set; }
+
+    double Opacity { get; set; }
+
+    Visibility Visibility { get; set; }
+    
+    ScaleInterval VisibleRange { get; set; }
+
+    FrameworkElement? Element { get; set; }
 
     List<ILegendCommand> Commands { get; set; }
 
-    ObservableCollection<ILayer> SubLayers { get; set; }
-
-    void SetVisibility(Visibility visibility);
-
     List<IFeatureTableCommand> FeatureTableCommands { get; set; }
 
-    RelayCommand ChangeSymbologyCommand { get;   }
+    Action<ILayer>? RequestChangeVisibility { get; set; }
 
-    event EventHandler<CustomEventArgs<Visibility>> OnVisibilityChanged;
+    RelayCommand ChangeSymbologyCommand { get; }
 
-    event EventHandler<CustomEventArgs<LabelParameters>> OnLabelChanged;
+    event EventHandler<CustomEventArgs<VisualParameters>> OnVisibilityChanged;
+
+    //event EventHandler<CustomEventArgs<VisualParameters>> OnLabelChanged;
 
     bool CanRenderLayer(double mapScale);
 
-    bool CanRenderLabels(double mapScale);
+    //bool CanRenderLabels(double mapScale);
 }

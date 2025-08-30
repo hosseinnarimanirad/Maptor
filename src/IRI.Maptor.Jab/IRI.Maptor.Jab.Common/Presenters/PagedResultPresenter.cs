@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Linq; 
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using IRI.Maptor.Jab.Common;
+
 using IRI.Maptor.Jab.Common.Assets.Commands;
 
 namespace IRI.Maptor.Jab.Common.Presenters;

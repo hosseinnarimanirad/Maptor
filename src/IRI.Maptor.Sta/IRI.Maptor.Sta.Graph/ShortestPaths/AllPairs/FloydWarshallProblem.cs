@@ -5,8 +5,7 @@ namespace IRI.Maptor.Sta.Graph;
 public class FloydWarshallProblem
 {
     public double[,] shortestPaths;
-
-    //List<double[,]> predecessors;
+     
     double[,] predecessors;
 
     public FloydWarshallProblem(double[,] adjacency)

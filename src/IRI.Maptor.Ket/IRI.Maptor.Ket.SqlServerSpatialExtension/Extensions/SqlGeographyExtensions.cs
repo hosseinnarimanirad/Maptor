@@ -11,12 +11,7 @@ public static class SqlGeographyExtensions
     {
         return geography == null || geography.IsNull || geography.STIsEmpty().IsTrue;
     }
-
-    //public static bool IsNotValidOrEmpty(this SqlGeography geography)
-    //{
-    //    return geography.IsNullOrEmpty() || geography.STIsValid().IsFalse;
-    //}
-
+     
     public static OpenGisGeographyType GetOpenGisType(this SqlGeography geography)
     {
         if (geography == null)
@@ -26,16 +21,7 @@ public static class SqlGeographyExtensions
         else
         {
             return (OpenGisGeographyType)Enum.Parse(typeof(OpenGisGeographyType), geography.STGeometryType().Value, true);
-        }
-
-        //if (geometry.IsNullOrEmpty())
-        //{
-        //    return OpenGisGeometryType.GeometryCollection;
-        //}
-        //else
-        //{
-        //    return (OpenGisGeometryType)Enum.Parse(typeof(OpenGisGeometryType), geometry.STGeometryType().Value, true);
-        //}
+        }         
     }
 
     public static Point AsPoint(this SqlGeography point)
@@ -54,8 +40,7 @@ public static class SqlGeographyExtensions
     #region Projection
 
     public static SqlGeometry Project(this SqlGeography geography, Func<Point, Point> mapFunction, int newSrid = 0)
-    {
-
+    { 
         SqlGeometryBuilder builder = new SqlGeometryBuilder();
 
         builder.SetSrid(newSrid);
@@ -201,9 +186,7 @@ public static class SqlGeographyExtensions
 
     private static Point GetPoint(SqlGeography geography, int index)
     {
-        return geography.STPointN(index).AsPoint();
-
-        //return new IRI.Maptor.Sta.Common.Primitives.Point(temp.Long.Value, temp.Lat.Value);
+        return geography.STPointN(index).AsPoint(); 
     }
 
 

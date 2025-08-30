@@ -1,12 +1,13 @@
 ﻿using System;
 
+using MahApps.Metro.IconPacks;
+
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Common.Abstrations;
-using MahApps.Metro.IconPacks;  // Add this at the top of your file
 
 
-namespace IRI.Maptor.Jab.Common.Presenters.MapOptions;
+namespace IRI.Maptor.Jab.Common.Presenters;
 
 public class MapOptionsPresenter : Notifier, ILocateable
 {
@@ -169,7 +170,7 @@ public class MapOptionsPresenter : Notifier, ILocateable
             {
                 _rightCommand = new RelayCommand(param =>
                 {
-                    this.RightCommandAction?.Invoke(param);
+                    RightCommandAction?.Invoke(param);
                 });
             }
             return _rightCommand;
@@ -186,7 +187,7 @@ public class MapOptionsPresenter : Notifier, ILocateable
             {
                 _leftCommand = new RelayCommand(param =>
                 {
-                    this.LeftCommandAction?.Invoke(param);
+                    LeftCommandAction?.Invoke(param);
                 });
             }
             return _leftCommand;
@@ -203,7 +204,7 @@ public class MapOptionsPresenter : Notifier, ILocateable
             {
                 _middleCommand = new RelayCommand(param =>
                 {
-                    this.MiddleCommandAction?.Invoke(param);
+                    MiddleCommandAction?.Invoke(param);
                 });
             }
             return _middleCommand;
@@ -220,7 +221,7 @@ public class MapOptionsPresenter : Notifier, ILocateable
             {
                 _upperRightCommand = new RelayCommand(param =>
                 {
-                    this.UpperRightCommandAction?.Invoke(param);
+                    UpperRightCommandAction?.Invoke(param);
                 });
             }
             return _upperRightCommand;
@@ -249,12 +250,12 @@ public class MapOptionsPresenter : Notifier, ILocateable
     public MapOptionsPresenter(string rightToolTip, string leftToolTip, string middleToolTip,
                                 PackIconModernKind? rightSymbol, PackIconModernKind? leftSymbol, PackIconModernKind? middleSymbol)
     {
-        this.RightToolTip = rightToolTip;
-        this.LeftToolTip = leftToolTip;
-        this.MiddleToolTip = middleToolTip;
+        RightToolTip = rightToolTip;
+        LeftToolTip = leftToolTip;
+        MiddleToolTip = middleToolTip;
 
-        this.RightSymbol = rightSymbol;
-        this.LeftSymbol = leftSymbol;
-        this.MiddleSymbol = middleSymbol;
+        RightSymbol = rightSymbol;
+        LeftSymbol = leftSymbol;
+        MiddleSymbol = middleSymbol;
     }
 }

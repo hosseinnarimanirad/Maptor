@@ -257,7 +257,7 @@ public struct EsriPolygonZ : IEsriPointsWithZ
         for (int i = 0; i < NumberOfParts; i++)
         {
             result.Append(string.Format("{0},",
-                SqlServerWktMapFunctions.PointZGroupElementToWkt(
+                SqlServerWktHelper.PointZGroupElementToWkt(
                     ShapeHelper.GetEsriPoints(this, this.Parts[i]),
                     ShapeHelper.GetZValues(this, this.Parts[i]),
                     ShapeHelper.GetMeasures(this, this.Parts[i]))));

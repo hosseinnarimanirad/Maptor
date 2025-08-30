@@ -1,7 +1,10 @@
 ﻿using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Model.Legend;
+using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Common.Models.Legend;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,11 +13,13 @@ namespace IRI.Maptor.Jab.Controls.View;
 /// <summary>
 /// Interaction logic for MapLegendItemWithOptions.xaml
 /// </summary>
-public partial class MapLegendItemWithOptionsView : UserControl
+public partial class MapLegendItemWithOptionsView : UserControl, IDisposable, INotifyPropertyChanged
 {
     public MapLegendItemWithOptionsView()
     {
         InitializeComponent();
+        LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
+        LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
 
     #region DependencyProperties
@@ -97,8 +102,21 @@ public partial class MapLegendItemWithOptionsView : UserControl
 
     #endregion
 
+    private bool _isInScaleRange;
+
+    public bool IsInScaleRange
+    {
+        get { return _isInScaleRange; }
+        set
+        {
+            _isInScaleRange = value;
+            //RaisePropertyChanged();
+        }
+    }
 
 
+
+    public string SymbologyExpanderHeaderText => LocalizationManager.Instance[LocalizationResourceKeys.legend_symbologyExpanderHeaderText.ToString()];
 
 
     private void UpdateTitle(string newValue)
@@ -112,4 +130,48 @@ public partial class MapLegendItemWithOptionsView : UserControl
     }
 
 
+    private void Instance_LanguageChanged()
+    {
+        RaisePropertyChanged(nameof(SymbologyExpanderHeaderText)); 
+    }
+
+
+    #region INotifyPropertyChanged
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    #endregion
+
+
+    #region IDispose
+
+    private bool _disposed = false;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // Dispose managed resources
+                LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
+            }
+
+            // Dispose unmanaged resources here if any
+            _disposed = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
 }

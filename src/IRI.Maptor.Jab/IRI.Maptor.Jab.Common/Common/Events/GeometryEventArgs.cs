@@ -2,7 +2,7 @@
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Events;
 
 public class GeometryEventArgs : EventArgs
 {
@@ -10,6 +10,6 @@ public class GeometryEventArgs : EventArgs
 
     public GeometryEventArgs(Geometry geometry)
     {
-        this.Geometry = geometry;
+        Geometry = geometry;
     }
 }

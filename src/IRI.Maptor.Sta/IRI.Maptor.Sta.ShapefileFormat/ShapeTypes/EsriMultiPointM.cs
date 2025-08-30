@@ -218,7 +218,7 @@ public struct EsriMultiPointM : IEsriPointsWithMeasure
 
     public string AsSqlServerWkt()
     { 
-        return string.Format("MULTIPOINT{0}", SqlServerWktMapFunctions.PointMGroupElementToWkt(this.Points, this.Measures));
+        return string.Format("MULTIPOINT{0}", SqlServerWktHelper.PointMGroupElementToWkt(this.Points, this.Measures));
     }
 
     public byte[] AsWkb() 

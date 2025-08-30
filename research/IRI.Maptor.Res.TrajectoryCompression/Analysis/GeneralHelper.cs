@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Model;
-using IRI.Maptor.Jab.Common.Enums;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives; 
+using IRI.Maptor.Sta.Spatial.Primitives;
 
 
 namespace IRI.Maptor.Res.TrajectoryCompression;
@@ -31,7 +29,7 @@ public static class GeneralHelper
 
         var scale = WebMercatorUtility.GetGoogleMapScale(level);
 
-        var bitmap = await vectorLayer.AsGdiBitmapAsync(groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
+        var bitmap = await vectorLayer.AsGdiBitmapAsync(groundBoundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
 
         var diff = IRI.Maptor.Ket.GdiPlus.Helpers.ImageHelper.CalculateDifPlusBitmaps(originalBitmap, bitmap, true);
 
@@ -52,10 +50,10 @@ public static class GeneralHelper
                                             geometries,
                                             VisualParameters.GetStroke(Colors.Blue, 1),
                                             LayerType.VectorLayer,
-                                            RenderingApproach.Default,
-                                            RasterizationApproach.DrawingVisual);
+                                            RenderMode.Default,
+                                            RasterizationMethod.DrawingVisual);
 
-        vectorLayer.VisualParameters.Visibility = Visibility.Hidden;
+        vectorLayer.Visibility = Visibility.Hidden;
 
         //this.Presenter.AddLayer(vectorLayer);
 

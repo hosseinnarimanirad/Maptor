@@ -3,19 +3,20 @@ using System.Threading.Tasks;
 using IRI.Maptor.Sta.Common.Contracts.Google;
 using IRI.Maptor.Sta.Common.Services;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Model.Security;
+using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Sta.Spatial.Services.Google;
 using IRI.Maptor.Jab.Common.Abstractions;
+using IRI.Maptor.Jab.Common.Events;
 
-namespace IRI.Maptor.Jab.Common.ViewModel.Dialogs;
+namespace IRI.Maptor.Jab.Common.Presenters;
 
 public class AccountDialogViewModel : DialogViewModelBase
 {
     public AccountDialogViewModel(AuthenticationType type, IDialogService dialogService)
     {
-        this.Type = type;
+        Type = type;
 
-        this.DialogService = dialogService;
+        DialogService = dialogService;
     }
 
     #region Actions & Funcs
@@ -53,7 +54,7 @@ public class AccountDialogViewModel : DialogViewModelBase
     #endregion
 
     public delegate void SignInChangeHandler(CustomEventArgs<bool> args);
-    
+
     public event SignInChangeHandler SignInChanged;
 
     #region Properties
@@ -100,7 +101,7 @@ public class AccountDialogViewModel : DialogViewModelBase
             _isSignedIn = value;
             RaisePropertyChanged();
 
-            this.SignInChanged?.Invoke(new CustomEventArgs<bool>(value));
+            SignInChanged?.Invoke(new CustomEventArgs<bool>(value));
         }
     }
 
@@ -305,12 +306,12 @@ public class AccountDialogViewModel : DialogViewModelBase
     {
         get
         {
-            if (this._loginAsyncCommand == null)
+            if (_loginAsyncCommand == null)
             {
-                this._loginAsyncCommand = new RelayCommand(param => this.LoginAsync(param));
+                _loginAsyncCommand = new RelayCommand(param => LoginAsync(param));
             }
 
-            return this._loginAsyncCommand;
+            return _loginAsyncCommand;
         }
     }
 
@@ -321,12 +322,12 @@ public class AccountDialogViewModel : DialogViewModelBase
     {
         get
         {
-            if (this._loginCommand == null)
+            if (_loginCommand == null)
             {
-                this._loginCommand = new RelayCommand(param => this.Login(param));
+                _loginCommand = new RelayCommand(param => Login(param));
             }
 
-            return this._loginCommand;
+            return _loginCommand;
         }
     }
 
@@ -337,17 +338,17 @@ public class AccountDialogViewModel : DialogViewModelBase
     {
         get
         {
-            if (this._loginGuestCommand == null)
+            if (_loginGuestCommand == null)
             {
-                this._loginGuestCommand = new RelayCommand(param =>
+                _loginGuestCommand = new RelayCommand(param =>
                 {
-                    this.RequestLoginAsGuest?.Invoke();
+                    RequestLoginAsGuest?.Invoke();
 
-                    this.DialogResult = true;
+                    DialogResult = true;
                 });
             }
 
-            return this._loginGuestCommand;
+            return _loginGuestCommand;
         }
     }
 
@@ -364,7 +365,7 @@ public class AccountDialogViewModel : DialogViewModelBase
                 {
                     var result = await GoogleOAuthService.RunOAuth2();
 
-                    this.RequestLoginWithGoogleOAuth?.Invoke(result);
+                    RequestLoginWithGoogleOAuth?.Invoke(result);
 
                 });
             }
@@ -384,12 +385,12 @@ public class AccountDialogViewModel : DialogViewModelBase
     {
         get
         {
-            if (this._signUpCommand == null)
+            if (_signUpCommand == null)
             {
-                this._signUpCommand = new RelayCommand(param => this.RequestSignUp?.Invoke(param as INewUserEmailPassword));
+                _signUpCommand = new RelayCommand(param => RequestSignUp?.Invoke(param as INewUserEmailPassword));
             }
 
-            return this._signUpCommand;
+            return _signUpCommand;
         }
     }
 
@@ -401,12 +402,12 @@ public class AccountDialogViewModel : DialogViewModelBase
     {
         get
         {
-            if (this._signOutCommand == null)
+            if (_signOutCommand == null)
             {
-                this._signOutCommand = new RelayCommand(param => this.RequestSignOut?.Invoke());
+                _signOutCommand = new RelayCommand(param => RequestSignOut?.Invoke());
             }
 
-            return this._signOutCommand;
+            return _signOutCommand;
         }
     }
 
@@ -425,7 +426,7 @@ public class AccountDialogViewModel : DialogViewModelBase
             {
                 _resetPasswordCommand = new RelayCommand(param =>
                 {
-                    this.RequestResetPassword?.Invoke();
+                    RequestResetPassword?.Invoke();
                 });
             }
 
@@ -445,7 +446,7 @@ public class AccountDialogViewModel : DialogViewModelBase
             {
                 _handleForgetPasswordCommand = new RelayCommand(param =>
                 {
-                    this.RequestHandleForgetPassword?.Invoke(param as IHaveEmail);
+                    RequestHandleForgetPassword?.Invoke(param as IHaveEmail);
                 });
             }
 
@@ -465,7 +466,7 @@ public class AccountDialogViewModel : DialogViewModelBase
             {
                 _changePasswordCommand = new RelayCommand(param =>
                 {
-                    this.RequestChangePassword?.Invoke(param as IChangePassword);
+                    RequestChangePassword?.Invoke(param as IChangePassword);
                 });
             }
 
@@ -485,7 +486,7 @@ public class AccountDialogViewModel : DialogViewModelBase
             {
                 _showChangePasswordDialogViewCommand = new RelayCommand(async param =>
                 {
-                    
+
                     var viewModel = await DialogService?.ShowChangePasswordDialog(param, ihp =>
                     {
                         var parameter = new SimpleUserEmailPasswordModel(ihp.Password) { UserNameOrEmail = UserName };
@@ -540,7 +541,7 @@ public class AccountDialogViewModel : DialogViewModelBase
 
                     try
                     {
-                        this.RequestShowSignUpDialogView?.Invoke(model);
+                        RequestShowSignUpDialogView?.Invoke(model);
 
                         await DialogService.ShowMessageAsync("کاربر جدید با موفقیت اضافه شد", "پیغام", param);
                     }
@@ -568,7 +569,7 @@ public class AccountDialogViewModel : DialogViewModelBase
             {
                 _verifyEmailAddressCommand = new RelayCommand(param =>
                 {
-                    this.RequestVerifyEmailAddress?.Invoke(param as IHaveEmail);
+                    RequestVerifyEmailAddress?.Invoke(param as IHaveEmail);
                 });
             }
 
@@ -588,7 +589,7 @@ public class AccountDialogViewModel : DialogViewModelBase
                 _goToTermsOfUserWebPage = new RelayCommand(param =>
                 {
                     //System.Diagnostics.Process.Start(TermsOfUseWebPageUrl);
-                    this.RequestShowTermsOfUse?.Invoke();
+                    RequestShowTermsOfUse?.Invoke();
                 });
             }
 
@@ -664,7 +665,7 @@ public class AccountDialogViewModel : DialogViewModelBase
 
         try
         {
-            this.RequestChangePassword?.Invoke(viewModel.Model);
+            RequestChangePassword?.Invoke(viewModel.Model);
 
             await DialogService?.ShowMessageAsync("رمز عبور با موفقیت تغییر یافت", "پیغام", ownerWindow, null);
         }
@@ -799,7 +800,7 @@ public class AccountDialogViewModel : DialogViewModelBase
     {
         try
         {
-            this.IsBusy = true;
+            IsBusy = true;
 
             var passContainer = parameter as IUserEmailPassword;
 
@@ -807,20 +808,20 @@ public class AccountDialogViewModel : DialogViewModelBase
             {
                 //this.Password = passContainer.Password;                
 
-                if (this.RequestAuthenticateAsync != null)
+                if (RequestAuthenticateAsync != null)
                 {
-                    if (await this.RequestAuthenticateAsync(passContainer) != true)
+                    if (await RequestAuthenticateAsync(passContainer) != true)
                     {
-                        this.IsSignedIn = false;
+                        IsSignedIn = false;
 
                         passContainer.ClearInputValues();
                         passContainer.Password.Clear();
                     }
                     else
                     {
-                        this.IsSignedIn = true;
+                        IsSignedIn = true;
 
-                        this.DialogResult = true;
+                        DialogResult = true;
                     }
                 }
             }
@@ -835,7 +836,7 @@ public class AccountDialogViewModel : DialogViewModelBase
         }
         finally
         {
-            this.IsBusy = false;
+            IsBusy = false;
         }
     }
 
@@ -843,7 +844,7 @@ public class AccountDialogViewModel : DialogViewModelBase
     {
         try
         {
-            this.IsBusy = true;
+            IsBusy = true;
 
             var passContainer = parameter as IUserEmailPassword;
 
@@ -851,19 +852,19 @@ public class AccountDialogViewModel : DialogViewModelBase
             {
                 //this.Password = passContainer.Password;                
 
-                if (this.RequestAuthenticate != null)
+                if (RequestAuthenticate != null)
                 {
-                    if (this.RequestAuthenticate(passContainer) != true)
+                    if (RequestAuthenticate(passContainer) != true)
                     {
-                        this.IsSignedIn = false;
+                        IsSignedIn = false;
 
                         passContainer.ClearInputValues();
                     }
                     else
                     {
-                        this.IsSignedIn = true;
+                        IsSignedIn = true;
 
-                        this.DialogResult = true;
+                        DialogResult = true;
                     }
                 }
             }
@@ -878,7 +879,7 @@ public class AccountDialogViewModel : DialogViewModelBase
         }
         finally
         {
-            this.IsBusy = false;
+            IsBusy = false;
         }
     }
 }

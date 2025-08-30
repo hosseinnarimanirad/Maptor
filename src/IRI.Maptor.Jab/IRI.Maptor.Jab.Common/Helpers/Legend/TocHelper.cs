@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Collections.ObjectModel;
 
-using IRI.Maptor.Jab.Common.Model.Legend;
+using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Sta.Persistence.RasterDataSources;
-using IRI.Maptor.Jab.Common.Model;
+using IRI.Maptor.Jab.Common.Models;
 
 
 namespace IRI.Maptor.Jab.Common.Utility.Legend;

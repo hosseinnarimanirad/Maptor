@@ -1,11 +1,8 @@
-﻿using IRI.Maptor.Sta.Mathematics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace IRI.Maptor.Jab.Common; 
+using IRI.Maptor.Sta.Mathematics;
+
+namespace IRI.Maptor.Jab.Common;
 
 public class SimplificationAccuracy
 {

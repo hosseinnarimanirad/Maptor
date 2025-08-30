@@ -22,7 +22,7 @@ public class UnitTest
 {
     public UnitTest()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
     }
 
     [Fact]

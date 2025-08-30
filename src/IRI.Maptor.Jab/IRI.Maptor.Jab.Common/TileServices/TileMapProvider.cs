@@ -11,69 +11,19 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
 
     //in the case of google traffic map, caching should be avoided
     public bool AllowCache { get; set; } = true;
-
-    //private string _mapName ;
-
-    //public string MapName
-    //{
-    //    get { return _mapName; }
-    //    set
-    //    {
-    //        _mapName = value;
-    //        RaisePropertyChanged();
-    //        RaisePropertyChanged(nameof(FullTitle));
-    //    }
-    //}
-
-    //private string _providerName;
-
-    //public string ProviderName
-    //{
-    //    get { return _providerName; }
-    //    protected set
-    //    {
-    //        _providerName = value;
-    //        RaisePropertyChanged();
-    //        RaisePropertyChanged(nameof(FullTitle));
-    //    }
-    //}
-
-
+     
+     
     private string _providerResourceKey { get; set; }
     public string Provider => LocalizationManager.Instance[_providerResourceKey];
 
     public string ProviderEn => LocalizationManager.Instance.GetDefaultValue(_providerResourceKey);
-
-    //private readonly PersianEnglishItem _provider;
-
-    //public PersianEnglishItem Provider
-    //{
-    //    get { return _provider; }
-    //    //private set
-    //    //{
-    //    //    _provider = value;
-    //    //    RaisePropertyChanged();
-    //    //}
-    //}
+     
 
     private string _mapTypeResourceKey { get; set; }
     public string MapType => LocalizationManager.Instance[_mapTypeResourceKey];
 
     public string MapTypeEn => LocalizationManager.Instance.GetDefaultValue(_mapTypeResourceKey);
-
-
-    //private readonly string _mapType;
-
-    //public PersianEnglishItem MapType
-    //{
-    //    get { return _mapType; }
-    //    //private set
-    //    //{
-    //    //    _mapType = value;
-    //    //    RaisePropertyChanged();
-    //    //}
-    //}
-
+     
 
     private byte[]? _thumbnail;
 
@@ -99,9 +49,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
         }
     }
 
-
-    //public string FullTitle { get { return $"{ProviderName} - {MapName}"; } }
-
+     
     public string FullName
     {
         get
@@ -130,6 +78,18 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
 
     //    //this.MapType = new PersianEnglishItem(string.Empty, mapType, Model.LanguageMode.English);
     //}
+
+    public TileMapProvider(TileMapProvider mapProvider)
+    {
+        //mapProvider.Provider, mapProvider.MapType, , mapProvider.Thumbnail, mapProvider.Thumbnail72
+        this.MakeUrl = mapProvider.MakeUrl;
+        this._providerResourceKey = mapProvider._providerResourceKey;
+        this._mapTypeResourceKey = mapProvider._mapTypeResourceKey;
+        this._thumbnail = mapProvider._thumbnail;
+        this._thumbnail72 = mapProvider._thumbnail72;
+
+        LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
+    }
 
     public TileMapProvider(string providerResourceKey, string mapTypeResourceKey, Func<TileInfo, string> urlFunction, byte[]? thumbnail, byte[]? thumbnail72)
     {

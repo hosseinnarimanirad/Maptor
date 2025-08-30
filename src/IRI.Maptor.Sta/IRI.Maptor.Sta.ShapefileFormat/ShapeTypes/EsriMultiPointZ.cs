@@ -303,7 +303,7 @@ public struct EsriMultiPointZ : IEsriPointsWithZ
         //                                this.Measures[NumberOfPoints - 1] == ShapeConstants.NoDataValue ? "NULL" : this.Measures[NumberOfPoints - 1].ToString()));
 
         //return result.ToString();
-        return string.Format("MULTIPOINT{0}", SqlServerWktMapFunctions.PointZGroupElementToWkt(this.Points, this.ZValues, this.Measures));
+        return string.Format("MULTIPOINT{0}", SqlServerWktHelper.PointZGroupElementToWkt(this.Points, this.ZValues, this.Measures));
     }
 
     public byte[] AsWkb()

@@ -53,6 +53,7 @@
                     <Button Content="{Binding DrawPointText}" Command="{Binding DrawPointCommand}"/>
                     <Button Content="{Binding DrawPolylineText}" Command="{Binding DrawPolylineCommand}"/>
                     <Button Content="{Binding DrawPolygonText}" Command="{Binding DrawPolygonCommand}"/>
+                    <Button Content="{Binding AddTextToMap}" Command="{Binding AddTextCommand}"/>
                     <Button Content="{Binding GoToText}" Command="{Binding GoToCommand}"/>
                 </StackPanel>
             </Border>

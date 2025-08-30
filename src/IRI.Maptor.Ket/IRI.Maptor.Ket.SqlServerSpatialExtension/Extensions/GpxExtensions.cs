@@ -1,8 +1,7 @@
 ﻿using IRI.Maptor.Sta.Common.IO.Gpx;
 using Microsoft.SqlServer.Types;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-
-//namespace IRI.Maptor.Ket.SqlServerSpatialExtension
+ 
 namespace IRI.Maptor.Extensions;
 
 public static class GpxExtensions
@@ -41,7 +40,7 @@ public static class GpxExtensions
         return builder.ConstructedGeography;
     }
 
-    public static SqlGeography AsGeography(this GpxTrackSegment trackSegment)
+    public static SqlGeography? AsGeography(this GpxTrackSegment trackSegment)
     {
         SqlGeographyBuilder builder = new SqlGeographyBuilder();
 
@@ -71,15 +70,7 @@ public static class GpxExtensions
             if (item.TrackPoints.Count < 2)
                 continue;
 
-            AddTrackSegment(builder, item);
-            //builder.BeginFigure(item.TrackPoints[0].Latitude, item.TrackPoints[0].Longitude);
-
-            //for (int i = 1; i < item.TrackPoints.Count; i++)
-            //{
-            //    builder.AddLine(item.TrackPoints[i].Latitude, item.TrackPoints[i].Longitude);
-            //}
-
-            //builder.EndFigure();
+            AddTrackSegment(builder, item); 
         }
 
         builder.EndGeography();

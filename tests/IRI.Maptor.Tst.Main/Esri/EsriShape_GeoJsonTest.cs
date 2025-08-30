@@ -10,7 +10,7 @@ public class EsriShape_GeoJsonTest
 {
     public EsriShape_GeoJsonTest()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
     }
      
     [Fact]

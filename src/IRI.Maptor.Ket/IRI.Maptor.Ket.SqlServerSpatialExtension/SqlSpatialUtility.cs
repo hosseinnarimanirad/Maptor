@@ -1,10 +1,10 @@
 ﻿using Microsoft.SqlServer.Types;
-using IRI.Maptor.Sta.Common.Abstrations;
+
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.SpatialReferenceSystem; 
 
 namespace IRI.Maptor.Ket.SqlServerSpatialExtension;
 
@@ -50,9 +50,9 @@ public static class SqlSpatialUtility
     /// <param name="points"></param>
     /// <param name="isClosed"></param>
     /// <returns></returns>
-    public static SqlGeography MakeGeography<T>(List<T> points, bool isClosed, int srid = SridHelper.GeodeticWGS84) where T:IPoint,new()
+    public static SqlGeography? MakeGeography<T>(List<T> points, bool isClosed, int srid = SridHelper.GeodeticWGS84) where T:IPoint,new()
     {
-        if (points == null || points.Count < 1)
+        if (points is null || points.Count < 1)
         {
             return null;
         }
@@ -84,17 +84,15 @@ public static class SqlSpatialUtility
         return resultGeography.EnvelopeAngle().Value == 180 ? resultGeography.ReorientObject() : resultGeography;
     }
 
-    public static SqlGeometry UnionAll(List<SqlGeometry> geometries)
+    public static SqlGeometry? UnionAll(List<SqlGeometry> geometries)
     {
         return Aggregate(geometries, (g1, g2) => g1.STUnion(g2));            
     }
 
-    private static SqlGeometry Aggregate(List<SqlGeometry> geometries, Func<SqlGeometry, SqlGeometry, SqlGeometry> map)
+    private static SqlGeometry? Aggregate(List<SqlGeometry> geometries, Func<SqlGeometry, SqlGeometry, SqlGeometry> map)
     {
-        if (geometries == null || geometries.Count < 1)
-        {
+        if (geometries is null || geometries.Count < 1)
             return null;
-        }
 
         var result = geometries.First();
 
@@ -110,13 +108,9 @@ public static class SqlSpatialUtility
     //1399.06.11
     //مساحت مثلت‌های تشکیل دهنده شکل هندسی
     public static List<double> GetPrimitiveAreas(SqlGeometry geometry)
-    {
-        var result = new List<double>();
-
+    { 
         if (geometry == null)
-        {
-            return result;
-        }
+            return [];
 
         return SpatialUtility.GetPrimitiveAreas(geometry.AsGeometry());
     }
@@ -124,9 +118,7 @@ public static class SqlSpatialUtility
     public static List<double> GetPrimitiveAreas(List<SqlGeometry> geometries)
     {
         if (geometries == null)
-        {
-            return new List<double>();
-        }
+            return [];
 
         return geometries.SelectMany(g => GetPrimitiveAreas(g)).ToList();
     }

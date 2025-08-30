@@ -295,7 +295,7 @@ public struct EsriPolylineZ : IEsriPointsWithZ
         {
             result.Append(
                 string.Format("{0},",
-                SqlServerWktMapFunctions.PointZGroupElementToWkt(
+                SqlServerWktHelper.PointZGroupElementToWkt(
                     ShapeHelper.GetEsriPoints(this, i), ShapeHelper.GetZValues(this, i), ShapeHelper.GetMeasures(this, this.Parts[i]))));
         }
 

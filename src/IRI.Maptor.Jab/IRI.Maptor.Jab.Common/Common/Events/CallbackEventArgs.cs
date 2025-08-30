@@ -1,8 +1,8 @@
-﻿using System; 
+﻿using System;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Events;
 
-public class CallbackEventArgs<T> : System.EventArgs
+public class CallbackEventArgs<T> : EventArgs
 {
     public Action Callback { get; private set; }
 
@@ -10,8 +10,8 @@ public class CallbackEventArgs<T> : System.EventArgs
 
     public CallbackEventArgs(T arg, Action callback)
     {
-        this.Arg = arg;
+        Arg = arg;
 
-        this.Callback = callback;
+        Callback = callback;
     }
 }

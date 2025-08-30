@@ -18,14 +18,14 @@ public partial class MainWindow : Window
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-        try
-        {
-            SqlServerTypes.Utilities.LoadNativeAssembliesv14(Environment.CurrentDirectory);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        //try
+        //{
+        //    SqlServerTypes.Utilities.LoadNativeAssembliesv14(Environment.CurrentDirectory);
+        //}
+        //catch (Exception)
+        //{
+        //    throw;
+        //}
 
         var presenter = new ApplicationPresenter();
 

@@ -23,7 +23,7 @@ public partial class MainWindow : Window
 
     private void loaded_l(object sender, RoutedEventArgs e)
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14(AppDomain.CurrentDomain.BaseDirectory);
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14(AppDomain.CurrentDomain.BaseDirectory);
 
         var polygon = SqlGeometry.Parse(new SqlString("POLYGON( (0 0 9, 30 0 9, 30 30 9, 0 30 9, 0 0 9) )"));
         var temp = polygon.AsGml();
@@ -32,20 +32,16 @@ public partial class MainWindow : Window
     private void Button_Click(object sender, RoutedEventArgs e)
     {
         //TestSld(@"C:\Users\Hossein\Downloads\point_pointasgraphic.sld");
-        var t1 = new TileInfo(1338158, 837168, 21);
-        var t2 = new TileInfo(1338158, 837169, 21);
-         
+        TestSld(@"C:\Users\Hossein\Downloads\point_attribute.sld");
 
-        var result1_1 = t1.WebMercatorExtent;
-        var result1_2 = t2.WebMercatorExtent;
 
-        
+
     }
 
 
     private void TestSld(string fileName)
     {
-        var sld = XmlHelper.Deserialize<StyledLayerDescriptor>(fileName);
+        var sld = XmlHelper.DeserializeFromFile<StyledLayerDescriptor>(fileName);
 
         string modifiedPath = Path.Combine(
                             Path.GetDirectoryName(fileName),

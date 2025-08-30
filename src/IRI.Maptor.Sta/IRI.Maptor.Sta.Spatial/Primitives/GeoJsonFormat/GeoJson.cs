@@ -9,9 +9,6 @@ public static class GeoJson
     {
         var geoJsonString = File.ReadAllText(fileName);
 
-        //var parsedObject = Newtonsoft.Json.Linq.JObject.Parse(geoJsonString);
-        //return parsedObject["features"].Select(f => JsonConvert.DeserializeObject<GeoJsonFeature>(f.ToString()));
-
         var parsedObject = JsonNode.Parse(geoJsonString);
 
         return parsedObject?["features"]?.AsArray().Select(f => JsonHelper.Deserialize<GeoJsonFeature>(f.ToString())).ToList() ?? Enumerable.Empty<GeoJsonFeature>().ToList();

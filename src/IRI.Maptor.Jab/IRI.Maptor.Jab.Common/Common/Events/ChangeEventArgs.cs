@@ -1,6 +1,6 @@
-﻿using System; 
+﻿using System;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Events;
 
 public class ChangeEventArgs<T> : EventArgs
 {
@@ -10,8 +10,8 @@ public class ChangeEventArgs<T> : EventArgs
 
     public ChangeEventArgs(T oldValue, T newValue)
     {
-        this.OldValue = oldValue;
+        OldValue = oldValue;
 
-        this.NewValue = newValue;
+        NewValue = newValue;
     }
 }

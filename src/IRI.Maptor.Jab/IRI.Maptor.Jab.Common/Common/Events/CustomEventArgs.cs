@@ -1,4 +1,4 @@
-﻿namespace IRI.Maptor.Jab.Common;
+﻿namespace IRI.Maptor.Jab.Common.Events;
 
 public class CustomEventArgs<T> : System.EventArgs
 {
@@ -6,6 +6,6 @@ public class CustomEventArgs<T> : System.EventArgs
 
     public CustomEventArgs(T arg)
     {
-        this.Arg = arg;
+        Arg = arg;
     }
 }

@@ -64,7 +64,7 @@ public class UtmGridDataSource : VectorDataSource/*<UtmSheet>*/
     // Get as FeatureSet of Point
     public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
     {
-        var geographicBoundingBox = boundingBox.Transform(MapProjects.WebMercatorToMercatorWgs84);
+        var geographicBoundingBox = boundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84);
 
         var features = UtmIndexes.GetIndexSheets(geographicBoundingBox, Type, UtmZone)
                             //.Where(s => s.TheGeometry?.Intersects(boundingBox) == true)

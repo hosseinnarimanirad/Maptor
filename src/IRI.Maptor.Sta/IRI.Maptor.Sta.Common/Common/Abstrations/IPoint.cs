@@ -1,5 +1,4 @@
-﻿using System;
-namespace IRI.Maptor.Sta.Common.Abstrations;
+﻿namespace IRI.Maptor.Sta.Common.Abstrations;
 
 public interface IPoint
 {

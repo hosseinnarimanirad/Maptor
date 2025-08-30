@@ -1,25 +1,22 @@
-﻿using IRI.Maptor.Jab.Common.Model.Legend;
-using IRI.Maptor.Jab.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel; 
 
-namespace IRI.Maptor.Jab.Common.Presenter;
+using IRI.Maptor.Jab.Common.Models.Legend;
 
-public class LegendPresenter: Notifier
+namespace IRI.Maptor.Jab.Common.Presenters;
+
+public class LegendPresenter : Notifier
 {
     public LegendPresenter(IEnumerable<LegendItem> layers)
     {
         if (layers == null)
         {
-            this.Layers = new ObservableCollection<LegendItem>();
+            Layers = new ObservableCollection<LegendItem>();
         }
         else
         {
-            this.Layers = new ObservableCollection<LegendItem>(layers);
+            Layers = new ObservableCollection<LegendItem>(layers);
         }
 
     }
@@ -40,8 +37,8 @@ public class LegendPresenter: Notifier
 
     private void PrepareEvents()
     {
-        this.Layers.CollectionChanged -= Layers_CollectionChanged;
-        this.Layers.CollectionChanged += Layers_CollectionChanged;
+        Layers.CollectionChanged -= Layers_CollectionChanged;
+        Layers.CollectionChanged += Layers_CollectionChanged;
 
         foreach (var item in Layers)
         {
@@ -76,12 +73,12 @@ public class LegendPresenter: Notifier
 
     private void Item_OnRequestShowAll(object sender, LegendItemEventArgs e)
     {
-        this.OnRequestShowAll.SafeInvoke(this, e);
+        OnRequestShowAll?.Invoke(this, e);
     }
 
     private void RequestForSelectByDrawing(object sender, LegendItemEventArgs e)
     {
-        this.OnRequestSelectByDrawing.SafeInvoke(this, e);
+        OnRequestSelectByDrawing?.Invoke(this, e);
     }
 
 

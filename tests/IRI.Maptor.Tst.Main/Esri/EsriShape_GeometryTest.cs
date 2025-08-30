@@ -11,7 +11,7 @@ public class EsriShape_GeometryTest
 {
     public EsriShape_GeometryTest()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
     }
 
 

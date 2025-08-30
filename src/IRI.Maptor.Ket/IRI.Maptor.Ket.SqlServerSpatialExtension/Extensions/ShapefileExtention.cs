@@ -1,8 +1,7 @@
-﻿using IRI.Maptor.Sta.Spatial.Primitives;
+﻿using Microsoft.SqlServer.Types;
+
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
-using Microsoft.SqlServer.Types;
 using IRI.Maptor.Ket.SqlServerSpatialExtension.Helpers;
-using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 

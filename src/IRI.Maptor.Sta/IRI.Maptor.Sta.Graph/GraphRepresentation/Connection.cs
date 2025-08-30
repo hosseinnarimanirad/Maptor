@@ -1,10 +1,6 @@
-﻿// besmellahe rahmane rahim
-// Allahomma ajjel le-valiyek al-faraj
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿// BESMELLAHE RAHMANE RAHIM
+// ALLAHOMMA AJJEL LE-VALIYEK AL-FARAJ
+ 
 namespace IRI.Maptor.Sta.Graph;
 
 public struct Connection<TNode, TWeight>

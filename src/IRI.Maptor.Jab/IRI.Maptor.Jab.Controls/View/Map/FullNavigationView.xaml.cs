@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IRI.Maptor.Jab.Common.Events;
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,9 +42,9 @@ public partial class FullNavigationView : UserControl, INotifyPropertyChanged
 
     //public event IRI.Maptor.Jab.Common.PanEventHandler OnPanTriggered;
 
-    public event EventHandler<IRI.Maptor.Jab.Common.ZoomEventArgs> OnZoomChanged;
+    public event EventHandler<ZoomEventArgs> OnZoomChanged;
 
-    public event EventHandler<IRI.Maptor.Jab.Common.PanEventArgs> OnPanTriggered;
+    public event EventHandler<PanEventArgs> OnPanTriggered;
 
 
 
@@ -105,12 +106,12 @@ public partial class FullNavigationView : UserControl, INotifyPropertyChanged
     {
         this.ZoomLevel = this.zoom.Value;
 
-        this.OnZoomChanged?.Invoke(sender, new IRI.Maptor.Jab.Common.ZoomEventArgs(e.NewValue, double.NaN));
+        this.OnZoomChanged?.Invoke(sender, ZoomEventArgs.EmptyArg);
     }
 
     private void PanMap(double xOffset, double yOffset)
     {
-        this.OnPanTriggered?.Invoke(this, new IRI.Maptor.Jab.Common.PanEventArgs(new Point(xOffset, yOffset)));
+        this.OnPanTriggered?.Invoke(this, new PanEventArgs(new Point(xOffset, yOffset)));
     }
 
     public void UpdateZoomLevel(double zoomLevel)

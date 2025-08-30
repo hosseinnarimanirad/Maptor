@@ -1,5 +1,7 @@
+besmellah
+
 # 🌍 Maptor Spatial Library
-**A .NET Library for Spatial Data Processing and Geospatial Analysis**  
+**A .NET Library for Spatial Data Modeling, Transfer, Processing, and Visualization**  
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/hosseinnarimanirad/IRI.Japey/blob/master/LICENSE)
 [![Build](https://img.shields.io/github/actions/workflow/status/hosseinnarimanirad/Maptor/master-release.yml)](https://github.com/hosseinnarimanirad/Maptor/actions)
@@ -26,10 +28,10 @@ Built for **.NET 8+**, it provides a comprehensive set of tools for **geometry o
 
 ```
 Maptor /
-├── IRI.Sta/                     # Core spatial data structures & algorithms
-├── IRI.Ket/                     # Utilities (data sources, file I/O)
-├── IRI.Jab/                     # WPF components (MapViewer, dialogs, etc.)
-├── IRI.Tst/                     # Unit tests
+├── IRI.Maptor.Sta/                     # Core spatial data structures & algorithms
+├── IRI.Maptor.Ket/                     # Utilities (data sources, file I/O)
+├── IRI.Maptor.Jab/                     # WPF components (MapViewer, dialogs, etc.)
+├── IRI.Maptor.Tst/                     # Unit tests
 └── Examples/                    # Usage samples
 ```
 
@@ -39,7 +41,6 @@ Maptor /
 
 Maptor consists of multiple modular packages. 
  
-👉 [Browse all packages on NuGet.org](https://www.nuget.org/packages?q=IRI.Maptor)
  	 
 | Package | Description | Version |
 |---------|-------------|---------|
@@ -70,6 +71,9 @@ Maptor consists of multiple modular packages.
 
 </details>     
   	  
+      
+👉 [Browse all packages on NuGet.org](https://www.nuget.org/packages?q=IRI.Maptor)
+
 ---
   
 **Installation Example via NuGet CLI:**

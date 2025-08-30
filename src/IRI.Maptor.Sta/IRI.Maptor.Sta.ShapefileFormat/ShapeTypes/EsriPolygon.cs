@@ -202,7 +202,7 @@ public struct EsriPolygon : IEsriSimplePoints
 
         for (int i = 0; i < NumberOfParts; i++)
         {
-            result.Append(string.Format("{0},", SqlServerWktMapFunctions.PointGroupElementToWkt(ShapeHelper.GetEsriPoints(this, this.Parts[i]))));
+            result.Append(string.Format("{0},", SqlServerWktHelper.PointGroupElementToWkt(ShapeHelper.GetEsriPoints(this, this.Parts[i]))));
         }
 
         return result.Remove(result.Length - 1, 1).Append(")").ToString();

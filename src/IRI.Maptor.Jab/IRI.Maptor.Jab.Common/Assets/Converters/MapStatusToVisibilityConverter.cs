@@ -3,8 +3,6 @@ using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
 
-using IRI.Maptor.Jab.Common.Model;
-
 namespace IRI.Maptor.Jab.Common.Assets.Converters;
 
 public class MapStatusToVisibilityConverter : IValueConverter

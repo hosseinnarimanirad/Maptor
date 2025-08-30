@@ -15,7 +15,6 @@ public class EsriJsonGeometry
     const string polylineType = "POLYLINE";
     const string polygonType = "POLYGON";
 
-    //[JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public EsriJsonGeometryType Type { get; set; }
 
@@ -46,7 +45,6 @@ public class EsriJsonGeometry
     {
         try
         {
-            //var result = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(esriGeometryJsonString);
             var result = JsonHelper.Deserialize<EsriJsonGeometry>(esriGeometryJsonString);
 
             result.Type = type;

@@ -21,7 +21,6 @@ public class GeoJsonFeatureSet
 
     public void Save(string fileName, bool indented, bool removeSpaces = false)
     {
-        //var result = Newtonsoft.Json.JsonConvert.SerializeObject(this, indented ? Formatting.Indented : Formatting.None);
         var result = JsonHelper.Serialize(this, indented);
 
         System.IO.File.WriteAllText(fileName, removeSpaces ? result.Replace(" ", string.Empty) : result);

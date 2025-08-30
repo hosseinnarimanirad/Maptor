@@ -11,7 +11,6 @@
  
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\IRI.Maptor.Bas\IRI.Maptor.Bas.SqlSpatialLoader\IRI.Maptor.Bas.SqlSpatialLoader.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Common\IRI.Maptor.Jab.Common.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Controls\IRI.Maptor.Jab.Controls.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Controls\IRI.Maptor.Jab.Controls.csproj" />
@@ -25,13 +24,17 @@
 
   <ItemGroup>
     <PackageReference Include="MahApps.Metro" />
-    <PackageReference Include="MahApps.Metro.IconPacks" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Modern" />
   </ItemGroup>
   
-  <ItemGroup>
+  <!--<ItemGroup>
     <Reference Include="Microsoft.SqlServer.Types">
       <HintPath>..\..\..\deploy\MicrosoftSqlServerTypes\v14\Microsoft.SqlServer.Types.dll</HintPath>
     </Reference>
+  </ItemGroup>-->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SqlServer.Types" />
   </ItemGroup>
+
 
 </Project>

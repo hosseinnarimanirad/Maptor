@@ -15,7 +15,7 @@ public class GdbItem
 
     public GdbXml_FeatureClass? DefinitionInfo => string.IsNullOrWhiteSpace(Definition) ?
                                                 null :
-                                                XmlHelper.ParseFromXml<GdbXml_FeatureClass>(Definition);
+                                                XmlHelper.DeserializeFromXmlString<GdbXml_FeatureClass>(Definition);
 
     public string? AliasName => DefinitionInfo?.AliasName;
 

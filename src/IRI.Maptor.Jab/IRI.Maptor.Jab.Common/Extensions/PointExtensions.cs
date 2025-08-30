@@ -1,5 +1,6 @@
-﻿using IRI.Maptor.Sta.Common.Abstrations;
-using System;
+﻿using System;
+
+using IRI.Maptor.Sta.Common.Abstrations;
 
 namespace IRI.Maptor.Extensions;
 

@@ -1,7 +1,6 @@
-﻿using System; 
-using IRI.Maptor.Jab.Common.Model;
+﻿using System;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Events;
 
 public class MapActionEventArgs : EventArgs
 {

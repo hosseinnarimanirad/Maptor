@@ -5,71 +5,24 @@ using System.Windows.Shapes;
 using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common.Model;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Common.Enums;
-using IRI.Maptor.Extensions;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 namespace IRI.Maptor.Jab.Common;
 
-public class SpecialLineLayer : BaseLayer
+public class SpecialLineLayer : SymbolizableLayer
 {
-    #region BaseLayer Members
-
-    private BoundingBox _extent;
-
-    public override BoundingBox Extent
-    {
-        get
-        {
-            return _extent;
-        }
-
-        protected set
-        {
-            this._extent = value;
-        }
-    }
-
-    public override RenderingApproach Rendering
-    {
-        get
-        {
-            return RenderingApproach.Default;
-        }
-
-        protected set
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public override LayerType Type
-    {
-        get
-        {
-            return LayerType.Complex;
-        }
-
-        protected set
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    #endregion
+    public override LayerType Type => LayerType.Complex;
 
     public const string DefaultArrowString = "F1 M 6.75,9L 8.75,11L 16,18L 9.5,18L 0,9L 9.5,0L 16,0L 8.75,7L 6.75,9 Z";
 
     public static readonly System.Windows.Media.Geometry DefaultArrow = System.Windows.Media.Geometry.Parse(DefaultArrowString);
-
-
+     
     List<Point> _pointCollection;
 
     bool _isPolyBezierMode;
 
     System.Windows.Media.Geometry _symbol;
-
     public System.Windows.Media.Geometry Symbol
     {
         get { return _symbol; }
@@ -89,7 +42,9 @@ public class SpecialLineLayer : BaseLayer
         if (!polyBezierMode)
             throw new NotImplementedException();
 
-        this.VisualParameters = parameters ?? VisualParameters.CreateNew(1);
+        var visualParameters = parameters ?? VisualParameters.CreateNew(1);
+         
+        this.SetSymbolizer(new SimpleSymbolizer(visualParameters));
 
         this.ZIndex = int.MaxValue;
 
@@ -107,7 +62,6 @@ public class SpecialLineLayer : BaseLayer
         figure.Segments.Add(segment);
 
         return new PathGeometry(new List<PathFigure>() { figure });
-
     }
 
     public void Update(System.Windows.Media.Geometry symbol, List<Point> pointCollection, bool canEdit = true, bool polyBezierMode = true)
@@ -153,11 +107,13 @@ public class SpecialLineLayer : BaseLayer
             System.Windows.Point location, direction;
 
             pathGeometry.GetPointAtFractionLength(fraction, out location, out direction);
-             
+
             if (!screenLimit.Intersects(new Point(location.X, location.Y)))
                 continue;
 
-            Path tempPath = new Path() { Fill = this.VisualParameters.Fill, Data = _symbol };
+            var param = this.GetMainOrDefaultSymbology();
+
+            Path tempPath = new Path() { Fill = param.Fill, Data = _symbol };
 
             if (CanEdit && mouseDownAction != null)
             {

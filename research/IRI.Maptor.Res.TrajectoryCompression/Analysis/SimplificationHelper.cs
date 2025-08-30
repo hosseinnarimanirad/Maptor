@@ -9,8 +9,6 @@ using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Enums;
-using IRI.Maptor.Jab.Common.Model;
 using IRI.Maptor.Sta.ShapefileFormat;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
@@ -606,8 +604,8 @@ public static class SimplificationHelper
                                             new List<Geometry<Point>>() { geometry },
                                             VisualParameters.Get(Colors.Transparent, color, strokeThickness, opacity),
                                             LayerType.VectorLayer,
-                                            RenderingApproach.Default,
-                                            RasterizationApproach.DrawingVisual);
+                                            RenderMode.Default,
+                                            RasterizationMethod.DrawingVisual);
 
         var currentScreenSize = WebMercatorUtility.ToScreenSize(level, groundBoundingBox);
 
@@ -780,7 +778,7 @@ public static class SimplificationHelper
             var currentScreenSize = WebMercatorUtility.ToScreenSize(level, groundBoundingBox);
             var scale = WebMercatorUtility.GetGoogleMapScale(level);
 
-            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
+            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(groundBoundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
 
             originalBitmap.Save($"{outputDirectory}\\{fileName}-{level}-original.png", System.Drawing.Imaging.ImageFormat.Tiff);
 

@@ -17,7 +17,7 @@ public class SpatialUtilityTest
 {
     public SpatialUtilityTest()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
     }
 
     [Theory]
@@ -230,7 +230,7 @@ public class SpatialUtilityTest
     [Theory]
     [InlineData(true, "POLYGON((0 0 9, 30 0 9, 30 30 9, 0 30 9, 0 0 9))", "POINT(10 10)")]
     [InlineData(false, "POLYGON((0 0 9, 30 0 9, 30 30 9, 0 30 9, 0 0 9))", "POINT(-1 10)")]
-     
+
     [InlineData(false, _multiPolygon2, "POINT(5928349 3913730)")]
     [InlineData(false, _multiPolygon2, "POINT(5928808 3904099)")]
     [InlineData(false, _multiPolygon2, "POINT(5959994 3906086)")]
@@ -328,22 +328,28 @@ public class SpatialUtilityTest
         Assert.Equal(isPointInPolygon, isPointInPolygonActually);
     }
 
-    [Fact]
-    public void TestSphericalDistance()
+    [Theory]
+    [InlineData(30.0000, 44.0000, 30.0001, 44.0001, 6)] // ~15 m
+    [InlineData(30.0000, 44.0000, 30.0010, 44.0010, 6)] // ~150 m
+    [InlineData(30.0000, 44.0000, 30.0100, 44.0100, 4)] // ~1.5 km
+    [InlineData(30.0000, 44.0000, 30.0500, 44.0500, 5)] // ~7.5 km
+    [InlineData(30.0000, 44.0000, 30.5000, 44.5000, 4)] // ~68 km
+    [InlineData(30.0000, 44.0000, 31.0000, 45.0000, 3)] // ~137 km
+    [InlineData(66.0000, 70.0000, 95.0000, 33.1234, 0)] // ~137 km
+    public void VincentyDistance_ShouldMatchSqlGeography(double longitude1, double latitude1, double longitude2, double latitude2, int precision)
     {
-        //var p1 = new Point(-5.0 + 42.0 / 60 + 53 / 3600.0, 50.0 + 03 / 60.0 + 59.0 / 3600);
-        //var p2 = new Point(-3.0 + 04.0 / 60 + 12 / 3600.0, 58.0 + 38 / 60.0 + 38.0 / 3600);
+        // Arrange
+        var p1 = new Point(longitude1, latitude1);
+        var p2 = new Point(longitude2, latitude2);
 
-        var p1 = new Point(30, 44);
-        var p2 = new Point(30.5, 44.5);
+        var expected = p1.AsSqlGeography().STDistance(p2.AsSqlGeography()).Value;
 
-        var p1Geo = p1.AsSqlGeography();
-        var p2Geo = p2.AsSqlGeography();
+        // Act
+        var actual = SpatialUtility.VincentyDistance(p1, p2);
 
-        var expected = p1Geo.STDistance(p2Geo).Value;
-
-        var distance = p1.SphericalDistance(p2);
-
-        Assert.Equal(expected, distance);
+        // Assert
+        Assert.Equal(expected, actual, precision: precision);
     }
+
+
 }

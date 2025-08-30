@@ -137,6 +137,7 @@ public class Point : IPoint
 
         return result;
     }
+     
 
     public virtual string AsWkt()
     {

@@ -8,13 +8,13 @@
         mc:Ignorable="d" Loaded="loaded_l"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <!--<Button Click="Button_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Go" MinWidth="72"/>-->
+        <Button Click="Button_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Go" MinWidth="72"/>
         <!--<mahApp:ColorCanvas/>-->
         <!--<mahApp:ColorPalette VerticalAlignment="Top" HorizontalAlignment="Left"/>--> 
-        <mahApp:ColorPicker  VerticalAlignment="Top"
+        <!--<mahApp:ColorPicker  VerticalAlignment="Top"
                  mahApp:TextBoxHelper.ClearTextButton="True"
                  mahApp:TextBoxHelper.UseFloatingWatermark="True"
                  mahApp:TextBoxHelper.Watermark="Select a color2" 
-                SelectedColor="red"  />
+                SelectedColor="red"  />-->
     </Grid>
 </Window>

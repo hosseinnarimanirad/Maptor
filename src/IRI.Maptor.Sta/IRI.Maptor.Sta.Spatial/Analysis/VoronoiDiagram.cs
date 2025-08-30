@@ -1,8 +1,8 @@
-﻿// besmellahe rahmane rahim
-// Allahomma ajjel le-valiyek al-faraj
+﻿// BESMELLAHE RAHMANE RAHIM
+// ALLAHOMMA AJJEL LE-VALIYEK AL-FARAJ
 
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Analysis.Topology;
+using IRI.Maptor.Sta.Spatial.Topology;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -314,4 +314,6 @@ public class VoronoiDiagram
 
         return result;
     }
+
+
 }

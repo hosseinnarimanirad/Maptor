@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common.Model;
+using IRI.Maptor.Jab.Common.Events;
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Common.Model.Legend;
+using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Enums; 
+using System.Windows.Data;
+using System.Windows.Shapes;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -18,34 +20,45 @@ public abstract class BaseLayer : Notifier, ILayer
     {
         this.LayerId = Guid.NewGuid();
 
-        this.VisibleRange = ScaleInterval.All;
-
-        this.VisualParameters = VisualParameters.CreateNew(1);
-
         this.ParentLayerId = Guid.Empty;
     }
 
+    #region Layer Id
+
+    /// <summary>
+    /// Id of layer in datasource or api response
+    /// to manage sublayers
+    /// </summary>
     public int AuxilaryId { get; set; }
-
-    public abstract LayerType Type { get; protected set; }
-
-    public abstract BoundingBox Extent { get; protected set; }
-
-    public abstract RenderingApproach Rendering { get; protected set; }
-
-    public virtual RasterizationApproach ToRasterTechnique
-    {
-        get { return RasterizationApproach.None; }
-
-        protected set { }
-    }
-
-    public virtual void Invalidate() => IsValid = false;
 
     public Guid LayerId { get; protected set; }
 
-    private bool _isGroupLayer;
+    public Guid ParentLayerId { get; set; }
 
+    private string _layerName = string.Empty;
+    public string LayerName
+    {
+        get { return _layerName; }
+        set
+        {
+            _layerName = value;
+            RaisePropertyChanged();
+
+            this._onLayerNameChanged?.Invoke(this, new CustomEventArgs<string>(value));
+        }
+    }
+
+    #endregion
+
+    public abstract LayerType Type { get; /*protected set;*/ }
+
+    public virtual BoundingBox Extent { get; protected set; }
+
+    public virtual RenderMode RenderMode { get => RenderMode.Default; /*protected set { } */}
+
+    public virtual RasterizationMethod RasterizationMethod { get => RasterizationMethod.None;/* protected set { }*/ }
+
+    private bool _isGroupLayer;
     public bool IsGroupLayer
     {
         get { return _isGroupLayer; }
@@ -57,20 +70,31 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
+    public ObservableCollection<ILayer> SubLayers { get; set; } = new();
 
-    public Guid ParentLayerId { get; set; }
-
-    public ObservableCollection<ILayer> SubLayers { get; set; }
-
-    public bool IsValid { get; set; } = true;
+    //public bool IsValid { get; set; } = true;
 
     public int ZIndex { get; set; }
 
-    // use for identify tool
+    // is layer discoverable in identify
     public bool IsSearchable { get; set; } = false;
 
-    private bool _isSelectedInToc;
+    private bool _isInScaleRange;
 
+    public bool IsInScaleRange
+    {
+        get { return _isInScaleRange; }
+        set
+        {
+            _isInScaleRange = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    #region Toc
+
+    private bool _isSelectedInToc;
     public bool IsSelectedInToc
     {
         get { return _isSelectedInToc; }
@@ -91,7 +115,6 @@ public abstract class BaseLayer : Notifier, ILayer
     }
 
     private bool _isExpandedInToc;
-
     public bool IsExpandedInToc
     {
         get { return _isExpandedInToc; }
@@ -118,13 +141,13 @@ public abstract class BaseLayer : Notifier, ILayer
             //}
         }
     }
+
     public bool ShowOptions
     {
         get { return IsSelectedInToc && Commands?.Count > 0 && !IsGroupLayer; }
     }
 
     private bool _showInToc = true;
-
     public bool ShowInToc
     {
         get { return _showInToc; }
@@ -135,8 +158,18 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-    private bool _canUserDelete = true;
+    private int _tocOrder;
+    public int TocOrder
+    {
+        get { return _tocOrder; }
+        set
+        {
+            _tocOrder = value;
+            RaisePropertyChanged();
+        }
+    }
 
+    private bool _canUserDelete = true;
     public bool CanUserDelete
     {
         get { return Type != LayerType.BaseMap && _canUserDelete; }
@@ -147,29 +180,37 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-    private int _numberOfSelectedFeatures;
 
-    public bool HasSelectedFeatures
-    {
-        get { return NumberOfSelectedFeatures > 0; }
-    }
+    public virtual bool IsSymbolizable => false;
 
-    public int NumberOfSelectedFeatures
+    public virtual bool HasMultiSymbolizers => false;
+
+    #endregion
+
+    private double _opacity = 1.0;
+    public double Opacity
     {
-        get { return _numberOfSelectedFeatures; }
+        get { return _opacity; }
         set
         {
-            _numberOfSelectedFeatures = value;
+            _opacity = value;
             RaisePropertyChanged();
-            RaisePropertyChanged(nameof(HasSelectedFeatures));
-
-            this.OnSelectedFeaturesChanged?.Invoke(this, new CustomEventArgs<BaseLayer>(this));
         }
     }
 
+    private Visibility _visibility;
+    public Visibility Visibility
+    {
+        get { return _visibility; }
+        set
+        {
+            _visibility = value;
+            RaisePropertyChanged();
+            SetVisibility(value);
+        }
+    }
 
-    private ScaleInterval _visibleRange;
-
+    private ScaleInterval _visibleRange = ScaleInterval.All;
     public ScaleInterval VisibleRange
     {
         get { return _visibleRange; }
@@ -180,18 +221,91 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-    private List<ILegendCommand>? _commands;
-    public List<ILegendCommand>? Commands
+    //private LabelParameters _labels;
+    //public LabelParameters Labels
+    //{
+    //    get { return _labels; }
+    //    set
+    //    {
+    //        _labels = value;
+    //        RaisePropertyChanged();
+
+    //        this.OnLabelChanged?.Invoke(this, new CustomEventArgs<LabelParameters>(value));
+    //    }
+    //}
+
+    //private VisualParameters _visualParameters;
+    //public VisualParameters VisualParameters
+    //{
+    //    get { return _visualParameters; }
+    //    set
+    //    {
+    //        _visualParameters = value;
+
+    //        RaisePropertyChanged();
+
+    //        if (_visualParameters != null)
+    //        {
+    //            _visualParameters.OnVisibilityChanged -= RaiseVisibilityChanged;
+    //            _visualParameters.OnVisibilityChanged += RaiseVisibilityChanged;
+    //        }
+
+    //    }
+    //}
+
+
+    private FrameworkElement? _element;
+    public FrameworkElement? Element
     {
-        get { return _commands; }
+        get { return this._element; }
+
         set
         {
-            _commands = value;
+            this._element = value;
+
+            if (Element is not null)
+            {
+                BindWithFrameworkElement(value);
+            }
+
             RaisePropertyChanged();
-            RaisePropertyChanged(nameof(ShowOptions));
         }
     }
 
+    public Action<ILayer>? RequestChangeVisibility { get; set; }
+
+    protected virtual void BindWithFrameworkElement(FrameworkElement? element)
+    {
+        if (element is null)
+            return;
+
+        Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
+        element.SetBinding(Path.VisibilityProperty, binding4);
+
+        Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
+        element.SetBinding(Path.OpacityProperty, binding5);
+    }
+
+    //public void BindWithFrameworkElement(FrameworkElement? element)
+    //{
+    //    if (element is null)
+    //        return;
+
+    //    if (element is Path || element is Rectangle)
+    //    {
+    //        Binding binding4 = new Binding() { Source = this._parent, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
+    //        element.SetBinding(Path.VisibilityProperty, binding4);
+
+    //        Binding binding5 = new Binding() { Source = this._parent, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
+    //        element.SetBinding(Path.OpacityProperty, binding5);
+    //    } 
+    //    else
+    //        throw new NotImplementedException();
+    //} 
+
+    #region Methods
+
+    //public virtual void Invalidate() => IsValid = false;
 
     public void TurnOff()
     {
@@ -205,20 +319,23 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public void SetVisibility(Visibility visibility)
     {
-        this.VisualParameters.Visibility = visibility;
-
         if (!SubLayers.IsNullOrEmpty())
         {
             foreach (var item in SubLayers)
             {
-                item.SetVisibility(visibility);
+                item.Visibility = visibility;
             }
+        }
+
+        if (this.Element is null && visibility == Visibility.Visible)
+        {
+            this.RequestChangeVisibility?.Invoke(this);
         }
     }
 
     public void ToggleVisibility()
     {
-        if (this.VisualParameters.Visibility == Visibility.Visible)
+        if (this.Visibility == Visibility.Visible)
         {
             TurnOff();
         }
@@ -230,18 +347,20 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public bool CanRenderLayer(double mapScale)
     {
-        return this.VisualParameters?.Visibility == Visibility.Visible && this.VisibleRange.IsInRange(1.0 / mapScale);
+        return this.Visibility == Visibility.Visible && this.VisibleRange.IsInRange(1.0 / mapScale);
     }
 
-    public bool CanRenderLabels(double mapScale)
-    {
-        return this.Labels?.IsLabeled(1.0 / mapScale) == true;
-    }
+    //public bool CanRenderLabels(double mapScale)
+    //{
+    //    return this.Labels?.IsLabeled(1.0 / mapScale) == true;
+    //}
 
-    private List<IFeatureTableCommand> _featureTableCommands;
+    #endregion
+
+    private List<IFeatureTableCommand> _featureTableCommands = new();
     public List<IFeatureTableCommand> FeatureTableCommands
     {
-        get { return _featureTableCommands; }
+        get => _featureTableCommands;
         set
         {
             _featureTableCommands = value;
@@ -249,9 +368,20 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
+    private List<ILegendCommand> _commands = new();
+    public List<ILegendCommand> Commands
+    {
+        get => _commands;
+        set
+        {
+            _commands = value;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(ShowOptions));
+        }
+    }
 
 
-    private RelayCommand _changeSymbologyCommand;
+    private RelayCommand? _changeSymbologyCommand;
     public RelayCommand ChangeSymbologyCommand
     {
         get
@@ -266,16 +396,13 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-
-
-    private RelayCommand _toggleExpandCommand;
+    private RelayCommand? _toggleExpandCommand;
     public RelayCommand ToggleExpandCommand
     {
         get
         {
             if (_toggleExpandCommand == null)
             {
-                //_changeSymbologyCommand = new RelayCommand(param => { this.RequestChangeSymbology?.Invoke(this); }, param => IsSelectedInToc);
                 _toggleExpandCommand = new RelayCommand(param => { this.IsExpandedInToc = !this.IsExpandedInToc; });
             }
 
@@ -284,61 +411,13 @@ public abstract class BaseLayer : Notifier, ILayer
     }
 
 
-    private LabelParameters _labels;
+    public Action<ILayer>? RequestChangeSymbology;
 
-    public LabelParameters Labels
-    {
-        get { return _labels; }
-        set
-        {
-            _labels = value;
-            RaisePropertyChanged();
+    #region Events
 
-            this.OnLabelChanged?.Invoke(this, new CustomEventArgs<LabelParameters>(value));
-        }
-    }
+    private event EventHandler<CustomEventArgs<VisualParameters>>? _onVisibilityChanged;
 
-    private string _layerName;
-
-    public string LayerName
-    {
-        get { return _layerName; }
-        set
-        {
-            _layerName = value;
-            RaisePropertyChanged();
-
-            this._onLayerNameChanged?.Invoke(this, new CustomEventArgs<string>(value));
-        }
-    }
-
-
-
-    private VisualParameters _visualParameters;
-
-    public VisualParameters VisualParameters
-    {
-        get { return _visualParameters; }
-        set
-        {
-            _visualParameters = value;
-
-            RaisePropertyChanged();
-
-            if (_visualParameters != null)
-            {
-                _visualParameters.OnVisibilityChanged -= RaiseVisibilityChanged;
-                _visualParameters.OnVisibilityChanged += RaiseVisibilityChanged;
-            }
-
-        }
-    }
-
-    public Action<ILayer> RequestChangeSymbology;
-
-    private event EventHandler<CustomEventArgs<Visibility>> _onVisibilityChanged;
-
-    public event EventHandler<CustomEventArgs<Visibility>> OnVisibilityChanged
+    public event EventHandler<CustomEventArgs<VisualParameters>> OnVisibilityChanged
     {
         remove { this._onVisibilityChanged -= value; }
         add
@@ -350,10 +429,7 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-    public event EventHandler<CustomEventArgs<BaseLayer>> OnSelectedFeaturesChanged;
-
-
-    private event EventHandler<CustomEventArgs<string>> _onLayerNameChanged;
+    private event EventHandler<CustomEventArgs<string>>? _onLayerNameChanged;
 
     public event EventHandler<CustomEventArgs<string>> OnLayerNameChanged
     {
@@ -367,12 +443,15 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-    private void RaiseVisibilityChanged(object sender, CustomEventArgs<Visibility> e)
-    {
-        this._onVisibilityChanged.SafeInvoke(this, e);
-    }
+    //public event EventHandler<CustomEventArgs<VisualParameters>> OnLabelChanged;
 
-    public event EventHandler<CustomEventArgs<LabelParameters>> OnLabelChanged;
+    public event EventHandler<CustomEventArgs<BaseLayer>>? OnIsSelectedInTocChanged;
 
-    public event EventHandler<CustomEventArgs<BaseLayer>> OnIsSelectedInTocChanged;
+    #endregion
+
+    //protected void RaiseVisibilityChanged(object? sender, CustomEventArgs<VisualParameters> e)
+    //{
+    //    this._onVisibilityChanged?.Invoke(this, e);
+    //}
+
 }

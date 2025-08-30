@@ -23,10 +23,13 @@
     <None Remove="Assets\PrjSamples\World_Mercator.prj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Reference Include="Microsoft.SqlServer.Types">
       <HintPath>..\..\deploy\MicrosoftSqlServerTypes\v14\Microsoft.SqlServer.Types.dll</HintPath>
     </Reference>
+  </ItemGroup>-->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SqlServer.Types" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,7 +48,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Common\IRI.Maptor.Jab.Common.csproj" />
-    <ProjectReference Include="..\..\src\IRI.Maptor.Bas\IRI.Maptor.Bas.SqlSpatialLoader\IRI.Maptor.Bas.SqlSpatialLoader.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.SqlServerSpatialExtension\IRI.Maptor.Ket.SqlServerSpatialExtension.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
     <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.MachineLearning\IRI.Maptor.Sta.MachineLearning.csproj" />

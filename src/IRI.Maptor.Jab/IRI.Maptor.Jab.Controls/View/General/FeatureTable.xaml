@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="IRI.Maptor.Jab.Controls.View.FeatureTable"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             xmlns:model="clr-namespace:IRI.Maptor.Jab.Common.Model;assembly=IRI.Maptor.Jab.Common"
+             xmlns:model="clr-namespace:IRI.Maptor.Jab.Common.Models;assembly=IRI.Maptor.Jab.Common"
              xmlns:local ="clr-namespace:IRI.Maptor.Jab.Controls.Common.Behaviors"
              xmlns:dgx="http://schemas.datagridExtensions.com/wpf"
              x:Name="root">

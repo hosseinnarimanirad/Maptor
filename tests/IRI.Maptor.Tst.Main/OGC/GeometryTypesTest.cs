@@ -20,7 +20,7 @@ namespace IRI.Maptor.Tst.Standards.OGC.SFA
 
         public GeometryTypesTest()
         {
-            SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+            //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
         }
 
         [Fact]

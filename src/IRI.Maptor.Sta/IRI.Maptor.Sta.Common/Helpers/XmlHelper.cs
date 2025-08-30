@@ -156,15 +156,15 @@ public static class XmlHelper
         //return writer.ToString();
     }
 
-    public static T Deserialize<T>(string path)
+    public static T DeserializeFromFile<T>(string path)
     {
-        System.Xml.XmlTextReader reader = null;
+        XmlTextReader? reader = null;
 
         try
         {
-            reader = new System.Xml.XmlTextReader(path);
+            reader = new XmlTextReader(path);
 
-            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(T));
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
 
             T result = (T)serializer.Deserialize(reader);
 
@@ -180,7 +180,7 @@ public static class XmlHelper
         }
     }
 
-    public static T ParseFromXml<T>(string xmlString)
+    public static T DeserializeFromXmlString<T>(string xmlString)
     {
         if (string.IsNullOrEmpty(xmlString))
             throw new ArgumentException("XML string cannot be null or empty", nameof(xmlString));

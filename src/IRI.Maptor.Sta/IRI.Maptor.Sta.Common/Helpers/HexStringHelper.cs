@@ -46,8 +46,11 @@ public static class HexStringHelper
     }
 
     //https://stackoverflow.com/questions/311165/how-do-you-convert-byte-array-to-hexadecimal-string-and-vice-versa
-    public static string ByteToHexBitFiddle(byte[] bytes, bool append0x = false)
+    public static string ByteToHexBitFiddle(byte[]? bytes, bool append0x = false)
     {
+        if (bytes is null)
+            return string.Empty;
+
         char[] c = new char[bytes.Length * 2];
         int b;
         for (int i = 0; i < bytes.Length; i++)

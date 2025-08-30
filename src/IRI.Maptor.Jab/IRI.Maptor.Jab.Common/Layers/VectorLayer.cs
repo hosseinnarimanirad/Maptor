@@ -10,73 +10,105 @@ using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common.Model;
+using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Helpers;
+using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Persistence.DataSources;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
 
 using WpfPoint = System.Windows.Point;
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Common.Enums;
-using IRI.Maptor.Sta.Persistence.Abstractions;
-using IRI.Maptor.Jab.Common.Cartography.Symbologies;
-using IRI.Maptor.Jab.Common.Cartography.Rendering;
-using IRI.Maptor.Extensions;
 
 namespace IRI.Maptor.Jab.Common;
 
-public class VectorLayer : BaseLayer
+public class VectorLayer : SymbolizableLayer
 {
     #region Properties, Fields
 
     public IVectorDataSource DataSource { get; protected set; }
 
-    private FrameworkElement _element;
+    //private FrameworkElement? _element;
+    //public FrameworkElement? Element
+    //{
+    //    get { return this._element; }
 
-    public FrameworkElement Element
-    {
-        get { return this._element; }
+    //    set
+    //    {
+    //        this._element = value;
 
-        set
-        {
-            this._element = value;
+    //        BindWithFrameworkElement(value);
 
-            BindWithFrameworkElement(value);
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
-            RaisePropertyChanged();
-        }
-    }
+    //public void BindWithFrameworkElement(FrameworkElement? element)
+    //{
+    //    if (element is null)
+    //        return;
 
-    private LayerType _type;
+    //    Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
+    //    element.SetBinding(Path.VisibilityProperty, binding4);
 
+    //    Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
+    //    element.SetBinding(Path.OpacityProperty, binding5);
+    //}
+
+    protected LayerType _type;
     public override LayerType Type
     {
         get { return _type; }
-        protected set
-        {
-            _type = value;
-            RaisePropertyChanged();
-        }
+        //protected set
+        //{
+        //    _type = value;
+        //    RaisePropertyChanged();
+        //}
     }
 
 
-    private BoundingBox _extent;
+    //private BoundingBox _extent;
+    //public override BoundingBox Extent
+    //{
+    //    get { return _extent; }
+    //    protected set
+    //    {
+    //        _extent = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
-    public override BoundingBox Extent
+    private RenderMode _rendering = RenderMode.Default;
+    public override RenderMode RenderMode { get => _rendering;/* private set;*/ }
+
+    protected RasterizationMethod _rasterizationApproach = RasterizationMethod.DrawingVisual;
+    public override RasterizationMethod RasterizationMethod { get => _rasterizationApproach; /*protected set;*/ }
+
+
+    private int _numberOfSelectedFeatures;
+    public int NumberOfSelectedFeatures
     {
-        get { return _extent; }
-        protected set
+        get { return _numberOfSelectedFeatures; }
+        set
         {
-            _extent = value;
+            _numberOfSelectedFeatures = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(HasSelectedFeatures));
+
+            this.OnSelectedFeaturesChanged?.Invoke(this, new CustomEventArgs<VectorLayer>(this));
         }
     }
 
-    public override RenderingApproach Rendering { get; protected set; }
+    public bool HasSelectedFeatures
+    {
+        get { return NumberOfSelectedFeatures > 0; }
+    }
 
-    public override RasterizationApproach ToRasterTechnique { get; protected set; }
+    public override bool IsSymbolizable => true;
 
     //public bool IsValid { get; set; }
 
@@ -84,68 +116,105 @@ public class VectorLayer : BaseLayer
 
     public TileManager TileManager = new TileManager();
 
-    public List<ISymbolizer> Symbolizers { get; protected set; } = new List<ISymbolizer>();
-
     #endregion
 
     #region Constructors
 
     internal VectorLayer()
     {
-
     }
 
-    public VectorLayer(string name, List<Geometry<Point>> features, LayerType type, RenderingApproach rendering, RasterizationApproach toRasterTechnique)
-        : this(name, features, new VisualParameters(BrushHelper.PickBrush(), BrushHelper.PickBrush(), 1, 1, Visibility.Visible), type, rendering, toRasterTechnique)
+    public VectorLayer(string layerName,
+                        List<Geometry<Point>> features,
+                        LayerType type,
+                        RenderMode renderMode,
+                        RasterizationMethod rasterizationMethod)
+        : this(layerName, features, new VisualParameters(BrushHelper.PickBrush(), BrushHelper.PickBrush(), 1, 1), type, renderMode, rasterizationMethod)
     {
-
     }
 
-    public VectorLayer(string layerName, List<Geometry<Point>> features, VisualParameters parameters, LayerType type, RenderingApproach rendering, RasterizationApproach toRasterTechnique)
+    public VectorLayer(string layerName,
+                        List<Geometry<Point>> features,
+                        VisualParameters parameters,
+                        LayerType type,
+                        RenderMode renderMode,
+                        RasterizationMethod rasterizationMethod)
     {
-        if (features == null || features.Count == 0)
+        if (features.IsNullOrEmpty())
             throw new NotImplementedException();
 
-        Initialize(layerName, new MemoryDataSource(features), parameters, type, rendering, toRasterTechnique, ScaleInterval.All, null, null);
+        var dataSource = new MemoryDataSource(features);
+
+        List<ISymbolizer> symbolizers = [new SimpleSymbolizer(parameters)];
+
+        Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, ScaleInterval.All);
     }
 
-    public VectorLayer(string layerName, IVectorDataSource dataSource, VisualParameters parameters, LayerType type, RenderingApproach rendering,
-        RasterizationApproach toRasterTechnique, ScaleInterval visibleRange, SimplePointSymbolizer pointSymbol = null, LabelParameters labeling = null)
+    public VectorLayer(string layerName,
+                        IVectorDataSource dataSource,
+                        VisualParameters parameters,
+                        LayerType type,
+                        RenderMode renderMode,
+                        RasterizationMethod rasterizationMethod,
+                        ScaleInterval visibleRange,
+                        //SimplePointSymbolizer? pointSymbol = null,
+                        VisualParameters? labeling = null)
     {
-        Initialize(layerName, dataSource, parameters, type, rendering, toRasterTechnique, visibleRange, pointSymbol, labeling);
+        List<ISymbolizer> symbolizers = [new SimpleSymbolizer(parameters)];
+
+        if (labeling is not null)
+            symbolizers.Add(new LabelSymbolizer(labeling));
+
+        Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange/*, pointSymbol, labeling*/);
     }
 
-    private void Initialize(string layerName, IVectorDataSource dataSource, VisualParameters parameters, LayerType type, RenderingApproach rendering,
-                                RasterizationApproach toRasterTechnique, ScaleInterval visibleRange,
-                                SimplePointSymbolizer pointSymbol, LabelParameters labeling)
+    public VectorLayer(string layerName,
+                      IVectorDataSource dataSource,
+                      List<ISymbolizer> symbolizers,
+                      LayerType type,
+                      RenderMode renderMode,
+                      RasterizationMethod rasterizationMethod,
+                      ScaleInterval visibleRange,
+                      VisualParameters? labeling = null)
+    {
+       
+        Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange);
+    }
+
+    private void Initialize(string layerName,
+                            IVectorDataSource dataSource,
+                            List<ISymbolizer> symbolizers,
+                            LayerType type,
+                            RenderMode rendering,
+                            RasterizationMethod toRasterTechnique,
+                            ScaleInterval visibleRange)//,
+                                                       //SimplePointSymbolizer? pointSymbol,
+                                                       //VisualParameters? labeling)
     {
         this.LayerId = Guid.NewGuid();
 
         this.DataSource = dataSource;
 
-        this.Rendering = rendering;
+        this._rendering = rendering;
 
-        this.ToRasterTechnique = toRasterTechnique;
+        this._rasterizationApproach = toRasterTechnique;
 
-        this.Type = type;
-
-        //var geometries = dataSource.GetGeometries();
+        this._type = type;
 
         if (dataSource.GeometryType.AsLayerType() is not null)
         {
-            this.Type = type | dataSource.GeometryType.AsLayerType().Value; /*GetGeometryType(geometries.FirstOrDefault(g => g != null))*/;
+            this._type = type | dataSource.GeometryType.AsLayerType().Value; /*GetGeometryType(geometries.FirstOrDefault(g => g != null))*/;
         }
         else
         {
-            this.Type = type;
+            this._type = type;
         }
 
-        //this.Extent = geometries?.GetBoundingBox() ?? BoundingBox.NaN;
         this.Extent = dataSource.WebMercatorExtent;
 
         this.LayerName = layerName;
 
-        this.VisualParameters = parameters;
+        //this.VisualParameters = parameters;
 
         //this.PointSymbol = pointSymbol ?? new SimplePointSymbol() { SymbolWidth = 4, SymbolHeight = 4 };
 
@@ -162,512 +231,40 @@ public class VectorLayer : BaseLayer
         //    this.Symbolizers.Add(new SimpleSymbolizer(f => f.Attributes["denomi_vol"].ToString() == "400", p1));
         //    this.Symbolizers.Add(new SimpleSymbolizer(f => f.Attributes["denomi_vol"].ToString() == "230", p2));
         //    this.Symbolizers.Add(new SimpleSymbolizer(f => f.Attributes["denomi_vol"].ToString() == "63", p3));
-        //}
-        //else
-        //{
-            this.Symbolizers.Add(new SimpleSymbolizer(parameters));
-        //}
+        //} 
+        //this.Symbolizers.Add(new SimpleSymbolizer(parameters));
+        
+        //this.Symbolizers.AddRange(symbolizers);
 
-        this.Labels = labeling;
-
-        //Check for missing visibleRange
-        if (this.Labels != null)
+        foreach (var item in symbolizers)
         {
-            if (this.Labels.VisibleRange == null)
-            {
-                this.Labels.VisibleRange = visibleRange;
-            }
-
-            this.Symbolizers.Add(new LabelSymbolizer(labeling));
+            this.SetSymbolizer(item);
         }
 
-        this.VisibleRange = (visibleRange == null) ? ScaleInterval.All : visibleRange;
+        //this.Labels = labeling;
 
+        ////Check for missing visibleRange
+        //if (this.Labels != null)
+        //{
+        //    if (this.Labels.VisibleRange == null)
+        //    {
+        //        this.Labels.VisibleRange = visibleRange;
+        //    }
+
+        //    this.Symbolizers.Add(new LabelSymbolizer(labeling));
+        //}
+
+        this.VisibleRange = (visibleRange == null) ? ScaleInterval.All : visibleRange;
     }
+
+
+
 
     #endregion
 
     public override string ToString()
     {
-        return $"{Enum.GetName(this.Type)} - {this.DataSource.ToString()}";
-    }
-
-    #region Rendering
-
-
-    //DrawingVisual Approach
-    //public ImageBrush? RenderUsingDrawingVisual(List<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight/*,*/ /*Func<WpfPoint, WpfPoint> mapToScreen,*/ /*RectangleGeometry area*/)
-    //{
-    //    if (features.IsNullOrEmpty())
-    //        return null;
-
-    //    //var pen = this.VisualParameters.GetWpfPen();
-
-    //    //Brush brush = this.VisualParameters.Fill;
-
-    //    //DrawingVisual drawingVisual = new DrawingVisualRenderer().ParseGeometry(features, /*mapToScreen,*/ pen, brush, this.VisualParameters.PointSymbol);
-
-    //    //if (drawingVisual is null)
-    //    //    return null;
-
-    //    //RenderTargetBitmap image = new RenderTargetBitmap((int)screenWidth, (int)screenHeight, 96, 96, PixelFormats.Pbgra32);
-
-    //    //image.Render(drawingVisual);
-
-    //    //if (this.CanRenderLabels(mapScale))
-    //    //{
-    //    //    var renderedLabels = this.DrawLabels(features/*, image*//*, mapToScreen*/);
-
-    //    //    if (renderedLabels is not null)
-    //    //        image.Render(renderedLabels);
-    //    //}
-
-    //    //image.Freeze();
-
-    //    //var drawingVisuals = AsDrawingVisual(features, mapScale);
-    //    var drawingVisuals = new DrawingVisualRenderStrategy(Symbolizers).AsDrawingVisual(features, mapScale);
-
-    //    var image = ImageUtility.Render(drawingVisuals, (int)screenWidth, (int)screenHeight);
-
-    //    return new ImageBrush(image);
-
-    //    //Path path = new Path()
-    //    //{
-    //    //    //Data = area,
-    //    //    Tag = new LayerTag(mapScale) { Layer = this, IsTiled = false },
-    //    //};
-
-    //    //this.Element = path;
-
-    //    //path.Fill = new ImageBrush(image);
-
-    //    //return path;
-    //}
-
-    //Gdi+
-    //public ImageBrush? RenderUsingGdiPlus(List<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight/*,*/ /*Func<WpfPoint, WpfPoint> mapToScreen,*/ /*RectangleGeometry area*/)
-    //{
-    //    //if (features.IsNullOrEmpty())
-    //    //    return null;
-
-    //    ////var borderBrush = this.VisualParameters.Stroke.AsGdiBrush();
-
-    //    ////var pen = this.VisualParameters.GetGdiPlusPen();
-
-    //    //var bitmap = GdiBitmapRenderer.ParseSqlGeometry(
-    //    //    features,
-    //    //    screenWidth,
-    //    //    screenHeight,
-    //    //    //mapToScreen,
-    //    //    this.VisualParameters.GetGdiPlusPen(),
-    //    //    this.VisualParameters.Fill.AsGdiBrush(),
-    //    //    this.VisualParameters.PointSymbol);
-
-    //    //if (bitmap == null)
-    //    //    return null;
-
-    //    //if (CanRenderLabels(mapScale))
-    //    //{
-    //    //    GdiBitmapRenderer.DrawLabels(features, bitmap, /*mapToScreen,*/ this.Labels);
-    //    //}
-
-    //    var bitmap = AsGdiBitmap(features, screenWidth, screenHeight, mapScale);
-
-    //    if (bitmap is null)
-    //        return null;
-
-    //    BitmapImage image = ImageUtility.AsBitmapImage(bitmap, System.Drawing.Imaging.ImageFormat.Png);
-
-    //    bitmap.Dispose();
-
-    //    image.Freeze();
-
-    //    return new ImageBrush(image);
-
-    //    //Path path = new Path()
-    //    //{
-    //    //    //Data = area,
-    //    //    Tag = new Model.LayerTag(mapScale) { Layer = this, Tile = null, IsDrawn = true, IsNew = true }
-    //    //};
-
-    //    //this.Element = path;
-
-    //    //path.Fill = new ImageBrush(bitmapImage);
-
-    //    //return path;
-    //}
-
-    //Consider Labels
-    //public ImageBrush? RenderUsingWriteableBitmap(List<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight/*,*/ /*Func<WpfPoint, WpfPoint> mapToScreen, *//*RectangleGeometry area*/)
-    //{
-    //    if (features.IsNullOrEmpty())
-    //        return null;
-
-    //    var image = new WriteableBitmapRenderStrategy(this.Symbolizers).ParseSqlGeometry(
-    //                        features,
-    //                        //mapToScreen,
-    //                        (int)screenWidth,
-    //                        (int)screenHeight,
-    //                        this.VisualParameters.Stroke.AsSolidColor().Value,
-    //                        this.VisualParameters.Fill.AsSolidColor().Value);
-
-    //    if (image == null)
-    //        return null;
-
-    //    if (CanRenderLabels(mapScale))
-    //    {
-    //        //this.DrawLabel(labels, geometries, image, transform);
-    //    }
-
-    //    image.Freeze();
-
-    //    return new ImageBrush(image);
-
-    //    ////Try #3
-    //    //Path path = new Path()
-    //    //{
-    //    //    //Data = area,
-    //    //    Tag = new LayerTag(mapScale) { Layer = this, Tile = null, IsDrawn = true, IsNew = true }
-    //    //};
-
-    //    //this.Element = path;
-
-    //    //path.Fill = new ImageBrush(image);
-
-    //    //return path;
-    //}
-
-    //StreamGeometry Approach
-    //public Path AsShape(List<Feature<Point>> features, TransformGroup viewTransform, TranslateTransform viewTransformForPoints/*, Func<WpfPoint, WpfPoint> mapToScreen*/)
-    //{
-    //    StreamGeometry geo;
-
-    //    if (this.Type.HasFlag(LayerType.Point))
-    //    {
-    //        geo = StreamGeometryRenderer.ParseSqlGeometry(features, /*mapToScreen,*/ this.VisualParameters.PointSymbol.GeometryPointSymbol);
-
-    //        geo.FillRule = FillRule.Nonzero;
-
-    //        geo.Transform = viewTransformForPoints;
-    //    }
-    //    else
-    //    {
-    //        geo = StreamGeometryRenderer.ParseSqlGeometry(features/*, p => p*/);
-
-    //        geo.Transform = viewTransform;
-    //    }
-
-    //    //GeometryDrawing drawing = new GeometryDrawing();
-
-    //    Path path = new Path()
-    //    {
-    //        StrokeDashArray = VisualParameters.DashType,
-    //        Data = geo,
-    //        Tag = new LayerTag(-1) { Layer = this, IsTiled = false },
-    //        Stroke = VisualParameters.Stroke,
-    //        Fill = VisualParameters.Fill,
-    //        StrokeThickness = VisualParameters.StrokeThickness
-    //    };
-
-    //    this.Element = path;
-
-    //    return path;
-    //}
-    //OpenTK
-    //public Path AsBitmapUsingOpenTK(List<Geometry<Point>> geometries, List<string> labels, double mapScale, BoundingBox boundingBox, double width, double height, Func<WpfPoint, WpfPoint> mapToScreen, RectangleGeometry area)
-    //{
-    //    if (geometries == null)
-    //        return null;
-
-    //    //Pen pen = new Pen(this.VisualParameters.Stroke, this.VisualParameters.StrokeThickness);
-    //    var pen = this.VisualParameters.GetGdiPlusPen();
-
-    //    Brush brush = this.VisualParameters.Fill;
-
-    //    //var color = ((SolidColorBrush)this.VisualParameters.Stroke)?.Color ?? ((SolidColorBrush)this.VisualParameters.Fill).Color;
-
-    //    //var image = new SqlSpatialToOpenTKBitmap().ParseSqlGeometry(
-    //    //    geometries,
-    //    //    width,
-    //    //    height,
-    //    //    mapToScreen,
-    //    //    new System.Drawing.Pen(System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B), (int)this.VisualParameters.StrokeThickness),
-    //    //    System.Drawing.Brushes.SkyBlue);
-
-    //    var image = new SqlSpatialToOpenTKBitmap().ParseSqlGeometry(
-    //        geometries,
-    //        width,
-    //        height,
-    //        mapToScreen,
-    //        pen,
-    //        System.Drawing.Brushes.SkyBlue);
-
-    //    if (image == null)
-    //        return null;
-
-    //    if (labels != null)
-    //    {
-    //        SqlSpatialToGdiBitmap.DrawLabels(labels, geometries, image, mapToScreen, Labels);
-    //    }
-
-    //    BitmapImage bitmapImage = IRI.Maptor.Jab.Common.Helpers.ImageUtility.AsBitmapImage(image, System.Drawing.Imaging.ImageFormat.Png);
-
-    //    //Try #3
-    //    Path path = new Path()
-    //    {
-    //        Data = area,
-    //        Tag = new Model.LayerTag(mapScale) { Layer = this, Tile = null, IsDrawn = true, IsNew = true }
-    //    };
-
-    //    this.Element = path;
-
-    //    path.Fill = new ImageBrush(bitmapImage);
-
-
-    //    return path;
-    //}
-
-    #endregion
-
-
-    #region Tile Rendering, Old methods
-
-    //DrawingVisual Approach
-    //public ImageBrush? AsTileUsingDrawingVisual(List<Feature<Point>> features, double mapScale, /*TileInfo region,*/ double tileWidth, double tileHeight/*, RectangleGeometry area*//*,*/ /*Func<WpfPoint, WpfPoint> viewTransform, *//*BoundingBox totalExtent*/)
-    //{
-    //    if (features is null)
-    //        return null;
-
-    //    //var shiftX = region.WebMercatorExtent.Center.X - totalExtent.TopLeft.X - region.WebMercatorExtent.Width / 2.0;
-    //    //var shiftY = region.WebMercatorExtent.Center.Y - totalExtent.TopLeft.Y + region.WebMercatorExtent.Height / 2.0;
-
-    //    var drawingVisual = new DrawingVisualRenderer().ParseGeometry(
-    //                            features,
-    //                            //p => viewTransform(new WpfPoint(p.X - shiftX, p.Y - shiftY)),
-    //                            this.VisualParameters.GetWpfPen(),
-    //                            this.VisualParameters.Fill,
-    //                            this.VisualParameters.PointSymbol);
-
-    //    if (drawingVisual is null)
-    //        return null;
-
-    //    RenderTargetBitmap image = new RenderTargetBitmap((int)tileWidth, (int)tileHeight, 96, 96, PixelFormats.Pbgra32);
-
-    //    image.Render(drawingVisual);
-
-    //    if (this.CanRenderLabels(mapScale))
-    //    {
-    //        this.DrawLabels(features, image/*, p => viewTransform(new WpfPoint(p.X - shiftX, p.Y - shiftY))*/);
-    //    }
-
-    //    image.Freeze();
-
-    //    return new ImageBrush(image);
-
-    //    //Path path = new Path()
-    //    //{
-    //    //    //Data = area,
-    //    //    Tag = new LayerTag(mapScale) { Layer = this, IsTiled = true, Tile = new TileInfo(region.RowNumber, region.ColumnNumber, region.ZoomLevel), IsDrawn = true, IsNew = true }
-    //    //};
-
-    //    //this.Element = path;
-
-    //    //path.Fill = new ImageBrush(image);
-
-    //    //return path;
-    //}
-
-    ////Gdi+ Approach
-    //public ImageBrush? AsTileUsingGdiPlusAsync(List<Feature<Point>> features, double mapScale, /*TileInfo region, */double tileWidth, double tileHeight/*, RectangleGeometry area*//*,*/ /*Func<WpfPoint, WpfPoint> viewTransform, *//*BoundingBox totalExtent*/)
-    //{
-    //    if (features.IsNullOrEmpty())
-    //        return null;
-
-    //    //var shiftX = region.WebMercatorExtent.Center.X - totalExtent.TopLeft.X - region.WebMercatorExtent.Width / 2.0;
-    //    //var shiftY = region.WebMercatorExtent.Center.Y - totalExtent.TopLeft.Y + region.WebMercatorExtent.Height / 2.0;
-
-    //    var bitmap = GdiBitmapRenderer.ParseSqlGeometry(
-    //                    features,
-    //                    tileWidth,
-    //                    tileHeight,
-    //                    //p => viewTransform(new WpfPoint(p.X - shiftX, p.Y - shiftY)),
-    //                    this.VisualParameters.GetGdiPlusPen(),
-    //                    this.VisualParameters.Fill.AsGdiBrush(),
-    //                    this.VisualParameters.PointSymbol);
-
-    //    if (bitmap is null)
-    //        return null;
-
-    //    if (this.CanRenderLabels(mapScale))
-    //    {
-    //        //96.05.19
-    //        //SqlSpatialToGdiBitmap.DrawLabels(labels, geometries, image, transform, Labels);
-    //    }
-
-    //    var image = ImageUtility.AsBitmapImage(bitmap, System.Drawing.Imaging.ImageFormat.Png);
-
-    //    bitmap.Dispose();
-
-    //    image.Freeze();
-
-    //    return new ImageBrush(image);
-
-    //    //Path path = new Path()
-    //    //{
-    //    //    //Data = area,
-    //    //    Tag = new LayerTag(mapScale) { Layer = this, IsTiled = true, Tile = new TileInfo(region.RowNumber, region.ColumnNumber, region.ZoomLevel), IsDrawn = true, IsNew = true }
-    //    //};
-
-    //    //this.Element = path;
-
-    //    //path.Fill = new ImageBrush(bitmapImage);
-
-    //    //return path;
-    //}
-
-    //Writeable Bitmap Approach
-    //Consider Labeling
-    //public ImageBrush? AsTileUsingWriteableBitmap(List<Feature<Point>> features, double mapScale, /*TileInfo region, */double tileWidth, double tileHeight/*, RectangleGeometry area*//*,*/ /*Func<WpfPoint, WpfPoint> viewTransform, *//*BoundingBox totalExtent*/)
-    //{
-    //    if (features.IsNullOrEmpty())
-    //        return null;
-
-    //    //var transform = MapToTileScreenWpf(totalExtent, region.WebMercatorExtent, viewTransform);
-
-    //    var image = new WriteableBitmapRenderer().ParseSqlGeometry(
-    //        features,
-    //        //transform,
-    //        (int)tileWidth,
-    //        (int)tileHeight,
-    //        this.VisualParameters.Stroke.AsSolidColor().Value,
-    //        this.VisualParameters.Fill.AsSolidColor().Value);
-
-    //    if (image is null)
-    //        return null;
-
-    //    image.Freeze();
-
-    //    return new ImageBrush(image);
-
-    //    //Path path = new Path()
-    //    //{
-    //    //    //Data = area,
-    //    //    Tag = new LayerTag(mapScale) { Layer = this, IsTiled = true, Tile = region, IsDrawn = true, IsNew = true }
-    //    //};
-
-    //    //this.Element = path;
-
-    //    //path.Fill = new ImageBrush(image);
-
-    //    //return path;
-    //}
-
-    ////OpenTK Approach
-    //public Path AsTileUsinOpenTK(List<Geometry<Point>> geometries, List<string> labels, double mapScale, TileInfo region, double tileWidth, double tileHeight, RectangleGeometry area, Func<WpfPoint, WpfPoint> viewTransform, BoundingBox totalExtent)
-    //{
-    //    if (geometries == null)
-    //        return null;
-
-    //    //Brush brush = this.VisualParameters.Fill;
-
-    //    //var color = ((SolidColorBrush)this.VisualParameters.Stroke)?.Color ?? ((SolidColorBrush)this.VisualParameters.Fill).Color;
-
-    //    //var pen = new System.Drawing.Pen(System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B), (int)this.VisualParameters.StrokeThickness);
-
-    //    //if (this.VisualParameters.DashStyle != null)
-    //    //{
-    //    //    pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-    //    //}
-    //    var pen = this.VisualParameters.GetGdiPlusPen();
-
-    //    var brush = this.VisualParameters.GetGdiPlusFillBrush();
-
-    //    var transform = MapToTileScreenWpf(totalExtent, region.WebMercatorExtent, viewTransform);
-
-    //    var image = new SqlSpatialToOpenTKBitmap().ParseSqlGeometry(
-    //                    geometries,
-    //                    tileWidth,
-    //                    tileHeight,
-    //                    transform,
-    //                    pen,
-    //                    brush);
-
-    //    if (image == null)
-    //        return null;
-
-    //    if (labels != null)
-    //    {
-    //        SqlSpatialToGdiBitmap.DrawLabels(labels, geometries, image, transform, this.Labels);
-    //    }
-
-    //    BitmapImage bitmapImage = IRI.Maptor.Jab.Common.Helpers.ImageUtility.AsBitmapImage(image, System.Drawing.Imaging.ImageFormat.Png);
-
-    //    Path path = new Path()
-    //    {
-    //        Data = area,
-    //        Tag = new LayerTag(mapScale) { Layer = this, IsTiled = true, Tile = region, IsDrawn = true, IsNew = true }
-    //    };
-
-    //    this.Element = path;
-
-    //    path.Fill = new ImageBrush(bitmapImage);
-
-    //    return path;
-    //}
-
-    //private static Func<WpfPoint, WpfPoint> MapToTileScreenWpf(BoundingBox totalExtent, BoundingBox mapBoundingBoxOfTile, Func<WpfPoint, WpfPoint> viewTransform)
-    //{
-    //    return p => { return viewTransform(new WpfPoint(p.X - mapBoundingBoxOfTile.TopLeft.X + totalExtent.TopLeft.X, p.Y - mapBoundingBoxOfTile.BottomRight.Y + totalExtent.BottomRight.Y)); };
-    //}
-
-    //private static Func<WpfPoint, WpfPoint> OldMapToTileScreenWpf(BoundingBox totalExtent, BoundingBox mapBoundingBoxOfTile, Transform viewTransform)
-    //{
-    //    var mapShift = (mapBoundingBoxOfTile.Center - new Point(totalExtent.TopLeft.X + mapBoundingBoxOfTile.Width / 2.0, totalExtent.TopLeft.Y - mapBoundingBoxOfTile.Height / 2.0)).AsWpfPoint();
-
-    //    return p => { return viewTransform.Transform(new WpfPoint(p.X - mapShift.X, p.Y - mapShift.Y)); };
-    //}
-
-    //private static Func<Point, Point> MapToTileScreen(BoundingBox totalExtent, BoundingBox mapBoundingBoxOfTile, Transform viewTransform)
-    //{
-    //    var mapShift = (mapBoundingBoxOfTile.Center - new Point(totalExtent.TopLeft.X + mapBoundingBoxOfTile.Width / 2.0, totalExtent.TopLeft.Y - mapBoundingBoxOfTile.Height / 2.0)).AsWpfPoint();
-
-    //    return p => { return viewTransform.Transform(new WpfPoint(p.X - mapShift.X, p.Y - mapShift.Y)).AsPoint(); };
-    //}
-
-    #endregion
-
-
-    public void BindWithFrameworkElement(FrameworkElement element)
-    {
-        //if (element is Path)
-        //{
-        //    Binding binding1 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Stroke"), Mode = BindingMode.TwoWay };
-        //    element.SetBinding(Path.StrokeProperty, binding1);
-
-        //    Binding binding2 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Fill"), Mode = BindingMode.TwoWay };
-        //    element.SetBinding(Path.FillProperty, binding2);
-
-        //    Binding binding3 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.StrokeThickness"), Mode = BindingMode.TwoWay };
-        //    element.SetBinding(Path.StrokeThicknessProperty, binding3);
-
-        //    Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Visibility"), Mode = BindingMode.TwoWay };
-        //    element.SetBinding(Path.VisibilityProperty, binding4);
-
-        //    Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Opacity"), Mode = BindingMode.TwoWay };
-        //    element.SetBinding(Path.OpacityProperty, binding5);
-
-        //    Binding binding6 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.DashType"), Mode = BindingMode.TwoWay };
-        //    element.SetBinding(Path.StrokeDashArrayProperty, binding5);
-        //}
-        //else if (element is System.Windows.Controls.Image)
-        //{
-
-        Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Visibility"), Mode = BindingMode.TwoWay };
-        //Binding binding4 = new Binding() { Source = this, Path = new PropertyPath(nameof(VisualParameters.Visibility)), Mode = BindingMode.TwoWay }; try using this line insted of above
-        element.SetBinding(Path.VisibilityProperty, binding4);
-
-        Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Opacity"), Mode = BindingMode.TwoWay };
-        element.SetBinding(Path.OpacityProperty, binding5);
+        return $"{Enum.GetName(this.Type)} - {this.DataSource?.ToString()}";
     }
 
     public static Func<Point, Point> CreateMapToScreenMapFunc(BoundingBox mapExtent, double screenWidth, double screenHeight)
@@ -679,12 +276,10 @@ public class VectorLayer : BaseLayer
         return new Func<Point, Point>(p => new Point((p.X - mapExtent.XMin) * scale, -(p.Y - mapExtent.YMax) * scale));
     }
 
-    public async Task<List<Feature<Point>>> GetRenderReadyFeatures(BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
+    public async Task<List<Feature<Point>>> GetRenderReadyFeatures(BoundingBox mapExtent, double mapScale, double screenWidth, double screenHeight)
     {
-        //var geoLabledPairs = await this.GetGeometryLabelPairForDisplayAsync(mapScale, mapExtent);
         var feature = await this.DataSource.GetAsFeatureSetAsync(mapScale, mapExtent);
 
-        //if (geoLabledPairs.Geometries == null)
         if (feature is null || feature.HasNoGeometry())
             return new List<Feature<Point>>();
 
@@ -692,7 +287,7 @@ public class VectorLayer : BaseLayer
         //double yScale = imageHeight / mapExtent.Height;
         //double scale = xScale > yScale ? yScale : xScale;
         //Func<Point, Point> mapToScreen = new Func<Point, Point>(p => new Point((p.X - mapExtent.XMin) * scale, -(p.Y - mapExtent.YMax) * scale));
-        var mapToScreen = CreateMapToScreenMapFunc(mapExtent, imageWidth, imageHeight);
+        var mapToScreen = CreateMapToScreenMapFunc(mapExtent, screenWidth, screenHeight);
 
         return feature.Transform(mapToScreen).Features;
     }
@@ -700,55 +295,15 @@ public class VectorLayer : BaseLayer
 
     #region Raster Save And Export Methods
 
-    public async Task<System.Drawing.Bitmap?> AsGdiBitmapAsync(BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
+    public async Task<System.Drawing.Bitmap?> AsGdiBitmapAsync(BoundingBox mapExtent, double mapScale, double screenWidth, double screenHeight)
     {
-        ////var geoLabledPairs = await this.GetGeometryLabelPairForDisplayAsync(mapScale, mapExtent);
-        //var feature = await this.DataSource.GetAsFeatureSetAsync(mapScale, mapExtent);
+        var features = await GetRenderReadyFeatures(mapExtent, mapScale, screenWidth, screenHeight);
 
-        //if (feature is null || feature.HasNoGeometry())
-        //    return new System.Drawing.Bitmap((int)imageWidth, (int)imageHeight);
+        if (features.IsNullOrEmpty())
+            return null;
 
-        ////double xScale = imageWidth / mapExtent.Width;
-        ////double yScale = imageHeight / mapExtent.Height;
-        ////double scale = xScale > yScale ? yScale : xScale;
-        ////Func<Point, Point> mapToScreen = new Func<Point, Point>(p => new Point((p.X - mapExtent.XMin) * scale, -(p.Y - mapExtent.YMax) * scale));
-        //var mapToScreen = CreateMapToScreenMapFunc(mapExtent, imageWidth, imageHeight);
-
-        //var features = feature.Transform(mapToScreen).Features;
-        //var geometries = feature.GetGeometries().Select(g => g.Transform(mapToScreen, g.Srid)).ToList();
-        var features = await GetRenderReadyFeatures(mapExtent, imageWidth, imageHeight, mapScale);
-
-        return new GdiBitmapRenderStrategy(Symbolizers).AsGdiBitmap(features, imageWidth, imageHeight, mapScale);
+        return new GdiBitmapRenderStrategy(Symbolizers).AsGdiBitmap(features, mapScale, screenWidth, screenHeight);
     }
-
-    //public System.Drawing.Bitmap? AsGdiBitmap(List<Feature<Point>> features, double imageWidth, double imageHeight, double mapScale)
-    //{
-    //    if (features.IsNullOrEmpty())
-    //        return null;
-
-    //    //var borderBrush = this.VisualParameters.Stroke.AsGdiBrush();
-
-    //    //var pen = this.VisualParameters.GetGdiPlusPen();
-
-    //    var image = new GdiBitmapRenderStrategy().ParseSqlGeometry(
-    //        features,
-    //        imageWidth,
-    //        imageHeight,
-    //        //mapToScreen,
-    //        this.VisualParameters.GetGdiPlusPen(),
-    //        this.VisualParameters.Fill.AsGdiBrush(),
-    //        this.VisualParameters.PointSymbol);
-
-    //    if (image is null)
-    //        return null;
-
-    //    if (this.CanRenderLabels(mapScale))
-    //    {
-    //        new GdiBitmapRenderStrategy().DrawLabels(features, image, /*mapToScreen, */this.Labels);
-    //    }
-
-    //    return image;
-    //}
 
 
     // Todo: this method has been totally changed but not tested!
@@ -776,32 +331,7 @@ public class VectorLayer : BaseLayer
 
             foreach (var tile in googleTiles)
             {
-                //var geometries = await GetGeometriesForDisplayAsync(scale, tile.WebMercatorExtent);
-                //var feature = await this.DataSource.GetAsFeatureSetAsync(scale, tile.WebMercatorExtent);
-
-                //if (feature is null || feature.Features.IsNullOrEmpty())
-                //    continue;
-
-                ////var geometries = feature.GetGeometries();
-
-                //var transform = MapUtility.GetMapToScreen(tile.WebMercatorExtent, 256, 256);
-
-                //var features = feature.Transform(transform).Features;
-
-                //Func<WpfPoint, WpfPoint> mapToScreen = p =>  transform(p.AsPoint()).AsWpfPoint(); 
-
-                //var pen = this.VisualParameters.GetGdiPlusPen();
-                //pen.Width = 2;
-                //var image = GdiBitmapRenderer.ParseSqlGeometry(
-                //                features,
-                //                256,
-                //                256,
-                //                //mapToScreen,
-                //                pen,
-                //                this.VisualParameters.Fill.AsGdiBrush(),
-                //                this.VisualParameters.PointSymbol);
-
-                var image = await AsGdiBitmapAsync(tile.WebMercatorExtent, 256, 256, scale);
+                var image = await AsGdiBitmapAsync(tile.WebMercatorExtent, scale, 256, 256);
 
                 if (image is null)
                     continue;
@@ -811,14 +341,12 @@ public class VectorLayer : BaseLayer
         }
     }
 
-    public async void SaveAsPng(string fileName, BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
+    public async Task SaveAsPng(string fileName, BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
     {
-        switch (this.ToRasterTechnique)
+        switch (this.RasterizationMethod)
         {
-
-            case RasterizationApproach.StreamGeometry:
-            case RasterizationApproach.DrawingVisual:
-                //SaveAsPngDrawingVisual(fileName, mapExtent, imageWidth, imageHeight, mapScale);
+            case RasterizationMethod.StreamGeometry:
+            case RasterizationMethod.DrawingVisual:
                 var renderTargetBitmap = await AsRenderTargetBitmap(mapExtent, imageWidth, imageHeight, mapScale);
 
                 if (renderTargetBitmap is null)
@@ -828,13 +356,12 @@ public class VectorLayer : BaseLayer
 
                 break;
 
-            case RasterizationApproach.WriteableBitmap:
+            case RasterizationMethod.WriteableBitmap:
             //case RasterizationApproach.OpenTk:
-            case RasterizationApproach.GdiPlus:
-            case RasterizationApproach.None:
+            case RasterizationMethod.GdiPlus:
+            case RasterizationMethod.None:
             default:
-                //SaveAsPngGdiPlus(fileName, mapExtent, imageWidth, imageHeight, mapScale);
-                var image = await AsGdiBitmapAsync(mapExtent, imageWidth, imageHeight, mapScale);
+                var image = await AsGdiBitmapAsync(mapExtent, mapScale, imageWidth, imageHeight);
 
                 if (image is null)
                     return;
@@ -846,130 +373,24 @@ public class VectorLayer : BaseLayer
         }
     }
 
-    //private async void SaveAsPngGdiPlus(string fileName, BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
-    //{
-    //    var image = await ParseToBitmapImage(mapExtent, imageWidth, imageHeight, mapScale);
-
-    //    image.Save(fileName);
-
-    //    image.Dispose();
-    //}
-
-    //// todo: consider using AsDrawingVisual method and removing the duplicate codes
-    //private async void SaveAsPngDrawingVisual(string fileName, BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
-    //{
-    //    ////var geoLabledPairs = await this.GetGeometryLabelPairForDisplayAsync(mapScale, mapExtent);
-    //    //var feature = await this.DataSource.GetAsFeatureSetAsync(mapScale, mapExtent);
-
-    //    ////if (geoLabledPairs.Geometries == null)
-    //    //if (feature is null || feature.HasNoGeometry())
-    //    //    return;
-
-    //    ////double xScale = imageWidth / mapExtent.Width;
-    //    ////double yScale = imageHeight / mapExtent.Height;
-    //    ////double scale = xScale > yScale ? yScale : xScale;
-    //    ////Func<Point, Point> mapToScreen = new Func<Point, Point>(p => new Point((p.X - mapExtent.XMin) * scale, -(p.Y - mapExtent.YMax) * scale));
-    //    //var mapToScreen = CreateMapToScreenMapFunc(mapExtent, imageWidth, imageHeight);
-
-    //    //var features = feature.Transform(mapToScreen).Features;
-
-    //    ////var geometries = feature.GetGeometries().Select(g => g.Transform(mapToScreen, g.Srid)).ToList();
-
-    //    //var pen = this.VisualParameters.GetWpfPen();
-
-    //    //Brush brush = this.VisualParameters.Fill;
-
-    //    //DrawingVisual drawingVisual = new DrawingVisualRenderer().ParseGeometry(features, /*i => mapToScreen(i), */pen, brush, this.VisualParameters.PointSymbol);
-    //    var drawingVisuals = await AsDrawingVisual(mapExtent, imageWidth, imageHeight, mapScale);
-
-    //    if (drawingVisuals.IsNullOrEmpty())
-    //        return;
-
-    //    ImageUtility.Save(fileName, drawingVisuals, (int)imageWidth, (int)imageHeight);
-
-    //    //RenderTargetBitmap image = new RenderTargetBitmap((int)imageWidth, (int)imageHeight, 96, 96, PixelFormats.Pbgra32);
-
-    //    //foreach (var item in drawingVisuals)
-    //    //{
-    //    //    image.Render(item);
-    //    //}
-
-    //    ////if (this.CanRenderLabels(mapScale) && feature.IsLabeled())
-    //    ////{
-    //    ////    this.DrawLabels(features, image/*, mapToScreen*/);
-    //    ////}
-
-    //    //image.Freeze();
-
-    //    //PngBitmapEncoder pngImage = new PngBitmapEncoder();
-
-    //    //pngImage.Frames.Add(BitmapFrame.Create(image));
-
-    //    //using (System.IO.Stream stream = System.IO.File.Create(fileName))
-    //    //{
-    //    //    pngImage.Save(stream);
-    //    //}
-
-    //}
-
     public async Task<List<DrawingVisual>> AsDrawingVisual(BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
     {
-        var features = await GetRenderReadyFeatures(mapExtent, imageWidth, imageHeight, mapScale);
+        var features = await GetRenderReadyFeatures(mapExtent, mapScale, imageWidth, imageHeight);
+
+        if (features.IsNullOrEmpty())
+            return [];
 
         return new DrawingVisualRenderStrategy(Symbolizers).AsDrawingVisual(features, mapScale);
-        //return AsDrawingVisual(features, mapScale);
     }
-
-    //private List<DrawingVisual> AsDrawingVisual(List<Feature<Point>> features, double mapScale)
-    //{
-    //    var result = new List<DrawingVisual>();
-
-    //    var pen = this.VisualParameters.GetWpfPen();
-
-    //    if (pen is not null)
-    //    {
-    //        pen.LineJoin = PenLineJoin.Round;
-    //        pen.EndLineCap = PenLineCap.Round;
-    //        pen.StartLineCap = PenLineCap.Round;
-    //    }
-
-    //    Brush brush = this.VisualParameters.Fill;
-
-    //    DrawingVisual drawingVisual = new DrawingVisualRenderStrategy(Symbolizers).ParseGeometry(
-    //                                    features,
-    //                                    //mapToScreen,
-    //                                    pen,
-    //                                    brush,
-    //                                    VisualParameters.PointSymbol);
-
-    //    drawingVisual.Opacity = this.VisualParameters.Opacity;
-
-    //    result.Add(drawingVisual);
-
-    //    if (this.CanRenderLabels(mapScale) /*&& feature.IsLabeled()*/)
-    //    {
-    //        var renderedLabels = this.DrawLabels(features/*, image*//*, mapToScreen*/);
-
-    //        if (renderedLabels is not null)
-    //        {
-    //            renderedLabels.Opacity = this.VisualParameters.Opacity;
-
-    //            result.Add(renderedLabels);
-    //        }
-    //    }
-
-    //    return result;
-    //}
 
     public async Task<RenderTargetBitmap?> AsRenderTargetBitmap(BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
     {
-        var features = await GetRenderReadyFeatures(mapExtent, imageWidth, imageHeight, mapScale);
+        //var features = await GetRenderReadyFeatures(mapExtent, mapScale, imageWidth, imageHeight);
+        //if (features.IsNullOrEmpty())
+        //    return null;
+        //var drawingVisuals = new DrawingVisualRenderStrategy(Symbolizers).AsDrawingVisual(features, mapScale);
 
-        if (features.IsNullOrEmpty())
-            return null;
-
-        //var drawingVisuals = AsDrawingVisual(features, mapScale);
-        var drawingVisuals = new DrawingVisualRenderStrategy(Symbolizers).AsDrawingVisual(features, mapScale);
+        var drawingVisuals = await AsDrawingVisual(mapExtent, imageWidth, imageHeight, mapScale);
 
         if (drawingVisuals.IsNullOrEmpty())
             return null;
@@ -984,7 +405,6 @@ public class VectorLayer : BaseLayer
 
     public void ExportAsShapefile(string shpFileName)
     {
-        //var features = GetFeatures<T>();
         var features = this.DataSource.GetAsFeatureSet();
 
         features.SaveAsShapefile(shpFileName, System.Text.Encoding.UTF8, null, true);
@@ -1002,228 +422,153 @@ public class VectorLayer : BaseLayer
 
     #region GetGeometry & GetFeature Methods
 
-    //public async Task<FeatureSet<Point>> GetGeometryLabelPairForDisplayAsync(double mapScale, BoundingBox mapExtent)
-    //{
-    //List<Geometry<Point>>? geometries;
+    public FeatureSet<Point>? GetFeatures() => GetFeatures(null);
 
-    //List<string>? labels = null;
+    public List<Field>? GetFields() => DataSource?.Fields;
 
-    //if (this.CanRenderLabels(mapScale))
-    //{
-    //    var geoLabelPairs = await this.DataSource.GetAsFeatureSetAsync(mapExtent);
-
-    //    geometries = geoLabelPairs.Features.Select(i => i.TheGeometry).ToList();
-
-    //    labels = geoLabelPairs.Features.Select(i => i.Label).ToList();
-    //}
-    //else
-    //{
-    //    geometries = await this.GetGeometriesForDisplayAsync(mapScale, mapExtent);
-    //}
-
-    //return new GeometryLabelPairs(geometries, labels);
-    //}
-
-    //public async Task<List<Geometry<Point>>> GetGeometriesForDisplayAsync(double mapScale, BoundingBox boundingBox)
-    //{
-    //    //List<Geometry<Point>> geometries = new List<Geometry<Point>>();
-
-    //    //if (this.DataSource is MemoryScaleDependentDataSource)
-    //    //{
-    //    //    geometries = await ((MemoryScaleDependentDataSource)this.DataSource).GetGeometriesAsync(mapScale, boundingBox);
-    //    //}
-    //    //else
-    //    //{
-    //    var features = await this.DataSource.GetAsFeatureSetAsync(mapScale, boundingBox);
-
-    //    if (features == FeatureSet<Point>.Empty)
-    //        return new List<Geometry<Point>>();
-
-    //    var geometries = features.GetGeometries();
-    //    //}
-
-    //    //if (geometries.Count == 0)
-    //    //    return null;
-
-    //    return geometries;
-    //}
-
-    public FeatureSet<Point>? GetFeatures/*<T>*/()// where T : class, IGeometryAware<Point>
-    {
-        return GetFeatures/*<T>*/(null);
-    }
-
-    public List<Field>? GetFields()
-    {
-        return DataSource?.Fields;
-    }
-
-    public FeatureSet<Point>? GetFeatures/*<TGeometryAware>*/(Geometry<Point>? geometry) //where TGeometryAware : class, IGeometryAware<Point>
-    {
-        return DataSource.GetAsFeatureSet(geometry);
-
-        ////if (DataSource as VectorDataSource<TGeometryAware> != null)
-        ////{
-        ////    //return (DataSource as VectorDataSource<TGeometryAware>)!.GetGeometryAwares(geometry);
-        ////    return (DataSource as VectorDataSource<TGeometryAware>)!.GetAsFeatureSet(geometry);
-        ////}
-
-        //return null;
-    }
+    public FeatureSet<Point>? GetFeatures(Geometry<Point>? geometry) => DataSource.GetAsFeatureSet(geometry);
 
     #endregion
 
 
-    //POTENTIALLY ERROR PROUNE; formattedText is always RTL
+    //private Image? DrawLabels(List<Feature<Point>> features, double width, double height)
+    //{
+    //    if (features.IsNullOrEmpty())
+    //        return null;
 
+    //    List<WpfPoint> mapCoordinates = features.ConvertAll((g) => this.Labels.PositionFunc(g.TheGeometry).AsWpfPoint()).ToList();
 
+    //    DrawingVisual drawingVisual = new DrawingVisual();
 
+    //    using (DrawingContext drawingContext = drawingVisual.RenderOpen())
+    //    {
+    //        var typeface = new Typeface(this.Labels.FontFamily, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
 
-    private Image? DrawLabels(List<Feature<Point>> features, double width, double height/*, Func<WpfPoint, WpfPoint> mapToScreen*/)
-    {
-        if (features.IsNullOrEmpty())
-            return null;
+    //        var flowDirection = this.Labels.IsRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
 
-        List<WpfPoint> mapCoordinates = features.ConvertAll<WpfPoint>(
-                  (g) =>
-                  {
-                      var point = this.Labels.PositionFunc(g.TheGeometry);
-                      return new WpfPoint(point.Points[0].X, point.Points[0].Y);
-                  }).ToList();
+    //        var culture = System.Globalization.CultureInfo.CurrentCulture;
 
-        DrawingVisual drawingVisual = new DrawingVisual();
+    //        var backgroundBrush = new SolidColorBrush(Color.FromArgb(50, 255, 255, 255));
 
-        using (DrawingContext drawingContext = drawingVisual.RenderOpen())
-        {
-            var typeface = new Typeface(this.Labels.FontFamily, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
+    //        for (int i = 0; i < features.Count; i++)
+    //        {
+    //            var label = features[i].Label;
 
-            var flowDirection = this.Labels.IsRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+    //            if (string.IsNullOrEmpty(label))
+    //                continue;
 
-            var culture = System.Globalization.CultureInfo.CurrentCulture;
+    //            FormattedText formattedText =
+    //                new FormattedText(label, culture, flowDirection, typeface, this.Labels.FontSize, this.Labels.Foreground, 96);
 
-            var backgroundBrush = new SolidColorBrush(Color.FromArgb(50, 255, 255, 255));
+    //            WpfPoint location = /*mapToScreen*/(mapCoordinates[i]);
 
-            for (int i = 0; i < features.Count; i++)
-            {
-                var label = features[i].Label;
+    //            drawingContext.DrawRectangle(backgroundBrush, null, new Rect(location, new Size(formattedText.Width, formattedText.Height)));
+    //            drawingContext.DrawText(formattedText, new WpfPoint(location.X - formattedText.Width / 2.0, location.Y - formattedText.Height / 2.0));
+    //        }
+    //    }
 
-                if (string.IsNullOrEmpty(label))
-                    continue;
+    //    Image image = Helpers.ImageUtility.Create(width, height, drawingVisual);
 
-                FormattedText formattedText =
-                    new FormattedText(label, culture, flowDirection, typeface, this.Labels.FontSize, this.Labels.Foreground, 96);
+    //    image.Tag = new LayerTag(-1) { Layer = this, IsTiled = false };
 
-                WpfPoint location = /*mapToScreen*/(mapCoordinates[i]);
+    //    this.BindWithFrameworkElement(image);
 
-                drawingContext.DrawRectangle(backgroundBrush, null, new Rect(location, new Size(formattedText.Width, formattedText.Height)));
-                drawingContext.DrawText(formattedText, new WpfPoint(location.X - formattedText.Width / 2.0, location.Y - formattedText.Height / 2.0));
-            }
-        }
+    //    return image;
+    //}
 
-        Image image = Helpers.ImageUtility.Create(width, height, drawingVisual);
+    //private void DrawLabels(List<Feature<Point>> features, System.Drawing.Bitmap image)
+    //{
+    //    if (features.IsNullOrEmpty())
+    //        return;
 
-        image.Tag = new Model.LayerTag(-1) { Layer = this, IsTiled = false };
+    //    var mapCoordinates = features.ConvertAll((g) => Labels.PositionFunc(g.TheGeometry)).ToList();
 
-        this.BindWithFrameworkElement(image);
+    //    var font = new System.Drawing.Font(this.Labels.FontFamily.FamilyNames.First().Value, this.Labels.FontSize);
 
-        return image;
-    }
+    //    var graphic = System.Drawing.Graphics.FromImage(image);
 
-    private void DrawLabels(List<Feature<Point>> features, System.Drawing.Bitmap image/*, Func<IPoint, IPoint> mapToScreen*/)
-    {
-        if (features.IsNullOrEmpty())
-            return;
+    //    graphic.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-        var mapCoordinates = features.ConvertAll(
-                  (g) =>
-                  {
-                      return this.Labels.PositionFunc(g.TheGeometry).AsPoint();
-                  }).ToList();
+    //    graphic.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
-        var font = new System.Drawing.Font(this.Labels.FontFamily.FamilyNames.First().Value, this.Labels.FontSize);
+    //    graphic.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
 
-        var graphic = System.Drawing.Graphics.FromImage(image);
+    //    graphic.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
 
-        graphic.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+    //    var typeface = new Typeface(this.Labels.FontFamily, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
 
-        graphic.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+    //    var flowDirection = this.Labels.IsRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
 
-        graphic.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+    //    var culture = System.Globalization.CultureInfo.CurrentCulture;
 
-        graphic.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+    //    var backgroundBrush = BrushHelper.CreateGdiBrush(System.Drawing.Color.FromArgb(50, 255, 255, 255), 1);
 
-        var typeface = new Typeface(this.Labels.FontFamily, FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
+    //    for (int i = 0; i < features.Count; i++)
+    //    {
+    //        var label = features[i].Label;
 
-        var flowDirection = this.Labels.IsRtl ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+    //        if (string.IsNullOrEmpty(label))
+    //            continue;
 
-        var culture = System.Globalization.CultureInfo.CurrentCulture;
+    //        FormattedText formattedText =
+    //        new FormattedText(label, culture, flowDirection, typeface, this.Labels.FontSize, this.Labels.Foreground, 96);
 
-        var backgroundBrush = BrushHelper.CreateGdiBrush(System.Drawing.Color.FromArgb(50, 255, 255, 255), 1);
+    //        var location = /*mapToScreen*/(mapCoordinates[i]);
 
-        for (int i = 0; i < features.Count; i++)
-        {
-            var label = features[i].Label;
+    //        graphic.FillRectangle(backgroundBrush, (int)location.X, (int)location.Y, (int)formattedText.Width, (int)formattedText.Height);
 
-            if (string.IsNullOrEmpty(label))
-                continue;
+    //        graphic.DrawString(label, font, Labels.Foreground.AsGdiBrush(), (float)location.X, (float)location.Y);
+    //    }
 
-            FormattedText formattedText =
-            new FormattedText(label, culture, flowDirection, typeface, this.Labels.FontSize, this.Labels.Foreground, 96);
+    //    graphic.Flush();
+    //}
 
-            var location = /*mapToScreen*/(mapCoordinates[i]);
+    //private System.Drawing.Bitmap? DrawLabel(int width, int height, List<string> labels, List<Geometry<Point>> positions)
+    //{
+    //    System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(width, height);
 
-            graphic.FillRectangle(backgroundBrush, (int)location.X, (int)location.Y, (int)formattedText.Width, (int)formattedText.Height);
+    //    if (labels.Count != positions.Count)
+    //        return null;
 
-            graphic.DrawString(label, font, Labels.Foreground.AsGdiBrush(), (float)location.X, (float)location.Y);
-        }
+    //    if (labels.IsNullOrEmpty())
+    //        return null;
 
-        graphic.Flush();
-    }
+    //    var mapCoordinates = positions.ConvertAll((g) => this.Labels.PositionFunc(g)).ToList();
 
-    private System.Drawing.Bitmap? DrawLabel(int width, int height, List<string> labels, List<Geometry<Point>> positions/*, Func<IPoint, IPoint> transform*/)
-    {
-        System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(width, height);
+    //    var font = new System.Drawing.Font(this.Labels.FontFamily.FamilyNames.First().Value, this.Labels.FontSize);
 
-        if (labels.Count != positions.Count)
-            return null;
+    //    var graphic = System.Drawing.Graphics.FromImage(bitmap);
 
-        if (labels.IsNullOrEmpty())
-            return null;
+    //    graphic.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-        var mapCoordinates = positions.ConvertAll(
-                  (g) =>
-                  {
-                      return this.Labels.PositionFunc(g).AsPoint();
-                  }).ToList();
+    //    graphic.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
-        var font = new System.Drawing.Font(this.Labels.FontFamily.FamilyNames.First().Value, this.Labels.FontSize);
+    //    graphic.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
 
-        var graphic = System.Drawing.Graphics.FromImage(bitmap);
+    //    graphic.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
 
-        graphic.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+    //    var foreground = Labels.Foreground.AsGdiBrush();
 
-        graphic.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+    //    for (int i = 0; i < labels.Count; i++)
+    //    {
+    //        var label = labels[i];
 
-        graphic.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+    //        if (string.IsNullOrEmpty(label))
+    //            continue;
 
-        graphic.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+    //        var location = /*transform*/(mapCoordinates[i]);
 
-        var foreground = Labels.Foreground.AsGdiBrush();
+    //        graphic.DrawString(label, font, foreground, (float)location.X, (float)location.Y);
+    //    }
 
-        for (int i = 0; i < labels.Count; i++)
-        {
-            var label = labels[i];
+    //    graphic.Flush();
 
-            if (string.IsNullOrEmpty(label))
-                continue;
+    //    return bitmap;
+    //}
 
-            var location = /*transform*/(mapCoordinates[i]);
+    #region Events
 
-            graphic.DrawString(label, font, foreground, (float)location.X, (float)location.Y);
-        }
+    public event EventHandler<CustomEventArgs<VectorLayer>> OnSelectedFeaturesChanged;
 
-        graphic.Flush();
-
-        return bitmap;
-    }
+    #endregion
 }

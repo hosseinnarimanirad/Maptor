@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
@@ -56,13 +56,11 @@
     <None Remove="Assets\Images\Flags\fa.png" />
     <None Remove="Assets\Images\imageNotFound.jpg" />
     <None Remove="Assets\Images\Logos\google.png" />
-    <None Remove="Deploy\Stateless.dll" />
     <None Remove="Properties\Resources.resx~RF2341c1.TMP" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\Images\Logos\google.png" />
-    <Content Include="Deploy\Stateless.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,26 +71,22 @@
     <PackageReference Include="System.Data.SqlClient" />
     <PackageReference Include="System.Drawing.Common" />
     <PackageReference Include="WriteableBitmapEx" />
-    <PackageReference Include="MahApps.Metro.IconPacks" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Modern" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\IRI.Maptor.Ket\IRI.Maptor.Ket.GdiPlus\IRI.Maptor.Ket.GdiPlus.csproj" />
-    <ProjectReference Include="..\..\IRI.Maptor.Ket\IRI.Maptor.Ket.SqlServerPersistence\IRI.Maptor.Ket.SqlServerPersistence.csproj" />
-    <ProjectReference Include="..\..\IRI.Maptor.Ket\IRI.Maptor.Ket.SqlServerSpatialExtension\IRI.Maptor.Ket.SqlServerSpatialExtension.csproj" />
+    <!--<ProjectReference Include="..\..\IRI.Maptor.Ket\IRI.Maptor.Ket.SqlServerSpatialExtension\IRI.Maptor.Ket.SqlServerSpatialExtension.csproj" />-->
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.MachineLearning\IRI.Maptor.Sta.MachineLearning.csproj" />
+    <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Ogc\IRI.Maptor.Sta.Ogc.csproj" />
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Persistence\IRI.Maptor.Sta.Persistence.csproj" />
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Security\IRI.Maptor.Sta.Security.csproj" />
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.ShapefileFormat\IRI.Maptor.Sta.ShapefileFormat.csproj" />
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.SpatialReferenceSystem\IRI.Maptor.Sta.SpatialReferenceSystem.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.SqlServer.Types">
-      <HintPath>..\..\..\deploy\MicrosoftSqlServerTypes\v14\Microsoft.SqlServer.Types.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+ 
 
   <ItemGroup>
     <Resource Include="Assets\Cursors\MapCursorSet1\MagnifyMinusRightHanded.cur" />

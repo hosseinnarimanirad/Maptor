@@ -2,7 +2,7 @@
 // Allahomma ajjel le-valiyek al-faraj
 
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Analysis.Topology;
+using IRI.Maptor.Sta.Spatial.Topology;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using System;
 using System.Collections.Generic;

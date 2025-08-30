@@ -202,7 +202,7 @@ public struct EsriPolygonM : IEsriPointsWithMeasure
         {
             result.Append(
                 string.Format("{0},",
-                SqlServerWktMapFunctions.PointMGroupElementToWkt(
+                SqlServerWktHelper.PointMGroupElementToWkt(
                     ShapeHelper.GetEsriPoints(this, this.Parts[i]),
                     ShapeHelper.GetMeasures(this, this.Parts[i]))));
         }

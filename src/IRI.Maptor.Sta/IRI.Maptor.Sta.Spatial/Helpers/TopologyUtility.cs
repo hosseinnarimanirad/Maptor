@@ -1,6 +1,6 @@
 ﻿using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Mathematics;
-using IRI.Maptor.Sta.Spatial.Analysis.Topology;
+using IRI.Maptor.Sta.Spatial.Topology;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;

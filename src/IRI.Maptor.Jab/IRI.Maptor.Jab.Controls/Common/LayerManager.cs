@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Model;
-using IRI.Maptor.Jab.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Jab.Controls;
@@ -40,7 +38,6 @@ public class LayerManager : Notifier
             return;
 
         layer.OnVisibilityChanged -= RefreshLayerVisibility;
-
         layer.OnVisibilityChanged += RefreshLayerVisibility;
 
         UpdateIsInRange(layer, inverseMapScale);
@@ -174,13 +171,13 @@ public class LayerManager : Notifier
         }
     }
 
-    public IEnumerable<ILayer> UpdateAndGetLayers(double inverseMapScale, RenderingApproach rendering)
+    public IEnumerable<ILayer> UpdateAndGetLayers(double inverseMapScale, RenderMode rendering)
     {
         Debug.WriteLine($"LayerManager; {DateTime.Now.ToLongTimeString()}; UpdateAndGetLayers called");
 
         ArrangeZIndex();
 
-        var newLayers = allLayers.Where(l => l.VisibleRange.IsInRange(inverseMapScale) && l.Rendering == rendering)
+        var newLayers = allLayers.Where(l => l.VisibleRange.IsInRange(inverseMapScale) && l.RenderMode == rendering)
                                     .OrderByDescending(i => i.Type == LayerType.BaseMap)
                                     //.ThenByDescending(i => i.Type == LayerType.Raster)
                                     //.ThenByDescending(i => i.Type == LayerType.ImagePyramid)
@@ -200,14 +197,14 @@ public class LayerManager : Notifier
         //    System.Diagnostics.Debug.WriteLine($"UpdateAndGetLayers layercounts:{  newLayers.Count()}");
         //}
 
-        var toBeRemovedLayers = this.CurrentLayers.Where(i => i.Rendering == rendering && newLayers.All(l => l.LayerId != i.LayerId)).ToList();
+        var toBeRemovedLayers = this.CurrentLayers.Where(i => i.RenderMode == rendering && newLayers.All(l => l.LayerId != i.LayerId)).ToList();
 
         for (int i = 0; i < toBeRemovedLayers.Count; i++)
         {
             this.CurrentLayers.Remove(toBeRemovedLayers[i]);
         }
 
-        var toBeAdded = newLayers.Where(i => i.Rendering == rendering && this.CurrentLayers.All(l => l.LayerId != i.LayerId)).ToList();
+        var toBeAdded = newLayers.Where(i => i.RenderMode == rendering && this.CurrentLayers.All(l => l.LayerId != i.LayerId)).ToList();
 
         for (int i = 0; i < toBeAdded.Count; i++)
         {
@@ -234,12 +231,12 @@ public class LayerManager : Notifier
 
     private void UpdateIsInRange(ILayer layer, double inverseMapScale)
     {
-        layer.VisualParameters.IsInScaleRange = layer.VisibleRange.IsInRange(inverseMapScale);
+        layer.IsInScaleRange = layer.VisibleRange.IsInRange(inverseMapScale);
 
-        if (layer.Labels != null)
-        {
-            layer.Labels.IsInScaleRange = layer.Labels.VisibleRange.IsInRange(inverseMapScale);
-        }
+        //if (layer.Labels != null)
+        //{
+        //    layer.Labels.IsInScaleRange = layer.Labels.VisibleRange.IsInRange(inverseMapScale);
+        //}
     }
 
     public BoundingBox CalculateCurrentMapExtent()

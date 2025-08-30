@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Jab.Common.Model;
+﻿using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Spatial.Model;
 
 namespace IRI.Maptor.Extensions;

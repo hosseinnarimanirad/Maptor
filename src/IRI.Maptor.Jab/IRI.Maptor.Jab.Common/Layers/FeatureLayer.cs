@@ -1,194 +1,192 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Windows;
+//using System.Windows.Data;
+//using System.Windows.Media;
+//using System.Windows.Media.Imaging;
+//using System.Windows.Shapes;
 
-using IRI.Maptor.Jab.Common.Model;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Persistence.DataSources;
- 
-using Point = IRI.Maptor.Sta.Common.Primitives.Point;
-using IRI.Maptor.Jab.Common.Enums;
-using IRI.Maptor.Jab.Common.Cartography.Rendering;
-using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+//using IRI.Maptor.Jab.Common.Models;
+//using IRI.Maptor.Sta.Common.Primitives;
+//using IRI.Maptor.Sta.Spatial.Primitives;
+//using IRI.Maptor.Sta.Persistence.DataSources;
 
-namespace IRI.Maptor.Jab.Common;
+//using Point = IRI.Maptor.Sta.Common.Primitives.Point;
+//using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+//using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
 
-public class FeatureLayer : BaseLayer
-{
-    public MemoryDataSource DataSource { get; protected set; }
+//namespace IRI.Maptor.Jab.Common;
 
-    public Func<Feature<Point>, VisualParameters> SymbologyRule { get; set; }
+//public class FeatureLayer : BaseLayer
+//{
+//    public MemoryDataSource DataSource { get; protected set; }
 
-    private LayerType _type;
+//    public Func<Feature<Point>, VisualParameters> SymbologyRule { get; set; }
 
-    public List<ISymbolizer> Symbolizers { get; protected set; }
+//    private LayerType _type;
 
-    public override LayerType Type
-    {
-        get { return _type; }
-        protected set
-        {
-            _type = value;
-            RaisePropertyChanged();
-        }
-    }
+//    public List<ISymbolizer> Symbolizers { get; protected set; }
 
-    private FrameworkElement _element;
+//    public override LayerType Type
+//    {
+//        get { return _type; }
+//        protected set
+//        {
+//            _type = value;
+//            RaisePropertyChanged();
+//        }
+//    }
 
-    public FrameworkElement Element
-    {
-        get { return this._element; }
+//    private FrameworkElement _element;
 
-        set
-        {
-            this._element = value;
+//    public FrameworkElement Element
+//    {
+//        get { return this._element; }
 
-            BindWithFrameworkElement(value);
+//        set
+//        {
+//            this._element = value;
 
-            RaisePropertyChanged();
-        }
-    }
+//            BindWithFrameworkElement(value);
 
-    private BoundingBox _extent;
+//            RaisePropertyChanged();
+//        }
+//    }
 
-    public override BoundingBox Extent
-    {
-        get { return _extent; }
-        protected set
-        {
-            _extent = value;
-            RaisePropertyChanged();
-        }
-    }
+//    private BoundingBox _extent;
 
-    public override RenderingApproach Rendering { get; protected set; }
+//    public override BoundingBox Extent
+//    {
+//        get { return _extent; }
+//        protected set
+//        {
+//            _extent = value;
+//            RaisePropertyChanged();
+//        }
+//    }
 
-    public override RasterizationApproach ToRasterTechnique { get; protected set; }
+//    public override RenderingApproach Rendering { get; protected set; }
 
-    public void BindWithFrameworkElement(FrameworkElement element)
-    {
-        Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Visibility"), Mode = BindingMode.TwoWay };
-        //Binding binding4 = new Binding() { Source = this, Path = new PropertyPath(nameof(VisualParameters.Visibility)), Mode = BindingMode.TwoWay }; try using this line insted of above
-        element.SetBinding(Path.VisibilityProperty, binding4);
+//    public override RasterizationApproach ToRasterTechnique { get; protected set; }
 
-        Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Opacity"), Mode = BindingMode.TwoWay };
-        element.SetBinding(Path.OpacityProperty, binding5);
-    }
+//    public void BindWithFrameworkElement(FrameworkElement element)
+//    {
+//        Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Visibility"), Mode = BindingMode.TwoWay };
+//        //Binding binding4 = new Binding() { Source = this, Path = new PropertyPath(nameof(VisualParameters.Visibility)), Mode = BindingMode.TwoWay }; try using this line insted of above
+//        element.SetBinding(Path.VisibilityProperty, binding4);
 
-    // todo: unused input parameters
-    public Path? AsBitmapUsingGdiPlus(List<Feature<Point>> features, List<string> labels, double mapScale, /*BoundingBox boundingBox,*/ double width, double height, /*Func<WpfPoint, WpfPoint> mapToScreen,*/ RectangleGeometry area)
-    {
-        if (features == null)
-            return null;
+//        Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Opacity"), Mode = BindingMode.TwoWay };
+//        element.SetBinding(Path.OpacityProperty, binding5);
+//    }
 
-        var image = new GdiBitmapRenderStrategy(this.Symbolizers).ParseSqlGeometry(
-            features,
-            width,
-            height,
-            //mapToScreen,
-            this.SymbologyRule);
+//    // todo: unused input parameters
+//    public Path? AsBitmapUsingGdiPlus(List<Feature<Point>> features, List<string> labels, double mapScale, /*BoundingBox boundingBox,*/ double width, double height, /*Func<WpfPoint, WpfPoint> mapToScreen,*/ RectangleGeometry area)
+//    {
+//        if (features == null)
+//            return null;
+
+//        var image = new GdiBitmapRenderStrategy(this.Symbolizers).ParseSqlGeometry(
+//            features,
+//            width,
+//            height, 
+//            this.SymbologyRule);
 
 
-        if (image == null)
-            return null;
+//        if (image == null)
+//            return null;
 
-        BitmapImage bitmapImage = Helpers.ImageUtility.AsBitmapImage(image, System.Drawing.Imaging.ImageFormat.Png);
+//        BitmapImage bitmapImage = Helpers.ImageUtility.AsBitmapImage(image, System.Drawing.Imaging.ImageFormat.Png);
 
-        image.Dispose();
+//        image.Dispose();
 
-        Path path = new Path()
-        {
-            Data = area,
-            Tag = new Model.LayerTag(mapScale) { Layer = this, Tile = null, IsDrawn = true, IsNew = true }
-        };
+//        Path path = new Path()
+//        {
+//            Data = area,
+//            Tag = new LayerTag(mapScale) { Layer = this, Tile = null, IsDrawn = true, IsNew = true }
+//        };
 
-        this.Element = path;
+//        this.Element = path;
 
-        path.Fill = new ImageBrush(bitmapImage);
+//        path.Fill = new ImageBrush(bitmapImage);
 
-        bitmapImage.Freeze();
+//        bitmapImage.Freeze();
 
-        return path;
-    }
+//        return path;
+//    }
 
      
 
-    #region Constructors
+//    #region Constructors
 
-    internal FeatureLayer()
-    {
+//    internal FeatureLayer()
+//    {
 
-    }
+//    }
 
-    public FeatureLayer(string name, List<Feature<Point>> features, Func<Feature<Point>, VisualParameters> symbologyRule,
-                        RenderingApproach rendering, RasterizationApproach toRasterTechnique, ScaleInterval visibleRange)
-    {
-        if (features == null || features.Count == 0)
-            throw new NotImplementedException();
+//    public FeatureLayer(string name, List<Feature<Point>> features, Func<Feature<Point>, VisualParameters> symbologyRule,
+//                        RenderingApproach rendering, RasterizationApproach toRasterTechnique, ScaleInterval visibleRange)
+//    {
+//        if (features == null || features.Count == 0)
+//            throw new NotImplementedException();
 
-        Initialize(name, new MemoryDataSource(features/*, null, null*/), rendering, toRasterTechnique, visibleRange, symbologyRule);
-    }
+//        Initialize(name, new MemoryDataSource(features/*, null, null*/), rendering, toRasterTechnique, visibleRange, symbologyRule);
+//    }
 
-    public FeatureLayer(string layerName, MemoryDataSource dataSource, RenderingApproach rendering,
-                        RasterizationApproach toRasterTechnique, Func<Feature<Point>, VisualParameters> symbologyRule, ScaleInterval visibleRange)
-    {
-        Initialize(layerName, dataSource, rendering, toRasterTechnique, visibleRange, symbologyRule);
-    }
+//    public FeatureLayer(string layerName, MemoryDataSource dataSource, RenderingApproach rendering,
+//                        RasterizationApproach toRasterTechnique, Func<Feature<Point>, VisualParameters> symbologyRule, ScaleInterval visibleRange)
+//    {
+//        Initialize(layerName, dataSource, rendering, toRasterTechnique, visibleRange, symbologyRule);
+//    }
 
-    private void Initialize(string layerName, MemoryDataSource dataSource, RenderingApproach rendering,
-        RasterizationApproach toRasterTechnique, ScaleInterval visibleRange, Func<Feature<Point>, VisualParameters> symbologyRule)
-    {
-        this.LayerId = Guid.NewGuid();
+//    private void Initialize(string layerName, MemoryDataSource dataSource, RenderingApproach rendering,
+//        RasterizationApproach toRasterTechnique, ScaleInterval visibleRange, Func<Feature<Point>, VisualParameters> symbologyRule)
+//    {
+//        this.LayerId = Guid.NewGuid();
 
-        this.DataSource = dataSource;
+//        this.DataSource = dataSource;
 
-        this.Rendering = rendering;
+//        this.Rendering = rendering;
 
-        this.ToRasterTechnique = toRasterTechnique;
+//        this.ToRasterTechnique = toRasterTechnique;
 
-        this.Type = LayerType.Feature | LayerType.FeatureLayer;
+//        this.Type = LayerType.Feature | LayerType.FeatureLayer;
 
-        //var geometries = dataSource.GetGeometries();
+//        //var geometries = dataSource.GetGeometries();
 
-        //if (geometries?.Count > 0)
-        //{
-        //    this.Type = type | GetGeometryType(geometries.FirstOrDefault(g => g != null));
-        //}
-        //else
-        //{
-        //    this.Type = type;
-        //}
+//        //if (geometries?.Count > 0)
+//        //{
+//        //    this.Type = type | GetGeometryType(geometries.FirstOrDefault(g => g != null));
+//        //}
+//        //else
+//        //{
+//        //    this.Type = type;
+//        //}
 
-        //this.Extent = DataSource.GetFeatures()?.GetGeometries()?.GetBoundingBox() ?? BoundingBox.NaN;
-        this.Extent = DataSource.WebMercatorExtent;
+//        //this.Extent = DataSource.GetFeatures()?.GetGeometries()?.GetBoundingBox() ?? BoundingBox.NaN;
+//        this.Extent = DataSource.WebMercatorExtent;
 
-        this.LayerName = layerName;
+//        this.LayerName = layerName;
 
-        this.VisualParameters = new VisualParameters(null, null, 0, 1, Visibility.Visible);
+//        this.VisualParameters = new VisualParameters(null, null, 0, 1, Visibility.Visible);
 
-        this.SymbologyRule = symbologyRule;
+//        this.SymbologyRule = symbologyRule;
 
-        //this.PointSymbol = pointSymbol ?? new SimplePointSymbol() { SymbolWidth = 4, SymbolHeight = 4 };
+//        //this.PointSymbol = pointSymbol ?? new SimplePointSymbol() { SymbolWidth = 4, SymbolHeight = 4 };
 
-        //this.Labels = labeling;
+//        //this.Labels = labeling;
 
-        ////Check for missing visibleRange
-        //if (this.Labels != null)
-        //{
-        //    if (this.Labels.VisibleRange == null)
-        //    {
-        //        this.Labels.VisibleRange = visibleRange;
-        //    }
-        //}
+//        ////Check for missing visibleRange
+//        //if (this.Labels != null)
+//        //{
+//        //    if (this.Labels.VisibleRange == null)
+//        //    {
+//        //        this.Labels.VisibleRange = visibleRange;
+//        //    }
+//        //}
 
-        this.VisibleRange = (visibleRange == null) ? ScaleInterval.All : visibleRange;
+//        this.VisibleRange = (visibleRange == null) ? ScaleInterval.All : visibleRange;
 
-    }
+//    }
 
-    #endregion
-}
+//    #endregion
+//}

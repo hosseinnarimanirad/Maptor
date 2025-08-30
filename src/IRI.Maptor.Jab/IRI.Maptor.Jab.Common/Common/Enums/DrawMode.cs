@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Jab.Common.Enums;
+namespace IRI.Maptor.Jab.Common;
 
 public enum DrawMode
 {

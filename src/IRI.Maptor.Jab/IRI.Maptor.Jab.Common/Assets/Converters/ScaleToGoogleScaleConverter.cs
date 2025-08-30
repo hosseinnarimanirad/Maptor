@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-using IRI.Maptor.Jab.Common.Model;
+using IRI.Maptor.Jab.Common.Models;
 
 namespace IRI.Maptor.Jab.Common.Assets.Converters;
 

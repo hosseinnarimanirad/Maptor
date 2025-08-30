@@ -7,10 +7,6 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Title>Maptor WindowsBase library</Title>
   </PropertyGroup>
- 
-  <ItemGroup>
-    <Content Include="ThirdPartyLibraries\ManagedNativeWifi\LICENSE.txt" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
@@ -21,6 +17,7 @@
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Management.dll</HintPath>
     </Reference>
   </ItemGroup>
+ 
 
   <ItemGroup>
     <None Update="README.md">

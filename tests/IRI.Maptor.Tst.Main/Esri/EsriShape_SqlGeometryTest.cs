@@ -10,7 +10,7 @@ public class EsriShape_SqlGeometryTest
 {
     public EsriShape_SqlGeometryTest()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
     }
 
     [Fact]

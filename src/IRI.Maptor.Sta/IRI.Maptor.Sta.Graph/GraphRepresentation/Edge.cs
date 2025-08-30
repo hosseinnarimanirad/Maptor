@@ -1,5 +1,5 @@
-﻿// besmellahe rahmane rahim
-// Allahomma ajjel le-valiyek al-faraj
+﻿// BESMELLAHE RAHMANE RAHIM
+// ALLAHOMMA AJJEL LE-VALIYEK AL-FARAJ
 
 
 namespace IRI.Maptor.Sta.Graph;
@@ -30,14 +30,5 @@ public struct Edge<TNode, TWeight>
     public override string ToString()
     {
         return string.Format("({0})-{1}-({2})", Node.ToString(), Connection.Weight.ToString(), Connection.Node.ToString());
-    }
-
-    //#region IComparer<Edge<TNode,TWeight>> Members
-
-    //public int Compare(Edge<TNode, TWeight> first, Edge<TNode, TWeight> second)
-    //{
-    //    return first.Connection.Weight.CompareTo(second.Connection.Weight);
-    //}
-
-    //#endregion
+    } 
 }

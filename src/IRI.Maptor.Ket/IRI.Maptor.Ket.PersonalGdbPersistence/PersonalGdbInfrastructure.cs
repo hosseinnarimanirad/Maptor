@@ -136,7 +136,7 @@ public static class PersonalGdbInfrastructure
         // with the '<DEFeatureClassInfo' strings for featureDatasets
         // <DEFeatureClassInfo
 
-        var featureClassInfos = IRI.Maptor.Sta.Common.Helpers.XmlHelper.ParseFromXml<GdbXml_FeatureClass>(definition);
+        var featureClassInfos = IRI.Maptor.Sta.Common.Helpers.XmlHelper.DeserializeFromXmlString<GdbXml_FeatureClass>(definition);
 
         return featureClassInfos is null || featureClassInfos.GPFieldInfoExs is null
             ? result
@@ -154,7 +154,7 @@ public static class PersonalGdbInfrastructure
             try
             {
 
-                var info = IRI.Maptor.Sta.Common.Helpers.XmlHelper.ParseFromXml<GdbXml_CodedValueDomain>(item.Definition);
+                var info = IRI.Maptor.Sta.Common.Helpers.XmlHelper.DeserializeFromXmlString<GdbXml_CodedValueDomain>(item.Definition);
 
                 if (info is null || info.CodedValues.Items.IsNullOrEmpty())
                     continue;

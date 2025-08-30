@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-
-using IRI.Maptor.Jab.Common.Model;
-using IRI.Maptor.Jab.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Persistence.DataSources;
@@ -9,13 +6,13 @@ using System.Linq;
 
 namespace IRI.Maptor.Jab.Common;
 
-public class GridLayer : BaseLayer
+public class GridLayer : SymbolizableLayer
 {
-    public override LayerType Type { get; protected set; } = LayerType.VectorLayer;
+    public override LayerType Type => LayerType.VectorLayer;
 
-    public override BoundingBox Extent { get; protected set; }
+    //public override BoundingBox Extent { get; protected set; }
 
-    public override RenderingApproach Rendering { get; protected set; }
+    //public override RenderingApproach Rendering { get; protected set; }
 
     public GridDataSource DataSource { get; set; }
 

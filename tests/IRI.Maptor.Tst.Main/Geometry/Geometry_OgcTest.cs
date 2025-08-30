@@ -14,7 +14,7 @@ public class Geometry_OgcTest
 {
     public Geometry_OgcTest()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
     }
 
     public static IEnumerable<object[]> OgcGeometryTestData =>

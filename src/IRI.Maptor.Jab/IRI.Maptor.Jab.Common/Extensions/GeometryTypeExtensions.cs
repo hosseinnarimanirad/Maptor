@@ -1,5 +1,5 @@
 ﻿using System;
-using IRI.Maptor.Jab.Common.Model;
+using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Extensions;

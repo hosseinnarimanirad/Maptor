@@ -51,15 +51,15 @@ public partial class GoToGeodeticView : NotifiableUserControl, IDisposable
     //    //this.ZoomToLabel = isPersian ? "بزرگ‌نمایی" : "Zoom To";
     //}
      
-    //public IRI.Maptor.Jab.Common.Model.Language Language
+    //public IRI.Maptor.Jab.Common.Models.Language Language
     //{
-    //    get { return (IRI.Maptor.Jab.Common.Model.Language)GetValue(LanguageProperty); }
+    //    get { return (IRI.Maptor.Jab.Common.Models.Language)GetValue(LanguageProperty); }
     //    set { SetValue(LanguageProperty, value); }
     //}
 
     //// Using a DependencyProperty as the backing store for Language.  This enables animation, styling, binding, etc...
     //public static readonly DependencyProperty LanguageProperty =
-    //    DependencyProperty.Register("Language", typeof(IRI.Maptor.Jab.Common.Model.Language), typeof(GoToGeodeticView), new PropertyMetadata(Common.Model.Language.Persian));
+    //    DependencyProperty.Register("Language", typeof(IRI.Maptor.Jab.Common.Models.Language), typeof(GoToGeodeticView), new PropertyMetadata(Common.Model.Language.Persian));
 
 
     #region IDispose

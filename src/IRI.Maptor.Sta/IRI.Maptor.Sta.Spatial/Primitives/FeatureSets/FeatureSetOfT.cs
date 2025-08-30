@@ -1,5 +1,4 @@
 ﻿using IRI.Maptor.Extensions;
-using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Primitives;
 
@@ -42,7 +41,7 @@ public class FeatureSet<T> where T : IPoint, new()
     public static FeatureSet<T> Create(string title, List<Feature<T>> features)
     {
         if (features.IsNullOrEmpty())
-            throw new NotImplementedException("FeatureSet<TGeometry, TPoint> => empty features not allowed");
+            return FeatureSet<T>.Empty;
 
         if (features.Select(f => f.TheGeometry.Srid).Distinct().Count() > 1)
             throw new NotImplementedException("FeatureSet<TGeometry, TPoint> => same SRID rule violated");

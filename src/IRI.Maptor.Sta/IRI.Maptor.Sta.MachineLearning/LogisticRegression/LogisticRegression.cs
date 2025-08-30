@@ -232,39 +232,5 @@ public class LogisticRegression
 
         return xValues.Transpose() * weight * xValues;
     }
-
-
-    //private object ComputeWaldStatistics(Matrix xValues)
-    //{
-    //    var fisherMatrix = ComputeTheFisherInformationMatrix(xValues);
-
-    //    var covariance = fisherMatrix.Inverse();
-
-    //    double[] variance = covariance.DiagonalVector();
-
-    //    double[] waldStatistics = new double[variance.Length];
-
-    //    for (int i = 0; i < variance.Length; i++)
-    //    {
-    //        waldStatistics[i] = beta[i] / Math.Sqrt(variance[i]);
-    //    }
-
-    //    double[] pValues = new double[variance.Length];
-
-    //    ChiSquare.
-    //}
-
-    //public void Serialize(string fileName)
-    //{
-    //    var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(this);
-
-    //    System.IO.File.WriteAllText(fileName, jsonString);
-    //}
-
-    //public static LogisticRegression Deserialize(string fileName)
-    //{
-    //    var jsonString = System.IO.File.ReadAllText(fileName);
-
-    //    return Newtonsoft.Json.JsonConvert.DeserializeObject<LogisticRegression>(jsonString);
-    //}
+     
 }

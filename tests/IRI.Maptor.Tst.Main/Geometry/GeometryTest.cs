@@ -1,5 +1,4 @@
 ﻿using IRI.Maptor.Extensions;
-using IRI.Maptor.Extensions;
 using IRI.Maptor.Tst.NetFrameworkTest.Assets;
 
 
@@ -10,7 +9,7 @@ public class GeometryTest
 {
     public GeometryTest()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
     }
 
     [Fact]
@@ -18,7 +17,7 @@ public class GeometryTest
     {
         foreach (var item in GeometrySamples.AllGeometries)
         {
-            var area1 = item.CalculateUnsignedEuclideanArea();
+            var area1 = item.EuclideanArea;
             var area2 = item.AsSqlGeometry().STArea().Value;
 
             Assert.Equal(area1, area2);

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Jab.Common.Cartography.Common;
+namespace IRI.Maptor.Jab.Common.Cartography;
 
 public enum SymbologyType
 {

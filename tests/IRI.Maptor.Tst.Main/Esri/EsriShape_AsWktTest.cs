@@ -9,7 +9,7 @@ public class EsriShape_AsWktTest
 {
     public EsriShape_AsWktTest()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
 
         InitializeTest();
     }

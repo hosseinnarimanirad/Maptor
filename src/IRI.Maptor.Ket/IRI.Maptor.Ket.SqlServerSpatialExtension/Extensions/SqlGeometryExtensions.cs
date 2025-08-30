@@ -9,8 +9,7 @@ using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Ket.SqlServerSpatialExtension.Helpers;
-using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
-using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions; 
 
 namespace IRI.Maptor.Extensions;
 
@@ -18,38 +17,23 @@ public static class SqlGeometryExtensions
 {
     public static bool IsNullOrEmpty(this SqlGeometry geometry)
     {
-        return geometry == null || geometry.IsNull || geometry.STIsEmpty().IsTrue;
+        return geometry is null || geometry.IsNull || geometry.STIsEmpty().IsTrue;
     }
-
-    //public static bool IsNotValidOrEmpty(this SqlGeometry geometry)
-    //{
-    //    return geometry.IsNullOrEmpty() || geometry.STIsValid().IsFalse;
-    //}
-
+     
     public static int GetSrid(this SqlGeometry geometry)
     {
-        if (geometry == null)
+        if (geometry is null)
             return 0;
 
         var srid = geometry.STSrid;
 
-        if (srid.IsNull)
-        {
-            return 0;
-        }
-        else
-        {
-            return geometry.STSrid.Value;
-        }
+        return srid.IsNull ? 0 : srid.Value;
     }
 
     public static double GetAreaInSquareKilometers(this SqlGeometry geometry, Func<IPoint, Point> toWgs84)
     {
-
-        if (geometry == null)
-        {
+        if (geometry is null)
             return 0;
-        }
 
         try
         {
@@ -57,7 +41,7 @@ public static class SqlGeometryExtensions
                             .STArea()
                             .Value / 1000000.0;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return 0;
         }
@@ -67,15 +51,12 @@ public static class SqlGeometryExtensions
 
     public static BoundingBox GetBoundingBox(this List<SqlGeometry> spatialFeatures)
     {
-        if (spatialFeatures.IsNullOrEmpty() /*== null || spatialFeatures.Count < 1*/)
+        if (spatialFeatures.IsNullOrEmpty())
             return new BoundingBox(double.NaN, double.NaN, double.NaN, double.NaN);
 
         var envelopes = spatialFeatures.AsParallel().Select(i => i?.STEnvelope()).Where(i => !i.IsNullOrEmpty()).ToList();
 
         return SqlSpatialHelper.GetBoundingBoxFromEnvelopes(envelopes);
-
-        //Method 0
-        //return BoundingBox.GetMergedBoundingBox(spatialFeatures.Select(i => i.GetBoundingBox()).Where(i => !i.IsNaN()));
     }
 
 
@@ -163,16 +144,7 @@ public static class SqlGeometryExtensions
         else
         {
             return (OpenGisGeometryType)Enum.Parse(typeof(OpenGisGeometryType), geometry.STGeometryType().Value, true);
-        }
-
-        //if (geometry.IsNullOrEmpty())
-        //{
-        //    return OpenGisGeometryType.GeometryCollection;
-        //}
-        //else
-        //{
-        //    return (OpenGisGeometryType)Enum.Parse(typeof(OpenGisGeometryType), geometry.STGeometryType().Value, true);
-        //}
+        } 
     }
 
     public static bool IsPointOrMultiPoint(this SqlGeometry geometry)
@@ -224,10 +196,7 @@ public static class SqlGeometryExtensions
     }
 
     public static SqlGeometry GetCentroidOrOnSurface(this SqlGeometry geometry)
-    {
-        //if (geometry.IsNotValidOrEmpty())
-        //    return SqlGeometry.Null;
-
+    { 
         return geometry.STContains(geometry.STCentroid()).Value ? geometry.STCentroid() : geometry.STPointOnSurface();
     }
 
@@ -1202,12 +1171,7 @@ public static class SqlGeometryExtensions
     #region SqlGeometry To GeoJson
 
     public static IGeoJsonGeometry AsGeoJson(this SqlGeometry geometry, bool isXFirst = true)
-    {
-        //if (geometry.IsNotValidOrEmpty())
-        //{
-        //    throw new NotImplementedException();
-        //}
-
+    { 
         OpenGisGeometryType geometryType = geometry.GetOpenGisType();
 
         switch (geometryType)
@@ -1451,61 +1415,5 @@ public static class SqlGeometryExtensions
 
     #endregion
 
-
-    //#region SqlFeature  
-
-    //public static SqlFeature AsSqlFeature<T>(this Feature<T> feature) where T : IPoint, new()
-    //{
-    //    if (feature == null)
-    //    {
-    //        return null;
-    //    }
-
-    //    return new SqlFeature()
-    //    {
-    //        Attributes = feature.Attributes,
-    //        Id = feature.Id,
-    //        TheSqlGeometry = feature.TheGeometry.AsSqlGeometry()
-    //    };
-    //}
-
-    //public static GeoJsonFeature AsGeoJsonFeature(this SqlFeature feature, Func<Point, Point> toWgs84Func, bool isLongitudeFirst)
-    //{
-    //    return new GeoJsonFeature()
-    //    {
-    //        Geometry = feature.TheSqlGeometry.Project(toWgs84Func, SridHelper.GeodeticWGS84).AsGeoJson(isLongitudeFirst),
-    //        Id = feature.Id.ToString(),
-    //        Properties = feature.Attributes/*.ToDictionary(k => k.Key, k => k.Value)*/,
-
-    //    };
-    //}
-
-    //public static SqlFeature AsSqlFeature(this GeoJsonFeature feature, bool isLongitudeFirst, SrsBase targetSrs = null)
-    //{
-    //    targetSrs = targetSrs ?? SrsBases.GeodeticWgs84;
-
-    //    return new SqlFeature()
-    //    {
-    //        Attributes = feature.Properties/*.ToDictionary(f => f.Key, f => (object)f.Value)*/,
-    //        //Id = feature.id,
-    //        TheSqlGeometry = feature.Geometry.AsSqlGeography(isLongitudeFirst, SridHelper.GeodeticWGS84)
-    //                                            .Project(targetSrs.FromWgs84Geodetic<Point>, SridHelper.WebMercator)
-    //    };
-    //}
-
-    //public static Feature<Point> AsFeature(this GeoJsonFeature feature, bool isLongitudeFirst, SrsBase? targetSrs = null)
-    //{
-    //    targetSrs = targetSrs ?? SrsBases.GeodeticWgs84;
-
-    //    return new Feature<Point>()
-    //    {
-    //        Attributes = feature.Properties/*.ToDictionary(f => f.Key, f => (object)f.Value)*/,
-    //        //Id = feature.id,
-    //        //TheGeometry = feature.Geometry.AsSqlGeography(isLongitudeFirst, SridHelper.GeodeticWGS84)
-    //        //                                    .Project(targetSrs.FromWgs84Geodetic<Point>, SridHelper.WebMercator).AsGeometry()
-    //        TheGeometry = feature.Geometry.Parse(isLongitudeFirst, SridHelper.GeodeticWGS84).Project(targetSrs)
-    //    };
-    //}
-
-    //#endregion
+     
 }

@@ -184,14 +184,14 @@ public struct EsriPolyline : IEsriSimplePoints
 
             for (int i = 0; i < NumberOfParts; i++)
             {
-                result.Append(string.Format("{0},", SqlServerWktMapFunctions.PointGroupElementToWkt(ShapeHelper.GetEsriPoints(this, this.Parts[i]))));
+                result.Append(string.Format("{0},", SqlServerWktHelper.PointGroupElementToWkt(ShapeHelper.GetEsriPoints(this, this.Parts[i]))));
             }
 
             return result.Remove(result.Length - 1, 1).Append(")").ToString();
         }
         else
         {
-            return string.Format("LINESTRING{0}", SqlServerWktMapFunctions.PointGroupElementToWkt(ShapeHelper.GetEsriPoints(this, this.Parts[0])));
+            return string.Format("LINESTRING{0}", SqlServerWktHelper.PointGroupElementToWkt(ShapeHelper.GetEsriPoints(this, this.Parts[0])));
         }
 
     }

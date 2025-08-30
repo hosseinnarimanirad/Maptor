@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using IRI.Maptor.Sta.Common.Helpers;
-using IRI.Maptor.Jab.Common.Model.Security;
+using IRI.Maptor.Jab.Common.Models.Security;
 
 namespace IRI.Maptor.Jab.Controls.View.Security
 {

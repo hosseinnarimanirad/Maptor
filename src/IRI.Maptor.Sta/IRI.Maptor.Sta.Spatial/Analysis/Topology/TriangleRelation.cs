@@ -1,8 +1,5 @@
-﻿// besmellahe rahmane rahim
-// Allahomma ajjel le-valiyek al-faraj
-
-using System;
-namespace IRI.Maptor.Sta.Spatial.Analysis.Topology;
+﻿
+namespace IRI.Maptor.Sta.Spatial.Topology;
 
 //[Flags]
 public enum TriangleRelation

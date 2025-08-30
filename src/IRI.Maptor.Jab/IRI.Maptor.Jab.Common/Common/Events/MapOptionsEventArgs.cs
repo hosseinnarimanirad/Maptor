@@ -1,9 +1,8 @@
-﻿using System; 
+﻿using System;
 using System.Windows;
-
 using IRI.Maptor.Sta.Common.Abstrations;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Events;
 
 public class MapOptionsEventArgs<T> : EventArgs where T : FrameworkElement, new()
 {
@@ -13,8 +12,8 @@ public class MapOptionsEventArgs<T> : EventArgs where T : FrameworkElement, new(
 
     public MapOptionsEventArgs(T view, ILocateable dataContext)
     {
-        this.View = view;
+        View = view;
 
-        this.DataContext = dataContext;
+        DataContext = dataContext;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using IRI.Maptor.Jab.Common.Abstractions;
-using IRI.Maptor.Jab.Common.Model.Security;
-using IRI.Maptor.Jab.Common.ViewModel.Dialogs;
+using IRI.Maptor.Jab.Common.Models.Security;
+using IRI.Maptor.Jab.Common.Presenters;
 using IRI.Maptor.Jab.Controls.ViewModel.Dialogs;
 using Microsoft.Win32;
 using System;
@@ -474,7 +474,7 @@ namespace IRI.Maptor.Jab.Controls.Services.Dialog
                 }
             };
 
-            IRI.Maptor.Jab.Common.ViewModel.Dialogs.SignUpDialogViewModel viewModel = new Jab.Common.ViewModel.Dialogs.SignUpDialogViewModel(requestClose);
+            SignUpDialogViewModel viewModel = new SignUpDialogViewModel(requestClose);
             //{
             //    Message = message,
             //    Title = title,
@@ -655,7 +655,7 @@ namespace IRI.Maptor.Jab.Controls.Services.Dialog
 
         #endregion
 
-        public Task<bool?> ShowDialgAsync<TParent>(Window view, DialogViewModelBase viewModel)
+        public Task<bool?> ShowDialogAsync<TParent>(Window view, DialogViewModelBase viewModel)
         {
             var owner = Application.Current.Windows.OfType<TParent>().FirstOrDefault() as Window;
 

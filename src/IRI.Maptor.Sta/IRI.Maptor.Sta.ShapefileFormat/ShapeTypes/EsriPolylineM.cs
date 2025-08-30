@@ -203,7 +203,7 @@ public struct EsriPolylineM : IEsriPointsWithMeasure
         for (int i = 0; i < NumberOfParts; i++)
         {
             result.Append(string.Format("{0},",
-                SqlServerWktMapFunctions.PointMGroupElementToWkt(ShapeHelper.GetEsriPoints(this, i), ShapeHelper.GetMeasures(this, this.Parts[i]))));
+                SqlServerWktHelper.PointMGroupElementToWkt(ShapeHelper.GetEsriPoints(this, i), ShapeHelper.GetMeasures(this, this.Parts[i]))));
         }
 
         return result.Remove(result.Length - 1, 1).Append(")").ToString();

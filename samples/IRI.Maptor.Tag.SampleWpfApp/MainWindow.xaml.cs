@@ -22,14 +22,14 @@ public partial class MainWindow : Window
     {
         System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-        try
-        {
-            SqlServerTypes.Utilities.LoadNativeAssembliesv14(Environment.CurrentDirectory);
-        }
-        catch
-        {
-            MessageBox.Show("error!");
-        }
+        //try
+        //{
+        //    SqlServerTypes.Utilities.LoadNativeAssembliesv14(Environment.CurrentDirectory);
+        //}
+        //catch
+        //{
+        //    MessageBox.Show("error!");
+        //}
 
         var presenter = new ViewModel.AppViewModel();
 

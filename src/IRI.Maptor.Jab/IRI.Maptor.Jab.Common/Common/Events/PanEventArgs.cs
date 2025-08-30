@@ -1,7 +1,7 @@
-﻿using System; 
+﻿using System;
 using System.Windows;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Events;
 
 public class PanEventArgs : EventArgs
 {
@@ -9,6 +9,6 @@ public class PanEventArgs : EventArgs
 
     public PanEventArgs(Point offset)
     {
-        this.Offset = offset;
+        Offset = offset;
     }
 }

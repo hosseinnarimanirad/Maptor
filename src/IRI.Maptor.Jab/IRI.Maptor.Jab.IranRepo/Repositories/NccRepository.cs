@@ -2,14 +2,14 @@
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Model;
-using IRI.Maptor.Jab.Common.Enums;
+using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 namespace IRI.Maptor.Jab.IranRepo;
 
 public static class NccRepository
 {
-    public static VectorLayer? GetLayer(string layerName, string layerTitle, VisualParameters visualParameters, LabelParameters? label)
+    public static VectorLayer? GetLayer(string layerName, string layerTitle, VisualParameters visualParameters, VisualParameters? label)
     {
         var jsonString = ZipFileHelper.OpenAndReadAsString("iriRepo.dll", layerName);
 
@@ -18,15 +18,17 @@ public static class NccRepository
 
         var features = OrdinaryJsonListSource.CreateFromJsonString<NccPoint>(jsonString, i => i.AsFeature()/*, p => p.Name*/);
 
-        var vectorLayer = new VectorLayer(layerTitle, features, visualParameters, LayerType.VectorLayer, RenderingApproach.Default, RasterizationApproach.GdiPlus, ScaleInterval.All)
+        var vectorLayer = new VectorLayer(layerTitle, features, visualParameters, LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All)
         {
             ShowInToc = false,
             CanUserDelete = false,
+            Visibility = System.Windows.Visibility.Collapsed
         };
 
         if (label is not null)
         {
-            vectorLayer.Labels = label;
+            //vectorLayer.Labels = label;
+            vectorLayer.SetSymbolizer(new LabelSymbolizer(label));
         }
 
         return vectorLayer;

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System; 
 using System.Windows.Media;
-using IRI.Maptor.Jab.Common.Cartography.Common;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives;
+ 
 
 namespace IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
@@ -12,10 +9,9 @@ public class SimplePointSymbolizer : SymbolizerBase
     public override SymbologyType Type { get => SymbologyType.Single; }
 
     private double _symbolWidth = 16;
-
     public double SymbolWidth
     {
-        get { return _symbolWidth; }
+        get => _symbolWidth;
         set
         {
             _symbolWidth = value;
@@ -24,10 +20,9 @@ public class SimplePointSymbolizer : SymbolizerBase
     }
 
     private double _symbolHeight = 16;
-
     public double SymbolHeight
     {
-        get { return _symbolHeight; }
+        get => _symbolHeight;
         set
         {
             _symbolHeight = value;
@@ -36,46 +31,41 @@ public class SimplePointSymbolizer : SymbolizerBase
     }
 
 
-    private Geometry _geometryPointSymbol;
-
-    public Geometry GeometryPointSymbol
+    private Geometry? _geometrySymbol;
+    public Geometry? GeometrySymbol
     {
-        get { return _geometryPointSymbol; }
+        get => _geometrySymbol;
         set
         {
-            _geometryPointSymbol = value;
+            _geometrySymbol = value;
             RaisePropertyChanged();
         }
     }
 
 
-    private ImageSource _imagePointSymbol;
-
-    public ImageSource ImagePointSymbol
+    private ImageSource? _imageSymbol;
+    public ImageSource? ImageSymbol
     {
-        get { return _imagePointSymbol; }
+        get => _imageSymbol;
         set
         {
-            _imagePointSymbol = value;
+            _imageSymbol = value;
             RaisePropertyChanged();
         }
     }
 
 
-    private System.Drawing.Image _imagePointSymbolGdiPlus;
-
-    public System.Drawing.Image ImagePointSymbolGdiPlus
+    private System.Drawing.Image? _imageSymbolGdiPlus;
+    public System.Drawing.Image? ImageSymbolGdiPlus
     {
-        get { return _imagePointSymbolGdiPlus; }
+        get => _imageSymbolGdiPlus;
         set
         {
-            _imagePointSymbolGdiPlus = value;
+            _imageSymbolGdiPlus = value;
             RaisePropertyChanged();
         }
     }
-
-    public Predicate<Feature<Point>> IsFilterPassed => throw new NotImplementedException();
-
+     
     public SimplePointSymbolizer()
     {
 
@@ -87,15 +77,5 @@ public class SimplePointSymbolizer : SymbolizerBase
 
         SymbolWidth = pointSize;
     }
-
-    //public override VisualParameters Get()
-    //{
-    //    throw new System.NotImplementedException();
-    //}
-
-    public ImageBrush Render(List<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight)
-    {
-        throw new NotImplementedException();
-    }
-
+      
 }

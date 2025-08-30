@@ -1,11 +1,7 @@
-﻿using IRI.Maptor.Jab.Common.Cartography.Common;
+﻿using System; 
+
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
@@ -17,20 +13,30 @@ public abstract class SymbolizerBase : Notifier, ISymbolizer
 
     public double? MaxScaleDenominator { get; set; }
 
+
+    private VisualParameters? _param;
+    public VisualParameters? Param
+    {
+        get { return _param; }
+        set
+        {
+            _param = value;
+            RaisePropertyChanged();
+
+            //this.OnLabelChanged?.Invoke(this, new CustomEventArgs<LabelParameters>(value));
+        }
+    }
+
     private Func<Feature<Point>, bool> _filter = f => true;
     public virtual Func<Feature<Point>, bool> IsFilterPassed
     {
         get => _filter;
-        protected set => _filter = value;
+        set => _filter = value;
     }
-
-    public virtual Predicate<double> ScalePredicate => s => true;
-
-    //public abstract VisualParameters Get( );
-
+     
     public bool IsInScaleRange(double scale)
     {
-        return scale > (MinScaleDenominator ?? 0) &&
-                scale < (MaxScaleDenominator ?? double.MaxValue);
+        return scale >= (MinScaleDenominator ?? 0) &&
+                scale <= (MaxScaleDenominator ?? double.MaxValue);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Model;
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.View.MapMarkers;
 using IRI.Maptor.Jab.Controls.Presenter;
 using IRI.Maptor.Sta.Common.Primitives;

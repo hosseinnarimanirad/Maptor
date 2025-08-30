@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Security.Principal;
 using System.Windows;
+using System.Security.Principal;
+
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Localization;
+
 using static IRI.Maptor.Jab.Common.Localization.LocalizationResourceKeys;
 
-namespace IRI.Maptor.Jab.Common.Presenter;
+namespace IRI.Maptor.Jab.Common.Presenters;
 
 //TO DO: consider replacing Action methods with "IDialogService" 
 public class BasePresenter : Notifier
@@ -31,13 +33,13 @@ public class BasePresenter : Notifier
         {
             System.Threading.Thread.CurrentPrincipal = value;
 
-            this.UserName = value.Identity.Name;
+            UserName = value.Identity.Name;
 
             RaisePropertyChanged(nameof(UserName));
 
             RaisePropertyChanged();
 
-            this.UserChanged?.Invoke(this, this.UserName);
+            UserChanged?.Invoke(this, UserName);
         }
     }
 
@@ -109,8 +111,9 @@ public class BasePresenter : Notifier
         RaisePropertyChanged(nameof(ClearText));
         RaisePropertyChanged(nameof(DrawingsText));
         RaisePropertyChanged(nameof(DrawPointText));
-        RaisePropertyChanged(nameof(DrawPolygonText));
         RaisePropertyChanged(nameof(DrawPolylineText));
+        RaisePropertyChanged(nameof(DrawPolygonText));
+        RaisePropertyChanged(nameof(AddTextToMap));
         RaisePropertyChanged(nameof(FullExtentText));
         RaisePropertyChanged(nameof(GoToText));
         RaisePropertyChanged(nameof(LayersText));
@@ -125,7 +128,7 @@ public class BasePresenter : Notifier
             return;
         }
 
-        this.DialogService = presenter.DialogService;
+        DialogService = presenter.DialogService;
 
         //this.RequestOpenFile = arg => presenter.RequestOpenFile(arg);
         //this.RequestSaveFile = arg => presenter.RequestSaveFile(arg);
@@ -141,8 +144,9 @@ public class BasePresenter : Notifier
     public string ClearText => LocalizationManager.Instance[ui_clear.ToString()];
     public string DrawingsText => LocalizationManager.Instance[ui_drawings.ToString()];
     public string DrawPointText => LocalizationManager.Instance[ui_drawPoint.ToString()];
-    public string DrawPolygonText => LocalizationManager.Instance[ui_drawPolygon.ToString()];
     public string DrawPolylineText => LocalizationManager.Instance[ui_drawPolyline.ToString()];
+    public string DrawPolygonText => LocalizationManager.Instance[ui_drawPolygon.ToString()];
+    public string AddTextToMap => LocalizationManager.Instance[ui_addTextToMap.ToString()];
     public string FullExtentText => LocalizationManager.Instance[ui_fullExtent.ToString()];
     public string GoToText => LocalizationManager.Instance[ui_goTo.ToString()];
     public string LayersText => LocalizationManager.Instance[ui_layers.ToString()];

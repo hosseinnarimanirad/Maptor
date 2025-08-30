@@ -1,9 +1,9 @@
 ﻿using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Model.Security;
+using IRI.Maptor.Jab.Common.Models.Security;
 using System;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Jab.Common.ViewModel.Dialogs;
+namespace IRI.Maptor.Jab.Common.Presenters;
 
 public class ChangePasswordDialogViewModel : Notifier
 {
@@ -146,16 +146,16 @@ public class ChangePasswordDialogViewModel : Notifier
 
                     //this.OldPassword = SecureStringHelper.GetString(model.Password);
 
-                    if (model.IsNewPasswordValid() && (await TryAuthenticate(model)))
+                    if (model.IsNewPasswordValid() && await TryAuthenticate(model))
                     //if (model.IsNewPasswordValid())
                     {
                         //this.NewPassword = SecureStringHelper.GetString(model.NewPassword);
 
-                        this.IsOk = true;
+                        IsOk = true;
 
-                        this.Model = model;
+                        Model = model;
 
-                        this.RequestClose?.Invoke();
+                        RequestClose?.Invoke();
                     }
                     else
                     {
@@ -177,12 +177,12 @@ public class ChangePasswordDialogViewModel : Notifier
         {
             if (RequestAuthenticateAsync != null)
             {
-                return await this.RequestAuthenticateAsync(model);
+                return await RequestAuthenticateAsync(model);
             }
         }
         else
         {
-            return this.RequestAuthenticate(model);
+            return RequestAuthenticate(model);
         }
 
         return false;
@@ -198,9 +198,9 @@ public class ChangePasswordDialogViewModel : Notifier
             {
                 _cancelCommand = new RelayCommand(param =>
                 {
-                    this.IsOk = false;
+                    IsOk = false;
 
-                    this.RequestClose?.Invoke();
+                    RequestClose?.Invoke();
                 });
             }
 

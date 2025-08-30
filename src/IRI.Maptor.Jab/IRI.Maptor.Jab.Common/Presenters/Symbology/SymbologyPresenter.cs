@@ -1,7 +1,7 @@
 ﻿using System;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 
-namespace IRI.Maptor.Jab.Common.Presenters.Symbology;
+namespace IRI.Maptor.Jab.Common.Presenters;
 
 public class SymbologyPresenter : Notifier
 {
@@ -31,7 +31,7 @@ public class SymbologyPresenter : Notifier
             {
                 _closeCommand = new RelayCommand(param =>
                 {
-                    this.RequestCloseAction?.Invoke();
+                    RequestCloseAction?.Invoke();
                 });
             }
 
@@ -49,7 +49,7 @@ public class SymbologyPresenter : Notifier
             {
                 _applyCommand = new RelayCommand(param =>
                 {
-                    this.RequestApplyAction?.Invoke(this);
+                    RequestApplyAction?.Invoke(this);
                 });
             }
 

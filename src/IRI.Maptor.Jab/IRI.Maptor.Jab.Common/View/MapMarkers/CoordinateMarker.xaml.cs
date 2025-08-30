@@ -13,36 +13,6 @@ namespace IRI.Maptor.Jab.Common.View.MapMarkers;
 /// </summary>
 public partial class CoordinateMarker : UserControl, INotifyPropertyChanged, IMapMarker
 {
-    //public double X
-    //{
-    //    get { return (double)GetValue(XProperty); }
-    //    set
-    //    {
-    //        SetValue(XProperty, value);
-    //        UpdateCoordinates();
-    //    }
-    //}
-
-    //// Using a DependencyProperty as the backing store for X.  This enables animation, styling, binding, etc...
-    //public static readonly DependencyProperty XProperty =
-    //    DependencyProperty.Register(nameof(X), typeof(double), typeof(CoordinateMarker), new PropertyMetadata(0.0));
-
-
-    //public double Y
-    //{
-    //    get { return (double)GetValue(YProperty); }
-    //    set
-    //    {
-    //        SetValue(YProperty, value);
-    //        UpdateCoordinates();
-    //    }
-    //}
-
-    //// Using a DependencyProperty as the backing store for Y.  This enables animation, styling, binding, etc...
-    //public static readonly DependencyProperty YProperty =
-    //    DependencyProperty.Register(nameof(Y), typeof(double), typeof(CoordinateMarker), new PropertyMetadata(0.0));
-
-
     public bool ChangeToDms { get; }
 
     private string _xLabel;

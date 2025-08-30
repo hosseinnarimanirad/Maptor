@@ -2,17 +2,16 @@
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Enums;
-using IRI.Maptor.Jab.Common.Model;
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.MapIndexes;
-using IRI.Maptor.Jab.Common.Model.Legend;
-using IRI.Maptor.Jab.Common.Presenter.Map;
+using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Jab.Common.Presenters;
 
 namespace IRI.Maptor.Jab.IranRepo;
 
@@ -27,7 +26,10 @@ public static class IndexLayers
 
         var geo = features.GetAsFeatureSet().Features.Select(f => f.TheGeometry).ToList();
 
-        return new VectorLayer(layerName, geo, new VisualParameters(null, color, 1, 1), LayerType.VectorLayer, RenderingApproach.Default, RasterizationApproach.DrawingVisual);
+        return new VectorLayer(layerName, geo, new VisualParameters(null, color, 1, 1), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.DrawingVisual)
+        {
+            Visibility = System.Windows.Visibility.Collapsed
+        };
     }
 
     public static VectorLayer GetIndex250kLayer()
@@ -36,15 +38,16 @@ public static class IndexLayers
 
         var source = OrdinaryJsonListSource.CreateFromJsonString<Index250k>(jsonString, i => i.AsFeature()/*, i => i.SheetNameEn*/);
 
-        VisualParameters parameters = new VisualParameters(null, "#FFEA4333", 5, .9) { Visibility = System.Windows.Visibility.Collapsed };
+        VisualParameters parameters = new VisualParameters(null, "#FFEA4333", 5, .9);
 
-        var index250kLabels = new LabelParameters(ScaleInterval.Create(7), 12, parameters.Stroke, fontFamily, i => i.GetCentroidPlus()) { IsRtl = false };
+        var index250kLabels = VisualParameters.CreateLabel(ScaleInterval.Create(7), 12, parameters.Stroke, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
 
-        return new VectorLayer("اندکس ۲۵۰ هزار", source, parameters, LayerType.VectorLayer, RenderingApproach.Default, RasterizationApproach.DrawingVisual, ScaleInterval.Create(4))
+        return new VectorLayer("اندکس ۲۵۰ هزار", source, parameters, LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.DrawingVisual, ScaleInterval.Create(4), index250kLabels)
         {
             ShowInToc = false,
             CanUserDelete = false,
-            Labels = index250kLabels
+            Visibility = System.Windows.Visibility.Collapsed
+            //Labels = index250kLabels
         };
 
     }
@@ -55,15 +58,16 @@ public static class IndexLayers
 
         var source = OrdinaryJsonListSource.CreateFromJsonString<Index100k>(jsonString, i => i.AsFeature()/*, i => i.SheetNameEn*/);
 
-        VisualParameters parameters = new VisualParameters(null, "#FFEA4333", 3, .9) { Visibility = System.Windows.Visibility.Collapsed };
+        VisualParameters parameters = new VisualParameters(null, "#FFEA4333", 3, .9);
 
-        var index100kLabels = new LabelParameters(ScaleInterval.Create(9), 12, parameters.Stroke, fontFamily, i => i.GetCentroidPlus()) { IsRtl = false };
+        var index100kLabels = VisualParameters.CreateLabel(ScaleInterval.Create(9), 12, parameters.Stroke, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
 
-        return new VectorLayer("اندکس ۱۰۰ هزار", source, parameters, LayerType.VectorLayer, RenderingApproach.Default, RasterizationApproach.GdiPlus, ScaleInterval.Create(5))
+        return new VectorLayer("اندکس ۱۰۰ هزار", source, parameters, LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.Create(5), index100kLabels)
         {
             ShowInToc = false,
             CanUserDelete = false,
-            Labels = index100kLabels
+            Visibility = System.Windows.Visibility.Collapsed
+            //Labels = index100kLabels
         };
 
     }
@@ -74,12 +78,13 @@ public static class IndexLayers
 
         var source = OrdinaryJsonListSource.CreateFromJsonString<Index50k>(jsonString, i => i.AsFeature()/*, i => i.SheetNumber*/);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8) { Visibility = System.Windows.Visibility.Collapsed };
+        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
 
-        return new VectorLayer("اندکس ۵۰ هزار", source, parameters, LayerType.VectorLayer, RenderingApproach.Default, RasterizationApproach.GdiPlus, ScaleInterval.Create(9))
+        return new VectorLayer("اندکس ۵۰ هزار", source, parameters, LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.Create(9))
         {
             ShowInToc = false,
-            CanUserDelete = false
+            CanUserDelete = false,
+            Visibility = System.Windows.Visibility.Collapsed
         };
 
     }
@@ -90,12 +95,13 @@ public static class IndexLayers
 
         var source = OrdinaryJsonListSource.CreateFromJsonString<Index25k>(jsonString, i => i.AsFeature()/*, i => i.SheetNumber*/);
 
-        VisualParameters parameters = new VisualParameters(null, "#88FF8130", 2, .8) { Visibility = System.Windows.Visibility.Collapsed, DashStyle = DashStyles.Dot };
+        VisualParameters parameters = new VisualParameters(null, "#88FF8130", 2, .8) { DashStyle = DashStyles.Dot };
 
-        return new VectorLayer("اندکس ۲۵ هزار", source, parameters, LayerType.VectorLayer, RenderingApproach.Default, RasterizationApproach.GdiPlus, ScaleInterval.Create(10))
+        return new VectorLayer("اندکس ۲۵ هزار", source, parameters, LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.Create(10))
         {
             ShowInToc = false,
-            CanUserDelete = false
+            CanUserDelete = false,
+            Visibility = System.Windows.Visibility.Collapsed
         };
 
     }
@@ -106,14 +112,14 @@ public static class IndexLayers
 
         //var fontFamily = new FontFamily("Times New Roman");
 
-        index250k.Commands = GetCommands<Index250k>(map, index250k/*, index250kLabels*/);
+        index250k.Commands = GetCommands/*<Index250k>*/(map, index250k/*, index250kLabels*/);
 
         //100k
         var index100k = IndexLayers.GetIndex100kLayer();
 
         //var index100kLegend = new MapLegendItemWithOptionsModel(index100k);
 
-        index100k.Commands = GetCommands<Index100k>(map, index100k/*, index100kLabels*/);
+        index100k.Commands = GetCommands/*<Index100k>*/(map, index100k/*, index100kLabels*/);
 
         return new List<ILayer>() { index250k, index100k };
 
@@ -166,9 +172,9 @@ public static class IndexLayers
 
         UtmGridDataSource source = UtmGridDataSource.Create(UtmIndexType.Ncc2kBlock, utmZone);
 
-        var label = new LabelParameters(ScaleInterval.Create(8), 14, Brushes.Red, fontFamily, i => i?.GetCentroidPlus()/*?.STCentroid()*/) { IsRtl = false };
+        var label = VisualParameters.CreateLabel(ScaleInterval.Create(8), 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8) { Visibility = System.Windows.Visibility.Collapsed };
+        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
 
         var layer =
             new VectorLayer(
@@ -176,18 +182,17 @@ public static class IndexLayers
                 source,
                 parameters,
                 LayerType.VectorLayer,
-                RenderingApproach.Default,
-                RasterizationApproach.DrawingVisual,
+                RenderMode.Default,
+                RasterizationMethod.DrawingVisual,
                 ScaleInterval.Create(6),
-                null,
-                null)
+                label)
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Labels = label
+                Visibility = System.Windows.Visibility.Collapsed
             };
 
-        layer.Commands = GetCommands<UtmSheet>(map, layer/*, label*/);
+        layer.Commands = GetCommands/*<UtmSheet>*/(map, layer/*, label*/);
 
         return layer;
     }
@@ -198,9 +203,9 @@ public static class IndexLayers
 
         UtmGridDataSource source = UtmGridDataSource.Create(UtmIndexType.Ncc2kSheet, utmZone);
 
-        var label = new LabelParameters(ScaleInterval.Create(11), 13, Brushes.Red, fontFamily, i => i?.GetCentroidPlus()) { IsRtl = false };
+        var label = VisualParameters.CreateLabel(ScaleInterval.Create(11), 13, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8) { Visibility = System.Windows.Visibility.Collapsed };
+        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
 
         var layer =
             new VectorLayer(
@@ -208,18 +213,17 @@ public static class IndexLayers
                 source,
                 parameters,
                 LayerType.VectorLayer,
-                RenderingApproach.Default,
-                RasterizationApproach.DrawingVisual,
+                RenderMode.Default,
+                RasterizationMethod.DrawingVisual,
                 ScaleInterval.Create(11),
-                null,
-                null)
+                label)
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Labels = label
+                Visibility = System.Windows.Visibility.Collapsed
             };
 
-        layer.Commands = GetCommands<UtmSheet>(map, layer/*, label*/);
+        layer.Commands = GetCommands(map, layer);
 
         return layer;
     }
@@ -230,9 +234,9 @@ public static class IndexLayers
 
         UtmGridDataSource source = UtmGridDataSource.Create(UtmIndexType.Ncc1k, utmZone);
 
-        var label = new LabelParameters(ScaleInterval.Create(14), 14, Brushes.Red, fontFamily, i => i?.GetCentroidPlus()) { IsRtl = false };
+        var label = VisualParameters.CreateLabel(ScaleInterval.Create(14), 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8) { Visibility = System.Windows.Visibility.Collapsed };
+        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
 
         var layer =
             new VectorLayer(
@@ -240,18 +244,17 @@ public static class IndexLayers
                 source,
                 parameters,
                 LayerType.VectorLayer,
-                RenderingApproach.Default,
-                RasterizationApproach.DrawingVisual,
+                RenderMode.Default,
+                RasterizationMethod.DrawingVisual,
                 ScaleInterval.Create(13),
-                null,
-                null)
+                label)
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Labels = label
+                Visibility = System.Windows.Visibility.Collapsed
             };
 
-        layer.Commands = GetCommands<UtmSheet>(map, layer/*, label*/);
+        layer.Commands = GetCommands(map, layer);
 
         return layer;
     }
@@ -262,9 +265,9 @@ public static class IndexLayers
 
         UtmGridDataSource source = UtmGridDataSource.Create(UtmIndexType.Ncc500, utmZone);
 
-        var label = new LabelParameters(ScaleInterval.Create(15), 14, Brushes.Red, fontFamily, i => i?.GetCentroidPlus()) { IsRtl = false };
+        var label = VisualParameters.CreateLabel(ScaleInterval.Create(15), 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8) { Visibility = System.Windows.Visibility.Collapsed };
+        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
 
         var layer =
             new VectorLayer(
@@ -272,18 +275,17 @@ public static class IndexLayers
                 source,
                 parameters,
                 LayerType.VectorLayer,
-                RenderingApproach.Default,
-                RasterizationApproach.DrawingVisual,
+                RenderMode.Default,
+                RasterizationMethod.DrawingVisual,
                 ScaleInterval.Create(14),
-                null,
-                null)
+                label)
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Labels = label
+                Visibility = System.Windows.Visibility.Collapsed
             };
 
-        layer.Commands = GetCommands<UtmSheet>(map, layer/*, label*/);
+        layer.Commands = GetCommands/*<UtmSheet>*/(map, layer/*, label*/);
 
         return layer;
     }
@@ -301,9 +303,9 @@ public static class IndexLayers
 
         GridDataSource source50k = GridDataSource.Create(GeodeticIndexType.Ncc50k);
 
-        var label = new LabelParameters(ScaleInterval.Create(9), 14, Brushes.Red, fontFamily, i => i?.GetCentroidPlus()) { IsRtl = false };
+        var label = VisualParameters.CreateLabel(ScaleInterval.Create(9), 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8) { Visibility = System.Windows.Visibility.Collapsed };
+        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
 
         var layer50k =
             new VectorLayer(
@@ -311,18 +313,17 @@ public static class IndexLayers
                 source50k,
                 parameters,
                 LayerType.VectorLayer,
-                RenderingApproach.Default,
-                RasterizationApproach.DrawingVisual,
+                RenderMode.Default,
+                RasterizationMethod.DrawingVisual,
                 ScaleInterval.Create(7),
-                null,
-                null)
+                label)
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Labels = label
+                Visibility = System.Windows.Visibility.Collapsed
             };
 
-        layer50k.Commands = GetCommands<GeodeticSheet>(map, layer50k/*, label*/);
+        layer50k.Commands = GetCommands/*<GeodeticSheet>*/(map, layer50k/*, label*/);
 
         return layer50k;
     }
@@ -333,9 +334,9 @@ public static class IndexLayers
 
         GridDataSource source25k = GridDataSource.Create(GeodeticIndexType.Ncc25k);
 
-        var label = new LabelParameters(ScaleInterval.Create(10, 19), 14, Brushes.Red, fontFamily, i => i?.GetCentroidPlus()) { IsRtl = false };
+        var label = VisualParameters.CreateLabel(ScaleInterval.Create(10, 19), 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 1, .8) { Visibility = System.Windows.Visibility.Collapsed };
+        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 1, .8);
 
         var layer25k =
             new VectorLayer(
@@ -343,18 +344,17 @@ public static class IndexLayers
                 source25k,
                 parameters,
                 LayerType.VectorLayer,
-                RenderingApproach.Default,
-                RasterizationApproach.DrawingVisual,
+                RenderMode.Default,
+                RasterizationMethod.DrawingVisual,
                 ScaleInterval.Create(8),
-                null,
-                null)
+                label)
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Labels = label
+                Visibility = System.Windows.Visibility.Collapsed
             };
 
-        layer25k.Commands = GetCommands<GeodeticSheet>(map, layer25k/*, label*/);
+        layer25k.Commands = GetCommands/*<GeodeticSheet>*/(map, layer25k/*, label*/);
 
         return layer25k;
     }
@@ -363,9 +363,9 @@ public static class IndexLayers
     {
         var fontFamily = new FontFamily("Times New Roman");
 
-        var label = new LabelParameters(ScaleInterval.Create(11, 19), 14, Brushes.Red, fontFamily, i => i?.GetCentroidPlus()) { IsRtl = false };
+        var label = VisualParameters.CreateLabel(ScaleInterval.Create(11, 19), 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 1, .8) { Visibility = System.Windows.Visibility.Collapsed };
+        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 1, .8);
 
         var layer10k =
             new VectorLayer(
@@ -373,18 +373,17 @@ public static class IndexLayers
                 GridDataSource.Create(GeodeticIndexType.Ncc10k),
                 parameters,
                 LayerType.VectorLayer,
-                RenderingApproach.Default,
-                RasterizationApproach.DrawingVisual,
+                RenderMode.Default,
+                RasterizationMethod.DrawingVisual,
                 ScaleInterval.Create(9),
-                null,
-                null)
+                label)
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Labels = label
+                Visibility = System.Windows.Visibility.Collapsed
             };
 
-        layer10k.Commands = GetCommands<GeodeticSheet>(map, layer10k/*, label*/);
+        layer10k.Commands = GetCommands/*<GeodeticSheet>*/(map, layer10k/*, label*/);
 
         return layer10k;
     }
@@ -393,9 +392,9 @@ public static class IndexLayers
     {
         var fontFamily = new FontFamily("Times New Roman");
 
-        var label = new LabelParameters(ScaleInterval.Create(12, 19), 14, Brushes.Red, fontFamily, i => i?.GetCentroidPlus()) { IsRtl = false };
+        var label = VisualParameters.CreateLabel(ScaleInterval.Create(12, 19), 14, Brushes.Red, fontFamily, i => i?.GetCentroidPlusPoint(), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 1, .8) { Visibility = System.Windows.Visibility.Collapsed };
+        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 1, .8);
 
         var layer5k =
             new VectorLayer(
@@ -403,25 +402,24 @@ public static class IndexLayers
                 GridDataSource.Create(GeodeticIndexType.Ncc5k),
                 parameters,
                 LayerType.VectorLayer,
-                RenderingApproach.Default,
-                RasterizationApproach.DrawingVisual,
+                RenderMode.Default,
+                RasterizationMethod.DrawingVisual,
                 ScaleInterval.Create(10),
-                null,
-                null)
+                label)
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Labels = label
+                Visibility = System.Windows.Visibility.Collapsed
             };
 
-        layer5k.Commands = GetCommands<GeodeticSheet>(map, layer5k/*, label*/);
+        layer5k.Commands = GetCommands/*<GeodeticSheet>*/(map, layer5k/*, label*/);
 
         return layer5k;
     }
 
 
-    private static List<ILegendCommand> GetCommands<T>(MapPresenter map, VectorLayer layer/*, LabelParameters label*/)
-        where T : class, IGeometryAware<Point>
+    private static List<ILegendCommand> GetCommands/*<T>*/(MapPresenter map, VectorLayer layer/*, VisualParameters.CreateLabel label*/)
+    //where T : class, IGeometryAware<Point>
     {
         return new List<ILegendCommand>()
         {

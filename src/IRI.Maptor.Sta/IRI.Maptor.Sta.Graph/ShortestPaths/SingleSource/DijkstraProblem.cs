@@ -1,11 +1,9 @@
-﻿// besmellahe rahmane rahim
-// Allahomma ajjel le-valiyek al-faraj
+﻿// BESMELLAHE RAHMANE RAHIM
+// ALLAHOMMA AJJEL LE-VALIYEK AL-FARAJ
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using IRI.Maptor.Sta.Mathematics; 
-using IRI.Maptor.Sta.DataStructures;
+using IRI.Maptor.Sta.Mathematics;
 using IRI.Maptor.Sta.DataStructures.CustomStructures;
 
 namespace IRI.Maptor.Sta.Graph;
@@ -77,9 +75,7 @@ public class DijkstraProblem
     private List<int> TracePath(int firstNode, int secondNode)
     {
 
-        List<int> result = new List<int>();
-
-        result.Add(secondNode);
+        List<int> result = [secondNode];
 
         int tempNode = secondNode;
 

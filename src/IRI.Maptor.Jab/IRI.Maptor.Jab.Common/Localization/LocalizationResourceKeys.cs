@@ -36,6 +36,9 @@ public enum LocalizationResourceKeys
 
     goto_dialogTitle,
 
+    // todo: check if not used in future
+    legend_symbologyExpanderHeaderText,
+
     map_pan,
     map_zoomTo,
 
@@ -102,6 +105,7 @@ public enum LocalizationResourceKeys
     ui_drawings,
     ui_drawPoint,
     ui_drawPolygon,
+    ui_addTextToMap,
     ui_drawPolyline,
     ui_fullExtent,
     ui_goTo,

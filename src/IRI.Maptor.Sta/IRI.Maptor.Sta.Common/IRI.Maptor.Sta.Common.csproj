@@ -20,7 +20,8 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Title>Maptor Common standard library</Title>
     <Copyright>Maptor</Copyright> 
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance> 
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   
   <ItemGroup>

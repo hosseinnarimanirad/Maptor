@@ -5,9 +5,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Collections.Generic;
-
-using IRI.Maptor.Sta.Spatial.DataStructures;
-using Rectangle = IRI.Maptor.Sta.Spatial.DataStructures.Rectangle;
+using Rectangle = IRI.Maptor.Sta.Spatial.AdvancedStructures.Rectangle;
+using IRI.Maptor.Sta.Spatial.AdvancedStructures;
 
 namespace IRI.Maptor.Res.Sfc.View;
 
@@ -24,7 +23,7 @@ public partial class RTreeWindow : Window
         brushes = new Brush[] { Brushes.Black, Brushes.Brown, Brushes.Blue, Brushes.Orange, Brushes.Red, Brushes.Green, Brushes.YellowGreen };
     }
 
-    List<IRI.Maptor.Sta.Spatial.DataStructures.Rectangle> rectangles = new List<IRI.Maptor.Sta.Spatial.DataStructures.Rectangle>();
+    List<Rectangle> rectangles = new List<Rectangle>();
 
     Point old;
     bool isDragging;
@@ -159,7 +158,7 @@ public partial class RTreeWindow : Window
         {
             DrawRectangle(rTreeNode.Boundary, brushes[level], canvas);
 
-            foreach (IRI.Maptor.Sta.Spatial.DataStructures.Rectangle item in rTreeNode.GetSubRectangles())
+            foreach (Rectangle item in rTreeNode.GetSubRectangles())
             {
                 DrawRectangle(item, brushes[level + 1], canvas);
             }
@@ -176,7 +175,7 @@ public partial class RTreeWindow : Window
 
     }
 
-    private void DrawRectangle(IRI.Maptor.Sta.Spatial.DataStructures.Rectangle rectangle, Brush brush, Canvas canvas)
+    private void DrawRectangle(Rectangle rectangle, Brush brush, Canvas canvas)
     {
         RectangleGeometry geometry = new RectangleGeometry(new Rect(rectangle.minX, rectangle.minY, rectangle.Width, rectangle.Height));
 

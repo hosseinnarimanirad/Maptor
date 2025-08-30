@@ -13,7 +13,7 @@ public class HexStringTest
 {
     public HexStringTest()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
     }
 
     [Fact]

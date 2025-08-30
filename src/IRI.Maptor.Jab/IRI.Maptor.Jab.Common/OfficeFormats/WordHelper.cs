@@ -1,10 +1,11 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Wordprocessing;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
-namespace IRI.Maptor.Sta.Common.OfficeFormats;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+
+namespace IRI.Maptor.Jab.Common.OfficeFormats;
 
 public static class WordHelper
 {

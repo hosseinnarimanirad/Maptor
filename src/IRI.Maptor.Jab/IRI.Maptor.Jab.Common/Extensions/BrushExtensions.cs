@@ -1,29 +1,18 @@
-﻿using IRI.Maptor.Extensions;
+﻿using IRI.Maptor.Jab.Common.Helpers;
 using System.Windows.Media;
 
 namespace IRI.Maptor.Extensions;
 
 public static class BrushExtensions
-{
+{ 
+    public static System.Windows.Media.Color? AsSolidColor(this Brush brush) => (brush as SolidColorBrush)?.Color;
 
-    public static System.Windows.Media.Color? AsSolidColor(this Brush brush)
+    public static System.Drawing.Color? AsGdiSolidColor(this Brush brush, double? opacity = null) => brush.AsSolidColor()?.AsGdiColor(opacity);
+
+    public static System.Drawing.Brush? AsGdiBrush(this Brush brush, double? opacity = null)
     {
-        var solidBrush = brush as SolidColorBrush;
+        var solidColor = brush.AsSolidColor()?.AsGdiColor(opacity);
 
-        return solidBrush != null ? solidBrush.Color : (Color?)null;
+        return solidColor != null ? new System.Drawing.SolidBrush(solidColor.Value) : null;
     }
-
-    public static System.Drawing.Color? AsGdiSolidColor(this Brush brush, double? opacity = null)
-    {
-        var color = brush.AsSolidColor();
-
-        return color.HasValue ? color.Value.AsGdiColor(opacity) : (System.Drawing.Color?)null;
-    }
-
-    public static System.Drawing.Brush AsGdiBrush(this Brush brush, double? opacity = null)
-    {
-        var solidColorBrush = brush as SolidColorBrush;
-
-        return solidColorBrush != null ? new System.Drawing.SolidBrush(solidColorBrush.Color.AsGdiColor(opacity)) : null;
-    } 
 }

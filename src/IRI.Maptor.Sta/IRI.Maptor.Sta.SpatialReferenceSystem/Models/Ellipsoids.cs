@@ -232,7 +232,7 @@ public static class Ellipsoids
             return new Ellipsoid<Meter, Degree>("WGS 72", new Meter(6378135.0), 298.26, 4322) { EsriName = "WGS_1972" };
         }
     }
-
+                                                                                                             
     public static Ellipsoid<Meter, Degree> WGS84 { get; } = new Ellipsoid<Meter, Degree>("WGS 84", new Meter(6378137.0), 298.257223563, SridHelper.GeodeticWGS84) { EsriName = "WGS_1984" };
 
     public static Ellipsoid<Meter, Degree> Sphere

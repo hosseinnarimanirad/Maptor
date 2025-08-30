@@ -5,8 +5,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>IRI.ShapefileFormat</Title>
     <NoWarn>CS8602,CS8618,CS8625</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup>
+    <Nullable>enable</Nullable> 
     <!-- or "latest", "preview", or "11.0" -->
     <LangVersion>latest</LangVersion>
   </PropertyGroup>

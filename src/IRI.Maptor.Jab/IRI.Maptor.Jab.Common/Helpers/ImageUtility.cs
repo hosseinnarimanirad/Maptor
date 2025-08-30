@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Controls;
+using System.Collections.Generic;
 using System.Windows.Media.Imaging;
+using System.Runtime.InteropServices;
 
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Ket.GdiPlus.WorldfileFormat;
@@ -15,7 +15,7 @@ namespace IRI.Maptor.Jab.Common.Helpers;
 
 public static class ImageUtility
 {
-    public static BitmapImage GetImage(Uri uri)
+    public static BitmapImage CreateBitmapImage(Uri uri)
     {
         BitmapImage result = new BitmapImage();
 
@@ -30,7 +30,7 @@ public static class ImageUtility
         return result;
     }
 
-    public static BitmapImage GetImage(string uri, int decodePixelHeight)
+    public static BitmapImage CreateBitmapImage(string uri, int decodePixelHeight)
     {
         BitmapImage result = new BitmapImage();
 
@@ -46,36 +46,8 @@ public static class ImageUtility
 
         return result;
     }
-
-    public static BitmapImage ToImage(byte[] array, int decodePixelWidth, int decodePixelHeight)
-    {
-        BitmapImage image = new BitmapImage();
-
-        using (System.IO.MemoryStream memoryStream = new System.IO.MemoryStream(array))
-        {
-            memoryStream.Position = 0;
-
-            image.BeginInit();
-
-            image.DecodePixelHeight = decodePixelHeight;
-
-            image.DecodePixelWidth = decodePixelWidth;
-
-            image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-
-            image.CacheOption = BitmapCacheOption.OnLoad;
-
-            image.StreamSource = memoryStream;
-
-            image.EndInit();
-        }
-
-        image.Freeze();
-
-        return image;
-    }
-
-    public static BitmapImage ToImage(byte[] array)
+      
+    public static BitmapImage? CreateBitmapImage(byte[] array, int? decodePixelWidth = null, int? decodePixelHeight = null)
     {
         BitmapImage image = new BitmapImage();
 
@@ -87,9 +59,11 @@ public static class ImageUtility
 
                 image.BeginInit();
 
-                //image.DecodePixelHeight = height;
+                if (decodePixelHeight.HasValue)
+                    image.DecodePixelHeight = decodePixelHeight.Value;
 
-                //image.DecodePixelWidth = width;
+                if (decodePixelWidth.HasValue)
+                    image.DecodePixelWidth = decodePixelWidth.Value;
 
                 image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
 
@@ -101,7 +75,6 @@ public static class ImageUtility
 
                 image.Freeze();
             }
-
         }
         catch (Exception ex)
         {
@@ -112,7 +85,7 @@ public static class ImageUtility
         return image;
     }
 
-    public static BitmapImage AsBitmapImage(System.Drawing.Bitmap bitmap, System.Drawing.Imaging.ImageFormat format)
+    public static BitmapImage CreateBitmapImage(System.Drawing.Bitmap bitmap, System.Drawing.Imaging.ImageFormat format)
     {
         BitmapImage result = new BitmapImage();
 
@@ -134,7 +107,7 @@ public static class ImageUtility
         return result;
     }
 
-    public static BitmapImage AsBitmapImage(WriteableBitmap writeableBitmap)
+    public static BitmapImage CreateBitmapImage(WriteableBitmap writeableBitmap)
     {
         BitmapImage bmImage = new BitmapImage();
 
@@ -152,7 +125,7 @@ public static class ImageUtility
         return bmImage;
     }
 
-    public static BitmapImage ParseToBitmapImage(this RenderTargetBitmap rtb)
+    public static BitmapImage CreateBitmapImage(this RenderTargetBitmap rtb)
     {
         var bitmapImage = new BitmapImage();
 
@@ -177,8 +150,25 @@ public static class ImageUtility
 
     public static BitmapSource AsBitmapSource(System.Drawing.Bitmap bitmap)
     {
-        return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
-              System.Windows.Int32Rect.Empty, BitmapSizeOptions.FromWidthAndHeight(bitmap.Width, bitmap.Height));
+        return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                                                bitmap.GetHbitmap(), 
+                                                IntPtr.Zero,
+                                                System.Windows.Int32Rect.Empty, 
+                                                BitmapSizeOptions.FromWidthAndHeight(bitmap.Width, bitmap.Height));
+    }
+
+    public static RenderTargetBitmap Render(List<DrawingVisual> drawingVisuals, int screenWidth, int screenHeight)
+    {
+        RenderTargetBitmap image = new RenderTargetBitmap(screenWidth, screenHeight, 96, 96, PixelFormats.Pbgra32);
+
+        foreach (var item in drawingVisuals)
+        {
+            image.Render(item);
+        }
+
+        image.Freeze();
+
+        return image;
     }
 
     public static void MergeAndSave(string fileName, List<DrawingVisual> drawingVisuals, int width, int height, BitmapEncoder? preferedEncoder = null)
@@ -193,34 +183,7 @@ public static class ImageUtility
             image.Render(drawingVisual);
         }
 
-        Save(fileName, image, preferedEncoder);
-
-        //var frame = BitmapFrame.Create(image);
-
-        ////PngBitmapEncoder pngImage = new PngBitmapEncoder();
-        //BitmapEncoder encoder = preferedEncoder ?? new PngBitmapEncoder();
-
-        //encoder.Frames.Add(frame);
-
-        //using (Stream stream = File.Create(fileName))
-        //{
-        //    encoder.Save(stream);
-        //}
-    }
-
-    public static RenderTargetBitmap Render(/*string fileName,*/ List<DrawingVisual> drawingVisuals, int screenWidth, int screenHeight)
-    {
-        RenderTargetBitmap image = new RenderTargetBitmap(screenWidth, screenHeight, 96, 96, PixelFormats.Pbgra32);
-
-        foreach (var item in drawingVisuals)
-        {
-            image.Render(item);
-        }
-
-        image.Freeze();
-
-        return image;
-        //Save(fileName, image, preferedEncoder);
+        Save(fileName, image, preferedEncoder); 
     }
 
     public static void Save(string fileName, RenderTargetBitmap? image, BitmapEncoder? preferedEncoder = null)
@@ -345,6 +308,7 @@ public static class ImageUtility
 
     #endregion
 
+
     #region TileInfo
 
     public static void MergeTilesAndSaveByWpf(List<TileInfo> tiles, Func<TileInfo, string> fileNameFunc, string outputFileName)
@@ -396,7 +360,7 @@ public static class ImageUtility
     public static void MergeTilesAndSaveByGdiplus(List<TileInfo> tiles, Func<TileInfo, string> fileNameFunc, string outputFileName,
         System.Drawing.Imaging.ImageFormat imageFormat,
         System.Drawing.Imaging.PixelFormat format = System.Drawing.Imaging.PixelFormat.Format24bppRgb,
-        string waterMarkText = null)
+        string? waterMarkText = null)
     {
         if (tiles == null || tiles.Count < 1)
         {
@@ -485,7 +449,7 @@ public static class ImageUtility
         return true;
     }
 
-    public static void MergeTilesAndSaveByGdiplusInGeodetic(List<TileInfo> tiles, Func<TileInfo, string> fileNameFunc, string outputFileName, string waterMarkText = null)
+    public static void MergeTilesAndSaveByGdiplusInGeodetic(List<TileInfo> tiles, Func<TileInfo, string> fileNameFunc, string outputFileName, string? waterMarkText = null)
     {
         if (tiles == null || tiles.Count < 1)
         {
@@ -537,6 +501,7 @@ public static class ImageUtility
     }
 
     #endregion
+
 
     #region Other
 
@@ -630,9 +595,6 @@ public static class ImageUtility
     }
 
     private static double GetOpacity(double opacity) => opacity < 0 ? 0 : opacity > 1 ? 1 : opacity;
-
-
+     
     #endregion
-
-
 }

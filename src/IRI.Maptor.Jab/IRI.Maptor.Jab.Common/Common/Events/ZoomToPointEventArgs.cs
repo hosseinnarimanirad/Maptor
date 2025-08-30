@@ -1,8 +1,7 @@
 ﻿using System;
-
 using IRI.Maptor.Sta.Common.Primitives;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Events;
 
 public class ZoomToPointEventArgs : EventArgs
 {
@@ -12,8 +11,8 @@ public class ZoomToPointEventArgs : EventArgs
 
     public ZoomToPointEventArgs(double mapScale, Point center)
     {
-        this.MapScale = mapScale;
+        MapScale = mapScale;
 
-        this.Center = center;
+        Center = center;
     }
 }

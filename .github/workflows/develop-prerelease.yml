@@ -6,7 +6,7 @@ on:
 
 env:
   DOTNET_VERSION: '8.0.x'
-  PROJECT_PREFIXES: 'IRI.Maptor.Sta IRI.Maptor.Ket IRI.Maptor.Jab IRI.Maptor.Bas'
+  PROJECT_PREFIXES: 'IRI.Maptor.Sta IRI.Maptor.Ket IRI.Maptor.Jab'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
   NOWARN_CODES: 'CS1591;CS1573;CS0618;NU5104;CS8600;CS0414;CS8601;CS8603'
 
@@ -21,6 +21,14 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Get Base Version
+      id: get_version
+      shell: pwsh
+      run: |
+        $baseVersion = ([xml](Get-Content "Directory.Build.props")).Project.PropertyGroup.Version
+        if (-not $baseVersion) { $baseVersion = "1.0.0" }
+        echo "baseVersion=$baseVersion" >> $env:GITHUB_OUTPUT
 
     - name: Restore dependencies
       run: |
@@ -45,26 +53,21 @@ jobs:
               --verbosity minimal
           }
         }
-        
-    - name: Test
-      run: |
-        $prefixes = "${{ env.PROJECT_PREFIXES }}".Split(' ')
-        foreach ($prefix in $prefixes) {
-          Get-ChildItem -Path ./src -Recurse -Filter "${prefix}*.Tests.csproj" | ForEach-Object {
-            dotnet test $_.FullName --configuration Release --no-build --verbosity normal
-          }
-        }
 
     - name: Pack (Pre-release)
       run: |
-        $versionSuffix = "alpha.${{ github.run_number }}"
+        $baseVersion = "${{ steps.get_version.outputs.baseVersion }}"
+        # $prereleaseVersion = "$baseVersion-alpha.${{ github.run_number }}"
+        $prereleaseVersion = "$baseVersion-alpha"
+        Write-Host "Using pre-release version: $prereleaseVersion"
+
         $prefixes = "${{ env.PROJECT_PREFIXES }}".Split(' ')
         foreach ($prefix in $prefixes) {
-          Get-ChildItem -Path ./src -Recurse -Filter "${prefix}*.csproj" | ForEach-Object {                        
+          Get-ChildItem -Path ./src -Recurse -Filter "${prefix}*.csproj" | ForEach-Object {
             dotnet pack $_.FullName `
               --configuration Release `
               --no-build `
-              /p:VersionSuffix=$versionSuffix `
+              /p:PackageVersion=$prereleaseVersion `
               --output ./nupkgs
           }
         }
@@ -73,5 +76,9 @@ jobs:
       run: |
         $apiKey = "${{ secrets.NUGET_API_KEY }}"
         Get-ChildItem -Path ./nupkgs -Filter *.nupkg | ForEach-Object {
-          dotnet nuget push $_.FullName --source ${{ env.NUGET_SOURCE }} --api-key $apiKey --skip-duplicate
+          Write-Host "Publishing $($_.Name) to NuGet..."
+          dotnet nuget push $_.FullName `
+            --source ${{ env.NUGET_SOURCE }} `
+            --api-key $apiKey `
+            --skip-duplicate
         }

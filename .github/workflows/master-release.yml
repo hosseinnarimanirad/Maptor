@@ -1,4 +1,4 @@
-name: Publish master to NuGet
+name: Publish master NuGet Package
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 env:
   DOTNET_VERSION: '8.0.x'
-  PROJECT_PREFIXES: 'IRI.Maptor.Sta IRI.Maptor.Ket IRI.Maptor.Jab IRI.Maptor.Bas'
+  PROJECT_PREFIXES: 'IRI.Maptor.Sta IRI.Maptor.Ket IRI.Maptor.Jab'
   NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
   NOWARN_CODES: 'CS1591;CS1573;CS0618;NU5104;CS8600;CS0414;CS8601;CS8603'  
 
@@ -76,7 +76,7 @@ jobs:
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        name: "Maptor Release"
+        name: "Maptor v${{ github.run_number }}"
         tag_name: "v${{ github.run_number }}"
         body: |
           📦 Stable NuGet packages for this release:

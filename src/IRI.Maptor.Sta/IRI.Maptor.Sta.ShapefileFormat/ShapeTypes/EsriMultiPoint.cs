@@ -126,7 +126,7 @@ public struct EsriMultiPoint : IEsriSimplePoints
     {
         return string.Format(
             "MULTIPOINT({0})",
-            string.Join(",", this.points.Select(i => string.Format("({0})", SqlServerWktMapFunctions.SinglePointElementToWkt(i))).ToArray()));
+            string.Join(",", this.points.Select(i => string.Format("({0})", SqlServerWktHelper.SinglePointElementToWkt(i))).ToArray()));
     }
 
     public byte[] AsWkb()

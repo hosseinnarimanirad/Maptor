@@ -11,7 +11,7 @@ public class Geometry_SqlServerNativeBinaryTest
 {
     public Geometry_SqlServerNativeBinaryTest()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
     }
 
     int _srid = 4326;

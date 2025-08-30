@@ -1,15 +1,13 @@
-﻿using IRI.Maptor.Sta.ShapefileFormat.EsriType;
-using IRI.Maptor.Extensions;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
+using System.Collections.Generic;
+
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.ShapefileFormat.EsriType;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
-using IRI.Maptor.Extensions;
 
 namespace IRI.Maptor.Extensions;
 
@@ -17,18 +15,12 @@ public static class GeometryExtensions
 {
     #region Geometry > Esri Shape
 
-    public static IEsriShape AsEsriShape<T>(this Geometry<T> geometry, int srid, Func<IPoint, IPoint> mapFunction = null) where T : IPoint, new()
-    {
-        //var type = geometry.GeometryType;
-        //if (geometry.IsNullOrEmpty())
-        //{
-        //    return SqlSpatialHelper.CreateEmptySqlGeometry(type, srid);
-        //}
-
+    public static IEsriShape? AsEsriShape<T>(this Geometry<T> geometry, int? srid = null, Func<IPoint, IPoint> mapFunction = null) where T : IPoint, new()
+    { 
         if (geometry.IsNullOrEmpty())
-        {
             return null;
-        }
+        
+        var targetSrid = srid ?? geometry.Srid;
 
         var type = geometry.Type;
 
@@ -42,22 +34,22 @@ public static class GeometryExtensions
                 throw new NotImplementedException();
 
             case GeometryType.Point:
-                return PointToEsriPoint(geometry, srid, mapFunction);
+                return PointToEsriPoint(geometry, targetSrid, mapFunction);
 
             case GeometryType.MultiPoint:
-                return MultiPointToEsriMultiPoint(geometry, srid, mapFunction);
+                return MultiPointToEsriMultiPoint(geometry, targetSrid, mapFunction);
 
             case GeometryType.LineString:
-                return LineStringToEsriPolyline(geometry, srid, mapFunction);
+                return LineStringToEsriPolyline(geometry, targetSrid, mapFunction);
 
             case GeometryType.MultiLineString:
-                return MultiLineStringToEsriPolyline(geometry, srid, mapFunction);
+                return MultiLineStringToEsriPolyline(geometry, targetSrid, mapFunction);
 
             case GeometryType.Polygon:
-                return PolygonToEsriPolygon(geometry, srid, mapFunction);
+                return PolygonToEsriPolygon(geometry, targetSrid, mapFunction);
 
             case GeometryType.MultiPolygon:
-                return MultiPolygonToEsriPolygon(geometry, srid, mapFunction);
+                return MultiPolygonToEsriPolygon(geometry, targetSrid, mapFunction);
         }
     }
 

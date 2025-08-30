@@ -1,24 +1,24 @@
-﻿using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using IRI.Maptor.Sta.Common.Primitives;
+﻿//using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+//using IRI.Maptor.Sta.Common.Primitives;
 
-namespace IRI.Maptor.Sta.Spatial.Primitives;
+//namespace IRI.Maptor.Sta.Spatial.Primitives;
 
-public interface IGeometry
-{
-    int NumberOfGeometries { get; }
+//public interface IGeometry
+//{
+//    int NumberOfGeometries { get; }
 
-    int NumberOfPoints { get; }
+//    int NumberOfPoints { get; }
 
-    int Srid { get; set; }
+//    int Srid { get; set; }
 
-    int TotalNumberOfPoints { get; }
+//    int TotalNumberOfPoints { get; }
 
-    GeometryType Type { get; set; }
+//    GeometryType Type { get; set; }
 
-    string AsWkt();
+//    string AsWkt();
 
-    byte[] AsWkb();
+//    byte[] AsWkb();
 
-    SrsBase GetSrs();
+//    SrsBase GetSrs();
      
-}
+//}

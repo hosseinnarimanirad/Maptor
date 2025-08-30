@@ -1,4 +1,5 @@
 ﻿using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 using static IRI.Maptor.Tst.NetFrameworkTest.Assets.EsriJsonSamples;
 
@@ -9,31 +10,32 @@ public class EsriJson_SqlGeometryTest
 {
     public EsriJson_SqlGeometryTest()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
     }
 
 
     [Fact]
     public void TestEsriJson_SqlGeometryConversion()
     {
+        
         try
         {
-            var point2D = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(point2DJson);
-            var point3D = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(point3DJson);
-            var pointNull = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(pointNullJson);
-            var pointNaN = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(pointNaNJson);
+            var point2D = JsonHelper.Deserialize<EsriJsonGeometry>(point2DJson);
+            var point3D = JsonHelper.Deserialize<EsriJsonGeometry>(point3DJson);
+            var pointNull = JsonHelper.Deserialize<EsriJsonGeometry>(pointNullJson);
+            var pointNaN = JsonHelper.Deserialize<EsriJsonGeometry>(pointNaNJson);
 
-            var multipoint2D = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(multipoint2DJson);
-            var multipoint3D = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(multipoint3DJson);
-            var multipointEmpty = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(multipointEmptyJson);
+            var multipoint2D = JsonHelper.Deserialize<EsriJsonGeometry>(multipoint2DJson);
+            var multipoint3D = JsonHelper.Deserialize<EsriJsonGeometry>(multipoint3DJson);
+            var multipointEmpty = JsonHelper.Deserialize<EsriJsonGeometry>(multipointEmptyJson);
 
-            var polyline2D = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(polyline2DJson);
-            var polyline3D = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(polylineMJson);
-            var polylineEmpty = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(polylineEmptyJson);
+            var polyline2D = JsonHelper.Deserialize<EsriJsonGeometry>(polyline2DJson);
+            var polyline3D = JsonHelper.Deserialize<EsriJsonGeometry>(polylineMJson);
+            var polylineEmpty = JsonHelper.Deserialize<EsriJsonGeometry>(polylineEmptyJson);
 
-            var polygon2D = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(polygon2DJson);
-            var polygon3D = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(polygon3DJson);
-            var polygonEmpty = Newtonsoft.Json.JsonConvert.DeserializeObject<EsriJsonGeometry>(polygonEmptyJson);
+            var polygon2D = JsonHelper.Deserialize<EsriJsonGeometry>(polygon2DJson);
+            var polygon3D = JsonHelper.Deserialize<EsriJsonGeometry>(polygon3DJson);
+            var polygonEmpty = JsonHelper.Deserialize<EsriJsonGeometry>(polygonEmptyJson);
 
             IRI.Maptor.Ket.SqlServerSpatialExtension.Helpers.SqlSpatialHelper.Parse(point2D.AsWkt()).AsEsriJsonGeometry();
             IRI.Maptor.Ket.SqlServerSpatialExtension.Helpers.SqlSpatialHelper.Parse(point3D.AsWkt()).AsEsriJsonGeometry();

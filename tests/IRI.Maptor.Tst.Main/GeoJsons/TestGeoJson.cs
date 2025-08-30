@@ -14,7 +14,7 @@ public class TestGeoJson
 {
     public TestGeoJson()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
     }
     
     [Fact]

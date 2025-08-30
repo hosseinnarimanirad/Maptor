@@ -87,13 +87,7 @@ public static class GoogleMapService
     {
         //var url = $"https://maps.googleapis.com/maps/api/directions/json?origin={startString}&destination={endString}&alternatives=true&departure_time={time}&key={key}";
 
-        //return ResponseFactory.Create(await Helpers.NetHelper.HttpGetAsync<GoogleDirectionsResult>(url));
-
         return await IRI.Maptor.Sta.Common.Helpers.NetHelper.HttpGetAsync<GooglePlacesResult>($"{googlePlacesApiUrl}query={query}&key={key}");
-
-        //var result = await client.DownloadStringTaskAsync(new Uri($"{apiUrl}query={query}&key={key}"));
-
-        //return Newtonsoft.Json.JsonConvert.DeserializeObject<GooglePlacesResult>(result);
     }
 
     public static Response<GooglePlacesResult> Search(string query, string key)

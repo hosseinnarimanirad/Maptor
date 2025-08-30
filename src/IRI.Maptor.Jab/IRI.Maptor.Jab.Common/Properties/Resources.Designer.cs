@@ -296,6 +296,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Symbology.
+        /// </summary>
+        public static string legend_symbologyExpanderHeaderText {
+            get {
+                return ResourceManager.GetString("legend_symbologyExpanderHeaderText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pan.
         /// </summary>
         public static string map_pan {
@@ -787,6 +796,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string ui_addShapefile {
             get {
                 return ResourceManager.GetString("ui_addShapefile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Text.
+        /// </summary>
+        public static string ui_addTextToMap {
+            get {
+                return ResourceManager.GetString("ui_addTextToMap", resourceCulture);
             }
         }
         

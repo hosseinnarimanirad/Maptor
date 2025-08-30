@@ -1,6 +1,5 @@
 ﻿using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Presenter.Map;
-using IRI.Maptor.Jab.Common.ViewModel.Dialogs;
+using IRI.Maptor.Jab.Common.Presenters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,10 +51,7 @@ namespace IRI.Maptor.Jab.Controls.Presenter
 
         public override async Task Initialize()
         {
-            this.RequestClearAll = () =>
-            {
-                this.ClearAll();// (new Predicate<ILayer>(l => l.CanUserDelete == true), true);
-            };
+            this.RequestClearAll = this.ClearAll;
 
             // 1400.03.04
             //this.DialogService = new IRI.Maptor.Jab.Controls.Services.Dialog.DefaultDialogService();

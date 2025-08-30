@@ -10,7 +10,7 @@ public class GeoJson_SqlGeometryTest
 {
     public GeoJson_SqlGeometryTest()
     {
-        SqlServerTypes.Utilities.LoadNativeAssembliesv14();
+        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
     }
 
     [Fact]

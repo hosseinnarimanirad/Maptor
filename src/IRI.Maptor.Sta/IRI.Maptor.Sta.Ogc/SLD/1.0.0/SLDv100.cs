@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Xml.Serialization;
+using System.Collections.Generic;
 
 namespace IRI.Maptor.Sta.Ogc.SLD;
+ 
 
-// Main SLD classes
-[XmlRoot("StyledLayerDescriptor", Namespace = "http://www.opengis.net/sld", IsNullable = false)]
+[XmlRoot("StyledLayerDescriptor", Namespace = SldNamespaces.SLD, IsNullable = false)]
 public class StyledLayerDescriptor
 {
-    public const string defaultNamespace = "http://www.opengis.net/sld";
-
     [XmlElement("Name")]
     public string Name { get; set; }
 
@@ -19,29 +18,36 @@ public class StyledLayerDescriptor
     public string Abstract { get; set; }
 
     [XmlElement("NamedLayer")]
-    public List<NamedLayer> NamedLayers { get; set; }
+    public List<NamedLayer> NamedLayers { get; set; } = new();
 
     [XmlElement("UserLayer")]
-    public List<UserLayer> UserLayers { get; set; }
+    public List<UserLayer> UserLayers { get; set; } = new();
 
     [XmlAttribute("version")]
     public string Version { get; set; } = "1.0.0";
 
-    // Correct schemaLocation attribute declaration
-    [XmlAttribute("schemaLocation", Namespace = "http://www.w3.org/2001/XMLSchema-instance")]
+    // schemaLocation attribute (xsi)
+    [XmlAttribute("schemaLocation", Namespace = SldNamespaces.XSI)]
     public string SchemaLocation { get; set; } = "http://www.opengis.net/sld StyledLayerDescriptor.xsd";
 
-    // Add these namespace declarations for proper serialization
+    // Namespace declarations for proper serialization
     [XmlNamespaceDeclarations]
     public XmlSerializerNamespaces Xmlns { get; set; }
 
     public StyledLayerDescriptor()
     {
         Xmlns = new XmlSerializerNamespaces();
-        Xmlns.Add("", defaultNamespace);
-        Xmlns.Add("ogc", "http://www.opengis.net/ogc");
-        Xmlns.Add("xlink", "http://www.w3.org/1999/xlink");
-        Xmlns.Add("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        Xmlns.Add("", SldNamespaces.SLD);
+        Xmlns.Add("ogc", SldNamespaces.OGC);
+        Xmlns.Add("xlink", SldNamespaces.XLINK);
+        Xmlns.Add("xsi", SldNamespaces.XSI);
+    }
+
+    // Optional lightweight validation
+    public IEnumerable<string> Validate()
+    {
+        if ((NamedLayers?.Count ?? 0) == 0 && (UserLayers?.Count ?? 0) == 0)
+            yield return "At least one NamedLayer or UserLayer is recommended.";
     }
 }
 
@@ -54,10 +60,10 @@ public class NamedLayer
     public LayerFeatureConstraints LayerFeatureConstraints { get; set; }
 
     [XmlElement("NamedStyle")]
-    public List<NamedStyle> NamedStyles { get; set; }
+    public List<NamedStyle> NamedStyles { get; set; } = new();
 
     [XmlElement("UserStyle")]
-    public List<UserStyle> UserStyles { get; set; }
+    public List<UserStyle> UserStyles { get; set; } = new();
 }
 
 public class NamedStyle
@@ -78,7 +84,7 @@ public class UserLayer
     public LayerFeatureConstraints LayerFeatureConstraints { get; set; }
 
     [XmlElement("UserStyle")]
-    public List<UserStyle> UserStyles { get; set; }
+    public List<UserStyle> UserStyles { get; set; } = new();
 }
 
 public class RemoteOWS
@@ -96,20 +102,19 @@ public enum ServiceType
     WCS
 }
 
-//[XmlType(Namespace = "http://www.w3.org/1999/xlink")]
 public class OnlineResource
 {
-    [XmlAttribute("type", Namespace = "http://www.w3.org/1999/xlink")]
+    [XmlAttribute("type", Namespace = SldNamespaces.XLINK)]
     public string Type { get; set; } = "simple";
 
-    [XmlAttribute("href", Namespace = "http://www.w3.org/1999/xlink")]
+    [XmlAttribute("href", Namespace = SldNamespaces.XLINK)]
     public string Href { get; set; }
 }
 
 public class LayerFeatureConstraints
 {
     [XmlElement("FeatureTypeConstraint")]
-    public List<FeatureTypeConstraint> FeatureTypeConstraints { get; set; }
+    public List<FeatureTypeConstraint> FeatureTypeConstraints { get; set; } = new();
 }
 
 public class FeatureTypeConstraint
@@ -117,11 +122,11 @@ public class FeatureTypeConstraint
     [XmlElement("FeatureTypeName")]
     public string FeatureTypeName { get; set; }
 
-    [XmlElement("Filter", Namespace = "http://www.opengis.net/ogc")]
-    public FilterType Filter { get; set; }
+    [XmlElement("Filter", Namespace = SldNamespaces.OGC)]
+    public OgcFilter Filter { get; set; }
 
     [XmlElement("Extent")]
-    public List<Extent> Extents { get; set; }
+    public List<Extent> Extents { get; set; } = new();
 }
 
 public class Extent
@@ -149,10 +154,8 @@ public class UserStyle
     public bool? IsDefault { get; set; }
 
     [XmlElement("FeatureTypeStyle")]
-    public List<FeatureTypeStyle> FeatureTypeStyles { get; set; }
+    public List<FeatureTypeStyle> FeatureTypeStyles { get; set; } = new();
 
-
-    // This pattern prevents serialization when null
     public bool ShouldSerializeIsDefault() => IsDefault.HasValue;
 }
 
@@ -171,54 +174,13 @@ public class FeatureTypeStyle
     public string FeatureTypeName { get; set; }
 
     [XmlElement("SemanticTypeIdentifier")]
-    public List<string> SemanticTypeIdentifiers { get; set; }
+    public List<string> SemanticTypeIdentifiers { get; set; } = new();
 
     [XmlElement("Rule")]
-    public List<Rule> Rules { get; set; }
+    public List<Rule> Rules { get; set; } = new();
 }
 
-public class Rule
-{
-    [XmlElement("Name")]
-    public string Name { get; set; }
 
-    [XmlElement("Title")]
-    public string Title { get; set; }
-
-    [XmlElement("Abstract")]
-    public string Abstract { get; set; }
-
-    [XmlElement("LegendGraphic")]
-    public LegendGraphic LegendGraphic { get; set; }
-
-    [XmlElement("Filter", Namespace = "http://www.opengis.net/ogc")]
-    public FilterType Filter { get; set; }
-
-    [XmlElement("ElseFilter")]
-    public ElseFilter ElseFilter { get; set; }
-
-    [XmlElement("MinScaleDenominator")]
-    public double? MinScaleDenominator { get; set; }
-
-    [XmlElement("MaxScaleDenominator")]
-    public double? MaxScaleDenominator { get; set; }
-
-    [XmlElement("Symbolizer")]
-    [XmlElement("PolygonSymbolizer", Type = typeof(PolygonSymbolizer))]
-    [XmlElement("LineSymbolizer", Type = typeof(LineSymbolizer))]
-    [XmlElement("PointSymbolizer", Type = typeof(PointSymbolizer))]
-    [XmlElement("TextSymbolizer", Type = typeof(TextSymbolizer))]
-    //[XmlElement("RasterSymbolizer", Type = typeof(RasterSymbolizer))]
-    public List<Symbolizer> Symbolizers { get; set; }
-
-
-
-    // This pattern prevents serialization when null
-    public bool ShouldSerializeMinScaleDenominator() => MinScaleDenominator.HasValue;
-    public bool ShouldSerializeMaxScaleDenominator() => MaxScaleDenominator.HasValue;
-
-
-}
 
 public class LegendGraphic
 {
@@ -233,7 +195,7 @@ public class ElseFilter { }
 [XmlInclude(typeof(PolygonSymbolizer))]
 [XmlInclude(typeof(PointSymbolizer))]
 [XmlInclude(typeof(TextSymbolizer))]
-//[XmlInclude(typeof(RasterSymbolizer))]
+[XmlInclude(typeof(RasterSymbolizer))]
 public abstract class Symbolizer
 {
     [XmlElement("Geometry")]
@@ -246,8 +208,6 @@ public class LineSymbolizer : Symbolizer
     public Stroke Stroke { get; set; }
 }
 
-//[System.Serializable]
-//[XmlType(AnonymousType = true, Namespace = StyledLayerDescriptor.defaultNamespace)]
 public class PolygonSymbolizer : Symbolizer
 {
     [XmlElement("Fill")]
@@ -279,6 +239,19 @@ public class TextSymbolizer : Symbolizer
 
     [XmlElement("Fill")]
     public Fill Fill { get; set; }
+
+    // Many engines accept VendorOption in TextSymbolizer
+    [XmlElement("VendorOption")]
+    public List<VendorOption> VendorOptions { get; set; } = new();
+}
+
+public class VendorOption
+{
+    [XmlAttribute("name")]
+    public string Name { get; set; }
+
+    [XmlText]
+    public string Value { get; set; }
 }
 
 public class RasterSymbolizer : Symbolizer
@@ -293,7 +266,7 @@ public class RasterSymbolizer : Symbolizer
     public OverlapBehavior OverlapBehavior { get; set; }
 
     [XmlElement("ColorMap")]
-    public ColorMap? ColorMap { get; set; }
+    public ColorMap ColorMap { get; set; }
 
     [XmlElement("ContrastEnhancement")]
     public ContrastEnhancement ContrastEnhancement { get; set; }
@@ -304,53 +277,31 @@ public class RasterSymbolizer : Symbolizer
     [XmlElement("ImageOutline")]
     public ImageOutline ImageOutline { get; set; }
 
-
-    // This pattern prevents serialization when null
     public bool ShouldSerializeOpacity() => Opacity.HasValue;
 }
 
 public class Label
 {
-    [XmlElement("PropertyName", Namespace = "http://www.opengis.net/ogc")]
+    [XmlElement("PropertyName", Namespace = SldNamespaces.OGC)]
     public string PropertyName { get; set; }
 }
-
 
 // Supporting classes for symbolizers
 public class Geometry
 {
-    [XmlElement("PropertyName", Namespace = "http://www.opengis.net/ogc")]
+    [XmlElement("PropertyName", Namespace = SldNamespaces.OGC)]
     public string PropertyName { get; set; }
 }
 
-public class Stroke
+
+
+
+
+
+
+public enum WellKnownMark
 {
-    [XmlElement("GraphicFill")]
-    public GraphicFill GraphicFill { get; set; }
-
-    [XmlElement("GraphicStroke")]
-    public GraphicStroke GraphicStroke { get; set; }
-
-    [XmlElement("CssParameter")]
-    public List<CssParameter> CssParameters { get; set; }
-}
-
-public class Fill
-{
-    [XmlElement("GraphicFill")]
-    public GraphicFill GraphicFill { get; set; }
-
-    [XmlElement("CssParameter")]
-    public List<CssParameter> CssParameters { get; set; }
-}
-
-public class CssParameter
-{
-    [XmlAttribute("name")]
-    public string Name { get; set; }
-
-    [XmlText]
-    public string Value { get; set; }
+    square, circle, triangle, star, cross, x
 }
 
 [XmlInclude(typeof(ExternalGraphic))]
@@ -358,26 +309,28 @@ public class CssParameter
 public class Graphic
 {
     [XmlElement("ExternalGraphic")]
-    public List<ExternalGraphic> ExternalGraphics { get; set; }
+    public List<ExternalGraphic> ExternalGraphics { get; set; } = new();
 
     [XmlElement("Mark")]
-    public List<Mark> Marks { get; set; }
+    public List<Mark> Marks { get; set; } = new();
 
     [XmlElement("Opacity")]
     public double? Opacity { get; set; }
 
+    /// <summary>
+    /// Specifies the size of the symbol, in pixels. When used with an 
+    /// image file, this specifies the height of the image, with the width 
+    /// being scaled accordingly. if omitted the native symbol size is used.
+    /// </summary>
     [XmlElement("Size")]
-    public int Size { get; set; }
-    //public ParameterValueType Size { get; set; }
+    public int? Size { get; set; }
 
     [XmlElement("Rotation")]
     public double? Rotation { get; set; }
-    //public ParameterValueType Rotation { get; set; }
 
-
-    // This pattern prevents serialization when null
     public bool ShouldSerializeOpacity() => Opacity.HasValue;
     public bool ShouldSerializeRotation() => Rotation.HasValue;
+    public bool ShouldSerializeSize() => Size.HasValue;
 }
 
 public class GraphicFill
@@ -401,33 +354,19 @@ public class ExternalGraphic
     public string Format { get; set; }
 }
 
-public class Mark
-{
-    [XmlElement("WellKnownName")]
-    public string WellKnownName { get; set; }
 
-    [XmlElement("Fill")]
-    public Fill Fill { get; set; }
-
-    [XmlElement("Stroke")]
-    public Stroke Stroke { get; set; }
-}
 
 public class ParameterValueType
 {
-    [XmlElement("expression", Namespace = "http://www.opengis.net/ogc")]
-    public List<string> Expressions { get; set; }
+    [XmlElement("expression", Namespace = SldNamespaces.OGC)]
+    public List<string> Expressions { get; set; } = new();
 
     [XmlText]
     public string Value { get; set; }
 }
 
 // Text symbolizer supporting classes
-public class Font
-{
-    [XmlElement("CssParameter")]
-    public List<CssParameter> CssParameters { get; set; }
-}
+
 
 public class LabelPlacement
 {
@@ -531,7 +470,7 @@ public class Random { }
 public class ColorMap
 {
     [XmlElement("ColorMapEntry")]
-    public List<ColorMapEntry>? ColorMapEntries { get; set; }
+    public List<ColorMapEntry> ColorMapEntries { get; set; } = new();
 }
 
 public class ColorMapEntry
@@ -539,18 +478,21 @@ public class ColorMapEntry
     [XmlAttribute("color")]
     public string Color { get; set; }
 
+    // double? cannot be used because complexTypes (such as Nullable<T>)
+    // are not supported as XmlAttribute
     [XmlAttribute("opacity")]
-    public double? Opacity { get; set; }
+    public string Opacity { get; set; }
 
+    // double? cannot be used because complexTypes (such as Nullable<T>)
+    // are not supported as XmlAttribute
     [XmlAttribute("quantity")]
-    public double? Quantity { get; set; }
+    public string Quantity { get; set; }
 
     [XmlAttribute("label")]
     public string Label { get; set; }
 
-
-    // This pattern prevents serialization when null
-    public bool ShouldSerializeOpacity() => Opacity.HasValue;
+    //public bool ShouldSerializeOpacity() => Opacity.HasValue;
+    //public bool ShouldSerializeQuantity() => Quantity.HasValue;
 }
 
 public class ContrastEnhancement
@@ -563,6 +505,8 @@ public class ContrastEnhancement
 
     [XmlElement("GammaValue")]
     public double? GammaValue { get; set; }
+
+    public bool ShouldSerializeGammaValue() => GammaValue.HasValue;
 }
 
 public class Normalize { }
@@ -575,6 +519,9 @@ public class ShadedRelief
 
     [XmlElement("ReliefFactor")]
     public double? ReliefFactor { get; set; }
+
+    public bool ShouldSerializeBrightnessOnly() => BrightnessOnly.HasValue;
+    public bool ShouldSerializeReliefFactor() => ReliefFactor.HasValue;
 }
 
 public class ImageOutline
@@ -586,52 +533,85 @@ public class ImageOutline
     public PolygonSymbolizer PolygonSymbolizer { get; set; }
 }
 
-// OGC Filter types (simplified)
-public class FilterType
-{
-    // This would be expanded with actual filter capabilities
-    [XmlElement("PropertyIsEqualTo", Namespace = "http://www.opengis.net/ogc")]
-    public PropertyFilterBase PropertyIsEqualTo { get; set; }
+//// OGC Filter types (expanded scaffolding)
+//public class FilterType
+//{
+//    [XmlElement("PropertyIsEqualTo", Namespace = SldNamespaces.OGC)]
+//    public PropertyFilterBase PropertyIsEqualTo { get; set; }
 
+//    [XmlElement("PropertyIsLessThan", Namespace = SldNamespaces.OGC)]
+//    public PropertyFilterBase PropertyIsLessThan { get; set; }
 
-    [XmlElement("PropertyIsLessThan", Namespace = "http://www.opengis.net/ogc")]
-    public PropertyFilterBase PropertyIsLessThan { get; set; }
+//    [XmlElement("PropertyIsNotEqualTo", Namespace = SldNamespaces.OGC)]
+//    public PropertyFilterBase PropertyIsNotEqualTo { get; set; }
 
+//    [XmlElement("PropertyIsLessThanOrEqualTo", Namespace = SldNamespaces.OGC)]
+//    public PropertyFilterBase PropertyIsLessThanOrEqualTo { get; set; }
 
-    [XmlElement("PropertyIsNotEqualTo", Namespace = "http://www.opengis.net/ogc")]
-    public PropertyFilterBase PropertyIsNotEqualTo { get; set; }
+//    [XmlElement("PropertyIsGreaterThan", Namespace = SldNamespaces.OGC)]
+//    public PropertyFilterBase PropertyIsGreaterThan { get; set; }
 
+//    [XmlElement("PropertyIsGreaterThanOrEqualTo", Namespace = SldNamespaces.OGC)]
+//    public PropertyFilterBase PropertyIsGreaterThanOrEqualTo { get; set; }
 
-    [XmlElement("PropertyIsLessThanOrEqualTo", Namespace = "http://www.opengis.net/ogc")]
-    public PropertyFilterBase PropertyIsLessThanOrEqualTo { get; set; }
+//    // Additional common filters
+//    [XmlElement("PropertyIsLike", Namespace = SldNamespaces.OGC)]
+//    public PropertyIsLikeFilter PropertyIsLike { get; set; }
 
+//    [XmlElement("PropertyIsNull", Namespace = SldNamespaces.OGC)]
+//    public PropertyIsNullFilter PropertyIsNull { get; set; }
 
-    [XmlElement("PropertyIsGreaterThan", Namespace = "http://www.opengis.net/ogc")]
-    public PropertyFilterBase PropertyIsGreaterThan { get; set; }
+//    [XmlElement("PropertyIsBetween", Namespace = SldNamespaces.OGC)]
+//    public PropertyIsBetweenFilter PropertyIsBetween { get; set; }
+//}
 
+//public class PropertyFilterBase
+//{
+//    [XmlElement("PropertyName", Namespace = SldNamespaces.OGC)]
+//    public string PropertyName { get; set; }
 
-    [XmlElement("PropertyIsGreaterThanOrEqualTo", Namespace = "http://www.opengis.net/ogc")]
-    public PropertyFilterBase PropertyIsGreaterThanOrEqualTo { get; set; }
+//    [XmlElement("Literal", Namespace = SldNamespaces.OGC)]
+//    public string Literal { get; set; }
+//}
 
-    // Add other filter types as needed
+//public class PropertyIsLikeFilter
+//{
+//    [XmlAttribute("wildCard")]
+//    public string WildCard { get; set; } = "*";
 
+//    [XmlAttribute("singleChar")]
+//    public string SingleChar { get; set; } = "?";
 
+//    [XmlAttribute("escape")]
+//    public string Escape { get; set; } = "\\";
 
-    //<PropertyIsLike>
+//    [XmlElement("PropertyName", Namespace = SldNamespaces.OGC)]
+//    public string PropertyName { get; set; }
 
-    //<PropertyIsNull>
+//    [XmlElement("Literal", Namespace = SldNamespaces.OGC)]
+//    public string Literal { get; set; }
+//}
 
-    //<PropertyIsBetween>
+//public class PropertyIsNullFilter
+//{
+//    [XmlElement("PropertyName", Namespace = SldNamespaces.OGC)]
+//    public string PropertyName { get; set; }
+//}
 
+//public class PropertyIsBetweenFilter
+//{
+//    [XmlElement("PropertyName", Namespace = SldNamespaces.OGC)]
+//    public string PropertyName { get; set; }
 
+//    [XmlElement("LowerBoundary", Namespace = SldNamespaces.OGC)]
+//    public BoundaryValue LowerBoundary { get; set; }
 
-}
+//    [XmlElement("UpperBoundary", Namespace = SldNamespaces.OGC)]
+//    public BoundaryValue UpperBoundary { get; set; }
+//}
 
-public class PropertyFilterBase
-{
-    [XmlElement("PropertyName", Namespace = "http://www.opengis.net/ogc")]
-    public string PropertyName { get; set; }
-
-    [XmlElement("Literal", Namespace = "http://www.opengis.net/ogc")]
-    public string Literal { get; set; }
-}
+//public class BoundaryValue
+//{
+//    [XmlElement("Literal", Namespace = SldNamespaces.OGC)]
+//    public string Literal { get; set; }
+//}

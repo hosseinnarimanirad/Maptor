@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Jab.Common.Presenters.General;
+namespace IRI.Maptor.Jab.Common.Presenters;
 
 public class AboutMePresenter
 {
@@ -36,7 +36,7 @@ public class AboutMePresenter
         {
             if (_gotoGithubCommand == null)
             {
-                _gotoGithubCommand = new RelayCommand(param => this.RequestGoToGithub?.Invoke());
+                _gotoGithubCommand = new RelayCommand(param => RequestGoToGithub?.Invoke());
             }
             return _gotoGithubCommand;
         }
@@ -50,7 +50,7 @@ public class AboutMePresenter
         {
             if (_gotoStackoverflowCommand == null)
             {
-                _gotoStackoverflowCommand = new RelayCommand(param => this.RequestGoToStackoverflow?.Invoke());
+                _gotoStackoverflowCommand = new RelayCommand(param => RequestGoToStackoverflow?.Invoke());
             }
             return _gotoStackoverflowCommand;
         }
@@ -64,7 +64,7 @@ public class AboutMePresenter
         {
             if (_gotoLinkedinCommand == null)
             {
-                _gotoLinkedinCommand = new RelayCommand(param => this.RequestGoToLinkedin?.Invoke());
+                _gotoLinkedinCommand = new RelayCommand(param => RequestGoToLinkedin?.Invoke());
             }
             return _gotoLinkedinCommand;
         }
@@ -79,7 +79,7 @@ public class AboutMePresenter
         {
             if (_gotoMakanNegarCommand == null)
             {
-                _gotoMakanNegarCommand = new RelayCommand(param => this.RequestGoToMakanNegar?.Invoke());
+                _gotoMakanNegarCommand = new RelayCommand(param => RequestGoToMakanNegar?.Invoke());
             }
 
             return _gotoMakanNegarCommand;

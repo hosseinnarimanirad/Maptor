@@ -53,6 +53,8 @@ Examples:
   - `feat(viewer): add zoom-to-layer functionality`
   - `docs(readme): update installation instructions`
 
+See [Commit Message Conventions](.github/COMMIT_CONVENTION.md)
+
 --- 
 
 ## 🔄 Pull Request Process

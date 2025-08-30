@@ -51,11 +51,11 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
 
     private readonly List<GdbItemColumnInfo>? _columns;
 
-    public Action<IGeometryAware<Point>>? AddAction;
+    public Action<Feature<Point>>? AddAction;
 
     public Action<int>? RemoveAction;
 
-    public Action<IGeometryAware<Point>>? UpdateAction;
+    public Action<Feature<Point>>? UpdateAction;
 
     public string? IdColumnName { get; set; }
     public override int Srid { get; protected set; }

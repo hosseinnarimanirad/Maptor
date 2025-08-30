@@ -3,13 +3,11 @@
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.Spatial.AdvancedStructures;
-using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.Spatial.AdvancedStructures;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 
 namespace IRI.Maptor.Extensions;
@@ -96,17 +94,12 @@ public static class Sta_GeometryExtensions
         return new GeoJsonPoint()
         {
             Type = GeoJson.Point,
-            Coordinates = new double[] { point.X, point.Y }
+            Coordinates = [point.X, point.Y]
         };
     }
 
     public static IGeoJsonGeometry AsGeoJson<T>(this Geometry<T> geometry, bool isLongitudeFirst = true) where T : IPoint, new()
-    {
-        //if (geometry.IsNullOrEmpty())
-        //{
-        //    throw new NotImplementedException();
-        //}            
-
+    { 
         switch (geometry.Type)
         {
             case GeometryType.Point:
@@ -140,15 +133,15 @@ public static class Sta_GeometryExtensions
     private static double[] GetGeoJsonObjectPoint<T>(T point, bool isLongitudeFirst) where T : IPoint, new()
     {
         if (point == null)
-            return new double[0];
+            return [];
 
         if (isLongitudeFirst)
         {
-            return new double[] { point.X, point.Y };
+            return [point.X, point.Y];
         }
         else
         {
-            return new double[] { point.Y, point.X };
+            return [point.Y, point.X];
         }
 
     }
@@ -156,7 +149,7 @@ public static class Sta_GeometryExtensions
     private static double[][] GetGeoJsonLineStringOrRing<T>(Geometry<T> lineStringOrRing, bool isLongitudeFirst, bool isRing) where T : IPoint, new()
     {
         if (lineStringOrRing.IsNullOrEmpty())
-            return new double[0][];
+            return [];
 
         int numberOfPoints = lineStringOrRing.NumberOfPoints;
 
@@ -197,7 +190,7 @@ public static class Sta_GeometryExtensions
             return new GeoJsonPoint()
             {
                 Type = GeoJson.Point,
-                Coordinates = new double[] { point.Points[0].X, point.Points[0].Y }
+                Coordinates = [point.Points[0].X, point.Points[0].Y]
             };
         }
         else
@@ -205,7 +198,7 @@ public static class Sta_GeometryExtensions
             return new GeoJsonPoint()
             {
                 Type = GeoJson.Point,
-                Coordinates = new double[] { point.Points[0].Y, point.Points[0].X }
+                Coordinates = [point.Points[0].Y, point.Points[0].X]
             };
         }
 
@@ -245,7 +238,7 @@ public static class Sta_GeometryExtensions
             return new GeoJsonLineString()
             {
                 Type = GeoJson.LineString,
-                Coordinates = new double[0][],
+                Coordinates = [],
             };
 
         double[][] paths = GetGeoJsonLineStringOrRing(lineString, isLongitudeFirst, false);
@@ -265,7 +258,7 @@ public static class Sta_GeometryExtensions
             return new GeoJsonMultiLineString()
             {
                 Type = GeoJson.MultiLineString,
-                Coordinates = new double[0][][],
+                Coordinates = [],
             };
 
         int numberOfParts = multiLineString.NumberOfGeometries;
@@ -292,7 +285,7 @@ public static class Sta_GeometryExtensions
             return new GeoJsonPolygon()
             {
                 Type = GeoJson.Polygon,
-                Coordinates = new double[0][][],
+                Coordinates = [],
             };
 
 
@@ -322,7 +315,7 @@ public static class Sta_GeometryExtensions
             return new GeoJsonMultiPolygon()
             {
                 Type = GeoJson.MultiPolygon,
-                Coordinates = new double[0][][][],
+                Coordinates = [],
             };
 
         int numberOfParts = multiPolygon.NumberOfGeometries;
@@ -345,8 +338,7 @@ public static class Sta_GeometryExtensions
 
 
     #region Simplification
-
-
+     
     public static List<Geometry<Point>> Simplify(
       this IEnumerable<Geometry<Point>> geometries,
       SimplificationType type,
@@ -400,21 +392,7 @@ public static class Sta_GeometryExtensions
             throw;
         }
     }
-
-    //public static Geometry<Point> Simplify(this Geometry<Point> geometry, SimplificationType type, SimplificationParamters parameters /*double threshold,  bool retain3Points, double areaThreshold = double.NaN*/)
-    //{
-    //    if (geometry.IsNotValidOrEmpty())
-    //    {
-    //        return geometry;
-    //    }
-
-    //    //var extractedGeometry = geometry.AsGeometry();
-
-    //    var filteredGeometry = geometry.Simplify(type, parameters);
-
-    //    return filteredGeometry;//.AsSqlGeometry().MakeValid();
-    //}
-
+      
     public static List<Geometry<Point>> RemoveOverlappingPoints(this List<Geometry<Point>> source, double minDistance)
     {
         try
@@ -527,7 +505,6 @@ public static class Sta_GeometryExtensions
             throw;
         }
     }
-
-
+     
     #endregion
 }

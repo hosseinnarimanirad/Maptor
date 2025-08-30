@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Events;
 
 public class TcsEventArgs<T1, T2> : System.EventArgs
 {
@@ -10,8 +10,8 @@ public class TcsEventArgs<T1, T2> : System.EventArgs
 
     public TcsEventArgs(TaskCompletionSource<T1> tcs, T2 arg)
     {
-        this.Tcs = tcs;
+        Tcs = tcs;
 
-        this.Arg = arg;
+        Arg = arg;
     }
 }

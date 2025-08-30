@@ -2,9 +2,7 @@
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.Common.PropertyDescriptors;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using System.ComponentModel;
 
 namespace IRI.Maptor.Sta.Spatial.Primitives;
 

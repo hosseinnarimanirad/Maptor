@@ -21,7 +21,7 @@ namespace IRI.Maptor.Jab.Common.Raster;
 
 public static class RasterHelper
 {
-    public static void Create(List<IGeometryAware<Point>> points, Func<IGeometryAware<Point>, double> valueFunc, int width, int height, Color minColor, Color maxColor, Color midColor, double? maxDistance)
+    public static void Create(List<Feature<Point>> points, Func<Feature<Point>, double> valueFunc, int width, int height, Color minColor, Color maxColor, Color midColor, double? maxDistance)
     {
         var boundingBox = points.Select(p => p.TheGeometry).ToList().GetBoundingBox();
 
@@ -114,7 +114,7 @@ public static class RasterHelper
         //return result;
     }
 
-    public static async Task<GeoReferencedImage> Create(List<IGeometryAware<Point>> points, Func<IGeometryAware<Point>, double> valueFunc, int width, int height, DiscreteRangeColor ranges, double? maxDistance)
+    public static async Task<GeoReferencedImage> Create(List<Feature<Point>> points, Func<Feature<Point>, double> valueFunc, int width, int height, DiscreteRangeColor ranges, double? maxDistance)
     {
         return await Task.Run<GeoReferencedImage>(() =>
         {
@@ -180,7 +180,7 @@ public static class RasterHelper
         });
     }
 
-    public static void CreateFast(List<IGeometryAware<Point>> points, Func<IGeometryAware<Point>, double> valueFunc, int width, int height, List<double> values, List<Color> colors, double? maxDistance)
+    public static void CreateFast(List<Feature<Point>> points, Func<Feature<Point>, double> valueFunc, int width, int height, List<double> values, List<Color> colors, double? maxDistance)
     {
         var boundingBox = points.Select(p => p.TheGeometry).ToList().GetBoundingBox();
 

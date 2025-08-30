@@ -1,11 +1,11 @@
-﻿using IRI.Maptor.Jab.Common.Model.CoordinatePanel;
+﻿using IRI.Maptor.Jab.Common.Models.CoordinatePanel;
 using System.Collections.ObjectModel;
 using System.Linq;
-using IRI.Maptor.Jab.Common.Model;
+using IRI.Maptor.Jab.Common.Models;
 using System.Windows;
 using IRI.Maptor.Jab.Common.Localization;
 
-namespace IRI.Maptor.Jab.Common.Presenter;
+namespace IRI.Maptor.Jab.Common.Presenters;
 
 public class CoordinatePanelPresenter : Notifier
 {
@@ -41,18 +41,18 @@ public class CoordinatePanelPresenter : Notifier
 
     public CoordinatePanelPresenter()
     {
-        this.SpatialReferences = new ObservableCollection<SpatialReferenceItem>();
+        SpatialReferences = new ObservableCollection<SpatialReferenceItem>();
 
-        this.SpatialReferences.CollectionChanged += (sender, e) =>
+        SpatialReferences.CollectionChanged += (sender, e) =>
         {
             UpdateSelectedItem();
         };
 
-        this.SpatialReferences.Add(SpatialReferenceItems.GeodeticWgs84);
-        this.SpatialReferences.Add(SpatialReferenceItems.GeodeticDmsWgs84);
-        this.SpatialReferences.Add(SpatialReferenceItems.UtmWgs84);
+        SpatialReferences.Add(SpatialReferenceItems.GeodeticWgs84);
+        SpatialReferences.Add(SpatialReferenceItems.GeodeticDmsWgs84);
+        SpatialReferences.Add(SpatialReferenceItems.UtmWgs84);
 
-        this.SpatialReferences.First().IsSelected = true;
+        SpatialReferences.First().IsSelected = true;
 
         //SetLanguage(LanguageMode.Persian);
         _localization = LocalizationManager.Instance;
@@ -67,7 +67,7 @@ public class CoordinatePanelPresenter : Notifier
     {
         foreach (var item in SpatialReferences)
         {
-            item.FireIsSelectedChanged = e => { this.SelectedItem = e; };
+            item.FireIsSelectedChanged = e => { SelectedItem = e; };
         }
     }
 
@@ -94,8 +94,8 @@ public class CoordinatePanelPresenter : Notifier
     //    }
     //}
 
-    public string GetCurrentPosstionString(IRI.Maptor.Sta.Common.Primitives.Point geodeticPoint)
+    public string GetCurrentPosstionString(Sta.Common.Primitives.Point geodeticPoint)
     {
-        return this.SelectedItem?.GetPositionString(geodeticPoint);
+        return SelectedItem?.GetPositionString(geodeticPoint);
     }
 }

@@ -1,6 +1,4 @@
 ﻿using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Primitives;
-//using Microsoft.SqlServer.Types;
 using IRI.Maptor.Sta.Common.Abstrations;
 
 namespace IRI.Maptor.Extensions;

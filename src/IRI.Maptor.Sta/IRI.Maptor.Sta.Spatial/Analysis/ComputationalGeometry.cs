@@ -1,8 +1,8 @@
-﻿// besmellahe rahmane rahim
-// Allahomma ajjel le-valiyek al-faraj
+﻿// BESMELLAHE RAHMANE RAHIM
+// ALLAHOMMA AJJEL LE-VALIYEK AL-FARAJ
 
 using IRI.Maptor.Sta.DataStructures;
-using IRI.Maptor.Sta.Spatial.Analysis.Topology;
+using IRI.Maptor.Sta.Spatial.Topology;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.DataStructures.CustomStructures;
 using IRI.Maptor.Sta.Spatial.Helpers;
@@ -12,7 +12,6 @@ namespace IRI.Maptor.Sta.Spatial.Analysis;
 
 public static class ComputationalGeometry
 {
-
     public static PoinTriangleRelation GetPointTriangleRelation(Point sightlyPoint, Point firstVertex, Point secondVertex, Point thirdVertex)
     {
         int firstRelation = (int)TopologyUtility.GetPointVectorRelation(sightlyPoint, firstVertex, secondVertex);
@@ -199,14 +198,4 @@ public static class ComputationalGeometry
 
         return result;
     }
-
-    //public static double CalculateDistance(Point firstPoint, Point secondPoint)
-    //{
-    //    double dx = firstPoint.X - secondPoint.X;
-
-    //    double dy = firstPoint.Y - secondPoint.Y;
-
-    //    return Math.Sqrt(dx * dx + dy * dy);
-    //}
-
 }
