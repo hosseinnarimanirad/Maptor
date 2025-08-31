@@ -23,7 +23,9 @@
     <converters:EnumToDescriptionConverter x:Key="enumToDescriptionConverter"/>
 
     <converters:FlowDocumentXmlToStringConverter x:Key="flowDocumentXmlToStringConverter"/>
-    
+
+    <converters:IndexToBoolConverter x:Key="indexToBoolConverter"/>
+
     <converters:IntGreaterThanIntParameterToVisibilityConverter x:Key="intGreaterThanIntParameterToVisibilityConverter"/>
     <converters:IntGreaterThanIntParameterToIsEnabledConverter x:Key="intGreaterThanIntParameterToIsEnabledConverter"/>
     <converters:IntLessThanIntParameterToIsEnabledConverter x:Key="intLessThanIntParameterToIsEnabledConverter"/>

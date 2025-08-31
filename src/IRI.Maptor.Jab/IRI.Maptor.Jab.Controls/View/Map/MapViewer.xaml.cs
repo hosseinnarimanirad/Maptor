@@ -564,13 +564,8 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.Layers = this.Layers;
 
-        presenter.RequestSetConnectedState = (i) =>
-        {
-            //this.isOffline = !arg.Arg;
-            //presenter.IsConnected = i;  //13960625
+        presenter.RequestSetConnectedState = this.SetConnectionState;
 
-            this.SetConnectionState(i);
-        };
         //bool isCachEnabled = false, string cacheDirectory = null, bool isOffline = false
 
         //presenter.RequestSetCustomTileService = (iMapProvider, isCachEnabled, cacheDirectory, isOffline, getFileName) =>
