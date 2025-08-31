@@ -17,7 +17,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 using IRI.Maptor.Jab.Common.Cartography;
 
-namespace IRI.Maptor.Jab.Common.Raster;
+namespace IRI.Maptor.Jab.Common.Helpers;
 
 public static class RasterHelper
 {
