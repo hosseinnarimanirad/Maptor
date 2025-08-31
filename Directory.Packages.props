@@ -17,7 +17,9 @@
 
     <PackageVersion Include="Jdenticon-net" Version="3.1.2" />
     <PackageVersion Include="Jdenticon.Wpf" Version="3.1.2" />
- 
+
+    <PackageVersion Include="LiteDB" Version="5.0.21" />
+
     <PackageVersion Include="Mapster" Version="7.4.0" />
     <PackageVersion Include="Mapster.DependencyInjection" Version="1.0.1" />
 
