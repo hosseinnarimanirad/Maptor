@@ -381,12 +381,14 @@ namespace IRI.Maptor.Jab.Controls.Services.Dialog
         {
             var tcs = new TaskCompletionSource<bool?>();
 
+            var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.Information }.Data;
+
             DialogViewModel viewModel = new(true)
             {
                 Message = message,
                 Title = title ?? _defaultShowMessageTitle,
                 IsTwoOptionsMode = false,
-                IconPathMarkup = pathMarkup ?? IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarInformation
+                IconPathMarkup = pathMarkup ?? markup
             };
 
             View.Dialogs.MessageBoxView dialog = new View.Dialogs.MessageBoxView();

@@ -34,9 +34,11 @@ public static class FeatureTableCommands
     //public static Func<MapPresenter, FeatureTableCommand> CreateZoomToExtentCommandFunc = (presenter) => CreateZoomToExtentCommand(presenter);
     public static FeatureTableCommand CreateZoomToExtentCommand(MapPresenter map)
     {
+        var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.Magnify }.Data;
+
         var result = new FeatureTableCommand()
         {
-            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarMagnify,
+            PathMarkup = markup,
             //Layer = layer.AssociatedLayer,
             ToolTip = "محدودهٔ عوارض"
         };
@@ -72,9 +74,11 @@ public static class FeatureTableCommands
 
     public static FeatureTableCommand CreateExportToExcelCommand(MapPresenter map)
     {
+        var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.PageExcel }.Data;
+
         var result = new FeatureTableCommand()
         {
-            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarPageExcel,
+            PathMarkup = markup,
             //Layer = layer.AssociatedLayer,
             ToolTip = "خروجی اکسل"
         };
@@ -126,9 +130,11 @@ public static class FeatureTableCommands
 
     public static FeatureTableCommand CreateExportAsDrawingLayersCommand(MapPresenter map)
     {
+        var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.VectorPenAdd }.Data;
+
         var result = new FeatureTableCommand()
         {
-            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarVectorPenAdd,
+            PathMarkup = markup,
             //Layer = layer.AssociatedLayer,
             ToolTip = "انتقال به ترسیم‌ها"
         };

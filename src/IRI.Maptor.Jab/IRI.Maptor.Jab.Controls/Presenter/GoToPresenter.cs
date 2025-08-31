@@ -200,19 +200,23 @@ public class GoToPresenter : Notifier
 
     private List<HamburgerGoToMenuItem> GetDefaultItems()
     {
+        var globeMarkup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.Globe }.Data;
+
+        var mapTreasureMarkup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.MapTreasure }.Data;
+
         return new List<HamburgerGoToMenuItem>()
         {
             new HamburgerGoToMenuItem(new GoToGeodeticView(), SpatialReferenceType.Geodetic){
                 Title = "Geodetic",
                 SubTitle ="WGS84",
                 Tooltip ="Geodetic",
-                Icon = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarGlobe,
+                Icon = globeMarkup,
             },
             new HamburgerGoToMenuItem(new GoToMapProjectView(), SpatialReferenceType.UTM){
                 Title = "Uiversal Transverse Mercator",
                 SubTitle ="UTM",
                 Tooltip ="UTM",
-                Icon = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarMapTreasure,
+                Icon = mapTreasureMarkup,
             }
         };
     }

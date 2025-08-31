@@ -8,7 +8,7 @@
 
     <converters:BoolToBrushConverter x:Key="boolToBrushConverter"/>
     <converters:BoolToBoldFontConverter x:Key="boolToBoldFontConverter"/>
-    <converters:BoolToGeometryConverter x:Key="boolToGeometryConverter"/>
+    <!--<converters:BoolToGeometryConverter x:Key="boolToGeometryConverter"/>-->
     <converters:BoolToGridLengthConverter x:Key="boolToGridLengthConverter"/>
     <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter"/>
 
