@@ -40,7 +40,7 @@ public class GroupLayer : BaseLayer
 
     public override string ToString()
     {
-        return $"GROUP LAYER - {LayerName}";
+        return $"GROUP LAYER - {LayerName}: ({this.SubLayers?.Count ?? 0})";
     }
-      
+
 }

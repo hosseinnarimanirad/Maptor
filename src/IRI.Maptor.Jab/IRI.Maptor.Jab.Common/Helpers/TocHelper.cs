@@ -14,8 +14,7 @@ public class TocHelper
     {
         if (!System.IO.Directory.Exists(rootDirectory))
             return [];
-
-
+         
         //Load Shapefiles in the directory
         var shapefiles = new System.IO.DirectoryInfo(rootDirectory).GetFiles("*.shp");
 
@@ -68,7 +67,12 @@ public class TocHelper
 
             GroupLayer layer = new GroupLayer(layerName);
 
-            layer.SubLayers = LoadFiles(item.FullName, vectorLayerLoader, rasterLayerLoader);
+            var subLayers = LoadFiles(item.FullName, vectorLayerLoader, rasterLayerLoader);
+
+            foreach (var subLayer in subLayers)
+            {
+                layer.AddSubLayer(subLayer);
+            }
 
             result.Add(layer);
         }
