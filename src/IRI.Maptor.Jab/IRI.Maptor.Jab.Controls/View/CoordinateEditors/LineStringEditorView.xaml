@@ -3,60 +3,53 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.View"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    
-    
-        <DataGrid Name="pointList" AutoGenerateColumns="False" ItemsSource="{Binding Points}"
+    <UserControl.Resources>
+        
+    </UserControl.Resources>
+
+    <DataGrid Name="pointList" AutoGenerateColumns="False" ItemsSource="{Binding Points}"
                   Grid.ColumnSpan="7" CanUserDeleteRows="True" IsReadOnly="True" CanUserSortColumns="False">
-            <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}">
-                    <!--<EventSetter Event="MouseLeftButtonDown" />-->
-                    <!--<Setter Property="Background" Value="LightGray" />-->
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>
+        <DataGrid.RowStyle>
+            <Style TargetType="{x:Type DataGridRow}">
+                <!--<EventSetter Event="MouseLeftButtonDown" />-->
+                <!--<Setter Property="Background" Value="LightGray" />-->
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </DataGrid.RowStyle>
 
-            <!--<Style TargetType="Path">
-                <Setter Property="Width" Value="16"/>
-                <Setter Property="Height" Value="16"/>
-                <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                <Setter Property="Stretch" Value="Uniform"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="FlowDirection" Value="LeftToRight"/>
-            </Style>-->
+        <DataGrid.Columns>
+            <DataGridTemplateColumn>
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding RemovePointCommand}" Width="Auto" Height="Auto" Padding="2" Margin="4">
+                            <!--<Path Data="{StaticResource appbarDelete}" Width="16" Height="16" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform" FlowDirection="LeftToRight"/>-->
+                            <iconPacks:PackIconModern Kind="Delete" Width="16" Height="16" Foreground="{StaticResource MahApps.Brushes.Accent}" FlowDirection="LeftToRight"/>
+                        </Button>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="X" Width="Auto" MinWidth="100">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBox FlowDirection="LeftToRight" Text="{Binding Path=X, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"></TextBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="Y" Width="Auto" MinWidth="100">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBox FlowDirection="LeftToRight" Text="{Binding Path=Y, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"></TextBox>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+    </DataGrid>
 
-            <DataGrid.Columns>
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Command="{Binding RemovePointCommand}" Width="Auto" Height="Auto" Padding="2" Margin="4">
-                                <Path Data="{StaticResource appbarDelete}" Width="16" Height="16" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform" FlowDirection="LeftToRight"/>
-                            </Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="X" Width="Auto" MinWidth="100">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBox FlowDirection="LeftToRight" Text="{Binding Path=X, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"></TextBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Y" Width="Auto" MinWidth="100">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBox FlowDirection="LeftToRight" Text="{Binding Path=Y, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"></TextBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
- 
 </UserControl>

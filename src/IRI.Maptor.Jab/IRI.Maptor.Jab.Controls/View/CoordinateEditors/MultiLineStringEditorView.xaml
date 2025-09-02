@@ -4,10 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.View"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-
-
+             d:DesignHeight="300" d:DesignWidth="300"> 
     <ScrollViewer VerticalScrollBarVisibility="Auto"   >
         <Expander Header="خط‌ها" ScrollViewer.VerticalScrollBarVisibility="Auto" Cursor="Hand">
             <ItemsControl ItemsSource="{Binding LineStrings}">
@@ -17,11 +16,11 @@
                             <Expander.Header>
                                 <DockPanel Cursor="Hand">
                                     <DockPanel.Resources>
-                                        <Style TargetType="Path">
+                                        <Style TargetType="iconPacks:PackIconModern">
                                             <Setter Property="Width" Value="16"/>
                                             <Setter Property="Height" Value="16"/>
-                                            <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                                            <Setter Property="Stretch" Value="Uniform"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                            <!--<Setter Property="Stretch" Value="Uniform"/>-->
                                             <Setter Property="VerticalAlignment" Value="Center"/>
                                             <Setter Property="HorizontalAlignment" Value="Center"/>
                                             <Setter Property="FlowDirection" Value="LeftToRight"/>
@@ -36,13 +35,16 @@
                                         </Style>
                                     </DockPanel.Resources>
                                     <Button Grid.Column="6" DockPanel.Dock="Right">
-                                        <Path Data="{StaticResource appbarMagnifyAdd}" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <!--<Path Data="{StaticResource appbarMagnifyAdd}"  Stretch="Uniform"  />-->
+                                        <iconPacks:Modern Kind="MagnifyAdd" />
                                     </Button>
                                     <Button Grid.Column="6" DockPanel.Dock="Right">
-                                        <Path Data="{StaticResource appbarCheck}" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <!--<Path Data="{StaticResource appbarCheck}"  Stretch="Uniform" />-->
+                                        <iconPacks:Modern Kind="Check" />
                                     </Button>
                                     <Button Grid.Column="0" DockPanel.Dock="Right">
-                                        <Path Data="{StaticResource appbarDelete}" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <!--<Path Data="{StaticResource appbarDelete}"  Stretch="Uniform" />-->
+                                        <iconPacks:Modern Kind="Delete" />
                                     </Button>
                                     <TextBlock Text="حلقه داخلی" VerticalAlignment="Center" Foreground="White" FontWeight="Bold"/>
                                 </DockPanel>
@@ -52,7 +54,6 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-
                                 <local:LineStringEditorView Grid.Column="1" Margin="10,0,0,0"/>
                             </Grid>
                         </Expander>

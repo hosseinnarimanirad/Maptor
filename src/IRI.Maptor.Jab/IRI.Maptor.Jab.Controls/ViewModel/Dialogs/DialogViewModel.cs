@@ -14,8 +14,6 @@ namespace IRI.Maptor.Jab.Controls.ViewModel.Dialogs
     {
         public Action _requestFirstAction, _requestSecondAction;
 
-        public Action RequestClose;
-
         private string _title;
 
         public string Title
@@ -197,13 +195,7 @@ namespace IRI.Maptor.Jab.Controls.ViewModel.Dialogs
 
         public DialogViewModel(bool isTwoOptionsMode = true)
         {
-            IsTwoOptionsMode = isTwoOptionsMode;
-            //Title = "تایید مجدد عملیات";
-            //Message = "مطمئنی؟";
-            ////Message = "alsdkfha;lskdhf;alksdgh;laksdhglaksdhg;lkahsdglahdglka;j ;aekl;ajdsgl; kajdg;lakdg a \na;lsdfj;lafdj";
-            //FirstOptionText = "بله";
-            //SecondOptionText = "خیر";
-            //IsTwoOptionsMode = true;
+            IsTwoOptionsMode = isTwoOptionsMode; 
         }
     }
 }

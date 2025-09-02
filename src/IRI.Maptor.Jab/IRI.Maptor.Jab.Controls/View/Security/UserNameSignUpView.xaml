@@ -5,8 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.View.Security"
              mc:Ignorable="d" 
-             
-             xmlns:validation="clr-namespace:IRI.Maptor.Jab.Common.Assets.ValidationRules;assembly=IRI.Maptor.Jab.CommonCommonCore"
              xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" x:Name="root">
     <local:SecurityInputUserControl.Resources>
         <Style x:Key="myErrorTemplate" TargetType="Control">

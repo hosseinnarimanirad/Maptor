@@ -346,10 +346,6 @@
   <data name="srs_webMercatorTitle" xml:space="preserve">
     <value>وب مرکاتور</value>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value />
-    <comment>Drawing Layer download google, bing, etc images</comment>
-  </data>
   <data name="tile_mapType_BlackWhite" xml:space="preserve">
     <value>سیاه‌سفید</value>
   </data>
@@ -436,5 +432,8 @@
   </data>
   <data name="ui_header_layerLegend" xml:space="preserve">
     <value>لایه‌ها</value>
+  </data>
+  <data name="wat_security_userName" xml:space="preserve">
+    <value>نام کاربری</value>
   </data>
 </root>

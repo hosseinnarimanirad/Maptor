@@ -321,7 +321,7 @@ namespace IRI.Maptor.Jab.Controls.Services.Dialog
         {
             var tcs = new TaskCompletionSource<bool?>();
 
-            IRI.Maptor.Jab.Controls.ViewModel.Dialogs.DialogViewModel viewModel = new Jab.Controls.ViewModel.Dialogs.DialogViewModel(true)
+            DialogViewModel viewModel = new(true)
             {
                 Message = message,
                 Title = title,

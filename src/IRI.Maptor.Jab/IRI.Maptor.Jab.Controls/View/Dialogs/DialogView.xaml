@@ -4,54 +4,58 @@
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
                 xmlns:viewModel="clr-namespace:IRI.Maptor.Jab.Controls.ViewModel.Dialogs"
-                mc:Ignorable="d" WindowStyle="ToolWindow" d:DataContext="{d:DesignInstance Type=viewModel:DialogViewModel, IsDesignTimeCreatable=True}"
-                xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls" Title="{Binding Title}" FlowDirection="RightToLeft" ShowInTaskbar="False"
-                GlowBrush="{Binding Source={StaticResource MahApps.Brushes.Highlight}, TargetNullValue=Red}" ShowMaxRestoreButton="False" ShowCloseButton="False" 
-                ShowMinButton="False" ShowTitleBar="True"  
+                xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls" 
+                mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewModel:DialogViewModel, IsDesignTimeCreatable=True}"
+                Title="{Binding Title}" FlowDirection="RightToLeft" ShowInTaskbar="False"
+                WindowStyle="ToolWindow" GlowBrush="{Binding Source={StaticResource MahApps.Brushes.Highlight}, TargetNullValue=Red}" 
+                ShowMaxRestoreButton="False" ShowCloseButton="False" ShowMinButton="False" ShowTitleBar="True"  
                 SizeToContent="WidthAndHeight" MinWidth="400" FontFamily="{StaticResource iranSans}" WindowStartupLocation="CenterOwner">
-    <Grid>
-        <Grid.Resources>
-            <SolidColorBrush x:Key="defaultRed">#FFEA4333</SolidColorBrush>
-            <SolidColorBrush x:Key="defaultGreen">#FF81BA45</SolidColorBrush>
-            <Style TargetType="Path">
-                <Setter Property="Fill" Value="White"/>
-                <Setter Property="Stretch" Value="Uniform"/>
+    <Grid Margin="16">
+        <Grid.Resources> 
+            <Style TargetType="iconPacks:PackIconModern">
+                <!--<Setter Property="Foreground" Value="White"/>-->
+                <!--<Setter Property="Stretch" Value="Uniform"/>-->
                 <Setter Property="Width" Value="18"/>
-                <Setter Property="Height" Value="18"/>
-                <Setter Property="Margin" Value="4"/>
-                <Setter Property="FlowDirection" Value="LeftToRight"/>
+                <Setter Property="Height" Value="18"/> 
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
-            <Style x:Key="okButtonStyle" TargetType="Button" BasedOn="{StaticResource circleButton}">
-                <Setter Property="Background" Value="{Binding FirstOptionColor,TargetNullValue={StaticResource defaultGreen}}"/>
+            <!--<Style x:Key="okButtonStyle" TargetType="Button" BasedOn="{StaticResource circleButton}">
+                <Setter Property="Background" Value="{Binding FirstOptionColor,TargetNullValue={StaticResource MahApps.Brushes.Accent}}"/>
             </Style>
             <Style x:Key="cancelButtonStyle" TargetType="Button" BasedOn="{StaticResource circleButton}">
-                <Setter Property="Background" Value="{Binding SecondOptionColor,TargetNullValue={StaticResource defaultRed}}"/>
-            </Style>
+                <Setter Property="Background" Value="{Binding SecondOptionColor,TargetNullValue={StaticResource MahApps.Brushes.Gray3}}"/>
+            </Style>-->
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Horizontal" Margin="4">
-            <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Margin="10" Height="40" Width="40" BorderThickness="4" CornerRadius="20">
-                <Path Data="{Binding IconPathMarkup, TargetNullValue={StaticResource appbarInformation}}" Fill="{DynamicResource MahApps.Brushes.Accent}" Width="18" Height="18"/>
+        <StackPanel Orientation="Horizontal" Margin="8">
+            <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Margin="10" Height="40" Width="40" 
+                    BorderThickness="3" CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <!--<Path Data="{Binding IconPathMarkup, TargetNullValue={StaticResource appbarInformation}}" Fill="{DynamicResource MahApps.Brushes.Accent}" Width="18" Height="18"/>-->
+                <iconPacks:PackIconModern Kind="Information" Foreground="{StaticResource MahApps.Brushes.Accent}" />
             </Border>
-            <TextBlock Text="{Binding Message}" Margin="4,4" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"/>
+            <TextBlock Text="{Binding Message}" Margin="8,0" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap" 
+                       Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         </StackPanel>
-        <StackPanel Grid.Row="1">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Margin="4,0" Style="{StaticResource cancelButtonStyle}" Command="{Binding SecondOptionCommand}" ToolTip="{Binding SecondOptionText}"
-                        Visibility="{Binding IsTwoOptionsMode, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Path Data="{Binding SecondOptionPathMarkup, TargetNullValue={StaticResource appbarClose}}"/>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Margin="4,0" Style="{StaticResource circleButton}" Command="{Binding SecondOptionCommand}" ToolTip="{Binding SecondOptionText}"
+                    Background="{Binding SecondOptionColor, FallbackValue={DynamicResource MahApps.Brushes.Gray10}, RelativeSource={RelativeSource AncestorType=Window}}"
+                    Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                    Visibility="{Binding IsTwoOptionsMode, Converter={StaticResource boolToVisibilityConverter}}">
+                    <!--<Path Data="{Binding SecondOptionPathMarkup, TargetNullValue={StaticResource appbarClose}}"/>-->
+                    <iconPacks:Modern Kind="Close"/>
                 </Button>
-                <Button Margin="4,0" Style="{StaticResource okButtonStyle}" Command="{Binding FirstOptionCommand}" ToolTip="{Binding FirstOptionText}">
-                    <Path Data="{Binding FirstOptionPathMarkup, TargetNullValue={StaticResource appbarCheck}}"/>
+            <Button Margin="4,0" Style="{StaticResource circleButton}" Command="{Binding FirstOptionCommand}" ToolTip="{Binding FirstOptionText}"
+                    Background="{Binding FirstOptionColor, FallbackValue={DynamicResource MahApps.Brushes.Accent}, RelativeSource={RelativeSource AncestorType=Window}}"
+                    Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
+                    <!--<Path Data="{Binding FirstOptionPathMarkup, TargetNullValue={StaticResource appbarCheck}}"/>-->
+                    <iconPacks:Modern Kind="Check"/>
                 </Button>
-
-            </StackPanel>
+ 
         </StackPanel>
     </Grid>
 </mahApp:MetroWindow>

@@ -1,15 +1,15 @@
 ﻿using IRI.Maptor.Jab.Common.Properties;
 using System;
 using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
+using System.Globalization; 
 using System.Windows;
 
 namespace IRI.Maptor.Jab.Common.Localization;
 
-public class LocalizationManager //: INotifyPropertyChanged
+public class LocalizationManager : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public static LocalizationManager Instance { get; } = new LocalizationManager();
 
     private CultureInfo _currentCulture = CultureInfo.CurrentUICulture;
@@ -30,7 +30,11 @@ public class LocalizationManager //: INotifyPropertyChanged
                 CultureInfo.CurrentUICulture = value;
                 CultureInfo.CurrentCulture = value;
                 LanguageChanged?.Invoke();
+                
                 FlowDirectionChanged?.Invoke(); // New event
+
+                Resources.Culture = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null)); // refresh all bindings
             }
         }
     }
@@ -59,7 +63,7 @@ public class LocalizationManager //: INotifyPropertyChanged
 
     public bool IsPersian => CurrentCulture.Name.Equals("fa-IR", StringComparison.OrdinalIgnoreCase);
 
-    private LocalizationManager()
+    public LocalizationManager()
     {
         CurrentCulture = CultureInfo.GetCultureInfo("en-US");
     }
