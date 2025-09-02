@@ -30,7 +30,7 @@
                         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                     </Trigger>
                     <Trigger Property="IsEnabled" Value="False">
-                        <Setter Property="Background" Value="LightGray"/>
+                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Border.NonActive}"/>
                     </Trigger>
                 </Style.Triggers>
             </Style>
