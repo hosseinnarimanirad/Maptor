@@ -3,7 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common"
+                xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
              x:Name="root">
+    <userControl:LocalizedUserControl.Resources>
+        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+    </userControl:LocalizedUserControl.Resources>
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -14,7 +18,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="{Binding ElementName=root, Path=Ltxt_srs_utmZone}" Margin="4" VerticalAlignment="Center"/>
+        <TextBlock Text="{Binding [srs_utmZone], Source={StaticResource Localization}}" Margin="4" VerticalAlignment="Center"/>
         <mahApp:NumericUpDown Grid.Column="1" HorizontalAlignment="Left" Margin="4" Minimum="0" Maximum="60" mahApp:TextBoxHelper.SelectAllOnFocus="True"
                               Value="{Binding UtmZone, Mode=TwoWay, StringFormat={}{0:00}}" MinWidth="75"/>
         

@@ -2,43 +2,25 @@
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
                     xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+                    xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.View" 
+                    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
                     x:Name="root"
-                    xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.View"  
-                    WindowStyle="ToolWindow" ShowIconOnTitleBar="False" ShowInTaskbar="False"
-                    FlowDirection="{Binding ElementName=root, Path=CurrentFlowDirection}" FontFamily="{StaticResource iranSans}"
-                    Title="{Binding ElementName=root, Path=Ltxt_dialog_symbology_title}"  GlowBrush="{DynamicResource MahApps.Brushes.Accent}" ShowMaxRestoreButton="False" ShowMinButton="False"
-                    WindowTransitionsEnabled="False" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+                    WindowStyle="ToolWindow" 
+                    ShowIconOnTitleBar="False" 
+                    ShowInTaskbar="False"
+                    FlowDirection="{Binding ElementName=root, Path=CurrentFlowDirection}" 
+                    FontFamily="{StaticResource iranSans}"
+                    GlowBrush="{DynamicResource MahApps.Brushes.Accent}" 
+                    ShowMaxRestoreButton="False" 
+                    ShowMinButton="False"
+                    WindowTransitionsEnabled="False" 
+                    ResizeMode="NoResize" 
+                    Title="{Binding ElementName=root, Path=Ltxt_dialog_symbology_title}"
+                    SizeToContent="WidthAndHeight">                      
+    <local:LocalizedMetroWindow.Resources>
+        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+    </local:LocalizedMetroWindow.Resources>
     <Grid>
-        <Grid.Resources>
-            <!--<BitmapImage x:Key="transparentBackground" UriSource="/Assets/Images/transparentBackground.png" />-->
-            <!--<Style TargetType="ToggleButton" x:Key="colorToggle">
-                <Style.Setters>
-                    <Setter Property="Cursor" Value="Hand"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ToggleButton">
-                                <Grid>
-                                    <Image Width="auto" Height="auto" Source="/IRI.Maptor.Jab.Controls;component/Assets/Images/transparentBackground.png" Margin="4" Stretch="UniformToFill"/>
-                                    <Rectangle Fill="{TemplateBinding Background}" Height="Auto" Width="Auto" Margin="4" Stroke="Gray" StrokeThickness="1"/>
-                                </Grid>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsKeyboardFocused" Value="true">
-                                    </Trigger>
-                                    <Trigger Property="IsChecked" Value="true">
-                                    </Trigger>
-                                    <Trigger Property="IsEnabled" Value="false">
-                                        <Setter Property="Foreground" Value="#ADADAD"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style.Setters>
-            </Style>-->
-
-        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -53,40 +35,24 @@
             <ColumnDefinition Width="90"/>
         </Grid.ColumnDefinitions>
         <mahApp:ColorPicker Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="4" FlowDirection="LeftToRight" Width="230"
-                          SelectedColor="{Binding Symbology.Fill, Mode=TwoWay, Converter={StaticResource solidColorBrushToColorConverter}}"
-                          mahApp:TextBoxHelper.Watermark="{Binding ElementName=root, Path=Ltxt_dialog_symbology_fill}"
-                          mahApp:TextBoxHelper.ClearTextButton="True"
-                          mahApp:TextBoxHelper.UseFloatingWatermark="True"                            
-                          mahApp:TextBoxHelper.WatermarkAlignment="Center"/>
-
-        <!--<TextBlock Grid.Column="0" Grid.Row="0" Text="رنگ سطح" VerticalAlignment="Center" Margin="4"/>-->
-        <!--<ToggleButton Grid.Column="1" Height="32" Grid.Row="0" x:Name="fillToggle" Style="{StaticResource colorToggle}" Background="{Binding Symbology.Fill, Mode=TwoWay}"/>-->
-        <!--<Popup IsOpen="{Binding ElementName=fillToggle, Path=IsChecked}" StaysOpen="False"
-                   PlacementTarget="{Binding ElementName=fillToggle}" >
-            <Border Background="White">
-                --><!--<telerik:RadColorEditor x:Name="fillColor" VerticalAlignment="Top" HorizontalAlignment="Left" Width="349" Background="White"
-                                        SelectedColor="{Binding Symbology.Fill, Mode=TwoWay, Converter={StaticResource stringToColorConverter}}"/>--><!--           
-            </Border>
-        </Popup>-->
-
+                            SelectedColor="{Binding Symbology.Fill, Mode=TwoWay, Converter={StaticResource solidColorBrushToColorConverter}}"
+                            mahApp:TextBoxHelper.ClearTextButton="True"
+                            mahApp:TextBoxHelper.Watermark="{Binding [dialog_symbology_fill], Source={StaticResource Localization}}"
+                            mahApp:TextBoxHelper.UseFloatingWatermark="True"                            
+                            mahApp:TextBoxHelper.WatermarkAlignment="Center"/>
+                          <!--mahApp:TextBoxHelper.Watermark="{Binding ElementName=root, Path=Ltxt_dialog_symbology_fill}"-->
+ 
         <mahApp:ColorPicker Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="4" FlowDirection="LeftToRight" Width="230"
                             SelectedColor="{Binding Symbology.Stroke, Mode=TwoWay, Converter={StaticResource solidColorBrushToColorConverter}}"
-                            mahApp:TextBoxHelper.Watermark="{Binding ElementName=root, Path=Ltxt_dialog_symbology_stroke}" 
+                            mahApp:TextBoxHelper.Watermark="{Binding [dialog_symbology_stroke], Source={StaticResource Localization}}"
                             mahApp:TextBoxHelper.ClearTextButton="True" 
                             mahApp:TextBoxHelper.UseFloatingWatermark="True" 
                             mahApp:TextBoxHelper.WatermarkAlignment="Center"/>
-        
-        <!--<TextBlock Grid.Column="2" Grid.Row="0" Text="رنگ مرز" VerticalAlignment="Center" Margin="4"/>-->
-        <!--<ToggleButton Grid.Column="3" Height="32" Grid.Row="0" x:Name="strokeToggle" Style="{StaticResource colorToggle}" Background="{Binding Symbology.Stroke, Mode=TwoWay}"/>-->
-        <!--<Popup IsOpen="{Binding ElementName=strokeToggle, Path=IsChecked}" StaysOpen="False"
-                   PlacementTarget="{Binding ElementName=strokeToggle}" >
-            <Border Background="White">
-                <telerik:RadColorEditor x:Name="strokeColor" VerticalAlignment="Top" HorizontalAlignment="Left" Width="349" Background="White"
-                                        SelectedColor="{Binding Symbology.Stroke, Mode=TwoWay, Converter={StaticResource stringToColorConverter}}"/>
-            </Border>
-        </Popup>-->
+                            <!--mahApp:TextBoxHelper.Watermark="{Binding ElementName=root, Path=Ltxt_dialog_symbology_stroke}"-->
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding ElementName=root, Path=Ltxt_dialog_symbology_strokeWidth}" VerticalAlignment="Center" Margin="4"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="4"
+                   Text="{Binding [dialog_symbology_strokeWidth], Source={StaticResource Localization}}"/>
+        <!--Text="{Binding ElementName=root, Path=Ltxt_dialog_symbology_strokeWidth}" />-->
         <mahApp:NumericUpDown Grid.Row="1" Grid.Column="1" HideUpDownButtons="True" Width="80" Margin="4" Minimum="0" 
                                 mahApp:TextBoxHelper.SelectAllOnFocus="True" Value="{Binding Symbology.StrokeThickness, Mode=TwoWay}"/>
  
@@ -100,6 +66,5 @@
                       Height="24" />
             </Button>
         </StackPanel>
-
     </Grid>
 </local:LocalizedMetroWindow>
