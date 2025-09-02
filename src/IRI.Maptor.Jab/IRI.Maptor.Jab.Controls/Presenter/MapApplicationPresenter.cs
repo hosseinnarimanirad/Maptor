@@ -1,10 +1,8 @@
-﻿using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Presenters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System; 
 using System.Threading.Tasks;
+
+using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.Assets.Commands;
 
 namespace IRI.Maptor.Jab.Controls.Presenter
 {
@@ -46,55 +44,22 @@ namespace IRI.Maptor.Jab.Controls.Presenter
 
             this.RequestShowSymbologyView = layer => Common.Defaults.DefaultActions.GetDefaultShowSymbologyView(ownerWindow, layer, this);
 
-            ownerWindow.DataContext = this;
-        }
-
-        public override async Task Initialize()
-        {
             this.RequestClearAll = this.ClearAll;
-
-            // 1400.03.04
-            //this.DialogService = new IRI.Maptor.Jab.Controls.Services.Dialog.DefaultDialogService();
-
-            //13971106
-            //this.RequestOpenFile = (filter) =>
-            //{
-            //    Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog() { Filter = filter };
-
-            //    if (dialog.ShowDialog() == true)
-            //        return dialog.FileName;
-            //    else
-            //        return string.Empty;
-            //};
-
-            //this.RequestSaveFile = (filter) =>
-            //{
-            //    Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog() { Filter = filter };
-
-            //    if (dialog.ShowDialog() == true)
-            //        return dialog.FileName;
-            //    else
-            //        return string.Empty;
-            //};
-
-            //this.RequestShowMessage = msg => System.Windows.MessageBox.Show(msg);
 
             this.MapSettings.BaseMapCacheDirectory = Environment.CurrentDirectory + "\\Data";
 
             this.MapSettings.MaxGoogleZoomLevel = 18;
             this.MapSettings.MinGoogleZoomLevel = 4;
 
-            //await this.SetTileBaseMap("GOOGLESATELLITE");
-            //this.SelectedMapProvider = this.MapProviders?.FirstOrDefault();
-
-            //this.BaseMapType = IRI.Maptor.Jab.Common.TileServices.TileType.Hybrid;
             this.SetMapCursorSet1();
 
             this.RegisterMapOptions();
 
             this.IsPanMode = true;
-        }
 
+            ownerWindow.DataContext = this;
+        }
+         
 
         private void ShowAboutMe()
         {

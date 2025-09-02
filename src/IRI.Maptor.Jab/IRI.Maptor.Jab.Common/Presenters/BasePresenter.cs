@@ -70,6 +70,7 @@ public class BasePresenter : Notifier
         //this.RequestSaveFile = arg => presenter.RequestSaveFile(arg);
         //this.RequestShowMessage = message => presenter.ShowMessage(message);
     }
+     
 
     #region Localization
 

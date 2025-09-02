@@ -3471,10 +3471,7 @@ public abstract class MapPresenter : BasePresenter
 
     #endregion
 
-    public virtual Task Initialize()
-    {
-        return Task.CompletedTask;
-    }
+    public virtual Task InitializeAsync() => Task.CompletedTask;
 
 
     public virtual void RegisterMapOptions()

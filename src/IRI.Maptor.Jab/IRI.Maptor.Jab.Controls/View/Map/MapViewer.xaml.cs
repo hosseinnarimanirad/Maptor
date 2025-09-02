@@ -807,7 +807,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.SetMapCursorSet1();
 
-        await presenter.Initialize();
+        await presenter.InitializeAsync();
 
 
         presenter.ZoomToExtent(initialView ?? sb.BoundingBoxes.Mercator_Iran, true, isNewExtent: true);
