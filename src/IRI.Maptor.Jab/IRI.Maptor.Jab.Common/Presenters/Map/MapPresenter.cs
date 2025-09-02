@@ -423,7 +423,8 @@ public abstract class MapPresenter : BasePresenter
         if (provider is null)
             return;
 
-        if (provider.FullName == SelectedMapProvider?.FullName)
+        //if (provider.FullName == SelectedMapProvider?.FullName)
+        if (provider == SelectedMapProvider)
             return;
 
         if (!MapProviders.Contains(provider))
@@ -2930,7 +2931,7 @@ public abstract class MapPresenter : BasePresenter
                         //TileType tileType = (TileType)Enum.Parse(typeof(TileType), args[1]);
 
                         //this.ProviderTypeFullName = provider;
-                        var provider = MapProviders.FirstOrDefault(m => m.FullName.EqualsIgnoreCase(param?.ToString()));
+                        var provider = MapProviders.FirstOrDefault(m => m.Is(param?.ToString()));
 
                         /*await*/
                         SetTileBaseMap(provider/*, BaseMapOpacity*/);

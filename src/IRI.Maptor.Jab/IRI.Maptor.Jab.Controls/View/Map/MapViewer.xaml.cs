@@ -1050,10 +1050,23 @@ public partial class MapViewer : NotifiableUserControl
 
     public void SetLayer(ILayer layer)
     {
+        ConfigureLayer(layer);
+
+        this._layerManager.Add(layer, 1.0 / _mapScale);
+    }
+
+    private void ConfigureLayer(ILayer layer)
+    {
         if (layer.RequestChangeVisibility is null)
             layer.RequestChangeVisibility = RefreshLayerVisibility;
 
-        this._layerManager.Add(layer, 1.0 / _mapScale);
+        if (!layer.SubLayers.IsNullOrEmpty())
+        {
+            foreach (var sublayer in layer.SubLayers)
+            {
+                ConfigureLayer(sublayer);
+            }
+        }
     }
 
     public void RemoveLayer(string layerName)
@@ -1815,9 +1828,9 @@ public partial class MapViewer : NotifiableUserControl
         //Clear current layer
         this.ClearLayer(layer, remove: false, forceRemove: false);
 
-        if (layer.RenderMode == RenderMode.Tiled)
+        if (layer.RenderMode == RenderMode.Tiled && layer is VectorLayer vectorLayer)
         {
-            AddTiledLayer(layer as VectorLayer);
+            AddTiledLayer(vectorLayer);
         }
         else
         {

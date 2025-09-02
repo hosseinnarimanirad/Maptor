@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using IRI.Maptor.Jab.Common.Localization;
+
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Model;
+using IRI.Maptor.Jab.Common.Localization;
 
 namespace IRI.Maptor.Jab.Common.TileServices;
 
@@ -11,19 +13,19 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
 
     //in the case of google traffic map, caching should be avoided
     public bool AllowCache { get; set; } = true;
-     
-     
+
+
     private string _providerResourceKey { get; set; }
     public string Provider => LocalizationManager.Instance[_providerResourceKey];
 
     public string ProviderEn => LocalizationManager.Instance.GetDefaultValue(_providerResourceKey);
-     
+
 
     private string _mapTypeResourceKey { get; set; }
     public string MapType => LocalizationManager.Instance[_mapTypeResourceKey];
 
     public string MapTypeEn => LocalizationManager.Instance.GetDefaultValue(_mapTypeResourceKey);
-     
+
 
     private byte[]? _thumbnail;
 
@@ -49,35 +51,13 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
         }
     }
 
-     
-    public string FullName
-    {
-        get
-        {
-            return $"{ProviderEn}-{MapTypeEn}";
-        }
-    }
+
+    public string FullName => $"{ProviderEn}-{MapTypeEn}";
 
     public string Title { get { return $"{Provider}-{MapType}"; } }
 
     public Func<TileInfo, string> MakeUrl { get; protected set; }
-
-    //protected TileMapProvider()
-    //{
-
-    //}
-
-    //public TileMapProvider(string provider, string mapType, Func<TileInfo, string> urlFunction, byte[]? thumbnail, byte[]? thumbnail72)
-    //    : this(PersianEnglishItem.CreateUpperCasedEnglish(string.Empty, provider),
-    //            PersianEnglishItem.CreateUpperCasedEnglish(string.Empty, mapType),
-    //            urlFunction, thumbnail, thumbnail72)
-    //{
-    //    //this.MakeUrl = urlFunction;
-
-    //    //this.Provider = new PersianEnglishItem(string.Empty, provider, Model.LanguageMode.English);
-
-    //    //this.MapType = new PersianEnglishItem(string.Empty, mapType, Model.LanguageMode.English);
-    //}
+     
 
     public TileMapProvider(TileMapProvider mapProvider)
     {
@@ -113,8 +93,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
 
         RaisePropertyChanged(nameof(Title));
     }
-
-    
+     
 
     public virtual string GetUrl(TileInfo tile)
     {
@@ -159,6 +138,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
     //    return !object.Equals(first, second);
     //}
 
+    public bool Is(string? fullName) => !string.IsNullOrWhiteSpace(fullName) && this.FullName.EqualsIgnoreCase(fullName);
 
     #region IDispose
 

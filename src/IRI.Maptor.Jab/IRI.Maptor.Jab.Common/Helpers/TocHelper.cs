@@ -24,7 +24,7 @@ public class TocHelper
         { 
             var layer = vectorLayerLoader(item.FullName);
 
-            layer.LayerName = System.IO.Path.GetFileNameWithoutExtension(item.FullName);
+            //layer.LayerName = System.IO.Path.GetFileNameWithoutExtension(item.FullName);
 
             result.Add(layer);
         }
@@ -53,7 +53,7 @@ public class TocHelper
 
             var layer = new RasterLayer(new ZippedImagePyramidDataSource(item), layerName, ScaleInterval.All, false, true, System.Windows.Visibility.Collapsed, 1);
 
-            layer.LayerName = layerName;
+            //layer.LayerName = layerName;
 
             result.Add(layer);
         }
