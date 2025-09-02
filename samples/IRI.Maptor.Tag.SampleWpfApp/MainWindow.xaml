@@ -2,15 +2,17 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" Loaded="Window_Loaded" 
         xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"  
         xmlns:iriJabControls="clr-namespace:IRI.Maptor.Jab.Controls.View;assembly=IRI.Maptor.Jab.Controls"
-        Title="MainWindow" Height="600" Width="900" x:Name="root" FlowDirection="{Binding CurrentFlowDirection}">
+        Title="MainWindow" Height="600" Width="900" x:Name="root" >
     <Window.Resources>
-       
+        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
     </Window.Resources>
-    <Grid >
+    <Grid FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="200"/>
             <ColumnDefinition/>
@@ -45,16 +47,16 @@
             </StackPanel.Resources>
             <Border BorderBrush="Black" BorderThickness="1" Margin="2">
                 <StackPanel Orientation="Horizontal" >
-                    <Button Content="{Binding Ltxt_cmd_general_clearAll}" Command="{Binding ClearAllCommand}"/>
-                    <Button Content="{Binding Ltxt_cmd_general_fullExtent}" Command="{Binding FullExtentCommand}"/>
-                    <Button Content="{Binding Ltxt_cmd_general_AddShapefile}" Command="{Binding AddShapefileCommand}"/>
-                    <Button Content="{Binding Ltxt_cmd_general_measureLength}" Command="{Binding MeasureLengthCommand}"/>
-                    <Button Content="{Binding Ltxt_cmd_general_measureArea}" Command="{Binding MeasureAreaCommand}"/>
-                    <Button Content="{Binding Ltxt_cmd_general_drawPoint}" Command="{Binding DrawPointCommand}"/>
-                    <Button Content="{Binding Ltxt_cmd_general_drawPolyline}" Command="{Binding DrawPolylineCommand}"/>
-                    <Button Content="{Binding Ltxt_cmd_general_drawPolygon}" Command="{Binding DrawPolygonCommand}"/>
-                    <Button Content="{Binding Ltxt_cmd_general_addTextToMap}" Command="{Binding AddTextToMapCommand}"/>
-                    <Button Content="{Binding Ltxt_cmd_general_goTo}" Command="{Binding GoToCommand}"/>
+                    <Button Content="{Binding [cmd_general_clearAll], Source={StaticResource Localization}}" Command="{Binding ClearAllCommand}"/>
+                    <Button Content="{Binding [cmd_general_fullExtent], Source={StaticResource Localization}}" Command="{Binding FullExtentCommand}"/>
+                    <Button Content="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}" Command="{Binding AddShapefileCommand}"/>
+                    <Button Content="{Binding [cmd_general_measureLength], Source={StaticResource Localization}}" Command="{Binding MeasureLengthCommand}"/>
+                    <Button Content="{Binding [cmd_general_measureArea], Source={StaticResource Localization}}" Command="{Binding MeasureAreaCommand}"/>
+                    <Button Content="{Binding [cmd_general_drawPoint], Source={StaticResource Localization}}" Command="{Binding DrawPointCommand}"/>
+                    <Button Content="{Binding [cmd_general_drawPolyline], Source={StaticResource Localization}}" Command="{Binding DrawPolylineCommand}"/>
+                    <Button Content="{Binding [cmd_general_drawPolygon], Source={StaticResource Localization}}" Command="{Binding DrawPolygonCommand}"/>
+                    <Button Content="{Binding [cmd_general_addTextToMap], Source={StaticResource Localization}}" Command="{Binding AddTextToMapCommand}"/>
+                    <Button Content="{Binding [cmd_general_goTo], Source={StaticResource Localization}}" Command="{Binding GoToCommand}"/>
                 </StackPanel>
             </Border>
             <Border BorderBrush="Black" BorderThickness="1" Margin="2">
@@ -78,13 +80,13 @@
             Position="{Binding CurrentPoint, ElementName=map}"/>
         
         <StackPanel Grid.Row="1">
-            <Expander Header="{Binding Ltxt_header_BaseMaps}" DockPanel.Dock="Top" IsExpanded="True"  Margin="0,1,0,0" Cursor="Hand">
+            <Expander Header="{Binding [ui_header_baseMaps], Source={StaticResource Localization}}" DockPanel.Dock="Top" IsExpanded="True"  Margin="0,1,0,0" Cursor="Hand">
                 <ComboBox ItemsSource="{Binding MapProviders}" SelectedItem="{Binding SelectedMapProvider, Mode=TwoWay}" VerticalAlignment="Center" DisplayMemberPath="Title"/>
             </Expander>
-            <Expander Header="{Binding Ltxt_header_DrawingLegend}" DockPanel.Dock="Top" IsExpanded="True"  Margin="0,1,0,0" Cursor="Hand">
+            <Expander Header="{Binding [ui_header_drawingLegend], Source={StaticResource Localization}}" DockPanel.Dock="Top" IsExpanded="True"  Margin="0,1,0,0" Cursor="Hand">
                 <iriJabControls:MapDrawingLegendView MinHeight="90"/>
             </Expander>
-            <Expander Header="{Binding Ltxt_header_LayerLegend}" IsExpanded="True" Margin="0,1,0,0" Cursor="Hand">
+            <Expander Header="{Binding [ui_header_layerLegend], Source={StaticResource Localization}}" IsExpanded="True" Margin="0,1,0,0" Cursor="Hand">
                 <iriJabControls:MapLegendWithOptionsView EnableFilterMode="True"  DataContext="{Binding Layers}" GroupName="B"/>
             </Expander>
         </StackPanel>

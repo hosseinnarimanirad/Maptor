@@ -13,7 +13,7 @@ public class LocalizedUserControl : NotifiableUserControl, IDisposable
         LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
 
-    public FlowDirection CurrentFlowDirection => LocalizationManager.Instance.CurrentFlowDirection;
+    //public FlowDirection CurrentFlowDirection => LocalizationManager.Instance.CurrentFlowDirection;
 
     protected virtual void Instance_LanguageChanged()
     {
