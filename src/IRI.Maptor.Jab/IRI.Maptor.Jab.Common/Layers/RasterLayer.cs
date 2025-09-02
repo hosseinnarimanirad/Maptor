@@ -222,7 +222,7 @@ public class RasterLayer : BaseLayer
         this._parent = parent;
 
         this._type = isBaseMap ? LayerType.BaseMap : (isPyramid ? LayerType.ImagePyramid : LayerType.Raster);
-         
+
         this.LayerName = name;
 
         this._extent = boundingBox;
@@ -255,6 +255,7 @@ public class RasterLayer : BaseLayer
         //this.VisualParameters = new VisualParameters(null, isBaseMap ? null : Brushes.Black, isBaseMap ? 0 : 1, opacity);
         //this.VisualParameters = new VisualParameters(null, null, 0, opacity, visibility);
         this.Opacity = opacity;
+        this.Visibility = visibility;
     }
 
 
