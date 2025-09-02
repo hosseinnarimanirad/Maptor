@@ -265,6 +265,39 @@
   <data name="dialog_symbology_title" xml:space="preserve">
     <value>سمبل لایه</value>
   </data>
+  <data name="mapPanel_currentPart_add" xml:space="preserve">
+    <value>اضافه کردن تکهٔ جدید</value>
+  </data>
+  <data name="mapPanel_currentPart_delete" xml:space="preserve">
+    <value>حذف تکهٔ جاری</value>
+  </data>
+  <data name="mapPanel_currentPart_zoom" xml:space="preserve">
+    <value>بزرگ‌نمایی روی تکهٔ جاری</value>
+  </data>
+  <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
+    <value>کپی مختصات</value>
+  </data>
+  <data name="mapPanel_currentPoint_delete" xml:space="preserve">
+    <value>حذف نقطه</value>
+  </data>
+  <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
+    <value>نقطهٔ بعدی</value>
+  </data>
+  <data name="mapPanel_currentPoint_goToPreviousPoint" xml:space="preserve">
+    <value>نقطه قبلی</value>
+  </data>
+  <data name="mapPanel_currentPoint_zoom" xml:space="preserve">
+    <value>بزرگ‌نمایی</value>
+  </data>
+  <data name="mapPanel_edit_cancel" xml:space="preserve">
+    <value>لغو ویرایش</value>
+  </data>
+  <data name="mapPanel_edit_delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="mapPanel_edit_finish" xml:space="preserve">
+    <value>اتمام ویرایش</value>
+  </data>
   <data name="mapPanel_header_currentPoint" xml:space="preserve">
     <value>نقطه جاری</value>
   </data>
@@ -273,6 +306,12 @@
   </data>
   <data name="mapPanel_header_srs" xml:space="preserve">
     <value>سیستم مرجع مکانی</value>
+  </data>
+  <data name="mapPanel_measure_convertToDrawing" xml:space="preserve">
+    <value>تبدیل به عارضه ترسیمی</value>
+  </data>
+  <data name="mapPanel_measure_showEdgeLabels" xml:space="preserve">
+    <value>نمایش طول اضلاع</value>
   </data>
   <data name="map_draw_addPoint" xml:space="preserve">
     <value>افزودن نقطه</value>

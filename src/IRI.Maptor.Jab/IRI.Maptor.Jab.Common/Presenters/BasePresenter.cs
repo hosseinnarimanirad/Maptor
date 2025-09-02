@@ -92,11 +92,11 @@ public class BasePresenter : Notifier
         RaisePropertyChanged(nameof(Ltxt_cmd_general_measureArea));
         RaisePropertyChanged(nameof(Ltxt_cmd_general_measureLength));
 
-        RaisePropertyChanged(nameof(cmd_general_pan));
-        RaisePropertyChanged(nameof(cmd_general_zoomIn));
-        RaisePropertyChanged(nameof(cmd_general_zoomOut));
-        RaisePropertyChanged(nameof(cmd_general_zoomPrevious));
-        RaisePropertyChanged(nameof(cmd_general_zoomNext));
+        //RaisePropertyChanged(nameof(cmd_general_pan));
+        //RaisePropertyChanged(nameof(cmd_general_zoomIn));
+        //RaisePropertyChanged(nameof(cmd_general_zoomOut));
+        //RaisePropertyChanged(nameof(cmd_general_zoomPrevious));
+        //RaisePropertyChanged(nameof(cmd_general_zoomNext));
 
 
         RaisePropertyChanged(nameof(Ltxt_header_BaseMaps));

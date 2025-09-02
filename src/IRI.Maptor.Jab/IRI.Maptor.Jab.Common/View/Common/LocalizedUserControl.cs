@@ -17,7 +17,7 @@ public class LocalizedUserControl : NotifiableUserControl, IDisposable
 
     protected virtual void Instance_LanguageChanged()
     {
-
+        NotifyAllProperties();
     }
      
     #region IDispose

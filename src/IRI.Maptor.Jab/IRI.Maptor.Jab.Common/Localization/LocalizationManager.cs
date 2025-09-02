@@ -10,7 +10,8 @@ public class LocalizationManager : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public static LocalizationManager Instance { get; } = new LocalizationManager();
+    private static readonly LocalizationManager _instance = new LocalizationManager();
+    public static LocalizationManager Instance => _instance;
 
     private CultureInfo _currentCulture = CultureInfo.CurrentUICulture;
 

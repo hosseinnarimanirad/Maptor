@@ -1,17 +1,16 @@
-﻿<userControl:LocalizedUserControl x:Class="IRI.Maptor.Jab.Controls.View.MapInfoView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
-        xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common"
-        xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls" x:Name="root"                   
-        xmlns:system="clr-namespace:System;assembly=netstandard">
-    <userControl:LocalizedUserControl.Resources>
+﻿<UserControl x:Class="IRI.Maptor.Jab.Controls.View.MapInfoView"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"        
+            xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+            xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
+            xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+            x:Name="root">
+    <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <Style  TargetType="{x:Type Button}" x:Key="circleButton">
                 <Setter Property="Margin" Value="4"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
@@ -61,7 +60,7 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            <Style  TargetType="{x:Type ToggleButton}" x:Key="circleToggle">
+            <Style TargetType="{x:Type ToggleButton}" x:Key="circleToggle">
                 <Setter Property="Margin" Value="4"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
                 <Setter Property="Width" Value="32"/>
@@ -90,26 +89,26 @@
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
-            <Style TargetType="Path">
-                <Setter Property="Fill" Value="White"/>
-                <Setter Property="Stretch" Value="Uniform"/>
+            <Style TargetType="iconPacks:PackIconModern">
+                <Setter Property="Foreground" Value="White"/>
+                <!--<Setter Property="Stretch" Value="Uniform"/>-->
                 <Setter Property="Margin" Value="8"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="FlowDirection" Value="LeftToRight"/>
             </Style>
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
                 <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12" />
             </Style>
         </ResourceDictionary>
-    </userControl:LocalizedUserControl.Resources>
+    </UserControl.Resources>
     <Border CornerRadius="15" BorderThickness="3" MinWidth="420" VerticalAlignment="Top" HorizontalAlignment="Center" 
                     Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent3}" Opacity=".95"
                     Margin="4" Visibility="{Binding IsDrawEditMeasureMode, Converter={StaticResource boolToVisibilityConverter}}">
-        <StackPanel FlowDirection="{Binding ElementName=root, Path=CurrentFlowDirection}">
+        <StackPanel FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}">
             <DockPanel Margin="0" >
                 <TextBlock DockPanel.Dock="Left" Text="X" Margin="4"
                            Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
-                <!--<TextBox DockPanel.Dock="Left" Text="{Binding MapPanel.CurrentEditingPoint.X, Mode=TwoWay}" MaxWidth="90"
-                         FlowDirection="LeftToRight" MinWidth="80" Margin="2" VerticalAlignment="Center">-->
                 <TextBox DockPanel.Dock="Left" MaxWidth="90" FlowDirection="LeftToRight" MinWidth="80" Margin="2" VerticalAlignment="Center"
                          Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                     <TextBox.Style>
@@ -153,33 +152,32 @@
                         </Style>
                     </TextBox.Resources>
                 </TextBox>
-
-
+ 
                 <!--Drawing-->
                 <DockPanel DockPanel.Dock="Right" LastChildFill="False"
                             Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}">
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Left" Margin="2" 
-                            ToolTip="{Binding ElementName=root, Path=Ltxt_map_draw_addPoint}"
+                            ToolTip="{Binding [map_draw_addPoint], Source={StaticResource Localization}}"
                             Command="{Binding AddPointToNewDrawingCommand}"
                             Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <Path Data="{StaticResource appbarAdd}"/>
+                        <iconPacks:Modern Kind="Add"/>
                     </Button>
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Left" Margin="2,0,10,0" 
-                        ToolTip="{Binding ElementName=root, Path=Ltxt_map_draw_finishDrawingPart}"
-                        Command="{Binding FinishDrawingPartCommand}"
+                            ToolTip="{Binding [map_draw_finishDrawingPart], Source={StaticResource Localization}}"
+                            Command="{Binding FinishDrawingPartCommand}"
                             Visibility="{Binding MapPanel.Options.IsMultiPartSupportAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <Path Data="{StaticResource appbarCheckmark}"/>
+                        <iconPacks:Modern Kind="Checkmark"/>
                     </Button>
 
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" Margin="2" 
-                        ToolTip="{Binding ElementName=root, Path=Ltxt_map_draw_finishDrawing}"
-                        Command="{Binding FinishNewDrawingCommand}" >
-                        <Path Data="{StaticResource appbarCheck}"/>
+                            ToolTip="{Binding [map_draw_finishDrawing], Source={StaticResource Localization}}"
+                            Command="{Binding FinishNewDrawingCommand}" >
+                        <iconPacks:Modern Kind="Check"/>
                     </Button>
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" Margin="2" 
-                        ToolTip="{Binding ElementName=root, Path=Ltxt_map_draw_cancelDrawing}"
-                        Command="{Binding CancelNewDrawingCommand}" >
-                        <Path Data="{StaticResource appbarClose}"/>
+                            ToolTip="{Binding [map_draw_cancelDrawing], Source={StaticResource Localization}}"
+                            Command="{Binding CancelNewDrawingCommand}" >
+                        <iconPacks:Modern Kind="Close"/>
                     </Button>
                 </DockPanel>
                 <!-- Drawing -->
@@ -188,29 +186,38 @@
                 <!--Editing-->
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" 
                             DataContext="{Binding CurrentEditingLayer}"
+                            ToolTip="{Binding [mapPanel_measure_showEdgeLabels], Source={StaticResource Localization}}"
                             Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">
                     <ToggleButton Style="{StaticResource circleToggle}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                             IsChecked="{Binding Options.IsEdgeLabelVisible, Mode=TwoWay}" Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <Path Data="{StaticResource appbarMeasureMeter}"/>
+                        <iconPacks:Modern Kind="MeasureMeter"/>
                     </ToggleButton>
 
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
-                            Command="{Binding DeleteCommand}" Visibility="{Binding Options.IsDeleteButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <Path Data="{StaticResource appbarDelete}"/>
+                            Command="{Binding ConvertToDrawingItemCommand}" 
+                            ToolTip="{Binding [mapPanel_measure_convertToDrawing], Source={StaticResource Localization}}"
+                            Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <iconPacks:Modern Kind="VectorPenAdd"/>
                     </Button>
 
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
-                            Command="{Binding ConvertToDrawingItemCommand}" Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <Path Data="{StaticResource appbarVectorPenAdd}"/>
+                            Command="{Binding DeleteCommand}"
+                            ToolTip="{Binding [mapPanel_edit_delete], Source={StaticResource Localization}}"
+                            Visibility="{Binding Options.IsDeleteButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <iconPacks:Modern Kind="Delete"/>
                     </Button>
-                    
+
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
-                            Command="{Binding CancelEditingCommand}" Visibility="{Binding Options.IsCancelButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}" >
-                        <Path Data="{StaticResource appbarClose}"/>
+                            Command="{Binding CancelEditingCommand}" 
+                            ToolTip="{Binding [mapPanel_edit_cancel], Source={StaticResource Localization}}"
+                            Visibility="{Binding Options.IsCancelButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <iconPacks:Modern Kind="Close"/>
                     </Button>
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
-                            Command="{Binding FinishEditingCommand}" Visibility="{Binding Options.IsFinishButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <Path Data="{StaticResource appbarCheck}"/>
+                            Command="{Binding FinishEditingCommand}" 
+                            ToolTip="{Binding [mapPanel_edit_finish], Source={StaticResource Localization}}"
+                            Visibility="{Binding Options.IsFinishButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <iconPacks:Modern Kind="Check"/>
                     </Button>
                 </StackPanel>
                 <!--Editing-->
@@ -218,7 +225,7 @@
             </DockPanel>
 
 
-            <TextBlock Text="{Binding ElementName=root, Path=Ltxt_map_draw_newDrawing}" VerticalAlignment="Center" Margin="8,0" Foreground="{StaticResource  MahApps.Brushes.Accent2}"
+            <TextBlock Text="{Binding [map_draw_newDrawing], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="8,0" Foreground="{StaticResource  MahApps.Brushes.Accent2}"
                         Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}" HorizontalAlignment="Center" TextDecorations="Underline"/>
             <StackPanel >
                 <StackPanel.Visibility>
@@ -226,112 +233,91 @@
                         <Binding Path="MapPanel.Options.IsOptionsAvailable"/>
                         <Binding Path="MapPanel.IsDetailsVisible"/>
                     </MultiBinding>
-                    <!--Visibility="{Binding MapPanel.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"-->
                 </StackPanel.Visibility>
                 <TabControl SelectedIndex="2" Background="Transparent"  >
                     <TabControl.Items>
-                        <TabItem Header="{Binding ElementName=root, Path=Ltxt_mapPanel_header_currentPoint}" Cursor="Hand"><!--Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">-->
+                        <TabItem Header="{Binding [mapPanel_header_currentPoint], Source={StaticResource Localization}}" Cursor="Hand">
                             <TabItem.Visibility>
                                 <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
-                                    <!--<Binding Path="IsEditMode"/>-->
                                     <Binding Path="MapPanel.Options.IsMultiPartSupportAvailable"/>
                                 </MultiBinding>
                             </TabItem.Visibility>
                             <StackPanel Orientation="Horizontal" DataContext="{Binding CurrentEditingLayer}" FlowDirection="LeftToRight" HorizontalAlignment="Center">
-                                <!--<CheckBox Content="نمایش ابزارهای عوارض چند تکه‌ای" 
-                                  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2" Visibility="Collapsed"
-                                  x:Name="showMultiPartTools" IsChecked="True"/>-->
-
                                 <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
-                                ToolTip="نقطه قبلی"
-                                Command="{Binding GoToPreviousPointCommand}" >
-                                    <Path Data="{StaticResource appbarChevronLeft}" />
+                                        ToolTip="{Binding [mapPanel_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}"
+                                        Command="{Binding GoToPreviousPointCommand}" >
+                                    <iconPacks:Modern Kind="ChevronLeft" />
                                 </Button>
                                 <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
-                                ToolTip="حذف نقطه"
-                                Command="{Binding DeleteCurrentPointCommand}" >
-                                    <Path Data="{StaticResource appbarDelete}"/>
+                                        ToolTip="{Binding [mapPanel_currentPoint_delete], Source={StaticResource Localization}}"
+                                        Command="{Binding DeleteCurrentPointCommand}" >
+                                    <iconPacks:Modern Kind="Delete"/>
                                 </Button>
                                 <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
-                                ToolTip="بزرگ‌نمایی"
-                                Command="{Binding ZoomToCurrentPointCommand}" >
-                                    <Path Data="{StaticResource appbarMagnifyAdd}" />
+                                        ToolTip="{Binding [mapPanel_currentPoint_zoom], Source={StaticResource Localization}}"
+                                        Command="{Binding ZoomToCurrentPointCommand}" >
+                                    <iconPacks:Modern Kind="MagnifyAdd"/>
                                 </Button>
                                 <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
-                                ToolTip="کپی مختصات"
-                                Command="{Binding CopyCurrentPointCommand}" 
+                                        ToolTip="{Binding [mapPanel_currentPoint_copyCoordinate], Source={StaticResource Localization}}"
+                                        Command="{Binding CopyCurrentPointCommand}" 
                                         CommandParameter="{Binding DataContext.MapPanel.SpatialReference, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}">
-                                    <Path Data="{StaticResource appbarPageCopy}" />
+                                    <iconPacks:Modern Kind="PageCopy"/>
                                 </Button>
                                 <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
-                                ToolTip="نقطهٔ بعدی"
-                                Command="{Binding GoToNextPointCommand}" >
-                                    <Path Data="{StaticResource appbarChevronRight}"/>
+                                        ToolTip="{Binding [mapPanel_currentPoint_goToNextPoint], Source={StaticResource Localization}}"
+                                        Command="{Binding GoToNextPointCommand}" >
+                                    <iconPacks:Modern Kind="ChevronRight"/>
                                 </Button>
                             </StackPanel>
                         </TabItem>
 
-                        <TabItem Header="{Binding ElementName=root, Path=Ltxt_mapPanel_header_multiPart}" Cursor="Hand" ><!--Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">-->
+                        <TabItem Header="{Binding [mapPanel_header_multiPart], Source={StaticResource Localization}}" Cursor="Hand" >
                             <TabItem.Visibility>
                                 <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
-                                    <!--<Binding Path="IsEditMode"/>-->
                                     <Binding Path="MapPanel.Options.IsMultiPartSupportAvailable"/>
-                                </MultiBinding> 
+                                </MultiBinding>
                             </TabItem.Visibility>
                             <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Center" DataContext="{Binding CurrentEditingLayer}" >
-                              
                                 <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
-                                ToolTip="حذف تکهٔ جاری"
-                                Command="{Binding DeleteCurrentPartCommand}" >
-                                    <Path Data="{StaticResource appbarDelete}"/>
+                                        ToolTip="{Binding [mapPanel_currentPart_delete], Source={StaticResource Localization}}"
+                                        Command="{Binding DeleteCurrentPartCommand}" >
+                                    <iconPacks:Modern Kind="Delete"/>
                                 </Button>
 
                                 <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" IsEnabled="False"
-                                    ToolTip="اضافه کردن تکهٔ جدید"
-                                    Command="{Binding AddNewPartCommand}">
-                                    <Path Data="{StaticResource appbarAdd}" />
+                                        ToolTip="{Binding [mapPanel_currentPart_add], Source={StaticResource Localization}}"
+                                        Command="{Binding AddNewPartCommand}">
+                                    <iconPacks:Modern Kind="Add"/>
                                 </Button>
                                 <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
-                                ToolTip="بزرگ‌نمایی روی تکهٔ جاری"
-                                Command="{Binding ZoomToCurrentPartCommand}" >
-                                    <Path Data="{StaticResource appbarMagnifyAdd}"/>
+                                        ToolTip="{Binding [mapPanel_currentPart_zoom], Source={StaticResource Localization}}"
+                                        Command="{Binding ZoomToCurrentPartCommand}" >
+                                    <iconPacks:Modern Kind="MagnifyAdd"/>
                                 </Button>
-                                <!--<Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
-                                ToolTip="{Binding ElementName=root, Path=CancelDrawingText}"
-                                Command="{Binding CancelNewDrawingCommand}" >
-                            <Path Data="{StaticResource appbarChevronRight}" />
-                        </Button>-->
                             </StackPanel>
                         </TabItem>
 
-                        <TabItem Header="{Binding ElementName=root, Path=Ltxt_mapPanel_header_srs}" Cursor="Hand">
+                        <TabItem Header="{Binding [mapPanel_header_srs], Source={StaticResource Localization}}" Cursor="Hand">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <RadioButton GroupName="A" ToolTip="{Binding ElementName=root, Path=Ltxt_srs_geodeticWgs84Title}" Foreground="White" Margin="4,2" 
+                                <RadioButton GroupName="A" ToolTip="{Binding [srs_geodeticWgs84Title], Source={StaticResource Localization}}" Foreground="White" Margin="4,2" 
                                      IsChecked="{Binding MapPanel.IsGeodeticWgs84EditingMode, Mode=TwoWay}" Width="Auto" Height="Auto"  
                                      HorizontalContentAlignment="Center" Style="{StaticResource simpleToggle}" >
-
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
-                                        <Path Data="{StaticResource appbarGlobe}" Height="16" Margin="2" />
+                                        <iconPacks:PackIconModern Kind="Globe" Margin="0 0 4 0" VerticalAlignment="Center"/>
                                         <TextBlock Text="WGS84" Margin="2" Foreground="White"/>
                                     </StackPanel>
                                 </RadioButton>
-                                <RadioButton GroupName="A" ToolTip="{Binding ElementName=root, Path=UtmText}" Foreground="White" Margin="4,2"
+                                <RadioButton GroupName="A" ToolTip="{Binding [srs_utmTitle], Source={StaticResource Localization}}" Foreground="White" Margin="4,2"
                                      IsChecked="{Binding MapPanel.IsUTMEditingMode, Mode=TwoWay}" Style="{StaticResource simpleToggle}" >
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
-                                        <Path Data="{StaticResource appbarMapTreasure}" Height="16" Margin="2" />
+                                        <iconPacks:PackIconModern Kind="MapTreasure" Margin="0 0 4 0" VerticalAlignment="Center"/>
                                         <TextBlock Text="UTM" Margin="2" Foreground="White"/>
                                     </StackPanel>
                                 </RadioButton>
-                                <!--<RadioButton GroupName="A" ToolTip="{Binding ElementName=root, Path=WebMercatorText}" Foreground="White" Margin="4,2"
-                                     IsChecked="{Binding MapPanel.IsWebMercatorEditingMode, Mode=TwoWay}" Style="{StaticResource simpleToggle}" >
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
-                                        <Path Data="{StaticResource appbarMapTreasure}" Height="16" Margin="2" />
-                                        <TextBlock Text="Web Mercator" Margin="2" Foreground="White"/>
-                                    </StackPanel>
-                                </RadioButton>-->
                                 <TextBlock DockPanel.Dock="Left" Margin="4"
                                             Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}"
-                                            Text="{Binding ElementName=root, Path=Ltxt_srs_utmZone}"/>
+                                            Text="{Binding [srs_utmZone], Source={StaticResource Localization}}"/>
                                 <TextBox DockPanel.Dock="Left" BorderThickness="1" FlowDirection="LeftToRight" MinWidth="30" Margin="2" VerticalAlignment="Center"
                                             Text="{Binding MapPanel.CurrentEditingZone, Mode=TwoWay}" MaxWidth="30"
                                             Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}">
@@ -363,13 +349,17 @@
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
-                <StackPanel>
-                    <Path Margin="2" Height="8" Visibility="{Binding MapPanel.IsDetailsNotVisible, Converter={StaticResource boolToVisibilityConverter}}"
+                <StackPanel HorizontalAlignment="Center">
+                    <iconPacks:PackIconModern Margin="2" Height="8" Kind="ChevronDown"
+                                              Visibility="{Binding MapPanel.IsDetailsNotVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
+                    <iconPacks:PackIconModern Margin="2" Height="8" Kind="ChevronUp"
+                                              Visibility="{Binding MapPanel.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
+                    <!--<Path Margin="2" Height="8" Visibility="{Binding MapPanel.IsDetailsNotVisible, Converter={StaticResource boolToVisibilityConverter}}"
                             Data="M39.629,19.819l-14.63,14.63L10.37,19.819c-0.976-0.976-0.976-2.559,0-3.536c0.976-0.976,2.559-0.976,3.536,0l11.093,11.093l11.095-11.094c0.977-0.976,2.56-0.976,3.536,0C40.606,17.259,40.606,18.842,39.629,19.819z"/>
                     <Path Margin="2" Height="8" Visibility="{Binding MapPanel.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"
-                            Data="M39.631,33.716c-0.976,0.977-2.56,0.977-3.535,0L25.001,22.621L13.904,33.717c-0.488,0.487-1.128,0.731-1.768,0.731c-0.64,0-1.28-0.244-1.768-0.731c-0.976-0.978-0.976-2.56,0-3.536L25,15.551l14.63,14.629C40.608,31.156,40.608,32.739,39.631,33.716z"/>
+                            Data="M39.631,33.716c-0.976,0.977-2.56,0.977-3.535,0L25.001,22.621L13.904,33.717c-0.488,0.487-1.128,0.731-1.768,0.731c-0.64,0-1.28-0.244-1.768-0.731c-0.976-0.978-0.976-2.56,0-3.536L25,15.551l14.63,14.629C40.608,31.156,40.608,32.739,39.631,33.716z"/>-->
                 </StackPanel>
             </Border>
         </StackPanel>
     </Border>
-</userControl:LocalizedUserControl>
+</UserControl>

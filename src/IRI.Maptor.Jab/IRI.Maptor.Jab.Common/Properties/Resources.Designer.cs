@@ -539,6 +539,105 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add new part.
+        /// </summary>
+        public static string mapPanel_currentPart_add {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPart_add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete current part.
+        /// </summary>
+        public static string mapPanel_currentPart_delete {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPart_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom to current part.
+        /// </summary>
+        public static string mapPanel_currentPart_zoom {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPart_zoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy current point&apos;s coordinate.
+        /// </summary>
+        public static string mapPanel_currentPoint_copyCoordinate {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPoint_copyCoordinate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete current point.
+        /// </summary>
+        public static string mapPanel_currentPoint_delete {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPoint_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next point.
+        /// </summary>
+        public static string mapPanel_currentPoint_goToNextPoint {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPoint_goToNextPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous point.
+        /// </summary>
+        public static string mapPanel_currentPoint_goToPreviousPoint {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPoint_goToPreviousPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom to current point.
+        /// </summary>
+        public static string mapPanel_currentPoint_zoom {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPoint_zoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel Edit.
+        /// </summary>
+        public static string mapPanel_edit_cancel {
+            get {
+                return ResourceManager.GetString("mapPanel_edit_cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string mapPanel_edit_delete {
+            get {
+                return ResourceManager.GetString("mapPanel_edit_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finish Edit.
+        /// </summary>
+        public static string mapPanel_edit_finish {
+            get {
+                return ResourceManager.GetString("mapPanel_edit_finish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current Point.
         /// </summary>
         public static string mapPanel_header_currentPoint {
@@ -562,6 +661,24 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string mapPanel_header_srs {
             get {
                 return ResourceManager.GetString("mapPanel_header_srs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Convert to drawing item.
+        /// </summary>
+        public static string mapPanel_measure_convertToDrawing {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_convertToDrawing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Edge Labels.
+        /// </summary>
+        public static string mapPanel_measure_showEdgeLabels {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_showEdgeLabels", resourceCulture);
             }
         }
         
