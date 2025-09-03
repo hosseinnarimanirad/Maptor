@@ -29,10 +29,10 @@ public class Stroke
     public string StrokeValue => GetParameter(SldHelper.CssParameter_Stroke)?.Value ?? SldConstants.DefaultStroke;
 
     [XmlIgnore]
-    public double StrokeThicknessValue => GetParameter(SldHelper.CssParameter_StrokeWidth).DoubleValue ?? SldConstants.DefaultStrokeWidth;
+    public double StrokeThicknessValue => GetParameter(SldHelper.CssParameter_StrokeWidth)?.DoubleValue ?? SldConstants.DefaultStrokeWidth;
 
     [XmlIgnore]
-    public double StrokeOpacityValue => GetParameter(SldHelper.CssParameter_StrokeOpacity).DoubleValue ?? SldConstants.DefaultStrokeOpacity;
+    public double StrokeOpacityValue => GetParameter(SldHelper.CssParameter_StrokeOpacity)?.DoubleValue ?? SldConstants.DefaultStrokeOpacity;
 
     [XmlIgnore]
     public Sld_StrokeLineJoin StrokeLineJoinValue => GetParameter(SldHelper.CssParameter_StrokeLineJoin)?.StrokeLineJoin ?? SldConstants.DefaultStrokeLineJoin;

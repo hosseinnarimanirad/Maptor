@@ -60,17 +60,40 @@ public static class SldExtensions
         };
     }
 
-    public static System.Windows.Media.Geometry? Parse(this WellKnownMark wellKnownMark)
+    public static System.Windows.Media.Geometry? ParseToGeometry(this Mark mark, int width, int height)
     {
-        return wellKnownMark switch
+        System.Windows.Media.Geometry? geometry = mark.WellKnownNameValue switch
         {
-            WellKnownMark.x => System.Windows.Media.Geometry.Parse(new PackIconModern() { Kind = PackIconModernKind.AxisXLetter }.Data),
-            WellKnownMark.circle => System.Windows.Media.Geometry.Parse(new PackIconModern() { Kind = PackIconModernKind.LocationCircle }.Data),
-            WellKnownMark.star => System.Windows.Media.Geometry.Parse(new PackIconModern() { Kind = PackIconModernKind.Star }.Data),
+            WellKnownMark.x => System.Windows.Media.Geometry.Parse("M90 390l120-120 130 120 30-30-130-120 130-120-30-30-130 120-120-120-30 30 120 120-120 120 30 30z"),
+            WellKnownMark.circle => null,/*System.Windows.Media.Geometry.Parse(new PackIconModern() { Kind = PackIconModernKind.LocationCircle }.Data),*/
+            WellKnownMark.star => System.Windows.Media.Geometry.Parse(new PackIconModern() { Kind = PackIconModernKind.Star, Height = height, Width = width }.Data),
             WellKnownMark.triangle => System.Windows.Media.Geometry.Parse("M192 704h640l-320-448z"),
             WellKnownMark.square => System.Windows.Media.Geometry.Parse("M10,14V10H14V14H10Z"),
             _ => null
         };
+
+        if (geometry != null)
+        {
+            // Clone so we can modify it
+            geometry = geometry.Clone();
+
+            // Get original bounds
+            var bounds = geometry.Bounds;
+
+            double scaleX = width / bounds.Width;
+            double scaleY = height / bounds.Height;
+
+            // To preserve aspect ratio, pick min(scaleX, scaleY)
+            double scale = Math.Min(scaleX, scaleY);
+
+            var transformGroup = new TransformGroup();
+            transformGroup.Children.Add(new ScaleTransform(scale, scale));
+            transformGroup.Children.Add(new TranslateTransform(-bounds.X * scale, -bounds.Y * scale));
+
+            geometry.Transform = transformGroup;
+        }
+
+        return geometry;
     }
 
     public static List<ISymbolizer> ParseToSymbolizers(this StyledLayerDescriptor sld)
@@ -228,10 +251,9 @@ public static class SldExtensions
         visualParameters.Build(mark.Stroke);
         visualParameters.Build(mark.Fill);
 
-        System.Windows.Media.Geometry? geometry = mark.WellKnownNameValue?.Parse();
+        System.Windows.Media.Geometry? geometry = mark.ParseToGeometry(size, size);
 
-        if (geometry is not null)
-            visualParameters.PointSymbol = new SimplePointSymbolizer(size) { GeometrySymbol = geometry };
+        visualParameters.PointSymbol = new SimplePointSymbolizer(size) { GeometrySymbol = geometry };
 
         return new SimpleSymbolizer(visualParameters);
     }

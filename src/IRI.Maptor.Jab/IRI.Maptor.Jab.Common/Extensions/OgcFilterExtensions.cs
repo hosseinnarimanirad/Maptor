@@ -63,9 +63,13 @@ public static class OgcFilterExtensions
         return
             new Func<Feature<Point>, bool>(f =>
             {
-                if (literal is null || propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
+                if (propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
 
-                return double.TryParse(f.Attributes[propertyName].ToString(), out var value) ? value < literal : false;
+                var attribute = f.Attributes[propertyName]?.ToString();
+
+                if (literal is null) return attribute is null;
+
+                return double.TryParse(attribute, out var value) ? value < literal : false;
             });
     }
 
@@ -77,9 +81,13 @@ public static class OgcFilterExtensions
         return
             new Func<Feature<Point>, bool>(f =>
             {
-                if (literal is null || propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
+                if (propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
 
-                return double.TryParse(f.Attributes[propertyName].ToString(), out var value) ? value > literal : false;
+                var attribute = f.Attributes[propertyName]?.ToString();
+
+                if (literal is null) return attribute is null;
+
+                return double.TryParse(attribute, out var value) ? value > literal : false;
             });
     }
 
@@ -91,9 +99,13 @@ public static class OgcFilterExtensions
         return
             new Func<Feature<Point>, bool>(f =>
             {
-                if (literal is null || propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
+                if (propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
 
-                return double.TryParse(f.Attributes[propertyName].ToString(), out var value) ? value <= literal : false;
+                var attribute = f.Attributes[propertyName]?.ToString();
+
+                if (literal is null) return attribute is null;
+
+                return double.TryParse(attribute, out var value) ? value <= literal : false;
             });
     }
 
@@ -105,9 +117,13 @@ public static class OgcFilterExtensions
         return
             new Func<Feature<Point>, bool>(f =>
             {
-                if (literal is null || propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
+                if (propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
 
-                return double.TryParse(f.Attributes[propertyName].ToString(), out var value) ? value >= literal : false;
+                var attribute = f.Attributes[propertyName]?.ToString();
+
+                if (literal is null) return attribute is null;
+
+                return double.TryParse(attribute, out var value) ? value >= literal : false;
             });
     }
 
@@ -119,9 +135,13 @@ public static class OgcFilterExtensions
         return
             new Func<Feature<Point>, bool>(f =>
             {
-                if (literal is null || propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
+                if (propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
 
-                return f.Attributes[propertyName].ToString() == literal;
+                var attribute = f.Attributes[propertyName]?.ToString();
+
+                if (literal is null) return attribute is null;
+
+                return attribute == literal;
             });
     }
 
@@ -133,9 +153,13 @@ public static class OgcFilterExtensions
         return
             new Func<Feature<Point>, bool>(f =>
             {
-                if (literal is null || propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
+                if (propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
 
-                return f.Attributes[propertyName].ToString() != literal;
+                var attribute = f.Attributes[propertyName]?.ToString();
+
+                if (literal is null) return attribute is not null;
+
+                return attribute != literal;
             });
     }
 
@@ -183,7 +207,11 @@ public static class OgcFilterExtensions
                     upperBoundary is null ||
                     propertyName is null || !f.Attributes.ContainsKey(propertyName)) return false;
 
-                return double.TryParse(f.Attributes[propertyName].ToString(), out var value) ? value >= lowerBoundary && value <= upperBoundary : false;
+                var attribute = f.Attributes[propertyName]?.ToString();
+
+                if (attribute is null) return false;
+
+                return double.TryParse(attribute, out var value) ? value >= lowerBoundary && value <= upperBoundary : false;
             });
     }
 
