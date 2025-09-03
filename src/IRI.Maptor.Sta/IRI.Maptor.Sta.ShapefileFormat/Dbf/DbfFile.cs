@@ -6,7 +6,6 @@ using System.Text;
 using System.Linq;
 using IRI.Maptor.Sta.ShapefileFormat.Model;
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Extensions;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.Dbf;
 
@@ -177,9 +176,9 @@ public static class DbfFile
 
     //public static List<Dictionary<string, object>> Read(string dbfFileName, bool correctFarsiCharacters = true, Encoding dataEncoding = null, Encoding fieldHeaderEncoding = null)
     public static EsriAttributeDictionary Read(
-        string dbfFileName, 
-        bool correctFarsiCharacters = true, 
-        Encoding dataEncoding = null, 
+        string dbfFileName,
+        bool correctFarsiCharacters = true,
+        Encoding dataEncoding = null,
         Encoding fieldHeaderEncoding = null)
     {
         dataEncoding = dataEncoding ?? (TryDetectEncoding(dbfFileName) ?? Encoding.UTF8);
@@ -268,9 +267,9 @@ public static class DbfFile
     }
 
     public static object[][] ReadToObject(
-        string dbfFileName, 
-        bool correctFarsiCharacters = true, 
-        Encoding dataEncoding = null, 
+        string dbfFileName,
+        bool correctFarsiCharacters = true,
+        Encoding dataEncoding = null,
         Encoding fieldHeaderEncoding = null)
     {
         dataEncoding = dataEncoding ?? (TryDetectEncoding(dbfFileName) ?? Encoding.UTF8);
@@ -744,56 +743,36 @@ public static class DbfFile
             if (item.Length == 0)
                 continue;
 
-            switch (char.ToUpper(item.Type))
-            {
-                case 'F':
-                case 'O':
-                case '+':
-                    result.Columns.Add(item.Name, typeof(double));
-                    break;
-
-                case 'I':
-                    result.Columns.Add(item.Name, typeof(int));
-                    break;
-
-                case 'Y':
-                    result.Columns.Add(item.Name, typeof(decimal));
-                    break;
-
-                case 'L':
-                    result.Columns.Add(item.Name, typeof(bool));
-                    break;
-
-                case 'D':
-                case 'T':
-                case '@':
-                    result.Columns.Add(item.Name, typeof(DateTime));
-                    break;
-
-                case 'M':
-                case 'B':
-                case 'P':
-                    result.Columns.Add(item.Name, typeof(byte[]));
-                    break;
-
-                case 'N':
-                    if (item.DecimalCount == 0)
-                        result.Columns.Add(item.Name, typeof(int));
-                    else
-                        result.Columns.Add(item.Name, typeof(double));
-                    break;
-
-                case 'C':
-                case 'G':
-                case 'V':
-                case 'X':
-                default:
-                    result.Columns.Add(item.Name, typeof(string));
-                    break;
-            }
+            result.Columns.Add(item.Name, GetType(item));             
         }
 
         return result;
+    }
+
+    public static Type GetType(DbfFieldDescriptor descriptor)
+    {
+        char typeChar = char.ToUpperInvariant(descriptor.Type);
+
+        // Special case for 'N'
+        if (typeChar == 'N')
+            return descriptor.DecimalCount == 0 ? typeof(int) : typeof(double);
+
+        // Lookup table for other types
+        return typeChar switch
+        {
+            'F' or 'O' or '+' => typeof(double),
+            'I' => typeof(int),
+            'Y' => typeof(decimal),
+            'L' => typeof(bool),
+            'D' or 'T' or '@' => typeof(DateTime),
+            'M' or 'B' or 'P' => typeof(byte[]),
+
+            //case 'C':
+            //case 'G':
+            //case 'V':
+            //case 'X':
+            _ => typeof(string)
+        };
     }
 
     //Read

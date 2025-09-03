@@ -10,7 +10,7 @@ public interface IVectorDataSource : IDataSource
 {
     GeometryType? GeometryType { get; }
 
-    List<Field>? Fields { get; set; }
+    List<Field> Fields { get; set; }
 
 
     // Get Geometries *********************************************************

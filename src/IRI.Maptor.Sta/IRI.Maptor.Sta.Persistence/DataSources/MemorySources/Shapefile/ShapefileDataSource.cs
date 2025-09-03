@@ -61,8 +61,6 @@ public class ShapefileDataSource : MemoryDataSource//<Feature<Point>>
             transformFunc = p => p.Project(_sourceSrs, targetSrs);
         }
 
-        //string title = System.IO.Path.GetFileNameWithoutExtension(shapefileName);
-
         WebMercatorExtent = geometries.MainHeader.MinimumBoundingBox;
 
         // 1401.11.28
@@ -82,6 +80,16 @@ public class ShapefileDataSource : MemoryDataSource//<Feature<Point>>
         for (int i = 0; i < attributes.Fields.Count; i++)
         {
             _fields.Add(new ObjectToDbfTypeMap<Feature<Point>>(attributes.Fields[i], t => inverseAttributeMap(t)[i]));
+
+            this.Fields.Add(new Field()
+            {
+                Alias = attributes.Fields[i].Name,
+                Name = attributes.Fields[i].Name,
+                Length = attributes.Fields[i].Length,
+                Precision = attributes.Fields[i].DecimalCount,
+                Scale = attributes.Fields[i].Length,
+                Type = DbfFile.GetType(attributes.Fields[i]).ToString()
+            });
         }
 
 

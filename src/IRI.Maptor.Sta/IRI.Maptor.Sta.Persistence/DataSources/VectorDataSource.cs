@@ -8,7 +8,7 @@ using IRI.Maptor.Sta.Persistence.Abstractions;
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public abstract class VectorDataSource/*<TGeometryAware>*/ : IVectorDataSource
-    //where TGeometryAware : class, IGeometryAware<Point>
+//where TGeometryAware : class, IGeometryAware<Point>
 {
     //protected abstract Feature<Point> ToFeatureMappingFunc(TGeometryAware geometryAware);
 
@@ -18,11 +18,11 @@ public abstract class VectorDataSource/*<TGeometryAware>*/ : IVectorDataSource
 
     public virtual GeometryType? GeometryType { get; protected set; }
 
-    public List<Field>? Fields { get; set; }
+    public List<Field> Fields { get; set; } = new List<Field>();
 
-    
+
     #region Get as FeatureSet
-    
+
     public virtual FeatureSet<Point> GetAsFeatureSet() => GetAsFeatureSet(Geometry<Point>.Empty);
 
     public abstract FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox);
@@ -42,10 +42,10 @@ public abstract class VectorDataSource/*<TGeometryAware>*/ : IVectorDataSource
 
     #endregion
 
-     
+
 
     public abstract FeatureSet<Point> Search(string searchText);
-     
+
 }
 
 //public static class ToDataTableDefaultMappings
