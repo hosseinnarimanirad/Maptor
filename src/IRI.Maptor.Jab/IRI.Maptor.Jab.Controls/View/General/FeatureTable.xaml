@@ -2,8 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:model="clr-namespace:IRI.Maptor.Jab.Common.Models;assembly=IRI.Maptor.Jab.Common"
-             xmlns:local ="clr-namespace:IRI.Maptor.Jab.Controls.Common.Behaviors"
-             xmlns:dgx="http://schemas.datagridExtensions.com/wpf"
+             xmlns:local ="clr-namespace:IRI.Maptor.Jab.Controls.Common.Behaviors" 
              x:Name="root">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -15,8 +14,8 @@
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
                             <Setter Property="Foreground" Value="White"/>
                             <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
-                            <Setter Property="Width" Value="30"/>
-                            <Setter Property="Height" Value="30"/>
+                            <Setter Property="Width" Value="24"/>
+                            <Setter Property="Height" Value="24"/>
                             <Setter Property="Cursor" Value="Hand"/>
                             <Setter Property="Template">
                                 <Setter.Value>
@@ -42,7 +41,6 @@
                             </Style.Triggers>
                         </Style>
                     </ToggleButton.Style>
-
                     <Path Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton, Mode=FindAncestor}}" Width="16" Height="16" FlowDirection="LeftToRight">
                         <Path.Style>
                             <Style TargetType="{x:Type Path}" >
@@ -61,20 +59,12 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type model:FeatureTableCommand}">
                 <Button VerticalAlignment="Center" Margin="4" Cursor="Hand" 
-               Command="{Binding Command}" IsEnabled="{Binding IsEnabled}" 
-               CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor} }" 
-               BorderThickness="0" Focusable="False" ToolTip="{Binding ToolTip}" Height="28" 
-               Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                           Command="{Binding Command}" IsEnabled="{Binding IsEnabled}"  Style="{x:Null}"
+                           CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor} }" 
+                           BorderThickness="0" Focusable="False" ToolTip="{Binding ToolTip}" Height="24" Width="24"
+                           Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
                     <Path Data="{Binding PathMarkup}" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform"  FlowDirection="LeftToRight"/>
-                </Button>
-                <!--<Button VerticalAlignment="Center" Margin="1" Cursor="Hand" Command="{Binding Command}" IsEnabled="{Binding IsEnabled}" 
-               BorderThickness="0" Focusable="False"  ToolTip="{Binding ToolTip}"
-               Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
-           <Path Data="{Binding PathMarkup}" Stretch="Uniform" Fill="White" Width="16" Height="16" FlowDirection="LeftToRight"/>
-       </Button>-->
-                <!--<Button Command="{Binding ZoomToCommand}" Cursor="Hand" BorderThickness="0" Height="28" Margin="4">
-           <Path Data="{StaticResource appbarMagnify}" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform" FlowDirection="LeftToRight"/>
-       </Button>-->
+                </Button> 
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -106,7 +96,7 @@
                        VerticalAlignment="Center" FontFamily="{StaticResource iranSans}"
                        DockPanel.Dock="Left" Margin="4">
                 <TextBlock.Text>
-                    <MultiBinding StringFormat="{}{1} از {0} عارضه">
+                    <MultiBinding StringFormat="{}{1} - {0}">
                         <Binding ElementName="grid" Path="ItemsSource.Count" Converter="{StaticResource latinDigitsToFarsiDigitsConverter}"/>
                         <Binding ElementName="grid" Path="SelectedItems.Count" Converter="{StaticResource latinDigitsToFarsiDigitsConverter}"/>
                         <!--Text="{Binding ElementName=grid, Path=ItemsSource.Count, Converter={StaticResource latinDigitsToFarsiDigitsConverter}, StringFormat={}{0} عارضه}"-->
@@ -116,15 +106,14 @@
             <!--<Button Command="{Binding ZoomToCommand}" Cursor="Hand" BorderThickness="0" Height="28" Margin="4">
                 <Path Data="{StaticResource appbarMagnify}" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform" FlowDirection="LeftToRight"/>
             </Button>-->
-            <Button Command="{Binding EditCommand}" Cursor="Hand" BorderThickness="0" Height="28" Margin="4" IsEnabled="{Binding IsSingleValueHighlighted}"
-                    Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
+            <Button Command="{Binding EditCommand}" Cursor="Hand" BorderThickness="0" Height="24" Margin="4" IsEnabled="{Binding IsSingleValueHighlighted}"
+                    Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}" Style="{x:Null}">
                 <Path Data="{StaticResource appbarEdit}" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform" FlowDirection="LeftToRight"/>
             </Button>
-            <Button Command="{Binding SaveCommand}" Cursor="Hand" BorderThickness="0" Height="28" Margin="4"
+            <Button Command="{Binding SaveCommand}" Cursor="Hand" BorderThickness="0" Height="24" Margin="4"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <Path Data="{StaticResource appbarSave}" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform" FlowDirection="LeftToRight"/>
             </Button>
-
             <ItemsControl ItemsSource="{Binding AssociatedLayer.FeatureTableCommands}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
