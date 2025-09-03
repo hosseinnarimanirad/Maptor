@@ -101,7 +101,7 @@ public class GeometryHelper
     }
 
 
-    internal static void Transform(Drawing.Graphics graphics, Geometry original, Point location, Drawing.Pen pen, Drawing.Brush brush)
+    internal static void TransformOld(Drawing.Graphics graphics, Geometry original, Point location, Drawing.Pen pen, Drawing.Brush brush)
     {
         var geometry = original.GetFlattenedPathGeometry();
 
@@ -136,6 +136,74 @@ public class GeometryHelper
             }
         }
 
+    }
+
+    internal static void Transform(Drawing.Graphics graphics, Geometry geometry, Point location, Drawing.Pen pen, Drawing.Brush brush)
+    {
+        using (Drawing.Drawing2D.GraphicsPath path = new Drawing.Drawing2D.GraphicsPath())
+        {
+            var figures = geometry.GetOutlinedPathGeometry().Figures;
+
+            foreach (var figure in figures)
+            {
+                System.Windows.Point start = figure.StartPoint;
+                var startPoint = new Drawing.PointF((float)(start.X + location.X), (float)(start.Y + location.Y));
+
+                path.StartFigure();
+                Drawing.PointF lastPoint = startPoint;
+
+                foreach (var segment in figure.Segments)
+                {
+                    if (segment is LineSegment line)
+                    {
+                        var end = new Drawing.PointF((float)(line.Point.X + location.X), (float)(line.Point.Y + location.Y));
+                        path.AddLine(lastPoint, end);
+                        lastPoint = end;
+                    }
+                    else if (segment is PolyLineSegment poly)
+                    {
+                        foreach (var p in poly.Points)
+                        {
+                            var next = new Drawing.PointF((float)(p.X + location.X), (float)(p.Y + location.Y));
+                            path.AddLine(lastPoint, next);
+                            lastPoint = next;
+                        }
+                    }
+                    else if (segment is BezierSegment bezier)
+                    {
+                        var p1 = new Drawing.PointF((float)(bezier.Point1.X + location.X), (float)(bezier.Point1.Y + location.Y));
+                        var p2 = new Drawing.PointF((float)(bezier.Point2.X + location.X), (float)(bezier.Point2.Y + location.Y));
+                        var p3 = new Drawing.PointF((float)(bezier.Point3.X + location.X), (float)(bezier.Point3.Y + location.Y));
+                        path.AddBezier(lastPoint, p1, p2, p3);
+                        lastPoint = p3;
+                    }
+                    else if (segment is PolyBezierSegment polyBezier)
+                    {
+                        for (int i = 0; i < polyBezier.Points.Count; i += 3)
+                        {
+                            var p1 = new Drawing.PointF((float)(polyBezier.Points[i].X + location.X), (float)(polyBezier.Points[i].Y + location.Y));
+                            var p2 = new Drawing.PointF((float)(polyBezier.Points[i + 1].X + location.X), (float)(polyBezier.Points[i + 1].Y + location.Y));
+                            var p3 = new Drawing.PointF((float)(polyBezier.Points[i + 2].X + location.X), (float)(polyBezier.Points[i + 2].Y + location.Y));
+                            path.AddBezier(lastPoint, p1, p2, p3);
+                            lastPoint = p3;
+                        }
+                    }
+                    else
+                    {
+                        throw new NotImplementedException($"Segment type {segment.GetType().Name} is not supported.");
+                    }
+                }
+
+                if (figure.IsClosed)
+                    path.CloseFigure();
+            }
+
+            // Fill and stroke
+            if (brush != null)
+                graphics.FillPath(brush, path);
+            if (pen != null)
+                graphics.DrawPath(pen, path);
+        }
     }
 
     internal static void Transform(WriteableBitmap context, Geometry original, Point location, int border, int fill)

@@ -59,6 +59,9 @@ public class GdiBitmapRenderStrategy : RenderStrategy
                 // filter features
                 var filteredFeatures = features.Where(symbolizer.IsFilterPassed).ToList();
 
+                if (filteredFeatures.IsNullOrEmpty())
+                    continue;
+
                 switch (symbolizer)
                 {
                     case SimplePointSymbolizer simplePointSymbolizer:

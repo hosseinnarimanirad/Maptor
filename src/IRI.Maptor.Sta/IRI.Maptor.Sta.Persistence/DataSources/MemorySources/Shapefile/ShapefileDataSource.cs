@@ -54,7 +54,7 @@ public class ShapefileDataSource : MemoryDataSource//<Feature<Point>>
 
         _targetSrs = targetSrs;
 
-        Func<Point, Point> transformFunc = null;
+        Func<Point, Point>? transformFunc = null;
 
         if (targetSrs != null)
         {
@@ -94,7 +94,7 @@ public class ShapefileDataSource : MemoryDataSource//<Feature<Point>>
 
         for (int i = 0; i < geometries.Count; i++)
         {
-            Geometry<Point> geometry = null;
+            Geometry<Point>? geometry = null;
 
             if (transformFunc == null)
             {
@@ -103,7 +103,7 @@ public class ShapefileDataSource : MemoryDataSource//<Feature<Point>>
             else
             {
                 //targetSrs should not be null in this case
-                geometry = geometries[i].AsGeometry()/*.MakeValid()*/.Transform(p => transformFunc(p), targetSrs!.Srid);
+                geometry = geometries[i].AsGeometry()/*.MakeValid()*/.Transform(transformFunc, targetSrs!.Srid);
             }
 
             var feature = map(geometry, attributes.Attributes[i]);

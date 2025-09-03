@@ -218,23 +218,6 @@ public class VectorLayer : SymbolizableLayer
 
         //this.PointSymbol = pointSymbol ?? new SimplePointSymbol() { SymbolWidth = 4, SymbolHeight = 4 };
 
-        //if (layerName == "مدار" || layerName == "تکه مسیر خط")
-        //{
-        //    var p1 = parameters.Clone();
-        //    var p2 = parameters.Clone();
-        //    var p3 = parameters.Clone();
-
-        //    p1.Stroke = Brushes.Purple; p1.StrokeThickness = 8;
-        //    p2.Stroke = Brushes.Red; p2.StrokeThickness = 5;
-        //    p3.Stroke = Brushes.Blue; p3.StrokeThickness = 2;
-
-        //    this.Symbolizers.Add(new SimpleSymbolizer(f => f.Attributes["denomi_vol"].ToString() == "400", p1));
-        //    this.Symbolizers.Add(new SimpleSymbolizer(f => f.Attributes["denomi_vol"].ToString() == "230", p2));
-        //    this.Symbolizers.Add(new SimpleSymbolizer(f => f.Attributes["denomi_vol"].ToString() == "63", p3));
-        //} 
-        //this.Symbolizers.Add(new SimpleSymbolizer(parameters));
-        
-        //this.Symbolizers.AddRange(symbolizers);
 
         foreach (var item in symbolizers)
         {

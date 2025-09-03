@@ -497,6 +497,9 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 
     public void Build(Sta.Ogc.SLD.Stroke stroke)
     {
+        if (stroke is null)
+            return;
+         
         var strokeValue = stroke.StrokeValue;
         var strokeThickness = stroke.StrokeThicknessValue;
         var strokeOpacity = stroke.StrokeOpacityValue;
@@ -519,7 +522,9 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 
     public void Build(Sta.Ogc.SLD.Fill fill)
     {
-
+        if (fill is null)
+            return;
+         
         var fillValue = fill.FillValue;
         var fillOpacity = fill.FillOpacityValue;
 
