@@ -7,7 +7,6 @@
              x:Name="root">
     <UserControl.Resources>
         <ResourceDictionary>
-
             <DataTemplate DataType="{x:Type model:FeatureTableToggleCommand}">
                 <ToggleButton VerticalAlignment="Center" Margin="2" Cursor="Hand" BorderThickness="0" Focusable="False" ToolTip="{Binding ToolTip}"
                        IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"
@@ -88,11 +87,11 @@
                                 ShowGroupPanel="False" IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
                              x:Name="grid" telerik:StyleManager.Theme="Office2019" SelectionMode="Extended" SelectionChanged="grid_SelectionChanged"
                                 RowEditEnded="grid_RowEditEnded" MouseDoubleClick="grid_MouseDoubleClick">-->
-        <DataGrid ItemsSource="{Binding Features}" AutoGenerateColumns="True" AutoGeneratingColumn="grid_AutoGeneratingColumn"
-                           IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
-                        x:Name="grid" SelectionMode="Extended" SelectionChanged="grid_SelectionChanged"
-                  local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True"
-                           CellEditEnding="grid_CellEditEnding" AddingNewItem="grid_AddingNewItem" MouseDoubleClick="grid_MouseDoubleClick">
+        <DataGrid ItemsSource="{Binding Features}" AutoGenerateColumns="False" AutoGeneratingColumn="grid_AutoGeneratingColumn"
+                    IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
+                    x:Name="grid" SelectionMode="Extended" SelectionChanged="grid_SelectionChanged"
+                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True"
+                    CellEditEnding="grid_CellEditEnding" AddingNewItem="grid_AddingNewItem" MouseDoubleClick="grid_MouseDoubleClick">
 
             <!--<i:Interaction.Behaviors>
                 <localTelerik:RadMultiSelectBehavior SelectedItems="{Binding HighlightedFeatures}"/>

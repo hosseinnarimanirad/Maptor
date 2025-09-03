@@ -1,14 +1,13 @@
-﻿using IRI.Maptor.Jab.Common.Models.Map;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using IRI.Maptor.Extensions;
-using Microsoft.VisualBasic.FileIO;
-using System;
+using System.Windows.Controls;
+using System.Collections.Generic;
+
+using IRI.Maptor.Extensions; 
+using IRI.Maptor.Jab.Common.Models.Map;
+using IRI.Maptor.Sta.Spatial.Primitives; 
 using IRI.Maptor.Jab.Common.Assets.Converters;
 
 namespace IRI.Maptor.Jab.Controls.Common.Behaviors;
@@ -36,6 +35,7 @@ public static class DataGridDictionaryBehavior
             if ((bool)e.NewValue)
             {
                 grid.AutoGenerateColumns = false; // We control columns
+                grid.Loaded -= Grid_Loaded;
                 grid.Loaded += Grid_Loaded;
             }
             else

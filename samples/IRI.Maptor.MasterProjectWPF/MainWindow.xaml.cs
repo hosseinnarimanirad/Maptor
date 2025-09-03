@@ -32,7 +32,8 @@ public partial class MainWindow : Window
     private void Button_Click(object sender, RoutedEventArgs e)
     {
         //TestSld(@"C:\Users\Hossein\Downloads\point_pointasgraphic.sld");
-        TestSld(@"C:\Users\Hossein\Downloads\point_attribute.sld");
+        //TestSld(@"C:\Users\Hossein\Downloads\point_attribute.sld");
+        TestSld(@"E:\Work\Barg\Sample SLD\barg\tower.sld");
 
 
 
