@@ -12,38 +12,23 @@ public struct DbfFieldDescriptor
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 11)]
     private string name;            //Field Name (ASCII)
 
-    public string Name
-    {
-        get { return name; }
-    }
+    public string Name => name;
 
     private char type;              //Field Type (ASCII): C, N, L, D, M, F, B, G, P, ...
 
-    public char Type
-    {
-        get { return type; }
-    }
+    public char Type => type;
 
     private Int32 dataAddress;     //Field Data Address
 
-    public Int32 DataAddress
-    {
-        get { return dataAddress; }
-    }
+    public Int32 DataAddress => dataAddress;
 
     private byte length;            //Field Length: depends on Field Type; Max = 255
 
-    public byte Length
-    {
-        get { return length; }
-    }
+    public byte Length => length;
 
     private byte decimalCount;      //Decimal Count: Numeric <= 15
 
-    public byte DecimalCount
-    {
-        get { return decimalCount; }
-    }
+    public byte DecimalCount => decimalCount;
 
     private Int16 reserved1;        //Reserved for Multi-user dBASE
 
@@ -100,6 +85,11 @@ public struct DbfFieldDescriptor
     public override string ToString()
     {
         return $"Name: {Name}; Type: {Type}; Length: {Length}";
+    }
+
+    public void UpdateName(string newName)
+    {
+        this.name = newName;
     }
 
 }

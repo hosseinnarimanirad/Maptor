@@ -6,21 +6,16 @@ using System.Text;
 using System.Linq;
 using IRI.Maptor.Sta.ShapefileFormat.Model;
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Helpers;
+using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.Dbf;
 
 public static class DbfFile
 {
+    internal static Encoding _currentEncoding = EncodingHelper.ArabicEncoding;
 
-    //private static Dictionary<char, Func<byte[], object>> _mapFunctions;
-
-    internal const int _arabicWindowsEncoding = 1252;
-
-    internal static Encoding _arabicEncoding = Encoding.GetEncoding(_arabicWindowsEncoding);
-
-    internal static Encoding _currentEncoding = Encoding.GetEncoding(_arabicWindowsEncoding);
-
-    internal static Encoding _fieldsEncoding = Encoding.GetEncoding(_arabicWindowsEncoding);
+    internal static Encoding _fieldsEncoding = EncodingHelper.ArabicEncoding;
 
     internal static bool _correctFarsiCharacters = true;
 
@@ -153,9 +148,7 @@ public static class DbfFile
         var cpgFile = Shapefile.GetCpgFileName(dbfFileName);
 
         if (!System.IO.File.Exists(cpgFile))
-        {
-            return null;
-        }
+            return EncodingHelper.ArabicEncoding;
 
         var encodingText = System.IO.File.ReadAllText(cpgFile);
 
@@ -166,12 +159,10 @@ public static class DbfFile
         else if (encodingText?.Contains("1256") == true)
         {
             //return Dbf.DbfFile._arabicEncoding;
-            return DbfFile._arabicEncoding;
+            return EncodingHelper.ArabicEncoding;
         }
         else
-        {
-            return null;
-        }
+            return EncodingHelper.ArabicEncoding;
     }
 
     //public static List<Dictionary<string, object>> Read(string dbfFileName, bool correctFarsiCharacters = true, Encoding dataEncoding = null, Encoding fieldHeaderEncoding = null)
@@ -181,7 +172,7 @@ public static class DbfFile
         Encoding dataEncoding = null,
         Encoding fieldHeaderEncoding = null)
     {
-        dataEncoding = dataEncoding ?? (TryDetectEncoding(dbfFileName) ?? Encoding.UTF8);
+        dataEncoding = dataEncoding ?? TryDetectEncoding(dbfFileName);
 
         ChangeEncoding(dataEncoding);
 
@@ -196,7 +187,7 @@ public static class DbfFile
         //    ChangeEncoding(dataEncoding);
         //}
 
-        DbfFile._fieldsEncoding = fieldHeaderEncoding ?? DbfFile._arabicEncoding;
+        DbfFile._fieldsEncoding = fieldHeaderEncoding ?? EncodingHelper.ArabicEncoding;
 
         DbfFile._correctFarsiCharacters = correctFarsiCharacters;
 
@@ -221,7 +212,8 @@ public static class DbfFile
             fields.Add(DbfFieldDescriptor.Parse(buffer, DbfFile._fieldsEncoding));
         }
 
-        fields = fields.Where(c => c.Length != 0).ToList();
+        //fields = fields.Where(c => c.Length != 0).ToList();
+        fields = EnsureFields(fields);
 
         var _mapFunctions = DbfFieldMappings.GetMappingFunctions(_currentEncoding, _correctFarsiCharacters);
 
@@ -276,7 +268,7 @@ public static class DbfFile
 
         ChangeEncoding(dataEncoding);
 
-        DbfFile._fieldsEncoding = fieldHeaderEncoding ?? _arabicEncoding;
+        DbfFile._fieldsEncoding = fieldHeaderEncoding ?? EncodingHelper.ArabicEncoding;
 
         DbfFile._correctFarsiCharacters = correctFarsiCharacters;
 
@@ -302,7 +294,9 @@ public static class DbfFile
             columns.Add(DbfFieldDescriptor.Parse(buffer, DbfFile._fieldsEncoding));
         }
 
-        columns = columns.Where(c => c.Length != 0).ToList();
+        //columns = columns.Where(c => c.Length != 0).ToList();
+        columns = EnsureFields(columns);
+
 
         var _mapFunctions = DbfFieldMappings.GetMappingFunctions(_currentEncoding, _correctFarsiCharacters);
 
@@ -743,7 +737,7 @@ public static class DbfFile
             if (item.Length == 0)
                 continue;
 
-            result.Columns.Add(item.Name, GetType(item));             
+            result.Columns.Add(item.Name, GetType(item));
         }
 
         return result;
@@ -815,7 +809,8 @@ public static class DbfFile
             columns.Add(DbfFieldDescriptor.Parse(buffer, DbfFile._fieldsEncoding));
         }
 
-        columns = columns.Where(c => c.Length != 0).ToList();
+        //columns = columns.Where(c => c.Length != 0).ToList();
+        columns = EnsureFields(columns);
 
         var mapFunctions = DbfFieldMappings.GetMappingFunctions(_currentEncoding, _correctFarsiCharacters);
 
@@ -912,4 +907,37 @@ public static class DbfFile
     }
 
     #endregion
+
+
+    /// <summary>
+    /// Ensure Unique Names and filter zero length fields
+    /// </summary>
+    /// <param name="fields"></param>
+    /// <param name="maxLength"></param>
+    /// <returns></returns>
+    private static List<DbfFieldDescriptor> EnsureFields(List<DbfFieldDescriptor> fields, int maxLength = 11)
+    {
+        return fields.Where(f => f.Length != 0)
+                        .GroupBy(f => f.Name)
+                        .Select(g => g.Select((f, index) =>
+                        {
+                            if (index == 0)
+                                return f;
+
+                            var oldName = f.Name ?? string.Empty;
+
+                            var suffix = $"_{index}";
+
+                            int baseLength = Math.Max(maxLength - suffix.Length, 1);
+
+                            var newName = oldName.Length > baseLength ? oldName[..baseLength] : oldName;
+
+                            f.UpdateName($"{newName}{suffix}");
+
+                            return f;
+                        }))
+                        .SelectMany(g => g.ToList())
+                        .ToList();
+    }
+
 }

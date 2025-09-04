@@ -208,7 +208,7 @@ public class EsriPrjFile
             var toWgs84Values = DatumNode.Children.SingleOrDefault(i => i.Name.EqualsIgnoreCase(_toWgs84))?.Values;
 
             var srid = GetEllipsoidSrid();
-             
+
             if (srid == 0)
             {
                 if (Type == EsriSrType.Geogcs && spheroidValues.First().ToUpper() == "WGS_1984")
@@ -297,7 +297,7 @@ public class EsriPrjFile
         var crsAuthorityNode = _rootNode.Children.SingleOrDefault(i => i.Name == _authority);
 
         var srid = GetSridFromAuthorityNode(crsAuthorityNode);
-         
+
         ////1399.06.13
         ////in the authority field was not available
         if (srid == 0)
@@ -433,66 +433,60 @@ public class EsriPrjFile
 
     public SrsBase AsMapProjection()
     {
-        switch (ProjectionType)
-        {
-            case SpatialReferenceType.None:
-                return new NoProjection(this.Title, this.Ellipsoid) { DatumName = this.GeogcsNode.Values?.First() };
+        SrsBase result =
+         ProjectionType switch
+         {
+             SpatialReferenceType.None =>
+                new NoProjection(this.Title, this.Ellipsoid),
 
-            case SpatialReferenceType.AlbersEqualAreaConic:
-            case SpatialReferenceType.AzimuthalEquidistant:
-                throw new NotImplementedException();
+             SpatialReferenceType.AlbersEqualAreaConic or
+             SpatialReferenceType.AzimuthalEquidistant =>
+                throw new NotImplementedException(),
 
-            case SpatialReferenceType.CylindricalEqualArea:
-                return new CylindricalEqualArea(this.Title, this.Ellipsoid, Srid) { DatumName = this.GeogcsNode.Values?.First() };
+             SpatialReferenceType.CylindricalEqualArea =>
+                new CylindricalEqualArea(this.Title, this.Ellipsoid, Srid),
 
-            case SpatialReferenceType.LambertConformalConic:
-                return new LambertConformalConic2P(
-                    this.Ellipsoid,
-                    GetParameter(EsriPrjParameterType.StandardParallel_1, double.NaN),
-                    GetParameter(EsriPrjParameterType.StandardParallel_2, double.NaN),
-                    GetParameter(EsriPrjParameterType.CentralMeridian, 0),
-                    GetParameter(EsriPrjParameterType.LatitudeOfOrigin, 0),
-                    GetParameter(EsriPrjParameterType.FalseEasting, 0),
-                    GetParameter(EsriPrjParameterType.FalseNorthing, 0),
-                    GetParameter(EsriPrjParameterType.ScaleFactor, 1),
-                    Srid)
-                {
-                    Title = this.Title,
-                    DatumName = this.GeogcsNode.Values?.First()
-                };
+             SpatialReferenceType.LambertConformalConic =>
+                new LambertConformalConic2P(
+                   this.Ellipsoid,
+                   GetParameter(EsriPrjParameterType.StandardParallel_1, double.NaN),
+                   GetParameter(EsriPrjParameterType.StandardParallel_2, double.NaN),
+                   GetParameter(EsriPrjParameterType.CentralMeridian, 0),
+                   GetParameter(EsriPrjParameterType.LatitudeOfOrigin, 0),
+                   GetParameter(EsriPrjParameterType.FalseEasting, 0),
+                   GetParameter(EsriPrjParameterType.FalseNorthing, 0),
+                   GetParameter(EsriPrjParameterType.ScaleFactor, 1),
+                   Srid),
 
-            case SpatialReferenceType.Mercator:
-                return new Mercator(this.Ellipsoid, Srid)
-                {
-                    Title = this.Title,
-                    DatumName = this.GeogcsNode.Values?.First()
-                };
+             SpatialReferenceType.Mercator =>
+                new Mercator(this.Ellipsoid, Srid),
 
-            case SpatialReferenceType.TransverseMercator:
-            case SpatialReferenceType.UTM:
-                return new TransverseMercator(
-                    this.Ellipsoid,
-                    GetParameter(EsriPrjParameterType.CentralMeridian, 0),
-                    GetParameter(EsriPrjParameterType.LatitudeOfOrigin, 0),
-                    GetParameter(EsriPrjParameterType.FalseEasting, 0),
-                    GetParameter(EsriPrjParameterType.FalseNorthing, 0),
-                    GetParameter(EsriPrjParameterType.ScaleFactor, 1),
-                    Srid)
-                {
-                    Title = this.Title,
-                    DatumName = this.GeogcsNode.Values?.First()
-                };
+             SpatialReferenceType.TransverseMercator =>
+                new TransverseMercator(
+                   this.Ellipsoid,
+                   GetParameter(EsriPrjParameterType.CentralMeridian, 0),
+                   GetParameter(EsriPrjParameterType.LatitudeOfOrigin, 0),
+                   GetParameter(EsriPrjParameterType.FalseEasting, 0),
+                   GetParameter(EsriPrjParameterType.FalseNorthing, 0),
+                   GetParameter(EsriPrjParameterType.ScaleFactor, 1),
+                   Srid),
 
-            case SpatialReferenceType.WebMercator:
-                return new WebMercator()
-                {
-                    Title = this.Title,
-                    DatumName = this.GeogcsNode.Values?.First()
-                };
+             SpatialReferenceType.UTM =>
+                new UTM(this.Ellipsoid,
+                               GetParameter(EsriPrjParameterType.CentralMeridian, 0)),
 
-            default:
-                throw new NotImplementedException();
-        }
+             SpatialReferenceType.WebMercator =>
+                new WebMercator(),
+
+             SpatialReferenceType.Geodetic => throw new NotImplementedException(),
+             _ =>
+                 throw new NotImplementedException()
+         };
+
+        result.Title = this.Title;
+        result.DatumName = this.GeogcsNode.Values?.FirstOrDefault();
+
+        return result;
     }
 
     public string AsEsriCrsWkt()
