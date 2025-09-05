@@ -998,9 +998,9 @@ public partial class MapViewer : NotifiableUserControl
     //    this._layerManager.Add(layer);
     //}
 
-    public void UnSetTileService(string providerFullName/*, TileType type*/)
+    public void UnSetTileService(string providerFullName)
     {
-        this._layerManager.RemoveTile(providerFullName, /*type, */forceRemove: true);
+        this._layerManager.RemoveTile(providerFullName, forceRemove: true);
     }
 
     public void UnSetTileServices(int groupId = 1)
@@ -1601,7 +1601,7 @@ public partial class MapViewer : NotifiableUserControl
 
         return geometry;
     }
-
+     
 
     private void AddSpecialLineLayer(SpecialLineLayer layer, Action mouseDown = null)
     {
@@ -1693,13 +1693,17 @@ public partial class MapViewer : NotifiableUserControl
 
             var webMercatorExtent = geoImage.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
 
-            Point topLeft = webMercatorExtent.TopLeft.AsWpfPoint();
 
-            Point bottomRigth = webMercatorExtent.BottomRight.AsWpfPoint();
+            var area = ParseToRectangleGeometry(webMercatorExtent);
 
-            RectangleGeometry geometry = new RectangleGeometry(new Rect(topLeft, bottomRigth), 0, 0);
 
-            geometry.Transform = viewTransform;
+            //Point topLeft = webMercatorExtent.TopLeft.AsWpfPoint();
+
+            //Point bottomRigth = webMercatorExtent.BottomRight.AsWpfPoint();
+
+            //RectangleGeometry geometry = new RectangleGeometry(new Rect(topLeft, bottomRigth), 0, 0);
+
+            //geometry.Transform = viewTransform;
 
             ImageBrush fill;
 
@@ -1716,7 +1720,11 @@ public partial class MapViewer : NotifiableUserControl
             Path path = new Path()
             {
                 Fill = fill,
-                Data = geometry,
+                //Data = geometry,
+                Data = area,
+                StrokeThickness = 1,
+                Stroke = Brushes.Gray,
+                StrokeDashArray = [2, 3],
                 Tag = new LayerTag(this.MapScale) { Layer = layer, Tile = tile },
             };
 
@@ -1792,7 +1800,7 @@ public partial class MapViewer : NotifiableUserControl
                     }
                     else if (item is TileServiceLayer tileServiceLayer)
                     {
-                        await AddTileServiceLayerAsync(/*item as TileServiceLayer*/ tileServiceLayer, tile);
+                        await AddTileServiceLayerAsync(tileServiceLayer, tile);
                     }
                     //else if (item is FeatureLayer)
                     //{
@@ -1979,7 +1987,7 @@ public partial class MapViewer : NotifiableUserControl
         {
             element.RenderTransformOrigin = new Point(0, 0);
         }
-         
+
         var scaleTransform = ((TransformGroup)(element.RenderTransform)).Children.First();
 
         ((TransformGroup)(element.RenderTransform)).Children.Clear();

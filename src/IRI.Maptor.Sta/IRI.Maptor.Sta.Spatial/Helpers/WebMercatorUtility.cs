@@ -35,8 +35,8 @@ public static class WebMercatorUtility
 
     static WebMercatorUtility()
     {
-        //MaxAllowableLatitude = 85.05112877822864;
-        MaxAllowableLatitude = 85.0;
+        MaxAllowableLatitude = 85.05112877822864;
+        //MaxAllowableLatitude = 85.0;
 
         MaxIsometricLatitude = MapProjects.GeodeticLatitudeToIsometricLatitude(MaxAllowableLatitude, _firstEccentricity);
 
@@ -379,6 +379,10 @@ public static class WebMercatorUtility
         {
             tempLongitude -= 180;
         }
+        else if (tempLongitude < -180)
+        {
+            tempLongitude += 360;
+        }
         else
         {
             tempLongitude += 180;
@@ -390,6 +394,8 @@ public static class WebMercatorUtility
         var xUnit = 360.0 / numberOfImages;
 
         var yUnit = (MaxIsometricLatitude - MinIsometricLatitude) / numberOfImages;
+
+        //yUnit = xUnit;
 
         var columnNumber = Math.Floor(tempLongitude / xUnit);
 
@@ -411,9 +417,12 @@ public static class WebMercatorUtility
 
     public static List<TileInfo> GeodeticBoundingBoxToGoogleTileRegions(BoundingBox geodeticBoundingBox, int zoomLevel)
     {
-        var lowerLeft = LatLonToImageNumber(geodeticBoundingBox.BottomRight.Y, geodeticBoundingBox.TopLeft.X, zoomLevel);
+        var maxX = Math.Min(180, geodeticBoundingBox.BottomRight.X);
+        var minX = Math.Max(-180, geodeticBoundingBox.TopLeft.X);
 
-        var upperRight = LatLonToImageNumber(geodeticBoundingBox.TopLeft.Y, geodeticBoundingBox.BottomRight.X, zoomLevel);
+        var lowerLeft = LatLonToImageNumber(geodeticBoundingBox.BottomRight.Y, minX, zoomLevel);
+
+        var upperRight = LatLonToImageNumber(geodeticBoundingBox.TopLeft.Y, maxX, zoomLevel);
 
         var result = new List<TileInfo>();
 
@@ -430,7 +439,10 @@ public static class WebMercatorUtility
 
     public static List<TileInfo> WebMercatorBoundingBoxToGoogleTileRegions(BoundingBox webMercatorBoundingBox, int zoomLevel)
     {
-        var geographicBoundingBox = webMercatorBoundingBox.Transform(i => MapProjects.WebMercatorToGeodeticWgs84(i));
+        var geographicBoundingBox = webMercatorBoundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84);
+
+        if (geographicBoundingBox.Width > 270)
+            geographicBoundingBox = new BoundingBox(-180, geographicBoundingBox.YMin, 180, geographicBoundingBox.YMax);
 
         return GeodeticBoundingBoxToGoogleTileRegions(geographicBoundingBox, zoomLevel);
     }

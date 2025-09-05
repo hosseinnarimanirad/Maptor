@@ -70,7 +70,7 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
         string? labelColumnName = null,
         Func<Point, Point> onTheFlyProj = null,
         List<GdbCodedValueDomain>? domains = null,
-        List<GdbItemColumnInfo>? columns = null)
+        List<GdbItemColumnInfo>? columns = null) : base(new List<Field>())
     {
         this._mdbFileName = mdbFileName;
 
@@ -425,5 +425,5 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
     public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
     {
         throw new NotImplementedException();
-    } 
+    }
 }
