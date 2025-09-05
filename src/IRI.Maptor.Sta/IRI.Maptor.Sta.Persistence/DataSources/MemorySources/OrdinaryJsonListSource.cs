@@ -10,14 +10,14 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
-public class OrdinaryJsonListSource/*<TGeometryAware>*/ : MemoryDataSource//<TGeometryAware> where TGeometryAware : class, IGeometryAware<Point>
+public class OrdinaryJsonListSource : MemoryDataSource
 {
     public override GeometryType? GeometryType
     {
         get; protected set;
     }
 
-    private OrdinaryJsonListSource(List<Feature<Point>> features/*, Func<TGeometryAware, Feature<Point>> mapToFeatureFunc, Func<TGeometryAware, string>? labelFunc = null*/)
+    private OrdinaryJsonListSource(List<Feature<Point>> features)
         : base(features)
     {
         //_labelFunc = labelFunc;
@@ -38,28 +38,22 @@ public class OrdinaryJsonListSource/*<TGeometryAware>*/ : MemoryDataSource//<TGe
         return $"OrdinaryJsonListSource";
     }
 
-    public static OrdinaryJsonListSource/*<TGeometryAware>*/ CreateFromJsonString<TGeometryAware>(
+    public static OrdinaryJsonListSource CreateFromJsonString<TGeometryAware>(
         string jsonString,
-        Func<TGeometryAware, Feature<Point>> mapToFeatureFunc/*, */
-        /*Func<TGeometryAware, string> labelFunc = null*/) where TGeometryAware : class, IGeometryAware<Point>
+        Func<TGeometryAware, Feature<Point>> mapToFeatureFunc) where TGeometryAware : class, IGeometryAware<Point>
     {
         var values = JsonHelper.Deserialize<List<TGeometryAware>>(jsonString);
 
-        return new OrdinaryJsonListSource(values.Select(v => mapToFeatureFunc(v)).ToList());//, mapToFeatureFunc, labelFunc);
+        return new OrdinaryJsonListSource(values.Select(v => mapToFeatureFunc(v)).ToList()); 
     }
 
-    public static OrdinaryJsonListSource/*<TGeometryAware>*/ CreateFromFile<TGeometryAware>(
-        string fileName, 
-        Func<TGeometryAware, Feature<Point>> mapToFeatureFunc
-        /*, Func<TGeometryAware, string> labelFunc = null*/) where TGeometryAware : class, IGeometryAware<Point>
+    public static OrdinaryJsonListSource CreateFromFile<TGeometryAware>(
+        string fileName,
+        Func<TGeometryAware, Feature<Point>> mapToFeatureFunc) where TGeometryAware : class, IGeometryAware<Point>
     {
         var jsonString = System.IO.File.ReadAllText(fileName);
 
-        return CreateFromJsonString(jsonString, mapToFeatureFunc/*, labelFunc*/);
+        return CreateFromJsonString(jsonString, mapToFeatureFunc);
     }
-
-    //public static GeoJsonSource<SqlFeature> Create(List<SqlFeature> features)
-    //{
-    //    return new GeoJsonSource<SqlFeature>(features, f => f);
-    //}
+     
 }

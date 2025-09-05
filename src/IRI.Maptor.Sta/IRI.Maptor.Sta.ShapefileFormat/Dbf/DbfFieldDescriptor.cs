@@ -1,8 +1,10 @@
-﻿using System;
+﻿using IRI.Maptor.Sta.Common.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Xml.Linq;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.Dbf;
 
@@ -92,4 +94,14 @@ public struct DbfFieldDescriptor
         this.name = newName;
     }
 
+
+    public Field AsField() => new Field()
+    {
+        Alias = this.Name,
+        Name = this.Name,
+        Length = this.Length,
+        Precision = this.DecimalCount,
+        Scale = this.Length,
+        Type = DbfFile.GetType(this).ToString()
+    };
 }

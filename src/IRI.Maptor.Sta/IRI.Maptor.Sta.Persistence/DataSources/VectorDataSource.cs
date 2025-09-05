@@ -7,11 +7,8 @@ using IRI.Maptor.Sta.Persistence.Abstractions;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
-public abstract class VectorDataSource/*<TGeometryAware>*/ : IVectorDataSource
-//where TGeometryAware : class, IGeometryAware<Point>
+public abstract class VectorDataSource : IVectorDataSource
 {
-    //protected abstract Feature<Point> ToFeatureMappingFunc(TGeometryAware geometryAware);
-
     public virtual BoundingBox WebMercatorExtent { get; protected set; }
 
     public abstract int Srid { get; protected set; }
@@ -20,6 +17,10 @@ public abstract class VectorDataSource/*<TGeometryAware>*/ : IVectorDataSource
 
     public List<Field> Fields { get; set; } = new List<Field>();
 
+    public VectorDataSource(List<Field> fields)
+    {
+        this.Fields = fields;
+    }
 
     #region Get as FeatureSet
 

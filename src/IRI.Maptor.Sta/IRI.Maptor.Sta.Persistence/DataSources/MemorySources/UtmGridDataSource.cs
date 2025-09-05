@@ -10,8 +10,10 @@ using IRI.Maptor.Extensions;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
-public class UtmGridDataSource : VectorDataSource/*<UtmSheet>*/
+public class UtmGridDataSource : VectorDataSource
 {
+    private readonly static List<Field> _fields = new List<Field>();
+
     public int UtmZone { get; set; }
 
     public UtmIndexType Type { get; protected set; }
@@ -32,7 +34,26 @@ public class UtmGridDataSource : VectorDataSource/*<UtmSheet>*/
         protected set => _ = value;
     }
 
-    private UtmGridDataSource()
+    static UtmGridDataSource()
+    {
+        _fields =
+        [
+            new() {IsNullable=false, Name=nameof(UtmSheet.Id), Length=0, Type="int"},
+            new() {IsNullable=false, Name=nameof(UtmSheet.SheetName), Length=0, Type="string"},
+            new() {IsNullable=false, Name=nameof(UtmSheet.UtmZone), Length=0, Type="int"},
+            new() {IsNullable=false, Name=nameof(UtmSheet.Type), Length=0, Type="int"},
+            new() {IsNullable=false, Name=nameof(UtmSheet.Row), Length=0, Type="int"},
+            new() {IsNullable=false, Name=nameof(UtmSheet.Column), Length=0, Type="int"},
+        ];
+    }
+    //    {nameof(geometryAware.Id), geometryAware.Id},
+    //    {nameof(geometryAware.SheetName), geometryAware.SheetName},
+    //    { nameof(geometryAware.UtmZone), geometryAware.UtmZone},
+    //    { nameof(geometryAware.Type), geometryAware.Type},
+    //    { nameof(geometryAware.Row), geometryAware.Row},
+    //    { nameof(geometryAware.Column), geometryAware.Column},
+
+    private UtmGridDataSource() : base(_fields)
     {
         GeodeticWgs84Extent = BoundingBoxes.GeodeticWgs84_Iran;
     }
@@ -41,7 +62,7 @@ public class UtmGridDataSource : VectorDataSource/*<UtmSheet>*/
     {
         return $"UtmGridDataSource {Type.GetName()}";
     }
-      
+
 
     // Get as FeatureSet of Point
     public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
@@ -92,6 +113,8 @@ public class UtmGridDataSource : VectorDataSource/*<UtmSheet>*/
                                 }
         };
     }
+
+
 
     public static UtmGridDataSource Create(UtmIndexType indexType, int utmZone)
     {

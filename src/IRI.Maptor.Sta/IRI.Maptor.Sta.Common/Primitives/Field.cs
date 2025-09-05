@@ -49,4 +49,25 @@ public class Field
 
         return fields;
     }
+
+    public static List<Field> FromDictionary(Dictionary<string, object>? dict)
+    {
+        var fields = new List<Field>();
+
+        if (dict is null)
+            return fields;
+
+        foreach (var kvp in dict)
+        {
+            fields.Add(new Field
+            {
+                Name = kvp.Key,
+                Alias = kvp.Key,
+                Type = kvp.Value?.GetType().Name ?? "object",
+                IsNullable = kvp.Value == null
+            });
+        }
+
+        return fields;
+    }
 }

@@ -145,7 +145,7 @@ public class SelectedLayer/*<TGeometryAware> */: Notifier/*, ISelectedLayer *//*
     {
         //var itemValue = item as Feature<Point>;
 
-        var dataSource = (this?.AssociatedLayer as VectorLayer)?.DataSource as IEditableVectorDataSource/*<TGeometryAware, Point>*/;
+        var dataSource = (this?.AssociatedLayer as VectorLayer)?.DataSource as IEditableVectorDataSource;
 
         //dataSource.UpdateFeature(itemValue);
         dataSource.Update(item);
@@ -164,7 +164,7 @@ public class SelectedLayer/*<TGeometryAware> */: Notifier/*, ISelectedLayer *//*
 
     public void SaveChanges()
     {
-        ((AssociatedLayer as VectorLayer).DataSource as IEditableVectorDataSource/*<TGeometryAware, Point>*/).SaveChanges();
+        ((AssociatedLayer as VectorLayer).DataSource as IEditableVectorDataSource).SaveChanges();
     }
 
 

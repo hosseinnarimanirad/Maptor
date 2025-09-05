@@ -1691,7 +1691,7 @@ public partial class MapViewer : NotifiableUserControl
                  (this._presenter != null && !layer.HasTheSameMapProvider(this._presenter.SelectedMapProvider)))
                 return;
 
-            var webMercatorExtent = geoImage.GeodeticWgs84BoundingBox.Transform(i => MapProjects.GeodeticWgs84ToWebMercator(i));
+            var webMercatorExtent = geoImage.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
 
             Point topLeft = webMercatorExtent.TopLeft.AsWpfPoint();
 

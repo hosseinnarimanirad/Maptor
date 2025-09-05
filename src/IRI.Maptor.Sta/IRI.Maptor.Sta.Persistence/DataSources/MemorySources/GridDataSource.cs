@@ -10,8 +10,10 @@ using IRI.Maptor.Extensions;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
-public class GridDataSource : VectorDataSource/*<GeodeticSheet>*/
+public class GridDataSource : VectorDataSource
 {
+    private readonly static List<Field> _fields = new List<Field>();
+
     public GeodeticIndexType Type { get; protected set; }
 
     public BoundingBox GeodeticWgs84Extent { get; set; }
@@ -30,11 +32,26 @@ public class GridDataSource : VectorDataSource/*<GeodeticSheet>*/
         protected set => _ = value;
     }
 
-    private GridDataSource()
+    private GridDataSource() : base(_fields)
     {
         GeodeticWgs84Extent = BoundingBoxes.GeodeticWgs84_Iran;
     }
 
+    static GridDataSource()
+    {
+        _fields =
+        [
+            new() {IsNullable=false, Name=nameof(GeodeticSheet.Id), Length=0, Type="int"},
+            new() {IsNullable=false, Name=nameof(GeodeticSheet.SheetName), Length=0, Type="string"},
+            new() {IsNullable=false, Name=nameof(GeodeticSheet.SubTitle), Length=0, Type="string"},
+            new() {IsNullable=false, Name=nameof(GeodeticSheet.Type), Length=0, Type="int"},
+            new() {IsNullable=false, Name="Min Longitude", Length=0, Type="int"},
+            new() {IsNullable=false, Name="Max Longitude", Length=0, Type="int"},
+            new() {IsNullable=false, Name="Min Latitude", Length=0, Type="int"},
+            new() {IsNullable=false, Name="Max Latitude", Length=0, Type="int"},
+        ];
+    }
+ 
     public override string ToString()
     {
         return $"GridDataSource {Type.GetName()}";

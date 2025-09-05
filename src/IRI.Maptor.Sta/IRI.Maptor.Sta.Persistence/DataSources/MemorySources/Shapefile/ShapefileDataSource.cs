@@ -17,7 +17,7 @@ using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
-public class ShapefileDataSource : MemoryDataSource//<Feature<Point>>
+public class ShapefileDataSource : MemoryDataSource
 {
     string _shapefileName;
 
@@ -32,16 +32,16 @@ public class ShapefileDataSource : MemoryDataSource//<Feature<Point>>
     //ObjectToDfbFields<T> _fields;
     List<ObjectToDbfTypeMap<Feature<Point>>> _fields;
 
-    protected ShapefileDataSource()
-    {
-    }
+    //protected ShapefileDataSource()
+    //{
+    //}
 
     internal ShapefileDataSource(string shapefileName,
                                 IEsriShapeCollection geometries,
                                 EsriAttributeDictionary attributes,
                                 Func<Geometry<Point>, Dictionary<string, object>, Feature<Point>> map,
                                 Func<Feature<Point>, List<object>> inverseAttributeMap,
-                                SrsBase targetSrs)
+                                SrsBase targetSrs) 
     {
         if (attributes == null)
         {
@@ -79,18 +79,10 @@ public class ShapefileDataSource : MemoryDataSource//<Feature<Point>>
 
         for (int i = 0; i < attributes.Fields.Count; i++)
         {
-            _fields.Add(new ObjectToDbfTypeMap<Feature<Point>>(attributes.Fields[i], t => inverseAttributeMap(t)[i]));
-
-            this.Fields.Add(new Field()
-            {
-                Alias = attributes.Fields[i].Name,
-                Name = attributes.Fields[i].Name,
-                Length = attributes.Fields[i].Length,
-                Precision = attributes.Fields[i].DecimalCount,
-                Scale = attributes.Fields[i].Length,
-                Type = DbfFile.GetType(attributes.Fields[i]).ToString()
-            });
+            _fields.Add(new ObjectToDbfTypeMap<Feature<Point>>(attributes.Fields[i], t => inverseAttributeMap(t)[i])); 
         }
+
+        this.Fields = attributes.Fields.Select(f => f.AsField()).ToList();
 
 
         if (geometries?.Count != attributes.Attributes?.Count)

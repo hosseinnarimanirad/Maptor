@@ -14,28 +14,26 @@ using System.Threading.Tasks;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
-public class MemoryDataSource/*<TGeometryAware>*/ : VectorDataSource/*<TGeometryAware>*/, IEditableVectorDataSource/*<TGeometryAware, Point>*/
-//where TGeometryAware : class, IGeometryAware<Point>
-//where TPoint : IPoint, new()
+public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 {
     protected FeatureSet<Point> _features;
-     
+
     private int _uniqueId = 0;
-     
+
     public override int Srid { get => GetSrid(); protected set => _ = value; }
 
-    public MemoryDataSource()
+    public MemoryDataSource() : base(new List<Field>())
     {
     }
 
-    public MemoryDataSource(List<Geometry<Point>> geometries)
+    public MemoryDataSource(List<Geometry<Point>> geometries) : base(new List<Field>())
     {
         var features = geometries.Select(g => new Feature<Point>(g) { Id = GetNewId() }).ToList();
 
         Initialize(features);
     }
 
-    public MemoryDataSource(List<Feature<Point>> features)
+    public MemoryDataSource(List<Feature<Point>> features) : base(new List<Field>())
     {
         Initialize(features);
     }
@@ -46,12 +44,14 @@ public class MemoryDataSource/*<TGeometryAware>*/ : VectorDataSource/*<TGeometry
             item.Id = GetNewId();
 
         _features = FeatureSet<Point>.Create(string.Empty, features);
-        
+
         GeometryType = features.First().TheGeometry.Type;
+
+        this.Fields = Field.FromDictionary(features?.FirstOrDefault().Attributes);
 
         UpdateExtent();
     }
-     
+
 
     // todo: remove this method
     public int GetSrid()
@@ -72,9 +72,9 @@ public class MemoryDataSource/*<TGeometryAware>*/ : VectorDataSource/*<TGeometry
 
     protected void UpdateExtent()
     {
-        WebMercatorExtent = _features.Extent; 
+        WebMercatorExtent = _features.Extent;
     }
-     
+
     // Get as FeatureSet of Point
     public override FeatureSet<Point> GetAsFeatureSet(Geometry<Point>? geometry)
     {
@@ -89,7 +89,7 @@ public class MemoryDataSource/*<TGeometryAware>*/ : VectorDataSource/*<TGeometry
             //var result = new FeatureSet<Point>(_features.Features.Where(f => f.TheGeometry.Intersects(geometry)).ToList());
 
             //result.Fields = this._features.Fields;
-        } 
+        }
     }
 
     public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
@@ -183,7 +183,7 @@ public class MemoryDataSource/*<TGeometryAware>*/ : VectorDataSource/*<TGeometry
         ////}
 
         //_features[index] = newGeometry;
-        
+
         _features.Update(newGeometry);
 
         UpdateExtent();
