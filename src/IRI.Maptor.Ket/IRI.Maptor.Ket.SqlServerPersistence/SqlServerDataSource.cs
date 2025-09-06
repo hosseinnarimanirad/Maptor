@@ -54,12 +54,12 @@ public class SqlServerDataSource : VectorDataSource/*<Feature<Point>>*/, IEditab
 
     public override int Srid { get => GetSrid(); protected set => _ = value; }
 
-    protected SqlServerDataSource()
+    protected SqlServerDataSource() : base(new List<Field>())
     {
 
     }
 
-    public SqlServerDataSource(string connectionString, string tableName, string? spatialColumnName = null, string? labelColumnName = null)
+    public SqlServerDataSource(string connectionString, string tableName, string? spatialColumnName = null, string? labelColumnName = null) : base(new List<Field>())
     {
         this._connectionString = connectionString;
 

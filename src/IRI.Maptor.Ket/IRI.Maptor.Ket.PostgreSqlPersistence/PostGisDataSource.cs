@@ -35,7 +35,7 @@ public class PostGisDataSource : VectorDataSource/*<Feature<Point>>*/
     {
     }
 
-    public PostGisDataSource(string connectionString, string tableName, string spatialColumnName, string schema = "public")
+    public PostGisDataSource(string connectionString, string tableName, string spatialColumnName, string schema = "public") : base(new List<Field>())
     {
         this._connectionString = connectionString;
         //string.Format("Server={0}; UID={1}; PWD={2}; Database={3}; Port={4}", server, user, password, database, port);
