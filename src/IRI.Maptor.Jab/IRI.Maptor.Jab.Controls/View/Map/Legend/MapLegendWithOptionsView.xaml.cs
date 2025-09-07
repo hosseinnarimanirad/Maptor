@@ -3,28 +3,25 @@ using System.Windows.Data;
 using System.Windows.Controls;
 
 using IRI.Maptor.Jab.Common;
+using System.Collections.ObjectModel;
 
 namespace IRI.Maptor.Jab.Controls.View;
 
 /// <summary>
 /// Interaction logic for MapLegendWithOptions.xaml
 /// </summary>
-public partial class MapLegendWithOptionsView : UserControl
+public partial class MapLegendWithOptionsView : NotifiableUserControl
 {
     public MapLegendWithOptionsView()
     {
         InitializeComponent();
     }
 
-
-
     public string GroupName
     {
         get { return (string)GetValue(GroupNameProperty); }
         set { SetValue(GroupNameProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for GroupName.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty GroupNameProperty =
         DependencyProperty.Register(nameof(GroupName), typeof(string), typeof(MapLegendWithOptionsView), new PropertyMetadata("A"));
 
@@ -34,8 +31,6 @@ public partial class MapLegendWithOptionsView : UserControl
         get { return (bool)GetValue(EnableFilterModeProperty); }
         set { SetValue(EnableFilterModeProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for EnableFilterMode.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty EnableFilterModeProperty =
         DependencyProperty.Register(nameof(EnableFilterMode), typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
 
@@ -45,8 +40,6 @@ public partial class MapLegendWithOptionsView : UserControl
         get { return (bool)GetValue(ShowVectorLayersProperty); }
         set { SetValue(ShowVectorLayersProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for ShowVectorLayers.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowVectorLayersProperty =
         DependencyProperty.Register(nameof(ShowVectorLayers), typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
 
@@ -57,11 +50,8 @@ public partial class MapLegendWithOptionsView : UserControl
         get { return (bool)GetValue(ShowRasterLayersProperty); }
         set { SetValue(ShowRasterLayersProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for ShowRasterLayers.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowRasterLayersProperty =
         DependencyProperty.Register(nameof(ShowRasterLayers), typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
-
 
 
     public double TitleFontSize
@@ -69,10 +59,35 @@ public partial class MapLegendWithOptionsView : UserControl
         get { return (double)GetValue(TitleFontSizeProperty); }
         set { SetValue(TitleFontSizeProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for FontSize.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty TitleFontSizeProperty =
         DependencyProperty.Register(nameof(TitleFontSize), typeof(double), typeof(MapLegendWithOptionsView), new PropertyMetadata(13.0));
+
+
+    public bool ShowTools
+    {
+        get { return (bool)GetValue(ShowToolsProperty); }
+        set
+        {
+            SetValue(ShowToolsProperty, value);
+            RaisePropertyChanged(nameof(ShowTools));
+        }
+    }
+
+    // Using a DependencyProperty as the backing store for ShowTools.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ShowToolsProperty =
+        DependencyProperty.Register(nameof(ShowTools), typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
+
+
+
+    public ObservableCollection<ILayer> Layers
+    {
+        get { return (ObservableCollection<ILayer>)GetValue(LayersProperty); }
+        set { SetValue(LayersProperty, value); }
+    } 
+    public static readonly DependencyProperty LayersProperty =
+        DependencyProperty.Register("Layers", typeof(ObservableCollection<ILayer>), typeof(MapLegendWithOptionsView), new PropertyMetadata(null));
+
+
 
     private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
     {
