@@ -1,0 +1,46 @@
+﻿<Window x:Class="IRI.Maptor.Tag.SampleWpfApp.LegendSamples.DrawingLegendWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"  
+        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.View;assembly=IRI.Maptor.Jab.Controls" 
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
+        Loaded="Window_Loaded" Title="Sample Maptor App" Height="700" Width="900">
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource flatButtonPrimary}">
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1" Margin="2">
+            <StackPanel Orientation="Horizontal" >
+                <StackPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource flatButtonPrimary}">
+                        <Setter Property="Margin" Value="4"/>
+                    </Style>
+                </StackPanel.Resources>
+                <Button Content="DrawPoint" Command="{Binding DrawPointCommand}"/>
+                <Button Content="DrawPolyline" Command="{Binding DrawPolylineCommand}"/>
+                <Button Content="DrawPolygon" Command="{Binding DrawPolygonCommand}"/>
+                <Button Content="AddTextToMap" Command="{Binding AddTextToMapCommand}"/>
+            </StackPanel>
+        </Border>
+
+        <Expander Header="Drawing Legend" IsExpanded="True" Margin="0,1,0,0" Cursor="Hand" Grid.RowSpan="2">
+            <maptor:MapDrawingLegendView MinHeight="90"/>
+        </Expander>
+
+        <maptor:MapViewer Grid.Row="1" Grid.Column="1" x:Name="map" BorderBrush="Black" BorderThickness="1"/>
+        <maptor:MapInfoView Grid.Row="1" Grid.Column="1" DataContext="{Binding }"/>
+
+    </Grid>
+</Window>

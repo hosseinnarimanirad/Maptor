@@ -91,7 +91,7 @@
                 <maptor:MapDrawingLegendView MinHeight="90"/>
             </Expander>
             <Expander Header="{Binding [ui_header_layerLegend], Source={StaticResource Localization}}" IsExpanded="True" Margin="0,1,0,0" Cursor="Hand">
-                <maptor:MapLegendWithOptionsView EnableFilterMode="True"  DataContext="{Binding Layers}" GroupName="B"/>
+                <maptor:MapLegendWithOptionsView EnableFilterMode="True"  Layers="{Binding Layers}"  GroupName="B"/>
             </Expander>
         </StackPanel>
 

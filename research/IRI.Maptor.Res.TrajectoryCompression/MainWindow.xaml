@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"        
-        xmlns:iriJabControls="clr-namespace:IRI.Maptor.Jab.Controls.View;assembly=IRI.Maptor.Jab.Controls"
+        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.View;assembly=IRI.Maptor.Jab.Controls"
         mc:Ignorable="d" Loaded="Window_Loaded"
         Title="Trajectory Compression - (Powered by #MakanNegar)" Height="450" Width="800">
     <Grid>
@@ -71,11 +71,11 @@
             <TextBlock Grid.Row="1" Text="Layers" HorizontalAlignment="Center" FontSize="18" Margin="4"/>
             <!--<ListBox ScrollViewer.VerticalScrollBarVisibility="Auto" VirtualizingPanel.IsVirtualizing="True"
                      Grid.Row="1" Margin="8" ItemsSource="{Binding Geometries}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedGeometry, Mode=TwoWay}" MinHeight="200"/>-->
-            <iriJabControls:MapLegendItemWithOptionsView Grid.Row="2" Margin="8"   
+            <maptor:MapLegendItemWithOptionsView Grid.Row="2" Margin="8"   
                                                           DataContext="{Binding Layers}" />
         </Grid>
         <GridSplitter Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Width="5" ResizeBehavior="PreviousAndNext"/>
         <Border Grid.Column="2" Grid.Row="1"  BorderBrush="Black" BorderThickness="1" Margin="1"/>
-        <iriJabControls:MapViewer Grid.Row="1" Grid.Column="2" x:Name="map"/>
+        <maptor:MapViewer Grid.Row="1" Grid.Column="2" x:Name="map"/>
     </Grid>
 </Window>
