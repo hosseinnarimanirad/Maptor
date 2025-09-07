@@ -117,6 +117,53 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="cmd_drawingLegendItem_boundary" xml:space="preserve">
+    <value>Boundary</value>
+    <comment>drawing layer</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_breakIntoGeometries" xml:space="preserve">
+    <value>Break Into Geometries</value>
+    <comment>drawing layer</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_breakIntoPoints" xml:space="preserve">
+    <value>Break Into Points</value>
+    <comment>drawing layer </comment>
+  </data>
+  <data name="cmd_drawingLegendItem_convexHull" xml:space="preserve">
+    <value>Convex Hull</value>
+    <comment>drawing layer</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_downloadRegionImages" xml:space="preserve">
+    <value>Download images</value>
+    <comment>Drawing Layer download google, bing, etc images</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_duplicateFeature" xml:space="preserve">
+    <value>Duplicate</value>
+    <comment>drawing layer - create a clone from the feature</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="cmd_drawingLegendItem_envelope" xml:space="preserve">
+    <value>Envelope</value>
+    <comment>drawing layer</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsGeoJson" xml:space="preserve">
+    <value>Export as GeoJson</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsPng" xml:space="preserve">
+    <value>Export as png</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsShapefile" xml:space="preserve">
+    <value>Export as shapefile</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exteriorRing" xml:space="preserve">
+    <value>Exterior ring</value>
+    <comment>drawing layer</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
+    <value>Remove feature</value>
+  </data>
   <data name="cmd_drawingLegend_addGeoJson" xml:space="preserve">
     <value>Add GeoJson</value>
   </data>
@@ -127,13 +174,13 @@
     <value>Add Shapefile</value>
   </data>
   <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
-    <value>Move Down</value>
+    <value>Move down</value>
   </data>
   <data name="cmd_drawingLegend_moveUp" xml:space="preserve">
-    <value>Move Up</value>
+    <value>Move up</value>
   </data>
   <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
-    <value>Remove All</value>
+    <value>Remove all</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
     <value>Add Shapefile</value>
@@ -154,16 +201,16 @@
     <value>Draw Polyline</value>
   </data>
   <data name="cmd_general_fullExtent" xml:space="preserve">
-    <value>Full Extent</value>
+    <value>Full extent</value>
   </data>
   <data name="cmd_general_goTo" xml:space="preserve">
     <value>Go To</value>
   </data>
   <data name="cmd_general_measureArea" xml:space="preserve">
-    <value>Measure Area</value>
+    <value>Measure area</value>
   </data>
   <data name="cmd_general_measureLength" xml:space="preserve">
-    <value>Measure Length</value>
+    <value>Measure length</value>
   </data>
   <data name="cmd_general_pan" xml:space="preserve">
     <value>Pan</value>
@@ -172,78 +219,61 @@
     <value>Zoom In</value>
   </data>
   <data name="cmd_general_zoomNext" xml:space="preserve">
-    <value>Zoom Next</value>
+    <value>Zoom next</value>
   </data>
   <data name="cmd_general_zoomOut" xml:space="preserve">
     <value>Zoom out</value>
   </data>
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
-    <value>Zoom Previous</value>
+    <value>Zoom previous</value>
   </data>
-  <data name="cmd_legend_boundary" xml:space="preserve">
-    <value>Boundary</value>
-    <comment>drawing layer</comment>
-  </data>
-  <data name="cmd_legend_breakIntoGeometries" xml:space="preserve">
-    <value>Break Into Geometries</value>
-    <comment>drawing layer</comment>
-  </data>
-  <data name="cmd_legend_breakIntoPoints" xml:space="preserve">
-    <value>Break Into Points</value>
-    <comment>drawing layer </comment>
-  </data>
-  <data name="cmd_legend_clearSelected" xml:space="preserve">
+  <data name="cmd_legendItem_clearSelected" xml:space="preserve">
     <value>Clear Selected Features</value>
   </data>
-  <data name="cmd_legend_convexHull" xml:space="preserve">
-    <value>Convex Hull</value>
-    <comment>drawing layer</comment>
-  </data>
-  <data name="cmd_legend_downloadRegionImages" xml:space="preserve">
-    <value>Download images</value>
-    <comment>Drawing Layer download google, bing, etc images</comment>
-  </data>
-  <data name="cmd_legend_duplicateFeature" xml:space="preserve">
-    <value>Duplicate</value>
-    <comment>drawing layer - create a clone from the feature</comment>
-  </data>
-  <data name="cmd_legend_edit" xml:space="preserve">
-    <value>Edit</value>
-  </data>
-  <data name="cmd_legend_envelope" xml:space="preserve">
-    <value>Envelope</value>
-    <comment>drawing layer</comment>
-  </data>
-  <data name="cmd_legend_exportAsGeoJson" xml:space="preserve">
+  <data name="cmd_legendItem_exportAsGeoJson" xml:space="preserve">
     <value>Export as GeoJson</value>
   </data>
-  <data name="cmd_legend_exportAsPng" xml:space="preserve">
+  <data name="cmd_legendItem_exportAsPng" xml:space="preserve">
     <value>Export as png</value>
   </data>
-  <data name="cmd_legend_exportAsShapefile" xml:space="preserve">
-    <value>Export as Shapefile</value>
+  <data name="cmd_legendItem_exportAsShapefile" xml:space="preserve">
+    <value>Export as shapefile</value>
   </data>
-  <data name="cmd_legend_exteriorRing" xml:space="preserve">
-    <value>Exterior Ring</value>
-    <comment>drawing layer</comment>
+  <data name="cmd_legendItem_remove" xml:space="preserve">
+    <value>Remove layer</value>
   </data>
-  <data name="cmd_legend_removeLayer" xml:space="preserve">
-    <value>Remove Layer</value>
+  <data name="cmd_legendItem_selectByDrawing" xml:space="preserve">
+    <value>Select by drawing</value>
   </data>
-  <data name="cmd_legend_selectByDrawing" xml:space="preserve">
-    <value>Select by Drawing</value>
+  <data name="cmd_legendItem_showAttributes" xml:space="preserve">
+    <value>Show attributes</value>
   </data>
-  <data name="cmd_legend_showAttributes" xml:space="preserve">
-    <value>Show Attributes</value>
-  </data>
-  <data name="cmd_legend_showSymbology" xml:space="preserve">
+  <data name="cmd_legendItem_showSymbology" xml:space="preserve">
     <value>Show Symbology</value>
   </data>
-  <data name="cmd_legend_toggleLayerLabel" xml:space="preserve">
+  <data name="cmd_legendItem_toggleLayerLabel" xml:space="preserve">
     <value>Toggle Layer Label</value>
   </data>
-  <data name="cmd_legend_zoomToExtent" xml:space="preserve">
+  <data name="cmd_legendItem_zoomToExtent" xml:space="preserve">
     <value>Zoom To Extent</value>
+  </data>
+  <data name="cmd_legend_addGeoJson" xml:space="preserve">
+    <value>Add GeoJson</value>
+  </data>
+  <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
+    <value>Add lat/long</value>
+  </data>
+  <data name="cmd_legend_addShapefile" xml:space="preserve">
+    <value>Add shapefile</value>
+  </data>
+  <data name="cmd_legend_moveDown" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="cmd_legend_moveUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="cmd_legend_removeAll" xml:space="preserve">
+    <value>Remove All</value>
   </data>
   <data name="dialog_goto_panTo" xml:space="preserve">
     <value>Pan to</value>

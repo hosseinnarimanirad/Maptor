@@ -68,9 +68,9 @@ public abstract class LegendCommandBase : Notifier, ILegendCommand
         Localization.LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
 
-    public LegendCommandBase(LocalizationResourceKeys tooltipResourceKey) : this()
+    public LegendCommandBase(string tooltipResourceKey) : this()
     {
-        this.ToolTipResourceKey = tooltipResourceKey.ToString();
+        ToolTipResourceKey = tooltipResourceKey;
     }
 
     private void Instance_LanguageChanged()

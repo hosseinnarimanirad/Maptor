@@ -18,5 +18,5 @@ public partial class SymbologyView : LocalizedMetroWindow
         InitializeComponent(); 
     }
      
-    public string Ltxt_dialog_symbology_title => LocalizationManager.Instance[LocalizationResourceKeys.dialog_symbology_title.ToString()];
+    public string Ltxt_dialog_symbology_title => LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_symbology_title)];
 }

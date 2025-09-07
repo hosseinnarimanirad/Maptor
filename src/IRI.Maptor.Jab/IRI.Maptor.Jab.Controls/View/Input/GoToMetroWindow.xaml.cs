@@ -23,6 +23,6 @@ public partial class GoToMetroWindow : LocalizedMetroWindow
         this.DataContext = presenter;
     } 
 
-    public string Ltxt_dialog_goto_title => LocalizationManager.Instance[LocalizationResourceKeys.dialog_goto_title.ToString()];
+    public string Ltxt_dialog_goto_title => LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_goto_title)];
 
 }

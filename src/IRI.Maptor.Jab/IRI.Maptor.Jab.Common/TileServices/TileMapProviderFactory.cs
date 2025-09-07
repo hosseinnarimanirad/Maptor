@@ -3,7 +3,8 @@ using System.Text;
 using System.Collections.Generic;
 
 using IRI.Maptor.Sta.Spatial.Model;
-using IRI.Maptor.Jab.Common.Helpers; 
+using IRI.Maptor.Jab.Common.Helpers;
+using static IRI.Maptor.Jab.Common.Properties.Resources;
 using System.Linq;
 
 namespace IRI.Maptor.Jab.Common.TileServices;
@@ -73,8 +74,8 @@ public static class TileMapProviderFactory
             if (_bingSatellite is null)
             {
                 _bingSatellite = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_bing.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Satellite.ToString(),
+                    nameof(tile_provider_bing),
+                    nameof(tile_mapType_Satellite),
                     tile => MakeBingSatelliteUrl(tile, GetServer()),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/bingSatellite.jpg"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/bingSatellite72.jpg"));
@@ -92,8 +93,8 @@ public static class TileMapProviderFactory
             if (_bingStreet is null)
             {
                 _bingStreet = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_bing.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Street.ToString(),
+                    nameof(tile_provider_bing),
+                    nameof(tile_mapType_Street),
                     tile => MakeBingStreetUrl(tile, GetServer()),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/bingStreet.jpg"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/bingStreet72.jpg"));
@@ -113,8 +114,8 @@ public static class TileMapProviderFactory
             if (_bingHybrid is null)
             {
                 _bingHybrid = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_bing.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Hybrid.ToString(),
+                    nameof(tile_provider_bing),
+                    nameof(tile_mapType_Hybrid),
                     tile => MakeBingHybridUrl(tile, GetServer()),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/bingHybrid.jpg"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/bingHybrid72.jpg"));
@@ -162,8 +163,8 @@ public static class TileMapProviderFactory
             if (_googleCleanGrey is null)
             {
                 _googleCleanGrey = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_google.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_CleanGrey.ToString(),
+                    nameof(tile_provider_google),
+                    nameof(tile_mapType_CleanGrey),
                     MakeGoogleCleanGreyUrl,
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/googleTerrain.png"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/googleGrey72.jpg"));
@@ -182,8 +183,8 @@ public static class TileMapProviderFactory
             if (_googleBlackWhite is null)
             {
                 _googleBlackWhite = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_google.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_BlackWhite.ToString(),
+                    nameof(tile_provider_google),
+                    nameof(tile_mapType_BlackWhite),
                     MakeGoogleBlackWhiteUrl,
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/googleTerrain.png"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/googleBlackWhite72.jpg"));
@@ -202,8 +203,8 @@ public static class TileMapProviderFactory
             if (_googleTraffic is null)
             {
                 _googleTraffic = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_google.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Traffic.ToString(),
+                    nameof(tile_provider_google),
+                    nameof(tile_mapType_Traffic),
                     tile => MakeGoogleTerafficUrl(tile, GetServer()),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/googleTerrain.png"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/googleTraffic72.jpg"))
@@ -225,8 +226,8 @@ public static class TileMapProviderFactory
             if (_googleSatellite is null)
             {
                 _googleSatellite = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_google.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Satellite.ToString(),
+                    nameof(tile_provider_google),
+                    nameof(tile_mapType_Satellite),
                     tile => MakeGoogleSatelliteUrl(tile, GetServer()),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/googleSatellite.jpg"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/googleSatellite72.jpg"));
@@ -245,8 +246,8 @@ public static class TileMapProviderFactory
             if (_googleHybrid is null)
             {
                 _googleHybrid = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_google.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Hybrid.ToString(),
+                    nameof(tile_provider_google),
+                    nameof(tile_mapType_Hybrid),
                     tile => MakeGoogleHybridUrl(tile, GetServer()),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/googleHybrid.jpg"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/googleHybrid72.jpg"));
@@ -265,8 +266,8 @@ public static class TileMapProviderFactory
             if (_googleRoadMap is null)
             {
                 _googleRoadMap = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_google.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_RoadMap.ToString(),
+                    nameof(tile_provider_google),
+                    nameof(tile_mapType_RoadMap),
                     tile => MakeGoogleRoadMapUrl(tile, GetServer()),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/googleRoadmap.jpg"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/googleRoadMap72.jpg"));
@@ -285,8 +286,8 @@ public static class TileMapProviderFactory
             if (_googleTerrain is null)
             {
                 _googleTerrain = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_google.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Terrain.ToString(),
+                    nameof(tile_provider_google),
+                    nameof(tile_mapType_Terrain),
                     tile => MakeGoogleTerrainUrl(tile, GetServer()),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/googleTerrain.png"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/googleTerrain72.jpg"));
@@ -326,8 +327,8 @@ public static class TileMapProviderFactory
             if (_googleLight is null)
             {
                 _googleLight = CreateFromXyzUrlIntServer( 
-                    Localization.LocalizationResourceKeys.tile_provider_google.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Light.ToString(),
+                    nameof(tile_provider_google),
+                    nameof(tile_mapType_Light),
                     "https://mt{@server}.google.com/vt/lyrs=r&x={x}&y={y}&z={z}",
                    $"{baseMapUri}/googleTerrain.png",
                    $"{baseMapUri}/72/googleLight72.jpg");
@@ -348,8 +349,8 @@ public static class TileMapProviderFactory
             if (_googleNature is null)
             {
                 _googleNature = CreateFromXyzUrlIntServer( 
-                    Localization.LocalizationResourceKeys.tile_provider_google.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Nature.ToString(),
+                    nameof(tile_provider_google),
+                    nameof(tile_mapType_Nature),
                    "https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjV8cC5oOiNGRkE4MDB8cC5nOjEscy50OjQ5fHAuaDojNTNGRjAwfHAuczotNzN8cC5sOjQwfHAuZzoxLHMudDo1MHxwLmg6I0ZCRkYwMHxwLmc6MSxzLnQ6NTF8cC5oOiMwMEZGRkR8cC5sOjMwfHAuZzoxLHMudDo2fHAuaDojMDBCRkZGfHAuczo2fHAubDo4fHAuZzoxLHMudDoyfHAuaDojNjc5NzE0fHAuczozMy40fHAubDotMjUuNHxwLmc6MQ!4e0!23i1301875",
                    $"{baseMapUri}/googleTerrain.png",
                    $"{baseMapUri}/72/googleNature72.jpg");
@@ -369,8 +370,8 @@ public static class TileMapProviderFactory
             if (_googleNeutralBlue is null)
             {
                 _googleNeutralBlue = CreateFromXyzUrlIntServer( 
-                    Localization.LocalizationResourceKeys.tile_provider_google.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_NeutralBlue.ToString(),
+                    nameof(tile_provider_google),
+                    nameof(tile_mapType_NeutralBlue),
                     "https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjZ8cy5lOmd8cC5jOiNmZjE5MzM0MSxzLnQ6NXxzLmU6Z3xwLmM6I2ZmMmM1YTcxLHMudDozfHMuZTpnfHAuYzojZmYyOTc2OGF8cC5sOi0zNyxzLnQ6MnxzLmU6Z3xwLmM6I2ZmNDA2ZDgwLHMudDo0fHMuZTpnfHAuYzojZmY0MDZkODAscy5lOmwudC5zfHAudjpvbnxwLmM6I2ZmM2U2MDZmfHAudzoyfHAuZzowLjg0LHMuZTpsLnQuZnxwLmM6I2ZmZmZmZmZmLHMudDoxfHMuZTpnfHAudzowLjZ8cC5jOiNmZjFhMzU0MSxzLmU6bC5pfHAudjpvZmYscy50OjQwfHMuZTpnfHAuYzojZmYyYzVhNzE!4e0!23i1301875",
                     $"{baseMapUri}/googleTerrain.png",
                     $"{baseMapUri}/72/googleNeutralBlue72.jpg");
@@ -444,8 +445,8 @@ public static class TileMapProviderFactory
             if (_openStreetMap is null)
             {
                 _openStreetMap = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_osm.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Street.ToString(),
+                    nameof(tile_provider_osm),
+                    nameof(tile_mapType_Street),
                     tile => MakeOpenStreetMapUrl(tile, GetServerCharacter()),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/openStreetMap.png"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/osmOpenStreetMap72.jpg"));
@@ -464,8 +465,8 @@ public static class TileMapProviderFactory
             if (_openTopoMap is null)
             {
                 _openTopoMap = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_osm.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Topo.ToString(),
+                    nameof(tile_provider_osm),
+                    nameof(tile_mapType_Topo),
                     tile => MakeOpenTopoMapUrl(tile, GetServerCharacter()),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/openTopoMap.png"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/osmOpenTopoMap72.jpg"));
@@ -484,8 +485,8 @@ public static class TileMapProviderFactory
             if (_mapyWinter is null)
             {
                 _mapyWinter = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_osm.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_MapyWinter.ToString(),
+                    nameof(tile_provider_osm),
+                    nameof(tile_mapType_MapyWinter),
                     MakeMapyWinterUrl,
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/mapyWinter.jpg"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/osmMapyWinter72.jpg"));
@@ -504,8 +505,8 @@ public static class TileMapProviderFactory
             if (_mapyTourist is null)
             {
                 _mapyTourist = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_osm.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_MapyTourist.ToString(),
+                    nameof(tile_provider_osm),
+                    nameof(tile_mapType_MapyTourist),
                     MakeMapyTouristUrl,
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/mapyTourism.jpg"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/osmMapyTourist72.jpg"));
@@ -524,8 +525,8 @@ public static class TileMapProviderFactory
             if (_osmHikeBike is null)
             {
                 _osmHikeBike = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_osm.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_HikeBike.ToString(),
+                    nameof(tile_provider_osm),
+                    nameof(tile_mapType_HikeBike),
                     MakeOsmHikeBikeUrl,
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/osmHikeBike.jpg"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/osmHikeBike72.jpg"));
@@ -544,8 +545,8 @@ public static class TileMapProviderFactory
             if (_stamentWatercolor is null)
             {
                 _stamentWatercolor = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_osm.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Watercolor.ToString(),
+                    nameof(tile_provider_osm),
+                    nameof(tile_mapType_Watercolor),
                     MakeStamenWatercolorUrl,
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/stamenWatercolor.jpg"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/stamenWatercolor.jpg"));
@@ -574,8 +575,8 @@ public static class TileMapProviderFactory
             if (_wazeStreet is null)
             {
                 _wazeStreet = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_waze.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Street.ToString(),
+                    nameof(tile_provider_waze),
+                    nameof(tile_mapType_Street),
                     MakeWazeRoadMapUrl,
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/waze.png"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/wazeStreet72.jpg"));
@@ -606,8 +607,8 @@ public static class TileMapProviderFactory
             if (_cartoDark is null)
             {
                 _cartoDark = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_carto.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Dark.ToString(),
+                    nameof(tile_provider_carto),
+                    nameof(tile_mapType_Dark),
                     MakeCartoDarkUrl,
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/cartoDark.jpg"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/cartoDark72.jpg"));
@@ -625,8 +626,8 @@ public static class TileMapProviderFactory
             if (_cartoLight is null)
             {
                 _cartoLight = new TileMapProvider( 
-                    Localization.LocalizationResourceKeys.tile_provider_carto.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Light.ToString(),
+                    nameof(tile_provider_carto),
+                    nameof(tile_mapType_Light),
                     MakeCartoLightUrl,
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/cartoLight.jpg"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/cartoLight72.jpg"));
@@ -649,8 +650,8 @@ public static class TileMapProviderFactory
             if (_mapboxComic is null)
             {
                 _mapboxComic = CreateFromXyzUrlCharServer( 
-                    Localization.LocalizationResourceKeys.tile_provider_mapbox.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Comic.ToString(),
+                    nameof(tile_provider_mapbox),
+                    nameof(tile_mapType_Comic),
                     "https://{@server}.tiles.mapbox.com/v4/mapbox.comic/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w",
                     $"{baseMapUri}/72/mapboxComic72.jpg",
                     $"{baseMapUri}/72/mapboxComic72.jpg");
@@ -667,11 +668,9 @@ public static class TileMapProviderFactory
         {
             if (_mapboxSatellite is null)
             {
-                _mapboxSatellite = CreateFromXyzUrlCharServer(
-                    //new PersianEnglishItem("مپ‌باکس", Mapbox),
-                    //new PersianEnglishItem("ماهواره", "Satellite"),
-                    Localization.LocalizationResourceKeys.tile_provider_mapbox.ToString(),
-                    Localization.LocalizationResourceKeys.tile_mapType_Satellite.ToString(),
+                _mapboxSatellite = CreateFromXyzUrlCharServer( 
+                    nameof(tile_provider_mapbox),
+                    nameof(tile_mapType_Satellite),
                     "https://{@server}.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w",
                     $"{baseMapUri}/72/mapboxComic72.jpg",
                     $"{baseMapUri}/72/mapboxComic72.jpg");

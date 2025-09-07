@@ -11,24 +11,24 @@ namespace IRI.Maptor.Jab.Controls.View;
 /// <summary>
 /// Interaction logic for MapDrawingLegendView.xaml
 /// </summary>
-public partial class MapDrawingLegendView : LocalizedUserControl
+public partial class MapDrawingLegendView : NotifiableUserControl
 {
-    public MapDrawingLegendView():base()
+    public MapDrawingLegendView() 
     {
         InitializeComponent();
 
         //LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
 
-    protected override void Instance_LanguageChanged()
-    {
-        RaisePropertyChanged(nameof(RemoveAllDrawingItemsLabel));
-        RaisePropertyChanged(nameof(AddGeoJsonToDrawingItemsLabel));
-        RaisePropertyChanged(nameof(AddLongLatTxtToDrawingItemsLabel));
-        RaisePropertyChanged(nameof(AddShapefileToDrawingItemsLabel));
-        RaisePropertyChanged(nameof(MoveDrawingItemDownLabel));
-        RaisePropertyChanged(nameof(MoveDrawingItemUpLabel));
-    }
+    //protected override void Instance_LanguageChanged()
+    //{
+    //    RaisePropertyChanged(nameof(RemoveAllDrawingItemsLabel));
+    //    RaisePropertyChanged(nameof(AddGeoJsonToDrawingItemsLabel));
+    //    RaisePropertyChanged(nameof(AddLongLatTxtToDrawingItemsLabel));
+    //    RaisePropertyChanged(nameof(AddShapefileToDrawingItemsLabel));
+    //    RaisePropertyChanged(nameof(MoveDrawingItemDownLabel));
+    //    RaisePropertyChanged(nameof(MoveDrawingItemUpLabel));
+    //}
 
     public string GroupName
     {
@@ -70,21 +70,21 @@ public partial class MapDrawingLegendView : LocalizedUserControl
     public static readonly DependencyProperty ShowToolsProperty =
         DependencyProperty.Register(nameof(ShowTools), typeof(bool), typeof(MapDrawingLegendView), new PropertyMetadata(true));
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    //public event PropertyChangedEventHandler PropertyChanged;
 
-    protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    //protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+    //{
+    //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    //}
 
 
 
-    public string RemoveAllDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_removeAll.ToString()];
-    public string AddGeoJsonToDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_addGeoJson.ToString()];
-    public string AddLongLatTxtToDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_addLatLongTxt.ToString()];
-    public string AddShapefileToDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_addShapefile.ToString()];
-    public string MoveDrawingItemDownLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_moveDown.ToString()];
-    public string MoveDrawingItemUpLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_moveUp.ToString()];
+    //public string RemoveAllDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_removeAll.ToString()];
+    //public string AddGeoJsonToDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_addGeoJson.ToString()];
+    //public string AddLongLatTxtToDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_addLatLongTxt.ToString()];
+    //public string AddShapefileToDrawingItemsLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_addShapefile.ToString()];
+    //public string MoveDrawingItemDownLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_moveDown.ToString()];
+    //public string MoveDrawingItemUpLabel => LocalizationManager.Instance[LocalizationResourceKeys.cmd_drawingLegend_moveUp.ToString()];
 
     //#region IDispose
 

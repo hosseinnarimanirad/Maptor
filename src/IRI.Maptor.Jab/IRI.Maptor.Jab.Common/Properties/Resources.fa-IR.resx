@@ -117,8 +117,54 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="cmd_drawingLegendItem_boundary" xml:space="preserve">
+    <value>مرز</value>
+    <comment>drawing layer</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_breakIntoGeometries" xml:space="preserve">
+    <value>تفکیک به هندسه</value>
+    <comment>drawing layer</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_breakIntoPoints" xml:space="preserve">
+    <value>تفکیک به نقاط</value>
+    <comment>drawing layer</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_convexHull" xml:space="preserve">
+    <value>پوش محدب</value>
+    <comment>drawing layer</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_downloadRegionImages" xml:space="preserve">
+    <value>دانلود تصاویر محدوده</value>
+  </data>
+  <data name="cmd_drawingLegendItem_duplicateFeature" xml:space="preserve">
+    <value>ایجاد کپی از عارضه</value>
+    <comment>drawing layer - create a clone from the feature</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_edit" xml:space="preserve">
+    <value>ویرایش</value>
+  </data>
+  <data name="cmd_drawingLegendItem_envelope" xml:space="preserve">
+    <value>مستطیل دربرگیرنده</value>
+    <comment>drawing layer</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsGeoJson" xml:space="preserve">
+    <value>خروجی در قالب GeoJson</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsPng" xml:space="preserve">
+    <value>خروجی عکسی</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsShapefile" xml:space="preserve">
+    <value>خروجی در قالب شیپ‌فایل</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exteriorRing" xml:space="preserve">
+    <value>حلقه خارجی</value>
+    <comment>drawing layer</comment>
+  </data>
+  <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
+    <value>حذف عارضه</value>
+  </data>
   <data name="cmd_drawingLegend_addGeoJson" xml:space="preserve">
-    <value>بارگذاری عارضه ژئوجی‌سان</value>
+    <value>بارگذاری عارضه GeoJson</value>
   </data>
   <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
     <value>بارگذاری از فایل</value>
@@ -180,69 +226,53 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>نمای قبل</value>
   </data>
-  <data name="cmd_legend_boundary" xml:space="preserve">
-    <value>مرز</value>
-    <comment>drawing layer</comment>
-  </data>
-  <data name="cmd_legend_breakIntoGeometries" xml:space="preserve">
-    <value>تفکیک به هندسه</value>
-    <comment>drawing layer</comment>
-  </data>
-  <data name="cmd_legend_breakIntoPoints" xml:space="preserve">
-    <value>تفکیک به نقاط</value>
-    <comment>drawing layer</comment>
-  </data>
-  <data name="cmd_legend_clearSelected" xml:space="preserve">
+  <data name="cmd_legendItem_clearSelected" xml:space="preserve">
     <value>پاک کردن عوارض انتخابی</value>
   </data>
-  <data name="cmd_legend_convexHull" xml:space="preserve">
-    <value>پوش محدب</value>
-    <comment>drawing layer</comment>
-  </data>
-  <data name="cmd_legend_downloadRegionImages" xml:space="preserve">
-    <value>دانلود تصاویر محدوده</value>
-  </data>
-  <data name="cmd_legend_duplicateFeature" xml:space="preserve">
-    <value>ایجاد کپی از عارضه</value>
-    <comment>drawing layer - create a clone from the feature</comment>
-  </data>
-  <data name="cmd_legend_edit" xml:space="preserve">
-    <value>ویرایش</value>
-  </data>
-  <data name="cmd_legend_envelope" xml:space="preserve">
-    <value>مستطیل دربرگیرنده</value>
-    <comment>drawing layer</comment>
-  </data>
-  <data name="cmd_legend_exportAsGeoJson" xml:space="preserve">
+  <data name="cmd_legendItem_exportAsGeoJson" xml:space="preserve">
     <value>خروجی در قالب GeoJson</value>
   </data>
-  <data name="cmd_legend_exportAsPng" xml:space="preserve">
+  <data name="cmd_legendItem_exportAsPng" xml:space="preserve">
     <value>خروجی عکسی</value>
   </data>
-  <data name="cmd_legend_exportAsShapefile" xml:space="preserve">
+  <data name="cmd_legendItem_exportAsShapefile" xml:space="preserve">
     <value>خروجی در قالب شیپ‌فایل</value>
   </data>
-  <data name="cmd_legend_exteriorRing" xml:space="preserve">
-    <value>حلقه خارجی</value>
-    <comment>drawing layer</comment>
-  </data>
-  <data name="cmd_legend_removeLayer" xml:space="preserve">
+  <data name="cmd_legendItem_remove" xml:space="preserve">
     <value>حذف لایه</value>
   </data>
-  <data name="cmd_legend_selectByDrawing" xml:space="preserve">
+  <data name="cmd_legendItem_selectByDrawing" xml:space="preserve">
     <value>انتخاب عوارض محدودهٔ ترسیم</value>
   </data>
-  <data name="cmd_legend_showAttributes" xml:space="preserve">
+  <data name="cmd_legendItem_showAttributes" xml:space="preserve">
     <value>اطلاعات توصیفی</value>
   </data>
-  <data name="cmd_legend_showSymbology" xml:space="preserve">
+  <data name="cmd_legendItem_showSymbology" xml:space="preserve">
     <value>سمبل‌گذاری</value>
   </data>
-  <data name="cmd_legend_toggleLayerLabel" xml:space="preserve">
+  <data name="cmd_legendItem_toggleLayerLabel" xml:space="preserve">
     <value>نمایش برچسب عوارض</value>
   </data>
-  <data name="cmd_legend_zoomToExtent" xml:space="preserve">
+  <data name="cmd_legendItem_zoomToExtent" xml:space="preserve">
     <value>محدودهٔ لایه</value>
+  </data>
+  <data name="cmd_legend_addGeoJson" xml:space="preserve">
+    <value>افزودن GeoJson</value>
+  </data>
+  <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
+    <value>افزودن از فایل</value>
+  </data>
+  <data name="cmd_legend_addShapefile" xml:space="preserve">
+    <value>افزودن شیپ‌فایل</value>
+  </data>
+  <data name="cmd_legend_moveDown" xml:space="preserve">
+    <value>پایین</value>
+  </data>
+  <data name="cmd_legend_moveUp" xml:space="preserve">
+    <value>بالا</value>
+  </data>
+  <data name="cmd_legend_removeAll" xml:space="preserve">
+    <value>حذف همه لایه‌ها</value>
   </data>
   <data name="dialog_goto_panTo" xml:space="preserve">
     <value>برو به</value>

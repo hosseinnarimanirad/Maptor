@@ -1404,6 +1404,8 @@ public abstract class MapPresenter : BasePresenter
     }
 
 
+
+
     List<Func<DrawingItemLayer, ILegendCommand>>? drawingItemCommands = null;
 
     public List<Func<DrawingItemLayer, ILegendCommand>>? DrawingItemCommands

@@ -37,21 +37,21 @@ public class LegendToggleCommand : LegendCommandBase
 
     public LegendToggleCommand()
     {
-        //Localization.LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
+        Localization.LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
 
-    //private void Instance_LanguageChanged()
-    //{
-    //    RaisePropertyChanged(nameof(ToolTip));
-    //}
+    private void Instance_LanguageChanged()
+    {
+        RaisePropertyChanged(nameof(ToolTip));
+    }
 
     public static LegendToggleCommand CreateToggleLayerLabelCommand(MapPresenter map, SymbolizableLayer layer/*, LabelParameters labels*/)
     {
         LegendToggleCommand result = new LegendToggleCommand
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.TextSerif }.Data,// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarTextSerif;
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.TextSerif }.Data,// appbarTextSerif;
             NotSelectedPathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.AppbarExtension.appbarTextSerifNone,
-            ToolTipResourceKey = LocalizationResourceKeys.cmd_legend_toggleLayerLabel.ToString(),
+            ToolTipResourceKey = nameof(IRI.Maptor.Jab.Common.Properties.Resources.cmd_legendItem_toggleLayerLabel),
             Layer = layer,
             //IsSelected = layer.Labels?.IsOn == true
             IsSelected = layer.GetDefaultLabelParams()?.IsSelected == true
@@ -99,8 +99,8 @@ public class LegendToggleCommand : LegendCommandBase
         return result;
     }
 
-    private static void Map_OnZoomChanged(object? sender, double e)
-    {
-        throw new NotImplementedException();
-    }
+    //private static void Map_OnZoomChanged(object? sender, double e)
+    //{
+    //    throw new NotImplementedException();
+    //}
 }

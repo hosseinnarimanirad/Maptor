@@ -8,12 +8,12 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Jab.Common.Presenters;
 using IRI.Maptor.Jab.Common.Models.Map;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Sta.Spatial.Primitives; 
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
+using IRI.Maptor.Jab.Common.Properties;
 
 namespace IRI.Maptor.Jab.Common.Models.Legend;
 
@@ -25,7 +25,7 @@ public class LegendCommand : LegendCommandBase
 
     }
 
-    public LegendCommand(LocalizationResourceKeys tooltipResourceKey) : base(tooltipResourceKey)
+    public LegendCommand(string tooltipResourceKey) : base(tooltipResourceKey)
     {
     }
 
@@ -38,7 +38,6 @@ public class LegendCommand : LegendCommandBase
         {
             PathMarkup = markup,
             Command = new RelayCommand(param => action()),
-            //ToolTip = tooltip,
             ToolTipResourceKey = tooltipResourceKey,
             Layer = layer
         };
@@ -51,12 +50,11 @@ public class LegendCommand : LegendCommandBase
 
     public static Func<MapPresenter, ILayer, LegendCommand> CreateZoomToExtentCommandFunc = CreateZoomToExtentCommand;
     public static LegendCommand CreateZoomToExtentCommand(MapPresenter map, ILayer layer)
-    {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_zoomToExtent)
+    { 
+        var result = new LegendCommand(nameof(Resources.cmd_legendItem_zoomToExtent))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Magnify }.Data,// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarMagnify,
-            Layer = layer,
-            //ToolTip = "محدودهٔ لایه" 
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Magnify }.Data,// .appbarMagnify,
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand((param) =>
@@ -74,11 +72,10 @@ public class LegendCommand : LegendCommandBase
     public static Func<MapPresenter, ILayer, ILegendCommand> CreateRemoveLayerFunc = CreateRemoveLayer;
     public static ILegendCommand CreateRemoveLayer(MapPresenter map, ILayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_removeLayer)
+        var result = new LegendCommand(nameof(Resources.cmd_legendItem_remove))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Delete }.Data,//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarDelete,
-            Layer = layer,
-            //ToolTip = "حذف لایه", 
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Delete }.Data,//.appbarDelete,
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(param =>
@@ -93,7 +90,7 @@ public class LegendCommand : LegendCommandBase
     {
         var pathMarkup = new PackIconModern() { Kind = PackIconModernKind.Cart }.Data;
 
-        return Create(layer, showSymbologyViewAction, pathMarkup/*Assets.ShapeStrings.Appbar.appbarCart*/, LocalizationResourceKeys.cmd_legend_showSymbology.ToString());
+        return Create(layer, showSymbologyViewAction, pathMarkup, nameof(Resources.cmd_legendItem_showSymbology));
     }
 
     #endregion
@@ -101,18 +98,84 @@ public class LegendCommand : LegendCommandBase
 
     #region Defaults for VectorLayer
 
-    public static Func<MapPresenter, ILayer, LegendCommand> CreateShowAttributeTableFunc/*<T>*/()// where T : class, IGeometryAware<Point>
+    public static Func<MapPresenter, ILayer, ILegendCommand> CreateClearSelectedFunc = (presenter, layer) => CreateClearSelected(presenter, layer as VectorLayer);
+    public static ILegendCommand CreateClearSelected(MapPresenter map, VectorLayer layer)
     {
-        return (presenter, layer) => CreateShowAttributeTable/*<T>*/(presenter, layer as VectorLayer);
+        var result = new LegendCommand(nameof(Resources.cmd_legendItem_clearSelected))
+        {
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Close }.Data,//.appbarClose,
+            Layer = layer,
+            IsCommandVisible = false,
+        };
+
+        result.Command = new RelayCommand(param =>
+        {
+            map.RemoveSelectedLayer(layer);
+        });
+
+        layer.OnSelectedFeaturesChanged += (sender, e) => { result.IsCommandVisible = e.Arg.HasSelectedFeatures; };
+
+        return result;
     }
 
-    public static LegendCommand CreateShowAttributeTable/*<T>*/(MapPresenter map, VectorLayer layer) //where T : class, IGeometryAware<Point>
+
+    public static Func<MapPresenter, ILayer, ILegendCommand> CreateSelectByDrawingFunc()  
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_showAttributes)
+        return (presenter, layer) => CreateSelectByDrawing(presenter, layer as VectorLayer);
+    }
+    public static ILegendCommand CreateSelectByDrawing(MapPresenter map, VectorLayer layer)  
+    {
+        var result = new LegendCommand(nameof(Resources.cmd_legendItem_selectByDrawing))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.PageText }.Data,//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarPageText,
-            Layer = layer,
-            //ToolTip = "اطلاعات توصیفی", 
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.VectorPenConvert }.Data,//.appbarVectorPenConvert,
+            Layer = layer, 
+        };
+
+        result.Command = new RelayCommand(async param =>
+        {
+            var options = EditableFeatureLayerOptions.CreateDefaultForDrawing(false, false);
+
+            options.IsOptionsAvailable = false;
+
+            var drawingResult = await map.GetDrawingAsync(DrawMode.Polygon, options);
+
+            if (!drawingResult.HasNotNullResult())
+                return;
+
+            var features = layer.GetFeatures(drawingResult.Result);
+
+            if (features == null)
+            {
+                return;
+            }
+
+            var newLayer = new SelectedLayer(layer, layer.GetFields())
+            {
+                ShowSelectedOnMap = true
+            };
+
+            if (features != null)
+            {
+                newLayer.Features = new System.Collections.ObjectModel.ObservableCollection<Feature<Point>>(features.Features);
+            }
+
+            map.AddSelectedLayer(newLayer);
+        });
+
+        return result;
+    }
+
+
+    public static Func<MapPresenter, ILayer, LegendCommand> CreateShowAttributeTableFunc() 
+    {
+        return (presenter, layer) => CreateShowAttributeTable(presenter, layer as VectorLayer);
+    }
+    public static LegendCommand CreateShowAttributeTable(MapPresenter map, VectorLayer layer)  
+    {
+        var result = new LegendCommand(nameof(Resources.cmd_legendItem_showAttributes))
+        {
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.PageText }.Data,//.appbarPageText,
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand((param) =>
@@ -120,9 +183,9 @@ public class LegendCommand : LegendCommandBase
             if (layer == null || map == null)
                 return;
 
-            var features = layer.GetFeatures/*<T>*/();
+            var features = layer.GetFeatures();
 
-            var newLayer = new SelectedLayer/*<Feature<Point>>*/(layer, layer.GetFields());
+            var newLayer = new SelectedLayer(layer, layer.GetFields());
 
             //newLayer.RequestSave = l =>
             //{
@@ -145,84 +208,14 @@ public class LegendCommand : LegendCommandBase
         return result;
     }
 
-
-    public static Func<MapPresenter, ILayer, ILegendCommand> CreateSelectByDrawingFunc/*<T>*/() //where T : class, IGeometryAware<Point>
-    {
-        return (presenter, layer) => CreateSelectByDrawing/*<T>*/(presenter, layer as VectorLayer);
-    }
-    public static ILegendCommand CreateSelectByDrawing/*<T>*/(MapPresenter map, VectorLayer layer) //where T : class, IGeometryAware<Point>
-    {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_selectByDrawing)
-        {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.VectorPenConvert }.Data,//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarVectorPenConvert,
-            Layer = layer,
-            //ToolTip = "انتخاب عوارض محدودهٔ ترسیم", 
-        };
-
-        result.Command = new RelayCommand(async param =>
-        {
-            var options = EditableFeatureLayerOptions.CreateDefaultForDrawing(false, false);
-
-            options.IsOptionsAvailable = false;
-
-            var drawingResult = await map.GetDrawingAsync(DrawMode.Polygon, options);
-
-            if (!drawingResult.HasNotNullResult())
-                return;
-
-            var features = layer.GetFeatures/*<T>*/(drawingResult.Result);
-
-            if (features == null)
-            {
-                return;
-            }
-
-            var newLayer = new SelectedLayer/*<Feature<Point>>*/(layer, layer.GetFields())
-            {
-                ShowSelectedOnMap = true
-            };
-
-            if (features != null)
-            {
-                newLayer.Features = new System.Collections.ObjectModel.ObservableCollection<Feature<Point>>(features.Features);
-            }
-
-            map.AddSelectedLayer(newLayer);
-        });
-
-        return result;
-    }
-
-
-    public static Func<MapPresenter, ILayer, ILegendCommand> CreateClearSelectedFunc = (presenter, layer) => CreateClearSelected(presenter, layer as VectorLayer);
-    public static ILegendCommand CreateClearSelected(MapPresenter map, VectorLayer layer)
-    {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_clearSelected)
-        {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Close }.Data,//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarClose,
-            Layer = layer,
-            //ToolTip = "پاک کردن عوارض انتخابی", 
-            IsCommandVisible = false,
-        };
-
-        result.Command = new RelayCommand(param =>
-        {
-            map.RemoveSelectedLayer(layer);
-        });
-
-        layer.OnSelectedFeaturesChanged += (sender, e) => { result.IsCommandVisible = e.Arg.HasSelectedFeatures; };
-
-        return result;
-    }
-
+     
     public static Func<MapPresenter, ILayer, ILegendCommand> CreateExportAsPngFunc = (presenter, layer) => CreateExportAsPng(presenter, layer as VectorLayer);
     public static ILegendCommand CreateExportAsPng(MapPresenter map, VectorLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_exportAsPng)
+        var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsPng))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Image }.Data,//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarImage,
-            Layer = layer,
-            //ToolTip = _exportAsBitmapToolTip, 
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Image }.Data,//.appbarImage,
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
@@ -248,12 +241,11 @@ public class LegendCommand : LegendCommandBase
 
     public static Func<MapPresenter, ILayer, ILegendCommand> CreateExportAsShapefileFunc = (presenter, layer) => CreateExportAsShapefile(presenter, layer as VectorLayer);
     public static ILegendCommand CreateExportAsShapefile(MapPresenter map, VectorLayer layer)
-    {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_exportAsShapefile)
+    {  
+        var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsShapefile))
         {
-            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile,//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarDownload,
-            Layer = layer,
-            //ToolTip = _exportAsShapefileToolTip, 
+            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile,//.appbarDownload,
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
@@ -279,11 +271,10 @@ public class LegendCommand : LegendCommandBase
     public static Func<MapPresenter, ILayer, ILegendCommand> CreateExportAsGeoJsonFunc = (presenter, layer) => CreateExportAsGeoJson(presenter, layer as VectorLayer);
     public static ILegendCommand CreateExportAsGeoJson(MapPresenter map, VectorLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_exportAsGeoJson)
+        var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsGeoJson))
         {
-            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarDownload,
-            Layer = layer,
-            //ToolTip = _exportAsGeoJsonToolTip, 
+            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,//.appbarDownload,
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
@@ -310,12 +301,12 @@ public class LegendCommand : LegendCommandBase
         return result;
     }
 
-    internal static List<Func<MapPresenter, ILayer, ILegendCommand>> GetDefaultVectorLayerCommands/*<T>*/() //where T : class, IGeometryAware<Point>
+    internal static List<Func<MapPresenter, ILayer, ILegendCommand>> GetDefaultVectorLayerCommands() 
     {
         return new List<Func<MapPresenter, ILayer, ILegendCommand>>()
         {
-            CreateSelectByDrawingFunc/*<T>*/(),
-            CreateShowAttributeTableFunc/*<T>*/(),
+            CreateSelectByDrawingFunc(),
+            CreateShowAttributeTableFunc(),
             CreateClearSelectedFunc,
             CreateRemoveLayerFunc,
             CreateExportAsPngFunc,
@@ -329,27 +320,14 @@ public class LegendCommand : LegendCommandBase
 
 
     #region Drawing Item Legend Commands
-
-    //private const string _removeToolTip = "حذف";
-
-    //private const string _editToolTip = "ویرایش";
-
-    //private const string _zoomToolTip = "بزرگ‌نمایی";
-
-    //private const string _saveAsShapefileToolTip = "ذخیره‌سازی در قالب شیپ‌فایل";
-    //private const string _saveAsGeoJsonToolTip = "ذخیره‌سازی در قالب ژئوجی‌سان";
-    //private const string _saveAsPngToolTip = "ذخیره‌سازی در قالب png";
-
-
-    // ***************** Remove ******************
-    // *******************************************
+     
+     
     public static ILegendCommand CreateRemoveDrawingItemLayer(MapPresenter map, DrawingItemLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_removeLayer)
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_remove))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Delete }.Data,// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarDelete,
-            Layer = layer,
-            //ToolTip = _removeToolTip,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Delete }.Data,// .appbarDelete,
+            Layer = layer, 
 
         };
 
@@ -367,11 +345,10 @@ public class LegendCommand : LegendCommandBase
     // *******************************************
     public static ILegendCommand CreateEditDrawingItemLayer(MapPresenter map, DrawingItemLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_edit)
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_edit))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Edit }.Data, //IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarEdit,
-            Layer = layer,
-            //ToolTip = _editToolTip, 
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Edit }.Data, //.appbarEdit,
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
@@ -413,11 +390,10 @@ public class LegendCommand : LegendCommandBase
     // *******************************************
     public static ILegendCommand CreateExportDrawingItemLayerAsShapefile(MapPresenter map, DrawingItemLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_exportAsShapefile)
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsShapefile))
         {
             PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile,
-            Layer = layer,
-            //ToolTip = _saveAsShapefileToolTip, 
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
@@ -446,11 +422,10 @@ public class LegendCommand : LegendCommandBase
     // *******************************************
     public static ILegendCommand CreateExportDrawingItemLayerAsGeoJson(MapPresenter map, DrawingItemLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_exportAsGeoJson)
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsGeoJson))
         {
             PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,
-            Layer = layer,
-            //ToolTip = _saveAsGeoJsonToolTip, 
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
@@ -479,11 +454,10 @@ public class LegendCommand : LegendCommandBase
 
     public static ILegendCommand CreateExportDrawingItemLayerAsPng(MapPresenter map, DrawingItemLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_exportAsPng)
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsPng))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Image }.Data, //IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarImage,
-            Layer = layer,
-            //ToolTip = _saveAsPngToolTip, 
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Image }.Data, //.appbarImage,
+            Layer = layer,  
         };
 
         result.Command = new RelayCommand(async param =>
@@ -500,9 +474,7 @@ public class LegendCommand : LegendCommandBase
                 var currentScreenSize = WebMercatorUtility.ToScreenSize(map.CurrentZoomLevel, groundBoundingBox);
 
                 var mapScale = WebMercatorUtility.GetGoogleMapScale(map.CurrentZoomLevel);
-
-                //var image = await layer.AsRenderTargetBitmap(groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
-                //IRI.Maptor.Jab.Common.Helpers.ImageUtility.Save(fileName, image);
+                 
                 await layer.SaveAsPng(fileName, groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, mapScale);
             }
             catch (Exception ex)
@@ -518,21 +490,16 @@ public class LegendCommand : LegendCommandBase
     // *******************************************
     public static ILegendCommand CreateGetExteriorRingCommand(MapPresenter map, DrawingItemLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_exteriorRing)
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exteriorRing))
         {
             PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.SegoePrint.exteriorRing,
-            Layer = layer,
-            //ToolTip = "حلقه خارجی", 
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
         {
             try
-            {
-                //var geometry = layer.Geometry.AsSqlGeometry().STExteriorRing();               
-
-                //map.AddDrawingItem(geometry.AsGeometry(), $"{layer.LayerName}-ExteriorRing");
-
+            { 
                 var geometry = layer.Geometry.GetExteriorRing();
 
                 if (geometry is null)
@@ -553,20 +520,16 @@ public class LegendCommand : LegendCommandBase
     // *******************************************
     public static ILegendCommand CreateGetEnvelopeCommand(MapPresenter map, DrawingItemLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_envelope)
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_envelope))
         {
             PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.SegoePrint.envelope,
-            Layer = layer,
-            //ToolTip = "مستطیل دربرگیرنده", 
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
         {
             try
-            {
-                //var geometry = layer.Geometry.AsSqlGeometry().STEnvelope();
-                //map.AddDrawingItem(geometry.AsGeometry(), $"{layer.LayerName}-Envelope");
-
+            { 
                 var geometry = layer.Geometry.GetEnvelope();
 
                 if (geometry is null)
@@ -587,19 +550,16 @@ public class LegendCommand : LegendCommandBase
     // *******************************************
     public static ILegendCommand CreateGetConvexHullCommand(MapPresenter map, DrawingItemLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_convexHull)
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_convexHull))
         {
             PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.SegoePrint.convexHull,
-            Layer = layer,
-            //ToolTip = "پوش محدب", 
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
         {
             try
-            {
-                //var geometry = layer.Geometry.AsSqlGeometry().STConvexHull(); 
-                //map.AddDrawingItem(geometry.AsGeometry(), $"{layer.LayerName}-ConvexHull");
+            { 
                 var geometry = layer.Geometry.GetConvexHull();
 
                 if (geometry is null)
@@ -620,20 +580,16 @@ public class LegendCommand : LegendCommandBase
     // *******************************************
     public static ILegendCommand CreateGetBoundaryCommand(MapPresenter map, DrawingItemLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_boundary)
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_boundary))
         {
             PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.SegoePrint.boundary,
-            Layer = layer,
-            //ToolTip = "مرز", 
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
         {
             try
-            {
-                //var geometry = layer.Geometry.AsSqlGeometry().STBoundary();
-                //map.AddDrawingItem(geometry.AsGeometry(), $"{layer.LayerName}-Boundary");
-
+            { 
                 var geometry = layer.Geometry.GetBoundary();
                 map.AddDrawingItem(geometry, $"{layer.LayerName}-Boundary");
             }
@@ -650,18 +606,16 @@ public class LegendCommand : LegendCommandBase
     // *******************************************
     public static ILegendCommand CreateBreakIntoGeometriesCommand(MapPresenter map, DrawingItemLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_breakIntoGeometries)
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_breakIntoGeometries))
         {
             PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.SegoePrint.extractGeometries,
-            Layer = layer,
-            //ToolTip = "تفکیک به هندسه", 
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
         {
             try
-            {
-                //var geometries = layer.Geometry.AsSqlGeometry().GetGeometries();
+            { 
                 var geometries = layer.Geometry.Split(clone: true);
 
                 var counter = 0;
@@ -684,81 +638,19 @@ public class LegendCommand : LegendCommandBase
     // *******************************************
     public static ILegendCommand CreateBreakIntoPointsCommand(MapPresenter map, DrawingItemLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_breakIntoPoints)
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_breakIntoPoints))
         {
             PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.SegoePrint.extractPoints,
-            Layer = layer,
-            //ToolTip = "تفکیک به نقاط", 
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
         {
             try
-            {
-                //var pointCollection = IRI.Maptor.Ket.SqlServerSpatialExtension.SqlSpatialUtility.MakePointCollection(layer.Geometry.GetAllPoints());
-                //map.AddDrawingItem(pointCollection.AsGeometry(), $"{layer.LayerName} Points");
-
+            { 
                 var pointCollection = Geometry<Point>.Create(layer.Geometry.GetAllPoints(), GeometryType.MultiPoint, layer.Geometry.Srid);
 
                 map.AddDrawingItem(pointCollection, $"{layer.LayerName} Points");
-            }
-            catch (Exception ex)
-            {
-                await map.DialogService.ShowMessageAsync(ex.Message, null, param);
-            }
-        });
-
-        return result;
-    }
-
-    // ***************** Simplify by Angle *******
-    // *******************************************
-    public static ILegendCommand CreateSimplifyByAngleCommand(MapPresenter map, DrawingItemLayer layer)
-    {
-        var result = new LegendCommand()
-        {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarFlag,
-            Layer = layer,
-            ToolTipResourceKey = "ساده‌سازی روش زاویه",
-        };
-
-        result.Command = new RelayCommand(async param =>
-        {
-            try
-            {
-                var simplified = layer.Geometry.Simplify(SimplificationType.CumulativeAngle, new SimplificationParamters() { AngleThreshold = 0.99, Retain3Points = true });
-                //VisualSimplification.sim layer.Geometry.Simplify()
-                map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-{map.CurrentZoomLevel}");
-
-            }
-            catch (Exception ex)
-            {
-                await map.DialogService.ShowMessageAsync(ex.Message, null, param);
-            }
-        });
-
-        return result;
-    }
-
-    // ***************** Simplify by Area ********
-    // *******************************************
-    public static ILegendCommand CreateSimplifyByAreaCommand(MapPresenter map, DrawingItemLayer layer)
-    {
-        var result = new LegendCommand()
-        {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarFlag,
-            Layer = layer,
-            ToolTipResourceKey = "ساده‌سازی روش مساحت",
-        };
-
-        result.Command = new RelayCommand(async param =>
-        {
-            try
-            {
-                var simplified = layer.Geometry.Simplify(SimplificationType.CumulativeTriangleRoutine, map.CurrentZoomLevel, new SimplificationParamters() { Retain3Points = true });
-                //VisualSimplification.sim layer.Geometry.Simplify()
-                map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-{map.CurrentZoomLevel}");
-
             }
             catch (Exception ex)
             {
@@ -773,11 +665,10 @@ public class LegendCommand : LegendCommandBase
     // *******************************************
     public static ILegendCommand CreateCloneDrawingItemCommand(MapPresenter map, DrawingItemLayer layer)
     {
-        var result = new LegendCommand(LocalizationResourceKeys.cmd_legend_duplicateFeature)
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_duplicateFeature))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.PageCopy }.Data,//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarPageCopy,
-            Layer = layer,
-            //ToolTip = "ایجاد کپی از عارضه", 
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.PageCopy }.Data,//.appbarPageCopy,
+            Layer = layer, 
         };
 
         result.Command = new RelayCommand(async param =>
@@ -798,13 +689,71 @@ public class LegendCommand : LegendCommandBase
         return result;
     }
 
+    // ***************** Simplify by Angle *******
+    // *******************************************
+    public static ILegendCommand CreateSimplifyByAngleCommand(MapPresenter map, DrawingItemLayer layer)
+    {
+        var result = new LegendCommand()
+        {
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,// .appbarFlag,
+            Layer = layer,
+            ToolTipResourceKey = "ساده‌سازی روش زاویه",
+        };
+
+        result.Command = new RelayCommand(async param =>
+        {
+            try
+            {
+                var simplified = layer.Geometry.Simplify(SimplificationType.CumulativeAngle, new SimplificationParamters() { AngleThreshold = 0.99, Retain3Points = true });
+      
+                map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-{map.CurrentZoomLevel}");
+
+            }
+            catch (Exception ex)
+            {
+                await map.DialogService.ShowMessageAsync(ex.Message, null, param);
+            }
+        });
+
+        return result;
+    }
+
+    // ***************** Simplify by Area ********
+    // *******************************************
+    public static ILegendCommand CreateSimplifyByAreaCommand(MapPresenter map, DrawingItemLayer layer)
+    {
+        var result = new LegendCommand()
+        {
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,//.appbarFlag,
+            Layer = layer,
+            ToolTipResourceKey = "ساده‌سازی روش مساحت",
+        };
+
+        result.Command = new RelayCommand(async param =>
+        {
+            try
+            {
+                var simplified = layer.Geometry.Simplify(SimplificationType.CumulativeTriangleRoutine, map.CurrentZoomLevel, new SimplificationParamters() { Retain3Points = true });
+  
+                map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-{map.CurrentZoomLevel}");
+
+            }
+            catch (Exception ex)
+            {
+                await map.DialogService.ShowMessageAsync(ex.Message, null, param);
+            }
+        });
+
+        return result;
+    }
+
     // ***************** Simplifications **********
     // *******************************************
     public static ILegendCommand CreateSimplifyByVWCommand(MapPresenter map, DrawingItemLayer layer)
     {
         var result = new LegendCommand()
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarFlag,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,//.appbarFlag,
             Layer = layer,
             ToolTipResourceKey = "ساده‌سازی روش ویزوال",
         };
@@ -814,7 +763,7 @@ public class LegendCommand : LegendCommandBase
             try
             {
                 var simplified = layer.Geometry.Simplify(SimplificationType.VisvalingamWhyatt, map.CurrentZoomLevel, new SimplificationParamters() { Retain3Points = true });
-                //VisualSimplification.sim layer.Geometry.Simplify()
+              
                 map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-VW-{map.CurrentZoomLevel}");
 
             }
@@ -831,7 +780,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand()
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarFlag,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,//.appbarFlag,
             Layer = layer,
             ToolTipResourceKey = "ساده‌سازی روش داگلاس",
         };
