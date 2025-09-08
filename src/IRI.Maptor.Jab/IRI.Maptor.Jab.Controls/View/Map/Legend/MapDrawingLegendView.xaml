@@ -141,7 +141,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            <Style TargetType="Path">
+            <Style TargetType="Path" x:Key="buttonPath">
                 <Setter Property="Stretch" Value="Uniform"/>
                 <Setter Property="Fill" Value="White"/>
                 <Setter Property="Width" Value="18"/>
@@ -177,15 +177,15 @@
                     <StackPanel Orientation="Horizontal">
                         <Button Style="{StaticResource menuCircleButton}" Command="{Binding AddGeoJsonToDrawingItemsCommand}"  
                                 ToolTip="{Binding [cmd_drawingLegend_addGeoJson], Source={StaticResource Localization}}">
-                            <Path Data="{StaticResource json}"/>
+                            <Path Style="{StaticResource buttonPath}" Data="{StaticResource json}"/>
                         </Button>
                         <Button Style="{StaticResource menuCircleButton}" Command="{Binding AddLongLatTxtToDrawingItemsCommand}"  
                                 ToolTip="{Binding [cmd_drawingLegend_addLatLongTxt], Source={StaticResource Localization}}">
-                            <Path Data="{StaticResource txt}"/>
+                            <Path Style="{StaticResource buttonPath}" Data="{StaticResource txt}"/>
                         </Button>
                         <Button Style="{StaticResource menuCircleButton}" Command="{Binding AddShapefileToDrawingItemsCommand}"  
                                 ToolTip="{Binding [cmd_drawingLegend_addShapefile], Source={StaticResource Localization}}">
-                            <Path Data="{StaticResource shapefile}"/>
+                            <Path Style="{StaticResource buttonPath}" Data="{StaticResource shapefile}"/>
                         </Button>
                     </StackPanel>
                 </Expander>

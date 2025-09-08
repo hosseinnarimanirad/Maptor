@@ -10,7 +10,7 @@
 
     <Grid IsEnabled="{Binding IsInScaleRange}" Margin="0" >
         <Grid.Resources>
-            <Style  TargetType="{x:Type Button}" x:Key="circleButton">
+            <Style TargetType="{x:Type Button}" x:Key="circleButton">
                 <Setter Property="Margin" Value="4"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
                 <Setter Property="Width" Value="30"/>
@@ -156,7 +156,7 @@
                     <Border.InputBindings>
                         <MouseBinding MouseAction="LeftClick" Command="{Binding ChangeSymbologyCommand}" CommandParameter="{Binding}"/>
                     </Border.InputBindings>
-                    <Path Margin="0" Data="{Binding Type, Converter={StaticResource iLayerToLegendConverter}, TargetNullValue={x:Static Geometry.Empty}}" x:Name="OriginalPath"
+                    <Path Margin="1" Data="{Binding Type, Converter={StaticResource iLayerToLegendConverter}, TargetNullValue={x:Static Geometry.Empty}}" x:Name="OriginalPath"
                             Fill="{Binding ElementName=root, Path=Symbology.Fill}" Stroke="{Binding ElementName=root, Path=Symbology.Stroke}"
                             StrokeThickness="{Binding ElementName=root, Path=Symbology.StrokeThickness}" Stretch="Uniform"
                             HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="{Binding Opacity}">
