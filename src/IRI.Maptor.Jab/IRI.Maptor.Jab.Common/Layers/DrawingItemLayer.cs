@@ -173,6 +173,11 @@ public class DrawingItemLayer : VectorLayer//, IIdentifiable
 
         result.SetSymbolizer(new SimpleSymbolizer(VisualParameters.GetDefaultForDrawingItems()));
 
+        result.OnVisibilityChanged += (sender, e) =>
+        {
+            result.RequestChangeVisibility?.Invoke(result);
+        };
+          
         //result.AddVisualParameters(VisualParameters.GetDefaultForDrawingItems());
 
         result.SpecialPointLayer = new SpecialPointLayer(layerName, locateables, .8, null, LayerType.MoveableItem) { ParentLayerId = result.LayerId };

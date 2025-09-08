@@ -70,6 +70,28 @@ public partial class MapDrawingLegendView : NotifiableUserControl
     public static readonly DependencyProperty ShowToolsProperty =
         DependencyProperty.Register(nameof(ShowTools), typeof(bool), typeof(MapDrawingLegendView), new PropertyMetadata(true));
 
+    
+    #region Expander configs
+
+    private int _selectedExpanderIndex = 2;
+    public int SelectedExpanderIndex
+    {
+        get => _selectedExpanderIndex;
+        set
+        {
+            if (_selectedExpanderIndex != value)
+            {
+                _selectedExpanderIndex = value;
+                RaisePropertyChanged();
+            }
+        }
+    }
+     
+
+
+    #endregion
+
+
     //public event PropertyChangedEventHandler PropertyChanged;
 
     //protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")

@@ -42,7 +42,7 @@
                             <Slider Margin="4" Minimum="0" Maximum="1" LargeChange="0.2" Value="{Binding BaseMapOpacity}" TickPlacement="Both" TickFrequency=".1" IsSnapToTickEnabled="True"/>
                         </DockPanel>
                         <ComboBox ItemsSource="{Binding MapProviders}" SelectedItem="{Binding SelectedMapProvider, Mode=TwoWay}" 
-                                  VerticalAlignment="Center" DisplayMemberPath="Title" Margin="0,4"/>
+                                    DisplayMemberPath="Title" VerticalAlignment="Center" Margin="0,4"/>
                     </StackPanel>
                 </Expander>
                 <Expander Header="Drawing Legend" DockPanel.Dock="Top" IsExpanded="True"  Margin="0,1,0,0" Cursor="Hand">
@@ -53,7 +53,7 @@
                 </Expander>
             </DockPanel>
         </Border>
-        
+
         <Expander Header="Draw" HorizontalAlignment="Left" Margin="4" IsExpanded="True" Background="White" VerticalAlignment="Top" Opacity="1">
             <StackPanel>
                 <Button Command="{Binding DrawPointCommand}" ToolTip="Draw point"  >
