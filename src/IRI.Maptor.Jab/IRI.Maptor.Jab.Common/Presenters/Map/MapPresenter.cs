@@ -1533,17 +1533,17 @@ public abstract class MapPresenter : BasePresenter
     {
         var drawingItemLayer = DrawingItemLayer.Create(name, drawing, symbolizers/*, id*//*, source*/);
 
-        drawingItemLayer.OnIsSelectedInTocChanged += (sender, e) =>
-        {
-            if (drawingItemLayer.IsSelectedInToc)
-            {
-                SelectedDrawingItem = drawingItemLayer;
-            }
-            else if (SelectedDrawingItem == drawingItemLayer)
-            {
-                SelectedDrawingItem = null;
-            }
-        };
+        //drawingItemLayer.OnIsSelectedInTocChanged += (sender, e) =>
+        //{
+        //    if (drawingItemLayer.IsSelectedInToc)
+        //    {
+        //        SelectedDrawingItem = drawingItemLayer;
+        //    }
+        //    else if (SelectedDrawingItem == drawingItemLayer)
+        //    {
+        //        SelectedDrawingItem = null;
+        //    }
+        //};
 
         TrySetCommandsForDrawingItemLayer(drawingItemLayer);
 
@@ -1600,24 +1600,30 @@ public abstract class MapPresenter : BasePresenter
         second.ZIndex = tempZIndex;
 
         RemoveDrawingItem(first);
-
         RemoveDrawingItem(second);
 
-        var newFirstLayer = CreateDrawingItemLayer(first.Feature, first.LayerName, first.Symbolizers);
+        //AddDrawingItem(first);
+        //AddDrawingItem(second);
 
-        var newSecondLayer = CreateDrawingItemLayer(second.Feature, second.LayerName, second.Symbolizers);
+        //RemoveDrawingItem(first);
+
+        //RemoveDrawingItem(second);
+
+        //var newFirstLayer = CreateDrawingItemLayer(first.Feature, first.LayerName, first.Symbolizers);
+
+        //var newSecondLayer = CreateDrawingItemLayer(second.Feature, second.LayerName, second.Symbolizers);
 
         if (first.ZIndex < second.ZIndex)
         {
-            InsertDrawingItem(newFirstIndex, newFirstLayer);
+            InsertDrawingItem(newFirstIndex, first);
 
-            InsertDrawingItem(newSecondIndex, newSecondLayer);
+            InsertDrawingItem(newSecondIndex, second);
         }
         else
         {
-            InsertDrawingItem(newSecondIndex, newSecondLayer);
+            InsertDrawingItem(newSecondIndex, second);
 
-            InsertDrawingItem(newFirstIndex, newFirstLayer);
+            InsertDrawingItem(newFirstIndex, first);
         }
     }
 
@@ -2313,6 +2319,18 @@ public abstract class MapPresenter : BasePresenter
             [
                 new Locateable(response.Result, AncherFunctionHandlers.BottomCenter){ Element = new TextboxMarker(){ LabelValue=text} }
             ]);
+
+            //drawingItemLayer.OnIsSelectedInTocChanged += (sender, e) =>
+            //{
+            //    if (drawingItemLayer.IsSelectedInToc)
+            //    {
+            //        SelectedDrawingItem = drawingItemLayer;
+            //    }
+            //    else if (SelectedDrawingItem == drawingItemLayer)
+            //    {
+            //        SelectedDrawingItem = null;
+            //    }
+            //};
 
             //TrySetCommandsForDrawingItemLayer(drawingItemLayer);
 
