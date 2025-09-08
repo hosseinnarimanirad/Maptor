@@ -1601,7 +1601,7 @@ public partial class MapViewer : NotifiableUserControl
 
         return geometry;
     }
-     
+
 
     private void AddSpecialLineLayer(SpecialLineLayer layer, Action mouseDown = null)
     {
@@ -2309,7 +2309,7 @@ public partial class MapViewer : NotifiableUserControl
         for (int i = this.mapView.Children.Count - 1; i >= 0; i--)
         {
             //Complex layer items may not be Path, so use FrameworkElement
-            var tag = ((LayerTag)((FrameworkElement)(this.mapView.Children[i])).Tag);
+            var tag = (LayerTag)((FrameworkElement)this.mapView.Children[i]).Tag;
 
             if (justTiled && !tag.IsTiled)
                 continue;
@@ -2334,20 +2334,16 @@ public partial class MapViewer : NotifiableUserControl
 
 
             //1397.04.02 why not checking this first?
-            if ((tag.LayerType.HasFlag(LayerType.Feature) || tag.LayerType.HasFlag(LayerType.VectorLayer)) && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
-            {
+            if ((tag.LayerType.HasFlag(LayerType.Feature) || tag.LayerType.HasFlag(LayerType.VectorLayer)) &&
+                this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
                 continue;
-            }
 
             if (tag.LayerType.HasFlag(LayerType.Drawing) && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
-            {
                 continue;
-            }
 
-            //if (tag.LayerType == LayerType.BaseMap && this.CurrentExtent.Intersects(tag.Tile.WebMercatorExtent))
-            //    continue;
-
-
+            if (tag.LayerType.HasFlag(LayerType.MoveableItem) && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
+                continue;
+             
 
             this.mapView.Children.RemoveAt(i);
         }
