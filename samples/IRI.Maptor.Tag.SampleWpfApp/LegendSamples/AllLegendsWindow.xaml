@@ -49,7 +49,7 @@
                     <maptor:MapDrawingLegendView MinHeight="90"/>
                 </Expander>
                 <Expander Header="Layer Legend" DockPanel.Dock="Top" IsExpanded="True" Margin="0,1,0,0" Cursor="Hand">
-                    <maptor:MapLegendWithOptionsView EnableFilterMode="True" Layers="{Binding Layers}" GroupName="B"/>
+                    <maptor:MapLegendView EnableFilterMode="True" Layers="{Binding Layers}" GroupName="B"/>
                 </Expander>
             </DockPanel>
         </Border>

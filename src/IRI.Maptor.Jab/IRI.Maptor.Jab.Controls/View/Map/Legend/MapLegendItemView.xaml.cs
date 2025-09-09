@@ -11,9 +11,9 @@ namespace IRI.Maptor.Jab.Controls.View;
 /// <summary>
 /// Interaction logic for MapLegendItemWithOptions.xaml
 /// </summary>
-public partial class MapLegendItemWithOptionsView : UserControl//, IDisposable, INotifyPropertyChanged
+public partial class MapLegendItemView : UserControl//, IDisposable, INotifyPropertyChanged
 {
-    public MapLegendItemWithOptionsView()
+    public MapLegendItemView()
     {
         InitializeComponent();
         //LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
@@ -30,11 +30,11 @@ public partial class MapLegendItemWithOptionsView : UserControl//, IDisposable, 
 
     // Using a DependencyProperty as the backing store for LayerName.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty TitleProperty =
-        DependencyProperty.Register(nameof(Title), typeof(string), typeof(MapLegendItemWithOptionsView), new PropertyMetadata(new PropertyChangedCallback((d, dp) =>
+        DependencyProperty.Register(nameof(Title), typeof(string), typeof(MapLegendItemView), new PropertyMetadata(new PropertyChangedCallback((d, dp) =>
         {
             try
             {
-                ((MapLegendItemWithOptionsView)d).UpdateTitle((string)dp.NewValue);
+                ((MapLegendItemView)d).UpdateTitle((string)dp.NewValue);
             }
             catch (Exception)
             {
@@ -50,7 +50,7 @@ public partial class MapLegendItemWithOptionsView : UserControl//, IDisposable, 
 
     // Using a DependencyProperty as the backing store for FontSize.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty TitleFontSizeProperty =
-        DependencyProperty.Register(nameof(TitleFontSize), typeof(double), typeof(MapLegendItemWithOptionsView), new PropertyMetadata(13.0));
+        DependencyProperty.Register(nameof(TitleFontSize), typeof(double), typeof(MapLegendItemView), new PropertyMetadata(13.0));
 
 
     public bool IsEditable
@@ -61,7 +61,7 @@ public partial class MapLegendItemWithOptionsView : UserControl//, IDisposable, 
 
     // Using a DependencyProperty as the backing store for IsEditable.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty IsEditableProperty =
-        DependencyProperty.Register(nameof(IsEditable), typeof(bool), typeof(MapLegendItemWithOptionsView), new PropertyMetadata(false));
+        DependencyProperty.Register(nameof(IsEditable), typeof(bool), typeof(MapLegendItemView), new PropertyMetadata(false));
 
 
     public VisualParameters Symbology
@@ -72,7 +72,7 @@ public partial class MapLegendItemWithOptionsView : UserControl//, IDisposable, 
 
     // Using a DependencyProperty as the backing store for Symbology.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty SymbologyProperty =
-        DependencyProperty.Register(nameof(Symbology), typeof(VisualParameters), typeof(MapLegendItemWithOptionsView), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(Symbology), typeof(VisualParameters), typeof(MapLegendItemView), new PropertyMetadata(null));
 
 
 
@@ -84,7 +84,7 @@ public partial class MapLegendItemWithOptionsView : UserControl//, IDisposable, 
 
     // Using a DependencyProperty as the backing store for IsChecked.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty IsCheckedProperty =
-        DependencyProperty.Register(nameof(IsChecked), typeof(bool), typeof(MapLegendItemWithOptionsView), new PropertyMetadata(false));
+        DependencyProperty.Register(nameof(IsChecked), typeof(bool), typeof(MapLegendItemView), new PropertyMetadata(false));
 
 
 
@@ -96,7 +96,7 @@ public partial class MapLegendItemWithOptionsView : UserControl//, IDisposable, 
 
     // Using a DependencyProperty as the backing store for Commands.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty CommandsProperty =
-        DependencyProperty.Register(nameof(Commands), typeof(IEnumerable<ILegendCommand>), typeof(MapLegendItemWithOptionsView), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(Commands), typeof(IEnumerable<ILegendCommand>), typeof(MapLegendItemView), new PropertyMetadata(null));
 
     #endregion
 

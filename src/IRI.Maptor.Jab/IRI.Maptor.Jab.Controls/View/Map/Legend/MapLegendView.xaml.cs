@@ -10,9 +10,9 @@ namespace IRI.Maptor.Jab.Controls.View;
 /// <summary>
 /// Interaction logic for MapLegendWithOptions.xaml
 /// </summary>
-public partial class MapLegendWithOptionsView : NotifiableUserControl
+public partial class MapLegendView : NotifiableUserControl
 {
-    public MapLegendWithOptionsView()
+    public MapLegendView()
     {
         InitializeComponent();
     }
@@ -23,7 +23,7 @@ public partial class MapLegendWithOptionsView : NotifiableUserControl
         set { SetValue(GroupNameProperty, value); }
     }
     public static readonly DependencyProperty GroupNameProperty =
-        DependencyProperty.Register(nameof(GroupName), typeof(string), typeof(MapLegendWithOptionsView), new PropertyMetadata("A"));
+        DependencyProperty.Register(nameof(GroupName), typeof(string), typeof(MapLegendView), new PropertyMetadata("A"));
 
 
     public bool EnableFilterMode
@@ -32,7 +32,7 @@ public partial class MapLegendWithOptionsView : NotifiableUserControl
         set { SetValue(EnableFilterModeProperty, value); }
     }
     public static readonly DependencyProperty EnableFilterModeProperty =
-        DependencyProperty.Register(nameof(EnableFilterMode), typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
+        DependencyProperty.Register(nameof(EnableFilterMode), typeof(bool), typeof(MapLegendView), new PropertyMetadata(true));
 
 
     public bool ShowVectorLayers
@@ -41,7 +41,7 @@ public partial class MapLegendWithOptionsView : NotifiableUserControl
         set { SetValue(ShowVectorLayersProperty, value); }
     }
     public static readonly DependencyProperty ShowVectorLayersProperty =
-        DependencyProperty.Register(nameof(ShowVectorLayers), typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
+        DependencyProperty.Register(nameof(ShowVectorLayers), typeof(bool), typeof(MapLegendView), new PropertyMetadata(true));
 
 
 
@@ -51,7 +51,7 @@ public partial class MapLegendWithOptionsView : NotifiableUserControl
         set { SetValue(ShowRasterLayersProperty, value); }
     }
     public static readonly DependencyProperty ShowRasterLayersProperty =
-        DependencyProperty.Register(nameof(ShowRasterLayers), typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
+        DependencyProperty.Register(nameof(ShowRasterLayers), typeof(bool), typeof(MapLegendView), new PropertyMetadata(true));
 
 
     public double TitleFontSize
@@ -60,7 +60,7 @@ public partial class MapLegendWithOptionsView : NotifiableUserControl
         set { SetValue(TitleFontSizeProperty, value); }
     }
     public static readonly DependencyProperty TitleFontSizeProperty =
-        DependencyProperty.Register(nameof(TitleFontSize), typeof(double), typeof(MapLegendWithOptionsView), new PropertyMetadata(13.0));
+        DependencyProperty.Register(nameof(TitleFontSize), typeof(double), typeof(MapLegendView), new PropertyMetadata(13.0));
 
 
     public bool ShowTools
@@ -75,7 +75,7 @@ public partial class MapLegendWithOptionsView : NotifiableUserControl
 
     // Using a DependencyProperty as the backing store for ShowTools.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowToolsProperty =
-        DependencyProperty.Register(nameof(ShowTools), typeof(bool), typeof(MapLegendWithOptionsView), new PropertyMetadata(true));
+        DependencyProperty.Register(nameof(ShowTools), typeof(bool), typeof(MapLegendView), new PropertyMetadata(true));
 
 
 
@@ -85,7 +85,7 @@ public partial class MapLegendWithOptionsView : NotifiableUserControl
         set { SetValue(LayersProperty, value); }
     } 
     public static readonly DependencyProperty LayersProperty =
-        DependencyProperty.Register("Layers", typeof(ObservableCollection<ILayer>), typeof(MapLegendWithOptionsView), new PropertyMetadata(null));
+        DependencyProperty.Register("Layers", typeof(ObservableCollection<ILayer>), typeof(MapLegendView), new PropertyMetadata(null));
 
 
 

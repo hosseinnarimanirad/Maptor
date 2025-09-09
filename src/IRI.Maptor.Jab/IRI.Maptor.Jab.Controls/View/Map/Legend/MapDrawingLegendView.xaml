@@ -88,7 +88,7 @@
                         <ControlTemplate TargetType="Expander">
                             <Border x:Name="expanderBorder"
                                     BorderBrush="{DynamicResource MahApps.Brushes.Highlight}"
-                                    BorderThickness="1" Background="{DynamicResource MahApps.Brushes.Accent2}"
+                                    BorderThickness="2" Background="{DynamicResource MahApps.Brushes.Accent2}"
                                     Margin="1" Padding="0" CornerRadius="18">
                                 <StackPanel Orientation="Horizontal">
                                     <ToggleButton x:Name="HeaderSite"
@@ -157,7 +157,7 @@
         <ScrollViewer HorizontalScrollBarVisibility="Auto"
                         VerticalScrollBarVisibility="Auto"
                         Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
-            <DockPanel HorizontalAlignment="Center">
+            <DockPanel HorizontalAlignment="Center" FlowDirection="LeftToRight">
                 <Button Style="{StaticResource menuCircleButton}" Command="{Binding MoveDrawingItemDownCommand}"  
                         ToolTip="{Binding [cmd_drawingLegend_moveDown], Source={StaticResource Localization}}" 
                         IsEnabled="{Binding CanMoveDrawingItemDown}">
@@ -245,7 +245,7 @@
                 <DataTemplate>
                     <RadioButton Style="{StaticResource {x:Type ToggleButton}}" GroupName="{Binding ElementName=root, Path=GroupName}" DataContext="{Binding }"
                                  IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}">
-                        <maptor:MapLegendItemWithOptionsView Title="{Binding LayerName, Mode=TwoWay}" Symbology="{Binding DefaultSymbology}"  
+                        <maptor:MapLegendItemView Title="{Binding LayerName, Mode=TwoWay}" Symbology="{Binding DefaultSymbology}"  
                                                                      IsEditable="True" Commands="{Binding Commands}" 
                                                                      IsChecked="{Binding IsSelectedInToc}"
                                                                      TitleFontSize="{Binding ElementName=root, Path=TitleFontSize}"/>

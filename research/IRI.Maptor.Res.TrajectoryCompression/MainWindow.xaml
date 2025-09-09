@@ -71,7 +71,7 @@
             <TextBlock Grid.Row="1" Text="Layers" HorizontalAlignment="Center" FontSize="18" Margin="4"/>
             <!--<ListBox ScrollViewer.VerticalScrollBarVisibility="Auto" VirtualizingPanel.IsVirtualizing="True"
                      Grid.Row="1" Margin="8" ItemsSource="{Binding Geometries}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedGeometry, Mode=TwoWay}" MinHeight="200"/>-->
-            <maptor:MapLegendItemWithOptionsView Grid.Row="2" Margin="8"   
+            <maptor:MapLegendItemView Grid.Row="2" Margin="8"   
                                                           DataContext="{Binding Layers}" />
         </Grid>
         <GridSplitter Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Width="5" ResizeBehavior="PreviousAndNext"/>
