@@ -56,7 +56,6 @@ Maptor consists of multiple modular packages.
  
 | Package | Description | Version |
 |---------|-------------|---------|
-| [IRI.Maptor.Bas.SqlSpatialLoader](https://www.nuget.org/packages/IRI.Maptor.Bas.SqlSpatialLoader) | .NET dependency of Maptor | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Bas.SqlSpatialLoader.svg?style=flat-square) |
 | [IRI.Maptor.Jab.Common](https://www.nuget.org/packages/IRI.Maptor.Jab.Common) | Basic UI models, rendering methods etc. | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Jab.Common.svg?style=flat-square) |
 | [IRI.Maptor.Ket.GdiPlus](https://www.nuget.org/packages/IRI.Maptor.Ket.GdiPlus) | Raster data handling, Worldfile, PCA, raster calculation | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.GdiPlus.svg?style=flat-square) |
 | [IRI.Maptor.Ket.PersonalGdbPersistence](https://www.nuget.org/packages/IRI.Maptor.Ket.PersonalGdbPersistence) | Read/Write Personal GDB files | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.PersonalGdbPersistence.svg?style=flat-square) |
