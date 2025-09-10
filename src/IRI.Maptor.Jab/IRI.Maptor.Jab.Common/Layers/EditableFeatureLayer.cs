@@ -566,10 +566,6 @@ public class EditableFeatureLayer : SymbolizableLayer
             leftToolTip: _displayCoordinates,
             middleToolTip: _delete,
 
-            //rightSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarPageCopy,
-            //leftSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.CustomShapes.xY,
-            //middleSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarDelete);
-
             rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.PageCopy,
             leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.AxisXy,
             middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Delete);
@@ -616,41 +612,14 @@ public class EditableFeatureLayer : SymbolizableLayer
         RequestRightClickOptions?.Invoke(new View.MapOptions.MapThreeOptions(false), e, presenter);
 
     }
-
-    //private void RegisterMapOptionsForNewPath(MouseButtonEventArgs e)
-    //{
-    //    var presenter = new Jab.Common.Presenters.MapOptions.MapOptionsPresenter(
-    //      rightToolTip: "لغو",
-    //      leftToolTip: "تکمیل",
-    //      middleToolTip: "تکمیل بخش",
-
-    //  rightSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarClose,
-    //  leftSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarCheck,
-    //  middleSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarCitySeattle);
-
-    //    presenter.LeftCommandAction = i => { this.RequestCancelEditing?.Invoke(this); };
-    //    presenter.RightCommandAction = i => { this.FinishEditing(); };
-    //    presenter.MiddleCommandAction = i => { this.FinishDrawingPart(); };
-
-
-    //    var view = new Common.View.MapOptions.MapThreeOptions(true);
-
-    //    view.DataContext = presenter;
-
-    //    RequestRightClickOptions?.Invoke(new Common.View.MapOptions.MapThreeOptions(false), e, presenter);
-    //}
-
+     
     private void RegisterMapOptionsForEditPath(MouseButtonEventArgs e)
     {
         var presenter = new MapOptionsPresenter(
             leftToolTip: _cancel,
             rightToolTip: _finish,
             middleToolTip: _delete,
-
-            //leftSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarClose,
-            //rightSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarCheck,
-            //middleSymbol: IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarDelete);
-
+             
             leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Close,
             rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Check,
             middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Delete);

@@ -53,7 +53,7 @@ public class LegendCommand : LegendCommandBase
     { 
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_zoomToExtent))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Magnify }.Data,// .appbarMagnify,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Magnify }.Data, 
             Layer = layer, 
         };
 
@@ -74,7 +74,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_remove))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Delete }.Data,//.appbarDelete,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Delete }.Data, 
             Layer = layer, 
         };
 
@@ -103,7 +103,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_clearSelected))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Close }.Data,//.appbarClose,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Close }.Data, 
             Layer = layer,
             IsCommandVisible = false,
         };
@@ -127,7 +127,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_selectByDrawing))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.VectorPenConvert }.Data,//.appbarVectorPenConvert,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.VectorPenConvert }.Data, 
             Layer = layer, 
         };
 
@@ -174,7 +174,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_showAttributes))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.PageText }.Data,//.appbarPageText,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.PageText }.Data, 
             Layer = layer, 
         };
 
@@ -214,7 +214,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsPng))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Image }.Data,//.appbarImage,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Image }.Data, 
             Layer = layer, 
         };
 
@@ -244,7 +244,7 @@ public class LegendCommand : LegendCommandBase
     {  
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsShapefile))
         {
-            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile,//.appbarDownload,
+            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile, 
             Layer = layer, 
         };
 
@@ -273,7 +273,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsGeoJson))
         {
-            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,//.appbarDownload,
+            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json, 
             Layer = layer, 
         };
 
@@ -326,7 +326,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_remove))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Delete }.Data,// .appbarDelete,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Delete }.Data, 
             Layer = layer, 
 
         };
@@ -347,7 +347,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_edit))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Edit }.Data, //.appbarEdit,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Edit }.Data,  
             Layer = layer, 
         };
 
@@ -456,7 +456,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsPng))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Image }.Data, //.appbarImage,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Image }.Data,  
             Layer = layer,  
         };
 
@@ -667,7 +667,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_duplicateFeature))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.PageCopy }.Data,//.appbarPageCopy,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.PageCopy }.Data, 
             Layer = layer, 
         };
 
@@ -695,7 +695,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand()
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,// .appbarFlag,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,
             Layer = layer,
             ToolTipResourceKey = "ساده‌سازی روش زاویه",
         };
@@ -724,7 +724,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand()
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,//.appbarFlag,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data, 
             Layer = layer,
             ToolTipResourceKey = "ساده‌سازی روش مساحت",
         };
@@ -753,7 +753,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand()
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,//.appbarFlag,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,
             Layer = layer,
             ToolTipResourceKey = "ساده‌سازی روش ویزوال",
         };
@@ -780,7 +780,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand()
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,//.appbarFlag,
+            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data, 
             Layer = layer,
             ToolTipResourceKey = "ساده‌سازی روش داگلاس",
         };
