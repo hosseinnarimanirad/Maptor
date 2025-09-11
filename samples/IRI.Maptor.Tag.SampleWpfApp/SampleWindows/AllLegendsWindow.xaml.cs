@@ -1,16 +1,17 @@
-﻿using System.Windows;
-using IRI.Maptor.Sta.Common.Primitives;
+﻿using System.Text;
+using System.Windows;
+
 using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Jab.Controls.Presenter;
-using System.Text;
+using IRI.Maptor.Sta.Common.Primitives;
 
-namespace IRI.Maptor.Tag.SampleWpfApp.LegendSamples;
+namespace IRI.Maptor.Tag.SampleWpfApp.SampleWindows;
 /// <summary>
-/// Interaction logic for DrawingLegendWindow.xaml
+/// Interaction logic for AllLegendsWindow.xaml
 /// </summary>
-public partial class DrawingLegendWindow : Window
+public partial class AllLegendsWindow : Window
 {
-    public DrawingLegendWindow()
+    public AllLegendsWindow()
     {
         InitializeComponent();
     }

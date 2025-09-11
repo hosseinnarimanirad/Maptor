@@ -1,30 +1,20 @@
 ﻿using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Jab.Controls.Presenter;
 using IRI.Maptor.Sta.Common.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
-namespace IRI.Maptor.Tag.SampleWpfApp.LegendSamples;
+namespace IRI.Maptor.Tag.SampleWpfApp.SampleWindows;
 /// <summary>
-/// Interaction logic for AllLegendsWindow.xaml
+/// Interaction logic for TableOfContentWindow.xaml
 /// </summary>
-public partial class AllLegendsWindow : Window
+public partial class TableOfContentWindow : Window
 {
-    public AllLegendsWindow()
+    public TableOfContentWindow()
     {
         InitializeComponent();
     }
+
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
@@ -38,6 +28,7 @@ public partial class AllLegendsWindow : Window
 
         // Configure initial view
         presenter.SelectedMapProvider = TileMapProviderFactory.GoogleRoadMap;
-        presenter.ZoomToExtent(BoundingBoxes.WebMercator_Africa, false, isNewExtent: true);         
+        presenter.ZoomToExtent(BoundingBoxes.WebMercator_Africa, false, isNewExtent: true);
     }
+     
 }
