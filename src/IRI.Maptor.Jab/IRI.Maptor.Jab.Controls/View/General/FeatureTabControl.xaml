@@ -12,10 +12,16 @@
         <Style TargetType="{x:Type TabItem}">
             <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="15"></Setter>
         </Style>
+        <DataTemplate x:Key="FeatureTableTemplate">
+            <maptor:FeatureTable 
+                DataContext="{Binding}"  
+                IsZoomToGeometryEnabled="{Binding ElementName=root, Path=IsZoomToGeometryEnabled}"
+                CanUserEditGeometry="{Binding ElementName=root, Path=CanUserEditGeometry}" 
+                CanUserEditAttribute="{Binding ElementName=root, Path=CanUserEditAttribute}" />
+        </DataTemplate>
     </UserControl.Resources>
-    <TabControl ItemsSource="{Binding SelectedLayers}" VerticalAlignment="Stretch" 
-       Margin="0" Padding="0" SelectedIndex="0"
-       SelectedItem="{Binding CurrentLayer, Mode=TwoWay}">
+    <TabControl ItemsSource="{Binding SelectedLayers}" VerticalAlignment="Stretch" Margin="0"
+                SelectedItem="{Binding CurrentLayer, Mode=TwoWay}" Padding="0" SelectedIndex="0">
         <TabControl.ItemTemplate>
             <DataTemplate>
                 <StackPanel Orientation="Horizontal" Margin="0">
@@ -23,7 +29,7 @@
                         <TextBlock.Text>
                             <MultiBinding StringFormat="{}{0} ({1})">
                                 <Binding Path="LayerName"/>
-                                <Binding Path="Features.Count" Converter="{StaticResource latinDigitsToFarsiDigitsConverter}"/>
+                                <Binding Path="Features.Count" Converter="{StaticResource localizedNumberConverter}"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
@@ -39,11 +45,10 @@
         </TabControl.ItemTemplate>
         <TabControl.ContentTemplate>
             <DataTemplate>
-                <maptor:FeatureTable DataContext="{Binding}" 
-                                     IsZoomToGeometryEnabled="{Binding ElementName=root, Path=IsZoomToGeometryEnabled}"
-                                     CanUserEditGeometry="{Binding ElementName=root, Path=CanUserEditGeometry}" 
-                                     CanUserEditAttribute="{Binding ElementName=root, Path=CanUserEditAttribute}" 
-                                     />
+                <maptor:FeatureTable    DataContext="{Binding }"
+                                        IsZoomToGeometryEnabled="{Binding ElementName=root, Path=IsZoomToGeometryEnabled}"
+                                        CanUserEditGeometry="{Binding ElementName=root, Path=CanUserEditGeometry}" 
+                                        CanUserEditAttribute="{Binding ElementName=root, Path=CanUserEditAttribute}" />
             </DataTemplate>
         </TabControl.ContentTemplate>
     </TabControl>

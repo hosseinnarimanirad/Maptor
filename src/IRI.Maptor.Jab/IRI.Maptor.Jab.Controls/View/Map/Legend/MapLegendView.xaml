@@ -100,7 +100,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
                     Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
             <Button Style="{StaticResource menuCircleButton}"  Cursor="Hand" Command="{Binding AddGeoJsonToDrawingItemsCommand}"  
                     Focusable="False" ToolTip="{Binding [cmd_legend_addGeoJson], Source={StaticResource Localization}}" IsEnabled="False">

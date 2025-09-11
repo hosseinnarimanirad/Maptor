@@ -4,6 +4,7 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:model="clr-namespace:IRI.Maptor.Jab.Common.Models;assembly=IRI.Maptor.Jab.Common"
              xmlns:local ="clr-namespace:IRI.Maptor.Jab.Controls.Common.Behaviors" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              x:Name="root">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -78,11 +79,11 @@
                                 ShowGroupPanel="False" IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
                              x:Name="grid" telerik:StyleManager.Theme="Office2019" SelectionMode="Extended" SelectionChanged="grid_SelectionChanged"
                                 RowEditEnded="grid_RowEditEnded" MouseDoubleClick="grid_MouseDoubleClick">-->
-        <DataGrid ItemsSource="{Binding Features}" AutoGenerateColumns="False" AutoGeneratingColumn="grid_AutoGeneratingColumn"
-                    IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
-                    x:Name="grid" SelectionMode="Extended" SelectionChanged="grid_SelectionChanged"
-                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True" BorderThickness="1"
-                    CellEditEnding="grid_CellEditEnding" AddingNewItem="grid_AddingNewItem" MouseDoubleClick="grid_MouseDoubleClick">
+        <DataGrid x:Name="grid" BorderThickness="1" ItemsSource="{Binding Features}" AutoGenerateColumns="False" SelectionMode="Extended" 
+                  IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
+                  SelectionChanged="grid_SelectionChanged" CellEditEnding="grid_CellEditEnding" EnableColumnVirtualization="False"
+                  AddingNewItem="grid_AddingNewItem" MouseDoubleClick="grid_MouseDoubleClick" DataContextChanged="grid_DataContextChanged"
+                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True"> 
 
             <!--<i:Interaction.Behaviors>
                 <localTelerik:RadMultiSelectBehavior SelectedItems="{Binding HighlightedFeatures}"/>
@@ -98,9 +99,8 @@
                        DockPanel.Dock="Left" Margin="4">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{1} - {0}">
-                        <Binding ElementName="grid" Path="ItemsSource.Count" Converter="{StaticResource latinDigitsToFarsiDigitsConverter}"/>
-                        <Binding ElementName="grid" Path="SelectedItems.Count" Converter="{StaticResource latinDigitsToFarsiDigitsConverter}"/>
-                        <!--Text="{Binding ElementName=grid, Path=ItemsSource.Count, Converter={StaticResource latinDigitsToFarsiDigitsConverter}, StringFormat={}{0} عارضه}"-->
+                        <Binding ElementName="grid" Path="ItemsSource.Count" Converter="{StaticResource localizedNumberConverter}"/>
+                        <Binding ElementName="grid" Path="SelectedItems.Count" Converter="{StaticResource localizedNumberConverter}"/>
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>

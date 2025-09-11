@@ -44,13 +44,14 @@ public class ShapefileDataSource : MemoryDataSource
                                 SrsBase targetSrs) 
     {
         if (attributes == null)
-        {
             throw new NotImplementedException();
-        }
 
         _shapefileName = shapefileName;
 
         _sourceSrs = ShapefileFormat.Shapefile.TryGetSrs(shapefileName);
+
+        if (_sourceSrs is null)
+            throw new NotImplementedException();
 
         _targetSrs = targetSrs;
 

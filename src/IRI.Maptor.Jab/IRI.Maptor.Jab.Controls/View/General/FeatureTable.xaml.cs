@@ -10,6 +10,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
 
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
+using IRI.Maptor.Jab.Controls.Common.Behaviors;
 
 namespace IRI.Maptor.Jab.Controls.View;
 
@@ -34,8 +35,6 @@ public partial class FeatureTable : UserControl
     }
     public static readonly DependencyProperty CanUserEditGeometryProperty =
         DependencyProperty.Register(nameof(CanUserEditGeometry), typeof(bool), typeof(FeatureTable), new PropertyMetadata(false));
-
-
 
     public bool CanUserEditAttribute
     {
@@ -158,42 +157,42 @@ public partial class FeatureTable : UserControl
     //        e.Column.Header = field.Alias;
     //}
 
-    private void grid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
-    {
-        if (Type.GetTypeCode(e.PropertyType) == TypeCode.Object)
-        {
-            e.Cancel = true;
-        }
+    //private void grid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+    //{
+    //    if (Type.GetTypeCode(e.PropertyType) == TypeCode.Object)
+    //    {
+    //        e.Cancel = true;
+    //    }
 
-        switch (Type.GetTypeCode(e.PropertyType))
-        {
-            case TypeCode.Double:
-            case TypeCode.Int16:
-            case TypeCode.Int32:
-            case TypeCode.Int64:
-            case TypeCode.Decimal:
-            case TypeCode.SByte:
-            case TypeCode.Single:
-                //e.Column.TextAlignment = TextAlignment.Left;
-                break;
-            default:
-                break;
-        }
+    //    switch (Type.GetTypeCode(e.PropertyType))
+    //    {
+    //        case TypeCode.Double:
+    //        case TypeCode.Int16:
+    //        case TypeCode.Int32:
+    //        case TypeCode.Int64:
+    //        case TypeCode.Decimal:
+    //        case TypeCode.SByte:
+    //        case TypeCode.Single:
+    //            //e.Column.TextAlignment = TextAlignment.Left;
+    //            break;
+    //        default:
+    //            break;
+    //    }
 
-        if (e.Column.Header.ToString().EqualsIgnoreCase(nameof(Feature<Point>.TheGeometry)) ||
-            e.Column.Header.ToString().EqualsIgnoreCase("TheGeometry"/*nameof(IGeometryAware.TheGeometry)*/))
-        {
-            e.Cancel = true;
-        }
+    //    if (e.Column.Header.ToString().EqualsIgnoreCase(nameof(Feature<Point>.TheGeometry)) ||
+    //        e.Column.Header.ToString().EqualsIgnoreCase("TheGeometry"/*nameof(IGeometryAware.TheGeometry)*/))
+    //    {
+    //        e.Cancel = true;
+    //    }
 
-        if (Presenter.Fields.IsNullOrEmpty())
-            return;
+    //    if (Presenter.Fields.IsNullOrEmpty())
+    //        return;
 
-        var field = Presenter?.Fields?.FirstOrDefault(f => f.Name == e.Column.Header.ToString());
+    //    var field = Presenter?.Fields?.FirstOrDefault(f => f.Name == e.Column.Header.ToString());
 
-        if (field is not null)
-            e.Column.Header = field.Alias;
-    }
+    //    if (field is not null)
+    //        e.Column.Header = field.Alias;
+    //}
 
 
 
@@ -206,7 +205,12 @@ public partial class FeatureTable : UserControl
     {
         if (grid.SelectedItems is null || grid.SelectedItems.Count == 0)
             return;
-        
+
         this.Presenter.UpdateHighlightedFeatures(grid.SelectedItems.Cast<Feature<Point>>());
+    }
+
+    private void grid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        DataGridDictionaryBehavior.Regenerate(sender);
     }
 }

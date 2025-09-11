@@ -5,9 +5,9 @@ using System.Windows.Data;
 using System.Windows.Controls;
 using System.Collections.Generic;
 
-using IRI.Maptor.Extensions; 
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Models.Map;
-using IRI.Maptor.Sta.Spatial.Primitives; 
+using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Converters;
 
 namespace IRI.Maptor.Jab.Controls.Common.Behaviors;
@@ -45,6 +45,11 @@ public static class DataGridDictionaryBehavior
         }
     }
 
+    public static void Regenerate(object sender)
+    {
+        Grid_Loaded(sender, new RoutedEventArgs());
+    }
+
     private static void Grid_Loaded(object sender, RoutedEventArgs e)
     {
         var grid = sender as DataGrid;
@@ -53,16 +58,16 @@ public static class DataGridDictionaryBehavior
         // Clear existing generated columns
         grid.Columns.Clear();
 
-        var items = grid.ItemsSource as IEnumerable<Feature<IRI.Maptor.Sta.Common.Primitives.Point>>;
-        if (items == null) return;
+        //var items = grid.ItemsSource as IEnumerable<Feature<IRI.Maptor.Sta.Common.Primitives.Point>>;
+        //if (items == null) return;
 
         var presenter = grid.DataContext as SelectedLayer;
-
+         
         if (presenter is null || presenter.Fields.IsNullOrEmpty())
             return;
-
-        var keys = items.First().Attributes.Select(a => a.Key).ToList();
          
+        var keys = presenter.Fields.Select(a => a.Name).ToList();
+
         // Create editable columns bound to Attributes[key]
         foreach (var key in keys)
         {
@@ -190,8 +195,8 @@ public static class DataGridDictionaryBehavior
                 };
             }
 
-            grid.Columns.Add(column);            
-        } 
+            grid.Columns.Add(column);
+        }
     }
 
     // Helper for DatePicker template

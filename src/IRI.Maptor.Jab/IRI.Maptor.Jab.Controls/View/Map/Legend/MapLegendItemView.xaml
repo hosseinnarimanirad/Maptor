@@ -169,10 +169,14 @@
                             Text="{Binding ElementName=root, Path=Title}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding ElementName=root, Path=IsEditable, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
-                <TextBlock VerticalAlignment="Center"
+                <!--<TextBlock VerticalAlignment="Center"
                             Text="{Binding NumberOfSelectedFeatures, Converter={StaticResource latinDigitsToFarsiDigitsConverter}, StringFormat={}({0})}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
-                            Visibility="{Binding NumberOfSelectedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
+                            Visibility="{Binding NumberOfSelectedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>-->
+                <TextBlock VerticalAlignment="Center"
+                              Text="{Binding NumberOfSelectedFeatures, Converter={StaticResource localizedNumberConverter}, StringFormat={}({0})}" 
+                              FontSize="{Binding ElementName=root, Path=TitleFontSize}"
+                              Visibility="{Binding NumberOfSelectedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
                 <TextBox BorderThickness="1" Padding="0" VerticalAlignment="Center" MinWidth="70"
                             Text="{Binding ElementName=root, Path=Title, Mode=TwoWay}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"

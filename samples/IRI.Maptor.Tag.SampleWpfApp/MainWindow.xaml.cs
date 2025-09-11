@@ -21,7 +21,6 @@ public partial class MainWindow : Window
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
         System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
         //try
         //{
         //    SqlServerTypes.Utilities.LoadNativeAssembliesv14(Environment.CurrentDirectory);

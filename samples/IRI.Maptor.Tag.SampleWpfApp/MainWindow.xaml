@@ -105,7 +105,7 @@
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0} ({1})">
                                         <Binding Path="LayerName"/>
-                                        <Binding Path="Features.Count" Converter="{StaticResource latinDigitsToFarsiDigitsConverter}"/>
+                                        <Binding Path="Features.Count" Converter="{StaticResource localizedNumberConverter}"/>
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>

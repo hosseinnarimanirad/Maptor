@@ -39,10 +39,12 @@
 
         <Label Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1">X:</Label>
 
+        <!--<ComboBox Name="coordinateType" Grid.Column="0" HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Center" SelectedIndex="0"
+                  Width="100" SelectionChanged="coordinateType_SelectionChanged" 
+                  IsEnabled="{Binding PointCollection.Count, Converter={StaticResource intLessThanIntParameterToIsEnabledConverter}, ConverterParameter=1}" Grid.Row="1" >-->
         <ComboBox Name="coordinateType" Grid.Column="0" HorizontalAlignment="Left" FontWeight="Bold" VerticalAlignment="Center" SelectedIndex="0"
                   Width="100" SelectionChanged="coordinateType_SelectionChanged" 
-                  IsEnabled="{Binding PointCollection.Count, Converter={StaticResource intLessThanIntParameterToIsEnabledConverter}, ConverterParameter=1}" Grid.Row="1" >
-            <!--IsEnabled="{Binding ElementName=PointCollection, Path=Count, Converter={StaticResource countLessThanOneToBoolConverter}}">-->
+                  IsEnabled="{Binding PointCollection.Count, Converter={StaticResource isLessThanConverter}, ConverterParameter=1}" Grid.Row="1" >
             <ComboBoxItem>ژئودتیک</ComboBoxItem>
             <ComboBoxItem>UTM</ComboBoxItem>
         </ComboBox>
