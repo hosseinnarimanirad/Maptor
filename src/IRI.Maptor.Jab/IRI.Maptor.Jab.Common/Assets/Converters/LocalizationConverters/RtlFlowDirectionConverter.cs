@@ -22,7 +22,7 @@ public class RtlFlowDirectionConverter : IValueConverter
     private bool IsRtlCharacter(char ch)
     {
         // Hebrew, Arabic, Syriac, Thaana, N'Ko, etc.
-        return (ch >= 0x0590 && ch <= 0x08FF) ||
-               (ch >= 0xFB1D && ch <= 0xFEFC);
+        return ch >= 0x0590 && ch <= 0x08FF ||
+               ch >= 0xFB1D && ch <= 0xFEFC;
     }
 }

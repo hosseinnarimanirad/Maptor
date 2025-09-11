@@ -13,7 +13,7 @@
     <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter"/>
 
     <converters:CenterChildParentConverter x:Key="centerChildParentConverter"/>
-    <converters:CountLessThanOneToBoolConverter x:Key="countLessThanOneToBoolConverter"/>
+    <!--<converters:CountLessThanOneToBoolConverter x:Key="countLessThanOneToBoolConverter"/>-->
 
     <converters:DateTimeToPersianEllapsedDateCoarseConverter x:Key="dateTimeToPersianEllapsedDateCoarseConverter"/>
     <converters:DoubleToDoubleInverseConverter x:Key="doubleInverseConverter"/>
@@ -27,8 +27,8 @@
     <converters:IndexToBoolConverter x:Key="indexToBoolConverter"/>
 
     <converters:IntGreaterThanIntParameterToVisibilityConverter x:Key="intGreaterThanIntParameterToVisibilityConverter"/>
-    <converters:IntGreaterThanIntParameterToIsEnabledConverter x:Key="intGreaterThanIntParameterToIsEnabledConverter"/>
-    <converters:IntLessThanIntParameterToIsEnabledConverter x:Key="intLessThanIntParameterToIsEnabledConverter"/>
+    <!--<converters:IntGreaterThanIntParameterToIsEnabledConverter x:Key="intGreaterThanIntParameterToIsEnabledConverter"/>-->
+    <!--<converters:IntLessThanIntParameterToIsEnabledConverter x:Key="intLessThanIntParameterToIsEnabledConverter"/>-->
     <converters:IsAuthorizedToBool x:Key="isAuthorizedToBool"/>
     <converters:IsAuthorizedToVisibility x:Key="isAuthorizedToVisibility"/>
     <converters:IsGreaterThanConverter x:Key="isGreaterThanConverter"/>
@@ -36,7 +36,8 @@
     <converters:IsMapProviderSelected x:Key="isMapProviderSelected"/>
 
     <converters:LatinDigitsToFarsiDigitsConverter x:Key="latinDigitsToFarsiDigitsConverter"/>
-    
+    <converters:LocalizedNumberConverter x:Key="localizedNumberConverter"/>
+
     <converters:MultiBooleanToVisibilityConverter x:Key="multiBooleanToVisibilityConverter"/>
     
     <converters:NotConverter x:Key="notConverter"/>
