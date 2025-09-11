@@ -40,7 +40,7 @@
         <TabControl.ContentTemplate>
             <DataTemplate>
                 <maptor:FeatureTable DataContext="{Binding}" 
-                                     IsZoomToGeometryEnabled="{Binding ElementName=root, Path=CanUserEditGeometry}"
+                                     IsZoomToGeometryEnabled="{Binding ElementName=root, Path=IsZoomToGeometryEnabled}"
                                      CanUserEditGeometry="{Binding ElementName=root, Path=CanUserEditGeometry}" 
                                      CanUserEditAttribute="{Binding ElementName=root, Path=CanUserEditAttribute}" 
                                      />
