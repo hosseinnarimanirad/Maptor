@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"  
         xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.View;assembly=IRI.Maptor.Jab.Controls" 
-        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" 
         Loaded="Window_Loaded" Title="Sample Maptor App" Height="700" Width="900">
     <Window.Resources>
         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource flatButtonPrimary}">
