@@ -49,8 +49,8 @@ public class LegendToggleCommand : LegendCommandBase
     {
         LegendToggleCommand result = new LegendToggleCommand
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.TextSerif }.Data, 
-            NotSelectedPathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.AppbarExtension.appbarTextSerifNone,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.FormatTitle }.Data,
+            NotSelectedPathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.FormatStrikethrough}.Data,
             ToolTipResourceKey = nameof(IRI.Maptor.Jab.Common.Properties.Resources.cmd_legendItem_toggleLayerLabel),
             Layer = layer,
             //IsSelected = layer.Labels?.IsOn == true

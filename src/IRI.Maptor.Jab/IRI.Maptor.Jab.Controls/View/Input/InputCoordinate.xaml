@@ -32,7 +32,6 @@
 
         <Button Grid.ColumnSpan="7" Margin="4" Command="{Binding DrawGeometryCommand}"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0">
-                <!--<Path Data="{StaticResource appbarVectorPen}" Fill="{DynamicResource MahApps.Brushes.Accent}" Width="16" Stretch="Uniform" Height="15" Margin="4,0" FlowDirection="LeftToRight"/>-->
                 <iconPacks:PackIconModern Kind="VectorPen" Width="16" Foreground="{DynamicResource MahApps.Brushes.Accent}" />
                 <TextBlock Text="ترسیم عارضه روی نقشه" VerticalAlignment="Center" Margin="2,0"/>
             </StackPanel>
@@ -56,8 +55,6 @@
                  Visibility="{Binding ElementName=coordinateType, Path=SelectedIndex, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}" Grid.Row="1"/>
         <Button Grid.Column="6" Name="save" Grid.RowSpan="1"  Click="save_Click" Foreground="{DynamicResource MahApps.Brushes.Accent}"
                 HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4" Grid.Row="1" Padding="4">
-            <!--<Image Stretch="Uniform" Source="/IRI.Smaja.ZaminNegarAja;component/Images/appbar.add24.png"></Image>-->
-            <!--<Path Data="{StaticResource appbarAdd}" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>-->
             <iconPacks:Modern Kind="Add" Width="16"/>
         </Button>
         <Label Name="note" Grid.Row="4" Grid.ColumnSpan="5" FontStyle="Italic" Foreground="DarkGray">توجه: مختصات ها به صورت طول و عرض جغرافیایی می باشند</Label>

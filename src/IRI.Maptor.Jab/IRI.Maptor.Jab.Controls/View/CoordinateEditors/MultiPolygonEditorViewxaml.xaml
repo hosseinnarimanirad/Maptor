@@ -35,15 +35,12 @@
                                         </Style>
                                     </DockPanel.Resources>
                                     <Button Grid.Column="6" DockPanel.Dock="Right">
-                                        <!--<Path Data="{StaticResource appbarMagnifyAdd}"/>-->
                                         <iconPacks:Modern Kind="MagnifyAdd"/>
                                     </Button>
                                     <Button Grid.Column="6" DockPanel.Dock="Right">
-                                        <!--<Path Data="{StaticResource appbarCheck}" />-->
                                         <iconPacks:Modern Kind="Check"/>
                                     </Button>
                                     <Button Grid.Column="0" DockPanel.Dock="Right">
-                                        <!--<Path Data="{StaticResource appbarDelete}" />-->
                                         <iconPacks:Modern Kind="Delete"/>
                                     </Button>
                                     <TextBlock Text="چندضلعی" VerticalAlignment="Center" Foreground="White" FontWeight="Bold"/>

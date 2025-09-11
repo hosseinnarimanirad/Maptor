@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MahApps.Metro.IconPacks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,8 +36,8 @@ namespace IRI.Maptor.Jab.MultiSelectItem.View
         // Using a DependencyProperty as the backing store for Title.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register(nameof(Title), typeof(string), typeof(MultiSelectItem), new PropertyMetadata(string.Empty));
-         
-         
+
+
 
 
         public int PathSize
@@ -50,15 +51,15 @@ namespace IRI.Maptor.Jab.MultiSelectItem.View
             DependencyProperty.Register(nameof(PathSize), typeof(int), typeof(MultiSelectItem), new PropertyMetadata(16));
 
 
-        public Geometry PathData
+        public PackIconModernKind PathKind
         {
-            get { return (Geometry)GetValue(PathDataProperty); }
-            set { SetValue(PathDataProperty, value); }
+            get { return (PackIconModernKind)GetValue(PathKindProperty); }
+            set { SetValue(PathKindProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for PathData.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty PathDataProperty =
-            DependencyProperty.Register("PathData", typeof(Geometry), typeof(MultiSelectItem), new PropertyMetadata(Geometry.Empty));
+        public static readonly DependencyProperty PathKindProperty =
+            DependencyProperty.Register("PathKind", typeof(PackIconModernKind), typeof(MultiSelectItem), new PropertyMetadata(PackIconModernKind.Add/*Geometry.Empty*/));
 
 
 

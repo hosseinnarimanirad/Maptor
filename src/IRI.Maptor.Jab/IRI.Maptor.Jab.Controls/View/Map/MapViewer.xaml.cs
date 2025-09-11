@@ -4214,9 +4214,9 @@ public partial class MapViewer : NotifiableUserControl
         leftToolTip: "لغو",
         middleToolTip: "تکمیل تکه‌جاری",
 
-        rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Check, // IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarCheck,
-        leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Close, // IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarClose,
-        middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Checkmark); // IRI.Maptor.Jab.Common.Assets.ShapeStrings.Appbar.appbarCheckmark);
+        rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Check,  
+        leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Close,  
+        middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Checkmark);  
 
         presenter.LeftCommandAction = i =>
         {

@@ -40,6 +40,7 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Width" Value="16"/>
+            <Setter Property="FlowDirection" Value="LeftToRight"/>
         </Style>
         <CollectionViewSource x:Key="collectionViewSource" 
                               Source="{Binding Layers, RelativeSource={RelativeSource AncestorType=userControl:NotifiableUserControl}}" 
@@ -123,7 +124,7 @@
             </Button>
             <Button Style="{StaticResource menuCircleButton}" Cursor="Hand" Command="{Binding MoveDrawingItemUpCommand}" Visibility="Collapsed"
                     Focusable="False" ToolTip="{Binding [cmd_legend_moveUp], Source={StaticResource Localization}}" IsEnabled="{Binding CanMoveDrawingItemUp}">
-                <Path Data="{StaticResource appbarLayerUp}" Stretch="Uniform" Fill="White" Width="18" Height="18" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconModern Kind="LayerUp" />
             </Button>
         </StackPanel>
         <Line Grid.Row="1" X1="0" X2="100" StrokeThickness="2" Stroke="{DynamicResource MahApps.Brushes.Highlight}" 

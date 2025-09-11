@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IRI.Maptor.Jab.MultiSelectItem.View"
              mc:Ignorable="d"  
-    
+            xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
             FlowDirection="RightToLeft"
             xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro">
     <Grid>
@@ -157,11 +157,16 @@
         </ComboBox>
 
         <Button Grid.Column="2" Command="{Binding AddCommand}">
-            <Path Data="{Binding Path=PathData, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" Stretch="Uniform"
+            <iconPacks:PackIconModern
+                Kind="{Binding PathKind, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                Width="{Binding Path=PathSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" 
+                Height="{Binding Path=PathSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+            <!--<Path Data="{Binding Path=PathData, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" Stretch="Uniform"
                   Width="{Binding Path=PathSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" 
                   Height="{Binding Path=PathSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                   Fill="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" 
-                  Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>
+                  Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}"/>-->
         </Button>
 
         <RadioButton Padding="2" Grid.Column="3" Content="و" Style="{StaticResource {x:Type ToggleButton}}" 

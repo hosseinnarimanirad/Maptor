@@ -35,7 +35,6 @@
         <StackPanel Orientation="Horizontal" Margin="8">
             <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Margin="10" Height="40" Width="40" 
                     BorderThickness="3" CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <!--<Path Data="{Binding IconPathMarkup, TargetNullValue={StaticResource appbarInformation}}" Fill="{DynamicResource MahApps.Brushes.Accent}" Width="18" Height="18"/>-->
                 <iconPacks:PackIconModern Kind="Information" Foreground="{StaticResource MahApps.Brushes.Accent}" />
             </Border>
             <TextBlock Text="{Binding Message}" Margin="8,0" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap" 
@@ -46,16 +45,13 @@
                     Background="{Binding SecondOptionColor, FallbackValue={DynamicResource MahApps.Brushes.Gray10}, RelativeSource={RelativeSource AncestorType=Window}}"
                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                     Visibility="{Binding IsTwoOptionsMode, Converter={StaticResource boolToVisibilityConverter}}">
-                    <!--<Path Data="{Binding SecondOptionPathMarkup, TargetNullValue={StaticResource appbarClose}}"/>-->
                     <iconPacks:Modern Kind="Close"/>
                 </Button>
             <Button Margin="4,0" Style="{StaticResource circleButton}" Command="{Binding FirstOptionCommand}" ToolTip="{Binding FirstOptionText}"
                     Background="{Binding FirstOptionColor, FallbackValue={DynamicResource MahApps.Brushes.Accent}, RelativeSource={RelativeSource AncestorType=Window}}"
                     Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
-                    <!--<Path Data="{Binding FirstOptionPathMarkup, TargetNullValue={StaticResource appbarCheck}}"/>-->
                     <iconPacks:Modern Kind="Check"/>
                 </Button>
- 
         </StackPanel>
     </Grid>
 </mahApp:MetroWindow>

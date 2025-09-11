@@ -3,7 +3,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
-            
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls" 
                     xmlns:viewModel="clr-namespace:IRI.Maptor.Jab.Controls.ViewModel.Dialogs"
                     d:DataContext="{d:DesignInstance Type=viewModel:DialogViewModel, IsDesignTimeCreatable=True}"
@@ -41,7 +41,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal" Margin="4">
             <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Margin="10" Height="40" Width="40" BorderThickness="4" CornerRadius="20">
-                <Path Data="{Binding IconPathMarkup, TargetNullValue={StaticResource appbarInformation}}" Fill="{DynamicResource MahApps.Brushes.Accent}" Width="18" Height="18"/>
+                <Path Data="{Binding IconPathMarkup, TargetNullValue={iconPacks:Modern Kind=Information}}" Fill="{DynamicResource MahApps.Brushes.Accent}" Width="18" Height="18"/>
             </Border>
             <TextBlock Text="{Binding Message}" Margin="4,4" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"/>
         </StackPanel>
@@ -49,7 +49,7 @@
             
                 <Button Margin="4,0" Style="{StaticResource okButtonStyle}" Command="{Binding FirstOptionCommand}" ToolTip="{Binding FirstOptionText}"
                         HorizontalAlignment="Right">
-                    <Path Data="{Binding FirstOptionPathMarkup, TargetNullValue={StaticResource appbarCheck}}"/>
+                    <Path Data="{Binding FirstOptionPathMarkup, TargetNullValue={iconPacks:Modern Kind=Check}}"/>
                 </Button> 
         </StackPanel>
     </Grid>

@@ -29,7 +29,6 @@
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <Button Command="{Binding RemovePointCommand}" Width="Auto" Height="Auto" Padding="2" Margin="4">
-                            <!--<Path Data="{StaticResource appbarDelete}" Width="16" Height="16" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform" FlowDirection="LeftToRight"/>-->
                             <iconPacks:PackIconModern Kind="Delete" Width="16" Height="16" Foreground="{StaticResource MahApps.Brushes.Accent}" FlowDirection="LeftToRight"/>
                         </Button>
                     </DataTemplate>
