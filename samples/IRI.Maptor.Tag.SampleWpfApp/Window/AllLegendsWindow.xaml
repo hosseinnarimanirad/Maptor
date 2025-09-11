@@ -53,23 +53,5 @@
                 </Expander>
             </DockPanel>
         </Border>
-
-        <Expander Header="Draw" HorizontalAlignment="Left" Margin="4" IsExpanded="True" Background="White" VerticalAlignment="Top" Opacity="1">
-            <StackPanel>
-                <Button Command="{Binding DrawPointCommand}" ToolTip="Draw point"  >
-                    <iconPacks:Modern Kind="LocationCircle"/>
-                </Button>
-                <Button Command="{Binding DrawPolylineCommand}" ToolTip="Draw polyline">
-                    <iconPacks:Modern Kind="VectorLine"/>
-                </Button>
-                <Button Command="{Binding DrawPolygonCommand}" ToolTip="Draw polygon">
-                    <iconPacks:Modern Kind="VectorPolygon"/>
-                </Button>
-                <Button Command="{Binding AddTextToMapCommand}" ToolTip="Add text to map">
-                    <iconPacks:Modern Kind="TextSerif"/>
-                </Button>
-            </StackPanel>
-        </Expander>
-
     </Grid>
 </Window>

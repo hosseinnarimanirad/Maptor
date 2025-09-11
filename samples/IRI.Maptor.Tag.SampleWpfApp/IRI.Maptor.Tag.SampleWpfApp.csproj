@@ -32,9 +32,6 @@
       <HintPath>..\..\..\deploy\MicrosoftSqlServerTypes\v14\Microsoft.SqlServer.Types.dll</HintPath>
     </Reference>
   </ItemGroup>-->
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SqlServer.Types" />
-  </ItemGroup>
 
 
 </Project>

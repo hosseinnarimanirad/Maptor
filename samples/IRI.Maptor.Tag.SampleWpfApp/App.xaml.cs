@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace IRI.App.NaghsheYar;
+namespace IRI.Maptor.Tag.SampleWpfApp;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
