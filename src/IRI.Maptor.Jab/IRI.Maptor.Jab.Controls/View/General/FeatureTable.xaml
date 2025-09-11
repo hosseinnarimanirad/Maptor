@@ -60,11 +60,11 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type model:FeatureTableCommand}">
                 <Button VerticalAlignment="Center" Margin="4" Cursor="Hand" 
-                           Command="{Binding Command}" IsEnabled="{Binding IsEnabled}"  Style="{x:Null}"
+                           Command="{Binding Command}" IsEnabled="{Binding IsEnabled}" 
                            CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor} }" 
                            BorderThickness="0" Focusable="False" ToolTip="{Binding ToolTip}" Height="24" Width="24"
                            Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Path Data="{Binding PathMarkup}" Fill="{DynamicResource MahApps.Brushes.Accent}" Stretch="Uniform"  FlowDirection="LeftToRight"/>
+                    <Path Data="{Binding PathMarkup}" Fill="White" Stretch="Uniform"  FlowDirection="LeftToRight" Margin="4"/>
                 </Button> 
             </DataTemplate>
         </ResourceDictionary>
@@ -81,7 +81,7 @@
         <DataGrid ItemsSource="{Binding Features}" AutoGenerateColumns="False" AutoGeneratingColumn="grid_AutoGeneratingColumn"
                     IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
                     x:Name="grid" SelectionMode="Extended" SelectionChanged="grid_SelectionChanged"
-                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True"
+                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True" BorderThickness="1"
                     CellEditEnding="grid_CellEditEnding" AddingNewItem="grid_AddingNewItem" MouseDoubleClick="grid_MouseDoubleClick">
 
             <!--<i:Interaction.Behaviors>

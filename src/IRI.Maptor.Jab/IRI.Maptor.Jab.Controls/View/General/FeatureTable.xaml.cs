@@ -1,14 +1,15 @@
-﻿using IRI.Maptor.Jab.Common.Models.Map;
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Point = IRI.Maptor.Sta.Common.Primitives.Point;
+
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Jab.Common.Models.Map;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
+
+using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 
 namespace IRI.Maptor.Jab.Controls.View;
 
@@ -22,7 +23,6 @@ public partial class FeatureTable : UserControl
         get { return (bool)GetValue(IsZoomToGeometryEnabledProperty); }
         set { SetValue(IsZoomToGeometryEnabledProperty, value); }
     }
-
     public static readonly DependencyProperty IsZoomToGeometryEnabledProperty =
       DependencyProperty.Register(nameof(IsZoomToGeometryEnabled), typeof(bool), typeof(FeatureTable), new PropertyMetadata(false));
 
@@ -32,8 +32,6 @@ public partial class FeatureTable : UserControl
         get { return (bool)GetValue(CanUserEditGeometryProperty); }
         set { SetValue(CanUserEditGeometryProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for CanUserEditGeometry.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty CanUserEditGeometryProperty =
         DependencyProperty.Register(nameof(CanUserEditGeometry), typeof(bool), typeof(FeatureTable), new PropertyMetadata(false));
 
@@ -44,8 +42,6 @@ public partial class FeatureTable : UserControl
         get { return (bool)GetValue(CanUserEditAttributeProperty); }
         set { SetValue(CanUserEditAttributeProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for CanUserEditAttribute.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty CanUserEditAttributeProperty =
         DependencyProperty.Register(nameof(CanUserEditAttribute), typeof(bool), typeof(FeatureTable), new PropertyMetadata(false));
 
@@ -57,7 +53,7 @@ public partial class FeatureTable : UserControl
         InitializeComponent();
     }
 
-    
+
 
 
     private void grid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -208,6 +204,9 @@ public partial class FeatureTable : UserControl
 
     private void grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        if (grid.SelectedItems is null || grid.SelectedItems.Count == 0)
+            return;
+        
         this.Presenter.UpdateHighlightedFeatures(grid.SelectedItems.Cast<Feature<Point>>());
     }
 }
