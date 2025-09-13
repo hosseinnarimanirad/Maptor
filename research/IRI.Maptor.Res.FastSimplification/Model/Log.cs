@@ -4,7 +4,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Res.FastSimplification;
 
-public class SpeedLog
+public class Log
 {
     public string FileName { get; set; }
 
@@ -24,7 +24,7 @@ public class SpeedLog
 
     public double Compression { get; set; }
 
-    public SpeedLog(
+    public Log(
         string fileName,
         string methodName,
         List<Geometry<Point>> originalGeometries,

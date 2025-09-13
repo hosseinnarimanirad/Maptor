@@ -21,7 +21,13 @@
     </Reference>
   </ItemGroup>-->
   <ItemGroup>
-    <PackageReference Include="Microsoft.SqlServer.Types"/>
+    <PackageReference Include="Microsoft.SqlServer.Types" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="README.md">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
   </ItemGroup>
 
 </Project>
