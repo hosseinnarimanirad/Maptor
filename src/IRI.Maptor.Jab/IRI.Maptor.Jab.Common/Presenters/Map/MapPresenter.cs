@@ -768,7 +768,7 @@ public abstract class MapPresenter : BasePresenter
 
     public Func<double> RequestGetActualHeight;
 
-    //public Action<MapPresenter> RegisterAction;
+    public Action<MapPresenter> RegisterAction;
 
     public Action<bool> RequestSetConnectedState;
 

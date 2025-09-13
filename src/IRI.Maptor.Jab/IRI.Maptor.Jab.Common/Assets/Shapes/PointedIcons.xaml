@@ -1,8 +1,0 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
-    
-    <!--Programming Notebook > WPF > Resources-->
-    <StreamGeometry x:Key="home107">M 420.099,18.4442L 338.028,18.4442L 338.028,53.4378L 420.099,120.205L 420.099,18.4442 Z M 420.099,278.496L 420.099,243.795L 338.028,176.918L 250.421,105.528L 80.7432,243.795L 80.7432,432.496L 187.713,432.496L 187.713,246.681L 313.13,246.681L 313.13,432.496L 420.099,432.496L 420.099,278.496 Z M 80.7432,225.952L 250.421,87.6844L 338.028,159.074L 420.099,225.952L 457.735,256.621L 500.843,203.72L 420.099,138.035L 338.028,71.268L 250.421,-3.05176e-005L 0,203.72L 43.1077,256.621L 80.7432,225.952 Z</StreamGeometry>
-     
-</ResourceDictionary>

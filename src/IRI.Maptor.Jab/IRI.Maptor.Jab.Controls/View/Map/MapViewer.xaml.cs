@@ -503,7 +503,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestGetActualWidth = () => this.mapView.ActualWidth;
 
-        //presenter.RegisterAction = async (i) => { await this.Register(i); };
+        presenter.RegisterAction = async (i) => { await this.Register(i); };
 
         presenter.RequestSetDefaultCursor = this.SetDefaultCursor;
 
