@@ -9,7 +9,7 @@
         xmlns:iriJabUIComponents="clr-namespace:IRI.Maptor.Jab.MultiSelectItem.View;assembly=IRI.Maptor.Jab.MultiSelectItem"
         xmlns:MapViewer="clr-namespace:IRI.Maptor.Jab.Controls;assembly=IRI.Maptor.Jab.Controls"   
         mc:Ignorable="d" Loaded="Window_Loaded"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="850" Width="1400">
     <Window.Resources>
 
         <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MahApps.Styles.Slider}"/>
@@ -24,14 +24,15 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="530"/>
+            <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="1.6*"/>
         </Grid.ColumnDefinitions>
 
         <ScrollViewer Grid.Row="0" Grid.Column="0"  >
             <Grid Grid.Row="1" Grid.Column="0"  >
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -57,21 +58,26 @@
                         <Setter Property="Margin" Value="4"/>
                     </Style>
                 </Grid.Resources>
-                <!--<Expander Header="Layers" IsExpanded="True">
-            <iriJabMapControls:MapLegendView DataContext="{Binding IndexLayers}" GroupName="Index" EnableFilterMode="False" MaxHeight="250"
-                                                                            FontFamily="{StaticResource iranSans}"/>
-        </Expander>-->
-                <Expander Header="Logistic Regression" Grid.Row="0">
-                    <StackPanel>
+                <Expander Grid.Row="0" Cursor="Hand" Header="Toolds" IsExpanded="True">
+                    <WrapPanel>
+                        <Button Height="20" Content="Analyze" HorizontalAlignment="Left" Margin="2" Command="{Binding AnalyzeCommand}"/>
+                        <Button Height="20" Content="Measure" HorizontalAlignment="Left" Margin="2" Command="{Binding MeasureLengthCommand}"/>
+                        <Button Height="20" Content="Create initial syn. data" HorizontalAlignment="Left" Margin="2" Click="createData_Click" Visibility="Collapsed"/>
+                        <Button Height="20" Content="Print" HorizontalAlignment="Left" Margin="2" Command="{Binding ExportMapAsPngCommand}" CommandParameter="{Binding ElementName=window}"/>
+                        <Button Height="20" Content="set print area" HorizontalAlignment="Left" Margin="2" Command="{Binding SetPrintAreaCommand}"/>
+                    </WrapPanel>
+                </Expander>
+                <Expander Grid.Row="1" Cursor="Hand" Header="Logistic Regression">
+                    <WrapPanel>
                         <!--<Button Content="Create LR Model using selected drawing items" Command="{Binding CreateTrainingDataCommand}"/>-->
                         <Button Content="Save LR model (json) ..." Command="{Binding SaveTrainingDataAsJsonCommand}"/>
                         <Button Content="Save LR model (csv) ..." Command="{Binding SaveTrainingDataAsCsvCommand}"/>
                         <Button Content="Load LR model ..." Command="{Binding LoadTrainingDataCommand}"/>
                         <Button Content="Clear LR model" Command="{Binding ClearTrainingDataCommand}"/>
                         <TextBlock Text="{Binding TrainingData.Records.Count, StringFormat={}Count:{0}, TargetNullValue=0}" FontFamily="Calibri"/>
-                    </StackPanel>
+                    </WrapPanel>
                 </Expander>
-                <Expander Header="Synthetic Training Data" Grid.Row="1">
+                <Expander Grid.Row="2" Cursor="Hand" Header="Synthetic Training Data">
                     <Grid x:Name="syntheticGrid" DataContext="{Binding SyntheticDataTrainingData}">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -143,15 +149,13 @@
                         </ListBox>
                     </Grid>
                 </Expander>
-                <Expander Header="Drawing Items" Grid.Row="2" IsExpanded="False"  DockPanel.Dock="Top"
-                            Margin="0,1,0,0" Cursor="Hand" Background="Transparent">
+                <Expander Grid.Row="3" Cursor="Hand" Header="Drawing Items" Background="Transparent">
                     <maptor:MapDrawingLegendView MinHeight="90" GroupName="A"/>
                 </Expander>
-                <Expander Header="Layer"  Grid.Row="3" IsExpanded="False" DockPanel.Dock="Top"
-                            Margin="0,1,0,0" Cursor="Hand" Background="Transparent">
+                <Expander Grid.Row="4" Cursor="Hand" Header="Layer" Background="Transparent">
                     <maptor:MapLegendView EnableFilterMode="True" Layers="{Binding Layers}" GroupName="B"/>
                 </Expander>
-                <Expander Header="Attribute Table" Grid.Row="6" MaxHeight="260" DockPanel.Dock="Top" Cursor="Hand" >
+                <Expander Grid.Row="5" Cursor="Hand" Header="Attribute Table" MaxHeight="260">
                     <maptor:FeatureTabControl/>
                 </Expander>
             </Grid>
@@ -165,11 +169,6 @@
             <TextBlock Text="{Binding ElementName=map, Path=MapScale, Converter={StaticResource doubleInverseConverter}, StringFormat={}Scale: {0:N2}}" MinWidth="120" VerticalAlignment="Center" Margin="4"/>
             <ComboBox VerticalAlignment="Center" ItemsSource="{Binding StandardScales}" MinWidth="120"
                         SelectedItem="{Binding ElementName=map, Path=MapScale, Mode=TwoWay, Converter={StaticResource scaleToGoogleScaleConverter}}" />
-            <Button Height="20" Content="Measure" HorizontalAlignment="Left" Margin="2" Command="{Binding MeasureLengthCommand}"/>
-            <Button Height="20" Content="Create initial syn. data" HorizontalAlignment="Left" Margin="2" Click="createData_Click" Visibility="Collapsed"/>
-            <Button Height="20" Content="Print" HorizontalAlignment="Left" Margin="2" Command="{Binding ExportMapAsPngCommand}" 
-                CommandParameter="{Binding ElementName=window}"/>
-            <Button Height="20" Content="set print area" HorizontalAlignment="Left" Margin="2" Command="{Binding SetPrintAreaCommand}"/>
 
         </StackPanel>
     </Grid>

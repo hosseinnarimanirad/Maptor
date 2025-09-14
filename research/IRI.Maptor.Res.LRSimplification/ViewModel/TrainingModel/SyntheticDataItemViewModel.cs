@@ -1,7 +1,7 @@
 ﻿using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Sta.MachineLearning;
-using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Res.LRSimplification.ViewModel.TrainingModel;
 
@@ -52,11 +52,6 @@ public class SyntheticDataItemViewModel : Notifier
     }
 
 
-    public string CurrentLRParameters => Parameters?.ToString() ?? string.Empty;
-
-    public bool IsRetained => !string.IsNullOrWhiteSpace(OriginalLineString) && OriginalLineString == SimplifiedLineString;
-
-
     private string _title = string.Empty;
     public string Title
     {
@@ -92,7 +87,12 @@ public class SyntheticDataItemViewModel : Notifier
         }
     }
 
+
     public bool EnablePreview { get; set; } = true;
+     
+    public string CurrentLRParameters => Parameters?.ToString() ?? string.Empty;
+
+    public bool IsRetained => !string.IsNullOrWhiteSpace(OriginalLineString) && OriginalLineString == SimplifiedLineString;
 
     public SyntheticDataItemViewModel(Action requestPreview, bool enablePreview)
     {

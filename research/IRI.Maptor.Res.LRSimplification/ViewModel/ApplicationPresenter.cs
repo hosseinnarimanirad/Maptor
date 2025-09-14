@@ -426,6 +426,24 @@ public class ApplicationPresenter : MapApplicationPresenter
         }
     }
 
+    private RelayCommand _analyzeCommand;
+
+    public RelayCommand AnalyzeCommand
+    {
+        get
+        {
+            if (_analyzeCommand == null)
+            {
+                _analyzeCommand = new RelayCommand(async param =>
+                {
+                    await Common.LRHelper.GeneralTest();
+                });
+            }
+
+            return _analyzeCommand;
+        }
+    }
+
 
     internal void AddWkt()
     {

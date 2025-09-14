@@ -1,10 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using System.Linq;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
@@ -17,7 +13,7 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 
-namespace IRI.Maptor.Res.TrajectoryCompression;
+namespace IRI.Maptor.Res.LRSimplification.Common;
 
 public static class LRHelper
 {
@@ -684,18 +680,18 @@ public static class LRHelper
         features = features.Where(f => !f.HasDuplicatePoints()).ToList();
 
         List<SimplificationType> methods = new List<SimplificationType>()
-            {
-                SimplificationType.RamerDouglasPeucker,
-                SimplificationType.ReumannWitkam,
+        {
+            SimplificationType.RamerDouglasPeucker,
+            SimplificationType.ReumannWitkam,
 
-                //SimplificationType.VisvalingamWhyatt,
-                //SimplificationType.SleeveFitting,
+            //SimplificationType.VisvalingamWhyatt,
+            //SimplificationType.SleeveFitting,
 
-                SimplificationType.NormalOpeningWindow,
-                SimplificationType.BeforeOpeningWindow,
+            SimplificationType.NormalOpeningWindow,
+            SimplificationType.BeforeOpeningWindow,
 
-                //SimplificationType.APSC
-            };
+            //SimplificationType.APSC
+        };
 
         var coefs = new List<int>() { 0, 2/*, 4, 6, 8, 10 */};
 
@@ -714,7 +710,7 @@ public static class LRHelper
             var baseZoomLevel = WebMercatorUtility.EstimateZoomLevel(boundingBox, /*34,*/ 512, 512);
 
             var originalVectorLayer = GeneralHelper.GetAsLayer("original", new() { feature });
-
+             
             GeoJsonFeatureSet originalFeatureSet = feature.AsGeoJsonFeatureSet();
 
             originalFeatureSet.Save($"{outputDirectory}\\{fileName}-F{featureIndex}.json", false, true);
@@ -1488,6 +1484,4 @@ public static class LRHelper
     }
 
     #endregion
-
-
 }

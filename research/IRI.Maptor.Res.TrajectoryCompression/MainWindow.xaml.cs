@@ -35,7 +35,7 @@ public partial class MainWindow : Window
         // await SimplificationHelper.GeneralTest();
         // SimplificationHelper.TestAPSC();
 
-        await LRHelper.GeneralTest();
+        //await LRHelper.GeneralTest();
         //await LRHelper.InvestigateVisualDiff();
     }
       

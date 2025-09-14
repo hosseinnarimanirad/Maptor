@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using IRI.Maptor.Sta.Common.Primitives;
 
-namespace IRI.Maptor.Res.TrajectoryCompression;
+namespace IRI.Maptor.Res.LRSimplification;
 
 public class VisualSimplificationLog
 {

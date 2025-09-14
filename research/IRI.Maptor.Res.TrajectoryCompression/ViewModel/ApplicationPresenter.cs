@@ -24,6 +24,7 @@ public class ApplicationPresenter : MapApplicationPresenter
         }
     }
 
+
     private double _estimatedScale;
     public double EstimatedScale
     {
@@ -34,6 +35,7 @@ public class ApplicationPresenter : MapApplicationPresenter
             RaisePropertyChanged();
         }
     }
+
 
     private AreaStatistics _areaStatistics;
     public AreaStatistics AreaStatistics
@@ -46,6 +48,7 @@ public class ApplicationPresenter : MapApplicationPresenter
         }
     }
 
+
     private double _distanceTolerance;
     public double DistanceTolerance
     {
@@ -57,6 +60,7 @@ public class ApplicationPresenter : MapApplicationPresenter
         }
     }
 
+
     private int _zoomLevel;
     public int ZoomLevel
     {
@@ -67,6 +71,7 @@ public class ApplicationPresenter : MapApplicationPresenter
             RaisePropertyChanged(); 
         }
     }
+
 
     public ApplicationPresenter()
     {
@@ -93,11 +98,9 @@ public class ApplicationPresenter : MapApplicationPresenter
         
 
     #region Commands
-     
-
+      
     //Simplify By Area
     private RelayCommand _simplifyByAreaCommand;
-
     public RelayCommand SimplifyByAreaCommand
     {
         get
@@ -130,7 +133,6 @@ public class ApplicationPresenter : MapApplicationPresenter
     }
 
     private RelayCommand _simplifyVisvalingamCommand;
-
     public RelayCommand SimplifyVisvalingamCommand
     {
         get
@@ -201,8 +203,7 @@ public class ApplicationPresenter : MapApplicationPresenter
             return _simplifyVisvalingamCommand;
         }
     }
-     
-
+      
     #endregion
 }
 

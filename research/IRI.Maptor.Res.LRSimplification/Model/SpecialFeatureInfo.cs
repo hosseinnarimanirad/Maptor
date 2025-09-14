@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Res.TrajectoryCompression;
+namespace IRI.Maptor.Res.LRSimplification;
 
 public class SpecialFeatureInfo
 {
