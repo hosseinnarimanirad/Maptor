@@ -17,24 +17,13 @@ public partial class MainWindow : Window
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-        //try
-        //{
-        //    SqlServerTypes.Utilities.LoadNativeAssembliesv14(Environment.CurrentDirectory);
-        //}
-        //catch (Exception)
-        //{
-        //    throw;
-        //}
-
+         
         var presenter = new ApplicationPresenter();
 
         await this.map.Register(presenter);
 
         presenter.Initialize(this);
-
-        //this.DataContext = presenter;
-
+         
         presenter.RemoveAllProviders();
     }
       

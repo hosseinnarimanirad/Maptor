@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IRI.Maptor.Res.FastSimplification"
         mc:Ignorable="d"
-        Title="MainWindow" Height="200" Width="300">
+        Title="MainWindow" Height="150" Width="200">
     <Grid>
         <Button Click="Button_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Run" MinWidth="72"/>
     </Grid>

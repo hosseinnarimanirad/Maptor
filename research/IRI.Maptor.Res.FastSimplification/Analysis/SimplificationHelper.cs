@@ -179,9 +179,7 @@ public static class SimplificationHelper
 
                     //featureSet.Save($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{method}.json", false, true);
                 }
-
-                //Save($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{coef}.png", drawingVisuals, estimatedZoomLevel, boundingBox);
-
+                 
                 //IRI.Maptor.Jab.Common.Helpers.ImageUtility.MergeAndSave($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{scale:N}.png", drawingVisuals, screenSize.Width, screenSize.Height);
             }
         }

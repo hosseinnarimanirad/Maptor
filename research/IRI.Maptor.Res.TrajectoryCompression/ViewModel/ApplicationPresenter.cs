@@ -1,16 +1,15 @@
 ﻿using System.Linq;
+using System.Collections.Generic;
+
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Models;
-using System.Collections.Generic;
-using IRI.Maptor.Jab.Controls.Presenter;
-using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Sta.Spatial.Analysis;
-using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
-
-
-
+using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Jab.Controls.Presenter;
+using IRI.Maptor.Jab.Common.Assets.Commands;
+ 
 namespace IRI.Maptor.Res.TrajectoryCompression;
 
 public class ApplicationPresenter : MapApplicationPresenter
@@ -91,60 +90,7 @@ public class ApplicationPresenter : MapApplicationPresenter
      
 
     public LogisticSimplification<Point> LogisticGeometrySimplification { get; set; }
-      
-    //private CustomSqlGeometry _selectedGeometryPoints;
-    //public CustomSqlGeometry SelectedGeometryPoints
-    //{
-    //    get { return _selectedGeometryPoints; }
-    //    set
-    //    {
-    //        _selectedGeometryPoints = value;
-    //        RaisePropertyChanged();
-    //        RaisePropertyChanged(nameof(CurrentPoints));
-    //    }
-    //}
-
-    //public List<Point> CurrentPoints
-    //{
-    //    get
-    //    {
-
-    //        if (this.SelectedGeometryPoints == null)
-    //        {
-    //            return new List<Point>();
-    //        }
-
-    //        var result = new List<Point>();
-
-    //        for (int i = 0; i < SelectedGeometryPoints.Geometry.STNumGeometries().Value; i++)
-    //        {
-    //            var temp = SelectedGeometryPoints.Geometry.STGeometryN(i + 1);
-
-    //            result.Add(new Point(temp.STX.Value, temp.STY.Value));
-    //        }
-
-    //        return result;
-    //    }
-    //}
-
-
-
-    //public IEsriShapeCollection GetShapes(string fileName)
-    //{
-    //    var shapes = IRI.Maptor.Sta.ShapefileFormat.Shapefile.ReadShapes(fileName);
-
-    //    var width = Math.Max(shapes.MainHeader.MinimumBoundingBox.Width, shapes.MainHeader.MinimumBoundingBox.Height);
-
-    //    //this.EstimatedScale = WebMercatorUtility.EstimateInverseMapScale(width, 900);
-
-    //    var z1 = WebMercatorUtility.EstimateZoomLevel(width, /*30,*/ 900);
-
-    //    Trace.WriteLine($"Z1: {z1}");
-
-    //    return shapes;
-    //}
-     
-
+        
 
     #region Commands
      

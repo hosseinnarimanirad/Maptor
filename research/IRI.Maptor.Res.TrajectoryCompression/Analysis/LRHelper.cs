@@ -8,10 +8,10 @@ using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.ShapefileFormat;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.MachineLearning;
+using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
