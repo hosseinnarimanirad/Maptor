@@ -10,13 +10,13 @@ using IRI.Maptor.Sta.Common.Abstrations;
 namespace IRI.Maptor.Sta.MachineLearning;
 
 public class LRSimplificationParameters<T> where T : IPoint, new()
-{ 
+{
     [JsonInclude]
     public double? DistanceToPrevious { get; private set; }
 
     [JsonInclude]
     public double? DistanceToNext { get; private set; }
-     
+
     [JsonInclude]
     public double? Area { get; private set; }
 
@@ -31,7 +31,7 @@ public class LRSimplificationParameters<T> where T : IPoint, new()
 
     [JsonInclude]
     public double? BaseLength { get; private set; }
-     
+
     [JsonInclude]
     public double? dX12 { get; private set; }
     [JsonInclude]
@@ -157,7 +157,7 @@ public class LRSimplificationParameters<T> where T : IPoint, new()
         if (Features.Contains(LRSimplificationFeatures.dY23))
             this.dY23 = Math.Abs(lastScreenPoint.Y - middleScreenPoint.Y);
     }
-     
+
     public void UpdateArea(double newArea)
     {
         this.Area = newArea;
@@ -167,15 +167,14 @@ public class LRSimplificationParameters<T> where T : IPoint, new()
 
     public override string ToString()
     {
+        if (FeatureValues.IsNullOrEmpty())
+            return string.Empty;
+
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < FeatureValues.Count; i++)
-        {
             sb.AppendLine($"{Features[i]}: {FeatureValues[i]:N4}");
-        }
 
         return sb.ToString();
-
-        //return $"DistanceToNext: {DistanceToNext} \n DistanceToPrevious: {DistanceToPrevious} \n Area: {Area} \n SquareCosineOfAngle: {SquareCosineOfAngle} \n CosineOfAngle: {CosineOfAngle} \n VerticalDistance: {VerticalDistance} \n BaseLength: {BaseLength}";
     }
 }

@@ -363,6 +363,18 @@
   <data name="map_draw_newDrawing" xml:space="preserve">
     <value>Click on the last point to finish drawing.</value>
   </data>
+  <data name="ribbon_header_drawing" xml:space="preserve">
+    <value>Drawing</value>
+  </data>
+  <data name="ribbon_header_help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="ribbon_header_map" xml:space="preserve">
+    <value>Map</value>
+  </data>
+  <data name="ribbon_header_settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="srs_ceaSubTitle" xml:space="preserve">
     <value>Cylindrical Equal Area</value>
   </data>

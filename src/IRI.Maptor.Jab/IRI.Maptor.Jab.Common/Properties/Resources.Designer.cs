@@ -773,6 +773,42 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Drawing.
+        /// </summary>
+        public static string ribbon_header_drawing {
+            get {
+                return ResourceManager.GetString("ribbon_header_drawing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        public static string ribbon_header_help {
+            get {
+                return ResourceManager.GetString("ribbon_header_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map.
+        /// </summary>
+        public static string ribbon_header_map {
+            get {
+                return ResourceManager.GetString("ribbon_header_map", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string ribbon_header_settings {
+            get {
+                return ResourceManager.GetString("ribbon_header_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cylindrical Equal Area.
         /// </summary>
         public static string srs_ceaSubTitle {

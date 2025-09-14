@@ -358,6 +358,18 @@
   <data name="map_draw_newDrawing" xml:space="preserve">
     <value>برای اتمام ترسیم روی نقطهٔ آخر مجدد کلیک کنید.</value>
   </data>
+  <data name="ribbon_header_drawing" xml:space="preserve">
+    <value>لایه و ترسیم</value>
+  </data>
+  <data name="ribbon_header_help" xml:space="preserve">
+    <value>راهنما</value>
+  </data>
+  <data name="ribbon_header_map" xml:space="preserve">
+    <value>نقشه</value>
+  </data>
+  <data name="ribbon_header_settings" xml:space="preserve">
+    <value>تنظیمات</value>
+  </data>
   <data name="srs_ceaSubTitle" xml:space="preserve">
     <value>ceaSubTitle</value>
   </data>
