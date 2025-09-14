@@ -108,7 +108,7 @@ public class VectorLayer : SymbolizableLayer
         get { return NumberOfSelectedFeatures > 0; }
     }
 
-    public override bool IsSymbolizable => true;
+    //public override bool IsSymbolizable => true;
 
     //public bool IsValid { get; set; }
 

@@ -117,6 +117,69 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="cmd_drawingLegend_addGeoJson" xml:space="preserve">
+    <value>Add GeoJson</value>
+  </data>
+  <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
+    <value>Add Lat/Long Text</value>
+  </data>
+  <data name="cmd_drawingLegend_addShapefile" xml:space="preserve">
+    <value>Add Shapefile</value>
+  </data>
+  <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
+    <value>Move Down</value>
+  </data>
+  <data name="cmd_drawingLegend_moveUp" xml:space="preserve">
+    <value>Move Up</value>
+  </data>
+  <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
+    <value>Remove All</value>
+  </data>
+  <data name="cmd_general_addShapefile" xml:space="preserve">
+    <value>Add Shapefile</value>
+  </data>
+  <data name="cmd_general_addTextToMap" xml:space="preserve">
+    <value>Add Text</value>
+  </data>
+  <data name="cmd_general_clearAll" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="cmd_general_drawPoint" xml:space="preserve">
+    <value>Draw Point</value>
+  </data>
+  <data name="cmd_general_drawPolygon" xml:space="preserve">
+    <value>Draw Polygon</value>
+  </data>
+  <data name="cmd_general_drawPolyline" xml:space="preserve">
+    <value>Draw Polyline</value>
+  </data>
+  <data name="cmd_general_fullExtent" xml:space="preserve">
+    <value>Full Extent</value>
+  </data>
+  <data name="cmd_general_goTo" xml:space="preserve">
+    <value>Go To</value>
+  </data>
+  <data name="cmd_general_measureArea" xml:space="preserve">
+    <value>Measure Area</value>
+  </data>
+  <data name="cmd_general_measureLength" xml:space="preserve">
+    <value>Measure Length</value>
+  </data>
+  <data name="cmd_general_pan" xml:space="preserve">
+    <value>Pan</value>
+  </data>
+  <data name="cmd_general_zoomIn" xml:space="preserve">
+    <value>Zoom In</value>
+  </data>
+  <data name="cmd_general_zoomNext" xml:space="preserve">
+    <value>Zoom Next</value>
+  </data>
+  <data name="cmd_general_zoomOut" xml:space="preserve">
+    <value>Zoom out</value>
+  </data>
+  <data name="cmd_general_zoomPrevious" xml:space="preserve">
+    <value>Zoom Previous</value>
+  </data>
   <data name="cmd_legend_boundary" xml:space="preserve">
     <value>Boundary</value>
     <comment>drawing layer</comment>
@@ -182,45 +245,54 @@
   <data name="cmd_legend_zoomToExtent" xml:space="preserve">
     <value>Zoom To Extent</value>
   </data>
-  <data name="draw_addPointText" xml:space="preserve">
-    <value>Add Point</value>
+  <data name="dialog_goto_panTo" xml:space="preserve">
+    <value>Pan to</value>
   </data>
-  <data name="draw_cancelDrawingText" xml:space="preserve">
-    <value>Cancel Drawing</value>
-  </data>
-  <data name="draw_finishDrawingPartText" xml:space="preserve">
-    <value>Finish Drawing Part</value>
-  </data>
-  <data name="draw_finishDrawingText" xml:space="preserve">
-    <value>Finish Drawing</value>
-  </data>
-  <data name="draw_newDrawingText" xml:space="preserve">
-    <value>Click on the last point to finish drawing.</value>
-  </data>
-  <data name="goto_dialogTitle" xml:space="preserve">
+  <data name="dialog_goto_title" xml:space="preserve">
     <value>Go To</value>
+  </data>
+  <data name="dialog_goto_zoomTo" xml:space="preserve">
+    <value>Zoom to</value>
+  </data>
+  <data name="dialog_symbology_fill" xml:space="preserve">
+    <value>Fill</value>
+  </data>
+  <data name="dialog_symbology_stroke" xml:space="preserve">
+    <value>Stroke</value>
+  </data>
+  <data name="dialog_symbology_strokeWidth" xml:space="preserve">
+    <value>Stroke width</value>
+  </data>
+  <data name="dialog_symbology_title" xml:space="preserve">
+    <value>Layer Symbology</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="imageNotFound" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Assets\Images\imageNotFound.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="legend_symbologyExpanderHeaderText" xml:space="preserve">
-    <value>Symbology</value>
-  </data>
-  <data name="mapPanel_currentPoint" xml:space="preserve">
+  <data name="mapPanel_header_currentPoint" xml:space="preserve">
     <value>Current Point</value>
   </data>
-  <data name="mapPanel_multiPart" xml:space="preserve">
+  <data name="mapPanel_header_multiPart" xml:space="preserve">
     <value>Multi part</value>
   </data>
-  <data name="mapPanel_srs" xml:space="preserve">
+  <data name="mapPanel_header_srs" xml:space="preserve">
     <value>Spatial Reference System</value>
   </data>
-  <data name="map_pan" xml:space="preserve">
-    <value>Pan</value>
+  <data name="map_draw_addPoint" xml:space="preserve">
+    <value>Add Point</value>
   </data>
-  <data name="map_zoomTo" xml:space="preserve">
-    <value>Zoom To</value>
+  <data name="map_draw_cancelDrawing" xml:space="preserve">
+    <value>Cancel Drawing</value>
+  </data>
+  <data name="map_draw_finishDrawing" xml:space="preserve">
+    <value>Finish Drawing</value>
+  </data>
+  <data name="map_draw_finishDrawingPart" xml:space="preserve">
+    <value>Finish Drawing Part</value>
+  </data>
+  <data name="map_draw_newDrawing" xml:space="preserve">
+    <value>Click on the last point to finish drawing.</value>
   </data>
   <data name="srs_ceaSubTitle" xml:space="preserve">
     <value>Cylindrical Equal Area</value>
@@ -278,18 +350,6 @@
   </data>
   <data name="srs_webMercatorTitle" xml:space="preserve">
     <value>Web Mercator</value>
-  </data>
-  <data name="symbology_fillLabel" xml:space="preserve">
-    <value>Fill</value>
-  </data>
-  <data name="symbology_strokeLabel" xml:space="preserve">
-    <value>Stroke</value>
-  </data>
-  <data name="symbology_strokeWidthLabel" xml:space="preserve">
-    <value>Stroke width</value>
-  </data>
-  <data name="symbology_title" xml:space="preserve">
-    <value>Layer Symbology</value>
   </data>
   <data name="tile_mapType_BlackWhite" xml:space="preserve">
     <value>BlackWhite</value>
@@ -387,62 +447,14 @@
   <data name="tile_provider_yandex" xml:space="preserve">
     <value>YANDEX</value>
   </data>
-  <data name="ui_addShapefile" xml:space="preserve">
-    <value>Add Shapefile</value>
-  </data>
-  <data name="ui_addTextToMap" xml:space="preserve">
-    <value>Add Text</value>
-  </data>
-  <data name="ui_baseMaps" xml:space="preserve">
+  <data name="ui_header_baseMaps" xml:space="preserve">
     <value>Base Maps</value>
   </data>
-  <data name="ui_clear" xml:space="preserve">
-    <value>Clear</value>
-  </data>
-  <data name="ui_drawingLegend_addGeoJson" xml:space="preserve">
-    <value>Add GeoJson</value>
-  </data>
-  <data name="ui_drawingLegend_addLatLongTxt" xml:space="preserve">
-    <value>Add Lat/Long Text</value>
-  </data>
-  <data name="ui_drawingLegend_addShapefile" xml:space="preserve">
-    <value>Add Shapefile</value>
-  </data>
-  <data name="ui_drawingLegend_moveDown" xml:space="preserve">
-    <value>Move Down</value>
-  </data>
-  <data name="ui_drawingLegend_moveUp" xml:space="preserve">
-    <value>Move Up</value>
-  </data>
-  <data name="ui_drawingLegend_removeAll" xml:space="preserve">
-    <value>Remove All</value>
-  </data>
-  <data name="ui_drawings" xml:space="preserve">
+  <data name="ui_header_drawingLegend" xml:space="preserve">
     <value>Drawings</value>
   </data>
-  <data name="ui_drawPoint" xml:space="preserve">
-    <value>Draw Point</value>
-  </data>
-  <data name="ui_drawPolygon" xml:space="preserve">
-    <value>Draw Polygon</value>
-  </data>
-  <data name="ui_drawPolyline" xml:space="preserve">
-    <value>Draw Polyline</value>
-  </data>
-  <data name="ui_fullExtent" xml:space="preserve">
-    <value>Full Extent</value>
-  </data>
-  <data name="ui_goTo" xml:space="preserve">
-    <value>Go To</value>
-  </data>
-  <data name="ui_layers" xml:space="preserve">
+  <data name="ui_header_layerLegend" xml:space="preserve">
     <value>Layers</value>
-  </data>
-  <data name="ui_measureArea" xml:space="preserve">
-    <value>Measure Area</value>
-  </data>
-  <data name="ui_measureLength" xml:space="preserve">
-    <value>Measure Length</value>
   </data>
   <data name="whiteImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Assets\Images\whiteImage.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

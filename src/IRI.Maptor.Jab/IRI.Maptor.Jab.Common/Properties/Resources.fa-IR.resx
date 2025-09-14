@@ -117,6 +117,69 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="cmd_drawingLegend_addGeoJson" xml:space="preserve">
+    <value>بارگذاری عارضه ژئوجی‌سان</value>
+  </data>
+  <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
+    <value>بارگذاری از فایل</value>
+  </data>
+  <data name="cmd_drawingLegend_addShapefile" xml:space="preserve">
+    <value>بارگذاری عارضه شیپ‌فایل</value>
+  </data>
+  <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
+    <value>پایین</value>
+  </data>
+  <data name="cmd_drawingLegend_moveUp" xml:space="preserve">
+    <value>بالا</value>
+  </data>
+  <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
+    <value>حذف تمام عوارض ترسیمی</value>
+  </data>
+  <data name="cmd_general_addShapefile" xml:space="preserve">
+    <value>افزودن شیپ‌فایل</value>
+  </data>
+  <data name="cmd_general_addTextToMap" xml:space="preserve">
+    <value>اضافه کردن متن</value>
+  </data>
+  <data name="cmd_general_clearAll" xml:space="preserve">
+    <value>پاک کردن همه</value>
+  </data>
+  <data name="cmd_general_drawPoint" xml:space="preserve">
+    <value>ترسیم نقطه</value>
+  </data>
+  <data name="cmd_general_drawPolygon" xml:space="preserve">
+    <value>ترسیم چندضلعی</value>
+  </data>
+  <data name="cmd_general_drawPolyline" xml:space="preserve">
+    <value>ترسیم خط</value>
+  </data>
+  <data name="cmd_general_fullExtent" xml:space="preserve">
+    <value>نمای کل</value>
+  </data>
+  <data name="cmd_general_goTo" xml:space="preserve">
+    <value>برو به...</value>
+  </data>
+  <data name="cmd_general_measureArea" xml:space="preserve">
+    <value>محاسبه مساحت</value>
+  </data>
+  <data name="cmd_general_measureLength" xml:space="preserve">
+    <value>محاسبه فاصله</value>
+  </data>
+  <data name="cmd_general_pan" xml:space="preserve">
+    <value>جابجایی</value>
+  </data>
+  <data name="cmd_general_zoomIn" xml:space="preserve">
+    <value>بزرگ‌نمایی</value>
+  </data>
+  <data name="cmd_general_zoomNext" xml:space="preserve">
+    <value>نمای بعد</value>
+  </data>
+  <data name="cmd_general_zoomOut" xml:space="preserve">
+    <value>نمای بالاتر</value>
+  </data>
+  <data name="cmd_general_zoomPrevious" xml:space="preserve">
+    <value>نمای قبل</value>
+  </data>
   <data name="cmd_legend_boundary" xml:space="preserve">
     <value>مرز</value>
     <comment>drawing layer</comment>
@@ -181,41 +244,50 @@
   <data name="cmd_legend_zoomToExtent" xml:space="preserve">
     <value>محدودهٔ لایه</value>
   </data>
-  <data name="draw_addPointText" xml:space="preserve">
-    <value>افزودن نقطه</value>
+  <data name="dialog_goto_panTo" xml:space="preserve">
+    <value>برو به</value>
   </data>
-  <data name="draw_cancelDrawingText" xml:space="preserve">
-    <value>لغو ترسیم</value>
-  </data>
-  <data name="draw_finishDrawingPartText" xml:space="preserve">
-    <value>تکمیل بخش</value>
-  </data>
-  <data name="draw_finishDrawingText" xml:space="preserve">
-    <value>پایان ترسیم</value>
-  </data>
-  <data name="draw_newDrawingText" xml:space="preserve">
-    <value>برای اتمام ترسیم روی نقطهٔ آخر مجدد کلیک کنید.</value>
-  </data>
-  <data name="goto_dialogTitle" xml:space="preserve">
+  <data name="dialog_goto_title" xml:space="preserve">
     <value>بروبه مختصات</value>
   </data>
-  <data name="legend_symbologyExpanderHeaderText" xml:space="preserve">
-    <value>سمبل‌گذاری</value>
+  <data name="dialog_goto_zoomTo" xml:space="preserve">
+    <value>بزرگ‌نمایی</value>
   </data>
-  <data name="mapPanel_currentPoint" xml:space="preserve">
+  <data name="dialog_symbology_fill" xml:space="preserve">
+    <value>رنگ سطح</value>
+  </data>
+  <data name="dialog_symbology_stroke" xml:space="preserve">
+    <value>رنگ مرز</value>
+  </data>
+  <data name="dialog_symbology_strokeWidth" xml:space="preserve">
+    <value>ضخامت مرز</value>
+  </data>
+  <data name="dialog_symbology_title" xml:space="preserve">
+    <value>سمبل لایه</value>
+  </data>
+  <data name="mapPanel_header_currentPoint" xml:space="preserve">
     <value>نقطه جاری</value>
   </data>
-  <data name="mapPanel_multiPart" xml:space="preserve">
+  <data name="mapPanel_header_multiPart" xml:space="preserve">
     <value>عوارض چندتکه‌ای</value>
   </data>
-  <data name="mapPanel_srs" xml:space="preserve">
+  <data name="mapPanel_header_srs" xml:space="preserve">
     <value>سیستم مرجع مکانی</value>
   </data>
-  <data name="map_pan" xml:space="preserve">
-    <value>جابجایی</value>
+  <data name="map_draw_addPoint" xml:space="preserve">
+    <value>افزودن نقطه</value>
   </data>
-  <data name="map_zoomTo" xml:space="preserve">
-    <value>بزرگ‌نمایی</value>
+  <data name="map_draw_cancelDrawing" xml:space="preserve">
+    <value>لغو ترسیم</value>
+  </data>
+  <data name="map_draw_finishDrawing" xml:space="preserve">
+    <value>پایان ترسیم</value>
+  </data>
+  <data name="map_draw_finishDrawingPart" xml:space="preserve">
+    <value>تکمیل بخش</value>
+  </data>
+  <data name="map_draw_newDrawing" xml:space="preserve">
+    <value>برای اتمام ترسیم روی نقطهٔ آخر مجدد کلیک کنید.</value>
   </data>
   <data name="srs_ceaSubTitle" xml:space="preserve">
     <value>ceaSubTitle</value>
@@ -277,18 +349,6 @@
   <data name="String1" xml:space="preserve">
     <value />
     <comment>Drawing Layer download google, bing, etc images</comment>
-  </data>
-  <data name="symbology_fillLabel" xml:space="preserve">
-    <value>رنگ سطح</value>
-  </data>
-  <data name="symbology_strokeLabel" xml:space="preserve">
-    <value>رنگ مرز</value>
-  </data>
-  <data name="symbology_strokeWidthLabel" xml:space="preserve">
-    <value>ضخامت مرز</value>
-  </data>
-  <data name="symbology_title" xml:space="preserve">
-    <value>سمبل لایه</value>
   </data>
   <data name="tile_mapType_BlackWhite" xml:space="preserve">
     <value>سیاه‌سفید</value>
@@ -368,61 +428,13 @@
   <data name="tile_provider_yandex" xml:space="preserve">
     <value>یاندکس</value>
   </data>
-  <data name="ui_addShapefile" xml:space="preserve">
-    <value>افزودن شیپ‌فایل</value>
-  </data>
-  <data name="ui_addTextToMap" xml:space="preserve">
-    <value>اضافه کردن متن</value>
-  </data>
-  <data name="ui_baseMaps" xml:space="preserve">
+  <data name="ui_header_baseMaps" xml:space="preserve">
     <value>نقشه‌های پایه</value>
   </data>
-  <data name="ui_clear" xml:space="preserve">
-    <value>پاک کردن</value>
-  </data>
-  <data name="ui_drawingLegend_addGeoJson" xml:space="preserve">
-    <value>بارگذاری عارضه ژئوجی‌سان</value>
-  </data>
-  <data name="ui_drawingLegend_addLatLongTxt" xml:space="preserve">
-    <value>بارگذاری از فایل</value>
-  </data>
-  <data name="ui_drawingLegend_addShapefile" xml:space="preserve">
-    <value>بارگذاری عارضه شیپ‌فایل</value>
-  </data>
-  <data name="ui_drawingLegend_moveDown" xml:space="preserve">
-    <value>پایین</value>
-  </data>
-  <data name="ui_drawingLegend_moveUp" xml:space="preserve">
-    <value>بالا</value>
-  </data>
-  <data name="ui_drawingLegend_removeAll" xml:space="preserve">
-    <value>حذف تمام عوارض ترسیمی</value>
-  </data>
-  <data name="ui_drawings" xml:space="preserve">
+  <data name="ui_header_drawingLegend" xml:space="preserve">
     <value>عوارض ترسیمی</value>
   </data>
-  <data name="ui_drawPoint" xml:space="preserve">
-    <value>ترسیم نقطه</value>
-  </data>
-  <data name="ui_drawPolygon" xml:space="preserve">
-    <value>ترسیم چندضلعی</value>
-  </data>
-  <data name="ui_drawPolyline" xml:space="preserve">
-    <value>ترسیم خط</value>
-  </data>
-  <data name="ui_fullExtent" xml:space="preserve">
-    <value>نمای کل</value>
-  </data>
-  <data name="ui_goTo" xml:space="preserve">
-    <value>برو به...</value>
-  </data>
-  <data name="ui_layers" xml:space="preserve">
+  <data name="ui_header_layerLegend" xml:space="preserve">
     <value>لایه‌ها</value>
-  </data>
-  <data name="ui_measureArea" xml:space="preserve">
-    <value>محاسبه مساحت</value>
-  </data>
-  <data name="ui_measureLength" xml:space="preserve">
-    <value>محاسبه فاصله</value>
   </data>
 </root>

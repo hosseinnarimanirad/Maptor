@@ -1997,19 +1997,19 @@ public abstract class MapPresenter : BasePresenter
 
         layer.RequestChangeVisibility = async di =>
         {
-            DrawingItemLayer drawingLayer = (DrawingItemLayer) di;
+            DrawingItemLayer drawingLayer = (DrawingItemLayer)di;
 
-             RefreshLayerVisibility(di);
+            RefreshLayerVisibility(di);
 
-             if (drawingLayer.CanShowHighlightGeometry())
-             {
-                 await SelectDrawingItem(drawingLayer);
-             }
-             else
-             {
-                 ClearLayer(drawingLayer.HighlightGeometryKey.ToString(), true, true);
-             }
-         };
+            if (drawingLayer.CanShowHighlightGeometry())
+            {
+                await SelectDrawingItem(drawingLayer);
+            }
+            else
+            {
+                ClearLayer(drawingLayer.HighlightGeometryKey.ToString(), true, true);
+            }
+        };
 
         if (layer.RequestChangeSymbology == null)
         {
@@ -2295,7 +2295,7 @@ public abstract class MapPresenter : BasePresenter
 
     #region AddText
 
-    protected async Task AddText()
+    protected async Task AddTextToMap()
     {
         try
         {
@@ -2306,10 +2306,10 @@ public abstract class MapPresenter : BasePresenter
 
             var text = "sample text!";
 
-            var drawingItemLayer = DrawingItemLayer.CreateSpecialLayer("Text", new List<Locateable>()
-            {
-                new Locateable(response.Result, AncherFunctionHandlers.BottomCenter){ Element = new TextboxMarker(){ LabelValue=" asfdsdf"} }
-            });
+            var drawingItemLayer = DrawingItemLayer.CreateSpecialLayer("Text",
+            [
+                new Locateable(response.Result, AncherFunctionHandlers.BottomCenter){ Element = new TextboxMarker(){ LabelValue=text} }
+            ]);
 
             //TrySetCommandsForDrawingItemLayer(drawingItemLayer);
 
@@ -3009,17 +3009,17 @@ public abstract class MapPresenter : BasePresenter
     #region -   Drawing Commands
 
 
-    private RelayCommand _addTextCommand;
-    public RelayCommand AddTextCommand
+    private RelayCommand _addTextToMapCommand;
+    public RelayCommand AddTextToMapCommand
     {
         get
         {
-            if (_addTextCommand == null)
+            if (_addTextToMapCommand == null)
             {
-                _addTextCommand = new RelayCommand(async param => await AddText());
+                _addTextToMapCommand = new RelayCommand(async param => await AddTextToMap());
             }
 
-            return _addTextCommand;
+            return _addTextToMapCommand;
         }
     }
 

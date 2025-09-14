@@ -9,7 +9,7 @@ namespace IRI.Maptor.Jab.Common;
 
 public class Notifier : INotifyPropertyChanged
 {
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
     {

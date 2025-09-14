@@ -1,13 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IRI.Maptor.Jab.Common.Localization;
+﻿namespace IRI.Maptor.Jab.Common.Localization;
 
 public enum LocalizationResourceKeys
 {
+    cmd_drawingLegend_addGeoJson,
+    cmd_drawingLegend_addLatLongTxt,
+    cmd_drawingLegend_addShapefile,
+    cmd_drawingLegend_moveDown,
+    cmd_drawingLegend_moveUp,
+    cmd_drawingLegend_removeAll,
+
+    cmd_general_addShapefile,
+    cmd_general_addTextToMap,
+    cmd_general_clearAll,
+    cmd_general_drawPoint,
+    cmd_general_drawPolygon,
+    cmd_general_drawPolyline,
+    cmd_general_fullExtent,
+    cmd_general_goTo,
+    cmd_general_measureArea,
+    cmd_general_measureLength,
+
+    cmd_general_pan,
+    cmd_general_zoomIn,
+    cmd_general_zoomOut,
+    cmd_general_zoomPrevious,
+    cmd_general_zoomNext,
+
     cmd_legend_boundary,
     cmd_legend_breakIntoGeometries,
     cmd_legend_breakIntoPoints,
@@ -28,23 +46,24 @@ public enum LocalizationResourceKeys
     cmd_legend_toggleLayerLabel,
     cmd_legend_zoomToExtent,
 
-    draw_addPointText,
-    draw_cancelDrawingText,
-    draw_finishDrawingPartText,
-    draw_finishDrawingText,
-    draw_newDrawingText,
+    map_draw_addPoint,
+    map_draw_cancelDrawing,
+    map_draw_finishDrawingPart,
+    map_draw_finishDrawing,
+    map_draw_newDrawing,
 
-    goto_dialogTitle,
+    dialog_goto_title,
+    dialog_goto_panTo,
+    dialog_goto_zoomTo,
 
-    // todo: check if not used in future
-    legend_symbologyExpanderHeaderText,
-
-    map_pan,
-    map_zoomTo,
-
-    mapPanel_currentPoint,
-    mapPanel_multiPart,
-    mapPanel_srs,
+    dialog_symbology_title,
+    dialog_symbology_fill,
+    dialog_symbology_stroke,
+    dialog_symbology_strokeWidth,
+     
+    mapPanel_header_currentPoint,
+    mapPanel_header_multiPart,
+    mapPanel_header_srs,
 
     srs_ceaSubTitle,
     srs_ceaTitle,
@@ -65,11 +84,6 @@ public enum LocalizationResourceKeys
     srs_utmZone,
     srs_webMercatorTitle,
     srs_webMercatorSubTitle,
-
-    symbology_fillLabel,
-    symbology_strokeLabel,
-    symbology_strokeWidthLabel,
-    symbology_title,
 
     tile_provider_bing,
     tile_provider_carto,
@@ -97,47 +111,8 @@ public enum LocalizationResourceKeys
     tile_mapType_Watercolor,
     tile_mapType_Dark,
     tile_mapType_Comic,
-
-
-    ui_addShapefile,
-    ui_baseMaps,
-    ui_clear,
-    ui_drawings,
-    ui_drawPoint,
-    ui_drawPolygon,
-    ui_addTextToMap,
-    ui_drawPolyline,
-    ui_fullExtent,
-    ui_goTo,
-    ui_layers,
-    ui_measureArea,
-    ui_measureLength,
-
-    ui_drawingLegend_removeAll,
-    ui_drawingLegend_addGeoJson,
-    ui_drawingLegend_addShapefile,
-    ui_drawingLegend_addLatLongTxt,
-    ui_drawingLegend_moveDown,
-    ui_drawingLegend_moveUp
+     
+    ui_header_baseMaps,
+    ui_header_drawingLegend,
+    ui_header_layerLegend,
 }
-
-//public static class LocalizationResourceKeys
-//{
-//    public const string UtmZone = "srs_utmZone";
-
-//    public const string UtmTitle = "srs_utmTitle";
-
-//    public const string GeodeticWgs84Title = "srs_geodeticTitle";
-
-//    public const string Draw_NewDrawingText = "draw_newDrawingText";
-//    public const string Draw_CancelDrawingText = "draw_cancelDrawingText";
-//    public const string Draw_FinishDrawingText = "draw_finishDrawingText";
-//    public const string Draw_FinishDrawingPartText = "draw_finishDrawingPartText";
-//    public const string Draw_AddPointText = "draw_addPointText";
-
-//    public const string MapPanel_currentPoint = "mapPanel_currentPoint";
-//    public static LocalizationResourceKeys()
-//    {
-//        IRI.Maptor.Jab.Common.Properties.Resources.draw_addPointText
-//    }
-//}

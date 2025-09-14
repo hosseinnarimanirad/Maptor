@@ -45,16 +45,16 @@
             </StackPanel.Resources>
             <Border BorderBrush="Black" BorderThickness="1" Margin="2">
                 <StackPanel Orientation="Horizontal" >
-                    <Button Content="{Binding ClearText}" Command="{Binding ClearAllCommand}"/>
-                    <Button Content="{Binding FullExtentText}" Command="{Binding FullExtentCommand}"/>
-                    <Button Content="{Binding AddShapefileText}" Command="{Binding AddShapefileCommand}"/>
-                    <Button Content="{Binding MeasureLengthText}" Command="{Binding MeasureLengthCommand}"/>
-                    <Button Content="{Binding MeasureAreaText}" Command="{Binding MeasureAreaCommand}"/>
-                    <Button Content="{Binding DrawPointText}" Command="{Binding DrawPointCommand}"/>
-                    <Button Content="{Binding DrawPolylineText}" Command="{Binding DrawPolylineCommand}"/>
-                    <Button Content="{Binding DrawPolygonText}" Command="{Binding DrawPolygonCommand}"/>
-                    <Button Content="{Binding AddTextToMap}" Command="{Binding AddTextCommand}"/>
-                    <Button Content="{Binding GoToText}" Command="{Binding GoToCommand}"/>
+                    <Button Content="{Binding Ltxt_cmd_general_clearAll}" Command="{Binding ClearAllCommand}"/>
+                    <Button Content="{Binding Ltxt_cmd_general_fullExtent}" Command="{Binding FullExtentCommand}"/>
+                    <Button Content="{Binding Ltxt_cmd_general_AddShapefile}" Command="{Binding AddShapefileCommand}"/>
+                    <Button Content="{Binding Ltxt_cmd_general_measureLength}" Command="{Binding MeasureLengthCommand}"/>
+                    <Button Content="{Binding Ltxt_cmd_general_measureArea}" Command="{Binding MeasureAreaCommand}"/>
+                    <Button Content="{Binding Ltxt_cmd_general_drawPoint}" Command="{Binding DrawPointCommand}"/>
+                    <Button Content="{Binding Ltxt_cmd_general_drawPolyline}" Command="{Binding DrawPolylineCommand}"/>
+                    <Button Content="{Binding Ltxt_cmd_general_drawPolygon}" Command="{Binding DrawPolygonCommand}"/>
+                    <Button Content="{Binding Ltxt_cmd_general_addTextToMap}" Command="{Binding AddTextToMapCommand}"/>
+                    <Button Content="{Binding Ltxt_cmd_general_goTo}" Command="{Binding GoToCommand}"/>
                 </StackPanel>
             </Border>
             <Border BorderBrush="Black" BorderThickness="1" Margin="2">
@@ -78,13 +78,13 @@
             Position="{Binding CurrentPoint, ElementName=map}"/>
         
         <StackPanel Grid.Row="1">
-            <Expander Header="{Binding BaseMapsText}" DockPanel.Dock="Top" IsExpanded="True"  Margin="0,1,0,0" Cursor="Hand">
+            <Expander Header="{Binding Ltxt_header_BaseMaps}" DockPanel.Dock="Top" IsExpanded="True"  Margin="0,1,0,0" Cursor="Hand">
                 <ComboBox ItemsSource="{Binding MapProviders}" SelectedItem="{Binding SelectedMapProvider, Mode=TwoWay}" VerticalAlignment="Center" DisplayMemberPath="Title"/>
             </Expander>
-            <Expander Header="{Binding DrawingsText}" DockPanel.Dock="Top" IsExpanded="True"  Margin="0,1,0,0" Cursor="Hand">
+            <Expander Header="{Binding Ltxt_header_DrawingLegend}" DockPanel.Dock="Top" IsExpanded="True"  Margin="0,1,0,0" Cursor="Hand">
                 <iriJabControls:MapDrawingLegendView MinHeight="90"/>
             </Expander>
-            <Expander Header="{Binding LayersText}" IsExpanded="True" Margin="0,1,0,0" Cursor="Hand">
+            <Expander Header="{Binding Ltxt_header_LayerLegend}" IsExpanded="True" Margin="0,1,0,0" Cursor="Hand">
                 <iriJabControls:MapLegendWithOptionsView EnableFilterMode="True"  DataContext="{Binding Layers}" GroupName="B"/>
             </Expander>
         </StackPanel>

@@ -1,25 +1,23 @@
-﻿using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Localization;
-using IRI.Maptor.Jab.Common.Models.Legend;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Collections.Generic;
+
+using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Common.Models.Legend;
 
 namespace IRI.Maptor.Jab.Controls.View;
 
 /// <summary>
 /// Interaction logic for MapLegendItemWithOptions.xaml
 /// </summary>
-public partial class MapLegendItemWithOptionsView : UserControl, IDisposable, INotifyPropertyChanged
+public partial class MapLegendItemWithOptionsView : UserControl//, IDisposable, INotifyPropertyChanged
 {
     public MapLegendItemWithOptionsView()
     {
         InitializeComponent();
-        LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
-        LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
+        //LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
+        //LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
 
     #region DependencyProperties
@@ -38,7 +36,7 @@ public partial class MapLegendItemWithOptionsView : UserControl, IDisposable, IN
             {
                 ((MapLegendItemWithOptionsView)d).UpdateTitle((string)dp.NewValue);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
             }
@@ -113,65 +111,23 @@ public partial class MapLegendItemWithOptionsView : UserControl, IDisposable, IN
             //RaisePropertyChanged();
         }
     }
-
-
-
-    public string SymbologyExpanderHeaderText => LocalizationManager.Instance[LocalizationResourceKeys.legend_symbologyExpanderHeaderText.ToString()];
+     
+    //public string SymbologyExpanderHeaderText => LocalizationManager.Instance[LocalizationResourceKeys.legend_symbologyExpanderHeaderText.ToString()];
 
 
     private void UpdateTitle(string newValue)
     {
-        var layer = (this.DataContext as DrawingItemLayer);
-
-        if (layer != null)
+        if (this.DataContext is DrawingItemLayer layer)
         {
             layer.LayerName = newValue;
-        } 
-    }
-
-
-    private void Instance_LanguageChanged()
-    {
-        RaisePropertyChanged(nameof(SymbologyExpanderHeaderText)); 
-    }
-
-
-    #region INotifyPropertyChanged
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    #endregion
-
-
-    #region IDispose
-
-    private bool _disposed = false;
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                // Dispose managed resources
-                LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
-            }
-
-            // Dispose unmanaged resources here if any
-            _disposed = true;
         }
+        //var layer = (this.DataContext as DrawingItemLayer);
+
+        //if (layer != null)
+        //{
+        //    layer.LayerName = newValue;
+        //} 
     }
 
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    #endregion
+     
 }

@@ -61,6 +61,195 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add GeoJson.
+        /// </summary>
+        public static string cmd_drawingLegend_addGeoJson {
+            get {
+                return ResourceManager.GetString("cmd_drawingLegend_addGeoJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Lat/Long Text.
+        /// </summary>
+        public static string cmd_drawingLegend_addLatLongTxt {
+            get {
+                return ResourceManager.GetString("cmd_drawingLegend_addLatLongTxt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Shapefile.
+        /// </summary>
+        public static string cmd_drawingLegend_addShapefile {
+            get {
+                return ResourceManager.GetString("cmd_drawingLegend_addShapefile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move Down.
+        /// </summary>
+        public static string cmd_drawingLegend_moveDown {
+            get {
+                return ResourceManager.GetString("cmd_drawingLegend_moveDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move Up.
+        /// </summary>
+        public static string cmd_drawingLegend_moveUp {
+            get {
+                return ResourceManager.GetString("cmd_drawingLegend_moveUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove All.
+        /// </summary>
+        public static string cmd_drawingLegend_removeAll {
+            get {
+                return ResourceManager.GetString("cmd_drawingLegend_removeAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Shapefile.
+        /// </summary>
+        public static string cmd_general_addShapefile {
+            get {
+                return ResourceManager.GetString("cmd_general_addShapefile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Text.
+        /// </summary>
+        public static string cmd_general_addTextToMap {
+            get {
+                return ResourceManager.GetString("cmd_general_addTextToMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear All.
+        /// </summary>
+        public static string cmd_general_clearAll {
+            get {
+                return ResourceManager.GetString("cmd_general_clearAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw Point.
+        /// </summary>
+        public static string cmd_general_drawPoint {
+            get {
+                return ResourceManager.GetString("cmd_general_drawPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw Polygon.
+        /// </summary>
+        public static string cmd_general_drawPolygon {
+            get {
+                return ResourceManager.GetString("cmd_general_drawPolygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw Polyline.
+        /// </summary>
+        public static string cmd_general_drawPolyline {
+            get {
+                return ResourceManager.GetString("cmd_general_drawPolyline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full Extent.
+        /// </summary>
+        public static string cmd_general_fullExtent {
+            get {
+                return ResourceManager.GetString("cmd_general_fullExtent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go To.
+        /// </summary>
+        public static string cmd_general_goTo {
+            get {
+                return ResourceManager.GetString("cmd_general_goTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Measure Area.
+        /// </summary>
+        public static string cmd_general_measureArea {
+            get {
+                return ResourceManager.GetString("cmd_general_measureArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Measure Length.
+        /// </summary>
+        public static string cmd_general_measureLength {
+            get {
+                return ResourceManager.GetString("cmd_general_measureLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pan.
+        /// </summary>
+        public static string cmd_general_pan {
+            get {
+                return ResourceManager.GetString("cmd_general_pan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom In.
+        /// </summary>
+        public static string cmd_general_zoomIn {
+            get {
+                return ResourceManager.GetString("cmd_general_zoomIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom Next.
+        /// </summary>
+        public static string cmd_general_zoomNext {
+            get {
+                return ResourceManager.GetString("cmd_general_zoomNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom out.
+        /// </summary>
+        public static string cmd_general_zoomOut {
+            get {
+                return ResourceManager.GetString("cmd_general_zoomOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom Previous.
+        /// </summary>
+        public static string cmd_general_zoomPrevious {
+            get {
+                return ResourceManager.GetString("cmd_general_zoomPrevious", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boundary.
         /// </summary>
         public static string cmd_legend_boundary {
@@ -232,56 +421,65 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add Point.
+        ///   Looks up a localized string similar to Pan to.
         /// </summary>
-        public static string draw_addPointText {
+        public static string dialog_goto_panTo {
             get {
-                return ResourceManager.GetString("draw_addPointText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cancel Drawing.
-        /// </summary>
-        public static string draw_cancelDrawingText {
-            get {
-                return ResourceManager.GetString("draw_cancelDrawingText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Finish Drawing Part.
-        /// </summary>
-        public static string draw_finishDrawingPartText {
-            get {
-                return ResourceManager.GetString("draw_finishDrawingPartText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Finish Drawing.
-        /// </summary>
-        public static string draw_finishDrawingText {
-            get {
-                return ResourceManager.GetString("draw_finishDrawingText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Click on the last point to finish drawing..
-        /// </summary>
-        public static string draw_newDrawingText {
-            get {
-                return ResourceManager.GetString("draw_newDrawingText", resourceCulture);
+                return ResourceManager.GetString("dialog_goto_panTo", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Go To.
         /// </summary>
-        public static string goto_dialogTitle {
+        public static string dialog_goto_title {
             get {
-                return ResourceManager.GetString("goto_dialogTitle", resourceCulture);
+                return ResourceManager.GetString("dialog_goto_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom to.
+        /// </summary>
+        public static string dialog_goto_zoomTo {
+            get {
+                return ResourceManager.GetString("dialog_goto_zoomTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fill.
+        /// </summary>
+        public static string dialog_symbology_fill {
+            get {
+                return ResourceManager.GetString("dialog_symbology_fill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stroke.
+        /// </summary>
+        public static string dialog_symbology_stroke {
+            get {
+                return ResourceManager.GetString("dialog_symbology_stroke", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stroke width.
+        /// </summary>
+        public static string dialog_symbology_strokeWidth {
+            get {
+                return ResourceManager.GetString("dialog_symbology_strokeWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Layer Symbology.
+        /// </summary>
+        public static string dialog_symbology_title {
+            get {
+                return ResourceManager.GetString("dialog_symbology_title", resourceCulture);
             }
         }
         
@@ -296,56 +494,74 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Symbology.
+        ///   Looks up a localized string similar to Add Point.
         /// </summary>
-        public static string legend_symbologyExpanderHeaderText {
+        public static string map_draw_addPoint {
             get {
-                return ResourceManager.GetString("legend_symbologyExpanderHeaderText", resourceCulture);
+                return ResourceManager.GetString("map_draw_addPoint", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pan.
+        ///   Looks up a localized string similar to Cancel Drawing.
         /// </summary>
-        public static string map_pan {
+        public static string map_draw_cancelDrawing {
             get {
-                return ResourceManager.GetString("map_pan", resourceCulture);
+                return ResourceManager.GetString("map_draw_cancelDrawing", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zoom To.
+        ///   Looks up a localized string similar to Finish Drawing.
         /// </summary>
-        public static string map_zoomTo {
+        public static string map_draw_finishDrawing {
             get {
-                return ResourceManager.GetString("map_zoomTo", resourceCulture);
+                return ResourceManager.GetString("map_draw_finishDrawing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finish Drawing Part.
+        /// </summary>
+        public static string map_draw_finishDrawingPart {
+            get {
+                return ResourceManager.GetString("map_draw_finishDrawingPart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click on the last point to finish drawing..
+        /// </summary>
+        public static string map_draw_newDrawing {
+            get {
+                return ResourceManager.GetString("map_draw_newDrawing", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Current Point.
         /// </summary>
-        public static string mapPanel_currentPoint {
+        public static string mapPanel_header_currentPoint {
             get {
-                return ResourceManager.GetString("mapPanel_currentPoint", resourceCulture);
+                return ResourceManager.GetString("mapPanel_header_currentPoint", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Multi part.
         /// </summary>
-        public static string mapPanel_multiPart {
+        public static string mapPanel_header_multiPart {
             get {
-                return ResourceManager.GetString("mapPanel_multiPart", resourceCulture);
+                return ResourceManager.GetString("mapPanel_header_multiPart", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Spatial Reference System.
         /// </summary>
-        public static string mapPanel_srs {
+        public static string mapPanel_header_srs {
             get {
-                return ResourceManager.GetString("mapPanel_srs", resourceCulture);
+                return ResourceManager.GetString("mapPanel_header_srs", resourceCulture);
             }
         }
         
@@ -517,42 +733,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string srs_webMercatorTitle {
             get {
                 return ResourceManager.GetString("srs_webMercatorTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Fill.
-        /// </summary>
-        public static string symbology_fillLabel {
-            get {
-                return ResourceManager.GetString("symbology_fillLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Stroke.
-        /// </summary>
-        public static string symbology_strokeLabel {
-            get {
-                return ResourceManager.GetString("symbology_strokeLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Stroke width.
-        /// </summary>
-        public static string symbology_strokeWidthLabel {
-            get {
-                return ResourceManager.GetString("symbology_strokeWidthLabel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Layer Symbology.
-        /// </summary>
-        public static string symbology_title {
-            get {
-                return ResourceManager.GetString("symbology_title", resourceCulture);
             }
         }
         
@@ -791,173 +971,29 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add Shapefile.
-        /// </summary>
-        public static string ui_addShapefile {
-            get {
-                return ResourceManager.GetString("ui_addShapefile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Text.
-        /// </summary>
-        public static string ui_addTextToMap {
-            get {
-                return ResourceManager.GetString("ui_addTextToMap", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Base Maps.
         /// </summary>
-        public static string ui_baseMaps {
+        public static string ui_header_baseMaps {
             get {
-                return ResourceManager.GetString("ui_baseMaps", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Clear.
-        /// </summary>
-        public static string ui_clear {
-            get {
-                return ResourceManager.GetString("ui_clear", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add GeoJson.
-        /// </summary>
-        public static string ui_drawingLegend_addGeoJson {
-            get {
-                return ResourceManager.GetString("ui_drawingLegend_addGeoJson", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Lat/Long Text.
-        /// </summary>
-        public static string ui_drawingLegend_addLatLongTxt {
-            get {
-                return ResourceManager.GetString("ui_drawingLegend_addLatLongTxt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Shapefile.
-        /// </summary>
-        public static string ui_drawingLegend_addShapefile {
-            get {
-                return ResourceManager.GetString("ui_drawingLegend_addShapefile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Move Down.
-        /// </summary>
-        public static string ui_drawingLegend_moveDown {
-            get {
-                return ResourceManager.GetString("ui_drawingLegend_moveDown", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Move Up.
-        /// </summary>
-        public static string ui_drawingLegend_moveUp {
-            get {
-                return ResourceManager.GetString("ui_drawingLegend_moveUp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remove All.
-        /// </summary>
-        public static string ui_drawingLegend_removeAll {
-            get {
-                return ResourceManager.GetString("ui_drawingLegend_removeAll", resourceCulture);
+                return ResourceManager.GetString("ui_header_baseMaps", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Drawings.
         /// </summary>
-        public static string ui_drawings {
+        public static string ui_header_drawingLegend {
             get {
-                return ResourceManager.GetString("ui_drawings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Draw Point.
-        /// </summary>
-        public static string ui_drawPoint {
-            get {
-                return ResourceManager.GetString("ui_drawPoint", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Draw Polygon.
-        /// </summary>
-        public static string ui_drawPolygon {
-            get {
-                return ResourceManager.GetString("ui_drawPolygon", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Draw Polyline.
-        /// </summary>
-        public static string ui_drawPolyline {
-            get {
-                return ResourceManager.GetString("ui_drawPolyline", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Full Extent.
-        /// </summary>
-        public static string ui_fullExtent {
-            get {
-                return ResourceManager.GetString("ui_fullExtent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Go To.
-        /// </summary>
-        public static string ui_goTo {
-            get {
-                return ResourceManager.GetString("ui_goTo", resourceCulture);
+                return ResourceManager.GetString("ui_header_drawingLegend", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Layers.
         /// </summary>
-        public static string ui_layers {
+        public static string ui_header_layerLegend {
             get {
-                return ResourceManager.GetString("ui_layers", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Measure Area.
-        /// </summary>
-        public static string ui_measureArea {
-            get {
-                return ResourceManager.GetString("ui_measureArea", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Measure Length.
-        /// </summary>
-        public static string ui_measureLength {
-            get {
-                return ResourceManager.GetString("ui_measureLength", resourceCulture);
+                return ResourceManager.GetString("ui_header_layerLegend", resourceCulture);
             }
         }
         

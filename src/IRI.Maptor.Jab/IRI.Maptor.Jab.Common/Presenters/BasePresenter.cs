@@ -99,28 +99,6 @@ public class BasePresenter : Notifier
         LocalizationManager.Instance.FlowDirectionChanged += Instance_FlowDirectionChanged;
     }
 
-    private void Instance_FlowDirectionChanged()
-    {
-        RaisePropertyChanged(nameof(CurrentFlowDirection));
-    }
-
-    private void OnLanguageChanged()
-    {
-        RaisePropertyChanged(nameof(AddShapefileText));
-        RaisePropertyChanged(nameof(BaseMapsText));
-        RaisePropertyChanged(nameof(ClearText));
-        RaisePropertyChanged(nameof(DrawingsText));
-        RaisePropertyChanged(nameof(DrawPointText));
-        RaisePropertyChanged(nameof(DrawPolylineText));
-        RaisePropertyChanged(nameof(DrawPolygonText));
-        RaisePropertyChanged(nameof(AddTextToMap));
-        RaisePropertyChanged(nameof(FullExtentText));
-        RaisePropertyChanged(nameof(GoToText));
-        RaisePropertyChanged(nameof(LayersText));
-        RaisePropertyChanged(nameof(MeasureAreaText));
-        RaisePropertyChanged(nameof(MeasureLengthText));
-    }
-
     public void RedirectRequestesTo(BasePresenter presenter)
     {
         if (presenter == this)
@@ -135,21 +113,97 @@ public class BasePresenter : Notifier
         //this.RequestShowMessage = message => presenter.ShowMessage(message);
     }
 
+    #region Localization
+
+    private void Instance_FlowDirectionChanged()
+    {
+        RaisePropertyChanged(nameof(CurrentFlowDirection));
+    }
+
+    private void OnLanguageChanged()
+    {
+        RaisePropertyChanged(nameof(Ltxt_cmd_general_AddShapefile));
+        RaisePropertyChanged(nameof(Ltxt_header_BaseMaps));
+        RaisePropertyChanged(nameof(Ltxt_cmd_general_clearAll));
+        RaisePropertyChanged(nameof(Ltxt_header_DrawingLegend));
+        RaisePropertyChanged(nameof(Ltxt_cmd_general_drawPoint));
+        RaisePropertyChanged(nameof(Ltxt_cmd_general_drawPolyline));
+        RaisePropertyChanged(nameof(Ltxt_cmd_general_drawPolygon));
+        RaisePropertyChanged(nameof(Ltxt_cmd_general_addTextToMap));
+        RaisePropertyChanged(nameof(Ltxt_cmd_general_fullExtent));
+        RaisePropertyChanged(nameof(Ltxt_cmd_general_goTo));
+        RaisePropertyChanged(nameof(Ltxt_header_LayerLegend));
+        RaisePropertyChanged(nameof(Ltxt_cmd_general_measureArea));
+        RaisePropertyChanged(nameof(Ltxt_cmd_general_measureLength));
+    }
 
 
     public FlowDirection CurrentFlowDirection => LocalizationManager.Instance.CurrentFlowDirection;
 
-    public string AddShapefileText => LocalizationManager.Instance[ui_addShapefile.ToString()];
-    public string BaseMapsText => LocalizationManager.Instance[ui_baseMaps.ToString()];
-    public string ClearText => LocalizationManager.Instance[ui_clear.ToString()];
-    public string DrawingsText => LocalizationManager.Instance[ui_drawings.ToString()];
-    public string DrawPointText => LocalizationManager.Instance[ui_drawPoint.ToString()];
-    public string DrawPolylineText => LocalizationManager.Instance[ui_drawPolyline.ToString()];
-    public string DrawPolygonText => LocalizationManager.Instance[ui_drawPolygon.ToString()];
-    public string AddTextToMap => LocalizationManager.Instance[ui_addTextToMap.ToString()];
-    public string FullExtentText => LocalizationManager.Instance[ui_fullExtent.ToString()];
-    public string GoToText => LocalizationManager.Instance[ui_goTo.ToString()];
-    public string LayersText => LocalizationManager.Instance[ui_layers.ToString()];
-    public string MeasureAreaText => LocalizationManager.Instance[ui_measureArea.ToString()];
-    public string MeasureLengthText => LocalizationManager.Instance[ui_measureLength.ToString()];
+    /// <summary>
+    /// Header of BaseMaps panel
+    /// </summary>
+    public string Ltxt_header_BaseMaps => LocalizationManager.Instance[ui_header_baseMaps.ToString()];
+
+    /// <summary>
+    /// Header of Drawing's Legend 
+    /// </summary>
+    public string Ltxt_header_DrawingLegend => LocalizationManager.Instance[ui_header_drawingLegend.ToString()];
+
+    /// <summary>
+    /// Header of Layer's Legend
+    /// </summary>
+    public string Ltxt_header_LayerLegend => LocalizationManager.Instance[ui_header_layerLegend.ToString()];
+
+    /// <summary>
+    /// Content of a button for Add shapefile command
+    /// </summary>
+    public string Ltxt_cmd_general_AddShapefile => LocalizationManager.Instance[cmd_general_addShapefile.ToString()];
+
+    /// <summary>
+    /// Content of a button for Add text to map command
+    /// </summary>
+    public string Ltxt_cmd_general_addTextToMap => LocalizationManager.Instance[cmd_general_addTextToMap.ToString()];
+    
+    /// <summary>
+    /// Content of a button for Draw point command
+    /// </summary>
+    public string Ltxt_cmd_general_drawPoint => LocalizationManager.Instance[cmd_general_drawPoint.ToString()];
+
+    /// <summary>
+    /// Content of a button for Draw polyline command
+    /// </summary>
+    public string Ltxt_cmd_general_drawPolyline => LocalizationManager.Instance[cmd_general_drawPolyline.ToString()];
+
+    /// <summary>
+    /// Content of a button for Draw polygon command
+    /// </summary>
+    public string Ltxt_cmd_general_drawPolygon => LocalizationManager.Instance[cmd_general_drawPolygon.ToString()];
+
+    /// <summary>
+    /// Content of a button for clear all command
+    /// </summary>
+    public string Ltxt_cmd_general_clearAll => LocalizationManager.Instance[cmd_general_clearAll.ToString()];
+
+    /// <summary>
+    /// Content of a button for full extent command
+    /// </summary>
+    public string Ltxt_cmd_general_fullExtent => LocalizationManager.Instance[cmd_general_fullExtent.ToString()];
+    
+    /// <summary>
+    /// Content of a button for Measure area command
+    /// </summary>
+    public string Ltxt_cmd_general_measureArea => LocalizationManager.Instance[cmd_general_measureArea.ToString()];
+    
+    /// <summary>
+    /// Content of a button for Measure length command
+    /// </summary>
+    public string Ltxt_cmd_general_measureLength => LocalizationManager.Instance[cmd_general_measureLength.ToString()];
+
+    /// <summary>
+    /// Content of a button for showing the Goto dialog command
+    /// </summary>
+    public string Ltxt_cmd_general_goTo => LocalizationManager.Instance[cmd_general_goTo.ToString()];
+
+    #endregion
 }
