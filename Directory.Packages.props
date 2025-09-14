@@ -23,9 +23,9 @@
     <PackageVersion Include="Mapster" Version="7.4.0" />
     <PackageVersion Include="Mapster.DependencyInjection" Version="1.0.1" />
 
-    <PackageVersion Include="MahApps.Metro" Version="2.4.10" />
-    <PackageVersion Include="MahApps.Metro.IconPacks.Modern" Version="6.0.0" />
-    <PackageVersion Include="MahApps.Metro.IconPacks.Material" Version="6.0.0" />
+    <PackageVersion Include="MahApps.Metro" Version="2.4.11" />
+    <PackageVersion Include="MahApps.Metro.IconPacks.Modern" Version="6.1.0" />
+    <PackageVersion Include="MahApps.Metro.IconPacks.Material" Version="6.1.0" />
 
     <PackageVersion Include="MediatR" Version="12.4.1" />
 
