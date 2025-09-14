@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Controls\IRI.Maptor.Jab.Controls.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Controls\IRI.Maptor.Jab.Controls.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.MultiSelectItem\IRI.Maptor.Jab.MultiSelectItem.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.SqlServerSpatialExtension\IRI.Maptor.Ket.SqlServerSpatialExtension.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Ket\IRI.Maptor.Ket.WindowsBase\IRI.Maptor.Ket.WindowsBase.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.MachineLearning\IRI.Maptor.Sta.MachineLearning.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.ShapefileFormat\IRI.Maptor.Sta.ShapefileFormat.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.SpatialReferenceSystem\IRI.Maptor.Sta.SpatialReferenceSystem.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Sta\IRI.Maptor.Sta.Spatial\IRI.Maptor.Sta.Spatial.csproj" />
+    <ProjectReference Include="..\..\src\IRI.Maptor.Jab\IRI.Maptor.Jab.Common\IRI.Maptor.Jab.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MahApps.Metro" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Modern" /> 
+  </ItemGroup>
+
+</Project>
