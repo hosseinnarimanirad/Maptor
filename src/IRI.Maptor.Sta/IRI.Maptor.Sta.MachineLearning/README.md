@@ -1,4 +1,4 @@
-﻿\# 🤖 IRI.Maptor.Sta.MachineLearning
+﻿# 🤖 IRI.Maptor.Sta.MachineLearning
 
 
 
@@ -8,7 +8,7 @@
 
 
 
-\*\*IRI.Maptor.Sta.MachineLearning\*\* is a lightweight .NET library for integrating \*\*machine learning algorithms\*\* into .NET applications.  
+IRI.Maptor.Sta.MachineLearning is a lightweight .NET library for integrating machine learning algorithms into .NET applications.  
 
 It provides a simple API for training, evaluating, and predicting with classic ML algorithms.
 
@@ -18,7 +18,7 @@ It provides a simple API for training, evaluating, and predicting with classic M
 
 
 
-\## ✨ Features
+## ✨ Features
 
 
 
@@ -40,7 +40,7 @@ It provides a simple API for training, evaluating, and predicting with classic M
 
 
 
-\## ⚙️ Installation
+## ⚙️ Installation
 
 
 
@@ -56,11 +56,11 @@ dotnet add package IRI.Maptor.Sta.MachineLearning
 
 
 
-\## 💻 Usage Examples
+## 💻 Usage Examples
 
 
 
-\### Example 1 – Training a Classification Model
+### Example 1 – Training a Classification Model
 
 ```csharp
 
@@ -98,7 +98,7 @@ model.Save("decision\_tree.model");
 
 
 
-\### Example 2 – Making Predictions
+### Example 2 – Making Predictions
 
 ```csharp
 
@@ -122,7 +122,7 @@ Console.WriteLine($"Predicted class: {prediction}");
 
 
 
-\### Example 3 – Evaluating Model Performance
+### Example 3 – Evaluating Model Performance
 
 ```csharp
 
@@ -146,7 +146,7 @@ Console.WriteLine($"Accuracy: {accuracy:P2}");
 
 
 
-\## 📂 Project Structure
+## 📂 Project Structure
 
 ```
 
@@ -172,7 +172,7 @@ IRI.Maptor.Sta.MachineLearning/
 
 
 
-\## 🤝 Contributing
+## 🤝 Contributing
 
 Contributions are welcome!  
 
@@ -184,9 +184,9 @@ Please include tests and documentation updates when submitting pull requests.
 
 
 
-\## 📜 License
+## 📜 License
 
-This project is licensed under the \[MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
 
 
 
