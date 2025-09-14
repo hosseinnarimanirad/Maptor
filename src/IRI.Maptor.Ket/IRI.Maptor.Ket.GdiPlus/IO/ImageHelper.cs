@@ -85,8 +85,7 @@ public static class ImageHelper
 
         return coorditate;
     }
-
-
+     
     public static Size GetSize(string fileName)
     {
         Size result = new Size();
@@ -126,15 +125,7 @@ public static class ImageHelper
         }
 
     }
-
-    //public static IRI.Maptor.Sta.Common.Point3D GetMercatorLocation(Bitmap bitmap)
-    //{
-    //    var wgs84 = GetWgs84Location(bitmap);
-
-    //    var mercator = IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections.MapProjects.GeodeticToMercator((IRI.Maptor.Sta.Common.Primitives.Point)wgs84);
-
-    //    return new IRI.Maptor.Sta.Common.Point3D(mercator.X, mercator.Y, wgs84.Z);
-    //}
+     
 
     /// <summary>
     /// Point3D is in geodetic
@@ -333,8 +324,7 @@ public static class ImageHelper
         //returns different percent
         return (result, differentPixels / totalPixels /** 100.0*/);
     }
-
-
+     
     public static (Bitmap image, double percent) CalculateDifPlusBitmaps(Bitmap originalImage, Bitmap secondImage, bool ignoreWhitePixels)
     {
         if (originalImage.Width != secondImage.Width || originalImage.Height != secondImage.Height)
