@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Abstrations; 
 
 namespace IRI.Maptor.Sta.MachineLearning;
 
@@ -22,7 +21,6 @@ public class LRSimplificationTrainingData<T> where T : IPoint, new()
 
     public LRSimplificationTrainingData() : this(new List<LRSimplificationParameters<T>>(), new List<LRSimplificationFeatures>())
     {
-
     }
 
     public LRSimplificationTrainingData(List<LRSimplificationParameters<T>> records) : this(records, records.First().Features)
@@ -36,11 +34,11 @@ public class LRSimplificationTrainingData<T> where T : IPoint, new()
         this.Features = features;
     }
 
-
     public bool IsNullOrEmpty()
     {
         return this.Records.IsNullOrEmpty() || this.Features.IsNullOrEmpty();
     }
+
     public int GetCountOfFeatures()
     {
         return Features?.Count ?? 0;
@@ -169,5 +167,4 @@ public class LRSimplificationTrainingData<T> where T : IPoint, new()
             return null;
         }
     }
-
 }

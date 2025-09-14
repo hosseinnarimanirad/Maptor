@@ -6,57 +6,48 @@ using System.Text.Json.Serialization;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Extensions;
 
 namespace IRI.Maptor.Sta.MachineLearning;
 
 public class LRSimplificationParameters<T> where T : IPoint, new()
-{
-    //public const int NumberOfFeatures = 4;
-
-    /// <summary>
-    /// in screen scale
-    /// </summary>
-    //public const double MinVerticalSquareDistanceThreshold = 0.1;
-
-    //[JsonProperty]
+{ 
+    [JsonInclude]
     public double? DistanceToPrevious { get; private set; }
 
-    //[JsonProperty]
+    [JsonInclude]
     public double? DistanceToNext { get; private set; }
-
-    //[JsonProperty]
+     
+    [JsonInclude]
     public double? Area { get; private set; }
 
-    //[JsonProperty]
+    [JsonInclude]
     public double? SquareCosineOfAngle { get; private set; }
 
-    //[JsonProperty]
+    [JsonInclude]
     public double? CosineOfAngle { get; private set; }
 
-    //[JsonProperty]
+    [JsonInclude]
     public double? VerticalDistance { get; private set; }
 
-    //[JsonProperty]
+    [JsonInclude]
     public double? BaseLength { get; private set; }
-
-
-    //[JsonProperty]
+     
+    [JsonInclude]
     public double? dX12 { get; private set; }
-    //[JsonProperty]
+    [JsonInclude]
     public double? dX13 { get; private set; }
-    //[JsonProperty]
+    [JsonInclude]
     public double? dX23 { get; private set; }
 
-    //[JsonProperty]
+    [JsonInclude]
     public double? dY12 { get; private set; }
-    //[JsonProperty]
+    [JsonInclude]
     public double? dY13 { get; private set; }
-    //[JsonProperty]
+    [JsonInclude]
     public double? dY23 { get; private set; }
 
 
-    //[JsonProperty]
+    [JsonInclude]
     public List<LRSimplificationFeatures> Features { get; set; }
 
     [JsonIgnore]
@@ -104,31 +95,10 @@ public class LRSimplificationParameters<T> where T : IPoint, new()
             result.Add(value.Value);
         }
 
-        //if (Features.Contains(LRSimplificationFeatures.DistanceToNext))
-        //    result.Add(this.DistanceToNext);
-
-        //if (Features.Contains(LRSimplificationFeatures.DistanceToPrevious))
-        //    result.Add(this.DistanceToPrevious);
-
-        //if (Features.Contains(LRSimplificationFeatures.VerticalDistance))
-        //    result.Add(this.VerticalDistance);
-
-        //if (Features.Contains(LRSimplificationFeatures.BaseLength))
-        //    result.Add(this.BaseLength);
-
-        //if (Features.Contains(LRSimplificationFeatures.CosineOfAngle))
-        //    result.Add(this.CosineOfAngle);
-
-        //if (Features.Contains(LRSimplificationFeatures.SquareCosineOfAngle))
-        //    result.Add(this.SquareCosineOfAngle);
-
-        //if (Features.Contains(LRSimplificationFeatures.Area))
-        //    result.Add(this.Area);
-
         _featureValues = result;
     }
 
-    //[JsonProperty]
+    [JsonInclude]
     public bool IsRetained { get; set; }
 
     public LRSimplificationParameters()
@@ -187,31 +157,7 @@ public class LRSimplificationParameters<T> where T : IPoint, new()
         if (Features.Contains(LRSimplificationFeatures.dY23))
             this.dY23 = Math.Abs(lastScreenPoint.Y - middleScreenPoint.Y);
     }
-
-    //public LRSimplificationParameters(
-    //    double? distanceToPrevious, 
-    //    double? distanceToNext, 
-    //    double? area, 
-    //    double? squareCosineOfAngle, 
-    //    double? cosineOfAngle, 
-    //    double? verticalDistance, 
-    //    double? baseLength, 
-    //    List<LRSimplificationFeatures> features, 
-    //    bool isRetained)
-    //{
-    //    DistanceToPrevious = distanceToPrevious;
-    //    DistanceToNext = distanceToNext;
-    //    Area = area;
-    //    SquareCosineOfAngle = squareCosineOfAngle;
-    //    CosineOfAngle = cosineOfAngle;
-    //    VerticalDistance = verticalDistance;
-    //    BaseLength = baseLength;
-    //    Features = features;
-    //    IsRetained = isRetained;
-
-    //    InitFeatureValues();
-    //}
-
+     
     public void UpdateArea(double newArea)
     {
         this.Area = newArea;
