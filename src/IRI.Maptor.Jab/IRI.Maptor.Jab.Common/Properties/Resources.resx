@@ -363,6 +363,9 @@
   <data name="map_draw_newDrawing" xml:space="preserve">
     <value>Click on the last point to finish drawing.</value>
   </data>
+  <data name="map_scale_content" xml:space="preserve">
+    <value>Scale</value>
+  </data>
   <data name="ribbon_header_drawing" xml:space="preserve">
     <value>Drawing</value>
   </data>

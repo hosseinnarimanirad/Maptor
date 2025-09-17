@@ -629,6 +629,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scale.
+        /// </summary>
+        public static string map_scale_content {
+            get {
+                return ResourceManager.GetString("map_scale_content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add new part.
         /// </summary>
         public static string mapPanel_currentPart_add {

@@ -358,6 +358,9 @@
   <data name="map_draw_newDrawing" xml:space="preserve">
     <value>برای اتمام ترسیم روی نقطهٔ آخر مجدد کلیک کنید.</value>
   </data>
+  <data name="map_scale_content" xml:space="preserve">
+    <value>مقیاس</value>
+  </data>
   <data name="ribbon_header_drawing" xml:space="preserve">
     <value>لایه و ترسیم</value>
   </data>
