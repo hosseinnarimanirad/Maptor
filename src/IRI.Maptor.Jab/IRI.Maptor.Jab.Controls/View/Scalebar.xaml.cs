@@ -1,4 +1,7 @@
 ﻿using IRI.Maptor.Jab.Common;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -11,9 +14,21 @@ namespace IRI.Maptor.Jab.Controls.View;
 public partial class Scalebar : NotifiableUserControl
 {
 
+    private static readonly List<double> _roundLengths =
+        new List<double>()
+        {
+            5,          10,         20,         // meters
+            500,        1_000,      2_000,      // meters (2 km)
+            5000,       10_000,     20_000,     // 5k, 10k, 20k
+            50_000,     100_000,    200_000,    // 50k, 100k, 200k
+            500_000,    1_000_000,  2_000_000   // 500k, 1000k, 2000k
+        };
+
     public Scalebar()
     {
         InitializeComponent();
+
+        GroundLength = string.Empty;
     }
 
     public void SetScale(double mapScale)
@@ -23,26 +38,47 @@ public partial class Scalebar : NotifiableUserControl
         if (source == null)
             return;
 
+        if (double.IsInfinity(mapScale) || double.IsNaN(mapScale))
+            return;
+
         double dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
 
         double unitDistance = (1.0 / dpiX) * 1200.0 / (3937.0 * 12.0);
 
+        var minScalebarWidth = 50;
+        var maxScalebarWidth = 150;
+
+        var minScreenLengthInMeter = minScalebarWidth * unitDistance;
+        var maxScreenLengthInMeter = maxScalebarWidth * unitDistance;
+
+        var minGroundLengthInMeter = minScreenLengthInMeter * mapScale;
+        var maxGroundLengthInMeter = maxScreenLengthInMeter * mapScale;
+
         //this.scale.Content = "1/" + string.Format("{0:0,0}", 1.0 / mapScale);
 
-        double screenLength = this.scalebarLine.ActualWidth;
+        //double screenLength = this.scalebarLine.ActualWidth;
 
-        double screenLengthInMeter = screenLength * unitDistance;
+        //double screenLengthInMeter = screenLength * unitDistance;
 
-        double groundLengthInMeter = screenLengthInMeter * mapScale;
+        var selectedLength = _roundLengths.FirstOrDefault(l => l >= minGroundLengthInMeter && l <= maxGroundLengthInMeter);
 
-        this.Max = (groundLengthInMeter / 1000.0 > 1) ?
+        if (selectedLength == 0)
+            return;
+
+        this.ScaleBarLength = (selectedLength / mapScale) / unitDistance;
+        RaisePropertyChanged(nameof(ScaleBarLength));
+
+
+        //double groundLengthInMeter = /*screenLengthInMeter*/minScreenLengthInMeter * mapScale;
+        var groundLengthInMeter = selectedLength;
+
+        this.GroundLength = (groundLengthInMeter / 1000.0 > 1) ?
             string.Format("{0:f0} km", groundLengthInMeter / 1000) :
             string.Format("{0} m", groundLengthInMeter);
+
+        //this.Min = (groundLengthInMeter / 1000.0 > 1) ? "0 km" : "0 m";
          
-        this.Min = (groundLengthInMeter / 1000.0 > 1) ? "0 km" : "0 m";
-        
-        RaisePropertyChanged(nameof(Min));
-        RaisePropertyChanged(nameof(Max));
+        RaisePropertyChanged(nameof(GroundLength));
     }
 
 
@@ -57,7 +93,24 @@ public partial class Scalebar : NotifiableUserControl
         DependencyProperty.Register("CurrentScale", typeof(double), typeof(Scalebar), new PropertyMetadata(
             new PropertyChangedCallback((d, dp) => { ((Scalebar)d).SetScale((double)dp.NewValue); })));
 
-    public string Min { get; set; }
+    //public string Min { get; set; }
 
-    public string Max { get; set; }
+    public string GroundLength { get; set; }  
+
+    public double ScaleBarLength { get; set; } = 150;
+
+
+
+
+    public bool ShowScaleValue
+    {
+        get { return (bool)GetValue(ShowScaleValueProperty); }
+        set { SetValue(ShowScaleValueProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for ShowScaleValue.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ShowScaleValueProperty =
+        DependencyProperty.Register("ShowScaleValue", typeof(bool), typeof(Scalebar), new PropertyMetadata(false));
+
+
 }
