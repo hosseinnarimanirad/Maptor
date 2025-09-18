@@ -1,10 +1,8 @@
-﻿using IRI.Maptor.Jab.Common;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Forms;
+using System.Collections.Generic;
+
+using IRI.Maptor.Jab.Common;
 
 namespace IRI.Maptor.Jab.Controls.View;
 
@@ -88,18 +86,9 @@ public partial class Scalebar : NotifiableUserControl
         set { SetValue(CurrentScaleProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for CurrentScale.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty CurrentScaleProperty =
         DependencyProperty.Register("CurrentScale", typeof(double), typeof(Scalebar), new PropertyMetadata(
             new PropertyChangedCallback((d, dp) => { ((Scalebar)d).SetScale((double)dp.NewValue); })));
-
-    //public string Min { get; set; }
-
-    public string GroundLength { get; set; }  
-
-    public double ScaleBarLength { get; set; } = 150;
-
-
 
 
     public bool ShowScaleValue
@@ -108,9 +97,24 @@ public partial class Scalebar : NotifiableUserControl
         set { SetValue(ShowScaleValueProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for ShowScaleValue.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowScaleValueProperty =
         DependencyProperty.Register("ShowScaleValue", typeof(bool), typeof(Scalebar), new PropertyMetadata(false));
+
+
+    public bool IsGoogleStyle
+    {
+        get { return (bool)GetValue(IsGoogleStyleProperty); }
+        set { SetValue(IsGoogleStyleProperty, value); }
+    }
+
+    public static readonly DependencyProperty IsGoogleStyleProperty =
+        DependencyProperty.Register("IsGoogleStyle", typeof(bool), typeof(Scalebar), new PropertyMetadata(false));
+
+
+    public string GroundLength { get; set; }  
+
+    public double ScaleBarLength { get; set; } = 150;
+
 
 
 }
