@@ -8,7 +8,7 @@
         xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" Loaded="Window_Loaded" 
-        Title="MainWindow" Height="600" Width="900" x:Name="root" >
+        Title="MainWindow" Height="600" Width="1100" x:Name="root" >
     <Window.Resources>
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         <Style TargetType="{x:Type TabItem}">

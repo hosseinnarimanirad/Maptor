@@ -1,9 +1,15 @@
-﻿using IRI.Maptor.Jab.Common;
+﻿using ControlzEx.Standard;
+using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Commands;
+using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.View.MapMarkers;
 using IRI.Maptor.Jab.Controls.Presenter;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.Analysis;
+using IRI.Maptor.Sta.Spatial.Helpers;
+using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 using System.Collections.Generic;
 
 namespace IRI.Maptor.Tag.SampleWpfApp.ViewModel;
@@ -34,7 +40,7 @@ public class AppViewModel : MapApplicationPresenter
         this.ZoomToExtent(pointLayer.Extent, isExactExtent: false, isNewExtent: true);
     }
       
-
+    
     private RelayCommand? _showSpecialPointLayerSampleCommand;
 
     public RelayCommand ShowSpecialPointLayerSampleCommand

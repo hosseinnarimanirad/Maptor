@@ -87,7 +87,7 @@ public static class WebMercatorUtility
     /// <summary>
     /// In Pixel
     /// </summary>
-    /// <param name="level"></param>
+    /// <param name="level">zoom level</param>
     /// <returns></returns>
     public static long CalculateScreenSize(int level)
     {
@@ -136,6 +136,19 @@ public static class WebMercatorUtility
 
 
 
+    // ********************************************** WebMercator ****************************************************
+    /// <summary>
+    /// Returns the length in WebMercator
+    /// </summary>
+    /// <param name="level">Google Zoom Level</param>
+    /// <param name="screenLengthInPixel">In Pixel</param>
+    /// <returns></returns>
+    public static double ToWebMercatorLength(int level, double screenLengthInPixel)
+    {
+        return screenLengthInPixel * EarthCircumference / CalculateScreenSize(level);
+    }
+
+
     // ********************************************** GROUND *********************************************************
     /// <summary>
     /// The ground resolution indicates the distance on the ground that’s represented by a single pixel in the map.
@@ -146,8 +159,12 @@ public static class WebMercatorUtility
     /// <returns></returns>
     public static double CalculateGroundResolution(int level, double latitude)
     {
+        // note:
+        // todo:
+        // the latitude should be geocentric latitude not geodetic!
+
         // 1: 1 pixel
-        return Math.Cos(latitude * Math.PI / 180.0) * ToWebMercatorLength(level, 1); // EarthCircumference / CalculateScreenSize(level);
+        return Math.Cos(latitude * Math.PI / 180.0) * ToWebMercatorLength(level, 1); 
     }
 
     /// <summary>
@@ -161,19 +178,6 @@ public static class WebMercatorUtility
         return ConversionHelper.PixelToMeterFactor / mapScale;
     }
 
-
-
-    // ********************************************** WebMercator ****************************************************
-    /// <summary>
-    /// Returns the length in WebMercator
-    /// </summary>
-    /// <param name="level">Google Zoom Level</param>
-    /// <param name="screenLengthInPixel">In Pixel</param>
-    /// <returns></returns>
-    public static double ToWebMercatorLength(int level, double screenLengthInPixel)
-    {
-        return screenLengthInPixel * EarthCircumference / CalculateScreenSize(level);
-    }
 
 
 
