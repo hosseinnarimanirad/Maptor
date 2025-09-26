@@ -33,12 +33,28 @@ public partial class MainWindow : Window
     {
         //TestSld(@"C:\Users\Hossein\Downloads\point_pointasgraphic.sld");
         //TestSld(@"C:\Users\Hossein\Downloads\point_attribute.sld");
-        TestSld(@"E:\Work\Barg\Sample SLD\barg\tower.sld");
+        //TestSld(@"E:\Work\Barg\Sample SLD\barg\tower.sld");
 
-
+        TestShp();
 
     }
 
+    private void TestShp()
+    {
+        var shpFile = @"E:\Data\Internet\World\World_Countries.shp";
+
+        byte[] existingData = File.ReadAllBytes(shpFile);
+        Console.WriteLine($"File loaded: {existingData.Length} bytes");
+
+        // Data to append
+        byte[] newData = System.IO.File.ReadAllBytes(@"E:\Work\1.OurProducts\Makan Negar\Assets\MakanNegarLogo.png");
+
+        // Append new data to the file
+        using (FileStream fs = new FileStream(shpFile, FileMode.Append, FileAccess.Write))
+        {
+            fs.Write(newData, 0, newData.Length);
+        }
+    }
 
     private void TestSld(string fileName)
     {
