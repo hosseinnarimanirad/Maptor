@@ -74,6 +74,9 @@
 
         <maptor:MapInfoView Grid.Row="1" Grid.Column="1" DataContext="{Binding }"/>
 
+        <maptor:Scalebar Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="4"  
+                         CurrentScale="{Binding CurrentPointInverseMapScale}" ShowScaleValue="True" />
+        
         <maptor:CoordinatePanelView 
             Grid.Column="1" 
             Grid.Row="1" 
