@@ -407,7 +407,6 @@ public static class MapProjects
         double latitude = 2.0 * (Math.Atan(Math.Exp(webMercator.Y / a)) - Math.PI / 4.0) * 180 / Math.PI;
 
         return new TPoint() { X = longitude, Y = latitude };
-
     }
 
 
