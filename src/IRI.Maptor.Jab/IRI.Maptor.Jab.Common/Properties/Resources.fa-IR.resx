@@ -310,6 +310,9 @@
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>حذف نقطه</value>
   </data>
+  <data name="mapPanel_currentPoint_displayCoordinate" xml:space="preserve">
+    <value>نمایش مختصات</value>
+  </data>
   <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
     <value>نقطهٔ بعدی</value>
   </data>
@@ -330,6 +333,9 @@
   </data>
   <data name="mapPanel_header_currentPoint" xml:space="preserve">
     <value>نقطه جاری</value>
+  </data>
+  <data name="mapPanel_header_measure" xml:space="preserve">
+    <value>اندازه‌گیری</value>
   </data>
   <data name="mapPanel_header_multiPart" xml:space="preserve">
     <value>عوارض چندتکه‌ای</value>

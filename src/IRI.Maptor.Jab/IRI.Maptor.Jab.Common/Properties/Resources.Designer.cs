@@ -683,6 +683,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display Coordinates.
+        /// </summary>
+        public static string mapPanel_currentPoint_displayCoordinate {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPoint_displayCoordinate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next point.
         /// </summary>
         public static string mapPanel_currentPoint_goToNextPoint {
@@ -742,6 +751,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string mapPanel_header_currentPoint {
             get {
                 return ResourceManager.GetString("mapPanel_header_currentPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Measurement.
+        /// </summary>
+        public static string mapPanel_header_measure {
+            get {
+                return ResourceManager.GetString("mapPanel_header_measure", resourceCulture);
             }
         }
         

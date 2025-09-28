@@ -315,6 +315,9 @@
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>Delete current point</value>
   </data>
+  <data name="mapPanel_currentPoint_displayCoordinate" xml:space="preserve">
+    <value>Display Coordinates</value>
+  </data>
   <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
     <value>Next point</value>
   </data>
@@ -335,6 +338,9 @@
   </data>
   <data name="mapPanel_header_currentPoint" xml:space="preserve">
     <value>Current Point</value>
+  </data>
+  <data name="mapPanel_header_measure" xml:space="preserve">
+    <value>Measurement</value>
   </data>
   <data name="mapPanel_header_multiPart" xml:space="preserve">
     <value>Multi part</value>
