@@ -191,7 +191,6 @@ public class MapPanelPresenter : Notifier
                 throw new NotImplementedException();
             }
         }
-
     }
 
     public MapPanelPresenter()

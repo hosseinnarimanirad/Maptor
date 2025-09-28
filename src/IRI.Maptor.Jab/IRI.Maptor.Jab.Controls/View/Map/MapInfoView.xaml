@@ -132,7 +132,12 @@
 
                 <TextBlock DockPanel.Dock="Left" Text="Y" Margin="4"
                            Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
-                <TextBox DockPanel.Dock="Left" MaxWidth="90" FlowDirection="LeftToRight" MinWidth="80" Margin="2" VerticalAlignment="Center"
+                <TextBox DockPanel.Dock="Left" 
+                         MaxWidth="90" 
+                         MinWidth="80" 
+                         Margin="2" 
+                         VerticalAlignment="Center"
+                         FlowDirection="LeftToRight" 
                          Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                     <TextBox.Style>
                         <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
@@ -152,7 +157,7 @@
                         </Style>
                     </TextBox.Resources>
                 </TextBox>
- 
+
                 <!--Drawing-->
                 <DockPanel DockPanel.Dock="Right" LastChildFill="False"
                             Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}">
@@ -189,7 +194,8 @@
                             ToolTip="{Binding [mapPanel_measure_showEdgeLabels], Source={StaticResource Localization}}"
                             Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">
                     <ToggleButton Style="{StaticResource circleToggle}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
-                            IsChecked="{Binding Options.IsEdgeLabelVisible, Mode=TwoWay}" Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                                    IsChecked="{Binding Options.IsEdgeLabelVisible, Mode=TwoWay}" 
+                                    Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Modern Kind="MeasureMeter"/>
                     </ToggleButton>
 
@@ -328,6 +334,33 @@
                                     </TextBox.Resources>
                                 </TextBox>
                             </StackPanel>
+                        </TabItem>
+
+                        <TabItem Header="{Binding [mapPanel_header_measure], Source={StaticResource Localization}}" Cursor="Hand">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Margin" Value="2"/>
+                                        <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>-->
+                                    </Style>
+                                </Grid.Resources>
+                                <TextBlock Text="Mean Height"/>
+                                <Slider Grid.Column="1" Margin="2"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Area:"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MapPanel.CurrentEditingPoint.X}"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Length:"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MapPanel.CurrentEditingPoint.X}"/>
+                                <TextBlock/>
+                            </Grid>
                         </TabItem>
                     </TabControl.Items>
                 </TabControl>

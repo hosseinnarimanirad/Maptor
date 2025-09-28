@@ -27,13 +27,11 @@ namespace IRI.Maptor.Jab.Common;
 
 public class EditableFeatureLayer : SymbolizableLayer
 {
-    //static readonly Brush _stroke = BrushHelper.FromHex("#FF1CA1E2");
-    //static readonly Brush _fill = BrushHelper.FromHex("#661CA1E2");
-    string _delete = "حذف";
-    string _copy = "کپی";
-    string _finish = "اتمام";
-    string _cancel = "لغو";
-    string _displayCoordinates = "نمایش مختصات";
+    //string _delete = "حذف";
+    //string _copy = "کپی";
+    //string _finish = "اتمام";
+    //string _cancel = "لغو";
+    //string _displayCoordinates = "نمایش مختصات";
 
     public EditableFeatureLayerOptions Options { get; }
 
@@ -80,6 +78,13 @@ public class EditableFeatureLayer : SymbolizableLayer
     Transform _toScreen;
 
     Func<double, double> _screenToMap;
+
+    #region Measure Attributes
+
+    public double GroundLength=> SpatialUtility.CalculateLength()
+
+
+    #endregion
 
     public event EventHandler OnRequestFinishDrawing;
 
@@ -324,9 +329,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
             //do not show length/area when geometry has just one/two point or new part has just one/two point
             if (double.IsNaN(MeasureValue))
-            {
                 return;
-            }
 
             element.TooltipValue = MeasureValue.ToInvariantString();
 
@@ -562,13 +565,16 @@ public class EditableFeatureLayer : SymbolizableLayer
     private void RegisterMapOptionsForVertices(MouseButtonEventArgs e, IPoint point, Locateable locateable)
     {
         var presenter = new MapOptionsPresenter(
-            rightToolTip: _copy,
-            leftToolTip: _displayCoordinates,
-            middleToolTip: _delete,
+                //rightToolTip: _copy,
+                //leftToolTip: _displayCoordinates,
+                //middleToolTip: _delete,
+                rightToolTip: IRI.Maptor.Jab.Common.Properties.Resources.mapPanel_currentPoint_copyCoordinate,
+                leftToolTip: IRI.Maptor.Jab.Common.Properties.Resources.mapPanel_currentPoint_displayCoordinate,
+                middleToolTip: IRI.Maptor.Jab.Common.Properties.Resources.mapPanel_currentPoint_delete,
 
-            rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.PageCopy,
-            leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.AxisXy,
-            middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Delete);
+                rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.PageCopy,
+                leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.AxisXy,
+                middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Delete);
 
         presenter.RightCommandAction = i =>
         {
@@ -612,14 +618,17 @@ public class EditableFeatureLayer : SymbolizableLayer
         RequestRightClickOptions?.Invoke(new View.MapOptions.MapThreeOptions(false), e, presenter);
 
     }
-     
+
     private void RegisterMapOptionsForEditPath(MouseButtonEventArgs e)
     {
         var presenter = new MapOptionsPresenter(
-            leftToolTip: _cancel,
-            rightToolTip: _finish,
-            middleToolTip: _delete,
-             
+            //leftToolTip: _cancel,
+            //rightToolTip: _finish,
+            //middleToolTip: _delete,
+            leftToolTip: IRI.Maptor.Jab.Common.Properties.Resources.mapPanel_edit_cancel,
+            rightToolTip: IRI.Maptor.Jab.Common.Properties.Resources.mapPanel_edit_finish,
+            middleToolTip: IRI.Maptor.Jab.Common.Properties.Resources.mapPanel_edit_delete,
+
             leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Close,
             rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Check,
             middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Delete);
@@ -965,12 +974,12 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public double MeasureValue
     {
-        get { return SpatialUtility.GetMeasure(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84); }
+        get { return SpatialUtility.GetEllipsoidMeasure(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84); }
     }
 
     public string MeasureLabel
     {
-        get { return SpatialUtility.GetMeasureLabel(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84); }
+        get { return SpatialUtility.GetEllipsoidMeasureLabel(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84); }
     }
 
     public string AreaLabel
@@ -980,7 +989,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public string LengthLabel
     {
-        get { return UnitHelper.GetAreaLabel(_webMercatorGeometry.CalculateGroundLength(MapProjects.WebMercatorToGeodeticWgs84)); }
+        get { return UnitHelper.GetAreaLabel(_webMercatorGeometry.CalculateEllipsoidalLength(MapProjects.WebMercatorToGeodeticWgs84)); }
     }
 
     public Path GetPath(Transform transform)
