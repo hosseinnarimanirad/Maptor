@@ -109,15 +109,15 @@ public class SpatialUtilityTest
         Point insideRectangle4 = new Point(5, 10);
         Assert.Equal(true, SpatialUtility.IsAxisAlignedRectangleInsideCircle(insideRectangle4, 11.19, rectangle));
 
-        Assert.Equal(Intersects, SpatialUtility.CalculateAxisAlignedRectangleRelationToCircle(insideRectangle, radius, rectangle));
-        Assert.Equal(Disjoint, SpatialUtility.CalculateAxisAlignedRectangleRelationToCircle(topOfRectangle, radius, rectangle));
-        Assert.Equal(Disjoint, SpatialUtility.CalculateAxisAlignedRectangleRelationToCircle(bottomOfRectangle, radius, rectangle));
-        Assert.Equal(Intersects, SpatialUtility.CalculateAxisAlignedRectangleRelationToCircle(topRightCorner, radius, rectangle));
-        Assert.Equal(Disjoint, SpatialUtility.CalculateAxisAlignedRectangleRelationToCircle(topRightCorner2, radius, rectangle));
-        Assert.Equal(Intersects, SpatialUtility.CalculateAxisAlignedRectangleRelationToCircle(centerRectangle, radius, rectangle));
-        Assert.Equal(Intersects, SpatialUtility.CalculateAxisAlignedRectangleRelationToCircle(insideRectangle2, radius, rectangle));
-        Assert.Equal(Intersects, SpatialUtility.CalculateAxisAlignedRectangleRelationToCircle(insideRectangle3, 11.19, rectangle));
-        Assert.Equal(Contained, SpatialUtility.CalculateAxisAlignedRectangleRelationToCircle(insideRectangle4, 11.19, rectangle));
+        Assert.Equal(Intersects, SpatialUtility.GetAxisAlignedRectangleRelationToCircle(insideRectangle, radius, rectangle));
+        Assert.Equal(Disjoint, SpatialUtility.GetAxisAlignedRectangleRelationToCircle(topOfRectangle, radius, rectangle));
+        Assert.Equal(Disjoint, SpatialUtility.GetAxisAlignedRectangleRelationToCircle(bottomOfRectangle, radius, rectangle));
+        Assert.Equal(Intersects, SpatialUtility.GetAxisAlignedRectangleRelationToCircle(topRightCorner, radius, rectangle));
+        Assert.Equal(Disjoint, SpatialUtility.GetAxisAlignedRectangleRelationToCircle(topRightCorner2, radius, rectangle));
+        Assert.Equal(Intersects, SpatialUtility.GetAxisAlignedRectangleRelationToCircle(centerRectangle, radius, rectangle));
+        Assert.Equal(Intersects, SpatialUtility.GetAxisAlignedRectangleRelationToCircle(insideRectangle2, radius, rectangle));
+        Assert.Equal(Intersects, SpatialUtility.GetAxisAlignedRectangleRelationToCircle(insideRectangle3, 11.19, rectangle));
+        Assert.Equal(Contained, SpatialUtility.GetAxisAlignedRectangleRelationToCircle(insideRectangle4, 11.19, rectangle));
 
     }
 
@@ -133,7 +133,7 @@ public class SpatialUtilityTest
     [Fact]
     public void CalculateSignedRingAreaTest()
     {
-        Assert.Equal(-4, SpatialUtility.GetSignedEuclideanRingArea(new List<Point>()
+        Assert.Equal(-4, SpatialUtility.GetSignedEuclideanArea(new List<Point>()
                 {
             Point.Create(-1,-1),
             Point.Create(-1, 1),
@@ -141,7 +141,7 @@ public class SpatialUtilityTest
             Point.Create(1, -1)
                 }));
 
-        Assert.Equal(4, SpatialUtility.GetSignedEuclideanRingArea(new List<Point>()
+        Assert.Equal(4, SpatialUtility.GetSignedEuclideanArea(new List<Point>()
                 {
             Point.Create(-1,-1),
             Point.Create(1, -1),
@@ -345,7 +345,7 @@ public class SpatialUtilityTest
         var expected = p1.AsSqlGeography().STDistance(p2.AsSqlGeography()).Value;
 
         // Act
-        var actual = SpatialUtility.SphericalVincentyDistance(p1, p2);
+        var actual = SpatialUtility.GetVincentyDistance(p1, p2);
 
         // Assert
         Assert.Equal(expected, actual, precision: precision);

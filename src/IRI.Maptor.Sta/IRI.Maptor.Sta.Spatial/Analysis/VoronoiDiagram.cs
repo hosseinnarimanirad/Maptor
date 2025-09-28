@@ -143,9 +143,9 @@ public class VoronoiDiagram
 
     private void DivideTheRegionWithPointInTheRegion(VoronoiCell polygon, Point point)
     {
-        Point midPoint = SpatialUtility.CalculateMidPoint(point, polygon.PrimaryPoint);
+        Point midPoint = SpatialUtility.GetMidPoint(point, polygon.PrimaryPoint);
 
-        Point temPoint = new Point(midPoint.X + 10, midPoint.Y - 10 / SpatialUtility.CalculateSlope(point, polygon.PrimaryPoint));
+        Point temPoint = new Point(midPoint.X + 10, midPoint.Y - 10 / SpatialUtility.GetSlope(point, polygon.PrimaryPoint));
 
         List<int> edgeIndexes;
 
@@ -235,9 +235,9 @@ public class VoronoiDiagram
     {
         VoronoiCell polygon = GetPolygon(polygonCode);
 
-        Point midPoint = SpatialUtility.CalculateMidPoint(point, polygon.PrimaryPoint);
+        Point midPoint = SpatialUtility.GetMidPoint(point, polygon.PrimaryPoint);
 
-        Point temPoint = new Point(midPoint.X + 10, midPoint.Y - 10 / SpatialUtility.CalculateSlope(point, polygon.PrimaryPoint));
+        Point temPoint = new Point(midPoint.X + 10, midPoint.Y - 10 / SpatialUtility.GetSlope(point, polygon.PrimaryPoint));
 
         List<int> edgeIndexes;
 

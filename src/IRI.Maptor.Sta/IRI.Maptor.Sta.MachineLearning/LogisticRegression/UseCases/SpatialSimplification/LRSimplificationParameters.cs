@@ -121,10 +121,10 @@ public class LRSimplificationParameters<T> where T : IPoint, new()
             this.Area = SpatialUtility.GetUnsignedTriangleArea(firstScreenPoint, middleScreenPoint, lastScreenPoint);
 
         if (Features.Contains(LRSimplificationFeatures.DistanceToNext))
-            this.DistanceToNext = SpatialUtility.CalculateEuclideanDistance(middleScreenPoint, lastScreenPoint);
+            this.DistanceToNext = SpatialUtility.GetEuclideanDistance(middleScreenPoint, lastScreenPoint);
 
         if (Features.Contains(LRSimplificationFeatures.DistanceToPrevious))
-            this.DistanceToPrevious = SpatialUtility.CalculateEuclideanDistance(middleScreenPoint, firstScreenPoint);
+            this.DistanceToPrevious = SpatialUtility.GetEuclideanDistance(middleScreenPoint, firstScreenPoint);
 
         if (Features.Contains(LRSimplificationFeatures.CosineOfAngle))
             this.CosineOfAngle = SpatialUtility.GetCosineOfOuterAngle(firstScreenPoint, middleScreenPoint, lastScreenPoint);
@@ -137,7 +137,7 @@ public class LRSimplificationParameters<T> where T : IPoint, new()
             this.VerticalDistance = SpatialUtility.GetPointToLineSegmentDistance(firstScreenPoint, lastScreenPoint, middleScreenPoint);
 
         if (Features.Contains(LRSimplificationFeatures.BaseLength))
-            this.BaseLength = SpatialUtility.CalculateEuclideanDistance(firstScreenPoint, lastScreenPoint);
+            this.BaseLength = SpatialUtility.GetEuclideanDistance(firstScreenPoint, lastScreenPoint);
 
         if (Features.Contains(LRSimplificationFeatures.dX12))
             this.dX12 = Math.Abs(middleScreenPoint.X - firstScreenPoint.X);

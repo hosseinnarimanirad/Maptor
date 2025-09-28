@@ -984,7 +984,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public string AreaLabel
     {
-        get { return UnitHelper.GetAreaLabel(SpatialUtility.CalculateGroundArea(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84)); }
+        get { return UnitHelper.GetAreaLabel(SpatialUtility.GetGroundArea(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84)); }
     }
 
     public string LengthLabel

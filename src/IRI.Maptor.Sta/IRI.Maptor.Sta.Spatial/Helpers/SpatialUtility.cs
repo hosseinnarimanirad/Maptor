@@ -14,7 +14,7 @@ namespace IRI.Maptor.Sta.Spatial.Analysis;
 public static class SpatialUtility
 {
     public const double EpsilonDistance = 0.0000001;
-      
+
     #region Euclidean/Sphere/Ellipsoidal Distance
 
 
@@ -24,7 +24,7 @@ public static class SpatialUtility
     /// <param name="first"></param>
     /// <param name="second"></param>
     /// <returns></returns>
-    public static double CalculateSquareEuclideanDistance<T>(T first, T second) where T : IPoint
+    public static double GetSquareEuclideanDistance<T>(T first, T second) where T : IPoint
     {
         var dx = first.X - second.X;
 
@@ -39,7 +39,7 @@ public static class SpatialUtility
     /// <param name="first"></param>
     /// <param name="second"></param>
     /// <returns></returns>
-    public static double CalculateEuclideanDistance<T>(T first, T second) where T : IPoint => Math.Sqrt(CalculateSquareEuclideanDistance(first, second));
+    public static double GetEuclideanDistance<T>(T first, T second) where T : IPoint => Math.Sqrt(GetSquareEuclideanDistance(first, second));
 
     // https://medium.com/swlh/calculating-the-distance-between-two-points-on-earth-bac5cd50c840
     // https://www.movable-type.co.uk/scripts/latlong.html
@@ -54,7 +54,7 @@ public static class SpatialUtility
     /// <param name="firstPoint">First Geocentric point</param>
     /// <param name="secondPoint">Second Geocentric point</param>
     /// <returns>The distance between points on the sphere</returns>
-    public static double CalculateSphericalDistance<T>(T firstPoint, T secondPoint) where T : IPoint
+    public static double GetSphericalDistance<T>(T firstPoint, T secondPoint) where T : IPoint
     {
         //var radius = 6371008.8; // in meters
 
@@ -100,7 +100,7 @@ public static class SpatialUtility
     /// <param name="secondPoint">Second Geodetic point</param>
     /// <returns>The distance between points on the ellipsoid</returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public static double SphericalVincentyDistance<T>(T firstPoint, T secondPoint) where T : IPoint
+    public static double GetVincentyDistance<T>(T firstPoint, T secondPoint) where T : IPoint
     {
         // WGS-84 ellipsoid parameters
         const double a = 6378137.0;            // semi-major axis in meters
@@ -186,12 +186,12 @@ public static class SpatialUtility
     /// <typeparam name="T"></typeparam>
     /// <param name="points">last point should not be repeated for ring</param>
     /// <returns>Signed Euclidean area for ring</returns>
-    public static double GetSignedEuclideanRingArea<T>(List<T> points) where T : IPoint
+    public static double GetSignedEuclideanArea<T>(List<T> points) where T : IPoint
     {
         if (points == null || points.Count < 3)
             return 0;
 
-        if (SpatialUtility.CalculateEuclideanDistance(points[0], points[points.Count - 1]) == 0)
+        if (SpatialUtility.GetEuclideanDistance(points[0], points[points.Count - 1]) == 0)
             throw new NotImplementedException("SpatialUtility > GetSignedRingArea");
 
         double area = 0;
@@ -217,7 +217,7 @@ public static class SpatialUtility
     /// </summary>
     /// <param name="points">last point should not be repeated for ring</param>
     /// <returns>Unsigned Euclidean area for ring</returns>
-    public static double GetUnsignedEuclideanRingArea<T>(List<T> points) where T : IPoint, new() => Math.Abs(GetSignedEuclideanRingArea(points));
+    public static double GetUnsignedEuclideanArea<T>(List<T> points) where T : IPoint, new() => Math.Abs(GetSignedEuclideanArea(points));
 
     /// <summary>
     /// Calculate signed Euclidean area for triangle
@@ -251,12 +251,12 @@ public static class SpatialUtility
 
     #region True Area
 
-    public static double CalculateGroundArea(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
+    public static double GetGroundArea(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
     {
-        return CalculateGroundArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84));
+        return GetGroundArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84));
     }
 
-    public static double CalculateGroundArea<T>(Geometry<T> geography) where T : IPoint, new()
+    public static double GetGroundArea<T>(Geometry<T> geography) where T : IPoint, new()
     {
         var newGeo = geography.Project(new CylindricalEqualArea());
 
@@ -275,19 +275,19 @@ public static class SpatialUtility
     /// For MultiPolygon: sum of polygon areas.
     /// Returns 0 for non-areal geometries.
     /// </summary>
-    public static double CalculateSphericalArea<T>(Geometry<T> geography) where T : IPoint, new()
+    public static double GetSphericalArea<T>(Geometry<T> geography) where T : IPoint, new()
     {
         switch (geography.Type)
         {
             case GeometryType.Polygon:
-                return CalculatePolygonAreaOnSphere(geography);
+                return GetPolygonAreaOnSphere(geography);
 
             case GeometryType.MultiPolygon:
                 if (geography.Geometries == null || geography.Geometries.Count == 0) return 0;
                 double sum = 0;
                 for (int i = 0; i < geography.Geometries.Count; i++)
                 {
-                    sum += CalculatePolygonAreaOnSphere(geography.Geometries[i]);
+                    sum += GetPolygonAreaOnSphere(geography.Geometries[i]);
                 }
                 return sum;
 
@@ -296,7 +296,7 @@ public static class SpatialUtility
         }
     }
 
-    private static double CalculatePolygonAreaOnSphere<TPoint>(Geometry<TPoint> polygon)
+    private static double GetPolygonAreaOnSphere<TPoint>(Geometry<TPoint> polygon)
         where TPoint : IPoint, new()
     {
         if (polygon?.Geometries == null || polygon.Geometries.Count == 0)
@@ -344,10 +344,10 @@ public static class SpatialUtility
             var p1 = ring[i];
             var p2 = ring[(i + 1) % n];
 
-            double φ1 = DegToRad(p1.Y);
-            double φ2 = DegToRad(p2.Y);
-            double λ1 = DegToRad(p1.X);
-            double λ2 = DegToRad(p2.X);
+            double φ1 = /*DegreeToRad*/(p1.Y) * Math.PI / 180.0;
+            double φ2 = /*DegreeToRad*/(p2.Y) * Math.PI / 180.0;
+            double λ1 = /*DegreeToRad*/(p1.X) * Math.PI / 180.0;
+            double λ2 = /*DegreeToRad*/(p2.X) * Math.PI / 180.0;
 
             double dλ = WrapDeltaLon(λ2 - λ1); // wrap into [-π, π]
 
@@ -415,22 +415,22 @@ public static class SpatialUtility
     /// Calculates polygon or multipolygon area on WGS84 ellipsoid in m².
     /// Uses ellipsoidal formula (Karney's algorithm for geodesic polygons).
     /// </summary>
-    public static double CalculateEllipsoidalArea<T>(Geometry<T> geography) where T : IPoint, new()
+    public static double GetEllipsoidalArea<T>(Geometry<T> geography) where T : IPoint, new()
     {
         switch (geography.Type)
         {
             case GeometryType.Polygon:
-                return CalculateEllipsoidalPolygonArea(geography);
+                return GetEllipsoidalPolygonArea(geography);
 
             case GeometryType.MultiPolygon:
-                return geography.Geometries.Sum(g => CalculateEllipsoidalPolygonArea(g));
+                return geography.Geometries.Sum(g => GetEllipsoidalPolygonArea(g));
 
             default:
                 return 0;
         }
     }
 
-    private static double CalculateEllipsoidalPolygonArea<TPoint>(Geometry<TPoint> polygon)
+    private static double GetEllipsoidalPolygonArea<TPoint>(Geometry<TPoint> polygon)
         where TPoint : IPoint, new()
     {
         if (polygon?.Geometries == null || polygon.Geometries.Count == 0)
@@ -448,7 +448,7 @@ public static class SpatialUtility
             if (ring.Points == null || ring.Points.Count < 3)
                 continue;
 
-            double area = ComputeRingAreaOnEllipsoid(ring.Points, a, f, b);
+            double area = GetRingAreaOnEllipsoid(ring.Points, a, f, b);
 
             if (ringIndex == 0)
                 totalArea += area;  // outer ring
@@ -462,7 +462,7 @@ public static class SpatialUtility
     /// <summary>
     /// Compute ring area using Karney’s algorithm for geodesic polygons on an ellipsoid.
     /// </summary>
-    private static double ComputeRingAreaOnEllipsoid<TPoint>(List<TPoint> points, double a, double f, double b)
+    private static double GetRingAreaOnEllipsoid<TPoint>(List<TPoint> points, double a, double f, double b)
         where TPoint : IPoint
     {
         // Use GeographicLib-style series for area accumulation
@@ -473,7 +473,7 @@ public static class SpatialUtility
         List<(double lat, double lon)> radPoints = new List<(double lat, double lon)>(n);
         for (int i = 0; i < n; i++)
         {
-            radPoints.Add((DegToRad(points[i].Y), DegToRad(points[i].X)));
+            radPoints.Add((/*DegreeToRad*/(points[i].Y) * Math.PI / 180.0, /*DegreeToRad*/(points[i].X) * Math.PI / 180.0));
         }
 
         for (int i = 0; i < n; i++)
@@ -481,7 +481,7 @@ public static class SpatialUtility
             var (lat1, lon1) = radPoints[i];
             var (lat2, lon2) = radPoints[(i + 1) % n];
 
-            double segArea = ComputeSegmentArea(lat1, lon1, lat2, lon2, a, f, b);
+            double segArea = GetSegmentArea(lat1, lon1, lat2, lon2, a, f, b);
             area += segArea;
         }
 
@@ -491,7 +491,7 @@ public static class SpatialUtility
     /// <summary>
     /// Compute area contribution of a single geodesic segment using ellipsoidal corrections.
     /// </summary>
-    private static double ComputeSegmentArea(double lat1, double lon1, double lat2, double lon2, double a, double f, double b)
+    private static double GetSegmentArea(double lat1, double lon1, double lat2, double lon2, double a, double f, double b)
     {
         // Vincenty formula for azimuth and length
         double L = lon2 - lon1;
@@ -553,7 +553,7 @@ public static class SpatialUtility
     #endregion
 
 
-    private static double DegToRad(double deg) => deg * Math.PI / 180.0;
+    //private static double DegreeToRad(double deg) => deg * Math.PI / 180.0;
 
     #endregion
 
@@ -649,7 +649,7 @@ public static class SpatialUtility
 
             case GeometryType.Polygon:
             case GeometryType.MultiPolygon:
-                return CalculateGroundArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84));
+                return GetGroundArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84));
 
             case GeometryType.Point:
             case GeometryType.MultiPoint:
@@ -672,7 +672,7 @@ public static class SpatialUtility
 
             case GeometryType.Polygon:
             case GeometryType.MultiPolygon:
-                var area = CalculateGroundArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84));
+                var area = GetGroundArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84));
                 return UnitHelper.GetAreaLabel(area);
 
             case GeometryType.Point:
@@ -690,26 +690,26 @@ public static class SpatialUtility
         => UnitHelper.GetLengthLabel(geometry.CalculateEllipsoidalLength(toWgs84Geodetic));
 
     public static string GetEllipsoidAreaLabel(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
-        => UnitHelper.GetAreaLabel(CalculateGroundArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84)));
+        => UnitHelper.GetAreaLabel(GetGroundArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84)));
 
-    public static string GetLengthLabel(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic) 
+    public static string GetLengthLabel(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
         => UnitHelper.GetLengthLabel(geometry.CalculateEllipsoidalLength(toWgs84Geodetic));
 
-    public static string GetAreaLabel(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic) 
-        => UnitHelper.GetAreaLabel(CalculateGroundArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84)));
+    public static string GetAreaLabel(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
+        => UnitHelper.GetAreaLabel(GetGroundArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84)));
 
     #endregion
 
 
     #region LineSegment
 
-    public static double CalculateLength<T>(LineSegment<T> line, Func<T, T> toGeodeticWgs84Func) where T : IPoint, new()
+    public static double GetLength<T>(LineSegment<T> line, Func<T, T> toGeodeticWgs84Func) where T : IPoint, new()
     {
         var start = toGeodeticWgs84Func(line.Start);
 
         var end = toGeodeticWgs84Func(line.End);
-         
-        return SphericalVincentyDistance(start, end);
+
+        return GetVincentyDistance(start, end);
 
         //var geodeticLine = SqlSpatialUtility.MakeGeography(new List<T>() { start, end }, false);
         //return geodeticLine.STLength().Value;
@@ -717,7 +717,7 @@ public static class SpatialUtility
 
     public static string GetLengthLabel<T>(LineSegment<T> line, Func<T, T> toGeodeticWgs84Func) where T : IPoint, new()
     {
-        var length = CalculateLength(line, toGeodeticWgs84Func);
+        var length = GetLength(line, toGeodeticWgs84Func);
 
         return UnitHelper.GetLengthLabel(length);
     }
@@ -726,6 +726,7 @@ public static class SpatialUtility
 
 
     #region Angle
+
     public static double GetSignedInnerAngle<T>(T firstPoint, T middlePoint, T lastPoint, AngleMode mode = AngleMode.Radian) where T : IPoint
     {
         var isClockwise = IsClockwise(new List<T> { firstPoint, middlePoint, lastPoint });
@@ -935,7 +936,7 @@ public static class SpatialUtility
     /// <returns></returns>
     public static bool IsClockwise<T>(List<T> points) where T : IPoint
     {
-        return GetSignedEuclideanRingArea(points) < 0;
+        return GetSignedEuclideanArea(points) < 0;
     }
 
     #endregion
@@ -995,7 +996,7 @@ public static class SpatialUtility
     /// <param name="circleRadius"></param>
     /// <param name="axisAlignedRectangle"></param>
     /// <returns></returns>
-    public static SpatialRelation CalculateAxisAlignedRectangleRelationToCircle(IPoint circleCenter, double circleRadius, BoundingBox axisAlignedRectangle)
+    public static SpatialRelation GetAxisAlignedRectangleRelationToCircle(IPoint circleCenter, double circleRadius, BoundingBox axisAlignedRectangle)
     {
         var rectangleCenter = axisAlignedRectangle.Center;
 
@@ -1050,7 +1051,7 @@ public static class SpatialUtility
         //نظر گرفته می‌شود.
         if (dxSegment == 0 && dySegment == 0)
         {
-            return SpatialUtility.CalculateEuclideanDistance(lineSegmentStart, targetPoint);
+            return SpatialUtility.GetEuclideanDistance(lineSegmentStart, targetPoint);
         }
 
         return Math.Abs(dySegment * targetPoint.X - dxSegment * targetPoint.Y + lineSegmentEnd.X * lineSegmentStart.Y - lineSegmentEnd.Y * lineSegmentStart.X)
@@ -1069,7 +1070,7 @@ public static class SpatialUtility
         //نظر گرفته می‌شود.
         if (dxSegment == 0 && dySegment == 0)
         {
-            return SpatialUtility.CalculateSquareEuclideanDistance(lineSegmentStart, targetPoint);
+            return SpatialUtility.GetSquareEuclideanDistance(lineSegmentStart, targetPoint);
         }
 
         var numerator = (dySegment * targetPoint.X - dxSegment * targetPoint.Y + lineSegmentEnd.X * lineSegmentStart.Y - lineSegmentEnd.Y * lineSegmentStart.X);
@@ -1086,7 +1087,7 @@ public static class SpatialUtility
 
     // todo: consider ring mode
     // McMaster, R. B. (1986). A statistical analysis of mathematical measures for linear simplification. The American Cartographer, 13(2), 103-116.
-    public static double CalculateTotalVectorDisplacement<T>(List<T> originalPoints, List<T> simplifiedPoints, bool isRingMode) where T : IPoint, new()
+    public static double GetTotalVectorDisplacement<T>(List<T> originalPoints, List<T> simplifiedPoints, bool isRingMode) where T : IPoint, new()
     {
         int currentSimplifiedIndex_Start = 0;
         int currentSimplifiedIndex_End = 1;
@@ -1107,7 +1108,7 @@ public static class SpatialUtility
             //    //indexMap.Add(originalIndex, null);
             //}
             /*else */
-            if (SpatialUtility.CalculateEuclideanDistance(currentPoint, simplifiedPoints[currentSimplifiedIndex_End]) < EpsilonDistance)
+            if (SpatialUtility.GetEuclideanDistance(currentPoint, simplifiedPoints[currentSimplifiedIndex_End]) < EpsilonDistance)
             {
                 //indexMap.Add(originalIndex, null);
                 currentSimplifiedIndex_Start = currentSimplifiedIndex_End;
@@ -1130,16 +1131,16 @@ public static class SpatialUtility
 
         return result;
     }
-     
+
     #endregion
 
 
-    public static T CalculateMidPoint<T>(T firstPoint, T secondPoint) where T : IPoint, new()
+    public static T GetMidPoint<T>(T firstPoint, T secondPoint) where T : IPoint, new()
     {
         return new T() { X = (firstPoint.X + secondPoint.X) / 2, Y = (firstPoint.Y + secondPoint.Y) / 2 };
     }
 
-    public static double CalculateSlope<T>(T firstPoint, T secondPoint) where T : IPoint, new()
+    public static double GetSlope<T>(T firstPoint, T secondPoint) where T : IPoint, new()
     {
         return (secondPoint.Y - firstPoint.Y) / (secondPoint.X - firstPoint.X);
     }

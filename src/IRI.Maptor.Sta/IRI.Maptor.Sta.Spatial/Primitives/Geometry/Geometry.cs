@@ -407,7 +407,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
             for (int i = 0; i < this.Points.Count; i++)
             {
-                var distance = SpatialUtility.CalculateEuclideanDistance(this.Points[i], point);
+                var distance = SpatialUtility.GetEuclideanDistance(this.Points[i], point);
 
                 if (minDistance > distance)
                 {
@@ -714,7 +714,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         switch (this.Type)
         {
             case GeometryType.Point:
-                return SpatialUtility.CalculateEuclideanDistance(this.AsPoint(), point) < SpatialUtility.EpsilonDistance;
+                return SpatialUtility.GetEuclideanDistance(this.AsPoint(), point) < SpatialUtility.EpsilonDistance;
 
             case GeometryType.LineString:
                 return TopologyUtility.IsPointOnLineString(this, point);
@@ -998,7 +998,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
                 throw new NotImplementedException("Geometry > CalculateTotalVectorDisplacement");
 
             case GeometryType.LineString:
-                return SpatialUtility.CalculateTotalVectorDisplacement(this.GetAllPoints(), simplified.GetAllPoints(), isRingBase);
+                return SpatialUtility.GetTotalVectorDisplacement(this.GetAllPoints(), simplified.GetAllPoints(), isRingBase);
 
             case GeometryType.Polygon:
                 return this.Geometries.Zip(simplified.Geometries, (g1, g2) => g1.CalculateTotalVectorDisplacement(g2, isRingBase)).Sum();
@@ -2252,7 +2252,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
         for (int i = 0; i < this.Geometries.Count; i++)
         {
-            var area = SpatialUtility.GetUnsignedEuclideanRingArea(this.Geometries[i].GetAllPoints());
+            var area = SpatialUtility.GetUnsignedEuclideanArea(this.Geometries[i].GetAllPoints());
 
             // If this ring is bigger than current outer, swap
             if (area > outerArea)
@@ -2369,12 +2369,12 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
         for (int i = 0; i < this.Points.Count - 1; i++)
         {
-            result += SpatialUtility.CalculateEuclideanDistance(this.Points[i], this.Points[i + 1]);
+            result += SpatialUtility.GetEuclideanDistance(this.Points[i], this.Points[i + 1]);
         }
 
         if (isRing)
         {
-            result += SpatialUtility.CalculateEuclideanDistance(this.Points[this.Points.Count - 1], this.Points[0]);
+            result += SpatialUtility.GetEuclideanDistance(this.Points[this.Points.Count - 1], this.Points[0]);
         }
 
         return result;
@@ -2436,12 +2436,12 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
         for (int i = 0; i < wgs84Pionts.Count - 1; i++)
         {
-            result += SpatialUtility.SphericalVincentyDistance(wgs84Pionts[i], wgs84Pionts[i + 1]);
+            result += SpatialUtility.GetVincentyDistance(wgs84Pionts[i], wgs84Pionts[i + 1]);
         }
 
         if (isRing)
         {
-            result += SpatialUtility.SphericalVincentyDistance(wgs84Pionts[this.Points.Count - 1], wgs84Pionts[0]);
+            result += SpatialUtility.GetVincentyDistance(wgs84Pionts[this.Points.Count - 1], wgs84Pionts[0]);
         }
 
         return result;
@@ -2513,12 +2513,12 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
         for (int i = 0; i < this.Points.Count - 1; i++)
         {
-            result.Add(SpatialUtility.CalculateEuclideanDistance(this.Points[i], this.Points[i + 1]));
+            result.Add(SpatialUtility.GetEuclideanDistance(this.Points[i], this.Points[i + 1]));
         }
 
         if (isRing)
         {
-            result.Add(SpatialUtility.CalculateEuclideanDistance(this.Points[this.Points.Count - 1], this.Points[0]));
+            result.Add(SpatialUtility.GetEuclideanDistance(this.Points[this.Points.Count - 1], this.Points[0]));
         }
 
         return result;

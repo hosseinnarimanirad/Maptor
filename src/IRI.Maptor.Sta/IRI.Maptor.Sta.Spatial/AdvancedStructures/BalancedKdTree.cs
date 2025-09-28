@@ -266,7 +266,7 @@ public class BalancedKdTree<T>
     {
         if (distanceFunc == null)
         {
-            distanceFunc = (p1, p2) => SpatialUtility.CalculateEuclideanDistance(PointFunc(p1), PointFunc(p2));
+            distanceFunc = (p1, p2) => SpatialUtility.GetEuclideanDistance(PointFunc(p1), PointFunc(p2));
         }
 
         var minDistance = distanceFunc(this.Root.Point, point);
@@ -316,7 +316,7 @@ public class BalancedKdTree<T>
     {
         if (distanceFunc == null)
         {
-            distanceFunc = (p1, p2) => SpatialUtility.CalculateEuclideanDistance(PointFunc(p1), PointFunc(p2));
+            distanceFunc = (p1, p2) => SpatialUtility.GetEuclideanDistance(PointFunc(p1), PointFunc(p2));
         }
 
         return FindNeighbours(point, distance, Root, distanceFunc);
@@ -333,7 +333,7 @@ public class BalancedKdTree<T>
 
         if (node.LeftChild != null && !node.LeftChild.IsNilNode())
         {
-            var relation = SpatialUtility.CalculateAxisAlignedRectangleRelationToCircle(PointFunc(point), radius, node.LeftChild.MinimumBoundingBox);
+            var relation = SpatialUtility.GetAxisAlignedRectangleRelationToCircle(PointFunc(point), radius, node.LeftChild.MinimumBoundingBox);
 
             if (relation == IRI.Maptor.Sta.Common.Enums.SpatialRelation.Contained)
             {
@@ -347,7 +347,7 @@ public class BalancedKdTree<T>
 
         if (node.RightChild != null && !node.RightChild.IsNilNode())
         {
-            var relation = SpatialUtility.CalculateAxisAlignedRectangleRelationToCircle(PointFunc(point), radius, node.RightChild.MinimumBoundingBox);
+            var relation = SpatialUtility.GetAxisAlignedRectangleRelationToCircle(PointFunc(point), radius, node.RightChild.MinimumBoundingBox);
 
             if (relation == IRI.Maptor.Sta.Common.Enums.SpatialRelation.Contained)
             {

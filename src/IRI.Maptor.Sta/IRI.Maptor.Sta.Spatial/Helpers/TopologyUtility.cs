@@ -142,9 +142,9 @@ public class TopologyUtility
         if (firstLineFirstPoint.Equals(firstLineSecondPoint) || secondLineFirstPoint.Equals(secondLineSecondPoint))
             throw new NotImplementedException();
         // precision issues!
-        double firstSlope = SpatialUtility.CalculateSlope(firstLineFirstPoint, firstLineSecondPoint);
+        double firstSlope = SpatialUtility.GetSlope(firstLineFirstPoint, firstLineSecondPoint);
 
-        double secondSlope = SpatialUtility.CalculateSlope(secondLineFirstPoint, secondLineSecondPoint);
+        double secondSlope = SpatialUtility.GetSlope(secondLineFirstPoint, secondLineSecondPoint);
 
         if (firstSlope - secondSlope == 0 || double.IsInfinity(firstSlope) && double.IsInfinity(secondSlope))
         {

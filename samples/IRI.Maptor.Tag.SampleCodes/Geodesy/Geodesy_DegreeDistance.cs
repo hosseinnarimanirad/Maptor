@@ -30,7 +30,7 @@ public static class Geodesy_DegreeDistance
 
         for (int i = 0; i < equatorPoints.Count; i++)
         {
-            var distance = SpatialUtility.CalculateSphericalDistance(basePoint, equatorPoints[i]);
+            var distance = SpatialUtility.GetSphericalDistance(basePoint, equatorPoints[i]);
             //var distance = SpatialUtility.VincentyDistance(basePoint, equatorPoints[i]);
             var degree = equatorPoints[i].X.ToString("0.##########");
             Console.WriteLine($"| {i,-14} | {degree,-14} | {FormatDistance(distance),-14}|");

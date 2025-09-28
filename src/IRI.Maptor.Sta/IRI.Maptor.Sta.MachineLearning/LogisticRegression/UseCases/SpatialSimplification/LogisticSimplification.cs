@@ -196,7 +196,7 @@ public class LogisticSimplification<T> where T : IPoint, new()
         }
 
         // do not add last point if it is already added 
-        if (SpatialUtility.CalculateEuclideanDistance(result.Last(), points.Last()) != 0)
+        if (SpatialUtility.GetEuclideanDistance(result.Last(), points.Last()) != 0)
         {
             result.Add(points.Last());
         }
@@ -266,7 +266,7 @@ public class LogisticSimplification<T> where T : IPoint, new()
         }
 
         // do not add last point if it is already added
-        if (SpatialUtility.CalculateEuclideanDistance(result.Last(), points.Last()) != 0)
+        if (SpatialUtility.GetEuclideanDistance(result.Last(), points.Last()) != 0)
         {
             result.Add(points.Last());
         }
@@ -326,7 +326,7 @@ public class LogisticSimplification<T> where T : IPoint, new()
         }
 
         // do not add last point if it is already added
-        if (SpatialUtility.CalculateEuclideanDistance(result.Last(), points.Last()) != 0)
+        if (SpatialUtility.GetEuclideanDistance(result.Last(), points.Last()) != 0)
         {
             result.Add(points.Last());
         }
