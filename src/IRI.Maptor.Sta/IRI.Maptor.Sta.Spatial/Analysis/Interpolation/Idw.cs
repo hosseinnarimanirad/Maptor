@@ -17,7 +17,7 @@ public static class Idw
 
         foreach (var item in points)
         {
-            double distance = SpatialUtility.GetEuclideanDistance(measurePoint, item);
+            double distance = SpatialUtility.CalculateEuclideanDistance(measurePoint, item);
 
             if (distance < maxDistance)
             {

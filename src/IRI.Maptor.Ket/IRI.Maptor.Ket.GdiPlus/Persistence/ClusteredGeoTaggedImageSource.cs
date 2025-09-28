@@ -82,7 +82,7 @@ public class ClusteredGeoTaggedImageSource : IDataSource
 
             var logic = new Func<GeoTaggedImage, GeoTaggedImage, bool>((first, second) =>
             {
-                var distance = SpatialUtility.GetEuclideanDistance(first.WebMercatorLocation, second.WebMercatorLocation);
+                var distance = SpatialUtility.CalculateEuclideanDistance(first.WebMercatorLocation, second.WebMercatorLocation);
 
                 var tolerance = 50 * ConversionHelper.InchToMeterFactor / 96.0;
 

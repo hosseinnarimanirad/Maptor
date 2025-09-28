@@ -133,7 +133,7 @@ public class SpatialUtilityTest
     [Fact]
     public void CalculateSignedRingAreaTest()
     {
-        Assert.Equal(-4, SpatialUtility.GetSignedRingArea(new List<Point>()
+        Assert.Equal(-4, SpatialUtility.GetSignedEuclideanRingArea(new List<Point>()
                 {
             Point.Create(-1,-1),
             Point.Create(-1, 1),
@@ -141,7 +141,7 @@ public class SpatialUtilityTest
             Point.Create(1, -1)
                 }));
 
-        Assert.Equal(4, SpatialUtility.GetSignedRingArea(new List<Point>()
+        Assert.Equal(4, SpatialUtility.GetSignedEuclideanRingArea(new List<Point>()
                 {
             Point.Create(-1,-1),
             Point.Create(1, -1),
@@ -345,7 +345,7 @@ public class SpatialUtilityTest
         var expected = p1.AsSqlGeography().STDistance(p2.AsSqlGeography()).Value;
 
         // Act
-        var actual = SpatialUtility.VincentyDistance(p1, p2);
+        var actual = SpatialUtility.SphericalVincentyDistance(p1, p2);
 
         // Assert
         Assert.Equal(expected, actual, precision: precision);

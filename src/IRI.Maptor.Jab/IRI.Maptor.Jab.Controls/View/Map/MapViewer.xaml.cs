@@ -5087,9 +5087,9 @@ public partial class MapViewer : NotifiableUserControl
                 //var measureValue = mode == DrawMode.Polygon ? UnitHelper.GetAreaLabel(geoAsGeodetic.STArea().Value) : UnitHelper.GetLengthLabel(geoAsGeodetic.STLength().Value);
                 //marker.ToolTip = mode == DrawMode.Polygon ? geoAsGeodetic.STArea().Value : geoAsGeodetic.STLength().Value;
 
-                var measureValue = SpatialUtility.GetMeasureLabel(geo, MapProjects.WebMercatorToGeodeticWgs84);
+                var measureValue = SpatialUtility.GetEllipsoidMeasureLabel(geo, MapProjects.WebMercatorToGeodeticWgs84);
 
-                marker.ToolTip = SpatialUtility.GetMeasure(geo, MapProjects.WebMercatorToGeodeticWgs84);
+                marker.ToolTip = SpatialUtility.GetEllipsoidMeasure(geo, MapProjects.WebMercatorToGeodeticWgs84);
 
                 marker.LabelValue = measureValue;
 

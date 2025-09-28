@@ -58,7 +58,7 @@ public class MercatorTest
     [Fact]
     public void TestWebMercatorForBothMethods()
     {
-        TestForPoint(new Point(51.1, 35.58));
+        TestForPoint(new Point(51.12345678, 35.581234567));
 
         TestForPoint(new Point(51.17, -35.52));
 

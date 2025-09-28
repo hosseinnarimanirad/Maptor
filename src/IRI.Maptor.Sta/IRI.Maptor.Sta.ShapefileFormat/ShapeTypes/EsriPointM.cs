@@ -107,7 +107,7 @@ public struct EsriPointM : IPoint, IEsriShape, IHasM
     {
         //return Point.GetDistance(new Point(this.X, this.Y), new Point(point.X, point.Y));
 
-        return IRI.Maptor.Sta.Spatial.Analysis.SpatialUtility.GetEuclideanDistance(this, point);
+        return IRI.Maptor.Sta.Spatial.Analysis.SpatialUtility.CalculateEuclideanDistance(this, point);
     }
 
 
