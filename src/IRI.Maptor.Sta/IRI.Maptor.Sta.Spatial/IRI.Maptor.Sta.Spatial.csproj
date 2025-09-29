@@ -31,5 +31,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Analysis\AreaCalculator\" />
+  </ItemGroup>
+
 
 </Project>

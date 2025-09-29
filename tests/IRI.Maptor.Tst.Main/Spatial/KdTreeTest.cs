@@ -114,13 +114,13 @@ namespace IRI.Maptor.Tst.NetFrameworkTest.Spatial
 
         private Point FindNearestBruteForce(List<Point> dataSet, Point targetPoint)
         {
-            var minDistance = SpatialUtility.GetEuclideanDistance(dataSet[0], targetPoint);
+            var minDistance = SpatialUtility.GetEuclideanLength(dataSet[0], targetPoint);
 
             var result = dataSet.First();
 
             for (int i = 0; i < dataSet.Count; i++)
             {
-                var distance = SpatialUtility.GetEuclideanDistance(dataSet[i], targetPoint);
+                var distance = SpatialUtility.GetEuclideanLength(dataSet[i], targetPoint);
 
                 if (distance < minDistance)
                 {

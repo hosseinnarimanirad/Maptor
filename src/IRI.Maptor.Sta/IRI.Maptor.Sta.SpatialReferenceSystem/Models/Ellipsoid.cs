@@ -13,9 +13,7 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
     #region Fields
 
     private Cartesian3DPoint<TLinear> _datumTranslation;
-
-    //private AngularUnit m_Omega, m_Phi, m_Kappa;
-
+     
     private OrientationParameter _datumMisalignment;
 
     private LinearUnit _semiMajorAxis;
@@ -34,30 +32,15 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
 
     #region Properties
 
-    public ICartesian3DPoint DatumTranslation
-    {
-        get { return _datumTranslation; }
-    }
+    public ICartesian3DPoint DatumTranslation => _datumTranslation;
 
-    public OrientationParameter DatumMisalignment
-    {
-        get { return _datumMisalignment; }
-    }
+    public OrientationParameter DatumMisalignment => _datumMisalignment;
 
-    public LinearUnit SemiMajorAxis
-    {
-        get { return _semiMajorAxis; }
-    }
+    public LinearUnit SemiMajorAxis => _semiMajorAxis;
 
-    public LinearUnit SemiMinorAxis
-    {
-        get { return _semiMinorAxis; }
-    }
+    public LinearUnit SemiMinorAxis => _semiMinorAxis;
 
-    public string Name
-    {
-        get { return _name; }
-    }
+    public string Name => _name;
 
     public string EsriName { get; set; }
 
@@ -99,7 +82,11 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
 
     #region Constructors
 
-    public Ellipsoid(string name, LinearUnit semiMajorAxis, double inverseFlattening, int srid)
+    public Ellipsoid(
+            string name, 
+            LinearUnit semiMajorAxis, 
+            double inverseFlattening, 
+            int srid)
         : this(name,
                 semiMajorAxis,
                 inverseFlattening,
@@ -108,8 +95,13 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
                 srid)
     { }
 
-    public Ellipsoid(string name, LinearUnit semiMajorAxis, LinearUnit semiMinorAxis,
-                        ICartesian3DPoint datumTranslation, OrientationParameter datumMisalignment, int srid)
+    public Ellipsoid(
+            string name, 
+            LinearUnit semiMajorAxis, 
+            LinearUnit semiMinorAxis,
+            ICartesian3DPoint datumTranslation, 
+            OrientationParameter datumMisalignment, 
+            int srid)
         : this(name,
                 semiMajorAxis,
                 1.0 / semiMajorAxis.Subtract(semiMinorAxis).Divide(semiMajorAxis).Value,
@@ -118,8 +110,13 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
                 srid)
     { }
 
-    public Ellipsoid(string name, LinearUnit semiMajorAxis, double inverseFlattening,
-                        ICartesian3DPoint datumTranslation, OrientationParameter datumMisalignment, int srid)
+    public Ellipsoid(
+            string name, 
+            LinearUnit semiMajorAxis, 
+            double inverseFlattening,
+            ICartesian3DPoint datumTranslation, 
+            OrientationParameter datumMisalignment, 
+            int srid)
     {
         _datumTranslation = new Cartesian3DPoint<TLinear>(datumTranslation.X, datumTranslation.Y, datumTranslation.Z);
 
@@ -159,22 +156,9 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
 
     #endregion
 
+
     #region Methods
-
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <param name="latitudeInRadian">Latitude Value in Radian</param>
-    ///// <returns></returns>
-    //public double CalculateN(double latitudeInRadian)
-    //{
-    //    var sin = Math.Sin(latitudeInRadian);
-
-    //    return  (this.m_SemiMajorAxis.Value
-    //                    /
-    //            Math.Sqrt(1 - this.FirstEccentricity * this.FirstEccentricity * sin * sin));
-    //}
-
+     
     public double CalculateN(double Latitude)
     {
         double sin = Math.Sin(Latitude * Math.PI / 180);
@@ -224,15 +208,9 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
         return false;
     }
 
-    public override int GetHashCode()
-    {
-        return ToString().GetHashCode();
-    }
+    public override int GetHashCode() => ToString().GetHashCode();
 
-    public override string ToString()
-    {
-        return Name;
-    }
+    public override string ToString() => Name;
 
     public Ellipsoid<TNewLinearType, TNewAngularType> ChangeTo<TNewLinearType, TNewAngularType>()
         where TNewLinearType : LinearUnit, new()
@@ -253,6 +231,9 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
 
     #endregion
 
+
+    #region Operators
+
     public static bool operator ==(Ellipsoid<TLinear, TAngular> firstEllipsoid, IEllipsoid secondEllipsoid)
     {
         return firstEllipsoid.DatumTranslation == secondEllipsoid.DatumTranslation &&
@@ -262,9 +243,7 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
                 firstEllipsoid.SemiMinorAxis == secondEllipsoid.SemiMinorAxis;
     }
 
-    public static bool operator !=(Ellipsoid<TLinear, TAngular> firstEllipsoid, IEllipsoid secondEllipsoid)
-    {
-        return !(firstEllipsoid == secondEllipsoid);
-    }
+    public static bool operator !=(Ellipsoid<TLinear, TAngular> firstEllipsoid, IEllipsoid secondEllipsoid) => !(firstEllipsoid == secondEllipsoid);
 
+    #endregion
 }

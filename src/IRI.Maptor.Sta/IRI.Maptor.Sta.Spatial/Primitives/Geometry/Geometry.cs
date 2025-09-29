@@ -407,7 +407,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
             for (int i = 0; i < this.Points.Count; i++)
             {
-                var distance = SpatialUtility.GetEuclideanDistance(this.Points[i], point);
+                var distance = SpatialUtility.GetEuclideanLength(this.Points[i], point);
 
                 if (minDistance > distance)
                 {
@@ -714,7 +714,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         switch (this.Type)
         {
             case GeometryType.Point:
-                return SpatialUtility.GetEuclideanDistance(this.AsPoint(), point) < SpatialUtility.EpsilonDistance;
+                return SpatialUtility.GetEuclideanLength(this.AsPoint(), point) < SpatialUtility.EpsilonDistance;
 
             case GeometryType.LineString:
                 return TopologyUtility.IsPointOnLineString(this, point);
@@ -2369,12 +2369,12 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
         for (int i = 0; i < this.Points.Count - 1; i++)
         {
-            result += SpatialUtility.GetEuclideanDistance(this.Points[i], this.Points[i + 1]);
+            result += SpatialUtility.GetEuclideanLength(this.Points[i], this.Points[i + 1]);
         }
 
         if (isRing)
         {
-            result += SpatialUtility.GetEuclideanDistance(this.Points[this.Points.Count - 1], this.Points[0]);
+            result += SpatialUtility.GetEuclideanLength(this.Points[this.Points.Count - 1], this.Points[0]);
         }
 
         return result;
@@ -2382,23 +2382,10 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
     public double CalculateEllipsoidalLength(Func<T, T> toWgs84Geodetic)
     {
-        //try
-        //{
-        //    return geometry.AsSqlGeometry().Project(toWgs84Geodetic, SridHelper.GeodeticWGS84).MakeValid().STLength().Value;
-        //}
-        //catch (Exception)
-        //{
-        //    return double.NaN;
-        //}
-        ////return GetArea(geometry.Transform(toWgs84Geodetic, 0));
+        // return geometry.AsSqlGeometry().Project(toWgs84Geodetic, SridHelper.GeodeticWGS84).MakeValid().STLength().Value;
+
         if (this.IsNotValidOrEmpty())
             return 0;
-
-        var geodeticGeometry = this.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84);
-
-        //1399.07.17
-        //if (this.Points == null && this.Geometries == null)
-        //    return 0;
 
         switch (this.Type)
         {
@@ -2407,10 +2394,10 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
                 return 0;
 
             case GeometryType.LineString:
-                return CalculateGroundLengthForLineStringOrRing(false, toWgs84Geodetic);
+                return CalculateEllipsoidalLengthForLineStringOrRing(false, toWgs84Geodetic);
 
             case GeometryType.Polygon:
-                return Geometries.Sum(g => g.CalculateGroundLengthForLineStringOrRing(true, toWgs84Geodetic));
+                return Geometries.Sum(g => g.CalculateEllipsoidalLengthForLineStringOrRing(true, toWgs84Geodetic));
 
             case GeometryType.MultiLineString:
             case GeometryType.MultiPolygon:
@@ -2425,9 +2412,9 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         }
     }
 
-    private double CalculateGroundLengthForLineStringOrRing(bool isRing, Func<T, T> toWgs84Geodetic)
+    private double CalculateEllipsoidalLengthForLineStringOrRing(bool isRing, Func<T, T> toWgs84Geodetic)
     {
-        if (this.Points == null || this.Points.Count < 2)
+        if (Points is null || Points.Count < 2)
             return 0;
 
         double result = 0;
@@ -2436,12 +2423,12 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
         for (int i = 0; i < wgs84Pionts.Count - 1; i++)
         {
-            result += SpatialUtility.GetVincentyDistance(wgs84Pionts[i], wgs84Pionts[i + 1]);
+            result += SpatialUtility.GetEllipsoidalLength(wgs84Pionts[i], wgs84Pionts[i + 1]);
         }
 
         if (isRing)
         {
-            result += SpatialUtility.GetVincentyDistance(wgs84Pionts[this.Points.Count - 1], wgs84Pionts[0]);
+            result += SpatialUtility.GetEllipsoidalLength(wgs84Pionts[this.Points.Count - 1], wgs84Pionts[0]);
         }
 
         return result;
@@ -2513,12 +2500,12 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
         for (int i = 0; i < this.Points.Count - 1; i++)
         {
-            result.Add(SpatialUtility.GetEuclideanDistance(this.Points[i], this.Points[i + 1]));
+            result.Add(SpatialUtility.GetEuclideanLength(this.Points[i], this.Points[i + 1]));
         }
 
         if (isRing)
         {
-            result.Add(SpatialUtility.GetEuclideanDistance(this.Points[this.Points.Count - 1], this.Points[0]));
+            result.Add(SpatialUtility.GetEuclideanLength(this.Points[this.Points.Count - 1], this.Points[0]));
         }
 
         return result;

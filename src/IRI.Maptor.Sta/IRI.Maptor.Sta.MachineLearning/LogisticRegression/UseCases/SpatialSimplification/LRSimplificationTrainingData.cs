@@ -96,7 +96,7 @@ public class LRSimplificationTrainingData<T> where T : IPoint, new()
 
             for (int originalIndex = simplifiedIndex; originalIndex < originalPoints.Count; originalIndex++)
             {
-                if (IRI.Maptor.Sta.Spatial.Analysis.SpatialUtility.GetEuclideanDistance(currentPoint, originalPoints[originalIndex]) < IRI.Maptor.Sta.Spatial.Analysis.SpatialUtility.EpsilonDistance)
+                if (IRI.Maptor.Sta.Spatial.Analysis.SpatialUtility.GetEuclideanLength(currentPoint, originalPoints[originalIndex]) < IRI.Maptor.Sta.Spatial.Analysis.SpatialUtility.EpsilonDistance)
                 {
                     indexMap.Add(simplifiedIndex, originalIndex);
 

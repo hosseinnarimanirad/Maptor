@@ -81,7 +81,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     #region Measure Attributes
 
-    public double GroundLength=> SpatialUtility.CalculateLength()
+    //public double GroundLength=> SpatialUtility.CalculateLength()
 
 
     #endregion
@@ -984,7 +984,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public string AreaLabel
     {
-        get { return UnitHelper.GetAreaLabel(SpatialUtility.GetGroundArea(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84)); }
+        get { return UnitHelper.GetAreaLabel(SpatialUtility.GetEllipsoidalArea(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84)); }
     }
 
     public string LengthLabel

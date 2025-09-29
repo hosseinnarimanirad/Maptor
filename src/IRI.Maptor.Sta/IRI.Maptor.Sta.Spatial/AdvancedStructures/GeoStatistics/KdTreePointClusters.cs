@@ -49,7 +49,7 @@ public class KdTreePointClusters<T> where T : IPoint
 
                 var tempGroup = new Group<T>(_allSingleMembers[i]);
 
-                var nearestGroup = Groups.FindNearestNeighbour(tempGroup, ((g1, g2) => IRI.Maptor.Sta.Spatial.Analysis.SpatialUtility.GetEuclideanDistance(g1.Center, g2.Center)));
+                var nearestGroup = Groups.FindNearestNeighbour(tempGroup, ((g1, g2) => IRI.Maptor.Sta.Spatial.Analysis.SpatialUtility.GetEuclideanLength(g1.Center, g2.Center)));
 
                 if (groupLogic(nearestGroup.Center, _allSingleMembers[i]))
                 {

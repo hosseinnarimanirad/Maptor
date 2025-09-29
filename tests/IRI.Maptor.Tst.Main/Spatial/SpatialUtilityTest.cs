@@ -1,14 +1,15 @@
-﻿using IRI.Maptor.Sta.Spatial.Analysis;
+﻿using System.Collections.Generic;
+
+using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Metrics;
+using IRI.Maptor.Sta.Spatial.Helpers;
+using IRI.Maptor.Sta.Spatial.Analysis;
+using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
+using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Tst.NetFrameworkTest.Assets;
-using System.Collections.Generic;
-using IRI.Maptor.Sta.Metrics;
-using IRI.Maptor.Extensions;
+
 using static IRI.Maptor.Sta.Common.Enums.SpatialRelation;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
-using IRI.Maptor.Sta.Spatial.Helpers;
-using IRI.Maptor.Extensions;
 
 namespace IRI.Maptor.Tst.NetFrameworkTest.Spatial;
 
@@ -126,8 +127,8 @@ public class SpatialUtilityTest
     [Fact]
     public void CalculateSignedTriangleAreaTest()
     {
-        Assert.Equal(-0.5, SpatialUtility.GetSignedTriangleArea(new Point(0, 0), Point.Create(0, 1), Point.Create(1, 0)));
-        Assert.Equal(0.5, SpatialUtility.GetSignedTriangleArea(new Point(0, 0), Point.Create(1, 0), Point.Create(0, 1)));
+        Assert.Equal(-0.5, SpatialUtility.GetSignedEuclideanArea(new Point(0, 0), Point.Create(0, 1), Point.Create(1, 0)));
+        Assert.Equal(0.5, SpatialUtility.GetSignedEuclideanArea(new Point(0, 0), Point.Create(1, 0), Point.Create(0, 1)));
     }
 
     [Fact]
@@ -267,8 +268,7 @@ public class SpatialUtilityTest
     [InlineData(true, _multiPolygon2, "POINT(5946870 3868843)")]
     [InlineData(true, _multiPolygon2, "POINT(5947023 3850192)")]
     [InlineData(true, _multiPolygon2, "POINT(5908346 3871136)")]
-    [InlineData(true, _multiPolygon2, "POINT(5983160 3877895)")]
-    [InlineData(true, _multiPolygon2, "POINT(5983160 3877895)")]
+    [InlineData(true, _multiPolygon2, "POINT(5983160 3877895)")] 
     [InlineData(true, _multiPolygon2, "POINT(5904218 3885812)")]
     [InlineData(true, _multiPolygon2, "POINT(5980350 3881532)")]
     [InlineData(true, _multiPolygon2, "POINT(5938462 3888870)")]
@@ -328,6 +328,7 @@ public class SpatialUtilityTest
         Assert.Equal(isPointInPolygon, isPointInPolygonActually);
     }
 
+
     [Theory]
     [InlineData(30.0000, 44.0000, 30.0001, 44.0001, 6)] // ~15 m
     [InlineData(30.0000, 44.0000, 30.0010, 44.0010, 6)] // ~150 m
@@ -345,11 +346,9 @@ public class SpatialUtilityTest
         var expected = p1.AsSqlGeography().STDistance(p2.AsSqlGeography()).Value;
 
         // Act
-        var actual = SpatialUtility.GetVincentyDistance(p1, p2);
+        var actual = SpatialUtility.GetEllipsoidalLength(p1, p2);
 
         // Assert
         Assert.Equal(expected, actual, precision: precision);
     }
-
-
 }

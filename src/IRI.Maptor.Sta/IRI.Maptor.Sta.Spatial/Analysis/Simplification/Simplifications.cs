@@ -29,9 +29,9 @@ public static class Simplifications
 
         while (thirdIndex < pointList.Count)
         {
-            var area = SpatialUtility.GetSignedTriangleArea(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
+            var area = SpatialUtility.GetSignedEuclideanArea(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
 
-            var areaCheck2 = SpatialUtility.GetUnsignedTriangleArea(pointList[firstIndex], pointList[(int)((firstIndex + thirdIndex) / 2.0)], pointList[thirdIndex]);
+            var areaCheck2 = SpatialUtility.GetUnsignedEuclideanArea(pointList[firstIndex], pointList[(int)((firstIndex + thirdIndex) / 2.0)], pointList[thirdIndex]);
 
             tempArea += area;
 
@@ -136,7 +136,7 @@ public static class Simplifications
         {
             var angle = SpatialUtility.GetSquareCosineOfAngle(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
 
-            var area = SpatialUtility.GetUnsignedTriangleArea(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
+            var area = SpatialUtility.GetUnsignedEuclideanArea(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
 
             tempArea += area;
 
@@ -186,7 +186,7 @@ public static class Simplifications
 
         while (secondIndex < pointList.Count - 1)
         {
-            var semiDistance = SpatialUtility.GetSquareEuclideanDistance(pointList[firstIndex], pointList[secondIndex]);
+            var semiDistance = SpatialUtility.GetSquareEuclideanLength(pointList[firstIndex], pointList[secondIndex]);
 
             temp += semiDistance;
 
@@ -272,7 +272,7 @@ public static class Simplifications
 
         for (int i = 1; i < numberOfPoints - 1; i++)
         {
-            if (SpatialUtility.GetEuclideanDistance(pointList[i], pointList[firstIndex]) > parameters.DistanceThreshold)
+            if (SpatialUtility.GetEuclideanLength(pointList[i], pointList[firstIndex]) > parameters.DistanceThreshold)
             {
                 result.Add(pointList[i]);
                 firstIndex = i;
@@ -285,7 +285,7 @@ public static class Simplifications
         }
 
         // prevent adding the last point if it is already added
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
@@ -326,7 +326,7 @@ public static class Simplifications
         }
 
         // prevent adding the last point if it is already added
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
@@ -370,7 +370,7 @@ public static class Simplifications
         }
 
         // prevent adding the last point if it is already added
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
@@ -563,7 +563,7 @@ public static class Simplifications
         }
 
         // prevent adding the last point if it is already added
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
@@ -635,7 +635,7 @@ public static class Simplifications
             result.Add(pointList[pointList.Count() / 2]);
         }
 
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
@@ -713,7 +713,7 @@ public static class Simplifications
             result.Add(pointList[pointList.Count() / 2]);
         }
 
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
@@ -782,7 +782,7 @@ public static class Simplifications
                         //if (i + 2 > pList.Count - 1) { }
                         //if (firstIndex > areas.Count - 1) { }
 
-                        areas[firstIndex] = SpatialUtility.GetUnsignedTriangleArea(pList[firstIndex], pList[i], pList[(i + 2) % pointCount]);
+                        areas[firstIndex] = SpatialUtility.GetUnsignedEuclideanArea(pList[firstIndex], pList[i], pList[(i + 2) % pointCount]);
                     }
 
                     if (i < areas.Count - 1)
@@ -791,7 +791,7 @@ public static class Simplifications
                         //if ((i + 3) % pointCount > pList.Count - 1) { }
 
                         // (i, i+2, i+3): i is used insted of i+1 because i+1 is going to be removed
-                        areas[(i + 1) % areaCount] = SpatialUtility.GetUnsignedTriangleArea(pList[i], pList[(i + 2) % pointCount], pList[(i + 3) % pointCount]);
+                        areas[(i + 1) % areaCount] = SpatialUtility.GetUnsignedEuclideanArea(pList[i], pList[(i + 2) % pointCount], pList[(i + 3) % pointCount]);
                     }
 
                     //pList.RemoveAt((i + 1) % pointCount);
@@ -811,7 +811,7 @@ public static class Simplifications
             pList.Add(pointList[pointList.Count() / 2]);
         }
 
-        if (SpatialUtility.GetEuclideanDistance(pList.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(pList.Last(), pointList.Last()) != 0)
         {
             pList.Add(pointList.Last());
         }
@@ -870,7 +870,7 @@ public static class Simplifications
         }
 
         // prevent adding the last point if it is already added
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
@@ -938,7 +938,7 @@ public static class Simplifications
             result.Add(pointList[pointList.Count() / 2]);
         }
 
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
@@ -1005,7 +1005,7 @@ public static class Simplifications
             result.Add(pointList[pointList.Count() / 2]);
         }
 
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
@@ -1033,7 +1033,7 @@ public static class Simplifications
 
         for (int i = 0; i < pointList.Count - 2; i++)
         {
-            var area = SpatialUtility.GetUnsignedTriangleArea(pointList[i], pointList[i + 1], pointList[i + 2]);
+            var area = SpatialUtility.GetUnsignedEuclideanArea(pointList[i], pointList[i + 1], pointList[i + 2]);
 
             if (area > parameters.AreaThreshold)
             {
@@ -1055,7 +1055,7 @@ public static class Simplifications
         }
 
         // prevent adding the last point if it is already added
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
@@ -1092,7 +1092,7 @@ public static class Simplifications
                 throw new NotImplementedException();
             }
 
-            var area = SpatialUtility.GetUnsignedTriangleArea(pointList[startIndex], pointList[midIndex/*i + 1*/], pointList[endIndex]);
+            var area = SpatialUtility.GetUnsignedEuclideanArea(pointList[startIndex], pointList[midIndex/*i + 1*/], pointList[endIndex]);
 
             if (area > parameters.AreaThreshold)
             {
@@ -1109,7 +1109,7 @@ public static class Simplifications
         }
 
         // prevent adding the last point if it is already added
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
@@ -1144,7 +1144,7 @@ public static class Simplifications
             //tempArea += area;
             //if (Math.Abs(tempArea) > threshold)
 
-            var area = SpatialUtility.GetUnsignedTriangleArea(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
+            var area = SpatialUtility.GetUnsignedEuclideanArea(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
 
             tempArea += area;
 
@@ -1168,7 +1168,7 @@ public static class Simplifications
         }
 
         // prevent adding the last point if it is already added
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
@@ -1199,7 +1199,7 @@ public static class Simplifications
             //tempArea += area;
             //if (Math.Abs(tempArea) > threshold)
 
-            var area = SpatialUtility.GetUnsignedTriangleArea(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
+            var area = SpatialUtility.GetUnsignedEuclideanArea(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
 
             tempArea += area;
 
@@ -1224,7 +1224,7 @@ public static class Simplifications
         }
 
         // prevent adding the last point if it is already added
-        if (SpatialUtility.GetEuclideanDistance(result.Last(), pointList.Last()) != 0)
+        if (SpatialUtility.GetEuclideanLength(result.Last(), pointList.Last()) != 0)
         {
             result.Add(pointList.Last());
         }
