@@ -22,6 +22,8 @@ public static class SridHelper
     // https://epsg.io/54034
     public const int CylindricalEqualArea = 54034;
 
+    public static int GetUtmSrid(int zone) => int.Parse($"326{zone}");
+
     public static SrsBase AsSrsBase(int srid)
     {
         switch (srid)

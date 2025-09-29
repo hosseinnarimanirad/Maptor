@@ -29,7 +29,7 @@ public class GeometryTest
     {
         foreach (var item in GeometrySamples.AllGeometries)
         {
-            var length1 = item.CalculateEuclideanLength();
+            var length1 = item.GetEuclideanLength();
             var length2 = item.AsSqlGeometry().STLength().Value;
 
             Assert.Equal(length1, length2);

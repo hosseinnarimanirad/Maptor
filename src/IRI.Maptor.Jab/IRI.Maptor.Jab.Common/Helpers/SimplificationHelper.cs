@@ -67,7 +67,7 @@ public static class SimplificationHelper
 
         var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = true };
 
-        var length_Original = feature.CalculateEuclideanLength();
+        var length_Original = feature.GetEuclideanLength();
 
         GeoJsonFeatureSet originalFeatureSet = feature.AsGeoJsonFeatureSet();
 
@@ -174,7 +174,7 @@ public static class SimplificationHelper
         if (simplified.Type != feature.Type)
             return (null, null);
 
-        var length = feature.CalculateEuclideanLength();
+        var length = feature.GetEuclideanLength();
 
         var tlvdPerLength = feature.CalculateTotalVectorDisplacement(simplified) / length;
         var compression = feature.Compression(simplified);
@@ -232,7 +232,7 @@ public static class SimplificationHelper
             if (simplified.Type == GeometryType.Point)
                 continue;
 
-            var length = feature.CalculateEuclideanLength();
+            var length = feature.GetEuclideanLength();
 
             lengths.Add(length);
             tlvdPerLengths.Add(feature.CalculateTotalVectorDisplacement(simplified) / length);

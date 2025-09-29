@@ -1196,7 +1196,7 @@ public static class LRHelper
 
             var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
-            var length_Original = feature.CalculateEuclideanLength();
+            var length_Original = feature.GetEuclideanLength();
 
             var ranks = new List<(string type, double value)>();
 

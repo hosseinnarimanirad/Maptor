@@ -341,8 +341,13 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
                                     <RowDefinition/>
                                     <RowDefinition/>
                                     <RowDefinition/>
@@ -350,15 +355,24 @@
                                 <Grid.Resources>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Margin" Value="2"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
                                         <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>-->
                                     </Style>
                                 </Grid.Resources>
-                                <TextBlock Text="Mean Height"/>
-                                <Slider Grid.Column="1" Margin="2"/>
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Area:"/>
-                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MapPanel.CurrentEditingPoint.X}"/>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Length:"/>
-                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MapPanel.CurrentEditingPoint.X}"/>
+                                <TextBlock Grid.Row="1" Text="Mean Height"/>
+                                <DockPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" LastChildFill="True">
+                                    <TextBox Text="{Binding CurrentEditingLayer.Height, StringFormat={}{0:N0}}" DockPanel.Dock="Right" Margin="4" Width="50"/>
+                                    <Button DockPanel.Dock="Right" Content="reset" Margin="4" Visibility="Collapsed"/>
+                                    <Slider Margin="2" Minimum="-100" Maximum="5000" Value="{Binding CurrentEditingLayer.Height}"/>
+                                </DockPanel>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="EuclideanLengthInUtm:"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanLengthInUtm, StringFormat={}{0:N1}}"/>
+                                <TextBlock Grid.Row="2" Grid.Column="2" Text="SphericalLength:"/>
+                                <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding CurrentEditingLayer.SphericalLength, StringFormat={}{0:N1}}"/>
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="EllipsoidalLength:"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding CurrentEditingLayer.EllipsoidalLength, StringFormat={}{0:N1}}"/>
+                                <TextBlock Grid.Row="3" Grid.Column="2" Text="GroundLength:"/>
+                                <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding CurrentEditingLayer.GroundLength, StringFormat={}{0:N1}}"/>
                                 <TextBlock/>
                             </Grid>
                         </TabItem>

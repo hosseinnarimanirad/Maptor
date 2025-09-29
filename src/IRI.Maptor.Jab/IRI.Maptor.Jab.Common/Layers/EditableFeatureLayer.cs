@@ -5,23 +5,26 @@ using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Input;
+
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Helpers;
+using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Models.DataStructure;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 using WpfPoint = System.Windows.Point;
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 using LineSegment = System.Windows.Media.LineSegment;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
-using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common.Presenters;
-using IRI.Maptor.Sta.Spatial.Analysis;
-using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Sta.Spatial.Helpers;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -56,6 +59,20 @@ public class EditableFeatureLayer : SymbolizableLayer
     // Vertext Coordinates 
     private SpecialPointLayer _primaryVerticesLabelLayer;
 
+    private double _height;
+
+    public double Height
+    {
+        get { return _height; }
+        set
+        {
+            _height = value;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(GroundLength));
+        }
+    }
+
+
     //1397.08.19
     //private bool _massEdit;
     //public bool MassEdit
@@ -86,31 +103,31 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     #endregion
 
-    public event EventHandler OnRequestFinishDrawing;
+    public event EventHandler? OnRequestFinishDrawing;
 
-    public event EventHandler OnRequestDeleteGeometry;
+    public event EventHandler? OnRequestDeleteGeometry;
 
-    public Action<FrameworkElement, MouseButtonEventArgs, ILocateable> RequestRightClickOptions;
+    public Action<FrameworkElement, MouseButtonEventArgs, ILocateable>? RequestRightClickOptions;
 
-    public Action RequestRemoveRightClickOptions;
+    public Action? RequestRemoveRightClickOptions;
 
-    public Action<EditableFeatureLayer> RequestRefresh;
+    public Action<EditableFeatureLayer>? RequestRefresh;
 
-    public Action<Geometry> RequestFinishEditing;
+    public Action<Geometry>? RequestFinishEditing;
 
-    public Action<Geometry> RequestConvertToDrawingItem;
+    public Action<Geometry>? RequestConvertToDrawingItem;
 
-    public Action<EditableFeatureLayer> RequestCancelEditing;
+    public Action<EditableFeatureLayer>? RequestCancelEditing;
 
-    public Action<EditableFeatureLayer> RquestShowCoordinates;
+    public Action<EditableFeatureLayer>? RquestShowCoordinates;
 
-    public Action RequestCancelDrawing;
+    public Action? RequestCancelDrawing;
 
-    public Action<Locateable> RequestSelectedLocatableChanged;
+    public Action<Locateable>? RequestSelectedLocatableChanged;
 
-    public Action<Point> RequestZoomToPoint;
+    public Action<Point>? RequestZoomToPoint;
 
-    public Action<Geometry> RequestZoomToGeometry;
+    public Action<Geometry>? RequestZoomToGeometry;
 
     public override BoundingBox Extent
     {
@@ -118,13 +135,6 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         protected set => throw new NotImplementedException();
     }
-
-    //public override RenderingApproach Rendering
-    //{
-    //    get => RenderingApproach.Default;
-
-    //    protected set => throw new NotImplementedException();
-    //}
 
     public override LayerType Type => LayerType.EditableItem;
 
@@ -140,10 +150,15 @@ public class EditableFeatureLayer : SymbolizableLayer
     /// <param name="name"></param>
     /// <param name="mercatorPoints"></param>
     /// <param name="isClosed"></param>
-    public EditableFeatureLayer(string name, List<Point> mercatorPoints, Transform toScreen, Func<double, double> screenToMap, GeometryType type, EditableFeatureLayerOptions options = null)
-        : this(name, Geometry.Create(mercatorPoints/*.Cast<IPoint>().ToArray()*/, type, SridHelper.WebMercator), toScreen, screenToMap, options)
+    public EditableFeatureLayer(
+        string name,
+        List<Point> mercatorPoints,
+        Transform toScreen,
+        Func<double, double> screenToMap,
+        GeometryType type,
+        EditableFeatureLayerOptions? options = null)
+        : this(name, Geometry.Create(mercatorPoints, type, SridHelper.WebMercator), toScreen, screenToMap, options)
     {
-
     }
 
     /// <summary>
@@ -152,7 +167,12 @@ public class EditableFeatureLayer : SymbolizableLayer
     /// <param name="name"></param>
     /// <param name="mercatorPoints"></param>
     /// <param name="isClosed"></param>
-    public EditableFeatureLayer(string name, Geometry mercatorGeometry, Transform toScreen, Func<double, double> screenToMap, EditableFeatureLayerOptions options = null)
+    public EditableFeatureLayer(
+        string name,
+        Geometry webMercatorGeometry,
+        Transform toScreen,
+        Func<double, double> screenToMap,
+        EditableFeatureLayerOptions? options = null)
     {
         //this._isNewDrawingMode = isNewDrawing;
         this.Options = options ?? EditableFeatureLayerOptions.CreateDefault();
@@ -161,7 +181,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         this.LayerName = name;
 
-        this._webMercatorGeometry = mercatorGeometry;
+        this._webMercatorGeometry = webMercatorGeometry;
 
         this.LayerId = Guid.NewGuid();
 
@@ -174,7 +194,6 @@ public class EditableFeatureLayer : SymbolizableLayer
         //this.VisualParameters = new VisualParameters(_mercatorGeometry.IsRingBase() ? _fill : null, _stroke, 3, 1);
         //this.VisualParameters = Options.Visual;
         this.SetSymbolizer(new SimpleSymbolizer(Options.Visual));
-
 
         this._feature = GetDefaultEditingPath();
 
@@ -195,22 +214,22 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         var layerType = Options.IsNewDrawing ? LayerType.EditableItem : LayerType.MoveableItem | LayerType.EditableItem;
 
-        this._primaryVerticesLayer = new SpecialPointLayer("vert", new List<Locateable>(), 1, ScaleInterval.All, layerType) { AlwaysTop = true };
+        this._primaryVerticesLayer = new SpecialPointLayer("#vert", new List<Locateable>(), 1, ScaleInterval.All, layerType) { AlwaysTop = true };
 
         this._primaryVerticesLayer.RequestSelectedLocatableChanged = (l) => this.RequestSelectedLocatableChanged?.Invoke(l);
 
-        this._midVerticesLayer = new SpecialPointLayer("int. vert", new List<Locateable>(), .7, ScaleInterval.All, layerType) { AlwaysTop = true };
+        this._midVerticesLayer = new SpecialPointLayer("#int. vert", new List<Locateable>(), .7, ScaleInterval.All, layerType) { AlwaysTop = true };
 
-        this._edgeLabelLayer = new SpecialPointLayer("edge length", new List<Locateable>(), .9, ScaleInterval.All, layerType) { AlwaysTop = false };
+        this._edgeLabelLayer = new SpecialPointLayer("#edge length", new List<Locateable>(), .9, ScaleInterval.All, layerType) { AlwaysTop = false };
 
-        this._primaryVerticesLabelLayer = new SpecialPointLayer("vert length", new List<Locateable>(), .9, ScaleInterval.All, layerType) { AlwaysTop = false };
+        this._primaryVerticesLabelLayer = new SpecialPointLayer("#vert length", new List<Locateable>(), .9, ScaleInterval.All, layerType) { AlwaysTop = false };
 
         ReconstructLocateables();
 
         if (Options.IsNewDrawing)
         {
             //add virtual vertex which show last point
-            this.AddSemiVertex((Point)(mercatorGeometry.Points == null ? mercatorGeometry.Geometries.Last().Points.Last() : mercatorGeometry.Points.Last()));
+            this.AddSemiVertex((Point)(webMercatorGeometry.Points == null ? webMercatorGeometry.Geometries.Last().Points.Last() : webMercatorGeometry.Points.Last()));
         }
     }
 
@@ -302,12 +321,6 @@ public class EditableFeatureLayer : SymbolizableLayer
     {
         this._edgeLabelLayer.Items.Clear();
 
-        //if (this._webMercatorGeometry?.GetAllPoints().Length <= 1)
-        ////if (this._webMercatorGeometry.NumberOfPoints <= 1 || temp <= 1)
-        //{
-        //    return;
-        //}
-
         if (Options.IsEdgeLabelVisible)
         {
             var edges = _webMercatorGeometry.GetLineSegments().Select(i => ToEdgeLengthLocatable(i.Start, i.End));
@@ -342,6 +355,11 @@ public class EditableFeatureLayer : SymbolizableLayer
                 Y = point.Y + offset
             });
         }
+
+        RaisePropertyChanged(nameof(EllipsoidalLength));
+        RaisePropertyChanged(nameof(EuclideanLengthInUtm));
+        RaisePropertyChanged(nameof(SphericalLength));
+        RaisePropertyChanged(nameof(GroundLength));
     }
 
     private void UpdateCoordinate(Locateable locatable)
@@ -355,13 +373,6 @@ public class EditableFeatureLayer : SymbolizableLayer
             item.X = locatable.X;
             item.Y = locatable.Y;
         }
-    }
-
-    private void UpdatePrimaryVerticesLabels()
-    {
-        this._primaryVerticesLabelLayer.Items.Clear();
-
-
     }
 
     private void MakeLocateables(Geometry geometry, RecursiveCollection<Locateable> primaryCollection, RecursiveCollection<Locateable> midCollection)
@@ -964,33 +975,45 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     #endregion
 
+    #region Measures
+
+
+    public double MeasureValue => SpatialUtility.GetEllipsoidMeasure(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84);
+
+    public string MeasureLabel => SpatialUtility.GetEllipsoidMeasureLabel(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84);
+
+    public string AreaLabel => UnitHelper.GetAreaLabel(SpatialUtility.GetEllipsoidalArea(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84));
+
+    public string LengthLabel => UnitHelper.GetLengthLabel(GetGeodeticWgs84Geometery().GetEllipsoidalLength(/*MapProjects.WebMercatorToGeodeticWgs84*/));
+
+
+    public double EuclideanLengthInUtm => GetUtmGeometry().GetEuclideanLength();
+
+    public double SphericalLength => GetGeodeticWgs84Geometery().GetSphericalLength();
+
+    public double EllipsoidalLength => GetGeodeticWgs84Geometery().GetEllipsoidalLength();
+
+    public double GroundLength => EllipsoidalLength * (1.0 + Height / WebMercatorUtility.EarthRadius);
+
+
+    #endregion
 
     #region Public Methods
 
-    public bool HasAnyPoint()
+    public Geometry GetGeodeticWgs84Geometery() => _webMercatorGeometry.Transform(MapProjects.WebMercatorToGeodeticWgs84, SridHelper.GeodeticWGS84);
+
+    public Geometry GetUtmGeometry()
     {
-        return this._webMercatorGeometry != null ? this._webMercatorGeometry.HasAnyPoint() : false;
+        var geography = GetGeodeticWgs84Geometery();
+
+        var boundary = geography.GetBoundingBox();
+
+        var zone = MapProjects.FindUtmZone(boundary.MiddleBottom.X);
+
+        return geography.Transform(p => MapProjects.GeodeticToUTM(p, Ellipsoids.WGS84, zone, boundary.YMin > 0), SridHelper.GetUtmSrid(zone));
     }
 
-    public double MeasureValue
-    {
-        get { return SpatialUtility.GetEllipsoidMeasure(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84); }
-    }
-
-    public string MeasureLabel
-    {
-        get { return SpatialUtility.GetEllipsoidMeasureLabel(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84); }
-    }
-
-    public string AreaLabel
-    {
-        get { return UnitHelper.GetAreaLabel(SpatialUtility.GetEllipsoidalArea(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84)); }
-    }
-
-    public string LengthLabel
-    {
-        get { return UnitHelper.GetAreaLabel(_webMercatorGeometry.CalculateEllipsoidalLength(MapProjects.WebMercatorToGeodeticWgs84)); }
-    }
+    public bool HasAnyPoint() => this._webMercatorGeometry != null && this._webMercatorGeometry.HasAnyPoint();
 
     public Path GetPath(Transform transform)
     {
@@ -1001,17 +1024,9 @@ public class EditableFeatureLayer : SymbolizableLayer
         return this._feature;
     }
 
-    public SpecialPointLayer GetVertices()
-    {
-        //return new SpecialPointLayer("vert", this._vertices.SelectMany(i => i), ScaleInterval.All, LayerType.MoveableItem | LayerType.EditableItem, 1);
-        return _primaryVerticesLayer;
-    }
+    public SpecialPointLayer GetVertices() => _primaryVerticesLayer;
 
-    public SpecialPointLayer GetMidVertices()
-    {
-        //return new SpecialPointLayer("int. vert", this._midVertices.SelectMany(i => i), ScaleInterval.All, LayerType.MoveableItem | LayerType.EditableItem, .7);
-        return _midVerticesLayer;
-    }
+    public SpecialPointLayer GetMidVertices() => _midVerticesLayer;
 
     public SpecialPointLayer GetEdgeLengthes()
     {
@@ -1020,15 +1035,9 @@ public class EditableFeatureLayer : SymbolizableLayer
         return _edgeLabelLayer;
     }
 
-    public SpecialPointLayer GetPrimaryVerticesLabels()
-    {
-        return _primaryVerticesLabelLayer;
-    }
+    public SpecialPointLayer GetPrimaryVerticesLabels() => _primaryVerticesLabelLayer;
 
-    public Geometry GetFinalGeometry()
-    {
-        return this._webMercatorGeometry;
-    }
+    public Geometry GetFinalGeometry() => this._webMercatorGeometry;
 
     public void AddVertex(Point webMercatorPoint)
     {
@@ -1054,7 +1063,8 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         var newPoint = this.ToScreen(newMercatorPoint.AsWpfPoint());
 
-        var lastSegment = ((LineSegment)_pathGeometry.Figures.Last().Segments.Last()).Point = new WpfPoint(newPoint.X, newPoint.Y);
+        //var lastSegment = ((LineSegment)_pathGeometry.Figures.Last().Segments.Last()).Point = new WpfPoint(newPoint.X, newPoint.Y);
+        ((LineSegment)_pathGeometry.Figures.Last().Segments.Last()).Point = new WpfPoint(newPoint.X, newPoint.Y);
     }
 
     public void FinishEditing()
@@ -1064,15 +1074,9 @@ public class EditableFeatureLayer : SymbolizableLayer
         this.RequestFinishEditing?.Invoke(this._webMercatorGeometry);
     }
 
-    private void GoToPreviousPoint()
-    {
-        this._primaryVerticesLayer.SelectPreviousLocatable();
-    }
+    private void GoToPreviousPoint() => this._primaryVerticesLayer.SelectPreviousLocatable();
 
-    private void GoToNextPoint()
-    {
-        this._primaryVerticesLayer.SelectNextLocatable();
-    }
+    private void GoToNextPoint() => this._primaryVerticesLayer.SelectNextLocatable();
 
     private void TryDeleteCurrentPoint()
     {
@@ -1180,171 +1184,147 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     #region Commands
 
-    private RelayCommand _finishEditingCommand;
+    private RelayCommand? _finishEditingCommand;
     public RelayCommand FinishEditingCommand
     {
         get
         {
             if (_finishEditingCommand == null)
-            {
-                //_finishEditingCommand = new RelayCommand(param => this.RequestFinishEditing?.Invoke(this._webMercatorGeometry));
                 _finishEditingCommand = new RelayCommand(param => FinishEditing());
-            }
 
             return _finishEditingCommand;
         }
     }
 
 
-    private RelayCommand _cancelEditingCommand;
+    private RelayCommand? _cancelEditingCommand;
     public RelayCommand CancelEditingCommand
     {
         get
         {
             if (_cancelEditingCommand == null)
-            {
                 _cancelEditingCommand = new RelayCommand(param => this.RequestCancelEditing?.Invoke(this));
-            }
 
             return _cancelEditingCommand;
         }
     }
 
 
-    private RelayCommand _deleteCommand;
+    private RelayCommand? _deleteCommand;
     public RelayCommand DeleteCommand
     {
         get
         {
             if (_deleteCommand == null)
-            {
                 _deleteCommand = new RelayCommand(param =>
                 {
                     this.RequestCancelEditing?.Invoke(this);
-
                     this.OnRequestDeleteGeometry?.Invoke(this, EventArgs.Empty);
                 });
-            }
 
             return _deleteCommand;
         }
     }
 
 
-    private RelayCommand _cancelDrawingCommand;
+    private RelayCommand? _cancelDrawingCommand;
     public RelayCommand CancelDrawingCommand
     {
         get
         {
             if (_cancelDrawingCommand == null)
-            {
                 _cancelDrawingCommand = new RelayCommand(param => this.CancelDrawing());
-            }
 
             return _cancelDrawingCommand;
         }
     }
 
 
-    private RelayCommand _goToPreviousPointCommand;
+    private RelayCommand? _goToPreviousPointCommand;
     public RelayCommand GoToPreviousPointCommand
     {
         get
         {
             if (_goToPreviousPointCommand == null)
-            {
                 _goToPreviousPointCommand = new RelayCommand(param => this.GoToPreviousPoint());
-            }
 
             return _goToPreviousPointCommand;
         }
     }
 
 
-    private RelayCommand _goToNextPointCommand;
+    private RelayCommand? _goToNextPointCommand;
     public RelayCommand GoToNextPointCommand
     {
         get
         {
             if (_goToNextPointCommand == null)
-            {
                 _goToNextPointCommand = new RelayCommand(param => this.GoToNextPoint());
-            }
 
             return _goToNextPointCommand;
         }
     }
 
 
-    private RelayCommand _deleteCurrentPointCommand;
+    private RelayCommand? _deleteCurrentPointCommand;
     public RelayCommand DeleteCurrentPointCommand
     {
         get
         {
             if (_deleteCurrentPointCommand == null)
-            {
                 _deleteCurrentPointCommand = new RelayCommand(param => this.TryDeleteCurrentPoint());
-            }
 
             return _deleteCurrentPointCommand;
         }
     }
 
 
-    private RelayCommand _zoomToCurrentPointCommand;
+    private RelayCommand? _zoomToCurrentPointCommand;
     public RelayCommand ZoomToCurrentPointCommand
     {
         get
         {
             if (_zoomToCurrentPointCommand == null)
-            {
                 _zoomToCurrentPointCommand = new RelayCommand(param => this.ZoomToCurrentPoint());
-            }
 
             return _zoomToCurrentPointCommand;
         }
     }
 
 
-    private RelayCommand _copyCurrentPointCommand;
+    private RelayCommand? _copyCurrentPointCommand;
     public RelayCommand CopyCurrentPointCommand
     {
         get
         {
             if (_copyCurrentPointCommand == null)
-            {
                 _copyCurrentPointCommand = new RelayCommand(param => this.CopyCurrentPointCoordinateToClipboard((SpatialReferenceType)param));
-            }
 
             return _copyCurrentPointCommand;
         }
     }
 
 
-    private RelayCommand _deleteCurrentPartCommand;
+    private RelayCommand? _deleteCurrentPartCommand;
     public RelayCommand DeleteCurrentPartCommand
     {
         get
         {
             if (_deleteCurrentPartCommand == null)
-            {
                 _deleteCurrentPartCommand = new RelayCommand(param => this.DeleteCurrentPart());
-            }
 
             return _deleteCurrentPartCommand;
         }
     }
 
 
-    private RelayCommand _zoomToCurrentPartCommand;
+    private RelayCommand? _zoomToCurrentPartCommand;
     public RelayCommand ZoomToCurrentPartCommand
     {
         get
         {
             if (_zoomToCurrentPartCommand == null)
-            {
                 _zoomToCurrentPartCommand = new RelayCommand(param => this.ZoomToCurrentPart());
-            }
 
             return _zoomToCurrentPartCommand;
         }
@@ -1352,15 +1332,13 @@ public class EditableFeatureLayer : SymbolizableLayer
 
 
 
-    private RelayCommand _convertToDrawingItemCommand;
+    private RelayCommand? _convertToDrawingItemCommand;
     public RelayCommand ConvertToDrawingItemCommand
     {
         get
         {
             if (_convertToDrawingItemCommand == null)
-            {
                 _convertToDrawingItemCommand = new RelayCommand(param => this.RequestConvertToDrawingItem?.Invoke(this._webMercatorGeometry));
-            }
 
             return _convertToDrawingItemCommand;
         }

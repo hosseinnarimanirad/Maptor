@@ -98,7 +98,7 @@ public class NineAlgoSixMeasureLog
         //this.PointDensity_Simplified = simplified.CalculatePointDensity();
         //this.PCInPointDensity = original.PercentageChangeInPointDensity(simplified);
 
-        this.Length_Original = original.CalculateEuclideanLength();
+        this.Length_Original = original.GetEuclideanLength();
         //this.Length_Simplified = simplified.CalculateEuclideanLength();
         //this.PCInLineLength = original.PercentageChangeInLineLength(simplified);
 

@@ -19,13 +19,13 @@ public static class SimplificationMetrics
         if (original.IsNullOrEmpty() || simplified.IsNullOrEmpty())
             return 1;
 
-        var originalLength = original.CalculateEuclideanLength();
+        var originalLength = original.GetEuclideanLength();
 
         if (originalLength == 0)
             return 1;
 
         else
-            return simplified.CalculateEuclideanLength() / originalLength;
+            return simplified.GetEuclideanLength() / originalLength;
     }
 
 

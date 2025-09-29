@@ -368,7 +368,7 @@ public static class Sta_GeometryExtensions
                 {
                     //try
                     //{
-                    var length = result[g].CalculateEuclideanLength();
+                    var length = result[g].GetEuclideanLength();
 
                     if (length < paramters.DistanceThreshold)
                     {

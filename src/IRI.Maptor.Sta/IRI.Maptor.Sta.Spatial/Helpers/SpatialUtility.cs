@@ -237,12 +237,12 @@ public static class SpatialUtility
 
     #region Ellipsoidal Area
 
-    public static double GetEllipsoidalArea(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
+    public static double GetEllipsoidalArea<T>(Geometry<T> geometry, Func<T, T> toWgs84Geodetic) where T : IPoint, new()
     {
         return GetEllipsoidalArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84));
     }
 
-    public static double GetEllipsoidalArea<T>(Geometry<T> geography) where T : IPoint, new()
+    private static double GetEllipsoidalArea<T>(Geometry<T> geography) where T : IPoint, new()
     {
         var newGeo = geography.Project(new CylindricalEqualArea());
 
@@ -270,22 +270,27 @@ public static class SpatialUtility
 
             case GeometryType.MultiPolygon:
                 if (geography.Geometries == null || geography.Geometries.Count == 0) return 0;
-                double sum = 0;
-                for (int i = 0; i < geography.Geometries.Count; i++)
-                {
-                    sum += GetPolygonAreaOnAuthalicSphere(geography.Geometries[i]);
-                }
-                return sum;
+
+                return geography.Geometries.Sum(g => GetPolygonAreaOnAuthalicSphere(g));
+
+                //double sum = 0;
+
+                //for (int i = 0; i < geography.Geometries.Count; i++)
+                //{
+                //    sum += GetPolygonAreaOnAuthalicSphere(geography.Geometries[i]);
+                //}
+
+                //return sum;
 
             default:
                 return 0;
         }
     }
 
-    private static double GetPolygonAreaOnAuthalicSphere<TPoint>(Geometry<TPoint> polygon)
+    private static double GetPolygonAreaOnAuthalicSphere<TPoint>(Geometry<TPoint> geographyPolygon)
         where TPoint : IPoint, new()
     {
-        if (polygon?.Geometries == null || polygon.Geometries.Count == 0)
+        if (geographyPolygon?.Geometries is null || geographyPolygon.Geometries.Count == 0)
             return 0;
 
         // WGS-84 params
@@ -295,12 +300,12 @@ public static class SpatialUtility
         double Rq = GetAuthalicRadius(a, f);                   // authalic radius (m)
 
         // Outer ring (index 0) MINUS holes (index >= 1)
-        double outer = GetRingAreaOnAuthalicSphere(polygon.Geometries[0].Points, Rq);
+        double outer = GetRingAreaOnAuthalicSphere(geographyPolygon.Geometries[0].Points, Rq);
         double holes = 0;
 
-        for (int i = 1; i < polygon.Geometries.Count; i++)
+        for (int i = 1; i < geographyPolygon.Geometries.Count; i++)
         {
-            holes += GetRingAreaOnAuthalicSphere(polygon.Geometries[i].Points, Rq);
+            holes += GetRingAreaOnAuthalicSphere(geographyPolygon.Geometries[i].Points, Rq);
         }
 
         double area = outer - holes;
@@ -547,15 +552,17 @@ public static class SpatialUtility
 
     public static double GetEllipsoidMeasure(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
     {
+        var geography = geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84);
+
         switch (geometry.Type)
         {
             case GeometryType.LineString:
             case GeometryType.MultiLineString:
-                return geometry.CalculateEllipsoidalLength(toWgs84Geodetic);
+                return geography.GetEllipsoidalLength();
 
             case GeometryType.Polygon:
             case GeometryType.MultiPolygon:
-                return GetEllipsoidalArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84));
+                return GetEllipsoidalArea(geography/*geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84)*/);
 
             case GeometryType.Point:
             case GeometryType.MultiPoint:
@@ -570,15 +577,17 @@ public static class SpatialUtility
 
     public static string GetEllipsoidMeasureLabel(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
     {
+        var geography = geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84);
+
         switch (geometry.Type)
         {
             case GeometryType.LineString:
             case GeometryType.MultiLineString:
-                return UnitHelper.GetLengthLabel(geometry.CalculateEllipsoidalLength(toWgs84Geodetic));
+                return UnitHelper.GetLengthLabel(geography.GetEllipsoidalLength(/*toWgs84Geodetic*/));
 
             case GeometryType.Polygon:
             case GeometryType.MultiPolygon:
-                var area = GetEllipsoidalArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84));
+                var area = GetEllipsoidalArea(geography/*geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84)*/);
                 return UnitHelper.GetAreaLabel(area);
 
             case GeometryType.Point:
@@ -592,14 +601,14 @@ public static class SpatialUtility
         }
     }
 
-    public static string GetEllipsoidLengthLabel(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
-        => UnitHelper.GetLengthLabel(geometry.CalculateEllipsoidalLength(toWgs84Geodetic));
+    //public static string GetEllipsoidLengthLabel(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
+    //    => UnitHelper.GetLengthLabel(geometry.GetEllipsoidalLength(toWgs84Geodetic));
 
     public static string GetEllipsoidAreaLabel(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
         => UnitHelper.GetAreaLabel(GetEllipsoidalArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84)));
 
-    public static string GetLengthLabel(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
-        => UnitHelper.GetLengthLabel(geometry.CalculateEllipsoidalLength(toWgs84Geodetic));
+    //public static string GetLengthLabel(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
+    //    => UnitHelper.GetLengthLabel(geometry.GetEllipsoidalLength(toWgs84Geodetic));
 
     public static string GetAreaLabel(Geometry<Point> geometry, Func<Point, Point> toWgs84Geodetic)
         => UnitHelper.GetAreaLabel(GetEllipsoidalArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84)));

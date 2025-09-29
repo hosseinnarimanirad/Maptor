@@ -1021,7 +1021,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
     // 1401.03.12
     public double CalculateTotalVectorDisplacementPerLength(Geometry<T> simplified)
     {
-        var length = CalculateEuclideanLength();
+        var length = GetEuclideanLength();
 
         if (length != 0)
             return CalculateTotalVectorDisplacement(simplified) / length;
@@ -1036,12 +1036,12 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         if (simplified.IsNullOrEmpty())
             return 1.0;
 
-        var length = this.CalculateEuclideanLength();
+        var length = this.GetEuclideanLength();
 
         if (length == 0)
             return 1.0;
 
-        return simplified.CalculateEuclideanLength() / length;
+        return simplified.GetEuclideanLength() / length;
     }
 
     // 1401.03.12
@@ -2200,17 +2200,13 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
     #region Area
 
-    public double EuclideanArea => CalculateUnsignedEuclideanArea();
+    public double EuclideanArea => GetUnsignedEuclideanArea();
 
     // https://www.mathopenref.com/coordpolygonarea.html
-    private double CalculateUnsignedEuclideanArea()
+    private double GetUnsignedEuclideanArea()
     {
         if (this.IsNullOrEmpty())
             return 0;
-
-        //1399.07.17
-        //if (this.Points == null && this.Geometries == null)
-        //    return 0;
 
         switch (this.Type)
         {
@@ -2221,10 +2217,10 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
                 return 0;
 
             case GeometryType.Polygon:
-                return this.CalculateUnsignedEuclideanAreaForPolygon();
+                return this.GetUnsignedEuclideanAreaForPolygon();
 
             case GeometryType.MultiPolygon:
-                return Geometries.Sum(g => g.CalculateUnsignedEuclideanArea());
+                return Geometries.Sum(g => g.GetUnsignedEuclideanArea());
 
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:
@@ -2233,8 +2229,6 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
             default:
                 throw new NotImplementedException();
         }
-
-
     }
 
     //1399.06.10
@@ -2242,7 +2236,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
     //تشکیل شده. بنابر این بزرگ‌ترین مساحت متعلق به رینگ بزرگ 
     //و باقی همه حفره‌ها هستن
     //این الگوریتم اگه چندضلعی معتبر نباشه درست جواب نمی‌ده
-    private double CalculateUnsignedEuclideanAreaForPolygon()
+    private double GetUnsignedEuclideanAreaForPolygon()
     {
         if (this.Geometries is null || this.Geometries.Count == 0)
             return 0;
@@ -2268,34 +2262,6 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
         return Math.Max(0, outerArea - holesArea);
     }
-
-
-    ////1399.06.11
-    ////در این جا فرض شده که نقطه اخر چند حلقه تکرار 
-    ////نشده
-    //private static double CalculateUnsignedEuclideanAreaForRing(List<T> points)
-    //{
-    //    if (points == null || points.Count < 3)
-    //        return 0;
-
-    //    double area = 0;
-
-    //    for (int i = 0; i < points.Count - 1; i++)
-    //    {
-    //        double temp = points[i].X * points[i + 1].Y - points[i].Y * points[i + 1].X;
-
-    //        area += temp;
-    //    }
-
-    //    //1399.06.11
-    //    //تکرار نقطه اخر چند ضلعی
-    //    //فرض بر این هست که داخل لیست نقطه‌ها
-    //    //این نقطه تکرار نشده باشه
-    //    area += points[points.Count - 1].X * points[0].Y - points[points.Count - 1].Y * points[0].X;
-
-    //    return Math.Abs(area / 2.0);
-    //}
-
 
     #endregion
 
@@ -2326,7 +2292,190 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
     #region Length
 
-    public double CalculateEuclideanLength()
+    public double GetEuclideanLength() => GetLength(SpatialUtility.GetEuclideanLength);
+
+    public double GetSphericalLength()
+    {
+        if (this.Srid != SridHelper.GeodeticWGS84)
+            throw new NotImplementedException("Geometry > GetSphericalLength > should be geodetic wgs84");
+
+        return GetLength(SpatialUtility.GetSphericalLength);
+    }
+
+    public double GetEllipsoidalLength()
+    {
+        if (this.Srid != SridHelper.GeodeticWGS84)
+            throw new NotImplementedException("Geometry > GetEllipsoidalLength > should be geodetic wgs84");
+
+        return GetLength(SpatialUtility.GetEllipsoidalLength);
+    }
+
+    //public double GetEuclideanLength()
+    //{
+    //    if (this.IsNullOrEmpty())
+    //        return 0;
+
+    //    //1399.07.17
+    //    //if (this.Points == null && this.Geometries == null)
+    //    //    return 0;
+
+    //    switch (this.Type)
+    //    {
+    //        case GeometryType.Point:
+    //        case GeometryType.MultiPoint:
+    //            return 0;
+
+    //        case GeometryType.LineString:
+    //            return GetEuclideanLengthForLineStringOrRing(false);
+
+    //        case GeometryType.Polygon:
+    //            return Geometries.Sum(g => g.GetEuclideanLengthForLineStringOrRing(true));
+
+    //        case GeometryType.MultiLineString:
+    //        case GeometryType.MultiPolygon:
+    //            return Geometries.Sum(g => g.GetEuclideanLength());
+
+    //        case GeometryType.GeometryCollection:
+    //        case GeometryType.CircularString:
+    //        case GeometryType.CompoundCurve:
+    //        case GeometryType.CurvePolygon:
+    //        default:
+    //            throw new NotImplementedException("Geometry.cs > CalculateEuclideanLength");
+    //    }
+    //}
+
+    //private double GetEuclideanLengthForLineStringOrRing(bool isRing)
+    //{
+    //    if (this.Points == null || this.Points.Count < 2)
+    //        return 0;
+
+    //    double result = 0;
+
+    //    for (int i = 0; i < this.Points.Count - 1; i++)
+    //    {
+    //        result += SpatialUtility.GetEuclideanLength(this.Points[i], this.Points[i + 1]);
+    //    }
+
+    //    if (isRing)
+    //    {
+    //        result += SpatialUtility.GetEuclideanLength(this.Points[this.Points.Count - 1], this.Points[0]);
+    //    }
+
+    //    return result;
+    //}
+
+    //public double GetSphericalLength(Func<T, T> toWgs84Geodetic)
+    //{
+    //    // return geometry.AsSqlGeometry().Project(toWgs84Geodetic, SridHelper.GeodeticWGS84).MakeValid().STLength().Value;
+
+    //    if (this.IsNotValidOrEmpty())
+    //        return 0;
+
+    //    switch (this.Type)
+    //    {
+    //        case GeometryType.Point:
+    //        case GeometryType.MultiPoint:
+    //            return 0;
+
+    //        case GeometryType.LineString:
+    //            return GetSphericalLengthForLineStringOrRing(false, toWgs84Geodetic);
+
+    //        case GeometryType.Polygon:
+    //            return Geometries.Sum(g => g.GetSphericalLengthForLineStringOrRing(true, toWgs84Geodetic));
+
+    //        case GeometryType.MultiLineString:
+    //        case GeometryType.MultiPolygon:
+    //            return Geometries.Sum(g => g.GetSphericalLength(toWgs84Geodetic));
+
+    //        case GeometryType.GeometryCollection:
+    //        case GeometryType.CircularString:
+    //        case GeometryType.CompoundCurve:
+    //        case GeometryType.CurvePolygon:
+    //        default:
+    //            throw new NotImplementedException("Geometry.cs > CalculateEuclideanLength");
+    //    }
+    //}
+
+    //private double GetSphericalLengthForLineStringOrRing(bool isRing, Func<T, T> toWgs84Geodetic)
+    //{
+    //    if (Points is null || Points.Count < 2)
+    //        return 0;
+
+    //    double result = 0;
+
+    //    var wgs84Pionts = this.Points.Select(toWgs84Geodetic).ToList();
+
+    //    for (int i = 0; i < wgs84Pionts.Count - 1; i++)
+    //    {
+    //        result += SpatialUtility.GetSphericalLength(wgs84Pionts[i], wgs84Pionts[i + 1]);
+    //    }
+
+    //    if (isRing)
+    //    {
+    //        result += SpatialUtility.GetSphericalLength(wgs84Pionts[this.Points.Count - 1], wgs84Pionts[0]);
+    //    }
+
+    //    return result;
+    //}
+
+    //public double GetEllipsoidalLength(Func<T, T> toWgs84Geodetic)
+    //{
+    //    // return geometry.AsSqlGeometry().Project(toWgs84Geodetic, SridHelper.GeodeticWGS84).MakeValid().STLength().Value;
+
+    //    if (this.IsNotValidOrEmpty())
+    //        return 0;
+
+    //    switch (this.Type)
+    //    {
+    //        case GeometryType.Point:
+    //        case GeometryType.MultiPoint:
+    //            return 0;
+
+    //        case GeometryType.LineString:
+    //            return GetEllipsoidalLengthForLineStringOrRing(false, toWgs84Geodetic);
+
+    //        case GeometryType.Polygon:
+    //            return Geometries.Sum(g => g.GetEllipsoidalLengthForLineStringOrRing(true, toWgs84Geodetic));
+
+    //        case GeometryType.MultiLineString:
+    //        case GeometryType.MultiPolygon:
+    //            return Geometries.Sum(g => g.GetEllipsoidalLength(toWgs84Geodetic));
+
+    //        case GeometryType.GeometryCollection:
+    //        case GeometryType.CircularString:
+    //        case GeometryType.CompoundCurve:
+    //        case GeometryType.CurvePolygon:
+    //        default:
+    //            throw new NotImplementedException("Geometry.cs > CalculateEuclideanLength");
+    //    }
+    //}
+
+    //private double GetEllipsoidalLengthForLineStringOrRing(bool isRing, Func<T, T> toWgs84Geodetic)
+    //{
+    //    if (Points is null || Points.Count < 2)
+    //        return 0;
+
+    //    double result = 0;
+
+    //    var wgs84Pionts = this.Points.Select(toWgs84Geodetic).ToList();
+
+    //    for (int i = 0; i < wgs84Pionts.Count - 1; i++)
+    //    {
+    //        result += SpatialUtility.GetEllipsoidalLength(wgs84Pionts[i], wgs84Pionts[i + 1]);
+    //    }
+
+    //    if (isRing)
+    //    {
+    //        result += SpatialUtility.GetEllipsoidalLength(wgs84Pionts[this.Points.Count - 1], wgs84Pionts[0]);
+    //    }
+
+    //    return result;
+    //}
+
+
+
+
+    private double GetLength(Func<T, T, double> distanceFunc)
     {
         if (this.IsNullOrEmpty())
             return 0;
@@ -2342,14 +2491,14 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
                 return 0;
 
             case GeometryType.LineString:
-                return CalculateEuclideanLengthForLineStringOrRing(false);
+                return GetLengthForLineStringOrRing(distanceFunc, false);
 
             case GeometryType.Polygon:
-                return Geometries.Sum(g => g.CalculateEuclideanLengthForLineStringOrRing(true));
+                return Geometries.Sum(g => g.GetLengthForLineStringOrRing(distanceFunc, true));
 
             case GeometryType.MultiLineString:
             case GeometryType.MultiPolygon:
-                return Geometries.Sum(g => g.CalculateEuclideanLength());
+                return Geometries.Sum(g => g.GetLength(distanceFunc));
 
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:
@@ -2360,7 +2509,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         }
     }
 
-    private double CalculateEuclideanLengthForLineStringOrRing(bool isRing)
+    private double GetLengthForLineStringOrRing(Func<T, T, double> distanceFunc, bool isRing)
     {
         if (this.Points == null || this.Points.Count < 2)
             return 0;
@@ -2369,70 +2518,17 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
         for (int i = 0; i < this.Points.Count - 1; i++)
         {
-            result += SpatialUtility.GetEuclideanLength(this.Points[i], this.Points[i + 1]);
+            result += distanceFunc(this.Points[i], this.Points[i + 1]);
         }
 
         if (isRing)
         {
-            result += SpatialUtility.GetEuclideanLength(this.Points[this.Points.Count - 1], this.Points[0]);
+            result += distanceFunc(this.Points[this.Points.Count - 1], this.Points[0]);
         }
 
         return result;
     }
 
-    public double CalculateEllipsoidalLength(Func<T, T> toWgs84Geodetic)
-    {
-        // return geometry.AsSqlGeometry().Project(toWgs84Geodetic, SridHelper.GeodeticWGS84).MakeValid().STLength().Value;
-
-        if (this.IsNotValidOrEmpty())
-            return 0;
-
-        switch (this.Type)
-        {
-            case GeometryType.Point:
-            case GeometryType.MultiPoint:
-                return 0;
-
-            case GeometryType.LineString:
-                return CalculateEllipsoidalLengthForLineStringOrRing(false, toWgs84Geodetic);
-
-            case GeometryType.Polygon:
-                return Geometries.Sum(g => g.CalculateEllipsoidalLengthForLineStringOrRing(true, toWgs84Geodetic));
-
-            case GeometryType.MultiLineString:
-            case GeometryType.MultiPolygon:
-                return Geometries.Sum(g => g.CalculateEllipsoidalLength(toWgs84Geodetic));
-
-            case GeometryType.GeometryCollection:
-            case GeometryType.CircularString:
-            case GeometryType.CompoundCurve:
-            case GeometryType.CurvePolygon:
-            default:
-                throw new NotImplementedException("Geometry.cs > CalculateEuclideanLength");
-        }
-    }
-
-    private double CalculateEllipsoidalLengthForLineStringOrRing(bool isRing, Func<T, T> toWgs84Geodetic)
-    {
-        if (Points is null || Points.Count < 2)
-            return 0;
-
-        double result = 0;
-
-        var wgs84Pionts = this.Points.Select(toWgs84Geodetic).ToList();
-
-        for (int i = 0; i < wgs84Pionts.Count - 1; i++)
-        {
-            result += SpatialUtility.GetEllipsoidalLength(wgs84Pionts[i], wgs84Pionts[i + 1]);
-        }
-
-        if (isRing)
-        {
-            result += SpatialUtility.GetEllipsoidalLength(wgs84Pionts[this.Points.Count - 1], wgs84Pionts[0]);
-        }
-
-        return result;
-    }
 
     #endregion
 
@@ -2442,7 +2538,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
     // 1401.02.31; 1401.03.12
     public double CalculatePointDensity()
     {
-        var length = this.CalculateEuclideanLength();
+        var length = this.GetEuclideanLength();
 
         if (length == 0)
             return double.PositiveInfinity;

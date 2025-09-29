@@ -15,7 +15,7 @@ public static class WebMercatorUtility
     // 
     private const int ImageSize = 256;
 
-    private const double EarthRadius = 6378137;
+    public const double EarthRadius = 6378137;
     //private const double MinLatitude = -85.05112878;
     //private const double MaxLatitude = 85.05112878;
     private const double MinLongitude = -180;
