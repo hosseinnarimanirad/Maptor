@@ -337,50 +337,89 @@
                         </TabItem>
 
                         <TabItem Header="{Binding [mapPanel_header_measure], Source={StaticResource Localization}}" Cursor="Hand">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.Resources>
+                            <StackPanel>
+                                <StackPanel.Resources>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Margin" Value="2"/>
                                         <Setter Property="VerticalAlignment" Value="Center"/>
                                         <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>-->
                                     </Style>
-                                </Grid.Resources>
-                                <TextBlock Grid.Row="1" Text="Mean Height"/>
-                                <DockPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" LastChildFill="True">
-                                    <TextBox Text="{Binding CurrentEditingLayer.Height, StringFormat={}{0:N0}}" DockPanel.Dock="Right" Margin="4" Width="50"/>
-                                    <Button DockPanel.Dock="Right" Content="reset" Margin="4" Visibility="Collapsed"/>
-                                    <Slider Margin="2" Minimum="-100" Maximum="5000" Value="{Binding CurrentEditingLayer.Height}"/>
-                                </DockPanel>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="EuclideanLengthInUtm:"/>
-                                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanLengthInUtm, StringFormat={}{0:N1}}"/>
-                                <TextBlock Grid.Row="2" Grid.Column="2" Text="SphericalLength:"/>
-                                <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding CurrentEditingLayer.SphericalLength, StringFormat={}{0:N1}}"/>
-                                <TextBlock Grid.Row="3" Grid.Column="0" Text="EllipsoidalLength:"/>
-                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding CurrentEditingLayer.EllipsoidalLength, StringFormat={}{0:N1}}"/>
-                                <TextBlock Grid.Row="3" Grid.Column="2" Text="GroundLength:"/>
-                                <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding CurrentEditingLayer.GroundLength, StringFormat={}{0:N1}}"/>
-                                <TextBlock/>
-                            </Grid>
+                                </StackPanel.Resources>
+                                <GroupBox Header="General">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="Scale Factor:"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.ScaleFactor, StringFormat={}{0:N5}}"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="2"  FontWeight="Bold" Text="Mean Height"/>
+                                        <DockPanel Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" LastChildFill="True">
+                                            <TextBox Text="{Binding CurrentEditingLayer.Height, StringFormat={}{0:N0}}" DockPanel.Dock="Right" Margin="4" Width="50" VerticalAlignment="Center"/>
+                                            <Slider Margin="2" Minimum="0" Maximum="5000" Value="{Binding CurrentEditingLayer.Height}" MinWidth="70"/>
+                                        </DockPanel>
+                                    </Grid>
+                                </GroupBox>
+                                <Expander Header="Length" IsExpanded="False">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="auto"/> 
+                                        </Grid.RowDefinitions>
+                                     
+                                       
+                                        <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="EuclideanLengthInUtm:"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanLengthInUtm, StringFormat={}{0:N1}}"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="2" FontWeight="Bold" Text="EllipsoidalLength:"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding CurrentEditingLayer.EllipsoidalLength, StringFormat={}{0:N1}}"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="EuclideanLengthInUtm_Refined:"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanLengthInUtm_Refined, StringFormat={}{0:N1}}"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="2" FontWeight="Bold" Text="SphericalLength:"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding CurrentEditingLayer.SphericalLength, StringFormat={}{0:N1}}"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="GroundLength:"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CurrentEditingLayer.GroundLength, StringFormat={}{0:N1}}"/>
+                                    </Grid>
+                                </Expander>
+                                <Expander Header="Area" IsEnabled="True">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="EuclideanArea (UTM):"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanArea, StringFormat={}{0:N1}}"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="2" FontWeight="Bold" Text="EllipsoidalArea:"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding CurrentEditingLayer.EllipsoidalArea, StringFormat={}{0:N1}}"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="AuthalicSphereArea:"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentEditingLayer.AuthalicSphereArea, StringFormat={}{0:N1}}"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="2" FontWeight="Bold" Text="KarneyArea:"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding CurrentEditingLayer.KarneyArea, StringFormat={}{0:N1}}"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="GroundArea:"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CurrentEditingLayer.GroundArea, StringFormat={}{0:N1}}"/>
+                                    </Grid>
+                                </Expander>
+                            </StackPanel>
+                            
                         </TabItem>
                     </TabControl.Items>
                 </TabControl>
-
             </StackPanel>
-
             <Border Height="Auto" Margin="0 5 0 0" CornerRadius="0 0 13 13" 
                     Cursor="Hand" Visibility="{Binding MapPanel.Options.IsOptionsAvailable, Converter={StaticResource boolToVisibilityConverter}}">
                 <Border.InputBindings>

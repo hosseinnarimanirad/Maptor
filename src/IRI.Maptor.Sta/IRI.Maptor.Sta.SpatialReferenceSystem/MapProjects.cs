@@ -1358,20 +1358,7 @@ public static class MapProjects
 
         double deltaLambda = (geodeticPoint.X - lambda0) * Math.PI / 180.0;
 
-        return k0 * (1.0 + (1.0 + C) * (deltaLambda * deltaLambda * cosinePhi * cosinePhi) / 2.0);
-
-
-
-        //double phi = geodeticPoint.Y * Math.PI / 180.0;
-
-        //double k0 = .09996;
-
-        //double cosinePhi = Math.Cos(phi);
-
-        //double sinLambda = Math.Sin(geodeticPoint.X * Math.PI / 180.0);
-
-        //return k0 / Math.Sqrt(1 - sinLambda * sinLambda * cosinePhi * cosinePhi);
-
+        return k0 * (1.0 + (1.0 + C) * (deltaLambda * deltaLambda * cosinePhi * cosinePhi) / 2.0); 
     }
 
     /// <summary>

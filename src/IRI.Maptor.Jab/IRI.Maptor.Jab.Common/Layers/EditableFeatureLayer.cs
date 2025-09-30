@@ -69,6 +69,8 @@ public class EditableFeatureLayer : SymbolizableLayer
             _height = value;
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(GroundLength));
+            RaisePropertyChanged(nameof(EuclideanLengthInUtm_Refined));
+            RaisePropertyChanged(nameof(GroundArea));
         }
     }
 
@@ -357,9 +359,18 @@ public class EditableFeatureLayer : SymbolizableLayer
         }
 
         RaisePropertyChanged(nameof(EllipsoidalLength));
+        RaisePropertyChanged(nameof(ScaleFactor));
         RaisePropertyChanged(nameof(EuclideanLengthInUtm));
+        RaisePropertyChanged(nameof(EuclideanLengthInUtm_Refined));
         RaisePropertyChanged(nameof(SphericalLength));
         RaisePropertyChanged(nameof(GroundLength));
+
+        RaisePropertyChanged(nameof(EuclideanArea));
+        RaisePropertyChanged(nameof(EllipsoidalArea));
+        RaisePropertyChanged(nameof(AuthalicSphereArea));
+        RaisePropertyChanged(nameof(KarneyArea));
+        RaisePropertyChanged(nameof(GroundArea));
+
     }
 
     private void UpdateCoordinate(Locateable locatable)
@@ -987,7 +998,12 @@ public class EditableFeatureLayer : SymbolizableLayer
     public string LengthLabel => UnitHelper.GetLengthLabel(GetGeodeticWgs84Geometery().GetEllipsoidalLength(/*MapProjects.WebMercatorToGeodeticWgs84*/));
 
 
+    public double ScaleFactor => MapProjects.CalculateUTMScaleFactor(GetGeodeticWgs84Geometery().GetCentroidPlus().AsPoint());
+
+
     public double EuclideanLengthInUtm => GetUtmGeometry().GetEuclideanLength();
+
+    public double EuclideanLengthInUtm_Refined => EuclideanLengthInUtm * (1.0 / ScaleFactor) * (1.0 + Height / WebMercatorUtility.EarthRadius);
 
     public double SphericalLength => GetGeodeticWgs84Geometery().GetSphericalLength();
 
@@ -995,6 +1011,16 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public double GroundLength => EllipsoidalLength * (1.0 + Height / WebMercatorUtility.EarthRadius);
 
+
+    public double EuclideanArea => GetUtmGeometry().EuclideanArea;
+
+    public double EllipsoidalArea => SpatialUtility.GetEllipsoidalArea(GetGeodeticWgs84Geometery());
+
+    public double AuthalicSphereArea => SpatialUtility.GetAreaOnAuthalicSphere(GetGeodeticWgs84Geometery());
+
+    public double KarneyArea => SpatialUtility.GetKarneyArea(GetGeodeticWgs84Geometery());
+
+    public double GroundArea => EllipsoidalArea * (1.0 + 2 * Height / WebMercatorUtility.EarthRadius);
 
     #endregion
 

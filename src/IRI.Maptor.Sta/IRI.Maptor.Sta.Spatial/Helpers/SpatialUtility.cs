@@ -242,7 +242,7 @@ public static class SpatialUtility
         return GetEllipsoidalArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84));
     }
 
-    private static double GetEllipsoidalArea<T>(Geometry<T> geography) where T : IPoint, new()
+    public static double GetEllipsoidalArea<T>(Geometry<T> geography) where T : IPoint, new()
     {
         var newGeo = geography.Project(new CylindricalEqualArea());
 
