@@ -358,7 +358,7 @@
                                         <TextBlock Grid.Row="0" Grid.Column="2"  FontWeight="Bold" Text="Mean Height"/>
                                         <DockPanel Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" LastChildFill="True">
                                             <TextBox Text="{Binding CurrentEditingLayer.Height, StringFormat={}{0:N0}}" DockPanel.Dock="Right" Margin="4" Width="50" VerticalAlignment="Center"/>
-                                            <Slider Margin="2" Minimum="0" Maximum="5000" Value="{Binding CurrentEditingLayer.Height}" MinWidth="70"/>
+                                            <Slider Margin="2" Minimum="0" Maximum="5000" Value="{Binding CurrentEditingLayer.Height, UpdateSourceTrigger=PropertyChanged}" MinWidth="70"/>
                                         </DockPanel>
                                     </Grid>
                                 </GroupBox>

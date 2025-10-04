@@ -31,7 +31,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
                 <StackPanel VerticalAlignment="Center">
                     <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="2,0,2,2" Height="6" Margin="0" CornerRadius="1" 
-                            Width="{Binding ElementName=layoutRoot, Path=ScaleBarLength, FallbackValue=100}" 
+                            Width="{Binding ElementName=layoutRoot, Path=ScaleBarLength, FallbackValue=150}" 
                             Visibility="{Binding ElementName=layoutRoot, Path=IsGoogleStyle, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=true}"/>
                     <Border BorderBrush="Black" BorderThickness="0.5" VerticalAlignment="Center"
                             Visibility="{Binding ElementName=layoutRoot, Path=IsGoogleStyle, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=false}">

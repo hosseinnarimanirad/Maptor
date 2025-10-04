@@ -16,8 +16,9 @@ public partial class Scalebar : NotifiableUserControl
         new List<double>()
         {
             5,          10,         20,         // meters
+            50,         100,        200,        // meters
             500,        1_000,      2_000,      // meters (2 km)
-            5000,       10_000,     20_000,     // 5k, 10k, 20k
+            5_000,      10_000,     20_000,     // 5k, 10k, 20k
             50_000,     100_000,    200_000,    // 50k, 100k, 200k
             500_000,    1_000_000,  2_000_000   // 500k, 1000k, 2000k
         };
@@ -43,8 +44,8 @@ public partial class Scalebar : NotifiableUserControl
 
         double unitDistance = (1.0 / dpiX) * 1200.0 / (3937.0 * 12.0);
 
-        var minScalebarWidth = 50;
-        var maxScalebarWidth = 150;
+        var minScalebarWidth = 100;
+        var maxScalebarWidth = 200;
 
         var minScreenLengthInMeter = minScalebarWidth * unitDistance;
         var maxScreenLengthInMeter = maxScalebarWidth * unitDistance;
@@ -70,7 +71,7 @@ public partial class Scalebar : NotifiableUserControl
         //double groundLengthInMeter = /*screenLengthInMeter*/minScreenLengthInMeter * mapScale;
         var groundLengthInMeter = selectedLength;
 
-        this.GroundLength = (groundLengthInMeter / 1000.0 > 1) ?
+        this.GroundLength = (groundLengthInMeter / 1000.0 >= 1) ?
             string.Format("{0:f0} km", groundLengthInMeter / 1000) :
             string.Format("{0} m", groundLengthInMeter);
 
