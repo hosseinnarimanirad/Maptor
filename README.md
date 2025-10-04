@@ -14,40 +14,43 @@ Maptor is a powerful, open-source .NET library designed to make spatial operatio
 
 ## 🚀 Quick Start
 
+### Add a Console Project
+Add a new C# console project
+
 ### Installation
 ```bash
 # Core spatial functionality
 dotnet add package IRI.Maptor.Sta.Spatial
-
-# Shapefile support
-dotnet add package IRI.Maptor.Sta.ShapefileFormat
-
-# WPF map controls
-dotnet add package IRI.Maptor.Jab.Controls
 ```
 
 ### Basic Usage
 ```csharp
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 // Create and work with points
 var point1 = new Point(51.5074, -0.1278); // London
 var point2 = new Point(40.7128, -74.0060); // New York
 
-// Calculate distance
-double distance = point1.SphericalDistance(point2);
-Console.WriteLine($"Distance: {distance:F2} km");
 
 // Create geometries
-var geometry = new Geometry<Point>
-{
-    Type = GeometryType.Point,
-    Points = new List<Point> { point1 }
-};
+var line = Geometry<Point>.CreatePointOrLineString(SridHelper.GeodeticWGS84, point1, point2);
+
+
+var ellipsoidal_length = line.GetEllipsoidalLength();
+var spherical_length = line.GetSphericalLength();
+
+// Calculate length
+Console.WriteLine($"ellipsoidal distance: {ellipsoidal_length:N1} km");
+Console.WriteLine($"  spherical distance: {spherical_length:N1} km");
 
 // Convert to GeoJSON
-string geoJson = geometry.AsGeoJson();
+var geoJsonLine = line.AsGeoJson().Serialize(indented: true);
+Console.WriteLine($"line: {geoJsonLine}");
+
+Console.Read();
 ```
 
 ---
@@ -55,7 +58,7 @@ string geoJson = geometry.AsGeoJson();
 ## ✨ Key Features
 
 ### 🗺️ **Spatial Reference Systems**
-- **30+ predefined ellipsoids** (WGS84, GRS80, Clarke 1866, etc.)
+- **15+ predefined ellipsoids** (WGS84, GRS80, Clarke 1866, etc.)
 - **Coordinate transformations** (UTM, Mercator, WebMercator, Lambert, etc.)
 - **Custom SRID support** for specialized projections
 - **Geodetic calculations** with high precision
@@ -64,13 +67,12 @@ string geoJson = geometry.AsGeoJson();
 - **Complete geometry types**: Points, Lines, Polygons, MultiPoints, MultiLines, MultiPolygons
 - **Advanced algorithms**: Delaunay triangulation, Voronoi diagrams, convex hulls
 - **Spatial indexing**: KdTree, RTree for efficient spatial queries
-- **Topology operations**: Intersection, union, difference, buffer
 
 ### 📊 **Data I/O & Formats**
 - **Vector formats**: Shapefile, GeoJSON, KML, GPX, WKB, WKT
-- **Raster support**: GeoTIFF, Worldfile, custom raster formats
+- **Raster support**: GeoTIFF (Worldfile), GRD file, custom raster formats
 - **Database integration**: SQL Server Spatial, PostGIS, Personal GDB
-- **OGC standards**: WFS, WMS, GML 2/3, SLD styling
+- **OGC standards**: WFS, WMS, GML 2/3, SFA, SLD styling
 
 ### 🧮 **Advanced Algorithms**
 - **Graph algorithms**: BFS, DFS, Dijkstra, Minimum Spanning Tree, MinCut
@@ -81,8 +83,7 @@ string geoJson = geometry.AsGeoJson();
 ### 🖥️ **WPF Visualization**
 - **Interactive map viewer** with zoom, pan, and layer management
 - **Rich UI controls** for spatial data display
-- **Custom markers and annotations**
-- **Real-time coordinate tracking**
+- **Custom markers and annotations** 
 
 ---
 
@@ -95,20 +96,19 @@ Maptor/
 ├── 📦 IRI.Maptor.Sta/          # Core spatial operations & algorithms
 │   ├── Spatial                 # Geometry types, spatial algorithms
 │   ├── SpatialReferenceSystem  # Coordinate systems & transformations
-│   ├── ShapefileFormat        # ESRI Shapefile I/O
-│   ├── Ogc                    # OGC standards implementation
-│   ├── Graph                  # Graph algorithms
-│   └── MachineLearning        # ML algorithms for spatial data
+│   ├── ShapefileFormat         # ESRI Shapefile I/O
+│   ├── Ogc                     # OGC standards implementation
+│   ├── Graph                   # Graph algorithms
+│   └── MachineLearning         # ML algorithms for spatial data
 ├── 🔧 IRI.Maptor.Ket/          # Infrastructure & persistence
-│   ├── SqlServerPersistence   # SQL Server integration
-│   ├── PostgreSqlPersistence  # PostGIS integration
-│   ├── GdiPlus               # Raster data handling
-│   └── WebApiPersistence     # Web API data sources
+│   ├── SqlServerPersistence    # SQL Server integration
+│   ├── PostgreSqlPersistence   # PostGIS integration
+│   ├── GdiPlus                 # Raster data handling
+│   └── WebApiPersistence       # Web API data sources
 ├── 🖥️ IRI.Maptor.Jab/          # WPF UI components
-│   ├── Controls              # Map viewer, dialogs
-│   ├── Common                # MVVM infrastructure
-│   └── IranRepo              # Regional data support
-└── 🧪 Tests & Samples/        # Comprehensive test suite & examples
+│   ├── Controls                # Map viewer, dialogs
+│   ├── Common                  # MVVM infrastructure 
+└── 🧪 Tests & Samples/         # Comprehensive test suite & examples
 ```
 
 ---
@@ -145,6 +145,7 @@ Maptor/
 
 ### Working with Shapefiles
 ```csharp
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.ShapefileFormat;
 
 // Read shapefile
@@ -155,49 +156,21 @@ foreach (var shape in shapes)
 }
 
 // Convert to GeoJSON
-var geoJson = shapes.Select(s => s.AsGeoJson()).ToList();
+var geoJson = shapes.Select(s => s.AsGeometry().AsGeoJson()).ToList();
 ```
 
 ### Coordinate Transformations
 ```csharp
+using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 // Transform WGS84 to UTM
 var wgs84Point = new Point(51.5074, -0.1278); // London
-var utmPoint = CoordinateSystem.Transform(
-    wgs84Point, 
-    CoordinateSystem.WGS84, 
-    CoordinateSystem.UTM_Zone30N
-);
+var utmPoint = MapProjects.GeodeticToUTM(wgs84Point);
+
+Console.WriteLine($"London (UTM): {utmPoint}");
 ```
-
-### Spatial Queries
-```csharp
-// Find points within radius
-var center = new Point(51.5074, -0.1278);
-var radius = 1000; // meters
-var nearbyPoints = points.Where(p => 
-    p.SphericalDistance(center) <= radius
-).ToList();
-
-// Spatial indexing for performance
-var kdTree = new KdTree<Point>(points);
-var nearest = kdTree.FindNearest(center, 5);
-```
-
-### WPF Map Integration
-```csharp
-// Add layers to map
-var pointLayer = new SpecialPointLayer(
-    name: "Cities",
-    items: cityMarkers,
-    opacity: 0.8,
-    visibleRange: ScaleInterval.All
-);
-
-mapPresenter.AddLayer(pointLayer);
-mapPresenter.ZoomToExtent(pointLayer.Extent);
-```
+ 
 
 ---
 
@@ -205,10 +178,8 @@ mapPresenter.ZoomToExtent(pointLayer.Extent);
 
 - **🗺️ GIS Applications**: Desktop and web mapping applications
 - **📊 Data Analysis**: Spatial data processing and analysis
-- **🏗️ Engineering**: Surveying, construction, and infrastructure projects
-- **🌍 Environmental**: Climate modeling, resource management
-- **🚗 Transportation**: Route optimization, logistics
-- **🏙️ Urban Planning**: City modeling, demographic analysis
+- **🏗️ Engineering**: Surveying, and infrastructure projects
+- **🚗 Transportation**: Route optimization, logistics 
 - **🔬 Research**: Academic and scientific spatial research
 
 ---
@@ -242,10 +213,9 @@ dotnet run
 
 ## 🧪 Testing & Quality
 
-- **1,359+ C# files** with comprehensive test coverage
-- **Unit tests** for all core functionality
-- **Integration tests** for database operations
-- **Performance benchmarks** for critical algorithms
+- **1,300+ C# files** with comprehensive test coverage
+- **Unit tests** for core functionality 
+- **Performance benchmarks** for some algorithms
 - **Continuous integration** with GitHub Actions
 
 ---
