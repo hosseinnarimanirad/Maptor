@@ -9,6 +9,10 @@ using IRI.Maptor.Sta.Common.Contracts.Google;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using System.Data.Common;
 using IRI.Maptor.Sta.Spatial.Model;
+using IRI.Maptor.Ket.GdiPlus.Helpers;
+using IRI.Maptor.Ket.GdiPlus.WorldfileFormat;
+using IRI.Maptor.Sta.Spatial.IO;
+using IRI.Maptor.Sta.Spatial.DigitalTerrainModeling;
 
 namespace IRI.Maptor.MasterProjectWPF;
 /// <summary>
@@ -35,8 +39,13 @@ public partial class MainWindow : Window
         //TestSld(@"C:\Users\Hossein\Downloads\point_attribute.sld");
         //TestSld(@"E:\Work\Barg\Sample SLD\barg\tower.sld");
 
-        TestShp();
+        var result = ImageHelper.Read32BitGrayscaleTiff(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s.tif");
 
+        var worldfile = Worldfile.Read(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s.tfw");
+
+        WorldfileMatrix16bit matrix = new WorldfileMatrix16bit(result, worldfile.XPixelSize, worldfile.YPixelSize, worldfile.CenterOfUpperLeftPixel);
+        
+        matrix.WriteToBinarySimple(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s.bdem");
     }
 
     private void TestShp()

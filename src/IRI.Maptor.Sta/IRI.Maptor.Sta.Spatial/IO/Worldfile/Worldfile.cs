@@ -3,48 +3,44 @@
 namespace IRI.Maptor.Sta.Spatial.IO;
 
 public class Worldfile
-{
-    private double _xPixelSize;
+{ 
+    public double XPixelSize { get; set; } 
+     
+    public double YPixelSize { get; set; } 
+     
+    public double XRotation { get; set; } 
+      
+    public double YRotation { get; set; }
 
-    public double XPixelSize
+    public Point CenterOfUpperLeftPixel { get; set; }
+
+    public double GroundXMin => CenterOfUpperLeftPixel.X - XPixelSize / 2.0;
+
+    public double GroundYMax => CenterOfUpperLeftPixel.Y + YPixelSize / 2.0;
+
+    public Worldfile()
     {
-        get { return _xPixelSize; }
-        set { _xPixelSize = value; }
     }
 
-    private double _yPixelSize;
-
-    public double YPixelSize
+    public Worldfile(double xPixelSize, double yPixelSize, Point centerOfUpperLeftPixel)
+        : this(xPixelSize, yPixelSize, 0, 0, centerOfUpperLeftPixel)
     {
-        get { return _yPixelSize; }
-        set { _yPixelSize = value; }
+
     }
 
-    private double _xRotation;
-
-    public double XRotation
+    public Worldfile(double xPixelSize, double yPixelSize, double xRotation, double yRotation, Point centerOfUpperLeftPixel)
     {
-        get { return _xRotation; }
-        set { _xRotation = value; }
+        XPixelSize = xPixelSize;
+
+        YPixelSize = yPixelSize;
+
+        CenterOfUpperLeftPixel = centerOfUpperLeftPixel;
+
+        XRotation = xRotation;
+
+        YRotation = yRotation;
     }
 
-    private double _yRotation;
-
-    public double YRotation
-    {
-        get { return _yRotation; }
-        set { _yRotation = value; }
-    }
-
-    public double GroundXMin
-    {
-        get => CenterOfUpperLeftPixel.X - XPixelSize / 2.0;
-    }
-
-    public double GroundYMax
-    {
-        get => CenterOfUpperLeftPixel.Y + YPixelSize / 2.0;
-    }
 
     public BoundingBox GetBoundingBox(int imagePixelWidth, int imagePixelHeight)
     {
@@ -66,8 +62,7 @@ public class Worldfile
 
         return new Point(x, y);
     }
-
-
+     
     public Point ToGroundCoordinate(Point imageCoordinate, int imagePixelWidth, int imagePixelHeight)
     {
         var groundWidth = XPixelSize * imagePixelWidth;
@@ -79,34 +74,6 @@ public class Worldfile
         var y = GroundYMax - imageCoordinate.Y * groundHeight / imagePixelHeight;
 
         return new Point(x, y);
-    }
-
-
-    private Point _centerOfUpperLeftPixel;
-
-    public Point CenterOfUpperLeftPixel
-    {
-        get { return _centerOfUpperLeftPixel; }
-        set { _centerOfUpperLeftPixel = value; }
-    }
-
-    public Worldfile(double xPixelSize, double yPixelSize, Point centerOfUpperLeftPixel)
-        : this(xPixelSize, yPixelSize, 0, 0, centerOfUpperLeftPixel)
-    {
-
-    }
-
-    public Worldfile(double xPixelSize, double yPixelSize, double xRotation, double yRotation, Point centerOfUpperLeftPixel)
-    {
-        _xPixelSize = xPixelSize;
-
-        _yPixelSize = yPixelSize;
-
-        _centerOfUpperLeftPixel = centerOfUpperLeftPixel;
-
-        _xRotation = xRotation;
-
-        _yRotation = yRotation;
     }
 
     public static Worldfile Read(string worldFileName)

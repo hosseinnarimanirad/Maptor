@@ -9,6 +9,8 @@ using System.Runtime.InteropServices;
 
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Ket.GdiPlus.WorldfileFormat;
+using IRI.Maptor.Sta.Spatial.IO;
+using IRI.Maptor.Ket.GdiPlus.Helpers;
 
 
 namespace IRI.Maptor.Jab.Common.Helpers;
@@ -46,7 +48,7 @@ public static class ImageUtility
 
         return result;
     }
-      
+
     public static BitmapImage? CreateBitmapImage(byte[] array, int? decodePixelWidth = null, int? decodePixelHeight = null)
     {
         BitmapImage image = new BitmapImage();
@@ -151,9 +153,9 @@ public static class ImageUtility
     public static BitmapSource AsBitmapSource(System.Drawing.Bitmap bitmap)
     {
         return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                                                bitmap.GetHbitmap(), 
+                                                bitmap.GetHbitmap(),
                                                 IntPtr.Zero,
-                                                System.Windows.Int32Rect.Empty, 
+                                                System.Windows.Int32Rect.Empty,
                                                 BitmapSizeOptions.FromWidthAndHeight(bitmap.Width, bitmap.Height));
     }
 
@@ -183,7 +185,7 @@ public static class ImageUtility
             image.Render(drawingVisual);
         }
 
-        Save(fileName, image, preferedEncoder); 
+        Save(fileName, image, preferedEncoder);
     }
 
     public static void Save(string fileName, RenderTargetBitmap? image, BitmapEncoder? preferedEncoder = null)
@@ -304,6 +306,27 @@ public static class ImageUtility
         }
 
         return buffer;
+    }
+
+    #endregion
+
+    #region Worldfile Matrix
+
+    public static WorldfileMatrix16bit? ReadWorldfileMatrix(string fileName)
+    {
+        if (!System.IO.File.Exists(fileName))
+            return null;
+
+        var worldfileName = WorldfileManager.TryGetAssociatedWorldfileName(fileName);
+
+        if (string.IsNullOrWhiteSpace(worldfileName))
+            return null;
+
+        var worldfile = Worldfile.Read(worldfileName);
+
+        var matrix = ImageHelper.Read32BitGrayscaleTiff(fileName);
+
+        return new WorldfileMatrix16bit(matrix, worldfile.XPixelSize, worldfile.YPixelSize, worldfile.XRotation, worldfile.YRotation, worldfile.CenterOfUpperLeftPixel);
     }
 
     #endregion
@@ -595,6 +618,6 @@ public static class ImageUtility
     }
 
     private static double GetOpacity(double opacity) => opacity < 0 ? 0 : opacity > 1 ? 1 : opacity;
-     
+
     #endregion
 }

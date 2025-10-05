@@ -15,85 +15,44 @@ public class RegularDtm
 {
     #region Field & Properties
 
-    private double cellWidth;
+    //private double cellWidth;
 
-    private double cellHeight;
+    //private double cellHeight;
 
     //coordinate of the center of upper left cell
     private Point lowerLeftCoordinate;
 
     protected Matrix values;
 
-    public double CellWidth
-    {
-        get { return cellWidth; }
-    }
+    public double CellWidth { get; private set; }
+     
 
-    public double CellHeight
-    {
-        get { return cellHeight; }
-    }
+    public double CellHeight { get; private set; }
 
-    public int NumberOfRows
-    {
-        get { return values.NumberOfRows; }
-    }
 
-    public int NumberOfColumns
-    {
-        get { return values.NumberOfColumns; }
-    }
+    public int NumberOfRows => values.NumberOfRows;
 
-    public AttributedPoint LowerLeft
-    {
-        get { return GetPoint(NumberOfRows - 1, 0); }
-    }
+    public int NumberOfColumns => values.NumberOfColumns;
 
-    public AttributedPoint LoweRight
-    {
-        get { return GetPoint(NumberOfRows - 1, NumberOfColumns - 1); }
-    }
+    public AttributedPoint LowerLeft => GetPoint(NumberOfRows - 1, 0);
 
-    public AttributedPoint UpperLeft
-    {
-        get { return GetPoint(0, 0); }
-    }
+    public AttributedPoint LoweRight => GetPoint(NumberOfRows - 1, NumberOfColumns - 1);
 
-    public AttributedPoint UppeRight
-    {
-        get { return GetPoint(0, NumberOfColumns - 1); }
-    }
+    public AttributedPoint UpperLeft => GetPoint(0, 0);
 
-    public Matrix Values
-    {
-        get { return values; }
-    }
+    public AttributedPoint UppeRight => GetPoint(0, NumberOfColumns - 1);
 
-    public double MinX
-    {
-        get { return lowerLeftCoordinate.X - CellWidth / 2; }
-    }
+    public Matrix Values => values;
 
-    public double MinY
-    {
-        get { return lowerLeftCoordinate.Y - cellHeight / 2; }
-    }
+    public double MinX => lowerLeftCoordinate.X - CellWidth / 2;
 
-    public double MaxY
-    {
-        get { return MinY + NumberOfRows * CellHeight; }
-    }
+    public double MinY => lowerLeftCoordinate.Y - CellHeight / 2;
 
-    public double MaX
-    {
-        get { return MinX + NumberOfColumns * CellWidth; }
-    }
+    public double MaxY => MinY + NumberOfRows * CellHeight;
 
-    public AttributedPoint this[int row, int column]
-    {
-        get { return GetPoint(column, row); }
-        //set { /* set the specified index to value here */ }
-    }
+    public double MaX => MinX + NumberOfColumns * CellWidth;
+
+    public AttributedPoint this[int row, int column] => GetPoint(column, row);
 
     #endregion
 
@@ -112,9 +71,9 @@ public class RegularDtm
     {
         this.values = values;
 
-        this.cellHeight = cellHeight;
+        this.CellHeight = cellHeight;
 
-        this.cellWidth = cellWidth;
+        this.CellWidth = cellWidth;
 
         lowerLeftCoordinate = lowerLeft;
     }
@@ -128,8 +87,8 @@ public class RegularDtm
 
     public AttributedPoint GetPoint(int row, int column)
     {
-        return new AttributedPoint(lowerLeftCoordinate.X + column * cellWidth,
-                                    lowerLeftCoordinate.Y + (NumberOfRows - 1 - row) * cellHeight,
+        return new AttributedPoint(lowerLeftCoordinate.X + column * CellWidth,
+                                    lowerLeftCoordinate.Y + (NumberOfRows - 1 - row) * CellHeight,
                                     values[row, column]);
     }
 
@@ -229,7 +188,7 @@ public class RegularDtm
 
         return (values[row + 1, column + 1] + coef * values[row, column + 1] + values[row - 1, column + 1] -
                  (values[row - 1, column + 1] + coef * values[row, column - 1] + values[row - 1, column - 1])) /
-                 ((4 + 2 * coef) * cellWidth);
+                 ((4.0 + 2.0 * coef) * CellWidth);
     }
 
     public double CalculateSouthNorthSlope(int row, int column)
@@ -238,7 +197,7 @@ public class RegularDtm
 
         return (values[row - 1, column + 1] + coef * values[row - 1, column] + values[row - 1, column - 1] -
                 (values[row + 1, column + 1] + coef * values[row + 1, column] + values[row + 1, column - 1])) /
-                ((4 + 2 * coef) * cellHeight);
+                ((4.0 + 2.0 * coef) * CellHeight);
     }
 
     public Matrix GetSlopeMatrix()
@@ -406,7 +365,7 @@ public class RegularDtm
             throw new NotImplementedException();
         }
 
-        if (cellHeight != cellWidth)
+        if (CellHeight != CellWidth)
         {
 
             throw new NotImplementedException();
@@ -426,7 +385,7 @@ public class RegularDtm
 
         writer.WriteLine(string.Format("yllcorner     {0}", MinY));
 
-        writer.WriteLine(string.Format("cellsize      {0}", cellHeight));
+        writer.WriteLine(string.Format("cellsize      {0}", CellHeight));
 
         writer.WriteLine(string.Format("NODATA_value {0}", noDataValue));
 

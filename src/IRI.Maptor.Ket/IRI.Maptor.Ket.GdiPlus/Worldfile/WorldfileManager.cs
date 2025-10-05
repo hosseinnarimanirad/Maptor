@@ -1,13 +1,12 @@
-﻿using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Model;
-using System;
-using System.Text;
-using IRI.Maptor.Sta.Spatial.IO;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Model;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.Common.Helpers;
+﻿using System.Text;
+
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Spatial.IO;
+using IRI.Maptor.Sta.Common.Model;
+using IRI.Maptor.Sta.Spatial.Model;
+using IRI.Maptor.Sta.Common.Helpers;
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Ket.GdiPlus.WorldfileFormat;
 
@@ -64,7 +63,7 @@ public static class WorldfileManager
         System.IO.File.WriteAllText(fileName, lines.ToString());
     }
 
-    public static GeoReferencedImage ReadWorldfile(string imageFileName, int srid)
+    public static GeoReferencedImage? ReadWorldfile(string imageFileName, int srid)
     {
         if (!System.IO.File.Exists(imageFileName))
             return null;
@@ -93,14 +92,14 @@ public static class WorldfileManager
 
             return new GeoReferencedImage(System.IO.File.ReadAllBytes(imageFileName), boundingBox);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return null;
         }
 
     }
 
-    public static Worldfile TryReadAssociatedWorldfile(string imageFileName)
+    public static Worldfile? TryReadAssociatedWorldfile(string imageFileName)
     {
         var worldFileName = TryGetAssociatedWorldfileName(imageFileName);
 
@@ -112,7 +111,7 @@ public static class WorldfileManager
         return null;
     }
 
-    public static string TryGetAssociatedWorldfileName(string imageFileName)
+    public static string? TryGetAssociatedWorldfileName(string imageFileName)
     {
         string worldFileName = string.Empty;
 

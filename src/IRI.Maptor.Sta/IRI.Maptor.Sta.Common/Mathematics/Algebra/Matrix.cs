@@ -15,7 +15,7 @@ public class Matrix
 {
     #region Fields&Properties
 
-    protected double[][] Element = new double[0][];
+    protected double[][] Element = [];
 
     public double this[int rowNumber, int columNumber]
     {
@@ -24,44 +24,15 @@ public class Matrix
         set { this.SetValue(rowNumber, columNumber, value); }
     }
 
-    public int NumberOfRows
-    {
-        get { return this.Element[0].Length; }
-    }
+    public int NumberOfRows => this.Element[0].Length;
 
-    public int NumberOfColumns
-    {
-        get { return this.Element.Length; }
-    }
+    public int NumberOfColumns => this.Element.Length;
 
-    public double Trace
-    {
+    public double Trace => CalculateTrace();
 
-        get
-        {
+    public double Determinant => CalculateDeterminant();
 
-            return CalculateTrace();
-
-        }
-
-    }
-
-    public double Determinant
-    {
-
-        get
-        {
-
-            return CalculateDeterminant();
-
-        }
-
-    }
-
-    public double SumOfElements
-    {
-        get { return CalculateSumOfElemets(); }
-    }
+    public double SumOfElements => CalculateSumOfElemets();
 
     #endregion
 
@@ -125,75 +96,34 @@ public class Matrix
 
     #region Methods
 
-    public bool IsNull()
-    {
-        return this.Element == null;
-    }
+    public bool IsNull() => this.Element == null;
 
-    public bool IsRowMatrix()
-    {
+    public bool IsRowMatrix() => (this.NumberOfRows == 1);
 
-        return (this.NumberOfRows == 1);
+    public bool IsColumnMatrix() => (this.NumberOfColumns == 1);
 
-    }
+    public bool IsSquare() => (this.NumberOfColumns == this.NumberOfRows);
 
-    public bool IsColumnMatrix()
-    {
-
-        return (this.NumberOfColumns == 1);
-
-    }
-
-    public bool IsSquare()
-    {
-        return (this.NumberOfColumns == this.NumberOfRows);
-    }
-
-    public bool IsSymmetric()
-    {
-
-        return (this == this.Transpose());
-
-    }
+    public bool IsSymmetric() => (this == this.Transpose());
 
     public bool IsDiagonal()
     {
-
         if (!this.IsSquare())
-        {
-
             throw new NonSquareMatrixException();
 
-        }
-
         return ((this.Clone() - Matrix.DiagonalMatrix(this.DiagonalVector())) == Matrix.Zeros(this.NumberOfColumns));
-
     }
 
-    public bool IsSingular()
-    {
+    public bool IsSingular() => (this.Determinant == 0);
 
-        return (this.Determinant == 0);
-
-    }
-
-    public bool IsNonsingular()
-    {
-
-        return (!(this.Determinant == 0));
-
-    }
+    public bool IsNonsingular() => !(this.Determinant == 0);
 
     public bool IsOrthogonal()
     {
-
         if (!this.IsSquare())
-        {
             throw new NonSquareMatrixException();
-        }
 
         return (this * this.Transpose() == Matrix.Identity(this.NumberOfColumns));
-
     }
 
     public Matrix Clone()
@@ -211,10 +141,7 @@ public class Matrix
         return (resultMatrix);
     }
 
-    public Matrix Negative()
-    {
-        return (-this);
-    }
+    public Matrix Negative() => -this;
 
     public Matrix SubMatrix(int startRow, int startColumn, int endRow, int endColumns)
     {
@@ -243,122 +170,18 @@ public class Matrix
 
     public Matrix Transpose()
     {
-
         Matrix result = new Matrix(this.NumberOfColumns, this.NumberOfRows);
 
         for (int i = 0; i < this.NumberOfRows; i++)
         {
-
             result.SetColumn(i, this.GetRow(i));
-
         }
 
         return result;
     }
-
-    //public Matrix Inverse()
-    //{
-    //    int row = this.NumberOfRows;
-
-    //    int column = this.NumberOfColumns;
-
-    //    if (!this.IsSquare())
-    //    {
-
-    //        throw new Exception("Matrix must be square");
-
-    //    }
-
-    //    if (this.IsSingular())
-    //    {
-
-    //        throw new Exception("Matrix must be non-singular");
-
-    //    }
-
-    //    Matrix tempMatrix = new Matrix(row, 2 * column);
-
-    //    for (int i = 0; i < row; i++)
-    //    {
-
-    //        for (int j = 0; j < 2 * column; j++)
-    //        {
-
-    //            if (j < column)
-    //            {
-    //                tempMatrix[i, j] = this[i, j];
-    //            }
-
-    //            else
-    //            {
-    //                if (i == j - column)
-    //                {
-    //                    tempMatrix[i, j] = 1;
-    //                }
-    //            }
-
-    //        }
-
-    //    }
-
-    //    for (int i = 0; i < row; i++)
-    //    {
-    //        int i2 = i;
-
-    //        double coef = tempMatrix[i, i];
-
-    //        for (int j = i + 1; j < row; j++)
-    //        {
-
-    //            double temp = tempMatrix[j, i];
-
-    //            if (Math.Abs(temp) > Math.Abs(coef))
-    //            {
-    //                coef = tempMatrix[j, i];
-    //                i2 = j;
-    //            }
-    //        }
-
-    //        if (i2 != i)
-    //        {
-
-    //            SwapRows(ref tempMatrix, i2, i);
-
-    //        }
-
-    //        for (int j = 0; j < 2 * column; j++)
-    //        {
-    //            tempMatrix[i, j] = tempMatrix[i, j] / coef;
-    //        }
-
-    //        for (int j = 0; j < row; j++)
-    //        {
-
-    //            if (j != i)
-    //            {
-
-    //                coef = tempMatrix[j, i];
-
-    //                for (int k = 0; k < 2 * column; k++)
-    //                {
-    //                    tempMatrix[j, k] = tempMatrix[j, k] - coef * tempMatrix[i, k];
-    //                }
-
-    //            }
-
-    //        }
-
-    //    }
-
-    //    Matrix result = tempMatrix.Copy(0, column, this.NumberOfRows - 1, 2 * column - 1);
-
-    //    return result;
-
-    //}
-
+      
     public Matrix CofactorMatrixOf(int rowNumber, int columNumber)
     {
-
         Matrix tempMatrix = this.Clone();
 
         tempMatrix.RemoveRow(rowNumber);
@@ -366,16 +189,12 @@ public class Matrix
         tempMatrix.RemoveColumn(columNumber);
 
         return tempMatrix;
-
     }
 
     public Matrix Adjoint()
     {
-
         if (!this.IsSquare())
-        {
             throw new NonSquareMatrixException();
-        }
 
         Matrix resultMatrix = new Matrix(this.NumberOfColumns, this.NumberOfColumns);
 
@@ -392,42 +211,29 @@ public class Matrix
         }
 
         return resultMatrix;
-
     }
 
     // ? try with a matrix that has a infinity member
-    public Matrix Inverse()
-    {
-        return (1 / this.Determinant * this.Adjoint());
-    }
+    public Matrix Inverse() => 1 / this.Determinant * this.Adjoint();
 
     public Matrix LeftInverse()
     {
-
         Matrix tempMatrix = this.Transpose();
 
-        return ((tempMatrix * this).Inverse() * tempMatrix);
-
+        return (tempMatrix * this).Inverse() * tempMatrix;
     }
 
     public Matrix RightInverse()
     {
-
         Matrix tempMatrix = this.Transpose();
 
-        return (tempMatrix * (this * tempMatrix).Inverse());
-
+        return tempMatrix * (this * tempMatrix).Inverse();
     }
 
     public double[] DiagonalVector()
     {
-
         if (!this.IsSquare())
-        {
-
             throw new NonSquareMatrixException();
-
-        }
 
         double[] result = new double[this.NumberOfRows];
 
@@ -439,7 +245,6 @@ public class Matrix
         }
 
         return result;
-
     }
 
     public double[] GetRow(int row)
