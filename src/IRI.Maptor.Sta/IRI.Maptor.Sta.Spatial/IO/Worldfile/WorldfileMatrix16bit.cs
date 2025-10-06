@@ -11,9 +11,9 @@ public class WorldfileMatrix16bit : Worldfile
 {
     Int16[,] _values;
 
-    public int Height => _values?.GetLength(0) ?? 0;
+    public int ImageHeight => _values?.GetLength(0) ?? 0;
 
-    public int Width => _values?.GetLength(1) ?? 0;
+    public int ImageWidth => _values?.GetLength(1) ?? 0;
 
     public WorldfileMatrix16bit()
     {
@@ -55,8 +55,8 @@ public class WorldfileMatrix16bit : Worldfile
             // Write properties
             writer.Write(XPixelSize);
             writer.Write(YPixelSize);
-            writer.Write(Width);
-            writer.Write(Height);
+            writer.Write(ImageWidth);
+            writer.Write(ImageHeight);
             writer.Write(CenterOfUpperLeftPixel.X);
             writer.Write(CenterOfUpperLeftPixel.Y);
 
