@@ -1,13 +1,15 @@
-﻿using Microsoft.SqlServer.Types;
-using System;
-using System.Data.SqlTypes;
+﻿using System;
 using System.IO;
 using System.Windows;
+using System.Data.Common;
+using System.Data.SqlTypes;
+
+using Microsoft.SqlServer.Types;
+ 
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Ogc.SLD;
 using IRI.Maptor.Sta.Common.Contracts.Google;
 using IRI.Maptor.Sta.Spatial.Helpers;
-using System.Data.Common;
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Ket.GdiPlus.Helpers;
 using IRI.Maptor.Ket.GdiPlus.WorldfileFormat;
@@ -39,11 +41,15 @@ public partial class MainWindow : Window
         //TestSld(@"C:\Users\Hossein\Downloads\point_attribute.sld");
         //TestSld(@"E:\Work\Barg\Sample SLD\barg\tower.sld");
 
-        var result = ImageHelper.Read32BitGrayscaleTiff(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s.tif");
+        var result2 = TiffReader.ReadGeoTiff32bitDEM(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s.tif");
+
+
+
+        //var result = ImageHelper.Read32BitGrayscaleTiff(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s.tif");
 
         var worldfile = Worldfile.Read(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s.tfw");
 
-        WorldfileMatrix16bit matrix = new WorldfileMatrix16bit(result, worldfile.XPixelSize, worldfile.YPixelSize, worldfile.CenterOfUpperLeftPixel);
+        WorldfileMatrix16bit matrix = new WorldfileMatrix16bit(result2.Data, worldfile.XPixelSize, worldfile.YPixelSize, worldfile.CenterOfUpperLeftPixel);
         
         matrix.WriteToBinarySimple(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s.bdem");
     }

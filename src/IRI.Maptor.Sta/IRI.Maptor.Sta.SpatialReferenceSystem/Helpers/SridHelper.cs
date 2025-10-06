@@ -4,6 +4,8 @@ namespace IRI.Maptor.Sta.SpatialReferenceSystem;
 
 public static class SridHelper
 {
+    public const string GeodeticWGS84Name = "GCS_WGS_1984";
+
     public const int GeodeticWGS84 = 4326;
 
     public const int WebMercator = 3857;

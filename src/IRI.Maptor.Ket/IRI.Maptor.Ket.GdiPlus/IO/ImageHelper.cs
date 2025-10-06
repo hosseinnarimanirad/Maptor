@@ -1,4 +1,5 @@
 ﻿using IRI.Maptor.Sta.Mathematics;
+using IRI.Maptor.Sta.Spatial.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -307,181 +308,181 @@ public static class ImageHelper
     //    }
     //}
 
-    public static Matrix Read32BitGrayscaleTiff(string filePath)
-    {
-        using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-        using (var reader = new BinaryReader(stream))
-        {
-            // --- HEADER ---
-            byte[] endianBytes = reader.ReadBytes(2);
-            bool isLittleEndian = endianBytes[0] == 'I' && endianBytes[1] == 'I';
-            if (!(isLittleEndian || (endianBytes[0] == 'M' && endianBytes[1] == 'M')))
-                throw new InvalidDataException("Invalid TIFF byte order");
+    //public static Matrix Read32BitGrayscaleTiff(string filePath)
+    //{
+    //    using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+    //    using (var reader = new BinaryReader(stream))
+    //    {
+    //        // --- HEADER ---
+    //        byte[] endianBytes = reader.ReadBytes(2);
+    //        bool isLittleEndian = endianBytes[0] == 'I' && endianBytes[1] == 'I';
+    //        if (!(isLittleEndian || (endianBytes[0] == 'M' && endianBytes[1] == 'M')))
+    //            throw new InvalidDataException("Invalid TIFF byte order");
 
-            ushort magicNumber = ReadUInt16(reader, isLittleEndian);
-            if (magicNumber != 42)
-                throw new InvalidDataException("Invalid TIFF magic number");
+    //        ushort magicNumber = ReadUInt16(reader, isLittleEndian);
+    //        if (magicNumber != 42)
+    //            throw new InvalidDataException("Invalid TIFF magic number");
 
-            uint ifdOffset = ReadUInt32(reader, isLittleEndian);
-            reader.BaseStream.Seek(ifdOffset, SeekOrigin.Begin);
+    //        uint ifdOffset = ReadUInt32(reader, isLittleEndian);
+    //        reader.BaseStream.Seek(ifdOffset, SeekOrigin.Begin);
 
-            // --- IFD ---
-            ushort entryCount = ReadUInt16(reader, isLittleEndian);
-            var tags = new Dictionary<ushort, (ushort type, uint count, uint valueOrOffset)>();
+    //        // --- IFD ---
+    //        ushort entryCount = ReadUInt16(reader, isLittleEndian);
+    //        var tags = new Dictionary<ushort, (ushort type, uint count, uint valueOrOffset)>();
 
-            for (int i = 0; i < entryCount; i++)
-            {
-                ushort tag = ReadUInt16(reader, isLittleEndian);
-                ushort type = ReadUInt16(reader, isLittleEndian);
-                uint count = ReadUInt32(reader, isLittleEndian);
-                uint valueOrOffset = ReadUInt32(reader, isLittleEndian);
+    //        for (int i = 0; i < entryCount; i++)
+    //        {
+    //            ushort tag = ReadUInt16(reader, isLittleEndian);
+    //            ushort type = ReadUInt16(reader, isLittleEndian);
+    //            uint count = ReadUInt32(reader, isLittleEndian);
+    //            uint valueOrOffset = ReadUInt32(reader, isLittleEndian);
 
-                tags[tag] = (type, count, valueOrOffset);
-            }
+    //            tags[tag] = (type, count, valueOrOffset);
+    //        }
 
-            // --- REQUIRED TAGS ---
-            if (!tags.ContainsKey(256) || !tags.ContainsKey(257) || // width, height
-                !tags.ContainsKey(258) || !tags.ContainsKey(259) || // bitsPerSample, compression
-                !tags.ContainsKey(339))                             // sampleFormat
-            {
-                throw new InvalidDataException("Missing required TIFF tags");
-            }
+    //        // --- REQUIRED TAGS ---
+    //        if (!tags.ContainsKey(256) || !tags.ContainsKey(257) || // width, height
+    //            !tags.ContainsKey(258) || !tags.ContainsKey(259) || // bitsPerSample, compression
+    //            !tags.ContainsKey(339))                             // sampleFormat
+    //        {
+    //            throw new InvalidDataException("Missing required TIFF tags");
+    //        }
 
-            uint width = ReadTagScalarUInt(tags[256], reader, isLittleEndian);
-            uint height = ReadTagScalarUInt(tags[257], reader, isLittleEndian);
-            ushort bitsPerSample = (ushort)ReadTagScalarUInt(tags[258], reader, isLittleEndian);
-            ushort compression = (ushort)ReadTagScalarUInt(tags[259], reader, isLittleEndian);
-            ushort sampleFormat = (ushort)ReadTagScalarUInt(tags[339], reader, isLittleEndian);
+    //        uint width = ReadTagScalarUInt(tags[256], reader, isLittleEndian);
+    //        uint height = ReadTagScalarUInt(tags[257], reader, isLittleEndian);
+    //        ushort bitsPerSample = (ushort)ReadTagScalarUInt(tags[258], reader, isLittleEndian);
+    //        ushort compression = (ushort)ReadTagScalarUInt(tags[259], reader, isLittleEndian);
+    //        ushort sampleFormat = (ushort)ReadTagScalarUInt(tags[339], reader, isLittleEndian);
 
-            if (bitsPerSample != 32 || compression != 1 || sampleFormat != 3)
-                throw new InvalidDataException("Unsupported TIFF format. Must be 32-bit float, uncompressed grayscale");
+    //        if (bitsPerSample != 32 || compression != 1 || sampleFormat != 3)
+    //            throw new InvalidDataException("Unsupported TIFF format. Must be 32-bit float, uncompressed grayscale");
 
-            var result = new Matrix((int)height, (int)width);
+    //        var result = new Matrix((int)height, (int)width);
 
-            // --- STRIPS ---
-            if (tags.ContainsKey(273)) // StripOffsets
-            {
-                uint[] stripOffsets = ReadTagUIntArray(tags[273], reader, isLittleEndian);
-                uint[] stripByteCounts = tags.ContainsKey(279)
-                    ? ReadTagUIntArray(tags[279], reader, isLittleEndian)
-                    : new uint[] { width * height * 4 };
+    //        // --- STRIPS ---
+    //        if (tags.ContainsKey(273)) // StripOffsets
+    //        {
+    //            uint[] stripOffsets = ReadTagUIntArray(tags[273], reader, isLittleEndian);
+    //            uint[] stripByteCounts = tags.ContainsKey(279)
+    //                ? ReadTagUIntArray(tags[279], reader, isLittleEndian)
+    //                : new uint[] { width * height * 4 };
 
-                int rowSize = (int)(width * 4);
-                int currentRow = 0;
-                byte[] buffer = new byte[4];
+    //            int rowSize = (int)(width * 4);
+    //            int currentRow = 0;
+    //            byte[] buffer = new byte[4];
 
-                for (int s = 0; s < stripOffsets.Length; s++)
-                {
-                    reader.BaseStream.Seek(stripOffsets[s], SeekOrigin.Begin);
-                    int rowsInStrip = (int)(stripByteCounts[s] / rowSize);
+    //            for (int s = 0; s < stripOffsets.Length; s++)
+    //            {
+    //                reader.BaseStream.Seek(stripOffsets[s], SeekOrigin.Begin);
+    //                int rowsInStrip = (int)(stripByteCounts[s] / rowSize);
 
-                    for (int y = 0; y < rowsInStrip && currentRow < height; y++, currentRow++)
-                    {
-                        for (int x = 0; x < width; x++)
-                        {
-                            reader.Read(buffer, 0, 4);
-                            if (isLittleEndian != BitConverter.IsLittleEndian)
-                                Array.Reverse(buffer);
-                            result[currentRow, x] = BitConverter.ToSingle(buffer, 0);
-                        }
-                    }
-                }
-            }
-            // --- TILES ---
-            else if (tags.ContainsKey(324) && tags.ContainsKey(325)) // TileOffsets + TileByteCounts
-            {
-                uint[] tileOffsets = ReadTagUIntArray(tags[324], reader, isLittleEndian);
-                uint[] tileByteCounts = ReadTagUIntArray(tags[325], reader, isLittleEndian);
+    //                for (int y = 0; y < rowsInStrip && currentRow < height; y++, currentRow++)
+    //                {
+    //                    for (int x = 0; x < width; x++)
+    //                    {
+    //                        reader.Read(buffer, 0, 4);
+    //                        if (isLittleEndian != BitConverter.IsLittleEndian)
+    //                            Array.Reverse(buffer);
+    //                        result[currentRow, x] = BitConverter.ToSingle(buffer, 0);
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        // --- TILES ---
+    //        else if (tags.ContainsKey(324) && tags.ContainsKey(325)) // TileOffsets + TileByteCounts
+    //        {
+    //            uint[] tileOffsets = ReadTagUIntArray(tags[324], reader, isLittleEndian);
+    //            uint[] tileByteCounts = ReadTagUIntArray(tags[325], reader, isLittleEndian);
 
-                uint tileWidth = tags.ContainsKey(322) ? ReadTagScalarUInt(tags[322], reader, isLittleEndian) : width;
-                uint tileLength = tags.ContainsKey(323) ? ReadTagScalarUInt(tags[323], reader, isLittleEndian) : height;
+    //            uint tileWidth = tags.ContainsKey(322) ? ReadTagScalarUInt(tags[322], reader, isLittleEndian) : width;
+    //            uint tileLength = tags.ContainsKey(323) ? ReadTagScalarUInt(tags[323], reader, isLittleEndian) : height;
 
-                int tilesAcross = (int)Math.Ceiling(width / (double)tileWidth);
-                int tilesDown = (int)Math.Ceiling(height / (double)tileLength);
+    //            int tilesAcross = (int)Math.Ceiling(width / (double)tileWidth);
+    //            int tilesDown = (int)Math.Ceiling(height / (double)tileLength);
 
-                byte[] buffer = new byte[4];
+    //            byte[] buffer = new byte[4];
 
-                for (int t = 0; t < tileOffsets.Length; t++)
-                {
-                    int tileX = t % tilesAcross;
-                    int tileY = t / tilesAcross;
+    //            for (int t = 0; t < tileOffsets.Length; t++)
+    //            {
+    //                int tileX = t % tilesAcross;
+    //                int tileY = t / tilesAcross;
 
-                    reader.BaseStream.Seek(tileOffsets[t], SeekOrigin.Begin);
+    //                reader.BaseStream.Seek(tileOffsets[t], SeekOrigin.Begin);
 
-                    for (int y = 0; y < tileLength; y++)
-                    {
-                        int imgY = tileY * (int)tileLength + y;
-                        if (imgY >= height) break;
+    //                for (int y = 0; y < tileLength; y++)
+    //                {
+    //                    int imgY = tileY * (int)tileLength + y;
+    //                    if (imgY >= height) break;
 
-                        for (int x = 0; x < tileWidth; x++)
-                        {
-                            int imgX = tileX * (int)tileWidth + x;
-                            if (imgX >= width) break;
+    //                    for (int x = 0; x < tileWidth; x++)
+    //                    {
+    //                        int imgX = tileX * (int)tileWidth + x;
+    //                        if (imgX >= width) break;
 
-                            reader.Read(buffer, 0, 4);
-                            if (isLittleEndian != BitConverter.IsLittleEndian)
-                                Array.Reverse(buffer);
-                            result[imgY, imgX] = BitConverter.ToSingle(buffer, 0);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                throw new InvalidDataException("TIFF has neither StripOffsets (273) nor TileOffsets (324). Unsupported layout.");
-            }
+    //                        reader.Read(buffer, 0, 4);
+    //                        if (isLittleEndian != BitConverter.IsLittleEndian)
+    //                            Array.Reverse(buffer);
+    //                        result[imgY, imgX] = BitConverter.ToSingle(buffer, 0);
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        else
+    //        {
+    //            throw new InvalidDataException("TIFF has neither StripOffsets (273) nor TileOffsets (324). Unsupported layout.");
+    //        }
 
-            return result;
-        }
-    }
+    //        return result;
+    //    }
+    //}
+     
+    //// --- Helper Methods ---
+    //private static ushort ReadUInt16(BinaryReader reader, bool isLittleEndian)
+    //{
+    //    byte[] bytes = reader.ReadBytes(2);
+    //    if (isLittleEndian != BitConverter.IsLittleEndian)
+    //        Array.Reverse(bytes);
+    //    return BitConverter.ToUInt16(bytes, 0);
+    //}
 
-    // --- Helper Methods ---
-    private static ushort ReadUInt16(BinaryReader reader, bool isLittleEndian)
-    {
-        byte[] bytes = reader.ReadBytes(2);
-        if (isLittleEndian != BitConverter.IsLittleEndian)
-            Array.Reverse(bytes);
-        return BitConverter.ToUInt16(bytes, 0);
-    }
+    //private static uint ReadUInt32(BinaryReader reader, bool isLittleEndian)
+    //{
+    //    byte[] bytes = reader.ReadBytes(4);
+    //    if (isLittleEndian != BitConverter.IsLittleEndian)
+    //        Array.Reverse(bytes);
+    //    return BitConverter.ToUInt32(bytes, 0);
+    //}
 
-    private static uint ReadUInt32(BinaryReader reader, bool isLittleEndian)
-    {
-        byte[] bytes = reader.ReadBytes(4);
-        if (isLittleEndian != BitConverter.IsLittleEndian)
-            Array.Reverse(bytes);
-        return BitConverter.ToUInt32(bytes, 0);
-    }
+    //private static uint ReadTagScalarUInt((ushort type, uint count, uint valueOrOffset) tag, BinaryReader reader, bool isLittleEndian)
+    //{
+    //    if (tag.count != 1) throw new InvalidDataException("Expected scalar tag");
+    //    if (tag.type == 3) return (ushort)tag.valueOrOffset; // SHORT
+    //    if (tag.type == 4) return tag.valueOrOffset;         // LONG
+    //    throw new InvalidDataException("Unsupported tag type");
+    //}
 
-    private static uint ReadTagScalarUInt((ushort type, uint count, uint valueOrOffset) tag, BinaryReader reader, bool isLittleEndian)
-    {
-        if (tag.count != 1) throw new InvalidDataException("Expected scalar tag");
-        if (tag.type == 3) return (ushort)tag.valueOrOffset; // SHORT
-        if (tag.type == 4) return tag.valueOrOffset;         // LONG
-        throw new InvalidDataException("Unsupported tag type");
-    }
+    //private static uint[] ReadTagUIntArray((ushort type, uint count, uint valueOrOffset) tag, BinaryReader reader, bool isLittleEndian)
+    //{
+    //    if (tag.count == 1)
+    //        return new uint[] { ReadTagScalarUInt(tag, reader, isLittleEndian) };
 
-    private static uint[] ReadTagUIntArray((ushort type, uint count, uint valueOrOffset) tag, BinaryReader reader, bool isLittleEndian)
-    {
-        if (tag.count == 1)
-            return new uint[] { ReadTagScalarUInt(tag, reader, isLittleEndian) };
+    //    long savedPos = reader.BaseStream.Position;
+    //    reader.BaseStream.Seek(tag.valueOrOffset, SeekOrigin.Begin);
 
-        long savedPos = reader.BaseStream.Position;
-        reader.BaseStream.Seek(tag.valueOrOffset, SeekOrigin.Begin);
+    //    var result = new uint[tag.count];
+    //    for (int i = 0; i < tag.count; i++)
+    //    {
+    //        if (tag.type == 3)
+    //            result[i] = ReadUInt16(reader, isLittleEndian);
+    //        else if (tag.type == 4)
+    //            result[i] = ReadUInt32(reader, isLittleEndian);
+    //        else
+    //            throw new InvalidDataException("Unsupported array tag type");
+    //    }
 
-        var result = new uint[tag.count];
-        for (int i = 0; i < tag.count; i++)
-        {
-            if (tag.type == 3)
-                result[i] = ReadUInt16(reader, isLittleEndian);
-            else if (tag.type == 4)
-                result[i] = ReadUInt32(reader, isLittleEndian);
-            else
-                throw new InvalidDataException("Unsupported array tag type");
-        }
-
-        reader.BaseStream.Seek(savedPos, SeekOrigin.Begin);
-        return result;
-    }
+    //    reader.BaseStream.Seek(savedPos, SeekOrigin.Begin);
+    //    return result;
+    //}
 
     public static void ReduceSingleDots(Matrix matrix)
     {

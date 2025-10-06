@@ -74,7 +74,6 @@ public static class WorldfileManager
          
         try
         {
-
             BoundingBox boundingBox;
 
             if (srid == SridHelper.GeodeticWGS84)
