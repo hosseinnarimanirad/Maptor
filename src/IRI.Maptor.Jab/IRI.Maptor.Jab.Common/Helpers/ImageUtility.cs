@@ -312,22 +312,22 @@ public static class ImageUtility
 
     #region Worldfile Matrix
 
-    public static WorldfileMatrix16bit? ReadWorldfileMatrix(string fileName)
-    {
-        if (!System.IO.File.Exists(fileName))
-            return null;
+    //public static WorldfileMatrix16bit? ReadWorldfileMatrix(string fileName)
+    //{
+    //    if (!System.IO.File.Exists(fileName))
+    //        return null;
 
-        var worldfileName = WorldfileManager.TryGetAssociatedWorldfileName(fileName);
+    //    var worldfileName = WorldfileManager.TryGetAssociatedWorldfileName(fileName);
 
-        if (string.IsNullOrWhiteSpace(worldfileName))
-            return null;
+    //    if (string.IsNullOrWhiteSpace(worldfileName))
+    //        return null;
 
-        var worldfile = Worldfile.Read(worldfileName);
+    //    var worldfile = Worldfile.Read(worldfileName);
 
-        var matrix = ImageHelper.Read32BitGrayscaleTiff(fileName);
+    //    var matrix = ImageHelper.Read32BitGrayscaleTiff(fileName);
 
-        return new WorldfileMatrix16bit(matrix, worldfile.XPixelSize, worldfile.YPixelSize, worldfile.XRotation, worldfile.YRotation, worldfile.CenterOfUpperLeftPixel);
-    }
+    //    return new WorldfileMatrix16bit(matrix, worldfile.XPixelSize, worldfile.YPixelSize, worldfile.XRotation, worldfile.YRotation, worldfile.CenterOfUpperLeftPixel);
+    //}
 
     #endregion
 
