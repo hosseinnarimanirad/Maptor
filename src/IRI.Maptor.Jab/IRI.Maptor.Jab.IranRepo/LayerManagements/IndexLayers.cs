@@ -42,7 +42,16 @@ public static class IndexLayers
 
         var index250kLabels = VisualParameters.CreateLabel(ScaleInterval.Create(7), 12, parameters.Stroke, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
 
-        return new VectorLayer("اندکس ۲۵۰ هزار", source, parameters, LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.DrawingVisual, ScaleInterval.Create(4), index250kLabels)
+        return new VectorLayer(
+            //"اندکس ۲۵۰ هزار", 
+            IRI.Maptor.Jab.Common.Properties.Resources.index_250k_title,
+            source, 
+            parameters, 
+            LayerType.VectorLayer, 
+            RenderMode.Default, 
+            RasterizationMethod.DrawingVisual, 
+            ScaleInterval.Create(4), 
+            index250kLabels)
         {
             ShowInToc = false,
             CanUserDelete = false,
@@ -62,7 +71,16 @@ public static class IndexLayers
 
         var index100kLabels = VisualParameters.CreateLabel(ScaleInterval.Create(9), 12, parameters.Stroke, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
 
-        return new VectorLayer("اندکس ۱۰۰ هزار", source, parameters, LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.Create(5), index100kLabels)
+        return new VectorLayer(
+            //"اندکس ۱۰۰ هزار", 
+            IRI.Maptor.Jab.Common.Properties.Resources.index_100k_title,
+            source, 
+            parameters, 
+            LayerType.VectorLayer, 
+            RenderMode.Default, 
+            RasterizationMethod.GdiPlus, 
+            ScaleInterval.Create(5), 
+            index100kLabels)
         {
             ShowInToc = false,
             CanUserDelete = false,
@@ -80,7 +98,15 @@ public static class IndexLayers
 
         VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
 
-        return new VectorLayer("اندکس ۵۰ هزار", source, parameters, LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.Create(9))
+        return new VectorLayer(
+            //"اندکس ۵۰ هزار", 
+            IRI.Maptor.Jab.Common.Properties.Resources.index_50k_title,
+            source, 
+            parameters, 
+            LayerType.VectorLayer, 
+            RenderMode.Default, 
+            RasterizationMethod.GdiPlus, 
+            ScaleInterval.Create(9))
         {
             ShowInToc = false,
             CanUserDelete = false,
@@ -97,7 +123,15 @@ public static class IndexLayers
 
         VisualParameters parameters = new VisualParameters(null, "#88FF8130", 2, .8) { DashStyle = DashStyles.Dot };
 
-        return new VectorLayer("اندکس ۲۵ هزار", source, parameters, LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.Create(10))
+        return new VectorLayer(
+            //"اندکس ۲۵ هزار", 
+            IRI.Maptor.Jab.Common.Properties.Resources.index_25k_title,
+            source, 
+            parameters, 
+            LayerType.VectorLayer, 
+            RenderMode.Default, 
+            RasterizationMethod.GdiPlus, 
+            ScaleInterval.Create(10))
         {
             ShowInToc = false,
             CanUserDelete = false,
@@ -178,7 +212,8 @@ public static class IndexLayers
 
         var layer =
             new VectorLayer(
-                "بلوک‌های ۲ هزار",
+                //"بلوک‌های ۲ هزار",
+                IRI.Maptor.Jab.Common.Properties.Resources.index_2kblocks_title,
                 source,
                 parameters,
                 LayerType.VectorLayer,
@@ -209,7 +244,8 @@ public static class IndexLayers
 
         var layer =
             new VectorLayer(
-                "اندکس ۲ هزار",
+                //"اندکس ۲ هزار",
+                IRI.Maptor.Jab.Common.Properties.Resources.index_2kUtm_title,
                 source,
                 parameters,
                 LayerType.VectorLayer,
@@ -240,7 +276,8 @@ public static class IndexLayers
 
         var layer =
             new VectorLayer(
-                "اندکس ۱ هزار",
+                //"اندکس ۱ هزار",
+                IRI.Maptor.Jab.Common.Properties.Resources.index_1kUtm_title,
                 source,
                 parameters,
                 LayerType.VectorLayer,
@@ -271,7 +308,8 @@ public static class IndexLayers
 
         var layer =
             new VectorLayer(
-                "اندکس ۵۰۰",
+                //"اندکس ۵۰۰",
+                IRI.Maptor.Jab.Common.Properties.Resources.index_500UtmTitle,
                 source,
                 parameters,
                 LayerType.VectorLayer,
@@ -309,7 +347,8 @@ public static class IndexLayers
 
         var layer50k =
             new VectorLayer(
-                "اندکس ۵۰ هزار",
+                //"اندکس ۵۰ هزار",
+                IRI.Maptor.Jab.Common.Properties.Resources.index_50k_title,
                 source50k,
                 parameters,
                 LayerType.VectorLayer,
@@ -340,7 +379,8 @@ public static class IndexLayers
 
         var layer25k =
             new VectorLayer(
-                "اندکس ۲۵ هزار",
+                //"اندکس ۲۵ هزار",
+                IRI.Maptor.Jab.Common.Properties.Resources.index_25k_title,
                 source25k,
                 parameters,
                 LayerType.VectorLayer,
@@ -369,7 +409,8 @@ public static class IndexLayers
 
         var layer10k =
             new VectorLayer(
-                "اندکس ۱۰ هزار",
+                //"اندکس ۱۰ هزار",
+                IRI.Maptor.Jab.Common.Properties.Resources.index_10k_title,
                 GridDataSource.Create(GeodeticIndexType.Ncc10k),
                 parameters,
                 LayerType.VectorLayer,
@@ -398,7 +439,8 @@ public static class IndexLayers
 
         var layer5k =
             new VectorLayer(
-                "اندکس ۵ هزار",
+                //"اندکس ۵ هزار",
+                IRI.Maptor.Jab.Common.Properties.Resources.index_5k_title,
                 GridDataSource.Create(GeodeticIndexType.Ncc5k),
                 parameters,
                 LayerType.VectorLayer,

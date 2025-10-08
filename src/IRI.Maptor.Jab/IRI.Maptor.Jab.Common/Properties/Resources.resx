@@ -300,6 +300,57 @@
   <data name="imageNotFound" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Assets\Images\imageNotFound.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="index_100k_title" xml:space="preserve">
+    <value>Index 100k</value>
+  </data>
+  <data name="index_10k_title" xml:space="preserve">
+    <value>Index 10k</value>
+  </data>
+  <data name="index_1kUtm_title" xml:space="preserve">
+    <value>Index 1000</value>
+  </data>
+  <data name="index_250k_title" xml:space="preserve">
+    <value>Index 250k</value>
+  </data>
+  <data name="index_25k_title" xml:space="preserve">
+    <value>Index 25k</value>
+  </data>
+  <data name="index_2kblocks_title" xml:space="preserve">
+    <value>Index 2000 Blocks</value>
+  </data>
+  <data name="index_2kUtm_title" xml:space="preserve">
+    <value>Index 2000</value>
+  </data>
+  <data name="index_500UtmTitle" xml:space="preserve">
+    <value>Index 500</value>
+  </data>
+  <data name="index_50k_title" xml:space="preserve">
+    <value>Index 50k</value>
+  </data>
+  <data name="index_5k_title" xml:space="preserve">
+    <value>Index 5k</value>
+  </data>
+  <data name="layer_geodesy1_title" xml:space="preserve">
+    <value>Geodesy 1</value>
+  </data>
+  <data name="layer_geodesy2_title" xml:space="preserve">
+    <value>Geodesy 2</value>
+  </data>
+  <data name="layer_geodynamics_title" xml:space="preserve">
+    <value>Geodynamics</value>
+  </data>
+  <data name="layer_gravimetry_title" xml:space="preserve">
+    <value>Gravimetry</value>
+  </data>
+  <data name="layer_leveling1_title" xml:space="preserve">
+    <value>Leveling 1</value>
+  </data>
+  <data name="layer_leveling2_title" xml:space="preserve">
+    <value>Leveling 2</value>
+  </data>
+  <data name="layer_leveling3_title" xml:space="preserve">
+    <value>Leveling 3</value>
+  </data>
   <data name="mapPanel_currentPart_add" xml:space="preserve">
     <value>Add new part</value>
   </data>

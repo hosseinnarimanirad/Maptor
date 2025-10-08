@@ -295,6 +295,57 @@
   <data name="dialog_symbology_title" xml:space="preserve">
     <value>سمبل لایه</value>
   </data>
+  <data name="index_100k_title" xml:space="preserve">
+    <value>اندکس ۱۰۰ هزار</value>
+  </data>
+  <data name="index_10k_title" xml:space="preserve">
+    <value>اندکس ۱۰ هزار</value>
+  </data>
+  <data name="index_1kUtm_title" xml:space="preserve">
+    <value>اندکس ۱ هزار</value>
+  </data>
+  <data name="index_250k_title" xml:space="preserve">
+    <value>اندکس ۲۵۰ هزار</value>
+  </data>
+  <data name="index_25k_title" xml:space="preserve">
+    <value>اندکس ۲۵ هزار</value>
+  </data>
+  <data name="index_2kblocks_title" xml:space="preserve">
+    <value>بلوک‌های ۲ هزار</value>
+  </data>
+  <data name="index_2kUtm_title" xml:space="preserve">
+    <value>اندکس ۲ هزار</value>
+  </data>
+  <data name="index_500UtmTitle" xml:space="preserve">
+    <value>اندکس ۵۰۰</value>
+  </data>
+  <data name="index_50k_title" xml:space="preserve">
+    <value>اندکس ۵۰ هزار</value>
+  </data>
+  <data name="index_5k_title" xml:space="preserve">
+    <value>اندکس ۵ هزار</value>
+  </data>
+  <data name="layer_geodesy1_title" xml:space="preserve">
+    <value />
+  </data>
+  <data name="layer_geodesy2_title" xml:space="preserve">
+    <value>ژئودزی ۲</value>
+  </data>
+  <data name="layer_geodynamics_title" xml:space="preserve">
+    <value>ژئودینامیک</value>
+  </data>
+  <data name="layer_gravimetry_title" xml:space="preserve">
+    <value>ثقل سنجی</value>
+  </data>
+  <data name="layer_leveling1_title" xml:space="preserve">
+    <value />
+  </data>
+  <data name="layer_leveling2_title" xml:space="preserve">
+    <value />
+  </data>
+  <data name="layer_leveling3_title" xml:space="preserve">
+    <value />
+  </data>
   <data name="mapPanel_currentPart_add" xml:space="preserve">
     <value>اضافه کردن تکهٔ جدید</value>
   </data>

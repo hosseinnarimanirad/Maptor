@@ -584,6 +584,159 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Index 100k.
+        /// </summary>
+        public static string index_100k_title {
+            get {
+                return ResourceManager.GetString("index_100k_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index 10k.
+        /// </summary>
+        public static string index_10k_title {
+            get {
+                return ResourceManager.GetString("index_10k_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index 1000.
+        /// </summary>
+        public static string index_1kUtm_title {
+            get {
+                return ResourceManager.GetString("index_1kUtm_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index 250k.
+        /// </summary>
+        public static string index_250k_title {
+            get {
+                return ResourceManager.GetString("index_250k_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index 25k.
+        /// </summary>
+        public static string index_25k_title {
+            get {
+                return ResourceManager.GetString("index_25k_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index 2000 Blocks.
+        /// </summary>
+        public static string index_2kblocks_title {
+            get {
+                return ResourceManager.GetString("index_2kblocks_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index 2000.
+        /// </summary>
+        public static string index_2kUtm_title {
+            get {
+                return ResourceManager.GetString("index_2kUtm_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index 500.
+        /// </summary>
+        public static string index_500UtmTitle {
+            get {
+                return ResourceManager.GetString("index_500UtmTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index 50k.
+        /// </summary>
+        public static string index_50k_title {
+            get {
+                return ResourceManager.GetString("index_50k_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index 5k.
+        /// </summary>
+        public static string index_5k_title {
+            get {
+                return ResourceManager.GetString("index_5k_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geodesy 1.
+        /// </summary>
+        public static string layer_geodesy1_title {
+            get {
+                return ResourceManager.GetString("layer_geodesy1_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geodesy 2.
+        /// </summary>
+        public static string layer_geodesy2_title {
+            get {
+                return ResourceManager.GetString("layer_geodesy2_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geodynamics.
+        /// </summary>
+        public static string layer_geodynamics_title {
+            get {
+                return ResourceManager.GetString("layer_geodynamics_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gravimetry.
+        /// </summary>
+        public static string layer_gravimetry_title {
+            get {
+                return ResourceManager.GetString("layer_gravimetry_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leveling 1.
+        /// </summary>
+        public static string layer_leveling1_title {
+            get {
+                return ResourceManager.GetString("layer_leveling1_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leveling 2.
+        /// </summary>
+        public static string layer_leveling2_title {
+            get {
+                return ResourceManager.GetString("layer_leveling2_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leveling 3.
+        /// </summary>
+        public static string layer_leveling3_title {
+            get {
+                return ResourceManager.GetString("layer_leveling3_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Point.
         /// </summary>
         public static string map_draw_addPoint {
