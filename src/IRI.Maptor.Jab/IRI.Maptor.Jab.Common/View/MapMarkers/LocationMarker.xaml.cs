@@ -7,9 +7,9 @@ namespace IRI.Maptor.Jab.Common.View.MapMarkers;
 /// <summary>
 /// Interaction logic for MapMarker.xaml
 /// </summary>
-public partial class MapMarker : UserControl, IMapMarker
+public partial class LocationMarker : UserControl, IMapMarker
 {
-    public MapMarker(int number)
+    public LocationMarker(int number)
     {
         InitializeComponent();
 
@@ -18,7 +18,7 @@ public partial class MapMarker : UserControl, IMapMarker
         //this.numberBox.Text = number.ToString();
     }
 
-    public MapMarker(string content)
+    public LocationMarker(string content)
     {
         InitializeComponent();
 
@@ -37,7 +37,7 @@ public partial class MapMarker : UserControl, IMapMarker
 
     // Using a DependencyProperty as the backing store for Value.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ValueProperty =
-        DependencyProperty.Register(nameof(Value), typeof(string), typeof(MapMarker), new PropertyMetadata(string.Empty));
+        DependencyProperty.Register(nameof(Value), typeof(string), typeof(LocationMarker), new PropertyMetadata(string.Empty));
 
 
     private bool _isSelected;

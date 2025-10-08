@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows.Media.Animation;
 
-using IRI.Maptor.Extensions;
-using IRI.Maptor.Extensions;
+using IRI.Maptor.Extensions; 
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -72,11 +71,11 @@ public class Locateable : Notifier
         }
     }
 
-    private System.Windows.Point _location;
+    private WpfPoint _location;
     /// <summary>
     /// Web Mercator System.Windows.Point
     /// </summary>
-    public System.Windows.Point Location
+    public WpfPoint Location
     {
         get { return _location; }
     }
@@ -167,29 +166,16 @@ public class Locateable : Notifier
     //}
 
     void Element_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-    {
-        //if (Popup != null)
-        //{
-        //    this.Popup.Focus();
-
-        //    this.Popup.IsOpen = !this.Popup.IsOpen;
-        //}
-
+    { 
         this.OnRequestHandleMouseDown?.Invoke(null, EventArgs.Empty);
     }
 
     public void Select()
     {
-        if (this.Element == null)
+        if (this.Element is null)
             return;
-
-        //var storyBoard = this.Element.FindResource("mapMarkerExpandOnMouseEnter") as Storyboard;
-
-        //if (storyBoard == null)
-        //    return;
-
-        //storyBoard.Begin(this.Element);
-        var element = ((View.MapMarkers.MapMarker)(this.Element));
+         
+        var element = (View.MapMarkers.LocationMarker)this.Element;
 
         element.BeginAnimation(System.Windows.FrameworkElement.HeightProperty, new DoubleAnimation(250, new System.Windows.Duration(new TimeSpan(0, 0, 1))) { FillBehavior = FillBehavior.HoldEnd });
     }

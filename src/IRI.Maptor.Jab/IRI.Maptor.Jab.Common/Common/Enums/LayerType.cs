@@ -20,10 +20,10 @@ public enum LayerType
     GridAndGraticule = 2048,
     AnimatingItem = 4096,
     ImagePyramid = 8192,
-    MoveableItem = 16384,
-    EditableItem = 32768,
-    GroupLayer = 65536,
-    None = 131072,
-    FeatureLayer = 262144
-    //UserInterface = 1024
+    MoveableItem = 16_384,
+    EditableItem = 32_768,
+    GroupLayer = 65_536,
+    None = 131_072,
+    FeatureLayer = 262_144,
+    ActiveExtent = 524_288
 }

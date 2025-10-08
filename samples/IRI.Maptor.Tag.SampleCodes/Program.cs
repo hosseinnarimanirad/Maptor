@@ -1,5 +1,4 @@
 ﻿
-using IRI.Maptor.Jab.Common.Helpers;
 
 IRI.Maptor.Tag.SampleCodes.Geodesy.GoogleMap_PixelDistance.GoogleMapGroundResolution();
 //IRI.Maptor.Tag.SampleCodes.Geodesy.Geodesy_DegreeDistance.DegreeToEarthDistance(0);

@@ -20,6 +20,7 @@ public partial class PhotoMarker : UserControl, IMapMarker
 
         this.image.Source = imageSource;
     }
+
     private bool _isSelected;
 
     public bool IsSelected
