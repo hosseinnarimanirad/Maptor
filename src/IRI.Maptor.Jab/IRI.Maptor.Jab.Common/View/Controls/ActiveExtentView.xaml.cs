@@ -13,7 +13,7 @@ public partial class ActiveExtentView : MapMarker
     public event EventHandler/*<ScreenExtentChangedEventArgs>*/ OnExtentChanged;
 
     public ActiveExtentViewModel? Presenter => this.DataContext as ActiveExtentViewModel;
-     
+
     public ActiveExtentView()
     {
         InitializeComponent();
@@ -23,9 +23,9 @@ public partial class ActiveExtentView : MapMarker
     private Ellipse? _activeEllipse;
 
     private Point _previousMousePosition;
-     
+
     private const double MinSize = 20;
-     
+
     public double GetWidth() => double.IsNaN(Width) ? ActualWidth : Width;
 
     public double GetHeight() => double.IsNaN(Height) ? ActualHeight : Height;
@@ -90,38 +90,66 @@ public partial class ActiveExtentView : MapMarker
         if (_activeEllipse == rightEllipse)
         {
             newWidth = Math.Max(MinSize, newWidth + dx);
-
-            //rightChange = dx;
         }
         else if (_activeEllipse == leftEllipse)
         {
             newWidth = Math.Max(MinSize, newWidth - dx);
 
-            //leftChange = dx;
-
             newLeft += dx;
 
-            //// if we hit min-size, clamp left so we don't "flip"
-            //if (Width == MinSize)
-            //    newLeft = _startLeft + _startWidth - newWidth;
+            // if we hit min-size, clamp left so we don't "flip"
+            if (newWidth == MinSize)
+                newLeft = GetLeft() + GetWidth() - newWidth;             
         }
         else if (_activeEllipse == bottomEllipse)
         {
             newHeight = Math.Max(MinSize, newHeight + dy);
-
-            //bottomChange = -dy;
         }
         else if (_activeEllipse == topEllipse)
         {
             newHeight = Math.Max(MinSize, newHeight - dy);
 
-            //topChange = -dy;
-
             newTop += dy;
 
-            //newTop = _startTop + dy;
-            //if (newHeight == MinSize)
-            //    newTop = _startTop + _startHeight - newHeight;
+            if (newHeight == MinSize)
+                newTop = GetTop() + GetHeight() - newHeight;
+        }
+
+        // --- CORNER HANDLES ---
+        else if (_activeEllipse == topLeftEllipse)
+        {
+            newWidth = Math.Max(MinSize, newWidth - dx);
+            newLeft += dx;
+            newHeight = Math.Max(MinSize, newHeight - dy);
+            newTop += dy;
+
+            if (newWidth == MinSize)
+                newLeft = GetLeft() + GetWidth() - newWidth;
+            if (newHeight == MinSize)
+                newTop = GetTop() + GetHeight() - newHeight;
+        }
+        else if (_activeEllipse == topRightEllipse)
+        {
+            newWidth = Math.Max(MinSize, newWidth + dx);
+            newHeight = Math.Max(MinSize, newHeight - dy);
+            newTop += dy;
+
+            if (newHeight == MinSize)
+                newTop = GetTop() + GetHeight() - newHeight;
+        }
+        else if (_activeEllipse == bottomRightEllipse)
+        {
+            newWidth = Math.Max(MinSize, newWidth + dx);
+            newHeight = Math.Max(MinSize, newHeight + dy);
+        }
+        else if (_activeEllipse == bottomLeftEllipse)
+        {
+            newWidth = Math.Max(MinSize, newWidth - dx);
+            newLeft += dx;
+            newHeight = Math.Max(MinSize, newHeight + dy);
+
+            if (newWidth == MinSize)
+                newLeft = GetLeft() + GetWidth() - newWidth;
         }
 
 
@@ -133,17 +161,7 @@ public partial class ActiveExtentView : MapMarker
 
         _previousMousePosition = pos;
 
-        //this.OnExtentChanged?.UpdateExtent(leftChange: leftChange, rightChange: rightChange, topChange: topChange, bottomChange: bottomChange);
-
         this.OnExtentChanged?.Invoke(this, EventArgs.Empty);
-
-        //this.OnExtentChanged?.Invoke(
-        //    this, 
-        //    new ScreenExtentChangedEventArgs(
-        //        leftChange: leftChange, 
-        //        rightChange: rightChange, 
-        //        topChange: topChange, 
-        //        bottomChange: bottomChange));
     }
 
     private void Ellipse_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
