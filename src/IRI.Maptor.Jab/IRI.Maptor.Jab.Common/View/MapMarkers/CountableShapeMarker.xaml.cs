@@ -7,7 +7,7 @@ namespace IRI.Maptor.Jab.Common.View.MapMarkers;
 /// <summary>
 /// Interaction logic for CountableShapeMarker.xaml
 /// </summary>
-public partial class CountableShapeMarker : UserControl, IMapMarker
+public partial class CountableShapeMarker : MapMarker
 {
     public CountableShapeMarker(Geometry shape, string count)
     {
@@ -18,15 +18,15 @@ public partial class CountableShapeMarker : UserControl, IMapMarker
 
         this.labelBox.Text = count;
     }
-    private bool _isSelected;
+    //private bool _isSelected;
 
-    public bool IsSelected
-    {
-        get { return _isSelected; }
-        set
-        {
-            _isSelected = value;
-        }
-    }
+    //public bool IsSelected
+    //{
+    //    get { return _isSelected; }
+    //    set
+    //    {
+    //        _isSelected = value;
+    //    }
+    //}
 }
 

@@ -1,16 +1,11 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common.View.MapMarkers;
-
-/// <summary>
-/// Interaction logic for ShapeWithLabelMarker.xaml
-/// </summary>
-public partial class CoordinateMarker : NotifiableUserControl, IMapMarker
+ 
+public partial class CoordinateMarker : MapMarker
 {
     public bool ChangeToDms { get; }
 
@@ -102,24 +97,17 @@ public partial class CoordinateMarker : NotifiableUserControl, IMapMarker
         }
 
     }
+     
+    //private bool _isSelected;
 
-    //public event PropertyChangedEventHandler PropertyChanged;
-
-    //protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+    //public bool IsSelected
     //{
-    //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    //    get { return _isSelected; }
+    //    set
+    //    {
+    //        _isSelected = value;
+    //    }
     //}
-
-    private bool _isSelected;
-
-    public bool IsSelected
-    {
-        get { return _isSelected; }
-        set
-        {
-            _isSelected = value;
-        }
-    }
 
 
     enum Coordinates

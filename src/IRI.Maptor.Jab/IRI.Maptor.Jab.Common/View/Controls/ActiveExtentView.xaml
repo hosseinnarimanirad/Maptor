@@ -53,5 +53,10 @@
         <Ellipse Cursor="SizeWE" HorizontalAlignment="Right" VerticalAlignment="Center" x:Name="rightEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
         <Ellipse Cursor="SizeNS" HorizontalAlignment="Center" VerticalAlignment="Bottom" x:Name="bottomEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
         <Ellipse Cursor="SizeWE" HorizontalAlignment="Left" VerticalAlignment="Center" x:Name="leftEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
+
+        <Ellipse Cursor="SizeNWSE" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="topLeftEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
+        <Ellipse Cursor="SizeNESW" HorizontalAlignment="Right" VerticalAlignment="Top" x:Name="topRightEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
+        <Ellipse Cursor="SizeNWSE" HorizontalAlignment="Right" VerticalAlignment="Bottom" x:Name="bottomRightEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
+        <Ellipse Cursor="SizeNESW" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="bottomLeftEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
     </Grid>
 </UserControl>

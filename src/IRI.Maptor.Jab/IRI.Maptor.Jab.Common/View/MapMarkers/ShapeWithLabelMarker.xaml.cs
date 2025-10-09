@@ -4,11 +4,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 namespace IRI.Maptor.Jab.Common.View.MapMarkers;
-
-/// <summary>
-/// Interaction logic for ShapeWithLabelMarker.xaml
-/// </summary>
-public partial class ShapeWithLabelMarker : UserControl, IMapMarker//, INotifyPropertyChanged
+ 
+public partial class ShapeWithLabelMarker : MapMarker
 {
     //private bool _isExpanded;
 
@@ -44,14 +41,14 @@ public partial class ShapeWithLabelMarker : UserControl, IMapMarker//, INotifyPr
     {
         //this.IsExpanded = !this.IsExpanded;
     }
-    private bool _isSelected;
+    //private bool _isSelected;
 
-    public bool IsSelected
-    {
-        get { return _isSelected; }
-        set
-        {
-            _isSelected = value;
-        }
-    }
+    //public bool IsSelected
+    //{
+    //    get { return _isSelected; }
+    //    set
+    //    {
+    //        _isSelected = value;
+    //    }
+    //}
 }

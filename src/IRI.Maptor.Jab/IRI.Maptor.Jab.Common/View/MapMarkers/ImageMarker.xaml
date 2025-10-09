@@ -1,24 +1,23 @@
-﻿<UserControl x:Class="IRI.Maptor.Jab.Common.View.MapMarkers.ImageMarker"
+﻿<maptor:MapMarker x:Class="IRI.Maptor.Jab.Common.View.MapMarkers.ImageMarker"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  x:Name="root"
-             Width="16" Height="16">
+             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Common.View"
+             x:Name="root" Width="16" Height="16">
 
-    <UserControl.Resources>
+    <maptor:MapMarker.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Animations.xaml"/>
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Colors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </UserControl.Resources>
-    <UserControl.RenderTransform>
+    </maptor:MapMarker.Resources>
+    <maptor:MapMarker.RenderTransform>
         <TransformGroup>
             <ScaleTransform />
         </TransformGroup>
-    </UserControl.RenderTransform>
-    <UserControl.Triggers>
+    </maptor:MapMarker.RenderTransform>
+    <maptor:MapMarker.Triggers>
         <EventTrigger RoutedEvent="UIElement.MouseEnter">
             <BeginStoryboard >
                 <Storyboard>
@@ -49,7 +48,7 @@
             </BeginStoryboard>
             <BeginStoryboard Storyboard="{StaticResource mapMarkerResetOnMouseLeave}"/>
         </EventTrigger>
-    </UserControl.Triggers>
+    </maptor:MapMarker.Triggers>
 
     <Canvas x:Name="Document" Width="{Binding ElementName=root, Path=Width}" Height="{Binding ElementName=root, Path=Height}">
         <Viewbox Width="{Binding ElementName=root, Path=Width}" Height="{Binding ElementName=root, Path=Height}" Margin="0" x:Name="viewbox">
@@ -61,4 +60,4 @@
         </Viewbox>
     </Canvas>
 
-</UserControl>
+</maptor:MapMarker>

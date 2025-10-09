@@ -2,29 +2,21 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Shapes;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Events;
 
 namespace IRI.Maptor.Jab.Common.View.Controls;
-/// <summary>
-/// Interaction logic for ActiveExtentView.xaml
-/// </summary>
+ 
 public partial class ActiveExtentView : UserControl, IMapMarker
 {
-    public event EventHandler<CustomEventArgs<IRI.Maptor.Sta.Common.Primitives.BoundingBox>> ActiveExtentChanged;
+    public event EventHandler<ScreenExtentChangedEventArgs> OnActiveExtentChanged;
 
     public ActiveExtentView()
     {
         InitializeComponent();
     }
-
-    //private bool _isDragging = false;
-    //private bool _isResizing = false;
-    private Point _clickPosition;
-    private Ellipse? _activeHandle;
-
-    private IRI.Maptor.Sta.Common.Primitives.BoundingBox _currentExtent;
 
     private bool _isSelected;
 
@@ -37,128 +29,171 @@ public partial class ActiveExtentView : UserControl, IMapMarker
         }
     }
 
-    //#region Move
 
-    //private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    //{
-    //    _isDragging = true;
+    private Ellipse? _activeEllipse;
 
-    //    _clickPosition = e.GetPosition(this);
+    private Point _startMousePos;
 
-    //    CaptureMouse();
-    //}
+    private double _startLeft, _startTop, _startWidth, _startHeight;
 
-    //private void Border_MouseMove(object sender, MouseEventArgs e)
-    //{
-    //    if (_isDragging && Parent is Canvas canvas)
-    //    {
-    //        var position = e.GetPosition(canvas);
+    private const double MinSize = 20;
 
-    //        var dx = position.X - _clickPosition.X;
-
-    //        var dy = position.Y - _clickPosition.Y;
-
-    //        var newExtent = this._currentExtent.Transform(p => new Sta.Common.Primitives.Point(p.X + dy, p.Y + dy));
-
-    //        _currentExtent = newExtent;
-
-    //        this.ActiveExtentChanged?.Invoke(this, new CustomEventArgs<Sta.Common.Primitives.BoundingBox>(newExtent));
-    //    }
-    //}
-
-    //private void Border_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-    //{
-    //    _isDragging = false;
-
-    //    ReleaseMouseCapture();
-    //}
-
-    //#endregion
+    //public IRI.Maptor.Sta.Common.Primitives.Point WebMercatorCenter { get; set; }
 
 
     private void Ellipse_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
-         
-        //_isResizing = true;
 
-        _activeHandle = sender as Ellipse;
+        _activeEllipse = sender as Ellipse;
 
-        if (_activeHandle is null)
+        if (_activeEllipse is null)
             return;
 
-        _activeHandle.CaptureMouse();
+        if (!(Parent is Canvas canvas)) return;
 
-        _clickPosition = e.GetPosition(Parent as Canvas);
+        _activeEllipse.CaptureMouse();
 
-        _activeHandle.MouseMove -= Ellipse_MouseMove;
-        _activeHandle.MouseMove += Ellipse_MouseMove;
+        //ensure canvas coordinates are defined(fall back to 0 if NaN)
+        double left = Canvas.GetLeft(this);
+        if (double.IsNaN(left)) { left = 0; Canvas.SetLeft(this, left); }
 
-        _activeHandle.MouseLeftButtonUp -= Ellipse_MouseLeftButtonUp;
-        _activeHandle.MouseLeftButtonUp += Ellipse_MouseLeftButtonUp;
+        double top = Canvas.GetTop(this);
+        if (double.IsNaN(top)) { top = 0; Canvas.SetTop(this, top); }
+
+        //store start geometry
+        _startLeft = left;
+        _startTop = top;
+        _startWidth = double.IsNaN(Width) ? ActualWidth : Width;
+        _startHeight = double.IsNaN(Height) ? ActualHeight : Height;
+
+        _startMousePos = e.GetPosition(canvas);
+
+
+        _activeEllipse.MouseMove -= Ellipse_MouseMove;
+        _activeEllipse.MouseMove += Ellipse_MouseMove;
+
+        _activeEllipse.MouseLeftButtonUp -= Ellipse_MouseLeftButtonUp;
+        _activeEllipse.MouseLeftButtonUp += Ellipse_MouseLeftButtonUp;
     }
 
     private void Ellipse_MouseMove(object sender, MouseEventArgs e)
     {
-        if (/*!_isResizing || */_activeHandle == null || !(Parent is Canvas canvas)) return;
+        if (/*!_isResizing || */_activeEllipse == null || !(Parent is Canvas canvas)) return;
 
         Point pos = e.GetPosition(canvas);
-        double deltaX = pos.X - _clickPosition.X;
-        double deltaY = pos.Y - _clickPosition.Y;
+        double dx = pos.X - _startMousePos.X;
+        double dy = pos.Y - _startMousePos.Y;
 
-        if (Math.Abs(deltaX) + Math.Abs(deltaY) < 0.5)
+        // jitter filter
+        if (Math.Abs(dx) + Math.Abs(dy) < 0.5)
             return;
 
-        double newWidth = Width;
-        double newHeight = Height;
-        double newLeft = Canvas.GetLeft(this);
-        double newTop = Canvas.GetTop(this);
+        double newLeft = _startLeft;
+        double newTop = _startTop;
+        double newWidth = _startWidth;
+        double newHeight = _startHeight;
 
-        if (_activeHandle == rightEllipse)
+        double leftChange = 0, topChange = 0, rightChange = 0, bottomChange = 0;
+
+        if (_activeEllipse == rightEllipse)
         {
-            newWidth = Math.Max(20, Width + deltaX);
+            newWidth = Math.Max(MinSize, _startWidth + dx);
+
+            rightChange = dx;
         }
-        else if (_activeHandle == leftEllipse)
+        else if (_activeEllipse == leftEllipse)
         {
-            newWidth = Math.Max(20, Width - deltaX);
-            newLeft += deltaX; // shift left boundary
+            newWidth = Math.Max(MinSize, _startWidth - dx);
+            newLeft = _startLeft + dx;
+
+            leftChange = -dx;
+
+            // if we hit min-size, clamp left so we don't "flip"
+            if (newWidth == MinSize)
+                newLeft = _startLeft + _startWidth - newWidth;
         }
-        else if (_activeHandle == bottomEllipse)
+        else if (_activeEllipse == bottomEllipse)
         {
-            newHeight = Math.Max(20, Height + deltaY);
+            newHeight = Math.Max(MinSize, _startHeight + dy);
+
+            bottomChange = dy;
         }
-        else if (_activeHandle == topEllipse)
+        else if (_activeEllipse == topEllipse)
         {
-            newHeight = Math.Max(20, Height - deltaY);
-            newTop += deltaY; // shift top boundary
+            newHeight = Math.Max(MinSize, _startHeight - dy);
+            newTop = _startTop + dy;
+
+            topChange = -dy;
+
+            if (newHeight == MinSize)
+                newTop = _startTop + _startHeight - newHeight;
         }
 
-        // Apply new values
-        Width = newWidth;
-        Height = newHeight;
+        //---new corner combos-- -
+        else if (_activeEllipse == topLeftEllipse)
+        {
+            newWidth = Math.Max(MinSize, _startWidth - dx);
+            newLeft = _startLeft + dx;
+            newHeight = Math.Max(MinSize, _startHeight - dy);
+            newTop = _startTop + dy;
+
+            if (newWidth == MinSize)
+                newLeft = _startLeft + _startWidth - newWidth;
+            if (newHeight == MinSize)
+                newTop = _startTop + _startHeight - newHeight;
+        }
+        else if (_activeEllipse == topRightEllipse)
+        {
+            newWidth = Math.Max(MinSize, _startWidth + dx);
+            newHeight = Math.Max(MinSize, _startHeight - dy);
+            newTop = _startTop + dy;
+
+            if (newHeight == MinSize)
+                newTop = _startTop + _startHeight - newHeight;
+        }
+        else if (_activeEllipse == bottomRightEllipse)
+        {
+            newWidth = Math.Max(MinSize, _startWidth + dx);
+            newHeight = Math.Max(MinSize, _startHeight + dy);
+        }
+        else if (_activeEllipse == bottomLeftEllipse)
+        {
+            newWidth = Math.Max(MinSize, _startWidth - dx);
+            newLeft = _startLeft + dx;
+            newHeight = Math.Max(MinSize, _startHeight + dy);
+
+            if (newWidth == MinSize)
+                newLeft = _startLeft + _startWidth - newWidth;
+        }
+
+        // apply changes
         Canvas.SetLeft(this, newLeft);
         Canvas.SetTop(this, newTop);
+        Width = newWidth;
+        Height = newHeight;
 
-        _clickPosition = pos; 
     }
 
     private void Ellipse_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        //_isResizing = false;
+        _activeEllipse = sender as Ellipse;
 
-        _activeHandle = sender as Ellipse;
-
-        if (_activeHandle is null)
+        if (_activeEllipse is null)
             return;
 
-        _activeHandle.MouseMove -= Ellipse_MouseMove;
-        _activeHandle.MouseLeftButtonUp -= Ellipse_MouseLeftButtonUp;
+        _activeEllipse.MouseMove -= Ellipse_MouseMove;
+        _activeEllipse.MouseLeftButtonUp -= Ellipse_MouseLeftButtonUp;
 
-        _activeHandle.ReleaseMouseCapture();
+        _activeEllipse.ReleaseMouseCapture();
 
-        _activeHandle = null;
+        _activeEllipse = null;
 
-         
+        //this.OnActiveExtentChanged?.Invoke(this, new ScreenExtentChangedEventArgs(leftChange, rightChange, topChange, bottomChange));
     }
 
+    //private IRI.Maptor.Sta.Common.Primitives.BoundingBox GetCurrentScreenExtent()
+    //{
+    //    return new Sta.Common.Primitives.BoundingBox(_startLeft, _startTop, _startLeft + Width, _startTop + Height);
+    //}
 }

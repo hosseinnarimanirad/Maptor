@@ -4,10 +4,7 @@ using IRI.Maptor.Jab.Common.Abstractions;
 
 namespace IRI.Maptor.Jab.Common.View.MapMarkers;
 
-/// <summary>
-/// Interaction logic for ImageSymbolMarker.xaml
-/// </summary>
-public partial class ImageMarker : UserControl, IMapMarker
+public partial class ImageMarker : MapMarker
 {
     public ImageMarker(ImageSource symbol, double width = 16, double height = 16)
     {
@@ -24,14 +21,14 @@ public partial class ImageMarker : UserControl, IMapMarker
         //this.viewbox.Height = height;
     }
 
-    private bool _isSelected;
+    //private bool _isSelected;
 
-    public bool IsSelected
-    {
-        get { return _isSelected; }
-        set
-        {
-            _isSelected = value;
-        }
-    }
+    //public bool IsSelected
+    //{
+    //    get { return _isSelected; }
+    //    set
+    //    {
+    //        _isSelected = value;
+    //    }
+    //}
 }

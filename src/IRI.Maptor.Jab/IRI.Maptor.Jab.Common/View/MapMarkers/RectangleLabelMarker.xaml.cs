@@ -4,11 +4,8 @@ using IRI.Maptor.Jab.Common.Abstractions;
 
 
 namespace IRI.Maptor.Jab.Common.View.MapMarkers;
-
-/// <summary>
-/// Interaction logic for ShapeWithLabelMarker.xaml
-/// </summary>
-public partial class RectangleLabelMarker : UserControl, IMapMarker
+ 
+public partial class RectangleLabelMarker : MapMarker
 {
 
     public string LabelValue
@@ -44,14 +41,14 @@ public partial class RectangleLabelMarker : UserControl, IMapMarker
             this.Style = (Style)this.FindResource("expandableStyle");
         }
     }
-    private bool _isSelected;
+    //private bool _isSelected;
 
-    public bool IsSelected
-    {
-        get { return _isSelected; }
-        set
-        {
-            _isSelected = value;
-        }
-    }
+    //public bool IsSelected
+    //{
+    //    get { return _isSelected; }
+    //    set
+    //    {
+    //        _isSelected = value;
+    //    }
+    //}
 }

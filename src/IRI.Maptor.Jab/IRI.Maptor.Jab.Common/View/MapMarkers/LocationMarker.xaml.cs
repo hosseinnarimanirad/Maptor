@@ -3,11 +3,8 @@ using System.Windows.Controls;
 using IRI.Maptor.Jab.Common.Abstractions;
 
 namespace IRI.Maptor.Jab.Common.View.MapMarkers;
-
-/// <summary>
-/// Interaction logic for MapMarker.xaml
-/// </summary>
-public partial class LocationMarker : UserControl, IMapMarker
+ 
+public partial class LocationMarker : MapMarker
 {
     public LocationMarker(int number)
     {
@@ -40,14 +37,14 @@ public partial class LocationMarker : UserControl, IMapMarker
         DependencyProperty.Register(nameof(Value), typeof(string), typeof(LocationMarker), new PropertyMetadata(string.Empty));
 
 
-    private bool _isSelected;
+    //private bool _isSelected;
 
-    public bool IsSelected
-    {
-        get { return _isSelected; }
-        set
-        {
-            _isSelected = value;
-        }
-    }
+    //public bool IsSelected
+    //{
+    //    get { return _isSelected; }
+    //    set
+    //    {
+    //        _isSelected = value;
+    //    }
+    //}
 }

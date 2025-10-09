@@ -1,23 +1,22 @@
-﻿<UserControl x:Class="IRI.Maptor.Jab.Common.View.MapMarkers.RectangeMarker"
+﻿<maptor:MapMarker x:Class="IRI.Maptor.Jab.Common.View.MapMarkers.RectangeMarker"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:IRI.Maptor.Jab.Common.View.MapMarkers" Width="10" Height="10">
-    <UserControl.Resources>
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"          
+             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Common.View" 
+             Width="10" Height="10">
+    <maptor:MapMarker.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Animations.xaml"/>
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Colors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </UserControl.Resources>
-    <UserControl.RenderTransform>
+    </maptor:MapMarker.Resources>
+    <maptor:MapMarker.RenderTransform>
         <TransformGroup>
             <ScaleTransform />
         </TransformGroup>
-    </UserControl.RenderTransform>
-    <UserControl.Triggers>
+    </maptor:MapMarker.RenderTransform>
+    <maptor:MapMarker.Triggers>
         <EventTrigger RoutedEvent="UIElement.MouseEnter">
             <BeginStoryboard >
                 <Storyboard>
@@ -48,6 +47,6 @@
             </BeginStoryboard>
             <BeginStoryboard Storyboard="{StaticResource mapMarkerResetOnMouseLeave}"/>
         </EventTrigger>
-    </UserControl.Triggers>
+    </maptor:MapMarker.Triggers>
     <Rectangle Fill="White" Stroke="DarkGray" StrokeThickness="1" Cursor="Hand"/>
-</UserControl>
+</maptor:MapMarker>

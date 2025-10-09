@@ -3,13 +3,10 @@ using System.Windows.Controls;
 using IRI.Maptor.Jab.Common.Abstractions;
 
 namespace IRI.Maptor.Jab.Common.View.MapMarkers;
-
-/// <summary>
-/// Interaction logic for Circle.xaml
-/// </summary>
-public partial class Circle : UserControl, IMapMarker
+ 
+public partial class Circle : MapMarker
 {
-    public Circle(double opacity = 1, Brush stroke = null, Brush fill = null, double strokeThickness = 1, int size = 12)
+    public Circle(double opacity = 1, Brush? stroke = null, Brush? fill = null, double strokeThickness = 1, int size = 12)
     {
         InitializeComponent();
 

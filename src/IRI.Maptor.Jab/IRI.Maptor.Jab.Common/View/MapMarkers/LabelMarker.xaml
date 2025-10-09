@@ -1,12 +1,10 @@
-﻿<UserControl x:Class="IRI.Maptor.Jab.Common.View.MapMarkers.LabelMarker"
+﻿<maptor:MapMarker x:Class="IRI.Maptor.Jab.Common.View.MapMarkers.LabelMarker"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" Background="Transparent"
-             xmlns:local="clr-namespace:IRI.Maptor.Jab.Common.View.MapMarkers" x:Name="root" Width="80" Height="30" MinWidth="40" 
-             xmlns:sys="clr-namespace:System;assembly=mscorlib" Canvas.ZIndex="1000000">
-    
-    <UserControl.Resources>
+             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Common.View"              
+             x:Name="root" Background="Transparent" Width="80" Height="30" MinWidth="40" Canvas.ZIndex="1000000">
+
+    <maptor:MapMarker.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Animations.xaml"/>
@@ -39,13 +37,13 @@
             </Style>
         </ResourceDictionary>
       
-    </UserControl.Resources>
-    <UserControl.RenderTransform>
+    </maptor:MapMarker.Resources>
+    <maptor:MapMarker.RenderTransform>
         <TransformGroup>
             <ScaleTransform />
         </TransformGroup>
-    </UserControl.RenderTransform>
-    <UserControl.Triggers>
+    </maptor:MapMarker.RenderTransform>
+    <maptor:MapMarker.Triggers>
         <EventTrigger RoutedEvent="UIElement.MouseEnter">
             <BeginStoryboard >
                 <Storyboard>
@@ -62,7 +60,7 @@
             </BeginStoryboard>
 
         </EventTrigger>
-    </UserControl.Triggers>
+    </maptor:MapMarker.Triggers>
     <Grid x:Name="Document" Background="Transparent" ToolTip="{Binding ElementName=root, Path=ToolTipValue}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -83,4 +81,4 @@
         <TextBlock Grid.Column="0" x:Name="labelBox" TextAlignment="Center" FontSize="11" Margin="0" Height="Auto"                       
                        HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding ElementName=root, Path=LabelValue}" Foreground="White" TextWrapping="Wrap"/>
     </Grid>
-</UserControl>
+</maptor:MapMarker>

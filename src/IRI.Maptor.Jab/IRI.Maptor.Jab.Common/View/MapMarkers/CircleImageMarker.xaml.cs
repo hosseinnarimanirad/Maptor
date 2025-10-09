@@ -3,18 +3,15 @@ using System.Windows.Controls;
 using IRI.Maptor.Jab.Common.Abstractions;
 
 namespace IRI.Maptor.Jab.Common.View.MapMarkers;
-
-/// <summary>
-/// Interaction logic for CircleImageMarker.xaml
-/// </summary>
-public partial class CircleImageMarker : UserControl, IMapMarker
+ 
+public partial class CircleImageMarker : MapMarker
 {
     public CircleImageMarker()
     {
         InitializeComponent();
     }
 
-    public CircleImageMarker(ImageSource image, string tooltip = null)
+    public CircleImageMarker(ImageSource image, string? tooltip = null)
     {
         InitializeComponent();
 
@@ -26,14 +23,14 @@ public partial class CircleImageMarker : UserControl, IMapMarker
         }
     }
 
-    private bool _isSelected;
+    //private bool _isSelected;
 
-    public bool IsSelected
-    {
-        get { return _isSelected; }
-        set
-        {
-            _isSelected = value; 
-        }
-    }
+    //public bool IsSelected
+    //{
+    //    get { return _isSelected; }
+    //    set
+    //    {
+    //        _isSelected = value; 
+    //    }
+    //}
 }

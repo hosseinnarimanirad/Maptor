@@ -3,11 +3,8 @@ using System.Windows.Controls;
 using IRI.Maptor.Jab.Common.Abstractions;
 
 namespace IRI.Maptor.Jab.Common.View.MapMarkers;
-
-/// <summary>
-/// Interaction logic for ShapeWithLabelMarker.xaml
-/// </summary>
-public partial class LabelMarker : UserControl, IMapMarker
+ 
+public partial class LabelMarker : MapMarker
 {
 
     public string LabelValue
@@ -16,26 +13,20 @@ public partial class LabelMarker : UserControl, IMapMarker
         set { SetValue(LabelValueProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for LabelValue.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty LabelValueProperty =
         DependencyProperty.Register(nameof(LabelValue), typeof(string), typeof(LabelMarker), new PropertyMetadata(string.Empty));
+     
 
-
-
-
-    public string TooltipValue
+    public string ToolTipValue
     {
-        get { return (string)GetValue(TooltipValueProperty); }
-        set { SetValue(TooltipValueProperty, value); }
+        get { return (string)GetValue(ToolTipValueProperty); }
+        set { SetValue(ToolTipValueProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for TooltipValue.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty TooltipValueProperty =
-        DependencyProperty.Register("TooltipValue", typeof(string), typeof(LabelMarker), new PropertyMetadata(string.Empty));
+    public static readonly DependencyProperty ToolTipValueProperty =
+        DependencyProperty.Register("ToolTipValue", typeof(string), typeof(LabelMarker), new PropertyMetadata(string.Empty));
 
-
-
-
+     
     public LabelMarker(string count, bool isExpandBringToFrontEnabled = false)
     {
         InitializeComponent();
@@ -48,14 +39,14 @@ public partial class LabelMarker : UserControl, IMapMarker
         }
     }
 
-    private bool _isSelected;
+    //private bool _isSelected;
 
-    public bool IsSelected
-    {
-        get { return _isSelected; }
-        set
-        {
-            _isSelected = value;
-        }
-    }
+    //public bool IsSelected
+    //{
+    //    get { return _isSelected; }
+    //    set
+    //    {
+    //        _isSelected = value;
+    //    }
+    //}
 }

@@ -1,24 +1,22 @@
-﻿<UserControl x:Class="IRI.Maptor.Jab.Common.View.MapMarkers.LocationMarker"
+﻿<maptor:MapMarker x:Class="IRI.Maptor.Jab.Common.View.MapMarkers.LocationMarker"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:sys="clr-namespace:System;assembly=mscorlib" x:Name="control"
-             Width="30" Height="40" Opacity=".9">
-    <UserControl.Resources>
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"             
+             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Common.View" 
+             x:Name="control" Width="30" Height="40" Opacity=".9">
+    <maptor:MapMarker.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Animations.xaml"/>
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Colors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </UserControl.Resources>
-    <UserControl.RenderTransform>
+    </maptor:MapMarker.Resources>
+    <maptor:MapMarker.RenderTransform>
         <TransformGroup>
             <ScaleTransform />
         </TransformGroup>
-    </UserControl.RenderTransform>
-    <UserControl.Triggers>
+    </maptor:MapMarker.RenderTransform>
+    <maptor:MapMarker.Triggers>
         <EventTrigger RoutedEvent="UIElement.MouseEnter">
             <BeginStoryboard Storyboard="{StaticResource mapMarkerExpandOnMouseEnter}"/>
             <BeginStoryboard>
@@ -38,7 +36,7 @@
             <StopStoryboard BeginStoryboardName="toFront"/>
         </EventTrigger>
       
-    </UserControl.Triggers>
+    </maptor:MapMarker.Triggers>
     <!--<Canvas x:Name="Document" Width="18" Height="24" Clip="F1 M 0,0L 18,0L 18,24L 0,24L 0,0">-->
     <Canvas x:Name="Document" Width="30" Height="40">
         <Viewbox Width="30">
@@ -54,4 +52,4 @@
                        HorizontalAlignment="Center" Text="{Binding ElementName=control, Path=Value}" Foreground="White"/>
         </Border>
     </Canvas>
-</UserControl>
+</maptor:MapMarker>
