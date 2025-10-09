@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Media.Animation;
 
-using IRI.Maptor.Extensions; 
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -25,6 +25,8 @@ public class Locateable : Notifier
 
     public bool CanBeUsedAsEditingPoint { get; set; } = false;
 
+    public bool CanTriggerPositionChange { get; set; } = true;
+
     private double _x;
     /// <summary>
     /// Web Mercator X coordinate
@@ -44,7 +46,8 @@ public class Locateable : Notifier
 
             this._location.X = value;
 
-            this.OnPositionChanged?.Invoke(this, new ChangeEventArgs<WpfPoint>(oldValue, new WpfPoint(_x, _y)));
+            if (CanTriggerPositionChange)
+                this.OnPositionChanged?.Invoke(this, new ChangeEventArgs<WpfPoint>(oldValue, new WpfPoint(_x, _y)));
         }
     }
 
@@ -66,8 +69,9 @@ public class Locateable : Notifier
             RaisePropertyChanged();
 
             this._location.Y = value;
-
-            this.OnPositionChanged?.Invoke(this, new ChangeEventArgs<WpfPoint>(oldValue, new WpfPoint(_x, _y)));
+             
+            if (CanTriggerPositionChange)
+                this.OnPositionChanged?.Invoke(this, new ChangeEventArgs<WpfPoint>(oldValue, new WpfPoint(_x, _y)));
         }
     }
 
@@ -166,7 +170,7 @@ public class Locateable : Notifier
     //}
 
     void Element_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-    { 
+    {
         this.OnRequestHandleMouseDown?.Invoke(null, EventArgs.Empty);
     }
 
@@ -174,7 +178,7 @@ public class Locateable : Notifier
     {
         if (this.Element is null)
             return;
-         
+
         var element = (View.MapMarkers.LocationMarker)this.Element;
 
         element.BeginAnimation(System.Windows.FrameworkElement.HeightProperty, new DoubleAnimation(250, new System.Windows.Duration(new TimeSpan(0, 0, 1))) { FillBehavior = FillBehavior.HoldEnd });

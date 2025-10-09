@@ -42,6 +42,7 @@ using IRI.Maptor.Sta.Persistence.RasterDataSources;
 using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
 
 using sb = IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Jab.Common.View.Controls;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
@@ -821,6 +822,10 @@ public partial class MapViewer : NotifiableUserControl
 
     private double? _unitDistance;
 
+    /// <summary>
+    /// Size of each pixel (in meter)
+    /// </summary>
+    /// <returns></returns>
     private double GetUnitDistance()
     {
         if (_unitDistance == null || double.IsNaN(_unitDistance.Value))
@@ -1949,7 +1954,7 @@ public partial class MapViewer : NotifiableUserControl
             }
         };
 
-        var items = specialPointLayer.Items.Where(i => this.CurrentExtent.Intersects(new sb.Point(i.X, i.Y)));
+        var items = specialPointLayer.Items.Where(i => this.CurrentExtent.Intersects(new sb.Point(i.X, i.Y))).ToList();
 
         foreach (var item in items)
         {
@@ -1986,6 +1991,23 @@ public partial class MapViewer : NotifiableUserControl
         else
         {
             element.RenderTransformOrigin = new Point(0, 0);
+        }
+
+        if (element is ActiveExtentView activeExtentView)
+        {
+            var mapWidth = ScreenToMap(width);
+            var mapHeight = ScreenToMap(height);
+
+            var newExtent = new sb.BoundingBox(new sb.Point(item.X, item.Y), mapWidth, mapHeight);
+            
+            Canvas.SetLeft(activeExtentView, 0);
+            Canvas.SetTop(activeExtentView, 0);
+
+            (activeExtentView.DataContext as ActiveExtentViewModel)?.UpdateExtent(newExtent);
+
+            var testName = "#testB";
+            _presenter.RemoveDrawingItem(testName);
+            _presenter.AddDrawingItem(newExtent.AsGeometry<sb.Point>(SridHelper.WebMercator), testName, VisualParameters.Get(Colors.Red, Colors.Blue, 10, 0.9));
         }
 
         var scaleTransform = ((TransformGroup)(element.RenderTransform)).Children.First();
@@ -2343,7 +2365,7 @@ public partial class MapViewer : NotifiableUserControl
 
             if (tag.LayerType.HasFlag(LayerType.MoveableItem) && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
                 continue;
-             
+
 
             this.mapView.Children.RemoveAt(i);
         }
@@ -4214,9 +4236,9 @@ public partial class MapViewer : NotifiableUserControl
         leftToolTip: "لغو",
         middleToolTip: "تکمیل تکه‌جاری",
 
-        rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Check,  
-        leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Close,  
-        middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Checkmark);  
+        rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Check,
+        leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Close,
+        middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Checkmark);
 
         presenter.LeftCommandAction = i =>
         {

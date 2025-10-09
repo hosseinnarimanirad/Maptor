@@ -89,17 +89,27 @@ public struct BoundingBox
         this.yMax = yMax;
     }
 
-    public BoundingBox(Point center, double offset)
+    public BoundingBox(Point center, double offset) : this(center, offset * 2, offset * 2)
     {
-        this.xMin = center.X - offset;
+        //this.xMin = center.X - offset;
 
-        this.xMax = center.X + offset;
+        //this.xMax = center.X + offset;
 
-        this.yMin = center.Y - offset;
+        //this.yMin = center.Y - offset;
 
-        this.yMax = center.Y + offset;
+        //this.yMax = center.Y + offset;
     }
 
+    public BoundingBox(Point center, double width, double height)
+    {
+        this.xMin = center.X - width / 2.0;
+
+        this.xMax = center.X + width / 2.0;
+
+        this.yMin = center.Y - height / 2.0;
+
+        this.yMax = center.Y + height / 2.0;
+    }
 
     public static BoundingBox NaN { get { return new BoundingBox(double.NaN, double.NaN, double.NaN, double.NaN); } }
 

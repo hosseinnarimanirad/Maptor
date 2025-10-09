@@ -1,15 +1,14 @@
-﻿<UserControl x:Class="IRI.Maptor.Jab.Common.View.Controls.ActiveExtentView"
+﻿<maptor:MapMarker x:Class="IRI.Maptor.Jab.Common.View.Controls.ActiveExtentView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:IRI.Maptor.Jab.Common.View.Controls" Width="200" Height="150">
-    <UserControl.RenderTransform>
+             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Common.View"
+             x:Name="root" Width="200" Height="150">
+    <maptor:MapMarker.RenderTransform>
         <TransformGroup>
             <ScaleTransform />
         </TransformGroup>
-    </UserControl.RenderTransform>
-    <Grid>
+    </maptor:MapMarker.RenderTransform>
+    <Grid Margin="-5">
         <Grid.Resources>
             <Style TargetType="Ellipse">
                 <Setter Property="Height" Value="10"/>
@@ -29,7 +28,7 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            <Style  TargetType="Border">
+            <Style x:Key="mainBorder" TargetType="Border">
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}" />
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="BorderThickness" Value="4" />
@@ -45,9 +44,21 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            <Style x:Key="labelBorder"  TargetType="Border">
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Background" Value="White"/> 
+                <Setter Property="CornerRadius" Value="6"/>
+                <Setter Property="Visibility" Value="{Binding ElementName=root, Path=ShowMeasures, Converter={StaticResource boolToVisibilityConverter}}"/>
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                <Setter Property="Margin" Value="4,0"/>
+            </Style>
         </Grid.Resources>
 
-        <Border Margin="3"  Cursor="SizeAll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Border Margin="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="6" BorderBrush="White"/>
+        <Border Margin="3" Style="{StaticResource mainBorder}" Cursor="SizeAll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
 
         <Ellipse Cursor="SizeNS" HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="topEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
         <Ellipse Cursor="SizeWE" HorizontalAlignment="Right" VerticalAlignment="Center" x:Name="rightEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
@@ -58,5 +69,28 @@
         <Ellipse Cursor="SizeNESW" HorizontalAlignment="Right" VerticalAlignment="Top" x:Name="topRightEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
         <Ellipse Cursor="SizeNWSE" HorizontalAlignment="Right" VerticalAlignment="Bottom" x:Name="bottomRightEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
         <Ellipse Cursor="SizeNESW" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="bottomLeftEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
+
+        <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-18" >
+            <TextBlock Text="1234.45 m" />
+        </Border>
+
+        <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="-18,0" >
+            <Border.LayoutTransform>
+                <RotateTransform Angle="90"/>
+            </Border.LayoutTransform>
+            <TextBlock Text="1234.45 m" />
+        </Border>
+            
+        <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,-18" >
+            <TextBlock Text="1234.45 m"/>
+        </Border>
+
+        <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-18,0" >
+            <Border.LayoutTransform>
+                <RotateTransform Angle="-90"/>
+            </Border.LayoutTransform>
+            <TextBlock Text="1234.45 m"/>
+        </Border>
+
     </Grid>
-</UserControl>
+</maptor:MapMarker>

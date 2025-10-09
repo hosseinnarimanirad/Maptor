@@ -49,7 +49,7 @@ namespace IRI.Maptor.Jab.Controls.Presenter
             this.MapSettings.BaseMapCacheDirectory = Environment.CurrentDirectory + "\\Data";
 
             this.MapSettings.MaxGoogleZoomLevel = 18;
-            this.MapSettings.MinGoogleZoomLevel = 4;
+            this.MapSettings.MinGoogleZoomLevel = 2;
 
             this.SetMapCursorSet1();
 

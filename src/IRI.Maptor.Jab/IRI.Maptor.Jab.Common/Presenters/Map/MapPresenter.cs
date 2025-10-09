@@ -1474,12 +1474,12 @@ public abstract class MapPresenter : BasePresenter
 
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(simpleVisualParameters), new LabelSymbolizer(labelParameters)];
 
-        var shapeItem = CreateDrawingItemLayer(feature, featureName, symbolizers/*, id*//*, source*/);
+        var drawingItemLayer = CreateDrawingItemLayer(feature, featureName, symbolizers/*, id*//*, source*/);
 
-        if (shapeItem != null)
+        if (drawingItemLayer != null)
         {
             //this.SetLayer(shapeItem.AssociatedLayer);
-            AddDrawingItem(shapeItem);
+            AddDrawingItem(drawingItemLayer);
             //this.Refresh();
         }
     }
@@ -1515,6 +1515,14 @@ public abstract class MapPresenter : BasePresenter
         ClearLayer(item, true);
 
         ClearLayer(item.HighlightGeometryKey.ToString(), true, true);
+    }
+
+    public void RemoveDrawingItem(string name)
+    {
+        var layer = DrawingItems.FirstOrDefault(d => d.LayerName == name);
+
+        if (layer is not null)
+            RemoveDrawingItem(layer);
     }
 
     public void RemoveAllDrawingItems()
