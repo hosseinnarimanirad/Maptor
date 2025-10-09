@@ -1,5 +1,8 @@
 ﻿using IRI.Maptor.Jab.Common.Events;
+using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.Analysis;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 using System;
 
 namespace IRI.Maptor.Jab.Common.Presenters;
@@ -107,6 +110,19 @@ public class ActiveExtentViewModel : Notifier
             this.MapCenter.CanTriggerPositionChange = true;
         }
 
+        var geodeticExtent = newExtent.Transform(MapProjects.WebMercatorToGeodeticWgs84);
+
+        var bottomLength = SpatialUtility.GetEllipsoidalLength(geodeticExtent.BottomLeft, geodeticExtent.BottomRight);
+        var topLength = SpatialUtility.GetEllipsoidalLength(geodeticExtent.TopLeft, geodeticExtent.TopRight);
+        var leftLength = SpatialUtility.GetEllipsoidalLength(geodeticExtent.BottomLeft, geodeticExtent.TopLeft);
+        var rightLength = SpatialUtility.GetEllipsoidalLength(geodeticExtent.BottomRight, geodeticExtent.TopRight);
+
+        BottomLabel = UnitHelper.GetLengthLabel(bottomLength);
+        TopLabel = UnitHelper.GetLengthLabel(topLength);
+        LeftLabel = UnitHelper.GetLengthLabel(leftLength);
+        RightLabel = UnitHelper.GetLengthLabel(rightLength);
+
         this.OnExtentChanged?.Invoke(this, EventArgs.Empty);
-    } 
+
+    }
 }

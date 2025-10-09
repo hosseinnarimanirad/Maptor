@@ -71,25 +71,25 @@
         <Ellipse Cursor="SizeNESW" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="bottomLeftEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
 
         <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-18" >
-            <TextBlock Text="1234.45 m" />
+            <TextBlock Text="{Binding TopLabel, FallbackValue='NaN'}"/>
         </Border>
 
         <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="-18,0" >
             <Border.LayoutTransform>
                 <RotateTransform Angle="90"/>
             </Border.LayoutTransform>
-            <TextBlock Text="1234.45 m" />
+            <TextBlock Text="{Binding RightLabel, FallbackValue='NaN'}"/>
         </Border>
             
         <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,-18" >
-            <TextBlock Text="1234.45 m"/>
+            <TextBlock Text="{Binding BottomLabel, FallbackValue='NaN'}"/>
         </Border>
 
         <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-18,0" >
             <Border.LayoutTransform>
                 <RotateTransform Angle="-90"/>
             </Border.LayoutTransform>
-            <TextBlock Text="1234.45 m"/>
+            <TextBlock Text="{Binding LeftLabel, FallbackValue='NaN'}"/>
         </Border>
 
     </Grid>
