@@ -1834,7 +1834,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         return WktParser.Parse(wktString, srid);
     }
 
-    public static Geometry<Point> FromWkb(byte[] bytes, int srid)
+    public static Geometry<Point>? FromWkb(byte[] bytes, int srid)
     {
         return WkbParser.Parse(bytes, srid);
     }
