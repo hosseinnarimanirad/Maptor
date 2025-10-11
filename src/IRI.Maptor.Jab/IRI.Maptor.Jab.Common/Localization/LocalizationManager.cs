@@ -1,7 +1,7 @@
 ﻿using IRI.Maptor.Jab.Common.Properties;
 using System;
 using System.ComponentModel;
-using System.Globalization; 
+using System.Globalization;
 using System.Windows;
 
 namespace IRI.Maptor.Jab.Common.Localization;
@@ -31,11 +31,12 @@ public class LocalizationManager : INotifyPropertyChanged
                 CultureInfo.CurrentUICulture = value;
                 CultureInfo.CurrentCulture = value;
                 LanguageChanged?.Invoke();
-                
+
                 FlowDirectionChanged?.Invoke(); // New event
 
                 Resources.Culture = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null)); // refresh all bindings
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentFlowDirection)));
             }
         }
     }
@@ -75,6 +76,7 @@ public class LocalizationManager : INotifyPropertyChanged
     public void SetCulture(CultureInfo culture)
     {
         CurrentCulture = culture;
+
     }
 
     public string GetDefaultValue(string key)

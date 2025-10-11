@@ -36,6 +36,9 @@
             </Grid.Resources>
 
             <DockPanel Grid.Row="2" VerticalAlignment="Center" MouseDown="options_MouseDown" Cursor="Hand" LastChildFill="True">
+                <Label DockPanel.Dock="Right" Content="{Binding ElementName=root, Path=ZoomLevel, Converter={StaticResource localizedNumberConverter}}"/>
+                <Label DockPanel.Dock="Right" Content="{Binding [map_coordinatePanel_zoomLevel], Source={StaticResource Localization}}"/>
+                
                 <Label Visibility="{Binding SelectedItem.IsZoneVisible, Converter={StaticResource boolToVisibilityConverter}}"   
                        Width="100" Content="{Binding SelectedItem.ZoneNumber}" Margin="00 0 10 0" Background="White" 
                        FlowDirection="LeftToRight" Height="Auto" HorizontalContentAlignment="Right" Foreground="{DynamicResource MahApps.Brushes.Highlight}"

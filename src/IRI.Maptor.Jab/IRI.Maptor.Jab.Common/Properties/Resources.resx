@@ -405,6 +405,9 @@
   <data name="mapPanel_measure_showEdgeLabels" xml:space="preserve">
     <value>Show Edge Labels</value>
   </data>
+  <data name="map_coordinatePanel_zoomLevel" xml:space="preserve">
+    <value>Zoom Level</value>
+  </data>
   <data name="map_draw_addPoint" xml:space="preserve">
     <value>Add Point</value>
   </data>

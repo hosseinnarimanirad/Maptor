@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
-using IRI.Maptor.Extensions;
-using IRI.Maptor.Extensions;
+using IRI.Maptor.Extensions; 
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Presenters;
 
@@ -87,46 +86,16 @@ public partial class CoordinatePanelView : NotifiableUserControl
         })));
 
 
-    //public LanguageMode UILanguage
-    //{
-    //    get { return (LanguageMode)GetValue(UILanguageProperty); }
-    //    set
-    //    {
-    //        SetValue(UILanguageProperty, value);
-    //        SetLanguage(value);
-    //    }
-    //}
 
-    //// Using a DependencyProperty as the backing store for UILanguage.  This enables animation, styling, binding, etc...
-    //public static readonly DependencyProperty UILanguageProperty =
-    //    DependencyProperty.Register(
-    //        nameof(UILanguage),
-    //        typeof(LanguageMode),
-    //        typeof(CoordinatePanelView),
-    //        new PropertyMetadata(LanguageMode.Persian, (d, dp) =>
-    //        {
-    //            try
-    //            {
-    //                ((CoordinatePanelView)d).SetLanguage((LanguageMode)dp.NewValue);
-    //            }
-    //            catch (Exception ex)
-    //            {
-    //                return;
-    //            }
-    //        }));
+    public int ZoomLevel
+    {
+        get { return (int)GetValue(ZoomLevelProperty); }
+        set { SetValue(ZoomLevelProperty, value); }
+    }
 
-    //private void SetLanguage(LanguageMode value)
-    //{
-    //    this.FlowDirection = (value == LanguageMode.Persian) ?
-    //                            FlowDirection.RightToLeft :
-    //                            FlowDirection.LeftToRight;
-
-    //    //if (this.Presenter != null)
-    //    //{
-    //    //    this.Presenter.SetLanguage(value);
-    //    //}
-    //}
-
+    // Using a DependencyProperty as the backing store for ZoomLevel.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ZoomLevelProperty =
+        DependencyProperty.Register("ZoomLevel", typeof(int), typeof(CoordinatePanelView), new PropertyMetadata(1));
 
 
 }

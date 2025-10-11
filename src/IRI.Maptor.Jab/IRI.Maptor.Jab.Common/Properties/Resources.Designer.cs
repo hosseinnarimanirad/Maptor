@@ -737,6 +737,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zoom Level.
+        /// </summary>
+        public static string map_coordinatePanel_zoomLevel {
+            get {
+                return ResourceManager.GetString("map_coordinatePanel_zoomLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Point.
         /// </summary>
         public static string map_draw_addPoint {
