@@ -15,6 +15,8 @@ public class Locateable : Notifier
 {
     public event EventHandler OnRequestHandleMouseDown;
 
+    public event EventHandler OnRequestHandleMouseUp;
+
     public event EventHandler<ChangeEventArgs<WpfPoint>> OnPositionChanged;
 
     public Action<bool> RequestChangeIsSelected;
@@ -105,9 +107,11 @@ public class Locateable : Notifier
             this._element = value;
             this._element.MouseDown -= Element_MouseDown;
             this._element.MouseDown += Element_MouseDown;
+
+            this._element.MouseUp -= _element_MouseUp;
+            this._element.MouseUp += _element_MouseUp;
         }
     }
-
 
     public Locateable(AncherFunctionHandler? ancherFunction = null)
     {
@@ -173,6 +177,17 @@ public class Locateable : Notifier
     {
         this.OnRequestHandleMouseDown?.Invoke(null, EventArgs.Empty);
     }
+
+    private void _element_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        RaiseMouseUpEvent();
+    }
+
+    public void RaiseMouseUpEvent()
+    {
+        this.OnRequestHandleMouseUp?.Invoke(null, EventArgs.Empty);
+    }
+     
 
     public void Select()
     {

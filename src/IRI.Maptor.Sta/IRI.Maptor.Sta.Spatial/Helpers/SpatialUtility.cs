@@ -8,6 +8,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Sta.Spatial.Helpers;
 
 namespace IRI.Maptor.Sta.Spatial.Analysis;
 
@@ -233,17 +234,14 @@ public static class SpatialUtility
     }
 
     #endregion
-    
+
 
     #region Ellipsoidal Area
 
-    public static double GetEllipsoidalArea<T>(Geometry<T> geometry, Func<T, T> toWgs84Geodetic) where T : IPoint, new()
+    public static double GetEllipsoidalArea<T>(Geometry<T> geometry, Func<T, T> toWgs84Geodetic = null) where T : IPoint, new()
     {
-        return GetEllipsoidalArea(geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84));
-    }
+        var geography = toWgs84Geodetic is null ? geometry : geometry.Transform(toWgs84Geodetic, SridHelper.GeodeticWGS84);
 
-    public static double GetEllipsoidalArea<T>(Geometry<T> geography) where T : IPoint, new()
-    {
         var newGeo = geography.Project(new CylindricalEqualArea());
 
         return newGeo.EuclideanArea;
@@ -273,14 +271,14 @@ public static class SpatialUtility
 
                 return geography.Geometries.Sum(g => GetPolygonAreaOnAuthalicSphere(g));
 
-                //double sum = 0;
+            //double sum = 0;
 
-                //for (int i = 0; i < geography.Geometries.Count; i++)
-                //{
-                //    sum += GetPolygonAreaOnAuthalicSphere(geography.Geometries[i]);
-                //}
+            //for (int i = 0; i < geography.Geometries.Count; i++)
+            //{
+            //    sum += GetPolygonAreaOnAuthalicSphere(geography.Geometries[i]);
+            //}
 
-                //return sum;
+            //return sum;
 
             default:
                 return 0;
@@ -541,6 +539,16 @@ public static class SpatialUtility
         // For ellipsoidal area: use spherical excess approximation
         double sphericalExcess = L * (Math.Sin(lat1) + Math.Sin(lat2)) / 2;
         return sphericalExcess * a * a; // approximate
+    }
+
+    #endregion
+
+
+    #region Ground Area
+
+    public static double GetGroundArea<T>(Geometry<T> geometry, double meanHeight, Func<T, T> toWgs84Geodetic = null) where T : IPoint, new()
+    {
+        return GetEllipsoidalArea(geometry, toWgs84Geodetic) * (1.0 + 2 * meanHeight / WebMercatorUtility.EarthRadius);
     }
 
     #endregion

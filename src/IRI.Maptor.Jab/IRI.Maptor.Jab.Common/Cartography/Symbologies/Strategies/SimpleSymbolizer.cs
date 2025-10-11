@@ -1,7 +1,7 @@
 ﻿using System;
 
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives; 
+using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
@@ -26,9 +26,9 @@ public class SimpleSymbolizer : SymbolizerBase
         Param = visualParameters;
     }
 
-    public SimpleSymbolizer(Func<Feature<Point>, bool> filter, VisualParameters visualParameters):this(visualParameters)
+    public SimpleSymbolizer(Func<Feature<Point>, bool> filter, VisualParameters visualParameters) : this(visualParameters)
     {
         this.IsFilterPassed = filter;
     }
-      
+
 }

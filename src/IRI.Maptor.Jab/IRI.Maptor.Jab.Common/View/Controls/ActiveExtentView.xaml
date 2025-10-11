@@ -46,12 +46,14 @@
             </Style>
             <Style x:Key="labelBorder"  TargetType="Border">
                 <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Background" Value="White"/> 
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                <Setter Property="BorderBrush" Value="White"/>
+                <Setter Property="BorderThickness" Value="2"/>
                 <Setter Property="CornerRadius" Value="6"/>
                 <Setter Property="Visibility" Value="{Binding ElementName=root, Path=ShowMeasures, Converter={StaticResource boolToVisibilityConverter}}"/>
             </Style>
             <Style TargetType="TextBlock">
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                <Setter Property="Foreground" Value="White"/>
                 <Setter Property="Margin" Value="4,0"/>
             </Style>
         </Grid.Resources>
@@ -70,22 +72,22 @@
         <Ellipse Cursor="SizeNWSE" HorizontalAlignment="Right" VerticalAlignment="Bottom" x:Name="bottomRightEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
         <Ellipse Cursor="SizeNESW" HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="bottomLeftEllipse" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
 
-        <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-18" >
+        <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-20" >
             <TextBlock Text="{Binding TopLabel, FallbackValue='NaN'}"/>
         </Border>
 
-        <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="-18,0" >
+        <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="-20,0" >
             <Border.LayoutTransform>
                 <RotateTransform Angle="90"/>
             </Border.LayoutTransform>
             <TextBlock Text="{Binding RightLabel, FallbackValue='NaN'}"/>
         </Border>
             
-        <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,-18" >
+        <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,-20" >
             <TextBlock Text="{Binding BottomLabel, FallbackValue='NaN'}"/>
         </Border>
 
-        <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-18,0" >
+        <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="-20,0" >
             <Border.LayoutTransform>
                 <RotateTransform Angle="-90"/>
             </Border.LayoutTransform>

@@ -1020,7 +1020,8 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public double KarneyArea => SpatialUtility.GetKarneyArea(GetGeodeticWgs84Geometery());
 
-    public double GroundArea => EllipsoidalArea * (1.0 + 2 * Height / WebMercatorUtility.EarthRadius);
+    //public double GroundArea => EllipsoidalArea * (1.0 + 2 * Height / WebMercatorUtility.EarthRadius);
+    public double GroundArea => SpatialUtility.GetGroundArea(GetGeodeticWgs84Geometery(), Height);
 
     #endregion
 

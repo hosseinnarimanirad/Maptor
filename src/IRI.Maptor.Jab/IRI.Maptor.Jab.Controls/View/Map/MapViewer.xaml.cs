@@ -2005,9 +2005,9 @@ public partial class MapViewer : NotifiableUserControl
 
             (activeExtentView.DataContext as ActiveExtentViewModel)?.UpdateExtent(newExtent);
 
-            var testName = "#testB";
-            _presenter.RemoveDrawingItem(testName);
-            _presenter.AddDrawingItem(newExtent.AsGeometry<sb.Point>(SridHelper.WebMercator), testName, VisualParameters.Get(Colors.Red, Colors.Blue, 10, 0.9));
+            //var testName = "#testB";
+            //_presenter.RemoveDrawingItem(testName);
+            //_presenter.AddDrawingItem(newExtent.AsGeometry<sb.Point>(SridHelper.WebMercator), testName, VisualParameters.Get(Colors.Red, Colors.Blue, 10, 0.9));
         }
 
         var scaleTransform = ((TransformGroup)(element.RenderTransform)).Children.First();
@@ -2197,6 +2197,7 @@ public partial class MapViewer : NotifiableUserControl
 
         this.mapView.ReleaseMouseCapture();
 
+        locateable?.RaiseMouseUpEvent();
     }
 
     //POTENTIALLY ERROR PROUNE; What if the Element has no scaletransform

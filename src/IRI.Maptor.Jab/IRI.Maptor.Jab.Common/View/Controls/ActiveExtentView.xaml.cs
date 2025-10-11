@@ -10,7 +10,8 @@ namespace IRI.Maptor.Jab.Common.View.Controls;
 
 public partial class ActiveExtentView : MapMarker
 {
-    public event EventHandler/*<ScreenExtentChangedEventArgs>*/ OnExtentChanged;
+    public event EventHandler OnExtentChanged;
+    public event EventHandler OnExtentChanging;
 
     public ActiveExtentViewModel? Presenter => this.DataContext as ActiveExtentViewModel;
 
@@ -119,19 +120,25 @@ public partial class ActiveExtentView : MapMarker
         else if (_activeEllipse == topLeftEllipse)
         {
             newWidth = Math.Max(MinSize, newWidth - dx);
+           
             newLeft += dx;
+           
             newHeight = Math.Max(MinSize, newHeight - dy);
+           
             newTop += dy;
 
             if (newWidth == MinSize)
                 newLeft = GetLeft() + GetWidth() - newWidth;
+           
             if (newHeight == MinSize)
                 newTop = GetTop() + GetHeight() - newHeight;
         }
         else if (_activeEllipse == topRightEllipse)
         {
             newWidth = Math.Max(MinSize, newWidth + dx);
+           
             newHeight = Math.Max(MinSize, newHeight - dy);
+           
             newTop += dy;
 
             if (newHeight == MinSize)
@@ -140,12 +147,15 @@ public partial class ActiveExtentView : MapMarker
         else if (_activeEllipse == bottomRightEllipse)
         {
             newWidth = Math.Max(MinSize, newWidth + dx);
+            
             newHeight = Math.Max(MinSize, newHeight + dy);
         }
         else if (_activeEllipse == bottomLeftEllipse)
         {
             newWidth = Math.Max(MinSize, newWidth - dx);
+           
             newLeft += dx;
+
             newHeight = Math.Max(MinSize, newHeight + dy);
 
             if (newWidth == MinSize)
@@ -161,7 +171,7 @@ public partial class ActiveExtentView : MapMarker
 
         _previousMousePosition = pos;
 
-        this.OnExtentChanged?.Invoke(this, EventArgs.Empty);
+        this.OnExtentChanging?.Invoke(this, EventArgs.Empty);
     }
 
     private void Ellipse_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -177,5 +187,7 @@ public partial class ActiveExtentView : MapMarker
         _activeEllipse.ReleaseMouseCapture();
 
         _activeEllipse = null;
+
+        this.OnExtentChanged?.Invoke(this, EventArgs.Empty);
     }
 }

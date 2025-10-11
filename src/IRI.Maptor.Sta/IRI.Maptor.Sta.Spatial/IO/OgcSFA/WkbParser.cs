@@ -1,5 +1,4 @@
-﻿using IRI.Maptor.Extensions;
-using IRI.Maptor.Extensions;
+﻿using IRI.Maptor.Extensions; 
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -40,6 +39,7 @@ public static class WkbParser
 
                 case WkbGeometryType.MultiPolygon:
                     return FromWkbMultiPolygon(stream, srid);
+
                 case WkbGeometryType.PointZ:
                 case WkbGeometryType.LineStringZ:
                 case WkbGeometryType.PolygonZ:

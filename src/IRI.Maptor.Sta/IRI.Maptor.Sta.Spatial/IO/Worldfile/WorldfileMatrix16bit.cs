@@ -28,7 +28,7 @@ public class WorldfileMatrix16bit : Worldfile
 
     public WorldfileMatrix16bit(Matrix data, double xPixelSize, double yPixelSize, double xRotation, double yRotation, Point centerOfUpperLeftPixel)
         : base(xPixelSize: xPixelSize, yPixelSize: yPixelSize, xRotation: xRotation, yRotation: yRotation, centerOfUpperLeftPixel: centerOfUpperLeftPixel)
-    { 
+    {
         _values = new short[data.NumberOfRows, data.NumberOfColumns];
 
         for (int i = 0; i < data.NumberOfRows; i++)
@@ -37,7 +37,7 @@ public class WorldfileMatrix16bit : Worldfile
             {
                 _values[i, j] = (short)data[i, j];
             }
-        } 
+        }
     }
 
     public Int16 this[int rowNumber, int columNumber]
@@ -61,22 +61,23 @@ public class WorldfileMatrix16bit : Worldfile
             writer.Write(CenterOfUpperLeftPixel.Y);
 
             // Write array dimensions and data
-            if (_values == null)
+            //if (_values == null)
+            //{
+            //writer.Write(0);
+            //writer.Write(0);
+            //}
+            //else
+            if (_values != null)
             {
-                writer.Write(0);
-                writer.Write(0);
-            }
-            else
-            {
-                int rows = _values.GetLength(0);
-                int cols = _values.GetLength(1);
+                //int rows = _values.GetLength(0);
+                //int cols = _values.GetLength(1);
 
-                writer.Write(rows);
-                writer.Write(cols);
+                //writer.Write(rows);
+                //writer.Write(cols);
 
-                for (int i = 0; i < rows; i++)
+                for (int i = 0; i < ImageHeight; i++)
                 {
-                    for (int j = 0; j < cols; j++)
+                    for (int j = 0; j < ImageWidth; j++)
                     {
                         writer.Write(_values[i, j]);
                     }
@@ -95,22 +96,28 @@ public class WorldfileMatrix16bit : Worldfile
             // Read properties
             dem.XPixelSize = reader.ReadDouble();
             dem.YPixelSize = reader.ReadDouble();
-            
+
+            var imageWidth = reader.ReadInt32();
+            var imageHeight = reader.ReadInt32();
+
             double centerX = reader.ReadDouble();
             double centerY = reader.ReadDouble();
             dem.CenterOfUpperLeftPixel = new Point((int)centerX, (int)centerY);
 
-            // Read array dimensions
-            int rows = reader.ReadInt32();
-            int cols = reader.ReadInt32();
+            //// Read array dimensions
+            //int rows = reader.ReadInt32();
+            //int cols = reader.ReadInt32();
 
-            if (rows > 0 && cols > 0)
+            //if (rows != imageHeight || cols != imageWidth)
+            //    throw new NotImplementedException();
+
+            if (imageWidth > 0 && imageHeight > 0)
             {
-                dem._values = new Int16[rows, cols];
+                dem._values = new Int16[imageHeight, imageWidth];
 
-                for (int i = 0; i < rows; i++)
+                for (int i = 0; i < imageHeight; i++)
                 {
-                    for (int j = 0; j < cols; j++)
+                    for (int j = 0; j < imageWidth; j++)
                     {
                         dem._values[i, j] = reader.ReadInt16();
                     }
@@ -123,6 +130,29 @@ public class WorldfileMatrix16bit : Worldfile
 
             return dem;
         }
+    }
+
+    public Point ToImageCoordinate(Point groundCoordinate) => ToImageCoordinate(groundCoordinate, ImageWidth, ImageHeight);
+
+    public Point ToGroundCoordinate(Point imageCoordinate) => ToGroundCoordinate(imageCoordinate, ImageWidth, ImageHeight);
+
+    public Int16 GetValue(Point groundCoordinate)
+    {
+        if (_values.Length == 0)
+            return 0;
+
+        var point = ToImageCoordinate(groundCoordinate);
+
+        int x = (int)point.X;
+        int y = (int)point.Y;
+
+        if (y < 0 || y >= ImageHeight ||
+            x < 0 || x >= ImageWidth)
+        {
+            return 0; 
+        }
+
+        return _values[y, x];
     }
 
 }
