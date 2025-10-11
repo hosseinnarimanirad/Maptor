@@ -2003,7 +2003,7 @@ public partial class MapViewer : NotifiableUserControl
             Canvas.SetLeft(activeExtentView, 0);
             Canvas.SetTop(activeExtentView, 0);
 
-            (activeExtentView.DataContext as ActiveExtentViewModel)?.UpdateExtent(newExtent);
+            (activeExtentView.DataContext as ActiveExtentViewModel)?.UpdateExtent(newExtent, true);
 
             //var testName = "#testB";
             //_presenter.RemoveDrawingItem(testName);

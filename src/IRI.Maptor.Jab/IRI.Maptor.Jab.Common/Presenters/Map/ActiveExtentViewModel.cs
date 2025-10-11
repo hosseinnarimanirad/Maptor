@@ -96,7 +96,7 @@ public class ActiveExtentViewModel : Notifier
     }
 
 
-    public void UpdateExtent(BoundingBox newExtent)
+    public void UpdateExtent(BoundingBox newExtent, bool changedEvent)
     {
         this.Extent = newExtent;
 
@@ -122,7 +122,8 @@ public class ActiveExtentViewModel : Notifier
         LeftLabel = UnitHelper.GetLengthLabel(leftLength);
         RightLabel = UnitHelper.GetLengthLabel(rightLength);
 
-        this.OnExtentChanged?.Invoke(this, EventArgs.Empty);
+        if (changedEvent)
+            this.OnExtentChanged?.Invoke(this, EventArgs.Empty);
 
     }
 }

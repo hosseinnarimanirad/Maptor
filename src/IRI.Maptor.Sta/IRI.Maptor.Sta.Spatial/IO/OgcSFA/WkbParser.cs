@@ -61,7 +61,7 @@ public static class WkbParser
                 case WkbGeometryType.MultiLineStringZM:
                 case WkbGeometryType.MultiPolygonZM:
                 default:
-                    throw new NotImplementedException();
+                    throw new NotImplementedException($"WkbParser > Parse > unsupported type: {type.ToString()}");
             }
         }
 
