@@ -405,8 +405,8 @@
   <data name="mapPanel_measure_showEdgeLabels" xml:space="preserve">
     <value>Show Edge Labels</value>
   </data>
-  <data name="map_coordinatePanel_zoomLevel" xml:space="preserve">
-    <value>Zoom Level</value>
+  <data name="map_coordinatePanel_height" xml:space="preserve">
+    <value>Height</value>
   </data>
   <data name="map_draw_addPoint" xml:space="preserve">
     <value>Add Point</value>
@@ -423,8 +423,11 @@
   <data name="map_draw_newDrawing" xml:space="preserve">
     <value>Click on the last point to finish drawing.</value>
   </data>
-  <data name="map_scale_content" xml:space="preserve">
+  <data name="map_scalebar_content" xml:space="preserve">
     <value>Scale</value>
+  </data>
+  <data name="map_scalebar_zoomLevel" xml:space="preserve">
+    <value>Zoom Level</value>
   </data>
   <data name="ribbon_header_drawing" xml:space="preserve">
     <value>Drawing</value>

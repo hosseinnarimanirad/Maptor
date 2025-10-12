@@ -87,15 +87,30 @@ public partial class CoordinatePanelView : NotifiableUserControl
 
 
 
-    public int ZoomLevel
+
+
+    public double? CurrentHeight
     {
-        get { return (int)GetValue(ZoomLevelProperty); }
-        set { SetValue(ZoomLevelProperty, value); }
+        get { return (double?)GetValue(CurrentHeightProperty); }
+        set { SetValue(CurrentHeightProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for ZoomLevel.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty ZoomLevelProperty =
-        DependencyProperty.Register("ZoomLevel", typeof(int), typeof(CoordinatePanelView), new PropertyMetadata(1));
+    // Using a DependencyProperty as the backing store for Height.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty CurrentHeightProperty =
+        DependencyProperty.Register("CurrentHeight", typeof(double?), typeof(CoordinatePanelView), new PropertyMetadata(null));
+
+
+
+    public bool IsHeightAvailable
+    {
+        get { return (bool)GetValue(IsHeightAvailableProperty); }
+        set { SetValue(IsHeightAvailableProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for IsHeightAvailable.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty IsHeightAvailableProperty =
+        DependencyProperty.Register("IsHeightAvailable", typeof(bool), typeof(CoordinatePanelView), new PropertyMetadata(false));
+
 
 
 }

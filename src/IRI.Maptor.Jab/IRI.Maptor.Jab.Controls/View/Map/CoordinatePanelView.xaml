@@ -14,7 +14,7 @@
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         </ResourceDictionary>
     </userControl:NotifiableUserControl.Resources>
-    <Border BorderThickness="1" CornerRadius="3" Padding="2" FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}" MinWidth="460">
+    <Border BorderThickness="1" CornerRadius="3" Padding="2" FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}" MinWidth="460">
         <Border.Style>
             <Style TargetType="Border">
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
@@ -36,8 +36,10 @@
             </Grid.Resources>
 
             <DockPanel Grid.Row="2" VerticalAlignment="Center" MouseDown="options_MouseDown" Cursor="Hand" LastChildFill="True">
-                <Label DockPanel.Dock="Right" Content="{Binding ElementName=root, Path=ZoomLevel, Converter={StaticResource localizedNumberConverter}}"/>
-                <Label DockPanel.Dock="Right" Content="{Binding [map_coordinatePanel_zoomLevel], Source={StaticResource Localization}}"/>
+                <Label DockPanel.Dock="Right" Content="{Binding ElementName=root, Path=CurrentHeight, Converter={StaticResource localizedNumberConverter}}"
+                       Visibility="{Binding ElementName=root, Path=IsHeightAvailable, Converter={StaticResource boolToVisibilityConverter}}"/>
+                <Label DockPanel.Dock="Right" Content="{Binding [map_coordinatePanel_height], Source={StaticResource Localization}}" Width="71"
+                       Visibility="{Binding ElementName=root, Path=IsHeightAvailable, Converter={StaticResource boolToVisibilityConverter}}"/>
                 
                 <Label Visibility="{Binding SelectedItem.IsZoneVisible, Converter={StaticResource boolToVisibilityConverter}}"   
                        Width="100" Content="{Binding SelectedItem.ZoneNumber}" Margin="00 0 10 0" Background="White" 

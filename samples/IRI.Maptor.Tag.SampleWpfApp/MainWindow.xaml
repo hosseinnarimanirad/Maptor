@@ -84,7 +84,8 @@
             HorizontalAlignment="Right" 
             VerticalAlignment="Bottom"
             DataContext="{Binding CoordinatePanel}" 
-            Position="{Binding CurrentPoint, ElementName=map}"/>
+            Position="{Binding CurrentPoint, ElementName=map}"
+            ZoomLevel="{Binding ElementName=root, Path=DataContext.CurrentZoomLevel}"/>
 
         <StackPanel Grid.Row="1">
             <Expander Header="{Binding [ui_header_baseMaps], Source={StaticResource Localization}}" DockPanel.Dock="Top" IsExpanded="True"  Margin="0,1,0,0" Cursor="Hand">

@@ -326,7 +326,7 @@
     <value>اندکس ۵ هزار</value>
   </data>
   <data name="layer_geodesy1_title" xml:space="preserve">
-    <value />
+    <value>ژئودزی ۱</value>
   </data>
   <data name="layer_geodesy2_title" xml:space="preserve">
     <value>ژئودزی ۲</value>
@@ -338,13 +338,13 @@
     <value>ثقل سنجی</value>
   </data>
   <data name="layer_leveling1_title" xml:space="preserve">
-    <value />
+    <value>ترازیابی درجه ۱</value>
   </data>
   <data name="layer_leveling2_title" xml:space="preserve">
-    <value />
+    <value>ترازیابی درجه ۲</value>
   </data>
   <data name="layer_leveling3_title" xml:space="preserve">
-    <value />
+    <value>ترازیابی درجه ۳</value>
   </data>
   <data name="mapPanel_currentPart_add" xml:space="preserve">
     <value>اضافه کردن تکهٔ جدید</value>
@@ -400,8 +400,8 @@
   <data name="mapPanel_measure_showEdgeLabels" xml:space="preserve">
     <value>نمایش طول اضلاع</value>
   </data>
-  <data name="map_coordinatePanel_zoomLevel" xml:space="preserve">
-    <value>سطح</value>
+  <data name="map_coordinatePanel_height" xml:space="preserve">
+    <value>ارتفاع</value>
   </data>
   <data name="map_draw_addPoint" xml:space="preserve">
     <value>افزودن نقطه</value>
@@ -418,8 +418,11 @@
   <data name="map_draw_newDrawing" xml:space="preserve">
     <value>برای اتمام ترسیم روی نقطهٔ آخر مجدد کلیک کنید.</value>
   </data>
-  <data name="map_scale_content" xml:space="preserve">
+  <data name="map_scalebar_content" xml:space="preserve">
     <value>مقیاس</value>
+  </data>
+  <data name="map_scalebar_zoomLevel" xml:space="preserve">
+    <value>سطح بزرگ‌نمایی</value>
   </data>
   <data name="ribbon_header_drawing" xml:space="preserve">
     <value>لایه و ترسیم</value>

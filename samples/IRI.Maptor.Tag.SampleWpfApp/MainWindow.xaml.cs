@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows;
 using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Sta.Common.Primitives;
 
@@ -41,5 +42,7 @@ public partial class MainWindow : Window
         presenter.ZoomToExtent(BoundingBoxes.WebMercator_Africa, false, isNewExtent: true);
 
         presenter.SelectedMapProvider = TileMapProviderFactory.GoogleRoadMap;
+        //LocalizationManager.Instance.SetCulture(CultureInfo.GetCultureInfo("fa-IR"));
+
     }
 }

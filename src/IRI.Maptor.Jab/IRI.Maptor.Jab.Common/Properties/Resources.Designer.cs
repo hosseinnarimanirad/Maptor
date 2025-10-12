@@ -737,11 +737,11 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zoom Level.
+        ///   Looks up a localized string similar to Height.
         /// </summary>
-        public static string map_coordinatePanel_zoomLevel {
+        public static string map_coordinatePanel_height {
             get {
-                return ResourceManager.GetString("map_coordinatePanel_zoomLevel", resourceCulture);
+                return ResourceManager.GetString("map_coordinatePanel_height", resourceCulture);
             }
         }
         
@@ -793,9 +793,18 @@ namespace IRI.Maptor.Jab.Common.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Scale.
         /// </summary>
-        public static string map_scale_content {
+        public static string map_scalebar_content {
             get {
-                return ResourceManager.GetString("map_scale_content", resourceCulture);
+                return ResourceManager.GetString("map_scalebar_content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom Level.
+        /// </summary>
+        public static string map_scalebar_zoomLevel {
+            get {
+                return ResourceManager.GetString("map_scalebar_zoomLevel", resourceCulture);
             }
         }
         

@@ -102,6 +102,32 @@ public partial class Scalebar : NotifiableUserControl
         DependencyProperty.Register("ShowScaleValue", typeof(bool), typeof(Scalebar), new PropertyMetadata(false));
 
 
+
+    public bool ShowZoomLevel
+    {
+        get { return (bool)GetValue(ShowZoomLevelProperty); }
+        set { SetValue(ShowZoomLevelProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for ShowZoomLevel.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ShowZoomLevelProperty =
+        DependencyProperty.Register("ShowZoomLevel", typeof(bool), typeof(Scalebar), new PropertyMetadata(false));
+
+
+
+
+    public int ZoomLevel
+    {
+        get { return (int)GetValue(ZoomLevelProperty); }
+        set { SetValue(ZoomLevelProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for ZoomLevel.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ZoomLevelProperty =
+        DependencyProperty.Register("ZoomLevel", typeof(int), typeof(Scalebar), new PropertyMetadata(-1));
+
+
+
     public bool IsGoogleStyle
     {
         get { return (bool)GetValue(IsGoogleStyleProperty); }
