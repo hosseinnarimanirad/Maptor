@@ -25,10 +25,10 @@ public static class GoogleMapsGeolocationService
                 }).ToArray();
 
             //
-            foreach (var item in wifiAccessPoints)
-            {
-                Debug.WriteLine($"mac: {item.macAddress}, signal:{item.signalStrength}, channel: {item.channel}");
-            }
+            //foreach (var item in wifiAccessPoints)
+            //{
+            //    Debug.WriteLine($"mac: {item.macAddress}, signal:{item.signalStrength}, channel: {item.channel}");
+            //}
 
             return await GetLocationAsync(key, wifiAccessPoints);
 

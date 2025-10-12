@@ -1631,7 +1631,7 @@ public partial class MapViewer : NotifiableUserControl
 
     private void AddEditableFeatureLayer(EditableFeatureLayer layer)
     {
-        Debug.WriteLine($"MapViewer; {DateTime.Now.ToShortTimeString()}; AddEditableFeatureLayer {layer.LayerName} called");
+        //Debug.WriteLine($"MapViewer; {DateTime.Now.ToShortTimeString()}; AddEditableFeatureLayer {layer.LayerName} called");
 
         var path = layer.GetPath(this.viewTransform);
 
@@ -1655,7 +1655,7 @@ public partial class MapViewer : NotifiableUserControl
 
         AddComplexLayer(layer.GetPrimaryVerticesLabels(), true);
 
-        Debug.WriteLine($"MapViewer; {DateTime.Now.ToShortTimeString()}; AddEditableFeatureLayer {layer.LayerName} finished");
+        //Debug.WriteLine($"MapViewer; {DateTime.Now.ToShortTimeString()}; AddEditableFeatureLayer {layer.LayerName} finished");
     }
 
 
@@ -1857,30 +1857,30 @@ public partial class MapViewer : NotifiableUserControl
     public void Refresh(bool isNewExtent)
     {
         //UpdateTileInfos();
-        Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh Called");
+        //Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh Called");
 
         if (this.CurrentTileInfos == null)
             return;
 
         StopUnnecessaryJobs();
 
-        Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-StopUnnecessaryJobs finished");
+        //Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-StopUnnecessaryJobs finished");
 
         ClearNonTiled();
 
-        Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-ClearNonTiled finished");
+        //Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-ClearNonTiled finished");
 
         var mapScale = this.MapScale;
 
         IEnumerable<ILayer> infos = this._layerManager.UpdateAndGetLayers(1.0 / mapScale, RenderMode.Default);
 
-        Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-UpdateAndGetLayers finished");
+        //Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-UpdateAndGetLayers finished");
 
         if (infos == null) return;
 
         foreach (ILayer item in infos)
         {
-            Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-Proccessing {item.LayerName}");
+            //Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-Proccessing {item.LayerName}");
 
             if (!item.CanRenderLayer(mapScale))
             {

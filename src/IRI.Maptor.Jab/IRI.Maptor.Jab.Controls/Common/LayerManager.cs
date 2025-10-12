@@ -173,7 +173,7 @@ public class LayerManager : Notifier
 
     public IEnumerable<ILayer> UpdateAndGetLayers(double inverseMapScale, RenderMode rendering)
     {
-        Debug.WriteLine($"LayerManager; {DateTime.Now.ToLongTimeString()}; UpdateAndGetLayers called");
+        //Debug.WriteLine($"LayerManager; {DateTime.Now.ToLongTimeString()}; UpdateAndGetLayers called");
 
         ArrangeZIndex();
 
@@ -216,7 +216,7 @@ public class LayerManager : Notifier
             this.CurrentLayers.Add(toBeAdded[i]);
         }
 
-        Debug.WriteLine($"LayerManager; {DateTime.Now.ToLongTimeString()}; UpdateAndGetLayers finished");
+        //Debug.WriteLine($"LayerManager; {DateTime.Now.ToLongTimeString()}; UpdateAndGetLayers finished");
 
         return newLayers;
     }

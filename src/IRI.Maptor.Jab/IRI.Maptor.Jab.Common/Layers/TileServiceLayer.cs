@@ -164,7 +164,7 @@ public class TileServiceLayer : BaseLayer
             if (url == null)
                 return GetNotFoundImage(tile);
 
-            System.Diagnostics.Debug.WriteLine("Getting Tile at " + url);
+            //System.Diagnostics.Debug.WriteLine("Getting Tile at " + url);
 
             var byteImage = await client.DownloadDataTaskAsync(url);
 
@@ -218,7 +218,7 @@ public class TileServiceLayer : BaseLayer
             if (url == null)
                 return GetNotFoundImage(tile);
 
-            System.Diagnostics.Debug.WriteLine("Getting Tile at " + url);
+            //System.Diagnostics.Debug.WriteLine("Getting Tile at " + url);
 
             var response = await client.GetAsync(url);
 
