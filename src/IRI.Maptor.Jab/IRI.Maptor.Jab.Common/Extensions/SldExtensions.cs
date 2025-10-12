@@ -88,7 +88,8 @@ public static class SldExtensions
 
             var transformGroup = new TransformGroup();
             transformGroup.Children.Add(new ScaleTransform(scale, scale));
-            transformGroup.Children.Add(new TranslateTransform(-bounds.X * scale, -bounds.Y * scale));
+            transformGroup.Children.Add(new TranslateTransform(-bounds.X * scale - bounds.Width / 2.0 * scale,
+                                                                -bounds.Y * scale - bounds.Height / 2.0 * scale));
 
             geometry.Transform = transformGroup;
         }
