@@ -76,8 +76,21 @@ public partial class Scalebar : NotifiableUserControl
             string.Format("{0} m", groundLengthInMeter);
 
         //this.Min = (groundLengthInMeter / 1000.0 > 1) ? "0 km" : "0 m";
-         
+
         RaisePropertyChanged(nameof(GroundLength));
+
+        this.CurrentScaleText = IRI.Maptor.Jab.Common.Localization.LocalizationManager.GetLocalizedNumberString($"1:{mapScale:N0}");
+    }
+
+    private string _currentScaleText;
+    public string CurrentScaleText
+    {
+        get { return _currentScaleText; }
+        set
+        {
+            _currentScaleText = value;
+            RaisePropertyChanged();
+        }
     }
 
 
@@ -138,7 +151,7 @@ public partial class Scalebar : NotifiableUserControl
         DependencyProperty.Register("IsGoogleStyle", typeof(bool), typeof(Scalebar), new PropertyMetadata(false));
 
 
-    public string GroundLength { get; set; }  
+    public string GroundLength { get; set; }
 
     public double ScaleBarLength { get; set; } = 150;
 

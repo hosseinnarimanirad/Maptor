@@ -565,6 +565,7 @@ public abstract class MapPresenter : BasePresenter
 
     public int CurrentZoomLevel { get { return RequestCurrentZoomLevel?.Invoke() ?? 1; } }
 
+    //public string CurrentScaleText => Localization.LocalizationManager.GetLocalizedNumberString($"1:{CurrentPointInverseMapScale}");
 
     public BoundingBox CurrentExtent
     {

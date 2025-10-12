@@ -1,8 +1,11 @@
-﻿using IRI.Maptor.Jab.Common.Properties;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows;
+
+using IRI.Maptor.Extensions;
+using IRI.Maptor.Jab.Common.Properties;
 
 namespace IRI.Maptor.Jab.Common.Localization;
 
@@ -83,5 +86,33 @@ public class LocalizationManager : INotifyPropertyChanged
     {
         return Resources.ResourceManager.GetString(key, CultureInfo.InvariantCulture)
                ?? $"#{key}#";
+    }
+
+    public static string GetLocalizedNumberString(object value)
+    { 
+        // Use culture from binding if available, otherwise fallback to current thread culture
+      
+        //culture ??= CultureInfo.CurrentUICulture;
+        var culture = Instance.CurrentCulture;
+
+        var isPersian = string.Equals(culture.Name, "fa-IR", StringComparison.OrdinalIgnoreCase);
+
+        if (value is IFormattable formattable)
+        { 
+            if (isPersian)
+            {
+                return formattable?.ToString()?.LatinNumbersToFarsiNumbers() ?? string.Empty;
+            }
+            else
+            {
+                return formattable.ToString(null, culture);
+            }
+        }
+        else if (value is string str && isPersian)
+        {
+            return str?.LatinNumbersToFarsiNumbers() ?? string.Empty;
+        }
+
+        return value?.ToString() ?? string.Empty;
     }
 }

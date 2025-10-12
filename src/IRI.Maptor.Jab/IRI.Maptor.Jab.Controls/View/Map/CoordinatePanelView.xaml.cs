@@ -84,11 +84,7 @@ public partial class CoordinatePanelView : NotifiableUserControl
                 return;
             }
         })));
-
-
-
-
-
+     
     public double? CurrentHeight
     {
         get { return (double?)GetValue(CurrentHeightProperty); }
@@ -98,9 +94,7 @@ public partial class CoordinatePanelView : NotifiableUserControl
     // Using a DependencyProperty as the backing store for Height.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty CurrentHeightProperty =
         DependencyProperty.Register("CurrentHeight", typeof(double?), typeof(CoordinatePanelView), new PropertyMetadata(null));
-
-
-
+     
     public bool IsHeightAvailable
     {
         get { return (bool)GetValue(IsHeightAvailableProperty); }
