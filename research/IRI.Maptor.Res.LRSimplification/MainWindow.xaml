@@ -9,7 +9,7 @@
         xmlns:iriJabUIComponents="clr-namespace:IRI.Maptor.Jab.MultiSelectItem.View;assembly=IRI.Maptor.Jab.MultiSelectItem"
         xmlns:MapViewer="clr-namespace:IRI.Maptor.Jab.Controls;assembly=IRI.Maptor.Jab.Controls"   
         mc:Ignorable="d" Loaded="Window_Loaded"
-        Title="MainWindow" Height="850" Width="1400">
+        Title="Online Simplification using Logistic Regression (Demo App)" Height="850" Width="1400">
     <Window.Resources>
 
         <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MahApps.Styles.Slider}"/>

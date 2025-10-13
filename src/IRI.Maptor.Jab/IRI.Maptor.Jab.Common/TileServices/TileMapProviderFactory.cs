@@ -30,12 +30,7 @@ public static class TileMapProviderFactory
     // this.AddProvider(TileMapProviderFactory.CreateInteranetProvider("localGoogle", "hybridMap", t => $@"http://v-gisserver2/Google/Satellite/{t.ZoomLevel}/gs_{t.ColumnNumber}_{t.RowNumber}_{t.ZoomLevel}.jpg"));
     public static TileMapProvider CreateInteranetProvider(string providerName, string subTitle, Func<TileInfo, string> interanetUrlFunc)
     {
-        TileMapProvider result = new TileMapProvider(providerName, subTitle, interanetUrlFunc, null, null)
-        {
-            RequireInternetConnection = false
-        };
-
-        return result;
+        return new TileMapProvider(providerName, subTitle, interanetUrlFunc, null, null, TileMapProviderMode.LocalNetwork);
     }
 
     #region Bing
@@ -73,7 +68,7 @@ public static class TileMapProviderFactory
         {
             if (_bingSatellite is null)
             {
-                _bingSatellite = new TileMapProvider( 
+                _bingSatellite = new TileMapProvider(
                     nameof(tile_provider_bing),
                     nameof(tile_mapType_Satellite),
                     tile => MakeBingSatelliteUrl(tile, GetServer()),
@@ -92,7 +87,7 @@ public static class TileMapProviderFactory
         {
             if (_bingStreet is null)
             {
-                _bingStreet = new TileMapProvider( 
+                _bingStreet = new TileMapProvider(
                     nameof(tile_provider_bing),
                     nameof(tile_mapType_Street),
                     tile => MakeBingStreetUrl(tile, GetServer()),
@@ -113,7 +108,7 @@ public static class TileMapProviderFactory
         {
             if (_bingHybrid is null)
             {
-                _bingHybrid = new TileMapProvider( 
+                _bingHybrid = new TileMapProvider(
                     nameof(tile_provider_bing),
                     nameof(tile_mapType_Hybrid),
                     tile => MakeBingHybridUrl(tile, GetServer()),
@@ -162,7 +157,7 @@ public static class TileMapProviderFactory
         {
             if (_googleCleanGrey is null)
             {
-                _googleCleanGrey = new TileMapProvider( 
+                _googleCleanGrey = new TileMapProvider(
                     nameof(tile_provider_google),
                     nameof(tile_mapType_CleanGrey),
                     MakeGoogleCleanGreyUrl,
@@ -182,7 +177,7 @@ public static class TileMapProviderFactory
         {
             if (_googleBlackWhite is null)
             {
-                _googleBlackWhite = new TileMapProvider( 
+                _googleBlackWhite = new TileMapProvider(
                     nameof(tile_provider_google),
                     nameof(tile_mapType_BlackWhite),
                     MakeGoogleBlackWhiteUrl,
@@ -202,7 +197,7 @@ public static class TileMapProviderFactory
         {
             if (_googleTraffic is null)
             {
-                _googleTraffic = new TileMapProvider( 
+                _googleTraffic = new TileMapProvider(
                     nameof(tile_provider_google),
                     nameof(tile_mapType_Traffic),
                     tile => MakeGoogleTerafficUrl(tile, GetServer()),
@@ -225,7 +220,7 @@ public static class TileMapProviderFactory
         {
             if (_googleSatellite is null)
             {
-                _googleSatellite = new TileMapProvider( 
+                _googleSatellite = new TileMapProvider(
                     nameof(tile_provider_google),
                     nameof(tile_mapType_Satellite),
                     tile => MakeGoogleSatelliteUrl(tile, GetServer()),
@@ -245,7 +240,7 @@ public static class TileMapProviderFactory
         {
             if (_googleHybrid is null)
             {
-                _googleHybrid = new TileMapProvider( 
+                _googleHybrid = new TileMapProvider(
                     nameof(tile_provider_google),
                     nameof(tile_mapType_Hybrid),
                     tile => MakeGoogleHybridUrl(tile, GetServer()),
@@ -265,7 +260,7 @@ public static class TileMapProviderFactory
         {
             if (_googleRoadMap is null)
             {
-                _googleRoadMap = new TileMapProvider( 
+                _googleRoadMap = new TileMapProvider(
                     nameof(tile_provider_google),
                     nameof(tile_mapType_RoadMap),
                     tile => MakeGoogleRoadMapUrl(tile, GetServer()),
@@ -285,7 +280,7 @@ public static class TileMapProviderFactory
         {
             if (_googleTerrain is null)
             {
-                _googleTerrain = new TileMapProvider( 
+                _googleTerrain = new TileMapProvider(
                     nameof(tile_provider_google),
                     nameof(tile_mapType_Terrain),
                     tile => MakeGoogleTerrainUrl(tile, GetServer()),
@@ -326,7 +321,7 @@ public static class TileMapProviderFactory
         {
             if (_googleLight is null)
             {
-                _googleLight = CreateFromXyzUrlIntServer( 
+                _googleLight = CreateFromXyzUrlIntServer(
                     nameof(tile_provider_google),
                     nameof(tile_mapType_Light),
                     "https://mt{@server}.google.com/vt/lyrs=r&x={x}&y={y}&z={z}",
@@ -348,7 +343,7 @@ public static class TileMapProviderFactory
         {
             if (_googleNature is null)
             {
-                _googleNature = CreateFromXyzUrlIntServer( 
+                _googleNature = CreateFromXyzUrlIntServer(
                     nameof(tile_provider_google),
                     nameof(tile_mapType_Nature),
                    "https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjV8cC5oOiNGRkE4MDB8cC5nOjEscy50OjQ5fHAuaDojNTNGRjAwfHAuczotNzN8cC5sOjQwfHAuZzoxLHMudDo1MHxwLmg6I0ZCRkYwMHxwLmc6MSxzLnQ6NTF8cC5oOiMwMEZGRkR8cC5sOjMwfHAuZzoxLHMudDo2fHAuaDojMDBCRkZGfHAuczo2fHAubDo4fHAuZzoxLHMudDoyfHAuaDojNjc5NzE0fHAuczozMy40fHAubDotMjUuNHxwLmc6MQ!4e0!23i1301875",
@@ -369,7 +364,7 @@ public static class TileMapProviderFactory
         {
             if (_googleNeutralBlue is null)
             {
-                _googleNeutralBlue = CreateFromXyzUrlIntServer( 
+                _googleNeutralBlue = CreateFromXyzUrlIntServer(
                     nameof(tile_provider_google),
                     nameof(tile_mapType_NeutralBlue),
                     "https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjZ8cy5lOmd8cC5jOiNmZjE5MzM0MSxzLnQ6NXxzLmU6Z3xwLmM6I2ZmMmM1YTcxLHMudDozfHMuZTpnfHAuYzojZmYyOTc2OGF8cC5sOi0zNyxzLnQ6MnxzLmU6Z3xwLmM6I2ZmNDA2ZDgwLHMudDo0fHMuZTpnfHAuYzojZmY0MDZkODAscy5lOmwudC5zfHAudjpvbnxwLmM6I2ZmM2U2MDZmfHAudzoyfHAuZzowLjg0LHMuZTpsLnQuZnxwLmM6I2ZmZmZmZmZmLHMudDoxfHMuZTpnfHAudzowLjZ8cC5jOiNmZjFhMzU0MSxzLmU6bC5pfHAudjpvZmYscy50OjQwfHMuZTpnfHAuYzojZmYyYzVhNzE!4e0!23i1301875",
@@ -444,7 +439,7 @@ public static class TileMapProviderFactory
         {
             if (_openStreetMap is null)
             {
-                _openStreetMap = new TileMapProvider( 
+                _openStreetMap = new TileMapProvider(
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_Street),
                     tile => MakeOpenStreetMapUrl(tile, GetServerCharacter()),
@@ -464,7 +459,7 @@ public static class TileMapProviderFactory
         {
             if (_openTopoMap is null)
             {
-                _openTopoMap = new TileMapProvider( 
+                _openTopoMap = new TileMapProvider(
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_Topo),
                     tile => MakeOpenTopoMapUrl(tile, GetServerCharacter()),
@@ -484,7 +479,7 @@ public static class TileMapProviderFactory
         {
             if (_mapyWinter is null)
             {
-                _mapyWinter = new TileMapProvider( 
+                _mapyWinter = new TileMapProvider(
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_MapyWinter),
                     MakeMapyWinterUrl,
@@ -504,7 +499,7 @@ public static class TileMapProviderFactory
         {
             if (_mapyTourist is null)
             {
-                _mapyTourist = new TileMapProvider( 
+                _mapyTourist = new TileMapProvider(
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_MapyTourist),
                     MakeMapyTouristUrl,
@@ -524,7 +519,7 @@ public static class TileMapProviderFactory
         {
             if (_osmHikeBike is null)
             {
-                _osmHikeBike = new TileMapProvider( 
+                _osmHikeBike = new TileMapProvider(
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_HikeBike),
                     MakeOsmHikeBikeUrl,
@@ -544,7 +539,7 @@ public static class TileMapProviderFactory
         {
             if (_stamentWatercolor is null)
             {
-                _stamentWatercolor = new TileMapProvider( 
+                _stamentWatercolor = new TileMapProvider(
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_Watercolor),
                     MakeStamenWatercolorUrl,
@@ -574,7 +569,7 @@ public static class TileMapProviderFactory
         {
             if (_wazeStreet is null)
             {
-                _wazeStreet = new TileMapProvider( 
+                _wazeStreet = new TileMapProvider(
                     nameof(tile_provider_waze),
                     nameof(tile_mapType_Street),
                     MakeWazeRoadMapUrl,
@@ -606,7 +601,7 @@ public static class TileMapProviderFactory
         {
             if (_cartoDark is null)
             {
-                _cartoDark = new TileMapProvider( 
+                _cartoDark = new TileMapProvider(
                     nameof(tile_provider_carto),
                     nameof(tile_mapType_Dark),
                     MakeCartoDarkUrl,
@@ -625,7 +620,7 @@ public static class TileMapProviderFactory
         {
             if (_cartoLight is null)
             {
-                _cartoLight = new TileMapProvider( 
+                _cartoLight = new TileMapProvider(
                     nameof(tile_provider_carto),
                     nameof(tile_mapType_Light),
                     MakeCartoLightUrl,
@@ -649,7 +644,7 @@ public static class TileMapProviderFactory
         {
             if (_mapboxComic is null)
             {
-                _mapboxComic = CreateFromXyzUrlCharServer( 
+                _mapboxComic = CreateFromXyzUrlCharServer(
                     nameof(tile_provider_mapbox),
                     nameof(tile_mapType_Comic),
                     "https://{@server}.tiles.mapbox.com/v4/mapbox.comic/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w",
@@ -668,7 +663,7 @@ public static class TileMapProviderFactory
         {
             if (_mapboxSatellite is null)
             {
-                _mapboxSatellite = CreateFromXyzUrlCharServer( 
+                _mapboxSatellite = CreateFromXyzUrlCharServer(
                     nameof(tile_provider_mapbox),
                     nameof(tile_mapType_Satellite),
                     "https://{@server}.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w",
@@ -780,9 +775,9 @@ public static class TileMapProviderFactory
     }
 
 
-    public static List<TileMapProvider> GetAll()
+    public static List<TileMapProvider> GetAll(string? localNetworkBaseUrl = null)
     {
-        return new List<TileMapProvider>()
+        var providers = new List<TileMapProvider>()
         {
             BingHybrid, BingSatellite, BingStreet,
             GoogleHybrid, GoogleRoadMap, GoogleSatellite, GoogleTerrain,
@@ -794,16 +789,36 @@ public static class TileMapProviderFactory
             CartoDark, CartoLight,
             MapboxComic, MapboxSatellite
         };
+
+        if (!string.IsNullOrWhiteSpace(localNetworkBaseUrl))
+        {
+            foreach (var item in providers)
+            {
+                item.ChangeMode(TileMapProviderMode.LocalNetwork, localNetworkBaseUrl);
+            }
+        }
+
+        return providers;
     }
 
-    public static List<TileMapProvider> GetDefault()
+    public static List<TileMapProvider> GetDefault(string? localNetworkBaseUrl = null)
     {
-        return new List<TileMapProvider>()
+        var providers = new List<TileMapProvider>()
         {
             GoogleRoadMap, GoogleTerrain, GoogleSatellite, GoogleHybrid,
             BingHybrid, BingSatellite,
             OpenStreetMap, OpenTopoMap
         };
+
+        if (!string.IsNullOrWhiteSpace(localNetworkBaseUrl))
+        {
+            foreach (var item in providers)
+            {
+                item.ChangeMode(TileMapProviderMode.LocalNetwork, localNetworkBaseUrl);
+            }
+        }
+
+        return providers;
     }
 
 }

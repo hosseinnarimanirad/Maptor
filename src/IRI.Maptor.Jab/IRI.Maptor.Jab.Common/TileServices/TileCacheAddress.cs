@@ -61,7 +61,7 @@ public class TileCacheAddress
     {
         if (getFileName == null)
         {
-            _getFileName = t => $"{t.ZoomLevel}\\{t.RowNumber}_{t.ColumnNumber}.png";
+            _getFileName = t => $"{t.ZoomLevel}\\{t.RowNumber}\\{t.RowNumber}_{t.ColumnNumber}.png";
         }
         else
         {
@@ -101,7 +101,7 @@ public class TileCacheAddress
 
                     return new GeoReferencedImage(bytes, tile.GeodeticExtent);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return GeoReferencedImage.NaN;
                 }

@@ -972,7 +972,7 @@ public partial class MapViewer : NotifiableUserControl
     //    SetTileService(ScaleInterval.All, provider, type, isCachEnabled, cacheDirectory, isOffline, getFileName);
     //}
 
-    public void SetTileService(TileMapProvider mapProvider, bool isCachEnabled = false, string cacheDirectory = null, bool isOffline = false, Func<TileInfo, string>? getFileName = null, double opacity = 1)
+    public void SetTileService(TileMapProvider mapProvider, bool isCachEnabled = false, string? cacheDirectory = null, bool isOffline = false, Func<TileInfo, string>? getFileName = null, double opacity = 1)
     {
         if (mapProvider is null)
             return;

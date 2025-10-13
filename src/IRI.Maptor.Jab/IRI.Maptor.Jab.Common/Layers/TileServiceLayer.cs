@@ -143,7 +143,7 @@ public class TileServiceLayer : BaseLayer
     {
         try
         {
-            if (IsOffline && _mapProvider.RequireInternetConnection)
+            if (IsOffline && _mapProvider.ShouldBeConnectedToInternet())
                 return GetNotFoundImage(tile);
 
             WiseWebClient client = new WiseWebClient(3000);
@@ -210,7 +210,7 @@ public class TileServiceLayer : BaseLayer
     {
         try
         {
-            if (IsOffline && _mapProvider.RequireInternetConnection)
+            if (IsOffline && _mapProvider.ShouldBeConnectedToInternet())
                 return GetNotFoundImage(tile);
 
             var url = this._mapProvider.GetUrl(tile);

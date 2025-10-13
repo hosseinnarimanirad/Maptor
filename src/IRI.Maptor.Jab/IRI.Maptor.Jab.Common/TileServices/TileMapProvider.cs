@@ -9,26 +9,17 @@ namespace IRI.Maptor.Jab.Common.TileServices;
 
 public class TileMapProvider : ValueObjectNotifier, IDisposable
 {
-    public bool RequireInternetConnection { get; set; } = true;
-
-    //in the case of google traffic map, caching should be avoided
-    public bool AllowCache { get; set; } = true;
-
-
     private string _providerResourceKey { get; set; }
     public string Provider => LocalizationManager.Instance[_providerResourceKey];
-
     public string ProviderEn => LocalizationManager.Instance.GetDefaultValue(_providerResourceKey);
 
 
     private string _mapTypeResourceKey { get; set; }
     public string MapType => LocalizationManager.Instance[_mapTypeResourceKey];
-
     public string MapTypeEn => LocalizationManager.Instance.GetDefaultValue(_mapTypeResourceKey);
 
 
     private byte[]? _thumbnail;
-
     public byte[]? Thumbnail
     {
         get { return _thumbnail; }
@@ -40,7 +31,6 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
     }
 
     private byte[]? _thumbnail72;
-
     public byte[]? Thumbnail72
     {
         get { return _thumbnail72; }
@@ -52,37 +42,67 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
     }
 
 
+    //public bool RequireInternetConnection { get; set; } = true;
+    public TileMapProviderMode Mode { get; protected set; } = TileMapProviderMode.Internet;
+
+
     public string FullName => $"{ProviderEn}-{MapTypeEn}";
 
     public string Title { get { return $"{Provider}-{MapType}"; } }
 
-    public Func<TileInfo, string> MakeUrl { get; protected set; }
-     
+    public Func<TileInfo, string>? MakeInternetUrl { get; protected set; }
+
+    public Func<TileInfo, string>? MakeInteranetUrl { get; protected set; }
+
+    public string? LocalNetworkBaseUrl { get; protected set; }
+
+    //in the case of google traffic map, caching should be avoided
+    public bool AllowCache { get; set; } = true;
+
+    public bool ShouldBeConnectedToInternet() => Mode == TileMapProviderMode.Internet && LocalNetworkBaseUrl == null;
+
 
     public TileMapProvider(TileMapProvider mapProvider)
     {
-        //mapProvider.Provider, mapProvider.MapType, , mapProvider.Thumbnail, mapProvider.Thumbnail72
-        this.MakeUrl = mapProvider.MakeUrl;
+        if (mapProvider.Mode == TileMapProviderMode.Internet)
+            this.MakeInternetUrl = mapProvider.MakeInternetUrl;
+
+        else
+            this.MakeInteranetUrl = mapProvider.MakeInternetUrl;
+
+        this.Mode = mapProvider.Mode;
+
         this._providerResourceKey = mapProvider._providerResourceKey;
         this._mapTypeResourceKey = mapProvider._mapTypeResourceKey;
         this._thumbnail = mapProvider._thumbnail;
         this._thumbnail72 = mapProvider._thumbnail72;
 
+        LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
         LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
 
-    public TileMapProvider(string providerResourceKey, string mapTypeResourceKey, Func<TileInfo, string> urlFunction, byte[]? thumbnail, byte[]? thumbnail72)
+    public TileMapProvider(
+        string providerResourceKey,
+        string mapTypeResourceKey,
+        Func<TileInfo, string> urlFunction,
+        byte[]? thumbnail,
+        byte[]? thumbnail72,
+        TileMapProviderMode mode = TileMapProviderMode.Internet)
     {
-        this.MakeUrl = urlFunction;
+        if (mode == TileMapProviderMode.Internet)
+            this.MakeInternetUrl = urlFunction;
+
+        else
+            this.MakeInteranetUrl = urlFunction;
+
+        this.Mode = mode;
 
         this._providerResourceKey = providerResourceKey;
-
         this._mapTypeResourceKey = mapTypeResourceKey;
-
         this._thumbnail = thumbnail;
-
         this._thumbnail72 = thumbnail72;
 
+        LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
         LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
 
@@ -90,20 +110,23 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
     {
         RaisePropertyChanged(nameof(Provider));
         RaisePropertyChanged(nameof(MapType));
-
         RaisePropertyChanged(nameof(Title));
     }
-     
 
-    public virtual string GetUrl(TileInfo tile)
+
+    public virtual string? GetUrl(TileInfo tile)
     {
-        return MakeUrl?.Invoke(tile);
+        if (this.Mode == TileMapProviderMode.LocalNetwork && MakeInteranetUrl is null)
+            return $"{LocalNetworkBaseUrl}/{ProviderEn}/{MapTypeEn}/{tile.ZoomLevel}/{tile.RowNumber}/{tile.RowNumber}_{tile.ColumnNumber}.png";
+        
+        else if (this.Mode == TileMapProviderMode.LocalNetwork)
+            return MakeInteranetUrl?.Invoke(tile);
+
+        else
+            return MakeInternetUrl?.Invoke(tile);
     }
 
-    public override string ToString()
-    {
-        return Title;
-    }
+    public override string ToString() => Title;
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
@@ -139,6 +162,17 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
     //}
 
     public bool Is(string? fullName) => !string.IsNullOrWhiteSpace(fullName) && this.FullName.EqualsIgnoreCase(fullName);
+
+    public void ChangeMode(TileMapProviderMode newMode, string? localNetworkBaseUrl)
+    {
+        if (this.Mode == newMode)
+            return;
+
+        this.Mode = newMode;
+
+        if (newMode == TileMapProviderMode.LocalNetwork)
+            this.LocalNetworkBaseUrl = localNetworkBaseUrl;
+    }
 
     #region IDispose
 
