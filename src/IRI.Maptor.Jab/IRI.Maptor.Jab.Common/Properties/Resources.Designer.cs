@@ -791,7 +791,7 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Scale.
+        ///   Looks up a localized string similar to SCALE.
         /// </summary>
         public static string map_scalebar_content {
             get {
@@ -800,7 +800,7 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zoom Level.
+        ///   Looks up a localized string similar to Level.
         /// </summary>
         public static string map_scalebar_zoomLevel {
             get {

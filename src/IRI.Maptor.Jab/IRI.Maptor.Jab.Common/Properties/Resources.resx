@@ -424,10 +424,10 @@
     <value>Click on the last point to finish drawing.</value>
   </data>
   <data name="map_scalebar_content" xml:space="preserve">
-    <value>Scale</value>
+    <value>SCALE</value>
   </data>
   <data name="map_scalebar_zoomLevel" xml:space="preserve">
-    <value>Zoom Level</value>
+    <value>Level</value>
   </data>
   <data name="ribbon_header_drawing" xml:space="preserve">
     <value>Drawing</value>

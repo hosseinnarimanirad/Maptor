@@ -45,7 +45,7 @@ public partial class Scalebar : NotifiableUserControl
         double unitDistance = (1.0 / dpiX) * 1200.0 / (3937.0 * 12.0);
 
         var minScalebarWidth = 100;
-        var maxScalebarWidth = 200;
+        var maxScalebarWidth = 250;
 
         var minScreenLengthInMeter = minScalebarWidth * unitDistance;
         var maxScreenLengthInMeter = maxScalebarWidth * unitDistance;
