@@ -5,25 +5,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
              xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common"
-             Width="auto" Height="auto" Opacity="0.8" >
+             Width="auto" Height="auto" >
     <userControl:NotifiableUserControl.Resources>
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-        <Storyboard x:Key="OnMouseEnter1">
-            <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="layoutRoot" To="1" Duration="0:0:.3"></DoubleAnimation>
-        </Storyboard>
-        <Storyboard x:Key="OnMouseLeave1">
-            <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="layoutRoot" To=".8" Duration="0:0:.3"></DoubleAnimation>
-        </Storyboard>
     </userControl:NotifiableUserControl.Resources>
-    <userControl:NotifiableUserControl.Triggers>
-        <EventTrigger RoutedEvent="Mouse.MouseEnter">
-            <BeginStoryboard x:Name="OnMouseEnter1_BeginStoryboard" Storyboard="{StaticResource OnMouseEnter1}"/>
-        </EventTrigger>
-        <EventTrigger RoutedEvent="Mouse.MouseLeave">
-            <BeginStoryboard x:Name="OnMouseLeave1_BeginStoryboard" Storyboard="{StaticResource OnMouseLeave1}"/>
-        </EventTrigger>
-    </userControl:NotifiableUserControl.Triggers>
     <Border Background="White" CornerRadius="5" >
+        <Border.Style>
+            <Style TargetType="Border">
+                <Setter Property="Opacity" Value="0.8"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Opacity" Value="1"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
         <Grid Margin="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

@@ -4,7 +4,7 @@
                 xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"                 
                 xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common"
-                x:Name="root" Height="auto" Width="auto" Opacity=".8" MouseLeave="UserControl_MouseLeave">
+                x:Name="root" Height="auto" Width="auto" MouseLeave="UserControl_MouseLeave">
     <userControl:NotifiableUserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -29,10 +29,16 @@
             </Style>
         </ResourceDictionary>
     </userControl:NotifiableUserControl.Resources>
-    <Border BorderThickness="1" CornerRadius="3" Padding="2" FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}" MinWidth="460">
+    <Border BorderThickness="1" CornerRadius="3" Padding="8,1,1,1" FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}" MinWidth="460">
         <Border.Style>
             <Style TargetType="Border">
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                <Setter Property="Opacity" Value="0.8"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Opacity" Value="1"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
         </Border.Style>
         <Grid>
@@ -43,10 +49,10 @@
                 <RowDefinition Name="optionsRow2" Height="0"/>
             </Grid.RowDefinitions>
       
-            <DockPanel Grid.Row="2" VerticalAlignment="Center" MouseDown="options_MouseDown" Cursor="Hand" LastChildFill="True">
+            <DockPanel Grid.Row="2" VerticalAlignment="Center" MouseDown="options_MouseDown" Cursor="Hand" LastChildFill="True" Background="Transparent">
                 
                 <!--Height-->
-                <TextBlock DockPanel.Dock="Right" 
+                <TextBlock DockPanel.Dock="Right" Margin="0"
                             Style="{StaticResource dynamicText}" 
                             Text="{Binding ElementName=root, Path=CurrentHeight, Converter={StaticResource localizedNumberConverter}}"
                             Visibility="{Binding ElementName=root, Path=IsHeightAvailable, Converter={StaticResource boolToVisibilityConverter}}"/>
@@ -84,7 +90,7 @@
                 </ItemsControl.Template>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <RadioButton GroupName="A" IsChecked="{Binding IsSelected, Mode=TwoWay}"  Background="{DynamicResource MahApps.Brushes.Accent}"
+                        <RadioButton GroupName="A" IsChecked="{Binding IsSelected, Mode=TwoWay}" Background="Transparent"
                                      Margin="6 2" Foreground="White" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center"
                                      Cursor="Hand">
                             <Label Content="{Binding TitleItem}" Foreground="White"/>

@@ -12,34 +12,26 @@ namespace IRI.Maptor.Jab.Controls.View;
 /// </summary>
 public partial class CoordinatePanelView : NotifiableUserControl
 {
-    public CoordinatePanelPresenter Presenter { get { return this.DataContext as CoordinatePanelPresenter; } }
-   
-    //#region INotifyPropertyChanged
-
-    //public event PropertyChangedEventHandler PropertyChanged;
-
-    //protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
-    //{
-    //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    //}
-
-    //#endregion
-
+    public CoordinatePanelPresenter? Presenter { get { return this.DataContext as CoordinatePanelPresenter; } }
+    
     public CoordinatePanelView()
     {
         InitializeComponent();
     }
      
-
     private void options_MouseDown(object sender, MouseButtonEventArgs e)
     {
         this.optionsRow.Height = new GridLength(1, GridUnitType.Auto);
 
-        this.optionsRow2.Height = new GridLength(1, GridUnitType.Auto);
-
-        this.Opacity = 1;
+        this.optionsRow2.Height = new GridLength(1, GridUnitType.Auto); 
     }
 
+    private void UserControl_MouseLeave(object sender, MouseEventArgs e)
+    {
+        this.optionsRow.Height = new GridLength(0, GridUnitType.Pixel);
+
+        this.optionsRow2.Height = new GridLength(0, GridUnitType.Pixel); 
+    }
 
 
     /// <summary>
@@ -55,15 +47,6 @@ public partial class CoordinatePanelView : NotifiableUserControl
         Presenter.SelectedItem?.Update(geodeticPoint.AsPoint());
     }
 
-
-    private void UserControl_MouseLeave(object sender, MouseEventArgs e)
-    {
-        this.optionsRow.Height = new GridLength(0, GridUnitType.Pixel);
-
-        this.optionsRow2.Height = new GridLength(0, GridUnitType.Pixel);
-
-        this.Opacity = .8;
-    }
 
     public Point Position
     {
@@ -91,17 +74,16 @@ public partial class CoordinatePanelView : NotifiableUserControl
         set { SetValue(CurrentHeightProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for Height.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty CurrentHeightProperty =
         DependencyProperty.Register("CurrentHeight", typeof(double?), typeof(CoordinatePanelView), new PropertyMetadata(null));
-     
+    
+    
     public bool IsHeightAvailable
     {
         get { return (bool)GetValue(IsHeightAvailableProperty); }
         set { SetValue(IsHeightAvailableProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for IsHeightAvailable.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty IsHeightAvailableProperty =
         DependencyProperty.Register("IsHeightAvailable", typeof(bool), typeof(CoordinatePanelView), new PropertyMetadata(false));
 
