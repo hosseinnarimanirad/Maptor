@@ -96,10 +96,12 @@ public class ActiveExtentViewModel : Notifier
     }
 
 
+
+
     public void UpdateExtent(BoundingBox newExtent, bool changedEvent)
     {
         this.Extent = newExtent;
-
+         
         if (newExtent.Center.X != MapCenter.X || newExtent.Center.Y != MapCenter.Y)
         {
             this.MapCenter.CanTriggerPositionChange = false;

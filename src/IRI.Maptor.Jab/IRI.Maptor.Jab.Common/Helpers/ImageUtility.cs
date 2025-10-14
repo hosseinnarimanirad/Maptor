@@ -49,9 +49,12 @@ public static class ImageUtility
         return result;
     }
 
-    public static BitmapImage? CreateBitmapImage(byte[] array, int? decodePixelWidth = null, int? decodePixelHeight = null)
+    public static BitmapImage? CreateBitmapImage(byte[]? array, int? decodePixelWidth = null, int? decodePixelHeight = null)
     {
         BitmapImage image = new BitmapImage();
+
+        if (array is null)
+            return image;
 
         try
         {

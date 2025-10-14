@@ -23,15 +23,13 @@ public static class ZipFileHelper
     }
 
     public static string? OpenAndReadAsString(string zippedArchiveFile, string fileName)
-    {
+    { 
         var archive = ZipFile.OpenRead(zippedArchiveFile);
 
         var file = archive.Entries.Where(i => i.FullName.Equals(fileName, StringComparison.OrdinalIgnoreCase));
 
         if (!(file?.Count() == 1))
-        {
             return null;
-        }
 
         var stream = file.First().Open();
 

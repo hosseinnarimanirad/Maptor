@@ -3502,8 +3502,6 @@ public partial class MapViewer : NotifiableUserControl
 
             newZoomLevel = CheckGoogleZoomLevel(newZoomLevel);
 
-            Debug.Print($"newZoomLevel: {newZoomLevel}");
-
             //98.01.18. consider using
             this.ZoomAndCenter(WebMercatorUtility.GetGoogleMapScale(newZoomLevel), mapCenter.AsPoint());
         }
