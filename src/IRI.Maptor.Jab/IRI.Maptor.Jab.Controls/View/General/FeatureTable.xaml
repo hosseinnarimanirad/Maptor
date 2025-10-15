@@ -61,11 +61,14 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type model:FeatureTableCommand}">
                 <Button VerticalAlignment="Center" Margin="4" Cursor="Hand" 
-                           Command="{Binding Command}" IsEnabled="{Binding IsEnabled}" 
-                           CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor} }" 
-                           BorderThickness="0" Focusable="False" ToolTip="{Binding ToolTip}" Height="24" Width="24"
-                           Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Path Data="{Binding PathMarkup}" Fill="White" Stretch="Uniform"  FlowDirection="LeftToRight" Margin="4"/>
+                        Background="{DynamicResource MahApps.Brushes.Accent}"
+                        Command="{Binding Command}" IsEnabled="{Binding IsEnabled}" 
+                        CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor} }" 
+                        BorderThickness="0" Focusable="False" ToolTip="{Binding ToolTip}" Height="24" Width="24"
+                        Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                    <Viewbox>
+                        <Path Data="{Binding PathMarkup}" Fill="White" Stretch="Uniform" FlowDirection="LeftToRight" Margin="0"/>
+                    </Viewbox>
                 </Button> 
             </DataTemplate>
         </ResourceDictionary>
