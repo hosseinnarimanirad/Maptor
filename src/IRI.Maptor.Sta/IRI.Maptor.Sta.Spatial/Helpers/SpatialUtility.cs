@@ -161,20 +161,25 @@ public static class SpatialUtility
         return s; // in meters
     }
 
+    public static double GetGroundLength<T>(T firstPoint, T secondPoint, double meanHeight) where T : IPoint
+    {
+        return GetEllipsoidalLength(firstPoint,secondPoint) * (1.0 + meanHeight / WebMercatorUtility.EarthRadius);
+    }
+
     #endregion
 
 
-    #region Area
+        #region Area
 
-    #region Euclidean Area
+        #region Euclidean Area
 
-    /// <summary>
-    /// Calculate Signed Euclidean area for ring. 
-    /// Clockwise rings have negative area and CounterClockwise rings have positive area
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="points">last point should not be repeated for ring</param>
-    /// <returns>Signed Euclidean area for ring</returns>
+        /// <summary>
+        /// Calculate Signed Euclidean area for ring. 
+        /// Clockwise rings have negative area and CounterClockwise rings have positive area
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="points">last point should not be repeated for ring</param>
+        /// <returns>Signed Euclidean area for ring</returns>
     public static double GetSignedEuclideanArea<T>(List<T> points) where T : IPoint
     {
         if (points == null || points.Count < 3)

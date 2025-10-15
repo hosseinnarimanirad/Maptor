@@ -1,15 +1,17 @@
-﻿using IRI.Maptor.Jab.Common.Events;
+﻿using System;
+
 using IRI.Maptor.Sta.Common.Helpers;
-using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Analysis;
+using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using System;
 
 namespace IRI.Maptor.Jab.Common.Presenters;
 
 public class ActiveExtentViewModel : Notifier
 {
-    public event EventHandler OnExtentChanged;
+    public event EventHandler? OnExtentChanged;
+
+    public event EventHandler? OnExtentChanging;
 
     public ActiveExtentViewModel(Locateable mapCenter, double mapWidth, double mapHeight)
     {
@@ -48,7 +50,7 @@ public class ActiveExtentViewModel : Notifier
         }
     }
 
-    private string _topLabel;
+    private string _topLabel = string.Empty;
     public string TopLabel
     {
         get { return _topLabel; }
@@ -60,7 +62,7 @@ public class ActiveExtentViewModel : Notifier
     }
 
 
-    private string _bottomLabel;
+    private string _bottomLabel = string.Empty;
     public string BottomLabel
     {
         get { return _bottomLabel; }
@@ -72,7 +74,7 @@ public class ActiveExtentViewModel : Notifier
     }
 
 
-    private string _leftLabel;
+    private string _leftLabel = string.Empty;
     public string LeftLabel
     {
         get { return _leftLabel; }
@@ -84,7 +86,7 @@ public class ActiveExtentViewModel : Notifier
     }
 
 
-    private string _rightLabel;
+    private string _rightLabel = string.Empty;
     public string RightLabel
     {
         get { return _rightLabel; }
@@ -101,7 +103,7 @@ public class ActiveExtentViewModel : Notifier
     public void UpdateExtent(BoundingBox newExtent, bool changedEvent)
     {
         this.Extent = newExtent;
-         
+
         if (newExtent.Center.X != MapCenter.X || newExtent.Center.Y != MapCenter.Y)
         {
             this.MapCenter.CanTriggerPositionChange = false;
@@ -127,5 +129,7 @@ public class ActiveExtentViewModel : Notifier
         if (changedEvent)
             this.OnExtentChanged?.Invoke(this, EventArgs.Empty);
 
+        else
+            this.OnExtentChanging?.Invoke(this, EventArgs.Empty);
     }
 }

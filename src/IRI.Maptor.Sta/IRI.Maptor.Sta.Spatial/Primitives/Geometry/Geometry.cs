@@ -2309,6 +2309,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
         return GetLength(SpatialUtility.GetEllipsoidalLength);
     }
+     
 
     //public double GetEuclideanLength()
     //{
