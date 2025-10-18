@@ -47,7 +47,7 @@
                               Source="{Binding Layers, RelativeSource={RelativeSource AncestorType=userControl:NotifiableUserControl}}" 
                               Filter="CollectionViewSource_Filter">
             <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="TocOrder"/>
+                <scm:SortDescription PropertyName="TocOrder" Direction="Descending"/>
             </CollectionViewSource.SortDescriptions>
         </CollectionViewSource>
         <HierarchicalDataTemplate x:Key="legendTemplate" ItemsSource="{Binding SubLayers}">
@@ -80,7 +80,6 @@
                     </Style.Triggers>
                 </Style>
             </HierarchicalDataTemplate.Resources>
-
             <RadioButton Style="{StaticResource {x:Type ToggleButton}}" 
                         GroupName="{Binding ElementName=root, Path=GroupName}"
                         HorizontalAlignment="Stretch" 

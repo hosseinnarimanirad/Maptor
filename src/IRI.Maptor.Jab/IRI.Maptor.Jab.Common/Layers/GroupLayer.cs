@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 
@@ -33,9 +34,12 @@ public class GroupLayer : BaseLayer
 
         if (!this.SubLayers.Contains(layer))
         {
-            this.SubLayers.Add(layer);
-        }
+            var index = this.SubLayers.Count(x => x.ZIndex > layer.ZIndex);
+            
+            this.SubLayers.Insert(index, layer);
 
+            //this.SubLayers.Add(layer);
+        }
     }
 
     public override string ToString()
