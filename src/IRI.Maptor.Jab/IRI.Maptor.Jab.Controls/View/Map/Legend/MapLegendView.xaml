@@ -4,6 +4,7 @@
             xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common" 
             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
+                                       xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
             x:Name="root"
             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.View"  >
     <userControl:NotifiableUserControl.Resources>
@@ -44,7 +45,11 @@
         </Style>
         <CollectionViewSource x:Key="collectionViewSource" 
                               Source="{Binding Layers, RelativeSource={RelativeSource AncestorType=userControl:NotifiableUserControl}}" 
-                              Filter="CollectionViewSource_Filter"/>
+                              Filter="CollectionViewSource_Filter">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="TocOrder"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
         <HierarchicalDataTemplate x:Key="legendTemplate" ItemsSource="{Binding SubLayers}">
             <HierarchicalDataTemplate.Resources>
                 <Style TargetType="ToggleButton">

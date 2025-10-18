@@ -81,7 +81,6 @@ public abstract class BaseLayer : Notifier, ILayer
     public bool IsSearchable { get; set; } = false;
 
     private bool _isInScaleRange;
-
     public bool IsInScaleRange
     {
         get { return _isInScaleRange; }
