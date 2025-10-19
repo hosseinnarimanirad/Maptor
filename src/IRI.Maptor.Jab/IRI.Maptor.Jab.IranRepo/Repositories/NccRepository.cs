@@ -28,7 +28,7 @@ public static class NccRepository
         if (label is not null)
         {
             //vectorLayer.Labels = label;
-            vectorLayer.SetSymbolizer(new LabelSymbolizer(label));
+            vectorLayer.SetSymbolizer(new LabelSymbolizer(label, string.Empty));
         }
 
         return vectorLayer;

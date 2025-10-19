@@ -140,8 +140,15 @@ public static class SldExtensions
                 symbolizer.MaxScaleDenominator = rule.MaxScaleDenominator;
                 symbolizer.MinScaleDenominator = rule.MinScaleDenominator;
 
+                if (rule.Filter is null)
+                {
+                    symbolizer.IsFilterPassed = f => true;
+                }
+                else
+                {
+                    symbolizer.IsFilterPassed = rule.Filter.ParseFilter();
+                }
 
-                symbolizer.IsFilterPassed = rule.Filter.ParseFilter();
 
                 result.Add(symbolizer);
             }
@@ -294,7 +301,9 @@ public static class SldExtensions
 
         var labelParameters = VisualParameters.CreateLabel(ScaleInterval.All, fontSize, new SolidColorBrush(fillColor), fontFamily, p => p.AsPoint(), isRtl: false);
 
-        return new LabelSymbolizer(labelParameters);
+        var labelAttribute = textSymbolizer.Label?.PropertyName ?? string.Empty;
+
+        return new LabelSymbolizer(labelParameters, labelAttribute);
     }
 
 

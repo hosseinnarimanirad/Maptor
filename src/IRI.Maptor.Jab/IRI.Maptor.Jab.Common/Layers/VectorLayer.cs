@@ -163,7 +163,7 @@ public class VectorLayer : SymbolizableLayer
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(parameters)];
 
         if (labeling is not null)
-            symbolizers.Add(new LabelSymbolizer(labeling));
+            symbolizers.Add(new LabelSymbolizer(labeling, string.Empty));
 
         Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange/*, pointSymbol, labeling*/);
     }
@@ -177,7 +177,10 @@ public class VectorLayer : SymbolizableLayer
                       ScaleInterval visibleRange,
                       VisualParameters? labeling = null)
     {
-       
+
+        if (labeling is not null)
+            symbolizers.Add(new LabelSymbolizer(labeling, string.Empty));
+
         Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange);
     }
 

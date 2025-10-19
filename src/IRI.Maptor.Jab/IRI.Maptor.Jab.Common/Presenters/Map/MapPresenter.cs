@@ -1473,7 +1473,7 @@ public abstract class MapPresenter : BasePresenter
 
         var labelParameters = VisualParameters.GetDefaultForDrawingItemLabels(simpleVisualParameters.Stroke);
 
-        List<ISymbolizer> symbolizers = [new SimpleSymbolizer(simpleVisualParameters), new LabelSymbolizer(labelParameters)];
+        List<ISymbolizer> symbolizers = [new SimpleSymbolizer(simpleVisualParameters), new LabelSymbolizer(labelParameters, feature.LabelAttribute)];
 
         var drawingItemLayer = CreateDrawingItemLayer(feature, featureName, symbolizers/*, id*//*, source*/);
 

@@ -84,7 +84,7 @@ public class GdiBitmapRenderStrategy : RenderStrategy
                     case LabelSymbolizer labelSymbolizer:
                         if (labelSymbolizer.Param?.IsInScaleRangeAndSelected(1.0 / mapScale) == true)
                         {
-                            DrawLabels(filteredFeatures, graphics, labelSymbolizer.Param);
+                            DrawLabels(filteredFeatures, graphics, labelSymbolizer.Param, labelSymbolizer.LabelAttribute);
                         }
                         break;
 
@@ -110,7 +110,7 @@ public class GdiBitmapRenderStrategy : RenderStrategy
             AddGeometry(graphics, item.TheGeometry, pen, brush, pointSymbol);
         }
     }
-     
+
     private int AddGeometry(Drawing.Graphics graphics, Geometry<Point> geometry, Drawing.Pen pen, Drawing.Brush brush, SimplePointSymbolizer pointSymbol)
     {
         if (geometry.IsNotValidOrEmpty())
@@ -292,7 +292,7 @@ public class GdiBitmapRenderStrategy : RenderStrategy
         }
     }
 
-    private void DrawLabels(List<Feature<Point>> features, Drawing.Graphics graphic, VisualParameters labelParameters)
+    private void DrawLabels(List<Feature<Point>> features, Drawing.Graphics graphic, VisualParameters labelParameters, string? labelAttribute = null)
     {
         if (features.IsNullOrEmpty())
             return;
@@ -323,7 +323,9 @@ public class GdiBitmapRenderStrategy : RenderStrategy
         {
             var location = mapCoordinates[i];
 
-            var stringSize = graphic.MeasureString(features[i].Label, font);
+            var labelValue = (string.IsNullOrEmpty(labelAttribute) ? features[i]?.Label : features[i]?.Attributes[labelAttribute]?.ToString()) ?? string.Empty;
+
+            var stringSize = graphic.MeasureString(/*features[i].Label*/labelValue, font);
 
             Drawing.PointF locationF = new Drawing.PointF((float)(location.X - stringSize.Width / 2.0), (float)(location.Y - stringSize.Height / 2.0));
 
@@ -333,7 +335,7 @@ public class GdiBitmapRenderStrategy : RenderStrategy
 
             graphic.FillRectangle(_labelBackground, rectangleF);
 
-            graphic.DrawString(features[i].Label, font, brush, locationF, format);
+            graphic.DrawString(/*features[i].Label*/labelValue, font, brush, locationF, format);
         }
 
         graphic.Flush();
