@@ -1343,7 +1343,7 @@ public partial class MapViewer : NotifiableUserControl
         //consider if layer was Labeled
         var lines = gridLayer.GetLines(extent);
 
-        VectorLayer layer = new VectorLayer("temp grid", lines, LayerType.VectorLayer,
+        VectorLayer layer = new VectorLayer("temp grid", lines, VisualParameters.CreateNew(1), LayerType.VectorLayer,
             RenderMode.Default,
             RasterizationMethod.DrawingVisual);
 
@@ -1999,7 +1999,7 @@ public partial class MapViewer : NotifiableUserControl
             var mapHeight = ScreenToMap(height);
 
             var newExtent = new sb.BoundingBox(new sb.Point(item.X, item.Y), mapWidth, mapHeight);
-            
+
             Canvas.SetLeft(activeExtentView, 0);
             Canvas.SetTop(activeExtentView, 0);
 

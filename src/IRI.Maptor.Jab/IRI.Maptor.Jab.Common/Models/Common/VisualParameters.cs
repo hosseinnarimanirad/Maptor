@@ -427,7 +427,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
     {
     }
 
-    public VisualParameters(Brush? fill, Brush? stroke, double strokeThickness, double opacity, bool isOn = true /*, Visibility visibility = Visibility.Visible*/)
+    public VisualParameters(Brush? fill, Brush? stroke, double strokeThickness, double opacity, bool isOn = true)
     {
         this.Fill = fill ?? Brushes.Transparent;
 
@@ -542,10 +542,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
     /// </summary>
     /// <param name="opacity"></param>
     /// <returns></returns>
-    public static VisualParameters CreateNew(double opacity = 1)
-    {
-        return new VisualParameters(opacity);
-    }
+    public static VisualParameters CreateNew(double opacity = 1) => new VisualParameters(opacity);
 
     public static VisualParameters CreateNew(double opacity, double strokeThickness = 1, bool withoutFill = false)
     {

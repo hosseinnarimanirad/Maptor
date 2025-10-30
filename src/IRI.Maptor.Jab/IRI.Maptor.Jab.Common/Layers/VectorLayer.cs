@@ -32,61 +32,18 @@ public class VectorLayer : SymbolizableLayer
 
     public IVectorDataSource DataSource { get; protected set; }
 
-    //private FrameworkElement? _element;
-    //public FrameworkElement? Element
-    //{
-    //    get { return this._element; }
-
-    //    set
-    //    {
-    //        this._element = value;
-
-    //        BindWithFrameworkElement(value);
-
-    //        RaisePropertyChanged();
-    //    }
-    //}
-
-    //public void BindWithFrameworkElement(FrameworkElement? element)
-    //{
-    //    if (element is null)
-    //        return;
-
-    //    Binding binding4 = new Binding() { Source = this, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
-    //    element.SetBinding(Path.VisibilityProperty, binding4);
-
-    //    Binding binding5 = new Binding() { Source = this, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
-    //    element.SetBinding(Path.OpacityProperty, binding5);
-    //}
-
     protected LayerType _type;
     public override LayerType Type
     {
         get { return _type; }
-        //protected set
-        //{
-        //    _type = value;
-        //    RaisePropertyChanged();
-        //}
     }
 
 
-    //private BoundingBox _extent;
-    //public override BoundingBox Extent
-    //{
-    //    get { return _extent; }
-    //    protected set
-    //    {
-    //        _extent = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
-
     private RenderMode _rendering = RenderMode.Default;
-    public override RenderMode RenderMode { get => _rendering;/* private set;*/ }
+    public override RenderMode RenderMode { get => _rendering; }
 
     protected RasterizationMethod _rasterizationApproach = RasterizationMethod.DrawingVisual;
-    public override RasterizationMethod RasterizationMethod { get => _rasterizationApproach; /*protected set;*/ }
+    public override RasterizationMethod RasterizationMethod { get => _rasterizationApproach; }
 
 
     private int _numberOfSelectedFeatures;
@@ -103,16 +60,7 @@ public class VectorLayer : SymbolizableLayer
         }
     }
 
-    public bool HasSelectedFeatures
-    {
-        get { return NumberOfSelectedFeatures > 0; }
-    }
-
-    //public override bool IsSymbolizable => true;
-
-    //public bool IsValid { get; set; }
-
-    //public void Invalidate() => IsValid = false;
+    public bool HasSelectedFeatures => NumberOfSelectedFeatures > 0;
 
     public TileManager TileManager = new TileManager();
 
@@ -120,18 +68,16 @@ public class VectorLayer : SymbolizableLayer
 
     #region Constructors
 
-    internal VectorLayer()
-    {
-    }
+    internal VectorLayer() { }
 
-    public VectorLayer(string layerName,
-                        List<Geometry<Point>> features,
-                        LayerType type,
-                        RenderMode renderMode,
-                        RasterizationMethod rasterizationMethod)
-        : this(layerName, features, new VisualParameters(BrushHelper.PickBrush(), BrushHelper.PickBrush(), 1, 1), type, renderMode, rasterizationMethod)
-    {
-    }
+    //public VectorLayer(string layerName,
+    //                    List<Geometry<Point>> features,
+    //                    LayerType type,
+    //                    RenderMode renderMode,
+    //                    RasterizationMethod rasterizationMethod)
+    //    : this(layerName, features, new VisualParameters(BrushHelper.PickBrush(), BrushHelper.PickBrush(), 1, 1), type, renderMode, rasterizationMethod)
+    //{
+    //}
 
     public VectorLayer(string layerName,
                         List<Geometry<Point>> features,
@@ -156,8 +102,7 @@ public class VectorLayer : SymbolizableLayer
                         LayerType type,
                         RenderMode renderMode,
                         RasterizationMethod rasterizationMethod,
-                        ScaleInterval visibleRange,
-                        //SimplePointSymbolizer? pointSymbol = null,
+                        ScaleInterval visibleRange, 
                         VisualParameters? labeling = null)
     {
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(parameters)];
@@ -190,9 +135,7 @@ public class VectorLayer : SymbolizableLayer
                             LayerType type,
                             RenderMode rendering,
                             RasterizationMethod toRasterTechnique,
-                            ScaleInterval visibleRange)//,
-                                                       //SimplePointSymbolizer? pointSymbol,
-                                                       //VisualParameters? labeling)
+                            ScaleInterval visibleRange) 
     {
         this.LayerId = Guid.NewGuid();
 
@@ -204,9 +147,11 @@ public class VectorLayer : SymbolizableLayer
 
         this._type = type;
 
-        if (dataSource.GeometryType.AsLayerType() is not null)
+        var layerType = dataSource.GeometryType.AsLayerType();
+
+        if (layerType is not null)
         {
-            this._type = type | dataSource.GeometryType.AsLayerType().Value; /*GetGeometryType(geometries.FirstOrDefault(g => g != null))*/;
+            this._type = type | layerType.Value;
         }
         else
         {
@@ -216,42 +161,18 @@ public class VectorLayer : SymbolizableLayer
         this.Extent = dataSource.WebMercatorExtent;
 
         this.LayerName = layerName;
-
-        //this.VisualParameters = parameters;
-
-        //this.PointSymbol = pointSymbol ?? new SimplePointSymbol() { SymbolWidth = 4, SymbolHeight = 4 };
-
-
+         
         foreach (var item in symbolizers)
         {
             this.SetSymbolizer(item);
         }
-
-        //this.Labels = labeling;
-
-        ////Check for missing visibleRange
-        //if (this.Labels != null)
-        //{
-        //    if (this.Labels.VisibleRange == null)
-        //    {
-        //        this.Labels.VisibleRange = visibleRange;
-        //    }
-
-        //    this.Symbolizers.Add(new LabelSymbolizer(labeling));
-        //}
-
+         
         this.VisibleRange = (visibleRange == null) ? ScaleInterval.All : visibleRange;
     }
 
-
-
-
     #endregion
 
-    public override string ToString()
-    {
-        return $"{Enum.GetName(this.Type)} - {this.DataSource?.ToString()}";
-    }
+    public override string ToString() => $"{Enum.GetName(this.Type)} - {this.DataSource?.ToString()}";
 
     public static Func<Point, Point> CreateMapToScreenMapFunc(BoundingBox mapExtent, double screenWidth, double screenHeight)
     {
@@ -554,7 +475,7 @@ public class VectorLayer : SymbolizableLayer
 
     #region Events
 
-    public event EventHandler<CustomEventArgs<VectorLayer>> OnSelectedFeaturesChanged;
+    public event EventHandler<CustomEventArgs<VectorLayer>>? OnSelectedFeaturesChanged;
 
     #endregion
 }
