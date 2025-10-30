@@ -2475,13 +2475,15 @@ public abstract class MapPresenter : BasePresenter
         {
             var dataSource = await ShapefileDataSourceFactory.CreateAsync(fileName, new WebMercator());
 
-            var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName), dataSource,
-                new VisualParameters(null, BrushHelper.PickBrush(), 3, 1),
-                LayerType.VectorLayer,
-                RenderMode.Default,
-                RasterizationMethod.GdiPlus, ScaleInterval.All);
+            var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
+                                dataSource,
+                                [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)], //new VisualParameters(null, BrushHelper.PickBrush(), 3, 1),
+                                LayerType.VectorLayer,
+                                RenderMode.Default,
+                                RasterizationMethod.GdiPlus,
+                                ScaleInterval.All);
 
-            AddLayer/*<Feature<Point>>*/(vectorLayer);
+            AddLayer(vectorLayer);
         }
         catch (Exception ex)
         {
@@ -2626,8 +2628,7 @@ public abstract class MapPresenter : BasePresenter
 
             var features = featureSet.Features.Select(f => f.AsFeature(true, SrsBases.WebMercator)).ToList();
 
-            //var dataSource = GeoJsonSource<SqlFeature>.CreateFromFile(fileName, f => f);
-            var dataSource = new MemoryDataSource(features/*, f => f.Label*//*, null*/);
+            var dataSource = new MemoryDataSource(features);
 
             AddLayer(new VectorLayer("", dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All));
 
@@ -2672,8 +2673,7 @@ public abstract class MapPresenter : BasePresenter
             var features = featureSet.Features.Select(f => f.AsFeature(true, SrsBases.WebMercator)).ToList();
 
             // todo: provide parameter instead of `null`
-            var dataSource = new MemoryDataSource(
-                features/*,f => f.Label,null*/);
+            var dataSource = new MemoryDataSource(features);
 
             AddLayer(new VectorLayer("", dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All));
 
@@ -2703,7 +2703,7 @@ public abstract class MapPresenter : BasePresenter
             var dataSource = OrdinaryJsonListSource.CreateFromFile<Feature<Point>>(geoJsonFeatureSetFileName, f => f);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(geoJsonFeatureSetFileName), dataSource,
-                new VisualParameters(null, BrushHelper.PickBrush(), 3, 1),
+                [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.GdiPlus, ScaleInterval.All);

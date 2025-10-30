@@ -93,6 +93,9 @@ public class VectorLayer : SymbolizableLayer
 
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(parameters)];
 
+        if (parameters.IsLabelParameters)
+            symbolizers.Add(new LabelSymbolizer(parameters, string.Empty));
+
         Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, ScaleInterval.All);
     }
 
@@ -102,15 +105,14 @@ public class VectorLayer : SymbolizableLayer
                         LayerType type,
                         RenderMode renderMode,
                         RasterizationMethod rasterizationMethod,
-                        ScaleInterval visibleRange, 
-                        VisualParameters? labeling = null)
+                        ScaleInterval visibleRange)
     {
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(parameters)];
 
-        if (labeling is not null)
-            symbolizers.Add(new LabelSymbolizer(labeling, string.Empty));
+        if (parameters.IsLabelParameters)
+            symbolizers.Add(new LabelSymbolizer(parameters, string.Empty));
 
-        Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange/*, pointSymbol, labeling*/);
+        Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange);
     }
 
     public VectorLayer(string layerName,
@@ -119,12 +121,12 @@ public class VectorLayer : SymbolizableLayer
                       LayerType type,
                       RenderMode renderMode,
                       RasterizationMethod rasterizationMethod,
-                      ScaleInterval visibleRange,
-                      VisualParameters? labeling = null)
+                      ScaleInterval visibleRange)//,
+                      //VisualParameters? labeling = null)
     {
 
-        if (labeling is not null)
-            symbolizers.Add(new LabelSymbolizer(labeling, string.Empty));
+        //if (labeling is not null)
+        //    symbolizers.Add(new LabelSymbolizer(labeling, string.Empty));
 
         Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange);
     }
@@ -135,7 +137,7 @@ public class VectorLayer : SymbolizableLayer
                             LayerType type,
                             RenderMode rendering,
                             RasterizationMethod toRasterTechnique,
-                            ScaleInterval visibleRange) 
+                            ScaleInterval? visibleRange) 
     {
         this.LayerId = Guid.NewGuid();
 
@@ -145,18 +147,26 @@ public class VectorLayer : SymbolizableLayer
 
         this._rasterizationApproach = toRasterTechnique;
 
+
         this._type = type;
 
         var layerType = dataSource.GeometryType.AsLayerType();
 
         if (layerType is not null)
-        {
-            this._type = type | layerType.Value;
-        }
-        else
-        {
-            this._type = type;
-        }
+            this._type |= layerType.Value;
+
+        //this._type = type;
+
+        //var layerType = dataSource.GeometryType.AsLayerType();
+
+        //if (layerType is not null)
+        //{
+        //    this._type = type | layerType.Value;
+        //}
+        //else
+        //{
+        //    this._type = type;
+        //}
 
         this.Extent = dataSource.WebMercatorExtent;
 

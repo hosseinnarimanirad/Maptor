@@ -35,7 +35,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
     //public event EventHandler<CustomEventArgs<VisualParameters>>? OnIsInScaleRangeChanged;
 
     //public event EventHandler<CustomEventArgs<VisualParameters>>? OnIsOnChanged;
-     
+
 
     #region General Properties
 
@@ -209,7 +209,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 
     public Func<Geometry<Sb.Point>, Sb.Point>? PositionFunc { get; set; }
 
-    public bool IsLabelParameters => FontFamily != null;
+    public bool IsLabelParameters => FontFamily != null || Foreground != null || Background != null;
 
     private int _fontSize;
     public int FontSize
@@ -462,7 +462,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 
     public bool IsInScaleRange(double inverseMapScale)
     {
-        return VisibleRange.IsInRange(inverseMapScale) ;
+        return VisibleRange.IsInRange(inverseMapScale);
     }
 
     public VisualParameters Clone()
@@ -499,7 +499,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
     {
         if (stroke is null)
             return;
-         
+
         var strokeValue = stroke.StrokeValue;
         var strokeThickness = stroke.StrokeThicknessValue;
         var strokeOpacity = stroke.StrokeOpacityValue;
@@ -524,12 +524,21 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
     {
         if (fill is null)
             return;
-         
+
         var fillValue = fill.FillValue;
         var fillOpacity = fill.FillOpacityValue;
 
         this.Fill = BrushHelper.CreateBrush(fillValue, fillOpacity);
 
+    }
+
+    public void MergeWithLabel(VisualParameters labelParameters)
+    {
+        this.FontFamily = labelParameters.FontFamily;
+        this.FontSize = labelParameters.FontSize;
+        this.Foreground = labelParameters.Foreground;
+        this.PositionFunc = labelParameters.PositionFunc;
+        this.IsRtl = labelParameters.IsRtl;
     }
 
     #endregion

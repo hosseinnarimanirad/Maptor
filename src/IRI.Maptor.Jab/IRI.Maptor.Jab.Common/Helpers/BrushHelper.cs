@@ -50,7 +50,7 @@ public static class BrushHelper
         return converter.ConvertFromString(colorNameOrHex) as SolidColorBrush ?? Brushes.Transparent;
     }
 
-    public static Brush CreateBrush(string hexColor) => new SolidColorBrush(ColorHelper.ToWpfColor(hexColor));
+    public static Brush? CreateBrush(string? hexColor) => string.IsNullOrEmpty(hexColor) ? null : new SolidColorBrush(ColorHelper.ToWpfColor(hexColor));
 
     public static Brush CreateBrush(string hexColor, double opacity) => new SolidColorBrush(ColorHelper.ToWpfColor(hexColor, opacity));
 
@@ -61,7 +61,7 @@ public static class BrushHelper
 
         // Scale existing alpha
         byte alpha = (byte)Math.Round(color.A * opacity);
- 
+
         return new SolidColorBrush(Color.FromArgb((byte)alpha, r: color.R, g: color.G, b: color.B));
     }
 
@@ -73,7 +73,7 @@ public static class BrushHelper
     public static System.Drawing.Brush CreateGdiBrush(string hexColor, double opacity)
     {
         var color = ColorHelper.ToGdiColor(hexColor, opacity);
-         
+
         return new System.Drawing.SolidBrush(color);
     }
 

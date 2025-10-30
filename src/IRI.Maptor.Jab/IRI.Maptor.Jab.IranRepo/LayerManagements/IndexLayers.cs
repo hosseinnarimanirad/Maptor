@@ -12,6 +12,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 namespace IRI.Maptor.Jab.IranRepo;
 
@@ -36,29 +37,27 @@ public static class IndexLayers
     {
         var jsonString = ZipFileHelper.OpenAndReadAsString("iriRepo.dll", "IriIndex250k");
 
-        var source = OrdinaryJsonListSource.CreateFromJsonString<Index250k>(jsonString, i => i.AsFeature()/*, i => i.SheetNameEn*/);
+        var source = OrdinaryJsonListSource.CreateFromJsonString<Index250k>(jsonString!, i => i.AsFeature());
 
-        VisualParameters parameters = new VisualParameters(null, "#FFEA4333", 5, .9);
+        var symbolizer = SimpleSymbolizer.Create(null, "#FFEA4333", 5, .9);
 
-        var index250kLabels = VisualParameters.CreateLabel(ScaleInterval.Create(7), 12, parameters.Stroke, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
+        var index250kLabels = LabelSymbolizer.Create(string.Empty, 12, symbolizer!.Param!.Stroke!, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(7), isRtl: false);
 
+        //"اندکس ۲۵۰ هزار", 
         return new VectorLayer(
-            //"اندکس ۲۵۰ هزار", 
             IRI.Maptor.Jab.Common.Properties.Resources.index_250k_title,
-            source, 
-            parameters, 
-            LayerType.VectorLayer, 
-            RenderMode.Default, 
-            RasterizationMethod.DrawingVisual, 
-            ScaleInterval.Create(4), 
-            index250kLabels)
+            source,
+            [symbolizer, index250kLabels],
+            LayerType.VectorLayer,
+            RenderMode.Default,
+            RasterizationMethod.DrawingVisual,
+            ScaleInterval.Create(4))
         {
             ShowInToc = false,
             CanUserDelete = false,
             Visibility = System.Windows.Visibility.Collapsed
             //Labels = index250kLabels
         };
-
     }
 
     public static VectorLayer GetIndex100kLayer()
@@ -67,20 +66,19 @@ public static class IndexLayers
 
         var source = OrdinaryJsonListSource.CreateFromJsonString<Index100k>(jsonString, i => i.AsFeature()/*, i => i.SheetNameEn*/);
 
-        VisualParameters parameters = new VisualParameters(null, "#FFEA4333", 3, .9);
+        var symbolizer = SimpleSymbolizer.Create(null, "#FFEA4333", 3, .9);
 
-        var index100kLabels = VisualParameters.CreateLabel(ScaleInterval.Create(9), 12, parameters.Stroke, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
+        var index100kLabels = LabelSymbolizer.Create(string.Empty, 12, symbolizer!.Param!.Stroke!, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(9), isRtl: false);
 
         return new VectorLayer(
             //"اندکس ۱۰۰ هزار", 
             IRI.Maptor.Jab.Common.Properties.Resources.index_100k_title,
-            source, 
-            parameters, 
-            LayerType.VectorLayer, 
-            RenderMode.Default, 
-            RasterizationMethod.GdiPlus, 
-            ScaleInterval.Create(5), 
-            index100kLabels)
+            source,
+             [symbolizer, index100kLabels],
+            LayerType.VectorLayer,
+            RenderMode.Default,
+            RasterizationMethod.GdiPlus,
+            ScaleInterval.Create(5))
         {
             ShowInToc = false,
             CanUserDelete = false,
@@ -96,16 +94,16 @@ public static class IndexLayers
 
         var source = OrdinaryJsonListSource.CreateFromJsonString<Index50k>(jsonString, i => i.AsFeature()/*, i => i.SheetNumber*/);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
+        var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 2, .8);
 
         return new VectorLayer(
             //"اندکس ۵۰ هزار", 
             IRI.Maptor.Jab.Common.Properties.Resources.index_50k_title,
-            source, 
-            parameters, 
-            LayerType.VectorLayer, 
-            RenderMode.Default, 
-            RasterizationMethod.GdiPlus, 
+            source,
+            [symbolizer,],
+            LayerType.VectorLayer,
+            RenderMode.Default,
+            RasterizationMethod.GdiPlus,
             ScaleInterval.Create(9))
         {
             ShowInToc = false,
@@ -121,16 +119,17 @@ public static class IndexLayers
 
         var source = OrdinaryJsonListSource.CreateFromJsonString<Index25k>(jsonString, i => i.AsFeature()/*, i => i.SheetNumber*/);
 
-        VisualParameters parameters = new VisualParameters(null, "#88FF8130", 2, .8) { DashStyle = DashStyles.Dot };
+        var symbolizer = SimpleSymbolizer.Create(null, "#88FF8130", 2, .8);
+        symbolizer!.Param!.DashStyle = DashStyles.Dot;
 
         return new VectorLayer(
             //"اندکس ۲۵ هزار", 
             IRI.Maptor.Jab.Common.Properties.Resources.index_25k_title,
-            source, 
-            parameters, 
-            LayerType.VectorLayer, 
-            RenderMode.Default, 
-            RasterizationMethod.GdiPlus, 
+            source,
+            [symbolizer,],
+            LayerType.VectorLayer,
+            RenderMode.Default,
+            RasterizationMethod.GdiPlus,
             ScaleInterval.Create(10))
         {
             ShowInToc = false,
@@ -144,19 +143,14 @@ public static class IndexLayers
     {
         var index250k = IndexLayers.GetIndex250kLayer();
 
-        //var fontFamily = new FontFamily("Times New Roman");
-
-        index250k.Commands = GetCommands/*<Index250k>*/(map, index250k/*, index250kLabels*/);
+        index250k.Commands = GetCommands(map, index250k);
 
         //100k
         var index100k = IndexLayers.GetIndex100kLayer();
 
-        //var index100kLegend = new MapLegendItemWithOptionsModel(index100k);
-
-        index100k.Commands = GetCommands/*<Index100k>*/(map, index100k/*, index100kLabels*/);
+        index100k.Commands = GetCommands(map, index100k);
 
         return new List<ILayer>() { index250k, index100k };
-
     }
 
 
@@ -167,7 +161,6 @@ public static class IndexLayers
 
         var jsonString = ZipFileHelper.OpenAndReadAsString("iriRepo.dll", "IriIndex250k");
 
-        //return OrdinaryJsonListSource.CreateFromJsonString<Index250k>(jsonString, i => i.AsFeature()/*, i => i.SheetNameEn*/).GetGeometryAwares(geometry);
         return OrdinaryJsonListSource.CreateFromJsonString<Index250k>(jsonString, i => i.AsFeature()/*, i => i.SheetNameEn*/).GetAsFeatureSet(geometry);
     }
 
@@ -176,8 +169,6 @@ public static class IndexLayers
         var geometry = MapProjects.GeodeticWgs84ToWebMercator(geodeticPoint).AsGeometry(SridHelper.WebMercator);
 
         var jsonString = ZipFileHelper.OpenAndReadAsString("iriRepo.dll", "IriIndex100k");
-
-        //return OrdinaryJsonListSource.CreateFromJsonString<Index100k>(jsonString, i => i.AsFeature(), i => i.SheetNameEn).GetGeometryAwares(geometry);
 
         return OrdinaryJsonListSource.CreateFromJsonString<Index100k>(jsonString, i => i.AsFeature()/*, i => i.SheetNameEn*/).GetAsFeatureSet(geometry);
     }
@@ -188,7 +179,6 @@ public static class IndexLayers
 
         var jsonString = ZipFileHelper.OpenAndReadAsString("iriRepo.dll", "IriIndex50k");
 
-        //return OrdinaryJsonListSource.CreateFromJsonString<Index50k>(jsonString, i => i.AsFeature(), i => i.SheetNameEn).GetGeometryAwares(geometry);
         return OrdinaryJsonListSource.CreateFromJsonString<Index50k>(jsonString, i => i.AsFeature()/*, i => i.SheetNameEn*/).GetAsFeatureSet(geometry);
     }
 
@@ -197,7 +187,7 @@ public static class IndexLayers
     //
     public static List<ILayer> Get2kAndLowerIndexLayers(MapPresenter map, int utmZone)
     {
-        return new List<ILayer>() { Get2kDynamicIndexBlock(map, utmZone), Get2kDynamicIndexSheet(map, utmZone), Get1kDynamicIndex(map, utmZone), Get500DynamicIndex(map, utmZone) };
+        return [Get2kDynamicIndexBlock(map, utmZone), Get2kDynamicIndexSheet(map, utmZone), Get1kDynamicIndex(map, utmZone), Get500DynamicIndex(map, utmZone)];
     }
 
     public static VectorLayer Get2kDynamicIndexBlock(MapPresenter map, int utmZone)
@@ -206,21 +196,20 @@ public static class IndexLayers
 
         UtmGridDataSource source = UtmGridDataSource.Create(UtmIndexType.Ncc2kBlock, utmZone);
 
-        var label = VisualParameters.CreateLabel(ScaleInterval.Create(8), 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
+        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(8), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
+        var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 2, .8);
 
         var layer =
             new VectorLayer(
                 //"بلوک‌های ۲ هزار",
                 IRI.Maptor.Jab.Common.Properties.Resources.index_2kblocks_title,
                 source,
-                parameters,
+                [symbolizer, label],
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(6),
-                label)
+                ScaleInterval.Create(6))
             {
                 ShowInToc = false,
                 CanUserDelete = false,
@@ -238,21 +227,20 @@ public static class IndexLayers
 
         UtmGridDataSource source = UtmGridDataSource.Create(UtmIndexType.Ncc2kSheet, utmZone);
 
-        var label = VisualParameters.CreateLabel(ScaleInterval.Create(11), 13, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
+        var label = LabelSymbolizer.Create(string.Empty, 13, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(11), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
+        var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 2, .8);
 
         var layer =
             new VectorLayer(
                 //"اندکس ۲ هزار",
                 IRI.Maptor.Jab.Common.Properties.Resources.index_2kUtm_title,
                 source,
-                parameters,
+                [symbolizer, label],
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(11),
-                label)
+                ScaleInterval.Create(11))
             {
                 ShowInToc = false,
                 CanUserDelete = false,
@@ -270,21 +258,20 @@ public static class IndexLayers
 
         UtmGridDataSource source = UtmGridDataSource.Create(UtmIndexType.Ncc1k, utmZone);
 
-        var label = VisualParameters.CreateLabel(ScaleInterval.Create(14), 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
+        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(14), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
+        var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 2, .8);
 
         var layer =
             new VectorLayer(
                 //"اندکس ۱ هزار",
                 IRI.Maptor.Jab.Common.Properties.Resources.index_1kUtm_title,
                 source,
-                parameters,
+                [symbolizer, label],
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(13),
-                label)
+                ScaleInterval.Create(13))
             {
                 ShowInToc = false,
                 CanUserDelete = false,
@@ -302,21 +289,20 @@ public static class IndexLayers
 
         UtmGridDataSource source = UtmGridDataSource.Create(UtmIndexType.Ncc500, utmZone);
 
-        var label = VisualParameters.CreateLabel(ScaleInterval.Create(15), 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
+        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(15), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
+        var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 2, .8);
 
         var layer =
             new VectorLayer(
                 //"اندکس ۵۰۰",
                 IRI.Maptor.Jab.Common.Properties.Resources.index_500UtmTitle,
                 source,
-                parameters,
+                [symbolizer, label],
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(14),
-                label)
+                ScaleInterval.Create(14))
             {
                 ShowInToc = false,
                 CanUserDelete = false,
@@ -330,10 +316,7 @@ public static class IndexLayers
 
 
 
-    public static List<ILayer> Get50kAndHigherIndexLayers(MapPresenter map)
-    {
-        return new List<ILayer>() { Get50kDynamicIndex(map), Get25kDynamicIndex(map), Get10kDynamicIndex(map), Get5kDynamicIndex(map) };
-    }
+    public static List<ILayer> Get50kAndHigherIndexLayers(MapPresenter map) => [Get50kDynamicIndex(map), Get25kDynamicIndex(map), Get10kDynamicIndex(map), Get5kDynamicIndex(map)];
 
     public static VectorLayer Get50kDynamicIndex(MapPresenter map)
     {
@@ -341,21 +324,20 @@ public static class IndexLayers
 
         GridDataSource source50k = GridDataSource.Create(GeodeticIndexType.Ncc50k);
 
-        var label = VisualParameters.CreateLabel(ScaleInterval.Create(9), 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
+        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(9), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 2, .8);
+        var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 2, .8);
 
         var layer50k =
             new VectorLayer(
                 //"اندکس ۵۰ هزار",
                 IRI.Maptor.Jab.Common.Properties.Resources.index_50k_title,
                 source50k,
-                parameters,
+                [symbolizer, label],
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(7),
-                label)
+                ScaleInterval.Create(7))
             {
                 ShowInToc = false,
                 CanUserDelete = false,
@@ -373,21 +355,20 @@ public static class IndexLayers
 
         GridDataSource source25k = GridDataSource.Create(GeodeticIndexType.Ncc25k);
 
-        var label = VisualParameters.CreateLabel(ScaleInterval.Create(10, 19), 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
+        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(10, 19), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 1, .8);
+        var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 1, .8);
 
         var layer25k =
             new VectorLayer(
                 //"اندکس ۲۵ هزار",
                 IRI.Maptor.Jab.Common.Properties.Resources.index_25k_title,
                 source25k,
-                parameters,
+                [symbolizer, label],
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(8),
-                label)
+                ScaleInterval.Create(8))
             {
                 ShowInToc = false,
                 CanUserDelete = false,
@@ -403,21 +384,20 @@ public static class IndexLayers
     {
         var fontFamily = new FontFamily("Times New Roman");
 
-        var label = VisualParameters.CreateLabel(ScaleInterval.Create(11, 19), 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), isRtl: false);
+        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(11, 19), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 1, .8);
+        var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 1, .8);
 
         var layer10k =
             new VectorLayer(
                 //"اندکس ۱۰ هزار",
                 IRI.Maptor.Jab.Common.Properties.Resources.index_10k_title,
                 GridDataSource.Create(GeodeticIndexType.Ncc10k),
-                parameters,
+                [symbolizer, label],
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(9),
-                label)
+                ScaleInterval.Create(9))
             {
                 ShowInToc = false,
                 CanUserDelete = false,
@@ -433,21 +413,20 @@ public static class IndexLayers
     {
         var fontFamily = new FontFamily("Times New Roman");
 
-        var label = VisualParameters.CreateLabel(ScaleInterval.Create(12, 19), 14, Brushes.Red, fontFamily, i => i?.GetCentroidPlusPoint(), isRtl: false);
+        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i?.GetCentroidPlusPoint(), ScaleInterval.Create(12, 19), isRtl: false);
 
-        VisualParameters parameters = new VisualParameters(null, "#88EA4333", 1, .8);
+        var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 1, .8);
 
         var layer5k =
             new VectorLayer(
                 //"اندکس ۵ هزار",
                 IRI.Maptor.Jab.Common.Properties.Resources.index_5k_title,
                 GridDataSource.Create(GeodeticIndexType.Ncc5k),
-                parameters,
+                [symbolizer, label],
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(10),
-                label)
+                ScaleInterval.Create(10))
             {
                 ShowInToc = false,
                 CanUserDelete = false,
@@ -460,17 +439,13 @@ public static class IndexLayers
     }
 
 
-    private static List<ILegendCommand> GetCommands/*<T>*/(MapPresenter map, VectorLayer layer/*, VisualParameters.CreateLabel label*/)
-    //where T : class, IGeometryAware<Point>
-    {
-        return new List<ILegendCommand>()
-        {
+    private static List<ILegendCommand> GetCommands/*<T>*/(MapPresenter map, VectorLayer layer/*, VisualParameters.CreateLabel label*/) =>
+        [
             LegendCommand.CreateZoomToExtentCommand(map, layer),
             LegendCommand.CreateShowAttributeTable/*<T>*/(map,layer),
             LegendCommand.CreateSelectByDrawing/*<T>*/(map,layer),
             LegendCommand.CreateClearSelected(map,layer),
             LegendToggleCommand.CreateToggleLayerLabelCommand(map, layer/*, label*/)
-        };
-    }
+        ];
 
 }

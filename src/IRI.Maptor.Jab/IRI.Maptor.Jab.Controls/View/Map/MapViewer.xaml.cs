@@ -1013,25 +1013,25 @@ public partial class MapViewer : NotifiableUserControl
         this._layerManager.Remove(layer => layer.Type == LayerType.BaseMap && layer is TileServiceLayer && (layer as TileServiceLayer).GroupId == groupId, forceRemove: true);
     }
 
-    public void SetVectorLayer(
-        string layerName,
-        ScaleInterval scaleInterval,
-        IVectorDataSource dataSource,
-        VisualParameters visualElements,
-        RenderMode renderMode = RenderMode.Default,
-        Func<Geometry<sb.Point>, sb.Point>? positionFunc = null,
-        int fontSize = 0,
-        Geometry? pointSymbol = null)
-    {
-        //LabelParameters parameters = new LabelParameters(null, fontSize, new SolidColorBrush(Colors.Black), new FontFamily("irannastaliq"), positionFunc);
-        var foreground = new SolidColorBrush(Colors.Black);
+    //public void SetVectorLayer(
+    //    string layerName,
+    //    ScaleInterval scaleInterval,
+    //    IVectorDataSource dataSource,
+    //    VisualParameters visualElements,
+    //    RenderMode renderMode = RenderMode.Default,
+    //    Func<Geometry<sb.Point>, sb.Point>? positionFunc = null,
+    //    int fontSize = 0,
+    //    Geometry? pointSymbol = null)
+    //{
+    //    //LabelParameters parameters = new LabelParameters(null, fontSize, new SolidColorBrush(Colors.Black), new FontFamily("irannastaliq"), positionFunc);
+    //    var foreground = new SolidColorBrush(Colors.Black);
 
-        VisualParameters labelParameters = VisualParameters.CreateLabel(ScaleInterval.All, fontSize, foreground, new FontFamily(), positionFunc ?? (g => g.GetCentroidPlusPoint()), isRtl: false);
+    //    VisualParameters labelParameters = VisualParameters.CreateLabel(ScaleInterval.All, fontSize, foreground, new FontFamily(), positionFunc ?? (g => g.GetCentroidPlusPoint()), isRtl: false);
 
-        var layer = new VectorLayer(layerName, dataSource, visualElements, LayerType.VectorLayer, renderMode, RasterizationMethod.DrawingVisual, scaleInterval, labelParameters /*new SimplePointSymbolizer() { GeometrySymbol = pointSymbol }, isLabeled ? parameters : null*/);
+    //    var layer = new VectorLayer(layerName, dataSource, visualElements, LayerType.VectorLayer, renderMode, RasterizationMethod.DrawingVisual, scaleInterval, labelParameters );
 
-        this._layerManager.Add(layer, 1.0 / _mapScale);
-    }
+    //    this._layerManager.Add(layer, 1.0 / _mapScale);
+    //}
 
     //public void SetVectorLayer(
     //        ScaleInterval scaleInterval, 
@@ -1343,7 +1343,11 @@ public partial class MapViewer : NotifiableUserControl
         //consider if layer was Labeled
         var lines = gridLayer.GetLines(extent);
 
-        VectorLayer layer = new VectorLayer("temp grid", lines, VisualParameters.CreateNew(1), LayerType.VectorLayer,
+        VectorLayer layer = new VectorLayer(
+            "temp grid", 
+            lines, 
+            VisualParameters.CreateNew(1), 
+            LayerType.VectorLayer,
             RenderMode.Default,
             RasterizationMethod.DrawingVisual);
 
@@ -2756,49 +2760,21 @@ public partial class MapViewer : NotifiableUserControl
     public async Task DrawGeometriesAsync(
         string layerName,
         List<Geometry<sb.Point>> geometries,
-        VisualParameters visualElements)
-    //List<object>? labels = null,
-    //Func<Geometry<sb.Point>, sb.Point>? positionFunc = null,
-    //int fontSize = 0,
-    //Brush? labelBackground = null,
-    //FontFamily? font = null,
-    //RasterizationMethod? rasterizationApproach = RasterizationMethod.GdiPlus)
+        VisualParameters visualElements) 
     {
         if (geometries.IsNullOrEmpty())
             return;
-
-        //LabelParameters parameters = null;
-
-        //if (labels != null && positionFunc != null)
-        //{
-        //    parameters = new LabelParameters(null, fontSize, labelBackground, new FontFamily("tahoma"), positionFunc);
-        //}
-
-        IVectorDataSource source;
-
-        //if (labels == null)
-        //{
-        source = new MemoryDataSource(geometries);
-        //}
-        //else
-        //{
-        //    var features = geometries.Zip(labels, (g, l) => new Feature<sb.Point>(g, l.ToString())).ToList();
-
-        //    source = new MemoryDataSource(features/*, f => f.Label, null*/);
-        //}
-
-
+         
+        var source = new MemoryDataSource(geometries);
+         
         var layer = new VectorLayer(
-            layerName,
-            //new MemoryDataSource(geometries, labels, i => i.ToString()),
+            layerName, 
             source,
             visualElements,
             LayerType.Drawing,
             RenderMode.Default,
             RasterizationMethod.DrawingVisual,
-            ScaleInterval.All);
-        //pointSymbol: null,
-        //labeling: parameters);
+            ScaleInterval.All); 
 
         this._layerManager.Add(layer, 1.0 / _mapScale);
 
