@@ -69,7 +69,6 @@ public class MercatorTest
 
     private void TestForPoint(Point geodeticPoint)
     {
-
         var webMercator = MapProjects.GeodeticWgs84ToWebMercator(geodeticPoint);
 
         var geodetic1 = MapProjects.WebMercatorToGeodeticWgs84(webMercator);

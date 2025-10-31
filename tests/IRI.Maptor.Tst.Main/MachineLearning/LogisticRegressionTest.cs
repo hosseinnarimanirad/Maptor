@@ -132,13 +132,13 @@ namespace IRI.Maptor.Tst.NetCore.MachineLearning
 
         #region Sample Data #2
 
-        static readonly double[] _gmat = new double[40] { 780, 750, 690, 710, 680, 730, 690, 720, 740, 690, 610, 690, 710, 680, 770, 610, 580, 650, 540, 590, 620, 600, 550, 550, 570, 670, 660, 580, 650, 660, 640, 620, 660, 660, 680, 650, 670, 580, 590, 690 };
-        static readonly double[] _gpa = new double[] { 4, 3.9, 3.3, 3.7, 3.9, 3.7, 2.3, 3.3, 3.3, 1.7, 2.7, 3.7, 3.7, 3.3, 3.3, 3, 2.7, 3.7, 2.7, 2.3, 3.3, 2, 2.3, 2.7, 3, 3.3, 3.7, 2.3, 3.7, 3.3, 3, 2.7, 4, 3.3, 3.3, 2.3, 2.7, 3.3, 1.7, 3.7 };
-        static readonly double[] _work_experience = new double[] { 3, 4, 3, 5, 4, 6, 1, 4, 5, 1, 3, 5, 6, 4, 3, 1, 4, 6, 2, 3, 2, 1, 4, 1, 2, 6, 4, 2, 6, 5, 1, 2, 4, 6, 5, 1, 2, 1, 4, 5 };
+        static readonly double[] _gmat = [780, 750, 690, 710, 680, 730, 690, 720, 740, 690, 610, 690, 710, 680, 770, 610, 580, 650, 540, 590, 620, 600, 550, 550, 570, 670, 660, 580, 650, 660, 640, 620, 660, 660, 680, 650, 670, 580, 590, 690];
+        static readonly double[] _gpa = [4, 3.9, 3.3, 3.7, 3.9, 3.7, 2.3, 3.3, 3.3, 1.7, 2.7, 3.7, 3.7, 3.3, 3.3, 3, 2.7, 3.7, 2.7, 2.3, 3.3, 2, 2.3, 2.7, 3, 3.3, 3.7, 2.3, 3.7, 3.3, 3, 2.7, 4, 3.3, 3.3, 2.3, 2.7, 3.3, 1.7, 3.7];
+        static readonly double[] _work_experience = [3, 4, 3, 5, 4, 6, 1, 4, 5, 1, 3, 5, 6, 4, 3, 1, 4, 6, 2, 3, 2, 1, 4, 1, 2, 6, 4, 2, 6, 5, 1, 2, 4, 6, 5, 1, 2, 1, 4, 5];
 
-        IRI.Maptor.Sta.Mathematics.Matrix _gmat_gpa_workExperience = new IRI.Maptor.Sta.Mathematics.Matrix(new double[][] { _gmat, _gpa, _work_experience });
+        IRI.Maptor.Sta.Mathematics.Matrix _gmat_gpa_workExperience = new IRI.Maptor.Sta.Mathematics.Matrix([_gmat, _gpa, _work_experience]);
 
-        static readonly double[] _admitted = new double[] { 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1 };
+        static readonly double[] _admitted = [1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1];
 
         #endregion
 
@@ -158,14 +158,14 @@ namespace IRI.Maptor.Tst.NetCore.MachineLearning
             Assert.True(LogisticRegressionHelper.CalculateNegLogLikelihood(0, 0.1) > 0.10 && LogisticRegressionHelper.CalculateNegLogLikelihood(0, 0.1) < 0.11);
 
 
-            Assert.True(LogisticRegressionHelper.CalculateLossByGradientDescent(new double[] { 1 }, new double[] { 0.1 }) > 2.30 &&
-                            LogisticRegressionHelper.CalculateLossByGradientDescent(new double[] { 1 }, new double[] { 0.1 }) < 2.31);
-            Assert.True(LogisticRegressionHelper.CalculateLossByGradientDescent(new double[] { 0 }, new double[] { 0.9 }) > 2.30 &&
-                            LogisticRegressionHelper.CalculateLossByGradientDescent(new double[] { 0 }, new double[] { 0.9 }) < 2.31);
-            Assert.True(LogisticRegressionHelper.CalculateLossByGradientDescent(new double[] { 1 }, new double[] { 0.9 }) > 0.10 &&
-                            LogisticRegressionHelper.CalculateLossByGradientDescent(new double[] { 1 }, new double[] { 0.9 }) < 0.11);
-            Assert.True(LogisticRegressionHelper.CalculateLossByGradientDescent(new double[] { 0 }, new double[] { 0.1 }) > 0.10 &&
-                            LogisticRegressionHelper.CalculateLossByGradientDescent(new double[] { 0 }, new double[] { 0.1 }) < 0.11);
+            Assert.True(LogisticRegressionHelper.CalculateLossByGradientDescent([1], [0.1]) > 2.30 &&
+                            LogisticRegressionHelper.CalculateLossByGradientDescent([1], [0.1]) < 2.31);
+            Assert.True(LogisticRegressionHelper.CalculateLossByGradientDescent([0], [0.9]) > 2.30 &&
+                            LogisticRegressionHelper.CalculateLossByGradientDescent([0], [0.9]) < 2.31);
+            Assert.True(LogisticRegressionHelper.CalculateLossByGradientDescent([1], [0.9]) > 0.10 &&
+                            LogisticRegressionHelper.CalculateLossByGradientDescent([1], [0.9]) < 0.11);
+            Assert.True(LogisticRegressionHelper.CalculateLossByGradientDescent([0], [0.1]) > 0.10 &&
+                            LogisticRegressionHelper.CalculateLossByGradientDescent([0], [0.1]) < 0.11);
 
             //assert 2.30 < error([1], [0.1]) < 2.31
             //assert 2.30 < error([0], [0.9]) < 2.31
@@ -242,42 +242,6 @@ namespace IRI.Maptor.Tst.NetCore.MachineLearning
         [Fact]
         public void TestLogisticsRegressionCoefficients_Regularization()
         {
-            #region Sample python code
-
-            //  import pandas as pd
-            //  from sklearn.model_selection import train_test_split
-            //  from sklearn.linear_model import LogisticRegression
-            //  from sklearn import metrics
-            //  import seaborn as sn
-            //  import matplotlib.pyplot as plt
-
-            //  from sklearn.preprocessing import StandardScaler
-            //  from sklearn.pipeline import make_pipeline
-
-            //  candidates = {
-            //                'gmat': [780,750,690,710,680,730,690,720,740,690,610,690,710,680,770,610,580,650,540,590,620,600,550,550,570,670,660,580,650,660,640,620,660,660,680,650,670,580,590,690],
-            //              'gpa': [4,3.9,3.3,3.7,3.9,3.7,2.3,3.3,3.3,1.7,2.7,3.7,3.7,3.3,3.3,3,2.7,3.7,2.7,2.3,3.3,2,2.3,2.7,3,3.3,3.7,2.3,3.7,3.3,3,2.7,4,3.3,3.3,2.3,2.7,3.3,1.7,3.7],
-            //              'work_experience': [3,4,3,5,4,6,1,4,5,1,3,5,6,4,3,1,4,6,2,3,2,1,4,1,2,6,4,2,6,5,1,2,4,6,5,1,2,1,4,5],
-            //              'admitted': [1,1,0,1,0,1,0,1,1,0,0,1,1,0,1,0,0,1,0,0,1,0,0,0,0,1,1,0,1,1,0,0,1,1,1,0,0,0,0,1]
-            //              }
-
-            //            df = pd.DataFrame(candidates, columns = ['gmat', 'gpa', 'work_experience', 'admitted'])
-
-
-            //  X_train = df[['gmat', 'gpa', 'work_experience']]
-            //  y_train = df['admitted']
-
-            //  # X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.25,random_state=0)
-            //  # X_train, X_test, y_train, y_test = train_test_split(StandardScaler().fit_transform(X), y, test_size=0.33, random_state=42)
-
-
-            //  X_train = StandardScaler().fit_transform(X_train)
-            //  # X_train = s.fit_transform(X_train)
-            //  logistic_regression = LogisticRegression(penalty = 'none')
-            //  logistic_regression.fit(X_train, y_train)
-
-            #endregion
-
             // ***************** No Regularization *************************
             // *************************************************************
             LogisticRegression lr = new LogisticRegression(new LogisticRegressionOptions()
@@ -368,23 +332,4 @@ namespace IRI.Maptor.Tst.NetCore.MachineLearning
             Assert.Equal(1.0, Math.Round(lr.Predict(new List<double>() { newGmat[4], newGpa[4], newWork_experience[4] }).Value));
         }
     }
-}
-
-// another sample
-// https://towardsdatascience.com/what-is-logistic-regression-d3f59ef1a9b
-
-// sample data
-//approved = np.array([1, 1, 1, 0, 0, 0, 1, 1, 0, 0])
-//age = [21, 42, 35, 33, 63, 70, 26, 31, 52, 53]
-//weight = [110, 180, 175, 235, 95, 90, 175, 190, 250, 185]
-//avg_hrt = [65, 70, 72, 77, 67, 62, 68, 65, 73, 75]
-//X = np.column_stack([age, weight, avg_hrt])
-
-
-//Create new data
-//new_age = [20, 45, 33, 31, 62, 71, 72, 25, 30, 53, 55]
-//new_weight = [105, 175, 170, 240, 100, 95, 200, 170, 195, 255, 180]
-//new_avg_hrt = [64, 68, 70, 78, 67, 61, 68, 67, 66, 75, 76]# Combining the multiple lists into one object called "test_X"
-//test_X = np.column_stack([new_age, new_weight, new_avg_hrt])
-
-//Our approval results are: [1 1 1 0 0 0 0 1 1 0 0] 
+} 

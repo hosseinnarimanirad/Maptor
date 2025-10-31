@@ -6,12 +6,7 @@ namespace IRI.Maptor.Tst.Main.TheGeometry;
 
 
 public class GeometryTest
-{
-    public GeometryTest()
-    {
-        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
-    }
-
+{ 
     [Fact]
     public void TestAreaCalculation()
     {
@@ -61,20 +56,5 @@ public class GeometryTest
         Assert.Equal(6.324, dispacement, 3 /*0.001*/);
 
     }
-
-
-    //[Fact]
-    //public void Test()
-    //{
-    //    foreach (var item in GeometrySamples.AllGeometries)
-    //    {
-    //        if (item.IsNullOrEmpty())
-    //        {
-    //            continue;
-    //        }
-
-    //        var stat = new AreaStatistics(item);
-    //    }
-    //}
-
+     
 }

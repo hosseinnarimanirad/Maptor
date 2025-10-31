@@ -1,4 +1,6 @@
-﻿using System;
+﻿using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using System;
 
 using System.Reflection;
 
@@ -16,4 +18,28 @@ public class ProjectTest
          
 
     }
+
+
+    /// <summary>
+    /// Tests WGS84 to Web Mercator transformation for NIOC area coordinates.
+    /// </summary>
+    [Fact]
+    public void TestNiocLcc_Wgs84ToWebMercator()
+    {
+        // Arrange: WGS84 geodetic coordinates
+        var wgs84Point = new Point(50.689721, 30.072906);
+
+        // Expected Web Mercator coordinates (in meters)
+        const double expectedWebMercatorX = 5642753.93;
+        const double expectedWebMercatorY = 3512924.70;
+        const int precision = 1; // ±0.1 meter tolerance
+
+        // Act: Transform WGS84 to Web Mercator
+        var webMercatorResult = MapProjects.GeodeticWgs84ToWebMercator(wgs84Point);
+
+        // Assert
+        Assert.Equal(expectedWebMercatorX, webMercatorResult.X, precision);
+        Assert.Equal(expectedWebMercatorY, webMercatorResult.Y, precision);
+    }
+
 }

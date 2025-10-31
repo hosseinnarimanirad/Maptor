@@ -1,22 +1,17 @@
-﻿using IRI.Maptor.Extensions;
+﻿using System.Data.SqlTypes; // For SqlBytes
+using System.Collections.Generic;
+
+using Microsoft.SqlServer.Types;
+
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
-using Microsoft.SqlServer.Types;
 using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
-using System.Collections.Generic;
-using System.Data.SqlTypes; // For SqlBytes
-using Xunit;
-using IRI.Maptor.Extensions;
 
 namespace IRI.Maptor.Tst.Main.TheGeometry;
 
 public class Geometry_OgcTest
-{
-    public Geometry_OgcTest()
-    {
-        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
-    }
-
+{ 
     public static IEnumerable<object[]> OgcGeometryTestData =>
         new List<object[]>
         {

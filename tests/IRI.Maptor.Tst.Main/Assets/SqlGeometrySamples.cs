@@ -1,10 +1,7 @@
-﻿using Microsoft.SqlServer.Types;
-using System;
+﻿using System.Data.SqlTypes;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Microsoft.SqlServer.Types;
 
 namespace IRI.Maptor.Tst.NetFrameworkTest.Assets
 {
@@ -60,9 +57,7 @@ namespace IRI.Maptor.Tst.NetFrameworkTest.Assets
 
 
         public static SqlGeometry Polygon_ForAngularChange = SqlGeometry.Parse(new SqlString("POLYGON((-15 -3, -14 -5, -13 -3, -12 -4, -12 -6, -11 -6, -11 -5, -10 -4, -9 -3, -12 -2, -15 -3))"));
-
-
-
+         
         // total vector displacement
         public static SqlGeometry LineString_ForVectorDisplacement_Original = SqlGeometry.Parse(new SqlString("LINESTRING(-4.5 -2, -4 0, -4 1.5, -2 4, -2 5, 0 6, 0 4, 4 4, 4.5 3, 2 0, 8 -2, 4 -4, -2 -8, -4 -6, -4 -4)"));
         public static SqlGeometry LineString_ForVectorDisplacement_Simplified = SqlGeometry.Parse(new SqlString("LINESTRING(-4.5 -2, -2 4, 0 4, 4 4, 2 0, 8 -2, -2 -8, -4 -4)"));

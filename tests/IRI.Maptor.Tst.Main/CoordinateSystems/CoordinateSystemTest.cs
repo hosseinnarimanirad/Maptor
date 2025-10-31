@@ -7,11 +7,35 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Common.Primitives;
 using System;
 using Xunit;
+using IRI.Maptor.Sta.Metrics;
 
 namespace IRI.Maptor.Tst.CoordinateSystems;
 
 public class CoordinateSystemTest
 {
+    /// <summary>
+    /// Tests datum transformation from WGS84 to Clarke 1880 (RGS).
+    /// Verifies that datum transformation handles ellipsoid changes correctly.
+    /// </summary>
+    [Fact]
+    public void TestNiocLcc_DatumTransformation_Wgs84ToClarke1880()
+    {
+        // Arrange: WGS84 geodetic coordinate
+        var wgs84Point = new Point(50.689721, 30.072906);
+
+        // Expected Clarke 1880 (RGS) coordinates after datum transformation
+        const double expectedClarke1880Longitude = 50.689721;
+        const double expectedClarke1880Latitude = 30.075637;
+        const int precision = 6;
+
+        // Act: Transform datum from WGS84 to Clarke 1880 (RGS)
+        var clarke1880Point = Transformations.ChangeDatum(wgs84Point, Ellipsoids.WGS84, Ellipsoids.Clarke1880Rgs);
+
+        // Assert: Verify datum transformation accuracy
+        Assert.Equal(expectedClarke1880Longitude, clarke1880Point.X, precision);
+        Assert.Equal(expectedClarke1880Latitude, clarke1880Point.Y, precision);
+    }
+
     [Fact]
     [Trait("Author", "Hossein Narimani Rad")]
     public void TestGeodeticToAlbersEqualAreaConic()
@@ -36,8 +60,8 @@ public class CoordinateSystemTest
         // Assuming the GeodeticToAlbersEqualAreaConic method expects degrees.
         // The method takes arrays, so we pass single-element arrays.
         double[][] actualResult = MapProjects.GeodeticToAlbersEqualAreaConic(
-            new double[] { inputLambda_deg },
-            new double[] { inputPhi_deg },
+            [inputLambda_deg],
+            [inputPhi_deg],
             Ellipsoids.Clarke1866, // Assuming this is a predefined Ellipsoid object
             lambda0_deg,
             phi0_deg,
@@ -98,5 +122,37 @@ public class CoordinateSystemTest
         Assert.NotNull(transformedPoint);
         Assert.Equal(expectedNahrawanEquivalentPoint.X, transformedPoint.X, precisionX);
         Assert.Equal(expectedNahrawanEquivalentPoint.Y, transformedPoint.Y, precisionY);
+    }
+
+    [Fact]
+    public void TestGeodeticToAT()
+    {
+        var ellipsoid = Ellipsoids.WGS84;
+
+        var phi = 35.123456;
+
+        var lambda = 51.123456;
+
+        var testPoint = new IRI.Maptor.Sta.Common.Primitives.Point(lambda, phi);
+
+        var result1 = Transformations.ToCartesian(testPoint, ellipsoid);
+
+        var result2 =
+            new GeodeticPoint<Meter, Degree>(ellipsoid, new Meter(0),
+            new Degree(lambda),
+            new Degree(phi)).ToCartesian<Meter>();
+
+
+        Assert.Equal(result2.X.Value, result1.X, 9/* 1E-9*/);
+        Assert.Equal(result2.Y.Value, result1.Y, 9 /*1E-9*/);
+        Assert.Equal(result2.Z.Value, result1.Z, 9 /*1E-9*/);
+
+
+        var result3 = Transformations.ToGeodetic<Point>(result1, ellipsoid);
+
+
+        Assert.Equal(testPoint.X, result3.X, 9 /*1E-9*/);
+        Assert.Equal(testPoint.Y, result3.Y, 9 /*1E-9*/);
+        //Assert.Equal(result1.Z, result3.Z, 1E-9);
     }
 }
