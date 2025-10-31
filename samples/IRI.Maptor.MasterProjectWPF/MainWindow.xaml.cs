@@ -41,17 +41,19 @@ public partial class MainWindow : Window
         //TestSld(@"C:\Users\Hossein\Downloads\point_attribute.sld");
         //TestSld(@"E:\Work\Barg\Sample SLD\barg\tower.sld");
 
-        var result2 = TiffReader.ReadGeoTiff32bitDEM(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s_WebMercator.tif");
+        //var result2 = TiffReader.ReadGeoTiff32bitDEM(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s_WebMercator.tif");
 
 
 
-        //var result = ImageHelper.Read32BitGrayscaleTiff(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s.tif");
+        ////var result = ImageHelper.Read32BitGrayscaleTiff(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s.tif");
 
-        var worldfile = Worldfile.Read(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s_WebMercator.tfw");
+        //var worldfile = Worldfile.Read(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s_WebMercator.tfw");
 
-        WorldfileMatrix16bit matrix = new WorldfileMatrix16bit(result2.Data, worldfile.XPixelSize, worldfile.YPixelSize, worldfile.CenterOfUpperLeftPixel);
+        //WorldfileMatrix16bit matrix = new WorldfileMatrix16bit(result2.Data, worldfile.XPixelSize, worldfile.YPixelSize, worldfile.CenterOfUpperLeftPixel);
         
-        matrix.WriteToBinarySimple(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s_WebMercator.bdem");
+        //matrix.WriteToBinarySimple(@"E:\Data\DEM\Iran_DEM_5s\Iran_DEM_5s_WebMercator.bdem");
+
+
     }
 
     private void TestShp()
@@ -80,6 +82,12 @@ public partial class MainWindow : Window
                             Path.GetFileNameWithoutExtension(fileName) + "_m" + Path.GetExtension(fileName));
 
         XmlHelper.Serialize(modifiedPath, sld, true);
+    }
+
+
+    private void TestDxf(string fileName)
+    {
+
     }
 
 }
