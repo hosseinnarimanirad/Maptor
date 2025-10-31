@@ -209,7 +209,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 
     public Func<Geometry<Sb.Point>, Sb.Point>? PositionFunc { get; set; }
 
-    public bool IsLabelParameters => FontFamily != null || Foreground != null || Background != null;
+    public bool HasLabelParameters => FontFamily != null || Foreground != null || Background != null;
 
     private int _fontSize;
     public int FontSize
@@ -565,13 +565,13 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
         return new VisualParameters(fill, BrushHelper.PickBrush(), strokeThickness, opacity, isOn: true);
     }
 
-    public static VisualParameters CreateLabel(ScaleInterval visibleRange, int fontSize, Brush foreground, FontFamily fontFamily, Func<Geometry<Sb.Point>, Sb.Point> positionFunc, bool isRtl)
+    public static VisualParameters CreateLabel(ScaleInterval visibleRange, int fontSize, Brush? foreground, FontFamily fontFamily, Func<Geometry<Sb.Point>, Sb.Point> positionFunc, bool isRtl)
     {
         return new VisualParameters()
         {
             VisibleRange = visibleRange,
             FontSize = fontSize,
-            Foreground = foreground,
+            Foreground = foreground ?? Brushes.Black,
             FontFamily = fontFamily,
             PositionFunc = positionFunc,
             IsRtl = isRtl,

@@ -33,6 +33,7 @@ public class SimpleSymbolizer : SymbolizerBase
     }
 
 
+    public static SimpleSymbolizer Create(double opacity) => Create(BrushHelper.PickBrush(), BrushHelper.PickBrush(), 1, opacity, isOn: true);
 
     public static SimpleSymbolizer Create(Brush? fill, Brush? stroke, double strokeThickness, double opacity, bool isOn = true)
     {

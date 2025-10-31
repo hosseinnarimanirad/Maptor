@@ -93,7 +93,7 @@ public class VectorLayer : SymbolizableLayer
 
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(parameters)];
 
-        if (parameters.IsLabelParameters)
+        if (parameters.HasLabelParameters)
             symbolizers.Add(new LabelSymbolizer(parameters, string.Empty));
 
         Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, ScaleInterval.All);
@@ -109,7 +109,7 @@ public class VectorLayer : SymbolizableLayer
     {
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(parameters)];
 
-        if (parameters.IsLabelParameters)
+        if (parameters.HasLabelParameters)
             symbolizers.Add(new LabelSymbolizer(parameters, string.Empty));
 
         Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange);
