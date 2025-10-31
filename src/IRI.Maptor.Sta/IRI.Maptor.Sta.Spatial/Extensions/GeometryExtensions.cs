@@ -8,6 +8,7 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Spatial.AdvancedStructures;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Sta.Spatial.IO.Dxf;
 
 
 namespace IRI.Maptor.Extensions;
@@ -337,8 +338,45 @@ public static class Sta_GeometryExtensions
     #endregion
 
 
+    #region Geometry To Dxf
+
+    /// <summary>
+    /// Converts the geometry to a DXF string
+    /// </summary>
+    /// <param name="geometry">The geometry to convert</param>
+    /// <returns>DXF file content as string</returns>
+    public static string ToDxf(this Geometry<Point> geometry)
+    {
+        if (geometry == null)
+            throw new ArgumentNullException(nameof(geometry));
+
+        DxfWriter.ResetHandleCounter();
+        return DxfWriter.Write(geometry);
+    }
+
+    /// <summary>
+    /// Saves the geometry to a DXF file
+    /// </summary>
+    /// <param name="geometry">The geometry to save</param>
+    /// <param name="filePath">The path to save the DXF file</param>
+    /// <returns>The path to the saved file</returns>
+    public static string SaveAsDxf(this Geometry<Point> geometry, string filePath)
+    {
+        if (geometry == null)
+            throw new ArgumentNullException(nameof(geometry));
+
+        if (string.IsNullOrWhiteSpace(filePath))
+            throw new ArgumentException("File path cannot be null or empty", nameof(filePath));
+
+        DxfWriter.ResetHandleCounter();
+        return DxfWriter.WriteToFile(geometry, filePath);
+    }
+
+    #endregion
+
+
     #region Simplification
-     
+
     public static List<Geometry<Point>> Simplify(
       this IEnumerable<Geometry<Point>> geometries,
       SimplificationType type,

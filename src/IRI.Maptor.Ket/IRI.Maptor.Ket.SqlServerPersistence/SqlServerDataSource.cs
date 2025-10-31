@@ -167,7 +167,7 @@ public class SqlServerDataSource : VectorDataSource/*<Feature<Point>>*/, IEditab
 
         var srid = GetSrid();
 
-        var wkbString = IRI.Maptor.Sta.Common.Helpers.HexStringHelper.ByteToHexBitFiddle(wkbGeometryFilter, true);
+        var wkbString = IRI.Maptor.Sta.Common.Helpers.HexStringHelper.ToHexStringUsingBitFiddle(wkbGeometryFilter, true);
 
         if (returnOnlyGeometry)
         {

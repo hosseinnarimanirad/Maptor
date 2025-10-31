@@ -87,7 +87,7 @@ public static class SqlGeometryExtensions
 
     public static string AsWkbString(this SqlGeometry geometry)
     {
-        return Sta.Common.Helpers.HexStringHelper.ByteToHexBitFiddle(geometry?.AsWkb(), true);
+        return Sta.Common.Helpers.HexStringHelper.ToHexStringUsingBitFiddle(geometry?.AsWkb(), true);
     }
 
 

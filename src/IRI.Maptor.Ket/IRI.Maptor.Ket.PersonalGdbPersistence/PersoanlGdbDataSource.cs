@@ -147,7 +147,7 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
             return MakeSelectCommand(string.Empty, returnOnlyGeometry);
         }
 
-        var wkbString = IRI.Maptor.Sta.Common.Helpers.HexStringHelper.ByteToHexBitFiddle(wkbGeometryFilter, true);
+        var wkbString = IRI.Maptor.Sta.Common.Helpers.HexStringHelper.ToHexStringUsingBitFiddle(wkbGeometryFilter, true);
 
         if (returnOnlyGeometry)
         {

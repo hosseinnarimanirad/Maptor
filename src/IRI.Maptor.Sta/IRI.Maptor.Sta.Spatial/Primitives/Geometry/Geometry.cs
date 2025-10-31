@@ -1851,7 +1851,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
     public string AsWkbString()
     {
-        return IRI.Maptor.Sta.Common.Helpers.HexStringHelper.ByteToHexBitFiddle(AsWkb(), append0x: true);
+        return IRI.Maptor.Sta.Common.Helpers.HexStringHelper.ToHexStringUsingBitFiddle(AsWkb(), append0x: true);
     }
 
     #endregion
