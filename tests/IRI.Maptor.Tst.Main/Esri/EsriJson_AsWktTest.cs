@@ -2,37 +2,32 @@
 using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 using static IRI.Maptor.Tst.NetFrameworkTest.Assets.EsriJsonSamples;
 
-namespace IRI.Maptor.Tst.Esri;
+namespace IRI.Maptor.Tst.Main.Esri;
 
 
 public class EsriJson_AsWktTest
-{
-    public EsriJson_AsWktTest()
-    {
-        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
-    }
-
+{ 
     [Fact]
     public void TestEsriJson_Wkt()
     {
         try
         {
-            var point2D = JsonHelper.Deserialize<EsriJsonGeometry>(point2DJson);
-            var point3D = JsonHelper.Deserialize<EsriJsonGeometry>(point3DJson);
-            var pointNull = JsonHelper.Deserialize<EsriJsonGeometry>(pointNullJson);
-            var pointNaN = JsonHelper.Deserialize<EsriJsonGeometry>(pointNaNJson);
+            var point2D = JsonHelper.Deserialize<EsriJsonGeometry>(point2DJson)!;
+            var point3D = JsonHelper.Deserialize<EsriJsonGeometry>(point3DJson)!;
+            var pointNull = JsonHelper.Deserialize<EsriJsonGeometry>(pointNullJson)!;
+            var pointNaN = JsonHelper.Deserialize<EsriJsonGeometry>(pointNaNJson)!;
 
-            var multipoint2D = JsonHelper.Deserialize<EsriJsonGeometry>(multipoint2DJson);
-            var multipoint3D = JsonHelper.Deserialize<EsriJsonGeometry>(multipoint3DJson);
-            var multipointEmpty = JsonHelper.Deserialize<EsriJsonGeometry>(multipointEmptyJson);
+            var multipoint2D = JsonHelper.Deserialize<EsriJsonGeometry>(multipoint2DJson)!;
+            var multipoint3D = JsonHelper.Deserialize<EsriJsonGeometry>(multipoint3DJson)!;
+            var multipointEmpty = JsonHelper.Deserialize<EsriJsonGeometry>(multipointEmptyJson)!;
 
-            var polyline2D = JsonHelper.Deserialize<EsriJsonGeometry>(polyline2DJson);
-            var polyline3D = JsonHelper.Deserialize<EsriJsonGeometry>(polylineMJson);
-            var polylineEmpty = JsonHelper.Deserialize<EsriJsonGeometry>(polylineEmptyJson);
+            var polyline2D = JsonHelper.Deserialize<EsriJsonGeometry>(polyline2DJson)!;
+            var polyline3D = JsonHelper.Deserialize<EsriJsonGeometry>(polylineMJson)!;
+            var polylineEmpty = JsonHelper.Deserialize<EsriJsonGeometry>(polylineEmptyJson)!;
 
-            var polygon2D = JsonHelper.Deserialize<EsriJsonGeometry>(polygon2DJson);
-            var polygon3D = JsonHelper.Deserialize<EsriJsonGeometry>(polygon3DJson);
-            var polygonEmpty = JsonHelper.Deserialize<EsriJsonGeometry>(polygonEmptyJson);
+            var polygon2D = JsonHelper.Deserialize<EsriJsonGeometry>(polygon2DJson)!;
+            var polygon3D = JsonHelper.Deserialize<EsriJsonGeometry>(polygon3DJson)!;
+            var polygonEmpty = JsonHelper.Deserialize<EsriJsonGeometry>(polygonEmptyJson)!;
 
 
             Assert.Equal("POINT(-118.15 33.8)", point2D.AsWkt());

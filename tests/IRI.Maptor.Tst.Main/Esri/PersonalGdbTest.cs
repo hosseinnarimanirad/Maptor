@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Data.OleDb;
+﻿using System.Data.OleDb;
+using System.Collections.Generic;
+
 using IRI.Maptor.Sta.PersonalGdb;
 
-namespace IRI.Maptor.Tst.Esri;
-
+namespace IRI.Maptor.Tst.Main.Esri;
 
 public class PersonalGdbTest
 {

@@ -3,17 +3,10 @@ using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 using static IRI.Maptor.Tst.NetFrameworkTest.Assets.EsriJsonSamples;
 
-namespace IRI.Maptor.Tst.Esri;
-
-
+namespace IRI.Maptor.Tst.Main.Esri;
+ 
 public class EsriJson_SqlGeometryTest
-{
-    public EsriJson_SqlGeometryTest()
-    {
-        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
-    }
-
-
+{ 
     [Fact]
     public void TestEsriJson_SqlGeometryConversion()
     {

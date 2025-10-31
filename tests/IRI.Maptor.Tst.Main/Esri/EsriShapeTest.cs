@@ -1,11 +1,6 @@
 ﻿using IRI.Maptor.Sta.ShapefileFormat.EsriType;
-using Microsoft.SqlServer.Types;
-using System.Data.SqlTypes;
-using IRI.Maptor.Extensions;
-using System.Collections.Generic;
 
-namespace IRI.Maptor.Tst.Esri;
-
+namespace IRI.Maptor.Tst.Main.Esri;
 
 public class EsriShapeTest
 {
@@ -22,11 +17,11 @@ public class EsriShapeTest
     {
         this.points = new EsriPoint[3][];
 
-        points[0] = new EsriPoint[] { new EsriPoint(0.65, 0, 0), new EsriPoint(5, 5, 0), new EsriPoint(3.04, 6.4, 0) };
+        points[0] = [new (0.65, 0, 0), new (5, 5, 0), new (3.04, 6.4, 0)];
 
-        points[1] = new EsriPoint[] { new EsriPoint(10, 0, 0), new EsriPoint(5.43, 15.65, 0), new EsriPoint(3.04, 6.4, 0), new EsriPoint(10, 90.34, 0), new EsriPoint(25.43, 15.65, 0), new EsriPoint(73.04, 61.44, 0) };
+        points[1] = [new(10, 0, 0), new(5.43, 15.65, 0), new(3.04, 6.4, 0), new (10, 90.34, 0), new (25.43, 15.65, 0), new (73.04, 61.44, 0)];
 
-        points[2] = new EsriPoint[] { new EsriPoint(20, 10, 0), new EsriPoint(15, 5, 0), new EsriPoint(33.04, 64.4, 0) };
+        points[2] = [new (20, 10, 0), new (15, 5, 0), new (33.04, 64.4, 0)];
     }
 
     [Fact]

@@ -2,9 +2,8 @@
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-using IRI.Maptor.Extensions;
 
-namespace IRI.Maptor.Tst.GeoJsons;
+namespace IRI.Maptor.Tst.Main.GeoJsons;
 
 public class GeoJson_SqlGeometryTest
 {

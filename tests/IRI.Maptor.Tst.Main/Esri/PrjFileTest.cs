@@ -1,10 +1,11 @@
 ﻿using System.Linq;
-using IRI.Maptor.Sta.ShapefileFormat;
-using IRI.Maptor.Sta.ShapefileFormat.EsriType;
-using IRI.Maptor.Sta.ShapefileFormat.Prj;
 using System.Collections.Generic;
 
-namespace IRI.Maptor.Tst.Esri;
+using IRI.Maptor.Sta.ShapefileFormat;
+using IRI.Maptor.Sta.ShapefileFormat.Prj;
+using IRI.Maptor.Sta.ShapefileFormat.EsriType;
+
+namespace IRI.Maptor.Tst.Main.Esri;
 
 public class PrjFileTest
 {

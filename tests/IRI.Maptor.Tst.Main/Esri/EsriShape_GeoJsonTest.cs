@@ -1,10 +1,9 @@
-﻿using IRI.Maptor.Extensions;
-using IRI.Maptor.Extensions;
+﻿using Microsoft.SqlServer.Types;
+
+using IRI.Maptor.Extensions; 
 using IRI.Maptor.Tst.NetFrameworkTest.Assets;
-using Microsoft.SqlServer.Types;
 
-namespace IRI.Maptor.Tst.Esri;
-
+namespace IRI.Maptor.Tst.Main.Esri;
 
 public class EsriShape_GeoJsonTest
 {

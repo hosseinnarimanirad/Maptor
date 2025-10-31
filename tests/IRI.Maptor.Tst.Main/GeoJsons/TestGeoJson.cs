@@ -5,10 +5,9 @@ using System.Reflection;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Spatial.GeoJsonFormat; 
 
-namespace IRI.Maptor.Tst.GeoJsons;
+namespace IRI.Maptor.Tst.Main.GeoJsons;
 
 public class TestGeoJson
 {

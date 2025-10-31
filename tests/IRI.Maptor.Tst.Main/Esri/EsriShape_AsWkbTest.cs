@@ -1,16 +1,13 @@
 ﻿using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using Microsoft.SqlServer.Types;
 using System.Data.SqlTypes;
-
-namespace IRI.Maptor.Tst.Esri;
-
+ 
+namespace IRI.Maptor.Tst.Main.Esri;
 
 public class EsriShape_AsWkbTest
 {
     public EsriShape_AsWkbTest()
-    {
-        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
-
+    { 
         InitializeTest();
     }
 
@@ -97,8 +94,7 @@ public class EsriShape_AsWkbTest
             SqlGeometry.STPointFromText(
             new SqlChars(new SqlString(string.Format("POINT({0} {1} {2} {3})", x, y, z, m))), 0);
         
-        Assert.Equal(pointZ.AsWkb(), sqlEsriPointZ.AsBinaryZM().Buffer);
-
+        Assert.Equal(pointZ.AsWkb(), sqlEsriPointZ.AsBinaryZM().Buffer); 
 
         //byte[] b1 = pointM.ToSqlServerWkb();
         //byte[] b2 = sqlEsriPointM.AsBinaryZM().Buffer;

@@ -2,8 +2,7 @@
 using Microsoft.SqlServer.Types;
 using System.Data.SqlTypes;
 
-namespace IRI.Maptor.Tst.Esri;
-
+namespace IRI.Maptor.Tst.Main.Esri;
 
 public class EsriShape_AsWktTest
 {

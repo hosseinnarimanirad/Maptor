@@ -1,11 +1,10 @@
 ﻿using System.Linq;
-using IRI.Maptor.Tst.NetFrameworkTest.Assets;
-using IRI.Maptor.Extensions;
 using Microsoft.SqlServer.Types;
+
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Tst.NetFrameworkTest.Assets;
 
-namespace IRI.Maptor.Tst.Esri;
-
+namespace IRI.Maptor.Tst.Main.Esri;
 
 public class EsriShape_GeometryTest
 {

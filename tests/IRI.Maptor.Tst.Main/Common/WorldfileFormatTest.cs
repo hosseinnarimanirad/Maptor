@@ -25,23 +25,7 @@ public class WorldfileFormatTest
     {
         Test(vanakUtm, vanakWidth, vanakHeight);
 
-        Test(Ni, niWidth, niHeight);
-        //var vanakBbx1 = WorldfileManager.ReadImageBoundingBox(vanakUtm, vanakHeight, vanakWidth);
-
-        //var vanakWorldfile = Worldfile.Read(vanakUtm);
-
-        //var vanakBbx2 = vanakWorldfile.GetBoundingBox(vanakWidth, vanakHeight);
-
-        //Assert.Equal(vanakBbx1, vanakBbx2);
-
-        //var calculatedVanakWorldfile = WorldfileManager.Create(vanakBbx2, vanakWidth, vanakHeight);
-
-        //var delta = 1E-7;
-
-        //Assert.Equal(vanakWorldfile.XPixelSize, calculatedVanakWorldfile.XPixelSize, delta);
-        //Assert.Equal(vanakWorldfile.YPixelSize, calculatedVanakWorldfile.YPixelSize, delta);
-        //Assert.Equal(vanakWorldfile.CenterOfUpperLeftPixel.X, calculatedVanakWorldfile.CenterOfUpperLeftPixel.X, delta);
-        //Assert.Equal(vanakWorldfile.CenterOfUpperLeftPixel.Y, calculatedVanakWorldfile.CenterOfUpperLeftPixel.Y, delta);
+        Test(Ni, niWidth, niHeight); 
     }
 
     public void Test(string fileName, int width, int height)
