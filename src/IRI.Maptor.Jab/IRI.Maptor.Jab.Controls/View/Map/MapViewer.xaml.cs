@@ -43,6 +43,7 @@ using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
 
 using sb = IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.View.Controls;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
@@ -1344,9 +1345,9 @@ public partial class MapViewer : NotifiableUserControl
         var lines = gridLayer.GetLines(extent);
 
         VectorLayer layer = new VectorLayer(
-            "temp grid", 
-            lines, 
-            VisualParameters.CreateNew(1), 
+            "temp grid",
+            lines,
+            VisualParameters.CreateNew(1),
             LayerType.VectorLayer,
             RenderMode.Default,
             RasterizationMethod.DrawingVisual);
@@ -2760,21 +2761,21 @@ public partial class MapViewer : NotifiableUserControl
     public async Task DrawGeometriesAsync(
         string layerName,
         List<Geometry<sb.Point>> geometries,
-        VisualParameters visualElements) 
+        VisualParameters visualParams)
     {
         if (geometries.IsNullOrEmpty())
             return;
-         
+
         var source = new MemoryDataSource(geometries);
-         
+
         var layer = new VectorLayer(
-            layerName, 
+            layerName,
             source,
-            visualElements,
+            [new SimpleSymbolizer(visualParams)],
             LayerType.Drawing,
             RenderMode.Default,
             RasterizationMethod.DrawingVisual,
-            ScaleInterval.All); 
+            ScaleInterval.All);
 
         this._layerManager.Add(layer, 1.0 / _mapScale);
 
@@ -2828,7 +2829,7 @@ public partial class MapViewer : NotifiableUserControl
     //    await AddNonTiledLayer(layer);
     //}
 
-    public async Task SelectGeometriesAsync(List<Geometry<sb.Point>> geometries, VisualParameters visualParameters, string? layerName, Geometry? pointSymbol = null)
+    public async Task SelectGeometriesAsync(List<Geometry<sb.Point>> geometries, VisualParameters visualParams, string? layerName/*, Geometry? pointSymbol = null*/)
     {
         ClearLayer(LayerType.Selection, true);
 
@@ -2840,7 +2841,7 @@ public partial class MapViewer : NotifiableUserControl
         var layer = new VectorLayer(
             layerName,
             new MemoryDataSource(geometries),
-            visualParameters,
+            [new SimpleSymbolizer(visualParams)],
             LayerType.Selection,
             RenderMode.Default,
             RasterizationMethod.DrawingVisual,

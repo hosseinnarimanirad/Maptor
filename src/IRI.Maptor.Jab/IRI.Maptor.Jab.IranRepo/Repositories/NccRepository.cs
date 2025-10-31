@@ -21,7 +21,7 @@ public static class NccRepository
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(visualParameters)];
 
         if (label is not null)
-            symbolizers.Add(new LabelSymbolizer(label, string.Empty));
+            symbolizers.Add(new LabelSymbolizer(label));
 
         var vectorLayer = new VectorLayer(layerTitle, features, symbolizers, LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All)
         {

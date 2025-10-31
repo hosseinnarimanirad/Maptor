@@ -94,7 +94,7 @@ public class VectorLayer : SymbolizableLayer
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(parameters)];
 
         if (parameters.HasLabelParameters)
-            symbolizers.Add(new LabelSymbolizer(parameters, string.Empty));
+            symbolizers.Add(new LabelSymbolizer(parameters));
 
         Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, ScaleInterval.All);
     }
@@ -110,7 +110,7 @@ public class VectorLayer : SymbolizableLayer
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(parameters)];
 
         if (parameters.HasLabelParameters)
-            symbolizers.Add(new LabelSymbolizer(parameters, string.Empty));
+            symbolizers.Add(new LabelSymbolizer(parameters));
 
         Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange);
     }
@@ -124,10 +124,6 @@ public class VectorLayer : SymbolizableLayer
                       ScaleInterval visibleRange)//,
                       //VisualParameters? labeling = null)
     {
-
-        //if (labeling is not null)
-        //    symbolizers.Add(new LabelSymbolizer(labeling, string.Empty));
-
         Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange);
     }
 

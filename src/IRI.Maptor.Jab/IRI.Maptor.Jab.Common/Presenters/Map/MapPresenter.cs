@@ -865,7 +865,7 @@ public abstract class MapPresenter : BasePresenter
     public Action<Point> RequestFlashPoint;
 
 
-    public Func<List<Geometry<Point>>, VisualParameters, string, Geometry, Task> RequestSelectGeometries;
+    public Func<List<Geometry<Point>>, VisualParameters, string, /*Geometry, */Task> RequestSelectGeometries;
 
     public Func<string, List<Geometry<Point>>, VisualParameters, Task>? RequestAddGeometries;
 
@@ -1251,9 +1251,9 @@ public abstract class MapPresenter : BasePresenter
         await SelectGeometriesAsync(new List<Geometry<Point>>() { geometry });
     }
 
-    public async Task SelectGeometryAsync(Geometry<Point> geometry, VisualParameters visualParameters, string layerName, Geometry pointSymbol = null)
+    public async Task SelectGeometryAsync(Geometry<Point> geometry, VisualParameters visualParameters, string layerName/*, Geometry pointSymbol = null*/)
     {
-        await SelectGeometriesAsync(new List<Geometry<Point>>() { geometry }, visualParameters, layerName, pointSymbol);
+        await SelectGeometriesAsync(new List<Geometry<Point>>() { geometry }, visualParameters, layerName/*, pointSymbol*/);
     }
 
     public async Task SelectGeometriesAsync(List<Geometry<Point>> geometries)
@@ -1262,9 +1262,9 @@ public abstract class MapPresenter : BasePresenter
         await SelectGeometriesAsync(geometries, VisualParameters.GetDefaultForSelection(), null);
     }
 
-    public async Task SelectGeometriesAsync(List<Geometry<Point>> geometries, VisualParameters visualParameters, string layerName, Geometry pointSymbol = null)
+    public async Task SelectGeometriesAsync(List<Geometry<Point>> geometries, VisualParameters visualParameters, string layerName/*, Geometry pointSymbol = null*/)
     {
-        await RequestSelectGeometries?.Invoke(geometries, visualParameters, layerName, pointSymbol);
+        await RequestSelectGeometries?.Invoke(geometries, visualParameters, layerName/*, pointSymbol*/);
     }
 
 

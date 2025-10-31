@@ -41,7 +41,7 @@ public static class IndexLayers
 
         var symbolizer = SimpleSymbolizer.Create(null, "#FFEA4333", 5, .9);
 
-        var index250kLabels = LabelSymbolizer.Create(string.Empty, 12, symbolizer!.Param!.Stroke!, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(7), isRtl: false);
+        var index250kLabels = LabelSymbolizer.Create(12, symbolizer!.Param!.Stroke!, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(7), isRtl: false);
 
         //"اندکس ۲۵۰ هزار", 
         return new VectorLayer(
@@ -68,7 +68,7 @@ public static class IndexLayers
 
         var symbolizer = SimpleSymbolizer.Create(null, "#FFEA4333", 3, .9);
 
-        var index100kLabels = LabelSymbolizer.Create(string.Empty, 12, symbolizer!.Param!.Stroke!, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(9), isRtl: false);
+        var index100kLabels = LabelSymbolizer.Create(12, symbolizer!.Param!.Stroke!, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(9), isRtl: false);
 
         return new VectorLayer(
             //"اندکس ۱۰۰ هزار", 
@@ -196,7 +196,7 @@ public static class IndexLayers
 
         UtmGridDataSource source = UtmGridDataSource.Create(UtmIndexType.Ncc2kBlock, utmZone);
 
-        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(8), isRtl: false);
+        var label = LabelSymbolizer.Create(14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(8), isRtl: false);
 
         var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 2, .8);
 
@@ -227,7 +227,7 @@ public static class IndexLayers
 
         UtmGridDataSource source = UtmGridDataSource.Create(UtmIndexType.Ncc2kSheet, utmZone);
 
-        var label = LabelSymbolizer.Create(string.Empty, 13, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(11), isRtl: false);
+        var label = LabelSymbolizer.Create(13, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(11), isRtl: false);
 
         var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 2, .8);
 
@@ -258,7 +258,7 @@ public static class IndexLayers
 
         UtmGridDataSource source = UtmGridDataSource.Create(UtmIndexType.Ncc1k, utmZone);
 
-        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(14), isRtl: false);
+        var label = LabelSymbolizer.Create(14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(14), isRtl: false);
 
         var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 2, .8);
 
@@ -289,7 +289,7 @@ public static class IndexLayers
 
         UtmGridDataSource source = UtmGridDataSource.Create(UtmIndexType.Ncc500, utmZone);
 
-        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(15), isRtl: false);
+        var label = LabelSymbolizer.Create(14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(15), isRtl: false);
 
         var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 2, .8);
 
@@ -324,7 +324,7 @@ public static class IndexLayers
 
         GridDataSource source50k = GridDataSource.Create(GeodeticIndexType.Ncc50k);
 
-        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(9), isRtl: false);
+        var label = LabelSymbolizer.Create(14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(9), isRtl: false);
 
         var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 2, .8);
 
@@ -355,7 +355,7 @@ public static class IndexLayers
 
         GridDataSource source25k = GridDataSource.Create(GeodeticIndexType.Ncc25k);
 
-        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(10, 19), isRtl: false);
+        var label = LabelSymbolizer.Create(14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(10, 19), isRtl: false);
 
         var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 1, .8);
 
@@ -384,7 +384,7 @@ public static class IndexLayers
     {
         var fontFamily = new FontFamily("Times New Roman");
 
-        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(11, 19), isRtl: false);
+        var label = LabelSymbolizer.Create(14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(11, 19), isRtl: false);
 
         var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 1, .8);
 
@@ -413,7 +413,7 @@ public static class IndexLayers
     {
         var fontFamily = new FontFamily("Times New Roman");
 
-        var label = LabelSymbolizer.Create(string.Empty, 14, Brushes.Red, fontFamily, i => i?.GetCentroidPlusPoint(), ScaleInterval.Create(12, 19), isRtl: false);
+        var label = LabelSymbolizer.Create(14, Brushes.Red, fontFamily, i => i?.GetCentroidPlusPoint(), ScaleInterval.Create(12, 19), isRtl: false);
 
         var symbolizer = SimpleSymbolizer.Create(null, "#88EA4333", 1, .8);
 
