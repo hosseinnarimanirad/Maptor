@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Version>2.8.8</Version>    
+    <Version>2.8.9</Version>    
     <PackageIcon>package-icon.png</PackageIcon>
     <PackageIconUrl/> 
   </PropertyGroup>
