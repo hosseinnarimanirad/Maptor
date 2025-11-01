@@ -1,0 +1,34 @@
+<UserControl x:Class="IRI.Maptor.Jab.Controls.View.Symbology.Sld.ScaleRangeEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             mc:Ignorable="d" 
+             d:DesignHeight="120" d:DesignWidth="400">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Min Scale:" VerticalAlignment="Center" Margin="4"/>
+        <mahApp:NumericUpDown Grid.Row="0" Grid.Column="1" Margin="4" 
+                              Value="{Binding MinScale, Mode=TwoWay}" 
+                              Minimum="0" 
+                              HideUpDownButtons="True"
+                              mahApp:TextBoxHelper.Watermark="Optional - Leave empty for no minimum"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Max Scale:" VerticalAlignment="Center" Margin="4"/>
+        <mahApp:NumericUpDown Grid.Row="1" Grid.Column="1" Margin="4" 
+                              Value="{Binding MaxScale, Mode=TwoWay}" 
+                              Minimum="0" 
+                              HideUpDownButtons="True"
+                              mahApp:TextBoxHelper.Watermark="Optional - Leave empty for no maximum"/>
+    </Grid>
+</UserControl>
+
