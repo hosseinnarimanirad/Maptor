@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <Folder Include="Analysis\AreaCalculator\" />
+    <Folder Include="IO\TopoJson\" />
   </ItemGroup>
 
 

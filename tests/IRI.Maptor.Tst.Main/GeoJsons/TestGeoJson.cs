@@ -10,12 +10,7 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 namespace IRI.Maptor.Tst.Main.GeoJsons;
 
 public class TestGeoJson
-{
-    public TestGeoJson()
-    {
-        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
-    }
-    
+{ 
     [Fact]
     public void TestGeoJsonSerialize()
     {
