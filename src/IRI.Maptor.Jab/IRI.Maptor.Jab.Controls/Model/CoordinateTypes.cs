@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IRI.Maptor.Jab.Controls.Model;
+namespace IRI.Maptor.Jab.Controls.Models;
 
 public enum CoordinateTypes
 {

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
-namespace IRI.Maptor.Jab.Controls.Model;
+namespace IRI.Maptor.Jab.Controls.Models;
 
 public class Job
 {

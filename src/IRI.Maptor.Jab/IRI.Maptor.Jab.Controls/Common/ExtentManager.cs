@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Jab.Common.Events;
 
-namespace IRI.Maptor.Jab.Controls.Model;
+namespace IRI.Maptor.Jab.Controls.Models;
 
 public class ExtentManager : Notifier
 {

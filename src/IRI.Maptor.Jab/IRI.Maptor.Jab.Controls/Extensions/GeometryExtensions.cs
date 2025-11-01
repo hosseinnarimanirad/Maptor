@@ -1,5 +1,5 @@
 ﻿
-using IRI.Maptor.Jab.Controls.Model;
+using IRI.Maptor.Jab.Controls.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using System;

@@ -4,7 +4,7 @@ using System.Linq;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 using IRI.Maptor.Sta.Common.Primitives;
 
-namespace IRI.Maptor.Jab.Controls.Model;
+namespace IRI.Maptor.Jab.Controls.Models;
 
 public class LineStringEditorModel : CoordinateEditor
 {

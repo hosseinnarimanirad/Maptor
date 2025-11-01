@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace IRI.Maptor.Jab.Controls.Model.Legend
+namespace IRI.Maptor.Jab.Controls.Models.Legend
 {
     //public class CommandDataTemplateSelector : DataTemplateSelector
     //{

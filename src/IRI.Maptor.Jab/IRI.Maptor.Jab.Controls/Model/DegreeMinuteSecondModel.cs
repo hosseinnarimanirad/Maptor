@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Jab.Controls.Model
+namespace IRI.Maptor.Jab.Controls.Models
 {
     public class DegreeMinuteSecondModel : Notifier
     {

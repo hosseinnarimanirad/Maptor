@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
 
-namespace IRI.Maptor.Jab.Controls.Model
+namespace IRI.Maptor.Jab.Controls.Models
 {
     public class MultiLineStringEditorModel : CoordinateEditor
     {

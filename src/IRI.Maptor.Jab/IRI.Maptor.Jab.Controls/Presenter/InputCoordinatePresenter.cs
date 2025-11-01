@@ -6,7 +6,7 @@ using IRI.Maptor.Jab.Common.Assets.Commands;
 using System.Threading.Tasks;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Controls.Model;
+using IRI.Maptor.Jab.Controls.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 

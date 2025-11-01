@@ -27,6 +27,7 @@
  
   <ItemGroup>
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
+    <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Ogc\IRI.Maptor.Sta.Ogc.csproj" />
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Persistence\IRI.Maptor.Sta.Persistence.csproj" />
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.ShapefileFormat\IRI.Maptor.Sta.ShapefileFormat.csproj" />
     <ProjectReference Include="..\IRI.Maptor.Jab.Common\IRI.Maptor.Jab.Common.csproj" />
@@ -40,6 +41,10 @@
     <Compile Update="View\Map\MapViewer.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="View\Symbology\Sld\" />
   </ItemGroup>
 
 </Project>

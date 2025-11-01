@@ -6,7 +6,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Controls.View;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Controls.Model.GoTo;
+using IRI.Maptor.Jab.Controls.Models.GoTo;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
@@ -85,16 +85,16 @@ public class GoToPresenter : Notifier
     }
 
 
-    private readonly Model.DegreeMinuteSecondModel _longitudeDms;
+    private readonly Models.DegreeMinuteSecondModel _longitudeDms;
 
-    public Model.DegreeMinuteSecondModel LongitudeDms
+    public Models.DegreeMinuteSecondModel LongitudeDms
     {
         get { return _longitudeDms; } 
     }
 
-    private readonly Model.DegreeMinuteSecondModel _latitudeDms;
+    private readonly Models.DegreeMinuteSecondModel _latitudeDms;
 
-    public Model.DegreeMinuteSecondModel LatitudeDms
+    public Models.DegreeMinuteSecondModel LatitudeDms
     {
         get { return _latitudeDms; } 
     }
@@ -145,12 +145,12 @@ public class GoToPresenter : Notifier
             this.MenuItems = items;
         }
          
-        this._longitudeDms = new Model.DegreeMinuteSecondModel();
+        this._longitudeDms = new Models.DegreeMinuteSecondModel();
 
         this._longitudeDms.OnValueChanged -= OnValueChangedHandler;
         this._longitudeDms.OnValueChanged += OnValueChangedHandler;
 
-        this._latitudeDms = new Model.DegreeMinuteSecondModel();
+        this._latitudeDms = new Models.DegreeMinuteSecondModel();
 
         //this._latitudeDms.OnValueChanged += (sender, e) => { UpdateXY(); };
 

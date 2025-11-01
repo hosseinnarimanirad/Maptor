@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Media;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
-namespace IRI.Maptor.Jab.Controls.Model.GoTo
+namespace IRI.Maptor.Jab.Controls.Models.GoTo
 {
     public class HamburgerGoToMenuItem : Notifier
     {
