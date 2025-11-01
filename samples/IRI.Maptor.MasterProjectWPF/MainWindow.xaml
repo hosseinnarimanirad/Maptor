@@ -8,7 +8,10 @@
         mc:Ignorable="d" Loaded="loaded_l"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Click="Button_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Go" MinWidth="72"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
+            <Button Click="Button_Click" Content="Go" MinWidth="72"/>
+            <Button Click="Button_ReadTopoJson_Click" Content="Read TopoJSON" MinWidth="120" Margin="0,10,0,0"/>
+        </StackPanel>
         <!--<mahApp:ColorCanvas/>-->
         <!--<mahApp:ColorPalette VerticalAlignment="Top" HorizontalAlignment="Left"/>--> 
         <!--<mahApp:ColorPicker  VerticalAlignment="Top"
