@@ -6,12 +6,7 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 namespace IRI.Maptor.Tst.Main.GeoJsons;
 
 public class GeoJson_SqlGeometryTest
-{
-    public GeoJson_SqlGeometryTest()
-    {
-        //SqlServerTypes.Utilities.LoadNativeAssembliesv14();
-    }
-
+{ 
     [Fact]
     public void TestGeoJsonAndSqlGeometryConvert()
     {
