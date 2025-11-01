@@ -234,9 +234,9 @@ public class EditableFeatureLayerOptions : Notifier
 
     public VisualParameters Visual { get; set; } = new VisualParameters(_fill, _stroke, 4, .9);
 
-    public Func<FrameworkElement> MakePrimaryVertex { get; set; } = () => new View.MapMarkers.Circle(1);
+    public Func<FrameworkElement> MakePrimaryVertex { get; set; } = () => new Views.MapMarkers.Circle(1);
 
-    public Func<FrameworkElement> MakeSecondaryVertex { get; set; } = () => new View.MapMarkers.Circle(.6);
+    public Func<FrameworkElement> MakeSecondaryVertex { get; set; } = () => new Views.MapMarkers.Circle(.6);
 
     public EditableFeatureLayerOptions()
     {

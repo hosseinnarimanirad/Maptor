@@ -340,7 +340,7 @@ public class EditableFeatureLayer : SymbolizableLayer
             if (point == null)
                 return;
 
-            var element = new View.MapMarkers.RectangleLabelMarker(MeasureLabel);
+            var element = new Views.MapMarkers.RectangleLabelMarker(MeasureLabel);
 
             //do not show length/area when geometry has just one/two point or new part has just one/two point
             if (double.IsNaN(MeasureValue))
@@ -379,7 +379,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         foreach (var item in locatables)
         {
-            (item.Element as View.MapMarkers.CoordinateMarker).MercatorLocation = new Point(locatable.X, locatable.Y);
+            (item.Element as Views.MapMarkers.CoordinateMarker).MercatorLocation = new Point(locatable.X, locatable.Y);
 
             item.X = locatable.X;
             item.Y = locatable.Y;
@@ -616,7 +616,7 @@ public class EditableFeatureLayer : SymbolizableLayer
             }
             else
             {
-                var element = new View.MapMarkers.CoordinateMarker(locateable.X, locateable.Y);
+                var element = new Views.MapMarkers.CoordinateMarker(locateable.X, locateable.Y);
 
                 var auxLocateable = new Locateable(AncherFunctionHandlers.CenterLeft) { Element = element, X = point.X, Y = point.Y, Id = locateable.Id };
 
@@ -637,7 +637,7 @@ public class EditableFeatureLayer : SymbolizableLayer
             this.RemoveMapOptions();
         };
 
-        RequestRightClickOptions?.Invoke(new View.MapOptions.MapThreeOptions(false), e, presenter);
+        RequestRightClickOptions?.Invoke(new Views.MapOptions.MapThreeOptions(false), e, presenter);
 
     }
 
@@ -679,7 +679,7 @@ public class EditableFeatureLayer : SymbolizableLayer
             this.RemoveMapOptions();
         };
 
-        RequestRightClickOptions?.Invoke(new View.MapOptions.MapThreeOptions(false), e, presenter);
+        RequestRightClickOptions?.Invoke(new Views.MapOptions.MapThreeOptions(false), e, presenter);
 
     }
 
@@ -977,7 +977,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         var edge = new LineSegment<Point>(first, second);
 
-        var element = new View.MapMarkers.RectangleLabelMarker(SpatialUtility.GetLengthLabel(edge, toGeodeticWgs84));
+        var element = new Views.MapMarkers.RectangleLabelMarker(SpatialUtility.GetLengthLabel(edge, toGeodeticWgs84));
 
         //var offset = _screenToMap(15);
 

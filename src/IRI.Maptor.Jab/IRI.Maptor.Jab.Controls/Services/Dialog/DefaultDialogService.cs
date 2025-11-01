@@ -1,7 +1,7 @@
 ﻿using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Jab.Common.Presenters;
-using IRI.Maptor.Jab.Controls.ViewModel.Dialogs;
+using IRI.Maptor.Jab.Controls.ViewModels.Dialogs;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -328,7 +328,7 @@ namespace IRI.Maptor.Jab.Controls.Services.Dialog
                 IsTwoOptionsMode = true
             };
 
-            View.Dialogs.DialogView dialog = new View.Dialogs.DialogView();
+            Views.Dialogs.DialogView dialog = new Views.Dialogs.DialogView();
 
             if (ownerWindow == null)
                 ownerWindow = _defaultOwnerWindow;
@@ -391,7 +391,7 @@ namespace IRI.Maptor.Jab.Controls.Services.Dialog
                 IconPathMarkup = pathMarkup ?? markup
             };
 
-            View.Dialogs.MessageBoxView dialog = new View.Dialogs.MessageBoxView();
+            Views.Dialogs.MessageBoxView dialog = new Views.Dialogs.MessageBoxView();
 
             if (ownerWindow == null)
                 ownerWindow = _defaultOwnerWindow;
@@ -447,7 +447,7 @@ namespace IRI.Maptor.Jab.Controls.Services.Dialog
         {
             var tcs = new TaskCompletionSource<SignUpDialogViewModel>();
 
-            View.Dialogs.UserNameSignUpDialogView dialog = new View.Dialogs.UserNameSignUpDialogView();
+            Views.Dialogs.UserNameSignUpDialogView dialog = new Views.Dialogs.UserNameSignUpDialogView();
 
             if (ownerWindow == null)
                 ownerWindow = _defaultOwnerWindow;
@@ -605,7 +605,7 @@ namespace IRI.Maptor.Jab.Controls.Services.Dialog
         {
             var tcs = new TaskCompletionSource<ChangePasswordDialogViewModel>();
 
-            View.Dialogs.ChangePasswordDialogView dialog = new View.Dialogs.ChangePasswordDialogView();
+            Views.Dialogs.ChangePasswordDialogView dialog = new Views.Dialogs.ChangePasswordDialogView();
 
             if (ownerWindow == null)
                 ownerWindow = _defaultOwnerWindow;

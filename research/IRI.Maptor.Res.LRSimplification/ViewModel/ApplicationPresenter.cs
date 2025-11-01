@@ -7,7 +7,7 @@ using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Controls.Presenter;
+using IRI.Maptor.Jab.Controls.Presenters;
 using IRI.Maptor.Jab.Common.Models.Legend; 
 using IRI.Maptor.Jab.Common.Assets.Commands; 
 using IRI.Maptor.Res.LRSimplification.ViewModel.TrainingModel; 

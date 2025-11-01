@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="View\Map\Auxilary\**" />
-    <EmbeddedResource Remove="View\Map\Auxilary\**" />
-    <None Remove="View\Map\Auxilary\**" />
-    <Page Remove="View\Map\Auxilary\**" />
+    <Compile Remove="Views\Map\Auxilary\**" />
+    <EmbeddedResource Remove="Views\Map\Auxilary\**" />
+    <None Remove="Views\Map\Auxilary\**" />
+    <Page Remove="Views\Map\Auxilary\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,13 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="View\Map\MapViewer.xaml.cs">
+    <Compile Update="Views\Map\MapViewer.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="View\Symbology\Sld\" />
   </ItemGroup>
 
 </Project>

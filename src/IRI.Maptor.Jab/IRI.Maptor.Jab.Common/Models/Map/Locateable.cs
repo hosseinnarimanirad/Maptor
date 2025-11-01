@@ -194,7 +194,7 @@ public class Locateable : Notifier
         if (this.Element is null)
             return;
 
-        var element = (View.MapMarkers.LocationMarker)this.Element;
+        var element = (Views.MapMarkers.LocationMarker)this.Element;
 
         element.BeginAnimation(System.Windows.FrameworkElement.HeightProperty, new DoubleAnimation(250, new System.Windows.Duration(new TimeSpan(0, 0, 1))) { FillBehavior = FillBehavior.HoldEnd });
     }

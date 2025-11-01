@@ -13,7 +13,7 @@ using IRI.Maptor.Jab.Common.Presenters;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Jab.Common.View.MapMarkers;
+using IRI.Maptor.Jab.Common.Views.MapMarkers;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 using LineSegment = System.Windows.Media.LineSegment;
@@ -277,7 +277,7 @@ public class PolyBezierLayer : SymbolizableLayer
 
         if (RequestRightClickOptions != null)
         {
-            RequestRightClickOptions(new View.MapOptions.MapThreeOptions(), e, presenter);
+            RequestRightClickOptions(new Views.MapOptions.MapThreeOptions(), e, presenter);
         }
     }
 
@@ -508,7 +508,7 @@ public class PolyBezierLayer : SymbolizableLayer
             this.RemoveMapOptions();
         };
 
-        RequestRightClickOptions?.Invoke(new View.MapOptions.MapTwoOptions(), e, presenter);
+        RequestRightClickOptions?.Invoke(new Views.MapOptions.MapTwoOptions(), e, presenter);
     }
 
     private void Decorate()

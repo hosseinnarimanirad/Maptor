@@ -1,5 +1,5 @@
 ﻿using IRI.Maptor.Jab.Common.TileServices;
-using IRI.Maptor.Jab.Controls.Presenter;
+using IRI.Maptor.Jab.Controls.Presenters;
 using IRI.Maptor.Sta.Common.Primitives;
 using System.Globalization;
 using System.Text;

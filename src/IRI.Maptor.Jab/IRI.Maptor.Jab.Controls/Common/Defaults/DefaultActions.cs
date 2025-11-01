@@ -16,9 +16,9 @@ public static class DefaultActions
     {
         var result = new Action<IRI.Maptor.Sta.Common.Primitives.Point>((IRI.Maptor.Sta.Common.Primitives.Point webMercatorPoint) =>
         {
-            var gotoPresenter = IRI.Maptor.Jab.Controls.Presenter.GoToPresenter.Create(mapPresenter);
+            var gotoPresenter = IRI.Maptor.Jab.Controls.Presenters.GoToPresenter.Create(mapPresenter);
 
-            var gotoView = new IRI.Maptor.Jab.Controls.View.GoToMetroWindow(gotoPresenter);
+            var gotoView = new IRI.Maptor.Jab.Controls.Views.GoToMetroWindow(gotoPresenter);
 
             //gotoView.DataContext = gotoPresenter;
             gotoView.Owner = ownerWindow;
@@ -35,7 +35,7 @@ public static class DefaultActions
 
     public static void GetDefaultShowSymbologyView(Window ownerWindow, ILayer layer, MapPresenter mapPresenter)
     {
-        var view = new IRI.Maptor.Jab.Controls.View.Symbology.SymbologyView();
+        var view = new IRI.Maptor.Jab.Controls.Views.Symbology.SymbologyView();
 
         var presenter = new SymbologyPresenter();
 

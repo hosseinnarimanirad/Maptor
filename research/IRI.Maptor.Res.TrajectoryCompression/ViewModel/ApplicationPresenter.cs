@@ -7,7 +7,7 @@ using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Controls.Presenter;
+using IRI.Maptor.Jab.Controls.Presenters;
 using IRI.Maptor.Jab.Common.Assets.Commands;
  
 namespace IRI.Maptor.Res.TrajectoryCompression;

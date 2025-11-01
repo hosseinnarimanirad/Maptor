@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="IRI.Maptor.Jab.Common.Views.MapOptions.MapFourOptions"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" 
+                Width="150" Height="130" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/ButtonStyles.xaml"/>
+    </UserControl.Resources>
+    <UserControl.RenderTransform>
+        <TransformGroup>
+            <ScaleTransform/>
+        </TransformGroup>
+    </UserControl.RenderTransform>
+
+    <Grid Margin="0">
+        <Grid.Resources>
+            <Style TargetType="iconPacks:PackIconModern">
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Style>
+        </Grid.Resources>
+        <Ellipse Width="8" Height="8" Opacity=".6" Fill="{DynamicResource MahApps.Brushes.Accent}"  Margin="0" Stroke="White" StrokeThickness="2"/>
+
+        <Button Name="rightButton" Style="{StaticResource circleButton}" Command="{Binding RightCommand}" ToolTip="{Binding RightToolTip}" Background="{DynamicResource MahApps.Brushes.Accent}">
+            <!--<Path Height="20.7781" Stretch="Uniform" Fill="White" Data="{Binding RightSymbol}"/>-->
+            <iconPacks:PackIconModern Kind="{Binding RightSymbol}"/>
+        </Button>
+
+        <Button Name="upperRightButton" Style="{StaticResource circleButton}" Command="{Binding UpperRightCommand}" ToolTip="{Binding UpperRightToolTip}" Background="{DynamicResource MahApps.Brushes.Accent}">
+            <!--<Path Height="20.7781" Stretch="Uniform" Fill="White" Data="{Binding UpperRightSymbol}"/>-->
+            <iconPacks:PackIconModern Kind="{Binding UpperRightSymbol}"/>
+        </Button>
+
+        <Button Name="upperLeftButton" Style="{StaticResource circleButton}" Command="{Binding UpperLeftCommand}" ToolTip="{Binding UpperLeftToolTip}" Background="{DynamicResource MahApps.Brushes.Accent}">
+            <!--<Path Height="20.7781" Stretch="Uniform" Fill="White" Data="{Binding UpperLeftSymbol}"/>-->
+            <iconPacks:PackIconModern Kind="{Binding UpperLeftSymbol}"/>
+        </Button>
+
+        <Button Name="leftButton" Style="{StaticResource circleButton}" Command="{Binding LeftCommand}" ToolTip="{Binding LeftToolTip}" Background="{DynamicResource MahApps.Brushes.Accent}">
+            <!--<Path Height="24" Stretch="Uniform" Fill="White" Data="{Binding LeftSymbol}"/>-->
+            <iconPacks:PackIconModern Kind="{Binding LeftSymbol}"/>
+        </Button>
+    </Grid>
+</UserControl>

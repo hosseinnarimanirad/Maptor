@@ -72,7 +72,7 @@ public class BezierItem
 
         _endControlLineFigure.Segments.Add(new LineSegment(endControlPoint, true));
 
-        StartLocateable = new Locateable(MapProjects.WebMercatorToGeodeticWgs84(startPoint)) { Element = new View.MapMarkers.Circle(1, new SolidColorBrush(Colors.Green)) };
+        StartLocateable = new Locateable(MapProjects.WebMercatorToGeodeticWgs84(startPoint)) { Element = new Views.MapMarkers.Circle(1, new SolidColorBrush(Colors.Green)) };
 
         StartLocateable.OnPositionChanged += (sender, e) =>
         {
@@ -88,7 +88,7 @@ public class BezierItem
         };
 
 
-        EndLocateable = new Locateable(MapProjects.WebMercatorToGeodeticWgs84(endPoint)) { Element = new View.MapMarkers.Circle(1, new SolidColorBrush(Colors.Green)) };
+        EndLocateable = new Locateable(MapProjects.WebMercatorToGeodeticWgs84(endPoint)) { Element = new Views.MapMarkers.Circle(1, new SolidColorBrush(Colors.Green)) };
 
         EndLocateable.OnPositionChanged += (sender, e) =>
         {
@@ -104,7 +104,7 @@ public class BezierItem
         };
 
 
-        StartControlLocateable = new Locateable(MapProjects.WebMercatorToGeodeticWgs84(startControlPoint.AsPoint())) { Element = new View.MapMarkers.Circle(1, new SolidColorBrush(Colors.Green)) };
+        StartControlLocateable = new Locateable(MapProjects.WebMercatorToGeodeticWgs84(startControlPoint.AsPoint())) { Element = new Views.MapMarkers.Circle(1, new SolidColorBrush(Colors.Green)) };
 
         StartControlLocateable.OnPositionChanged += (sender, e) =>
         {
@@ -120,7 +120,7 @@ public class BezierItem
         };
 
 
-        EndControlLocateable = new Locateable(MapProjects.WebMercatorToGeodeticWgs84(endControlPoint.AsPoint())) { Element = new View.MapMarkers.Circle(1, new SolidColorBrush(Colors.Green)) };
+        EndControlLocateable = new Locateable(MapProjects.WebMercatorToGeodeticWgs84(endControlPoint.AsPoint())) { Element = new Views.MapMarkers.Circle(1, new SolidColorBrush(Colors.Green)) };
 
         EndControlLocateable.OnPositionChanged += (sender, e) =>
         {

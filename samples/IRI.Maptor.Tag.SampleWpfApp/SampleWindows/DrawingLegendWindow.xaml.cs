@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.TileServices;
-using IRI.Maptor.Jab.Controls.Presenter;
+using IRI.Maptor.Jab.Controls.Presenters;
 using System.Text;
 
 namespace IRI.Maptor.Tag.SampleWpfApp.SampleWindows;

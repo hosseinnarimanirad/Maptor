@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
-        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.View;assembly=IRI.Maptor.Jab.Controls"
+        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.Views;assembly=IRI.Maptor.Jab.Controls"
         xmlns:iriJabUIComponents="clr-namespace:IRI.Maptor.Jab.MultiSelectItem.View;assembly=IRI.Maptor.Jab.MultiSelectItem"
         xmlns:MapViewer="clr-namespace:IRI.Maptor.Jab.Controls;assembly=IRI.Maptor.Jab.Controls"   
         mc:Ignorable="d" Loaded="Window_Loaded"

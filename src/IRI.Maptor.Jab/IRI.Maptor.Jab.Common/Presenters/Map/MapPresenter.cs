@@ -31,7 +31,7 @@ using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Jab.Common.Models.Map;
 using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.View.MapMarkers;
+using IRI.Maptor.Jab.Common.Views.MapMarkers;
 using IRI.Maptor.Jab.Common.Models.Spatialable;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Events;
