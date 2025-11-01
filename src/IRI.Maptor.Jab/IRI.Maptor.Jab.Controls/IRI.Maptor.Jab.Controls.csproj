@@ -24,43 +24,14 @@
     <PackageReference Include="MahApps.Metro.IconPacks.Modern" />
     <PackageReference Include="MahApps.Metro.IconPacks.Material" />
   </ItemGroup>
-
-  <!--<ItemGroup>
-    <PackageReference Include="Telerik.UI.for.Wpf.60.Xaml" Version="2022.3.912" />
-  </ItemGroup>-->
-
+ 
   <ItemGroup>
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Persistence\IRI.Maptor.Sta.Persistence.csproj" />
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.ShapefileFormat\IRI.Maptor.Sta.ShapefileFormat.csproj" />
     <ProjectReference Include="..\IRI.Maptor.Jab.Common\IRI.Maptor.Jab.Common.csproj" />
   </ItemGroup>
-
-
-  <!--<ItemGroup>
-    <Reference Include="Microsoft.SqlServer.Types">
-      <HintPath>..\..\..\deploy\MicrosoftSqlServerTypes\v14\Microsoft.SqlServer.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls">
-      <HintPath>..\..\..\deploy\Telerik2022\Telerik.Windows.Controls.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.Data">
-      <HintPath>..\..\..\deploy\Telerik2022\Telerik.Windows.Controls.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.GridView">
-      <HintPath>..\..\..\deploy\Telerik2022\Telerik.Windows.Controls.GridView.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.Input">
-      <HintPath>..\..\..\deploy\Telerik2022\Telerik.Windows.Controls.Input.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.Navigation">
-      <HintPath>..\..\..\deploy\Telerik2022\Telerik.Windows.Controls.Navigation.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Data">
-      <HintPath>..\..\..\deploy\Telerik2022\Telerik.Windows.Data.dll</HintPath>
-    </Reference>
-  </ItemGroup>-->
-
+ 
   <ItemGroup>
     <Resource Include="Assets\Images\transparentBackground.png" />
   </ItemGroup>
