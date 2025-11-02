@@ -131,10 +131,10 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
     public bool Is(string? fullName) => !string.IsNullOrWhiteSpace(fullName) && this.FullName.EqualsIgnoreCase(fullName);
 
     // this is the set strategy method for TileMapProvider as the Context of the TileServiceUrlStrategy
-    public void ChangeMode(TileMapProviderMode newMode, string? localNetworkOrProxyBaseUrl)
+    public void ChangeMode(TileMapProviderMode newMode, string? localNetworkBaseUrl, string? proxyAppBaseUrl)
     {
-        if (this.Mode == newMode)
-            return;
+        //if (this.Mode == newMode)
+        //    return;
 
         this.Mode = newMode;
 
@@ -147,11 +147,11 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
                 break;
 
             case TileMapProviderMode.LocalNetwork:
-                _urlStrategy = new TileServiceUrlStrategy_LocalNetwork(localNetworkOrProxyBaseUrl!, ProviderEn, MapTypeEn);
+                _urlStrategy = new TileServiceUrlStrategy_LocalNetwork(localNetworkBaseUrl!, ProviderEn, MapTypeEn);
                 break;
 
             case TileMapProviderMode.ProxyApp:
-                _urlStrategy = new TileServiceUrlStrategy_ProxyApp(localNetworkOrProxyBaseUrl!, _providerResourceKey, _mapTypeResourceKey);
+                _urlStrategy = new TileServiceUrlStrategy_ProxyApp(proxyAppBaseUrl!, _providerResourceKey, _mapTypeResourceKey);
                 break;
 
             default:

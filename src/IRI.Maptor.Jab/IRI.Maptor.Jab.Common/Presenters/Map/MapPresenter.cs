@@ -343,6 +343,101 @@ public abstract class MapPresenter : BasePresenter
     }
 
 
+    #region BaseMap Mode
+
+    private string _localNetworkBaseMapBaseUrl;
+    public string LocalNetworkBaseMapBaseUrl
+    {
+        get { return _localNetworkBaseMapBaseUrl; }
+        set
+        {
+            _localNetworkBaseMapBaseUrl = value;
+            RaisePropertyChanged();
+
+            UpdateTilesServices();
+        }
+    }
+
+    private string _proxyAppBaseMapBaseUrl;
+    public string ProxyAppBaseMapBaseUrl
+    {
+        get { return _proxyAppBaseMapBaseUrl; }
+        set
+        {
+            _proxyAppBaseMapBaseUrl = value;
+            RaisePropertyChanged();
+
+            UpdateTilesServices();
+        }
+    }
+
+
+
+    private TileMapProviderMode _selectedTileMapProviderMode = TileMapProviderMode.Internet;
+    public TileMapProviderMode SelectedTileMapProviderMode
+    {
+        get { return _selectedTileMapProviderMode; }
+        set
+        {
+            _selectedTileMapProviderMode = value;
+            RaisePropertyChanged();
+
+            UpdateTilesServices();
+        }
+    }
+
+    private void UpdateTilesServices()
+    {
+        foreach (var item in this.MapProviders)
+        {
+            item.ChangeMode(SelectedTileMapProviderMode, LocalNetworkBaseMapBaseUrl, ProxyAppBaseMapBaseUrl/*IRI.App.MakanNegarSaba.Properties.Settings.Default.baseMapUrl*/);
+        }
+    }
+
+    //private bool _isLocalBaseMapMode;
+    //public bool IsLocalBaseMapMode
+    //{
+    //    get { return _isLocalBaseMapMode; }
+    //    set
+    //    {
+    //        _isLocalBaseMapMode = value;
+    //        RaisePropertyChanged();
+
+    //        //Properties.Settings.Default.IsLocalBaseMapMode = value;
+
+    //        foreach (var item in this.MapProviders)
+    //        {
+    //            item.ChangeMode(value ? TileMapProviderMode.LocalNetwork : TileMapProviderMode.Internet, LocalNetworkBaseMapBaseUrl/*IRI.App.MakanNegarSaba.Properties.Settings.Default.baseMapUrl*/);
+    //        }
+
+    //    }
+    //}
+
+    //private bool _isOnlineBaseMapMode;
+    //public bool IsOnlineBaseMapMode
+    //{
+    //    get { return _isOnlineBaseMapMode; }
+    //    set
+    //    {
+    //        _isOnlineBaseMapMode = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
+
+    //private bool _isProxyAppBaseMapMode;
+    //public bool IsProxyAppBaseMapMode
+    //{
+    //    get { return _isProxyAppBaseMapMode; }
+    //    set
+    //    {
+    //        _isProxyAppBaseMapMode = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
+
+
+    #endregion
+
     //private Dictionary<string, Func<TileType, IMapProvider>> _mapProviders;
     //public Dictionary<string, Func<TileType, IMapProvider>> MapProviders
     //{

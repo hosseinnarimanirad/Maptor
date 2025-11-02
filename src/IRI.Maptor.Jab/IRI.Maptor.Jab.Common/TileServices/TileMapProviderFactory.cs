@@ -673,7 +673,7 @@ public static class TileMapProviderFactory
         {
             foreach (var item in providers)
             {
-                item.ChangeMode(TileMapProviderMode.LocalNetwork, localNetworkBaseUrl);
+                item.ChangeMode(TileMapProviderMode.LocalNetwork, localNetworkBaseUrl, null);
             }
         }
 
@@ -693,7 +693,7 @@ public static class TileMapProviderFactory
         {
             foreach (var item in providers)
             {
-                item.ChangeMode(TileMapProviderMode.LocalNetwork, localNetworkBaseUrl);
+                item.ChangeMode(TileMapProviderMode.LocalNetwork, localNetworkBaseUrl, null);
             }
         }
 

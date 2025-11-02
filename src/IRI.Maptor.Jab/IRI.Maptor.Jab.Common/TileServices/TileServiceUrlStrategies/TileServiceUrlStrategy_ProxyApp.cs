@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Jab.Common.Localization;
 
@@ -39,7 +38,9 @@ public class TileServiceUrlStrategy_ProxyApp : TileServiceUrlStrategy
 
         // Build the proxy API URL with all parameters
         // Pattern: {baseUrl}/api/tile?url={url}&provider={provider}&mapType={mapType}&z={z}&x={x}&y={y}
-        var encodedUrl = HttpUtility.UrlEncode(originalUrl);
+        // IMPORTANT: Use Uri.EscapeDataString (NOT HttpUtility.UrlEncode) for query parameter values
+        // Uri.EscapeDataString is RFC 3986 compliant and properly encodes URLs for query parameters
+        var encodedUrl = Uri.EscapeDataString(originalUrl);
         
         return $"{_proxyBaseUrl}/api/tile?url={encodedUrl}&provider={providerName}&mapType={mapTypeName}&z={tile.ZoomLevel}&x={tile.ColumnNumber}&y={tile.RowNumber}";
     }
