@@ -45,6 +45,7 @@
     <PackageVersion Include="Microsoft.Identity.Web" Version="2.15.2" />
     <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="2.15.2" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
 
     <PackageVersion Include="NetTopologySuite" Version="2.5.0" />

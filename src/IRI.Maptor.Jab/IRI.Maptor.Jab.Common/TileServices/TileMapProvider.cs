@@ -9,6 +9,14 @@ namespace IRI.Maptor.Jab.Common.TileServices;
 
 public class TileMapProvider : ValueObjectNotifier, IDisposable
 {
+    TileServiceUrlStrategy _urlStrategy;
+
+
+    public string FullName => $"{ProviderEn}-{MapTypeEn}";
+
+    public string Title { get { return $"{Provider}-{MapType}"; } }
+
+
     private string _providerResourceKey { get; set; }
     public string Provider => LocalizationManager.Instance[_providerResourceKey];
     public string ProviderEn => LocalizationManager.Instance.GetDefaultValue(_providerResourceKey);
@@ -41,66 +49,48 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
         }
     }
 
-
-    //public bool RequireInternetConnection { get; set; } = true;
     public TileMapProviderMode Mode { get; protected set; } = TileMapProviderMode.Internet;
 
-
-    public string FullName => $"{ProviderEn}-{MapTypeEn}";
-
-    public string Title { get { return $"{Provider}-{MapType}"; } }
-
-    public Func<TileInfo, string>? MakeInternetUrl { get; protected set; }
-
-    public Func<TileInfo, string>? MakeInteranetUrl { get; protected set; }
-
-    public string? LocalNetworkBaseUrl { get; protected set; }
 
     //in the case of google traffic map, caching should be avoided
     public bool AllowCache { get; set; } = true;
 
-    public bool ShouldBeConnectedToInternet() => Mode == TileMapProviderMode.Internet && LocalNetworkBaseUrl == null;
+
+    //public Func<TileInfo, string>? MakeInternetUrl { get; protected set; }
+
+    //public Func<TileInfo, string>? MakeInteranetUrl { get; protected set; }
+
+    //public string? LocalNetworkBaseUrl { get; protected set; }
 
 
-    public TileMapProvider(TileMapProvider mapProvider)
+    protected TileMapProvider(TileMapProvider mapProvider)
+        : this(mapProvider._providerResourceKey, mapProvider._mapTypeResourceKey, mapProvider.Thumbnail, mapProvider.Thumbnail72, mapProvider.Mode)
     {
-        if (mapProvider.Mode == TileMapProviderMode.Internet)
-            this.MakeInternetUrl = mapProvider.MakeInternetUrl;
 
-        else
-            this.MakeInteranetUrl = mapProvider.MakeInternetUrl;
-
-        this.Mode = mapProvider.Mode;
-
-        this._providerResourceKey = mapProvider._providerResourceKey;
-        this._mapTypeResourceKey = mapProvider._mapTypeResourceKey;
-        this._thumbnail = mapProvider._thumbnail;
-        this._thumbnail72 = mapProvider._thumbnail72;
-
-        LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
-        LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
 
-    public TileMapProvider(
+    protected TileMapProvider(
         string providerResourceKey,
         string mapTypeResourceKey,
-        Func<TileInfo, string> urlFunction,
+        //Func<TileInfo, string> urlFunction,
         byte[]? thumbnail,
         byte[]? thumbnail72,
         TileMapProviderMode mode = TileMapProviderMode.Internet)
     {
-        if (mode == TileMapProviderMode.Internet)
-            this.MakeInternetUrl = urlFunction;
+        //if (mode == TileMapProviderMode.Internet)
+        //    this.MakeInternetUrl = urlFunction;
 
-        else
-            this.MakeInteranetUrl = urlFunction;
-
-        this.Mode = mode;
+        //else
+        //    this.MakeInteranetUrl = urlFunction;
+        //this.MakeInternetUrl = TileMapWebUrlFactory.GetMakeUrlFunc(providerResourceKey, mapTypeResourceKey);
+        _urlStrategy = new TileServiceUrlStrategy_Web(providerResourceKey, mapTypeResourceKey);
 
         this._providerResourceKey = providerResourceKey;
         this._mapTypeResourceKey = mapTypeResourceKey;
         this._thumbnail = thumbnail;
         this._thumbnail72 = thumbnail72;
+
+        this.Mode = mode;
 
         LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
         LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
@@ -113,18 +103,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
         RaisePropertyChanged(nameof(Title));
     }
 
-
-    public virtual string? GetUrl(TileInfo tile)
-    {
-        if (this.Mode == TileMapProviderMode.LocalNetwork && MakeInteranetUrl is null)
-            return $"{LocalNetworkBaseUrl}/{ProviderEn}/{MapTypeEn}/{tile.ZoomLevel}/{tile.RowNumber}/{tile.RowNumber}_{tile.ColumnNumber}.png";
-        
-        else if (this.Mode == TileMapProviderMode.LocalNetwork)
-            return MakeInteranetUrl?.Invoke(tile);
-
-        else
-            return MakeInternetUrl?.Invoke(tile);
-    }
+    public bool ShouldBeConnectedToInternet() => Mode == TileMapProviderMode.Internet /*&& LocalNetworkBaseUrl == null*/;
 
     public override string ToString() => Title;
 
@@ -134,45 +113,68 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
         yield return MapTypeEn;
     }
 
-    //public override bool Equals(object obj)
-    //{
-    //    if (object.Equals(obj, null))
-    //    {
-    //        return false;
-    //    }
 
-    //    return (obj as TileMapProvider)?.Name?.EqualsIgnoreCase(this.Name) == true;
-    //}
+    public virtual string? GetUrl(TileInfo tile)
+    {
+        //if (this.Mode == TileMapProviderMode.LocalNetwork && MakeInteranetUrl is null)
+        //    return $"{LocalNetworkBaseUrl}/{ProviderEn}/{MapTypeEn}/{tile.ZoomLevel}/{tile.RowNumber}/{tile.RowNumber}_{tile.ColumnNumber}.png";
 
-    //public override int GetHashCode()
-    //{
-    //    return this.ToString().GetHashCode();
-    //}
+        //else if (this.Mode == TileMapProviderMode.LocalNetwork)
+        //    return MakeInteranetUrl?.Invoke(tile);
 
-    //public static bool operator ==(TileMapProvider first, TileMapProvider second)
-    //{
-    //    //using object.Equals handle the case of null==null otherwise it will use Equals and return false in this case 
-    //    return object.Equals(first, second);
-    //}
+        //else
+        //    return MakeInternetUrl?.Invoke(tile);
 
-    //public static bool operator !=(TileMapProvider first, TileMapProvider second)
-    //{
-    //    //using object.Equals handle the case of null==null otherwise it will use Equals and return false in this case
-    //    return !object.Equals(first, second);
-    //}
+        return _urlStrategy.GetUrl(tile);
+    }
 
     public bool Is(string? fullName) => !string.IsNullOrWhiteSpace(fullName) && this.FullName.EqualsIgnoreCase(fullName);
 
-    public void ChangeMode(TileMapProviderMode newMode, string? localNetworkBaseUrl)
+    // this is the set strategy method for TileMapProvider as the Context of the TileServiceUrlStrategy
+    public void ChangeMode(TileMapProviderMode newMode, string? localNetworkOrProxyBaseUrl)
     {
         if (this.Mode == newMode)
             return;
 
         this.Mode = newMode;
 
-        if (newMode == TileMapProviderMode.LocalNetwork)
-            this.LocalNetworkBaseUrl = localNetworkBaseUrl;
+        //if (newMode == TileMapProviderMode.LocalNetwork)
+        //    this.LocalNetworkBaseUrl = localNetworkBaseUrl;
+        switch (newMode)
+        {
+            case TileMapProviderMode.Internet:
+                _urlStrategy = new TileServiceUrlStrategy_Web(_providerResourceKey, _mapTypeResourceKey);
+                break;
+
+            case TileMapProviderMode.LocalNetwork:
+                _urlStrategy = new TileServiceUrlStrategy_LocalNetwork(localNetworkOrProxyBaseUrl!, ProviderEn, MapTypeEn);
+                break;
+
+            case TileMapProviderMode.ProxyApp:
+                _urlStrategy = new TileServiceUrlStrategy_ProxyApp(localNetworkOrProxyBaseUrl!, _providerResourceKey, _mapTypeResourceKey);
+                break;
+
+            default:
+                throw new NotImplementedException("TileMapProvider > ChangeMode!");
+        }
     }
+
+    #region Static Factory Methods
+
+    public static TileMapProvider Create(string providerResourceKey, string mapTypeResourceKey, byte[]? thumbnail, byte[]? thumbnail72)
+    {
+        return new TileMapProvider(providerResourceKey, mapTypeResourceKey, thumbnail, thumbnail72);
+    }
+
+    public static TileMapProvider CreateLocalNetwork(string providerResourceKey, string mapTypeResourceKey, byte[]? thumbnail, byte[]? thumbnail72, Func<TileInfo, string> interanetUrlFunc)
+    {
+        return new TileMapProvider(providerResourceKey, mapTypeResourceKey, thumbnail, thumbnail72, TileMapProviderMode.LocalNetwork)
+        {
+            _urlStrategy = new TileServiceUrlStrategy_LocalNetwork(interanetUrlFunc),
+        };
+    }
+
+    #endregion
 
     #region IDispose
 
