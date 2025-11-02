@@ -22,6 +22,7 @@
  
   <ItemGroup>
     <ProjectReference Include="..\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Sta.Spatial\IRI.Maptor.Sta.Spatial.csproj" />
   </ItemGroup>
  
   <ItemGroup>
