@@ -4,6 +4,7 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:model="clr-namespace:IRI.Maptor.Jab.Common.Models;assembly=IRI.Maptor.Jab.Common"
              xmlns:local ="clr-namespace:IRI.Maptor.Jab.Controls.Common.Behaviors" 
+             xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              x:Name="root">
     <UserControl.Resources>
@@ -86,6 +87,7 @@
                   IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
                   SelectionChanged="grid_SelectionChanged" CellEditEnding="grid_CellEditEnding" EnableColumnVirtualization="False"
                   AddingNewItem="grid_AddingNewItem" MouseDoubleClick="grid_MouseDoubleClick" DataContextChanged="grid_DataContextChanged"
+                  dgx:DataGridFilter.IsAutoFilterEnabled="True"
                     local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True"> 
 
             <!--<i:Interaction.Behaviors>
