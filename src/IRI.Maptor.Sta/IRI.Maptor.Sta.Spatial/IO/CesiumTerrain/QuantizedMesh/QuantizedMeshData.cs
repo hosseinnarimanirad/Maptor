@@ -8,7 +8,7 @@ public class QuantizedMeshData
     /// <summary>
     /// The header information containing tile metadata
     /// </summary>
-    public TerrainTileHeader Header { get; set; }
+    public QuantizedMeshHeader Header { get; set; }
 
     /// <summary>
     /// Number of vertices in the mesh
@@ -63,7 +63,7 @@ public class QuantizedMeshData
     /// <summary>
     /// Optional extensions (water mask, vertex normals, metadata, etc.)
     /// </summary>
-    public TerrainTileExtensions Extensions { get; set; }
+    public QuantizedMeshExtensions Extensions { get; set; }
 
     /// <summary>
     /// Converts quantized U coordinate to normalized value [0, 1]

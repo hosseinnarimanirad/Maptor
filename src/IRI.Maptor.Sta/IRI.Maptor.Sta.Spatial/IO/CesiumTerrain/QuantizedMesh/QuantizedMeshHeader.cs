@@ -4,7 +4,7 @@ namespace IRI.Maptor.Sta.Spatial.IO.CesiumTerrain;
 /// Represents the header of a Cesium Quantized-Mesh terrain tile (.terrain file)
 /// Specification: https://github.com/CesiumGS/quantized-mesh
 /// </summary>
-public class TerrainTileHeader
+public class QuantizedMeshHeader
 {
     /// <summary>
     /// The center of the tile in Earth-centered, Earth-fixed coordinates (X component)

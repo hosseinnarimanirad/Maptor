@@ -49,7 +49,7 @@ public static class SimplificationHelper
         StreamWriter writer = new StreamWriter($"{writeFolder}\\summary.txt", false);
         writer.WriteLine(Log.GetHeader());
 
-        List<string> fileNames = ["AdminArea_WM", "Building_WM", "Landuse_WM", "Railway_WM"];
+        List<string> fileNames = ["AdminArea_WM", "Building_WM", "Landuse_WM", "Railway_WM", "Road_WM"];
 
         var oldfiles = Directory.EnumerateFiles(writeFolder, "*.txt", SearchOption.AllDirectories)
                                 .Select(s => System.IO.Path.GetFileNameWithoutExtension(s).Replace("-summary", string.Empty));
@@ -173,7 +173,9 @@ public static class SimplificationHelper
 
                     var compression = Math.Round(feature.Compression(simplified) * 100);
 
-                    var fullFileName = $"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{method.GetDescription()}-{scale:N0}-{compression}%.png";
+                    var tlvd = feature.CalculateTotalVectorDisplacementPerLength(simplified);
+
+                    var fullFileName = $"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{renderSize}-{method.GetDescription()}-{scale:N0}-{compression}%-{tlvd:#.00}.png";
 
                     ImageUtility.MergeAndSave(fullFileName, [originalFrame!, simplifiedFrame!], screenSize.Width, screenSize.Height);
 

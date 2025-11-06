@@ -9,7 +9,7 @@ namespace IRI.Maptor.Sta.Spatial.IO.CesiumTerrain;
 /// <summary>
 /// Provides conversion between Cesium Quantized-Mesh terrain (.terrain) and RasterGeoTiff (DEM)
 /// </summary>
-public static class TerrainRasterConverter
+public static class QuantizedMeshRasterConverter
 {
     /// <summary>
     /// Converts a QuantizedMeshData to a RasterGeoTiff by sampling the mesh into a regular grid
@@ -195,7 +195,7 @@ public static class TerrainRasterConverter
         var (ecefX, ecefY, ecefZ) = GeographicToECEF(centerLon, centerLat, (minHeight + maxHeight) / 2.0);
 
         // Create header
-        var header = new TerrainTileHeader
+        var header = new QuantizedMeshHeader
         {
             CenterX = ecefX,
             CenterY = ecefY,

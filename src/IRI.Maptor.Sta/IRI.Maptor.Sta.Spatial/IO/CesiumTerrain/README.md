@@ -1,24 +1,74 @@
-# Cesium Quantized-Mesh Terrain Format Support
+# Cesium Terrain Format Support
 
-This module provides support for reading Cesium Quantized-Mesh terrain tiles (`.terrain` files), which are used for efficient 3D terrain visualization in web-based mapping applications.
+This module provides comprehensive support for reading both **heightmap-1.0** and **quantized-mesh-1.0** terrain tile formats (`.terrain` files), used for efficient 3D terrain visualization in web-based mapping applications.
 
-## 📋 Format Overview
+## 📋 Supported Formats
 
-**Cesium Quantized-Mesh** is a binary format for terrain data that provides:
+### 1. **quantized-mesh-1.0** (Triangle Mesh)
+An adaptive triangle mesh format that provides:
+- **Adaptive detail**: More vertices where terrain is complex, fewer where smooth
 - **Efficient compression** through quantization and delta encoding
 - **Level-of-detail (LOD)** support via tile pyramids
 - **Fast rendering** with optimized triangle meshes
 - **Tile stitching** through edge indices
 - **Optional extensions** (water masks, vertex normals, metadata)
 
+### 2. **heightmap-1.0** (Regular Grid)
+A regular grid heightmap format that provides:
+- **Uniform sampling**: Fixed grid sizes (65×65, 257×257, etc.)
+- **Simple structure**: Regular array of elevation values
+- **Fast queries**: Direct grid lookup
+- **Predictable file size**: Based on grid dimensions
+- **Easy processing**: Standard raster operations
+
 ## 🔧 Usage
 
-### Basic Reading
+### Auto-Detection and Reading (Recommended)
 
 ```csharp
 using IRI.Maptor.Sta.Spatial.IO.CesiumTerrain;
 
-// Read a .terrain file
+// Automatically detect format and read
+var (format, data) = TerrainReader.ReadAuto("path/to/tile/15/12345/67890.terrain");
+
+Console.WriteLine($"Format: {format}"); // QuantizedMesh or Heightmap
+
+if (format == TerrainFormat.QuantizedMesh)
+{
+    var meshData = (QuantizedMeshData)data;
+    Console.WriteLine($"Mesh: {meshData.VertexCount} vertices");
+}
+else if (format == TerrainFormat.Heightmap)
+{
+    var heightmapData = (HeightmapData)data;
+    Console.WriteLine($"Grid: {heightmapData.GridSize}×{heightmapData.GridSize}");
+}
+```
+
+### Get Height at Web Mercator Coordinates
+
+```csharp
+// Method 1: By file path and normalized coordinates (0-1)
+float height = TerrainReader.GetHeightAt("tile.terrain", u: 0.5, v: 0.5);
+
+// Method 2: By zoom/x/y tile coordinates and pixel position
+float pixelHeight = TerrainReader.GetHeightAtPixel(
+    terrainBasePath: @"C:\terrain",
+    zoom: 13,
+    tileX: 4096,
+    tileY: 2048,
+    pixelX: 128,  // pixel in 256×256 tile
+    pixelY: 128
+);
+Console.WriteLine($"Height at pixel: {pixelHeight}m");
+```
+
+### Reading Quantized-Mesh Format
+
+```csharp
+using IRI.Maptor.Sta.Spatial.IO.CesiumTerrain;
+
+// Read a quantized-mesh .terrain file
 var terrainData = QuantizedMeshReader.Read("path/to/tile/15/12345/67890.terrain");
 
 // Access header information
@@ -43,6 +93,25 @@ for (int i = 0; i < terrainData.Indices.Length; i += 3)
     uint v2 = terrainData.Indices[i + 2];
     // Process triangle
 }
+```
+
+### Reading Heightmap Format
+
+```csharp
+using IRI.Maptor.Sta.Spatial.IO.CesiumTerrain;
+
+// Read a heightmap-1.0 file
+var heightmapData = HeightmapReader.Read("tile.terrain");
+
+Console.WriteLine($"Grid size: {heightmapData.GridSize}×{heightmapData.GridSize}");
+Console.WriteLine($"Total samples: {heightmapData.TotalSamples}");
+Console.WriteLine($"Height range: {heightmapData.MinHeight}m to {heightmapData.MaxHeight}m");
+
+// Get height at grid position
+float heightAt = heightmapData.GetHeight(row: 128, col: 128);
+
+// Get interpolated height
+float interpolated = heightmapData.GetInterpolatedHeight(u: 0.5, v: 0.5);
 ```
 
 ### Working with Tile Coordinates
@@ -129,11 +198,27 @@ for (int i = 0; i < terrainData.VertexCount; i++)
 }
 ```
 
-### Converting Between Terrain and Raster Formats
+### Converting Between Formats
 
-The library provides bidirectional conversion between Cesium terrain mesh format and raster DEM (RasterGeoTiff).
+The library provides bidirectional conversion between both terrain formats and raster DEM (RasterGeoTiff).
 
-#### Terrain → Raster (Mesh to Grid)
+#### Heightmap ↔ Raster
+
+```csharp
+// Heightmap → Raster
+var heightmapData = HeightmapReader.Read("tile.terrain");
+var tileCoord = new TerrainTileCoordinate(5, 39, 20);
+var raster = HeightmapRasterConverter.ToRasterGeoTiff(heightmapData, tileCoord);
+
+// Raster → Heightmap
+var raster = TiffReader.ReadGeoTiff32bitDEM("dem.tif");
+var heightmap = HeightmapRasterConverter.FromRasterGeoTiff(raster, targetGridSize: 257);
+
+// Resample Heightmap
+var resampled = HeightmapRasterConverter.Resample(heightmap, targetGridSize: 65);
+```
+
+#### Quantized-Mesh → Raster (Mesh to Grid)
 
 ```csharp
 using IRI.Maptor.Sta.Spatial.IO.CesiumTerrain;
@@ -143,7 +228,7 @@ var terrainData = QuantizedMeshReader.Read("15/12345/67890.terrain");
 var tileCoord = new TerrainTileCoordinate(15, 12345, 67890);
 
 // Convert to raster DEM with specified resolution
-var raster = TerrainRasterConverter.ToRasterGeoTiff(
+var raster = QuantizedMeshRasterConverter.ToRasterGeoTiff(
     terrainData, 
     tileCoord,
     outputWidth: 512,   // Desired raster width
@@ -158,7 +243,7 @@ Console.WriteLine($"Dimensions: {raster.Data.NumberOfRows} × {raster.Data.Numbe
 double elevation = raster.Data[256, 256]; // Center pixel
 ```
 
-#### Raster → Terrain (Grid to Mesh)
+#### Raster → Quantized-Mesh (Grid to Mesh)
 
 ```csharp
 using IRI.Maptor.Sta.Spatial.IO;
@@ -169,7 +254,7 @@ var raster = TiffReader.ReadGeoTiff32bitDEM("dem.tif");
 
 // Convert to terrain mesh
 var tileCoord = new TerrainTileCoordinate(15, 12345, 67890);
-var terrainData = TerrainRasterConverter.FromRasterGeoTiff(raster, tileCoord);
+var terrainData = QuantizedMeshRasterConverter.FromRasterGeoTiff(raster, tileCoord);
 
 // Validate the mesh
 if (terrainData.IsValid())
@@ -195,7 +280,7 @@ var tiles = new[]
 foreach (var (path, coord) in tiles)
 {
     var terrainData = QuantizedMeshReader.Read(path);
-    var raster = TerrainRasterConverter.ToRasterGeoTiff(terrainData, coord, 256, 256);
+    var raster = QuantizedMeshRasterConverter.ToRasterGeoTiff(terrainData, coord, 256, 256);
     
     // Save as GeoTIFF or process further
     Console.WriteLine($"Converted {path} to raster");
@@ -250,7 +335,7 @@ public static List<RasterGeoTiff> GetDEMForBoundingBox(
             var terrainData = QuantizedMeshReader.Read(filePath);
             
             // Convert to raster (256x256 is a good default resolution)
-            var raster = TerrainRasterConverter.ToRasterGeoTiff(
+            var raster = QuantizedMeshRasterConverter.ToRasterGeoTiff(
                 terrainData, 
                 coord,
                 outputWidth: 256,
@@ -458,13 +543,29 @@ Each tile covers a specific geographic area, with higher levels providing more d
 - **Cesium Ion**: [Official terrain service](https://cesium.com/platform/cesium-ion/)
 - **CesiumJS**: [3D mapping library](https://cesium.com/cesiumjs/)
 
+## 📊 Format Comparison
+
+| Feature | heightmap-1.0 | quantized-mesh-1.0 |
+|---------|---------------|-------------------|
+| **Structure** | Regular grid | Triangle mesh |
+| **File Size** | Fixed (grid-based) | Variable (adaptive) |
+| **Sampling** | Uniform | Adaptive |
+| **Query Speed** | Very Fast | Moderate |
+| **Compression** | Minimal | High |
+| **Reading** | ✅ Supported | ✅ Supported |
+| **Writing** | ❌ Not yet | ❌ Not yet |
+| **→ Raster** | ✅ Supported | ✅ Supported |
+| **← Raster** | ✅ Supported | ✅ Supported |
+
 ## ⚠️ Notes
 
 - All data is stored in **little-endian** format
-- Coordinates use **Earth-Centered, Earth-Fixed (ECEF)** reference frame
+- Coordinates use **Earth-Centered, Earth-Fixed (ECEF)** reference frame for quantized-mesh
 - Geographic coordinates are typically **WGS84**
-- This implementation currently supports **reading only** (no writer)
+- **Reading**: Both formats fully supported
+- **Writing**: Not yet implemented for either format
 - Edge indices are used for **tile stitching** to prevent cracks between adjacent tiles
+- Heightmap grid sizes must be 2^n + 1 (e.g., 65, 129, 257, 513)
 
 ## 🔄 Conversion Methodology
 
@@ -507,12 +608,21 @@ The conversion from raster to mesh uses **grid triangulation**:
 
 ## 🔮 Future Enhancements
 
+- ✅ ~~Format support (both heightmap-1.0 and quantized-mesh-1.0)~~ **COMPLETED**
 - ✅ ~~Conversion utilities (DEM ↔ .terrain)~~ **COMPLETED**
-- Writer support (`.terrain` file binary writer)
+- ✅ ~~Height query by Web Mercator coordinates~~ **COMPLETED**
+- ✅ ~~Auto-format detection~~ **COMPLETED**
+- Writer support (binary .terrain file writing for both formats)
 - Advanced mesh simplification (Ramer-Douglas-Peucker, Garland-Heckbert)
 - Adaptive mesh generation with error metrics
 - Integration with tile cache/streaming systems
 - Level-of-detail (LOD) selection algorithms
 - Delaunay triangulation for better mesh quality
 - Terrain skirt generation for crack prevention
+
+## 📚 Additional Resources
+
+- [USAGE_EXAMPLES.md](./USAGE_EXAMPLES.md) - Comprehensive code examples
+- [Cesium Quantized-Mesh Specification](https://github.com/CesiumGS/quantized-mesh)
+- [Cesium Ion](https://cesium.com/platform/cesium-ion/) - Terrain hosting service
 

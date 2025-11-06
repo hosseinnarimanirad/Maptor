@@ -1,9 +1,9 @@
 namespace IRI.Maptor.Sta.Spatial.IO.CesiumTerrain;
 
 /// <summary>
-/// Optional extensions that may be present in a terrain tile
+/// Optional extensions that may be present in a quantized-mesh terrain tile
 /// </summary>
-public class TerrainTileExtensions
+public class QuantizedMeshExtensions
 {
     /// <summary>
     /// Water mask indicating which parts of the terrain are water (0 = land, 255 = water)
@@ -37,9 +37,9 @@ public class TerrainTileExtensions
 }
 
 /// <summary>
-/// Extension identifiers used in terrain files
+/// Extension identifiers used in quantized-mesh terrain files
 /// </summary>
-public enum TerrainExtensionId : byte
+public enum QuantizedMeshExtensionId : byte
 {
     /// <summary>
     /// Oct-Encoded Per-Vertex Normals (1 byte identifier)

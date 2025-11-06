@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="150" Width="200">
     <Grid>
-        <Button Click="Button_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Run" MinWidth="72"/>
+        <Button Click="Button_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Compare Algorithms!" MinWidth="72"/>
     </Grid>
 </Window>

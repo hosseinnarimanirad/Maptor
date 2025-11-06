@@ -82,9 +82,9 @@ public static class QuantizedMeshReader
     /// <summary>
     /// Reads the terrain tile header (88 bytes)
     /// </summary>
-    private static TerrainTileHeader ReadHeader(BinaryReader reader)
+    private static QuantizedMeshHeader ReadHeader(BinaryReader reader)
     {
-        return new TerrainTileHeader
+        return new QuantizedMeshHeader
         {
             // Center coordinates (3 doubles = 24 bytes)
             CenterX = reader.ReadDouble(),
@@ -171,26 +171,26 @@ public static class QuantizedMeshReader
     /// <summary>
     /// Reads optional extensions
     /// </summary>
-    private static TerrainTileExtensions ReadExtensions(BinaryReader reader)
+    private static QuantizedMeshExtensions ReadExtensions(BinaryReader reader)
     {
-        var extensions = new TerrainTileExtensions();
+        var extensions = new QuantizedMeshExtensions();
 
         while (reader.BaseStream.Position < reader.BaseStream.Length)
         {
             byte extensionId = reader.ReadByte();
             uint extensionLength = reader.ReadUInt32();
 
-            switch ((TerrainExtensionId)extensionId)
+            switch ((QuantizedMeshExtensionId)extensionId)
             {
-                case TerrainExtensionId.VertexNormals:
+                case QuantizedMeshExtensionId.VertexNormals:
                     extensions.VertexNormals = reader.ReadBytes((int)extensionLength);
                     break;
 
-                case TerrainExtensionId.WaterMask:
+                case QuantizedMeshExtensionId.WaterMask:
                     extensions.WaterMask = reader.ReadBytes((int)extensionLength);
                     break;
 
-                case TerrainExtensionId.Metadata:
+                case QuantizedMeshExtensionId.Metadata:
                     byte[] metadataBytes = reader.ReadBytes((int)extensionLength);
                     extensions.Metadata = System.Text.Encoding.UTF8.GetString(metadataBytes);
                     break;

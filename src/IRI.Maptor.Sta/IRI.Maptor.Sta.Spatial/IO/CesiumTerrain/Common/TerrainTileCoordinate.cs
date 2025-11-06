@@ -37,6 +37,28 @@ public class TerrainTileCoordinate
     public string GetFileName() => $"{Level}/{X}/{Y}.terrain";
 
     /// <summary>
+    /// Calculates the tile coordinate that contains a geographic position
+    /// </summary>
+    /// <param name="longitude">Longitude in degrees (-180 to 180)</param>
+    /// <param name="latitude">Latitude in degrees (-90 to 90)</param>
+    /// <param name="zoom">Zoom level</param>
+    /// <returns>Tile coordinate containing the geographic position</returns>
+    public static TerrainTileCoordinate FromGeographic(double longitude, double latitude, int zoom)
+    {
+        int numTiles = 1 << zoom; // 2^zoom
+        
+        // Calculate tile indices
+        int x = (int)Math.Floor((longitude + 180.0) / 360.0 * numTiles);
+        int y = (int)Math.Floor((90.0 - latitude) / 180.0 * numTiles);
+        
+        // Clamp to valid range
+        x = Math.Max(0, Math.Min(x, numTiles - 1));
+        y = Math.Max(0, Math.Min(y, numTiles - 1));
+        
+        return new TerrainTileCoordinate(zoom, x, y);
+    }
+
+    /// <summary>
     /// Parses a terrain tile coordinate from a file path
     /// </summary>
     /// <param name="path">Path in format "level/x/y.terrain"</param>
