@@ -26,6 +26,7 @@ using IRI.Maptor.Sta.Persistence.RasterDataSources;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 using IRI.Maptor.Ket.GdiPersistence;
+using IRI.Maptor.Ket.KmlFormat;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Jab.Common.Models.Map;
@@ -2590,6 +2591,95 @@ public abstract class MapPresenter : BasePresenter
         }
     }
 
+    public virtual async Task AddKmlfile(object owner, int? maxSizeInKB)
+    {
+        IsBusy = true;
+
+        var fileName = await DialogService.ShowOpenFileDialogAsync("Keyhole Markup Language (KML)|*.kml", owner);
+
+        if (!File.Exists(fileName))
+        {
+            IsBusy = false;
+
+            return;
+        }
+
+        FileInfo info = new FileInfo(fileName);
+
+        if (maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
+        {
+            await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", owner);
+
+            return;
+        }
+
+        await AddKmlfile(fileName, owner);
+    }
+
+    public async Task AddKmlfile(string fileName, object owner)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+            {
+                throw new FileNotFoundException($"KML file '{fileName}' was not found.", fileName);
+            }
+
+            List<Feature<Point>> features;
+
+            try
+            {
+                var kmlFeatures = KmlReader.ReadFeaturesFromFile(fileName);
+                features = kmlFeatures.ToFeatures();
+            }
+            catch
+            {
+                features = new List<Feature<Point>>();
+            }
+
+            if (features.IsNullOrEmpty())
+            {
+                try
+                {
+                    var geometries = KmlReader.ReadFromFile(fileName);
+                    features = geometries.ToFeatures();
+                }
+                catch
+                {
+                    features = new List<Feature<Point>>();
+                }
+            }
+
+            if (features.IsNullOrEmpty())
+            {
+                await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل KML یافت نشد.", _error, owner);
+                return;
+            }
+
+            var dataSource = new MemoryDataSource(features);
+            var geometryType = features.First().TheGeometry.Type;
+            var symbolizers = fileName.CreateSymbolizersFromKml(geometryType);
+
+            var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
+                                dataSource,
+                                symbolizers,
+                                LayerType.VectorLayer,
+                                RenderMode.Default,
+                                RasterizationMethod.GdiPlus,
+                                ScaleInterval.All);
+
+            AddLayer(vectorLayer);
+        }
+        catch (Exception ex)
+        {
+            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     public virtual async Task AddWebMercatorWorldfile(object owner)
     {
         IsBusy = true;
@@ -2966,6 +3056,25 @@ public abstract class MapPresenter : BasePresenter
             return _addShapefileCommand;
         }
     }
+
+    private RelayCommand _addKmlfileCommand;
+
+    public RelayCommand AddKmlfileCommand
+    {
+        get
+        {
+            if (_addKmlfileCommand == null)
+            {
+                _addKmlfileCommand = new RelayCommand(async param =>
+                {
+                    await AddKmlfile(param, null);
+                });
+            }
+
+            return _addKmlfileCommand;
+        }
+    }
+
 
     private RelayCommand _addWgs84WorldfileCommand;
     public RelayCommand AddWgs84WorldfileCommand
