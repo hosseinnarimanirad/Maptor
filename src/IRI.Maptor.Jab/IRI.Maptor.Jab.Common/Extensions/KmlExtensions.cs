@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Ket.KmlFormat;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -14,201 +14,233 @@ namespace IRI.Maptor.Extensions;
 
 public static class KmlExtensions
 {
-    private const string KmlNamespace = "http://www.opengis.net/kml/2.2";
+    private static readonly XNamespace Kml = "http://www.opengis.net/kml/2.2";
 
-    public static List<ISymbolizer> CreateSymbolizersFromKml(this string fileName, GeometryType geometryType)
+    public static List<ISymbolizer> CreateSymbolizersFromKml(this IEnumerable<Feature<Point>> features, GeometryType geometryType)
     {
+        var featureList = features?.Where(f => f != null).ToList() ?? new List<Feature<Point>>();
+
+        if (featureList.Count == 0)
+        {
+            return new List<ISymbolizer>
+            {
+                SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)
+            };
+        }
+
+        var groups = featureList.GroupBy(f => KmlAttributeKeys.GetStyleKey(f));
         var symbolizers = new List<ISymbolizer>();
 
-        var visualParameters = fileName.TryCreateVisualParametersFromKml(geometryType);
+        foreach (var group in groups)
+        {
+            var metadata = GetStyleMetadata(group);
+            var visualParameters = BuildVisualParameters(metadata, geometryType) ?? VisualParameters.CreateNew();
 
-        if (visualParameters != null)
-        {
-            symbolizers.Add(new SimpleSymbolizer(visualParameters));
-        }
-        else
-        {
-            symbolizers.Add(SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1));
+            var styleKey = group.Key;
+            Func<Feature<Point>, bool> filter = styleKey == null
+                ? f => string.IsNullOrEmpty(KmlAttributeKeys.GetStyleKey(f))
+                : f => string.Equals(KmlAttributeKeys.GetStyleKey(f), styleKey, StringComparison.OrdinalIgnoreCase);
+
+            var symbolizer = new SimpleSymbolizer(filter, visualParameters);
+
+            var regionMetadata = GetRegionMetadata(group);
+            ApplyRegionMetadata(symbolizer, regionMetadata);
+
+            symbolizers.Add(symbolizer);
         }
 
         return symbolizers;
     }
 
-    public static VisualParameters? TryCreateVisualParametersFromKml(this string fileName, GeometryType geometryType)
+    private static KmlStyleMetadata? GetStyleMetadata(IGrouping<string?, Feature<Point>> group)
     {
-        if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+        foreach (var feature in group)
         {
-            return null;
-        }
-
-        try
-        {
-            var document = XDocument.Load(fileName);
-            return document.TryCreateVisualParametersFromKml(geometryType);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    public static VisualParameters? TryCreateVisualParametersFromKml(this XDocument document, GeometryType geometryType)
-    {
-        if (document == null)
-        {
-            return null;
-        }
-
-        XNamespace kml = KmlNamespace;
-
-        var placemark = document.Descendants(kml + "Placemark").FirstOrDefault();
-        if (placemark == null)
-        {
-            return null;
-        }
-
-        var styleElement = ResolveStyleElement(document, placemark, kml);
-        if (styleElement == null)
-        {
-            return null;
-        }
-
-        var lineStyle = styleElement.Element(kml + "LineStyle");
-        var polyStyle = styleElement.Element(kml + "PolyStyle");
-        var iconStyle = styleElement.Element(kml + "IconStyle");
-
-        var strokeHex = ConvertKmlColorToHex(lineStyle?.Element(kml + "color")?.Value);
-        var strokeWidth = ParseDouble(lineStyle?.Element(kml + "width")?.Value) ?? 1.0;
-
-        string? fillHex = null;
-
-        if (IsPolygonGeometry(geometryType))
-        {
-            var fillEnabled = polyStyle?.Element(kml + "fill")?.Value != "0";
-            var outlineEnabled = polyStyle?.Element(kml + "outline")?.Value != "0";
-
-            if (fillEnabled)
+            if (feature.Attributes != null &&
+                feature.Attributes.TryGetValue(KmlAttributeKeys.StyleMetadata, out var metadataObj) &&
+                metadataObj is KmlStyleMetadata metadata)
             {
-                fillHex = ConvertKmlColorToHex(polyStyle?.Element(kml + "color")?.Value);
-            }
-
-            if (!outlineEnabled)
-            {
-                strokeHex = null;
-            }
-
-            if (string.IsNullOrEmpty(strokeHex))
-            {
-                strokeHex = ConvertKmlColorToHex(lineStyle?.Element(kml + "color")?.Value);
-            }
-        }
-        else if (IsLineGeometry(geometryType))
-        {
-            if (string.IsNullOrEmpty(strokeHex))
-            {
-                strokeHex = ConvertKmlColorToHex(polyStyle?.Element(kml + "color")?.Value);
-            }
-        }
-        else if (IsPointGeometry(geometryType))
-        {
-            fillHex = ConvertKmlColorToHex(iconStyle?.Element(kml + "color")?.Value)
-                      ?? ConvertKmlColorToHex(polyStyle?.Element(kml + "color")?.Value)
-                      ?? strokeHex;
-        }
-
-        if (string.IsNullOrEmpty(strokeHex) && string.IsNullOrEmpty(fillHex))
-        {
-            return null;
-        }
-
-        var fillBrush = string.IsNullOrEmpty(fillHex) ? null : BrushHelper.CreateBrush(fillHex);
-        var strokeBrush = string.IsNullOrEmpty(strokeHex) ? null : BrushHelper.CreateBrush(strokeHex);
-
-        var parameters = new VisualParameters(fillBrush, strokeBrush, strokeWidth, 1);
-
-        if (IsPointGeometry(geometryType) && parameters.PointSymbol is not null)
-        {
-            var iconScale = ParseDouble(iconStyle?.Element(kml + "scale")?.Value);
-            if (iconScale.HasValue && iconScale.Value > 0)
-            {
-                var size = Math.Clamp(iconScale.Value * parameters.PointSymbol.SymbolWidth, 4, 64);
-                parameters.PointSymbol.SymbolWidth = size;
-                parameters.PointSymbol.SymbolHeight = size;
-            }
-        }
-
-        return parameters;
-    }
-
-    private static XElement? ResolveStyleElement(XDocument document, XElement placemark, XNamespace kml)
-    {
-        var inlineStyle = placemark.Element(kml + "Style");
-        if (inlineStyle != null)
-        {
-            return inlineStyle;
-        }
-
-        var styleUrl = placemark.Element(kml + "styleUrl")?.Value;
-        var resolved = ResolveStyleByUrl(document, styleUrl, kml);
-        if (resolved != null)
-        {
-            return resolved;
-        }
-
-        return document.Descendants(kml + "Style").FirstOrDefault();
-    }
-
-    private static XElement? ResolveStyleByUrl(XDocument document, string? styleUrl, XNamespace kml)
-    {
-        var styleId = ExtractStyleId(styleUrl);
-
-        if (string.IsNullOrEmpty(styleId))
-        {
-            return null;
-        }
-
-        var styleElement = document.Descendants(kml + "Style")
-            .FirstOrDefault(e => string.Equals(e.Attribute("id")?.Value, styleId, StringComparison.OrdinalIgnoreCase));
-
-        if (styleElement != null)
-        {
-            return styleElement;
-        }
-
-        var styleMapElement = document.Descendants(kml + "StyleMap")
-            .FirstOrDefault(e => string.Equals(e.Attribute("id")?.Value, styleId, StringComparison.OrdinalIgnoreCase));
-
-        if (styleMapElement != null)
-        {
-            var normalUrl = styleMapElement.Elements(kml + "Pair")
-                .FirstOrDefault(p => string.Equals(p.Element(kml + "key")?.Value, "normal", StringComparison.OrdinalIgnoreCase))
-                ?.Element(kml + "styleUrl")?.Value;
-
-            if (!string.IsNullOrWhiteSpace(normalUrl))
-            {
-                return ResolveStyleByUrl(document, normalUrl, kml);
+                return metadata;
             }
         }
 
         return null;
     }
 
-    private static string? ExtractStyleId(string? styleUrl)
+    private static KmlRegionMetadata? GetRegionMetadata(IGrouping<string?, Feature<Point>> group)
     {
-        if (string.IsNullOrWhiteSpace(styleUrl))
+        foreach (var feature in group)
         {
-            return null;
+            if (feature.Attributes != null &&
+                feature.Attributes.TryGetValue(KmlAttributeKeys.RegionMetadata, out var metadataObj) &&
+                metadataObj is KmlRegionMetadata metadata)
+            {
+                return metadata;
+            }
         }
 
-        var trimmed = styleUrl.Trim();
-        var hashIndex = trimmed.LastIndexOf('#');
+        return null;
+    }
 
-        if (hashIndex >= 0 && hashIndex < trimmed.Length - 1)
+    private static void ApplyRegionMetadata(SimpleSymbolizer symbolizer, KmlRegionMetadata? regionMetadata)
+    {
+        if (regionMetadata == null)
         {
-            return trimmed[(hashIndex + 1)..];
+            return;
         }
 
-        return trimmed;
+        if (regionMetadata.MinLodPixels.HasValue)
+        {
+            symbolizer.MinScaleDenominator = regionMetadata.MinLodPixels.Value;
+        }
+
+        if (regionMetadata.MaxLodPixels.HasValue)
+        {
+            symbolizer.MaxScaleDenominator = regionMetadata.MaxLodPixels.Value;
+        }
+    }
+
+    private static VisualParameters? BuildVisualParameters(KmlStyleMetadata? metadata, GeometryType geometryType)
+    {
+        var styleElement = metadata?.InlineStyle ?? metadata?.NormalStyle;
+
+        if (styleElement == null)
+        {
+            var fallback = VisualParameters.CreateNew();
+            ApplyIconMetadata(fallback, metadata, geometryType);
+            EnsureDefaults(fallback, geometryType);
+            return fallback;
+        }
+
+        var visual = new VisualParameters(null, null, 1, 1);
+
+        ApplyPolyStyle(visual, styleElement.Element(Kml + "PolyStyle"), geometryType);
+        ApplyLineStyle(visual, styleElement.Element(Kml + "LineStyle"));
+        ApplyIconStyle(visual, styleElement.Element(Kml + "IconStyle"));
+        ApplyLabelStyle(visual, styleElement.Element(Kml + "LabelStyle"));
+        ApplyIconMetadata(visual, metadata, geometryType);
+
+        EnsureDefaults(visual, geometryType);
+
+        return visual;
+    }
+
+    private static void ApplyIconMetadata(VisualParameters visual, KmlStyleMetadata? metadata, GeometryType geometryType)
+    {
+        if (metadata == null || metadata.IconHref.IsNullOrEmpty() || !IsPointGeometry(geometryType))
+        {
+            return;
+        }
+
+        visual.PointSymbol.IconHref = metadata.IconHref;
+
+        if (metadata.IconScale.HasValue && metadata.IconScale.Value > 0)
+        {
+            var baseSize = Math.Max(visual.PointSymbol.SymbolWidth, 12);
+            var size = Math.Clamp(baseSize * metadata.IconScale.Value, 4, 128);
+            visual.PointSymbol.SymbolWidth = size;
+            visual.PointSymbol.SymbolHeight = size;
+        }
+    }
+
+    private static void ApplyPolyStyle(VisualParameters visual, XElement? polyStyleElement, GeometryType geometryType)
+    {
+        if (polyStyleElement == null)
+        {
+            return;
+        }
+
+        var fillEnabled = !string.Equals(polyStyleElement.Element(Kml + "fill")?.Value, "0", StringComparison.OrdinalIgnoreCase);
+        var outlineEnabled = !string.Equals(polyStyleElement.Element(Kml + "outline")?.Value, "0", StringComparison.OrdinalIgnoreCase);
+        var fillHex = ConvertKmlColorToHex(polyStyleElement.Element(Kml + "color")?.Value);
+
+        if (fillEnabled && !string.IsNullOrEmpty(fillHex) && IsPolygonGeometry(geometryType))
+        {
+            visual.Fill = BrushHelper.CreateBrush(fillHex);
+        }
+
+        if (!outlineEnabled)
+        {
+            visual.Stroke = null;
+        }
+    }
+
+    private static void ApplyLineStyle(VisualParameters visual, XElement? lineStyleElement)
+    {
+        if (lineStyleElement == null)
+        {
+            return;
+        }
+
+        var lineHex = ConvertKmlColorToHex(lineStyleElement.Element(Kml + "color")?.Value);
+        var strokeWidth = TryParseDouble(lineStyleElement.Element(Kml + "width")?.Value);
+
+        if (!string.IsNullOrEmpty(lineHex))
+        {
+            visual.Stroke = BrushHelper.CreateBrush(lineHex);
+        }
+
+        if (strokeWidth.HasValue && strokeWidth.Value > 0)
+        {
+            visual.StrokeThickness = strokeWidth.Value;
+        }
+    }
+
+    private static void ApplyIconStyle(VisualParameters visual, XElement? iconStyleElement)
+    {
+        if (iconStyleElement == null || visual.PointSymbol == null)
+        {
+            return;
+        }
+
+        var iconHex = ConvertKmlColorToHex(iconStyleElement.Element(Kml + "color")?.Value);
+        var scale = TryParseDouble(iconStyleElement.Element(Kml + "scale")?.Value);
+
+        if (!string.IsNullOrEmpty(iconHex))
+        {
+            visual.Fill = BrushHelper.CreateBrush(iconHex);
+        }
+
+        if (scale.HasValue && scale.Value > 0)
+        {
+            var size = Math.Clamp(scale.Value * visual.PointSymbol.SymbolWidth, 4, 64);
+            visual.PointSymbol.SymbolWidth = size;
+            visual.PointSymbol.SymbolHeight = size;
+        }
+    }
+
+    private static void ApplyLabelStyle(VisualParameters visual, XElement? labelStyleElement)
+    {
+        if (labelStyleElement == null)
+        {
+            return;
+        }
+
+        var labelHex = ConvertKmlColorToHex(labelStyleElement.Element(Kml + "color")?.Value);
+        var labelScale = TryParseDouble(labelStyleElement.Element(Kml + "scale")?.Value);
+
+        if (!string.IsNullOrEmpty(labelHex))
+        {
+            visual.Foreground = BrushHelper.CreateBrush(labelHex);
+        }
+
+        if (labelScale.HasValue && labelScale.Value > 0)
+        {
+            visual.FontSize = (int)Math.Max(8, 12 * labelScale.Value);
+        }
+    }
+
+    private static void EnsureDefaults(VisualParameters visual, GeometryType geometryType)
+    {
+        if (visual.Stroke == null && IsLineGeometry(geometryType))
+        {
+            visual.Stroke = BrushHelper.PickBrush();
+        }
+
+        if (visual.Fill == null && IsPolygonGeometry(geometryType))
+        {
+            visual.Fill = BrushHelper.PickBrush();
+        }
     }
 
     private static bool IsPointGeometry(GeometryType geometryType) =>
@@ -225,7 +257,7 @@ public static class KmlExtensions
         geometryType == GeometryType.MultiPolygon ||
         geometryType == GeometryType.CurvePolygon;
 
-    private static double? ParseDouble(string? value)
+    private static double? TryParseDouble(string? value)
     {
         if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var result))
         {

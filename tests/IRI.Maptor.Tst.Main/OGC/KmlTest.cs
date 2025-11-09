@@ -1,8 +1,7 @@
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Wordprocessing;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Ket.KmlFormat;
 using IRI.Maptor.Ket.KmlFormat.Primitives;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using System.Collections.Generic;
@@ -311,6 +310,272 @@ public class KmlTest
 
     #endregion
 
+    #region Feature Conversion Tests
+
+    [Fact]
+    public void Features_ToFeatureList_PreservesAttributesAndStyleMetadata()
+    {
+        // Arrange - Create KML with style information
+        var kmlString = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<kml xmlns=""http://www.opengis.net/kml/2.2"">
+  <Document>
+    <Style id=""cityStyle"">
+      <IconStyle>
+        <color>ff0000ff</color>
+        <scale>1.5</scale>
+      </IconStyle>
+    </Style>
+    <StyleMap id=""cityStyleMap"">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#cityStyle</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#cityStyle</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Placemark>
+      <name>City A</name>
+      <styleUrl>#cityStyleMap</styleUrl>
+      <ExtendedData>
+        <SchemaData>
+          <SimpleData name=""Population"">1000000</SimpleData>
+        </SchemaData>
+      </ExtendedData>
+      <Point>
+        <coordinates>10,20</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>";
+
+        var kmlFeatures = KmlReader.ParseFeatures(kmlString);
+
+        // Act
+        var features = kmlFeatures.ToFeatures();
+
+        // Assert
+        Assert.NotNull(features);
+        Assert.Single(features);
+
+        var feature = features[0];
+        Assert.Equal("City A", feature.Attributes[KmlFeatureExtensions.NameAttributeKey]);
+        Assert.Equal("1000000", feature.Attributes["Population"]);
+        Assert.Equal("cityStyleMap", feature.Attributes[KmlAttributeKeys.StyleId]);
+        Assert.True((bool)feature.Attributes[KmlAttributeKeys.StyleIsMap]);
+        Assert.NotNull(feature.Attributes[KmlAttributeKeys.StyleMetadata]);
+    }
+
+    [Fact]
+    public void Features_ToKmlFeatures_RoundTripMaintainsStyleMetadata()
+    {
+        // Arrange
+        var originalKml = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<kml xmlns=""http://www.opengis.net/kml/2.2"">
+  <Document>
+    <Style id=""inlineStyle"">
+      <LineStyle>
+        <color>ff00ff00</color>
+        <width>3</width>
+      </LineStyle>
+    </Style>
+    <Placemark>
+      <name>Styled Line</name>
+      <styleUrl>#inlineStyle</styleUrl>
+      <LineString>
+        <coordinates>0,0 1,1</coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>";
+
+        var kmlFeatures = KmlReader.ParseFeatures(originalKml);
+        var features = kmlFeatures.ToFeatures();
+
+        // Act
+        var roundTrip = features.ToKmlFeatures();
+
+        // Assert
+        Assert.NotNull(roundTrip);
+        Assert.Single(roundTrip);
+
+        var kmlFeature = roundTrip[0];
+        Assert.Equal("Styled Line", kmlFeature.Name);
+        Assert.NotNull(kmlFeature.Style);
+        Assert.Equal("inlineStyle", kmlFeature.Style?.StyleId);
+        Assert.True(kmlFeature.Style?.HasAnyStyle);
+    }
+
+    [Fact]
+    public void ParseFeatures_WithStyleMap_CapturesIconMetadata()
+    {
+        // Arrange
+        const string kml = """
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <Style id="normalIcon">
+      <IconStyle>
+        <scale>1.2</scale>
+        <Icon>
+          <href>http://example.com/normal.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <Style id="highlightIcon">
+      <IconStyle>
+        <scale>5</scale>
+        <Icon>
+          <href>http://example.com/highlight.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <StyleMap id="iconMap">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#normalIcon</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#highlightIcon</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Placemark>
+      <name>Icon Site</name>
+      <styleUrl>#iconMap</styleUrl>
+      <Point>
+        <coordinates>40,10</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>
+""";
+
+        // Act
+        var kmlFeatures = KmlReader.ParseFeatures(kml);
+        var features = kmlFeatures.ToFeatures();
+
+        // Assert
+        var feature = Assert.Single(features);
+        Assert.True(feature.Attributes.ContainsKey(KmlAttributeKeys.IconHref));
+        Assert.Equal("http://example.com/normal.png", feature.Attributes[KmlAttributeKeys.IconHref]);
+        Assert.True(feature.Attributes.ContainsKey(KmlAttributeKeys.IconScale));
+        Assert.Equal(1.2, (double)feature.Attributes[KmlAttributeKeys.IconScale]);
+
+        var metadata = Assert.IsType<KmlStyleMetadata>(feature.Attributes[KmlAttributeKeys.StyleMetadata]);
+        Assert.True(metadata.IsStyleMap);
+        Assert.Equal("iconMap", metadata.StyleId);
+        Assert.Equal("#iconMap", metadata.StyleUrl);
+        Assert.Equal("#normalIcon", metadata.NormalStyleUrl);
+        Assert.Equal("http://example.com/normal.png", metadata.IconHref);
+        Assert.Equal(1.2, metadata.IconScale);
+        Assert.NotNull(metadata.NormalStyle);
+        Assert.Null(metadata.InlineStyle);
+    }
+
+    [Fact]
+    public void CreateSymbolizersFromKml_PropagatesIconHrefIntoPointSymbol()
+    {
+        // Arrange
+        const string kml = """
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <Style id="normalIcon">
+      <IconStyle>
+        <scale>1.2</scale>
+        <Icon>
+          <href>http://example.com/normal.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <StyleMap id="iconMap">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#normalIcon</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#normalIcon</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Placemark>
+      <name>Icon Site</name>
+      <styleUrl>#iconMap</styleUrl>
+      <Point>
+        <coordinates>40,10</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>
+""";
+
+        var kmlFeatures = KmlReader.ParseFeatures(kml);
+        var features = kmlFeatures.ToFeatures();
+
+        // Act
+        var symbolizers = features.CreateSymbolizersFromKml(GeometryType.Point);
+
+        // Assert
+        var symbolizer = Assert.IsType<SimpleSymbolizer>(Assert.Single(symbolizers));
+        var visual = Assert.NotNull(symbolizer.Param);
+        Assert.NotNull(visual.PointSymbol);
+        Assert.Equal("http://example.com/normal.png", visual.PointSymbol.IconHref);
+        Assert.Equal("http://example.com/normal.png", features[0].Attributes[KmlAttributeKeys.IconHref]);
+        Assert.True(visual.PointSymbol.SymbolWidth >= 14);
+    }
+
+    [Fact]
+    public void ToKml_PreservesIconHrefWhenExporting()
+    {
+        // Arrange
+        const string kml = """
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <Style id="normalIcon">
+      <IconStyle>
+        <scale>1.2</scale>
+        <Icon>
+          <href>http://example.com/normal.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <StyleMap id="iconMap">
+      <Pair>
+        <key>normal</key>
+        <styleUrl>#normalIcon</styleUrl>
+      </Pair>
+      <Pair>
+        <key>highlight</key>
+        <styleUrl>#normalIcon</styleUrl>
+      </Pair>
+    </StyleMap>
+    <Placemark>
+      <name>Icon Site</name>
+      <styleUrl>#iconMap</styleUrl>
+      <Point>
+        <coordinates>40,10</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>
+""";
+
+        var kmlFeatures = KmlReader.ParseFeatures(kml);
+        var features = kmlFeatures.ToFeatures();
+
+        // Act
+        var roundTrip = features.ToKmlFeatures();
+        var regeneratedKml = KmlWriter.ToKml(roundTrip);
+
+        // Assert
+        Assert.Contains("<href>http://example.com/normal.png</href>", regeneratedKml);
+    }
+
+    #endregion
+
     #region Multiple Features Tests
 
     [Fact]
@@ -603,6 +868,126 @@ public class KmlTest
         // Assert - Verify all geometries are parsed
         Assert.NotNull(parsed);
         Assert.Equal(4, parsed.Count); // 2 cities + 2 landmarks
+    }
+
+    #endregion
+
+    #region Feature Conversion Tests
+
+    [Fact]
+    public void ParseFeatures_ToFeatures_PreservesAttributes()
+    {
+        var kml = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<kml xmlns=""http://www.opengis.net/kml/2.2"">
+  <Document>
+    <Style id=""cityStyle"">
+      <IconStyle>
+        <color>ff0000ff</color>
+        <scale>1.2</scale>
+      </IconStyle>
+    </Style>
+    <Placemark id=""pm1"">
+      <name>City Hall</name>
+      <description>Main administrative building</description>
+      <styleUrl>#cityStyle</styleUrl>
+      <ExtendedData>
+        <SchemaData schemaUrl=""#citySchema"">
+          <SimpleData name=""Population"">500000</SimpleData>
+        </SchemaData>
+      </ExtendedData>
+      <Point>
+        <coordinates>-0.1278,51.5074</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>";
+
+        var kmlFeatures = KmlReader.ParseFeatures(kml);
+
+        Assert.Single(kmlFeatures);
+        var kmlFeature = kmlFeatures[0];
+        Assert.Equal("City Hall", kmlFeature.Name);
+        Assert.NotNull(kmlFeature.Style);
+        Assert.Equal("cityStyle", kmlFeature.Style?.StyleId);
+        Assert.True(kmlFeature.Style?.HasAnyStyle);
+
+        var features = kmlFeatures.ToFeatures();
+
+        Assert.Single(features);
+        var feature = features[0];
+
+        Assert.Equal(GeometryType.Point, feature.TheGeometry.Type);
+        Assert.Equal(-0.1278, feature.TheGeometry.Points[0].X, 6);
+        Assert.Equal(51.5074, feature.TheGeometry.Points[0].Y, 6);
+        Assert.Equal("City Hall", feature.Attributes["Name"]);
+        Assert.Equal("Main administrative building", feature.Attributes["Description"]);
+        Assert.Equal("500000", feature.Attributes["Population"]);
+    }
+
+    [Fact]
+    public void Features_ToKmlFeatures_PreservesNamesAndAttributes()
+    {
+        var geometry = Geometry<Point>.Create(12.34, 56.78, srid: 4326);
+
+        var feature = new Feature<Point>(geometry, new Dictionary<string, object>
+        {
+            ["Name"] = "Test Feature",
+            ["Description"] = "A sample feature",
+            ["Category"] = "Sample"
+        })
+        {
+            Id = 42
+        };
+
+        var kmlFeatures = new List<Feature<Point>> { feature }.ToKmlFeatures();
+
+        Assert.Single(kmlFeatures);
+        var kmlFeature = kmlFeatures[0];
+
+        Assert.Equal("Test Feature", kmlFeature.Name);
+        Assert.Equal("A sample feature", kmlFeature.Description);
+        Assert.Equal(feature.Id.ToString(), kmlFeature.Id);
+        Assert.Equal("Sample", kmlFeature.Attributes["Category"]);
+        Assert.Equal(GeometryType.Point, kmlFeature.Geometry.Type);
+    }
+
+    [Fact]
+    public void ParseFeatures_CapturesRegionMetadata()
+    {
+        var kml = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<kml xmlns=""http://www.opengis.net/kml/2.2"">
+  <Document>
+    <Placemark>
+      <name>Regional Feature</name>
+      <Region>
+        <Lod>
+          <minLodPixels>128</minLodPixels>
+          <maxLodPixels>512</maxLodPixels>
+        </Lod>
+        <LatLonAltBox>
+          <north>52.0</north>
+          <south>51.0</south>
+          <east>1.0</east>
+          <west>0.0</west>
+        </LatLonAltBox>
+      </Region>
+      <Point>
+        <coordinates>0.5,51.5</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>";
+
+        var kmlFeatures = KmlReader.ParseFeatures(kml);
+
+        Assert.Single(kmlFeatures);
+        var kmlFeature = kmlFeatures[0];
+        Assert.NotNull(kmlFeature.Region);
+        Assert.Equal(128, kmlFeature.Region?.MinLodPixels);
+        Assert.Equal(512, kmlFeature.Region?.MaxLodPixels);
+        Assert.NotNull(kmlFeature.Region?.LatLonAltBox);
+        Assert.Equal(52.0, kmlFeature.Region?.LatLonAltBox?.North);
+        Assert.Equal(0.0, kmlFeature.Region?.LatLonAltBox?.West);
     }
 
     #endregion
