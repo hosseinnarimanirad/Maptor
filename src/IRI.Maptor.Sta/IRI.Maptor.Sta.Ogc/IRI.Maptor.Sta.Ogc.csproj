@@ -24,16 +24,15 @@
     <ProjectReference Include="..\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
     <ProjectReference Include="..\IRI.Maptor.Sta.Spatial\IRI.Maptor.Sta.Spatial.csproj" />
   </ItemGroup>
- 
+
   <ItemGroup>
-    <Compile Update="KML\Ogckml22.cs">
-      <SubType>code</SubType>
-    </Compile>
-    <Compile Update="KML\OgcKml22Urn.cs">
-      <SubType>code</SubType>
-    </Compile>  
+    <PackageReference Include="System.ComponentModel.Annotations" />
   </ItemGroup>
  
+  <ItemGroup>
+    <EmbeddedResource Include="KML\Schemas\*.xsd" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Update="README.md">
       <Pack>True</Pack>

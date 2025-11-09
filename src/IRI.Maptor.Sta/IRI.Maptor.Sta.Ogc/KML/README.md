@@ -196,6 +196,24 @@ string combined = KmlDecorator.DecorateWithDataAndStyle(
     styleBuilder);
 ```
 
+#### Advanced Placemark Helpers
+
+```csharp
+using System;
+using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Ket.KmlFormat.Primitives;
+
+var timedPlacemark = new PlacemarkType { Name = "Timed Region" }
+    .WithTimeSpan(DateTime.UtcNow.AddHours(-6), DateTime.UtcNow)
+    .WithRegion(
+        north: 37.9,
+        south: 37.1,
+        east:  -121.8,
+        west:  -122.5);
+```
+
+`WithTimeSpan` serialises ISO 8601 timestamps, while `WithRegion` configures the embedded `LatLonAltBox` (and optional `Lod`) in a single call.
+
 ### Validating KML
 
 ```csharp
@@ -232,6 +250,18 @@ bool isValidQuick = KmlValidator.IsValid(kmlContent);
 // Generate validation report
 string report = KmlValidator.GenerateValidationReport(kmlContent);
 Console.WriteLine(report);
+
+// Schema-aware validation (embedded kml22.xsd, atom-author-link.xsd, xAL.xsd)
+var options = new KmlValidator.KmlValidationOptions
+{
+    ValidateSchema = true,
+    BestEffort = false
+};
+
+bool schemaValid = KmlValidator.Validate(kmlContent, out var schemaErrors, out var schemaWarnings, options);
+```
+
+The validator ships with the OGC KML schemas embedded in the assembly. Schema validation messages now include precise line/column context, and the optional `KmlValidationOptions` allows callers to continue with additional checks even when schema errors are present.
 
 // Validate coordinates
 bool coordsValid = KmlValidator.ValidateCoordinates(longitude: 51.5074, latitude: -0.1278);
@@ -397,6 +427,24 @@ This implementation follows:
 - OGC KML 2.2 Specification
 - KML namespace: `http://www.opengis.net/kml/2.2`
 - WGS84 coordinate system (EPSG:4326)
+
+## Regenerating Schema Classes
+
+The strongly typed models under `KML/Generated` are produced with [XmlSchemaClassGenerator](https://github.com/mganss/XmlSchemaClassGenerator).  
+To refresh them after schema changes, run the following command from the repository root:
+
+```powershell
+.\tools\SchemaGenerator\XmlSchemaClassGenerator.Console.exe `
+  --output "src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/KML/Generated" `
+  --namespace "http://www.opengis.net/kml/2.2=IRI.Maptor.Ket.KmlFormat.Primitives" `
+  --namespace "http://www.opengis.net/kml/2.2:deprecated=IRI.Maptor.Ket.KmlFormat.Deprecated" `
+  --namespace "http://www.google.com/kml/ext/2.2=IRI.Maptor.Ket.KmlFormat.Gx" `
+  --namespace "http://www.w3.org/2005/Atom=IRI.Maptor.Ket.KmlFormat.Atom" `
+  --namespace "urn:oasis:names:tc:ciq:xsdschema:xAL:2.0=IRI.Maptor.Ket.KmlFormat.Xal" `
+  .\tools\schema\kml22.local.xsd
+```
+
+The runtime validator consumes the compiled schemas embedded in `KML/Schemas` (`kml22.xsd`, `atom-author-link.xsd`, `xAL.xsd`), ensuring consistent validation in every environment.
 
 ## Related Classes
 

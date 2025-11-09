@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using System.Reflection;
 using System.Xml.Linq;
+using System.Xml.Schema;
 
 namespace IRI.Maptor.Ket.KmlFormat;
 
@@ -17,6 +19,22 @@ public static class KmlValidator
     private const double MaxLatitude = 90.0;
     private const double MinLongitude = -180.0;
     private const double MaxLongitude = 180.0;
+    private static readonly Lazy<XmlSchemaSet> SchemaSet = new(LoadSchemaSet);
+
+    public sealed class KmlValidationOptions
+    {
+        public static KmlValidationOptions Default => new KmlValidationOptions();
+
+        /// <summary>
+        /// Enables XML Schema validation against the embedded OGC KML schemas.
+        /// </summary>
+        public bool ValidateSchema { get; set; } = true;
+
+        /// <summary>
+        /// Continues with structural validation even when schema validation reports errors.
+        /// </summary>
+        public bool BestEffort { get; set; } = true;
+    }
 
     #region Public Validation Methods
 
@@ -27,7 +45,7 @@ public static class KmlValidator
     /// <param name="errors">List of validation errors</param>
     /// <param name="warnings">List of validation warnings</param>
     /// <returns>True if valid, false otherwise</returns>
-    public static bool ValidateFile(string filePath, out List<string> errors, out List<string> warnings)
+    public static bool ValidateFile(string filePath, out List<string> errors, out List<string> warnings, KmlValidationOptions? options = null)
     {
         errors = new List<string>();
         warnings = new List<string>();
@@ -41,7 +59,7 @@ public static class KmlValidator
         try
         {
             var kmlContent = File.ReadAllText(filePath);
-            return Validate(kmlContent, out errors, out warnings);
+            return Validate(kmlContent, out errors, out warnings, options);
         }
         catch (Exception ex)
         {
@@ -57,10 +75,11 @@ public static class KmlValidator
     /// <param name="errors">List of validation errors</param>
     /// <param name="warnings">List of validation warnings</param>
     /// <returns>True if valid, false otherwise</returns>
-    public static bool Validate(string kmlString, out List<string> errors, out List<string> warnings)
+    public static bool Validate(string kmlString, out List<string> errors, out List<string> warnings, KmlValidationOptions? options = null)
     {
         errors = new List<string>();
         warnings = new List<string>();
+        var validationOptions = NormalizeOptions(options);
 
         if (string.IsNullOrWhiteSpace(kmlString))
         {
@@ -72,6 +91,16 @@ public static class KmlValidator
         if (!ValidateXmlStructure(kmlString, errors))
         {
             return false;
+        }
+
+        if (validationOptions.ValidateSchema)
+        {
+            ValidateAgainstSchema(kmlString, errors, warnings);
+
+            if (!validationOptions.BestEffort && errors.Count > 0)
+            {
+                return false;
+            }
         }
 
         // Parse and validate KML content
@@ -94,9 +123,9 @@ public static class KmlValidator
     /// </summary>
     /// <param name="kmlString">KML content as string</param>
     /// <returns>True if valid, false otherwise</returns>
-    public static bool IsValid(string kmlString)
+    public static bool IsValid(string kmlString, KmlValidationOptions? options = null)
     {
-        return Validate(kmlString, out _, out _);
+        return Validate(kmlString, out _, out _, options);
     }
 
     /// <summary>
@@ -169,6 +198,46 @@ public static class KmlValidator
     #endregion
 
     #region Private Validation Methods
+
+    private static KmlValidationOptions NormalizeOptions(KmlValidationOptions? options) =>
+        options ?? KmlValidationOptions.Default;
+
+    private static void ValidateAgainstSchema(string kmlString, List<string> errors, List<string> warnings)
+    {
+        try
+        {
+            var settings = new XmlReaderSettings
+            {
+                ValidationType = ValidationType.Schema,
+                Schemas = SchemaSet.Value,
+                ValidationFlags = XmlSchemaValidationFlags.ReportValidationWarnings,
+                DtdProcessing = DtdProcessing.Ignore
+            };
+
+            settings.ValidationEventHandler += (_, args) =>
+            {
+                var message = FormatSchemaMessage(args);
+                if (args.Severity == XmlSeverityType.Warning)
+                {
+                    warnings.Add(message);
+                }
+                else
+                {
+                    errors.Add(message);
+                }
+            };
+
+            using var reader = XmlReader.Create(new StringReader(kmlString), settings);
+            while (reader.Read())
+            {
+                // Intentionally empty: reading the document triggers validation callbacks.
+            }
+        }
+        catch (XmlException ex)
+        {
+            errors.Add($"Schema validation failed: {ex.Message}");
+        }
+    }
 
     private static bool ValidateXmlStructure(string xmlString, List<string> errors)
     {
@@ -415,6 +484,86 @@ public static class KmlValidator
         }
     }
 
+    private static XmlSchemaSet LoadSchemaSet()
+    {
+        var assembly = typeof(KmlValidator).Assembly;
+        var resolver = new EmbeddedResourceResolver(assembly);
+        var schemaSet = new XmlSchemaSet
+        {
+            XmlResolver = resolver
+        };
+
+        var readerSettings = new XmlReaderSettings
+        {
+            DtdProcessing = DtdProcessing.Ignore,
+            XmlResolver = resolver
+        };
+
+        foreach (var resourceName in resolver.ResourceNames)
+        {
+            using var stream = assembly.GetManifestResourceStream(resourceName)
+                ?? throw new InvalidOperationException($"Embedded KML schema resource '{resourceName}' could not be found.");
+            using var reader = XmlReader.Create(stream, readerSettings, resourceName);
+            schemaSet.Add(null, reader);
+        }
+
+        schemaSet.Compile();
+        return schemaSet;
+    }
+
+    private static string FormatSchemaMessage(ValidationEventArgs args)
+    {
+        var location = args.Exception is { LineNumber: > 0, LinePosition: > 0 }
+            ? $" (line {args.Exception.LineNumber}, position {args.Exception.LinePosition})"
+            : string.Empty;
+        return $"{args.Severity}: {args.Message}{location}";
+    }
+
+    private sealed class EmbeddedResourceResolver : XmlUrlResolver
+    {
+        private readonly Assembly _assembly;
+        private readonly Dictionary<string, string> _resourceMap;
+
+        public EmbeddedResourceResolver(Assembly assembly)
+        {
+            _assembly = assembly;
+            _resourceMap = assembly.GetManifestResourceNames()
+                .Where(name => name.EndsWith(".xsd", StringComparison.OrdinalIgnoreCase))
+                .ToDictionary(GetFileKey, name => name, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public IEnumerable<string> ResourceNames => _resourceMap.Values;
+
+        public override object? GetEntity(Uri absoluteUri, string? role, Type? ofObjectToReturn)
+        {
+            var key = absoluteUri.IsAbsoluteUri
+                ? Path.GetFileName(absoluteUri.LocalPath)
+                : absoluteUri.OriginalString;
+
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                key = absoluteUri.ToString();
+            }
+
+            if (_resourceMap.TryGetValue(key, out var resourceName))
+            {
+                var stream = _assembly.GetManifestResourceStream(resourceName);
+                if (stream != null)
+                {
+                    return stream;
+                }
+            }
+
+            return base.GetEntity(absoluteUri, role, ofObjectToReturn);
+        }
+
+        private static string GetFileKey(string resourceName)
+        {
+            var parts = resourceName.Split('.');
+            return parts.Length >= 2 ? $"{parts[^2]}.{parts[^1]}" : resourceName;
+        }
+    }
+
     #endregion
 
     #region Validation Report
@@ -424,13 +573,13 @@ public static class KmlValidator
     /// </summary>
     /// <param name="kmlString">KML content to validate</param>
     /// <returns>Validation report as string</returns>
-    public static string GenerateValidationReport(string kmlString)
+    public static string GenerateValidationReport(string kmlString, KmlValidationOptions? options = null)
     {
         var report = new System.Text.StringBuilder();
         report.AppendLine("=== KML Validation Report ===");
         report.AppendLine();
 
-        var isValid = Validate(kmlString, out var errors, out var warnings);
+        var isValid = Validate(kmlString, out var errors, out var warnings, options);
 
         report.AppendLine($"Status: {(isValid ? "VALID" : "INVALID")}");
         report.AppendLine($"Errors: {errors.Count}");

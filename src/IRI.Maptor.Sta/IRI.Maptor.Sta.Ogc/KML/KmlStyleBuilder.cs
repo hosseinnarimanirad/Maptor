@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using IRI.Maptor.Ket.KmlFormat.Primitives;
 
 namespace IRI.Maptor.Ket.KmlFormat;
@@ -30,24 +31,24 @@ public class KmlStyleBuilder
         string? iconHref = null,
         double scale = 1.0,
         byte[]? color = null,
-        colorModeEnumType colorMode = colorModeEnumType.normal)
+        ColorModeEnumType colorMode = ColorModeEnumType.Normal)
     {
         var iconStyle = new IconStyleType
         {
-            scale = scale,
-            colorMode = colorMode
+            Scale = scale,
+            ColorMode = colorMode
         };
 
         if (color != null)
         {
-            iconStyle.color = color;
+            iconStyle.Color = color;
         }
 
         if (!string.IsNullOrEmpty(iconHref))
         {
             iconStyle.Icon = new BasicLinkType
             {
-                href = iconHref
+                Href = iconHref
             };
         }
 
@@ -88,20 +89,20 @@ public class KmlStyleBuilder
     public KmlStyleBuilder WithIconHotSpot(
         double x,
         double y,
-        unitsEnumType xUnits = unitsEnumType.fraction,
-        unitsEnumType yUnits = unitsEnumType.fraction)
+        UnitsEnumType xUnits = UnitsEnumType.Fraction,
+        UnitsEnumType yUnits = UnitsEnumType.Fraction)
     {
         if (_style.IconStyle == null)
         {
             _style.IconStyle = new IconStyleType();
         }
 
-        _style.IconStyle.hotSpot = new vec2Type
+        _style.IconStyle.HotSpot = new Vec2Type
         {
-            x = x,
-            y = y,
-            xunits = xUnits,
-            yunits = yUnits
+            X = x,
+            Y = y,
+            Xunits = xUnits,
+            Yunits = yUnits
         };
 
         return this;
@@ -121,17 +122,17 @@ public class KmlStyleBuilder
     public KmlStyleBuilder WithLineStyle(
         byte[]? color = null,
         double width = 1.0,
-        colorModeEnumType colorMode = colorModeEnumType.normal)
+        ColorModeEnumType colorMode = ColorModeEnumType.Normal)
     {
         var lineStyle = new LineStyleType
         {
-            width = width,
-            colorMode = colorMode
+            Width = width,
+            ColorMode = colorMode
         };
 
         if (color != null)
         {
-            lineStyle.color = color;
+            lineStyle.Color = color;
         }
 
         _style.LineStyle = lineStyle;
@@ -174,18 +175,18 @@ public class KmlStyleBuilder
         byte[]? fillColor = null,
         bool fill = true,
         bool outline = true,
-        colorModeEnumType colorMode = colorModeEnumType.normal)
+        ColorModeEnumType colorMode = ColorModeEnumType.Normal)
     {
         var polyStyle = new PolyStyleType
         {
-            fill = fill,
-            outline = outline,
-            colorMode = colorMode
+            Fill = fill,
+            Outline = outline,
+            ColorMode = colorMode
         };
 
         if (fillColor != null)
         {
-            polyStyle.color = fillColor;
+            polyStyle.Color = fillColor;
         }
 
         _style.PolyStyle = polyStyle;
@@ -228,17 +229,17 @@ public class KmlStyleBuilder
     public KmlStyleBuilder WithLabelStyle(
         byte[]? color = null,
         double scale = 1.0,
-        colorModeEnumType colorMode = colorModeEnumType.normal)
+        ColorModeEnumType colorMode = ColorModeEnumType.Normal)
     {
         var labelStyle = new LabelStyleType
         {
-            scale = scale,
-            colorMode = colorMode
+            Scale = scale,
+            ColorMode = colorMode
         };
 
         if (color != null)
         {
-            labelStyle.color = color;
+            labelStyle.Color = color;
         }
 
         _style.LabelStyle = labelStyle;
@@ -281,11 +282,11 @@ public class KmlStyleBuilder
         byte[]? bgColor = null,
         byte[]? textColor = null,
         string? text = null,
-        displayModeEnumType displayMode = displayModeEnumType.@default)
+        DisplayModeEnumType displayMode = DisplayModeEnumType.Default)
     {
         var balloonStyle = new BalloonStyleType
         {
-            displayMode = displayMode
+            DisplayMode = displayMode
         };
 
         if (bgColor != null)
@@ -295,12 +296,12 @@ public class KmlStyleBuilder
 
         if (textColor != null)
         {
-            balloonStyle.textColor = textColor;
+            balloonStyle.TextColor = textColor;
         }
 
         if (!string.IsNullOrEmpty(text))
         {
-            balloonStyle.text = text;
+            balloonStyle.Text = text;
         }
 
         _style.BalloonStyle = balloonStyle;
@@ -318,7 +319,7 @@ public class KmlStyleBuilder
     /// <returns>Builder instance for fluent API</returns>
     public KmlStyleBuilder WithId(string id)
     {
-        _style.id = id;
+        _style.Id = id;
         return this;
     }
 
@@ -459,7 +460,8 @@ public static class KmlStyleExtensions
     /// <returns>The styled placemark</returns>
     public static PlacemarkType WithStyle(this PlacemarkType placemark, StyleType style)
     {
-        placemark.Styles = new AbstractStyleSelectorType[] { style };
+        placemark.AbstractStyleSelectorGroup.Clear();
+        placemark.AbstractStyleSelectorGroup.Add(style);
         return placemark;
     }
 
@@ -471,7 +473,81 @@ public static class KmlStyleExtensions
     /// <returns>The styled placemark</returns>
     public static PlacemarkType WithStyleUrl(this PlacemarkType placemark, string styleUrl)
     {
-        placemark.styleUrl = styleUrl;
+        placemark.StyleUrl = styleUrl;
+        return placemark;
+    }
+
+    public static PlacemarkType WithTimeSpan(this PlacemarkType placemark, DateTime? begin, DateTime? end)
+    {
+        if (placemark == null)
+            throw new ArgumentNullException(nameof(placemark));
+
+        if (begin == null && end == null)
+        {
+            placemark.AbstractTimePrimitiveGroup = null;
+            return placemark;
+        }
+
+        var timeSpan = placemark.AbstractTimePrimitiveGroup as TimeSpanType ?? new TimeSpanType();
+        timeSpan.Begin = begin?.ToString("o", CultureInfo.InvariantCulture);
+        timeSpan.End = end?.ToString("o", CultureInfo.InvariantCulture);
+        placemark.AbstractTimePrimitiveGroup = timeSpan;
+        return placemark;
+    }
+
+    public static PlacemarkType WithRegion(
+        this PlacemarkType placemark,
+        double north,
+        double south,
+        double east,
+        double west,
+        double? minAltitude = null,
+        double? maxAltitude = null,
+        LodType? lod = null)
+    {
+        if (placemark == null)
+            throw new ArgumentNullException(nameof(placemark));
+
+        var region = placemark.Region ?? new RegionType();
+        var latLonAltBox = region.LatLonAltBox ?? new LatLonAltBoxType();
+
+        latLonAltBox.North = north;
+        latLonAltBox.NorthSpecified = true;
+        latLonAltBox.South = south;
+        latLonAltBox.SouthSpecified = true;
+        latLonAltBox.East = east;
+        latLonAltBox.EastSpecified = true;
+        latLonAltBox.West = west;
+        latLonAltBox.WestSpecified = true;
+
+        if (minAltitude.HasValue)
+        {
+            latLonAltBox.MinAltitude = minAltitude.Value;
+            latLonAltBox.MinAltitudeSpecified = true;
+        }
+        else
+        {
+            latLonAltBox.MinAltitudeSpecified = false;
+        }
+
+        if (maxAltitude.HasValue)
+        {
+            latLonAltBox.MaxAltitude = maxAltitude.Value;
+            latLonAltBox.MaxAltitudeSpecified = true;
+        }
+        else
+        {
+            latLonAltBox.MaxAltitudeSpecified = false;
+        }
+
+        region.LatLonAltBox = latLonAltBox;
+
+        if (lod != null)
+        {
+            region.Lod = lod;
+        }
+
+        placemark.Region = region;
         return placemark;
     }
 }

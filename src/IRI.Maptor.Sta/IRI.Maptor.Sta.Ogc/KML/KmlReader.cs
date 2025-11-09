@@ -153,12 +153,14 @@ public static class KmlReader
         var features = new List<KmlFeature>();
         XNamespace kml = KmlNamespace;
 
+        var styleCatalog = BuildStyleCatalog(document, kml);
+
         // Find all Placemarks
         var placemarks = document.Descendants(kml + "Placemark");
 
         foreach (var placemark in placemarks)
         {
-            var feature = ExtractFeatureFromPlacemark(placemark, kml, targetSrid);
+            var feature = ExtractFeatureFromPlacemark(placemark, kml, targetSrid, styleCatalog);
             if (feature != null)
             {
                 features.Add(feature);
@@ -194,7 +196,11 @@ public static class KmlReader
         return null;
     }
 
-    private static KmlFeature? ExtractFeatureFromPlacemark(XElement placemark, XNamespace kml, int targetSrid)
+    private static KmlFeature? ExtractFeatureFromPlacemark(
+        XElement placemark,
+        XNamespace kml,
+        int targetSrid,
+        KmlStyleCatalog styleCatalog)
     {
         var geometry = ExtractGeometryFromPlacemark(placemark, kml, targetSrid);
 
@@ -227,6 +233,18 @@ public static class KmlReader
                     }
                 }
             }
+        }
+
+        var styleMetadata = ExtractStyleMetadata(placemark, kml, styleCatalog);
+        if (styleMetadata != null)
+        {
+            feature.Style = styleMetadata;
+        }
+
+        var regionMetadata = ExtractRegionMetadata(placemark, kml);
+        if (regionMetadata != null)
+        {
+            feature.Region = regionMetadata;
         }
 
         return feature;
@@ -425,6 +443,212 @@ public static class KmlReader
     }
 
     #endregion
+
+    #region Private Helper Methods - Styles & Regions
+
+    private static KmlStyleCatalog BuildStyleCatalog(XDocument document, XNamespace kml)
+    {
+        var catalog = new KmlStyleCatalog();
+
+        foreach (var styleElement in document.Descendants(kml + "Style"))
+        {
+            var id = styleElement.Attribute("id")?.Value;
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                catalog.Styles[id] = new XElement(styleElement);
+            }
+        }
+
+        foreach (var styleMapElement in document.Descendants(kml + "StyleMap"))
+        {
+            var id = styleMapElement.Attribute("id")?.Value;
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                continue;
+            }
+
+            var styleMap = new KmlStyleMapEntry();
+
+            foreach (var pair in styleMapElement.Elements(kml + "Pair"))
+            {
+                var key = pair.Element(kml + "key")?.Value?.Trim();
+                var styleUrl = pair.Element(kml + "styleUrl")?.Value?.Trim();
+
+                if (string.Equals(key, "normal", StringComparison.OrdinalIgnoreCase))
+                {
+                    styleMap.NormalStyleUrl = styleUrl;
+                    var normalStyleId = ExtractStyleId(styleUrl);
+                    if (!string.IsNullOrWhiteSpace(normalStyleId) && catalog.Styles.TryGetValue(normalStyleId, out var normalStyle))
+                    {
+                        styleMap.NormalStyle = new XElement(normalStyle);
+                    }
+                }
+            }
+
+            catalog.StyleMaps[id] = styleMap;
+        }
+
+        return catalog;
+    }
+
+    private static KmlStyleMetadata? ExtractStyleMetadata(
+        XElement placemark,
+        XNamespace kml,
+        KmlStyleCatalog styleCatalog)
+    {
+        var styleUrlRaw = placemark.Element(kml + "styleUrl")?.Value?.Trim();
+        var inlineStyleElement = placemark.Element(kml + "Style");
+
+        if (styleUrlRaw == null && inlineStyleElement == null && !styleCatalog.HasStyles)
+        {
+            return null;
+        }
+
+        var metadata = new KmlStyleMetadata
+        {
+            StyleUrl = styleUrlRaw,
+            InlineStyle = inlineStyleElement != null ? new XElement(inlineStyleElement) : null
+        };
+
+        var styleId = ExtractStyleId(styleUrlRaw);
+        metadata.StyleId = styleId;
+
+        XElement? representativeStyle = metadata.InlineStyle;
+
+        if (!string.IsNullOrWhiteSpace(styleId))
+        {
+            if (styleCatalog.StyleMaps.TryGetValue(styleId, out var styleMap))
+            {
+                metadata.IsStyleMap = true;
+                metadata.NormalStyleUrl = styleMap.NormalStyleUrl;
+                if (styleMap.NormalStyle != null)
+                {
+                    metadata.NormalStyle = new XElement(styleMap.NormalStyle);
+                    representativeStyle ??= metadata.NormalStyle;
+                }
+            }
+            else if (styleCatalog.Styles.TryGetValue(styleId, out var style))
+            {
+                metadata.NormalStyle = new XElement(style);
+                representativeStyle ??= metadata.NormalStyle;
+            }
+        }
+
+        if (representativeStyle != null)
+        {
+            PopulateIconMetadata(metadata, representativeStyle, kml);
+        }
+
+        if (metadata.HasAnyStyle ||
+            !metadata.StyleUrl.IsNullOrEmpty() ||
+            !metadata.StyleId.IsNullOrEmpty() ||
+            metadata.IconHref != null)
+        {
+            return metadata;
+        }
+
+        return null;
+    }
+
+    private static KmlRegionMetadata? ExtractRegionMetadata(XElement placemark, XNamespace kml)
+    {
+        var regionElement = placemark.Element(kml + "Region");
+        if (regionElement == null)
+        {
+            return null;
+        }
+
+        var regionMetadata = new KmlRegionMetadata();
+
+        var lodElement = regionElement.Element(kml + "Lod");
+        if (lodElement != null)
+        {
+            regionMetadata.MinLodPixels = TryParseDouble(lodElement.Element(kml + "minLodPixels")?.Value);
+            regionMetadata.MaxLodPixels = TryParseDouble(lodElement.Element(kml + "maxLodPixels")?.Value);
+            regionMetadata.MinFadeExtent = TryParseDouble(lodElement.Element(kml + "minFadeExtent")?.Value);
+            regionMetadata.MaxFadeExtent = TryParseDouble(lodElement.Element(kml + "maxFadeExtent")?.Value);
+        }
+
+        var latLonAltBoxElement = regionElement.Element(kml + "LatLonAltBox");
+        if (latLonAltBoxElement == null)
+        {
+            latLonAltBoxElement = regionElement.Element(kml + "LatLonBox");
+        }
+
+        if (latLonAltBoxElement != null)
+        {
+            var latLonAltBox = new KmlLatLonAltBox
+            {
+                North = TryParseDouble(latLonAltBoxElement.Element(kml + "north")?.Value),
+                South = TryParseDouble(latLonAltBoxElement.Element(kml + "south")?.Value),
+                East = TryParseDouble(latLonAltBoxElement.Element(kml + "east")?.Value),
+                West = TryParseDouble(latLonAltBoxElement.Element(kml + "west")?.Value),
+                MinAltitude = TryParseDouble(latLonAltBoxElement.Element(kml + "minAltitude")?.Value),
+                MaxAltitude = TryParseDouble(latLonAltBoxElement.Element(kml + "maxAltitude")?.Value),
+                AltitudeMode = latLonAltBoxElement.Element(kml + "altitudeMode")?.Value ?? latLonAltBoxElement.Element(kml + "altitudeMode")?.Value
+            };
+
+            if (latLonAltBox.HasAnyValue)
+            {
+                regionMetadata.LatLonAltBox = latLonAltBox;
+            }
+        }
+
+        if (!regionMetadata.HasValues)
+        {
+            return null;
+        }
+
+        return regionMetadata;
+    }
+
+    private static void PopulateIconMetadata(KmlStyleMetadata metadata, XElement styleElement, XNamespace kml)
+    {
+        var iconStyle = styleElement.Element(kml + "IconStyle");
+        if (iconStyle == null)
+        {
+            return;
+        }
+
+        metadata.IconScale ??= TryParseDouble(iconStyle.Element(kml + "scale")?.Value);
+
+        var iconElement = iconStyle.Element(kml + "Icon");
+        var href = iconElement?.Element(kml + "href")?.Value?.Trim();
+        if (!string.IsNullOrWhiteSpace(href))
+        {
+            metadata.IconHref ??= href;
+        }
+    }
+
+    private static string? ExtractStyleId(string? styleUrl)
+    {
+        if (string.IsNullOrWhiteSpace(styleUrl))
+        {
+            return null;
+        }
+
+        var trimmed = styleUrl.Trim();
+        var hashIndex = trimmed.LastIndexOf('#');
+
+        if (hashIndex >= 0 && hashIndex < trimmed.Length - 1)
+        {
+            return trimmed[(hashIndex + 1)..];
+        }
+
+        return trimmed;
+    }
+
+    private static double? TryParseDouble(string? value)
+    {
+        if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var result))
+        {
+            return result;
+        }
+
+        return null;
+    }
+
+    #endregion
 }
 
 /// <summary>
@@ -437,4 +661,67 @@ public class KmlFeature
     public string? Description { get; set; }
     public string? Id { get; set; }
     public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
+    public KmlStyleMetadata? Style { get; set; }
+    public KmlRegionMetadata? Region { get; set; }
 }
+
+public class KmlStyleMetadata
+{
+    public string? StyleUrl { get; set; }
+    public string? StyleId { get; set; }
+    public bool IsStyleMap { get; set; }
+    public string? NormalStyleUrl { get; set; }
+    public XElement? InlineStyle { get; set; }
+    public XElement? NormalStyle { get; set; }
+    public string? IconHref { get; set; }
+    public double? IconScale { get; set; }
+
+    public bool HasAnyStyle =>
+        InlineStyle != null || NormalStyle != null;
+}
+
+public class KmlRegionMetadata
+{
+    public double? MinLodPixels { get; set; }
+    public double? MaxLodPixels { get; set; }
+    public double? MinFadeExtent { get; set; }
+    public double? MaxFadeExtent { get; set; }
+    public KmlLatLonAltBox? LatLonAltBox { get; set; }
+
+    internal bool HasValues =>
+        MinLodPixels.HasValue ||
+        MaxLodPixels.HasValue ||
+        MinFadeExtent.HasValue ||
+        MaxFadeExtent.HasValue ||
+        (LatLonAltBox?.HasAnyValue ?? false);
+}
+
+public class KmlLatLonAltBox
+{
+    public double? North { get; set; }
+    public double? South { get; set; }
+    public double? East { get; set; }
+    public double? West { get; set; }
+    public double? MinAltitude { get; set; }
+    public double? MaxAltitude { get; set; }
+    public string? AltitudeMode { get; set; }
+
+    internal bool HasAnyValue =>
+        North.HasValue || South.HasValue || East.HasValue || West.HasValue ||
+        MinAltitude.HasValue || MaxAltitude.HasValue || !string.IsNullOrWhiteSpace(AltitudeMode);
+}
+
+internal class KmlStyleCatalog
+{
+    public Dictionary<string, XElement> Styles { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, KmlStyleMapEntry> StyleMaps { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+    public bool HasStyles => Styles.Count > 0 || StyleMaps.Count > 0;
+}
+
+internal class KmlStyleMapEntry
+{
+    public string? NormalStyleUrl { get; set; }
+    public XElement? NormalStyle { get; set; }
+}
+

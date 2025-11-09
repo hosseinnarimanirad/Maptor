@@ -144,7 +144,14 @@ public static class KmlWriter
         var placemarks = features.Select(f =>
             CreatePlacemarkFromFeature(f, projectToGeodeticFunc, kml)).ToArray();
 
-        var document = new XElement(kml + "Document", placemarks);
+        var document = new XElement(kml + "Document");
+
+        AddSharedStyles(document, features, kml);
+
+        foreach (var placemark in placemarks)
+        {
+            document.Add(placemark);
+        }
 
         if (!string.IsNullOrWhiteSpace(documentName))
         {
@@ -243,6 +250,8 @@ public static class KmlWriter
             placemark.Add(new XElement(kml + "description", feature.Description));
         }
 
+        AddStyleElements(placemark, feature, kml);
+
         // Add extended data if attributes exist
         if (feature.Attributes != null && feature.Attributes.Count > 0)
         {
@@ -262,6 +271,144 @@ public static class KmlWriter
         }
 
         return placemark;
+    }
+
+    #endregion
+
+    #region Private Helper Methods - Style Handling
+
+    private static void AddSharedStyles(XElement document, IEnumerable<KmlFeature> features, XNamespace kml)
+    {
+        var uniqueStyles = new HashSet<string>(StringComparer.Ordinal);
+
+        foreach (var feature in features)
+        {
+            var style = feature.Style;
+            if (style?.NormalStyle == null)
+            {
+                continue;
+            }
+
+            var styleClone = new XElement(style.NormalStyle);
+            EnsureIconStyle(styleClone, style, kml);
+
+            var key = styleClone.ToString(SaveOptions.DisableFormatting);
+            if (uniqueStyles.Add(key))
+            {
+                document.Add(styleClone);
+            }
+        }
+    }
+
+    private static void AddStyleElements(XElement placemark, KmlFeature feature, XNamespace kml)
+    {
+        var style = feature.Style;
+
+        if (style != null)
+        {
+            if (!style.StyleUrl.IsNullOrEmpty())
+            {
+                placemark.Add(new XElement(kml + "styleUrl", style.StyleUrl));
+            }
+
+            if (style.InlineStyle != null)
+            {
+                var inlineClone = new XElement(style.InlineStyle);
+                EnsureIconStyle(inlineClone, style, kml);
+                placemark.Add(inlineClone);
+            }
+            else if (style.NormalStyle == null && !style.IconHref.IsNullOrEmpty())
+            {
+                placemark.Add(CreateIconStyleElement(style.IconHref!, style.IconScale, kml));
+            }
+
+            return;
+        }
+
+        if (feature.Attributes == null)
+        {
+            return;
+        }
+
+        if (!feature.Attributes.TryGetValue(KmlAttributeKeys.IconHref, out var iconHrefObj) ||
+            iconHrefObj is not string iconHref ||
+            string.IsNullOrWhiteSpace(iconHref))
+        {
+            return;
+        }
+
+        double? iconScale = null;
+        if (feature.Attributes.TryGetValue(KmlAttributeKeys.IconScale, out var scaleString) &&
+            double.TryParse(scaleString, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsedScale))
+        {
+            iconScale = parsedScale;
+        }
+
+        placemark.Add(CreateIconStyleElement(iconHref, iconScale, kml));
+    }
+
+    private static void EnsureIconStyle(XElement styleElement, KmlStyleMetadata metadata, XNamespace kml)
+    {
+        if (metadata.IconHref.IsNullOrEmpty())
+        {
+            return;
+        }
+
+        var iconStyle = styleElement.Element(kml + "IconStyle");
+        if (iconStyle == null)
+        {
+            iconStyle = new XElement(kml + "IconStyle");
+            styleElement.Add(iconStyle);
+        }
+
+        if (metadata.IconScale.HasValue)
+        {
+            var scaleElement = iconStyle.Element(kml + "scale");
+            if (scaleElement == null)
+            {
+                iconStyle.Add(new XElement(kml + "scale", metadata.IconScale.Value.ToString(CultureInfo.InvariantCulture)));
+            }
+            else
+            {
+                scaleElement.Value = metadata.IconScale.Value.ToString(CultureInfo.InvariantCulture);
+            }
+        }
+
+        var iconElement = iconStyle.Element(kml + "Icon");
+        if (iconElement == null)
+        {
+            iconElement = new XElement(kml + "Icon");
+            iconStyle.Add(iconElement);
+        }
+
+        var hrefElement = iconElement.Element(kml + "href");
+        if (hrefElement == null)
+        {
+            iconElement.Add(new XElement(kml + "href", metadata.IconHref));
+        }
+        else
+        {
+            hrefElement.Value = metadata.IconHref!;
+        }
+    }
+
+    private static XElement CreateIconStyleElement(string iconHref, double? iconScale, XNamespace kml)
+    {
+        var styleElement = new XElement(kml + "Style");
+        var iconStyle = new XElement(kml + "IconStyle");
+
+        if (iconScale.HasValue)
+        {
+            iconStyle.Add(new XElement(kml + "scale", iconScale.Value.ToString(CultureInfo.InvariantCulture)));
+        }
+
+        var iconElement = new XElement(kml + "Icon",
+            new XElement(kml + "href", iconHref));
+
+        iconStyle.Add(iconElement);
+        styleElement.Add(iconStyle);
+
+        return styleElement;
     }
 
     #endregion

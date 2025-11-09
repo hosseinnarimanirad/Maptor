@@ -49,31 +49,28 @@ public static class KmlDecorator
 
         for (int i = 0; i < numberOfFeatures; i++)
         {
-            placemarks[i].id = i.ToString();
+            var placemark = placemarks[i];
+            placemark.Id = i.ToString();
 
-            var elements = new SimpleDataType[attributeNames.Count];
-
+            var schemaData = new SchemaDataType();
             for (int j = 0; j < attributeNames.Count; j++)
             {
-                elements[j] = new SimpleDataType()
+                schemaData.SimpleData.Add(new SimpleDataType
                 {
-                    name = attributeNames[j],
-                    Value = extractFuncs[j](attributes[i])
-                };
+                    Name = attributeNames[j],
+                    Value = extractFuncs[j](attributes[i]) ?? string.Empty
+                });
             }
 
-            var data = new SchemaDataType[1];
-            data[0] = new SchemaDataType() { SimpleData = elements };
-
             var extendedData = new ExtendedDataType();
-            extendedData.SchemaData = data;
+            extendedData.SchemaData.Add(schemaData);
+            placemark.ExtendedData = extendedData;
+            placemark.Description = i.ToString();
 
-            placemarks[i].ExtendedData = extendedData;
-            placemarks[i].description = i.ToString();
+            document.AbstractFeatureGroup.Add(placemark);
         }
 
-        document.AbstractFeature = placemarks.OfType<AbstractFeatureType>().ToArray();
-        result.KmlObjectExtensionGroup = new AbstractObjectType[] { document };
+        result.KmlObjectExtensionGroup.Add(document);
 
         return IRI.Maptor.Sta.Common.Helpers.XmlHelper.Parse(result);
     }
@@ -91,22 +88,20 @@ public static class KmlDecorator
         if (attributes == null || attributes.Count == 0)
             return;
 
-        var simpleDataList = attributes.Select(kvp =>
-            new SimpleDataType
+        var schemaData = new SchemaDataType();
+        foreach (var kvp in attributes)
+        {
+            schemaData.SimpleData.Add(new SimpleDataType
             {
-                name = kvp.Key,
-                Value = kvp.Value
-            }).ToArray();
+                Name = kvp.Key,
+                Value = kvp.Value ?? string.Empty
+            });
+        }
 
-        var schemaData = new SchemaDataType
-        {
-            SimpleData = simpleDataList
-        };
-
-        placemark.ExtendedData = new ExtendedDataType
-        {
-            SchemaData = new[] { schemaData }
-        };
+        var extendedData = placemark.ExtendedData ?? new ExtendedDataType();
+        extendedData.SchemaData.Clear();
+        extendedData.SchemaData.Add(schemaData);
+        placemark.ExtendedData = extendedData;
     }
 
     #endregion
@@ -133,7 +128,7 @@ public static class KmlDecorator
 
         foreach (var placemark in placemarks)
         {
-            placemark.Styles = new AbstractStyleSelectorType[] { style };
+            placemark.WithStyle(style);
         }
 
         return SerializePlacemarks(placemarks);
@@ -157,7 +152,7 @@ public static class KmlDecorator
 
         foreach (var placemark in placemarks)
         {
-            placemark.Styles = new AbstractStyleSelectorType[] { style };
+            placemark.WithStyle(style);
         }
 
         return SerializePlacemarks(placemarks);
@@ -186,7 +181,7 @@ public static class KmlDecorator
 
         foreach (var placemark in placemarks)
         {
-            placemark.Styles = new AbstractStyleSelectorType[] { style };
+            placemark.WithStyle(style);
         }
 
         return SerializePlacemarks(placemarks);
@@ -209,7 +204,7 @@ public static class KmlDecorator
 
         foreach (var placemark in placemarks)
         {
-            placemark.Styles = new AbstractStyleSelectorType[] { style };
+            placemark.WithStyle(style);
         }
 
         return SerializePlacemarks(placemarks);
@@ -236,21 +231,19 @@ public static class KmlDecorator
         // Set style IDs on shared styles
         foreach (var kvp in sharedStyles)
         {
-            kvp.Value.id = kvp.Key;
+            kvp.Value.Id = kvp.Key;
+            document.AbstractStyleSelectorGroup.Add(kvp.Value);
         }
-
-        // Add shared styles to document
-        document.Styles = sharedStyles.Values.ToArray();
 
         // Apply style URLs to placemarks
         for (int i = 0; i < placemarks.Count; i++)
         {
             var styleId = styleIdSelector(placemarks[i], i);
-            placemarks[i].styleUrl = $"#{styleId}";
+            placemarks[i].WithStyleUrl($"#{styleId}");
+            document.AbstractFeatureGroup.Add(placemarks[i]);
         }
 
-        document.AbstractFeature = placemarks.OfType<AbstractFeatureType>().ToArray();
-        result.KmlObjectExtensionGroup = new AbstractObjectType[] { document };
+        result.KmlObjectExtensionGroup.Add(document);
 
         return IRI.Maptor.Sta.Common.Helpers.XmlHelper.Parse(result);
     }
@@ -289,29 +282,25 @@ public static class KmlDecorator
 
         for (int i = 0; i < numberOfFeatures; i++)
         {
-            placemarks[i].id = i.ToString();
+            var placemark = placemarks[i];
+            placemark.Id = i.ToString();
 
-            // Add extended data
-            var elements = new SimpleDataType[attributeNames.Count];
+            var schemaData = new SchemaDataType();
             for (int j = 0; j < attributeNames.Count; j++)
             {
-                elements[j] = new SimpleDataType()
+                schemaData.SimpleData.Add(new SimpleDataType
                 {
-                    name = attributeNames[j],
-                    Value = extractFuncs[j](attributes[i])
-                };
+                    Name = attributeNames[j],
+                    Value = extractFuncs[j](attributes[i]) ?? string.Empty
+                });
             }
 
-            var data = new SchemaDataType[1];
-            data[0] = new SchemaDataType() { SimpleData = elements };
+            var extendedData = placemark.ExtendedData ?? new ExtendedDataType();
+            extendedData.SchemaData.Clear();
+            extendedData.SchemaData.Add(schemaData);
+            placemark.ExtendedData = extendedData;
 
-            placemarks[i].ExtendedData = new ExtendedDataType
-            {
-                SchemaData = data
-            };
-
-            // Add style
-            placemarks[i].Styles = new AbstractStyleSelectorType[] { style };
+            placemark.WithStyle(style);
         }
 
         return SerializePlacemarks(placemarks);
@@ -324,12 +313,13 @@ public static class KmlDecorator
     private static string SerializePlacemarks(List<PlacemarkType> placemarks)
     {
         var result = new KmlType();
-        var document = new DocumentType
+        var document = new DocumentType();
+        foreach (var placemark in placemarks.OfType<AbstractFeatureType>())
         {
-            AbstractFeature = placemarks.OfType<AbstractFeatureType>().ToArray()
-        };
+            document.AbstractFeatureGroup.Add(placemark);
+        }
 
-        result.KmlObjectExtensionGroup = new AbstractObjectType[] { document };
+        result.KmlObjectExtensionGroup.Add(document);
 
         return IRI.Maptor.Sta.Common.Helpers.XmlHelper.Parse(result);
     }
