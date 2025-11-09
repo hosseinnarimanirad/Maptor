@@ -1,5 +1,10 @@
 ﻿using System; 
+using System.IO;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
+using IRI.Maptor.Extensions;
+using IRI.Maptor.Jab.Common.Helpers;
  
 
 namespace IRI.Maptor.Jab.Common.Cartography.Symbologies;
@@ -65,6 +70,17 @@ public class SimplePointSymbolizer : SymbolizerBase
             RaisePropertyChanged();
         }
     }
+
+    private string? _iconHref;
+    public string? IconHref
+    {
+        get => _iconHref;
+        set
+        {
+            _iconHref = value;
+            RaisePropertyChanged();
+        }
+    }
      
     public SimplePointSymbolizer()
     {
@@ -76,6 +92,50 @@ public class SimplePointSymbolizer : SymbolizerBase
         SymbolHeight = pointSize;
 
         SymbolWidth = pointSize;
+    }
+
+    public void EnsureIconLoaded()
+    {
+        if (IconHref.IsNullOrEmpty() || (ImageSymbol != null && ImageSymbolGdiPlus != null))
+        {
+            return;
+        }
+
+        try
+        {
+            var bitmap = LoadBitmap();
+            if (bitmap != null)
+            {
+                bitmap.Freeze();
+                ImageSymbol ??= bitmap;
+                ImageSymbolGdiPlus ??= bitmap.AsGdiPlusImage();
+            }
+        }
+        catch
+        {
+            // Ignore loading failures; fall back to default rendering
+        }
+    }
+
+    private BitmapImage? LoadBitmap()
+    {
+        if (IconHref.IsNullOrEmpty())
+        {
+            return null;
+        }
+
+        if (Uri.TryCreate(IconHref, UriKind.Absolute, out var absolute))
+        {
+            return ImageUtility.CreateBitmapImage(absolute);
+        }
+
+        var fullPath = Path.GetFullPath(IconHref);
+        if (File.Exists(fullPath))
+        {
+            return ImageUtility.CreateBitmapImage(new Uri(fullPath, UriKind.Absolute));
+        }
+
+        return null;
     }
       
 }

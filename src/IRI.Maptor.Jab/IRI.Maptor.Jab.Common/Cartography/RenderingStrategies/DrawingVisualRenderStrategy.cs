@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Collections.Generic;
@@ -252,6 +253,8 @@ public class DrawingVisualRenderStrategy : RenderStrategy
 
     private void AddPoint(DrawingContext context, Geometry<Point> point, Brush? brush, Pen? pen, SimplePointSymbolizer? pointSymbol)
     {
+        pointSymbol?.EnsureIconLoaded();
+
         var symbolWidth = pointSymbol?.SymbolWidth ?? pointSymbolWidth;
         var symbolHeight = pointSymbol?.SymbolHeight ?? pointSymbolHeight;
 

@@ -2658,7 +2658,7 @@ public abstract class MapPresenter : BasePresenter
 
             var dataSource = new MemoryDataSource(features);
             var geometryType = features.First().TheGeometry.Type;
-            var symbolizers = fileName.CreateSymbolizersFromKml(geometryType);
+            var symbolizers = features.CreateSymbolizersFromKml(geometryType);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
                                 dataSource,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.IO;
 using System.Windows.Media;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
@@ -157,6 +158,8 @@ public class GdiBitmapRenderStrategy : RenderStrategy
 
     private void AddPoint(Drawing.Graphics graphics, Geometry<Point> point, Drawing.Pen pen, Drawing.Brush brush, SimplePointSymbolizer pointSymbol)
     {
+        pointSymbol?.EnsureIconLoaded();
+
         var parsedPoint = point.AsWpfPoint().AsPoint();
 
         if (pointSymbol?.GeometrySymbol != null)
