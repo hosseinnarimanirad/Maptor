@@ -83,6 +83,8 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         };
     }
 
+    
+
     //#region ICustomTypeDescriptor
 
 
