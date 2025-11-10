@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Xml.Linq;
+using System.Windows.Media.Imaging;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.Helpers;
@@ -14,6 +17,8 @@ namespace IRI.Maptor.Extensions;
 
 public static class KmlExtensions
 {
+    private static readonly HttpClient HttpClient = new();
+
     private static readonly XNamespace Kml = "http://www.opengis.net/kml/2.2";
 
     public static List<ISymbolizer> CreateSymbolizersFromKml(this IEnumerable<Feature<Point>> features, GeometryType geometryType)
@@ -132,7 +137,12 @@ public static class KmlExtensions
             return;
         }
 
-        visual.PointSymbol.IconHref = metadata.IconHref;
+        if (visual.PointSymbol == null)
+        {
+            return;
+        }
+
+        InitializePointSymbolImages(visual.PointSymbol, metadata.IconHref!, metadata);
 
         if (metadata.IconScale.HasValue && metadata.IconScale.Value > 0)
         {
@@ -140,6 +150,200 @@ public static class KmlExtensions
             var size = Math.Clamp(baseSize * metadata.IconScale.Value, 4, 128);
             visual.PointSymbol.SymbolWidth = size;
             visual.PointSymbol.SymbolHeight = size;
+        }
+    }
+
+    private static void InitializePointSymbolImages(SimplePointSymbolizer pointSymbol, string iconHref, KmlStyleMetadata metadata)
+    {
+        var bitmap = TryLoadIconBitmap(iconHref, metadata);
+
+        if (bitmap == null)
+        {
+            return;
+        }
+
+        pointSymbol.ImageSymbol = bitmap;
+
+        try
+        {
+            pointSymbol.ImageSymbolGdiPlus = bitmap.AsGdiPlusImage();
+        }
+        catch
+        {
+            // Ignore failures when creating the GDI+ image to avoid breaking rendering.
+        }
+
+        // fallback defaults stay intact if decoding fails.
+        if (bitmap.PixelWidth > 1 && bitmap.PixelHeight > 1)
+        {
+            pointSymbol.SymbolWidth = bitmap.PixelWidth;
+            pointSymbol.SymbolHeight = bitmap.PixelHeight;
+        }
+
+    }
+
+    private static BitmapImage? TryLoadIconBitmap(string iconHref, KmlStyleMetadata metadata)
+    {
+        foreach (var candidateUri in EnumerateIconUris(iconHref, metadata))
+        {
+            try
+            {
+                BitmapImage? bitmap;
+
+                if (candidateUri.IsFile)
+                {
+                    if (!File.Exists(candidateUri.LocalPath))
+                    {
+                        continue;
+                    }
+
+                    bitmap = CreateBitmapFromFile(candidateUri);
+                }
+                else if (IsHttpUri(candidateUri))
+                {
+                    bitmap = CreateBitmapFromRemote(candidateUri);
+                }
+                else
+                {
+                    bitmap = ImageUtility.CreateBitmapImage(candidateUri);
+                }
+
+                if (bitmap != null && bitmap.CanFreeze && !bitmap.IsFrozen)
+                {
+                    bitmap.Freeze();
+                }
+
+                if (bitmap != null)
+                {
+                    return bitmap;
+                }
+            }
+            catch
+            {
+                // Ignore and try next candidate.
+            }
+        }
+
+        return null;
+    }
+
+    private static bool IsHttpUri(Uri uri) =>
+        uri.IsAbsoluteUri &&
+        (uri.Scheme.Equals(Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase) ||
+         uri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase));
+
+    private static BitmapImage CreateBitmapFromFile(Uri fileUri)
+    {
+        var bitmap = new BitmapImage();
+        bitmap.BeginInit();
+        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.UriSource = fileUri;
+        bitmap.EndInit();
+        return bitmap;
+    }
+
+    private static BitmapImage? CreateBitmapFromRemote(Uri remoteUri)
+    {
+        try
+        {
+            var data = HttpClient.GetByteArrayAsync(remoteUri).GetAwaiter().GetResult();
+
+            if (data == null || data.Length == 0)
+            {
+                return null;
+            }
+
+            using var memoryStream = new MemoryStream(data);
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.StreamSource = memoryStream;
+            bitmap.EndInit();
+            return bitmap;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static IEnumerable<Uri> EnumerateIconUris(string iconHref, KmlStyleMetadata metadata)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        if (Uri.TryCreate(iconHref, UriKind.Absolute, out var absoluteUri))
+        {
+            if (seen.Add(absoluteUri.AbsoluteUri))
+            {
+                yield return absoluteUri;
+            }
+
+            yield break;
+        }
+
+        foreach (var baseUri in GetBaseUris(metadata))
+        {
+            if (Uri.TryCreate(baseUri, iconHref, out var combined) && seen.Add(combined.AbsoluteUri))
+            {
+                yield return combined;
+            }
+        }
+
+        Uri? fileUri = null;
+        try
+        {
+            var fullPath = Path.GetFullPath(iconHref);
+            if (File.Exists(fullPath))
+            {
+                fileUri = new Uri(fullPath, UriKind.Absolute);
+            }
+        }
+        catch
+        {
+            // Ignore invalid paths
+        }
+
+        if (fileUri != null && seen.Add(fileUri.AbsoluteUri))
+        {
+            yield return fileUri;
+        }
+    }
+
+    private static IEnumerable<Uri> GetBaseUris(KmlStyleMetadata metadata)
+    {
+        if (metadata.InlineStyle != null && !string.IsNullOrWhiteSpace(metadata.InlineStyle.BaseUri))
+        {
+            if (Uri.TryCreate(metadata.InlineStyle.BaseUri, UriKind.Absolute, out var inlineBase))
+            {
+                yield return inlineBase;
+            }
+        }
+
+        if (metadata.NormalStyle != null && !string.IsNullOrWhiteSpace(metadata.NormalStyle.BaseUri))
+        {
+            if (Uri.TryCreate(metadata.NormalStyle.BaseUri, UriKind.Absolute, out var normalBase))
+            {
+                yield return normalBase;
+            }
+        }
+
+        Uri? directoryUri = null;
+        try
+        {
+            var baseDirectory = AppContext.BaseDirectory;
+            if (!string.IsNullOrWhiteSpace(baseDirectory))
+            {
+                directoryUri = new Uri(baseDirectory, UriKind.Absolute);
+            }
+        }
+        catch
+        {
+            // Ignore failures when building the base directory URI.
+        }
+
+        if (directoryUri != null)
+        {
+            yield return directoryUri;
         }
     }
 

@@ -20,9 +20,18 @@ static class OgcKmlMapFunctions
 
         IRI.Maptor.Ket.KmlFormat.Primitives.DocumentType document = new DocumentType();
 
-        document.AbstractFeature = abstractFeatureType;
+        if (abstractFeatureType != null)
+        {
+            foreach (var feature in abstractFeatureType)
+            {
+                if (feature != null)
+                {
+                    document.AbstractFeatureGroup.Add(feature);
+                }
+            }
+        }
 
-        result.KmlObjectExtensionGroup = new AbstractObjectType[] { document };
+        result.KmlObjectExtensionGroup.Add(document);
 
         return IRI.Maptor.Sta.Common.Helpers.XmlHelper.Parse(result);
     }

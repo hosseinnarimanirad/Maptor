@@ -245,8 +245,14 @@ public static class ImageUtility
     {
         using (MemoryStream memoryStream = new MemoryStream())
         {
-            var encoder = new BmpBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(image as BitmapSource));
+            var bitmapSource = image as BitmapSource;
+            if (bitmapSource == null)
+            {
+                throw new ArgumentException("ImageSource must be a BitmapSource", nameof(image));
+            }
+
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
             encoder.Save(memoryStream);
             memoryStream.Flush();
             return System.Drawing.Image.FromStream(memoryStream);

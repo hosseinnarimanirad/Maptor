@@ -253,7 +253,7 @@ public class DrawingVisualRenderStrategy : RenderStrategy
 
     private void AddPoint(DrawingContext context, Geometry<Point> point, Brush? brush, Pen? pen, SimplePointSymbolizer? pointSymbol)
     {
-        pointSymbol?.EnsureIconLoaded();
+        //pointSymbol?.EnsureIconLoaded();
 
         var symbolWidth = pointSymbol?.SymbolWidth ?? pointSymbolWidth;
         var symbolHeight = pointSymbol?.SymbolHeight ?? pointSymbolHeight;

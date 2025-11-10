@@ -285,14 +285,17 @@ public struct EsriPolylineM : IEsriPointsWithMeasure
         {
             IRI.Maptor.Ket.KmlFormat.Primitives.LineStringType linestring = new Ket.KmlFormat.Primitives.LineStringType();
 
-            linestring.coordinates = item;
+            linestring.Coordinates.Add(item);
 
             linestrings.Add(linestring);
         }
 
-        multiGeometry.AbstractGeometryObjectExtensionGroup = linestrings.ToArray();
+        foreach (var line in linestrings)
+        {
+            multiGeometry.AbstractGeometryGroup.Add(line);
+        }
 
-        placemark.AbstractFeatureObjectExtensionGroup = new Ket.KmlFormat.Primitives.AbstractObjectType[] { multiGeometry };
+        placemark.AbstractGeometryGroup = multiGeometry;
 
         return placemark;
     }

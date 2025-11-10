@@ -360,7 +360,7 @@ public class KmlTest
         Assert.Single(features);
 
         var feature = features[0];
-        Assert.Equal("City A", feature.Attributes[KmlFeatureExtensions.NameAttributeKey]);
+        Assert.Equal("City A", feature.Attributes[KmlAttributeKeys.NameAttributeKey]);
         Assert.Equal("1000000", feature.Attributes["Population"]);
         Assert.Equal("cityStyleMap", feature.Attributes[KmlAttributeKeys.StyleId]);
         Assert.True((bool)feature.Attributes[KmlAttributeKeys.StyleIsMap]);
@@ -519,7 +519,8 @@ public class KmlTest
 
         // Assert
         var symbolizer = Assert.IsType<SimpleSymbolizer>(Assert.Single(symbolizers));
-        var visual = Assert.NotNull(symbolizer.Param);
+        Assert.NotNull(symbolizer.Param);
+        var visual = symbolizer.Param!;
         Assert.NotNull(visual.PointSymbol);
         Assert.Equal("http://example.com/normal.png", visual.PointSymbol.IconHref);
         Assert.Equal("http://example.com/normal.png", features[0].Attributes[KmlAttributeKeys.IconHref]);
@@ -705,15 +706,15 @@ public class KmlTest
         // Assert - Verify styles are created
         Assert.NotNull(pointStyle);
         Assert.NotNull(pointStyle.IconStyle);
-        Assert.Equal(1.2, pointStyle.IconStyle.scale);
+        Assert.Equal(1.2, pointStyle.IconStyle.Scale);
 
         Assert.NotNull(lineStyle);
         Assert.NotNull(lineStyle.LineStyle);
-        Assert.Equal(3.0, lineStyle.LineStyle.width);
+        Assert.Equal(3.0, lineStyle.LineStyle.Width);
 
         Assert.NotNull(polygonStyle);
         Assert.NotNull(polygonStyle.PolyStyle);
-        Assert.True(polygonStyle.PolyStyle.fill);
+        Assert.True(polygonStyle.PolyStyle.Fill);
     }
 
     [Fact]

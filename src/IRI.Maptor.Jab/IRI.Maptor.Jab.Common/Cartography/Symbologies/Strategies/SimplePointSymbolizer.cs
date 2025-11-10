@@ -71,17 +71,6 @@ public class SimplePointSymbolizer : SymbolizerBase
         }
     }
 
-    private string? _iconHref;
-    public string? IconHref
-    {
-        get => _iconHref;
-        set
-        {
-            _iconHref = value;
-            RaisePropertyChanged();
-        }
-    }
-     
     public SimplePointSymbolizer()
     {
 
@@ -94,48 +83,48 @@ public class SimplePointSymbolizer : SymbolizerBase
         SymbolWidth = pointSize;
     }
 
-    public void EnsureIconLoaded()
-    {
-        if (IconHref.IsNullOrEmpty() || (ImageSymbol != null && ImageSymbolGdiPlus != null))
-        {
-            return;
-        }
+    //public void EnsureIconLoaded()
+    //{
+    //    if (_iconHref.IsNullOrEmpty() || (ImageSymbol != null && ImageSymbolGdiPlus != null))
+    //    {
+    //        return;
+    //    }
 
-        try
-        {
-            var bitmap = LoadBitmap();
-            if (bitmap != null)
-            {
-                bitmap.Freeze();
-                ImageSymbol ??= bitmap;
-                ImageSymbolGdiPlus ??= bitmap.AsGdiPlusImage();
-            }
-        }
-        catch
-        {
-            // Ignore loading failures; fall back to default rendering
-        }
-    }
+    //    try
+    //    {
+    //        var bitmap = LoadBitmap();
+    //        if (bitmap != null)
+    //        {
+    //            bitmap.Freeze();
+    //            ImageSymbol ??= bitmap;
+    //            ImageSymbolGdiPlus ??= bitmap.AsGdiPlusImage();
+    //        }
+    //    }
+    //    catch
+    //    {
+    //        // Ignore loading failures; fall back to default rendering
+    //    }
+    //}
 
-    private BitmapImage? LoadBitmap()
-    {
-        if (IconHref.IsNullOrEmpty())
-        {
-            return null;
-        }
+    //private BitmapImage? LoadBitmap()
+    //{
+    //    if (_iconHref.IsNullOrEmpty())
+    //    {
+    //        return null;
+    //    }
 
-        if (Uri.TryCreate(IconHref, UriKind.Absolute, out var absolute))
-        {
-            return ImageUtility.CreateBitmapImage(absolute);
-        }
+    //    if (Uri.TryCreate(_iconHref, UriKind.Absolute, out var absolute))
+    //    {
+    //        return ImageUtility.CreateBitmapImage(absolute);
+    //    }
 
-        var fullPath = Path.GetFullPath(IconHref);
-        if (File.Exists(fullPath))
-        {
-            return ImageUtility.CreateBitmapImage(new Uri(fullPath, UriKind.Absolute));
-        }
+    //    var fullPath = Path.GetFullPath(_iconHref);
+    //    if (File.Exists(fullPath))
+    //    {
+    //        return ImageUtility.CreateBitmapImage(new Uri(fullPath, UriKind.Absolute));
+    //    }
 
-        return null;
-    }
+    //    return null;
+    //}
       
 }

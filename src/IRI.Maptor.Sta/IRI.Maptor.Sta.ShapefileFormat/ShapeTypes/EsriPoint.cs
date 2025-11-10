@@ -157,10 +157,10 @@ public struct EsriPoint : IPoint, IEsriShape
             coordinates = projectToGeodeticFunc(new Point(this.X, this.Y));
         }
 
-        point.coordinates = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", coordinates.X, coordinates.Y);
+        point.Coordinates.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", coordinates.X, coordinates.Y));
 
         //placemark.AbstractFeatureObjectExtensionGroup = new Ket.KmlFormat.Primitives.AbstractObjectType[] { point };
-        placemark.AbstractGeometry = point;
+        placemark.AbstractGeometryGroup = point;
 
         return placemark;
 

@@ -158,7 +158,7 @@ public class GdiBitmapRenderStrategy : RenderStrategy
 
     private void AddPoint(Drawing.Graphics graphics, Geometry<Point> point, Drawing.Pen pen, Drawing.Brush brush, SimplePointSymbolizer pointSymbol)
     {
-        pointSymbol?.EnsureIconLoaded();
+        //pointSymbol?.EnsureIconLoaded();
 
         var parsedPoint = point.AsWpfPoint().AsPoint();
 

@@ -271,15 +271,18 @@ public struct EsriPolyline : IEsriSimplePoints
         {
             IRI.Maptor.Ket.KmlFormat.Primitives.LineStringType linestring = new Ket.KmlFormat.Primitives.LineStringType();
 
-            linestring.coordinates = item;
+            linestring.Coordinates.Add(item);
 
             linestrings.Add(linestring);
         }
 
-        multiGeometry.AbstractGeometry = linestrings.ToArray();
+        foreach (var line in linestrings)
+        {
+            multiGeometry.AbstractGeometryGroup.Add(line);
+        }
 
         //placemark.AbstractFeatureObjectExtensionGroup = new Ket.KmlFormat.Primitives.AbstractObjectType[] { multiGeometry };
-        placemark.AbstractGeometry = multiGeometry;
+        placemark.AbstractGeometryGroup = multiGeometry;
         //IRI.Maptor.Ket.KmlFormat.Primitives.MultiGeometryType t = new Ket.KmlFormat.Primitives.MultiGeometryType();
 
         if (color == null)
@@ -291,10 +294,10 @@ public struct EsriPolyline : IEsriSimplePoints
             new Ket.KmlFormat.Primitives.StyleType();
 
         Ket.KmlFormat.Primitives.LineStyleType lineStyle = new Ket.KmlFormat.Primitives.LineStyleType();
-        lineStyle.color = color;
+        lineStyle.Color = color;
 
         style.LineStyle = lineStyle;
-        placemark.Styles = new Ket.KmlFormat.Primitives.AbstractStyleSelectorType[] { style };
+        placemark.AbstractStyleSelectorGroup.Add(style);
 
         return placemark;
     }

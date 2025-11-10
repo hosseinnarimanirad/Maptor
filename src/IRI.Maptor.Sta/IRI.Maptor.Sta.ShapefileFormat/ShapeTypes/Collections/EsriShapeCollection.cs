@@ -81,9 +81,12 @@ public class EsriShapeCollection<T> : List<T>, IEsriShapeCollection where T : IE
 
         var placemarks = ((List<T>)this).Select(i => i.AsPlacemark());
 
-        document.AbstractFeature = placemarks.OfType<Ket.KmlFormat.Primitives.AbstractFeatureType>().ToArray();
+        foreach (var placemark in placemarks.OfType<Ket.KmlFormat.Primitives.AbstractFeatureType>())
+        {
+            document.AbstractFeatureGroup.Add(placemark);
+        }
 
-        result.KmlObjectExtensionGroup = new Ket.KmlFormat.Primitives.AbstractObjectType[] { document };
+        result.KmlObjectExtensionGroup.Add(document);
 
         return XmlHelper.Parse(result);
     }

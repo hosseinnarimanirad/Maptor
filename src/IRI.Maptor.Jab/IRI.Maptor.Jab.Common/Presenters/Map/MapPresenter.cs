@@ -2656,6 +2656,8 @@ public abstract class MapPresenter : BasePresenter
                 return;
             }
 
+            features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
+
             var dataSource = new MemoryDataSource(features);
             var geometryType = features.First().TheGeometry.Type;
             var symbolizers = features.CreateSymbolizersFromKml(geometryType);
