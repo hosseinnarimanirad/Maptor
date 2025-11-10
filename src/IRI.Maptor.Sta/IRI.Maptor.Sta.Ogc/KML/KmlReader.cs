@@ -20,6 +20,17 @@ public static class KmlReader
 {
     private const string KmlNamespace = "http://www.opengis.net/kml/2.2";
 
+    private static XNamespace ResolveKmlNamespace(XDocument document)
+    {
+        var rootNamespace = document.Root?.Name.Namespace;
+        if (rootNamespace != null && !string.IsNullOrEmpty(rootNamespace.NamespaceName))
+        {
+            return rootNamespace;
+        }
+
+        return KmlNamespace;
+    }
+
     #region Public Methods
 
     /// <summary>
@@ -131,7 +142,7 @@ public static class KmlReader
     private static List<Geometry<Point>> ExtractGeometries(XDocument document, int targetSrid)
     {
         var geometries = new List<Geometry<Point>>();
-        XNamespace kml = KmlNamespace;
+        XNamespace kml = ResolveKmlNamespace(document);
 
         // Find all Placemarks
         var placemarks = document.Descendants(kml + "Placemark");
@@ -151,7 +162,7 @@ public static class KmlReader
     private static List<KmlFeature> ExtractFeatures(XDocument document, int targetSrid)
     {
         var features = new List<KmlFeature>();
-        XNamespace kml = KmlNamespace;
+        XNamespace kml = ResolveKmlNamespace(document);
 
         var styleCatalog = BuildStyleCatalog(document, kml);
 
