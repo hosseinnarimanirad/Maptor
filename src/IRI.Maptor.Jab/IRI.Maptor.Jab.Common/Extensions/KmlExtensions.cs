@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Windows.Media;
 using System.Xml.Linq;
 using System.Windows.Media.Imaging;
 using IRI.Maptor.Jab.Common;
@@ -142,7 +143,18 @@ public static class KmlExtensions
             return;
         }
 
-        InitializePointSymbolImages(visual.PointSymbol, metadata.IconHref!, metadata);
+        var iconLoaded = InitializePointSymbolImages(visual.PointSymbol, metadata.IconHref!, metadata);
+
+        if (!iconLoaded)
+        {
+            visual.Fill ??= BrushHelper.PickBrush();
+            visual.Stroke ??= Brushes.Black;
+
+            if (visual.StrokeThickness <= 0)
+            {
+                visual.StrokeThickness = 2;
+            }
+        }
 
         if (metadata.IconScale.HasValue && metadata.IconScale.Value > 0)
         {
@@ -153,13 +165,19 @@ public static class KmlExtensions
         }
     }
 
-    private static void InitializePointSymbolImages(SimplePointSymbolizer pointSymbol, string iconHref, KmlStyleMetadata metadata)
+    private static bool InitializePointSymbolImages(SimplePointSymbolizer pointSymbol, string iconHref, KmlStyleMetadata metadata)
     {
+        // ensure we don't keep stale assets from previous attempts
+        pointSymbol.ImageSymbol = null;
+        pointSymbol.ImageSymbolGdiPlus = null;
+        pointSymbol.GeometrySymbol = null;
+
         var bitmap = TryLoadIconBitmap(iconHref, metadata);
 
         if (bitmap == null)
         {
-            return;
+            ApplyDefaultPointGeometry(pointSymbol);
+            return false;
         }
 
         pointSymbol.ImageSymbol = bitmap;
@@ -180,6 +198,7 @@ public static class KmlExtensions
             pointSymbol.SymbolHeight = bitmap.PixelHeight;
         }
 
+        return true;
     }
 
     private static BitmapImage? TryLoadIconBitmap(string iconHref, KmlStyleMetadata metadata)
@@ -225,6 +244,24 @@ public static class KmlExtensions
         }
 
         return null;
+    }
+
+    private static void ApplyDefaultPointGeometry(SimplePointSymbolizer pointSymbol)
+    {
+        var width = Math.Max(pointSymbol.SymbolWidth, 4);
+        var height = Math.Max(pointSymbol.SymbolHeight, 4);
+
+        pointSymbol.SymbolWidth = width;
+        pointSymbol.SymbolHeight = height;
+
+        var ellipse = new EllipseGeometry(new System.Windows.Rect(-width / 2.0, -height / 2.0, width, height));
+
+        if (ellipse.CanFreeze && !ellipse.IsFrozen)
+        {
+            ellipse.Freeze();
+        }
+
+        pointSymbol.GeometrySymbol = ellipse;
     }
 
     private static bool IsHttpUri(Uri uri) =>
