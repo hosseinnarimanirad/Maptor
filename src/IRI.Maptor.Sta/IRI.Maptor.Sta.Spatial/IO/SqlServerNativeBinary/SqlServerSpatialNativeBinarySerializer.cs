@@ -1,7 +1,6 @@
 ﻿using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.IO;
+using IRI.Maptor.Sta.Common.Primitives; 
 using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Enums;
@@ -19,12 +18,14 @@ public static partial class SqlServerSpatialNativeBinary
             //GeometryType.PointZ => SqlServerSpatialNativeBinaryTypes.PointZ,
             //GeometryType.PointM => SqlServerSpatialNativeBinaryTypes.PointM,
             //GeometryType.PointZM => SqlServerSpatialNativeBinaryTypes.PointZM,
+            GeometryType.LineString => SqlServerSpatialNativeBinaryTypes.LineString,
+            GeometryType.Polygon => SqlServerSpatialNativeBinaryTypes.Polygon,
             GeometryType.MultiPoint => SqlServerSpatialNativeBinaryTypes.MultiPoint,
+            GeometryType.MultiLineString => SqlServerSpatialNativeBinaryTypes.MultiLineString,
+            GeometryType.MultiPolygon => SqlServerSpatialNativeBinaryTypes.MultiPolygon,
             //GeometryType.MultiPointZ => SqlServerSpatialNativeBinaryTypes.MultiPointZ,
             //GeometryType.MultiPointM => SqlServerSpatialNativeBinaryTypes.MultiPointM,
             //GeometryType.MultiPointZM => SqlServerSpatialNativeBinaryTypes.MultiPointZM,
-
-
 
             _ => throw new NotImplementedException($"Geometry type {type} is not implemented.")
         };
@@ -57,6 +58,19 @@ public static partial class SqlServerSpatialNativeBinary
 
 
 
+    private static byte GetTypeByte(SqlServerSpatialNativeBinaryTypes type)
+    {
+        // Map enum values to actual SQL Server byte values
+        return type switch
+        {
+            SqlServerSpatialNativeBinaryTypes.LineString => 4,
+            SqlServerSpatialNativeBinaryTypes.Polygon => 5,
+            SqlServerSpatialNativeBinaryTypes.MultiLineString => 4,
+            SqlServerSpatialNativeBinaryTypes.MultiPolygon => 4,
+            _ => (byte)type  // For Point, MultiPoint, etc., use the enum value directly
+        };
+    }
+
     public static byte[] Serialize<T>(Geometry<T> geometry) where T : IPoint, new()
     {
         if (geometry.IsNullOrEmpty())
@@ -67,7 +81,7 @@ public static partial class SqlServerSpatialNativeBinary
         {
             bw.Write(geometry.Srid);          // SRID (little-endian)
             bw.Write((byte)0x01);    // Version marker
-            bw.Write((byte)ParseType(geometry.Type));    // Version marker
+            bw.Write(GetTypeByte(ParseType(geometry.Type)));    // Type byte
 
             switch (geometry.Type)
             {
@@ -76,20 +90,24 @@ public static partial class SqlServerSpatialNativeBinary
                     break;
 
                 case GeometryType.LineString:
-                //GeometryLineStringAsWkb(geometry);
+                    GeometryLineStringAsWkb(bw, geometry);
+                    break;
 
                 case GeometryType.Polygon:
-                //return GeometryPolygonAsWkb(geometry);
+                    GeometryPolygonAsWkb(bw, geometry);
+                    break;
 
                 case GeometryType.MultiPoint:
                     GeometryMultiPointAsWkb(bw, geometry);
                     break;
 
                 case GeometryType.MultiLineString:
-                //GeometryMultiLineStringAsWkb(geometry);
+                    GeometryMultiLineStringAsWkb(bw, geometry);
+                    break;
 
                 case GeometryType.MultiPolygon:
-                //GeometryMultiPolygonAsWkb(geometry);
+                    GeometryMultiPolygonAsWkb(bw, geometry);
+                    break;
 
                 case GeometryType.GeometryCollection:
                 case GeometryType.CircularString:
@@ -104,115 +122,181 @@ public static partial class SqlServerSpatialNativeBinary
     }
 
 
-    private static byte[] GeometryLineStringAsWkb<T>(Geometry<T> lineString) where T : IPoint, new()
+    private static void GeometryLineStringAsWkb<T>(BinaryWriter writer, Geometry<T> lineString) where T : IPoint, new()
     {
-        List<byte> result = new List<byte>();
+        var pointCount = lineString.Points.Count;
+        
+        // Write point count
+        writer.Write(pointCount);
 
-        result.AddRange(OgcWkbMapFunctions.ToWkbLineString(lineString.Points));
-
-        return result.ToArray();
-    }
-
-    // todo: do not modify input polygon. consider add/remove points as a bad practice!
-    private static byte[] GeometryPolygonAsWkb<T>(Geometry<T> polygon) where T : IPoint, new()
-    {
-        List<byte> result = new List<byte>
+        // Write all points
+        for (int i = 0; i < lineString.Points.Count; i++)
         {
-            (byte)WkbByteOrder.WkbNdr
-        };
-
-        result.AddRange(BitConverter.GetBytes((uint)WkbGeometryType.Polygon));
-
-        result.AddRange(BitConverter.GetBytes((uint)polygon.Geometries.Count));
-
-        for (int i = 0; i < polygon.Geometries.Count; i++)
-        {
-            var points = polygon.Geometries[i].Points;
-            // add first point
-            points.Add(polygon.Geometries[i].Points[0]);
-
-            result.AddRange(OgcWkbMapFunctions.ToWkbLinearRing(points));
-
-            // to enforce idempotency
-            points.RemoveAt(points.Count - 1);
+            writer.Write(lineString.Points[i].AsByteArray());
         }
 
-        return result.ToArray();
+        // Write metadata section
+        writer.Write((int)1);  // First value
+        writer.Write((int)1);  // Second value
+        writer.Write(HexStringHelper.ToByteArray("0xFFFFFFFF0000000002"));  // Fixed pattern (9 bytes)
+    }
+
+    private static void GeometryPolygonAsWkb<T>(BinaryWriter writer, Geometry<T> polygon) where T : IPoint, new()
+    {
+        var ringCount = polygon.Geometries.Count;
+        var totalPointCount = polygon.Points.Count;
+        
+        // Write total point count (all rings combined)
+        writer.Write(totalPointCount);
+
+        // Write all points from all rings
+        for (int i = 0; i < polygon.Geometries.Count; i++)
+        {
+            var ring = polygon.Geometries[i];
+            for (int j = 0; j < ring.Points.Count; j++)
+            {
+                writer.Write(ring.Points[j].AsByteArray());
+            }
+        }
+
+        // Write metadata section
+        writer.Write(ringCount);  // Ring count
+        writer.Write((int)2);  // Second value (always 2?)
+        
+        // Write ring point counts
+        for (int i = 0; i < ringCount; i++)
+        {
+            writer.Write(polygon.Geometries[i].Points.Count);
+        }
+        
+        // Write additional value (always 1?)
+        writer.Write((int)1);
+        
+        // Fixed pattern (9 bytes)
+        writer.Write(HexStringHelper.ToByteArray("0xFFFFFFFF0000000003"));
     }
 
     private static void GeometryMultiPointAsWkb<T>(BinaryWriter writer, Geometry<T> multipoint) where T : IPoint, new()
     {
-        writer.Write(multipoint.NumberOfGeometries);
+        var pointCount = multipoint.NumberOfGeometries;
+        
+        // Write point count
+        writer.Write(pointCount);
 
+        // Write all points
         for (int i = 0; i < multipoint.Geometries.Count; i++)
         {
             writer.Write(multipoint.Geometries[i].Points[0].AsByteArray());
         }
 
-        // write sql server's metada
-        // sample
+        // Write metadata section
+        // Point count again
+        writer.Write(pointCount);
 
-        //01000000 01 00000000                                     02000000 FFFFFFFF0000000004000000000000000001
-        //02000000 01 00000000 01 01000000                         03000000 FFFFFFFF0000000004000000000000000001 00000000 01000000 01
-        //03000000 01 00000000 01 01000000 01 02000000             04000000 FFFFFFFF0000000004000000000000000001 00000000 01000000 01 00000000 02000000 01
-        //04000000 01 00000000 01 01000000 01 02000000 01 03000000 05000000 FFFFFFFF0000000004000000000000000001 00000000 01000000 01 00000000 02000000 01 00000000 03000000 01
-
-        writer.Write(multipoint.NumberOfGeometries);
-
-        for (int i = 0; i < multipoint.Geometries.Count; i++)
+        // For each point: byte flag (0x01) + int32 index
+        for (int i = 0; i < pointCount; i++)
         {
             writer.Write((byte)0x01);
             writer.Write(i);
         }
 
-        writer.Write(multipoint.NumberOfGeometries + 1);
+        // Additional count = pointCount + 1
+        writer.Write(pointCount + 1);
 
+        // Fixed pattern (17 bytes)
         writer.Write(HexStringHelper.ToByteArray("0xFFFFFFFF0000000004000000000000000001"));
 
-        for (int i = 1; i < multipoint.NumberOfGeometries; i++)
+        // For points 1..N-1: int32(0) + int32(index) + byte(0x01)
+        for (int i = 1; i < pointCount; i++)
         {
             writer.Write((int)0);
-            writer.Write(BitConverter.GetBytes(i));
+            writer.Write(i);
             writer.Write((byte)0x01);
         }
     }
 
-    private static byte[] GeometryMultiLineStringAsWkb<T>(Geometry<T> multiLineString) where T : IPoint, new()
+    private static void GeometryMultiLineStringAsWkb<T>(BinaryWriter writer, Geometry<T> multiLineString) where T : IPoint, new()
     {
-        List<byte> result = new List<byte>
-        {
-            (byte)WkbByteOrder.WkbNdr
-        };
+        var linestringCount = multiLineString.Geometries.Count;
+        var totalPointCount = multiLineString.Points.Count;
+        
+        // Write total point count (all linestrings combined)
+        writer.Write(totalPointCount);
 
-        result.AddRange(BitConverter.GetBytes((uint)WkbGeometryType.MultiLineString));
-
-        result.AddRange(BitConverter.GetBytes((uint)multiLineString.Geometries.Count));
-
+        // Write all points from all linestrings
         for (int i = 0; i < multiLineString.Geometries.Count; i++)
         {
-            result.AddRange(Serialize(multiLineString.Geometries[i]));
+            var linestring = multiLineString.Geometries[i];
+            for (int j = 0; j < linestring.Points.Count; j++)
+            {
+                writer.Write(linestring.Points[j].AsByteArray());
+            }
         }
 
-        return result.ToArray();
+        // Write metadata section
+        writer.Write(linestringCount);  // Linestring count
+        writer.Write((int)1);  // Second value
+        
+        // Write linestring point counts
+        for (int i = 0; i < linestringCount; i++)
+        {
+            writer.Write(multiLineString.Geometries[i].Points.Count);
+        }
+        
+        // Fixed pattern (9 bytes)
+        writer.Write(HexStringHelper.ToByteArray("0xFFFFFFFF0000000005"));
+        
+        // Additional metadata
+        writer.Write((int)0);
+        writer.Write(linestringCount);
+        writer.Write((int)1);
+        writer.Write((short)2);  // 2 bytes
     }
 
-    private static byte[] GeometryMultiPolygonAsWkb<T>(Geometry<T> multiPolygon) where T : IPoint, new()
+    private static void GeometryMultiPolygonAsWkb<T>(BinaryWriter writer, Geometry<T> multiPolygon) where T : IPoint, new()
     {
-        List<byte> result = new List<byte>
-        {
-            (byte)WkbByteOrder.WkbNdr
-        };
+        var polygonCount = multiPolygon.Geometries.Count;
+        var totalPointCount = multiPolygon.Points.Count;
+        
+        // Write total point count (all polygons combined)
+        writer.Write(totalPointCount);
 
-        result.AddRange(BitConverter.GetBytes((uint)WkbGeometryType.MultiPolygon));
-
-        result.AddRange(BitConverter.GetBytes((uint)multiPolygon.Geometries.Count));
-
+        // Write all points from all polygons
         for (int i = 0; i < multiPolygon.Geometries.Count; i++)
         {
-            result.AddRange(Serialize(multiPolygon.Geometries[i]));
+            var polygon = multiPolygon.Geometries[i];
+            for (int j = 0; j < polygon.Geometries.Count; j++)
+            {
+                var ring = polygon.Geometries[j];
+                for (int k = 0; k < ring.Points.Count; k++)
+                {
+                    writer.Write(ring.Points[k].AsByteArray());
+                }
+            }
         }
 
-        return result.ToArray();
+        // Write metadata section
+        writer.Write(polygonCount);  // Polygon count
+        writer.Write((int)2);  // Second value
+        
+        // Write polygon ring counts and ring point counts
+        for (int i = 0; i < polygonCount; i++)
+        {
+            var polygon = multiPolygon.Geometries[i];
+            writer.Write(polygon.Geometries.Count);  // Ring count for this polygon
+            for (int j = 0; j < polygon.Geometries.Count; j++)
+            {
+                writer.Write(polygon.Geometries[j].Points.Count);  // Point count for this ring
+            }
+        }
+        
+        // Fixed pattern (9 bytes)
+        writer.Write(HexStringHelper.ToByteArray("0xFFFFFFFF0000000006"));
+        
+        // Additional metadata
+        writer.Write((int)0);
+        writer.Write(polygonCount);
+        writer.Write((int)2);
+        writer.Write((short)3);  // 2 bytes
     }
-
 }
