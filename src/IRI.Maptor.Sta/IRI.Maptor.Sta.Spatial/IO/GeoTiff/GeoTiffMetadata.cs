@@ -154,4 +154,103 @@ public class GeoTiffMetadata
         //                        xMax: (xOfCenterOfUpperLeftPixel - xPixelSize / 2.0) + xPixelSize * ImageWidth,
         //                        yMax: yOfCenterOfUpperLeftPixel + yPixelSize / 2.0);
     }
+
+    /// <summary>
+    /// Creates GeoTIFF metadata from a bounding box, image dimensions, and SRID.
+    /// </summary>
+    public static GeoTiffMetadata Create(BoundingBox boundingBox, int imageWidth, int imageHeight, int srid)
+    {
+        var metadata = new GeoTiffMetadata
+        {
+            ImageWidth = imageWidth,
+            ImageHeight = imageHeight
+        };
+
+        // Calculate pixel sizes
+        double pixelSizeX = boundingBox.Width / imageWidth;
+        double pixelSizeY = boundingBox.Height / imageHeight;
+
+        // Set pixel scale: [pixelSizeX, pixelSizeY, 0]
+        metadata.PixelScale = new double[] { pixelSizeX, pixelSizeY, 0.0 };
+
+        // Set tiepoints: [0, 0, 0, upperLeftX, upperLeftY, 0]
+        // Upper-left corner world coordinates (pixel 0,0)
+        double upperLeftX = boundingBox.XMin;
+        double upperLeftY = boundingBox.YMax;
+        metadata.TiePoints = new double[] { 0.0, 0.0, 0.0, upperLeftX, upperLeftY, 0.0 };
+
+        // Build GeoKeyDirectory
+        metadata.GeoKeyDirectory = BuildGeoKeyDirectory(srid);
+
+        // Set GeoAsciiParams
+        metadata.GeoAsciiParams = srid == SridHelper.WebMercator ? "WGS 84 / Pseudo-Mercator\0" : "WGS 84\0";
+
+        return metadata;
+    }
+
+    /// <summary>
+    /// Builds a GeoKeyDirectory array from an SRID.
+    /// </summary>
+    private static ushort[] BuildGeoKeyDirectory(int srid)
+    {
+        List<ushort> geoKeys = new List<ushort>();
+
+        // Header: [version, revision, minor revision, number of keys]
+        geoKeys.Add(1); // Version
+        geoKeys.Add(1); // Revision
+        geoKeys.Add(0); // Minor revision
+
+        bool isGeographic = srid == SridHelper.GeodeticWGS84;
+        int numKeys = isGeographic ? 3 : 4;
+        geoKeys.Add((ushort)numKeys); // Number of keys
+
+        if (isGeographic)
+        {
+            // Key 1: GTModelTypeGeoKey (1024) = ModelTypeGeographic (2)
+            geoKeys.Add(1024); // Key ID
+            geoKeys.Add(0); // Location (0 = value in tag)
+            geoKeys.Add(1); // Count
+            geoKeys.Add(2); // Value (ModelTypeGeographic)
+
+            // Key 2: GeographicTypeGeoKey (2048) = WGS84
+            geoKeys.Add(2048); // Key ID
+            geoKeys.Add(0); // Location
+            geoKeys.Add(1); // Count
+            geoKeys.Add(4326); // Value (WGS84)
+
+            // Key 3: GeogAngularUnitsGeoKey (2054) = degrees
+            geoKeys.Add(2054); // Key ID
+            geoKeys.Add(0); // Location
+            geoKeys.Add(1); // Count
+            geoKeys.Add(9102); // Value (degrees)
+        }
+        else
+        {
+            // Key 1: GTModelTypeGeoKey (1024) = ModelTypeProjected (1)
+            geoKeys.Add(1024); // Key ID
+            geoKeys.Add(0); // Location (0 = value in tag)
+            geoKeys.Add(1); // Count
+            geoKeys.Add(1); // Value (ModelTypeProjected)
+
+            // Key 2: ProjectedCSTypeGeoKey (3072) = EPSG code
+            geoKeys.Add(3072); // Key ID
+            geoKeys.Add(0); // Location
+            geoKeys.Add(1); // Count
+            geoKeys.Add((ushort)srid); // Value (EPSG code, e.g., 3857)
+
+            // Key 3: GeographicTypeGeoKey (2048) = WGS84
+            geoKeys.Add(2048); // Key ID
+            geoKeys.Add(0); // Location
+            geoKeys.Add(1); // Count
+            geoKeys.Add(4326); // Value (WGS84)
+
+            // Key 4: GeogAngularUnitsGeoKey (2054) = degrees
+            geoKeys.Add(2054); // Key ID
+            geoKeys.Add(0); // Location
+            geoKeys.Add(1); // Count
+            geoKeys.Add(9102); // Value (degrees)
+        }
+
+        return geoKeys.ToArray();
+    }
 }

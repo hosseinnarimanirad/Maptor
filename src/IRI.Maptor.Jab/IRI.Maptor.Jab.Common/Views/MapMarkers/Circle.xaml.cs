@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using IRI.Maptor.Jab.Common.Abstractions;
 
 namespace IRI.Maptor.Jab.Common.Views.MapMarkers;
- 
+
 public partial class Circle : MapMarker
 {
     public Circle(double opacity = 1, Brush? stroke = null, Brush? fill = null, double strokeThickness = 1, int size = 12)
@@ -45,7 +45,7 @@ public partial class Circle : MapMarker
 
     private bool _isSelected;
 
-    public bool IsSelected
+    public override bool IsSelected
     {
         get { return _isSelected; }
         set

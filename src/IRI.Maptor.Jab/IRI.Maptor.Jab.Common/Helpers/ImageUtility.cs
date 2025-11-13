@@ -11,6 +11,7 @@ using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Ket.GdiPlus.WorldfileFormat;
 using IRI.Maptor.Sta.Spatial.IO;
 using IRI.Maptor.Ket.GdiPlus.Helpers;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 
 namespace IRI.Maptor.Jab.Common.Helpers;
@@ -439,6 +440,272 @@ public static class ImageUtility
         var worldFile = WorldfileManager.Create(tiles.GetTotalImageBoundsInWebMercator(), width * 256, height * 256);
 
         WorldfileManager.SaveWorldFile(WorldfileManager.MakeAssociatedWorldfileName(outputFileName), worldFile);
+    }
+
+    public static void MergeTilesAndSaveByGdiplus_Large(List<TileInfo> tiles, Func<TileInfo, string> fileNameFunc, string outputFileName,
+        System.Drawing.Imaging.ImageFormat imageFormat,
+        System.Drawing.Imaging.PixelFormat format = System.Drawing.Imaging.PixelFormat.Format24bppRgb,
+        string? waterMarkText = null)
+    {
+        if (tiles == null || tiles.Count < 1)
+        {
+            return;
+        }
+
+        var minX = tiles.Min(t => t.ColumnNumber);
+        var minY = tiles.Min(t => t.RowNumber);
+        var width = tiles.Max(t => t.ColumnNumber) - minX + 1;
+        var height = tiles.Max(t => t.RowNumber) - minY + 1;
+        var pixelWidth = width * 256;
+        var pixelHeight = height * 256;
+
+        // Determine format and use appropriate writer
+        if (imageFormat == System.Drawing.Imaging.ImageFormat.Tiff)
+        {
+            WriteGeoTiff(tiles, fileNameFunc, outputFileName, pixelWidth, pixelHeight, format, minX, minY);
+        }
+        else if (imageFormat == System.Drawing.Imaging.ImageFormat.Png)
+        {
+            WritePng(tiles, fileNameFunc, outputFileName, pixelWidth, pixelHeight, format, minX, minY);
+            
+            // Generate worldfile for PNG (PNG doesn't support embedded GeoTIFF tags)
+            var worldFile = WorldfileManager.Create(tiles.GetTotalImageBoundsInWebMercator(), pixelWidth, pixelHeight);
+            WorldfileManager.SaveWorldFile(WorldfileManager.MakeAssociatedWorldfileName(outputFileName), worldFile);
+        }
+        else
+        {
+            // BMP or other formats - use BMP writer
+            WriteBmp(tiles, fileNameFunc, outputFileName, pixelWidth, pixelHeight, format, minX, minY);
+            
+            // Generate worldfile for BMP
+            var worldFile = WorldfileManager.Create(tiles.GetTotalImageBoundsInWebMercator(), pixelWidth, pixelHeight);
+            WorldfileManager.SaveWorldFile(WorldfileManager.MakeAssociatedWorldfileName(outputFileName), worldFile);
+        }
+    }
+
+    private static void WriteGeoTiff(List<TileInfo> tiles, Func<TileInfo, string> fileNameFunc, string outputFileName,
+        int width, int height, System.Drawing.Imaging.PixelFormat pixelFormat, int minX, int minY)
+    {
+        // Get coordinate bounds
+        var bounds = tiles.GetTotalImageBoundsInGeodetic();
+        var webMercatorBounds = tiles.GetTotalImageBoundsInWebMercator();
+        
+        // Determine if using Web Mercator or Geodetic based on coordinate ranges
+        // Web Mercator coordinates are typically much larger (millions)
+        bool useWebMercator = Math.Abs(webMercatorBounds.XMin) > 1000000 || Math.Abs(webMercatorBounds.YMin) > 1000000;
+        var activeBounds = useWebMercator ? webMercatorBounds : bounds;
+        int srid = useWebMercator ? SridHelper.WebMercator : SridHelper.GeodeticWGS84;
+        
+        // Create GeoTIFF metadata using the builder method
+        var metadata = GeoTiffMetadata.Create(activeBounds, width, height, srid);
+        
+        // Determine bits per pixel and samples per pixel
+        int bitsPerSample = System.Drawing.Image.GetPixelFormatSize(pixelFormat);
+        int samplesPerPixel = bitsPerSample == 24 ? 3 : (bitsPerSample == 32 ? 4 : 1);
+        int bytesPerPixel = bitsPerSample / 8;
+
+        // Prepare tile lookup
+        var sortedTiles = tiles.OrderBy(t => t.RowNumber).ThenBy(t => t.ColumnNumber).ToList();
+        var tileDict = sortedTiles.ToDictionary(t => (t.RowNumber, t.ColumnNumber));
+        
+        // Create row data provider function
+        byte[] getRowData(int row, int rowWidth)
+        {
+            byte[] rowBuffer = new byte[rowWidth * bytesPerPixel];
+            Array.Clear(rowBuffer, 0, rowBuffer.Length);
+            
+            int tileRow = row / 256;
+            int pixelInTileRow = row % 256;
+            
+            // Fill row from tiles
+            for (int col = 0; col < rowWidth; col++)
+            {
+                int tileCol = col / 256;
+                int pixelInTileCol = col % 256;
+                
+                if (tileDict.TryGetValue((minY + tileRow, minX + tileCol), out var tile))
+                {
+                    var fileName = fileNameFunc(tile);
+                    if (File.Exists(fileName))
+                    {
+                        using (var tileImage = System.Drawing.Image.FromFile(fileName))
+                        using (var tileBitmap = new System.Drawing.Bitmap(tileImage))
+                        {
+                            var pixel = tileBitmap.GetPixel(pixelInTileCol, pixelInTileRow);
+                            int bufferPos = col * bytesPerPixel;
+                            
+                            if (bytesPerPixel == 3)
+                            {
+                                rowBuffer[bufferPos] = pixel.B;
+                                rowBuffer[bufferPos + 1] = pixel.G;
+                                rowBuffer[bufferPos + 2] = pixel.R;
+                            }
+                            else if (bytesPerPixel == 4)
+                            {
+                                rowBuffer[bufferPos] = pixel.B;
+                                rowBuffer[bufferPos + 1] = pixel.G;
+                                rowBuffer[bufferPos + 2] = pixel.R;
+                                rowBuffer[bufferPos + 3] = pixel.A;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return rowBuffer;
+        }
+        
+        // Use TiffWriter to write the file
+        TiffWriter.WriteGeoTiff(outputFileName, width, height, bitsPerSample, samplesPerPixel, metadata, getRowData);
+    }
+
+    private static void WritePng(List<TileInfo> tiles, Func<TileInfo, string> fileNameFunc, string outputFileName,
+        int width, int height, System.Drawing.Imaging.PixelFormat pixelFormat, int minX, int minY)
+    {
+        // Determine bits per pixel and samples per pixel
+        int bitsPerPixel = System.Drawing.Image.GetPixelFormatSize(pixelFormat);
+        int samplesPerPixel = bitsPerPixel == 24 ? 3 : (bitsPerPixel == 32 ? 4 : 1);
+
+        // Prepare tile lookup
+        var sortedTiles = tiles.OrderBy(t => t.RowNumber).ThenBy(t => t.ColumnNumber).ToList();
+        var tileDict = sortedTiles.ToDictionary(t => (t.RowNumber, t.ColumnNumber));
+        
+        int bytesPerPixel = bitsPerPixel / 8;
+        
+        // Create row data provider function
+        byte[] getRowData(int row)
+        {
+            byte[] rowBuffer = new byte[width * bytesPerPixel];
+            Array.Clear(rowBuffer, 0, rowBuffer.Length);
+            
+            int tileRow = row / 256;
+            int pixelInTileRow = row % 256;
+            
+            // Fill row from tiles
+            for (int col = 0; col < width; col++)
+            {
+                int tileCol = col / 256;
+                int pixelInTileCol = col % 256;
+                
+                if (tileDict.TryGetValue((minY + tileRow, minX + tileCol), out var tile))
+                {
+                    var fileName = fileNameFunc(tile);
+                    if (File.Exists(fileName))
+                    {
+                        using (var tileImage = System.Drawing.Image.FromFile(fileName))
+                        using (var tileBitmap = new System.Drawing.Bitmap(tileImage))
+                        {
+                            var pixel = tileBitmap.GetPixel(pixelInTileCol, pixelInTileRow);
+                            int bufferPos = col * bytesPerPixel;
+                            
+                            if (bytesPerPixel == 3)
+                            {
+                                rowBuffer[bufferPos] = pixel.R;
+                                rowBuffer[bufferPos + 1] = pixel.G;
+                                rowBuffer[bufferPos + 2] = pixel.B;
+                            }
+                            else if (bytesPerPixel == 4)
+                            {
+                                rowBuffer[bufferPos] = pixel.R;
+                                rowBuffer[bufferPos + 1] = pixel.G;
+                                rowBuffer[bufferPos + 2] = pixel.B;
+                                rowBuffer[bufferPos + 3] = pixel.A;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return rowBuffer;
+        }
+        
+        // Use PngWriter to write the file
+        PngWriter.WritePng(outputFileName, width, height, bitsPerPixel, samplesPerPixel, getRowData);
+    }
+
+    private static void WriteBmp(List<TileInfo> tiles, Func<TileInfo, string> fileNameFunc, string outputFileName,
+        int width, int height, System.Drawing.Imaging.PixelFormat pixelFormat, int minX, int minY)
+    {
+        int bitsPerPixel = System.Drawing.Image.GetPixelFormatSize(pixelFormat);
+        int bytesPerPixel = bitsPerPixel / 8;
+        int rowSize = ((width * bitsPerPixel + 31) / 32) * 4; // Row size must be multiple of 4
+        int imageDataSize = rowSize * height;
+        
+        using (var stream = new FileStream(outputFileName, FileMode.Create, FileAccess.Write))
+        using (var writer = new BinaryWriter(stream))
+        {
+            // BMP File Header (14 bytes)
+            writer.Write((ushort)0x4D42); // BM signature
+            writer.Write((uint)(14 + 40 + imageDataSize)); // File size
+            writer.Write((ushort)0); // Reserved 1
+            writer.Write((ushort)0); // Reserved 2
+            writer.Write((uint)(14 + 40)); // Offset to pixel data
+            
+            // DIB Header (40 bytes)
+            writer.Write((uint)40); // Header size
+            writer.Write((int)width); // Width
+            writer.Write((int)height); // Height (positive = bottom-up)
+            writer.Write((ushort)1); // Color planes
+            writer.Write((ushort)bitsPerPixel); // Bits per pixel
+            writer.Write((uint)0); // Compression (0 = none)
+            writer.Write((uint)imageDataSize); // Image size
+            writer.Write((int)0); // X pixels per meter
+            writer.Write((int)0); // Y pixels per meter
+            writer.Write((uint)0); // Colors in palette
+            writer.Write((uint)0); // Important colors
+            
+            // Pixel data (BMP stores bottom-to-top)
+            byte[] rowBuffer = new byte[rowSize];
+            var sortedTiles = tiles.OrderByDescending(t => t.RowNumber).ThenBy(t => t.ColumnNumber).ToList();
+            
+            for (int row = height - 1; row >= 0; row--)
+            {
+                Array.Clear(rowBuffer, 0, rowBuffer.Length);
+                
+                int tileRow = row / 256;
+                int pixelInTileRow = row % 256;
+                
+                for (int col = 0; col < width; col++)
+                {
+                    int tileCol = col / 256;
+                    int pixelInTileCol = col % 256;
+                    
+                    var tile = sortedTiles.FirstOrDefault(t => 
+                        t.RowNumber == minY + tileRow && 
+                        t.ColumnNumber == minX + tileCol);
+                    
+                    if (tile != null)
+                    {
+                        var fileName = fileNameFunc(tile);
+                        if (File.Exists(fileName))
+                        {
+                            using (var tileImage = System.Drawing.Image.FromFile(fileName))
+                            using (var tileBitmap = new System.Drawing.Bitmap(tileImage))
+                            {
+                                var pixel = tileBitmap.GetPixel(pixelInTileCol, pixelInTileRow);
+                                int bufferPos = col * bytesPerPixel;
+                                
+                                if (bytesPerPixel == 3)
+                                {
+                                    rowBuffer[bufferPos] = pixel.B;
+                                    rowBuffer[bufferPos + 1] = pixel.G;
+                                    rowBuffer[bufferPos + 2] = pixel.R;
+                                }
+                                else if (bytesPerPixel == 4)
+                                {
+                                    rowBuffer[bufferPos] = pixel.B;
+                                    rowBuffer[bufferPos + 1] = pixel.G;
+                                    rowBuffer[bufferPos + 2] = pixel.R;
+                                    rowBuffer[bufferPos + 3] = pixel.A;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                writer.Write(rowBuffer);
+            }
+        }
     }
 
     public static bool HasAnyImage(List<TileInfo> tiles, Func<TileInfo, string> fileNameFunc)
