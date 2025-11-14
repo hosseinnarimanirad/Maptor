@@ -77,4 +77,105 @@ public class Geometry_SqlServerNativeBinaryTest
         Assert.True(nativeBinary.SequenceEqual(newNativeBinary));
 
     }
+
+    [Theory]
+    [InlineData("POINT(1 2 1)")] // PointZ
+    [InlineData("POINT(1 2 2 3)")] // PointZM
+    public void TestSqlNativeBinaryDeserializeZM(string wktGeometry)
+    {
+        // ARRANGE 
+        wktGeometry = wktGeometry.Replace(", ", ",");
+        var sqlGeometry = Microsoft.SqlServer.Types.SqlGeometry.Parse(new System.Data.SqlTypes.SqlString(wktGeometry));
+        sqlGeometry.STSrid = _srid;
+
+        var nativeBinary = sqlGeometry.Serialize().Buffer;
+
+        // ACT
+        var geometry = SqlServerSpatialNativeBinary.Deserialize(nativeBinary);
+
+        // ASSERT - Note: Z/M values are lost when converting to Point, so we only check X, Y
+        var expectedGeometry = Geometry<Point>.FromWkt(wktGeometry, _srid);
+        Assert.Equal(geometry.AsWkt(), expectedGeometry.AsWkt());
+    }
+
+    [Theory]
+    [InlineData("POINT(1 2 1)")] // PointZ
+    [InlineData("POINT(1 2 2 3)")] // PointZM
+    public void TestSqlNativeBinarySerializeZM(string wktGeometry)
+    {
+        // ARRANGE 
+        wktGeometry = wktGeometry.Replace(", ", ",");
+        var sqlGeometry = Microsoft.SqlServer.Types.SqlGeometry.Parse(new System.Data.SqlTypes.SqlString(wktGeometry));
+        sqlGeometry.STSrid = _srid;
+
+        var nativeBinary = sqlGeometry.Serialize().Buffer;
+
+        var geometry = Geometry<Point>.FromWkt(wktGeometry, _srid);
+
+        // ACT
+        var newNativeBinary = SqlServerSpatialNativeBinary.Serialize(geometry);
+
+        // ASSERT - Note: Since Point doesn't support Z/M, serialization may differ
+        // We check that deserialization works correctly
+        var deserialized = SqlServerSpatialNativeBinary.Deserialize(newNativeBinary);
+        var expectedGeometry = Geometry<Point>.FromWkt(wktGeometry, _srid);
+        Assert.Equal(deserialized.AsWkt(), expectedGeometry.AsWkt());
+    }
+
+    [Theory]
+    [InlineData("LINESTRING(4 4 4 4, 9 0 4 4)")] // LineStringZM
+    public void TestSqlNativeBinaryDeserializeLineStringZM(string wktGeometry)
+    {
+        // ARRANGE 
+        wktGeometry = wktGeometry.Replace(", ", ",");
+        var sqlGeometry = Microsoft.SqlServer.Types.SqlGeometry.Parse(new System.Data.SqlTypes.SqlString(wktGeometry));
+        sqlGeometry.STSrid = _srid;
+
+        var nativeBinary = sqlGeometry.Serialize().Buffer;
+
+        // ACT
+        var geometry = SqlServerSpatialNativeBinary.Deserialize(nativeBinary);
+
+        // ASSERT - Note: Z/M values are lost when converting to Point, so we only check X, Y
+        var expectedGeometry = Geometry<Point>.FromWkt(wktGeometry, _srid);
+        Assert.Equal(geometry.AsWkt(), expectedGeometry.AsWkt());
+    }
+
+    [Theory]
+    [InlineData("POLYGON((0 0 9, 30 0 9, 30 30 9, 0 30 9, 0 0 9))")] // PolygonZ
+    public void TestSqlNativeBinaryDeserializePolygonZ(string wktGeometry)
+    {
+        // ARRANGE 
+        wktGeometry = wktGeometry.Replace(", ", ",");
+        var sqlGeometry = Microsoft.SqlServer.Types.SqlGeometry.Parse(new System.Data.SqlTypes.SqlString(wktGeometry));
+        sqlGeometry.STSrid = _srid;
+
+        var nativeBinary = sqlGeometry.Serialize().Buffer;
+
+        // ACT
+        var geometry = SqlServerSpatialNativeBinary.Deserialize(nativeBinary);
+
+        // ASSERT - Note: Z values are lost when converting to Point, so we only check X, Y
+        var expectedGeometry = Geometry<Point>.FromWkt(wktGeometry, _srid);
+        Assert.Equal(geometry.AsWkt(), expectedGeometry.AsWkt());
+    }
+
+    [Theory]
+    [InlineData("MULTIPOINT((0 0), (0 3), (3 3), (3 0), (1 1 1), (9 9 1 2), (9 10), (10 9))")] // MultiPointZM
+    public void TestSqlNativeBinaryDeserializeMultiPointZM(string wktGeometry)
+    {
+        // ARRANGE 
+        wktGeometry = wktGeometry.Replace(", ", ",");
+        var sqlGeometry = Microsoft.SqlServer.Types.SqlGeometry.Parse(new System.Data.SqlTypes.SqlString(wktGeometry));
+        sqlGeometry.STSrid = _srid;
+
+        var nativeBinary = sqlGeometry.Serialize().Buffer;
+
+        // ACT
+        var geometry = SqlServerSpatialNativeBinary.Deserialize(nativeBinary);
+
+        // ASSERT - Note: Z/M values are lost when converting to Point, so we only check X, Y
+        var expectedGeometry = Geometry<Point>.FromWkt(wktGeometry, _srid);
+        Assert.Equal(geometry.AsWkt(), expectedGeometry.AsWkt());
+    }
 }

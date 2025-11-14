@@ -18,4 +18,8 @@ public enum SqlServerSpatialNativeBinaryTypes : byte
     Polygon = 21,        // Serializes as byte 5, but needs unique enum value
     MultiLineString = 22, // Serializes as byte 4, but needs unique enum value
     MultiPolygon = 23,    // Serializes as byte 4, but needs unique enum value
+    
+    // Z/M variants
+    LineStringZM = 24,    // Serializes as byte 0x17 (23 decimal)
+    PolygonZ = 25,        // Serializes as byte 5 when has Z values
 }

@@ -1,4 +1,5 @@
-﻿using IRI.Maptor.Extensions;
+﻿using System;
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
 
@@ -62,12 +63,23 @@ public static partial class SqlServerSpatialNativeBinary
         }
         else if (typeByte == 5)
         {
-            // Peek at structure to distinguish Polygon from MultiPointZ
+            // Peek at structure to distinguish Polygon/PolygonZ from MultiPointZ
             var position = reader.BaseStream.Position;
             var pointCount = reader.ReadInt32();
             
-            // Skip points
-            reader.BaseStream.Position = position + 4 + (pointCount * 16);
+            // Check if points have Z (24 bytes) or just X,Y (16 bytes)
+            // Skip first point to check size
+            reader.BaseStream.Position = position + 4;
+            var x = reader.ReadDouble();
+            var y = reader.ReadDouble();
+            var nextValue = reader.ReadDouble();
+            
+            // Check if this is Z value (reasonable range) or metadata
+            bool hasZ = !double.IsNaN(nextValue) && Math.Abs(nextValue) < 1e100;
+            
+            // Skip points (adjust size based on Z presence)
+            int pointSize = hasZ ? 24 : 16;
+            reader.BaseStream.Position = position + 4 + (pointCount * pointSize);
             
             var firstMetadataValue = reader.ReadInt32();
             var secondMetadataValue = reader.ReadInt32();
@@ -82,8 +94,12 @@ public static partial class SqlServerSpatialNativeBinary
             }
             else
             {
-                return SqlServerSpatialNativeBinaryTypes.Polygon;
+                return hasZ ? SqlServerSpatialNativeBinaryTypes.PolygonZ : SqlServerSpatialNativeBinaryTypes.Polygon;
             }
+        }
+        else if (typeByte == 0x17) // LineStringZM
+        {
+            return SqlServerSpatialNativeBinaryTypes.LineStringZM;
         }
         
         // For other type bytes, cast directly
@@ -141,6 +157,12 @@ public static partial class SqlServerSpatialNativeBinary
 
                 case SqlServerSpatialNativeBinaryTypes.MultiPolygon:
                     return ParseMultiPolygon(stream, srid);
+
+                case SqlServerSpatialNativeBinaryTypes.LineStringZM:
+                    return ParseLineStringZM(stream, srid);
+
+                case SqlServerSpatialNativeBinaryTypes.PolygonZ:
+                    return ParsePolygonZ(stream, srid);
                     
                 default:
                     break;
@@ -263,6 +285,74 @@ public static partial class SqlServerSpatialNativeBinary
         {
             var x = reader.ReadDouble();
             var y = reader.ReadDouble();
+            allPoints.Add(new Point(x, y));
+        }
+
+        // Read metadata to determine ring structure
+        var ringCount = reader.ReadInt32();
+        reader.ReadInt32(); // Skip second value
+        
+        // Read ring point counts
+        var ringPointCounts = new List<int>(ringCount);
+        for (int i = 0; i < ringCount; i++)
+        {
+            ringPointCounts.Add(reader.ReadInt32());
+        }
+        
+        reader.ReadInt32(); // Skip additional value
+        reader.ReadBytes(9); // Skip fixed pattern
+
+        // Split points into rings
+        var rings = new List<Geometry<Point>>(ringCount);
+        int pointIndex = 0;
+        for (int i = 0; i < ringCount; i++)
+        {
+            var ringPoints = new List<Point>(ringPointCounts[i]);
+            for (int j = 0; j < ringPointCounts[i]; j++)
+            {
+                ringPoints.Add(allPoints[pointIndex++]);
+            }
+            rings.Add(Geometry<Point>.CreatePointOrLineString(ringPoints, srid));
+        }
+
+        return Geometry<Point>.CreatePolygonOrMultiPolygon(rings, srid);
+    }
+
+    private static Geometry<Point> ParseLineStringZM(BinaryReader reader, int srid)
+    {
+        var pointCount = reader.ReadInt32();
+        var points = new List<Point>(pointCount);
+
+        // Read all points (X, Y, Z, M)
+        for (int i = 0; i < pointCount; i++)
+        {
+            var x = reader.ReadDouble();
+            var y = reader.ReadDouble();
+            var z = reader.ReadDouble();
+            var m = reader.ReadDouble();
+            // Note: Point doesn't support Z/M, so we only store X, Y
+            points.Add(new Point(x, y));
+        }
+
+        // Skip metadata: int32(1) + int32(1) + 9 bytes pattern = 17 bytes
+        reader.ReadInt32(); // First value
+        reader.ReadInt32(); // Second value
+        reader.ReadBytes(9); // Fixed pattern
+
+        return Geometry<Point>.CreatePointOrLineString(points, srid);
+    }
+
+    private static Geometry<Point> ParsePolygonZ(BinaryReader reader, int srid)
+    {
+        var totalPointCount = reader.ReadInt32();
+        
+        // Read all points first (X, Y, Z)
+        var allPoints = new List<Point>(totalPointCount);
+        for (int i = 0; i < totalPointCount; i++)
+        {
+            var x = reader.ReadDouble();
+            var y = reader.ReadDouble();
+            var z = reader.ReadDouble(); // Read but don't store Z
             allPoints.Add(new Point(x, y));
         }
 

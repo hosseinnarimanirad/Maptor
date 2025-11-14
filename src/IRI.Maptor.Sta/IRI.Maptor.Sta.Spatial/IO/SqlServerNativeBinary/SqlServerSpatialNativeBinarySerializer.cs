@@ -1,4 +1,5 @@
-﻿using IRI.Maptor.Extensions;
+﻿using System.Linq;
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives; 
 using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
@@ -55,6 +56,100 @@ public static partial class SqlServerSpatialNativeBinary
         };
     }
 
+    // Helper methods to detect Z/M in points
+    private static bool PointHasZ<T>(T point) where T : IPoint
+    {
+        return point is IHasZ;
+    }
+
+    private static bool PointHasM<T>(T point) where T : IPoint
+    {
+        return point is IHasM;
+    }
+
+    private static bool GeometryHasZ<T>(Geometry<T> geometry) where T : IPoint, new()
+    {
+        if (geometry.Points != null && geometry.Points.Count > 0)
+        {
+            return geometry.Points.Any(p => PointHasZ(p));
+        }
+        if (geometry.Geometries != null && geometry.Geometries.Count > 0)
+        {
+            return geometry.Geometries.Any(g => GeometryHasZ(g));
+        }
+        return false;
+    }
+
+    private static bool GeometryHasM<T>(Geometry<T> geometry) where T : IPoint, new()
+    {
+        if (geometry.Points != null && geometry.Points.Count > 0)
+        {
+            return geometry.Points.Any(p => PointHasM(p));
+        }
+        if (geometry.Geometries != null && geometry.Geometries.Count > 0)
+        {
+            return geometry.Geometries.Any(g => GeometryHasM(g));
+        }
+        return false;
+    }
+
+    private static bool GeometryHasAllZ<T>(Geometry<T> geometry) where T : IPoint, new()
+    {
+        if (geometry.Points != null && geometry.Points.Count > 0)
+        {
+            return geometry.Points.All(p => PointHasZ(p));
+        }
+        if (geometry.Geometries != null && geometry.Geometries.Count > 0)
+        {
+            return geometry.Geometries.All(g => GeometryHasAllZ(g));
+        }
+        return false;
+    }
+
+    private static bool GeometryHasAllZM<T>(Geometry<T> geometry) where T : IPoint, new()
+    {
+        if (geometry.Points != null && geometry.Points.Count > 0)
+        {
+            return geometry.Points.All(p => PointHasZ(p) && PointHasM(p));
+        }
+        if (geometry.Geometries != null && geometry.Geometries.Count > 0)
+        {
+            return geometry.Geometries.All(g => GeometryHasAllZM(g));
+        }
+        return false;
+    }
+
+    // Write point with Z/M support
+    private static void WritePoint<T>(BinaryWriter writer, T point, bool hasZ, bool hasM) where T : IPoint
+    {
+        writer.Write(point.X);
+        writer.Write(point.Y);
+        
+        if (hasZ)
+        {
+            if (point is IHasZ hasZPoint)
+            {
+                writer.Write(hasZPoint.Z);
+            }
+            else
+            {
+                writer.Write(double.NaN); // NaN for missing Z
+            }
+        }
+        
+        if (hasM)
+        {
+            if (point is IHasM hasMPoint)
+            {
+                writer.Write(hasMPoint.Measure);
+            }
+            else
+            {
+                writer.Write(double.NaN); // NaN for missing M
+            }
+        }
+    }
+
 
 
 
@@ -67,6 +162,8 @@ public static partial class SqlServerSpatialNativeBinary
             SqlServerSpatialNativeBinaryTypes.Polygon => 5,
             SqlServerSpatialNativeBinaryTypes.MultiLineString => 4,
             SqlServerSpatialNativeBinaryTypes.MultiPolygon => 4,
+            SqlServerSpatialNativeBinaryTypes.LineStringZM => 0x17, // 23 decimal
+            SqlServerSpatialNativeBinaryTypes.PolygonZ => 5, // Same as Polygon, distinguished by metadata
             _ => (byte)type  // For Point, MultiPoint, etc., use the enum value directly
         };
     }
@@ -81,24 +178,27 @@ public static partial class SqlServerSpatialNativeBinary
         {
             bw.Write(geometry.Srid);          // SRID (little-endian)
             bw.Write((byte)0x01);    // Version marker
-            bw.Write(GetTypeByte(ParseType(geometry.Type)));    // Type byte
+            
+            // Determine type based on geometry type and Z/M presence
+            SqlServerSpatialNativeBinaryTypes type = DetermineType(geometry);
+            bw.Write(GetTypeByte(type));    // Type byte
 
             switch (geometry.Type)
             {
                 case GeometryType.Point:
-                    bw.Write(geometry.Points[0].AsByteArray());
+                    SerializePoint(bw, geometry, type);
                     break;
 
                 case GeometryType.LineString:
-                    GeometryLineStringAsWkb(bw, geometry);
+                    GeometryLineStringAsWkb(bw, geometry, type);
                     break;
 
                 case GeometryType.Polygon:
-                    GeometryPolygonAsWkb(bw, geometry);
+                    GeometryPolygonAsWkb(bw, geometry, type);
                     break;
 
                 case GeometryType.MultiPoint:
-                    GeometryMultiPointAsWkb(bw, geometry);
+                    GeometryMultiPointAsWkb(bw, geometry, type);
                     break;
 
                 case GeometryType.MultiLineString:
@@ -121,10 +221,52 @@ public static partial class SqlServerSpatialNativeBinary
         }
     }
 
+    private static SqlServerSpatialNativeBinaryTypes DetermineType<T>(Geometry<T> geometry) where T : IPoint, new()
+    {
+        bool hasZ = GeometryHasZ(geometry);
+        bool hasM = GeometryHasM(geometry);
+        bool allZ = GeometryHasAllZ(geometry);
+        bool allZM = GeometryHasAllZM(geometry);
 
-    private static void GeometryLineStringAsWkb<T>(BinaryWriter writer, Geometry<T> lineString) where T : IPoint, new()
+        return geometry.Type switch
+        {
+            GeometryType.Point =>
+                (allZM) ? SqlServerSpatialNativeBinaryTypes.PointZM :
+                (allZ) ? SqlServerSpatialNativeBinaryTypes.PointZ :
+                (hasM) ? SqlServerSpatialNativeBinaryTypes.PointM :
+                SqlServerSpatialNativeBinaryTypes.Point,
+
+            GeometryType.LineString =>
+                (allZM) ? SqlServerSpatialNativeBinaryTypes.LineStringZM :
+                SqlServerSpatialNativeBinaryTypes.LineString,
+
+            GeometryType.Polygon =>
+                (allZ) ? SqlServerSpatialNativeBinaryTypes.PolygonZ :
+                SqlServerSpatialNativeBinaryTypes.Polygon,
+
+            GeometryType.MultiPoint =>
+                (hasZ || hasM) ? SqlServerSpatialNativeBinaryTypes.MultiPointZM :
+                SqlServerSpatialNativeBinaryTypes.MultiPoint,
+
+            _ => ParseType(geometry.Type)
+        };
+    }
+
+    private static void SerializePoint<T>(BinaryWriter writer, Geometry<T> geometry, SqlServerSpatialNativeBinaryTypes type) where T : IPoint, new()
+    {
+        var point = geometry.Points[0];
+        bool hasZ = HasZ(type) || type == SqlServerSpatialNativeBinaryTypes.PointZM;
+        bool hasM = HasM(type) || type == SqlServerSpatialNativeBinaryTypes.PointZM;
+        
+        WritePoint(writer, point, hasZ, hasM);
+    }
+
+
+    private static void GeometryLineStringAsWkb<T>(BinaryWriter writer, Geometry<T> lineString, SqlServerSpatialNativeBinaryTypes type) where T : IPoint, new()
     {
         var pointCount = lineString.Points.Count;
+        bool hasZ = type == SqlServerSpatialNativeBinaryTypes.LineStringZM;
+        bool hasM = type == SqlServerSpatialNativeBinaryTypes.LineStringZM;
         
         // Write point count
         writer.Write(pointCount);
@@ -132,7 +274,7 @@ public static partial class SqlServerSpatialNativeBinary
         // Write all points
         for (int i = 0; i < lineString.Points.Count; i++)
         {
-            writer.Write(lineString.Points[i].AsByteArray());
+            WritePoint(writer, lineString.Points[i], hasZ, hasM);
         }
 
         // Write metadata section
@@ -141,10 +283,11 @@ public static partial class SqlServerSpatialNativeBinary
         writer.Write(HexStringHelper.ToByteArray("0xFFFFFFFF0000000002"));  // Fixed pattern (9 bytes)
     }
 
-    private static void GeometryPolygonAsWkb<T>(BinaryWriter writer, Geometry<T> polygon) where T : IPoint, new()
+    private static void GeometryPolygonAsWkb<T>(BinaryWriter writer, Geometry<T> polygon, SqlServerSpatialNativeBinaryTypes type) where T : IPoint, new()
     {
         var ringCount = polygon.Geometries.Count;
         var totalPointCount = polygon.Points.Count;
+        bool hasZ = type == SqlServerSpatialNativeBinaryTypes.PolygonZ;
         
         // Write total point count (all rings combined)
         writer.Write(totalPointCount);
@@ -155,7 +298,7 @@ public static partial class SqlServerSpatialNativeBinary
             var ring = polygon.Geometries[i];
             for (int j = 0; j < ring.Points.Count; j++)
             {
-                writer.Write(ring.Points[j].AsByteArray());
+                WritePoint(writer, ring.Points[j], hasZ, false);
             }
         }
 
@@ -176,17 +319,26 @@ public static partial class SqlServerSpatialNativeBinary
         writer.Write(HexStringHelper.ToByteArray("0xFFFFFFFF0000000003"));
     }
 
-    private static void GeometryMultiPointAsWkb<T>(BinaryWriter writer, Geometry<T> multipoint) where T : IPoint, new()
+    private static void GeometryMultiPointAsWkb<T>(BinaryWriter writer, Geometry<T> multipoint, SqlServerSpatialNativeBinaryTypes type) where T : IPoint, new()
     {
         var pointCount = multipoint.NumberOfGeometries;
+        bool hasZ = type == SqlServerSpatialNativeBinaryTypes.MultiPointZM || type == SqlServerSpatialNativeBinaryTypes.MultiPointZ;
+        bool hasM = type == SqlServerSpatialNativeBinaryTypes.MultiPointZM || type == SqlServerSpatialNativeBinaryTypes.MultiPointM;
+        
+        // For MultiPointZM (type 0x07), we need to check if any point has Z/M
+        if (type == SqlServerSpatialNativeBinaryTypes.MultiPointZM)
+        {
+            hasZ = GeometryHasZ(multipoint);
+            hasM = GeometryHasM(multipoint);
+        }
         
         // Write point count
         writer.Write(pointCount);
 
-        // Write all points
+        // Write all points (with Z/M if needed, using NaN for missing values)
         for (int i = 0; i < multipoint.Geometries.Count; i++)
         {
-            writer.Write(multipoint.Geometries[i].Points[0].AsByteArray());
+            WritePoint(writer, multipoint.Geometries[i].Points[0], hasZ, hasM);
         }
 
         // Write metadata section
