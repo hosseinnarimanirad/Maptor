@@ -37,7 +37,7 @@ public static class GraphSampleCodes
         var path = bfs.GetPathTo("D");    // ["A", "B", "D"] or ["A", "C", "D"]
 
         // The BFS tree discovered from A (as an adjacency list)
-        var bfsTree = bfs.searchResult;
+        var bfsTree = bfs.SearchResult;
 
         // *******************************************
         // Depth-First Search (DFS) & Topological Sort
@@ -54,7 +54,7 @@ public static class GraphSampleCodes
         var dfs = new DepthFirstSearch<string, int>(dag, startNode: "5");
 
         // Topological order (method name as implemented in the code)
-        var topo = dfs.CalculateTopologiacalSort(); // e.g., ["4","5","2","3","1","0"]
+        var topo = dfs.CalculateTopologicalSort(); // e.g., ["4","5","2","3","1","0"]
 
         // Get nodes sorted by finish time, if needed:
         var finishOrder = dfs.GetSortedNodes(SortType.BasedOnFinishTime);
