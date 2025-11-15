@@ -15,7 +15,6 @@ public static class MinimumSpanningTree
 
         List<Triple<LinkedListNode<TNode>, TWeight, LinkedListNode<TNode>>> list = new List<Triple<LinkedListNode<TNode>, TWeight, LinkedListNode<TNode>>>();
 
-        // what is the use of jungle?
         List<LinkedList<TNode>> jungle = new List<LinkedList<TNode>>();
 
         Dictionary<TNode, LinkedListNode<TNode>> nodeList = new Dictionary<TNode, LinkedListNode<TNode>>();
@@ -83,80 +82,4 @@ public static class MinimumSpanningTree
     {
         return first.Second.CompareTo(second.Second);
     }
-
-
-
-
-
-
-    //public static AdjacencyList<TNode, TWeight> CalculateByPrim<TNode, TWeight>(AdjacencyList<TNode, TWeight> graph)
-    //  where TWeight : IComparable
-    //{
-    //    List<Triple<LinkedListNode<TNode>, TWeight, LinkedListNode<TNode>>> list = new List<Triple<LinkedListNode<TNode>, TWeight, LinkedListNode<TNode>>>();
-
-    //    // what is the use of jungle?
-    //    List<LinkedList<TNode>> jungle = new List<LinkedList<TNode>>();
-
-    //    Dictionary<TNode, LinkedListNode<TNode>> nodeList = new Dictionary<TNode, LinkedListNode<TNode>>();
-
-    //    AdjacencyList<TNode, TWeight> result = new AdjacencyList<TNode, TWeight>();
-
-    //    foreach (TNode item in graph)
-    //    {
-    //        LinkedList<TNode> temp = new LinkedList<TNode>();
-
-    //        temp.AddFirst(item);
-
-    //        nodeList.Add(item, temp.First);
-
-    //        jungle.Add(temp);
-    //    }
-
-
-    //    for (int i = 0; i < graph.NumberOfNodes; i++)
-    //    {
-    //        foreach (Connection<TNode, TWeight> item in graph.GetConnections(graph[i]))
-    //        {
-    //            list.Add(new Triple<LinkedListNode<TNode>, TWeight, LinkedListNode<TNode>>(nodeList[graph[i]],
-    //                                                                                        item.Weight,
-    //                                                                                        nodeList[item.Node]));
-    //        }
-    //    }
-
-    //    //list.Sort(new Comparison<Triple<LinkedListNode<TNode>, TWeight, LinkedListNode<TNode>>>(CompareEdge));
-
-    //    TNode currentNode = graph[0];
-
-    //    List<Connection<TNode, TWeight>> connections = new List<Connection<TNode, TWeight>>();
-
-    //    List<TNode> nodes = new List<TNode>(graph.NumberOfNodes);
-
-    //    foreach (TNode item in graph)
-    //    {
-    //        nodes.Add(item);
-    //    }
-
-    //    while (jungle.Count > 1)
-    //    {
-    //        LinkedListNode<Connection<TNode, TWeight>> neighbour = graph.GetConnections(currentNode).First;
-
-    //        while (neighbour != null)
-    //        {
-    //            connections.Add(neighbour.Value);
-
-    //            //parents.Add(neighbour.Value, currentNode);
-
-    //            neighbour = neighbour.Next;
-    //        }
-
-    //        Connection<TNode, TWeight> selectedConnection = GetMinimumConnection(connections);
-
-    //        connections.Remove(selectedConnection);
-
-    //    }
-
-    //    return result;
-    //}
-
-
 }

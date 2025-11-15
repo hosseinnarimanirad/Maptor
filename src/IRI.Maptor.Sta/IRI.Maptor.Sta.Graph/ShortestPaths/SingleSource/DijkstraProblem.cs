@@ -16,13 +16,6 @@ public class DijkstraProblem
 
     List<int> intendedIndexes;
 
-    //int m_firstNode;
-
-    //public int FirstNode
-    //{
-    //    get { return this.m_firstNode; }
-    //}
-
     public Matrix Adjacency
     {
         get { return this.m_Adjacency; }
@@ -35,9 +28,11 @@ public class DijkstraProblem
 
     public DijkstraProblem(Matrix adjacency)
     {
-        if (!adjacency.IsSquare())//|| adjacency.IsSingular())
+        if (adjacency == null)
+            throw new ArgumentNullException(nameof(adjacency));
+        if (!adjacency.IsSquare())
         {
-            throw new NotImplementedException();
+            throw new ArgumentException("Adjacency matrix must be square.", nameof(adjacency));
         }
 
         this.m_Adjacency = adjacency;
@@ -46,8 +41,10 @@ public class DijkstraProblem
 
     public List<int> FindShortestPath(int firstNode, int secondNode)
     {
-        // check wheather firstNode and secondNode are in the range!
-        // check if it has not been calculated before
+        if (firstNode < 0 || firstNode >= this.NumberOfNodes)
+            throw new ArgumentOutOfRangeException(nameof(firstNode), $"Node index must be between 0 and {this.NumberOfNodes - 1}.");
+        if (secondNode < 0 || secondNode >= this.NumberOfNodes)
+            throw new ArgumentOutOfRangeException(nameof(secondNode), $"Node index must be between 0 and {this.NumberOfNodes - 1}.");
 
         Initialize(firstNode);
 
@@ -110,11 +107,18 @@ public class DijkstraProblem
         labelWeight[firstNode] = new IndexValue<double>(firstNode, 0);
     }
 
+    /// <summary>
+    /// Gets the node with the minimum weight from the intended indexes.
+    /// Note: This uses linear search (O(n)). For better performance with large graphs,
+    /// consider using a priority queue/heap data structure (O(log n)).
+    /// </summary>
+    /// <returns>The index of the node with minimum weight.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when no nodes remain.</exception>
     private int GetMinimumWeightNode()
     {
         if (this.intendedIndexes.Count == 0)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("No nodes remaining in the intended indexes list.");
         }
 
         int resultIndex = intendedIndexes[0];

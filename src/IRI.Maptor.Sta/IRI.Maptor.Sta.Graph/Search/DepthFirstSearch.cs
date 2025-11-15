@@ -2,22 +2,39 @@
 // ALLAHOMMA AJJEL LE-VALIYEK AL-FARAJ
 
 using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System.Linq; 
 
 namespace IRI.Maptor.Sta.Graph;
 
+/// <summary>
+/// Performs depth-first search (DFS) traversal on a graph.
+/// DFS explores as far as possible along each branch before backtracking.
+/// </summary>
+/// <typeparam name="TNode">The type of nodes in the graph.</typeparam>
+/// <typeparam name="TWeight">The type of edge weights. Must be comparable.</typeparam>
 public class DepthFirstSearch<TNode, TWeight>
     where TWeight : IComparable
 {
+    /// <summary>
+    /// Represents the type of edge in a DFS tree.
+    /// </summary>
     public enum EdgeType
     {
+        /// <summary>Tree edge - an edge in the DFS tree.</summary>
         Tree,
+        /// <summary>Back edge - an edge to an ancestor in the DFS tree (indicates a cycle).</summary>
         Back,
+        /// <summary>Forward edge - an edge to a descendant in the DFS tree.</summary>
         Forward,
+        /// <summary>Cross edge - an edge between nodes in different subtrees.</summary>
         Cross
     }
 
-    public AdjacencyList<TNode, TWeight> searchResult;
+    /// <summary>
+    /// Gets the DFS tree as an adjacency list.
+    /// </summary>
+    public AdjacencyList<TNode, TWeight> SearchResult { get; private set; }
 
     private AdjacencyList<TNode, TWeight> graph;
 
@@ -33,21 +50,33 @@ public class DepthFirstSearch<TNode, TWeight>
     }
      
     SortedList<TNode, FastDepthFirstSearchNode<TNode>> labels;
+    Dictionary<TNode, TNode> predecessors;
 
     TNode startNode;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DepthFirstSearch{TNode, TWeight}"/> class and performs DFS on the graph.
+    /// </summary>
+    /// <param name="graph">The graph to search.</param>
+    /// <param name="startNode">The node to start the DFS from.</param>
+    /// <exception cref="ArgumentNullException">Thrown when graph or startNode is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when startNode does not exist in the graph.</exception>
     public DepthFirstSearch(AdjacencyList<TNode, TWeight> graph, TNode startNode)
     {
+        if (graph == null)
+            throw new ArgumentNullException(nameof(graph));
+        if (startNode == null)
+            throw new ArgumentNullException(nameof(startNode));
         if (!graph.HasTheNode(startNode))
         {
-            throw new NotImplementedException();
+            throw new ArgumentException($"Start node '{startNode}' does not exist in the graph.", nameof(startNode));
         }
 
         this.InitializeMembers(graph, startNode);
 
         foreach (TNode node in graph)
         {
-            this.searchResult.AddNode(node);
+            this.SearchResult.AddNode(node);
 
             labels.Add(node, new FastDepthFirstSearchNode<TNode>(node, null, null));
         }
@@ -66,23 +95,31 @@ public class DepthFirstSearch<TNode, TWeight>
     }
 
     /// <summary>
-    /// Designed to compute the Strongly Connected Components
+    /// Initializes a new instance of the <see cref="DepthFirstSearch{TNode, TWeight}"/> class with a specific node order.
+    /// Designed to compute Strongly Connected Components (SCC).
     /// </summary>
-    /// <param name="graph"></param>
-    /// <param name="startNode"></param>
-    /// <param name="nodeOrder"></param>
+    /// <param name="graph">The graph to search.</param>
+    /// <param name="nodeOrder">The order in which nodes should be visited.</param>
+    /// <exception cref="ArgumentNullException">Thrown when graph or nodeOrder is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when nodeOrder is empty or contains invalid nodes.</exception>
     public DepthFirstSearch(AdjacencyList<TNode, TWeight> graph, List<TNode> nodeOrder)
     {
-        if (!graph.HasTheNode(startNode))
+        if (graph == null)
+            throw new ArgumentNullException(nameof(graph));
+        if (nodeOrder == null)
+            throw new ArgumentNullException(nameof(nodeOrder));
+        if (nodeOrder.Count == 0)
+            throw new ArgumentException("Node order list cannot be empty.", nameof(nodeOrder));
+        if (!graph.HasTheNode(nodeOrder[0]))
         {
-            throw new NotImplementedException();
+            throw new ArgumentException($"Start node '{nodeOrder[0]}' does not exist in the graph.", nameof(nodeOrder));
         }
 
         this.InitializeMembers(graph, nodeOrder[0]);
 
         foreach (TNode node in graph)
         {
-            this.searchResult.AddNode(node);
+            this.SearchResult.AddNode(node);
 
             labels.Add(node, new FastDepthFirstSearchNode<TNode>(node, null, null));
         }
@@ -110,19 +147,14 @@ public class DepthFirstSearch<TNode, TWeight>
 
         this.forwardEdges = new List<Edge<TNode, TWeight>>();
 
-        this.searchResult = new AdjacencyList<TNode, TWeight>();
+        this.SearchResult = new AdjacencyList<TNode, TWeight>();
 
-        //this.labels = new  UniquePairs<TNode, NodeInfo<TNode, TimeStamp>>();
         this.labels = new SortedList<TNode, FastDepthFirstSearchNode<TNode>>(graph.NumberOfNodes);
+        this.predecessors = new Dictionary<TNode, TNode>(graph.NumberOfNodes);
     }
 
     private void Visit(TNode currentNode, ref int time)
     {
-        //this.labels[currentNode].Status = NodeStatus.Gray;
-
-        //time += 1;
-
-        //this.labels[currentNode].Value = new TimeStamp(time, null);
         this.labels[currentNode].DiscoverTime = ++time;
 
         LinkedList<Connection<TNode, TWeight>> connections = graph.GetConnections(currentNode);
@@ -131,9 +163,10 @@ public class DepthFirstSearch<TNode, TWeight>
         {
             if (this.labels[node.Node].IsWhite())
             {
-                searchResult.AddDirectedEdge(currentNode, node.Node, node.Weight);
+                SearchResult.AddDirectedEdge(currentNode, node.Node, node.Weight);
 
                 labels[node.Node].Predecessor = labels[currentNode];
+                predecessors[node.Node] = currentNode;
 
                 Visit(node.Node, ref time);
             }
@@ -156,22 +189,20 @@ public class DepthFirstSearch<TNode, TWeight>
             }
             else
             {
-                throw new NotImplementedException();
+                throw new InvalidOperationException($"Unexpected node status for node '{node.Node}'.");
             }
         }
 
-        //this.labels[currentNode].Status = NodeStatus.Black;
-
-        //this.labels[currentNode].Value = new TimeStamp(this.labels[currentNode].Value.DiscoverTime, ++time);
         this.labels[currentNode].FinishTime = ++time;
     }
 
     public List<TNode> GetPathToSource(TNode node)
     {
-        //if (!this.labels.FirstValuesContains(node))
+        if (node == null)
+            throw new ArgumentNullException(nameof(node));
         if (!this.labels.Keys.Contains(node))
         {
-            throw new NotImplementedException();
+            throw new KeyNotFoundException($"Node '{node}' was not visited during the depth-first search.");
         }
 
         List<TNode> result = new List<TNode>();
@@ -180,12 +211,9 @@ public class DepthFirstSearch<TNode, TWeight>
 
         result.Add(currentNode);
 
-        //while (!object.Equals(this.labels.GetSecondValue(currentNode).Predecessor, null))
-        while (!object.Equals(this.labels[currentNode].Predecessor, null))
+        while (predecessors.TryGetValue(currentNode, out TNode? predecessor))
         {
-            //currentNode = labels.GetFirstValue(labels.GetSecondValue(currentNode).Predecessor);
-            currentNode = labels.Keys[this.labels.Values.IndexOf(labels[currentNode].Predecessor)];
-
+            currentNode = predecessor;
             result.Add(currentNode);
         }
 
@@ -196,20 +224,20 @@ public class DepthFirstSearch<TNode, TWeight>
     }
 
     /// <summary>
-    /// the graph must be a dag!
+    /// Calculates a topological sort of the graph nodes based on finish times.
+    /// The graph must be a Directed Acyclic Graph (DAG).
     /// </summary>
-    /// <returns></returns>
-    public List<TNode> CalculateTopologiacalSort()
+    /// <returns>A list of nodes in topological order.</returns>
+    public List<TNode> CalculateTopologicalSort()
     {
         List<TNode> result = new List<TNode>();
 
-        foreach (TNode item in this.searchResult)
+        foreach (TNode item in this.SearchResult)
         {
             int index = 0;
 
             foreach (TNode temp in result)
             {
-                //if (this.labels[item].Value.FinishTime > this.labels[temp].Value.FinishTime)
                 if (this.labels[item].FinishTime > this.labels[temp].FinishTime)
                 {
                     index++;
@@ -236,65 +264,35 @@ public class DepthFirstSearch<TNode, TWeight>
         }
         else
         {
-            throw new NotImplementedException();
+            throw new ArgumentException($"Unknown sort type: {sortType}.", nameof(sortType));
         }
     }
 
     private List<TNode> GetSortedNodesBasedOnFinishTime()
     {
-        List<TNode> result = new List<TNode>();
-
-        for (int i = 1; i <= 2 * searchResult.NumberOfNodes; i++)
-        {
-            for (int j = 0; j < searchResult.NumberOfNodes; j++)
-            {
-                //if (this.labels[searchResult[j]].Value.FinishTime.Equals(i))
-                if (this.labels[searchResult[j]].FinishTime.Equals(i))
-                {
-                    result.Add(searchResult[j]);
-                }
-            }
-        }
-
-        return result;
+        return SearchResult.OrderBy(node => this.labels[node].FinishTime ?? int.MaxValue).ToList();
     }
 
     private List<TNode> GetSortedNodesBasedOnDiscoverTime()
     {
-        List<TNode> result = new List<TNode>();
-
-        for (int i = 1; i <= 2 * searchResult.NumberOfNodes; i++)
-        {
-            for (int j = 0; j < searchResult.NumberOfNodes; j++)
-            {
-                //if (this.labels[searchResult[j]].Value.DiscoverTime.Equals(i))
-                if (this.labels[searchResult[j]].DiscoverTime.Equals(i))
-                {
-                    result.Add(searchResult[j]);
-                }
-            }
-        }
-
-        return result;
+        return SearchResult.OrderBy(node => this.labels[node].DiscoverTime ?? int.MaxValue).ToList();
     }
 
     public override string ToString()
     {
         System.Text.StringBuilder result = new System.Text.StringBuilder();
 
-        for (int i = 1; i <= 2 * searchResult.NumberOfNodes; i++)
+        for (int i = 1; i <= 2 * SearchResult.NumberOfNodes; i++)
         {
-            for (int j = 0; j < searchResult.NumberOfNodes; j++)
+            for (int j = 0; j < SearchResult.NumberOfNodes; j++)
             {
-                //if (this.labels[searchResult[j]].Value.DiscoverTime.Equals(i))
-                if (this.labels[searchResult[j]].DiscoverTime.Equals(i))
+                if (this.labels[SearchResult[j]].DiscoverTime.Equals(i))
                 {
-                    result.Append(string.Format("({0} ", searchResult[j].ToString()));
+                    result.Append(string.Format("({0} ", SearchResult[j].ToString()));
                 }
-                //else if (this.labels[searchResult[j]].Value.FinishTime.Equals(i))
-                else if (this.labels[searchResult[j]].FinishTime.Equals(i))
+                else if (this.labels[SearchResult[j]].FinishTime.Equals(i))
                 {
-                    result.Append(string.Format(" {0})", searchResult[j].ToString()));
+                    result.Append(string.Format(" {0})", SearchResult[j].ToString()));
                 }
             }
         }
@@ -310,14 +308,12 @@ public class DepthFirstSearch<TNode, TWeight>
 
         List<List<TNode>> result = new List<List<TNode>>();
 
-        for (int i = 1; i < 2 * searchResult.NumberOfNodes * 2; i++)
+        for (int i = 1; i < 2 * SearchResult.NumberOfNodes * 2; i++)
         {
-            for (int j = 0; j < searchResult.NumberOfNodes; j++)
+            for (int j = 0; j < SearchResult.NumberOfNodes; j++)
             {
-                //NodeInfo<TNode, TimeStamp> tempInfo = this.labels[this.searchResult[j]];
-                FastDepthFirstSearchNode<TNode> tempInfo = this.labels[this.searchResult[j]];
+                FastDepthFirstSearchNode<TNode> tempInfo = this.labels[this.SearchResult[j]];
 
-                //if (tempInfo.Value.DiscoverTime == i)
                 if (tempInfo.DiscoverTime == i)
                 {
                     if (tempIndex == 0)
@@ -329,12 +325,11 @@ public class DepthFirstSearch<TNode, TWeight>
 
                     tempIndex++;
                 }
-                //else if (tempInfo.Value.FinishTime == i)
                 else if (tempInfo.FinishTime == i)
                 {
                     tempIndex--;
 
-                    result[tempGraphNumber].Add(this.searchResult[j]);
+                    result[tempGraphNumber].Add(this.SearchResult[j]);
                 }
             }
         }

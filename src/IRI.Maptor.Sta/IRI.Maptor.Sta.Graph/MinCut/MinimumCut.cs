@@ -11,16 +11,6 @@ public static class MinimumCut
     {
         if (graph.NumberOfNodes <= 2)
         {
-            //int count = 0;
-
-            //foreach (TNode item in graph)
-            //{
-            //    List<Connection<TNode, TWeight>> temp = graph.GetConnections(item);
-
-            //    count += temp.Count;
-            //}
-
-            //return count;
             return graph.NumberOfEdges;
         }
 
@@ -47,7 +37,7 @@ public static class MinimumCut
             }
         }
 
-        throw new NotImplementedException();
+        throw new InvalidOperationException("Failed to find a random edge in the graph.");
     }
 
     private static AdjacencyList<TNode, TWeight> EdgeContraction<TNode, TWeight>(AdjacencyList<TNode, TWeight> graph, Edge<TNode, TWeight> edge) 

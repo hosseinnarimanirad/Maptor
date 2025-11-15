@@ -6,31 +6,53 @@ using System.Collections.Generic;
 
 namespace IRI.Maptor.Sta.Graph;
 
+/// <summary>
+/// Performs breadth-first search (BFS) traversal on a graph starting from a specified node.
+/// BFS explores all nodes at the current depth level before moving to nodes at the next level.
+/// </summary>
+/// <typeparam name="TNode">The type of nodes in the graph.</typeparam>
+/// <typeparam name="TWeight">The type of edge weights. Must be comparable.</typeparam>
 public class BreadthFirstSearch<TNode, TWeight>
     where TWeight : IComparable
 {
-    public AdjacencyList<TNode, TWeight> searchResult;
+    /// <summary>
+    /// Gets the BFS tree as an adjacency list, representing the shortest path tree from the start node.
+    /// </summary>
+    public AdjacencyList<TNode, TWeight> SearchResult { get; private set; }
 
     SortedList<TNode, BreadthFirstSearchNode<TNode>> labels;
+    Dictionary<TNode, TNode> predecessors;
 
     TNode startNode;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BreadthFirstSearch{TNode, TWeight}"/> class and performs BFS on the graph.
+    /// </summary>
+    /// <param name="graph">The graph to search.</param>
+    /// <param name="startNode">The node to start the BFS from.</param>
+    /// <exception cref="ArgumentNullException">Thrown when graph or startNode is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when startNode does not exist in the graph.</exception>
     public BreadthFirstSearch(AdjacencyList<TNode, TWeight> graph, TNode startNode)
     {
+        if (graph == null)
+            throw new ArgumentNullException(nameof(graph));
+        if (startNode == null)
+            throw new ArgumentNullException(nameof(startNode));
         if (!graph.HasTheNode(startNode))
         {
-            throw new NotImplementedException();
+            throw new ArgumentException($"Start node '{startNode}' does not exist in the graph.", nameof(startNode));
         }
 
         this.startNode = startNode;
 
-        searchResult = new AdjacencyList<TNode, TWeight>();
+        SearchResult = new AdjacencyList<TNode, TWeight>();
 
         this.labels = new SortedList<TNode, BreadthFirstSearchNode<TNode>>(graph.NumberOfNodes);
+        this.predecessors = new Dictionary<TNode, TNode>(graph.NumberOfNodes);
 
         foreach (TNode node in graph)
         {
-            this.searchResult.AddNode(node);
+            this.SearchResult.AddNode(node);
 
             labels.Add(node, new BreadthFirstSearchNode<TNode>(NodeStatus.White, double.PositiveInfinity));
         }
@@ -38,7 +60,6 @@ public class BreadthFirstSearch<TNode, TWeight>
         labels[startNode].Status = NodeStatus.Gray;
 
         labels[startNode].Value = 0;
-        //.Status = NodeStatus.Gray; labels[startNode].Value = 0;
 
         Queue<TNode> nodes = new Queue<TNode>();
 
@@ -62,27 +83,47 @@ public class BreadthFirstSearch<TNode, TWeight>
 
                     labels[item.Node].Value = labels[currentNode].Value + 1;
 
-                    searchResult.AddDirectedEdge(currentNode, item.Node, item.Weight);
+                    predecessors[item.Node] = currentNode;
+
+                    SearchResult.AddDirectedEdge(currentNode, item.Node, item.Weight);
                 }
             }
         }
     }
 
+    /// <summary>
+    /// Gets the level (distance) of the specified node from the start node.
+    /// </summary>
+    /// <param name="node">The node to get the level for.</param>
+    /// <returns>The level (distance) from the start node. Returns positive infinity if the node was not visited.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when node is null.</exception>
+    /// <exception cref="KeyNotFoundException">Thrown when the node was not visited during BFS.</exception>
     public double GetLevel(TNode node)
     {
+        if (node == null)
+            throw new ArgumentNullException(nameof(node));
         if (!this.labels.Keys.Contains(node))
         {
-            throw new NotImplementedException();
+            throw new KeyNotFoundException($"Node '{node}' was not visited during the breadth-first search.");
         }
 
         return labels[node].Value;
     }
 
-    public List<TNode> GetPathTo(TNode node)
+    /// <summary>
+    /// Gets the shortest path from the start node to the specified node.
+    /// </summary>
+    /// <param name="node">The target node.</param>
+    /// <returns>A list of nodes representing the path from start to target, or null if no path exists.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when node is null.</exception>
+    /// <exception cref="KeyNotFoundException">Thrown when the node was not visited during BFS.</exception>
+    public List<TNode>? GetPathTo(TNode node)
     {
+        if (node == null)
+            throw new ArgumentNullException(nameof(node));
         if (!this.labels.Keys.Contains(node))
         {
-            throw new NotImplementedException();
+            throw new KeyNotFoundException($"Node '{node}' was not visited during the breadth-first search.");
         }
 
         List<TNode> result = new List<TNode>();
@@ -93,18 +134,13 @@ public class BreadthFirstSearch<TNode, TWeight>
 
         while (!currentNode.Equals(this.startNode))
         {
-            BreadthFirstSearchNode<TNode> temp = this.labels[currentNode].Predecessor;
-
-            if (object.Equals(temp, null))
+            if (!predecessors.TryGetValue(currentNode, out TNode? predecessor) || predecessor == null)
             {
                 return null;
             }
-            else
-            {
-                currentNode = this.labels.Keys[this.labels.Values.IndexOf(temp)];
 
-                result.Add(currentNode);
-            }
+            currentNode = predecessor;
+            result.Add(currentNode);
         }
 
         result.Reverse();

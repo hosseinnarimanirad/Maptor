@@ -12,8 +12,9 @@ It supports **directed and undirected graphs**, **weighted graphs**, and impleme
   - **Breadth-First Search (BFS)**
   - **Depth-First Search (DFS)**
 - Shortest path algorithms:
-  - **Dijkstra**
-  - **Floyd Warshall**
+  - **Dijkstra** (non-negative weights)
+  - **Bellman-Ford** (handles negative weights, detects negative cycles)
+  - **Floyd Warshall** (all-pairs shortest path)
 - Minimum spanning tree:
   - **Prim**
 - Strongly Connected Components (SCC)
@@ -72,7 +73,7 @@ double level = bfs.GetLevel("D"); // 2
 var path = bfs.GetPathTo("D");    // ["A", "B", "D"] or ["A", "C", "D"]
 
 // The BFS tree discovered from A (as an adjacency list)
-var bfsTree = bfs.searchResult;
+var bfsTree = bfs.SearchResult;
 ```
 
 ### Depth-First Search (DFS) & Topological Sort
@@ -91,7 +92,7 @@ dag.AddDirectedEdge("3", "1", 1);
 var dfs = new DepthFirstSearch<string, int>(dag, startNode: "5");
 
 // Topological order (method name as implemented in the code)
-var topo = dfs.CalculateTopologiacalSort(); // e.g., ["4","5","2","3","1","0"]
+var topo = dfs.CalculateTopologicalSort(); // e.g., ["4","5","2","3","1","0"]
 
 // Get nodes sorted by finish time, if needed:
 var finishOrder = dfs.GetSortedNodes(SortType.BasedOnFinishTime);
@@ -108,6 +109,49 @@ var components = Graph.GetStronglyConnectedComponents<string, int>(g);
 
 // components is List<List<string>>;
 // each inner list is one strongly connected component.
+```
+
+### Bellman-Ford Algorithm
+
+The Bellman-Ford algorithm finds shortest paths from a source node and can handle negative edge weights. It also detects negative cycles.
+
+```csharp
+// Create a graph with potentially negative weights
+var graph = new AdjacencyList<string, double>();
+graph.AddDirectedEdge("A", "B", 4.0);
+graph.AddDirectedEdge("A", "C", 2.0);
+graph.AddDirectedEdge("B", "C", -3.0);  // Negative weight allowed
+graph.AddDirectedEdge("B", "D", 1.0);
+graph.AddDirectedEdge("C", "D", 5.0);
+
+// Run Bellman-Ford from source "A"
+var bellmanFord = new BellmanFordProblem<string, double>(graph, "A");
+
+// Check for negative cycles
+if (bellmanFord.HasNegativeCycle)
+{
+    Console.WriteLine("Graph contains a negative cycle!");
+}
+else
+{
+    // Get shortest distance to "D" (returns infinity if no path exists)
+    double distance = bellmanFord.GetDistance("D");
+    
+    // Or use TryGetDistance to check if path exists
+    if (bellmanFord.TryGetDistance("D", out double validDistance))
+    {
+        Console.WriteLine($"Distance to D: {validDistance}");
+    }
+    
+    // Get shortest path to "D"
+    List<string>? path = bellmanFord.GetShortestPath("D");
+}
+
+// Using Matrix input (similar to Dijkstra)
+var matrix = new Matrix(/* adjacency matrix */);
+var bellmanFordMatrix = new BellmanFordMatrixProblem(matrix, sourceNodeIndex: 0);
+double distance = bellmanFordMatrix.GetDistance(targetNodeIndex: 3);
+List<int>? path = bellmanFordMatrix.GetShortestPath(targetNodeIndex: 3);
 ```
 
 ### Minimum Spanning Tree (MST)
@@ -139,6 +183,7 @@ var mstPrim = prim.GetMinimumSpanningTree();
 | BFS               | Breadth-First Search traversal            |
 | DFS               | Depth-First Search traversal              |
 | Dijkstra          | Single-source shortest path (non-negative weights) |
+| Bellman-Ford      | Single-source shortest path (handles negative weights, detects negative cycles) |
 | FloydWarshall     | AllPairs shortest path (handles negative weights) |
 | Kruskal           | Minimum Spanning Tree                    |  
 | Prim              | Minimum Spanning Tree                    |  

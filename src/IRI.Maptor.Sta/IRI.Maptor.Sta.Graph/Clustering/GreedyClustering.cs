@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic; 
+using System;
+using System.Collections.Generic;
+using System.Linq; 
 
 namespace IRI.Maptor.Sta.Graph;
 
-public class GreedyClustring<TNode, TWeight>
+public class GreedyClustering<TNode, TWeight>
 {
     AdjacencyList<TNode, TWeight> graph;
 
@@ -18,10 +19,9 @@ public class GreedyClustring<TNode, TWeight>
         get { return GetMaximum(); }
     }
 
-    public GreedyClustring(AdjacencyList<TNode, TWeight> graph, Func<Edge<TNode, TWeight>, Edge<TNode, TWeight>, int> compareFunction)
+    public GreedyClustering(AdjacencyList<TNode, TWeight> graph, Func<Edge<TNode, TWeight>, Edge<TNode, TWeight>, int> compareFunction)
     {
         this.graph = graph;
-        //List<Edge<TNode, TWeight>> edges = new List<Edge<TNode, TWeight>>();
         this.compareFunction = compareFunction;
     }
 
@@ -45,9 +45,11 @@ public class GreedyClustring<TNode, TWeight>
     {
         Initialize();
 
+        if (numberOfClusters < 1)
+            throw new ArgumentException("Number of clusters must be at least 1.", nameof(numberOfClusters));
         if (this.clusters.Count < numberOfClusters)
         {
-            throw new NotImplementedException();
+            throw new ArgumentException($"Cannot create {numberOfClusters} clusters from {this.clusters.Count} nodes.", nameof(numberOfClusters));
         }
 
         while (this.clusters.Count != numberOfClusters)
@@ -106,7 +108,7 @@ public class GreedyClustring<TNode, TWeight>
             }
         }
 
-        throw new NotImplementedException();
+        throw new InvalidOperationException($"Node '{node}' was not found in any cluster.");
     }
 
     private void MergeClusters(LinkedList<TNode> first, LinkedList<TNode> second)
@@ -144,3 +146,4 @@ public class GreedyClustring<TNode, TWeight>
         return edge.Connection.Weight;
     }
 }
+

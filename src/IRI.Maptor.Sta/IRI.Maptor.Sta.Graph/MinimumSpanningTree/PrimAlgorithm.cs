@@ -38,8 +38,6 @@ public class PrimAlgorithm<TNode, TWeight> where TWeight : IComparable
 
             connections.Remove(safeEdge);
 
-            //this.newNodes = ProceedNode(this.newNodes);
-
             LinkedListNode<TNode> first = nodeList[safeEdge.Connection.Node];
 
             LinkedListNode<TNode> second = nodeList[safeEdge.Node];
@@ -99,22 +97,19 @@ public class PrimAlgorithm<TNode, TWeight> where TWeight : IComparable
 
     private void UpdateNewEdges(TNode node)
     {
-        if (!this.visitedNodes.Contains(node))
-        {
-            LinkedListNode<Connection<TNode, TWeight>> neighbour = network.GetConnections(node).First;
-
-            while (neighbour != null)
+            if (!this.visitedNodes.Contains(node))
             {
-                //if (!this.visitedNodes.Contains(neighbour.Value.Node))
-                //{
-                connections.Add(new Edge<TNode, TWeight>(node, neighbour.Value));
-                //}
+                LinkedListNode<Connection<TNode, TWeight>> neighbour = network.GetConnections(node).First;
 
-                neighbour = neighbour.Next;
+                while (neighbour != null)
+                {
+                    connections.Add(new Edge<TNode, TWeight>(node, neighbour.Value));
+
+                    neighbour = neighbour.Next;
+                }
+
+                this.visitedNodes.Add(node);
             }
-
-            this.visitedNodes.Add(node);
-        }
 
 
     }

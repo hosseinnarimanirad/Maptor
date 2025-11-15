@@ -57,9 +57,13 @@ public class FastDepthFirstSearch<TNode, TWeight> where TWeight : new()
 
     private void DoTheDepthFirstSearch(AdjacencyList<TNode, TWeight> graph, List<TNode> nodeOrder)
     {
+        if (graph == null)
+            throw new ArgumentNullException(nameof(graph));
+        if (nodeOrder == null)
+            throw new ArgumentNullException(nameof(nodeOrder));
         if (graph.NumberOfNodes != nodeOrder.Count)
         {
-            throw new NotImplementedException();
+            throw new ArgumentException($"Graph node count ({graph.NumberOfNodes}) does not match node order count ({nodeOrder.Count}).", nameof(nodeOrder));
         }
 
         int time = 0;
