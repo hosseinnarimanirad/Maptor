@@ -1,21 +1,17 @@
-﻿using System.Linq;
-using System;
+﻿using System.IO;
+using System.Linq;
+using System.Data.SqlTypes;
+using System.Reflection;
 
 using Microsoft.SqlServer.Types;
-using System.Data.SqlTypes;
-using IRI.Maptor.Sta.Spatial.Primitives;
 
 
-using System.Reflection;
-using System.IO;
 using IRI.Maptor.Sta.ShapefileFormat.Prj;
-using IRI.Maptor.Ket.SqlServerSpatialExtension;
 using IRI.Maptor.Sta.ShapefileFormat;
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Tst.NetFrameworkTest.Assets;
-using IRI.Maptor.Extensions;
+using IRI.Maptor.Tst.Assets;
 
-namespace IRI.Maptor.Tst.NetFrameworkTest.SqlServerSpatialExtension;
+namespace IRI.Maptor.Tst.SqlServerSpatialExtension;
 
 
 public class UnitTest

@@ -1,5 +1,5 @@
 ﻿using IRI.Maptor.Extensions;
-using IRI.Maptor.Tst.NetFrameworkTest.Assets;
+using IRI.Maptor.Tst.Assets;
 
 
 namespace IRI.Maptor.Tst.Main.TheGeometry;

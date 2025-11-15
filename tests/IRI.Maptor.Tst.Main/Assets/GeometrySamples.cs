@@ -4,7 +4,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Primitives;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
-namespace IRI.Maptor.Tst.NetFrameworkTest.Assets
+namespace IRI.Maptor.Tst.Assets
 {
     public static class GeometrySamples
     {

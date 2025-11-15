@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Tst.NetFrameworkTest.Spatial
+namespace IRI.Maptor.Tst.Spatial
 {
 
     public class VisualSimplificationTest

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Tst.NetFrameworkTest.Assets.SqlSpatialSamples
+namespace IRI.Maptor.Tst.Assets.SqlSpatialSamples
 {
     static class SqlGeometrySamples
     {

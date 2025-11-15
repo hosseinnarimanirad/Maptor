@@ -5,7 +5,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.IO.Dxf;
-using IRI.Maptor.Tst.NetFrameworkTest.Assets;
+using IRI.Maptor.Tst.Assets;
 using Xunit;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Analysis;
 
-namespace IRI.Maptor.Tst.NetFrameworkTest.Spatial
+namespace IRI.Maptor.Tst.Spatial
 {
     
     public class KdTreeTest

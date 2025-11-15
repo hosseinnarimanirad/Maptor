@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Tst.NetFrameworkTest.Common;
+namespace IRI.Maptor.Tst.Common;
 
 
 public class WorldfileFormatTest

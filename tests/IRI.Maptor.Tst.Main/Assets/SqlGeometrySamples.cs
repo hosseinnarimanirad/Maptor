@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Microsoft.SqlServer.Types;
 
-namespace IRI.Maptor.Tst.NetFrameworkTest.Assets
+namespace IRI.Maptor.Tst.Assets
 {
     public static class SqlGeometrySamples
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Tst.NetFrameworkTest.Common.Mapping
+namespace IRI.Maptor.Tst.Common.Mapping
 {
     public class MapIndexesTest
     {

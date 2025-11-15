@@ -7,11 +7,11 @@ using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Tst.NetFrameworkTest.Assets;
+using IRI.Maptor.Tst.Assets;
 
 using static IRI.Maptor.Sta.Common.Enums.SpatialRelation;
 
-namespace IRI.Maptor.Tst.NetFrameworkTest.Spatial;
+namespace IRI.Maptor.Tst.Spatial;
 
 
 public class SpatialUtilityTest

@@ -3,7 +3,7 @@ using System.Data.SqlTypes;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Extensions;
 
-namespace IRI.Maptor.Tst.Main.Geometry;
+namespace IRI.Maptor.Tst.Main.TheGeometry;
 
 public class EllipsoidalAreaTests
 {
