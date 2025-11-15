@@ -975,6 +975,1214 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
     #endregion
 
 
+    #region Union
+
+    /// <summary>
+    /// Computes the union of this geometry with another geometry
+    /// </summary>
+    /// <param name="other">The geometry to union with</param>
+    /// <returns>The union of the two geometries</returns>
+    public Geometry<T> Union(Geometry<T> other)
+    {
+        if (this.IsNullOrEmpty())
+            return other ?? Geometry<T>.Empty;
+
+        if (other.IsNullOrEmpty())
+            return this;
+
+        if (this.Srid != other.Srid)
+            throw new ArgumentException("SRIDs must match for Union operation");
+
+        switch (this.Type)
+        {
+            case GeometryType.Point:
+                return UnionPoint(other);
+
+            case GeometryType.LineString:
+                return UnionLineString(other);
+
+            case GeometryType.Polygon:
+                return UnionPolygon(other);
+
+            case GeometryType.MultiPoint:
+                return UnionMultiPoint(other);
+
+            case GeometryType.MultiLineString:
+                return UnionMultiLineString(other);
+
+            case GeometryType.MultiPolygon:
+                return UnionMultiPolygon(other);
+
+            case GeometryType.GeometryCollection:
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            default:
+                throw new NotImplementedException($"Union not implemented for {this.Type}");
+        }
+    }
+
+    private Geometry<T> UnionPoint(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.Point:
+                if (this.Points[0].AreExactlyTheSame(other.Points[0]))
+                    return this;
+                return new Geometry<T>(new List<Geometry<T>> { this, other }, GeometryType.MultiPoint, this.Srid);
+
+            case GeometryType.MultiPoint:
+                var points = new List<Geometry<T>> { this };
+                points.AddRange(other.Geometries);
+                return new Geometry<T>(points, GeometryType.MultiPoint, this.Srid);
+
+            default:
+                return new Geometry<T>(new List<Geometry<T>> { this, other }, GeometryType.GeometryCollection, this.Srid);
+        }
+    }
+
+    private Geometry<T> UnionLineString(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.LineString:
+                // Check if lines are connected - simplified: just combine into MultiLineString
+                return new Geometry<T>(new List<Geometry<T>> { this, other }, GeometryType.MultiLineString, this.Srid);
+
+            case GeometryType.MultiLineString:
+                var lines = new List<Geometry<T>> { this };
+                lines.AddRange(other.Geometries);
+                return new Geometry<T>(lines, GeometryType.MultiLineString, this.Srid);
+
+            default:
+                return new Geometry<T>(new List<Geometry<T>> { this, other }, GeometryType.GeometryCollection, this.Srid);
+        }
+    }
+
+    private Geometry<T> UnionPolygon(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.Polygon:
+                return UnionPolygons(this, other);
+
+            case GeometryType.MultiPolygon:
+                var result = this;
+                foreach (var poly in other.Geometries)
+                {
+                    result = result.UnionPolygon(poly);
+                }
+                return result;
+
+            default:
+                return new Geometry<T>(new List<Geometry<T>> { this, other }, GeometryType.GeometryCollection, this.Srid);
+        }
+    }
+
+    private Geometry<T> UnionMultiPoint(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.Point:
+                var points = new List<Geometry<T>>(this.Geometries) { other };
+                return new Geometry<T>(points, GeometryType.MultiPoint, this.Srid);
+
+            case GeometryType.MultiPoint:
+                var allPoints = new List<Geometry<T>>(this.Geometries);
+                allPoints.AddRange(other.Geometries);
+                // Remove duplicate points
+                var uniquePoints = new List<Geometry<T>>();
+                foreach (var point in allPoints)
+                {
+                    if (!uniquePoints.Any(p => p.Points[0].AreExactlyTheSame(point.Points[0])))
+                        uniquePoints.Add(point);
+                }
+                return new Geometry<T>(uniquePoints, GeometryType.MultiPoint, this.Srid);
+
+            default:
+                return new Geometry<T>(new List<Geometry<T>> { this, other }, GeometryType.GeometryCollection, this.Srid);
+        }
+    }
+
+    private Geometry<T> UnionMultiLineString(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.LineString:
+                var lines = new List<Geometry<T>>(this.Geometries) { other };
+                return new Geometry<T>(lines, GeometryType.MultiLineString, this.Srid);
+
+            case GeometryType.MultiLineString:
+                var allLines = new List<Geometry<T>>(this.Geometries);
+                allLines.AddRange(other.Geometries);
+                return new Geometry<T>(allLines, GeometryType.MultiLineString, this.Srid);
+
+            default:
+                return new Geometry<T>(new List<Geometry<T>> { this, other }, GeometryType.GeometryCollection, this.Srid);
+        }
+    }
+
+    private Geometry<T> UnionMultiPolygon(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.Polygon:
+                var result = other;
+                foreach (var poly in this.Geometries)
+                {
+                    result = result.UnionPolygon(poly);
+                }
+                return result;
+
+            case GeometryType.MultiPolygon:
+                result = this.Geometries[0];
+                for (int i = 1; i < this.Geometries.Count; i++)
+                {
+                    result = result.UnionPolygon(this.Geometries[i]);
+                }
+                foreach (var poly in other.Geometries)
+                {
+                    result = result.UnionPolygon(poly);
+                }
+                return result;
+
+            default:
+                return new Geometry<T>(new List<Geometry<T>> { this, other }, GeometryType.GeometryCollection, this.Srid);
+        }
+    }
+
+    /// <summary>
+    /// Unions two polygons by combining all rings and using CreatePolygonOrMultiPolygon logic
+    /// </summary>
+    private static Geometry<T> UnionPolygons(Geometry<T> poly1, Geometry<T> poly2)
+    {
+        if (poly1.IsNullOrEmpty())
+            return poly2;
+        if (poly2.IsNullOrEmpty())
+            return poly1;
+
+        // Collect all rings from both polygons
+        var allRings = new List<Geometry<T>>();
+        
+        // Add rings from first polygon
+        foreach (var ring in poly1.Geometries)
+        {
+            allRings.Add(ring.Clone());
+        }
+        
+        // Add rings from second polygon
+        foreach (var ring in poly2.Geometries)
+        {
+            allRings.Add(ring.Clone());
+        }
+
+        // Use CreatePolygonOrMultiPolygon to organize rings correctly
+        return CreatePolygonOrMultiPolygon(allRings, poly1.Srid);
+    }
+
+    /// <summary>
+    /// Checks if two polygons overlap
+    /// </summary>
+    private static bool ArePolygonsOverlapping(Geometry<T> poly1, Geometry<T> poly2)
+    {
+        if (poly1.IsNullOrEmpty() || poly2.IsNullOrEmpty())
+            return false;
+
+        // Check bounding box intersection first
+        var bbox1 = poly1.GetBoundingBox();
+        var bbox2 = poly2.GetBoundingBox();
+        if (!bbox1.Intersects(bbox2))
+            return false;
+
+        // Check if any point from poly1 is inside poly2 or vice versa
+        var testPoint1 = poly1.Geometries[0].Points[0];
+        var testPoint2 = poly2.Geometries[0].Points[0];
+
+        if (TopologyUtility.IsPointInPolygon(poly2, testPoint1) ||
+            TopologyUtility.IsPointInPolygon(poly1, testPoint2))
+            return true;
+
+        // Check if boundaries intersect
+        return poly1.Intersects(poly2);
+    }
+
+    /// <summary>
+    /// Merges a list of potentially overlapping polygons
+    /// </summary>
+    private static Geometry<T> MergeOverlappingPolygons(List<Geometry<T>> polygons)
+    {
+        if (polygons.IsNullOrEmpty())
+            return Geometry<T>.Empty;
+
+        if (polygons.Count == 1)
+            return polygons[0];
+
+        var result = polygons[0];
+        for (int i = 1; i < polygons.Count; i++)
+        {
+            result = result.UnionPolygon(polygons[i]);
+        }
+        return result;
+    }
+
+    #endregion
+
+
+    #region Intersection
+
+    /// <summary>
+    /// Computes the intersection of this geometry with another geometry
+    /// </summary>
+    /// <param name="other">The geometry to intersect with</param>
+    /// <returns>The intersection of the two geometries</returns>
+    public Geometry<T> Intersection(Geometry<T> other)
+    {
+        if (this.IsNullOrEmpty() || other.IsNullOrEmpty())
+            return Geometry<T>.Empty;
+
+        if (this.Srid != other.Srid)
+            throw new ArgumentException("SRIDs must match for Intersection operation");
+
+        switch (this.Type)
+        {
+            case GeometryType.Point:
+                return IntersectionPoint(other);
+
+            case GeometryType.LineString:
+                return IntersectionLineString(other);
+
+            case GeometryType.Polygon:
+                return IntersectionPolygon(other);
+
+            case GeometryType.MultiPoint:
+                return IntersectionMultiPoint(other);
+
+            case GeometryType.MultiLineString:
+                return IntersectionMultiLineString(other);
+
+            case GeometryType.MultiPolygon:
+                return IntersectionMultiPolygon(other);
+
+            case GeometryType.GeometryCollection:
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            default:
+                throw new NotImplementedException($"Intersection not implemented for {this.Type}");
+        }
+    }
+
+    private Geometry<T> IntersectionPoint(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.Point:
+                if (this.Points[0].AreExactlyTheSame(other.Points[0]))
+                    return this;
+                return Geometry<T>.Empty;
+
+            case GeometryType.LineString:
+                if (TopologyUtility.IsPointOnLineString(other, this.Points[0]))
+                    return this;
+                return Geometry<T>.Empty;
+
+            case GeometryType.Polygon:
+                if (TopologyUtility.IsPointInPolygon(other, this.Points[0]))
+                    return this;
+                return Geometry<T>.Empty;
+
+            case GeometryType.MultiPoint:
+                foreach (var pointGeo in other.Geometries)
+                {
+                    if (this.Points[0].AreExactlyTheSame(pointGeo.Points[0]))
+                        return this;
+                }
+                return Geometry<T>.Empty;
+
+            case GeometryType.MultiLineString:
+            case GeometryType.MultiPolygon:
+                foreach (var geo in other.Geometries)
+                {
+                    var intersection = this.IntersectionPoint(geo);
+                    if (!intersection.IsNullOrEmpty())
+                        return intersection;
+                }
+                return Geometry<T>.Empty;
+
+            default:
+                return Geometry<T>.Empty;
+        }
+    }
+
+    private Geometry<T> IntersectionLineString(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.Point:
+                return other.IntersectionPoint(this);
+
+            case GeometryType.LineString:
+                // Simplified: check if lines intersect, return intersection points or overlapping segments
+                if (this.Intersects(other))
+                {
+                    // For simplicity, return empty - full implementation would require finding intersection points/segments
+                    // This is a placeholder that indicates intersection exists
+                    return Geometry<T>.Empty; // TODO: Implement proper line-line intersection
+                }
+                return Geometry<T>.Empty;
+
+            case GeometryType.Polygon:
+                // Return parts of line that are inside polygon
+                if (this.Intersects(other))
+                {
+                    // Simplified: return empty - full implementation would clip line to polygon
+                    return Geometry<T>.Empty; // TODO: Implement line-polygon clipping
+                }
+                return Geometry<T>.Empty;
+
+            case GeometryType.MultiLineString:
+            case GeometryType.MultiPolygon:
+                var intersections = new List<Geometry<T>>();
+                foreach (var geo in other.Geometries)
+                {
+                    var intersection = this.IntersectionLineString(geo);
+                    if (!intersection.IsNullOrEmpty())
+                        intersections.Add(intersection);
+                }
+                if (intersections.Count == 0)
+                    return Geometry<T>.Empty;
+                // Combine intersections
+                return intersections[0]; // Simplified
+
+            default:
+                return Geometry<T>.Empty;
+        }
+    }
+
+    private Geometry<T> IntersectionPolygon(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.Point:
+                return other.IntersectionPoint(this);
+
+            case GeometryType.LineString:
+                return other.IntersectionLineString(this);
+
+            case GeometryType.Polygon:
+                return IntersectionPolygons(this, other);
+
+            case GeometryType.MultiPolygon:
+                var intersections = new List<Geometry<T>>();
+                foreach (var poly in other.Geometries)
+                {
+                    var intersection = this.IntersectionPolygon(poly);
+                    if (!intersection.IsNullOrEmpty())
+                        intersections.Add(intersection);
+                }
+                if (intersections.Count == 0)
+                    return Geometry<T>.Empty;
+                // Union all intersections
+                var result = intersections[0];
+                for (int i = 1; i < intersections.Count; i++)
+                {
+                    result = result.UnionPolygon(intersections[i]);
+                }
+                return result;
+
+            default:
+                return Geometry<T>.Empty;
+        }
+    }
+
+    private Geometry<T> IntersectionMultiPoint(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.Point:
+                return other.IntersectionPoint(this);
+
+            case GeometryType.MultiPoint:
+                var commonPoints = new List<Geometry<T>>();
+                foreach (var point1 in this.Geometries)
+                {
+                    foreach (var point2 in other.Geometries)
+                    {
+                        if (point1.Points[0].AreExactlyTheSame(point2.Points[0]))
+                        {
+                            commonPoints.Add(point1);
+                            break;
+                        }
+                    }
+                }
+                if (commonPoints.Count == 0)
+                    return Geometry<T>.Empty;
+                if (commonPoints.Count == 1)
+                    return commonPoints[0];
+                return new Geometry<T>(commonPoints, GeometryType.MultiPoint, this.Srid);
+
+            default:
+                return Geometry<T>.Empty;
+        }
+    }
+
+    private Geometry<T> IntersectionMultiLineString(Geometry<T> other)
+    {
+        var intersections = new List<Geometry<T>>();
+        foreach (var line in this.Geometries)
+        {
+            var intersection = line.IntersectionLineString(other);
+            if (!intersection.IsNullOrEmpty())
+                intersections.Add(intersection);
+        }
+        if (intersections.Count == 0)
+            return Geometry<T>.Empty;
+        // Simplified: return first intersection
+        return intersections[0];
+    }
+
+    private Geometry<T> IntersectionMultiPolygon(Geometry<T> other)
+    {
+        var intersections = new List<Geometry<T>>();
+        foreach (var poly in this.Geometries)
+        {
+            var intersection = poly.IntersectionPolygon(other);
+            if (!intersection.IsNullOrEmpty())
+                intersections.Add(intersection);
+        }
+        if (intersections.Count == 0)
+            return Geometry<T>.Empty;
+        // Union all intersections
+        var result = intersections[0];
+        for (int i = 1; i < intersections.Count; i++)
+        {
+            result = result.UnionPolygon(intersections[i]);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Intersects two polygons - simplified implementation
+    /// </summary>
+    private static Geometry<T> IntersectionPolygons(Geometry<T> poly1, Geometry<T> poly2)
+    {
+        if (poly1.IsNullOrEmpty() || poly2.IsNullOrEmpty())
+            return Geometry<T>.Empty;
+
+        // Check if polygons overlap
+        if (!ArePolygonsOverlapping(poly1, poly2))
+            return Geometry<T>.Empty;
+
+        // Simplified: For proper intersection, we would need polygon clipping algorithm
+        // This is a placeholder that uses bounding box intersection
+        // Full implementation would require more complex geometric operations
+        
+        // For now, return empty - indicating intersection exists but not computing exact result
+        // TODO: Implement proper polygon-polygon intersection using clipping algorithm
+        return Geometry<T>.Empty;
+    }
+
+    #endregion
+
+
+    #region Difference
+
+    /// <summary>
+    /// Computes the difference of this geometry with another geometry (this - other)
+    /// </summary>
+    /// <param name="other">The geometry to subtract</param>
+    /// <returns>The difference of the two geometries</returns>
+    public Geometry<T> Difference(Geometry<T> other)
+    {
+        if (this.IsNullOrEmpty())
+            return Geometry<T>.Empty;
+
+        if (other.IsNullOrEmpty())
+            return this;
+
+        if (this.Srid != other.Srid)
+            throw new ArgumentException("SRIDs must match for Difference operation");
+
+        switch (this.Type)
+        {
+            case GeometryType.Point:
+                return DifferencePoint(other);
+
+            case GeometryType.LineString:
+                return DifferenceLineString(other);
+
+            case GeometryType.Polygon:
+                return DifferencePolygon(other);
+
+            case GeometryType.MultiPoint:
+                return DifferenceMultiPoint(other);
+
+            case GeometryType.MultiLineString:
+                return DifferenceMultiLineString(other);
+
+            case GeometryType.MultiPolygon:
+                return DifferenceMultiPolygon(other);
+
+            case GeometryType.GeometryCollection:
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            default:
+                throw new NotImplementedException($"Difference not implemented for {this.Type}");
+        }
+    }
+
+    private Geometry<T> DifferencePoint(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.Point:
+                if (this.Points[0].AreExactlyTheSame(other.Points[0]))
+                    return Geometry<T>.Empty;
+                return this;
+
+            case GeometryType.LineString:
+            case GeometryType.Polygon:
+            case GeometryType.MultiLineString:
+            case GeometryType.MultiPolygon:
+                if (other.IntersectsPoint(this.Points[0]))
+                    return Geometry<T>.Empty;
+                return this;
+
+            case GeometryType.MultiPoint:
+                foreach (var pointGeo in other.Geometries)
+                {
+                    if (this.Points[0].AreExactlyTheSame(pointGeo.Points[0]))
+                        return Geometry<T>.Empty;
+                }
+                return this;
+
+            default:
+                return this;
+        }
+    }
+
+    private Geometry<T> DifferenceLineString(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.Point:
+                if (TopologyUtility.IsPointOnLineString(this, other.Points[0]))
+                {
+                    // Remove point from line - simplified: return line as-is
+                    return this; // TODO: Implement point removal from line
+                }
+                return this;
+
+            case GeometryType.LineString:
+            case GeometryType.Polygon:
+            case GeometryType.MultiLineString:
+            case GeometryType.MultiPolygon:
+                if (!this.Intersects(other))
+                    return this;
+                // Simplified: return empty if intersects - full implementation would clip
+                return Geometry<T>.Empty; // TODO: Implement proper line clipping
+
+            case GeometryType.MultiPoint:
+                return this; // Points don't affect line geometry
+
+            default:
+                return this;
+        }
+    }
+
+    private Geometry<T> DifferencePolygon(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.Point:
+                return this; // Point doesn't affect polygon
+
+            case GeometryType.LineString:
+                return this; // Line doesn't affect polygon (simplified)
+
+            case GeometryType.Polygon:
+                return DifferencePolygons(this, other);
+
+            case GeometryType.MultiPolygon:
+                var result = this;
+                foreach (var poly in other.Geometries)
+                {
+                    result = result.DifferencePolygon(poly);
+                    if (result.IsNullOrEmpty())
+                        break;
+                }
+                return result;
+
+            default:
+                return this;
+        }
+    }
+
+    private Geometry<T> DifferenceMultiPoint(Geometry<T> other)
+    {
+        switch (other.Type)
+        {
+            case GeometryType.Point:
+                var remainingPoints = new List<Geometry<T>>();
+                foreach (var pointGeo in this.Geometries)
+                {
+                    if (!pointGeo.Points[0].AreExactlyTheSame(other.Points[0]))
+                        remainingPoints.Add(pointGeo);
+                }
+                if (remainingPoints.Count == 0)
+                    return Geometry<T>.Empty;
+                if (remainingPoints.Count == 1)
+                    return remainingPoints[0];
+                return new Geometry<T>(remainingPoints, GeometryType.MultiPoint, this.Srid);
+
+            case GeometryType.MultiPoint:
+                var points = new List<Geometry<T>>();
+                foreach (var point1 in this.Geometries)
+                {
+                    bool found = false;
+                    foreach (var point2 in other.Geometries)
+                    {
+                        if (point1.Points[0].AreExactlyTheSame(point2.Points[0]))
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                        points.Add(point1);
+                }
+                if (points.Count == 0)
+                    return Geometry<T>.Empty;
+                if (points.Count == 1)
+                    return points[0];
+                return new Geometry<T>(points, GeometryType.MultiPoint, this.Srid);
+
+            default:
+                return this;
+        }
+    }
+
+    private Geometry<T> DifferenceMultiLineString(Geometry<T> other)
+    {
+        var remainingLines = new List<Geometry<T>>();
+        foreach (var line in this.Geometries)
+        {
+            var diff = line.DifferenceLineString(other);
+            if (!diff.IsNullOrEmpty())
+                remainingLines.Add(diff);
+        }
+        if (remainingLines.Count == 0)
+            return Geometry<T>.Empty;
+        if (remainingLines.Count == 1)
+            return remainingLines[0];
+        return new Geometry<T>(remainingLines, GeometryType.MultiLineString, this.Srid);
+    }
+
+    private Geometry<T> DifferenceMultiPolygon(Geometry<T> other)
+    {
+        var remainingPolygons = new List<Geometry<T>>();
+        foreach (var poly in this.Geometries)
+        {
+            var diff = poly.DifferencePolygon(other);
+            if (!diff.IsNullOrEmpty())
+                remainingPolygons.Add(diff);
+        }
+        if (remainingPolygons.Count == 0)
+            return Geometry<T>.Empty;
+        if (remainingPolygons.Count == 1)
+            return remainingPolygons[0];
+        return new Geometry<T>(remainingPolygons, GeometryType.MultiPolygon, this.Srid);
+    }
+
+    /// <summary>
+    /// Subtracts polygon2 from polygon1 - simplified implementation
+    /// </summary>
+    private static Geometry<T> DifferencePolygons(Geometry<T> poly1, Geometry<T> poly2)
+    {
+        if (poly1.IsNullOrEmpty())
+            return Geometry<T>.Empty;
+
+        if (poly2.IsNullOrEmpty())
+            return poly1;
+
+        // Check if polygons overlap
+        if (!ArePolygonsOverlapping(poly1, poly2))
+            return poly1;
+
+        // Simplified: For proper difference, we would need polygon clipping algorithm
+        // This is a placeholder
+        // Full implementation would require subtracting poly2 from poly1 using boolean operations
+        
+        // For now, return empty if poly1 is completely inside poly2
+        var testPoint = poly1.Geometries[0].Points[0];
+        if (TopologyUtility.IsPointInPolygon(poly2, testPoint))
+        {
+            // Check if poly1 is completely contained
+            // Simplified: return empty
+            return Geometry<T>.Empty; // TODO: Implement proper polygon difference
+        }
+
+        return poly1; // Simplified: return original if not completely contained
+    }
+
+    #endregion
+
+
+    #region Buffer
+
+    /// <summary>
+    /// Creates a buffer around this geometry at the specified distance
+    /// </summary>
+    /// <param name="distance">The buffer distance</param>
+    /// <returns>A buffered geometry</returns>
+    public Geometry<T> Buffer(double distance)
+    {
+        if (this.IsNullOrEmpty())
+            return Geometry<T>.Empty;
+
+        if (distance < 0)
+            throw new ArgumentException("Buffer distance cannot be negative", nameof(distance));
+
+        if (Math.Abs(distance) < SpatialUtility.EpsilonDistance)
+        {
+            // For zero or very small distance, return original geometry for points/lines
+            // For polygons, return as-is
+            return this.Clone();
+        }
+
+        switch (this.Type)
+        {
+            case GeometryType.Point:
+                return BufferPoint(distance);
+
+            case GeometryType.LineString:
+                return BufferLineString(distance);
+
+            case GeometryType.Polygon:
+                return BufferPolygon(distance);
+
+            case GeometryType.MultiPoint:
+                return BufferMultiPoint(distance);
+
+            case GeometryType.MultiLineString:
+                return BufferMultiLineString(distance);
+
+            case GeometryType.MultiPolygon:
+                return BufferMultiPolygon(distance);
+
+            case GeometryType.GeometryCollection:
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            default:
+                throw new NotImplementedException($"Buffer not implemented for {this.Type}");
+        }
+    }
+
+    private Geometry<T> BufferPoint(double distance)
+    {
+        var center = this.Points[0];
+        return CreateCircle(center, distance, 64, this.Srid);
+    }
+
+    private Geometry<T> BufferLineString(double distance)
+    {
+        if (this.Points == null || this.Points.Count < 2)
+            return Geometry<T>.Empty;
+
+        var offsetPoints = OffsetLineSegment(this.Points, distance, false);
+        if (offsetPoints.Count < 2)
+            return Geometry<T>.Empty;
+        
+        // Add end caps (semi-circles)
+        var startCap = CreateSemiCircle(this.Points[0], this.Points[1], distance, true, this.Srid);
+        var endCap = CreateSemiCircle(this.Points[this.Points.Count - 1], this.Points[this.Points.Count - 2], distance, false, this.Srid);
+
+        // Combine: start cap + offset line + end cap (reversed)
+        var allPoints = new List<T>();
+        
+        // Add start cap points (if not degenerate)
+        if (startCap.Type == GeometryType.LineString && startCap.Points != null)
+        {
+            allPoints.AddRange(startCap.Points);
+        }
+        else if (startCap.Type == GeometryType.Point && startCap.Points != null && startCap.Points.Count > 0)
+        {
+            allPoints.Add(startCap.Points[0]);
+        }
+        
+        // Add offset line points
+        allPoints.AddRange(offsetPoints);
+        
+        // Add end cap points (reversed, if not degenerate)
+        if (endCap.Type == GeometryType.LineString && endCap.Points != null)
+        {
+            var reversedEndCap = new List<T>(endCap.Points);
+            reversedEndCap.Reverse();
+            allPoints.AddRange(reversedEndCap);
+        }
+        else if (endCap.Type == GeometryType.Point && endCap.Points != null && endCap.Points.Count > 0)
+        {
+            allPoints.Add(endCap.Points[0]);
+        }
+        
+        // Close the polygon if not already closed
+        if (allPoints.Count > 0)
+        {
+            var firstPoint = allPoints[0];
+            var lastPoint = allPoints[allPoints.Count - 1];
+            if (!firstPoint.AreExactlyTheSame(lastPoint))
+            {
+                allPoints.Add(new T() { X = firstPoint.X, Y = firstPoint.Y });
+            }
+        }
+
+        if (allPoints.Count < 3)
+            return Geometry<T>.Empty;
+
+        return new Geometry<T>(allPoints, GeometryType.Polygon, this.Srid);
+    }
+
+    private Geometry<T> BufferPolygon(double distance)
+    {
+        if (this.Geometries == null || this.Geometries.Count == 0)
+            return Geometry<T>.Empty;
+
+        var bufferedRings = new List<Geometry<T>>();
+
+        // Buffer exterior ring outward
+        var exteriorRing = this.Geometries[0];
+        var bufferedExterior = OffsetLineSegment(exteriorRing.Points, distance, true);
+        if (bufferedExterior.Count >= 3)
+        {
+            bufferedRings.Add(new Geometry<T>(bufferedExterior, GeometryType.LineString, this.Srid));
+        }
+
+        // Buffer interior rings (holes) inward (negative distance)
+        for (int i = 1; i < this.Geometries.Count; i++)
+        {
+            var hole = this.Geometries[i];
+            if (!ShouldEliminateHole(hole, distance))
+            {
+                var bufferedHole = OffsetLineSegment(hole.Points, -distance, true);
+                if (bufferedHole.Count >= 3)
+                {
+                    // Check if buffered hole is still inside the buffered exterior
+                    var testPoint = bufferedHole[0];
+                    if (TopologyUtility.IsPointInRing(bufferedRings[0], testPoint))
+                    {
+                        bufferedRings.Add(new Geometry<T>(bufferedHole, GeometryType.LineString, this.Srid));
+                    }
+                }
+            }
+        }
+
+        if (bufferedRings.Count == 0)
+            return Geometry<T>.Empty;
+
+        return CreatePolygonOrMultiPolygon(bufferedRings, this.Srid);
+    }
+
+    private Geometry<T> BufferMultiPoint(double distance)
+    {
+        var bufferedPolygons = new List<Geometry<T>>();
+        foreach (var pointGeo in this.Geometries)
+        {
+            var buffered = pointGeo.BufferPoint(distance);
+            bufferedPolygons.Add(buffered);
+        }
+
+        // Union all buffered circles
+        if (bufferedPolygons.Count == 0)
+            return Geometry<T>.Empty;
+
+        var result = bufferedPolygons[0];
+        for (int i = 1; i < bufferedPolygons.Count; i++)
+        {
+            result = result.UnionPolygon(bufferedPolygons[i]);
+        }
+        return result;
+    }
+
+    private Geometry<T> BufferMultiLineString(double distance)
+    {
+        var bufferedPolygons = new List<Geometry<T>>();
+        foreach (var lineGeo in this.Geometries)
+        {
+            var buffered = lineGeo.BufferLineString(distance);
+            bufferedPolygons.Add(buffered);
+        }
+
+        // Union all buffered polygons
+        if (bufferedPolygons.Count == 0)
+            return Geometry<T>.Empty;
+
+        var result = bufferedPolygons[0];
+        for (int i = 1; i < bufferedPolygons.Count; i++)
+        {
+            result = result.UnionPolygon(bufferedPolygons[i]);
+        }
+        return result;
+    }
+
+    private Geometry<T> BufferMultiPolygon(double distance)
+    {
+        var bufferedPolygons = new List<Geometry<T>>();
+        foreach (var polyGeo in this.Geometries)
+        {
+            var buffered = polyGeo.BufferPolygon(distance);
+            if (!buffered.IsNullOrEmpty())
+            {
+                bufferedPolygons.Add(buffered);
+            }
+        }
+
+        // Union all buffered polygons
+        if (bufferedPolygons.Count == 0)
+            return Geometry<T>.Empty;
+
+        var result = bufferedPolygons[0];
+        for (int i = 1; i < bufferedPolygons.Count; i++)
+        {
+            result = result.UnionPolygon(bufferedPolygons[i]);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Creates a circle polygon around a center point
+    /// </summary>
+    private static Geometry<T> CreateCircle(T center, double radius, int segments, int srid)
+    {
+        var points = new List<T>();
+        double angleStep = 2.0 * Math.PI / segments;
+
+        for (int i = 0; i < segments; i++)
+        {
+            double angle = i * angleStep;
+            double x = center.X + radius * Math.Cos(angle);
+            double y = center.Y + radius * Math.Sin(angle);
+            points.Add(new T() { X = x, Y = y });
+        }
+
+        // Close the polygon
+        points.Add(new T() { X = points[0].X, Y = points[0].Y });
+
+        return new Geometry<T>(points, GeometryType.Polygon, srid);
+    }
+
+    /// <summary>
+    /// Creates a semi-circle cap for line endpoints
+    /// </summary>
+    private static Geometry<T> CreateSemiCircle(T center, T directionPoint, double radius, bool isStart, int srid)
+    {
+        var points = new List<T>();
+        int segments = 16;
+        double angleStep = Math.PI / segments;
+
+        // Calculate direction vector
+        double dx = directionPoint.X - center.X;
+        double dy = directionPoint.Y - center.Y;
+        double length = Math.Sqrt(dx * dx + dy * dy);
+        if (length < SpatialUtility.EpsilonDistance)
+            return new Geometry<T>(new List<T> { center }, GeometryType.Point, srid);
+
+        // Perpendicular direction (rotate 90 degrees)
+        double perpX = -dy / length;
+        double perpY = dx / length;
+
+        // Start angle
+        double startAngle = Math.Atan2(perpY, perpX);
+        if (!isStart)
+            startAngle += Math.PI;
+
+        for (int i = 0; i <= segments; i++)
+        {
+            double angle = startAngle + i * angleStep;
+            double x = center.X + radius * Math.Cos(angle);
+            double y = center.Y + radius * Math.Sin(angle);
+            points.Add(new T() { X = x, Y = y });
+        }
+
+        return new Geometry<T>(points, GeometryType.LineString, srid);
+    }
+
+    /// <summary>
+    /// Offsets a line segment or ring by a specified distance
+    /// </summary>
+    private List<T> OffsetLineSegment(List<T> points, double distance, bool isClosed)
+    {
+        if (points == null || points.Count < 2)
+            return new List<T>();
+
+        var offsetPoints = new List<T>();
+        int count = points.Count;
+
+        for (int i = 0; i < count; i++)
+        {
+            T prev, curr, next;
+
+            if (isClosed)
+            {
+                prev = points[(i - 1 + count) % count];
+                curr = points[i];
+                next = points[(i + 1) % count];
+            }
+            else
+            {
+                if (i == 0)
+                {
+                    // Start point: use next segment direction
+                    curr = points[i];
+                    next = points[i + 1];
+                    double dx = next.X - curr.X;
+                    double dy = next.Y - curr.Y;
+                    double len = Math.Sqrt(dx * dx + dy * dy);
+                    if (len < SpatialUtility.EpsilonDistance)
+                    {
+                        offsetPoints.Add(new T() { X = curr.X, Y = curr.Y });
+                        continue;
+                    }
+                    double perpX = -dy / len * distance;
+                    double perpY = dx / len * distance;
+                    offsetPoints.Add(new T() { X = curr.X + perpX, Y = curr.Y + perpY });
+                    continue;
+                }
+                else if (i == count - 1)
+                {
+                    // End point: use previous segment direction
+                    prev = points[i - 1];
+                    curr = points[i];
+                    double dx = curr.X - prev.X;
+                    double dy = curr.Y - prev.Y;
+                    double len = Math.Sqrt(dx * dx + dy * dy);
+                    if (len < SpatialUtility.EpsilonDistance)
+                    {
+                        offsetPoints.Add(new T() { X = curr.X, Y = curr.Y });
+                        continue;
+                    }
+                    double perpX = -dy / len * distance;
+                    double perpY = dx / len * distance;
+                    offsetPoints.Add(new T() { X = curr.X + perpX, Y = curr.Y + perpY });
+                    continue;
+                }
+                else
+                {
+                    prev = points[i - 1];
+                    curr = points[i];
+                    next = points[i + 1];
+                }
+            }
+
+            // Calculate offset at vertex
+            var offsetPoint = OffsetPoint(curr, prev, next, distance);
+            offsetPoints.Add(offsetPoint);
+        }
+
+        return offsetPoints;
+    }
+
+    /// <summary>
+    /// Calculates the offset point at a vertex
+    /// </summary>
+    private static T OffsetPoint(T point, T prevPoint, T nextPoint, double distance)
+    {
+        // Calculate direction vectors
+        double dx1 = point.X - prevPoint.X;
+        double dy1 = point.Y - prevPoint.Y;
+        double len1 = Math.Sqrt(dx1 * dx1 + dy1 * dy1);
+
+        double dx2 = nextPoint.X - point.X;
+        double dy2 = nextPoint.Y - point.Y;
+        double len2 = Math.Sqrt(dx2 * dx2 + dy2 * dy2);
+
+        if (len1 < SpatialUtility.EpsilonDistance || len2 < SpatialUtility.EpsilonDistance)
+        {
+            // Degenerate case: use perpendicular to available segment
+            if (len1 >= SpatialUtility.EpsilonDistance)
+            {
+                double perpX = -dy1 / len1 * distance;
+                double perpY = dx1 / len1 * distance;
+                return new T() { X = point.X + perpX, Y = point.Y + perpY };
+            }
+            else if (len2 >= SpatialUtility.EpsilonDistance)
+            {
+                double perpX = -dy2 / len2 * distance;
+                double perpY = dx2 / len2 * distance;
+                return new T() { X = point.X + perpX, Y = point.Y + perpY };
+            }
+            return new T() { X = point.X, Y = point.Y };
+        }
+
+        // Normalize direction vectors
+        dx1 /= len1;
+        dy1 /= len1;
+        dx2 /= len2;
+        dy2 /= len2;
+
+        // Calculate perpendicular vectors
+        double perp1X = -dy1;
+        double perp1Y = dx1;
+        double perp2X = -dy2;
+        double perp2Y = dx2;
+
+        // Calculate bisector direction
+        double bisectorX = perp1X + perp2X;
+        double bisectorY = perp1Y + perp2Y;
+        double bisectorLen = Math.Sqrt(bisectorX * bisectorX + bisectorY * bisectorY);
+
+        if (bisectorLen < SpatialUtility.EpsilonDistance)
+        {
+            // Parallel segments: use perpendicular direction
+            return new T() { X = point.X + perp1X * distance, Y = point.Y + perp1Y * distance };
+        }
+
+        // Normalize bisector
+        bisectorX /= bisectorLen;
+        bisectorY /= bisectorLen;
+
+        // Calculate offset distance along bisector
+        // Use miter limit to prevent excessive offsets at sharp angles
+        double angle = Math.Acos(Math.Max(-1, Math.Min(1, dx1 * dx2 + dy1 * dy2)));
+        double offsetDist = distance / Math.Sin(angle / 2.0);
+        
+        // Apply miter limit (prevent excessive offsets)
+        double miterLimit = 5.0; // Maximum miter length as multiple of distance
+        if (offsetDist > distance * miterLimit)
+        {
+            // Use simple perpendicular offset instead
+            return new T() { X = point.X + perp1X * distance, Y = point.Y + perp1Y * distance };
+        }
+
+        return new T() { X = point.X + bisectorX * offsetDist, Y = point.Y + bisectorY * offsetDist };
+    }
+
+    /// <summary>
+    /// Checks if a hole should be eliminated due to buffer distance
+    /// </summary>
+    private static bool ShouldEliminateHole(Geometry<T> hole, double bufferDistance)
+    {
+        if (hole.IsNullOrEmpty() || hole.Points == null || hole.Points.Count < 3)
+            return true;
+
+        // Calculate approximate hole size (minimum distance from center to edge)
+        var center = hole.GetMeanPoint();
+        double minDistance = double.MaxValue;
+        foreach (var point in hole.Points)
+        {
+            double dist = SpatialUtility.GetEuclideanLength(center, point);
+            if (dist < minDistance)
+                minDistance = dist;
+        }
+
+        // If buffer distance exceeds hole size, hole will be eliminated
+        return bufferDistance >= minDistance;
+    }
+
+    #endregion
+
+
     #region Simplification Measures
     // ref: McMaster, R. B. (1986). A statistical analysis of mathematical measures for linear simplification. The American Cartographer, 13(2), 103-116.
 
