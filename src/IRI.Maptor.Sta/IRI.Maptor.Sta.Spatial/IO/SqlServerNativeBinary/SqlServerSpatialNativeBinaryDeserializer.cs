@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -6,106 +7,92 @@ using IRI.Maptor.Sta.Common.Primitives;
 namespace IRI.Maptor.Sta.Spatial.IO;
 
 public static partial class SqlServerSpatialNativeBinary
-{
-
-
-    private static SqlServerSpatialNativeBinaryTypes DetermineGeometryType(byte typeByte, BinaryReader reader)
+{ 
+    // Determine geometry type from serialization properties and structure
+    private static SqlServerSpatialNativeBinaryTypes DetermineGeometryTypeFromProps(byte serializationProps, BinaryReader reader)
     {
-        // Type byte 4 can be MultiPoint, LineString, MultiLineString, or MultiPolygon
-        // Type byte 5 can be MultiPointZ or Polygon
-        // We need to peek at the structure to determine the actual type
+        bool hasZ = (serializationProps & 0x01) != 0;
+        bool hasM = (serializationProps & 0x02) != 0;
+        bool isPoint = (serializationProps & 0x08) != 0; // P bit
+        bool isLineSegment = (serializationProps & 0x10) != 0; // L bit
         
-        if (typeByte == 4)
+        // Handle optimized cases (P and L bits) before reading counts
+        if (isPoint)
         {
-            // Peek at the point count and metadata structure
-            var position = reader.BaseStream.Position;
-            var pointCount = reader.ReadInt32();
-            
-            // Read ahead to check metadata structure
-            // Skip all points (pointCount * 16 bytes for X, Y)
-            reader.BaseStream.Position = position + 4 + (pointCount * 16);
-            
-            // Read metadata to determine type
-            var firstMetadataValue = reader.ReadInt32();
-            var secondMetadataValue = reader.ReadInt32();
+            return SqlServerSpatialNativeBinaryTypes.Point;
+        }
+        
+        if (isLineSegment)
+        {
+            return SqlServerSpatialNativeBinaryTypes.LineString;
+        }
+        
+        // Read number of points to determine structure
+        var position = reader.BaseStream.Position;
+        var pointCount = reader.ReadInt32();
+        
+        // Determine point size based on Z/M flags
+        int pointSize = 16; // X, Y
+        if (hasZ && !hasM) pointSize = 24; // X, Y, Z
+        else if (hasZ && hasM) pointSize = 32; // X, Y, Z, M
+        else if (!hasZ && hasM) pointSize = 24; // X, Y, M
+        
+        // Read ahead to check Figures and Shapes structure
+        var pointsEndPosition = position + 4 + (pointCount * pointSize);
+        reader.BaseStream.Position = pointsEndPosition;
+        
+        // Read Figures section
+        var figureCount = reader.ReadInt32();
+        
+        // Skip Figures section
+        for (int i = 0; i < figureCount; i++)
+        {
+            reader.ReadByte(); // Figure attribute
+            reader.ReadInt32(); // Figure point offset
+        }
+        
+        // Read Shapes section to get OpenGIS Type
+        var shapeCount = reader.ReadInt32();
+        if (shapeCount > 0)
+        {
+            reader.ReadInt32(); // Parent offset
+            reader.ReadInt32(); // Figure offset
+            var openGisType = reader.ReadByte(); // OpenGIS Type
             
             // Reset position
             reader.BaseStream.Position = position;
             
-            // MultiPoint has specific metadata pattern: pointCount, then flags+indices
-            // LineString metadata: 1, 1, then pattern
-            // MultiLineString metadata: linestringCount, 1, then point counts
-            // MultiPolygon metadata: polygonCount, 2, then ring counts
-            
-            if (firstMetadataValue == pointCount)
-            {
-                // This looks like MultiPoint (point count repeated)
-                return SqlServerSpatialNativeBinaryTypes.MultiPoint;
-            }
-            else if (firstMetadataValue == 1 && secondMetadataValue == 1)
-            {
-                // LineString pattern
-                return SqlServerSpatialNativeBinaryTypes.LineString;
-            }
-            else if (secondMetadataValue == 1)
-            {
-                // MultiLineString pattern
-                return SqlServerSpatialNativeBinaryTypes.MultiLineString;
-            }
-            else if (secondMetadataValue == 2)
-            {
-                // MultiPolygon pattern
-                return SqlServerSpatialNativeBinaryTypes.MultiPolygon;
-            }
-            
-            // Default to MultiPoint if uncertain
-            return SqlServerSpatialNativeBinaryTypes.MultiPoint;
-        }
-        else if (typeByte == 5)
-        {
-            // Peek at structure to distinguish Polygon/PolygonZ from MultiPointZ
-            var position = reader.BaseStream.Position;
-            var pointCount = reader.ReadInt32();
-            
-            // Check if points have Z (24 bytes) or just X,Y (16 bytes)
-            // Skip first point to check size
-            reader.BaseStream.Position = position + 4;
-            var x = reader.ReadDouble();
-            var y = reader.ReadDouble();
-            var nextValue = reader.ReadDouble();
-            
-            // Check if this is Z value (reasonable range) or metadata
-            bool hasZ = !double.IsNaN(nextValue) && Math.Abs(nextValue) < 1e100;
-            
-            // Skip points (adjust size based on Z presence)
-            int pointSize = hasZ ? 24 : 16;
-            reader.BaseStream.Position = position + 4 + (pointCount * pointSize);
-            
-            var firstMetadataValue = reader.ReadInt32();
-            var secondMetadataValue = reader.ReadInt32();
-            
-            reader.BaseStream.Position = position;
-            
-            // Polygon has metadata: ringCount, 2, then ring point counts
-            // MultiPointZ would have pointCount repeated like MultiPoint
-            if (firstMetadataValue == pointCount)
-            {
-                return SqlServerSpatialNativeBinaryTypes.MultiPointZ;
-            }
-            else
-            {
-                return hasZ ? SqlServerSpatialNativeBinaryTypes.PolygonZ : SqlServerSpatialNativeBinaryTypes.Polygon;
-            }
-        }
-        else if (typeByte == 0x17) // LineStringZM
-        {
-            return SqlServerSpatialNativeBinaryTypes.LineStringZM;
+            // Determine type from OpenGIS type
+            return DetermineTypeFromOpenGisType(openGisType, serializationProps);
         }
         
-        // For other type bytes, cast directly
-        return (SqlServerSpatialNativeBinaryTypes)typeByte;
+        // Reset position
+        reader.BaseStream.Position = position;
+        
+        // Default: try to infer from point count (fallback)
+        if (pointCount == 1)
+        {
+            return SqlServerSpatialNativeBinaryTypes.Point;
+        }
+        
+        // Default to LineString for multiple points
+        return SqlServerSpatialNativeBinaryTypes.LineString;
     }
-
+    
+    private static SqlServerSpatialNativeBinaryTypes DetermineTypeFromOpenGisType(byte openGisType, byte serializationProps)
+    {
+        return openGisType switch
+        {
+            1 => SqlServerSpatialNativeBinaryTypes.Point,
+            2 => SqlServerSpatialNativeBinaryTypes.LineString,
+            3 => SqlServerSpatialNativeBinaryTypes.Polygon,
+            4 => SqlServerSpatialNativeBinaryTypes.MultiPoint,
+            5 => SqlServerSpatialNativeBinaryTypes.MultiLineString,
+            6 => SqlServerSpatialNativeBinaryTypes.MultiPolygon,
+            _ => SqlServerSpatialNativeBinaryTypes.Point
+        };
+    }
+     
     public static Geometry<Point> Deserialize(byte[] nativeBinary)
     {
         if (nativeBinary.IsNullOrEmpty())
@@ -113,56 +100,35 @@ public static partial class SqlServerSpatialNativeBinary
 
         using (var stream = new BinaryReader(new MemoryStream(nativeBinary)))
         {
+            // Header: SRID + Version + Serialization Properties
             var srid = stream.ReadInt32();
-
             var version = stream.ReadByte();
-
-            var typeByte = stream.ReadByte();
-            var type = DetermineGeometryType(typeByte, stream);
+            var serializationProps = stream.ReadByte();
+            
+            // Determine type from serialization properties and structure
+            // For simple geometries, we can determine type from serialization props
+            // But for complex ones (0x04, 0x05, 0x07), we need to peek at structure
+            var type = DetermineGeometryTypeFromProps(serializationProps, stream);
 
             switch (type)
             {
                 case SqlServerSpatialNativeBinaryTypes.Point:
-                    return ParsePoint(stream, srid);
-
-                case SqlServerSpatialNativeBinaryTypes.PointZ:
-                    return ParsePointZ(stream, srid);
-
-                case SqlServerSpatialNativeBinaryTypes.PointM:
-                    return ParsePointM(stream, srid);
-
-                case SqlServerSpatialNativeBinaryTypes.PointZM:
-                    return ParsePointZM(stream, srid);
+                    return ParsePoint(stream, srid, serializationProps);
 
                 case SqlServerSpatialNativeBinaryTypes.LineString:
-                    return ParseLineString(stream, srid);
+                    return ParseLineString(stream, srid, serializationProps);
 
                 case SqlServerSpatialNativeBinaryTypes.Polygon:
-                    return ParsePolygon(stream, srid);
+                    return ParsePolygon(stream, srid, serializationProps);
 
                 case SqlServerSpatialNativeBinaryTypes.MultiPoint:
-                    return ParseMultiPoint(stream, srid);
-
-                case SqlServerSpatialNativeBinaryTypes.MultiPointZ:
-                    return ParseMultiPointZ(stream, srid);
-
-                case SqlServerSpatialNativeBinaryTypes.MultiPointM:
-                    return ParseMultiPointM(stream, srid);
-                    
-                case SqlServerSpatialNativeBinaryTypes.MultiPointZM:
-                    return ParseMultiPointZM(stream, srid);
+                    return ParseMultiPoint(stream, srid, serializationProps);
 
                 case SqlServerSpatialNativeBinaryTypes.MultiLineString:
-                    return ParseMultiLineString(stream, srid);
+                    return ParseMultiLineString(stream, srid, serializationProps);
 
                 case SqlServerSpatialNativeBinaryTypes.MultiPolygon:
-                    return ParseMultiPolygon(stream, srid);
-
-                case SqlServerSpatialNativeBinaryTypes.LineStringZM:
-                    return ParseLineStringZM(stream, srid);
-
-                case SqlServerSpatialNativeBinaryTypes.PolygonZ:
-                    return ParsePolygonZ(stream, srid);
+                    return ParseMultiPolygon(stream, srid, serializationProps);
                     
                 default:
                     break;
@@ -216,70 +182,129 @@ public static partial class SqlServerSpatialNativeBinary
         throw new NotImplementedException();
     }
 
-    private static Geometry<Point> ParsePoint(BinaryReader reader, int srid)
+    private static Geometry<Point> ParsePoint(BinaryReader reader, int srid, byte serializationProps)
     {
+        bool hasZ = (serializationProps & 0x01) != 0;
+        bool hasM = (serializationProps & 0x02) != 0;
+        bool isPointOptimized = (serializationProps & 0x08) != 0; // P bit
+        
+        if (isPointOptimized)
+        {
+            // When P bit is set, Number of Points, Figures, and Shapes are omitted
+            // Read point coordinates directly
+            var optimizedX = reader.ReadDouble();
+            var optimizedY = reader.ReadDouble();
+            if (hasZ) reader.ReadDouble(); // Skip Z
+            if (hasM) reader.ReadDouble(); // Skip M
+            return Geometry<Point>.Create(optimizedX, optimizedY, srid);
+        }
+        
+        // Points section: Number of Points + Points
+        var pointCount = reader.ReadInt32();
+        if (pointCount == 0)
+        {
+            // Empty point - read through Figures and Shapes sections
+            var emptyFigureCount = reader.ReadInt32();
+            var emptyShapeCount = reader.ReadInt32();
+            if (emptyShapeCount > 0)
+            {
+                reader.ReadInt32(); // Parent offset
+                reader.ReadInt32(); // Figure offset
+                reader.ReadByte(); // OpenGIS type
+            }
+            return Geometry<Point>.CreateEmpty(GeometryType.Point, srid);
+        }
+        
+        // Read point coordinates
         var x = reader.ReadDouble();
         var y = reader.ReadDouble();
+        if (hasZ) reader.ReadDouble(); // Skip Z
+        if (hasM) reader.ReadDouble(); // Skip M
+        
+        // Read Figures section
+        var figureCount = reader.ReadInt32();
+        if (figureCount > 0)
+        {
+            reader.ReadByte(); // Figure attribute
+            reader.ReadInt32(); // Figure point offset
+        }
+        
+        // Read Shapes section
+        var shapeCount = reader.ReadInt32();
+        if (shapeCount > 0)
+        {
+            reader.ReadInt32(); // Parent offset
+            reader.ReadInt32(); // Figure offset
+            reader.ReadByte(); // OpenGIS type
+        }
 
         return Geometry<Point>.Create(x, y, srid);
     }
 
-    private static Geometry<Point> ParsePointM(BinaryReader reader, int srid)
+    private static Geometry<Point> ParseLineString(BinaryReader reader, int srid, byte serializationProps)
     {
-        var x = reader.ReadDouble();
-        var y = reader.ReadDouble();
-        var m = reader.ReadDouble();
-
-        return Geometry<Point>.Create(x, y, /*m, */srid);
-    }
-
-    private static Geometry<Point> ParsePointZ(BinaryReader reader, int srid)
-    {
-        var x = reader.ReadDouble();
-        var y = reader.ReadDouble();
-        var z = reader.ReadDouble();
-
-        return Geometry<Point>.Create(x, y, /*z, */srid);
-    }
-
-    private static Geometry<Point> ParsePointZM(BinaryReader reader, int srid)
-    {
-        var x = reader.ReadDouble();
-        var y = reader.ReadDouble();
-        var z = reader.ReadDouble();
-        var m = reader.ReadDouble();
-
-        return Geometry<Point>.Create(x, y, /*z, */srid);
-    }
-
-
-
-    private static Geometry<Point> ParseLineString(BinaryReader reader, int srid)
-    {
+        bool hasZ = (serializationProps & 0x01) != 0;
+        bool hasM = (serializationProps & 0x02) != 0;
+        
+        // Points section: Number of Points + All Points (sequential: (X,Y) pairs, then all Z, then all M)
         var pointCount = reader.ReadInt32();
         var points = new List<Point>(pointCount);
 
-        // Read all points
+        // Read points as (X, Y) pairs sequentially
         for (int i = 0; i < pointCount; i++)
         {
             var x = reader.ReadDouble();
             var y = reader.ReadDouble();
             points.Add(new Point(x, y));
         }
-
-        // Skip metadata: int32(1) + int32(1) + 9 bytes pattern = 17 bytes
-        reader.ReadInt32(); // First value
-        reader.ReadInt32(); // Second value
-        reader.ReadBytes(9); // Fixed pattern
+        
+        // Skip all Z coordinates (if hasZ)
+        if (hasZ)
+        {
+            for (int i = 0; i < pointCount; i++)
+            {
+                reader.ReadDouble(); // Skip Z
+            }
+        }
+        
+        // Skip all M coordinates (if hasM)
+        if (hasM)
+        {
+            for (int i = 0; i < pointCount; i++)
+            {
+                reader.ReadDouble(); // Skip M
+            }
+        }
+        
+        // Figures section: Number of Figures + (Attribute + Point Offset) for each figure
+        var figureCount = reader.ReadInt32();
+        if (figureCount > 0)
+        {
+            reader.ReadByte(); // Figure attribute
+            reader.ReadInt32(); // Figure point offset
+        }
+        
+        // Shapes section: Number of Shapes + (Parent Offset + Figure Offset + OpenGIS Type) for each shape
+        var shapeCount = reader.ReadInt32();
+        if (shapeCount > 0)
+        {
+            reader.ReadInt32(); // Parent offset
+            reader.ReadInt32(); // Figure offset
+            reader.ReadByte(); // OpenGIS type
+        }
 
         return Geometry<Point>.CreatePointOrLineString(points, srid);
     }
 
-    private static Geometry<Point> ParsePolygon(BinaryReader reader, int srid)
+    private static Geometry<Point> ParsePolygon(BinaryReader reader, int srid, byte serializationProps)
     {
+        bool hasZ = (serializationProps & 0x01) != 0;
+        bool hasM = (serializationProps & 0x02) != 0;
+        
+        // Points section: Number of Points + All Points (sequential: (X,Y) pairs, then all Z, then all M)
         var totalPointCount = reader.ReadInt32();
         
-        // Read all points first
+        // Read points as (X, Y) pairs sequentially
         var allPoints = new List<Point>(totalPointCount);
         for (int i = 0; i < totalPointCount; i++)
         {
@@ -287,30 +312,56 @@ public static partial class SqlServerSpatialNativeBinary
             var y = reader.ReadDouble();
             allPoints.Add(new Point(x, y));
         }
-
-        // Read metadata to determine ring structure
-        var ringCount = reader.ReadInt32();
-        reader.ReadInt32(); // Skip second value
         
-        // Read ring point counts
-        var ringPointCounts = new List<int>(ringCount);
-        for (int i = 0; i < ringCount; i++)
+        // Skip all Z coordinates (if hasZ)
+        if (hasZ)
         {
-            ringPointCounts.Add(reader.ReadInt32());
+            for (int i = 0; i < totalPointCount; i++)
+            {
+                reader.ReadDouble(); // Skip Z
+            }
         }
         
-        reader.ReadInt32(); // Skip additional value
-        reader.ReadBytes(9); // Skip fixed pattern
-
-        // Split points into rings
-        var rings = new List<Geometry<Point>>(ringCount);
-        int pointIndex = 0;
-        for (int i = 0; i < ringCount; i++)
+        // Skip all M coordinates (if hasM)
+        if (hasM)
         {
-            var ringPoints = new List<Point>(ringPointCounts[i]);
-            for (int j = 0; j < ringPointCounts[i]; j++)
+            for (int i = 0; i < totalPointCount; i++)
             {
-                ringPoints.Add(allPoints[pointIndex++]);
+                reader.ReadDouble(); // Skip M
+            }
+        }
+
+        // Figures section: Number of Figures + (Attribute + Point Offset) for each figure
+        var figureCount = reader.ReadInt32();
+        var figureOffsets = new List<int>(figureCount);
+        for (int i = 0; i < figureCount; i++)
+        {
+            reader.ReadByte(); // Figure attribute (1 for exterior, 0 for interior)
+            var pointOffset = reader.ReadInt32(); // Figure Point Offset
+            figureOffsets.Add(pointOffset);
+        }
+        
+        // Shapes section: Number of Shapes + (Parent Offset + Figure Offset + OpenGIS Type) for each shape
+        var shapeCount = reader.ReadInt32();
+        if (shapeCount > 0)
+        {
+            reader.ReadInt32(); // Parent offset
+            reader.ReadInt32(); // Figure offset
+            reader.ReadByte(); // OpenGIS type
+        }
+
+        // Split points into rings based on figure offsets
+        var rings = new List<Geometry<Point>>(figureCount);
+        for (int i = 0; i < figureCount; i++)
+        {
+            var startOffset = figureOffsets[i];
+            var endOffset = (i < figureCount - 1) ? figureOffsets[i + 1] : totalPointCount;
+            var pointsInRing = endOffset - startOffset;
+            
+            var ringPoints = new List<Point>(pointsInRing);
+            for (int j = 0; j < pointsInRing && (startOffset + j) < allPoints.Count; j++)
+            {
+                ringPoints.Add(allPoints[startOffset + j]);
             }
             rings.Add(Geometry<Point>.CreatePointOrLineString(ringPoints, srid));
         }
@@ -318,113 +369,74 @@ public static partial class SqlServerSpatialNativeBinary
         return Geometry<Point>.CreatePolygonOrMultiPolygon(rings, srid);
     }
 
-    private static Geometry<Point> ParseLineStringZM(BinaryReader reader, int srid)
+    private static Geometry<Point> ParseMultiLineString(BinaryReader reader, int srid, byte serializationProps)
     {
-        var pointCount = reader.ReadInt32();
-        var points = new List<Point>(pointCount);
-
-        // Read all points (X, Y, Z, M)
-        for (int i = 0; i < pointCount; i++)
-        {
-            var x = reader.ReadDouble();
-            var y = reader.ReadDouble();
-            var z = reader.ReadDouble();
-            var m = reader.ReadDouble();
-            // Note: Point doesn't support Z/M, so we only store X, Y
-            points.Add(new Point(x, y));
-        }
-
-        // Skip metadata: int32(1) + int32(1) + 9 bytes pattern = 17 bytes
-        reader.ReadInt32(); // First value
-        reader.ReadInt32(); // Second value
-        reader.ReadBytes(9); // Fixed pattern
-
-        return Geometry<Point>.CreatePointOrLineString(points, srid);
-    }
-
-    private static Geometry<Point> ParsePolygonZ(BinaryReader reader, int srid)
-    {
+        bool hasZ = (serializationProps & 0x01) != 0;
+        bool hasM = (serializationProps & 0x02) != 0;
+        
         var totalPointCount = reader.ReadInt32();
         
-        // Read all points first (X, Y, Z)
+        // Read all points as (X, Y) pairs sequentially
         var allPoints = new List<Point>(totalPointCount);
         for (int i = 0; i < totalPointCount; i++)
         {
             var x = reader.ReadDouble();
             var y = reader.ReadDouble();
-            var z = reader.ReadDouble(); // Read but don't store Z
             allPoints.Add(new Point(x, y));
         }
-
-        // Read metadata to determine ring structure
-        var ringCount = reader.ReadInt32();
-        reader.ReadInt32(); // Skip second value
         
-        // Read ring point counts
-        var ringPointCounts = new List<int>(ringCount);
-        for (int i = 0; i < ringCount; i++)
+        // Skip all Z coordinates (if hasZ)
+        if (hasZ)
         {
-            ringPointCounts.Add(reader.ReadInt32());
-        }
-        
-        reader.ReadInt32(); // Skip additional value
-        reader.ReadBytes(9); // Skip fixed pattern
-
-        // Split points into rings
-        var rings = new List<Geometry<Point>>(ringCount);
-        int pointIndex = 0;
-        for (int i = 0; i < ringCount; i++)
-        {
-            var ringPoints = new List<Point>(ringPointCounts[i]);
-            for (int j = 0; j < ringPointCounts[i]; j++)
+            for (int i = 0; i < totalPointCount; i++)
             {
-                ringPoints.Add(allPoints[pointIndex++]);
+                reader.ReadDouble(); // Skip Z
             }
-            rings.Add(Geometry<Point>.CreatePointOrLineString(ringPoints, srid));
-        }
-
-        return Geometry<Point>.CreatePolygonOrMultiPolygon(rings, srid);
-    }
-
-    private static Geometry<Point> ParseMultiLineString(BinaryReader reader, int srid)
-    {
-        var totalPointCount = reader.ReadInt32();
-        
-        // Read all points first
-        var allPoints = new List<Point>(totalPointCount);
-        for (int i = 0; i < totalPointCount; i++)
-        {
-            var x = reader.ReadDouble();
-            var y = reader.ReadDouble();
-            allPoints.Add(new Point(x, y));
-        }
-
-        // Read metadata to determine linestring structure
-        var linestringCount = reader.ReadInt32();
-        reader.ReadInt32(); // Skip second value
-        
-        // Read linestring point counts
-        var linestringPointCounts = new List<int>(linestringCount);
-        for (int i = 0; i < linestringCount; i++)
-        {
-            linestringPointCounts.Add(reader.ReadInt32());
         }
         
-        reader.ReadBytes(9); // Skip fixed pattern
-        reader.ReadInt32(); // Skip additional value
-        reader.ReadInt32(); // Skip additional value
-        reader.ReadInt32(); // Skip additional value
-        reader.ReadInt16(); // Skip short value
-
-        // Split points into linestrings
-        var linestrings = new List<Geometry<Point>>(linestringCount);
-        int pointIndex = 0;
-        for (int i = 0; i < linestringCount; i++)
+        // Skip all M coordinates (if hasM)
+        if (hasM)
         {
-            var linestringPoints = new List<Point>(linestringPointCounts[i]);
-            for (int j = 0; j < linestringPointCounts[i]; j++)
+            for (int i = 0; i < totalPointCount; i++)
             {
-                linestringPoints.Add(allPoints[pointIndex++]);
+                reader.ReadDouble(); // Skip M
+            }
+        }
+
+        // Read Figures section: Number of Figures + (Attribute + Point Offset) for each figure
+        var figureCount = reader.ReadInt32();
+        var figureOffsets = new List<int>(figureCount);
+        for (int i = 0; i < figureCount; i++)
+        {
+            reader.ReadByte(); // Figure attribute (should be 1 for stroke/linestring)
+            var pointOffset = reader.ReadInt32(); // Figure Point Offset
+            figureOffsets.Add(pointOffset);
+        }
+        
+        // Read Shapes section: Number of Shapes + (Parent Offset + Figure Offset + OpenGIS Type) for each shape
+        var shapeCount = reader.ReadInt32();
+        var shapes = new List<(int parentOffset, int figureOffset, byte openGisType)>(shapeCount);
+        for (int i = 0; i < shapeCount; i++)
+        {
+            var parentOffset = reader.ReadInt32();
+            var figureOffset = reader.ReadInt32();
+            var openGisType = reader.ReadByte();
+            shapes.Add((parentOffset, figureOffset, openGisType));
+        }
+
+        // Build linestrings from figures
+        // Each figure represents a linestring
+        var linestrings = new List<Geometry<Point>>(figureCount);
+        for (int i = 0; i < figureCount; i++)
+        {
+            var startOffset = figureOffsets[i];
+            var endOffset = (i < figureCount - 1) ? figureOffsets[i + 1] : totalPointCount;
+            var pointsInLinestring = endOffset - startOffset;
+            
+            var linestringPoints = new List<Point>(pointsInLinestring);
+            for (int j = 0; j < pointsInLinestring && (startOffset + j) < allPoints.Count; j++)
+            {
+                linestringPoints.Add(allPoints[startOffset + j]);
             }
             linestrings.Add(Geometry<Point>.CreatePointOrLineString(linestringPoints, srid));
         }
@@ -432,11 +444,14 @@ public static partial class SqlServerSpatialNativeBinary
         return new Geometry<Point>(linestrings, GeometryType.MultiLineString, srid);
     }
 
-    private static Geometry<Point> ParseMultiPolygon(BinaryReader reader, int srid)
+    private static Geometry<Point> ParseMultiPolygon(BinaryReader reader, int srid, byte serializationProps)
     {
+        bool hasZ = (serializationProps & 0x01) != 0;
+        bool hasM = (serializationProps & 0x02) != 0;
+        
         var totalPointCount = reader.ReadInt32();
         
-        // Read all points first
+        // Read all points as (X, Y) pairs sequentially
         var allPoints = new List<Point>(totalPointCount);
         for (int i = 0; i < totalPointCount; i++)
         {
@@ -444,96 +459,160 @@ public static partial class SqlServerSpatialNativeBinary
             var y = reader.ReadDouble();
             allPoints.Add(new Point(x, y));
         }
-
-        // Read metadata to determine polygon structure
-        var polygonCount = reader.ReadInt32();
-        reader.ReadInt32(); // Skip second value
         
-        // Read polygon ring counts and ring point counts
-        var polygonRingCounts = new List<int>(polygonCount);
-        var ringPointCounts = new List<List<int>>(polygonCount);
-        
-        for (int i = 0; i < polygonCount; i++)
+        // Skip all Z coordinates (if hasZ)
+        if (hasZ)
         {
-            var ringCount = reader.ReadInt32();
-            polygonRingCounts.Add(ringCount);
-            var ringCounts = new List<int>(ringCount);
-            for (int j = 0; j < ringCount; j++)
+            for (int i = 0; i < totalPointCount; i++)
             {
-                ringCounts.Add(reader.ReadInt32());
+                reader.ReadDouble(); // Skip Z
             }
-            ringPointCounts.Add(ringCounts);
         }
         
-        reader.ReadBytes(9); // Skip fixed pattern
-        reader.ReadInt32(); // Skip additional value
-        reader.ReadInt32(); // Skip additional value
-        reader.ReadInt32(); // Skip additional value
-        reader.ReadInt16(); // Skip short value
-
-        // Split points into polygons
-        var polygons = new List<Geometry<Point>>(polygonCount);
-        int pointIndex = 0;
-        for (int i = 0; i < polygonCount; i++)
+        // Skip all M coordinates (if hasM)
+        if (hasM)
         {
-            var rings = new List<Geometry<Point>>(polygonRingCounts[i]);
-            for (int j = 0; j < polygonRingCounts[i]; j++)
+            for (int i = 0; i < totalPointCount; i++)
             {
-                var ringPoints = new List<Point>(ringPointCounts[i][j]);
-                for (int k = 0; k < ringPointCounts[i][j]; k++)
-                {
-                    ringPoints.Add(allPoints[pointIndex++]);
-                }
-                rings.Add(Geometry<Point>.CreatePointOrLineString(ringPoints, srid));
+                reader.ReadDouble(); // Skip M
             }
-            polygons.Add(Geometry<Point>.CreatePolygonOrMultiPolygon(rings, srid));
+        }
+
+        // Read Figures section: Number of Figures + (Attribute + Point Offset) for each figure
+        var figureCount = reader.ReadInt32();
+        var figureOffsets = new List<int>(figureCount);
+        var figureAttributes = new List<byte>(figureCount);
+        for (int i = 0; i < figureCount; i++)
+        {
+            var attribute = reader.ReadByte(); // Figure attribute (2 for exterior ring, 0 for interior ring)
+            var pointOffset = reader.ReadInt32(); // Figure Point Offset
+            figureAttributes.Add(attribute);
+            figureOffsets.Add(pointOffset);
+        }
+        
+        // Read Shapes section: Number of Shapes + (Parent Offset + Figure Offset + OpenGIS Type) for each shape
+        var shapeCount = reader.ReadInt32();
+        var shapes = new List<(int parentOffset, int figureOffset, byte openGisType)>(shapeCount);
+        for (int i = 0; i < shapeCount; i++)
+        {
+            var parentOffset = reader.ReadInt32();
+            var figureOffset = reader.ReadInt32();
+            var openGisType = reader.ReadByte();
+            shapes.Add((parentOffset, figureOffset, openGisType));
+        }
+
+        // Build polygons from shapes
+        // Shapes with parentOffset == -1 are top-level polygons (OpenGIS Type = 3)
+        // Shapes with parentOffset >= 0 are child shapes (rings) of those polygons
+        var polygons = new List<Geometry<Point>>();
+        for (int i = 0; i < shapeCount; i++)
+        {
+            if (shapes[i].parentOffset == -1 && shapes[i].openGisType == 3) // Polygon shape
+            {
+                // Find all rings (figures) that belong to this polygon
+                var polygonRings = new List<Geometry<Point>>();
+                var startFigureIndex = shapes[i].figureOffset;
+                
+                // Find the end figure index (next polygon's start or end of figures)
+                int endFigureIndex = figureCount;
+                for (int j = i + 1; j < shapeCount; j++)
+                {
+                    if (shapes[j].parentOffset == -1 && shapes[j].openGisType == 3)
+                    {
+                        endFigureIndex = shapes[j].figureOffset;
+                        break;
+                    }
+                }
+                
+                // Extract rings for this polygon
+                for (int figIdx = startFigureIndex; figIdx < endFigureIndex; figIdx++)
+                {
+                    var startOffset = figureOffsets[figIdx];
+                    var endOffset = (figIdx < figureCount - 1) ? figureOffsets[figIdx + 1] : totalPointCount;
+                    var pointsInRing = endOffset - startOffset;
+                    
+                    var ringPoints = new List<Point>(pointsInRing);
+                    for (int j = 0; j < pointsInRing && (startOffset + j) < allPoints.Count; j++)
+                    {
+                        ringPoints.Add(allPoints[startOffset + j]);
+                    }
+                    polygonRings.Add(Geometry<Point>.CreatePointOrLineString(ringPoints, srid));
+                }
+                
+                if (polygonRings.Count > 0)
+                {
+                    polygons.Add(Geometry<Point>.CreatePolygonOrMultiPolygon(polygonRings, srid));
+                }
+            }
         }
 
         return new Geometry<Point>(polygons, GeometryType.MultiPolygon, srid);
     }
 
-    private static Geometry<Point> ParseMultiPoint(BinaryReader reader, int srid, Func<BinaryReader, int, Geometry<Point>> parsePoint)
+    private static Geometry<Point> ParseMultiPoint(BinaryReader reader, int srid, byte serializationProps)
     {
-        var numberOfGeometries = reader.ReadInt32();
+        bool hasZ = (serializationProps & 0x01) != 0;
+        bool hasM = (serializationProps & 0x02) != 0;
+        var pointCount = reader.ReadInt32();
 
-        var geometries = new List<Geometry<Point>>(numberOfGeometries);
-
-        for (int i = 0; i < numberOfGeometries; i++)
-        {
-            geometries.Add(parsePoint(reader, srid));
-        }
-
-        // Skip metadata section
-        var pointCount = reader.ReadInt32(); // Point count again
-        
-        // Skip point metadata: for each point, byte flag + int32 index
+        // Read all points as (X, Y) pairs sequentially
+        var points = new List<Point>(pointCount);
         for (int i = 0; i < pointCount; i++)
         {
-            reader.ReadByte(); // Flag
-            reader.ReadInt32(); // Index
+            var x = reader.ReadDouble();
+            var y = reader.ReadDouble();
+            points.Add(new Point(x, y));
         }
         
-        reader.ReadInt32(); // Additional count (pointCount + 1)
-        reader.ReadBytes(17); // Fixed pattern
-        
-        // Skip additional metadata for points 1..N-1
-        for (int i = 1; i < pointCount; i++)
+        // Read all Z coordinates (if hasZ)
+        if (hasZ)
         {
-            reader.ReadInt32(); // Zero
-            reader.ReadInt32(); // Index
-            reader.ReadByte(); // Flag
+            for (int i = 0; i < pointCount; i++)
+            {
+                reader.ReadDouble(); // Skip Z
+            }
+        }
+        
+        // Read all M coordinates (if hasM)
+        if (hasM)
+        {
+            for (int i = 0; i < pointCount; i++)
+            {
+                reader.ReadDouble(); // Skip M
+            }
+        }
+
+        // Read Figures section: Number of Figures + (Attribute + Point Offset) for each figure
+        var figureCount = reader.ReadInt32();
+        var figureOffsets = new List<int>(figureCount);
+        for (int i = 0; i < figureCount; i++)
+        {
+            reader.ReadByte(); // Figure attribute (should be 1 for stroke/point)
+            var pointOffset = reader.ReadInt32(); // Figure Point Offset
+            figureOffsets.Add(pointOffset);
+        }
+        
+        // Read Shapes section: Number of Shapes + (Parent Offset + Figure Offset + OpenGIS Type) for each shape
+        var shapeCount = reader.ReadInt32();
+        if (shapeCount > 0)
+        {
+            reader.ReadInt32(); // Parent offset (should be -1 for MultiPoint)
+            reader.ReadInt32(); // Figure offset
+            reader.ReadByte(); // OpenGIS type (should be 4 for MultiPoint)
+        }
+
+        // Create Point geometries from points
+        // Each point is a separate geometry in MultiPoint
+        var geometries = new List<Geometry<Point>>(pointCount);
+        for (int i = 0; i < pointCount; i++)
+        {
+            geometries.Add(Geometry<Point>.Create(points[i].X, points[i].Y, srid));
         }
 
         return new Geometry<Point>(geometries, GeometryType.MultiPoint, srid);
     }
 
-
-    private static Geometry<Point> ParseMultiPoint(BinaryReader reader, int srid) => ParseMultiPoint(reader, srid, ParsePoint);
-
-    private static Geometry<Point> ParseMultiPointM(BinaryReader reader, int srid) => ParseMultiPoint(reader, srid, ParsePointM);
-    private static Geometry<Point> ParseMultiPointZ(BinaryReader reader, int srid) => ParseMultiPoint(reader, srid, ParsePointZ);
-    private static Geometry<Point> ParseMultiPointZM(BinaryReader reader, int srid) => ParseMultiPoint(reader, srid, ParsePointZM);
-
+     
 
     private static Geometry<Point> FromWkbLineString(BinaryReader reader, int srid)
     {
@@ -594,7 +673,6 @@ public static partial class SqlServerSpatialNativeBinary
         return new Geometry<Point>(geometries, GeometryType.MultiPolygon, srid);
     }
 
-
     private static List<Point> ReadLineStringOrRing(BinaryReader reader, bool isRing)
     {
         var numberOfPoints = reader.ReadInt32();
@@ -616,7 +694,5 @@ public static partial class SqlServerSpatialNativeBinary
 
         return result;
     }
-
-
 
 }
