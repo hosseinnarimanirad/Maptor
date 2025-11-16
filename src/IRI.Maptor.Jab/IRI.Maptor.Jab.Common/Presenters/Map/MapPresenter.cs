@@ -2550,6 +2550,7 @@ public abstract class MapPresenter : BasePresenter
     #region Shapefile/Worldfile/GeoJson
 
     const string _error = "خطا";
+    const string _fileLockedError = "فایل در حال استفاده توسط برنامه دیگری است. لطفا فایل را ببندید و دوباره تلاش کنید.";
 
     public virtual async Task AddShapefile(object owner, int? maxSizeInKB)
     {
@@ -2683,6 +2684,14 @@ public abstract class MapPresenter : BasePresenter
 
             AddLayer(vectorLayer);
         }
+        catch (IOException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
         catch (Exception ex)
         {
             await DialogService.ShowMessageAsync(ex.Message, _error, owner);
@@ -2723,28 +2732,14 @@ public abstract class MapPresenter : BasePresenter
         try
         {
             if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
-            {
                 throw new FileNotFoundException($"DXF file '{fileName}' was not found.", fileName);
-            }
 
-            var geometry = DxfReader.ReadFromFile(fileName, SridHelper.GeodeticWGS84);
+            var geometries = DxfReader.ReadFromFile(fileName, SridHelper.GeodeticWGS84);
 
-            if (geometry == null || geometry.IsNullOrEmpty())
+            if (geometries == null || geometries.IsNullOrEmpty())
             {
                 await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
                 return;
-            }
-
-            List<Geometry<Point>> geometries;
-
-            // Handle GeometryCollection by extracting individual geometries
-            if (geometry.Type == GeometryType.GeometryCollection && geometry.Geometries != null)
-            {
-                geometries = geometry.Geometries.Where(g => g != null && !g.IsNullOrEmpty()).ToList();
-            }
-            else
-            {
-                geometries = new List<Geometry<Point>> { geometry };
             }
 
             if (geometries.Count == 0)
@@ -2753,29 +2748,55 @@ public abstract class MapPresenter : BasePresenter
                 return;
             }
 
-            var features = geometries.ToFeatures();
-
-            if (features.IsNullOrEmpty())
+            if (geometries.Any(g => g.Srid == 0))
             {
-                await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
+                await DialogService.ShowMessageAsync("سیستم مختصات DXF یافت نشد.", _error, owner);
                 return;
             }
 
-            features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
+            var groups = geometries.GroupBy(g => g.Type).ToList();
 
-            var dataSource = new MemoryDataSource(features);
-            var geometryType = features.First().TheGeometry.Type;
-            var symbolizers = new List<ISymbolizer> { SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1) };
+            // create the parent group layer
+            GroupLayer groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName));
 
-            var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
-                                dataSource,
-                                symbolizers,
-                                LayerType.VectorLayer,
-                                RenderMode.Default,
-                                RasterizationMethod.GdiPlus,
-                                ScaleInterval.All);
+            foreach (var group in groups)
+            {
+                var features = group.Select(g => g.AsFeature()).ToList();
 
-            AddLayer(vectorLayer);
+                if (features.IsNullOrEmpty())
+                {
+                    await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
+                    return;
+                }
+
+                features = features.Select(f => f.Project(new WebMercator())).ToList();
+                 
+                var dataSource = new MemoryDataSource(features);
+                var geometryType = features.First().TheGeometry.Type;
+                var symbolizers = new List<ISymbolizer> { SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1) };
+
+                var vectorLayer = new VectorLayer($"{Path.GetFileNameWithoutExtension(fileName)}-{group.Key}",
+                                    dataSource,
+                                    symbolizers,
+                                    LayerType.VectorLayer,
+                                    RenderMode.Default,
+                                    RasterizationMethod.GdiPlus,
+                                    ScaleInterval.All);
+
+                //AddLayer(vectorLayer);
+
+                groupLayer.AddSubLayer(vectorLayer);
+            }
+
+            AddLayer(groupLayer);
+        }
+        catch (IOException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
         }
         catch (Exception ex)
         {
@@ -2791,23 +2812,42 @@ public abstract class MapPresenter : BasePresenter
     {
         IsBusy = true;
 
-        var fileName = await DialogService.ShowOpenFileDialogAsync("Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff", null);
+        try
+        {
+            var fileName = await DialogService.ShowOpenFileDialogAsync("Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff", owner);
 
-        if (!File.Exists(fileName))
+            if (!File.Exists(fileName))
+            {
+                IsBusy = false;
+
+                return;
+            }
+
+            await AddWorldfile(fileName, SridHelper.WebMercator, owner);
+        }
+        catch (IOException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        catch (Exception ex)
+        {
+            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+        }
+        finally
         {
             IsBusy = false;
-
-            return;
         }
-
-        await AddWorldfile(fileName, SridHelper.WebMercator, owner);
     }
 
     public virtual async Task AddWorldfile(object owner)
     {
         IsBusy = true;
 
-        var fileName = await DialogService.ShowOpenFileDialogAsync("Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff", null);
+        var fileName = await DialogService.ShowOpenFileDialogAsync("Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff", owner);
 
         if (!File.Exists(fileName))
         {
@@ -2846,6 +2886,14 @@ public abstract class MapPresenter : BasePresenter
             //this.Refresh();
 
         }
+        catch (IOException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
         catch (Exception ex)
         {
             await DialogService.ShowMessageAsync(ex.Message, _error, owner);
@@ -2881,6 +2929,14 @@ public abstract class MapPresenter : BasePresenter
                 1);
 
             AddLayer(rasterLayer);
+        }
+        catch (IOException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
         }
         catch (Exception ex)
         {
@@ -2924,6 +2980,14 @@ public abstract class MapPresenter : BasePresenter
 
             AddLayer(new VectorLayer("", dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All));
 
+        }
+        catch (IOException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
         }
         catch (Exception ex)
         {
@@ -2969,6 +3033,14 @@ public abstract class MapPresenter : BasePresenter
 
             AddLayer(new VectorLayer("", dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All));
 
+        }
+        catch (IOException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
         }
         catch (Exception ex)
         {
@@ -3637,35 +3709,50 @@ public abstract class MapPresenter : BasePresenter
             {
                 _addGeoJsonToDrawingItemsCommand = new RelayCommand(async param =>
                 {
-                    var fileName = await DialogService.ShowOpenFileDialogAsync("*.json|*.json", param);
-
-                    if (string.IsNullOrWhiteSpace(fileName))
-                        return;
-
-                    var featureSet = GeoJsonFeatureSet.Load(fileName);
-
-                    if (featureSet.Features.IsNullOrEmpty())
-                        return;
-
-                    var features = featureSet.Features.Select(f => f.AsFeature(true, SrsBases.WebMercator)).ToList();
-
-                    //var dataSource = GeoJsonSource<SqlFeature>.CreateFromFile(fileName, f => f);
-                    //var dataSource = new MemoryDataSource(
-                    //    features/*,f => f.Label,null*/);
-
-                    //var geometries = dataSource.GetAsFeatureSet()?.Features;
-
-                    if (features.IsNullOrEmpty())
-                        return;
-
-                    if (features.Count != 1)
+                    try
                     {
-                        await DialogService.ShowMessageAsync("فایل جی‌سان حاوی تک عارضه باید باشد", _error, param);
+                        var fileName = await DialogService.ShowOpenFileDialogAsync("*.json|*.json", param);
 
-                        return;
+                        if (string.IsNullOrWhiteSpace(fileName))
+                            return;
+
+                        var featureSet = GeoJsonFeatureSet.Load(fileName);
+
+                        if (featureSet.Features.IsNullOrEmpty())
+                            return;
+
+                        var features = featureSet.Features.Select(f => f.AsFeature(true, SrsBases.WebMercator)).ToList();
+
+                        //var dataSource = GeoJsonSource<SqlFeature>.CreateFromFile(fileName, f => f);
+                        //var dataSource = new MemoryDataSource(
+                        //    features/*,f => f.Label,null*/);
+
+                        //var geometries = dataSource.GetAsFeatureSet()?.Features;
+
+                        if (features.IsNullOrEmpty())
+                            return;
+
+                        if (features.Count != 1)
+                        {
+                            await DialogService.ShowMessageAsync("فایل جی‌سان حاوی تک عارضه باید باشد", _error, param);
+
+                            return;
+                        }
+
+                        AddDrawingItem(features.First().TheGeometry, Path.GetFileNameWithoutExtension(fileName)/*, null, int.MinValue*//*, dataSource*/);
                     }
-
-                    AddDrawingItem(features.First().TheGeometry, Path.GetFileNameWithoutExtension(fileName)/*, null, int.MinValue*//*, dataSource*/);
+                    catch (IOException)
+                    {
+                        await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    }
+                    catch (Exception ex)
+                    {
+                        await DialogService.ShowMessageAsync(ex.Message, _error, param);
+                    }
                 });
             }
 
@@ -3682,27 +3769,42 @@ public abstract class MapPresenter : BasePresenter
             {
                 _addLongLatTxtToDrawingItemsCommand = new RelayCommand(async param =>
                 {
-                    var fileName = await DialogService.ShowOpenFileDialogAsync("*.csv|*.csv", param);
+                    try
+                    {
+                        var fileName = await DialogService.ShowOpenFileDialogAsync("*.csv|*.csv", param);
 
-                    if (string.IsNullOrWhiteSpace(fileName))
-                        return;
+                        if (string.IsNullOrWhiteSpace(fileName))
+                            return;
 
-                    var wgsPoints = IOHelper.ReadAllPoints(fileName, IOHelper.CsvDelimiterChar);
+                        var wgsPoints = IOHelper.ReadAllPoints(fileName, IOHelper.CsvDelimiterChar);
 
-                    if (wgsPoints.IsNullOrEmpty())
-                        return;
+                        if (wgsPoints.IsNullOrEmpty())
+                            return;
 
-                    var webMercatorPoints = wgsPoints.Select(p => p.Project(SrsBases.GeodeticWgs84, SrsBases.WebMercator)).ToList();
+                        var webMercatorPoints = wgsPoints.Select(p => p.Project(SrsBases.GeodeticWgs84, SrsBases.WebMercator)).ToList();
 
-                    var geometry = Geometry<Point>.CreatePointOrLineStringOrRing(webMercatorPoints, SridHelper.WebMercator);
+                        var geometry = Geometry<Point>.CreatePointOrLineStringOrRing(webMercatorPoints, SridHelper.WebMercator);
 
-                    //Feature<Point> feature = new Feature<Point>(geometry, "test label");
+                        //Feature<Point> feature = new Feature<Point>(geometry, "test label");
 
-                    //var dataSource = new MemoryDataSource([feature]);
+                        //var dataSource = new MemoryDataSource([feature]);
 
-                    //var geometries = dataSource.GetAsFeatureSet()?.Features;
+                        //var geometries = dataSource.GetAsFeatureSet()?.Features;
 
-                    AddDrawingItem(geometry, Path.GetFileNameWithoutExtension(fileName)/*, null, int.MinValue*//*, dataSource*/);
+                        AddDrawingItem(geometry, Path.GetFileNameWithoutExtension(fileName)/*, null, int.MinValue*//*, dataSource*/);
+                    }
+                    catch (IOException)
+                    {
+                        await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    }
+                    catch (Exception ex)
+                    {
+                        await DialogService.ShowMessageAsync(ex.Message, _error, param);
+                    }
                 });
             }
 
@@ -3721,26 +3823,41 @@ public abstract class MapPresenter : BasePresenter
             {
                 _addShapefileToDrawingItemsCommand = new RelayCommand(async param =>
                 {
-                    var fileName = await DialogService.ShowOpenFileDialogAsync("*.shp|*.shp", null);
-
-                    if (string.IsNullOrWhiteSpace(fileName))
-                        return;
-
-                    var dataSource = ShapefileDataSourceFactory.Create(fileName, new WebMercator());
-
-                    var geometries = dataSource.GetAsFeatureSet()?.Features;
-
-                    if (geometries.IsNullOrEmpty())
-                        return;
-
-                    if (geometries.Count != 1)
+                    try
                     {
-                        await DialogService.ShowMessageAsync("شیپ فایل حاوی تک عارضه باید باشد", _error, param);
+                        var fileName = await DialogService.ShowOpenFileDialogAsync("*.shp|*.shp", param);
 
-                        return;
+                        if (string.IsNullOrWhiteSpace(fileName))
+                            return;
+
+                        var dataSource = ShapefileDataSourceFactory.Create(fileName, new WebMercator());
+
+                        var geometries = dataSource.GetAsFeatureSet()?.Features;
+
+                        if (geometries.IsNullOrEmpty())
+                            return;
+
+                        if (geometries.Count != 1)
+                        {
+                            await DialogService.ShowMessageAsync("شیپ فایل حاوی تک عارضه باید باشد", _error, param);
+
+                            return;
+                        }
+
+                        AddDrawingItem(geometries.First().TheGeometry, Path.GetFileNameWithoutExtension(fileName)/*, null, int.MinValue*//*, dataSource*/);
                     }
-
-                    AddDrawingItem(geometries.First().TheGeometry, Path.GetFileNameWithoutExtension(fileName)/*, null, int.MinValue*//*, dataSource*/);
+                    catch (IOException)
+                    {
+                        await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    }
+                    catch (Exception ex)
+                    {
+                        await DialogService.ShowMessageAsync(ex.Message, _error, param);
+                    }
                 });
             }
 

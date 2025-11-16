@@ -1,4 +1,4 @@
-﻿using System; 
+﻿using System;
 using System.Threading.Tasks;
 
 using IRI.Maptor.Jab.Common.Presenters;
@@ -48,8 +48,11 @@ namespace IRI.Maptor.Jab.Controls.Presenters
 
             this.MapSettings.BaseMapCacheDirectory = Environment.CurrentDirectory + "\\Data";
 
-            this.MapSettings.MaxGoogleZoomLevel = 18;
-            this.MapSettings.MinGoogleZoomLevel = 2;
+            if (this.MapSettings.MinGoogleZoomLevel == 0)
+                this.MapSettings.MinGoogleZoomLevel = 2;
+
+            if (this.MapSettings.MaxGoogleZoomLevel == 0)
+                this.MapSettings.MaxGoogleZoomLevel = 18;
 
             this.SetMapCursorSet1();
 
@@ -59,7 +62,7 @@ namespace IRI.Maptor.Jab.Controls.Presenters
 
             ownerWindow.DataContext = this;
         }
-         
+
 
         private void ShowAboutMe()
         {
