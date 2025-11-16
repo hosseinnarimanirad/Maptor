@@ -1163,13 +1163,13 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
         // Collect all rings from both polygons
         var allRings = new List<Geometry<T>>();
-        
+
         // Add rings from first polygon
         foreach (var ring in poly1.Geometries)
         {
             allRings.Add(ring.Clone());
         }
-        
+
         // Add rings from second polygon
         foreach (var ring in poly2.Geometries)
         {
@@ -1476,7 +1476,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         // Simplified: For proper intersection, we would need polygon clipping algorithm
         // This is a placeholder that uses bounding box intersection
         // Full implementation would require more complex geometric operations
-        
+
         // For now, return empty - indicating intersection exists but not computing exact result
         // TODO: Implement proper polygon-polygon intersection using clipping algorithm
         return Geometry<T>.Empty;
@@ -1713,7 +1713,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         // Simplified: For proper difference, we would need polygon clipping algorithm
         // This is a placeholder
         // Full implementation would require subtracting poly2 from poly1 using boolean operations
-        
+
         // For now, return empty if poly1 is completely inside poly2
         var testPoint = poly1.Geometries[0].Points[0];
         if (TopologyUtility.IsPointInPolygon(poly2, testPoint))
@@ -1794,14 +1794,14 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         var offsetPoints = OffsetLineSegment(this.Points, distance, false);
         if (offsetPoints.Count < 2)
             return Geometry<T>.Empty;
-        
+
         // Add end caps (semi-circles)
         var startCap = CreateSemiCircle(this.Points[0], this.Points[1], distance, true, this.Srid);
         var endCap = CreateSemiCircle(this.Points[this.Points.Count - 1], this.Points[this.Points.Count - 2], distance, false, this.Srid);
 
         // Combine: start cap + offset line + end cap (reversed)
         var allPoints = new List<T>();
-        
+
         // Add start cap points (if not degenerate)
         if (startCap.Type == GeometryType.LineString && startCap.Points != null)
         {
@@ -1811,10 +1811,10 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         {
             allPoints.Add(startCap.Points[0]);
         }
-        
+
         // Add offset line points
         allPoints.AddRange(offsetPoints);
-        
+
         // Add end cap points (reversed, if not degenerate)
         if (endCap.Type == GeometryType.LineString && endCap.Points != null)
         {
@@ -1826,7 +1826,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         {
             allPoints.Add(endCap.Points[0]);
         }
-        
+
         // Close the polygon if not already closed
         if (allPoints.Count > 0)
         {
@@ -2146,7 +2146,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         // Use miter limit to prevent excessive offsets at sharp angles
         double angle = Math.Acos(Math.Max(-1, Math.Min(1, dx1 * dx2 + dy1 * dy2)));
         double offsetDist = distance / Math.Sin(angle / 2.0);
-        
+
         // Apply miter limit (prevent excessive offsets)
         double miterLimit = 5.0; // Maximum miter length as multiple of distance
         if (offsetDist > distance * miterLimit)
@@ -3109,7 +3109,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
     public Feature<T> AsFeature()
     {
-        return new Feature<T>(this);
+        return new Feature<T>(this, new Dictionary<string, object>() { { "_", " " } });
     }
 
     public GeoJsonFeatureSet AsGeoJsonFeatureSet()
@@ -3517,7 +3517,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
         return GetLength(SpatialUtility.GetEllipsoidalLength);
     }
-     
+
 
     //public double GetEuclideanLength()
     //{

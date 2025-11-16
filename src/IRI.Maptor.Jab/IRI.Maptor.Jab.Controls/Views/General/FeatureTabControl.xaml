@@ -15,9 +15,9 @@
         <DataTemplate x:Key="FeatureTableTemplate">
             <maptor:FeatureTable 
                 DataContext="{Binding}"  
-                IsZoomToGeometryEnabled="{Binding ElementName=root, Path=IsZoomToGeometryEnabled}"
-                CanUserEditGeometry="{Binding ElementName=root, Path=CanUserEditGeometry}" 
-                CanUserEditAttribute="{Binding ElementName=root, Path=CanUserEditAttribute}" />
+                IsZoomToGeometryEnabled="{Binding IsZoomToGeometryEnabled, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}"
+                CanUserEditGeometry="{Binding CanUserEditGeometry, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}" 
+                CanUserEditAttribute="{Binding CanUserEditAttribute, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}" />
         </DataTemplate>
     </UserControl.Resources>
     <TabControl ItemsSource="{Binding SelectedLayers}" VerticalAlignment="Stretch" Margin="0"
@@ -46,9 +46,9 @@
         <TabControl.ContentTemplate>
             <DataTemplate>
                 <maptor:FeatureTable    DataContext="{Binding }"
-                                        IsZoomToGeometryEnabled="{Binding ElementName=root, Path=IsZoomToGeometryEnabled}"
-                                        CanUserEditGeometry="{Binding ElementName=root, Path=CanUserEditGeometry}" 
-                                        CanUserEditAttribute="{Binding ElementName=root, Path=CanUserEditAttribute}" />
+                                        IsZoomToGeometryEnabled="{Binding IsZoomToGeometryEnabled, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}"
+                                        CanUserEditGeometry="{Binding CanUserEditGeometry, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}" 
+                                        CanUserEditAttribute="{Binding CanUserEditAttribute, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}" />
             </DataTemplate>
         </TabControl.ContentTemplate>
     </TabControl>
