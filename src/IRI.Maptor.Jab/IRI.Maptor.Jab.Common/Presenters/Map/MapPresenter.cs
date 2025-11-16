@@ -27,6 +27,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 using IRI.Maptor.Ket.GdiPersistence;
 using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.Spatial.IO.Dxf;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Jab.Common.Models.Map;
@@ -1417,7 +1418,7 @@ public abstract class MapPresenter : BasePresenter
 
     }
 
-    public void SearchByAttribute(string? searchTest)
+    public virtual void SearchByAttribute(string? searchTest)
     {
         RemoveAllDrawingItems();
 
@@ -1881,7 +1882,7 @@ public abstract class MapPresenter : BasePresenter
 
         CurrentExtentIndex = 0;
 
-        if (ExtentHistoryLength > 5)
+        if (ExtentHistoryLength > 11)
             Extents.RemoveAt(lastExtentIndex);
     }
 
@@ -2162,6 +2163,16 @@ public abstract class MapPresenter : BasePresenter
         var result = GetAllLayers(Layers).SingleOrDefault(l => l.LayerId == layerId);
 
         return result;
+    }
+
+    public ILayer? FindLayerByAuxilaryId(int? layerId)
+    {
+        if (!layerId.HasValue)
+            return null;
+
+        var allLayers = GetAllLayers(Layers);
+
+        return allLayers.FirstOrDefault(l => l.AuxilaryId == layerId);
     }
 
 
@@ -2682,6 +2693,100 @@ public abstract class MapPresenter : BasePresenter
         }
     }
 
+    public virtual async Task AddDxffile(object owner, int? maxSizeInKB)
+    {
+        IsBusy = true;
+
+        var fileName = await DialogService.ShowOpenFileDialogAsync("Drawing Exchange Format (DXF)|*.dxf", owner);
+
+        if (!File.Exists(fileName))
+        {
+            IsBusy = false;
+
+            return;
+        }
+
+        FileInfo info = new FileInfo(fileName);
+
+        if (maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
+        {
+            await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", owner);
+
+            return;
+        }
+
+        await AddDxffile(fileName, owner);
+    }
+
+    public async Task AddDxffile(string fileName, object owner)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+            {
+                throw new FileNotFoundException($"DXF file '{fileName}' was not found.", fileName);
+            }
+
+            var geometry = DxfReader.ReadFromFile(fileName, SridHelper.GeodeticWGS84);
+
+            if (geometry == null || geometry.IsNullOrEmpty())
+            {
+                await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
+                return;
+            }
+
+            List<Geometry<Point>> geometries;
+
+            // Handle GeometryCollection by extracting individual geometries
+            if (geometry.Type == GeometryType.GeometryCollection && geometry.Geometries != null)
+            {
+                geometries = geometry.Geometries.Where(g => g != null && !g.IsNullOrEmpty()).ToList();
+            }
+            else
+            {
+                geometries = new List<Geometry<Point>> { geometry };
+            }
+
+            if (geometries.Count == 0)
+            {
+                await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
+                return;
+            }
+
+            var features = geometries.ToFeatures();
+
+            if (features.IsNullOrEmpty())
+            {
+                await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
+                return;
+            }
+
+            features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
+
+            var dataSource = new MemoryDataSource(features);
+            var geometryType = features.First().TheGeometry.Type;
+            var symbolizers = new List<ISymbolizer> { SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1) };
+
+            var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
+                                dataSource,
+                                symbolizers,
+                                LayerType.VectorLayer,
+                                RenderMode.Default,
+                                RasterizationMethod.GdiPlus,
+                                ScaleInterval.All);
+
+            AddLayer(vectorLayer);
+        }
+        catch (Exception ex)
+        {
+            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     public virtual async Task AddWebMercatorWorldfile(object owner)
     {
         IsBusy = true;
@@ -3077,6 +3182,23 @@ public abstract class MapPresenter : BasePresenter
         }
     }
 
+    private RelayCommand _addDxffileCommand;
+
+    public RelayCommand AddDxffileCommand
+    {
+        get
+        {
+            if (_addDxffileCommand == null)
+            {
+                _addDxffileCommand = new RelayCommand(async param =>
+                {
+                    await AddDxffile(param, null);
+                });
+            }
+
+            return _addDxffileCommand;
+        }
+    }
 
     private RelayCommand _addWgs84WorldfileCommand;
     public RelayCommand AddWgs84WorldfileCommand

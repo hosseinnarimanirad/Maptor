@@ -15,6 +15,8 @@ public interface ILayer
 {
     Guid LayerId { get; }
 
+    int AuxilaryId { get; set; }
+
     Guid ParentLayerId { get; set; }
 
     string LayerName { get; set; }
