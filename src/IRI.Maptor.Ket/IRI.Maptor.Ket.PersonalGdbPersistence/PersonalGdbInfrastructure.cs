@@ -3,6 +3,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Ket.PersonalGdbPersistence.Model;
 using IRI.Maptor.Ket.PersonalGdbPersistence.Xml;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.IO.Prj;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using System.Data.OleDb;
 
@@ -44,7 +45,7 @@ public static class PersonalGdbInfrastructure
                     var srid = (int)dataReader["SRID"];
                     var srtext = (string)dataReader["SRTEXT"];
 
-                    var srsbase = IRI.Maptor.Sta.ShapefileFormat.Prj.EsriPrjFile.Parse(srtext).AsMapProjection();
+                    var srsbase = EsriPrjFile.Parse(srtext).AsMapProjection();
 
                     result.Add(srid, srsbase);
                 }

@@ -83,7 +83,15 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         };
     }
 
-    
+    public Feature<T> Project(SrsBase targetSrs)
+    {
+        return new Feature<T>(TheGeometry.Project(targetSrs), this.Attributes)
+        {
+            Id = this.Id,
+            LabelAttribute = this.LabelAttribute
+        };
+    }
+
 
     //#region ICustomTypeDescriptor
 

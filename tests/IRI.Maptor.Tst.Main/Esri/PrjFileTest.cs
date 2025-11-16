@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 
 using IRI.Maptor.Sta.ShapefileFormat;
-using IRI.Maptor.Sta.ShapefileFormat.Prj;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
+using IRI.Maptor.Sta.Spatial.IO.Prj;
 
 namespace IRI.Maptor.Tst.Main.Esri;
 

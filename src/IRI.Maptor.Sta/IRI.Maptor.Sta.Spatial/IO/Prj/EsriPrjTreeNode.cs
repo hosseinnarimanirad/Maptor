@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Sta.ShapefileFormat.Prj;
+namespace IRI.Maptor.Sta.Spatial.IO.Prj;
 
 public class EsriPrjTreeNode
 {
@@ -56,16 +56,16 @@ public class EsriPrjTreeNode
 
     public EsriPrjTreeNode(string name, params string[] values)
     {
-        this.Name = name;
+        Name = name;
 
-        this.Values = values.ToList();
+        Values = values.ToList();
     }
 
     public EsriPrjTreeNode(IEllipsoid ellipsoid, string title, int srid)
     {
-        this.Name = EsriPrjFile._geogcs;
+        Name = EsriPrjFile._geogcs;
 
-        this.Values = new List<string>() { title ?? $"GCS_{ellipsoid.EsriName}" };
+        Values = new List<string>() { title ?? $"GCS_{ellipsoid.EsriName}" };
 
         //esri write zero for Inverse Flattening of shperes!
         var inverseFlattening = double.IsInfinity(ellipsoid.InverseFlattening) ? 0 : ellipsoid.InverseFlattening;
@@ -80,25 +80,25 @@ public class EsriPrjTreeNode
         var primem = new EsriPrjTreeNode(EsriPrjFile._primem, EsriPrjFile._greenwich, "0.0");
 
         var unit = new EsriPrjTreeNode(EsriPrjFile._unit, EsriPrjFile._degree, EsriPrjFile._degreeValue);
-         
-        this.Children = new List<EsriPrjTreeNode>() { datum, primem, unit };
+
+        Children = new List<EsriPrjTreeNode>() { datum, primem, unit };
 
         if (srid != 0)
         {
             var authority = new EsriPrjTreeNode(EsriPrjFile._authority, EsriPrjFile._epsg, srid.ToString());
 
-            this.Children.Add(authority);
+            Children.Add(authority);
         }
-         
+
     }
 
     private EsriPrjTreeNode(string name, string content)
     {
-        this.Name = name.Replace(specialCharacter, string.Empty).Trim(trimCharacters);
+        Name = name.Replace(specialCharacter, string.Empty).Trim(trimCharacters);
 
-        this.Children = new List<EsriPrjTreeNode>();
+        Children = new List<EsriPrjTreeNode>();
 
-        this.Values = new List<string>();
+        Values = new List<string>();
 
         var matches = GetParts(content);
 
@@ -117,13 +117,13 @@ public class EsriPrjTreeNode
         {
             if (parts[i].Contains(specialCharacter))
             {
-                this.Children.Add(new EsriPrjTreeNode(parts[i], matches[matchIndex]));
+                Children.Add(new EsriPrjTreeNode(parts[i], matches[matchIndex]));
 
                 matchIndex++;
             }
             else
             {
-                this.Values.Add(parts[i].Trim(trimCharacters));
+                Values.Add(parts[i].Trim(trimCharacters));
             }
         }
 

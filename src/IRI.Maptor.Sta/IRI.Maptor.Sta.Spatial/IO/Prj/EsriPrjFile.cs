@@ -1,18 +1,13 @@
-﻿using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using IRI.Maptor.Sta.ShapefileFormat.Prj;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ellipsoid = IRI.Maptor.Sta.SpatialReferenceSystem.Ellipsoid<IRI.Maptor.Sta.Metrics.Meter, IRI.Maptor.Sta.Metrics.Degree>;
+﻿using System.Globalization;
+
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Metrics;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.Models;
-using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using Ellipsoid = IRI.Maptor.Sta.SpatialReferenceSystem.Ellipsoid<IRI.Maptor.Sta.Metrics.Meter, IRI.Maptor.Sta.Metrics.Degree>;
 
-namespace IRI.Maptor.Sta.ShapefileFormat.Prj;
+namespace IRI.Maptor.Sta.Spatial.IO.Prj;
 
 public class EsriPrjFile
 {
@@ -56,7 +51,7 @@ public class EsriPrjFile
 
     public EsriPrjFile(EsriPrjTreeNode root)
     {
-        this._rootNode = root;
+        _rootNode = root;
 
         //sample: AUTHORITY["EPSG", "4326"]
         //var authorityInfo = root.Children.SingleOrDefault(i => i.Name == _authority)?.Values;
@@ -68,14 +63,14 @@ public class EsriPrjFile
         //    int.TryParse(authorityInfo[1], out srid);
         //}
 
-        this._srid = GetCrsSrid();
+        _srid = GetCrsSrid();
     }
 
     public EsriPrjFile(string prjFileName)
     {
-        this._rootNode = EsriPrjTreeNode.Parse(System.IO.File.ReadAllText(prjFileName));
+        _rootNode = EsriPrjTreeNode.Parse(File.ReadAllText(prjFileName));
 
-        this._srid = GetCrsSrid();
+        _srid = GetCrsSrid();
 
     }
 
@@ -437,18 +432,18 @@ public class EsriPrjFile
          ProjectionType switch
          {
              SpatialReferenceType.None =>
-                new NoProjection(this.Title, this.Ellipsoid),
+                new NoProjection(Title, Ellipsoid),
 
              SpatialReferenceType.AlbersEqualAreaConic or
              SpatialReferenceType.AzimuthalEquidistant =>
                 throw new NotImplementedException(),
 
              SpatialReferenceType.CylindricalEqualArea =>
-                new CylindricalEqualArea(this.Title, this.Ellipsoid, Srid),
+                new CylindricalEqualArea(Title, Ellipsoid, Srid),
 
              SpatialReferenceType.LambertConformalConic =>
                 new LambertConformalConic2P(
-                   this.Ellipsoid,
+                   Ellipsoid,
                    GetParameter(EsriPrjParameterType.StandardParallel_1, double.NaN),
                    GetParameter(EsriPrjParameterType.StandardParallel_2, double.NaN),
                    GetParameter(EsriPrjParameterType.CentralMeridian, 0),
@@ -459,11 +454,11 @@ public class EsriPrjFile
                    Srid),
 
              SpatialReferenceType.Mercator =>
-                new Mercator(this.Ellipsoid, Srid),
+                new Mercator(Ellipsoid, Srid),
 
              SpatialReferenceType.TransverseMercator =>
                 new TransverseMercator(
-                   this.Ellipsoid,
+                   Ellipsoid,
                    GetParameter(EsriPrjParameterType.CentralMeridian, 0),
                    GetParameter(EsriPrjParameterType.LatitudeOfOrigin, 0),
                    GetParameter(EsriPrjParameterType.FalseEasting, 0),
@@ -472,7 +467,7 @@ public class EsriPrjFile
                    Srid),
 
              SpatialReferenceType.UTM =>
-                new UTM(this.Ellipsoid,
+                new UTM(Ellipsoid,
                                GetParameter(EsriPrjParameterType.CentralMeridian, 0)),
 
              SpatialReferenceType.WebMercator =>
@@ -483,8 +478,8 @@ public class EsriPrjFile
                  throw new NotImplementedException()
          };
 
-        result.Title = this.Title;
-        result.DatumName = this.GeogcsNode.Values?.FirstOrDefault();
+        result.Title = Title;
+        result.DatumName = GeogcsNode.Values?.FirstOrDefault();
 
         return result;
     }
@@ -496,9 +491,9 @@ public class EsriPrjFile
 
     public void Save(string prjFileName)
     {
-        if (System.IO.Path.GetExtension(prjFileName).ToLower() != ".prj")
+        if (Path.GetExtension(prjFileName).ToLower() != ".prj")
             throw new NotImplementedException();
 
-        System.IO.File.WriteAllText(prjFileName, AsEsriCrsWkt());
+        File.WriteAllText(prjFileName, AsEsriCrsWkt());
     }
 }

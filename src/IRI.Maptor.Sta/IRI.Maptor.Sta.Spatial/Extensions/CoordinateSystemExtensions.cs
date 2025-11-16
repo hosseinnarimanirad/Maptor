@@ -1,5 +1,4 @@
 ﻿using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using IRI.Maptor.Sta.ShapefileFormat.Prj;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Spatial.IO.Prj;
 
-namespace IRI.Maptor.Sta.ShapefileFormat;
+namespace IRI.Maptor.Sta.Spatial.Extensions;
 
 public static class CoordinateSystemExtensions
 {

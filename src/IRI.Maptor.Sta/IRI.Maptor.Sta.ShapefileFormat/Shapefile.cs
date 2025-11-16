@@ -9,15 +9,16 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.ShapefileFormat.Dbf;
-using IRI.Maptor.Sta.ShapefileFormat.Prj;
 using IRI.Maptor.Sta.ShapefileFormat.Model;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.ShapefileFormat.Reader;
 using IRI.Maptor.Sta.ShapefileFormat.Writer;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
-using IRI.Maptor.Sta.SpatialReferenceSystem; 
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
+using IRI.Maptor.Sta.Spatial.Extensions;
+using IRI.Maptor.Sta.Spatial.IO.Prj;
 
 namespace IRI.Maptor.Sta.ShapefileFormat;
 
@@ -269,7 +270,7 @@ public static class Shapefile
 
     #region Prj & Srid
 
-    public static EsriPrjFile TryReadPrjFile(string shpFileName)
+    public static EsriPrjFile? TryReadPrjFile(string shpFileName)
     {
         var prjFile = GetPrjFileName(shpFileName);
 
@@ -277,7 +278,7 @@ public static class Shapefile
         {
             if (System.IO.File.Exists(prjFile))
             {
-                return new Prj.EsriPrjFile(prjFile);
+                return new EsriPrjFile(prjFile);
             }
         }
         catch (Exception)
@@ -288,7 +289,7 @@ public static class Shapefile
         return null;
     }
 
-    public static SrsBase TryGetSrs(string shpFileName)
+    public static SrsBase? TryGetSrs(string shpFileName)
     {
         var esriPrjFile = TryReadPrjFile(shpFileName);
 
@@ -547,7 +548,7 @@ public static class Shapefile
             throw new System.IO.FileNotFoundException($"prj file not found. {sourcePrj}");
         }
 
-        var sourceSrs = new Prj.EsriPrjFile(sourcePrj).AsMapProjection();
+        var sourceSrs = new EsriPrjFile(sourcePrj).AsMapProjection();
 
         var data = ReadShapes(shpFileName).ToList();
 
@@ -583,9 +584,9 @@ public static class Shapefile
 
     public static List<IEsriShape> Project(List<IEsriShape> values, string sourceEsriWktPrj, string targetEsriWktPrj) /*where TEsriPoint : IPoint, new()*/
     {
-        var sourceSrs = Prj.EsriPrjFile.Parse(sourceEsriWktPrj).AsMapProjection();
+        var sourceSrs = EsriPrjFile.Parse(sourceEsriWktPrj).AsMapProjection();
 
-        var targetSrs = Prj.EsriPrjFile.Parse(targetEsriWktPrj).AsMapProjection();
+        var targetSrs = EsriPrjFile.Parse(targetEsriWktPrj).AsMapProjection();
 
         return Project(values, sourceSrs, targetSrs);
     }

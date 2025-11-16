@@ -4,12 +4,10 @@ using System.Data.SqlTypes;
 using System.Reflection;
 
 using Microsoft.SqlServer.Types;
-
-
-using IRI.Maptor.Sta.ShapefileFormat.Prj;
-using IRI.Maptor.Sta.ShapefileFormat;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Tst.Assets;
+using IRI.Maptor.Sta.Spatial.Extensions;
+using IRI.Maptor.Sta.Spatial.IO.Prj;
 
 namespace IRI.Maptor.Tst.SqlServerSpatialExtension;
 
