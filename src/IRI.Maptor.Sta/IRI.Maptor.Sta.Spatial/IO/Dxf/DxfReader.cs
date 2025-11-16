@@ -4,6 +4,8 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.Spatial.IO.Prj;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Sta.Spatial.IO.Dxf;
 
@@ -12,38 +14,85 @@ namespace IRI.Maptor.Sta.Spatial.IO.Dxf;
 /// </summary>
 public class DxfReader
 {
-    public static Geometry<Point> ReadFromFile(string filePath, int srid = 0)
+    public static List<Geometry<Point>> ReadFromFile(string filePath, int srid = 0)
     {
         if (!File.Exists(filePath))
             throw new FileNotFoundException("DXF file not found", filePath);
-            
+
         var content = File.ReadAllText(filePath);
         return Read(content, srid);
     }
-    
-    public static Geometry<Point> Read(string dxfContent, int srid = 0)
+
+    public static List<Geometry<Point>> Read(string dxfContent, int srid = 0)
     {
         if (string.IsNullOrWhiteSpace(dxfContent))
-            return Geometry<Point>.Empty;
-            
+            return [Geometry<Point>.Empty];
+
         var lines = dxfContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-        var entities = ParseEntities(lines);
-        
+
+        // Extract SRID from DXF if not explicitly provided
+        if (srid == 0)
+        {
+            var detectedSrid = ExtractSridFromDxf(lines);
+            if (detectedSrid > 0)
+            {
+                srid = detectedSrid;
+            }
+        }
+
+        var entities = ParseEntities(lines, srid);
+
         if (entities.Count == 0)
-            return Geometry<Point>.Empty;
-            
-        if (entities.Count == 1)
-            return entities[0];
-            
-        // Multiple entities - create GeometryCollection
-        return new Geometry<Point>(entities, GeometryType.GeometryCollection, srid);
+            return [Geometry<Point>.Empty];
+
+        return entities;
     }
-    
-    private static List<Geometry<Point>> ParseEntities(string[] lines)
+
+    /// <summary>
+    /// Extracts SRID from spatial reference system information in DXF file
+    /// Searches for GEOGCS or PROJCS WKT strings in XRECORD entities
+    /// </summary>
+    private static int ExtractSridFromDxf(string[] lines)
+    {
+        if (lines == null || lines.Length == 0)
+            return 0;
+
+        // Search for GEOGCS or PROJCS WKT strings
+        // These typically appear in XRECORD entities where group code 1 contains the WKT string
+        for (int i = 0; i < lines.Length; i++)
+        {
+            var line = lines[i].Trim();
+
+            // Look for WKT strings starting with GEOGCS or PROJCS
+            if (line.StartsWith("GEOGCS", StringComparison.OrdinalIgnoreCase) ||
+                line.StartsWith("PROJCS", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    // Parse the WKT string to extract SRID
+                    var prjFile = EsriPrjFile.Parse(line);
+                    var detectedSrid = prjFile.Srid;
+
+                    if (detectedSrid > 0)
+                    {
+                        return detectedSrid;
+                    }
+                }
+                catch
+                {
+                    // If parsing fails, continue searching
+                    continue;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    private static List<Geometry<Point>> ParseEntities(string[] lines, int srid)
     {
         var geometries = new List<Geometry<Point>>();
-        var srid = 0; // Default SRID
-        
+
         // Find ENTITIES section
         int entitiesStart = -1;
         for (int i = 0; i < lines.Length - 1; i++)
@@ -57,10 +106,10 @@ public class DxfReader
                 }
             }
         }
-        
+
         if (entitiesStart == -1)
             return geometries;
-            
+
         // Parse entities
         int i_entity = entitiesStart;
         while (i_entity < lines.Length)
@@ -70,12 +119,12 @@ public class DxfReader
                 i_entity++;
                 if (i_entity >= lines.Length)
                     break;
-                    
+
                 var entityType = lines[i_entity].Trim();
-                
+
                 if (entityType == "ENDSEC" || entityType == "EOF")
                     break;
-                    
+
                 switch (entityType)
                 {
                     case "POINT":
@@ -83,39 +132,39 @@ public class DxfReader
                         if (point != null)
                             geometries.Add(point);
                         break;
-                        
+
                     case "LINE":
                         var line = ParseLine(lines, ref i_entity, srid);
                         if (line != null)
                             geometries.Add(line);
                         break;
-                        
+
                     case "LWPOLYLINE":
                         var polyline = ParseLwPolyline(lines, ref i_entity, srid);
                         if (polyline != null)
                             geometries.Add(polyline);
                         break;
-                        
+
                     case "POLYLINE":
                         var poly = ParsePolyline(lines, ref i_entity, srid);
                         if (poly != null)
                             geometries.Add(poly);
                         break;
-                        
+
                     case "CIRCLE":
                         // Circles are approximated as polygons
                         var circle = ParseCircle(lines, ref i_entity, srid);
                         if (circle != null)
                             geometries.Add(circle);
                         break;
-                        
+
                     case "ARC":
                         // Arcs are approximated as line strings
                         var arc = ParseArc(lines, ref i_entity, srid);
                         if (arc != null)
                             geometries.Add(arc);
                         break;
-                        
+
                     default:
                         // Skip unknown entity
                         i_entity++;
@@ -127,137 +176,137 @@ public class DxfReader
                 i_entity++;
             }
         }
-        
+
         return geometries;
     }
-    
+
     private static Geometry<Point>? ParsePoint(string[] lines, ref int index, int srid)
     {
         double x = 0, y = 0;
         bool hasX = false, hasY = false;
-        
+
         index++; // Move past entity type
-        
+
         while (index < lines.Length - 1)
         {
             var groupCode = lines[index].Trim();
             index++;
-            
+
             if (groupCode == "0") // Next entity
             {
                 index--; // Back up to let main loop handle it
                 break;
             }
-            
+
             var value = lines[index].Trim();
             index++;
-            
+
             switch (groupCode)
             {
                 case "10": // X coordinate
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out x))
                         hasX = true;
                     break;
-                    
+
                 case "20": // Y coordinate
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out y))
                         hasY = true;
                     break;
             }
         }
-        
+
         if (hasX && hasY)
             return Geometry<Point>.Create(x, y, srid);
-            
+
         return null;
     }
-    
+
     private static Geometry<Point>? ParseLine(string[] lines, ref int index, int srid)
     {
         double x1 = 0, y1 = 0, x2 = 0, y2 = 0;
         bool hasStart = false, hasEnd = false;
-        
+
         index++; // Move past entity type
-        
+
         while (index < lines.Length - 1)
         {
             var groupCode = lines[index].Trim();
             index++;
-            
+
             if (groupCode == "0") // Next entity
             {
                 index--; // Back up
                 break;
             }
-            
+
             var value = lines[index].Trim();
             index++;
-            
+
             switch (groupCode)
             {
                 case "10": // Start X
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out x1))
                         hasStart = true;
                     break;
-                    
+
                 case "20": // Start Y
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out y1))
                         hasStart = true;
                     break;
-                    
+
                 case "11": // End X
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out x2))
                         hasEnd = true;
                     break;
-                    
+
                 case "21": // End Y
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out y2))
                         hasEnd = true;
                     break;
             }
         }
-        
+
         if (hasStart && hasEnd)
         {
             var points = new List<Point> { new Point(x1, y1), new Point(x2, y2) };
             return new Geometry<Point>(points, GeometryType.LineString, srid);
         }
-            
+
         return null;
     }
-    
+
     private static Geometry<Point>? ParseLwPolyline(string[] lines, ref int index, int srid)
     {
         var points = new List<Point>();
         bool isClosed = false;
         int numVertices = 0;
-        
+
         index++; // Move past entity type
-        
+
         while (index < lines.Length - 1)
         {
             var groupCode = lines[index].Trim();
             index++;
-            
+
             if (groupCode == "0") // Next entity
             {
                 index--; // Back up
                 break;
             }
-            
+
             var value = lines[index].Trim();
             index++;
-            
+
             switch (groupCode)
             {
                 case "90": // Number of vertices
                     int.TryParse(value, out numVertices);
                     break;
-                    
+
                 case "70": // Polyline flag (1 = closed)
                     isClosed = value == "1";
                     break;
-                    
+
                 case "10": // X coordinate
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double x))
                     {
@@ -275,13 +324,13 @@ public class DxfReader
                     break;
             }
         }
-        
+
         if (points.Count == 0)
             return null;
-            
+
         if (points.Count == 1)
             return Geometry<Point>.Create(points[0].X, points[0].Y, srid);
-            
+
         if (isClosed && points.Count >= 3)
         {
             // Create a polygon
@@ -294,20 +343,20 @@ public class DxfReader
             return new Geometry<Point>(points, GeometryType.LineString, srid);
         }
     }
-    
+
     private static Geometry<Point>? ParsePolyline(string[] lines, ref int index, int srid)
     {
         var points = new List<Point>();
         bool isClosed = false;
-        
+
         index++; // Move past entity type
-        
+
         // Parse POLYLINE header
         while (index < lines.Length - 1)
         {
             var groupCode = lines[index].Trim();
             index++;
-            
+
             if (groupCode == "0")
             {
                 var nextEntity = lines[index].Trim();
@@ -322,10 +371,10 @@ public class DxfReader
                     break;
                 }
             }
-            
+
             var value = lines[index].Trim();
             index++;
-            
+
             if (groupCode == "70") // Polyline flag
             {
                 if (int.TryParse(value, out int flag))
@@ -334,7 +383,7 @@ public class DxfReader
                 }
             }
         }
-        
+
         // Parse VERTEX entities
         while (index < lines.Length - 1)
         {
@@ -342,27 +391,27 @@ public class DxfReader
             {
                 index++;
                 var entityType = lines[index].Trim();
-                
+
                 if (entityType == "VERTEX")
                 {
                     index++;
                     double x = 0, y = 0;
                     bool hasX = false, hasY = false;
-                    
+
                     while (index < lines.Length - 1)
                     {
                         var groupCode = lines[index].Trim();
                         index++;
-                        
+
                         if (groupCode == "0")
                         {
                             index--;
                             break;
                         }
-                        
+
                         var value = lines[index].Trim();
                         index++;
-                        
+
                         switch (groupCode)
                         {
                             case "10":
@@ -375,7 +424,7 @@ public class DxfReader
                                 break;
                         }
                     }
-                    
+
                     if (hasX && hasY)
                         points.Add(new Point(x, y));
                 }
@@ -395,13 +444,13 @@ public class DxfReader
                 index++;
             }
         }
-        
+
         if (points.Count == 0)
             return null;
-            
+
         if (points.Count == 1)
             return Geometry<Point>.Create(points[0].X, points[0].Y, srid);
-            
+
         if (isClosed && points.Count >= 3)
         {
             var ring = new Geometry<Point>(points, GeometryType.LineString, srid);
@@ -412,47 +461,47 @@ public class DxfReader
             return new Geometry<Point>(points, GeometryType.LineString, srid);
         }
     }
-    
+
     private static Geometry<Point>? ParseCircle(string[] lines, ref int index, int srid, int segments = 32)
     {
         double centerX = 0, centerY = 0, radius = 0;
         bool hasCenter = false, hasRadius = false;
-        
+
         index++; // Move past entity type
-        
+
         while (index < lines.Length - 1)
         {
             var groupCode = lines[index].Trim();
             index++;
-            
+
             if (groupCode == "0") // Next entity
             {
                 index--;
                 break;
             }
-            
+
             var value = lines[index].Trim();
             index++;
-            
+
             switch (groupCode)
             {
                 case "10": // Center X
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out centerX))
                         hasCenter = true;
                     break;
-                    
+
                 case "20": // Center Y
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out centerY))
                         hasCenter = true;
                     break;
-                    
+
                 case "40": // Radius
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out radius))
                         hasRadius = true;
                     break;
             }
         }
-        
+
         if (hasCenter && hasRadius && radius > 0)
         {
             // Approximate circle as a polygon
@@ -464,78 +513,78 @@ public class DxfReader
                 double y = centerY + radius * Math.Sin(angle);
                 points.Add(new Point(x, y));
             }
-            
+
             var ring = new Geometry<Point>(points, GeometryType.LineString, srid);
             return new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
         }
-        
+
         return null;
     }
-    
+
     private static Geometry<Point>? ParseArc(string[] lines, ref int index, int srid, int segments = 32)
     {
         double centerX = 0, centerY = 0, radius = 0;
         double startAngle = 0, endAngle = 0;
         bool hasCenter = false, hasRadius = false;
         bool hasStartAngle = false, hasEndAngle = false;
-        
+
         index++; // Move past entity type
-        
+
         while (index < lines.Length - 1)
         {
             var groupCode = lines[index].Trim();
             index++;
-            
+
             if (groupCode == "0") // Next entity
             {
                 index--;
                 break;
             }
-            
+
             var value = lines[index].Trim();
             index++;
-            
+
             switch (groupCode)
             {
                 case "10": // Center X
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out centerX))
                         hasCenter = true;
                     break;
-                    
+
                 case "20": // Center Y
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out centerY))
                         hasCenter = true;
                     break;
-                    
+
                 case "40": // Radius
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out radius))
                         hasRadius = true;
                     break;
-                    
+
                 case "50": // Start angle (degrees)
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out startAngle))
                         hasStartAngle = true;
                     break;
-                    
+
                 case "51": // End angle (degrees)
                     if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out endAngle))
                         hasEndAngle = true;
                     break;
             }
         }
-        
+
         if (hasCenter && hasRadius && hasStartAngle && hasEndAngle && radius > 0)
         {
             // Convert angles from degrees to radians
             double startRad = startAngle * Math.PI / 180.0;
             double endRad = endAngle * Math.PI / 180.0;
-            
+
             // Handle angle wrapping
             if (endRad < startRad)
                 endRad += 2 * Math.PI;
-                
+
             double angleRange = endRad - startRad;
-            
+
             // Approximate arc as a line string
             var points = new List<Point>();
             for (int i = 0; i <= segments; i++)
@@ -546,11 +595,11 @@ public class DxfReader
                 double y = centerY + radius * Math.Sin(angle);
                 points.Add(new Point(x, y));
             }
-            
+
             if (points.Count >= 2)
                 return new Geometry<Point>(points, GeometryType.LineString, srid);
         }
-        
+
         return null;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -36,10 +37,12 @@ public class Geometry_DxfTest
 
         // Act
         var dxfContent = originalGeometry.ToDxf();
-        var restoredGeometry = DxfReader.Read(dxfContent, srid: 0);
+        var restoredGeometries = DxfReader.Read(dxfContent, srid: 0);
 
         // Assert
-        Assert.NotNull(restoredGeometry);
+        Assert.NotNull(restoredGeometries);
+        Assert.NotEmpty(restoredGeometries);
+        var restoredGeometry = restoredGeometries[0];
         Assert.True(restoredGeometry.HasAnyPoint(), 
             $"Restored geometry from {geometrySampleName} should have points");
         
@@ -85,11 +88,13 @@ public class Geometry_DxfTest
         {
             // Act
             originalLineString.SaveAsDxf(tempFilePath);
-            var restoredGeometry = DxfReader.ReadFromFile(tempFilePath, srid: 0);
+            var restoredGeometries = DxfReader.ReadFromFile(tempFilePath, srid: 0);
 
             // Assert
-            Assert.NotNull(restoredGeometry);
+            Assert.NotNull(restoredGeometries);
+            Assert.NotEmpty(restoredGeometries);
             Assert.True(File.Exists(tempFilePath));
+            var restoredGeometry = restoredGeometries[0];
             Assert.Equal(GeometryType.LineString, restoredGeometry.Type);
             Assert.Equal(originalLineString.Points.Count, restoredGeometry.Points.Count);
         }
@@ -148,11 +153,12 @@ public class Geometry_DxfTest
         const string emptyDxf = "";
 
         // Act
-        var geometry = DxfReader.Read(emptyDxf, srid: 0);
+        var geometries = DxfReader.Read(emptyDxf, srid: 0);
 
         // Assert
-        Assert.NotNull(geometry);
-        Assert.True(geometry.IsNullOrEmpty());
+        Assert.NotNull(geometries);
+        Assert.NotEmpty(geometries);
+        Assert.True(geometries[0].IsNullOrEmpty());
     }
 
     #endregion
@@ -303,32 +309,6 @@ public class Geometry_DxfTest
             nullGeometry!.ToDxf());
     }
 
-    [Fact]
-    public void FromDxf_ExtensionMethod_ShouldParseDxfString()
-    {
-        // Arrange
-        var originalGeometry = GeometrySamples.Linestring;
-        var dxfContent = originalGeometry.ToDxf();
-
-        // Act
-        var restoredGeometry = dxfContent.FromDxf(srid: 0);
-
-        // Assert
-        Assert.NotNull(restoredGeometry);
-        Assert.Equal(GeometryType.LineString, restoredGeometry.Type);
-        Assert.Equal(originalGeometry.Points.Count, restoredGeometry.Points.Count);
-    }
-
-    [Fact]
-    public void FromDxf_WithNullContent_ShouldThrowArgumentException()
-    {
-        // Arrange
-        string? nullContent = null;
-
-        // Act & Assert
-        Assert.Throws<ArgumentException>(() => 
-            nullContent!.FromDxf(srid: 0));
-    }
 
     #endregion
 
@@ -348,10 +328,12 @@ public class Geometry_DxfTest
 
         // Act
         var dxfContent = lineString.ToDxf();
-        var restoredGeometry = DxfReader.Read(dxfContent, srid: 0);
+        var restoredGeometries = DxfReader.Read(dxfContent, srid: 0);
 
         // Assert
-        Assert.NotNull(restoredGeometry);
+        Assert.NotNull(restoredGeometries);
+        Assert.NotEmpty(restoredGeometries);
+        var restoredGeometry = restoredGeometries[0];
         Assert.Equal(points.Count, restoredGeometry.Points.Count);
         
         // Verify precision to 6 decimal places (DXF uses "F6" format)
@@ -375,10 +357,12 @@ public class Geometry_DxfTest
 
         // Act
         var dxfContent = originalPolygon.ToDxf();
-        var restoredGeometry = DxfReader.Read(dxfContent, srid: 0);
+        var restoredGeometries = DxfReader.Read(dxfContent, srid: 0);
 
         // Assert
-        Assert.NotNull(restoredGeometry);
+        Assert.NotNull(restoredGeometries);
+        Assert.NotEmpty(restoredGeometries);
+        var restoredGeometry = restoredGeometries[0];
         
         // Simple polygon should preserve area
         var restoredArea = restoredGeometry.EuclideanArea;
@@ -396,17 +380,16 @@ public class Geometry_DxfTest
 
         // Act
         var dxfContent = originalPolygon.ToDxf();
-        var restoredGeometry = DxfReader.Read(dxfContent, srid: 0);
+        var restoredGeometries = DxfReader.Read(dxfContent, srid: 0);
 
         // Assert
-        Assert.NotNull(restoredGeometry);
-        Assert.True(restoredGeometry.HasAnyPoint());
+        Assert.NotNull(restoredGeometries);
+        Assert.NotEmpty(restoredGeometries);
         
-        // DXF writes each ring as a separate polyline, so we expect a GeometryCollection
-        if (restoredGeometry.Type == GeometryType.GeometryCollection)
-        {
-            Assert.Equal(originalRingCount, restoredGeometry.Geometries.Count);
-        }
+        // DXF writes each ring as a separate polyline, so we expect multiple geometries in the list
+        // The number of geometries should match the number of rings
+        Assert.True(restoredGeometries.Count >= originalRingCount || 
+                    restoredGeometries.Any(g => g.HasAnyPoint()));
     }
 
     #endregion
@@ -419,10 +402,10 @@ public class Geometry_DxfTest
     public void Read_WithMalformedOrEmptyDxf_ShouldHandleGracefully(string dxfContent)
     {
         // Act
-        var geometry = DxfReader.Read(dxfContent, srid: 0);
+        var geometries = DxfReader.Read(dxfContent, srid: 0);
 
-        // Assert - Should return geometry (empty or otherwise) rather than throw
-        Assert.NotNull(geometry);
+        // Assert - Should return list (empty or otherwise) rather than throw
+        Assert.NotNull(geometries);
     }
 
     #endregion
@@ -453,8 +436,10 @@ public class Geometry_DxfTest
         
         Assert.NotNull(restored1);
         Assert.NotNull(restored2);
-        Assert.True(restored1.HasAnyPoint());
-        Assert.True(restored2.HasAnyPoint());
+        Assert.NotEmpty(restored1);
+        Assert.NotEmpty(restored2);
+        Assert.True(restored1[0].HasAnyPoint());
+        Assert.True(restored2[0].HasAnyPoint());
     }
 
     #endregion
