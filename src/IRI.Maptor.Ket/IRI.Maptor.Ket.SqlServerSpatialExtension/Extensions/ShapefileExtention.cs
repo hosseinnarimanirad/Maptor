@@ -113,7 +113,7 @@ public static class ShapefileExtention
 
         try
         {
-            switch (shape.Type)
+            switch (shape.EsriType)
             {
                 case EsriShapeType.NullShape:
                     return SqlGeometry.Null;
@@ -149,16 +149,16 @@ public static class ShapefileExtention
 
             var result = builder.ConstructedGeometry.MakeValid();
 
-            if (!result.IsNullOrEmpty() && !AreConsistent(shape.Type, result.GetOpenGisType()))
+            if (!result.IsNullOrEmpty() && !AreConsistent(shape.EsriType, result.GetOpenGisType()))
             {
-                return ClearGeometry(shape.Type, result, shape.Srid);
+                return ClearGeometry(shape.EsriType, result, shape.Srid);
             }
 
             return result;
         }
         catch (Exception ex)
         {
-            return CreateDefault(shape.Type, shape.Srid);
+            return CreateDefault(shape.EsriType, shape.Srid);
         }
     }
 

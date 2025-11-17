@@ -266,7 +266,7 @@ public struct EsriMultiPointZ : IEsriPointsWithZ
         get { return 20 + 8 * NumberOfPoints + 2 * (8 + 4 * NumberOfPoints); }
     }
 
-    public EsriShapeType Type
+    public EsriShapeType EsriType
     {
         get { return EsriShapeType.EsriMultiPointZM; }
     }

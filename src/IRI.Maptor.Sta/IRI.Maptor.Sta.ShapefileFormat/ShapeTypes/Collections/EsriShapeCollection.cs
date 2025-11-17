@@ -35,7 +35,7 @@ public class EsriShapeCollection<T> : List<T>, IEsriShapeCollection where T : IE
             throw new NotImplementedException();
         }
 
-        if (values.Select(i => i.Type).Distinct().Count() > 1)
+        if (values.Select(i => i.EsriType).Distinct().Count() > 1)
         {
             throw new NotImplementedException();
         }
@@ -51,7 +51,7 @@ public class EsriShapeCollection<T> : List<T>, IEsriShapeCollection where T : IE
         //toward the total length of the file, as stored at Byte 24 in the file header.
         var length = values.Sum(i => i.ContentLength + 4);
 
-        this.mainHeader = new MainFileHeader(length, values.First().Type, minimumBoundingBox);
+        this.mainHeader = new MainFileHeader(length, values.First().EsriType, minimumBoundingBox);
     }
       
     #region IShapeCollection Members

@@ -5,7 +5,7 @@ namespace IRI.Maptor.Sta.Spatial.Analysis;
 
 public static class Idw
 {
-    public static double? Calculate(IEnumerable<Point3D> points, IPoint measurePoint, double? maxDistance)
+    public static double? Calculate(IEnumerable<PointZM> points, IPoint measurePoint, double? maxDistance)
     {
         //var weights = new List<double>();
 

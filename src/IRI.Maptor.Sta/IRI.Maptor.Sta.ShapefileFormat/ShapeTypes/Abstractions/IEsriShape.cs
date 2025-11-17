@@ -23,7 +23,7 @@ public interface IEsriShape
     /// </summary>
     int ContentLength { get; }
 
-    EsriShapeType Type { get; }
+    EsriShapeType EsriType { get; }
 
     string AsSqlServerWkt();
 

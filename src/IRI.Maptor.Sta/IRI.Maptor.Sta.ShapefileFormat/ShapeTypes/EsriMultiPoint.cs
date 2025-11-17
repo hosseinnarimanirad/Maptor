@@ -101,7 +101,7 @@ public struct EsriMultiPoint : IEsriSimplePoints
         get { return 20 + 8 * NumberOfPoints; }
     }
 
-    public EsriShapeType Type
+    public EsriShapeType EsriType
     {
         get { return EsriShapeType.EsriMultiPoint; }
     }

@@ -1,9 +1,13 @@
-﻿namespace IRI.Maptor.Sta.Common.Abstrations;
+﻿using IRI.Maptor.Sta.Common.Primitives;
+
+namespace IRI.Maptor.Sta.Common.Abstrations;
 
 public interface IPoint
 {
     double X { get; set; }
     double Y { get; set; }
+
+    //PointType Type { get; }
 
     bool AreExactlyTheSame(object obj);
 
@@ -15,6 +19,8 @@ public interface IPoint
 
     byte[] AsByteArray();
 
+    //bool HasM();
+
+    //bool HasZ();
      
-    //T Transform<T>(Func<T, T> transform, int newSrid) where T : IPoint, new();
 }

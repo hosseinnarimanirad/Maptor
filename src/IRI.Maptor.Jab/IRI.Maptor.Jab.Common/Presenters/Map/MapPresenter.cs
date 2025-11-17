@@ -2267,7 +2267,7 @@ public abstract class MapPresenter : BasePresenter
     //    this.RequestZoomAndCenterToGoogleZoomLevel?.Invoke(googleZoomLevel, mapCenter, callback, false);
     //}
 
-    public void ZoomToExtent(BoundingBox boundingBox, bool isExactExtent, bool isNewExtent, Action callback = null)
+    public void ZoomToExtent(BoundingBox boundingBox, bool isExactExtent, bool isNewExtent, Action? callback = null)
     {
         RequestZoomToExtent?.Invoke(boundingBox, isExactExtent, isNewExtent, callback);
     }

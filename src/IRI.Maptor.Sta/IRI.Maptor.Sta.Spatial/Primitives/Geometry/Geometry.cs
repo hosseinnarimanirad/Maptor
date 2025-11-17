@@ -11,9 +11,9 @@ using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Sta.Spatial.Primitives;
 
-public class Geometry<T> /*: IGeometry */where T : IPoint, new()
+public class Geometry<T> : IGeometry where T : IPoint, new()
 {
-    static readonly T? NullPoint = default;
+    static readonly T NullPoint = default;
 
     private static readonly Geometry<T> _empty = new Geometry<T>();
 
@@ -73,6 +73,17 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
     }
 
     public int Srid { get; set; }
+
+    public bool HasZ()
+    {
+        return typeof(IHasZ).IsAssignableFrom(typeof(T));
+    }
+
+    public bool HasM()
+    {
+        return typeof(IHasM).IsAssignableFrom(typeof(T));
+    }
+     
 
     #region Constructors
 
@@ -2378,6 +2389,30 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         }
     }
 
+    public T? GetMeanOrLastPoint()
+    {
+        switch (this.Type)
+        {
+            case GeometryType.LineString:
+            case GeometryType.MultiLineString:
+                return this.GetLastPoint();
+
+            case GeometryType.Polygon:
+            case GeometryType.MultiPolygon:
+                return this.GetMeanPoint();
+
+            case GeometryType.Point:
+            case GeometryType.MultiPoint:
+            case GeometryType.GeometryCollection:
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            default:
+                throw new NotImplementedException();
+        }
+
+    }
+
     public void StartNewGeometry(T startPoint, GeometryType type)
     {
         if (this.Geometries == null)
@@ -3044,7 +3079,7 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
     public static Geometry<Point>? FromWkb(byte[] bytes, int srid)
     {
-        return WkbParser.Parse(bytes, srid);
+        return WkbReader.Parse(bytes, srid) as Geometry<Point>;
     }
 
     public string AsWkt()
@@ -3054,10 +3089,10 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
     public byte[]? AsWkb()
     {
-        return WkbParser.AsWkb(this);
+        return WkbWriter.AsWkb(this);
     }
 
-    public string AsWkbString()
+    public string AsWkbHexString()
     {
         return IRI.Maptor.Sta.Common.Helpers.HexStringHelper.ToHexStringUsingBitFiddle(AsWkb(), append0x: true);
     }
@@ -3237,17 +3272,14 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
         return CreatePointOrLineString(points.ToList(), srid);
     }
 
-    public static Geometry<Point> CreateLineStringFromPoints(List<Geometry<Point>> geometries)
+    public static Geometry<T> CreateLineStringFromPoints(List<Geometry<T>> geometries)
     {
-        if (geometries?.Any() != true)
-        {
-            return Geometry<Point>.Empty;
-        }
+        if (geometries.IsNullOrEmpty())
+            return Geometry<T>.Empty;
 
         var points = geometries.Select(g => g.AsPoint()).ToList();
 
-        //Geometry<Point> result = new Geometry<Point>()
-        return Geometry<Point>.CreatePointOrLineString(points, geometries?.FirstOrDefault()?.Srid ?? 0);
+        return Geometry<T>.CreatePointOrLineString(points, geometries?.FirstOrDefault()?.Srid ?? 0);
     }
 
 
@@ -3473,30 +3505,6 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
     #endregion
 
-    public IPoint? GetMeanOrLastPoint()
-    {
-        switch (this.Type)
-        {
-            case GeometryType.LineString:
-            case GeometryType.MultiLineString:
-                return this.GetLastPoint();
-
-            case GeometryType.Polygon:
-            case GeometryType.MultiPolygon:
-                return this.GetMeanPoint();
-
-            case GeometryType.Point:
-            case GeometryType.MultiPoint:
-            case GeometryType.GeometryCollection:
-            case GeometryType.CircularString:
-            case GeometryType.CompoundCurve:
-            case GeometryType.CurvePolygon:
-            default:
-                throw new NotImplementedException();
-        }
-
-    }
-
 
     #region Length
 
@@ -3680,8 +3688,6 @@ public class Geometry<T> /*: IGeometry */where T : IPoint, new()
 
     //    return result;
     //}
-
-
 
 
     private double GetLength(Func<T, T, double> distanceFunc)

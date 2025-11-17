@@ -3,9 +3,11 @@
 
 using System;
 using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Sta.Spatial.DigitalTerrainModeling;
 
+// consider replacing this class with PointZM
 [Serializable]
 public struct AttributedPoint : IPoint
 {
@@ -33,7 +35,13 @@ public struct AttributedPoint : IPoint
 
         set { _value = value; }
     }
-     
+
+    //public PointType Type => PointType.PointM;
+
+    //public bool HasM() => true;
+
+    //public bool HasZ() => false;
+
     public AttributedPoint(double x, double y, double value)
     {
         _x = x;

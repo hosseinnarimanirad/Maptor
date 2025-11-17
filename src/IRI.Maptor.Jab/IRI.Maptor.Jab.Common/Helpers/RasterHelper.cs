@@ -36,7 +36,7 @@ public static class RasterHelper
         //create empty raster
         Bitmap result = new Bitmap(width, height);
 
-        List<Point3D> pointSet = points.Select(p => new Point3D(p.TheGeometry.Points[0].X, p.TheGeometry.Points[0].Y, valueFunc(p))).ToList();
+        List<PointZM> pointSet = points.Select(p => new PointZM(p.TheGeometry.Points[0].X, p.TheGeometry.Points[0].Y, valueFunc(p))).ToList();
 
         var maxValue = pointSet.Max(p => p.Z);
         var minValue = pointSet.Min(p => p.Z);
@@ -133,7 +133,7 @@ public static class RasterHelper
             Bitmap result = new Bitmap(width, height);
 
 
-            List<Point3D> pointSet = points.Select(p => new Point3D(p.TheGeometry.Points[0].X, p.TheGeometry.Points[0].Y, valueFunc(p))).ToList();
+            List<PointZM> pointSet = points.Select(p => new PointZM(p.TheGeometry.Points[0].X, p.TheGeometry.Points[0].Y, valueFunc(p))).ToList();
 
             var maxValue = pointSet.Max(p => p.Z);
             var minValue = pointSet.Min(p => p.Z);
@@ -201,7 +201,7 @@ public static class RasterHelper
         Bitmap result;
 
 
-        List<Point3D> pointSet = points.Select(p => new Point3D(p.TheGeometry.Points[0].X, p.TheGeometry.Points[0].Y, valueFunc(p))).ToList();
+        List<PointZM> pointSet = points.Select(p => new PointZM(p.TheGeometry.Points[0].X, p.TheGeometry.Points[0].Y, valueFunc(p))).ToList();
 
         var maxValue = pointSet.Max(p => p.Z);
         var minValue = pointSet.Min(p => p.Z);

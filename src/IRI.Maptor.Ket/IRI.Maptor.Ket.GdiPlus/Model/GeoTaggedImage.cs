@@ -6,9 +6,9 @@ namespace IRI.Maptor.Ket.GdiPlus.Model;
 
 public class GeoTaggedImage
 {
-    public Point3D GeographicLocation { get; set; }
+    public PointZM GeographicLocation { get; set; }
 
-    public Point3D WebMercatorLocation { get; set; }
+    public PointZM WebMercatorLocation { get; set; }
 
     public string ImageFileName { get; set; }
 
@@ -22,11 +22,11 @@ public class GeoTaggedImage
 
             if (System.IO.File.Exists(location))
             {
-                this.GeographicLocation = JsonHelper.Deserialize<Point3D>(System.IO.File.ReadAllText(location));
+                this.GeographicLocation = JsonHelper.Deserialize<PointZM>(System.IO.File.ReadAllText(location));
 
                 var webMercator = MapProjects.GeodeticWgs84ToWebMercator((Point)GeographicLocation);
 
-                this.WebMercatorLocation = new Point3D(webMercator.X, webMercator.Y, GeographicLocation.Z);
+                this.WebMercatorLocation = new PointZM(webMercator.X, webMercator.Y, GeographicLocation.Z);
             }
             else
             {
@@ -36,7 +36,7 @@ public class GeoTaggedImage
 
                     var webMercator = MapProjects.GeodeticWgs84ToWebMercator((Point)GeographicLocation);
 
-                    this.WebMercatorLocation = new Point3D(webMercator.X, webMercator.Y, GeographicLocation.Z);
+                    this.WebMercatorLocation = new PointZM(webMercator.X, webMercator.Y, GeographicLocation.Z);
 
                     System.IO.File.WriteAllText(location, JsonHelper.Serialize(this.GeographicLocation));
                 }
@@ -44,9 +44,9 @@ public class GeoTaggedImage
         }
         catch (Exception)
         {
-            this.GeographicLocation = Point3D.NaN;
+            this.GeographicLocation = PointZM.NaN;
 
-            this.WebMercatorLocation = Point3D.NaN;
+            this.WebMercatorLocation = PointZM.NaN;
         }
     }
 }

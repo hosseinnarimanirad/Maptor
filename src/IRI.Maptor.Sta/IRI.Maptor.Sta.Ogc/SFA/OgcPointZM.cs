@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using IRI.Maptor.Sta.Common.Abstrations;
 
 namespace IRI.Maptor.Sta.Ogc.SFA;
 
 [Serializable]
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
-public struct OgcPointZM : IOgcPoint
+public struct OgcPointZM : IOgcPoint, IHasZ, IHasM
 {
     double x;
 

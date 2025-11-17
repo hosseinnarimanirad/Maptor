@@ -176,7 +176,7 @@ public struct EsriPolygon : IEsriSimplePoints
         get { return 22 + 2 * NumberOfParts + 8 * NumberOfPoints; }
     }
 
-    public EsriShapeType Type
+    public EsriShapeType EsriType
     {
         get { return EsriShapeType.EsriPolygon; }
     }

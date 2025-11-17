@@ -271,7 +271,7 @@ public struct EsriPolylineZ : IEsriPointsWithZ
         get { return 22 + 2 * NumberOfParts + 8 * NumberOfPoints + 2 * (8 + 4 * NumberOfPoints); }
     }
 
-    public EsriShapeType Type
+    public EsriShapeType EsriType
     {
         get { return EsriShapeType.EsriPolyLineZM; }
     }

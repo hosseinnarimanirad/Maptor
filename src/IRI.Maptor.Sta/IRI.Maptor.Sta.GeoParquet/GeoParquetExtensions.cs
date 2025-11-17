@@ -30,7 +30,7 @@ public static class GeoParquetExtensions
     /// </summary>
     public static Geometry<Point>? FromGeoParquetWkb(this byte[] wkbBytes, int srid)
     {
-        return WkbParser.Parse(wkbBytes, srid);
+        return WkbReader.Parse(wkbBytes, srid) as Geometry<Point>;
     }
 
     /// <summary>

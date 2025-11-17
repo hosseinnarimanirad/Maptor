@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using IRI.Maptor.Sta.Common.Abstrations;
 
 namespace IRI.Maptor.Sta.Ogc.SFA;
 
-public interface IOgcPoint
+public interface IOgcPoint  
 {
     double X { get; }
 

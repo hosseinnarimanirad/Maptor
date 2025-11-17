@@ -39,12 +39,16 @@ public struct EsriPointZ : IPoint, IEsriShape, IHasZ
         get { return this.measure; }
     }
 
+    //public PointType Type => PointType.PointM | PointType.PointZ;
+
+    //public bool HasM() => true;
+
+    //public bool HasZ() => true;
+
     public int Srid { get; set; }
 
     public EsriPointZ(double x, double y, double z, int srid)
-        : this(x, y, z, EsriConstants.NoDataValue, srid)
-    {
-    }
+        : this(x, y, z, EsriConstants.NoDataValue, srid) { }
 
     public EsriPointZ(double x, double y, double z, double measure, int srid)
     {
@@ -79,11 +83,11 @@ public struct EsriPointZ : IPoint, IEsriShape, IHasZ
     {
         if (point is EsriPointZ)
         {
-            return Point3D.GetDistance(new Point3D(this.X, this.Y, this.Z), new Point3D(point.X, point.Y, ((EsriPointZ)point).Z));
+            return PointZM.GetDistance(new PointZM(this.X, this.Y, this.Z), new PointZM(point.X, point.Y, ((EsriPointZ)point).Z));
         }
         else
         {
-            return new Point3D(this.X, this.Y, this.Z).DistanceTo(point);
+            return new PointZM(this.X, this.Y, this.Z).DistanceTo(point);
         }
 
     }
@@ -135,7 +139,7 @@ public struct EsriPointZ : IPoint, IEsriShape, IHasZ
         get { return ShapeConstants.PointZContentLengthInWords; }
     }
 
-    public EsriShapeType Type
+    public EsriShapeType EsriType
     {
         get { return EsriShapeType.EsriPointZM; }
     }

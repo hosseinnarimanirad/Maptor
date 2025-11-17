@@ -144,24 +144,24 @@ public struct EsriMultiPointM : IEsriPointsWithMeasure
 
         this.measures = new double[points.Length];
 
-        this.minMeasure = points[0].Measure;
+        this.minMeasure = points[0].M;
 
-        this.maxMeasure = points[0].Measure;
+        this.maxMeasure = points[0].M;
 
         for (int i = 0; i < points.Length; i++)
         {
             this.points[i] = new EsriPoint(points[i].X, points[i].Y, this.Srid);
 
-            this.measures[i] = points[i].Measure;
+            this.measures[i] = points[i].M;
 
-            if (this.minMeasure > points[i].Measure)
+            if (this.minMeasure > points[i].M)
             {
-                this.minMeasure = points[i].Measure;
+                this.minMeasure = points[i].M;
             }
 
-            if (this.maxMeasure < points[i].Measure)
+            if (this.maxMeasure < points[i].M)
             {
-                this.maxMeasure = points[i].Measure;
+                this.maxMeasure = points[i].M;
             }
         }
     }
@@ -195,7 +195,7 @@ public struct EsriMultiPointM : IEsriPointsWithMeasure
         get { return 20 + 8 * NumberOfPoints + 8 + 4 * NumberOfPoints; }
     }
 
-    public EsriShapeType Type
+    public EsriShapeType EsriType
     {
         get { return EsriShapeType.EsriMultiPointM; }
     }

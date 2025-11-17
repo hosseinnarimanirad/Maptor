@@ -14,6 +14,10 @@ public class Point : IPoint
 
     public double Y { get; set; }
 
+    public Point()
+    {
+    }
+
     public Point(double x, double y)
     {
         this.X = x;
@@ -21,31 +25,11 @@ public class Point : IPoint
         this.Y = y;
     }
 
-    public Point()
-    {
-        this.X = 0;
+    //public virtual PointType Type => PointType.Normal;
 
-        this.Y = 0;
-    }
+    //public virtual bool HasM() => false;
 
-    //public static double GetDistance(Point first, Point second)
-    //{
-    //    return Math.Sqrt((first.X - second.X) * (first.X - second.X) + (first.Y - second.Y) * (first.Y - second.Y));
-    //}
-
-    //public static double EuclideanDistance(IPoint first, IPoint second)
-    //{
-    //    return
-    //        Math.Sqrt((first.X - second.X) * (first.X - second.X) +
-    //                    (first.Y - second.Y) * (first.Y - second.Y));
-    //}
-
-    public static Point FromPolar(double radius, double angleInRadian)
-    {
-        return new Point(
-            radius * Math.Cos(angleInRadian),
-            radius * Math.Sin(angleInRadian));
-    }
+    //public virtual bool HasZ() => false;
 
     public double DistanceTo(IPoint point)
     {
@@ -92,20 +76,6 @@ public class Point : IPoint
     //    return GetDistance(this, new Point(point.X, point.Y));
     //}
 
-    public static Point operator -(Point p1, Point p2)
-    {
-        return new Point(p2.X - p1.X, p2.Y - p1.Y);
-    }
-
-    public static Point operator +(Point p1, Point p2)
-    {
-        return new Point(p1.X + p2.X, p1.Y + p2.Y);
-    }
-
-    public static Point NaN { get; } = new Point(double.NaN, double.NaN);
-
-    public static Point PositiveInfinity { get; } = new Point(double.PositiveInfinity, double.PositiveInfinity);
-
     public override bool Equals(object obj)
     {
         if (obj?.GetType() == typeof(Point))
@@ -123,7 +93,8 @@ public class Point : IPoint
         return base.GetHashCode();
     }
 
-    public byte[] AsWkb()
+
+    public virtual byte[] AsWkb()
     {
         byte[] result = new byte[21];
 
@@ -138,10 +109,56 @@ public class Point : IPoint
         return result;
     }
      
-
     public virtual string AsWkt()
     {
         return FormattableString.Invariant($"POINT({X.ToInvariantString()} {Y.ToInvariantString()}");
+    }
+     
+    public byte[] AsByteArray()
+    {
+        // Option #1
+        //byte[] result = new byte[16];
+
+        //Array.Copy(BitConverter.GetBytes(X), 0, result, 0, 8);
+
+        //Array.Copy(BitConverter.GetBytes(Y), 0, result, 8, 8);
+
+        //return result;
+
+
+        // Option #2
+        //byte[] result = new byte[16];
+
+        //BitConverter.TryWriteBytes(result.AsSpan(0, 8), X);
+
+        //BitConverter.TryWriteBytes(result.AsSpan(8, 8), Y);
+
+        //return result;
+
+
+        // Option #3
+        Span<byte> buffer = stackalloc byte[16];  // Stack-allocated, no heap allocation
+
+        BitConverter.TryWriteBytes(buffer.Slice(0, 8), X);
+
+        BitConverter.TryWriteBytes(buffer.Slice(8, 8), Y);
+
+        return buffer.ToArray();  // Only allocates when creating final array
+    }
+
+
+    #region Static Methods
+
+    public static Point NaN { get; } = new Point(double.NaN, double.NaN);
+
+    public static Point PositiveInfinity { get; } = new Point(double.PositiveInfinity, double.PositiveInfinity);
+
+
+    public static Point FromPolar(double radius, double angleInRadian)
+    {
+        return new Point(
+            radius * Math.Cos(angleInRadian),
+            radius * Math.Sin(angleInRadian));
     }
 
     public static Point Parse(double[] values, bool isLongitudeFirst)
@@ -179,6 +196,16 @@ public class Point : IPoint
         return new Point(x, y);
     }
 
+    public static Point operator -(Point p1, Point p2)
+    {
+        return new Point(p2.X - p1.X, p2.Y - p1.Y);
+    }
+
+    public static Point operator +(Point p1, Point p2)
+    {
+        return new Point(p1.X + p2.X, p1.Y + p2.Y);
+    }
+
     //public static bool operator ==(Point first, Point second)
     //{
     //    return first.Equals(second);
@@ -189,45 +216,5 @@ public class Point : IPoint
     //    return !first.Equals(second);
     //}
 
-
-    //public Microsoft.SqlServer.Types.SqlGeometry AsSqlGeometry()
-    //{
-    //    return Microsoft.SqlServer.Types.SqlGeometry.Parse(
-    //        new System.Data.SqlTypes.SqlString(string.Format("POINT({0} {1})", this.X.ToString(), this.Y.ToString())));
-    //}
-
-
-    public byte[] AsByteArray()
-    {
-        // Option #1
-        //byte[] result = new byte[16];
-
-        //Array.Copy(BitConverter.GetBytes(X), 0, result, 0, 8);
-
-        //Array.Copy(BitConverter.GetBytes(Y), 0, result, 8, 8);
-
-        //return result;
-
-
-        // Option #2
-        //byte[] result = new byte[16];
-
-        //BitConverter.TryWriteBytes(result.AsSpan(0, 8), X);
-
-        //BitConverter.TryWriteBytes(result.AsSpan(8, 8), Y);
-
-        //return result;
-
-
-        // Option #3
-        Span<byte> buffer = stackalloc byte[16];  // Stack-allocated, no heap allocation
-
-        BitConverter.TryWriteBytes(buffer.Slice(0, 8), X);
-
-        BitConverter.TryWriteBytes(buffer.Slice(8, 8), Y);
-
-        return buffer.ToArray();  // Only allocates when creating final array
-    }
-
-
+    #endregion
 }

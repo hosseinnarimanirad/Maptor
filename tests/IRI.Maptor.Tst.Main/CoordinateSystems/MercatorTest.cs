@@ -1,11 +1,4 @@
-﻿using IRI.Maptor.Sta.Spatial.Primitives;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IRI.Maptor.Sta.Common.Primitives;
+﻿using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Tst.CoordinateSystems;

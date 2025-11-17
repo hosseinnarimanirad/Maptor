@@ -43,6 +43,14 @@ public class NotifiablePoint : Notifier, IPoint
         }
     }
 
+
+    //public PointType Type => PointType.Normal;
+
+    //public bool HasM() => false;
+
+    //public bool HasZ() => false;
+
+
     public NotifiablePoint()
     {
 

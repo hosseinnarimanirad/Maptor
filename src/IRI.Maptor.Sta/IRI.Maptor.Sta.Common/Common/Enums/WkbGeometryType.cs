@@ -25,6 +25,7 @@ public enum WkbGeometryType : int
     PolyhedralSurface = 15,
     TIN = 16,
 
+
     GeometryZ = 1000,
     PointZ = 1001,
     LineStringZ = 1002,
@@ -43,6 +44,7 @@ public enum WkbGeometryType : int
     PolyhedralSurfaceZ = 1015,
     TINZ = 1016,
 
+
     GeometryM = 2000,
     PointM = 2001,
     LineStringM = 2002,
@@ -60,6 +62,7 @@ public enum WkbGeometryType : int
     SurfaceM = 2014,
     PolyhedralSurfaceM = 2015,
     TINM = 2016,
+
 
     GeometryZM = 3000,
     PointZM = 3001,

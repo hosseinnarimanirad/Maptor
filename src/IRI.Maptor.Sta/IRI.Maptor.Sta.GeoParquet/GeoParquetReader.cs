@@ -13,7 +13,7 @@ namespace IRI.Maptor.Sta.GeoParquet;
 /// Reader for GeoParquet files
 /// </summary>
 public static class GeoParquetReader
-{
+{ 
     /// <summary>
     /// Reads features from a GeoParquet file
     /// </summary>
@@ -70,7 +70,7 @@ public static class GeoParquetReader
                 if (geometryBytes == null || geometryBytes.Length == 0)
                     continue;
 
-                var geometry = WkbParser.Parse(geometryBytes, srid);
+                var geometry = WkbReader.Parse(geometryBytes, srid) as Geometry<Point>;
                 if (geometry == null)
                     continue;
 

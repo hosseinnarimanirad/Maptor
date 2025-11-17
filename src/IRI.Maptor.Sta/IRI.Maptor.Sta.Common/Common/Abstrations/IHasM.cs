@@ -6,5 +6,5 @@ namespace IRI.Maptor.Sta.Common.Abstrations;
 
 public interface IHasM
 {
-    public double Measure { get; }
+    public double M { get; }
 }

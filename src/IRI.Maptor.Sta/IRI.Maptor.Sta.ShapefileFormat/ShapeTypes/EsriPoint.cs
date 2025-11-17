@@ -30,6 +30,12 @@ public struct EsriPoint : IPoint, IEsriShape
 
     public int Srid { get; set; }
 
+    //public PointType Type => PointType.Normal;
+     
+    //public bool HasM() => false;
+
+    //public bool HasZ() => false;
+
     public EsriPoint(double x, double y, int srid)
     {
         this.Srid = srid;
@@ -78,7 +84,7 @@ public struct EsriPoint : IPoint, IEsriShape
         get { return ShapeConstants.PointContentLengthInWords; }
     }
 
-    public EsriShapeType Type
+    public EsriShapeType EsriType
     {
         get { return EsriShapeType.EsriPoint; }
     }

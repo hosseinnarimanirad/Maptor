@@ -29,10 +29,16 @@ public struct EsriPointM : IPoint, IEsriShape, IHasM
         set { this.y = value; }
     }
 
-    public double Measure
+    public double M
     {
         get { return this.measure; }
     }
+
+    //public PointType Type => PointType.PointM;
+     
+    //public bool HasM() => true;
+
+    //public bool HasZ() => false;
 
     public int Srid { get; set; }
 
@@ -78,7 +84,7 @@ public struct EsriPointM : IPoint, IEsriShape, IHasM
 
         result.Write(Writer.ShpWriter.CheckNoDataAndGetByteValue(this.Y), 0, ShapeConstants.DoubleSize);
 
-        result.Write(Writer.ShpWriter.CheckNoDataAndGetByteValue(this.Measure), 0, ShapeConstants.DoubleSize);
+        result.Write(Writer.ShpWriter.CheckNoDataAndGetByteValue(this.M), 0, ShapeConstants.DoubleSize);
 
         return result.ToArray();
     }
@@ -88,7 +94,7 @@ public struct EsriPointM : IPoint, IEsriShape, IHasM
         get { return ShapeConstants.PointMContentLengthInWords; }
     }
 
-    public EsriShapeType Type
+    public EsriShapeType EsriType
     {
         get { return EsriShapeType.EsriPointM; }
     }
@@ -113,12 +119,12 @@ public struct EsriPointM : IPoint, IEsriShape, IHasM
 
     public string AsSqlServerWkt()
     {
-        return string.Format(System.Globalization.CultureInfo.InvariantCulture, "POINT({0:G17} {1:G17} NULL {2:G17})", this.X, this.Y, this.Measure);
+        return string.Format(System.Globalization.CultureInfo.InvariantCulture, "POINT({0:G17} {1:G17} NULL {2:G17})", this.X, this.Y, this.M);
     }
 
     public byte[] AsWkb()
     {
-        return OgcWkbMapFunctions.ToWkbPointM(this, this.Measure);
+        return OgcWkbMapFunctions.ToWkbPointM(this, this.M);
     }
 
     /// <summary>
@@ -137,14 +143,14 @@ public struct EsriPointM : IPoint, IEsriShape, IHasM
 
     public string AsExactString()
     {
-        return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17} {1:G17} {2:G17}", this.X, this.Y, this.Measure);
+        return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17} {1:G17} {2:G17}", this.X, this.Y, this.M);
     }
 
     public IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         var result = transform(this);
 
-        return new EsriPointM(result.X, result.Y, this.Measure, newSrid);
+        return new EsriPointM(result.X, result.Y, this.M, newSrid);
     }
 
     public Geometry<Point> AsGeometry()

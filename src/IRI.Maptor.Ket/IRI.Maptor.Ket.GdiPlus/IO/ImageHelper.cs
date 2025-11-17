@@ -102,7 +102,7 @@ public static class ImageHelper
         return result;
     }
 
-    public static IRI.Maptor.Sta.Common.Primitives.Point3D GetWgs84Location(Bitmap bitmap)
+    public static IRI.Maptor.Sta.Common.Primitives.PointZM GetWgs84Location(Bitmap bitmap)
     {
         var latitude = GetLatitude(bitmap);
 
@@ -112,17 +112,17 @@ public static class ImageHelper
 
         if (!(latitude.HasValue && longitude.HasValue))
         {
-            return IRI.Maptor.Sta.Common.Primitives.Point3D.NaN;
+            return IRI.Maptor.Sta.Common.Primitives.PointZM.NaN;
         }
         else
         {
             if (height.HasValue)
             {
-                return new IRI.Maptor.Sta.Common.Primitives.Point3D(longitude.Value, latitude.Value, height.Value);
+                return new IRI.Maptor.Sta.Common.Primitives.PointZM(longitude.Value, latitude.Value, height.Value);
             }
             else
             {
-                return new IRI.Maptor.Sta.Common.Primitives.Point3D(longitude.Value, latitude.Value, double.NaN);
+                return new IRI.Maptor.Sta.Common.Primitives.PointZM(longitude.Value, latitude.Value, double.NaN);
             }
         }
 
@@ -134,7 +134,7 @@ public static class ImageHelper
     /// </summary>
     /// <param name="bitmap"></param>
     /// <param name="point"></param>
-    public static void SaveGeoTagInfo(ref Bitmap bitmap, IRI.Maptor.Sta.Common.Primitives.Point3D point)
+    public static void SaveGeoTagInfo(ref Bitmap bitmap, IRI.Maptor.Sta.Common.Primitives.PointZM point)
     {
         if (point.Y < -90 || point.Y > 90 || point.X < -180 || point.X > 360)
             throw new NotImplementedException();

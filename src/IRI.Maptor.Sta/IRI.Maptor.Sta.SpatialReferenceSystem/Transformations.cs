@@ -274,7 +274,7 @@ public static class Transformations
         return new TPoint() { X = result.Longitude.GetValue(0).Value, Y = result.Latitude.GetValue(0).Value };
     }
 
-    public static Point3D ToCartesian(IPoint geodeticPoint, IEllipsoid ellipsoid)
+    public static PointZM ToCartesian(IPoint geodeticPoint, IEllipsoid ellipsoid)
     {
         var scale = Math.PI / 180.0;
 
@@ -298,10 +298,10 @@ public static class Transformations
 
         var z = ellipsoid.DatumTranslation.Z.Value + N * ellipsoid.SemiMinorAxis.Value * ellipsoid.SemiMinorAxis.Value / (ellipsoid.SemiMajorAxis.Value * ellipsoid.SemiMajorAxis.Value) * sinPhi;
 
-        return new Point3D(x, y, z);
+        return new PointZM(x, y, z);
     }
 
-    public static TPoint ToGeodetic<TPoint>(Point3D cartesianPoint, IEllipsoid ellipsoid) where TPoint : IPoint, new()
+    public static TPoint ToGeodetic<TPoint>(PointZM cartesianPoint, IEllipsoid ellipsoid) where TPoint : IPoint, new()
     {
         double tempSemiMajor = ellipsoid.SemiMajorAxis.Value;
 

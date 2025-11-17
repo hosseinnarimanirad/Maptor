@@ -324,7 +324,7 @@ public static class Shapefile
 
         IEsriShapeCollection collection = new EsriShapeCollection<IEsriShape>(shapes);
 
-        EsriShapeType shapeType = shapes.First().Type;
+        EsriShapeType shapeType = shapes.First().EsriType;
 
         using (System.IO.MemoryStream featureWriter = new System.IO.MemoryStream())
         {

@@ -237,6 +237,7 @@ public static class WebMercatorUtility
 
     public static int GetZoomLevel(double mapScale, double latitude = 0)
     {
+        // Floor should be used not Round
         var level = (int)Math.Round(GetLevel(mapScale, latitude));
 
         return AdjustLevel(level);
