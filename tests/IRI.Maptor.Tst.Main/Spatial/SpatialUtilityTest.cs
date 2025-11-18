@@ -318,8 +318,8 @@ public class SpatialUtilityTest
     public void IsPointInPolygon(bool isPointInPolygon, string polygonWkt, string pointWkt)
     {
         // Arrange 
-        var sut = WktParser.Parse(polygonWkt);
-        var point = WktParser.Parse(pointWkt).AsPoint();
+        var sut = (SqlServerWktReader.Parse(polygonWkt) as Geometry<Point>);
+        var point = (SqlServerWktReader.Parse(pointWkt) as Geometry<Point>).AsPoint();
 
         // Act
         bool isPointInPolygonActually = TopologyUtility.IsPointInPolygon<Point>(sut, point);

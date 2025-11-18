@@ -129,8 +129,8 @@ public class SyntheticDataTrainingViewModel : Notifier
             return (null, null);
 
         //wkt in screen 
-        var originalScreenGeometry = Geometry<Point>.FromWkt(CurrentItem?.OriginalLineString, 0);
-        var simplifiedScreenGeometry = Geometry<Point>.FromWkt(CurrentItem?.SimplifiedLineString, 0);
+        var originalScreenGeometry = Geometry<Point>.FromWkt(CurrentItem?.OriginalLineString, 0) as Geometry<Point>;
+        var simplifiedScreenGeometry = Geometry<Point>.FromWkt(CurrentItem?.SimplifiedLineString, 0) as Geometry<Point>;
 
         var originalGeometry = _map.TransformScreenGeometryToWebMercatorGeometry(originalScreenGeometry);
         var simplifiedGeometry = _map.TransformScreenGeometryToWebMercatorGeometry(simplifiedScreenGeometry);
@@ -322,8 +322,8 @@ public class SyntheticDataTrainingViewModel : Notifier
             return new List<LRSimplificationParameters<Sb.Point>>();
 
         //wkt in screen 
-        var originalScreenGeometry = Geometry<Point>.FromWkt(item?.OriginalLineString, 0);
-        var simplifiedScreenGeometry = Geometry<Point>.FromWkt(item?.SimplifiedLineString, 0);
+        var originalScreenGeometry = Geometry<Point>.FromWkt(item?.OriginalLineString, 0) as Geometry<Point>;
+        var simplifiedScreenGeometry = Geometry<Point>.FromWkt(item?.SimplifiedLineString, 0) as Geometry<Point>;
 
         var isRingMode = originalScreenGeometry.IsRingBase();
 

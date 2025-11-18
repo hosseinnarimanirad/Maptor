@@ -53,18 +53,18 @@ public class PointZM : IPoint, IHasZ, IHasM
 
     public PointZM(double x, double y, double z)
     {
-        this.X = x;
+        X = x;
 
-        this.Y = y;
+        Y = y;
 
-        this.Z = z;
+        Z = z;
     }
 
 
 
-    public override string ToString() => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}, {1}, {2}", this.X, this.Y, this.Z);
+    public override string ToString() => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}, {1}, {2}, {3}", X, Y, Z, M);
 
-    public string AsExactString() => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17} {1:G17} {2:G17}", this.X, this.Y, this.Z);
+    public string AsExactString() => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17} {1:G17} {2:G17}", X, Y, Z);
 
     public bool AreExactlyTheSame(object obj)
     {
@@ -89,8 +89,8 @@ public class PointZM : IPoint, IHasZ, IHasM
         }
         else
         {
-            return Math.Sqrt((this.X - point.X) * (this.X - point.X) +
-                                (this.Y - point.Y) * (this.Y - point.Y));
+            return Math.Sqrt((X - point.X) * (X - point.X) +
+                                (Y - point.Y) * (Y - point.Y));
         }
     }
 

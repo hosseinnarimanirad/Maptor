@@ -3072,19 +3072,23 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     #region Ogc Wkb & Wkt
 
-    public static Geometry<Point> FromWkt(string wktString, int srid)
+    public static Geometry<T> FromWkt(string wktString, int srid)
     {
-        return WktParser.Parse(wktString, srid);
+        var result = WktReader.Parse(wktString, srid) as Geometry<T>;
+
+        return result ?? Geometry<T>.Empty;
     }
 
-    public static Geometry<Point>? FromWkb(byte[] bytes, int srid)
+    public static Geometry<T> FromWkb(byte[] bytes, int srid)
     {
-        return WkbReader.Parse(bytes, srid) as Geometry<Point>;
+        var result = WkbReader.Parse(bytes, srid) as Geometry<T>;
+
+        return result ?? Geometry<T>.Empty;
     }
 
     public string AsWkt()
     {
-        return WktParser.AsWkt(this);
+        return WktWriter.AsWkt(this);
     }
 
     public byte[]? AsWkb()
@@ -3286,6 +3290,10 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public static Geometry<T> CreatePolygonOrMultiPolygon(List<Geometry<T>> rings, int srid)
     {
+        // OGC SFA for polygon:
+        // The exterior boundary LinearRing defines the “top” of the surface which is the side of the surface from which the
+        // exterior boundary appears to traverse the boundary in a counter clockwise direction. The interior LinearRings will
+        // have the opposite orientation, and appear as clockwise when viewed from the “top”,
         if (rings.IsNullOrEmpty())
         {
             return Geometry<T>.CreateEmpty(GeometryType.Polygon, srid);
@@ -3316,8 +3324,8 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
                     isMasterRing = false;
 
-                    //must be ccw
-                    if (SpatialUtility.IsClockwise(currentRing.Points))
+                    // inner rings must be CW
+                    if (!SpatialUtility.IsClockwise(currentRing.Points))
                     {
                         currentRing.Reverse();
                     }
@@ -3327,8 +3335,8 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             }
             if (isMasterRing)
             {
-                //must be cw
-                if (!SpatialUtility.IsClockwise(currentRing.Points))
+                // outter ring must be CCW
+                if (SpatialUtility.IsClockwise(currentRing.Points))
                 {
                     currentRing.Reverse();
                 }

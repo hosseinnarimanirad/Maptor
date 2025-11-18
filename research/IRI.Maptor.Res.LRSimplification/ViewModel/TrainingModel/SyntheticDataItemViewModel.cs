@@ -113,7 +113,7 @@ public class SyntheticDataItemViewModel : Notifier
         {
             try
             {
-                var original = Geometry<Point>.FromWkt(OriginalLineString, 0);
+                var original = Geometry<Point>.FromWkt(OriginalLineString, 0) as Geometry<Point>;
 
                 var simplified = Geometry<Point>.CreatePointOrLineString(new List<Point>() { original.Points.First(), original.Points.Last() }, original.Srid);
 

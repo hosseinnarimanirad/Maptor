@@ -1,7 +1,6 @@
-using System.Text;
-
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -16,22 +15,14 @@ public static class WktReader
     const string Polygon = "POLYGON";
     const string MultiPolygon = "MULTIPOLYGON";
 
-    private enum CoordinateDimension
-    {
-        TwoD,  // X Y
-        Z,     // X Y Z
-        M,     // X Y M
-        ZM     // X Y Z M
-    }
-
-    public static Geometry<Point> Parse(string wktString, int srid = 0)
+    public static IGeometry Parse(string wktString, int srid = 0)
     {
         if (string.IsNullOrWhiteSpace(wktString))
             return Geometry<Point>.Empty;
 
-        var typeChars = wktString.TakeWhile(c => c != '(')?.ToArray();
+        var typeChars = wktString.TakeWhile(c => c != '(').ToArray();
 
-        if (typeChars.IsNullOrEmpty())
+        if (typeChars == null || typeChars.Length == 0)
             return Geometry<Point>.Empty;
 
         var type = new string(typeChars).Trim().ToUpper();
@@ -44,22 +35,22 @@ public static class WktReader
         switch (baseType)
         {
             case Point:
-                return ParsePoint(coordinates, srid, isRing: false, dimension);
+                return WktHelpers.ParsePoint(coordinates, srid, dimension, "WktReader");
 
             case MultiPoint:
-                return ParseMultiPoint(coordinates, srid, isRing: false, dimension);
+                return ParseMultiPoint(coordinates, srid, dimension);
 
             case LineString:
-                return ParseLineString(coordinates, srid, isRing: false, dimension);
+                return WktHelpers.ParseLineString(coordinates, srid, isRing: false, dimension, "WktReader");
 
             case MultiLineString:
-                return ParseMultiLineString(coordinates, srid, dimension);
+                return WktHelpers.ParseMultiLineString(coordinates, srid, dimension, "WktReader");
 
             case Polygon:
-                return ParsePolygon(coordinates, srid, dimension);
+                return WktHelpers.ParsePolygon(coordinates, srid, dimension, "WktReader");
 
             case MultiPolygon:
-                return ParseMultiPolygon(coordinates, srid, dimension);
+                return WktHelpers.ParseMultiPolygon(coordinates, srid, dimension, "WktReader");
 
             default:
                 throw new NotImplementedException($"WktReader > Parse: Unsupported geometry type '{baseType}'");
@@ -79,141 +70,40 @@ public static class WktReader
 
     private static string RemoveDimensionSuffix(string type)
     {
+        var result = type;
+
         if (type.EndsWith("ZM", StringComparison.OrdinalIgnoreCase))
-            return type.Substring(0, type.Length - 2);
-        if (type.EndsWith("Z", StringComparison.OrdinalIgnoreCase) || type.EndsWith("M", StringComparison.OrdinalIgnoreCase))
-            return type.Substring(0, type.Length - 1);
-        return type;
+            result = type.Substring(0, type.Length - 2);
+
+        else if (type.EndsWith("Z", StringComparison.OrdinalIgnoreCase) || type.EndsWith("M", StringComparison.OrdinalIgnoreCase))
+            result = type.Substring(0, type.Length - 1);
+
+        return result.Trim().ToUpper();
     }
 
-    private static Geometry<Point> ParsePoint(string wktString, int srid, bool isRing, CoordinateDimension dimension)
-    {
-        var points = GetPoints(wktString, isRing, dimension);
-        return Geometry<Point>.CreatePointOrLineString(points, srid);
-    }
-
-    private static Geometry<Point> ParseMultiPoint(string wktString, int srid, bool isRing, CoordinateDimension dimension)
-    {
-        var cleanedString = wktString.Replace('(', ' ').Replace(')', ' ');
-        var points = GetPoints(cleanedString, isRing, dimension);
-
-        if (points.IsNullOrEmpty())
-            return Geometry<Point>.Empty;
-
-        return new Geometry<Point>(points.Select(p => Geometry<Point>.Create(p.X, p.Y, srid)).ToList(), GeometryType.MultiPoint, srid);
-    }
-
-    private static Geometry<Point> ParseLineString(string wktString, int srid, bool isRing, CoordinateDimension dimension)
-    {
-        var points = GetPoints(wktString, isRing, dimension);
-        return Geometry<Point>.CreatePointOrLineString(points, srid);
-    }
-
-    private static Geometry<Point> ParseMultiLineString(string wktString, int srid, CoordinateDimension dimension)
-    {
-        var items = Process(wktString);
-        List<Geometry<Point>> lineStrings = new List<Geometry<Point>>();
-
-        foreach (var item in items.Where(i => i.level == 2))
-        {
-            var subString = wktString.Substring(item.start, item.end - item.start);
-            lineStrings.Add(ParseLineString(subString, srid, isRing: false, dimension));
-        }
-
-        return new Geometry<Point>(lineStrings, GeometryType.MultiLineString, srid);
-    }
-
-    private static Geometry<Point> ParsePolygon(string wktString, int srid, CoordinateDimension dimension)
-    {
-        var items = Process(wktString);
-        List<Geometry<Point>> rings = new List<Geometry<Point>>();
-
-        foreach (var item in items.Where(i => i.level == 2))
-        {
-            var subString = wktString.Substring(item.start, item.end - item.start);
-            rings.Add(ParseLineString(subString, srid, isRing: true, dimension));
-        }
-
-        return new Geometry<Point>(rings, GeometryType.Polygon, srid);
-    }
-
-    private static Geometry<Point> ParseMultiPolygon(string wktString, int srid, CoordinateDimension dimension)
-    {
-        var items = Process(wktString);
-        List<Geometry<Point>> polygons = new List<Geometry<Point>>();
-
-        foreach (var item in items.Where(i => i.level == 2))
-        {
-            List<Geometry<Point>> rings = new List<Geometry<Point>>();
-
-            foreach (var ring in items.Where(i => i.level == 3 && i.end < item.end && i.start > item.start))
-            {
-                var subString = wktString.Substring(ring.start, ring.end - ring.start);
-                rings.Add(ParseLineString(subString, srid, isRing: true, dimension));
-            }
-
-            polygons.Add(new Geometry<Point>(rings, GeometryType.Polygon, srid));
-        }
-
-        return new Geometry<Point>(polygons, GeometryType.MultiPolygon, srid);
-    }
-
-    private static List<Point> GetPoints(string pointArray, bool isRing, CoordinateDimension dimension)
-    {
-        var cleanedPointArray = pointArray?.Trim(' ', ')', '(');
-
-        if (string.IsNullOrEmpty(cleanedPointArray))
-            return new List<Point>();
-
-        var points = cleanedPointArray
-            .Split(',')
-            .Select(p => p.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(i => double.Parse(i))
-                            .ToList());
-
-        // The last point is repeated for close rings
-        var pointList = isRing ? points.Take(points.Count() - 1).ToList() : points.ToList();
-
-        return pointList.Select(p => CreatePoint(p, dimension)).ToList();
-    }
-
-    private static Point CreatePoint(List<double> coordinates, CoordinateDimension dimension)
+    private static IGeometry ParseMultiPoint(string wktString, int srid, CoordinateDimension dimension)
     {
         return dimension switch
         {
-            CoordinateDimension.TwoD => new Point(coordinates[0], coordinates[1]),
-            CoordinateDimension.Z => new PointZ { X = coordinates[0], Y = coordinates[1], Z = coordinates[2] },
-            CoordinateDimension.M => new PointM { X = coordinates[0], Y = coordinates[1], M = coordinates[2] },
-            // Note: PointZM doesn't extend Point, so we use PointZ and preserve Z (M is lost)
-            // For full ZM support, consider using Geometry<PointZM> overloads
-            CoordinateDimension.ZM => new PointZ { X = coordinates[0], Y = coordinates[1], Z = coordinates[2] },
-            _ => throw new NotImplementedException($"WktReader > CreatePoint: Unsupported dimension '{dimension}'")
+            CoordinateDimension.TwoD => ParseMultiPoint<Point>(wktString, srid),
+            CoordinateDimension.Z => ParseMultiPoint<PointZ>(wktString, srid),
+            CoordinateDimension.M => ParseMultiPoint<PointM>(wktString, srid),
+            CoordinateDimension.ZM => ParseMultiPoint<PointZM>(wktString, srid),
+            _ => throw new NotImplementedException($"WktReader > ParseMultiPoint: Unsupported dimension '{dimension}'")
         };
     }
 
-    // 1400.03.21
-    private static List<(int level, int start, int end)> Process(string wktString)
+    private static Geometry<T> ParseMultiPoint<T>(string wktString, int srid) where T : IPoint, new()
     {
-        int currentLevel = 0;
-        List<(int level, int start, int end)> result = new List<(int level, int start, int end)>();
-        Stack<int> startIndex = new Stack<int>();
+        var dimension = WktHelpers.GetDimensionFromType<T>();
+        var cleanedString = wktString.Replace('(', ' ').Replace(')', ' ');
+        var coordinates = WktHelpers.GetCoordinates(cleanedString, isRing: false, dimension, "WktReader");
 
-        for (int i = 0; i < wktString.Length; i++)
-        {
-            if (wktString[i] == '(')
-            {
-                startIndex.Push(i);
-                currentLevel++;
-            }
+        if (coordinates.IsNullOrEmpty())
+            return WktHelpers.CreateEmptyGeometry<T>(GeometryType.MultiPoint, srid);
 
-            if (wktString[i] == ')')
-            {
-                result.Add((currentLevel, startIndex.Pop(), i));
-                currentLevel--;
-            }
-        }
-
-        return result;
+        return WktHelpers.CreateTypedMultiPointGeometry<T>(coordinates, srid);
     }
+
 }
 
