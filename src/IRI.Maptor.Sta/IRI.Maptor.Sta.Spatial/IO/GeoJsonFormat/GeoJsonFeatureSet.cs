@@ -3,22 +3,42 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using System.Text.Json.Serialization;
 
 namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-
-
+ 
+/// <summary>
+/// Represents a GeoJSON FeatureCollection object (RFC 7946).
+/// </summary>
 public class GeoJsonFeatureSet
 {
+    /// <summary>
+    /// Gets or sets the type of the GeoJSON object. Must be "FeatureCollection".
+    /// </summary>
     [JsonPropertyName("type")]
-    public string Type { get; set; } = "FeatureCollection";
+    public string Type { get; set; } = GeoJson.FeatureCollection;
 
+    /// <summary>
+    /// Gets or sets the total number of features in the collection.
+    /// </summary>
     [JsonPropertyName("totalFeatures")]
     public int TotalFeatures { get; set; }
 
+    /// <summary>
+    /// Gets or sets the list of features in the collection.
+    /// </summary>
     [JsonPropertyName("features")]
-    public List<GeoJsonFeature> Features { get; set; }
+    public List<GeoJsonFeature>? Features { get; set; }
 
+    /// <summary>
+    /// Gets or sets the coordinate reference system. Note: CRS is deprecated in RFC 7946.
+    /// </summary>
     [JsonPropertyName("crs")]
-    public GeoJsonCrs Crs { get; set; }
+    public GeoJsonCrs? Crs { get; set; }
 
+    /// <summary>
+    /// Saves this FeatureCollection to a file.
+    /// </summary>
+    /// <param name="fileName">The path where the file will be saved.</param>
+    /// <param name="indented">If true, the JSON output will be indented.</param>
+    /// <param name="removeSpaces">If true, all spaces will be removed from the output.</param>
     public void Save(string fileName, bool indented, bool removeSpaces = false)
     {
         var result = JsonHelper.Serialize(this, indented);
@@ -26,17 +46,33 @@ public class GeoJsonFeatureSet
         System.IO.File.WriteAllText(fileName, removeSpaces ? result.Replace(" ", string.Empty) : result);
     }
 
+    /// <summary>
+    /// Loads a GeoJSON FeatureCollection from a file.
+    /// </summary>
+    /// <param name="fileName">The path to the GeoJSON file.</param>
+    /// <returns>A GeoJsonFeatureSet instance.</returns>
     public static GeoJsonFeatureSet Load(string fileName)
     {
         return Parse(System.IO.File.ReadAllText(fileName));
     }
 
+    /// <summary>
+    /// Parses a GeoJSON FeatureCollection string.
+    /// </summary>
+    /// <param name="geoJsonFeaturesSetString">The GeoJSON FeatureCollection string to parse.</param>
+    /// <returns>A GeoJsonFeatureSet instance.</returns>
     public static GeoJsonFeatureSet Parse(string geoJsonFeaturesSetString)
     {
         return JsonHelper.Deserialize<GeoJsonFeatureSet>(geoJsonFeaturesSetString);
     }
-
-
+     
+    /// <summary>
+    /// Converts a delimited file (CSV, TSV, etc.) to a GeoJSON FeatureCollection of points.
+    /// </summary>
+    /// <param name="fileName">The path to the delimited file.</param>
+    /// <param name="userFirstLineAsHeader">If true, the first line is treated as a header row.</param>
+    /// <param name="delimited">The delimiter characters used in the file.</param>
+    /// <returns>A GeoJsonFeatureSet containing point features.</returns>
     public static GeoJsonFeatureSet DelimitedToPointGeoJson(string fileName, bool userFirstLineAsHeader, params char[] delimited)
     {
         var rawData = IOHelper.ReadAllDelimitedFile(fileName, delimited);
@@ -74,38 +110,35 @@ public class GeoJsonFeatureSet
             result.Add(new GeoJsonFeature()
             {
                 Geometry = GeoJsonPoint.Create(longitude, latitude),
-                Geometry_name = $"point {i}",
+                GeometryName = $"point {i}",
                 Id = i.ToString(),
                 Type = GeoJson.Point,
                 Properties = dictionary
             });
         }
 
-        return new GeoJsonFeatureSet() { Features = result, TotalFeatures = result.Count, Type = "FeatureSet" };
+        return new GeoJsonFeatureSet() { Features = result, TotalFeatures = result.Count, Type = GeoJson.FeatureSet };
     }
 
+    /// <summary>
+    /// Converts a CSV file to a GeoJSON FeatureCollection of points.
+    /// </summary>
+    /// <param name="fileName">The path to the CSV file.</param>
+    /// <param name="userFirstLineAsHeader">If true, the first line is treated as a header row.</param>
+    /// <returns>A GeoJsonFeatureSet containing point features.</returns>
     public static GeoJsonFeatureSet CsvToPointGeoJson(string fileName, bool userFirstLineAsHeader)
     {
         return DelimitedToPointGeoJson(fileName, userFirstLineAsHeader, IOHelper.CsvDelimiterChar);
     }
 
+    /// <summary>
+    /// Converts a TSV (Tab-Separated Values) file to a GeoJSON FeatureCollection of points.
+    /// </summary>
+    /// <param name="fileName">The path to the TSV file.</param>
+    /// <param name="userFirstLineAsHeader">If true, the first line is treated as a header row.</param>
+    /// <returns>A GeoJsonFeatureSet containing point features.</returns>
     public static GeoJsonFeatureSet TsvToPointGeoJson(string fileName, bool userFirstLineAsHeader)
     {
         return DelimitedToPointGeoJson(fileName, userFirstLineAsHeader, IOHelper.TsvDelimiterChar);
     }
-}
-
-public class GeoJsonCrs
-{
-    [JsonPropertyName("type")]
-    public string Type { get; set; }
-
-    [JsonPropertyName("properties")]
-    public Properties Properties { get; set; }
-}
-
-public class Properties
-{
-    [JsonPropertyName("name")]
-    public string Name { get; set; }
 }

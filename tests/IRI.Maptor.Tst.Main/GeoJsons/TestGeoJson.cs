@@ -57,7 +57,7 @@ public class TestGeoJson
     {
         var networkblocks = GeoJson.ParseToGeoJsonFeatures(ReadFile("networkblock.json"));
 
-        var checkSqlGeometryAndGeometryConversions = networkblocks.Select(f => f.Geometry.AsSqlGeometry().AsWkt() == f.Geometry.Parse().AsSqlGeometry().AsWkt());
+        var checkSqlGeometryAndGeometryConversions = networkblocks.Select(f => f.Geometry.AsSqlGeometry().AsWkt() == f.Geometry.Parse().AsWkt());
 
         if (checkSqlGeometryAndGeometryConversions.Any(r => r == false))
             throw new NotImplementedException();
@@ -69,7 +69,7 @@ public class TestGeoJson
          
         var stations = GeoJson.ParseToGeoJsonFeatures(ReadFile("stations.json"));
 
-        var checkSqlGeometryAndGeometryConversions2 = stations.Select(f => f.Geometry.AsSqlGeometry().AsWkt() == f.Geometry.Parse().AsSqlGeometry().AsWkt());
+        var checkSqlGeometryAndGeometryConversions2 = stations.Select(f => f.Geometry.AsSqlGeometry().AsWkt() == f.Geometry.Parse().AsWkt());
 
         if (checkSqlGeometryAndGeometryConversions2.Any(r => r == false))
             throw new NotImplementedException();

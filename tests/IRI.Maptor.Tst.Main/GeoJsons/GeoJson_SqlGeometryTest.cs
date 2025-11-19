@@ -12,7 +12,7 @@ public class GeoJson_SqlGeometryTest
     {
         //Test Point
         var geoJsonPoint = Geometry<Point>.Create(30, 10).AsSqlGeometry().AsGeoJson();
-        var point = geoJsonPoint.Parse(true);
+        var point = geoJsonPoint.Parse(true) as Geometry<Point>;
         Assert.Equal(point.Points[0].X, 30);
         Assert.Equal(point.Points[0].Y, 10);
 
