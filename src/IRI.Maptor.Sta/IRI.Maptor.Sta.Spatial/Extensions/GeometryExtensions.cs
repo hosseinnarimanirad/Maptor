@@ -24,7 +24,7 @@ public static class Sta_GeometryExtensions
 
         return BoundingBox.GetMergedBoundingBox(envelopes, true);
     }
-     
+
     public static T Project<T>(this T point, SrsBase sourceSrs, SrsBase targetSrs) where T : IPoint, new()
     {
         if (sourceSrs.Ellipsoid.AreTheSame(targetSrs.Ellipsoid))
@@ -66,7 +66,7 @@ public static class Sta_GeometryExtensions
 
         return result;
     }
-     
+
     public static bool IsNullOrEmpty<T>(this Geometry<T> geometry) where T : IPoint, new()
     {
         return geometry is null ||
@@ -84,6 +84,28 @@ public static class Sta_GeometryExtensions
     #region Geometry To GeoJson
 
     // public methods
+    /// <summary>
+    /// Converts an IGeometry instance to a GeoJSON geometry.
+    /// </summary>
+    /// <param name="geometry">The geometry to convert.</param>
+    /// <param name="isLongitudeFirst">If true, coordinates are output as [longitude, latitude]; otherwise [latitude, longitude].</param>
+    /// <returns>An IGeoJsonGeometry instance representing the converted geometry.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when geometry is null.</exception>
+    /// <exception cref="NotSupportedException">Thrown when the geometry type is not supported.</exception>
+    public static IGeoJsonGeometry AsGeoJson(this IGeometry geometry, bool isLongitudeFirst = true)
+    {
+        if (geometry == null)
+            throw new ArgumentNullException(nameof(geometry));
+
+        return geometry switch
+        {
+            Geometry<Point> g => g.AsGeoJson(isLongitudeFirst),
+            Geometry<PointZ> gz => gz.AsGeoJson(isLongitudeFirst),
+            Geometry<PointZM> gzm => gzm.AsGeoJson(isLongitudeFirst),
+            _ => throw new NotSupportedException($"Geometry type {geometry.GetType()} is not supported for GeoJSON conversion.")
+        };
+    }
+
     public static IGeoJsonGeometry AsGeoJson<T>(this T point) where T : IPoint, new()
     {
         if (point == null)
@@ -100,7 +122,7 @@ public static class Sta_GeometryExtensions
     }
 
     public static IGeoJsonGeometry AsGeoJson<T>(this Geometry<T> geometry, bool isLongitudeFirst = true) where T : IPoint, new()
-    { 
+    {
         switch (geometry.Type)
         {
             case GeometryType.Point:
@@ -136,15 +158,18 @@ public static class Sta_GeometryExtensions
         if (point == null)
             return [];
 
-        if (isLongitudeFirst)
+        return point switch
         {
-            return [point.X, point.Y];
-        }
-        else
-        {
-            return [point.Y, point.X];
-        }
-
+            PointZM pzm => isLongitudeFirst
+                ? [pzm.X, pzm.Y, pzm.Z, pzm.M]
+                : [pzm.Y, pzm.X, pzm.Z, pzm.M],
+            PointZ pz => isLongitudeFirst
+                ? [pz.X, pz.Y, pz.Z]
+                : [pz.Y, pz.X, pz.Z],
+            _ => isLongitudeFirst
+                ? [point.X, point.Y]
+                : [point.Y, point.X]
+        };
     }
 
     private static double[][] GetGeoJsonLineStringOrRing<T>(Geometry<T> lineStringOrRing, bool isLongitudeFirst, bool isRing) where T : IPoint, new()
@@ -181,28 +206,15 @@ public static class Sta_GeometryExtensions
     {
         //This check is required
         if (point.IsNullOrEmpty())
-            return new GeoJsonPoint()
-            {
-                Type = GeoJson.Point,
-            };
+            return GeoJsonPoint.Empty;
 
-        if (isLongitudeFirst)
-        {
-            return new GeoJsonPoint()
-            {
-                Type = GeoJson.Point,
-                Coordinates = [point.Points[0].X, point.Points[0].Y]
-            };
-        }
-        else
-        {
-            return new GeoJsonPoint()
-            {
-                Type = GeoJson.Point,
-                Coordinates = [point.Points[0].Y, point.Points[0].X]
-            };
-        }
+        var coordinates = GetGeoJsonObjectPoint(point.Points[0], isLongitudeFirst);
 
+        return new GeoJsonPoint()
+        {
+            Type = GeoJson.Point,
+            Coordinates = coordinates
+        };
     }
 
     private static GeoJsonMultiPoint GeometryMultiPointToGeoJsonMultiPoint<T>(this Geometry<T> multiPoint, bool isLongitudeFirst) where T : IPoint, new()
@@ -210,10 +222,6 @@ public static class Sta_GeometryExtensions
         //This check is required
         if (multiPoint.IsNullOrEmpty())
             return GeoJsonMultiPoint.Empty;
-        //return new GeoJsonMultiPoint()
-        //{                
-        //    Coordinates = [],
-        //};
 
         var numberOfGeometries = multiPoint.NumberOfGeometries;
 
@@ -227,7 +235,6 @@ public static class Sta_GeometryExtensions
         return new GeoJsonMultiPoint()
         {
             Coordinates = points,
-            //Type = GeoJson.MultiPoint,
         };
     }
 
@@ -236,11 +243,7 @@ public static class Sta_GeometryExtensions
     {
         //This check is required
         if (lineString.IsNullOrEmpty())
-            return new GeoJsonLineString()
-            {
-                Type = GeoJson.LineString,
-                Coordinates = [],
-            };
+            return GeoJsonLineString.Empty;
 
         double[][] paths = GetGeoJsonLineStringOrRing(lineString, isLongitudeFirst, false);
 
@@ -256,11 +259,7 @@ public static class Sta_GeometryExtensions
     {
         //This check is required
         if (multiLineString.IsNullOrEmpty())
-            return new GeoJsonMultiLineString()
-            {
-                Type = GeoJson.MultiLineString,
-                Coordinates = [],
-            };
+            return GeoJsonMultiLineString.Empty;
 
         int numberOfParts = multiLineString.NumberOfGeometries;
 
@@ -283,11 +282,7 @@ public static class Sta_GeometryExtensions
     {
         //This check is required
         if (polygon.IsNullOrEmpty())
-            return new GeoJsonPolygon()
-            {
-                Type = GeoJson.Polygon,
-                Coordinates = [],
-            };
+            return GeoJsonPolygon.Empty;
 
 
         int numberOfParts = polygon.NumberOfGeometries;
@@ -298,8 +293,6 @@ public static class Sta_GeometryExtensions
         {
             result[i] = GetGeoJsonLineStringOrRing(polygon.Geometries[i], isLongitudeFirst, true);
         }
-
-        //double[][][] rings = new double[1][][] { GetGeoJsonLineStringOrRing(geometry) };
 
         return new GeoJsonPolygon()
         {
@@ -313,11 +306,7 @@ public static class Sta_GeometryExtensions
     {
         //This check is required
         if (multiPolygon.IsNullOrEmpty())
-            return new GeoJsonMultiPolygon()
-            {
-                Type = GeoJson.MultiPolygon,
-                Coordinates = [],
-            };
+            return GeoJsonMultiPolygon.Empty;
 
         int numberOfParts = multiPolygon.NumberOfGeometries;
 
@@ -430,7 +419,7 @@ public static class Sta_GeometryExtensions
             throw;
         }
     }
-      
+
     public static List<Geometry<Point>> RemoveOverlappingPoints(this List<Geometry<Point>> source, double minDistance)
     {
         try
@@ -543,6 +532,6 @@ public static class Sta_GeometryExtensions
             throw;
         }
     }
-     
+
     #endregion
 }

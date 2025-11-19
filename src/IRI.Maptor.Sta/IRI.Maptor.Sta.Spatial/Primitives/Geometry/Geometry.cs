@@ -3390,25 +3390,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         return new Geometry<T>(result, GeometryType.LineString, SridHelper.GeodeticWGS84);
 
     }
-
-
-    //public static Point ParsePointToGeometry(double[] values, bool isLongitudeFirst)
-    //{
-    //    if (values == null || values.Count() != 2)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    if (isLongitudeFirst)
-    //    {
-    //        return new Point(values[0], values[1]);
-    //    }
-    //    else
-    //    {
-    //        return new Point(values[1], values[0]);
-    //    }
-    //}
-
+     
     public static Geometry<T> ParsePointToGeometry(double[] xy, bool isLongitudeFirst, int srid = SridHelper.GeodeticWGS84)
     {
         return new Geometry<T>(new List<T>() { Point.Parse<T>(xy, isLongitudeFirst) }, GeometryType.Point, srid);
@@ -3437,9 +3419,13 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         }
     }
 
-    public static Geometry<T> ParsePolygonToGeometry(double[][][] rings, GeometryType geometryType, bool isLongFirst, int srid = SridHelper.GeodeticWGS84)
+    public static Geometry<T> ParsePolygonToGeometry(
+        double[][][] rings,
+        GeometryType geometryType,
+        bool isLongitudeFirst,
+        int srid = SridHelper.GeodeticWGS84)
     {
-        return new Geometry<T>(rings.Select(p => ParseLineStringToGeometry(p, GeometryType.LineString, true, isLongFirst, srid)).ToList(), geometryType, srid);
+        return new Geometry<T>(rings.Select(p => ParseLineStringToGeometry(p, GeometryType.LineString, true, isLongitudeFirst, srid)).ToList(), geometryType, srid);
     }
 
 
