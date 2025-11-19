@@ -13,27 +13,27 @@ public static class WktWriter
 
         string dimensionSuffix = GetDimensionSuffix(hasZ, hasM);
 
-        string suffixWithSpace = string.IsNullOrEmpty(dimensionSuffix) ? "" : $" {dimensionSuffix}";
+        string suffixWithSpace = string.IsNullOrEmpty(dimensionSuffix) ? "" : $"{dimensionSuffix} ";
 
         switch (geometry.Type)
         {
             case GeometryType.Point:
-                return FormattableString.Invariant($"POINT{suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
+                return FormattableString.Invariant($"POINT {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
 
             case GeometryType.LineString:
-                return FormattableString.Invariant($"LINESTRING{suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
+                return FormattableString.Invariant($"LINESTRING {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
 
             case GeometryType.Polygon:
-                return FormattableString.Invariant($"POLYGON{suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: true)}");
+                return FormattableString.Invariant($"POLYGON {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: true)}");
 
             case GeometryType.MultiPoint:
-                return FormattableString.Invariant($"MULTIPOINT{suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
+                return FormattableString.Invariant($"MULTIPOINT {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
 
             case GeometryType.MultiLineString:
-                return FormattableString.Invariant($"MULTILINESTRING{suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
+                return FormattableString.Invariant($"MULTILINESTRING {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
 
             case GeometryType.MultiPolygon:
-                return FormattableString.Invariant($"MULTIPOLYGON{suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: true)}");
+                return FormattableString.Invariant($"MULTIPOLYGON {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: true)}");
 
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:

@@ -16,74 +16,74 @@ public class Geometry_OgcTest
     public static IEnumerable<object[]> OgcGeometryTestData =>
     [
         // Points
-        [ "POINT(1 2)"],
-        [ "POINT(0 0)"],
-        [ "POINT(-10.5 20.75)" ],
-        [ "POINT(100 200)" ],
+        [ "POINT (1 2)"],
+        [ "POINT (0 0)"],
+        [ "POINT (-10.5 20.75)" ],
+        [ "POINT (100 200)" ],
             
         // MultiPoints
-        [ "MULTIPOINT((0 0), (0 3), (3 3), (3 0), (1 1), (9 9), (9 10), (10 9))" ],
-        [ "MULTIPOINT((2 3), (7 8))" ],
-        [ "MULTIPOINT((1 1), (2 2), (3 3))" ],
-        [ "MULTIPOINT((10 20), (30 40), (50 60), (70 80))" ],
+        [ "MULTIPOINT ((0 0), (0 3), (3 3), (3 0), (1 1), (9 9), (9 10), (10 9))" ],
+        [ "MULTIPOINT ((2 3), (7 8))" ],
+        [ "MULTIPOINT ((1 1), (2 2), (3 3))" ],
+        [ "MULTIPOINT ((10 20), (30 40), (50 60), (70 80))" ],
             
         // LineStrings
-        [ "LINESTRING(1 1, 2 0, 2 4, 3 3)" ],
-        [ "LINESTRING(4 4, 9 0)" ],
-        [ "LINESTRING(0 0, 10 10)" ],
-        [ "LINESTRING(0 0, 5 5, 10 0, 15 5, 20 0)" ],
-        [ "LINESTRING(-5 -5, 0 0, 5 5, 10 10)" ],
+        [ "LINESTRING (1 1, 2 0, 2 4, 3 3)" ],
+        [ "LINESTRING (4 4, 9 0)" ],
+        [ "LINESTRING (0 0, 10 10)" ],
+        [ "LINESTRING (0 0, 5 5, 10 0, 15 5, 20 0)" ],
+        [ "LINESTRING (-5 -5, 0 0, 5 5, 10 10)" ],
             
         // MultiLineStrings
-        [ "MULTILINESTRING((1 1, 3 5), (-5 3, -8 -2))" ],
-        [ "MULTILINESTRING((0 0, 10 10), (20 20, 30 30))" ],
-        [ "MULTILINESTRING((1 1, 2 2), (3 3, 4 4), (5 5, 6 6))" ],
+        [ "MULTILINESTRING ((1 1, 3 5), (-5 3, -8 -2))" ],
+        [ "MULTILINESTRING ((0 0, 10 10), (20 20, 30 30))" ],
+        [ "MULTILINESTRING ((1 1, 2 2), (3 3, 4 4), (5 5, 6 6))" ],
             
         // Polygons
-        [ "POLYGON((0 0, 30 0, 30 30, 0 30, 0 0))" ],
-        [ "POLYGON((-20 -20, 20 -20, 20 20, -20 20, -20 -20), (10 0, 0 -10, 0 10, 10 0))" ],
-        [ "POLYGON((-20 -20, 20 -20, 20 20, -20 20, -20 -20), (10 0, 0 -10, 0 10, 10 0), (-10 0, -15 0, -10 10, -10 0))" ],
-        [ "POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))" ],
-        [ "POLYGON((0 0, 20 0, 20 20, 0 20, 0 0), (5 5, 5 15, 15 15, 15 5, 5 5))" ],
+        [ "POLYGON ((0 0, 30 0, 30 30, 0 30, 0 0))" ],
+        [ "POLYGON ((-20 -20, 20 -20, 20 20, -20 20, -20 -20), (10 0, 0 -10, 0 10, 10 0))" ],
+        [ "POLYGON ((-20 -20, 20 -20, 20 20, -20 20, -20 -20), (10 0, 0 -10, 0 10, 10 0), (-10 0, -15 0, -10 10, -10 0))" ],
+        [ "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))" ],
+        [ "POLYGON ((0 0, 20 0, 20 20, 0 20, 0 0), (5 5, 5 15, 15 15, 15 5, 5 5))" ],
             
         // MultiPolygons
-        [ "MULTIPOLYGON(((0 0, 3 0, 3 3, 0 3, 0 0), (2 1, 1 1, 1 2, 2 1)), ((9 9, 10 9, 9 10, 9 9)))" ],
-        [ "MULTIPOLYGON(((0 0, 6 0, 6 6, 0 6, 0 0), (1 5, 5 5, 5 1, 1 1, 1 5)), ((4 4, 2 4, 2 2, 4 2, 4 4), (3.5 3.5, 3.5 2.5, 2.5 2.5, 2.5 3.5, 3.5 3.5)))" ],
-        [ "MULTIPOLYGON(((0 0, 10 0, 10 10, 0 10, 0 0)), ((20 20, 30 20, 30 30, 20 30, 20 20)))" ],
-        [ "MULTIPOLYGON(((0 0, 5 0, 5 5, 0 5, 0 0)), ((10 10, 15 10, 15 15, 10 15, 10 10)), ((20 20, 25 20, 25 25, 20 25, 20 20)))" ],
+        [ "MULTIPOLYGON (((0 0, 3 0, 3 3, 0 3, 0 0), (2 1, 1 1, 1 2, 2 1)), ((9 9, 10 9, 9 10, 9 9)))" ],
+        [ "MULTIPOLYGON (((0 0, 6 0, 6 6, 0 6, 0 0), (1 5, 5 5, 5 1, 1 1, 1 5)), ((4 4, 2 4, 2 2, 4 2, 4 4), (3.5 3.5, 3.5 2.5, 2.5 2.5, 2.5 3.5, 3.5 3.5)))" ],
+        [ "MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0)), ((20 20, 30 20, 30 30, 20 30, 20 20)))" ],
+        [ "MULTIPOLYGON (((0 0, 5 0, 5 5, 0 5, 0 0)), ((10 10, 15 10, 15 15, 10 15, 10 10)), ((20 20, 25 20, 25 25, 20 25, 20 20)))" ],
             
         // Z Variants
-        [ "POINT Z(1 2 3)" ],
-        [ "POINT Z(0 0 10)" ],
-        [ "MULTIPOINT Z((0 0 0), (1 1 1), (2 2 2))" ],
-        [ "LINESTRING Z(0 0 0, 1 1 1, 2 2 2)" ],
-        [ "LINESTRING Z(0 0 5, 10 10 15, 20 20 25)" ],
-        [ "MULTILINESTRING Z((0 0 0, 1 1 1), (2 2 2, 3 3 3))" ],
-        [ "POLYGON Z((0 0 0, 10 0 0, 10 10 0, 0 10 0, 0 0 0))" ],
-        [ "POLYGON Z((0 0 0, 20 0 0, 20 20 0, 0 20 0, 0 0 0), (5 5 0, 5 15 0, 15 15 0, 15 5 0, 5 5 0))" ],
-        [ "MULTIPOLYGON Z(((0 0 0, 10 0 0, 10 10 0, 0 10 0, 0 0 0)), ((20 20 0, 30 20 0, 30 30 0, 20 30 0, 20 20 0)))" ],
+        [ "POINT Z (1 2 3)" ],
+        [ "POINT Z (0 0 10)" ],
+        [ "MULTIPOINT Z ((0 0 0), (1 1 1), (2 2 2))" ],
+        [ "LINESTRING Z (0 0 0, 1 1 1, 2 2 2)" ],
+        [ "LINESTRING Z (0 0 5, 10 10 15, 20 20 25)" ],
+        [ "MULTILINESTRING Z ((0 0 0, 1 1 1), (2 2 2, 3 3 3))" ],
+        [ "POLYGON Z ((0 0 0, 10 0 0, 10 10 0, 0 10 0, 0 0 0))" ],
+        [ "POLYGON Z ((0 0 0, 20 0 0, 20 20 0, 0 20 0, 0 0 0), (5 5 0, 5 15 0, 15 15 0, 15 5 0, 5 5 0))" ],
+        [ "MULTIPOLYGON Z (((0 0 0, 10 0 0, 10 10 0, 0 10 0, 0 0 0)), ((20 20 0, 30 20 0, 30 30 0, 20 30 0, 20 20 0)))" ],
             
         // M Variants
-        [ "POINT M(1 2 100)" ],
-        [ "POINT M(0 0 200)" ],
-        [ "MULTIPOINT M((0 0 0), (1 1 10), (2 2 20))" ],
-        [ "LINESTRING M(0 0 0, 1 1 10, 2 2 20)" ],
-        [ "LINESTRING M(0 0 100, 10 10 200, 20 20 300)" ],
-        [ "MULTILINESTRING M((0 0 0, 1 1 10), (2 2 20, 3 3 30))" ],
-        [ "POLYGON M((0 0 0, 10 0 0, 10 10 0, 0 10 0, 0 0 0))" ],
-        [ "POLYGON M((0 0 0, 20 0 0, 20 20 0, 0 20 0, 0 0 0), (5 5 0, 5 15 0, 15 15 0, 15 5 0, 5 5 0))" ],
-        [ "MULTIPOLYGON M(((0 0 0, 10 0 0, 10 10 0, 0 10 0, 0 0 0)), ((20 20 0, 30 20 0, 30 30 0, 20 30 0, 20 20 0)))" ],
+        [ "POINT M (1 2 100)" ],
+        [ "POINT M (0 0 200)" ],
+        [ "MULTIPOINT M ((0 0 0), (1 1 10), (2 2 20))" ],
+        [ "LINESTRING M (0 0 0, 1 1 10, 2 2 20)" ],
+        [ "LINESTRING M (0 0 100, 10 10 200, 20 20 300)" ],
+        [ "MULTILINESTRING M ((0 0 0, 1 1 10), (2 2 20, 3 3 30))" ],
+        [ "POLYGON M ((0 0 0, 10 0 0, 10 10 0, 0 10 0, 0 0 0))" ],
+        [ "POLYGON M ((0 0 0, 20 0 0, 20 20 0, 0 20 0, 0 0 0), (5 5 0, 5 15 0, 15 15 0, 15 5 0, 5 5 0))" ],
+        [ "MULTIPOLYGON M (((0 0 0, 10 0 0, 10 10 0, 0 10 0, 0 0 0)), ((20 20 0, 30 20 0, 30 30 0, 20 30 0, 20 20 0)))" ],
             
         // ZM Variants
-        [ "POINT ZM(1 2 3 100)" ],
-        [ "POINT ZM(0 0 10 200)" ],
-        [ "MULTIPOINT ZM((0 0 0 0), (1 1 1 10), (2 2 2 20))" ],
-        [ "LINESTRING ZM(0 0 0 0, 1 1 1 10, 2 2 2 20)" ],
-        [ "LINESTRING ZM(0 0 5 100, 10 10 15 200, 20 20 25 300)" ],
-        [ "MULTILINESTRING ZM((0 0 0 0, 1 1 1 10), (2 2 2 20, 3 3 3 30))" ],
-        [ "POLYGON ZM((0 0 0 0, 10 0 0 0, 10 10 0 0, 0 10 0 0, 0 0 0 0))" ],
-        [ "POLYGON ZM((0 0 0 0, 20 0 0 0, 20 20 0 0, 0 20 0 0, 0 0 0 0), (5 5 0 0, 5 15 0 0, 15 15 0 0, 15 5 0 0, 5 5 0 0))" ],
-        [ "MULTIPOLYGON ZM(((0 0 0 0, 10 0 0 0, 10 10 0 0, 0 10 0 0, 0 0 0 0)), ((20 20 0 0, 30 20 0 0, 30 30 0 0, 20 30 0 0, 20 20 0 0)))" ]
+        [ "POINT ZM (1 2 3 100)" ],
+        [ "POINT ZM (0 0 10 200)" ],
+        [ "MULTIPOINT ZM ((0 0 0 0), (1 1 1 10), (2 2 2 20))" ],
+        [ "LINESTRING ZM (0 0 0 0, 1 1 1 10, 2 2 2 20)" ],
+        [ "LINESTRING ZM (0 0 5 100, 10 10 15 200, 20 20 25 300)" ],
+        [ "MULTILINESTRING ZM ((0 0 0 0, 1 1 1 10), (2 2 2 20, 3 3 3 30))" ],
+        [ "POLYGON ZM ((0 0 0 0, 10 0 0 0, 10 10 0 0, 0 10 0 0, 0 0 0 0))" ],
+        [ "POLYGON ZM ((0 0 0 0, 20 0 0 0, 20 20 0 0, 0 20 0 0, 0 0 0 0), (5 5 0 0, 5 15 0 0, 15 15 0 0, 15 5 0 0, 5 5 0 0))" ],
+        [ "MULTIPOLYGON ZM (((0 0 0 0, 10 0 0 0, 10 10 0 0, 0 10 0 0, 0 0 0 0)), ((20 20 0 0, 30 20 0 0, 30 30 0 0, 20 30 0 0, 20 20 0 0)))" ]
      ];
 
     public static IEnumerable<object[]> SqlServerGeometryTestData =>
@@ -182,7 +182,7 @@ public class Geometry_OgcTest
         var initialGeometry = SqlServerWktReader.Parse(expectedSqlServerWkt);
 
         // Act
-        var actualWkt = new string(SqlGeometry.STGeomFromWKB(new SqlBytes(initialGeometry.AsWkb()), 0).AsTextZM().Buffer);
+        var actualWkt = new string(SqlGeometry.STGeomFromWKB(new SqlBytes(initialGeometry.AsWkb()), 0).AsTextZM ().Buffer);
 
         // Assert
         // Verifies that WKT -> Geometry -> WKB -> Geometry(Sql) -> WKT results in the original WKT(or its canonical form)
