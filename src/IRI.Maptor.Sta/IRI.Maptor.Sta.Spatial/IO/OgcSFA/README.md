@@ -198,3 +198,4 @@ MULTIPOINT ((0 0 0), (1 1 1), (2 2 2))
 - [SQL Server Spatial Data Types](https://docs.microsoft.com/en-us/sql/relational-databases/spatial/spatial-data-types-overview)
 - [SQL Server Geometry Data Type](https://docs.microsoft.com/en-us/sql/t-sql/spatial-geometry/spatial-types-geometry-transact-sql)
 
+
