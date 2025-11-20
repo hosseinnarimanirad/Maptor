@@ -102,10 +102,3 @@ public static class SvgExtensions
         return SvgReader.ReadFeature(svgContent, srid, preserveAttributes);
     }
 }
-
-
-
-
-
-
-

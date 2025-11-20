@@ -253,8 +253,3 @@ public static class TiffWriter
         writer.BaseStream.Position = savedPos;
     }
 }
-
-
-
-
-

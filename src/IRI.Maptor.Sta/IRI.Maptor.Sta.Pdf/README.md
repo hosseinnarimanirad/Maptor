@@ -352,9 +352,3 @@ Generated PDF files are compatible with:
 - [IRI.Maptor.Sta.Spatial](../IRI.Maptor.Sta.Spatial/README.md) - Core spatial library
 - [EPS Format Support](../IRI.Maptor.Sta.Spatial/IO/Eps/README.md) - Similar vector format implementation
 - [SVG Format Support](../IRI.Maptor.Sta.Spatial/IO/Svg/README.md) - Similar vector format implementation
-
-
-
-
-
-

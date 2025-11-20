@@ -1,4 +1,5 @@
-﻿namespace IRI.Maptor.Sta.Common.Primitives;
+﻿
+namespace IRI.Maptor.Sta.Common.Primitives;
 
 public static class BoundingBoxes
 {

@@ -299,9 +299,3 @@ public static class KmzWriter
 
     #endregion
 }
-
-
-
-
-
-

@@ -73,9 +73,3 @@ public static class PdfExtensions
         return PdfWriter.WriteToFile(feature, filePath, options);
     }
 }
-
-
-
-
-
-

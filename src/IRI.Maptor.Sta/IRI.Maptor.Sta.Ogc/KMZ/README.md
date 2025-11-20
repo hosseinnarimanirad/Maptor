@@ -306,8 +306,3 @@ Console.WriteLine($"Read: {readGeometries.Count} geometries");
 ## License
 
 MIT License - See LICENSE.txt in the repository root
-
-
-
-
-
