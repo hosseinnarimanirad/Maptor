@@ -32,8 +32,28 @@ An OPTIONAL third-position element SHALL be the height in meters above or below 
 
 This implementation supports 4D coordinates (`PointZM` with measure) as an **extension beyond RFC 7946**. While RFC 7946 Section 3.1.1 states that implementations SHOULD NOT extend position arrays beyond 3 elements, this library provides 4D support for compatibility with systems that require measure values. This is provided as extra functionality and is not part of the GeoJSON standard.
 
-### Polygon Ring Orientation (RFC 7946 Section 3.1.6)
+### Polygon Rings (RFC 7946 Section 3.1.6)
 
+Polygon rings have specific requirements:
+
+#### Ring Closure
+**Per RFC 7946 Section 3.1.6**, polygon rings **MUST** be closed:
+- The first and last positions are equivalent
+- They **MUST** contain identical values
+- Their representation **SHOULD** also be identical
+
+Example of a valid closed ring:
+```json
+{
+  "type": "Polygon",
+  "coordinates": [
+    [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]
+  ]
+}
+```
+Note that the first coordinate `[30, 10]` is repeated as the last coordinate to close the ring.
+
+#### Ring Orientation
 Polygon rings **MUST** follow the right-hand rule:
 - **External rings** (first ring): **counterclockwise** orientation
 - **Internal rings** (holes): **clockwise** orientation
