@@ -198,6 +198,11 @@ public static class GeoJson
         return pointFactory.Create(x, y, coords);
     }
 
+    internal static List<T> CreatePointListFromCoordinates<T>(double[][] coords, IPointFactory<T> pointFactory, bool isLongitudeFirst = true) where T : IPoint
+    {
+        return coords?.Select(c => CreatePointFromCoordinates(c, pointFactory, isLongitudeFirst)).ToList() ?? new List<T>();
+    }
+
     /// <summary>
     /// Creates a Geometry instance with the appropriate point type based on coordinate dimensions.
     /// </summary>
@@ -245,7 +250,7 @@ public static class GeoJson
         int srid = 0) where T : IPoint, new()
     {
         if (coordinates == null || coordinates.Length == 0)
-            return Geometry<T>.CreateEmpty(geometryType, srid); 
+            return Geometry<T>.CreateEmpty(geometryType, srid);
 
         var pointsToUse = isRing && coordinates.Length > 0 ? coordinates.Take(coordinates.Length - 1) : coordinates;
 
@@ -322,56 +327,28 @@ public static class GeoJson
 
         // Convert ring to Point list for area calculation
         // GeoJSON rings are closed (first point equals last point), but GetSignedEuclideanArea expects non-closed
-        var points = new List<Point>();
-        for (int i = 0; i < ring.Length; i++)
+        var points = new List<Point>(ring.Length);
+
+        for (int i = 0; i < ring.Length - 1; i++)
         {
-            var coord = ring[i];
-            if (coord == null || coord.Length < 2)
+            var coords = ring[i];
+            if (coords == null || coords.Length < 2)
                 return true; // Invalid coordinate
 
-            double x, y;
-            if (isLongitudeFirst)
-            {
-                x = coord[0];
-                y = coord[1];
-            }
-            else
-            {
-                x = coord[1];
-                y = coord[0];
-            }
-            points.Add(new Point(x, y));
-        }
+            double x = isLongitudeFirst ? coords[0] : coords[1];
+            double y = isLongitudeFirst ? coords[1] : coords[0];
 
-        // Remove duplicate last point if ring is closed (first == last)
-        // Check both coordinate equality and object equality for robustness
-        if (points.Count > 1)
-        {
-            var firstPoint = points[0];
-            var lastPoint = points[points.Count - 1];
-            if (firstPoint.X == lastPoint.X && firstPoint.Y == lastPoint.Y)
-            {
-                points.RemoveAt(points.Count - 1);
-            }
+            points.Add(new Point(x, y));
         }
 
         if (points.Count < 3)
             return true; // Not enough points for a valid ring
 
-        // Calculate signed area using shoelace formula
-        // Positive area = counterclockwise, Negative area = clockwise
-        double signedArea = SpatialUtility.GetSignedEuclideanArea(points);
+        var isClockwize = SpatialUtility.IsClockwise(points);
 
         // External rings must be counterclockwise (positive area)
         // Internal rings must be clockwise (negative area)
-        if (isExternalRing)
-        {
-            return signedArea >= 0; // External ring should be counterclockwise
-        }
-        else
-        {
-            return signedArea <= 0; // Internal ring should be clockwise
-        }
+        return isExternalRing ^ isClockwize;
     }
 
     /// <summary>
