@@ -6,7 +6,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
- 
+
 /// <summary>
 /// Represents a GeoJSON LineString geometry (RFC 7946).
 /// </summary>
@@ -22,7 +22,7 @@ public class GeoJsonLineString : GeoJsonBase
     /// <summary>
     /// Gets or sets the type of the geometry. Must be "LineString".
     /// </summary>
-    [JsonIgnore] 
+    [JsonIgnore]
     public override string? Type { get; set; }
 
     /// <summary>
@@ -37,6 +37,18 @@ public class GeoJsonLineString : GeoJsonBase
     /// </summary>
     [JsonIgnore]
     public override GeometryType GeometryType { get => GeometryType.LineString; }
+
+    /// <summary>
+    /// Gets whether this geometry has Z (elevation) coordinates.
+    /// Returns true if coordinates have 3 or more dimensions.
+    /// </summary>
+    [JsonIgnore] public override bool HasZ => GeoJson.DetectCoordinateDimension(Coordinates) >= 3;
+
+    /// <summary>
+    /// Gets whether this geometry has M (measure) coordinates.
+    /// Returns true if coordinates have 4 dimensions.
+    /// </summary>
+    [JsonIgnore] public override bool HasM => GeoJson.DetectCoordinateDimension(Coordinates) >= 4;
 
     /// <summary>
     /// Initializes a new instance of GeoJsonLineString with Type set to "LineString".
@@ -71,9 +83,14 @@ public class GeoJsonLineString : GeoJsonBase
     public override IGeometry Parse(bool isLongitudeFirst = true, int srid = 0)
     {
         if (this.Coordinates.IsNullOrEmpty())
-            return GeoJson.CreateEmptyGeometry(GeometryType.LineString, srid);
+            return Geometry<Point>.CreateEmpty(GeometryType.LineString, srid);
 
-        return GeoJson.CreateGeometryFromLineCoordinates(Coordinates!, this.GeometryType, false, isLongitudeFirst, srid);
+        return (this.HasZ, this.HasM) switch
+        {
+            (true, true) => GeoJson.CreateGeometryFromLineCoordinates(Coordinates!, GeoJson.PointZMFactory, this.GeometryType, false, isLongitudeFirst, srid),
+            (true, false) => GeoJson.CreateGeometryFromLineCoordinates(Coordinates!, GeoJson.PointZFactory, this.GeometryType, false, isLongitudeFirst, srid),
+            _ => GeoJson.CreateGeometryFromLineCoordinates(Coordinates!, GeoJson.PointFactory, this.GeometryType, false, isLongitudeFirst, srid),
+        };
     }
 
     /// <summary>

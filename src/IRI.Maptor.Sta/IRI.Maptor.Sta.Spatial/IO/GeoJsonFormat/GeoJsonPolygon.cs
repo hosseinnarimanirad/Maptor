@@ -6,7 +6,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
- 
+
 /// <summary>
 /// Represents a GeoJSON Polygon geometry (RFC 7946).
 /// </summary>
@@ -22,7 +22,7 @@ public class GeoJsonPolygon : GeoJsonBase
     /// <summary>
     /// Gets or sets the type of the geometry. Must be "Polygon".
     /// </summary>
-    [JsonIgnore] 
+    [JsonIgnore]
     public override string? Type { get; set; }
 
     /// <summary>
@@ -38,6 +38,18 @@ public class GeoJsonPolygon : GeoJsonBase
     /// </summary>
     [JsonIgnore]
     public override GeometryType GeometryType { get => GeometryType.Polygon; }
+
+    /// <summary>
+    /// Gets whether this geometry has Z (elevation) coordinates.
+    /// Returns true if coordinates have 3 or more dimensions.
+    /// </summary>
+    [JsonIgnore] public override bool HasZ => GeoJson.DetectCoordinateDimension(Coordinates) >= 3;
+
+    /// <summary>
+    /// Gets whether this geometry has M (measure) coordinates.
+    /// Returns true if coordinates have 4 dimensions.
+    /// </summary>
+    [JsonIgnore] public override bool HasM => GeoJson.DetectCoordinateDimension(Coordinates) >= 4;
 
     /// <summary>
     /// Initializes a new instance of GeoJsonPolygon with Type set to "Polygon".
@@ -72,9 +84,14 @@ public class GeoJsonPolygon : GeoJsonBase
     public override IGeometry Parse(bool isLongitudeFirst = true, int srid = 0)
     {
         if (this.Coordinates.IsNullOrEmpty())
-            return GeoJson.CreateEmptyGeometry(GeometryType.Polygon, srid);
+            return Geometry<Point>.CreateEmpty(GeometryType.Polygon, srid);
 
-        return GeoJson.CreateGeometryFromPolygonCoordinates(Coordinates!, this.GeometryType, isLongitudeFirst, srid);
+        return (this.HasZ, this.HasM) switch
+        {
+            (true, true) => GeoJson.CreateGeometryFromPolygonCoordinates(Coordinates!, GeoJson.PointZMFactory, GeometryType.Polygon, isLongitudeFirst, srid),
+            (true, false) => GeoJson.CreateGeometryFromPolygonCoordinates(Coordinates!, GeoJson.PointZFactory, GeometryType.Polygon, isLongitudeFirst, srid),
+            _ => GeoJson.CreateGeometryFromPolygonCoordinates(Coordinates!, GeoJson.PointFactory, GeometryType.Polygon, isLongitudeFirst, srid),
+        };
     }
 
     /// <summary>
@@ -95,5 +112,22 @@ public class GeoJsonPolygon : GeoJsonBase
     public static GeoJsonPolygon Create(IEnumerable<double[][]> rings)
     {
         return new GeoJsonPolygon() { Coordinates = rings?.ToArray() };
+    }
+
+    /// <summary>
+    /// Validates polygon ring orientations according to RFC 7946 Section 3.1.6.
+    /// The first ring (external ring) must be counterclockwise.
+    /// Subsequent rings (internal rings/holes) must be clockwise.
+    /// </summary>
+    /// <param name="isLongitudeFirst">If true, coordinates are interpreted as [longitude, latitude]; otherwise [latitude, longitude].</param>
+    /// <returns>A tuple indicating if validation passed and a list of validation errors (if any).</returns>
+    public (bool IsValid, List<string> Errors) ValidateRingOrientations(bool isLongitudeFirst = true)
+    {
+        if (this.Coordinates == null || this.Coordinates.Length == 0)
+        {
+            return (true, new List<string>()); // Empty polygon is valid
+        }
+
+        return GeoJson.ValidatePolygonRingOrientations(this.Coordinates, isLongitudeFirst);
     }
 }

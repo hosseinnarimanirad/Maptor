@@ -40,6 +40,18 @@ public class GeoJsonMultiLineString : GeoJsonBase
     public override GeometryType GeometryType { get => GeometryType.MultiLineString; }
 
     /// <summary>
+    /// Gets whether this geometry has Z (elevation) coordinates.
+    /// Returns true if coordinates have 3 or more dimensions.
+    /// </summary>
+    [JsonIgnore] public override bool HasZ => GeoJson.DetectCoordinateDimension(Coordinates) >= 3;
+
+    /// <summary>
+    /// Gets whether this geometry has M (measure) coordinates.
+    /// Returns true if coordinates have 4 dimensions.
+    /// </summary>
+    [JsonIgnore] public override bool HasM => GeoJson.DetectCoordinateDimension(Coordinates) >= 4;
+
+    /// <summary>
     /// Initializes a new instance of GeoJsonMultiLineString with Type set to "MultiLineString".
     /// </summary>
     public GeoJsonMultiLineString() => Type = GeoJson.MultiLineString;
@@ -72,17 +84,13 @@ public class GeoJsonMultiLineString : GeoJsonBase
     public override IGeometry Parse(bool isLongitudeFirst = true, int srid = SridHelper.GeodeticWGS84)
     {
         if (this.Coordinates.IsNullOrEmpty())
-            return GeoJson.CreateEmptyGeometry(GeometryType.MultiLineString, srid);
+            return Geometry<Point>.CreateEmpty(GeometryType.MultiLineString, srid);
 
-        var lineStringGeometries = Coordinates!.Select(c => GeoJson.CreateGeometryFromLineCoordinates(c, GeometryType.LineString, false, isLongitudeFirst, srid)).ToList();
-
-        // All LineStrings should have the same point type, so use the first one to determine the type
-        return lineStringGeometries[0] switch
+        return (this.HasZ, this.HasM) switch
         {
-            Geometry<Point> => new Geometry<Point>(lineStringGeometries.Cast<Geometry<Point>>().ToList(), this.GeometryType, srid),
-            Geometry<PointZ> => new Geometry<PointZ>(lineStringGeometries.Cast<Geometry<PointZ>>().ToList(), this.GeometryType, srid),
-            Geometry<PointZM> => new Geometry<PointZM>(lineStringGeometries.Cast<Geometry<PointZM>>().ToList(), this.GeometryType, srid),
-            _ => throw new NotSupportedException($"Unsupported geometry type: {lineStringGeometries[0].GetType()}")
+            (true, true) => new Geometry<PointZM>(Coordinates!.Select(c => GeoJson.CreateGeometryFromLineCoordinates(c, GeoJson.PointZMFactory, GeometryType.LineString, false, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
+            (true, false) => new Geometry<PointZ>(Coordinates!.Select(c => GeoJson.CreateGeometryFromLineCoordinates(c, GeoJson.PointZFactory, GeometryType.LineString, false, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
+            _ => new Geometry<Point>(Coordinates!.Select(c => GeoJson.CreateGeometryFromLineCoordinates(c, GeoJson.PointFactory, GeometryType.LineString, false, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
         };
     }
 

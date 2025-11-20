@@ -237,8 +237,7 @@ public static class Sta_GeometryExtensions
             Coordinates = points,
         };
     }
-
-    //Not supportig Z and M Values
+     
     private static GeoJsonLineString GeometryLineStringToGeoJsonPolyline<T>(this Geometry<T> lineString, bool isLongitudeFirst) where T : IPoint, new()
     {
         //This check is required
@@ -253,8 +252,7 @@ public static class Sta_GeometryExtensions
             Type = GeoJson.LineString,
         };
     }
-
-    //Not supportig Z and M Values
+     
     private static GeoJsonMultiLineString GeometryMultiLineStringToGeoJsonPolyline<T>(this Geometry<T> multiLineString, bool isLongitudeFirst) where T : IPoint, new()
     {
         //This check is required
@@ -276,8 +274,7 @@ public static class Sta_GeometryExtensions
             Type = GeoJson.MultiLineString,
         };
     }
-
-    //Not supportig Z and M Values
+     
     private static GeoJsonPolygon GeometryPolygonToGeoJsonPolygon<T>(this Geometry<T> polygon, bool isLongitudeFirst) where T : IPoint, new()
     {
         //This check is required
@@ -300,8 +297,7 @@ public static class Sta_GeometryExtensions
             Type = GeoJson.Polygon,
         };
     }
-
-    //Not supportig Z and M Values
+     
     private static GeoJsonMultiPolygon GeometryMultiPolygonToGeoJsonMultiPolygon<T>(this Geometry<T> multiPolygon, bool isLongitudeFirst) where T : IPoint, new()
     {
         //This check is required

@@ -19,10 +19,7 @@ public class GeoJsonMultiPoint : GeoJsonBase
     /// </summary>
     public static GeoJsonMultiPoint Empty => _empty;
 
-    /// <summary>
-    /// Gets or sets the type of the geometry. Must be "MultiPoint".
-    /// </summary>
-    [JsonIgnore] 
+    [JsonIgnore]
     public override string? Type { get; set; }
 
     /// <summary>
@@ -36,7 +33,19 @@ public class GeoJsonMultiPoint : GeoJsonBase
     /// Gets the geometry type as GeometryType.MultiPoint.
     /// </summary>
     [JsonIgnore]
-    public override GeometryType GeometryType { get => GeometryType.MultiPoint; }
+    public override GeometryType GeometryType => GeometryType.MultiPoint;
+
+    /// <summary>
+    /// Gets whether this geometry has Z (elevation) coordinates.
+    /// Returns true if coordinates have 3 or more dimensions.
+    /// </summary>
+    [JsonIgnore] public override bool HasZ => GeoJson.DetectCoordinateDimension(Coordinates) >= 3;
+
+    /// <summary>
+    /// Gets whether this geometry has M (measure) coordinates.
+    /// Returns true if coordinates have 4 dimensions.
+    /// </summary>
+    [JsonIgnore] public override bool HasM => GeoJson.DetectCoordinateDimension(Coordinates) >= 4;
 
     /// <summary>
     /// Initializes a new instance of GeoJsonMultiPoint with Type set to "MultiPoint".
@@ -76,27 +85,13 @@ public class GeoJsonMultiPoint : GeoJsonBase
     public override IGeometry Parse(bool isLongitudeFirst = true, int srid = 0)
     {
         if (this.Coordinates.IsNullOrEmpty())
-            return GeoJson.CreateEmptyGeometry(GeometryType.MultiPoint, srid);
+            return Geometry<Point>.CreateEmpty(GeometryType.MultiPoint, srid);
 
-        var maxDim = GeoJson.DetectMaxCoordinateDimension(Coordinates!);
-        var normalizedCoords = Coordinates!.Select(c =>
+        return (this.HasZ, this.HasM) switch
         {
-            if (c == null) return new double[maxDim];
-            var normalized = new double[maxDim];
-            Array.Copy(c, normalized, Math.Min(c.Length, maxDim));
-            for (int i = c.Length; i < maxDim; i++)
-                normalized[i] = 0;
-            return normalized;
-        }).ToArray();
-
-        var pointGeometries = normalizedCoords.Select(c => GeoJson.CreateGeometryFromPointCoordinates(c, GeometryType.Point, isLongitudeFirst, srid)).ToList();
-
-        return maxDim switch
-        {
-            2 => new Geometry<Point>(pointGeometries.Cast<Geometry<Point>>().ToList(), this.GeometryType, srid),
-            3 => new Geometry<PointZ>(pointGeometries.Cast<Geometry<PointZ>>().ToList(), this.GeometryType, srid),
-            4 => new Geometry<PointZM>(pointGeometries.Cast<Geometry<PointZM>>().ToList(), this.GeometryType, srid),
-            _ => throw new NotSupportedException($"Unsupported coordinate dimension: {maxDim}")
+            (true, true) => new Geometry<PointZM>(Coordinates.Select(c => GeoJson.CreatePointFromCoordinates(c, GeoJson.PointZMFactory, isLongitudeFirst)).ToList(), this.GeometryType, srid),
+            (true, false) => new Geometry<PointZ>(Coordinates.Select(c => GeoJson.CreatePointFromCoordinates(c, GeoJson.PointZFactory, isLongitudeFirst)).ToList(), this.GeometryType, srid),
+            _ => new Geometry<Point>(Coordinates.Select(c => GeoJson.CreatePointFromCoordinates(c, GeoJson.PointFactory, isLongitudeFirst)).ToList(), this.GeometryType, srid),
         };
     }
 

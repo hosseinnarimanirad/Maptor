@@ -31,31 +31,7 @@ public static partial class SqlServerSpatialNativeBinary
             _ => throw new NotImplementedException($"Geometry type {type} is not implemented.")
         };
     }
-
-    private static bool HasZ(SqlServerSpatialNativeBinaryTypes type)
-    {
-        // Z/M support removed - always return false
-        return false;
-    }
-
-    private static bool HasM(SqlServerSpatialNativeBinaryTypes type)
-    {
-        // Z/M support removed - always return false
-        return false;
-    }
-
-
-    private static bool GeometryHasZ<T>(Geometry<T> geometry) where T : IPoint, new()
-    {
-        return typeof(IHasZ).IsAssignableFrom(typeof(T));
-    }
-
-    private static bool GeometryHasM<T>(Geometry<T> geometry) where T : IPoint, new()
-    {
-        return typeof(IHasM).IsAssignableFrom(typeof(T));
-    }
-
-
+     
 
     // Write points in sequential format: (X,Y) pairs, then all Z (if hasZ), then all M (if hasM)
     private static void WritePointsSequential<T>(BinaryWriter writer, List<T> points, bool hasZ, bool hasM) where T : IPoint
@@ -101,41 +77,8 @@ public static partial class SqlServerSpatialNativeBinary
             }
         }
     }
-
-    // Write single point (for Point geometry)
-    private static void WritePoint<T>(BinaryWriter writer, T point, bool hasZ, bool hasM) where T : IPoint
-    {
-        writer.Write(point.X);
-        writer.Write(point.Y);
-
-        if (hasZ)
-        {
-            if (point is IHasZ hasZPoint)
-            {
-                writer.Write(hasZPoint.Z);
-            }
-            else
-            {
-                writer.Write(double.NaN); // NaN for missing Z
-            }
-        }
-
-        if (hasM)
-        {
-            if (point is IHasM hasMPoint)
-            {
-                writer.Write(hasMPoint.M);
-            }
-            else
-            {
-                writer.Write(double.NaN); // NaN for missing M
-            }
-        }
-    }
-
-
-
-
+     
+     
     // Get Serialization Properties byte based on type
     // Bit flags: V (valid) = 0x04, P (point optimized) = 0x08
     // Z/M support removed - Z and M flags are never set
@@ -249,10 +192,7 @@ public static partial class SqlServerSpatialNativeBinary
     }
 
     private static void SerializePoint<T>(BinaryWriter writer, Geometry<T> geometry, SqlServerSpatialNativeBinaryTypes type) where T : IPoint, new()
-    {
-        bool hasZ = HasZ(type);
-        bool hasM = HasM(type);
-
+    { 
         // Check if this is an empty point
         if (geometry.Points == null || geometry.Points.Count == 0)
         {
@@ -274,7 +214,7 @@ public static partial class SqlServerSpatialNativeBinary
         // When P bit is set, Number of Points, Figures, and Shapes sections are omitted
         // Write point coordinates directly
         var point = geometry.Points[0];
-        WritePoint(writer, point, hasZ, hasM);
+        WritePointsSequential(writer, [point], geometry.HasZ(), geometry.HasM());
     }
 
 
@@ -349,15 +289,6 @@ public static partial class SqlServerSpatialNativeBinary
     private static void GeometryMultiPointAsWkb<T>(BinaryWriter writer, Geometry<T> multipoint, SqlServerSpatialNativeBinaryTypes type) where T : IPoint, new()
     {
         var pointCount = multipoint.NumberOfGeometries;
-        bool hasZ = type == SqlServerSpatialNativeBinaryTypes.MultiPointZM || type == SqlServerSpatialNativeBinaryTypes.MultiPointZ;
-        bool hasM = type == SqlServerSpatialNativeBinaryTypes.MultiPointZM || type == SqlServerSpatialNativeBinaryTypes.MultiPointM;
-
-        // For MultiPointZM (type 0x07), we need to check if any point has Z/M
-        if (type == SqlServerSpatialNativeBinaryTypes.MultiPointZM)
-        {
-            hasZ = GeometryHasZ(multipoint);
-            hasM = GeometryHasM(multipoint);
-        }
 
         // Write point count
         writer.Write(pointCount);
@@ -370,7 +301,7 @@ public static partial class SqlServerSpatialNativeBinary
         }
 
         // Write points in sequential format: (X,Y) pairs, then all Z, then all M
-        WritePointsSequential(writer, allPoints, hasZ, hasM);
+        WritePointsSequential(writer, allPoints, multipoint.HasZ(), multipoint.HasM());
 
         // Write metadata section
         // Based on CSV analysis: 02 00000001 00000000 01010000 00030000 00 FFFFFFFF 00000000 04 00000000 00000000 01 00000000 01

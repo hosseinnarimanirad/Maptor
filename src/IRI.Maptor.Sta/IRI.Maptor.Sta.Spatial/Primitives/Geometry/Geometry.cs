@@ -83,7 +83,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     {
         return typeof(IHasM).IsAssignableFrom(typeof(T));
     }
-     
+
 
     #region Constructors
 
@@ -98,6 +98,10 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public Geometry(List<T> points, GeometryType type, bool isClosed, int srid)
     {
+        this.Type = type;
+
+        this.Srid = srid;
+
         if (type == GeometryType.LineString || type == GeometryType.Point)
         {
             if (type == GeometryType.LineString && isClosed && points?.Count > 0)
@@ -114,13 +118,14 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
             this.Points = points;
 
-            this.Type = type;
-
-            this.Srid = srid;
+        }
+        else if (type == GeometryType.MultiPoint)
+        {
+            this.Geometries = points.Select(p => new Geometry<T>([p], GeometryType.Point, srid)).ToList();
         }
         else
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Geometry > Constructor");
         }
     }
 
@@ -3390,7 +3395,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         return new Geometry<T>(result, GeometryType.LineString, SridHelper.GeodeticWGS84);
 
     }
-     
+
     public static Geometry<T> ParsePointToGeometry(double[] xy, bool isLongitudeFirst, int srid = SridHelper.GeodeticWGS84)
     {
         return new Geometry<T>(new List<T>() { Point.Parse<T>(xy, isLongitudeFirst) }, GeometryType.Point, srid);

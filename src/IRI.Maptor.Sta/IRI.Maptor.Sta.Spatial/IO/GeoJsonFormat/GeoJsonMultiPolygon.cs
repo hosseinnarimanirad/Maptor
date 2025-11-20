@@ -39,6 +39,18 @@ public class GeoJsonMultiPolygon : GeoJsonBase
     public override GeometryType GeometryType { get => GeometryType.MultiPolygon; }
 
     /// <summary>
+    /// Gets whether this geometry has Z (elevation) coordinates.
+    /// Returns true if coordinates have 3 or more dimensions.
+    /// </summary>
+    [JsonIgnore] public override bool HasZ => GeoJson.DetectCoordinateDimension(Coordinates) >= 3;
+
+    /// <summary>
+    /// Gets whether this geometry has M (measure) coordinates.
+    /// Returns true if coordinates have 4 dimensions.
+    /// </summary>
+    [JsonIgnore] public override bool HasM => GeoJson.DetectCoordinateDimension(Coordinates) >= 4;
+
+    /// <summary>
     /// Initializes a new instance of GeoJsonMultiPolygon with Type set to "MultiPolygon".
     /// </summary>
     public GeoJsonMultiPolygon() => Type = GeoJson.MultiPolygon;
@@ -74,17 +86,13 @@ public class GeoJsonMultiPolygon : GeoJsonBase
     public override IGeometry Parse(bool isLongitudeFirst = true, int srid = 0)
     {
         if (this.Coordinates.IsNullOrEmpty())
-            return GeoJson.CreateEmptyGeometry(GeometryType.MultiPolygon, srid);
+            return Geometry<Point>.CreateEmpty(GeometryType.MultiPolygon, srid);
 
-        var polygonGeometries = Coordinates!.Select(c => GeoJson.CreateGeometryFromPolygonCoordinates(c, GeometryType.Polygon, isLongitudeFirst, srid)).ToList();
-
-        // All Polygons should have the same point type, so use the first one to determine the type
-        return polygonGeometries[0] switch
+        return (this.HasZ, this.HasM) switch
         {
-            Geometry<Point> => new Geometry<Point>(polygonGeometries.Cast<Geometry<Point>>().ToList(), this.GeometryType, srid),
-            Geometry<PointZ> => new Geometry<PointZ>(polygonGeometries.Cast<Geometry<PointZ>>().ToList(), this.GeometryType, srid),
-            Geometry<PointZM> => new Geometry<PointZM>(polygonGeometries.Cast<Geometry<PointZM>>().ToList(), this.GeometryType, srid),
-            _ => throw new NotSupportedException($"Unsupported geometry type: {polygonGeometries[0].GetType()}")
+            (true, true) => new Geometry<PointZM>(Coordinates!.Select(c => GeoJson.CreateGeometryFromPolygonCoordinates(c, GeoJson.PointZMFactory, GeometryType.Polygon, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
+            (true, false) => new Geometry<PointZ>(Coordinates!.Select(c => GeoJson.CreateGeometryFromPolygonCoordinates(c, GeoJson.PointZFactory, GeometryType.Polygon, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
+            _ => new Geometry<Point>(Coordinates!.Select(c => GeoJson.CreateGeometryFromPolygonCoordinates(c, GeoJson.PointFactory, GeometryType.Polygon, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
         };
     }
 
@@ -106,5 +114,41 @@ public class GeoJsonMultiPolygon : GeoJsonBase
     public static GeoJsonMultiPolygon Create(IEnumerable<double[][][]> polygons)
     {
         return new GeoJsonMultiPolygon() { Coordinates = polygons?.ToArray() };
+    }
+
+    /// <summary>
+    /// Validates polygon ring orientations for all polygons according to RFC 7946 Section 3.1.6.
+    /// For each polygon, the first ring (external ring) must be counterclockwise.
+    /// Subsequent rings (internal rings/holes) must be clockwise.
+    /// </summary>
+    /// <param name="isLongitudeFirst">If true, coordinates are interpreted as [longitude, latitude]; otherwise [latitude, longitude].</param>
+    /// <returns>A tuple indicating if validation passed and a list of validation errors (if any).</returns>
+    public (bool IsValid, List<string> Errors) ValidateRingOrientations(bool isLongitudeFirst = true)
+    {
+        var allErrors = new List<string>();
+
+        if (this.Coordinates == null || this.Coordinates.Length == 0)
+        {
+            return (true, allErrors); // Empty MultiPolygon is valid
+        }
+
+        // Validate each polygon
+        for (int polygonIndex = 0; polygonIndex < this.Coordinates.Length; polygonIndex++)
+        {
+            var polygonRings = this.Coordinates[polygonIndex];
+            if (polygonRings == null || polygonRings.Length == 0)
+                continue;
+
+            var (isValid, errors) = GeoJson.ValidatePolygonRingOrientations(polygonRings, isLongitudeFirst);
+            if (!isValid)
+            {
+                foreach (var error in errors)
+                {
+                    allErrors.Add($"Polygon {polygonIndex}: {error}");
+                }
+            }
+        }
+
+        return (allErrors.Count == 0, allErrors);
     }
 }

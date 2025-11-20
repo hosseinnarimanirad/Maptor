@@ -5,7 +5,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
- 
+
 /// <summary>
 /// Represents a GeoJSON Point geometry (RFC 7946).
 /// </summary>
@@ -21,7 +21,7 @@ public class GeoJsonPoint : GeoJsonBase
     /// <summary>
     /// Gets or sets the type of the geometry. Must be "Point".
     /// </summary>
-    [JsonIgnore] 
+    [JsonIgnore]
     public override string? Type { get; set; }
 
     /// <summary>
@@ -40,6 +40,18 @@ public class GeoJsonPoint : GeoJsonBase
     /// Initializes a new instance of GeoJsonPoint with Type set to "Point".
     /// </summary>
     public GeoJsonPoint() => Type = GeoJson.Point;
+
+    /// <summary>
+    /// Gets whether this geometry has Z (elevation) coordinates.
+    /// Returns true if coordinates have 3 or more dimensions.
+    /// </summary>
+    [JsonIgnore] public override bool HasZ => GeoJson.DetectCoordinateDimension(Coordinates) >= 3;
+
+    /// <summary>
+    /// Gets whether this geometry has M (measure) coordinates.
+    /// Returns true if coordinates have 4 dimensions.
+    /// </summary>
+    [JsonIgnore] public override bool HasM => GeoJson.DetectCoordinateDimension(Coordinates) >= 4;
 
     /// <summary>
     /// Determines whether this point is null or empty.
@@ -69,11 +81,16 @@ public class GeoJsonPoint : GeoJsonBase
     public override IGeometry Parse(bool isLongitudeFirst = true, int srid = 0)
     {
         if (this.Coordinates.IsNullOrEmpty())
-            return GeoJson.CreateEmptyGeometry(GeometryType.Point, srid);
+            return Geometry<Point>.CreateEmpty(GeometryType.Point, srid);
 
-        return GeoJson.CreateGeometryFromPointCoordinates(Coordinates!, GeometryType.Point, isLongitudeFirst, srid);
+        return (this.HasZ, this.HasM) switch
+        {
+            (true, true) => new Geometry<PointZM>([GeoJson.CreatePointFromCoordinates(Coordinates!, GeoJson.PointZMFactory, isLongitudeFirst)], GeometryType.Point, srid),
+            (true, false) => new Geometry<PointZ>([GeoJson.CreatePointFromCoordinates(Coordinates!, GeoJson.PointZFactory, isLongitudeFirst)], GeometryType.Point, srid),
+            _ => new Geometry<Point>([GeoJson.CreatePointFromCoordinates(Coordinates!, GeoJson.PointFactory, isLongitudeFirst)], GeometryType.Point, srid),
+        };
     }
-     
+
     /// <summary>
     /// Creates a new GeoJSON point with the specified longitude and latitude.
     /// </summary>
@@ -83,5 +100,5 @@ public class GeoJsonPoint : GeoJsonBase
     public static GeoJsonPoint Create(double longitude, double latitude)
     {
         return new GeoJsonPoint() { Coordinates = [longitude, latitude], Type = GeoJson.Point };
-    } 
+    }
 }

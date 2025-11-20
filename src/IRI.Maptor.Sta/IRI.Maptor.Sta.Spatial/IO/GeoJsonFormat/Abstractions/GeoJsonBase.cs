@@ -19,6 +19,12 @@ public abstract class GeoJsonBase : IGeoJsonGeometry
     /// </summary>
     public abstract GeometryType GeometryType { get; }
 
+    public abstract bool HasZ{ get; }
+
+    // standard GeoJson does not supports M,
+    // check the readme file for more information
+    public abstract bool HasM { get; }
+
     /// <summary>
     /// Determines whether this geometry is null or empty.
     /// </summary>
