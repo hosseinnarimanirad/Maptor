@@ -8,6 +8,7 @@ using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Sta.Spatial.IO.SqlServerNativeBinary;
 
 namespace IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -96,6 +97,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public Geometry(List<T> points, GeometryType type, int srid) : this(points, type, false, srid) { }
 
+    // note: in the case of rings (isClosed=true) first point should not be repeated as last point
     public Geometry(List<T> points, GeometryType type, bool isClosed, int srid)
     {
         this.Type = type;
@@ -110,10 +112,8 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
                 var firstPoint = points[0];
 
-                if (lastPoint.X != firstPoint.X && lastPoint.Y != firstPoint.Y)
-                {
-                    throw new ArgumentException("the last point and first point must be the same");
-                }
+                if (lastPoint.X == firstPoint.X && lastPoint.Y == firstPoint.Y)
+                    throw new ArgumentException("the first point should not be repeated as last point in rings");
             }
 
             this.Points = points;
@@ -3091,20 +3091,19 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         return result ?? Geometry<T>.Empty;
     }
 
-    public string AsWkt()
-    {
-        return WktWriter.AsWkt(this);
-    }
+    public string AsWkt() => WktWriter.AsWkt(this);
 
-    public byte[]? AsWkb()
-    {
-        return WkbWriter.AsWkb(this);
-    }
+    public byte[]? AsWkb() => WkbWriter.AsWkb(this);
 
     public string AsWkbHexString()
     {
         return IRI.Maptor.Sta.Common.Helpers.HexStringHelper.ToHexStringUsingBitFiddle(AsWkb(), append0x: true);
     }
+
+
+    public byte[]? AsSqlServerNativeBinary() => SqlServerSpatialNativeBinary.Serialize(this);
+
+    public string AsSqlServerWkt() => SqlServerWktWriter.AsWkt(this);
 
     #endregion
 

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -7,121 +9,18 @@ using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Abstrations;
 
-namespace IRI.Maptor.Sta.Spatial.IO;
+namespace IRI.Maptor.Sta.Spatial.IO.SqlServerNativeBinary;
 
 public static partial class SqlServerSpatialNativeBinary
 {
-    private static SqlServerSpatialNativeBinaryTypes ParseType(GeometryType type)
+
+    public static byte[]? Serialize<T>(Geometry<T> geometry) where T : IPoint, new()
     {
-        return type switch
-        {
-            GeometryType.Point => SqlServerSpatialNativeBinaryTypes.Point,
-            //GeometryType.PointZ => SqlServerSpatialNativeBinaryTypes.PointZ,
-            //GeometryType.PointM => SqlServerSpatialNativeBinaryTypes.PointM,
-            //GeometryType.PointZM => SqlServerSpatialNativeBinaryTypes.PointZM,
-            GeometryType.LineString => SqlServerSpatialNativeBinaryTypes.LineString,
-            GeometryType.Polygon => SqlServerSpatialNativeBinaryTypes.Polygon,
-            GeometryType.MultiPoint => SqlServerSpatialNativeBinaryTypes.MultiPoint,
-            GeometryType.MultiLineString => SqlServerSpatialNativeBinaryTypes.MultiLineString,
-            GeometryType.MultiPolygon => SqlServerSpatialNativeBinaryTypes.MultiPolygon,
-            //GeometryType.MultiPointZ => SqlServerSpatialNativeBinaryTypes.MultiPointZ,
-            //GeometryType.MultiPointM => SqlServerSpatialNativeBinaryTypes.MultiPointM,
-            //GeometryType.MultiPointZM => SqlServerSpatialNativeBinaryTypes.MultiPointZM,
-
-            _ => throw new NotImplementedException($"Geometry type {type} is not implemented.")
-        };
-    }
-     
-
-    // Write points in sequential format: (X,Y) pairs, then all Z (if hasZ), then all M (if hasM)
-    private static void WritePointsSequential<T>(BinaryWriter writer, List<T> points, bool hasZ, bool hasM) where T : IPoint
-    {
-        var pointCount = points.Count;
-
-        // Write all points as (X, Y) pairs sequentially
-        for (int i = 0; i < pointCount; i++)
-        {
-            writer.Write(points[i].X);
-            writer.Write(points[i].Y);
-        }
-
-        // Write all Z coordinates (if hasZ)
-        if (hasZ)
-        {
-            for (int i = 0; i < pointCount; i++)
-            {
-                if (points[i] is IHasZ hasZPoint)
-                {
-                    writer.Write(hasZPoint.Z);
-                }
-                else
-                {
-                    writer.Write(double.NaN); // NaN for missing Z
-                }
-            }
-        }
-
-        // Write all M coordinates (if hasM)
-        if (hasM)
-        {
-            for (int i = 0; i < pointCount; i++)
-            {
-                if (points[i] is IHasM hasMPoint)
-                {
-                    writer.Write(hasMPoint.M);
-                }
-                else
-                {
-                    writer.Write(double.NaN); // NaN for missing M
-                }
-            }
-        }
-    }
-     
-     
-    // Get Serialization Properties byte based on type
-    // Bit flags: V (valid) = 0x04, P (point optimized) = 0x08
-    // Z/M support removed - Z and M flags are never set
-    // For Point types, add P bit (0x08) for optimized format (but not for empty points)
-    private static byte GetSerializationProperties(SqlServerSpatialNativeBinaryTypes type, GeometryType geometryType, bool isPointEmpty = false)
-    {
-        byte props = 0x04; // V (valid) flag is always set
-                           // Z/M flags removed - never set
-
-        // Set P bit (0x08) for non-empty Point types to use optimized format
-        if (geometryType == GeometryType.Point && !isPointEmpty)
-        {
-            props |= 0x08; // P bit (point optimized)
-        }
-
-        return props;
-    }
-
-    private static byte GetTypeByte(SqlServerSpatialNativeBinaryTypes type)
-    {
-        // Map enum values to actual SQL Server byte values
-        return type switch
-        {
-            SqlServerSpatialNativeBinaryTypes.LineString => 0x14,      // 20 decimal
-            SqlServerSpatialNativeBinaryTypes.LineStringZ => 0x15,     // 21 decimal
-            SqlServerSpatialNativeBinaryTypes.LineStringZM => 0x17,    // 23 decimal
-            SqlServerSpatialNativeBinaryTypes.Polygon => 0x04,          // 4 - shares with MultiPoint
-            SqlServerSpatialNativeBinaryTypes.PolygonZ => 0x05,        // 5 - shares with MultiPointZ
-            SqlServerSpatialNativeBinaryTypes.PolygonZM => 0x07,       // 7 - shares with MultiPointZM
-            SqlServerSpatialNativeBinaryTypes.MultiLineString => 0x04, // 4 - shares with MultiPoint
-            SqlServerSpatialNativeBinaryTypes.MultiLineStringZ => 0x05, // 5 - shares with MultiPointZ
-            SqlServerSpatialNativeBinaryTypes.MultiLineStringZM => 0x07, // 7 - shares with MultiPointZM
-            SqlServerSpatialNativeBinaryTypes.MultiPolygon => 0x04,    // 4 - shares with MultiPoint
-            SqlServerSpatialNativeBinaryTypes.MultiPolygonZ => 0x05,   // 5 - shares with MultiPointZ
-            SqlServerSpatialNativeBinaryTypes.MultiPolygonZM => 0x07,  // 7 - shares with MultiPointZM
-            _ => (byte)type  // For Point, MultiPoint, etc., use the enum value directly
-        };
-    }
-
-    public static byte[] Serialize<T>(Geometry<T> geometry) where T : IPoint, new()
-    {
-        if (geometry.IsNullOrEmpty())
+        if (geometry == null)
             return null;
+
+        bool hasZ = geometry.HasZ();
+        bool hasM = geometry.HasM();
 
         using (var ms = new MemoryStream())
         using (var bw = new BinaryWriter(ms))
@@ -130,295 +29,863 @@ public static partial class SqlServerSpatialNativeBinary
             bw.Write(geometry.Srid);          // SRID (little-endian)
             bw.Write((byte)0x01);             // Version = 1
 
-            // Determine type based on geometry type and Z/M presence
-            SqlServerSpatialNativeBinaryTypes type = DetermineType(geometry);
-            // For Point types, check if empty - empty points don't use P bit optimization
-            bool isPointEmpty = geometry.Type == GeometryType.Point &&
-                               (geometry.Points == null || geometry.Points.Count == 0);
-            byte serializationProps = GetSerializationProperties(type, geometry.Type, isPointEmpty);
-            bw.Write(serializationProps);     // Serialization Properties (V, Z, M, P flags)
-
-            switch (geometry.Type)
+            // Handle geometry types
+            if (geometry.Type == GeometryType.Point)
             {
-                case GeometryType.Point:
-                    SerializePoint(bw, geometry, type);
-                    break;
-
-                case GeometryType.LineString:
-                    GeometryLineStringAsWkb(bw, geometry, type);
-                    break;
-
-                case GeometryType.Polygon:
-                    GeometryPolygonAsWkb(bw, geometry, type);
-                    break;
-
-                case GeometryType.MultiPoint:
-                    GeometryMultiPointAsWkb(bw, geometry, type);
-                    break;
-
-                case GeometryType.MultiLineString:
-                    GeometryMultiLineStringAsWkb(bw, geometry, type);
-                    break;
-
-                case GeometryType.MultiPolygon:
-                    GeometryMultiPolygonAsWkb(bw, geometry, type);
-                    break;
-
-                case GeometryType.GeometryCollection:
-                case GeometryType.CircularString:
-                case GeometryType.CompoundCurve:
-                case GeometryType.CurvePolygon:
-                default:
-                    throw new NotImplementedException();
+                SerializePoint(bw, geometry, hasZ: hasZ, hasM: hasM);
+            }
+            else if (geometry.Type == GeometryType.LineString)
+            {
+                SerializeLineString(bw, geometry, hasZ: hasZ, hasM: hasM);
+            }
+            else if (geometry.Type == GeometryType.MultiPoint)
+            {
+                SerializeMultiPoint(bw, geometry, hasZ: hasZ, hasM: hasM);
+            }
+            else if (geometry.Type == GeometryType.MultiLineString)
+            {
+                SerializeMultiLineString(bw, geometry, hasZ: hasZ, hasM: hasM);
+            }
+            else if (geometry.Type == GeometryType.Polygon)
+            {
+                SerializePolygon(bw, geometry, hasZ: hasZ, hasM: hasM);
+            }
+            else if (geometry.Type == GeometryType.MultiPolygon)
+            {
+                SerializeMultiPolygon(bw, geometry, hasZ: hasZ, hasM: hasM);
+            }
+            else
+            {
+                throw new NotImplementedException($"Serialization for geometry type {geometry.Type} is not yet implemented");
             }
 
             return ms.ToArray();
         }
     }
 
-    private static SqlServerSpatialNativeBinaryTypes DetermineType<T>(Geometry<T> geometry) where T : IPoint, new()
+    private static void SerializePoint<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM) where T : IPoint, new()
     {
-        // Z/M support removed - always return base types
-        return geometry.Type switch
+        // Check if point is empty
+        bool isEmpty = geometry.Points == null || geometry.Points.Count == 0;
+
+        if (isEmpty)
         {
-            GeometryType.Point => SqlServerSpatialNativeBinaryTypes.Point,
-            GeometryType.LineString => SqlServerSpatialNativeBinaryTypes.LineString,
-            GeometryType.Polygon => SqlServerSpatialNativeBinaryTypes.Polygon,
-            GeometryType.MultiPoint => SqlServerSpatialNativeBinaryTypes.MultiPoint,
-            GeometryType.MultiLineString => SqlServerSpatialNativeBinaryTypes.MultiLineString,
-            GeometryType.MultiPolygon => SqlServerSpatialNativeBinaryTypes.MultiPolygon,
-            _ => ParseType(geometry.Type)
-        };
+            // Empty point: Write serialization properties (V flag only, no P flag)
+            byte serializationProps = (byte)SerializationProp.V;
+            writer.Write(serializationProps);
+
+            // Write Number of Points = 0
+            writer.Write(0);
+
+            // Write Number of Figures = 0
+            writer.Write(0);
+
+            // Write Number of Shapes = 1
+            writer.Write(1);
+
+            // Write Shape structure
+            writer.Write(-1);              // Parent Offset (-1 means no parent)
+            writer.Write(0);                // Figure Offset
+            writer.Write((byte)1);          // OpenGIS Type (1 = Point)
+        }
+        else
+        {
+            // Non-empty single point: Use P flag optimization
+            if (geometry.Points.Count != 1)
+                throw new ArgumentException("Point geometry must contain exactly one point for P flag optimization");
+
+            var point = geometry.Points[0];
+
+            // Build serialization properties byte
+            SerializationProp serializationProps = SerializationProp.V;  // V flag always set
+            serializationProps |= SerializationProp.P;                   // P flag for optimization
+
+            if (hasZ)
+            {
+                serializationProps |= SerializationProp.Z;
+            }
+
+            if (hasM)
+            {
+                serializationProps |= SerializationProp.M;
+            }
+
+            writer.Write((byte)serializationProps);
+
+            // Write X, Y coordinates
+            writer.Write(point.X);
+            writer.Write(point.Y);
+
+            // Write Z coordinate if present
+            if (hasZ && point is IHasZ zPoint)
+            {
+                double zValue = zPoint.Z;
+
+                WriteDouble(writer, zValue);
+            }
+
+            // Write M coordinate if present
+            if (hasM && point is IHasM mPoint)
+            {
+                double mValue = mPoint.M;
+
+                WriteDouble(writer, mValue);
+            }
+        }
     }
 
-    private static void SerializePoint<T>(BinaryWriter writer, Geometry<T> geometry, SqlServerSpatialNativeBinaryTypes type) where T : IPoint, new()
-    { 
-        // Check if this is an empty point
-        if (geometry.Points == null || geometry.Points.Count == 0)
+    private static void SerializeLineString<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM) where T : IPoint, new()
+    {
+        // Check if LineString is empty
+        bool isEmpty = geometry.Points == null || geometry.Points.Count == 0;
+
+        if (isEmpty)
         {
-            // Empty point: write full format (no P bit optimization for empty points)
-            writer.Write(0);  // Number of Points = 0
+            // Empty LineString: Write serialization properties (V flag only, no L flag)
+            byte serializationProps = (byte)SerializationProp.V;
+            writer.Write(serializationProps);
 
-            // Figures section: Number of Figures + (Attribute + Point Offset) for each figure
-            writer.Write(0);  // Number of Figures = 0
+            // Write Number of Points = 0
+            writer.Write(0);
 
-            // Shapes section: Number of Shapes + (Parent Offset + Figure Offset + OpenGIS Type) for each shape
-            writer.Write(1);  // Number of Shapes = 1
-            writer.Write((int)-1);  // Shape Parent Offset = -1 (no parent)
-            writer.Write(0);  // Shape Figure Offset = 0
-            writer.Write((byte)1);  // Shape OpenGIS Type = 1 (point)
+            // Write Number of Figures = 0
+            writer.Write(0);
+
+            // Write Number of Shapes = 1
+            writer.Write(1);
+
+            // Write Shape structure
+            writer.Write(-1);              // Parent Offset (-1 means no parent)
+            writer.Write(0);              // Figure Offset
+            writer.Write((byte)2);        // OpenGIS Type (2 = LineString)
+
             return;
         }
 
-        // For non-empty points, use optimized format (P bit is set in serialization properties)
-        // When P bit is set, Number of Points, Figures, and Shapes sections are omitted
-        // Write point coordinates directly
-        var point = geometry.Points[0];
-        WritePointsSequential(writer, [point], geometry.HasZ(), geometry.HasM());
-    }
 
-
-    private static void GeometryLineStringAsWkb<T>(BinaryWriter writer, Geometry<T> lineString, SqlServerSpatialNativeBinaryTypes type) where T : IPoint, new()
-    {
-        var pointCount = lineString.Points.Count;
-        bool hasZ = type == SqlServerSpatialNativeBinaryTypes.LineStringZ || type == SqlServerSpatialNativeBinaryTypes.LineStringZM;
-        bool hasM = type == SqlServerSpatialNativeBinaryTypes.LineStringZM;
-
-        // Points section: Number of Points + All Points (sequential: (X,Y) pairs, then all Z, then all M)
-        writer.Write(pointCount);  // Number of Points
-
-        // Write points in sequential format: (X,Y) pairs, then all Z, then all M
-        WritePointsSequential(writer, lineString.Points, hasZ, hasM);
-
-        // Figures section: Number of Figures + (Attribute + Point Offset) for each figure
-        writer.Write(1);  // Number of Figures = 1
-        writer.Write((byte)1);  // Figure Attribute = 1 (stroke/linestring)
-        writer.Write(0);  // Figure Point Offset = 0 (starts at first point)
-
-        // Shapes section: Number of Shapes + (Parent Offset + Figure Offset + OpenGIS Type) for each shape
-        writer.Write(1);  // Number of Shapes = 1
-        writer.Write((int)-1);  // Shape Parent Offset = -1 (no parent)
-        writer.Write(0);  // Shape Figure Offset = 0 (uses first figure)
-        writer.Write((byte)2);  // Shape OpenGIS Type = 2 (linestring)
-    }
-
-    private static void GeometryPolygonAsWkb<T>(BinaryWriter writer, Geometry<T> polygon, SqlServerSpatialNativeBinaryTypes type) where T : IPoint, new()
-    {
-        var ringCount = polygon.Geometries.Count;
-        var totalPointCount = polygon.TotalNumberOfPoints;
-        bool hasZ = type == SqlServerSpatialNativeBinaryTypes.PolygonZ || type == SqlServerSpatialNativeBinaryTypes.PolygonZM;
-        bool hasM = type == SqlServerSpatialNativeBinaryTypes.PolygonZM;
-
-        // Collect all points from all rings
-        var allPoints = new List<T>(totalPointCount);
-        for (int i = 0; i < polygon.Geometries.Count; i++)
+        if (geometry.Points.Count == 2)
         {
-            var ring = polygon.Geometries[i];
-            for (int j = 0; j < ring.Points.Count; j++)
+            // Use L flag optimization for single line segment (2 points)
+            var point1 = geometry.Points[0];
+            var point2 = geometry.Points[1];
+
+            // Build serialization properties byte
+            SerializationProp serializationProps = SerializationProp.V;  // V flag always set
+            serializationProps |= SerializationProp.L;                    // L flag for optimization
+
+            if (hasZ) serializationProps |= SerializationProp.Z;
+
+            if (hasM) serializationProps |= SerializationProp.M;
+             
+            writer.Write((byte)serializationProps);
+
+            // Write 2 points (X, Y for each)
+            writer.Write(point1.X);
+            writer.Write(point1.Y);
+            writer.Write(point2.X);
+            writer.Write(point2.Y);
+
+            // Write Z coordinates if present (2 values sequentially)
+            if (hasZ && point1 is IHasZ zPoint1 && point2 is IHasZ zPoint2)
             {
-                allPoints.Add(ring.Points[j]);
+                WriteDouble(writer, zPoint1.Z);
+                WriteDouble(writer, zPoint2.Z);
+            }
+
+            // Write M coordinates if present (2 values sequentially)
+            if (hasM && point1 is IHasM mPoint1 && point2 is IHasM mPoint2)
+            {
+                WriteDouble(writer, mPoint1.M);
+                WriteDouble(writer, mPoint2.M);
             }
         }
-
-        // Points section: Number of Points + All Points (sequential: (X,Y) pairs, then all Z, then all M)
-        writer.Write(totalPointCount);  // Number of Points
-
-        // Write points in sequential format: (X,Y) pairs, then all Z, then all M
-        WritePointsSequential(writer, allPoints, hasZ, hasM);
-
-        // Figures section: Number of Figures + (Attribute + Point Offset) for each figure
-        // Each ring is a figure (exterior ring = 1, interior rings = 0)
-        writer.Write(ringCount);  // Number of Figures
-
-        int pointOffset = 0;
-        for (int i = 0; i < ringCount; i++)
+        else
         {
-            var ring = polygon.Geometries[i];
-            writer.Write((byte)(i == 0 ? 1 : 0));  // Figure Attribute: 1 for exterior ring, 0 for interior rings
-            writer.Write(pointOffset);  // Figure Point Offset
-            pointOffset += ring.Points.Count;
-        }
+            // Full LineString structure (multiple points)
+            var pointCount = geometry.Points.Count;
 
-        // Shapes section: Number of Shapes + (Parent Offset + Figure Offset + OpenGIS Type) for each shape
-        writer.Write(1);  // Number of Shapes = 1 (single polygon)
-        writer.Write((int)-1);  // Shape Parent Offset = -1 (no parent)
-        writer.Write(0);  // Shape Figure Offset = 0 (uses first figure)
-        writer.Write((byte)3);  // Shape OpenGIS Type = 3 (polygon)
+            // Build serialization properties byte
+            SerializationProp serializationProps = SerializationProp.V;  // V flag always set
+            // No L flag for multi-point LineString
+
+            if (hasZ)
+            {
+                serializationProps |= SerializationProp.Z;
+            }
+
+            if (hasM)
+            {
+                serializationProps |= SerializationProp.M;
+            }
+
+            writer.Write((byte)serializationProps);
+
+            // Write Number of Points
+            writer.Write(pointCount);
+
+            // Write all X, Y pairs sequentially
+            foreach (var point in geometry.Points)
+            {
+                writer.Write(point.X);
+                writer.Write(point.Y);
+            }
+
+            // Write all Z values sequentially if present
+            if (hasZ)
+            {
+                foreach (var point in geometry.Points)
+                {
+                    if (point is IHasZ zPoint)
+                    {
+                        WriteDouble(writer, zPoint.Z);
+                    }
+                    else
+                    {
+                        WriteDouble(writer, double.NaN); // Write QNaN if point doesn't have Z
+                    }
+                }
+            }
+
+            // Write all M values sequentially if present
+            if (hasM)
+            {
+                foreach (var point in geometry.Points)
+                {
+                    if (point is IHasM mPoint)
+                    {
+                        WriteDouble(writer, mPoint.M);
+                    }
+                    else
+                    {
+                        WriteDouble(writer, double.NaN); // Write QNaN if point doesn't have M
+                    }
+                }
+            }
+
+            // Write Number of Figures = 1
+            writer.Write(1);
+
+            // Write Figure structure
+            writer.Write((byte)0x01);  // Figure Attribute (0x01 = stroke)
+            writer.Write(0);           // Point Offset (0 for LineString starting at first point)
+
+            // Write Number of Shapes = 1
+            writer.Write(1);
+
+            // Write Shape structure
+            writer.Write(-1);          // Parent Offset (-1 means no parent)
+            writer.Write(0);           // Figure Offset (0 for first figure)
+            writer.Write((byte)2);    // OpenGIS Type (2 = LineString)
+        }
     }
 
-    private static void GeometryMultiPointAsWkb<T>(BinaryWriter writer, Geometry<T> multipoint, SqlServerSpatialNativeBinaryTypes type) where T : IPoint, new()
+    private static void SerializeMultiPoint<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM) where T : IPoint, new()
     {
-        var pointCount = multipoint.NumberOfGeometries;
+        // Check if MultiPoint is empty
+        bool isEmpty = geometry.Geometries == null || geometry.Geometries.Count == 0;
 
-        // Write point count
+        if (isEmpty)
+        {
+            // Empty MultiPoint: Write serialization properties (V flag only)
+            byte emptySerializationProps = (byte)SerializationProp.V;
+            writer.Write(emptySerializationProps);
+
+            // Write Number of Points = 0
+            writer.Write(0);
+
+            // Write Number of Figures = 0
+            writer.Write(0);
+
+            // Write Number of Shapes = 1
+            writer.Write(1);
+
+            // Write Shape structure
+            writer.Write(-1);              // Parent Offset (-1 means no parent)
+            writer.Write(0);               // Figure Offset
+            writer.Write((byte)4);        // OpenGIS Type (4 = MultiPoint)
+            return;
+        }
+
+        // Extract all points from Geometries (each geometry is a Point)
+        var pointCount = geometry.Geometries.Count;
+        var allPoints = new List<T>(pointCount);
+        foreach (var pointGeometry in geometry.Geometries)
+        {
+            if (pointGeometry.Type != GeometryType.Point)
+                throw new ArgumentException("MultiPoint geometry must contain only Point geometries");
+            
+            if (pointGeometry.Points == null || pointGeometry.Points.Count != 1)
+                throw new ArgumentException("Each Point geometry in MultiPoint must contain exactly one point");
+
+            allPoints.Add(pointGeometry.Points[0]);
+        }
+
+        // Build serialization properties byte
+        SerializationProp serializationProps = SerializationProp.V;  // V flag always set
+        // No P or L flag for MultiPoint
+
+        if (hasZ)
+        {
+            serializationProps |= SerializationProp.Z;
+        }
+
+        if (hasM)
+        {
+            serializationProps |= SerializationProp.M;
+        }
+
+        writer.Write((byte)serializationProps);
+
+        // Write Number of Points
         writer.Write(pointCount);
 
-        // Collect all points from all geometries
-        var allPoints = new List<T>(pointCount);
-        for (int i = 0; i < multipoint.Geometries.Count; i++)
+        // Write all X, Y pairs sequentially
+        foreach (var point in allPoints)
         {
-            allPoints.Add(multipoint.Geometries[i].Points[0]);
+            writer.Write(point.X);
+            writer.Write(point.Y);
         }
 
-        // Write points in sequential format: (X,Y) pairs, then all Z, then all M
-        WritePointsSequential(writer, allPoints, multipoint.HasZ(), multipoint.HasM());
-
-        // Write metadata section
-        // Based on CSV analysis: 02 00000001 00000000 01010000 00030000 00 FFFFFFFF 00000000 04 00000000 00000000 01 00000000 01
-        // Point count as byte (not int32)
-        writer.Write((byte)pointCount);
-
-        writer.Write((int)1);  // First int32 value (1)
-        writer.Write((int)0);  // Second int32 value (0)
-
-        // Pattern: 01010000 00030000 00 (9 bytes total)
-        // These are raw bytes written as hex pattern
-        writer.Write(HexStringHelper.ToByteArray("0x010100000003000000"));
-
-        // Fixed pattern (9 bytes): FFFFFFFF 00000000 04
-        writer.Write(HexStringHelper.ToByteArray("0xFFFFFFFF0000000004"));
-
-        // Additional metadata: int32(0) + int32(0) + byte(1) + int32(0) + byte(1)
-        writer.Write((int)0);
-        writer.Write((int)0);
-        writer.Write((byte)1);
-        writer.Write((int)0);
-        writer.Write((byte)1);
-    }
-
-    private static void GeometryMultiLineStringAsWkb<T>(BinaryWriter writer, Geometry<T> multiLineString, SqlServerSpatialNativeBinaryTypes type) where T : IPoint, new()
-    {
-        var linestringCount = multiLineString.Geometries.Count;
-        var totalPointCount = multiLineString.TotalNumberOfPoints;
-        bool hasZ = type == SqlServerSpatialNativeBinaryTypes.MultiLineStringZ || type == SqlServerSpatialNativeBinaryTypes.MultiLineStringZM;
-        bool hasM = type == SqlServerSpatialNativeBinaryTypes.MultiLineStringZM;
-
-        // Write total point count (all linestrings combined)
-        writer.Write(totalPointCount);
-
-        // Collect all points from all linestrings
-        var allPoints = new List<T>(totalPointCount);
-        for (int i = 0; i < multiLineString.Geometries.Count; i++)
+        // Write all Z values sequentially if present
+        if (hasZ)
         {
-            var linestring = multiLineString.Geometries[i];
-            for (int j = 0; j < linestring.Points.Count; j++)
+            foreach (var point in allPoints)
             {
-                allPoints.Add(linestring.Points[j]);
-            }
-        }
-
-        // Write points in sequential format: (X,Y) pairs, then all Z, then all M
-        WritePointsSequential(writer, allPoints, hasZ, hasM);
-
-        // Write metadata section: byte(linestringCount) + int32(flag=1) + int32(pointCount) + int32(additional) + 9 bytes pattern + additional metadata
-        writer.Write((byte)linestringCount);  // Linestring count is a byte
-        writer.Write((int)1);  // Flag (1 = linestring structure)
-
-        // For single linestring, write the point count; for multiple, write first linestring's point count
-        var linestringPointCount = linestringCount > 0 ? multiLineString.Geometries[0].Points.Count : 0;
-        writer.Write(linestringPointCount);  // Point count for the linestring
-
-        writer.Write((int)0);  // Additional value
-
-        // Fixed pattern (9 bytes): FFFFFFFF 00000000 05
-        writer.Write(HexStringHelper.ToByteArray("0xFFFFFFFF0000000005"));
-
-        // Additional metadata: int32(0) + int32(0) + byte(1) + int32(0) + byte(2)
-        writer.Write((int)0);
-        writer.Write((int)0);
-        writer.Write((byte)1);
-        writer.Write((int)0);
-        writer.Write((byte)2);
-    }
-
-    private static void GeometryMultiPolygonAsWkb<T>(BinaryWriter writer, Geometry<T> multiPolygon, SqlServerSpatialNativeBinaryTypes type) where T : IPoint, new()
-    {
-        var polygonCount = multiPolygon.Geometries.Count;
-        var totalPointCount = multiPolygon.TotalNumberOfPoints;
-        bool hasZ = type == SqlServerSpatialNativeBinaryTypes.MultiPolygonZ || type == SqlServerSpatialNativeBinaryTypes.MultiPolygonZM;
-        bool hasM = type == SqlServerSpatialNativeBinaryTypes.MultiPolygonZM;
-
-        // Write total point count (all polygons combined)
-        writer.Write(totalPointCount);
-
-        // Collect all points from all polygons
-        var allPoints = new List<T>(totalPointCount);
-        for (int i = 0; i < multiPolygon.Geometries.Count; i++)
-        {
-            var polygon = multiPolygon.Geometries[i];
-            for (int j = 0; j < polygon.Geometries.Count; j++)
-            {
-                var ring = polygon.Geometries[j];
-                for (int k = 0; k < ring.Points.Count; k++)
+                if (point is IHasZ zPoint)
                 {
-                    allPoints.Add(ring.Points[k]);
+                    WriteDouble(writer, zPoint.Z);
+                }
+                else
+                {
+                    WriteDouble(writer, double.NaN); // Write QNaN if point doesn't have Z
                 }
             }
         }
 
-        // Write points in sequential format: (X,Y) pairs, then all Z, then all M
-        WritePointsSequential(writer, allPoints, hasZ, hasM);
+        // Write all M values sequentially if present
+        if (hasM)
+        {
+            foreach (var point in allPoints)
+            {
+                if (point is IHasM mPoint)
+                {
+                    WriteDouble(writer, mPoint.M);
+                }
+                else
+                {
+                    WriteDouble(writer, double.NaN); // Write QNaN if point doesn't have M
+                }
+            }
+        }
 
-        // Write metadata section: byte(polygonCount) + int32(flag=2) + int32(value) + int32(additional) + 9 bytes pattern + additional metadata
-        // Based on CSV analysis: 01 00000002 00000002 00000000 FFFFFFFF 00000000 06 ...
-        writer.Write((byte)polygonCount);  // Polygon count is a byte
-        writer.Write((int)2);  // Flag (2 = polygon structure)
+        // Write Number of Figures = point count (one figure per point)
+        writer.Write(pointCount);
 
-        // The third int32 appears to be polygonCount + 1 (or similar calculation)
-        // For MultiPolygon with 1 polygon, it's 2
-        var thirdValue = polygonCount + 1;
-        writer.Write(thirdValue);
+        // Write Figures section - one figure per point
+        for (int i = 0; i < pointCount; i++)
+        {
+            writer.Write((byte)0x01);  // Figure Attribute (0x01 = stroke)
+            writer.Write(i);           // Point Offset (index of the point)
+        }
 
-        writer.Write((int)0);  // Additional value
+        // Write Number of Shapes = pointCount + 1 (one parent MultiPoint + one per point)
+        writer.Write(pointCount + 1);
 
-        // Fixed pattern (9 bytes): FFFFFFFF 00000000 06
-        writer.Write(HexStringHelper.ToByteArray("0xFFFFFFFF0000000006"));
+        // Write first shape: Parent MultiPoint shape
+        writer.Write(-1);          // Parent Offset (-1 means no parent)
+        writer.Write(0);          // Figure Offset (0 for MultiPoint)
+        writer.Write((byte)0x04); // OpenGIS Type (0x04 = MultiPoint)
 
-        // Additional metadata: int32(0) + int32(0) + byte(2) + int32(0) + byte(3)
-        writer.Write((int)0);
-        writer.Write((int)0);
-        writer.Write((byte)2);
-        writer.Write((int)0);
-        writer.Write((byte)3);
+        // Write Shapes section - one shape per point (children of MultiPoint)
+        for (int i = 0; i < pointCount; i++)
+        {
+            writer.Write(0);          // Parent Offset (0 = index of MultiPoint shape)
+            writer.Write(i);          // Figure Offset (index of the figure)
+            writer.Write((byte)0x01); // OpenGIS Type (0x01 = Point)
+        }
     }
+
+    private static void SerializeMultiLineString<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM) where T : IPoint, new()
+    {
+        // Check if MultiLineString is empty
+        bool isEmpty = geometry.Geometries == null || geometry.Geometries.Count == 0;
+
+        if (isEmpty)
+        {
+            // Empty MultiLineString: Write serialization properties (V flag only)
+            byte emptySerializationProps = (byte)SerializationProp.V;
+            writer.Write(emptySerializationProps);
+
+            // Write Number of Points = 0
+            writer.Write(0);
+
+            // Write Number of Figures = 0
+            writer.Write(0);
+
+            // Write Number of Shapes = 1
+            writer.Write(1);
+
+            // Write Shape structure
+            writer.Write(-1);              // Parent Offset (-1 means no parent)
+            writer.Write(0);               // Figure Offset
+            writer.Write((byte)5);         // OpenGIS Type (5 = MultiLineString)
+            return;
+        }
+
+        // Extract all points from Geometries (each geometry is a LineString)
+        var lineStringCount = geometry.Geometries.Count;
+        var allPoints = new List<T>();
+        var lineStringPointCounts = new List<int>(lineStringCount);
+        var cumulativeOffsets = new List<int>(lineStringCount + 1) { 0 };
+
+        foreach (var lineStringGeometry in geometry.Geometries)
+        {
+            if (lineStringGeometry.Type != GeometryType.LineString)
+                throw new ArgumentException("MultiLineString geometry must contain only LineString geometries");
+
+            if (lineStringGeometry.Points == null || lineStringGeometry.Points.Count == 0)
+                throw new ArgumentException("Each LineString geometry in MultiLineString must contain at least one point");
+
+            var pointCount = lineStringGeometry.Points.Count;
+            lineStringPointCounts.Add(pointCount);
+            cumulativeOffsets.Add(cumulativeOffsets[cumulativeOffsets.Count - 1] + pointCount);
+
+            foreach (var point in lineStringGeometry.Points)
+            {
+                allPoints.Add(point);
+            }
+        }
+
+        var totalPointCount = allPoints.Count;
+
+        // Build serialization properties byte
+        SerializationProp serializationProps = SerializationProp.V;  // V flag always set
+        // No P or L flag for MultiLineString
+
+        if (hasZ)
+        {
+            serializationProps |= SerializationProp.Z;
+        }
+
+        if (hasM)
+        {
+            serializationProps |= SerializationProp.M;
+        }
+
+        writer.Write((byte)serializationProps);
+
+        // Write Number of Points
+        writer.Write(totalPointCount);
+
+        // Write all X, Y pairs sequentially (from all LineStrings)
+        foreach (var point in allPoints)
+        {
+            writer.Write(point.X);
+            writer.Write(point.Y);
+        }
+
+        // Write all Z values sequentially if present
+        if (hasZ)
+        {
+            foreach (var point in allPoints)
+            {
+                if (point is IHasZ zPoint)
+                {
+                    WriteDouble(writer, zPoint.Z);
+                }
+                else
+                {
+                    WriteDouble(writer, double.NaN); // Write QNaN if point doesn't have Z
+                }
+            }
+        }
+
+        // Write all M values sequentially if present
+        if (hasM)
+        {
+            foreach (var point in allPoints)
+            {
+                if (point is IHasM mPoint)
+                {
+                    WriteDouble(writer, mPoint.M);
+                }
+                else
+                {
+                    WriteDouble(writer, double.NaN); // Write QNaN if point doesn't have M
+                }
+            }
+        }
+
+        // Write Number of Figures = LineString count (one figure per LineString)
+        writer.Write(lineStringCount);
+
+        // Write Figures section - one figure per LineString
+        for (int i = 0; i < lineStringCount; i++)
+        {
+            writer.Write((byte)0x01);  // Figure Attribute (0x01 = stroke)
+            writer.Write(cumulativeOffsets[i]); // Point Offset (cumulative point index)
+        }
+
+        // Write Number of Shapes = LineString count + 1 (one parent + one per LineString)
+        writer.Write(lineStringCount + 1);
+
+        // Write first shape: Parent MultiLineString shape
+        writer.Write(-1);          // Parent Offset (-1 means no parent)
+        writer.Write(0);          // Figure Offset (0 for MultiLineString)
+        writer.Write((byte)0x05); // OpenGIS Type (0x05 = MultiLineString)
+
+        // Write Shapes section - one shape per LineString (children of MultiLineString)
+        for (int i = 0; i < lineStringCount; i++)
+        {
+            writer.Write(0);          // Parent Offset (0 = index of MultiLineString shape)
+            writer.Write(i);          // Figure Offset (index of the figure)
+            writer.Write((byte)0x02); // OpenGIS Type (0x02 = LineString)
+        }
+    }
+
+    private static void SerializePolygon<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM) where T : IPoint, new()
+    {
+        // Check if Polygon is empty
+        bool isEmpty = geometry.Geometries == null || geometry.Geometries.Count == 0;
+
+        if (isEmpty)
+        {
+            // Empty Polygon: Write serialization properties (V flag only)
+            byte emptySerializationProps = (byte)SerializationProp.V;
+            writer.Write(emptySerializationProps);
+
+            // Write Number of Points = 0
+            writer.Write(0);
+
+            // Write Number of Figures = 0
+            writer.Write(0);
+
+            // Write Number of Shapes = 1
+            writer.Write(1);
+
+            // Write Shape structure
+            writer.Write(-1);              // Parent Offset (-1 means no parent)
+            writer.Write(0);               // Figure Offset
+            writer.Write((byte)3);         // OpenGIS Type (3 = Polygon)
+            return;
+        }
+
+        // Extract rings from Geometries
+        // First geometry is exterior ring, remaining geometries are interior rings (holes)
+        var ringCount = geometry.Geometries.Count;
+        var allPoints = new List<T>();
+        var ringPointCounts = new List<int>(ringCount);
+        var cumulativeOffsets = new List<int>(ringCount + 1) { 0 };
+
+        foreach (var ringGeometry in geometry.Geometries)
+        {
+            if (ringGeometry.Type != GeometryType.LineString)
+                throw new ArgumentException("Polygon geometry must contain only LineString geometries (rings)");
+
+            if (ringGeometry.Points == null || ringGeometry.Points.Count == 0)
+                throw new ArgumentException("Each ring geometry in Polygon must contain at least one point");
+
+            var ringPoints = ringGeometry.Points;
+            var firstPoint = ringPoints[0];
+            var lastPoint = ringPoints[ringPoints.Count - 1];
+            
+            // SQL Server format requires explicit closing point (first point repeated)
+            // Check if ring is already closed
+            bool isAlreadyClosed = (firstPoint.X == lastPoint.X && firstPoint.Y == lastPoint.Y);
+            
+            // Count includes closing point
+            var pointCount = isAlreadyClosed ? ringPoints.Count : ringPoints.Count + 1;
+            ringPointCounts.Add(pointCount);
+            cumulativeOffsets.Add(cumulativeOffsets[cumulativeOffsets.Count - 1] + pointCount);
+
+            // Add all points
+            foreach (var point in ringPoints)
+            {
+                allPoints.Add(point);
+            }
+            
+            // Add closing point if not already closed
+            if (!isAlreadyClosed)
+            {
+                allPoints.Add(firstPoint);
+            }
+        }
+
+        var totalPointCount = allPoints.Count;
+
+        // Build serialization properties byte
+        SerializationProp serializationProps = SerializationProp.V;  // V flag always set
+        // No P or L flag for Polygon
+
+        if (hasZ)
+        {
+            serializationProps |= SerializationProp.Z;
+        }
+
+        if (hasM)
+        {
+            serializationProps |= SerializationProp.M;
+        }
+
+        writer.Write((byte)serializationProps);
+
+        // Write Number of Points
+        writer.Write(totalPointCount);
+
+        // Write all X, Y pairs sequentially (from all rings)
+        foreach (var point in allPoints)
+        {
+            writer.Write(point.X);
+            writer.Write(point.Y);
+        }
+
+        // Write all Z values sequentially if present
+        if (hasZ)
+        {
+            foreach (var point in allPoints)
+            {
+                if (point is IHasZ zPoint)
+                {
+                    WriteDouble(writer, zPoint.Z);
+                }
+                else
+                {
+                    WriteDouble(writer, double.NaN); // Write QNaN if point doesn't have Z
+                }
+            }
+        }
+
+        // Write all M values sequentially if present
+        if (hasM)
+        {
+            foreach (var point in allPoints)
+            {
+                if (point is IHasM mPoint)
+                {
+                    WriteDouble(writer, mPoint.M);
+                }
+                else
+                {
+                    WriteDouble(writer, double.NaN); // Write QNaN if point doesn't have M
+                }
+            }
+        }
+
+        // Write Number of Figures = ring count (one figure per ring)
+        writer.Write(ringCount);
+
+        // Write Figures section - one figure per ring
+        for (int i = 0; i < ringCount; i++)
+        {
+            if (i == 0)
+            {
+                // Exterior ring
+                writer.Write((byte)0x02);  // Figure Attribute (0x02 = exterior ring)
+            }
+            else
+            {
+                // Interior ring
+                writer.Write((byte)0x00);  // Figure Attribute (0x00 = interior ring)
+            }
+            writer.Write(cumulativeOffsets[i]); // Point Offset (cumulative point index)
+        }
+
+        // Write Number of Shapes = 1
+        writer.Write(1);
+
+        // Write Shapes section - one shape for Polygon
+        writer.Write(-1);          // Parent Offset (-1 means no parent)
+        writer.Write(0);          // Figure Offset (0 for exterior ring)
+        writer.Write((byte)0x03); // OpenGIS Type (0x03 = Polygon)
+    }
+
+    private static void SerializeMultiPolygon<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM) where T : IPoint, new()
+    {
+        // Check if MultiPolygon is empty
+        bool isEmpty = geometry.Geometries == null || geometry.Geometries.Count == 0;
+
+        if (isEmpty)
+        {
+            // Empty MultiPolygon: Write serialization properties (V flag only)
+            byte emptySerializationProps = (byte)SerializationProp.V;
+            writer.Write(emptySerializationProps);
+
+            // Write Number of Points = 0
+            writer.Write(0);
+
+            // Write Number of Figures = 0
+            writer.Write(0);
+
+            // Write Number of Shapes = 1
+            writer.Write(1);
+
+            // Write Shape structure
+            writer.Write(-1);              // Parent Offset (-1 means no parent)
+            writer.Write(0);               // Figure Offset
+            writer.Write((byte)6);         // OpenGIS Type (6 = MultiPolygon)
+            return;
+        }
+
+        // Extract all rings from all polygons
+        // Each geometry in Geometries is a Polygon
+        // Each Polygon's rings are in its Geometries property (Geometries[0] = exterior, Geometries[1..] = interior)
+        var polygonCount = geometry.Geometries.Count;
+        var allPoints = new List<T>();
+        var ringAttributes = new List<byte>(); // 0x02 for exterior, 0x00 for interior
+        var cumulativePointOffsets = new List<int>() { 0 };
+        var polygonFirstFigureIndices = new List<int>(polygonCount + 1) { 0 }; // First figure index for each polygon (index 0 is always 0)
+
+        foreach (var polygonGeometry in geometry.Geometries)
+        {
+            if (polygonGeometry.Type != GeometryType.Polygon)
+                throw new ArgumentException("MultiPolygon geometry must contain only Polygon geometries");
+
+            if (polygonGeometry.Geometries == null || polygonGeometry.Geometries.Count == 0)
+                throw new ArgumentException("Each Polygon geometry in MultiPolygon must contain at least one ring");
+
+            // Store the first figure index for this polygon (before processing its rings)
+            int currentPolygonFirstFigureIndex = ringAttributes.Count;
+            polygonFirstFigureIndices.Add(currentPolygonFirstFigureIndex);
+
+            // Process each ring in this polygon
+            foreach (var ringGeometry in polygonGeometry.Geometries)
+            {
+                if (ringGeometry.Type != GeometryType.LineString)
+                    throw new ArgumentException("Polygon geometry must contain only LineString geometries (rings)");
+
+                if (ringGeometry.Points == null || ringGeometry.Points.Count == 0)
+                    throw new ArgumentException("Each ring geometry in Polygon must contain at least one point");
+
+                var ringPoints = ringGeometry.Points;
+                var firstPoint = ringPoints[0];
+                var lastPoint = ringPoints[ringPoints.Count - 1];
+                
+                // SQL Server format requires explicit closing point (first point repeated)
+                // Check if ring is already closed
+                bool isAlreadyClosed = (firstPoint.X == lastPoint.X && firstPoint.Y == lastPoint.Y);
+                
+                // Determine ring type (exterior or interior)
+                // First ring of each polygon is exterior, rest are interior
+                bool isExteriorRing = (ringAttributes.Count == currentPolygonFirstFigureIndex);
+                byte ringAttribute = isExteriorRing ? (byte)0x02 : (byte)0x00;
+                ringAttributes.Add(ringAttribute);
+
+                // Count includes closing point
+                var pointCount = isAlreadyClosed ? ringPoints.Count : ringPoints.Count + 1;
+                cumulativePointOffsets.Add(cumulativePointOffsets[cumulativePointOffsets.Count - 1] + pointCount);
+
+                // Add all points
+                foreach (var point in ringPoints)
+                {
+                    allPoints.Add(point);
+                }
+                
+                // Add closing point if not already closed
+                if (!isAlreadyClosed)
+                {
+                    allPoints.Add(firstPoint);
+                }
+            }
+        }
+
+        var totalPointCount = allPoints.Count;
+        var totalRingCount = ringAttributes.Count;
+
+        // Build serialization properties byte
+        SerializationProp serializationProps = SerializationProp.V;  // V flag always set
+        // No P or L flag for MultiPolygon
+
+        if (hasZ)
+        {
+            serializationProps |= SerializationProp.Z;
+        }
+
+        if (hasM)
+        {
+            serializationProps |= SerializationProp.M;
+        }
+
+        writer.Write((byte)serializationProps);
+
+        // Write Number of Points
+        writer.Write(totalPointCount);
+
+        // Write all X, Y pairs sequentially (from all rings of all polygons)
+        foreach (var point in allPoints)
+        {
+            writer.Write(point.X);
+            writer.Write(point.Y);
+        }
+
+        // Write all Z values sequentially if present
+        if (hasZ)
+        {
+            foreach (var point in allPoints)
+            {
+                if (point is IHasZ zPoint)
+                {
+                    WriteDouble(writer, zPoint.Z);
+                }
+                else
+                {
+                    WriteDouble(writer, double.NaN); // Write QNaN if point doesn't have Z
+                }
+            }
+        }
+
+        // Write all M values sequentially if present
+        if (hasM)
+        {
+            foreach (var point in allPoints)
+            {
+                if (point is IHasM mPoint)
+                {
+                    WriteDouble(writer, mPoint.M);
+                }
+                else
+                {
+                    WriteDouble(writer, double.NaN); // Write QNaN if point doesn't have M
+                }
+            }
+        }
+
+        // Write Number of Figures = total ring count (one figure per ring)
+        writer.Write(totalRingCount);
+
+        // Write Figures section - one figure per ring
+        for (int i = 0; i < totalRingCount; i++)
+        {
+            writer.Write(ringAttributes[i]);  // Figure Attribute (0x02 for exterior, 0x00 for interior)
+            writer.Write(cumulativePointOffsets[i]); // Point Offset (cumulative point index)
+        }
+
+        // Write Number of Shapes = polygonCount + 1 (one parent + one per Polygon)
+        writer.Write(polygonCount + 1);
+
+        // Write first shape: Parent MultiPolygon shape
+        writer.Write(-1);          // Parent Offset (-1 means no parent)
+        writer.Write(0);          // Figure Offset (0 for MultiPolygon)
+        writer.Write((byte)0x06); // OpenGIS Type (0x06 = MultiPolygon)
+
+        // Write Shapes section - one shape per Polygon (children of MultiPolygon)
+        for (int i = 0; i < polygonCount; i++)
+        {
+            writer.Write(0);                      // Parent Offset (0 = index of MultiPolygon shape)
+            writer.Write(polygonFirstFigureIndices[i + 1]); // Figure Offset (first figure index of this polygon, index 0 is always 0)
+            writer.Write((byte)0x03);             // OpenGIS Type (0x03 = Polygon)
+        }
+    }
+
+    private static void WriteDouble(BinaryWriter writer, double value)
+    {
+        // Write QNaN for NULL values
+        if (double.IsNaN(value))
+            writer.Write(BitConverter.Int64BitsToDouble(0x7FF8000000000000)); // QNaN
+
+        else
+            writer.Write(value);
+    }
+
+
+
 }

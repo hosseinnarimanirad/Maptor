@@ -1,4 +1,5 @@
-﻿namespace IRI.Maptor.Sta.Spatial.IO;
+﻿namespace IRI.Maptor.Sta.Spatial.IO.SqlServerNativeBinary;
+
 
 public enum SqlServerSpatialNativeBinaryTypes : byte
 {

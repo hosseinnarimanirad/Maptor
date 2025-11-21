@@ -21,22 +21,22 @@ public static class SqlServerWktWriter
         switch (geometry.Type)
         {
             case GeometryType.Point:
-                return FormattableString.Invariant($"POINT{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
+                return FormattableString.Invariant($"POINT {WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
 
             case GeometryType.LineString:
-                return FormattableString.Invariant($"LINESTRING{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
+                return FormattableString.Invariant($"LINESTRING {WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
 
             case GeometryType.Polygon:
-                return FormattableString.Invariant($"POLYGON{WktHelpers.ToWktPointArrayString(geometry, isRingBase: true)}");
+                return FormattableString.Invariant($"POLYGON {WktHelpers.ToWktPointArrayString(geometry, isRingBase: true)}");
 
             case GeometryType.MultiPoint:
-                return FormattableString.Invariant($"MULTIPOINT{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
+                return FormattableString.Invariant($"MULTIPOINT {WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
 
             case GeometryType.MultiLineString:
-                return FormattableString.Invariant($"MULTILINESTRING{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
+                return FormattableString.Invariant($"MULTILINESTRING {WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
 
             case GeometryType.MultiPolygon:
-                return FormattableString.Invariant($"MULTIPOLYGON{WktHelpers.ToWktPointArrayString(geometry, isRingBase: true)}");
+                return FormattableString.Invariant($"MULTIPOLYGON {WktHelpers.ToWktPointArrayString(geometry, isRingBase: true)}");
 
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:
