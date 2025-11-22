@@ -1,4 +1,6 @@
-﻿using System; 
+﻿using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Controls.Common;
+using System; 
 using System.Text;
 using System.Windows; 
 
@@ -18,12 +20,13 @@ public partial class MainWindow : Window
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
          
-        var presenter = new ApplicationPresenter();
+        var presenter = await MapInitializationHelper.InitializeMapAsync(
+            this.map,
+            this,
+            new ApplicationPresenter());
 
-        await this.map.Register(presenter);
+        this.DataContext = presenter;
 
-        presenter.Initialize(this);
-         
         presenter.RemoveAllProviders();
     }
       

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows;
 using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Controls.Common;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -31,15 +32,18 @@ public partial class MainWindow : Window
         //    MessageBox.Show("error!");
         //}
 
-        var presenter = new ViewModel.AppViewModel();
+        var config = new MapViewerConfiguration
+        {
+            InitialExtent = BoundingBoxes.WebMercator_Africa
+        };
 
-        await this.map.Register(presenter);
+        var presenter = await MapInitializationHelper.InitializeMapAsync(
+            this.map,
+            this,
+            new ViewModel.AppViewModel(),
+            config);
 
-        presenter.Initialize(this);
-
-        //this.DataContext = presenter;
-         
-        presenter.ZoomToExtent(BoundingBoxes.WebMercator_Africa, false, isNewExtent: true);
+        this.DataContext = presenter;
 
         presenter.SelectedMapProvider = TileMapProviderFactory.GoogleRoadMap;
         //LocalizationManager.Instance.SetCulture(CultureInfo.GetCultureInfo("fa-IR"));

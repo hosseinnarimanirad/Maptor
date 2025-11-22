@@ -78,4 +78,7 @@ public abstract class LegendCommandBase : Notifier, ILegendCommand
         RaisePropertyChanged(nameof(ToolTip));
     }
 
+
+    public override string ToString() => ToolTip;
+
 }

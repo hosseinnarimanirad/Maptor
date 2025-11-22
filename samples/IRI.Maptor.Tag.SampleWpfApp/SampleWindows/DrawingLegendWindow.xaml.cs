@@ -1,8 +1,10 @@
 ﻿using System.Windows;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Jab.Controls.Common;
 using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Jab.Controls.Presenters;
 using System.Text;
+using IRI.Maptor.Jab.Common;
 
 namespace IRI.Maptor.Tag.SampleWpfApp.SampleWindows;
 /// <summary>
@@ -21,12 +23,20 @@ public partial class DrawingLegendWindow : Window
         System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
         // Initialize map presenter (viewmodel)
-        var presenter = new MapApplicationPresenter();
-        await this.map.Register(presenter);
-        presenter.Initialize(this);
+        var config = new MapViewerConfiguration
+        {
+            InitialExtent = BoundingBoxes.WebMercator_Africa
+        };
+
+        var presenter = await MapInitializationHelper.InitializeMapAsync(
+            this.map,
+            this,
+            new MapApplicationPresenter(),
+            config);
+
+        this.DataContext = presenter;
 
         // Configure initial view
         presenter.SelectedMapProvider = TileMapProviderFactory.GoogleRoadMap;
-        presenter.ZoomToExtent(BoundingBoxes.WebMercator_Africa, false, isNewExtent: true);
     }
 }

@@ -2,6 +2,8 @@
 
 using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Res.LRSimplification.Common;
+using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Controls.Common;
 
 namespace IRI.Maptor.Res.LRSimplification;
 /// <summary>
@@ -55,12 +57,13 @@ public partial class MainWindow : Window
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     { 
-        var presenter = new ViewModel.ApplicationPresenter();
+        var presenter = await MapInitializationHelper.InitializeMapAsync(
+            this.map,
+            this,
+            new ViewModel.ApplicationPresenter());
 
-        await this.map.Register(presenter);
+        this.DataContext = presenter;
 
-        presenter.Initialize(this);
-         
         presenter.RemoveAllProviders();
          
 

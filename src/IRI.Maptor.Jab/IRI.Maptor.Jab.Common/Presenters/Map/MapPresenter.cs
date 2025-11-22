@@ -38,6 +38,7 @@ using IRI.Maptor.Jab.Common.Models.Spatialable;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Jab.Common.Abstractions;
 
 
 namespace IRI.Maptor.Jab.Common.Presenters;
@@ -376,7 +377,7 @@ public abstract class MapPresenter : BasePresenter
 
 
     private TileMapProviderMode _selectedTileMapProviderMode = TileMapProviderMode.Internet;
-    public TileMapProviderMode SelectedTileMapProviderMode
+    public virtual TileMapProviderMode SelectedTileMapProviderMode
     {
         get { return _selectedTileMapProviderMode; }
         set
@@ -846,6 +847,39 @@ public abstract class MapPresenter : BasePresenter
 
         CoordinatePanel = new CoordinatePanelPresenter();
     }
+
+
+    public virtual Task InitializeAsync() => Task.CompletedTask;
+
+    public virtual void Initialize(IDialogService dialogService, Action<Point> requestShowGoToView, Action<ILayer> requestShowSymbologyView)
+    {
+        //this.DialogService = new IRI.Maptor.Jab.Controls.Services.Dialog.DefaultDialogService(ownerWindow);
+        this.DialogService = dialogService;
+
+        //this.RequestShowGoToView = IRI.Maptor.Jab.Controls.Common.Defaults.DefaultActions.GetDefaultGoToAction(ownerWindow, this);
+        //this.RequestShowSymbologyView = layer => Common.Defaults.DefaultActions.GetDefaultShowSymbologyView(ownerWindow, layer, this);
+        this.RequestShowGoToView = requestShowGoToView;
+        this.RequestShowSymbologyView = requestShowSymbologyView;
+
+        this.RequestClearAll = this.ClearAll;
+
+        this.MapSettings.BaseMapCacheDirectory = Environment.CurrentDirectory + "\\Data";
+
+        if (this.MapSettings.MinGoogleZoomLevel == 0)
+            this.MapSettings.MinGoogleZoomLevel = 2;
+
+        if (this.MapSettings.MaxGoogleZoomLevel == 0)
+            this.MapSettings.MaxGoogleZoomLevel = 18;
+
+        this.SetMapCursorSet1();
+
+        this.RegisterMapOptions();
+
+        this.IsPanMode = true;
+
+        //ownerWindow.DataContext = this;
+    }
+
 
 
     #region Actions & Funcs
@@ -3944,8 +3978,6 @@ public abstract class MapPresenter : BasePresenter
     public event EventHandler OnDeleteDrawing;
 
     #endregion
-
-    public virtual Task InitializeAsync() => Task.CompletedTask;
 
 
     public virtual void RegisterMapOptions()

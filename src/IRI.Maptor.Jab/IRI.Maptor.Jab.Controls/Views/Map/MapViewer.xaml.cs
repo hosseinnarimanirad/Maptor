@@ -484,16 +484,13 @@ public partial class MapViewer : NotifiableUserControl
                                 List<IrProvince93>? provinces = null)
     {
         if (presenter == null)
-        {
             return;
-        }
 
         _presenter = presenter;
 
         presenter.RequestPrint = this.Print;
 
         presenter.RequestGetAsDrawingVisual = this.GetAsDrawingVisual;
-        //presenter.RequestPrintAsPngAsync = this.PrintAsPngAsync;
 
         presenter.RequestGetProxy = () => this.Proxy;
 
@@ -567,31 +564,15 @@ public partial class MapViewer : NotifiableUserControl
         presenter.Layers = this.Layers;
 
         presenter.RequestSetConnectedState = this.SetConnectionState;
+         
+        presenter.RequestRefreshBaseMaps = this.RefreshBaseMaps;
 
-        //bool isCachEnabled = false, string cacheDirectory = null, bool isOffline = false
-
-        //presenter.RequestSetCustomTileService = (iMapProvider, isCachEnabled, cacheDirectory, isOffline, getFileName) =>
-        //{
-        //    this.UnSetTileServices();
-
-        //    this.SetTileService(iMapProvider, isCachEnabled, cacheDirectory, isOffline, getFileName);
-
-        //    this.RefreshBaseMaps();
-        //};
-
-        presenter.RequestRefreshBaseMaps = () =>
-        {
-            this.RefreshBaseMaps();
-        };
-
-        //IMapProvider mapProvider, bool isCachEnabled = false, string cacheDirectory = null, bool isOffline = false, Func< TileInfo, string> getFileName = null
         presenter.RequestSetTileService = (iMapProvider, isCachEnabled, cacheDirectory, isOffline, getlocalFileName, opacity) =>
         {
             this.UnSetTileServices();
 
             this.SetTileService(iMapProvider, isCachEnabled, cacheDirectory, isOffline, getlocalFileName, opacity);
 
-            //this.RefreshTiles();
             this.RefreshBaseMaps();
         };
 
@@ -614,11 +595,7 @@ public partial class MapViewer : NotifiableUserControl
         this.MouseUp += (sender, e) => { presenter.FireMapMouseUp(this.CurrentPoint); };
 
         this.CurrentEditingPointChanged += (sender, e) =>
-        {
-            //presenter.CurrentMapInfoPoint.X = e.Point.X;// = new NotifiablePoint(e.Point.X, e.Point.Y);
-
-            //presenter.CurrentMapInfoPoint.Y = e.Point.Y;
-
+        { 
             presenter.UpdateCurrentEditingPoint(e.Point.AsPoint());
         };
 
@@ -631,9 +608,7 @@ public partial class MapViewer : NotifiableUserControl
         presenter.RequestZoomToPoint = (center, mapScale) => this.ZoomAndCenter(mapScale, center);
 
         presenter.RequestZoomAndCenterToGoogleZoomLevel = this.ZoomAndCenterToGoogleZoomLevel;
-
-        //presenter.RequestZoomToGoogleZoomLevel = googleZoomLevel => this.ZoomToGoogleZoomLevel(googleZoomLevel);
-
+         
         presenter.RequestRegisterMapOptions = (arg) => { this.RegisterRightClickContextOptions(arg.View, arg.DataContext); };
 
         presenter.RequestRemoveMapOptions = this.RemoveRightClickOptions;
@@ -650,7 +625,6 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestAddPointToNewDrawing = p =>
         {
-            //AddPointToNewDrawing(IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections.MapProjects.GeodeticWgs84ToWebMercator(p));
             AddPointToNewDrawing((sb.Point)p);
         };
 
@@ -666,14 +640,10 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestFinishEdit = FinishEditing;
 
-        //presenter.RequestMeasure = async (mode, isEdgeLabelVisible) => await this.MeasureAsync(mode, isEdgeLabelVisible, null);
         presenter.RequestMeasure = MeasureAsync;
-
-        //presenter.RequestAddText = AddTextAsync;
-
+         
         presenter.RequestCancelMeasure = this.CancelMeasure;
 
-        //presenter.RequestGetBezier = async (geometry, decorationVisual) => { return await GetBezierAsync(geometry, decorationVisual); };
         presenter.RequestGetBezier = GetBezierAsync;
 
         presenter.RequestEdit = this.EditGeometryAsync;
@@ -691,9 +661,7 @@ public partial class MapViewer : NotifiableUserControl
             this.SetLayer(l);
 
             //return this.AddNonTiledLayer(l);
-            this.AddLayer(l);
-
-
+            this.AddLayer(l); 
         };
 
         presenter.RequestTransformScreenGeometryToWebMercatorGeometry = (screenGeo) =>
@@ -702,25 +670,7 @@ public partial class MapViewer : NotifiableUserControl
 
             return mapGeo;
         };
-
-        //presenter.RequestChangeLayerZIndex = (layer, newZIndex) =>
-        //{
-        //    layer.ZIndex = newZIndex;
-        //    _layerManager.ChangeLayerZIndex(layer, newZIndex);
-        //};
-
-        //presenter.RequestRemoveLayer = layerName => { this.RemoveLayer};
-
-        //presenter.RequestRemoveLayer = (layer, forceRemove) =>
-        //{
-        //    this.ClearLayer(layer, true, forceRemove);
-        //};
-
-        //presenter.RequestRemoveLayerByName = (i) =>
-        //  {
-        //      this.ClearLayer(i, true);
-        //  };
-
+          
         presenter.RequestRemovePolyBezierLayers = RemovePolyBezierLayers;
 
         presenter.RequestAddPolyBezier = (name, points, geometry, showSymbolOnly, decorationVisuals) =>
@@ -808,6 +758,8 @@ public partial class MapViewer : NotifiableUserControl
         presenter.Pan();
 
         presenter.SetMapCursorSet1();
+
+        //presenter.Initialize();
 
         await presenter.InitializeAsync();
 

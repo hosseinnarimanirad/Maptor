@@ -308,7 +308,7 @@ public class AccountDialogViewModel : DialogViewModelBase
         {
             if (_loginAsyncCommand == null)
             {
-                _loginAsyncCommand = new RelayCommand(param => LoginAsync(param));
+                _loginAsyncCommand = new RelayCommand(LoginAsync);
             }
 
             return _loginAsyncCommand;
