@@ -104,7 +104,7 @@
                        DockPanel.Dock="Left" Margin="4">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{1} - {0}">
-                        <Binding ElementName="grid" Path="ItemsSource.Count" Converter="{StaticResource localizedNumberConverter}"/>
+                        <Binding ElementName="grid" Path="Items.Count" Converter="{StaticResource localizedNumberConverter}"/>
                         <Binding ElementName="grid" Path="SelectedItems.Count" Converter="{StaticResource localizedNumberConverter}"/>
                     </MultiBinding>
                 </TextBlock.Text>
