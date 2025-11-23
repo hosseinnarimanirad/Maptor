@@ -564,7 +564,7 @@ public partial class MapViewer : NotifiableUserControl
         presenter.Layers = this.Layers;
 
         presenter.RequestSetConnectedState = this.SetConnectionState;
-         
+
         presenter.RequestRefreshBaseMaps = this.RefreshBaseMaps;
 
         presenter.RequestSetTileService = (iMapProvider, isCachEnabled, cacheDirectory, isOffline, getlocalFileName, opacity) =>
@@ -595,7 +595,7 @@ public partial class MapViewer : NotifiableUserControl
         this.MouseUp += (sender, e) => { presenter.FireMapMouseUp(this.CurrentPoint); };
 
         this.CurrentEditingPointChanged += (sender, e) =>
-        { 
+        {
             presenter.UpdateCurrentEditingPoint(e.Point.AsPoint());
         };
 
@@ -608,7 +608,7 @@ public partial class MapViewer : NotifiableUserControl
         presenter.RequestZoomToPoint = (center, mapScale) => this.ZoomAndCenter(mapScale, center);
 
         presenter.RequestZoomAndCenterToGoogleZoomLevel = this.ZoomAndCenterToGoogleZoomLevel;
-         
+
         presenter.RequestRegisterMapOptions = (arg) => { this.RegisterRightClickContextOptions(arg.View, arg.DataContext); };
 
         presenter.RequestRemoveMapOptions = this.RemoveRightClickOptions;
@@ -641,7 +641,7 @@ public partial class MapViewer : NotifiableUserControl
         presenter.RequestFinishEdit = FinishEditing;
 
         presenter.RequestMeasure = MeasureAsync;
-         
+
         presenter.RequestCancelMeasure = this.CancelMeasure;
 
         presenter.RequestGetBezier = GetBezierAsync;
@@ -661,7 +661,7 @@ public partial class MapViewer : NotifiableUserControl
             this.SetLayer(l);
 
             //return this.AddNonTiledLayer(l);
-            this.AddLayer(l); 
+            this.AddLayer(l);
         };
 
         presenter.RequestTransformScreenGeometryToWebMercatorGeometry = (screenGeo) =>
@@ -670,7 +670,7 @@ public partial class MapViewer : NotifiableUserControl
 
             return mapGeo;
         };
-          
+
         presenter.RequestRemovePolyBezierLayers = RemovePolyBezierLayers;
 
         presenter.RequestAddPolyBezier = (name, points, geometry, showSymbolOnly, decorationVisuals) =>
@@ -3150,27 +3150,20 @@ public partial class MapViewer : NotifiableUserControl
                 FillBehavior = FillBehavior.Stop
             };
 
-            animation.Completed += new EventHandler(
-                delegate (object o, EventArgs e)
-                {
-                    //Debug.WriteLine(new StackTrace().GetFrame(0).GetMethod().Name + "animation called");
+            animation.Completed += new EventHandler(delegate (object o, EventArgs e)
+                                    {
+                                        if (++counter != counterValue)
+                                            return;
 
-                    if (++counter != counterValue)
-                        return;
+                                        UpdateTileInfos();
 
-                    //Debug.WriteLine(new StackTrace().GetFrame(0).GetMethod().Name + "animation completed", _refreshCalled);
+                                        Refresh(isNewExtent: true);
 
-                    UpdateTileInfos();
+                                        if (callback != null)
+                                            _ = Dispatcher.BeginInvoke(callback, DispatcherPriority.Background, null);
 
-                    Refresh(isNewExtent: true);
-
-                    if (callback != null)
-                    {
-                        Dispatcher.BeginInvoke(callback, System.Windows.Threading.DispatcherPriority.Background, null);
-                    }
-
-                    this.counterValue = -1;
-                });
+                                        this.counterValue = -1;
+                                    });
 
             animation.To = this.panTransform.X + xOffset * 1.0 / this.zoomTransform.ScaleX;
             this.panTransform.BeginAnimation(TranslateTransform.XProperty, animation);
@@ -3362,9 +3355,7 @@ public partial class MapViewer : NotifiableUserControl
 
     private void mapView_MouseWheel(object sender, MouseWheelEventArgs e)
     {
-
         Zoom(e.Delta > 0, e.GetPosition(this.mapView));
-
     }
 
 
@@ -3447,7 +3438,7 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     //It has animation
-    private async void ZoomToExtent(sb.BoundingBox mapBoundingBox, bool canChangeToPointZoom, bool isExactExtent = true, bool isNewExtent = true, Action callback = null, bool withAnimation = true)
+    private async void ZoomToExtent(sb.BoundingBox mapBoundingBox, bool canChangeToPointZoom, bool isExactExtent = true, bool isNewExtent = true, Action? callback = null, bool withAnimation = true)
     {
         if (double.IsNaN(mapBoundingBox.Width + mapBoundingBox.Height))
             return;
@@ -3456,8 +3447,6 @@ public partial class MapViewer : NotifiableUserControl
 
         if (mapBoundingBox.Width + mapBoundingBox.Height < minBoundingBoxSize)
         {
-            //PanTo(mapBoundingBox.X, mapBoundingBox.Y, callback);
-
             int newZoomLevel = WebMercatorUtility.GetNextZoomLevel(CurrentZoomLevel);
 
             var wgs84Center = MapProjects.WebMercatorToGeodeticWgs84(mapCenter);
@@ -3480,113 +3469,114 @@ public partial class MapViewer : NotifiableUserControl
         if (mapBoundingBox.GetDiagonalLength() < 15 && canChangeToPointZoom)
         {
             ZoomToPoint(MapToScreen(mapBoundingBox.TopLeft.AsWpfPoint()), 1.25);
+
+            return;
         }
-        else
+
+        counterValue = 8;
+
+        //Point intermediateExtentCenter = new Point((mapBoundingBox.Left + mapBoundingBox.Right) / 2.0,
+        //                                            (mapBoundingBox.Top + mapBoundingBox.Bottom) / 2.0);
+        var intermediateExtentCenter = mapCenter.AsWpfPoint();
+
+        Point windowCenter = new Point(this.mapView.ActualWidth / 2.0, this.mapView.ActualHeight / 2.0);
+
+        Point screenExtentCenter = MapToScreen(intermediateExtentCenter);
+
+        double scale = double.NaN;
+
+        //if (IsGoogleZoomLevelsEnabled)
+        //{
+        //    var newZoomLevel = WebMercatorUtility.EstimateZoomLevel(mapBoundingBox, this.mapView.ActualWidth, this.mapView.ActualHeight);
+
+        //    var mapScale = WebMercatorUtility.GetGoogleMapScale(newZoomLevel);
+
+        //    scale = ToScreenScale(mapScale);
+        //}
+        //else
+        //{
+        double xScale = (isExactExtent ? this.mapView.ActualWidth : this.mapView.ActualWidth - 20) / mapBoundingBox.Width;
+
+        double yScale = (isExactExtent ? this.mapView.ActualHeight : this.mapView.ActualHeight - 20) / mapBoundingBox.Height;
+
+        scale = xScale > yScale ? yScale : xScale;
+        //}
+
+        if (double.IsNaN(scale))
         {
-            counterValue = 8;
-
-            //Point intermediateExtentCenter = new Point((mapBoundingBox.Left + mapBoundingBox.Right) / 2.0,
-            //                                            (mapBoundingBox.Top + mapBoundingBox.Bottom) / 2.0);
-            var intermediateExtentCenter = mapCenter.AsWpfPoint();
-
-            Point windowCenter = new Point(this.mapView.ActualWidth / 2.0, this.mapView.ActualHeight / 2.0);
-
-            Point screenExtentCenter = MapToScreen(intermediateExtentCenter);
-
-            double scale = double.NaN;
-
-            if (IsGoogleZoomLevelsEnabled)
-            {
-                var newZoomLevel = WebMercatorUtility.EstimateZoomLevel(mapBoundingBox, this.mapView.ActualWidth, this.mapView.ActualHeight);
-
-                var mapScale = WebMercatorUtility.GetGoogleMapScale(newZoomLevel);
-
-                scale = ToScreenScale(mapScale);
-            }
-            else
-            {
-                double xScale = (isExactExtent ? this.mapView.ActualWidth : this.mapView.ActualWidth - 20) / mapBoundingBox.Width;
-
-                double yScale = (isExactExtent ? this.mapView.ActualHeight : this.mapView.ActualHeight - 20) / mapBoundingBox.Height;
-
-                scale = xScale > yScale ? yScale : xScale;
-            }
-
-            if (double.IsNaN(scale))
-            {
-                return;
-            }
-
-            double pointScale = ToMapScale(scale) / this.MapScale;
-
-            if (withAnimation)
-            {
-                try
-                {
-                    var duration = new Duration(TimeSpan.FromMilliseconds(100));
-
-                    var fillBehavior = FillBehavior.Stop;
-
-                    DoubleAnimation animationPanX = new DoubleAnimation(windowCenter.X - intermediateExtentCenter.X, duration, fillBehavior);
-                    var t1 = AnimateAsync(() => { this.panTransform.BeginAnimation(TranslateTransform.XProperty, animationPanX); }, animationPanX);
-
-                    DoubleAnimation animationPanY = new DoubleAnimation(windowCenter.Y - intermediateExtentCenter.Y, duration, fillBehavior);
-                    var t2 = AnimateAsync(() => { this.panTransform.BeginAnimation(TranslateTransform.YProperty, animationPanY); }, animationPanY);
-
-                    DoubleAnimation animationPanPX = new DoubleAnimation(windowCenter.X - screenExtentCenter.X, duration, fillBehavior);
-                    var t3 = AnimateAsync(() => { this.panTransformForPoints.BeginAnimation(TranslateTransform.XProperty, animationPanPX); }, animationPanPX);
-
-                    DoubleAnimation animationPanPY = new DoubleAnimation(windowCenter.Y - screenExtentCenter.Y, duration, fillBehavior);
-                    var t4 = AnimateAsync(() => { this.panTransformForPoints.BeginAnimation(TranslateTransform.YProperty, animationPanPY); }, animationPanPY);
-
-
-                    DoubleAnimation animationZoomX = new DoubleAnimation(this.mapView.ActualWidth / 2.0, duration, fillBehavior);
-                    var t5 = AnimateAsync(() => { this.zoomTransform.BeginAnimation(ScaleTransform.CenterXProperty, animationZoomX); }, animationZoomX);
-
-                    DoubleAnimation animationZoomY = new DoubleAnimation(this.mapView.ActualHeight / 2.0, duration, fillBehavior);
-                    var t6 = AnimateAsync(() => { this.zoomTransform.BeginAnimation(ScaleTransform.CenterYProperty, animationZoomY); }, animationZoomY);
-
-                    DoubleAnimation animationZoomSX = new DoubleAnimation(scale * baseScaleX, duration, fillBehavior);
-                    var t7 = AnimateAsync(() => { this.zoomTransform.BeginAnimation(ScaleTransform.ScaleXProperty, animationZoomSX); }, animationZoomSX);
-
-                    DoubleAnimation animationZoomSY = new DoubleAnimation(scale * baseScaleY, duration, fillBehavior);
-                    var t8 = AnimateAsync(() => { this.zoomTransform.BeginAnimation(ScaleTransform.ScaleYProperty, animationZoomSY); }, animationZoomSY);
-
-                    await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8);
-
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-            }
-
-            this.panTransform.X = windowCenter.X - intermediateExtentCenter.X;
-            this.panTransform.Y = windowCenter.Y - intermediateExtentCenter.Y;
-
-            this.panTransformForPoints.X = 0;
-            this.panTransformForPoints.Y = 0;
-
-            this.zoomTransform.CenterX = this.mapView.ActualWidth / 2.0;
-
-            this.zoomTransform.CenterY = this.mapView.ActualHeight / 2.0;
-
-            this.zoomTransform.ScaleX = scale * baseScaleX;
-
-            this.zoomTransform.ScaleY = scale * baseScaleY;
-
-            this._theScreenScale = scale * baseScaleX;
-
-            this.OnZoomChanged?.Invoke(null, ZoomEventArgs.EmptyArg);
-
-            Refresh(isNewExtent);
-
-            if (callback != null)
-            {
-                await Dispatcher.BeginInvoke(callback, DispatcherPriority.Background, null);
-            }
-
+            return;
         }
+
+        double pointScale = ToMapScale(scale) / this.MapScale;
+
+        if (withAnimation)
+        {
+            try
+            {
+                var duration = new Duration(TimeSpan.FromMilliseconds(100));
+
+                var fillBehavior = FillBehavior.Stop;
+
+                DoubleAnimation animationPanX = new DoubleAnimation(windowCenter.X - intermediateExtentCenter.X, duration, fillBehavior);
+                var t1 = AnimateAsync(() => { this.panTransform.BeginAnimation(TranslateTransform.XProperty, animationPanX); }, animationPanX);
+
+                DoubleAnimation animationPanY = new DoubleAnimation(windowCenter.Y - intermediateExtentCenter.Y, duration, fillBehavior);
+                var t2 = AnimateAsync(() => { this.panTransform.BeginAnimation(TranslateTransform.YProperty, animationPanY); }, animationPanY);
+
+                DoubleAnimation animationPanPX = new DoubleAnimation(windowCenter.X - screenExtentCenter.X, duration, fillBehavior);
+                var t3 = AnimateAsync(() => { this.panTransformForPoints.BeginAnimation(TranslateTransform.XProperty, animationPanPX); }, animationPanPX);
+
+                DoubleAnimation animationPanPY = new DoubleAnimation(windowCenter.Y - screenExtentCenter.Y, duration, fillBehavior);
+                var t4 = AnimateAsync(() => { this.panTransformForPoints.BeginAnimation(TranslateTransform.YProperty, animationPanPY); }, animationPanPY);
+
+
+                DoubleAnimation animationZoomX = new DoubleAnimation(this.mapView.ActualWidth / 2.0, duration, fillBehavior);
+                var t5 = AnimateAsync(() => { this.zoomTransform.BeginAnimation(ScaleTransform.CenterXProperty, animationZoomX); }, animationZoomX);
+
+                DoubleAnimation animationZoomY = new DoubleAnimation(this.mapView.ActualHeight / 2.0, duration, fillBehavior);
+                var t6 = AnimateAsync(() => { this.zoomTransform.BeginAnimation(ScaleTransform.CenterYProperty, animationZoomY); }, animationZoomY);
+
+                DoubleAnimation animationZoomSX = new DoubleAnimation(scale * baseScaleX, duration, fillBehavior);
+                var t7 = AnimateAsync(() => { this.zoomTransform.BeginAnimation(ScaleTransform.ScaleXProperty, animationZoomSX); }, animationZoomSX);
+
+                DoubleAnimation animationZoomSY = new DoubleAnimation(scale * baseScaleY, duration, fillBehavior);
+                var t8 = AnimateAsync(() => { this.zoomTransform.BeginAnimation(ScaleTransform.ScaleYProperty, animationZoomSY); }, animationZoomSY);
+
+                await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8);
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        this.panTransform.X = windowCenter.X - intermediateExtentCenter.X;
+        this.panTransform.Y = windowCenter.Y - intermediateExtentCenter.Y;
+
+        this.panTransformForPoints.X = 0;
+        this.panTransformForPoints.Y = 0;
+
+        this.zoomTransform.CenterX = this.mapView.ActualWidth / 2.0;
+
+        this.zoomTransform.CenterY = this.mapView.ActualHeight / 2.0;
+
+        this.zoomTransform.ScaleX = scale * baseScaleX;
+
+        this.zoomTransform.ScaleY = scale * baseScaleY;
+
+        this._theScreenScale = scale * baseScaleX;
+
+        this.OnZoomChanged?.Invoke(null, ZoomEventArgs.EmptyArg);
+
+        Refresh(isNewExtent);
+
+        if (callback != null)
+        {
+            await Dispatcher.BeginInvoke(callback, DispatcherPriority.Background, null);
+        }
+
+
     }
 
     private void ZoomToPoint(Point windowPoint, double deltaZoom)

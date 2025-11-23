@@ -937,7 +937,7 @@ public abstract class MapPresenter : BasePresenter
     //public Action<int> RequestZoomToGoogleZoomLevel;
 
     //  bool isExactExtent, bool isNewExtent
-    public Action<BoundingBox, bool, bool, Action> RequestZoomToExtent;
+    public Action<BoundingBox, bool, bool, Action?> RequestZoomToExtent;
 
     public Action<Geometry<Point>> RequestZoomToFeature;
 

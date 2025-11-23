@@ -231,12 +231,7 @@ public class LayerManager : Notifier
 
     private void UpdateIsInRange(ILayer layer, double inverseMapScale)
     {
-        layer.IsInScaleRange = layer.VisibleRange.IsInRange(inverseMapScale);
-
-        //if (layer.Labels != null)
-        //{
-        //    layer.Labels.IsInScaleRange = layer.Labels.VisibleRange.IsInRange(inverseMapScale);
-        //}
+        layer.IsInScaleRange = layer.VisibleRange.IsInRange(inverseMapScale); 
     }
 
     public BoundingBox CalculateCurrentMapExtent()
