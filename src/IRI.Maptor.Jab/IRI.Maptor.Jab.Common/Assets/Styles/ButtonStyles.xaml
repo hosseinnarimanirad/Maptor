@@ -114,7 +114,7 @@
         <Setter Property="Height" Value="40"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Margin" Value="4"/>
-        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontSize" Value="14"/>
     </Style>
     <Style x:Key="flatButtonGrayRound6" TargetType="Button" BasedOn="{StaticResource flatButtonGray}">
         <Setter Property="Border.CornerRadius" Value="6"/>

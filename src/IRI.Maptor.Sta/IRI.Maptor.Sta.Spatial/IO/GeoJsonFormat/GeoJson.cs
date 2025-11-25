@@ -95,7 +95,7 @@ public static class GeoJson
         return GeoJsonFeatureSet.Parse(geoJsonFeatureSet)?.Features;
     }
 
-    internal static string Serialize(IGeoJsonGeometry geoJson, bool indented, bool removeSpaces = false)
+    public static string Serialize(IGeoJsonGeometry geoJson, bool indented, bool removeSpaces = false)
     {
         var result = JsonHelper.Serialize(geoJson, indented);
 

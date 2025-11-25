@@ -11,23 +11,12 @@ public class BoolToVisibilityConverter : IValueConverter
         bool target = true;
 
         if (parameter != null)
-        {
-            target = bool.Parse(parameter.ToString());
-        }
+            bool.TryParse(parameter.ToString(), out target);
 
-        if (!(value is bool))
-        {
-            return Visibility.Collapsed;
-        }
+        if (value is bool boolValue)
+            return boolValue == target ? Visibility.Visible : Visibility.Collapsed;
 
-        if ((bool)value == target)
-        {
-            return Visibility.Visible;
-        }
-        else
-        {
-            return Visibility.Collapsed;
-        }
+        return Visibility.Collapsed; 
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

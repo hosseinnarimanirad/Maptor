@@ -1,0 +1,40 @@
+<UserControl x:Class="IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors.PointEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             FlowDirection="RightToLeft"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid Margin="4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Column="0" Text="X:" Margin="4" VerticalAlignment="Center"/>
+        <TextBox Grid.Column="1" Text="{Binding Point.X, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                 FlowDirection="LeftToRight" Margin="4"/>
+
+        <TextBlock Grid.Column="2" Text="Y:" Margin="4" VerticalAlignment="Center"/>
+        <TextBox Grid.Column="3" Text="{Binding Point.Y, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                 FlowDirection="LeftToRight" Margin="4"/>
+
+        <Button Grid.Column="4" Command="{Binding ZoomToPointCommand}" Margin="4" 
+                ToolTip="Zoom to Point" Style="{DynamicResource MahApps.Styles.Button.Square.Accent}">
+            <iconPacks:PackIconModern Kind="Magnify" Width="16" Height="16"/>
+        </Button>
+    </Grid>
+</UserControl>
+
