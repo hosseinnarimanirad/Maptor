@@ -538,6 +538,33 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select File.
+        /// </summary>
+        public static string dialog_openfile_title {
+            get {
+                return ResourceManager.GetString("dialog_openfile_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string dialog_savefile_title {
+            get {
+                return ResourceManager.GetString("dialog_savefile_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message.
+        /// </summary>
+        public static string dialog_showMessage_title {
+            get {
+                return ResourceManager.GetString("dialog_showMessage_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fill.
         /// </summary>
         public static string dialog_symbology_fill {

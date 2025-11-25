@@ -11,6 +11,7 @@
     <!--<converters:BoolToGeometryConverter x:Key="boolToGeometryConverter"/>-->
     <converters:BoolToGridLengthConverter x:Key="boolToGridLengthConverter"/>
     <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter"/>
+    <converters:BoolToInverseVisibilityConverter x:Key="boolToInverseVisibilityConverter"/>
 
     <converters:CenterChildParentConverter x:Key="centerChildParentConverter"/>
     <!--<converters:CountLessThanOneToBoolConverter x:Key="countLessThanOneToBoolConverter"/>-->
