@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Controls.Models.GeometryDetails;
-using IRI.Maptor.Jab.Controls.Presenters;
+using IRI.Maptor.Jab.Controls.ViewModels;
 using IRI.Maptor.Jab.Controls.Services.Dialog;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
@@ -44,7 +44,7 @@ public partial class GeometryDetailsView : UserControl
 
     public Action<IRI.Maptor.Sta.Common.Primitives.Point>? RequestZoomToPoint { get; set; }
 
-    private GeometryDetailsPresenter? Presenter { get; set; }
+    private GeometryDetailsViewModel? ViewModel { get; set; }
 
     public GeometryDetailsView()
     {
@@ -53,6 +53,11 @@ public partial class GeometryDetailsView : UserControl
     }
 
     private void GeometryDetailsView_Loaded(object sender, RoutedEventArgs e)
+    {
+        InitializePresenter();
+    }
+
+    private void InitializePresenter()
     {
         if (DialogService == null)
         {
@@ -64,22 +69,41 @@ public partial class GeometryDetailsView : UserControl
             }
         }
 
-        if (Presenter == null && DialogService != null)
+        if (ViewModel == null && DialogService != null)
         {
-            Presenter = new GeometryDetailsPresenter(DialogService);
+            ViewModel = new GeometryDetailsViewModel(DialogService);
             if (RequestZoomToPoint != null)
             {
-                Presenter.RequestZoomToPoint = RequestZoomToPoint;
+                ViewModel.RequestZoomToPoint = RequestZoomToPoint;
             }
-            DataContext = Presenter;
+            DataContext = ViewModel;
+            
+            // If Geometry was set before viewmodel was created, set it now
+            if (Geometry != null)
+            {
+                ViewModel.Geometry = Geometry;
+            }
         }
     }
 
     private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is GeometryDetailsView view && view.Presenter != null)
+        if (d is GeometryDetailsView view)
         {
-            view.Presenter.Geometry = e.NewValue as IGeometry;
+            // If viewmodel exists, set geometry on it
+            if (view.ViewModel != null)
+            {
+                view.ViewModel.Geometry = e.NewValue as IGeometry;
+            }
+            // Otherwise, if view is loaded, initialize viewmodel
+            else if (view.IsLoaded)
+            {
+                view.InitializePresenter();
+                if (view.ViewModel != null && e.NewValue != null)
+                {
+                    view.ViewModel.Geometry = e.NewValue as IGeometry;
+                }
+            }
         }
     }
 
@@ -87,19 +111,25 @@ public partial class GeometryDetailsView : UserControl
     {
         if (d is GeometryDetailsView view)
         {
-            if (view.Presenter == null && e.NewValue is IDialogService dialogService)
+            if (view.ViewModel == null && e.NewValue is IDialogService dialogService)
             {
-                view.Presenter = new GeometryDetailsPresenter(dialogService);
+                view.ViewModel = new GeometryDetailsViewModel(dialogService);
                 if (view.RequestZoomToPoint != null)
                 {
-                    view.Presenter.RequestZoomToPoint = view.RequestZoomToPoint;
+                    view.ViewModel.RequestZoomToPoint = view.RequestZoomToPoint;
                 }
-                view.DataContext = view.Presenter;
+                view.DataContext = view.ViewModel;
+                
+                // If Geometry was set before viewmodel was created, set it now
+                if (view.Geometry != null)
+                {
+                    view.ViewModel.Geometry = view.Geometry;
+                }
             }
-            else if (view.Presenter != null && e.NewValue is IDialogService newDialogService)
+            else if (view.ViewModel != null && e.NewValue is IDialogService newDialogService)
             {
-                // Update dialog service if presenter already exists
-                // Note: This would require making DialogService settable in presenter
+                // Update dialog service if viewmodel already exists
+                // Note: This would require making DialogService settable in viewmodel
             }
         }
     }

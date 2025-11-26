@@ -97,6 +97,14 @@
                 <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="FlowDirection" Value="LeftToRight"/>
             </Style>
+            <Style TargetType="iconPacks:PackIconMaterial">
+                <Setter Property="Foreground" Value="White"/>
+                <!--<Setter Property="Stretch" Value="Uniform"/>-->
+                <Setter Property="Margin" Value="8"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="FlowDirection" Value="LeftToRight"/>
+            </Style>
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
                 <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12" />
             </Style>
@@ -107,6 +115,7 @@
                     Margin="4" Visibility="{Binding IsDrawEditMeasureMode, Converter={StaticResource boolToVisibilityConverter}}">
         <StackPanel FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}">
             <DockPanel Margin="0" >
+                
                 <TextBlock DockPanel.Dock="Left" Text="X" Margin="4"
                            Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
                 <TextBox DockPanel.Dock="Left" MaxWidth="90" FlowDirection="LeftToRight" MinWidth="80" Margin="2" VerticalAlignment="Center"
@@ -206,6 +215,11 @@
                         <iconPacks:Modern Kind="VectorPenAdd"/>
                     </Button>
 
+                    <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2"
+                            Command="{Binding ShowGeometryDetailsCommand}">
+                        <iconPacks:Material Kind="VectorPointEdit"/>
+                    </Button>
+                    
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                             Command="{Binding DeleteCommand}"
                             ToolTip="{Binding [mapPanel_edit_delete], Source={StaticResource Localization}}"
@@ -230,196 +244,206 @@
 
             </DockPanel>
 
+            <!--new drawing information text-->
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" TextDecorations="Underline" Margin="8,0"
+                       Text="{Binding [map_draw_newDrawing], Source={StaticResource Localization}}"
+                       Foreground="{StaticResource  MahApps.Brushes.Accent2}"
+                       Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}"/>
 
-            <TextBlock Text="{Binding [map_draw_newDrawing], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="8,0" Foreground="{StaticResource  MahApps.Brushes.Accent2}"
-                        Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}" HorizontalAlignment="Center" TextDecorations="Underline"/>
-            <StackPanel >
-                <StackPanel.Visibility>
+            <!--tabs-->
+            <TabControl SelectedIndex="2" Background="Transparent"  >
+                <TabControl.Visibility>
                     <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
                         <Binding Path="MapPanel.Options.IsOptionsAvailable"/>
                         <Binding Path="MapPanel.IsDetailsVisible"/>
                     </MultiBinding>
-                </StackPanel.Visibility>
-                <TabControl SelectedIndex="2" Background="Transparent"  >
-                    <TabControl.Items>
-                        <TabItem Header="{Binding [mapPanel_header_currentPoint], Source={StaticResource Localization}}" Cursor="Hand">
-                            <TabItem.Visibility>
-                                <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
-                                    <Binding Path="MapPanel.Options.IsMultiPartSupportAvailable"/>
-                                </MultiBinding>
-                            </TabItem.Visibility>
-                            <StackPanel Orientation="Horizontal" DataContext="{Binding CurrentEditingLayer}" FlowDirection="LeftToRight" HorizontalAlignment="Center">
-                                <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                </TabControl.Visibility>
+                <TabControl.Items>
+
+                    <!--current point-->
+                    <TabItem Header="{Binding [mapPanel_header_currentPoint], Source={StaticResource Localization}}" Cursor="Hand">
+                        <TabItem.Visibility>
+                            <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
+                                <Binding Path="MapPanel.Options.IsMultiPartSupportAvailable"/>
+                            </MultiBinding>
+                        </TabItem.Visibility>
+                        <StackPanel Orientation="Horizontal" DataContext="{Binding CurrentEditingLayer}" FlowDirection="LeftToRight" HorizontalAlignment="Center">
+                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}"
                                         Command="{Binding GoToPreviousPointCommand}" >
-                                    <iconPacks:Modern Kind="ChevronLeft" />
-                                </Button>
-                                <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                                <iconPacks:Modern Kind="ChevronLeft" />
+                            </Button>
+                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_delete], Source={StaticResource Localization}}"
                                         Command="{Binding DeleteCurrentPointCommand}" >
-                                    <iconPacks:Modern Kind="Delete"/>
-                                </Button>
-                                <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                                <iconPacks:Modern Kind="Delete"/>
+                            </Button>
+                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_zoom], Source={StaticResource Localization}}"
                                         Command="{Binding ZoomToCurrentPointCommand}" >
-                                    <iconPacks:Modern Kind="MagnifyAdd"/>
-                                </Button>
-                                <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                                <iconPacks:Modern Kind="MagnifyAdd"/>
+                            </Button>
+                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_copyCoordinate], Source={StaticResource Localization}}"
                                         Command="{Binding CopyCurrentPointCommand}" 
                                         CommandParameter="{Binding DataContext.MapPanel.SpatialReference, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}">
-                                    <iconPacks:Modern Kind="PageCopy"/>
-                                </Button>
-                                <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                                <iconPacks:Modern Kind="PageCopy"/>
+                            </Button>
+                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_goToNextPoint], Source={StaticResource Localization}}"
                                         Command="{Binding GoToNextPointCommand}" >
-                                    <iconPacks:Modern Kind="ChevronRight"/>
-                                </Button>
-                            </StackPanel>
-                        </TabItem>
+                                <iconPacks:Modern Kind="ChevronRight"/>
+                            </Button>
+                        </StackPanel>
+                    </TabItem>
 
-                        <TabItem Header="{Binding [mapPanel_header_multiPart], Source={StaticResource Localization}}" Cursor="Hand" >
-                            <TabItem.Visibility>
-                                <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
-                                    <Binding Path="MapPanel.Options.IsMultiPartSupportAvailable"/>
-                                </MultiBinding>
-                            </TabItem.Visibility>
-                            <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Center" DataContext="{Binding CurrentEditingLayer}" >
-                                <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                    <!--multi part-->
+                    <TabItem Header="{Binding [mapPanel_header_multiPart], Source={StaticResource Localization}}" Cursor="Hand" >
+                        <TabItem.Visibility>
+                            <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
+                                <Binding Path="MapPanel.Options.IsMultiPartSupportAvailable"/>
+                            </MultiBinding>
+                        </TabItem.Visibility>
+                        <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Center" DataContext="{Binding CurrentEditingLayer}" >
+                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPart_delete], Source={StaticResource Localization}}"
                                         Command="{Binding DeleteCurrentPartCommand}" >
-                                    <iconPacks:Modern Kind="Delete"/>
-                                </Button>
+                                <iconPacks:Modern Kind="Delete"/>
+                            </Button>
 
-                                <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" IsEnabled="False"
+                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" IsEnabled="False"
                                         ToolTip="{Binding [mapPanel_currentPart_add], Source={StaticResource Localization}}"
                                         Command="{Binding AddNewPartCommand}">
-                                    <iconPacks:Modern Kind="Add"/>
-                                </Button>
-                                <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                                <iconPacks:Modern Kind="Add"/>
+                            </Button>
+                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPart_zoom], Source={StaticResource Localization}}"
                                         Command="{Binding ZoomToCurrentPartCommand}" >
-                                    <iconPacks:Modern Kind="MagnifyAdd"/>
-                                </Button>
-                            </StackPanel>
-                        </TabItem>
+                                <iconPacks:Modern Kind="MagnifyAdd"/>
+                            </Button>
+                        </StackPanel>
+                    </TabItem>
 
-                        <TabItem Header="{Binding [mapPanel_header_srs], Source={StaticResource Localization}}" Cursor="Hand">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <RadioButton GroupName="A" ToolTip="{Binding [srs_geodeticWgs84Title], Source={StaticResource Localization}}" Foreground="White" Margin="4,2" 
+                    <!--spatial reference system-->
+                    <TabItem Header="{Binding [mapPanel_header_srs], Source={StaticResource Localization}}" Cursor="Hand">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <RadioButton GroupName="A" ToolTip="{Binding [srs_geodeticWgs84Title], Source={StaticResource Localization}}" Foreground="White" Margin="4,2" 
                                      IsChecked="{Binding MapPanel.IsGeodeticWgs84EditingMode, Mode=TwoWay}" Width="Auto" Height="Auto"  
                                      HorizontalContentAlignment="Center" Style="{StaticResource simpleToggle}" >
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
-                                        <iconPacks:PackIconModern Kind="Globe" Margin="0 0 4 0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="WGS84" Margin="2" Foreground="White"/>
-                                    </StackPanel>
-                                </RadioButton>
-                                <RadioButton GroupName="A" ToolTip="{Binding [srs_utmTitle], Source={StaticResource Localization}}" Foreground="White" Margin="4,2"
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
+                                    <iconPacks:PackIconModern Kind="Globe" Margin="0 0 4 0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="WGS84" Margin="2" Foreground="White"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton GroupName="A" ToolTip="{Binding [srs_utmTitle], Source={StaticResource Localization}}" Foreground="White" Margin="4,2"
                                      IsChecked="{Binding MapPanel.IsUTMEditingMode, Mode=TwoWay}" Style="{StaticResource simpleToggle}" >
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
-                                        <iconPacks:PackIconModern Kind="MapTreasure" Margin="0 0 4 0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="UTM" Margin="2" Foreground="White"/>
-                                    </StackPanel>
-                                </RadioButton>
-                                <TextBlock DockPanel.Dock="Left" Margin="4"
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
+                                    <iconPacks:PackIconModern Kind="MapTreasure" Margin="0 0 4 0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="UTM" Margin="2" Foreground="White"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <TextBlock DockPanel.Dock="Left" Margin="4"
                                             Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}"
                                             Text="{Binding [srs_utmZone], Source={StaticResource Localization}}"/>
-                                <TextBox DockPanel.Dock="Left" BorderThickness="1" FlowDirection="LeftToRight" MinWidth="30" Margin="2" VerticalAlignment="Center"
+                            <TextBox DockPanel.Dock="Left" BorderThickness="1" FlowDirection="LeftToRight" MinWidth="30" Margin="2" VerticalAlignment="Center"
                                             Text="{Binding MapPanel.CurrentEditingZone, Mode=TwoWay}" MaxWidth="30"
                                             Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}">
-                                    <TextBox.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius" Value="3"/>
-                                        </Style>
-                                    </TextBox.Resources>
-                                </TextBox>
-                            </StackPanel>
-                        </TabItem>
-
-                        <TabItem Header="{Binding [mapPanel_header_measure], Source={StaticResource Localization}}" Cursor="Hand">
-                            <StackPanel>
-                                <StackPanel.Resources>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Margin" Value="2"/>
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>-->
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="3"/>
                                     </Style>
-                                </StackPanel.Resources>
-                                <GroupBox Header="General">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="Scale Factor:"/>
-                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.ScaleFactor, StringFormat={}{0:N5}}"/>
-                                        <TextBlock Grid.Row="0" Grid.Column="2"  FontWeight="Bold" Text="Mean Height"/>
-                                        <DockPanel Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" LastChildFill="True">
-                                            <TextBox Text="{Binding CurrentEditingLayer.Height, StringFormat={}{0:N0}}" DockPanel.Dock="Right" Margin="4" Width="50" VerticalAlignment="Center"/>
-                                            <Slider Margin="2" Minimum="0" Maximum="5000" Value="{Binding CurrentEditingLayer.Height, UpdateSourceTrigger=PropertyChanged}" MinWidth="70"/>
-                                        </DockPanel>
-                                    </Grid>
-                                </GroupBox>
-                                <Expander Header="Length" IsExpanded="False">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto"/>
-                                            <RowDefinition Height="auto"/>
-                                            <RowDefinition Height="auto"/> 
-                                        </Grid.RowDefinitions>
-                                     
-                                       
-                                        <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="EuclideanLengthInUtm:"/>
-                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanLengthInUtm, StringFormat={}{0:N1}}"/>
-                                        <TextBlock Grid.Row="0" Grid.Column="2" FontWeight="Bold" Text="EllipsoidalLength:"/>
-                                        <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding CurrentEditingLayer.EllipsoidalLength, StringFormat={}{0:N1}}"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="EuclideanLengthInUtm_Refined:"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanLengthInUtm_Refined, StringFormat={}{0:N1}}"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="2" FontWeight="Bold" Text="SphericalLength:"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding CurrentEditingLayer.SphericalLength, StringFormat={}{0:N1}}"/>
-                                        <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="GroundLength:"/>
-                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CurrentEditingLayer.GroundLength, StringFormat={}{0:N1}}"/>
-                                    </Grid>
-                                </Expander>
-                                <Expander Header="Area" IsEnabled="True">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto"/>
-                                            <RowDefinition Height="auto"/>
-                                            <RowDefinition Height="auto"/>
-                                        </Grid.RowDefinitions>
-                                        <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="EuclideanArea (UTM):"/>
-                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanArea, StringFormat={}{0:N1}}"/>
-                                        <TextBlock Grid.Row="0" Grid.Column="2" FontWeight="Bold" Text="EllipsoidalArea:"/>
-                                        <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding CurrentEditingLayer.EllipsoidalArea, StringFormat={}{0:N1}}"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="AuthalicSphereArea:"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentEditingLayer.AuthalicSphereArea, StringFormat={}{0:N1}}"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="2" FontWeight="Bold" Text="KarneyArea:"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding CurrentEditingLayer.KarneyArea, StringFormat={}{0:N1}}"/>
-                                        <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="GroundArea:"/>
-                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CurrentEditingLayer.GroundArea, StringFormat={}{0:N1}}"/>
-                                    </Grid>
-                                </Expander>
-                            </StackPanel>
-                            
-                        </TabItem>
-                    </TabControl.Items>
-                </TabControl>
-            </StackPanel>
+                                </TextBox.Resources>
+                            </TextBox>
+                        </StackPanel>
+                    </TabItem>
+
+                    <!--measure-->
+                    <TabItem Header="{Binding [mapPanel_header_measure], Source={StaticResource Localization}}" Cursor="Hand">
+                        <StackPanel>
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Margin" Value="2"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>-->
+                                </Style>
+                            </StackPanel.Resources>
+                            <GroupBox Header="General">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="Scale Factor:"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.ScaleFactor, StringFormat={}{0:N5}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2"  FontWeight="Bold" Text="Mean Height"/>
+                                    <DockPanel Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" LastChildFill="True">
+                                        <TextBox Text="{Binding CurrentEditingLayer.Height, StringFormat={}{0:N0}}" DockPanel.Dock="Right" Margin="4" Width="50" VerticalAlignment="Center"/>
+                                        <Slider Margin="2" Minimum="0" Maximum="5000" Value="{Binding CurrentEditingLayer.Height, UpdateSourceTrigger=PropertyChanged}" MinWidth="70"/>
+                                    </DockPanel>
+                                </Grid>
+                            </GroupBox>
+                            <Expander Header="Length" IsExpanded="False">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="EuclideanLengthInUtm:"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanLengthInUtm, StringFormat={}{0:N1}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" FontWeight="Bold" Text="EllipsoidalLength:"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding CurrentEditingLayer.EllipsoidalLength, StringFormat={}{0:N1}}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="EuclideanLengthInUtm_Refined:"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanLengthInUtm_Refined, StringFormat={}{0:N1}}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" FontWeight="Bold" Text="SphericalLength:"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding CurrentEditingLayer.SphericalLength, StringFormat={}{0:N1}}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="GroundLength:"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CurrentEditingLayer.GroundLength, StringFormat={}{0:N1}}"/>
+                                </Grid>
+                            </Expander>
+                            <Expander Header="Area" IsEnabled="True">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="EuclideanArea (UTM):"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanArea, StringFormat={}{0:N1}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" FontWeight="Bold" Text="EllipsoidalArea:"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding CurrentEditingLayer.EllipsoidalArea, StringFormat={}{0:N1}}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="AuthalicSphereArea:"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentEditingLayer.AuthalicSphereArea, StringFormat={}{0:N1}}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" FontWeight="Bold" Text="KarneyArea:"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding CurrentEditingLayer.KarneyArea, StringFormat={}{0:N1}}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="GroundArea:"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CurrentEditingLayer.GroundArea, StringFormat={}{0:N1}}"/>
+                                </Grid>
+                            </Expander>
+                        </StackPanel>
+
+                    </TabItem>
+
+                </TabControl.Items>
+            </TabControl>
+
+            <!--options semi expander at the below-->
             <Border Height="Auto" Margin="0 5 0 0" CornerRadius="0 0 13 13" 
                     Cursor="Hand" Visibility="{Binding MapPanel.Options.IsOptionsAvailable, Converter={StaticResource boolToVisibilityConverter}}">
                 <Border.InputBindings>

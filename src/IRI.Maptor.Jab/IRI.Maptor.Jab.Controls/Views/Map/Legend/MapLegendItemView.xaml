@@ -181,7 +181,8 @@
                             Text="{Binding ElementName=root, Path=Title, Mode=TwoWay}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding ElementName=root, Path=IsEditable, Converter={StaticResource boolToVisibilityConverter}}"
-                            mahApp:TextBoxHelper.Watermark="عنوان" Margin="1" mahApp:TextBoxHelper.SelectAllOnFocus="True">
+                            mahApp:TextBoxHelper.Watermark="عنوان" Margin="1" mahApp:TextBoxHelper.SelectAllOnFocus="True"
+                            VerticalContentAlignment="Center">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="4"/>

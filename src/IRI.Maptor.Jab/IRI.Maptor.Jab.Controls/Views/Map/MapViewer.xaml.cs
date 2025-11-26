@@ -44,6 +44,7 @@ using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
 using sb = IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Views.Controls;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Jab.Controls.Presenters;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
@@ -4707,6 +4708,26 @@ public partial class MapViewer : NotifiableUserControl
         CurrentEditingLayer.RequestConvertToDrawingItem = (g) =>
         {
             _presenter.AddDrawingItem(g);
+        };
+
+        CurrentEditingLayer.RequestShowGeometryDetails = (g) =>
+        {
+            var dialog = new Views.Dialogs.GeometryDetailsDialogView
+            {
+                Geometry = g,
+                DialogService = this._presenter.DialogService,
+                Owner = Window.GetWindow(this)
+            };
+
+            // Handle zoom to point if needed
+            dialog.RequestZoomToPoint = (point) =>
+            {
+                // Convert geodetic point to WebMercator and zoom
+                var webMercatorPoint = MapProjects.GeodeticWgs84ToWebMercator(point);
+                this.ZoomAndCenter(WebMercatorUtility.GetGoogleMapScale(15), webMercatorPoint);
+            };
+
+            dialog.ShowDialog();
         };
 
         CurrentEditingLayer.RequestCancelEditing = (g) =>

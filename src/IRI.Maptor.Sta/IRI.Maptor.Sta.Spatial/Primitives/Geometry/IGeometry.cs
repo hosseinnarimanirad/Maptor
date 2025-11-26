@@ -1,4 +1,5 @@
-﻿using IRI.Maptor.Sta.Common.Primitives;
+﻿using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,5 +30,9 @@ public interface IGeometry
 
     string AsSqlServerWkt();
 
+    CoordinateDimension GetDimension();
 
+    bool IsValid();
+
+    bool IsEmpty();
 }

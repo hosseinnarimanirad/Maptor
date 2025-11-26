@@ -119,6 +119,8 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public Action<Geometry>? RequestConvertToDrawingItem;
 
+    public Action<Geometry>? RequestShowGeometryDetails;
+
     public Action<EditableFeatureLayer>? RequestCancelEditing;
 
     public Action<EditableFeatureLayer>? RquestShowCoordinates;
@@ -1370,6 +1372,24 @@ public class EditableFeatureLayer : SymbolizableLayer
             return _convertToDrawingItemCommand;
         }
     }
+
+
+
+     
+    private RelayCommand _showGeometryDetailsCommand;
+    public RelayCommand ShowGeometryDetailsCommand
+    {
+        get
+        {
+            if (_showGeometryDetailsCommand == null)
+            {
+                _showGeometryDetailsCommand = new RelayCommand(param => this.RequestShowGeometryDetails?.Invoke(this._webMercatorGeometry));
+            }
+            return _showGeometryDetailsCommand;
+        }
+    }
+     
+
 
     #endregion
 }

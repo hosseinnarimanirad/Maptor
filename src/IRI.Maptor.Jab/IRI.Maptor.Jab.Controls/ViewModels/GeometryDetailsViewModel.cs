@@ -4,12 +4,10 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Controls.Models.GeometryDetails;
 using IRI.Maptor.Jab.Controls.Presenters.CoordinateEditors;
 using IRI.Maptor.Sta.Common.Abstrations;
@@ -20,58 +18,37 @@ using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
-namespace IRI.Maptor.Jab.Controls.Presenters;
+namespace IRI.Maptor.Jab.Controls.ViewModels;
 
-public class GeometryDetailsPresenter : Notifier
+public class GeometryDetailsViewModel : Notifier
 {
     private readonly IDialogService _dialogService;
 
     public Action<Point>? RequestZoomToPoint { get; set; }
 
-    public GeometryDetailsPresenter(IDialogService dialogService)
+    public GeometryDetailsViewModel(IDialogService dialogService)
     {
         _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-        LocalizationManager.Instance.LanguageChanged += OnLanguageChanged;
+        
+        // Initialize available formats
+        AvailableFormats = new ObservableCollection<string>
+        {
+            "WKT",
+            "WKB",
+            "SQL Server WKT",
+            "SQL Server Native Binary",
+            "GeoJSON",
+            "GML 2",
+            "GML 3",
+            "KML",
+            "Esri JSON Geometry",
+            "TopoJSON",
+            "DXF"
+        };
+        
+        SelectedFormat = "WKT"; // Default format
     }
 
-    private void OnLanguageChanged()
-    {
-        RaisePropertyChanged(nameof(LGeometryType));
-        RaisePropertyChanged(nameof(LDimension));
-        RaisePropertyChanged(nameof(LNumberOfPoints));
-        RaisePropertyChanged(nameof(LNumberOfGeometries));
-        RaisePropertyChanged(nameof(LUtmZone));
-        RaisePropertyChanged(nameof(LPoints));
-        RaisePropertyChanged(nameof(LExteriorRing));
-        RaisePropertyChanged(nameof(LInteriorRing));
-        RaisePropertyChanged(nameof(LAddPart));
-        RaisePropertyChanged(nameof(LDeletePart));
-        RaisePropertyChanged(nameof(LSave));
-        RaisePropertyChanged(nameof(LCancel));
-        RaisePropertyChanged(nameof(LExport));
-        RaisePropertyChanged(nameof(LZoomToPoint));
-        RaisePropertyChanged(nameof(LFormats));
-        RaisePropertyChanged(nameof(LEditCoordinates));
-    }
-
-    // Localization properties
-    public string LGeometryType => LocalizationManager.Instance["GeometryDetailsView_GeometryType"] ?? "Geometry Type";
-    public string LDimension => LocalizationManager.Instance["GeometryDetailsView_Dimension"] ?? "Dimension";
-    public string LNumberOfPoints => LocalizationManager.Instance["GeometryDetailsView_NumberOfPoints"] ?? "Number of Points";
-    public string LNumberOfGeometries => LocalizationManager.Instance["GeometryDetailsView_NumberOfGeometries"] ?? "Number of Geometries";
-    public string LUtmZone => LocalizationManager.Instance["GeometryDetailsView_UtmZone"] ?? "UTM Zone";
-    public string LPoints => LocalizationManager.Instance["GeometryDetailsView_Points"] ?? "Points";
-    public string LExteriorRing => LocalizationManager.Instance["GeometryDetailsView_ExteriorRing"] ?? "Exterior Ring";
-    public string LInteriorRing => LocalizationManager.Instance["GeometryDetailsView_InteriorRing"] ?? "Interior Ring";
-    public string LAddPart => LocalizationManager.Instance["GeometryDetailsView_AddPart"] ?? "Add Part";
-    public string LDeletePart => LocalizationManager.Instance["GeometryDetailsView_DeletePart"] ?? "Delete Part";
-    public string LSave => LocalizationManager.Instance["GeometryDetailsView_Save"] ?? "Save";
-    public string LCancel => LocalizationManager.Instance["GeometryDetailsView_Cancel"] ?? "Cancel";
-    public string LExport => LocalizationManager.Instance["GeometryDetailsView_Export"] ?? "Export";
-    public string LZoomToPoint => LocalizationManager.Instance["GeometryDetailsView_ZoomToPoint"] ?? "Zoom to Point";
-    public string LFormats => LocalizationManager.Instance["GeometryDetailsView_Formats"] ?? "Geometry Formats";
-    public string LEditCoordinates => LocalizationManager.Instance["GeometryDetailsView_EditCoordinates"] ?? "Edit Coordinates";
-    public string LBasicInfo => LocalizationManager.Instance["GeometryDetailsView_BasicInfo"] ?? "Basic Information";
     private IGeometry _geometry;
     public IGeometry Geometry
     {
@@ -163,172 +140,48 @@ public class GeometryDetailsPresenter : Notifier
         }
     }
 
-    // Format strings
-    private string _wkt = string.Empty;
-    public string Wkt
+    // Format selection properties
+    private ObservableCollection<string> _availableFormats;
+    public ObservableCollection<string> AvailableFormats
     {
-        get => _wkt;
+        get => _availableFormats;
         set
         {
-            _wkt = value;
+            _availableFormats = value ?? new ObservableCollection<string>();
             RaisePropertyChanged();
         }
     }
 
-    private string _wkb = string.Empty;
-    public string Wkb
+    private string _selectedFormat = "WKT";
+    public string SelectedFormat
     {
-        get => _wkb;
+        get => _selectedFormat;
         set
         {
-            _wkb = value;
+            if (_selectedFormat != value)
+            {
+                _selectedFormat = value;
+                RaisePropertyChanged();
+                UpdateStringRepresentation();
+            }
+        }
+    }
+
+    private string _stringRepresentation = string.Empty;
+    public string StringRepresentation
+    {
+        get => _stringRepresentation;
+        set
+        {
+            _stringRepresentation = value ?? string.Empty;
             RaisePropertyChanged();
         }
     }
 
-    private string _sqlServerWkt = string.Empty;
-    public string SqlServerWkt
-    {
-        get => _sqlServerWkt;
-        set
-        {
-            _sqlServerWkt = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private string _sqlServerNativeBinary = string.Empty;
-    public string SqlServerNativeBinary
-    {
-        get => _sqlServerNativeBinary;
-        set
-        {
-            _sqlServerNativeBinary = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private string _geoJson = string.Empty;
-    public string GeoJson
-    {
-        get => _geoJson;
-        set
-        {
-            _geoJson = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private string _gml2 = string.Empty;
-    public string Gml2
-    {
-        get => _gml2;
-        set
-        {
-            _gml2 = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private string _gml3 = string.Empty;
-    public string Gml3
-    {
-        get => _gml3;
-        set
-        {
-            _gml3 = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private string _kml = string.Empty;
-    public string Kml
-    {
-        get => _kml;
-        set
-        {
-            _kml = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private string _esriJsonGeometry = string.Empty;
-    public string EsriJsonGeometry
-    {
-        get => _esriJsonGeometry;
-        set
-        {
-            _esriJsonGeometry = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private string _topoJson = string.Empty;
-    public string TopoJson
-    {
-        get => _topoJson;
-        set
-        {
-            _topoJson = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private string _dxf = string.Empty;
-    public string Dxf
-    {
-        get => _dxf;
-        set
-        {
-            _dxf = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    // Export commands
-    private RelayCommand _exportWktCommand;
-    public RelayCommand ExportWktCommand =>
-        _exportWktCommand ??= new RelayCommand(param => ExportFormat("WKT", ".wkt", Wkt));
-
-    private RelayCommand _exportWkbCommand;
-    public RelayCommand ExportWkbCommand =>
-        _exportWkbCommand ??= new RelayCommand(param => ExportFormat("WKB", ".wkb", Wkb));
-
-    private RelayCommand _exportSqlServerWktCommand;
-    public RelayCommand ExportSqlServerWktCommand =>
-        _exportSqlServerWktCommand ??= new RelayCommand(param => ExportFormat("SQL Server WKT", ".wkt", SqlServerWkt));
-
-    private RelayCommand _exportSqlServerNativeBinaryCommand;
-    public RelayCommand ExportSqlServerNativeBinaryCommand =>
-        _exportSqlServerNativeBinaryCommand ??= new RelayCommand(param => ExportFormat("SQL Server Native Binary", ".bin", SqlServerNativeBinary));
-
-    private RelayCommand _exportGeoJsonCommand;
-    public RelayCommand ExportGeoJsonCommand =>
-        _exportGeoJsonCommand ??= new RelayCommand(param => ExportFormat("GeoJSON", ".geojson", GeoJson));
-
-    private RelayCommand _exportGml2Command;
-    public RelayCommand ExportGml2Command =>
-        _exportGml2Command ??= new RelayCommand(param => ExportFormat("GML 2", ".gml", Gml2));
-
-    private RelayCommand _exportGml3Command;
-    public RelayCommand ExportGml3Command =>
-        _exportGml3Command ??= new RelayCommand(param => ExportFormat("GML 3", ".gml", Gml3));
-
-    private RelayCommand _exportKmlCommand;
-    public RelayCommand ExportKmlCommand =>
-        _exportKmlCommand ??= new RelayCommand(param => ExportFormat("KML", ".kml", Kml));
-
-    private RelayCommand _exportEsriJsonGeometryCommand;
-    public RelayCommand ExportEsriJsonGeometryCommand =>
-        _exportEsriJsonGeometryCommand ??= new RelayCommand(param => ExportFormat("Esri JSON Geometry", ".json", EsriJsonGeometry));
-
-    private RelayCommand _exportTopoJsonCommand;
-    public RelayCommand ExportTopoJsonCommand =>
-        _exportTopoJsonCommand ??= new RelayCommand(param => ExportFormat("TopoJSON", ".topojson", TopoJson));
-
-    private RelayCommand _exportDxfCommand;
-    public RelayCommand ExportDxfCommand =>
-        _exportDxfCommand ??= new RelayCommand(param => ExportFormat("DXF", ".dxf", Dxf));
+    // Export command
+    private RelayCommand _exportCommand;
+    public RelayCommand ExportCommand =>
+        _exportCommand ??= new RelayCommand(param => ExportCurrentFormat());
 
     // Editor properties
     private object _geometryEditor;
@@ -382,14 +235,14 @@ public class GeometryDetailsPresenter : Notifier
 
     private void UpdateAllProperties()
     {
-        if (_geometry == null || IsGeometryNullOrInvalid())
+        if (_geometry == null || _geometry.IsEmpty())
         {
             ClearAllProperties();
             return;
         }
 
         // Calculate dimension
-        Dimension = CalculateDimension();
+        Dimension = _geometry.GetDimension();
 
         // Get geometry in WGS84 geodetic for calculations
         Geometry<Point>? geodeticGeometry = GetGeodeticGeometry();
@@ -410,11 +263,107 @@ public class GeometryDetailsPresenter : Notifier
         // Extract points in WGS84 geodetic
         ExtractPoints(geodeticGeometry);
 
-        // Generate format strings
-        GenerateFormatStrings();
+        // Update string representation for selected format
+        UpdateStringRepresentation();
 
         // Create geometry editor
         CreateGeometryEditor(geodeticGeometry);
+    }
+
+    private void UpdateStringRepresentation()
+    {
+        if (_geometry == null)
+        {
+            StringRepresentation = string.Empty;
+            return;
+        }
+
+        try
+        {
+            switch (SelectedFormat)
+            {
+                case "WKT":
+                    StringRepresentation = _geometry.AsWkt() ?? string.Empty;
+                    break;
+
+                case "WKB":
+                    var wkbBytes = _geometry.AsWkb();
+                    StringRepresentation = wkbBytes != null ? HexStringHelper.ToHexStringUsingBitFiddle(wkbBytes, true) : string.Empty;
+                    break;
+
+                case "SQL Server WKT":
+                    StringRepresentation = _geometry.AsSqlServerWkt() ?? string.Empty;
+                    break;
+
+                case "SQL Server Native Binary":
+                    var nativeBytes = _geometry.AsSqlServerNativeBinary();
+                    StringRepresentation = nativeBytes != null ? HexStringHelper.ToHexStringUsingBitFiddle(nativeBytes, true) : string.Empty;
+                    break;
+
+                case "GeoJSON":
+                    var geoJson = _geometry.AsGeoJson();
+                    if (geoJson != null)
+                    {
+                        StringRepresentation = IRI.Maptor.Sta.Spatial.GeoJsonFormat.GeoJson.Serialize(geoJson, indented: true, removeSpaces: false);
+                    }
+                    else
+                    {
+                        StringRepresentation = string.Empty;
+                    }
+                    break;
+
+                case "GML 2":
+                    // Not directly available, leave empty for now
+                    StringRepresentation = string.Empty;
+                    break;
+
+                case "GML 3":
+                    // Requires SqlGeometry conversion, leave empty for now
+                    StringRepresentation = string.Empty;
+                    break;
+
+                case "KML":
+                    if (_geometry is Geometry<Point> geom)
+                    {
+                        StringRepresentation = geom.AsKml() ?? string.Empty;
+                    }
+                    else
+                    {
+                        StringRepresentation = string.Empty;
+                    }
+                    break;
+
+                case "Esri JSON Geometry":
+                    // Not directly available, leave empty for now
+                    StringRepresentation = string.Empty;
+                    break;
+
+                case "TopoJSON":
+                    if (_geometry is Geometry<Point> topoGeom && !topoGeom.IsNullOrEmpty())
+                    {
+                        var topoJson = TopoJsonConverter.FromGeometry(topoGeom);
+                        StringRepresentation = JsonSerializer.Serialize(topoJson);
+                    }
+                    else
+                    {
+                        StringRepresentation = string.Empty;
+                    }
+                    break;
+
+                case "DXF":
+                    // Not directly available, leave empty for now
+                    StringRepresentation = string.Empty;
+                    break;
+
+                default:
+                    StringRepresentation = string.Empty;
+                    break;
+            }
+        }
+        catch
+        {
+            StringRepresentation = string.Empty;
+        }
     }
 
     private void CreateGeometryEditor(Geometry<Point>? geodeticGeometry)
@@ -460,15 +409,31 @@ public class GeometryDetailsPresenter : Notifier
                 break;
 
             case IRI.Maptor.Sta.Common.Primitives.GeometryType.MultiLineString:
-                var multiLineStringPresenter = new MultiLineStringEditorPresenter();
-                // TODO: Populate with parts from geometry
-                GeometryEditor = multiLineStringPresenter;
+                if (geodeticGeometry != null)
+                {
+                    var multiLineStringPresenter = new MultiLineStringEditorPresenter();
+                    var parts = CreateMultiLineStringParts(geodeticGeometry);
+                    foreach (var part in parts)
+                    {
+                        var partPresenter = new LineStringEditorPresenter(part);
+                        multiLineStringPresenter.Parts.Add(partPresenter);
+                    }
+                    GeometryEditor = multiLineStringPresenter;
+                }
                 break;
 
             case IRI.Maptor.Sta.Common.Primitives.GeometryType.MultiPolygon:
-                var multiPolygonPresenter = new MultiPolygonEditorPresenter();
-                // TODO: Populate with polygons from geometry
-                GeometryEditor = multiPolygonPresenter;
+                if (geodeticGeometry != null)
+                {
+                    var multiPolygonPresenter = new MultiPolygonEditorPresenter();
+                    var polygons = CreateMultiPolygonParts(geodeticGeometry);
+                    foreach (var polygonRings in polygons)
+                    {
+                        var polygonPresenter = new PolygonEditorPresenter(polygonRings);
+                        multiPolygonPresenter.Polygons.Add(polygonPresenter);
+                    }
+                    GeometryEditor = multiPolygonPresenter;
+                }
                 break;
 
             default:
@@ -507,53 +472,72 @@ public class GeometryDetailsPresenter : Notifier
         return rings;
     }
 
-    private bool IsGeometryNullOrInvalid()
+    private ObservableCollection<ObservableCollection<PointInfo>> CreateMultiLineStringParts(Geometry<Point> geodeticGeometry)
     {
-        if (_geometry == null)
-            return true;
-
-        // Check if geometry has any points
-        if (_geometry.TotalNumberOfPoints == 0)
-            return true;
-
-        // Try to cast to Geometry<Point> to check if invalid
-        if (_geometry is Geometry<Point> geom)
+        var parts = new ObservableCollection<ObservableCollection<PointInfo>>();
+        
+        if (geodeticGeometry?.Geometries != null)
         {
-            return geom.IsNullOrEmpty() || !geom.IsValid();
+            foreach (var lineStringGeometry in geodeticGeometry.Geometries)
+            {
+                var partPoints = new ObservableCollection<PointInfo>();
+                
+                if (lineStringGeometry?.Points != null)
+                {
+                    foreach (var point in lineStringGeometry.Points)
+                    {
+                        partPoints.Add(new PointInfo { X = point.X, Y = point.Y });
+                    }
+                }
+                
+                parts.Add(partPoints);
+            }
         }
-        else if (_geometry is Geometry<PointZ> geomZ)
-        {
-            return geomZ.IsNullOrEmpty() || !geomZ.IsValid();
-        }
-        else if (_geometry is Geometry<PointM> geomM)
-        {
-            return geomM.IsNullOrEmpty() || !geomM.IsValid();
-        }
-        else if (_geometry is Geometry<PointZM> geomZM)
-        {
-            return geomZM.IsNullOrEmpty() || !geomZM.IsValid();
-        }
-
-        // For other types, just check if it has points
-        return false;
+        
+        return parts;
     }
 
-    private CoordinateDimension CalculateDimension()
+    private ObservableCollection<ObservableCollection<RingInfo>> CreateMultiPolygonParts(Geometry<Point> geodeticGeometry)
     {
-        if (_geometry == null)
-            return CoordinateDimension.TwoD;
-
-        bool hasZ = _geometry.HasZ();
-        bool hasM = _geometry.HasM();
-
-        if (hasZ && hasM)
-            return CoordinateDimension.ZM;
-        if (hasZ)
-            return CoordinateDimension.Z;
-        if (hasM)
-            return CoordinateDimension.M;
-        return CoordinateDimension.TwoD;
+        var polygons = new ObservableCollection<ObservableCollection<RingInfo>>();
+        
+        if (geodeticGeometry?.Geometries != null)
+        {
+            foreach (var polygonGeometry in geodeticGeometry.Geometries)
+            {
+                var polygonRings = new ObservableCollection<RingInfo>();
+                
+                if (polygonGeometry?.Geometries != null)
+                {
+                    for (int i = 0; i < polygonGeometry.Geometries.Count; i++)
+                    {
+                        var ringGeometry = polygonGeometry.Geometries[i];
+                        var ringPoints = new ObservableCollection<PointInfo>();
+                        
+                        if (ringGeometry?.Points != null)
+                        {
+                            foreach (var point in ringGeometry.Points)
+                            {
+                                ringPoints.Add(new PointInfo { X = point.X, Y = point.Y });
+                            }
+                        }
+                        
+                        polygonRings.Add(new RingInfo 
+                        { 
+                            IsExterior = i == 0, 
+                            Points = ringPoints 
+                        });
+                    }
+                }
+                
+                polygons.Add(polygonRings);
+            }
+        }
+        
+        return polygons;
     }
+     
+     
 
     private Geometry<Point>? GetGeodeticGeometry()
     {
@@ -731,115 +715,6 @@ public class GeometryDetailsPresenter : Notifier
         Points = points;
     }
 
-    private void GenerateFormatStrings()
-    {
-        if (_geometry == null)
-        {
-            ClearFormatStrings();
-            return;
-        }
-
-        try
-        {
-            Wkt = _geometry.AsWkt() ?? string.Empty;
-        }
-        catch
-        {
-            Wkt = string.Empty;
-        }
-
-        try
-        {
-            var wkbBytes = _geometry.AsWkb();
-            Wkb = wkbBytes != null ? HexStringHelper.ToHexStringUsingBitFiddle(wkbBytes, true) : string.Empty;
-        }
-        catch
-        {
-            Wkb = string.Empty;
-        }
-
-        try
-        {
-            SqlServerWkt = _geometry.AsSqlServerWkt() ?? string.Empty;
-        }
-        catch
-        {
-            SqlServerWkt = string.Empty;
-        }
-
-        try
-        {
-            var nativeBytes = _geometry.AsSqlServerNativeBinary();
-            SqlServerNativeBinary = nativeBytes != null ? HexStringHelper.ToHexStringUsingBitFiddle(nativeBytes, true) : string.Empty;
-        }
-        catch
-        {
-            SqlServerNativeBinary = string.Empty;
-        }
-
-        try
-        {
-            var geoJson = _geometry.AsGeoJson();
-            if (geoJson != null)
-            {
-                GeoJson = IRI.Maptor.Sta.Spatial.GeoJsonFormat.GeoJson.Serialize(geoJson, indented: true, removeSpaces: false);
-            }
-            else
-            {
-                GeoJson = string.Empty;
-            }
-        }
-        catch
-        {
-            GeoJson = string.Empty;
-        }
-
-        // GML2 - not directly available, leave empty for now
-        Gml2 = string.Empty;
-
-        // GML3 - requires SqlGeometry conversion, leave empty for now
-        Gml3 = string.Empty;
-
-        try
-        {
-            if (_geometry is Geometry<Point> geom)
-            {
-                Kml = geom.AsKml() ?? string.Empty;
-            }
-            else
-            {
-                Kml = string.Empty;
-            }
-        }
-        catch
-        {
-            Kml = string.Empty;
-        }
-
-        // EsriJsonGeometry - not directly available, leave empty for now
-        EsriJsonGeometry = string.Empty;
-
-        try
-        {
-            if (_geometry is Geometry<Point> geom && !geom.IsNullOrEmpty())
-            {
-                var topoJson = TopoJsonConverter.FromGeometry(geom);
-                TopoJson = JsonSerializer.Serialize(topoJson);
-            }
-            else
-            {
-                TopoJson = string.Empty;
-            }
-        }
-        catch
-        {
-            TopoJson = string.Empty;
-        }
-
-        // DXF - not directly available, leave empty for now
-        Dxf = string.Empty;
-    }
-
     private void ClearAllProperties()
     {
         Dimension = CoordinateDimension.TwoD;
@@ -849,37 +724,39 @@ public class GeometryDetailsPresenter : Notifier
         NumberOfGeometries = 0;
         GeometryType = string.Empty;
         Points = new ObservableCollection<PointInfo>();
-        ClearFormatStrings();
+        StringRepresentation = string.Empty;
     }
 
-    private void ClearFormatStrings()
+    private async void ExportCurrentFormat()
     {
-        Wkt = string.Empty;
-        Wkb = string.Empty;
-        SqlServerWkt = string.Empty;
-        SqlServerNativeBinary = string.Empty;
-        GeoJson = string.Empty;
-        Gml2 = string.Empty;
-        Gml3 = string.Empty;
-        Kml = string.Empty;
-        EsriJsonGeometry = string.Empty;
-        TopoJson = string.Empty;
-        Dxf = string.Empty;
-    }
-
-    private async void ExportFormat(string formatName, string extension, string content)
-    {
-        if (string.IsNullOrEmpty(content))
+        if (string.IsNullOrEmpty(StringRepresentation))
         {
             await _dialogService.ShowMessageAsync(
-                $"No {formatName} content available to export.",
+                $"No {SelectedFormat} content available to export.",
                 "Export Failed",
                 null);
             return;
         }
 
+        // Determine file extension based on format
+        string extension = SelectedFormat switch
+        {
+            "WKT" => ".wkt",
+            "WKB" => ".wkb",
+            "SQL Server WKT" => ".wkt",
+            "SQL Server Native Binary" => ".bin",
+            "GeoJSON" => ".geojson",
+            "GML 2" => ".gml",
+            "GML 3" => ".gml",
+            "KML" => ".kml",
+            "Esri JSON Geometry" => ".json",
+            "TopoJSON" => ".topojson",
+            "DXF" => ".dxf",
+            _ => ".txt"
+        };
+
         var fileName = _dialogService.ShowSaveFileDialog(
-            $"{formatName} files (*{extension})|*{extension}|All files (*.*)|*.*",
+            $"{SelectedFormat} files (*{extension})|*{extension}|All files (*.*)|*.*",
             null,
             $"geometry{extension}");
 
@@ -887,16 +764,16 @@ public class GeometryDetailsPresenter : Notifier
         {
             try
             {
-                File.WriteAllText(fileName, content);
+                File.WriteAllText(fileName, StringRepresentation);
                 await _dialogService.ShowMessageAsync(
-                    $"{formatName} exported successfully.",
+                    $"{SelectedFormat} exported successfully.",
                     "Export Success",
                     null);
             }
             catch (Exception ex)
             {
                 await _dialogService.ShowMessageAsync(
-                    $"Failed to export {formatName}: {ex.Message}",
+                    $"Failed to export {SelectedFormat}: {ex.Message}",
                     "Export Failed",
                     null);
             }

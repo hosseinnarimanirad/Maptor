@@ -9,6 +9,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.Spatial.IO.SqlServerNativeBinary;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -83,6 +84,20 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     public bool HasM()
     {
         return typeof(IHasM).IsAssignableFrom(typeof(T));
+    }
+
+    public CoordinateDimension GetDimension()
+    { 
+        bool hasZ = this.HasZ();
+        bool hasM = this.HasM();
+
+        if (hasZ && hasM)
+            return CoordinateDimension.ZM;
+        if (hasZ)
+            return CoordinateDimension.Z;
+        if (hasM)
+            return CoordinateDimension.M;
+        return CoordinateDimension.TwoD;
     }
 
 
@@ -188,6 +203,11 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         //}
     }
 
+    public bool IsEmpty()
+    {
+        return (this.Points.IsNullOrEmpty() && this.Geometries.IsNullOrEmpty()) ||
+                 this.TotalNumberOfPoints == 0;
+    }
 
     public bool IsValid()
     {

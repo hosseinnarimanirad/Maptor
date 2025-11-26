@@ -296,6 +296,67 @@
   <data name="dialog_symbology_title" xml:space="preserve">
     <value>Layer Symbology</value>
   </data>
+  <data name="dialog_geometryDetails_title" xml:space="preserve">
+    <value>Geometry Details</value>
+    <comment>Title for the geometry details dialog window</comment>
+  </data>
+  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
+    <value>Basic Information</value>
+  </data>
+  <data name="dialog_geometryDetails_geometryType" xml:space="preserve">
+    <value>Geometry Type</value>
+  </data>
+  <data name="dialog_geometryDetails_dimension" xml:space="preserve">
+    <value>Dimension</value>
+  </data>
+  <data name="dialog_geometryDetails_numberOfPoints" xml:space="preserve">
+    <value>Number of Points</value>
+  </data>
+  <data name="dialog_geometryDetails_numberOfGeometries" xml:space="preserve">
+    <value>Number of Geometries</value>
+  </data>
+  <data name="dialog_geometryDetails_utmZone" xml:space="preserve">
+    <value>UTM Zone</value>
+  </data>
+  <data name="dialog_geometryDetails_points" xml:space="preserve">
+    <value>Points</value>
+  </data>
+  <data name="dialog_geometryDetails_editCoordinates" xml:space="preserve">
+    <value>Edit Coordinates</value>
+  </data>
+  <data name="dialog_geometryDetails_format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="dialog_geometryDetails_export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="dialog_geometryDetails_save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="dialog_geometryDetails_cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="dialog_geometryDetails_exteriorRing" xml:space="preserve">
+    <value>Exterior Ring</value>
+  </data>
+  <data name="dialog_geometryDetails_interiorRings" xml:space="preserve">
+    <value>Interior Rings</value>
+  </data>
+  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
+    <value>Add Part</value>
+  </data>
+  <data name="dialog_geometryDetails_deletePart" xml:space="preserve">
+    <value>Delete Part</value>
+  </data>
+  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
+    <value>Add Point</value>
+  </data>
+  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
+    <value>Add Polygon</value>
+  </data>
+  <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
+    <value>Zoom to Point</value>
+  </data>
   <data name="dialog_savefile_title" xml:space="preserve">
     <value>Save</value>
     <comment>Default title for save file dialogs</comment>

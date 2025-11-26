@@ -4,12 +4,12 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.Views.General"
+             xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
              xmlns:editors="clr-namespace:IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors"
              xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Controls.Presenters.CoordinateEditors"
              xmlns:converters="clr-namespace:IRI.Maptor.Jab.Controls.Views.General.Converters"
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
-             FlowDirection="RightToLeft"
+             FlowDirection="RightToLeft" MinWidth="700"
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -21,22 +21,17 @@
             <converters:CollectionToStringConverter x:Key="collectionToStringConverter"/>
             <converters:CoordinateDimensionToZVisibilityConverter x:Key="coordinateDimensionToZVisibilityConverter"/>
             <converters:CoordinateDimensionToMVisibilityConverter x:Key="coordinateDimensionToMVisibilityConverter"/>
+            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
+                <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-        <Grid Margin="8">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="8"> 
 
             <!-- Basic Information Section -->
-            <GroupBox Grid.Row="0" Header="{Binding LBasicInfo, FallbackValue='اطلاعات پایه'}" Margin="0,0,0,8" Padding="8">
+            <GroupBox Grid.Row="0" Header="{Binding [dialog_geometryDetails_basicInfo], Source={StaticResource Localization}}" Margin="0,0,0,8" Padding="8">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -50,23 +45,23 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding LGeometryType, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [dialog_geometryDetails_geometryType], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding GeometryType}" 
                                FontWeight="Bold" Margin="4" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding LDimension, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding [dialog_geometryDetails_dimension], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Dimension}" 
                                FontWeight="Bold" Margin="4" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding LNumberOfPoints, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding [dialog_geometryDetails_numberOfPoints], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding NumberOfPoints}" 
                                Margin="4" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding LNumberOfGeometries, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding [dialog_geometryDetails_numberOfGeometries], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
                     <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding NumberOfGeometries}" 
                                Margin="4" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding LUtmZone, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding [dialog_geometryDetails_utmZone], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="4">
                         <TextBlock Text="{Binding UtmZone, TargetNullValue='N/A'}" 
                                    FontWeight="Bold" VerticalAlignment="Center"/>
@@ -82,240 +77,9 @@
                     </StackPanel>
                 </Grid>
             </GroupBox>
-
-            <!-- Points Section -->
-            <GroupBox Grid.Row="1" Header="{Binding LPoints, StringFormat='{}{0} (WGS84 Geodetic)', FallbackValue='نقاط (طول و عرض جغرافیایی WGS84)'}" Margin="0,0,0,8" Padding="8">
-                <DataGrid ItemsSource="{Binding Points}" AutoGenerateColumns="False" 
-                          IsReadOnly="True" CanUserSortColumns="False" 
-                          AlternatingRowBackground="LightBlue" GridLinesVisibility="All"
-                          HeadersVisibility="Column" MaxHeight="300">
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
-                        </Style>
-                    </DataGrid.RowStyle>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="X (طول جغرافیایی)" Binding="{Binding X, StringFormat=F8}" 
-                                            Width="150">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                                    <Setter Property="FlowDirection" Value="LeftToRight"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Header="Y (عرض جغرافیایی)" Binding="{Binding Y, StringFormat=F8}" 
-                                            Width="150">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                                    <Setter Property="FlowDirection" Value="LeftToRight"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Header="Z" Binding="{Binding Z, StringFormat=F4}" 
-                                            Width="100">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                                    <Setter Property="FlowDirection" Value="LeftToRight"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                            <DataGridTextColumn.Visibility>
-                                <Binding Path="DataContext.Dimension" RelativeSource="{RelativeSource AncestorType=UserControl}" 
-                                         Converter="{StaticResource coordinateDimensionToZVisibilityConverter}"/>
-                            </DataGridTextColumn.Visibility>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Header="M" Binding="{Binding M, StringFormat=F4}" 
-                                            Width="100">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                                    <Setter Property="FlowDirection" Value="LeftToRight"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                            <DataGridTextColumn.Visibility>
-                                <Binding Path="DataContext.Dimension" RelativeSource="{RelativeSource AncestorType=UserControl}" 
-                                         Converter="{StaticResource coordinateDimensionToMVisibilityConverter}"/>
-                            </DataGridTextColumn.Visibility>
-                        </DataGridTextColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </GroupBox>
-
-            <!-- Format Display Section -->
-            <Expander Grid.Row="2" Header="{Binding LFormats, FallbackValue='فرمت‌های هندسه'}" Margin="0,0,0,8" IsExpanded="False">
-                <TabControl>
-                    <TabItem Header="WKT">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Content="{Binding LExport, FallbackValue='Export'}" Command="{Binding ExportWktCommand}" 
-                                    HorizontalAlignment="Right" Margin="4"
-                                    Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBox Text="{Binding Wkt}" IsReadOnly="True" TextWrapping="Wrap" 
-                                         FontFamily="Consolas" FontSize="11"/>
-                            </ScrollViewer>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="WKB">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Content="{Binding LExport, FallbackValue='Export'}" Command="{Binding ExportWkbCommand}" 
-                                    HorizontalAlignment="Right" Margin="4"
-                                    Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBox Text="{Binding Wkb}" IsReadOnly="True" TextWrapping="Wrap" 
-                                         FontFamily="Consolas" FontSize="11"/>
-                            </ScrollViewer>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="SQL Server WKT">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Content="Export" Command="{Binding ExportSqlServerWktCommand}" 
-                                    HorizontalAlignment="Right" Margin="4"
-                                    Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBox Text="{Binding SqlServerWkt}" IsReadOnly="True" TextWrapping="Wrap" 
-                                         FontFamily="Consolas" FontSize="11"/>
-                            </ScrollViewer>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="SQL Server Native Binary">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Content="Export" Command="{Binding ExportSqlServerNativeBinaryCommand}" 
-                                    HorizontalAlignment="Right" Margin="4"
-                                    Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBox Text="{Binding SqlServerNativeBinary}" IsReadOnly="True" TextWrapping="Wrap" 
-                                         FontFamily="Consolas" FontSize="11"/>
-                            </ScrollViewer>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="GeoJSON">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Content="Export" Command="{Binding ExportGeoJsonCommand}" 
-                                    HorizontalAlignment="Right" Margin="4"
-                                    Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBox Text="{Binding GeoJson}" IsReadOnly="True" TextWrapping="Wrap" 
-                                         FontFamily="Consolas" FontSize="11"/>
-                            </ScrollViewer>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="GML 2">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Content="Export" Command="{Binding ExportGml2Command}" 
-                                    HorizontalAlignment="Right" Margin="4"
-                                    Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBox Text="{Binding Gml2}" IsReadOnly="True" TextWrapping="Wrap" 
-                                         FontFamily="Consolas" FontSize="11"/>
-                            </ScrollViewer>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="GML 3">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Content="Export" Command="{Binding ExportGml3Command}" 
-                                    HorizontalAlignment="Right" Margin="4"
-                                    Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBox Text="{Binding Gml3}" IsReadOnly="True" TextWrapping="Wrap" 
-                                         FontFamily="Consolas" FontSize="11"/>
-                            </ScrollViewer>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="KML">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Content="Export" Command="{Binding ExportKmlCommand}" 
-                                    HorizontalAlignment="Right" Margin="4"
-                                    Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBox Text="{Binding Kml}" IsReadOnly="True" TextWrapping="Wrap" 
-                                         FontFamily="Consolas" FontSize="11"/>
-                            </ScrollViewer>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="Esri JSON Geometry">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Content="Export" Command="{Binding ExportEsriJsonGeometryCommand}" 
-                                    HorizontalAlignment="Right" Margin="4"
-                                    Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBox Text="{Binding EsriJsonGeometry}" IsReadOnly="True" TextWrapping="Wrap" 
-                                         FontFamily="Consolas" FontSize="11"/>
-                            </ScrollViewer>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="TopoJSON">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Content="Export" Command="{Binding ExportTopoJsonCommand}" 
-                                    HorizontalAlignment="Right" Margin="4"
-                                    Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBox Text="{Binding TopoJson}" IsReadOnly="True" TextWrapping="Wrap" 
-                                         FontFamily="Consolas" FontSize="11"/>
-                            </ScrollViewer>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="DXF">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Button Grid.Row="0" Content="Export" Command="{Binding ExportDxfCommand}" 
-                                    HorizontalAlignment="Right" Margin="4"
-                                    Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBox Text="{Binding Dxf}" IsReadOnly="True" TextWrapping="Wrap" 
-                                         FontFamily="Consolas" FontSize="11"/>
-                            </ScrollViewer>
-                        </Grid>
-                    </TabItem>
-                </TabControl>
-            </Expander>
-
+ 
             <!-- Geometry Editor Section -->
-            <GroupBox Grid.Row="3" Header="{Binding LEditCoordinates, FallbackValue='ویرایش مختصات'}" Margin="0,0,0,8" Padding="8">
+            <GroupBox Grid.Row="1" Header="{Binding [dialog_geometryDetails_editCoordinates], Source={StaticResource Localization}}" Margin="0,0,0,8" Padding="8">
                 <ContentControl Content="{Binding GeometryEditor}">
                     <ContentControl.Resources>
                         <DataTemplate DataType="{x:Type presenters:PointEditorPresenter}">
@@ -340,16 +104,50 @@
                 </ContentControl>
             </GroupBox>
 
+            <!-- Format Display Section -->
+            <GroupBox Grid.Row="2" Header="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}}" Margin="0,0,0,8" Padding="8">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}, StringFormat='{}{0}:'}" 
+                               Margin="4" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding AvailableFormats}" FlowDirection="LeftToRight"
+                              SelectedItem="{Binding SelectedFormat, Mode=TwoWay}" 
+                              Margin="4" HorizontalAlignment="Stretch"/>
+                    <Button Grid.Row="0" Grid.Column="2" 
+                            Content="{Binding [dialog_geometryDetails_export], Source={StaticResource Localization}}" 
+                            Command="{Binding ExportCommand}" 
+                            Margin="4"
+                            Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
+
+                    <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" FlowDirection="LeftToRight" 
+                                  VerticalScrollBarVisibility="Auto" MaxHeight="200" Margin="0" HorizontalAlignment="Stretch">
+                        <TextBlock Text="{Binding StringRepresentation}" HorizontalAlignment="Stretch" Background="LightGray"
+                                   TextWrapping="Wrap"   Padding="4"
+                                   FontFamily="Consolas" FontSize="11"/>
+                    </ScrollViewer>
+                </Grid>
+            </GroupBox>
+
             <!-- Save/Cancel Buttons -->
-            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-                <Button Content="{Binding LSave, FallbackValue='Save'}" Command="{Binding SaveGeometryCommand}" Margin="4" 
-                        Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"
-                        Visibility="{Binding IsEditing, Converter={StaticResource boolToVisibilityConverter}}"/>
-                <Button Content="{Binding LCancel, FallbackValue='Cancel'}" Command="{Binding CancelEditingCommand}" Margin="4" 
-                        Style="{DynamicResource MahApps.Styles.Button.Square}"
-                        Visibility="{Binding IsEditing, Converter={StaticResource boolToVisibilityConverter}}"/>
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                <Button Content="{Binding [dialog_geometryDetails_save], Source={StaticResource Localization}}" 
+                        Command="{Binding SaveGeometryCommand}" Margin="4" 
+                        Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
+                <Button Content="{Binding [dialog_geometryDetails_cancel], Source={StaticResource Localization}}" 
+                        Command="{Binding CancelEditingCommand}" Margin="4" 
+                        Style="{DynamicResource MahApps.Styles.Button.Square}"/>
             </StackPanel>
-        </Grid>
+        </StackPanel>
     </ScrollViewer>
 </UserControl>
 

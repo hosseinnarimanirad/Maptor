@@ -295,6 +295,67 @@
   <data name="dialog_symbology_title" xml:space="preserve">
     <value>سمبل لایه</value>
   </data>
+  <data name="dialog_geometryDetails_title" xml:space="preserve">
+    <value>جزئیات هندسه</value>
+    <comment>عنوان پنجره جزئیات هندسه</comment>
+  </data>
+  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
+    <value>اطلاعات پایه</value>
+  </data>
+  <data name="dialog_geometryDetails_geometryType" xml:space="preserve">
+    <value>نوع هندسه</value>
+  </data>
+  <data name="dialog_geometryDetails_dimension" xml:space="preserve">
+    <value>بعد</value>
+  </data>
+  <data name="dialog_geometryDetails_numberOfPoints" xml:space="preserve">
+    <value>تعداد نقاط</value>
+  </data>
+  <data name="dialog_geometryDetails_numberOfGeometries" xml:space="preserve">
+    <value>تعداد هندسه‌ها</value>
+  </data>
+  <data name="dialog_geometryDetails_utmZone" xml:space="preserve">
+    <value>منطقه UTM</value>
+  </data>
+  <data name="dialog_geometryDetails_points" xml:space="preserve">
+    <value>نقاط</value>
+  </data>
+  <data name="dialog_geometryDetails_editCoordinates" xml:space="preserve">
+    <value>ویرایش مختصات</value>
+  </data>
+  <data name="dialog_geometryDetails_format" xml:space="preserve">
+    <value>فرمت</value>
+  </data>
+  <data name="dialog_geometryDetails_export" xml:space="preserve">
+    <value>خروجی</value>
+  </data>
+  <data name="dialog_geometryDetails_save" xml:space="preserve">
+    <value>ذخیره</value>
+  </data>
+  <data name="dialog_geometryDetails_cancel" xml:space="preserve">
+    <value>لغو</value>
+  </data>
+  <data name="dialog_geometryDetails_exteriorRing" xml:space="preserve">
+    <value>حلقه خارجی</value>
+  </data>
+  <data name="dialog_geometryDetails_interiorRings" xml:space="preserve">
+    <value>حلقه‌های داخلی</value>
+  </data>
+  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
+    <value>افزودن بخش</value>
+  </data>
+  <data name="dialog_geometryDetails_deletePart" xml:space="preserve">
+    <value>حذف بخش</value>
+  </data>
+  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
+    <value>افزودن نقطه</value>
+  </data>
+  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
+    <value>افزودن چندضلعی</value>
+  </data>
+  <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
+    <value>زوم به نقطه</value>
+  </data>
   <data name="dialog_showMessage_title" xml:space="preserve">
     <value>پیام</value>
     <comment>عنوان پیش‌فرض برای پنجره‌های پیام</comment>
