@@ -39,6 +39,7 @@ using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.Abstractions;
+using IRI.Maptor.Sta.Ogc.WMS;
 
 
 namespace IRI.Maptor.Jab.Common.Presenters;
@@ -190,7 +191,7 @@ public abstract class MapPresenter : BasePresenter
 
             if (value?.ShowSelectedOnMap == true)
             {
-                ShowSelectedFeatures(value?.GetSelectedFeatures());
+                ShowSelectedFeatures(value?.GetSelectedFeatures(), value?.AssociatedLayer?.DefaultSymbology?.StrokeThickness);
             }
 
             if (_currentLayer is null)
@@ -1237,7 +1238,7 @@ public abstract class MapPresenter : BasePresenter
                 //Referesh
                 if (selectedLayer.ShowSelectedOnMap)
                 {
-                    ShowSelectedFeatures(selectedLayer.GetSelectedFeatures());
+                    ShowSelectedFeatures(selectedLayer.GetSelectedFeatures(), selectedLayer?.AssociatedLayer?.DefaultSymbology?.StrokeThickness);
                 }
 
                 Refresh(isNewExtent: true);
@@ -1254,7 +1255,7 @@ public abstract class MapPresenter : BasePresenter
 
             if (selectedLayer.ShowSelectedOnMap)
             {
-                ShowSelectedFeatures(selectedLayer.GetSelectedFeatures());
+                ShowSelectedFeatures(selectedLayer.GetSelectedFeatures(), selectedLayer.AssociatedLayer?.DefaultSymbology?.StrokeThickness);
             }
         }
         else
@@ -1265,7 +1266,7 @@ public abstract class MapPresenter : BasePresenter
 
             if (selectedLayer.ShowSelectedOnMap)
             {
-                ShowSelectedFeatures(selectedLayer.GetSelectedFeatures());
+                ShowSelectedFeatures(selectedLayer.GetSelectedFeatures(), selectedLayer.AssociatedLayer?.DefaultSymbology?.StrokeThickness);
             }
         }
     }
@@ -1317,7 +1318,7 @@ public abstract class MapPresenter : BasePresenter
         }
     }
 
-    private async void ShowSelectedFeatures(IEnumerable<Feature<Point>> enumerable)
+    private async void ShowSelectedFeatures(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
     {
         ClearLayer("__$selection", true);
         ClearLayer("__$highlight", true);
@@ -1327,11 +1328,14 @@ public abstract class MapPresenter : BasePresenter
             return;
         }
 
-        await DrawGeometriesAsync(enumerable.Select(i => i.TheGeometry).ToList(), "__$selection", VisualParameters.GetDefaultForSelection());
+        await DrawGeometriesAsync(
+            enumerable.Select(i => i.TheGeometry).ToList(),
+            "__$selection",
+            VisualParameters.GetDefaultForSelection(strokeThickness));
 
     }
 
-    private async void ShowHighlightedFeatures(IEnumerable<Feature<Point>> enumerable)
+    private async void ShowHighlightedFeatures(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
     {
         ClearLayer("__$highlight", true);
 
@@ -1348,7 +1352,10 @@ public abstract class MapPresenter : BasePresenter
         }
         else
         {
-            await DrawGeometriesAsync(enumerable.Select(i => i.TheGeometry).ToList(), "__$highlight", VisualParameters.GetDefaultForHighlight(enumerable.FirstOrDefault()));
+            await DrawGeometriesAsync(
+                enumerable.Select(i => i.TheGeometry).ToList(),
+                "__$highlight",
+                VisualParameters.GetDefaultForHighlight(enumerable.FirstOrDefault(), strokeThickness));
         }
     }
 
@@ -1370,7 +1377,7 @@ public abstract class MapPresenter : BasePresenter
         if (highlightGeo is null)
             return;
 
-        var visualParameters = VisualParameters.GetDefaultForSelection();
+        var visualParameters = VisualParameters.GetDefaultForSelection(layer.DefaultSymbology?.StrokeThickness);
 
         //visualParameters.Visibility = layer.VisualParameters.Visibility;
 
@@ -1390,7 +1397,7 @@ public abstract class MapPresenter : BasePresenter
     public async Task SelectGeometriesAsync(List<Geometry<Point>> geometries)
     {
         //await this.SelectGeometries(geometries, new VisualParameters(new System.Windows.Media.SolidColorBrush(Aqua), new System.Windows.Media.SolidColorBrush(Aqua), 2, .5));
-        await SelectGeometriesAsync(geometries, VisualParameters.GetDefaultForSelection(), null);
+        await SelectGeometriesAsync(geometries, VisualParameters.GetDefaultForSelection(null), null);
     }
 
     public async Task SelectGeometriesAsync(List<Geometry<Point>> geometries, VisualParameters visualParameters, string layerName/*, Geometry pointSymbol = null*/)
@@ -2804,7 +2811,7 @@ public abstract class MapPresenter : BasePresenter
                 }
 
                 features = features.Select(f => f.Project(new WebMercator())).ToList();
-                 
+
                 var dataSource = new MemoryDataSource(features);
                 var geometryType = features.First().TheGeometry.Type;
                 var symbolizers = new List<ISymbolizer> { SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1) };

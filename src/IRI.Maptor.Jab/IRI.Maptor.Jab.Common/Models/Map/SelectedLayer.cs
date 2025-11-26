@@ -92,14 +92,14 @@ public class SelectedLayer/*<TGeometryAware> */: Notifier/*, ISelectedLayer *//*
         HighlightedFeatures = new ObservableCollection<Feature<Point>>(items/*.Cast<TGeometryAware>()*/);
     }
 
-    public void UpdateSelectedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable)
+    public void UpdateSelectedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
     {
-        FeaturesChangedAction?.Invoke(enumerable);
+        FeaturesChangedAction?.Invoke(enumerable, strokeThickness);
     }
 
     public void UpdateHighlightedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable)
     {
-        HighlightFeaturesChangedAction?.Invoke(enumerable);
+        HighlightFeaturesChangedAction?.Invoke(enumerable, this.AssociatedLayer.DefaultSymbology?.StrokeThickness);
     }
 
     public IEnumerable<Feature<Point>> GetSelectedFeatures()
@@ -151,9 +151,9 @@ public class SelectedLayer/*<TGeometryAware> */: Notifier/*, ISelectedLayer *//*
         dataSource.Update(item);
     }
 
-    public Action<IEnumerable<Feature<Point>>> FeaturesChangedAction { get; set; }
+    public Action<IEnumerable<Feature<Point>>, double?> FeaturesChangedAction { get; set; }
 
-    public Action<IEnumerable<Feature<Point>>> HighlightFeaturesChangedAction { get; set; }
+    public Action<IEnumerable<Feature<Point>>, double?> HighlightFeaturesChangedAction { get; set; }
 
     public Action<Feature<Point>> RequestFlashSinglePoint { get; set; }
 

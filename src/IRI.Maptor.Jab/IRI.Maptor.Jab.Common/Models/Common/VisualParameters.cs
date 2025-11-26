@@ -620,9 +620,31 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
         return result;
     }
 
-    public static VisualParameters GetDefaultForSelection()
+    public static VisualParameters GetDefaultForSelection(double? strokeThickness)
     {
-        return new VisualParameters(DefaultSelectionFill, DefaultSelectionStroke, 2, 0.9);
+        return new VisualParameters(DefaultSelectionFill, DefaultSelectionStroke, strokeThickness ?? 2, 0.9);
+    }
+
+    public static VisualParameters GetDefaultForHighlight(double? strokeThickness)
+    {
+        return new VisualParameters(DefaultHighlightFill, DefaultHighlightStroke, strokeThickness ?? 3, .8);
+    }
+
+    public static VisualParameters GetDefaultForHighlight(Feature<Sb.Point> sqlGeometryAware, double? strokeThickness)
+    {
+        VisualParameters result;
+
+        if (sqlGeometryAware?.TheGeometry?.IsPointOrMultiPoint() == true)
+        { 
+            result = new VisualParameters(DefaultHighlightStroke, DefaultHighlightFill, strokeThickness ?? 3, .9) { PointSymbol = new SimplePointSymbolizer(10) };
+        }
+        else
+        {
+            result = GetDefaultForHighlight(strokeThickness);
+        }
+
+        return result;
+
     }
 
     public static VisualParameters GetDefaultForRoutingPoints()
@@ -640,28 +662,6 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
         return new VisualParameters(DefaultRoutingLineThick, DefaultRoutingLineThick, 6, 1);
     }
 
-    public static VisualParameters GetDefaultForHighlight()
-    {
-        return new VisualParameters(DefaultHighlightFill, DefaultHighlightStroke, 2, .8);
-    }
-
-
-    public static VisualParameters GetDefaultForHighlight(Feature<Sb.Point> sqlGeometryAware)
-    {
-        VisualParameters result;
-
-        if (sqlGeometryAware?.TheGeometry?.IsPointOrMultiPoint() == true)
-        {
-            result = new VisualParameters(DefaultHighlightStroke, DefaultHighlightFill, 3, .9) { PointSymbol = new SimplePointSymbolizer(10) };
-        }
-        else
-        {
-            result = GetDefaultForHighlight();
-        }
-
-        return result;
-
-    }
 
 
     public static SolidColorBrush DefaultHighlightStroke = new SolidColorBrush(Colors.Yellow);

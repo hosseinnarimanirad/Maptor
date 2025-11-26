@@ -4582,6 +4582,9 @@ public partial class MapViewer : NotifiableUserControl
             if (layer.Visibility != Visibility.Visible)
                 continue;
 
+            if (!layer.IsInScaleRange)
+                continue;
+
             var features = layer.DataSource.GetAsFeatureSet(geometryBoundary);
 
             if (features is not null && !features.Features.IsNullOrEmpty())
