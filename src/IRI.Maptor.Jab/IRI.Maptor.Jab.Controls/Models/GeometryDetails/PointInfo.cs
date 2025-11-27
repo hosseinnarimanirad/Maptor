@@ -50,3 +50,6 @@ public class PointInfo : Notifier
     }
 }
 
+
+
+

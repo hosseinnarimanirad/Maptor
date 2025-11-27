@@ -59,3 +59,6 @@ public class MultiPointEditorPresenter : Notifier
     }
 }
 
+
+
+

@@ -55,3 +55,6 @@ public class LineStringEditorPresenter : Notifier
     }
 }
 
+
+
+
