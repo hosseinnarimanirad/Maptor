@@ -216,7 +216,7 @@
                     </Button>
 
                     <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2"
-                            Command="{Binding ShowGeometryDetailsCommand}" Visibility="Collapsed">
+                            Command="{Binding ShowGeometryDetailsCommand}" Visibility="Visible">
                         <iconPacks:Material Kind="VectorPointEdit"/>
                     </Button>
                     

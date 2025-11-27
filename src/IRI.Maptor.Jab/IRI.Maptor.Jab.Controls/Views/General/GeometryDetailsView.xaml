@@ -6,8 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
              xmlns:editors="clr-namespace:IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors"
-             xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Controls.Presenters.CoordinateEditors"
-             xmlns:converters="clr-namespace:IRI.Maptor.Jab.Controls.Views.General.Converters"
+             xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Controls.Presenters.CoordinateEditors" 
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
              FlowDirection="RightToLeft" MinWidth="700"
              mc:Ignorable="d">
@@ -18,9 +17,9 @@
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Fonts.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-            <converters:CollectionToStringConverter x:Key="collectionToStringConverter"/>
+            <!--<converters:CollectionToStringConverter x:Key="collectionToStringConverter"/>
             <converters:CoordinateDimensionToZVisibilityConverter x:Key="coordinateDimensionToZVisibilityConverter"/>
-            <converters:CoordinateDimensionToMVisibilityConverter x:Key="coordinateDimensionToMVisibilityConverter"/>
+            <converters:CoordinateDimensionToMVisibilityConverter x:Key="coordinateDimensionToMVisibilityConverter"/>-->
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
                 <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12" />
             </Style>
@@ -131,7 +130,7 @@
 
                     <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" FlowDirection="LeftToRight" 
                                   VerticalScrollBarVisibility="Auto" MaxHeight="200" Margin="0" HorizontalAlignment="Stretch">
-                        <TextBlock Text="{Binding StringRepresentation}" HorizontalAlignment="Stretch" Background="LightGray"
+                        <TextBlock Text="{Binding StringRepresentation}" HorizontalAlignment="Stretch" Background="#EEEEEE"
                                    TextWrapping="Wrap"   Padding="4"
                                    FontFamily="Consolas" FontSize="11"/>
                     </ScrollViewer>

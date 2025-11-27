@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Name="root"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             xmlns:model="clr-namespace:IRI.Maptor.Jab.Common.Models.Legend;assembly=IRI.Maptor.Jab.Common"
-             xmlns:my="clr-namespace:IRI.Maptor.Jab.Controls.Assets.Converters"
+             xmlns:model="clr-namespace:IRI.Maptor.Jab.Common.Models.Legend;assembly=IRI.Maptor.Jab.Common" 
              xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
              FontFamily="{StaticResource iranSans}"  >
 
@@ -91,7 +90,7 @@
                     <Path Data="{Binding PathMarkup}" Stretch="Uniform" Fill="White" Width="16" Height="16" FlowDirection="LeftToRight"/>
                 </Button>
             </DataTemplate>
-            <my:ILayerToLegendConverter x:Key="iLayerToLegendConverter"/>
+            <!--<my:ILayerToLegendConverter x:Key="iLayerToLegendConverter"/>-->
             <!--<my:ILayerToCanSetSymbologyConverter x:Key="iLayerToCanSetSymbologyConverter"/>-->
         </Grid.Resources>
         <!--<Grid.RowDefinitions>

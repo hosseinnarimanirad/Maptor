@@ -1,6 +1,6 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 
-namespace IRI.Maptor.Jab.Controls.Views;
+namespace IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors;
 
 /// <summary>
 /// Interaction logic for MultiLineStringEditorView.xaml
@@ -12,3 +12,7 @@ public partial class MultiLineStringEditorView : UserControl
         InitializeComponent();
     }
 }
+
+
+
+

@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
 
-namespace IRI.Maptor.Jab.Controls.Views.General.Converters;
+namespace IRI.Maptor.Jab.Common.Assets.Converters;
 
 public class CollectionToStringConverter : IValueConverter
 {
@@ -23,4 +23,7 @@ public class CollectionToStringConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+
+
+
 

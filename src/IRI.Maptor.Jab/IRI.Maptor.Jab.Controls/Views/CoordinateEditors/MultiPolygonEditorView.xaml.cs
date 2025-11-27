@@ -3,13 +3,16 @@ using System.Windows.Controls;
 namespace IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors;
 
 /// <summary>
-/// Interaction logic for MultiPointEditorView.xaml
+/// Interaction logic for MultiPolygonEditorView.xaml
 /// </summary>
-public partial class MultiPointEditorView : UserControl
+public partial class MultiPolygonEditorView : UserControl
 {
-    public MultiPointEditorView()
+    public MultiPolygonEditorView()
     {
         InitializeComponent();
     }
 }
+
+
+
 

@@ -1,86 +1,56 @@
-﻿<UserControl x:Class="IRI.Maptor.Jab.Controls.Views.PolygonEditorView"
+<UserControl x:Class="IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors.PolygonEditorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.Views"
-             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" >
-    <UserControl.Resources>
-        <Style TargetType="iconPacks:PackIconModern">
-            <Setter Property="Width" Value="16"/>
-            <Setter Property="Height" Value="16"/>
-            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-            <!--<Setter Property="Stretch" Value="Uniform"/>-->
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="FlowDirection" Value="LeftToRight"/>
-        </Style>
-        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Width" Value="Auto"/>
-            <Setter Property="Height" Value="Auto"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="4"/>
-            <Setter Property="Margin" Value="2"/>
-        </Style>
-    </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors"
+             xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Controls.Presenters.CoordinateEditors"
+             FlowDirection="RightToLeft"
+             mc:Ignorable="d">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="4">
+            <!-- Exterior Ring -->
+            <Expander Header="Exterior Ring" IsExpanded="True" Margin="0,0,0,8">
+                <local:LineStringEditorView x:Name="ExteriorRingEditor"/>
+            </Expander>
 
-        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="0,4">
-            <Expander Grid.Row="1" Cursor="Hand">
-                <Expander.Header>
-                    <DockPanel LastChildFill="True">
-                        <Button Grid.Column="6" DockPanel.Dock="Right">
-                            <iconPacks:Modern Kind="MagnifyAdd"/>
-                        </Button>
-                        <Button Grid.Column="6" DockPanel.Dock="Right">
-                            <iconPacks:Modern Kind="Check"/>
-                        </Button>
-                        <TextBlock Text="حلقه بیرونی" VerticalAlignment="Center" Foreground="White" FontWeight="Bold"/>
-                    </DockPanel>
-                </Expander.Header>
-                <local:LineStringEditorView DataContext="{Binding OutterRing}" Margin="10,0,0,0"/>
+            <!-- Interior Rings -->
+            <Expander Header="Interior Rings" IsExpanded="False" Margin="0,0,0,8">
+                <StackPanel>
+                    <Button Content="Add Interior Ring" Command="{Binding AddInteriorRingCommand}" 
+                            Margin="4" HorizontalAlignment="Right"
+                            Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
+                    <ItemsControl ItemsSource="{Binding InteriorRings}" Margin="0,8,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Expander Margin="0,4,0,0">
+                                    <Expander.Header>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{Binding Header, StringFormat='Interior Ring {0}'}"/>
+                                            <Button Grid.Column="1" Command="{Binding DataContext.DeleteRingCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                    CommandParameter="{Binding}" Margin="4,0,0,0" Padding="4">
+                                                <iconPacks:PackIconModern Kind="Delete" Width="16" Height="16" 
+                                                                          Foreground="{StaticResource MahApps.Brushes.Accent}"/>
+                                            </Button>
+                                        </Grid>
+                                    </Expander.Header>
+                                    <local:LineStringEditorView>
+                                        <local:LineStringEditorView.DataContext>
+                                            <presenters:LineStringEditorPresenter Points="{Binding Points}"/>
+                                        </local:LineStringEditorView.DataContext>
+                                    </local:LineStringEditorView>
+                                </Expander>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
             </Expander>
-        </ScrollViewer>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1" >
-            <Expander Header="حلقه‌های داخلی" ScrollViewer.VerticalScrollBarVisibility="Auto" Cursor="Hand" Foreground="White">
-                <ItemsControl ItemsSource="{Binding InnerRings}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Expander ScrollViewer.VerticalScrollBarVisibility="Auto">
-                                <Expander.Header>
-                                    <DockPanel Cursor="Hand" LastChildFill="True">
-                                        <!--<DockPanel.Resources>                                            
-                                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                                <Setter Property="Width" Value="Auto"/>
-                                                <Setter Property="Height" Value="Auto"/>
-                                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                                <Setter Property="VerticalAlignment" Value="Center"/>
-                                                <Setter Property="Padding" Value="4"/>
-                                                <Setter Property="Margin" Value="2"/>
-                                            </Style>
-                                        </DockPanel.Resources>-->
-                                        <Button Grid.Column="6" DockPanel.Dock="Right">
-                                            <iconPacks:Modern Kind="MagnifyAdd"/>
-                                        </Button>
-                                        <Button Grid.Column="6" DockPanel.Dock="Right">
-                                            <iconPacks:Modern Kind="Check"/>
-                                        </Button>
-                                        <Button Grid.Column="0" DockPanel.Dock="Right">
-                                            <iconPacks:Modern Kind="Delete"/>
-                                        </Button>
-                                        <TextBlock Text="حلقه داخلی" VerticalAlignment="Center" Foreground="White" FontWeight="Bold"/>
-                                    </DockPanel>
-                                </Expander.Header>
-                                <local:LineStringEditorView Grid.Column="1" Margin="10,0,0,0"/>
-                            </Expander>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Expander>
-        </ScrollViewer>
-    </Grid>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>
+

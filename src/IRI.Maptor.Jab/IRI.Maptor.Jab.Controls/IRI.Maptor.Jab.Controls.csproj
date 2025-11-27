@@ -43,4 +43,8 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Assets\DataTemplateSelectors\" />
+  </ItemGroup>
+
 </Project>

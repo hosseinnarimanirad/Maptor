@@ -4,15 +4,15 @@ using System.Windows;
 using System.Windows.Data;
 using IRI.Maptor.Sta.Common.Enums;
 
-namespace IRI.Maptor.Jab.Controls.Views.General.Converters;
+namespace IRI.Maptor.Jab.Common.Assets.Converters;
 
-public class CoordinateDimensionToZVisibilityConverter : IValueConverter
+public class CoordinateDimensionToMVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value is CoordinateDimension dimension)
         {
-            return dimension == CoordinateDimension.Z || dimension == CoordinateDimension.ZM
+            return dimension == CoordinateDimension.M || dimension == CoordinateDimension.ZM
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }
@@ -24,4 +24,7 @@ public class CoordinateDimensionToZVisibilityConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+
+
+
 

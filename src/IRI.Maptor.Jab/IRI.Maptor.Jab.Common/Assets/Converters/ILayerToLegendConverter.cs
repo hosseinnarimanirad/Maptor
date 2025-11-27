@@ -1,13 +1,9 @@
 ﻿using IRI.Maptor.Jab.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System; 
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace IRI.Maptor.Jab.Controls.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Assets.Converters;
 
 public class ILayerToLegendConverter : IValueConverter
 {

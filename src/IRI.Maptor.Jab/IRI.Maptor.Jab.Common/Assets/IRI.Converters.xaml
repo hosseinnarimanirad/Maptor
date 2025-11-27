@@ -14,6 +14,9 @@
     <converters:BoolToInverseVisibilityConverter x:Key="boolToInverseVisibilityConverter"/>
 
     <converters:CenterChildParentConverter x:Key="centerChildParentConverter"/>
+    <converters:CollectionToStringConverter x:Key="collectionToStringConverter"/>
+    <converters:CoordinateDimensionToMVisibilityConverter x:Key="coordinateDimensionToMVisibilityConverter"/>
+    <converters:CoordinateDimensionToZVisibilityConverter x:Key="coordinateDimensionToZVisibilityConverter"/>
     <!--<converters:CountLessThanOneToBoolConverter x:Key="countLessThanOneToBoolConverter"/>-->
 
     <converters:DateTimeToPersianEllapsedDateCoarseConverter x:Key="dateTimeToPersianEllapsedDateCoarseConverter"/>
@@ -25,6 +28,7 @@
 
     <converters:FlowDocumentXmlToStringConverter x:Key="flowDocumentXmlToStringConverter"/>
 
+    <converters:ILayerToLegendConverter x:Key="iLayerToLegendConverter"/>
     <converters:IndexToBoolConverter x:Key="indexToBoolConverter"/>
 
     <converters:IntGreaterThanIntParameterToVisibilityConverter x:Key="intGreaterThanIntParameterToVisibilityConverter"/>

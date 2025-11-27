@@ -1,4 +1,4 @@
-<UserControl x:Class="IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors.MultiLineStringEditorView"
+<UserControl x:Class="IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors.MultiPointEditorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -9,10 +9,10 @@
              mc:Ignorable="d">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="4">
-            <Button Content="Add Part" Command="{Binding AddPartCommand}" 
+            <Button Content="Add Point" Command="{Binding AddPointCommand}" 
                     Margin="4" HorizontalAlignment="Right"
                     Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
-            <ItemsControl ItemsSource="{Binding Parts}" Margin="0,8,0,0">
+            <ItemsControl ItemsSource="{Binding Points}" Margin="0,8,0,0">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Expander Margin="0,4,0,0">
@@ -22,15 +22,15 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Header, StringFormat='Part {0}'}"/>
-                                    <Button Grid.Column="1" Command="{Binding DataContext.DeletePartCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                    <TextBlock Grid.Column="0" Text="{Binding Point, StringFormat='Point: X={0:F8}, Y={1:F8}'}"/>
+                                    <Button Grid.Column="1" Command="{Binding DataContext.DeletePointCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
                                             CommandParameter="{Binding}" Margin="4,0,0,0" Padding="4">
                                         <iconPacks:PackIconModern Kind="Delete" Width="16" Height="16" 
                                                                   Foreground="{StaticResource MahApps.Brushes.Accent}"/>
                                     </Button>
                                 </Grid>
                             </Expander.Header>
-                            <local:LineStringEditorView DataContext="{Binding}"/>
+                            <local:PointEditorView DataContext="{Binding}"/>
                         </Expander>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -38,4 +38,7 @@
         </StackPanel>
     </ScrollViewer>
 </UserControl>
+
+
+
 

@@ -157,7 +157,7 @@ public abstract class BaseLayer : Notifier, ILayer
             RaisePropertyChanged();
         }
     }
-
+    
     private int _tocOrder;
     public int TocOrder
     {

@@ -1,54 +1,62 @@
-﻿<UserControl x:Class="IRI.Maptor.Jab.Controls.Views.LineStringEditorView"
+<UserControl x:Class="IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors.LineStringEditorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <UserControl.Resources>
-        
-    </UserControl.Resources>
+             FlowDirection="RightToLeft"
+             mc:Ignorable="d">
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-    <DataGrid Name="pointList" AutoGenerateColumns="False" ItemsSource="{Binding Points}"
-                  Grid.ColumnSpan="7" CanUserDeleteRows="True" IsReadOnly="True" CanUserSortColumns="False">
-        <DataGrid.RowStyle>
-            <Style TargetType="{x:Type DataGridRow}">
-                <!--<EventSetter Event="MouseLeftButtonDown" />-->
-                <!--<Setter Property="Background" Value="LightGray" />-->
-                <Style.Triggers>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </DataGrid.RowStyle>
+        <Button Grid.Row="0" Content="Add Point" Command="{Binding AddPointCommand}" 
+                Margin="4" HorizontalAlignment="Right"
+                Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"/>
 
-        <DataGrid.Columns>
-            <DataGridTemplateColumn>
-                <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                        <Button Command="{Binding RemovePointCommand}" Width="Auto" Height="Auto" Padding="2" Margin="4">
-                            <iconPacks:PackIconModern Kind="Delete" Width="16" Height="16" Foreground="{StaticResource MahApps.Brushes.Accent}" FlowDirection="LeftToRight"/>
-                        </Button>
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn Header="X" Width="Auto" MinWidth="100">
-                <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                        <TextBox FlowDirection="LeftToRight" Text="{Binding Path=X, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"></TextBox>
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-            <DataGridTemplateColumn Header="Y" Width="Auto" MinWidth="100">
-                <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                        <TextBox FlowDirection="LeftToRight" Text="{Binding Path=Y, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"></TextBox>
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-        </DataGrid.Columns>
-    </DataGrid>
-
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Points}" AutoGenerateColumns="False" 
+                  CanUserSortColumns="False" AlternatingRowBackground="LightBlue" 
+                  GridLinesVisibility="All" HeadersVisibility="Column">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Delete" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding DataContext.DeletePointCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                    CommandParameter="{Binding}" Margin="2" Padding="4">
+                                <iconPacks:PackIconModern Kind="Delete" Width="16" Height="16" 
+                                                          Foreground="{StaticResource MahApps.Brushes.Accent}"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="X" Width="*" MinWidth="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding X, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                                     FlowDirection="LeftToRight" Margin="2"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Y" Width="*" MinWidth="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Y, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                                     FlowDirection="LeftToRight" Margin="2"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
+    </Grid>
 </UserControl>
+
+
+
+
