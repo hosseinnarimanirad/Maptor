@@ -1,10 +1,10 @@
 using System;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Controls.Models.GeometryDetails;
+using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 using IRI.Maptor.Sta.Common.Primitives;
 
-namespace IRI.Maptor.Jab.Controls.Presenters.CoordinateEditors;
+namespace IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 
 public class PointEditorPresenter : Notifier
 {

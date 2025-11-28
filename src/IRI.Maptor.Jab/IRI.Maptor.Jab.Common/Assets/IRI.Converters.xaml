@@ -47,7 +47,9 @@
     
     <converters:NotConverter x:Key="notConverter"/>
     <converters:NotNullToBoolConverter x:Key="notNullToBoolConverter"/>
-     
+
+    <converters:PointNumberConverter x:Key="pointNumberConverter"/>
+ 
     <converters:ScaleToGoogleScaleConverter x:Key="scaleToGoogleScaleConverter"/>
     <converters:SolidColorBrushToColorConverter x:Key="solidColorBrushToColorConverter"/>
     <converters:StreamGeometryToImageConverter x:Key="streamGeometryToImageConverter"/>

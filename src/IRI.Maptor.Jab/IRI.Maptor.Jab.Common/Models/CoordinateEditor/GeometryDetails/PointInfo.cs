@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using IRI.Maptor.Jab.Common;
 
-namespace IRI.Maptor.Jab.Controls.Models.GeometryDetails;
+namespace IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
 public class PointInfo : Notifier
 {

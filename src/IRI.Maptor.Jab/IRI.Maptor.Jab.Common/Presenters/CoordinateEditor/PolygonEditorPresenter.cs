@@ -4,9 +4,9 @@ using System.Linq;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Localization;
-using IRI.Maptor.Jab.Controls.Models.GeometryDetails;
+using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
-namespace IRI.Maptor.Jab.Controls.Presenters.CoordinateEditors;
+namespace IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 
 public class PolygonEditorPresenter : Notifier
 {
@@ -36,7 +36,7 @@ public class PolygonEditorPresenter : Notifier
         {
             if (ExteriorRing != null)
             {
-                return new LineStringEditorPresenter(ExteriorRing.Points);
+                //return new LineStringEditorPresenter(ExteriorRing.Points);
             }
             return null;
         }

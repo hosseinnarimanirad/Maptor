@@ -1,12 +1,14 @@
+// COMMENTED OUT: MultiLineStringEditorPresenter functionality has been merged into LineStringEditorPresenter
+/*
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Controls.Models.GeometryDetails;
+using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
-namespace IRI.Maptor.Jab.Controls.Presenters.CoordinateEditors;
+namespace IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 
 public class MultiLineStringEditorPresenter : Notifier
 {
@@ -203,6 +205,7 @@ public class MultiLineStringEditorPresenter : Notifier
         Parts.CollectionChanged += Parts_CollectionChanged;
     }
 }
+*/
 
 
 

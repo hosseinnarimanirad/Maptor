@@ -1,11 +1,15 @@
 using System;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Controls;
+
 using MahApps.Metro.Controls;
+
+using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Localization;
-using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using System.Windows;
+using IRI.Maptor.Jab.Controls.ViewModels;
+using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
 namespace IRI.Maptor.Jab.Controls.Views.Dialogs;
 
@@ -14,19 +18,10 @@ namespace IRI.Maptor.Jab.Controls.Views.Dialogs;
 /// </summary>
 public partial class GeometryDetailsDialogView : MetroWindow
 {
-    public static readonly DependencyProperty GeometryProperty =
-        DependencyProperty.Register(
-            nameof(Geometry),
-            typeof(IGeometry),
-            typeof(GeometryDetailsDialogView),
-            new PropertyMetadata(null, OnGeometryChanged));
 
-    public static readonly DependencyProperty DialogServiceProperty =
-        DependencyProperty.Register(
-            nameof(DialogService),
-            typeof(IDialogService),
-            typeof(GeometryDetailsDialogView),
-            new PropertyMetadata(null, OnDialogServiceChanged));
+    public EditableFeatureLayer EditableFeatureLayer { get; }
+
+    private IDialogService DialogService { get; }
 
     public static readonly DependencyProperty DialogTitleProperty =
         DependencyProperty.Register(
@@ -35,34 +30,42 @@ public partial class GeometryDetailsDialogView : MetroWindow
             typeof(GeometryDetailsDialogView),
             new PropertyMetadata("Geometry Details"));
 
-    public IGeometry Geometry
-    {
-        get => (IGeometry)GetValue(GeometryProperty);
-        set => SetValue(GeometryProperty, value);
-    }
-
-    public IDialogService DialogService
-    {
-        get => (IDialogService)GetValue(DialogServiceProperty);
-        set => SetValue(DialogServiceProperty, value);
-    }
-
     public string DialogTitle
     {
         get => (string)GetValue(DialogTitleProperty);
         set => SetValue(DialogTitleProperty, value);
     }
 
-    public Action<IRI.Maptor.Sta.Common.Primitives.Point>? RequestZoomToPoint { get; set; }
+    private GeometryDetailsViewModel? ViewModel { get; set; }
 
-    public GeometryDetailsDialogView()
+
+
+
+    private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is DataGridRow row && row.DataContext is PointInfo pointInfo)
+        {
+            var point = new IRI.Maptor.Sta.Common.Primitives.Point(pointInfo.X, pointInfo.Y);
+            //RequestZoomToPoint?.Invoke(point);
+        }
+    }
+
+
+    public GeometryDetailsDialogView(EditableFeatureLayer editableFeatureLayer, IDialogService dialogService)
     {
         InitializeComponent();
-        Loaded += GeometryDetailsDialogView_Loaded;
         LocalizationManager.Instance.LanguageChanged += OnLanguageChanged;
-        
+
         // Set initial title
         UpdateTitle();
+
+        this.EditableFeatureLayer = editableFeatureLayer;
+
+        this.DialogService = dialogService;
+
+        this.ViewModel = new GeometryDetailsViewModel(editableFeatureLayer, dialogService);
+
+        this.DataContext = ViewModel;
     }
 
     private void UpdateTitle()
@@ -74,72 +77,6 @@ public partial class GeometryDetailsDialogView : MetroWindow
     private void OnLanguageChanged()
     {
         UpdateTitle();
-    }
-
-    private void GeometryDetailsDialogView_Loaded(object sender, RoutedEventArgs e)
-    {
-        // Ensure properties are set on the GeometryDetailsView after both are loaded
-        UpdateGeometryDetailsViewProperties();
-    }
-
-    private void UpdateGeometryDetailsViewProperties()
-    {
-        if (GeometryDetailsViewControl != null && IsLoaded)
-        {
-            // Set RequestZoomToPoint handler first
-            if (RequestZoomToPoint != null)
-            {
-                GeometryDetailsViewControl.RequestZoomToPoint = RequestZoomToPoint;
-            }
-            
-            // Set DialogService (this will create the presenter and set DataContext)
-            if (DialogService != null)
-            {
-                GeometryDetailsViewControl.DialogService = DialogService;
-            }
-            
-            // Use Dispatcher to ensure the inner view's Loaded event has fired
-            // before setting Geometry, so the presenter exists
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                if (GeometryDetailsViewControl != null && Geometry != null)
-                {
-                    GeometryDetailsViewControl.Geometry = Geometry;
-                }
-            }), System.Windows.Threading.DispatcherPriority.Loaded);
-        }
-    }
-
-    private static void OnGeometryChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is GeometryDetailsDialogView dialog)
-        {
-            if (dialog.GeometryDetailsViewControl != null && dialog.IsLoaded)
-            {
-                dialog.GeometryDetailsViewControl.Geometry = e.NewValue as IGeometry;
-            }
-        }
-    }
-
-    private static void OnDialogServiceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is GeometryDetailsDialogView dialog)
-        {
-            if (dialog.GeometryDetailsViewControl != null && dialog.IsLoaded)
-            {
-                dialog.GeometryDetailsViewControl.DialogService = e.NewValue as IDialogService;
-                // After setting DialogService, update Geometry if it was set before
-                if (dialog.Geometry != null)
-                {
-                    dialog.GeometryDetailsViewControl.Geometry = dialog.Geometry;
-                }
-            }
-        }
-    }
-
-    private void GeometryDetailsView_RequestZoomToPoint(IRI.Maptor.Sta.Common.Primitives.Point point)
-    {
-        RequestZoomToPoint?.Invoke(point);
     }
 }
 

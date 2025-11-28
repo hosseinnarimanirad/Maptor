@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Controls.Models.GeometryDetails;
+using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
-namespace IRI.Maptor.Jab.Controls.Presenters.CoordinateEditors;
+namespace IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 
 public class MultiPointEditorPresenter : Notifier
 {

@@ -29,13 +29,7 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 namespace IRI.Maptor.Jab.Common;
 
 public class EditableFeatureLayer : SymbolizableLayer
-{
-    //string _delete = "حذف";
-    //string _copy = "کپی";
-    //string _finish = "اتمام";
-    //string _cancel = "لغو";
-    //string _displayCoordinates = "نمایش مختصات";
-
+{ 
     public EditableFeatureLayerOptions Options { get; }
 
     private Geometry _webMercatorGeometry;
@@ -60,7 +54,6 @@ public class EditableFeatureLayer : SymbolizableLayer
     private SpecialPointLayer _primaryVerticesLabelLayer;
 
     private double _height;
-
     public double Height
     {
         get { return _height; }
@@ -74,36 +67,11 @@ public class EditableFeatureLayer : SymbolizableLayer
         }
     }
 
-
-    //1397.08.19
-    //private bool _massEdit;
-    //public bool MassEdit
-    //{
-    //    get { return _massEdit; }
-    //    set
-    //    {
-    //        if (_massEdit == value)
-    //        {
-    //            return;
-    //        }
-
-    //        _massEdit = value;
-    //        RaisePropertyChanged();
-
-    //        ReconstructLocateables();
-    //    }
-    //}
-
+     
     Transform _toScreen;
 
     Func<double, double> _screenToMap;
-
-    #region Measure Attributes
-
-    //public double GroundLength=> SpatialUtility.CalculateLength()
-
-
-    #endregion
+     
 
     public event EventHandler? OnRequestFinishDrawing;
 
@@ -117,12 +85,13 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public Action<Geometry>? RequestFinishEditing;
 
-    public Action<Geometry>? RequestConvertToDrawingItem;
-
-    public Action<Geometry>? RequestShowGeometryDetails;
-
     public Action<EditableFeatureLayer>? RequestCancelEditing;
 
+    public Action<Geometry>? RequestConvertToDrawingItem;
+
+    public Action<EditableFeatureLayer>? RequestShowGeometryDetails;
+
+    // todo: check if duplicate
     public Action<EditableFeatureLayer>? RquestShowCoordinates;
 
     public Action? RequestCancelDrawing;
@@ -141,11 +110,6 @@ public class EditableFeatureLayer : SymbolizableLayer
     }
 
     public override LayerType Type => LayerType.EditableItem;
-
-    private WpfPoint ToScreen(WpfPoint point)
-    {
-        return _toScreen.Transform(point);
-    }
 
 
     /// <summary>
@@ -237,18 +201,20 @@ public class EditableFeatureLayer : SymbolizableLayer
         }
     }
 
+    private WpfPoint ToScreen(WpfPoint point)
+    {
+        return _toScreen.Transform(point);
+    }
+
+    #region New Drawing
+
     internal void StartNewPart(Point webMercatorPoint)
     {
         this._webMercatorGeometry.Geometries.Last().InsertLastPoint(webMercatorPoint);
-        //this.AddVertex(webMercatorPoint);
+         
         MakePathGeometry();
 
         ReconstructLocateables();
-    }
-
-    internal void CancelDrawing()
-    {
-        this.RequestCancelDrawing?.Invoke();
     }
 
     internal bool TryFinishDrawingPart()
@@ -259,12 +225,16 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         ReconstructLocateables();
 
-
         return result;
-        //this._pathGeometry.Figures.Last().Segments.RemoveAt(this._pathGeometry.Figures.Last().Segments.Count - 1);
-
-        //this._pathGeometry.Figures.Add(new PathFigure());
     }
+
+    internal void CancelDrawing()
+    {
+        this.RequestCancelDrawing?.Invoke();
+    }
+
+    #endregion
+
 
     #region Private Methods
 
@@ -940,17 +910,17 @@ public class EditableFeatureLayer : SymbolizableLayer
     }
 
     //probably this method can be better
-    private void AddVertex(Point webMercatorPoint, Geometry geometry, RecursiveCollection<Locateable> primaryCollection)
+    private Locateable? AddVertex(Point webMercatorPoint, Geometry geometry, RecursiveCollection<Locateable> primaryCollection)
     {
         if (geometry.Points != null)
         {
-            var point = this.ToScreen(webMercatorPoint.AsWpfPoint());
+            //var point = this.ToScreen(webMercatorPoint.AsWpfPoint());
 
             var locateable = ToPrimaryLocateable(webMercatorPoint);
 
             //geometry.Points.Count > 0, is to see if it is not going to add first point of a new part
             if (geometry.Points.Count > 0 && geometry.Points.Last().AreExactlyTheSame(webMercatorPoint) == true)
-                return;
+                return null;
 
             geometry.InsertLastPoint(webMercatorPoint);
 
@@ -966,10 +936,11 @@ public class EditableFeatureLayer : SymbolizableLayer
                 this._edgeLabelLayer.Items.Add(ToEdgeLengthLocatable(geometry.Points[geometry.Points.Count - 2], webMercatorPoint));
             }
 
+            return locateable;
         }
         else
         {
-            AddVertex(webMercatorPoint, geometry.Geometries.Last(), primaryCollection.Collections.Last());
+            return AddVertex(webMercatorPoint, geometry.Geometries.Last(), primaryCollection.Collections.Last());
         }
     }
 
@@ -1068,9 +1039,9 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public Geometry GetFinalGeometry() => this._webMercatorGeometry;
 
-    public void AddVertex(Point webMercatorPoint)
+    public Locateable? AddVertex(Point webMercatorPoint)
     {
-        AddVertex(webMercatorPoint, this._webMercatorGeometry, this._vertices);
+        return AddVertex(webMercatorPoint, this._webMercatorGeometry, this._vertices);
     }
 
     public void AddSemiVertex(Point webMercatorPoint)
@@ -1107,7 +1078,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     private void GoToNextPoint() => this._primaryVerticesLayer.SelectNextLocatable();
 
-    private void TryDeleteCurrentPoint()
+    public void TryDeleteCurrentPoint()
     {
         var locateable = _primaryVerticesLayer.FindSelectedLocatable();
 
@@ -1383,7 +1354,7 @@ public class EditableFeatureLayer : SymbolizableLayer
         {
             if (_showGeometryDetailsCommand == null)
             {
-                _showGeometryDetailsCommand = new RelayCommand(param => this.RequestShowGeometryDetails?.Invoke(this._webMercatorGeometry));
+                _showGeometryDetailsCommand = new RelayCommand(param => this.RequestShowGeometryDetails?.Invoke(this));
             }
             return _showGeometryDetailsCommand;
         }

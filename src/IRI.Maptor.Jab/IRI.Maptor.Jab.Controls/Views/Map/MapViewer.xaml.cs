@@ -4713,24 +4713,14 @@ public partial class MapViewer : NotifiableUserControl
             _presenter.AddDrawingItem(g);
         };
 
-        CurrentEditingLayer.RequestShowGeometryDetails = (g) =>
+        CurrentEditingLayer.RequestShowGeometryDetails = (editableFeatureLayer) =>
         {
-            var dialog = new Views.Dialogs.GeometryDetailsDialogView
+            var dialog = new Views.Dialogs.GeometryDetailsDialogView(editableFeatureLayer, this._presenter.DialogService)
             {
-                Geometry = g,
-                DialogService = this._presenter.DialogService,
                 Owner = Window.GetWindow(this)
             };
-
-            // Handle zoom to point if needed
-            dialog.RequestZoomToPoint = (point) =>
-            {
-                // Convert geodetic point to WebMercator and zoom
-                var webMercatorPoint = MapProjects.GeodeticWgs84ToWebMercator(point);
-                this.ZoomAndCenter(WebMercatorUtility.GetGoogleMapScale(15), webMercatorPoint);
-            };
-
-            dialog.ShowDialog();
+              
+            dialog.Show();
         };
 
         CurrentEditingLayer.RequestCancelEditing = (g) =>

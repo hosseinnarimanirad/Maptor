@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 
-namespace IRI.Maptor.Jab.Controls.Presenters.CoordinateEditors;
+namespace IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 
 public class MultiPolygonEditorPresenter : Notifier
 {

@@ -3,7 +3,7 @@ using IRI.Maptor.Jab.Common.Assets.Commands;
 using System;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
-namespace IRI.Maptor.Jab.Controls.Models;
+namespace IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
 public class CoordinateEditor : Notifier
 {

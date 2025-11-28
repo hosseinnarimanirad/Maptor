@@ -1,8 +1,7 @@
+using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using IRI.Maptor.Jab.Controls.Models.GeometryDetails;
-using IRI.Maptor.Jab.Controls.Presenters.CoordinateEditors;
+using System.Windows.Controls; 
 
 namespace IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors;
 
@@ -23,12 +22,12 @@ public partial class PolygonEditorView : UserControl
         {
             if (presenter.ExteriorRing != null)
             {
-                var exteriorPresenter = new LineStringEditorPresenter(presenter.ExteriorRing.Points);
-                var exteriorEditor = this.FindName("ExteriorRingEditor") as LineStringEditorView;
-                if (exteriorEditor != null)
-                {
-                    exteriorEditor.DataContext = exteriorPresenter;
-                }
+                //var exteriorPresenter = new LineStringEditorPresenter(presenter.ExteriorRing.Points);
+                //var exteriorEditor = this.FindName("ExteriorRingEditor") as LineStringEditorView;
+                //if (exteriorEditor != null)
+                //{
+                //    exteriorEditor.DataContext = exteriorPresenter;
+                //}
             }
         }
     }
