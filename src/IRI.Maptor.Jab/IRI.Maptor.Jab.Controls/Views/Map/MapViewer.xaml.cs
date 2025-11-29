@@ -2226,6 +2226,17 @@ public partial class MapViewer : NotifiableUserControl
 
     public void SetCursor(Cursor cursor)
     {
+        if (itWasPanningWhileDrawing ||
+            itWasPanningWhileStartDrawing ||
+            itWasPanningWhileStartNewPart ||
+            itWasPanningWhileSelectThePoint)
+            return;
+
+        // this condition prevent the cursor to
+        // change to cross in drawig mode
+        //if (this.Status == MapStatus.Drawing)
+        //    return;
+
         this.mapView.Cursor = cursor;
     }
 
@@ -4719,7 +4730,7 @@ public partial class MapViewer : NotifiableUserControl
             {
                 Owner = Window.GetWindow(this)
             };
-              
+
             dialog.Show();
         };
 
