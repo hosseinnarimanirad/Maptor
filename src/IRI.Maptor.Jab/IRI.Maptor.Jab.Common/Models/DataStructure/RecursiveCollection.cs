@@ -5,27 +5,17 @@ namespace IRI.Maptor.Jab.Common.Models.DataStructure;
 
 public class RecursiveCollection<T>
 {
-    private List<T>? _values;
+    //equivalent to points
+    public List<T>? Values { get; set; }
 
-    public List<T>? Values
-    {
-        get { return _values; }
-        set { _values = value; }
-    }
-
-    private List<RecursiveCollection<T>>? _collections;
-
-    public List<RecursiveCollection<T>>? Collections
-    {
-        get { return _collections; }
-        set { _collections = value; }
-    }
+    // equivalent to geometries
+    public List<RecursiveCollection<T>>? Collections { get; set; }
 
     public List<T> GetFlattenCollection()
     {
         if (this.Collections is null)
         {
-            return Values;
+            return this.Values;
         }
         else
         {

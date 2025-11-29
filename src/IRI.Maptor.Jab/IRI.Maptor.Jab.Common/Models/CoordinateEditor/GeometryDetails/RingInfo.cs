@@ -16,13 +16,13 @@ public class RingInfo : Notifier
         }
     }
 
-    private ObservableCollection<PointInfo> _points = new ObservableCollection<PointInfo>();
-    public ObservableCollection<PointInfo> Points
+    private ObservableCollection<NotifiablePoint> _points = new ObservableCollection<NotifiablePoint>();
+    public ObservableCollection<NotifiablePoint> Points
     {
         get => _points;
         set
         {
-            _points = value ?? new ObservableCollection<PointInfo>();
+            _points = value ?? new ObservableCollection<NotifiablePoint>();
             RaisePropertyChanged();
         }
     }
