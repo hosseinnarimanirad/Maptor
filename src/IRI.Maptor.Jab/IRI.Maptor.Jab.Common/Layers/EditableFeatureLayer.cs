@@ -29,8 +29,10 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 namespace IRI.Maptor.Jab.Common;
 
 public class EditableFeatureLayer : SymbolizableLayer
-{ 
-    public EditableFeatureLayerOptions Options { get; }
+{
+    Transform _toScreen;
+
+    Func<double, double> _screenToMap;
 
     private Geometry _webMercatorGeometry;
 
@@ -38,9 +40,9 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     private PathGeometry _pathGeometry;
 
-    RecursiveCollection<Locateable> _vertices;
+    private RecursiveCollection<Locateable> _vertices;
 
-    RecursiveCollection<Locateable> _midVertices;
+    private RecursiveCollection<Locateable> _midVertices;
 
 
     private SpecialPointLayer _primaryVerticesLayer;
@@ -52,6 +54,18 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     // Vertext Coordinates 
     private SpecialPointLayer _primaryVerticesLabelLayer;
+
+
+    public EditableFeatureLayerOptions Options { get; }
+
+    public override BoundingBox Extent
+    {
+        get => _webMercatorGeometry.GetBoundingBox();
+
+        protected set => throw new NotImplementedException();
+    }
+
+    public override LayerType Type => LayerType.EditableItem;
 
     private double _height;
     public double Height
@@ -67,15 +81,8 @@ public class EditableFeatureLayer : SymbolizableLayer
         }
     }
 
-     
-    Transform _toScreen;
 
-    Func<double, double> _screenToMap;
-     
-
-    public event EventHandler? OnRequestFinishDrawing;
-
-    public event EventHandler? OnRequestDeleteGeometry;
+    #region Actions
 
     public Action<FrameworkElement, MouseButtonEventArgs, ILocateable>? RequestRightClickOptions;
 
@@ -83,33 +90,33 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public Action<EditableFeatureLayer>? RequestRefresh;
 
-    public Action<Geometry>? RequestFinishEditing;
-
-    public Action<EditableFeatureLayer>? RequestCancelEditing;
-
     public Action<Geometry>? RequestConvertToDrawingItem;
 
     public Action<EditableFeatureLayer>? RequestShowGeometryDetails;
 
     // todo: check if duplicate
-    public Action<EditableFeatureLayer>? RquestShowCoordinates;
+    //public Action<EditableFeatureLayer>? RquestShowCoordinates;
+
+    // drawing
+    public event EventHandler? OnRequestFinishDrawing;
 
     public Action? RequestCancelDrawing;
 
+    // editing
+    public Action<Geometry>? RequestFinishEditing;
+
+    public Action<EditableFeatureLayer>? RequestCancelEditing;
+
+    public event EventHandler? OnRequestDeleteGeometry;
+
     public Action<Locateable>? RequestSelectedLocatableChanged;
 
+    // zoom
     public Action<Point>? RequestZoomToPoint;
 
     public Action<Geometry>? RequestZoomToGeometry;
 
-    public override BoundingBox Extent
-    {
-        get => _webMercatorGeometry.GetBoundingBox();
-
-        protected set => throw new NotImplementedException();
-    }
-
-    public override LayerType Type => LayerType.EditableItem;
+    #endregion
 
 
     /// <summary>
@@ -211,7 +218,7 @@ public class EditableFeatureLayer : SymbolizableLayer
     internal void StartNewPart(Point webMercatorPoint)
     {
         this._webMercatorGeometry.Geometries.Last().InsertLastPoint(webMercatorPoint);
-         
+
         MakePathGeometry();
 
         ReconstructLocateables();
@@ -365,12 +372,7 @@ public class EditableFeatureLayer : SymbolizableLayer
             primaryCollection.Values = new List<Locateable>();
 
             midCollection.Values = new List<Locateable>();
-
-            //if (MassEdit)
-            //{
-            //    return;
-            //}
-
+             
             for (int i = 0; i < geometry.Points.Count; i++)
             {
                 var locateable = ToPrimaryLocateable(geometry.Points[i]);
@@ -959,6 +961,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     #endregion
 
+
     #region Measures
 
 
@@ -997,6 +1000,7 @@ public class EditableFeatureLayer : SymbolizableLayer
     public double GroundArea => SpatialUtility.GetGroundArea(GetGeodeticWgs84Geometery(), Height);
 
     #endregion
+
 
     #region Public Methods
 
@@ -1346,7 +1350,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
 
 
-     
+
     private RelayCommand _showGeometryDetailsCommand;
     public RelayCommand ShowGeometryDetailsCommand
     {
@@ -1359,7 +1363,7 @@ public class EditableFeatureLayer : SymbolizableLayer
             return _showGeometryDetailsCommand;
         }
     }
-     
+
 
 
     #endregion

@@ -1,6 +1,7 @@
 using System;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Commands;
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 using IRI.Maptor.Sta.Common.Primitives;
 
@@ -8,8 +9,8 @@ namespace IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 
 public class PointEditorPresenter : Notifier
 {
-    private PointInfo _point;
-    public PointInfo Point
+    private NotifiablePoint _point;
+    public NotifiablePoint Point
     {
         get => _point;
         set
@@ -23,7 +24,7 @@ public class PointEditorPresenter : Notifier
     public bool CanDelete { get; set; }
 
     public event Action<IRI.Maptor.Sta.Common.Primitives.Point>? RequestZoomToPoint;
-    public event Action<PointInfo>? PointChanged;
+    public event Action<NotifiablePoint>? PointChanged;
 
     private RelayCommand _zoomToPointCommand;
     public RelayCommand ZoomToPointCommand =>
@@ -43,7 +44,7 @@ public class PointEditorPresenter : Notifier
             // Delete handled by parent
         }, param => CanDelete);
 
-    public PointEditorPresenter(PointInfo point, bool canDelete = false)
+    public PointEditorPresenter(NotifiablePoint point, bool canDelete = false)
     {
         Point = point ?? throw new ArgumentNullException(nameof(point));
         CanDelete = canDelete;
@@ -52,10 +53,10 @@ public class PointEditorPresenter : Notifier
         {
             Point.PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName == nameof(PointInfo.X) || 
-                    e.PropertyName == nameof(PointInfo.Y) ||
-                    e.PropertyName == nameof(PointInfo.Z) ||
-                    e.PropertyName == nameof(PointInfo.M))
+                if (e.PropertyName == nameof(NotifiablePoint.X) || 
+                    e.PropertyName == nameof(NotifiablePoint.Y) ||
+                    e.PropertyName == nameof(NotifiablePoint.Z) ||
+                    e.PropertyName == nameof(NotifiablePoint.M))
                 {
                     PointChanged?.Invoke(Point);
                 }

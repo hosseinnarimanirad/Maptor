@@ -4,6 +4,7 @@ using System.Linq;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
 namespace IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
@@ -48,7 +49,7 @@ public class PolygonEditorPresenter : Notifier
     public RelayCommand AddInteriorRingCommand =>
         _addInteriorRingCommand ??= new RelayCommand(param =>
         {
-            var newRing = new RingInfo { IsExterior = false, Points = new ObservableCollection<PointInfo>() };
+            var newRing = new RingInfo { IsExterior = false, Points = new ObservableCollection<NotifiablePoint>() };
             Rings.Add(newRing);
             RaisePropertyChanged(nameof(InteriorRings));
             GeometryChanged?.Invoke(Rings);
@@ -71,7 +72,7 @@ public class PolygonEditorPresenter : Notifier
         Rings = rings ?? new ObservableCollection<RingInfo>();
         if (Rings.Count == 0)
         {
-            Rings.Add(new RingInfo { IsExterior = true, Points = new ObservableCollection<PointInfo>() });
+            Rings.Add(new RingInfo { IsExterior = true, Points = new ObservableCollection<NotifiablePoint>() });
         }
         else
         {

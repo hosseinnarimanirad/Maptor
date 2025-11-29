@@ -10,6 +10,7 @@ using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Controls.ViewModels;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
+using IRI.Maptor.Jab.Common.Models;
 
 namespace IRI.Maptor.Jab.Controls.Views.Dialogs;
 
@@ -43,7 +44,7 @@ public partial class GeometryDetailsDialogView : MetroWindow
 
     private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        if (sender is DataGridRow row && row.DataContext is PointInfo pointInfo)
+        if (sender is DataGridRow row && row.DataContext is NotifiablePoint pointInfo)
         {
             var point = new IRI.Maptor.Sta.Common.Primitives.Point(pointInfo.X, pointInfo.Y);
             //RequestZoomToPoint?.Invoke(point);

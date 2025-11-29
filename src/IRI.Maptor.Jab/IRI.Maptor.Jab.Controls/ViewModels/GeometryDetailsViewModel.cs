@@ -8,6 +8,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Assets.Commands;
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 using IRI.Maptor.Sta.Common.Abstrations;
@@ -440,18 +441,18 @@ public class GeometryDetailsViewModel : Notifier
                 break;
 
             case IRI.Maptor.Sta.Common.Primitives.GeometryType.MultiPolygon:
-                if (geodeticGeometry != null)
-                {
-                    var multiPolygonPresenter = new MultiPolygonEditorPresenter();
-                    var polygons = CreateMultiPolygonParts(geodeticGeometry);
-                    foreach (var polygonRings in polygons)
-                    {
-                        var polygonPresenter = new PolygonEditorPresenter(polygonRings);
-                        multiPolygonPresenter.Polygons.Add(polygonPresenter);
-                    }
-                    GeometryEditor = multiPolygonPresenter;
-                }
-                break;
+                //if (geodeticGeometry != null)
+                //{
+                //    var multiPolygonPresenter = new MultiPolygonEditorPresenter();
+                //    var polygons = CreateMultiPolygonParts(geodeticGeometry);
+                //    foreach (var polygonRings in polygons)
+                //    {
+                //        var polygonPresenter = new PolygonEditorPresenter(polygonRings);
+                //        multiPolygonPresenter.Polygons.Add(polygonPresenter);
+                //    }
+                //    GeometryEditor = multiPolygonPresenter;
+                //}
+                //break;
 
             default:
                 GeometryEditor = null;
@@ -468,13 +469,13 @@ public class GeometryDetailsViewModel : Notifier
             for (int i = 0; i < geodeticGeometry.Geometries.Count; i++)
             {
                 var ringGeometry = geodeticGeometry.Geometries[i];
-                var ringPoints = new ObservableCollection<PointInfo>();
+                var ringPoints = new ObservableCollection<NotifiablePoint>();
 
                 if (ringGeometry?.Points != null)
                 {
                     foreach (var point in ringGeometry.Points)
                     {
-                        ringPoints.Add(new PointInfo { X = point.X, Y = point.Y });
+                        ringPoints.Add(new NotifiablePoint { X = point.X, Y = point.Y });
                     }
                 }
 
@@ -529,13 +530,13 @@ public class GeometryDetailsViewModel : Notifier
                     for (int i = 0; i < polygonGeometry.Geometries.Count; i++)
                     {
                         var ringGeometry = polygonGeometry.Geometries[i];
-                        var ringPoints = new ObservableCollection<PointInfo>();
+                        var ringPoints = new ObservableCollection<NotifiablePoint>();
 
                         if (ringGeometry?.Points != null)
                         {
                             foreach (var point in ringGeometry.Points)
                             {
-                                ringPoints.Add(new PointInfo { X = point.X, Y = point.Y });
+                                ringPoints.Add(new NotifiablePoint { X = point.X, Y = point.Y });
                             }
                         }
 
@@ -664,7 +665,7 @@ public class GeometryDetailsViewModel : Notifier
 
     private void ExtractPoints(Geometry<Point> geodeticGeometry)
     {
-        var points = new ObservableCollection<PointInfo>();
+        var points = new ObservableCollection<NotifiablePoint>();
 
         if (geodeticGeometry == null || geodeticGeometry.IsNullOrEmpty())
         {
@@ -698,7 +699,7 @@ public class GeometryDetailsViewModel : Notifier
         for (int i = 0; i < allGeodeticPoints.Count; i++)
         {
             var geodeticPoint = allGeodeticPoints[i];
-            var pointInfo = new PointInfo
+            var pointInfo = new NotifiablePoint
             {
                 X = geodeticPoint.X, // Longitude
                 Y = geodeticPoint.Y  // Latitude

@@ -177,16 +177,16 @@
             <Button Style="{StaticResource circleButton}" 
                             Command="{Binding GoToPreviousPartCommand}"
                             IsEnabled="{Binding IsPreviousPartAvailable}">
-                <iconPacks:PackIconModern Kind="ChevronLeft"/>
+                <iconPacks:PackIconMaterial Kind="ChevronLeft"/>
             </Button>
             <Button Style="{StaticResource circleButton}" 
                             Command="{Binding GoToNextPartCommand}"
                             IsEnabled="{Binding IsNextPartAvailable}">
-                <iconPacks:PackIconModern Kind="ChevronRight"/>
+                <iconPacks:PackIconMaterial Kind="ChevronRight"/>
             </Button>
             <Button Style="{StaticResource circleButton}" 
                             Command="{Binding AddPartCommand}">
-                <iconPacks:PackIconModern Kind="Add"/>
+                <iconPacks:PackIconMaterial Kind="ShapePolygonPlus"/>
             </Button>
             <Button Style="{StaticResource circleButton}" 
                             Command="{Binding DeletePartCommand}"
@@ -292,6 +292,24 @@
                 <iconPacks:PackIconModern Kind="Edit"/>
             </ToggleButton>
             <Button Style="{StaticResource circleButton}" 
+                      Command="{Binding PanToCurrentPointCommand}"
+                      IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                      ToolTip="{Binding [geometryDetails_currentPoint_zoom], Source={StaticResource Localization}}">
+                <iconPacks:PackIconModern Kind="CursorHand"/>
+            </Button>
+            <Button Style="{StaticResource circleButton}" 
+                      Command="{Binding ZoomToCurrentPointCommand}"
+                      IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                      ToolTip="{Binding [geometryDetails_currentPoint_zoomToPoint], Source={StaticResource Localization}}">
+                <iconPacks:PackIconModern Kind="MagnifyAdd"/>
+            </Button>
+            <Button Style="{StaticResource circleButton}" 
+                      Command="{Binding CopyCurrentPointCommand}"
+                      IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                      ToolTip="{Binding [geometryDetails_currentPoint_copyCoordinate], Source={StaticResource Localization}}">
+                <iconPacks:PackIconModern Kind="PageCopy"/>
+            </Button>
+            <Button Style="{StaticResource circleButton}" 
                     Command="{Binding InsertPointBeforeSelectedCommand}"
                     ToolTip="{Binding [geometryDetails_currentPoint_insert], Source={StaticResource Localization}}">
                 <iconPacks:PackIconModern Kind="ListAdd"/>
@@ -307,24 +325,7 @@
                     ToolTip="{Binding [geometryDetails_currentPoint_delete], Source={StaticResource Localization}}">
                 <iconPacks:PackIconModern Kind="Delete"/>
             </Button>
-            <Button Style="{StaticResource circleButton}" 
-                    Command="{Binding PanToCurrentPointCommand}"
-                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
-                    ToolTip="{Binding [geometryDetails_currentPoint_zoom], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="CursorHand"/>
-            </Button>
-            <Button Style="{StaticResource circleButton}" 
-                    Command="{Binding ZoomToCurrentPointCommand}"
-                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
-                    ToolTip="{Binding [geometryDetails_currentPoint_zoomToPoint], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="MagnifyAdd"/>
-            </Button>
-            <Button Style="{StaticResource circleButton}" 
-                    Command="{Binding CopyCurrentPointCommand}"
-                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
-                    ToolTip="{Binding [geometryDetails_currentPoint_copyCoordinate], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="PageCopy"/>
-            </Button>
+          
             <Button Style="{StaticResource circleButton}" 
                       Command="{Binding GoToPreviousPageCommand}"  
                       ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}">

@@ -1,3 +1,4 @@
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 using System;
@@ -68,7 +69,7 @@ public partial class LineStringEditorView : UserControl
     public event Action<Point>? RequestZoomToPoint;
     public event Action<Point>? RequestFlashPoint;
     public event Action<Point>? RequestPanToPoint;
-    public event Action<PointInfo>? RequestCopyCoordinate;
+    public event Action<NotifiablePoint>? RequestCopyCoordinate;
 
     public LineStringEditorView()
     {
@@ -144,19 +145,19 @@ public partial class LineStringEditorView : UserControl
     //    }
     //}
 
-    private void Presenter_RequestPanToPoint(PointInfo pointInfo)
+    private void Presenter_RequestPanToPoint(NotifiablePoint pointInfo)
     {
         var point = new Point(pointInfo.X, pointInfo.Y);
         RequestPanToPoint?.Invoke(point);
     }
 
-    private void Presenter_RequestZoomToPoint(PointInfo pointInfo)
+    private void Presenter_RequestZoomToPoint(NotifiablePoint pointInfo)
     {
         var point = new Point(pointInfo.X, pointInfo.Y);
         RequestZoomToPoint?.Invoke(point);
     }
 
-    private void Presenter_RequestCopyCoordinate(PointInfo pointInfo)
+    private void Presenter_RequestCopyCoordinate(NotifiablePoint pointInfo)
     {
         RequestCopyCoordinate?.Invoke(pointInfo);
     }

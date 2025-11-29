@@ -93,16 +93,16 @@
                         <DataTemplate DataType="{x:Type presenters:PolygonEditorPresenter}">
                             <editors:PolygonEditorView/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type presenters:MultiPointEditorPresenter}">
+                        <!--<DataTemplate DataType="{x:Type presenters:MultiPointEditorPresenter}">
                             <editors:MultiPointEditorView/>
-                        </DataTemplate>
+                        </DataTemplate>-->
                         <!-- COMMENTED OUT: MultiLineStringEditorPresenter functionality merged into LineStringEditorPresenter -->
                         <!--<DataTemplate DataType="{x:Type presenters:MultiLineStringEditorPresenter}">
                         <editors:MultiLineStringEditorView/>
                     </DataTemplate>-->
-                        <DataTemplate DataType="{x:Type presenters:MultiPolygonEditorPresenter}">
+                        <!--<DataTemplate DataType="{x:Type presenters:MultiPolygonEditorPresenter}">
                             <editors:MultiPolygonEditorView/>
-                        </DataTemplate>
+                        </DataTemplate>-->
                     </ContentControl.Resources>
                 </ContentControl>
             </Expander>
