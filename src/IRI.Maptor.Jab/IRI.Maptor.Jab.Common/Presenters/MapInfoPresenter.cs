@@ -7,7 +7,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common.Presenters;
 
-public class MapPanelPresenter : Notifier
+public class MapInfoPresenter : Notifier
 {
     private bool _isDetailsVisible;
 
@@ -193,7 +193,7 @@ public class MapPanelPresenter : Notifier
         }
     }
 
-    public MapPanelPresenter()
+    public MapInfoPresenter()
     {
         //RaisePropertyChanged(nameof(IsGeodeticWgs84EditingMode));
     }

@@ -40,6 +40,7 @@ using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Sta.Ogc.WMS;
+using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 
 
 namespace IRI.Maptor.Jab.Common.Presenters;
@@ -73,8 +74,8 @@ public abstract class MapPresenter : BasePresenter
     }
 
 
-    private MapPanelPresenter _mapPanel;
-    public MapPanelPresenter MapPanel
+    private MapInfoPresenter _mapPanel;
+    public MapInfoPresenter MapPanel
     {
         get { return _mapPanel; }
         set
@@ -135,6 +136,16 @@ public abstract class MapPresenter : BasePresenter
         }
     }
 
+    private GeometryDetailsViewModel _geometryDetails;
+    public GeometryDetailsViewModel GeometryDetails
+    {
+        get { return _geometryDetails; }
+        set
+        {
+            _geometryDetails = value;
+            RaisePropertyChanged();
+        }
+    }
 
 
     private EditableFeatureLayer _currentEditingLayer;
@@ -829,7 +840,7 @@ public abstract class MapPresenter : BasePresenter
 
         MapProviders = TileMapProviderFactory.GetDefault();
 
-        MapPanel = new MapPanelPresenter();
+        MapPanel = new MapInfoPresenter();
 
         MapPanel.CurrentEditingPoint = new NotifiablePoint(0, 0, param =>
           {

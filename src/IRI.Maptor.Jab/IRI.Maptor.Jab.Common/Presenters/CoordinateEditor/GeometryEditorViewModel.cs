@@ -66,6 +66,116 @@ public abstract class GeometryEditorViewModel : Notifier
         }
     }
 
+    public bool IsEmptyGeometry => this.Points is null || this.Points.Count == 0;
+
+    #region Parts
+
+    private List<IGeometry> Parts => this.FeatureLayer?.GetFinalGeometry()?.Geometries?.Cast<IGeometry>().ToList();
+
+    public IGeometry? CurrentPart
+    {
+        get
+        {
+            if (Parts == null || Parts.Count == 0 || CurrentPartIndex < 0 || CurrentPartIndex >= Parts.Count)
+                return null;
+
+            var currentPart = Parts[CurrentPartIndex];
+
+            //// Subscribe to property changes when CurrentPart changes
+            //if (currentPart != _previousCurrentPart)
+            //{
+            //    if (_previousCurrentPart != null)
+            //    {
+            //        _previousCurrentPart.PropertyChanged -= CurrentPart_PropertyChanged;
+            //    }
+            //    if (currentPart != null)
+            //    {
+            //        currentPart.PropertyChanged += CurrentPart_PropertyChanged;
+            //    }
+            //    _previousCurrentPart = currentPart;
+            //}
+
+            return currentPart;
+        }
+    }
+
+    private int _currentPartIndex = 0;
+    public int CurrentPartIndex
+    {
+        get => _currentPartIndex;
+        set
+        {
+            if (value < 0 || (FeatureLayer.GetFinalGeometry()?.Geometries != null && Parts.Count > 0 && value >= Parts.Count))
+                return;
+
+            _currentPartIndex = value;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(CurrentPart));
+            RaisePropertyChanged(nameof(CurrentPartNumber));
+            RaisePropertyChanged(nameof(IsNextPartAvailable));
+            RaisePropertyChanged(nameof(IsPreviousPartAvailable));
+
+            // Notify that all CurrentPart-dependent properties have changed
+            RaisePropertyChanged(nameof(CurrentPagePoints));
+            RaisePropertyChanged(nameof(SelectedPoint));
+            RaisePropertyChanged(nameof(TotalPages));
+            RaisePropertyChanged(nameof(CurrentPageNumber));
+            RaisePropertyChanged(nameof(TotalPointCount));
+            RaisePropertyChanged(nameof(CurrentPointIndex));
+            RaisePropertyChanged(nameof(CurrentPointNumber));
+            RaisePropertyChanged(nameof(IsPreviousPointAvailable));
+            RaisePropertyChanged(nameof(IsNextPointAvailable));
+            RaisePropertyChanged(nameof(IsLastPage));
+            RaisePropertyChanged(nameof(IsEditable));
+            RaisePropertyChanged(nameof(CurrentPageIndex));
+        }
+    }
+
+    public int CurrentPartNumber => CurrentPartIndex + 1;
+
+    public int TotalPartCount => Parts?.Count ?? 0;
+
+    public bool IsNextPartAvailable => Parts != null && Parts.Count > 0;
+
+    public bool IsPreviousPartAvailable => Parts != null && Parts.Count > 0;
+
+    protected void Parts_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        //GeometryChanged?.Invoke(Parts);
+        RaisePropertyChanged(nameof(TotalPartCount));
+        RaisePropertyChanged(nameof(CurrentPart));
+        RaisePropertyChanged(nameof(CurrentPartNumber));
+        RaisePropertyChanged(nameof(IsNextPartAvailable));
+        RaisePropertyChanged(nameof(IsPreviousPartAvailable));
+        AdjustCurrentPartIndex();
+    }
+
+    private void AdjustCurrentPartIndex()
+    {
+        if (Parts == null || Parts.Count == 0)
+        {
+            if (_currentPartIndex != 0)
+            {
+                _currentPartIndex = 0;
+                RaisePropertyChanged(nameof(CurrentPartIndex));
+            }
+        }
+        else if (_currentPartIndex >= Parts.Count)
+        {
+            _currentPartIndex = Parts.Count - 1;
+            RaisePropertyChanged(nameof(CurrentPartIndex));
+        }
+        RaisePropertyChanged(nameof(CurrentPart));
+    }
+
+    //public event Action<ObservableCollection<LineStringEditorPresenter>>? GeometryChanged;
+
+    //public event Action<LineStringEditorPresenter>? RequestZoomToPart;
+
+
+    #endregion
+
+
     #region Current Geometry or Geometry Part
 
     // all points of the current geometry part
@@ -92,7 +202,7 @@ public abstract class GeometryEditorViewModel : Notifier
     {
         get
         {
-            if (Points == null || Points.Count == 0)
+            if (IsEmptyGeometry)
                 return new ObservableCollection<Locateable>();
 
             var startIndex = CurrentPageIndex * MaxPointsPerPage;
@@ -121,6 +231,8 @@ public abstract class GeometryEditorViewModel : Notifier
             RaisePropertyChanged(nameof(IsNextPointAvailable));
             // Update command states
             CommandManager.InvalidateRequerySuggested();
+
+            FeatureLayer.SelectPoint(CurrentPointIndex);
         }
     }
 
@@ -167,7 +279,7 @@ public abstract class GeometryEditorViewModel : Notifier
             //{
             //    return CurrentPart.TotalPages;
             //}
-            return Points == null || Points.Count == 0 ? 0 : (int)Math.Ceiling(Points.Count / (double)MaxPointsPerPage);
+            return IsEmptyGeometry ? 0 : (int)Math.Ceiling(Points.Count / (double)MaxPointsPerPage);
         }
     }
 
@@ -239,8 +351,9 @@ public abstract class GeometryEditorViewModel : Notifier
             //{
             //    return CurrentPart.IsPreviousPointAvailable;
             //}
-            if (SelectedPoint == null || Points == null || Points.Count == 0)
+            if (SelectedPoint == null || IsEmptyGeometry)
                 return false;
+
             return CurrentPointIndex > 0;
         }
     }
@@ -254,8 +367,9 @@ public abstract class GeometryEditorViewModel : Notifier
             //{
             //    return CurrentPart.IsNextPointAvailable;
             //}
-            if (SelectedPoint == null || Points == null || Points.Count == 0)
+            if (SelectedPoint == null || IsEmptyGeometry)
                 return false;
+
             return CurrentPointIndex >= 0 && CurrentPointIndex < Points.Count - 1;
         }
     }
@@ -285,7 +399,7 @@ public abstract class GeometryEditorViewModel : Notifier
 
     protected void UpdateValidationState()
     {
-        if (Points == null || Points.Count == 0)
+        if (IsEmptyGeometry)
         {
             HasInvalidPoints = false;
             return;
@@ -357,160 +471,6 @@ public abstract class GeometryEditorViewModel : Notifier
     #endregion
 
 
-    #region Parts
-
-    private List<IGeometry> Parts => this.FeatureLayer?.GetFinalGeometry()?.Geometries?.Cast<IGeometry>().ToList();
-    // Multi-line string functionality (merged from MultiLineStringEditorPresenter)
-    //private ObservableCollection<LineStringEditorPresenter> _parts = new ObservableCollection<LineStringEditorPresenter>();
-    //public ObservableCollection<LineStringEditorPresenter> Parts
-    //{
-    //    get => _parts;
-    //    set
-    //    {
-    //        if (_parts != null)
-    //        {
-    //            _parts.CollectionChanged -= Parts_CollectionChanged;
-    //        }
-    //        _parts = value ?? new ObservableCollection<LineStringEditorPresenter>();
-    //        if (_parts != null)
-    //        {
-    //            _parts.CollectionChanged += Parts_CollectionChanged;
-    //        }
-    //        RaisePropertyChanged();
-    //        RaisePropertyChanged(nameof(TotalPartCount));
-    //        RaisePropertyChanged(nameof(CurrentPart));
-    //        RaisePropertyChanged(nameof(CurrentPartNumber));
-    //        RaisePropertyChanged(nameof(IsNextPartAvailable));
-    //        RaisePropertyChanged(nameof(IsPreviousPartAvailable));
-    //        AdjustCurrentPartIndex();
-    //    }
-    //}
-
-    private int _currentPartIndex = 0;
-    public int CurrentPartIndex
-    {
-        get => _currentPartIndex;
-        set
-        {
-            if (value < 0 || (FeatureLayer.GetFinalGeometry()?.Geometries != null && Parts.Count > 0 && value >= Parts.Count))
-                return;
-
-            _currentPartIndex = value;
-            RaisePropertyChanged();
-            RaisePropertyChanged(nameof(CurrentPart));
-            RaisePropertyChanged(nameof(CurrentPartNumber));
-            RaisePropertyChanged(nameof(IsNextPartAvailable));
-            RaisePropertyChanged(nameof(IsPreviousPartAvailable));
-
-            // Notify that all CurrentPart-dependent properties have changed
-            RaisePropertyChanged(nameof(CurrentPagePoints));
-            RaisePropertyChanged(nameof(SelectedPoint));
-            RaisePropertyChanged(nameof(TotalPages));
-            RaisePropertyChanged(nameof(CurrentPageNumber));
-            RaisePropertyChanged(nameof(TotalPointCount));
-            RaisePropertyChanged(nameof(CurrentPointIndex));
-            RaisePropertyChanged(nameof(CurrentPointNumber));
-            RaisePropertyChanged(nameof(IsPreviousPointAvailable));
-            RaisePropertyChanged(nameof(IsNextPointAvailable));
-            RaisePropertyChanged(nameof(IsLastPage));
-            RaisePropertyChanged(nameof(IsEditable));
-            RaisePropertyChanged(nameof(CurrentPageIndex));
-        }
-    }
-
-    //private IGeometry? _previousCurrentPart;
-
-    public IGeometry? CurrentPart
-    {
-        get
-        {
-            if (Parts == null || Parts.Count == 0 || CurrentPartIndex < 0 || CurrentPartIndex >= Parts.Count)
-                return null;
-
-            var currentPart = Parts[CurrentPartIndex];
-
-            //// Subscribe to property changes when CurrentPart changes
-            //if (currentPart != _previousCurrentPart)
-            //{
-            //    if (_previousCurrentPart != null)
-            //    {
-            //        _previousCurrentPart.PropertyChanged -= CurrentPart_PropertyChanged;
-            //    }
-            //    if (currentPart != null)
-            //    {
-            //        currentPart.PropertyChanged += CurrentPart_PropertyChanged;
-            //    }
-            //    _previousCurrentPart = currentPart;
-            //}
-
-            return currentPart;
-        }
-    }
-
-    //private void CurrentPart_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    //{
-    //    // Forward property change notifications from CurrentPart
-    //    if (e.PropertyName == nameof(CurrentPagePoints) ||
-    //        e.PropertyName == nameof(SelectedPoint) ||
-    //        e.PropertyName == nameof(TotalPages) ||
-    //        e.PropertyName == nameof(CurrentPageNumber) ||
-    //        e.PropertyName == nameof(TotalPointCount) ||
-    //        e.PropertyName == nameof(CurrentPointIndex) ||
-    //        e.PropertyName == nameof(CurrentPointNumber) ||
-    //        e.PropertyName == nameof(IsPreviousPointAvailable) ||
-    //        e.PropertyName == nameof(IsNextPointAvailable) ||
-    //        e.PropertyName == nameof(IsLastPage) ||
-    //        e.PropertyName == nameof(IsEditable) ||
-    //        e.PropertyName == nameof(CurrentPageIndex))
-    //    {
-    //        RaisePropertyChanged(e.PropertyName);
-    //    }
-    //}
-
-    public int CurrentPartNumber => CurrentPartIndex + 1;
-
-    public int TotalPartCount => Parts?.Count ?? 0;
-
-    public bool IsNextPartAvailable => Parts != null && Parts.Count > 0;
-
-    public bool IsPreviousPartAvailable => Parts != null && Parts.Count > 0;
-
-    protected void Parts_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        //GeometryChanged?.Invoke(Parts);
-        RaisePropertyChanged(nameof(TotalPartCount));
-        RaisePropertyChanged(nameof(CurrentPart));
-        RaisePropertyChanged(nameof(CurrentPartNumber));
-        RaisePropertyChanged(nameof(IsNextPartAvailable));
-        RaisePropertyChanged(nameof(IsPreviousPartAvailable));
-        AdjustCurrentPartIndex();
-    }
-
-    private void AdjustCurrentPartIndex()
-    {
-        if (Parts == null || Parts.Count == 0)
-        {
-            if (_currentPartIndex != 0)
-            {
-                _currentPartIndex = 0;
-                RaisePropertyChanged(nameof(CurrentPartIndex));
-            }
-        }
-        else if (_currentPartIndex >= Parts.Count)
-        {
-            _currentPartIndex = Parts.Count - 1;
-            RaisePropertyChanged(nameof(CurrentPartIndex));
-        }
-        RaisePropertyChanged(nameof(CurrentPart));
-    }
-
-    //public event Action<ObservableCollection<LineStringEditorPresenter>>? GeometryChanged;
-
-    //public event Action<LineStringEditorPresenter>? RequestZoomToPart;
-
-
-    #endregion
-
 
     private RelayCommand _addPointCommand;
     public RelayCommand AddPointCommand =>
@@ -534,7 +494,7 @@ public abstract class GeometryEditorViewModel : Notifier
 
             //// Select the newly added point
             //SelectedPoint = newPoint;
-             
+
             var locatable = FeatureLayer.AddVertex(new Sta.Common.Primitives.Point(0, 0));
 
             if (locatable is null)
@@ -651,7 +611,7 @@ public abstract class GeometryEditorViewModel : Notifier
     public RelayCommand GoToPreviousPointCommand =>
         _goToPreviousPointCommand ??= new RelayCommand(param =>
         {
-            if (SelectedPoint == null || Points == null || Points.Count == 0)
+            if (SelectedPoint == null || IsEmptyGeometry)
                 return;
 
             int currentIndex = Points.IndexOf(SelectedPoint);
@@ -677,7 +637,7 @@ public abstract class GeometryEditorViewModel : Notifier
     public RelayCommand GoToNextPointCommand =>
         _goToNextPointCommand ??= new RelayCommand(param =>
         {
-            if (SelectedPoint == null || Points == null || Points.Count == 0)
+            if (SelectedPoint == null || IsEmptyGeometry)
                 return;
 
             int currentIndex = Points.IndexOf(SelectedPoint);

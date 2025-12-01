@@ -9,8 +9,7 @@ using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
-using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
+using IRI.Maptor.Jab.Common.Models.CoordinateEditor; 
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Helpers;
@@ -19,7 +18,7 @@ using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
-namespace IRI.Maptor.Jab.Controls.ViewModels;
+namespace IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 
 public class GeometryDetailsViewModel : Notifier
 {

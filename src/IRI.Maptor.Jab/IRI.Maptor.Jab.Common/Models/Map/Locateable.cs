@@ -6,7 +6,6 @@ using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-
 using WpfPoint = System.Windows.Point;
 
 namespace IRI.Maptor.Jab.Common;
@@ -71,7 +70,7 @@ public class Locateable : Notifier
             RaisePropertyChanged();
 
             this._location.Y = value;
-             
+
             if (CanTriggerPositionChange)
                 this.OnPositionChanged?.Invoke(this, new ChangeEventArgs<WpfPoint>(oldValue, new WpfPoint(_x, _y)));
         }
@@ -111,6 +110,11 @@ public class Locateable : Notifier
             this._element.MouseUp -= _element_MouseUp;
             this._element.MouseUp += _element_MouseUp;
         }
+    }
+
+    private Locateable()
+    {
+
     }
 
     public Locateable(AncherFunctionHandler? ancherFunction = null)
@@ -187,7 +191,7 @@ public class Locateable : Notifier
     {
         this.OnRequestHandleMouseUp?.Invoke(null, EventArgs.Empty);
     }
-     
+
 
     public void Select()
     {
@@ -210,5 +214,16 @@ public class Locateable : Notifier
             return;
 
         storyBoard.Begin(this.Element);
+    }
+
+    public static Locateable CreateFromWebMercatorPoint(Point webMercatorPoint, AncherFunctionHandler? ancherFunctionHandler = null)
+    {
+        return new Locateable()
+        {
+            X = webMercatorPoint.X,
+            Y = webMercatorPoint.Y,
+
+            _location = webMercatorPoint.AsWpfPoint()
+        };
     }
 }

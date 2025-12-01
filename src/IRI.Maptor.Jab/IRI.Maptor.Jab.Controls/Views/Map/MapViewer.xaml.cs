@@ -45,6 +45,7 @@ using sb = IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Views.Controls;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Controls.Presenters;
+using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
@@ -4726,10 +4727,17 @@ public partial class MapViewer : NotifiableUserControl
 
         CurrentEditingLayer.RequestShowGeometryDetails = (editableFeatureLayer) =>
         {
-            var dialog = new Views.Dialogs.GeometryDetailsDialogView(editableFeatureLayer, this._presenter.DialogService)
+
+            this._presenter.GeometryDetails = new GeometryDetailsViewModel(editableFeatureLayer, this._presenter.DialogService);
+
+            //this.DataContext = ViewModel;
+
+            var dialog = new Views.Dialogs.GeometryDetailsDialogView(/*editableFeatureLayer, this._presenter.DialogService*/)
             {
                 Owner = Window.GetWindow(this)
             };
+
+            dialog.DataContext = this._presenter.GeometryDetails;
 
             dialog.Show();
         };

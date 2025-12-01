@@ -5,25 +5,29 @@ using System.Linq;
 using System.Windows.Input;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Jab.Common.Models.CoordinateEditor; 
- 
+using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
+
 namespace IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 
 public class LineStringEditorPresenter : GeometryEditorViewModel
 {
-     
+
     public LineStringEditorPresenter(EditableFeatureLayer editableFeatureLayer)
     {
         this.FeatureLayer = editableFeatureLayer;
 
         //Points = points ?? new ObservableCollection<NotifiablePoint>();
         //Points.CollectionChanged += Points_CollectionChanged;
-        
+
+        this.Points = new ObservableCollection<Locateable>(FeatureLayer.GetFinalGeometry().GetLastPart().Select(p => Locateable.CreateFromWebMercatorPoint(p)));
+
+        this.IsEditable = true;
+
         foreach (var point in Points)
         {
             point.PropertyChanged += Point_PropertyChanged;
         }
-        
+
         UpdateValidationState();
 
         // Initialize Parts collection for multi-line string support

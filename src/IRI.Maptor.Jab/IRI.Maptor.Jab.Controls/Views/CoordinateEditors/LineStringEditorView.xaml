@@ -211,10 +211,10 @@
         </StackPanel>
 
 
-        <DataGrid Grid.Row="1" FlowDirection="LeftToRight"  
+        <DataGrid Grid.Row="1" FlowDirection="LeftToRight"  x:Name="dataGrid"
                   ItemsSource="{Binding CurrentPagePoints}" 
                   SelectedItem="{Binding SelectedPoint, Mode=TwoWay}"
-                  AutoGenerateColumns="False" 
+                  AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged"
                   CanUserSortColumns="False" CanUserAddRows="False"
                   Style="{DynamicResource MahApps.Styles.DataGrid}" CanUserReorderColumns="True"
                   HeadersVisibility="Column" AlternationCount="2000000000"

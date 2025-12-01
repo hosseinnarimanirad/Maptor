@@ -11,6 +11,7 @@ using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Controls.ViewModels;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 
 namespace IRI.Maptor.Jab.Controls.Views.Dialogs;
 
@@ -19,10 +20,9 @@ namespace IRI.Maptor.Jab.Controls.Views.Dialogs;
 /// </summary>
 public partial class GeometryDetailsDialogView : MetroWindow
 {
+    //public EditableFeatureLayer EditableFeatureLayer { get; }
 
-    public EditableFeatureLayer EditableFeatureLayer { get; }
-
-    private IDialogService DialogService { get; }
+    //private IDialogService DialogService { get; }
 
     public static readonly DependencyProperty DialogTitleProperty =
         DependencyProperty.Register(
@@ -37,7 +37,7 @@ public partial class GeometryDetailsDialogView : MetroWindow
         set => SetValue(DialogTitleProperty, value);
     }
 
-    private GeometryDetailsViewModel? ViewModel { get; set; }
+    //private GeometryDetailsViewModel? ViewModel { get; set; }
 
 
 
@@ -52,7 +52,7 @@ public partial class GeometryDetailsDialogView : MetroWindow
     }
 
 
-    public GeometryDetailsDialogView(EditableFeatureLayer editableFeatureLayer, IDialogService dialogService)
+    public GeometryDetailsDialogView(/*EditableFeatureLayer editableFeatureLayer, IDialogService dialogService*/)
     {
         InitializeComponent();
         LocalizationManager.Instance.LanguageChanged += OnLanguageChanged;
@@ -60,13 +60,13 @@ public partial class GeometryDetailsDialogView : MetroWindow
         // Set initial title
         UpdateTitle();
 
-        this.EditableFeatureLayer = editableFeatureLayer;
+        //this.EditableFeatureLayer = editableFeatureLayer;
 
-        this.DialogService = dialogService;
+        //this.DialogService = dialogService;
 
-        this.ViewModel = new GeometryDetailsViewModel(editableFeatureLayer, dialogService);
+        //this.ViewModel = new GeometryDetailsViewModel(editableFeatureLayer, dialogService);
 
-        this.DataContext = ViewModel;
+        //this.DataContext = ViewModel;
     }
 
     private void UpdateTitle()

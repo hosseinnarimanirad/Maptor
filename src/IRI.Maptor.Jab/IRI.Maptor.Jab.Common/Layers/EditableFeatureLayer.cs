@@ -215,6 +215,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     #region New Drawing
 
+    // add point to the last part
     internal void StartNewPart(Point webMercatorPoint)
     {
         this._webMercatorGeometry.Geometries.Last().InsertLastPoint(webMercatorPoint);
@@ -224,6 +225,7 @@ public class EditableFeatureLayer : SymbolizableLayer
         ReconstructLocateables();
     }
 
+    // add an empty new part
     internal bool TryFinishDrawingPart()
     {
         var result = this._webMercatorGeometry.TryAddNewPart();
@@ -1181,6 +1183,11 @@ public class EditableFeatureLayer : SymbolizableLayer
         this._primaryVerticesLabelLayer.Items.Clear();
 
         this._primaryVerticesLabelLayer.Items.Add(ToPrimaryLocateable(nearestPoint));
+    }
+
+    public void SelectPoint(int index)
+    {
+        this._primaryVerticesLayer.SelectLocatable(index);
     }
 
     #endregion

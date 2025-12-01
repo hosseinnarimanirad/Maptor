@@ -23,9 +23,9 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public GeometryType Type { get; set; }
 
-    private List<T> _points;
+    private List<T>? _points;
 
-    public List<T> Points
+    public List<T>? Points
     {
         get { return _points; }
         set
@@ -39,9 +39,9 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         }
     }
 
-    private List<Geometry<T>> _geometries;
+    private List<Geometry<T>>? _geometries;
 
-    public List<Geometry<T>> Geometries
+    public List<Geometry<T>>? Geometries
     {
         get { return _geometries; }
         set
@@ -87,7 +87,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     }
 
     public CoordinateDimension GetDimension()
-    { 
+    {
         bool hasZ = this.HasZ();
         bool hasM = this.HasM();
 
@@ -147,9 +147,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     public Geometry(List<Geometry<T>> geometries, GeometryType type, int srid)
     {
         if (type != GeometryType.MultiLineString && type != GeometryType.MultiPoint && type != GeometryType.MultiPolygon && type != GeometryType.Polygon && type != GeometryType.GeometryCollection)
-        {
             throw new NotImplementedException();
-        }
 
         this.Geometries = geometries;
 
@@ -2548,11 +2546,11 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     public List<T> GetLastPart()
     {
         if (this.IsNullOrEmpty())
-            return null;
+            return new List<T>();
 
         if (this.IsLeafGeometry())
         {
-            return this.Points;
+            return this.Points ?? new List<T>();
         }
         else
         {
@@ -2656,81 +2654,41 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         var currentGeometry = this.Clone();
 
         //e.g. having a LineString with just one point we cannot convert to MultilineString
-        if (!currentGeometry.IsValid())
-        {
-            return false;
-        }
+        if (!currentGeometry.IsValid()) return false;
 
         switch (this.Type)
         {
             case GeometryType.Point:
-                this.Geometries = new List<Geometry<T>>();
-                this.Geometries.Add(currentGeometry);
-                this.Geometries.Add(new Geometry<T>(new List<T>(), GeometryType.Point, this.Srid));
                 this.Points = null;
+                this.Geometries = [currentGeometry, CreateEmpty(GeometryType.Point, this.Srid)];
                 this.Type = GeometryType.MultiPoint;
                 break;
-            //this.Geometries = new Geometry[2];
-            //this.Geometries[0] = currentGeometry;
-            //this.Geometries[1] = new Geometry(new IPoint[0], GeometryType.Point, this.Srid);
-            //this.Points = null;
-            //this.Type = GeometryType.MultiPoint;
-            //break;
 
             case GeometryType.LineString:
                 this.Points = null;
-                this.Geometries = new List<Geometry<T>>();
-                this.Geometries.Add(currentGeometry);
-                this.Geometries.Add(new Geometry<T>(new List<T>(), GeometryType.LineString, this.Srid));
+                this.Geometries = [currentGeometry, CreateEmpty(GeometryType.LineString, this.Srid)];
                 this.Type = GeometryType.MultiLineString;
                 break;
 
-            //this.Points = null;
-            //this.Geometries = new Geometry[2];
-            //this.Geometries[0] = currentGeometry;
-            //this.Geometries[1] = new Geometry(new IPoint[0], GeometryType.LineString, this.Srid);
-
-            //this.Type = GeometryType.MultiLineString;
-            //break;
-
             case GeometryType.Polygon:
-                this.Geometries = new List<Geometry<T>>();
-                this.Geometries.Add(currentGeometry);
-                this.Geometries.Add(new Geometry<T>(new List<Geometry<T>>() { new Geometry<T>(new List<T>(), GeometryType.LineString, this.Srid) }, GeometryType.Polygon, this.Srid));
+                this.Geometries =
+                [
+                    currentGeometry,
+                    new Geometry<T>(new List<Geometry<T>>() { new Geometry<T>(new List<T>(), GeometryType.LineString, Srid) }, GeometryType.Polygon, this.Srid),
+                ];
                 this.Type = GeometryType.MultiPolygon;
                 break;
 
-            //this.Geometries = new Geometry[2];
-            //this.Geometries[0] = currentGeometry;
-            //this.Geometries[1] = new Geometry(new Geometry[] { new Geometry(new IPoint[0], GeometryType.LineString, this.Srid) }, GeometryType.Polygon, this.Srid);
-            //this.Type = GeometryType.MultiPolygon;
-            //break;
-
             case GeometryType.MultiPoint:
-                this.Geometries.Add(new Geometry<T>(new List<T>(), GeometryType.Point, this.Srid));
+                this.Geometries.Add(CreateEmpty(GeometryType.Point, this.Srid));
                 break;
-            //var points = this.Geometries.ToList();
-            //points.Add(new Geometry(new IPoint[0], GeometryType.Point, this.Srid));
-            //this.Geometries = points.ToList();
-            //break;
-
             case GeometryType.MultiLineString:
-                this.Geometries.Add(new Geometry<T>(new List<T>(), GeometryType.LineString, this.Srid));
+                this.Geometries.Add(CreateEmpty(GeometryType.LineString, this.Srid));
                 break;
-
-            //var lines = this.Geometries.ToList();
-            //lines.Add(new Geometry(new IPoint[0], GeometryType.LineString, this.Srid));
-            //this.Geometries = lines.ToList();
-            //break;
 
             case GeometryType.MultiPolygon:
                 this.Geometries.Add(new Geometry<T>(new List<Geometry<T>> { new Geometry<T>(new List<T>(), GeometryType.LineString, this.Srid) }, GeometryType.Polygon, this.Srid));
                 break;
-
-            //var polygons = this.Geometries.ToList();
-            //polygons.Add(new Geometry(new Geometry[] { new Geometry(new IPoint[0], GeometryType.LineString, this.Srid) }, GeometryType.Polygon, this.Srid));
-            //this.Geometries = polygons.ToList();
-            //break;
 
 
             case GeometryType.GeometryCollection:
@@ -3203,26 +3161,16 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     {
         switch (type)
         {
-            case GeometryType.GeometryCollection:
-                return new Geometry<T>(new List<Geometry<T>>(), GeometryType.GeometryCollection, srid);
-
-            case GeometryType.LineString:
-                return new Geometry<T>(new List<T>(), GeometryType.LineString, srid);
-
-            case GeometryType.MultiLineString:
-                return new Geometry<T>(new List<Geometry<T>>(), GeometryType.MultiLineString, srid);
-
+            case GeometryType.Polygon:
             case GeometryType.MultiPoint:
-                return new Geometry<T>(new List<Geometry<T>>(), GeometryType.MultiPoint, srid);
-
+            case GeometryType.MultiLineString:
             case GeometryType.MultiPolygon:
-                return new Geometry<T>(new List<Geometry<T>>(), GeometryType.MultiPolygon, srid);
+            case GeometryType.GeometryCollection:
+                return new Geometry<T>(new List<Geometry<T>>(), type, srid);
 
             case GeometryType.Point:
-                return new Geometry<T>(new List<T>(), GeometryType.Point, srid);
-
-            case GeometryType.Polygon:
-                return new Geometry<T>(new List<Geometry<T>>(), GeometryType.Polygon, srid);
+            case GeometryType.LineString:
+                return new Geometry<T>(new List<T>(), type, srid);
 
             case GeometryType.CircularString:
             case GeometryType.CompoundCurve:

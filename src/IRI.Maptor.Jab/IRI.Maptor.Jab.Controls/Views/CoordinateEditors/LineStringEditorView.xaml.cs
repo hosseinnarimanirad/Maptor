@@ -1,10 +1,11 @@
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;  
+using System.Windows.Input;
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 
 namespace IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors;
@@ -89,7 +90,7 @@ public partial class LineStringEditorView : UserControl
             //oldPresenter.RequestCopyCoordinate -= Presenter_RequestCopyCoordinate;
             //oldPresenter.PropertyChanged -= Presenter_PropertyChanged;
         }
-        
+
         if (e.NewValue is LineStringEditorPresenter presenter)
         {
             _currentPresenter = presenter;
@@ -99,7 +100,7 @@ public partial class LineStringEditorView : UserControl
             //presenter.RequestZoomToPoint += Presenter_RequestZoomToPoint;
             //presenter.RequestCopyCoordinate += Presenter_RequestCopyCoordinate;
             //presenter.PropertyChanged += Presenter_PropertyChanged;
-            
+
             // Subscribe to CurrentPart if in multi-line mode
             //UpdateCurrentPartSubscription();
         }
@@ -136,7 +137,7 @@ public partial class LineStringEditorView : UserControl
     //        //_currentPartPresenter.RequestZoomToPoint += Presenter_RequestZoomToPoint;
     //        //_currentPartPresenter.RequestCopyCoordinate += Presenter_RequestCopyCoordinate;
     //    }
-        
+
     //    // Also update the main presenter's MaxPointsPerPage and IsEditable if switching to single-line mode
     //    if (_currentPartPresenter == null && _currentPresenter != null)
     //    {
@@ -161,6 +162,19 @@ public partial class LineStringEditorView : UserControl
     {
         RequestCopyCoordinate?.Invoke(pointInfo);
     }
-     
+
+    //
+    private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (dataGrid.SelectedItem is null)
+            return;
+
+        // in order to automatically scroll into the selected row
+        dataGrid.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            dataGrid.ScrollIntoView(dataGrid.SelectedItem);
+        }), System.Windows.Threading.DispatcherPriority.Background);
+
+    }
 }
 
