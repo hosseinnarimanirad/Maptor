@@ -796,43 +796,24 @@ public abstract class GeometryEditorViewModelBase : Notifier
             if (FeatureLayer == null)
                 return;
 
-            // AddVertex adds to the last part of the geometry
-            // It returns the Locateable instance and adds it to _primaryVerticesLayer.Items
-            // Since it doesn't call ReconstructLocateables(), we can add it directly to Points
-            // But we need to ensure we're viewing the correct part
+            // Add point to the current part being viewed, not necessarily the last part
             var geometry = FeatureLayer.GetFinalGeometry();
             if (geometry == null)
                 return;
 
-            // Determine which part the vertex will be added to
-            int targetPartIndex = 0;
-            if (geometry.Geometries != null && geometry.Geometries.Count > 0)
-            {
-                targetPartIndex = geometry.Geometries.Count - 1; // Last part
-            }
-
-            var locatable = FeatureLayer.AddVertex(new Sta.Common.Primitives.Point(0, 0));
+            // Use AddVertexToPart to add to the current part
+            var locatable = FeatureLayer.AddVertexToPart(new Sta.Common.Primitives.Point(0, 0), CurrentPartIndex);
 
             if (locatable is null)
                 return;
 
-            // If the vertex was added to a different part than we're viewing, switch to that part
-            if (targetPartIndex != CurrentPartIndex)
+            // AddVertexToPart calls ReconstructLocateables() which triggers LocateablesReconstructed event
+            // The event handler will refresh Points collection
+            // After refresh, select the newly added point
+            var refreshedPoints = FeatureLayer.GetLocateablesForPart(CurrentPartIndex);
+            if (refreshedPoints.Count > 0)
             {
-                CurrentPartIndex = targetPartIndex;
-                // RefreshPointsFromCurrentPart() will be called by CurrentPartIndex setter
-                // Find and select the newly added point
-                var refreshedPoints = FeatureLayer.GetLocateablesForPart(targetPartIndex);
-                if (refreshedPoints.Count > 0)
-                {
-                    SelectedPoint = refreshedPoints[refreshedPoints.Count - 1]; // Last point
-                }
-            }
-            else
-            {
-                // Same part - add to Points collection directly
-                Points.Add(locatable);
-                SelectedPoint = locatable;
+                SelectedPoint = refreshedPoints[refreshedPoints.Count - 1]; // Last point (newly added)
             }
 
             // Move to last page if new point is added
@@ -841,7 +822,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
                 CurrentPageIndex = TotalPages - 1;
             }
 
-        }, param => IsLastPage && !HasInvalidPoints);
+        }, param => (IsLastPage || Points.Count == 0) && !HasInvalidPoints);
 
 
     private RelayCommand _deletePointCommand;
@@ -1089,33 +1070,42 @@ public abstract class GeometryEditorViewModelBase : Notifier
 
             if (success)
             {
+                // Wait for the geometry structure to be updated
+                // The LocateablesReconstructed event will fire and refresh Points
+                // After that, we can safely add a point to the new part
                 int newPartCount = Parts?.Count ?? 0;
                 if (newPartCount > oldPartCount)
                 {
                     int newPartIndex = newPartCount - 1;
 
-                    // Add a point (0,0) to the new part
-                    // This will trigger ReconstructLocateables() again
-                    var newPointLocatable = FeatureLayer.AddVertexToPart(new Sta.Common.Primitives.Point(0, 0), newPartIndex);
-
-                    if (newPointLocatable != null)
+                    // Verify the new part exists in the geometry before adding point
+                    var geometry = FeatureLayer.GetFinalGeometry();
+                    if (geometry?.Geometries != null && newPartIndex < geometry.Geometries.Count)
                     {
-                        // Navigate to the new part to show it in the DataGrid
-                        // (Required to select the new point in the DataGrid)
-                        CurrentPartIndex = newPartIndex;
+                        // Add a point (0,0) to the new part
+                        // AddVertexToPart will directly manipulate the geometry and trigger ReconstructLocateables()
+                        var newPointLocatable = FeatureLayer.AddVertexToPart(new Sta.Common.Primitives.Point(0, 0), newPartIndex);
 
-                        // Refresh points and select the new point
-                        var refreshedPoints = FeatureLayer.GetLocateablesForPart(newPartIndex);
-                        if (refreshedPoints.Count > 0)
+                        if (newPointLocatable != null)
                         {
-                            // Select the newly added point (first point in the new part)
-                            SelectedPoint = refreshedPoints[0];
+                            // Navigate to the new part to show it in the DataGrid
+                            // (Required to select the new point in the DataGrid)
+                            CurrentPartIndex = newPartIndex;
 
-                            // Calculate which page the new point is on and navigate to it
-                            int pageOfNewPoint = 0 / MaxPointsPerPage; // First point is on page 0
-                            if (pageOfNewPoint != CurrentPageIndex)
+                            // After CurrentPartIndex changes, RefreshPointsFromCurrentPart() is called
+                            // Wait a moment for the Points collection to refresh, then select the new point
+                            var refreshedPoints = FeatureLayer.GetLocateablesForPart(newPartIndex);
+                            if (refreshedPoints.Count > 0)
                             {
-                                CurrentPageIndex = pageOfNewPoint;
+                                // Select the newly added point (first point in the new part)
+                                SelectedPoint = refreshedPoints[0];
+
+                                // Calculate which page the new point is on and navigate to it
+                                int pageOfNewPoint = 0 / MaxPointsPerPage; // First point is on page 0
+                                if (pageOfNewPoint != CurrentPageIndex)
+                                {
+                                    CurrentPageIndex = pageOfNewPoint;
+                                }
                             }
                         }
                     }

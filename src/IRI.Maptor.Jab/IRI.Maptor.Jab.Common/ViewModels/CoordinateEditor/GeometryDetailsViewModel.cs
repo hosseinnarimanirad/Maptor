@@ -312,18 +312,24 @@ public class GeometryDetailsViewModel : Notifier
         get => _geometryEditor;
         set
         {
-            // Unsubscribe from old editor's event
+            // Unsubscribe from old editor's events
             if (_geometryEditor != null)
             {
                 _geometryEditor.RequestUpdateCurrentEditingPoint -= GeometryEditor_RequestUpdateCurrentEditingPoint;
+                _geometryEditor.RequestZoomToPoint -= GeometryEditor_RequestZoomToPoint;
+                _geometryEditor.RequestPanToPoint -= GeometryEditor_RequestPanToPoint;
+                _geometryEditor.RequestCopyCoordinate -= GeometryEditor_RequestCopyCoordinate;
             }
 
             _geometryEditor = value;
 
-            // Subscribe to new editor's event
+            // Subscribe to new editor's events
             if (_geometryEditor != null)
             {
                 _geometryEditor.RequestUpdateCurrentEditingPoint += GeometryEditor_RequestUpdateCurrentEditingPoint;
+                _geometryEditor.RequestZoomToPoint += GeometryEditor_RequestZoomToPoint;
+                _geometryEditor.RequestPanToPoint += GeometryEditor_RequestPanToPoint;
+                _geometryEditor.RequestCopyCoordinate += GeometryEditor_RequestCopyCoordinate;
             }
 
             RaisePropertyChanged();
@@ -335,9 +341,51 @@ public class GeometryDetailsViewModel : Notifier
     /// </summary>
     public Action<Point>? RequestUpdateCurrentEditingPoint { get; set; }
 
+    /// <summary>
+    /// Action to zoom to a point on the map
+    /// </summary>
+    public Action<Point>? RequestZoomToPoint { get; set; }
+
+    /// <summary>
+    /// Action to pan to a point on the map
+    /// </summary>
+    public Action<Point>? RequestPanToPoint { get; set; }
+
+    /// <summary>
+    /// Action to copy coordinate to clipboard
+    /// </summary>
+    public Action<Point>? RequestCopyCoordinate { get; set; }
+
     private void GeometryEditor_RequestUpdateCurrentEditingPoint(Point webMercatorPoint)
     {
         RequestUpdateCurrentEditingPoint?.Invoke(webMercatorPoint);
+    }
+
+    private void GeometryEditor_RequestZoomToPoint(Locateable locateable)
+    {
+        if (locateable != null)
+        {
+            var point = new Point(locateable.X, locateable.Y);
+            RequestZoomToPoint?.Invoke(point);
+        }
+    }
+
+    private void GeometryEditor_RequestPanToPoint(Locateable locateable)
+    {
+        if (locateable != null)
+        {
+            var point = new Point(locateable.X, locateable.Y);
+            RequestPanToPoint?.Invoke(point);
+        }
+    }
+
+    private void GeometryEditor_RequestCopyCoordinate(Locateable locateable)
+    {
+        if (locateable != null)
+        {
+            var point = new Point(locateable.X, locateable.Y);
+            RequestCopyCoordinate?.Invoke(point);
+        }
     }
 
     private IGeometry _originalGeometry;

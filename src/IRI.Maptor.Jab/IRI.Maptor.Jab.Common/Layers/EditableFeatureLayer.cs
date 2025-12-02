@@ -957,6 +957,9 @@ public class EditableFeatureLayer : SymbolizableLayer
             this._primaryVerticesLayer.Items.Add(locateable);
             //}
 
+            // Update path geometry to reflect the new point immediately
+            MakePathGeometry();
+
             if (geometry.Points.Count > 1 && Options.IsEdgeLabelVisible)
             {
                 this._edgeLabelLayer.Items.Add(ToEdgeLengthLocatable(geometry.Points[geometry.Points.Count - 2], webMercatorPoint));
@@ -1088,8 +1091,33 @@ public class EditableFeatureLayer : SymbolizableLayer
         {
             if (partIndex != 0)
                 return null;
-            
-            return AddVertex(webMercatorPoint);
+
+            // Check if point already exists (avoid duplicates)
+            if (_webMercatorGeometry.Points.Count > 0)
+            {
+                if (_webMercatorGeometry.Points.Last().AreExactlyTheSame(webMercatorPoint))
+                    return null;
+            }
+
+            // Directly add the point to the geometry
+            _webMercatorGeometry.InsertLastPoint(webMercatorPoint);
+
+            // Update path geometry
+            MakePathGeometry();
+
+            // Reconstruct locateables to sync with the updated geometry
+            // This ensures LocateablesReconstructed event fires and ViewModel gets updated
+            ReconstructLocateables();
+
+            // Find and return the newly created Locateable
+            var locateables = GetLocateablesForPart(0);
+            if (locateables.Count > 0)
+            {
+                // Return the last point (the one we just added)
+                return locateables[locateables.Count - 1];
+            }
+
+            return null;
         }
 
         // Multi-part geometry
@@ -1098,18 +1126,36 @@ public class EditableFeatureLayer : SymbolizableLayer
             if (partIndex < 0 || partIndex >= _webMercatorGeometry.Geometries.Count)
                 return null;
 
-            // Calculate global index: sum of points in all parts before the target part
-            int globalIndex = 0;
-            for (int i = 0; i < partIndex; i++)
+            // Get the target part geometry
+            var targetPart = _webMercatorGeometry.Geometries[partIndex];
+            if (targetPart == null)
+                return null;
+
+            // Check if point already exists (avoid duplicates)
+            if (targetPart.Points != null && targetPart.Points.Count > 0)
             {
-                globalIndex += _webMercatorGeometry.Geometries[i].Points?.Count ?? 0;
+                if (targetPart.Points.Last().AreExactlyTheSame(webMercatorPoint))
+                    return null;
             }
 
-            // Insert at the end of the target part (after all existing points in that part)
-            int partPointCount = _webMercatorGeometry.Geometries[partIndex].Points?.Count ?? 0;
-            globalIndex += partPointCount;
+            // Directly add the point to the target part's geometry
+            targetPart.InsertLastPoint(webMercatorPoint);
 
-            return InsertVertexAt(webMercatorPoint, globalIndex);
+            // Update path geometry
+            MakePathGeometry();
+
+            // Reconstruct locateables to sync with the updated geometry
+            ReconstructLocateables();
+
+            // Find and return the newly created Locateable
+            var locateables = GetLocateablesForPart(partIndex);
+            if (locateables.Count > 0)
+            {
+                // Return the last point in the part (the one we just added)
+                return locateables[locateables.Count - 1];
+            }
+
+            return null;
         }
 
         return null;
@@ -1317,12 +1363,23 @@ public class EditableFeatureLayer : SymbolizableLayer
                 var part = _webMercatorGeometry.Geometries[partIndex];
                 int partPointCount = part.Points?.Count ?? 0;
 
-                if (globalIndex >= currentGlobalIndex && globalIndex <= currentGlobalIndex + partPointCount)
+                // Check if globalIndex falls within this part's range
+                // Valid range: [currentGlobalIndex, currentGlobalIndex + partPointCount)
+                // We use < instead of <= for the upper bound to ensure we don't match the start of the next part
+                // Exception: if this is the last part, we can insert at the end (currentGlobalIndex + partPointCount)
+                bool isLastPart = partIndex == _webMercatorGeometry.Geometries.Count - 1;
+                bool isInRange = globalIndex >= currentGlobalIndex && 
+                                 (isLastPart ? globalIndex <= currentGlobalIndex + partPointCount 
+                                            : globalIndex < currentGlobalIndex + partPointCount);
+
+                if (isInRange)
                 {
                     // Found the part - calculate local index
                     int localIndex = globalIndex - currentGlobalIndex;
 
-                    if (part.Points != null && localIndex >= 0 && localIndex <= part.Points.Count)
+                    // Validate local index: can insert at positions [0, partPointCount] (inclusive)
+                    // 0 = before first point, partPointCount = after last point
+                    if (part.Points != null && localIndex >= 0 && localIndex <= partPointCount)
                     {
                         part.InsertPoint(webMercatorPoint, localIndex);
                         ReconstructLocateables();

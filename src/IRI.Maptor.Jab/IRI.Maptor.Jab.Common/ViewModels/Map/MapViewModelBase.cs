@@ -184,10 +184,27 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             _currentGeometryDetails = value;
             
-            // Set the action to update CurrentEditingPoint when coordinates change in DataGrid
+            // Set the actions to handle coordinate editor requests
             if (_currentGeometryDetails != null)
             {
                 _currentGeometryDetails.RequestUpdateCurrentEditingPoint = UpdateCurrentEditingPoint;
+                
+                // Wire up zoom, pan, and copy actions
+                _currentGeometryDetails.RequestZoomToPoint = (point) =>
+                {
+                    Zoom(WebMercatorUtility.GetGoogleMapScale(14), point);
+                };
+                
+                _currentGeometryDetails.RequestPanToPoint = (point) =>
+                {
+                    RequestPanTo?.Invoke(point, null);
+                };
+                
+                _currentGeometryDetails.RequestCopyCoordinate = (point) =>
+                {
+                    var geodetic = MapProjects.WebMercatorToGeodeticWgs84(point);
+                    System.Windows.Clipboard.SetDataObject($"{geodetic.X.ToString("n4")},{geodetic.Y.ToString("n4")}");
+                };
             }
             
             RaisePropertyChanged();
