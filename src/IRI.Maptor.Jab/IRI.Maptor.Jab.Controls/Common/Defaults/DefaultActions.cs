@@ -1,6 +1,6 @@
 ﻿using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.ViewModels;
-using IRI.Maptor.Jab.Controls.ViewModels;
+using IRI.Maptor.Jab.Common.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace IRI.Maptor.Jab.Controls.Common.Defaults;
 public static class DefaultActions
 {
 
-    public static Action<IRI.Maptor.Sta.Common.Primitives.Point> GetDefaultGoToAction(Window ownerWindow, MapViewModel mapPresenter)
+    public static Action<IRI.Maptor.Sta.Common.Primitives.Point> GetDefaultGoToAction(Window ownerWindow, MapViewModelBase mapPresenter)
     {
         var result = new Action<IRI.Maptor.Sta.Common.Primitives.Point>((IRI.Maptor.Sta.Common.Primitives.Point webMercatorPoint) =>
         {
@@ -34,7 +34,7 @@ public static class DefaultActions
     }
 
 
-    public static void GetDefaultShowSymbologyView(Window ownerWindow, ILayer layer, MapViewModel mapPresenter)
+    public static void GetDefaultShowSymbologyView(Window ownerWindow, ILayer layer, MapViewModelBase mapPresenter)
     {
         var view = new IRI.Maptor.Jab.Controls.Views.Symbology.SymbologyView();
 

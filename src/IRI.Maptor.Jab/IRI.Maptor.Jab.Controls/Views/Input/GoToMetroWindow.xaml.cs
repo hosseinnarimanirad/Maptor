@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 using MahApps.Metro.Controls;
 using IRI.Maptor.Jab.Common.Localization;
-using IRI.Maptor.Jab.Controls.ViewModels;
+using IRI.Maptor.Jab.Common.ViewModels;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 

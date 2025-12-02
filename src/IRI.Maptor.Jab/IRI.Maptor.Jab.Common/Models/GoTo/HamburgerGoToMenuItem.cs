@@ -3,7 +3,7 @@
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
-namespace IRI.Maptor.Jab.Controls.Models.GoTo
+namespace IRI.Maptor.Jab.Common.Models.GoTo
 {
     public class HamburgerGoToMenuItem : Notifier
     {

@@ -13,7 +13,7 @@ namespace IRI.Maptor.Jab.IranRepo;
 
 public static class NccLayers
 { 
-    public static List<ILayer> GetLayers(MapViewModel map)
+    public static List<ILayer> GetLayers(MapViewModelBase map)
     {
         var fontFamily = new FontFamily("Times New Roman");
 
@@ -116,7 +116,7 @@ public static class NccLayers
                     ?.ToList() ?? [];
     }
 
-    private static List<ILegendCommand> GetCommands<T>(MapViewModel map, VectorLayer layer/*, LabelParameters label*/)
+    private static List<ILegendCommand> GetCommands<T>(MapViewModelBase map, VectorLayer layer/*, LabelParameters label*/)
         where T : class, IGeometryAware<Point>
     {
         return new List<ILegendCommand>()

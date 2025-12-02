@@ -476,11 +476,11 @@ public partial class MapViewer : NotifiableUserControl
 
 
 
-    MapViewModel _presenter;
+    MapViewModelBase _presenter;
 
     #endregion
 
-    public async Task Register(MapViewModel presenter,
+    public async Task Register(MapViewModelBase presenter,
                                 sb.BoundingBox? initialView = null,
                                 List<IrProvince93>? provinces = null)
     {

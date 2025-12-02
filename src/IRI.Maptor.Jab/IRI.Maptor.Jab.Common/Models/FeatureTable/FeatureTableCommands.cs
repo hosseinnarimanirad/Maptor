@@ -32,7 +32,7 @@ public static class FeatureTableCommands
 
 
     //public static Func<MapPresenter, FeatureTableCommand> CreateZoomToExtentCommandFunc = (presenter) => CreateZoomToExtentCommand(presenter);
-    public static FeatureTableCommand CreateZoomToExtentCommand(MapViewModel map)
+    public static FeatureTableCommand CreateZoomToExtentCommand(MapViewModelBase map)
     {
         var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.Magnify }.Data;
 
@@ -60,7 +60,7 @@ public static class FeatureTableCommands
         return result;
     }
 
-    private static void TryFlashPoint(MapViewModel map, IEnumerable<Feature<Point>> point)
+    private static void TryFlashPoint(MapViewModelBase map, IEnumerable<Feature<Point>> point)
     {
         if (point?.Count() == 1 && point.First().TheGeometry.Type == GeometryType.Point)
         {
@@ -72,7 +72,7 @@ public static class FeatureTableCommands
 
     #region Export Excel
 
-    public static FeatureTableCommand CreateExportToExcelCommand(MapViewModel map)
+    public static FeatureTableCommand CreateExportToExcelCommand(MapViewModelBase map)
     {
         var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.PageExcel }.Data;
 
@@ -128,7 +128,7 @@ public static class FeatureTableCommands
 
     #region Export As Drawing Item
 
-    public static FeatureTableCommand CreateExportAsDrawingLayersCommand(MapViewModel map)
+    public static FeatureTableCommand CreateExportAsDrawingLayersCommand(MapViewModelBase map)
     {
         var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.VectorPenAdd }.Data;
 
@@ -186,9 +186,9 @@ public static class FeatureTableCommands
 
 
 
-    internal static List<Func<MapViewModel, IFeatureTableCommand>> GetDefaultVectorLayerCommands/*<T>*/() //where T : class, IGeometryAware<Point>
+    internal static List<Func<MapViewModelBase, IFeatureTableCommand>> GetDefaultVectorLayerCommands/*<T>*/() //where T : class, IGeometryAware<Point>
     {
-        return new List<Func<MapViewModel, IFeatureTableCommand>>()
+        return new List<Func<MapViewModelBase, IFeatureTableCommand>>()
         {
             CreateZoomToExtentCommand,
             CreateExportToExcelCommand,

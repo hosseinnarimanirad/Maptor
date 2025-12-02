@@ -32,7 +32,7 @@ public static class MapInitializationHelper
         MapViewer mapView,
         Window ownerWindow,
         T presenter,
-        MapViewerConfiguration? config = null) where T : MapViewModel
+        MapViewerConfiguration? config = null) where T : MapViewModelBase
     {
         if (mapView == null)
             throw new ArgumentNullException(nameof(mapView));
@@ -67,7 +67,7 @@ public static class MapInitializationHelper
     /// </summary>
     private static (IDialogService dialogService, Action<IRI.Maptor.Sta.Common.Primitives.Point> requestShowGoToView, Action<ILayer> requestShowSymbologyView) CreateDefaultServices(
         Window ownerWindow,
-        MapViewModel presenter)
+        MapViewModelBase presenter)
     {
         var dialogService = new DefaultDialogService(ownerWindow);
         var requestShowGoToView = DefaultActions.GetDefaultGoToAction(ownerWindow, presenter);
@@ -110,7 +110,7 @@ public static class MapInitializationHelper
     /// <summary>
     /// Configures presenter settings based on the configuration.
     /// </summary>
-    private static void ConfigurePresenterSettings(MapViewModel presenter, MapViewerConfiguration config)
+    private static void ConfigurePresenterSettings(MapViewModelBase presenter, MapViewerConfiguration config)
     {
         if (config.MinGoogleZoomLevel > 0)
         {

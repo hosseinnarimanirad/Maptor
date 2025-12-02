@@ -15,7 +15,7 @@ using IRI.Maptor.Jab.Common.ViewModels;
 
 namespace IRI.Maptor.Res.LRSimplification.ViewModel;
 
-public class ApplicationPresenter : MapViewModel
+public class ApplicationPresenter : MapViewModelBase
 {
     public List<GoogleScale> StandardScales
     {

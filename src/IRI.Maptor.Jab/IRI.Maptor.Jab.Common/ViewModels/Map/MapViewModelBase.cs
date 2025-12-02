@@ -45,7 +45,7 @@ using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
-public abstract class MapViewModel : BaseViewModel
+public abstract class MapViewModelBase : ViewModelBase
 {
     #region Properties
 
@@ -281,8 +281,8 @@ public abstract class MapViewModel : BaseViewModel
     //                LegendCommand.CreateClearSelected(this, (VectorLayer) layer),
     //                LegendCommand.CreateRemoveLayer(this, layer),
 
-    private List<Func<MapViewModel, IFeatureTableCommand>> _defaultVectorLayerFeatureTableCommands = FeatureTableCommands.GetDefaultVectorLayerCommands/*<Feature<Point>>*/();
-    public List<Func<MapViewModel, IFeatureTableCommand>> DefaultVectorLayerFeatureTableCommands
+    private List<Func<MapViewModelBase, IFeatureTableCommand>> _defaultVectorLayerFeatureTableCommands = FeatureTableCommands.GetDefaultVectorLayerCommands/*<Feature<Point>>*/();
+    public List<Func<MapViewModelBase, IFeatureTableCommand>> DefaultVectorLayerFeatureTableCommands
     {
         get { return _defaultVectorLayerFeatureTableCommands; }
         set
@@ -821,7 +821,7 @@ public abstract class MapViewModel : BaseViewModel
 
     #endregion
 
-    public MapViewModel()
+    public MapViewModelBase()
     {
         //this.MapProviders = new Dictionary<string, Func<TileType, IMapProvider>>()
         //{
@@ -912,7 +912,7 @@ public abstract class MapViewModel : BaseViewModel
 
     public Func<double> RequestGetActualHeight;
 
-    public Action<MapViewModel> RegisterAction;
+    public Action<MapViewModelBase> RegisterAction;
 
     public Action<bool> RequestSetConnectedState;
 

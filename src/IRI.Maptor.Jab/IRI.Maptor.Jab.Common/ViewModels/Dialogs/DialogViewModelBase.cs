@@ -3,7 +3,7 @@ using System;
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
-public abstract class DialogViewModelBase : BaseViewModel
+public abstract class DialogViewModelBase : ViewModelBase
 {
     private bool? _dialogResult = false;
 

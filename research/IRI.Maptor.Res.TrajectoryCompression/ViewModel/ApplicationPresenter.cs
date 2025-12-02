@@ -12,7 +12,7 @@ using IRI.Maptor.Jab.Common.ViewModels;
 
 namespace IRI.Maptor.Res.TrajectoryCompression;
 
-public class ApplicationPresenter : MapViewModel
+public class ApplicationPresenter : MapViewModelBase
 {
     bool retain3Points;
 

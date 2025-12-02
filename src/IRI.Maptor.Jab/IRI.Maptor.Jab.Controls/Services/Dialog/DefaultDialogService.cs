@@ -2,7 +2,7 @@
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Jab.Common.ViewModels;
-using IRI.Maptor.Jab.Controls.ViewModels.Dialogs;
+using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 using Microsoft.Win32;
 using System;
 using System.Linq;

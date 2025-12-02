@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace IRI.Maptor.Jab.Controls.ViewModels.Dialogs
+namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs
 {
     public class DialogViewModel : DialogViewModelBase
     {

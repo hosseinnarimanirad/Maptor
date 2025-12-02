@@ -9,7 +9,7 @@ using IRI.Maptor.Jab.Common.Assets.Commands;
 
 namespace IRI.Maptor.Tag.SampleWpfApp.ViewModel;
 
-public class AppViewModel : MapViewModel
+public class AppViewModel : MapViewModelBase
 {
     public void ShowSpecialPointLayerSample()
     {

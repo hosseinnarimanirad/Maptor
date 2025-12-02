@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Controls.Views;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Controls.Models.GoTo;
+using IRI.Maptor.Sta.Common.Primitives; 
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Jab.Common.ViewModels;
+using IRI.Maptor.Jab.Common.Models.GoTo;
 
-namespace IRI.Maptor.Jab.Controls.ViewModels;
+namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public class GoToViewModel : Notifier
 {
@@ -313,7 +313,7 @@ public class GoToViewModel : Notifier
 
     #endregion
 
-    public static GoToViewModel Create(MapViewModel mapPresenter)
+    public static GoToViewModel Create(MapViewModelBase mapPresenter)
     {
         var gotoPresenter = new GoToViewModel(
            p =>

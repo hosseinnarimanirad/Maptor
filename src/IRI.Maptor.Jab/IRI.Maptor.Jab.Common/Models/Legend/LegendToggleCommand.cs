@@ -45,7 +45,7 @@ public class LegendToggleCommand : LegendCommandBase
         RaisePropertyChanged(nameof(ToolTip));
     }
 
-    public static LegendToggleCommand CreateToggleLayerLabelCommand(MapViewModel map, SymbolizableLayer layer/*, LabelParameters labels*/)
+    public static LegendToggleCommand CreateToggleLayerLabelCommand(MapViewModelBase map, SymbolizableLayer layer/*, LabelParameters labels*/)
     {
         LegendToggleCommand result = new LegendToggleCommand
         {

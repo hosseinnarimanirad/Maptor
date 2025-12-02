@@ -5,7 +5,7 @@
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls" 
-                    xmlns:viewModel="clr-namespace:IRI.Maptor.Jab.Controls.ViewModels.Dialogs"
+                    xmlns:viewModel="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.Dialogs"
                     d:DataContext="{d:DesignInstance Type=viewModel:DialogViewModel, IsDesignTimeCreatable=True}"
                     mc:Ignorable="d" 
               

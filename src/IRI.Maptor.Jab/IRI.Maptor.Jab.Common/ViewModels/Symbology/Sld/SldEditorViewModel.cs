@@ -8,7 +8,7 @@ using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Ogc.SLD;
 
-namespace IRI.Maptor.Jab.Controls.ViewModels.Symbology.Sld;
+namespace IRI.Maptor.Jab.Common.ViewModels.Symbology.Sld;
 
 public class SldEditorViewModel : Notifier
 {
