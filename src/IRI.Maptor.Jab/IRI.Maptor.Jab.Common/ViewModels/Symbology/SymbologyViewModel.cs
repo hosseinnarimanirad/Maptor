@@ -1,7 +1,7 @@
 ﻿using System;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 
-namespace IRI.Maptor.Jab.Common.ViewModels;
+namespace IRI.Maptor.Jab.Common.ViewModels.Symbology;
 
 public class SymbologyViewModel : Notifier
 {

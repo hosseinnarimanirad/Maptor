@@ -1,8 +1,8 @@
 using System;
-using System.Linq; 
+using System.Linq;
 using IRI.Maptor.Sta.Ogc.SLD;
 
-namespace IRI.Maptor.Jab.Common.ViewModels.Symbology.Sld;
+namespace IRI.Maptor.Jab.Common.ViewModels.Symbology;
 
 public class LineSymbolizerViewModel : SymbolizerViewModelBase
 {

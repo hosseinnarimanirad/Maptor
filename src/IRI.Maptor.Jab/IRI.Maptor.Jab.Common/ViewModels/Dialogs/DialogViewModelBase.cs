@@ -1,7 +1,7 @@
 ﻿using IRI.Maptor.Jab.Common.Events;
 using System;
 
-namespace IRI.Maptor.Jab.Common.ViewModels;
+namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 
 public abstract class DialogViewModelBase : ViewModelBase
 {

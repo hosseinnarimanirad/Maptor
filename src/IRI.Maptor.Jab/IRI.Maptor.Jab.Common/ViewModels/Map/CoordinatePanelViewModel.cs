@@ -5,10 +5,10 @@ using IRI.Maptor.Jab.Common.Models;
 using System.Windows;
 using IRI.Maptor.Jab.Common.Localization;
 
-namespace IRI.Maptor.Jab.Common.ViewModels;
+namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 
 public class CoordinatePanelViewModel : Notifier
-{ 
+{
     private ObservableCollection<SpatialReferenceItem> _spatialReferences = new ObservableCollection<SpatialReferenceItem>();
 
     public ObservableCollection<SpatialReferenceItem> SpatialReferences
@@ -57,7 +57,7 @@ public class CoordinatePanelViewModel : Notifier
             item.FireIsSelectedChanged = e => { SelectedItem = e; };
         }
     }
-     
+
     public string GetCurrentPosstionString(Sta.Common.Primitives.Point geodeticPoint)
     {
         return SelectedItem?.GetPositionString(geodeticPoint);

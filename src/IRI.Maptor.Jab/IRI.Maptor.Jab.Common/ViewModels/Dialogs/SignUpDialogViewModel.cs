@@ -1,9 +1,8 @@
 ﻿using System;
-
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Models.Security;
 
-namespace IRI.Maptor.Jab.Common.ViewModels;
+namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 
 public class SignUpDialogViewModel : DialogViewModelBase
 {

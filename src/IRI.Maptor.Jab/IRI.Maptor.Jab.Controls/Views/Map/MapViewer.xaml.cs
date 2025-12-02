@@ -45,6 +45,7 @@ using sb = IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Views.Controls;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
+using IRI.Maptor.Jab.Common.ViewModels.Map;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 

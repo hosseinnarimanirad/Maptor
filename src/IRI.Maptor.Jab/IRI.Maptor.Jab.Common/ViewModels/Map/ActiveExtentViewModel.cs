@@ -5,7 +5,7 @@ using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
-namespace IRI.Maptor.Jab.Common.ViewModels;
+namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 
 public class ActiveExtentViewModel : Notifier
 {
@@ -102,16 +102,16 @@ public class ActiveExtentViewModel : Notifier
 
     public void UpdateExtent(BoundingBox newExtent, bool changedEvent)
     {
-        this.Extent = newExtent;
+        Extent = newExtent;
 
         if (newExtent.Center.X != MapCenter.X || newExtent.Center.Y != MapCenter.Y)
         {
-            this.MapCenter.CanTriggerPositionChange = false;
+            MapCenter.CanTriggerPositionChange = false;
 
-            this.MapCenter.X = Extent.Center.X;
-            this.MapCenter.Y = Extent.Center.Y;
+            MapCenter.X = Extent.Center.X;
+            MapCenter.Y = Extent.Center.Y;
 
-            this.MapCenter.CanTriggerPositionChange = true;
+            MapCenter.CanTriggerPositionChange = true;
         }
 
         var geodeticExtent = newExtent.Transform(MapProjects.WebMercatorToGeodeticWgs84);
@@ -127,9 +127,9 @@ public class ActiveExtentViewModel : Notifier
         RightLabel = UnitHelper.GetLengthLabel(rightLength);
 
         if (changedEvent)
-            this.OnExtentChanged?.Invoke(this, EventArgs.Empty);
+            OnExtentChanged?.Invoke(this, EventArgs.Empty);
 
         else
-            this.OnExtentChanging?.Invoke(this, EventArgs.Empty);
+            OnExtentChanging?.Invoke(this, EventArgs.Empty);
     }
 }

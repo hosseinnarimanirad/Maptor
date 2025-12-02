@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Threading.Tasks;
-
-using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Models.Security;
- 
+using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
+
 namespace IRI.Maptor.Jab.Common.Abstractions;
 
 public interface IDialogService

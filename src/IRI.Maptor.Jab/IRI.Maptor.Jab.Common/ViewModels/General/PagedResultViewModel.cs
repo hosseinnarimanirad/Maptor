@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq; 
+using System.Linq;
 using System.Collections.Generic;
 
 using IRI.Maptor.Jab.Common.Assets.Commands;
@@ -10,21 +10,21 @@ public class PagedResultViewModel<T> : Notifier
 {
     public PagedResultViewModel(IEnumerable<T> dataSource, int pageSize)
     {
-        this.PageSize = pageSize;
+        PageSize = pageSize;
 
-        this.DataSource = dataSource;
+        DataSource = dataSource;
     }
 
     public void Referesh(IEnumerable<T> dataSource)
     {
-        this.DataSource = dataSource;
+        DataSource = dataSource;
     }
 
     public PagedResultViewModel(int pageSize)
     {
-        this.DataSource = new List<T>();
+        DataSource = new List<T>();
 
-        this.PageSize = pageSize;
+        PageSize = pageSize;
     }
 
     private int _currentPage;
@@ -35,7 +35,7 @@ public class PagedResultViewModel<T> : Notifier
         set
         {
             _currentPage = value;
-            this.CurrentPageItems = this.DataSource.Skip(PageSize * (value - 1)).Take(PageSize);
+            CurrentPageItems = DataSource.Skip(PageSize * (value - 1)).Take(PageSize);
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(IsNextPageAvailable));
             RaisePropertyChanged(nameof(IsPreviousPageAvailable));
@@ -60,7 +60,7 @@ public class PagedResultViewModel<T> : Notifier
             RaisePropertyChanged(nameof(TotalPages));
             RaisePropertyChanged(nameof(Count));
 
-            this.CurrentPage = 1;
+            CurrentPage = 1;
         }
     }
 
@@ -90,9 +90,9 @@ public class PagedResultViewModel<T> : Notifier
             RaisePropertyChanged(nameof(IsNextPageAvailable));
             RaisePropertyChanged(nameof(IsPreviousPageAvailable));
 
-            if (this.CurrentPage > this.TotalPages)
+            if (CurrentPage > TotalPages)
             {
-                this.CurrentPage = this.TotalPages;
+                CurrentPage = TotalPages;
             }
 
             RaisePropertyChanged(nameof(CurrentPage));
@@ -115,23 +115,23 @@ public class PagedResultViewModel<T> : Notifier
 
     public int Count
     {
-        get { return this.DataSource.Count(); }
+        get { return DataSource.Count(); }
     }
 
     public string Title
     {
-        get { return string.Format("صفحۀ {0} از {1}", this.CurrentPage, this.TotalPages); }
+        get { return string.Format("صفحۀ {0} از {1}", CurrentPage, TotalPages); }
     }
 
 
     public bool IsNextPageAvailable
     {
-        get { return this.CurrentPage < this.TotalPages; }
+        get { return CurrentPage < TotalPages; }
     }
 
     public bool IsPreviousPageAvailable
     {
-        get { return this.CurrentPage > 1; }
+        get { return CurrentPage > 1; }
     }
 
     private IEnumerable<T> GetItems(int pageNumber)
@@ -144,7 +144,7 @@ public class PagedResultViewModel<T> : Notifier
         if (!IsNextPageAvailable)
             return;
 
-        this.CurrentPage++;
+        CurrentPage++;
     }
 
     public void GoToPreviousPage()
@@ -152,17 +152,17 @@ public class PagedResultViewModel<T> : Notifier
         if (!IsPreviousPageAvailable)
             return;
 
-        this.CurrentPage--;
+        CurrentPage--;
     }
 
     public void GoToFirstPage()
     {
-        this.CurrentPage = 1;
+        CurrentPage = 1;
     }
 
     public void GoToLastPage()
     {
-        this.CurrentPage = this.TotalPages;
+        CurrentPage = TotalPages;
     }
 
     public event EventHandler OnPageChanged;
@@ -177,7 +177,7 @@ public class PagedResultViewModel<T> : Notifier
         {
             if (_nextPageCommand == null)
             {
-                _nextPageCommand = new RelayCommand(param => this.GoToNextPage(), param => this.IsNextPageAvailable);
+                _nextPageCommand = new RelayCommand(param => GoToNextPage(), param => IsNextPageAvailable);
             }
 
             return _nextPageCommand;
@@ -193,7 +193,7 @@ public class PagedResultViewModel<T> : Notifier
         {
             if (_previousPageCommand == null)
             {
-                _previousPageCommand = new RelayCommand(param => this.GoToPreviousPage(), param => this.IsPreviousPageAvailable);
+                _previousPageCommand = new RelayCommand(param => GoToPreviousPage(), param => IsPreviousPageAvailable);
             }
 
             return _previousPageCommand;
@@ -209,7 +209,7 @@ public class PagedResultViewModel<T> : Notifier
         {
             if (_lastPageCommand == null)
             {
-                _lastPageCommand = new RelayCommand(param => this.GoToLastPage(), param => this.IsNextPageAvailable);
+                _lastPageCommand = new RelayCommand(param => GoToLastPage(), param => IsNextPageAvailable);
             }
 
             return _lastPageCommand;
@@ -225,7 +225,7 @@ public class PagedResultViewModel<T> : Notifier
         {
             if (_firstPageCommand == null)
             {
-                _firstPageCommand = new RelayCommand(param => this.GoToFirstPage(), param => this.IsPreviousPageAvailable);
+                _firstPageCommand = new RelayCommand(param => GoToFirstPage(), param => IsPreviousPageAvailable);
             }
 
             return _firstPageCommand;

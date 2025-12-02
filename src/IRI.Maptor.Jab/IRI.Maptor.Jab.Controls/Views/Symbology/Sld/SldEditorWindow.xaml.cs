@@ -1,5 +1,5 @@
 using System.Windows;
-using IRI.Maptor.Jab.Common.ViewModels.Symbology.Sld;
+using IRI.Maptor.Jab.Common.ViewModels.Symbology;
 
 namespace IRI.Maptor.Jab.Controls.Views.Symbology.Sld;
 

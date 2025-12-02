@@ -1,201 +1,195 @@
-﻿using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Media;
 
-namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs
+using IRI.Maptor.Jab.Common.Assets.Commands;
+
+namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
+
+public class DialogViewModel : DialogViewModelBase
 {
-    public class DialogViewModel : DialogViewModelBase
+    public Action _requestFirstAction, _requestSecondAction;
+
+    private string _title;
+
+    public string Title
     {
-        public Action _requestFirstAction, _requestSecondAction;
-
-        private string _title;
-
-        public string Title
+        get { return _title; }
+        set
         {
-            get { return _title; }
-            set
-            {
-                _title = value;
-                RaisePropertyChanged();
-            }
+            _title = value;
+            RaisePropertyChanged();
         }
+    }
 
 
-        private string _message;
+    private string _message;
 
-        public string Message
+    public string Message
+    {
+        get { return _message; }
+        set
         {
-            get { return _message; }
-            set
-            {
-                _message = value;
-                RaisePropertyChanged();
-            }
+            _message = value;
+            RaisePropertyChanged();
         }
+    }
 
-        private string _iconPathMarkup;
+    private string _iconPathMarkup;
 
-        public string IconPathMarkup
+    public string IconPathMarkup
+    {
+        get { return _iconPathMarkup; }
+        set
         {
-            get { return _iconPathMarkup; }
-            set
-            {
-                _iconPathMarkup = value;
-                RaisePropertyChanged();
-            }
+            _iconPathMarkup = value;
+            RaisePropertyChanged();
         }
+    }
 
 
-        private bool _isTwoOptionsMode;
+    private bool _isTwoOptionsMode;
 
-        public bool IsTwoOptionsMode
+    public bool IsTwoOptionsMode
+    {
+        get { return _isTwoOptionsMode; }
+        set
         {
-            get { return _isTwoOptionsMode; }
-            set
-            {
-                _isTwoOptionsMode = value;
-                RaisePropertyChanged();
-            }
+            _isTwoOptionsMode = value;
+            RaisePropertyChanged();
         }
+    }
 
 
 
 
 
-        //OK Button
-        private string _firstOptionText;
+    //OK Button
+    private string _firstOptionText;
 
-        public string FirstOptionText
+    public string FirstOptionText
+    {
+        get { return _firstOptionText; }
+        set
         {
-            get { return _firstOptionText; }
-            set
-            {
-                _firstOptionText = value;
-                RaisePropertyChanged();
-            }
+            _firstOptionText = value;
+            RaisePropertyChanged();
         }
+    }
 
 
-        private string _firstOptionPathMarkup;
+    private string _firstOptionPathMarkup;
 
-        public string FirstOptionPathMarkup
+    public string FirstOptionPathMarkup
+    {
+        get { return _firstOptionPathMarkup; }
+        set
         {
-            get { return _firstOptionPathMarkup; }
-            set
-            {
-                _firstOptionPathMarkup = value;
-                RaisePropertyChanged();
-            }
+            _firstOptionPathMarkup = value;
+            RaisePropertyChanged();
         }
+    }
 
-        private Brush _firstOptionColor;
+    private Brush _firstOptionColor;
 
-        public Brush FirstOptionColor
+    public Brush FirstOptionColor
+    {
+        get { return _firstOptionColor; }
+        set
         {
-            get { return _firstOptionColor; }
-            set
-            {
-                _firstOptionColor = value;
-                RaisePropertyChanged();
-            }
+            _firstOptionColor = value;
+            RaisePropertyChanged();
         }
+    }
 
-        private RelayCommand _firstOptionCommand;
+    private RelayCommand _firstOptionCommand;
 
-        public RelayCommand FirstOptionCommand
+    public RelayCommand FirstOptionCommand
+    {
+        get
         {
-            get
+            if (_firstOptionCommand == null)
             {
-                if (_firstOptionCommand == null)
+                _firstOptionCommand = new RelayCommand(param =>
                 {
-                    _firstOptionCommand = new RelayCommand(param =>
-                    {
-                        _requestFirstAction?.Invoke();
+                    _requestFirstAction?.Invoke();
 
-                        this.DialogResult = true;
+                    this.DialogResult = true;
 
-                        RequestClose?.Invoke();
-                    });
-                }
-
-                return _firstOptionCommand;
+                    RequestClose?.Invoke();
+                });
             }
+
+            return _firstOptionCommand;
         }
+    }
 
 
-        //Cancel Button
-        private string _secondOptionText;
+    //Cancel Button
+    private string _secondOptionText;
 
-        public string SecondOptionText
+    public string SecondOptionText
+    {
+        get { return _secondOptionText; }
+        set
         {
-            get { return _secondOptionText; }
-            set
-            {
-                _secondOptionText = value;
-                RaisePropertyChanged();
-            }
+            _secondOptionText = value;
+            RaisePropertyChanged();
         }
+    }
 
-        private string _secondOptionPathMarkup;
+    private string _secondOptionPathMarkup;
 
-        public string SecondOptionPathMarkup
+    public string SecondOptionPathMarkup
+    {
+        get { return _secondOptionPathMarkup; }
+        set
         {
-            get { return _secondOptionPathMarkup; }
-            set
-            {
-                _secondOptionPathMarkup = value;
-                RaisePropertyChanged();
-            }
+            _secondOptionPathMarkup = value;
+            RaisePropertyChanged();
         }
+    }
 
-        private Brush _secondOptionColor;
+    private Brush _secondOptionColor;
 
-        public Brush SecondOptionColor
+    public Brush SecondOptionColor
+    {
+        get { return _secondOptionColor; }
+        set
         {
-            get { return _secondOptionColor; }
-            set
-            {
-                _secondOptionColor = value;
-                RaisePropertyChanged();
-            }
+            _secondOptionColor = value;
+            RaisePropertyChanged();
         }
+    }
 
-        private RelayCommand _secondOptionCommand;
+    private RelayCommand _secondOptionCommand;
 
-        public RelayCommand SecondOptionCommand
+    public RelayCommand SecondOptionCommand
+    {
+        get
         {
-            get
+            if (_secondOptionCommand == null)
             {
-                if (_secondOptionCommand == null)
+                _secondOptionCommand = new RelayCommand(param =>
                 {
-                    _secondOptionCommand = new RelayCommand(param =>
-                    {
-                        _requestSecondAction?.Invoke();
-                        
-                        DialogResult = false;
+                    _requestSecondAction?.Invoke();
+                    
+                    DialogResult = false;
 
-                        RequestClose?.Invoke();
-                    });
-                }
-
-                return _secondOptionCommand;
+                    RequestClose?.Invoke();
+                });
             }
-        }
 
-        public DialogViewModel()
-        {
-            IsTwoOptionsMode = true;
+            return _secondOptionCommand;
         }
+    }
 
-        public DialogViewModel(bool isTwoOptionsMode = true)
-        {
-            IsTwoOptionsMode = isTwoOptionsMode; 
-        }
+    public DialogViewModel()
+    {
+        IsTwoOptionsMode = true;
+    }
+
+    public DialogViewModel(bool isTwoOptionsMode = true)
+    {
+        IsTwoOptionsMode = isTwoOptionsMode; 
     }
 }

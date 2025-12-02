@@ -3,7 +3,7 @@ using IRI.Maptor.Jab.Common.Models.Security;
 using System;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Jab.Common.ViewModels;
+namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 
 public class ChangePasswordDialogViewModel : Notifier
 {

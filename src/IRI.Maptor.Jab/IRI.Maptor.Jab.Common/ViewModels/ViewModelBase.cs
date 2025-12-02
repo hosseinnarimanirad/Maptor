@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Windows;
 using System.Security.Principal;
 
 using IRI.Maptor.Jab.Common.Abstractions;
-using IRI.Maptor.Jab.Common.Localization;
-
-//using static IRI.Maptor.Jab.Common.Localization.LocalizationResourceKeys;
-
+ 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
-//TO DO: consider replacing Action methods with "IDialogService" 
 public class ViewModelBase : Notifier
 {
     public IDialogService DialogService { get; set; }

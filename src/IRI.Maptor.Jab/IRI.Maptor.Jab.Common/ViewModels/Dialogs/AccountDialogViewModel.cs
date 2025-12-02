@@ -8,7 +8,7 @@ using IRI.Maptor.Sta.Spatial.Services.Google;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Events;
 
-namespace IRI.Maptor.Jab.Common.ViewModels;
+namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 
 public class AccountDialogViewModel : DialogViewModelBase
 {

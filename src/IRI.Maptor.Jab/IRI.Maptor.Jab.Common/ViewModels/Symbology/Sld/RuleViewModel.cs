@@ -1,13 +1,13 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Assets.Commands;
+using System.Collections.ObjectModel;
+
 using IRI.Maptor.Sta.Ogc;
 using IRI.Maptor.Sta.Ogc.SLD;
+using IRI.Maptor.Jab.Common.Assets.Commands; 
 
-namespace IRI.Maptor.Jab.Common.ViewModels.Symbology.Sld;
+namespace IRI.Maptor.Jab.Common.ViewModels.Symbology;
 
 public class RuleViewModel : Notifier
 {

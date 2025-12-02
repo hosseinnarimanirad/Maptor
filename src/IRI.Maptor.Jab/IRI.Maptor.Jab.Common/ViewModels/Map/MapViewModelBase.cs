@@ -41,6 +41,7 @@ using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Sta.Ogc.WMS;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
+using IRI.Maptor.Jab.Common.ViewModels.Map;
 
 
 namespace IRI.Maptor.Jab.Common.ViewModels;

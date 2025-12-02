@@ -5,7 +5,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
-namespace IRI.Maptor.Jab.Common.ViewModels;
+namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 
 public class MapInfoViewModel : Notifier
 {

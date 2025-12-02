@@ -1,6 +1,7 @@
 ﻿using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.ViewModels;
+using IRI.Maptor.Jab.Common.ViewModels.Symbology;
 using System;
 using System.Collections.Generic;
 using System.Linq;

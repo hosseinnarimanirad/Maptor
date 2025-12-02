@@ -4,11 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using System.Xml.Serialization;
-using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Ogc.SLD;
 
-namespace IRI.Maptor.Jab.Common.ViewModels.Symbology.Sld;
+namespace IRI.Maptor.Jab.Common.ViewModels.Symbology;
 
 public class SldEditorViewModel : Notifier
 {
@@ -108,7 +107,7 @@ public class SldEditorViewModel : Notifier
         {
             var index = Rules.IndexOf(SelectedRule);
             Rules.Remove(SelectedRule);
-            
+
             if (Rules.Count > 0)
             {
                 SelectedRule = Rules[Math.Min(index, Rules.Count - 1)];
@@ -226,7 +225,7 @@ public class SldEditorViewModel : Notifier
         {
             var sld = ToStyledLayerDescriptor();
             var serializer = new XmlSerializer(typeof(StyledLayerDescriptor));
-            
+
             using (var stream = File.Create(filePath))
             {
                 serializer.Serialize(stream, sld);
