@@ -40,39 +40,23 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     }
 
     private List<Geometry<T>>? _geometries;
-
     public List<Geometry<T>>? Geometries
     {
         get { return _geometries; }
         set
         {
             if (this.Points != null && value != null)
-            {
                 throw new NotImplementedException();
-            }
 
             this._geometries = value;
         }
     }
 
-    public int NumberOfPoints { get { return Points?.Count ?? 0; } }
+    public int NumberOfPoints => Points?.Count ?? 0;
 
-    public int NumberOfGeometries { get { return Geometries?.Count ?? 0; } }
+    public int NumberOfGeometries => Geometries?.Count ?? 0;
 
-    public int TotalNumberOfPoints
-    {
-        get
-        {
-            if (this.IsLeafGeometry())
-            {
-                return this.NumberOfPoints;
-            }
-            else
-            {
-                return Geometries?.Sum(g => g.TotalNumberOfPoints) ?? 0;
-            }
-        }
-    }
+    public int TotalNumberOfPoints => IsLeafGeometry() ? NumberOfPoints : Geometries?.Sum(g => g.TotalNumberOfPoints) ?? 0;
 
     public int Srid { get; set; }
 
@@ -84,20 +68,6 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     public bool HasM()
     {
         return typeof(IHasM).IsAssignableFrom(typeof(T));
-    }
-
-    public CoordinateDimension GetDimension()
-    {
-        bool hasZ = this.HasZ();
-        bool hasM = this.HasM();
-
-        if (hasZ && hasM)
-            return CoordinateDimension.ZM;
-        if (hasZ)
-            return CoordinateDimension.Z;
-        if (hasM)
-            return CoordinateDimension.M;
-        return CoordinateDimension.TwoD;
     }
 
 
@@ -172,6 +142,33 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
 
     #region Simple Methods
+
+    public CoordinateDimension GetDimension()
+    {
+        bool hasZ = this.HasZ();
+        bool hasM = this.HasM();
+
+        if (hasZ && hasM)
+            return CoordinateDimension.ZM;
+        if (hasZ)
+            return CoordinateDimension.Z;
+        if (hasM)
+            return CoordinateDimension.M;
+        return CoordinateDimension.TwoD;
+    }
+
+    public List<Point> GetPoints()
+    {
+        if (Points is null)
+            return null;
+
+        if (this.Points is List<Point> points)
+        {
+            return points;
+        }
+        else
+            return this.Points.Select(p => new Point(p.X, p.Y)).ToList();
+    }
 
     public override string ToString()
     {

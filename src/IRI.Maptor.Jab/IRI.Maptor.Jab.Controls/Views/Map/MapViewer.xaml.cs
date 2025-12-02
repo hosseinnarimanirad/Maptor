@@ -4725,7 +4725,7 @@ public partial class MapViewer : NotifiableUserControl
         CurrentEditingLayer.RequestShowGeometryDetails = (editableFeatureLayer) =>
         {
 
-            this._presenter.GeometryDetails = new GeometryDetailsViewModel(editableFeatureLayer, this._presenter.DialogService);
+            this._presenter.CurrentGeometryDetails = new GeometryDetailsViewModel(editableFeatureLayer, this._presenter.DialogService);
 
             //this.DataContext = ViewModel;
 
@@ -4734,7 +4734,7 @@ public partial class MapViewer : NotifiableUserControl
                 Owner = Window.GetWindow(this)
             };
 
-            dialog.DataContext = this._presenter.GeometryDetails;
+            dialog.DataContext = this._presenter.CurrentGeometryDetails;
 
             dialog.Show();
         };

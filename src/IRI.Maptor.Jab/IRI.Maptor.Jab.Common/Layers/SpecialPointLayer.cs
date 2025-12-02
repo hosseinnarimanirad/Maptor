@@ -29,7 +29,7 @@ public class SpecialPointLayer : BaseLayer
         get => (Items.Count < 1) ? BoundingBox.NaN : BoundingBox.CalculateBoundingBox(Items.Select(i => new Point(i.X, i.Y)));
         protected set => throw new NotImplementedException();
     }
-     
+
     private bool _alwaysTop;
 
     public bool AlwaysTop
@@ -41,10 +41,10 @@ public class SpecialPointLayer : BaseLayer
             RaisePropertyChanged();
         }
     }
-     
+
     private LayerType _type;
     public override LayerType Type => _type;
-     
+
     public SpecialPointLayer(string name, Locateable item, double opacity = 1, ScaleInterval? visibleRange = null, LayerType type = LayerType.Complex)
         : this(name, new List<Locateable>() { item }, opacity, visibleRange, type)
     {
@@ -162,28 +162,41 @@ public class SpecialPointLayer : BaseLayer
             Items[i].IsSelected = Items[i].Element == element;
         }
 
-        this.RequestSelectedLocatableChanged?.Invoke(FindSelectedLocatable());
+        this.RequestSelectedLocatableChanged?.Invoke(FindSelectedLocatable(), FindSelectedLocatableIndex());
     }
 
     public void SelectLocatable(int index)
     {
+        bool change = false;
+
         for (int i = 0; i < Items.Count; i++)
         {
-            Items[i].IsSelected = index == i;
+            var newValue = index == i;
+
+            if (newValue != Items[i].IsSelected)
+            {
+                Items[i].IsSelected = newValue;
+                change = true;
+            }
+
+            //Items[i].IsSelected = index == i;
         }
 
-        this.RequestSelectedLocatableChanged?.Invoke(FindSelectedLocatable());
+        if (change)
+            this.RequestSelectedLocatableChanged?.Invoke(FindSelectedLocatable(), FindSelectedLocatableIndex());
     }
 
-    public Locateable FindSelectedLocatable()
+    public Locateable? FindSelectedLocatable()
     {
-        for (int i = 0; i < Items.Count; i++)
-        {
-            if (Items[i].IsSelected)
-                return Items[i];
-        }
+        return this.Items.FirstOrDefault(l => l.IsSelected);
 
-        return null;
+        //for (int i = 0; i < Items.Count; i++)
+        //{
+        //    if (Items[i].IsSelected)
+        //        return Items[i];
+        //}
+
+        //return null;
     }
 
     public int FindSelectedLocatableIndex()
@@ -229,5 +242,5 @@ public class SpecialPointLayer : BaseLayer
         SelectLocatable(next);
     }
 
-    public Action<Locateable> RequestSelectedLocatableChanged;
+    public Action<Locateable?, int> RequestSelectedLocatableChanged;
 }

@@ -242,8 +242,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding X, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
-                                     FlowDirection="LeftToRight" Margin="1"
-                                     IsEnabled="{Binding DataContext.IsEditable, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>
+                                     FlowDirection="LeftToRight" Margin="1"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -251,8 +250,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding Y, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
-                                     FlowDirection="LeftToRight" Margin="1"
-                                     IsEnabled="{Binding DataContext.IsEditable, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>
+                                     FlowDirection="LeftToRight" Margin="1"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -260,8 +258,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding Z, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
-                                     FlowDirection="LeftToRight" Margin="1"
-                                     IsEnabled="{Binding DataContext.IsEditable, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>
+                                     FlowDirection="LeftToRight" Margin="1"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

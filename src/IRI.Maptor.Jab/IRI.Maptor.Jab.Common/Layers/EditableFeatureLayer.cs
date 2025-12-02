@@ -109,12 +109,14 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public event EventHandler? OnRequestDeleteGeometry;
 
-    public Action<Locateable>? RequestSelectedLocatableChanged;
+    public Action<Locateable?, int>? RequestSelectedLocatableChanged;
 
     // zoom
     public Action<Point>? RequestZoomToPoint;
 
     public Action<Geometry>? RequestZoomToGeometry;
+
+    public event Action? LocateablesReconstructed;
 
     #endregion
 
@@ -191,7 +193,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         this._primaryVerticesLayer = new SpecialPointLayer("#vert", new List<Locateable>(), 1, ScaleInterval.All, layerType) { AlwaysTop = true };
 
-        this._primaryVerticesLayer.RequestSelectedLocatableChanged = (l) => this.RequestSelectedLocatableChanged?.Invoke(l);
+        this._primaryVerticesLayer.RequestSelectedLocatableChanged = (l, i) => this.RequestSelectedLocatableChanged?.Invoke(l, i);
 
         this._midVerticesLayer = new SpecialPointLayer("#int. vert", new List<Locateable>(), .7, ScaleInterval.All, layerType) { AlwaysTop = true };
 
@@ -295,6 +297,9 @@ public class EditableFeatureLayer : SymbolizableLayer
         }
 
         UpdateEdgeLables();
+
+        // Notify that Locateables have been reconstructed
+        LocateablesReconstructed?.Invoke();
     }
 
 
@@ -374,7 +379,7 @@ public class EditableFeatureLayer : SymbolizableLayer
             primaryCollection.Values = new List<Locateable>();
 
             midCollection.Values = new List<Locateable>();
-             
+
             for (int i = 0; i < geometry.Points.Count; i++)
             {
                 var locateable = ToPrimaryLocateable(geometry.Points[i]);
@@ -1188,6 +1193,95 @@ public class EditableFeatureLayer : SymbolizableLayer
     public void SelectPoint(int index)
     {
         this._primaryVerticesLayer.SelectLocatable(index);
+    }
+
+    /// <summary>
+    /// Gets the Locateable objects for a specific part index
+    /// </summary>
+    public List<Locateable> GetLocateablesForPart(int partIndex)
+    {
+        if (_vertices == null)
+            return new List<Locateable>();
+
+        // Single-part geometry
+        if (_vertices.Values != null)
+        {
+            return partIndex == 0 ? _vertices.Values.ToList() : new List<Locateable>();
+        }
+
+        // Multi-part geometry
+        if (_vertices.Collections != null && partIndex >= 0 && partIndex < _vertices.Collections.Count)
+        {
+            return _vertices.Collections[partIndex].GetFlattenCollection();
+        }
+
+        return new List<Locateable>();
+    }
+
+    /// <summary>
+    /// Inserts a vertex at the specified global index
+    /// </summary>
+    /// <param name="webMercatorPoint">The point to insert (in Web Mercator coordinates)</param>
+    /// <param name="globalIndex">The global index across all parts where the point should be inserted</param>
+    /// <returns>The newly created Locateable instance, or null if insertion failed</returns>
+    public Locateable? InsertVertexAt(Point webMercatorPoint, int globalIndex)
+    {
+        if (_webMercatorGeometry == null)
+            return null;
+
+        // Single-part geometry
+        if (_webMercatorGeometry.Points != null)
+        {
+            if (globalIndex < 0 || globalIndex > _webMercatorGeometry.Points.Count)
+                return null;
+
+            _webMercatorGeometry.InsertPoint(webMercatorPoint, globalIndex);
+            ReconstructLocateables();
+
+            // Find the newly inserted Locateable after reconstruction
+            var locateables = GetLocateablesForPart(0);
+            if (globalIndex >= 0 && globalIndex < locateables.Count)
+            {
+                return locateables[globalIndex];
+            }
+            return null;
+        }
+
+        // Multi-part geometry
+        if (_webMercatorGeometry.Geometries != null)
+        {
+            // Find which part contains the global index
+            int currentGlobalIndex = 0;
+            for (int partIndex = 0; partIndex < _webMercatorGeometry.Geometries.Count; partIndex++)
+            {
+                var part = _webMercatorGeometry.Geometries[partIndex];
+                int partPointCount = part.Points?.Count ?? 0;
+
+                if (globalIndex >= currentGlobalIndex && globalIndex <= currentGlobalIndex + partPointCount)
+                {
+                    // Found the part - calculate local index
+                    int localIndex = globalIndex - currentGlobalIndex;
+
+                    if (part.Points != null && localIndex >= 0 && localIndex <= part.Points.Count)
+                    {
+                        part.InsertPoint(webMercatorPoint, localIndex);
+                        ReconstructLocateables();
+
+                        // Find the newly inserted Locateable after reconstruction
+                        var locateables = GetLocateablesForPart(partIndex);
+                        if (localIndex >= 0 && localIndex < locateables.Count)
+                        {
+                            return locateables[localIndex];
+                        }
+                        return null;
+                    }
+                }
+
+                currentGlobalIndex += partPointCount;
+            }
+        }
+
+        return null;
     }
 
     #endregion

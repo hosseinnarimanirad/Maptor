@@ -7,7 +7,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
-public class PointEditorViewModel : Notifier
+public class PointEditorViewModel : GeometryEditorViewModelBase
 {
     private NotifiablePoint _point;
     public NotifiablePoint Point

@@ -18,6 +18,10 @@ public interface IGeometry
 
     int Srid { get; set; }
 
+    List<Point> GetPoints();
+
+    bool IsLeafGeometry();
+
     bool HasZ();
 
     bool HasM();

@@ -1,15 +1,14 @@
-﻿using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using System;
+﻿using System;
+using System.Linq;
+using System.Windows.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+
+using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Jab.Common.Assets.Commands;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
@@ -21,7 +20,20 @@ public abstract class GeometryEditorViewModelBase : Notifier
         get { return _featureLayer; }
         set
         {
+            // Unsubscribe from old feature layer's event
+            if (_featureLayer != null)
+            {
+                _featureLayer.LocateablesReconstructed -= FeatureLayer_LocateablesReconstructed;
+            }
+
             _featureLayer = value;
+
+            // Subscribe to new feature layer's event
+            if (_featureLayer != null)
+            {
+                _featureLayer.LocateablesReconstructed += FeatureLayer_LocateablesReconstructed;
+            }
+
             RaisePropertyChanged();
         }
     }
@@ -109,6 +121,10 @@ public abstract class GeometryEditorViewModelBase : Notifier
                 return;
 
             _currentPartIndex = value;
+
+            // Refresh Points collection from the current part
+            RefreshPointsFromCurrentPart();
+
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(CurrentPart));
             RaisePropertyChanged(nameof(CurrentPartNumber));
@@ -214,6 +230,8 @@ public abstract class GeometryEditorViewModelBase : Notifier
     }
 
     private Locateable? _selectedPoint;
+    private bool _isUpdatingFromChangeCurrentEditingPoint = false;
+    
     public Locateable? SelectedPoint
     {
         get
@@ -222,7 +240,22 @@ public abstract class GeometryEditorViewModelBase : Notifier
         }
         set
         {
+            if (_selectedPoint == value)
+                return;
+
+            // Unsubscribe from old point's PropertyChanged
+            if (_selectedPoint != null)
+            {
+                _selectedPoint.PropertyChanged -= SelectedPoint_PropertyChanged;
+            }
+
             _selectedPoint = value;
+
+            // Subscribe to new point's PropertyChanged
+            if (_selectedPoint != null)
+            {
+                _selectedPoint.PropertyChanged += SelectedPoint_PropertyChanged;
+            }
 
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(CurrentPointIndex));
@@ -232,7 +265,32 @@ public abstract class GeometryEditorViewModelBase : Notifier
             // Update command states
             CommandManager.InvalidateRequerySuggested();
 
-            FeatureLayer.SelectPoint(CurrentPointIndex);
+            // Calculate global index from current part index and local point index
+            if (_selectedPoint != null && CurrentPointIndex >= 0)
+            {
+                int globalIndex = GetGlobalIndex(CurrentPartIndex, CurrentPointIndex);
+                FeatureLayer.SelectPoint(globalIndex);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Event fired when SelectedPoint coordinates change (from DataGrid editing)
+    /// </summary>
+    public event Action<Point>? RequestUpdateCurrentEditingPoint;
+
+    private void SelectedPoint_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (_isUpdatingFromChangeCurrentEditingPoint)
+            return; // Prevent infinite loop when updating from ChangeCurrentEditingPoint
+
+        if (e.PropertyName == nameof(Locateable.X) || e.PropertyName == nameof(Locateable.Y))
+        {
+            if (_selectedPoint != null)
+            {
+                // Fire event with Web Mercator coordinates (SelectedPoint already uses Web Mercator)
+                RequestUpdateCurrentEditingPoint?.Invoke(new Point(_selectedPoint.X, _selectedPoint.Y));
+            }
         }
     }
 
@@ -466,7 +524,247 @@ public abstract class GeometryEditorViewModelBase : Notifier
         UpdateValidationState();
     }
 
+    internal void ChangeCurrentEditingPoint(Point currentWebMercatorEditingPoint)
+    {
+        if (SelectedPoint is null)
+            return;
+
+        // Set flag to prevent infinite loop when updating SelectedPoint coordinates
+        _isUpdatingFromChangeCurrentEditingPoint = true;
+        try
+        {
+            SelectedPoint.X = currentWebMercatorEditingPoint.X;
+            SelectedPoint.Y = currentWebMercatorEditingPoint.Y;
+        }
+        finally
+        {
+            _isUpdatingFromChangeCurrentEditingPoint = false;
+        }
+    }
+
+    // in the case the selected point is changed outside
+    // and even its coordinates may have been changed
+    // index is the index of the point across all parts of a geometry
+    // so it does not depend on the part nor on the 
+    internal void UpdateSelectedPoint(Locateable l, int index)
+    {
+        if (l == null)
+            return;
+
+        if (Parts.IsNullOrEmpty())
+        {
+            // Single-part geometry: index maps directly to Points collection
+            if (index >= 0 && index < Points.Count)
+            {
+                // Navigate to correct page
+                int pageIndex = index / MaxPointsPerPage;
+                if (pageIndex != CurrentPageIndex)
+                {
+                    CurrentPageIndex = pageIndex;
+                }
+
+                // Update the selected point and its coordinates
+                this.SelectedPoint = Points[index];
+                if (this.SelectedPoint != null)
+                {
+                    this.SelectedPoint.X = l.X;
+                    this.SelectedPoint.Y = l.Y;
+                }
+            }
+        }
+        else
+        {
+            // Multi-part geometry: find which part contains this global index
+            var (partIndex, localIndex) = GetPartAndLocalIndex(index);
+
+            if (partIndex >= 0 && localIndex >= 0)
+            {
+                // Switch to the correct part if needed
+                if (partIndex != CurrentPartIndex)
+                {
+                    CurrentPartIndex = partIndex;
+                }
+
+                // Ensure Points collection is up to date
+                if (localIndex >= 0 && localIndex < Points.Count)
+                {
+                    // Navigate to correct page
+                    int pageIndex = localIndex / MaxPointsPerPage;
+                    if (pageIndex != CurrentPageIndex)
+                    {
+                        CurrentPageIndex = pageIndex;
+                    }
+
+                    // Update the selected point and its coordinates
+                    this.SelectedPoint = Points[localIndex];
+                    if (this.SelectedPoint != null)
+                    {
+                        this.SelectedPoint.X = l.X;
+                        this.SelectedPoint.Y = l.Y;
+                    }
+                }
+            }
+        }
+    }
+
     public event Action<ObservableCollection<Locateable>>? PointsChanged;
+
+    /// <summary>
+    /// Refreshes the Points collection from the current part's Locateable objects
+    /// Uses the same Locateable instances from EditableFeatureLayer so changes on the map update the DataGrid
+    /// </summary>
+    /// <param name="preservePageAndSelection">If true, preserves the current page index and selection when possible</param>
+    private void RefreshPointsFromCurrentPart(bool preservePageAndSelection = false)
+    {
+        if (FeatureLayer == null)
+            return;
+
+        var geometry = FeatureLayer.GetFinalGeometry();
+        if (geometry == null)
+            return;
+
+        // Preserve current selection and page before refreshing
+        Locateable? previousSelectedPoint = SelectedPoint;
+        int? previousGlobalIndex = null;
+        int previousPageIndex = CurrentPageIndex;
+        
+        if (previousSelectedPoint != null && Points != null)
+        {
+            int localIndex = Points.IndexOf(previousSelectedPoint);
+            if (localIndex >= 0)
+            {
+                previousGlobalIndex = GetGlobalIndex(CurrentPartIndex, localIndex);
+            }
+        }
+
+        // Unsubscribe from old points
+        if (_points != null)
+        {
+            foreach (var point in _points)
+            {
+                point.PropertyChanged -= Point_PropertyChanged;
+            }
+        }
+
+        // Get Locateable objects from EditableFeatureLayer for the current part
+        // These are the same instances used on the map, so changes will sync automatically
+        List<Locateable> newPoints = FeatureLayer.GetLocateablesForPart(CurrentPartIndex);
+
+        // Subscribe to new points' PropertyChanged events
+        foreach (var point in newPoints)
+        {
+            point.PropertyChanged += Point_PropertyChanged;
+        }
+
+        // Update Points collection (this will trigger CollectionChanged)
+        Points = new ObservableCollection<Locateable>(newPoints);
+
+        if (preservePageAndSelection && previousGlobalIndex.HasValue)
+        {
+            // Restore selection and page if possible
+            var (partIndex, localIndex) = GetPartAndLocalIndex(previousGlobalIndex.Value);
+            if (partIndex == CurrentPartIndex && localIndex >= 0 && localIndex < newPoints.Count)
+            {
+                SelectedPoint = newPoints[localIndex];
+                // Adjust page to show the selected point
+                int pageOfSelectedPoint = localIndex / MaxPointsPerPage;
+                CurrentPageIndex = pageOfSelectedPoint;
+            }
+            else
+            {
+                SelectedPoint = null;
+                // Try to preserve page index if valid
+                if (previousPageIndex >= 0 && previousPageIndex < TotalPages)
+                {
+                    CurrentPageIndex = previousPageIndex;
+                }
+                else
+                {
+                    CurrentPageIndex = 0;
+                }
+            }
+        }
+        else
+        {
+            // Reset page to first page when switching parts
+            CurrentPageIndex = 0;
+            SelectedPoint = null;
+        }
+    }
+
+    /// <summary>
+    /// Handles the LocateablesReconstructed event from FeatureLayer
+    /// Refreshes the Points collection when Locateables are reconstructed (e.g., after add/remove operations)
+    /// </summary>
+    private void FeatureLayer_LocateablesReconstructed()
+    {
+        // Preserve page and selection when refreshing due to reconstruction
+        RefreshPointsFromCurrentPart(preservePageAndSelection: true);
+    }
+
+    /// <summary>
+    /// Calculates the global index from a part index and local index within that part
+    /// </summary>
+    private int GetGlobalIndex(int partIndex, int localIndex)
+    {
+        if (Parts.IsNullOrEmpty())
+        {
+            // Single-part geometry: local index is the global index
+            return localIndex;
+        }
+
+        if (partIndex < 0 || partIndex >= Parts.Count)
+            return -1;
+
+        // Sum points from all parts before the target part
+        int globalIndex = 0;
+        for (int i = 0; i < partIndex; i++)
+        {
+            if (Parts[i] is IGeometry part && part.NumberOfPoints > 0)
+            {
+                globalIndex += part.NumberOfPoints;
+            }
+        }
+
+        // Add the local index within the target part
+        return globalIndex + localIndex;
+    }
+
+    /// <summary>
+    /// Finds which part contains the global index and returns the part index and local index within that part
+    /// </summary>
+    private (int partIndex, int localIndex) GetPartAndLocalIndex(int globalIndex)
+    {
+        if (globalIndex < 0)
+            return (-1, -1);
+
+        if (Parts.IsNullOrEmpty())
+        {
+            // Single-part geometry: global index is the local index, part index is 0
+            return (0, globalIndex);
+        }
+
+        int accumulatedPoints = 0;
+        for (int i = 0; i < Parts.Count; i++)
+        {
+            if (Parts[i] is IGeometry part && part.NumberOfPoints > 0)
+            {
+                int partPointCount = part.NumberOfPoints;
+
+                if (globalIndex < accumulatedPoints + partPointCount)
+                {
+                    // Found the part containing this global index
+                    int localIndex = globalIndex - accumulatedPoints;
+                    return (i, localIndex);
+                }
+
+                accumulatedPoints += partPointCount;
+            }
+        }
+
+        // Global index is out of range
+        return (-1, -1);
+    }
 
     #endregion
 
@@ -476,39 +774,53 @@ public abstract class GeometryEditorViewModelBase : Notifier
     public RelayCommand AddPointCommand =>
         _addPointCommand ??= new RelayCommand(param =>
         {
-            //// If in multi-line mode, delegate to CurrentPart
-            //if (Parts != null && Parts.Count > 0 && CurrentPart != null)
-            //{
-            //    CurrentPart.AddPointCommand.Execute(param);
-            //    return;
-            //}
+            if (FeatureLayer == null)
+                return;
 
-            //var newPoint = new Locateable { X = 0, Y = 0 };
-            //Points.Add(newPoint);
+            // AddVertex adds to the last part of the geometry
+            // It returns the Locateable instance and adds it to _primaryVerticesLayer.Items
+            // Since it doesn't call ReconstructLocateables(), we can add it directly to Points
+            // But we need to ensure we're viewing the correct part
+            var geometry = FeatureLayer.GetFinalGeometry();
+            if (geometry == null)
+                return;
 
-            //// Move to last page if new point is added
-            //if (TotalPages > 0)
-            //{
-            //    CurrentPageIndex = TotalPages - 1;
-            //}
-
-            //// Select the newly added point
-            //SelectedPoint = newPoint;
+            // Determine which part the vertex will be added to
+            int targetPartIndex = 0;
+            if (geometry.Geometries != null && geometry.Geometries.Count > 0)
+            {
+                targetPartIndex = geometry.Geometries.Count - 1; // Last part
+            }
 
             var locatable = FeatureLayer.AddVertex(new Sta.Common.Primitives.Point(0, 0));
 
             if (locatable is null)
                 return;
 
-            Points.Add(locatable);
+            // If the vertex was added to a different part than we're viewing, switch to that part
+            if (targetPartIndex != CurrentPartIndex)
+            {
+                CurrentPartIndex = targetPartIndex;
+                // RefreshPointsFromCurrentPart() will be called by CurrentPartIndex setter
+                // Find and select the newly added point
+                var refreshedPoints = FeatureLayer.GetLocateablesForPart(targetPartIndex);
+                if (refreshedPoints.Count > 0)
+                {
+                    SelectedPoint = refreshedPoints[refreshedPoints.Count - 1]; // Last point
+                }
+            }
+            else
+            {
+                // Same part - add to Points collection directly
+                Points.Add(locatable);
+                SelectedPoint = locatable;
+            }
 
             // Move to last page if new point is added
             if (TotalPages > 0)
             {
                 CurrentPageIndex = TotalPages - 1;
             }
-
-            SelectedPoint = locatable;
 
         }, param => IsLastPage && !HasInvalidPoints);
 
@@ -517,56 +829,62 @@ public abstract class GeometryEditorViewModelBase : Notifier
     public RelayCommand DeletePointCommand =>
         _deletePointCommand ??= new RelayCommand(param =>
         {
-            //// If in multi-line mode, delegate to CurrentPart
-            //if (Parts != null && Parts.Count > 0 && CurrentPart != null)
-            //{
-            //    CurrentPart.DeletePointCommand.Execute(param);
-            //    return;
-            //}
-
-            if (param is Locateable point)
+            if (param is Locateable point && FeatureLayer != null)
             {
                 int indexToDelete = Points.IndexOf(point);
                 if (indexToDelete < 0)
                     return;
 
-                int pageOfDeletedPoint = indexToDelete / MaxPointsPerPage;
-                bool wasOnCurrentPage = pageOfDeletedPoint == CurrentPageIndex;
+                // Calculate global index to select the point on the map before deleting
+                int globalIndex = GetGlobalIndex(CurrentPartIndex, indexToDelete);
+                
+                // Select the point on the map so TryDeleteCurrentPoint can find it
+                FeatureLayer.SelectPoint(globalIndex);
 
-                Points.Remove(point);
-
-                // Adjust page if needed
-                if (Points.Count == 0)
-                {
-                    CurrentPageIndex = 0;
-                }
-                else if (wasOnCurrentPage && CurrentPagePoints.Count == 0 && CurrentPageIndex > 0)
-                {
-                    CurrentPageIndex--;
-                }
-                else if (TotalPages > 0 && CurrentPageIndex >= TotalPages)
-                {
-                    CurrentPageIndex = TotalPages - 1;
-                }
-
-                PointsChanged?.Invoke(Points);
-
+                // Delete the point from geometry
+                // This will call ReconstructLocateables() which triggers LocateablesReconstructed event
+                // The event handler will refresh Points collection
                 FeatureLayer.TryDeleteCurrentPoint();
 
-                SelectedPoint = null;
+                // After reconstruction, Points collection is refreshed by event handler
+                // Clear selection or select nearest remaining point
+                if (Points != null && Points.Count > 0)
+                {
+                    // Select the point at the same index, or the previous one if at end
+                    int newIndex = indexToDelete < Points.Count ? indexToDelete : Points.Count - 1;
+                    if (newIndex >= 0)
+                    {
+                        SelectedPoint = Points[newIndex];
+
+                        // Adjust page if needed
+                        int pageOfNewPoint = newIndex / MaxPointsPerPage;
+                        if (pageOfNewPoint != CurrentPageIndex)
+                        {
+                            CurrentPageIndex = pageOfNewPoint;
+                        }
+                    }
+                }
+                else
+                {
+                    SelectedPoint = null;
+                    CurrentPageIndex = 0;
+                }
             }
         });
 
     //private RelayCommand _deleteCurrentPointCommand;
-    //public RelayCommand DeleteCurrentPointCommand =>
-    //    _deleteCurrentPointCommand ??= new RelayCommand(param =>
-    //    {
-    //        if (SelectedPoint != null)
-    //        {
-    //            DeletePointCommand.Execute(SelectedPoint);
-    //            SelectedPoint = null;
-    //        }
-    //    }, param => SelectedPoint != null);
+    private RelayCommand _deleteCurrentPointCommand;
+    public RelayCommand DeleteCurrentPointCommand =>
+        _deleteCurrentPointCommand ??= new RelayCommand(param =>
+        {
+            if (SelectedPoint != null && FeatureLayer != null)
+            {
+                // Delete the selected point
+                // This will call ReconstructLocateables() which triggers LocateablesReconstructed event
+                // The event handler will refresh Points collection
+                DeletePointCommand.Execute(SelectedPoint);
+            }
+        }, param => SelectedPoint != null && FeatureLayer != null);
 
 
     private RelayCommand _goToNextPageCommand;
@@ -684,32 +1002,39 @@ public abstract class GeometryEditorViewModelBase : Notifier
     public RelayCommand InsertPointBeforeSelectedCommand =>
         _insertPointBeforeSelectedCommand ??= new RelayCommand(param =>
         {
-            //// If in multi-line mode, delegate to CurrentPart
-            //if (Parts != null && Parts.Count > 0 && CurrentPart != null)
-            //{
-            //    CurrentPart.InsertPointBeforeSelectedCommand.Execute(param);
-            //    return;
-            //}
-
-            if (SelectedPoint == null || Points == null)
+            if (SelectedPoint == null || Points == null || FeatureLayer == null)
                 return;
 
             int selectedIndex = Points.IndexOf(SelectedPoint);
             if (selectedIndex < 0)
                 return;
 
-            var newPoint = new Locateable { X = 0, Y = 0 };
-            Points.Insert(selectedIndex, newPoint);
+            // Calculate global index from current part and local index
+            int globalIndex = GetGlobalIndex(CurrentPartIndex, selectedIndex);
 
-            // Calculate which page the new point is on
-            int pageOfNewPoint = selectedIndex / MaxPointsPerPage;
-            if (pageOfNewPoint != CurrentPageIndex)
+            // Insert point into geometry at the calculated global index
+            // This will call ReconstructLocateables() which will trigger LocateablesReconstructed event
+            // The event handler will refresh Points collection and preserve selection
+            var newLocateable = FeatureLayer.InsertVertexAt(new Sta.Common.Primitives.Point(0, 0), globalIndex);
+
+            if (newLocateable != null)
             {
-                CurrentPageIndex = pageOfNewPoint;
-            }
+                // After reconstruction, Points collection is refreshed by event handler
+                // Find the newly inserted point and select it
+                var refreshedPoints = FeatureLayer.GetLocateablesForPart(CurrentPartIndex);
+                int newLocalIndex = selectedIndex; // Inserted before selected, so same index
+                if (newLocalIndex >= 0 && newLocalIndex < refreshedPoints.Count)
+                {
+                    SelectedPoint = refreshedPoints[newLocalIndex];
 
-            // Select the newly inserted point
-            SelectedPoint = newPoint;
+                    // Calculate which page the new point is on
+                    int pageOfNewPoint = newLocalIndex / MaxPointsPerPage;
+                    if (pageOfNewPoint != CurrentPageIndex)
+                    {
+                        CurrentPageIndex = pageOfNewPoint;
+                    }
+                }
+            }
 
             PointsChanged?.Invoke(Points);
         }, param => SelectedPoint != null && !HasInvalidPoints);

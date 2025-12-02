@@ -296,15 +296,38 @@ public class GeometryDetailsViewModel : Notifier
 
 
     // Editor properties
-    private object _geometryEditor;
-    public object GeometryEditor
+    private GeometryEditorViewModelBase _geometryEditor;
+    public GeometryEditorViewModelBase GeometryEditor
     {
         get => _geometryEditor;
         set
         {
+            // Unsubscribe from old editor's event
+            if (_geometryEditor != null)
+            {
+                _geometryEditor.RequestUpdateCurrentEditingPoint -= GeometryEditor_RequestUpdateCurrentEditingPoint;
+            }
+
             _geometryEditor = value;
+
+            // Subscribe to new editor's event
+            if (_geometryEditor != null)
+            {
+                _geometryEditor.RequestUpdateCurrentEditingPoint += GeometryEditor_RequestUpdateCurrentEditingPoint;
+            }
+
             RaisePropertyChanged();
         }
+    }
+
+    /// <summary>
+    /// Action to update CurrentEditingPoint in MapViewModelBase when coordinates change in DataGrid
+    /// </summary>
+    public Action<Point>? RequestUpdateCurrentEditingPoint { get; set; }
+
+    private void GeometryEditor_RequestUpdateCurrentEditingPoint(Point webMercatorPoint)
+    {
+        RequestUpdateCurrentEditingPoint?.Invoke(webMercatorPoint);
     }
 
     private IGeometry _originalGeometry;
@@ -736,5 +759,9 @@ public class GeometryDetailsViewModel : Notifier
         StringRepresentation = string.Empty;
     }
 
+    internal void ChangeCurrentEditingPoint(Point currentWebMercatorEditingPoint)
+    {
+        GeometryEditor.ChangeCurrentEditingPoint(currentWebMercatorEditingPoint);
+    }
 }
 

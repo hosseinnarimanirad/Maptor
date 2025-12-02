@@ -9,7 +9,7 @@ using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
-public class PolygonEditorViewModel : Notifier
+public class PolygonEditorViewModel : GeometryEditorViewModelBase
 {
     public string LExteriorRing => LocalizationManager.Instance["GeometryDetailsView_ExteriorRing"] ?? "Exterior Ring";
     public string LInteriorRings => LocalizationManager.Instance["GeometryDetailsView_InteriorRings"] ?? "Interior Rings";

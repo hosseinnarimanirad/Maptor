@@ -16,23 +16,17 @@ public class LineStringEditorViewModel : GeometryEditorViewModelBase
     {
         this.FeatureLayer = editableFeatureLayer;
 
-        //Points = points ?? new ObservableCollection<NotifiablePoint>();
-        //Points.CollectionChanged += Points_CollectionChanged;
-
-        this.Points = new ObservableCollection<Locateable>(FeatureLayer.GetFinalGeometry().GetLastPart().Select(p => Locateable.CreateFromWebMercatorPoint(p)));
+        // Initialize CurrentPartIndex to 0 (first part)
+        // This will trigger RefreshPointsFromCurrentPart() which initializes Points collection
+        // Setting it explicitly ensures initialization happens
+        CurrentPartIndex = 0;
 
         this.IsEditable = true;
 
-        foreach (var point in Points)
-        {
-            point.PropertyChanged += Point_PropertyChanged;
-        }
-
+        // Points are already initialized by RefreshPointsFromCurrentPart() called in CurrentPartIndex setter
+        // which also subscribes to PropertyChanged events
+        // UpdateValidationState is called by RefreshPointsFromCurrentPart via UpdatePagingProperties
         UpdateValidationState();
-
-        // Initialize Parts collection for multi-line string support
-        //Parts = new ObservableCollection<LineStringEditorPresenter>();
-        //Parts.CollectionChanged += Parts_CollectionChanged;
     }
 }
 

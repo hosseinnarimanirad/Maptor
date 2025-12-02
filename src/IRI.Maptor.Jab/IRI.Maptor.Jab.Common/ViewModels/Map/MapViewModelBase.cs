@@ -7,7 +7,6 @@ using System.Windows.Input;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-//using System.Windows;
 using System.Windows.Media.Imaging;
 using WpfPoint = System.Windows.Point;
 
@@ -19,29 +18,29 @@ using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Services;
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Sta.Spatial.Helpers;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Spatial.IO.Dxf;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Persistence.RasterDataSources;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 using IRI.Maptor.Ket.GdiPersistence;
 using IRI.Maptor.Ket.KmlFormat;
-using IRI.Maptor.Sta.Spatial.IO.Dxf;
+
+using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Jab.Common.Models.Map;
+using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.TileServices;
+using IRI.Maptor.Jab.Common.Models.Legend;
+using IRI.Maptor.Jab.Common.ViewModels.Map;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Views.MapMarkers;
 using IRI.Maptor.Jab.Common.Models.Spatialable;
-using IRI.Maptor.Jab.Common.Models.Legend;
-using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
-using IRI.Maptor.Jab.Common.Abstractions;
-using IRI.Maptor.Sta.Ogc.WMS;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
-using IRI.Maptor.Jab.Common.ViewModels.Map;
 
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
@@ -137,17 +136,6 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    private GeometryDetailsViewModel _geometryDetails;
-    public GeometryDetailsViewModel GeometryDetails
-    {
-        get { return _geometryDetails; }
-        set
-        {
-            _geometryDetails = value;
-            RaisePropertyChanged();
-        }
-    }
-
 
     private EditableFeatureLayer _currentEditingLayer;
     public EditableFeatureLayer CurrentEditingLayer
@@ -160,9 +148,17 @@ public abstract class MapViewModelBase : ViewModelBase
 
             if (_currentEditingLayer != null)
             {
-                _currentEditingLayer.RequestSelectedLocatableChanged = (l) =>
+                _currentEditingLayer.RequestSelectedLocatableChanged = (l, index) =>
                 {
+                    if (l is null)
+                        return;
+
                     UpdateCurrentEditingPoint(new Point(l.X, l.Y));
+
+                    if (CurrentGeometryDetails is not null)
+                    {
+                        CurrentGeometryDetails.GeometryEditor.UpdateSelectedPoint(l, index);
+                    }
                 };
 
                 _currentEditingLayer.RequestZoomToPoint = (p) =>
@@ -176,6 +172,25 @@ public abstract class MapViewModelBase : ViewModelBase
                 };
             }
 
+        }
+    }
+
+
+    private GeometryDetailsViewModel _currentGeometryDetails;
+    public GeometryDetailsViewModel CurrentGeometryDetails
+    {
+        get { return _currentGeometryDetails; }
+        set
+        {
+            _currentGeometryDetails = value;
+            
+            // Set the action to update CurrentEditingPoint when coordinates change in DataGrid
+            if (_currentGeometryDetails != null)
+            {
+                _currentGeometryDetails.RequestUpdateCurrentEditingPoint = UpdateCurrentEditingPoint;
+            }
+            
+            RaisePropertyChanged();
         }
     }
 
@@ -824,15 +839,6 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public MapViewModelBase()
     {
-        //this.MapProviders = new Dictionary<string, Func<TileType, IMapProvider>>()
-        //{
-        //    {"GOOGLE", tileType => new GoogleMapProvider(tileType) },
-        //    {"BING", tileType => new BingMapProvider(tileType) },
-        //    {"NOKIA", tileType => new NokiaMapProvider(tileType) },
-        //    {"OPENSTREETMAP", tileType => new OsmMapProvider(tileType) },
-        //    {"WAZE", tileType => new WazeMapProvider(tileType) },
-        //};
-
         _drawingItems.CollectionChanged += (sender, e) =>
         {
             RaisePropertyChanged(nameof(CanMoveDrawingItemDown));
@@ -856,6 +862,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
               CurrentEditingLayer.ChangeCurrentEditingPoint(MapPanel.CurrentWebMercatorEditingPoint);
 
+              CurrentGeometryDetails.ChangeCurrentEditingPoint(MapPanel.CurrentWebMercatorEditingPoint);
+
           });
 
         CoordinatePanel = new CoordinatePanelViewModel();
@@ -866,11 +874,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public virtual void Initialize(IDialogService dialogService, Action<Point> requestShowGoToView, Action<ILayer> requestShowSymbologyView)
     {
-        //this.DialogService = new IRI.Maptor.Jab.Controls.Services.Dialog.DefaultDialogService(ownerWindow);
         this.DialogService = dialogService;
 
-        //this.RequestShowGoToView = IRI.Maptor.Jab.Controls.Common.Defaults.DefaultActions.GetDefaultGoToAction(ownerWindow, this);
-        //this.RequestShowSymbologyView = layer => Common.Defaults.DefaultActions.GetDefaultShowSymbologyView(ownerWindow, layer, this);
         this.RequestShowGoToView = requestShowGoToView;
         this.RequestShowSymbologyView = requestShowSymbologyView;
 
@@ -889,7 +894,6 @@ public abstract class MapViewModelBase : ViewModelBase
         this.RegisterMapOptions();
 
         this.IsPanMode = true;
-
         //ownerWindow.DataContext = this;
     }
 
@@ -1788,12 +1792,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
     #endregion
 
-    //private void ChangeLayerZIndex(ILayer layer, int newZIndex)
-    //{
-    //    this.RequestChangeLayerZIndex?.Invoke(layer, newZIndex);
-    //}
-
     //*****************************************General***************************************************************
+
     #region General
 
     public async Task SetIsBusy(bool isBusy)
