@@ -1,7 +1,7 @@
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
-using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
+using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -43,7 +43,7 @@ public partial class LineStringEditorView : UserControl
 
     private static void OnMaxPointsPerPageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is LineStringEditorView view && view.DataContext is LineStringEditorPresenter presenter)
+        if (d is LineStringEditorView view && view.DataContext is LineStringEditorViewModel presenter)
         {
             presenter.MaxPointsPerPage = (int)e.NewValue;
             //// Also update CurrentPart if in multi-line mode
@@ -56,7 +56,7 @@ public partial class LineStringEditorView : UserControl
 
     private static void OnIsEditableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is LineStringEditorView view && view.DataContext is LineStringEditorPresenter presenter)
+        if (d is LineStringEditorView view && view.DataContext is LineStringEditorViewModel presenter)
         {
             presenter.IsEditable = (bool)e.NewValue;
             //// Also update CurrentPart if in multi-line mode
@@ -78,12 +78,12 @@ public partial class LineStringEditorView : UserControl
         this.DataContextChanged += LineStringEditorView_DataContextChanged;
     }
 
-    private LineStringEditorPresenter? _currentPresenter;
+    private LineStringEditorViewModel? _currentPresenter;
     //private LineStringEditorPresenter? _currentPartPresenter;
 
     private void LineStringEditorView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (e.OldValue is LineStringEditorPresenter oldPresenter)
+        if (e.OldValue is LineStringEditorViewModel oldPresenter)
         {
             //oldPresenter.RequestPanToPoint -= Presenter_RequestPanToPoint;
             //oldPresenter.RequestZoomToPoint -= Presenter_RequestZoomToPoint;
@@ -91,7 +91,7 @@ public partial class LineStringEditorView : UserControl
             //oldPresenter.PropertyChanged -= Presenter_PropertyChanged;
         }
 
-        if (e.NewValue is LineStringEditorPresenter presenter)
+        if (e.NewValue is LineStringEditorViewModel presenter)
         {
             _currentPresenter = presenter;
             presenter.MaxPointsPerPage = MaxPointsPerPage;

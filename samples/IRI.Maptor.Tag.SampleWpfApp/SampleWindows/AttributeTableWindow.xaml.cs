@@ -1,11 +1,10 @@
-﻿using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Controls.Common;
-using IRI.Maptor.Jab.Common.TileServices;
-using IRI.Maptor.Jab.Controls.Presenters;
-using IRI.Maptor.Sta.Common.Primitives;
-using System.Globalization;
-using System.Text;
+﻿using System.Text;
 using System.Windows;
+
+using IRI.Maptor.Jab.Controls.Common; 
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Jab.Common.TileServices;
+using IRI.Maptor.Tag.SampleWpfApp.ViewModel;
 
 namespace IRI.Maptor.Tag.SampleWpfApp.SampleWindows;
 /// <summary>
@@ -33,7 +32,7 @@ public partial class TableOfContentWindow : Window
         var presenter = await MapInitializationHelper.InitializeMapAsync(
             this.map,
             this,
-            new MapApplicationPresenter(),
+            new AppViewModel(),
             config);
 
         this.DataContext = presenter;

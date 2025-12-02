@@ -232,7 +232,7 @@ Potential improvements:
 See also:
 - `IRI.Maptor.Sta.Ogc.SLD` namespace for the underlying data model
 - `IRI.Maptor.Sta.Ogc.FilterEncoding` for OGC filter classes
-- `IRI.Maptor.Jab.Common.Presenters.ViewModelBase` for MVVM base classes
+- `IRI.Maptor.Jab.Common.ViewModels.ViewModelBase` for MVVM base classes
 
 ## License
 

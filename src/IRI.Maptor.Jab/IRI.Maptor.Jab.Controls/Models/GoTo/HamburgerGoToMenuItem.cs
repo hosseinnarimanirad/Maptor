@@ -1,13 +1,6 @@
-﻿using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+﻿using System.Windows;
+
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Controls.Presenters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Controls.Models.GoTo

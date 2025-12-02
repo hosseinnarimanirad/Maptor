@@ -1,0 +1,740 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using IRI.Maptor.Extensions;
+using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Common.Abstractions;
+using IRI.Maptor.Jab.Common.Assets.Commands;
+using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Common.Models.CoordinateEditor; 
+using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Helpers;
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.IO.TopoJson;
+using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+
+namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
+
+public class GeometryDetailsViewModel : Notifier
+{
+    private readonly IDialogService _dialogService;
+
+    private readonly EditableFeatureLayer _editableFeatureLayer;
+
+    public GeometryDetailsViewModel(EditableFeatureLayer editableFeatureLayer, IDialogService dialogService)
+    {
+        _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+
+        _editableFeatureLayer = editableFeatureLayer;
+
+        // Initialize available formats
+        AvailableFormats = new ObservableCollection<string>
+        {
+            "WKT",
+            "WKB",
+            "SQL Server WKT",
+            "SQL Server Native Binary",
+            "GeoJSON",
+            "GML 2",
+            "GML 3",
+            "KML",
+            "Esri JSON Geometry",
+            "TopoJSON",
+            "DXF"
+        };
+
+        SelectedFormat = "WKT"; // Default format
+
+        this.Geometry = editableFeatureLayer.GetFinalGeometry();
+    }
+
+    private IGeometry _geometry;
+    public IGeometry Geometry
+    {
+        get => _geometry;
+        set
+        {
+            _geometry = value;
+            UpdateAllProperties();
+        }
+    }
+
+    public CoordinateDimension Dimension => _geometry.GetDimension();
+
+    private int? _utmZone;
+    public int? UtmZone
+    {
+        get => _utmZone;
+        set
+        {
+            _utmZone = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private List<int> _utmZones = new List<int>();
+    public List<int> UtmZones
+    {
+        get => _utmZones;
+        private set
+        {
+            _utmZones = value ?? new List<int>();
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(SpansMultipleUtmZones));
+        }
+    }
+
+    public bool SpansMultipleUtmZones => UtmZones.Count > 1;
+     
+    public int NumberOfPoints => Geometry.TotalNumberOfPoints;
+     
+    public int NumberOfGeometries => Geometry.NumberOfGeometries;
+     
+    public string GeometryType => Geometry.Type.ToString();
+
+
+    #region Format selection properties
+  
+    private ObservableCollection<string> _availableFormats;
+    public ObservableCollection<string> AvailableFormats
+    {
+        get => _availableFormats;
+        set
+        {
+            _availableFormats = value ?? new ObservableCollection<string>();
+            RaisePropertyChanged();
+        }
+    }
+
+    private string _selectedFormat = "WKT";
+    public string SelectedFormat
+    {
+        get => _selectedFormat;
+        set
+        {
+            if (_selectedFormat != value)
+            {
+                _selectedFormat = value;
+                RaisePropertyChanged();
+                UpdateStringRepresentation();
+            }
+        }
+    }
+
+    private string _stringRepresentation = string.Empty;
+    public string StringRepresentation
+    {
+        get => _stringRepresentation;
+        set
+        {
+            _stringRepresentation = value ?? string.Empty;
+            RaisePropertyChanged();
+        }
+    }
+
+    // Export command
+    private RelayCommand _exportCommand;
+    public RelayCommand ExportCommand =>
+        _exportCommand ??= new RelayCommand(param => ExportCurrentFormat());
+
+    private async void ExportCurrentFormat()
+    {
+        if (string.IsNullOrEmpty(StringRepresentation))
+        {
+            await _dialogService.ShowMessageAsync(
+                $"No {SelectedFormat} content available to export.",
+                "Export Failed",
+                null);
+            return;
+        }
+
+        // Determine file extension based on format
+        string extension = SelectedFormat switch
+        {
+            "WKT" => ".wkt",
+            "WKB" => ".wkb",
+            "SQL Server WKT" => ".wkt",
+            "SQL Server Native Binary" => ".bin",
+            "GeoJSON" => ".geojson",
+            "GML 2" => ".gml",
+            "GML 3" => ".gml",
+            "KML" => ".kml",
+            "Esri JSON Geometry" => ".json",
+            "TopoJSON" => ".topojson",
+            "DXF" => ".dxf",
+            _ => ".txt"
+        };
+
+        var fileName = _dialogService.ShowSaveFileDialog(
+            $"{SelectedFormat} files (*{extension})|*{extension}|All files (*.*)|*.*",
+            null,
+            $"geometry{extension}");
+
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            try
+            {
+                File.WriteAllText(fileName, StringRepresentation);
+                await _dialogService.ShowMessageAsync(
+                    $"{SelectedFormat} exported successfully.",
+                    "Export Success",
+                    null);
+            }
+            catch (Exception ex)
+            {
+                await _dialogService.ShowMessageAsync(
+                    $"Failed to export {SelectedFormat}: {ex.Message}",
+                    "Export Failed",
+                    null);
+            }
+        }
+    }
+
+
+    private void UpdateStringRepresentation()
+    {
+        if (_geometry == null)
+        {
+            StringRepresentation = string.Empty;
+            return;
+        }
+
+        try
+        {
+            switch (SelectedFormat)
+            {
+                case "WKT":
+                    StringRepresentation = _geometry.AsWkt() ?? string.Empty;
+                    break;
+
+                case "WKB":
+                    var wkbBytes = _geometry.AsWkb();
+                    StringRepresentation = wkbBytes != null ? HexStringHelper.ToHexStringUsingBitFiddle(wkbBytes, true) : string.Empty;
+                    break;
+
+                case "SQL Server WKT":
+                    StringRepresentation = _geometry.AsSqlServerWkt() ?? string.Empty;
+                    break;
+
+                case "SQL Server Native Binary":
+                    var nativeBytes = _geometry.AsSqlServerNativeBinary();
+                    StringRepresentation = nativeBytes != null ? HexStringHelper.ToHexStringUsingBitFiddle(nativeBytes, true) : string.Empty;
+                    break;
+
+                case "GeoJSON":
+                    var geoJson = _geometry.AsGeoJson();
+                    if (geoJson != null)
+                    {
+                        StringRepresentation = IRI.Maptor.Sta.Spatial.GeoJsonFormat.GeoJson.Serialize(geoJson, indented: true, removeSpaces: false);
+                    }
+                    else
+                    {
+                        StringRepresentation = string.Empty;
+                    }
+                    break;
+
+                case "GML 2":
+                    // Not directly available, leave empty for now
+                    StringRepresentation = string.Empty;
+                    break;
+
+                case "GML 3":
+                    // Requires SqlGeometry conversion, leave empty for now
+                    StringRepresentation = string.Empty;
+                    break;
+
+                case "KML":
+                    if (_geometry is Geometry<Point> geom)
+                    {
+                        StringRepresentation = geom.AsKml() ?? string.Empty;
+                    }
+                    else
+                    {
+                        StringRepresentation = string.Empty;
+                    }
+                    break;
+
+                case "Esri JSON Geometry":
+                    // Not directly available, leave empty for now
+                    StringRepresentation = string.Empty;
+                    break;
+
+                case "TopoJSON":
+                    if (_geometry is Geometry<Point> topoGeom && !topoGeom.IsNullOrEmpty())
+                    {
+                        var topoJson = TopoJsonConverter.FromGeometry(topoGeom);
+                        StringRepresentation = JsonSerializer.Serialize(topoJson);
+                    }
+                    else
+                    {
+                        StringRepresentation = string.Empty;
+                    }
+                    break;
+
+                case "DXF":
+                    // Not directly available, leave empty for now
+                    StringRepresentation = string.Empty;
+                    break;
+
+                default:
+                    StringRepresentation = string.Empty;
+                    break;
+            }
+        }
+        catch
+        {
+            StringRepresentation = string.Empty;
+        }
+    }
+
+    #endregion
+
+
+    // Editor properties
+    private object _geometryEditor;
+    public object GeometryEditor
+    {
+        get => _geometryEditor;
+        set
+        {
+            _geometryEditor = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private IGeometry _originalGeometry;
+    private bool _isEditing;
+    public bool IsEditing
+    {
+        get => _isEditing;
+        set
+        {
+            _isEditing = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private RelayCommand _saveGeometryCommand;
+    public RelayCommand SaveGeometryCommand =>
+        _saveGeometryCommand ??= new RelayCommand(param => SaveGeometry(), param => IsEditing);
+
+    private RelayCommand _cancelEditingCommand;
+    public RelayCommand CancelEditingCommand =>
+        _cancelEditingCommand ??= new RelayCommand(param => CancelEditing(), param => IsEditing);
+
+    private void SaveGeometry()
+    {
+        // TODO: Convert editor data back to geometry
+        // For now, just clear editing state
+        IsEditing = false;
+        _originalGeometry = null;
+    }
+
+    private void CancelEditing()
+    {
+        if (_originalGeometry != null)
+        {
+            Geometry = _originalGeometry;
+        }
+        IsEditing = false;
+        _originalGeometry = null;
+    }
+
+    private void UpdateAllProperties()
+    {
+        if (_geometry == null || _geometry.IsEmpty())
+        {
+            ClearAllProperties();
+            return;
+        }
+
+        // Calculate dimension
+        //Dimension = _geometry.GetDimension();
+        RaisePropertyChanged(nameof(Dimension));
+
+        // Get geometry in WGS84 geodetic for calculations
+        Geometry<Point>? geodeticGeometry = GetGeodeticGeometry();
+        if (geodeticGeometry == null)
+        {
+            ClearAllProperties();
+            return;
+        }
+
+        // Update counts
+        RaisePropertyChanged(nameof(NumberOfPoints));
+        RaisePropertyChanged(nameof(NumberOfGeometries));
+        RaisePropertyChanged(nameof(GeometryType));
+        //NumberOfPoints = _geometry.TotalNumberOfPoints;
+        //NumberOfGeometries = _geometry.NumberOfGeometries;
+        //GeometryType = _geometry.Type.ToString();
+
+        // Calculate UTM zones
+        CalculateUtmZones(geodeticGeometry);
+
+        // Extract points in WGS84 geodetic
+        ExtractPoints(geodeticGeometry);
+
+        // Update string representation for selected format
+        UpdateStringRepresentation();
+
+        // Create geometry editor
+        CreateGeometryEditor(geodeticGeometry);
+    }
+
+    private void CreateGeometryEditor(Geometry<Point>? geodeticGeometry)
+    {
+        if (_geometry == null)
+        {
+            GeometryEditor = null;
+            return;
+        }
+
+        // Create appropriate editor based on geometry type
+        switch (_geometry.Type)
+        {
+            case IRI.Maptor.Sta.Common.Primitives.GeometryType.Point:
+                //if (Points.Count > 0)
+                //{
+                //    var pointPresenter = new PointEditorPresenter(Points[0], canDelete: false);
+
+                //    GeometryEditor = pointPresenter;
+                //}
+                break;
+
+            case IRI.Maptor.Sta.Common.Primitives.GeometryType.LineString:
+                var lineStringPresenter = new LineStringEditorViewModel(_editableFeatureLayer);
+                GeometryEditor = lineStringPresenter;
+                break;
+
+            case IRI.Maptor.Sta.Common.Primitives.GeometryType.Polygon:
+                if (geodeticGeometry != null)
+                {
+                    var polygonRings = CreatePolygonRings(geodeticGeometry);
+                    var polygonPresenter = new PolygonEditorViewModel(polygonRings);
+                    GeometryEditor = polygonPresenter;
+                }
+                break;
+
+            case IRI.Maptor.Sta.Common.Primitives.GeometryType.MultiPoint:
+                //var multiPointPresenter = new MultiPointEditorPresenter(Points);
+                //GeometryEditor = multiPointPresenter;
+                //break;
+
+            case IRI.Maptor.Sta.Common.Primitives.GeometryType.MultiLineString:
+                if (geodeticGeometry != null)
+                {
+                    var multiLineStringPresenter = new LineStringEditorViewModel(_editableFeatureLayer);
+                    //var parts = CreateMultiLineStringParts(geodeticGeometry);
+                    //foreach (var part in parts)
+                    //{
+                    //    var partPresenter = new LineStringEditorPresenter(part);
+                    //    multiLineStringPresenter.Parts.Add(partPresenter);
+                    //}
+                    GeometryEditor = multiLineStringPresenter;
+                }
+                break;
+
+            case IRI.Maptor.Sta.Common.Primitives.GeometryType.MultiPolygon:
+                //if (geodeticGeometry != null)
+                //{
+                //    var multiPolygonPresenter = new MultiPolygonEditorPresenter();
+                //    var polygons = CreateMultiPolygonParts(geodeticGeometry);
+                //    foreach (var polygonRings in polygons)
+                //    {
+                //        var polygonPresenter = new PolygonEditorPresenter(polygonRings);
+                //        multiPolygonPresenter.Polygons.Add(polygonPresenter);
+                //    }
+                //    GeometryEditor = multiPolygonPresenter;
+                //}
+                //break;
+
+            default:
+                GeometryEditor = null;
+                break;
+        }
+    }
+
+    private ObservableCollection<RingInfo> CreatePolygonRings(Geometry<Point> geodeticGeometry)
+    {
+        var rings = new ObservableCollection<RingInfo>();
+
+        if (geodeticGeometry?.Geometries != null)
+        {
+            for (int i = 0; i < geodeticGeometry.Geometries.Count; i++)
+            {
+                var ringGeometry = geodeticGeometry.Geometries[i];
+                var ringPoints = new ObservableCollection<NotifiablePoint>();
+
+                if (ringGeometry?.Points != null)
+                {
+                    foreach (var point in ringGeometry.Points)
+                    {
+                        ringPoints.Add(new NotifiablePoint { X = point.X, Y = point.Y });
+                    }
+                }
+
+                rings.Add(new RingInfo
+                {
+                    IsExterior = i == 0,
+                    Points = ringPoints
+                });
+            }
+        }
+
+        return rings;
+    }
+
+    //private ObservableCollection<ObservableCollection<PointInfo>> CreateMultiLineStringParts(Geometry<Point> geodeticGeometry)
+    //{
+    //    var parts = new ObservableCollection<ObservableCollection<PointInfo>>();
+
+    //    if (geodeticGeometry?.Geometries != null)
+    //    {
+    //        foreach (var lineStringGeometry in geodeticGeometry.Geometries)
+    //        {
+    //            var partPoints = new ObservableCollection<PointInfo>();
+
+    //            if (lineStringGeometry?.Points != null)
+    //            {
+    //                foreach (var point in lineStringGeometry.Points)
+    //                {
+    //                    partPoints.Add(new PointInfo { X = point.X, Y = point.Y });
+    //                }
+    //            }
+
+    //            parts.Add(partPoints);
+    //        }
+    //    }
+
+    //    return parts;
+    //}
+
+    private ObservableCollection<ObservableCollection<RingInfo>> CreateMultiPolygonParts(Geometry<Point> geodeticGeometry)
+    {
+        var polygons = new ObservableCollection<ObservableCollection<RingInfo>>();
+
+        if (geodeticGeometry?.Geometries != null)
+        {
+            foreach (var polygonGeometry in geodeticGeometry.Geometries)
+            {
+                var polygonRings = new ObservableCollection<RingInfo>();
+
+                if (polygonGeometry?.Geometries != null)
+                {
+                    for (int i = 0; i < polygonGeometry.Geometries.Count; i++)
+                    {
+                        var ringGeometry = polygonGeometry.Geometries[i];
+                        var ringPoints = new ObservableCollection<NotifiablePoint>();
+
+                        if (ringGeometry?.Points != null)
+                        {
+                            foreach (var point in ringGeometry.Points)
+                            {
+                                ringPoints.Add(new NotifiablePoint { X = point.X, Y = point.Y });
+                            }
+                        }
+
+                        polygonRings.Add(new RingInfo
+                        {
+                            IsExterior = i == 0,
+                            Points = ringPoints
+                        });
+                    }
+                }
+
+                polygons.Add(polygonRings);
+            }
+        }
+
+        return polygons;
+    }
+
+
+
+    private Geometry<Point>? GetGeodeticGeometry()
+    {
+        if (_geometry == null)
+            return null;
+
+        // Cast to Geometry<Point> for operations
+        Geometry<Point>? geom = _geometry as Geometry<Point>;
+        if (geom == null)
+        {
+            // Try to convert other point types
+            if (_geometry is Geometry<PointZ> geomZ)
+            {
+                // Convert PointZ to Point (lose Z)
+                var points = geomZ.GetAllPoints()?.Select(p => new Point(p.X, p.Y)).ToList();
+                if (points != null && points.Count > 0)
+                {
+                    geom = Geometry<Point>.Create(points, geomZ.Type, geomZ.Srid);
+                }
+            }
+            else if (_geometry is Geometry<PointM> geomM)
+            {
+                var points = geomM.GetAllPoints()?.Select(p => new Point(p.X, p.Y)).ToList();
+                if (points != null && points.Count > 0)
+                {
+                    geom = Geometry<Point>.Create(points, geomM.Type, geomM.Srid);
+                }
+            }
+            else if (_geometry is Geometry<PointZM> geomZM)
+            {
+                var points = geomZM.GetAllPoints()?.Select(p => new Point(p.X, p.Y)).ToList();
+                if (points != null && points.Count > 0)
+                {
+                    geom = Geometry<Point>.Create(points, geomZM.Type, geomZM.Srid);
+                }
+            }
+        }
+
+        if (geom == null || geom.IsNullOrEmpty())
+            return null;
+
+        // Transform to WGS84 geodetic if needed
+        if (geom.Srid != SridHelper.GeodeticWGS84)
+        {
+            try
+            {
+                // Try common transformations
+                if (geom.Srid == SridHelper.WebMercator)
+                {
+                    geom = geom.Transform(MapProjects.WebMercatorToGeodeticWgs84, SridHelper.GeodeticWGS84);
+                }
+                else
+                {
+                    // For other SRIDs, we might need a more sophisticated transformation
+                    // For now, assume it's already geodetic or can't transform
+                    // In a real implementation, you'd check SRID and apply appropriate transformation
+                }
+            }
+            catch
+            {
+                // Transformation failed, return null
+                return null;
+            }
+        }
+
+        return geom;
+    }
+
+    private void CalculateUtmZones(Geometry<Point> geodeticGeometry)
+    {
+        if (geodeticGeometry == null || geodeticGeometry.IsNullOrEmpty())
+        {
+            UtmZone = null;
+            UtmZones = new List<int>();
+            return;
+        }
+
+        var allPoints = geodeticGeometry.GetAllPoints();
+        if (allPoints == null || allPoints.Count == 0)
+        {
+            UtmZone = null;
+            UtmZones = new List<int>();
+            return;
+        }
+
+        // Calculate UTM zone for each point
+        var zones = new HashSet<int>();
+
+        foreach (var point in allPoints)
+        {
+            try
+            {
+                int zone = MapProjects.FindUtmZone(point.X);
+                zones.Add(zone);
+            }
+            catch
+            {
+                // Skip invalid points
+            }
+        }
+
+        UtmZones = zones.OrderBy(z => z).ToList();
+
+        UtmZone = UtmZones.FirstOrDefault();
+
+    }
+
+    private void ExtractPoints(Geometry<Point> geodeticGeometry)
+    {
+        var points = new ObservableCollection<NotifiablePoint>();
+
+        if (geodeticGeometry == null || geodeticGeometry.IsNullOrEmpty())
+        {
+            //Points = points;
+            return;
+        }
+
+        var allGeodeticPoints = geodeticGeometry.GetAllPoints();
+        if (allGeodeticPoints == null || allGeodeticPoints.Count == 0)
+        {
+            //Points = points;
+            return;
+        }
+
+        // Get original points with Z/M if available
+        List<IPoint>? originalPoints = null;
+        if (_geometry is Geometry<PointZ> geomZ)
+        {
+            originalPoints = geomZ.GetAllPoints()?.Cast<IPoint>().ToList();
+        }
+        else if (_geometry is Geometry<PointM> geomM)
+        {
+            originalPoints = geomM.GetAllPoints()?.Cast<IPoint>().ToList();
+        }
+        else if (_geometry is Geometry<PointZM> geomZM)
+        {
+            originalPoints = geomZM.GetAllPoints()?.Cast<IPoint>().ToList();
+        }
+
+        // Match geodetic points with original points to get Z/M
+        for (int i = 0; i < allGeodeticPoints.Count; i++)
+        {
+            var geodeticPoint = allGeodeticPoints[i];
+            var pointInfo = new NotifiablePoint
+            {
+                X = geodeticPoint.X, // Longitude
+                Y = geodeticPoint.Y  // Latitude
+            };
+
+            // Try to get Z and M from original points if available
+            if (originalPoints != null && i < originalPoints.Count)
+            {
+                var originalPoint = originalPoints[i];
+                if (originalPoint is IHasZ hasZ)
+                {
+                    pointInfo.Z = hasZ.Z;
+                }
+                if (originalPoint is IHasM hasM)
+                {
+                    pointInfo.M = hasM.M;
+                }
+            }
+
+            points.Add(pointInfo);
+        }
+
+        //Points = points;
+    }
+
+    private void ClearAllProperties()
+    {
+        //Dimension = CoordinateDimension.TwoD;
+        UtmZone = null;
+        UtmZones = new List<int>();
+        //NumberOfPoints = 0;
+        //NumberOfGeometries = 0;
+        //GeometryType = string.Empty;
+        //Points = new ObservableCollection<PointInfo>();
+        StringRepresentation = string.Empty;
+    }
+
+}
+

@@ -7,7 +7,7 @@ using IRI.Maptor.Jab.Common.Models.Map;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.OfficeFormats;
 
 namespace IRI.Maptor.Jab.Common.Models;
@@ -32,7 +32,7 @@ public static class FeatureTableCommands
 
 
     //public static Func<MapPresenter, FeatureTableCommand> CreateZoomToExtentCommandFunc = (presenter) => CreateZoomToExtentCommand(presenter);
-    public static FeatureTableCommand CreateZoomToExtentCommand(MapPresenter map)
+    public static FeatureTableCommand CreateZoomToExtentCommand(MapViewModel map)
     {
         var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.Magnify }.Data;
 
@@ -60,7 +60,7 @@ public static class FeatureTableCommands
         return result;
     }
 
-    private static void TryFlashPoint(MapPresenter map, IEnumerable<Feature<Point>> point)
+    private static void TryFlashPoint(MapViewModel map, IEnumerable<Feature<Point>> point)
     {
         if (point?.Count() == 1 && point.First().TheGeometry.Type == GeometryType.Point)
         {
@@ -72,7 +72,7 @@ public static class FeatureTableCommands
 
     #region Export Excel
 
-    public static FeatureTableCommand CreateExportToExcelCommand(MapPresenter map)
+    public static FeatureTableCommand CreateExportToExcelCommand(MapViewModel map)
     {
         var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.PageExcel }.Data;
 
@@ -128,7 +128,7 @@ public static class FeatureTableCommands
 
     #region Export As Drawing Item
 
-    public static FeatureTableCommand CreateExportAsDrawingLayersCommand(MapPresenter map)
+    public static FeatureTableCommand CreateExportAsDrawingLayersCommand(MapViewModel map)
     {
         var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.VectorPenAdd }.Data;
 
@@ -186,9 +186,9 @@ public static class FeatureTableCommands
 
 
 
-    internal static List<Func<MapPresenter, IFeatureTableCommand>> GetDefaultVectorLayerCommands/*<T>*/() //where T : class, IGeometryAware<Point>
+    internal static List<Func<MapViewModel, IFeatureTableCommand>> GetDefaultVectorLayerCommands/*<T>*/() //where T : class, IGeometryAware<Point>
     {
-        return new List<Func<MapPresenter, IFeatureTableCommand>>()
+        return new List<Func<MapViewModel, IFeatureTableCommand>>()
         {
             CreateZoomToExtentCommand,
             CreateExportToExcelCommand,

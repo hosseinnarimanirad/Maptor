@@ -2,7 +2,7 @@
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Localization;
 using MahApps.Metro.IconPacks;
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Events;
 
 namespace IRI.Maptor.Jab.Common.Models.Legend;
@@ -45,7 +45,7 @@ public class LegendToggleCommand : LegendCommandBase
         RaisePropertyChanged(nameof(ToolTip));
     }
 
-    public static LegendToggleCommand CreateToggleLayerLabelCommand(MapPresenter map, SymbolizableLayer layer/*, LabelParameters labels*/)
+    public static LegendToggleCommand CreateToggleLayerLabelCommand(MapViewModel map, SymbolizableLayer layer/*, LabelParameters labels*/)
     {
         LegendToggleCommand result = new LegendToggleCommand
         {

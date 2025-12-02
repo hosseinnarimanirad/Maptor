@@ -11,7 +11,7 @@ using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Controls.ViewModels;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
+using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
 namespace IRI.Maptor.Jab.Controls.Views.Dialogs;
 

@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using IRI.Maptor.Extensions; 
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 
@@ -12,7 +12,7 @@ namespace IRI.Maptor.Jab.Controls.Views;
 /// </summary>
 public partial class CoordinatePanelView : NotifiableUserControl
 {
-    public CoordinatePanelPresenter? Presenter { get { return this.DataContext as CoordinatePanelPresenter; } }
+    public CoordinatePanelViewModel? Presenter { get { return this.DataContext as CoordinatePanelViewModel; } }
     
     public CoordinatePanelView()
     {

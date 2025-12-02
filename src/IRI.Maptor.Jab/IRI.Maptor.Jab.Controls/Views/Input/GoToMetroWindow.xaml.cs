@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 
 using MahApps.Metro.Controls;
 using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Controls.ViewModels;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 
@@ -18,7 +19,7 @@ public partial class GoToMetroWindow : LocalizedMetroWindow
         InitializeComponent();
     }
 
-    public GoToMetroWindow(Presenters.GoToPresenter presenter) : this()
+    public GoToMetroWindow(GoToViewModel presenter) : this()
     {
         this.DataContext = presenter;
     } 

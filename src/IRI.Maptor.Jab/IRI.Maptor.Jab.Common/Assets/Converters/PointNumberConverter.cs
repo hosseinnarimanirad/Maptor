@@ -1,5 +1,5 @@
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
-using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
+using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using System;
 using System.Globalization;
 using System.Windows.Data;
@@ -16,7 +16,7 @@ public class PointNumberConverter : IMultiValueConverter
             return result.ToString();
 
         if (values[2] is Locateable point &&
-            values[3] is LineStringEditorPresenter presenter)
+            values[3] is LineStringEditorViewModel presenter)
         {
             result = presenter.GetPointNumber(point);
         }

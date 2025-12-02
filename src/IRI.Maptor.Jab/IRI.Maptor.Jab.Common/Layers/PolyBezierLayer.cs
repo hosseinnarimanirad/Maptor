@@ -9,7 +9,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Helpers;
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
@@ -242,7 +242,7 @@ public class PolyBezierLayer : SymbolizableLayer
     {
         var mainLocateable = sender as Locateable;
 
-        var presenter = new MapOptionsPresenter(
+        var presenter = new MapOptionsViewModel(
             rightToolTip: string.Empty,
             leftToolTip: string.Empty,
             middleToolTip: string.Empty,
@@ -483,7 +483,7 @@ public class PolyBezierLayer : SymbolizableLayer
 
     private void _mainPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
-        var presenter = new MapOptionsPresenter(
+        var presenter = new MapOptionsViewModel(
             rightToolTip: string.Empty,
             leftToolTip: string.Empty,
             middleToolTip: string.Empty,

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors"
-             xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;assembly=IRI.Maptor.Jab.Common"
+             xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;assembly=IRI.Maptor.Jab.Common"
              FlowDirection="RightToLeft"
              mc:Ignorable="d">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -41,7 +41,7 @@
                                     </Expander.Header>
                                     <local:LineStringEditorView>
                                         <local:LineStringEditorView.DataContext>
-                                            <presenters:LineStringEditorPresenter Points="{Binding Points}"/>
+                                            <presenters:LineStringEditorViewModel Points="{Binding Points}"/>
                                         </local:LineStringEditorView.DataContext>
                                     </local:LineStringEditorView>
                                 </Expander>

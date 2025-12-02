@@ -11,7 +11,7 @@ using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
@@ -562,7 +562,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     private void RegisterMapOptionsForVertices(MouseButtonEventArgs e, IPoint point, Locateable locateable)
     {
-        var presenter = new MapOptionsPresenter(
+        var presenter = new MapOptionsViewModel(
                 //rightToolTip: _copy,
                 //leftToolTip: _displayCoordinates,
                 //middleToolTip: _delete,
@@ -619,7 +619,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     private void RegisterMapOptionsForEditPath(MouseButtonEventArgs e)
     {
-        var presenter = new MapOptionsPresenter(
+        var presenter = new MapOptionsViewModel(
             //leftToolTip: _cancel,
             //rightToolTip: _finish,
             //middleToolTip: _delete,

@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
 using IRI.Maptor.Jab.Common.Events;
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
 
 namespace IRI.Maptor.Jab.Common.Views.Controls;
 

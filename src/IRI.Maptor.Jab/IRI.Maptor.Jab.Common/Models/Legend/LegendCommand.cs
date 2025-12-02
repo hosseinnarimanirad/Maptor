@@ -5,7 +5,7 @@ using MahApps.Metro.IconPacks;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Spatial.Helpers;
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Models.Map;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives; 
@@ -48,8 +48,8 @@ public class LegendCommand : LegendCommandBase
     }
 
 
-    public static Func<MapPresenter, ILayer, LegendCommand> CreateZoomToExtentCommandFunc = CreateZoomToExtentCommand;
-    public static LegendCommand CreateZoomToExtentCommand(MapPresenter map, ILayer layer)
+    public static Func<MapViewModel, ILayer, LegendCommand> CreateZoomToExtentCommandFunc = CreateZoomToExtentCommand;
+    public static LegendCommand CreateZoomToExtentCommand(MapViewModel map, ILayer layer)
     { 
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_zoomToExtent))
         {
@@ -69,8 +69,8 @@ public class LegendCommand : LegendCommandBase
     }
 
 
-    public static Func<MapPresenter, ILayer, ILegendCommand> CreateRemoveLayerFunc = CreateRemoveLayer;
-    public static ILegendCommand CreateRemoveLayer(MapPresenter map, ILayer layer)
+    public static Func<MapViewModel, ILayer, ILegendCommand> CreateRemoveLayerFunc = CreateRemoveLayer;
+    public static ILegendCommand CreateRemoveLayer(MapViewModel map, ILayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_remove))
         {
@@ -98,8 +98,8 @@ public class LegendCommand : LegendCommandBase
 
     #region Defaults for VectorLayer
 
-    public static Func<MapPresenter, ILayer, ILegendCommand> CreateClearSelectedFunc = (presenter, layer) => CreateClearSelected(presenter, layer as VectorLayer);
-    public static ILegendCommand CreateClearSelected(MapPresenter map, VectorLayer layer)
+    public static Func<MapViewModel, ILayer, ILegendCommand> CreateClearSelectedFunc = (presenter, layer) => CreateClearSelected(presenter, layer as VectorLayer);
+    public static ILegendCommand CreateClearSelected(MapViewModel map, VectorLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_clearSelected))
         {
@@ -119,11 +119,11 @@ public class LegendCommand : LegendCommandBase
     }
 
 
-    public static Func<MapPresenter, ILayer, ILegendCommand> CreateSelectByDrawingFunc()  
+    public static Func<MapViewModel, ILayer, ILegendCommand> CreateSelectByDrawingFunc()  
     {
         return (presenter, layer) => CreateSelectByDrawing(presenter, layer as VectorLayer);
     }
-    public static ILegendCommand CreateSelectByDrawing(MapPresenter map, VectorLayer layer)  
+    public static ILegendCommand CreateSelectByDrawing(MapViewModel map, VectorLayer layer)  
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_selectByDrawing))
         {
@@ -166,11 +166,11 @@ public class LegendCommand : LegendCommandBase
     }
 
 
-    public static Func<MapPresenter, ILayer, LegendCommand> CreateShowAttributeTableFunc() 
+    public static Func<MapViewModel, ILayer, LegendCommand> CreateShowAttributeTableFunc() 
     {
         return (presenter, layer) => CreateShowAttributeTable(presenter, layer as VectorLayer);
     }
-    public static LegendCommand CreateShowAttributeTable(MapPresenter map, VectorLayer layer)  
+    public static LegendCommand CreateShowAttributeTable(MapViewModel map, VectorLayer layer)  
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_showAttributes))
         {
@@ -209,8 +209,8 @@ public class LegendCommand : LegendCommandBase
     }
 
      
-    public static Func<MapPresenter, ILayer, ILegendCommand> CreateExportAsPngFunc = (presenter, layer) => CreateExportAsPng(presenter, layer as VectorLayer);
-    public static ILegendCommand CreateExportAsPng(MapPresenter map, VectorLayer layer)
+    public static Func<MapViewModel, ILayer, ILegendCommand> CreateExportAsPngFunc = (presenter, layer) => CreateExportAsPng(presenter, layer as VectorLayer);
+    public static ILegendCommand CreateExportAsPng(MapViewModel map, VectorLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsPng))
         {
@@ -239,8 +239,8 @@ public class LegendCommand : LegendCommandBase
     }
 
 
-    public static Func<MapPresenter, ILayer, ILegendCommand> CreateExportAsShapefileFunc = (presenter, layer) => CreateExportAsShapefile(presenter, layer as VectorLayer);
-    public static ILegendCommand CreateExportAsShapefile(MapPresenter map, VectorLayer layer)
+    public static Func<MapViewModel, ILayer, ILegendCommand> CreateExportAsShapefileFunc = (presenter, layer) => CreateExportAsShapefile(presenter, layer as VectorLayer);
+    public static ILegendCommand CreateExportAsShapefile(MapViewModel map, VectorLayer layer)
     {  
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsShapefile))
         {
@@ -268,8 +268,8 @@ public class LegendCommand : LegendCommandBase
         return result;
     }
 
-    public static Func<MapPresenter, ILayer, ILegendCommand> CreateExportAsGeoJsonFunc = (presenter, layer) => CreateExportAsGeoJson(presenter, layer as VectorLayer);
-    public static ILegendCommand CreateExportAsGeoJson(MapPresenter map, VectorLayer layer)
+    public static Func<MapViewModel, ILayer, ILegendCommand> CreateExportAsGeoJsonFunc = (presenter, layer) => CreateExportAsGeoJson(presenter, layer as VectorLayer);
+    public static ILegendCommand CreateExportAsGeoJson(MapViewModel map, VectorLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsGeoJson))
         {
@@ -301,9 +301,9 @@ public class LegendCommand : LegendCommandBase
         return result;
     }
 
-    internal static List<Func<MapPresenter, ILayer, ILegendCommand>> GetDefaultVectorLayerCommands() 
+    internal static List<Func<MapViewModel, ILayer, ILegendCommand>> GetDefaultVectorLayerCommands() 
     {
-        return new List<Func<MapPresenter, ILayer, ILegendCommand>>()
+        return new List<Func<MapViewModel, ILayer, ILegendCommand>>()
         {
             CreateSelectByDrawingFunc(),
             CreateShowAttributeTableFunc(),
@@ -322,7 +322,7 @@ public class LegendCommand : LegendCommandBase
     #region Drawing Item Legend Commands
      
      
-    public static ILegendCommand CreateRemoveDrawingItemLayer(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateRemoveDrawingItemLayer(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_remove))
         {
@@ -343,7 +343,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Edit ********************
     // *******************************************
-    public static ILegendCommand CreateEditDrawingItemLayer(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateEditDrawingItemLayer(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_edit))
         {
@@ -388,7 +388,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Export As Shapefile *****
     // *******************************************
-    public static ILegendCommand CreateExportDrawingItemLayerAsShapefile(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateExportDrawingItemLayerAsShapefile(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsShapefile))
         {
@@ -420,7 +420,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Export As GeoJson *******
     // *******************************************
-    public static ILegendCommand CreateExportDrawingItemLayerAsGeoJson(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateExportDrawingItemLayerAsGeoJson(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsGeoJson))
         {
@@ -452,7 +452,7 @@ public class LegendCommand : LegendCommandBase
         return result;
     }
 
-    public static ILegendCommand CreateExportDrawingItemLayerAsPng(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateExportDrawingItemLayerAsPng(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsPng))
         {
@@ -488,7 +488,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Exterior Ring ***********
     // *******************************************
-    public static ILegendCommand CreateGetExteriorRingCommand(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateGetExteriorRingCommand(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exteriorRing))
         {
@@ -518,7 +518,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Envelope ****************
     // *******************************************
-    public static ILegendCommand CreateGetEnvelopeCommand(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateGetEnvelopeCommand(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_envelope))
         {
@@ -548,7 +548,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Convex Hull *************
     // *******************************************
-    public static ILegendCommand CreateGetConvexHullCommand(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateGetConvexHullCommand(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_convexHull))
         {
@@ -578,7 +578,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Boundary ****************
     // *******************************************
-    public static ILegendCommand CreateGetBoundaryCommand(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateGetBoundaryCommand(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_boundary))
         {
@@ -604,7 +604,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Break into geometries ***
     // *******************************************
-    public static ILegendCommand CreateBreakIntoGeometriesCommand(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateBreakIntoGeometriesCommand(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_breakIntoGeometries))
         {
@@ -636,7 +636,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Extract points **********
     // *******************************************
-    public static ILegendCommand CreateBreakIntoPointsCommand(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateBreakIntoPointsCommand(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_breakIntoPoints))
         {
@@ -663,7 +663,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Duplicate ***************
     // *******************************************
-    public static ILegendCommand CreateCloneDrawingItemCommand(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateCloneDrawingItemCommand(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_duplicateFeature))
         {
@@ -691,7 +691,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Simplify by Angle *******
     // *******************************************
-    public static ILegendCommand CreateSimplifyByAngleCommand(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateSimplifyByAngleCommand(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand()
         {
@@ -720,7 +720,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Simplify by Area ********
     // *******************************************
-    public static ILegendCommand CreateSimplifyByAreaCommand(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateSimplifyByAreaCommand(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand()
         {
@@ -749,7 +749,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Simplifications **********
     // *******************************************
-    public static ILegendCommand CreateSimplifyByVWCommand(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateSimplifyByVWCommand(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand()
         {
@@ -776,7 +776,7 @@ public class LegendCommand : LegendCommandBase
         return result;
     }
 
-    public static ILegendCommand CreateSimplifyByRDPCommand(MapPresenter map, DrawingItemLayer layer)
+    public static ILegendCommand CreateSimplifyByRDPCommand(MapViewModel map, DrawingItemLayer layer)
     {
         var result = new LegendCommand()
         {
@@ -809,9 +809,9 @@ public class LegendCommand : LegendCommandBase
 
     #region Default Text Layer
 
-    internal static List<Func<MapPresenter, DrawingItemLayer, ILegendCommand>> GetDefaultTextLayerCommands()
+    internal static List<Func<MapViewModel, DrawingItemLayer, ILegendCommand>> GetDefaultTextLayerCommands()
     {
-        return new List<Func<MapPresenter, DrawingItemLayer, ILegendCommand>>()
+        return new List<Func<MapViewModel, DrawingItemLayer, ILegendCommand>>()
         {
             CreateRemoveDrawingItemLayer,
             (p,l)=>LegendCommand. CreateZoomToExtentCommandFunc(p,l)

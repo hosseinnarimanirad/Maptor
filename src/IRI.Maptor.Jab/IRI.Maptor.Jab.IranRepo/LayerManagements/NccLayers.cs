@@ -3,7 +3,7 @@
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Helpers;
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Models.Legend;
@@ -13,7 +13,7 @@ namespace IRI.Maptor.Jab.IranRepo;
 
 public static class NccLayers
 { 
-    public static List<ILayer> GetLayers(MapPresenter map)
+    public static List<ILayer> GetLayers(MapViewModel map)
     {
         var fontFamily = new FontFamily("Times New Roman");
 
@@ -116,7 +116,7 @@ public static class NccLayers
                     ?.ToList() ?? [];
     }
 
-    private static List<ILegendCommand> GetCommands<T>(MapPresenter map, VectorLayer layer/*, LabelParameters label*/)
+    private static List<ILegendCommand> GetCommands<T>(MapViewModel map, VectorLayer layer/*, LabelParameters label*/)
         where T : class, IGeometryAware<Point>
     {
         return new List<ILegendCommand>()

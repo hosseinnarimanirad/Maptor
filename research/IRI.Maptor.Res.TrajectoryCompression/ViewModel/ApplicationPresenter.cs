@@ -6,13 +6,13 @@ using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Controls.Presenters;
+using IRI.Maptor.Sta.Spatial.Primitives; 
 using IRI.Maptor.Jab.Common.Assets.Commands;
- 
+using IRI.Maptor.Jab.Common.ViewModels;
+
 namespace IRI.Maptor.Res.TrajectoryCompression;
 
-public class ApplicationPresenter : MapApplicationPresenter
+public class ApplicationPresenter : MapViewModel
 {
     bool retain3Points;
 

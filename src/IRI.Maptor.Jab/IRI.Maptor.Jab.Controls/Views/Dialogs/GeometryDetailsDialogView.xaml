@@ -4,7 +4,7 @@
         xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:views="clr-namespace:IRI.Maptor.Jab.Controls.Views"                    
         xmlns:editors="clr-namespace:IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors"
-        xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;assembly=IRI.Maptor.Jab.Common" 
+        xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;assembly=IRI.Maptor.Jab.Common" 
         xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
         Title="{Binding DialogTitle, RelativeSource={RelativeSource AncestorType=mahApp:MetroWindow}}" 
         FlowDirection="RightToLeft" 
@@ -84,13 +84,13 @@
             <Expander Grid.Row="1" Header="{Binding [dialog_geometryDetails_editCoordinates], Source={StaticResource Localization}}" Margin="0,0,0,8" Padding="8">
                 <ContentControl Content="{Binding GeometryEditor}">
                     <ContentControl.Resources>
-                        <DataTemplate DataType="{x:Type presenters:PointEditorPresenter}">
+                        <DataTemplate DataType="{x:Type presenters:PointEditorViewModel}">
                             <editors:PointEditorView/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type presenters:LineStringEditorPresenter}">
+                        <DataTemplate DataType="{x:Type presenters:LineStringEditorViewModel}">
                             <editors:LineStringEditorView/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type presenters:PolygonEditorPresenter}">
+                        <DataTemplate DataType="{x:Type presenters:PolygonEditorViewModel}">
                             <editors:PolygonEditorView/>
                         </DataTemplate>
                         <!--<DataTemplate DataType="{x:Type presenters:MultiPointEditorPresenter}">

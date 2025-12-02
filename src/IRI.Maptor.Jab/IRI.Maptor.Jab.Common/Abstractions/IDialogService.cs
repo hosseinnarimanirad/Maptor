@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Threading.Tasks;
 
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Models.Security;
  
 namespace IRI.Maptor.Jab.Common.Abstractions;

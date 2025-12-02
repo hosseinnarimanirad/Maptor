@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Abstractions;
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Controls.Common.Defaults;
 using IRI.Maptor.Jab.Controls.Services.Dialog;
 using IRI.Maptor.Jab.Controls.Views;
@@ -32,7 +32,7 @@ public static class MapInitializationHelper
         MapViewer mapView,
         Window ownerWindow,
         T presenter,
-        MapViewerConfiguration? config = null) where T : MapPresenter
+        MapViewerConfiguration? config = null) where T : MapViewModel
     {
         if (mapView == null)
             throw new ArgumentNullException(nameof(mapView));
@@ -67,7 +67,7 @@ public static class MapInitializationHelper
     /// </summary>
     private static (IDialogService dialogService, Action<IRI.Maptor.Sta.Common.Primitives.Point> requestShowGoToView, Action<ILayer> requestShowSymbologyView) CreateDefaultServices(
         Window ownerWindow,
-        MapPresenter presenter)
+        MapViewModel presenter)
     {
         var dialogService = new DefaultDialogService(ownerWindow);
         var requestShowGoToView = DefaultActions.GetDefaultGoToAction(ownerWindow, presenter);
@@ -110,7 +110,7 @@ public static class MapInitializationHelper
     /// <summary>
     /// Configures presenter settings based on the configuration.
     /// </summary>
-    private static void ConfigurePresenterSettings(MapPresenter presenter, MapViewerConfiguration config)
+    private static void ConfigurePresenterSettings(MapViewModel presenter, MapViewerConfiguration config)
     {
         if (config.MinGoogleZoomLevel > 0)
         {

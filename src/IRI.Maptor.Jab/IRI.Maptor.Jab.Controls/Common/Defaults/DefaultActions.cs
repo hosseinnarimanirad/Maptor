@@ -1,5 +1,6 @@
 ﻿using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
+using IRI.Maptor.Jab.Controls.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,11 @@ namespace IRI.Maptor.Jab.Controls.Common.Defaults;
 public static class DefaultActions
 {
 
-    public static Action<IRI.Maptor.Sta.Common.Primitives.Point> GetDefaultGoToAction(Window ownerWindow, MapPresenter mapPresenter)
+    public static Action<IRI.Maptor.Sta.Common.Primitives.Point> GetDefaultGoToAction(Window ownerWindow, MapViewModel mapPresenter)
     {
         var result = new Action<IRI.Maptor.Sta.Common.Primitives.Point>((IRI.Maptor.Sta.Common.Primitives.Point webMercatorPoint) =>
         {
-            var gotoPresenter = IRI.Maptor.Jab.Controls.Presenters.GoToPresenter.Create(mapPresenter);
+            var gotoPresenter = GoToViewModel.Create(mapPresenter);
 
             var gotoView = new IRI.Maptor.Jab.Controls.Views.GoToMetroWindow(gotoPresenter);
 
@@ -33,11 +34,11 @@ public static class DefaultActions
     }
 
 
-    public static void GetDefaultShowSymbologyView(Window ownerWindow, ILayer layer, MapPresenter mapPresenter)
+    public static void GetDefaultShowSymbologyView(Window ownerWindow, ILayer layer, MapViewModel mapPresenter)
     {
         var view = new IRI.Maptor.Jab.Controls.Views.Symbology.SymbologyView();
 
-        var presenter = new SymbologyPresenter();
+        var presenter = new SymbologyViewModel();
 
         //if (layer is DrawingItemLayer)
         //{ 

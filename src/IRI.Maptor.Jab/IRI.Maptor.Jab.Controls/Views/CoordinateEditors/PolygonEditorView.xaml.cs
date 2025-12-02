@@ -1,4 +1,4 @@
-using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
+using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls; 
@@ -18,7 +18,7 @@ public partial class PolygonEditorView : UserControl
 
     private void PolygonEditorView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (e.NewValue is PolygonEditorPresenter presenter)
+        if (e.NewValue is PolygonEditorViewModel presenter)
         {
             if (presenter.ExteriorRing != null)
             {

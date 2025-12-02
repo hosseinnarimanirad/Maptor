@@ -33,7 +33,7 @@ using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Assets.Data;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
@@ -44,8 +44,7 @@ using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
 using sb = IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Views.Controls;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
-using IRI.Maptor.Jab.Controls.Presenters;
-using IRI.Maptor.Jab.Common.Presenters.CoordinateEditor;
+using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
@@ -477,11 +476,11 @@ public partial class MapViewer : NotifiableUserControl
 
 
 
-    MapPresenter _presenter;
+    MapViewModel _presenter;
 
     #endregion
 
-    public async Task Register(MapPresenter presenter,
+    public async Task Register(MapViewModel presenter,
                                 sb.BoundingBox? initialView = null,
                                 List<IrProvince93>? provinces = null)
     {
@@ -4162,7 +4161,7 @@ public partial class MapViewer : NotifiableUserControl
 
     private FrameworkElement GetRightClickOptionsForDraw()
     {
-        var presenter = new MapOptionsPresenter(
+        var presenter = new MapOptionsViewModel(
         rightToolTip: "تکمیل",
         leftToolTip: "لغو",
         middleToolTip: "تکمیل تکه‌جاری",
@@ -4693,12 +4692,9 @@ public partial class MapViewer : NotifiableUserControl
         //    CurrentEditingLayer?.FindNearestPoint(mapPoint);
         //};
 
-        CurrentEditingLayer.RequestRightClickOptions = (i1, i2, i3) =>
-        {
-            this.AddRightClickOptions(i1, i2, i3);
-        };
+        CurrentEditingLayer.RequestRightClickOptions = this.AddRightClickOptions;
 
-        CurrentEditingLayer.RequestRemoveRightClickOptions = () => { this.RemoveRightClickOptions(); };
+        CurrentEditingLayer.RequestRemoveRightClickOptions = this.RemoveRightClickOptions;
 
         CurrentEditingLayer.RequestRefresh = l =>
         {

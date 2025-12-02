@@ -1,13 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿//using System;
+//using System.Threading.Tasks;
 
-using IRI.Maptor.Jab.Common.Presenters;
-using IRI.Maptor.Jab.Common.Assets.Commands;
+//using IRI.Maptor.Jab.Common.ViewModels;
+//using IRI.Maptor.Jab.Common.Assets.Commands;
 
-namespace IRI.Maptor.Jab.Controls.Presenters
-{
-    public class MapApplicationPresenter : MapPresenter
-    {  
+//namespace IRI.Maptor.Jab.Controls.Presenters
+//{
+//    public class MapApplicationPresenter : MapViewModel
+//    {
 
-    }
-}
+//    }
+//}

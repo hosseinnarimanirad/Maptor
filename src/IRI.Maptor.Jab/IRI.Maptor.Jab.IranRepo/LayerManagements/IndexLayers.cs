@@ -11,7 +11,7 @@ using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using IRI.Maptor.Jab.Common.Presenters;
+using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 namespace IRI.Maptor.Jab.IranRepo;
@@ -139,7 +139,7 @@ public static class IndexLayers
 
     }
 
-    public static List<ILayer> GetLayers(MapPresenter map)
+    public static List<ILayer> GetLayers(MapViewModel map)
     {
         var index250k = IndexLayers.GetIndex250kLayer();
 
@@ -185,12 +185,12 @@ public static class IndexLayers
 
 
     //
-    public static List<ILayer> Get2kAndLowerIndexLayers(MapPresenter map, int utmZone)
+    public static List<ILayer> Get2kAndLowerIndexLayers(MapViewModel map, int utmZone)
     {
         return [Get2kDynamicIndexBlock(map, utmZone), Get2kDynamicIndexSheet(map, utmZone), Get1kDynamicIndex(map, utmZone), Get500DynamicIndex(map, utmZone)];
     }
 
-    public static VectorLayer Get2kDynamicIndexBlock(MapPresenter map, int utmZone)
+    public static VectorLayer Get2kDynamicIndexBlock(MapViewModel map, int utmZone)
     {
         var fontFamily = new FontFamily("Times New Roman");
 
@@ -221,7 +221,7 @@ public static class IndexLayers
         return layer;
     }
 
-    public static VectorLayer Get2kDynamicIndexSheet(MapPresenter map, int utmZone)
+    public static VectorLayer Get2kDynamicIndexSheet(MapViewModel map, int utmZone)
     {
         var fontFamily = new FontFamily("Times New Roman");
 
@@ -252,7 +252,7 @@ public static class IndexLayers
         return layer;
     }
 
-    public static VectorLayer Get1kDynamicIndex(MapPresenter map, int utmZone)
+    public static VectorLayer Get1kDynamicIndex(MapViewModel map, int utmZone)
     {
         var fontFamily = new FontFamily("Times New Roman");
 
@@ -283,7 +283,7 @@ public static class IndexLayers
         return layer;
     }
 
-    public static VectorLayer Get500DynamicIndex(MapPresenter map, int utmZone)
+    public static VectorLayer Get500DynamicIndex(MapViewModel map, int utmZone)
     {
         var fontFamily = new FontFamily("Times New Roman");
 
@@ -316,9 +316,9 @@ public static class IndexLayers
 
 
 
-    public static List<ILayer> Get50kAndHigherIndexLayers(MapPresenter map) => [Get50kDynamicIndex(map), Get25kDynamicIndex(map), Get10kDynamicIndex(map), Get5kDynamicIndex(map)];
+    public static List<ILayer> Get50kAndHigherIndexLayers(MapViewModel map) => [Get50kDynamicIndex(map), Get25kDynamicIndex(map), Get10kDynamicIndex(map), Get5kDynamicIndex(map)];
 
-    public static VectorLayer Get50kDynamicIndex(MapPresenter map)
+    public static VectorLayer Get50kDynamicIndex(MapViewModel map)
     {
         var fontFamily = new FontFamily("Times New Roman");
 
@@ -349,7 +349,7 @@ public static class IndexLayers
         return layer50k;
     }
 
-    public static VectorLayer Get25kDynamicIndex(MapPresenter map)
+    public static VectorLayer Get25kDynamicIndex(MapViewModel map)
     {
         var fontFamily = new FontFamily("Times New Roman");
 
@@ -380,7 +380,7 @@ public static class IndexLayers
         return layer25k;
     }
 
-    public static VectorLayer Get10kDynamicIndex(MapPresenter map)
+    public static VectorLayer Get10kDynamicIndex(MapViewModel map)
     {
         var fontFamily = new FontFamily("Times New Roman");
 
@@ -409,7 +409,7 @@ public static class IndexLayers
         return layer10k;
     }
 
-    public static VectorLayer Get5kDynamicIndex(MapPresenter map)
+    public static VectorLayer Get5kDynamicIndex(MapViewModel map)
     {
         var fontFamily = new FontFamily("Times New Roman");
 
@@ -439,7 +439,7 @@ public static class IndexLayers
     }
 
 
-    private static List<ILegendCommand> GetCommands/*<T>*/(MapPresenter map, VectorLayer layer/*, VisualParameters.CreateLabel label*/) =>
+    private static List<ILegendCommand> GetCommands/*<T>*/(MapViewModel map, VectorLayer layer/*, VisualParameters.CreateLabel label*/) =>
         [
             LegendCommand.CreateZoomToExtentCommand(map, layer),
             LegendCommand.CreateShowAttributeTable/*<T>*/(map,layer),
