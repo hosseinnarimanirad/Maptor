@@ -698,6 +698,25 @@ public abstract class GeometryEditorViewModelBase : Notifier
     /// </summary>
     private void FeatureLayer_LocateablesReconstructed()
     {
+        // Validate and adjust CurrentPartIndex if needed
+        int partCount = Parts?.Count ?? 0;
+        if (partCount == 0)
+        {
+            // No parts left, reset to 0
+            if (_currentPartIndex != 0)
+            {
+                _currentPartIndex = 0;
+                RaisePropertyChanged(nameof(CurrentPartIndex));
+            }
+        }
+        else if (_currentPartIndex >= partCount)
+        {
+            // CurrentPartIndex is out of bounds, adjust to last valid index
+            _currentPartIndex = partCount - 1;
+            RaisePropertyChanged(nameof(CurrentPartIndex));
+            RaisePropertyChanged(nameof(CurrentPart));
+        }
+
         // Preserve page and selection when refreshing due to reconstruction
         RefreshPointsFromCurrentPart(preservePageAndSelection: true);
     }
@@ -1059,17 +1078,60 @@ public abstract class GeometryEditorViewModelBase : Notifier
             // Add a new empty part
             //var newPart = new IGeometry();
             //Parts.Add(newPart);
-            FeatureLayer.StartNewPart(new Sta.Common.Primitives.Point(0, 0));
+            if (FeatureLayer == null)
+                return;
 
-            CurrentPartIndex = Parts.Count - 1;
+            // Store the current part count before adding
+            int oldPartCount = Parts?.Count ?? 0;
 
-            // Notify that CurrentPart has changed
-            RaisePropertyChanged(nameof(CurrentPart));
-            RaisePropertyChanged(nameof(CurrentPagePoints));
-            RaisePropertyChanged(nameof(SelectedPoint));
-            RaisePropertyChanged(nameof(TotalPages));
-            RaisePropertyChanged(nameof(CurrentPageNumber));
-            RaisePropertyChanged(nameof(TotalPointCount));
+            // Add a new empty part - this will trigger ReconstructLocateables()
+            bool success = FeatureLayer.TryAddNewPart();
+
+            if (success)
+            {
+                int newPartCount = Parts?.Count ?? 0;
+                if (newPartCount > oldPartCount)
+                {
+                    int newPartIndex = newPartCount - 1;
+
+                    // Add a point (0,0) to the new part
+                    // This will trigger ReconstructLocateables() again
+                    var newPointLocatable = FeatureLayer.AddVertexToPart(new Sta.Common.Primitives.Point(0, 0), newPartIndex);
+
+                    if (newPointLocatable != null)
+                    {
+                        // Navigate to the new part to show it in the DataGrid
+                        // (Required to select the new point in the DataGrid)
+                        CurrentPartIndex = newPartIndex;
+
+                        // Refresh points and select the new point
+                        var refreshedPoints = FeatureLayer.GetLocateablesForPart(newPartIndex);
+                        if (refreshedPoints.Count > 0)
+                        {
+                            // Select the newly added point (first point in the new part)
+                            SelectedPoint = refreshedPoints[0];
+
+                            // Calculate which page the new point is on and navigate to it
+                            int pageOfNewPoint = 0 / MaxPointsPerPage; // First point is on page 0
+                            if (pageOfNewPoint != CurrentPageIndex)
+                            {
+                                CurrentPageIndex = pageOfNewPoint;
+                            }
+                        }
+                    }
+                }
+
+                // Notify that CurrentPart has changed
+                RaisePropertyChanged(nameof(CurrentPart));
+                RaisePropertyChanged(nameof(TotalPartCount));
+                RaisePropertyChanged(nameof(CurrentPagePoints));
+                RaisePropertyChanged(nameof(SelectedPoint));
+                RaisePropertyChanged(nameof(TotalPages));
+                RaisePropertyChanged(nameof(CurrentPageNumber));
+                RaisePropertyChanged(nameof(TotalPointCount));
+                RaisePropertyChanged(nameof(IsNextPartAvailable));
+                RaisePropertyChanged(nameof(IsPreviousPartAvailable));
+            }
 
             //GeometryChanged?.Invoke(Parts);
         });
@@ -1078,38 +1140,79 @@ public abstract class GeometryEditorViewModelBase : Notifier
     public RelayCommand DeletePartCommand =>
         _deletePartCommand ??= new RelayCommand(param =>
         {
+            if (FeatureLayer == null)
+                return;
+
+            int indexToDelete = -1;
+
+            // Extract part index from parameter
             if (param is IGeometry part)
             {
-                int indexToDelete = Parts.IndexOf(part);
-                if (indexToDelete < 0)
-                    return;
+                indexToDelete = Parts?.IndexOf(part) ?? -1;
+            }
+            else if (param is int partIndex)
+            {
+                indexToDelete = partIndex;
+            }
 
-                bool wasCurrentPart = indexToDelete == CurrentPartIndex;
-                bool wasLastPart = indexToDelete == Parts.Count - 1;
+            if (indexToDelete < 0 || Parts == null || indexToDelete >= Parts.Count)
+                return;
 
-                Parts.Remove(part);
+            // Store state before deletion
+            int oldPartCount = Parts.Count;
+            bool wasCurrentPart = indexToDelete == CurrentPartIndex;
+            bool wasLastPart = indexToDelete == Parts.Count - 1;
 
-                if (Parts.Count == 0)
+            // Delete the part from the geometry - this will trigger ReconstructLocateables()
+            bool success = FeatureLayer.TryDeletePartByIndex(indexToDelete);
+
+            if (success)
+            {
+                // After LocateablesReconstructed event fires and refreshes Points,
+                // update CurrentPartIndex appropriately
+                int newPartCount = Parts?.Count ?? 0;
+
+                if (newPartCount == 0)
                 {
+                    // All parts deleted
                     CurrentPartIndex = 0;
                 }
                 else if (wasCurrentPart)
                 {
+                    // Deleted the current part
                     if (wasLastPart && CurrentPartIndex > 0)
                     {
+                        // Was last part, move to previous part
                         CurrentPartIndex = CurrentPartIndex - 1;
                     }
                     else if (!wasLastPart)
                     {
+                        // Was not last part, stay at same index (which now points to next part)
                         CurrentPartIndex = CurrentPartIndex;
+                    }
+                    else
+                    {
+                        // Was last part but it was the only part, set to 0
+                        CurrentPartIndex = 0;
                     }
                 }
                 else if (indexToDelete < CurrentPartIndex)
                 {
+                    // Deleted part was before current part, decrement index
                     CurrentPartIndex = CurrentPartIndex - 1;
                 }
+                // If deleted part was after current part, CurrentPartIndex stays the same
 
-                //GeometryChanged?.Invoke(Parts);
+                // Notify that CurrentPart has changed
+                RaisePropertyChanged(nameof(CurrentPart));
+                RaisePropertyChanged(nameof(TotalPartCount));
+                RaisePropertyChanged(nameof(CurrentPagePoints));
+                RaisePropertyChanged(nameof(SelectedPoint));
+                RaisePropertyChanged(nameof(TotalPages));
+                RaisePropertyChanged(nameof(CurrentPageNumber));
+                RaisePropertyChanged(nameof(TotalPointCount));
+                RaisePropertyChanged(nameof(IsNextPartAvailable));
+                RaisePropertyChanged(nameof(IsPreviousPartAvailable));
             }
         });
 

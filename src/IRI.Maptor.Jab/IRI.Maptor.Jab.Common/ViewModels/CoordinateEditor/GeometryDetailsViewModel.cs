@@ -32,6 +32,9 @@ public class GeometryDetailsViewModel : Notifier
 
         _editableFeatureLayer = editableFeatureLayer;
 
+        // Subscribe to LocateablesReconstructed event to refresh geometry when parts change
+        _editableFeatureLayer.LocateablesReconstructed += EditableFeatureLayer_LocateablesReconstructed;
+
         // Initialize available formats
         AvailableFormats = new ObservableCollection<string>
         {
@@ -51,6 +54,13 @@ public class GeometryDetailsViewModel : Notifier
         SelectedFormat = "WKT"; // Default format
 
         this.Geometry = editableFeatureLayer.GetFinalGeometry();
+    }
+
+    private void EditableFeatureLayer_LocateablesReconstructed()
+    {
+        // Refresh geometry when parts are added/deleted
+        // This will trigger UpdateAllProperties() which updates all dependent properties
+        Geometry = _editableFeatureLayer.GetFinalGeometry();
     }
 
     private IGeometry _geometry;

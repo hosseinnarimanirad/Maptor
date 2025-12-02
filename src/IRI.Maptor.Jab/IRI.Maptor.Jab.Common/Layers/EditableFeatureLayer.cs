@@ -239,6 +239,23 @@ public class EditableFeatureLayer : SymbolizableLayer
         return result;
     }
 
+    /// <summary>
+    /// Adds a new empty part to the geometry
+    /// </summary>
+    /// <returns>True if the part was successfully added, false otherwise</returns>
+    public bool TryAddNewPart()
+    {
+        var result = this._webMercatorGeometry.TryAddNewPart();
+
+        if (result)
+        {
+            MakePathGeometry();
+            ReconstructLocateables();
+        }
+
+        return result;
+    }
+
     internal void CancelDrawing()
     {
         this.RequestCancelDrawing?.Invoke();
@@ -1055,6 +1072,49 @@ public class EditableFeatureLayer : SymbolizableLayer
         return AddVertex(webMercatorPoint, this._webMercatorGeometry, this._vertices);
     }
 
+    /// <summary>
+    /// Adds a vertex to a specific part by part index
+    /// </summary>
+    /// <param name="webMercatorPoint">The point to add (in Web Mercator coordinates)</param>
+    /// <param name="partIndex">The index of the part to add the vertex to</param>
+    /// <returns>The newly created Locateable instance, or null if addition failed</returns>
+    public Locateable? AddVertexToPart(Point webMercatorPoint, int partIndex)
+    {
+        if (_webMercatorGeometry == null)
+            return null;
+
+        // Single-part geometry
+        if (_webMercatorGeometry.Points != null)
+        {
+            if (partIndex != 0)
+                return null;
+            
+            return AddVertex(webMercatorPoint);
+        }
+
+        // Multi-part geometry
+        if (_webMercatorGeometry.Geometries != null)
+        {
+            if (partIndex < 0 || partIndex >= _webMercatorGeometry.Geometries.Count)
+                return null;
+
+            // Calculate global index: sum of points in all parts before the target part
+            int globalIndex = 0;
+            for (int i = 0; i < partIndex; i++)
+            {
+                globalIndex += _webMercatorGeometry.Geometries[i].Points?.Count ?? 0;
+            }
+
+            // Insert at the end of the target part (after all existing points in that part)
+            int partPointCount = _webMercatorGeometry.Geometries[partIndex].Points?.Count ?? 0;
+            globalIndex += partPointCount;
+
+            return InsertVertexAt(webMercatorPoint, globalIndex);
+        }
+
+        return null;
+    }
+
     public void AddSemiVertex(Point webMercatorPoint)
     {
         var point = this.ToScreen(webMercatorPoint.AsWpfPoint());
@@ -1282,6 +1342,40 @@ public class EditableFeatureLayer : SymbolizableLayer
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Deletes a part (ring or line string) by its index
+    /// </summary>
+    /// <param name="partIndex">The index of the part to delete</param>
+    /// <returns>True if the part was successfully deleted, false otherwise</returns>
+    public bool TryDeletePartByIndex(int partIndex)
+    {
+        if (_webMercatorGeometry == null)
+            return false;
+
+        // Single-part geometry - cannot delete the only part
+        if (_webMercatorGeometry.Points != null)
+            return false;
+
+        // Multi-part geometry
+        if (_webMercatorGeometry.Geometries != null)
+        {
+            if (partIndex < 0 || partIndex >= _webMercatorGeometry.Geometries.Count)
+                return false;
+
+            var partToDelete = _webMercatorGeometry.Geometries[partIndex];
+            
+            if (_webMercatorGeometry.TryRemovePart(partToDelete))
+            {
+                MakePathGeometry();
+                ReconstructLocateables();
+                this.RequestRefresh?.Invoke(this);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     #endregion
