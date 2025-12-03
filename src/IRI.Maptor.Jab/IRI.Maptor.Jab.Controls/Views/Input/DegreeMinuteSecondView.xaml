@@ -6,17 +6,40 @@
                 x:Name="root">
     <Grid>
         <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
-            <mahApp:NumericUpDown MinWidth="{Binding ElementName=root, Path=MinInputWidth}" Width="Auto" HideUpDownButtons="{Binding ElementName=root, Path=HideUpDownButtons}"
-                                  Maximum="{Binding ElementName=root, Path=MaxDegreeValue}" Minimum="{Binding ElementName=root, Path=MinDegreeValue}" Margin="1,0" NumericInputMode="Numbers"  
-                                  Value="{Binding Degree, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" StringFormat="{}{0:000} °" mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
+            <mahApp:NumericUpDown MinWidth="{Binding ElementName=root, Path=MinInputWidth}"
+                                  Width="Auto"
+                                  HideUpDownButtons="{Binding ElementName=root, Path=HideUpDownButtons}"
+                                  Maximum="{Binding ElementName=root, Path=MaxDegreeValue}"
+                                  Minimum="{Binding ElementName=root, Path=MinDegreeValue}"
+                                  Margin="1,0"
+                                  NumericInputMode="Numbers"  
+                                  Value="{Binding Degree, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  StringFormat="{}{0:000} °"
+                                  mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
 
-            <mahApp:NumericUpDown MinWidth="0" Width="Auto" HideUpDownButtons="{Binding ElementName=root, Path=HideUpDownButtons}"
-                                  Maximum="59" Minimum="0" Margin="1,0" NumericInputMode="Numbers" 
-                                  Value="{Binding Minute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" StringFormat="{}{0:00} ' " mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
+            <mahApp:NumericUpDown MinWidth="0"
+                                  Width="Auto"
+                                  HideUpDownButtons="{Binding ElementName=root, Path=HideUpDownButtons}"
+                                  Maximum="59"
+                                  Minimum="0"
+                                  Margin="1,0"
+                                  NumericInputMode="Numbers" 
+                                  Value="{Binding Minute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  StringFormat="{}{0:00} ' "
+                                  mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
 
-            <mahApp:NumericUpDown MinWidth="0" Width="Auto" HideUpDownButtons="{Binding ElementName=root, Path=HideUpDownButtons}"
-                                  Maximum="59.99" Minimum="0" Margin="1,0" NumericInputMode="Decimal"  DecimalPointCorrection="Number" Speedup="True"
-                                  Value="{Binding Second, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" StringFormat="{}{0:00.00} &quot;" mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
+            <mahApp:NumericUpDown MinWidth="0"
+                                  Width="Auto"
+                                  HideUpDownButtons="{Binding ElementName=root, Path=HideUpDownButtons}"
+                                  Maximum="59.99"
+                                  Minimum="0"
+                                  Margin="1,0"
+                                  NumericInputMode="Decimal"
+                                  DecimalPointCorrection="Number"
+                                  Speedup="True"
+                                  Value="{Binding Second, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  StringFormat="{}{0:00.00} &quot;"
+                                  mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
         </StackPanel>
     </Grid>
 </userControl:NotifiableUserControl>

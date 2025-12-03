@@ -81,7 +81,8 @@
             </Expander>
 
             <!-- Geometry Editor Section -->
-            <Expander Grid.Row="1" Header="{Binding [dialog_geometryDetails_editCoordinates], Source={StaticResource Localization}}" Margin="0,0,0,8" Padding="8">
+            <Expander Grid.Row="1" Header="{Binding [dialog_geometryDetails_editCoordinates], Source={StaticResource Localization}}" Margin="0,0,0,8" Padding="8"
+                      IsExpanded="True">
                 <ContentControl Content="{Binding GeometryEditor}">
                     <ContentControl.Resources>
                         <DataTemplate DataType="{x:Type presenters:PointEditorViewModel}">

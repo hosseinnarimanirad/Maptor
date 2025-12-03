@@ -17,6 +17,10 @@
     <converters:CollectionToStringConverter x:Key="collectionToStringConverter"/>
     <converters:CoordinateDimensionToMVisibilityConverter x:Key="coordinateDimensionToMVisibilityConverter"/>
     <converters:CoordinateDimensionToZVisibilityConverter x:Key="coordinateDimensionToZVisibilityConverter"/>
+    <converters:EllipsoidNameConverter x:Key="ellipsoidNameConverter"/>
+    <converters:UtmZoneConverter x:Key="utmZoneConverter"/>
+    <converters:SrsTypeToIconConverter x:Key="srsTypeToIconConverter"/>
+    <converters:SrsTypeToDescriptionConverter x:Key="srsTypeToDescriptionConverter"/>
     <!--<converters:CountLessThanOneToBoolConverter x:Key="countLessThanOneToBoolConverter"/>-->
 
     <converters:DateTimeToPersianEllapsedDateCoarseConverter x:Key="dateTimeToPersianEllapsedDateCoarseConverter"/>

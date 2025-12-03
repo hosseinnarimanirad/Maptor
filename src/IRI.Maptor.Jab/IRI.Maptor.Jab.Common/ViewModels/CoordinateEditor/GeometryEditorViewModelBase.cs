@@ -9,6 +9,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
+using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
@@ -34,7 +35,38 @@ public abstract class GeometryEditorViewModelBase : Notifier
                 _featureLayer.LocateablesReconstructed += FeatureLayer_LocateablesReconstructed;
             }
 
+            // Initialize SRS components if not already initialized
+            if (_srsViewModel == null)
+            {
+                _srsViewModel = new CoordinateEditorSrsViewModel();
+                // Subscribe to SRS changes to update CurrentPointEditor and DataGrid
+                _srsViewModel.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(CoordinateEditorSrsViewModel.SelectedSrsType) ||
+                        e.PropertyName == nameof(CoordinateEditorSrsViewModel.SelectedEllipsoid) ||
+                        e.PropertyName == nameof(CoordinateEditorSrsViewModel.UtmZone))
+                    {
+                        _currentPointEditor?.UpdateFromSelectedPoint();
+                        // Force DataGrid refresh by notifying that CurrentPagePoints has changed
+                        // This will cause all MultiBindings in DataGrid cells to re-evaluate
+                        RaisePropertyChanged(nameof(CurrentPagePoints));
+                        // Also notify that Points collection changed to ensure bindings refresh
+                        RaisePropertyChanged(nameof(Points));
+                    }
+                };
+            }
+
+            if (_currentPointEditor == null)
+            {
+                _currentPointEditor = new CurrentPointEditorModel
+                {
+                    SrsViewModel = _srsViewModel
+                };
+            }
+
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(SrsViewModel));
+            RaisePropertyChanged(nameof(CurrentPointEditor));
         }
     }
 
@@ -79,6 +111,74 @@ public abstract class GeometryEditorViewModelBase : Notifier
     }
 
     public bool IsEmptyGeometry => this.Points is null || this.Points.Count == 0;
+
+    #region SRS Support
+
+    private CoordinateEditorSrsViewModel? _srsViewModel;
+    public CoordinateEditorSrsViewModel? SrsViewModel
+    {
+        get => _srsViewModel;
+        set
+        {
+            if (_srsViewModel == value)
+                return;
+
+            _srsViewModel = value;
+            RaisePropertyChanged();
+
+            // Update CurrentPointEditor's SRS ViewModel reference
+            if (_currentPointEditor != null)
+            {
+                _currentPointEditor.SrsViewModel = value;
+            }
+        }
+    }
+
+    private CurrentPointEditorModel? _currentPointEditor;
+    public CurrentPointEditorModel? CurrentPointEditor
+    {
+        get => _currentPointEditor;
+        set
+        {
+            if (_currentPointEditor == value)
+                return;
+
+            _currentPointEditor = value;
+            RaisePropertyChanged();
+
+            // Wire up SRS ViewModel
+            if (_currentPointEditor != null && _srsViewModel != null)
+            {
+                _currentPointEditor.SrsViewModel = _srsViewModel;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Checks if the geometry has Z coordinates
+    /// </summary>
+    public bool HasZ()
+    {
+        if (FeatureLayer == null)
+            return false;
+
+        var geometry = FeatureLayer.GetFinalGeometry();
+        return geometry?.HasZ() ?? false;
+    }
+
+    /// <summary>
+    /// Checks if the geometry has M coordinates
+    /// </summary>
+    public bool HasM()
+    {
+        if (FeatureLayer == null)
+            return false;
+
+        var geometry = FeatureLayer.GetFinalGeometry();
+        return geometry?.HasM() ?? false;
+    }
+
+    #endregion
 
     #region Parts
 
@@ -271,6 +371,14 @@ public abstract class GeometryEditorViewModelBase : Notifier
                 int globalIndex = GetGlobalIndex(CurrentPartIndex, CurrentPointIndex);
                 FeatureLayer.SelectPoint(globalIndex);
             }
+
+            // Update CurrentPointEditor when SelectedPoint changes
+            if (_currentPointEditor != null)
+            {
+                _currentPointEditor.CurrentPoint = _selectedPoint;
+                _currentPointEditor.HasZ = HasZ();
+                _currentPointEditor.HasM = HasM();
+            }
         }
     }
 
@@ -290,6 +398,12 @@ public abstract class GeometryEditorViewModelBase : Notifier
             {
                 // Fire event with Web Mercator coordinates (SelectedPoint already uses Web Mercator)
                 RequestUpdateCurrentEditingPoint?.Invoke(new Point(_selectedPoint.X, _selectedPoint.Y));
+                
+                // Update CurrentPointEditor when coordinates change (e.g., from map drag)
+                _currentPointEditor?.UpdateFromSelectedPoint();
+                
+                // Refresh DataGrid display to show updated coordinates in selected SRS
+                RaisePropertyChanged(nameof(CurrentPagePoints));
             }
         }
     }
@@ -505,6 +619,9 @@ public abstract class GeometryEditorViewModelBase : Notifier
         UpdateValidationState();
         PointsChanged?.Invoke(Points);
         UpdatePagingProperties();
+        
+        // Refresh DataGrid when Points collection changes to update coordinate display
+        RaisePropertyChanged(nameof(CurrentPagePoints));
     }
 
     private void UpdatePagingProperties()
@@ -535,6 +652,12 @@ public abstract class GeometryEditorViewModelBase : Notifier
         {
             SelectedPoint.X = currentWebMercatorEditingPoint.X;
             SelectedPoint.Y = currentWebMercatorEditingPoint.Y;
+            
+            // Update CurrentPointEditor when coordinates change from map
+            _currentPointEditor?.UpdateFromSelectedPoint();
+            
+            // Refresh DataGrid to show updated coordinates in selected SRS
+            RaisePropertyChanged(nameof(CurrentPagePoints));
         }
         finally
         {
@@ -569,6 +692,9 @@ public abstract class GeometryEditorViewModelBase : Notifier
                 {
                     this.SelectedPoint.X = l.X;
                     this.SelectedPoint.Y = l.Y;
+                    
+                    // Update CurrentPointEditor when coordinates change
+                    _currentPointEditor?.UpdateFromSelectedPoint();
                 }
             }
         }
@@ -601,6 +727,9 @@ public abstract class GeometryEditorViewModelBase : Notifier
                     {
                         this.SelectedPoint.X = l.X;
                         this.SelectedPoint.Y = l.Y;
+                        
+                        // Update CurrentPointEditor when coordinates change
+                        _currentPointEditor?.UpdateFromSelectedPoint();
                     }
                 }
             }
@@ -1125,6 +1254,22 @@ public abstract class GeometryEditorViewModelBase : Notifier
 
             //GeometryChanged?.Invoke(Parts);
         });
+
+    private RelayCommand _applyCurrentPointChangesCommand;
+    public RelayCommand ApplyCurrentPointChangesCommand =>
+        _applyCurrentPointChangesCommand ??= new RelayCommand(param =>
+        {
+            if (CurrentPointEditor == null)
+                return;
+
+            bool success = CurrentPointEditor.ApplyChanges();
+            if (success)
+            {
+                // Changes applied successfully, the Locateable has been updated
+                // The DataGrid will refresh automatically through property change notifications
+                RaisePropertyChanged(nameof(CurrentPagePoints));
+            }
+        }, param => CurrentPointEditor != null && CurrentPointEditor.ValidateInput());
 
     private RelayCommand _deletePartCommand;
     public RelayCommand DeletePartCommand =>

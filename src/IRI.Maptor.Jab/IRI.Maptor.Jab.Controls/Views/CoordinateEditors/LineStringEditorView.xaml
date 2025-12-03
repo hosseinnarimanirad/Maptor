@@ -5,6 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
+             xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:converters="clr-namespace:IRI.Maptor.Jab.Common.Assets.Converters;assembly=IRI.Maptor.Jab.Common"
+             xmlns:views="clr-namespace:IRI.Maptor.Jab.Controls.Views"
              FlowDirection="RightToLeft"
              mc:Ignorable="d" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="2">
     <UserControl.Resources>
@@ -12,6 +15,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <converters:CoordinateDisplayConverter x:Key="coordinateDisplayConverter"/>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <Style TargetType="{x:Type Button}" x:Key="circleButton">
                 <Setter Property="Margin" Value="4"/>
@@ -167,12 +171,12 @@
     <Grid Margin="0" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-
-        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Center" FlowDirection="LeftToRight">
+        <StackPanel Grid.Row="0" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Center" FlowDirection="LeftToRight">
             <TextBlock Text="Geometry Parts" VerticalAlignment="Center" FontWeight="Bold" Margin="0,4,10,4"/>
             <Button Style="{StaticResource circleButton}" 
                             Command="{Binding GoToPreviousPartCommand}"
@@ -210,12 +214,138 @@
             </TextBlock>
         </StackPanel>
 
+        <!-- SRS Selection and Current Point Editor Section -->
+        <Border Grid.Row="1" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,1,0,0" Padding="4" Margin="0,0,0,4">
+            <Grid>
+                <StackPanel>
+                    <!-- Current Point Editor -->
+                    <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
+                        <TextBlock Text="X:" VerticalAlignment="Center" Margin="0,0,4,0" Width="20"/>
+                        <!-- DMS Mode: Use DegreeMinuteSecondView -->
+                        <views:DegreeMinuteSecondView x:Name="dmsXView" DataContext="{Binding CurrentPointEditor.DmsX}" 
+                                                      Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToVisibilityConverter}}"
+                                                      MaxDegreeValue="180" MinDegreeValue="-180"
+                                                      HideUpDownButtons="False" Margin="0,0,8,0"/>
+                        <!-- Non-DMS Mode: Use TextBox -->
+                        <TextBox Text="{Binding CurrentPointEditor.CoordinateX, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                                 Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
+                                 Width="150" Margin="0,0,8,0" FlowDirection="LeftToRight" VerticalAlignment="Center"
+                                 mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
+                        <TextBlock Text="Y:" VerticalAlignment="Center" Margin="0,0,4,0" Width="20"/>
+                        <!-- DMS Mode: Use DegreeMinuteSecondView -->
+                        <views:DegreeMinuteSecondView DataContext="{Binding CurrentPointEditor.DmsY}" 
+                                                      Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToVisibilityConverter}}"
+                                                      MaxDegreeValue="90" MinDegreeValue="-90"
+                                                      HideUpDownButtons="False" Margin="0,0,8,0"/>
+                        <!-- Non-DMS Mode: Use TextBox -->
+                        <TextBox Text="{Binding CurrentPointEditor.CoordinateY, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                                 Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
+                                 Width="150" Margin="0,0,8,0" FlowDirection="LeftToRight" VerticalAlignment="Center"
+                                 mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
+                        <Button Style="{StaticResource circleButton}"
+                                Command="{Binding ApplyCurrentPointChangesCommand}" 
+                                IsEnabled="{Binding CurrentPointEditor, Converter={StaticResource notNullToBoolConverter}}"
+                                Margin="8,0,0,0">
+                            <iconPacks:PackIconMaterial Kind="Check"/>
+                        </Button>
+                        <ToggleButton x:Name="srsConfigToggleButton" Style="{StaticResource circleToggleButton}" Margin="8,0,0,0">
+                            <iconPacks:PackIconMaterial Kind="Cog"/>
+                        </ToggleButton>
+                    </StackPanel>
+                    <!-- SRS Info TextBlock -->
+                    <TextBlock VerticalAlignment="Center" Margin="4,4,0,0" FontStyle="Italic" Foreground="Gray" FontSize="11">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="SRS: {0}{1}{2}">
+                                <Binding Path="SrsViewModel.SelectedSrsType"/>
+                                <Binding Path="SrsViewModel.SelectedEllipsoid" Converter="{StaticResource ellipsoidNameConverter}"/>
+                                <Binding Path="SrsViewModel.UtmZone" Converter="{StaticResource utmZoneConverter}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+                
+                <!-- SRS Configuration Popup -->
+                <Popup x:Name="srsConfigPopup" 
+                       IsOpen="{Binding IsChecked, ElementName=srsConfigToggleButton}"
+                       Placement="Bottom"
+                       PlacementTarget="{Binding ElementName=srsConfigToggleButton}"
+                       StaysOpen="False"
+                       PopupAnimation="Slide"
+                       AllowsTransparency="True">
+                    <Border Background="White" 
+                            BorderBrush="{DynamicResource MahApps.Brushes.Accent}" 
+                            BorderThickness="1" 
+                            Padding="8"
+                            CornerRadius="4">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <StackPanel Orientation="Vertical" FlowDirection="LeftToRight" MinWidth="200">
+                            <TextBlock Text="SRS Configuration" FontWeight="Bold" Margin="0,0,0,8"/>
+                            <!-- SRS Type -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <TextBlock Text="SRS:" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <ComboBox ItemsSource="{Binding SrsViewModel.AvailableSrsTypes}" 
+                                          SelectedItem="{Binding SrsViewModel.SelectedSrsType, Mode=TwoWay}" 
+                                          Width="150">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <iconPacks:PackIconMaterial 
+                                                    Kind="{Binding Converter={StaticResource srsTypeToIconConverter}}" 
+                                                    Width="16" Height="16" 
+                                                    Margin="0,0,4,0"
+                                                    VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Converter={StaticResource srsTypeToDescriptionConverter}}" 
+                                                          VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                            <!-- Ellipsoid -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
+                                        Visibility="{Binding SrsViewModel.IsEllipsoidVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                                <TextBlock Text="Ellipsoid:" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <ComboBox ItemsSource="{Binding SrsViewModel.AvailableEllipsoids}" 
+                                          SelectedItem="{Binding SrsViewModel.SelectedEllipsoid, Mode=TwoWay}"
+                                          DisplayMemberPath="Name"
+                                          Width="150"/>
+                            </StackPanel>
+                            <!-- UTM Zone -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
+                                        Visibility="{Binding SrsViewModel.IsUtmZoneVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                                <TextBlock Text="UTM Zone:" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <mahApp:NumericUpDown Value="{Binding SrsViewModel.UtmZone, Mode=TwoWay}" 
+                                                     Minimum="1" Maximum="60" 
+                                                     Width="150"/>
+                            </StackPanel>
+                            <!-- Coordinate Precision -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <TextBlock Text="Lat/Long Precision:" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <mahApp:NumericUpDown Value="{Binding SrsViewModel.LatLongPrecision, Mode=TwoWay}" 
+                                                     Minimum="0" Maximum="10" 
+                                                     Width="150"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <TextBlock Text="X/Y Precision:" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <mahApp:NumericUpDown Value="{Binding SrsViewModel.XYPrecision, Mode=TwoWay}" 
+                                                     Minimum="0" Maximum="10" 
+                                                     Width="150"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+            </Grid>
+        </Border>
 
-        <DataGrid Grid.Row="1" FlowDirection="LeftToRight"  x:Name="dataGrid"
+
+        <DataGrid Grid.Row="2" FlowDirection="LeftToRight"  x:Name="dataGrid"
                   ItemsSource="{Binding CurrentPagePoints}" 
                   SelectedItem="{Binding SelectedPoint, Mode=TwoWay}"
                   AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged"
                   CanUserSortColumns="False" CanUserAddRows="False"
+                  IsReadOnly="True"
                   Style="{DynamicResource MahApps.Styles.DataGrid}" CanUserReorderColumns="True"
                   HeadersVisibility="Column" AlternationCount="2000000000"
                   SelectionMode="Single" MaxHeight="200"  
@@ -241,16 +371,36 @@
                 <DataGridTemplateColumn Header="X" Width="*" MinWidth="120">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding X, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
-                                     FlowDirection="LeftToRight" Margin="1"/>
+                            <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource coordinateDisplayConverter}" ConverterParameter="X">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.SrsViewModel.SelectedSrsType" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.SelectedEllipsoid" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.UtmZone" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.LatLongPrecision" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.XYPrecision" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Y" Width="*" MinWidth="120">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Y, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
-                                     FlowDirection="LeftToRight" Margin="1"/>
+                            <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource coordinateDisplayConverter}" ConverterParameter="Y">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.SrsViewModel.SelectedSrsType" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.SelectedEllipsoid" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.UtmZone" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.LatLongPrecision" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.XYPrecision" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -280,7 +430,7 @@
         </DataGrid>
  
         <!-- Header with point counter and navigation buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Stretch" FlowDirection="LeftToRight" Margin="0,4,0,0"
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Stretch" FlowDirection="LeftToRight" Margin="0,4,0,0"
                     Background="{DynamicResource MahApps.Brushes.Accent}">
           
             <ToggleButton Style="{StaticResource circleToggleButton}" 
