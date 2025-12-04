@@ -203,15 +203,46 @@
                             IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">
                 <iconPacks:PackIconModern Kind="MagnifyAdd"/>
             </Button>
-            <TextBlock VerticalAlignment="Center" 
-                                TextBlock.TextAlignment="Right">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="Part {0} of {1}">
-                        <Binding Path="CurrentPartNumber"/>
-                        <Binding Path="TotalPartCount"/>
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock VerticalAlignment="Center" 
+                                    TextBlock.TextAlignment="Right" Margin="0,0,8,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text">
+                                <Setter.Value>
+                                    <MultiBinding StringFormat="Part {0} of {1}">
+                                        <Binding Path="CurrentPartNumber"/>
+                                        <Binding Path="TotalPartCount"/>
+                                    </MultiBinding>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding TotalPartCount}" Value="0">
+                                    <Setter Property="Text" Value="No parts"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBlock VerticalAlignment="Center" FontStyle="Italic" Margin="0,0,0,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Text" Value=""/>
+                            <Setter Property="Foreground" Value="Green"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentPartIsValid}" Value="True">
+                                    <Setter Property="Text" Value="✓ Valid"/>
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding CurrentPartIsValid}" Value="False">
+                                    <Setter Property="Text" Value="✗ Invalid"/>
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StackPanel>
         </StackPanel>
 
         <!-- SRS Selection and Current Point Editor Section -->
@@ -223,9 +254,9 @@
                         <TextBlock Text="X:" VerticalAlignment="Center" Margin="0,0,4,0" Width="20"/>
                         <!-- DMS Mode: Use DegreeMinuteSecondView -->
                         <views:DegreeMinuteSecondView x:Name="dmsXView" DataContext="{Binding CurrentPointEditor.DmsX}" 
-                                                      Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToVisibilityConverter}}"
-                                                      MaxDegreeValue="180" MinDegreeValue="-180"
-                                                      HideUpDownButtons="False" Margin="0,0,8,0"/>
+                                                      MaxDegreeValue="180" MinDegreeValue="-180" 
+                                                      HideUpDownButtons="False" Margin="0,0,8,0"
+                                                      Visibility="{Binding DataContext.CurrentPointEditor.IsDmsMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
                         <!-- Non-DMS Mode: Use TextBox -->
                         <TextBox Text="{Binding CurrentPointEditor.CoordinateX, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                                  Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
@@ -234,9 +265,9 @@
                         <TextBlock Text="Y:" VerticalAlignment="Center" Margin="0,0,4,0" Width="20"/>
                         <!-- DMS Mode: Use DegreeMinuteSecondView -->
                         <views:DegreeMinuteSecondView DataContext="{Binding CurrentPointEditor.DmsY}" 
-                                                      Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToVisibilityConverter}}"
                                                       MaxDegreeValue="90" MinDegreeValue="-90"
-                                                      HideUpDownButtons="False" Margin="0,0,8,0"/>
+                                                      HideUpDownButtons="False" Margin="0,0,8,0"
+                                                      Visibility={Binding DataContext.CurrentPointEditor.IsDmsMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
                         <!-- Non-DMS Mode: Use TextBox -->
                         <TextBox Text="{Binding CurrentPointEditor.CoordinateY, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                                  Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"

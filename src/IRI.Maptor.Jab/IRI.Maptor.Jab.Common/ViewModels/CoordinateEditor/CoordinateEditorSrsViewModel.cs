@@ -11,7 +11,7 @@ namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
 public class CoordinateEditorSrsViewModel : Notifier
 {
-    private CoordinateEditorSrsType _selectedSrsType = CoordinateEditorSrsType.WebMercator;
+    private CoordinateEditorSrsType _selectedSrsType = CoordinateEditorSrsType.GeodeticDecimal;
     public CoordinateEditorSrsType SelectedSrsType
     {
         get => _selectedSrsType;

@@ -228,6 +228,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(CurrentPart));
             RaisePropertyChanged(nameof(CurrentPartNumber));
+            RaisePropertyChanged(nameof(CurrentPartIsValid));
             RaisePropertyChanged(nameof(IsNextPartAvailable));
             RaisePropertyChanged(nameof(IsPreviousPartAvailable));
 
@@ -255,12 +256,30 @@ public abstract class GeometryEditorViewModelBase : Notifier
 
     public bool IsPreviousPartAvailable => Parts != null && Parts.Count > 0;
 
+    public bool CurrentPartIsValid
+    {
+        get
+        {
+            if (CurrentPart == null)
+                return false;
+            
+            // For LineString, need at least 2 points
+            if (CurrentPart is IGeometry geometry)
+            {
+                return geometry.IsValid();
+            }
+            
+            return false;
+        }
+    }
+
     protected void Parts_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         //GeometryChanged?.Invoke(Parts);
         RaisePropertyChanged(nameof(TotalPartCount));
         RaisePropertyChanged(nameof(CurrentPart));
         RaisePropertyChanged(nameof(CurrentPartNumber));
+        RaisePropertyChanged(nameof(CurrentPartIsValid));
         RaisePropertyChanged(nameof(IsNextPartAvailable));
         RaisePropertyChanged(nameof(IsPreviousPartAvailable));
         AdjustCurrentPartIndex();
@@ -282,6 +301,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
             RaisePropertyChanged(nameof(CurrentPartIndex));
         }
         RaisePropertyChanged(nameof(CurrentPart));
+        RaisePropertyChanged(nameof(CurrentPartIsValid));
     }
 
     //public event Action<ObservableCollection<LineStringEditorPresenter>>? GeometryChanged;
@@ -844,6 +864,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
             _currentPartIndex = partCount - 1;
             RaisePropertyChanged(nameof(CurrentPartIndex));
             RaisePropertyChanged(nameof(CurrentPart));
+            RaisePropertyChanged(nameof(CurrentPartIsValid));
         }
 
         // Preserve page and selection when refreshing due to reconstruction
@@ -1242,6 +1263,8 @@ public abstract class GeometryEditorViewModelBase : Notifier
 
                 // Notify that CurrentPart has changed
                 RaisePropertyChanged(nameof(CurrentPart));
+                RaisePropertyChanged(nameof(CurrentPartNumber));
+                RaisePropertyChanged(nameof(CurrentPartIsValid));
                 RaisePropertyChanged(nameof(TotalPartCount));
                 RaisePropertyChanged(nameof(CurrentPagePoints));
                 RaisePropertyChanged(nameof(SelectedPoint));
@@ -1340,6 +1363,8 @@ public abstract class GeometryEditorViewModelBase : Notifier
 
                 // Notify that CurrentPart has changed
                 RaisePropertyChanged(nameof(CurrentPart));
+                RaisePropertyChanged(nameof(CurrentPartNumber));
+                RaisePropertyChanged(nameof(CurrentPartIsValid));
                 RaisePropertyChanged(nameof(TotalPartCount));
                 RaisePropertyChanged(nameof(CurrentPagePoints));
                 RaisePropertyChanged(nameof(SelectedPoint));
