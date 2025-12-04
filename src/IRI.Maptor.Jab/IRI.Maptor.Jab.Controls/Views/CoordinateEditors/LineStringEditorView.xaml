@@ -267,7 +267,7 @@
                         <views:DegreeMinuteSecondView DataContext="{Binding CurrentPointEditor.DmsY}" 
                                                       MaxDegreeValue="90" MinDegreeValue="-90"
                                                       HideUpDownButtons="False" Margin="0,0,8,0"
-                                                      Visibility={Binding DataContext.CurrentPointEditor.IsDmsMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
+                                                      Visibility="{Binding DataContext.CurrentPointEditor.IsDmsMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
                         <!-- Non-DMS Mode: Use TextBox -->
                         <TextBox Text="{Binding CurrentPointEditor.CoordinateY, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                                  Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
