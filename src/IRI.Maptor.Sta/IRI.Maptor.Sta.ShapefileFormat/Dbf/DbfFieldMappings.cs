@@ -36,6 +36,7 @@ public static class DbfFieldMappings
         //    return false;
         //}
 
+
         if (_dbfTrueValue1.Equals(tempValue) || _dbfTrueValue2.Equals(tempValue))
         {
             return true;
