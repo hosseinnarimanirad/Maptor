@@ -52,7 +52,7 @@ public static class DbfFieldMappings
 
     internal static string ConvertDbfGeneralToString(byte[] buffer, Encoding encoding, bool correctFarsiCharacters)
     {
-        var bytes = encoding.GetType() == typeof(PersianDOS) ? buffer.Reverse().ToArray() : buffer;
+        var bytes = encoding.GetType() == typeof(PersianDOS) ? Enumerable.Reverse(buffer).ToArray() : buffer;
 
         var result = encoding.GetString(bytes).Replace('\0', ' ').Trim();
 
