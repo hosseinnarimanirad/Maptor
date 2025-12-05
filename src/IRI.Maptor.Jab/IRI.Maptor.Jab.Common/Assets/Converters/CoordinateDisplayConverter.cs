@@ -28,7 +28,7 @@ public class CoordinateDisplayConverter : IMultiValueConverter
         if (values[0] is not Locateable locateable)
             return string.Empty;
 
-        if (values[1] is not CoordinateEditorSrsType srsType)
+        if (values[1] is not CoordinateDisplayMode srsType)
             return string.Empty;
 
         if (values[2] is not Ellipsoid ellipsoid)
@@ -48,18 +48,18 @@ public class CoordinateDisplayConverter : IMultiValueConverter
         {
             switch (srsType)
             {
-                case CoordinateEditorSrsType.UTM:
+                case CoordinateDisplayMode.UTM:
                     // UTM always uses WGS84 ellipsoid
                     var geodeticFromWebMercator = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
                     var utmPoint = MapProjects.GeodeticToUTM(geodeticFromWebMercator, Ellipsoids.WGS84, utmZone, geodeticFromWebMercator.Y > 0);
                     coordinateValue = isX ? utmPoint.X : utmPoint.Y;
                     return FormatWithPrecision(coordinateValue, xyPrecision);
 
-                case CoordinateEditorSrsType.WebMercator:
+                case CoordinateDisplayMode.WebMercator:
                     coordinateValue = isX ? webMercatorPoint.X : webMercatorPoint.Y;
                     return FormatWithPrecision(coordinateValue, xyPrecision);
 
-                case CoordinateEditorSrsType.GeodeticDecimal:
+                case CoordinateDisplayMode.GeodeticDecimal:
                     var geodetic = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
                     // If ellipsoid is not WGS84, convert to selected ellipsoid
                     if (!ellipsoid.AreTheSame(Ellipsoids.WGS84))
@@ -73,7 +73,7 @@ public class CoordinateDisplayConverter : IMultiValueConverter
                     }
                     return FormatWithPrecision(coordinateValue, latLongPrecision);
 
-                case CoordinateEditorSrsType.GeodeticDms:
+                case CoordinateDisplayMode.GeodeticDms:
                     var geodeticDms = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
                     // If ellipsoid is not WGS84, convert to selected ellipsoid
                     if (!ellipsoid.AreTheSame(Ellipsoids.WGS84))

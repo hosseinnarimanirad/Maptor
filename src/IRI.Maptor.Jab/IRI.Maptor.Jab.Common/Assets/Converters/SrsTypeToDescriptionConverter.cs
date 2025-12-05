@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Data;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common.Assets.Converters;
 
@@ -12,14 +13,14 @@ public class SrsTypeToDescriptionConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is CoordinateEditorSrsType srsType)
+        if (value is CoordinateDisplayMode srsType)
         {
             return srsType switch
             {
-                CoordinateEditorSrsType.UTM => "UTM",
-                CoordinateEditorSrsType.WebMercator => "Web Mercator",
-                CoordinateEditorSrsType.GeodeticDecimal => "Geodetic (Decimal Degrees)",
-                CoordinateEditorSrsType.GeodeticDms => "Geodetic (DMS)",
+                CoordinateDisplayMode.UTM => "UTM",
+                CoordinateDisplayMode.WebMercator => "Web Mercator",
+                CoordinateDisplayMode.GeodeticDecimal => "Geodetic (Decimal Degrees)",
+                CoordinateDisplayMode.GeodeticDms => "Geodetic (DMS)",
                 _ => srsType.ToString()
             };
         }

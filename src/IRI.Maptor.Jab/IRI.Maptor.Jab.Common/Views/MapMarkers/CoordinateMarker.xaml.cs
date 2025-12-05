@@ -34,7 +34,7 @@ public partial class CoordinateMarker : MapMarker
     }
 
 
-    private Coordinates _current;
+    private CoordinateDisplayMode _current;
 
     
     private Point _mercatorLocation;
@@ -54,7 +54,7 @@ public partial class CoordinateMarker : MapMarker
     {
         InitializeComponent();
 
-        this._current = Coordinates.Geodetic;
+        this._current = CoordinateDisplayMode.GeodeticDecimal;
 
         this.ChangeToDms = changeToDms;
 
@@ -68,7 +68,7 @@ public partial class CoordinateMarker : MapMarker
 
     private void changeCoordinate(object sender, MouseButtonEventArgs e)
     {
-        _current = (Coordinates)((int)(_current + 1) % 3);
+        _current = (CoordinateDisplayMode)((int)(_current + 1) % 3);
 
         UpdateCoordinates();
     }
@@ -77,12 +77,12 @@ public partial class CoordinateMarker : MapMarker
     {
         var value = MapProjects.WebMercatorToGeodeticWgs84(MercatorLocation);
 
-        if (_current == Coordinates.Utm)
+        if (_current == CoordinateDisplayMode.UTM)
         {
             value = MapProjects.GeodeticToUTM(value);
         }
 
-        if (_current == Coordinates.GeodeticDms)
+        if (_current == CoordinateDisplayMode.GeodeticDms)
         {
             XLabel = IRI.Maptor.Sta.Common.Helpers.DegreeHelper.ToDms(value.X, true); YLabel = IRI.Maptor.Sta.Common.Helpers.DegreeHelper.ToDms(value.Y, true);
         }
@@ -90,20 +90,12 @@ public partial class CoordinateMarker : MapMarker
         {
             var decimals = 2;
 
-            if (_current == Coordinates.Geodetic)
+            if (_current == CoordinateDisplayMode.GeodeticDecimal)
                 decimals = 5;
 
             XLabel = value.X.ToString($"N{decimals}"); YLabel = value.Y.ToString($"N{decimals}");
         }
 
-    }
-      
-
-    enum Coordinates
-    {
-        Utm = 0,
-        Geodetic = 1,
-        GeodeticDms = 2
-    }
+    } 
 
 }

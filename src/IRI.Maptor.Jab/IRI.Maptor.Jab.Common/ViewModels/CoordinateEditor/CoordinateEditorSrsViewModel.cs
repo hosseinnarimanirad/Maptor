@@ -11,8 +11,8 @@ namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
 public class CoordinateEditorSrsViewModel : Notifier
 {
-    private CoordinateEditorSrsType _selectedSrsType = CoordinateEditorSrsType.GeodeticDecimal;
-    public CoordinateEditorSrsType SelectedSrsType
+    private CoordinateDisplayMode _selectedSrsType = CoordinateDisplayMode.GeodeticDecimal;
+    public CoordinateDisplayMode SelectedSrsType
     {
         get => _selectedSrsType;
         set
@@ -23,7 +23,7 @@ public class CoordinateEditorSrsViewModel : Notifier
             _selectedSrsType = value;
             
             // Auto-set WGS84 for UTM (UTM always uses WGS84)
-            if (_selectedSrsType == CoordinateEditorSrsType.UTM)
+            if (_selectedSrsType == CoordinateDisplayMode.UTM)
             {
                 _selectedEllipsoid = Ellipsoids.WGS84;
                 RaisePropertyChanged(nameof(SelectedEllipsoid));
@@ -74,13 +74,13 @@ public class CoordinateEditorSrsViewModel : Notifier
         }
     }
 
-    public bool IsUtmZoneVisible => SelectedSrsType == CoordinateEditorSrsType.UTM;
+    public bool IsUtmZoneVisible => SelectedSrsType == CoordinateDisplayMode.UTM;
 
     // Ellipsoid is only visible for Geodetic types
     // UTM always uses WGS84 (fixed)
     // WebMercator is sphere-based (no ellipsoid)
-    public bool IsEllipsoidVisible => SelectedSrsType == CoordinateEditorSrsType.GeodeticDecimal || 
-                                      SelectedSrsType == CoordinateEditorSrsType.GeodeticDms;
+    public bool IsEllipsoidVisible => SelectedSrsType == CoordinateDisplayMode.GeodeticDecimal || 
+                                      SelectedSrsType == CoordinateDisplayMode.GeodeticDms;
 
     private int _latLongPrecision = 5;
     public int LatLongPrecision
@@ -110,19 +110,19 @@ public class CoordinateEditorSrsViewModel : Notifier
         }
     }
 
-    private ObservableCollection<CoordinateEditorSrsType> _availableSrsTypes;
-    public ObservableCollection<CoordinateEditorSrsType> AvailableSrsTypes
+    private ObservableCollection<CoordinateDisplayMode> _availableSrsTypes;
+    public ObservableCollection<CoordinateDisplayMode> AvailableSrsTypes
     {
         get
         {
             if (_availableSrsTypes == null)
             {
-                _availableSrsTypes = new ObservableCollection<CoordinateEditorSrsType>
+                _availableSrsTypes = new ObservableCollection<CoordinateDisplayMode>
                 {
-                    CoordinateEditorSrsType.UTM,
-                    CoordinateEditorSrsType.WebMercator,
-                    CoordinateEditorSrsType.GeodeticDecimal,
-                    CoordinateEditorSrsType.GeodeticDms
+                    CoordinateDisplayMode.UTM,
+                    CoordinateDisplayMode.WebMercator,
+                    CoordinateDisplayMode.GeodeticDecimal,
+                    CoordinateDisplayMode.GeodeticDms
                 };
             }
             return _availableSrsTypes;
@@ -154,7 +154,7 @@ public class CoordinateEditorSrsViewModel : Notifier
     {
         switch (SelectedSrsType)
         {
-            case CoordinateEditorSrsType.UTM:
+            case CoordinateDisplayMode.UTM:
                 var zone = utmZone ?? UtmZone;
                 // Convert UTM to Geodetic, then to Web Mercator
                 // UTM always uses WGS84 ellipsoid
@@ -162,10 +162,10 @@ public class CoordinateEditorSrsViewModel : Notifier
                 var geodeticFromUtm = MapProjects.UTMToGeodetic(utmPoint, Ellipsoids.WGS84, zone);
                 return MapProjects.GeodeticWgs84ToWebMercator(geodeticFromUtm);
 
-            case CoordinateEditorSrsType.WebMercator:
+            case CoordinateDisplayMode.WebMercator:
                 return new Point(x, y);
 
-            case CoordinateEditorSrsType.GeodeticDecimal:
+            case CoordinateDisplayMode.GeodeticDecimal:
                 var geodeticPoint = new Point(x, y);
                 // If ellipsoid is WGS84, use direct conversion
                 if (SelectedEllipsoid.AreTheSame(Ellipsoids.WGS84))
@@ -179,7 +179,7 @@ public class CoordinateEditorSrsViewModel : Notifier
                     return MapProjects.GeodeticWgs84ToWebMercator(wgs84Point);
                 }
 
-            case CoordinateEditorSrsType.GeodeticDms:
+            case CoordinateDisplayMode.GeodeticDms:
                 // When called from ApplyChanges, x and y are already decimal degrees (from DmsX.Value and DmsY.Value)
                 // Treat as GeodeticDecimal for conversion
                 var geodeticPointDms = new Point(x, y);
@@ -207,17 +207,17 @@ public class CoordinateEditorSrsViewModel : Notifier
     {
         switch (SelectedSrsType)
         {
-            case CoordinateEditorSrsType.UTM:
+            case CoordinateDisplayMode.UTM:
                 // Convert Web Mercator to Geodetic, then to UTM
                 // UTM always uses WGS84 ellipsoid
                 var geodeticFromWebMercator = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
                 var utmPoint = MapProjects.GeodeticToUTM(geodeticFromWebMercator, Ellipsoids.WGS84, UtmZone, geodeticFromWebMercator.Y > 0);
                 return (utmPoint.X, utmPoint.Y);
 
-            case CoordinateEditorSrsType.WebMercator:
+            case CoordinateDisplayMode.WebMercator:
                 return (webMercatorPoint.X, webMercatorPoint.Y);
 
-            case CoordinateEditorSrsType.GeodeticDecimal:
+            case CoordinateDisplayMode.GeodeticDecimal:
                 var geodetic = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
                 // If ellipsoid is not WGS84, convert to selected ellipsoid
                 if (!SelectedEllipsoid.AreTheSame(Ellipsoids.WGS84))
@@ -227,7 +227,7 @@ public class CoordinateEditorSrsViewModel : Notifier
                 }
                 return (geodetic.X, geodetic.Y);
 
-            case CoordinateEditorSrsType.GeodeticDms:
+            case CoordinateDisplayMode.GeodeticDms:
                 // Convert to decimal degrees first, then format as DMS string
                 var geodeticDms = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
                 if (!SelectedEllipsoid.AreTheSame(Ellipsoids.WGS84))
@@ -249,16 +249,16 @@ public class CoordinateEditorSrsViewModel : Notifier
     {
         switch (SelectedSrsType)
         {
-            case CoordinateEditorSrsType.UTM:
-            case CoordinateEditorSrsType.WebMercator:
+            case CoordinateDisplayMode.UTM:
+            case CoordinateDisplayMode.WebMercator:
                 // Use XY precision for map projections
                 return FormatWithPrecision(value, XYPrecision);
 
-            case CoordinateEditorSrsType.GeodeticDecimal:
+            case CoordinateDisplayMode.GeodeticDecimal:
                 // Use LatLong precision for geodetic coordinates
                 return FormatWithPrecision(value, LatLongPrecision);
 
-            case CoordinateEditorSrsType.GeodeticDms:
+            case CoordinateDisplayMode.GeodeticDms:
                 return DegreeHelper.ToDms(value, true);
 
             default:

@@ -3,6 +3,7 @@ using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
@@ -115,7 +116,7 @@ public class CurrentPointEditorModel : Notifier
         RaisePropertyChanged(nameof(DmsY));
     }
 
-    public bool IsDmsMode => SrsViewModel?.SelectedSrsType == CoordinateEditorSrsType.GeodeticDms;
+    public bool IsDmsMode => SrsViewModel?.SelectedSrsType == CoordinateDisplayMode.GeodeticDms;
 
     private int? _utmZone;
     public int? UtmZone
@@ -286,7 +287,7 @@ public class CurrentPointEditorModel : Notifier
         var (x, y) = SrsViewModel.ConvertFromWebMercator(webMercatorPoint);
 
         // Format based on SRS type
-        if (SrsViewModel.SelectedSrsType == CoordinateEditorSrsType.GeodeticDms)
+        if (SrsViewModel.SelectedSrsType == CoordinateDisplayMode.GeodeticDms)
         {
             // Update DMS models with decimal degrees
             // Always initialize if null
@@ -312,7 +313,7 @@ public class CurrentPointEditorModel : Notifier
         }
 
         // Update UTM zone if applicable
-        if (SrsViewModel.SelectedSrsType == CoordinateEditorSrsType.UTM)
+        if (SrsViewModel.SelectedSrsType == CoordinateDisplayMode.UTM)
         {
             var geodetic = IRI.Maptor.Sta.SpatialReferenceSystem.MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
             UtmZone = IRI.Maptor.Sta.SpatialReferenceSystem.MapProjects.FindUtmZone(geodetic.X);
@@ -344,7 +345,7 @@ public class CurrentPointEditorModel : Notifier
             double x, y;
 
             // Parse input based on SRS type
-            if (SrsViewModel.SelectedSrsType == CoordinateEditorSrsType.GeodeticDms)
+            if (SrsViewModel.SelectedSrsType == CoordinateDisplayMode.GeodeticDms)
             {
                 if (DmsX == null || DmsY == null)
                     return false;
@@ -388,7 +389,7 @@ public class CurrentPointEditorModel : Notifier
 
         try
         {
-            if (SrsViewModel.SelectedSrsType == CoordinateEditorSrsType.GeodeticDms)
+            if (SrsViewModel.SelectedSrsType == CoordinateDisplayMode.GeodeticDms)
             {
                 // Validate DMS models
                 if (DmsX == null || DmsY == null)
