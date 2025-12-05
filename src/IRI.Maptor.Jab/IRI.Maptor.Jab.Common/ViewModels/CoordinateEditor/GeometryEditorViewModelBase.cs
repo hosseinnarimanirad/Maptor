@@ -262,13 +262,13 @@ public abstract class GeometryEditorViewModelBase : Notifier
         {
             if (CurrentPart == null)
                 return false;
-            
+
             // For LineString, need at least 2 points
             if (CurrentPart is IGeometry geometry)
             {
                 return geometry.IsValid();
             }
-            
+
             return false;
         }
     }
@@ -351,7 +351,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
 
     private Locateable? _selectedPoint;
     private bool _isUpdatingFromChangeCurrentEditingPoint = false;
-    
+
     public Locateable? SelectedPoint
     {
         get
@@ -418,10 +418,10 @@ public abstract class GeometryEditorViewModelBase : Notifier
             {
                 // Fire event with Web Mercator coordinates (SelectedPoint already uses Web Mercator)
                 RequestUpdateCurrentEditingPoint?.Invoke(new Point(_selectedPoint.X, _selectedPoint.Y));
-                
+
                 // Update CurrentPointEditor when coordinates change (e.g., from map drag)
                 _currentPointEditor?.UpdateFromSelectedPoint();
-                
+
                 // Refresh DataGrid display to show updated coordinates in selected SRS
                 RaisePropertyChanged(nameof(CurrentPagePoints));
             }
@@ -639,7 +639,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
         UpdateValidationState();
         PointsChanged?.Invoke(Points);
         UpdatePagingProperties();
-        
+
         // Refresh DataGrid when Points collection changes to update coordinate display
         RaisePropertyChanged(nameof(CurrentPagePoints));
     }
@@ -672,10 +672,10 @@ public abstract class GeometryEditorViewModelBase : Notifier
         {
             SelectedPoint.X = currentWebMercatorEditingPoint.X;
             SelectedPoint.Y = currentWebMercatorEditingPoint.Y;
-            
+
             // Update CurrentPointEditor when coordinates change from map
             _currentPointEditor?.UpdateFromSelectedPoint();
-            
+
             // Refresh DataGrid to show updated coordinates in selected SRS
             RaisePropertyChanged(nameof(CurrentPagePoints));
         }
@@ -697,25 +697,28 @@ public abstract class GeometryEditorViewModelBase : Notifier
         if (Parts.IsNullOrEmpty())
         {
             // Single-part geometry: index maps directly to Points collection
-            if (index >= 0 && index < Points.Count)
-            {
-                // Navigate to correct page
-                int pageIndex = index / MaxPointsPerPage;
-                if (pageIndex != CurrentPageIndex)
-                {
-                    CurrentPageIndex = pageIndex;
-                }
+            if (index < 0 || index >= Points.Count)
+                return;
 
-                // Update the selected point and its coordinates
-                this.SelectedPoint = Points[index];
-                if (this.SelectedPoint != null)
-                {
-                    this.SelectedPoint.X = l.X;
-                    this.SelectedPoint.Y = l.Y;
-                    
-                    // Update CurrentPointEditor when coordinates change
-                    _currentPointEditor?.UpdateFromSelectedPoint();
-                }
+            // Navigate to correct page
+            int pageIndex = index / MaxPointsPerPage;
+            if (pageIndex != CurrentPageIndex)
+            {
+                CurrentPageIndex = pageIndex;
+            }
+
+            // Update the selected point and its coordinates
+
+            this.SelectedPoint = Points[index];
+
+            if (this.SelectedPoint != null)
+            {
+                this.SelectedPoint.X = l.X;
+                this.SelectedPoint.Y = l.Y;
+
+                // Update CurrentPointEditor when coordinates change
+                //_currentPointEditor?.UpdateFromSelectedPoint();
+                _currentPointEditor.CurrentPoint = this.SelectedPoint;
             }
         }
         else
@@ -723,35 +726,38 @@ public abstract class GeometryEditorViewModelBase : Notifier
             // Multi-part geometry: find which part contains this global index
             var (partIndex, localIndex) = GetPartAndLocalIndex(index);
 
-            if (partIndex >= 0 && localIndex >= 0)
+            if (partIndex < 0 && localIndex < 0)
+                return;
+
+            // Switch to the correct part if needed
+            if (partIndex != CurrentPartIndex)
+                CurrentPartIndex = partIndex;
+
+            // Ensure Points collection is up to date
+            if (localIndex < 0 || localIndex >= Points.Count)
+                return;
+
+            // Navigate to correct page
+            int pageIndex = localIndex / MaxPointsPerPage;
+            if (pageIndex != CurrentPageIndex)
             {
-                // Switch to the correct part if needed
-                if (partIndex != CurrentPartIndex)
-                {
-                    CurrentPartIndex = partIndex;
-                }
+                CurrentPageIndex = pageIndex;
+            }
 
-                // Ensure Points collection is up to date
-                if (localIndex >= 0 && localIndex < Points.Count)
-                {
-                    // Navigate to correct page
-                    int pageIndex = localIndex / MaxPointsPerPage;
-                    if (pageIndex != CurrentPageIndex)
-                    {
-                        CurrentPageIndex = pageIndex;
-                    }
+            // Update the selected point and its coordinates
+            this.SelectedPoint = Points[localIndex];
 
-                    // Update the selected point and its coordinates
-                    this.SelectedPoint = Points[localIndex];
-                    if (this.SelectedPoint != null)
-                    {
-                        this.SelectedPoint.X = l.X;
-                        this.SelectedPoint.Y = l.Y;
-                        
-                        // Update CurrentPointEditor when coordinates change
-                        _currentPointEditor?.UpdateFromSelectedPoint();
-                    }
-                }
+            if (this.SelectedPoint != null)
+            {
+                this.SelectedPoint.X = l.X;
+                this.SelectedPoint.Y = l.Y;
+
+                // Update CurrentPointEditor when coordinates change
+                if (_currentPointEditor is not null)
+                {
+                    //_currentPointEditor?.UpdateFromSelectedPoint();
+                    _currentPointEditor.CurrentPoint = this.SelectedPoint;
+                }                
             }
         }
     }
@@ -776,7 +782,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
         Locateable? previousSelectedPoint = SelectedPoint;
         int? previousGlobalIndex = null;
         int previousPageIndex = CurrentPageIndex;
-        
+
         if (previousSelectedPoint != null && Points != null)
         {
             int localIndex = Points.IndexOf(previousSelectedPoint);
@@ -987,7 +993,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
 
                 // Calculate global index to select the point on the map before deleting
                 int globalIndex = GetGlobalIndex(CurrentPartIndex, indexToDelete);
-                
+
                 // Select the point on the map so TryDeleteCurrentPoint can find it
                 FeatureLayer.SelectPoint(globalIndex);
 

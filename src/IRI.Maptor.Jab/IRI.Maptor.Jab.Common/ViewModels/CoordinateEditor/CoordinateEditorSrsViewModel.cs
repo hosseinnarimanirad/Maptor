@@ -11,6 +11,25 @@ namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
 public class CoordinateEditorSrsViewModel : Notifier
 {
+    private ObservableCollection<CoordinateDisplayMode> _availableSrsTypes;
+    public ObservableCollection<CoordinateDisplayMode> AvailableSrsTypes
+    {
+        get
+        {
+            if (_availableSrsTypes == null)
+            {
+                _availableSrsTypes = new ObservableCollection<CoordinateDisplayMode>
+                {
+                    CoordinateDisplayMode.UTM,
+                    CoordinateDisplayMode.WebMercator,
+                    CoordinateDisplayMode.GeodeticDecimal,
+                    CoordinateDisplayMode.GeodeticDms
+                };
+            }
+            return _availableSrsTypes;
+        }
+    }
+
     private CoordinateDisplayMode _selectedSrsType = CoordinateDisplayMode.GeodeticDecimal;
     public CoordinateDisplayMode SelectedSrsType
     {
@@ -21,14 +40,14 @@ public class CoordinateEditorSrsViewModel : Notifier
                 return;
 
             _selectedSrsType = value;
-            
+
             // Auto-set WGS84 for UTM (UTM always uses WGS84)
             if (_selectedSrsType == CoordinateDisplayMode.UTM)
             {
                 _selectedEllipsoid = Ellipsoids.WGS84;
                 RaisePropertyChanged(nameof(SelectedEllipsoid));
             }
-            
+
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(IsUtmZoneVisible));
             RaisePropertyChanged(nameof(IsEllipsoidVisible));
@@ -79,7 +98,7 @@ public class CoordinateEditorSrsViewModel : Notifier
     // Ellipsoid is only visible for Geodetic types
     // UTM always uses WGS84 (fixed)
     // WebMercator is sphere-based (no ellipsoid)
-    public bool IsEllipsoidVisible => SelectedSrsType == CoordinateDisplayMode.GeodeticDecimal || 
+    public bool IsEllipsoidVisible => SelectedSrsType == CoordinateDisplayMode.GeodeticDecimal ||
                                       SelectedSrsType == CoordinateDisplayMode.GeodeticDms;
 
     private int _latLongPrecision = 5;
@@ -110,25 +129,6 @@ public class CoordinateEditorSrsViewModel : Notifier
         }
     }
 
-    private ObservableCollection<CoordinateDisplayMode> _availableSrsTypes;
-    public ObservableCollection<CoordinateDisplayMode> AvailableSrsTypes
-    {
-        get
-        {
-            if (_availableSrsTypes == null)
-            {
-                _availableSrsTypes = new ObservableCollection<CoordinateDisplayMode>
-                {
-                    CoordinateDisplayMode.UTM,
-                    CoordinateDisplayMode.WebMercator,
-                    CoordinateDisplayMode.GeodeticDecimal,
-                    CoordinateDisplayMode.GeodeticDms
-                };
-            }
-            return _availableSrsTypes;
-        }
-    }
-
     public CoordinateEditorSrsViewModel()
     {
         // Initialize available ellipsoids
@@ -144,7 +144,7 @@ public class CoordinateEditorSrsViewModel : Notifier
             Ellipsoids.Sphere
         };
 
-        _selectedEllipsoid = Ellipsoids.WGS84;
+        _selectedEllipsoid = _availableEllipsoids[0];
     }
 
     /// <summary>
@@ -270,7 +270,7 @@ public class CoordinateEditorSrsViewModel : Notifier
     {
         if (precision == 0)
             return value.ToString("#,#");
-        
+
         string format = "#,#." + new string('0', precision);
         return value.ToString(format);
     }

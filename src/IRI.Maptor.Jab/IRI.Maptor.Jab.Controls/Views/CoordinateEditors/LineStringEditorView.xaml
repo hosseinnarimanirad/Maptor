@@ -231,11 +231,11 @@
                             <Setter Property="Foreground" Value="Green"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding CurrentPartIsValid}" Value="True">
-                                    <Setter Property="Text" Value="✓ Valid"/>
+                                    <Setter Property="Text" Value="✓ Valid Geometry Part"/>
                                     <Setter Property="Foreground" Value="Green"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding CurrentPartIsValid}" Value="False">
-                                    <Setter Property="Text" Value="✗ Invalid"/>
+                                    <Setter Property="Text" Value="✗ Invalid Geometry Part"/>
                                     <Setter Property="Foreground" Value="Red"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -247,7 +247,7 @@
 
         <!-- SRS Selection and Current Point Editor Section -->
         <Border Grid.Row="1" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,1,0,0" Padding="4" Margin="0,0,0,4">
-            <Grid>
+            <Grid FlowDirection="LeftToRight">
                 <StackPanel>
                     <!-- Current Point Editor -->
                     <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
@@ -284,7 +284,7 @@
                         </ToggleButton>
                     </StackPanel>
                     <!-- SRS Info TextBlock -->
-                    <TextBlock VerticalAlignment="Center" Margin="4,4,0,0" FontStyle="Italic" Foreground="Gray" FontSize="11">
+                    <TextBlock VerticalAlignment="Center" Margin="4,4,0,0" FontStyle="Italic" Foreground="Gray" FontSize="11" HorizontalAlignment="Left">
                         <TextBlock.Text>
                             <MultiBinding StringFormat="SRS: {0}{1}{2}">
                                 <Binding Path="SrsViewModel.SelectedSrsType"/>

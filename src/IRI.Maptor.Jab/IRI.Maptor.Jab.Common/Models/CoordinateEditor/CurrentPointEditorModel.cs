@@ -205,7 +205,7 @@ public class CurrentPointEditorModel : Notifier
 
             _srsViewModel = value;
             RaisePropertyChanged();
-            
+
             // Subscribe to new ViewModel
             if (_srsViewModel != null)
             {
@@ -219,7 +219,7 @@ public class CurrentPointEditorModel : Notifier
                         DmsY = new DegreeMinuteSecondModel();
                 }
             }
-            
+
             RaisePropertyChanged(nameof(IsDmsMode));
             UpdateFromSelectedPoint();
         }
@@ -227,39 +227,40 @@ public class CurrentPointEditorModel : Notifier
 
     private void SrsViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(CoordinateEditorSrsViewModel.SelectedSrsType))
-        {
-            // Initialize DMS models when switching to DMS mode (must happen before RaisePropertyChanged)
-            if (IsDmsMode)
-            {
-                if (DmsX == null)
-                {
-                    if (CurrentPoint != null && SrsViewModel != null)
-                    {
-                        var (x, _) = SrsViewModel.ConvertFromWebMercator(new Point(CurrentPoint.X, CurrentPoint.Y));
-                        DmsX = new DegreeMinuteSecondModel(x);
-                    }
-                    else
-                    {
-                        DmsX = new DegreeMinuteSecondModel();
-                    }
-                }
-                if (DmsY == null)
-                {
-                    if (CurrentPoint != null && SrsViewModel != null)
-                    {
-                        var (_, y) = SrsViewModel.ConvertFromWebMercator(new Point(CurrentPoint.X, CurrentPoint.Y));
-                        DmsY = new DegreeMinuteSecondModel(y);
-                    }
-                    else
-                    {
-                        DmsY = new DegreeMinuteSecondModel();
-                    }
-                }
-            }
-            RaisePropertyChanged(nameof(IsDmsMode));
-            UpdateFromSelectedPoint();
-        }
+        if (e.PropertyName != nameof(CoordinateEditorSrsViewModel.SelectedSrsType))
+            return;
+        //{
+        //// Initialize DMS models when switching to DMS mode (must happen before RaisePropertyChanged)
+        //if (IsDmsMode)
+        //{
+        //    if (DmsX == null)
+        //    {
+        //        if (CurrentPoint != null && SrsViewModel != null)
+        //        {
+        //            var (x, _) = SrsViewModel.ConvertFromWebMercator(new Point(CurrentPoint.X, CurrentPoint.Y));
+        //            DmsX = new DegreeMinuteSecondModel(x);
+        //        }
+        //        else
+        //        {
+        //            DmsX = new DegreeMinuteSecondModel();
+        //        }
+        //    }
+        //    if (DmsY == null)
+        //    {
+        //        if (CurrentPoint != null && SrsViewModel != null)
+        //        {
+        //            var (_, y) = SrsViewModel.ConvertFromWebMercator(new Point(CurrentPoint.X, CurrentPoint.Y));
+        //            DmsY = new DegreeMinuteSecondModel(y);
+        //        }
+        //        else
+        //        {
+        //            DmsY = new DegreeMinuteSecondModel();
+        //        }
+        //    }
+        //}
+        //RaisePropertyChanged(nameof(IsDmsMode));
+        UpdateFromSelectedPoint();
+        //}
     }
 
     /// <summary>
@@ -293,30 +294,34 @@ public class CurrentPointEditorModel : Notifier
             // Always initialize if null
             if (DmsX == null)
                 DmsX = new DegreeMinuteSecondModel(x);
+
             else
                 DmsX.Value = x;
 
             if (DmsY == null)
                 DmsY = new DegreeMinuteSecondModel(y);
+
             else
                 DmsY.Value = y;
+
+            RaisePropertyChanged(nameof(IsDmsMode));
         }
         else
         {
-            // Only update if fields are empty (user hasn't started editing)
-            // This prevents overwriting user input when point changes on map
-            if (string.IsNullOrWhiteSpace(CoordinateX) && string.IsNullOrWhiteSpace(CoordinateY))
-            {
-                CoordinateX = SrsViewModel.GetDisplayString(x);
-                CoordinateY = SrsViewModel.GetDisplayString(y);
-            }
+            //// Only update if fields are empty (user hasn't started editing)
+            //// This prevents overwriting user input when point changes on map
+            //if (string.IsNullOrWhiteSpace(CoordinateX) && string.IsNullOrWhiteSpace(CoordinateY))
+            //{
+            CoordinateX = SrsViewModel.GetDisplayString(x);
+            CoordinateY = SrsViewModel.GetDisplayString(y);
+            //}
         }
 
         // Update UTM zone if applicable
         if (SrsViewModel.SelectedSrsType == CoordinateDisplayMode.UTM)
         {
-            var geodetic = IRI.Maptor.Sta.SpatialReferenceSystem.MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
-            UtmZone = IRI.Maptor.Sta.SpatialReferenceSystem.MapProjects.FindUtmZone(geodetic.X);
+            var geodetic = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
+            UtmZone = MapProjects.FindUtmZone(geodetic.X);
         }
         else
         {
@@ -394,7 +399,7 @@ public class CurrentPointEditorModel : Notifier
                 // Validate DMS models
                 if (DmsX == null || DmsY == null)
                     return false;
-                
+
                 // DMS models always have valid values (they're NumericUpDown controls)
                 return true;
             }
