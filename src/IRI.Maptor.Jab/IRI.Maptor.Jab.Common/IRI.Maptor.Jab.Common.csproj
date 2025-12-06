@@ -6,6 +6,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
 
@@ -165,5 +167,11 @@
     <Folder Include="Cartography\Symbologies\Decorators\" />
     <Folder Include="Cartography\Symbologies\Factories\" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Windows.ThemeInfo">
+      <_Parameter1>None</_Parameter1>
+      <_Parameter2>SourceAssembly</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>

@@ -9,8 +9,10 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
+            <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>
         </ResourceDictionary>
     </UserControl.Resources>
     

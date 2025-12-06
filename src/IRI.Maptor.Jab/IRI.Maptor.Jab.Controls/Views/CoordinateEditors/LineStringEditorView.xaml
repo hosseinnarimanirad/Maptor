@@ -13,159 +13,13 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
+            <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>
+
             <converters:CoordinateDisplayConverter x:Key="coordinateDisplayConverter"/>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-            <Style TargetType="{x:Type Button}" x:Key="circleButton">
-                <Setter Property="Margin" Value="4"/>
-                <Setter Property="Background" Value="White"/>
-                <Setter Property="BorderBrush" Value="White"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Width" Value="32"/>
-                <Setter Property="Height" Value="32"/>
-                <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="Opacity" Value="0.9"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type Button}">
-                            <Grid>
-                                <Ellipse x:Name="ellipse" 
-                                         Margin="1" 
-                                         Fill="{TemplateBinding Property=Background}"
-                                         Stroke="{TemplateBinding Property=BorderBrush}"
-                                         StrokeThickness="{TemplateBinding Property=BorderThickness}">
-                                    <Ellipse.Effect>
-                                        <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.2" Color="Black"/>
-                                    </Ellipse.Effect>
-                                </Ellipse>
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Grid>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True"> 
-                                    <Setter Property="Opacity" Value="1"/>
-                                    <Setter Property="Effect" TargetName="ellipse">
-                                        <Setter.Value>
-                                            <DropShadowEffect BlurRadius="3" ShadowDepth="1.5" Opacity="0.6" Color="Black"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger> 
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-            <Style TargetType="iconPacks:PackIconModern">
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                <Setter Property="Margin" Value="4"/>
-                <Setter Property="Width" Value="16"/>
-                <Setter Property="Height" Value="16"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="FlowDirection" Value="LeftToRight"/>
-                <Setter Property="Opacity" Value="0.9"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
-                        <Setter Property="Opacity" Value="1"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
-                        <Setter Property="Opacity" Value="1"/>
-                    </DataTrigger>
-                    <Trigger Property="IsEnabled" Value="False">
-                        <Setter Property="Foreground" Value="LightGray"/> 
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-            <Style TargetType="iconPacks:PackIconMaterial">
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                <Setter Property="Margin" Value="4"/>
-                <Setter Property="Width" Value="16"/>
-                <Setter Property="Height" Value="16"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="FlowDirection" Value="LeftToRight"/>
-                <Setter Property="Opacity" Value="0.9"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
-                        <Setter Property="Opacity" Value="1"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
-                        <Setter Property="Opacity" Value="1"/>
-                    </DataTrigger>
-                    <Trigger Property="IsEnabled" Value="False">
-                        <Setter Property="Foreground" Value="LightGray"/> 
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-            <Style TargetType="{x:Type ToggleButton}" x:Key="circleToggleButton">
-                <Setter Property="Margin" Value="4"/>
-                <Setter Property="Background" Value="White"/>
-                <Setter Property="BorderBrush" Value="White"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Width" Value="32"/>
-                <Setter Property="Height" Value="32"/>
-                <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="Opacity" Value="0.9"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ToggleButton}">
-                            <Grid>
-                                <Ellipse x:Name="ellipse" 
-                                         Margin="1" 
-                                         Fill="{TemplateBinding Property=Background}"
-                                         Stroke="{TemplateBinding Property=BorderBrush}"
-                                         StrokeThickness="{TemplateBinding Property=BorderThickness}">
-                                    <Ellipse.Effect>
-                                        <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.2" Color="Black"/>
-                                    </Ellipse.Effect>
-                                </Ellipse>
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Grid>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsChecked" Value="True">
-                                    <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.Accent4}" TargetName="ellipse"/>
-                                    <Setter Property="Stroke" Value="{DynamicResource MahApps.Brushes.Highlight}" TargetName="ellipse"/>
-                                    <Setter Property="Effect" TargetName="ellipse">
-                                        <Setter.Value>
-                                            <DropShadowEffect BlurRadius="3" ShadowDepth="1.5" Opacity="0.4" Color="Black"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                                <Trigger Property="IsPressed" Value="True">
-                                    <Setter Property="Fill" Value="#D0D0D0" TargetName="ellipse"/>
-                                    <Setter Property="Effect" TargetName="ellipse">
-                                        <Setter.Value>
-                                            <DropShadowEffect BlurRadius="1" ShadowDepth="0.5" Opacity="0.1" Color="Black"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Fill" Value="#F0F0F0" TargetName="ellipse"/>
-                                    <Setter Property="Opacity" Value="1"/>
-                                    <Setter Property="Effect" TargetName="ellipse">
-                                        <Setter.Value>
-                                            <DropShadowEffect BlurRadius="3" ShadowDepth="1.5" Opacity="0.3" Color="Black"/>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                                <MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsChecked" Value="True"/>
-                                        <Condition Property="IsMouseOver" Value="True"/>
-                                    </MultiTrigger.Conditions>
-                                    <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.Accent2}" TargetName="ellipse"/>
-                                    <Setter Property="Stroke" Value="{DynamicResource MahApps.Brushes.Accent2}" TargetName="ellipse"/>
-                                    <Setter Property="Opacity" Value="1"/>
-                                </MultiTrigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Fill" Value="#CCCCCC" TargetName="ellipse"/>
-                                    <Setter Property="Opacity" Value="0.6"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Margin="0" >
@@ -178,27 +32,27 @@
 
         <StackPanel Grid.Row="0" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Center" FlowDirection="LeftToRight">
             <TextBlock Text="Geometry Parts" VerticalAlignment="Center" FontWeight="Bold" Margin="0,4,10,4"/>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
                             Command="{Binding GoToPreviousPartCommand}"
                             IsEnabled="{Binding IsPreviousPartAvailable}">
                 <iconPacks:PackIconMaterial Kind="ChevronLeft"/>
             </Button>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
                             Command="{Binding GoToNextPartCommand}"
                             IsEnabled="{Binding IsNextPartAvailable}">
                 <iconPacks:PackIconMaterial Kind="ChevronRight"/>
             </Button>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding AddPartCommand}">
                 <iconPacks:PackIconMaterial Kind="ShapePolygonPlus"/>
             </Button>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
                             Command="{Binding DeletePartCommand}"
                             CommandParameter="{Binding CurrentPart}"
                             IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">
                 <iconPacks:PackIconModern Kind="Delete"/>
             </Button>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding ZoomToCurrentPartCommand}"
                             IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">
                 <iconPacks:PackIconModern Kind="MagnifyAdd"/>
@@ -273,15 +127,19 @@
                                  Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
                                  Width="150" Margin="0,0,8,0" FlowDirection="LeftToRight" VerticalAlignment="Center"
                                  mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
-                        <Button Style="{StaticResource circleButton}"
+                        <Button Style="{StaticResource circleButtonDark}"
                                 Command="{Binding ApplyCurrentPointChangesCommand}" 
                                 IsEnabled="{Binding CurrentPointEditor, Converter={StaticResource notNullToBoolConverter}}"
                                 Margin="8,0,0,0">
                             <iconPacks:PackIconMaterial Kind="Check"/>
                         </Button>
-                        <ToggleButton x:Name="srsConfigToggleButton" Style="{StaticResource circleToggleButton}" Margin="8,0,0,0">
+                        <ToggleButton x:Name="srsConfigToggleButton" Style="{StaticResource circleToggleButtonLight}" Margin="8,0,0,0">
                             <iconPacks:PackIconMaterial Kind="Cog"/>
                         </ToggleButton>
+                        <views:DegreeMinuteSecondView x:Name="dmsXView_Copy" DataContext="{Binding CurrentPointEditor.DmsX}" 
+                            MaxDegreeValue="180" MinDegreeValue="-180" 
+                            HideUpDownButtons="False"
+                            Visibility="{Binding DataContext.CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
                     </StackPanel>
                     <!-- SRS Info TextBlock -->
                     <TextBlock VerticalAlignment="Center" Margin="4,4,0,0" FontStyle="Italic" Foreground="Gray" FontSize="11" HorizontalAlignment="Left">
@@ -460,57 +318,57 @@
             </DataGrid.RowStyle>
         </DataGrid>
  
-        <!-- Header with point counter and navigation buttons -->
+        <!-- Grid's buttons with point counter and navigation buttons -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Stretch" FlowDirection="LeftToRight" Margin="0,4,0,0"
                     Background="{DynamicResource MahApps.Brushes.Accent}">
           
-            <ToggleButton Style="{StaticResource circleToggleButton}" 
+            <ToggleButton Style="{StaticResource circleToggleButtonLight}" 
                          IsChecked="{Binding IsEditable, Mode=TwoWay}"
                          ToolTip="{Binding [geometryDetails_currentPoint_edit], Source={StaticResource Localization}}" Visibility="Collapsed" >
                 <iconPacks:PackIconModern Kind="Edit"/>
             </ToggleButton>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
                       Command="{Binding PanToCurrentPointCommand}"
                       IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
                       ToolTip="{Binding [geometryDetails_currentPoint_zoom], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="CursorHand"/>
+                <iconPacks:PackIconModern Kind="CursorHand"  />
             </Button>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
                       Command="{Binding ZoomToCurrentPointCommand}"
                       IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
                       ToolTip="{Binding [geometryDetails_currentPoint_zoomToPoint], Source={StaticResource Localization}}">
                 <iconPacks:PackIconModern Kind="MagnifyAdd"/>
             </Button>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
                       Command="{Binding CopyCurrentPointCommand}"
                       IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
                       ToolTip="{Binding [geometryDetails_currentPoint_copyCoordinate], Source={StaticResource Localization}}">
                 <iconPacks:PackIconModern Kind="PageCopy"/>
             </Button>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding InsertPointBeforeSelectedCommand}"
                     ToolTip="{Binding [geometryDetails_currentPoint_insert], Source={StaticResource Localization}}">
                 <iconPacks:PackIconModern Kind="ListAdd"/>
             </Button>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding AddPointCommand}"
                     ToolTip="{Binding [geometryDetails_currentPoint_add], Source={StaticResource Localization}}">
                 <iconPacks:PackIconModern Kind="Add"/>
             </Button>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding DeleteCurrentPointCommand}"
                     IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
                     ToolTip="{Binding [geometryDetails_currentPoint_delete], Source={StaticResource Localization}}">
                 <iconPacks:PackIconModern Kind="Delete"/>
             </Button>
           
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
                       Command="{Binding GoToPreviousPageCommand}"  
                       ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Kind="ChevronDoubleLeft" />
             </Button>
 
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
                       Command="{Binding GoToPreviousPointCommand}"
                       ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Kind="ChevronLeft"/>
@@ -530,12 +388,12 @@
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
           Command="{Binding GoToNextPointCommand}"
           ToolTip="{Binding [geometryDetails_currentPoint_goToNextPoint], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Kind="ChevronRight"/>
             </Button>
-            <Button Style="{StaticResource circleButton}" 
+            <Button Style="{StaticResource circleButtonDark}" 
          Command="{Binding GoToNextPageCommand}"
          ToolTip="{Binding [geometryDetails_currentPoint_goToNextPoint], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Kind="ChevronDoubleRight"/>

@@ -8,6 +8,13 @@
              xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;assembly=IRI.Maptor.Jab.Common"
              FlowDirection="RightToLeft"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="4">
             <!-- Exterior Ring -->
