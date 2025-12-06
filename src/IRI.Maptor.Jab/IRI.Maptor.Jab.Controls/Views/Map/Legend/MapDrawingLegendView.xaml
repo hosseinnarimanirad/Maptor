@@ -69,10 +69,10 @@
                                     Margin="0" Padding="0" CornerRadius="18">
                                     <StackPanel Orientation="Horizontal" Margin="0">
                                         <ToggleButton x:Name="HeaderSite"
-                                                      Margin="0"                                      
+                                                      Margin="0" Style="{StaticResource circleToggleButtonDark}"                                   
                                                       Width="32" Height="32"
                                                       IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
-                                            <ToggleButton.Style >
+                                            <!--<ToggleButton.Style >
                                                 <Style TargetType="ToggleButton" BasedOn="{StaticResource MahApps.Styles.ToggleButton.Circle}">
                                                     <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                                                     <Setter Property="Foreground" Value="White"/>
@@ -91,7 +91,7 @@
                                                         </Trigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </ToggleButton.Style>
+                                            </ToggleButton.Style>-->
                                             <ContentPresenter ContentSource="Header"/>
                                         </ToggleButton>
                                         <iconPacks:PackIconMaterial Kind="ChevronDoubleLeft" Width="8" Height="8" HorizontalAlignment="Center" Margin="4,0,8,0"

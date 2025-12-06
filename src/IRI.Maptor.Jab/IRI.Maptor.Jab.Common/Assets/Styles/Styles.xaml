@@ -163,10 +163,10 @@
     
     <Style TargetType="{x:Type ToggleButton}" x:Key="circleToggleButtonLight">
         <Setter Property="Margin" Value="4"/>
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="BorderBrush" Value="White"/>
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Width" Value="32"/>
         <Setter Property="Height" Value="32"/>
         <Setter Property="Cursor" Value="Hand"/>
@@ -187,24 +187,25 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.Accent4}" TargetName="ellipse"/>
-                            <Setter Property="Stroke" Value="{DynamicResource MahApps.Brushes.Highlight}" TargetName="ellipse"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                            <Setter Property="BorderThickness" Value="2"/>
                             <Setter Property="Effect" TargetName="ellipse">
                                 <Setter.Value>
-                                    <DropShadowEffect BlurRadius="3" ShadowDepth="1.5" Opacity="0.6" Color="Black"/>
+                                    <DropShadowEffect BlurRadius="3" ShadowDepth="0" Opacity="0.7" Color="Black"/>
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Fill" Value="#D0D0D0" TargetName="ellipse"/>
+                        <!--<Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="#D0D0D0"/>
                             <Setter Property="Effect" TargetName="ellipse">
                                 <Setter.Value>
                                     <DropShadowEffect BlurRadius="1" ShadowDepth="0.5" Opacity="0.1" Color="Black"/>
                                 </Setter.Value>
                             </Setter>
-                        </Trigger>
+                        +
+                        </Trigger>-->
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Fill" Value="#F0F0F0" TargetName="ellipse"/>
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                             <Setter Property="Opacity" Value="1"/>
                             <Setter Property="Effect" TargetName="ellipse">
                                 <Setter.Value>
@@ -217,13 +218,12 @@
                                 <Condition Property="IsChecked" Value="True"/>
                                 <Condition Property="IsMouseOver" Value="True"/>
                             </MultiTrigger.Conditions>
-                            <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.Accent2}" TargetName="ellipse"/>
-                            <Setter Property="Stroke" Value="{DynamicResource MahApps.Brushes.Accent2}" TargetName="ellipse"/>
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                             <Setter Property="Opacity" Value="1"/>
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Fill" Value="#CCCCCC" TargetName="ellipse"/>
-                            <Setter Property="Opacity" Value="0.6"/>
+                            <Setter Property="Background" Value="DarkGray"/>
+                            <Setter Property="Opacity" Value="0.9"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -234,9 +234,9 @@
     <Style TargetType="{x:Type ToggleButton}" x:Key="circleToggleButtonDark">
         <Setter Property="Margin" Value="4"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-        <Setter Property="BorderBrush" Value="White"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Width" Value="32"/>
         <Setter Property="Height" Value="32"/>
         <Setter Property="Cursor" Value="Hand"/>
@@ -257,25 +257,24 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.Highlight}" TargetName="ellipse"/>
-                            <Setter Property="Stroke" Value="White" TargetName="ellipse"/>
-                            <Setter Property="Opacity" Value="1"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                            <Setter Property="BorderThickness" Value="2"/>
                             <Setter Property="Effect" TargetName="ellipse">
                                 <Setter.Value>
-                                    <DropShadowEffect BlurRadius="3" ShadowDepth="1.5" Opacity="0.6" Color="Black"/>
+                                    <DropShadowEffect BlurRadius="3" ShadowDepth="0" Opacity="0.7" Color="Black"/>
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
+                        <!--<Trigger Property="IsPressed" Value="True">
                             <Setter Property="Fill" Value="#D0D0D0" TargetName="ellipse"/>
                             <Setter Property="Effect" TargetName="ellipse">
                                 <Setter.Value>
                                     <DropShadowEffect BlurRadius="1" ShadowDepth="0.5" Opacity="0.1" Color="Black"/>
                                 </Setter.Value>
                             </Setter>
-                        </Trigger>
+                        </Trigger>-->
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Fill" Value="#F0F0F0" TargetName="ellipse"/>
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                             <Setter Property="Opacity" Value="1"/>
                             <Setter Property="Effect" TargetName="ellipse">
                                 <Setter.Value>
@@ -288,13 +287,13 @@
                                 <Condition Property="IsChecked" Value="True"/>
                                 <Condition Property="IsMouseOver" Value="True"/>
                             </MultiTrigger.Conditions>
-                            <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.Accent2}" TargetName="ellipse"/>
-                            <Setter Property="Stroke" Value="{DynamicResource MahApps.Brushes.Accent2}" TargetName="ellipse"/>
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+                            <!--<Setter Property="Stroke" Value="{DynamicResource MahApps.Brushes.Accent2}" TargetName="ellipse"/>-->
                             <Setter Property="Opacity" Value="1"/>
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Fill" Value="#CCCCCC" TargetName="ellipse"/>
-                            <Setter Property="Opacity" Value="0.6"/>
+                            <Setter Property="Background" Value="DarkGray"/>
+                            <Setter Property="Opacity" Value="0.9"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
