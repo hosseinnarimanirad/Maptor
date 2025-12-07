@@ -77,7 +77,8 @@
                 <TextBlock DockPanel.Dock="Left" Text="X" Margin="4"
                            Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
                 <TextBox DockPanel.Dock="Left" MaxWidth="90" FlowDirection="LeftToRight" MinWidth="80" Margin="2" VerticalAlignment="Center"
-                         Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                         Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"
+                         mahApp:TextBoxHelper.SelectAllOnFocus="True">
                     <TextBox.Style>
                         <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
                             <Style.Triggers>
@@ -104,7 +105,8 @@
                          MinWidth="80" 
                          Margin="2" 
                          VerticalAlignment="Center"
-                         FlowDirection="LeftToRight" 
+                         FlowDirection="LeftToRight"
+                         mahApp:TextBoxHelper.SelectAllOnFocus="True"
                          Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                     <TextBox.Style>
                         <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
