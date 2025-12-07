@@ -493,12 +493,12 @@ public class GeometryDetailsViewModel : Notifier
                 break;
 
             case IRI.Maptor.Sta.Common.Primitives.GeometryType.Polygon:
-                if (geodeticGeometry != null)
-                {
-                    var polygonRings = CreatePolygonRings(geodeticGeometry);
-                    var polygonPresenter = new PolygonEditorViewModel(polygonRings);
-                    GeometryEditor = polygonPresenter;
-                }
+                //if (geodeticGeometry != null)
+                //{
+                //    var polygonRings = CreatePolygonRings(geodeticGeometry);
+                //    var polygonPresenter = new PolygonEditorViewModel(polygonRings);
+                //    GeometryEditor = polygonPresenter;
+                //}
                 break;
 
             case IRI.Maptor.Sta.Common.Primitives.GeometryType.MultiPoint:

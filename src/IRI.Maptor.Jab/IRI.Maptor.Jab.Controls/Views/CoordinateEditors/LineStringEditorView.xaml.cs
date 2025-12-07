@@ -1,11 +1,10 @@
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
-using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
+
+using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
+
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 
 namespace IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors;
@@ -105,47 +104,7 @@ public partial class LineStringEditorView : UserControl
             //UpdateCurrentPartSubscription();
         }
     }
-
-    //private void Presenter_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    //{
-    //    if (e.PropertyName == nameof(LineStringEditorPresenter.CurrentPart))
-    //    {
-    //        UpdateCurrentPartSubscription();
-    //    }
-    //}
-
-    //private void UpdateCurrentPartSubscription()
-    //{
-    //    if (_currentPresenter == null)
-    //        return;
-
-    //    // Unsubscribe from old CurrentPart
-    //    if (_currentPartPresenter != null)
-    //    {
-    //        //_currentPartPresenter.RequestPanToPoint -= Presenter_RequestPanToPoint;
-    //        //_currentPartPresenter.RequestZoomToPoint -= Presenter_RequestZoomToPoint;
-    //        //_currentPartPresenter.RequestCopyCoordinate -= Presenter_RequestCopyCoordinate;
-    //    }
-
-    //    // Subscribe to new CurrentPart if in multi-line mode
-    //    _currentPartPresenter = _currentPresenter.CurrentPart;
-    //    if (_currentPartPresenter != null)
-    //    {
-    //        _currentPartPresenter.MaxPointsPerPage = MaxPointsPerPage;
-    //        _currentPartPresenter.IsEditable = IsEditable;
-    //        //_currentPartPresenter.RequestPanToPoint += Presenter_RequestPanToPoint;
-    //        //_currentPartPresenter.RequestZoomToPoint += Presenter_RequestZoomToPoint;
-    //        //_currentPartPresenter.RequestCopyCoordinate += Presenter_RequestCopyCoordinate;
-    //    }
-
-    //    // Also update the main presenter's MaxPointsPerPage and IsEditable if switching to single-line mode
-    //    if (_currentPartPresenter == null && _currentPresenter != null)
-    //    {
-    //        _currentPresenter.MaxPointsPerPage = MaxPointsPerPage;
-    //        _currentPresenter.IsEditable = IsEditable;
-    //    }
-    //}
-
+      
     private void Presenter_RequestPanToPoint(NotifiablePoint pointInfo)
     {
         var point = new Point(pointInfo.X, pointInfo.Y);

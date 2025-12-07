@@ -944,8 +944,16 @@ public abstract class GeometryEditorViewModelBase : Notifier
     #endregion
 
 
+    public event Action<Locateable>? RequestPanToPoint;
 
-    private RelayCommand _addPointCommand;
+    public event Action<Locateable>? RequestZoomToPoint;
+
+    public event Action<Locateable>? RequestCopyCoordinate;
+
+    
+    #region Point Commands
+
+    private RelayCommand? _addPointCommand;
     public RelayCommand AddPointCommand =>
         _addPointCommand ??= new RelayCommand(param =>
         {
@@ -981,7 +989,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
         }, param => (IsLastPage || Points.Count == 0) && !HasInvalidPoints);
 
 
-    private RelayCommand _deletePointCommand;
+    private RelayCommand? _deletePointCommand;
     public RelayCommand DeletePointCommand =>
         _deletePointCommand ??= new RelayCommand(param =>
         {
@@ -1028,8 +1036,8 @@ public abstract class GeometryEditorViewModelBase : Notifier
             }
         });
 
-    //private RelayCommand _deleteCurrentPointCommand;
-    private RelayCommand _deleteCurrentPointCommand;
+    
+    private RelayCommand? _deleteCurrentPointCommand;
     public RelayCommand DeleteCurrentPointCommand =>
         _deleteCurrentPointCommand ??= new RelayCommand(param =>
         {
@@ -1043,7 +1051,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
         }, param => SelectedPoint != null && FeatureLayer != null);
 
 
-    private RelayCommand _goToNextPageCommand;
+    private RelayCommand? _goToNextPageCommand;
     public RelayCommand GoToNextPageCommand =>
         _goToNextPageCommand ??= new RelayCommand(param =>
         {
@@ -1054,7 +1062,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
         }, param => CurrentPageIndex < TotalPages - 1 && !HasInvalidPoints);
 
 
-    private RelayCommand _goToPreviousPageCommand;
+    private RelayCommand? _goToPreviousPageCommand;
     public RelayCommand GoToPreviousPageCommand =>
         _goToPreviousPageCommand ??= new RelayCommand(param =>
         {
@@ -1065,13 +1073,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
         }, param => CurrentPageIndex > 0 && !HasInvalidPoints);
 
 
-    public event Action<Locateable>? RequestPanToPoint;
-
-    public event Action<Locateable>? RequestZoomToPoint;
-
-    public event Action<Locateable>? RequestCopyCoordinate;
-
-    private RelayCommand _panToCurrentPointCommand;
+    private RelayCommand? _panToCurrentPointCommand;
     public RelayCommand PanToCurrentPointCommand =>
         _panToCurrentPointCommand ??= new RelayCommand(param =>
         {
@@ -1081,7 +1083,8 @@ public abstract class GeometryEditorViewModelBase : Notifier
             }
         }, param => SelectedPoint != null && !HasInvalidPoints);
 
-    private RelayCommand _goToPreviousPointCommand;
+
+    private RelayCommand? _goToPreviousPointCommand;
     public RelayCommand GoToPreviousPointCommand =>
         _goToPreviousPointCommand ??= new RelayCommand(param =>
         {
@@ -1107,7 +1110,8 @@ public abstract class GeometryEditorViewModelBase : Notifier
             }
         }, param => IsPreviousPointAvailable && !HasInvalidPoints);
 
-    private RelayCommand _goToNextPointCommand;
+
+    private RelayCommand? _goToNextPointCommand;
     public RelayCommand GoToNextPointCommand =>
         _goToNextPointCommand ??= new RelayCommand(param =>
         {
@@ -1133,7 +1137,8 @@ public abstract class GeometryEditorViewModelBase : Notifier
             }
         }, param => IsNextPointAvailable && !HasInvalidPoints);
 
-    private RelayCommand _zoomToCurrentPointCommand;
+
+    private RelayCommand? _zoomToCurrentPointCommand;
     public RelayCommand ZoomToCurrentPointCommand =>
         _zoomToCurrentPointCommand ??= new RelayCommand(param =>
         {
@@ -1143,7 +1148,8 @@ public abstract class GeometryEditorViewModelBase : Notifier
             }
         }, param => SelectedPoint != null && IsPointValid(SelectedPoint) && !HasInvalidPoints);
 
-    private RelayCommand _copyCurrentPointCommand;
+
+    private RelayCommand? _copyCurrentPointCommand;
     public RelayCommand CopyCurrentPointCommand =>
         _copyCurrentPointCommand ??= new RelayCommand(param =>
         {
@@ -1154,7 +1160,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
         }, param => SelectedPoint != null);
 
 
-    private RelayCommand _insertPointBeforeSelectedCommand;
+    private RelayCommand? _insertPointBeforeSelectedCommand;
     public RelayCommand InsertPointBeforeSelectedCommand =>
         _insertPointBeforeSelectedCommand ??= new RelayCommand(param =>
         {
@@ -1195,8 +1201,12 @@ public abstract class GeometryEditorViewModelBase : Notifier
             PointsChanged?.Invoke(Points);
         }, param => SelectedPoint != null && !HasInvalidPoints);
 
-    // Multi-line string commands (merged from MultiLineStringEditorPresenter)
-    private RelayCommand _addPartCommand;
+    #endregion
+
+
+    #region Multi-part commands
+
+    private RelayCommand? _addPartCommand;
     public RelayCommand AddPartCommand =>
         _addPartCommand ??= new RelayCommand(param =>
         {
@@ -1284,7 +1294,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
             //GeometryChanged?.Invoke(Parts);
         });
 
-    private RelayCommand _applyCurrentPointChangesCommand;
+    private RelayCommand? _applyCurrentPointChangesCommand;
     public RelayCommand ApplyCurrentPointChangesCommand =>
         _applyCurrentPointChangesCommand ??= new RelayCommand(param =>
         {
@@ -1300,7 +1310,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
             }
         }, param => CurrentPointEditor != null && CurrentPointEditor.ValidateInput());
 
-    private RelayCommand _deletePartCommand;
+    private RelayCommand? _deletePartCommand;
     public RelayCommand DeletePartCommand =>
         _deletePartCommand ??= new RelayCommand(param =>
         {
@@ -1382,7 +1392,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
             }
         });
 
-    private RelayCommand _goToNextPartCommand;
+    private RelayCommand? _goToNextPartCommand;
     public RelayCommand GoToNextPartCommand =>
         _goToNextPartCommand ??= new RelayCommand(param =>
         {
@@ -1399,7 +1409,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
             }
         }, param => IsNextPartAvailable);
 
-    private RelayCommand _goToPreviousPartCommand;
+    private RelayCommand? _goToPreviousPartCommand;
     public RelayCommand GoToPreviousPartCommand =>
         _goToPreviousPartCommand ??= new RelayCommand(param =>
         {
@@ -1416,7 +1426,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
             }
         }, param => IsPreviousPartAvailable);
 
-    private RelayCommand _zoomToCurrentPartCommand;
+    private RelayCommand? _zoomToCurrentPartCommand;
     public RelayCommand ZoomToCurrentPartCommand =>
         _zoomToCurrentPartCommand ??= new RelayCommand(param =>
         {
@@ -1426,4 +1436,5 @@ public abstract class GeometryEditorViewModelBase : Notifier
             }
         }, param => CurrentPart != null);
 
+    #endregion
 }

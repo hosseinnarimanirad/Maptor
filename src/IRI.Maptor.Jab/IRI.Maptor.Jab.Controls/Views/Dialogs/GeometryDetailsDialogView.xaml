@@ -24,7 +24,9 @@
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-         
+            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
+            <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>
+
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
 
@@ -85,15 +87,15 @@
                       IsExpanded="True">
                 <ContentControl Content="{Binding GeometryEditor}">
                     <ContentControl.Resources>
-                        <DataTemplate DataType="{x:Type presenters:PointEditorViewModel}">
+                        <!--<DataTemplate DataType="{x:Type presenters:PointEditorViewModel}">
                             <editors:PointEditorView/>
-                        </DataTemplate>
+                        </DataTemplate>-->
                         <DataTemplate DataType="{x:Type presenters:LineStringEditorViewModel}">
                             <editors:LineStringEditorView/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type presenters:PolygonEditorViewModel}">
+                        <!--<DataTemplate DataType="{x:Type presenters:PolygonEditorViewModel}">
                             <editors:PolygonEditorView/>
-                        </DataTemplate>
+                        </DataTemplate>-->
                         <!--<DataTemplate DataType="{x:Type presenters:MultiPointEditorPresenter}">
                             <editors:MultiPointEditorView/>
                         </DataTemplate>-->

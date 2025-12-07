@@ -102,8 +102,8 @@
 
         <!-- SRS Selection and Current Point Editor Section -->
         <Border Grid.Row="1" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,1,0,0" Padding="4" Margin="0,0,0,4">
-            <Grid FlowDirection="LeftToRight">
-                <StackPanel>
+            <Grid FlowDirection="LeftToRight" >
+                <StackPanel >
                     <!-- Current Point Editor -->
                     <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
                         <TextBlock Text="X:" VerticalAlignment="Center" Margin="0,0,4,0" Width="20"/>
@@ -128,19 +128,15 @@
                                  Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
                                  Width="150" Margin="0,0,8,0" FlowDirection="LeftToRight" VerticalAlignment="Center"
                                  mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
-                        <Button Style="{StaticResource circleButtonDark}"
+                        <Button Style="{StaticResource circleButtonLight}"
                                 Command="{Binding ApplyCurrentPointChangesCommand}" 
                                 IsEnabled="{Binding CurrentPointEditor, Converter={StaticResource notNullToBoolConverter}}"
-                                Margin="8,0,0,0">
+                                Margin="4,0,0,0">
                             <iconPacks:PackIconMaterial Kind="Check"/>
                         </Button>
                         <ToggleButton x:Name="srsConfigToggleButton" Style="{StaticResource circleToggleButtonLight}" Margin="8,0,0,0">
                             <iconPacks:PackIconMaterial Kind="Cog"/>
                         </ToggleButton>
-                        <views:DegreeMinuteSecondView x:Name="dmsXView_Copy" DataContext="{Binding CurrentPointEditor.DmsX}" 
-                            MaxDegreeValue="180" MinDegreeValue="-180" 
-                            HideUpDownButtons="False"
-                            Visibility="{Binding DataContext.CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
                     </StackPanel>
                     <!-- SRS Info TextBlock -->
                     <TextBlock VerticalAlignment="Center" Margin="4,4,0,0" FontStyle="Italic" Foreground="Gray" FontSize="11" HorizontalAlignment="Left">

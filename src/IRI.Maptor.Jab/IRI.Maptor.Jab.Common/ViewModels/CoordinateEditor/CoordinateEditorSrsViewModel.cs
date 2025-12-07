@@ -1,10 +1,10 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using IRI.Maptor.Jab.Common.Models;
+
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+
 using Ellipsoid = IRI.Maptor.Sta.SpatialReferenceSystem.Ellipsoid<IRI.Maptor.Sta.Metrics.Meter, IRI.Maptor.Sta.Metrics.Degree>;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
