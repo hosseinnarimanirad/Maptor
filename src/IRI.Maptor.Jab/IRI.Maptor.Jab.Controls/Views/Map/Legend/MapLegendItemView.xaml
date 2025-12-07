@@ -87,7 +87,7 @@
                         IsEnabled="{Binding IsEnabled}" 
                         ToolTip="{Binding ToolTip}"
                         Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Path Data="{Binding PathMarkup}" Stretch="Uniform" Fill="White" Width="18" Height="18" FlowDirection="LeftToRight"/>
+                    <Path Data="{Binding PathMarkup}" Style="{StaticResource circleButtonPath}"/>
                 </Button>
             </DataTemplate> 
         </Grid.Resources>

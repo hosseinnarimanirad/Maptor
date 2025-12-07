@@ -4,11 +4,11 @@
 
 
     <Style TargetType="{x:Type Button}" x:Key="circleButtonLight">
-        <Setter Property="Margin" Value="4"/>
+        <Setter Property="Margin" Value="2,2"/>
 
         <!-- Light theme colors -->
-        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
         <Setter Property="Foreground" Value="White"/>
 
         <Setter Property="BorderThickness" Value="0"/>
@@ -54,7 +54,6 @@
                             <Setter Property="BorderBrush" Value="LightGray"/>
                             <Setter Property="Foreground" Value="DarkGray"/>
                         </Trigger>
-
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -160,6 +159,23 @@
             </Trigger>-->
         </Style.Triggers>
     </Style>
+
+    <Style TargetType="{x:Type Path}" x:Key="circleButtonPath">
+        <Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ButtonBase}}"/>
+        <Setter Property="Margin" Value="1"/>
+        <Setter Property="Width" Value="18"/>
+        <Setter Property="Height" Value="18"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="Stretch" Value="Uniform"/>
+        <Setter Property="Opacity" Value="0.9"/>
+        <!--<Style.Triggers>
+            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ButtonBase}}" Value="True">
+                <Setter Property="Opacity" Value="1"/>
+            </DataTrigger> 
+        </Style.Triggers>-->
+    </Style>
     
     <Style TargetType="{x:Type ToggleButton}" x:Key="circleToggleButtonLight">
         <Setter Property="Margin" Value="4"/>
@@ -187,13 +203,14 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                             <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                             <Setter Property="BorderThickness" Value="2"/>
-                            <Setter Property="Effect" TargetName="ellipse">
+                            <!--<Setter Property="Effect" TargetName="ellipse">
                                 <Setter.Value>
                                     <DropShadowEffect BlurRadius="3" ShadowDepth="0" Opacity="0.7" Color="Black"/>
                                 </Setter.Value>
-                            </Setter>
+                            </Setter>-->
                         </Trigger>
                         <!--<Trigger Property="IsPressed" Value="True">
                             <Setter Property="Background" Value="#D0D0D0"/>
@@ -209,20 +226,21 @@
                             <Setter Property="Opacity" Value="1"/>
                             <Setter Property="Effect" TargetName="ellipse">
                                 <Setter.Value>
-                                    <DropShadowEffect BlurRadius="3" ShadowDepth="1.5" Opacity="0.3" Color="Black"/>
+                                    <DropShadowEffect BlurRadius="3" ShadowDepth="0" Opacity="0.9" Color="Black"/>
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
-                        <MultiTrigger>
+                        <!--<MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsChecked" Value="True"/>
                                 <Condition Property="IsMouseOver" Value="True"/>
                             </MultiTrigger.Conditions>
                             <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                             <Setter Property="Opacity" Value="1"/>
-                        </MultiTrigger>
+                        </MultiTrigger>-->
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" Value="DarkGray"/>
+                            <Setter Property="BorderBrush" Value="DarkGray"/>
                             <Setter Property="Opacity" Value="0.9"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -234,7 +252,7 @@
     <Style TargetType="{x:Type ToggleButton}" x:Key="circleToggleButtonDark">
         <Setter Property="Margin" Value="4"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Width" Value="32"/>
@@ -246,9 +264,9 @@
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Grid>
                         <Ellipse x:Name="ellipse" Margin="1" 
-                                Fill="{TemplateBinding Property=Background}"
-                                Stroke="{TemplateBinding Property=BorderBrush}"
-                                StrokeThickness="{TemplateBinding Property=BorderThickness}">
+                                Fill="{TemplateBinding Background}"
+                                Stroke="{TemplateBinding BorderBrush}"
+                                StrokeThickness="{TemplateBinding BorderThickness}">
                             <Ellipse.Effect>
                                 <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.25" Color="Black"/>
                             </Ellipse.Effect>
@@ -257,13 +275,7 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                            <Setter Property="BorderThickness" Value="2"/>
-                            <Setter Property="Effect" TargetName="ellipse">
-                                <Setter.Value>
-                                    <DropShadowEffect BlurRadius="3" ShadowDepth="0" Opacity="0.7" Color="Black"/>
-                                </Setter.Value>
-                            </Setter>
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                         </Trigger>
                         <!--<Trigger Property="IsPressed" Value="True">
                             <Setter Property="Fill" Value="#D0D0D0" TargetName="ellipse"/>
@@ -274,25 +286,24 @@
                             </Setter>
                         </Trigger>-->
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                             <Setter Property="Opacity" Value="1"/>
                             <Setter Property="Effect" TargetName="ellipse">
                                 <Setter.Value>
-                                    <DropShadowEffect BlurRadius="3" ShadowDepth="1.5" Opacity="0.3" Color="Black"/>
+                                    <DropShadowEffect BlurRadius="3" ShadowDepth="0" Opacity="0.9" Color="Black"/>
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
-                        <MultiTrigger>
+                        <!--<MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsChecked" Value="True"/>
                                 <Condition Property="IsMouseOver" Value="True"/>
                             </MultiTrigger.Conditions>
-                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-                            <!--<Setter Property="Stroke" Value="{DynamicResource MahApps.Brushes.Accent2}" TargetName="ellipse"/>-->
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/> 
                             <Setter Property="Opacity" Value="1"/>
-                        </MultiTrigger>
+                        </MultiTrigger>-->
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" Value="DarkGray"/>
+                            <Setter Property="BorderBrush" Value="DarkGray"/>
                             <Setter Property="Opacity" Value="0.9"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -302,8 +313,9 @@
     </Style>
 
 
+    
     <!--MapLegendItemView style [not used anymore]-->
-    <Style TargetType="{x:Type Button}" x:Key="mapLegendItemView_CircleButton">
+    <Style TargetType="{x:Type Button}" x:Key="mapLegendItemView_circleButton">
         <Setter Property="Margin" Value="4"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
         <Setter Property="Width" Value="30"/>
@@ -325,8 +337,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
-
     <!--MapDrawingLegendView style [not used anymore]-->
     <Style TargetType="{x:Type Button}" x:Key="mapDrawingLegendView_menuCircleButton">
         <Setter Property="Margin" Value="1"/>
@@ -354,6 +364,85 @@
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Border.NonActive}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <!--MapLegendView style [not used anymore]-->
+    <Style  TargetType="{x:Type Button}" x:Key="mapLegendView_menuCircleButton">
+        <Setter Property="Margin" Value="1"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Ellipse Margin="1" Fill="{TemplateBinding Property=Background}"/>
+                        <ContentPresenter/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Border.NonActive}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <!--MapInfoView style [not used anymore]-->
+    <Style  TargetType="{x:Type Button}" x:Key="MapInfoView_circleButton">
+        <Setter Property="Margin" Value="4"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Ellipse Margin="1" Fill="{TemplateBinding Property=Background}"/>
+                        <ContentPresenter/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="LightGray"  />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="{x:Type ToggleButton}" x:Key="MapInfoView_circleToggle">
+        <Setter Property="Margin" Value="4"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid>
+                        <Ellipse Margin="1" Fill="{TemplateBinding Property=Background}"/>
+                        <ContentPresenter/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

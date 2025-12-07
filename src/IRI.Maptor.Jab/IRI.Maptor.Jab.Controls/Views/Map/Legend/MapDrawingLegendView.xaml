@@ -28,6 +28,8 @@
                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                     <Setter Property="Width" Value="16"/>-->
                 </Style>
+
+                <!--the whole toolds toggle button-->
                 <Style TargetType="ToggleButton">
                     <Setter Property="BorderThickness" Value="4,0,0,0"/>
                     <Setter Property="BorderBrush" Value="Transparent"/>
@@ -63,10 +65,9 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="Expander">
-                                <Border x:Name="expanderBorder"
-                                    BorderBrush="{DynamicResource MahApps.Brushes.Highlight}"
-                                    BorderThickness="0" Background="{DynamicResource MahApps.Brushes.Accent2}"
-                                    Margin="0" Padding="0" CornerRadius="18">
+                                <Border x:Name="expanderBorder" 
+                                    Background="{DynamicResource MahApps.Brushes.Accent3}"
+                                    Margin="0" Padding="0" CornerRadius="20">
                                     <StackPanel Orientation="Horizontal" Margin="0">
                                         <ToggleButton x:Name="HeaderSite"
                                                       Margin="0" Style="{StaticResource circleToggleButtonDark}"                                   
@@ -94,12 +95,12 @@
                                             </ToggleButton.Style>-->
                                             <ContentPresenter ContentSource="Header"/>
                                         </ToggleButton>
-                                        <iconPacks:PackIconMaterial Kind="ChevronDoubleLeft" Width="8" Height="8" HorizontalAlignment="Center" Margin="4,0,8,0"
+                                        <!--<iconPacks:PackIconMaterial Kind="ChevronDoubleLeft" Width="8" Height="8" HorizontalAlignment="Center" Margin="4,0,8,0"
                                                                     Foreground="{DynamicResource MahApps.Brushes.Highlight}" Opacity="1"
                                                                     Visibility="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType=Expander}, Converter={StaticResource boolToVisibilityConverter}}"/>
                                         <iconPacks:PackIconMaterial Kind="ChevronDoubleRight" Width="8" Height="8" HorizontalAlignment="Center" Margin="4,0,8,0"
                                                                     Foreground="{DynamicResource MahApps.Brushes.Highlight}" Opacity="1"
-                                                                    Visibility="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType=Expander}, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
+                                                                    Visibility="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType=Expander}, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>-->
 
                                         <ContentPresenter x:Name="ExpandSite"
                                               ContentSource="Content"
@@ -133,6 +134,7 @@
                     <Setter Property="FlowDirection" Value="LeftToRight"/>
                 </Style>
 
+
                 <Style x:Key="circleButtonDarkOverride" TargetType="{x:Type Button}" BasedOn="{StaticResource circleButtonDark}" >
                     <Setter Property="Margin" Value="1"/>
                 </Style>
@@ -163,18 +165,18 @@
                     <Expander.Header>
                         <iconPacks:PackIconModern Kind="Add" Foreground="White"/>
                     </Expander.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0" >
-                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddGeoJsonToDrawingItemsCommand}"  Margin="1"
+                    <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center" >
+                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddGeoJsonToDrawingItemsCommand}"  
                                 ToolTip="{Binding [cmd_drawingLegend_addGeoJson], Source={StaticResource Localization}}">
                             <Path Style="{StaticResource buttonPath}" Data="{StaticResource json}"/>
                         </Button>
-                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddLongLatTxtToDrawingItemsCommand}"  Margin="0"
+                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddLongLatTxtToDrawingItemsCommand}"  
                                 ToolTip="{Binding [cmd_drawingLegend_addLatLongTxt], Source={StaticResource Localization}}">
                             <Path Style="{StaticResource buttonPath}" Data="{StaticResource txt}"/>
                         </Button>
-                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddShapefileToDrawingItemsCommand}"  Margin="0"
+                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddShapefileToDrawingItemsCommand}"  
                                 ToolTip="{Binding [cmd_drawingLegend_addShapefile], Source={StaticResource Localization}}">
-                            <Path Style="{StaticResource buttonPath}" Data="{StaticResource shapefile}"/>
+                            <Path Style="{StaticResource buttonPath}" Data="{StaticResource shapefile}" />
                         </Button>
                     </StackPanel>
                 </Expander>
@@ -207,10 +209,13 @@
 
             </DockPanel>
         </ScrollViewer>
-        <Line Grid.Row="1" X1="0" X2="100" StrokeThickness="2" Stroke="{DynamicResource MahApps.Brushes.Highlight}" 
-              Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"
-              Opacity="1" Margin="0,4"
-              Stretch="Fill"/>
+        
+        <Line Grid.Row="1" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,4" 
+              StrokeThickness="1"
+              StrokeDashArray="8 2"
+              Stroke="{DynamicResource MahApps.Brushes.Highlight}" 
+              Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"/>
+        
         <ListBox Grid.Row="2" ItemsSource="{Binding DrawingItems}" SelectionMode="Single" SelectedItem="{Binding SelectedDrawingItem, Mode=TwoWay}">
             <ListBox.ItemContainerStyle>
                 <!-- Style to get rid of the selection visual -->

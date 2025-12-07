@@ -9,33 +9,10 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-            <Style  TargetType="{x:Type Button}" x:Key="circleButton">
-                <Setter Property="Margin" Value="4"/>
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-                <Setter Property="Width" Value="32"/>
-                <Setter Property="Height" Value="32"/>
-                <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type Button}">
-                            <Grid>
-                                <Ellipse Margin="1" Fill="{TemplateBinding Property=Background}"/>
-                                <ContentPresenter/>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                    </Trigger>
-                    <Trigger Property="IsEnabled" Value="False">
-                        <Setter Property="Background" Value="LightGray"  />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
+            
             <Style  TargetType="{x:Type ToggleButton}" x:Key="simpleToggle">
                 <Setter Property="Margin" Value="4"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
@@ -60,38 +37,19 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            <Style TargetType="{x:Type ToggleButton}" x:Key="circleToggle">
-                <Setter Property="Margin" Value="4"/>
-                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-                <Setter Property="Width" Value="32"/>
-                <Setter Property="Height" Value="32"/>
-                <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ToggleButton}">
-                            <Grid>
-                                <Ellipse Margin="1" Fill="{TemplateBinding Property=Background}"/>
-                                <ContentPresenter/>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                    </Trigger>
-                    <Trigger Property="IsChecked" Value="True">
-                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
+           
             <Style TargetType="TextBlock">
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
-            <Style TargetType="iconPacks:PackIconModern">
+
+            <Style TargetType="{x:Type iconPacks:PackIconModern}" BasedOn="{StaticResource circleButtonPackIconModern}"/>
+            <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
+            <Style TargetType="{x:Type Path}" BasedOn="{StaticResource circleButtonPath}"/>
+
+            <!--<Style TargetType="iconPacks:PackIconModern">
                 <Setter Property="Foreground" Value="White"/>
-                <!--<Setter Property="Stretch" Value="Uniform"/>-->
+                --><!--<Setter Property="Stretch" Value="Uniform"/>--><!--
                 <Setter Property="Margin" Value="8"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -99,12 +57,12 @@
             </Style>
             <Style TargetType="iconPacks:PackIconMaterial">
                 <Setter Property="Foreground" Value="White"/>
-                <!--<Setter Property="Stretch" Value="Uniform"/>-->
+                --><!--<Setter Property="Stretch" Value="Uniform"/>--><!--
                 <Setter Property="Margin" Value="8"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="FlowDirection" Value="LeftToRight"/>
-            </Style>
+            </Style>-->
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
                 <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12" />
             </Style>
@@ -170,25 +128,25 @@
                 <!--Drawing-->
                 <DockPanel DockPanel.Dock="Right" LastChildFill="False"
                             Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Button Style="{StaticResource circleButton}" DockPanel.Dock="Left" Margin="2" 
+                    <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Left" Margin="2" 
                             ToolTip="{Binding [map_draw_addPoint], Source={StaticResource Localization}}"
                             Command="{Binding AddPointToNewDrawingCommand}"
                             Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Modern Kind="Add"/>
                     </Button>
-                    <Button Style="{StaticResource circleButton}" DockPanel.Dock="Left" Margin="2,0,10,0" 
+                    <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Left" Margin="2,0,10,0" 
                             ToolTip="{Binding [map_draw_finishDrawingPart], Source={StaticResource Localization}}"
                             Command="{Binding FinishDrawingPartCommand}"
                             Visibility="{Binding MapPanel.Options.IsMultiPartSupportAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Modern Kind="Checkmark"/>
                     </Button>
 
-                    <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" Margin="2" 
+                    <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" Margin="2" 
                             ToolTip="{Binding [map_draw_finishDrawing], Source={StaticResource Localization}}"
                             Command="{Binding FinishNewDrawingCommand}" >
                         <iconPacks:Modern Kind="Check"/>
                     </Button>
-                    <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" Margin="2" 
+                    <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" Margin="2" 
                             ToolTip="{Binding [map_draw_cancelDrawing], Source={StaticResource Localization}}"
                             Command="{Binding CancelNewDrawingCommand}" >
                         <iconPacks:Modern Kind="Close"/>
@@ -202,38 +160,38 @@
                             DataContext="{Binding CurrentEditingLayer}"
                             ToolTip="{Binding [mapPanel_measure_showEdgeLabels], Source={StaticResource Localization}}"
                             Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">
-                    <ToggleButton Style="{StaticResource circleToggle}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
+                    <ToggleButton Style="{StaticResource circleToggleButtonLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                                     IsChecked="{Binding Options.IsEdgeLabelVisible, Mode=TwoWay}" 
                                     Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Modern Kind="MeasureMeter"/>
                     </ToggleButton>
 
-                    <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
+                    <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                             Command="{Binding ConvertToDrawingItemCommand}" 
                             ToolTip="{Binding [mapPanel_measure_convertToDrawing], Source={StaticResource Localization}}"
                             Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Modern Kind="VectorPenAdd"/>
                     </Button>
 
-                    <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2"
+                    <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2"
                             Command="{Binding ShowGeometryDetailsCommand}" Visibility="Visible">
                         <iconPacks:Material Kind="Tune"/>
                     </Button>
-                    
-                    <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
+
+                    <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                             Command="{Binding DeleteCommand}"
                             ToolTip="{Binding [mapPanel_edit_delete], Source={StaticResource Localization}}"
                             Visibility="{Binding Options.IsDeleteButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Modern Kind="Delete"/>
                     </Button>
 
-                    <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
+                    <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                             Command="{Binding CancelEditingCommand}" 
                             ToolTip="{Binding [mapPanel_edit_cancel], Source={StaticResource Localization}}"
                             Visibility="{Binding Options.IsCancelButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Modern Kind="Close"/>
                     </Button>
-                    <Button Style="{StaticResource circleButton}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
+                    <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                             Command="{Binding FinishEditingCommand}" 
                             ToolTip="{Binding [mapPanel_edit_finish], Source={StaticResource Localization}}"
                             Visibility="{Binding Options.IsFinishButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -268,28 +226,28 @@
                             </MultiBinding>
                         </TabItem.Visibility>
                         <StackPanel Orientation="Horizontal" DataContext="{Binding CurrentEditingLayer}" FlowDirection="LeftToRight" HorizontalAlignment="Center">
-                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}"
                                         Command="{Binding GoToPreviousPointCommand}" >
                                 <iconPacks:Modern Kind="ChevronLeft" />
                             </Button>
-                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_delete], Source={StaticResource Localization}}"
                                         Command="{Binding DeleteCurrentPointCommand}" >
                                 <iconPacks:Modern Kind="Delete"/>
                             </Button>
-                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_zoom], Source={StaticResource Localization}}"
                                         Command="{Binding ZoomToCurrentPointCommand}" >
                                 <iconPacks:Modern Kind="MagnifyAdd"/>
                             </Button>
-                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_copyCoordinate], Source={StaticResource Localization}}"
                                         Command="{Binding CopyCurrentPointCommand}" 
                                         CommandParameter="{Binding DataContext.MapPanel.SpatialReference, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}">
                                 <iconPacks:Modern Kind="PageCopy"/>
                             </Button>
-                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_goToNextPoint], Source={StaticResource Localization}}"
                                         Command="{Binding GoToNextPointCommand}" >
                                 <iconPacks:Modern Kind="ChevronRight"/>
@@ -305,18 +263,18 @@
                             </MultiBinding>
                         </TabItem.Visibility>
                         <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Center" DataContext="{Binding CurrentEditingLayer}" >
-                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPart_delete], Source={StaticResource Localization}}"
                                         Command="{Binding DeleteCurrentPartCommand}" >
                                 <iconPacks:Modern Kind="Delete"/>
                             </Button>
 
-                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" IsEnabled="False"
+                            <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" IsEnabled="False"
                                         ToolTip="{Binding [mapPanel_currentPart_add], Source={StaticResource Localization}}"
                                         Command="{Binding AddNewPartCommand}">
                                 <iconPacks:Modern Kind="Add"/>
                             </Button>
-                            <Button Style="{StaticResource circleButton}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPart_zoom], Source={StaticResource Localization}}"
                                         Command="{Binding ZoomToCurrentPartCommand}" >
                                 <iconPacks:Modern Kind="MagnifyAdd"/>

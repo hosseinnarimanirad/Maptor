@@ -128,10 +128,8 @@
                           SelectedItem="{Binding SelectedFormat, Mode=TwoWay}" 
                           Margin="4" HorizontalAlignment="Stretch"/>
                     <Button Grid.Row="0" Grid.Column="2" 
-                        ToolTip="{Binding [dialog_geometryDetails_export], Source={StaticResource Localization}}" 
-                        Command="{Binding ExportCommand}" 
-                        Margin="4"
-                        Style="{StaticResource circleButton}">
+                        ToolTip="{Binding [dialog_geometryDetails_export], Source={StaticResource Localization}}"  
+                        Style="{StaticResource circleButtonLight}">
                         <iconPacks:PackIconModern Kind="Save"/>
                     </Button>
 
@@ -148,12 +146,12 @@
             <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
                 <Button ToolTip="{Binding [dialog_geometryDetails_cancel], Source={StaticResource Localization}}" 
                         Command="{Binding CancelEditingCommand}" Margin="4" 
-                        Style="{StaticResource circleButton}">
+                        Style="{StaticResource circleButtonLight}">
                     <iconPacks:PackIconModern Kind="Close"/>
                 </Button>
                 <Button ToolTip="{Binding [dialog_geometryDetails_save], Source={StaticResource Localization}}" 
                         Command="{Binding SaveGeometryCommand}" Margin="4"  
-                        Style="{StaticResource circleButton}">
+                        Style="{StaticResource circleButtonLight}">
                     <iconPacks:PackIconModern Kind="Check"/>
                 </Button>
             </StackPanel>

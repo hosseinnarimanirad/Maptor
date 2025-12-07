@@ -30,14 +30,15 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!--Geometry parts-->
         <StackPanel Grid.Row="0" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Center" FlowDirection="LeftToRight">
             <TextBlock Text="Geometry Parts" VerticalAlignment="Center" FontWeight="Bold" Margin="0,4,10,4"/>
-            <Button Style="{StaticResource circleButtonDark}" 
+            <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding GoToPreviousPartCommand}"
                             IsEnabled="{Binding IsPreviousPartAvailable}">
                 <iconPacks:PackIconMaterial Kind="ChevronLeft"/>
             </Button>
-            <Button Style="{StaticResource circleButtonDark}" 
+            <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding GoToNextPartCommand}"
                             IsEnabled="{Binding IsNextPartAvailable}">
                 <iconPacks:PackIconMaterial Kind="ChevronRight"/>
@@ -46,7 +47,7 @@
                             Command="{Binding AddPartCommand}">
                 <iconPacks:PackIconMaterial Kind="ShapePolygonPlus"/>
             </Button>
-            <Button Style="{StaticResource circleButtonDark}" 
+            <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding DeletePartCommand}"
                             CommandParameter="{Binding CurrentPart}"
                             IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">

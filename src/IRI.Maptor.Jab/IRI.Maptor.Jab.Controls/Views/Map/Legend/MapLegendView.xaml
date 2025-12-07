@@ -4,99 +4,77 @@
             xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common" 
             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
-                                       xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+            xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
             x:Name="root"
             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.Views"  >
     <userControl:NotifiableUserControl.Resources>
-        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-        <Style  TargetType="{x:Type Button}" x:Key="menuCircleButton">
-            <Setter Property="Margin" Value="1"/>
-            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
-            <Setter Property="Width" Value="32"/>
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid>
-                            <Ellipse Margin="1" Fill="{TemplateBinding Property=Background}"/>
-                            <ContentPresenter/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Border.NonActive}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style TargetType="{x:Type iconPacks:PackIconModern}">
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Width" Value="16"/>
-            <Setter Property="FlowDirection" Value="LeftToRight"/>
-        </Style>
-        <CollectionViewSource x:Key="collectionViewSource" 
-                              Source="{Binding Layers, RelativeSource={RelativeSource AncestorType=userControl:NotifiableUserControl}}" 
-                              Filter="CollectionViewSource_Filter">
-            <CollectionViewSource.SortDescriptions>
-                <scm:SortDescription PropertyName="TocOrder" Direction="Descending"/>
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-        <HierarchicalDataTemplate x:Key="legendTemplate" ItemsSource="{Binding SubLayers}">
-            <HierarchicalDataTemplate.Resources>
-                <Style TargetType="ToggleButton">
-                    <Setter Property="BorderThickness" Value="4,0,0,0"/>
-                    <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Setter Property="Cursor" Value="Hand"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ToggleButton">
-                                <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
-                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                            <Setter Property="Cursor" Value="Arrow"/>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}" />
-                            <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="LightGray"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </HierarchicalDataTemplate.Resources>
-            <RadioButton Style="{StaticResource {x:Type ToggleButton}}" 
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+
+            <Style TargetType="{x:Type iconPacks:PackIconModern}" BasedOn="{StaticResource circleButtonPackIconModern}"/>
+            <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
+            <Style TargetType="{x:Type Path}" BasedOn="{StaticResource circleButtonPath}"/>
+
+            <CollectionViewSource x:Key="collectionViewSource" 
+                                  Source="{Binding Layers, RelativeSource={RelativeSource AncestorType=userControl:NotifiableUserControl}}" 
+                                  Filter="CollectionViewSource_Filter">
+                <CollectionViewSource.SortDescriptions>
+                    <scm:SortDescription PropertyName="TocOrder" Direction="Descending"/>
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
+
+            <HierarchicalDataTemplate x:Key="legendTemplate" ItemsSource="{Binding SubLayers}">
+                <HierarchicalDataTemplate.Resources>
+                    <Style TargetType="ToggleButton">
+                        <Setter Property="BorderThickness" Value="4,0,0,0"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="LightGray"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </HierarchicalDataTemplate.Resources>
+                <RadioButton Style="{StaticResource {x:Type ToggleButton}}" 
                         GroupName="{Binding ElementName=root, Path=GroupName}"
                         HorizontalAlignment="Stretch" 
                         DataContext="{Binding }" 
                         IsEnabled="{Binding IsInScaleRange}" 
                         IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}">
-                <RadioButton.InputBindings>
-                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding ToggleExpandCommand}"/>
-                </RadioButton.InputBindings>
-                <maptor:MapLegendItemView Title="{Binding LayerName}" 
+                    <RadioButton.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding ToggleExpandCommand}"/>
+                    </RadioButton.InputBindings>
+                    <maptor:MapLegendItemView Title="{Binding LayerName}" 
                                     Symbology="{Binding DefaultSymbology}"  
                                     HorizontalAlignment="Stretch"
                                     Commands="{Binding Commands}"
                                     IsChecked="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}"
                                     TitleFontSize="{Binding ElementName=root, Path=TitleFontSize}"/>
-            </RadioButton>
-        </HierarchicalDataTemplate>
+                </RadioButton>
+            </HierarchicalDataTemplate>
+        </ResourceDictionary>
     </userControl:NotifiableUserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -106,35 +84,40 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
                     Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
-            <Button Style="{StaticResource menuCircleButton}"  Cursor="Hand" Command="{Binding AddGeoJsonToDrawingItemsCommand}"  
-                    Focusable="False" ToolTip="{Binding [cmd_legend_addGeoJson], Source={StaticResource Localization}}" IsEnabled="False">
-                <Path Data="{StaticResource json}" Stretch="Uniform" Fill="White" Width="18" Height="18" FlowDirection="LeftToRight"/>
+            <Button IsEnabled="True" Focusable="False" Command="{Binding AddGeoJsonToDrawingItemsCommand}"
+                    Style="{StaticResource circleButtonLight}"  
+                    ToolTip="{Binding [cmd_legend_addGeoJson], Source={StaticResource Localization}}">
+                <Path Data="{StaticResource json}"/>
             </Button>
-            <Button Style="{StaticResource menuCircleButton}" Cursor="Hand" Command="{Binding AddCsvCommand}"
-                    Focusable="False" ToolTip="{Binding [cmd_legend_addLatLongTxt], Source={StaticResource Localization}}" IsEnabled="False">
-                <Path Data="{StaticResource txt}" Stretch="Uniform" Fill="White" Width="18" Height="18" FlowDirection="LeftToRight"/>
+            <Button IsEnabled="False" Focusable="False" Command="{Binding AddCsvCommand}"
+                    Style="{StaticResource circleButtonLight}" 
+                    ToolTip="{Binding [cmd_legend_addLatLongTxt], Source={StaticResource Localization}}">
+                <Path Data="{StaticResource txt}"/>
             </Button>
-            <Button Style="{StaticResource menuCircleButton}" Cursor="Hand" Command="{Binding AddShapefileCommand}"
-                    Focusable="False" ToolTip="{Binding [cmd_legend_addShapefile], Source={StaticResource Localization}}">
-                <Path Data="{StaticResource shapefile}" Stretch="Uniform" Fill="White" Width="18" Height="18" FlowDirection="LeftToRight"/>
+            <Button Focusable="False" Command="{Binding AddShapefileCommand}"
+                    Style="{StaticResource circleButtonLight}" 
+                    ToolTip="{Binding [cmd_legend_addShapefile], Source={StaticResource Localization}}">
+                <Path Data="{StaticResource shapefile}"/>
             </Button>
-            <Button Style="{StaticResource menuCircleButton}" Cursor="Hand" Command="{Binding RemoveAllDrawingItemsCommand}" IsEnabled="False"
-                    Focusable="False" ToolTip="{Binding [cmd_legend_removeAll], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="Delete" />
+            <Button IsEnabled="False" Focusable="False" Command="{Binding RemoveAllDrawingItemsCommand}"
+                    Style="{StaticResource circleButtonLight}"  
+                    ToolTip="{Binding [cmd_legend_removeAll], Source={StaticResource Localization}}">
+                <iconPacks:PackIconModern Kind="Delete"/>
             </Button>
-            <Button Style="{StaticResource menuCircleButton}" Cursor="Hand" Command="{Binding MoveDrawingItemDownCommand}" Visibility="Collapsed"
+            <Button Style="{StaticResource circleButtonLight}" Cursor="Hand" Command="{Binding MoveDrawingItemDownCommand}" Visibility="Collapsed"
                     Focusable="False" ToolTip="{Binding [cmd_legend_moveDown], Source={StaticResource Localization}}" IsEnabled="{Binding CanMoveDrawingItemDown}">
-                <iconPacks:PackIconModern Kind="LayerDown" />
+                <iconPacks:PackIconModern Kind="LayerDown"/>
             </Button>
-            <Button Style="{StaticResource menuCircleButton}" Cursor="Hand" Command="{Binding MoveDrawingItemUpCommand}" Visibility="Collapsed"
+            <Button Style="{StaticResource circleButtonLight}" Cursor="Hand" Command="{Binding MoveDrawingItemUpCommand}" Visibility="Collapsed"
                     Focusable="False" ToolTip="{Binding [cmd_legend_moveUp], Source={StaticResource Localization}}" IsEnabled="{Binding CanMoveDrawingItemUp}">
-                <iconPacks:PackIconModern Kind="LayerUp" />
+                <iconPacks:PackIconModern Kind="LayerUp"/>
             </Button>
         </StackPanel>
-        <Line Grid.Row="1" X1="0" X2="100" StrokeThickness="2" Stroke="{DynamicResource MahApps.Brushes.Highlight}" 
-                Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"
-                Opacity="1" Margin="0,4"
-                Stretch="Fill"/>
+        <Line Grid.Row="1" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,4" 
+                StrokeThickness="1"
+                StrokeDashArray="8 2"
+                Stroke="{DynamicResource MahApps.Brushes.Highlight}"  
+                Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"/>
 
         <TreeView ItemsSource="{Binding Source={StaticResource collectionViewSource}}" ItemTemplate="{StaticResource legendTemplate}"
                   Grid.Row="2">
