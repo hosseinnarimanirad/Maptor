@@ -4,7 +4,7 @@
         xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:views="clr-namespace:IRI.Maptor.Jab.Controls.Views"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        xmlns:editors="clr-namespace:IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors"
+        xmlns:editors="clr-namespace:IRI.Maptor.Jab.Controls.Views"
         xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;assembly=IRI.Maptor.Jab.Common" 
         xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
         Title="{Binding DialogTitle, RelativeSource={RelativeSource AncestorType=mahApp:MetroWindow}}" 
@@ -90,8 +90,8 @@
                         <!--<DataTemplate DataType="{x:Type presenters:PointEditorViewModel}">
                             <editors:PointEditorView/>
                         </DataTemplate>-->
-                        <DataTemplate DataType="{x:Type presenters:LineStringEditorViewModel}">
-                            <editors:LineStringEditorView/>
+                        <DataTemplate DataType="{x:Type presenters:GeometryEditorViewModel}">
+                            <editors:GeometryEditorView/>
                         </DataTemplate>
                         <!--<DataTemplate DataType="{x:Type presenters:PolygonEditorViewModel}">
                             <editors:PolygonEditorView/>

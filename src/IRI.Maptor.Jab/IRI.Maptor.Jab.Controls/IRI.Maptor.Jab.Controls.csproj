@@ -46,6 +46,7 @@
 
   <ItemGroup>
     <Folder Include="Assets\DataTemplateSelectors\" />
+    <Folder Include="Views\CoordinateEditors\" />
   </ItemGroup>
 
   <ItemGroup>

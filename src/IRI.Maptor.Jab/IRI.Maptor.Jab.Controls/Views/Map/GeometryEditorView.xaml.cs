@@ -7,18 +7,18 @@ using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 
-namespace IRI.Maptor.Jab.Controls.Views.General.CoordinateEditors;
+namespace IRI.Maptor.Jab.Controls.Views;
 
 /// <summary>
 /// Interaction logic for LineStringEditorView.xaml
 /// </summary>
-public partial class LineStringEditorView : UserControl
+public partial class GeometryEditorView : UserControl
 {
     public static readonly DependencyProperty MaxPointsPerPageProperty =
         DependencyProperty.Register(
             nameof(MaxPointsPerPage),
             typeof(int),
-            typeof(LineStringEditorView),
+            typeof(GeometryEditorView),
             new PropertyMetadata(10, OnMaxPointsPerPageChanged));
 
     public int MaxPointsPerPage
@@ -31,7 +31,7 @@ public partial class LineStringEditorView : UserControl
         DependencyProperty.Register(
             nameof(IsEditable),
             typeof(bool),
-            typeof(LineStringEditorView),
+            typeof(GeometryEditorView),
             new PropertyMetadata(false, OnIsEditableChanged));
 
     public bool IsEditable
@@ -42,7 +42,7 @@ public partial class LineStringEditorView : UserControl
 
     private static void OnMaxPointsPerPageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is LineStringEditorView view && view.DataContext is LineStringEditorViewModel presenter)
+        if (d is GeometryEditorView view && view.DataContext is GeometryEditorViewModel presenter)
         {
             presenter.MaxPointsPerPage = (int)e.NewValue;
             //// Also update CurrentPart if in multi-line mode
@@ -55,7 +55,7 @@ public partial class LineStringEditorView : UserControl
 
     private static void OnIsEditableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is LineStringEditorView view && view.DataContext is LineStringEditorViewModel presenter)
+        if (d is GeometryEditorView view && view.DataContext is GeometryEditorViewModel presenter)
         {
             presenter.IsEditable = (bool)e.NewValue;
             //// Also update CurrentPart if in multi-line mode
@@ -71,18 +71,18 @@ public partial class LineStringEditorView : UserControl
     public event Action<Point>? RequestPanToPoint;
     public event Action<NotifiablePoint>? RequestCopyCoordinate;
 
-    public LineStringEditorView()
+    public GeometryEditorView()
     {
         InitializeComponent();
         this.DataContextChanged += LineStringEditorView_DataContextChanged;
     }
 
-    private LineStringEditorViewModel? _currentPresenter;
+    private GeometryEditorViewModel? _currentPresenter;
     //private LineStringEditorPresenter? _currentPartPresenter;
 
     private void LineStringEditorView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (e.OldValue is LineStringEditorViewModel oldPresenter)
+        if (e.OldValue is GeometryEditorViewModel oldPresenter)
         {
             //oldPresenter.RequestPanToPoint -= Presenter_RequestPanToPoint;
             //oldPresenter.RequestZoomToPoint -= Presenter_RequestZoomToPoint;
@@ -90,7 +90,7 @@ public partial class LineStringEditorView : UserControl
             //oldPresenter.PropertyChanged -= Presenter_PropertyChanged;
         }
 
-        if (e.NewValue is LineStringEditorViewModel presenter)
+        if (e.NewValue is GeometryEditorViewModel presenter)
         {
             _currentPresenter = presenter;
             presenter.MaxPointsPerPage = MaxPointsPerPage;

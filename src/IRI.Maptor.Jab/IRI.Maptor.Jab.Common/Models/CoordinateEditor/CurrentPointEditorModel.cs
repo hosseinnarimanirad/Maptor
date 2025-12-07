@@ -1,9 +1,8 @@
 using System;
-using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
+
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
 namespace IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
@@ -63,18 +62,14 @@ public class CurrentPointEditorModel : Notifier
 
             // Unsubscribe from old model
             if (_dmsX != null)
-            {
                 _dmsX.OnValueChanged -= DmsX_OnValueChanged;
-            }
 
             _dmsX = value;
             RaisePropertyChanged();
 
             // Subscribe to new model
             if (_dmsX != null)
-            {
                 _dmsX.OnValueChanged += DmsX_OnValueChanged;
-            }
         }
     }
 
@@ -89,18 +84,14 @@ public class CurrentPointEditorModel : Notifier
 
             // Unsubscribe from old model
             if (_dmsY != null)
-            {
                 _dmsY.OnValueChanged -= DmsY_OnValueChanged;
-            }
 
             _dmsY = value;
             RaisePropertyChanged();
 
             // Subscribe to new model
             if (_dmsY != null)
-            {
                 _dmsY.OnValueChanged += DmsY_OnValueChanged;
-            }
         }
     }
 
@@ -131,6 +122,7 @@ public class CurrentPointEditorModel : Notifier
             RaisePropertyChanged();
         }
     }
+
 
     private double? _z;
     public double? Z
@@ -188,6 +180,7 @@ public class CurrentPointEditorModel : Notifier
         }
     }
 
+
     private CoordinateEditorSrsViewModel? _srsViewModel;
     public CoordinateEditorSrsViewModel? SrsViewModel
     {
@@ -199,9 +192,7 @@ public class CurrentPointEditorModel : Notifier
 
             // Unsubscribe from old ViewModel
             if (_srsViewModel != null)
-            {
                 _srsViewModel.PropertyChanged -= SrsViewModel_PropertyChanged;
-            }
 
             _srsViewModel = value;
             RaisePropertyChanged();
@@ -215,6 +206,7 @@ public class CurrentPointEditorModel : Notifier
                 {
                     if (DmsX == null)
                         DmsX = new DegreeMinuteSecondModel();
+
                     if (DmsY == null)
                         DmsY = new DegreeMinuteSecondModel();
                 }
@@ -285,7 +277,7 @@ public class CurrentPointEditorModel : Notifier
 
         // Convert Web Mercator to selected SRS
         var webMercatorPoint = new Point(CurrentPoint.X, CurrentPoint.Y);
-        var (x, y) = SrsViewModel.ConvertFromWebMercator(webMercatorPoint);
+        var xy = SrsViewModel.ConvertFromWebMercator(webMercatorPoint);
 
         // Format based on SRS type
         if (SrsViewModel.SelectedSrsType == CoordinateDisplayMode.GeodeticDms)
@@ -293,16 +285,16 @@ public class CurrentPointEditorModel : Notifier
             // Update DMS models with decimal degrees
             // Always initialize if null
             if (DmsX == null)
-                DmsX = new DegreeMinuteSecondModel(x);
+                DmsX = new DegreeMinuteSecondModel(xy.X);
 
             else
-                DmsX.Value = x;
+                DmsX.Value = xy.X;
 
             if (DmsY == null)
-                DmsY = new DegreeMinuteSecondModel(y);
+                DmsY = new DegreeMinuteSecondModel(xy.Y);
 
             else
-                DmsY.Value = y;
+                DmsY.Value = xy.Y;
 
             RaisePropertyChanged(nameof(IsDmsMode));
         }
@@ -312,8 +304,8 @@ public class CurrentPointEditorModel : Notifier
             //// This prevents overwriting user input when point changes on map
             //if (string.IsNullOrWhiteSpace(CoordinateX) && string.IsNullOrWhiteSpace(CoordinateY))
             //{
-            CoordinateX = SrsViewModel.GetDisplayString(x);
-            CoordinateY = SrsViewModel.GetDisplayString(y);
+            CoordinateX = SrsViewModel.GetDisplayString(xy.X);
+            CoordinateY = SrsViewModel.GetDisplayString(xy.Y);
             //}
         }
 

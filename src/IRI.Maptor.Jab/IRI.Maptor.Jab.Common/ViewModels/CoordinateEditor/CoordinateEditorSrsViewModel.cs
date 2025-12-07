@@ -144,7 +144,7 @@ public class CoordinateEditorSrsViewModel : Notifier
             Ellipsoids.Sphere
         };
 
-        _selectedEllipsoid = _availableEllipsoids[0];
+        SelectedEllipsoid = _availableEllipsoids[0];
     }
 
     /// <summary>
@@ -166,6 +166,7 @@ public class CoordinateEditorSrsViewModel : Notifier
                 return new Point(x, y);
 
             case CoordinateDisplayMode.GeodeticDecimal:
+            case CoordinateDisplayMode.GeodeticDms:
                 var geodeticPoint = new Point(x, y);
                 // If ellipsoid is WGS84, use direct conversion
                 if (SelectedEllipsoid.AreTheSame(Ellipsoids.WGS84))
@@ -178,23 +179,7 @@ public class CoordinateEditorSrsViewModel : Notifier
                     var wgs84Point = Transformations.ChangeDatum(geodeticPoint, SelectedEllipsoid, Ellipsoids.WGS84);
                     return MapProjects.GeodeticWgs84ToWebMercator(wgs84Point);
                 }
-
-            case CoordinateDisplayMode.GeodeticDms:
-                // When called from ApplyChanges, x and y are already decimal degrees (from DmsX.Value and DmsY.Value)
-                // Treat as GeodeticDecimal for conversion
-                var geodeticPointDms = new Point(x, y);
-                // If ellipsoid is WGS84, use direct conversion
-                if (SelectedEllipsoid.AreTheSame(Ellipsoids.WGS84))
-                {
-                    return MapProjects.GeodeticWgs84ToWebMercator(geodeticPointDms);
-                }
-                else
-                {
-                    // Convert from selected ellipsoid to WGS84, then to Web Mercator
-                    var wgs84Point = Transformations.ChangeDatum(geodeticPointDms, SelectedEllipsoid, Ellipsoids.WGS84);
-                    return MapProjects.GeodeticWgs84ToWebMercator(wgs84Point);
-                }
-
+                  
             default:
                 throw new NotSupportedException($"SRS type {SelectedSrsType} is not supported");
         }
@@ -203,7 +188,7 @@ public class CoordinateEditorSrsViewModel : Notifier
     /// <summary>
     /// Converts coordinates from Web Mercator to the selected SRS
     /// </summary>
-    public (double x, double y) ConvertFromWebMercator(Point webMercatorPoint)
+    public Point ConvertFromWebMercator(Point webMercatorPoint)
     {
         switch (SelectedSrsType)
         {
@@ -212,10 +197,10 @@ public class CoordinateEditorSrsViewModel : Notifier
                 // UTM always uses WGS84 ellipsoid
                 var geodeticFromWebMercator = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
                 var utmPoint = MapProjects.GeodeticToUTM(geodeticFromWebMercator, Ellipsoids.WGS84, UtmZone, geodeticFromWebMercator.Y > 0);
-                return (utmPoint.X, utmPoint.Y);
+                return utmPoint;
 
             case CoordinateDisplayMode.WebMercator:
-                return (webMercatorPoint.X, webMercatorPoint.Y);
+                return webMercatorPoint;
 
             case CoordinateDisplayMode.GeodeticDecimal:
                 var geodetic = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
@@ -223,9 +208,9 @@ public class CoordinateEditorSrsViewModel : Notifier
                 if (!SelectedEllipsoid.AreTheSame(Ellipsoids.WGS84))
                 {
                     var convertedGeodetic = Transformations.ChangeDatum(geodetic, Ellipsoids.WGS84, SelectedEllipsoid);
-                    return (convertedGeodetic.X, convertedGeodetic.Y);
+                    return convertedGeodetic;
                 }
-                return (geodetic.X, geodetic.Y);
+                return geodetic;
 
             case CoordinateDisplayMode.GeodeticDms:
                 // Convert to decimal degrees first, then format as DMS string
@@ -233,9 +218,9 @@ public class CoordinateEditorSrsViewModel : Notifier
                 if (!SelectedEllipsoid.AreTheSame(Ellipsoids.WGS84))
                 {
                     var convertedGeodeticDms = Transformations.ChangeDatum(geodeticDms, Ellipsoids.WGS84, SelectedEllipsoid);
-                    return (convertedGeodeticDms.X, convertedGeodeticDms.Y);
+                    return convertedGeodeticDms;
                 }
-                return (geodeticDms.X, geodeticDms.Y);
+                return geodeticDms;
 
             default:
                 throw new NotSupportedException($"SRS type {SelectedSrsType} is not supported");
@@ -245,7 +230,7 @@ public class CoordinateEditorSrsViewModel : Notifier
     /// <summary>
     /// Gets display string for a coordinate value based on selected SRS type
     /// </summary>
-    public string GetDisplayString(double value, bool isLongitude = false)
+    public string GetDisplayString(double value)
     {
         switch (SelectedSrsType)
         {
@@ -275,39 +260,39 @@ public class CoordinateEditorSrsViewModel : Notifier
         return value.ToString(format);
     }
 
-    /// <summary>
-    /// Converts DMS string to decimal degrees
-    /// </summary>
-    public static double ParseDmsToDecimal(string dmsString)
-    {
-        // Simple parser for DMS format like "35°30'45.123\"N" or "35 30 45.123"
-        // This is a basic implementation - can be enhanced
-        if (string.IsNullOrWhiteSpace(dmsString))
-            return double.NaN;
+    ///// <summary>
+    ///// Converts DMS string to decimal degrees
+    ///// </summary>
+    //public static double ParseDmsToDecimal(string dmsString)
+    //{
+    //    // Simple parser for DMS format like "35°30'45.123\"N" or "35 30 45.123"
+    //    // This is a basic implementation - can be enhanced
+    //    if (string.IsNullOrWhiteSpace(dmsString))
+    //        return double.NaN;
 
-        // Remove direction indicators (N/S/E/W) and parse
-        dmsString = dmsString.Trim().ToUpper();
-        bool isNegative = dmsString.Contains('S') || dmsString.Contains('W');
-        dmsString = dmsString.Replace("N", "").Replace("S", "").Replace("E", "").Replace("W", "")
-                             .Replace("°", " ").Replace("'", " ").Replace("\"", "").Trim();
+    //    // Remove direction indicators (N/S/E/W) and parse
+    //    dmsString = dmsString.Trim().ToUpper();
+    //    bool isNegative = dmsString.Contains('S') || dmsString.Contains('W');
+    //    dmsString = dmsString.Replace("N", "").Replace("S", "").Replace("E", "").Replace("W", "")
+    //                         .Replace("°", " ").Replace("'", " ").Replace("\"", "").Trim();
 
-        var parts = dmsString.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length < 1)
-            return double.NaN;
+    //    var parts = dmsString.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+    //    if (parts.Length < 1)
+    //        return double.NaN;
 
-        double degrees = 0;
-        double minutes = 0;
-        double seconds = 0;
+    //    double degrees = 0;
+    //    double minutes = 0;
+    //    double seconds = 0;
 
-        if (parts.Length >= 1 && double.TryParse(parts[0], out var deg))
-            degrees = deg;
-        if (parts.Length >= 2 && double.TryParse(parts[1], out var min))
-            minutes = min;
-        if (parts.Length >= 3 && double.TryParse(parts[2], out var sec))
-            seconds = sec;
+    //    if (parts.Length >= 1 && double.TryParse(parts[0], out var deg))
+    //        degrees = deg;
+    //    if (parts.Length >= 2 && double.TryParse(parts[1], out var min))
+    //        minutes = min;
+    //    if (parts.Length >= 3 && double.TryParse(parts[2], out var sec))
+    //        seconds = sec;
 
-        double result = degrees + minutes / 60.0 + seconds / 3600.0;
-        return isNegative ? -result : result;
-    }
+    //    double result = degrees + minutes / 60.0 + seconds / 3600.0;
+    //    return isNegative ? -result : result;
+    //}
 }
 

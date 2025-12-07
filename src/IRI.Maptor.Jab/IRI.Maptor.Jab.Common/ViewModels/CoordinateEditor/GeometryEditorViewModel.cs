@@ -13,7 +13,7 @@ using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
-public abstract class GeometryEditorViewModelBase : Notifier
+public class GeometryEditorViewModel : Notifier
 {
     private EditableFeatureLayer _featureLayer;
     public EditableFeatureLayer FeatureLayer
@@ -111,6 +111,23 @@ public abstract class GeometryEditorViewModelBase : Notifier
     }
 
     public bool IsEmptyGeometry => this.Points is null || this.Points.Count == 0;
+
+    public GeometryEditorViewModel(EditableFeatureLayer editableFeatureLayer)
+    {
+        this.FeatureLayer = editableFeatureLayer;
+
+        // Initialize CurrentPartIndex to 0 (first part)
+        // This will trigger RefreshPointsFromCurrentPart() which initializes Points collection
+        // Setting it explicitly ensures initialization happens
+        CurrentPartIndex = 0;
+
+        this.IsEditable = true;
+
+        // Points are already initialized by RefreshPointsFromCurrentPart() called in CurrentPartIndex setter
+        // which also subscribes to PropertyChanged events
+        // UpdateValidationState is called by RefreshPointsFromCurrentPart via UpdatePagingProperties
+        UpdateValidationState();
+    }
 
     #region SRS Support
 
@@ -757,7 +774,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
                 {
                     //_currentPointEditor?.UpdateFromSelectedPoint();
                     _currentPointEditor.CurrentPoint = this.SelectedPoint;
-                }                
+                }
             }
         }
     }
@@ -950,7 +967,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
 
     public event Action<Locateable>? RequestCopyCoordinate;
 
-    
+
     #region Point Commands
 
     private RelayCommand? _addPointCommand;
@@ -1036,7 +1053,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
             }
         });
 
-    
+
     private RelayCommand? _deleteCurrentPointCommand;
     public RelayCommand DeleteCurrentPointCommand =>
         _deleteCurrentPointCommand ??= new RelayCommand(param =>
@@ -1250,7 +1267,7 @@ public abstract class GeometryEditorViewModelBase : Notifier
                     {
                         // Add a point (0,0) to the new part
                         // AddVertexToPart will directly manipulate the geometry and trigger ReconstructLocateables()
-                        var newPointLocatable = FeatureLayer.AddVertexToPart(new Sta.Common.Primitives.Point(0, 0), newPartIndex);
+                        var newPointLocatable = FeatureLayer.AddVertexToPart(new Point(0, 0), newPartIndex);
 
                         if (newPointLocatable != null)
                         {

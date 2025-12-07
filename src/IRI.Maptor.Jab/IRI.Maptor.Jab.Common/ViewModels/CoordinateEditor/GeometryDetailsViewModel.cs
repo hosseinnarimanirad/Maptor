@@ -43,8 +43,8 @@ public class GeometryDetailsViewModel : Notifier
             "SQL Server WKT",
             "SQL Server Native Binary",
             "GeoJSON",
-            "GML 2",
-            "GML 3",
+            //"GML 2",
+            //"GML 3",
             "KML",
             "Esri JSON Geometry",
             "TopoJSON",
@@ -54,6 +54,8 @@ public class GeometryDetailsViewModel : Notifier
         SelectedFormat = "WKT"; // Default format
 
         this.Geometry = editableFeatureLayer.GetFinalGeometry();
+
+        this.GeometryEditor = new GeometryEditorViewModel(_editableFeatureLayer);
     }
 
     private void EditableFeatureLayer_LocateablesReconstructed()
@@ -306,8 +308,8 @@ public class GeometryDetailsViewModel : Notifier
 
 
     // Editor properties
-    private GeometryEditorViewModelBase _geometryEditor;
-    public GeometryEditorViewModelBase GeometryEditor
+    private GeometryEditorViewModel _geometryEditor;
+    public GeometryEditorViewModel GeometryEditor
     {
         get => _geometryEditor;
         set
@@ -463,83 +465,8 @@ public class GeometryDetailsViewModel : Notifier
         // Update string representation for selected format
         UpdateStringRepresentation();
 
-        // Create geometry editor
-        CreateGeometryEditor(geodeticGeometry);
     }
-
-    private void CreateGeometryEditor(Geometry<Point>? geodeticGeometry)
-    {
-        if (_geometry == null)
-        {
-            GeometryEditor = null;
-            return;
-        }
-
-        // Create appropriate editor based on geometry type
-        switch (_geometry.Type)
-        {
-            case IRI.Maptor.Sta.Common.Primitives.GeometryType.Point:
-                //if (Points.Count > 0)
-                //{
-                //    var pointPresenter = new PointEditorPresenter(Points[0], canDelete: false);
-
-                //    GeometryEditor = pointPresenter;
-                //}
-                break;
-
-            case IRI.Maptor.Sta.Common.Primitives.GeometryType.LineString:
-                var lineStringPresenter = new LineStringEditorViewModel(_editableFeatureLayer);
-                GeometryEditor = lineStringPresenter;
-                break;
-
-            case IRI.Maptor.Sta.Common.Primitives.GeometryType.Polygon:
-                //if (geodeticGeometry != null)
-                //{
-                //    var polygonRings = CreatePolygonRings(geodeticGeometry);
-                //    var polygonPresenter = new PolygonEditorViewModel(polygonRings);
-                //    GeometryEditor = polygonPresenter;
-                //}
-                break;
-
-            case IRI.Maptor.Sta.Common.Primitives.GeometryType.MultiPoint:
-                //var multiPointPresenter = new MultiPointEditorPresenter(Points);
-                //GeometryEditor = multiPointPresenter;
-                //break;
-
-            case IRI.Maptor.Sta.Common.Primitives.GeometryType.MultiLineString:
-                if (geodeticGeometry != null)
-                {
-                    var multiLineStringPresenter = new LineStringEditorViewModel(_editableFeatureLayer);
-                    //var parts = CreateMultiLineStringParts(geodeticGeometry);
-                    //foreach (var part in parts)
-                    //{
-                    //    var partPresenter = new LineStringEditorPresenter(part);
-                    //    multiLineStringPresenter.Parts.Add(partPresenter);
-                    //}
-                    GeometryEditor = multiLineStringPresenter;
-                }
-                break;
-
-            case IRI.Maptor.Sta.Common.Primitives.GeometryType.MultiPolygon:
-                //if (geodeticGeometry != null)
-                //{
-                //    var multiPolygonPresenter = new MultiPolygonEditorPresenter();
-                //    var polygons = CreateMultiPolygonParts(geodeticGeometry);
-                //    foreach (var polygonRings in polygons)
-                //    {
-                //        var polygonPresenter = new PolygonEditorPresenter(polygonRings);
-                //        multiPolygonPresenter.Polygons.Add(polygonPresenter);
-                //    }
-                //    GeometryEditor = multiPolygonPresenter;
-                //}
-                //break;
-
-            default:
-                GeometryEditor = null;
-                break;
-        }
-    }
-
+     
     private ObservableCollection<RingInfo> CreatePolygonRings(Geometry<Point> geodeticGeometry)
     {
         var rings = new ObservableCollection<RingInfo>();

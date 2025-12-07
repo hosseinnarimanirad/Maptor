@@ -16,7 +16,7 @@ public class PointNumberConverter : IMultiValueConverter
             return result.ToString();
 
         if (values[2] is Locateable point &&
-            values[3] is LineStringEditorViewModel presenter)
+            values[3] is GeometryEditorViewModel presenter)
         {
             result = presenter.GetPointNumber(point);
         }
