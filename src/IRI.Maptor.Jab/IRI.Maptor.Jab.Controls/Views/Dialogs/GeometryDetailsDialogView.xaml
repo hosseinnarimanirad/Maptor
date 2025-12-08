@@ -31,7 +31,7 @@
     </mahApp:MetroWindow.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-        <StackPanel Margin="8">
+        <StackPanel Margin="4">
 
             <!-- Basic Information Section -->
             <Expander Grid.Row="0" Header="{Binding [dialog_geometryDetails_basicInfo], Source={StaticResource Localization}}" Margin="0,0,0,8" Padding="8"

@@ -8,7 +8,7 @@
              xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:converters="clr-namespace:IRI.Maptor.Jab.Common.Assets.Converters;assembly=IRI.Maptor.Jab.Common"
              xmlns:views="clr-namespace:IRI.Maptor.Jab.Controls.Views"
-             FlowDirection="RightToLeft"
+             FlowDirection="LeftToRight"
              mc:Ignorable="d" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="2">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -26,38 +26,116 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!--Geometry parts-->
-        <StackPanel Grid.Row="0" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Center" FlowDirection="LeftToRight">
-            <TextBlock Text="Geometry Parts" VerticalAlignment="Center" FontWeight="Bold" Margin="0,4,10,4"/>
-            <Button Style="{StaticResource circleButtonLight}" 
+        <!--Polygon section-->
+        <Border Grid.Row="0" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,0,0,1">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="4">
+                <TextBlock Text="Polygons" FontWeight="Bold" Margin="0,4,10,4" VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource circleButtonLight}" 
+                        Command="{Binding GoToPreviousPolygonCommand}"
+                        IsEnabled="{Binding IsPreviousPolygonAvailable, FallbackValue=False}">
+                        <iconPacks:PackIconMaterial Kind="ChevronLeft"/>
+                    </Button>
+                    <Button Style="{StaticResource circleButtonLight}" 
+                        Command="{Binding GoToNextPolygonCommand}"
+                        IsEnabled="{Binding IsNextPolygonAvailable, FallbackValue=False}">
+                        <iconPacks:PackIconMaterial Kind="ChevronRight"/>
+                    </Button>
+                    <Button Style="{StaticResource circleButtonLight}" 
+                            Command="{Binding AddPolygonCommand}">
+                        <iconPacks:PackIconMaterial Kind="ShapePolygonPlus"/>
+                    </Button>
+                    <Button Style="{StaticResource circleButtonLight}" 
+                              Command="{Binding DeletePolygonCommand}"
+                              CommandParameter="{Binding CurrentPolygon}"
+                              IsEnabled="{Binding CurrentPolygon, Converter={StaticResource notNullToBoolConverter}}">
+                        <iconPacks:PackIconModern Kind="Delete"/>
+                    </Button>
+                    <Button Style="{StaticResource circleButtonLight}" 
+                              Command="{Binding ZoomToCurrentPolygonCommand}"
+                              IsEnabled="{Binding CurrentPolygon, Converter={StaticResource notNullToBoolConverter}}">
+                        <iconPacks:PackIconModern Kind="MagnifyAdd"/>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock VerticalAlignment="Center" 
+                         TextBlock.TextAlignment="Right" Margin="0,0,8,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text">
+                                    <Setter.Value>
+                                        <MultiBinding StringFormat="Part {0} of {1}">
+                                            <Binding Path="CurrentPolygonNumber"/>
+                                            <Binding Path="TotalPolygonCount"/>
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding TotalPartCount}" Value="0">
+                                        <Setter Property="Text" Value="No Polygon"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBlock VerticalAlignment="Center" FontStyle="Italic" Margin="0,0,0,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value=""/>
+                                <Setter Property="Foreground" Value="Green"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentPolygonIsValid}" Value="True">
+                                        <Setter Property="Text" Value="✓ Valid Polygon"/>
+                                        <Setter Property="Foreground" Value="Green"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding CurrentPolygonIsValid, FallbackValue=False}" Value="False">
+                                        <Setter Property="Text" Value="✗ Invalid Polygon"/>
+                                        <Setter Property="Foreground" Value="Red"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <!-- Geometry parts -->
+
+        <StackPanel Grid.Row="1" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Left" Margin="4"
+                    >
+            <TextBlock Text="Parts" VerticalAlignment="Center" FontWeight="Bold" Margin="0,4,10,4"/>
+            <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
+                <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding GoToPreviousPartCommand}"
                             IsEnabled="{Binding IsPreviousPartAvailable}">
-                <iconPacks:PackIconMaterial Kind="ChevronLeft"/>
-            </Button>
-            <Button Style="{StaticResource circleButtonLight}" 
+                    <iconPacks:PackIconMaterial Kind="ChevronLeft"/>
+                </Button>
+                <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding GoToNextPartCommand}"
                             IsEnabled="{Binding IsNextPartAvailable}">
-                <iconPacks:PackIconMaterial Kind="ChevronRight"/>
-            </Button>
-            <Button Style="{StaticResource circleButtonLight}" 
+                    <iconPacks:PackIconMaterial Kind="ChevronRight"/>
+                </Button>
+                <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding AddPartCommand}">
-                <iconPacks:PackIconMaterial Kind="ShapePolygonPlus"/>
-            </Button>
-            <Button Style="{StaticResource circleButtonLight}" 
+                    <iconPacks:PackIconMaterial Kind="VectorSquarePlus"/>
+                </Button>
+                <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding DeletePartCommand}"
                             CommandParameter="{Binding CurrentPart}"
                             IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">
-                <iconPacks:PackIconModern Kind="Delete"/>
-            </Button>
-            <Button Style="{StaticResource circleButtonLight}" 
+                    <iconPacks:PackIconModern Kind="Delete"/>
+                </Button>
+                <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding ZoomToCurrentPartCommand}"
                             IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">
-                <iconPacks:PackIconModern Kind="MagnifyAdd"/>
-            </Button>
+                    <iconPacks:PackIconModern Kind="MagnifyAdd"/>
+                </Button>
+            </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock VerticalAlignment="Center" 
                                     TextBlock.TextAlignment="Right" Margin="0,0,8,0">
@@ -98,10 +176,13 @@
                     </TextBlock.Style>
                 </TextBlock>
             </StackPanel>
+            <iconPacks:PackIconMaterial Kind="{Binding GeometryType, Converter={StaticResource geometryTypeToMaterialIconConverter}, FallbackValue=Null}"
+                                        Style="{StaticResource circleButtonPackIconMaterial}" Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                        Width="18" Height="18"/>
         </StackPanel>
 
         <!-- SRS Selection and Current Point Editor Section -->
-        <Border Grid.Row="1" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,1,0,0" Padding="4" Margin="0,0,0,4">
+        <Border Grid.Row="2" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,1,0,0" Padding="4" Margin="0,0,0,4">
             <Grid FlowDirection="LeftToRight" >
                 <StackPanel >
                     <!-- Current Point Editor -->
@@ -149,7 +230,7 @@
                         </TextBlock.Text>
                     </TextBlock>
                 </StackPanel>
-                
+
                 <!-- SRS Configuration Popup -->
                 <Popup x:Name="srsConfigPopup" 
                        IsOpen="{Binding IsChecked, ElementName=srsConfigToggleButton}"
@@ -225,8 +306,8 @@
             </Grid>
         </Border>
 
-
-        <DataGrid Grid.Row="2" FlowDirection="LeftToRight"  x:Name="dataGrid"
+        <!-- Coordinate grid -->
+        <DataGrid Grid.Row="3" FlowDirection="LeftToRight"  x:Name="dataGrid"
                   ItemsSource="{Binding CurrentPagePoints}" 
                   SelectedItem="{Binding SelectedPoint, Mode=TwoWay}"
                   AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged"
@@ -237,7 +318,7 @@
                   SelectionMode="Single" MaxHeight="200"  
                   SelectionUnit="FullRow"  >
             <DataGrid.Columns>
-              
+
                 <DataGridTemplateColumn Header="#" Width="Auto" MinWidth="40">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -300,8 +381,8 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
             <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}"> 
-                    
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
@@ -314,11 +395,11 @@
                 </Style>
             </DataGrid.RowStyle>
         </DataGrid>
- 
+
         <!-- Grid's buttons with point counter and navigation buttons -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Stretch" FlowDirection="LeftToRight" Margin="0,4,0,0"
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Stretch" FlowDirection="LeftToRight" Margin="0,4,0,0"
                     Background="{DynamicResource MahApps.Brushes.Accent}">
-          
+
             <ToggleButton Style="{StaticResource circleToggleButtonLight}" 
                          IsChecked="{Binding IsEditable, Mode=TwoWay}"
                          ToolTip="{Binding [geometryDetails_currentPoint_edit], Source={StaticResource Localization}}" Visibility="Collapsed" >
@@ -358,7 +439,7 @@
                     ToolTip="{Binding [geometryDetails_currentPoint_delete], Source={StaticResource Localization}}">
                 <iconPacks:PackIconModern Kind="Delete"/>
             </Button>
-          
+
             <Button Style="{StaticResource circleButtonDark}" 
                       Command="{Binding GoToPreviousPageCommand}"  
                       ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}">

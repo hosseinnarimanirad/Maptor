@@ -71,6 +71,16 @@ public class GeometryEditorViewModel : Notifier
     }
 
 
+    public bool IsEmptyGeometry => this.Points is null || this.Points.Count == 0;
+
+    public Geometry<Point> Geometry => _featureLayer?.GetFinalGeometry();
+
+    public bool IsPolygonGeometry =>
+            Geometry?.Type == IRI.Maptor.Sta.Common.Primitives.GeometryType.Polygon ||
+            Geometry?.Type == IRI.Maptor.Sta.Common.Primitives.GeometryType.MultiPolygon;
+
+    public GeometryType? GeometryType => Geometry?.Type;
+
     private bool _isEditable = false;
     public bool IsEditable
     {
@@ -98,20 +108,6 @@ public class GeometryEditorViewModel : Notifier
         }
     }
 
-
-    private ObservableCollection<int> _availablePageSizes = new ObservableCollection<int> { 10, 20, 50, 100 };
-    public ObservableCollection<int> AvailablePageSizes
-    {
-        get => _availablePageSizes;
-        set
-        {
-            _availablePageSizes = value ?? new ObservableCollection<int> { 10, 20, 50 };
-            RaisePropertyChanged();
-        }
-    }
-
-    public bool IsEmptyGeometry => this.Points is null || this.Points.Count == 0;
-
     public GeometryEditorViewModel(EditableFeatureLayer editableFeatureLayer)
     {
         this.FeatureLayer = editableFeatureLayer;
@@ -129,319 +125,16 @@ public class GeometryEditorViewModel : Notifier
         UpdateValidationState();
     }
 
-    #region SRS Support
+    #region DataGrid Section
 
-    private CoordinateEditorSrsViewModel? _srsViewModel;
-    public CoordinateEditorSrsViewModel? SrsViewModel
+    private ObservableCollection<int> _availablePageSizes = new ObservableCollection<int> { 10, 20, 50, 100 };
+    public ObservableCollection<int> AvailablePageSizes
     {
-        get => _srsViewModel;
+        get => _availablePageSizes;
         set
         {
-            if (_srsViewModel == value)
-                return;
-
-            _srsViewModel = value;
+            _availablePageSizes = value ?? new ObservableCollection<int> { 10, 20, 50 };
             RaisePropertyChanged();
-
-            // Update CurrentPointEditor's SRS ViewModel reference
-            if (_currentPointEditor != null)
-            {
-                _currentPointEditor.SrsViewModel = value;
-            }
-        }
-    }
-
-    private CurrentPointEditorModel? _currentPointEditor;
-    public CurrentPointEditorModel? CurrentPointEditor
-    {
-        get => _currentPointEditor;
-        set
-        {
-            if (_currentPointEditor == value)
-                return;
-
-            _currentPointEditor = value;
-            RaisePropertyChanged();
-
-            // Wire up SRS ViewModel
-            if (_currentPointEditor != null && _srsViewModel != null)
-            {
-                _currentPointEditor.SrsViewModel = _srsViewModel;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Checks if the geometry has Z coordinates
-    /// </summary>
-    public bool HasZ()
-    {
-        if (FeatureLayer == null)
-            return false;
-
-        var geometry = FeatureLayer.GetFinalGeometry();
-        return geometry?.HasZ() ?? false;
-    }
-
-    /// <summary>
-    /// Checks if the geometry has M coordinates
-    /// </summary>
-    public bool HasM()
-    {
-        if (FeatureLayer == null)
-            return false;
-
-        var geometry = FeatureLayer.GetFinalGeometry();
-        return geometry?.HasM() ?? false;
-    }
-
-    #endregion
-
-    #region Parts
-
-    private List<IGeometry> Parts => this.FeatureLayer?.GetFinalGeometry()?.Geometries?.Cast<IGeometry>().ToList();
-
-    public IGeometry? CurrentPart
-    {
-        get
-        {
-            if (Parts == null || Parts.Count == 0 || CurrentPartIndex < 0 || CurrentPartIndex >= Parts.Count)
-                return null;
-
-            var currentPart = Parts[CurrentPartIndex];
-
-            //// Subscribe to property changes when CurrentPart changes
-            //if (currentPart != _previousCurrentPart)
-            //{
-            //    if (_previousCurrentPart != null)
-            //    {
-            //        _previousCurrentPart.PropertyChanged -= CurrentPart_PropertyChanged;
-            //    }
-            //    if (currentPart != null)
-            //    {
-            //        currentPart.PropertyChanged += CurrentPart_PropertyChanged;
-            //    }
-            //    _previousCurrentPart = currentPart;
-            //}
-
-            return currentPart;
-        }
-    }
-
-    private int _currentPartIndex = 0;
-    public int CurrentPartIndex
-    {
-        get => _currentPartIndex;
-        set
-        {
-            if (value < 0 || (FeatureLayer.GetFinalGeometry()?.Geometries != null && Parts.Count > 0 && value >= Parts.Count))
-                return;
-
-            _currentPartIndex = value;
-
-            // Refresh Points collection from the current part
-            RefreshPointsFromCurrentPart();
-
-            RaisePropertyChanged();
-            RaisePropertyChanged(nameof(CurrentPart));
-            RaisePropertyChanged(nameof(CurrentPartNumber));
-            RaisePropertyChanged(nameof(CurrentPartIsValid));
-            RaisePropertyChanged(nameof(IsNextPartAvailable));
-            RaisePropertyChanged(nameof(IsPreviousPartAvailable));
-
-            // Notify that all CurrentPart-dependent properties have changed
-            RaisePropertyChanged(nameof(CurrentPagePoints));
-            RaisePropertyChanged(nameof(SelectedPoint));
-            RaisePropertyChanged(nameof(TotalPages));
-            RaisePropertyChanged(nameof(CurrentPageNumber));
-            RaisePropertyChanged(nameof(TotalPointCount));
-            RaisePropertyChanged(nameof(CurrentPointIndex));
-            RaisePropertyChanged(nameof(CurrentPointNumber));
-            RaisePropertyChanged(nameof(IsPreviousPointAvailable));
-            RaisePropertyChanged(nameof(IsNextPointAvailable));
-            RaisePropertyChanged(nameof(IsLastPage));
-            RaisePropertyChanged(nameof(IsEditable));
-            RaisePropertyChanged(nameof(CurrentPageIndex));
-        }
-    }
-
-    public int CurrentPartNumber => CurrentPartIndex + 1;
-
-    public int TotalPartCount => Parts?.Count ?? 0;
-
-    public bool IsNextPartAvailable => Parts != null && Parts.Count > 0;
-
-    public bool IsPreviousPartAvailable => Parts != null && Parts.Count > 0;
-
-    public bool CurrentPartIsValid
-    {
-        get
-        {
-            if (CurrentPart == null)
-                return false;
-
-            // For LineString, need at least 2 points
-            if (CurrentPart is IGeometry geometry)
-            {
-                return geometry.IsValid();
-            }
-
-            return false;
-        }
-    }
-
-    protected void Parts_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        //GeometryChanged?.Invoke(Parts);
-        RaisePropertyChanged(nameof(TotalPartCount));
-        RaisePropertyChanged(nameof(CurrentPart));
-        RaisePropertyChanged(nameof(CurrentPartNumber));
-        RaisePropertyChanged(nameof(CurrentPartIsValid));
-        RaisePropertyChanged(nameof(IsNextPartAvailable));
-        RaisePropertyChanged(nameof(IsPreviousPartAvailable));
-        AdjustCurrentPartIndex();
-    }
-
-    private void AdjustCurrentPartIndex()
-    {
-        if (Parts == null || Parts.Count == 0)
-        {
-            if (_currentPartIndex != 0)
-            {
-                _currentPartIndex = 0;
-                RaisePropertyChanged(nameof(CurrentPartIndex));
-            }
-        }
-        else if (_currentPartIndex >= Parts.Count)
-        {
-            _currentPartIndex = Parts.Count - 1;
-            RaisePropertyChanged(nameof(CurrentPartIndex));
-        }
-        RaisePropertyChanged(nameof(CurrentPart));
-        RaisePropertyChanged(nameof(CurrentPartIsValid));
-    }
-
-    //public event Action<ObservableCollection<LineStringEditorPresenter>>? GeometryChanged;
-
-    //public event Action<LineStringEditorPresenter>? RequestZoomToPart;
-
-
-    #endregion
-
-
-    #region Current Geometry or Geometry Part
-
-    // all points of the current geometry part
-    private ObservableCollection<Locateable> _points = new ObservableCollection<Locateable>();
-    public ObservableCollection<Locateable> Points
-    {
-        get => _points;
-        set
-        {
-            if (_points != null)
-                _points.CollectionChanged -= Points_CollectionChanged;
-
-            _points = value ?? new ObservableCollection<Locateable>();
-
-            if (_points != null)
-                _points.CollectionChanged += Points_CollectionChanged;
-
-            RaisePropertyChanged();
-            UpdatePagingProperties();
-        }
-    }
-
-    public ObservableCollection<Locateable> CurrentPagePoints
-    {
-        get
-        {
-            if (IsEmptyGeometry)
-                return new ObservableCollection<Locateable>();
-
-            var startIndex = CurrentPageIndex * MaxPointsPerPage;
-
-            var count = Math.Min(MaxPointsPerPage, Points.Count - startIndex);
-
-            return new ObservableCollection<Locateable>(Points.Skip(startIndex).Take(count));
-        }
-    }
-
-    private Locateable? _selectedPoint;
-    private bool _isUpdatingFromChangeCurrentEditingPoint = false;
-
-    public Locateable? SelectedPoint
-    {
-        get
-        {
-            return _selectedPoint;
-        }
-        set
-        {
-            if (_selectedPoint == value)
-                return;
-
-            // Unsubscribe from old point's PropertyChanged
-            if (_selectedPoint != null)
-            {
-                _selectedPoint.PropertyChanged -= SelectedPoint_PropertyChanged;
-            }
-
-            _selectedPoint = value;
-
-            // Subscribe to new point's PropertyChanged
-            if (_selectedPoint != null)
-            {
-                _selectedPoint.PropertyChanged += SelectedPoint_PropertyChanged;
-            }
-
-            RaisePropertyChanged();
-            RaisePropertyChanged(nameof(CurrentPointIndex));
-            RaisePropertyChanged(nameof(CurrentPointNumber));
-            RaisePropertyChanged(nameof(IsPreviousPointAvailable));
-            RaisePropertyChanged(nameof(IsNextPointAvailable));
-            // Update command states
-            CommandManager.InvalidateRequerySuggested();
-
-            // Calculate global index from current part index and local point index
-            if (_selectedPoint != null && CurrentPointIndex >= 0)
-            {
-                int globalIndex = GetGlobalIndex(CurrentPartIndex, CurrentPointIndex);
-                FeatureLayer.SelectPoint(globalIndex);
-            }
-
-            // Update CurrentPointEditor when SelectedPoint changes
-            if (_currentPointEditor != null)
-            {
-                _currentPointEditor.CurrentPoint = _selectedPoint;
-                _currentPointEditor.HasZ = HasZ();
-                _currentPointEditor.HasM = HasM();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Event fired when SelectedPoint coordinates change (from DataGrid editing)
-    /// </summary>
-    public event Action<Point>? RequestUpdateCurrentEditingPoint;
-
-    private void SelectedPoint_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (_isUpdatingFromChangeCurrentEditingPoint)
-            return; // Prevent infinite loop when updating from ChangeCurrentEditingPoint
-
-        if (e.PropertyName == nameof(Locateable.X) || e.PropertyName == nameof(Locateable.Y))
-        {
-            if (_selectedPoint != null)
-            {
-                // Fire event with Web Mercator coordinates (SelectedPoint already uses Web Mercator)
-                RequestUpdateCurrentEditingPoint?.Invoke(new Point(_selectedPoint.X, _selectedPoint.Y));
-
-                // Update CurrentPointEditor when coordinates change (e.g., from map drag)
-                _currentPointEditor?.UpdateFromSelectedPoint();
-
-                // Refresh DataGrid display to show updated coordinates in selected SRS
-                RaisePropertyChanged(nameof(CurrentPagePoints));
-            }
         }
     }
 
@@ -580,6 +273,442 @@ public class GeometryEditorViewModel : Notifier
                 return false;
 
             return CurrentPointIndex >= 0 && CurrentPointIndex < Points.Count - 1;
+        }
+    }
+
+    #endregion
+
+    #region Current Point Section
+
+    private CoordinateEditorSrsViewModel? _srsViewModel;
+    public CoordinateEditorSrsViewModel? SrsViewModel
+    {
+        get => _srsViewModel;
+        set
+        {
+            if (_srsViewModel == value)
+                return;
+
+            _srsViewModel = value;
+            RaisePropertyChanged();
+
+            // Update CurrentPointEditor's SRS ViewModel reference
+            if (_currentPointEditor != null)
+            {
+                _currentPointEditor.SrsViewModel = value;
+            }
+        }
+    }
+
+    private CurrentPointEditorModel? _currentPointEditor;
+    public CurrentPointEditorModel? CurrentPointEditor
+    {
+        get => _currentPointEditor;
+        set
+        {
+            if (_currentPointEditor == value)
+                return;
+
+            _currentPointEditor = value;
+            RaisePropertyChanged();
+
+            // Wire up SRS ViewModel
+            if (_currentPointEditor != null && _srsViewModel != null)
+            {
+                _currentPointEditor.SrsViewModel = _srsViewModel;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Checks if the geometry has Z coordinates
+    /// </summary>
+    public bool HasZ()
+    {
+        if (FeatureLayer == null)
+            return false;
+
+        var geometry = FeatureLayer.GetFinalGeometry();
+        return geometry?.HasZ() ?? false;
+    }
+
+    /// <summary>
+    /// Checks if the geometry has M coordinates
+    /// </summary>
+    public bool HasM()
+    {
+        if (FeatureLayer == null)
+            return false;
+
+        var geometry = FeatureLayer.GetFinalGeometry();
+        return geometry?.HasM() ?? false;
+    }
+
+    #endregion
+
+
+    #region Parts
+
+    private List<IGeometry> Parts => this.FeatureLayer?.GetFinalGeometry()?.Geometries?.Cast<IGeometry>().ToList();
+
+    public IGeometry? CurrentPart
+    {
+        get
+        {
+            if (Parts == null || Parts.Count == 0 || CurrentPartIndex < 0 || CurrentPartIndex >= Parts.Count)
+                return null;
+
+            var currentPart = Parts[CurrentPartIndex];
+
+            //// Subscribe to property changes when CurrentPart changes
+            //if (currentPart != _previousCurrentPart)
+            //{
+            //    if (_previousCurrentPart != null)
+            //    {
+            //        _previousCurrentPart.PropertyChanged -= CurrentPart_PropertyChanged;
+            //    }
+            //    if (currentPart != null)
+            //    {
+            //        currentPart.PropertyChanged += CurrentPart_PropertyChanged;
+            //    }
+            //    _previousCurrentPart = currentPart;
+            //}
+
+            return currentPart;
+        }
+    }
+
+    private int _currentPartIndex = 0;
+    public int CurrentPartIndex
+    {
+        get => _currentPartIndex;
+        set
+        {
+            if (value < 0 || (FeatureLayer.GetFinalGeometry()?.Geometries != null && Parts.Count > 0 && value >= Parts.Count))
+                return;
+
+            _currentPartIndex = value;
+
+            // Refresh Points collection from the current part
+            RefreshPointsFromCurrentPart();
+
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(CurrentPart));
+            RaisePropertyChanged(nameof(CurrentPartNumber));
+            RaisePropertyChanged(nameof(CurrentPartIsValid));
+            RaisePropertyChanged(nameof(IsNextPartAvailable));
+            RaisePropertyChanged(nameof(IsPreviousPartAvailable));
+
+            // Notify that all CurrentPart-dependent properties have changed
+            RaisePropertyChanged(nameof(CurrentPagePoints));
+            RaisePropertyChanged(nameof(SelectedPoint));
+            RaisePropertyChanged(nameof(TotalPages));
+            RaisePropertyChanged(nameof(CurrentPageNumber));
+            RaisePropertyChanged(nameof(TotalPointCount));
+            RaisePropertyChanged(nameof(CurrentPointIndex));
+            RaisePropertyChanged(nameof(CurrentPointNumber));
+            RaisePropertyChanged(nameof(IsPreviousPointAvailable));
+            RaisePropertyChanged(nameof(IsNextPointAvailable));
+            RaisePropertyChanged(nameof(IsLastPage));
+            RaisePropertyChanged(nameof(IsEditable));
+            RaisePropertyChanged(nameof(CurrentPageIndex));
+        }
+    }
+
+    public int CurrentPartNumber => CurrentPartIndex + 1;
+
+    public int TotalPartCount => Parts?.Count ?? 0;
+
+    public bool IsNextPartAvailable => Parts != null && Parts.Count > 0;
+
+    public bool IsPreviousPartAvailable => Parts != null && Parts.Count > 0;
+
+    public bool CurrentPartIsValid
+    {
+        get
+        {
+            if (CurrentPart == null)
+                return false;
+
+            // For LineString, need at least 2 points
+            if (CurrentPart is IGeometry geometry)
+            {
+                return geometry.IsValid();
+            }
+
+            return false;
+        }
+    }
+
+    protected void Parts_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        //GeometryChanged?.Invoke(Parts);
+        RaisePropertyChanged(nameof(TotalPartCount));
+        RaisePropertyChanged(nameof(CurrentPart));
+        RaisePropertyChanged(nameof(CurrentPartNumber));
+        RaisePropertyChanged(nameof(CurrentPartIsValid));
+        RaisePropertyChanged(nameof(IsNextPartAvailable));
+        RaisePropertyChanged(nameof(IsPreviousPartAvailable));
+        AdjustCurrentPartIndex();
+    }
+
+    private void AdjustCurrentPartIndex()
+    {
+        if (Parts == null || Parts.Count == 0)
+        {
+            if (_currentPartIndex != 0)
+            {
+                _currentPartIndex = 0;
+                RaisePropertyChanged(nameof(CurrentPartIndex));
+            }
+        }
+        else if (_currentPartIndex >= Parts.Count)
+        {
+            _currentPartIndex = Parts.Count - 1;
+            RaisePropertyChanged(nameof(CurrentPartIndex));
+        }
+        RaisePropertyChanged(nameof(CurrentPart));
+        RaisePropertyChanged(nameof(CurrentPartIsValid));
+    }
+
+    //public event Action<ObservableCollection<LineStringEditorPresenter>>? GeometryChanged;
+
+    //public event Action<LineStringEditorPresenter>? RequestZoomToPart;
+
+
+    #endregion
+
+
+    #region Polygons
+
+    private List<IGeometry>? Polygons => GeometryType == Sta.Common.Primitives.GeometryType.MultiPolygon ?
+        this.FeatureLayer?.GetFinalGeometry()?.Geometries?.Cast<IGeometry>().ToList() : null;
+
+    public IGeometry? CurrentPolygon
+    {
+        get
+        {
+            if (Polygons is null || Polygons.Count == 0 || CurrentPolygonIndex < 0 || CurrentPolygonIndex >= Polygons.Count)
+                return null;
+
+            return Polygons[CurrentPolygonIndex]; 
+        }
+    }
+
+    private int _currentPolygonIndex = 0;
+    public int CurrentPolygonIndex
+    {
+        get => _currentPolygonIndex;
+        set
+        {
+            if (value < 0 || (Geometry?.Geometries != null && Polygons.Count > 0 && value >= Polygons.Count))
+                return;
+
+            _currentPolygonIndex = value;
+
+            // Refresh Points collection from the current part
+            RefreshPointsFromCurrentPart();
+
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(CurrentPolygon));
+            RaisePropertyChanged(nameof(CurrentPolygonNumber));
+            RaisePropertyChanged(nameof(CurrentPolygonIsValid));
+            RaisePropertyChanged(nameof(IsNextPolygonAvailable));
+            RaisePropertyChanged(nameof(IsPreviousPolygonAvailable));
+
+            // Notify that all CurrentPart-dependent properties have changed
+            RaisePropertyChanged(nameof(CurrentPagePoints));
+            RaisePropertyChanged(nameof(SelectedPoint));
+            RaisePropertyChanged(nameof(TotalPages));
+            RaisePropertyChanged(nameof(CurrentPageNumber));
+            RaisePropertyChanged(nameof(TotalPointCount));
+            RaisePropertyChanged(nameof(CurrentPointIndex));
+            RaisePropertyChanged(nameof(CurrentPointNumber));
+            RaisePropertyChanged(nameof(IsPreviousPointAvailable));
+            RaisePropertyChanged(nameof(IsNextPointAvailable));
+            RaisePropertyChanged(nameof(IsLastPage));
+            RaisePropertyChanged(nameof(IsEditable));
+            RaisePropertyChanged(nameof(CurrentPageIndex));
+        }
+    }
+
+    public int CurrentPolygonNumber => CurrentPolygonIndex + 1;
+
+    public int TotalPolygonCount => Polygons?.Count ?? 0;
+
+    public bool IsNextPolygonAvailable => Polygons != null && Polygons.Count > 0;
+
+    public bool IsPreviousPolygonAvailable => Polygons != null && Polygons.Count > 0;
+
+    public bool CurrentPolygonIsValid
+    {
+        get
+        {
+            if (CurrentPolygon == null)
+                return false;
+
+            // For LineString, need at least 2 points
+            if (CurrentPolygon is IGeometry geometry)
+            {
+                return geometry.IsValid();
+            }
+
+            return false;
+        }
+    }
+
+    protected void Polygons_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        //GeometryChanged?.Invoke(Parts);
+        RaisePropertyChanged(nameof(TotalPolygonCount));
+        RaisePropertyChanged(nameof(CurrentPolygon));
+        RaisePropertyChanged(nameof(CurrentPolygonNumber));
+        RaisePropertyChanged(nameof(CurrentPolygonIsValid));
+        RaisePropertyChanged(nameof(IsNextPolygonAvailable));
+        RaisePropertyChanged(nameof(IsPreviousPolygonAvailable));
+        AdjustCurrentPolygonIndex();
+    }
+
+    private void AdjustCurrentPolygonIndex()
+    {
+        if (Polygons is null || Polygons.Count == 0)
+        {
+            if (_currentPolygonIndex != 0)
+            {
+                _currentPolygonIndex = 0;
+                RaisePropertyChanged(nameof(CurrentPolygonIndex));
+            }
+        }
+        else if (_currentPolygonIndex >= Polygons.Count)
+        {
+            _currentPolygonIndex = Polygons.Count - 1;
+            RaisePropertyChanged(nameof(CurrentPolygonIndex));
+        }
+        RaisePropertyChanged(nameof(CurrentPolygon));
+        RaisePropertyChanged(nameof(CurrentPolygonIsValid));
+    }
+
+    //public event Action<ObservableCollection<LineStringEditorPresenter>>? GeometryChanged;
+
+    //public event Action<LineStringEditorPresenter>? RequestZoomToPart;
+
+
+    #endregion
+
+    #region Current Geometry or Geometry Part
+
+    // all points of the current geometry part
+    private ObservableCollection<Locateable> _points = new ObservableCollection<Locateable>();
+    public ObservableCollection<Locateable> Points
+    {
+        get => _points;
+        set
+        {
+            if (_points != null)
+                _points.CollectionChanged -= Points_CollectionChanged;
+
+            _points = value ?? new ObservableCollection<Locateable>();
+
+            if (_points != null)
+                _points.CollectionChanged += Points_CollectionChanged;
+
+            RaisePropertyChanged();
+            UpdatePagingProperties();
+        }
+    }
+
+    public ObservableCollection<Locateable> CurrentPagePoints
+    {
+        get
+        {
+            if (IsEmptyGeometry)
+                return new ObservableCollection<Locateable>();
+
+            var startIndex = CurrentPageIndex * MaxPointsPerPage;
+
+            var count = Math.Min(MaxPointsPerPage, Points.Count - startIndex);
+
+            return new ObservableCollection<Locateable>(Points.Skip(startIndex).Take(count));
+        }
+    }
+
+    private Locateable? _selectedPoint;
+
+    private bool _isUpdatingFromChangeCurrentEditingPoint = false;
+
+    public Locateable? SelectedPoint
+    {
+        get
+        {
+            return _selectedPoint;
+        }
+        set
+        {
+            if (_selectedPoint == value)
+                return;
+
+            // Unsubscribe from old point's PropertyChanged
+            if (_selectedPoint != null)
+            {
+                _selectedPoint.PropertyChanged -= SelectedPoint_PropertyChanged;
+            }
+
+            _selectedPoint = value;
+
+            // Subscribe to new point's PropertyChanged
+            if (_selectedPoint != null)
+            {
+                _selectedPoint.PropertyChanged += SelectedPoint_PropertyChanged;
+            }
+
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(CurrentPointIndex));
+            RaisePropertyChanged(nameof(CurrentPointNumber));
+            RaisePropertyChanged(nameof(IsPreviousPointAvailable));
+            RaisePropertyChanged(nameof(IsNextPointAvailable));
+            // Update command states
+            CommandManager.InvalidateRequerySuggested();
+
+            // Calculate global index from current part index and local point index
+            if (_selectedPoint != null && CurrentPointIndex >= 0)
+            {
+                int globalIndex = GetGlobalIndex(CurrentPartIndex, CurrentPointIndex);
+                FeatureLayer.SelectPoint(globalIndex);
+            }
+
+            // Update CurrentPointEditor when SelectedPoint changes
+            if (_currentPointEditor != null)
+            {
+                _currentPointEditor.CurrentPoint = _selectedPoint;
+                _currentPointEditor.HasZ = HasZ();
+                _currentPointEditor.HasM = HasM();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Event fired when SelectedPoint coordinates change (from DataGrid editing)
+    /// </summary>
+    public event Action<Point>? RequestUpdateCurrentEditingPoint;
+
+    private void SelectedPoint_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (_isUpdatingFromChangeCurrentEditingPoint)
+            return; // Prevent infinite loop when updating from ChangeCurrentEditingPoint
+
+        if (e.PropertyName == nameof(Locateable.X) || e.PropertyName == nameof(Locateable.Y))
+        {
+            if (_selectedPoint != null)
+            {
+                // Fire event with Web Mercator coordinates (SelectedPoint already uses Web Mercator)
+                RequestUpdateCurrentEditingPoint?.Invoke(new Point(_selectedPoint.X, _selectedPoint.Y));
+
+                // Update CurrentPointEditor when coordinates change (e.g., from map drag)
+                _currentPointEditor?.UpdateFromSelectedPoint();
+
+                // Refresh DataGrid display to show updated coordinates in selected SRS
+                RaisePropertyChanged(nameof(CurrentPagePoints));
+            }
         }
     }
 
@@ -1452,6 +1581,12 @@ public class GeometryEditorViewModel : Notifier
                 //RequestZoomToPart?.Invoke(CurrentPart);
             }
         }, param => CurrentPart != null);
+
+    #endregion
+
+    #region Polygon Commands
+
+
 
     #endregion
 }

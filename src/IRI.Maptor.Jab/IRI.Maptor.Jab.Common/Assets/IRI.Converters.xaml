@@ -32,6 +32,8 @@
 
     <converters:FlowDocumentXmlToStringConverter x:Key="flowDocumentXmlToStringConverter"/>
 
+    <converters:GeometryTypeToMaterialIconConverter x:Key="geometryTypeToMaterialIconConverter"/>
+
     <converters:ILayerToLegendConverter x:Key="iLayerToLegendConverter"/>
     <converters:IndexToBoolConverter x:Key="indexToBoolConverter"/>
 
