@@ -9,7 +9,7 @@ using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Jab.Common.Models.CoordinateEditor; 
+using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Helpers;
@@ -102,16 +102,16 @@ public class GeometryDetailsViewModel : Notifier
     }
 
     public bool SpansMultipleUtmZones => UtmZones.Count > 1;
-     
+
     public int NumberOfPoints => Geometry.TotalNumberOfPoints;
-     
+
     public int NumberOfGeometries => Geometry.NumberOfGeometries;
-     
+
     public string GeometryType => Geometry.Type.ToString();
 
 
     #region Format selection properties
-  
+
     private ObservableCollection<string> _availableFormats;
     public ObservableCollection<string> AvailableFormats
     {
@@ -390,43 +390,14 @@ public class GeometryDetailsViewModel : Notifier
         }
     }
 
-    private IGeometry _originalGeometry;
-    private bool _isEditing;
-    public bool IsEditing
-    {
-        get => _isEditing;
-        set
-        {
-            _isEditing = value;
-            RaisePropertyChanged();
-        }
-    }
-
     private RelayCommand _saveGeometryCommand;
     public RelayCommand SaveGeometryCommand =>
-        _saveGeometryCommand ??= new RelayCommand(param => SaveGeometry(), param => IsEditing);
+        _saveGeometryCommand ??= new RelayCommand(param => _editableFeatureLayer.FinishEditing(), param => true);
 
     private RelayCommand _cancelEditingCommand;
     public RelayCommand CancelEditingCommand =>
-        _cancelEditingCommand ??= new RelayCommand(param => CancelEditing(), param => IsEditing);
+        _cancelEditingCommand ??= new RelayCommand(param => _editableFeatureLayer.CancelDrawing(), param => true);
 
-    private void SaveGeometry()
-    {
-        // TODO: Convert editor data back to geometry
-        // For now, just clear editing state
-        IsEditing = false;
-        _originalGeometry = null;
-    }
-
-    private void CancelEditing()
-    {
-        if (_originalGeometry != null)
-        {
-            Geometry = _originalGeometry;
-        }
-        IsEditing = false;
-        _originalGeometry = null;
-    }
 
     private void UpdateAllProperties()
     {
@@ -441,7 +412,7 @@ public class GeometryDetailsViewModel : Notifier
         RaisePropertyChanged(nameof(Dimension));
 
         // Get geometry in WGS84 geodetic for calculations
-        Geometry<Point>? geodeticGeometry = GetGeodeticGeometry();
+        Geometry<Point>? geodeticGeometry = _editableFeatureLayer.GetGeodeticWgs84Geometery();
         if (geodeticGeometry == null)
         {
             ClearAllProperties();
@@ -460,176 +431,13 @@ public class GeometryDetailsViewModel : Notifier
         CalculateUtmZones(geodeticGeometry);
 
         // Extract points in WGS84 geodetic
-        ExtractPoints(geodeticGeometry);
+        //ExtractPoints(geodeticGeometry);
 
         // Update string representation for selected format
         UpdateStringRepresentation();
 
     }
-     
-    private ObservableCollection<RingInfo> CreatePolygonRings(Geometry<Point> geodeticGeometry)
-    {
-        var rings = new ObservableCollection<RingInfo>();
 
-        if (geodeticGeometry?.Geometries != null)
-        {
-            for (int i = 0; i < geodeticGeometry.Geometries.Count; i++)
-            {
-                var ringGeometry = geodeticGeometry.Geometries[i];
-                var ringPoints = new ObservableCollection<NotifiablePoint>();
-
-                if (ringGeometry?.Points != null)
-                {
-                    foreach (var point in ringGeometry.Points)
-                    {
-                        ringPoints.Add(new NotifiablePoint { X = point.X, Y = point.Y });
-                    }
-                }
-
-                rings.Add(new RingInfo
-                {
-                    IsExterior = i == 0,
-                    Points = ringPoints
-                });
-            }
-        }
-
-        return rings;
-    }
-
-    //private ObservableCollection<ObservableCollection<PointInfo>> CreateMultiLineStringParts(Geometry<Point> geodeticGeometry)
-    //{
-    //    var parts = new ObservableCollection<ObservableCollection<PointInfo>>();
-
-    //    if (geodeticGeometry?.Geometries != null)
-    //    {
-    //        foreach (var lineStringGeometry in geodeticGeometry.Geometries)
-    //        {
-    //            var partPoints = new ObservableCollection<PointInfo>();
-
-    //            if (lineStringGeometry?.Points != null)
-    //            {
-    //                foreach (var point in lineStringGeometry.Points)
-    //                {
-    //                    partPoints.Add(new PointInfo { X = point.X, Y = point.Y });
-    //                }
-    //            }
-
-    //            parts.Add(partPoints);
-    //        }
-    //    }
-
-    //    return parts;
-    //}
-
-    private ObservableCollection<ObservableCollection<RingInfo>> CreateMultiPolygonParts(Geometry<Point> geodeticGeometry)
-    {
-        var polygons = new ObservableCollection<ObservableCollection<RingInfo>>();
-
-        if (geodeticGeometry?.Geometries != null)
-        {
-            foreach (var polygonGeometry in geodeticGeometry.Geometries)
-            {
-                var polygonRings = new ObservableCollection<RingInfo>();
-
-                if (polygonGeometry?.Geometries != null)
-                {
-                    for (int i = 0; i < polygonGeometry.Geometries.Count; i++)
-                    {
-                        var ringGeometry = polygonGeometry.Geometries[i];
-                        var ringPoints = new ObservableCollection<NotifiablePoint>();
-
-                        if (ringGeometry?.Points != null)
-                        {
-                            foreach (var point in ringGeometry.Points)
-                            {
-                                ringPoints.Add(new NotifiablePoint { X = point.X, Y = point.Y });
-                            }
-                        }
-
-                        polygonRings.Add(new RingInfo
-                        {
-                            IsExterior = i == 0,
-                            Points = ringPoints
-                        });
-                    }
-                }
-
-                polygons.Add(polygonRings);
-            }
-        }
-
-        return polygons;
-    }
-
-
-
-    private Geometry<Point>? GetGeodeticGeometry()
-    {
-        if (_geometry == null)
-            return null;
-
-        // Cast to Geometry<Point> for operations
-        Geometry<Point>? geom = _geometry as Geometry<Point>;
-        if (geom == null)
-        {
-            // Try to convert other point types
-            if (_geometry is Geometry<PointZ> geomZ)
-            {
-                // Convert PointZ to Point (lose Z)
-                var points = geomZ.GetAllPoints()?.Select(p => new Point(p.X, p.Y)).ToList();
-                if (points != null && points.Count > 0)
-                {
-                    geom = Geometry<Point>.Create(points, geomZ.Type, geomZ.Srid);
-                }
-            }
-            else if (_geometry is Geometry<PointM> geomM)
-            {
-                var points = geomM.GetAllPoints()?.Select(p => new Point(p.X, p.Y)).ToList();
-                if (points != null && points.Count > 0)
-                {
-                    geom = Geometry<Point>.Create(points, geomM.Type, geomM.Srid);
-                }
-            }
-            else if (_geometry is Geometry<PointZM> geomZM)
-            {
-                var points = geomZM.GetAllPoints()?.Select(p => new Point(p.X, p.Y)).ToList();
-                if (points != null && points.Count > 0)
-                {
-                    geom = Geometry<Point>.Create(points, geomZM.Type, geomZM.Srid);
-                }
-            }
-        }
-
-        if (geom == null || geom.IsNullOrEmpty())
-            return null;
-
-        // Transform to WGS84 geodetic if needed
-        if (geom.Srid != SridHelper.GeodeticWGS84)
-        {
-            try
-            {
-                // Try common transformations
-                if (geom.Srid == SridHelper.WebMercator)
-                {
-                    geom = geom.Transform(MapProjects.WebMercatorToGeodeticWgs84, SridHelper.GeodeticWGS84);
-                }
-                else
-                {
-                    // For other SRIDs, we might need a more sophisticated transformation
-                    // For now, assume it's already geodetic or can't transform
-                    // In a real implementation, you'd check SRID and apply appropriate transformation
-                }
-            }
-            catch
-            {
-                // Transformation failed, return null
-                return null;
-            }
-        }
-
-        return geom;
-    }
 
     private void CalculateUtmZones(Geometry<Point> geodeticGeometry)
     {
@@ -670,67 +478,67 @@ public class GeometryDetailsViewModel : Notifier
 
     }
 
-    private void ExtractPoints(Geometry<Point> geodeticGeometry)
-    {
-        var points = new ObservableCollection<NotifiablePoint>();
+    //private void ExtractPoints(Geometry<Point> geodeticGeometry)
+    //{
+    //    var points = new ObservableCollection<NotifiablePoint>();
 
-        if (geodeticGeometry == null || geodeticGeometry.IsNullOrEmpty())
-        {
-            //Points = points;
-            return;
-        }
+    //    if (geodeticGeometry == null || geodeticGeometry.IsNullOrEmpty())
+    //    {
+    //        //Points = points;
+    //        return;
+    //    }
 
-        var allGeodeticPoints = geodeticGeometry.GetAllPoints();
-        if (allGeodeticPoints == null || allGeodeticPoints.Count == 0)
-        {
-            //Points = points;
-            return;
-        }
+    //    var allGeodeticPoints = geodeticGeometry.GetAllPoints();
+    //    if (allGeodeticPoints == null || allGeodeticPoints.Count == 0)
+    //    {
+    //        //Points = points;
+    //        return;
+    //    }
 
-        // Get original points with Z/M if available
-        List<IPoint>? originalPoints = null;
-        if (_geometry is Geometry<PointZ> geomZ)
-        {
-            originalPoints = geomZ.GetAllPoints()?.Cast<IPoint>().ToList();
-        }
-        else if (_geometry is Geometry<PointM> geomM)
-        {
-            originalPoints = geomM.GetAllPoints()?.Cast<IPoint>().ToList();
-        }
-        else if (_geometry is Geometry<PointZM> geomZM)
-        {
-            originalPoints = geomZM.GetAllPoints()?.Cast<IPoint>().ToList();
-        }
+    //    // Get original points with Z/M if available
+    //    List<IPoint>? originalPoints = null;
+    //    if (_geometry is Geometry<PointZ> geomZ)
+    //    {
+    //        originalPoints = geomZ.GetAllPoints()?.Cast<IPoint>().ToList();
+    //    }
+    //    else if (_geometry is Geometry<PointM> geomM)
+    //    {
+    //        originalPoints = geomM.GetAllPoints()?.Cast<IPoint>().ToList();
+    //    }
+    //    else if (_geometry is Geometry<PointZM> geomZM)
+    //    {
+    //        originalPoints = geomZM.GetAllPoints()?.Cast<IPoint>().ToList();
+    //    }
 
-        // Match geodetic points with original points to get Z/M
-        for (int i = 0; i < allGeodeticPoints.Count; i++)
-        {
-            var geodeticPoint = allGeodeticPoints[i];
-            var pointInfo = new NotifiablePoint
-            {
-                X = geodeticPoint.X, // Longitude
-                Y = geodeticPoint.Y  // Latitude
-            };
+    //    // Match geodetic points with original points to get Z/M
+    //    for (int i = 0; i < allGeodeticPoints.Count; i++)
+    //    {
+    //        var geodeticPoint = allGeodeticPoints[i];
+    //        var pointInfo = new NotifiablePoint
+    //        {
+    //            X = geodeticPoint.X, // Longitude
+    //            Y = geodeticPoint.Y  // Latitude
+    //        };
 
-            // Try to get Z and M from original points if available
-            if (originalPoints != null && i < originalPoints.Count)
-            {
-                var originalPoint = originalPoints[i];
-                if (originalPoint is IHasZ hasZ)
-                {
-                    pointInfo.Z = hasZ.Z;
-                }
-                if (originalPoint is IHasM hasM)
-                {
-                    pointInfo.M = hasM.M;
-                }
-            }
+    //        // Try to get Z and M from original points if available
+    //        if (originalPoints != null && i < originalPoints.Count)
+    //        {
+    //            var originalPoint = originalPoints[i];
+    //            if (originalPoint is IHasZ hasZ)
+    //            {
+    //                pointInfo.Z = hasZ.Z;
+    //            }
+    //            if (originalPoint is IHasM hasM)
+    //            {
+    //                pointInfo.M = hasM.M;
+    //            }
+    //        }
 
-            points.Add(pointInfo);
-        }
+    //        points.Add(pointInfo);
+    //    }
 
-        //Points = points;
-    }
+    //    //Points = points;
+    //}
 
     private void ClearAllProperties()
     {
