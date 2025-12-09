@@ -70,6 +70,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         return typeof(IHasM).IsAssignableFrom(typeof(T));
     }
 
+    public List<IGeometry>? GetGeometries() => Geometries?.Cast<IGeometry>().ToList();
 
     #region Constructors
 
@@ -2671,7 +2672,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 this.Geometries =
                 [
                     currentGeometry,
-                    new Geometry<T>(new List<Geometry<T>>() { new Geometry<T>(new List<T>(), GeometryType.LineString, Srid) }, GeometryType.Polygon, this.Srid),
+                    CreateNew(GeometryType.Polygon, this.Srid),
                 ];
                 this.Type = GeometryType.MultiPolygon;
                 break;
@@ -2684,10 +2685,9 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 break;
 
             case GeometryType.MultiPolygon:
-                this.Geometries.Add(new Geometry<T>(new List<Geometry<T>> { new Geometry<T>(new List<T>(), GeometryType.LineString, this.Srid) }, GeometryType.Polygon, this.Srid));
+                this.Geometries.Add(CreateNew(GeometryType.Polygon, this.Srid));
                 break;
-
-
+                 
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:
             case GeometryType.CompoundCurve:
@@ -2697,6 +2697,31 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         }
 
         return true;
+    }
+
+    public static Geometry<T> CreateNew(GeometryType type, int srid)
+    {
+        switch (type)
+        {
+            case GeometryType.Point:
+            case GeometryType.LineString:
+                return new Geometry<T>(new List<T>(), type, srid);
+
+            case GeometryType.Polygon:
+                return new Geometry<T>([CreateEmpty(GeometryType.LineString, srid)], GeometryType.Polygon, srid);
+
+            case GeometryType.MultiPoint:
+            case GeometryType.MultiLineString:
+            case GeometryType.MultiPolygon:
+            case GeometryType.GeometryCollection:
+                return new Geometry<T>(new List<Geometry<T>>(), type, srid);
+
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            default:
+                throw new NotImplementedException();
+        }
     }
 
     public bool TryRemovePart(Geometry<T> geometry)
@@ -3176,6 +3201,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 throw new NotImplementedException();
         }
     }
+
 
     public static Geometry<T> Create(double x, double y, int srid = 0)
     {

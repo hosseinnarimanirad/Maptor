@@ -69,7 +69,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="Text">
                                     <Setter.Value>
-                                        <MultiBinding StringFormat="Part {0} of {1}">
+                                        <MultiBinding StringFormat="Polygon {0} of {1}">
                                             <Binding Path="CurrentPolygonNumber"/>
                                             <Binding Path="TotalPolygonCount"/>
                                         </MultiBinding>
@@ -122,7 +122,7 @@
                 </Button>
                 <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding AddPartCommand}">
-                    <iconPacks:PackIconMaterial Kind="VectorSquarePlus"/>
+                    <iconPacks:PackIconModern Kind="Add"/>
                 </Button>
                 <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding DeletePartCommand}"
@@ -326,7 +326,7 @@
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{StaticResource pointNumberConverter}">
                                         <Binding Path="DataContext.CurrentPageIndex" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
-                                        <Binding Path="DataContext.MaxPointsPerPage" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SelectedPageSize" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
                                         <Binding Path="."/>
                                         <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
                                     </MultiBinding>
@@ -452,7 +452,7 @@
                 <iconPacks:PackIconMaterial Kind="ChevronLeft"/>
             </Button>
             <ComboBox ItemsSource="{Binding AvailablePageSizes}"
-             SelectedItem="{Binding MaxPointsPerPage, Mode=TwoWay}"
+             SelectedItem="{Binding SelectedPageSize, Mode=TwoWay}"
              Width="60" Margin="4,0" VerticalAlignment="Center"
              FlowDirection="LeftToRight"/>
             <TextBlock VerticalAlignment="Center" 

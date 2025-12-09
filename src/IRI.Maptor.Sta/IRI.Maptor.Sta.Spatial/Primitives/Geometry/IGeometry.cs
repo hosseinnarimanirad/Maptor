@@ -39,4 +39,6 @@ public interface IGeometry
     bool IsValid();
 
     bool IsEmpty();
+
+    List<IGeometry>? GetGeometries();
 }

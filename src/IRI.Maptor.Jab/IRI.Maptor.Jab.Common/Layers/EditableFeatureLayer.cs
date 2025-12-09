@@ -1081,7 +1081,7 @@ public class EditableFeatureLayer : SymbolizableLayer
     /// <param name="webMercatorPoint">The point to add (in Web Mercator coordinates)</param>
     /// <param name="partIndex">The index of the part to add the vertex to</param>
     /// <returns>The newly created Locateable instance, or null if addition failed</returns>
-    public Locateable? AddVertexToPart(Point webMercatorPoint, int partIndex)
+    public Locateable? AddVertexToPart(Point webMercatorPoint, int partIndex, int? subpartIndex = null)
     {
         if (_webMercatorGeometry == null)
             return null;
@@ -1127,7 +1127,9 @@ public class EditableFeatureLayer : SymbolizableLayer
                 return null;
 
             // Get the target part geometry
-            var targetPart = _webMercatorGeometry.Geometries[partIndex];
+            var targetPart = _webMercatorGeometry.Type == GeometryType.MultiPolygon ?
+                                _webMercatorGeometry?.Geometries[partIndex]?.Geometries?[subpartIndex ?? 0] : _webMercatorGeometry.Geometries[partIndex];
+
             if (targetPart == null)
                 return null;
 
@@ -1304,7 +1306,7 @@ public class EditableFeatureLayer : SymbolizableLayer
     /// <summary>
     /// Gets the Locateable objects for a specific part index
     /// </summary>
-    public List<Locateable> GetLocateablesForPart(int partIndex)
+    public List<Locateable> GetLocateablesForPart(int partIndex, int? subPartIndex = null)
     {
         if (_vertices == null)
             return new List<Locateable>();
@@ -1315,6 +1317,17 @@ public class EditableFeatureLayer : SymbolizableLayer
             return partIndex == 0 ? _vertices.Values.ToList() : new List<Locateable>();
         }
 
+        // Multi-polygon geometry
+        if (subPartIndex != null && _vertices.Collections != null && partIndex >= 0 && partIndex < _vertices.Collections.Count)
+        {
+            var polygon = _vertices.Collections[partIndex];
+
+            if (polygon != null && subPartIndex >= 0 && subPartIndex < polygon.Collections.Count)
+            {
+                return polygon.Collections[subPartIndex.Value].GetFlattenCollection();
+            }
+        }
+
         // Multi-part geometry
         if (_vertices.Collections != null && partIndex >= 0 && partIndex < _vertices.Collections.Count)
         {
@@ -1323,6 +1336,8 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         return new List<Locateable>();
     }
+
+
 
     /// <summary>
     /// Inserts a vertex at the specified global index
@@ -1368,8 +1383,8 @@ public class EditableFeatureLayer : SymbolizableLayer
                 // We use < instead of <= for the upper bound to ensure we don't match the start of the next part
                 // Exception: if this is the last part, we can insert at the end (currentGlobalIndex + partPointCount)
                 bool isLastPart = partIndex == _webMercatorGeometry.Geometries.Count - 1;
-                bool isInRange = globalIndex >= currentGlobalIndex && 
-                                 (isLastPart ? globalIndex <= currentGlobalIndex + partPointCount 
+                bool isInRange = globalIndex >= currentGlobalIndex &&
+                                 (isLastPart ? globalIndex <= currentGlobalIndex + partPointCount
                                             : globalIndex < currentGlobalIndex + partPointCount);
 
                 if (isInRange)
@@ -1422,7 +1437,7 @@ public class EditableFeatureLayer : SymbolizableLayer
                 return false;
 
             var partToDelete = _webMercatorGeometry.Geometries[partIndex];
-            
+
             if (_webMercatorGeometry.TryRemovePart(partToDelete))
             {
                 MakePathGeometry();

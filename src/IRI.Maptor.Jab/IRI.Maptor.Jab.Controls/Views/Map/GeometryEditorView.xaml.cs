@@ -14,17 +14,17 @@ namespace IRI.Maptor.Jab.Controls.Views;
 /// </summary>
 public partial class GeometryEditorView : UserControl
 {
-    public static readonly DependencyProperty MaxPointsPerPageProperty =
+    public static readonly DependencyProperty SelectedPageSizeProperty =
         DependencyProperty.Register(
-            nameof(MaxPointsPerPage),
+            nameof(SelectedPageSize),
             typeof(int),
             typeof(GeometryEditorView),
-            new PropertyMetadata(10, OnMaxPointsPerPageChanged));
+            new PropertyMetadata(10, OnSelectedPageSizeChanged));
 
-    public int MaxPointsPerPage
+    public int SelectedPageSize
     {
-        get => (int)GetValue(MaxPointsPerPageProperty);
-        set => SetValue(MaxPointsPerPageProperty, value);
+        get => (int)GetValue(SelectedPageSizeProperty);
+        set => SetValue(SelectedPageSizeProperty, value);
     }
 
     public static readonly DependencyProperty IsEditableProperty =
@@ -40,15 +40,15 @@ public partial class GeometryEditorView : UserControl
         set => SetValue(IsEditableProperty, value);
     }
 
-    private static void OnMaxPointsPerPageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnSelectedPageSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is GeometryEditorView view && view.DataContext is GeometryEditorViewModel presenter)
         {
-            presenter.MaxPointsPerPage = (int)e.NewValue;
+            presenter.SelectedPageSize = (int)e.NewValue;
             //// Also update CurrentPart if in multi-line mode
             //if (presenter.CurrentPart != null)
             //{
-            //    presenter.CurrentPart.MaxPointsPerPage = (int)e.NewValue;
+            //    presenter.CurrentPart.SelectedPageSize = (int)e.NewValue;
             //}
         }
     }
@@ -93,7 +93,7 @@ public partial class GeometryEditorView : UserControl
         if (e.NewValue is GeometryEditorViewModel presenter)
         {
             _currentPresenter = presenter;
-            presenter.MaxPointsPerPage = MaxPointsPerPage;
+            presenter.SelectedPageSize = SelectedPageSize;
             presenter.IsEditable = IsEditable;
             //presenter.RequestPanToPoint += Presenter_RequestPanToPoint;
             //presenter.RequestZoomToPoint += Presenter_RequestZoomToPoint;
@@ -124,13 +124,13 @@ public partial class GeometryEditorView : UserControl
 
     //
     private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (dataGrid.SelectedItem is null)
-            return;
-
+    { 
         // in order to automatically scroll into the selected row
         dataGrid.Dispatcher.BeginInvoke(new Action(() =>
         {
+            if (dataGrid.SelectedItem is null)
+                return; 
+
             dataGrid.ScrollIntoView(dataGrid.SelectedItem);
         }), System.Windows.Threading.DispatcherPriority.Background);
 
