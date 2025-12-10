@@ -319,6 +319,7 @@ public class GeometryDetailsViewModel : Notifier
             {
                 _geometryEditor.RequestUpdateCurrentEditingPoint -= GeometryEditor_RequestUpdateCurrentEditingPoint;
                 _geometryEditor.RequestZoomToPoint -= GeometryEditor_RequestZoomToPoint;
+                _geometryEditor.RequestZoomToGeometry -= GeometryEditor_RequestZoomToGeometry;
                 _geometryEditor.RequestPanToPoint -= GeometryEditor_RequestPanToPoint;
                 _geometryEditor.RequestCopyCoordinate -= GeometryEditor_RequestCopyCoordinate;
             }
@@ -330,6 +331,7 @@ public class GeometryDetailsViewModel : Notifier
             {
                 _geometryEditor.RequestUpdateCurrentEditingPoint += GeometryEditor_RequestUpdateCurrentEditingPoint;
                 _geometryEditor.RequestZoomToPoint += GeometryEditor_RequestZoomToPoint;
+                _geometryEditor.RequestZoomToGeometry += GeometryEditor_RequestZoomToGeometry;
                 _geometryEditor.RequestPanToPoint += GeometryEditor_RequestPanToPoint;
                 _geometryEditor.RequestCopyCoordinate += GeometryEditor_RequestCopyCoordinate;
             }
@@ -347,6 +349,8 @@ public class GeometryDetailsViewModel : Notifier
     /// Action to zoom to a point on the map
     /// </summary>
     public Action<Point>? RequestZoomToPoint { get; set; }
+
+    public Action<IGeometry?>? RequestZoomToGeometry { get; set; }
 
     /// <summary>
     /// Action to pan to a point on the map
@@ -371,6 +375,15 @@ public class GeometryDetailsViewModel : Notifier
             RequestZoomToPoint?.Invoke(point);
         }
     }
+
+    private void GeometryEditor_RequestZoomToGeometry(IGeometry? geometry)
+    {
+        if (geometry != null)
+        {
+            RequestZoomToGeometry?.Invoke(geometry);
+        }
+    }
+
 
     private void GeometryEditor_RequestPanToPoint(Locateable locateable)
     {

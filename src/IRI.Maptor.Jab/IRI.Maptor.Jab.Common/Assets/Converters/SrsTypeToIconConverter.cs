@@ -31,5 +31,3 @@ public class SrsTypeToIconConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
-
-

@@ -18,6 +18,8 @@ public interface IGeometry
 
     int Srid { get; set; }
 
+    BoundingBox GetBoundingBox();
+
     List<Point> GetPoints();
 
     bool IsLeafGeometry();
@@ -41,4 +43,6 @@ public interface IGeometry
     bool IsEmpty();
 
     List<IGeometry>? GetGeometries();
+
+    int ToGlobalPointIndex(int? polygonIndex, int partIndex, int localIndex);
 }

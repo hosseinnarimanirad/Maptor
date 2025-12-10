@@ -256,6 +256,31 @@ public class EditableFeatureLayer : SymbolizableLayer
         return result;
     }
 
+    internal bool TryAddNewRing(int? currentPolygonIndex)
+    {
+        bool result = false;
+
+        if (_webMercatorGeometry is null)
+            return result;
+
+        if (this._webMercatorGeometry.Type == GeometryType.Polygon)
+        {
+            result = this._webMercatorGeometry.TryAddNewRing();
+        }
+        else if (this._webMercatorGeometry.Type == GeometryType.MultiPolygon)
+        {
+            result = this._webMercatorGeometry.Geometries![currentPolygonIndex!.Value].TryAddNewRing();
+        }
+
+        if (result)
+        {
+            MakePathGeometry();
+            ReconstructLocateables();
+        }
+
+        return true;
+    }
+
     internal void CancelDrawing()
     {
         this.RequestCancelDrawing?.Invoke();
@@ -325,6 +350,9 @@ public class EditableFeatureLayer : SymbolizableLayer
     private void UpdateEdgeLables()
     {
         this._edgeLabelLayer.Items.Clear();
+
+        if (!_webMercatorGeometry.IsValid())
+            return;
 
         if (Options.IsEdgeLabelVisible)
         {
@@ -1081,86 +1109,88 @@ public class EditableFeatureLayer : SymbolizableLayer
     /// <param name="webMercatorPoint">The point to add (in Web Mercator coordinates)</param>
     /// <param name="partIndex">The index of the part to add the vertex to</param>
     /// <returns>The newly created Locateable instance, or null if addition failed</returns>
-    public Locateable? AddVertexToPart(Point webMercatorPoint, int partIndex, int? subpartIndex = null)
+    public Locateable? AddVertexToPart(Point webMercatorPoint, int? polygonIndex, int partIndex)
     {
-        if (_webMercatorGeometry == null)
-            return null;
-
-        // Single-part geometry
         if (_webMercatorGeometry.Points != null)
         {
-            if (partIndex != 0)
-                return null;
-
-            // Check if point already exists (avoid duplicates)
-            if (_webMercatorGeometry.Points.Count > 0)
-            {
-                if (_webMercatorGeometry.Points.Last().AreExactlyTheSame(webMercatorPoint))
-                    return null;
-            }
-
-            // Directly add the point to the geometry
-            _webMercatorGeometry.InsertLastPoint(webMercatorPoint);
-
-            // Update path geometry
-            MakePathGeometry();
-
-            // Reconstruct locateables to sync with the updated geometry
-            // This ensures LocateablesReconstructed event fires and ViewModel gets updated
-            ReconstructLocateables();
-
-            // Find and return the newly created Locateable
-            var locateables = GetLocateablesForPart(0);
-            if (locateables.Count > 0)
-            {
-                // Return the last point (the one we just added)
-                return locateables[locateables.Count - 1];
-            }
-
-            return null;
+            return AddVertex(webMercatorPoint, this._webMercatorGeometry, this._vertices);
         }
-
-        // Multi-part geometry
-        if (_webMercatorGeometry.Geometries != null)
+        else if (polygonIndex != null)
         {
-            if (partIndex < 0 || partIndex >= _webMercatorGeometry.Geometries.Count)
-                return null;
-
-            // Get the target part geometry
-            var targetPart = _webMercatorGeometry.Type == GeometryType.MultiPolygon ?
-                                _webMercatorGeometry?.Geometries[partIndex]?.Geometries?[subpartIndex ?? 0] : _webMercatorGeometry.Geometries[partIndex];
-
-            if (targetPart == null)
-                return null;
-
-            // Check if point already exists (avoid duplicates)
-            if (targetPart.Points != null && targetPart.Points.Count > 0)
-            {
-                if (targetPart.Points.Last().AreExactlyTheSame(webMercatorPoint))
-                    return null;
-            }
-
-            // Directly add the point to the target part's geometry
-            targetPart.InsertLastPoint(webMercatorPoint);
-
-            // Update path geometry
-            MakePathGeometry();
-
-            // Reconstruct locateables to sync with the updated geometry
-            ReconstructLocateables();
-
-            // Find and return the newly created Locateable
-            var locateables = GetLocateablesForPart(partIndex);
-            if (locateables.Count > 0)
-            {
-                // Return the last point in the part (the one we just added)
-                return locateables[locateables.Count - 1];
-            }
-
-            return null;
+            return AddVertex(webMercatorPoint,
+                            this._webMercatorGeometry.Geometries[polygonIndex.Value].Geometries[partIndex],
+                            _vertices.Collections[polygonIndex.Value].Collections[partIndex]);
+        }
+        else
+        {
+            return AddVertex(webMercatorPoint, this._webMercatorGeometry.Geometries[partIndex], _vertices.Collections[partIndex]);
         }
 
-        return null;
+
+        //if (_webMercatorGeometry == null)
+        //    return null;
+
+        //// Single-part geometry
+        //if (_webMercatorGeometry.Points != null)
+        //{
+        //    if (partIndex != 0)
+        //        return null;
+
+        //    // Check if point already exists (avoid duplicates)
+        //    if (_webMercatorGeometry.Points.Count > 0)
+        //    {
+        //        if (_webMercatorGeometry.Points.Last().AreExactlyTheSame(webMercatorPoint))
+        //            return null;
+        //    }
+
+        //    // Directly add the point to the geometry
+        //    _webMercatorGeometry.InsertLastPoint(webMercatorPoint);
+
+        //}
+
+        //// Multi-part geometry
+        //if (_webMercatorGeometry.Geometries != null)
+        //{
+        //    if (partIndex < 0 || partIndex >= _webMercatorGeometry.Geometries.Count)
+        //        return null;
+
+        //    // Get the target part geometry
+        //    var targetPart = _webMercatorGeometry.Type == GeometryType.MultiPolygon ?
+        //                        _webMercatorGeometry?.Geometries[polygonIndex ?? 0]?.Geometries?[partIndex] :
+        //                        _webMercatorGeometry.Geometries[partIndex];
+
+        //    if (targetPart == null)
+        //        return null;
+
+        //    // Check if point already exists (avoid duplicates)
+        //    if (targetPart.Points != null && targetPart.Points.Count > 0)
+        //    {
+        //        if (targetPart.Points.Last().AreExactlyTheSame(webMercatorPoint))
+        //            return null;
+        //    }
+
+        //    // Directly add the point to the target part's geometry
+        //    targetPart.InsertLastPoint(webMercatorPoint);
+
+        //}
+
+        //// Update path geometry
+        //MakePathGeometry();
+
+        //// Reconstruct locateables to sync with the updated geometry
+        //// This ensures LocateablesReconstructed event fires and ViewModel gets updated
+        //ReconstructLocateables();
+
+        //// Find and return the newly created Locateable
+        //var locateables = GetLocateablesForPart(polygonIndex, partIndex);
+
+        //if (locateables.Count > 0)
+        //{
+        //    // Return the last point (the one we just added)
+        //    return locateables[locateables.Count - 1];
+        //}
+
+        //return null;
     }
 
     public void AddSemiVertex(Point webMercatorPoint)
@@ -1306,25 +1336,23 @@ public class EditableFeatureLayer : SymbolizableLayer
     /// <summary>
     /// Gets the Locateable objects for a specific part index
     /// </summary>
-    public List<Locateable> GetLocateablesForPart(int partIndex, int? subPartIndex = null)
+    public List<Locateable> GetLocateablesForPart(int? polygonIndex, int partIndex)
     {
         if (_vertices == null)
             return new List<Locateable>();
 
         // Single-part geometry
         if (_vertices.Values != null)
-        {
             return partIndex == 0 ? _vertices.Values.ToList() : new List<Locateable>();
-        }
 
         // Multi-polygon geometry
-        if (subPartIndex != null && _vertices.Collections != null && partIndex >= 0 && partIndex < _vertices.Collections.Count)
+        if (polygonIndex != null && _vertices.Collections != null && polygonIndex >= 0 && polygonIndex < _vertices.Collections.Count)
         {
-            var polygon = _vertices.Collections[partIndex];
+            var polygon = _vertices.Collections[polygonIndex.Value];
 
-            if (polygon != null && subPartIndex >= 0 && subPartIndex < polygon.Collections.Count)
+            if (polygon != null && partIndex >= 0 && partIndex < polygon.Collections?.Count)
             {
-                return polygon.Collections[subPartIndex.Value].GetFlattenCollection();
+                return polygon.Collections[partIndex].GetFlattenCollection();
             }
         }
 
@@ -1339,82 +1367,82 @@ public class EditableFeatureLayer : SymbolizableLayer
 
 
 
-    /// <summary>
-    /// Inserts a vertex at the specified global index
-    /// </summary>
-    /// <param name="webMercatorPoint">The point to insert (in Web Mercator coordinates)</param>
-    /// <param name="globalIndex">The global index across all parts where the point should be inserted</param>
-    /// <returns>The newly created Locateable instance, or null if insertion failed</returns>
-    public Locateable? InsertVertexAt(Point webMercatorPoint, int globalIndex)
-    {
-        if (_webMercatorGeometry == null)
-            return null;
+    ///// <summary>
+    ///// Inserts a vertex at the specified global index
+    ///// </summary>
+    ///// <param name="webMercatorPoint">The point to insert (in Web Mercator coordinates)</param>
+    ///// <param name="globalIndex">The global index across all parts where the point should be inserted</param>
+    ///// <returns>The newly created Locateable instance, or null if insertion failed</returns>
+    //public Locateable? InsertVertexAt(Point webMercatorPoint, int globalIndex)
+    //{
+    //    if (_webMercatorGeometry == null)
+    //        return null;
 
-        // Single-part geometry
-        if (_webMercatorGeometry.Points != null)
-        {
-            if (globalIndex < 0 || globalIndex > _webMercatorGeometry.Points.Count)
-                return null;
+    //    // Single-part geometry
+    //    if (_webMercatorGeometry.Points != null)
+    //    {
+    //        if (globalIndex < 0 || globalIndex > _webMercatorGeometry.Points.Count)
+    //            return null;
 
-            _webMercatorGeometry.InsertPoint(webMercatorPoint, globalIndex);
-            ReconstructLocateables();
+    //        _webMercatorGeometry.InsertPoint(webMercatorPoint, globalIndex);
+    //        ReconstructLocateables();
 
-            // Find the newly inserted Locateable after reconstruction
-            var locateables = GetLocateablesForPart(0);
-            if (globalIndex >= 0 && globalIndex < locateables.Count)
-            {
-                return locateables[globalIndex];
-            }
-            return null;
-        }
+    //        // Find the newly inserted Locateable after reconstruction
+    //        var locateables = GetLocateablesForPart(0);
+    //        if (globalIndex >= 0 && globalIndex < locateables.Count)
+    //        {
+    //            return locateables[globalIndex];
+    //        }
+    //        return null;
+    //    }
 
-        // Multi-part geometry
-        if (_webMercatorGeometry.Geometries != null)
-        {
-            // Find which part contains the global index
-            int currentGlobalIndex = 0;
-            for (int partIndex = 0; partIndex < _webMercatorGeometry.Geometries.Count; partIndex++)
-            {
-                var part = _webMercatorGeometry.Geometries[partIndex];
-                int partPointCount = part.Points?.Count ?? 0;
+    //    // Multi-part geometry
+    //    if (_webMercatorGeometry.Geometries != null)
+    //    {
+    //        // Find which part contains the global index
+    //        int currentGlobalIndex = 0;
+    //        for (int partIndex = 0; partIndex < _webMercatorGeometry.Geometries.Count; partIndex++)
+    //        {
+    //            var part = _webMercatorGeometry.Geometries[partIndex];
+    //            int partPointCount = part.Points?.Count ?? 0;
 
-                // Check if globalIndex falls within this part's range
-                // Valid range: [currentGlobalIndex, currentGlobalIndex + partPointCount)
-                // We use < instead of <= for the upper bound to ensure we don't match the start of the next part
-                // Exception: if this is the last part, we can insert at the end (currentGlobalIndex + partPointCount)
-                bool isLastPart = partIndex == _webMercatorGeometry.Geometries.Count - 1;
-                bool isInRange = globalIndex >= currentGlobalIndex &&
-                                 (isLastPart ? globalIndex <= currentGlobalIndex + partPointCount
-                                            : globalIndex < currentGlobalIndex + partPointCount);
+    //            // Check if globalIndex falls within this part's range
+    //            // Valid range: [currentGlobalIndex, currentGlobalIndex + partPointCount)
+    //            // We use < instead of <= for the upper bound to ensure we don't match the start of the next part
+    //            // Exception: if this is the last part, we can insert at the end (currentGlobalIndex + partPointCount)
+    //            bool isLastPart = partIndex == _webMercatorGeometry.Geometries.Count - 1;
+    //            bool isInRange = globalIndex >= currentGlobalIndex &&
+    //                             (isLastPart ? globalIndex <= currentGlobalIndex + partPointCount
+    //                                        : globalIndex < currentGlobalIndex + partPointCount);
 
-                if (isInRange)
-                {
-                    // Found the part - calculate local index
-                    int localIndex = globalIndex - currentGlobalIndex;
+    //            if (isInRange)
+    //            {
+    //                // Found the part - calculate local index
+    //                int localIndex = globalIndex - currentGlobalIndex;
 
-                    // Validate local index: can insert at positions [0, partPointCount] (inclusive)
-                    // 0 = before first point, partPointCount = after last point
-                    if (part.Points != null && localIndex >= 0 && localIndex <= partPointCount)
-                    {
-                        part.InsertPoint(webMercatorPoint, localIndex);
-                        ReconstructLocateables();
+    //                // Validate local index: can insert at positions [0, partPointCount] (inclusive)
+    //                // 0 = before first point, partPointCount = after last point
+    //                if (part.Points != null && localIndex >= 0 && localIndex <= partPointCount)
+    //                {
+    //                    part.InsertPoint(webMercatorPoint, localIndex);
+    //                    ReconstructLocateables();
 
-                        // Find the newly inserted Locateable after reconstruction
-                        var locateables = GetLocateablesForPart(partIndex);
-                        if (localIndex >= 0 && localIndex < locateables.Count)
-                        {
-                            return locateables[localIndex];
-                        }
-                        return null;
-                    }
-                }
+    //                    // Find the newly inserted Locateable after reconstruction
+    //                    var locateables = GetLocateablesForPart(partIndex);
+    //                    if (localIndex >= 0 && localIndex < locateables.Count)
+    //                    {
+    //                        return locateables[localIndex];
+    //                    }
+    //                    return null;
+    //                }
+    //            }
 
-                currentGlobalIndex += partPointCount;
-            }
-        }
+    //            currentGlobalIndex += partPointCount;
+    //        }
+    //    }
 
-        return null;
-    }
+    //    return null;
+    //}
 
     /// <summary>
     /// Deletes a part (ring or line string) by its index

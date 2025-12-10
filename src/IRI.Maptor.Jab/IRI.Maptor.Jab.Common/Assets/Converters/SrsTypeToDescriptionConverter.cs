@@ -32,5 +32,3 @@ public class SrsTypeToDescriptionConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
-
-

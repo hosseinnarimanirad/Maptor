@@ -20,5 +20,3 @@ public class UtmZoneConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
-
-

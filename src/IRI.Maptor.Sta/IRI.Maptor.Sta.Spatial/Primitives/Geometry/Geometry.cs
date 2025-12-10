@@ -10,6 +10,7 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.Spatial.IO.SqlServerNativeBinary;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Services;
 
 namespace IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -69,8 +70,6 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     {
         return typeof(IHasM).IsAssignableFrom(typeof(T));
     }
-
-    public List<IGeometry>? GetGeometries() => Geometries?.Cast<IGeometry>().ToList();
 
     #region Constructors
 
@@ -278,6 +277,41 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     public bool IsPolygonOrMultiPolygon()
     {
         return Type == GeometryType.Polygon || Type == GeometryType.MultiPolygon;
+    }
+
+    public List<IGeometry>? GetGeometries() => Geometries?.Cast<IGeometry>().ToList();
+
+    public int ToGlobalPointIndex(int? polygonIndex, int partIndex, int localIndex)
+    {
+        switch (Type)
+        {
+            case GeometryType.Point:
+                return 0;
+
+            case GeometryType.LineString:
+                return localIndex;
+
+            case GeometryType.MultiPoint:
+                return partIndex;
+
+            case GeometryType.Polygon:
+            case GeometryType.MultiLineString:
+                var preceedingPartsPoints = Geometries?.Where((g, index) => index < partIndex).Select(g => g.TotalNumberOfPoints).DefaultIfEmpty(0).Sum() ?? 0;
+                return localIndex + preceedingPartsPoints;
+
+            case GeometryType.MultiPolygon:
+                var preceedingPolygonPoints = Geometries?.Where((g, index) => index < polygonIndex!.Value).Select(g => g.TotalNumberOfPoints).DefaultIfEmpty(0).Sum() ?? 0;
+                var preceedingRingsPoints = Geometries[polygonIndex!.Value].Geometries?.Where((g, index) => index < partIndex).Select(g => g.TotalNumberOfPoints).DefaultIfEmpty(0).Sum() ?? 0;
+                return localIndex + preceedingRingsPoints + preceedingPolygonPoints;
+
+            case GeometryType.GeometryCollection:
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            default:
+                return 0;
+        }
+
     }
 
     #endregion
@@ -2687,7 +2721,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             case GeometryType.MultiPolygon:
                 this.Geometries.Add(CreateNew(GeometryType.Polygon, this.Srid));
                 break;
-                 
+
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:
             case GeometryType.CompoundCurve:
@@ -2699,29 +2733,14 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         return true;
     }
 
-    public static Geometry<T> CreateNew(GeometryType type, int srid)
+    public bool TryAddNewRing()
     {
-        switch (type)
-        {
-            case GeometryType.Point:
-            case GeometryType.LineString:
-                return new Geometry<T>(new List<T>(), type, srid);
+        if (this.Type != GeometryType.Polygon)
+            return false;
 
-            case GeometryType.Polygon:
-                return new Geometry<T>([CreateEmpty(GeometryType.LineString, srid)], GeometryType.Polygon, srid);
+        this.Geometries.Add(Geometry<T>.CreateNew(GeometryType.LineString, this.Srid));
 
-            case GeometryType.MultiPoint:
-            case GeometryType.MultiLineString:
-            case GeometryType.MultiPolygon:
-            case GeometryType.GeometryCollection:
-                return new Geometry<T>(new List<Geometry<T>>(), type, srid);
-
-            case GeometryType.CircularString:
-            case GeometryType.CompoundCurve:
-            case GeometryType.CurvePolygon:
-            default:
-                throw new NotImplementedException();
-        }
+        return true;
     }
 
     public bool TryRemovePart(Geometry<T> geometry)
@@ -3178,6 +3197,31 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     //public static readonly Geometry EmptyMultiPoint = new Geometry(new Geometry[0], GeometryType.MultiPoint);
     //public static readonly Geometry EmptyMultiLineString = new Geometry(new Geometry[0], GeometryType.MultiLineString);
     //public static readonly Geometry EmptyMultiPolygon = new Geometry(new Geometry[0], GeometryType.MultiPolygon);
+
+    public static Geometry<T> CreateNew(GeometryType type, int srid)
+    {
+        switch (type)
+        {
+            case GeometryType.Point:
+            case GeometryType.LineString:
+                return new Geometry<T>(new List<T>(), type, srid);
+
+            case GeometryType.Polygon:
+                return new Geometry<T>([CreateEmpty(GeometryType.LineString, srid)], GeometryType.Polygon, srid);
+
+            case GeometryType.MultiPoint:
+            case GeometryType.MultiLineString:
+            case GeometryType.MultiPolygon:
+            case GeometryType.GeometryCollection:
+                return new Geometry<T>(new List<Geometry<T>>(), type, srid);
+
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            default:
+                throw new NotImplementedException();
+        }
+    }
 
     public static Geometry<T> CreateEmpty(GeometryType type, int srid)
     {

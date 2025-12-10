@@ -315,7 +315,7 @@
                   IsReadOnly="True"
                   Style="{DynamicResource MahApps.Styles.DataGrid}" CanUserReorderColumns="True"
                   HeadersVisibility="Column" AlternationCount="2000000000"
-                  SelectionMode="Single" MaxHeight="200"  
+                  SelectionMode="Single" Height="200"  
                   SelectionUnit="FullRow"  >
             <DataGrid.Columns>
 
@@ -405,29 +405,12 @@
                          ToolTip="{Binding [geometryDetails_currentPoint_edit], Source={StaticResource Localization}}" Visibility="Collapsed" >
                 <iconPacks:PackIconModern Kind="Edit"/>
             </ToggleButton>
-            <Button Style="{StaticResource circleButtonDark}" 
-                      Command="{Binding PanToCurrentPointCommand}"
-                      IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
-                      ToolTip="{Binding [geometryDetails_currentPoint_zoom], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="CursorHand"  />
-            </Button>
-            <Button Style="{StaticResource circleButtonDark}" 
-                      Command="{Binding ZoomToCurrentPointCommand}"
-                      IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
-                      ToolTip="{Binding [geometryDetails_currentPoint_zoomToPoint], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="MagnifyAdd"/>
-            </Button>
-            <Button Style="{StaticResource circleButtonDark}" 
-                      Command="{Binding CopyCurrentPointCommand}"
-                      IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
-                      ToolTip="{Binding [geometryDetails_currentPoint_copyCoordinate], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="PageCopy"/>
-            </Button>
-            <Button Style="{StaticResource circleButtonDark}" 
+          
+            <!--<Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding InsertPointBeforeSelectedCommand}"
                     ToolTip="{Binding [geometryDetails_currentPoint_insert], Source={StaticResource Localization}}">
                 <iconPacks:PackIconModern Kind="ListAdd"/>
-            </Button>
+            </Button>-->
             <Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding AddPointCommand}"
                     ToolTip="{Binding [geometryDetails_currentPoint_add], Source={StaticResource Localization}}">
@@ -439,7 +422,25 @@
                     ToolTip="{Binding [geometryDetails_currentPoint_delete], Source={StaticResource Localization}}">
                 <iconPacks:PackIconModern Kind="Delete"/>
             </Button>
+            <Button Style="{StaticResource circleButtonDark}" 
+                    Command="{Binding ZoomToCurrentPointCommand}"
+                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_zoomToPoint], Source={StaticResource Localization}}">
+                <iconPacks:PackIconModern Kind="MagnifyAdd"/>
+            </Button>
+            <Button Style="{StaticResource circleButtonDark}" 
+                    Command="{Binding PanToCurrentPointCommand}"
+                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_zoom], Source={StaticResource Localization}}">
+                <iconPacks:PackIconModern Kind="CursorHand"  />
+            </Button>
 
+            <Button Style="{StaticResource circleButtonDark}" 
+                    Command="{Binding CopyCurrentPointCommand}"
+                    IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_copyCoordinate], Source={StaticResource Localization}}">
+                <iconPacks:PackIconModern Kind="PageCopy"/>
+            </Button>
             <Button Style="{StaticResource circleButtonDark}" 
                       Command="{Binding GoToPreviousPageCommand}"  
                       ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}">
