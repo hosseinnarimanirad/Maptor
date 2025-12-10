@@ -936,7 +936,7 @@ public class GeometryEditorViewModel : Notifier
             return;
 
         // Use AddVertexToPart to add to the current part
-        Locateable? locatable = FeatureLayer.AddVertexToPart(new Sta.Common.Primitives.Point(0, 0), CurrentPolygonIndex, CurrentPartIndex);
+        Locateable? locatable = FeatureLayer.AddVertexToPart(GetNewPoint(), CurrentPolygonIndex, CurrentPartIndex);
 
         if (locatable is null)
             return;
@@ -1065,6 +1065,13 @@ public class GeometryEditorViewModel : Notifier
         }
 
         SelectedPoint = point;
+    }
+
+    private Point GetNewPoint()
+    {
+        var layerCenter = this.FeatureLayer.Extent.Center;
+
+        return layerCenter == Point.NaN ? new Point(0, 0) : layerCenter;
     }
 
     #endregion
@@ -1239,7 +1246,7 @@ public class GeometryEditorViewModel : Notifier
             {
                 // Add a point (0,0) to the new part
                 // AddVertexToPart will directly manipulate the geometry and trigger ReconstructLocateables()
-                var newPointLocatable = FeatureLayer.AddVertexToPart(new Point(0, 0), CurrentPolygonIndex, newPartIndex);
+                var newPointLocatable = FeatureLayer.AddVertexToPart(GetNewPoint(), CurrentPolygonIndex, newPartIndex);
 
                 if (newPointLocatable != null)
                 {
@@ -1411,7 +1418,7 @@ public class GeometryEditorViewModel : Notifier
                 int newPolygonIndex = TotalPolygonCount - 1;
                 // Add a point (0,0) to the new part
                 // AddVertexToPart will directly manipulate the geometry and trigger ReconstructLocateables()
-                var newPointLocatable = FeatureLayer.AddVertexToPart(new Point(0, 0), newPolygonIndex, CurrentPartIndex);
+                var newPointLocatable = FeatureLayer.AddVertexToPart(GetNewPoint(), newPolygonIndex, CurrentPartIndex);
 
                 if (newPointLocatable != null)
                 {
