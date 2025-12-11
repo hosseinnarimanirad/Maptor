@@ -11,7 +11,7 @@ public interface IGeometry
     GeometryType Type { get; set; }
 
     int NumberOfPoints { get; }
-
+     
     int NumberOfGeometries { get; }
 
     int TotalNumberOfPoints { get; }
@@ -44,5 +44,7 @@ public interface IGeometry
 
     List<IGeometry>? GetGeometries();
 
-    int ToGlobalPointIndex(int? polygonIndex, int partIndex, int localIndex);
+    int ToGlobalPointIndex(GeometryPointAddress pointAddress);
+
+    GeometryPointAddress FindPointAddress(int globalIndex);
 }

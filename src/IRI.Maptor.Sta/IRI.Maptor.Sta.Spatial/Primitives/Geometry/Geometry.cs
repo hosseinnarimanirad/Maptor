@@ -281,28 +281,32 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public List<IGeometry>? GetGeometries() => Geometries?.Cast<IGeometry>().ToList();
 
-    public int ToGlobalPointIndex(int? polygonIndex, int partIndex, int localIndex)
+    public int ToGlobalPointIndex(GeometryPointAddress pointAddress)
     {
+        var partIndex = pointAddress.PartIndex;
+
+        var polygonIndex = pointAddress.PolygonIndex;
+
         switch (Type)
         {
             case GeometryType.Point:
                 return 0;
 
             case GeometryType.LineString:
-                return localIndex;
+                return pointAddress.LocalPointIndex;
 
             case GeometryType.MultiPoint:
-                return partIndex;
+                return pointAddress.PartIndex;
 
             case GeometryType.Polygon:
             case GeometryType.MultiLineString:
                 var preceedingPartsPoints = Geometries?.Where((g, index) => index < partIndex).Select(g => g.TotalNumberOfPoints).DefaultIfEmpty(0).Sum() ?? 0;
-                return localIndex + preceedingPartsPoints;
+                return pointAddress.LocalPointIndex + preceedingPartsPoints;
 
             case GeometryType.MultiPolygon:
                 var preceedingPolygonPoints = Geometries?.Where((g, index) => index < polygonIndex!.Value).Select(g => g.TotalNumberOfPoints).DefaultIfEmpty(0).Sum() ?? 0;
                 var preceedingRingsPoints = Geometries[polygonIndex!.Value].Geometries?.Where((g, index) => index < partIndex).Select(g => g.TotalNumberOfPoints).DefaultIfEmpty(0).Sum() ?? 0;
-                return localIndex + preceedingRingsPoints + preceedingPolygonPoints;
+                return pointAddress.LocalPointIndex + preceedingRingsPoints + preceedingPolygonPoints;
 
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:
@@ -312,6 +316,60 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 return 0;
         }
 
+    }
+
+    public GeometryPointAddress FindPointAddress(int globalIndex)
+    {
+        switch (this.Type)
+        {
+            case GeometryType.Point:
+            case GeometryType.LineString:
+                return new GeometryPointAddress(null, 0, globalIndex);
+
+            case GeometryType.MultiPoint:
+            case GeometryType.MultiLineString:
+            case GeometryType.Polygon:
+                var tempCount = 0;
+
+                for (int i = 0; i < NumberOfGeometries; i++)
+                {
+                    var partPointCount = Geometries?[i].NumberOfPoints ?? 0;
+
+                    if (tempCount + partPointCount > globalIndex)
+                        return new GeometryPointAddress(null, i, globalIndex - tempCount);
+
+                    tempCount += partPointCount;
+                }
+
+                break;
+
+            case GeometryType.MultiPolygon:
+            case GeometryType.GeometryCollection:
+                var tempCount2 = 0;
+
+                for (int i = 0; i < NumberOfGeometries; i++)
+                {
+                    for (int j = 0; j < Geometries?[i].NumberOfGeometries; j++)
+                    {
+                        var partPointCount = Geometries?[i].Geometries?[j].NumberOfPoints ?? 0;
+
+                        if (tempCount2 + partPointCount > globalIndex)
+                            return new GeometryPointAddress(i, j, globalIndex - tempCount2);
+
+                        tempCount2 += partPointCount;
+                    }
+                }
+
+                break;
+
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            default:
+                break;
+        }
+
+        return new GeometryPointAddress(null, -1, -1);
     }
 
     #endregion
