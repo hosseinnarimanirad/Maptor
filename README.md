@@ -5,6 +5,7 @@
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![.NET](https://img.shields.io/badge/.NET-8.0-blue.svg)](https://dotnet.microsoft.com/download/dotnet/8.0)
 [![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Spatial.svg?style=flat-square)](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
+![GitHub last commit](https://img.shields.io/github/last-commit/hosseinnarimanirad/Maptor)
 
 **A comprehensive .NET GIS library for spatial data modeling, processing, and visualization**
 
