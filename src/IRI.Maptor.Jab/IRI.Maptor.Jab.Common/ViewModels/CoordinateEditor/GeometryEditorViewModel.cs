@@ -113,6 +113,9 @@ public class GeometryEditorViewModel : Notifier
         // which also subscribes to PropertyChanged events
         // UpdateValidationState is called by RefreshPointsFromCurrentPart via UpdatePagingProperties
         UpdateValidationState();
+
+        RaisePropertyChangedForMultiPartSection();
+        RaisePropertyChangedForMultiPolygonSection();
     }
 
 
@@ -684,72 +687,46 @@ public class GeometryEditorViewModel : Notifier
         if (l == null)
             return;
 
-        if (HasNoParts)
+        // Multi-part geometry: find which part contains this global index
+        //var (partIndex, localIndex) = GetPartAndLocalIndex(index);
+        var pointAddress = Geometry.FindPointAddress(index);
+        var partIndex = pointAddress.PartIndex;
+        var localIndex = pointAddress.LocalPointIndex;
+         
+        if (partIndex < 0 && localIndex < 0)
+            return;
+
+        // Switch to the correct part if needed
+        if (partIndex != CurrentPartIndex)
+            CurrentPartIndex = partIndex;
+
+        // Ensure Points collection is up to date
+        if (localIndex < 0 || localIndex >= TotalPointCount)
+            return;
+
+        // Navigate to correct page
+        int pageIndex = localIndex / SelectedPageSize;
+        if (pageIndex != CurrentPageIndex)
         {
-            // Single-part geometry: index maps directly to Points collection
-            if (index < 0 || index >= TotalPointCount)
-                return;
+            CurrentPageIndex = pageIndex;
+        }
 
-            // Navigate to correct page
-            int pageIndex = index / SelectedPageSize;
-            if (pageIndex != CurrentPageIndex)
+        // Update the selected point and its coordinates
+        this.SelectedPoint = Points[localIndex];
+
+        if (this.SelectedPoint != null)
+        {
+            this.SelectedPoint.X = l.X;
+            this.SelectedPoint.Y = l.Y;
+
+            // Update CurrentPointEditor when coordinates change
+            if (_currentPointEditor is not null)
             {
-                CurrentPageIndex = pageIndex;
-            }
-
-            // Update the selected point and its coordinates
-
-            this.SelectedPoint = Points[index];
-
-            if (this.SelectedPoint != null)
-            {
-                this.SelectedPoint.X = l.X;
-                this.SelectedPoint.Y = l.Y;
-
-                // Update CurrentPointEditor when coordinates change
                 //_currentPointEditor?.UpdateFromSelectedPoint();
                 _currentPointEditor.CurrentPoint = this.SelectedPoint;
             }
         }
-        else
-        {
-            // Multi-part geometry: find which part contains this global index
-            var (partIndex, localIndex) = GetPartAndLocalIndex(index);
 
-            if (partIndex < 0 && localIndex < 0)
-                return;
-
-            // Switch to the correct part if needed
-            if (partIndex != CurrentPartIndex)
-                CurrentPartIndex = partIndex;
-
-            // Ensure Points collection is up to date
-            if (localIndex < 0 || localIndex >= TotalPointCount)
-                return;
-
-            // Navigate to correct page
-            int pageIndex = localIndex / SelectedPageSize;
-            if (pageIndex != CurrentPageIndex)
-            {
-                CurrentPageIndex = pageIndex;
-            }
-
-            // Update the selected point and its coordinates
-            this.SelectedPoint = Points[localIndex];
-
-            if (this.SelectedPoint != null)
-            {
-                this.SelectedPoint.X = l.X;
-                this.SelectedPoint.Y = l.Y;
-
-                // Update CurrentPointEditor when coordinates change
-                if (_currentPointEditor is not null)
-                {
-                    //_currentPointEditor?.UpdateFromSelectedPoint();
-                    _currentPointEditor.CurrentPoint = this.SelectedPoint;
-                }
-            }
-        }
     }
 
     public event Action<ObservableCollection<Locateable>>? PointsChanged;
@@ -795,7 +772,6 @@ public class GeometryEditorViewModel : Notifier
         // Reset page to first page when switching parts
         CurrentPageIndex = 0;
         SelectedPoint = null;
-
     }
 
     /// <summary>
@@ -842,10 +818,10 @@ public class GeometryEditorViewModel : Notifier
             return -1;
 
         if (GeometryType == Sta.Common.Primitives.GeometryType.MultiPolygon)
-            return Geometry.ToGlobalPointIndex(CurrentPolygonIndex, CurrentPartIndex, localIndex);
+            return Geometry.ToGlobalPointIndex(new GeometryPointAddress(CurrentPolygonIndex, CurrentPartIndex, localIndex));
 
         else
-            return Geometry.ToGlobalPointIndex(null, CurrentPartIndex, localIndex);
+            return Geometry.ToGlobalPointIndex(new GeometryPointAddress(null, CurrentPartIndex, localIndex));
 
         //if (GeometryType == Sta.Common.Primitives.GeometryType.MultiPolygon)
         //{
@@ -875,42 +851,6 @@ public class GeometryEditorViewModel : Notifier
 
         //// Add the local index within the target part
         //return globalIndex + localIndex;
-    }
-
-    /// <summary>
-    /// Finds which part contains the global index and returns the part index and local index within that part
-    /// </summary>
-    private (int partIndex, int localIndex) GetPartAndLocalIndex(int globalIndex)
-    {
-        if (globalIndex < 0)
-            return (-1, -1);
-
-        if (HasNoParts)
-        {
-            // Single-part geometry: global index is the local index, part index is 0
-            return (0, globalIndex);
-        }
-
-        int accumulatedPoints = 0;
-        for (int i = 0; i < TotalPartCount; i++)
-        {
-            if (Parts![i] is IGeometry part && part.NumberOfPoints > 0)
-            {
-                int partPointCount = part.NumberOfPoints;
-
-                if (globalIndex < accumulatedPoints + partPointCount)
-                {
-                    // Found the part containing this global index
-                    int localIndex = globalIndex - accumulatedPoints;
-                    return (i, localIndex);
-                }
-
-                accumulatedPoints += partPointCount;
-            }
-        }
-
-        // Global index is out of range
-        return (-1, -1);
     }
 
     #endregion

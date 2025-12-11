@@ -3667,7 +3667,7 @@ public partial class MapViewer : NotifiableUserControl
 
     bool itWasPanningWhileStartNewPart { get; set; }
 
-    CancellationTokenSource drawingCancellationToken;
+    CancellationTokenSource? drawingCancellationToken;
 
     TaskCompletionSource<Response<Geometry<sb.Point>>> drawingTcs;
 
@@ -3764,8 +3764,7 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-
-
+     
     private void AddFirstPointForNewDrawing(sb.Point webMercatorPoint)
     {
         if (true)
