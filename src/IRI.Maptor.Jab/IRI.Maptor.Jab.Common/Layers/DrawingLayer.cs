@@ -7,6 +7,7 @@ using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using System.Linq;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -73,7 +74,7 @@ public class DrawingLayer : SymbolizableLayer
 
         //this.VisualParameters = new VisualParameters(mode == DrawMode.Polygon ? new SolidColorBrush(Colors.YellowGreen) : null, new SolidColorBrush(Colors.Blue), 3, 1);
         var param = new VisualParameters(mode == DrawMode.Polygon ? new SolidColorBrush(Colors.YellowGreen) : null, new SolidColorBrush(Colors.Blue), 3, 1);
-        
+
         this.SetSymbolizer(new SimpleSymbolizer(param));
     }
 
@@ -105,7 +106,16 @@ public class DrawingLayer : SymbolizableLayer
 
     public Geometry<Point> GetFinalGeometry()
     {
-        return this._editableFeatureLayer.GetFinalGeometry();
+        var geometry = this._editableFeatureLayer.GetFinalGeometry();
+
+        if (geometry.Type == GeometryType.MultiPolygon)
+        {
+            var rings = geometry.Geometries?.SelectMany(g => g.Geometries).ToList();
+
+            return Geometry<Point>.CreatePolygonOrMultiPolygon(rings, geometry.Srid);
+        }
+
+        return geometry;
     }
 
     public bool HasAnyPoint()
