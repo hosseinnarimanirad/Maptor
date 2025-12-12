@@ -67,6 +67,27 @@ public partial class GeometryDetailsDialogView : MetroWindow
         //this.ViewModel = new GeometryDetailsViewModel(editableFeatureLayer, dialogService);
 
         //this.DataContext = ViewModel;
+
+        // Subscribe to DataContext changes to wire up RequestClose event
+        this.DataContextChanged += GeometryDetailsDialogView_DataContextChanged;
+    }
+
+    private void GeometryDetailsDialogView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (e.OldValue is GeometryDetailsViewModel oldViewModel)
+        {
+            oldViewModel.RequestClose -= ViewModel_RequestClose;
+        }
+
+        if (e.NewValue is GeometryDetailsViewModel viewModel)
+        {
+            viewModel.RequestClose += ViewModel_RequestClose;
+        }
+    }
+
+    private void ViewModel_RequestClose()
+    {
+        this.Close();
     }
 
     private void UpdateTitle()

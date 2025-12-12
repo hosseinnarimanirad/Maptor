@@ -47,7 +47,6 @@ public class EditableFeatureLayerOptions : Notifier
 
     public bool IsNewDrawing { get; set; } = false;
 
-
     //private bool _isFeatureInfoVisible;
 
     //public bool IsFeatureInfoVisible
@@ -73,9 +72,7 @@ public class EditableFeatureLayerOptions : Notifier
     //    }
     //}
 
-
     private bool _isEdgeLabelVisible = false;
-
     public bool IsEdgeLabelVisible
     {
         get { return _isEdgeLabelVisible; }
@@ -89,7 +86,6 @@ public class EditableFeatureLayerOptions : Notifier
 
 
     private bool _isMeasureVisible = false;
-
     public bool IsMeasureVisible
     {
         get { return _isMeasureVisible; }
@@ -99,7 +95,6 @@ public class EditableFeatureLayerOptions : Notifier
             RaisePropertyChanged();
         }
     }
-
 
     //private bool _isVerticesVisible;
 
@@ -127,7 +122,6 @@ public class EditableFeatureLayerOptions : Notifier
     //}
 
     private bool _isFinishButtonVisible = true;
-
     public bool IsFinishButtonVisible
     {
         get { return _isFinishButtonVisible; }
@@ -138,8 +132,8 @@ public class EditableFeatureLayerOptions : Notifier
         }
     }
 
-    private bool _isCancelButtonVisible = true;
 
+    private bool _isCancelButtonVisible = true;
     public bool IsCancelButtonVisible
     {
         get { return _isCancelButtonVisible; }
@@ -150,8 +144,8 @@ public class EditableFeatureLayerOptions : Notifier
         }
     }
 
-    private bool _isDeleteButtonVisible;
 
+    private bool _isDeleteButtonVisible;
     public bool IsDeleteButtonVisible
     {
         get { return _isDeleteButtonVisible; }
@@ -162,8 +156,8 @@ public class EditableFeatureLayerOptions : Notifier
         }
     }
 
-    private bool _isMeasureButtonVisible;
 
+    private bool _isMeasureButtonVisible;
     public bool IsMeasureButtonVisible
     {
         get { return _isMeasureButtonVisible; }
@@ -174,8 +168,8 @@ public class EditableFeatureLayerOptions : Notifier
         }
     }
 
-    private bool _isManualInputAvailable = true;
 
+    private bool _isManualInputAvailable = true;
     public bool IsManualInputAvailable
     {
         get { return _isManualInputAvailable; }
@@ -186,8 +180,8 @@ public class EditableFeatureLayerOptions : Notifier
         }
     }
 
-    private bool _isMultiPartSupportAvailable = true;
 
+    private bool _isMultiPartSupportAvailable = true;
     public bool IsMultiPartSupportAvailable
     {
         get { return _isMultiPartSupportAvailable; }
@@ -198,8 +192,20 @@ public class EditableFeatureLayerOptions : Notifier
         }
     }
 
-    private bool _isOptionsAvailable = true;
 
+    private bool _isGeometryDetailsAvailable;
+    public bool IsGeometryDetailsAvailable
+    {
+        get { return _isGeometryDetailsAvailable; }
+        set
+        {
+            _isGeometryDetailsAvailable = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private bool _isOptionsAvailable = true;
     public bool IsOptionsAvailable
     {
         get { return _isOptionsAvailable; }
@@ -314,7 +320,7 @@ public class EditableFeatureLayerOptions : Notifier
             IsNewDrawing = true,
             IsOptionsAvailable = isOptionsAvailable,
 
-
+            IsGeometryDetailsAvailable = false,
 
             //IsEdgeLabelVisible = isEdgeLabelVisible,
             //IsOptionsAvailable = isOptionsAvailable,
@@ -340,6 +346,8 @@ public class EditableFeatureLayerOptions : Notifier
             IsMultiPartSupportAvailable = isMultipartSupportAvailable,
             IsNewDrawing = false,
             IsOptionsAvailable = isOptionsAvailable,
+
+            IsGeometryDetailsAvailable = false,
 
             //IsEdgeLabelVisible = true,
             //IsMeasureVisible = true,

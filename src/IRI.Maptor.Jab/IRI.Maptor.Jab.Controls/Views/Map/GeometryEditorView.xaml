@@ -8,18 +8,44 @@
              xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:converters="clr-namespace:IRI.Maptor.Jab.Common.Assets.Converters;assembly=IRI.Maptor.Jab.Common"
              xmlns:views="clr-namespace:IRI.Maptor.Jab.Controls.Views"
-             FlowDirection="LeftToRight"
+             FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
              mc:Ignorable="d" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="2">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Fonts.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
             <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>
 
             <converters:CoordinateDisplayConverter x:Key="coordinateDisplayConverter"/>
+            <converters:DistanceAzimuthConverter x:Key="distanceAzimuthConverter"/>
+            <converters:LocalizedFormatConverter x:Key="localizedFormatConverter"/>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+            
+            <!-- Conditional font styles for Persian localization -->
+            <Style x:Key="persianHeaderTextBlockStyle" TargetType="TextBlock">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsPersian, Source={StaticResource Localization}}" Value="True">
+                        <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="persianPolygonTextBlockStyle" TargetType="TextBlock">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsPersian, Source={StaticResource Localization}}" Value="True">
+                        <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="persianPartsTextBlockStyle" TargetType="TextBlock">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsPersian, Source={StaticResource Localization}}" Value="True">
+                        <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Margin="0" >
@@ -34,8 +60,9 @@
         <!--Polygon section-->
         <Border Grid.Row="0" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,0,0,1">
             <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="4">
-                <TextBlock Text="Polygons" FontWeight="Bold" Margin="0,4,10,4" VerticalAlignment="Center"/>
-                <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding [geometryDetails_polygon_title], Source={StaticResource Localization}}"
+                           FontWeight="Bold" Margin="0,4,10,4" VerticalAlignment="Center" Style="{StaticResource persianPolygonTextBlockStyle}"/>
+                <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
                     <Button Style="{StaticResource circleButtonLight}" 
                         Command="{Binding GoToPreviousPolygonCommand}"
                         IsEnabled="{Binding IsPreviousPolygonAvailable, FallbackValue=False}">
@@ -66,10 +93,10 @@
                     <TextBlock VerticalAlignment="Center" 
                          TextBlock.TextAlignment="Right" Margin="0,0,8,0">
                         <TextBlock.Style>
-                            <Style TargetType="TextBlock">
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource persianPolygonTextBlockStyle}">
                                 <Setter Property="Text">
                                     <Setter.Value>
-                                        <MultiBinding StringFormat="Polygon {0} of {1}">
+                                        <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_polygons_format">
                                             <Binding Path="CurrentPolygonNumber"/>
                                             <Binding Path="TotalPolygonCount"/>
                                         </MultiBinding>
@@ -77,7 +104,7 @@
                                 </Setter>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding TotalPartCount}" Value="0">
-                                        <Setter Property="Text" Value="No Polygon"/>
+                                        <Setter Property="Text" Value="{Binding [geometryDetails_polygons_noPolygon], Source={StaticResource Localization}}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -85,16 +112,16 @@
                     </TextBlock>
                     <TextBlock VerticalAlignment="Center" FontStyle="Italic" Margin="0,0,0,0">
                         <TextBlock.Style>
-                            <Style TargetType="TextBlock">
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource persianPolygonTextBlockStyle}">
                                 <Setter Property="Text" Value=""/>
                                 <Setter Property="Foreground" Value="Green"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentPolygonIsValid}" Value="True">
-                                        <Setter Property="Text" Value="✓ Valid Polygon"/>
+                                        <Setter Property="Text" Value="{Binding [geometryDetails_polygons_valid], Source={StaticResource Localization}}"/>
                                         <Setter Property="Foreground" Value="Green"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding CurrentPolygonIsValid, FallbackValue=False}" Value="False">
-                                        <Setter Property="Text" Value="✗ Invalid Polygon"/>
+                                        <Setter Property="Text" Value="{Binding [geometryDetails_polygons_invalid], Source={StaticResource Localization}}"/>
                                         <Setter Property="Foreground" Value="Red"/>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -108,7 +135,7 @@
 
         <StackPanel Grid.Row="1" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Left" Margin="4"
                     >
-            <TextBlock Text="Parts" VerticalAlignment="Center" FontWeight="Bold" Margin="0,4,10,4"/>
+            <TextBlock Text="{Binding [geometryDetails_parts_title], Source={StaticResource Localization}}" VerticalAlignment="Center" FontWeight="Bold" Margin="0,4,10,4" Style="{StaticResource persianPartsTextBlockStyle}"/>
             <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
                 <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding GoToPreviousPartCommand}"
@@ -140,10 +167,10 @@
                 <TextBlock VerticalAlignment="Center" 
                                     TextBlock.TextAlignment="Right" Margin="0,0,8,0">
                     <TextBlock.Style>
-                        <Style TargetType="TextBlock">
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource persianPartsTextBlockStyle}">
                             <Setter Property="Text">
                                 <Setter.Value>
-                                    <MultiBinding StringFormat="Part {0} of {1}">
+                                    <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_parts_format">
                                         <Binding Path="CurrentPartNumber"/>
                                         <Binding Path="TotalPartCount"/>
                                     </MultiBinding>
@@ -151,7 +178,7 @@
                             </Setter>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding TotalPartCount}" Value="0">
-                                    <Setter Property="Text" Value="No parts"/>
+                                    <Setter Property="Text" Value="{Binding [geometryDetails_parts_noParts], Source={StaticResource Localization}}"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -159,16 +186,16 @@
                 </TextBlock>
                 <TextBlock VerticalAlignment="Center" FontStyle="Italic" Margin="0,0,0,0">
                     <TextBlock.Style>
-                        <Style TargetType="TextBlock">
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource persianPartsTextBlockStyle}">
                             <Setter Property="Text" Value=""/>
                             <Setter Property="Foreground" Value="Green"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding CurrentPartIsValid}" Value="True">
-                                    <Setter Property="Text" Value="✓ Valid Geometry Part"/>
+                                    <Setter Property="Text" Value="{Binding [geometryDetails_parts_valid], Source={StaticResource Localization}}"/>
                                     <Setter Property="Foreground" Value="Green"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding CurrentPartIsValid}" Value="False">
-                                    <Setter Property="Text" Value="✗ Invalid Geometry Part"/>
+                                    <Setter Property="Text" Value="{Binding [geometryDetails_parts_invalid], Source={StaticResource Localization}}"/>
                                     <Setter Property="Foreground" Value="Red"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -187,7 +214,7 @@
                 <StackPanel >
                     <!-- Current Point Editor -->
                     <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
-                        <TextBlock Text="X:" VerticalAlignment="Center" Margin="0,0,4,0" Width="20"/>
+                        <TextBlock Text="{Binding [geometryDetails_currentPoint_x], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="20"/>
                         <!-- DMS Mode: Use DegreeMinuteSecondView -->
                         <views:DegreeMinuteSecondView x:Name="dmsXView" DataContext="{Binding CurrentPointEditor.DmsX}" 
                                                       MaxDegreeValue="180" MinDegreeValue="-180" 
@@ -198,7 +225,7 @@
                                  Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
                                  Width="150" Margin="0,0,8,0" FlowDirection="LeftToRight" VerticalAlignment="Center"
                                  mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
-                        <TextBlock Text="Y:" VerticalAlignment="Center" Margin="0,0,4,0" Width="20"/>
+                        <TextBlock Text="{Binding [geometryDetails_currentPoint_y], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="20"/>
                         <!-- DMS Mode: Use DegreeMinuteSecondView -->
                         <views:DegreeMinuteSecondView DataContext="{Binding CurrentPointEditor.DmsY}" 
                                                       MaxDegreeValue="90" MinDegreeValue="-90"
@@ -222,7 +249,7 @@
                     <!-- SRS Info TextBlock -->
                     <TextBlock VerticalAlignment="Center" Margin="4,4,0,0" FontStyle="Italic" Foreground="Gray" FontSize="11" HorizontalAlignment="Left">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="SRS: {0}{1}{2}">
+                            <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_options_srsInfoFormat">
                                 <Binding Path="SrsViewModel.SelectedSrsType"/>
                                 <Binding Path="SrsViewModel.SelectedEllipsoid" Converter="{StaticResource ellipsoidNameConverter}"/>
                                 <Binding Path="SrsViewModel.UtmZone" Converter="{StaticResource utmZoneConverter}"/>
@@ -248,10 +275,10 @@
                             <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
                         </Border.Effect>
                         <StackPanel Orientation="Vertical" FlowDirection="LeftToRight" MinWidth="200">
-                            <TextBlock Text="SRS Configuration" FontWeight="Bold" Margin="0,0,0,8"/>
+                            <TextBlock Text="{Binding [geometryDetails_options_srsConfiguration], Source={StaticResource Localization}}" FontWeight="Bold" Margin="0,0,0,8"/>
                             <!-- SRS Type -->
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                <TextBlock Text="SRS:" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <TextBlock Text="{Binding [geometryDetails_options_srs], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
                                 <ComboBox ItemsSource="{Binding SrsViewModel.AvailableSrsTypes}" 
                                           SelectedItem="{Binding SrsViewModel.SelectedSrsType, Mode=TwoWay}" 
                                           Width="150">
@@ -273,7 +300,7 @@
                             <!-- Ellipsoid -->
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
                                         Visibility="{Binding SrsViewModel.IsEllipsoidVisible, Converter={StaticResource boolToVisibilityConverter}}">
-                                <TextBlock Text="Ellipsoid:" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <TextBlock Text="{Binding [geometryDetails_options_ellipsoid], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
                                 <ComboBox ItemsSource="{Binding SrsViewModel.AvailableEllipsoids}" 
                                           SelectedItem="{Binding SrsViewModel.SelectedEllipsoid, Mode=TwoWay}"
                                           DisplayMemberPath="Name"
@@ -282,24 +309,36 @@
                             <!-- UTM Zone -->
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
                                         Visibility="{Binding SrsViewModel.IsUtmZoneVisible, Converter={StaticResource boolToVisibilityConverter}}">
-                                <TextBlock Text="UTM Zone:" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <TextBlock Text="{Binding [geometryDetails_options_utmZone], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
                                 <mahApp:NumericUpDown Value="{Binding SrsViewModel.UtmZone, Mode=TwoWay}" 
                                                      Minimum="1" Maximum="60" 
                                                      Width="150"/>
                             </StackPanel>
                             <!-- Coordinate Precision -->
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                <TextBlock Text="Lat/Long Precision:" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <TextBlock Text="{Binding [geometryDetails_options_latLongPrecision], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
                                 <mahApp:NumericUpDown Value="{Binding SrsViewModel.LatLongPrecision, Mode=TwoWay}" 
                                                      Minimum="0" Maximum="10" 
                                                      Width="150"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                <TextBlock Text="X/Y Precision:" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <TextBlock Text="{Binding [geometryDetails_options_xyPrecision], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
                                 <mahApp:NumericUpDown Value="{Binding SrsViewModel.XYPrecision, Mode=TwoWay}" 
                                                      Minimum="0" Maximum="10" 
                                                      Width="150"/>
                             </StackPanel>
+                            <!-- Grid Options Section -->
+                            <Border BorderBrush="LightGray" BorderThickness="0,1,0,0" Margin="0,8,0,4"/>
+                            <TextBlock Text="{Binding [geometryDetails_options_gridOptions], Source={StaticResource Localization}}" FontWeight="Bold" Margin="0,0,0,8"/>
+                            <CheckBox Content="{Binding [geometryDetails_options_showInnerAngle], Source={StaticResource Localization}}" 
+                                      IsChecked="{Binding ShowInnerAngle, Mode=TwoWay}"
+                                      Margin="0,0,0,4"/>
+                            <CheckBox Content="{Binding [geometryDetails_options_useDecimalDegreesForAngles], Source={StaticResource Localization}}" 
+                                      IsChecked="{Binding UseDecimalDegreesForAngles, Mode=TwoWay}"
+                                      Margin="0,0,0,4"/>
+                            <CheckBox Content="{Binding [geometryDetails_options_showZColumn], Source={StaticResource Localization}}" 
+                                      IsChecked="{Binding ShowZColumn, Mode=TwoWay}"
+                                      Margin="0,0,0,4"/>
                         </StackPanel>
                     </Border>
                 </Popup>
@@ -319,7 +358,12 @@
                   SelectionUnit="FullRow"  >
             <DataGrid.Columns>
 
-                <DataGridTemplateColumn Header="#" Width="Auto" MinWidth="40">
+                <DataGridTemplateColumn Width="Auto" MinWidth="40">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_number], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0"  Foreground="DimGray">
@@ -335,7 +379,12 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="X" Width="*" MinWidth="120">
+                <DataGridTemplateColumn Width="*" MinWidth="100">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_x], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
@@ -353,7 +402,12 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Y" Width="*" MinWidth="120">
+                <DataGridTemplateColumn Width="*" MinWidth="100">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_y], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
@@ -371,11 +425,97 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Z" Width="*" MinWidth="120">
+                <DataGridTemplateColumn Width="*" MinWidth="100"
+                                         Visibility="{Binding DataContext.ShowZColumn, RelativeSource={RelativeSource AncestorType=DataGrid}, Converter={StaticResource boolToVisibilityConverter}}">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_z], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding Z, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                                      FlowDirection="LeftToRight" Margin="1"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" MinWidth="120">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_distanceToNext], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource distanceAzimuthConverter}" ConverterParameter="DistanceToNext">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.Points" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" MinWidth="120">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_azimuthToNext], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource distanceAzimuthConverter}" ConverterParameter="AzimuthToNext">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.Points" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" MinWidth="120">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_azimuthToPrevious], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource distanceAzimuthConverter}" ConverterParameter="AzimuthToPrevious">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.Points" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="*" MinWidth="120">
+                    <DataGridTemplateColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_vertexAngle], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.HeaderTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock FlowDirection="LeftToRight" Margin="1" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource distanceAzimuthConverter}" ConverterParameter="VertexAngle">
+                                        <Binding Path="."/>
+                                        <Binding Path="DataContext.Points" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -459,7 +599,7 @@
             <TextBlock VerticalAlignment="Center" 
                         TextBlock.TextAlignment="Right" Margin="8,0,0,0">
                 <TextBlock.Text>
-                    <MultiBinding StringFormat="Point {0} of {1} (Page {2} of {3})">
+                    <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_pointCounter_format">
                         <Binding Path="CurrentPointNumber"/>
                         <Binding Path="TotalPointCount"/>
                         <Binding Path="CurrentPageNumber"/>

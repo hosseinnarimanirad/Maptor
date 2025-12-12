@@ -176,7 +176,9 @@
                     </Button>
 
                     <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2"
-                            Command="{Binding ShowGeometryDetailsCommand}" Visibility="Visible">
+                            Command="{Binding ShowGeometryDetailsCommand}"
+                            ToolTip=""
+                            Visibility="{Binding Options.IsGeometryDetailsAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Material Kind="Tune"/>
                     </Button>
 

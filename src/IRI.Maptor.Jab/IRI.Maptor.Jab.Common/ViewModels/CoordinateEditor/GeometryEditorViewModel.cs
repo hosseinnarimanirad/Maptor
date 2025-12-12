@@ -101,6 +101,43 @@ public class GeometryEditorViewModel : Notifier
         }
     }
 
+    private bool _showInnerAngle = true;
+    public bool ShowInnerAngle
+    {
+        get => _showInnerAngle;
+        set
+        {
+            _showInnerAngle = value;
+            RaisePropertyChanged();
+            // Refresh angle columns when this changes
+            RaisePropertyChanged(nameof(CurrentPagePoints));
+        }
+    }
+
+    private bool _useDecimalDegreesForAngles = false;
+    public bool UseDecimalDegreesForAngles
+    {
+        get => _useDecimalDegreesForAngles;
+        set
+        {
+            _useDecimalDegreesForAngles = value;
+            RaisePropertyChanged();
+            // Refresh angle columns when this changes
+            RaisePropertyChanged(nameof(CurrentPagePoints));
+        }
+    }
+
+    private bool _showZColumn = true;
+    public bool ShowZColumn
+    {
+        get => _showZColumn;
+        set
+        {
+            _showZColumn = value;
+            RaisePropertyChanged();
+        }
+    }
+
     public GeometryEditorViewModel(EditableFeatureLayer editableFeatureLayer)
     {
         this.FeatureLayer = editableFeatureLayer;

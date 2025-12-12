@@ -7,12 +7,12 @@
         xmlns:editors="clr-namespace:IRI.Maptor.Jab.Controls.Views"
         xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;assembly=IRI.Maptor.Jab.Common" 
         xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
-        Title="{Binding DialogTitle, RelativeSource={RelativeSource AncestorType=mahApp:MetroWindow}}" 
-        FlowDirection="RightToLeft" 
+        Title="{Binding DialogTitle, RelativeSource={RelativeSource AncestorType=mahApp:MetroWindow}}"          
         ShowInTaskbar="False"
-        SizeToContent="WidthAndHeight"
+        SizeToContent="Height"
         GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"                    
         MaxWidth="750"
+        FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
         WindowStartupLocation="CenterOwner"
         ShowMaxRestoreButton="True" 
         ShowCloseButton="True" 
@@ -20,144 +20,170 @@
         ShowTitleBar="True">
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries> 
+            <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
             <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>
 
+            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
+                <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12" />
+            </Style>
+            <Style x:Key="item" TargetType="TextBlock" >
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
+            </Style>
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-        <StackPanel Margin="4">
+    <StackPanel Margin="4">
 
-            <!-- Basic Information Section -->
-            <Expander Grid.Row="0" Header="{Binding [dialog_geometryDetails_basicInfo], Source={StaticResource Localization}}" Margin="0,0,0,8" Padding="8"
-                  IsExpanded="True">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+        <!-- Basic Information Section -->
+        <GroupBox Grid.Row="0" Margin="0,0,0,2" Padding="4">
+            <GroupBox.Header>
+                <TextBlock Text="{Binding [dialog_geometryDetails_basicInfo], Source={StaticResource Localization}}" Foreground="White"
+                           Style="{StaticResource item}" Margin="0"/>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [dialog_geometryDetails_geometryType], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding GeometryType}" 
+                <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource item}"
+                           Text="{Binding [dialog_geometryDetails_geometryType], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" 
+                           Text="{Binding GeometryType}" 
                            FontWeight="Bold" Margin="4" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding [dialog_geometryDetails_dimension], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Dimension}" 
+                <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource item}"
+                           Text="{Binding [dialog_geometryDetails_dimension], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Dimension}" 
                            FontWeight="Bold" Margin="4" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding [dialog_geometryDetails_numberOfPoints], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding NumberOfPoints}" 
+                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource item}"
+                           Text="{Binding [dialog_geometryDetails_numberOfPoints], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding NumberOfPoints, Converter={StaticResource localizedNumberConverter}}" 
                            Margin="4" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding [dialog_geometryDetails_numberOfGeometries], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding NumberOfGeometries}" 
+                <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource item}" 
+                           Text="{Binding [dialog_geometryDetails_numberOfGeometries], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding NumberOfGeometries, Converter={StaticResource localizedNumberConverter}}" 
                            Margin="4" VerticalAlignment="Center"/>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding [dialog_geometryDetails_utmZone], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="4" VerticalAlignment="Center"/>
-                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="4">
-                        <TextBlock Text="{Binding UtmZone, TargetNullValue='N/A'}" 
+                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource item}"
+                           Text="{Binding [dialog_geometryDetails_utmZone], Source={StaticResource Localization}, StringFormat='{}{0}:'}" />
+                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="4">
+                    <TextBlock Text="{Binding UtmZone, TargetNullValue='N/A'}" 
                                FontWeight="Bold" VerticalAlignment="Center"/>
-                        <TextBlock Margin="8,0,0,0" VerticalAlignment="Center"
+                    <TextBlock Margin="8,0,0,0" VerticalAlignment="Center"
                                Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                Visibility="{Binding SpansMultipleUtmZones, Converter={StaticResource boolToVisibilityConverter}}">
-                            <TextBlock.Text>
-                                <MultiBinding StringFormat="(همچنین: {0})">
-                                    <Binding Path="UtmZones" Converter="{StaticResource collectionToStringConverter}"/>
-                                </MultiBinding>
-                            </TextBlock.Text>
-                        </TextBlock>
-                    </StackPanel>
-                </Grid>
-            </Expander>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="(همچنین: {0})">
+                                <Binding Path="UtmZones" Converter="{StaticResource collectionToStringConverter}"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
 
-            <!-- Geometry Editor Section -->
-            <Expander Grid.Row="1" Header="{Binding [dialog_geometryDetails_editCoordinates], Source={StaticResource Localization}}" Margin="0,0,0,8" Padding="8"
+        <!-- Geometry Editor Section -->
+        <Expander Grid.Row="1" Margin="0,0,0,8" Padding="8"
                       IsExpanded="True">
-                <ContentControl Content="{Binding GeometryEditor}">
-                    <ContentControl.Resources>
-                        <!--<DataTemplate DataType="{x:Type presenters:PointEditorViewModel}">
+            <Expander.Header>
+                <TextBlock Text="{Binding [dialog_geometryDetails_editCoordinates], Source={StaticResource Localization}}" Foreground="White"
+               Style="{StaticResource item}" Margin="0" Cursor="Hand"/>
+            </Expander.Header>
+            <ContentControl Content="{Binding GeometryEditor}">
+                <ContentControl.Resources>
+                    <!--<DataTemplate DataType="{x:Type presenters:PointEditorViewModel}">
                             <editors:PointEditorView/>
                         </DataTemplate>-->
-                        <DataTemplate DataType="{x:Type presenters:GeometryEditorViewModel}">
-                            <editors:GeometryEditorView/>
-                        </DataTemplate>
-                        <!--<DataTemplate DataType="{x:Type presenters:PolygonEditorViewModel}">
+                    <DataTemplate DataType="{x:Type presenters:GeometryEditorViewModel}">
+                        <editors:GeometryEditorView/>
+                    </DataTemplate>
+                    <!--<DataTemplate DataType="{x:Type presenters:PolygonEditorViewModel}">
                             <editors:PolygonEditorView/>
                         </DataTemplate>-->
-                        <!--<DataTemplate DataType="{x:Type presenters:MultiPointEditorPresenter}">
+                    <!--<DataTemplate DataType="{x:Type presenters:MultiPointEditorPresenter}">
                             <editors:MultiPointEditorView/>
                         </DataTemplate>-->
-                        <!-- COMMENTED OUT: MultiLineStringEditorPresenter functionality merged into LineStringEditorPresenter -->
-                        <!--<DataTemplate DataType="{x:Type presenters:MultiLineStringEditorPresenter}">
+                    <!-- COMMENTED OUT: MultiLineStringEditorPresenter functionality merged into LineStringEditorPresenter -->
+                    <!--<DataTemplate DataType="{x:Type presenters:MultiLineStringEditorPresenter}">
                         <editors:MultiLineStringEditorView/>
                     </DataTemplate>-->
-                        <!--<DataTemplate DataType="{x:Type presenters:MultiPolygonEditorPresenter}">
+                    <!--<DataTemplate DataType="{x:Type presenters:MultiPolygonEditorPresenter}">
                             <editors:MultiPolygonEditorView/>
                         </DataTemplate>-->
-                    </ContentControl.Resources>
-                </ContentControl>
-            </Expander>
+                </ContentControl.Resources>
+            </ContentControl>
+        </Expander>
 
-            <!-- Format Display Section -->
-            <Expander Grid.Row="2" Header="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}}" Margin="0,0,0,8" Padding="8">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+        <!-- Format Display Section -->
+        <Expander Grid.Row="2" Margin="0,0,0,8" Padding="8" IsExpanded="True">
+            <Expander.Header>
+                <TextBlock Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}}" Foreground="White"
+                            Style="{StaticResource item}" Margin="0" Cursor="Hand"/>
+            </Expander.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}, StringFormat='{}{0}:'}" 
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}, StringFormat='{}{0}:'}" 
                            Margin="4" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding AvailableFormats}" FlowDirection="LeftToRight"
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding AvailableFormats}" FlowDirection="LeftToRight"
                           SelectedItem="{Binding SelectedFormat, Mode=TwoWay}" 
                           Margin="4" HorizontalAlignment="Stretch"/>
-                    <Button Grid.Row="0" Grid.Column="2" 
+                <Button Grid.Row="0" Grid.Column="2" 
                         ToolTip="{Binding [dialog_geometryDetails_export], Source={StaticResource Localization}}"  
                         Style="{StaticResource circleButtonLight}">
-                        <iconPacks:PackIconModern Kind="Save"/>
-                    </Button>
+                    <iconPacks:PackIconModern Kind="Save"/>
+                </Button>
 
-                    <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" FlowDirection="LeftToRight" 
+                <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" FlowDirection="LeftToRight" 
                               VerticalScrollBarVisibility="Auto" MaxHeight="150" Margin="0" HorizontalAlignment="Stretch">
-                        <TextBlock Text="{Binding StringRepresentation}" HorizontalAlignment="Stretch" Background="#EEEEEE"
+                    <TextBlock Text="{Binding StringRepresentation}" HorizontalAlignment="Stretch" Background="#EEEEEE"
                                TextWrapping="Wrap" Padding="4" MaxWidth="700"
                                FontFamily="Consolas" FontSize="11"/>
-                    </ScrollViewer>
-                </Grid>
-            </Expander>
+                </ScrollViewer>
+            </Grid>
+        </Expander>
 
-            <!-- Save/Cancel Buttons -->
-            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-                <Button ToolTip="{Binding [dialog_geometryDetails_cancel], Source={StaticResource Localization}}" 
+        <!-- Save/Cancel Buttons -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+            <Button ToolTip="{Binding [dialog_geometryDetails_cancel], Source={StaticResource Localization}}" 
                         Command="{Binding CancelEditingCommand}" Margin="4" 
                         Style="{StaticResource circleButtonLight}">
-                    <iconPacks:PackIconModern Kind="Close"/>
-                </Button>
-                <Button ToolTip="{Binding [dialog_geometryDetails_save], Source={StaticResource Localization}}" 
+                <iconPacks:PackIconModern Kind="Close"/>
+            </Button>
+            <Button ToolTip="{Binding [dialog_geometryDetails_save], Source={StaticResource Localization}}" 
                         Command="{Binding SaveGeometryCommand}" Margin="4"  
                         Style="{StaticResource circleButtonLight}">
-                    <iconPacks:PackIconModern Kind="Check"/>
-                </Button>
-            </StackPanel>
+                <iconPacks:PackIconModern Kind="Check"/>
+            </Button>
         </StackPanel>
-    </ScrollViewer>
+
+
+    </StackPanel>
+
 </mahApp:MetroWindow>
 

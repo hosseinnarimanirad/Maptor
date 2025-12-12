@@ -403,13 +403,23 @@ public class GeometryDetailsViewModel : Notifier
         }
     }
 
+    public event Action? RequestClose;
+
     private RelayCommand _saveGeometryCommand;
     public RelayCommand SaveGeometryCommand =>
-        _saveGeometryCommand ??= new RelayCommand(param => _editableFeatureLayer.FinishEditing(), param => true);
+        _saveGeometryCommand ??= new RelayCommand(param => 
+        {
+            _editableFeatureLayer.FinishEditing();
+            RequestClose?.Invoke();
+        }, param => true);
 
     private RelayCommand _cancelEditingCommand;
     public RelayCommand CancelEditingCommand =>
-        _cancelEditingCommand ??= new RelayCommand(param => _editableFeatureLayer.CancelDrawing(), param => true);
+        _cancelEditingCommand ??= new RelayCommand(param => 
+        {
+            _editableFeatureLayer.CancelDrawing();
+            RequestClose?.Invoke();
+        }, param => true);
 
 
     private void UpdateAllProperties()

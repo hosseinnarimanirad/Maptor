@@ -357,6 +357,126 @@
   <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
     <value>Zoom to Point</value>
   </data>
+  <data name="geometryDetails_polygon_title" xml:space="preserve">
+    <value>Polygon</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_azimuthToNext" xml:space="preserve">
+    <value>Azimuth To Next</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_azimuthToPrevious" xml:space="preserve">
+    <value>Azimuth To Previous</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_distanceToNext" xml:space="preserve">
+    <value>Distance To Next</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_number" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_vertexAngle" xml:space="preserve">
+    <value>Vertex Angle</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_x" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_y" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="geometryDetails_coordinateGrid_z" xml:space="preserve">
+    <value>Z</value>
+  </data>
+  <data name="geometryDetails_currentPoint_add" xml:space="preserve">
+    <value>Add Point</value>
+  </data>
+  <data name="geometryDetails_currentPoint_copyCoordinate" xml:space="preserve">
+    <value>Copy Coordinate</value>
+  </data>
+  <data name="geometryDetails_currentPoint_delete" xml:space="preserve">
+    <value>Delete Point</value>
+  </data>
+  <data name="geometryDetails_currentPoint_edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToNextPoint" xml:space="preserve">
+    <value>Go to Next Point</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
+    <value>Go to Previous Point</value>
+  </data>
+  <data name="geometryDetails_currentPoint_x" xml:space="preserve">
+    <value>X:</value>
+  </data>
+  <data name="geometryDetails_currentPoint_y" xml:space="preserve">
+    <value>Y:</value>
+  </data>
+  <data name="geometryDetails_currentPoint_zoom" xml:space="preserve">
+    <value>Pan to Point</value>
+  </data>
+  <data name="geometryDetails_currentPoint_zoomToPoint" xml:space="preserve">
+    <value>Zoom to Point</value>
+  </data>
+  <data name="geometryDetails_options_ellipsoid" xml:space="preserve">
+    <value>Ellipsoid:</value>
+  </data>
+  <data name="geometryDetails_options_gridOptions" xml:space="preserve">
+    <value>Grid Options</value>
+  </data>
+  <data name="geometryDetails_options_latLongPrecision" xml:space="preserve">
+    <value>Lat/Long Precision:</value>
+  </data>
+  <data name="geometryDetails_options_showInnerAngle" xml:space="preserve">
+    <value>Show Inner Angle</value>
+  </data>
+  <data name="geometryDetails_options_showZColumn" xml:space="preserve">
+    <value>Show Z Column</value>
+  </data>
+  <data name="geometryDetails_options_srs" xml:space="preserve">
+    <value>SRS:</value>
+  </data>
+  <data name="geometryDetails_options_srsConfiguration" xml:space="preserve">
+    <value>SRS Configuration</value>
+  </data>
+  <data name="geometryDetails_options_srsInfoFormat" xml:space="preserve">
+    <value>SRS: {0}{1}{2}</value>
+  </data>
+  <data name="geometryDetails_options_useDecimalDegreesForAngles" xml:space="preserve">
+    <value>Use Decimal Degrees for Angles</value>
+  </data>
+  <data name="geometryDetails_options_utmZone" xml:space="preserve">
+    <value>UTM Zone:</value>
+  </data>
+  <data name="geometryDetails_options_xyPrecision" xml:space="preserve">
+    <value>X/Y Precision:</value>
+  </data>
+  <data name="geometryDetails_parts_format" xml:space="preserve">
+    <value>Part {0} of {1}</value>
+  </data>
+  <data name="geometryDetails_parts_invalid" xml:space="preserve">
+    <value>✗ Invalid Geometry Part</value>
+  </data>
+  <data name="geometryDetails_parts_noParts" xml:space="preserve">
+    <value>No parts</value>
+  </data>
+  <data name="geometryDetails_parts_title" xml:space="preserve">
+    <value>Parts</value>
+  </data>
+  <data name="geometryDetails_parts_valid" xml:space="preserve">
+    <value>✓ Valid Geometry Part</value>
+  </data>
+  <data name="geometryDetails_pointCounter_format" xml:space="preserve">
+    <value>Point {0} of {1} (Page {2} of {3})</value>
+  </data>
+  <data name="geometryDetails_polygons_format" xml:space="preserve">
+    <value>Polygon {0} of {1}</value>
+  </data>
+  <data name="geometryDetails_polygons_invalid" xml:space="preserve">
+    <value>✗ Invalid Polygon</value>
+  </data>
+  <data name="geometryDetails_polygons_noPolygon" xml:space="preserve">
+    <value>No Polygon</value>
+  </data>
+  <data name="geometryDetails_polygons_valid" xml:space="preserve">
+    <value>✓ Valid Polygon</value>
+  </data>
   <data name="dialog_savefile_title" xml:space="preserve">
     <value>Save</value>
     <comment>Default title for save file dialogs</comment>
