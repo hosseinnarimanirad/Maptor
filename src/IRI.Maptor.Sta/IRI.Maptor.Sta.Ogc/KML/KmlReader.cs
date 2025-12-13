@@ -307,11 +307,11 @@ public static class KmlReader
         if (points == null || points.Count < 3)
             return null;
 
-        // Ensure the ring is closed (first point = last point)
-        if (points.First().X != points.Last().X || points.First().Y != points.Last().Y)
-        {
-            points.Add(new Point(points.First().X, points.First().Y));
-        }
+        //// Ensure the ring is closed (first point = last point)
+        //if (points.First().X != points.Last().X || points.First().Y != points.Last().Y)
+        //{
+        //    points.Add(new Point(points.First().X, points.First().Y));
+        //}
 
         return new Geometry<Point>(points, GeometryType.LineString, true, srid);
     }

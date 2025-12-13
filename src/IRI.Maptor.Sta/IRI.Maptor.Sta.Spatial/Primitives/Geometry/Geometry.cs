@@ -97,12 +97,17 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
                 var firstPoint = points[0];
 
+                // in some cases (e.g. reading KML files) the last point is repeated
                 if (lastPoint.X == firstPoint.X && lastPoint.Y == firstPoint.Y)
-                    throw new ArgumentException("the first point should not be repeated as last point in rings");
+                {
+                    this.Points = points.Take(points.Count - 2).ToList();
+
+                    return;
+                }
+                //throw new ArgumentException("the first point should not be repeated as last point in rings");
             }
 
             this.Points = points;
-
         }
         else if (type == GeometryType.MultiPoint)
         {
