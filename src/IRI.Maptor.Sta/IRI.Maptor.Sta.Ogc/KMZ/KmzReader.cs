@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using IRI.Maptor.Ket.KmlFormat;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.Common.Abstrations;
 
 namespace IRI.Maptor.Ket.KmlFormat;
 
@@ -26,8 +27,8 @@ public static class KmzReader
     /// </summary>
     /// <param name="kmzFilePath">Path to the KMZ file</param>
     /// <param name="targetSrid">Target SRID for the geometries (default: 4326 - WGS84)</param>
-    /// <returns>List of geometries extracted from the KMZ file</returns>
-    public static List<Geometry<Point>> ReadFromFile(string kmzFilePath, int targetSrid = 4326)
+    /// <returns>List of geometries extracted from the KMZ file (supports both 2D and 3D geometries)</returns>
+    public static List<IGeometry> ReadFromFile(string kmzFilePath, int targetSrid = 4326)
     {
         if (!File.Exists(kmzFilePath))
             throw new FileNotFoundException($"KMZ file not found: {kmzFilePath}", kmzFilePath);
@@ -58,8 +59,8 @@ public static class KmzReader
     /// </summary>
     /// <param name="kmzFilePath">Path to the KMZ file</param>
     /// <param name="targetSrid">Target SRID for the geometries (default: 4326 - WGS84)</param>
-    /// <returns>List of geometries extracted from the KMZ file</returns>
-    public static async Task<List<Geometry<Point>>> ReadFromFileAsync(string kmzFilePath, int targetSrid = 4326)
+    /// <returns>List of geometries extracted from the KMZ file (supports both 2D and 3D geometries)</returns>
+    public static async Task<List<IGeometry>> ReadFromFileAsync(string kmzFilePath, int targetSrid = 4326)
     {
         if (!File.Exists(kmzFilePath))
             throw new FileNotFoundException($"KMZ file not found: {kmzFilePath}", kmzFilePath);
@@ -72,8 +73,8 @@ public static class KmzReader
     /// </summary>
     /// <param name="kmzStream">KMZ content as stream</param>
     /// <param name="targetSrid">Target SRID for the geometries (default: 4326 - WGS84)</param>
-    /// <returns>List of geometries extracted from the KMZ stream</returns>
-    public static List<Geometry<Point>> Parse(Stream kmzStream, int targetSrid = 4326)
+    /// <returns>List of geometries extracted from the KMZ stream (supports both 2D and 3D geometries)</returns>
+    public static List<IGeometry> Parse(Stream kmzStream, int targetSrid = 4326)
     {
         if (kmzStream == null)
             throw new ArgumentNullException(nameof(kmzStream));

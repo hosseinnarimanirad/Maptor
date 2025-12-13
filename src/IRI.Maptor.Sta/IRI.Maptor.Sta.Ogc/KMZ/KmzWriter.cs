@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using IRI.Maptor.Ket.KmlFormat;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.Common.Abstrations;
 
 namespace IRI.Maptor.Ket.KmlFormat;
 
@@ -41,6 +42,44 @@ public static class KmzWriter
     }
 
     /// <summary>
+    /// Writes a single geometry with Z values to a KMZ file
+    /// </summary>
+    /// <param name="geometry">Geometry with Z values to write</param>
+    /// <param name="kmzFilePath">Path to the output KMZ file</param>
+    /// <param name="name">Feature name</param>
+    /// <param name="description">Feature description</param>
+    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
+    public static void WriteToFile(
+        Geometry<PointZ> geometry,
+        string kmzFilePath,
+        string? name = null,
+        string? description = null,
+        Func<Point, Point>? projectToGeodeticFunc = null)
+    {
+        var kmlString = KmlWriter.ToKml(geometry, name, description, projectToGeodeticFunc);
+        WriteKmlToKmz(kmzFilePath, kmlString, DefaultKmlFileName);
+    }
+
+    /// <summary>
+    /// Writes a single geometry (2D or 3D) to a KMZ file
+    /// </summary>
+    /// <param name="geometry">Geometry to write (supports both 2D and 3D)</param>
+    /// <param name="kmzFilePath">Path to the output KMZ file</param>
+    /// <param name="name">Feature name</param>
+    /// <param name="description">Feature description</param>
+    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
+    public static void WriteToFile(
+        IGeometry geometry,
+        string kmzFilePath,
+        string? name = null,
+        string? description = null,
+        Func<Point, Point>? projectToGeodeticFunc = null)
+    {
+        var kmlString = KmlWriter.ToKml(geometry, name, description, projectToGeodeticFunc);
+        WriteKmlToKmz(kmzFilePath, kmlString, DefaultKmlFileName);
+    }
+
+    /// <summary>
     /// Writes multiple geometries to a KMZ file
     /// </summary>
     /// <param name="geometries">List of geometries to write</param>
@@ -49,6 +88,40 @@ public static class KmzWriter
     /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
     public static void WriteToFile(
         List<Geometry<Point>> geometries,
+        string kmzFilePath,
+        string? documentName = null,
+        Func<Point, Point>? projectToGeodeticFunc = null)
+    {
+        var kmlString = KmlWriter.ToKml(geometries, documentName, projectToGeodeticFunc);
+        WriteKmlToKmz(kmzFilePath, kmlString, DefaultKmlFileName);
+    }
+
+    /// <summary>
+    /// Writes multiple geometries with Z values to a KMZ file
+    /// </summary>
+    /// <param name="geometries">List of geometries with Z values to write</param>
+    /// <param name="kmzFilePath">Path to the output KMZ file</param>
+    /// <param name="documentName">Document name</param>
+    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
+    public static void WriteToFile(
+        List<Geometry<PointZ>> geometries,
+        string kmzFilePath,
+        string? documentName = null,
+        Func<Point, Point>? projectToGeodeticFunc = null)
+    {
+        var kmlString = KmlWriter.ToKml(geometries, documentName, projectToGeodeticFunc);
+        WriteKmlToKmz(kmzFilePath, kmlString, DefaultKmlFileName);
+    }
+
+    /// <summary>
+    /// Writes multiple geometries (2D or 3D) to a KMZ file
+    /// </summary>
+    /// <param name="geometries">List of geometries to write (supports both 2D and 3D)</param>
+    /// <param name="kmzFilePath">Path to the output KMZ file</param>
+    /// <param name="documentName">Document name</param>
+    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
+    public static void WriteToFile(
+        List<IGeometry> geometries,
         string kmzFilePath,
         string? documentName = null,
         Func<Point, Point>? projectToGeodeticFunc = null)
@@ -83,6 +156,40 @@ public static class KmzWriter
     /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
     public static async Task WriteToFileAsync(
         List<Geometry<Point>> geometries,
+        string kmzFilePath,
+        string? documentName = null,
+        Func<Point, Point>? projectToGeodeticFunc = null)
+    {
+        var kmlString = KmlWriter.ToKml(geometries, documentName, projectToGeodeticFunc);
+        await WriteKmlToKmzAsync(kmzFilePath, kmlString, DefaultKmlFileName);
+    }
+
+    /// <summary>
+    /// Writes geometries with Z values to a KMZ file asynchronously
+    /// </summary>
+    /// <param name="geometries">List of geometries with Z values to write</param>
+    /// <param name="kmzFilePath">Path to the output KMZ file</param>
+    /// <param name="documentName">Document name</param>
+    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
+    public static async Task WriteToFileAsync(
+        List<Geometry<PointZ>> geometries,
+        string kmzFilePath,
+        string? documentName = null,
+        Func<Point, Point>? projectToGeodeticFunc = null)
+    {
+        var kmlString = KmlWriter.ToKml(geometries, documentName, projectToGeodeticFunc);
+        await WriteKmlToKmzAsync(kmzFilePath, kmlString, DefaultKmlFileName);
+    }
+
+    /// <summary>
+    /// Writes geometries (2D or 3D) to a KMZ file asynchronously
+    /// </summary>
+    /// <param name="geometries">List of geometries to write (supports both 2D and 3D)</param>
+    /// <param name="kmzFilePath">Path to the output KMZ file</param>
+    /// <param name="documentName">Document name</param>
+    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
+    public static async Task WriteToFileAsync(
+        List<IGeometry> geometries,
         string kmzFilePath,
         string? documentName = null,
         Func<Point, Point>? projectToGeodeticFunc = null)

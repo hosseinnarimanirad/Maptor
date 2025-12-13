@@ -100,7 +100,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 // in some cases (e.g. reading KML files) the last point is repeated
                 if (lastPoint.X == firstPoint.X && lastPoint.Y == firstPoint.Y)
                 {
-                    this.Points = points.Take(points.Count - 2).ToList();
+                    this.Points = points.Take(points.Count - 1).ToList();
 
                     return;
                 }

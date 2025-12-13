@@ -130,7 +130,7 @@ public static class FeatureExtensions
         return result;
     }
 
-    public static List<Feature<Point>> ToFeatures(this IEnumerable<Geometry<Point>> geometries, bool assignSequentialIds = true)
+    public static List<Feature<Point>> ToFeatures(this IEnumerable<IGeometry> geometries, bool assignSequentialIds = true)
     {
         var result = new List<Feature<Point>>();
 
@@ -143,12 +143,13 @@ public static class FeatureExtensions
 
         foreach (var geometry in geometries)
         {
-            if (geometry == null || geometry.IsNullOrEmpty())
-            {
+            if (geometry == null || geometry.IsEmpty())
                 continue;
-            }
 
-            var feature = new Feature<Point>(geometry)
+            if (geometries as Geometry<Point> is null)
+                continue;
+
+            var feature = new Feature<Point>(geometry as Geometry<Point>)
             {
                 Id = assignSequentialIds ? id : 0
             };

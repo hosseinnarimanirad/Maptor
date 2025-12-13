@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.Common.Abstrations;
 
 namespace IRI.Maptor.Ket.KmlFormat;
 
@@ -38,8 +39,8 @@ public static class KmlReader
     /// </summary>
     /// <param name="filePath">Path to the KML file</param>
     /// <param name="targetSrid">Target SRID for the geometries (default: 4326 - WGS84)</param>
-    /// <returns>List of geometries extracted from the KML file</returns>
-    public static List<Geometry<Point>> ReadFromFile(string filePath, int targetSrid = 4326)
+    /// <returns>List of geometries extracted from the KML file (supports both 2D and 3D geometries)</returns>
+    public static List<IGeometry> ReadFromFile(string filePath, int targetSrid = 4326)
     {
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"KML file not found: {filePath}", filePath);
@@ -60,8 +61,8 @@ public static class KmlReader
     /// </summary>
     /// <param name="filePath">Path to the KML file</param>
     /// <param name="targetSrid">Target SRID for the geometries (default: 4326 - WGS84)</param>
-    /// <returns>List of geometries extracted from the KML file</returns>
-    public static async Task<List<Geometry<Point>>> ReadFromFileAsync(string filePath, int targetSrid = 4326)
+    /// <returns>List of geometries extracted from the KML file (supports both 2D and 3D geometries)</returns>
+    public static async Task<List<IGeometry>> ReadFromFileAsync(string filePath, int targetSrid = 4326)
     {
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"KML file not found: {filePath}", filePath);
@@ -74,8 +75,8 @@ public static class KmlReader
     /// </summary>
     /// <param name="kmlString">KML content as string</param>
     /// <param name="targetSrid">Target SRID for the geometries (default: 4326 - WGS84)</param>
-    /// <returns>List of geometries extracted from the KML string</returns>
-    public static List<Geometry<Point>> Parse(string kmlString, int targetSrid = 4326)
+    /// <returns>List of geometries extracted from the KML string (supports both 2D and 3D geometries)</returns>
+    public static List<IGeometry> Parse(string kmlString, int targetSrid = 4326)
     {
         if (string.IsNullOrWhiteSpace(kmlString))
             throw new ArgumentException("KML string cannot be null or empty", nameof(kmlString));
@@ -139,9 +140,9 @@ public static class KmlReader
 
     #region Private Helper Methods - Geometry Extraction
 
-    private static List<Geometry<Point>> ExtractGeometries(XDocument document, int targetSrid)
+    private static List<IGeometry> ExtractGeometries(XDocument document, int targetSrid)
     {
-        var geometries = new List<Geometry<Point>>();
+        var geometries = new List<IGeometry>();
         XNamespace kml = ResolveKmlNamespace(document);
 
         // Find all Placemarks
@@ -150,7 +151,7 @@ public static class KmlReader
         foreach (var placemark in placemarks)
         {
             var geometry = ExtractGeometryFromPlacemark(placemark, kml, targetSrid);
-            if (geometry != null && !geometry.IsNullOrEmpty())
+            if (geometry != null && !geometry.IsEmpty())
             {
                 geometries.Add(geometry);
             }
@@ -181,7 +182,7 @@ public static class KmlReader
         return features;
     }
 
-    private static Geometry<Point>? ExtractGeometryFromPlacemark(XElement placemark, XNamespace kml, int targetSrid)
+    private static IGeometry? ExtractGeometryFromPlacemark(XElement placemark, XNamespace kml, int targetSrid)
     {
         // Try to find different geometry types
         var point = placemark.Element(kml + "Point");
@@ -215,12 +216,17 @@ public static class KmlReader
     {
         var geometry = ExtractGeometryFromPlacemark(placemark, kml, targetSrid);
 
-        if (geometry == null || geometry.IsNullOrEmpty())
+        if (geometry == null || geometry.IsEmpty())
             return null;
+
+        // Convert IGeometry to Geometry<Point> for KmlFeature (which uses Geometry<Point>)
+        Geometry<Point> geometryPoint = geometry is Geometry<PointZ> gz
+            ? ConvertPointZToPointGeometry(gz)
+            : (Geometry<Point>)geometry;
 
         var feature = new KmlFeature
         {
-            Geometry = geometry,
+            Geometry = geometryPoint,
             Name = placemark.Element(kml + "name")?.Value,
             Description = placemark.Element(kml + "description")?.Value,
             Id = placemark.Attribute("id")?.Value,
@@ -265,60 +271,74 @@ public static class KmlReader
 
     #region Private Helper Methods - Geometry Parsing
 
-    private static Geometry<Point>? ParsePoint(XElement pointElement, XNamespace kml, int srid)
+    private static IGeometry? ParsePoint(XElement pointElement, XNamespace kml, int srid)
     {
         var coordinatesElement = pointElement.Element(kml + "coordinates");
         if (coordinatesElement == null)
             return null;
 
         var coordinates = coordinatesElement.Value;
-        var point = ParseSingleCoordinate(coordinates);
+        var (point, hasZ) = ParseSingleCoordinate(coordinates);
 
         if (point == null)
             return null;
 
+        if (hasZ && point is PointZ pointZ)
+        {
+            return new Geometry<PointZ>(new List<PointZ> { pointZ }, GeometryType.Point, srid);
+        }
+
         return new Geometry<Point>(new List<Point> { point }, GeometryType.Point, srid);
     }
 
-    private static Geometry<Point>? ParseLineString(XElement lineStringElement, XNamespace kml, int srid)
+    private static IGeometry? ParseLineString(XElement lineStringElement, XNamespace kml, int srid)
     {
         var coordinatesElement = lineStringElement.Element(kml + "coordinates");
         if (coordinatesElement == null)
             return null;
 
         var coordinates = coordinatesElement.Value;
-        var points = ParseCoordinates(coordinates);
+        var (points, hasZ) = ParseCoordinates(coordinates);
 
         if (points == null || points.Count < 2)
             return null;
 
-        return new Geometry<Point>(points, GeometryType.LineString, srid);
+        if (hasZ && points.All(p => p is PointZ))
+        {
+            var pointZList = points.Cast<PointZ>().ToList();
+            return new Geometry<PointZ>(pointZList, GeometryType.LineString, srid);
+        }
+
+        var pointList = points.Cast<Point>().ToList();
+        return new Geometry<Point>(pointList, GeometryType.LineString, srid);
     }
 
-    private static Geometry<Point>? ParseLinearRing(XElement linearRingElement, XNamespace kml, int srid)
+    private static IGeometry? ParseLinearRing(XElement linearRingElement, XNamespace kml, int srid)
     {
         var coordinatesElement = linearRingElement.Element(kml + "coordinates");
         if (coordinatesElement == null)
             return null;
 
         var coordinates = coordinatesElement.Value;
-        var points = ParseCoordinates(coordinates);
+        var (points, hasZ) = ParseCoordinates(coordinates);
 
         if (points == null || points.Count < 3)
             return null;
 
-        //// Ensure the ring is closed (first point = last point)
-        //if (points.First().X != points.Last().X || points.First().Y != points.Last().Y)
-        //{
-        //    points.Add(new Point(points.First().X, points.First().Y));
-        //}
+        if (hasZ && points.All(p => p is PointZ))
+        {
+            var pointZList = points.Cast<PointZ>().ToList();
+            return new Geometry<PointZ>(pointZList, GeometryType.LineString, true, srid);
+        }
 
-        return new Geometry<Point>(points, GeometryType.LineString, true, srid);
+        var pointList = points.Cast<Point>().ToList();
+        return new Geometry<Point>(pointList, GeometryType.LineString, true, srid);
     }
 
-    private static Geometry<Point>? ParsePolygon(XElement polygonElement, XNamespace kml, int srid)
+    private static IGeometry? ParsePolygon(XElement polygonElement, XNamespace kml, int srid)
     {
-        var rings = new List<Geometry<Point>>();
+        var rings = new List<IGeometry>();
+        bool hasZ = false;
 
         // Outer boundary
         var outerBoundary = polygonElement.Element(kml + "outerBoundaryIs");
@@ -331,6 +351,8 @@ public static class KmlReader
                 if (outerRing != null)
                 {
                     rings.Add(outerRing);
+                    if (outerRing is Geometry<PointZ>)
+                        hasZ = true;
                 }
             }
         }
@@ -346,6 +368,8 @@ public static class KmlReader
                 if (innerRing != null)
                 {
                     rings.Add(innerRing);
+                    if (innerRing is Geometry<PointZ>)
+                        hasZ = true;
                 }
             }
         }
@@ -353,17 +377,24 @@ public static class KmlReader
         if (rings.Count == 0)
             return null;
 
-        return new Geometry<Point>(rings, GeometryType.Polygon, srid);
+        if (hasZ && rings.All(r => r is Geometry<PointZ>))
+        {
+            var pointZRings = rings.Cast<Geometry<PointZ>>().ToList();
+            return new Geometry<PointZ>(pointZRings, GeometryType.Polygon, srid);
+        }
+
+        var pointRings = rings.Cast<Geometry<Point>>().ToList();
+        return new Geometry<Point>(pointRings, GeometryType.Polygon, srid);
     }
 
-    private static Geometry<Point>? ParseMultiGeometry(XElement multiGeometryElement, XNamespace kml, int srid)
+    private static IGeometry? ParseMultiGeometry(XElement multiGeometryElement, XNamespace kml, int srid)
     {
-        var geometries = new List<Geometry<Point>>();
+        var geometries = new List<IGeometry>();
 
         // Parse all child geometries
         foreach (var child in multiGeometryElement.Elements())
         {
-            Geometry<Point>? parsed = null;
+            IGeometry? parsed = null;
 
             if (child.Name.LocalName == "Point")
             {
@@ -382,7 +413,7 @@ public static class KmlReader
                 parsed = ParsePolygon(child, kml, srid);
             }
 
-            if (parsed != null && !parsed.IsNullOrEmpty())
+            if (parsed != null && !parsed.IsEmpty())
             {
                 geometries.Add(parsed);
             }
@@ -403,39 +434,72 @@ public static class KmlReader
             _ => GeometryType.GeometryCollection
         } : GeometryType.GeometryCollection;
 
-        return new Geometry<Point>(geometries, multiType, srid);
+        // Check if all geometries have Z values
+        bool allHaveZ = geometries.All(g => g is Geometry<PointZ>);
+        if (allHaveZ)
+        {
+            var pointZGeometries = geometries.Cast<Geometry<PointZ>>().ToList();
+            return new Geometry<PointZ>(pointZGeometries, multiType, srid);
+        }
+
+        // Convert PointZ geometries to Point for mixed scenarios (use 2D version)
+        var pointGeometries = geometries.Select(g => g is Geometry<PointZ> gz 
+            ? ConvertPointZToPointGeometry(gz) 
+            : (Geometry<Point>)g).ToList();
+        return new Geometry<Point>(pointGeometries, multiType, srid);
+    }
+
+    private static Geometry<Point> ConvertPointZToPointGeometry(Geometry<PointZ> geometryZ)
+    {
+        if (geometryZ.Points != null)
+        {
+            var points = geometryZ.Points.Select(pz => new Point(pz.X, pz.Y)).ToList();
+            return new Geometry<Point>(points, geometryZ.Type, geometryZ.Srid);
+        }
+        else if (geometryZ.Geometries != null)
+        {
+            var geometries = geometryZ.Geometries.Select(gz => ConvertPointZToPointGeometry(gz)).ToList();
+            return new Geometry<Point>(geometries, geometryZ.Type, geometryZ.Srid);
+        }
+        return Geometry<Point>.Empty;
     }
 
     #endregion
 
     #region Private Helper Methods - Coordinate Parsing
 
-    private static Point? ParseSingleCoordinate(string coordinateString)
+    private static (Point? point, bool hasZ) ParseSingleCoordinate(string coordinateString)
     {
         if (string.IsNullOrWhiteSpace(coordinateString))
-            return null;
+            return (null, false);
 
         var parts = coordinateString.Trim().Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length < 2)
-            return null;
+            return (null, false);
 
         if (double.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out double x) &&
             double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double y))
         {
             // KML format is longitude,latitude (x,y) or longitude,latitude,altitude
-            return new Point(x, y);
+            if (parts.Length >= 3 && double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out double z))
+            {
+                return (new PointZ { X = x, Y = y, Z = z }, true);
+            }
+
+            return (new Point(x, y), false);
         }
 
-        return null;
+        return (null, false);
     }
 
-    private static List<Point> ParseCoordinates(string coordinatesString)
+    private static (List<Point> points, bool hasZ) ParseCoordinates(string coordinatesString)
     {
         if (string.IsNullOrWhiteSpace(coordinatesString))
-            return new List<Point>();
+            return (new List<Point>(), false);
 
         var points = new List<Point>();
+        bool hasZ = false;
 
         // KML coordinates can be separated by whitespace or newlines
         var coordinateSets = coordinatesString.Trim()
@@ -443,14 +507,16 @@ public static class KmlReader
 
         foreach (var coordSet in coordinateSets)
         {
-            var point = ParseSingleCoordinate(coordSet);
+            var (point, pointHasZ) = ParseSingleCoordinate(coordSet);
             if (point != null)
             {
                 points.Add(point);
+                if (pointHasZ)
+                    hasZ = true;
             }
         }
 
-        return points;
+        return (points, hasZ);
     }
 
     #endregion
