@@ -229,8 +229,8 @@ public class SpatialUtilityTest
 
     //
     [Theory]
-    [InlineData(true, "POLYGON((0 0 9, 30 0 9, 30 30 9, 0 30 9, 0 0 9))", "POINT(10 10)")]
-    [InlineData(false, "POLYGON((0 0 9, 30 0 9, 30 30 9, 0 30 9, 0 0 9))", "POINT(-1 10)")]
+    [InlineData(true, "POLYGON((0 0, 30 0, 30 30, 0 30, 0 0))", "POINT(10 10)")]
+    [InlineData(false, "POLYGON((0 0, 30 0, 30 30, 0 30, 0 0))", "POINT(-1 10)")]
 
     [InlineData(false, _multiPolygon2, "POINT(5928349 3913730)")]
     [InlineData(false, _multiPolygon2, "POINT(5928808 3904099)")]
@@ -268,7 +268,7 @@ public class SpatialUtilityTest
     [InlineData(true, _multiPolygon2, "POINT(5946870 3868843)")]
     [InlineData(true, _multiPolygon2, "POINT(5947023 3850192)")]
     [InlineData(true, _multiPolygon2, "POINT(5908346 3871136)")]
-    [InlineData(true, _multiPolygon2, "POINT(5983160 3877895)")] 
+    [InlineData(true, _multiPolygon2, "POINT(5983160 3877895)")]
     [InlineData(true, _multiPolygon2, "POINT(5904218 3885812)")]
     [InlineData(true, _multiPolygon2, "POINT(5980350 3881532)")]
     [InlineData(true, _multiPolygon2, "POINT(5938462 3888870)")]
