@@ -45,7 +45,31 @@ public class DxfReader
         if (entities.Count == 0)
             return [Geometry<Point>.Empty];
 
-        return entities;
+        // ************************************************************************************
+        // process polygons with holes
+        // in the case of a polygon with holes they should not be returned as separated polygons
+        // but they should be returned as a single polygon with holes. but in the case of multi-polygons
+        // they should be returned as separated polygons
+        var result = entities.Where(e => e.Type != GeometryType.Polygon).ToList();
+
+        var polygonRings = entities.Where(e => e.Type == GeometryType.Polygon).SelectMany(p => p.Geometries).ToList();
+
+        if (!polygonRings.IsNullOrEmpty())
+        {
+            var polygonOrMultiPolygon = Geometry<Point>.CreatePolygonOrMultiPolygon(polygonRings, srid);
+
+            if (polygonOrMultiPolygon.Type == GeometryType.MultiPolygon)
+            {
+                result.AddRange(polygonOrMultiPolygon.Geometries);
+            }
+            else
+            {
+                result.Add(polygonOrMultiPolygon);
+            }
+        }
+        // ************************************************************************************
+
+        return result;
     }
 
     /// <summary>

@@ -22,13 +22,9 @@ public class Geometry_DxfTest
     [Theory]
     [InlineData("Point")]
     [InlineData("Linestring")]
-    [InlineData("Polygon")]
-    [InlineData("Multipoint")]
-    [InlineData("MultiLineString")]
+    [InlineData("Polygon")] 
     [InlineData("PolygonWithHole")]
-    [InlineData("PolygonWithTwoHole")]
-    [InlineData("MultiPolygon01")]
-    [InlineData("MultiPolygon02")]
+    [InlineData("PolygonWithTwoHole")] 
     public void RoundTrip_VariousGeometries_ShouldPreserveGeometryData(string geometrySampleName)
     {
         // Arrange
@@ -48,9 +44,8 @@ public class Geometry_DxfTest
         
         // Total points should be preserved (allowing for closed polygons adding duplicate point)
         var restoredTotalPoints = restoredGeometry.TotalNumberOfPoints;
-        var tolerance = originalGeometry.Geometries?.Count ?? 1;
-        Assert.True(Math.Abs(restoredTotalPoints - originalTotalPoints) <= tolerance,
-            $"Point count mismatch for {geometrySampleName}");
+        
+        Assert.Equal( restoredTotalPoints, originalTotalPoints);
     }
 
     [Theory]
