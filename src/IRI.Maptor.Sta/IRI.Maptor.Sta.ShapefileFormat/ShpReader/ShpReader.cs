@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 

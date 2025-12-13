@@ -10,9 +10,10 @@ using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
+
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public struct EsriPoint : IPoint, IEsriShape
+public class EsriPoint : IEsriShape, IPoint
 {
     private double x, y;
 
@@ -36,6 +37,8 @@ public struct EsriPoint : IPoint, IEsriShape
 
     //public bool HasZ() => false;
 
+    public EsriPoint() { }
+
     public EsriPoint(double x, double y, int srid)
     {
         this.Srid = srid;
@@ -46,10 +49,7 @@ public struct EsriPoint : IPoint, IEsriShape
     }
 
 
-    public BoundingBox MinimumBoundingBox
-    {
-        get { return new BoundingBox(this.X, this.Y, this.X, this.Y); }
-    }
+    public override BoundingBox MinimumBoundingBox => new BoundingBox(this.X, this.Y, this.X, this.Y);
 
     //public byte[] WriteContentsToByte()
     //{
@@ -63,7 +63,7 @@ public struct EsriPoint : IPoint, IEsriShape
 
     //    return result.ToArray();
     //}
-    public byte[] WriteContentsToByte()
+    public override byte[] WriteContentsToByte()
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
 
@@ -79,15 +79,9 @@ public struct EsriPoint : IPoint, IEsriShape
     /// <summary>
     /// content length in 16bit words
     /// </summary>
-    public int ContentLength
-    {
-        get { return ShapeConstants.PointContentLengthInWords; }
-    }
+    public override int ContentLength => ShapeConstants.PointContentLengthInWords;
 
-    public EsriShapeType EsriType
-    {
-        get { return EsriShapeType.EsriPoint; }
-    }
+    public override EsriShapeType EsriType => EsriShapeType.EsriPoint;
 
     //public static explicit operator EsriPoint(Point value)
     //{
@@ -136,25 +130,25 @@ public struct EsriPoint : IPoint, IEsriShape
     }
 
 
-    public string AsSqlServerWkt()
-    {
-        return string.Format(System.Globalization.CultureInfo.InvariantCulture, "POINT({0:G17} {1:G17})", this.X, this.Y);
-    }
+    //public string AsSqlServerWkt()
+    //{
+    //    return string.Format(System.Globalization.CultureInfo.InvariantCulture, "POINT({0:G17} {1:G17})", this.X, this.Y);
+    //}
 
-    public byte[] AsWkb()
-    {
-        return OgcWkbMapFunctions.ToWkbPoint(this);
-    }
+    //public byte[] AsWkb()
+    //{
+    //    return OgcWkbMapFunctions.ToWkbPoint(this);
+    //}
 
     /// <summary>
     /// Returs Kml representation of the point. Note: Point must be in Lat/Long System
     /// </summary>
     /// <returns></returns>
-    public IRI.Maptor.Ket.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectToGeodeticFunc = null, byte[] color = null)
+    public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectToGeodeticFunc = null, byte[] color = null)
     {
-        IRI.Maptor.Ket.KmlFormat.Primitives.PlacemarkType placemark = new Ket.KmlFormat.Primitives.PlacemarkType();
+        IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType placemark = new IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType();
 
-        IRI.Maptor.Ket.KmlFormat.Primitives.PointType point = new Ket.KmlFormat.Primitives.PointType();
+        IRI.Maptor.Sta.KmlFormat.Primitives.PointType point = new IRI.Maptor.Sta.KmlFormat.Primitives.PointType();
 
         Point coordinates = new Point(this.x, this.Y);
 
@@ -165,47 +159,47 @@ public struct EsriPoint : IPoint, IEsriShape
 
         point.Coordinates.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", coordinates.X, coordinates.Y));
 
-        //placemark.AbstractFeatureObjectExtensionGroup = new Ket.KmlFormat.Primitives.AbstractObjectType[] { point };
+        //placemark.AbstractFeatureObjectExtensionGroup = new IRI.Maptor.Sta.KmlFormat.Primitives.AbstractObjectType[] { point };
         placemark.AbstractGeometryGroup = point;
 
         return placemark;
 
     }
 
-    public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
-    {
-        //IRI.Maptor.Ket.KmlFormat.Primitives.KmlType result = new Ket.KmlFormat.Primitives.KmlType();
+    //public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
+    //{
+    //    //IRI.Maptor.Sta.KmlFormat.Primitives.KmlType result = new IRI.Maptor.Sta.KmlFormat.Primitives.KmlType();
 
-        //IRI.Maptor.Ket.KmlFormat.Primitives.DocumentType document = new Ket.KmlFormat.Primitives.DocumentType();
+    //    //IRI.Maptor.Sta.KmlFormat.Primitives.DocumentType document = new IRI.Maptor.Sta.KmlFormat.Primitives.DocumentType();
 
-        //document.AbstractFeature = new Ket.KmlFormat.Primitives.AbstractFeatureType[] { this.AsPlacemark(projectToGeodeticFunc) };
+    //    //document.AbstractFeature = new IRI.Maptor.Sta.KmlFormat.Primitives.AbstractFeatureType[] { this.AsPlacemark(projectToGeodeticFunc) };
 
-        //result.KmlObjectExtensionGroup = new Ket.KmlFormat.Primitives.AbstractObjectType[] { document };
+    //    //result.KmlObjectExtensionGroup = new IRI.Maptor.Sta.KmlFormat.Primitives.AbstractObjectType[] { document };
 
-        //return IRI.Maptor.Ket.IO.XmlStream.Parse(result);
-        return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
-    }
+    //    //return IRI.Maptor.Ket.IO.XmlStream.Parse(result);
+    //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
+    //}
 
-    public IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid) /*where TPoint : IPoint, new()*/
+    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid) /*where TPoint : IPoint, new()*/
     {
         var result = transform(this);
 
         return new EsriPoint(result.X, result.Y, newSrid);
     }
 
-    public Geometry<Point> AsGeometry()
+    public override Geometry<Point> AsGeometry()
     {
         return new Geometry<Point>(new List<Point> { new Point(X, Y) }, GeometryType.Point, Srid);
     }
 
-    public bool IsNullOrEmpty()
+    public override bool IsNullOrEmpty()
     {
         return false;
     }
 
-    public bool IsRingBase() => false;
+    public override bool IsRingBase() => false;
 
-    public bool IsNaN()
+    public  bool IsNaN()
     {
         return double.IsNaN(X) || double.IsNaN(Y);
     }

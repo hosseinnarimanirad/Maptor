@@ -1,4 +1,5 @@
-﻿using IRI.Maptor.Sta.ShapefileFormat.EsriType;
+﻿
+using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 using System;
 using System.Collections.Generic;

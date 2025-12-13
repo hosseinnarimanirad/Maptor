@@ -75,13 +75,13 @@ public class EsriShapeCollection<T> : List<T>, IEsriShapeCollection where T : IE
 
     public string AsKml()
     {
-        IRI.Maptor.Ket.KmlFormat.Primitives.KmlType result = new Ket.KmlFormat.Primitives.KmlType();
+        IRI.Maptor.Sta.KmlFormat.Primitives.KmlType result = new IRI.Maptor.Sta.KmlFormat.Primitives.KmlType();
 
-        IRI.Maptor.Ket.KmlFormat.Primitives.DocumentType document = new Ket.KmlFormat.Primitives.DocumentType();
+        IRI.Maptor.Sta.KmlFormat.Primitives.DocumentType document = new IRI.Maptor.Sta.KmlFormat.Primitives.DocumentType();
 
         var placemarks = ((List<T>)this).Select(i => i.AsPlacemark());
 
-        foreach (var placemark in placemarks.OfType<Ket.KmlFormat.Primitives.AbstractFeatureType>())
+        foreach (var placemark in placemarks.OfType<IRI.Maptor.Sta.KmlFormat.Primitives.AbstractFeatureType>())
         {
             document.AbstractFeatureGroup.Add(placemark);
         }

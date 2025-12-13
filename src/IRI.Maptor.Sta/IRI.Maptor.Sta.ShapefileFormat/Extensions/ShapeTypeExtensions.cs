@@ -1,7 +1,8 @@
 ﻿using System;
 using IRI.Maptor.Sta.PersonalGdb;
-using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.ShapefileFormat;
+
 
 namespace IRI.Maptor.Extensions;
 

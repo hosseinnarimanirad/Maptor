@@ -11,65 +11,47 @@ using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 
+
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public struct EsriMultiPointM : IEsriPointsWithMeasure
+public class EsriMultiPointM : IEsriPointsWithMeasure
 {
+    //public int Srid { get; set; }
 
-    /// <summary>
-    /// MinX, MinY, MaxX, MaxY
-    /// </summary>
-    private BoundingBox boundingBox;
+    public override EsriShapeType EsriType => EsriShapeType.EsriMultiPointM;
 
-    public int Srid { get; set; }
 
-    private EsriPoint[] points;
+    //private BoundingBox boundingBox;
+    //public BoundingBox MinimumBoundingBox => boundingBox;
 
-    public int NumberOfPoints
-    {
-        get { return this.points.Length; }
-    }
 
-    public int NumberOfParts
-    {
-        get { return this.Parts.Length; }
-    }
+    //private EsriPoint[] points;
+    //public EsriPoint[] Points => this.points;
 
-    public EsriPoint[] Points
-    {
-        get { return this.points; }
-    }
+    //public int NumberOfPoints => this.points?.Length ?? 0;
 
-    public int[] Parts
-    {
-        get { return new int[] { 0 }; }
-    }
 
-    private double minMeasure, maxMeasure;
+    //public int[] Parts => [0];
 
-    private double[] measures;
+    //public int NumberOfParts => this.Parts.Length;
 
-    public double MinMeasure
-    {
-        get { return this.minMeasure; }
-    }
 
-    public double MaxMeasure
-    {
-        get { return this.maxMeasure; }
-    }
+    //private double minMeasure, maxMeasure;
+    //private double[] measures;
 
-    public double[] Measures
-    {
-        get { return this.measures; }
-    }
+    //public double MinMeasure => this.minMeasure;
+    //public double MaxMeasure => this.maxMeasure;
+    //public double[] Measures => this.measures;
+
+
+    public override int ContentLength => 20 + 8 * NumberOfPoints + 8 + 4 * NumberOfPoints;
+
+    public EsriMultiPointM() : this(Array.Empty<EsriPoint>(), Array.Empty<double>()) { }
 
     public EsriMultiPointM(EsriPoint[] points, double[] measures)
     {
-        if (points == null || points.Length != measures.Length)
-        {
+        if (points is null || points.Length != measures.Length)
             throw new NotImplementedException();
-        }
 
         if (points.Length == 0)
         {
@@ -81,11 +63,10 @@ public struct EsriMultiPointM : IEsriPointsWithMeasure
         }
 
         this.boundingBox = BoundingBox.CalculateBoundingBox(points/*.Cast<IPoint>()*/);
-         
+
         this.points = points;
 
         this.measures = measures;
-
 
         if (measures?.Count() > 0)
         {
@@ -99,15 +80,12 @@ public struct EsriMultiPointM : IEsriPointsWithMeasure
 
             this.maxMeasure = EsriConstants.NoDataValue;
         }
-
     }
 
     internal EsriMultiPointM(BoundingBox boundingBox, EsriPoint[] points, double minMeasure, double maxMeasure, double[] measures)
     {
-        if (points == null || points.Length != measures.Length)
-        {
+        if (points is null || points.Length != measures.Length)
             throw new NotImplementedException();
-        }
 
         if (points.Length == 0)
         {
@@ -119,7 +97,7 @@ public struct EsriMultiPointM : IEsriPointsWithMeasure
         }
 
         this.boundingBox = boundingBox;
-         
+
         this.points = points;
 
         this.minMeasure = minMeasure;
@@ -131,10 +109,8 @@ public struct EsriMultiPointM : IEsriPointsWithMeasure
 
     public EsriMultiPointM(EsriPointM[] points)
     {
-        if (points == null || points.Length < 1)
-        {
+        if (points is null || points.Length < 1)
             throw new NotImplementedException();
-        }
 
         this.boundingBox = BoundingBox.CalculateBoundingBox(points/*.Cast<IPoint>()*/);
 
@@ -166,9 +142,11 @@ public struct EsriMultiPointM : IEsriPointsWithMeasure
         }
     }
 
-    #region IShape Members
+    public override bool IsRingBase() => false;
 
-    public byte[] WriteContentsToByte()
+    public override bool IsNullOrEmpty() => Points == null || Points.Length < 1;
+
+    public override byte[] WriteContentsToByte()
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
 
@@ -182,7 +160,6 @@ public struct EsriMultiPointM : IEsriPointsWithMeasure
 
         result.Write(tempPoints, 0, tempPoints.Length);
 
-
         byte[] tempMeasures = Writer.ShpWriter.WriteAdditionalData(this.MinMeasure, this.MaxMeasure, this.Measures);
 
         result.Write(tempMeasures, 0, tempMeasures.Length);
@@ -190,72 +167,44 @@ public struct EsriMultiPointM : IEsriPointsWithMeasure
         return result.ToArray();
     }
 
-    public int ContentLength
-    {
-        get { return 20 + 8 * NumberOfPoints + 8 + 4 * NumberOfPoints; }
-    }
-
-    public EsriShapeType EsriType
-    {
-        get { return EsriShapeType.EsriMultiPointM; }
-    }
-
     /// <summary>
     /// 
     /// </summary>
     /// <param name="partNo">this parameter will be ignored</param>
     /// <returns></returns>
-    public EsriPoint[] GetPart(int partNo)
-    {
-        return this.Points;
-    }
+    public override EsriPoint[] GetPart(int partNo) => this.Points;
 
+    //public string AsSqlServerWkt()
+    //{
+    //    return string.Format("MULTIPOINT{0}", SqlServerWktHelper.PointMGroupElementToWkt(this.Points, this.Measures));
+    //}
 
-    public BoundingBox MinimumBoundingBox
-    {
-        get { return boundingBox; }
-    }
-
-    public string AsSqlServerWkt()
-    { 
-        return string.Format("MULTIPOINT{0}", SqlServerWktHelper.PointMGroupElementToWkt(this.Points, this.Measures));
-    }
-
-    public byte[] AsWkb() 
-    { 
-        return OgcWkbMapFunctions.ToWkbMultiPointM(this.points, this.measures);
-    }
+    //public byte[] AsWkb()
+    //{
+    //    return OgcWkbMapFunctions.ToWkbMultiPointM(this.points, this.measures);
+    //}
 
     /// <summary>
     /// Returs Kml representation of the point. Note: Point must be in Lat/Long System
     /// </summary>
     /// <returns></returns>
-    public IRI.Maptor.Ket.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
+    public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
     {
         throw new NotImplementedException();
     }
 
-    public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
-    {
-        return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
-    }
+    //public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
+    //{
+    //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
+    //}
 
-    public IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
+    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         return new EsriMultiPointM(this.Points.Select(i => i.Transform(transform, newSrid)).Cast<EsriPoint>().ToArray(), this.measures);
     }
 
-    public Geometry<Point> AsGeometry()
+    public override Geometry<Point> AsGeometry()
     {
         return new Geometry<Point>(points.Select(p => new Point(p.X, p.Y)).ToList(), GeometryType.MultiPoint, Srid);
     }
-
-    public bool IsNullOrEmpty()
-    {
-        return Points == null || Points.Length < 1;
-    }
-
-    public bool IsRingBase() => false;
-
-    #endregion
 }

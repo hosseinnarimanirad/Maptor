@@ -3,7 +3,7 @@
 
 using System;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.ShapefileFormat.EsriType;
+
 
 namespace IRI.Maptor.Sta.ShapefileFormat;
 

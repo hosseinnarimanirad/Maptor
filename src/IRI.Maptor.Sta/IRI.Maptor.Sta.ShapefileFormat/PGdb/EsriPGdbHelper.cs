@@ -1,8 +1,8 @@
 ﻿using System;
-
+using IRI.Maptor.Sta.ShapefileFormat;
 using IRI.Maptor.Sta.ShapefileFormat.Reader;
-using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
+
 
 namespace IRI.Maptor.Sta.PersonalGdb;
 

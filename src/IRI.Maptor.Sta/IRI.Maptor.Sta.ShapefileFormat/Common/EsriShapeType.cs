@@ -1,7 +1,7 @@
 ﻿// besmellahe rahmane rahim
 // Allahomma ajjel le-valiyek al-faraj
 
-namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
+namespace IRI.Maptor.Sta.ShapefileFormat;
 
 public enum EsriShapeType : int
 {
@@ -20,7 +20,7 @@ public enum EsriShapeType : int
     EsriPolyLineM = 23,
     EsriPolygonM = 25,
     EsriMultiPointM = 28,
-     
+
     EsriMultiPatch = 31,
 
     // 1401.10.29

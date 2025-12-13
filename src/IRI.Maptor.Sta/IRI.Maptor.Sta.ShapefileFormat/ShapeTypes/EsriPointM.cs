@@ -10,10 +10,11 @@ using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
+
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
 
-public struct EsriPointM : IPoint, IEsriShape, IHasM
+public class EsriPointM : IEsriShape, IPoint, IHasM
 {
     private double x, y, measure;
 
@@ -40,7 +41,9 @@ public struct EsriPointM : IPoint, IEsriShape, IHasM
 
     //public bool HasZ() => false;
 
-    public int Srid { get; set; }
+    //public int Srid { get; set; }
+
+    public EsriPointM() { }
 
     public EsriPointM(double x, double y, double measure, int srid)
     {
@@ -54,10 +57,7 @@ public struct EsriPointM : IPoint, IEsriShape, IHasM
     }
 
 
-    public BoundingBox MinimumBoundingBox
-    {
-        get { return new BoundingBox(this.X, this.Y, this.X, this.Y); }
-    }
+    public override BoundingBox MinimumBoundingBox => new BoundingBox(this.X, this.Y, this.X, this.Y);
 
     //public byte[] WriteContentsToByte()
     //{
@@ -74,7 +74,7 @@ public struct EsriPointM : IPoint, IEsriShape, IHasM
     //    return result.ToArray();
     //}
 
-    public byte[] WriteContentsToByte()
+    public override byte[] WriteContentsToByte()
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
 
@@ -89,15 +89,9 @@ public struct EsriPointM : IPoint, IEsriShape, IHasM
         return result.ToArray();
     }
 
-    public int ContentLength
-    {
-        get { return ShapeConstants.PointMContentLengthInWords; }
-    }
+    public override int ContentLength => ShapeConstants.PointMContentLengthInWords;
 
-    public EsriShapeType EsriType
-    {
-        get { return EsriShapeType.EsriPointM; }
-    }
+    public override EsriShapeType EsriType => EsriShapeType.EsriPointM;
 
     public bool AreExactlyTheSame(object obj)
     {
@@ -109,61 +103,61 @@ public struct EsriPointM : IPoint, IEsriShape, IHasM
         return this.AsExactString() == ((EsriPointM)obj).AsExactString();
     }
 
-    public double DistanceTo(IPoint point)
-    {
-        //return Point.GetDistance(new Point(this.X, this.Y), new Point(point.X, point.Y));
+    //public double DistanceTo(IPoint point)
+    //{
+    //    //return Point.GetDistance(new Point(this.X, this.Y), new Point(point.X, point.Y));
 
-        return IRI.Maptor.Sta.Spatial.Analysis.SpatialUtility.GetEuclideanLength(this, point);
-    }
+    //    return IRI.Maptor.Sta.Spatial.Analysis.SpatialUtility.GetEuclideanLength(this, point);
+    //}
 
 
-    public string AsSqlServerWkt()
-    {
-        return string.Format(System.Globalization.CultureInfo.InvariantCulture, "POINT({0:G17} {1:G17} NULL {2:G17})", this.X, this.Y, this.M);
-    }
+    //public string AsSqlServerWkt()
+    //{
+    //    return string.Format(System.Globalization.CultureInfo.InvariantCulture, "POINT({0:G17} {1:G17} NULL {2:G17})", this.X, this.Y, this.M);
+    //}
 
-    public byte[] AsWkb()
-    {
-        return OgcWkbMapFunctions.ToWkbPointM(this, this.M);
-    }
+    //public byte[] AsWkb()
+    //{
+    //    return OgcWkbMapFunctions.ToWkbPointM(this, this.M);
+    //}
 
     /// <summary>
     /// Returs Kml representation of the point. Note: Point must be in Lat/Long System
     /// </summary>
     /// <returns></returns>
-    public IRI.Maptor.Ket.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
+    public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
     {
         throw new NotImplementedException();
     }
 
-    public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
-    {
-        return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
-    }
+    //public override string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
+    //{
+    //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
+    //}
 
     public string AsExactString()
     {
         return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17} {1:G17} {2:G17}", this.X, this.Y, this.M);
     }
 
-    public IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
+    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         var result = transform(this);
 
         return new EsriPointM(result.X, result.Y, this.M, newSrid);
     }
 
-    public Geometry<Point> AsGeometry()
+    public override Geometry<Point> AsGeometry()
     {
         return new Geometry<Point>(new List<Point>() { new Point(X, Y) }, GeometryType.Point, Srid);
     }
 
-    public bool IsNullOrEmpty()
+    public override bool IsNullOrEmpty()
     {
         return false;
     }
 
-    public bool IsRingBase() => false;
+    public override bool IsRingBase() => false;
 
     public bool IsNaN()
     {

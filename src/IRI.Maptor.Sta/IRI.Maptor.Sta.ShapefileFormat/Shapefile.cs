@@ -20,6 +20,7 @@ using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 using IRI.Maptor.Sta.Spatial.Extensions;
 using IRI.Maptor.Sta.Spatial.IO.Prj;
 
+
 namespace IRI.Maptor.Sta.ShapefileFormat;
 
 public static class Shapefile

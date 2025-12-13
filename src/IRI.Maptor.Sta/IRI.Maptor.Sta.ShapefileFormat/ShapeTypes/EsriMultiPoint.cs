@@ -10,45 +10,38 @@ using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 using IRI.Maptor.Sta.Common.Abstrations;
 
+
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public struct EsriMultiPoint : IEsriSimplePoints
+public class EsriMultiPoint : IEsriSimplePoints
 {
-    /// <summary>
-    /// MinX, MinY, MaxX, MaxY
-    /// </summary>
-    private BoundingBox boundingBox;
+    //public int Srid { get; set; }
 
-    public int Srid { get; set; }
+    public override EsriShapeType EsriType => EsriShapeType.EsriMultiPoint;
 
-    private EsriPoint[] points;
 
-    public int NumberOfPoints
-    {
-        get { return this.points.Length; }
-    }
+    //private BoundingBox boundingBox;
+    //public BoundingBox MinimumBoundingBox => boundingBox;
 
-    public int NumberOfParts
-    {
-        get { return this.Parts.Length; }
-    }
 
-    public EsriPoint[] Points
-    {
-        get { return this.points; }
-    }
+    //private EsriPoint[] points;
+    //public EsriPoint[] Points => this.points;
+     
+    //public int NumberOfPoints => this.points?.Length ?? 0;
 
-    public int[] Parts
-    {
-        get { return new int[] { 0 }; }
-    }
+
+    //public int[] Parts => [0];
+
+    //public int NumberOfParts => this.Parts.Length;
+
+    public override int ContentLength => 20 + 8 * NumberOfPoints;
+
+    public EsriMultiPoint() : this(Array.Empty<EsriPoint>()) { }
 
     public EsriMultiPoint(EsriPoint[] points)
     {
-        if (points == null)
-        {
+        if (points is null)
             throw new NotImplementedException();
-        }
 
         if (points.Length == 0)
         {
@@ -62,7 +55,6 @@ public struct EsriMultiPoint : IEsriSimplePoints
         this.boundingBox = BoundingBox.CalculateBoundingBox(points/*.Cast<IPoint>()*/);
 
         this.points = points;
-
     }
 
     internal EsriMultiPoint(BoundingBox boundingBox, EsriPoint[] points)
@@ -79,7 +71,11 @@ public struct EsriMultiPoint : IEsriSimplePoints
         this.Srid = points.First().Srid;
     }
 
-    public byte[] WriteContentsToByte()
+    public override bool IsRingBase() => false;
+
+    //public override bool IsNullOrEmpty() => Points == null || Points.Length < 1;
+
+    public override byte[] WriteContentsToByte()
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
 
@@ -96,73 +92,46 @@ public struct EsriMultiPoint : IEsriSimplePoints
         return result.ToArray();
     }
 
-    public int ContentLength
-    {
-        get { return 20 + 8 * NumberOfPoints; }
-    }
-
-    public EsriShapeType EsriType
-    {
-        get { return EsriShapeType.EsriMultiPoint; }
-    }
-
     /// <summary>
     /// 
     /// </summary>
     /// <param name="partNo">this parameter will be ignored</param>
     /// <returns></returns>
-    public EsriPoint[] GetPart(int partNo)
-    {
-        return this.Points;
-    }
+    //public EsriPoint[] GetPart(int partNo) => this.Points;
 
+    //public override string AsSqlServerWkt()
+    //{
+    //    return string.Format(
+    //        "MULTIPOINT({0})",
+    //        string.Join(",", this.points.Select(i => string.Format("({0})", SqlServerWktHelper.SinglePointElementToWkt(i))).ToArray()));
+    //}
 
-    public BoundingBox MinimumBoundingBox
-    {
-        get { return boundingBox; }
-    }
-
-    public string AsSqlServerWkt()
-    {
-        return string.Format(
-            "MULTIPOINT({0})",
-            string.Join(",", this.points.Select(i => string.Format("({0})", SqlServerWktHelper.SinglePointElementToWkt(i))).ToArray()));
-    }
-
-    public byte[] AsWkb()
-    {
-        return OgcWkbMapFunctions.ToWkbMultiPoint(this.points); 
-    }
+    //public override byte[] AsWkb()
+    //{
+    //    return OgcWkbMapFunctions.ToWkbMultiPoint(this.points);
+    //}
 
     /// <summary>
     /// Returns Kml representation of the point. Note: Point must be in Lat/Long System
     /// </summary>
     /// <returns></returns>
-    public IRI.Maptor.Ket.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
+    public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
     {
         throw new NotImplementedException();
     }
 
-    public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
-    {
-        return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
-    }
+    //public override string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
+    //{
+    //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
+    //}
 
-    public IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid) /*where TPoint : IPoint, new()*/
+    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid) 
     {
         return new EsriMultiPoint(this.Points.Select(i => i.Transform(transform, newSrid)).Cast<EsriPoint>().ToArray());
     }
 
-    public Geometry<Point> AsGeometry()
+    public override Geometry<Point> AsGeometry()
     {
         return new Geometry<Point>(points.Select(p => p.AsGeometry()).ToList(), GeometryType.MultiPoint, Srid);
     }
-
-    public bool IsNullOrEmpty()
-    {
-        return Points == null || Points.Length < 1;
-    }
-
-    public bool IsRingBase() => false;
-
 }

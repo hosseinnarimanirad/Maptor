@@ -13,54 +13,46 @@ using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
+
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public struct EsriPolyline : IEsriSimplePoints
+public class EsriPolyline : IEsriSimplePoints
 {
-    /// <summary>
-    /// MinX, MinY, MaxX, MaxY
-    /// </summary>
-    private BoundingBox boundingBox;
+    //public int Srid { get; set; }
 
-    public int Srid { get; set; }
-
-    private EsriPoint[] points;
-
-    public int[] Parts
-    {
-        get { return this.parts; }
-    }
-
-    public int NumberOfPoints
-    {
-        get { return this.Points == null ? 0 : this.points.Length; }
-    }
-
-    /// <summary>
-    /// Points for All Parts
-    /// </summary>
-    public EsriPoint[] Points
-    {
-        get { return this.points; }
-    }
+    public override EsriShapeType EsriType => EsriShapeType.EsriPolyLine;
 
 
-    /// <summary>
-    /// Index to First Point in Part
-    /// </summary>
-    private int[] parts;
+    //private BoundingBox boundingBox;
+    //public BoundingBox MinimumBoundingBox => boundingBox;
 
-    public int NumberOfParts
-    {
-        get { return this.parts.Length; }
-    }
+
+    //private EsriPoint[] points;
+    ///// <summary>
+    ///// Points for All Parts
+    ///// </summary>
+    //public EsriPoint[] Points => this.points;
+
+    //public int NumberOfPoints => this.Points == null ? 0 : this.points.Length;
+
+
+    //private int[] parts;
+    ///// <summary>
+    ///// Index to First Point in Part
+    ///// </summary>
+    //public int[] Parts => this.parts;
+
+    //public int NumberOfParts => this.parts?.Length ?? 0;
+
+
+    public override int ContentLength => 22 + 2 * NumberOfParts + 8 * NumberOfPoints;
+
+    public EsriPolyline() : this(Array.Empty<EsriPoint>()) { }
 
     internal EsriPolyline(BoundingBox boundingBox, int[] parts, EsriPoint[] points)
     {
-        if (points == null)
-        {
+        if (points is null)
             throw new NotImplementedException();
-        }
 
         if (points.Length == 0)
         {
@@ -78,18 +70,12 @@ public struct EsriPolyline : IEsriSimplePoints
         this.points = points;
     }
 
-    public EsriPolyline(EsriPoint[] points)
-        : this(points, new int[] { 0 })
-    {
-
-    }
+    public EsriPolyline(EsriPoint[] points) : this(points, new int[] { 0 }) { }
 
     public EsriPolyline(EsriPoint[] points, int[] parts)
     {
-        if (points == null)
-        {
+        if (points is null)
             throw new NotImplementedException();
-        }
 
         if (points.Length == 0)
         {
@@ -109,10 +95,8 @@ public struct EsriPolyline : IEsriSimplePoints
 
     public EsriPolyline(EsriPoint[][] points)
     {
-        if (points == null || points.Length < 1)
-        {
+        if (points is null || points.Length < 1)
             throw new NotImplementedException();
-        }
 
         this.points = points.Where(i => i.Length > 1).SelectMany(i => i).ToArray();
 
@@ -128,10 +112,13 @@ public struct EsriPolyline : IEsriSimplePoints
         var boundingBoxes = points.Select(i => BoundingBox.CalculateBoundingBox(i/*.Cast<IPoint>()*/));
 
         this.boundingBox = BoundingBox.GetMergedBoundingBox(boundingBoxes);
-
     }
 
-    public byte[] WriteContentsToByte()
+    public override bool IsRingBase() => false;
+
+    //public bool IsNullOrEmpty() => Points == null || Points.Length < 1;
+
+    public override byte[] WriteContentsToByte()
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
 
@@ -155,77 +142,57 @@ public struct EsriPolyline : IEsriSimplePoints
         return result.ToArray();
     }
 
-    public int ContentLength
-    {
-        get { return 22 + 2 * NumberOfParts + 8 * NumberOfPoints; }
-    }
+    //public EsriPoint[] GetPart(int partNo) => ShapeHelper.GetEsriPoints(this, Parts[partNo]);
 
-    public EsriShapeType EsriType
-    {
-        get { return EsriShapeType.EsriPolyLine; }
-    }
+    //public string AsSqlServerWkt()
+    //{
+    //    if (this.NumberOfParts > 1)
+    //    {
+    //        StringBuilder result = new StringBuilder("MULTILINESTRING(");
 
-    public EsriPoint[] GetPart(int partNo)
-    {
-        return ShapeHelper.GetEsriPoints(this, Parts[partNo]);
-    }
+    //        for (int i = 0; i < NumberOfParts; i++)
+    //        {
+    //            result.Append(string.Format("{0},", SqlServerWktHelper.PointGroupElementToWkt(ShapeHelper.GetEsriPoints(this, this.Parts[i]))));
+    //        }
 
+    //        return result.Remove(result.Length - 1, 1).Append(")").ToString();
+    //    }
+    //    else
+    //    {
+    //        return string.Format("LINESTRING{0}", SqlServerWktHelper.PointGroupElementToWkt(ShapeHelper.GetEsriPoints(this, this.Parts[0])));
+    //    }
+    //}
 
-    public BoundingBox MinimumBoundingBox
-    {
-        get { return boundingBox; }
-    }
+    ///// <summary>
+    ///// Changed but not tested. 93.03.21
+    ///// </summary>
+    ///// <returns></returns>
+    //public byte[] AsWkb()
+    //{
+    //    List<byte> result = new List<byte>();
 
-    public string AsSqlServerWkt()
-    {
-        if (this.NumberOfParts > 1)
-        {
-            StringBuilder result = new StringBuilder("MULTILINESTRING(");
+    //    if (this.Parts.Count() == 1)
+    //    {
+    //        result.AddRange(OgcWkbMapFunctions.ToWkbLineString(ShapeHelper.GetEsriPoints(this, 0)));
+    //    }
+    //    else
+    //    {
+    //        result.Add((byte)WkbByteOrder.WkbNdr);
 
-            for (int i = 0; i < NumberOfParts; i++)
-            {
-                result.Append(string.Format("{0},", SqlServerWktHelper.PointGroupElementToWkt(ShapeHelper.GetEsriPoints(this, this.Parts[i]))));
-            }
+    //        result.AddRange(BitConverter.GetBytes((uint)WkbGeometryType.MultiLineString));
 
-            return result.Remove(result.Length - 1, 1).Append(")").ToString();
-        }
-        else
-        {
-            return string.Format("LINESTRING{0}", SqlServerWktHelper.PointGroupElementToWkt(ShapeHelper.GetEsriPoints(this, this.Parts[0])));
-        }
+    //        result.AddRange(BitConverter.GetBytes((uint)this.parts.Length));
 
-    }
+    //        for (int i = 0; i < this.parts.Length; i++)
+    //        {
+    //            result.AddRange(OgcWkbMapFunctions.ToWkbLineString(ShapeHelper.GetEsriPoints(this, this.Parts[i])));
+    //        }
+    //    }
 
-    /// <summary>
-    /// Changed but not tested. 93.03.21
-    /// </summary>
-    /// <returns></returns>
-    public byte[] AsWkb()
-    {
-        List<byte> result = new List<byte>();
+    //    return result.ToArray();
+    //}
 
-        if (this.Parts.Count() == 1)
-        {
-            result.AddRange(OgcWkbMapFunctions.ToWkbLineString(ShapeHelper.GetEsriPoints(this, 0)));
-        }
-        else
-        {
-            result.Add((byte)WkbByteOrder.WkbNdr);
-
-            result.AddRange(BitConverter.GetBytes((uint)WkbGeometryType.MultiLineString));
-
-            result.AddRange(BitConverter.GetBytes((uint)this.parts.Length));
-
-            for (int i = 0; i < this.parts.Length; i++)
-            {
-                result.AddRange(OgcWkbMapFunctions.ToWkbLineString(ShapeHelper.GetEsriPoints(this, this.Parts[i])));
-            }
-        }
-
-        return result.ToArray();
-    }
-
-    public IRI.Maptor.Ket.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectToGeodeticFunc = null, byte[] color = null)
+    public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectToGeodeticFunc = null, byte[] color = null)
     {
         return AsPlacemark(this, projectToGeodeticFunc, color);
     }
@@ -234,16 +201,16 @@ public struct EsriPolyline : IEsriSimplePoints
     /// Returs Kml representation of the point. Note: Point must be in Lat/Long System
     /// </summary>
     /// <returns></returns>
-    static IRI.Maptor.Ket.KmlFormat.Primitives.PlacemarkType AsPlacemark(EsriPolyline polyline, Func<Point, Point> projectToGeodeticFunc = null, byte[] color = null)
+    static IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(EsriPolyline polyline, Func<Point, Point> projectToGeodeticFunc = null, byte[] color = null)
     {
-        IRI.Maptor.Ket.KmlFormat.Primitives.PlacemarkType placemark =
-            new Ket.KmlFormat.Primitives.PlacemarkType();
+        IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType placemark =
+            new IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType();
 
-        List<IRI.Maptor.Ket.KmlFormat.Primitives.LineStringType> linestrings =
-            new List<Ket.KmlFormat.Primitives.LineStringType>();
+        List<IRI.Maptor.Sta.KmlFormat.Primitives.LineStringType> linestrings =
+            new List<IRI.Maptor.Sta.KmlFormat.Primitives.LineStringType>();
 
-        IRI.Maptor.Ket.KmlFormat.Primitives.MultiGeometryType multiGeometry =
-            new Ket.KmlFormat.Primitives.MultiGeometryType();
+        IRI.Maptor.Sta.KmlFormat.Primitives.MultiGeometryType multiGeometry =
+            new IRI.Maptor.Sta.KmlFormat.Primitives.MultiGeometryType();
 
         IEnumerable<string> coordinates;
 
@@ -269,7 +236,7 @@ public struct EsriPolyline : IEsriSimplePoints
 
         foreach (string item in coordinates)
         {
-            IRI.Maptor.Ket.KmlFormat.Primitives.LineStringType linestring = new Ket.KmlFormat.Primitives.LineStringType();
+            IRI.Maptor.Sta.KmlFormat.Primitives.LineStringType linestring = new IRI.Maptor.Sta.KmlFormat.Primitives.LineStringType();
 
             linestring.Coordinates.Add(item);
 
@@ -281,19 +248,19 @@ public struct EsriPolyline : IEsriSimplePoints
             multiGeometry.AbstractGeometryGroup.Add(line);
         }
 
-        //placemark.AbstractFeatureObjectExtensionGroup = new Ket.KmlFormat.Primitives.AbstractObjectType[] { multiGeometry };
+        //placemark.AbstractFeatureObjectExtensionGroup = new IRI.Maptor.Sta.KmlFormat.Primitives.AbstractObjectType[] { multiGeometry };
         placemark.AbstractGeometryGroup = multiGeometry;
-        //IRI.Maptor.Ket.KmlFormat.Primitives.MultiGeometryType t = new Ket.KmlFormat.Primitives.MultiGeometryType();
+        //IRI.Maptor.Sta.KmlFormat.Primitives.MultiGeometryType t = new IRI.Maptor.Sta.KmlFormat.Primitives.MultiGeometryType();
 
         if (color == null)
         {
             return placemark;
         }
 
-        IRI.Maptor.Ket.KmlFormat.Primitives.StyleType style =
-            new Ket.KmlFormat.Primitives.StyleType();
+        IRI.Maptor.Sta.KmlFormat.Primitives.StyleType style =
+            new IRI.Maptor.Sta.KmlFormat.Primitives.StyleType();
 
-        Ket.KmlFormat.Primitives.LineStyleType lineStyle = new Ket.KmlFormat.Primitives.LineStyleType();
+        IRI.Maptor.Sta.KmlFormat.Primitives.LineStyleType lineStyle = new IRI.Maptor.Sta.KmlFormat.Primitives.LineStyleType();
         lineStyle.Color = color;
 
         style.LineStyle = lineStyle;
@@ -302,17 +269,17 @@ public struct EsriPolyline : IEsriSimplePoints
         return placemark;
     }
 
-    public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
-    {
-        return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
-    }
+    //public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
+    //{
+    //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
+    //}
 
-    public IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
+    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         return new EsriPolyline(this.Points.Select(i => i.Transform(transform, newSrid)).Cast<EsriPoint>().ToArray(), this.Parts);
     }
 
-    public Geometry<Point> AsGeometry()
+    public override Geometry<Point> AsGeometry()
     {
         if (this.NumberOfParts > 1)
         {
@@ -335,12 +302,4 @@ public struct EsriPolyline : IEsriSimplePoints
             return Geometry<Point>.CreateEmpty(GeometryType.LineString, Srid);
         }
     }
-
-    public bool IsNullOrEmpty()
-    {
-        return Points == null || Points.Length < 1;
-    }
-
-    public bool IsRingBase() => false;
-
 }

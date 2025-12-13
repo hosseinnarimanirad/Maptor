@@ -9,8 +9,8 @@ using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Ket.SqlServerSpatialExtension.Helpers;
-using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions; 
-
+using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
+using IRI.Maptor.Sta.Spatial.Analysis;
 namespace IRI.Maptor.Extensions;
 
 public static class SqlGeometryExtensions
@@ -543,7 +543,7 @@ public static class SqlGeometryExtensions
         var numberOfInteriorRings = polygon.STNumInteriorRing().Value;
 
         Geometry<Point> exteriorRing = SqlLineStringToGeometry(polygon.STExteriorRing(), true);
-
+         
         List<Geometry<Point>> result = new List<Geometry<Point>>(numberOfInteriorRings + 1);
 
         //result[0] = exteriorRing;
@@ -556,7 +556,7 @@ public static class SqlGeometryExtensions
             result.Add(SqlLineStringToGeometry(polygon.STInteriorRingN(i), true));
         }
 
-        return new Geometry<Point>(result, GeometryType.Polygon, srid);
+        return Geometry<Point>.CreatePolygonOrMultiPolygon(result, srid);
     }
 
     private static Geometry<Point> SqlMultiPolygonToGeometry(SqlGeometry multiPolygon)

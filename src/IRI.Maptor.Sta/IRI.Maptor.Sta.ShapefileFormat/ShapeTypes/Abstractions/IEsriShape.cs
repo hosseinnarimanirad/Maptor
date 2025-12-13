@@ -1,43 +1,51 @@
 ﻿// besmellahe rahmane rahim
 // Allahomma ajjel le-valiyek al-faraj
 
+using System;
+
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
-using System;
+using IRI.Maptor.Sta.KmlFormat.Primitives;
+
 
 namespace IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
 
-public interface IEsriShape
+public abstract class IEsriShape
 {
-    BoundingBox MinimumBoundingBox { get; }
 
-    int Srid { get; set; }
+    public abstract BoundingBox MinimumBoundingBox { get; } 
 
-    byte[] WriteContentsToByte();
+
+    public int Srid { get; set; }
+
+    public abstract byte[] WriteContentsToByte();
 
     /// <summary>
     /// Length of the record contents section measured in 16-bit words.
     /// </summary>
-    int ContentLength { get; }
+    public abstract int ContentLength { get; }
 
-    EsriShapeType EsriType { get; }
+    public abstract EsriShapeType EsriType { get; }
 
-    string AsSqlServerWkt();
+    public abstract bool IsRingBase();
 
-    byte[] AsWkb();
+    public abstract bool IsNullOrEmpty();
 
-    Ket.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null);
+    public string AsSqlServerWkt() => AsGeometry().AsSqlServerWkt();
 
-    string AsKml(Func<Point, Point> projectToGeodeticFunc = null);
+    public byte[]? AsWkb() => AsGeometry().AsWkb();
 
-    IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid);// where TPoint : IPoint, new(); 
+    public abstract PlacemarkType AsPlacemark(Func<Point, Point> projectToGeodeticFunc = null, byte[] color = null);
 
-    Geometry<Point> AsGeometry();
+    //public abstract string AsKml(Func<Point, Point> projectToGeodeticFunc = null);
+    public virtual string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
+    {
+        return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
+    }
 
-    bool IsNullOrEmpty();
+    public abstract IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid);
 
-    bool IsRingBase();
+    public abstract Geometry<Point> AsGeometry();
 }

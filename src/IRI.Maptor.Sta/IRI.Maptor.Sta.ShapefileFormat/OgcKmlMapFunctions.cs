@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using IRI.Maptor.Ket.KmlFormat;
-using IRI.Maptor.Ket.KmlFormat.Primitives;
+using IRI.Maptor.Sta.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat.Primitives;
 
 namespace IRI.Maptor.Sta.ShapefileFormat;
 
@@ -16,9 +16,9 @@ static class OgcKmlMapFunctions
 
     internal static string AsKml(AbstractFeatureType[] abstractFeatureType)
     {
-        IRI.Maptor.Ket.KmlFormat.Primitives.KmlType result = new KmlType();
+        IRI.Maptor.Sta.KmlFormat.Primitives.KmlType result = new KmlType();
 
-        IRI.Maptor.Ket.KmlFormat.Primitives.DocumentType document = new DocumentType();
+        IRI.Maptor.Sta.KmlFormat.Primitives.DocumentType document = new DocumentType();
 
         if (abstractFeatureType != null)
         {

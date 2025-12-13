@@ -11,9 +11,10 @@ using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 
+
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public struct EsriPointZ : IPoint, IEsriShape, IHasZ
+public class EsriPointZ : IEsriShape, IPoint, IHasZ
 {
     private double x, y, z, measure;
 
@@ -45,7 +46,9 @@ public struct EsriPointZ : IPoint, IEsriShape, IHasZ
 
     //public bool HasZ() => true;
 
-    public int Srid { get; set; }
+    //public int Srid { get; set; }
+
+    public EsriPointZ() { }
 
     public EsriPointZ(double x, double y, double z, int srid)
         : this(x, y, z, EsriConstants.NoDataValue, srid) { }
@@ -79,26 +82,23 @@ public struct EsriPointZ : IPoint, IEsriShape, IHasZ
         return this.AsExactString() == ((EsriPointZ)obj).AsExactString();
     }
 
-    public double DistanceTo(IPoint point)
-    {
-        if (point is EsriPointZ)
-        {
-            return PointZM.GetDistance(new PointZM(this.X, this.Y, this.Z), new PointZM(point.X, point.Y, ((EsriPointZ)point).Z));
-        }
-        else
-        {
-            return new PointZM(this.X, this.Y, this.Z).DistanceTo(point);
-        }
+    //public double DistanceTo(IPoint point)
+    //{
+    //    if (point is EsriPointZ)
+    //    {
+    //        return PointZM.GetDistance(new PointZM(this.X, this.Y, this.Z), new PointZM(point.X, point.Y, ((EsriPointZ)point).Z));
+    //    }
+    //    else
+    //    {
+    //        return new PointZM(this.X, this.Y, this.Z).DistanceTo(point);
+    //    }
 
-    }
+    //}
 
     #region IShape Members
 
 
-    public BoundingBox MinimumBoundingBox
-    {
-        get { return new BoundingBox(this.X, this.Y, this.X, this.Y); }
-    }
+    public override BoundingBox MinimumBoundingBox => new BoundingBox(this.X, this.Y, this.X, this.Y);
 
     //public byte[] WriteContentsToByte()
     //{
@@ -117,7 +117,7 @@ public struct EsriPointZ : IPoint, IEsriShape, IHasZ
     //    return result.ToArray();
     //}
 
-    public byte[] WriteContentsToByte()
+    public override byte[] WriteContentsToByte()
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
 
@@ -134,58 +134,52 @@ public struct EsriPointZ : IPoint, IEsriShape, IHasZ
         return result.ToArray();
     }
 
-    public int ContentLength
-    {
-        get { return ShapeConstants.PointZContentLengthInWords; }
-    }
+    public override int ContentLength => ShapeConstants.PointZContentLengthInWords;
 
-    public EsriShapeType EsriType
-    {
-        get { return EsriShapeType.EsriPointZM; }
-    }
+    public override EsriShapeType EsriType => EsriShapeType.EsriPointZM;
 
-    public string AsSqlServerWkt()
-    {
-        return string.Format(System.Globalization.CultureInfo.InvariantCulture, "POINT({0:G17} {1:G17} {2:G17} {3})", this.X, this.Y, this.Z, this.Measure == EsriConstants.NoDataValue ? "NULL" : this.Measure.ToString("G17"));
-    }
+    //public string AsSqlServerWkt()
+    //{
+    //    return string.Format(System.Globalization.CultureInfo.InvariantCulture, "POINT({0:G17} {1:G17} {2:G17} {3})", this.X, this.Y, this.Z, this.Measure == EsriConstants.NoDataValue ? "NULL" : this.Measure.ToString("G17"));
+    //}
 
-    public byte[] AsWkb()
-    {
-        return OgcWkbMapFunctions.ToWkbPointZM(this, this.Z, this.Measure);
-    }
+    //public byte[] AsWkb()
+    //{
+    //    return OgcWkbMapFunctions.ToWkbPointZM(this, this.Z, this.Measure);
+    //}
 
     /// <summary>
     /// Returs Kml representation of the point. Note: Point must be in Lat/Long System
     /// </summary>
     /// <returns></returns>
-    public IRI.Maptor.Ket.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
+    public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
     {
         throw new NotImplementedException();
     }
 
-    public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
-    {
-        return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
-    }
+    //public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
+    //{
+    //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
+    //}
 
-    public IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
+    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         var result = transform(this);
 
         return new EsriPointZ(result.X, result.Y, this.Z, this.Measure, newSrid);
     }
 
-    public Geometry<Point> AsGeometry()
+    public override Geometry<Point> AsGeometry()
     {
         return new Geometry<Point>(new List<Point>() { new Point(X, Y) }, GeometryType.Point, Srid);
     }
 
-    public bool IsNullOrEmpty()
+    public override bool IsNullOrEmpty()
     {
         return false;
     }
 
-    public bool IsRingBase() => false;
+    public override bool IsRingBase() => false;
 
     #endregion
 

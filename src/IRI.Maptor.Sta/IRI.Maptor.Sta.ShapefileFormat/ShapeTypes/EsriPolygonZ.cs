@@ -17,93 +17,57 @@ using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public struct EsriPolygonZ : IEsriPointsWithZ
+public class EsriPolygonZ : IEsriPointsWithZ
 {
+    //public int Srid { get; set; }
 
-    /// <summary>
-    /// MinX, MinY, MaxX, MaxY
-    /// </summary>
-    private BoundingBox boundingBox;
+    public override EsriShapeType EsriType => EsriShapeType.EsriPolygonZM;
 
-    public int Srid { get; set; }
+    //private BoundingBox boundingBox;
+    //public BoundingBox MinimumBoundingBox => boundingBox;
 
-    private EsriPoint[] points;
+    //private EsriPoint[] points;
+    ///// <summary>
+    ///// Points for All Parts
+    ///// </summary>
+    //public EsriPoint[] Points => this.points;
 
+    //public int NumberOfPoints => this.points?.Length ?? 0;
 
-    public int NumberOfPoints
-    {
-        get { return this.points.Length; }
-    }
+    //private int[] parts;
+    ///// <summary>
+    ///// Index to First Point in Part
+    ///// </summary>
+    //public int[] Parts => this.parts;
 
-    /// <summary>
-    /// Points for All Parts
-    /// </summary>
-    public EsriPoint[] Points
-    {
-        get { return this.points; }
-    }
+    //public int NumberOfParts => this.parts?.Length ?? 0;
 
-    public int[] Parts
-    {
-        get { return this.parts; }
-    }
+    //private double minMeasure, maxMeasure;
+    //private double[] measures;
 
-    /// <summary>
-    /// Index to First Point in Part
-    /// </summary>
-    private int[] parts;
+    //public double MinMeasure => this.minMeasure;
 
-    public int NumberOfParts
-    {
-        get { return this.parts.Length; }
-    }
+    //public double MaxMeasure => this.maxMeasure;
 
+    //public double[] Measures => this.measures;
 
-    private double minMeasure, maxMeasure;
+    //private double minZ, maxZ;
+    //private double[] zValues;
 
-    private double[] measures;
+    //public double MinZ => this.minZ;
 
-    public double MinMeasure
-    {
-        get { return this.minMeasure; }
-    }
+    //public double MaxZ => this.maxZ;
 
-    public double MaxMeasure
-    {
-        get { return this.maxMeasure; }
-    }
+    //public double[] ZValues => this.zValues;
 
-    public double[] Measures
-    {
-        get { return this.measures; }
-    }
+    public override int ContentLength => 22 + 2 * NumberOfParts + 8 * NumberOfPoints + 2 * (8 + 4 * NumberOfPoints);
 
-
-    private double minZ, maxZ;
-
-    private double[] zValues;
-
-    public double MinZ
-    {
-        get { return this.minZ; }
-    }
-
-    public double MaxZ
-    {
-        get { return this.maxZ; }
-    }
-
-    public double[] ZValues
-    {
-        get { return this.zValues; }
-    }
+    public EsriPolygonZ() : this(Array.Empty<EsriPoint>(), Array.Empty<int>(), Array.Empty<double>(), Array.Empty<double>()) { }
 
     public EsriPolygonZ(EsriPoint[] points, int[] parts, double[] zValues, double[] measures)
     {
-        if (points == null || points.Length != zValues?.Length || points.Length != measures?.Length)
-        {
+        if (points is null || points.Length != zValues?.Length || points.Length != measures?.Length)
             throw new NotImplementedException();
-        }
 
         if (points.Length == 0)
         {
@@ -161,10 +125,8 @@ public struct EsriPolygonZ : IEsriPointsWithZ
                         double maxMeasure,
                         double[] measures)
     {
-        if (points == null || points.Length != zValues?.Length || points.Length != measures?.Length)
-        {
+        if (points is null || points.Length != zValues?.Length || points.Length != measures?.Length)
             throw new NotImplementedException();
-        }
 
         if (points.Length == 0)
         {
@@ -194,7 +156,11 @@ public struct EsriPolygonZ : IEsriPointsWithZ
         this.measures = measures;
     }
 
-    public byte[] WriteContentsToByte()
+    public override bool IsRingBase() => true;
+
+    //public bool IsNullOrEmpty() => Points == null || Points.Length < 1;
+
+    public override byte[] WriteContentsToByte()
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
 
@@ -211,16 +177,13 @@ public struct EsriPolygonZ : IEsriPointsWithZ
             result.Write(System.BitConverter.GetBytes(item), 0, ShapeConstants.IntegerSize);
         }
 
-
         byte[] tempPoints = Writer.ShpWriter.WritePointsToByte(this.points);
 
         result.Write(tempPoints, 0, tempPoints.Length);
 
-
         byte[] tempZ = Writer.ShpWriter.WriteAdditionalData(this.MinZ, this.MaxZ, this.ZValues);
 
         result.Write(tempZ, 0, tempZ.Length);
-
 
         byte[] tempMeasures = Writer.ShpWriter.WriteAdditionalData(this.MinMeasure, this.MaxMeasure, this.Measures);
 
@@ -229,87 +192,68 @@ public struct EsriPolygonZ : IEsriPointsWithZ
         return result.ToArray();
     }
 
-    public int ContentLength
-    {
-        get { return 22 + 2 * NumberOfParts + 8 * NumberOfPoints + 2 * (8 + 4 * NumberOfPoints); }
-    }
+    //public EsriPoint[] GetPart(int partNo) => ShapeHelper.GetEsriPoints(this, Parts[partNo]);
 
-    public EsriShapeType EsriType
-    {
-        get { return EsriShapeType.EsriPolygonZM; }
-    }
+    //public string AsSqlServerWkt()
+    //{
+    //    StringBuilder result = new StringBuilder("POLYGON(");
 
-    public EsriPoint[] GetPart(int partNo)
-    {
-        return ShapeHelper.GetEsriPoints(this, Parts[partNo]);
-    }
+    //    for (int i = 0; i < NumberOfParts; i++)
+    //    {
+    //        result.Append(string.Format("{0},",
+    //            SqlServerWktHelper.PointZGroupElementToWkt(
+    //                ShapeHelper.GetEsriPoints(this, this.Parts[i]),
+    //                ShapeHelper.GetZValues(this, this.Parts[i]),
+    //                ShapeHelper.GetMeasures(this, this.Parts[i]))));
+    //    }
 
+    //    return result.Remove(result.Length - 1, 1).Append(")").ToString();
+    //}
 
-    public BoundingBox MinimumBoundingBox
-    {
-        get { return boundingBox; }
-    }
+    ////Error Prone: not checking for multipolygon cases
+    //public byte[] AsWkb()
+    //{
+    //    List<byte> result = new List<byte>
+    //    {
+    //        (byte)WkbByteOrder.WkbNdr
+    //    };
 
-    public string AsSqlServerWkt()
-    {
-        StringBuilder result = new StringBuilder("POLYGON(");
+    //    result.AddRange(BitConverter.GetBytes((uint)WkbGeometryType.PolygonZM));
 
-        for (int i = 0; i < NumberOfParts; i++)
-        {
-            result.Append(string.Format("{0},",
-                SqlServerWktHelper.PointZGroupElementToWkt(
-                    ShapeHelper.GetEsriPoints(this, this.Parts[i]),
-                    ShapeHelper.GetZValues(this, this.Parts[i]),
-                    ShapeHelper.GetMeasures(this, this.Parts[i]))));
-        }
+    //    result.AddRange(BitConverter.GetBytes((uint)this.parts.Length));
 
-        return result.Remove(result.Length - 1, 1).Append(")").ToString();
-    }
+    //    for (int i = 0; i < this.parts.Length; i++)
+    //    {
+    //        result.AddRange(OgcWkbMapFunctions.ToWkbLinearRingZM(
+    //                ShapeHelper.GetEsriPoints(this, this.Parts[i]),
+    //                ShapeHelper.GetZValues(this, this.Parts[i]),
+    //                ShapeHelper.GetMeasures(this, this.Parts[i])));
+    //    }
 
-    //Error Prone: not checking for multipolygon cases
-    public byte[] AsWkb()
-    {
-        List<byte> result = new List<byte>
-        {
-            (byte)WkbByteOrder.WkbNdr
-        };
-
-        result.AddRange(BitConverter.GetBytes((uint)WkbGeometryType.PolygonZM));
-
-        result.AddRange(BitConverter.GetBytes((uint)this.parts.Length));
-
-        for (int i = 0; i < this.parts.Length; i++)
-        {
-            result.AddRange(OgcWkbMapFunctions.ToWkbLinearRingZM(
-                    ShapeHelper.GetEsriPoints(this, this.Parts[i]),
-                    ShapeHelper.GetZValues(this, this.Parts[i]),
-                    ShapeHelper.GetMeasures(this, this.Parts[i])));
-        }
-
-        return result.ToArray();
-    }
+    //    return result.ToArray();
+    //}
 
     /// <summary>
     /// Returs Kml representation of the point. Note: Point must be in Lat/Long System
     /// </summary>
     /// <returns></returns>
-    public IRI.Maptor.Ket.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
+    public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
     {
         throw new NotImplementedException();
     }
 
-    public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
-    {
-        return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
-    }
+    //public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
+    //{
+    //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
+    //}
 
-    public IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
+    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         return new EsriPolygonZ(this.Points.Select(i => i.Transform(transform, newSrid)).Cast<EsriPoint>().ToArray(), this.Parts, this.ZValues, this.Measures);
     }
 
     //always returns polygon not multi polygon
-    public Geometry<Point> AsGeometry()
+    public override Geometry<Point> AsGeometry()
     {
         if (this.NumberOfParts > 1)
         {
@@ -317,12 +261,9 @@ public struct EsriPolygonZ : IEsriPointsWithZ
 
             for (int i = 0; i < NumberOfParts; i++)
             {
-                //parts[i] = new Geometry<Point>(ShapeHelper.GetPoints(this, Parts[i]), GeometryType.LineString, Srid);
                 parts.Add(new Geometry<Point>(ShapeHelper.GetPoints(this, Parts[i]), GeometryType.LineString, Srid));
             }
-             
-            //1399.07.26
-            //return new Geometry<Point>(parts, GeometryType.Polygon, Srid);
+
             return Geometry<Point>.CreatePolygonOrMultiPolygon(parts, Srid);
         }
         else if (this.NumberOfParts == 1)
@@ -334,12 +275,4 @@ public struct EsriPolygonZ : IEsriPointsWithZ
             return Geometry<Point>.CreateEmpty(GeometryType.Polygon, Srid);
         }
     }
-
-    public bool IsNullOrEmpty()
-    {
-        return Points == null || Points.Length < 1;
-    }
-
-    public bool IsRingBase() => true;
-
 }
