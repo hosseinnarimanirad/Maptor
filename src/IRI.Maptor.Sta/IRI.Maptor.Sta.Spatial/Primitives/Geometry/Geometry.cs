@@ -3095,6 +3095,41 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         }
     }
 
+    public void FixPolygonRings()
+    {
+        if (this.IsEmpty())
+            return;
+
+        if (this.Type == GeometryType.Polygon)
+        {
+            if (this.Geometries[0] is null)
+                return;
+
+            for (int i = 1; i < Geometries.Count; i++)
+            {
+                // Only the first outter ring is CCW
+                var shouldBeClockwise = i != 0;
+
+                var points = this.Geometries[i]?.Points;
+
+                if (points is null)
+                    continue;
+
+                if (SpatialUtility.IsClockwise(points) != shouldBeClockwise)
+                {
+                    this.Geometries[i].Reverse();
+                }
+            }
+        }
+        else if (this.Type == GeometryType.MultiPolygon)
+        {
+            foreach (var item in Geometries)
+            {
+                item.FixPolygonRings();
+            }
+        }
+    }
+
     #endregion
 
 
