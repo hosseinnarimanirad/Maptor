@@ -18,7 +18,7 @@ namespace IRI.Maptor.Tst.Standards.OGC.KML;
 public class KmlTest
 {
     #region Point Tests
-     
+
 
     [Fact]
     public void TestKmlPointRoundTrip()
@@ -44,8 +44,8 @@ public class KmlTest
         Assert.NotNull(geometries);
         Assert.Single(geometries);
         Assert.Equal(GeometryType.Point, geometries[0].Type);
-        Assert.Equal(51.5074, geometries[0].Points[0].X, 6);
-        Assert.Equal(-0.1278, geometries[0].Points[0].Y, 6);
+        Assert.Equal(51.5074, (geometries[0] as Geometry<Point>).Points[0].X, 6);
+        Assert.Equal(-0.1278, (geometries[0] as Geometry<Point>).Points[0].Y, 6);
 
         // Act - Convert back to KML
         var kmlOutput = KmlWriter.ToKml(geometries[0], "Test Point", "A test point");
@@ -85,9 +85,9 @@ public class KmlTest
         Assert.NotNull(geometries);
         Assert.Single(geometries);
         Assert.Equal(GeometryType.LineString, geometries[0].Type);
-        Assert.Equal(3, geometries[0].Points.Count);
-        Assert.Equal(-122.0844, geometries[0].Points[0].X, 6);
-        Assert.Equal(37.4220, geometries[0].Points[0].Y, 6);
+        Assert.Equal(3, (geometries[0] as Geometry<Point>).Points.Count);
+        Assert.Equal(-122.0844, (geometries[0] as Geometry<Point>).Points[0].X, 6);
+        Assert.Equal(37.4220, (geometries[0] as Geometry<Point>).Points[0].Y, 6);
 
         // Act - Convert back to KML
         var kmlOutput = KmlWriter.ToKml(geometries[0], "Test Line");
@@ -131,8 +131,8 @@ public class KmlTest
         Assert.NotNull(geometries);
         Assert.Single(geometries);
         Assert.Equal(GeometryType.Polygon, geometries[0].Type);
-        Assert.Single(geometries[0].Geometries); // One ring (outer boundary)
-        Assert.Equal(5, geometries[0].Geometries[0].Points.Count); // 5 points (closed ring)
+        Assert.Single(geometries[0].GetGeometries()); // One ring (outer boundary)
+        Assert.Equal(4, (geometries[0].GetGeometries()[0] as Geometry<Point>).Points.Count); // 4 points (closed ring)
 
         // Act - Convert back to KML
         var kmlOutput = KmlWriter.ToKml(geometries[0], "Test Polygon");
@@ -176,7 +176,7 @@ public class KmlTest
         Assert.NotNull(geometries);
         Assert.Single(geometries);
         Assert.Equal(GeometryType.Polygon, geometries[0].Type);
-        Assert.Equal(2, geometries[0].Geometries.Count); // Outer + inner ring
+        Assert.Equal(2, geometries[0].GetGeometries().Count); // Outer + inner ring
 
         // Act - Convert back to KML
         var kmlOutput = KmlWriter.ToKml(geometries[0], "Polygon with Hole");
@@ -217,7 +217,7 @@ public class KmlTest
         Assert.NotNull(parsed);
         Assert.Single(parsed);
         Assert.Equal(GeometryType.MultiPoint, parsed[0].Type);
-        Assert.Equal(3, parsed[0].Geometries.Count);
+        Assert.Equal(3, parsed[0].GetGeometries().Count);
     }
 
     [Fact]
@@ -253,9 +253,9 @@ public class KmlTest
         Assert.NotNull(parsed);
         Assert.Single(parsed);
         Assert.Equal(GeometryType.MultiLineString, parsed[0].Type);
-        Assert.Equal(2, parsed[0].Geometries.Count);
-        Assert.Equal(2, parsed[0].Geometries[0].Points.Count);
-        Assert.Equal(3, parsed[0].Geometries[1].Points.Count);
+        Assert.Equal(2, parsed[0].GetGeometries().Count);
+        Assert.Equal(2, (parsed[0].GetGeometries()[0] as Geometry<Point>).Points.Count);
+        Assert.Equal(3, (parsed[0].GetGeometries()[1] as Geometry<Point>).Points.Count);
     }
 
     #endregion
@@ -606,12 +606,12 @@ public class KmlTest
         Assert.All(parsed, g => Assert.Equal(GeometryType.Point, g.Type));
 
         // Verify coordinates
-        Assert.Equal(51.5074, parsed[0].Points[0].X, 4);
-        Assert.Equal(-0.1278, parsed[0].Points[0].Y, 4);
-        Assert.Equal(48.8566, parsed[1].Points[0].X, 4);
-        Assert.Equal(2.3522, parsed[1].Points[0].Y, 4);
-        Assert.Equal(52.5200, parsed[2].Points[0].X, 4);
-        Assert.Equal(13.4050, parsed[2].Points[0].Y, 4);
+        Assert.Equal(51.5074, (parsed[0] as Geometry<Point>).Points[0].X, 4);
+        Assert.Equal(-0.1278, (parsed[0] as Geometry<Point>).Points[0].Y, 4);
+        Assert.Equal(48.8566, (parsed[1] as Geometry<Point>).Points[0].X, 4);
+        Assert.Equal(2.3522,  (parsed[1] as Geometry<Point>).Points[0].Y, 4);
+        Assert.Equal(52.5200, (parsed[2] as Geometry<Point>).Points[0].X, 4);
+        Assert.Equal(13.4050, (parsed[2] as Geometry<Point>).Points[0].Y, 4);
     }
 
     #endregion
@@ -765,12 +765,12 @@ public class KmlTest
         // Assert - Verify round-trip accuracy
         Assert.NotNull(parsed);
         Assert.Single(parsed);
-        Assert.Equal(5, parsed[0].Points.Count);
+        Assert.Equal(5, (parsed[0] as Geometry<Point>).Points.Count);
 
         for (int i = 0; i < points.Count; i++)
         {
-            Assert.Equal(points[i].X, parsed[0].Points[i].X, 6);
-            Assert.Equal(points[i].Y, parsed[0].Points[i].Y, 6);
+            Assert.Equal(points[i].X, (parsed[0] as Geometry<Point>).Points[i].X, 6);
+            Assert.Equal(points[i].Y, (parsed[0] as Geometry<Point>).Points[i].Y, 6);
         }
     }
 
@@ -825,7 +825,7 @@ public class KmlTest
         Assert.NotNull(parsed);
         Assert.Single(parsed);
         Assert.Equal(GeometryType.MultiPolygon, parsed[0].Type);
-        Assert.Equal(2, parsed[0].Geometries.Count);
+        Assert.Equal(2, (parsed[0] as Geometry<Point>).Geometries.Count);
     }
 
     #endregion
@@ -1009,8 +1009,8 @@ public class KmlTest
         var parsed = KmlReader.Parse(kmlOutput);
 
         // Assert - Verify precision is maintained (G17 format)
-        Assert.Equal(originalX, parsed[0].Points[0].X, 15); // High precision
-        Assert.Equal(originalY, parsed[0].Points[0].Y, 15);
+        Assert.Equal(originalX, (parsed[0] as Geometry<Point>).Points[0].X, 15); // High precision
+        Assert.Equal(originalY, (parsed[0] as Geometry<Point>).Points[0].Y, 15);
     }
 
     #endregion
@@ -1063,14 +1063,14 @@ public class KmlTest
     {
         // Arrange - Create one of each geometry type
         var point = Geometry<Point>.Create(10.0, 20.0, srid: 4326);
-        
+
         var lineString = new Geometry<Point>(
             new List<Point> { new Point(0, 0), new Point(10, 10), new Point(20, 5) },
             GeometryType.LineString,
             srid: 4326);
 
         var polygonRing = new Geometry<Point>(
-            new List<Point> { new Point(0, 0), new Point(10, 0), new Point(10, 10), new Point(0, 10), new Point(0, 0) },
+            new List<Point> { new Point(0, 0), new Point(10, 0), new Point(10, 10), new Point(0, 10) },
             GeometryType.LineString,
             true,
             srid: 4326);
@@ -1096,14 +1096,14 @@ public class KmlTest
         Assert.Equal(GeometryType.Polygon, parsed[2].Type);
 
         // Verify Point
-        Assert.Equal(10.0, parsed[0].Points[0].X, 6);
-        Assert.Equal(20.0, parsed[0].Points[0].Y, 6);
+        Assert.Equal(10.0, (parsed[0] as Geometry<Point>).Points[0].X, 6);
+        Assert.Equal(20.0, (parsed[0] as Geometry<Point>).Points[0].Y, 6);
 
         // Verify LineString
-        Assert.Equal(3, parsed[1].Points.Count);
-        
+        Assert.Equal(3, (parsed[1] as Geometry<Point>).Points.Count);
+
         // Verify Polygon
-        Assert.Equal(5, parsed[2].Geometries[0].Points.Count);
+        Assert.Equal(4, (parsed[2].GetGeometries()[0] as Geometry<Point>).Points.Count);
     }
 
     #endregion
@@ -1134,8 +1134,8 @@ public class KmlTest
             // Assert - Verify content
             Assert.NotNull(parsed);
             Assert.Single(parsed);
-            Assert.Equal(51.5074, parsed[0].Points[0].X, 4);
-            Assert.Equal(-0.1278, parsed[0].Points[0].Y, 4);
+            Assert.Equal(51.5074, (parsed[0] as Geometry<Point>).Points[0].X, 4);
+            Assert.Equal(-0.1278, (parsed[0] as Geometry<Point>).Points[0].Y, 4);
         }
         finally
         {
@@ -1220,26 +1220,26 @@ public class KmlTest
 
         // Assert - Verify geometries match
         Assert.Equal(geometries.Count, reparsed.Count);
-        
+
         for (int i = 0; i < geometries.Count; i++)
         {
             Assert.Equal(geometries[i].Type, reparsed[i].Type);
-            
+
             // Verify coordinate count
             if (geometries[i].Type == GeometryType.Point || geometries[i].Type == GeometryType.LineString)
             {
-                Assert.Equal(geometries[i].Points.Count, reparsed[i].Points.Count);
-                
+                Assert.Equal((geometries[i] as Geometry<Point>).Points.Count, (reparsed[i] as Geometry<Point>).Points.Count);
+
                 // Verify each coordinate
-                for (int j = 0; j < geometries[i].Points.Count; j++)
+                for (int j = 0; j < (geometries[i] as Geometry<Point>).Points.Count; j++)
                 {
-                    Assert.Equal(geometries[i].Points[j].X, reparsed[i].Points[j].X, 10);
-                    Assert.Equal(geometries[i].Points[j].Y, reparsed[i].Points[j].Y, 10);
+                    Assert.Equal((geometries[i] as Geometry<Point>).Points[j].X, (reparsed[i] as Geometry<Point>).Points[j].X, 10);
+                    Assert.Equal((geometries[i] as Geometry<Point>).Points[j].Y, (reparsed[i] as Geometry<Point>).Points[j].Y, 10);
                 }
             }
             else if (geometries[i].Type == GeometryType.Polygon)
             {
-                Assert.Equal(geometries[i].Geometries.Count, reparsed[i].Geometries.Count);
+                Assert.Equal(geometries[i].GetGeometries().Count, reparsed[i].GetGeometries().Count);
             }
         }
     }
