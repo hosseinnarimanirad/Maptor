@@ -1,7 +1,7 @@
 ﻿using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives; 
 
-namespace IRI.Maptor.Ket.KmlFormat;
+namespace IRI.Maptor.Sta.KmlFormat;
 
 public static class KmlAttributeKeys
 {

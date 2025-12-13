@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Ket.KmlFormat;
+﻿using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;

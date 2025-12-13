@@ -20,7 +20,7 @@ KMZ files are ZIP archives containing KML files (typically named "doc.kml") and 
 ### Reading KMZ
 
 ```csharp
-using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -49,7 +49,7 @@ using (var stream = File.OpenRead("map.kmz"))
 ### Writing KMZ
 
 ```csharp
-using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -82,7 +82,7 @@ await KmzWriter.WriteToFileAsync(geometries, "places.kmz", "My Places");
 ### Working with Resources
 
 ```csharp
-using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat;
 
 // Add image resource to KMZ
 var imageBytes = File.ReadAllBytes("icon.png");
@@ -257,7 +257,7 @@ KMZ support builds on top of the existing KML functionality:
 ### Complete Example: Create KMZ with Image
 
 ```csharp
-using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -297,8 +297,8 @@ Console.WriteLine($"Read: {readGeometries.Count} geometries");
 
 ## Related Classes
 
-- `IRI.Maptor.Ket.KmlFormat.KmlReader` - KML file reading
-- `IRI.Maptor.Ket.KmlFormat.KmlWriter` - KML file writing
+- `IRI.Maptor.Sta.KmlFormat.KmlReader` - KML file reading
+- `IRI.Maptor.Sta.KmlFormat.KmlWriter` - KML file writing
 - `IRI.Maptor.Sta.Common.Helpers.ZipFileHelper` - ZIP archive utilities
 - `IRI.Maptor.Sta.Spatial.Primitives.Geometry<T>` - Core geometry class
 - `IRI.Maptor.Sta.Common.Primitives.Point` - Point primitive

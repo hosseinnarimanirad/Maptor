@@ -4,12 +4,12 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
-using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 
-namespace IRI.Maptor.Ket.KmlFormat;
+namespace IRI.Maptor.Sta.KmlFormat;
 
 /// <summary>
 /// KMZ Reader for parsing KMZ files (compressed KML archives) and extracting geometries

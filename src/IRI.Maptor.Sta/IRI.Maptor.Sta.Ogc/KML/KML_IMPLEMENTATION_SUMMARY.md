@@ -332,7 +332,7 @@ if (!isValid)
 
 - `IRI.Maptor.Sta.Common` - XmlHelper, Point, BoundingBox
 - `IRI.Maptor.Sta.Spatial` - Geometry classes
-- `IRI.Maptor.Ket.KmlFormat.Primitives` - Auto-generated KML types
+- `IRI.Maptor.Sta.KmlFormat.Primitives` - Auto-generated KML types
 - System libraries: Xml, Linq, IO, Threading.Tasks
 
 ## Compatibility

@@ -28,7 +28,7 @@ This module provides comprehensive KML support including:
 ### Reading KML
 
 ```csharp
-using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -57,7 +57,7 @@ var parsed = KmlReader.Parse(kmlString);
 ### Writing KML
 
 ```csharp
-using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -109,7 +109,7 @@ geometries.SaveAsKml("places.kml", "My Places");
 ### Styling with KmlStyleBuilder
 
 ```csharp
-using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat;
 
 // Create a point style
 var pointStyle = new KmlStyleBuilder()
@@ -154,8 +154,8 @@ var colorWithAlpha = KmlStyleBuilder.CreateKmlColorFromHex("#80FF0000"); // Semi
 ### Decorating Placemarks
 
 ```csharp
-using IRI.Maptor.Ket.KmlFormat;
-using IRI.Maptor.Ket.KmlFormat.Primitives;
+using IRI.Maptor.Sta.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat.Primitives;
 
 // Create placemarks
 var placemarks = new List<PlacemarkType> { /* ... */ };
@@ -200,8 +200,8 @@ string combined = KmlDecorator.DecorateWithDataAndStyle(
 
 ```csharp
 using System;
-using IRI.Maptor.Ket.KmlFormat;
-using IRI.Maptor.Ket.KmlFormat.Primitives;
+using IRI.Maptor.Sta.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat.Primitives;
 
 var timedPlacemark = new PlacemarkType { Name = "Timed Region" }
     .WithTimeSpan(DateTime.UtcNow.AddHours(-6), DateTime.UtcNow)
@@ -217,7 +217,7 @@ var timedPlacemark = new PlacemarkType { Name = "Timed Region" }
 ### Validating KML
 
 ```csharp
-using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat;
 
 // Validate KML file
 bool isValid = KmlValidator.ValidateFile("map.kml", out var errors, out var warnings);
@@ -271,7 +271,7 @@ bool coordStringValid = KmlValidator.ValidateCoordinateString("51.5074,-0.1278",
 ### Working with Features
 
 ```csharp
-using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat;
 
 // Create a feature with attributes
 var feature = new KmlFeature
@@ -323,7 +323,7 @@ geometry.SaveAsKml("path.kml", "My Path", projectToGeodeticFunc: projectToWgs84)
 ### Advanced: Folders and Organization
 
 ```csharp
-using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat;
 
 // Organize geometries into folders
 var folders = new Dictionary<string, List<Geometry<Point>>>
@@ -339,8 +339,8 @@ string kmlWithFolders = KmlWriter.ToKmlWithFolders(folders, "Geographic Data");
 ### Advanced: Shared Styles
 
 ```csharp
-using IRI.Maptor.Ket.KmlFormat;
-using IRI.Maptor.Ket.KmlFormat.Primitives;
+using IRI.Maptor.Sta.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat.Primitives;
 
 // Create shared styles
 var sharedStyles = new Dictionary<string, StyleType>
@@ -436,11 +436,11 @@ To refresh them after schema changes, run the following command from the reposit
 ```powershell
 .\tools\SchemaGenerator\XmlSchemaClassGenerator.Console.exe `
   --output "src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/KML/Generated" `
-  --namespace "http://www.opengis.net/kml/2.2=IRI.Maptor.Ket.KmlFormat.Primitives" `
-  --namespace "http://www.opengis.net/kml/2.2:deprecated=IRI.Maptor.Ket.KmlFormat.Deprecated" `
-  --namespace "http://www.google.com/kml/ext/2.2=IRI.Maptor.Ket.KmlFormat.Gx" `
-  --namespace "http://www.w3.org/2005/Atom=IRI.Maptor.Ket.KmlFormat.Atom" `
-  --namespace "urn:oasis:names:tc:ciq:xsdschema:xAL:2.0=IRI.Maptor.Ket.KmlFormat.Xal" `
+  --namespace "http://www.opengis.net/kml/2.2=IRI.Maptor.Sta.KmlFormat.Primitives" `
+  --namespace "http://www.opengis.net/kml/2.2:deprecated=IRI.Maptor.Sta.KmlFormat.Deprecated" `
+  --namespace "http://www.google.com/kml/ext/2.2=IRI.Maptor.Sta.KmlFormat.Gx" `
+  --namespace "http://www.w3.org/2005/Atom=IRI.Maptor.Sta.KmlFormat.Atom" `
+  --namespace "urn:oasis:names:tc:ciq:xsdschema:xAL:2.0=IRI.Maptor.Sta.KmlFormat.Xal" `
   .\tools\schema\kml22.local.xsd
 ```
 
@@ -450,7 +450,7 @@ The runtime validator consumes the compiled schemas embedded in `KML/Schemas` (`
 
 - `IRI.Maptor.Sta.Spatial.Primitives.Geometry<T>` - Core geometry class
 - `IRI.Maptor.Sta.Common.Primitives.Point` - Point primitive
-- `IRI.Maptor.Ket.KmlFormat.Primitives.*` - Auto-generated KML 2.2 types
+- `IRI.Maptor.Sta.KmlFormat.Primitives.*` - Auto-generated KML 2.2 types
 
 ## License
 

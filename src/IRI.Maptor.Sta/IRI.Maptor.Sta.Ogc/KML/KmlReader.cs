@@ -10,7 +10,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 
-namespace IRI.Maptor.Ket.KmlFormat;
+namespace IRI.Maptor.Sta.KmlFormat;
 
 /// <summary>
 /// KML Reader for parsing KML files and extracting geometries

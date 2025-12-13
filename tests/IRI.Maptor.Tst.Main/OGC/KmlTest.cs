@@ -1,6 +1,6 @@
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Ket.KmlFormat;
-using IRI.Maptor.Ket.KmlFormat.Primitives;
+using IRI.Maptor.Sta.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat.Primitives;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;

@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using System.Xml.Schema;
 
-namespace IRI.Maptor.Ket.KmlFormat;
+namespace IRI.Maptor.Sta.KmlFormat;
 
 /// <summary>
 /// KML Validator for validating KML content against KML 2.2 specification

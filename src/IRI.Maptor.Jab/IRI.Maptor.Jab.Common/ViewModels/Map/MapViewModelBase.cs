@@ -26,7 +26,7 @@ using IRI.Maptor.Sta.Persistence.RasterDataSources;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 using IRI.Maptor.Ket.GdiPersistence;
-using IRI.Maptor.Ket.KmlFormat;
+using IRI.Maptor.Sta.KmlFormat;
 
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Models;

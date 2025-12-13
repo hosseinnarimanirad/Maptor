@@ -1,8 +1,8 @@
 using System;
 using System.Globalization;
-using IRI.Maptor.Ket.KmlFormat.Primitives;
+using IRI.Maptor.Sta.KmlFormat.Primitives;
 
-namespace IRI.Maptor.Ket.KmlFormat;
+namespace IRI.Maptor.Sta.KmlFormat;
 
 /// <summary>
 /// Builder for creating KML styles (IconStyle, LineStyle, PolyStyle)

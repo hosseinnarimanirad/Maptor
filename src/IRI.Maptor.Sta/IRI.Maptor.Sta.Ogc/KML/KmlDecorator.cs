@@ -1,10 +1,10 @@
-﻿using IRI.Maptor.Ket.KmlFormat.Primitives;
+﻿using IRI.Maptor.Sta.KmlFormat.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IRI.Maptor.Ket.KmlFormat;
+namespace IRI.Maptor.Sta.KmlFormat;
 
 /// <summary>
 /// Helper class for decorating KML placemarks with extended data and styles
