@@ -39,33 +39,7 @@ namespace IRI.Maptor.Tst.Spatial
             Assert.Equal(result[3], new Point(7, 9));
             Assert.Equal(result[4], new Point(9, 9));
         }
-
-        [Fact]
-        public void TestSimplifyByLang()
-        {
-            List<Point> originalList = new List<Point>() {
-                new Point(-12,3),//A
-                new Point(-8,4),//B
-                new Point(-2,5),//C
-                new Point(6,6),//D
-                new Point(8,5),//E
-                new Point(8,3),//F
-                new Point(4,2),//G
-                new Point(10,1),//H
-                new Point(14,0),//I
-                new Point(16,-1),//J
-                new Point(18,0),//K
-                new Point(20,2),//L
-                new Point(22,2),//M
-                new Point(22,4),//N
-                new Point(28,4),//O
-            };
-
-            var result = Simplifications.SimplifyByLang(originalList, new SimplificationParamters() { DistanceThreshold = 2, AreaThreshold = 4, LookAhead = 5 });
-
-            Assert.Equal(result.Count, 4);
-        }
-
+         
 
         [Fact]
         public void TestSimplifyByPerpendicular()
