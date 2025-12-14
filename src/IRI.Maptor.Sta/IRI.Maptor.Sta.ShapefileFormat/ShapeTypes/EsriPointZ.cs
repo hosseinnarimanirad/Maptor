@@ -149,12 +149,36 @@ public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
     //}
 
     /// <summary>
-    /// Returs Kml representation of the point. Note: Point must be in Lat/Long System
+    /// Returs Kml representation of the point. Note: Z,M values are ignored. Point must be in Lat/Long System
     /// </summary>
     /// <returns></returns>
     public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
     {
-        throw new NotImplementedException();
+        IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType placemark = new IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType();
+
+        IRI.Maptor.Sta.KmlFormat.Primitives.PointType point = new IRI.Maptor.Sta.KmlFormat.Primitives.PointType();
+
+        Point coordinates = new Point(this.X, this.Y);
+
+        if (projectFunc != null)
+        {
+            coordinates = projectFunc(coordinates);
+        }
+
+        point.Coordinates.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", coordinates.X, coordinates.Y));
+
+        placemark.AbstractGeometryGroup = point;
+
+        if (color != null)
+        {
+            IRI.Maptor.Sta.KmlFormat.Primitives.StyleType style = new IRI.Maptor.Sta.KmlFormat.Primitives.StyleType();
+            IRI.Maptor.Sta.KmlFormat.Primitives.IconStyleType iconStyle = new IRI.Maptor.Sta.KmlFormat.Primitives.IconStyleType();
+            iconStyle.Color = color;
+            style.IconStyle = iconStyle;
+            placemark.AbstractStyleSelectorGroup.Add(style);
+        }
+
+        return placemark;
     }
 
     //public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)

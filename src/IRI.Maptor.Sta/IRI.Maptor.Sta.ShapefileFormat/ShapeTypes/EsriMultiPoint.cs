@@ -112,12 +112,48 @@ public class EsriMultiPoint : EsriPointCollection
     //}
 
     /// <summary>
-    /// Returns Kml representation of the point. Note: Point must be in Lat/Long System
+    /// Returns Kml representation of the multipoint. Note: Points must be in Lat/Long System
     /// </summary>
     /// <returns></returns>
     public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
     {
-        throw new NotImplementedException();
+        IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType placemark = new IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType();
+
+        if (this.NumberOfPoints == 0)
+        {
+            return placemark;
+        }
+
+        IRI.Maptor.Sta.KmlFormat.Primitives.MultiGeometryType multiGeometry = new IRI.Maptor.Sta.KmlFormat.Primitives.MultiGeometryType();
+
+        foreach (var point in this.Points)
+        {
+            IRI.Maptor.Sta.KmlFormat.Primitives.PointType kmlPoint = new IRI.Maptor.Sta.KmlFormat.Primitives.PointType();
+            
+            Point coordinates = new Point(point.X, point.Y);
+            
+            if (projectFunc != null)
+            {
+                coordinates = projectFunc(coordinates);
+            }
+            
+            kmlPoint.Coordinates.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", coordinates.X, coordinates.Y));
+            
+            multiGeometry.AbstractGeometryGroup.Add(kmlPoint);
+        }
+
+        placemark.AbstractGeometryGroup = multiGeometry;
+
+        if (color != null)
+        {
+            IRI.Maptor.Sta.KmlFormat.Primitives.StyleType style = new IRI.Maptor.Sta.KmlFormat.Primitives.StyleType();
+            IRI.Maptor.Sta.KmlFormat.Primitives.IconStyleType iconStyle = new IRI.Maptor.Sta.KmlFormat.Primitives.IconStyleType();
+            iconStyle.Color = color;
+            style.IconStyle = iconStyle;
+            placemark.AbstractStyleSelectorGroup.Add(style);
+        }
+
+        return placemark;
     }
 
     //public override string AsKml(Func<Point, Point> projectToGeodeticFunc = null)

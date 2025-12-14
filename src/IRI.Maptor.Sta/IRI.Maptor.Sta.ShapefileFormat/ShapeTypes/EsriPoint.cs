@@ -159,11 +159,18 @@ public class EsriPoint : EsriShapeBase, IPoint
 
         point.Coordinates.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", coordinates.X, coordinates.Y));
 
-        //placemark.AbstractFeatureObjectExtensionGroup = new IRI.Maptor.Sta.KmlFormat.Primitives.AbstractObjectType[] { point };
         placemark.AbstractGeometryGroup = point;
 
-        return placemark;
+        if (color != null)
+        {
+            IRI.Maptor.Sta.KmlFormat.Primitives.StyleType style = new IRI.Maptor.Sta.KmlFormat.Primitives.StyleType();
+            IRI.Maptor.Sta.KmlFormat.Primitives.IconStyleType iconStyle = new IRI.Maptor.Sta.KmlFormat.Primitives.IconStyleType();
+            iconStyle.Color = color;
+            style.IconStyle = iconStyle;
+            placemark.AbstractStyleSelectorGroup.Add(style);
+        }
 
+        return placemark;
     }
 
     //public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
