@@ -7,7 +7,7 @@ using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public class EsriShapeCollection<T> : List<T>, IEsriShapeCollection where T : IEsriShape
+public class EsriShapeCollection<T> : List<T>, IEsriShapeCollection where T : EsriShapeBase
 {
     private MainFileHeader mainHeader;
 
@@ -30,7 +30,7 @@ public class EsriShapeCollection<T> : List<T>, IEsriShapeCollection where T : IE
 
     public EsriShapeCollection(IEnumerable<T> values)
     {
-        if (typeof(T) is IEsriPointsWithMeasure)
+        if (typeof(T) is EsriPointMCollection)
         {
             throw new NotImplementedException();
         }
@@ -56,11 +56,11 @@ public class EsriShapeCollection<T> : List<T>, IEsriShapeCollection where T : IE
       
     #region IShapeCollection Members
 
-    public new IEsriShape this[int index]
+    public new EsriShapeBase this[int index]
     {
         get
         {
-            return (IEsriShape)base[index];
+            return (EsriShapeBase)base[index];
         }
         set
         {
@@ -95,7 +95,7 @@ public class EsriShapeCollection<T> : List<T>, IEsriShapeCollection where T : IE
 
     #region IEnumerable<IShape> Members
 
-    public new IEnumerator<IEsriShape> GetEnumerator()
+    public new IEnumerator<EsriShapeBase> GetEnumerator()
     {
         for (int i = 0; i < this.Count; i++)
         {

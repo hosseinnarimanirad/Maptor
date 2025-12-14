@@ -16,7 +16,7 @@ using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public class EsriPolyline : IEsriSimplePoints
+public class EsriPolyline : EsriPointCollection
 {
     //public int Srid { get; set; }
 
@@ -274,7 +274,7 @@ public class EsriPolyline : IEsriSimplePoints
     //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
     //}
 
-    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
+    public override EsriShapeBase Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         return new EsriPolyline(this.Points.Select(i => i.Transform(transform, newSrid)).Cast<EsriPoint>().ToArray(), this.Parts);
     }

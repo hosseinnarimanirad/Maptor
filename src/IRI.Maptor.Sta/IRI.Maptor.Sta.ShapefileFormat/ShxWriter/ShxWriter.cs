@@ -16,7 +16,7 @@ internal static class ShxWriter
 
         int offset = 50;
 
-        foreach (IEsriShape item in shapes)
+        foreach (EsriShapeBase item in shapes)
         {
             shxWriter.Write(WriteHeaderToByte(offset, item.ContentLength), 0, 2 * ShapeConstants.IntegerSize);
 

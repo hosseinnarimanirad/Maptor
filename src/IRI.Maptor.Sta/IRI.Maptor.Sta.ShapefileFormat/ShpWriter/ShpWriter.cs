@@ -73,7 +73,7 @@ public static class ShpWriter
         return result.ToArray();
     }
 
-    internal static byte[] WriteHeaderToByte(int recordNumber, IEsriShape shape)
+    internal static byte[] WriteHeaderToByte(int recordNumber, EsriShapeBase shape)
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
 
@@ -84,7 +84,7 @@ public static class ShpWriter
         return result.ToArray();
     }
 
-    internal static byte[] WriteBoundingBoxToByte(IEsriSimplePoints shape)
+    internal static byte[] WriteBoundingBoxToByte(EsriPointCollection shape)
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
 

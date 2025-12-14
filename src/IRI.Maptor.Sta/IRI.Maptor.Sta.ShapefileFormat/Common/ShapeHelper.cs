@@ -11,7 +11,7 @@ namespace IRI.Maptor.Sta.ShapefileFormat;
 
 static class ShapeHelper
 {
-    internal static List<Point> GetPoints(IEsriSimplePoints shape, int startIndex)
+    internal static List<Point> GetPoints(EsriPointCollection shape, int startIndex)
     {
         int partNumber = Array.IndexOf(shape.Parts, startIndex);
 
@@ -37,7 +37,7 @@ static class ShapeHelper
         return result;
     }
 
-    internal static EsriPoint[] GetEsriPoints(IEsriSimplePoints shape, int startIndex)
+    internal static EsriPoint[] GetEsriPoints(EsriPointCollection shape, int startIndex)
     {
         int partNumber = Array.IndexOf(shape.Parts, startIndex);
 
@@ -52,7 +52,7 @@ static class ShapeHelper
         return result;
     }
 
-    internal static double[] GetMeasures(IEsriPointsWithMeasure shape, int startIndex)
+    internal static double[] GetMeasures(EsriPointMCollection shape, int startIndex)
     {
         int partNumber = Array.IndexOf(shape.Parts, startIndex);
 
@@ -67,7 +67,7 @@ static class ShapeHelper
         return result;
     }
 
-    internal static double[] GetZValues(IEsriPointsWithZ shape, int startIndex)
+    internal static double[] GetZValues(EsriPointZCollection shape, int startIndex)
     {
         int partNumber = Array.IndexOf(shape.Parts, startIndex);
 

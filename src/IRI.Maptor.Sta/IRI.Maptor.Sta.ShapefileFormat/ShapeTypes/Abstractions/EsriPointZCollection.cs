@@ -1,7 +1,7 @@
 ﻿using System;
 namespace IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
-public abstract class IEsriPointsWithZ : IEsriPointsWithMeasure
+public abstract class EsriPointZCollection : EsriPointMCollection
 {
     //double MaxZ { get; }
     //double MinZ { get; }

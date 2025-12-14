@@ -72,7 +72,7 @@ public static class ShapefileExtention
     {
         List<EsriPoint> result = new List<EsriPoint>();
 
-        foreach (IEsriSimplePoints shape in shapes)
+        foreach (EsriPointCollection shape in shapes)
         {
             result.AddRange(shape.Points);
         }
@@ -97,7 +97,7 @@ public static class ShapefileExtention
         return result;
     }
 
-    public static SqlGeometry AsSqlGeometry(this IEsriShape shape)
+    public static SqlGeometry AsSqlGeometry(this EsriShapeBase shape)
     {
         //try
         //{
@@ -128,19 +128,19 @@ public static class ShapefileExtention
                 case EsriShapeType.EsriMultiPoint:
                 case EsriShapeType.EsriMultiPointM:
                 case EsriShapeType.EsriMultiPointZM:
-                    WriteEsriMultiPoint(builder, (IEsriSimplePoints)shape);
+                    WriteEsriMultiPoint(builder, (EsriPointCollection)shape);
                     break;
 
                 case EsriShapeType.EsriPolyLine:
                 case EsriShapeType.EsriPolyLineM:
                 case EsriShapeType.EsriPolyLineZM:
-                    WriteEsriPolyline(builder, (IEsriSimplePoints)shape);
+                    WriteEsriPolyline(builder, (EsriPointCollection)shape);
                     break;
 
                 case EsriShapeType.EsriPolygon:
                 case EsriShapeType.EsriPolygonM:
                 case EsriShapeType.EsriPolygonZM:
-                    WriteEsriPolygon(builder, (IEsriSimplePoints)shape);
+                    WriteEsriPolygon(builder, (EsriPointCollection)shape);
                     break;
 
                 case EsriShapeType.EsriMultiPatch:
@@ -205,7 +205,7 @@ public static class ShapefileExtention
         builder.EndGeometry();
     }
 
-    private static void WriteEsriMultiPoint(SqlGeometryBuilder builder, IEsriSimplePoints points)
+    private static void WriteEsriMultiPoint(SqlGeometryBuilder builder, EsriPointCollection points)
     {
         builder.BeginGeometry(OpenGisGeometryType.MultiPoint);
 
@@ -217,7 +217,7 @@ public static class ShapefileExtention
         builder.EndGeometry();
     }
 
-    private static void WriteEsriPolyline(SqlGeometryBuilder builder, IEsriSimplePoints points)
+    private static void WriteEsriPolyline(SqlGeometryBuilder builder, EsriPointCollection points)
     {
         if (points.NumberOfParts == 1)
         {
@@ -249,7 +249,7 @@ public static class ShapefileExtention
         }
     }
 
-    private static void WriteEsriPolygon(SqlGeometryBuilder builder, IEsriSimplePoints points)
+    private static void WriteEsriPolygon(SqlGeometryBuilder builder, EsriPointCollection points)
     {
         if (points.NumberOfParts == 1)
         {

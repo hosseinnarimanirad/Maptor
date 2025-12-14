@@ -16,7 +16,7 @@ public static class GeometryExtensions
 {
     #region Geometry > Esri Shape
 
-    public static IEsriShape? AsEsriShape<T>(this Geometry<T> geometry, int? srid = null, Func<IPoint, IPoint> mapFunction = null) where T : IPoint, new()
+    public static EsriShapeBase? AsEsriShape<T>(this Geometry<T> geometry, int? srid = null, Func<IPoint, IPoint> mapFunction = null) where T : IPoint, new()
     {
         if (geometry.IsNullOrEmpty())
             return null;

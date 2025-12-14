@@ -5,11 +5,11 @@ using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public interface IEsriShapeCollection : IEnumerable<IEsriShape>
+public interface IEsriShapeCollection : IEnumerable<EsriShapeBase>
 {
     MainFileHeader MainHeader { get; }
 
-    IEsriShape this[int index] { get; set; }
+    EsriShapeBase this[int index] { get; set; }
 
     int Count { get; }
 

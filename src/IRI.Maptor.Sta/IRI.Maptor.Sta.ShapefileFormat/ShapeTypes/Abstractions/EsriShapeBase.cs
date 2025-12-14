@@ -12,7 +12,7 @@ using IRI.Maptor.Sta.KmlFormat.Primitives;
 namespace IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
 
-public abstract class IEsriShape
+public abstract class EsriShapeBase
 {
 
     public abstract BoundingBox MinimumBoundingBox { get; } 
@@ -45,7 +45,7 @@ public abstract class IEsriShape
         return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
     }
 
-    public abstract IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid);
+    public abstract EsriShapeBase Transform(Func<IPoint, IPoint> transform, int newSrid);
 
     public abstract Geometry<Point> AsGeometry();
 }

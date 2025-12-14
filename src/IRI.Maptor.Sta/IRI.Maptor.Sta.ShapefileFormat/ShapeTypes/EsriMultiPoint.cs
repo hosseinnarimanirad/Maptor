@@ -13,7 +13,7 @@ using IRI.Maptor.Sta.Common.Abstrations;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public class EsriMultiPoint : IEsriSimplePoints
+public class EsriMultiPoint : EsriPointCollection
 {
     //public int Srid { get; set; }
 
@@ -125,7 +125,7 @@ public class EsriMultiPoint : IEsriSimplePoints
     //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
     //}
 
-    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid) 
+    public override EsriShapeBase Transform(Func<IPoint, IPoint> transform, int newSrid) 
     {
         return new EsriMultiPoint(this.Points.Select(i => i.Transform(transform, newSrid)).Cast<EsriPoint>().ToArray());
     }

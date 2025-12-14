@@ -6,7 +6,7 @@ using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
-public abstract class IEsriSimplePoints : IEsriShape
+public abstract class EsriPointCollection : EsriShapeBase
 {
     protected BoundingBox boundingBox;
     public override BoundingBox MinimumBoundingBox => boundingBox;

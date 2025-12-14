@@ -124,7 +124,7 @@ public class ShapefileDataSource : MemoryDataSource
 
     public override void SaveChanges()
     {
-        Func<Feature<Point>, IEsriShape> geometryMap = null;
+        Func<Feature<Point>, EsriShapeBase> geometryMap = null;
 
         //save shp, shx, dbf, prj, cpg
 

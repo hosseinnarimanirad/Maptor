@@ -14,7 +14,7 @@ using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public class EsriPointZ : IEsriShape, IPoint, IHasZ
+public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
 {
     private double x, y, z, measure;
 
@@ -162,7 +162,7 @@ public class EsriPointZ : IEsriShape, IPoint, IHasZ
     //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
     //}
 
-    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
+    public override EsriShapeBase Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         var result = transform(this);
 

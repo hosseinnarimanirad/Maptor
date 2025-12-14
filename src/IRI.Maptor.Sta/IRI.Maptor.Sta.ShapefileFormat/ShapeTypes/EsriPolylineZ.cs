@@ -17,7 +17,7 @@ using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public class EsriPolylineZ : IEsriPointsWithZ
+public class EsriPolylineZ : EsriPointZCollection
 {
     //public int Srid { get; set; }
 
@@ -309,7 +309,7 @@ public class EsriPolylineZ : IEsriPointsWithZ
     //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
     //}
 
-    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
+    public override EsriShapeBase Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         return new EsriPolylineZ(this.Points.Select(i => i.Transform(transform, newSrid)).Cast<EsriPoint>().ToArray(), this.Parts, this.ZValues, this.Measures);
     }

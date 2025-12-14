@@ -9,7 +9,7 @@ using System.Text;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.Reader;
 
-public abstract class zReader<T> : MeasuresReader<T> where T : IEsriShape
+public abstract class zReader<T> : MeasuresReader<T> where T : EsriShapeBase
 {
     public zReader(string fileName, EsriShapeType type, int srid)
         : base(fileName, type, srid)

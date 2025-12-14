@@ -13,7 +13,7 @@ using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public class EsriMultiPointZ : IEsriPointsWithZ
+public class EsriMultiPointZ : EsriPointZCollection
 {
     //public int Srid { get; set; }
 
@@ -282,7 +282,7 @@ public class EsriMultiPointZ : IEsriPointsWithZ
     //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
     //}
 
-    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
+    public override EsriShapeBase Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         return new EsriMultiPointZ(this.Points.Select(i => i.Transform(transform, newSrid)).Cast<EsriPoint>().ToArray(), this.ZValues, this.Measures);
     }

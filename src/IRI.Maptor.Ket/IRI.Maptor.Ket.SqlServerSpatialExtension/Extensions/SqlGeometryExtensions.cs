@@ -619,7 +619,7 @@ public static class SqlGeometryExtensions
         }
     }
 
-    public static IEsriShape AsEsriShape(this SqlGeometry geometry, Func<IPoint, IPoint> mapFunction = null)
+    public static EsriShapeBase AsEsriShape(this SqlGeometry geometry, Func<IPoint, IPoint> mapFunction = null)
     {
         //if (geometry.IsNotValidOrEmpty())
         //{

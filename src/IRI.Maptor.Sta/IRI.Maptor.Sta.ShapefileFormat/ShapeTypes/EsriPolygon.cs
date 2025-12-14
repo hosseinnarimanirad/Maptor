@@ -26,7 +26,7 @@ namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 // Vertices of rings defining holes in polygons are in a counterclockwise direction.
 // Vertices for a single, ringed polygon are, therefore, always in clockwise order.
 // The rings of a polygon are referred to as its parts.
-public class EsriPolygon : IEsriSimplePoints
+public class EsriPolygon : EsriPointCollection
 {
     //public int Srid { get; set; }
 
@@ -212,7 +212,7 @@ public class EsriPolygon : IEsriSimplePoints
     //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
     //}
 
-    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
+    public override EsriShapeBase Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         return new EsriPolygon(this.Points.Select(i => i.Transform(transform, newSrid)).Cast<EsriPoint>().ToArray(), this.Parts);
     }

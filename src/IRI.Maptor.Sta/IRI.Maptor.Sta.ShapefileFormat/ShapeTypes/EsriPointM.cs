@@ -14,7 +14,7 @@ using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
 
-public class EsriPointM : IEsriShape, IPoint, IHasM
+public class EsriPointM : EsriShapeBase, IPoint, IHasM
 {
     private double x, y, measure;
 
@@ -140,7 +140,7 @@ public class EsriPointM : IEsriShape, IPoint, IHasM
         return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17} {1:G17} {2:G17}", this.X, this.Y, this.M);
     }
 
-    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid)
+    public override EsriShapeBase Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         var result = transform(this);
 

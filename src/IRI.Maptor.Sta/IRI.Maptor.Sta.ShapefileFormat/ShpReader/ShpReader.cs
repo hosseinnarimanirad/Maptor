@@ -10,7 +10,7 @@ using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.Reader;
 
-public abstract class ShpReader<T> : IEnumerable<T> where T : IEsriShape
+public abstract class ShpReader<T> : IEnumerable<T> where T : EsriShapeBase
 {
     //private string directoryName;
 

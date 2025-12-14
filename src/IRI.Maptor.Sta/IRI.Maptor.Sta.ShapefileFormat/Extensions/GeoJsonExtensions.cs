@@ -15,7 +15,7 @@ public static class GeoJsonExtensions
 {
     #region IGeoJsonGeometry > Esri Shape
 
-    public static IEsriShape AsEsriShape(this IGeoJsonGeometry geometry, bool isLongitudeFirst = true, int srid = 0, Func<IPoint, IPoint> mapFunction = null)
+    public static EsriShapeBase AsEsriShape(this IGeoJsonGeometry geometry, bool isLongitudeFirst = true, int srid = 0, Func<IPoint, IPoint> mapFunction = null)
     {
         //var type = geometry.GeometryType;
         //if (geometry.IsNullOrEmpty())

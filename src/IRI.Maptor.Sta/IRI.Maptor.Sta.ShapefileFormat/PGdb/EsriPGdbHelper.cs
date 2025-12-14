@@ -8,7 +8,7 @@ namespace IRI.Maptor.Sta.PersonalGdb;
 
 public static class EsriPGdbHelper
 {
-    public static IEsriShape ParseToEsriShape(byte[] bytes, int srid)
+    public static EsriShapeBase ParseToEsriShape(byte[] bytes, int srid)
     {
         if (bytes is null)
             return null;

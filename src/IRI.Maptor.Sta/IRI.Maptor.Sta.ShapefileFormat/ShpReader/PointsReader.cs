@@ -10,7 +10,7 @@ using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.Reader;
 
-public abstract class PointsReader<T> : ShpReader<T> where T : IEsriShape
+public abstract class PointsReader<T> : ShpReader<T> where T : EsriShapeBase
 {
     public PointsReader(string fileName, EsriShapeType type, int srid)
         : base(fileName, type, srid)

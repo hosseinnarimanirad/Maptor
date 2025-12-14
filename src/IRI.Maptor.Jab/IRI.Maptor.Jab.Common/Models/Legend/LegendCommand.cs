@@ -407,7 +407,7 @@ public class LegendCommand : LegendCommandBase
 
                 var esriShape = layer.Geometry.AsEsriShape();
 
-                IRI.Maptor.Sta.ShapefileFormat.Shapefile.Save(file, new List<IEsriShape>() { esriShape }, true, true);
+                IRI.Maptor.Sta.ShapefileFormat.Shapefile.Save(file, new List<EsriShapeBase>() { esriShape }, true, true);
             }
             catch (Exception ex)
             {

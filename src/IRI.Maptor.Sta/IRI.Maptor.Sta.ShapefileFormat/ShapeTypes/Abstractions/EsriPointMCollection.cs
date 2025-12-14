@@ -3,7 +3,7 @@ using System;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
-public abstract class IEsriPointsWithMeasure : IEsriSimplePoints
+public abstract class EsriPointMCollection : EsriPointCollection
 {
     //double MaxMeasure { get; }
     //double[] Measures { get; }

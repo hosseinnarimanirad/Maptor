@@ -126,12 +126,12 @@ public static class Shapefile
     }
 
 
-    public static Task<List<T>> ReadAsync<T>(string shpFileName, Func<Dictionary<string, object>, IEsriShape, T> mapFunc, bool correctFarsiCharacters = true, Encoding dataEncoding = null, int? defaultSrid = null, Encoding headerEncoding = null)
+    public static Task<List<T>> ReadAsync<T>(string shpFileName, Func<Dictionary<string, object>, EsriShapeBase, T> mapFunc, bool correctFarsiCharacters = true, Encoding dataEncoding = null, int? defaultSrid = null, Encoding headerEncoding = null)
     {
         return Task.Run(() => { return Read(shpFileName, mapFunc, correctFarsiCharacters, dataEncoding, defaultSrid, headerEncoding); });
     }
 
-    public static List<T> Read<T>(string shpFileName, Func<Dictionary<string, object>, IEsriShape, T> mapFunc, bool correctFarsiCharacters = true, Encoding dataEncoding = null, int? defaultSrid = null, Encoding headerEncoding = null)
+    public static List<T> Read<T>(string shpFileName, Func<Dictionary<string, object>, EsriShapeBase, T> mapFunc, bool correctFarsiCharacters = true, Encoding dataEncoding = null, int? defaultSrid = null, Encoding headerEncoding = null)
     {
         var shapes = ReadShapes(shpFileName, defaultSrid);
 
@@ -309,7 +309,7 @@ public static class Shapefile
 
     #region Write (Save) Shapefile 
 
-    public static void Save(string shpFileName, IEnumerable<IEsriShape> shapes, bool createDbf = false, bool overwrite = false, SrsBase srs = null)
+    public static void Save(string shpFileName, IEnumerable<EsriShapeBase> shapes, bool createDbf = false, bool overwrite = false, SrsBase srs = null)
     {
         if (shapes.IsNullOrEmpty())
         {
@@ -323,7 +323,7 @@ public static class Shapefile
             System.IO.Directory.CreateDirectory(directory);
         }
 
-        IEsriShapeCollection collection = new EsriShapeCollection<IEsriShape>(shapes);
+        IEsriShapeCollection collection = new EsriShapeCollection<EsriShapeBase>(shapes);
 
         EsriShapeType shapeType = shapes.First().EsriType;
 
@@ -331,7 +331,7 @@ public static class Shapefile
         {
             int recordNumber = 0;
 
-            foreach (IEsriShape item in shapes)
+            foreach (EsriShapeBase item in shapes)
             {
                 featureWriter.Write(ShpWriter.WriteHeaderToByte(++recordNumber, item), 0, 2 * ShapeConstants.IntegerSize);
 
@@ -409,7 +409,7 @@ public static class Shapefile
 
     public static void Save<T>(string shpFileName,
                                   IEnumerable<T> values,
-                                  Func<T, IEsriShape> geometryMap,
+                                  Func<T, EsriShapeBase> geometryMap,
                                   List<ObjectToDbfTypeMap<T>> attributeMappings,
                                   Encoding encoding,
                                   SrsBase srs,
@@ -452,14 +452,14 @@ public static class Shapefile
     //    //DbfFile.Write(GetDbfFileName(shpFileName), values, attributeMappings.Select(m => m.MapFunction).ToList(), attributeMappings.Select(m => m.FieldType).ToList(), encoding, overwrite);
     //}
 
-    public static void SaveAsShapefile(string shpFileName, IEnumerable<IEsriShape> data, bool createEmptyDbf, SrsBase srs, bool overwrite = false)
+    public static void SaveAsShapefile(string shpFileName, IEnumerable<EsriShapeBase> data, bool createEmptyDbf, SrsBase srs, bool overwrite = false)
     {
         Save(shpFileName, data, createEmptyDbf, overwrite, srs);
 
         //SaveAsPrj(shpFileName, crs, overwrite);
     }
 
-    public static void SaveAsShapefile<T>(string shpFileName, IEnumerable<T> data, Func<T, IEsriShape> map, bool createEmptyDbf, SrsBase srs, bool overwrite = false)
+    public static void SaveAsShapefile<T>(string shpFileName, IEnumerable<T> data, Func<T, EsriShapeBase> map, bool createEmptyDbf, SrsBase srs, bool overwrite = false)
     {
         Save(shpFileName, data.Select(t => map(t)), createEmptyDbf, overwrite, srs);
 
@@ -535,12 +535,12 @@ public static class Shapefile
     //    return result;
     //}
 
-    public static Task<List<IEsriShape>> ProjectAsync(string shpFileName, SrsBase targetSrs)
+    public static Task<List<EsriShapeBase>> ProjectAsync(string shpFileName, SrsBase targetSrs)
     {
         return Task.Run(() => Project(shpFileName, targetSrs));
     }
 
-    public static List<IEsriShape> Project(string shpFileName, SrsBase targetSrs)
+    public static List<EsriShapeBase> Project(string shpFileName, SrsBase targetSrs)
     {
         var sourcePrj = GetPrjFileName(shpFileName);
 
@@ -583,7 +583,7 @@ public static class Shapefile
         //return result;
     }
 
-    public static List<IEsriShape> Project(List<IEsriShape> values, string sourceEsriWktPrj, string targetEsriWktPrj) /*where TEsriPoint : IPoint, new()*/
+    public static List<EsriShapeBase> Project(List<EsriShapeBase> values, string sourceEsriWktPrj, string targetEsriWktPrj) /*where TEsriPoint : IPoint, new()*/
     {
         var sourceSrs = EsriPrjFile.Parse(sourceEsriWktPrj).AsMapProjection();
 
@@ -592,9 +592,9 @@ public static class Shapefile
         return Project(values, sourceSrs, targetSrs);
     }
 
-    public static List<IEsriShape> Project(List<IEsriShape> values, SrsBase sourceSrs, SrsBase targetSrs) /*where TEsriPoint : IPoint, new()*/
+    public static List<EsriShapeBase> Project(List<EsriShapeBase> values, SrsBase sourceSrs, SrsBase targetSrs) /*where TEsriPoint : IPoint, new()*/
     {
-        List<IEsriShape> result = new List<IEsriShape>(values.Count);
+        List<EsriShapeBase> result = new List<EsriShapeBase>(values.Count);
 
         if (sourceSrs.Ellipsoid.AreTheSame(targetSrs.Ellipsoid))
         {

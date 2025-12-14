@@ -13,7 +13,7 @@ using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
 
-public class EsriPoint : IEsriShape, IPoint
+public class EsriPoint : EsriShapeBase, IPoint
 {
     private double x, y;
 
@@ -180,7 +180,7 @@ public class EsriPoint : IEsriShape, IPoint
     //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
     //}
 
-    public override IEsriShape Transform(Func<IPoint, IPoint> transform, int newSrid) /*where TPoint : IPoint, new()*/
+    public override EsriShapeBase Transform(Func<IPoint, IPoint> transform, int newSrid) /*where TPoint : IPoint, new()*/
     {
         var result = transform(this);
 
