@@ -12,24 +12,35 @@ public class SpatialReferenceItem : Notifier, IDisposable
     const string defaultXLabel = "X";
     const string defaultYLabel = "Y";
 
-    private Func<Point, Point> _fromWgs84Geodetic;
+    //private Func<Point, Point> _fromWgs84Geodetic;
 
-    private Func<double, string> _toString;
+    //private Func<double, string> _toString;
+    private CoordinateDisplayMode _coordinateDisplayMode;
+    public CoordinateDisplayMode CoordinateDisplayMode
+    {
+        get { return _coordinateDisplayMode; }
+        set
+        {
+            _coordinateDisplayMode = value;
+            RaisePropertyChanged();
+        }
+    }
+
 
     public Action<SpatialReferenceItem> FireIsSelectedChanged;
 
     public SpatialReferenceItem(
-        Func<Point, Point> fromWgs84Geodetic,
-        Func<double, string> toString,
+        //Func<Point, Point> fromWgs84Geodetic,
+        CoordinateDisplayMode coordinateDisplayMode,
         string titleItemResourceKey,
         string subTitleItemResourceKey,
         string xLabelResourceKey,
         string yLabelResourceKey,
         string? zoneItemResourceKey = "")
     {
-        this._fromWgs84Geodetic = fromWgs84Geodetic;
+        //this._fromWgs84Geodetic = fromWgs84Geodetic;
 
-        this._toString = toString;
+        this.CoordinateDisplayMode = coordinateDisplayMode;
 
         this.TitleItemResourceKey = titleItemResourceKey;
 
@@ -53,18 +64,22 @@ public class SpatialReferenceItem : Notifier, IDisposable
         RaisePropertyChanged(nameof(YLabelItem));
     }
 
-    public IPoint FromWgs84Geodetic(Point geodeticPoint)
-    {
-        return _fromWgs84Geodetic(geodeticPoint);
-    }
+    //public Point FromWgs84Geodetic(Point geodeticPoint)
+    //{
+    //    return _fromWgs84Geodetic(geodeticPoint);
+    //}
 
     public void Update(Point geodeticPoint)
     {
-        var point = _fromWgs84Geodetic(geodeticPoint);
+        //var point = _fromWgs84Geodetic(geodeticPoint);
 
-        this.XValue = _toString(point.X);
+        var format = CoordinateHelper.Format(MapProjects.GeodeticWgs84ToWebMercator(geodeticPoint), CoordinateDisplayMode, null, 6, 3, null);
 
-        this.YValue = _toString(point.Y);
+        //this.XValue = _toString(point.X);
+        //this.YValue = _toString(point.Y);
+
+        this.XValue = format.x;
+        this.YValue = format.y;
 
         this.ZoneNumber = MapProjects.FindUtmZone(geodeticPoint.X).ToString();
 
@@ -179,16 +194,23 @@ public class SpatialReferenceItem : Notifier, IDisposable
     }
 
 
-    public string GetPositionString(Point geodeticPoint) //where T : IPoint, new()
-    {
-        var point = FromWgs84Geodetic(geodeticPoint);
+    //public string GetPositionString(Point geodeticPoint) //where T : IPoint, new()
+    //{
+    //    var point = _fromWgs84Geodetic(geodeticPoint);
 
-        var x = _toString(point.X);
+    //    //var point = FromWgs84Geodetic(geodeticPoint);
 
-        var y = _toString(point.Y);
 
-        return $"{x},{y}";
-    }
+    //    //var x = _toString(point.X);
+
+    //    //var y = _toString(point.Y);
+
+    //    //return $"{x},{y}";
+
+    //    var format = CoordinateHelper.Format(MapProjects.GeodeticWgs84ToWebMercator(point), _coordinateDisplayMode, null, 6, 3, null);
+
+    //    return $"{format.x}, {format.y}";
+    //}
 
     #region IDispose
 

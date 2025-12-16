@@ -58,8 +58,8 @@ public class CoordinatePanelViewModel : Notifier
         }
     }
 
-    public string GetCurrentPosstionString(Sta.Common.Primitives.Point geodeticPoint)
-    {
-        return SelectedItem?.GetPositionString(geodeticPoint);
-    }
+    //public string GetCurrentPosstionString(Sta.Common.Primitives.Point geodeticPoint)
+    //{
+    //    return SelectedItem?.GetPositionString(geodeticPoint);
+    //}
 }
