@@ -170,6 +170,8 @@ public abstract class MapViewModelBase : ViewModelBase
                 {
                     ZoomToExtent(g.GetBoundingBox(), isExactExtent: false, isNewExtent: true);
                 };
+
+                _currentEditingLayer.RequestGetCoordinateDisplayMode = () => this.MapPanel.SpatialReference;
             }
 
         }
@@ -2812,7 +2814,7 @@ public abstract class MapViewModelBase : ViewModelBase
             if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
                 throw new FileNotFoundException($"DXF file '{fileName}' was not found.", fileName);
 
-            var geometries = DxfReader.ReadFromFile(fileName, SridHelper.GeodeticWGS84);
+            var geometries = DxfReader.ReadFromFile(fileName, null);
 
             if (geometries == null || geometries.IsNullOrEmpty())
             {

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Windows.Input;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
@@ -57,18 +58,29 @@ public partial class CoordinateMarker : MapMarker
     }
 
 
-    public CoordinateMarker(Locateable locateable)
+    public CoordinateMarker(Locateable locateable, CoordinateDisplayMode? initialMode)
     {
         InitializeComponent();
 
-        this.CurrentCoordinateDisplayMode = CoordinateDisplayMode.GeodeticDecimal;
+        this.CurrentCoordinateDisplayMode = initialMode ?? CoordinateDisplayMode.GeodeticDecimal;
 
         this.WebMercatorLocation = locateable;
+
+        try
+        {
+            counter = availableDisplayModes.IndexOf(CurrentCoordinateDisplayMode);
+        }
+        catch (System.Exception) { }
     }
+
+    List<CoordinateDisplayMode> availableDisplayModes = [CoordinateDisplayMode.GeodeticDecimal, CoordinateDisplayMode.GeodeticDms, CoordinateDisplayMode.UTM];
+
+    int counter = 0;
 
     private void changeCoordinate(object sender, MouseButtonEventArgs e)
     {
-        CurrentCoordinateDisplayMode = (CoordinateDisplayMode)(((int)CurrentCoordinateDisplayMode + 1) % 4);
+        //CurrentCoordinateDisplayMode = (CoordinateDisplayMode) (((int)CurrentCoordinateDisplayMode + 1) % 4);
+        CurrentCoordinateDisplayMode = availableDisplayModes[counter++ % availableDisplayModes.Count];
 
         //UpdateCoordinates();
     }

@@ -24,62 +24,66 @@ public class CoordinateDisplayConverter : IMultiValueConverter
 
         // Convert Web Mercator to selected SRS
         var webMercatorPoint = new Point(locateable.X, locateable.Y);
-        var geodetic = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
+        //var geodetic = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
 
 
-        int utmZone = (values.Length > 2 && values[2] is int zone) ? zone : MapProjects.FindUtmZone(geodetic.X);
+        int? utmZone = (values.Length > 2 && values[2] is int zone) ? zone : null;
 
-        int latLongPrecision = (values.Length > 2 && values[3] is int llPrec) ? llPrec : 5;
+        int? latLongPrecision = (values.Length > 2 && values[3] is int llPrec) ? llPrec : null;
 
-        int xyPrecision = (values.Length > 2 && values[4] is int xyPrec) ? xyPrec : 2;
+        int? xyPrecision = (values.Length > 2 && values[4] is int xyPrec) ? xyPrec : null;
 
-        Ellipsoid ellipsoid = (values.Length > 2 && values[5] is Ellipsoid e) ? e : Ellipsoids.WGS84;
+        Ellipsoid? ellipsoid = (values.Length > 2 && values[5] is Ellipsoid e) ? e : null;
 
         bool isX = parameter?.ToString()?.ToUpper() == "X";
 
-        double coordinateValue;
+        //double coordinateValue;
 
-        try
-        {
-            switch (srsType)
-            {
-                case CoordinateDisplayMode.UTM:
-                    // UTM always uses WGS84 ellipsoid 
-                    var utmPoint = MapProjects.GeodeticToUTM(geodetic, Ellipsoids.WGS84, utmZone, geodetic.Y > 0);
-                    coordinateValue = isX ? utmPoint.X : utmPoint.Y;
-                    return FormatWithPrecision(coordinateValue, xyPrecision);
+        var format = CoordinateHelper.Format(webMercatorPoint, srsType, utmZone, latLongPrecision, xyPrecision, ellipsoid);
 
-                case CoordinateDisplayMode.WebMercator:
-                    coordinateValue = isX ? webMercatorPoint.X : webMercatorPoint.Y;
-                    return FormatWithPrecision(coordinateValue, xyPrecision);
+        return isX ? format.x : format.y;
 
-                case CoordinateDisplayMode.GeodeticDecimal:
-                case CoordinateDisplayMode.GeodeticDms:
-                    // If ellipsoid is not WGS84, convert to selected ellipsoid
-                    if (!ellipsoid.AreTheSame(Ellipsoids.WGS84))
-                    {
-                        var convertedGeodetic = Transformations.ChangeDatum(geodetic, Ellipsoids.WGS84, ellipsoid);
-                        coordinateValue = isX ? convertedGeodetic.X : convertedGeodetic.Y;
-                    }
-                    else
-                    {
-                        coordinateValue = isX ? geodetic.X : geodetic.Y;
-                    }
+        //try
+        //{
+        //    switch (srsType)
+        //    {
+        //        case CoordinateDisplayMode.UTM:
+        //            // UTM always uses WGS84 ellipsoid 
+        //            var utmPoint = MapProjects.GeodeticToUTM(geodetic, Ellipsoids.WGS84, utmZone, geodetic.Y > 0);
+        //            coordinateValue = isX ? utmPoint.X : utmPoint.Y;
+        //            return FormatWithPrecision(coordinateValue, xyPrecision);
 
-                    if (srsType == CoordinateDisplayMode.GeodeticDms)
-                        return DegreeHelper.ToDms(coordinateValue, true);
+        //        case CoordinateDisplayMode.WebMercator:
+        //            coordinateValue = isX ? webMercatorPoint.X : webMercatorPoint.Y;
+        //            return FormatWithPrecision(coordinateValue, xyPrecision);
 
-                    else
-                        return FormatWithPrecision(coordinateValue, latLongPrecision);
+        //        case CoordinateDisplayMode.GeodeticDecimal:
+        //        case CoordinateDisplayMode.GeodeticDms:
+        //            // If ellipsoid is not WGS84, convert to selected ellipsoid
+        //            if (!ellipsoid.AreTheSame(Ellipsoids.WGS84))
+        //            {
+        //                var convertedGeodetic = Transformations.ChangeDatum(geodetic, Ellipsoids.WGS84, ellipsoid);
+        //                coordinateValue = isX ? convertedGeodetic.X : convertedGeodetic.Y;
+        //            }
+        //            else
+        //            {
+        //                coordinateValue = isX ? geodetic.X : geodetic.Y;
+        //            }
 
-                default:
-                    return string.Empty;
-            }
-        }
-        catch
-        {
-            return string.Empty;
-        }
+        //            if (srsType == CoordinateDisplayMode.GeodeticDms)
+        //                return DegreeHelper.ToDms(coordinateValue, true);
+
+        //            else
+        //                return FormatWithPrecision(coordinateValue, latLongPrecision);
+
+        //        default:
+        //            return string.Empty;
+        //    }
+        //}
+        //catch
+        //{
+        //    return string.Empty;
+        //}
     }
 
     private string FormatWithPrecision(double value, int precision)

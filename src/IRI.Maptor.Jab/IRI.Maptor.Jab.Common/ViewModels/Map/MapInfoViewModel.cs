@@ -34,7 +34,6 @@ public class MapInfoViewModel : Notifier
     }
 
     private EditableFeatureLayerOptions _options;
-
     public EditableFeatureLayerOptions Options
     {
         get { return _options; }
@@ -46,9 +45,8 @@ public class MapInfoViewModel : Notifier
     }
 
 
-    private SpatialReferenceType _spatialReference = SpatialReferenceType.Geodetic;
-
-    public SpatialReferenceType SpatialReference
+    private CoordinateDisplayMode _spatialReference = CoordinateDisplayMode.GeodeticDecimal;
+    public CoordinateDisplayMode SpatialReference
     {
         get { return _spatialReference; }
         set
@@ -78,7 +76,7 @@ public class MapInfoViewModel : Notifier
 
             if (CurrentEditingPoint != null && value)
             {
-                SpatialReference = SpatialReferenceType.UTM;
+                SpatialReference =  CoordinateDisplayMode.UTM;
             }
 
             _isUTMEditingMode = value;
@@ -101,7 +99,7 @@ public class MapInfoViewModel : Notifier
 
             if (CurrentEditingPoint != null && value)
             {
-                SpatialReference = SpatialReferenceType.Geodetic;
+                SpatialReference = CoordinateDisplayMode.GeodeticDecimal;
             }
 
             _isGeodeticWgs84EditingMode = value;
@@ -123,7 +121,7 @@ public class MapInfoViewModel : Notifier
 
             if (CurrentEditingPoint != null && value)
             {
-                SpatialReference = SpatialReferenceType.WebMercator;
+                SpatialReference = CoordinateDisplayMode.WebMercator;
             }
 
             _isWebMercatorEditingMode = value;
@@ -168,7 +166,7 @@ public class MapInfoViewModel : Notifier
     {
         get
         {
-            if (SpatialReference == SpatialReferenceType.UTM)
+            if (SpatialReference == CoordinateDisplayMode.UTM)
             {
                 var geodetic = MapProjects.UTMToGeodetic(CurrentEditingPoint, CurrentEditingZone);
 
@@ -176,13 +174,13 @@ public class MapInfoViewModel : Notifier
 
                 return new Point(webMercator.X, webMercator.Y);
             }
-            else if (SpatialReference == SpatialReferenceType.Geodetic)
+            else if (SpatialReference == CoordinateDisplayMode.GeodeticDecimal)
             {
                 var webMercator = MapProjects.GeodeticWgs84ToWebMercator(CurrentEditingPoint);
 
                 return new Point(webMercator.X, webMercator.Y);
             }
-            else if (SpatialReference == SpatialReferenceType.WebMercator)
+            else if (SpatialReference == CoordinateDisplayMode.WebMercator)
             {
                 return new Point(CurrentEditingPoint.X, CurrentEditingPoint.Y);
             }
@@ -200,18 +198,18 @@ public class MapInfoViewModel : Notifier
 
     private Point FromWebMercator(Point webMercatorPoint)
     {
-        if (SpatialReference == SpatialReferenceType.WebMercator)
+        if (SpatialReference == CoordinateDisplayMode.WebMercator)
             return webMercatorPoint;
 
         var geodetic = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
 
-        if (SpatialReference == SpatialReferenceType.UTM)
+        if (SpatialReference == CoordinateDisplayMode.UTM)
         {
             CurrentEditingZone = MapProjects.FindUtmZone(geodetic.X);
 
             return MapProjects.GeodeticToUTM(geodetic);
         }
-        else if (SpatialReference == SpatialReferenceType.Geodetic)
+        else if (SpatialReference == CoordinateDisplayMode.GeodeticDecimal)
         {
             return geodetic;
         }

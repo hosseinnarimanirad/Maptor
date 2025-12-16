@@ -18,7 +18,6 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Models.DataStructure;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
-using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 using WpfPoint = System.Windows.Point;
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
@@ -117,6 +116,8 @@ public class EditableFeatureLayer : SymbolizableLayer
     public Action<Geometry>? RequestZoomToGeometry;
 
     public event Action? LocateablesReconstructed;
+
+    public Func<CoordinateDisplayMode> RequestGetCoordinateDisplayMode;
 
     #endregion
 
@@ -627,9 +628,22 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         presenter.RightCommandAction = i =>
         {
-            var geodetic = MapProjects.WebMercatorToGeodeticWgs84(presenter.Location);
+            //var geodetic = MapProjects.WebMercatorToGeodeticWgs84(presenter.Location);
 
-            Clipboard.SetDataObject($"{geodetic.X.ToString("n4")},{geodetic.Y.ToString("n4")}");
+            //Clipboard.SetDataObject($"{geodetic.X.ToString("n4")},{geodetic.Y.ToString("n4")}");
+            var mode = RequestGetCoordinateDisplayMode?.Invoke() ?? CoordinateDisplayMode.GeodeticDecimal;
+
+            var format = CoordinateHelper.Format(/*presenter.Location*/new Point(point.X, point.Y), mode, null, null, null, null);
+
+            if (mode == CoordinateDisplayMode.GeodeticDms || mode == CoordinateDisplayMode.GeodeticDecimal)
+            {
+                Clipboard.SetDataObject($"{format.y};{format.x}");
+            }
+            else
+            {
+                Clipboard.SetDataObject($"{format.x};{format.y}");
+            }
+
 
             this.RemoveMapOptions();
         };
@@ -643,7 +657,9 @@ public class EditableFeatureLayer : SymbolizableLayer
             }
             else
             {
-                var element = new Views.MapMarkers.CoordinateMarker(locateable);
+                var displayMode = RequestGetCoordinateDisplayMode?.Invoke();
+
+                var element = new Views.MapMarkers.CoordinateMarker(locateable, displayMode);
 
                 var auxLocateable = new Locateable(AncherFunctionHandlers.CenterLeft) { Element = element, X = point.X, Y = point.Y, Id = locateable.Id };
 
@@ -1252,7 +1268,7 @@ public class EditableFeatureLayer : SymbolizableLayer
         this.RequestZoomToPoint?.Invoke(new Point(currentPoint.X, currentPoint.Y));
     }
 
-    private void CopyCurrentPointCoordinateToClipboard(SpatialReferenceType spatialReferenceType)
+    private void CopyCurrentPointCoordinateToClipboard(CoordinateDisplayMode mode)
     {
         var currentPoint = this._primaryVerticesLayer.FindSelectedLocatable();
 
@@ -1261,31 +1277,42 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         Point point = new(currentPoint.X, currentPoint.Y);
 
-        switch (spatialReferenceType)
+        var format = CoordinateHelper.Format(point, mode, null, null, null, null);
+
+        if (mode == CoordinateDisplayMode.GeodeticDms || mode == CoordinateDisplayMode.GeodeticDecimal)
         {
-            case SpatialReferenceType.UTM:
-                var geodetic = MapProjects.WebMercatorToGeodeticWgs84(point);
-                point = MapProjects.GeodeticToUTM(geodetic, geodetic.Y > 0);
-                Clipboard.SetDataObject($"{point.X:#.##};{point.Y:#.##}");
-                break;
-
-            case SpatialReferenceType.WebMercator:
-                Clipboard.SetDataObject($"{point.X:#.##};{point.Y:#.##}");
-                break;
-
-            case SpatialReferenceType.Geodetic:
-            case SpatialReferenceType.None:
-                point = MapProjects.WebMercatorToGeodeticWgs84(point);
-                Clipboard.SetDataObject($"{point.Y:#.#####};{point.X:#.#####}");
-                break;
-            case SpatialReferenceType.AlbersEqualAreaConic:
-            case SpatialReferenceType.CylindricalEqualArea:
-            case SpatialReferenceType.LambertConformalConic:
-            case SpatialReferenceType.Mercator:
-            case SpatialReferenceType.TransverseMercator:
-            default:
-                throw new NotImplementedException("EditableFeatureLayer > CopyCurrentPointCoordinateToClipboard > unknown srs");
+            Clipboard.SetDataObject($"{format.y};{format.x}");
         }
+        else
+        {
+            Clipboard.SetDataObject($"{format.x};{format.y}");
+        }
+
+        //switch (spatialReferenceType)
+        //{
+        //    case CoordinateDisplayMode.UTM:
+        //        var geodetic = MapProjects.WebMercatorToGeodeticWgs84(point);
+        //        point = MapProjects.GeodeticToUTM(geodetic, geodetic.Y > 0);
+        //        Clipboard.SetDataObject($"{point.X:#.##};{point.Y:#.##}");
+        //        break;
+
+        //    case CoordinateDisplayMode.WebMercator:
+        //        Clipboard.SetDataObject($"{point.X:#.##};{point.Y:#.##}");
+        //        break;
+
+        //    case CoordinateDisplayMode.Geodetic:
+        //    case CoordinateDisplayMode.None:
+        //        point = MapProjects.WebMercatorToGeodeticWgs84(point);
+        //        Clipboard.SetDataObject($"{point.Y:#.#####};{point.X:#.#####}");
+        //        break;
+        //    case CoordinateDisplayMode.AlbersEqualAreaConic:
+        //    case CoordinateDisplayMode.CylindricalEqualArea:
+        //    case CoordinateDisplayMode.LambertConformalConic:
+        //    case CoordinateDisplayMode.Mercator:
+        //    case CoordinateDisplayMode.TransverseMercator:
+        //    default:
+        //        throw new NotImplementedException("EditableFeatureLayer > CopyCurrentPointCoordinateToClipboard > unknown srs");
+        //}
 
         //var geodetic = MapProjects.WebMercatorToGeodeticWgs84(new Point(currentPoint.X, currentPoint.Y));
 
@@ -1598,7 +1625,7 @@ public class EditableFeatureLayer : SymbolizableLayer
         get
         {
             if (_copyCurrentPointCommand == null)
-                _copyCurrentPointCommand = new RelayCommand(param => this.CopyCurrentPointCoordinateToClipboard((SpatialReferenceType)param));
+                _copyCurrentPointCommand = new RelayCommand(param => this.CopyCurrentPointCoordinateToClipboard((CoordinateDisplayMode)param));
 
             return _copyCurrentPointCommand;
         }
