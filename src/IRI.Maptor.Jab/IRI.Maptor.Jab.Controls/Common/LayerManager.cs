@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Diagnostics;
+using System.Linq; 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -82,61 +81,66 @@ public class LayerManager : Notifier
         }
     }
 
-    public void Remove(ILayer layer, bool forceRemove)
+    public void Remove(ILayer layer, bool forceRemove) => Clear(lyr => lyr == layer, forceRemove);
+
+    public void Remove(string layerName, bool forceRemove) => Clear(layer => layer?.LayerName == layerName, forceRemove);
+
+    internal void Remove(LayerType type, bool forceRemove) => Clear(layer => layer.Type.HasFlag(type), forceRemove);
+
+    public void Remove(Predicate<ILayer> rule, bool forceRemove) => Clear(rule, forceRemove);
+
+    public void RemoveTile(string providerFullName, bool forceRemove)
     {
-        Clear(lyr => lyr == layer, forceRemove);
-        //if (forceRemove || layer.CanUserDelete)
-        //{
-        //    this.allLayers.Remove(layer);
-
-        //    this.CurrentLayers.Remove(layer);
-        //}
-    }
-
-    public void Remove(string layerName, bool forceRemove)
-    {
-        Clear(layer => layer?.LayerName == layerName, forceRemove);
-
-        //this.allLayers.RemoveAll(i => (forceRemove || i.CanUserDelete) && i.LayerName == layerName);
-
-        //for (int i = CurrentLayers.Count - 1; i >= 0; i--)
-        //{
-        //    if ( CurrentLayers[i].LayerName == layerName)
-        //    {
-        //        this.CurrentLayers.Remove(CurrentLayers[i]);
-        //    }
-        //}
-    }
-
-    internal void Remove(LayerType type, bool forceRemove)
-    {
-        Clear(layer => layer.Type.HasFlag(type), forceRemove); 
-    }
-
-    public void Remove(Predicate<ILayer> rule, bool forceRemove)
-    {
-        Clear(rule, forceRemove); 
-    }
-
-    public void RemoveTile(string providerFullName, /*TileType type, */bool forceRemove)
-    {
-        Clear(layer => (layer as TileServiceLayer)?.ProviderFullName?.ToUpper() == providerFullName?.ToUpper() /*&& (layer as TileServiceLayer)?.TileType == type*/, forceRemove);
+        Clear(layer => (layer as TileServiceLayer)?.ProviderFullName?.ToUpper() == providerFullName?.ToUpper() , forceRemove);
     }
 
 
     private void Clear(Predicate<ILayer> rule, bool forceRemove)
     {
-        for (int i = CurrentLayers.Count - 1; i >= 0; i--)
-        {
-            if ((forceRemove || CurrentLayers[i]?.CanUserDelete == true) && rule(CurrentLayers[i]))
-            {
-                this.CurrentLayers.Remove(CurrentLayers[i]);
-            }
-        }
+        //for (int i = CurrentLayers.Count - 1; i >= 0; i--)
+        //{
+        //    if (CurrentLayers[i].IsGroupLayer)
+        //    {
+        //        Clear(CurrentLayers[i].SubLayers, rule, forceRemove);
+        //    }
+        //    else if ((forceRemove || CurrentLayers[i]?.CanUserDelete == true) && rule(CurrentLayers[i]))
+        //    {
+        //        this.CurrentLayers.Remove(CurrentLayers[i]);
+        //    }
+
+        //    if (CurrentLayers[i].IsGroupLayer && CurrentLayers[i].SubLayers.Count ==0)
+        //    {
+        //        this.CurrentLayers
+        //    }
+        //}
+        Clear(this.CurrentLayers, rule, forceRemove);
 
         this.allLayers.RemoveAll(layer => (forceRemove || layer?.CanUserDelete == true) && rule(layer));
     }
 
+    private void Clear(ObservableCollection<ILayer> layers, Predicate<ILayer> rule, bool forceRemove)
+    {
+        for (int i = layers.Count - 1; i >= 0; i--)
+        {
+            var layer = layers[i];
+
+            if (layer.IsGroupLayer)
+            {
+                Clear(layer.SubLayers, rule, forceRemove);
+            }
+            else if ((forceRemove || layer.CanUserDelete == true) && rule(layer))
+            {
+                layers.Remove(layer);
+            }
+
+            // remove group layer if all childs have been removed.
+            // e.g. in the case of DXF group layer.
+            if (layer.IsGroupLayer && layer.SubLayers.Count==0)
+            {
+                layers.Remove(layer);
+            }
+        }
+    }
 
     public void Clear()
     {
@@ -231,7 +235,7 @@ public class LayerManager : Notifier
 
     private void UpdateIsInRange(ILayer layer, double inverseMapScale)
     {
-        layer.IsInScaleRange = layer.VisibleRange.IsInRange(inverseMapScale); 
+        layer.IsInScaleRange = layer.VisibleRange.IsInRange(inverseMapScale);
     }
 
     public BoundingBox CalculateCurrentMapExtent()
