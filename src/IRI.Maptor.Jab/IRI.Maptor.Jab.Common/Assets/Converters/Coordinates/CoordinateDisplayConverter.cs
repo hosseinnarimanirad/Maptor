@@ -1,8 +1,6 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
@@ -14,16 +12,8 @@ public class CoordinateDisplayConverter : IMultiValueConverter
 {
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
-        if (values == null || values.Length < 6)
+        if (values == null || values.Length < 2)
             return string.Empty;
-
-        // values[0] = Locateable
-        // values[1] = SelectedSrsType (CoordinateEditorSrsType)
-        // values[2] = SelectedEllipsoid (Ellipsoid)
-        // values[3] = UtmZone (int)
-        // values[4] = LatLongPrecision (int)
-        // values[5] = XYPrecision (int)
-        // parameter = "X" or "Y" to indicate which coordinate
 
         if (values[0] is not Locateable locateable)
             return string.Empty;
@@ -31,17 +21,22 @@ public class CoordinateDisplayConverter : IMultiValueConverter
         if (values[1] is not CoordinateDisplayMode srsType)
             return string.Empty;
 
-        if (values[2] is not Ellipsoid ellipsoid)
-            return string.Empty;
-
-        int utmZone = values[3] is int zone ? zone : 39;
-        int latLongPrecision = values[4] is int llPrec ? llPrec : 5;
-        int xyPrecision = values[5] is int xyPrec ? xyPrec : 2;
-
-        bool isX = parameter?.ToString()?.ToUpper() == "X";
 
         // Convert Web Mercator to selected SRS
         var webMercatorPoint = new Point(locateable.X, locateable.Y);
+        var geodetic = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
+
+
+        int utmZone = (values.Length > 2 && values[2] is int zone) ? zone : MapProjects.FindUtmZone(geodetic.X);
+
+        int latLongPrecision = (values.Length > 2 && values[3] is int llPrec) ? llPrec : 5;
+
+        int xyPrecision = (values.Length > 2 && values[4] is int xyPrec) ? xyPrec : 2;
+
+        Ellipsoid ellipsoid = (values.Length > 2 && values[5] is Ellipsoid e) ? e : Ellipsoids.WGS84;
+
+        bool isX = parameter?.ToString()?.ToUpper() == "X";
+
         double coordinateValue;
 
         try
@@ -49,9 +44,8 @@ public class CoordinateDisplayConverter : IMultiValueConverter
             switch (srsType)
             {
                 case CoordinateDisplayMode.UTM:
-                    // UTM always uses WGS84 ellipsoid
-                    var geodeticFromWebMercator = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
-                    var utmPoint = MapProjects.GeodeticToUTM(geodeticFromWebMercator, Ellipsoids.WGS84, utmZone, geodeticFromWebMercator.Y > 0);
+                    // UTM always uses WGS84 ellipsoid 
+                    var utmPoint = MapProjects.GeodeticToUTM(geodetic, Ellipsoids.WGS84, utmZone, geodetic.Y > 0);
                     coordinateValue = isX ? utmPoint.X : utmPoint.Y;
                     return FormatWithPrecision(coordinateValue, xyPrecision);
 
@@ -60,7 +54,7 @@ public class CoordinateDisplayConverter : IMultiValueConverter
                     return FormatWithPrecision(coordinateValue, xyPrecision);
 
                 case CoordinateDisplayMode.GeodeticDecimal:
-                    var geodetic = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
+                case CoordinateDisplayMode.GeodeticDms:
                     // If ellipsoid is not WGS84, convert to selected ellipsoid
                     if (!ellipsoid.AreTheSame(Ellipsoids.WGS84))
                     {
@@ -71,21 +65,12 @@ public class CoordinateDisplayConverter : IMultiValueConverter
                     {
                         coordinateValue = isX ? geodetic.X : geodetic.Y;
                     }
-                    return FormatWithPrecision(coordinateValue, latLongPrecision);
 
-                case CoordinateDisplayMode.GeodeticDms:
-                    var geodeticDms = MapProjects.WebMercatorToGeodeticWgs84(webMercatorPoint);
-                    // If ellipsoid is not WGS84, convert to selected ellipsoid
-                    if (!ellipsoid.AreTheSame(Ellipsoids.WGS84))
-                    {
-                        var convertedGeodeticDms = Transformations.ChangeDatum(geodeticDms, Ellipsoids.WGS84, ellipsoid);
-                        coordinateValue = isX ? convertedGeodeticDms.X : convertedGeodeticDms.Y;
-                    }
+                    if (srsType == CoordinateDisplayMode.GeodeticDms)
+                        return DegreeHelper.ToDms(coordinateValue, true);
+
                     else
-                    {
-                        coordinateValue = isX ? geodeticDms.X : geodeticDms.Y;
-                    }
-                    return DegreeHelper.ToDms(coordinateValue, true);
+                        return FormatWithPrecision(coordinateValue, latLongPrecision);
 
                 default:
                     return string.Empty;
@@ -101,7 +86,7 @@ public class CoordinateDisplayConverter : IMultiValueConverter
     {
         if (precision == 0)
             return value.ToString("#,#");
-        
+
         string format = "#,#." + new string('0', precision);
         return value.ToString(format);
     }

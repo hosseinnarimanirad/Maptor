@@ -410,7 +410,8 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         foreach (var item in locatables)
         {
-            (item.Element as Views.MapMarkers.CoordinateMarker).MercatorLocation = new Point(locatable.X, locatable.Y);
+            //(item.Element as Views.MapMarkers.CoordinateMarker).WebMercatorLocation = new Point(locatable.X, locatable.Y);
+            (item.Element as Views.MapMarkers.CoordinateMarker)!.WebMercatorLocation = locatable;
 
             item.X = locatable.X;
             item.Y = locatable.Y;
@@ -642,7 +643,7 @@ public class EditableFeatureLayer : SymbolizableLayer
             }
             else
             {
-                var element = new Views.MapMarkers.CoordinateMarker(locateable.X, locateable.Y);
+                var element = new Views.MapMarkers.CoordinateMarker(locateable);
 
                 var auxLocateable = new Locateable(AncherFunctionHandlers.CenterLeft) { Element = element, X = point.X, Y = point.Y, Id = locateable.Id };
 
@@ -1264,7 +1265,7 @@ public class EditableFeatureLayer : SymbolizableLayer
         {
             case SpatialReferenceType.UTM:
                 var geodetic = MapProjects.WebMercatorToGeodeticWgs84(point);
-                point = MapProjects.GeodeticToUTM(geodetic, geodetic.Y < 0);
+                point = MapProjects.GeodeticToUTM(geodetic, geodetic.Y > 0);
                 Clipboard.SetDataObject($"{point.X:#.##};{point.Y:#.##}");
                 break;
 
@@ -1275,7 +1276,7 @@ public class EditableFeatureLayer : SymbolizableLayer
             case SpatialReferenceType.Geodetic:
             case SpatialReferenceType.None:
                 point = MapProjects.WebMercatorToGeodeticWgs84(point);
-                Clipboard.SetDataObject($"{point.X:#.#####};{point.Y:#.#####}");
+                Clipboard.SetDataObject($"{point.Y:#.#####};{point.X:#.#####}");
                 break;
             case SpatialReferenceType.AlbersEqualAreaConic:
             case SpatialReferenceType.CylindricalEqualArea:

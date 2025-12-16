@@ -17,6 +17,9 @@
     <converters:CollectionToStringConverter x:Key="collectionToStringConverter"/>
     <converters:CoordinateDimensionToMVisibilityConverter x:Key="coordinateDimensionToMVisibilityConverter"/>
     <converters:CoordinateDimensionToZVisibilityConverter x:Key="coordinateDimensionToZVisibilityConverter"/>
+    <converters:CoordinateDisplayConverter x:Key="coordinateDisplayConverter"/>
+    
+
     <converters:EllipsoidNameConverter x:Key="ellipsoidNameConverter"/>
     <converters:UtmZoneConverter x:Key="utmZoneConverter"/>
     <converters:SrsTypeToIconConverter x:Key="srsTypeToIconConverter"/>

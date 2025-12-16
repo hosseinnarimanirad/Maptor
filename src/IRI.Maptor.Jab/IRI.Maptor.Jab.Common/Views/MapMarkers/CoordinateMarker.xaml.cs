@@ -1,101 +1,101 @@
-﻿using System.Windows.Input;
-using IRI.Maptor.Jab.Common.Abstractions;
+using System.Windows.Input;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common.Views.MapMarkers;
- 
+
 public partial class CoordinateMarker : MapMarker
 {
-    public bool ChangeToDms { get; }
+    //private string _xLabel;
+    //public string XLabel
+    //{
+    //    get { return _xLabel; }
+    //    set
+    //    {
+    //        _xLabel = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
-    
-    private string _xLabel;
-    public string XLabel
+
+    //private string _yLabel;
+    //public string YLabel
+    //{
+    //    get { return _yLabel; }
+    //    set
+    //    {
+    //        _yLabel = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
+
+    private CoordinateDisplayMode _currentCoordinateDisplayMode;
+    public CoordinateDisplayMode CurrentCoordinateDisplayMode
     {
-        get { return _xLabel; }
+        get { return _currentCoordinateDisplayMode; }
         set
         {
-            _xLabel = value;
+            _currentCoordinateDisplayMode = value;
             RaisePropertyChanged();
         }
     }
 
-    
-    private string _yLabel;
-    public string YLabel
-    {
-        get { return _yLabel; }
-        set
-        {
-            _yLabel = value;
-            RaisePropertyChanged();
-        }
-    }
+
+    //private CoordinateDisplayMode _current;
 
 
-    private CoordinateDisplayMode _current;
-
-    
-    private Point _mercatorLocation;
-    public Point MercatorLocation
+    private Locateable _mercatorLocation;
+    public Locateable WebMercatorLocation
     {
         get { return _mercatorLocation; }
         set
         {
             _mercatorLocation = value;
             RaisePropertyChanged();
-            UpdateCoordinates();
+            //UpdateCoordinates();
         }
     }
 
 
-    public CoordinateMarker(double mercatorX, double mercatorY, bool changeToDms = false)
+    public CoordinateMarker(Locateable locateable)
     {
         InitializeComponent();
 
-        this._current = CoordinateDisplayMode.GeodeticDecimal;
+        this.CurrentCoordinateDisplayMode = CoordinateDisplayMode.GeodeticDecimal;
 
-        this.ChangeToDms = changeToDms;
-
-        this.MercatorLocation = new Point(mercatorX, mercatorY);
-
-        //this.X = mercatorX;
-
-        //this.Y = mercatorY;
-
+        this.WebMercatorLocation = locateable;
     }
 
     private void changeCoordinate(object sender, MouseButtonEventArgs e)
     {
-        _current = (CoordinateDisplayMode)((int)(_current + 1) % 3);
+        CurrentCoordinateDisplayMode = (CoordinateDisplayMode)(((int)CurrentCoordinateDisplayMode + 1) % 4);
 
-        UpdateCoordinates();
+        //UpdateCoordinates();
     }
 
-    public void UpdateCoordinates()
-    {
-        var value = MapProjects.WebMercatorToGeodeticWgs84(MercatorLocation);
+    //public void UpdateCoordinates()
+    //{
+    //    var value = MapProjects.WebMercatorToGeodeticWgs84(WebMercatorLocation);
 
-        if (_current == CoordinateDisplayMode.UTM)
-        {
-            value = MapProjects.GeodeticToUTM(value);
-        }
+    //    if (_current == CoordinateDisplayMode.UTM)
+    //    {
+    //        value = MapProjects.GeodeticToUTM(value);
+    //    }
 
-        if (_current == CoordinateDisplayMode.GeodeticDms)
-        {
-            XLabel = IRI.Maptor.Sta.Common.Helpers.DegreeHelper.ToDms(value.X, true); YLabel = IRI.Maptor.Sta.Common.Helpers.DegreeHelper.ToDms(value.Y, true);
-        }
-        else
-        {
-            var decimals = 2;
+    //    if (_current == CoordinateDisplayMode.GeodeticDms)
+    //    {
+    //        XLabel = IRI.Maptor.Sta.Common.Helpers.DegreeHelper.ToDms(value.X, true);
+    //        YLabel = IRI.Maptor.Sta.Common.Helpers.DegreeHelper.ToDms(value.Y, true);
+    //    }
+    //    else
+    //    {
+    //        var decimals = 2;
 
-            if (_current == CoordinateDisplayMode.GeodeticDecimal)
-                decimals = 5;
+    //        if (_current == CoordinateDisplayMode.GeodeticDecimal)
+    //            decimals = 5;
 
-            XLabel = value.X.ToString($"N{decimals}"); YLabel = value.Y.ToString($"N{decimals}");
-        }
-
-    } 
-
+    //        XLabel = value.X.ToString($"N{decimals}");
+    //        YLabel = value.Y.ToString($"N{decimals}");
+    //    }
+    //} 
 }

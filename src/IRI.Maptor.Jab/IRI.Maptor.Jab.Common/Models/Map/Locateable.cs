@@ -131,7 +131,7 @@ public class Locateable : Notifier
         this._location = new System.Windows.Point(0, 0);
     }
 
-    public Locateable(Point wgs84GeodeticPosition, AncherFunctionHandler ancherFunction = null) : this(ancherFunction)
+    public Locateable(Point wgs84GeodeticPosition, AncherFunctionHandler? ancherFunction = null) : this(ancherFunction)
     {
         var webMercator = MapProjects.GeodeticWgs84ToWebMercator(wgs84GeodeticPosition);
 

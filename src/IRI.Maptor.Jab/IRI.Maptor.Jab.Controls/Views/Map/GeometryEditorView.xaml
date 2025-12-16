@@ -18,8 +18,7 @@
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
             <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>
-
-            <converters:CoordinateDisplayConverter x:Key="coordinateDisplayConverter"/>
+ 
             <converters:DistanceAzimuthConverter x:Key="distanceAzimuthConverter"/>
             <converters:LocalizedFormatConverter x:Key="localizedFormatConverter"/>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
@@ -392,10 +391,10 @@
                                     <MultiBinding Converter="{StaticResource coordinateDisplayConverter}" ConverterParameter="X">
                                         <Binding Path="."/>
                                         <Binding Path="DataContext.SrsViewModel.SelectedSrsType" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
-                                        <Binding Path="DataContext.SrsViewModel.SelectedEllipsoid" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
                                         <Binding Path="DataContext.SrsViewModel.UtmZone" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
                                         <Binding Path="DataContext.SrsViewModel.LatLongPrecision" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
                                         <Binding Path="DataContext.SrsViewModel.XYPrecision" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.SelectedEllipsoid" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>

@@ -24,7 +24,3 @@ public class CoordinateDimensionToZVisibilityConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
-
-
-
-
