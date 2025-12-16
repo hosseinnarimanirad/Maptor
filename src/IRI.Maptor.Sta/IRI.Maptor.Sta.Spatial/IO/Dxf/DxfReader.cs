@@ -14,7 +14,7 @@ namespace IRI.Maptor.Sta.Spatial.IO.Dxf;
 /// </summary>
 public class DxfReader
 {
-    public static List<Geometry<Point>> ReadFromFile(string filePath, int srid = 0)
+    public static List<Geometry<Point>> ReadFromFile(string filePath, int? srid)
     {
         if (!File.Exists(filePath))
             throw new FileNotFoundException("DXF file not found", filePath);
@@ -23,7 +23,7 @@ public class DxfReader
         return Read(content, srid);
     }
 
-    public static List<Geometry<Point>> Read(string dxfContent, int srid = 0)
+    public static List<Geometry<Point>> Read(string dxfContent, int? srid)
     {
         if (string.IsNullOrWhiteSpace(dxfContent))
             return [Geometry<Point>.Empty];
@@ -40,7 +40,9 @@ public class DxfReader
             }
         }
 
-        var entities = ParseEntities(lines, srid);
+        srid = srid ?? SridHelper.GeodeticWGS84;
+
+        var entities = ParseEntities(lines, srid.Value);
 
         if (entities.Count == 0)
             return [Geometry<Point>.Empty];
@@ -56,7 +58,7 @@ public class DxfReader
 
         if (!polygonRings.IsNullOrEmpty())
         {
-            var polygonOrMultiPolygon = Geometry<Point>.CreatePolygonOrMultiPolygon(polygonRings, srid);
+            var polygonOrMultiPolygon = Geometry<Point>.CreatePolygonOrMultiPolygon(polygonRings, srid.Value);
 
             if (polygonOrMultiPolygon.Type == GeometryType.MultiPolygon)
             {
