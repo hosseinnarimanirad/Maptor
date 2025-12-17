@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Windows.Input;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
@@ -79,8 +80,9 @@ public partial class CoordinateMarker : MapMarker
 
     private void changeCoordinate(object sender, MouseButtonEventArgs e)
     {
+        counter = counter + 1;
         //CurrentCoordinateDisplayMode = (CoordinateDisplayMode) (((int)CurrentCoordinateDisplayMode + 1) % 4);
-        CurrentCoordinateDisplayMode = availableDisplayModes[counter++ % availableDisplayModes.Count];
+        CurrentCoordinateDisplayMode = availableDisplayModes[counter % availableDisplayModes.Count];
 
         //UpdateCoordinates();
     }
