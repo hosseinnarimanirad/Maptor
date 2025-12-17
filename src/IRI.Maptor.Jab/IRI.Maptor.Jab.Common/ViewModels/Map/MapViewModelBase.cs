@@ -3133,6 +3133,22 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
+    public virtual async Task AddGeoJson(object owner)
+    {
+        IsBusy = true;
+
+        var fileName = await DialogService.ShowOpenFileDialogAsync("GeoJSON|*.json", owner);
+
+        if (!File.Exists(fileName))
+        {
+            IsBusy = false;
+
+            return;
+        }
+          
+        await AddGeoJson(fileName, owner);
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -3313,6 +3329,22 @@ public abstract class MapViewModelBase : ViewModelBase
                 });
             }
             return _addShapefileCommand;
+        }
+    }
+
+    private RelayCommand _addGeoJSONfileCommand;
+    public RelayCommand AddGeoJSONfileCommand
+    {
+        get
+        {
+            if (_addGeoJSONfileCommand == null)
+            {
+                _addGeoJSONfileCommand = new RelayCommand(async param =>
+                {
+                    await AddGeoJson(param);
+                });
+            }
+            return _addGeoJSONfileCommand;
         }
     }
 
