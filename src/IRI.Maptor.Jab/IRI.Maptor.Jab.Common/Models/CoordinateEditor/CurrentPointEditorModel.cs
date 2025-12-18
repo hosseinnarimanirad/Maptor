@@ -408,5 +408,17 @@ public class CurrentPointEditorModel : Notifier
             return false;
         }
     }
+
+
+    public Point GetNewXY()
+    {
+        bool hasValidX = double.TryParse(CoordinateX, out double x);
+        bool hasValidY = double.TryParse(CoordinateY, out double y);
+
+        return hasValidX && hasValidY ? new Point(x, y) : Point.NaN;
+    }
+
+    public Point GetNewLatLong() => DmsX != null && DmsY != null ? new Point(DmsX.Value, DmsY.Value) : Point.NaN;
+
 }
 

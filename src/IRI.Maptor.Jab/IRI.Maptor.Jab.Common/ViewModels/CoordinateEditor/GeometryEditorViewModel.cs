@@ -729,7 +729,7 @@ public class GeometryEditorViewModel : Notifier
         var pointAddress = Geometry.FindPointAddress(index);
         var partIndex = pointAddress.PartIndex;
         var localIndex = pointAddress.LocalPointIndex;
-         
+
         if (partIndex < 0 && localIndex < 0)
             return;
 
@@ -912,8 +912,16 @@ public class GeometryEditorViewModel : Notifier
         if (Geometry == null)
             return;
 
+        //if (this.CurrentPointEditor?.CurrentPoint != null)
+        //    this.CurrentPointEditor.CurrentPoint = null;
+
         // Use AddVertexToPart to add to the current part
-        Locateable? locatable = FeatureLayer.AddVertexToPart(GetNewPoint(), CurrentPolygonIndex, CurrentPartIndex);
+        var newPoint = GetNewPoint();
+
+        if (newPoint.IsNaN())
+            return;
+
+        Locateable? locatable = FeatureLayer.AddVertexToPart(newPoint, CurrentPolygonIndex, CurrentPartIndex);
 
         if (locatable is null)
             return;
@@ -1046,9 +1054,21 @@ public class GeometryEditorViewModel : Notifier
 
     private Point GetNewPoint()
     {
-        var layerCenter = this.FeatureLayer.Extent.Center;
+        if (SrsViewModel is null || CurrentPointEditor is null)
+            return Point.NaN;
 
-        return layerCenter == Point.NaN ? new Point(0, 0) : layerCenter;
+        if (SrsViewModel.SelectedSrsType == Sta.SpatialReferenceSystem.CoordinateDisplayMode.GeodeticDms)
+        {
+            var point = CurrentPointEditor.GetNewLatLong();
+
+            return SrsViewModel.ConvertToWebMercator(point.X, point.Y);
+        }
+        else
+        {
+            var point = CurrentPointEditor.GetNewXY();
+
+            return SrsViewModel.ConvertToWebMercator(point.X, point.Y, SrsViewModel.UtmZone);
+        }
     }
 
     #endregion
@@ -1058,7 +1078,7 @@ public class GeometryEditorViewModel : Notifier
 
     private RelayCommand? _addPointCommand;
     public RelayCommand AddPointCommand =>
-        _addPointCommand ??= new RelayCommand(param => AddNewPoint(), param => (IsLastPage || TotalPointCount == 0) && !HasInvalidPoints);
+        _addPointCommand ??= new RelayCommand(param => AddNewPoint(), param => !HasInvalidPoints);
 
 
     //private RelayCommand? _insertPointBeforeSelectedCommand;

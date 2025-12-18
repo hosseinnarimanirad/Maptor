@@ -131,7 +131,7 @@
         </Expander>
 
         <!-- Format Display Section -->
-        <Expander Grid.Row="2" Margin="0,0,0,8" Padding="8" IsExpanded="True">
+        <Expander Grid.Row="2" Margin="0,0,0,8" Padding="8" IsExpanded="False">
             <Expander.Header>
                 <TextBlock Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}}" Foreground="White"
                             Style="{StaticResource item}" Margin="0" Cursor="Hand"/>

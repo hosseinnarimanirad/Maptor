@@ -241,6 +241,12 @@
                                 Margin="4,0,0,0">
                             <iconPacks:PackIconMaterial Kind="Check"/>
                         </Button>
+                        <Button Style="{StaticResource circleButtonLight}"
+                                 Command="{Binding AddPointCommand}" 
+                                 IsEnabled="{Binding CurrentPointEditor, Converter={StaticResource notNullToBoolConverter}}"
+                                 Margin="4,0,0,0">
+                            <iconPacks:PackIconMaterial Kind="Plus"/>
+                        </Button>
                         <ToggleButton x:Name="srsConfigToggleButton" Style="{StaticResource circleToggleButtonLight}" Margin="8,0,0,0">
                             <iconPacks:PackIconMaterial Kind="Cog"/>
                         </ToggleButton>
@@ -414,10 +420,10 @@
                                     <MultiBinding Converter="{StaticResource coordinateDisplayConverter}" ConverterParameter="Y">
                                         <Binding Path="."/>
                                         <Binding Path="DataContext.SrsViewModel.SelectedSrsType" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
-                                        <Binding Path="DataContext.SrsViewModel.SelectedEllipsoid" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
                                         <Binding Path="DataContext.SrsViewModel.UtmZone" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
                                         <Binding Path="DataContext.SrsViewModel.LatLongPrecision" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
                                         <Binding Path="DataContext.SrsViewModel.XYPrecision" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
+                                        <Binding Path="DataContext.SrsViewModel.SelectedEllipsoid" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
@@ -550,11 +556,11 @@
                     ToolTip="{Binding [geometryDetails_currentPoint_insert], Source={StaticResource Localization}}">
                 <iconPacks:PackIconModern Kind="ListAdd"/>
             </Button>-->
-            <Button Style="{StaticResource circleButtonDark}" 
+            <!--<Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding AddPointCommand}"
                     ToolTip="{Binding [geometryDetails_currentPoint_add], Source={StaticResource Localization}}">
                 <iconPacks:PackIconModern Kind="Add"/>
-            </Button>
+            </Button>-->
             <Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding DeleteCurrentPointCommand}"
                     IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
