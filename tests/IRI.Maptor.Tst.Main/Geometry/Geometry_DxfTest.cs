@@ -111,7 +111,7 @@ public class Geometry_DxfTest
 
         // Act & Assert
         Assert.Throws<FileNotFoundException>(() => 
-            DxfReader.ReadFromFile(nonExistentPath));
+            DxfReader.ReadFromFile(nonExistentPath, 0));
     }
 
     #endregion

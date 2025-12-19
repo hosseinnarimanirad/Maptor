@@ -858,36 +858,7 @@ public class GeometryEditorViewModel : Notifier
             return Geometry.ToGlobalPointIndex(new GeometryPointAddress(CurrentPolygonIndex, CurrentPartIndex, localIndex));
 
         else
-            return Geometry.ToGlobalPointIndex(new GeometryPointAddress(null, CurrentPartIndex, localIndex));
-
-        //if (GeometryType == Sta.Common.Primitives.GeometryType.MultiPolygon)
-        //{
-        //    // count number of points before the current point
-        //    var numberOfPointsInPreviousPolygons = Polygons?.Where((p, index) => index < partIndex)
-        //                                                    .Select(p => p.TotalNumberOfPoints)
-        //                                                    .DefaultIfEmpty(0)
-        //                                                    .Sum();
-
-        //    var numberOfPreviousPointsInCurrentPolygon = Polygons?[partIndex]?.GetGeometries()
-        //                                                                    ?.Where((g, index) => index < subpartIndex.Value)
-        //                                                                    .Select(g => g.NumberOfPoints)
-        //                                                                    .DefaultIfEmpty(0)
-        //                                                                    .Sum();
-
-        //}
-
-        //// Sum points from all parts before the target part
-        //int globalIndex = 0;
-        //for (int i = 0; i < partIndex; i++)
-        //{
-        //    if (Parts[i] is IGeometry part && part.NumberOfPoints > 0)
-        //    {
-        //        globalIndex += part.NumberOfPoints;
-        //    }
-        //}
-
-        //// Add the local index within the target part
-        //return globalIndex + localIndex;
+            return Geometry.ToGlobalPointIndex(new GeometryPointAddress(null, CurrentPartIndex, localIndex));         
     }
 
     #endregion

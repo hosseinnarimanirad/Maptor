@@ -70,10 +70,27 @@ Console.Read();
 - **Spatial indexing**: KdTree, RTree for efficient spatial queries
 
 ### 📊 **Data I/O & Formats**
-- **Vector formats**: Shapefile, GeoJSON, KML, GPX, WKB, WKT
+- **Vector formats**: 
+  - **Standard formats**: Shapefile, GeoJSON, KML, KMZ, GPX, WKB, WKT
+  - **Topology formats**: TopoJSON (with topology encoding and quantization support)
+  - **CAD/Graphics formats**: DXF, SVG, EPS (with styling support and round-trip coordinate preservation)
+  - **Document formats**: PDF (vector graphics export)
+  - **Columnar formats**: GeoParquet (efficient columnar geospatial data storage)
+  - **SQL Server Native Binary**: Native spatial data format
 - **Raster support**: GeoTIFF (Worldfile), GRD file, custom raster formats
-- **Database integration**: SQL Server Spatial, PostGIS, Personal GDB
+- **Terrain formats**: 
+  - **Cesium Terrain**: quantized-mesh-1.0 (adaptive triangle meshes) and heightmap-1.0 (regular grids) for 3D terrain visualization
+- **Tile formats**: 
+  - **PMTiles**: Serverless tile archive format (vector and raster tiles)
+  - **MBTiles**: SQLite-based tile storage for offline mapping
+  - **GeoPackage tiles**: OGC standard tile storage
+- **Database integration**: SQL Server Spatial, PostGIS, Personal GDB, SQLite/GeoPackage, MBTiles
 - **OGC standards**: WFS, WMS, GML 2/3, SFA, SLD styling
+- **Format features**: 
+  - Round-trip conversion with exact coordinate preservation (SVG, EPS, DXF)
+  - Styling support (colors, stroke width, opacity) for CAD/graphics formats
+  - Topology preservation in TopoJSON
+  - Efficient compression and quantization options
 
 ### 🧮 **Advanced Algorithms**
 - **Graph algorithms**: BFS, DFS, Dijkstra, Minimum Spanning Tree, MinCut
@@ -96,14 +113,22 @@ Maptor follows a modular architecture with clear separation of concerns:
 Maptor/
 ├── 📦 IRI.Maptor.Sta/          # Core spatial operations & algorithms
 │   ├── Spatial                 # Geometry types, spatial algorithms
+│   │   ├── IO/                # Format I/O (DXF, SVG, EPS, TopoJSON, PMTiles, CesiumTerrain, etc.)
+│   │   └── Analysis/           # Spatial analysis algorithms
 │   ├── SpatialReferenceSystem  # Coordinate systems & transformations
 │   ├── ShapefileFormat         # ESRI Shapefile I/O
 │   ├── Ogc                     # OGC standards implementation
 │   ├── Graph                   # Graph algorithms
-│   └── MachineLearning         # ML algorithms for spatial data
+│   ├── MachineLearning         # ML algorithms for spatial data
+│   ├── GeoParquet              # GeoParquet format support
+│   ├── Pdf                     # PDF vector format support
+│   ├── Security                # Security/cryptography primitives
+│   └── Persistence             # Persistence abstractions
 ├── 🔧 IRI.Maptor.Ket/          # Infrastructure & persistence
 │   ├── SqlServerPersistence    # SQL Server integration
 │   ├── PostgreSqlPersistence   # PostGIS integration
+│   ├── SqlitePersistence       # SQLite/GeoPackage/MBTiles support
+│   ├── PersonalGdbPersistence # Personal Geodatabase support
 │   ├── GdiPlus                 # Raster data handling
 │   └── WebApiPersistence       # Web API data sources
 ├── 🖥️ IRI.Maptor.Jab/          # WPF UI components
@@ -131,10 +156,12 @@ Maptor/
 | Package | Description | Version |
 |---------|-------------|---------|
 | [IRI.Maptor.Jab.Common](https://www.nuget.org/packages/IRI.Maptor.Jab.Common) | Basic UI models, rendering methods | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Jab.Common.svg?style=flat-square) |
-| [IRI.Maptor.Ket.GdiPlus](https://www.nuget.org/packages/IRI.Maptor.Ket.GdiPlus) | Raster data handling, Worldfile, PCA | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.GdiPlus.svg?style=flat-square) |
 | [IRI.Maptor.Ket.SqlServerPersistence](https://www.nuget.org/packages/IRI.Maptor.Ket.SqlServerPersistence) | SQL Server spatial integration | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.SqlServerPersistence.svg?style=flat-square) |
 | [IRI.Maptor.Ket.PostgreSqlPersistence](https://www.nuget.org/packages/IRI.Maptor.Ket.PostgreSqlPersistence) | PostGIS integration | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.PostgreSqlPersistence.svg?style=flat-square) |
+| [IRI.Maptor.Ket.SqlitePersistence](https://www.nuget.org/packages/IRI.Maptor.Ket.SqlitePersistence) | SQLite/GeoPackage/MBTiles support | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.SqlitePersistence.svg?style=flat-square) |
 | [IRI.Maptor.Sta.MachineLearning](https://www.nuget.org/packages/IRI.Maptor.Sta.MachineLearning) | Clustering, Apriori, Logistic Regression | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.MachineLearning.svg?style=flat-square) |
+| [IRI.Maptor.Sta.Pdf](https://www.nuget.org/packages/IRI.Maptor.Sta.Pdf) | PDF vector format support | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Pdf.svg?style=flat-square) |
+| [IRI.Maptor.Sta.Common](https://www.nuget.org/packages/IRI.Maptor.Sta.Common) | Foundational utilities and abstractions | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Common.svg?style=flat-square) |
 
 </details>
 
