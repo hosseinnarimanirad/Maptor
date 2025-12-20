@@ -29,6 +29,12 @@ public class MapOptionsViewModel : Notifier, ILocateable
     public Action<object>? UpperRightCommandAction;
     public Action<object>? UpperLeftCommandAction;
 
+    public Predicate<object>? CanExecuteRightCommandAction;
+    public Predicate<object>? CanExecuteLeftCommandAction;
+    public Predicate<object>? CanExecuteMiddleCommandAction;
+    public Predicate<object>? CanExecuteUpperRightCommandAction;
+    public Predicate<object>? CanExecuteUpperLeftCommandAction;
+
     #region Symbols
 
     private PackIconModernKind? _rightSymbol;
@@ -171,7 +177,7 @@ public class MapOptionsViewModel : Notifier, ILocateable
                 _rightCommand = new RelayCommand(param =>
                 {
                     RightCommandAction?.Invoke(param);
-                });
+                }, CanExecuteRightCommandAction);
             }
             return _rightCommand;
         }
@@ -188,7 +194,7 @@ public class MapOptionsViewModel : Notifier, ILocateable
                 _leftCommand = new RelayCommand(param =>
                 {
                     LeftCommandAction?.Invoke(param);
-                });
+                }, CanExecuteLeftCommandAction);
             }
             return _leftCommand;
         }
@@ -205,7 +211,7 @@ public class MapOptionsViewModel : Notifier, ILocateable
                 _middleCommand = new RelayCommand(param =>
                 {
                     MiddleCommandAction?.Invoke(param);
-                });
+                }, CanExecuteMiddleCommandAction);
             }
             return _middleCommand;
         }
@@ -222,7 +228,7 @@ public class MapOptionsViewModel : Notifier, ILocateable
                 _upperRightCommand = new RelayCommand(param =>
                 {
                     UpperRightCommandAction?.Invoke(param);
-                });
+                }, CanExecuteUpperRightCommandAction);
             }
             return _upperRightCommand;
         }
@@ -239,7 +245,7 @@ public class MapOptionsViewModel : Notifier, ILocateable
                 _upperLeftCommand = new RelayCommand(param =>
                 {
                     UpperLeftCommandAction?.Invoke(param);
-                });
+                }, CanExecuteUpperLeftCommandAction);
             }
             return _upperLeftCommand;
         }

@@ -3292,8 +3292,6 @@ public partial class MapViewer : NotifiableUserControl
 
     private void mapView_MouseDownForZoom(object sender, MouseButtonEventArgs e)
     {
-        //Debug.WriteLine(new StackTrace().GetFrame(0).GetMethod().Name, _eventEntered);
-
         if (this.viewTransform == null)
         //if (this.mapTransform == null)
         {
@@ -3323,6 +3321,10 @@ public partial class MapViewer : NotifiableUserControl
 
     private void mapView_MouseMoveForZoom(object sender, MouseEventArgs e)
     {
+        // in order to let the right click options on map work
+        if (e.LeftButton != MouseButtonState.Pressed)
+            return;
+
         Point currMouseLocation = e.GetPosition(this.mapView);
 
         double xOffset = currMouseLocation.X - this.prevMouseLocation.X;
@@ -3354,6 +3356,10 @@ public partial class MapViewer : NotifiableUserControl
         var boundingBox = sb.BoundingBox.Create(ScreenToMap(firstZoomBound).AsPoint(), ScreenToMap(currMouseLocation).AsPoint());
 
         this.mapView.ReleaseMouseCapture();
+
+        // in order to let the right click options on map work
+        if (e.ChangedButton != MouseButton.Left)
+            return;
 
         //ZoomToExtent(rect, true);
         ZoomToExtent(boundingBox, true);
@@ -3764,7 +3770,7 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-     
+
     private void AddFirstPointForNewDrawing(sb.Point webMercatorPoint)
     {
         if (true)

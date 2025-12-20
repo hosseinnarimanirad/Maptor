@@ -16,7 +16,7 @@ namespace IRI.Maptor.Jab.Common.Assets.Commands
         #region Fields
 
         readonly Action<object> _execute;
-        readonly Predicate<object> _canExecute;        
+        readonly Predicate<object>? _canExecute;        
 
         #endregion // Fields
 
@@ -36,7 +36,7 @@ namespace IRI.Maptor.Jab.Common.Assets.Commands
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action<object> execute, Predicate<object> canExecute)
+        public RelayCommand(Action<object> execute, Predicate<object>? canExecute)
         {
             if (execute == null)
                 throw new ArgumentNullException("execute");

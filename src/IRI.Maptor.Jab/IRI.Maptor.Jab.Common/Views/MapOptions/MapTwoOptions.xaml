@@ -22,14 +22,12 @@
             </Style>
         </Grid.Resources>
         <Ellipse x:Name="pointEllipse" Width="10" Height="10" Fill="{DynamicResource MahApps.Brushes.Accent}" Margin="0,0,0,0" Stroke="White" StrokeThickness="2"/>
-        
-        <Button Name="rightButton" Style="{StaticResource circleButton}" Command="{Binding RightCommand}" ToolTip="{Binding RightToolTip}" Background="{DynamicResource MahApps.Brushes.Accent}">
-            <!--<Path Height="20.7781" Stretch="Uniform" Fill="White" Data="{Binding RightSymbol}"/>-->
+
+        <Button Name="rightButton" Style="{StaticResource mapOptionsButton}" Command="{Binding RightCommand}" ToolTip="{Binding RightToolTip}" >
             <iconPacks:PackIconModern Kind="{Binding RightSymbol}"/>
         </Button>
 
-        <Button Name="leftButton" Style="{StaticResource circleButton}" Command="{Binding LeftCommand}" ToolTip="{Binding LeftToolTip}" Background="{DynamicResource MahApps.Brushes.Accent}">
-            <!--<Path Height="24" Stretch="Uniform" Fill="White" Data="{Binding LeftSymbol}"/>-->
+        <Button Name="leftButton" Style="{StaticResource mapOptionsButton}" Command="{Binding LeftCommand}" ToolTip="{Binding LeftToolTip}" >
             <iconPacks:PackIconModern Kind="{Binding LeftSymbol}"/>
         </Button>
     </Grid>

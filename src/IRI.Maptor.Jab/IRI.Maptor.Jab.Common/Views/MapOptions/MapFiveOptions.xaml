@@ -22,28 +22,23 @@
         </Grid.Resources>
         <Ellipse Width="8" Height="8" Opacity=".6" Fill="{DynamicResource MahApps.Brushes.Accent}" Margin="0" Stroke="White" StrokeThickness="2"/>
 
-        <Button Name="rightButton" Style="{StaticResource circleButton}" Command="{Binding RightCommand}" ToolTip="{Binding RightToolTip}" Background="{DynamicResource MahApps.Brushes.Accent}">
-            <!--<Path Height="20.7781" Stretch="Uniform" Fill="White" Data="{Binding RightSymbol}"/>-->
+        <Button Name="rightButton" Style="{StaticResource mapOptionsButton}" Command="{Binding RightCommand}" ToolTip="{Binding RightToolTip}" >
             <iconPacks:PackIconModern Kind="{Binding RightSymbol}"/>
         </Button>
 
-        <Button Name="upperRightButton" Style="{StaticResource circleButton}" Command="{Binding UpperRightCommand}" ToolTip="{Binding UpperRightToolTip}" Background="{DynamicResource MahApps.Brushes.Accent}">
-            <!--<Path Height="20.7781" Stretch="Uniform" Fill="White" Data="{Binding UpperRightSymbol}"/>-->
+        <Button Name="upperRightButton" Style="{StaticResource mapOptionsButton}" Command="{Binding UpperRightCommand}" ToolTip="{Binding UpperRightToolTip}" >
             <iconPacks:PackIconModern Kind="{Binding UpperRightSymbol}"/>
         </Button>
 
-        <Button Name="middleButton" Style="{StaticResource circleButton}" Command="{Binding MiddleCommand}" ToolTip="{Binding MiddleToolTip}" Background="{DynamicResource MahApps.Brushes.Accent}">
-            <!--<Path Height="20.7781" Stretch="Uniform" Fill="White" Data="{Binding MiddleSymbol}"/>-->
+        <Button Name="middleButton" Style="{StaticResource mapOptionsButton}" Command="{Binding MiddleCommand}" ToolTip="{Binding MiddleToolTip}" >
             <iconPacks:PackIconModern Kind="{Binding MiddleSymbol}"/>
         </Button>
 
-        <Button Name="upperLeftButton" Style="{StaticResource circleButton}" Command="{Binding UpperLeftCommand}" ToolTip="{Binding UpperLeftToolTip}" Background="{DynamicResource MahApps.Brushes.Accent}">
-            <!--<Path Height="20.7781" Stretch="Uniform" Fill="White" Data="{Binding UpperLeftSymbol}"/>-->
+        <Button Name="upperLeftButton" Style="{StaticResource mapOptionsButton}" Command="{Binding UpperLeftCommand}" ToolTip="{Binding UpperLeftToolTip}" >
             <iconPacks:PackIconModern Kind="{Binding UpperLeftSymbol}"/>
         </Button>
 
-        <Button Name="leftButton" Style="{StaticResource circleButton}" Command="{Binding LeftCommand}" ToolTip="{Binding LeftToolTip}" Background="{DynamicResource MahApps.Brushes.Accent}">
-            <!--<Path Height="24" Stretch="Uniform" Fill="White" Data="{Binding LeftSymbol}"/>-->
+        <Button Name="leftButton" Style="{StaticResource mapOptionsButton}" Command="{Binding LeftCommand}" ToolTip="{Binding LeftToolTip}" >
             <iconPacks:PackIconModern Kind="{Binding LeftSymbol}"/>
         </Button>
     </Grid>
