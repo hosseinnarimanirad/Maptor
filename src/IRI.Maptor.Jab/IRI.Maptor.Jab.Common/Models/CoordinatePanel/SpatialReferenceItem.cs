@@ -73,7 +73,7 @@ public class SpatialReferenceItem : Notifier, IDisposable
     {
         //var point = _fromWgs84Geodetic(geodeticPoint);
 
-        var format = CoordinateHelper.Format(MapProjects.GeodeticWgs84ToWebMercator(geodeticPoint), CoordinateDisplayMode, null, 6, 3, null);
+        var format = CoordinateHelper.Format(MapProjects.GeodeticWgs84ToWebMercator(geodeticPoint), CoordinateDisplayMode, thousandSeparator: true, null, 6, 3, null);
 
         //this.XValue = _toString(point.X);
         //this.YValue = _toString(point.Y);

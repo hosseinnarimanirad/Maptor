@@ -23,6 +23,8 @@ public class MapOptionsViewModel : Notifier, ILocateable
         }
     }
 
+    public Action? PrepareAction;
+
     public Action<object>? RightCommandAction;
     public Action<object>? LeftCommandAction;
     public Action<object>? MiddleCommandAction;

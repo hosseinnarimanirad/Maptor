@@ -24,6 +24,7 @@ using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 using LineSegment = System.Windows.Media.LineSegment;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 using IRI.Maptor.Sta.Spatial.Helpers;
+using IRI.Maptor.Jab.Common.Helpers;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -633,16 +634,18 @@ public class EditableFeatureLayer : SymbolizableLayer
             //Clipboard.SetDataObject($"{geodetic.X.ToString("n4")},{geodetic.Y.ToString("n4")}");
             var mode = RequestGetCoordinateDisplayMode?.Invoke() ?? CoordinateDisplayMode.GeodeticDecimal;
 
-            var format = CoordinateHelper.Format(/*presenter.Location*/new Point(point.X, point.Y), mode, null, null, null, null);
+            ClipboardHelper.CopyToClipboard(new Point(point.X, point.Y), mode, null, null, null, null);
 
-            if (mode == CoordinateDisplayMode.GeodeticDms || mode == CoordinateDisplayMode.GeodeticDecimal)
-            {
-                Clipboard.SetDataObject($"{format.y};{format.x}");
-            }
-            else
-            {
-                Clipboard.SetDataObject($"{format.x};{format.y}");
-            }
+            //var format = CoordinateHelper.Format(/*presenter.Location*/new Point(point.X, point.Y), mode, thousandSeparator: false, null, null, null, null);
+
+            //if (mode == CoordinateDisplayMode.GeodeticDms || mode == CoordinateDisplayMode.GeodeticDecimal)
+            //{
+            //    Clipboard.SetDataObject($"{format.y};{format.x}");
+            //}
+            //else
+            //{
+            //    Clipboard.SetDataObject($"{format.x};{format.y}");
+            //}
 
 
             this.RemoveMapOptions();
@@ -1277,16 +1280,18 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         Point point = new(currentPoint.X, currentPoint.Y);
 
-        var format = CoordinateHelper.Format(point, mode, null, null, null, null);
+        ClipboardHelper.CopyToClipboard(point, mode, null, null, null, null);
 
-        if (mode == CoordinateDisplayMode.GeodeticDms || mode == CoordinateDisplayMode.GeodeticDecimal)
-        {
-            Clipboard.SetDataObject($"{format.y};{format.x}");
-        }
-        else
-        {
-            Clipboard.SetDataObject($"{format.x};{format.y}");
-        }
+        //var format = CoordinateHelper.Format(point, mode, thousandSeparator: false, null, null, null, null);
+
+        //if (mode == CoordinateDisplayMode.GeodeticDms || mode == CoordinateDisplayMode.GeodeticDecimal)
+        //{
+        //    Clipboard.SetDataObject($"{format.y};{format.x}");
+        //}
+        //else
+        //{
+        //    Clipboard.SetDataObject($"{format.x};{format.y}");
+        //}
 
         //switch (spatialReferenceType)
         //{

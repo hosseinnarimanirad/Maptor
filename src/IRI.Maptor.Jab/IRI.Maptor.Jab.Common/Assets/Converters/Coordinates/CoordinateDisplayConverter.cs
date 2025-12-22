@@ -39,7 +39,7 @@ public class CoordinateDisplayConverter : IMultiValueConverter
 
         //double coordinateValue;
 
-        var format = CoordinateHelper.Format(webMercatorPoint, srsType, utmZone, latLongPrecision, xyPrecision, ellipsoid);
+        var format = CoordinateHelper.Format(webMercatorPoint, srsType, thousandSeparator: true, utmZone, latLongPrecision, xyPrecision, ellipsoid);
 
         return isX ? format.x : format.y;
 

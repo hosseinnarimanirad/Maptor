@@ -6,13 +6,12 @@ namespace IRI.Maptor.Sta.SpatialReferenceSystem;
 
 public static class CoordinateHelper
 {
-    public static (string x, string y) Format(Point webMercator, CoordinateDisplayMode mode, int? utmZone, int? latLongPrecision, int? xyPrecision, Ellipsoid? ellipsoid)
+    public static (string x, string y) Format(Point webMercator, CoordinateDisplayMode mode, bool thousandSeparator, int? utmZone, int? latLongPrecision, int? xyPrecision, Ellipsoid? ellipsoid)
     {
 
         // Convert Web Mercator to selected SRS 
         var geodetic = MapProjects.WebMercatorToGeodeticWgs84(webMercator);
-
-
+         
         int theUtmZone = utmZone ?? MapProjects.FindUtmZone(geodetic.X);
 
         int theLatLongPrecision = latLongPrecision ?? 5;
@@ -29,10 +28,10 @@ public static class CoordinateHelper
                     // UTM always uses WGS84 ellipsoid 
                     var utmPoint = MapProjects.GeodeticToUTM(geodetic, Ellipsoids.WGS84, theUtmZone, geodetic.Y > 0);
 
-                    return (FormatWithPrecision(utmPoint.X, theXyPrecision), FormatWithPrecision(utmPoint.Y, theXyPrecision));
+                    return (FormatWithPrecision(utmPoint.X, theXyPrecision, thousandSeparator), FormatWithPrecision(utmPoint.Y, theXyPrecision, thousandSeparator));
 
                 case CoordinateDisplayMode.WebMercator:
-                    return (FormatWithPrecision(webMercator.X, theXyPrecision), FormatWithPrecision(webMercator.Y, theXyPrecision));
+                    return (FormatWithPrecision(webMercator.X, theXyPrecision, thousandSeparator), FormatWithPrecision(webMercator.Y, theXyPrecision, thousandSeparator));
 
                 case CoordinateDisplayMode.GeodeticDecimal:
                 case CoordinateDisplayMode.GeodeticDms:
@@ -46,7 +45,7 @@ public static class CoordinateHelper
                         return (DegreeHelper.ToDms(geodetic.X, true), DegreeHelper.ToDms(geodetic.Y, true));
 
                     else
-                        return (FormatWithPrecision(geodetic.X, theLatLongPrecision), FormatWithPrecision(geodetic.Y, theLatLongPrecision));
+                        return (FormatWithPrecision(geodetic.X, theLatLongPrecision, thousandSeparator), FormatWithPrecision(geodetic.Y, theLatLongPrecision, thousandSeparator));
 
                 default:
                     return (string.Empty, string.Empty);
@@ -59,12 +58,18 @@ public static class CoordinateHelper
     }
 
 
-    private static string FormatWithPrecision(double value, int precision)
+    private static string FormatWithPrecision(double value, int precision, bool thousandSeparator)
     {
-        if (precision == 0)
-            return value.ToString("#,#");
+        var defaultFormat = thousandSeparator ? "#,#" : "#";
 
-        string format = "#,#." + new string('0', precision);
+        if (precision == 0)
+            return value.ToString(defaultFormat);
+        //return value.ToString("#,#");
+
+
+        string format = $"{defaultFormat}." + new string('0', precision);
+        //string format = "#,#." + new string('0', precision);
+
         return value.ToString(format);
     }
 

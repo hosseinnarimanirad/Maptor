@@ -1,4 +1,5 @@
 ﻿using IRI.Maptor.Extensions;
+using IRI.Maptor.Jab.Common.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,13 @@ namespace IRI.Maptor.Jab.Common.Views.MapOptions
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            var viewModel = this.DataContext as MapOptionsViewModel;
+
+            if (viewModel != null && viewModel.PrepareAction != null)
+            {
+                viewModel.PrepareAction?.Invoke();
+            }
+
             Storyboard storyboard = new Storyboard();
 
             storyboard.Children.Add(AnimationHelper.CreateElasticAnimation(this.leftButton, new PropertyPath("(Button.RenderTransform).(TranslateTransform.X)"), -50));
