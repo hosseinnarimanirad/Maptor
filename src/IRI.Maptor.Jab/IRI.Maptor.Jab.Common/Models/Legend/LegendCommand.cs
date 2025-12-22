@@ -170,6 +170,7 @@ public class LegendCommand : LegendCommandBase
     {
         return (presenter, layer) => CreateShowAttributeTable(presenter, layer as VectorLayer);
     }
+
     public static LegendCommand CreateShowAttributeTable(MapViewModelBase map, VectorLayer layer)  
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_showAttributes))
@@ -203,6 +204,8 @@ public class LegendCommand : LegendCommandBase
 
 
             map.AddSelectedLayer(newLayer);
+
+            //map.ShowAttributeTable = true;
         });
 
         return result;

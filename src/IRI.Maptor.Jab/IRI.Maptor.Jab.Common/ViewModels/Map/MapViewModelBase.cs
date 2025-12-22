@@ -821,6 +821,18 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
+    private bool _showAttributeTable = false;
+    public bool ShowAttributeTable
+    {
+        get { return _showAttributeTable; }
+        set
+        {
+            _showAttributeTable = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
     #endregion
 
 
@@ -1312,6 +1324,8 @@ public abstract class MapViewModelBase : ViewModelBase
                 ShowSelectedFeatures(selectedLayer.GetSelectedFeatures(), selectedLayer.AssociatedLayer?.DefaultSymbology?.StrokeThickness);
             }
         }
+
+        this.ShowAttributeTable = true;
     }
 
     public void RemoveSelectedLayer(VectorLayer layer)
