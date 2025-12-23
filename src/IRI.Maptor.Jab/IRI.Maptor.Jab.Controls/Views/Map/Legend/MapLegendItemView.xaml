@@ -231,8 +231,13 @@
                 </ToggleButton>
             </StackPanel>
             <ItemsControl BorderBrush="Black" BorderThickness="0,0,0,0" Margin="6,0,0,0"
-                            ItemsSource="{Binding ElementName=root, Path=Commands}"     
-                            Visibility="{Binding IsChecked, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}">
+                            ItemsSource="{Binding ElementName=root, Path=Commands}">
+                <ItemsControl.Visibility>
+                    <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
+                        <Binding Path="IsChecked" ElementName="root"/>
+                        <Binding Path="IsInScaleRange"/>
+                    </MultiBinding>
+                </ItemsControl.Visibility>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal"/>
