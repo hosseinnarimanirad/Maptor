@@ -76,6 +76,10 @@ public static class DataGridDictionaryBehavior
             if (field == null)
                 continue;
 
+            if (field.Type.ContainsIgnoreCase("NetTopologySuite"))
+                continue;
+
+
             DataGridColumn? column = null;
 
             var typeName = field.Type; // e.g. "System.Int32"

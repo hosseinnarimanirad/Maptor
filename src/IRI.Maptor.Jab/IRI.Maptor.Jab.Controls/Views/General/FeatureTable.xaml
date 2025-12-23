@@ -84,15 +84,11 @@
                              x:Name="grid" telerik:StyleManager.Theme="Office2019" SelectionMode="Extended" SelectionChanged="grid_SelectionChanged"
                                 RowEditEnded="grid_RowEditEnded" MouseDoubleClick="grid_MouseDoubleClick">-->
         <DataGrid x:Name="grid" BorderThickness="1" ItemsSource="{Binding Features}" AutoGenerateColumns="False" SelectionMode="Extended" 
-                  IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
-                  SelectionChanged="grid_SelectionChanged" CellEditEnding="grid_CellEditEnding" EnableColumnVirtualization="False"
-                  AddingNewItem="grid_AddingNewItem" MouseDoubleClick="grid_MouseDoubleClick" DataContextChanged="grid_DataContextChanged"
-                  dgx:DataGridFilter.IsAutoFilterEnabled="True" SelectionUnit="FullRow" Background="Transparent"
-                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True"> 
-
-            <!--<i:Interaction.Behaviors>
-                <localTelerik:RadMultiSelectBehavior SelectedItems="{Binding HighlightedFeatures}"/>
-            </i:Interaction.Behaviors>-->
+                    IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
+                    SelectionChanged="grid_SelectionChanged" CellEditEnding="grid_CellEditEnding" EnableColumnVirtualization="False"
+                    AddingNewItem="grid_AddingNewItem" MouseDoubleClick="grid_MouseDoubleClick" DataContextChanged="grid_DataContextChanged"
+                    dgx:DataGridFilter.IsAutoFilterEnabled="True" SelectionUnit="FullRow" Background="Transparent"
+                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True">  
         </DataGrid>
         <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" LastChildFill="False">
             <!--<telerik:RadDataPager DisplayMode="FirstLastPreviousNextNumeric,Text" IsTotalItemCountFixed="True"

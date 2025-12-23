@@ -121,7 +121,6 @@ public static class ExcelHelper
 
             // Insert the header row to the Sheet Data
             sheetData.AppendChild(row);
-
             try
             {
                 //var karevan = karevanha.Single(i => i.Id == item.KarevanId);
@@ -144,7 +143,7 @@ public static class ExcelHelper
                     sheetData.AppendChild(new Row(cells));
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
@@ -153,7 +152,7 @@ public static class ExcelHelper
         }
     }
 
-    public static void WriteDictionary(List<Dictionary<string, object>> rows, string outputFileName, string sheetName, List<CellValues> types = null, List<string> headers = null)
+    public static void WriteDictionary(List<Dictionary<string, object>> rows, string outputFileName, string sheetName, List<CellValues>? types = null, List<string>? headers = null)
     {
         if (rows is null || rows.Count == 0)
             return;

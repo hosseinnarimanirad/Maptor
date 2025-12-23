@@ -92,23 +92,42 @@ public static class FeatureTableCommands
 
             var features = layer.GetSelectedFeatures();
 
+            // Create headers from field aliases (matching grid display)
+            List<string>? headers = null;
+
+            List<string>? fieldNames = null;
+
+            if (!layer.Fields.IsNullOrEmpty())
+            {
+                headers = layer.Fields.Where(f => !f.Type.ContainsIgnoreCase("NetTopolygon")).Select(f => f.Alias ?? f.Name).ToList();
+                fieldNames = layer.Fields.Where(f => !f.Type.ContainsIgnoreCase("NetTopolygon")).Select(f => f.Name).ToList();
+            }
+
             //
             List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
 
             foreach (var item in features)
             {
-                rows.Add(item.Attributes);
+                // Create ordered dictionary matching field order to ensure columns align with headers
+                Dictionary<string, object> orderedRow;
+                if (fieldNames != null)
+                {
+                    orderedRow = new Dictionary<string, object>();
 
-                //if (item is Feature<Point> feature)
-                //{
-                //rows.Add(feature.Attributes);
-                //}
+                    foreach (var fieldName in fieldNames)
+                    {
+                        if (item.Attributes.TryGetValue(fieldName, out var value))
+                        {
+                            orderedRow[fieldName] = value;
+                        }
+                    }
 
-                //// todo: consider solving the general case
-                //else if (item is IGeometryAware<Point> geometryAware)
-                //{
-                //    rows.Add(new Dictionary<string, object>() { { "Id", item.Id } });
-                //}
+                    rows.Add(orderedRow);
+                }
+                else
+                {
+                    rows.Add(item.Attributes);
+                }
             }
 
             //گرفتن مسیر فایل
@@ -117,7 +136,7 @@ public static class FeatureTableCommands
             if (string.IsNullOrWhiteSpace(fileName))
                 return;
 
-            ExcelHelper.WriteDictionary(rows, fileName, "Sheet1", null, null);
+            ExcelHelper.WriteDictionary(rows, fileName, "Sheet1", null, headers);
 
         });
 
@@ -149,33 +168,12 @@ public static class FeatureTableCommands
             var features = layer.HighlightedFeatures;
 
             if (features.IsNullOrEmpty())
-            {
                 return;
-            }
 
             foreach (var feature in features)
             {
                 map.AddDrawingItem(feature.TheGeometry);
-            }
-
-            //
-            //List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-
-            //foreach (var item in features)
-            //{
-            //    if (item is SqlFeature feature)
-            //    {
-            //        rows.Add(feature.Attributes);
-            //    }
-            //}
-
-            ////گرفتن مسیر فایل
-            //var fileName = map.SaveFile("*.xlsx|*.xlsx");
-
-            //if (string.IsNullOrWhiteSpace(fileName))
-            //    return;
-
-            //Ket.OfficeFormat.ExcelHelper.WriteDictionary(rows, fileName, "Sheet1", null, null);
+            } 
 
         });
 
