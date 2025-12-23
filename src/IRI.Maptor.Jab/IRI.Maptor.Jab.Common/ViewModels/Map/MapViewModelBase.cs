@@ -1219,7 +1219,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         if (!IsConnected)
         {
-            await CheckInternetAccess();
+            await CheckNetAccess();
         }
 
         RequestSetTileService?.Invoke(baseMap, MapSettings.IsBaseMapCacheEnabled, MapSettings.BaseMapCacheDirectory, !IsConnected, getLocalFileName, opacity);
@@ -1857,7 +1857,7 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         RequestSetProxy?.Invoke(proxy);
 
-        await CheckInternetAccess();
+        await CheckNetAccess();
     }
 
     public void SetMapCursorSet1()
@@ -1881,7 +1881,7 @@ public abstract class MapViewModelBase : ViewModelBase
         RequestSetCursor?.Invoke(cursor);
     }
 
-    public async Task CheckInternetAccess()
+    public async virtual Task CheckNetAccess()
     {
         if (DoNotCheckInternet)
         {
@@ -3813,7 +3813,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_checkInternetAccessCommand == null)
             {
-                _checkInternetAccessCommand = new RelayCommand(async param => { await CheckInternetAccess(); });
+                _checkInternetAccessCommand = new RelayCommand(async param => { await CheckNetAccess(); });
             }
 
             return _checkInternetAccessCommand;
