@@ -28,8 +28,9 @@ public class LayerManager : Notifier
     {
         this.allLayers = new List<ILayer>();
 
-        this.CurrentLayers = new ObservableCollection<ILayer>();
+        this.CurrentLayers = new ObservableCollection<ILayer>(); 
     }
+     
 
     public void Add(ILayer layer, double inverseMapScale)
     {
@@ -267,8 +268,8 @@ public class LayerManager : Notifier
         this.RequestRefreshVisibility?.Invoke(sender as BaseLayer);
     }
 
-    public Action<BaseLayer> RequestRefreshVisibility;
-
+    public Action<BaseLayer>? RequestRefreshVisibility;
+     
     //internal void ChangeLayerZIndex(ILayer layer, int newZIndex)
     //{
 

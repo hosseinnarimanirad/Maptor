@@ -22,6 +22,8 @@ public abstract class BaseLayer : Notifier, ILayer
         this.LayerId = Guid.NewGuid();
 
         this.ParentLayerId = Guid.Empty;
+
+        this.ParentLayerName = string.Empty;
     }
 
     #region Layer Id
@@ -35,6 +37,8 @@ public abstract class BaseLayer : Notifier, ILayer
     public Guid LayerId { get; protected set; }
 
     public Guid ParentLayerId { get; set; }
+
+    public string ParentLayerName { get; set; }
 
     private string _layerName = string.Empty;
     public string LayerName

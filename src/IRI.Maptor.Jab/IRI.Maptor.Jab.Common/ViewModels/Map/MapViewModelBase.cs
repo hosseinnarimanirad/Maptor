@@ -258,65 +258,55 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
     private ObservableCollection<ILayer> _layers;
+    private ObservableCollection<ILayer> _allNonGroupLayers = new ObservableCollection<ILayer>();
+    
     public ObservableCollection<ILayer> Layers
     {
         get { return _layers; }
         set
         {
+            // Unsubscribe from old collection
+            if (_layers != null)
+            {
+                _layers.CollectionChanged -= Layers_CollectionChanged;
+            }
+            
             _layers = value;
             RaisePropertyChanged();
-
-            //if (_layers == null)
-            //    return;
-
-            //_layers.CollectionChanged += (sender, e) =>
-            //{
-            //    switch (e.Action)
-            //    {
-            //        case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-            //            foreach (var item in e.NewItems.Cast<ILayer>())
-            //            {
-            //                if (item.Type == LayerType.BaseMap)
-            //                {
-            //                    return;
-            //                }
-
-            //                var layer = item;
-
-            //                var model = new Model.Legend.MapLegendItemWithOptionsModel(layer);
-            //                model.Commands = new List<Model.Legend.ILegendCommand>()
-            //                {
-            //                    LegendCommand.CreateZoomToExtentCommand(this, layer),
-            //                };
-
-            //                LegendLayers.Add(model);
-            //            }
-            //            break;
-            //        case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-            //            foreach (var item in e.OldItems.Cast<ILayer>())
-            //            {
-            //                if (item.Type == LayerType.BaseMap)
-            //                {
-            //                    return;
-            //                }
-
-            //                LegendLayers.Remove(LegendLayers.First(ll => ll.Id == item.Id));
-            //            }
-            //            break;
-            //        case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
-            //            break;
-            //        case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
-            //            break;
-            //        case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
-            //            this.LegendLayers.Clear();
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //};
+            
+            // Subscribe to new collection
+            if (_layers != null)
+            {
+                _layers.CollectionChanged += Layers_CollectionChanged;
+            }
+            
+            // Update AllNonGroupLayers
+            UpdateAllNonGroupLayers();
         }
     }
 
+    private void Layers_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        UpdateAllNonGroupLayers();
+    }
+
+    private void UpdateAllNonGroupLayers()
+    {
+        var newLayers = GetAllLayers(Layers);
+        
+        _allNonGroupLayers.Clear();
+        foreach (var layer in newLayers)
+        {
+            _allNonGroupLayers.Add(layer);
+        }
+        
+        RaisePropertyChanged(nameof(AllNonGroupLayers));
+    }
+
+    public ObservableCollection<ILayer> AllNonGroupLayers
+    {
+        get { return _allNonGroupLayers; }
+    }
 
     //LegendCommand.CreateZoomToExtentCommand(this, layer),
     //                LegendCommand.CreateSelectByDrawing<T>(this, (VectorLayer) layer),

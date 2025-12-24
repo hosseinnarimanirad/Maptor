@@ -32,6 +32,8 @@ public class GroupLayer : BaseLayer
     {
         layer.ParentLayerId = this.LayerId;
 
+        layer.ParentLayerName = this.LayerName;
+
         if (!this.SubLayers.Contains(layer))
         {
             var index = this.SubLayers.Count(x => x.ZIndex > layer.ZIndex);

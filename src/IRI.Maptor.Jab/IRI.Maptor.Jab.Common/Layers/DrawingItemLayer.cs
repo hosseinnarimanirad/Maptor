@@ -35,7 +35,7 @@ public class DrawingItemLayer : VectorLayer//, IIdentifiable
             {
                 return Feature.TheGeometry?.GetBoundingBox() ?? BoundingBox.NaN;
             }
-            else if(SpecialPointLayer is not null)
+            else if (SpecialPointLayer is not null)
             {
                 return SpecialPointLayer.Extent;
             }
@@ -177,10 +177,14 @@ public class DrawingItemLayer : VectorLayer//, IIdentifiable
         {
             result.RequestChangeVisibility?.Invoke(result);
         };
-          
+
         //result.AddVisualParameters(VisualParameters.GetDefaultForDrawingItems());
 
-        result.SpecialPointLayer = new SpecialPointLayer(layerName, locateables, .8, null, LayerType.MoveableItem) { ParentLayerId = result.LayerId };
+        result.SpecialPointLayer = new SpecialPointLayer(layerName, locateables, .8, null, LayerType.MoveableItem)
+        {
+            ParentLayerId = result.LayerId,
+            ParentLayerName = result.LayerName
+        };
 
         return result;
     }

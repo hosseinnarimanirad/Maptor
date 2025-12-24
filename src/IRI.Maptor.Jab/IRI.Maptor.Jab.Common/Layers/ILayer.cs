@@ -19,6 +19,8 @@ public interface ILayer
 
     Guid ParentLayerId { get; set; }
 
+    string ParentLayerName { get; set; }
+
     string LayerName { get; set; }
 
     LayerType Type { get; }
