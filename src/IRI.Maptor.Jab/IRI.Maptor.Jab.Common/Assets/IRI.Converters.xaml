@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:IRI.Maptor.Jab.Common.Assets.Converters">
-    
+
     <converters:ArabicStringToFarsiStringConverter x:Key="arabicToFarsiConverter"/>
 
     <converters:Base64ToByteArrayConverter x:Key="base64ToByteArrayConverter"/>
@@ -18,19 +18,14 @@
     <converters:CoordinateDimensionToMVisibilityConverter x:Key="coordinateDimensionToMVisibilityConverter"/>
     <converters:CoordinateDimensionToZVisibilityConverter x:Key="coordinateDimensionToZVisibilityConverter"/>
     <converters:CoordinateDisplayConverter x:Key="coordinateDisplayConverter"/>
-    
-
-    <converters:EllipsoidNameConverter x:Key="ellipsoidNameConverter"/>
-    <converters:UtmZoneConverter x:Key="utmZoneConverter"/>
-    <converters:SrsTypeToIconConverter x:Key="srsTypeToIconConverter"/>
-    <converters:SrsTypeToDescriptionConverter x:Key="srsTypeToDescriptionConverter"/>
-    <!--<converters:CountLessThanOneToBoolConverter x:Key="countLessThanOneToBoolConverter"/>-->
 
     <converters:DateTimeToPersianEllapsedDateCoarseConverter x:Key="dateTimeToPersianEllapsedDateCoarseConverter"/>
     <converters:DoubleToDoubleInverseConverter x:Key="doubleInverseConverter"/>
     <converters:DoubleToMarginTopConverter x:Key="doubleToMarginTopConverter"/>
     <converters:DoubleToReducedDoubleByPercentConverter x:Key="doubleToReducedDoubleByPercentConverter"/>
 
+    <converters:EllipsoidNameConverter x:Key="ellipsoidNameConverter"/>
+    <converters:EnumToBoolConverter x:Key="enumToBoolConverter"/>
     <converters:EnumToDescriptionConverter x:Key="enumToDescriptionConverter"/>
 
     <converters:FlowDocumentXmlToStringConverter x:Key="flowDocumentXmlToStringConverter"/>
@@ -53,12 +48,16 @@
     <converters:LocalizedNumberConverter x:Key="localizedNumberConverter"/>
 
     <converters:MultiBooleanToVisibilityConverter x:Key="multiBooleanToVisibilityConverter"/>
-    
+
     <converters:NotConverter x:Key="notConverter"/>
     <converters:NotNullToBoolConverter x:Key="notNullToBoolConverter"/>
 
     <converters:PointNumberConverter x:Key="pointNumberConverter"/>
- 
+
+    <converters:SrsTypeToIconConverter x:Key="srsTypeToIconConverter"/>
+    <converters:SrsTypeToDescriptionConverter x:Key="srsTypeToDescriptionConverter"/>
+    <!--<converters:CountLessThanOneToBoolConverter x:Key="countLessThanOneToBoolConverter"/>-->
+
     <converters:ScaleToGoogleScaleConverter x:Key="scaleToGoogleScaleConverter"/>
     <converters:SolidColorBrushToColorConverter x:Key="solidColorBrushToColorConverter"/>
     <converters:StreamGeometryToImageConverter x:Key="streamGeometryToImageConverter"/>
@@ -70,7 +69,9 @@
     <converters:SubtractConstantConverter x:Key="subtractConstantConverter"/>
 
     <converters:TileTypeToBoolConverter x:Key="tileTypeToBoolConverter"/>
-    
+
+    <converters:UtmZoneConverter x:Key="utmZoneConverter"/>
+
     <converters:VisibilityToBoolConverter x:Key="visibilityToBoolConverter"/>
-      
+
 </ResourceDictionary>
