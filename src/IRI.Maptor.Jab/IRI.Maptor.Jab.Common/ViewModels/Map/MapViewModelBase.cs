@@ -285,6 +285,11 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    public ObservableCollection<ILayer> AllNonGroupLayers
+    {
+        get { return _allNonGroupLayers; }
+    }
+
     private void Layers_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         UpdateAllNonGroupLayers();
@@ -301,11 +306,6 @@ public abstract class MapViewModelBase : ViewModelBase
         }
         
         RaisePropertyChanged(nameof(AllNonGroupLayers));
-    }
-
-    public ObservableCollection<ILayer> AllNonGroupLayers
-    {
-        get { return _allNonGroupLayers; }
     }
 
     //LegendCommand.CreateZoomToExtentCommand(this, layer),
