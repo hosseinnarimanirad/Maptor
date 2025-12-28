@@ -33,21 +33,15 @@ public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
     public double Z
     {
         get { return this.z; }
+        set { this.z = value; }
     }
 
     public double Measure
     {
         get { return this.measure; }
+        set { this.measure = value; }
     }
-
-    //public PointType Type => PointType.PointM | PointType.PointZ;
-
-    //public bool HasM() => true;
-
-    //public bool HasZ() => true;
-
-    //public int Srid { get; set; }
-
+     
     public EsriPointZ() { }
 
     public EsriPointZ(double x, double y, double z, int srid)
@@ -81,42 +75,12 @@ public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
 
         return this.AsExactString() == ((EsriPointZ)obj).AsExactString();
     }
-
-    //public double DistanceTo(IPoint point)
-    //{
-    //    if (point is EsriPointZ)
-    //    {
-    //        return PointZM.GetDistance(new PointZM(this.X, this.Y, this.Z), new PointZM(point.X, point.Y, ((EsriPointZ)point).Z));
-    //    }
-    //    else
-    //    {
-    //        return new PointZM(this.X, this.Y, this.Z).DistanceTo(point);
-    //    }
-
-    //}
-
+     
     #region IShape Members
 
 
     public override BoundingBox MinimumBoundingBox => new BoundingBox(this.X, this.Y, this.X, this.Y);
-
-    //public byte[] WriteContentsToByte()
-    //{
-    //    System.IO.MemoryStream result = new System.IO.MemoryStream();
-
-    //    result.Write(System.BitConverter.GetBytes((int)ShapeType.PointZ), 0, ShapeConstants.IntegerSize);
-
-    //    result.Write(System.BitConverter.GetBytes(this.X), 0, ShapeConstants.DoubleSize);
-
-    //    result.Write(System.BitConverter.GetBytes(this.Y), 0, ShapeConstants.DoubleSize);
-
-    //    result.Write(System.BitConverter.GetBytes(this.Z), 0, ShapeConstants.DoubleSize);
-
-    //    result.Write(System.BitConverter.GetBytes(this.Measure), 0, ShapeConstants.DoubleSize);
-
-    //    return result.ToArray();
-    //}
-
+     
     public override byte[] WriteContentsToByte()
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
@@ -137,55 +101,16 @@ public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
     public override int ContentLength => ShapeConstants.PointZContentLengthInWords;
 
     public override EsriShapeType EsriType => EsriShapeType.EsriPointZM;
-
-    //public string AsSqlServerWkt()
-    //{
-    //    return string.Format(System.Globalization.CultureInfo.InvariantCulture, "POINT({0:G17} {1:G17} {2:G17} {3})", this.X, this.Y, this.Z, this.Measure == EsriConstants.NoDataValue ? "NULL" : this.Measure.ToString("G17"));
-    //}
-
-    //public byte[] AsWkb()
-    //{
-    //    return OgcWkbMapFunctions.ToWkbPointZM(this, this.Z, this.Measure);
-    //}
-
+     
     /// <summary>
     /// Returs Kml representation of the point. Note: Z,M values are ignored. Point must be in Lat/Long System
     /// </summary>
     /// <returns></returns>
-    public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectFunc = null, byte[] color = null)
+    public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectToGeodeticFunc = null, byte[] color = null)
     {
-        IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType placemark = new IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType();
-
-        IRI.Maptor.Sta.KmlFormat.Primitives.PointType point = new IRI.Maptor.Sta.KmlFormat.Primitives.PointType();
-
-        Point coordinates = new Point(this.X, this.Y);
-
-        if (projectFunc != null)
-        {
-            coordinates = projectFunc(coordinates);
-        }
-
-        point.Coordinates.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", coordinates.X, coordinates.Y));
-
-        placemark.AbstractGeometryGroup = point;
-
-        if (color != null)
-        {
-            IRI.Maptor.Sta.KmlFormat.Primitives.StyleType style = new IRI.Maptor.Sta.KmlFormat.Primitives.StyleType();
-            IRI.Maptor.Sta.KmlFormat.Primitives.IconStyleType iconStyle = new IRI.Maptor.Sta.KmlFormat.Primitives.IconStyleType();
-            iconStyle.Color = color;
-            style.IconStyle = iconStyle;
-            placemark.AbstractStyleSelectorGroup.Add(style);
-        }
-
-        return placemark;
+        return KmlPlacemarkHelper.CreatePointPlacemark(new Point(this.X, this.Y), projectToGeodeticFunc, color);
     }
-
-    //public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
-    //{
-    //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
-    //}
-
+     
     public override EsriShapeBase Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         var result = transform(this);
@@ -215,11 +140,15 @@ public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
     public byte[] AsByteArray()
     {
         // Option #3
-        Span<byte> buffer = stackalloc byte[16];  // Stack-allocated, no heap allocation
+        Span<byte> buffer = stackalloc byte[32];  // Stack-allocated, no heap allocation - X(8) + Y(8) + Z(8) + Measure(8)
 
         BitConverter.TryWriteBytes(buffer.Slice(0, 8), X);
 
         BitConverter.TryWriteBytes(buffer.Slice(8, 8), Y);
+
+        BitConverter.TryWriteBytes(buffer.Slice(16, 8), Z);
+
+        BitConverter.TryWriteBytes(buffer.Slice(24, 8), Measure);
 
         return buffer.ToArray();  // Only allocates when creating final array
     }

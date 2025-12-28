@@ -3,10 +3,6 @@ namespace IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
 public abstract class EsriPointZCollection : EsriPointMCollection
 {
-    //double MaxZ { get; }
-    //double MinZ { get; }
-    //double[] ZValues { get; }
-
     protected double minZ, maxZ;
     protected double[] zValues;
 
@@ -15,5 +11,4 @@ public abstract class EsriPointZCollection : EsriPointMCollection
     public double MaxZ => this.maxZ;
 
     public double[] ZValues => this.zValues;
-
 }

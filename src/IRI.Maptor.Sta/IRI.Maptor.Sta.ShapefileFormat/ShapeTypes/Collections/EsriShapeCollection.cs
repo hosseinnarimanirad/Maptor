@@ -30,28 +30,33 @@ public class EsriShapeCollection<T> : List<T>, IEsriShapeCollection where T : Es
 
     public EsriShapeCollection(IEnumerable<T> values)
     {
-        if (typeof(T) is EsriPointMCollection)
+        if (values is null)
+            throw new ArgumentNullException(nameof(values));
+        
+        if (typeof(EsriPointMCollection).IsAssignableFrom(typeof(T)))
         {
-            throw new NotImplementedException();
+            throw new ArgumentException("EsriPointMCollection types are not supported in this collection.", nameof(T));
         }
 
-        if (values.Select(i => i.EsriType).Distinct().Count() > 1)
+        var valuesList = values.ToList();
+        if (valuesList.Count == 0)
+            throw new ArgumentException("Collection must contain at least one shape.", nameof(values));
+
+        if (valuesList.Select(i => i.EsriType).Distinct().Count() > 1)
         {
-            throw new NotImplementedException();
+            throw new ArgumentException("All shapes in the collection must have the same EsriType.", nameof(values));
         }
 
-        this.AddRange(values);
-         
-        ////////this.mainHeader = new MainFileHeader(length, values[0].Type, minimumBoundingBox);
+        this.AddRange(valuesList);
 
-        var minimumBoundingBox = BoundingBox.GetMergedBoundingBox(values.Select(i => i.MinimumBoundingBox));
+        var minimumBoundingBox = BoundingBox.GetMergedBoundingBox(valuesList.Select(i => i.MinimumBoundingBox));
        
         //The content length for a record is the length of the record contents section measured in
         //16-bit words. Each record, therefore, contributes (4 + content length) 16-bit words
         //toward the total length of the file, as stored at Byte 24 in the file header.
-        var length = values.Sum(i => i.ContentLength + 4);
+        var length = valuesList.Sum(i => i.ContentLength + 4);
 
-        this.mainHeader = new MainFileHeader(length, values.First().EsriType, minimumBoundingBox);
+        this.mainHeader = new MainFileHeader(length, valuesList.First().EsriType, minimumBoundingBox);
     }
       
     #region IShapeCollection Members

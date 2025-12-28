@@ -28,15 +28,7 @@ public class EsriPoint : EsriShapeBase, IPoint
         get { return this.y; }
         set { this.y = value; }
     }
-
-    public int Srid { get; set; }
-
-    //public PointType Type => PointType.Normal;
-
-    //public bool HasM() => false;
-
-    //public bool HasZ() => false;
-
+     
     public EsriPoint() { }
 
     public EsriPoint(double x, double y, int srid)
@@ -50,19 +42,7 @@ public class EsriPoint : EsriShapeBase, IPoint
 
 
     public override BoundingBox MinimumBoundingBox => new BoundingBox(this.X, this.Y, this.X, this.Y);
-
-    //public byte[] WriteContentsToByte()
-    //{
-    //    System.IO.MemoryStream result = new System.IO.MemoryStream();
-
-    //    result.Write(System.BitConverter.GetBytes((int)ShapeType.Point), 0, ShapeConstants.IntegerSize);
-
-    //    result.Write(System.BitConverter.GetBytes(this.X), 0, ShapeConstants.DoubleSize);
-
-    //    result.Write(System.BitConverter.GetBytes(this.Y), 0, ShapeConstants.DoubleSize);
-
-    //    return result.ToArray();
-    //}
+     
     public override byte[] WriteContentsToByte()
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
@@ -82,12 +62,7 @@ public class EsriPoint : EsriShapeBase, IPoint
     public override int ContentLength => ShapeConstants.PointContentLengthInWords;
 
     public override EsriShapeType EsriType => EsriShapeType.EsriPoint;
-
-    //public static explicit operator EsriPoint(Point value)
-    //{
-    //    return new EsriPoint(value.X, value.Y);
-    //}
-
+     
     public string AsExactString()
     {
         return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17} {1:G17}", this.X, this.Y);
@@ -128,65 +103,16 @@ public class EsriPoint : EsriShapeBase, IPoint
     {
         return this.AsExactString().GetHashCode();
     }
-
-
-    //public string AsSqlServerWkt()
-    //{
-    //    return string.Format(System.Globalization.CultureInfo.InvariantCulture, "POINT({0:G17} {1:G17})", this.X, this.Y);
-    //}
-
-    //public byte[] AsWkb()
-    //{
-    //    return OgcWkbMapFunctions.ToWkbPoint(this);
-    //}
-
+     
     /// <summary>
     /// Returs Kml representation of the point. Note: Point must be in Lat/Long System
     /// </summary>
     /// <returns></returns>
     public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectToGeodeticFunc = null, byte[] color = null)
     {
-        IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType placemark = new IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType();
-
-        IRI.Maptor.Sta.KmlFormat.Primitives.PointType point = new IRI.Maptor.Sta.KmlFormat.Primitives.PointType();
-
-        Point coordinates = new Point(this.x, this.Y);
-
-        if (projectToGeodeticFunc != null)
-        {
-            coordinates = projectToGeodeticFunc(new Point(this.X, this.Y));
-        }
-
-        point.Coordinates.Add(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", coordinates.X, coordinates.Y));
-
-        placemark.AbstractGeometryGroup = point;
-
-        if (color != null)
-        {
-            IRI.Maptor.Sta.KmlFormat.Primitives.StyleType style = new IRI.Maptor.Sta.KmlFormat.Primitives.StyleType();
-            IRI.Maptor.Sta.KmlFormat.Primitives.IconStyleType iconStyle = new IRI.Maptor.Sta.KmlFormat.Primitives.IconStyleType();
-            iconStyle.Color = color;
-            style.IconStyle = iconStyle;
-            placemark.AbstractStyleSelectorGroup.Add(style);
-        }
-
-        return placemark;
+        return KmlPlacemarkHelper.CreatePointPlacemark(new Point(this.X, this.Y), projectToGeodeticFunc, color);
     }
-
-    //public string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
-    //{
-    //    //IRI.Maptor.Sta.KmlFormat.Primitives.KmlType result = new IRI.Maptor.Sta.KmlFormat.Primitives.KmlType();
-
-    //    //IRI.Maptor.Sta.KmlFormat.Primitives.DocumentType document = new IRI.Maptor.Sta.KmlFormat.Primitives.DocumentType();
-
-    //    //document.AbstractFeature = new IRI.Maptor.Sta.KmlFormat.Primitives.AbstractFeatureType[] { this.AsPlacemark(projectToGeodeticFunc) };
-
-    //    //result.KmlObjectExtensionGroup = new IRI.Maptor.Sta.KmlFormat.Primitives.AbstractObjectType[] { document };
-
-    //    //return IRI.Maptor.Ket.IO.XmlStream.Parse(result);
-    //    return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
-    //}
-
+     
     public override EsriShapeBase Transform(Func<IPoint, IPoint> transform, int newSrid) /*where TPoint : IPoint, new()*/
     {
         var result = transform(this);

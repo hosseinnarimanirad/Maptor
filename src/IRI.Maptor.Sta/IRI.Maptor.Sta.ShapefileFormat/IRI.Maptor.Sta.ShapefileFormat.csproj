@@ -3,9 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>IRI.ShapefileFormat</Title>
+    <Title>IRI.Maptor.Sta.ShapefileFormat</Title>
     <NoWarn>CS8602,CS8618,CS8625</NoWarn>
-    <Nullable>enable</Nullable> 
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <!-- or "latest", "preview", or "11.0" -->
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -14,16 +15,26 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Hossein Narimani Rad</Authors>
     <Company>Maptor</Company>
+    <Copyright>Maptor</Copyright>
     <Description>A .NET standard library to read/write shapefile (*.shp, *.shx, *.dbf, *.prj)</Description>
     <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/IRI.Maptor.Sta/IRI.Maptor.Sta.ShapefileFormat</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>shapefile;GIS;spatial;dbf</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <!-- PackageIconUrl can be added when an icon is available -->
+    <!-- <PackageIconUrl>https://github.com/hosseinnarimanirad/Maptor/raw/master/icon.png</PackageIconUrl> -->
   </PropertyGroup>
  
   <ItemGroup>
-    <Content Include="Info\Info.txt" />
-    <Content Include="License.txt" />
+    <None Update="Info\Info.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="License.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
  
   <ItemGroup>

@@ -39,7 +39,6 @@ public abstract class EsriShapeBase
 
     public abstract PlacemarkType AsPlacemark(Func<Point, Point> projectToGeodeticFunc = null, byte[] color = null);
 
-    //public abstract string AsKml(Func<Point, Point> projectToGeodeticFunc = null);
     public virtual string AsKml(Func<Point, Point> projectToGeodeticFunc = null)
     {
         return OgcKmlMapFunctions.AsKml(this.AsPlacemark(projectToGeodeticFunc));
