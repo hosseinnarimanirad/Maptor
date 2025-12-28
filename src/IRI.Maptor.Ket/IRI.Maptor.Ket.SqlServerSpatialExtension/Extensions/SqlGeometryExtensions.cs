@@ -19,7 +19,7 @@ public static class SqlGeometryExtensions
     {
         return geometry is null || geometry.IsNull || geometry.STIsEmpty().IsTrue;
     }
-     
+
     public static int GetSrid(this SqlGeometry geometry)
     {
         if (geometry is null)
@@ -144,7 +144,7 @@ public static class SqlGeometryExtensions
         else
         {
             return (OpenGisGeometryType)Enum.Parse(typeof(OpenGisGeometryType), geometry.STGeometryType().Value, true);
-        } 
+        }
     }
 
     public static bool IsPointOrMultiPoint(this SqlGeometry geometry)
@@ -196,7 +196,7 @@ public static class SqlGeometryExtensions
     }
 
     public static SqlGeometry GetCentroidOrOnSurface(this SqlGeometry geometry)
-    { 
+    {
         return geometry.STContains(geometry.STCentroid()).Value ? geometry.STCentroid() : geometry.STPointOnSurface();
     }
 
@@ -463,7 +463,7 @@ public static class SqlGeometryExtensions
         if (point.IsNullOrEmpty())
             return Geometry<Point>.CreateEmpty(GeometryType.Point, srid);
 
-        return new Geometry<Point>(new List<Point>() { point.AsPoint() }, GeometryType.Point, srid);
+        return Geometry<Point>.Create([point.AsPoint()], GeometryType.Point, srid);
     }
 
     private static Geometry<Point> SqlMultiPointToGeometry(SqlGeometry multiPoint)
@@ -507,7 +507,7 @@ public static class SqlGeometryExtensions
             result.Add(new Point(lineString.STPointN(i).STX.Value, lineString.STPointN(i).STY.Value));
         }
 
-        return new Geometry<Point>(result, GeometryType.LineString, srid);
+        return Geometry<Point>.Create(result, GeometryType.LineString, srid);
     }
 
     private static Geometry<Point> SqlMultiLineStringToGeometry(SqlGeometry multiLineString)
@@ -543,7 +543,7 @@ public static class SqlGeometryExtensions
         var numberOfInteriorRings = polygon.STNumInteriorRing().Value;
 
         Geometry<Point> exteriorRing = SqlLineStringToGeometry(polygon.STExteriorRing(), true);
-         
+
         List<Geometry<Point>> result = new List<Geometry<Point>>(numberOfInteriorRings + 1);
 
         //result[0] = exteriorRing;
@@ -1171,7 +1171,7 @@ public static class SqlGeometryExtensions
     #region SqlGeometry To GeoJson
 
     public static IGeoJsonGeometry AsGeoJson(this SqlGeometry geometry, bool isXFirst = true)
-    { 
+    {
         OpenGisGeometryType geometryType = geometry.GetOpenGisType();
 
         switch (geometryType)
@@ -1415,5 +1415,5 @@ public static class SqlGeometryExtensions
 
     #endregion
 
-     
+
 }

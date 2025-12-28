@@ -149,7 +149,7 @@ public class ApplicationPresenter : MapViewModelBase
                                     .Select(i => new IRI.Maptor.Sta.Common.Primitives.Point(double.Parse(i[0]), double.Parse(i[1])))
                                     .ToList();
 
-                    var lineString = new Geometry<Point>(points, GeometryType.LineString, 0);
+                    var lineString = Geometry<Point>.Create(points, GeometryType.LineString, 0);
 
                     var originalLayer = new VectorLayer("original",
                                                       new List<Geometry<Point>>() { lineString },

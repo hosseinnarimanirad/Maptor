@@ -4044,7 +4044,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 return new Geometry<T>(Geometry<T>.Create(points!, GeometryType.LineString, srid), GeometryType.Polygon, srid);
 
             case GeometryType.MultiPoint:
-                return new Geometry<T>(points.Select(p => Geometry<T>.Create(p.X, p.Y, srid)).ToList(), GeometryType.MultiPoint, srid);
+                return new Geometry<T>(points!, GeometryType.MultiPoint, srid);
 
             case GeometryType.MultiLineString:
             case GeometryType.MultiPolygon:
