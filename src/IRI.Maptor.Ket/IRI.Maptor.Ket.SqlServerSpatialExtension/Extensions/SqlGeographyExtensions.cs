@@ -434,5 +434,7 @@ public static class SqlGeographyExtensions
 
     #endregion
 
+    public static string As2DWkt(this SqlGeography geography) => new string(geography.STAsText().Value);
 
+    public static string As4DWkt(this SqlGeography geography) => new string(geography.AsTextZM().Value);
 }

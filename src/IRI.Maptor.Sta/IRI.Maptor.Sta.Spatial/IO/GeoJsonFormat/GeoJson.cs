@@ -254,7 +254,7 @@ public static class GeoJson
 
         var pointsToUse = isRing && coordinates.Length > 0 ? coordinates.Take(coordinates.Length - 1) : coordinates;
 
-        return new Geometry<T>(pointsToUse.Select(c => CreatePointFromCoordinates(c, pointFactory, isLongitudeFirst)).ToList(), geometryType, srid);
+        return Geometry<T>.Create(pointsToUse.Select(c => CreatePointFromCoordinates(c, pointFactory, isLongitudeFirst)).ToList(), geometryType, srid);
 
         //return maxDim switch
         //{

@@ -75,8 +75,8 @@ public class GeoJsonFeature
         // Convert IGeometry to Geometry<Point> for projection
         Geometry<Point> pointGeometry = geometry switch
         {
-            Geometry<PointZM> gzm => new Geometry<Point>(gzm.Points.Select(p => new Point(p.X, p.Y)).ToList(), geometry.Type, geometry.Srid),
-            Geometry<PointZ> gz => new Geometry<Point>(gz.Points.Select(p => new Point(p.X, p.Y)).ToList(), geometry.Type, geometry.Srid),
+            Geometry<PointZM> gzm => Geometry<Point>.Create(gzm.Points.Select(p => new Point(p.X, p.Y)).ToList(), geometry.Type, geometry.Srid),
+            Geometry<PointZ> gz => Geometry<Point>.Create(gz.Points.Select(p => new Point(p.X, p.Y)).ToList(), geometry.Type, geometry.Srid),
             Geometry<Point> g => g,
             _ => throw new NotSupportedException($"Unsupported geometry type: {geometry.GetType()}")
         };

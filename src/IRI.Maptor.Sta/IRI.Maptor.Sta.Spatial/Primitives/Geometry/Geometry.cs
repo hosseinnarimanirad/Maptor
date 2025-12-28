@@ -78,9 +78,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     }
 
-    //public Geometry(List<Point> points, GeometryType type, int srid) : this(points as List<T>, type, false, srid) { }
-
-    public Geometry(List<T> points, GeometryType type, int srid) : this(points, type, false, srid) { }
+    private Geometry(List<T> points, GeometryType type, int srid) : this(points, type, false, srid) { }
 
     // note: in the case of rings (isClosed=true) first point should not be repeated as last point
     public Geometry(List<T> points, GeometryType type, bool isClosed, int srid)
@@ -111,13 +109,15 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         }
         else if (type == GeometryType.MultiPoint)
         {
-            this.Geometries = points.Select(p => new Geometry<T>([p], GeometryType.Point, srid)).ToList();
+            this.Geometries = points.Select(p => Geometry<T>.Create([p], GeometryType.Point, srid)).ToList();
         }
         else
         {
             throw new NotImplementedException("Geometry > Constructor");
         }
     }
+
+    public Geometry(Geometry<T> geometry, GeometryType type, int srid) : this([geometry], type, srid) { }
 
     public Geometry(List<Geometry<T>> geometries, GeometryType type, int srid)
     {
@@ -140,8 +140,6 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             }
         }
     }
-
-    public Geometry(Geometry<T> geometry, GeometryType type, int srid) : this(new List<Geometry<T>>() { geometry }, type, srid) { }
 
     #endregion
 
@@ -240,6 +238,11 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     //{
     //    return this.IsNullOrEmpty() || !IsValid();
     //}
+
+    public bool IsNonEmptyLeafGeometry()
+    {
+        return IsLeafGeometry() && this.Points != null && this.Points.Count > 0;
+    }
 
     public bool IsLeafGeometry()
     {
@@ -578,7 +581,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 return new Geometry<T>(this.Geometries, GeometryType.MultiPoint, this.Srid);
 
             case GeometryType.Point:
-                return new Geometry<T>(this.Points, GeometryType.Point, this.Srid);
+                return Geometry<T>.Create(this.Points, GeometryType.Point, this.Srid);
 
             case GeometryType.LineString:
                 //todo: multiple cast consider changing it
@@ -731,10 +734,10 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 return new Geometry<T>(this.Geometries.Select(i => i.Transform(transform)).ToList(), GeometryType.MultiPoint, newSrid);
 
             case GeometryType.Point:
-                return new Geometry<T>(this.Points.Select(i => transform(i)).ToList(), GeometryType.Point, newSrid);
+                return Geometry<T>.Create(this.Points.Select(i => transform(i)).ToList(), GeometryType.Point, newSrid);
 
             case GeometryType.LineString:
-                return new Geometry<T>(this.Points.Select(i => transform(i)).ToList(), GeometryType.LineString, newSrid);
+                return Geometry<T>.Create(this.Points.Select(i => transform(i)).ToList(), GeometryType.LineString, newSrid);
 
             case GeometryType.MultiLineString:
                 return new Geometry<T>(this.Geometries.Select(i => i.Transform(transform)).ToList(), GeometryType.MultiLineString, newSrid);
@@ -1880,6 +1883,13 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             return this.Clone();
         }
 
+        // Check if geometry is geodetic (lat/long on ellipsoid)
+        if (this.Srid == SridHelper.GeodeticWGS84)
+        {
+            // Use geodesic buffer for geodetic coordinates
+            return BufferGeodesic(distance);
+        }
+
         switch (this.Type)
         {
             case GeometryType.Point:
@@ -1906,6 +1916,102 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             case GeometryType.CurvePolygon:
             default:
                 throw new NotImplementedException($"Buffer not implemented for {this.Type}");
+        }
+    }
+
+    /// <summary>
+    /// Creates a geodesic buffer around this geometry at the specified distance (for geodetic coordinates)
+    /// Uses Vincenty formulas for accurate ellipsoidal calculations
+    /// </summary>
+    /// <param name="distance">The buffer distance in meters</param>
+    /// <returns>A buffered geometry</returns>
+    public Geometry<T> BufferGeodesic(double distance)
+    {
+        if (this.IsNullOrEmpty())
+            return Geometry<T>.Empty;
+
+        if (distance < 0)
+            throw new ArgumentException("Buffer distance cannot be negative", nameof(distance));
+
+        if (Math.Abs(distance) < SpatialUtility.EpsilonDistance)
+        {
+            return this.Clone();
+        }
+
+        switch (this.Type)
+        {
+            case GeometryType.Point:
+                return BufferPointGeodesic(distance);
+
+            case GeometryType.LineString:
+                return BufferLineStringGeodesic(distance);
+
+            case GeometryType.Polygon:
+                return BufferPolygonGeodesic(distance);
+
+            case GeometryType.MultiPoint:
+                return BufferMultiPointGeodesic(distance);
+
+            case GeometryType.MultiLineString:
+                return BufferMultiLineStringGeodesic(distance);
+
+            case GeometryType.MultiPolygon:
+                return BufferMultiPolygonGeodesic(distance);
+
+            case GeometryType.GeometryCollection:
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            default:
+                throw new NotImplementedException($"BufferGeodesic not implemented for {this.Type}");
+        }
+    }
+
+    /// <summary>
+    /// Creates a spherical buffer around this geometry at the specified distance (for geodetic coordinates)
+    /// Uses Haversine formula for spherical calculations (faster but less accurate than geodesic)
+    /// </summary>
+    /// <param name="distance">The buffer distance in meters</param>
+    /// <returns>A buffered geometry</returns>
+    public Geometry<T> BufferSpherical(double distance)
+    {
+        if (this.IsNullOrEmpty())
+            return Geometry<T>.Empty;
+
+        if (distance < 0)
+            throw new ArgumentException("Buffer distance cannot be negative", nameof(distance));
+
+        if (Math.Abs(distance) < SpatialUtility.EpsilonDistance)
+        {
+            return this.Clone();
+        }
+
+        switch (this.Type)
+        {
+            case GeometryType.Point:
+                return BufferPointSpherical(distance);
+
+            case GeometryType.LineString:
+                return BufferLineStringSpherical(distance);
+
+            case GeometryType.Polygon:
+                return BufferPolygonSpherical(distance);
+
+            case GeometryType.MultiPoint:
+                return BufferMultiPointSpherical(distance);
+
+            case GeometryType.MultiLineString:
+                return BufferMultiLineStringSpherical(distance);
+
+            case GeometryType.MultiPolygon:
+                return BufferMultiPolygonSpherical(distance);
+
+            case GeometryType.GeometryCollection:
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            default:
+                throw new NotImplementedException($"BufferSpherical not implemented for {this.Type}");
         }
     }
 
@@ -2098,7 +2204,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         // Close the polygon
         points.Add(new T() { X = points[0].X, Y = points[0].Y });
 
-        return new Geometry<T>(points, GeometryType.Polygon, srid);
+        return Geometry<T>.Create(points, GeometryType.Polygon, srid);
     }
 
     /// <summary>
@@ -2134,7 +2240,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             points.Add(new T() { X = x, Y = y });
         }
 
-        return new Geometry<T>(points, GeometryType.LineString, srid);
+        return Geometry<T>.Create(points, GeometryType.LineString, srid);
     }
 
     /// <summary>
@@ -2308,6 +2414,569 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         // If buffer distance exceeds hole size, hole will be eliminated
         return bufferDistance >= minDistance;
     }
+
+    #region Geodesic Buffer Methods
+
+    private Geometry<T> BufferPointGeodesic(double distance)
+    {
+        var center = this.Points[0];
+        var circlePoints = SpatialUtility.CreateCircleGeodesic<T>(center, distance, 64);
+
+        return Geometry<T>.Create(circlePoints, GeometryType.Polygon, this.Srid);
+    }
+
+    private Geometry<T> BufferLineStringGeodesic(double distance)
+    {
+        if (this.Points == null || this.Points.Count < 2)
+            return Geometry<T>.Empty;
+
+        var offsetPoints = OffsetLineSegmentGeodesic(this.Points, distance, false);
+        if (offsetPoints.Count < 2)
+            return Geometry<T>.Empty;
+
+        // Add end caps (semi-circles)
+        var startCap = CreateSemiCircleGeodesic(this.Points[0], this.Points[1], distance, true, this.Srid);
+        var endCap = CreateSemiCircleGeodesic(this.Points[this.Points.Count - 1], this.Points[this.Points.Count - 2], distance, false, this.Srid);
+
+        // Combine: start cap + offset line + end cap (reversed)
+        var allPoints = new List<T>();
+
+        if (startCap.Type == GeometryType.LineString && startCap.Points != null)
+        {
+            allPoints.AddRange(startCap.Points);
+        }
+        else if (startCap.Type == GeometryType.Point && startCap.Points != null && startCap.Points.Count > 0)
+        {
+            allPoints.Add(startCap.Points[0]);
+        }
+
+        allPoints.AddRange(offsetPoints);
+
+        if (endCap.Type == GeometryType.LineString && endCap.Points != null)
+        {
+            var reversedEndCap = new List<T>(endCap.Points);
+            reversedEndCap.Reverse();
+            allPoints.AddRange(reversedEndCap);
+        }
+        else if (endCap.Type == GeometryType.Point && endCap.Points != null && endCap.Points.Count > 0)
+        {
+            allPoints.Add(endCap.Points[0]);
+        }
+
+        if (allPoints.Count > 0)
+        {
+            var firstPoint = allPoints[0];
+            var lastPoint = allPoints[allPoints.Count - 1];
+            if (!firstPoint.AreExactlyTheSame(lastPoint))
+            {
+                allPoints.Add(new T() { X = firstPoint.X, Y = firstPoint.Y });
+            }
+        }
+
+        if (allPoints.Count < 3)
+            return Geometry<T>.Empty;
+
+        return Geometry<T>.Create(allPoints, GeometryType.Polygon, this.Srid);
+    }
+
+    private Geometry<T> BufferPolygonGeodesic(double distance)
+    {
+        if (this.Geometries == null || this.Geometries.Count == 0)
+            return Geometry<T>.Empty;
+
+        var bufferedRings = new List<Geometry<T>>();
+
+        var exteriorRing = this.Geometries[0];
+        var bufferedExterior = OffsetLineSegmentGeodesic(exteriorRing.Points, distance, true);
+        if (bufferedExterior.Count >= 3)
+        {
+            bufferedRings.Add(new Geometry<T>(bufferedExterior, GeometryType.LineString, this.Srid));
+        }
+
+        for (int i = 1; i < this.Geometries.Count; i++)
+        {
+            var hole = this.Geometries[i];
+            if (!ShouldEliminateHoleGeodesic(hole, distance))
+            {
+                var bufferedHole = OffsetLineSegmentGeodesic(hole.Points, -distance, true);
+                if (bufferedHole.Count >= 3)
+                {
+                    var testPoint = bufferedHole[0];
+                    if (TopologyUtility.IsPointInRing(bufferedRings[0], testPoint))
+                    {
+                        bufferedRings.Add(new Geometry<T>(bufferedHole, GeometryType.LineString, this.Srid));
+                    }
+                }
+            }
+        }
+
+        if (bufferedRings.Count == 0)
+            return Geometry<T>.Empty;
+
+        return CreatePolygonOrMultiPolygon(bufferedRings, this.Srid);
+    }
+
+    private Geometry<T> BufferMultiPointGeodesic(double distance)
+    {
+        var bufferedPolygons = new List<Geometry<T>>();
+        foreach (var pointGeo in this.Geometries)
+        {
+            var buffered = pointGeo.BufferPointGeodesic(distance);
+            bufferedPolygons.Add(buffered);
+        }
+
+        if (bufferedPolygons.Count == 0)
+            return Geometry<T>.Empty;
+
+        var result = bufferedPolygons[0];
+        for (int i = 1; i < bufferedPolygons.Count; i++)
+        {
+            result = result.UnionPolygon(bufferedPolygons[i]);
+        }
+        return result;
+    }
+
+    private Geometry<T> BufferMultiLineStringGeodesic(double distance)
+    {
+        var bufferedPolygons = new List<Geometry<T>>();
+        foreach (var lineGeo in this.Geometries)
+        {
+            var buffered = lineGeo.BufferLineStringGeodesic(distance);
+            bufferedPolygons.Add(buffered);
+        }
+
+        if (bufferedPolygons.Count == 0)
+            return Geometry<T>.Empty;
+
+        var result = bufferedPolygons[0];
+        for (int i = 1; i < bufferedPolygons.Count; i++)
+        {
+            result = result.UnionPolygon(bufferedPolygons[i]);
+        }
+        return result;
+    }
+
+    private Geometry<T> BufferMultiPolygonGeodesic(double distance)
+    {
+        var bufferedPolygons = new List<Geometry<T>>();
+        foreach (var polyGeo in this.Geometries)
+        {
+            var buffered = polyGeo.BufferPolygonGeodesic(distance);
+            if (!buffered.IsNullOrEmpty())
+            {
+                bufferedPolygons.Add(buffered);
+            }
+        }
+
+        if (bufferedPolygons.Count == 0)
+            return Geometry<T>.Empty;
+
+        var result = bufferedPolygons[0];
+        for (int i = 1; i < bufferedPolygons.Count; i++)
+        {
+            result = result.UnionPolygon(bufferedPolygons[i]);
+        }
+        return result;
+    }
+
+    private List<T> OffsetLineSegmentGeodesic(List<T> points, double distance, bool isClosed)
+    {
+        if (points == null || points.Count < 2)
+            return new List<T>();
+
+        var offsetPoints = new List<T>();
+        int count = points.Count;
+
+        for (int i = 0; i < count; i++)
+        {
+            T prev, curr, next;
+
+            if (isClosed)
+            {
+                prev = points[(i - 1 + count) % count];
+                curr = points[i];
+                next = points[(i + 1) % count];
+            }
+            else
+            {
+                if (i == 0)
+                {
+                    curr = points[i];
+                    next = points[i + 1];
+                    double bearing = SpatialUtility.GetBearingGeodesic(curr, next);
+                    double perpBearing = bearing + Math.PI / 2.0; // Perpendicular bearing (left side)
+                    double absDistance = Math.Abs(distance);
+                    double finalBearing = distance < 0 ? perpBearing + Math.PI : perpBearing; // Right side for negative distance
+                    var offsetPoint = SpatialUtility.MovePointAlongGeodesic(curr, finalBearing, absDistance);
+                    offsetPoints.Add(offsetPoint);
+                    continue;
+                }
+                else if (i == count - 1)
+                {
+                    prev = points[i - 1];
+                    curr = points[i];
+                    double bearing = SpatialUtility.GetBearingGeodesic(prev, curr);
+                    double perpBearing = bearing + Math.PI / 2.0;
+                    double absDistance = Math.Abs(distance);
+                    double finalBearing = distance < 0 ? perpBearing + Math.PI : perpBearing;
+                    var offsetPoint = SpatialUtility.MovePointAlongGeodesic(curr, finalBearing, absDistance);
+                    offsetPoints.Add(offsetPoint);
+                    continue;
+                }
+                else
+                {
+                    prev = points[i - 1];
+                    curr = points[i];
+                    next = points[i + 1];
+                }
+            }
+
+            var offsetPoint2 = OffsetPointGeodesic(curr, prev, next, distance);
+            offsetPoints.Add(offsetPoint2);
+        }
+
+        return offsetPoints;
+    }
+
+    private static T OffsetPointGeodesic(T point, T prevPoint, T nextPoint, double distance)
+    {
+        double bearing1 = SpatialUtility.GetBearingGeodesic(prevPoint, point);
+        double bearing2 = SpatialUtility.GetBearingGeodesic(point, nextPoint);
+
+        double perpBearing1 = bearing1 + Math.PI / 2.0;
+        double perpBearing2 = bearing2 + Math.PI / 2.0;
+
+        // Average the perpendicular bearings
+        double avgBearing = (perpBearing1 + perpBearing2) / 2.0;
+
+        // Normalize bearing
+        while (avgBearing < 0) avgBearing += 2 * Math.PI;
+        while (avgBearing >= 2 * Math.PI) avgBearing -= 2 * Math.PI;
+
+        double absDistance = Math.Abs(distance);
+        double finalBearing = distance < 0 ? avgBearing + Math.PI : avgBearing; // Right side for negative distance
+
+        return SpatialUtility.MovePointAlongGeodesic(point, finalBearing, absDistance);
+    }
+
+    private static Geometry<T> CreateSemiCircleGeodesic(T center, T directionPoint, double radius, bool isStart, int srid)
+    {
+        var points = new List<T>();
+        int segments = 16;
+        double angleStep = Math.PI / segments;
+
+        double bearing = SpatialUtility.GetBearingGeodesic(center, directionPoint);
+        double perpBearing = bearing + Math.PI / 2.0;
+
+        double startBearing = isStart ? perpBearing : perpBearing + Math.PI;
+
+        for (int i = 0; i <= segments; i++)
+        {
+            double currentBearing = startBearing + i * angleStep;
+            var point = SpatialUtility.MovePointAlongGeodesic(center, currentBearing, radius);
+            points.Add(point);
+        }
+
+        return Geometry<T>.Create(points, GeometryType.LineString, srid);
+    }
+
+    private static bool ShouldEliminateHoleGeodesic(Geometry<T> hole, double bufferDistance)
+    {
+        if (hole.IsNullOrEmpty() || hole.Points == null || hole.Points.Count < 3)
+            return true;
+
+        var center = hole.GetMeanPoint();
+        double minDistance = double.MaxValue;
+        foreach (var point in hole.Points)
+        {
+            double dist = SpatialUtility.GetEllipsoidalLength(center, point);
+            if (dist < minDistance)
+                minDistance = dist;
+        }
+
+        return bufferDistance >= minDistance;
+    }
+
+    #endregion
+
+    #region Spherical Buffer Methods
+
+    private Geometry<T> BufferPointSpherical(double distance)
+    {
+        var center = this.Points[0];
+        var circlePoints = SpatialUtility.CreateCircleSpherical<T>(center, distance, 64);
+        return Geometry<T>.Create(circlePoints, GeometryType.Polygon, this.Srid);
+    }
+
+    private Geometry<T> BufferLineStringSpherical(double distance)
+    {
+        if (this.Points == null || this.Points.Count < 2)
+            return Geometry<T>.Empty;
+
+        var offsetPoints = OffsetLineSegmentSpherical(this.Points, distance, false);
+        if (offsetPoints.Count < 2)
+            return Geometry<T>.Empty;
+
+        var startCap = CreateSemiCircleSpherical(this.Points[0], this.Points[1], distance, true, this.Srid);
+        var endCap = CreateSemiCircleSpherical(this.Points[this.Points.Count - 1], this.Points[this.Points.Count - 2], distance, false, this.Srid);
+
+        var allPoints = new List<T>();
+
+        if (startCap.Type == GeometryType.LineString && startCap.Points != null)
+        {
+            allPoints.AddRange(startCap.Points);
+        }
+        else if (startCap.Type == GeometryType.Point && startCap.Points != null && startCap.Points.Count > 0)
+        {
+            allPoints.Add(startCap.Points[0]);
+        }
+
+        allPoints.AddRange(offsetPoints);
+
+        if (endCap.Type == GeometryType.LineString && endCap.Points != null)
+        {
+            var reversedEndCap = new List<T>(endCap.Points);
+            reversedEndCap.Reverse();
+            allPoints.AddRange(reversedEndCap);
+        }
+        else if (endCap.Type == GeometryType.Point && endCap.Points != null && endCap.Points.Count > 0)
+        {
+            allPoints.Add(endCap.Points[0]);
+        }
+
+        if (allPoints.Count > 0)
+        {
+            var firstPoint = allPoints[0];
+            var lastPoint = allPoints[allPoints.Count - 1];
+            if (!firstPoint.AreExactlyTheSame(lastPoint))
+            {
+                allPoints.Add(new T() { X = firstPoint.X, Y = firstPoint.Y });
+            }
+        }
+
+        if (allPoints.Count < 3)
+            return Geometry<T>.Empty;
+
+        return new Geometry<T>(allPoints, GeometryType.Polygon, this.Srid);
+    }
+
+    private Geometry<T> BufferPolygonSpherical(double distance)
+    {
+        if (this.Geometries == null || this.Geometries.Count == 0)
+            return Geometry<T>.Empty;
+
+        var bufferedRings = new List<Geometry<T>>();
+
+        var exteriorRing = this.Geometries[0];
+        var bufferedExterior = OffsetLineSegmentSpherical(exteriorRing.Points, distance, true);
+        if (bufferedExterior.Count >= 3)
+        {
+            bufferedRings.Add(new Geometry<T>(bufferedExterior, GeometryType.LineString, this.Srid));
+        }
+
+        for (int i = 1; i < this.Geometries.Count; i++)
+        {
+            var hole = this.Geometries[i];
+            if (!ShouldEliminateHoleSpherical(hole, distance))
+            {
+                var bufferedHole = OffsetLineSegmentSpherical(hole.Points, -distance, true);
+                if (bufferedHole.Count >= 3)
+                {
+                    var testPoint = bufferedHole[0];
+                    if (TopologyUtility.IsPointInRing(bufferedRings[0], testPoint))
+                    {
+                        bufferedRings.Add(new Geometry<T>(bufferedHole, GeometryType.LineString, this.Srid));
+                    }
+                }
+            }
+        }
+
+        if (bufferedRings.Count == 0)
+            return Geometry<T>.Empty;
+
+        return CreatePolygonOrMultiPolygon(bufferedRings, this.Srid);
+    }
+
+    private Geometry<T> BufferMultiPointSpherical(double distance)
+    {
+        var bufferedPolygons = new List<Geometry<T>>();
+        foreach (var pointGeo in this.Geometries)
+        {
+            var buffered = pointGeo.BufferPointSpherical(distance);
+            bufferedPolygons.Add(buffered);
+        }
+
+        if (bufferedPolygons.Count == 0)
+            return Geometry<T>.Empty;
+
+        var result = bufferedPolygons[0];
+        for (int i = 1; i < bufferedPolygons.Count; i++)
+        {
+            result = result.UnionPolygon(bufferedPolygons[i]);
+        }
+        return result;
+    }
+
+    private Geometry<T> BufferMultiLineStringSpherical(double distance)
+    {
+        var bufferedPolygons = new List<Geometry<T>>();
+        foreach (var lineGeo in this.Geometries)
+        {
+            var buffered = lineGeo.BufferLineStringSpherical(distance);
+            bufferedPolygons.Add(buffered);
+        }
+
+        if (bufferedPolygons.Count == 0)
+            return Geometry<T>.Empty;
+
+        var result = bufferedPolygons[0];
+        for (int i = 1; i < bufferedPolygons.Count; i++)
+        {
+            result = result.UnionPolygon(bufferedPolygons[i]);
+        }
+        return result;
+    }
+
+    private Geometry<T> BufferMultiPolygonSpherical(double distance)
+    {
+        var bufferedPolygons = new List<Geometry<T>>();
+        foreach (var polyGeo in this.Geometries)
+        {
+            var buffered = polyGeo.BufferPolygonSpherical(distance);
+            if (!buffered.IsNullOrEmpty())
+            {
+                bufferedPolygons.Add(buffered);
+            }
+        }
+
+        if (bufferedPolygons.Count == 0)
+            return Geometry<T>.Empty;
+
+        var result = bufferedPolygons[0];
+        for (int i = 1; i < bufferedPolygons.Count; i++)
+        {
+            result = result.UnionPolygon(bufferedPolygons[i]);
+        }
+        return result;
+    }
+
+    private List<T> OffsetLineSegmentSpherical(List<T> points, double distance, bool isClosed)
+    {
+        if (points == null || points.Count < 2)
+            return new List<T>();
+
+        var offsetPoints = new List<T>();
+        int count = points.Count;
+
+        for (int i = 0; i < count; i++)
+        {
+            T prev, curr, next;
+
+            if (isClosed)
+            {
+                prev = points[(i - 1 + count) % count];
+                curr = points[i];
+                next = points[(i + 1) % count];
+            }
+            else
+            {
+                if (i == 0)
+                {
+                    curr = points[i];
+                    next = points[i + 1];
+                    double bearing = SpatialUtility.GetBearingSpherical(curr, next);
+                    double perpBearing = bearing + Math.PI / 2.0;
+                    double absDistance = Math.Abs(distance);
+                    double finalBearing = distance < 0 ? perpBearing + Math.PI : perpBearing;
+                    var offsetPoint = SpatialUtility.MovePointAlongSpherical(curr, finalBearing, absDistance);
+                    offsetPoints.Add(offsetPoint);
+                    continue;
+                }
+                else if (i == count - 1)
+                {
+                    prev = points[i - 1];
+                    curr = points[i];
+                    double bearing = SpatialUtility.GetBearingSpherical(prev, curr);
+                    double perpBearing = bearing + Math.PI / 2.0;
+                    double absDistance = Math.Abs(distance);
+                    double finalBearing = distance < 0 ? perpBearing + Math.PI : perpBearing;
+                    var offsetPoint = SpatialUtility.MovePointAlongSpherical(curr, finalBearing, absDistance);
+                    offsetPoints.Add(offsetPoint);
+                    continue;
+                }
+                else
+                {
+                    prev = points[i - 1];
+                    curr = points[i];
+                    next = points[i + 1];
+                }
+            }
+
+            var offsetPoint2 = OffsetPointSpherical(curr, prev, next, distance);
+            offsetPoints.Add(offsetPoint2);
+        }
+
+        return offsetPoints;
+    }
+
+    private static T OffsetPointSpherical(T point, T prevPoint, T nextPoint, double distance)
+    {
+        double bearing1 = SpatialUtility.GetBearingSpherical(prevPoint, point);
+        double bearing2 = SpatialUtility.GetBearingSpherical(point, nextPoint);
+
+        double perpBearing1 = bearing1 + Math.PI / 2.0;
+        double perpBearing2 = bearing2 + Math.PI / 2.0;
+
+        double avgBearing = (perpBearing1 + perpBearing2) / 2.0;
+
+        while (avgBearing < 0) avgBearing += 2 * Math.PI;
+        while (avgBearing >= 2 * Math.PI) avgBearing -= 2 * Math.PI;
+
+        double absDistance = Math.Abs(distance);
+        double finalBearing = distance < 0 ? avgBearing + Math.PI : avgBearing;
+
+        return SpatialUtility.MovePointAlongSpherical(point, finalBearing, absDistance);
+    }
+
+    private static Geometry<T> CreateSemiCircleSpherical(T center, T directionPoint, double radius, bool isStart, int srid)
+    {
+        var points = new List<T>();
+        int segments = 16;
+        double angleStep = Math.PI / segments;
+
+        double bearing = SpatialUtility.GetBearingSpherical(center, directionPoint);
+        double perpBearing = bearing + Math.PI / 2.0;
+
+        double startBearing = isStart ? perpBearing : perpBearing + Math.PI;
+
+        for (int i = 0; i <= segments; i++)
+        {
+            double currentBearing = startBearing + i * angleStep;
+            var point = SpatialUtility.MovePointAlongSpherical(center, currentBearing, radius);
+            points.Add(point);
+        }
+
+        return Geometry<T>.Create(points, GeometryType.LineString, srid);
+    }
+
+    private static bool ShouldEliminateHoleSpherical(Geometry<T> hole, double bufferDistance)
+    {
+        if (hole.IsNullOrEmpty() || hole.Points == null || hole.Points.Count < 3)
+            return true;
+
+        var center = hole.GetMeanPoint();
+        double minDistance = double.MaxValue;
+        foreach (var point in hole.Points)
+        {
+            double dist = SpatialUtility.GetSphericalLength(center, point);
+            if (dist < minDistance)
+                minDistance = dist;
+        }
+
+        return bufferDistance >= minDistance;
+    }
+
+    #endregion
 
     #endregion
 
@@ -2562,7 +3231,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             return new Geometry<T>(this.Geometries.Select(g => g.Clone()).ToList(), this.Type, this.Srid);
         }
 
-        return new Geometry<T>(null, this.Type, false, this.Srid);
+        return Geometry<T>.CreateEmpty(this.Type, this.Srid);
     }
 
     public Geometry<T> NeutralizeGenericPoint()
@@ -3334,7 +4003,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
             case GeometryType.Point:
             case GeometryType.LineString:
-                return new Geometry<T>(new List<T>(), type, srid);
+                return Geometry<T>.Create(new List<T>(), type, srid);
 
             case GeometryType.CircularString:
             case GeometryType.CompoundCurve:
@@ -3347,7 +4016,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public static Geometry<T> Create(double x, double y, int srid = 0)
     {
-        return new Geometry<T>(new List<T> { new T() { X = x, Y = y } }, GeometryType.Point, srid);
+        return Geometry<T>.Create(new List<T> { new T() { X = x, Y = y } }, GeometryType.Point, srid);
     }
 
     /// <summary>
@@ -3359,21 +4028,20 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     /// <returns></returns>
     public static Geometry<T> Create(List<T> points, GeometryType type, int srid = 0)
     {
-        if (points == null)
-            CreateEmpty(type, srid);
+        // do not check empty list, what if we are making a new geometry
+        if (points is null)
+            return CreateEmpty(type, srid);
 
         switch (type)
         {
             case GeometryType.Point:
                 return new Geometry<T>(points!, GeometryType.Point, srid);
-            //return CreatePointOrLineString(points, srid); //do not use this method: what if making a new Geometry LineString with first point
 
             case GeometryType.LineString:
                 return new Geometry<T>(points!, GeometryType.LineString, srid);
-            //return CreatePointOrLineString(points, srid);
 
             case GeometryType.Polygon:
-                return new Geometry<T>(new Geometry<T>(points!, GeometryType.LineString, srid), GeometryType.Polygon, srid);
+                return new Geometry<T>(Geometry<T>.Create(points!, GeometryType.LineString, srid), GeometryType.Polygon, srid);
 
             case GeometryType.MultiPoint:
                 return new Geometry<T>(points.Select(p => Geometry<T>.Create(p.X, p.Y, srid)).ToList(), GeometryType.MultiPoint, srid);
@@ -3392,10 +4060,10 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     public static Geometry<T> CreatePointOrLineString(List<T> points, int srid)
     {
         if (points.Count == 1)
-            return new Geometry<T>(points, GeometryType.Point, srid);
+            return Geometry<T>.Create(points, GeometryType.Point, srid);
 
         else
-            return new Geometry<T>(points, GeometryType.LineString, srid);
+            return Geometry<T>.Create(points, GeometryType.LineString, srid);
     }
 
     public static Geometry<T> CreatePointOrLineStringOrRing(List<T> points, int srid)
@@ -3422,8 +4090,6 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
         return Geometry<T>.CreatePointOrLineString(points, geometries?.FirstOrDefault()?.Srid ?? 0);
     }
-
-
 
     public static Geometry<T> CreatePolygonOrMultiPolygon(List<Geometry<T>> rings, int srid)
     {
@@ -3524,13 +4190,13 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             }
         }
 
-        return new Geometry<T>(result, GeometryType.LineString, SridHelper.GeodeticWGS84);
+        return Geometry<T>.Create(result, GeometryType.LineString, SridHelper.GeodeticWGS84);
 
     }
 
     public static Geometry<T> ParsePointToGeometry(double[] xy, bool isLongitudeFirst, int srid = SridHelper.GeodeticWGS84)
     {
-        return new Geometry<T>(new List<T>() { Point.Parse<T>(xy, isLongitudeFirst) }, GeometryType.Point, srid);
+        return Geometry<T>.Create(new List<T>() { Point.Parse<T>(xy, isLongitudeFirst) }, GeometryType.Point, srid);
     }
 
     public static Geometry<T> ParseLineStringToGeometry(
@@ -3548,11 +4214,11 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             var numberOfPoints = geoCoordinates.Length;
 
             // skip last point
-            return new Geometry<T>(geoCoordinates.Take(numberOfPoints - 1).Select(p => Point.Parse<T>(p, isLongitudeFirst)).ToList(), geometryType, srid);
+            return Geometry<T>.Create(geoCoordinates.Take(numberOfPoints - 1).Select(p => Point.Parse<T>(p, isLongitudeFirst)).ToList(), geometryType, srid);
         }
         else
         {
-            return new Geometry<T>(geoCoordinates.Select(p => Point.Parse<T>(p, isLongitudeFirst)).ToList(), geometryType, srid);
+            return Geometry<T>.Create(geoCoordinates.Select(p => Point.Parse<T>(p, isLongitudeFirst)).ToList(), geometryType, srid);
         }
     }
 

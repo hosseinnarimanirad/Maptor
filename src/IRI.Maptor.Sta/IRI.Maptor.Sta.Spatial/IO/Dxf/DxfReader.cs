@@ -295,7 +295,7 @@ public class DxfReader
         if (hasStart && hasEnd)
         {
             var points = new List<Point> { new Point(x1, y1), new Point(x2, y2) };
-            return new Geometry<Point>(points, GeometryType.LineString, srid);
+            return Geometry<Point>.Create(points, GeometryType.LineString, srid);
         }
 
         return null;
@@ -360,13 +360,13 @@ public class DxfReader
         if (isClosed && points.Count >= 3)
         {
             // Create a polygon
-            var ring = new Geometry<Point>(points, GeometryType.LineString, srid);
+            var ring = Geometry<Point>.Create(points, GeometryType.LineString, srid);
             return new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
         }
         else
         {
             // Create a line string
-            return new Geometry<Point>(points, GeometryType.LineString, srid);
+            return Geometry<Point>.Create(points, GeometryType.LineString, srid);
         }
     }
 
@@ -479,12 +479,12 @@ public class DxfReader
 
         if (isClosed && points.Count >= 3)
         {
-            var ring = new Geometry<Point>(points, GeometryType.LineString, srid);
+            var ring = Geometry<Point>.Create(points, GeometryType.LineString, srid);
             return new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
         }
         else
         {
-            return new Geometry<Point>(points, GeometryType.LineString, srid);
+            return Geometry<Point>.Create(points, GeometryType.LineString, srid);
         }
     }
 
@@ -540,7 +540,7 @@ public class DxfReader
                 points.Add(new Point(x, y));
             }
 
-            var ring = new Geometry<Point>(points, GeometryType.LineString, srid);
+            var ring = Geometry<Point>.Create(points, GeometryType.LineString, srid);
             return new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
         }
 
@@ -623,7 +623,7 @@ public class DxfReader
             }
 
             if (points.Count >= 2)
-                return new Geometry<Point>(points, GeometryType.LineString, srid);
+                return Geometry<Point>.Create(points, GeometryType.LineString, srid);
         }
 
         return null;

@@ -2037,7 +2037,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         var type = points.Count == 1 ? GeometryType.Point : isClosed ? GeometryType.Polygon : GeometryType.LineString;
 
-        Geometry<Point> geometry = new Geometry<Point>(points/*.ToArray()*/, type, srid);
+        Geometry<Point> geometry =   Geometry<Point>.Create(points, type, srid);
 
         return EditAsync(geometry, options);
     }

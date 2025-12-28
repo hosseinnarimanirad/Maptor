@@ -80,7 +80,7 @@ public class EsriPolygon : EsriPointCollection
 
         this.points = points;
     }
-     
+
     public EsriPolygon(EsriPoint[] points, int[] parts)
     {
         if (points is null)
@@ -214,13 +214,13 @@ public class EsriPolygon : EsriPointCollection
         if (this.NumberOfParts == 1)
         {
             IRI.Maptor.Sta.KmlFormat.Primitives.PolygonType polygon = new IRI.Maptor.Sta.KmlFormat.Primitives.PolygonType();
-            
+
             IRI.Maptor.Sta.KmlFormat.Primitives.BoundaryType outerBoundary = new IRI.Maptor.Sta.KmlFormat.Primitives.BoundaryType();
             IRI.Maptor.Sta.KmlFormat.Primitives.LinearRingType outerRing = new IRI.Maptor.Sta.KmlFormat.Primitives.LinearRingType();
-            
+
             var points = ShapeHelper.GetPoints(this, this.Parts[0]);
             string coordinates;
-            
+
             if (projectFunc != null)
             {
                 coordinates = string.Join(" ", points.Select(p =>
@@ -234,30 +234,30 @@ public class EsriPolygon : EsriPointCollection
                 coordinates = string.Join(" ", points.Select(p =>
                     string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", p.X, p.Y)));
             }
-            
+
             // Close the ring by adding the first point at the end
             var firstPoint = points[0];
             Point firstPointProjected = projectFunc != null ? projectFunc(firstPoint) : firstPoint;
             coordinates += " " + string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", firstPointProjected.X, firstPointProjected.Y);
-            
+
             outerRing.Coordinates.Add(coordinates);
             outerBoundary.LinearRing = outerRing;
             polygon.OuterBoundaryIs = outerBoundary;
-            
+
             placemark.AbstractGeometryGroup = polygon;
         }
         else
         {
             // Multiple parts: first part is outer boundary, rest are inner boundaries
             IRI.Maptor.Sta.KmlFormat.Primitives.PolygonType polygon = new IRI.Maptor.Sta.KmlFormat.Primitives.PolygonType();
-            
+
             // Outer boundary
             IRI.Maptor.Sta.KmlFormat.Primitives.BoundaryType outerBoundary = new IRI.Maptor.Sta.KmlFormat.Primitives.BoundaryType();
             IRI.Maptor.Sta.KmlFormat.Primitives.LinearRingType outerRing = new IRI.Maptor.Sta.KmlFormat.Primitives.LinearRingType();
-            
+
             var outerPoints = ShapeHelper.GetPoints(this, this.Parts[0]);
             string outerCoordinates;
-            
+
             if (projectFunc != null)
             {
                 outerCoordinates = string.Join(" ", outerPoints.Select(p =>
@@ -271,25 +271,25 @@ public class EsriPolygon : EsriPointCollection
                 outerCoordinates = string.Join(" ", outerPoints.Select(p =>
                     string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", p.X, p.Y)));
             }
-            
+
             // Close the ring
             var firstOuterPoint = outerPoints[0];
             Point firstOuterProjected = projectFunc != null ? projectFunc(firstOuterPoint) : firstOuterPoint;
             outerCoordinates += " " + string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", firstOuterProjected.X, firstOuterProjected.Y);
-            
+
             outerRing.Coordinates.Add(outerCoordinates);
             outerBoundary.LinearRing = outerRing;
             polygon.OuterBoundaryIs = outerBoundary;
-            
+
             // Inner boundaries (holes)
             for (int i = 1; i < this.NumberOfParts; i++)
             {
                 IRI.Maptor.Sta.KmlFormat.Primitives.BoundaryType innerBoundary = new IRI.Maptor.Sta.KmlFormat.Primitives.BoundaryType();
                 IRI.Maptor.Sta.KmlFormat.Primitives.LinearRingType innerRing = new IRI.Maptor.Sta.KmlFormat.Primitives.LinearRingType();
-                
+
                 var innerPoints = ShapeHelper.GetPoints(this, this.Parts[i]);
                 string innerCoordinates;
-                
+
                 if (projectFunc != null)
                 {
                     innerCoordinates = string.Join(" ", innerPoints.Select(p =>
@@ -303,17 +303,17 @@ public class EsriPolygon : EsriPointCollection
                     innerCoordinates = string.Join(" ", innerPoints.Select(p =>
                         string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", p.X, p.Y)));
                 }
-                
+
                 // Close the ring
                 var firstInnerPoint = innerPoints[0];
                 Point firstInnerProjected = projectFunc != null ? projectFunc(firstInnerPoint) : firstInnerPoint;
                 innerCoordinates += " " + string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17},{1:G17}", firstInnerProjected.X, firstInnerProjected.Y);
-                
+
                 innerRing.Coordinates.Add(innerCoordinates);
                 innerBoundary.LinearRing = innerRing;
                 polygon.InnerBoundaryIs.Add(innerBoundary);
             }
-            
+
             placemark.AbstractGeometryGroup = polygon;
         }
 
@@ -350,13 +350,13 @@ public class EsriPolygon : EsriPointCollection
             for (int i = 0; i < NumberOfParts; i++)
             {
                 //parts[i] = new Geometry(ShapeHelper.GetPoints(this, Parts[i]), GeometryType.LineString, Srid);
-                parts.Add(new Geometry<Point>(ShapeHelper.GetPoints(this, Parts[i]), GeometryType.LineString, Srid));
+                parts.Add(Geometry<Point>.Create(ShapeHelper.GetPoints(this, Parts[i]), GeometryType.LineString, Srid));
             }
 
             //1399.07.26
             //return new Geometry<Point>(parts, GeometryType.Polygon, Srid);
             return Geometry<Point>.CreatePolygonOrMultiPolygon(parts, Srid);
-        } 
+        }
         else
         {
             return Geometry<Point>.CreateEmpty(GeometryType.Polygon, Srid);

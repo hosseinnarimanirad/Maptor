@@ -277,14 +277,14 @@ public class EsriPolylineM : EsriPointMCollection
             for (int i = 0; i < NumberOfParts; i++)
             {
                 //parts[i] = new Geometry<Point>(ShapeHelper.GetPoints(this, Parts[i]), GeometryType.LineString, Srid);
-                parts.Add(new Geometry<Point>(ShapeHelper.GetPoints(this, Parts[i]), GeometryType.LineString, Srid));
+                parts.Add(Geometry<Point>.Create(ShapeHelper.GetPoints(this, Parts[i]), GeometryType.LineString, Srid));
             }
 
             return new Geometry<Point>(parts, GeometryType.MultiLineString, Srid);
         }
         else if (this.NumberOfParts == 1)
         {
-            return new Geometry<Point>(ShapeHelper.GetPoints(this, Parts[0]), GeometryType.LineString, Srid);
+            return Geometry<Point>.Create(ShapeHelper.GetPoints(this, Parts[0]), GeometryType.LineString, Srid);
         }
         else
         {

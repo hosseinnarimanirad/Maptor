@@ -32,7 +32,7 @@ public class EsriPoint : EsriShapeBase, IPoint
     public int Srid { get; set; }
 
     //public PointType Type => PointType.Normal;
-     
+
     //public bool HasM() => false;
 
     //public bool HasZ() => false;
@@ -196,7 +196,7 @@ public class EsriPoint : EsriShapeBase, IPoint
 
     public override Geometry<Point> AsGeometry()
     {
-        return new Geometry<Point>(new List<Point> { new Point(X, Y) }, GeometryType.Point, Srid);
+        return Geometry<Point>.Create(X, Y, Srid);
     }
 
     public override bool IsNullOrEmpty()
@@ -206,7 +206,7 @@ public class EsriPoint : EsriShapeBase, IPoint
 
     public override bool IsRingBase() => false;
 
-    public  bool IsNaN()
+    public bool IsNaN()
     {
         return double.IsNaN(X) || double.IsNaN(Y);
     }

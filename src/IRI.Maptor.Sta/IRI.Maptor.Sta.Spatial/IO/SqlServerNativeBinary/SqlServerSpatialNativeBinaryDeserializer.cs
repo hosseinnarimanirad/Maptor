@@ -69,23 +69,23 @@ public static partial class SqlServerSpatialNativeBinary
             var z = reader.ReadDouble();
             var m = reader.ReadDouble();
 
-            return new Geometry<PointZM>([new PointZM() { X = x, Y = y, Z = z, M = m }], GeometryType.Point, srid);
+            return Geometry<PointZM>.Create([new PointZM() { X = x, Y = y, Z = z, M = m }], GeometryType.Point, srid);
         }
         else if (hasZ)
         {
             var z = reader.ReadDouble();
 
-            return new Geometry<PointZ>([new PointZ() { X = x, Y = y, Z = z }], GeometryType.Point, srid);
+            return Geometry<PointZ>.Create([new PointZ() { X = x, Y = y, Z = z }], GeometryType.Point, srid);
         }
         else if (hasM)
         {
             var m = reader.ReadDouble();
 
-            return new Geometry<PointM>([new PointM() { X = x, Y = y, M = m }], GeometryType.Point, srid);
+            return Geometry<PointM>.Create([new PointM() { X = x, Y = y, M = m }], GeometryType.Point, srid);
         }
 
         // Point (2D) 
-        return new Geometry<Point>([new Point(x, y)], GeometryType.Point, srid);
+        return Geometry<Point>.Create([new Point(x, y)], GeometryType.Point, srid);
     }
 
     private static IGeometry DeserializeOptimizedLineString(BinaryReader reader, int srid, bool hasZ, bool hasM)
@@ -108,7 +108,7 @@ public static partial class SqlServerSpatialNativeBinary
                 new PointZM() { X = x1, Y = y1, Z = z1, M = m1 },
                 new PointZM() { X = x2, Y = y2, Z = z2, M = m2 }
             };
-            return new Geometry<PointZM>(points, GeometryType.LineString, srid);
+            return Geometry<PointZM>.Create(points, GeometryType.LineString, srid);
         }
         else if (hasZ)
         {
@@ -120,7 +120,7 @@ public static partial class SqlServerSpatialNativeBinary
                 new PointZ() { X = x1, Y = y1, Z = z1 },
                 new PointZ() { X = x2, Y = y2, Z = z2 }
             };
-            return new Geometry<PointZ>(points, GeometryType.LineString, srid);
+            return Geometry<PointZ>.Create(points, GeometryType.LineString, srid);
         }
         else if (hasM)
         {
@@ -132,7 +132,7 @@ public static partial class SqlServerSpatialNativeBinary
                 new PointM() { X = x1, Y = y1, M = m1 },
                 new PointM() { X = x2, Y = y2, M = m2 }
             };
-            return new Geometry<PointM>(points, GeometryType.LineString, srid);
+            return Geometry<PointM>.Create(points, GeometryType.LineString, srid);
         }
 
         // LineString (2D)
@@ -141,7 +141,7 @@ public static partial class SqlServerSpatialNativeBinary
             new Point(x1, y1),
             new Point(x2, y2)
         };
-        return new Geometry<Point>(points2D, GeometryType.LineString, srid);
+        return Geometry<Point>.Create(points2D, GeometryType.LineString, srid);
     }
 
     private static IGeometry DeserializeNonOptimizedGeometry(BinaryReader reader, int srid, bool hasZ, bool hasM)
@@ -318,7 +318,7 @@ public static partial class SqlServerSpatialNativeBinary
                     M = mValues![i]
                 });
             }
-            return new Geometry<PointZM>(pointZMList, GeometryType.LineString, srid);
+            return Geometry<PointZM>.Create(pointZMList, GeometryType.LineString, srid);
         }
         else if (hasZ)
         {
@@ -332,7 +332,7 @@ public static partial class SqlServerSpatialNativeBinary
                     Z = zValues![i]
                 });
             }
-            return new Geometry<PointZ>(pointZList, GeometryType.LineString, srid);
+            return Geometry<PointZ>.Create(pointZList, GeometryType.LineString, srid);
         }
         else if (hasM)
         {
@@ -346,7 +346,7 @@ public static partial class SqlServerSpatialNativeBinary
                     M = mValues![i]
                 });
             }
-            return new Geometry<PointM>(pointMList, GeometryType.LineString, srid);
+            return Geometry<PointM>.Create(pointMList, GeometryType.LineString, srid);
         }
         else
         {
@@ -355,7 +355,7 @@ public static partial class SqlServerSpatialNativeBinary
             {
                 pointList.Add(new Point(points[i].X, points[i].Y));
             }
-            return new Geometry<Point>(pointList, GeometryType.LineString, srid);
+            return Geometry<Point>.Create(pointList, GeometryType.LineString, srid);
         }
     }
 
@@ -479,7 +479,7 @@ public static partial class SqlServerSpatialNativeBinary
                     Z = zValues![i],
                     M = mValues![i]
                 };
-                pointGeometries.Add(new Geometry<PointZM>([pointZM], GeometryType.Point, srid));
+                pointGeometries.Add(Geometry<PointZM>.Create([pointZM], GeometryType.Point, srid));
             }
             return new Geometry<PointZM>(pointGeometries, GeometryType.MultiPoint, srid);
         }
@@ -494,7 +494,7 @@ public static partial class SqlServerSpatialNativeBinary
                     Y = points[i].Y,
                     Z = zValues![i]
                 };
-                pointGeometries.Add(new Geometry<PointZ>([pointZ], GeometryType.Point, srid));
+                pointGeometries.Add(Geometry<PointZ>.Create([pointZ], GeometryType.Point, srid));
             }
             return new Geometry<PointZ>(pointGeometries, GeometryType.MultiPoint, srid);
         }
@@ -509,7 +509,7 @@ public static partial class SqlServerSpatialNativeBinary
                     Y = points[i].Y,
                     M = mValues![i]
                 };
-                pointGeometries.Add(new Geometry<PointM>([pointM], GeometryType.Point, srid));
+                pointGeometries.Add(Geometry<PointM>.Create([pointM], GeometryType.Point, srid));
             }
             return new Geometry<PointM>(pointGeometries, GeometryType.MultiPoint, srid);
         }
@@ -518,7 +518,7 @@ public static partial class SqlServerSpatialNativeBinary
             var pointGeometries = new List<Geometry<Point>>(pointCount);
             for (int i = 0; i < pointCount; i++)
             {
-                pointGeometries.Add(new Geometry<Point>([new Point(points[i].X, points[i].Y)], GeometryType.Point, srid));
+                pointGeometries.Add(Geometry<Point>.Create([new Point(points[i].X, points[i].Y)], GeometryType.Point, srid));
             }
             return new Geometry<Point>(pointGeometries, GeometryType.MultiPoint, srid);
         }
@@ -687,7 +687,7 @@ public static partial class SqlServerSpatialNativeBinary
                         M = mValues![j]
                     });
                 }
-                lineStringGeometries.Add(new Geometry<PointZM>(pointZMList, GeometryType.LineString, srid));
+                lineStringGeometries.Add(Geometry<PointZM>.Create(pointZMList, GeometryType.LineString, srid));
             }
             else if (hasZ)
             {
@@ -701,7 +701,7 @@ public static partial class SqlServerSpatialNativeBinary
                         Z = zValues![j]
                     });
                 }
-                lineStringGeometries.Add(new Geometry<PointZ>(pointZList, GeometryType.LineString, srid));
+                lineStringGeometries.Add(Geometry<PointZ>.Create(pointZList, GeometryType.LineString, srid));
             }
             else if (hasM)
             {
@@ -715,7 +715,7 @@ public static partial class SqlServerSpatialNativeBinary
                         M = mValues![j]
                     });
                 }
-                lineStringGeometries.Add(new Geometry<PointM>(pointMList, GeometryType.LineString, srid));
+                lineStringGeometries.Add(Geometry<PointM>.Create(pointMList, GeometryType.LineString, srid));
             }
             else
             {
@@ -724,7 +724,7 @@ public static partial class SqlServerSpatialNativeBinary
                 {
                     pointList.Add(new Point(points[j].X, points[j].Y));
                 }
-                lineStringGeometries.Add(new Geometry<Point>(pointList, GeometryType.LineString, srid));
+                lineStringGeometries.Add(Geometry<Point>.Create(pointList, GeometryType.LineString, srid));
             }
         }
 

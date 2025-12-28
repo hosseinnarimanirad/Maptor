@@ -36,7 +36,7 @@ public class EsriPointM : EsriShapeBase, IPoint, IHasM
     }
 
     //public PointType Type => PointType.PointM;
-     
+
     //public bool HasM() => true;
 
     //public bool HasZ() => false;
@@ -173,7 +173,7 @@ public class EsriPointM : EsriShapeBase, IPoint, IHasM
 
     public override Geometry<Point> AsGeometry()
     {
-        return new Geometry<Point>(new List<Point>() { new Point(X, Y) }, GeometryType.Point, Srid);
+        return Geometry<Point>.Create(X, Y, Srid);
     }
 
     public override bool IsNullOrEmpty()

@@ -181,7 +181,7 @@ public static class SvgReader
         if (points.Count < 2)
             return null;
 
-        return new Geometry<Point>(points, GeometryType.LineString, srid);
+        return Geometry<Point>.Create(points, GeometryType.LineString, srid);
     }
 
     private static Geometry<Point>? ParsePolygon(XElement element, int srid)
@@ -195,7 +195,7 @@ public static class SvgReader
             return null;
 
         // Create polygon with single ring
-        var ring = new Geometry<Point>(points, GeometryType.LineString, srid);
+        var ring = Geometry<Point>.Create(points, GeometryType.LineString, srid);
         return new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
     }
 
@@ -237,7 +237,7 @@ public static class SvgReader
                     // If we have accumulated points, create geometry
                     if (currentPoints.Count >= 2)
                     {
-                        geometries.Add(new Geometry<Point>(currentPoints, GeometryType.LineString, srid));
+                        geometries.Add(Geometry<Point>.Create(currentPoints, GeometryType.LineString, srid));
                     }
                     currentPoints.Clear();
                     var movePoints = ParseCoordinatePairs(coords);
@@ -263,13 +263,13 @@ public static class SvgReader
                             currentPoints.Add(new Point(startPoint.X, startPoint.Y));
                         }
                         // Create polygon
-                        var ring = new Geometry<Point>(currentPoints, GeometryType.LineString, srid);
+                        var ring = Geometry<Point>.Create(currentPoints, GeometryType.LineString, srid);
                         geometries.Add(new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid));
                     }
                     else if (currentPoints.Count >= 2)
                     {
                         // Create closed line string
-                        geometries.Add(new Geometry<Point>(currentPoints, GeometryType.LineString, srid));
+                        geometries.Add(Geometry<Point>.Create(currentPoints, GeometryType.LineString, srid));
                     }
                     currentPoints.Clear();
                     startPoint = null;
@@ -296,7 +296,7 @@ public static class SvgReader
         // Add any remaining points as line string
         if (currentPoints.Count >= 2)
         {
-            geometries.Add(new Geometry<Point>(currentPoints, GeometryType.LineString, srid));
+            geometries.Add(Geometry<Point>.Create(currentPoints, GeometryType.LineString, srid));
         }
 
         return geometries;

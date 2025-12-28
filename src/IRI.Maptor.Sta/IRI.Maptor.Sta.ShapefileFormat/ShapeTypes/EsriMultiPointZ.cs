@@ -325,6 +325,6 @@ public class EsriMultiPointZ : EsriPointZCollection
 
     public override Geometry<Point> AsGeometry()
     {
-        return new Geometry<Point>(points.Select(p => new Point(p.X, p.Y)).ToList(), GeometryType.MultiPoint, Srid);
+        return Geometry<Point>.Create(points.Select(p => new Point(p.X, p.Y)).ToList(), GeometryType.MultiPoint, Srid);
     }
 }

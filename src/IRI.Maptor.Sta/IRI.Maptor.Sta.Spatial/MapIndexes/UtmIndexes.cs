@@ -173,7 +173,7 @@ public static class UtmIndexes
 
             var p2 = new Point(i, endY);
 
-            result.Add(new Geometry<Point>(new List<Point>() { p1, p2 }, GeometryType.LineString, 0));
+            result.Add(Geometry<Point>.Create(new List<Point>() { p1, p2 }, GeometryType.LineString, 0));
         }
 
         for (double j = startY; j <= endY; j += utmHeight)
@@ -184,7 +184,7 @@ public static class UtmIndexes
 
             var p3 = new Point(endX, j);
 
-            result.Add(new Geometry<Point>(new List<Point>() { p1, p2, p3 }, GeometryType.LineString, 0));
+            result.Add(Geometry<Point>.Create(new List<Point>() { p1, p2, p3 }, GeometryType.LineString, 0));
         }
 
         return result.Select(g => g.Transform(p => MapProjects.UTMToGeodetic(p, utmZone), SridHelper.GeodeticWGS84)).ToList();

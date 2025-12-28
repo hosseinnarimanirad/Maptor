@@ -195,7 +195,7 @@ public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
 
     public override Geometry<Point> AsGeometry()
     {
-        return new Geometry<Point>(new List<Point>() { new Point(X, Y) }, GeometryType.Point, Srid);
+        return Geometry<Point>.Create(X, Y, Srid);
     }
 
     public override bool IsNullOrEmpty()

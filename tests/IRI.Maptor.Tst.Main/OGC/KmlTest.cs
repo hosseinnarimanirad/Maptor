@@ -224,12 +224,12 @@ public class KmlTest
     public void TestKmlMultiLineStringRoundTrip()
     {
         // Arrange - Create multi-linestring
-        var line1 = new Geometry<Point>(
+        var line1 = Geometry<Point>.Create(
             new List<Point> { new Point(0, 0), new Point(10, 10) },
             GeometryType.LineString,
             srid: 4326);
 
-        var line2 = new Geometry<Point>(
+        var line2 = Geometry<Point>.Create(
             new List<Point> { new Point(20, 20), new Point(30, 30), new Point(40, 40) },
             GeometryType.LineString,
             srid: 4326);
@@ -750,7 +750,7 @@ public class KmlTest
             new Point(-122.086, 37.424)
         };
 
-        var lineString = new Geometry<Point>(points, GeometryType.LineString, srid: 4326);
+        var lineString = Geometry<Point>.Create(points, GeometryType.LineString, srid: 4326);
 
         // Act - Convert to KML
         var kmlOutput = KmlWriter.ToKml(lineString, "Path", "A complex path");
@@ -1064,7 +1064,7 @@ public class KmlTest
         // Arrange - Create one of each geometry type
         var point = Geometry<Point>.Create(10.0, 20.0, srid: 4326);
 
-        var lineString = new Geometry<Point>(
+        var lineString = Geometry<Point>.Create(
             new List<Point> { new Point(0, 0), new Point(10, 10), new Point(20, 5) },
             GeometryType.LineString,
             srid: 4326);

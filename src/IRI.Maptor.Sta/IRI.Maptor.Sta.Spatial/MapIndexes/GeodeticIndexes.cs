@@ -659,7 +659,7 @@ public static class GeodeticIndexes
 
             var p2 = new Point(i * indexWidth, geographicIntersectRegion.YMax);
 
-            result.Add(new Geometry<Point>(new List<Point>() { p1, p2 }, GeometryType.LineString, SridHelper.GeodeticWGS84));
+            result.Add(Geometry<Point>.Create(new List<Point>() { p1, p2 }, GeometryType.LineString, SridHelper.GeodeticWGS84));
         }
 
         for (int j = startLatitdue; j < endLatitdue; j++)
@@ -668,7 +668,7 @@ public static class GeodeticIndexes
 
             var p2 = new Point(geographicIntersectRegion.XMax, j * indexHeight);
 
-            result.Add(new Geometry<Point>(new List<Point>() { p1, p2 }, GeometryType.LineString, SridHelper.GeodeticWGS84));
+            result.Add(Geometry<Point>.Create(new List<Point>() { p1, p2 }, GeometryType.LineString, SridHelper.GeodeticWGS84));
         }
 
         return result;

@@ -335,7 +335,7 @@ public static class WkbReader
         var z = ReadDouble(reader, byteOrder);
 
         var point = new PointZ { X = x, Y = y, Z = z };
-        return new Geometry<PointZ>(new List<PointZ> { point }, GeometryType.Point, srid);
+        return Geometry<PointZ>.Create(new List<PointZ> { point }, GeometryType.Point, srid);
     }
 
     private static Geometry<PointZ> FromWkbLineStringZ(BinaryReader reader, WkbByteOrder byteOrder, int srid)
@@ -444,7 +444,7 @@ public static class WkbReader
         var m = ReadDouble(reader, byteOrder);
 
         var point = new PointM { X = x, Y = y, M = m };
-        return new Geometry<PointM>(new List<PointM> { point }, GeometryType.Point, srid);
+        return Geometry<PointM>.Create(new List<PointM> { point }, GeometryType.Point, srid);
     }
 
     private static Geometry<PointM> FromWkbLineStringM(BinaryReader reader, WkbByteOrder byteOrder, int srid)
@@ -554,7 +554,7 @@ public static class WkbReader
         var m = ReadDouble(reader, byteOrder);
 
         var point = new PointZM { X = x, Y = y, Z = z, M = m };
-        return new Geometry<PointZM>(new List<PointZM> { point }, GeometryType.Point, srid);
+        return Geometry<PointZM>.Create(new List<PointZM> { point }, GeometryType.Point, srid);
     }
 
     private static Geometry<PointZM> FromWkbLineStringZM(BinaryReader reader, WkbByteOrder byteOrder, int srid)

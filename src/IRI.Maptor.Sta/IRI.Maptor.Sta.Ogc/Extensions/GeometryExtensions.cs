@@ -34,10 +34,11 @@ public static class Sta_KmlExtensions
         if (point == null)
             return string.Empty;
 
-        var geometry = new Geometry<Point>(
-            new System.Collections.Generic.List<Point> { new Point(point.X, point.Y) },
-            GeometryType.Point,
-            srid);
+        var geometry = Geometry<Point>.Create(point.X, point.Y, srid);
+        //new Geometry<Point>(
+        //    new System.Collections.Generic.List<Point> { new Point(point.X, point.Y) },
+        //    GeometryType.Point,
+        //    srid);
 
         return KmlWriter.ToKml(geometry, name, description, projectToGeodeticFunc);
     }
@@ -227,7 +228,7 @@ public static class Sta_KmlExtensions
     /// </summary>
     private static Geometry<Point> ConvertToPointGeometry<T>(Geometry<T> geometry) where T : IPoint, new()
     {
-        if (geometry == null)
+        if (geometry is null)
             return Geometry<Point>.Empty;
 
         // If already Point-based geometry, cast or convert
@@ -237,13 +238,13 @@ public static class Sta_KmlExtensions
         }
 
         // Convert points
-        if (geometry.Points != null && geometry.Points.Count > 0)
+        if (geometry.IsNonEmptyLeafGeometry())
         {
             var points = geometry.Points
                 .Select(p => new Point(p.X, p.Y))
                 .ToList();
 
-            return new Geometry<Point>(points, geometry.Type, geometry.Srid);
+            return Geometry<Point>.Create(points, geometry.Type, geometry.Srid);
         }
 
         // Convert geometries recursively

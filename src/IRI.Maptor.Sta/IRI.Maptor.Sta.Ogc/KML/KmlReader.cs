@@ -285,10 +285,10 @@ public static class KmlReader
 
         if (hasZ && point is PointZ pointZ)
         {
-            return new Geometry<PointZ>(new List<PointZ> { pointZ }, GeometryType.Point, srid);
+            return Geometry<PointZ>.Create([pointZ], GeometryType.Point, srid);
         }
 
-        return new Geometry<Point>(new List<Point> { point }, GeometryType.Point, srid);
+        return Geometry<Point>.Create([point], GeometryType.Point, srid);
     }
 
     private static IGeometry? ParseLineString(XElement lineStringElement, XNamespace kml, int srid)
@@ -306,11 +306,12 @@ public static class KmlReader
         if (hasZ && points.All(p => p is PointZ))
         {
             var pointZList = points.Cast<PointZ>().ToList();
-            return new Geometry<PointZ>(pointZList, GeometryType.LineString, srid);
+            return Geometry<PointZ>.Create(pointZList, GeometryType.LineString, srid);
         }
 
         var pointList = points.Cast<Point>().ToList();
-        return new Geometry<Point>(pointList, GeometryType.LineString, srid);
+
+        return Geometry<Point>.Create(pointList, GeometryType.LineString, srid);
     }
 
     private static IGeometry? ParseLinearRing(XElement linearRingElement, XNamespace kml, int srid)
@@ -443,8 +444,8 @@ public static class KmlReader
         }
 
         // Convert PointZ geometries to Point for mixed scenarios (use 2D version)
-        var pointGeometries = geometries.Select(g => g is Geometry<PointZ> gz 
-            ? ConvertPointZToPointGeometry(gz) 
+        var pointGeometries = geometries.Select(g => g is Geometry<PointZ> gz
+            ? ConvertPointZToPointGeometry(gz)
             : (Geometry<Point>)g).ToList();
         return new Geometry<Point>(pointGeometries, multiType, srid);
     }
@@ -454,11 +455,11 @@ public static class KmlReader
         if (geometryZ.Points != null)
         {
             var points = geometryZ.Points.Select(pz => new Point(pz.X, pz.Y)).ToList();
-            return new Geometry<Point>(points, geometryZ.Type, geometryZ.Srid);
+            return Geometry<Point>.Create(points, geometryZ.Type, geometryZ.Srid);
         }
         else if (geometryZ.Geometries != null)
         {
-            var geometries = geometryZ.Geometries.Select(gz => ConvertPointZToPointGeometry(gz)).ToList();
+            var geometries = geometryZ.Geometries.Select(ConvertPointZToPointGeometry).ToList();
             return new Geometry<Point>(geometries, geometryZ.Type, geometryZ.Srid);
         }
         return Geometry<Point>.Empty;

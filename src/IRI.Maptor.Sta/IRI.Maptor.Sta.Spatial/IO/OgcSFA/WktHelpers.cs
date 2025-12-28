@@ -80,7 +80,7 @@ internal static class WktHelpers
             CoordinateDimension.ZM => 4,
             _ => 2
         };
-         
+
         // The last point is repeated for close rings
         return isRing ? coordinates.Take(coordinates.Count - 1).ToList() : coordinates;
     }
@@ -194,7 +194,7 @@ internal static class WktHelpers
         var pointGeometries = coordinates.Select(c =>
         {
             var point = CreatePointFromCoordinates<T>(c);
-            return new Geometry<T>(new List<T> { point }, GeometryType.Point, srid);
+            return Geometry<T>.Create([point], GeometryType.Point, srid);
         }).ToList();
 
         return new Geometry<T>(pointGeometries, GeometryType.MultiPoint, srid);
@@ -229,7 +229,7 @@ internal static class WktHelpers
     private static Geometry<T> ParsePoint<T>(string wktString, int srid, CoordinateDimension dimension, string callerName) where T : IPoint, new()
     {
         var coordinates = ParseCoordinates(wktString);
-        
+
         // Validate coordinate count matches expected dimension
         int expectedCoordCount = dimension switch
         {
@@ -421,7 +421,7 @@ internal static class WktHelpers
     internal static string FormatWktPoint<T>(T point, bool includeParentheses) where T : IPoint
     {
         string coordinates;
-        
+
         // Use pattern matching to efficiently check and cast in one operation
         if (point is IHasZ hasZPoint && point is IHasM hasMPoint)
         {

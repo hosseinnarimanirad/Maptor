@@ -226,7 +226,7 @@ public static class EpsReader
                                 // If we have accumulated points, create geometry
                                 if (currentPath.Count >= 2)
                                 {
-                                    geometries.Add(new Geometry<Point>(currentPath, GeometryType.LineString, srid));
+                                    geometries.Add(Geometry<Point>.Create(currentPath, GeometryType.LineString, srid));
                                 }
                                 currentPath.Clear();
                                 currentPoint = new Point(mx, my);
@@ -273,13 +273,13 @@ public static class EpsReader
                                     currentPath.Add(new Point(startPoint.X, startPoint.Y));
                                 }
                                 // Create polygon
-                                var ring = new Geometry<Point>(currentPath, GeometryType.LineString, srid);
+                                var ring = Geometry<Point>.Create(currentPath, GeometryType.LineString, srid);
                                 geometries.Add(new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid));
                             }
                             else if (currentPath.Count >= 2)
                             {
                                 // Create closed line string
-                                geometries.Add(new Geometry<Point>(currentPath, GeometryType.LineString, srid));
+                                geometries.Add(Geometry<Point>.Create(currentPath, GeometryType.LineString, srid));
                             }
                             currentPath.Clear();
                             currentPoint = null;
@@ -289,7 +289,7 @@ public static class EpsReader
                         case "stroke":
                             if (currentPath.Count >= 2)
                             {
-                                geometries.Add(new Geometry<Point>(currentPath, GeometryType.LineString, srid));
+                                geometries.Add(Geometry<Point>.Create(currentPath, GeometryType.LineString, srid));
                             }
                             currentPath.Clear();
                             currentPoint = null;
@@ -299,7 +299,7 @@ public static class EpsReader
                         case "fill":
                             if (currentPath.Count >= 3)
                             {
-                                var fillRing = new Geometry<Point>(currentPath, GeometryType.LineString, srid);
+                                var fillRing = Geometry<Point>.Create(currentPath, GeometryType.LineString, srid);
                                 geometries.Add(new Geometry<Point>(new List<Geometry<Point>> { fillRing }, GeometryType.Polygon, srid));
                             }
                             currentPath.Clear();
@@ -314,7 +314,7 @@ public static class EpsReader
         // Add any remaining path
         if (currentPath.Count >= 2)
         {
-            geometries.Add(new Geometry<Point>(currentPath, GeometryType.LineString, srid));
+            geometries.Add(Geometry<Point>.Create(currentPath, GeometryType.LineString, srid));
         }
 
         return geometries;

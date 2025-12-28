@@ -168,6 +168,236 @@ public static class SpatialUtility
 
     #endregion
 
+    #region Bearing and Point Movement (Geodetic/Spherical)
+
+    /// <summary>
+    /// Calculate initial bearing between two geodetic points using spherical (Haversine) formula
+    /// </summary>
+    /// <param name="firstPoint">First geodetic point (lat/long in degrees)</param>
+    /// <param name="secondPoint">Second geodetic point (lat/long in degrees)</param>
+    /// <returns>Initial bearing in radians (0 = North, π/2 = East, π = South, 3π/2 = West)</returns>
+    public static double GetBearingSpherical<T>(T firstPoint, T secondPoint) where T : IPoint
+    {
+        double lat1 = firstPoint.Y * Math.PI / 180.0;
+        double lat2 = secondPoint.Y * Math.PI / 180.0;
+        double dLon = (secondPoint.X - firstPoint.X) * Math.PI / 180.0;
+
+        double y = Math.Sin(dLon) * Math.Cos(lat2);
+        double x = Math.Cos(lat1) * Math.Sin(lat2) - Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dLon);
+
+        double bearing = Math.Atan2(y, x);
+        return bearing; // Returns bearing in radians
+    }
+
+    /// <summary>
+    /// Calculate initial bearing between two geodetic points using Vincenty's inverse formula
+    /// </summary>
+    /// <param name="firstPoint">First geodetic point (lat/long in degrees)</param>
+    /// <param name="secondPoint">Second geodetic point (lat/long in degrees)</param>
+    /// <returns>Initial bearing in radians (0 = North, π/2 = East, π = South, 3π/2 = West)</returns>
+    public static double GetBearingGeodesic<T>(T firstPoint, T secondPoint) where T : IPoint
+    {
+        // WGS-84 ellipsoid parameters
+        double a = Ellipsoids.WGS84.SemiMajorAxis.Value;
+        double f = 1 / 298.257223563;
+        double b = (1 - f) * a;
+
+        double φ1 = firstPoint.Y * Math.PI / 180.0;
+        double φ2 = secondPoint.Y * Math.PI / 180.0;
+        double L = (secondPoint.X - firstPoint.X) * Math.PI / 180.0;
+
+        double U1 = Math.Atan((1 - f) * Math.Tan(φ1));
+        double U2 = Math.Atan((1 - f) * Math.Tan(φ2));
+
+        double sinU1 = Math.Sin(U1), cosU1 = Math.Cos(U1);
+        double sinU2 = Math.Sin(U2), cosU2 = Math.Cos(U2);
+
+        double λ = L, λPrev;
+        double sinλ, cosλ;
+        double sinσ, cosσ, σ;
+        double sinα, cos2α, cos2σm;
+        double C;
+
+        const double epsilon = 1e-12;
+        int iterations = 100;
+        do
+        {
+            sinλ = Math.Sin(λ);
+            cosλ = Math.Cos(λ);
+
+            sinσ = Math.Sqrt((cosU2 * sinλ) * (cosU2 * sinλ) +
+                             (cosU1 * sinU2 - sinU1 * cosU2 * cosλ) *
+                             (cosU1 * sinU2 - sinU1 * cosU2 * cosλ));
+
+            if (sinσ == 0)
+                return 0; // co-incident points
+
+            cosσ = sinU1 * sinU2 + cosU1 * cosU2 * cosλ;
+            σ = Math.Atan2(sinσ, cosσ);
+
+            sinα = (cosU1 * cosU2 * sinλ) / sinσ;
+            cos2α = 1 - sinα * sinα;
+
+            cos2σm = cosσ - (2 * sinU1 * sinU2) / cos2α;
+            if (double.IsNaN(cos2σm)) cos2σm = 0;
+
+            C = (f / 16) * cos2α * (4 + f * (4 - 3 * cos2α));
+
+            λPrev = λ;
+            λ = L + (1 - C) * f * sinα *
+                (σ + C * sinσ * (cos2σm + C * cosσ * (-1 + 2 * cos2σm * cos2σm)));
+        }
+        while (Math.Abs(λ - λPrev) > epsilon && --iterations > 0);
+
+        if (iterations == 0)
+            throw new InvalidOperationException("Vincenty formula failed to converge");
+
+        // Calculate initial bearing
+        double bearing = Math.Atan2(cosU2 * sinλ, cosU1 * sinU2 - sinU1 * cosU2 * cosλ);
+        return bearing; // Returns bearing in radians
+    }
+
+    /// <summary>
+    /// Move a point along a great circle given distance and bearing (spherical)
+    /// </summary>
+    /// <param name="startPoint">Starting geodetic point (lat/long in degrees)</param>
+    /// <param name="bearing">Bearing in radians (0 = North, π/2 = East, π = South, 3π/2 = West)</param>
+    /// <param name="distance">Distance in meters</param>
+    /// <returns>Destination point (lat/long in degrees)</returns>
+    public static T MovePointAlongSpherical<T>(T startPoint, double bearing, double distance) where T : IPoint, new()
+    {
+        double a = Ellipsoids.WGS84.SemiMajorAxis.Value;
+        double b = Ellipsoids.WGS84.SemiMinorAxis.Value;
+        double lat1 = startPoint.Y * Math.PI / 180.0;
+        double meanPhi = lat1; // Use start latitude for radius approximation
+        double R = Math.Sqrt(a * a * Math.Cos(meanPhi) * Math.Cos(meanPhi) + b * b * Math.Sin(meanPhi) * Math.Sin(meanPhi));
+
+        double angularDistance = distance / R; // Angular distance in radians
+
+        double lat1Rad = startPoint.Y * Math.PI / 180.0;
+        double lon1Rad = startPoint.X * Math.PI / 180.0;
+
+        double lat2Rad = Math.Asin(Math.Sin(lat1Rad) * Math.Cos(angularDistance) +
+                                   Math.Cos(lat1Rad) * Math.Sin(angularDistance) * Math.Cos(bearing));
+
+        double lon2Rad = lon1Rad + Math.Atan2(Math.Sin(bearing) * Math.Sin(angularDistance) * Math.Cos(lat1Rad),
+                                              Math.Cos(angularDistance) - Math.Sin(lat1Rad) * Math.Sin(lat2Rad));
+
+        return new T() { X = lon2Rad * 180.0 / Math.PI, Y = lat2Rad * 180.0 / Math.PI };
+    }
+
+    /// <summary>
+    /// Move a point along a geodesic given distance and bearing (ellipsoidal, using Vincenty's direct formula)
+    /// </summary>
+    /// <param name="startPoint">Starting geodetic point (lat/long in degrees)</param>
+    /// <param name="bearing">Initial bearing in radians (0 = North, π/2 = East, π = South, 3π/2 = West)</param>
+    /// <param name="distance">Distance in meters</param>
+    /// <returns>Destination point (lat/long in degrees)</returns>
+    public static T MovePointAlongGeodesic<T>(T startPoint, double bearing, double distance) where T : IPoint, new()
+    {
+        // WGS-84 ellipsoid parameters
+        double a = Ellipsoids.WGS84.SemiMajorAxis.Value;
+        double f = 1 / 298.257223563;
+        double b = (1 - f) * a;
+
+        double φ1 = startPoint.Y * Math.PI / 180.0;
+        double λ1 = startPoint.X * Math.PI / 180.0;
+        double α1 = bearing; // Initial bearing
+
+        double sinα1 = Math.Sin(α1);
+        double cosα1 = Math.Cos(α1);
+
+        double tanU1 = (1 - f) * Math.Tan(φ1);
+        double cosU1 = 1 / Math.Sqrt(1 + tanU1 * tanU1);
+        double sinU1 = tanU1 * cosU1;
+
+        double σ1 = Math.Atan2(tanU1, cosα1);
+        double sinα = cosU1 * sinα1;
+        double cos2α = 1 - sinα * sinα;
+        double uSquared = cos2α * (a * a - b * b) / (b * b);
+        double A = 1 + uSquared / 16384.0 * (4096.0 + uSquared * (-768 + uSquared * (320 - 175 * uSquared)));
+        double B = uSquared / 1024.0 * (256.0 + uSquared * (-128 + uSquared * (74 - 47 * uSquared)));
+
+        double σ = distance / (b * A);
+        double σPrev;
+        double sinσ, cosσ, cos2σm;
+
+        do
+        {
+            cos2σm = Math.Cos(2 * σ1 + σ);
+            sinσ = Math.Sin(σ);
+            cosσ = Math.Cos(σ);
+            double Δσ = B * sinσ * (cos2σm + B / 4.0 * (cosσ * (-1 + 2 * cos2σm * cos2σm) -
+                B / 6.0 * cos2σm * (-3 + 4 * sinσ * sinσ) * (-3 + 4 * cos2σm * cos2σm)));
+            σPrev = σ;
+            σ = distance / (b * A) + Δσ;
+        }
+        while (Math.Abs(σ - σPrev) > 1e-12);
+
+        double tmp = sinU1 * sinσ - cosU1 * cosσ * cosα1;
+        double φ2 = Math.Atan2(sinU1 * cosσ + cosU1 * sinσ * cosα1, (1 - f) * Math.Sqrt(sinα * sinα + tmp * tmp));
+        double λ = Math.Atan2(sinσ * sinα1, cosU1 * cosσ - sinU1 * sinσ * cosα1);
+        double C = f / 16.0 * cos2α * (4 + f * (4 - 3 * cos2α));
+        double L = λ - (1 - C) * f * sinα * (σ + C * sinσ * (cos2σm + C * cosσ * (-1 + 2 * cos2σm * cos2σm)));
+        double λ2 = λ1 + L;
+
+        return new T() { X = λ2 * 180.0 / Math.PI, Y = φ2 * 180.0 / Math.PI };
+    }
+
+    /// <summary>
+    /// Create a circle polygon on sphere using great circle arcs
+    /// </summary>
+    /// <param name="center">Center point (lat/long in degrees)</param>
+    /// <param name="radius">Radius in meters</param>
+    /// <param name="segments">Number of segments for the circle</param>
+    /// <returns>List of points forming the circle (lat/long in degrees)</returns>
+    public static List<T> CreateCircleSpherical<T>(T center, double radius, int segments) where T : IPoint, new()
+    {
+        var points = new List<T>();
+        double angleStep = 2.0 * Math.PI / segments;
+
+        for (int i = 0; i < segments; i++)
+        {
+            double bearing = i * angleStep;
+            var point = MovePointAlongSpherical<T>(center, bearing, radius);
+            points.Add(point);
+        }
+
+        // DO NOT CLOSE THE CIRCLE
+        // Close the circle
+        //points.Add(new T() { X = points[0].X, Y = points[0].Y });
+
+        return points;
+    }
+
+    /// <summary>
+    /// Create a circle polygon on ellipsoid using geodesic arcs
+    /// </summary>
+    /// <param name="center">Center point (lat/long in degrees)</param>
+    /// <param name="radius">Radius in meters</param>
+    /// <param name="segments">Number of segments for the circle</param>
+    /// <returns>List of points forming the circle (lat/long in degrees)</returns>
+    public static List<T> CreateCircleGeodesic<T>(T center, double radius, int segments) where T : IPoint, new()
+    {
+        var points = new List<T>();
+        double angleStep = 2.0 * Math.PI / segments;
+
+        for (int i = 0; i < segments; i++)
+        {
+            double bearing = i * angleStep;
+            var point = MovePointAlongGeodesic<T>(center, bearing, radius);
+            points.Add(point);
+        }
+
+        // DO NOT CLOSE THE CIRCLE
+        // Close the circle
+        //points.Add(new T() { X = points[0].X, Y = points[0].Y });
+
+        return points;
+    }
+
+    #endregion
+
 
         #region Area
 

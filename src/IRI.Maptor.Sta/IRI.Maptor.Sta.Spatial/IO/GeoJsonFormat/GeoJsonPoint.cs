@@ -85,9 +85,9 @@ public class GeoJsonPoint : GeoJsonBase
 
         return (this.HasZ, this.HasM) switch
         {
-            (true, true) => new Geometry<PointZM>([GeoJson.CreatePointFromCoordinates(Coordinates!, GeoJson.PointZMFactory, isLongitudeFirst)], GeometryType.Point, srid),
-            (true, false) => new Geometry<PointZ>([GeoJson.CreatePointFromCoordinates(Coordinates!, GeoJson.PointZFactory, isLongitudeFirst)], GeometryType.Point, srid),
-            _ => new Geometry<Point>([GeoJson.CreatePointFromCoordinates(Coordinates!, GeoJson.PointFactory, isLongitudeFirst)], GeometryType.Point, srid),
+            (true, true) => Geometry<PointZM>.Create([GeoJson.CreatePointFromCoordinates(Coordinates!, GeoJson.PointZMFactory, isLongitudeFirst)], GeometryType.Point, srid),
+            (true, false) => Geometry<PointZ>.Create([GeoJson.CreatePointFromCoordinates(Coordinates!, GeoJson.PointZFactory, isLongitudeFirst)], GeometryType.Point, srid),
+            _ => Geometry<Point>.Create([GeoJson.CreatePointFromCoordinates(Coordinates!, GeoJson.PointFactory, isLongitudeFirst)], GeometryType.Point, srid),
         };
     }
 
