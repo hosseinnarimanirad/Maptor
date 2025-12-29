@@ -2062,16 +2062,16 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             allPoints.Add(endCap.Points[0]);
         }
 
-        // Close the polygon if not already closed
-        if (allPoints.Count > 0)
-        {
-            var firstPoint = allPoints[0];
-            var lastPoint = allPoints[allPoints.Count - 1];
-            if (!firstPoint.AreExactlyTheSame(lastPoint))
-            {
-                allPoints.Add(new T() { X = firstPoint.X, Y = firstPoint.Y });
-            }
-        }
+        //// Close the polygon if not already closed
+        //if (allPoints.Count > 0)
+        //{
+        //    var firstPoint = allPoints[0];
+        //    var lastPoint = allPoints[allPoints.Count - 1];
+        //    if (!firstPoint.AreExactlyTheSame(lastPoint))
+        //    {
+        //        allPoints.Add(new T() { X = firstPoint.X, Y = firstPoint.Y });
+        //    }
+        //}
 
         if (allPoints.Count < 3)
             return Geometry<T>.Empty;
@@ -2200,10 +2200,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             double y = center.Y + radius * Math.Sin(angle);
             points.Add(new T() { X = x, Y = y });
         }
-
-        // Close the polygon
-        points.Add(new T() { X = points[0].X, Y = points[0].Y });
-
+         
         return Geometry<T>.Create(points, GeometryType.Polygon, srid);
     }
 
@@ -2463,15 +2460,15 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             allPoints.Add(endCap.Points[0]);
         }
 
-        if (allPoints.Count > 0)
-        {
-            var firstPoint = allPoints[0];
-            var lastPoint = allPoints[allPoints.Count - 1];
-            if (!firstPoint.AreExactlyTheSame(lastPoint))
-            {
-                allPoints.Add(new T() { X = firstPoint.X, Y = firstPoint.Y });
-            }
-        }
+        //if (allPoints.Count > 0)
+        //{
+        //    var firstPoint = allPoints[0];
+        //    var lastPoint = allPoints[allPoints.Count - 1];
+        //    if (!firstPoint.AreExactlyTheSame(lastPoint))
+        //    {
+        //        allPoints.Add(new T() { X = firstPoint.X, Y = firstPoint.Y });
+        //    }
+        //}
 
         if (allPoints.Count < 3)
             return Geometry<T>.Empty;
@@ -2743,16 +2740,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         {
             allPoints.Add(endCap.Points[0]);
         }
-
-        if (allPoints.Count > 0)
-        {
-            var firstPoint = allPoints[0];
-            var lastPoint = allPoints[allPoints.Count - 1];
-            if (!firstPoint.AreExactlyTheSame(lastPoint))
-            {
-                allPoints.Add(new T() { X = firstPoint.X, Y = firstPoint.Y });
-            }
-        }
+         
 
         if (allPoints.Count < 3)
             return Geometry<T>.Empty;
@@ -3890,6 +3878,15 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     public byte[]? AsSqlServerNativeBinary() => SqlServerSpatialNativeBinary.Serialize(this);
 
     public string AsSqlServerWkt() => SqlServerWktWriter.AsWkt(this);
+
+    #endregion
+
+
+    #region Ogc GML
+
+    // Note: GML conversion methods are implemented as extension methods in IRI.Maptor.Sta.Ogc.Extensions.Sta_GmlExtensions
+    // Use geometry.AsGml2() or geometry.AsGml3() extension methods
+    // Use Sta_GmlExtensions.FromGml2() or Sta_GmlExtensions.FromGml3() static methods
 
     #endregion
 

@@ -29,10 +29,12 @@ public static class BoundingBoxExtensions
         return boundingBox.TransofrmBy8Point(p => MapProjects.UTMToGeodetic(p, zone));
     }
 
-    public static BoundingBox UtmMbbToGeodeticWgs84Mbb(BoundingBox boundingBox, int zone)
+    public static BoundingBox UtmMbbToGeodeticWgs84Mbb(this BoundingBox boundingBox, int zone)
     {
         return UtmMbbToGeodeticWgs84Geometry(boundingBox, zone).GetBoundingBox();
     }
+
+    public static BoundingBox WebMercatorToGeodeticWgs84Mbb(this BoundingBox boundingBox) => boundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84);
 
 
     public static Geometry<Point> TransofrmBy4Point(this BoundingBox boundingBox, Func<Point, Point> func)

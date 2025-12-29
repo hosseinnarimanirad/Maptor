@@ -47,4 +47,5 @@ public interface IGeometry
     int ToGlobalPointIndex(GeometryPointAddress pointAddress);
 
     GeometryPointAddress FindPointAddress(int globalIndex);
+     
 }

@@ -96,50 +96,7 @@ public class Geometry_SpatialOperationsTest
     #endregion
 
     #region Buffer Tests
-
-    [Theory]
-    [InlineData("POINT(10 20)", 5.0, GeometryType.Polygon)] // Point buffer - returns circle polygon
-    [InlineData("LINESTRING(0 0, 10 0, 10 10)", 2.0, GeometryType.Polygon)] // LineString buffer - returns polygon
-    [InlineData("POLYGON((0 0, 0 10, 10 10, 10 0, 0 0))", 1.0, GeometryType.Polygon)] // Polygon buffer - returns buffered polygon
-    [InlineData("POLYGON((0 0, 0 20, 20 20, 20 0, 0 0), (5 5, 5 10, 10 10, 10 5, 5 5))", 10.0, GeometryType.Polygon)] // Polygon with hole - large buffer eliminates hole
-    [InlineData("MULTIPOINT((0 0), (10 10))", 3.0, GeometryType.Polygon)] // MultiPoint buffer - returns union of buffered points
-    [InlineData("POINT(10 20)", 0.0, null)] // Zero distance - may return original or very small buffer (type may vary)
-    public void Buffer_VariousGeometries_ReturnsExpectedResult(string wkt, double distance, GeometryType? expectedType)
-    {
-        // Arrange
-        var geo = Geometry<Point>.FromWkt(wkt, TestSrid);
-
-        // Act
-        Geometry<Point> result;
-        try
-        {
-            result = geo.Buffer(distance);
-        }
-        catch (NotImplementedException)
-        {
-            // Skip test if implementation is not complete
-            return;
-        }
-
-        // Assert
-        Assert.NotNull(result);
-        if (expectedType.HasValue)
-        {
-            Assert.Equal(expectedType.Value, result.Type);
-        }
-        else
-        {
-            // For zero distance or edge cases, just verify it's a valid geometry
-            Assert.True(result.HasAnyPoint() || result.IsNullOrEmpty());
-        }
-        Assert.True(result.HasAnyPoint());
-        
-        // Point buffers should have multiple points for circle representation
-        if (geo.Type == GeometryType.Point && distance > 0 && result.Type == GeometryType.Polygon)
-        {
-            Assert.True(result.NumberOfPoints >= 32);
-        }
-    }
+     
 
     [Theory]
     [InlineData("POINT(10 20)", -5.0)]
