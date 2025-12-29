@@ -259,7 +259,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     private ObservableCollection<ILayer> _layers;
     private ObservableCollection<ILayer> _allNonGroupLayers = new ObservableCollection<ILayer>();
-    
+
     public ObservableCollection<ILayer> Layers
     {
         get { return _layers; }
@@ -270,16 +270,16 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 _layers.CollectionChanged -= Layers_CollectionChanged;
             }
-            
+
             _layers = value;
             RaisePropertyChanged();
-            
+
             // Subscribe to new collection
             if (_layers != null)
             {
                 _layers.CollectionChanged += Layers_CollectionChanged;
             }
-            
+
             // Update AllNonGroupLayers
             UpdateAllNonGroupLayers();
         }
@@ -298,13 +298,13 @@ public abstract class MapViewModelBase : ViewModelBase
     private void UpdateAllNonGroupLayers()
     {
         var newLayers = GetAllLayers(Layers);
-        
+
         _allNonGroupLayers.Clear();
         foreach (var layer in newLayers)
         {
             _allNonGroupLayers.Add(layer);
         }
-        
+
         RaisePropertyChanged(nameof(AllNonGroupLayers));
     }
 
@@ -891,8 +891,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
               CurrentEditingLayer.ChangeCurrentEditingPoint(MapPanel.CurrentWebMercatorEditingPoint);
 
-              CurrentGeometryDetails.ChangeCurrentEditingPoint(MapPanel.CurrentWebMercatorEditingPoint);
-
+              if (CurrentGeometryDetails is not null)
+                  CurrentGeometryDetails.ChangeCurrentEditingPoint(MapPanel.CurrentWebMercatorEditingPoint);
           });
 
         CoordinatePanel = new CoordinatePanelViewModel();
@@ -2037,7 +2037,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         var type = points.Count == 1 ? GeometryType.Point : isClosed ? GeometryType.Polygon : GeometryType.LineString;
 
-        Geometry<Point> geometry =   Geometry<Point>.Create(points, type, srid);
+        Geometry<Point> geometry = Geometry<Point>.Create(points, type, srid);
 
         return EditAsync(geometry, options);
     }
@@ -3149,7 +3149,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             return;
         }
-          
+
         await AddGeoJson(fileName, owner);
     }
 

@@ -13,7 +13,7 @@ public class Notifier : INotifyPropertyChanged
 
     protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
     {
-        this.VerifyPropertyName(propertyName);
+        //this.VerifyPropertyName(propertyName);
 
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
