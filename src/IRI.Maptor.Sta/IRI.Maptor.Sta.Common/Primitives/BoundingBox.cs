@@ -146,13 +146,23 @@ public struct BoundingBox
 
     public string AsWkt()
     {
+        // OGC Simple Features Specification requires exterior rings to be counter-clockwise
+        // Order: bottom-left → bottom-right → top-right → top-left → back to start
         return string.Format(
-                System.Globalization.CultureInfo.InvariantCulture,
-                "POLYGON(({0} {1}, {0} {2}, {3} {2}, {3} {1}, {0} {1}))",
-                this.XMin,
-                this.YMin,
-                this.YMax,
-                this.XMax);
+            System.Globalization.CultureInfo.InvariantCulture,
+            "POLYGON(({0} {1}, {2} {1}, {2} {3}, {0} {3}, {0} {1}))",
+            this.XMin,  // bottom-left X
+            this.YMin,  // bottom-left Y
+            this.XMax,  // bottom-right X, top-right X
+            this.YMax); // top-right Y, top-left Y
+
+        //return string.Format(
+        //        System.Globalization.CultureInfo.InvariantCulture,
+        //        "POLYGON(({0} {1}, {0} {2}, {3} {2}, {3} {1}, {0} {1}))",
+        //        this.XMin,
+        //        this.YMin,
+        //        this.YMax,
+        //        this.XMax);
     }
 
 
