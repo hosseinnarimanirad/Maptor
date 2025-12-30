@@ -64,7 +64,7 @@ public class SpecialPointLayer : BaseLayer
         if (type == LayerType.Complex ||
             type == LayerType.RightClickOption ||
             type == LayerType.GridAndGraticule ||
-            type == LayerType.MoveableItem ||
+            //type == LayerType.MoveableItem ||
             type == LayerType.EditableItem)
             this._type = type;
         else

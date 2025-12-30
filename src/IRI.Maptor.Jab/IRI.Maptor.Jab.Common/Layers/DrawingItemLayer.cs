@@ -13,7 +13,7 @@ using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 namespace IRI.Maptor.Jab.Common;
 
-public class DrawingItemLayer : VectorLayer//, IIdentifiable
+public class DrawingItemLayer : VectorLayer
 {
     public Action<DrawingItemLayer>? RequestHighlightGeometry;
 
@@ -158,10 +158,11 @@ public class DrawingItemLayer : VectorLayer//, IIdentifiable
 
     public static DrawingItemLayer CreateSpecialLayer(string layerName, List<Locateable> locateables)
     {
-        DrawingItemLayer result = new DrawingItemLayer(layerName, /*id,*/ RasterizationMethod.DrawingVisual)
+        DrawingItemLayer result = new DrawingItemLayer(layerName, RasterizationMethod.DrawingVisual)
         {
-            //Extent = BoundingBox.CalculateBoundingBox(locateables.Select(l => new Point() { X = l.Location.X, Y = l.Location.Y })),
-            _type = LayerType.MoveableItem,
+            //_type = LayerType.MoveableItem,
+            _type = LayerType.Complex,
+            IsMovable = true,
         };
 
         result.SetSymbolizer(new SimpleSymbolizer(VisualParameters.GetDefaultForDrawingItems()));
@@ -171,12 +172,12 @@ public class DrawingItemLayer : VectorLayer//, IIdentifiable
             result.RequestChangeVisibility?.Invoke(result);
         };
 
-        //result.AddVisualParameters(VisualParameters.GetDefaultForDrawingItems());
-
-        result.SpecialPointLayer = new SpecialPointLayer(layerName, locateables, .8, null, LayerType.MoveableItem)
+        //result.SpecialPointLayer = new SpecialPointLayer(layerName, locateables, .8, null, LayerType.MoveableItem)
+        result.SpecialPointLayer = new SpecialPointLayer(layerName, locateables, .8, null, LayerType.Complex)
         {
             ParentLayerId = result.LayerId,
-            ParentLayerName = result.LayerName
+            ParentLayerName = result.LayerName,
+            IsMovable = true
         };
 
         return result;

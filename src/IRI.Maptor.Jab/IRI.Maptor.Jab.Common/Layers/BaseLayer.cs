@@ -24,6 +24,8 @@ public abstract class BaseLayer : Notifier, ILayer
         this.ParentLayerId = Guid.Empty;
 
         this.ParentLayerName = string.Empty;
+
+        this.IsMovable = false;
     }
 
     #region Layer Id
@@ -76,6 +78,8 @@ public abstract class BaseLayer : Notifier, ILayer
             RaisePropertyChanged(nameof(ShowOptions));
         }
     }
+
+    public bool IsMovable { get; set; } 
 
     public ObservableCollection<ILayer> SubLayers { get; set; } = new();
 

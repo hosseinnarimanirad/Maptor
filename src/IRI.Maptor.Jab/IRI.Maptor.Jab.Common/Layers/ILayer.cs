@@ -25,6 +25,8 @@ public interface ILayer
 
     LayerType Type { get; }
 
+    bool IsMovable { get; set; }
+
     BoundingBox Extent { get; }
 
     RenderMode RenderMode { get; }
@@ -63,7 +65,7 @@ public interface ILayer
     double Opacity { get; set; }
 
     Visibility Visibility { get; set; }
-    
+
     ScaleInterval VisibleRange { get; set; }
 
     FrameworkElement? Element { get; set; }

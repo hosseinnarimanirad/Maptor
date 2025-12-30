@@ -29,7 +29,7 @@ public enum LayerType
      
     RightClickOption = 510,
 
-    MoveableItem = 520,
+    //MoveableItem = 520,
 
     EditableItem = 530,
 

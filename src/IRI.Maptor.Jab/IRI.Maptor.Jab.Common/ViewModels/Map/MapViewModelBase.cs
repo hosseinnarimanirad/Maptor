@@ -2486,7 +2486,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             var drawingItemLayer = DrawingItemLayer.CreateSpecialLayer("Text",
             [
-                new Locateable(response.Result, AncherFunctionHandlers.BottomCenter){ Element = new TextboxMarker(){ LabelValue=text} }
+                new Locateable(response.Result, AncherFunctionHandlers.BottomCenter){ Element = new TextboxMarker(){ LabelValue = text} }
             ]);
 
             //drawingItemLayer.OnIsSelectedInTocChanged += (sender, e) =>

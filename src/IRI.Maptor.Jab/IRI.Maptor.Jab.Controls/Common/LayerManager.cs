@@ -157,7 +157,7 @@ public class LayerManager : Notifier
     public List<ILayer> GetOrderedLayers()
     {
         return allLayers.OrderBy(i => i.Type == LayerType.RightClickOption)
-                                     .ThenBy(i => i.Type == (LayerType.MoveableItem))
+                                     //.ThenBy(i => i.Type == (LayerType.MoveableItem))
                                      .ThenBy(i => i.Type == (LayerType.EditableItem))
                                      .ThenBy(i => i.Type == (LayerType.Complex))
                                      .ThenBy(e => e.Type == (LayerType.Highlight))
@@ -192,7 +192,7 @@ public class LayerManager : Notifier
                                     //.ThenByDescending(i => i.Type == LayerType.FeatureLayer)
                                     //.ThenByDescending(i => i.Type == LayerType.Selection)
                                     .ThenBy(i => i.Type == LayerType.RightClickOption)
-                                    .ThenBy(i => i.Type == LayerType.MoveableItem)
+                                    //.ThenBy(i => i.Type == LayerType.MoveableItem)
                                     .ThenBy(i => i.Type == LayerType.EditableItem)
                                     .ThenBy(i => i.Type == LayerType.Complex)
                                     .ThenBy(i => i.Type == LayerType.Drawing)

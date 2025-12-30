@@ -233,9 +233,9 @@ public class PolyBezierLayer : SymbolizableLayer
 
         this._controlPath = new Path() { Data = controlGeometry, Stroke = new SolidColorBrush(Colors.Red), StrokeThickness = 1 };
 
-        this._mainLayer = new SpecialPointLayer("1", _mainLocateables, .9, ScaleInterval.All, LayerType.EditableItem | LayerType.MoveableItem) { AlwaysTop = true };
+        this._mainLayer = new SpecialPointLayer("1", _mainLocateables, .9, ScaleInterval.All, LayerType.EditableItem /*| LayerType.MoveableItem*/) { AlwaysTop = true, IsMovable = true };
 
-        this._controlLayer = new SpecialPointLayer("2", _controlLocateables, .9, ScaleInterval.All, LayerType.EditableItem | LayerType.MoveableItem) { AlwaysTop = true };
+        this._controlLayer = new SpecialPointLayer("2", _controlLocateables, .9, ScaleInterval.All, LayerType.EditableItem /*| LayerType.MoveableItem*/) { AlwaysTop = true, IsMovable = true };
     }
 
     private void mainElement_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -247,9 +247,9 @@ public class PolyBezierLayer : SymbolizableLayer
             leftToolTip: string.Empty,
             middleToolTip: string.Empty,
 
-            rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Clipboard, 
-            leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Add, 
-            middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Delete); 
+            rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Clipboard,
+            leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Add,
+            middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Delete);
 
         presenter.RightCommandAction = i =>
         {
@@ -451,9 +451,9 @@ public class PolyBezierLayer : SymbolizableLayer
 
         _controlPath.Tag = new LayerTag(0) { Layer = this, IsTiled = false, LayerType = LayerType.EditableItem };
 
-        this._mainLayer = new SpecialPointLayer($"POLYBEZIER MAIN {LayerId}", _mainLocateables, .9, ScaleInterval.All, LayerType.EditableItem | LayerType.MoveableItem) { AlwaysTop = true };
+        this._mainLayer = new SpecialPointLayer($"POLYBEZIER MAIN {LayerId}", _mainLocateables, .9, ScaleInterval.All, LayerType.EditableItem /*| LayerType.MoveableItem*/) { AlwaysTop = true, IsMovable = true };
 
-        this._controlLayer = new SpecialPointLayer($"POLYBEZIER CONTROL {LayerId}", _controlLocateables, .9, ScaleInterval.All, LayerType.EditableItem | LayerType.MoveableItem) { AlwaysTop = true };
+        this._controlLayer = new SpecialPointLayer($"POLYBEZIER CONTROL {LayerId}", _controlLocateables, .9, ScaleInterval.All, LayerType.EditableItem /*| LayerType.MoveableItem*/) { AlwaysTop = true, IsMovable = true };
 
 
         this._mainPath.MouseLeftButtonDown += (sender, e) =>
@@ -488,8 +488,8 @@ public class PolyBezierLayer : SymbolizableLayer
             leftToolTip: string.Empty,
             middleToolTip: string.Empty,
 
-            rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.CitySeattle, 
-            leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Check, 
+            rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.CitySeattle,
+            leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Check,
             middleSymbol: null);
 
         presenter.RightCommandAction = i =>

@@ -1197,7 +1197,7 @@ public partial class MapViewer : NotifiableUserControl
         //            Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null)))
         //         );
         //}
-        else if (layer.Type == LayerType.Complex || layer.Type == LayerType.MoveableItem)
+        else if (layer.Type == LayerType.Complex /*|| layer.Type == LayerType.MoveableItem*/)
         {
             SpecialPointLayer? specialPointLayer = null;
 
@@ -1980,7 +1980,8 @@ public partial class MapViewer : NotifiableUserControl
         ((TransformGroup)(element.RenderTransform)).Children.Add(new TranslateTransform(screenLocation.X, screenLocation.Y));
 
         //What about other types: RightClickOption, GridAndGraticule
-        if (specialPointLayer.Type == LayerType.MoveableItem)
+        //if (specialPointLayer.Type == LayerType.MoveableItem)
+        if(specialPointLayer.IsMovable)
         {
             element.Tag = new LayerTag(this.MapScale)
             {
@@ -2328,7 +2329,8 @@ public partial class MapViewer : NotifiableUserControl
 
 
             //1397.04.02 why not checking this first?
-            if ((/*tag.LayerType.HasFlag(LayerType.Feature) ||*/ tag.LayerType.HasFlag(LayerType.VectorLayer)) &&
+            //if (( tag.LayerType.HasFlag(LayerType.Feature) ||   tag.LayerType.HasFlag(LayerType.VectorLayer)) &&
+            if ((tag.LayerType == LayerType.VectorLayer) &&
                 this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
                 continue;
 
@@ -2340,7 +2342,7 @@ public partial class MapViewer : NotifiableUserControl
             if (tag.LayerType == LayerType.Drawing && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
                 continue;
 
-            if (tag.LayerType == LayerType.MoveableItem && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
+            if (tag.LayerType == LayerType.Complex /*LayerType.MoveableItem*/ && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
                 continue;
 
 
@@ -3490,7 +3492,7 @@ public partial class MapViewer : NotifiableUserControl
 
         ClearLayer(LayerType.Complex, false);
 
-        ClearLayer(LayerType.MoveableItem, false);
+        //ClearLayer(LayerType.MoveableItem, false);
 
         ClearLayer(LayerType.EditableItem, false);
 

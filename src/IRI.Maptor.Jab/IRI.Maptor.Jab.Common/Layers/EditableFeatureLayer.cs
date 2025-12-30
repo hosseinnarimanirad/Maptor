@@ -153,7 +153,6 @@ public class EditableFeatureLayer : SymbolizableLayer
         Func<double, double> screenToMap,
         EditableFeatureLayerOptions? options = null)
     {
-        //this._isNewDrawingMode = isNewDrawing;
         this.Options = options ?? EditableFeatureLayerOptions.CreateDefault();
 
         this.Options.RequestHandleIsEdgeLabelVisibleChanged = UpdateEdgeLables;
@@ -191,17 +190,20 @@ public class EditableFeatureLayer : SymbolizableLayer
             this._feature.MouseRightButtonDown += (sender, e) => { this.RegisterMapOptionsForEditPath(e); };
         }
 
-        var layerType = Options.IsNewDrawing ? LayerType.EditableItem : LayerType.MoveableItem | LayerType.EditableItem;
+        bool isMovable = !Options.IsNewDrawing;
 
-        this._primaryVerticesLayer = new SpecialPointLayer("#vert", new List<Locateable>(), 1, ScaleInterval.All, layerType) { AlwaysTop = true };
+        //var layerType = Options.IsNewDrawing ? LayerType.EditableItem : LayerType.MoveableItem | LayerType.EditableItem;
+        var layerType = LayerType.EditableItem;
+
+        this._primaryVerticesLayer = new SpecialPointLayer("#vert", new List<Locateable>(), 1, ScaleInterval.All, layerType) { AlwaysTop = true, IsMovable = isMovable };
 
         this._primaryVerticesLayer.RequestSelectedLocatableChanged = (l, i) => this.RequestSelectedLocatableChanged?.Invoke(l, i);
 
-        this._midVerticesLayer = new SpecialPointLayer("#int. vert", new List<Locateable>(), .7, ScaleInterval.All, layerType) { AlwaysTop = true };
+        this._midVerticesLayer = new SpecialPointLayer("#int. vert", new List<Locateable>(), .7, ScaleInterval.All, layerType) { AlwaysTop = true, IsMovable = isMovable };
 
-        this._edgeLabelLayer = new SpecialPointLayer("#edge length", new List<Locateable>(), .9, ScaleInterval.All, layerType) { AlwaysTop = false };
+        this._edgeLabelLayer = new SpecialPointLayer("#edge length", new List<Locateable>(), .9, ScaleInterval.All, layerType) { AlwaysTop = false, IsMovable = isMovable };
 
-        this._primaryVerticesLabelLayer = new SpecialPointLayer("#vert length", new List<Locateable>(), .9, ScaleInterval.All, layerType) { AlwaysTop = false };
+        this._primaryVerticesLabelLayer = new SpecialPointLayer("#vert length", new List<Locateable>(), .9, ScaleInterval.All, layerType) { AlwaysTop = false, IsMovable = isMovable };
 
         ReconstructLocateables();
 
