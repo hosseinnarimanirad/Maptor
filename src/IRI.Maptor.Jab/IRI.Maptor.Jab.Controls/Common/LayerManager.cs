@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Linq; 
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Sta.Common.Primitives;
 
@@ -28,9 +29,9 @@ public class LayerManager : Notifier
     {
         this.allLayers = new List<ILayer>();
 
-        this.CurrentLayers = new ObservableCollection<ILayer>(); 
+        this.CurrentLayers = new ObservableCollection<ILayer>();
     }
-     
+
 
     public void Add(ILayer layer, double inverseMapScale)
     {
@@ -86,13 +87,13 @@ public class LayerManager : Notifier
 
     public void Remove(string layerName, bool forceRemove) => Clear(layer => layer?.LayerName == layerName, forceRemove);
 
-    internal void Remove(LayerType type, bool forceRemove) => Clear(layer => layer.Type.HasFlag(type), forceRemove);
+    //internal void Remove(LayerType type, bool forceRemove) => Clear(layer => layer.Type.HasFlag(type), forceRemove);
 
     public void Remove(Predicate<ILayer> rule, bool forceRemove) => Clear(rule, forceRemove);
 
     public void RemoveTile(string providerFullName, bool forceRemove)
     {
-        Clear(layer => (layer as TileServiceLayer)?.ProviderFullName?.ToUpper() == providerFullName?.ToUpper() , forceRemove);
+        Clear(layer => (layer as TileServiceLayer)?.ProviderFullName?.ToUpper() == providerFullName?.ToUpper(), forceRemove);
     }
 
 
@@ -136,7 +137,7 @@ public class LayerManager : Notifier
 
             // remove group layer if all childs have been removed.
             // e.g. in the case of DXF group layer.
-            if (layer.IsGroupLayer && layer.SubLayers.Count==0)
+            if (layer.IsGroupLayer && layer.SubLayers.Count == 0)
             {
                 layers.Remove(layer);
             }
@@ -155,13 +156,14 @@ public class LayerManager : Notifier
 
     public List<ILayer> GetOrderedLayers()
     {
-        return allLayers.OrderBy(i => i.Type.HasFlag(LayerType.RightClickOption))
-                                     .ThenBy(i => i.Type.HasFlag(LayerType.MoveableItem))
-                                     .ThenBy(i => i.Type.HasFlag(LayerType.EditableItem))
-                                     .ThenBy(i => i.Type.HasFlag(LayerType.Complex))
-                                     .ThenBy(e => e.Type.HasFlag(LayerType.Selection))
-                                     .ThenBy(i => i.Type.HasFlag(LayerType.Drawing))
-                                     .ThenByDescending(i => i.Type.HasFlag(LayerType.BaseMap))
+        return allLayers.OrderBy(i => i.Type == LayerType.RightClickOption)
+                                     .ThenBy(i => i.Type == (LayerType.MoveableItem))
+                                     .ThenBy(i => i.Type == (LayerType.EditableItem))
+                                     .ThenBy(i => i.Type == (LayerType.Complex))
+                                     .ThenBy(e => e.Type == (LayerType.Highlight))
+                                     .ThenBy(e => e.Type == (LayerType.Selection))
+                                     .ThenBy(i => i.Type == (LayerType.Drawing))
+                                     .ThenByDescending(i => i.Type == (LayerType.BaseMap))
                                      .ThenBy(i => i.ZIndex)
                                      .ToList();
     }
@@ -194,6 +196,8 @@ public class LayerManager : Notifier
                                     .ThenBy(i => i.Type == LayerType.EditableItem)
                                     .ThenBy(i => i.Type == LayerType.Complex)
                                     .ThenBy(i => i.Type == LayerType.Drawing)
+                                    .ThenBy(i => i.Type == LayerType.Selection)
+                                    .ThenBy(i => i.Type == LayerType.Highlight)
                                     .ThenBy(i => i.Type == LayerType.GroupLayer)
                                     .ThenBy(i => i.ZIndex);
 
@@ -251,12 +255,10 @@ public class LayerManager : Notifier
 
     private BoundingBox CalculateExtent(IList<ILayer> layers)
     {
-        if (layers == null || layers.Count < 1)
-        {
-            return new BoundingBox(double.NaN, double.NaN, double.NaN, double.NaN);
-        }
+        if (layers.IsNullOrEmpty())
+            return BoundingBox.NaN;
 
-        var extents = layers.Where(i => !i.Type.HasFlag(LayerType.BaseMap) && !i.Type.HasFlag(LayerType.ImagePyramid))
+        var extents = layers.Where(i => i.Type != LayerType.BaseMap && i.Type != LayerType.ImagePyramid)
                             .Select(i => i.Extent)
                             .Where(i => !double.IsNaN(i.Width) && !double.IsNaN(i.Height));
 
@@ -269,7 +271,7 @@ public class LayerManager : Notifier
     }
 
     public Action<BaseLayer>? RequestRefreshVisibility;
-     
+
     //internal void ChangeLayerZIndex(ILayer layer, int newZIndex)
     //{
 
