@@ -708,8 +708,6 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public int CurrentZoomLevel { get { return RequestCurrentZoomLevel?.Invoke() ?? 1; } }
 
-    //public string CurrentScaleText => Localization.LocalizationManager.GetLocalizedNumberString($"1:{CurrentPointInverseMapScale}");
-
     public BoundingBox CurrentExtent
     {
         get
@@ -954,8 +952,6 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action<TileMapProvider, bool, string, bool, Func<TileInfo, string>, double> RequestSetTileService;
 
-    //public Action RequestRemoveAllTileServices;
-
     public Func<double> RequestMapScale;
 
     public Func<double> RequestCurrentPointScale;
@@ -1042,11 +1038,11 @@ public abstract class MapViewModelBase : ViewModelBase
     public Action<Point> RequestFlashPoint;
 
 
-    public Func<List<Geometry<Point>>, VisualParameters, string, /*Geometry, */Task> RequestSelectGeometries;
+    public Func<string, List<Geometry<Point>>, VisualParameters, Task>? RequestSelectGeometries;
 
     public Func<string, List<Geometry<Point>>, VisualParameters, Task>? RequestAddGeometries;
 
-    //public Func<GeometryLabelPairs, string, VisualParameters, LabelParameters, Task> RequestDrawGeometryLablePairs;
+    public Func<string, List<Geometry<Point>>, VisualParameters, Task>? RequestHighlightGeometries;
 
     public Action<SpecialPointLayer> RequestAddSpecialPointLayer;
 
@@ -1056,12 +1052,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action<string> RequestRemoveLayerByName;
 
-    //public Func<ILayer, Task> RequestAddLayer;
     public Action<ILayer> RequestAddLayer;
 
     public Func<Geometry<Point>, Geometry<Point>> RequestTransformScreenGeometryToWebMercatorGeometry;
-
-    //public Action<string> RequestRemoveLayer;
 
     public Action<string, List<Point>, Geometry, bool, VisualParameters> RequestAddPolyBezier;
 
@@ -1081,10 +1074,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action OnRequestShowAboutMe;
 
-    //public Func<DrawMode, bool, Task<Geometry>> RequestMeasure;
     public Func<DrawMode, EditableFeatureLayerOptions, EditableFeatureLayerOptions, Action, Task<Response<Geometry<Point>>>> RequestMeasure;
-
-    //public Func<string, Task> RequestAddText;
 
     public Action RequestCancelMeasure;
 
@@ -1104,8 +1094,6 @@ public abstract class MapViewModelBase : ViewModelBase
     public Func<string, ObservableCollection<FeatureSet<Point>>> RequestSearch;
 
     public Func<Task<Response<Point>>> RequestGetPoint;
-
-    //public Func<Func<IPoint, IPoint>> RequestGetToScreenMap;
 
     public Func<Matrix> RequestGetMapToScreenMatrix;
 
@@ -1243,20 +1231,18 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public void AddSelectedLayer(SelectedLayer selectedLayer)
     {
-        if (selectedLayer == null)
-        {
+        if (selectedLayer is null)
             return;
-        }
 
-        selectedLayer.AssociatedLayer.NumberOfSelectedFeatures = selectedLayer.CountOfSelectedFeatures();
+        selectedLayer.AssociatedLayer.NumberOfSelectedFeatures = selectedLayer.CountOfSelectedFeatures;
 
         var existingLayer = SelectedLayers?.SingleOrDefault(l => l.Id == selectedLayer?.Id);
 
         if (existingLayer == null)
         {
-            selectedLayer.FeaturesChangedAction = ShowSelectedFeatures;
+            selectedLayer.RequestFeaturesChanged = ShowSelectedFeatures;
 
-            selectedLayer.HighlightFeaturesChangedAction = ShowHighlightedFeatures;
+            selectedLayer.RequestHighlightFeaturesChanged = ShowHighlightedFeatures;
 
             selectedLayer.RequestFlashSinglePoint = FlashHighlightedFeatures;
 
@@ -1331,8 +1317,10 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             SelectedLayers.Remove(selectedLayer);
 
-            ClearLayer("__$selection", true);
-            ClearLayer("__$highlight", true);
+            ClearLayer(LayerType.Selection, true);
+            ClearLayer(LayerType.Highlight, true);
+            //ClearLayer("__$selection", true);
+            //ClearLayer("__$highlight", true);
         }
     }
 
@@ -1349,8 +1337,10 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             SelectedLayers.Remove(selectedLayer);
 
-            ClearLayer("__$selection", true);
-            ClearLayer("__$highlight", true);
+            ClearLayer(LayerType.Selection, true);
+            ClearLayer(LayerType.Highlight, true);
+            //ClearLayer("__$selection", true);
+            //ClearLayer("__$highlight", true);
         }
     }
 
@@ -1367,31 +1357,28 @@ public abstract class MapViewModelBase : ViewModelBase
 
     private async void ShowSelectedFeatures(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
     {
-        ClearLayer("__$selection", true);
-        ClearLayer("__$highlight", true);
+        ClearLayer(LayerType.Selection, true);
+        ClearLayer(LayerType.Highlight, true);
+        //ClearLayer("__$selection", true);
+        //ClearLayer("__$highlight", true);
 
-        if (enumerable == null)
-        {
+        if (enumerable.IsNullOrEmpty())
             return;
-        }
 
-        await DrawGeometriesAsync(
-            enumerable.Select(i => i.TheGeometry).ToList(),
+        await SelectGeometriesAsync(
             "__$selection",
+            enumerable.Select(i => i.TheGeometry).ToList(),
             VisualParameters.GetDefaultForSelection(strokeThickness));
-
     }
 
     private async void ShowHighlightedFeatures(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
     {
-        ClearLayer("__$highlight", true);
-
+        ClearLayer(LayerType.Highlight, true);
+        //ClearLayer("__$highlight", true);
         ClearLayer(LayerType.AnimatingItem, true);
 
-        if (enumerable == null || enumerable.Count() == 0)
-        {
+        if (enumerable.IsNullOrEmpty())
             return;
-        }
 
         if (enumerable?.Count() < 10 && enumerable.First().TheGeometry.Type == GeometryType.Point)
         {
@@ -1399,9 +1386,9 @@ public abstract class MapViewModelBase : ViewModelBase
         }
         else
         {
-            await DrawGeometriesAsync(
-                enumerable.Select(i => i.TheGeometry).ToList(),
+            await HighlightGeometriesAsync(
                 "__$highlight",
+                enumerable.Select(i => i.TheGeometry).ToList(),
                 VisualParameters.GetDefaultForHighlight(enumerable.FirstOrDefault(), strokeThickness));
         }
     }
@@ -1426,46 +1413,28 @@ public abstract class MapViewModelBase : ViewModelBase
 
         var visualParameters = VisualParameters.GetDefaultForSelection(layer.DefaultSymbology?.StrokeThickness);
 
-        //visualParameters.Visibility = layer.VisualParameters.Visibility;
-
-        await SelectGeometryAsync(highlightGeo, visualParameters, layer.HighlightGeometryKey.ToString());
+        await SelectGeometriesAsync(layer.HighlightGeometryKey.ToString(), [highlightGeo], visualParameters);
     }
 
-    public async Task SelectGeometryAsync(Geometry<Point> geometry)
+    public async Task SelectGeometriesAsync(string layerName, List<Geometry<Point>> geometries, VisualParameters parameters)
     {
-        await SelectGeometriesAsync(new List<Geometry<Point>>() { geometry });
+        await RequestSelectGeometries?.Invoke(layerName, geometries, parameters);
     }
 
-    public async Task SelectGeometryAsync(Geometry<Point> geometry, VisualParameters visualParameters, string layerName/*, Geometry pointSymbol = null*/)
+    public async Task HighlightGeometriesAsync(string layerName, List<Geometry<Point>> geometry, VisualParameters parameters)
     {
-        await SelectGeometriesAsync(new List<Geometry<Point>>() { geometry }, visualParameters, layerName/*, pointSymbol*/);
+        await RequestHighlightGeometries?.Invoke(layerName, geometry, parameters);
     }
 
-    public async Task SelectGeometriesAsync(List<Geometry<Point>> geometries)
+    public async Task DrawGeometriesAsync(string layerName, List<Geometry<Point>> geometry, VisualParameters parameters)
     {
-        //await this.SelectGeometries(geometries, new VisualParameters(new System.Windows.Media.SolidColorBrush(Aqua), new System.Windows.Media.SolidColorBrush(Aqua), 2, .5));
-        await SelectGeometriesAsync(geometries, VisualParameters.GetDefaultForSelection(null), null);
-    }
-
-    public async Task SelectGeometriesAsync(List<Geometry<Point>> geometries, VisualParameters visualParameters, string layerName/*, Geometry pointSymbol = null*/)
-    {
-        await RequestSelectGeometries?.Invoke(geometries, visualParameters, layerName/*, pointSymbol*/);
+        await RequestAddGeometries?.Invoke(layerName, geometry, parameters);
     }
 
 
-    //public void DrawGeometryLablePairs(GeometryLabelPairs geometries, string name, VisualParameters parameters, LabelParameters labelParameters)
-    //{
-    //    RequestDrawGeometryLablePairs?.Invoke(geometries, name, parameters, labelParameters);
-    //}
-
-    public async Task DrawGeometriesAsync(List<Geometry<Point>> geometry, string name, VisualParameters parameters)
+    public async Task DrawGeometryAsync(string name, Geometry<Point> geometry, VisualParameters parameters)
     {
-        await RequestAddGeometries?.Invoke(name, geometry, parameters);
-    }
-
-    public async Task DrawGeometryAsync(Geometry<Point> geometry, string name, VisualParameters parameters)
-    {
-        await DrawGeometriesAsync(new List<Geometry<Point>> { geometry }, name, parameters);
+        await DrawGeometriesAsync(name, [geometry], parameters);
     }
 
 
@@ -1893,8 +1862,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public void ClearLayer(LayerType type, bool remove, bool forceRemove = false)
     {
-        Clear(tag => tag.LayerType.HasFlag(type), remove, forceRemove);
-        //this.RequestClearLayerByType?.Invoke(type, remove);
+        //Clear(tag => tag.LayerType.HasFlag(type), remove, forceRemove);
+        Clear(tag => tag.LayerType == type, remove, forceRemove);
     }
 
     public void ClearLayer(string layerName, bool remove = true, bool forceRemove = false)

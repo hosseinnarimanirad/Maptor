@@ -55,11 +55,17 @@ public class SpecialPointLayer : BaseLayer
     {
         this.LayerId = Guid.NewGuid();
 
-        if (type.HasFlag(LayerType.Complex) ||
-            type.HasFlag(LayerType.RightClickOption) ||
-            type.HasFlag(LayerType.GridAndGraticule) ||
-            type.HasFlag(LayerType.MoveableItem) ||
-            type.HasFlag(LayerType.EditableItem))
+
+        //if (type.HasFlag(LayerType.Complex) ||
+        //    type.HasFlag(LayerType.RightClickOption) ||
+        //    type.HasFlag(LayerType.GridAndGraticule) ||
+        //    type.HasFlag(LayerType.MoveableItem) ||
+        //    type.HasFlag(LayerType.EditableItem))
+        if (type == LayerType.Complex ||
+            type == LayerType.RightClickOption ||
+            type == LayerType.GridAndGraticule ||
+            type == LayerType.MoveableItem ||
+            type == LayerType.EditableItem)
             this._type = type;
         else
             throw new NotImplementedException();

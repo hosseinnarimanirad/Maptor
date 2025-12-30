@@ -83,7 +83,7 @@ public partial class MapLegendView : NotifiableUserControl
     {
         get { return (ObservableCollection<ILayer>)GetValue(LayersProperty); }
         set { SetValue(LayersProperty, value); }
-    } 
+    }
     public static readonly DependencyProperty LayersProperty =
         DependencyProperty.Register("Layers", typeof(ObservableCollection<ILayer>), typeof(MapLegendView), new PropertyMetadata(null));
 
@@ -104,16 +104,10 @@ public partial class MapLegendView : NotifiableUserControl
         {
             e.Accepted =
                item.ShowInToc && (
-               (ShowVectorLayers && item.Type.HasFlag(LayerType.VectorLayer)) ||
-               (ShowRasterLayers && item.Type.HasFlag(LayerType.Raster)) ||
-               (ShowRasterLayers && item.Type.HasFlag(LayerType.ImagePyramid)) ||
-               item.Type.HasFlag(LayerType.GroupLayer));
-
-            //e.Accepted =
-            //    item.Layer.ShowInToc && (
-            //    (ShowVectorLayers && item.Layer.Type.HasFlag(LayerType.VectorLayer)) ||
-            //    (ShowRasterLayers && item.Layer.Type.HasFlag(LayerType.Raster)) ||
-            //    (ShowRasterLayers && item.Layer.Type.HasFlag(LayerType.ImagePyramid)));
+               (ShowVectorLayers && item.Type == LayerType.VectorLayer) ||
+               (ShowRasterLayers && item.Type == LayerType.Raster) ||
+               (ShowRasterLayers && item.Type == LayerType.ImagePyramid) ||
+               item.Type == LayerType.GroupLayer); 
         }
 
     }

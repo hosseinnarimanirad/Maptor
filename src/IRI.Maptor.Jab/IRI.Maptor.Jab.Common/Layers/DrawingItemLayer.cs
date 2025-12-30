@@ -122,13 +122,6 @@ public class DrawingItemLayer : VectorLayer//, IIdentifiable
 
         DrawingItemLayer result = new DrawingItemLayer(layerName, feature, /*id, */RasterizationMethod.DrawingVisual);
 
-        //var simpleVisualParameters = visualParameters ?? VisualParameters.GetDefaultForDrawingItems();
-
-        //var labelParameters = VisualParameters.GetDefaultForDrawingItemLabels(simpleVisualParameters.Stroke);
-
-        //result.Symbolizers = [new Cartography.Symbologies.SimpleSymbolizer(simpleVisualParameters),
-        //                        new Cartography.Symbologies.LabelSymbolizer(labelParameters)];
-        //result.Symbolizers = symbolizers;
         foreach (var item in symbolizers)
         {
             result.SetSymbolizer(item);
@@ -136,12 +129,12 @@ public class DrawingItemLayer : VectorLayer//, IIdentifiable
 
         var geometryType = feature.TheGeometry.Type;
 
-        var featureType =
-            (geometryType == GeometryType.Point || geometryType == GeometryType.MultiPoint) ? LayerType.Point :
-            ((geometryType == GeometryType.LineString || geometryType == GeometryType.MultiLineString) ? LayerType.Polyline :
-            (geometryType == GeometryType.Polygon || geometryType == GeometryType.MultiPolygon) ? LayerType.Polygon : LayerType.None);
+        result.SpatialModelMode =
+            (geometryType == GeometryType.Point || geometryType == GeometryType.MultiPoint) ? SpatialModelMode.Point :
+            ((geometryType == GeometryType.LineString || geometryType == GeometryType.MultiLineString) ? SpatialModelMode.Polyline :
+            (geometryType == GeometryType.Polygon || geometryType == GeometryType.MultiPolygon) ? SpatialModelMode.Polygon : SpatialModelMode.None);
 
-        result._type = LayerType.Drawing | featureType;
+        result._type = LayerType.Drawing;
 
         result.Commands = new List<ILegendCommand>();
 

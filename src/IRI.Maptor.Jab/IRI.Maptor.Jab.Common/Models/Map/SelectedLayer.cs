@@ -1,4 +1,4 @@
-﻿using System; 
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,19 +7,20 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using System.Collections.Specialized;
 
 
 namespace IRI.Maptor.Jab.Common.Models.Map;
 
-public class SelectedLayer/*<TGeometryAware> */: Notifier/*, ISelectedLayer *//*where TGeometryAware : class, IGeometryAware<Point>*/
+public class SelectedLayer : Notifier
 {
-    public Guid Id { get { return AssociatedLayer?.LayerId ?? Guid.Empty; } }
+    public Guid Id => AssociatedLayer?.LayerId ?? Guid.Empty;
 
     public VectorLayer AssociatedLayer { get; set; }
 
-    public string LayerName { get { return AssociatedLayer?.LayerName; } }
+    public string LayerName => AssociatedLayer?.LayerName ?? string.Empty;
 
-    public bool ShowSelectedOnMap { get; set; } = false;
+    public List<Field>? Fields { get; set; }
 
     private ObservableCollection<Feature<Point>> _features;
     public ObservableCollection<Feature<Point>> Features
@@ -32,92 +33,59 @@ public class SelectedLayer/*<TGeometryAware> */: Notifier/*, ISelectedLayer *//*
         }
     }
 
-    public List<Field>? Fields { get; set; }
-
     private ObservableCollection<Feature<Point>> _highlightedFeatures = new ObservableCollection<Feature<Point>>();
     public ObservableCollection<Feature<Point>> HighlightedFeatures
     {
         get { return _highlightedFeatures; }
         set
         {
+            if (_highlightedFeatures != null)
+                _highlightedFeatures.CollectionChanged -= highlightedFeatures_CollectionChanged;
+
             _highlightedFeatures = value;
             RaisePropertyChanged();
 
-            _highlightedFeatures.CollectionChanged += (sender, e) =>
-            {
-                this.UpdateHighlightedFeaturesOnMap(HighlightedFeatures/*.Cast<Feature<Point>>()*/);
+            _highlightedFeatures.CollectionChanged += highlightedFeatures_CollectionChanged;
 
-                RaisePropertyChanged(nameof(IsSingleValueHighlighted));
-                //Update();
-            };
-
-            //Update();
-            this.UpdateHighlightedFeaturesOnMap(HighlightedFeatures/*.Cast<Feature<Point>>()*/);
+            this.UpdateHighlightedFeaturesOnMap(HighlightedFeatures);
 
             RaisePropertyChanged(nameof(IsSingleValueHighlighted));
         }
     }
 
-    public bool IsSingleValueHighlighted
-    {
-        get
-        {
-            return HighlightedFeatures?.Count == 1;
-        }
-    }
+    public bool ShowSelectedOnMap { get; set; } = false;
 
-    //private void Update()
-    //{
-    //    this.UpdateHighlightedFeaturesOnMap(HighlightedFeatures.Cast<Feature<Point>>());
-    //    RaisePropertyChanged(nameof(IsSingleValueHighlighted));
-    //}
+    public bool IsSingleValueHighlighted => HighlightedFeatures?.Count == 1;
+
+    public int CountOfSelectedFeatures => Features?.Count ?? 0;
+
+
+    public Action<IEnumerable<Feature<Point>>, double?>? RequestFeaturesChanged { get; set; }
+
+    public Action<IEnumerable<Feature<Point>>, double?>? RequestHighlightFeaturesChanged { get; set; }
+
+    public Action<Feature<Point>>? RequestFlashSinglePoint { get; set; }
+
+    public Action<IEnumerable<Feature<Point>>, Action>? RequestZoomTo { get; set; }
+
+    public Action<Feature<Point>>? RequestEdit { get; set; }
+
+    public Action? RequestRemove { get; set; }
 
 
     public SelectedLayer(VectorLayer layer, List<Field>? fields)
     {
-        //this.Id = id;
-
         this.AssociatedLayer = layer;
 
         this.Fields = fields;
     }
 
-    public void UpdateSelectedFeatures(IEnumerable<Feature<Point>> items)
+    private void highlightedFeatures_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        Features = new ObservableCollection<Feature<Point>>(items/*?.Cast<TGeometryAware>()*/);
+        this.UpdateHighlightedFeaturesOnMap(HighlightedFeatures);
+
+        RaisePropertyChanged(nameof(IsSingleValueHighlighted));
     }
-
-    public void UpdateHighlightedFeatures(IEnumerable<Feature<Point>> items)
-    {
-        HighlightedFeatures = new ObservableCollection<Feature<Point>>(items/*.Cast<TGeometryAware>()*/);
-    }
-
-    public void UpdateSelectedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
-    {
-        FeaturesChangedAction?.Invoke(enumerable, strokeThickness);
-    }
-
-    public void UpdateHighlightedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable)
-    {
-        HighlightFeaturesChangedAction?.Invoke(enumerable, this.AssociatedLayer.DefaultSymbology?.StrokeThickness);
-    }
-
-    public IEnumerable<Feature<Point>> GetSelectedFeatures()
-    {
-        return Features/*?.Cast<Feature<Point>>().ToList()*/;
-
-        //AssociatedLayer.
-    }
-
-    public int CountOfSelectedFeatures()
-    {
-        return Features.Count;
-    }
-
-    //public IEnumerable<Feature<Point>> GetHighlightedFeatures()
-    //{
-    //    return HighlightedFeatures/*?.Cast<Feature<Point>>().ToList()*/;
-    //}
 
     private void TryFlashPoint(IEnumerable<Feature<Point>> point)
     {
@@ -127,84 +95,79 @@ public class SelectedLayer/*<TGeometryAware> */: Notifier/*, ISelectedLayer *//*
         }
     }
 
+
+    public void UpdateSelectedFeatures(IEnumerable<Feature<Point>> items)
+    {
+        Features = new ObservableCollection<Feature<Point>>(items);
+    }
+
+    public void UpdateHighlightedFeatures(IEnumerable<Feature<Point>> items)
+    {
+        HighlightedFeatures = new ObservableCollection<Feature<Point>>(items);
+    }
+
+    public void UpdateSelectedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
+    {
+        RequestFeaturesChanged?.Invoke(enumerable, strokeThickness);
+    }
+
+    public void UpdateHighlightedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable)
+    {
+        RequestHighlightFeaturesChanged?.Invoke(enumerable, this.AssociatedLayer.DefaultSymbology?.StrokeThickness);
+    }
+
+    public IEnumerable<Feature<Point>> GetSelectedFeatures()
+    {
+        return Features;
+    }
+
     public void Update(Feature<Point> oldGeometry, Feature<Point> newGeometry)
     {
-        var dataSource = (this?.AssociatedLayer as VectorLayer)?.DataSource as IEditableVectorDataSource/*<Feature<Point>, Point>*/;
+        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
 
-        dataSource.Update(newGeometry /*as TGeometryAware*/);
+        if (dataSource is null)
+            return;
+
+        dataSource.Update(newGeometry);
 
         var feature = this.Features.Single(f => f.Id == oldGeometry.Id);
 
         feature.TheGeometry = newGeometry.TheGeometry;
-
-        //this.UpdateHighlightedFeatures(new List<Feature<Point>>() { feature });
-        //var highlight = HighlightedFeatures.Single(h => h.Id == oldGeometry.Id)
     }
 
-    public void UpdateFeature(Feature<Point> item)
-    {
-        //var itemValue = item as Feature<Point>;
+    public void UpdateFeature(Feature<Point> item) => (AssociatedLayer?.DataSource as IEditableVectorDataSource)?.Update(item);
 
-        var dataSource = (this?.AssociatedLayer as VectorLayer)?.DataSource as IEditableVectorDataSource;
-
-        //dataSource.UpdateFeature(itemValue);
-        dataSource.Update(item);
-    }
-
-    public Action<IEnumerable<Feature<Point>>, double?> FeaturesChangedAction { get; set; }
-
-    public Action<IEnumerable<Feature<Point>>, double?> HighlightFeaturesChangedAction { get; set; }
-
-    public Action<Feature<Point>> RequestFlashSinglePoint { get; set; }
-
-    public Action<IEnumerable<Feature<Point>>, Action> RequestZoomTo { get; set; }
-
-    public Action<Feature<Point>> RequestEdit { get; set; }
-
-
-    public void SaveChanges()
-    {
-        ((AssociatedLayer as VectorLayer).DataSource as IEditableVectorDataSource).SaveChanges();
-    }
+    public void SaveChanges() => (AssociatedLayer.DataSource as IEditableVectorDataSource)?.SaveChanges();
 
 
 
-    public Action RequestRemove { get; set; }
 
 
-    private RelayCommand _zoomToCommand;
+
+    private RelayCommand? _zoomToCommand;
     public RelayCommand ZoomToCommand
     {
         get
         {
-            if (_zoomToCommand == null)
-            {
-                _zoomToCommand = new RelayCommand(param =>
-                { 
-                    this.RequestZoomTo?.Invoke(HighlightedFeatures, () => { TryFlashPoint(HighlightedFeatures); });
-                });
-            }
+            if (_zoomToCommand is null)
+                _zoomToCommand = new RelayCommand(param => this.RequestZoomTo?.Invoke(HighlightedFeatures, () => { TryFlashPoint(HighlightedFeatures); }));
 
             return _zoomToCommand;
         }
     }
 
 
-    private RelayCommand _editCommand;
+    private RelayCommand? _editCommand;
     public RelayCommand EditCommand
     {
         get
         {
-            if (_editCommand == null)
+            if (_editCommand is null)
             {
                 _editCommand = new RelayCommand(param =>
                 {
-                    //var highlightedFeatures = GetHighlightedFeatures();
-
                     if (HighlightedFeatures?.Count == 1)
-                    {
                         this.RequestEdit(HighlightedFeatures.First());
-                    }
                 });
             }
 
@@ -213,36 +176,26 @@ public class SelectedLayer/*<TGeometryAware> */: Notifier/*, ISelectedLayer *//*
     }
 
 
-    private RelayCommand _saveCommand;
+    private RelayCommand? _saveCommand;
     public RelayCommand SaveCommand
     {
         get
         {
-            if (_saveCommand == null)
-            {
-                _saveCommand = new RelayCommand(param =>
-                {
-                    this.SaveChanges();
-                });
-            }
+            if (_saveCommand is null)
+                _saveCommand = new RelayCommand(param => this.SaveChanges());
 
             return _saveCommand;
         }
     }
 
 
-    private RelayCommand _removeCommand;
+    private RelayCommand? _removeCommand;
     public RelayCommand RemoveCommand
     {
         get
         {
-            if (_removeCommand == null)
-            {
-                _removeCommand = new RelayCommand(param =>
-                {
-                    this.RequestRemove?.Invoke();
-                });
-            }
+            if (_removeCommand is null)
+                _removeCommand = new RelayCommand(param => this.RequestRemove?.Invoke());
 
             return _removeCommand;
         }

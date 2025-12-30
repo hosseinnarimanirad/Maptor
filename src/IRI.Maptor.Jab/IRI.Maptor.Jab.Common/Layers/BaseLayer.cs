@@ -57,6 +57,8 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public abstract LayerType Type { get; /*protected set;*/ }
 
+    public virtual SpatialModelMode SpatialModelMode { get; protected set; } = SpatialModelMode.None;
+
     public virtual BoundingBox Extent { get; protected set; }
 
     public virtual RenderMode RenderMode { get => RenderMode.Default; /*protected set { } */}
@@ -161,7 +163,7 @@ public abstract class BaseLayer : Notifier, ILayer
             RaisePropertyChanged();
         }
     }
-    
+
     private int _tocOrder;
     public int TocOrder
     {
@@ -189,7 +191,10 @@ public abstract class BaseLayer : Notifier, ILayer
     {
         get
         {
-            return this.Type.HasFlag(LayerType.Point) || this.Type.HasFlag(LayerType.Polyline) || this.Type.HasFlag(LayerType.Polygon);
+            //return this.Type.HasFlag(LayerType.Point) || this.Type.HasFlag(LayerType.Polyline) || this.Type.HasFlag(LayerType.Polygon);
+            return this.SpatialModelMode == SpatialModelMode.Point ||
+                    this.SpatialModelMode == SpatialModelMode.Polyline ||
+                    this.SpatialModelMode == SpatialModelMode.Polygon;
         }
     }
 

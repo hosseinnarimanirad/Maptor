@@ -2,28 +2,40 @@
 
 namespace IRI.Maptor.Jab.Common;
 
-[Flags]
+//[Flags]
 public enum LayerType
 {
-    Point = 1,
-    Polyline = 2,
-    Polygon = 4,
-    Raster = 8,
-    BaseMap = 16,
-    Drawing = 32,
-    Label = 64,
-    Selection = 128,
-    VectorLayer = 256,
-    Feature = Point | Polygon | Polyline,
-    Complex = 512,
-    RightClickOption = 1024,
-    GridAndGraticule = 2048,
-    AnimatingItem = 4096,
-    ImagePyramid = 8192,
-    MoveableItem = 16_384,
-    EditableItem = 32_768,
-    GroupLayer = 65_536,
-    None = 131_072,
-    FeatureLayer = 262_144,
-    ActiveExtent = 524_288
+    None = 1,
+    GroupLayer = 2,
+
+    //Point = 10,
+    //Polyline = 11,
+    //Polygon = 12,
+    //Feature = Point | Polygon | Polyline,
+    VectorLayer = 100,
+
+    Drawing = 200,     
+    Selection = 201,
+    Highlight = 202,
+
+    Raster = 300,
+    BaseMap = 301,
+    ImagePyramid = 302,
+
+    Label = 400,
+
+
+    Complex = 500,
+     
+    RightClickOption = 510,
+
+    MoveableItem = 520,
+
+    EditableItem = 530,
+
+    AnimatingItem = 540,
+
+    GridAndGraticule = 550,
+
+    ActiveExtent = 560,
 }

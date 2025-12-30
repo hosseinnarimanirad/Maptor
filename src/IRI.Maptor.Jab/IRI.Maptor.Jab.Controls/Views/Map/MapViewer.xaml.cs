@@ -694,6 +694,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestAddGeometries = this.DrawGeometriesAsync;
 
+        presenter.RequestHighlightGeometries = this.HighlightGeometries;
         //presenter.RequestDrawGeometryLablePairs = DrawGeometryLablePairsAsync;
 
         presenter.RequestSelectGeometries = SelectGeometriesAsync;
@@ -1196,7 +1197,7 @@ public partial class MapViewer : NotifiableUserControl
         //            Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null)))
         //         );
         //}
-        else if (layer.Type.HasFlag(LayerType.Complex) || layer.Type.HasFlag(LayerType.MoveableItem))
+        else if (layer.Type == LayerType.Complex || layer.Type == LayerType.MoveableItem)
         {
             SpecialPointLayer? specialPointLayer = null;
 
@@ -1227,7 +1228,7 @@ public partial class MapViewer : NotifiableUserControl
             //They are handled when UpdateTileInfos is fired
             //continue;
         }
-        else if (!layer.Type.HasFlag(LayerType.Raster) && !layer.Type.HasFlag(LayerType.BaseMap) && !layer.Type.HasFlag(LayerType.ImagePyramid))
+        else if (layer.Type != LayerType.Raster && layer.Type != LayerType.BaseMap && layer.Type != LayerType.ImagePyramid)
         {
             VectorLayer vectorLayer = (VectorLayer)layer;
 
@@ -1247,7 +1248,7 @@ public partial class MapViewer : NotifiableUserControl
               );
 
         }
-        else if (!layer.Type.HasFlag(LayerType.Label))
+        else if (layer.Type != LayerType.Label)
         {
             if (layer.RenderMode == RenderMode.Default)
             {
@@ -1262,7 +1263,7 @@ public partial class MapViewer : NotifiableUserControl
                         return;
                     }
 
-                    if (!layer.Extent.Intersects(this.CurrentExtent) && !layer.Type.HasFlag(LayerType.BaseMap) && !(rasterLayer.DataSource is OfflineGoogleMapDataSource))
+                    if (!layer.Extent.Intersects(this.CurrentExtent) && layer.Type != LayerType.BaseMap && !(rasterLayer.DataSource is OfflineGoogleMapDataSource))
                     {
                         System.Diagnostics.Debug.WriteLine($"raster layer escaped!");
                         return;
@@ -1279,7 +1280,6 @@ public partial class MapViewer : NotifiableUserControl
                          new LayerTag(mapScale) { LayerType = layer.Type, BoundingBox = extent },
                          Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null)))
                         );
-
             }
         }
         else
@@ -1980,7 +1980,7 @@ public partial class MapViewer : NotifiableUserControl
         ((TransformGroup)(element.RenderTransform)).Children.Add(new TranslateTransform(screenLocation.X, screenLocation.Y));
 
         //What about other types: RightClickOption, GridAndGraticule
-        if (specialPointLayer.Type.HasFlag(LayerType.MoveableItem))
+        if (specialPointLayer.Type == LayerType.MoveableItem)
         {
             element.Tag = new LayerTag(this.MapScale)
             {
@@ -1994,7 +1994,8 @@ public partial class MapViewer : NotifiableUserControl
             element.MouseLeftButtonDown -= Element_MouseDownForMoveableItem;
             element.MouseLeftButtonDown += Element_MouseDownForMoveableItem;
         }
-        else if (specialPointLayer.Type.HasFlag(LayerType.Complex) || specialPointLayer.Type.HasFlag(LayerType.EditableItem))
+        //else if (specialPointLayer.Type.HasFlag(LayerType.Complex) || specialPointLayer.Type.HasFlag(LayerType.EditableItem))
+        else if (specialPointLayer.Type == LayerType.Complex || specialPointLayer.Type == LayerType.EditableItem)
         {
             element.Tag = new LayerTag(this.MapScale)
             {
@@ -2327,14 +2328,19 @@ public partial class MapViewer : NotifiableUserControl
 
 
             //1397.04.02 why not checking this first?
-            if ((tag.LayerType.HasFlag(LayerType.Feature) || tag.LayerType.HasFlag(LayerType.VectorLayer)) &&
+            if ((/*tag.LayerType.HasFlag(LayerType.Feature) ||*/ tag.LayerType.HasFlag(LayerType.VectorLayer)) &&
                 this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
                 continue;
 
-            if (tag.LayerType.HasFlag(LayerType.Drawing) && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
+            //if (tag.LayerType.HasFlag(LayerType.Drawing) && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
+            //    continue;
+
+            //if (tag.LayerType.HasFlag(LayerType.MoveableItem) && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
+            //    continue;
+            if (tag.LayerType == LayerType.Drawing && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
                 continue;
 
-            if (tag.LayerType.HasFlag(LayerType.MoveableItem) && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
+            if (tag.LayerType == LayerType.MoveableItem && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
                 continue;
 
 
@@ -2394,7 +2400,8 @@ public partial class MapViewer : NotifiableUserControl
 
     public void ClearLayer(LayerType type, bool remove, bool forceRemove = false)
     {
-        Clear(tag => tag.LayerType.HasFlag(type), remove, forceRemove);
+        //Clear(tag => tag.LayerType.HasFlag(type), remove, forceRemove);
+        Clear(tag => tag.LayerType == (type), remove, forceRemove);
     }
 
     public void ClearLayer(ILayer layer, bool remove, bool forceRemove = false)
@@ -2722,14 +2729,13 @@ public partial class MapViewer : NotifiableUserControl
         s.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimation);
     }
 
-    //Get the FontFamily in method parameters
-    public async Task DrawGeometriesAsync(
-        string layerName,
-        List<Geometry<sb.Point>> geometries,
-        VisualParameters visualParams)
+    private async Task DrawGeometriesAsync(string layerName, LayerType layerType, List<Geometry<sb.Point>> geometries, VisualParameters visualParams)
     {
         if (geometries.IsNullOrEmpty())
             return;
+
+        if (layerType != LayerType.Drawing && layerType != LayerType.Selection && layerType != LayerType.Highlight)
+            throw new ArgumentOutOfRangeException("MapViewer > DrawGeometriesAsync > wrong layerType");
 
         var source = new MemoryDataSource(geometries);
 
@@ -2737,7 +2743,7 @@ public partial class MapViewer : NotifiableUserControl
             layerName,
             source,
             [new SimpleSymbolizer(visualParams)],
-            LayerType.Drawing,
+            layerType,
             RenderMode.Default,
             RasterizationMethod.DrawingVisual,
             ScaleInterval.All);
@@ -2748,78 +2754,83 @@ public partial class MapViewer : NotifiableUserControl
         await AddNonTiledLayer(layer);
     }
 
-    //public async Task DrawGeometryLablePairsAsync(GeometryLabelPairs geometries, string layerName, VisualParameters parameters, LabelParameters labelParameters)
-    //{
-    //    if (geometries == null)
-    //        return;
 
-    //    var source = new MemoryDataSource(geometries.Geometries.Zip(geometries.Labels, (g, l) => new Feature<sb.Point>(g, l.ToString())).ToList()/*, f => f.Label, null*/);
+    //Get the FontFamily in method parameters
+    public async Task DrawGeometriesAsync(string layerName, List<Geometry<sb.Point>> geometries, VisualParameters visualParams)
+    {
+        await DrawGeometriesAsync(layerName, LayerType.Drawing, geometries, visualParams);
 
-    //    var layer = new VectorLayer(
-    //        layerName,
-    //        //new MemoryDataSource<string>(geometries.Geometries, geometries.Labels, i => i?.ToString()),
-    //        source,
-    //        parameters,
-    //        LayerType.Drawing,
-    //        RenderMode.Default,
-    //        RasterizationMethod.DrawingVisual,
-    //        ScaleInterval.All,
-    //        pointSymbol: null,
-    //        labeling: labelParameters);
+        //if (geometries.IsNullOrEmpty())
+        //    return;
 
-    //    this._layerManager.Add(layer, 1.0 / _mapScale);
+        //var source = new MemoryDataSource(geometries);
 
-    //    //AddTiledLayer(layer);
-    //    await AddNonTiledLayer(layer);
-    //}
+        //var layer = new VectorLayer(
+        //    layerName,
+        //    source,
+        //    [new SimpleSymbolizer(visualParams)],
+        //    LayerType.Drawing,
+        //    RenderMode.Default,
+        //    RasterizationMethod.DrawingVisual,
+        //    ScaleInterval.All);
 
-    //public async Task DrawGeometries(List<Geometry<sb.Point>> geometries, string layerName,
-    //                                VisualParameters visualParameters, Geometry pointSymbol)
-    //{
-    //    if (geometries == null || geometries.Count < 1)
-    //        return;
+        //this._layerManager.Add(layer, 1.0 / _mapScale);
 
-    //    var layer = new VectorLayer(
-    //        layerName,
-    //        new MemoryDataSource(geometries),
-    //        visualParameters,
-    //        LayerType.Drawing,
-    //        RenderMode.Default,
-    //        RasterizationMethod.DrawingVisual,
-    //        ScaleInterval.All,
-    //        new SimplePointSymbolizer() { GeometrySymbol = pointSymbol });
+        ////AddTiledLayer(layer);
+        //await AddNonTiledLayer(layer);
+    }
 
-    //    this._layerManager.Add(layer, 1.0 / _mapScale);
+    public async Task HighlightGeometries(string layerName, List<Geometry<sb.Point>> geometries, VisualParameters visualParams)
+    {
+        await DrawGeometriesAsync(layerName, LayerType.Highlight, geometries, visualParams);
 
-    //    await AddNonTiledLayer(layer);
-    //}
+        //if (geometries.IsNullOrEmpty())
+        //    return;
 
-    public async Task SelectGeometriesAsync(List<Geometry<sb.Point>> geometries, VisualParameters visualParams, string? layerName/*, Geometry? pointSymbol = null*/)
+        //var source = new MemoryDataSource(geometries);
+
+        //var layer = new VectorLayer(
+        //    layerName,
+        //    source,
+        //    [new SimpleSymbolizer(visualParams)],
+        //    LayerType.Highlight,
+        //    RenderMode.Default,
+        //    RasterizationMethod.DrawingVisual,
+        //    ScaleInterval.All);
+
+        //this._layerManager.Add(layer, 1.0 / _mapScale);
+
+        ////AddTiledLayer(layer);
+        //await AddNonTiledLayer(layer);
+    }
+
+    public async Task SelectGeometriesAsync(string layerName, List<Geometry<sb.Point>> geometries, VisualParameters visualParams)
     {
         ClearLayer(LayerType.Selection, true);
 
-        if (geometries.IsNullOrEmpty())
-            return;
+        await DrawGeometriesAsync(layerName, LayerType.Selection, geometries, visualParams);
 
-        layerName = string.IsNullOrWhiteSpace(layerName) ? Guid.NewGuid().ToString() : layerName;
+        //if (geometries.IsNullOrEmpty())
+        //    return;
 
-        var layer = new VectorLayer(
-            layerName,
-            new MemoryDataSource(geometries),
-            [new SimpleSymbolizer(visualParams)],
-            LayerType.Selection,
-            RenderMode.Default,
-            RasterizationMethod.DrawingVisual,
-            ScaleInterval.All)
-        //new SimplePointSymbolizer() { GeometrySymbol = pointSymbol })
-        {
-            ZIndex = int.MaxValue
-        };
+        //layerName = string.IsNullOrWhiteSpace(layerName) ? Guid.NewGuid().ToString() : layerName;
 
-        this._layerManager.Add(layer, 1.0 / _mapScale);
+        //var layer = new VectorLayer(
+        //    layerName,
+        //    new MemoryDataSource(geometries),
+        //    [new SimpleSymbolizer(visualParams)],
+        //    LayerType.Selection,
+        //    RenderMode.Default,
+        //    RasterizationMethod.DrawingVisual,
+        //    ScaleInterval.All)
+        ////new SimplePointSymbolizer() { GeometrySymbol = pointSymbol })
+        //{
+        //    ZIndex = int.MaxValue
+        //};
 
-        await AddNonTiledLayer(layer);
+        //this._layerManager.Add(layer, 1.0 / _mapScale);
 
+        //await AddNonTiledLayer(layer);
     }
 
     #endregion
@@ -4544,7 +4555,7 @@ public partial class MapViewer : NotifiableUserControl
 
         foreach (var layer in GetAllVectorLayers(this.Layers))
         {
-            if (!layer.Type.HasFlag(LayerType.VectorLayer))
+            if (layer.Type != LayerType.VectorLayer)
                 continue;
 
             if (!layer.IsSearchable)
@@ -4590,7 +4601,7 @@ public partial class MapViewer : NotifiableUserControl
 
         foreach (var layer in GetAllVectorLayers(this.Layers))
         {
-            if (!layer.Type.HasFlag(LayerType.VectorLayer))
+            if (layer.Type != LayerType.VectorLayer)
                 continue;
 
             if (!layer.IsSearchable)
