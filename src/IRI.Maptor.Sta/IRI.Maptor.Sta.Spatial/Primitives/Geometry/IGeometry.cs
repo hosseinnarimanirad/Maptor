@@ -44,8 +44,8 @@ public interface IGeometry
 
     List<IGeometry>? GetGeometries();
 
-    int ToGlobalPointIndex(GeometryPointAddress pointAddress);
+    int ToGlobalPointIndex(PointAddress pointAddress);
 
-    GeometryPointAddress FindPointAddress(int globalIndex);
+    PointAddress FindPointAddress(int globalIndex);
      
 }

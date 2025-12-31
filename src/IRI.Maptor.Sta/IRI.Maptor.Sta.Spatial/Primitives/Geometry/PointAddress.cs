@@ -4,7 +4,7 @@ using System.Text;
 
 namespace IRI.Maptor.Sta.Spatial.Primitives;
 
-public class GeometryPointAddress
+public class PointAddress
 {
     public int LocalPointIndex { get; set; }
 
@@ -12,7 +12,7 @@ public class GeometryPointAddress
 
     public int? PolygonIndex { get; set; }
 
-    public GeometryPointAddress(int? polygonIndex, int partIndex, int localPointIndex)
+    public PointAddress(int? polygonIndex, int partIndex, int localPointIndex)
     {
         PolygonIndex = polygonIndex;
         PartIndex = partIndex;

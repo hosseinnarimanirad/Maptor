@@ -855,10 +855,10 @@ public class GeometryEditorViewModel : Notifier
             return -1;
 
         if (GeometryType == Sta.Common.Primitives.GeometryType.MultiPolygon)
-            return Geometry.ToGlobalPointIndex(new GeometryPointAddress(CurrentPolygonIndex, CurrentPartIndex, localIndex));
+            return Geometry.ToGlobalPointIndex(new PointAddress(CurrentPolygonIndex, CurrentPartIndex, localIndex));
 
         else
-            return Geometry.ToGlobalPointIndex(new GeometryPointAddress(null, CurrentPartIndex, localIndex));         
+            return Geometry.ToGlobalPointIndex(new PointAddress(null, CurrentPartIndex, localIndex));         
     }
 
     #endregion

@@ -289,7 +289,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public List<IGeometry>? GetGeometries() => Geometries?.Cast<IGeometry>().ToList();
 
-    public int ToGlobalPointIndex(GeometryPointAddress pointAddress)
+    public int ToGlobalPointIndex(PointAddress pointAddress)
     {
         var partIndex = pointAddress.PartIndex;
 
@@ -326,13 +326,13 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     }
 
-    public GeometryPointAddress FindPointAddress(int globalIndex)
+    public PointAddress FindPointAddress(int globalIndex)
     {
         switch (this.Type)
         {
             case GeometryType.Point:
             case GeometryType.LineString:
-                return new GeometryPointAddress(null, 0, globalIndex);
+                return new PointAddress(null, 0, globalIndex);
 
             case GeometryType.MultiPoint:
             case GeometryType.MultiLineString:
@@ -344,7 +344,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                     var partPointCount = Geometries?[i].NumberOfPoints ?? 0;
 
                     if (tempCount + partPointCount > globalIndex)
-                        return new GeometryPointAddress(null, i, globalIndex - tempCount);
+                        return new PointAddress(null, i, globalIndex - tempCount);
 
                     tempCount += partPointCount;
                 }
@@ -362,7 +362,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                         var partPointCount = Geometries?[i].Geometries?[j].NumberOfPoints ?? 0;
 
                         if (tempCount2 + partPointCount > globalIndex)
-                            return new GeometryPointAddress(i, j, globalIndex - tempCount2);
+                            return new PointAddress(i, j, globalIndex - tempCount2);
 
                         tempCount2 += partPointCount;
                     }
@@ -377,7 +377,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 break;
         }
 
-        return new GeometryPointAddress(null, -1, -1);
+        return new PointAddress(null, -1, -1);
     }
 
     #endregion
