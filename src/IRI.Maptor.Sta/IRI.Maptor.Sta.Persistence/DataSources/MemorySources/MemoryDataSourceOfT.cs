@@ -26,22 +26,25 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     {
     }
 
-    public MemoryDataSource(List<Geometry<Point>> geometries) : base(new List<Field>())
+    public MemoryDataSource(List<Geometry<Point>> geometries, bool resetIds = true) : base(new List<Field>())
     {
         var features = geometries.Select(g => new Feature<Point>(g) { Id = GetNewId() }).ToList();
 
-        Initialize(features);
+        Initialize(features, resetIds);
     }
 
-    public MemoryDataSource(List<Feature<Point>> features) : base(new List<Field>())
+    public MemoryDataSource(List<Feature<Point>> features, bool resetIds = true) : base(new List<Field>())
     {
-        Initialize(features);
+        Initialize(features, resetIds);
     }
 
-    private void Initialize(List<Feature<Point>> features)
+    private void Initialize(List<Feature<Point>> features, bool resetIds)
     {
-        foreach (var item in features)
-            item.Id = GetNewId();
+        if (resetIds)
+        {
+            foreach (var item in features)
+                item.Id = GetNewId();
+        }
 
         _features = FeatureSet<Point>.Create(string.Empty, features);
 
