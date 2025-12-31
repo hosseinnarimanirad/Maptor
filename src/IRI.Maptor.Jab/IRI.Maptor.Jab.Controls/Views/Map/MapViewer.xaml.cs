@@ -656,7 +656,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestRemoveLayer = this.RemoveLayer;
 
-        presenter.RequestRemoveLayerByName = this.RemoveLayer;
+        //presenter.RequestRemoveLayerByName = this.RemoveLayer;
 
         presenter.RequestAddLayer = (l) =>
         {
@@ -1030,10 +1030,10 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    public void RemoveLayer(string layerName)
-    {
-        this._layerManager.Remove(layerName, true);
-    }
+    //public void RemoveLayer(string layerName)
+    //{
+    //    this._layerManager.Remove(layerName, true);
+    //}
 
     public void RemoveLayer(ILayer layer)
     {

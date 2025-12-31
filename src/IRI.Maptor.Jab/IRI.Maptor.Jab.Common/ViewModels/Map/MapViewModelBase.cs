@@ -1050,7 +1050,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action<ILayer> RequestRemoveLayer;
 
-    public Action<string> RequestRemoveLayerByName;
+    //public Action<string> RequestRemoveLayerByName;
 
     public Action<ILayer> RequestAddLayer;
 
@@ -2194,10 +2194,10 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    public void RemoveLayer(string layerName)
-    {
-        RequestRemoveLayerByName?.Invoke(layerName);
-    }
+    //public void RemoveLayer(string layerName)
+    //{
+    //    RequestRemoveLayerByName?.Invoke(layerName);
+    //}
 
 
     // 1400.03.23

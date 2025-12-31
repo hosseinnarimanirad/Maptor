@@ -85,7 +85,7 @@ public class LayerManager : Notifier
 
     public void Remove(ILayer layer, bool forceRemove) => Clear(lyr => lyr == layer, forceRemove);
 
-    public void Remove(string layerName, bool forceRemove) => Clear(layer => layer?.LayerName == layerName, forceRemove);
+    //public void Remove(string layerName, bool forceRemove) => Clear(layer => layer?.LayerName == layerName, forceRemove);
 
     //internal void Remove(LayerType type, bool forceRemove) => Clear(layer => layer.Type.HasFlag(type), forceRemove);
 
