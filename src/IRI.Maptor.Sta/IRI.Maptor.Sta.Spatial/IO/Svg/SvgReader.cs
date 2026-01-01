@@ -53,7 +53,7 @@ public static class SvgReader
                 return geometries[0];
 
             // Multiple geometries - create GeometryCollection
-            return new Geometry<Point>(geometries, GeometryType.GeometryCollection, srid);
+            return Geometry<Point>.Create(geometries, GeometryType.GeometryCollection, srid);
         }
         catch (Exception ex)
         {
@@ -196,7 +196,7 @@ public static class SvgReader
 
         // Create polygon with single ring
         var ring = Geometry<Point>.Create(points, GeometryType.LineString, srid);
-        return new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
+        return Geometry<Point>.Create(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
     }
 
     private static List<Geometry<Point>> ParsePath(XElement element, int srid)
@@ -211,10 +211,10 @@ public static class SvgReader
     private static List<Geometry<Point>> ParsePathData(string pathData, int srid)
     {
         var geometries = new List<Geometry<Point>>();
-        
+
         // Simple path parser - handles M (MoveTo), L (LineTo), Z (ClosePath)
         // More complex path commands (curves, arcs) are approximated as line segments
-        
+
         var commands = Regex.Split(pathData, @"(?=[MLZmlz])", RegexOptions.IgnoreCase);
         var currentPoints = new List<Point>();
         Point? startPoint = null;
@@ -264,7 +264,7 @@ public static class SvgReader
                         }
                         // Create polygon
                         var ring = Geometry<Point>.Create(currentPoints, GeometryType.LineString, srid);
-                        geometries.Add(new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid));
+                        geometries.Add(Geometry<Point>.Create(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid));
                     }
                     else if (currentPoints.Count >= 2)
                     {
@@ -313,7 +313,7 @@ public static class SvgReader
     private static List<Point> ParseCoordinatePairs(string coordinateString)
     {
         var points = new List<Point>();
-        
+
         // Remove whitespace and split by spaces or commas
         var cleaned = Regex.Replace(coordinateString, @"\s+", " ").Trim();
         var parts = Regex.Split(cleaned, @"[\s,]+");

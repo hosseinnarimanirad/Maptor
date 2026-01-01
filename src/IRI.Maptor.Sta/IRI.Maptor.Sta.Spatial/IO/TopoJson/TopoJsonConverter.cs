@@ -266,7 +266,7 @@ public static class TopoJsonConverter
             points.Add(Geometry<Point>.Create(x, y, srid));
         }
 
-        return new Geometry<Point>(points, GeometryType.MultiPoint, srid);
+        return Geometry<Point>.Create(points, GeometryType.MultiPoint, srid);
     }
 
     private static Geometry<Point> ConvertToLineString(TopoJsonLineString lineString, List<List<int[]>> arcs, TopoJsonTransform? transform, int srid)
@@ -285,7 +285,7 @@ public static class TopoJsonConverter
             lineStrings.Add(Geometry<Point>.Create(points, GeometryType.LineString, srid));
         }
 
-        return new Geometry<Point>(lineStrings, GeometryType.MultiLineString, srid);
+        return Geometry<Point>.Create(lineStrings, GeometryType.MultiLineString, srid);
     }
 
     private static Geometry<Point> ConvertToPolygon(TopoJsonPolygon polygon, List<List<int[]>> arcs, TopoJsonTransform? transform, int srid)
@@ -303,7 +303,7 @@ public static class TopoJsonConverter
             rings.Add(Geometry<Point>.Create(points, GeometryType.LineString, srid));
         }
 
-        return new Geometry<Point>(rings, GeometryType.Polygon, srid);
+        return Geometry<Point>.Create(rings, GeometryType.Polygon, srid);
     }
 
     private static Geometry<Point> ConvertToMultiPolygon(TopoJsonMultiPolygon multiPolygon, List<List<int[]>> arcs, TopoJsonTransform? transform, int srid)
@@ -325,10 +325,10 @@ public static class TopoJsonConverter
                 rings.Add(Geometry<Point>.Create(points, GeometryType.LineString, srid));
             }
 
-            polygons.Add(new Geometry<Point>(rings, GeometryType.Polygon, srid));
+            polygons.Add(Geometry<Point>.Create(rings, GeometryType.Polygon, srid));
         }
 
-        return new Geometry<Point>(polygons, GeometryType.MultiPolygon, srid);
+        return Geometry<Point>.Create(polygons, GeometryType.MultiPolygon, srid);
     }
 
     /// <summary>

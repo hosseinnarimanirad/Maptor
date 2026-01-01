@@ -22,7 +22,7 @@ public class GeoJsonMultiPolygon : GeoJsonBase
     /// <summary>
     /// Gets or sets the type of the geometry. Must be "MultiPolygon".
     /// </summary>
-    [JsonIgnore] 
+    [JsonIgnore]
     public override string? Type { get; set; }
 
     /// <summary>
@@ -90,9 +90,9 @@ public class GeoJsonMultiPolygon : GeoJsonBase
 
         return (this.HasZ, this.HasM) switch
         {
-            (true, true) => new Geometry<PointZM>(Coordinates!.Select(c => GeoJson.CreateGeometryFromPolygonCoordinates(c, GeoJson.PointZMFactory, GeometryType.Polygon, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
-            (true, false) => new Geometry<PointZ>(Coordinates!.Select(c => GeoJson.CreateGeometryFromPolygonCoordinates(c, GeoJson.PointZFactory, GeometryType.Polygon, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
-            _ => new Geometry<Point>(Coordinates!.Select(c => GeoJson.CreateGeometryFromPolygonCoordinates(c, GeoJson.PointFactory, GeometryType.Polygon, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
+            (true, true) => Geometry<PointZM>.Create(Coordinates!.Select(c => GeoJson.CreateGeometryFromPolygonCoordinates(c, GeoJson.PointZMFactory, GeometryType.Polygon, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
+            (true, false) => Geometry<PointZ>.Create(Coordinates!.Select(c => GeoJson.CreateGeometryFromPolygonCoordinates(c, GeoJson.PointZFactory, GeometryType.Polygon, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
+            _ => Geometry<Point>.Create(Coordinates!.Select(c => GeoJson.CreateGeometryFromPolygonCoordinates(c, GeoJson.PointFactory, GeometryType.Polygon, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
         };
     }
 

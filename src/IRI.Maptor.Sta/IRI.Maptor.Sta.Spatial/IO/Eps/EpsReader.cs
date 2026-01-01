@@ -57,7 +57,7 @@ public static class EpsReader
                 return geometries[0];
 
             // Multiple geometries - create GeometryCollection
-            return new Geometry<Point>(geometries, GeometryType.GeometryCollection, srid);
+            return Geometry<Point>.Create(geometries, GeometryType.GeometryCollection, srid);
         }
         catch (Exception ex)
         {
@@ -274,7 +274,7 @@ public static class EpsReader
                                 }
                                 // Create polygon
                                 var ring = Geometry<Point>.Create(currentPath, GeometryType.LineString, srid);
-                                geometries.Add(new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid));
+                                geometries.Add(Geometry<Point>.Create([ring], GeometryType.Polygon, srid));
                             }
                             else if (currentPath.Count >= 2)
                             {
@@ -300,7 +300,7 @@ public static class EpsReader
                             if (currentPath.Count >= 3)
                             {
                                 var fillRing = Geometry<Point>.Create(currentPath, GeometryType.LineString, srid);
-                                geometries.Add(new Geometry<Point>(new List<Geometry<Point>> { fillRing }, GeometryType.Polygon, srid));
+                                geometries.Add(Geometry<Point>.Create([fillRing], GeometryType.Polygon, srid));
                             }
                             currentPath.Clear();
                             currentPoint = null;

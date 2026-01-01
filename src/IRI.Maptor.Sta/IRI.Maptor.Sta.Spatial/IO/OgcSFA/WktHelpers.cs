@@ -197,7 +197,7 @@ internal static class WktHelpers
             return Geometry<T>.Create([point], GeometryType.Point, srid);
         }).ToList();
 
-        return new Geometry<T>(pointGeometries, GeometryType.MultiPoint, srid);
+        return Geometry<T>.Create(pointGeometries, GeometryType.MultiPoint, srid);
     }
 
     /// <summary>
@@ -208,7 +208,7 @@ internal static class WktHelpers
         if (geometries.IsNullOrEmpty())
             return CreateEmptyGeometry<T>(geometryType, srid);
 
-        return new Geometry<T>(geometries, geometryType, srid);
+        return Geometry<T>.Create(geometries, geometryType, srid);
     }
 
     /// <summary>

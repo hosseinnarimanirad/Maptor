@@ -361,7 +361,7 @@ public class DxfReader
         {
             // Create a polygon
             var ring = Geometry<Point>.Create(points, GeometryType.LineString, srid);
-            return new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
+            return Geometry<Point>.Create(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
         }
         else
         {
@@ -480,7 +480,7 @@ public class DxfReader
         if (isClosed && points.Count >= 3)
         {
             var ring = Geometry<Point>.Create(points, GeometryType.LineString, srid);
-            return new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
+            return Geometry<Point>.Create(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
         }
         else
         {
@@ -541,7 +541,7 @@ public class DxfReader
             }
 
             var ring = Geometry<Point>.Create(points, GeometryType.LineString, srid);
-            return new Geometry<Point>(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
+            return Geometry<Point>.Create(new List<Geometry<Point>> { ring }, GeometryType.Polygon, srid);
         }
 
         return null;

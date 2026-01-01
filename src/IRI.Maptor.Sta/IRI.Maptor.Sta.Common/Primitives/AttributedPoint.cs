@@ -48,14 +48,14 @@ public struct AttributedPoint : IPoint
 
         _y = y;
 
-        _value = value;         
+        _value = value;
     }
 
     public override string ToString()
     {
         return string.Format("Coordinate: X:{0}, Y:{1}; Attribute:{2}", X, Y, Value);
     }
-     
+
     public override bool Equals(object obj)
     {
         if (obj.GetType() == typeof(AttributedPoint))
@@ -83,6 +83,17 @@ public struct AttributedPoint : IPoint
     public bool AreExactlyTheSame(object obj)
     {
         throw new NotImplementedException();
+    }
+
+    public bool HaveTheSameXY(object obj)
+    {
+        var isTheSameType = obj.GetType() == typeof(AttributedPoint);
+
+        if (!isTheSameType) return false;
+
+        var point = (AttributedPoint)obj;
+
+        return this.X == point.X && this.Y == point.Y;
     }
 
     public double DistanceTo(IPoint point)

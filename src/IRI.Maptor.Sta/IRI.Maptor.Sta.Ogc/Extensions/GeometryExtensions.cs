@@ -248,13 +248,15 @@ public static class Sta_KmlExtensions
         }
 
         // Convert geometries recursively
-        if (geometry.Geometries != null && geometry.Geometries.Count > 0)
+        //if (geometry.Geometries != null && geometry.Geometries.Count > 0)
+        if (geometry.HasGeometry())
         {
             var geometries = geometry.Geometries
                 .Select(g => ConvertToPointGeometry(g))
                 .ToList();
 
-            return new Geometry<Point>(geometries, geometry.Type, geometry.Srid);
+            //return new Geometry<Point>(geometries, geometry.Type, geometry.Srid);
+            return Geometry<Point>.Create(geometries, geometry.Type, geometry.Srid);
         }
 
         return Geometry<Point>.CreateEmpty(geometry.Type, geometry.Srid);

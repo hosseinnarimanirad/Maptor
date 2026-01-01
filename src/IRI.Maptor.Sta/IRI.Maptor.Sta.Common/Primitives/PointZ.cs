@@ -34,4 +34,13 @@ public class PointZ : Point, IHasZ
         return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}, {1}, {2}", X, Y, Z);
     }
 
+    public override bool HaveTheSameXY(object obj)
+    {
+        var point = obj as PointZ;
+
+        if (point is null)
+            return false;
+
+        return this.X == point.X && this.Y == point.Y;
+    }
 }

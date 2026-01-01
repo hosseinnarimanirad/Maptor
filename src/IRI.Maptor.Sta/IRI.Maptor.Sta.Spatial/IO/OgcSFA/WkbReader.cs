@@ -1,6 +1,6 @@
 using System.IO;
 using System;
-using IRI.Maptor.Extensions; 
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -273,7 +273,7 @@ public static class WkbReader
             }
         }
 
-        return new Geometry<Point>(geometries, GeometryType.MultiPoint, srid);
+        return Geometry<Point>.Create(geometries, GeometryType.MultiPoint, srid);
     }
 
     private static Geometry<Point> FromWkbMultiLineString(BinaryReader reader, WkbByteOrder byteOrder, int srid)
@@ -297,7 +297,7 @@ public static class WkbReader
             }
         }
 
-        return new Geometry<Point>(geometries, GeometryType.MultiLineString, srid);
+        return Geometry<Point>.Create(geometries, GeometryType.MultiLineString, srid);
     }
 
     private static Geometry<Point> FromWkbMultiPolygon(BinaryReader reader, WkbByteOrder byteOrder, int srid)
@@ -321,7 +321,7 @@ public static class WkbReader
             }
         }
 
-        return new Geometry<Point>(geometries, GeometryType.MultiPolygon, srid);
+        return Geometry<Point>.Create(geometries, GeometryType.MultiPolygon, srid);
     }
 
     #endregion
@@ -382,7 +382,7 @@ public static class WkbReader
             }
         }
 
-        return new Geometry<PointZ>(geometries, GeometryType.MultiPoint, srid);
+        return Geometry<PointZ>.Create(geometries, GeometryType.MultiPoint, srid);
     }
 
     private static Geometry<PointZ> FromWkbMultiLineStringZ(BinaryReader reader, WkbByteOrder byteOrder, int srid)
@@ -406,7 +406,7 @@ public static class WkbReader
             }
         }
 
-        return new Geometry<PointZ>(geometries, GeometryType.MultiLineString, srid);
+        return Geometry<PointZ>.Create(geometries, GeometryType.MultiLineString, srid);
     }
 
     private static Geometry<PointZ> FromWkbMultiPolygonZ(BinaryReader reader, WkbByteOrder byteOrder, int srid)
@@ -430,7 +430,7 @@ public static class WkbReader
             }
         }
 
-        return new Geometry<PointZ>(geometries, GeometryType.MultiPolygon, srid);
+        return Geometry<PointZ>.Create(geometries, GeometryType.MultiPolygon, srid);
     }
 
     #endregion
@@ -491,7 +491,7 @@ public static class WkbReader
             }
         }
 
-        return new Geometry<PointM>(geometries, GeometryType.MultiPoint, srid);
+        return Geometry<PointM>.Create(geometries, GeometryType.MultiPoint, srid);
     }
 
     private static Geometry<PointM> FromWkbMultiLineStringM(BinaryReader reader, WkbByteOrder byteOrder, int srid)
@@ -515,7 +515,7 @@ public static class WkbReader
             }
         }
 
-        return new Geometry<PointM>(geometries, GeometryType.MultiLineString, srid);
+        return Geometry<PointM>.Create(geometries, GeometryType.MultiLineString, srid);
     }
 
     private static Geometry<PointM> FromWkbMultiPolygonM(BinaryReader reader, WkbByteOrder byteOrder, int srid)
@@ -539,7 +539,7 @@ public static class WkbReader
             }
         }
 
-        return new Geometry<PointM>(geometries, GeometryType.MultiPolygon, srid);
+        return Geometry<PointM>.Create(geometries, GeometryType.MultiPolygon, srid);
     }
 
     #endregion
@@ -601,7 +601,7 @@ public static class WkbReader
             }
         }
 
-        return new Geometry<PointZM>(geometries, GeometryType.MultiPoint, srid);
+        return Geometry<PointZM>.Create(geometries, GeometryType.MultiPoint, srid);
     }
 
     private static Geometry<PointZM> FromWkbMultiLineStringZM(BinaryReader reader, WkbByteOrder byteOrder, int srid)
@@ -625,7 +625,7 @@ public static class WkbReader
             }
         }
 
-        return new Geometry<PointZM>(geometries, GeometryType.MultiLineString, srid);
+        return Geometry<PointZM>.Create(geometries, GeometryType.MultiLineString, srid);
     }
 
     private static Geometry<PointZM> FromWkbMultiPolygonZM(BinaryReader reader, WkbByteOrder byteOrder, int srid)
@@ -649,7 +649,7 @@ public static class WkbReader
             }
         }
 
-        return new Geometry<PointZM>(geometries, GeometryType.MultiPolygon, srid);
+        return Geometry<PointZM>.Create(geometries, GeometryType.MultiPolygon, srid);
     }
 
     #endregion

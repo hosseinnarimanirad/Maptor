@@ -85,7 +85,7 @@ public abstract class EsriPointCollection : EsriShapeBase
             parts.Add(Geometry<Point>.Create(ShapeHelper.GetPoints(this, this.Parts[i]), GeometryType.LineString, this.Srid));
         }
 
-        return new Geometry<Point>(parts, GeometryType.MultiLineString, this.Srid);
+        return Geometry<Point>.Create(parts, GeometryType.MultiLineString, this.Srid);
     }
 
     /// <summary>

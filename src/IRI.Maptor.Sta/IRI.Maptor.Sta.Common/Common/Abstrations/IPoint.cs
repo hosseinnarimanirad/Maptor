@@ -11,6 +11,8 @@ public interface IPoint
 
     bool AreExactlyTheSame(object obj);
 
+    bool HaveTheSameXY(object obj);
+
     //double DistanceTo(IPoint point);
 
     byte[] AsWkb();

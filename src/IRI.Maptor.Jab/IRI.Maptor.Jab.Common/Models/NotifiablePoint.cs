@@ -84,6 +84,16 @@ public class NotifiablePoint : Notifier, IPoint
         throw new NotImplementedException();
     }
 
+
+    public bool HaveTheSameXY(object obj)
+    {
+        var point = obj as NotifiablePoint;
+
+        if (point is null) return false;
+
+        return this.X == point.X && this.Y == point.Y;
+    }
+
     public double DistanceTo(IPoint point)
     {
         throw new NotImplementedException();

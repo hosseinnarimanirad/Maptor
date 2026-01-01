@@ -7,46 +7,15 @@ using IRI.Maptor.Sta.Common.Abstrations;
 namespace IRI.Maptor.Sta.Common.Primitives;
 
 public class PointZM : IPoint, IHasZ, IHasM
-{
-    //private double _x;
-    //public double X
-    //{
-    //    get { return _x; }
-    //    set { _x = value; }
-    //}
-
+{ 
     public double X { get; set; }
-
-    //private double _y;
-
-    //public double Y
-    //{
-    //    get { return _y; }
-    //    set { _y = value; }
-    //}
+     
     public double Y { get; set; }
-
-    //private double _z;
-    //public double Z
-    //{
-    //    get { return _z; }
-    //    set { _z = value; }
-    //}
-
+     
     public double Z { get; set; }
 
     public double M { get; set; }
-
-
-    //private PointType _type;
-
-    //public PointType Type => _type;
-
-    //public bool HasM() => Type.HasFlag(PointType.PointM);
-
-    //public bool HasZ() => Type.HasFlag(PointType.PointZ);
-
-
+     
     public PointZM()
     {
     }
@@ -64,7 +33,7 @@ public class PointZM : IPoint, IHasZ, IHasM
 
     public override string ToString() => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}, {1}, {2}, {3}", X, Y, Z, M);
 
-    public string AsExactString() => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17} {1:G17} {2:G17}", X, Y, Z);
+    public string AsExactString() => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17} {1:G17} {2:G17} {3:G17}", X, Y, Z, M);
 
     public bool AreExactlyTheSame(object obj)
     {
@@ -72,6 +41,17 @@ public class PointZM : IPoint, IHasZ, IHasM
             return false;
 
         return this.AsExactString() == ((PointZM)obj).AsExactString();
+    }
+
+    public bool HaveTheSameXY(object obj)
+    {
+        var point = obj as PointZM;
+
+        if (point is null)
+            return false;
+
+        return this.X == point.X && this.Y == point.Y;
+
     }
 
     public static double GetDistance(PointZM first, PointZM second)

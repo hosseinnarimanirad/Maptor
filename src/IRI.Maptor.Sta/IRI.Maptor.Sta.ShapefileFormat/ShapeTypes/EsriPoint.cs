@@ -9,6 +9,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
+using IRI.Maptor.Sta.Spatial.DigitalTerrainModeling;
 
 
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
@@ -70,13 +71,22 @@ public class EsriPoint : EsriShapeBase, IPoint
 
     public bool AreExactlyTheSame(object obj)
     {
-        if (obj.GetType() != typeof(EsriPoint))
-        {
-            return false;
-        }
+        //if (obj.GetType() != typeof(EsriPoint))
+        //{
+        //    return false;
+        //}
 
-        return this.AsExactString() == ((EsriPoint)obj).AsExactString();
+        //return this.AsExactString() == ((EsriPoint)obj).AsExactString();
+
+        var point = obj as Point;
+
+        if (point is null)
+            return false;
+
+        return this.X == point.X && this.Y == point.Y;
     }
+
+    public bool HaveTheSameXY(object obj) => AreExactlyTheSame(obj);
 
     public double DistanceTo(IPoint point)
     {

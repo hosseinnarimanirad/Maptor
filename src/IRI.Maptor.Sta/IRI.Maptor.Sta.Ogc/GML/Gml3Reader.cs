@@ -333,7 +333,7 @@ public static class Gml3Reader
             }
             if (lineStrings.Count == 0)
                 return Geometry<PointZ>.Empty;
-            return new Geometry<PointZ>(lineStrings, GeometryType.MultiLineString, srid);
+            return Geometry<PointZ>.Create(lineStrings, GeometryType.MultiLineString, srid);
         }
         else
         {
@@ -352,7 +352,7 @@ public static class Gml3Reader
             }
             if (lineStrings.Count == 0)
                 return Geometry<Point>.Empty;
-            return new Geometry<Point>(lineStrings, GeometryType.MultiLineString, srid);
+            return Geometry<Point>.Create(lineStrings, GeometryType.MultiLineString, srid);
         }
     }
 
@@ -384,12 +384,12 @@ public static class Gml3Reader
         if (hasZ && polygons.All(p => p is Geometry<PointZ>))
         {
             var pointZPolygons = polygons.Cast<Geometry<PointZ>>().ToList();
-            return new Geometry<PointZ>(pointZPolygons, GeometryType.MultiPolygon, srid);
+            return Geometry<PointZ>.Create(pointZPolygons, GeometryType.MultiPolygon, srid);
         }
         else
         {
             var pointPolygons = polygons.Cast<Geometry<Point>>().ToList();
-            return new Geometry<Point>(pointPolygons, GeometryType.MultiPolygon, srid);
+            return Geometry<Point>.Create(pointPolygons, GeometryType.MultiPolygon, srid);
         }
     }
 

@@ -198,7 +198,7 @@ public class KmlTest
         var point2 = Geometry<Point>.Create(30.0, 40.0, srid: 4326);
         var point3 = Geometry<Point>.Create(50.0, 60.0, srid: 4326);
 
-        var multiPoint = new Geometry<Point>(
+        var multiPoint = Geometry<Point>.Create(
             new List<Geometry<Point>> { point1, point2, point3 },
             GeometryType.MultiPoint,
             srid: 4326);
@@ -234,7 +234,7 @@ public class KmlTest
             GeometryType.LineString,
             srid: 4326);
 
-        var multiLine = new Geometry<Point>(
+        var multiLine = Geometry<Point>.Create(
             new List<Geometry<Point>> { line1, line2 },
             GeometryType.MultiLineString,
             srid: 4326);
@@ -609,7 +609,7 @@ public class KmlTest
         Assert.Equal(51.5074, (parsed[0] as Geometry<Point>).Points[0].X, 4);
         Assert.Equal(-0.1278, (parsed[0] as Geometry<Point>).Points[0].Y, 4);
         Assert.Equal(48.8566, (parsed[1] as Geometry<Point>).Points[0].X, 4);
-        Assert.Equal(2.3522,  (parsed[1] as Geometry<Point>).Points[0].Y, 4);
+        Assert.Equal(2.3522, (parsed[1] as Geometry<Point>).Points[0].Y, 4);
         Assert.Equal(52.5200, (parsed[2] as Geometry<Point>).Points[0].X, 4);
         Assert.Equal(13.4050, (parsed[2] as Geometry<Point>).Points[0].Y, 4);
     }
@@ -796,20 +796,11 @@ public class KmlTest
             new Point(20, 20)
         };
 
-        var poly1 = new Geometry<Point>(
-            new Geometry<Point>(polygon1Points, GeometryType.LineString, true, 4326),
-            GeometryType.Polygon,
-            4326);
+        var poly1 = Geometry<Point>.CreatePolygon(polygon1Points, 4326);
 
-        var poly2 = new Geometry<Point>(
-            new Geometry<Point>(polygon2Points, GeometryType.LineString, true, 4326),
-            GeometryType.Polygon,
-            4326);
+        var poly2 = Geometry<Point>.CreatePolygon(polygon2Points, 4326);
 
-        var multiPolygon = new Geometry<Point>(
-            new List<Geometry<Point>> { poly1, poly2 },
-            GeometryType.MultiPolygon,
-            4326);
+        var multiPolygon = Geometry<Point>.Create([poly1, poly2], GeometryType.MultiPolygon, 4326);
 
         // Act - Convert to KML
         var kmlOutput = KmlWriter.ToKml(multiPolygon, "Two Polygons");
@@ -1065,18 +1056,12 @@ public class KmlTest
         var point = Geometry<Point>.Create(10.0, 20.0, srid: 4326);
 
         var lineString = Geometry<Point>.Create(
-            new List<Point> { new Point(0, 0), new Point(10, 10), new Point(20, 5) },
+            [new Point(0, 0), new Point(10, 10), new Point(20, 5)],
             GeometryType.LineString,
             srid: 4326);
 
-        var polygonRing = new Geometry<Point>(
-            new List<Point> { new Point(0, 0), new Point(10, 0), new Point(10, 10), new Point(0, 10) },
-            GeometryType.LineString,
-            true,
-            srid: 4326);
-
-        var polygon = new Geometry<Point>(polygonRing, GeometryType.Polygon, 4326);
-
+        var polygon = Geometry<Point>.CreatePolygon([new Point(0, 0), new Point(10, 0), new Point(10, 10), new Point(0, 10)], srid: 4326);
+         
         var geometries = new List<Geometry<Point>> { point, lineString, polygon };
 
         // Act - Convert to KML

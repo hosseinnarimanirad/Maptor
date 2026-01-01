@@ -29,7 +29,7 @@ public static class Gml2Reader
         {
             var doc = XDocument.Parse(gmlString);
             var root = doc.Root;
-            
+
             if (root == null)
                 return Geometry<Point>.Empty;
 
@@ -64,7 +64,7 @@ public static class Gml2Reader
         // http://www.opengis.net/gml/srs/epsg.xml#4326
         // EPSG:4326
         // urn:ogc:def:crs:EPSG::4326
-        
+
         if (string.IsNullOrEmpty(srsName))
             return 0;
 
@@ -338,7 +338,7 @@ public static class Gml2Reader
             }
             if (lineStrings.Count == 0)
                 return Geometry<PointZ>.Empty;
-            return new Geometry<PointZ>(lineStrings, GeometryType.MultiLineString, srid);
+            return Geometry<PointZ>.Create(lineStrings, GeometryType.MultiLineString, srid);
         }
         else
         {
@@ -357,7 +357,7 @@ public static class Gml2Reader
             }
             if (lineStrings.Count == 0)
                 return Geometry<Point>.Empty;
-            return new Geometry<Point>(lineStrings, GeometryType.MultiLineString, srid);
+            return Geometry<Point>.Create(lineStrings, GeometryType.MultiLineString, srid);
         }
     }
 
@@ -389,12 +389,12 @@ public static class Gml2Reader
         if (hasZ && polygons.All(p => p is Geometry<PointZ>))
         {
             var pointZPolygons = polygons.Cast<Geometry<PointZ>>().ToList();
-            return new Geometry<PointZ>(pointZPolygons, GeometryType.MultiPolygon, srid);
+            return Geometry<PointZ>.Create(pointZPolygons, GeometryType.MultiPolygon, srid);
         }
         else
         {
             var pointPolygons = polygons.Cast<Geometry<Point>>().ToList();
-            return new Geometry<Point>(pointPolygons, GeometryType.MultiPolygon, srid);
+            return Geometry<Point>.Create(pointPolygons, GeometryType.MultiPolygon, srid);
         }
     }
 
@@ -420,11 +420,11 @@ public static class Gml2Reader
         // But we need to create a Geometry<Point> or Geometry<PointZ> wrapper
         // For now, convert all to Point if any is Point, otherwise use PointZ
         bool hasZ = geometries.Any(g => g is Geometry<PointZ>);
-        
+
         if (hasZ)
         {
             // Convert all to PointZ for consistency
-            var pointZGeometries = geometries.Select(g => 
+            var pointZGeometries = geometries.Select(g =>
             {
                 if (g is Geometry<PointZ> pz) return pz;
                 if (g is Geometry<Point> p)
@@ -434,15 +434,15 @@ public static class Gml2Reader
                 }
                 return null;
             }).Where(g => g != null).Cast<Geometry<PointZ>>().ToList();
-            
+
             if (pointZGeometries.Count == 0)
                 return Geometry<Point>.Empty;
-            return new Geometry<PointZ>(pointZGeometries, GeometryType.GeometryCollection, srid);
+            return Geometry<PointZ>.Create(pointZGeometries, GeometryType.GeometryCollection, srid);
         }
         else
         {
             var pointGeometries = geometries.Cast<Geometry<Point>>().ToList();
-            return new Geometry<Point>(pointGeometries, GeometryType.GeometryCollection, srid);
+            return Geometry<Point>.Create(pointGeometries, GeometryType.GeometryCollection, srid);
         }
     }
 
@@ -462,7 +462,7 @@ public static class Gml2Reader
         else if (geometry.Geometries != null)
         {
             var convertedGeometries = geometry.Geometries.Select(ConvertToPointZ).ToList();
-            return new Geometry<PointZ>(convertedGeometries, geometry.Type, geometry.Srid);
+            return Geometry<PointZ>.Create(convertedGeometries, geometry.Type, geometry.Srid);
         }
 
         return Geometry<PointZ>.Empty;

@@ -33,4 +33,14 @@ public class PointM : Point, IHasM
         return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}, {1}, {2}", X, Y, M);
     }
 
+    public override bool HaveTheSameXY(object obj)
+    {
+        var point = obj as PointM;
+
+        if (point is null)
+            return false;
+
+        return this.X == point.X && this.Y == point.Y;
+    }
+
 }

@@ -57,13 +57,22 @@ public class Point : IPoint
 
     public bool AreExactlyTheSame(object obj)
     {
-        if (obj.GetType() != typeof(Point))
-        {
-            return false;
-        }
+        var point = obj as Point;
 
-        return this.AsExactString() == ((Point)obj).AsExactString();
+        if (point is null)
+            return false;
+
+        return this.X == point.X && this.Y == point.Y;
+
+        //if (obj.GetType() != typeof(Point))
+        //{
+        //    return false;
+        //}
+
+        //return this.AsExactString() == ((Point)obj).AsExactString();
     }
+
+    public virtual bool HaveTheSameXY(object obj) => AreExactlyTheSame(obj);
 
     public bool AreTheSame(Point point, int precision)
     {
@@ -108,12 +117,12 @@ public class Point : IPoint
 
         return result;
     }
-     
+
     public virtual string AsWkt()
     {
         return FormattableString.Invariant($"POINT({X.ToInvariantString()} {Y.ToInvariantString()}");
     }
-     
+
     public byte[] AsByteArray()
     {
         // Option #1

@@ -285,7 +285,7 @@ public static class GeoJson
 
         var ringGeometries = rings.Select(ring => CreateGeometryFromLineCoordinates(ring, pointFactory, GeometryType.LineString, isRing: true, isLongitudeFirst, srid)).ToList();
 
-        return new Geometry<T>(ringGeometries, geometryType, srid);
+        return Geometry<T>.Create(ringGeometries, geometryType, srid);
 
         //// All rings should have the same point type, so use the first one to determine the type
         //return ringGeometries[0] switch

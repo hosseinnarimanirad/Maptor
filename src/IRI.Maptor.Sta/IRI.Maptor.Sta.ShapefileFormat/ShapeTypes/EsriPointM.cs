@@ -35,7 +35,7 @@ public class EsriPointM : EsriShapeBase, IPoint, IHasM
         get { return this.measure; }
         set { this.measure = value; }
     }
-     
+
     public EsriPointM() { }
 
     public EsriPointM(double x, double y, double measure, int srid)
@@ -51,7 +51,7 @@ public class EsriPointM : EsriShapeBase, IPoint, IHasM
 
 
     public override BoundingBox MinimumBoundingBox => new BoundingBox(this.X, this.Y, this.X, this.Y);
-     
+
     public override byte[] WriteContentsToByte()
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
@@ -80,7 +80,18 @@ public class EsriPointM : EsriShapeBase, IPoint, IHasM
 
         return this.AsExactString() == ((EsriPointM)obj).AsExactString();
     }
-     
+
+    public bool HaveTheSameXY(object obj)
+    {
+        var point = obj as Point;
+
+        if (point is null)
+            return false;
+
+        return this.X == point.X && this.Y == point.Y;
+    }
+
+
     /// <summary>
     /// Returs Kml representation of the point. Note: M values are ignored. Point must be in Lat/Long System
     /// </summary>
@@ -89,7 +100,7 @@ public class EsriPointM : EsriShapeBase, IPoint, IHasM
     {
         return KmlPlacemarkHelper.CreatePointPlacemark(new Point(this.X, this.Y), projectToGeodeticFunc, color);
     }
-     
+
     public string AsExactString()
     {
         return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:G17} {1:G17} {2:G17}", this.X, this.Y, this.M);

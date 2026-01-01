@@ -329,11 +329,11 @@ public static class KmlReader
         if (hasZ && points.All(p => p is PointZ))
         {
             var pointZList = points.Cast<PointZ>().ToList();
-            return new Geometry<PointZ>(pointZList, GeometryType.LineString, true, srid);
+            return Geometry<PointZ>.CreatePolygonRing(pointZList, /*GeometryType.LineString, true,*/ srid);
         }
 
         var pointList = points.Cast<Point>().ToList();
-        return new Geometry<Point>(pointList, GeometryType.LineString, true, srid);
+        return   Geometry<Point>.CreatePolygonRing(pointList, /*GeometryType.LineString, true,*/ srid);
     }
 
     private static IGeometry? ParsePolygon(XElement polygonElement, XNamespace kml, int srid)
@@ -381,11 +381,11 @@ public static class KmlReader
         if (hasZ && rings.All(r => r is Geometry<PointZ>))
         {
             var pointZRings = rings.Cast<Geometry<PointZ>>().ToList();
-            return new Geometry<PointZ>(pointZRings, GeometryType.Polygon, srid);
+            return Geometry<PointZ>.Create(pointZRings, GeometryType.Polygon, srid);
         }
 
         var pointRings = rings.Cast<Geometry<Point>>().ToList();
-        return new Geometry<Point>(pointRings, GeometryType.Polygon, srid);
+        return Geometry<Point>.Create(pointRings, GeometryType.Polygon, srid);
     }
 
     private static IGeometry? ParseMultiGeometry(XElement multiGeometryElement, XNamespace kml, int srid)
@@ -440,14 +440,14 @@ public static class KmlReader
         if (allHaveZ)
         {
             var pointZGeometries = geometries.Cast<Geometry<PointZ>>().ToList();
-            return new Geometry<PointZ>(pointZGeometries, multiType, srid);
+            return Geometry<PointZ>.Create(pointZGeometries, multiType, srid);
         }
 
         // Convert PointZ geometries to Point for mixed scenarios (use 2D version)
         var pointGeometries = geometries.Select(g => g is Geometry<PointZ> gz
             ? ConvertPointZToPointGeometry(gz)
             : (Geometry<Point>)g).ToList();
-        return new Geometry<Point>(pointGeometries, multiType, srid);
+        return Geometry<Point>.Create(pointGeometries, multiType, srid);
     }
 
     private static Geometry<Point> ConvertPointZToPointGeometry(Geometry<PointZ> geometryZ)
@@ -460,7 +460,7 @@ public static class KmlReader
         else if (geometryZ.Geometries != null)
         {
             var geometries = geometryZ.Geometries.Select(ConvertPointZToPointGeometry).ToList();
-            return new Geometry<Point>(geometries, geometryZ.Type, geometryZ.Srid);
+            return Geometry<Point>.Create(geometries, geometryZ.Type, geometryZ.Srid);
         }
         return Geometry<Point>.Empty;
     }

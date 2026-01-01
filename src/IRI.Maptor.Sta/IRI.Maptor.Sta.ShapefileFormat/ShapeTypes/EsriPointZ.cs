@@ -75,7 +75,17 @@ public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
 
         return this.AsExactString() == ((EsriPointZ)obj).AsExactString();
     }
-     
+
+    public bool HaveTheSameXY(object obj)
+    {
+        var point = obj as Point;
+
+        if (point is null)
+            return false;
+
+        return this.X == point.X && this.Y == point.Y;
+    }
+
     #region IShape Members
 
 

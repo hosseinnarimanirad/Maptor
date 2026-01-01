@@ -481,7 +481,7 @@ public static partial class SqlServerSpatialNativeBinary
                 };
                 pointGeometries.Add(Geometry<PointZM>.Create([pointZM], GeometryType.Point, srid));
             }
-            return new Geometry<PointZM>(pointGeometries, GeometryType.MultiPoint, srid);
+            return Geometry<PointZM>.Create(pointGeometries, GeometryType.MultiPoint, srid);
         }
         else if (hasZ)
         {
@@ -496,7 +496,7 @@ public static partial class SqlServerSpatialNativeBinary
                 };
                 pointGeometries.Add(Geometry<PointZ>.Create([pointZ], GeometryType.Point, srid));
             }
-            return new Geometry<PointZ>(pointGeometries, GeometryType.MultiPoint, srid);
+            return Geometry<PointZ>.Create(pointGeometries, GeometryType.MultiPoint, srid);
         }
         else if (hasM)
         {
@@ -511,7 +511,7 @@ public static partial class SqlServerSpatialNativeBinary
                 };
                 pointGeometries.Add(Geometry<PointM>.Create([pointM], GeometryType.Point, srid));
             }
-            return new Geometry<PointM>(pointGeometries, GeometryType.MultiPoint, srid);
+            return Geometry<PointM>.Create(pointGeometries, GeometryType.MultiPoint, srid);
         }
         else
         {
@@ -520,7 +520,7 @@ public static partial class SqlServerSpatialNativeBinary
             {
                 pointGeometries.Add(Geometry<Point>.Create([new Point(points[i].X, points[i].Y)], GeometryType.Point, srid));
             }
-            return new Geometry<Point>(pointGeometries, GeometryType.MultiPoint, srid);
+            return Geometry<Point>.Create(pointGeometries, GeometryType.MultiPoint, srid);
         }
     }
 
@@ -663,7 +663,7 @@ public static partial class SqlServerSpatialNativeBinary
 
         // Group points by LineString using Figure Point Offsets
         var lineStringGeometries = new List<IGeometry>(figureCount);
-        
+
         for (int i = 0; i < figureCount; i++)
         {
             var startOffset = figurePointOffsets[i];
@@ -731,19 +731,19 @@ public static partial class SqlServerSpatialNativeBinary
         // Create appropriate MultiLineString type based on Z/M flags
         if (hasZ && hasM)
         {
-            return new Geometry<PointZM>(lineStringGeometries.Cast<Geometry<PointZM>>().ToList(), GeometryType.MultiLineString, srid);
+            return Geometry<PointZM>.Create(lineStringGeometries.Cast<Geometry<PointZM>>().ToList(), GeometryType.MultiLineString, srid);
         }
         else if (hasZ)
         {
-            return new Geometry<PointZ>(lineStringGeometries.Cast<Geometry<PointZ>>().ToList(), GeometryType.MultiLineString, srid);
+            return Geometry<PointZ>.Create(lineStringGeometries.Cast<Geometry<PointZ>>().ToList(), GeometryType.MultiLineString, srid);
         }
         else if (hasM)
         {
-            return new Geometry<PointM>(lineStringGeometries.Cast<Geometry<PointM>>().ToList(), GeometryType.MultiLineString, srid);
+            return Geometry<PointM>.Create(lineStringGeometries.Cast<Geometry<PointM>>().ToList(), GeometryType.MultiLineString, srid);
         }
         else
         {
-            return new Geometry<Point>(lineStringGeometries.Cast<Geometry<Point>>().ToList(), GeometryType.MultiLineString, srid);
+            return Geometry<Point>.Create(lineStringGeometries.Cast<Geometry<Point>>().ToList(), GeometryType.MultiLineString, srid);
         }
     }
 
@@ -811,12 +811,12 @@ public static partial class SqlServerSpatialNativeBinary
         // Read Figures section - store Point Offsets and Attributes to determine ring boundaries
         var figurePointOffsets = new List<int>(figureCount);
         var figureAttributes = new List<byte>(figureCount);
-        
+
         for (int i = 0; i < figureCount; i++)
         {
             var figureAttribute = reader.ReadByte();
             var pointOffset = reader.ReadInt32();
-            
+
             figureAttributes.Add(figureAttribute);
             figurePointOffsets.Add(pointOffset);
 
@@ -856,7 +856,7 @@ public static partial class SqlServerSpatialNativeBinary
 
         // Group points by ring using Figure Point Offsets
         var rings = new List<IGeometry>(figureCount);
-        
+
         for (int i = 0; i < figureCount; i++)
         {
             var startOffset = figurePointOffsets[i];
@@ -873,7 +873,7 @@ public static partial class SqlServerSpatialNativeBinary
             {
                 var firstPointIndex = startOffset;
                 var lastPointIndex = endOffset - 1;
-                if (points[firstPointIndex].X == points[lastPointIndex].X && 
+                if (points[firstPointIndex].X == points[lastPointIndex].X &&
                     points[firstPointIndex].Y == points[lastPointIndex].Y)
                 {
                     actualEndOffset = endOffset - 1; // Exclude the duplicate closing point
@@ -894,7 +894,7 @@ public static partial class SqlServerSpatialNativeBinary
                         M = mValues![j]
                     });
                 }
-                rings.Add(new Geometry<PointZM>(pointZMList, GeometryType.LineString, true, srid)); // isClosed = true for rings
+                rings.Add(Geometry<PointZM>.CreatePolygonRing(pointZMList, /*GeometryType.LineString, true, */srid)); // isClosed = true for rings
             }
             else if (hasZ)
             {
@@ -908,7 +908,7 @@ public static partial class SqlServerSpatialNativeBinary
                         Z = zValues![j]
                     });
                 }
-                rings.Add(new Geometry<PointZ>(pointZList, GeometryType.LineString, true, srid)); // isClosed = true for rings
+                rings.Add(Geometry<PointZ>.CreatePolygonRing(pointZList, /*GeometryType.LineString, true,*/ srid)); // isClosed = true for rings
             }
             else if (hasM)
             {
@@ -922,7 +922,7 @@ public static partial class SqlServerSpatialNativeBinary
                         M = mValues![j]
                     });
                 }
-                rings.Add(new Geometry<PointM>(pointMList, GeometryType.LineString, true, srid)); // isClosed = true for rings
+                rings.Add(Geometry<PointM>.CreatePolygonRing(pointMList, /*GeometryType.LineString, true,*/ srid)); // isClosed = true for rings
             }
             else
             {
@@ -931,7 +931,7 @@ public static partial class SqlServerSpatialNativeBinary
                 {
                     pointList.Add(new Point(points[j].X, points[j].Y));
                 }
-                rings.Add(new Geometry<Point>(pointList, GeometryType.LineString, true, srid)); // isClosed = true for rings
+                rings.Add(Geometry<Point>.CreatePolygonRing(pointList, /*GeometryType.LineString, true,*/ srid)); // isClosed = true for rings
             }
         }
 
@@ -939,19 +939,19 @@ public static partial class SqlServerSpatialNativeBinary
         // rings[0] is exterior ring, rings[1..] are interior rings
         if (hasZ && hasM)
         {
-            return new Geometry<PointZM>(rings.Cast<Geometry<PointZM>>().ToList(), GeometryType.Polygon, srid);
+            return Geometry<PointZM>.Create(rings.Cast<Geometry<PointZM>>().ToList(), GeometryType.Polygon, srid);
         }
         else if (hasZ)
         {
-            return new Geometry<PointZ>(rings.Cast<Geometry<PointZ>>().ToList(), GeometryType.Polygon, srid);
+            return Geometry<PointZ>.Create(rings.Cast<Geometry<PointZ>>().ToList(), GeometryType.Polygon, srid);
         }
         else if (hasM)
         {
-            return new Geometry<PointM>(rings.Cast<Geometry<PointM>>().ToList(), GeometryType.Polygon, srid);
+            return Geometry<PointM>.Create(rings.Cast<Geometry<PointM>>().ToList(), GeometryType.Polygon, srid);
         }
         else
         {
-            return new Geometry<Point>(rings.Cast<Geometry<Point>>().ToList(), GeometryType.Polygon, srid);
+            return Geometry<Point>.Create(rings.Cast<Geometry<Point>>().ToList(), GeometryType.Polygon, srid);
         }
     }
 
@@ -1019,12 +1019,12 @@ public static partial class SqlServerSpatialNativeBinary
         // Read Figures section - store Attributes and Point Offsets
         var figureAttributes = new List<byte>(figureCount);
         var figurePointOffsets = new List<int>(figureCount);
-        
+
         for (int i = 0; i < figureCount; i++)
         {
             var figureAttribute = reader.ReadByte();
             var pointOffset = reader.ReadInt32();
-            
+
             figureAttributes.Add(figureAttribute);
             figurePointOffsets.Add(pointOffset);
 
@@ -1059,7 +1059,7 @@ public static partial class SqlServerSpatialNativeBinary
         // Read remaining shapes - one per Polygon
         var polygonCount = shapeCount - 1;
         var polygonFigureOffsets = new List<int>(polygonCount);
-        
+
         for (int i = 0; i < polygonCount; i++)
         {
             var parentOffset = reader.ReadInt32();
@@ -1077,12 +1077,12 @@ public static partial class SqlServerSpatialNativeBinary
         // Group figures by Polygon using Shape Figure Offsets
         // Each Polygon shape's Figure Offset points to the first figure (exterior ring) of that polygon
         var polygonGeometries = new List<IGeometry>(polygonCount);
-        
+
         for (int polyIndex = 0; polyIndex < polygonCount; polyIndex++)
         {
             var polygonFirstFigureIndex = polygonFigureOffsets[polyIndex];
             var polygonLastFigureIndex = (polyIndex < polygonCount - 1) ? polygonFigureOffsets[polyIndex + 1] : figureCount;
-            
+
             // Determine which figures belong to this polygon
             var polygonRingCount = polygonLastFigureIndex - polygonFirstFigureIndex;
             if (polygonRingCount == 0)
@@ -1090,7 +1090,7 @@ public static partial class SqlServerSpatialNativeBinary
 
             // Group points by ring for this polygon
             var rings = new List<IGeometry>(polygonRingCount);
-            
+
             for (int ringIndex = 0; ringIndex < polygonRingCount; ringIndex++)
             {
                 var figureIndex = polygonFirstFigureIndex + ringIndex;
@@ -1115,7 +1115,7 @@ public static partial class SqlServerSpatialNativeBinary
                 {
                     var firstPointIndex = startOffset;
                     var lastPointIndex = endOffset - 1;
-                    if (points[firstPointIndex].X == points[lastPointIndex].X && 
+                    if (points[firstPointIndex].X == points[lastPointIndex].X &&
                         points[firstPointIndex].Y == points[lastPointIndex].Y)
                     {
                         actualEndOffset = endOffset - 1; // Exclude the duplicate closing point
@@ -1136,7 +1136,7 @@ public static partial class SqlServerSpatialNativeBinary
                             M = mValues![j]
                         });
                     }
-                    rings.Add(new Geometry<PointZM>(pointZMList, GeometryType.LineString, true, srid)); // isClosed = true for rings
+                    rings.Add(Geometry<PointZM>.CreatePolygonRing(pointZMList, /*GeometryType.LineString, true,*/ srid)); // isClosed = true for rings
                 }
                 else if (hasZ)
                 {
@@ -1150,7 +1150,7 @@ public static partial class SqlServerSpatialNativeBinary
                             Z = zValues![j]
                         });
                     }
-                    rings.Add(new Geometry<PointZ>(pointZList, GeometryType.LineString, true, srid)); // isClosed = true for rings
+                    rings.Add(Geometry<PointZ>.CreatePolygonRing(pointZList, /*GeometryType.LineString, true,*/ srid)); // isClosed = true for rings
                 }
                 else if (hasM)
                 {
@@ -1164,7 +1164,7 @@ public static partial class SqlServerSpatialNativeBinary
                             M = mValues![j]
                         });
                     }
-                    rings.Add(new Geometry<PointM>(pointMList, GeometryType.LineString, true, srid)); // isClosed = true for rings
+                    rings.Add(Geometry<PointM>.CreatePolygonRing(pointMList, /*GeometryType.LineString, true,*/ srid)); // isClosed = true for rings
                 }
                 else
                 {
@@ -1173,45 +1173,45 @@ public static partial class SqlServerSpatialNativeBinary
                     {
                         pointList.Add(new Point(points[j].X, points[j].Y));
                     }
-                    rings.Add(new Geometry<Point>(pointList, GeometryType.LineString, true, srid)); // isClosed = true for rings
+                    rings.Add(Geometry<Point>.CreatePolygonRing(pointList, /*GeometryType.LineString, true,*/ srid)); // isClosed = true for rings
                 }
             }
 
             // Create Polygon geometry from rings (rings[0] is exterior, rings[1..] are interior)
             if (hasZ && hasM)
             {
-                polygonGeometries.Add(new Geometry<PointZM>(rings.Cast<Geometry<PointZM>>().ToList(), GeometryType.Polygon, srid));
+                polygonGeometries.Add(Geometry<PointZM>.Create(rings.Cast<Geometry<PointZM>>().ToList(), GeometryType.Polygon, srid));
             }
             else if (hasZ)
             {
-                polygonGeometries.Add(new Geometry<PointZ>(rings.Cast<Geometry<PointZ>>().ToList(), GeometryType.Polygon, srid));
+                polygonGeometries.Add(Geometry<PointZ>.Create(rings.Cast<Geometry<PointZ>>().ToList(), GeometryType.Polygon, srid));
             }
             else if (hasM)
             {
-                polygonGeometries.Add(new Geometry<PointM>(rings.Cast<Geometry<PointM>>().ToList(), GeometryType.Polygon, srid));
+                polygonGeometries.Add(Geometry<PointM>.Create(rings.Cast<Geometry<PointM>>().ToList(), GeometryType.Polygon, srid));
             }
             else
             {
-                polygonGeometries.Add(new Geometry<Point>(rings.Cast<Geometry<Point>>().ToList(), GeometryType.Polygon, srid));
+                polygonGeometries.Add(Geometry<Point>.Create(rings.Cast<Geometry<Point>>().ToList(), GeometryType.Polygon, srid));
             }
         }
 
         // Create appropriate MultiPolygon type based on Z/M flags
         if (hasZ && hasM)
         {
-            return new Geometry<PointZM>(polygonGeometries.Cast<Geometry<PointZM>>().ToList(), GeometryType.MultiPolygon, srid);
+            return Geometry<PointZM>.Create(polygonGeometries.Cast<Geometry<PointZM>>().ToList(), GeometryType.MultiPolygon, srid);
         }
         else if (hasZ)
         {
-            return new Geometry<PointZ>(polygonGeometries.Cast<Geometry<PointZ>>().ToList(), GeometryType.MultiPolygon, srid);
+            return Geometry<PointZ>.Create(polygonGeometries.Cast<Geometry<PointZ>>().ToList(), GeometryType.MultiPolygon, srid);
         }
         else if (hasM)
         {
-            return new Geometry<PointM>(polygonGeometries.Cast<Geometry<PointM>>().ToList(), GeometryType.MultiPolygon, srid);
+            return Geometry<PointM>.Create(polygonGeometries.Cast<Geometry<PointM>>().ToList(), GeometryType.MultiPolygon, srid);
         }
         else
         {
-            return new Geometry<Point>(polygonGeometries.Cast<Geometry<Point>>().ToList(), GeometryType.MultiPolygon, srid);
+            return Geometry<Point>.Create(polygonGeometries.Cast<Geometry<Point>>().ToList(), GeometryType.MultiPolygon, srid);
         }
     }
 

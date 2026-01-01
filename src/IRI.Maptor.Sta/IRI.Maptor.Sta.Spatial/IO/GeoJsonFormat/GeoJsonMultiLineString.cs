@@ -55,7 +55,7 @@ public class GeoJsonMultiLineString : GeoJsonBase
     /// Initializes a new instance of GeoJsonMultiLineString with Type set to "MultiLineString".
     /// </summary>
     public GeoJsonMultiLineString() => Type = GeoJson.MultiLineString;
-     
+
     /// <summary>
     /// Determines whether this MultiLineString is null or empty.
     /// </summary>
@@ -88,9 +88,9 @@ public class GeoJsonMultiLineString : GeoJsonBase
 
         return (this.HasZ, this.HasM) switch
         {
-            (true, true) => new Geometry<PointZM>(Coordinates!.Select(c => GeoJson.CreateGeometryFromLineCoordinates(c, GeoJson.PointZMFactory, GeometryType.LineString, false, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
-            (true, false) => new Geometry<PointZ>(Coordinates!.Select(c => GeoJson.CreateGeometryFromLineCoordinates(c, GeoJson.PointZFactory, GeometryType.LineString, false, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
-            _ => new Geometry<Point>(Coordinates!.Select(c => GeoJson.CreateGeometryFromLineCoordinates(c, GeoJson.PointFactory, GeometryType.LineString, false, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
+            (true, true) => Geometry<PointZM>.Create(Coordinates!.Select(c => GeoJson.CreateGeometryFromLineCoordinates(c, GeoJson.PointZMFactory, GeometryType.LineString, false, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
+            (true, false) => Geometry<PointZ>.Create(Coordinates!.Select(c => GeoJson.CreateGeometryFromLineCoordinates(c, GeoJson.PointZFactory, GeometryType.LineString, false, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
+            _ => Geometry<Point>.Create(Coordinates!.Select(c => GeoJson.CreateGeometryFromLineCoordinates(c, GeoJson.PointFactory, GeometryType.LineString, false, isLongitudeFirst, srid)).ToList(), this.GeometryType, srid),
         };
     }
 

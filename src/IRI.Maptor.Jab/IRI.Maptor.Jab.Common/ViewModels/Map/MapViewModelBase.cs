@@ -3868,7 +3868,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
                         var webMercatorPoints = wgsPoints.Select(p => p.Project(SrsBases.GeodeticWgs84, SrsBases.WebMercator)).ToList();
 
-                        var geometry = Geometry<Point>.CreatePointOrLineStringOrRing(webMercatorPoints, SridHelper.WebMercator);
+                        var geometry = Geometry<Point>.CreatePointOrLineStringOrPolygon(webMercatorPoints, SridHelper.WebMercator);
 
                         //Feature<Point> feature = new Feature<Point>(geometry, "test label");
 

@@ -30,8 +30,7 @@ public static class FeatureTableCommands
         return result;
     }
 
-
-    //public static Func<MapPresenter, FeatureTableCommand> CreateZoomToExtentCommandFunc = (presenter) => CreateZoomToExtentCommand(presenter);
+     
     public static FeatureTableCommand CreateZoomToExtentCommand(MapViewModelBase map)
     {
         var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.Magnify }.Data;
@@ -181,16 +180,50 @@ public static class FeatureTableCommands
     }
 
     #endregion
+     
+
+    public static FeatureTableCommand CreateBufferCommand(MapViewModelBase map)
+    {
+        var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.DeathlyHallows }.Data;
+
+        var result = new FeatureTableCommand()
+        {
+            PathMarkup = markup, 
+            ToolTip = "بافر"
+        };
+
+        result.Command = new RelayCommand((param) =>
+        {
+            var layer = param as SelectedLayer;
+
+            if (layer == null || map == null)
+                return;
+
+            var features = layer.HighlightedFeatures;
+
+            if (features.IsNullOrEmpty())
+                return;
+
+            foreach (var feature in features)
+            {
+                var buffer = feature.TheGeometry.Buffer(100);
+                map.AddDrawingItem(buffer);
+            }
+
+        });
+
+        return result;
+    }
 
 
-
-    internal static List<Func<MapViewModelBase, IFeatureTableCommand>> GetDefaultVectorLayerCommands/*<T>*/() //where T : class, IGeometryAware<Point>
+    internal static List<Func<MapViewModelBase, IFeatureTableCommand>> GetDefaultVectorLayerCommands ()  
     {
         return new List<Func<MapViewModelBase, IFeatureTableCommand>>()
         {
             CreateZoomToExtentCommand,
             CreateExportToExcelCommand,
-            CreateExportAsDrawingLayersCommand
+            CreateExportAsDrawingLayersCommand,
+            CreateBufferCommand
         };
     }
 }

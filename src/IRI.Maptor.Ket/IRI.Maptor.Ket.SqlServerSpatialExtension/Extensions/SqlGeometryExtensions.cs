@@ -485,7 +485,7 @@ public static class SqlGeometryExtensions
             result.Add(SqlPointToGeometry(multiPoint.STGeometryN(i)));
         }
 
-        return new Geometry<Point>(result, GeometryType.MultiPoint, srid);
+        return Geometry<Point>.Create(result, GeometryType.MultiPoint, srid);
     }
 
     private static Geometry<Point> SqlLineStringToGeometry(SqlGeometry lineString, bool isRing)
@@ -529,7 +529,7 @@ public static class SqlGeometryExtensions
             result.Add(SqlLineStringToGeometry(multiLineString.STGeometryN(i), false));
         }
 
-        return new Geometry<Point>(result, GeometryType.MultiLineString, srid);
+        return Geometry<Point>.Create(result, GeometryType.MultiLineString, srid);
     }
 
     private static Geometry<Point> SqlPolygonToGeometry(SqlGeometry polygon)
@@ -577,7 +577,7 @@ public static class SqlGeometryExtensions
             result.Add(SqlPolygonToGeometry(multiPolygon.STGeometryN(i + 1)));
         }
 
-        return new Geometry<Point>(result, GeometryType.MultiPolygon, srid);
+        return Geometry<Point>.Create(result, GeometryType.MultiPolygon, srid);
     }
 
     private static Geometry<Point> SqlGeometryCollectionToGeometry(SqlGeometry geometryCollection)
@@ -599,7 +599,7 @@ public static class SqlGeometryExtensions
             result.Add(geometryCollection.STGeometryN(i).AsGeometry());
         }
 
-        return new Geometry<Point>(result, GeometryType.GeometryCollection, srid);
+        return Geometry<Point>.Create(result, GeometryType.GeometryCollection, srid);
     }
 
     #endregion
