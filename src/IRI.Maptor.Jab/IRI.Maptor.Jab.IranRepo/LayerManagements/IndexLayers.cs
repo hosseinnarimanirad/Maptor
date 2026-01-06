@@ -55,8 +55,8 @@ public static class IndexLayers
         {
             ShowInToc = false,
             CanUserDelete = false,
-            Visibility = System.Windows.Visibility.Collapsed
-            //Labels = index250kLabels
+            Visibility = System.Windows.Visibility.Collapsed,
+            TocOrder = 10
         };
     }
 
@@ -82,8 +82,8 @@ public static class IndexLayers
         {
             ShowInToc = false,
             CanUserDelete = false,
-            Visibility = System.Windows.Visibility.Collapsed
-            //Labels = index100kLabels
+            Visibility = System.Windows.Visibility.Collapsed,
+            TocOrder = 9
         };
 
     }
@@ -108,7 +108,8 @@ public static class IndexLayers
         {
             ShowInToc = false,
             CanUserDelete = false,
-            Visibility = System.Windows.Visibility.Collapsed
+            Visibility = System.Windows.Visibility.Collapsed,
+            TocOrder = 8,
         };
 
     }
@@ -134,7 +135,8 @@ public static class IndexLayers
         {
             ShowInToc = false,
             CanUserDelete = false,
-            Visibility = System.Windows.Visibility.Collapsed
+            Visibility = System.Windows.Visibility.Collapsed,
+            TocOrder = 7,
         };
 
     }
@@ -213,7 +215,8 @@ public static class IndexLayers
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Visibility = System.Windows.Visibility.Collapsed
+                Visibility = System.Windows.Visibility.Collapsed,
+                TocOrder = 4
             };
 
         layer.Commands = GetCommands/*<UtmSheet>*/(map, layer/*, label*/);
@@ -244,7 +247,8 @@ public static class IndexLayers
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Visibility = System.Windows.Visibility.Collapsed
+                Visibility = System.Windows.Visibility.Collapsed,
+                TocOrder = 3
             };
 
         layer.Commands = GetCommands(map, layer);
@@ -275,7 +279,8 @@ public static class IndexLayers
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Visibility = System.Windows.Visibility.Collapsed
+                Visibility = System.Windows.Visibility.Collapsed,
+                TocOrder = 2
             };
 
         layer.Commands = GetCommands(map, layer);
@@ -306,7 +311,8 @@ public static class IndexLayers
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Visibility = System.Windows.Visibility.Collapsed
+                Visibility = System.Windows.Visibility.Collapsed,
+                TocOrder = 1
             };
 
         layer.Commands = GetCommands/*<UtmSheet>*/(map, layer/*, label*/);
@@ -341,7 +347,9 @@ public static class IndexLayers
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Visibility = System.Windows.Visibility.Collapsed
+                Visibility = System.Windows.Visibility.Collapsed,
+                TocOrder = 8,
+
             };
 
         layer50k.Commands = GetCommands/*<GeodeticSheet>*/(map, layer50k/*, label*/);
@@ -372,7 +380,8 @@ public static class IndexLayers
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Visibility = System.Windows.Visibility.Collapsed
+                Visibility = System.Windows.Visibility.Collapsed,
+                TocOrder = 7,
             };
 
         layer25k.Commands = GetCommands/*<GeodeticSheet>*/(map, layer25k/*, label*/);
@@ -401,7 +410,8 @@ public static class IndexLayers
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Visibility = System.Windows.Visibility.Collapsed
+                Visibility = System.Windows.Visibility.Collapsed,
+                TocOrder = 6,
             };
 
         layer10k.Commands = GetCommands/*<GeodeticSheet>*/(map, layer10k/*, label*/);
@@ -430,7 +440,8 @@ public static class IndexLayers
             {
                 ShowInToc = false,
                 CanUserDelete = false,
-                Visibility = System.Windows.Visibility.Collapsed
+                Visibility = System.Windows.Visibility.Collapsed,
+                TocOrder = 5,
             };
 
         layer5k.Commands = GetCommands/*<GeodeticSheet>*/(map, layer5k/*, label*/);
