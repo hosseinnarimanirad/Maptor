@@ -223,7 +223,7 @@ public static class FeatureTableCommands
             CreateZoomToExtentCommand,
             CreateExportToExcelCommand,
             CreateExportAsDrawingLayersCommand,
-            CreateBufferCommand
+            //CreateBufferCommand
         };
     }
 }

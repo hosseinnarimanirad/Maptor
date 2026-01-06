@@ -3958,14 +3958,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
 
     #region Static Create
-
-    //public static readonly Geometry EmptyPoint = new Geometry(new IPoint[0], GeometryType.Point);
-    //public static readonly Geometry EmptyLineString = new Geometry(new IPoint[0], GeometryType.LineString);
-    //public static readonly Geometry EmptyPolygon = new Geometry(new IPoint[0], GeometryType.Polygon);
-    //public static readonly Geometry EmptyMultiPoint = new Geometry(new Geometry[0], GeometryType.MultiPoint);
-    //public static readonly Geometry EmptyMultiLineString = new Geometry(new Geometry[0], GeometryType.MultiLineString);
-    //public static readonly Geometry EmptyMultiPolygon = new Geometry(new Geometry[0], GeometryType.MultiPolygon);
-
+     
     public static Geometry<T> CreateNew(GeometryType type, int srid)
     {
         switch (type)
@@ -4140,10 +4133,10 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             return CreateLineString(points, srid);
     }
 
-    public static Geometry<T> CreatePointOrLineString(int srid, params T[] points)
-    {
-        return CreatePointOrLineString(points.ToList(), srid);
-    }
+    //public static Geometry<T> CreatePointOrLineString(int srid, params T[] points)
+    //{
+    //    return CreatePointOrLineString(points.ToList(), srid);
+    //}
 
     public static Geometry<T> CreatePointOrLineStringOrPolygon(List<T> points, int srid)
     {

@@ -49,7 +49,7 @@ public static class SyntheticDataFactory
                (0.0, >= -2.5, <= 2.5) => false,
                (0.5, >= -2.5, <= 2.5) => false,
                (1.0, >= -2.0, <= 2.0) => false,
-               (1.5, >= -1.5, <= 1.5) => false, 
+               (1.5, >= -1.5, <= 1.5) => false,
                _ => true
            };
 
@@ -80,7 +80,7 @@ public static class SyntheticDataFactory
     public static readonly Predicate<(double dx1, double dx2, double dy)> IsRetainedFunc40_0 =
            param => (Math.Abs(param.dy), param.dx1, param.dx2) switch
            {
-               (0.0, >= -0.0, <= 0.0) => false, 
+               (0.0, >= -0.0, <= 0.0) => false,
                _ => true
            };
 
@@ -138,9 +138,9 @@ public static class SyntheticDataFactory
 
                 bool retained = isRetainedFunc((dx1, dx2, dy));
 
-                Geometry<sb.Point> original = Geometry<sb.Point>.CreatePointOrLineString(0, startPoint, middlePoint, endPoint);
+                Geometry<sb.Point> original = Geometry<sb.Point>.CreatePointOrLineString([startPoint, middlePoint, endPoint], 0);
 
-                Geometry<sb.Point> simplified = retained ? original : Geometry<sb.Point>.CreatePointOrLineString(0, startPoint, endPoint);
+                Geometry<sb.Point> simplified = retained ? original : Geometry<sb.Point>.CreatePointOrLineString([startPoint, endPoint], 0);
 
                 var rowNumber = (int)((y - minY) / step);
 
@@ -156,7 +156,7 @@ public static class SyntheticDataFactory
 
         return result;
     }
-     
+
 }
 
 #region V1
