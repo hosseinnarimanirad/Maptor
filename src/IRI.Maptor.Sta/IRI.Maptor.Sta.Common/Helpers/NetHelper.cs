@@ -25,9 +25,9 @@ public static class NetHelper
     const string _defaultUri = "https://google.com";
 
     public const string ContentTypeApplicationJson = contentTypeJson;
-  
+
     public const string AccessControlAllowOrigin = "Access-Control-Allow-Origin";
-     
+
 
 
     public static bool PingHost(string nameOrAddress, int timeout = 3000)
@@ -140,9 +140,9 @@ public static class NetHelper
     {
         using (MailMessage mail = new MailMessage(from, to))
         {
-            using (SmtpClient client = new SmtpClient())
+            using (SmtpClient client = new SmtpClient(host, port))
             {
-                client.Port = port;
+                //client.Port = port;
 
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
 
@@ -152,7 +152,7 @@ public static class NetHelper
 
                 client.EnableSsl = enableSsl;
 
-                client.Host = host;
+                //client.Host = host;
 
                 mail.Subject = subject;
 
@@ -216,7 +216,7 @@ public static class NetHelper
 
         return client;
     }
-     
+
 
     private static System.Net.Http.HttpClient CreateHttpClient(string contentType, Encoding encoding, WebProxy? proxy = null, string? bearer = null, Dictionary<string, string>? headers = null)
     {
@@ -285,7 +285,7 @@ public static class NetHelper
             var client = CreateWebClient(contentType, encoding, proxy, bearer);
 
             var stringResult = await client.DownloadStringTaskAsync(address);
-            
+
             return ResponseFactory.Create(JsonHelper.Deserialize<T>(stringResult));
         }
         catch (Exception ex)
@@ -481,7 +481,7 @@ public static class NetHelper
         {
             var client = CreateWebClient(parameters.ContentType, parameters.Encoding, parameters.Proxy, parameters.Bearer, parameters.Headers);
 
-            
+
             var stringData = JsonHelper.SerializeWithIgnoreNullOption(parameters.Data);
 
             //var stringData = Newtonsoft.Json.JsonConvert.SerializeObject(parameters.Data, new Newtonsoft.Json.JsonSerializerSettings()

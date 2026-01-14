@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Diagnostics;
 
 namespace IRI.Maptor.Sta.Common.Helpers;
 
@@ -17,6 +18,8 @@ public static class HttpClientHelper_Old
         try
         {
             var json = JsonHelper.SerializeWithIgnoreNullOption(parameters.Data);
+
+            Debug.WriteLine(json);
 
             var result = await client.PostAsJsonAsync(parameters.Address, parameters.Data, JsonHelper.IgnoreNullValue);
 
