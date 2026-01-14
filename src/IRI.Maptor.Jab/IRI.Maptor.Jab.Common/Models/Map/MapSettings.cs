@@ -160,6 +160,35 @@ public class MapSettingsModel : Notifier
     #endregion
 
 
+    #region Identify
+
+    private bool _checkIsVisible = true;
+    // ignore unvisible layers or not in identify
+    public bool CheckIsVisible
+    {
+        get => _checkIsVisible;
+        set
+        {
+            _checkIsVisible = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private bool _checkIsInScaleRange = true;
+    // ignore layers which are not in scale range or not
+    public bool CheckIsInScaleRange
+    {
+        get => _checkIsInScaleRange;
+        set
+        {
+            _checkIsInScaleRange = value;
+            RaisePropertyChanged();
+        }
+    }
+     
+    #endregion
+
 
     private EditableFeatureLayerOptions _drawingOptions = EditableFeatureLayerOptions.CreateDefaultForDrawing(true, true, true);
 

@@ -713,7 +713,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestZoomToFeature = this.ZoomToFeature;
 
-        presenter.RequestIdentify = point => new ObservableCollection<FeatureSet<sb.Point>>(this.GetFeatures(point));
+        presenter.RequestIdentify = (point, options) => new ObservableCollection<FeatureSet<sb.Point>>(this.GetFeatures(point, options));
 
         presenter.RequestSearch = searchText => new ObservableCollection<FeatureSet<sb.Point>>(this.GetFeatures(searchText));
 
@@ -1981,7 +1981,7 @@ public partial class MapViewer : NotifiableUserControl
 
         //What about other types: RightClickOption, GridAndGraticule
         //if (specialPointLayer.Type == LayerType.MoveableItem)
-        if(specialPointLayer.IsMovable)
+        if (specialPointLayer.IsMovable)
         {
             element.Tag = new LayerTag(this.MapScale)
             {
@@ -4583,7 +4583,7 @@ public partial class MapViewer : NotifiableUserControl
 
     #region Identify
 
-    public List<FeatureSet<sb.Point>>? GetFeatures(sb.Point point)
+    public List<FeatureSet<sb.Point>>? GetFeatures(sb.Point point, IdentifyOptions options)
     {
         List<FeatureSet<sb.Point>> result = new List<FeatureSet<sb.Point>>();
 
@@ -4593,14 +4593,6 @@ public partial class MapViewer : NotifiableUserControl
 
         geometryBoundary = new sb.BoundingBox(point, offset).AsGeometry<sb.Point>(SridHelper.WebMercator);
 
-
-        //if (geometry.GetOpenGisType() == OpenGisGeometryType.Point || geometry.GetOpenGisType() == OpenGisGeometryType.MultiPoint)
-        //{
-        //    var mapDistance = ScreenToMap(7);
-
-        //    geometry = geometry.STBuffer(mapDistance);
-        //}
-
         foreach (var layer in GetAllVectorLayers(this.Layers))
         {
             if (layer.Type != LayerType.VectorLayer)
@@ -4609,10 +4601,10 @@ public partial class MapViewer : NotifiableUserControl
             if (!layer.IsSearchable)
                 continue;
 
-            if (layer.Visibility != Visibility.Visible)
+            if (options.CheckIsVisible && layer.Visibility != Visibility.Visible)
                 continue;
 
-            if (!layer.IsInScaleRange)
+            if (options.CheckIsInScaleRange && !layer.IsInScaleRange)
                 continue;
 
             var features = layer.DataSource.GetAsFeatureSet(geometryBoundary);
@@ -4874,12 +4866,9 @@ public partial class MapViewer : NotifiableUserControl
 
     private void RegisterPolyBezierLayer(PolyBezierLayer layer)
     {
-        layer.RequestRightClickOptions = (i1, i2, i3) =>
-        {
-            this.AddRightClickOptions(i1, i2, i3);
-        };
+        layer.RequestRightClickOptions = this.AddRightClickOptions;
 
-        layer.RequestRemoveRightClickOptions = () => { this.RemoveRightClickOptions(); };
+        layer.RequestRemoveRightClickOptions = this.RemoveRightClickOptions;
 
         layer.RequestRefresh = l =>
         {

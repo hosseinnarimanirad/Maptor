@@ -5,8 +5,7 @@ using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Primitives; 
 
 namespace IRI.Maptor.Jab.Common.Models;
 

@@ -1089,7 +1089,7 @@ public abstract class MapViewModelBase : ViewModelBase
     public Func<Geometry, VisualParameters, Task<Response<PolyBezierLayer>>> RequestGetBezier;
 
 
-    public Func<Point, ObservableCollection<FeatureSet<Point>>> RequestIdentify;
+    public Func<Point, IdentifyOptions, ObservableCollection<FeatureSet<Point>>> RequestIdentify;
 
     public Func<string, ObservableCollection<FeatureSet<Point>>> RequestSearch;
 
@@ -1449,16 +1449,13 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    public ObservableCollection<FeatureSet<Point>>? Identify(Point arg)
+    public ObservableCollection<FeatureSet<Point>>? Identify(Point arg, IdentifyOptions options)
     {
         if (RequestIdentify != null)
-        {
-            return RequestIdentify(arg);
-        }
+            return RequestIdentify(arg, options);
+
         else
-        {
             return null;
-        }
     }
 
 
@@ -2642,7 +2639,10 @@ public abstract class MapViewModelBase : ViewModelBase
                                 LayerType.VectorLayer,
                                 RenderMode.Default,
                                 RasterizationMethod.GdiPlus,
-                                ScaleInterval.All);
+                                ScaleInterval.All)
+            {
+                IsSearchable = true
+            };
 
             AddLayer(vectorLayer);
         }
@@ -2733,7 +2733,10 @@ public abstract class MapViewModelBase : ViewModelBase
                                 LayerType.VectorLayer,
                                 RenderMode.Default,
                                 RasterizationMethod.GdiPlus,
-                                ScaleInterval.All);
+                                ScaleInterval.All)
+            {
+                IsSearchable = true
+            };
 
             AddLayer(vectorLayer);
         }
@@ -2834,7 +2837,10 @@ public abstract class MapViewModelBase : ViewModelBase
                                     LayerType.VectorLayer,
                                     RenderMode.Default,
                                     RasterizationMethod.GdiPlus,
-                                    ScaleInterval.All);
+                                    ScaleInterval.All)
+                {
+                    IsSearchable = true
+                };
 
                 //AddLayer(vectorLayer);
 
@@ -3031,7 +3037,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             var dataSource = new MemoryDataSource(features);
 
-            AddLayer(new VectorLayer("", dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All));
+            AddLayer(new VectorLayer("", dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
 
         }
         catch (IOException)
@@ -3084,7 +3090,7 @@ public abstract class MapViewModelBase : ViewModelBase
             // todo: provide parameter instead of `null`
             var dataSource = new MemoryDataSource(features);
 
-            AddLayer(new VectorLayer("", dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All));
+            AddLayer(new VectorLayer("", dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
 
         }
         catch (IOException)
@@ -3131,15 +3137,16 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         try
         {
-            //Msh.Common.Model.GeoJson.GeoJsonFeatureSet.Load(geoJsonFeatureSetFileName);
-
             var dataSource = OrdinaryJsonListSource.CreateFromFile<Feature<Point>>(geoJsonFeatureSetFileName, f => f);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(geoJsonFeatureSetFileName), dataSource,
                 [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
                 LayerType.VectorLayer,
                 RenderMode.Default,
-                RasterizationMethod.GdiPlus, ScaleInterval.All);
+                RasterizationMethod.GdiPlus, ScaleInterval.All)
+            {
+                IsSearchable = true
+            };
 
             AddLayer/*<Feature<Point>>*/(vectorLayer);
         }

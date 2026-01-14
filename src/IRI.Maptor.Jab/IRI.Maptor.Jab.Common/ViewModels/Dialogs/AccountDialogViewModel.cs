@@ -324,7 +324,7 @@ public class AccountDialogViewModel : DialogViewModelBase
         {
             if (_loginCommand == null)
             {
-                _loginCommand = new RelayCommand(param => Login(param));
+                _loginCommand = new RelayCommand(Login);
             }
 
             return _loginCommand;
