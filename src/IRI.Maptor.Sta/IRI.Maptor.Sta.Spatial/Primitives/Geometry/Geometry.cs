@@ -4051,7 +4051,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             Srid = srid
         };
 
-        if (points?.Count > 0)
+        if (points?.Count > 1)
         {
             var lastPoint = points[points.Count - 1];
 
