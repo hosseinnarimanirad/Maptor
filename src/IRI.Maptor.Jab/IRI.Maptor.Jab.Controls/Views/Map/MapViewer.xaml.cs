@@ -46,6 +46,7 @@ using IRI.Maptor.Jab.Common.Views.Controls;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
+using IRI.Maptor.Jab.Common.Data;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
@@ -136,36 +137,36 @@ public partial class MapViewer : NotifiableUserControl
 
     TranslateTransform panTransformForPoints = new TranslateTransform();
 
-    private System.Net.WebProxy _proxy;
+    //private System.Net.WebProxy? _proxy;
 
-    public System.Net.WebProxy Proxy
-    {
-        get { return _proxy; }
-        set
-        {
-            _proxy = value;
+    //public System.Net.WebProxy? Proxy
+    //{
+    //    get { return _proxy; }
+    //    set
+    //    {
+    //        _proxy = value;
 
-            if (_proxy?.Address != null)
-            {
-                HttpClientHandler handler = new HttpClientHandler();
-                handler.Proxy = _proxy;
-                handler.UseProxy = true;
-                HttpClient = new System.Net.Http.HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: 10) };
-                HttpClient.DefaultRequestHeaders.Add("User-Agent", "app!");
-            }
-            else
-            {
-                HttpClientHandler handler = new HttpClientHandler();
-                handler.Proxy = null;
-                handler.UseProxy = false;
-                HttpClient = new System.Net.Http.HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: 10) };
-                HttpClient.DefaultRequestHeaders.Add("User-Agent", "app!");
-            }
+    //        if (_proxy?.Address != null)
+    //        {
+    //            HttpClientHandler handler = new HttpClientHandler();
+    //            handler.Proxy = _proxy;
+    //            handler.UseProxy = true;
+    //            HttpClient = new System.Net.Http.HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: 10) };
+    //            HttpClient.DefaultRequestHeaders.Add("User-Agent", "app!");
+    //        }
+    //        else
+    //        {
+    //            HttpClientHandler handler = new HttpClientHandler();
+    //            handler.Proxy = null;
+    //            handler.UseProxy = false;
+    //            HttpClient = new System.Net.Http.HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: 10) };
+    //            HttpClient.DefaultRequestHeaders.Add("User-Agent", "app!");
+    //        }
 
-        }
-    }
+    //    }
+    //}
 
-    public System.Net.Http.HttpClient HttpClient { get; set; }
+    //public System.Net.Http.HttpClient HttpClient { get; set; }
 
     public double ScreenScale
     {
@@ -196,40 +197,40 @@ public partial class MapViewer : NotifiableUserControl
     }
 
 
-    private int _minGoogleZoomLevel = 1;
+    //private int _minGoogleZoomLevel = 1;
 
-    public int MinGoogleZoomLevel
-    {
-        get { return _minGoogleZoomLevel; }
-        set
-        {
-            if (value > MaxGoogleZoomLevel)
-                return;
+    //public int MinGoogleZoomLevel
+    //{
+    //    get { return _minGoogleZoomLevel; }
+    //    set
+    //    {
+    //        if (value > MaxGoogleZoomLevel)
+    //            return;
 
-            _minGoogleZoomLevel = value;
-            RaisePropertyChanged();
-        }
-    }
+    //        _minGoogleZoomLevel = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
-    private int _maxGoogleZoomLevel = 22;
+    //private int _maxGoogleZoomLevel = 22;
 
-    public int MaxGoogleZoomLevel
-    {
-        get { return _maxGoogleZoomLevel; }
-        set
-        {
-            if (value < MinGoogleZoomLevel)
-                return;
+    //public int MaxGoogleZoomLevel
+    //{
+    //    get { return _maxGoogleZoomLevel; }
+    //    set
+    //    {
+    //        if (value < MinGoogleZoomLevel)
+    //            return;
 
-            _maxGoogleZoomLevel = value;
-            RaisePropertyChanged();
-        }
-    }
+    //        _maxGoogleZoomLevel = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
-    public bool IsGoogleZoomLevelsEnabled
-    {
-        get; set;
-    }
+    //public bool IsGoogleZoomLevelsEnabled
+    //{
+    //    get; set;
+    //}
 
 
     public UIElementCollection Elements { get { return mapView.Children; } }
@@ -494,11 +495,11 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestGetAsDrawingVisual = this.GetAsDrawingVisual;
 
-        presenter.RequestGetProxy = () => this.Proxy;
+        //presenter.RequestGetProxy = () => this.Proxy;
 
-        presenter.RequestSetProxy = (p) => this.Proxy = p;
+        //presenter.RequestSetProxy = (p) => this.Proxy = p;
 
-        this.Proxy = presenter.Proxy?.GetProxy();
+        //this.Proxy = presenter.Proxy?.GetProxy();
 
         presenter.RequestGetActualHeight = () => this.mapView.ActualHeight;
 
@@ -522,46 +523,40 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestEnableZoomOut = this.ZoomOutPoint;
 
-        presenter.MapSettings.FireIsDoubleClickZoomEnabledChanged = (e) =>
+        presenter.FireIsMouseWheelZoomEnabledChanged = e =>
         {
             if (e)
-            {
-                this.EnableZoomOnDoubleClick();
-            }
-            else
-            {
-                this.DisableZoomOnDoubleClick();
-            }
-        };
-
-        presenter.MapSettings.FireIsMouseWheelZoomEnabledChanged = (e) =>
-        {
-            if (e)
-            {
                 this.EnableZoomingOnMouseWheel();
-            }
+
             else
-            {
                 this.DisableZoomingOnMouseWheel();
-            }
         };
 
-        presenter.MapSettings.FireIsGoogleZoomLevelsEnabledChanged = (e) =>
+        presenter.FireIsDoubleClickZoomEnabledChanged = e =>
         {
-            this.IsGoogleZoomLevelsEnabled = e;
-        };
+            if (e)
+                this.EnableZoomOnDoubleClick();
 
-        presenter.MapSettings.FireMinGoogleZoomLevelChanged = (e) =>
-        {
-            this.MinGoogleZoomLevel = e;
+            else
+                this.DisableZoomOnDoubleClick();
         };
+         
+        //presenter.ZoomSettings.Initialize();
 
-        presenter.MapSettings.FireMaxGoogleZoomLevelChanged = (e) =>
-        {
-            this.MaxGoogleZoomLevel = e;
-        };
+        //presenter.ZoomSettings.FireIsGoogleZoomLevelsEnabledChanged = (e) =>
+        //{
+        //    this.IsGoogleZoomLevelsEnabled = e;
+        //};
 
-        presenter.MapSettings.Initialize();
+        //presenter.ZoomSettings.FireMinGoogleZoomLevelChanged = (e) =>
+        //{
+        //    this.MinGoogleZoomLevel = e;
+        //};
+
+        //presenter.ZoomSettings.FireMaxGoogleZoomLevelChanged = (e) =>
+        //{
+        //    this.MaxGoogleZoomLevel = e;
+        //};
 
         presenter.Layers = this.Layers;
 
@@ -1640,34 +1635,27 @@ public partial class MapViewer : NotifiableUserControl
     {
         try
         {
-            if (tile.ZoomLevel != CurrentZoomLevel ||
-                (_presenter != null && !layer.HasTheSameMapProvider(_presenter.SelectedMapProvider)))
+            if (_presenter == null)
+                return;
+
+            if (tile.ZoomLevel != CurrentZoomLevel || !layer.HasTheSameMapProvider(_presenter.SelectedMapProvider))
+                //(_presenter != null && !layer.HasTheSameMapProvider(_presenter.SelectedMapProvider)))
                 return;
 
             //System.Diagnostics.Debug.WriteLine($"layer.GetTileAsync before {tile.ToShortString()} {DateTime.Now.ToLongTimeString()}");
 
             // 1401.11.07
-            var geoImage = await layer.GetTileAsync(tile, this.HttpClient);
+            var geoImage = await layer.GetTileAsync(tile, _presenter.HttpClient);
 
             //System.Diagnostics.Debug.WriteLine($"layer.GetTileAsync after  {tile.ToShortString()} {DateTime.Now.ToLongTimeString()}");
 
-            if (tile.ZoomLevel != CurrentZoomLevel ||
-                 (this._presenter != null && !layer.HasTheSameMapProvider(this._presenter.SelectedMapProvider)))
+            if (tile.ZoomLevel != CurrentZoomLevel || !layer.HasTheSameMapProvider(this._presenter.SelectedMapProvider))
+                //(this._presenter != null && !layer.HasTheSameMapProvider(this._presenter.SelectedMapProvider)))
                 return;
 
             var webMercatorExtent = geoImage.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
 
-
             var area = ParseToRectangleGeometry(webMercatorExtent);
-
-
-            //Point topLeft = webMercatorExtent.TopLeft.AsWpfPoint();
-
-            //Point bottomRigth = webMercatorExtent.BottomRight.AsWpfPoint();
-
-            //RectangleGeometry geometry = new RectangleGeometry(new Rect(topLeft, bottomRigth), 0, 0);
-
-            //geometry.Transform = viewTransform;
 
             ImageBrush fill;
 
@@ -3448,7 +3436,7 @@ public partial class MapViewer : NotifiableUserControl
 
         var mapCenter = ScreenToMap(windowCenter);
 
-        if (IsGoogleZoomLevelsEnabled)
+        if (_presenter.MapSettings.IsGoogleZoomLevelsEnabled)
         {
             int newZoomLevel = zoomIn ? WebMercatorUtility.GetNextZoomLevel(CurrentZoomLevel) : WebMercatorUtility.GetPreviousZoomLevel(CurrentZoomLevel);
 
@@ -3653,13 +3641,13 @@ public partial class MapViewer : NotifiableUserControl
 
     private int CheckGoogleZoomLevel(int googleZoomLevel)
     {
-        if (googleZoomLevel < this.MinGoogleZoomLevel)
+        if (googleZoomLevel < _presenter.MapSettings.MinGoogleZoomLevel)
         {
-            return MinGoogleZoomLevel;
+            return _presenter.MapSettings.MinGoogleZoomLevel;
         }
-        else if (googleZoomLevel > this.MaxGoogleZoomLevel)
+        else if (googleZoomLevel > _presenter.MapSettings.MaxGoogleZoomLevel)
         {
-            return MaxGoogleZoomLevel;
+            return _presenter.MapSettings.MaxGoogleZoomLevel;
         }
 
         return googleZoomLevel;

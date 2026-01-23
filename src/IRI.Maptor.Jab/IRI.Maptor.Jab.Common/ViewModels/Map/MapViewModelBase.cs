@@ -41,38 +41,130 @@ using IRI.Maptor.Jab.Common.Views.MapMarkers;
 using IRI.Maptor.Jab.Common.Models.Spatialable;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
-
+using IRI.Maptor.Jab.Common.Models.Settings;
+using System.Net.Http;
+using IRI.Maptor.Jab.Common.Data;
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public abstract class MapViewModelBase : ViewModelBase
 {
-    #region Properties
+    #region Settings
 
-    private ProxySettingsModel _proxy;
-    public ProxySettingsModel Proxy
+    public System.Net.Http.HttpClient HttpClient { get; set; }
+
+    public Action<ProxySettingsModel>? FireProxySettingsChanged;
+
+    private ProxySettingsModel _proxySettings;
+    public ProxySettingsModel ProxySettings
     {
-        get { return _proxy; }
-        set
+        get { return _proxySettings; }
+        protected set
         {
-            _proxy = value;
-            value.FireProxyChanged = p => SetProxy(p.GetProxy());
+            if (_proxySettings != null)
+                _proxySettings.PropertyChanged -= ProxySettings_OnProxyChanged;
+
+            _proxySettings = value ?? new ProxySettingsModel(IRI.Maptor.Jab.Common.Data.ProxySettings.Default);
+
             RaisePropertyChanged();
+
+            _proxySettings.OnProxyChanged -= ProxySettings_OnProxyChanged;
+            _proxySettings.OnProxyChanged += ProxySettings_OnProxyChanged;
         }
     }
 
-
-    private MapSettingsModel _mapSettings = new MapSettingsModel();
-    public MapSettingsModel MapSettings
+    private void ProxySettings_OnProxyChanged(object? sender, EventArgs e)
     {
-        get { return _mapSettings; }
+        this.SetProxy(ProxySettings.GetProxy());
+    }
+
+
+    private BaseMapSettingsModel _baseMapSettings;
+    public BaseMapSettingsModel BaseMapSettings
+    {
+        get => _baseMapSettings;
         private set
         {
+            if (_baseMapSettings != null)
+                _baseMapSettings.OnOpacityChanged -= BaseMapSettings_OnOpacityChanged;
+
+            _baseMapSettings = value ?? new BaseMapSettingsModel(IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default/*, UpdateBaseMapOpacity*/);
+
+            RaisePropertyChanged();
+
+            _baseMapSettings.OnOpacityChanged -= BaseMapSettings_OnOpacityChanged;
+            _baseMapSettings.OnOpacityChanged += BaseMapSettings_OnOpacityChanged;
+        }
+    }
+
+    private void BaseMapSettings_OnOpacityChanged(object? sender, double e) => UpdateBaseMapOpacity(e);
+
+    //private void BaseMapSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    //{
+    //    if (e.PropertyName == nameof(BaseMapSettingsModel.BaseMapOpacity))
+    //    {
+
+    //    }
+    //}
+
+    public Action<bool>? FireIsDoubleClickZoomEnabledChanged;
+    public Action<bool>? FireIsMouseWheelZoomEnabledChanged;
+
+    private MapSettingsModel _mapSettings;
+    public MapSettingsModel MapSettings
+    {
+        get => _mapSettings;
+        private set
+        {
+            if (_mapSettings != null)
+            {
+                _mapSettings.OnIsDoubleClickZoomEnabledChanged -= MapSettings_OnIsDoubleClickZoomEnabledChanged;
+                _mapSettings.OnIsMouseWheelZoomEnabledChanged -= MapSettings_OnIsMouseWheelZoomEnabledChanged;
+            }
+
             _mapSettings = value;
+
+            RaisePropertyChanged();
+
+            _mapSettings.OnIsDoubleClickZoomEnabledChanged -= MapSettings_OnIsDoubleClickZoomEnabledChanged;
+            _mapSettings.OnIsDoubleClickZoomEnabledChanged += MapSettings_OnIsDoubleClickZoomEnabledChanged;
+
+            _mapSettings.OnIsMouseWheelZoomEnabledChanged -= MapSettings_OnIsMouseWheelZoomEnabledChanged;
+            _mapSettings.OnIsMouseWheelZoomEnabledChanged += MapSettings_OnIsMouseWheelZoomEnabledChanged;
+        }
+    }
+
+    private void MapSettings_OnIsDoubleClickZoomEnabledChanged(object? sender, bool e) => FireIsDoubleClickZoomEnabledChanged?.Invoke(e);
+    private void MapSettings_OnIsMouseWheelZoomEnabledChanged(object? sender, bool e) => FireIsMouseWheelZoomEnabledChanged?.Invoke(e);
+
+
+    private GeneralSettingsModel _generalSettings;
+    public GeneralSettingsModel GeneralSettings
+    {
+        get { return _generalSettings; }
+        private set
+        {
+            _generalSettings = value;
             RaisePropertyChanged();
         }
     }
 
+
+    //private double _legendFontSize = 12;
+    //public double LegendFontSize
+    //{
+    //    get { return _legendFontSize; }
+    //    set
+    //    {
+    //        _legendFontSize = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
+
+    #endregion
+
+
+    #region Properties
 
     private MapInfoViewModel _mapPanel;
     public MapInfoViewModel MapPanel
@@ -105,33 +197,6 @@ public abstract class MapViewModelBase : ViewModelBase
         set
         {
             _ostanha = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private double _baseMapOpacity = 1;
-    public double BaseMapOpacity
-    {
-        get { return _baseMapOpacity; }
-        set
-        {
-            _baseMapOpacity = value;
-            RaisePropertyChanged();
-
-            foreach (var layer in Layers.Where(i => i.Type == LayerType.BaseMap))
-            {
-                layer./*VisualParameters.*/Opacity = value;
-            }
-        }
-    }
-
-    private double _legendFontSize = 12;
-    public double LegendFontSize
-    {
-        get { return _legendFontSize; }
-        set
-        {
-            _legendFontSize = value;
             RaisePropertyChanged();
         }
     }
@@ -518,65 +583,23 @@ public abstract class MapViewModelBase : ViewModelBase
             _selectedMapProvider = value;
             RaisePropertyChanged();
 
-            _ = SetTileService(value, BaseMapOpacity, MapSettings.GetLocalFileName);
+            _ = SetTileService(value, BaseMapSettings.BaseMapOpacity, BaseMapSettings.GetLocalFileName);
         }
     }
 
-
-    //private string _providerTypeFullName = string.Empty;
-    //public string ProviderTypeFullName
-    //{
-    //    get { return _providerTypeFullName; }
-    //}
-
-    //public async Task SetTileBaseMap(string tileMapFullName)
-    //{
-    //    if (string.IsNullOrEmpty(tileMapFullName))
-    //    {
-    //        RemoveAllTileServices();
-
-    //        return;
-    //    }
-
-    //    var tileMapFullNameToUpper = tileMapFullName?.ToUpper();
-
-    //    //if (_providerTypeFullName == tileMapFullNameToUpper)
-    //    //{
-    //    //    return;
-    //    //}
-
-    //    //_providerTypeFullName = tileMapFullNameToUpper;
-
-    //    //RaisePropertyChanged(nameof(ProviderTypeFullName));
-
-    //    var provider = this.MapProviders.SingleOrDefault(m => m.FullName?.EqualsIgnoreCase(tileMapFullNameToUpper) == true);
-
-    //    if (provider == null)
-    //    {
-    //        return;
-    //    }
-
-    //    this.SelectedMapProvider = provider;
-
-    //    await SetTileService(provider, MapSettings.GetLocalFileName);//, MapSettings.GetFileName);             
-    //}
 
     public void SetTileBaseMap(TileMapProvider? provider/*, double opacity*/)
     {
         if (provider is null)
             return;
 
-        //if (provider.FullName == SelectedMapProvider?.FullName)
         if (provider == SelectedMapProvider)
             return;
 
         if (!MapProviders.Contains(provider))
             throw new NotImplementedException("MapPresenter > SetTileBaseMap");
-        //this.MapProviders.Add(provider);
 
         SelectedMapProvider = provider;
-
-        //await SetTileService(provider, opacity, MapSettings.GetLocalFileName);
     }
 
     private bool _doNotCheckInternet = false;
@@ -594,7 +617,7 @@ public abstract class MapViewModelBase : ViewModelBase
     private bool? _isConnected = null;
     public bool IsConnected
     {
-        get { return _isConnected.HasValue && _isConnected.Value; }
+        get => _isConnected == true;
         set
         {
             if (_isConnected == value)
@@ -866,6 +889,13 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public MapViewModelBase()
     {
+        ConfigHttpClient(null);
+
+        this.ProxySettings = new ProxySettingsModel(IRI.Maptor.Jab.Common.Data.ProxySettings.Default); ;
+        this.BaseMapSettings = new BaseMapSettingsModel(IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default);
+        this.MapSettings = new MapSettingsModel(IRI.Maptor.Jab.Common.Data.MapSettings.Default);
+        this.GeneralSettings = new GeneralSettingsModel(IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
+
         _drawingItems.CollectionChanged += (sender, e) =>
         {
             RaisePropertyChanged(nameof(CanMoveDrawingItemDown));
@@ -908,7 +938,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         this.RequestClearAll = this.ClearAll;
 
-        this.MapSettings.BaseMapCacheDirectory = Environment.CurrentDirectory + "\\Data";
+        //this.BaseMapCacheDirectory = Environment.CurrentDirectory + "\\Data";
 
         if (this.MapSettings.MinGoogleZoomLevel == 0)
             this.MapSettings.MinGoogleZoomLevel = 2;
@@ -925,16 +955,15 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-
     #region Actions & Funcs
 
     public Action RequestPrint;
 
     public Func<BoundingBox, int, int, Task<List<DrawingVisual>>> RequestGetAsDrawingVisual;
 
-    public Action<System.Net.WebProxy> RequestSetProxy;
+    //public Action<System.Net.WebProxy?> RequestSetProxy;
 
-    public Func<System.Net.WebProxy> RequestGetProxy;
+    //public Func<System.Net.WebProxy?> RequestGetProxy;
 
     public Action<MapAction, Cursor> RequestSetDefaultCursor;
 
@@ -1200,28 +1229,8 @@ public abstract class MapViewModelBase : ViewModelBase
             await CheckNetAccess();
         }
 
-        RequestSetTileService?.Invoke(baseMap, MapSettings.IsBaseMapCacheEnabled, MapSettings.BaseMapCacheDirectory, !IsConnected, getLocalFileName, opacity);
+        RequestSetTileService?.Invoke(baseMap, BaseMapSettings.IsBaseMapCacheEnabled, BaseMapSettings.BaseMapCacheDirectory, !IsConnected, getLocalFileName, opacity);
     }
-
-    //public async Task SetTileService(string provider, TileType tileType, Func<TileInfo, string> getFileName = null)
-    //{
-    //    provider = provider.ToUpper();
-
-    //    if (!IsConnected)
-    //    {
-    //        await CheckInternetAccess();
-    //    }
-
-    //    if (!MapProviders.ContainsKey(provider))
-    //    {
-    //        return;
-    //    }
-
-    //    var mapProvider = MapProviders[provider](tileType);
-
-    //    this.RequestSetTileService?.Invoke(mapProvider, MapSettings.IsBaseMapCacheEnabled, MapSettings.BaseMapCacheDirectory, !IsConnected, getFileName);
-
-    //}
 
     #endregion
 
@@ -1793,6 +1802,12 @@ public abstract class MapViewModelBase : ViewModelBase
 
     #region General
 
+    public void UpdateBaseMapOpacity(double opacity)
+    {
+        foreach (var layer in Layers.Where(i => i.Type == LayerType.BaseMap))
+            layer.Opacity = opacity;
+    }
+
     public async Task SetIsBusy(bool isBusy)
     {
         _isBusy = isBusy;
@@ -1809,11 +1824,45 @@ public abstract class MapViewModelBase : ViewModelBase
         });
     }
 
-    public async void SetProxy(System.Net.WebProxy proxy)
+    private void ConfigHttpClient(System.Net.WebProxy? proxy)
     {
-        RequestSetProxy?.Invoke(proxy);
+
+        if (proxy?.Address != null)
+        {
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.Proxy = proxy;
+            handler.UseProxy = true;
+            HttpClient = new System.Net.Http.HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: 10) };
+            HttpClient.DefaultRequestHeaders.Add("User-Agent", "app!");
+        }
+        else
+        {
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.Proxy = null;
+            handler.UseProxy = false;
+            HttpClient = new System.Net.Http.HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: 10) };
+            HttpClient.DefaultRequestHeaders.Add("User-Agent", "app!");
+        }
+
+    }
+
+    public async void SetProxy(System.Net.WebProxy? proxy)
+    {
+        ConfigHttpClient(proxy);
+
+        this.FireProxySettingsChanged?.Invoke(this.ProxySettings);
 
         await CheckNetAccess();
+    }
+
+    public async virtual Task CheckNetAccess()
+    {
+        if (DoNotCheckInternet)
+            return;
+
+        var proxy = this.ProxySettings.GetProxy();// RequestGetProxy?.Invoke();
+
+        IsConnected = await NetHelper.IsConnectedToInternet(proxy);
     }
 
     public void SetMapCursorSet1()
@@ -1835,18 +1884,6 @@ public abstract class MapViewModelBase : ViewModelBase
     public void SetCursor(Cursor cursor)
     {
         RequestSetCursor?.Invoke(cursor);
-    }
-
-    public async virtual Task CheckNetAccess()
-    {
-        if (DoNotCheckInternet)
-        {
-            return;
-        }
-
-        var proxy = RequestGetProxy?.Invoke();
-
-        IsConnected = await NetHelper.IsConnectedToInternet(proxy);
     }
 
 
@@ -3110,7 +3147,6 @@ public abstract class MapViewModelBase : ViewModelBase
             IsBusy = false;
         }
     }
-
 
     public virtual async Task AddGeoJson(object owner)
     {

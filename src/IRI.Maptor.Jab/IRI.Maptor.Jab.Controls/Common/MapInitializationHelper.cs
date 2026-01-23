@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Abstractions;
+using IRI.Maptor.Jab.Common.Data;
+using IRI.Maptor.Jab.Common.Models.Settings;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Controls.Common.Defaults;
 using IRI.Maptor.Jab.Controls.Services.Dialog;
@@ -30,9 +30,10 @@ public static class MapInitializationHelper
     /// <returns>The initialized presenter instance</returns>
     public static async Task<T> InitializeMapAsync<T>(
         MapViewer mapView,
-        Window ownerWindow,
+        System.Windows.Window ownerWindow,
         T presenter,
-        MapViewerConfiguration? config = null) where T : MapViewModelBase
+        IMapSettings? mapSettings
+        /*MapViewerConfiguration? config = null*/) where T : MapViewModelBase
     {
         if (mapView == null)
             throw new ArgumentNullException(nameof(mapView));
@@ -41,8 +42,11 @@ public static class MapInitializationHelper
         if (presenter == null)
             throw new ArgumentNullException(nameof(presenter));
 
+        mapView.Pan();
+
         // Use default configuration if none provided
-        config ??= MapViewerConfiguration.Default;
+        //config ??= MapViewerConfiguration.Default;
+        mapSettings ??= MapSettings.Default;
 
         // Register presenter with MapViewer (this sets up all the Request* delegates)
         await mapView.Register(presenter);
@@ -53,11 +57,13 @@ public static class MapInitializationHelper
         // Initialize presenter with default services
         presenter.Initialize(dialogService, requestShowGoToView, requestShowSymbologyView);
 
-        // Configure MapViewer with common settings
-        ConfigureMapViewer(mapView, config);
 
-        // Configure presenter settings
-        ConfigurePresenterSettings(presenter, config);
+
+        // Configure MapViewer with common settings
+        ConfigureMapViewer(mapView, mapSettings);
+
+        //// Configure presenter settings
+        //ConfigurePresenterSettings(presenter, config);
 
         return presenter;
     }
@@ -65,8 +71,8 @@ public static class MapInitializationHelper
     /// <summary>
     /// Creates default dialog service and action delegates for the presenter.
     /// </summary>
-    private static (IDialogService dialogService, Action<IRI.Maptor.Sta.Common.Primitives.Point> requestShowGoToView, Action<ILayer> requestShowSymbologyView) CreateDefaultServices(
-        Window ownerWindow,
+    private static (IDialogService dialogService, Action<Point> requestShowGoToView, Action<ILayer> requestShowSymbologyView) CreateDefaultServices(
+        System.Windows.Window ownerWindow,
         MapViewModelBase presenter)
     {
         var dialogService = new DefaultDialogService(ownerWindow);
@@ -79,48 +85,34 @@ public static class MapInitializationHelper
     /// <summary>
     /// Configures MapViewer with common settings based on the configuration.
     /// </summary>
-    private static void ConfigureMapViewer(MapViewer mapView, MapViewerConfiguration config)
+    private static void ConfigureMapViewer(MapViewer mapView, IMapSettings config)
     {
-        if (config.EnablePan)
-        {
-            mapView.Pan();
-        }
+        //if (config.EnablePan)
+        //{
+        //    mapView.Pan();
+        //}
 
-        if (config.EnableMouseWheelZoom)
+        if (config.IsMouseWheelZoomEnabled)
         {
             mapView.EnableZoomingOnMouseWheel();
         }
 
-        if (config.EnableGoogleZoomLevels)
-        {
-            mapView.IsGoogleZoomLevelsEnabled = true;
-        }
+        //if (config.IsGoogleZoomLevelsEnabled)
+        //{
+        //    mapView.IsGoogleZoomLevelsEnabled = true;
+        //}
 
-        if (config.InitialCursor != null)
-        {
-            mapView.SetCursor(config.InitialCursor);
-        }
+        //if (config.InitialCursor != null)
+        //{
+        //    mapView.SetCursor(config.InitialCursor);
+        //}
 
         if (config.InitialExtent != null)
         {
             mapView.ZoomToExtent(config.InitialExtent.Value);
         }
+
     }
 
-    /// <summary>
-    /// Configures presenter settings based on the configuration.
-    /// </summary>
-    private static void ConfigurePresenterSettings(MapViewModelBase presenter, MapViewerConfiguration config)
-    {
-        if (config.MinGoogleZoomLevel > 0)
-        {
-            presenter.MapSettings.MinGoogleZoomLevel = config.MinGoogleZoomLevel;
-        }
-
-        if (config.MaxGoogleZoomLevel > 0)
-        {
-            presenter.MapSettings.MaxGoogleZoomLevel = config.MaxGoogleZoomLevel;
-        }
-    }
 }
 

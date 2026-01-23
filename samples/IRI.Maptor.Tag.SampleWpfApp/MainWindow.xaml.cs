@@ -7,6 +7,7 @@ using IRI.Maptor.Jab.Controls.Common;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Jab.Common.Data;
 
 namespace IRI.Maptor.Tag.SampleWpfApp;
 
@@ -32,10 +33,9 @@ public partial class MainWindow : Window
         //    MessageBox.Show("error!");
         //}
 
-        var config = new MapViewerConfiguration
-        {
-            InitialExtent = BoundingBoxes.WebMercator_Africa
-        };
+        var config = ZoomSettings.Default;
+        config.InitialExtent = BoundingBoxes.WebMercator_Africa;
+
 
         var presenter = await MapInitializationHelper.InitializeMapAsync(
             this.map,

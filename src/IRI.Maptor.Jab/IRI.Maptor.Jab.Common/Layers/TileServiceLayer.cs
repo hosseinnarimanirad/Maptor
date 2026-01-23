@@ -139,7 +139,7 @@ public class TileServiceLayer : BaseLayer
         return result;
     }
 
-    public async Task<GeoReferencedImage> DownloadTileAsync(TileInfo tile, WebProxy proxy)
+    private async Task<GeoReferencedImage> DownloadTileAsync(TileInfo tile, WebProxy proxy)
     {
         try
         {
@@ -220,9 +220,9 @@ public class TileServiceLayer : BaseLayer
 
             //System.Diagnostics.Debug.WriteLine("Getting Tile at " + url);
 
-            var response = await client.GetAsync(url);
-
-            var byteImage = await response.Content.ReadAsByteArrayAsync();
+            //var response = await client.GetAsync(url);
+            //var byteImage = await response.Content.ReadAsByteArrayAsync();
+            var byteImage = await client.GetByteArrayAsync(url);
 
             if (IRI.Maptor.Jab.Common.Helpers.ImageUtility.CreateBitmapImage(byteImage) == null)
                 return GetNotFoundImage(tile);
