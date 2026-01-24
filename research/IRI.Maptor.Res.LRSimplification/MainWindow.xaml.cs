@@ -4,6 +4,7 @@ using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Res.LRSimplification.Common;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Controls.Common;
+using IRI.Maptor.Jab.Common.Data;
 
 namespace IRI.Maptor.Res.LRSimplification;
 /// <summary>
@@ -60,7 +61,8 @@ public partial class MainWindow : Window
         var presenter = await MapInitializationHelper.InitializeMapAsync(
             this.map,
             this,
-            new ViewModel.ApplicationPresenter());
+            new ViewModel.ApplicationPresenter(),
+            MapSettings.Default);
 
         this.DataContext = presenter;
 

@@ -1,4 +1,5 @@
 ﻿using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Common.Data;
 using IRI.Maptor.Jab.Controls.Common;
 using System; 
 using System.Text;
@@ -23,7 +24,8 @@ public partial class MainWindow : Window
         var presenter = await MapInitializationHelper.InitializeMapAsync(
             this.map,
             this,
-            new ApplicationPresenter());
+            new ApplicationPresenter(),
+            MapSettings.Default);
 
         this.DataContext = presenter;
 

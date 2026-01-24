@@ -83,7 +83,7 @@ public abstract class MapViewModelBase : ViewModelBase
     public BaseMapSettingsModel BaseMapSettings
     {
         get => _baseMapSettings;
-        private set
+        set
         {
             if (_baseMapSettings != null)
                 _baseMapSettings.OnOpacityChanged -= BaseMapSettings_OnOpacityChanged;

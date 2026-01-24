@@ -33,7 +33,7 @@ public partial class MainWindow : Window
         //    MessageBox.Show("error!");
         //}
 
-        var config = ZoomSettings.Default;
+        var config = MapSettings.Default;
         config.InitialExtent = BoundingBoxes.WebMercator_Africa;
 
 

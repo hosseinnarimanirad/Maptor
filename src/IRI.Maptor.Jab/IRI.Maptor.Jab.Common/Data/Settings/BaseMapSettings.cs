@@ -9,7 +9,7 @@ public class BaseMapSettings : /*ValueObject, */IBaseMapSettings
     public string? BaseMapCacheDirectory { get; set; } = $"{Environment.CurrentDirectory}\\Data";
     public bool IsBaseMapCacheEnabled { get; set; } = true;
 
-    private double _baseMapOpacity = 1;
+    private double _baseMapOpacity = 0.7;
 
     public double BaseMapOpacity
     {

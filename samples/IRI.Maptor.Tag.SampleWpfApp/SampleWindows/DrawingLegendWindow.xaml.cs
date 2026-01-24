@@ -4,7 +4,8 @@ using System.Windows;
 using IRI.Maptor.Jab.Controls.Common;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.TileServices;
-using IRI.Maptor.Tag.SampleWpfApp.ViewModel; 
+using IRI.Maptor.Tag.SampleWpfApp.ViewModel;
+using IRI.Maptor.Jab.Common.Data;
 
 namespace IRI.Maptor.Tag.SampleWpfApp.SampleWindows;
 /// <summary>
@@ -23,7 +24,7 @@ public partial class DrawingLegendWindow : Window
         System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
         // Initialize map presenter (viewmodel)
-        var config = new MapViewerConfiguration
+        var config = new MapSettings()
         {
             InitialExtent = BoundingBoxes.WebMercator_Africa
         };
