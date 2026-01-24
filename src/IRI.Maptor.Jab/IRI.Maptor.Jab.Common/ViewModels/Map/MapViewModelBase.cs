@@ -2718,6 +2718,32 @@ public abstract class MapViewModelBase : ViewModelBase
         await AddKmlfile(fileName, owner);
     }
 
+    public virtual async Task AddKmzfile(object owner, int? maxSizeInKB)
+    {
+        IsBusy = true;
+
+        var fileName = await DialogService.ShowOpenFileDialogAsync("Compressed KML files (KMZ)|*.kmz", owner);
+
+        if (!File.Exists(fileName))
+        {
+            IsBusy = false;
+
+            return;
+        }
+
+        FileInfo info = new FileInfo(fileName);
+
+        if (maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
+        {
+            await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", owner);
+
+            return;
+        }
+
+        await AddKmzfile(fileName, owner);
+    }
+    
+
     public async Task AddKmlfile(string fileName, object owner)
     {
         try
@@ -2744,6 +2770,81 @@ public abstract class MapViewModelBase : ViewModelBase
                 try
                 {
                     var geometries = KmlReader.ReadFromFile(fileName);
+                    features = geometries.ToFeatures();
+                }
+                catch
+                {
+                    features = new List<Feature<Point>>();
+                }
+            }
+
+            if (features.IsNullOrEmpty())
+            {
+                await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل KML یافت نشد.", _error, owner);
+                return;
+            }
+
+            features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
+
+            var dataSource = new MemoryDataSource(features);
+            var geometryType = features.First().TheGeometry.Type;
+            var symbolizers = features.CreateSymbolizersFromKml(geometryType);
+
+            var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
+                                dataSource,
+                                symbolizers,
+                                LayerType.VectorLayer,
+                                RenderMode.Default,
+                                RasterizationMethod.GdiPlus,
+                                ScaleInterval.All)
+            {
+                IsSearchable = true
+            };
+
+            AddLayer(vectorLayer);
+        }
+        catch (IOException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        catch (Exception ex)
+        {
+            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    public async Task AddKmzfile(string fileName, object owner)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+                throw new FileNotFoundException($"KMZ file '{fileName}' was not found.", fileName);
+
+            List<Feature<Point>> features;
+
+            try
+            {
+                var kmzFeatures = KmzReader.ReadFeaturesFromFile(fileName);
+                features = kmzFeatures.ToFeatures();
+            }
+            catch
+            {
+                features = new List<Feature<Point>>();
+            }
+
+            if (features.IsNullOrEmpty())
+            {
+                try
+                {
+                    var geometries = KmzReader.ReadFromFile(fileName);
                     features = geometries.ToFeatures();
                 }
                 catch
@@ -3385,6 +3486,23 @@ public abstract class MapViewModelBase : ViewModelBase
             }
 
             return _addKmlfileCommand;
+        }
+    }
+
+    private RelayCommand _addKmzfileCommand;
+    public RelayCommand AddKmzfileCommand
+    {
+        get
+        {
+            if (_addKmzfileCommand == null)
+            {
+                _addKmzfileCommand = new RelayCommand(async param =>
+                {
+                    await AddKmzfile(param, null);
+                });
+            }
+
+            return _addKmzfileCommand;
         }
     }
 
