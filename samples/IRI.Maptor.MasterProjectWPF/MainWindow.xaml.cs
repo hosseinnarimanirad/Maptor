@@ -98,7 +98,7 @@ public partial class MainWindow : Window
     {
         Geometry<IRI.Maptor.Sta.Common.Primitives.Point>.FromWkt(wkt, 0).SaveAsDxf(fileName);
 
-        var geometries = DxfReader.ReadFromFile(fileName, srid: 0);
+        var geometries = DxfReader.ReadFromFile(fileName, defaultSrid: 0);
 
         if (geometries.First().AsWkt() != wkt)
             return;

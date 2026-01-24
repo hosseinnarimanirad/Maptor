@@ -33,7 +33,7 @@ public class Geometry_DxfTest
 
         // Act
         var dxfContent = originalGeometry.ToDxf();
-        var restoredGeometries = DxfReader.Read(dxfContent, srid: 0);
+        var restoredGeometries = DxfReader.Read(dxfContent, defaultSrid: 0);
 
         // Assert
         Assert.NotNull(restoredGeometries);
@@ -83,7 +83,7 @@ public class Geometry_DxfTest
         {
             // Act
             originalLineString.SaveAsDxf(tempFilePath);
-            var restoredGeometries = DxfReader.ReadFromFile(tempFilePath, srid: 0);
+            var restoredGeometries = DxfReader.ReadFromFile(tempFilePath, defaultSrid: 0);
 
             // Assert
             Assert.NotNull(restoredGeometries);
@@ -148,7 +148,7 @@ public class Geometry_DxfTest
         const string emptyDxf = "";
 
         // Act
-        var geometries = DxfReader.Read(emptyDxf, srid: 0);
+        var geometries = DxfReader.Read(emptyDxf, defaultSrid: 0);
 
         // Assert
         Assert.NotNull(geometries);
@@ -323,7 +323,7 @@ public class Geometry_DxfTest
 
         // Act
         var dxfContent = lineString.ToDxf();
-        var restoredGeometries = DxfReader.Read(dxfContent, srid: 0);
+        var restoredGeometries = DxfReader.Read(dxfContent, defaultSrid: 0);
 
         // Assert
         Assert.NotNull(restoredGeometries);
@@ -352,7 +352,7 @@ public class Geometry_DxfTest
 
         // Act
         var dxfContent = originalPolygon.ToDxf();
-        var restoredGeometries = DxfReader.Read(dxfContent, srid: 0);
+        var restoredGeometries = DxfReader.Read(dxfContent, defaultSrid: 0);
 
         // Assert
         Assert.NotNull(restoredGeometries);
@@ -375,7 +375,7 @@ public class Geometry_DxfTest
 
         // Act
         var dxfContent = originalPolygon.ToDxf();
-        var restoredGeometries = DxfReader.Read(dxfContent, srid: 0);
+        var restoredGeometries = DxfReader.Read(dxfContent, defaultSrid: 0);
 
         // Assert
         Assert.NotNull(restoredGeometries);
@@ -397,7 +397,7 @@ public class Geometry_DxfTest
     public void Read_WithMalformedOrEmptyDxf_ShouldHandleGracefully(string dxfContent)
     {
         // Act
-        var geometries = DxfReader.Read(dxfContent, srid: 0);
+        var geometries = DxfReader.Read(dxfContent, defaultSrid: 0);
 
         // Assert - Should return list (empty or otherwise) rather than throw
         Assert.NotNull(geometries);
@@ -426,8 +426,8 @@ public class Geometry_DxfTest
         var dxf2 = point2.ToDxf();
 
         // Assert - Both should be valid DXF that can be read back
-        var restored1 = DxfReader.Read(dxf1, srid: 0);
-        var restored2 = DxfReader.Read(dxf2, srid: 0);
+        var restored1 = DxfReader.Read(dxf1, defaultSrid: 0);
+        var restored2 = DxfReader.Read(dxf2, defaultSrid: 0);
         
         Assert.NotNull(restored1);
         Assert.NotNull(restored2);

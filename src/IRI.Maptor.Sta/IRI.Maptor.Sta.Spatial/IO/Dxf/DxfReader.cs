@@ -14,16 +14,16 @@ namespace IRI.Maptor.Sta.Spatial.IO.Dxf;
 /// </summary>
 public class DxfReader
 {
-    public static List<Geometry<Point>> ReadFromFile(string filePath, int? srid)
+    public static List<Geometry<Point>> ReadFromFile(string filePath, int? defaultSrid)
     {
         if (!File.Exists(filePath))
             throw new FileNotFoundException("DXF file not found", filePath);
 
         var content = File.ReadAllText(filePath);
-        return Read(content, srid);
+        return Read(content, defaultSrid);
     }
 
-    public static List<Geometry<Point>> Read(string dxfContent, int? srid)
+    public static List<Geometry<Point>> Read(string dxfContent, int? defaultSrid)
     {
         if (string.IsNullOrWhiteSpace(dxfContent))
             return [Geometry<Point>.Empty];
@@ -31,18 +31,18 @@ public class DxfReader
         var lines = dxfContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
         // Extract SRID from DXF if not explicitly provided
-        if (srid == 0)
+        //if (defaultSrid == 0 || defaultSrid is null)
+        //{
+        var detectedSrid = ExtractSridFromDxf(lines);
+        if (detectedSrid > 0)
         {
-            var detectedSrid = ExtractSridFromDxf(lines);
-            if (detectedSrid > 0)
-            {
-                srid = detectedSrid;
-            }
+            defaultSrid = detectedSrid;
         }
+        //}
 
-        srid = srid ?? SridHelper.GeodeticWGS84;
+        defaultSrid = defaultSrid ?? SridHelper.GeodeticWGS84;
 
-        var entities = ParseEntities(lines, srid.Value);
+        var entities = ParseEntities(lines, defaultSrid.Value);
 
         if (entities.Count == 0)
             return [Geometry<Point>.Empty];
@@ -58,7 +58,7 @@ public class DxfReader
 
         if (!polygonRings.IsNullOrEmpty())
         {
-            var polygonOrMultiPolygon = Geometry<Point>.CreatePolygonOrMultiPolygon(polygonRings, srid.Value);
+            var polygonOrMultiPolygon = Geometry<Point>.CreatePolygonOrMultiPolygon(polygonRings, defaultSrid.Value);
 
             if (polygonOrMultiPolygon.Type == GeometryType.MultiPolygon)
             {

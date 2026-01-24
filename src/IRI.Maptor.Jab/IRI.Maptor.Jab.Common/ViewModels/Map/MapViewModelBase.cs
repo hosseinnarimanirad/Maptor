@@ -2795,11 +2795,11 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    public virtual async Task AddDxffile(object owner, int? maxSizeInKB)
+    public virtual async Task AddDxffile(object defaultSrid, int? maxSizeInKB)
     {
         IsBusy = true;
 
-        var fileName = await DialogService.ShowOpenFileDialogAsync("Drawing Exchange Format (DXF)|*.dxf", owner);
+        var fileName = await DialogService.ShowOpenFileDialogAsync("Drawing Exchange Format (DXF)|*.dxf", ownerWindow: null);
 
         if (!File.Exists(fileName))
         {
@@ -2812,22 +2812,29 @@ public abstract class MapViewModelBase : ViewModelBase
 
         if (maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
         {
-            await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", owner);
+            await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", ownerWindow: null);
 
             return;
         }
 
-        await AddDxffile(fileName, owner);
+        var srid = 0;
+
+        if (defaultSrid != null)
+        {
+            int.TryParse(defaultSrid.ToString(), out srid);
+        }
+
+        await AddDxffile(fileName, owner: null, srid);
     }
 
-    public async Task AddDxffile(string fileName, object owner)
+    public async Task AddDxffile(string fileName, object owner, int defaultSrid)
     {
         try
         {
             if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
                 throw new FileNotFoundException($"DXF file '{fileName}' was not found.", fileName);
 
-            var geometries = DxfReader.ReadFromFile(fileName, null);
+            var geometries = DxfReader.ReadFromFile(fileName, defaultSrid);
 
             if (geometries == null || geometries.IsNullOrEmpty())
             {
@@ -3365,7 +3372,6 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
     private RelayCommand _addKmlfileCommand;
-
     public RelayCommand AddKmlfileCommand
     {
         get
@@ -3383,7 +3389,6 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
     private RelayCommand _addDxffileCommand;
-
     public RelayCommand AddDxffileCommand
     {
         get
