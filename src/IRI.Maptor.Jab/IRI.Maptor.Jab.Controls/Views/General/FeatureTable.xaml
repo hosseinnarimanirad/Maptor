@@ -88,7 +88,7 @@
                     SelectionChanged="grid_SelectionChanged" CellEditEnding="grid_CellEditEnding" EnableColumnVirtualization="False"
                     AddingNewItem="grid_AddingNewItem" MouseDoubleClick="grid_MouseDoubleClick" DataContextChanged="grid_DataContextChanged"
                     dgx:DataGridFilter.IsAutoFilterEnabled="True" SelectionUnit="FullRow" Background="Transparent"
-                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True">  
+                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True" RowHeight="10">  
         </DataGrid>
         <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" LastChildFill="False">
             <!--<telerik:RadDataPager DisplayMode="FirstLastPreviousNextNumeric,Text" IsTotalItemCountFixed="True"
