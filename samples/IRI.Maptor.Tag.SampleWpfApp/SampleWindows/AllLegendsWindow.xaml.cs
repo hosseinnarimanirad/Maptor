@@ -33,7 +33,8 @@ public partial class AllLegendsWindow : Window
             this.map,
             this,
             new AppViewModel(),
-            config);
+            config,
+            BaseMapSettings.Default);
 
         this.DataContext = presenter;
 

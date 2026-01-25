@@ -124,9 +124,9 @@ public class MapSettingsModel : Notifier, IMapSettings
 
         //this.FireIsDoubleClickZoomEnabledChanged = fireIsDoubleClickZoomEnabledChanged;
 
-        this.IsMouseWheelZoomEnabled = true;
+        //this.IsMouseWheelZoomEnabled = true;
 
-        this.IsDoubleClickZoomEnabled = true;
+        //this.IsDoubleClickZoomEnabled = true;
     }
 
     private EditableFeatureLayerOptions _drawingOptions = EditableFeatureLayerOptions.CreateDefaultForDrawing(true, true, true);

@@ -86,7 +86,10 @@ public abstract class MapViewModelBase : ViewModelBase
         set
         {
             if (_baseMapSettings != null)
+            {
                 _baseMapSettings.OnOpacityChanged -= BaseMapSettings_OnOpacityChanged;
+                _baseMapSettings.OnBaseMapUrlChanged += BaseMapSettings_OnBaseMapUrlChanged;
+            }
 
             _baseMapSettings = value ?? new BaseMapSettingsModel(IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default/*, UpdateBaseMapOpacity*/);
 
@@ -94,7 +97,15 @@ public abstract class MapViewModelBase : ViewModelBase
 
             _baseMapSettings.OnOpacityChanged -= BaseMapSettings_OnOpacityChanged;
             _baseMapSettings.OnOpacityChanged += BaseMapSettings_OnOpacityChanged;
+
+            _baseMapSettings.OnBaseMapUrlChanged -= BaseMapSettings_OnBaseMapUrlChanged;
+            _baseMapSettings.OnBaseMapUrlChanged += BaseMapSettings_OnBaseMapUrlChanged;
         }
+    }
+
+    private void BaseMapSettings_OnBaseMapUrlChanged(object? sender, EventArgs e)
+    {
+        UpdateTilesServices();
     }
 
     private void BaseMapSettings_OnOpacityChanged(object? sender, double e) => UpdateBaseMapOpacity(e);
@@ -456,113 +467,60 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    #region BaseMap Mode
+    //#region BaseMap Mode
 
-    private string _localNetworkBaseMapBaseUrl;
-    public string LocalNetworkBaseMapBaseUrl
-    {
-        get { return _localNetworkBaseMapBaseUrl; }
-        set
-        {
-            _localNetworkBaseMapBaseUrl = value;
-            RaisePropertyChanged();
+    //private string _localNetworkBaseMapBaseUrl;
+    //public string LocalNetworkBaseMapBaseUrl
+    //{
+    //    get { return _localNetworkBaseMapBaseUrl; }
+    //    set
+    //    {
+    //        _localNetworkBaseMapBaseUrl = value;
+    //        RaisePropertyChanged();
 
-            UpdateTilesServices();
-        }
-    }
+    //        UpdateTilesServices();
+    //    }
+    //}
 
-    private string _proxyAppBaseMapBaseUrl;
-    public string ProxyAppBaseMapBaseUrl
-    {
-        get { return _proxyAppBaseMapBaseUrl; }
-        set
-        {
-            _proxyAppBaseMapBaseUrl = value;
-            RaisePropertyChanged();
+    //private string _proxyAppBaseMapBaseUrl;
+    //public string ProxyAppBaseMapBaseUrl
+    //{
+    //    get { return _proxyAppBaseMapBaseUrl; }
+    //    set
+    //    {
+    //        _proxyAppBaseMapBaseUrl = value;
+    //        RaisePropertyChanged();
 
-            UpdateTilesServices();
-        }
-    }
+    //        UpdateTilesServices();
+    //    }
+    //}
 
 
 
-    private TileMapProviderMode _selectedTileMapProviderMode = TileMapProviderMode.Internet;
-    public virtual TileMapProviderMode SelectedTileMapProviderMode
-    {
-        get { return _selectedTileMapProviderMode; }
-        set
-        {
-            _selectedTileMapProviderMode = value;
-            RaisePropertyChanged();
+    //private TileMapProviderMode _selectedTileMapProviderMode = TileMapProviderMode.Internet;
+    //public virtual TileMapProviderMode SelectedTileMapProviderMode
+    //{
+    //    get { return _selectedTileMapProviderMode; }
+    //    set
+    //    {
+    //        _selectedTileMapProviderMode = value;
+    //        RaisePropertyChanged();
 
-            UpdateTilesServices();
-        }
-    }
+    //        UpdateTilesServices();
+    //    }
+    //}
 
     private void UpdateTilesServices()
     {
         foreach (var item in this.MapProviders)
         {
-            item.ChangeMode(SelectedTileMapProviderMode, LocalNetworkBaseMapBaseUrl, ProxyAppBaseMapBaseUrl/*IRI.App.MakanNegarSaba.Properties.Settings.Default.baseMapUrl*/);
+            item.ChangeMode(BaseMapSettings.SelectedTileMapProviderMode, BaseMapSettings.LocalNetworkUrl, BaseMapSettings.ProxyAppUrl);
         }
     }
 
-    //private bool _isLocalBaseMapMode;
-    //public bool IsLocalBaseMapMode
-    //{
-    //    get { return _isLocalBaseMapMode; }
-    //    set
-    //    {
-    //        _isLocalBaseMapMode = value;
-    //        RaisePropertyChanged();
+    //#endregion
 
-    //        //Properties.Settings.Default.IsLocalBaseMapMode = value;
-
-    //        foreach (var item in this.MapProviders)
-    //        {
-    //            item.ChangeMode(value ? TileMapProviderMode.LocalNetwork : TileMapProviderMode.Internet, LocalNetworkBaseMapBaseUrl/*IRI.App.MakanNegarSaba.Properties.Settings.Default.baseMapUrl*/);
-    //        }
-
-    //    }
-    //}
-
-    //private bool _isOnlineBaseMapMode;
-    //public bool IsOnlineBaseMapMode
-    //{
-    //    get { return _isOnlineBaseMapMode; }
-    //    set
-    //    {
-    //        _isOnlineBaseMapMode = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
-
-    //private bool _isProxyAppBaseMapMode;
-    //public bool IsProxyAppBaseMapMode
-    //{
-    //    get { return _isProxyAppBaseMapMode; }
-    //    set
-    //    {
-    //        _isProxyAppBaseMapMode = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
-
-
-    #endregion
-
-    //private Dictionary<string, Func<TileType, IMapProvider>> _mapProviders;
-    //public Dictionary<string, Func<TileType, IMapProvider>> MapProviders
-    //{
-    //    get { return _mapProviders; }
-    //    set
-    //    {
-    //        _mapProviders = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
     private List<TileMapProvider> _mapProviders;
-
     public List<TileMapProvider> MapProviders
     {
         get { return _mapProviders; }
@@ -574,7 +532,6 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
     private TileMapProvider _selectedMapProvider;
-
     public TileMapProvider SelectedMapProvider
     {
         get { return _selectedMapProvider; }
@@ -891,11 +848,6 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         ConfigHttpClient(null);
 
-        this.ProxySettings = new ProxySettingsModel(IRI.Maptor.Jab.Common.Data.ProxySettings.Default); ;
-        this.BaseMapSettings = new BaseMapSettingsModel(IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default);
-        this.MapSettings = new MapSettingsModel(IRI.Maptor.Jab.Common.Data.MapSettings.Default);
-        this.GeneralSettings = new GeneralSettingsModel(IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
-
         _drawingItems.CollectionChanged += (sender, e) =>
         {
             RaisePropertyChanged(nameof(CanMoveDrawingItemDown));
@@ -929,7 +881,12 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public virtual Task InitializeAsync() => Task.CompletedTask;
 
-    public virtual void Initialize(IDialogService dialogService, Action<Point> requestShowGoToView, Action<ILayer> requestShowSymbologyView)
+    public virtual void Initialize(
+        IDialogService dialogService,
+        IMapSettings? mapSettings,
+        IBaseMapSettings? baseMapSettings,
+        Action<Point> requestShowGoToView,
+        Action<ILayer> requestShowSymbologyView)
     {
         this.DialogService = dialogService;
 
@@ -939,6 +896,11 @@ public abstract class MapViewModelBase : ViewModelBase
         this.RequestClearAll = this.ClearAll;
 
         //this.BaseMapCacheDirectory = Environment.CurrentDirectory + "\\Data";
+
+        this.ProxySettings = new ProxySettingsModel(IRI.Maptor.Jab.Common.Data.ProxySettings.Default);
+        this.BaseMapSettings = new BaseMapSettingsModel(baseMapSettings ?? IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default);
+        this.MapSettings = new MapSettingsModel(mapSettings ?? IRI.Maptor.Jab.Common.Data.MapSettings.Default);
+        this.GeneralSettings = new GeneralSettingsModel(IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
 
         if (this.MapSettings.MinGoogleZoomLevel == 0)
             this.MapSettings.MinGoogleZoomLevel = 2;
@@ -2742,7 +2704,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await AddKmzfile(fileName, owner);
     }
-    
+
 
     public async Task AddKmlfile(string fileName, object owner)
     {

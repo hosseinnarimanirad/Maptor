@@ -1,4 +1,6 @@
-﻿namespace IRI.Maptor.Jab.Common.Abstractions;
+﻿using IRI.Maptor.Jab.Common.TileServices;
+
+namespace IRI.Maptor.Jab.Common.Abstractions;
 
 public interface IBaseMapSettings
 {
@@ -9,4 +11,6 @@ public interface IBaseMapSettings
 
     string? LocalNetworkUrl { get; set; }
     string? ProxyAppUrl { get; set; }
+
+    TileMapProviderMode SelectedTileMapProviderMode { get; set; }
 }

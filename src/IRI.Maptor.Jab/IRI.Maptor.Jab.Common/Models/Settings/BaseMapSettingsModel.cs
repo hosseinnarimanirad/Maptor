@@ -2,6 +2,7 @@
 
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Jab.Common.Abstractions;
+using IRI.Maptor.Jab.Common.TileServices;
 
 namespace IRI.Maptor.Jab.Common.Models.Settings;
 
@@ -9,8 +10,10 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
 {
     private readonly IBaseMapSettings _baseMapSettings;
 
+
     public event EventHandler<double>? OnOpacityChanged;
 
+    public event EventHandler? OnBaseMapUrlChanged;
 
 
     private Func<TileInfo, string>? _getFileName = null;
@@ -44,10 +47,7 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
             RaisePropertyChanged();
         }
     }
-
-
-    //private Action<double>? FireOpacityChanged;
-
+      
     public double BaseMapOpacity
     {
         get { return _baseMapSettings.BaseMapOpacity; }
@@ -62,8 +62,7 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
             //    layer.Opacity = value;
         }
     }
-
-
+     
     public string? LocalNetworkUrl
     {
         get => _baseMapSettings.LocalNetworkUrl;
@@ -71,6 +70,8 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
         {
             _baseMapSettings.LocalNetworkUrl = value;
             RaisePropertyChanged();
+
+            OnBaseMapUrlChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -81,14 +82,29 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
         {
             _baseMapSettings.ProxyAppUrl = value;
             RaisePropertyChanged();
+
+            OnBaseMapUrlChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
-    public BaseMapSettingsModel(IBaseMapSettings baseMapSettings/*, Action<double> fireOpacityChanged*/)
-    {
-        //FireOpacityChanged = fireOpacityChanged;
 
+    public TileMapProviderMode SelectedTileMapProviderMode
+    {
+        get { return _baseMapSettings.SelectedTileMapProviderMode; }
+        set
+        {
+            _baseMapSettings.SelectedTileMapProviderMode = value;
+            RaisePropertyChanged();
+
+            OnBaseMapUrlChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+
+    public BaseMapSettingsModel(IBaseMapSettings baseMapSettings)
+    { 
         _baseMapSettings = baseMapSettings;
     }
 
+    public IBaseMapSettings GetData() => _baseMapSettings;
 }

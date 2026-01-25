@@ -34,7 +34,8 @@ public partial class TableOfContentWindow : Window
             this.map,
             this,
             new AppViewModel(),
-            config);
+            config,
+            BaseMapSettings.Default);
 
         this.DataContext = presenter;
 

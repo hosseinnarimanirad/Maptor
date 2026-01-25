@@ -41,7 +41,8 @@ public partial class MainWindow : Window
             this.map,
             this,
             new ViewModel.AppViewModel(),
-            config);
+            config,
+            BaseMapSettings.Default);
 
         this.DataContext = presenter;
 

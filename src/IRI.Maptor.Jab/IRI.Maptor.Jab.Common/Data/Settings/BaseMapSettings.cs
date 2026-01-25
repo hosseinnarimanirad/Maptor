@@ -1,6 +1,7 @@
 ﻿using System;
 
 using IRI.Maptor.Jab.Common.Abstractions;
+using IRI.Maptor.Jab.Common.TileServices;
 
 namespace IRI.Maptor.Jab.Common.Data;
 
@@ -31,4 +32,6 @@ public class BaseMapSettings : /*ValueObject, */IBaseMapSettings
     //}
 
     public static BaseMapSettings Default => new BaseMapSettings();
+
+    public TileMapProviderMode SelectedTileMapProviderMode { get; set; } = TileMapProviderMode.Internet;
 }
