@@ -10,6 +10,7 @@ using IRI.Maptor.Sta.Common.Model;
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.TileServices;
+using IRI.Maptor.Jab.Common.Abstractions;
 
 
 namespace IRI.Maptor.Jab.Common;
@@ -179,7 +180,7 @@ public class TileServiceLayer : BaseLayer
         }
     }
 
-    public async Task<GeoReferencedImage> GetTileAsync(TileInfo tile, HttpClient client)
+    public async Task<GeoReferencedImage> GetTileAsync(TileInfo tile, IHttpProtocol client)
     {
         GeoReferencedImage result;
 
@@ -206,7 +207,7 @@ public class TileServiceLayer : BaseLayer
         return result;
     }
 
-    public async Task<GeoReferencedImage> DownloadTileAsync(TileInfo tile, HttpClient client)
+    public async Task<GeoReferencedImage> DownloadTileAsync(TileInfo tile, IHttpProtocol client)
     {
         try
         {

@@ -51,9 +51,7 @@ public abstract class MapViewModelBase : ViewModelBase
 {
     #region Settings
 
-    public System.Net.Http.HttpClient HttpClient { get; set; }
-
-    public Action<ProxySettingsModel>? FireProxySettingsChanged;
+    public IHttpProtocol HttpClient { get; set; } = new HttpProtocol(null);
 
     private ProxySettingsModel _proxySettings;
     public ProxySettingsModel ProxySettings
@@ -64,18 +62,26 @@ public abstract class MapViewModelBase : ViewModelBase
             if (_proxySettings != null)
                 _proxySettings.PropertyChanged -= ProxySettings_OnProxyChanged;
 
-            _proxySettings = value ?? new ProxySettingsModel(IRI.Maptor.Jab.Common.Data.ProxySettings.Default);
+            _proxySettings = value ?? new ProxySettingsModel(Data.ProxySettings.Default);
 
             RaisePropertyChanged();
+
+            HttpClient?.ConfigHttpClient(value);
 
             _proxySettings.OnProxyChanged -= ProxySettings_OnProxyChanged;
             _proxySettings.OnProxyChanged += ProxySettings_OnProxyChanged;
         }
     }
 
-    private void ProxySettings_OnProxyChanged(object? sender, EventArgs e)
+    public Action<ProxySettingsModel>? FireProxySettingsChanged;
+
+    private async void ProxySettings_OnProxyChanged(object? sender, EventArgs e)
     {
-        this.SetProxy(ProxySettings.GetProxy());
+        HttpClient.ConfigHttpClient(this.ProxySettings);
+
+        this.FireProxySettingsChanged?.Invoke(this.ProxySettings);
+
+        await CheckNetAccess();
     }
 
 
@@ -846,7 +852,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public MapViewModelBase()
     {
-        ConfigHttpClient(null);
+        //HttpClient?.ConfigHttpClient(null);
 
         _drawingItems.CollectionChanged += (sender, e) =>
         {
@@ -1786,36 +1792,28 @@ public abstract class MapViewModelBase : ViewModelBase
         });
     }
 
-    private void ConfigHttpClient(System.Net.WebProxy? proxy)
-    {
+    //private void ConfigHttpClient(System.Net.WebProxy? proxy)
+    //{
 
-        if (proxy?.Address != null)
-        {
-            HttpClientHandler handler = new HttpClientHandler();
-            handler.Proxy = proxy;
-            handler.UseProxy = true;
-            HttpClient = new System.Net.Http.HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: 10) };
-            HttpClient.DefaultRequestHeaders.Add("User-Agent", "app!");
-        }
-        else
-        {
-            HttpClientHandler handler = new HttpClientHandler();
-            handler.Proxy = null;
-            handler.UseProxy = false;
-            HttpClient = new System.Net.Http.HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: 10) };
-            HttpClient.DefaultRequestHeaders.Add("User-Agent", "app!");
-        }
+    //    if (proxy?.Address != null)
+    //    {
+    //        HttpClientHandler handler = new HttpClientHandler();
+    //        handler.Proxy = proxy;
+    //        handler.UseProxy = true;
+    //        HttpClient = new System.Net.Http.HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: 10) };
+    //        HttpClient.DefaultRequestHeaders.Add("User-Agent", "app!");
+    //    }
+    //    else
+    //    {
+    //        HttpClientHandler handler = new HttpClientHandler();
+    //        handler.Proxy = null;
+    //        handler.UseProxy = false;
+    //        HttpClient = new System.Net.Http.HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: 10) };
+    //        HttpClient.DefaultRequestHeaders.Add("User-Agent", "app!");
+    //    }
 
-    }
+    //}
 
-    public async void SetProxy(System.Net.WebProxy? proxy)
-    {
-        ConfigHttpClient(proxy);
-
-        this.FireProxySettingsChanged?.Invoke(this.ProxySettings);
-
-        await CheckNetAccess();
-    }
 
     public async virtual Task CheckNetAccess()
     {

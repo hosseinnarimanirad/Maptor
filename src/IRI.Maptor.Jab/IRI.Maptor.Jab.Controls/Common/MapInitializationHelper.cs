@@ -57,9 +57,9 @@ public static class MapInitializationHelper
 
         // Create default services and actions
         var (dialogService, requestShowGoToView, requestShowSymbologyView) = CreateDefaultServices(ownerWindow, presenter);
-        
+
         // Initialize presenter with default services
-        presenter.Initialize(dialogService, requestShowGoToView, requestShowSymbologyView);
+        presenter.Initialize(dialogService, mapSettings, baseMapSettings, requestShowGoToView, requestShowSymbologyView);
 
 
 
