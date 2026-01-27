@@ -47,7 +47,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
         }
     }
 
-    public TileMapProviderMode Mode { get; protected set; } = TileMapProviderMode.Internet;
+    public TileMapAccessMode Mode { get; protected set; } = TileMapAccessMode.Internet;
      
     //in the case of google traffic map, caching should be avoided
     public bool AllowCache { get; set; } = true;
@@ -62,7 +62,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
         string mapTypeResourceKey, 
         byte[]? thumbnail,
         byte[]? thumbnail72,
-        TileMapProviderMode mode = TileMapProviderMode.Internet)
+        TileMapAccessMode mode = TileMapAccessMode.Internet)
     { 
         _urlStrategy = new TileServiceUrlStrategy_Web(providerResourceKey, mapTypeResourceKey);
 
@@ -84,7 +84,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
         RaisePropertyChanged(nameof(Title));
     }
 
-    public bool ShouldBeConnectedToInternet() => Mode == TileMapProviderMode.Internet;
+    public bool ShouldBeConnectedToInternet() => Mode == TileMapAccessMode.Internet;
 
     public override string ToString() => Title;
 
@@ -100,7 +100,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
     public bool Is(string? fullName) => !string.IsNullOrWhiteSpace(fullName) && this.FullName.EqualsIgnoreCase(fullName);
 
     // this is the set strategy method for TileMapProvider as the Context of the TileServiceUrlStrategy
-    public void ChangeMode(TileMapProviderMode newMode, string? localNetworkBaseUrl, string? proxyAppBaseUrl)
+    public void ChangeMode(TileMapAccessMode newMode, string? localNetworkBaseUrl, string? proxyAppBaseUrl)
     {
         //if (this.Mode == newMode)
         //    return;
@@ -109,15 +109,15 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
          
         switch (newMode)
         {
-            case TileMapProviderMode.Internet:
+            case TileMapAccessMode.Internet:
                 _urlStrategy = new TileServiceUrlStrategy_Web(_providerResourceKey, _mapTypeResourceKey);
                 break;
 
-            case TileMapProviderMode.LocalNetwork:
+            case TileMapAccessMode.LocalNetwork:
                 _urlStrategy = new TileServiceUrlStrategy_LocalNetwork(localNetworkBaseUrl!, ProviderEn, MapTypeEn);
                 break;
 
-            case TileMapProviderMode.ProxyApp:
+            case TileMapAccessMode.ProxyApp:
                 _urlStrategy = new TileServiceUrlStrategy_ProxyApp(proxyAppBaseUrl!, _providerResourceKey, _mapTypeResourceKey);
                 break;
 
@@ -136,7 +136,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
 
     public static TileMapProvider CreateLocalNetwork(string providerResourceKey, string mapTypeResourceKey, byte[]? thumbnail, byte[]? thumbnail72, Func<TileInfo, string> interanetUrlFunc)
     {
-        return new TileMapProvider(providerResourceKey, mapTypeResourceKey, thumbnail, thumbnail72, TileMapProviderMode.LocalNetwork)
+        return new TileMapProvider(providerResourceKey, mapTypeResourceKey, thumbnail, thumbnail72, TileMapAccessMode.LocalNetwork)
         {
             _urlStrategy = new TileServiceUrlStrategy_LocalNetwork(interanetUrlFunc),
         };

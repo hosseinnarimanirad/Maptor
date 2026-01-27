@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Media;
 using System.Collections.Generic;
 
@@ -48,9 +48,9 @@ public class DrawingLayer : SymbolizableLayer
                 type = GeometryType.LineString;
                 break;
             case DrawMode.Polygon:
+            case DrawMode.Rectangle:
                 type = GeometryType.Polygon;
                 break;
-            case DrawMode.Rectangle:
             case DrawMode.Freehand:
             default:
                 throw new NotImplementedException();

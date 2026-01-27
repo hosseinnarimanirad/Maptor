@@ -1,4 +1,4 @@
-﻿// BESMELLAHERAHMANERAHIM
+// BESMELLAHERAHMANERAHIM
 // ALLAHOMAAJJELLEVALIEKALFARAJ
 
 using System;
@@ -540,7 +540,7 @@ public partial class MapViewer : NotifiableUserControl
             else
                 this.DisableZoomOnDoubleClick();
         };
-         
+
         //presenter.ZoomSettings.Initialize();
 
         //presenter.ZoomSettings.FireIsGoogleZoomLevelsEnabledChanged = (e) =>
@@ -2543,7 +2543,7 @@ public partial class MapViewer : NotifiableUserControl
 
         var screenLocation = e.GetPosition(this.mapView);
 
-        FrameworkElement view = null;
+        FrameworkElement? view = null;
 
         if (this.Status == MapStatus.Drawing)
         {
@@ -3678,6 +3678,17 @@ public partial class MapViewer : NotifiableUserControl
 
     TaskCompletionSource<Response<Geometry<sb.Point>>> drawingTcs;
 
+
+
+    // Rectangle used for drag-based rectangle drawing (DrawMode.Rectangle)
+    Rectangle drawingRectangle;
+
+    Point rectangleFirstScreenPoint;
+
+    sb.Point rectangleFirstMapPoint;
+
+
+
     private void MapView_MouseDownForPanWhileStartDrawing(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton != MouseButton.Left)
@@ -4104,6 +4115,109 @@ public partial class MapViewer : NotifiableUserControl
         this.prevMouseLocation = e.GetPosition(this.mapView);
     }
 
+
+    private void MapView_MouseDownForRectangleDrawing(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton != MouseButton.Left)
+            return;
+
+        if (this.viewTransform == null)
+            return;
+
+        e.Handled = true;
+
+        this.rectangleFirstScreenPoint = e.GetPosition(this.mapView);
+
+        this.rectangleFirstMapPoint = ScreenToMap(this.rectangleFirstScreenPoint).AsPoint();
+
+        this.drawingRectangle = new Rectangle()
+        {
+            Stroke = drawingOptions.Visual.Stroke,
+            StrokeThickness = drawingOptions.Visual.StrokeThickness,
+            Fill = drawingOptions.Visual.Fill,
+            Tag = new LayerTag(-1) { IsTiled = false, LayerType = LayerType.Drawing }
+        };
+
+        if (this.rectangleFirstMapPoint.IsNaN())
+            return;
+
+        Mouse.Capture(this.mapView);
+
+        drawingRectangle.Width = 0;
+        drawingRectangle.Height = 0;
+
+        if (!this.mapView.Children.Contains(drawingRectangle))
+        {
+            this.mapView.Children.Add(drawingRectangle);
+            Canvas.SetZIndex(drawingRectangle, int.MaxValue);
+        }
+    }
+
+    private void MapView_MouseMoveForRectangleDrawing(object sender, MouseEventArgs e)
+    {
+        if (e.LeftButton != MouseButtonState.Pressed)
+            return;
+
+        Point currentMouseLocation = e.GetPosition(this.mapView);
+
+        Rect rect = new Rect(this.rectangleFirstScreenPoint, currentMouseLocation);
+
+        drawingRectangle.Width = rect.Width;
+        drawingRectangle.Height = rect.Height;
+
+        Canvas.SetTop(drawingRectangle, rect.Top);
+        Canvas.SetLeft(drawingRectangle, rect.Left);
+    }
+
+    private void MapView_MouseUpForRectangleDrawing(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton != MouseButton.Left)
+            return;
+
+        this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
+        this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
+        this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
+
+        this.mapView.Children.Remove(drawingRectangle);
+
+        this.mapView.ReleaseMouseCapture();
+
+        Point secondScreenPoint = e.GetPosition(this.mapView);
+
+        var secondMapPoint = ScreenToMap(secondScreenPoint).AsPoint();
+
+        if (secondMapPoint.IsNaN())
+        {
+            drawingTcs.TrySetCanceled();
+            return;
+        }
+
+        var bbox = sb.BoundingBox.Create(this.rectangleFirstMapPoint, secondMapPoint);
+
+        if (bbox.Width == 0 || bbox.Height == 0)
+        {
+            drawingTcs.TrySetCanceled();
+            return;
+        }
+
+        var p1 = bbox.TopLeft;
+        var p2 = bbox.TopRight;
+        var p3 = bbox.BottomRight;
+        var p4 = bbox.BottomLeft;
+
+        var ringPoints = new List<sb.Point> { p1, p2, p3, p4, p1 };
+
+        var ring = Geometry<sb.Point>.Create(ringPoints, sb.GeometryType.LineString, SridHelper.WebMercator);
+
+        var polygon = Geometry<sb.Point>.CreatePolygonOrMultiPolygon(new List<Geometry<sb.Point>> { ring }, SridHelper.WebMercator);
+
+        drawingCancellationToken = null;
+
+        drawingTcs.SetResult(ResponseFactory.Create(polygon));
+
+        this.Pan();
+    }
+
     private void MapView_MouseUpForForPanWhileDrawing(object sender, MouseButtonEventArgs e)
     {
         //if (e.RightButton == MouseButtonState.Pressed || e.ChangedButton == MouseButton.Right)
@@ -4219,7 +4333,7 @@ public partial class MapViewer : NotifiableUserControl
 
         this.drawMode = mode;
 
-        if (this.viewTransform == null || drawMode == DrawMode.Rectangle || drawMode == DrawMode.Freehand)
+        if (this.viewTransform == null || drawMode == DrawMode.Freehand)
             drawingTcs.TrySetCanceled();
 
         ResetMapViewEvents();
@@ -4245,6 +4359,12 @@ public partial class MapViewer : NotifiableUserControl
 
             this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
 
+            this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
+            this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
+            this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
+
+            this.mapView.Children.Remove(drawingRectangle);
+
             this.ClearLayer(drawingLayer, remove: true, forceRemove: true);
 
             if (drawingLayer != null)
@@ -4258,20 +4378,35 @@ public partial class MapViewer : NotifiableUserControl
 
         }, useSynchronizationContext: false);
 
+        if (this.drawMode == DrawMode.Rectangle)
+        {
+            // Drag-based axis-aligned rectangle drawing
+            this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
+            this.mapView.MouseDown += MapView_MouseDownForRectangleDrawing;
 
-        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-        this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartDrawing;
+            this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
+            this.mapView.MouseMove += MapView_MouseMoveForRectangleDrawing;
 
-        this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-        this.mapView.MouseDown += MapView_MouseDownForPanWhileStartDrawing;
+            this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
+            this.mapView.MouseUp += MapView_MouseUpForRectangleDrawing;
+        }
+        else
+        {
+            // Existing point/polyline/polygon drawing
+            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
+            this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartDrawing;
 
-        this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-        this.mapView.MouseUp += MapView_MouseUpForPanWhileStartDrawing;
+            this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
+            this.mapView.MouseDown += MapView_MouseDownForPanWhileStartDrawing;
 
-        this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-        this.mapView.MouseMove += MapView_MouseMoveForDrawing;
-        //this.mapView.MouseDown -= MapView_MouseDownForStartDrawing;
-        //this.mapView.MouseDown += MapView_MouseDownForStartDrawing;
+            this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
+            this.mapView.MouseUp += MapView_MouseUpForPanWhileStartDrawing;
+
+            this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
+            this.mapView.MouseMove += MapView_MouseMoveForDrawing;
+            //this.mapView.MouseDown -= MapView_MouseDownForStartDrawing;
+            //this.mapView.MouseDown += MapView_MouseDownForStartDrawing;
+        }
 
         return drawingTcs.Task;
 

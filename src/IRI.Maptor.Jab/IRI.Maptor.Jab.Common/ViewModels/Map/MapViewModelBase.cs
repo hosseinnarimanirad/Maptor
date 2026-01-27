@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Diagnostics;
@@ -94,7 +94,7 @@ public abstract class MapViewModelBase : ViewModelBase
             if (_baseMapSettings != null)
             {
                 _baseMapSettings.OnOpacityChanged -= BaseMapSettings_OnOpacityChanged;
-                _baseMapSettings.OnBaseMapUrlChanged += BaseMapSettings_OnBaseMapUrlChanged;
+                _baseMapSettings.OnBaseMapUrlChanged -= BaseMapSettings_OnBaseMapUrlChanged;
             }
 
             _baseMapSettings = value ?? new BaseMapSettingsModel(IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default/*, UpdateBaseMapOpacity*/);
@@ -504,7 +504,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
     //private TileMapProviderMode _selectedTileMapProviderMode = TileMapProviderMode.Internet;
-    //public virtual TileMapProviderMode SelectedTileMapProviderMode
+    //public virtual TileMapProviderMode SelectedTileMapAccessMode
     //{
     //    get { return _selectedTileMapProviderMode; }
     //    set
@@ -520,13 +520,13 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         foreach (var item in this.MapProviders)
         {
-            item.ChangeMode(BaseMapSettings.SelectedTileMapProviderMode, BaseMapSettings.LocalNetworkUrl, BaseMapSettings.ProxyAppUrl);
+            item.ChangeMode(BaseMapSettings.SelectedTileMapAccessMode, BaseMapSettings.LocalNetworkUrl, BaseMapSettings.ProxyAppUrl);
         }
     }
 
     //#endregion
 
-    private List<TileMapProvider> _mapProviders;
+    private List<TileMapProvider> _mapProviders = new List<TileMapProvider>();
     public List<TileMapProvider> MapProviders
     {
         get { return _mapProviders; }
@@ -601,9 +601,7 @@ public abstract class MapViewModelBase : ViewModelBase
         set
         {
             if (_mapStatus == value)
-            {
                 return;
-            }
 
             _mapStatus = value;
             RaisePropertyChanged();
@@ -806,6 +804,17 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    private bool _showMapInfoPanel;
+    public bool ShowMapInfoPanel
+    {
+        get { return _showMapInfoPanel; }
+        set
+        {
+            _showMapInfoPanel = value;
+            RaisePropertyChanged();
+        }
+    }
+
 
     #endregion
 
@@ -860,7 +869,7 @@ public abstract class MapViewModelBase : ViewModelBase
             RaisePropertyChanged(nameof(CanMoveDrawingItemUp));
         };
 
-        MapProviders = TileMapProviderFactory.GetDefault();
+        //MapProviders = TileMapProviderFactory.GetDefault();
 
         MapPanel = new MapInfoViewModel();
 
@@ -906,13 +915,15 @@ public abstract class MapViewModelBase : ViewModelBase
         this.ProxySettings = new ProxySettingsModel(IRI.Maptor.Jab.Common.Data.ProxySettings.Default);
         this.BaseMapSettings = new BaseMapSettingsModel(baseMapSettings ?? IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default);
         this.MapSettings = new MapSettingsModel(mapSettings ?? IRI.Maptor.Jab.Common.Data.MapSettings.Default);
-        this.GeneralSettings = new GeneralSettingsModel(IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
+        this.GeneralSettings = CreateGeneralSettingsModel();
 
         if (this.MapSettings.MinGoogleZoomLevel == 0)
             this.MapSettings.MinGoogleZoomLevel = 2;
 
         if (this.MapSettings.MaxGoogleZoomLevel == 0)
             this.MapSettings.MaxGoogleZoomLevel = 18;
+
+        this.MapProviders = BaseMapSettings.MapProviders;
 
         this.SetMapCursorSet1();
 
@@ -921,6 +932,9 @@ public abstract class MapViewModelBase : ViewModelBase
         this.IsPanMode = true;
         //ownerWindow.DataContext = this;
     }
+
+    protected virtual GeneralSettingsModel CreateGeneralSettingsModel() =>
+        new GeneralSettingsModel(IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
 
 
     #region Actions & Funcs
@@ -1533,8 +1547,6 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-
-
     List<Func<DrawingItemLayer, ILegendCommand>>? drawingItemCommands = null;
 
     public List<Func<DrawingItemLayer, ILegendCommand>>? DrawingItemCommands
@@ -1965,7 +1977,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public async Task<Response<Geometry<Point>>> EditAsync(Geometry<Point> geometry, EditableFeatureLayerOptions options)
     {
-        //this.IsEditMode = true;
+        this.ShowMapInfoPanel = true;
 
         Response<Geometry<Point>> result = null;
 
@@ -2353,9 +2365,11 @@ public abstract class MapViewModelBase : ViewModelBase
     //*****************************************Drawing***************************************************************
     #region Drawing
 
-    public async Task<Response<Geometry<Point>>> GetDrawingAsync(DrawMode mode, EditableFeatureLayerOptions options = null, bool display = true)
+    public async Task<Response<Geometry<Point>>> GetDrawingAsync(DrawMode mode, EditableFeatureLayerOptions? options = null, bool display = true)
     {
         //this.IsDrawMode = true;
+
+        this.ShowMapInfoPanel = mode != DrawMode.Rectangle;
 
         options = options ?? MapSettings.DrawingOptions;
 
@@ -2366,7 +2380,6 @@ public abstract class MapViewModelBase : ViewModelBase
         //this.IsDrawMode = false;
 
         return result;
-        //return tcs.Task;
     }
 
     protected void CancelNewDrawing()
@@ -2522,7 +2535,7 @@ public abstract class MapViewModelBase : ViewModelBase
     public async Task ClipAndExportMapAsPngAsync(object owner)
     {
         // select a rectangle 
-        var polygon = await GetDrawingAsync(DrawMode.Polygon);
+        var polygon = await GetDrawingAsync(DrawMode.Rectangle);
 
         if (polygon.IsNullOrEmpty())
             return;
@@ -2576,7 +2589,7 @@ public abstract class MapViewModelBase : ViewModelBase
     public async Task SetPrintAreaAsync()
     {
         // select a rectangle 
-        var polygon = await GetDrawingAsync(DrawMode.Polygon);
+        var polygon = await GetDrawingAsync(DrawMode.Rectangle);
 
         if (polygon.IsNullOrEmpty())
             return;

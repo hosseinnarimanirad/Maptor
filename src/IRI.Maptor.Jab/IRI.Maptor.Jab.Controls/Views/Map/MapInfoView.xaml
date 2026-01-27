@@ -4,7 +4,8 @@
             xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-            x:Name="root">
+            x:Name="root"
+            Visibility="{Binding ShowMapInfoPanel, Converter={StaticResource boolToVisibilityConverter}}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -129,7 +130,7 @@
 
                 <!--Drawing-->
                 <DockPanel DockPanel.Dock="Right" LastChildFill="False"
-                            Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}">
+                            Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}"> 
                     <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Left" Margin="2" 
                             ToolTip="{Binding [map_draw_addPoint], Source={StaticResource Localization}}"
                             Command="{Binding AddPointToNewDrawingCommand}"
@@ -210,7 +211,14 @@
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" TextDecorations="Underline" Margin="8,0"
                        Text="{Binding [map_draw_newDrawing], Source={StaticResource Localization}}"
                        Foreground="{StaticResource  MahApps.Brushes.Accent2}"
-                       Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}"/>
+                       Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}">
+                <!--<TextBlock.Visibility>
+                    <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
+                        <Binding Path="IsDrawMode" />
+                        <Binding Path="ShowMapInfoPanel" />
+                    </MultiBinding>
+                </TextBlock.Visibility>-->
+            </TextBlock>
 
             <!--tabs-->
             <TabControl SelectedIndex="2" Background="Transparent"  >
