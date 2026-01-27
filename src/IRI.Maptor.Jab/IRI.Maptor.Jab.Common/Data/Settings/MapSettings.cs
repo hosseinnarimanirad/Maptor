@@ -13,9 +13,9 @@ public class MapSettings : IMapSettings
     public int MinGoogleZoomLevel { get; set; } = 1;
 
 
-    public bool CheckIsInScaleRange { get; set; } = true;
+    public bool Identify_CheckIsInScaleRange { get; set; } = true;
 
-    public bool CheckIsVisible { get; set; } = true;
+    public bool Identify_CheckIsVisible { get; set; } = true;
 
 
     public static MapSettings Default = new MapSettings();

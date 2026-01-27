@@ -1,10 +1,11 @@
 ﻿using IRI.Maptor.Jab.Common.TileServices;
+using System.Collections.Generic;
 
 namespace IRI.Maptor.Jab.Common.Abstractions;
 
 public interface IBaseMapSettings
 {
-    string? BaseMapCacheDirectory { get; set; }
+    string BaseMapCacheDirectory { get; set; }
     bool IsBaseMapCacheEnabled { get; set; }
 
     double BaseMapOpacity { get; set; }
@@ -12,5 +13,7 @@ public interface IBaseMapSettings
     string? LocalNetworkUrl { get; set; }
     string? ProxyAppUrl { get; set; }
 
-    TileMapProviderMode SelectedTileMapProviderMode { get; set; }
+    TileMapAccessMode SelectedTileMapAccessMode { get; set; }
+
+    List<TileMapProvider> MapProviders { get; set; }
 }

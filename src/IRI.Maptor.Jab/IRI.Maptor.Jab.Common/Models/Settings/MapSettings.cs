@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Model;
@@ -92,24 +92,24 @@ public class MapSettingsModel : Notifier, IMapSettings
     #region Identify
 
     // ignore unvisible layers or not in identify
-    public bool CheckIsVisible
+    public bool Identify_CheckIsVisible
     {
-        get => _settings.CheckIsVisible;
+        get => _settings.Identify_CheckIsVisible;
         set
         {
-            _settings.CheckIsVisible = value;
+            _settings.Identify_CheckIsVisible = value;
             RaisePropertyChanged();
         }
     }
 
 
     // ignore layers which are not in scale range or not
-    public bool CheckIsInScaleRange
+    public bool Identify_CheckIsInScaleRange
     {
-        get => _settings.CheckIsInScaleRange;
+        get => _settings.Identify_CheckIsInScaleRange;
         set
         {
-            _settings.CheckIsInScaleRange = value;
+            _settings.Identify_CheckIsInScaleRange = value;
             RaisePropertyChanged();
         }
     }
@@ -128,6 +128,8 @@ public class MapSettingsModel : Notifier, IMapSettings
 
         //this.IsDoubleClickZoomEnabled = true;
     }
+
+    public IMapSettings GetData() => _settings;
 
     private EditableFeatureLayerOptions _drawingOptions = EditableFeatureLayerOptions.CreateDefaultForDrawing(true, true, true);
     public EditableFeatureLayerOptions DrawingOptions { get => _drawingOptions; set => _drawingOptions = value; }

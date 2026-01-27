@@ -3,6 +3,7 @@
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.TileServices;
+using System.Collections.Generic;
 
 namespace IRI.Maptor.Jab.Common.Models.Settings;
 
@@ -47,7 +48,7 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
             RaisePropertyChanged();
         }
     }
-      
+
     public double BaseMapOpacity
     {
         get { return _baseMapSettings.BaseMapOpacity; }
@@ -62,7 +63,7 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
             //    layer.Opacity = value;
         }
     }
-     
+
     public string? LocalNetworkUrl
     {
         get => _baseMapSettings.LocalNetworkUrl;
@@ -88,21 +89,30 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
     }
 
 
-    public TileMapProviderMode SelectedTileMapProviderMode
+    public TileMapAccessMode SelectedTileMapAccessMode
     {
-        get { return _baseMapSettings.SelectedTileMapProviderMode; }
+        get { return _baseMapSettings.SelectedTileMapAccessMode; }
         set
         {
-            _baseMapSettings.SelectedTileMapProviderMode = value;
+            _baseMapSettings.SelectedTileMapAccessMode = value;
             RaisePropertyChanged();
 
             OnBaseMapUrlChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
+    public List<TileMapProvider> MapProviders
+    {
+        get => _baseMapSettings.MapProviders;
+        set
+        {
+            _baseMapSettings.MapProviders = value;
+            RaisePropertyChanged(); 
+        }
+    }
 
     public BaseMapSettingsModel(IBaseMapSettings baseMapSettings)
-    { 
+    {
         _baseMapSettings = baseMapSettings;
     }
 

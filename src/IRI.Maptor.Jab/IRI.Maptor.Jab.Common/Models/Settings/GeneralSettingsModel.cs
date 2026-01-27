@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Jab.Common.Abstractions;
@@ -18,6 +18,8 @@ public class GeneralSettingsModel : Notifier, IGeneralSettings
             RaisePropertyChanged();
         }
     }
+
+    public IGeneralSettings GetData() => _settings;
 
     public GeneralSettingsModel(IGeneralSettings settings)
     {
