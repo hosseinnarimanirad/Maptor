@@ -16,4 +16,6 @@ public interface IBaseMapSettings
     TileMapAccessMode SelectedTileMapAccessMode { get; set; }
 
     List<TileMapProvider> MapProviders { get; set; }
+
+    BaseMapType InitialBaseMap { get; set; }
 }

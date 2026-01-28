@@ -88,10 +88,9 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
         }
     }
 
-
     public TileMapAccessMode SelectedTileMapAccessMode
     {
-        get { return _baseMapSettings.SelectedTileMapAccessMode; }
+        get => _baseMapSettings.SelectedTileMapAccessMode;
         set
         {
             _baseMapSettings.SelectedTileMapAccessMode = value;
@@ -107,9 +106,25 @@ public class BaseMapSettingsModel : Notifier, IBaseMapSettings
         set
         {
             _baseMapSettings.MapProviders = value;
-            RaisePropertyChanged(); 
+            RaisePropertyChanged();
         }
     }
+
+    public BaseMapType InitialBaseMap
+    {
+        get => _baseMapSettings.InitialBaseMap;
+        set
+        {
+            if (_baseMapSettings.InitialBaseMap == value)
+                return;
+
+            _baseMapSettings.InitialBaseMap = value;
+            RaisePropertyChanged();
+
+            OnBaseMapUrlChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
 
     public BaseMapSettingsModel(IBaseMapSettings baseMapSettings)
     {

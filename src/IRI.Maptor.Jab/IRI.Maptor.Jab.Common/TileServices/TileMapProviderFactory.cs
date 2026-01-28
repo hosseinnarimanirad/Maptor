@@ -17,9 +17,9 @@ public static class TileMapProviderFactory
     // this.AddProvider(TileMapProviderFactory.CreateInteranetProvider("localGoogle", "terrainMap", t => $@"http://v-gisserver2/Google/TerrainWithRoad/{t.ZoomLevel}/gtr_{t.ColumnNumber}_{t.RowNumber}_{t.ZoomLevel}.jpg"));
     // this.AddProvider(TileMapProviderFactory.CreateInteranetProvider("localGoogle", "satelliteMap", t => $@"http://v-gisserver2/Google/Satellite/{t.ZoomLevel}/gs_{t.ColumnNumber}_{t.RowNumber}_{t.ZoomLevel}.jpg"));
     // this.AddProvider(TileMapProviderFactory.CreateInteranetProvider("localGoogle", "hybridMap", t => $@"http://v-gisserver2/Google/Satellite/{t.ZoomLevel}/gs_{t.ColumnNumber}_{t.RowNumber}_{t.ZoomLevel}.jpg"));
-    public static TileMapProvider CreateInteranetProvider(string providerName, string subTitle, Func<TileInfo, string> interanetUrlFunc)
+    public static TileMapProvider CreateInteranetProvider(BaseMapType type, string providerName, string subTitle, Func<TileInfo, string> interanetUrlFunc)
     {
-        return TileMapProvider.CreateLocalNetwork(providerName, subTitle, null, null, interanetUrlFunc);
+        return TileMapProvider.CreateLocalNetwork(type, providerName, subTitle, null, null, interanetUrlFunc);
     }
 
     #region Bing
@@ -32,6 +32,7 @@ public static class TileMapProviderFactory
             if (_bingSatellite is null)
             {
                 _bingSatellite = TileMapProvider.Create(
+                    BaseMapType.Bing_Satellite,
                     nameof(tile_provider_bing),
                     nameof(tile_mapType_Satellite),
                     //tile => MakeBingSatelliteUrl(tile, GetServer()),
@@ -51,6 +52,7 @@ public static class TileMapProviderFactory
             if (_bingStreet is null)
             {
                 _bingStreet = TileMapProvider.Create(
+                    BaseMapType.Bing_Street,
                     nameof(tile_provider_bing),
                     nameof(tile_mapType_Street),
                     //tile => MakeBingStreetUrl(tile, GetServer()),
@@ -71,6 +73,7 @@ public static class TileMapProviderFactory
             if (_bingHybrid is null)
             {
                 _bingHybrid = TileMapProvider.Create(
+                    BaseMapType.Bing_Hybrid,
                     nameof(tile_provider_bing),
                     nameof(tile_mapType_Hybrid),
                     //tile => MakeBingHybridUrl(tile, GetServer()),
@@ -95,6 +98,7 @@ public static class TileMapProviderFactory
             if (_googleCleanGrey is null)
             {
                 _googleCleanGrey = TileMapProvider.Create(
+                    BaseMapType.Google_CleanGrey,
                     nameof(tile_provider_google),
                     nameof(tile_mapType_CleanGrey),
                     //MakeGoogleCleanGreyUrl,
@@ -115,6 +119,7 @@ public static class TileMapProviderFactory
             if (_googleBlackWhite is null)
             {
                 _googleBlackWhite = TileMapProvider.Create(
+                    BaseMapType.Google_BlackWhite,
                     nameof(tile_provider_google),
                     nameof(tile_mapType_BlackWhite),
                     //MakeGoogleBlackWhiteUrl,
@@ -135,13 +140,14 @@ public static class TileMapProviderFactory
             if (_googleTraffic is null)
             {
                 _googleTraffic = TileMapProvider.Create(
+                    BaseMapType.Google_Traffic,
                     nameof(tile_provider_google),
                     nameof(tile_mapType_Traffic),
                     //tile => MakeGoogleTerafficUrl(tile, GetServer()),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/googleTerrain.png"),
                     ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/googleTraffic72.jpg"));
 
-                _googleTraffic.AllowCache = false; 
+                _googleTraffic.AllowCache = false;
             }
 
             return _googleTraffic;
@@ -157,6 +163,7 @@ public static class TileMapProviderFactory
             if (_googleSatellite is null)
             {
                 _googleSatellite = TileMapProvider.Create(
+                    BaseMapType.Google_Satellite,
                     nameof(tile_provider_google),
                     nameof(tile_mapType_Satellite),
                     //tile => MakeGoogleSatelliteUrl(tile, GetServer()),
@@ -177,6 +184,7 @@ public static class TileMapProviderFactory
             if (_googleHybrid is null)
             {
                 _googleHybrid = TileMapProvider.Create(
+                    BaseMapType.Google_Hybrid,
                     nameof(tile_provider_google),
                     nameof(tile_mapType_Hybrid),
                     //tile => MakeGoogleHybridUrl(tile, GetServer()),
@@ -197,6 +205,7 @@ public static class TileMapProviderFactory
             if (_googleRoadMap is null)
             {
                 _googleRoadMap = TileMapProvider.Create(
+                    BaseMapType.Google_RoadMap,
                     nameof(tile_provider_google),
                     nameof(tile_mapType_RoadMap),
                     //tile => MakeGoogleRoadMapUrl(tile, GetServer()),
@@ -217,6 +226,7 @@ public static class TileMapProviderFactory
             if (_googleTerrain is null)
             {
                 _googleTerrain = TileMapProvider.Create(
+                    BaseMapType.Google_Terrain,
                     nameof(tile_provider_google),
                     nameof(tile_mapType_Terrain),
                     //tile => MakeGoogleTerrainUrl(tile, GetServer()),
@@ -268,11 +278,12 @@ public static class TileMapProviderFactory
             if (_googleLight is null)
             {
                 _googleLight = TileMapProvider.Create(
+                    BaseMapType.Google_Light,
                     nameof(tile_provider_google),
                     nameof(tile_mapType_Light),
-                   //"https://mt{@server}.google.com/vt/lyrs=r&x={x}&y={y}&z={z}",
-                   ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/googleTerrain.png"),
-                   ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/googleLight72.jpg")); 
+                    //"https://mt{@server}.google.com/vt/lyrs=r&x={x}&y={y}&z={z}",
+                    ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/googleTerrain.png"),
+                    ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/googleLight72.jpg"));
             }
 
             return _googleLight;
@@ -288,11 +299,12 @@ public static class TileMapProviderFactory
             if (_googleNature is null)
             {
                 _googleNature = TileMapProvider.Create(
+                    BaseMapType.Google_Nature,
                     nameof(tile_provider_google),
                     nameof(tile_mapType_Nature),
-                   //"https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjV8cC5oOiNGRkE4MDB8cC5nOjEscy50OjQ5fHAuaDojNTNGRjAwfHAuczotNzN8cC5sOjQwfHAuZzoxLHMudDo1MHxwLmg6I0ZCRkYwMHxwLmc6MSxzLnQ6NTF8cC5oOiMwMEZGRkR8cC5sOjMwfHAuZzoxLHMudDo2fHAuaDojMDBCRkZGfHAuczo2fHAubDo4fHAuZzoxLHMudDoyfHAuaDojNjc5NzE0fHAuczozMy40fHAubDotMjUuNHxwLmc6MQ!4e0!23i1301875",
-                   ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/googleTerrain.png"),
-                   ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/googleNature72.jpg"));
+                    //"https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjV8cC5oOiNGRkE4MDB8cC5nOjEscy50OjQ5fHAuaDojNTNGRjAwfHAuczotNzN8cC5sOjQwfHAuZzoxLHMudDo1MHxwLmg6I0ZCRkYwMHxwLmc6MSxzLnQ6NTF8cC5oOiMwMEZGRkR8cC5sOjMwfHAuZzoxLHMudDo2fHAuaDojMDBCRkZGfHAuczo2fHAubDo4fHAuZzoxLHMudDoyfHAuaDojNjc5NzE0fHAuczozMy40fHAubDotMjUuNHxwLmc6MQ!4e0!23i1301875",
+                    ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/googleTerrain.png"),
+                    ResourceHelper.ReadBinaryStreamFromResource($"{baseMapUri}/72/googleNature72.jpg"));
 
             }
 
@@ -309,6 +321,7 @@ public static class TileMapProviderFactory
             if (_googleNeutralBlue is null)
             {
                 _googleNeutralBlue = TileMapProvider.Create(
+                    BaseMapType.Google_NeutralBlue,
                     nameof(tile_provider_google),
                     nameof(tile_mapType_NeutralBlue),
                     //"https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjZ8cy5lOmd8cC5jOiNmZjE5MzM0MSxzLnQ6NXxzLmU6Z3xwLmM6I2ZmMmM1YTcxLHMudDozfHMuZTpnfHAuYzojZmYyOTc2OGF8cC5sOi0zNyxzLnQ6MnxzLmU6Z3xwLmM6I2ZmNDA2ZDgwLHMudDo0fHMuZTpnfHAuYzojZmY0MDZkODAscy5lOmwudC5zfHAudjpvbnxwLmM6I2ZmM2U2MDZmfHAudzoyfHAuZzowLjg0LHMuZTpsLnQuZnxwLmM6I2ZmZmZmZmZmLHMudDoxfHMuZTpnfHAudzowLjZ8cC5jOiNmZjFhMzU0MSxzLmU6bC5pfHAudjpvZmYscy50OjQwfHMuZTpnfHAuYzojZmYyYzVhNzE!4e0!23i1301875",
@@ -320,7 +333,7 @@ public static class TileMapProviderFactory
             return _googleNeutralBlue;
         }
     }
-     
+
     #endregion
 
 
@@ -347,6 +360,7 @@ public static class TileMapProviderFactory
             if (_openStreetMap is null)
             {
                 _openStreetMap = TileMapProvider.Create(
+                    BaseMapType.OSM_OpenStreetMap,
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_Street),
                     //tile => MakeOpenStreetMapUrl(tile, GetServerCharacter()),
@@ -367,6 +381,7 @@ public static class TileMapProviderFactory
             if (_openTopoMap is null)
             {
                 _openTopoMap = TileMapProvider.Create(
+                    BaseMapType.OSM_OpenTopoMap,
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_Topo),
                     //tile => MakeOpenTopoMapUrl(tile, GetServerCharacter()),
@@ -387,6 +402,7 @@ public static class TileMapProviderFactory
             if (_mapyWinter is null)
             {
                 _mapyWinter = TileMapProvider.Create(
+                    BaseMapType.OSM_MapyWinter,
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_MapyWinter),
                     //MakeMapyWinterUrl,
@@ -407,6 +423,7 @@ public static class TileMapProviderFactory
             if (_mapyTourist is null)
             {
                 _mapyTourist = TileMapProvider.Create(
+                    BaseMapType.OSM_MapyTourist,
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_MapyTourist),
                     //MakeMapyTouristUrl,
@@ -427,6 +444,7 @@ public static class TileMapProviderFactory
             if (_osmHikeBike is null)
             {
                 _osmHikeBike = TileMapProvider.Create(
+                    BaseMapType.OSM_OsmHikeBike,
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_HikeBike),
                     //MakeOsmHikeBikeUrl,
@@ -447,6 +465,7 @@ public static class TileMapProviderFactory
             if (_stamentWatercolor is null)
             {
                 _stamentWatercolor = TileMapProvider.Create(
+                    BaseMapType.OSM_StamenWatercolor,
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_Watercolor),
                     //MakeStamenWatercolorUrl,
@@ -471,6 +490,7 @@ public static class TileMapProviderFactory
             if (_wazeStreet is null)
             {
                 _wazeStreet = TileMapProvider.Create(
+                    BaseMapType.Waze_Street,
                     nameof(tile_provider_waze),
                     nameof(tile_mapType_Street),
                     //MakeWazeRoadMapUrl,
@@ -495,6 +515,7 @@ public static class TileMapProviderFactory
             if (_cartoDark is null)
             {
                 _cartoDark = TileMapProvider.Create(
+                    BaseMapType.Carto_Dark,
                     nameof(tile_provider_carto),
                     nameof(tile_mapType_Dark),
                     //MakeCartoDarkUrl,
@@ -514,6 +535,7 @@ public static class TileMapProviderFactory
             if (_cartoLight is null)
             {
                 _cartoLight = TileMapProvider.Create(
+                    BaseMapType.Carto_Light,
                     nameof(tile_provider_carto),
                     nameof(tile_mapType_Light),
                     //MakeCartoLightUrl,
@@ -537,6 +559,7 @@ public static class TileMapProviderFactory
             if (_mapboxComic is null)
             {
                 _mapboxComic = TileMapProvider.Create(
+                    BaseMapType.Mapbox_Comic,
                     nameof(tile_provider_mapbox),
                     nameof(tile_mapType_Comic),
                     //"https://{@server}.tiles.mapbox.com/v4/mapbox.comic/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w",
@@ -557,6 +580,7 @@ public static class TileMapProviderFactory
             if (_mapboxSatellite is null)
             {
                 _mapboxSatellite = TileMapProvider.Create(
+                    BaseMapType.Mapbox_Satellite,
                     nameof(tile_provider_mapbox),
                     nameof(tile_mapType_Satellite),
                     //"https://{@server}.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w",

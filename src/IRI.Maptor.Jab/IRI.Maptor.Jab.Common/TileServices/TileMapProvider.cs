@@ -10,7 +10,9 @@ namespace IRI.Maptor.Jab.Common.TileServices;
 public class TileMapProvider : ValueObjectNotifier, IDisposable
 {
     TileServiceUrlStrategy _urlStrategy;
-     
+
+    public BaseMapType Type { get; set; }
+
     public string FullName => $"{ProviderEn}-{MapTypeEn}";
 
     public string Title { get { return $"{Provider}-{MapType}"; } }
@@ -53,13 +55,14 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
     public bool AllowCache { get; set; } = true;
      
     protected TileMapProvider(TileMapProvider mapProvider)
-        : this(mapProvider._providerResourceKey, mapProvider._mapTypeResourceKey, mapProvider.Thumbnail, mapProvider.Thumbnail72, mapProvider.Mode)
+        : this(mapProvider.Type, mapProvider._providerResourceKey, mapProvider._mapTypeResourceKey, mapProvider.Thumbnail, mapProvider.Thumbnail72, mapProvider.Mode)
     {
     }
 
     protected TileMapProvider(
+        BaseMapType baseMapType,
         string providerResourceKey,
-        string mapTypeResourceKey, 
+        string mapTypeResourceKey,
         byte[]? thumbnail,
         byte[]? thumbnail72,
         TileMapAccessMode mode = TileMapAccessMode.Internet)
@@ -72,6 +75,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
         this._thumbnail72 = thumbnail72;
 
         this.Mode = mode;
+        this.Type = baseMapType;
 
         LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
         LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
@@ -90,6 +94,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
+        yield return Type;
         yield return ProviderEn;
         yield return MapTypeEn;
     }
@@ -129,14 +134,14 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
 
     #region Static Factory Methods
 
-    public static TileMapProvider Create(string providerResourceKey, string mapTypeResourceKey, byte[]? thumbnail, byte[]? thumbnail72)
+    public static TileMapProvider Create(BaseMapType type, string providerResourceKey, string mapTypeResourceKey, byte[]? thumbnail, byte[]? thumbnail72)
     {
-        return new TileMapProvider(providerResourceKey, mapTypeResourceKey, thumbnail, thumbnail72);
+        return new TileMapProvider(type, providerResourceKey, mapTypeResourceKey, thumbnail, thumbnail72);
     }
 
-    public static TileMapProvider CreateLocalNetwork(string providerResourceKey, string mapTypeResourceKey, byte[]? thumbnail, byte[]? thumbnail72, Func<TileInfo, string> interanetUrlFunc)
+    public static TileMapProvider CreateLocalNetwork(BaseMapType type, string providerResourceKey, string mapTypeResourceKey, byte[]? thumbnail, byte[]? thumbnail72, Func<TileInfo, string> interanetUrlFunc)
     {
-        return new TileMapProvider(providerResourceKey, mapTypeResourceKey, thumbnail, thumbnail72, TileMapAccessMode.LocalNetwork)
+        return new TileMapProvider(type, providerResourceKey, mapTypeResourceKey, thumbnail, thumbnail72, TileMapAccessMode.LocalNetwork)
         {
             _urlStrategy = new TileServiceUrlStrategy_LocalNetwork(interanetUrlFunc),
         };

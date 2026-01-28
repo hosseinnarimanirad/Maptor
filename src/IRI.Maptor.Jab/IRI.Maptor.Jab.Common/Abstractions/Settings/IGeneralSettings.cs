@@ -3,4 +3,16 @@
 public interface IGeneralSettings
 {
     double LegendFontSize { get; set; }
+
+
+    bool Scalebar_ShowScalebar { get; set; }  
+
+    bool Scalebar_ShowScaleValue { get; set; } 
+
+    bool Scalebar_ShowZoomLevel { get; set; }  
+
+    bool CoordinatePanel_ShowCoordinatePanel { get; set; }  
+
+    bool Legend_ShowLegendTools { get; set; }  
+
 }

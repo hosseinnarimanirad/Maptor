@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.TileServices;
@@ -27,6 +28,8 @@ public class BaseMapSettings : /*ValueObject, */IBaseMapSettings
 
     public List<TileMapProvider> MapProviders { get; set; }
 
+    public BaseMapType InitialBaseMap { get; set; }
+
 
     public BaseMapSettings()
     {
@@ -37,6 +40,8 @@ public class BaseMapSettings : /*ValueObject, */IBaseMapSettings
         this.SelectedTileMapAccessMode = TileMapAccessMode.Internet;
 
         this.MapProviders = TileMapProviderFactory.GetDefault();
+
+        this.InitialBaseMap = BaseMapType.Google_Terrain;
     }
 
     //protected override IEnumerable<object> GetEqualityComponents()

@@ -8,14 +8,14 @@ public class TileTypeToBoolConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (!(value is TileType) || parameter == null)
+        if (!(value is BaseMapType) || parameter == null)
         {
             return false;
         }
 
-        var type = (TileType)value;
+        var type = (BaseMapType)value;
 
-        var expectedType = (TileType)Enum.Parse(typeof(TileType), parameter.ToString(), true);
+        var expectedType = (BaseMapType)Enum.Parse(typeof(BaseMapType), parameter.ToString(), true);
 
         return type == expectedType;
     }
@@ -24,11 +24,11 @@ public class TileTypeToBoolConverter : IValueConverter
     {
         if ((bool)value && parameter != null)
         {
-            return (TileType)Enum.Parse(typeof(TileType), parameter.ToString(), true);
+            return (BaseMapType)Enum.Parse(typeof(BaseMapType), parameter.ToString(), true);
         }
         else
         {
-            return TileType.Terrain;
+            return BaseMapType.Google_Terrain;
         }
 
     }

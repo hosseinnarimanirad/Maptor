@@ -160,11 +160,13 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         get { return _generalSettings; }
         private set
-        {
-            _generalSettings = value;
-            RaisePropertyChanged();
+        { 
+            _generalSettings = value ?? new GeneralSettingsModel(IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
+
+            RaisePropertyChanged();  
         }
     }
+     
 
 
     //private double _legendFontSize = 12;
@@ -537,14 +539,17 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    private TileMapProvider _selectedMapProvider;
-    public TileMapProvider SelectedMapProvider
+    private TileMapProvider? _selectedMapProvider;
+    public TileMapProvider? SelectedMapProvider
     {
         get { return _selectedMapProvider; }
         set
         {
             _selectedMapProvider = value;
             RaisePropertyChanged();
+
+            if (value != null)
+                BaseMapSettings.InitialBaseMap = value.Type;
 
             _ = SetTileService(value, BaseMapSettings.BaseMapOpacity, BaseMapSettings.GetLocalFileName);
         }
@@ -924,6 +929,7 @@ public abstract class MapViewModelBase : ViewModelBase
             this.MapSettings.MaxGoogleZoomLevel = 18;
 
         this.MapProviders = BaseMapSettings.MapProviders;
+        this.SelectedMapProvider = this.MapProviders?.FirstOrDefault(m => m.Type == BaseMapSettings.InitialBaseMap);
 
         this.SetMapCursorSet1();
 
