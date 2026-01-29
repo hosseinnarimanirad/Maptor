@@ -483,7 +483,7 @@ public partial class MapViewer : NotifiableUserControl
     #endregion
 
     public async Task Register(MapViewModelBase presenter,
-                                sb.BoundingBox? initialView = null,
+                                //sb.BoundingBox? initialView = null,
                                 List<IrProvince93>? provinces = null)
     {
         if (presenter == null)
@@ -762,7 +762,7 @@ public partial class MapViewer : NotifiableUserControl
         await presenter.InitializeAsync();
 
 
-        presenter.ZoomToExtent(initialView ?? sb.BoundingBoxes.Mercator_Iran, true, isNewExtent: true);
+        //presenter.ZoomToExtent(initialView ?? sb.BoundingBoxes.Mercator_Iran, true, isNewExtent: true);
 
 
         presenter.RegisterMapOptions();
@@ -3460,7 +3460,7 @@ public partial class MapViewer : NotifiableUserControl
     //It has animation
     private async void ZoomToExtent(sb.BoundingBox mapBoundingBox, bool canChangeToPointZoom, bool isExactExtent = true, bool isNewExtent = true, Action? callback = null, bool withAnimation = true)
     {
-        if (double.IsNaN(mapBoundingBox.Width + mapBoundingBox.Height))
+        if (mapBoundingBox.IsNaN()/* double.IsNaN(mapBoundingBox.Width + mapBoundingBox.Height)*/)
             return;
 
         var mapCenter = mapBoundingBox.Center;

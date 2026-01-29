@@ -25,8 +25,10 @@ public partial class MainWindow : Window
             this.map,
             this,
             new ApplicationPresenter(),
+            ProxySettings.Default,
+            BaseMapSettings.Default,
             MapSettings.Default,
-            BaseMapSettings.Default);
+            GeneralSettings.Default);
 
         this.DataContext = presenter;
 

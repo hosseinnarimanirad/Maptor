@@ -34,8 +34,10 @@ public static class MapInitializationHelper
         MapViewer mapView,
         System.Windows.Window ownerWindow,
         T presenter,
+        IProxySettings? proxySettings,
+        IBaseMapSettings? baseMapSettings,
         IMapSettings? mapSettings,
-        IBaseMapSettings baseMapSettings,
+        IGeneralSettings? generalSettings,
         List<IrProvince93>? provinces = null
         /*MapViewerConfiguration? config = null*/) where T : MapViewModelBase
     {
@@ -48,23 +50,18 @@ public static class MapInitializationHelper
         if (presenter == null)
             throw new ArgumentNullException(nameof(presenter));
 
-        // Use default configuration if none provided
-        //config ??= MapViewerConfiguration.Default;
-        mapSettings ??= MapSettings.Default;
-
         // Register presenter with MapViewer (this sets up all the Request* delegates)
-        await mapView.Register(presenter, mapSettings.InitialExtent, provinces);
+        await mapView.Register(presenter, provinces);
 
         // Create default services and actions
         var (dialogService, requestShowGoToView, requestShowSymbologyView) = CreateDefaultServices(ownerWindow, presenter);
 
         // Initialize presenter with default services
-        presenter.Initialize(dialogService, mapSettings, baseMapSettings, requestShowGoToView, requestShowSymbologyView);
-
+        presenter.Initialize(dialogService, proxySettings, baseMapSettings, mapSettings, generalSettings, requestShowGoToView, requestShowSymbologyView);
 
 
         // Configure MapViewer with common settings
-        ConfigureMapViewer(mapView, mapSettings);
+        ConfigureMapViewer(presenter, mapView, mapSettings);
 
         //// Configure presenter settings
         //ConfigurePresenterSettings(presenter, config);
@@ -94,7 +91,7 @@ public static class MapInitializationHelper
     /// <summary>
     /// Configures MapViewer with common settings based on the configuration.
     /// </summary>
-    private static void ConfigureMapViewer(MapViewer mapView, IMapSettings config)
+    private static void ConfigureMapViewer<T>(T presenter, MapViewer mapView, IMapSettings config) where T : MapViewModelBase
     {
         //if (config.EnablePan)
         //{
@@ -118,7 +115,7 @@ public static class MapInitializationHelper
 
         if (config.InitialExtent != null)
         {
-            mapView.ZoomToExtent(config.InitialExtent.Value);
+            presenter.ZoomToExtent(config.InitialExtent ?? BoundingBoxes.Mercator_Iran, true, isNewExtent: true);
         }
 
     }

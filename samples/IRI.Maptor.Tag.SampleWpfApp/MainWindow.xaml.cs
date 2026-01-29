@@ -40,9 +40,11 @@ public partial class MainWindow : Window
         var presenter = await MapInitializationHelper.InitializeMapAsync(
             this.map,
             this,
-            new ViewModel.AppViewModel(),
+            new ViewModel.AppViewModel(), 
+            ProxySettings.Default,
+            BaseMapSettings.Default,
             config,
-            BaseMapSettings.Default);
+            GeneralSettings.Default);
 
         this.DataContext = presenter;
 

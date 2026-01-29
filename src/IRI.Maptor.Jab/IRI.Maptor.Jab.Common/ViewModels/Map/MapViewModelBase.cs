@@ -53,6 +53,11 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public IHttpProtocol HttpClient { get; set; } = new HttpProtocol(null);
 
+    public Action<ProxySettingsModel>? FireProxySettingsChanged;
+
+    public Action<bool>? FireIsDoubleClickZoomEnabledChanged;
+    public Action<bool>? FireIsMouseWheelZoomEnabledChanged;
+
     private ProxySettingsModel _proxySettings;
     public ProxySettingsModel ProxySettings
     {
@@ -71,17 +76,6 @@ public abstract class MapViewModelBase : ViewModelBase
             _proxySettings.OnProxyChanged -= ProxySettings_OnProxyChanged;
             _proxySettings.OnProxyChanged += ProxySettings_OnProxyChanged;
         }
-    }
-
-    public Action<ProxySettingsModel>? FireProxySettingsChanged;
-
-    private async void ProxySettings_OnProxyChanged(object? sender, EventArgs e)
-    {
-        HttpClient.ConfigHttpClient(this.ProxySettings);
-
-        this.FireProxySettingsChanged?.Invoke(this.ProxySettings);
-
-        await CheckNetAccess();
     }
 
 
@@ -109,23 +103,6 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    private void BaseMapSettings_OnBaseMapUrlChanged(object? sender, EventArgs e)
-    {
-        UpdateTilesServices();
-    }
-
-    private void BaseMapSettings_OnOpacityChanged(object? sender, double e) => UpdateBaseMapOpacity(e);
-
-    //private void BaseMapSettings_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    //{
-    //    if (e.PropertyName == nameof(BaseMapSettingsModel.BaseMapOpacity))
-    //    {
-
-    //    }
-    //}
-
-    public Action<bool>? FireIsDoubleClickZoomEnabledChanged;
-    public Action<bool>? FireIsMouseWheelZoomEnabledChanged;
 
     private MapSettingsModel _mapSettings;
     public MapSettingsModel MapSettings
@@ -151,34 +128,37 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    private void MapSettings_OnIsDoubleClickZoomEnabledChanged(object? sender, bool e) => FireIsDoubleClickZoomEnabledChanged?.Invoke(e);
-    private void MapSettings_OnIsMouseWheelZoomEnabledChanged(object? sender, bool e) => FireIsMouseWheelZoomEnabledChanged?.Invoke(e);
-
 
     private GeneralSettingsModel _generalSettings;
     public GeneralSettingsModel GeneralSettings
     {
         get { return _generalSettings; }
         private set
-        { 
+        {
             _generalSettings = value ?? new GeneralSettingsModel(IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
 
-            RaisePropertyChanged();  
+            RaisePropertyChanged();
         }
     }
-     
 
 
-    //private double _legendFontSize = 12;
-    //public double LegendFontSize
-    //{
-    //    get { return _legendFontSize; }
-    //    set
-    //    {
-    //        _legendFontSize = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
+    private async void ProxySettings_OnProxyChanged(object? sender, EventArgs e)
+    {
+        HttpClient.ConfigHttpClient(this.ProxySettings);
+
+        this.FireProxySettingsChanged?.Invoke(this.ProxySettings);
+
+        await CheckNetAccess();
+    }
+
+    private void BaseMapSettings_OnBaseMapUrlChanged(object? sender, EventArgs e) => UpdateTilesServices();
+
+    private void BaseMapSettings_OnOpacityChanged(object? sender, double e) => UpdateBaseMapOpacity(e);
+
+    private void MapSettings_OnIsDoubleClickZoomEnabledChanged(object? sender, bool e) => FireIsDoubleClickZoomEnabledChanged?.Invoke(e);
+
+    private void MapSettings_OnIsMouseWheelZoomEnabledChanged(object? sender, bool e) => FireIsMouseWheelZoomEnabledChanged?.Invoke(e);
+
 
     #endregion
 
@@ -661,21 +641,9 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    public double InverseMapScale
-    {
-        get
-        {
-            return 1.0 / MapScale;
-        }
-    }
+    public double InverseMapScale => 1.0 / MapScale;
 
-    public double MapScale
-    {
-        get
-        {
-            return RequestMapScale?.Invoke() ?? 1;
-        }
-    }
+    public double MapScale => RequestMapScale?.Invoke() ?? 1;
 
     public double CurrentPointInverseMapScale
     {
@@ -687,35 +655,17 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    public double CurrentPointGroundResolution
-    {
-        get
-        {
-            return RequestCurrentPointGroundResolution?.Invoke() ?? 1;
-        }
-    }
+    public double CurrentPointGroundResolution => RequestCurrentPointGroundResolution?.Invoke() ?? 1;
 
-    public int CurrentZoomLevel { get { return RequestCurrentZoomLevel?.Invoke() ?? 1; } }
+    public int CurrentZoomLevel => RequestCurrentZoomLevel?.Invoke() ?? 1;
 
-    public BoundingBox CurrentExtent
-    {
-        get
-        {
-            return RequestCurrentExtent?.Invoke() ?? BoundingBoxes.Mercator_Iran;
-        }
-    }
+    public BoundingBox CurrentExtent => RequestCurrentExtent?.Invoke() ?? BoundingBoxes.Mercator_Iran;
 
 
-    public double ActualWidth
-    {
-        get { return RequestGetActualWidth?.Invoke() ?? 1; }
-    }
+    public double ActualWidth => RequestGetActualWidth?.Invoke() ?? 1;
 
 
-    public double ActualHeight
-    {
-        get { return RequestGetActualHeight?.Invoke() ?? 1; ; }
-    }
+    public double ActualHeight => RequestGetActualHeight?.Invoke() ?? 1;
 
 
     private bool _isDrawMode;
@@ -744,13 +694,7 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    public bool IsDrawEditMeasureMode
-    {
-        get
-        {
-            return IsEditMode || IsDrawMode;
-        }
-    }
+    public bool IsDrawEditMeasureMode => IsEditMode || IsDrawMode;
 
 
     public bool IsPanMode
@@ -903,8 +847,10 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public virtual void Initialize(
         IDialogService dialogService,
-        IMapSettings? mapSettings,
+        IProxySettings? proxySettings,
         IBaseMapSettings? baseMapSettings,
+        IMapSettings? mapSettings,
+        IGeneralSettings? generalSettings,
         Action<Point> requestShowGoToView,
         Action<ILayer> requestShowSymbologyView)
     {
@@ -917,10 +863,10 @@ public abstract class MapViewModelBase : ViewModelBase
 
         //this.BaseMapCacheDirectory = Environment.CurrentDirectory + "\\Data";
 
-        this.ProxySettings = new ProxySettingsModel(IRI.Maptor.Jab.Common.Data.ProxySettings.Default);
+        this.ProxySettings = new ProxySettingsModel(proxySettings ?? IRI.Maptor.Jab.Common.Data.ProxySettings.Default);
         this.BaseMapSettings = new BaseMapSettingsModel(baseMapSettings ?? IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default);
         this.MapSettings = new MapSettingsModel(mapSettings ?? IRI.Maptor.Jab.Common.Data.MapSettings.Default);
-        this.GeneralSettings = CreateGeneralSettingsModel();
+        this.GeneralSettings = new GeneralSettingsModel(generalSettings ?? IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
 
         if (this.MapSettings.MinGoogleZoomLevel == 0)
             this.MapSettings.MinGoogleZoomLevel = 2;
@@ -936,11 +882,9 @@ public abstract class MapViewModelBase : ViewModelBase
         this.RegisterMapOptions();
 
         this.IsPanMode = true;
+
         //ownerWindow.DataContext = this;
     }
-
-    protected virtual GeneralSettingsModel CreateGeneralSettingsModel() =>
-        new GeneralSettingsModel(IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
 
 
     #region Actions & Funcs
@@ -1120,6 +1064,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
     #endregion
+
 
     public Func<Point, Point> CreateMapToScreenFunc()
     {

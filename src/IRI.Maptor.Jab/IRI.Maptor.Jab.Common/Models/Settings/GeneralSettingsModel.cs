@@ -68,11 +68,14 @@ public class GeneralSettingsModel : Notifier, IGeneralSettings
             RaisePropertyChanged();
         }
     }
-     
-    public IGeneralSettings GetData() => _settings;
+
 
     public GeneralSettingsModel(IGeneralSettings settings)
     {
-        _settings = settings; 
+        _settings = settings;
     }
+
+
+    public IGeneralSettings GetData() => _settings;
+
 }
