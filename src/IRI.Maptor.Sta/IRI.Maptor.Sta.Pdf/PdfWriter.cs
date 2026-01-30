@@ -1,3 +1,4 @@
+using System.Linq;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -12,6 +13,16 @@ namespace IRI.Maptor.Sta.Pdf;
 /// </summary>
 public static class PdfWriter
 {
+    /// <summary>
+    /// Data structure for layer information when writing multiple layers to PDF
+    /// </summary>
+    public class LayerPdfData
+    {
+        public List<Feature<Point>> Features { get; set; } = new();
+        public PdfOptions Options { get; set; } = new();
+        public int ZIndex { get; set; }
+        public double Opacity { get; set; } = 1.0;
+    }
     private const double POINTS_PER_INCH = 72.0;
     private const double A4_WIDTH = 595.0;  // A4 width in points
     private const double A4_HEIGHT = 842.0;  // A4 height in points
@@ -421,6 +432,256 @@ public static class PdfWriter
     {
         var color = options.GetFillColor() ?? XColors.Black;
         return new XSolidBrush(color);
+    }
+
+    /// <summary>
+    /// Writes multiple layers to PDF with their symbology
+    /// </summary>
+    public static byte[] WriteLayers(
+        List<LayerPdfData> layers,
+        BoundingBox mapExtent,
+        double mapScale,
+        PdfOptions? baseOptions = null)
+    {
+        if (layers == null || layers.Count == 0)
+            throw new ArgumentException("Layers list cannot be null or empty", nameof(layers));
+
+        if (mapExtent.IsNaN() || !mapExtent.IsValid())
+            throw new ArgumentException("Map extent must be valid", nameof(mapExtent));
+
+        baseOptions ??= new PdfOptions();
+
+        // Calculate page size based on map extent
+        var paddingX = mapExtent.Width * baseOptions.BoundingBoxPadding;
+        var paddingY = mapExtent.Height * baseOptions.BoundingBoxPadding;
+        var contentWidth = mapExtent.Width + (2 * paddingX);
+        var contentHeight = mapExtent.Height + (2 * paddingY);
+
+        // Ensure minimum size
+        var pageWidth = Math.Max(contentWidth, 100);
+        var pageHeight = Math.Max(contentHeight, 100);
+
+        // Create PDF document
+        var document = new PdfDocument();
+        document.Info.Title = baseOptions.Title ?? "Map Export";
+        document.Info.Author = baseOptions.Author ?? string.Empty;
+        document.Info.Creator = baseOptions.Creator;
+        document.Info.Subject = baseOptions.Subject ?? string.Empty;
+        document.Info.Keywords = baseOptions.Keywords ?? string.Empty;
+
+        var page = document.AddPage();
+        page.Width = pageWidth;
+        page.Height = pageHeight;
+
+        var gfx = XGraphics.FromPdfPage(page);
+
+        try
+        {
+            // Sort layers by ZIndex (ascending - lower ZIndex drawn first)
+            var sortedLayers = layers.OrderBy(l => l.ZIndex).ToList();
+
+            // Draw each layer
+            foreach (var layerData in sortedLayers)
+            {
+                if (layerData.Features == null || layerData.Features.Count == 0)
+                    continue;
+
+                // Combine layer opacity with base opacity
+                var combinedOpacity = baseOptions.Opacity * layerData.Opacity;
+
+                // Create layer-specific options
+                var layerOptions = new PdfOptions
+                {
+                    StrokeColor = layerData.Options.StrokeColor,
+                    FillColor = layerData.Options.FillColor,
+                    StrokeWidth = layerData.Options.StrokeWidth,
+                    Opacity = combinedOpacity,
+                    BoundingBoxPadding = 0, // Already applied to page size
+                    PointCircleRadius = layerData.Options.PointCircleRadius
+                };
+
+                // Draw all features in this layer
+                foreach (var feature in layerData.Features)
+                {
+                    if (feature?.TheGeometry == null || feature.TheGeometry.IsNullOrEmpty())
+                        continue;
+
+                    WriteGeometryForLayer(gfx, feature.TheGeometry, mapExtent, pageWidth, pageHeight, layerOptions);
+                }
+            }
+        }
+        finally
+        {
+            gfx.Dispose();
+        }
+
+        using var stream = new MemoryStream();
+        document.Save(stream);
+        return stream.ToArray();
+    }
+
+    /// <summary>
+    /// Writes geometry to PDF page using map extent transformation
+    /// </summary>
+    private static void WriteGeometryForLayer(
+        XGraphics gfx,
+        Geometry<Point> geometry,
+        BoundingBox mapExtent,
+        double pageWidth,
+        double pageHeight,
+        PdfOptions options)
+    {
+        if (geometry.IsNullOrEmpty())
+            return;
+
+        var paddingX = mapExtent.Width * options.BoundingBoxPadding;
+        var paddingY = mapExtent.Height * options.BoundingBoxPadding;
+
+        // Calculate scale factors
+        var contentWidth = mapExtent.Width + (2 * paddingX);
+        var contentHeight = mapExtent.Height + (2 * paddingY);
+
+        if (contentWidth <= 0) contentWidth = 1;
+        if (contentHeight <= 0) contentHeight = 1;
+
+        var scaleX = pageWidth / contentWidth;
+        var scaleY = pageHeight / contentHeight;
+        var scale = Math.Min(scaleX, scaleY); // Maintain aspect ratio
+
+        // Transform point from map coordinates to PDF coordinates
+        XPoint TransformPoint(Point point)
+        {
+            var x = (point.X - mapExtent.XMin + paddingX) * scale;
+            var y = pageHeight - ((point.Y - mapExtent.YMin + paddingY) * scale);
+            return new XPoint(x, y);
+        }
+
+        // Write geometry based on type
+        switch (geometry.Type)
+        {
+            case GeometryType.Point:
+                WritePointForLayer(gfx, geometry, TransformPoint, options);
+                break;
+
+            case GeometryType.LineString:
+                WriteLineStringForLayer(gfx, geometry, TransformPoint, options);
+                break;
+
+            case GeometryType.Polygon:
+                WritePolygonForLayer(gfx, geometry, TransformPoint, options);
+                break;
+
+            case GeometryType.MultiPoint:
+                if (geometry.Geometries != null)
+                {
+                    foreach (var pointGeo in geometry.Geometries)
+                    {
+                        WritePointForLayer(gfx, pointGeo, TransformPoint, options);
+                    }
+                }
+                break;
+
+            case GeometryType.MultiLineString:
+                if (geometry.Geometries != null)
+                {
+                    foreach (var lineGeo in geometry.Geometries)
+                    {
+                        WriteLineStringForLayer(gfx, lineGeo, TransformPoint, options);
+                    }
+                }
+                break;
+
+            case GeometryType.MultiPolygon:
+                if (geometry.Geometries != null)
+                {
+                    foreach (var polygonGeo in geometry.Geometries)
+                    {
+                        WritePolygonForLayer(gfx, polygonGeo, TransformPoint, options);
+                    }
+                }
+                break;
+
+            case GeometryType.GeometryCollection:
+                if (geometry.Geometries != null)
+                {
+                    foreach (var subGeometry in geometry.Geometries)
+                    {
+                        WriteGeometryForLayer(gfx, subGeometry, mapExtent, pageWidth, pageHeight, options);
+                    }
+                }
+                break;
+        }
+    }
+
+    private static void WritePointForLayer(XGraphics gfx, Geometry<Point> geometry, Func<Point, XPoint> transform, PdfOptions options)
+    {
+        if (geometry.Points == null || geometry.Points.Count == 0)
+            return;
+
+        var point = geometry.Points[0];
+        var pdfPoint = transform(point);
+        var radius = options.PointCircleRadius;
+
+        var pen = GetPen(options);
+        gfx.DrawEllipse(pen, pdfPoint.X - radius, pdfPoint.Y - radius, radius * 2, radius * 2);
+
+        if (options.FillColor.HasValue)
+        {
+            var brush = GetBrush(options);
+            gfx.DrawEllipse(brush, pdfPoint.X - radius, pdfPoint.Y - radius, radius * 2, radius * 2);
+        }
+    }
+
+    private static void WriteLineStringForLayer(XGraphics gfx, Geometry<Point> geometry, Func<Point, XPoint> transform, PdfOptions options)
+    {
+        if (geometry.Points == null || geometry.Points.Count < 2)
+            return;
+
+        var pdfPoints = geometry.Points.Select(transform).ToArray();
+        var pen = GetPen(options);
+        gfx.DrawLines(pen, pdfPoints);
+    }
+
+    private static void WritePolygonForLayer(XGraphics gfx, Geometry<Point> geometry, Func<Point, XPoint> transform, PdfOptions options)
+    {
+        if (geometry.Geometries == null || geometry.Geometries.Count == 0)
+            return;
+
+        // Write exterior ring
+        var exteriorRing = geometry.Geometries[0];
+        if (exteriorRing.Points == null || exteriorRing.Points.Count < 3)
+            return;
+
+        var exteriorPoints = exteriorRing.Points.Select(transform).ToArray();
+
+        // Fill polygon if fill color is specified
+        if (options.FillColor.HasValue)
+        {
+            var brush = GetBrush(options);
+            gfx.DrawPolygon(brush, exteriorPoints, XFillMode.Alternate);
+        }
+
+        // Draw polygon outline
+        var pen = GetPen(options);
+        gfx.DrawPolygon(pen, exteriorPoints);
+
+        // Draw interior rings (holes) if any
+        for (int ringIndex = 1; ringIndex < geometry.Geometries.Count; ringIndex++)
+        {
+            var ring = geometry.Geometries[ringIndex];
+            if (ring.Points != null && ring.Points.Count > 0)
+            {
+                var holePoints = ring.Points.Select(transform).ToArray();
+
+                if (options.FillColor.HasValue)
+                {
+                    var brush = GetBrush(options);
+                    gfx.DrawPolygon(brush, holePoints, XFillMode.Alternate);
+                }
+
+                gfx.DrawPolygon(pen, holePoints);
+            }
+        }
     }
 }
 

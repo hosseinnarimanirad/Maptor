@@ -22,6 +22,7 @@ using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Spatial.IO.Dxf;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
+using IRI.Maptor.Sta.Pdf;
 using IRI.Maptor.Sta.Persistence.RasterDataSources;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
@@ -2537,6 +2538,153 @@ public abstract class MapViewModelBase : ViewModelBase
         //}
     }
 
+    public async Task PrintToPdfAsync(object owner)
+    {
+        var boundingBox = PrintArea.IsNaN() ? CurrentExtent : PrintArea;
+        var mapScale = MapScale;
+
+        // Show save dialog
+        var fileName = await DialogService.ShowSaveFileDialogAsync("*.pdf|*.pdf", owner);
+
+        if (string.IsNullOrWhiteSpace(fileName))
+            return;
+
+        // Get all layers and filter to visible vector layers that are in scale
+        var allLayers = GetAllLayers(Layers);
+        var vectorLayers = allLayers.OfType<VectorLayer>()
+            .Where(layer => 
+                layer.Visibility == System.Windows.Visibility.Visible &&
+                layer.CanRenderLayer(mapScale))
+            .OrderBy(layer => layer.ZIndex)
+            .ToList();
+
+        if (vectorLayers.Count == 0)
+        {
+            // No layers to export
+            return;
+        }
+
+        // Collect layer data with features and symbology
+        var layerPdfDataList = new List<PdfWriter.LayerPdfData>();
+
+        foreach (var layer in vectorLayers)
+        {
+            try
+            {
+                // Get features for current extent
+                var featureSet = layer.DataSource.GetAsFeatureSet(boundingBox);
+
+                if (featureSet == null || featureSet.Features == null || featureSet.Features.Count == 0)
+                    continue;
+
+                // Filter features that intersect with bounding box
+                var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
+                var features = featureSet.Features
+                    .Where(f => f.TheGeometry != null && 
+                               !f.TheGeometry.IsNullOrEmpty() && 
+                               f.TheGeometry.Intersects(extentGeometry))
+                    .ToList();
+
+                if (features.Count == 0)
+                    continue;
+
+                // Convert symbology to PDF options
+                var pdfOptions = ConvertSymbologyToPdfOptions(layer.Symbolizers);
+
+                // Create layer PDF data
+                var layerPdfData = new PdfWriter.LayerPdfData
+                {
+                    Features = features,
+                    Options = pdfOptions,
+                    ZIndex = layer.ZIndex,
+                    Opacity = layer.Opacity
+                };
+
+                layerPdfDataList.Add(layerPdfData);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error processing layer {layer.LayerName}: {ex.Message}");
+                // Continue with other layers even if one fails
+            }
+        }
+
+        if (layerPdfDataList.Count == 0)
+        {
+            // No features to export
+            return;
+        }
+
+        // Create base PDF options
+        var baseOptions = new PdfOptions
+        {
+            Title = "Map Export",
+            Creator = "IRI.Maptor",
+            PageSize = PdfPageSize.Auto,
+            BoundingBoxPadding = 0.05 // 5% padding
+        };
+
+        // Generate PDF
+        var pdfBytes = PdfWriter.WriteLayers(layerPdfDataList, boundingBox, mapScale, baseOptions);
+
+        // Save to file
+        File.WriteAllBytes(fileName, pdfBytes);
+    }
+
+    /// <summary>
+    /// Converts layer symbolizers to PDF options
+    /// </summary>
+    private PdfOptions ConvertSymbologyToPdfOptions(IEnumerable<ISymbolizer>? symbolizers)
+    {
+        var options = new PdfOptions();
+
+        if (symbolizers == null)
+            return options;
+
+        // Get first SimpleSymbolizer
+        var simpleSymbolizer = symbolizers.OfType<SimpleSymbolizer>().FirstOrDefault();
+        if (simpleSymbolizer?.Param == null)
+            return options;
+
+        var visualParams = simpleSymbolizer.Param;
+
+        // Convert fill brush to RgbColor
+        if (visualParams.Fill != null)
+        {
+            var fillColor = visualParams.Fill.AsSolidColor();
+            if (fillColor.HasValue)
+            {
+                options.FillColor = new RgbColor(
+                    fillColor.Value.R,
+                    fillColor.Value.G,
+                    fillColor.Value.B,
+                    fillColor.Value.A
+                );
+            }
+        }
+
+        // Convert stroke brush to RgbColor
+        if (visualParams.Stroke != null)
+        {
+            var strokeColor = visualParams.Stroke.AsSolidColor();
+            if (strokeColor.HasValue)
+            {
+                options.StrokeColor = new RgbColor(
+                    strokeColor.Value.R,
+                    strokeColor.Value.G,
+                    strokeColor.Value.B,
+                    strokeColor.Value.A
+                );
+            }
+        }
+
+        // Set stroke width and opacity
+        options.StrokeWidth = visualParams.StrokeThickness;
+        options.Opacity = visualParams.Opacity;
+
+        return options;
+    }
+
     public async Task SetPrintAreaAsync()
     {
         // select a rectangle 
@@ -3805,6 +3953,20 @@ public abstract class MapViewModelBase : ViewModelBase
             }
 
             return _exportMapAsPngCommand;
+        }
+    }
+
+    private RelayCommand _printToPdfCommand;
+    public RelayCommand PrintToPdfCommand
+    {
+        get
+        {
+            if (_printToPdfCommand == null)
+            {
+                _printToPdfCommand = new RelayCommand(async param => await PrintToPdfAsync(param));
+            }
+
+            return _printToPdfCommand;
         }
     }
 
