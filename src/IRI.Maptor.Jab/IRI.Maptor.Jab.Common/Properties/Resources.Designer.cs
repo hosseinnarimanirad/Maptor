@@ -286,6 +286,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Draw Rectangle.
+        /// </summary>
+        public static string cmd_general_drawRectangle {
+            get {
+                return ResourceManager.GetString("cmd_general_drawRectangle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Full extent.
         /// </summary>
         public static string cmd_general_fullExtent {
@@ -511,6 +520,186 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Part.
+        /// </summary>
+        public static string dialog_geometryDetails_addPart {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_addPart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Point.
+        /// </summary>
+        public static string dialog_geometryDetails_addPoint {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_addPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Polygon.
+        /// </summary>
+        public static string dialog_geometryDetails_addPolygon {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_addPolygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Basic Information.
+        /// </summary>
+        public static string dialog_geometryDetails_basicInfo {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_basicInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string dialog_geometryDetails_cancel {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Part.
+        /// </summary>
+        public static string dialog_geometryDetails_deletePart {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_deletePart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dimension.
+        /// </summary>
+        public static string dialog_geometryDetails_dimension {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_dimension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Coordinates.
+        /// </summary>
+        public static string dialog_geometryDetails_editCoordinates {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_editCoordinates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export.
+        /// </summary>
+        public static string dialog_geometryDetails_export {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exterior Ring.
+        /// </summary>
+        public static string dialog_geometryDetails_exteriorRing {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_exteriorRing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Format.
+        /// </summary>
+        public static string dialog_geometryDetails_format {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geometry Type.
+        /// </summary>
+        public static string dialog_geometryDetails_geometryType {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_geometryType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interior Rings.
+        /// </summary>
+        public static string dialog_geometryDetails_interiorRings {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_interiorRings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of Geometries.
+        /// </summary>
+        public static string dialog_geometryDetails_numberOfGeometries {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_numberOfGeometries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of Points.
+        /// </summary>
+        public static string dialog_geometryDetails_numberOfPoints {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_numberOfPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Points.
+        /// </summary>
+        public static string dialog_geometryDetails_points {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string dialog_geometryDetails_save {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geometry Details.
+        /// </summary>
+        public static string dialog_geometryDetails_title {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UTM Zone.
+        /// </summary>
+        public static string dialog_geometryDetails_utmZone {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_utmZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom to Point.
+        /// </summary>
+        public static string dialog_geometryDetails_zoomToPoint {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_zoomToPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pan to.
         /// </summary>
         public static string dialog_goto_panTo {
@@ -597,6 +786,366 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string dialog_symbology_title {
             get {
                 return ResourceManager.GetString("dialog_symbology_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azimuth To Next.
+        /// </summary>
+        public static string geometryDetails_coordinateGrid_azimuthToNext {
+            get {
+                return ResourceManager.GetString("geometryDetails_coordinateGrid_azimuthToNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azimuth To Previous.
+        /// </summary>
+        public static string geometryDetails_coordinateGrid_azimuthToPrevious {
+            get {
+                return ResourceManager.GetString("geometryDetails_coordinateGrid_azimuthToPrevious", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Distance To Next.
+        /// </summary>
+        public static string geometryDetails_coordinateGrid_distanceToNext {
+            get {
+                return ResourceManager.GetString("geometryDetails_coordinateGrid_distanceToNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #.
+        /// </summary>
+        public static string geometryDetails_coordinateGrid_number {
+            get {
+                return ResourceManager.GetString("geometryDetails_coordinateGrid_number", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vertex Angle.
+        /// </summary>
+        public static string geometryDetails_coordinateGrid_vertexAngle {
+            get {
+                return ResourceManager.GetString("geometryDetails_coordinateGrid_vertexAngle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X.
+        /// </summary>
+        public static string geometryDetails_coordinateGrid_x {
+            get {
+                return ResourceManager.GetString("geometryDetails_coordinateGrid_x", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y.
+        /// </summary>
+        public static string geometryDetails_coordinateGrid_y {
+            get {
+                return ResourceManager.GetString("geometryDetails_coordinateGrid_y", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Z.
+        /// </summary>
+        public static string geometryDetails_coordinateGrid_z {
+            get {
+                return ResourceManager.GetString("geometryDetails_coordinateGrid_z", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Point.
+        /// </summary>
+        public static string geometryDetails_currentPoint_add {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Coordinate.
+        /// </summary>
+        public static string geometryDetails_currentPoint_copyCoordinate {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_copyCoordinate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Point.
+        /// </summary>
+        public static string geometryDetails_currentPoint_delete {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        public static string geometryDetails_currentPoint_edit {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to Next Point.
+        /// </summary>
+        public static string geometryDetails_currentPoint_goToNextPoint {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_goToNextPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to Previous Point.
+        /// </summary>
+        public static string geometryDetails_currentPoint_goToPreviousPoint {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_goToPreviousPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X:.
+        /// </summary>
+        public static string geometryDetails_currentPoint_x {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_x", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y:.
+        /// </summary>
+        public static string geometryDetails_currentPoint_y {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_y", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pan to Point.
+        /// </summary>
+        public static string geometryDetails_currentPoint_zoom {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_zoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom to Point.
+        /// </summary>
+        public static string geometryDetails_currentPoint_zoomToPoint {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_zoomToPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ellipsoid:.
+        /// </summary>
+        public static string geometryDetails_options_ellipsoid {
+            get {
+                return ResourceManager.GetString("geometryDetails_options_ellipsoid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid Options.
+        /// </summary>
+        public static string geometryDetails_options_gridOptions {
+            get {
+                return ResourceManager.GetString("geometryDetails_options_gridOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lat/Long Precision:.
+        /// </summary>
+        public static string geometryDetails_options_latLongPrecision {
+            get {
+                return ResourceManager.GetString("geometryDetails_options_latLongPrecision", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Inner Angle.
+        /// </summary>
+        public static string geometryDetails_options_showInnerAngle {
+            get {
+                return ResourceManager.GetString("geometryDetails_options_showInnerAngle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Z Column.
+        /// </summary>
+        public static string geometryDetails_options_showZColumn {
+            get {
+                return ResourceManager.GetString("geometryDetails_options_showZColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SRS:.
+        /// </summary>
+        public static string geometryDetails_options_srs {
+            get {
+                return ResourceManager.GetString("geometryDetails_options_srs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SRS Configuration.
+        /// </summary>
+        public static string geometryDetails_options_srsConfiguration {
+            get {
+                return ResourceManager.GetString("geometryDetails_options_srsConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SRS: {0}{1}{2}.
+        /// </summary>
+        public static string geometryDetails_options_srsInfoFormat {
+            get {
+                return ResourceManager.GetString("geometryDetails_options_srsInfoFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Decimal Degrees for Angles.
+        /// </summary>
+        public static string geometryDetails_options_useDecimalDegreesForAngles {
+            get {
+                return ResourceManager.GetString("geometryDetails_options_useDecimalDegreesForAngles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UTM Zone:.
+        /// </summary>
+        public static string geometryDetails_options_utmZone {
+            get {
+                return ResourceManager.GetString("geometryDetails_options_utmZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X/Y Precision:.
+        /// </summary>
+        public static string geometryDetails_options_xyPrecision {
+            get {
+                return ResourceManager.GetString("geometryDetails_options_xyPrecision", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Part {0} of {1}.
+        /// </summary>
+        public static string geometryDetails_parts_format {
+            get {
+                return ResourceManager.GetString("geometryDetails_parts_format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✗ Invalid Geometry Part.
+        /// </summary>
+        public static string geometryDetails_parts_invalid {
+            get {
+                return ResourceManager.GetString("geometryDetails_parts_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No parts.
+        /// </summary>
+        public static string geometryDetails_parts_noParts {
+            get {
+                return ResourceManager.GetString("geometryDetails_parts_noParts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parts.
+        /// </summary>
+        public static string geometryDetails_parts_title {
+            get {
+                return ResourceManager.GetString("geometryDetails_parts_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✓ Valid Geometry Part.
+        /// </summary>
+        public static string geometryDetails_parts_valid {
+            get {
+                return ResourceManager.GetString("geometryDetails_parts_valid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Point {0} of {1} (Page {2} of {3}).
+        /// </summary>
+        public static string geometryDetails_pointCounter_format {
+            get {
+                return ResourceManager.GetString("geometryDetails_pointCounter_format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Polygon.
+        /// </summary>
+        public static string geometryDetails_polygon_title {
+            get {
+                return ResourceManager.GetString("geometryDetails_polygon_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Polygon {0} of {1}.
+        /// </summary>
+        public static string geometryDetails_polygons_format {
+            get {
+                return ResourceManager.GetString("geometryDetails_polygons_format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✗ Invalid Polygon.
+        /// </summary>
+        public static string geometryDetails_polygons_invalid {
+            get {
+                return ResourceManager.GetString("geometryDetails_polygons_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Polygon.
+        /// </summary>
+        public static string geometryDetails_polygons_noPolygon {
+            get {
+                return ResourceManager.GetString("geometryDetails_polygons_noPolygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ✓ Valid Polygon.
+        /// </summary>
+        public static string geometryDetails_polygons_valid {
+            get {
+                return ResourceManager.GetString("geometryDetails_polygons_valid", resourceCulture);
             }
         }
         

@@ -802,4 +802,7 @@
     <value>Message</value>
     <comment>Default title for message dialogs</comment>
   </data>
+  <data name="cmd_general_drawRectangle" xml:space="preserve">
+    <value>Draw Rectangle</value>
+  </data>
 </root>

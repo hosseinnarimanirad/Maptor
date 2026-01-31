@@ -189,15 +189,20 @@
                     <StackPanel Orientation="Horizontal">
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding DrawPointCommand}" 
                                 ToolTip="{Binding [cmd_general_drawPoint], Source={StaticResource Localization}}"  >
-                            <iconPacks:Material Kind="VectorPointPlus"/>
+                            <iconPacks:Material Kind="MapMarkerPlusOutline"/>
                         </Button>
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding DrawPolylineCommand}" 
                                 ToolTip="{Binding [cmd_general_drawPolyline], Source={StaticResource Localization}}">
                             <iconPacks:Material Kind="VectorPolylinePlus"/>
                         </Button>
+                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding DrawRectangleCommand}" 
+                                ToolTip="{Binding [cmd_general_drawRectangle], Source={StaticResource Localization}}">
+                            <iconPacks:Material Kind="ShapeRectanglePlus"/>
+                        </Button>
+                        
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding DrawPolygonCommand}" 
                                 ToolTip="{Binding [cmd_general_drawPolygon], Source={StaticResource Localization}}">
-                            <iconPacks:Material Kind="VectorSquarePlus"/>
+                            <iconPacks:Material Kind="ShapePolygonPlus"/>
                         </Button>
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddTextToMapCommand}" 
                                 ToolTip="{Binding [cmd_general_addTextToMap], Source={StaticResource Localization}}">

@@ -776,4 +776,7 @@
   <data name="wat_security_userName" xml:space="preserve">
     <value>نام کاربری</value>
   </data>
+  <data name="cmd_general_drawRectangle" xml:space="preserve">
+    <value>ترسیم مستطیل</value>
+  </data>
 </root>
