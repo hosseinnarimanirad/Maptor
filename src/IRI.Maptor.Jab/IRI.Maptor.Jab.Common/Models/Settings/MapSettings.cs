@@ -15,7 +15,7 @@ public class MapSettingsModel : Notifier, IMapSettings
 
 
     #region Zoom
-     
+
     public bool IsMouseWheelZoomEnabled
     {
         get => _settings.IsMouseWheelZoomEnabled;
@@ -27,7 +27,7 @@ public class MapSettingsModel : Notifier, IMapSettings
             this.OnIsMouseWheelZoomEnabledChanged?.Invoke(this, value);
         }
     }
-     
+
     public bool IsDoubleClickZoomEnabled
     {
         get => _settings.IsDoubleClickZoomEnabled;
@@ -39,7 +39,7 @@ public class MapSettingsModel : Notifier, IMapSettings
             this.OnIsDoubleClickZoomEnabledChanged?.Invoke(this, value);
         }
     }
-     
+
     //public Action<bool>? FireIsGoogleZoomLevelsEnabledChanged;
     public bool IsGoogleZoomLevelsEnabled
     {
@@ -51,7 +51,7 @@ public class MapSettingsModel : Notifier, IMapSettings
             //this.FireIsGoogleZoomLevelsEnabledChanged?.Invoke(value);
         }
     }
-     
+
     //public Action<int>? FireMinGoogleZoomLevelChanged;
     //private int _minGoogleZoomLevel = 1;
     public int MinGoogleZoomLevel
@@ -62,12 +62,12 @@ public class MapSettingsModel : Notifier, IMapSettings
             if (value > MaxGoogleZoomLevel)
                 return;
 
-            _settings.MinGoogleZoomLevel = value;
+            _settings.MinGoogleZoomLevel = Math.Clamp(value, 2, 22);
             RaisePropertyChanged();
             //this.FireMinGoogleZoomLevelChanged?.Invoke(value);
         }
     }
-     
+
     //public Action<int>? FireMaxGoogleZoomLevelChanged;
     //private int _maxGoogleZoomLevel = 22;
     public int MaxGoogleZoomLevel
@@ -78,13 +78,21 @@ public class MapSettingsModel : Notifier, IMapSettings
             if (value < MinGoogleZoomLevel)
                 return;
 
-            _settings.MaxGoogleZoomLevel = value;
+            _settings.MaxGoogleZoomLevel = Math.Clamp(value, 2, 22);
             RaisePropertyChanged();
             //this.FireMaxGoogleZoomLevelChanged?.Invoke(value);
         }
     }
 
-    public BoundingBox? InitialExtent { get; set; } = null;
+    public BoundingBox? InitialExtent
+    {
+        get => _settings.InitialExtent;
+        set
+        {
+            _settings.InitialExtent = value;
+            RaisePropertyChanged();
+        }
+    }
 
     #endregion
 
