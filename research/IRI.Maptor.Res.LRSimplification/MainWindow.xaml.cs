@@ -57,15 +57,20 @@ public partial class MainWindow : Window
     }
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
-    { 
-        var presenter = await MapInitializationHelper.InitializeMapAsync(
-            this.map,
-            this,
-            new ViewModel.ApplicationPresenter(),
-            ProxySettings.Default,
-            BaseMapSettings.Default,
-            MapSettings.Default,
-            GeneralSettings.Default);
+    {
+        var presenter = new ViewModel.ApplicationPresenter();
+
+        presenter.InitializeSettings(ProxySettings.Default, BaseMapSettings.Default, MapSettings.Default, GeneralSettings.Default);
+
+        await MapInitializationHelper.InitializeMapAsync(this.map, this, presenter);
+
+        await MapInitializationHelper.InitializeMapAsync(this.map, this, presenter);
+
+            //new ViewModel.ApplicationPresenter(),
+            //ProxySettings.Default,
+            //BaseMapSettings.Default,
+            //MapSettings.Default,
+            //GeneralSettings.Default);
 
         this.DataContext = presenter;
 

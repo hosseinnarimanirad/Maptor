@@ -28,15 +28,13 @@ public partial class DrawingLegendWindow : Window
         {
             InitialExtent = BoundingBoxes.WebMercator_Africa
         };
+         
+        var presenter = new ViewModel.AppViewModel();
 
-        var presenter = await MapInitializationHelper.InitializeMapAsync(
-            this.map,
-            this,
-            new AppViewModel(),
-            ProxySettings.Default,
-            BaseMapSettings.Default,
-            config,
-            GeneralSettings.Default);
+        presenter.InitializeSettings(ProxySettings.Default, BaseMapSettings.Default, config, GeneralSettings.Default);
+
+        await MapInitializationHelper.InitializeMapAsync(this.map, this, presenter);
+
 
         this.DataContext = presenter;
 

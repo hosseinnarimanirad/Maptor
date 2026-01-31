@@ -843,15 +843,34 @@ public abstract class MapViewModelBase : ViewModelBase
         CoordinatePanel = new CoordinatePanelViewModel();
     }
 
+    public virtual void InitializeSettings(IProxySettings? proxySettings, IBaseMapSettings? baseMapSettings, IMapSettings? mapSettings, IGeneralSettings? generalSettings)
+    {
+        this.ProxySettings = new ProxySettingsModel(proxySettings ?? IRI.Maptor.Jab.Common.Data.ProxySettings.Default);
+        this.BaseMapSettings = new BaseMapSettingsModel(baseMapSettings ?? IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default);
+        this.MapSettings = new MapSettingsModel(mapSettings ?? IRI.Maptor.Jab.Common.Data.MapSettings.Default);
+        this.GeneralSettings = new GeneralSettingsModel(generalSettings ?? IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
+
+        //if (this.MapSettings.MinGoogleZoomLevel == 0)
+        //    this.MapSettings.MinGoogleZoomLevel = 2;
+
+        //if (this.MapSettings.MaxGoogleZoomLevel == 0)
+        //    this.MapSettings.MaxGoogleZoomLevel = 18;
+
+        this.MapProviders = BaseMapSettings.MapProviders;
+
+        this.SelectedMapProvider = this.MapProviders?.FirstOrDefault(m => m.Type == BaseMapSettings.InitialBaseMap);
+
+        this.UpdateTilesServices();
+    }
 
     public virtual Task InitializeAsync() => Task.CompletedTask;
 
     public virtual void Initialize(
         IDialogService dialogService,
-        IProxySettings? proxySettings,
-        IBaseMapSettings? baseMapSettings,
-        IMapSettings? mapSettings,
-        IGeneralSettings? generalSettings,
+        //IProxySettings? proxySettings,
+        //IBaseMapSettings? baseMapSettings,
+        //IMapSettings? mapSettings,
+        //IGeneralSettings? generalSettings,
         Action<Point> requestShowGoToView,
         Action<ILayer> requestShowSymbologyView)
     {
@@ -862,21 +881,21 @@ public abstract class MapViewModelBase : ViewModelBase
 
         this.RequestClearAll = this.ClearAll;
 
-        //this.BaseMapCacheDirectory = Environment.CurrentDirectory + "\\Data";
+        ////this.BaseMapCacheDirectory = Environment.CurrentDirectory + "\\Data";
 
-        this.ProxySettings = new ProxySettingsModel(proxySettings ?? IRI.Maptor.Jab.Common.Data.ProxySettings.Default);
-        this.BaseMapSettings = new BaseMapSettingsModel(baseMapSettings ?? IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default);
-        this.MapSettings = new MapSettingsModel(mapSettings ?? IRI.Maptor.Jab.Common.Data.MapSettings.Default);
-        this.GeneralSettings = new GeneralSettingsModel(generalSettings ?? IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
+        //this.ProxySettings = new ProxySettingsModel(proxySettings ?? IRI.Maptor.Jab.Common.Data.ProxySettings.Default);
+        //this.BaseMapSettings = new BaseMapSettingsModel(baseMapSettings ?? IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default);
+        //this.MapSettings = new MapSettingsModel(mapSettings ?? IRI.Maptor.Jab.Common.Data.MapSettings.Default);
+        //this.GeneralSettings = new GeneralSettingsModel(generalSettings ?? IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
 
-        if (this.MapSettings.MinGoogleZoomLevel == 0)
-            this.MapSettings.MinGoogleZoomLevel = 2;
+        ////if (this.MapSettings.MinGoogleZoomLevel == 0)
+        ////    this.MapSettings.MinGoogleZoomLevel = 2;
 
-        if (this.MapSettings.MaxGoogleZoomLevel == 0)
-            this.MapSettings.MaxGoogleZoomLevel = 18;
+        ////if (this.MapSettings.MaxGoogleZoomLevel == 0)
+        ////    this.MapSettings.MaxGoogleZoomLevel = 18;
 
-        this.MapProviders = BaseMapSettings.MapProviders;
-        this.SelectedMapProvider = this.MapProviders?.FirstOrDefault(m => m.Type == BaseMapSettings.InitialBaseMap);
+        //this.MapProviders = BaseMapSettings.MapProviders;
+        //this.SelectedMapProvider = this.MapProviders?.FirstOrDefault(m => m.Type == BaseMapSettings.InitialBaseMap);
 
         this.SetMapCursorSet1();
 
@@ -3776,19 +3795,6 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    private RelayCommand _drawPointCommand;
-    public RelayCommand DrawPointCommand
-    {
-        get
-        {
-            if (_drawPointCommand == null)
-            {
-                _drawPointCommand = new RelayCommand(async param => await DrawAsync(DrawMode.Point));
-            }
-            return _drawPointCommand;
-        }
-    }
-
     private RelayCommand _drawPolygonCommand;
     public RelayCommand DrawPolygonCommand
     {
@@ -3802,6 +3808,19 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    private RelayCommand _drawRectangleCommand;
+    public RelayCommand DrawRectangleCommand
+    {
+        get
+        {
+            if (_drawRectangleCommand == null)
+            {
+                _drawRectangleCommand = new RelayCommand(async param => await DrawAsync(DrawMode.Rectangle));
+            }
+            return _drawRectangleCommand;
+        }
+    }
+
     private RelayCommand _drawPolylineCommand;
     public RelayCommand DrawPolylineCommand
     {
@@ -3812,6 +3831,19 @@ public abstract class MapViewModelBase : ViewModelBase
                 _drawPolylineCommand = new RelayCommand(async param => await DrawAsync(DrawMode.Polyline));
             }
             return _drawPolylineCommand;
+        }
+    }
+
+    private RelayCommand _drawPointCommand;
+    public RelayCommand DrawPointCommand
+    {
+        get
+        {
+            if (_drawPointCommand == null)
+            {
+                _drawPointCommand = new RelayCommand(async param => await DrawAsync(DrawMode.Point));
+            }
+            return _drawPointCommand;
         }
     }
 

@@ -29,14 +29,16 @@ public partial class AllLegendsWindow : Window
             InitialExtent = BoundingBoxes.WebMercator_Africa
         };
 
-        var presenter = await MapInitializationHelper.InitializeMapAsync(
-            this.map,
-            this,
-            new AppViewModel(),
-            ProxySettings.Default,
-            BaseMapSettings.Default,
-            config,
-            GeneralSettings.Default);
+        var presenter = new ViewModel.AppViewModel();
+
+        presenter.InitializeSettings(ProxySettings.Default, BaseMapSettings.Default, config, GeneralSettings.Default);
+
+        await MapInitializationHelper.InitializeMapAsync(this.map, this, presenter);
+        //new AppViewModel(),
+        //ProxySettings.Default,
+        //BaseMapSettings.Default,
+        //config,
+        //GeneralSettings.Default);
 
         this.DataContext = presenter;
 

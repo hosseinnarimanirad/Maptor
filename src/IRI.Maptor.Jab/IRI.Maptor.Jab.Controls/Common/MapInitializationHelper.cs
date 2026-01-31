@@ -34,10 +34,10 @@ public static class MapInitializationHelper
         MapViewer mapView,
         System.Windows.Window ownerWindow,
         T presenter,
-        IProxySettings? proxySettings,
-        IBaseMapSettings? baseMapSettings,
-        IMapSettings? mapSettings,
-        IGeneralSettings? generalSettings,
+        //IProxySettings? proxySettings,
+        //IBaseMapSettings? baseMapSettings,
+        //IMapSettings? mapSettings,
+        //IGeneralSettings? generalSettings,
         List<IrProvince93>? provinces = null
         /*MapViewerConfiguration? config = null*/) where T : MapViewModelBase
     {
@@ -57,11 +57,11 @@ public static class MapInitializationHelper
         var (dialogService, requestShowGoToView, requestShowSymbologyView) = CreateDefaultServices(ownerWindow, presenter);
 
         // Initialize presenter with default services
-        presenter.Initialize(dialogService, proxySettings, baseMapSettings, mapSettings, generalSettings, requestShowGoToView, requestShowSymbologyView);
+        presenter.Initialize(dialogService, /*proxySettings, baseMapSettings, mapSettings, generalSettings,*/ requestShowGoToView, requestShowSymbologyView);
 
 
         // Configure MapViewer with common settings
-        ConfigureMapViewer(presenter, mapView, mapSettings);
+        ConfigureMapViewer(presenter, mapView/*, mapSettings*/);
 
         //// Configure presenter settings
         //ConfigurePresenterSettings(presenter, config);
@@ -91,14 +91,14 @@ public static class MapInitializationHelper
     /// <summary>
     /// Configures MapViewer with common settings based on the configuration.
     /// </summary>
-    private static void ConfigureMapViewer<T>(T presenter, MapViewer mapView, IMapSettings config) where T : MapViewModelBase
+    private static void ConfigureMapViewer<T>(T presenter, MapViewer mapView/*, IMapSettings config*/) where T : MapViewModelBase
     {
         //if (config.EnablePan)
         //{
         //    mapView.Pan();
         //}
 
-        if (config.IsMouseWheelZoomEnabled)
+        if (presenter.MapSettings.IsMouseWheelZoomEnabled)
         {
             mapView.EnableZoomingOnMouseWheel();
         }
@@ -113,9 +113,9 @@ public static class MapInitializationHelper
         //    mapView.SetCursor(config.InitialCursor);
         //}
 
-        if (config.InitialExtent != null)
+        if (presenter.MapSettings.InitialExtent != null)
         {
-            presenter.ZoomToExtent(config.InitialExtent ?? BoundingBoxes.Mercator_Iran, true, isNewExtent: true);
+            presenter.ZoomToExtent(presenter.MapSettings.InitialExtent ?? BoundingBoxes.Mercator_Iran, true, isNewExtent: true);
         }
 
     }
