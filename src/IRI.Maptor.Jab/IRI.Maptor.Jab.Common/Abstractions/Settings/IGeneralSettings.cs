@@ -1,4 +1,4 @@
-﻿namespace IRI.Maptor.Jab.Common.Abstractions;
+namespace IRI.Maptor.Jab.Common.Abstractions;
 
 public interface IGeneralSettings
 {
@@ -14,5 +14,7 @@ public interface IGeneralSettings
     bool CoordinatePanel_ShowCoordinatePanel { get; set; }  
 
     bool Legend_ShowLegendTools { get; set; }  
+
+    string MahAppsTheme { get; set; }
 
 }

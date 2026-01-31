@@ -4205,11 +4205,9 @@ public partial class MapViewer : NotifiableUserControl
         var p3 = bbox.BottomRight;
         var p4 = bbox.BottomLeft;
 
-        var ringPoints = new List<sb.Point> { p1, p2, p3, p4, p1 };
-
-        var ring = Geometry<sb.Point>.Create(ringPoints, sb.GeometryType.LineString, SridHelper.WebMercator);
-
-        var polygon = Geometry<sb.Point>.CreatePolygonOrMultiPolygon(new List<Geometry<sb.Point>> { ring }, SridHelper.WebMercator);
+        var ringPoints = new List<sb.Point> { p1, p2, p3, p4 };
+         
+        var polygon = Geometry<sb.Point>.CreatePolygon(ringPoints, SridHelper.WebMercator);
 
         drawingCancellationToken = null;
 

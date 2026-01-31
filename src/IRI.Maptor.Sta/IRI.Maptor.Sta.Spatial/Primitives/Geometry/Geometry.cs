@@ -4074,6 +4074,12 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public static Geometry<T> CreatePolygon(List<T> points, int srid)
     {
+        // outter ring must be CCW
+        if (SpatialUtility.IsClockwise(points))
+        {
+            points.Reverse();
+        }
+
         return new Geometry<T>()
         {
             Srid = srid,
