@@ -9,14 +9,14 @@ namespace IRI.Maptor.Jab.Common.Models.Themes;
       
 public enum MahAppsThemeColor
 {
-    [Color("#FFB8D135")]
-    Lime = 01,
+    [Color("#FF34A134")]
+    Emerald = 01,
 
     [Color("#FF81BA45")]
     Green = 02,
 
-    [Color("#FF34A134")]
-    Emerald = 03,
+    [Color("#FFB8D135")]
+    Lime = 03,
 
     [Color("#FF34BCBA")]
     Teal = 04,

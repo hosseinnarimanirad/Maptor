@@ -11,39 +11,9 @@ public class EditableFeatureLayerOptions : Notifier
     static readonly Brush _defaultStroke = BrushHelper.CreateBrush("#FF1CA1E2");
     static readonly Brush _defaultFill = BrushHelper.CreateBrush("#661CA1E2");
 
-    static readonly Brush _stroke;
-    static readonly Brush _fill;
-
-    static EditableFeatureLayerOptions()
-    {
-        try
-        {
-            var brush = (SolidColorBrush)Application.Current.Resources["MahApps.Brushes.Accent"];
-
-            if (brush == null)
-            {
-                _fill = _defaultFill;
-
-                _stroke = _defaultStroke;
-            }
-            else
-            {
-                _fill = new SolidColorBrush(new Color() { A = 100, R = brush.Color.R, G = brush.Color.G, B = brush.Color.B });
-
-                _stroke = new SolidColorBrush(new Color() { A = 204, R = brush.Color.R, G = brush.Color.G, B = brush.Color.B });
-            }
-        }
-        catch (Exception ex)
-        {
-            _fill = _defaultFill;
-
-            _stroke = _defaultStroke;
-        }
-        finally
-        {
-
-        }
-    }
+    readonly Brush _stroke;
+    readonly Brush _fill;
+     
 
     public bool IsNewDrawing { get; set; } = false;
 
@@ -238,7 +208,7 @@ public class EditableFeatureLayerOptions : Notifier
 
     public ScaleInterval VisibleRange { get; set; } = ScaleInterval.All;
 
-    public VisualParameters Visual { get; set; } = new VisualParameters(_fill, _stroke, 4, .9);
+    public VisualParameters Visual { get; set; }// = new VisualParameters(_fill, _stroke, 4, .9);
 
     public Func<FrameworkElement> MakePrimaryVertex { get; set; } = () => new Views.MapMarkers.Circle(1);
 
@@ -246,7 +216,35 @@ public class EditableFeatureLayerOptions : Notifier
 
     public EditableFeatureLayerOptions()
     {
+        try
+        {
+            var brush = (SolidColorBrush)Application.Current.Resources["MahApps.Brushes.Accent"];
 
+            if (brush == null)
+            {
+                _fill = _defaultFill;
+
+                _stroke = _defaultStroke;
+            }
+            else
+            {
+                _fill = new SolidColorBrush(new Color() { A = 100, R = brush.Color.R, G = brush.Color.G, B = brush.Color.B });
+
+                _stroke = new SolidColorBrush(new Color() { A = 204, R = brush.Color.R, G = brush.Color.G, B = brush.Color.B });
+            }
+        }
+        catch (Exception ex)
+        {
+            _fill = _defaultFill;
+
+            _stroke = _defaultStroke;
+        }
+        finally
+        {
+
+        }
+
+        Visual = new VisualParameters(_fill, _stroke, 4, 0.9);
     }
 
     public static EditableFeatureLayerOptions CreateDefault() => new EditableFeatureLayerOptions();

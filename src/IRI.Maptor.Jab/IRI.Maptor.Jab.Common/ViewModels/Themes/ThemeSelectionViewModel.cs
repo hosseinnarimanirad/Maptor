@@ -40,19 +40,7 @@ public class ThemeSelectionViewModel : Notifier
             RaisePropertyChanged();
         }
     }
-
-    public string SelectedThemeDisplayName
-    {
-        get => _selectedThemeDisplayName;
-        set
-        {
-            if (_selectedThemeDisplayName == value)
-                return;
-            _selectedThemeDisplayName = value ?? string.Empty;
-            RaisePropertyChanged();
-        }
-    }
-
+     
     private void LoadThemes(MahAppsThemeColor? currentTheme)
     {
         foreach (var theme in ThemeHelper.AvailableThemes)
@@ -68,10 +56,8 @@ public class ThemeSelectionViewModel : Notifier
 
         if (currentTheme is null)
             return;
-
-        var selectedInfo = ThemeHelper.GetThemeInfo(currentTheme.Value);
-        SelectedTheme = currentTheme.Value;
-        SelectedThemeDisplayName = selectedInfo?.DisplayName ?? currentTheme.ToString();
+         
+        SelectedTheme = currentTheme.Value; 
     }
 
     private RelayCommand? _selectThemeCommand;
@@ -90,8 +76,9 @@ public class ThemeSelectionViewModel : Notifier
                         {
                             t.IsSelected = t.Color == theme.Color;
                         }
-                        SelectedTheme = theme.Color;
-                        SelectedThemeDisplayName = theme.DisplayName;
+
+                        SelectedTheme = theme.Color; 
+                        _generalSettings.MahAppsTheme = SelectedTheme;
                         ThemeHelper.ApplyTheme(theme.Color);
                     }
                 });
@@ -110,7 +97,7 @@ public class ThemeSelectionViewModel : Notifier
             {
                 _saveCommand = new RelayCommand(_ =>
                 {
-                    _generalSettings.MahAppsTheme = SelectedTheme;
+                    //_generalSettings.MahAppsTheme = SelectedTheme;
                     _requestClose(true);
                 });
             }
@@ -128,6 +115,7 @@ public class ThemeSelectionViewModel : Notifier
             {
                 _cancelCommand = new RelayCommand(_ =>
                 {
+                    _generalSettings.MahAppsTheme = _originalTheme;
                     ThemeHelper.ApplyTheme(_originalTheme);
                     _requestClose(false);
                 });

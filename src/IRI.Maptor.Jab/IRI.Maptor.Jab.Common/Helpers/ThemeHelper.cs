@@ -59,10 +59,10 @@ public static class ThemeHelper
     }
 
 
-    /// <summary>
-    /// Gets theme info by theme name
-    /// </summary>
-    public static ThemeInfoModel? GetThemeInfo(MahAppsThemeColor color) => AvailableThemes.FirstOrDefault(t => t.Color == color);
+    ///// <summary>
+    ///// Gets theme info by theme name
+    ///// </summary>
+    //public static ThemeInfoModel? GetThemeInfo(MahAppsThemeColor color) => AvailableThemes.FirstOrDefault(t => t.Color == color);
 
     /// <summary>
     /// Applies a MahApps theme to the application

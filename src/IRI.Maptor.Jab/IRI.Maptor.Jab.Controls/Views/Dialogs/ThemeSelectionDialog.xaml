@@ -99,18 +99,7 @@
                 </ItemsControl>
             </ScrollViewer>
         </GroupBox>
-
-        <!--<TextBlock Grid.Row="2" 
-                   Text="تم انتخاب شده: " 
-                   Margin="8,4,8,0"
-                   FontWeight="SemiBold"/>
-        <TextBlock Grid.Row="2" 
-                   Text="{Binding SelectedThemeDisplayName}" 
-                   Margin="8,4,8,0"
-                   HorizontalAlignment="Right"
-                   Foreground="{DynamicResource MahApps.Brushes.Accent}"
-                   FontWeight="Bold"/>-->
-
+  
         <StackPanel Grid.Row="4" Orientation="Horizontal" 
                     HorizontalAlignment="Right" Margin="8">
             <Button x:Name="CancelButton" Command="{Binding CancelCommand}" Cursor="Hand" BorderThickness="0"

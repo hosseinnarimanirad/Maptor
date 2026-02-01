@@ -825,7 +825,7 @@
     <value>صورتی</value>
   </data>
   <data name="theme_color_purple" xml:space="preserve">
-    <value>بنفش</value>
+    <value>بنفش‌آبی</value>
   </data>
   <data name="theme_color_red" xml:space="preserve">
     <value>قرمز</value>
@@ -843,7 +843,7 @@
     <value>سبزآبی</value>
   </data>
   <data name="theme_color_violet" xml:space="preserve">
-    <value>بنفش‌آبی</value>
+    <value>بنفش</value>
   </data>
   <data name="theme_color_yellow" xml:space="preserve">
     <value>زرد</value>

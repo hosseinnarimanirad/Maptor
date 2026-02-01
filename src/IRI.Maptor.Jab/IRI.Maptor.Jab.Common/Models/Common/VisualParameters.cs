@@ -690,12 +690,11 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 
     public static DashStyle GetDefaultDashStyleForMeasurements()
     {
-        return new DashStyle(new double[] { 2, 1 }, 0);
+        return new DashStyle([2, 1], 0);
     }
 
     public static VisualParameters GetDefaultForMeasurements()
     {
-
         return new VisualParameters(BrushHelper.CreateBrush(ColorHelper.ToWpfColor("#FBB03B"), 0.3), BrushHelper.CreateBrush("#FBB03B"), 3, 1)
         {
             DashStyle = VisualParameters.GetDefaultDashStyleForMeasurements()

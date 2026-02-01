@@ -4411,7 +4411,7 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     // todo: validation on geometry
-    public async Task<Response<Geometry<sb.Point>>> GetDrawingAsync(DrawMode mode, EditableFeatureLayerOptions options = null, bool display = false, bool makeValid = true)
+    public async Task<Response<Geometry<sb.Point>>> GetDrawingAsync(DrawMode mode, EditableFeatureLayerOptions? options = null, bool display = false, bool makeValid = true)
     {
         try
         {

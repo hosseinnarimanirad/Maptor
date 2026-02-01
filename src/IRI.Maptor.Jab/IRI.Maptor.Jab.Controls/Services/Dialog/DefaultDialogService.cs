@@ -133,6 +133,7 @@ public class DefaultDialogService : IDialogService
         if (owner != null)
         {
             dialog.Owner = owner;
+            dialog.WindowStartupLocation= WindowStartupLocation.CenterOwner;
         }
 
         var blurDisposable = ApplyBlurEffect(owner);
