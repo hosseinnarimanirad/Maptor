@@ -167,6 +167,7 @@
   <ItemGroup>
     <Folder Include="Cartography\Symbologies\Decorators\" />
     <Folder Include="Cartography\Symbologies\Factories\" />
+    <Folder Include="Views\Themes\" />
   </ItemGroup>
   
   <ItemGroup>

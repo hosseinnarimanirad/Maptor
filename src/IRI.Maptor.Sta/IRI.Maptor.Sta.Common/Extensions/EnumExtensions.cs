@@ -124,6 +124,17 @@ public static class EnumExtensions
         return (T)(object)flags.Cast<int>().Aggregate(0, (c, n) => c |= n);
     }
 
+    public static TAttribute? GetAttribute<TAttribute>(this Enum value) where TAttribute : Attribute
+    {
+        var type = value.GetType();
+        var memberInfo = type.GetMember(value.ToString());
+
+        if (memberInfo.Length == 0)
+            return null;
+
+        var attributes = memberInfo[0].GetCustomAttributes(typeof(TAttribute), false);
+        return attributes.Length > 0 ? (TAttribute)attributes[0] : null;
+    }
 }
  
 //public enum DisplayProperty

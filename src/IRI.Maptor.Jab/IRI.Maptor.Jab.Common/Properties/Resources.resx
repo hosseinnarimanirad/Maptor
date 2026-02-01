@@ -805,4 +805,73 @@
   <data name="cmd_general_drawRectangle" xml:space="preserve">
     <value>Draw Rectangle</value>
   </data>
+  <data name="theme_color_amber" xml:space="preserve">
+    <value>Amber</value>
+  </data>
+  <data name="theme_color_blue" xml:space="preserve">
+    <value>Blue</value>
+  </data>
+  <data name="theme_color_brown" xml:space="preserve">
+    <value>Brown</value>
+  </data>
+  <data name="theme_color_cobalt" xml:space="preserve">
+    <value>Cobalt</value>
+  </data>
+  <data name="theme_color_crimson" xml:space="preserve">
+    <value>Crimson</value>
+  </data>
+  <data name="theme_color_cyan" xml:space="preserve">
+    <value>Cyan</value>
+  </data>
+  <data name="theme_color_emerald" xml:space="preserve">
+    <value>Emerald</value>
+  </data>
+  <data name="theme_color_green" xml:space="preserve">
+    <value>Green</value>
+  </data>
+  <data name="theme_color_indigo" xml:space="preserve">
+    <value>Indigo</value>
+  </data>
+  <data name="theme_color_lime" xml:space="preserve">
+    <value>Lime</value>
+  </data>
+  <data name="theme_color_magenta" xml:space="preserve">
+    <value>Magenta</value>
+  </data>
+  <data name="theme_color_mauve" xml:space="preserve">
+    <value>Mauve</value>
+  </data>
+  <data name="theme_color_olive" xml:space="preserve">
+    <value>Olive</value>
+  </data>
+  <data name="theme_color_orange" xml:space="preserve">
+    <value>Orange</value>
+  </data>
+  <data name="theme_color_pink" xml:space="preserve">
+    <value>Pink</value>
+  </data>
+  <data name="theme_color_purple" xml:space="preserve">
+    <value>Purple</value>
+  </data>
+  <data name="theme_color_red" xml:space="preserve">
+    <value>Red</value>
+  </data>
+  <data name="theme_color_sienna" xml:space="preserve">
+    <value>Sienna</value>
+  </data>
+  <data name="theme_color_steel" xml:space="preserve">
+    <value>Steel</value>
+  </data>
+  <data name="theme_color_taupe" xml:space="preserve">
+    <value>Taupe</value>
+  </data>
+  <data name="theme_color_teal" xml:space="preserve">
+    <value>Teal</value>
+  </data>
+  <data name="theme_color_violet" xml:space="preserve">
+    <value>Violet</value>
+  </data>
+  <data name="theme_color_yellow" xml:space="preserve">
+    <value>Yellow</value>
+  </data>
 </root>

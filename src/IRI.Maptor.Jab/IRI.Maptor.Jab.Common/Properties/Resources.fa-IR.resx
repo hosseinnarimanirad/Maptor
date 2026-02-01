@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -778,5 +778,74 @@
   </data>
   <data name="cmd_general_drawRectangle" xml:space="preserve">
     <value>ترسیم مستطیل</value>
+  </data>
+  <data name="theme_color_amber" xml:space="preserve">
+    <value>کهربایی</value>
+  </data>
+  <data name="theme_color_blue" xml:space="preserve">
+    <value>آبی</value>
+  </data>
+  <data name="theme_color_brown" xml:space="preserve">
+    <value>قهوه‌ای</value>
+  </data>
+  <data name="theme_color_cobalt" xml:space="preserve">
+    <value>لاجوردی</value>
+  </data>
+  <data name="theme_color_crimson" xml:space="preserve">
+    <value>زرشکی</value>
+  </data>
+  <data name="theme_color_cyan" xml:space="preserve">
+    <value>فیروزه‌ای</value>
+  </data>
+  <data name="theme_color_emerald" xml:space="preserve">
+    <value>زمردی</value>
+  </data>
+  <data name="theme_color_green" xml:space="preserve">
+    <value>سبز</value>
+  </data>
+  <data name="theme_color_indigo" xml:space="preserve">
+    <value>نیلی</value>
+  </data>
+  <data name="theme_color_lime" xml:space="preserve">
+    <value>لیمویی</value>
+  </data>
+  <data name="theme_color_magenta" xml:space="preserve">
+    <value>ارغوانی</value>
+  </data>
+  <data name="theme_color_mauve" xml:space="preserve">
+    <value>بنفش روشن</value>
+  </data>
+  <data name="theme_color_olive" xml:space="preserve">
+    <value>زیتونی</value>
+  </data>
+  <data name="theme_color_orange" xml:space="preserve">
+    <value>نارنجی</value>
+  </data>
+  <data name="theme_color_pink" xml:space="preserve">
+    <value>صورتی</value>
+  </data>
+  <data name="theme_color_purple" xml:space="preserve">
+    <value>بنفش</value>
+  </data>
+  <data name="theme_color_red" xml:space="preserve">
+    <value>قرمز</value>
+  </data>
+  <data name="theme_color_sienna" xml:space="preserve">
+    <value>سیه‌نا</value>
+  </data>
+  <data name="theme_color_steel" xml:space="preserve">
+    <value>فولادی</value>
+  </data>
+  <data name="theme_color_taupe" xml:space="preserve">
+    <value>خاکستری‌قهوه‌ای</value>
+  </data>
+  <data name="theme_color_teal" xml:space="preserve">
+    <value>سبزآبی</value>
+  </data>
+  <data name="theme_color_violet" xml:space="preserve">
+    <value>بنفش‌آبی</value>
+  </data>
+  <data name="theme_color_yellow" xml:space="preserve">
+    <value>زرد</value>
   </data>
 </root>

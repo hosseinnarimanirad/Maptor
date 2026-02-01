@@ -1754,6 +1754,213 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Amber.
+        /// </summary>
+        public static string theme_color_amber {
+            get {
+                return ResourceManager.GetString("theme_color_amber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blue.
+        /// </summary>
+        public static string theme_color_blue {
+            get {
+                return ResourceManager.GetString("theme_color_blue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brown.
+        /// </summary>
+        public static string theme_color_brown {
+            get {
+                return ResourceManager.GetString("theme_color_brown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cobalt.
+        /// </summary>
+        public static string theme_color_cobalt {
+            get {
+                return ResourceManager.GetString("theme_color_cobalt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crimson.
+        /// </summary>
+        public static string theme_color_crimson {
+            get {
+                return ResourceManager.GetString("theme_color_crimson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cyan.
+        /// </summary>
+        public static string theme_color_cyan {
+            get {
+                return ResourceManager.GetString("theme_color_cyan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emerald.
+        /// </summary>
+        public static string theme_color_emerald {
+            get {
+                return ResourceManager.GetString("theme_color_emerald", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Green.
+        /// </summary>
+        public static string theme_color_green {
+            get {
+                return ResourceManager.GetString("theme_color_green", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indigo.
+        /// </summary>
+        public static string theme_color_indigo {
+            get {
+                return ResourceManager.GetString("theme_color_indigo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lime.
+        /// </summary>
+        public static string theme_color_lime {
+            get {
+                return ResourceManager.GetString("theme_color_lime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Magenta.
+        /// </summary>
+        public static string theme_color_magenta {
+            get {
+                return ResourceManager.GetString("theme_color_magenta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mauve.
+        /// </summary>
+        public static string theme_color_mauve {
+            get {
+                return ResourceManager.GetString("theme_color_mauve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Olive.
+        /// </summary>
+        public static string theme_color_olive {
+            get {
+                return ResourceManager.GetString("theme_color_olive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Orange.
+        /// </summary>
+        public static string theme_color_orange {
+            get {
+                return ResourceManager.GetString("theme_color_orange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pink.
+        /// </summary>
+        public static string theme_color_pink {
+            get {
+                return ResourceManager.GetString("theme_color_pink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Purple.
+        /// </summary>
+        public static string theme_color_purple {
+            get {
+                return ResourceManager.GetString("theme_color_purple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Red.
+        /// </summary>
+        public static string theme_color_red {
+            get {
+                return ResourceManager.GetString("theme_color_red", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sienna.
+        /// </summary>
+        public static string theme_color_sienna {
+            get {
+                return ResourceManager.GetString("theme_color_sienna", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Steel.
+        /// </summary>
+        public static string theme_color_steel {
+            get {
+                return ResourceManager.GetString("theme_color_steel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Taupe.
+        /// </summary>
+        public static string theme_color_taupe {
+            get {
+                return ResourceManager.GetString("theme_color_taupe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teal.
+        /// </summary>
+        public static string theme_color_teal {
+            get {
+                return ResourceManager.GetString("theme_color_teal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Violet.
+        /// </summary>
+        public static string theme_color_violet {
+            get {
+                return ResourceManager.GetString("theme_color_violet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yellow.
+        /// </summary>
+        public static string theme_color_yellow {
+            get {
+                return ResourceManager.GetString("theme_color_yellow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to BlackWhite.
         /// </summary>
         public static string tile_mapType_BlackWhite {

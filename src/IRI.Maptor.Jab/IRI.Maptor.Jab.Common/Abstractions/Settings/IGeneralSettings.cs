@@ -1,3 +1,5 @@
+using IRI.Maptor.Jab.Common.Models.Themes;
+
 namespace IRI.Maptor.Jab.Common.Abstractions;
 
 public interface IGeneralSettings
@@ -13,8 +15,8 @@ public interface IGeneralSettings
 
     bool CoordinatePanel_ShowCoordinatePanel { get; set; }  
 
-    bool Legend_ShowLegendTools { get; set; }  
+    bool Legend_ShowLegendTools { get; set; }
 
-    string MahAppsTheme { get; set; }
+    MahAppsThemeColor? MahAppsTheme { get; set; }
 
 }

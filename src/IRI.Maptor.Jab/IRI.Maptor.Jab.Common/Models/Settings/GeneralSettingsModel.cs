@@ -2,6 +2,7 @@ using System;
 
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Jab.Common.Abstractions;
+using IRI.Maptor.Jab.Common.Models.Themes;
 
 namespace IRI.Maptor.Jab.Common.Models.Settings;
 
@@ -69,7 +70,7 @@ public class GeneralSettingsModel : Notifier, IGeneralSettings
         }
     }
 
-    public string MahAppsTheme
+    public MahAppsThemeColor? MahAppsTheme
     {
         get => _settings.MahAppsTheme;
         set
