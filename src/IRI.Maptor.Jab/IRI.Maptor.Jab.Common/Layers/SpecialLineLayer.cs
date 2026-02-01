@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -21,6 +21,11 @@ public class SpecialLineLayer : SymbolizableLayer
     List<Point> _pointCollection;
 
     bool _isPolyBezierMode;
+
+    /// <summary>
+    /// Gets the point collection for this line layer
+    /// </summary>
+    public List<Point> PointCollection => _pointCollection;
 
     System.Windows.Media.Geometry _symbol;
     public System.Windows.Media.Geometry Symbol
