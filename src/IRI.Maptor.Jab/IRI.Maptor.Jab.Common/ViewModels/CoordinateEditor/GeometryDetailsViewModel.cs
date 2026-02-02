@@ -8,6 +8,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Assets.Commands;
+using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 using IRI.Maptor.Sta.Common.Abstrations;
@@ -420,6 +421,25 @@ public class GeometryDetailsViewModel : Notifier
             _editableFeatureLayer.CancelDrawing();
             RequestClose?.Invoke();
         }, param => true);
+
+
+    private RelayCommand _copySelectedFormat;
+
+    public RelayCommand CopySelectedFormat
+    {
+        get
+        {
+            if (_copySelectedFormat == null)
+            {
+                _copySelectedFormat = new RelayCommand(param =>
+                {
+                    ClipboardHelper.CopyText(StringRepresentation);
+                });
+            }
+
+            return _copySelectedFormat;
+        }
+    }
 
 
     private void UpdateAllProperties()

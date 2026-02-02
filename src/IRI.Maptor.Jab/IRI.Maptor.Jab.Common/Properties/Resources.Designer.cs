@@ -565,6 +565,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string dialog_geometryDetails_copy {
+            get {
+                return ResourceManager.GetString("dialog_geometryDetails_copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete Part.
         /// </summary>
         public static string dialog_geometryDetails_deletePart {

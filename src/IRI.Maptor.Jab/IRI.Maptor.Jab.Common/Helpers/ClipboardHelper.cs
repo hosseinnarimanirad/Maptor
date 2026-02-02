@@ -26,4 +26,6 @@ public static class ClipboardHelper
             System.Windows.Clipboard.SetDataObject($"{format.x},{format.y}");
         }
     }
+
+    public static void CopyText(string text) => System.Windows.Clipboard.SetText(text);
 }

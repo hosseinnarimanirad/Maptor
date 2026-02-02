@@ -278,7 +278,10 @@ public class AccountDialogViewModel : DialogViewModelBase
         }
     }
 
-
+    /// <summary>
+    /// e.g. saba needs a tab to show settings 
+    /// such as default baseUrl at startup
+    /// </summary>
     private bool _isSettingsMode;
     public bool IsSettingsMode
     {

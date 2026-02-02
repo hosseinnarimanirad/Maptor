@@ -145,6 +145,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -155,11 +156,16 @@
                           Margin="4" HorizontalAlignment="Stretch"/>
                 <Button Grid.Row="0" Grid.Column="2" 
                         ToolTip="{Binding [dialog_geometryDetails_export], Source={StaticResource Localization}}"  
-                        Style="{StaticResource circleButtonLight}">
+                        Style="{StaticResource circleButtonLight}"
+                        Visibility="Collapsed">
                     <iconPacks:PackIconModern Kind="Save"/>
                 </Button>
-
-                <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" FlowDirection="LeftToRight" 
+                <Button Grid.Row="0" Grid.Column="3" Command="{Binding CopySelectedFormat}"
+                         ToolTip="{Binding [dialog_geometryDetails_copy], Source={StaticResource Localization}}"  
+                         Style="{StaticResource circleButtonLight}">
+                    <iconPacks:PackIconModern Kind="PageCopy"/>
+                </Button>
+                <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" FlowDirection="LeftToRight" 
                               VerticalScrollBarVisibility="Auto" MaxHeight="150" Margin="0" HorizontalAlignment="Stretch">
                     <TextBlock Text="{Binding StringRepresentation}" HorizontalAlignment="Stretch" Background="#EEEEEE"
                                TextWrapping="Wrap" Padding="4" MaxWidth="700"

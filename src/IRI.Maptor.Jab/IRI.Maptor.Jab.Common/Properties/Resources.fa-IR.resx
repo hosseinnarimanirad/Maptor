@@ -848,4 +848,7 @@
   <data name="theme_color_yellow" xml:space="preserve">
     <value>زرد</value>
   </data>
+  <data name="dialog_geometryDetails_copy" xml:space="preserve">
+    <value>کپی</value>
+  </data>
 </root>

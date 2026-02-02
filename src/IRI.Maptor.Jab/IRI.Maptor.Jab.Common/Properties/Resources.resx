@@ -874,4 +874,7 @@
   <data name="theme_color_yellow" xml:space="preserve">
     <value>Yellow</value>
   </data>
+  <data name="dialog_geometryDetails_copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
 </root>
