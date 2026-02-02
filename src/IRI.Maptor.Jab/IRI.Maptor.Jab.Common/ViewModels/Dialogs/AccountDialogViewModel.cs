@@ -160,7 +160,6 @@ public class AccountDialogViewModel : DialogViewModelBase
     #region Properties (Mode)
 
     private bool _isForgetPasswordMode;
-
     public bool IsForgetPasswordMode
     {
         get { return _isForgetPasswordMode; }
@@ -181,7 +180,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
 
     private bool _isRegisterMode;
-
     public bool IsRegisterMode
     {
         get { return _isRegisterMode; }
@@ -202,7 +200,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
 
     private bool _isNormalMode = true;
-
     public bool IsLoginMode
     {
         get { return _isNormalMode; }
@@ -221,8 +218,8 @@ public class AccountDialogViewModel : DialogViewModelBase
         }
     }
 
-    private bool _isEmailVerificationMode;
 
+    private bool _isEmailVerificationMode;
     public bool IsEmailVerificationMode
     {
         get { return _isEmailVerificationMode; }
@@ -241,8 +238,8 @@ public class AccountDialogViewModel : DialogViewModelBase
         }
     }
 
-    private bool _isSetPasswordMode;
 
+    private bool _isSetPasswordMode;
     public bool IsSetPasswordMode
     {
         get { return _isSetPasswordMode; }
@@ -261,8 +258,8 @@ public class AccountDialogViewModel : DialogViewModelBase
         }
     }
 
-    private bool _isChangePasswordMode;
 
+    private bool _isChangePasswordMode;
     public bool IsChangePasswordMode
     {
         get { return _isChangePasswordMode; }
@@ -281,6 +278,27 @@ public class AccountDialogViewModel : DialogViewModelBase
         }
     }
 
+
+    private bool _isSettingsMode;
+    public bool IsSettingsMode
+    {
+        get { return _isSettingsMode; }
+        set
+        {
+            if (value == _isSettingsMode)
+                return;
+
+            _isSettingsMode = value;
+            RaisePropertyChanged();
+
+            if (value)
+            {
+                SetMode(nameof(IsSettingsMode));
+            }
+        }
+    }
+
+
     #endregion
 
     #region Private Methods
@@ -293,6 +311,7 @@ public class AccountDialogViewModel : DialogViewModelBase
         IsEmailVerificationMode = nameof(IsEmailVerificationMode) == modeTitle;
         IsSetPasswordMode = nameof(IsSetPasswordMode) == modeTitle;
         IsChangePasswordMode = nameof(IsChangePasswordMode) == modeTitle;
+        IsSettingsMode = nameof(IsSettingsMode) == modeTitle;
     }
 
     #endregion
@@ -681,18 +700,12 @@ public class AccountDialogViewModel : DialogViewModelBase
     #region Commands (Go To Mode)
 
     private RelayCommand _goToLoginModeCommand;
-
     public RelayCommand GoToLoginModeCommand
     {
         get
         {
             if (_goToLoginModeCommand == null)
-            {
-                _goToLoginModeCommand = new RelayCommand(param =>
-                {
-                    IsLoginMode = true;
-                });
-            }
+                _goToLoginModeCommand = new RelayCommand(param => IsLoginMode = true);
 
             return _goToLoginModeCommand;
         }
@@ -700,18 +713,12 @@ public class AccountDialogViewModel : DialogViewModelBase
 
 
     private RelayCommand _goToRegisterModeCommand;
-
     public RelayCommand GoToRegisterModeCommand
     {
         get
         {
             if (_goToRegisterModeCommand == null)
-            {
-                _goToRegisterModeCommand = new RelayCommand(param =>
-                {
-                    IsRegisterMode = true;
-                });
-            }
+                _goToRegisterModeCommand = new RelayCommand(param => IsRegisterMode = true);
 
             return _goToRegisterModeCommand;
         }
@@ -719,18 +726,12 @@ public class AccountDialogViewModel : DialogViewModelBase
 
 
     private RelayCommand _gotoForgetPasswordModeCommand;
-
     public RelayCommand GoToForgetPasswordModeCommand
     {
         get
         {
             if (_gotoForgetPasswordModeCommand == null)
-            {
-                _gotoForgetPasswordModeCommand = new RelayCommand(param =>
-                {
-                    IsForgetPasswordMode = true;
-                });
-            }
+                _gotoForgetPasswordModeCommand = new RelayCommand(param => IsForgetPasswordMode = true);
 
             return _gotoForgetPasswordModeCommand;
         }
@@ -738,18 +739,12 @@ public class AccountDialogViewModel : DialogViewModelBase
 
 
     private RelayCommand _gotoEmailVerificationModeCommand;
-
     public RelayCommand GotoEmailVerificationModeCommand
     {
         get
         {
             if (_gotoEmailVerificationModeCommand == null)
-            {
-                _gotoEmailVerificationModeCommand = new RelayCommand(param =>
-                {
-                    IsEmailVerificationMode = true;
-                });
-            }
+                _gotoEmailVerificationModeCommand = new RelayCommand(param => IsEmailVerificationMode = true);
 
             return _gotoEmailVerificationModeCommand;
         }
@@ -757,18 +752,12 @@ public class AccountDialogViewModel : DialogViewModelBase
 
 
     private RelayCommand _goToChangePasswordModeCommand;
-
     public RelayCommand GoToChangePasswordModeCommand
     {
         get
         {
             if (_goToChangePasswordModeCommand == null)
-            {
-                _goToChangePasswordModeCommand = new RelayCommand(param =>
-                {
-                    IsChangePasswordMode = true;
-                });
-            }
+                _goToChangePasswordModeCommand = new RelayCommand(param => IsChangePasswordMode = true);
 
             return _goToChangePasswordModeCommand;
         }
@@ -776,20 +765,27 @@ public class AccountDialogViewModel : DialogViewModelBase
 
 
     private RelayCommand _goToSetPasswordModeCommand;
-
     public RelayCommand GoToSetPasswordModeCommand
     {
         get
         {
             if (_goToSetPasswordModeCommand == null)
-            {
-                _goToSetPasswordModeCommand = new RelayCommand(param =>
-                {
-                    IsSetPasswordMode = true;
-                });
-            }
+                _goToSetPasswordModeCommand = new RelayCommand(param => IsSetPasswordMode = true);
 
             return _goToSetPasswordModeCommand;
+        }
+    }
+
+
+    private RelayCommand _goToSettingsModeCommand;
+    public RelayCommand GoToSettingsModeCommand
+    {
+        get
+        {
+            if (_goToSettingsModeCommand == null)
+                _goToSettingsModeCommand = new RelayCommand(param => IsSettingsMode = true);
+
+            return _goToSettingsModeCommand;
         }
     }
 
