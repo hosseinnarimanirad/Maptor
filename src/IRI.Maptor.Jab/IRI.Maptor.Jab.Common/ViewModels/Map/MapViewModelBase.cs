@@ -843,19 +843,20 @@ public abstract class MapViewModelBase : ViewModelBase
         CoordinatePanel = new CoordinatePanelViewModel();
     }
 
-    public virtual void InitializeSettings(IProxySettings? proxySettings, IBaseMapSettings? baseMapSettings, IMapSettings? mapSettings, IGeneralSettings? generalSettings)
+    public virtual void InitializeSettings(
+        IProxySettings? proxySettings,
+        IBaseMapSettings? baseMapSettings,
+        IMapSettings? mapSettings,
+        IGeneralSettings? generalSettings)
     {
         this.ProxySettings = new ProxySettingsModel(proxySettings ?? IRI.Maptor.Jab.Common.Data.ProxySettings.Default);
+
         this.BaseMapSettings = new BaseMapSettingsModel(baseMapSettings ?? IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default);
+
         this.MapSettings = new MapSettingsModel(mapSettings ?? IRI.Maptor.Jab.Common.Data.MapSettings.Default);
+
         this.GeneralSettings = new GeneralSettingsModel(generalSettings ?? IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
-
-        //if (this.MapSettings.MinGoogleZoomLevel == 0)
-        //    this.MapSettings.MinGoogleZoomLevel = 2;
-
-        //if (this.MapSettings.MaxGoogleZoomLevel == 0)
-        //    this.MapSettings.MaxGoogleZoomLevel = 18;
-
+         
         this.MapProviders = BaseMapSettings.MapProviders;
 
         this.SelectedMapProvider = this.MapProviders?.FirstOrDefault(m => m.Type == BaseMapSettings.InitialBaseMap);
@@ -866,57 +867,31 @@ public abstract class MapViewModelBase : ViewModelBase
     public virtual Task InitializeAsync() => Task.CompletedTask;
 
     public virtual void Initialize(
-        IDialogService dialogService,
-        //IProxySettings? proxySettings,
-        //IBaseMapSettings? baseMapSettings,
-        //IMapSettings? mapSettings,
-        //IGeneralSettings? generalSettings,
+        IDialogService dialogService, 
         Action<Point> requestShowGoToView,
         Action<ILayer> requestShowSymbologyView)
     {
         this.DialogService = dialogService;
 
         this.RequestShowGoToView = requestShowGoToView;
+
         this.RequestShowSymbologyView = requestShowSymbologyView;
 
         this.RequestClearAll = this.ClearAll;
+         
+        //this.SetMapCursorSet1();
 
-        ////this.BaseMapCacheDirectory = Environment.CurrentDirectory + "\\Data";
+        //this.RegisterMapOptions();
 
-        //this.ProxySettings = new ProxySettingsModel(proxySettings ?? IRI.Maptor.Jab.Common.Data.ProxySettings.Default);
-        //this.BaseMapSettings = new BaseMapSettingsModel(baseMapSettings ?? IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default);
-        //this.MapSettings = new MapSettingsModel(mapSettings ?? IRI.Maptor.Jab.Common.Data.MapSettings.Default);
-        //this.GeneralSettings = new GeneralSettingsModel(generalSettings ?? IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
-
-        ////if (this.MapSettings.MinGoogleZoomLevel == 0)
-        ////    this.MapSettings.MinGoogleZoomLevel = 2;
-
-        ////if (this.MapSettings.MaxGoogleZoomLevel == 0)
-        ////    this.MapSettings.MaxGoogleZoomLevel = 18;
-
-        //this.MapProviders = BaseMapSettings.MapProviders;
-        //this.SelectedMapProvider = this.MapProviders?.FirstOrDefault(m => m.Type == BaseMapSettings.InitialBaseMap);
-
-        this.SetMapCursorSet1();
-
-        this.RegisterMapOptions();
-
-        this.IsPanMode = true;
-
-        //ownerWindow.DataContext = this;
+        //this.IsPanMode = true; 
     }
-
-
+     
     #region Actions & Funcs
 
     public Action RequestPrint;
 
     public Func<BoundingBox, int, int, Task<List<DrawingVisual>>> RequestGetAsDrawingVisual;
-
-    //public Action<System.Net.WebProxy?> RequestSetProxy;
-
-    //public Func<System.Net.WebProxy?> RequestGetProxy;
-
+     
     public Action<MapAction, Cursor> RequestSetDefaultCursor;
 
     public Action<Cursor> RequestSetCursor;

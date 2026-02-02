@@ -14,9 +14,9 @@ public class BoolToVisibilityConverter : IValueConverter
             bool.TryParse(parameter.ToString(), out target);
 
         if (value is bool boolValue)
-            return boolValue == target ? Visibility.Visible : Visibility.Collapsed;
+            return (boolValue == target) ? Visibility.Visible : Visibility.Collapsed;
 
-        return Visibility.Collapsed; 
+        return Visibility.Collapsed;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

@@ -475,9 +475,7 @@ public partial class MapViewer : NotifiableUserControl
 
         };
     }
-
-
-
+     
     MapViewModelBase _presenter;
 
     #endregion
@@ -494,13 +492,7 @@ public partial class MapViewer : NotifiableUserControl
         presenter.RequestPrint = this.Print;
 
         presenter.RequestGetAsDrawingVisual = this.GetAsDrawingVisual;
-
-        //presenter.RequestGetProxy = () => this.Proxy;
-
-        //presenter.RequestSetProxy = (p) => this.Proxy = p;
-
-        //this.Proxy = presenter.Proxy?.GetProxy();
-
+         
         presenter.RequestGetActualHeight = () => this.mapView.ActualHeight;
 
         presenter.RequestGetActualWidth = () => this.mapView.ActualWidth;
@@ -689,15 +681,10 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestAddGeometries = this.DrawGeometriesAsync;
 
-        presenter.RequestHighlightGeometries = this.HighlightGeometries;
-        //presenter.RequestDrawGeometryLablePairs = DrawGeometryLablePairsAsync;
+        presenter.RequestHighlightGeometries = this.HighlightGeometries; 
 
         presenter.RequestSelectGeometries = SelectGeometriesAsync;
-
-        //presenter.RequestClearLayerByType = (type, remove) => { this.ClearLayer(type, remove); };
-
-        //presenter.RequestClearLayerByName = (layer, remove) => { this.ClearLayer(layer, remove); };
-
+         
         presenter.RequestClearLayer = (layer, remove) => { this.ClearLayer(layer, remove); };
 
         presenter.RequestClearLayerByCriteria = this.Clear;
@@ -715,17 +702,7 @@ public partial class MapViewer : NotifiableUserControl
         presenter.RequestGetPoint = SelectPointAsync;
 
         presenter.RequestToScreenMap = this.MapToScreen;
-
-        //presenter.RequestGetToScreenMap = () =>
-        //{
-        //    return p =>
-        //    {
-        //        var temp = MapToScreen(new Point() { X = p.X, Y = p.Y });
-
-        //        return (sb.IPoint)new sb.Point(temp.X, temp.Y);
-        //    };
-        //};
-
+         
         presenter.RequestGetMapToScreenMatrix = () =>
         {
             return this.viewTransform.Value;
@@ -746,8 +723,7 @@ public partial class MapViewer : NotifiableUserControl
         };
 
         var ostanha = EnvelopeMarkupLabelTriple.GetProvinces93Wm(a =>
-        {
-            //this.ZoomToExtent( a.GetBoundingBox(/*SridHelper.WebMercator*/));
+        { 
             this.ZoomToExtent(IriProvinces93WmEnvelopes.ToBoundingBox(a.Province));
         });
 
@@ -756,15 +732,9 @@ public partial class MapViewer : NotifiableUserControl
         presenter.Pan();
 
         presenter.SetMapCursorSet1();
-
-        //presenter.Initialize();
-
+         
         await presenter.InitializeAsync();
-
-
-        //presenter.ZoomToExtent(initialView ?? sb.BoundingBoxes.Mercator_Iran, true, isNewExtent: true);
-
-
+         
         presenter.RegisterMapOptions();
 
     }
