@@ -184,23 +184,23 @@ public static class ExcelHelper
 
             SheetData sheetData = worksheetPart.Worksheet.AppendChild(new SheetData());
 
-            // Constructing header
-            Row row = new Row();
-
-            List<Cell> headerCells = new List<Cell>();
-
-            for (int i = 0; i < headers.Count; i++)
-            {
-                headerCells.Add(ConstructCell(headers[i], types[i]));
-            }
-
-            row.Append(headerCells);
-
-            // Insert the header row to the Sheet Data
-            sheetData.AppendChild(row);
-
             try
             {
+                // Constructing header
+                Row row = new Row();
+
+                List<Cell> headerCells = new List<Cell>();
+
+                for (int i = 0; i < headers.Count; i++)
+                {
+                    headerCells.Add(ConstructCell(headers[i], types[i]));
+                }
+
+                row.Append(headerCells);
+
+                // Insert the header row to the Sheet Data
+                sheetData.AppendChild(row);
+
                 //var karevan = karevanha.Single(i => i.Id == item.KarevanId);
                 foreach (var item in rows)
                 {

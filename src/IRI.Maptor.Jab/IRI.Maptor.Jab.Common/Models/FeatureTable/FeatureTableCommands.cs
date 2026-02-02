@@ -9,6 +9,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.OfficeFormats;
+using IRI.Maptor.Jab.Common.Helpers;
 
 namespace IRI.Maptor.Jab.Common.Models;
 
@@ -30,7 +31,7 @@ public static class FeatureTableCommands
         return result;
     }
 
-     
+
     public static FeatureTableCommand CreateZoomToExtentCommand(MapViewModelBase map)
     {
         var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.Magnify }.Data;
@@ -98,8 +99,8 @@ public static class FeatureTableCommands
 
             if (!layer.Fields.IsNullOrEmpty())
             {
-                headers = layer.Fields.Where(f => !f.Type.ContainsIgnoreCase("NetTopolygon")).Select(f => f.Alias ?? f.Name).ToList();
-                fieldNames = layer.Fields.Where(f => !f.Type.ContainsIgnoreCase("NetTopolygon")).Select(f => f.Name).ToList();
+                headers = layer.Fields.Where(f => !f.Type.ContainsIgnoreCase(FeatureTableHelper.NetTopologySuiteColumnName)).Select(f => f.Alias ?? f.Name).ToList();
+                fieldNames = layer.Fields.Where(f => !f.Type.ContainsIgnoreCase(FeatureTableHelper.NetTopologySuiteColumnName)).Select(f => f.Name).ToList();
             }
 
             //
@@ -109,7 +110,7 @@ public static class FeatureTableCommands
             {
                 // Create ordered dictionary matching field order to ensure columns align with headers
                 Dictionary<string, object> orderedRow;
-                if (fieldNames != null)
+                if (fieldNames != null && headers != null)
                 {
                     orderedRow = new Dictionary<string, object>();
 
@@ -120,7 +121,7 @@ public static class FeatureTableCommands
                             orderedRow[fieldName] = value;
                         }
                     }
-
+                     
                     rows.Add(orderedRow);
                 }
                 else
@@ -172,7 +173,7 @@ public static class FeatureTableCommands
             foreach (var feature in features)
             {
                 map.AddDrawingItem(feature.TheGeometry);
-            } 
+            }
 
         });
 
@@ -180,7 +181,7 @@ public static class FeatureTableCommands
     }
 
     #endregion
-     
+
 
     public static FeatureTableCommand CreateBufferCommand(MapViewModelBase map)
     {
@@ -188,7 +189,7 @@ public static class FeatureTableCommands
 
         var result = new FeatureTableCommand()
         {
-            PathMarkup = markup, 
+            PathMarkup = markup,
             ToolTip = "بافر"
         };
 
@@ -216,7 +217,7 @@ public static class FeatureTableCommands
     }
 
 
-    internal static List<Func<MapViewModelBase, IFeatureTableCommand>> GetDefaultVectorLayerCommands ()  
+    internal static List<Func<MapViewModelBase, IFeatureTableCommand>> GetDefaultVectorLayerCommands()
     {
         return new List<Func<MapViewModelBase, IFeatureTableCommand>>()
         {

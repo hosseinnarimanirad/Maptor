@@ -9,6 +9,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Models.Map;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Converters;
+using IRI.Maptor.Jab.Common.Helpers;
 
 namespace IRI.Maptor.Jab.Controls.Common.Behaviors;
 
@@ -76,7 +77,7 @@ public static class DataGridDictionaryBehavior
             if (field == null)
                 continue;
 
-            if (field.Type.ContainsIgnoreCase("NetTopologySuite"))
+            if (field.Type.ContainsIgnoreCase(FeatureTableHelper.NetTopologySuiteColumnName))
                 continue;
 
 
