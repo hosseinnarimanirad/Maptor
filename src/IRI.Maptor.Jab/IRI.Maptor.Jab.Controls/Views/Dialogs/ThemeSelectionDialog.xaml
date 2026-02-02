@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              FlowDirection="RightToLeft"
              FontFamily="{StaticResource iranSans}"
-             Title="انتخاب تم برنامه"
+             Title="تنظیمات ظاهر"
              ShowInTaskbar="False"
              ResizeMode="NoResize"
              SizeToContent="WidthAndHeight"
@@ -21,7 +21,7 @@
                  TextTrimming="CharacterEllipsis"
                  VerticalAlignment="Center"
                  Margin="8,0"
-                 FontWeight="Bold" />
+                 FontWeight="Light" />
         </DataTemplate>
     </mahApp:MetroWindow.TitleTemplate>
     <mahApp:MetroWindow.Resources>
@@ -84,7 +84,7 @@
 
         <GroupBox Grid.Row="1" Margin="0">
             <GroupBox.Header>
-                <TextBlock Text="رنگ‌ها" FontSize="16" FontWeight="Bold" Margin="0" Foreground="White"/>
+                <TextBlock Text="انتخاب رنگ زمینه برنامه" FontSize="14" Margin="4" Foreground="White"/>
             </GroupBox.Header>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="400" Grid.Row="1" Margin="4">
