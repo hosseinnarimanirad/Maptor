@@ -304,6 +304,8 @@ public class LegendCommand : LegendCommandBase
         return result;
     }
 
+     
+
     internal static List<Func<MapViewModelBase, ILayer, ILegendCommand>> GetDefaultVectorLayerCommands() 
     {
         return new List<Func<MapViewModelBase, ILayer, ILegendCommand>>()
@@ -316,9 +318,7 @@ public class LegendCommand : LegendCommandBase
             CreateZoomToExtentCommandFunc
         };
     }
-
-
-
+     
     #endregion
 
 

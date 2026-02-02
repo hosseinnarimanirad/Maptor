@@ -2183,7 +2183,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public List<ILayer> GetAllLayers(IEnumerable<ILayer>? layers)
     {
-        if (layers is null || layers.IsNullOrEmpty())
+        if (layers.IsNullOrEmpty())
             return new List<ILayer>();
 
         var result = layers.Where(l => l.IsGroupLayer == false).ToList();
@@ -2535,6 +2535,7 @@ public abstract class MapViewModelBase : ViewModelBase
     public async Task PrintToPdfAsync(object owner, bool supportPdfLayers = true)
     {
         var boundingBox = PrintArea.IsNaN() ? CurrentExtent : PrintArea;
+
         var mapScale = MapScale;
 
         // Show save dialog
@@ -2548,7 +2549,7 @@ public abstract class MapViewModelBase : ViewModelBase
         
         // Collect raster (basemap) layers
         var rasterLayerPdfDataList = new List<PdfWriter.RasterLayerPdfData>();
-        
+         
         // Find TileServiceLayer instances
         var tileServiceLayers = allLayers
             .OfType<TileServiceLayer>()
@@ -4478,6 +4479,25 @@ public abstract class MapViewModelBase : ViewModelBase
             }
 
             return _checkInternetAccessCommand;
+        }
+    }
+
+
+
+    private RelayCommand _closeAllTablesCommand;
+    public RelayCommand CloseAllTablesCommand
+    {
+        get
+        {
+            if (_closeAllTablesCommand == null)
+            {
+                _closeAllTablesCommand = new RelayCommand(param =>
+                {
+                    this.RemoveSelectedLayers(l => true);
+                });
+            }
+
+            return _closeAllTablesCommand;
         }
     }
 
