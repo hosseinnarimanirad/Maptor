@@ -13,7 +13,7 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-            
+
             <Style  TargetType="{x:Type ToggleButton}" x:Key="simpleToggle">
                 <Setter Property="Margin" Value="4"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
@@ -38,7 +38,7 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-           
+
             <Style TargetType="TextBlock">
                 <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -50,7 +50,9 @@
 
             <!--<Style TargetType="iconPacks:PackIconModern">
                 <Setter Property="Foreground" Value="White"/>
-                --><!--<Setter Property="Stretch" Value="Uniform"/>--><!--
+                -->
+            <!--<Setter Property="Stretch" Value="Uniform"/>-->
+            <!--
                 <Setter Property="Margin" Value="8"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -58,7 +60,9 @@
             </Style>
             <Style TargetType="iconPacks:PackIconMaterial">
                 <Setter Property="Foreground" Value="White"/>
-                --><!--<Setter Property="Stretch" Value="Uniform"/>--><!--
+                -->
+            <!--<Setter Property="Stretch" Value="Uniform"/>-->
+            <!--
                 <Setter Property="Margin" Value="8"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -74,7 +78,7 @@
                     Margin="4" Visibility="{Binding IsDrawEditMeasureMode, Converter={StaticResource boolToVisibilityConverter}}">
         <StackPanel FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}">
             <DockPanel Margin="0" >
-                
+
                 <TextBlock DockPanel.Dock="Left" Text="X" Margin="4"
                            Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
                 <TextBox DockPanel.Dock="Left" MaxWidth="90" FlowDirection="LeftToRight" MinWidth="80" Margin="2" VerticalAlignment="Center"
@@ -130,7 +134,7 @@
 
                 <!--Drawing-->
                 <DockPanel DockPanel.Dock="Right" LastChildFill="False"
-                            Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}"> 
+                            Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}">
                     <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Left" Margin="2" 
                             ToolTip="{Binding [map_draw_addPoint], Source={StaticResource Localization}}"
                             Command="{Binding AddPointToNewDrawingCommand}"
@@ -434,10 +438,6 @@
                                               Visibility="{Binding MapPanel.IsDetailsNotVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
                     <iconPacks:PackIconModern Margin="2" Height="8" Kind="ChevronUp"
                                               Visibility="{Binding MapPanel.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
-                    <!--<Path Margin="2" Height="8" Visibility="{Binding MapPanel.IsDetailsNotVisible, Converter={StaticResource boolToVisibilityConverter}}"
-                            Data="M39.629,19.819l-14.63,14.63L10.37,19.819c-0.976-0.976-0.976-2.559,0-3.536c0.976-0.976,2.559-0.976,3.536,0l11.093,11.093l11.095-11.094c0.977-0.976,2.56-0.976,3.536,0C40.606,17.259,40.606,18.842,39.629,19.819z"/>
-                    <Path Margin="2" Height="8" Visibility="{Binding MapPanel.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"
-                            Data="M39.631,33.716c-0.976,0.977-2.56,0.977-3.535,0L25.001,22.621L13.904,33.717c-0.488,0.487-1.128,0.731-1.768,0.731c-0.64,0-1.28-0.244-1.768-0.731c-0.976-0.978-0.976-2.56,0-3.536L25,15.551l14.63,14.629C40.608,31.156,40.608,32.739,39.631,33.716z"/>-->
                 </StackPanel>
             </Border>
         </StackPanel>

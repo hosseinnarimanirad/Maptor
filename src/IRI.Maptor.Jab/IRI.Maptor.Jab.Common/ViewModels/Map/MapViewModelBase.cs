@@ -856,7 +856,7 @@ public abstract class MapViewModelBase : ViewModelBase
         this.MapSettings = new MapSettingsModel(mapSettings ?? IRI.Maptor.Jab.Common.Data.MapSettings.Default);
 
         this.GeneralSettings = new GeneralSettingsModel(generalSettings ?? IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
-         
+
         this.MapProviders = BaseMapSettings.MapProviders;
 
         this.SelectedMapProvider = this.MapProviders?.FirstOrDefault(m => m.Type == BaseMapSettings.InitialBaseMap);
@@ -867,7 +867,7 @@ public abstract class MapViewModelBase : ViewModelBase
     public virtual Task InitializeAsync() => Task.CompletedTask;
 
     public virtual void Initialize(
-        IDialogService dialogService, 
+        IDialogService dialogService,
         Action<Point> requestShowGoToView,
         Action<ILayer> requestShowSymbologyView)
     {
@@ -878,20 +878,20 @@ public abstract class MapViewModelBase : ViewModelBase
         this.RequestShowSymbologyView = requestShowSymbologyView;
 
         this.RequestClearAll = this.ClearAll;
-         
+
         //this.SetMapCursorSet1();
 
         //this.RegisterMapOptions();
 
         //this.IsPanMode = true; 
     }
-     
+
     #region Actions & Funcs
 
     public Action RequestPrint;
 
     public Func<BoundingBox, int, int, Task<List<DrawingVisual>>> RequestGetAsDrawingVisual;
-     
+
     public Action<MapAction, Cursor> RequestSetDefaultCursor;
 
     public Action<Cursor> RequestSetCursor;
@@ -2437,10 +2437,14 @@ public abstract class MapViewModelBase : ViewModelBase
 
             var text = "sample text!";
 
+            TextboxMarkerViewModel viewModel = new TextboxMarkerViewModel() { LabelValue = text };
+
             var drawingItemLayer = DrawingItemLayer.CreateSpecialLayer("Text",
             [
-                new Locateable(response.Result, AncherFunctionHandlers.BottomCenter){ Element = new TextboxMarker(){ LabelValue = text} }
+                new Locateable(response.Result, AncherFunctionHandlers.BottomCenter){ Element = new TextboxMarker(){ DataContext = viewModel} }
             ]);
+
+            viewModel.RequestDelete = () => RemoveDrawingItem(drawingItemLayer);
 
             //drawingItemLayer.OnIsSelectedInTocChanged += (sender, e) =>
             //{
@@ -2546,14 +2550,14 @@ public abstract class MapViewModelBase : ViewModelBase
 
         // Get all layers
         var allLayers = GetAllLayers(Layers);
-        
+
         // Collect raster (basemap) layers
         var rasterLayerPdfDataList = new List<PdfWriter.RasterLayerPdfData>();
-         
+
         // Find TileServiceLayer instances
         var tileServiceLayers = allLayers
             .OfType<TileServiceLayer>()
-            .Where(layer => 
+            .Where(layer =>
                 layer.Visibility == System.Windows.Visibility.Visible &&
                 layer.CanRenderLayer(mapScale))
             .OrderBy(layer => layer.ZIndex)
@@ -2566,17 +2570,17 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 // Calculate zoom level from map scale
                 int zoomLevel = WebMercatorUtility.GetZoomLevel(mapScale);
-                
+
                 // Calculate tiles for bounding box
                 var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(boundingBox, zoomLevel);
-                
+
                 var rasterTiles = new List<PdfWriter.RasterTileData>();
-                
+
                 // Get tile images
                 foreach (var tileInfo in tiles)
                 {
                     var geoImage = await tileLayer.GetTileAsync(tileInfo, HttpClient);
-                    
+
                     if (geoImage?.IsValid == true && geoImage.Image != null)
                     {
                         var rasterTile = new PdfWriter.RasterTileData
@@ -2585,11 +2589,11 @@ public abstract class MapViewModelBase : ViewModelBase
                             WebMercatorExtent = tileInfo.WebMercatorExtent,
                             Opacity = tileLayer.Opacity
                         };
-                        
+
                         rasterTiles.Add(rasterTile);
                     }
                 }
-                
+
                 if (rasterTiles.Count > 0)
                 {
                     var rasterLayerData = new PdfWriter.RasterLayerPdfData
@@ -2599,7 +2603,7 @@ public abstract class MapViewModelBase : ViewModelBase
                         Opacity = tileLayer.Opacity,
                         LayerName = tileLayer.LayerName
                     };
-                    
+
                     rasterLayerPdfDataList.Add(rasterLayerData);
                 }
             }
@@ -2613,7 +2617,7 @@ public abstract class MapViewModelBase : ViewModelBase
         // Get visible vector layers that are in scale
         var vectorLayers = allLayers.OfType<VectorLayer>()
             .Where(layer =>
-                layer.Type== LayerType.VectorLayer &&
+                layer.Type == LayerType.VectorLayer &&
                 layer.Visibility == System.Windows.Visibility.Visible &&
                 layer.CanRenderLayer(mapScale))
             .OrderBy(layer => layer.ZIndex)
@@ -2621,7 +2625,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         // Get EditableFeatureLayer instances
         var editableFeatureLayers = allLayers.OfType<EditableFeatureLayer>()
-            .Where(layer => 
+            .Where(layer =>
                 layer.Visibility == System.Windows.Visibility.Visible &&
                 layer.CanRenderLayer(mapScale))
             .OrderBy(layer => layer.ZIndex)
@@ -2629,7 +2633,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         // Get DrawingLayer instances
         var drawingLayers = allLayers.OfType<DrawingLayer>()
-            .Where(layer => 
+            .Where(layer =>
                 layer.Visibility == System.Windows.Visibility.Visible &&
                 layer.CanRenderLayer(mapScale))
             .OrderBy(layer => layer.ZIndex)
@@ -2637,7 +2641,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         // Get SpecialPointLayer instances
         var specialPointLayers = allLayers.OfType<SpecialPointLayer>()
-            .Where(layer => 
+            .Where(layer =>
                 layer.Visibility == System.Windows.Visibility.Visible &&
                 layer.CanRenderLayer(mapScale))
             .OrderBy(layer => layer.ZIndex)
@@ -2645,7 +2649,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         // Get SpecialLineLayer instances
         var specialLineLayers = allLayers.OfType<SpecialLineLayer>()
-            .Where(layer => 
+            .Where(layer =>
                 layer.Visibility == System.Windows.Visibility.Visible &&
                 layer.CanRenderLayer(mapScale))
             .OrderBy(layer => layer.ZIndex)
@@ -2653,7 +2657,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         // Get GridLayer instances
         var gridLayers = allLayers.OfType<GridLayer>()
-            .Where(layer => 
+            .Where(layer =>
                 layer.Visibility == System.Windows.Visibility.Visible &&
                 layer.CanRenderLayer(mapScale))
             .OrderBy(layer => layer.ZIndex)
@@ -2675,8 +2679,8 @@ public abstract class MapViewModelBase : ViewModelBase
                 // Filter features that intersect with bounding box
                 var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
                 var allFeatures = featureSet.Features
-                    .Where(f => f.TheGeometry != null && 
-                               !f.TheGeometry.IsNullOrEmpty() && 
+                    .Where(f => f.TheGeometry != null &&
+                               !f.TheGeometry.IsNullOrEmpty() &&
                                f.TheGeometry.Intersects(extentGeometry))
                     .ToList();
 
@@ -2733,20 +2737,20 @@ public abstract class MapViewModelBase : ViewModelBase
                 var features = ConvertEditableFeatureLayerToFeatures(layer, boundingBox);
                 if (features.Count == 0)
                     continue;
-                
+
                 // Process symbolizers (same logic as VectorLayer)
                 foreach (var symbolizer in layer.Symbolizers)
                 {
                     if (symbolizer is LabelSymbolizer)
                         continue;
-                    
+
                     if (!symbolizer.IsInScaleRange(mapScale))
                         continue;
-                    
+
                     var filteredFeatures = features.Where(symbolizer.IsFilterPassed).ToList();
                     if (filteredFeatures.Count == 0)
                         continue;
-                    
+
                     var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
                     var layerPdfData = new PdfWriter.LayerPdfData
                     {
@@ -2756,7 +2760,7 @@ public abstract class MapViewModelBase : ViewModelBase
                         Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
                         LayerName = layer.LayerName
                     };
-                    
+
                     layerPdfDataList.Add(layerPdfData);
                 }
             }
@@ -2774,20 +2778,20 @@ public abstract class MapViewModelBase : ViewModelBase
                 var features = ConvertDrawingLayerToFeatures(layer, boundingBox);
                 if (features.Count == 0)
                     continue;
-                
+
                 // Process symbolizers (same logic as VectorLayer)
                 foreach (var symbolizer in layer.Symbolizers)
                 {
                     if (symbolizer is LabelSymbolizer)
                         continue;
-                    
+
                     if (!symbolizer.IsInScaleRange(mapScale))
                         continue;
-                    
+
                     var filteredFeatures = features.Where(symbolizer.IsFilterPassed).ToList();
                     if (filteredFeatures.Count == 0)
                         continue;
-                    
+
                     var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
                     var layerPdfData = new PdfWriter.LayerPdfData
                     {
@@ -2797,7 +2801,7 @@ public abstract class MapViewModelBase : ViewModelBase
                         Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
                         LayerName = layer.LayerName
                     };
-                    
+
                     layerPdfDataList.Add(layerPdfData);
                 }
             }
@@ -2815,7 +2819,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 var features = ConvertSpecialPointLayerToFeatures(layer, boundingBox);
                 if (features.Count == 0)
                     continue;
-                
+
                 // Use default point symbology since SpecialPointLayer has no symbolizers
                 var defaultPointOptions = new PdfOptions
                 {
@@ -2825,7 +2829,7 @@ public abstract class MapViewModelBase : ViewModelBase
                     PointCircleRadius = 3.0,
                     Opacity = layer.Opacity
                 };
-                
+
                 var layerPdfData = new PdfWriter.LayerPdfData
                 {
                     Features = features,
@@ -2834,7 +2838,7 @@ public abstract class MapViewModelBase : ViewModelBase
                     Opacity = layer.Opacity,
                     LayerName = layer.LayerName
                 };
-                
+
                 layerPdfDataList.Add(layerPdfData);
             }
             catch (Exception ex)
@@ -2851,20 +2855,20 @@ public abstract class MapViewModelBase : ViewModelBase
                 var features = ConvertSpecialLineLayerToFeatures(layer, boundingBox);
                 if (features.Count == 0)
                     continue;
-                
+
                 // Process symbolizers (same logic as VectorLayer)
                 foreach (var symbolizer in layer.Symbolizers)
                 {
                     if (symbolizer is LabelSymbolizer)
                         continue;
-                    
+
                     if (!symbolizer.IsInScaleRange(mapScale))
                         continue;
-                    
+
                     var filteredFeatures = features.Where(symbolizer.IsFilterPassed).ToList();
                     if (filteredFeatures.Count == 0)
                         continue;
-                    
+
                     var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
                     var layerPdfData = new PdfWriter.LayerPdfData
                     {
@@ -2874,7 +2878,7 @@ public abstract class MapViewModelBase : ViewModelBase
                         Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
                         LayerName = layer.LayerName
                     };
-                    
+
                     layerPdfDataList.Add(layerPdfData);
                 }
             }
@@ -2892,34 +2896,34 @@ public abstract class MapViewModelBase : ViewModelBase
                 var features = ConvertGridLayerToFeatures(layer, boundingBox);
                 if (features.Count == 0)
                     continue;
-                
+
                 // Filter features that intersect with bounding box
                 var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
                 var allFeatures = features
-                    .Where(f => f.TheGeometry != null && 
-                               !f.TheGeometry.IsNullOrEmpty() && 
+                    .Where(f => f.TheGeometry != null &&
+                               !f.TheGeometry.IsNullOrEmpty() &&
                                f.TheGeometry.Intersects(extentGeometry))
                     .ToList();
-                
+
                 if (allFeatures.Count == 0)
                     continue;
-                
+
                 // Process symbolizers (same logic as VectorLayer)
                 foreach (var symbolizer in layer.Symbolizers)
                 {
                     if (symbolizer is LabelSymbolizer)
                         continue;
-                    
+
                     if (!symbolizer.IsInScaleRange(mapScale))
                         continue;
-                    
+
                     var filteredFeatures = allFeatures
                         .Where(symbolizer.IsFilterPassed)
                         .ToList();
-                    
+
                     if (filteredFeatures.Count == 0)
                         continue;
-                    
+
                     var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
                     var layerPdfData = new PdfWriter.LayerPdfData
                     {
@@ -2929,7 +2933,7 @@ public abstract class MapViewModelBase : ViewModelBase
                         Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
                         LayerName = layer.LayerName
                     };
-                    
+
                     layerPdfDataList.Add(layerPdfData);
                 }
             }
@@ -2957,9 +2961,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
         // Generate PDF (pass both vector and raster layers)
         var pdfBytes = PdfWriter.WriteLayers(
-            layerPdfDataList, 
-            boundingBox, 
-            mapScale, 
+            layerPdfDataList,
+            boundingBox,
+            mapScale,
             baseOptions,
             rasterLayerPdfDataList.Count > 0 ? rasterLayerPdfDataList : null,
             supportPdfLayers);
@@ -3031,12 +3035,12 @@ public abstract class MapViewModelBase : ViewModelBase
         var geometry = layer.GetFinalGeometry();
         if (geometry == null || geometry.IsNullOrEmpty())
             return new List<Feature<Point>>();
-        
+
         // Check if geometry intersects bounding box
         var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
         if (!geometry.Intersects(extentGeometry))
             return new List<Feature<Point>>();
-        
+
         return new List<Feature<Point>> { new Feature<Point>(geometry) };
     }
 
@@ -3048,11 +3052,11 @@ public abstract class MapViewModelBase : ViewModelBase
         var geometry = layer.GetFinalGeometry();
         if (geometry == null || geometry.IsNullOrEmpty())
             return new List<Feature<Point>>();
-        
+
         var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
         if (!geometry.Intersects(extentGeometry))
             return new List<Feature<Point>>();
-        
+
         return new List<Feature<Point>> { new Feature<Point>(geometry) };
     }
 
@@ -3063,16 +3067,16 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         if (layer.Items == null || layer.Items.Count == 0)
             return new List<Feature<Point>>();
-        
+
         // Filter points within bounding box
         var points = layer.Items
             .Where(item => boundingBox.Contains(new Point(item.X, item.Y)))
             .Select(item => new Point(item.X, item.Y))
             .ToList();
-        
+
         if (points.Count == 0)
             return new List<Feature<Point>>();
-        
+
         // Create single Point or MultiPoint geometry
         Geometry<Point> geometry;
         if (points.Count == 1)
@@ -3083,7 +3087,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             geometry = Geometry<Point>.Create(points, GeometryType.MultiPoint, SridHelper.WebMercator);
         }
-        
+
         return new List<Feature<Point>> { new Feature<Point>(geometry) };
     }
 
@@ -3095,14 +3099,14 @@ public abstract class MapViewModelBase : ViewModelBase
         var pointCollection = layer.PointCollection;
         if (pointCollection == null || pointCollection.Count < 2)
             return new List<Feature<Point>>();
-        
+
         // Check if line intersects bounding box
         var lineGeometry = Geometry<Point>.Create(pointCollection, GeometryType.LineString, SridHelper.WebMercator);
         var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
-        
+
         if (!lineGeometry.Intersects(extentGeometry))
             return new List<Feature<Point>>();
-        
+
         return new List<Feature<Point>> { new Feature<Point>(lineGeometry) };
     }
 
@@ -3113,11 +3117,11 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         if (layer.DataSource == null)
             return new List<Feature<Point>>();
-        
+
         var featureSet = layer.DataSource.GetAsFeatureSet(boundingBox);
         if (featureSet?.Features == null || featureSet.Features.Count == 0)
             return new List<Feature<Point>>();
-        
+
         return featureSet.Features
             .Where(f => f.TheGeometry != null && !f.TheGeometry.IsNullOrEmpty())
             .ToList();

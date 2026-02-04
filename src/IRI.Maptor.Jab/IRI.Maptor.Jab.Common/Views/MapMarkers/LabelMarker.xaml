@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Common.Views"              
              x:Name="root" Background="Transparent" Width="80" Height="30" MinWidth="40" Canvas.ZIndex="1000000">
-
     <maptor:MapMarker.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -78,7 +77,7 @@
         </Border>
         <Path Data="F1 M 14,0L0,0L7,10 Z" Fill="{DynamicResource MahApps.Brushes.Highlight}" HorizontalAlignment="Center" Margin="33,27.561,33,-7.555" Grid.RowSpan="2"/>
 
-        <TextBlock Grid.Column="0" x:Name="labelBox" TextAlignment="Center" FontSize="11" Margin="0" Height="Auto"                       
+        <TextBlock x:Name="labelBox" Grid.Column="0" TextAlignment="Center" FontSize="11" Margin="0" Height="Auto"                       
                        HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding ElementName=root, Path=LabelValue}" Foreground="White" TextWrapping="Wrap"/>
     </Grid>
 </maptor:MapMarker>

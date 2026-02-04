@@ -74,6 +74,7 @@
     <PackageReference Include="System.Data.SqlClient" />
     <PackageReference Include="System.Drawing.Common" />
     <PackageReference Include="WriteableBitmapEx" />
+    <PackageReference Include="MahApps.Metro" />
     <PackageReference Include="MahApps.Metro.IconPacks.Modern" />
     <PackageReference Include="MahApps.Metro.IconPacks.Material" />
   </ItemGroup>

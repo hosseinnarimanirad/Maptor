@@ -10,7 +10,6 @@ namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 public class MapInfoViewModel : Notifier
 {
     private bool _isDetailsVisible;
-
     public bool IsDetailsVisible
     {
         get { return _isDetailsVisible; }
