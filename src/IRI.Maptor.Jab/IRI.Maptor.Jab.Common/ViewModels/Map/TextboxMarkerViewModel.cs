@@ -11,14 +11,14 @@ namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 
 public class TextboxMarkerViewModel : Notifier
 {
-    public static readonly double[] FontSizeOptions = { 9, 10, 11, 12, 14, 16, 18 };
+    public static readonly double[] FontSizeOptions = { 9, 10, 11, 12, 14, 16, 18, 20 };
 
     public static readonly string[] FontFamilyOptions;
 
     public const string IranSansFontName = "IRANSans";
+    private const string TimesNewRoman = "TimesNewRoman";
 
-
-    private double _formating_FontSize = 11.0;
+    private double _formating_FontSize = 14.0;
     public double Formating_FontSize
     {
         get { return _formating_FontSize; }
@@ -29,7 +29,7 @@ public class TextboxMarkerViewModel : Notifier
         }
     }
 
-    private string _formating_FontFamilyName = IranSansFontName;
+    private string _formating_FontFamilyName = IranSansFontName;// IranSansFontName;
     public string Formating_FontFamilyName
     {
         get { return _formating_FontFamilyName; }
@@ -57,7 +57,7 @@ public class TextboxMarkerViewModel : Notifier
         }
     }
 
-    private System.Windows.Media.FontFamily _formating_FontFamily = IriFonts.IranSans;
+    private System.Windows.Media.FontFamily _formating_FontFamily;
     public System.Windows.Media.FontFamily Formating_FontFamily
     {
         get { return _formating_FontFamily; }
@@ -170,7 +170,7 @@ public class TextboxMarkerViewModel : Notifier
         }
     }
 
-    private string _tooltipValue;
+    private string _tooltipValue = string.Empty;
     public string TooltipValue
     {
         get { return _tooltipValue; }
@@ -196,6 +196,7 @@ public class TextboxMarkerViewModel : Notifier
 
     static TextboxMarkerViewModel()
     {
+
         // Initialize font family options: IranSans first (from project resources), then system fonts
         var fontFamilies = new List<string> { IranSansFontName };
         foreach (var fontFamily in System.Windows.Media.Fonts.SystemFontFamilies)
@@ -210,6 +211,11 @@ public class TextboxMarkerViewModel : Notifier
         FontFamilyOptions = fontFamilies.ToArray();
     }
 
+    public TextboxMarkerViewModel()
+    {
+        Formating_FontFamilyName = IranSansFontName;
+
+    }
 
     public sealed record BackgroundChoice(string Name, System.Windows.Media.Color? ColorValue, bool IsTheme);
 

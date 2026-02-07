@@ -50,9 +50,9 @@
                     FontSize="{Binding Formating_FontSize}"
                     FontFamily="{Binding Formating_FontFamily}"
                     VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
-                    mahApp:TextBoxHelper.SelectAllOnFocus="True">
+                    mahApp:TextBoxHelper.SelectAllOnFocus="True" Focusable="True"  >
                 <TextBox.Style>
-                    <Style TargetType="TextBox">
+                    <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="TextBox">
@@ -60,7 +60,7 @@
                                             Background="{TemplateBinding Background}"
                                             BorderBrush="{TemplateBinding BorderBrush}"
                                             BorderThickness="{TemplateBinding BorderThickness}"
-                                            CornerRadius="2">
+                                            CornerRadius="5">
                                         <ScrollViewer x:Name="PART_ContentHost" />
                                     </Border>
                                 </ControlTemplate>
