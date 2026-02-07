@@ -25,6 +25,8 @@ using LineSegment = System.Windows.Media.LineSegment;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Sta.Spatial.Primitives;
+using System.Threading.Tasks;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -1515,6 +1517,25 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     #endregion
 
+    #region Overrides
+
+    public override Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
+    {
+        var geometry = this.GetFinalGeometry();
+        if (geometry == null || geometry.IsNullOrEmpty())
+            return Task.FromResult(FeatureSet<Point>.Empty);
+
+        // Check if geometry intersects bounding box
+        var extentGeometry = mapExtent.AsGeometry<Point>(SridHelper.WebMercator);
+
+        if (!geometry.Intersects(extentGeometry))
+            return Task.FromResult(FeatureSet<Point>.Empty);
+
+        return Task.FromResult(FeatureSet<Point>.Create($"{nameof(EditableFeatureLayer)}-{this.LayerId}", [geometry.AsFeature()]));
+        //return new List<Feature<Point>> { new Feature<Point>(geometry) };
+    }
+
+    #endregion
 
     #region Commands
 

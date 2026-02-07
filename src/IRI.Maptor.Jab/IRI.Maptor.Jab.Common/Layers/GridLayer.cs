@@ -3,6 +3,9 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using System.Linq;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using System.Threading.Tasks;
+using IRI.Maptor.Sta.Ogc.WMS;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -30,4 +33,21 @@ public class GridLayer : SymbolizableLayer
 
         return DataSource.GetAsFeatureSet(boundingBox).Features.Select(f => f.TheGeometry).ToList(); ;
     }
+
+    #region Overrides
+
+    public override Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
+    {
+        if (this.DataSource == null)
+            return Task.FromResult(FeatureSet<Point>.Empty);
+
+        var featureSet = this.DataSource.GetAsFeatureSet(mapExtent);
+
+        if (featureSet?.Features == null || featureSet.Features.Count == 0)
+            return Task.FromResult(FeatureSet<Point>.Empty);
+         
+        return Task.FromResult(featureSet);
+    }
+
+    #endregion
 }

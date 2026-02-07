@@ -180,30 +180,32 @@ public class VectorLayer : SymbolizableLayer
 
     public override string ToString() => $"{Enum.GetName(this.Type)} - {this.DataSource?.ToString()}";
 
-    public static Func<Point, Point> CreateMapToScreenMapFunc(BoundingBox mapExtent, double screenWidth, double screenHeight)
-    {
-        double xScale = screenWidth / mapExtent.Width;
-        double yScale = screenHeight / mapExtent.Height;
-        double scale = xScale > yScale ? yScale : xScale;
 
-        return new Func<Point, Point>(p => new Point((p.X - mapExtent.XMin) * scale, -(p.Y - mapExtent.YMax) * scale));
-    }
-
-    public async Task<List<Feature<Point>>> GetRenderReadyFeatures(BoundingBox mapExtent, double mapScale, double screenWidth, double screenHeight)
+    public override async Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
     {
         var feature = await this.DataSource.GetAsFeatureSetAsync(mapScale, mapExtent);
 
         if (feature is null || feature.HasNoGeometry())
-            return new List<Feature<Point>>();
+            return FeatureSet<Point>.Empty;
 
-        //double xScale = imageWidth / mapExtent.Width;
-        //double yScale = imageHeight / mapExtent.Height;
-        //double scale = xScale > yScale ? yScale : xScale;
-        //Func<Point, Point> mapToScreen = new Func<Point, Point>(p => new Point((p.X - mapExtent.XMin) * scale, -(p.Y - mapExtent.YMax) * scale));
-        var mapToScreen = CreateMapToScreenMapFunc(mapExtent, screenWidth, screenHeight);
-
-        return feature.Transform(mapToScreen).Features;
+        return feature;
     }
+
+    //public async Task<List<Feature<Point>>> GetRenderReadyFeatures(BoundingBox mapExtent, double mapScale, double screenWidth, double screenHeight)
+    //{
+    //    var feature = await this.DataSource.GetAsFeatureSetAsync(mapScale, mapExtent);
+
+    //    if (feature is null || feature.HasNoGeometry())
+    //        return new List<Feature<Point>>();
+
+    //    //double xScale = imageWidth / mapExtent.Width;
+    //    //double yScale = imageHeight / mapExtent.Height;
+    //    //double scale = xScale > yScale ? yScale : xScale;
+    //    //Func<Point, Point> mapToScreen = new Func<Point, Point>(p => new Point((p.X - mapExtent.XMin) * scale, -(p.Y - mapExtent.YMax) * scale));
+    //    var mapToScreen = Utility.CreateMapToScreenMapFunc(mapExtent, screenWidth, screenHeight);
+
+    //    return feature.Transform(mapToScreen).Features;
+    //}
 
 
     #region Raster Save And Export Methods

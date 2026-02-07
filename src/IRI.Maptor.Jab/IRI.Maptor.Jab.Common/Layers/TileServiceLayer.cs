@@ -30,11 +30,11 @@ public class TileServiceLayer : BaseLayer
     private readonly TileCacheAddress _cache;
 
     private readonly TileMapProvider _mapProvider;
-     
+
     public override RenderMode RenderMode => RenderMode.Tiled;
 
     public override LayerType Type => LayerType.BaseMap;
-     
+
     public override BoundingBox Extent
     {
         get => BoundingBox.NaN;
@@ -56,14 +56,14 @@ public class TileServiceLayer : BaseLayer
     {
         get { return _mapProvider.FullName; }
     }
-     
+
     public bool IsOffline { get; set; }
 
 
     public TileServiceLayer(TileMapProvider mapProvider, double opacity, Func<TileInfo, string>? getFileName = null)
-    { 
+    {
         this._cache = new TileCacheAddress(mapProvider.ProviderEn, mapProvider.MapTypeEn, getFileName);
-         
+
         this.Opacity = opacity;
 
         this._mapProvider = mapProvider;
@@ -89,7 +89,7 @@ public class TileServiceLayer : BaseLayer
     //{
     //    if (element is null)
     //        return;
-        
+
     //    if (element is Path || element is Rectangle)
     //    {
     //        //Binding binding1 = new Binding() { Source = this, Path = new PropertyPath("VisualParameters.Stroke"), Mode = BindingMode.TwoWay };
@@ -206,6 +206,8 @@ public class TileServiceLayer : BaseLayer
 
         return result;
     }
+
+    public GeoReferencedImage GetCachedTileAsync(TileInfo tile) => _cache?.GetTile(tile) ?? GeoReferencedImage.NaN;
 
     public async Task<GeoReferencedImage> DownloadTileAsync(TileInfo tile, IHttpProtocol client)
     {

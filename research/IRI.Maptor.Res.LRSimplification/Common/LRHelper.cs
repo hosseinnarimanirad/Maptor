@@ -11,6 +11,7 @@ using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Jab.Common.Helpers;
 
 
 namespace IRI.Maptor.Res.LRSimplification.Common;
@@ -106,7 +107,7 @@ public static class LRHelper
         originalBitmap.Save($"{outputDirectory}\\{fileName}-{estimatedZoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
         //var toScreenMap2 = this.Presenter.CreateToScreenMapFunc();
-        var toScreenMap3 = VectorLayer.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
+        var toScreenMap3 = Utility.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
 
         var threshold = webMercatorResolution /** coef*/;
 
@@ -220,7 +221,7 @@ public static class LRHelper
         originalBitmap.Save($"{outputDirectory}\\{fileName}-{estimatedZoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
         //var toScreenMap2 = this.Presenter.CreateToScreenMapFunc();
-        var toScreenMap3 = VectorLayer.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
+        var toScreenMap3 = Utility.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
 
         var threshold = webMercatorResolution /** coef*/;
 
@@ -346,7 +347,7 @@ public static class LRHelper
             //originalBitmap.Save($"{outputDirectory}\\{fileName}-{estimatedZoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
             //var toScreenMap2 = this.Presenter.CreateToScreenMapFunc();
-            var toScreenMap3 = VectorLayer.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
+            var toScreenMap3 = Utility.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
 
             var threshold = webMercatorResolution /** coef*/;
 
@@ -473,7 +474,7 @@ public static class LRHelper
             originalBitmap.Save($"{outputDirectory}\\{fileName}-{zoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
             //var toScreenMap2 = this.Presenter.CreateToScreenMapFunc();
-            var toScreenMap3 = VectorLayer.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
+            var toScreenMap3 = Utility.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
 
             var threshold = webMercatorResolution /** coef*/;
 
@@ -600,7 +601,7 @@ public static class LRHelper
 
             //originalBitmap.Save($"{outputDirectory}\\{fileName}-{estimatedZoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
-            var toScreenMap3 = VectorLayer.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
+            var toScreenMap3 = Utility.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
 
             var threshold = webMercatorResolution   /** coef*/;
 
@@ -738,7 +739,7 @@ public static class LRHelper
 
                 originalBitmap.Save($"{outputDirectory}\\{fileName}-{estimatedZoomLevel}-F{featureIndex}-original.png", System.Drawing.Imaging.ImageFormat.Tiff);
 
-                var toScreenMap3 = VectorLayer.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
+                var toScreenMap3 = Utility.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
 
                 var threshold = webMercatorResolution   /** coef*/;
 
@@ -906,7 +907,7 @@ public static class LRHelper
 
             originalBitmap.Save($"{outputDirectory}\\{fileName}-original-F{featureIndex}-Z{zoomLevel}.png", System.Drawing.Imaging.ImageFormat.Tiff);
 
-            var toScreenMap3 = VectorLayer.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
+            var toScreenMap3 = Utility.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
 
             var threshold = webMercatorResolution /** coef*/;
 
@@ -1059,7 +1060,7 @@ public static class LRHelper
 
         originalBitmap.Save($"{outputDirectory}\\{fileName}-{zoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
-        var toScreenMap3 = VectorLayer.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
+        var toScreenMap3 = Utility.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
 
         var threshold = webMercatorResolution /** coef*/;
 
@@ -1190,7 +1191,7 @@ public static class LRHelper
 
             var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
 
-            var toScreenMap3 = VectorLayer.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
+            var toScreenMap3 = Utility.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
 
             var threshold = webMercatorResolution   /** coef*/;
 

@@ -3,9 +3,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using System.Threading.Tasks;
+using IRI.Maptor.Sta.Ogc.WMS;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -249,4 +254,41 @@ public class SpecialPointLayer : BaseLayer
     }
 
     public Action<Locateable?, int> RequestSelectedLocatableChanged;
+
+
+    #region /*Overrides*/
+
+    public /*override*/ Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
+    {
+        if (this.Items.IsNullOrEmpty())
+            return Task.FromResult(FeatureSet<Point>.Empty);
+
+        // Filter points within bounding box
+        var points = this.Items
+            .Where(item => mapExtent.Contains(new Point(item.X, item.Y)))
+            .Select(item => new Point(item.X, item.Y))
+            .ToList();
+
+        if (points.Count == 0)
+            return Task.FromResult(FeatureSet<Point>.Empty);
+
+        // Create single Point or MultiPoint geometry
+        Geometry<Point> geometry;
+
+        if (points.Count == 1)
+        {
+            geometry = Geometry<Point>.Create(points, GeometryType.Point, SridHelper.WebMercator);
+        }
+        else
+        {
+            geometry = Geometry<Point>.Create(points, GeometryType.MultiPoint, SridHelper.WebMercator);
+        }
+
+        //return new List<Feature<Point>> { new Feature<Point>(geometry) };
+
+        return Task.FromResult(FeatureSet<Point>.Create($"{nameof(SpecialPointLayer)}-{this.LayerId}", [geometry.AsFeature()]));
+        //return new List<Feature<Point>> { new Feature<Point>(geometry) };
+    }
+
+    #endregion
 }

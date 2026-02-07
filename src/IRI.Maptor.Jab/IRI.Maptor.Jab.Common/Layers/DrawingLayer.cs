@@ -8,6 +8,9 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using System.Linq;
+using System.Threading.Tasks;
+using IRI.Maptor.Sta.Ogc.WMS;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -161,5 +164,10 @@ public class DrawingLayer : SymbolizableLayer
         //drawingVisual.Opacity = this.VisualParameters.Opacity;
 
         //return drawingVisual;
+    }
+
+    public override Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
+    {
+        return _editableFeatureLayer.GetFeatureSet(mapExtent, mapScale) ?? Task.FromResult(FeatureSet<Point>.Empty);
     }
 }

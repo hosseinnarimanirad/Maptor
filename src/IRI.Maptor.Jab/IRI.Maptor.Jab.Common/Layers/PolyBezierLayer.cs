@@ -18,6 +18,8 @@ using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 using LineSegment = System.Windows.Media.LineSegment;
 using WpfPoint = System.Windows.Point;
+using System.Threading.Tasks;
+using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -649,5 +651,7 @@ public class PolyBezierLayer : SymbolizableLayer
     {
         return _decorateLayer;
     }
+
+    public override Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale) => Task.FromResult(FeatureSet<Point>.Empty);
 
 }

@@ -1778,7 +1778,7 @@ public abstract class MapViewModelBase : ViewModelBase
         if (DoNotCheckInternet)
             return;
 
-        var proxy = this.ProxySettings.GetProxy();// RequestGetProxy?.Invoke();
+        var proxy = ProxySettings is null ? null : this.ProxySettings.GetProxy();// RequestGetProxy?.Invoke();
 
         IsConnected = await NetHelper.IsConnectedToInternet(proxy);
     }
@@ -1979,6 +1979,11 @@ public abstract class MapViewModelBase : ViewModelBase
         RequestFinishEdit?.Invoke(); //this is called in MapViewer
 
         OnFinishEdit?.Invoke(null, EventArgs.Empty); //this is called in the apps
+    }
+
+    public void UpdateCurrentEditingPoint(Point webMercatorPoint)
+    {
+        MapPanel.UpdateCurrentEditingPoint(webMercatorPoint);
     }
 
     #endregion
@@ -2385,7 +2390,10 @@ public abstract class MapViewModelBase : ViewModelBase
         RequestRemoveMapOptions?.Invoke();
     }
 
+    public virtual void RegisterMapOptions()
+    {
 
+    }
 
     #endregion
 
@@ -2435,7 +2443,7 @@ public abstract class MapViewModelBase : ViewModelBase
             if (!response.HasNotNullResult())
                 return;
 
-            var text = "sample text!";
+            var text = string.Empty;//"sample text!";
 
             TextboxMarkerViewModel viewModel = new TextboxMarkerViewModel() { LabelValue = text };
 
@@ -2472,10 +2480,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
     #endregion
 
-    public void UpdateCurrentEditingPoint(Point webMercatorPoint)
-    {
-        MapPanel.UpdateCurrentEditingPoint(webMercatorPoint);
-    }
+
+    #region Printing
 
     public void Print()
     {
@@ -2552,136 +2558,29 @@ public abstract class MapViewModelBase : ViewModelBase
         var allLayers = GetAllLayers(Layers);
 
         // Collect raster (basemap) layers
-        var rasterLayerPdfDataList = new List<PdfWriter.RasterLayerPdfData>();
+        var rasterLayerPdfDataList = await PdfHelper.GetTiles(this, mapScale, boundingBox);
 
-        // Find TileServiceLayer instances
-        var tileServiceLayers = allLayers
-            .OfType<TileServiceLayer>()
-            .Where(layer =>
-                layer.Visibility == System.Windows.Visibility.Visible &&
-                layer.CanRenderLayer(mapScale))
-            .OrderBy(layer => layer.ZIndex)
-            .ToList();
-
-        // Process tile service layers
-        foreach (var tileLayer in tileServiceLayers)
-        {
-            try
-            {
-                // Calculate zoom level from map scale
-                int zoomLevel = WebMercatorUtility.GetZoomLevel(mapScale);
-
-                // Calculate tiles for bounding box
-                var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(boundingBox, zoomLevel);
-
-                var rasterTiles = new List<PdfWriter.RasterTileData>();
-
-                // Get tile images
-                foreach (var tileInfo in tiles)
-                {
-                    var geoImage = await tileLayer.GetTileAsync(tileInfo, HttpClient);
-
-                    if (geoImage?.IsValid == true && geoImage.Image != null)
-                    {
-                        var rasterTile = new PdfWriter.RasterTileData
-                        {
-                            ImageBytes = geoImage.Image,
-                            WebMercatorExtent = tileInfo.WebMercatorExtent,
-                            Opacity = tileLayer.Opacity
-                        };
-
-                        rasterTiles.Add(rasterTile);
-                    }
-                }
-
-                if (rasterTiles.Count > 0)
-                {
-                    var rasterLayerData = new PdfWriter.RasterLayerPdfData
-                    {
-                        Tiles = rasterTiles,
-                        ZIndex = tileLayer.ZIndex,
-                        Opacity = tileLayer.Opacity,
-                        LayerName = tileLayer.LayerName
-                    };
-
-                    rasterLayerPdfDataList.Add(rasterLayerData);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error processing tile layer {tileLayer.LayerName}: {ex.Message}");
-                // Continue with other layers even if one fails
-            }
-        }
-
-        // Get visible vector layers that are in scale
-        var vectorLayers = allLayers.OfType<VectorLayer>()
-            .Where(layer =>
-                layer.Type == LayerType.VectorLayer &&
-                layer.Visibility == System.Windows.Visibility.Visible &&
-                layer.CanRenderLayer(mapScale))
-            .OrderBy(layer => layer.ZIndex)
-            .ToList();
-
-        // Get EditableFeatureLayer instances
-        var editableFeatureLayers = allLayers.OfType<EditableFeatureLayer>()
-            .Where(layer =>
-                layer.Visibility == System.Windows.Visibility.Visible &&
-                layer.CanRenderLayer(mapScale))
-            .OrderBy(layer => layer.ZIndex)
-            .ToList();
-
-        // Get DrawingLayer instances
-        var drawingLayers = allLayers.OfType<DrawingLayer>()
-            .Where(layer =>
-                layer.Visibility == System.Windows.Visibility.Visible &&
-                layer.CanRenderLayer(mapScale))
-            .OrderBy(layer => layer.ZIndex)
-            .ToList();
-
-        // Get SpecialPointLayer instances
-        var specialPointLayers = allLayers.OfType<SpecialPointLayer>()
-            .Where(layer =>
-                layer.Visibility == System.Windows.Visibility.Visible &&
-                layer.CanRenderLayer(mapScale))
-            .OrderBy(layer => layer.ZIndex)
-            .ToList();
-
-        // Get SpecialLineLayer instances
-        var specialLineLayers = allLayers.OfType<SpecialLineLayer>()
-            .Where(layer =>
-                layer.Visibility == System.Windows.Visibility.Visible &&
-                layer.CanRenderLayer(mapScale))
-            .OrderBy(layer => layer.ZIndex)
-            .ToList();
-
-        // Get GridLayer instances
-        var gridLayers = allLayers.OfType<GridLayer>()
-            .Where(layer =>
-                layer.Visibility == System.Windows.Visibility.Visible &&
-                layer.CanRenderLayer(mapScale))
-            .OrderBy(layer => layer.ZIndex)
+        var allVisibleInScaleLayers = allLayers.OfType<SymbolizableLayer>()
+                                                .Where(l => l.Visibility == System.Windows.Visibility.Visible &&
+                                                            l.CanRenderLayer(mapScale))
+            .OrderBy(l => l.ZIndex)
             .ToList();
 
         // Collect layer data with features and symbology
         var layerPdfDataList = new List<PdfWriter.LayerPdfData>();
 
-        foreach (var layer in vectorLayers)
+        foreach (var layer in allVisibleInScaleLayers)
         {
             try
             {
-                // Get features for current extent
-                var featureSet = layer.DataSource.GetAsFeatureSet(boundingBox);
+                // Get features for current extent and scale
+                var featureSet = await layer.GetFeatureSet(boundingBox, mapScale);
 
-                if (featureSet == null || featureSet.Features == null || featureSet.Features.Count == 0)
+                if (featureSet == null || featureSet.HasNoGeometry())
                     continue;
 
-                // Filter features that intersect with bounding box
-                var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
                 var allFeatures = featureSet.Features
-                    .Where(f => f.TheGeometry != null &&
-                               !f.TheGeometry.IsNullOrEmpty() &&
-                               f.TheGeometry.Intersects(extentGeometry))
+                    .Where(f => f.TheGeometry != null && !f.TheGeometry.IsEmpty())
                     .ToList();
 
                 if (allFeatures.Count == 0)
@@ -2699,9 +2598,7 @@ public abstract class MapViewModelBase : ViewModelBase
                         continue;
 
                     // Filter features using symbolizer's filter
-                    var filteredFeatures = allFeatures
-                        .Where(symbolizer.IsFilterPassed)
-                        .ToList();
+                    var filteredFeatures = allFeatures.Where(symbolizer.IsFilterPassed).ToList();
 
                     if (filteredFeatures.Count == 0)
                         continue;
@@ -2725,223 +2622,339 @@ public abstract class MapViewModelBase : ViewModelBase
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error processing layer {layer.LayerName}: {ex.Message}");
-                // Continue with other layers even if one fails
             }
         }
+
+        #region Old code
+
+        //// Get visible vector layers that are in scale
+        //var vectorLayers = allLayers.OfType<VectorLayer>()
+        //    .Where(layer =>
+        //        layer.Type == LayerType.VectorLayer &&
+        //        layer.Visibility == System.Windows.Visibility.Visible &&
+        //        layer.CanRenderLayer(mapScale))
+        //    .OrderBy(layer => layer.ZIndex)
+        //    .ToList();
+
+        //// Get EditableFeatureLayer instances
+        //var editableFeatureLayers = allLayers.OfType<EditableFeatureLayer>()
+        //    .Where(layer =>
+        //        layer.Visibility == System.Windows.Visibility.Visible &&
+        //        layer.CanRenderLayer(mapScale))
+        //    .OrderBy(layer => layer.ZIndex)
+        //    .ToList();
+
+        //// Get DrawingLayer instances
+        //var drawingLayers = allLayers.OfType<DrawingLayer>()
+        //    .Where(layer =>
+        //        layer.Visibility == System.Windows.Visibility.Visible &&
+        //        layer.CanRenderLayer(mapScale))
+        //    .OrderBy(layer => layer.ZIndex)
+        //    .ToList();
+
+        //// Get SpecialPointLayer instances
+        //var specialPointLayers = allLayers.OfType<SpecialPointLayer>()
+        //    .Where(layer =>
+        //        layer.Visibility == System.Windows.Visibility.Visible &&
+        //        layer.CanRenderLayer(mapScale))
+        //    .OrderBy(layer => layer.ZIndex)
+        //    .ToList();
+
+        //// Get SpecialLineLayer instances
+        //var specialLineLayers = allLayers.OfType<SpecialLineLayer>()
+        //    .Where(layer =>
+        //        layer.Visibility == System.Windows.Visibility.Visible &&
+        //        layer.CanRenderLayer(mapScale))
+        //    .OrderBy(layer => layer.ZIndex)
+        //    .ToList();
+
+        //// Get GridLayer instances
+        //var gridLayers = allLayers.OfType<GridLayer>()
+        //    .Where(layer =>
+        //        layer.Visibility == System.Windows.Visibility.Visible &&
+        //        layer.CanRenderLayer(mapScale))
+        //    .OrderBy(layer => layer.ZIndex)
+        //    .ToList();
+
+        //foreach (var layer in vectorLayers)
+        //{
+        //    try
+        //    {
+        //        // Get features for current extent
+        //        var featureSet = layer.DataSource.GetAsFeatureSet(boundingBox);
+
+        //        if (featureSet == null || featureSet.Features == null || featureSet.Features.Count == 0)
+        //            continue;
+
+        //        // Filter features that intersect with bounding box
+        //        var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
+        //        var allFeatures = featureSet.Features
+        //            .Where(f => f.TheGeometry != null &&
+        //                       !f.TheGeometry.IsNullOrEmpty() &&
+        //                       f.TheGeometry.Intersects(extentGeometry))
+        //            .ToList();
+
+        //        if (allFeatures.Count == 0)
+        //            continue;
+
+        //        // Iterate through ALL symbolizers in the layer
+        //        foreach (var symbolizer in layer.Symbolizers)
+        //        {
+        //            // Skip LabelSymbolizer (labels not supported in vector PDF)
+        //            if (symbolizer is LabelSymbolizer)
+        //                continue;
+
+        //            // Check if symbolizer is in scale range
+        //            if (!symbolizer.IsInScaleRange(mapScale))
+        //                continue;
+
+        //            // Filter features using symbolizer's filter
+        //            var filteredFeatures = allFeatures
+        //                .Where(symbolizer.IsFilterPassed)
+        //                .ToList();
+
+        //            if (filteredFeatures.Count == 0)
+        //                continue;
+
+        //            // Convert this symbolizer's visual parameters to PDF options
+        //            var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
+
+        //            // Create separate LayerPdfData for this symbolizer's filtered features
+        //            var layerPdfData = new PdfWriter.LayerPdfData
+        //            {
+        //                Features = filteredFeatures,
+        //                Options = pdfOptions,
+        //                ZIndex = layer.ZIndex, // Use layer's ZIndex
+        //                Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
+        //                LayerName = layer.LayerName
+        //            };
+
+        //            layerPdfDataList.Add(layerPdfData);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"Error processing layer {layer.LayerName}: {ex.Message}");
+        //        // Continue with other layers even if one fails
+        //    }
+        //}
 
         // Process EditableFeatureLayer instances
-        foreach (var layer in editableFeatureLayers)
-        {
-            try
-            {
-                var features = ConvertEditableFeatureLayerToFeatures(layer, boundingBox);
-                if (features.Count == 0)
-                    continue;
+        //foreach (var layer in editableFeatureLayers)
+        //{
+        //    try
+        //    {
+        //        var features = ConvertEditableFeatureLayerToFeatures(layer, boundingBox);
+        //        if (features.Count == 0)
+        //            continue;
 
-                // Process symbolizers (same logic as VectorLayer)
-                foreach (var symbolizer in layer.Symbolizers)
-                {
-                    if (symbolizer is LabelSymbolizer)
-                        continue;
+        //        // Process symbolizers (same logic as VectorLayer)
+        //        foreach (var symbolizer in layer.Symbolizers)
+        //        {
+        //            if (symbolizer is LabelSymbolizer)
+        //                continue;
 
-                    if (!symbolizer.IsInScaleRange(mapScale))
-                        continue;
+        //            if (!symbolizer.IsInScaleRange(mapScale))
+        //                continue;
 
-                    var filteredFeatures = features.Where(symbolizer.IsFilterPassed).ToList();
-                    if (filteredFeatures.Count == 0)
-                        continue;
+        //            var filteredFeatures = features.Where(symbolizer.IsFilterPassed).ToList();
+        //            if (filteredFeatures.Count == 0)
+        //                continue;
 
-                    var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
-                    var layerPdfData = new PdfWriter.LayerPdfData
-                    {
-                        Features = filteredFeatures,
-                        Options = pdfOptions,
-                        ZIndex = layer.ZIndex,
-                        Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
-                        LayerName = layer.LayerName
-                    };
+        //            var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
+        //            var layerPdfData = new PdfWriter.LayerPdfData
+        //            {
+        //                Features = filteredFeatures,
+        //                Options = pdfOptions,
+        //                ZIndex = layer.ZIndex,
+        //                Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
+        //                LayerName = layer.LayerName
+        //            };
 
-                    layerPdfDataList.Add(layerPdfData);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error processing EditableFeatureLayer {layer.LayerName}: {ex.Message}");
-            }
-        }
+        //            layerPdfDataList.Add(layerPdfData);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"Error processing EditableFeatureLayer {layer.LayerName}: {ex.Message}");
+        //    }
+        //}
 
-        // Process DrawingLayer instances
-        foreach (var layer in drawingLayers)
-        {
-            try
-            {
-                var features = ConvertDrawingLayerToFeatures(layer, boundingBox);
-                if (features.Count == 0)
-                    continue;
+        //// Process DrawingLayer instances
+        //foreach (var layer in drawingLayers)
+        //{
+        //    try
+        //    {
+        //        var features = ConvertDrawingLayerToFeatures(layer, boundingBox);
+        //        if (features.Count == 0)
+        //            continue;
 
-                // Process symbolizers (same logic as VectorLayer)
-                foreach (var symbolizer in layer.Symbolizers)
-                {
-                    if (symbolizer is LabelSymbolizer)
-                        continue;
+        //        // Process symbolizers (same logic as VectorLayer)
+        //        foreach (var symbolizer in layer.Symbolizers)
+        //        {
+        //            if (symbolizer is LabelSymbolizer)
+        //                continue;
 
-                    if (!symbolizer.IsInScaleRange(mapScale))
-                        continue;
+        //            if (!symbolizer.IsInScaleRange(mapScale))
+        //                continue;
 
-                    var filteredFeatures = features.Where(symbolizer.IsFilterPassed).ToList();
-                    if (filteredFeatures.Count == 0)
-                        continue;
+        //            var filteredFeatures = features.Where(symbolizer.IsFilterPassed).ToList();
+        //            if (filteredFeatures.Count == 0)
+        //                continue;
 
-                    var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
-                    var layerPdfData = new PdfWriter.LayerPdfData
-                    {
-                        Features = filteredFeatures,
-                        Options = pdfOptions,
-                        ZIndex = layer.ZIndex,
-                        Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
-                        LayerName = layer.LayerName
-                    };
+        //            var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
+        //            var layerPdfData = new PdfWriter.LayerPdfData
+        //            {
+        //                Features = filteredFeatures,
+        //                Options = pdfOptions,
+        //                ZIndex = layer.ZIndex,
+        //                Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
+        //                LayerName = layer.LayerName
+        //            };
 
-                    layerPdfDataList.Add(layerPdfData);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error processing DrawingLayer {layer.LayerName}: {ex.Message}");
-            }
-        }
+        //            layerPdfDataList.Add(layerPdfData);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"Error processing DrawingLayer {layer.LayerName}: {ex.Message}");
+        //    }
+        //}
 
         // Process SpecialPointLayer instances (no symbolizers - use default symbology)
-        foreach (var layer in specialPointLayers)
-        {
-            try
-            {
-                var features = ConvertSpecialPointLayerToFeatures(layer, boundingBox);
-                if (features.Count == 0)
-                    continue;
+        //foreach (var layer in specialPointLayers)
+        //{
+        //    try
+        //    {
+        //        var features = ConvertSpecialPointLayerToFeatures(layer, boundingBox);
+        //        if (features.Count == 0)
+        //            continue;
 
-                // Use default point symbology since SpecialPointLayer has no symbolizers
-                var defaultPointOptions = new PdfOptions
-                {
-                    FillColor = new RgbColor(0, 0, 255, 255), // Blue
-                    StrokeColor = new RgbColor(0, 0, 0, 255), // Black
-                    StrokeWidth = 1,
-                    PointCircleRadius = 3.0,
-                    Opacity = layer.Opacity
-                };
+        //        // Use default point symbology since SpecialPointLayer has no symbolizers
+        //        var defaultPointOptions = new PdfOptions
+        //        {
+        //            FillColor = new RgbColor(0, 0, 255, 255), // Blue
+        //            StrokeColor = new RgbColor(0, 0, 0, 255), // Black
+        //            StrokeWidth = 1,
+        //            PointCircleRadius = 3.0,
+        //            Opacity = layer.Opacity
+        //        };
 
-                var layerPdfData = new PdfWriter.LayerPdfData
-                {
-                    Features = features,
-                    Options = defaultPointOptions,
-                    ZIndex = layer.ZIndex,
-                    Opacity = layer.Opacity,
-                    LayerName = layer.LayerName
-                };
+        //        var layerPdfData = new PdfWriter.LayerPdfData
+        //        {
+        //            Features = features,
+        //            Options = defaultPointOptions,
+        //            ZIndex = layer.ZIndex,
+        //            Opacity = layer.Opacity,
+        //            LayerName = layer.LayerName
+        //        };
 
-                layerPdfDataList.Add(layerPdfData);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error processing SpecialPointLayer {layer.LayerName}: {ex.Message}");
-            }
-        }
+        //        layerPdfDataList.Add(layerPdfData);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"Error processing SpecialPointLayer {layer.LayerName}: {ex.Message}");
+        //    }
+        //}
 
-        // Process SpecialLineLayer instances
-        foreach (var layer in specialLineLayers)
-        {
-            try
-            {
-                var features = ConvertSpecialLineLayerToFeatures(layer, boundingBox);
-                if (features.Count == 0)
-                    continue;
+        //// Process SpecialLineLayer instances
+        //foreach (var layer in specialLineLayers)
+        //{
+        //    try
+        //    {
+        //        var features = ConvertSpecialLineLayerToFeatures(layer, boundingBox);
+        //        if (features.Count == 0)
+        //            continue;
 
-                // Process symbolizers (same logic as VectorLayer)
-                foreach (var symbolizer in layer.Symbolizers)
-                {
-                    if (symbolizer is LabelSymbolizer)
-                        continue;
+        //        // Process symbolizers (same logic as VectorLayer)
+        //        foreach (var symbolizer in layer.Symbolizers)
+        //        {
+        //            if (symbolizer is LabelSymbolizer)
+        //                continue;
 
-                    if (!symbolizer.IsInScaleRange(mapScale))
-                        continue;
+        //            if (!symbolizer.IsInScaleRange(mapScale))
+        //                continue;
 
-                    var filteredFeatures = features.Where(symbolizer.IsFilterPassed).ToList();
-                    if (filteredFeatures.Count == 0)
-                        continue;
+        //            var filteredFeatures = features.Where(symbolizer.IsFilterPassed).ToList();
+        //            if (filteredFeatures.Count == 0)
+        //                continue;
 
-                    var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
-                    var layerPdfData = new PdfWriter.LayerPdfData
-                    {
-                        Features = filteredFeatures,
-                        Options = pdfOptions,
-                        ZIndex = layer.ZIndex,
-                        Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
-                        LayerName = layer.LayerName
-                    };
+        //            var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
+        //            var layerPdfData = new PdfWriter.LayerPdfData
+        //            {
+        //                Features = filteredFeatures,
+        //                Options = pdfOptions,
+        //                ZIndex = layer.ZIndex,
+        //                Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
+        //                LayerName = layer.LayerName
+        //            };
 
-                    layerPdfDataList.Add(layerPdfData);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error processing SpecialLineLayer {layer.LayerName}: {ex.Message}");
-            }
-        }
+        //            layerPdfDataList.Add(layerPdfData);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"Error processing SpecialLineLayer {layer.LayerName}: {ex.Message}");
+        //    }
+        //}
 
-        // Process GridLayer instances
-        foreach (var layer in gridLayers)
-        {
-            try
-            {
-                var features = ConvertGridLayerToFeatures(layer, boundingBox);
-                if (features.Count == 0)
-                    continue;
+        //// Process GridLayer instances
+        //foreach (var layer in gridLayers)
+        //{
+        //    try
+        //    {
+        //        var features = ConvertGridLayerToFeatures(layer, boundingBox);
+        //        if (features.Count == 0)
+        //            continue;
 
-                // Filter features that intersect with bounding box
-                var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
-                var allFeatures = features
-                    .Where(f => f.TheGeometry != null &&
-                               !f.TheGeometry.IsNullOrEmpty() &&
-                               f.TheGeometry.Intersects(extentGeometry))
-                    .ToList();
+        //        // Filter features that intersect with bounding box
+        //        var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
+        //        var allFeatures = features
+        //            .Where(f => f.TheGeometry != null &&
+        //                       !f.TheGeometry.IsNullOrEmpty() &&
+        //                       f.TheGeometry.Intersects(extentGeometry))
+        //            .ToList();
 
-                if (allFeatures.Count == 0)
-                    continue;
+        //        if (allFeatures.Count == 0)
+        //            continue;
 
-                // Process symbolizers (same logic as VectorLayer)
-                foreach (var symbolizer in layer.Symbolizers)
-                {
-                    if (symbolizer is LabelSymbolizer)
-                        continue;
+        //        // Process symbolizers (same logic as VectorLayer)
+        //        foreach (var symbolizer in layer.Symbolizers)
+        //        {
+        //            if (symbolizer is LabelSymbolizer)
+        //                continue;
 
-                    if (!symbolizer.IsInScaleRange(mapScale))
-                        continue;
+        //            if (!symbolizer.IsInScaleRange(mapScale))
+        //                continue;
 
-                    var filteredFeatures = allFeatures
-                        .Where(symbolizer.IsFilterPassed)
-                        .ToList();
+        //            var filteredFeatures = allFeatures
+        //                .Where(symbolizer.IsFilterPassed)
+        //                .ToList();
 
-                    if (filteredFeatures.Count == 0)
-                        continue;
+        //            if (filteredFeatures.Count == 0)
+        //                continue;
 
-                    var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
-                    var layerPdfData = new PdfWriter.LayerPdfData
-                    {
-                        Features = filteredFeatures,
-                        Options = pdfOptions,
-                        ZIndex = layer.ZIndex,
-                        Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
-                        LayerName = layer.LayerName
-                    };
+        //            var pdfOptions = ConvertSymbolizerToPdfOptions(symbolizer);
+        //            var layerPdfData = new PdfWriter.LayerPdfData
+        //            {
+        //                Features = filteredFeatures,
+        //                Options = pdfOptions,
+        //                ZIndex = layer.ZIndex,
+        //                Opacity = layer.Opacity * (symbolizer.Param?.Opacity ?? 1.0),
+        //                LayerName = layer.LayerName
+        //            };
 
-                    layerPdfDataList.Add(layerPdfData);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error processing GridLayer {layer.LayerName}: {ex.Message}");
-            }
-        }
+        //            layerPdfDataList.Add(layerPdfData);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"Error processing GridLayer {layer.LayerName}: {ex.Message}");
+        //    }
+        //}
+
+
+        #endregion
 
         // Check if we have any layers to export (raster or vector)
         if (layerPdfDataList.Count == 0 && rasterLayerPdfDataList.Count == 0)
@@ -3030,102 +3043,102 @@ public abstract class MapViewModelBase : ViewModelBase
     /// <summary>
     /// Converts EditableFeatureLayer to Feature collection
     /// </summary>
-    private List<Feature<Point>> ConvertEditableFeatureLayerToFeatures(EditableFeatureLayer layer, BoundingBox boundingBox)
-    {
-        var geometry = layer.GetFinalGeometry();
-        if (geometry == null || geometry.IsNullOrEmpty())
-            return new List<Feature<Point>>();
+    //private List<Feature<Point>> ConvertEditableFeatureLayerToFeatures(EditableFeatureLayer layer, BoundingBox boundingBox)
+    //{
+    //    var geometry = layer.GetFinalGeometry();
+    //    if (geometry == null || geometry.IsNullOrEmpty())
+    //        return new List<Feature<Point>>();
 
-        // Check if geometry intersects bounding box
-        var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
-        if (!geometry.Intersects(extentGeometry))
-            return new List<Feature<Point>>();
+    //    // Check if geometry intersects bounding box
+    //    var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
+    //    if (!geometry.Intersects(extentGeometry))
+    //        return new List<Feature<Point>>();
 
-        return new List<Feature<Point>> { new Feature<Point>(geometry) };
-    }
+    //    return new List<Feature<Point>> { new Feature<Point>(geometry) };
+    //}
 
     /// <summary>
     /// Converts DrawingLayer to Feature collection
     /// </summary>
-    private List<Feature<Point>> ConvertDrawingLayerToFeatures(DrawingLayer layer, BoundingBox boundingBox)
-    {
-        var geometry = layer.GetFinalGeometry();
-        if (geometry == null || geometry.IsNullOrEmpty())
-            return new List<Feature<Point>>();
+    //private List<Feature<Point>> ConvertDrawingLayerToFeatures(DrawingLayer layer, BoundingBox boundingBox)
+    //{
+    //    var geometry = layer.GetFinalGeometry();
+    //    if (geometry == null || geometry.IsNullOrEmpty())
+    //        return new List<Feature<Point>>();
 
-        var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
-        if (!geometry.Intersects(extentGeometry))
-            return new List<Feature<Point>>();
+    //    var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
+    //    if (!geometry.Intersects(extentGeometry))
+    //        return new List<Feature<Point>>();
 
-        return new List<Feature<Point>> { new Feature<Point>(geometry) };
-    }
+    //    return new List<Feature<Point>> { new Feature<Point>(geometry) };
+    //}
 
     /// <summary>
     /// Converts SpecialPointLayer to Feature collection
     /// </summary>
-    private List<Feature<Point>> ConvertSpecialPointLayerToFeatures(SpecialPointLayer layer, BoundingBox boundingBox)
-    {
-        if (layer.Items == null || layer.Items.Count == 0)
-            return new List<Feature<Point>>();
+    //private List<Feature<Point>> ConvertSpecialPointLayerToFeatures(SpecialPointLayer layer, BoundingBox boundingBox)
+    //{
+    //    if (layer.Items == null || layer.Items.Count == 0)
+    //        return new List<Feature<Point>>();
 
-        // Filter points within bounding box
-        var points = layer.Items
-            .Where(item => boundingBox.Contains(new Point(item.X, item.Y)))
-            .Select(item => new Point(item.X, item.Y))
-            .ToList();
+    //    // Filter points within bounding box
+    //    var points = layer.Items
+    //        .Where(item => boundingBox.Contains(new Point(item.X, item.Y)))
+    //        .Select(item => new Point(item.X, item.Y))
+    //        .ToList();
 
-        if (points.Count == 0)
-            return new List<Feature<Point>>();
+    //    if (points.Count == 0)
+    //        return new List<Feature<Point>>();
 
-        // Create single Point or MultiPoint geometry
-        Geometry<Point> geometry;
-        if (points.Count == 1)
-        {
-            geometry = Geometry<Point>.Create(points, GeometryType.Point, SridHelper.WebMercator);
-        }
-        else
-        {
-            geometry = Geometry<Point>.Create(points, GeometryType.MultiPoint, SridHelper.WebMercator);
-        }
+    //    // Create single Point or MultiPoint geometry
+    //    Geometry<Point> geometry;
+    //    if (points.Count == 1)
+    //    {
+    //        geometry = Geometry<Point>.Create(points, GeometryType.Point, SridHelper.WebMercator);
+    //    }
+    //    else
+    //    {
+    //        geometry = Geometry<Point>.Create(points, GeometryType.MultiPoint, SridHelper.WebMercator);
+    //    }
 
-        return new List<Feature<Point>> { new Feature<Point>(geometry) };
-    }
+    //    return new List<Feature<Point>> { new Feature<Point>(geometry) };
+    //}
 
     /// <summary>
     /// Converts SpecialLineLayer to Feature collection
     /// </summary>
-    private List<Feature<Point>> ConvertSpecialLineLayerToFeatures(SpecialLineLayer layer, BoundingBox boundingBox)
-    {
-        var pointCollection = layer.PointCollection;
-        if (pointCollection == null || pointCollection.Count < 2)
-            return new List<Feature<Point>>();
+    //private List<Feature<Point>> ConvertSpecialLineLayerToFeatures(SpecialLineLayer layer, BoundingBox boundingBox)
+    //{
+    //    var pointCollection = layer.PointCollection;
+    //    if (pointCollection == null || pointCollection.Count < 2)
+    //        return new List<Feature<Point>>();
 
-        // Check if line intersects bounding box
-        var lineGeometry = Geometry<Point>.Create(pointCollection, GeometryType.LineString, SridHelper.WebMercator);
-        var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
+    //    // Check if line intersects bounding box
+    //    var lineGeometry = Geometry<Point>.Create(pointCollection, GeometryType.LineString, SridHelper.WebMercator);
+    //    var extentGeometry = boundingBox.AsGeometry<Point>(SridHelper.WebMercator);
 
-        if (!lineGeometry.Intersects(extentGeometry))
-            return new List<Feature<Point>>();
+    //    if (!lineGeometry.Intersects(extentGeometry))
+    //        return new List<Feature<Point>>();
 
-        return new List<Feature<Point>> { new Feature<Point>(lineGeometry) };
-    }
+    //    return new List<Feature<Point>> { new Feature<Point>(lineGeometry) };
+    //}
 
     /// <summary>
     /// Converts GridLayer to Feature collection
     /// </summary>
-    private List<Feature<Point>> ConvertGridLayerToFeatures(GridLayer layer, BoundingBox boundingBox)
-    {
-        if (layer.DataSource == null)
-            return new List<Feature<Point>>();
+    //private List<Feature<Point>> ConvertGridLayerToFeatures(GridLayer layer, BoundingBox boundingBox)
+    //{
+    //    if (layer.DataSource == null)
+    //        return new List<Feature<Point>>();
 
-        var featureSet = layer.DataSource.GetAsFeatureSet(boundingBox);
-        if (featureSet?.Features == null || featureSet.Features.Count == 0)
-            return new List<Feature<Point>>();
+    //    var featureSet = layer.DataSource.GetAsFeatureSet(boundingBox);
+    //    if (featureSet?.Features == null || featureSet.Features.Count == 0)
+    //        return new List<Feature<Point>>();
 
-        return featureSet.Features
-            .Where(f => f.TheGeometry != null && !f.TheGeometry.IsNullOrEmpty())
-            .ToList();
-    }
+    //    return featureSet.Features
+    //        .Where(f => f.TheGeometry != null && !f.TheGeometry.IsNullOrEmpty())
+    //        .ToList();
+    //}
 
     public async Task SetPrintAreaAsync()
     {
@@ -3139,6 +3152,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
         PrintArea = boundingBox;
     }
+
+    #endregion
+
 
     public void Refresh(bool isNewExtent)
     {
@@ -4757,8 +4773,4 @@ public abstract class MapViewModelBase : ViewModelBase
     #endregion
 
 
-    public virtual void RegisterMapOptions()
-    {
-
-    }
 }

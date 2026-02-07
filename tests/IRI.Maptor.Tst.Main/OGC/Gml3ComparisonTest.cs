@@ -17,39 +17,28 @@
 //    public static IEnumerable<object[]> Gml3TestData =>
 //    [
 //        // 2D Geometries
-//        [ "POINT (1 2)" ],
-//        [ "POINT (0 0)" ],
-//        [ "POINT (-10.5 20.75)" ],
-//        [ "MULTIPOINT ((0 0), (0 3), (3 3), (3 0))" ],
-//        [ "LINESTRING (1 1, 2 0, 2 4, 3 3)" ],
-//        [ "LINESTRING (0 0, 10 10)" ],
-//        [ "MULTILINESTRING ((1 1, 3 5), (-5 3, -8 -2))" ],
-//        [ "POLYGON ((0 0, 30 0, 30 30, 0 30, 0 0))" ],
-//        [ "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0), (5 5, 5 15, 15 15, 15 5, 5 5))" ],
-//        [ "MULTIPOLYGON (((0 0, 3 0, 3 3, 0 3, 0 0)), ((9 9, 10 9, 9 10, 9 9)))" ],
-        
-//        // 3D Geometries (Z values) - SQL Server WKT format (no Z keyword)
-//        [ "POINT (1 2 3)" ],
-//        [ "POINT (0 0 10)" ],
-//        [ "MULTIPOINT ((0 0 0), (1 1 1), (2 2 2))" ],
-//        [ "LINESTRING (0 0 0, 1 1 1, 2 2 2)" ],
-//        [ "LINESTRING (0 0 5, 10 10 15, 20 20 25)" ],
-//        [ "MULTILINESTRING ((0 0 0, 1 1 1), (2 2 2, 3 3 3))" ],
-//        [ "POLYGON ((0 0 0, 10 0 0, 10 10 0, 0 10 0, 0 0 0))" ],
-//        [ "POLYGON ((0 0 0, 20 0 0, 20 20 0, 0 20 0, 0 0 0), (5 5 0, 5 15 0, 15 15 0, 15 5 0, 5 5 0))" ],
-//        [ "MULTIPOLYGON (((0 0 0, 10 0 0, 10 10 0, 0 10 0, 0 0 0)), ((20 20 0, 30 20 0, 30 30 0, 20 30 0, 20 20 0)))" ],
+//        [ "POINT (1 2)", @"<Point xmlns=""http://www.opengis.net/gml""><pos>1 2</pos></Point>" ],
+//        [ "POINT (-10.5 20.75)", @"<Point xmlns=""http://www.opengis.net/gml""><pos>-10.5 20.75</pos></Point>" ],
+//        [ "MULTIPOINT ((0 0), (0 3), (3 3), (3 0))", @"<MultiPoint xmlns=""http://www.opengis.net/gml""><pointMembers><Point><pos>0 0</pos></Point><Point><pos>0 3</pos></Point><Point><pos>3 3</pos></Point><Point><pos>3 0</pos></Point></pointMembers></MultiPoint>" ],
+//        [ "LINESTRING (1 1, 2 0, 2 4, 3 3)" , @"<LineString xmlns=""http://www.opengis.net/gml""><posList>1 1 2 0 2 4 3 3</posList></LineString>" ],
+//        [ "LINESTRING (0 0, 10 10)", @"<LineString xmlns=""http://www.opengis.net/gml""><posList>0 0 10 10</posList></LineString>"],
+//        [ "MULTILINESTRING ((1 1, 3 5), (-5 3, -8 -2))", @"<MultiCurve xmlns=""http://www.opengis.net/gml""><curveMembers><LineString><posList>1 1 3 5</posList></LineString><LineString><posList>-5 3 -8 -2</posList></LineString></curveMembers></MultiCurve>" ],
+//        [ "POLYGON ((0 0, 30 0, 30 30, 0 30, 0 0))", @"<Polygon xmlns=""http://www.opengis.net/gml""><exterior><LinearRing><posList>0 0 30 0 30 30 0 30 0 0</posList></LinearRing></exterior></Polygon>" ],
+//        [ "POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0), (5 5, 5 15, 15 15, 15 5, 5 5))", @"<Polygon xmlns=""http://www.opengis.net/gml""><exterior><LinearRing><posList>0 0 10 0 10 10 0 10 0 0</posList></LinearRing></exterior><interior><LinearRing><posList>5 5 5 15 15 15 15 5 5 5</posList></LinearRing></interior></Polygon>" ],
+//        [ "MULTIPOLYGON (((0 0, 3 0, 3 3, 0 3, 0 0)), ((9 9, 10 9, 9 10, 9 9)))", @"<MultiSurface xmlns=""http://www.opengis.net/gml""><surfaceMembers><Polygon><exterior><LinearRing><posList>0 0 3 0 3 3 0 3 0 0</posList></LinearRing></exterior></Polygon><Polygon><exterior><LinearRing><posList>9 9 10 9 9 10 9 9</posList></LinearRing></exterior></Polygon></surfaceMembers></MultiSurface>" ],
+
 //    ];
 
 //    [Theory]
 //    [MemberData(nameof(Gml3TestData))]
-//    public void CompareGml3_GeometryVsSqlGeometry(string wktString)
+//    public void CompareGml3_GeometryVsSqlGeometry(string wktString, string expectedGmlString)
 //    {
 //        // Arrange
 //        const int srid = 4326;
-        
+
 //        // Parse WKT to Geometry<Point>
 //        var geometry = SqlServerWktReader.Parse(wktString, srid);
-        
+
 //        // Parse WKT to SqlGeometry
 //        var sqlGeometry = SqlGeometry.Parse(new System.Data.SqlTypes.SqlString(wktString));
 //        sqlGeometry.STSrid = srid;
@@ -57,32 +46,6 @@
 //        // Act - Get GML3 from both
 //        var geometryGml3 = geometry.AsGml3(includeSrid: false);
 //        var sqlGeometryGml3 = sqlGeometry.AsGml3(writeSrid: false);
-
-//        // Normalize both GML strings for comparison
-//        var normalizedGeometryGml = NormalizeGml(geometryGml3);
-//        var normalizedSqlGml = NormalizeGml(sqlGeometryGml3);
-
-//        // Assert - Compare normalized GML strings
-//        Assert.Equal(normalizedSqlGml, normalizedGeometryGml);
-//    }
-
-//    [Theory]
-//    [MemberData(nameof(Gml3TestData))]
-//    public void CompareGml3_WithSrid_GeometryVsSqlGeometry(string wktString)
-//    {
-//        // Arrange
-//        const int srid = 4326;
-        
-//        // Parse WKT to Geometry<Point>
-//        var geometry = Geometry<Point>.FromWkt(wktString, srid);
-        
-//        // Parse WKT to SqlGeometry
-//        var sqlGeometry = SqlGeometry.Parse(new System.Data.SqlTypes.SqlString(wktString));
-//        sqlGeometry.STSrid = srid;
-
-//        // Act - Get GML3 from both with SRID
-//        var geometryGml3 = geometry.AsGml3(includeSrid: true);
-//        var sqlGeometryGml3 = sqlGeometry.AsGml3(writeSrid: true);
 
 //        // Normalize both GML strings for comparison
 //        var normalizedGeometryGml = NormalizeGml(geometryGml3);
@@ -106,32 +69,32 @@
 //        try
 //        {
 //            var doc = XDocument.Parse(gmlString);
-            
-//            // Remove all namespace prefixes and use default namespace
-//            foreach (var element in doc.Descendants())
-//            {
-//                // Remove namespace prefixes from element names
-//                if (element.Name.Namespace != XNamespace.None)
-//                {
-//                    element.Name = XNamespace.None + element.Name.LocalName;
-//                }
-                
-//                // Remove namespace prefixes from attributes
-//                var attributesToRemove = element.Attributes()
-//                    .Where(a => a.IsNamespaceDeclaration || a.Name.Namespace != XNamespace.None)
-//                    .ToList();
-                
-//                foreach (var attr in attributesToRemove)
-//                {
-//                    if (!attr.IsNamespaceDeclaration)
-//                    {
-//                        // Keep the attribute but remove namespace prefix
-//                        var newName = XNamespace.None + attr.Name.LocalName;
-//                        element.SetAttributeValue(newName, attr.Value);
-//                    }
-//                    attr.Remove();
-//                }
-//            }
+
+//            //// Remove all namespace prefixes and use default namespace
+//            //foreach (var element in doc.Descendants())
+//            //{
+//            //    // Remove namespace prefixes from element names
+//            //    if (element.Name.Namespace != XNamespace.None)
+//            //    {
+//            //        element.Name = XNamespace.None + element.Name.LocalName;
+//            //    }
+
+//            //    // Remove namespace prefixes from attributes
+//            //    var attributesToRemove = element.Attributes()
+//            //        .Where(a => a.IsNamespaceDeclaration || a.Name.Namespace != XNamespace.None)
+//            //        .ToList();
+
+//            //    foreach (var attr in attributesToRemove)
+//            //    {
+//            //        if (!attr.IsNamespaceDeclaration)
+//            //        {
+//            //            // Keep the attribute but remove namespace prefix
+//            //            var newName = XNamespace.None + attr.Name.LocalName;
+//            //            element.SetAttributeValue(newName, attr.Value);
+//            //        }
+//            //        attr.Remove();
+//            //    }
+//            //}
 
 //            // Normalize the XML (removes extra whitespace, standardizes formatting)
 //            return doc.ToString(SaveOptions.DisableFormatting);

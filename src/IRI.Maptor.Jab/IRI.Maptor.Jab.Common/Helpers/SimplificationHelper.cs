@@ -61,7 +61,7 @@ public static class SimplificationHelper
 
         originalBitmap.Save($"{layerName}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
-        var toScreenMap = VectorLayer.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
+        var toScreenMap = Utility.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
 
         var threshold = webMercatorResolution   /** coef*/;
 

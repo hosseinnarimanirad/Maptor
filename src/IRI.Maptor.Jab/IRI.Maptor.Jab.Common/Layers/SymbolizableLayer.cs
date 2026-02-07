@@ -1,5 +1,8 @@
 ﻿using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.Events;
+using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +15,7 @@ public abstract class SymbolizableLayer : BaseLayer
 {
     //public event EventHandler<CustomEventArgs<VisualParameters>>? OnLabelChanged;
 
-
     protected List<VisualParameters> _visualParameters = [];
-
-    //public List<ISymbolizer> Symbolizers { get; protected set; } = [];
 
     private List<ISymbolizer> _symbolizers = [];
 
@@ -23,24 +23,6 @@ public abstract class SymbolizableLayer : BaseLayer
     {
         get => _symbolizers.AsReadOnly();
     }
-
-    //public List<VisualParameters> VisualParameters
-    //{
-    //    get { return _visualParameters; }
-    //    set
-    //    {
-    //        _visualParameters = value;
-
-    //        RaisePropertyChanged();
-
-    //        if (_visualParameters != null)
-    //        {
-    //            _visualParameters.OnVisibilityChanged -= RaiseVisibilityChanged;
-    //            _visualParameters.OnVisibilityChanged += RaiseVisibilityChanged;
-    //        }
-
-    //    }
-    //}
 
     public void SetSymbolizer(ISymbolizer symbolizer)
     {
@@ -58,20 +40,32 @@ public abstract class SymbolizableLayer : BaseLayer
         RaisePropertyChanged(nameof(DefaultSymbology));
     }
 
-    //public override bool IsSymbolizable => true;
-
     public override bool HasMultiSymbolizers => Symbolizers?.Count(s => s is not LabelSymbolizer) > 1;
 
     public VisualParameters? DefaultSymbology => _visualParameters?.FirstOrDefault(/*s => !s.HasLabelParameters*/ );
 
     public VisualParameters? DefaultLabel => _visualParameters?.FirstOrDefault(s => s.HasLabelParameters);
 
-    //public bool CanRenderLabels(double mapScale)
-    //{
-    //    return this.Labels?.IsLabeled(1.0 / mapScale) == true;
-    //}
-
     public VisualParameters GetMainOrDefaultSymbology() => _symbolizers.FirstOrDefault(v => v is SimpleSymbolizer)?.Param ?? VisualParameters.CreateNew();
 
     public VisualParameters? GetDefaultLabelParams() => _symbolizers.FirstOrDefault(v => v is LabelSymbolizer)?.Param ?? null;
+
+    public abstract Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale);
+
+
+    public async Task<List<Feature<Point>>> GetRenderReadyFeatures(BoundingBox mapExtent, double mapScale, double screenWidth, double screenHeight)
+    {
+        var feature = await this.GetFeatureSet(mapExtent, mapScale);
+
+        if (feature is null || feature.HasNoGeometry())
+            return new List<Feature<Point>>();
+
+        //double xScale = imageWidth / mapExtent.Width;
+        //double yScale = imageHeight / mapExtent.Height;
+        //double scale = xScale > yScale ? yScale : xScale;
+        //Func<Point, Point> mapToScreen = new Func<Point, Point>(p => new Point((p.X - mapExtent.XMin) * scale, -(p.Y - mapExtent.YMax) * scale));
+        var mapToScreen = Utility.CreateMapToScreenMapFunc(mapExtent, screenWidth, screenHeight);
+
+        return feature.Transform(mapToScreen).Features;
+    }
 }

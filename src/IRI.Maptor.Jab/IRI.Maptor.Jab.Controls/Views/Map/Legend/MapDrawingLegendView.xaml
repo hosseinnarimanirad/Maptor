@@ -67,7 +67,7 @@
                             <ControlTemplate TargetType="Expander">
                                 <Border x:Name="expanderBorder" 
                                     Background="{DynamicResource MahApps.Brushes.Accent3}"
-                                    Margin="0" Padding="0" CornerRadius="20">
+                                    Margin="0" Padding="0" CornerRadius="18">
                                     <StackPanel Orientation="Horizontal" Margin="0">
                                         <ToggleButton x:Name="HeaderSite"
                                                       Margin="0" Style="{StaticResource circleToggleButtonDark}"                                   

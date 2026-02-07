@@ -7,6 +7,10 @@ using System.Collections.Generic;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Sta.Spatial.Primitives;
+using System.Threading.Tasks;
+using IRI.Maptor.Sta.Ogc.WMS;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -17,7 +21,7 @@ public class SpecialLineLayer : SymbolizableLayer
     public const string DefaultArrowString = "F1 M 6.75,9L 8.75,11L 16,18L 9.5,18L 0,9L 9.5,0L 16,0L 8.75,7L 6.75,9 Z";
 
     public static readonly System.Windows.Media.Geometry DefaultArrow = System.Windows.Media.Geometry.Parse(DefaultArrowString);
-     
+
     List<Point> _pointCollection;
 
     bool _isPolyBezierMode;
@@ -48,7 +52,7 @@ public class SpecialLineLayer : SymbolizableLayer
             throw new NotImplementedException();
 
         var visualParameters = parameters ?? VisualParameters.CreateNew(1);
-         
+
         this.SetSymbolizer(new SimpleSymbolizer(visualParameters));
 
         this.ZIndex = int.MaxValue;
@@ -62,7 +66,7 @@ public class SpecialLineLayer : SymbolizableLayer
 
         PolyBezierSegment segment = new PolyBezierSegment();
 
-        segment.Points = new PointCollection(_pointCollection.Skip(1).Select(p => toScreen.Transform(p.AsWpfPoint())));
+        segment.Points = new System.Windows.Media.PointCollection(_pointCollection.Skip(1).Select(p => toScreen.Transform(p.AsWpfPoint())));
 
         figure.Segments.Add(segment);
 
@@ -154,4 +158,22 @@ public class SpecialLineLayer : SymbolizableLayer
     }
 
 
+    public override Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
+    {
+        var pointCollection = this.PointCollection;
+
+        if (pointCollection == null || pointCollection.Count < 2)
+            return Task.FromResult(FeatureSet<Point>.Empty);
+
+        // Check if line intersects bounding box
+        var lineGeometry = Geometry<Point>.Create(pointCollection, GeometryType.LineString, SridHelper.WebMercator);
+
+        var extentGeometry = mapExtent.AsGeometry<Point>(SridHelper.WebMercator);
+
+        if (!lineGeometry.Intersects(extentGeometry))
+            return Task.FromResult(FeatureSet<Point>.Empty);
+
+        return Task.FromResult(FeatureSet<Point>.Create($"{nameof(SpecialLineLayer)}-{this.LayerId}", [lineGeometry.AsFeature()])); 
+
+    }
 }
