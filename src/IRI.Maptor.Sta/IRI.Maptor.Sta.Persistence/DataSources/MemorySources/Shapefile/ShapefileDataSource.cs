@@ -24,18 +24,9 @@ public class ShapefileDataSource : MemoryDataSource
     SrsBase _targetSrs;
 
     SrsBase _sourceSrs;
-
-    //public List<ShapefileFormat.Model.ObjectToDbfTypeMap<T>> AttributeMap { get; set; }
-
-
-    // 1400.02.03
-    //ObjectToDfbFields<T> _fields;
+      
     List<ObjectToDbfTypeMap<Feature<Point>>> _fields;
-
-    //protected ShapefileDataSource()
-    //{
-    //}
-
+     
     internal ShapefileDataSource(string shapefileName,
                                 IEsriShapeCollection geometries,
                                 EsriAttributeDictionary attributes,
@@ -63,19 +54,14 @@ public class ShapefileDataSource : MemoryDataSource
         }
 
         WebMercatorExtent = geometries.MainHeader.MinimumBoundingBox;
-
-        // 1401.11.28
+         
         GeometryType = geometries.MainHeader.ShapeType.AsGeometryType();
 
         if (transformFunc != null)
         {
             WebMercatorExtent = WebMercatorExtent.Transform(p => transformFunc(p));
         }
-
-        // 1400.02.03-comment
-        //this._fields = new ObjectToDfbFields<T>() { ExtractAttributesFunc = inverseAttributeMap, Fields = attributes.Fields };
-
-        // 1400.02.19
+          
         _fields = new List<ObjectToDbfTypeMap<Feature<Point>>>();
 
         for (int i = 0; i < attributes.Fields.Count; i++)
@@ -114,11 +100,7 @@ public class ShapefileDataSource : MemoryDataSource
             features.Add(feature);
         }
 
-        _features = FeatureSet<Point>.Create(string.Empty, features);
-
-        //_idFunc = id => _features.Single(f => f.Id == id);
-
-        //_mapToFeatureFunc = f => f;
+        _features = FeatureSet<Point>.Create(string.Empty, features); 
     }
 
 

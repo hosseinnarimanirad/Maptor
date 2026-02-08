@@ -169,8 +169,8 @@ public static class DbfFile
     public static EsriAttributeDictionary Read(
         string dbfFileName,
         bool correctFarsiCharacters = true,
-        Encoding dataEncoding = null,
-        Encoding fieldHeaderEncoding = null)
+        Encoding? dataEncoding = null,
+        Encoding? fieldHeaderEncoding = null)
     {
         dataEncoding = dataEncoding ?? TryDetectEncoding(dbfFileName);
 
@@ -261,8 +261,8 @@ public static class DbfFile
     public static object[][] ReadToObject(
         string dbfFileName,
         bool correctFarsiCharacters = true,
-        Encoding dataEncoding = null,
-        Encoding fieldHeaderEncoding = null)
+        Encoding? dataEncoding = null,
+        Encoding? fieldHeaderEncoding = null)
     {
         dataEncoding = dataEncoding ?? (TryDetectEncoding(dbfFileName) ?? Encoding.UTF8);
 

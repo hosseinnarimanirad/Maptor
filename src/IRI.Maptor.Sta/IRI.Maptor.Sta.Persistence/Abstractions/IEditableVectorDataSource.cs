@@ -3,9 +3,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Sta.Persistence.Abstractions;
 
-public interface IEditableVectorDataSource//<TGeometryAware, TPoint>
-                                          //where TGeometryAware : IGeometryAware<TPoint>
-                                          //where TPoint : IPoint, new()
+public interface IEditableVectorDataSource : IDataSource
 {
     void Add(Feature<Point> newValue);
 
