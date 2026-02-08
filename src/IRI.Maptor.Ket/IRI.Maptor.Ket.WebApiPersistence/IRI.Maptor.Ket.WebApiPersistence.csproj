@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Persistence\IRI.Maptor.Sta.Persistence.csproj" />
+    <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
+    <ProjectReference Include="..\..\IRI.Maptor.Sta\IRI.Maptor.Sta.Spatial\IRI.Maptor.Sta.Spatial.csproj" />
   </ItemGroup>
 
   <ItemGroup>
