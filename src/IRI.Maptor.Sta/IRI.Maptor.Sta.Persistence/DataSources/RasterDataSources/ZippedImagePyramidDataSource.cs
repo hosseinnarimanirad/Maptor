@@ -18,12 +18,11 @@ public class ZippedImagePyramidDataSource : IRasterDataSource
 {
     public const string _extentFileName = "extent.json";
 
-    private BoundingBox _extent;
-
+    private BoundingBox _webMercatorExtent;
     public BoundingBox WebMercatorExtent
     {
-        get { return _extent; }
-        private set { _extent = value; }
+        get => _webMercatorExtent;
+        private set => _webMercatorExtent = value;
     }
 
     public int Srid => SridHelper.WebMercator;

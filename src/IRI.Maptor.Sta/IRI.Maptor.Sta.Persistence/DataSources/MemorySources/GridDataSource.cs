@@ -24,17 +24,12 @@ public class GridDataSource : VectorDataSource
         protected set => _ = value;
     }
 
-    public override int Srid { get => SridHelper.WebMercator; protected set => _ = value; }
+    public override int Srid { get => SridHelper.WebMercator;   }
 
     public override GeometryType? GeometryType
     {
         get => Common.Primitives.GeometryType.Polygon;
         protected set => _ = value;
-    }
-
-    private GridDataSource() : base(_fields)
-    {
-        GeodeticWgs84Extent = BoundingBoxes.GeodeticWgs84_Iran;
     }
 
     static GridDataSource()
@@ -51,29 +46,13 @@ public class GridDataSource : VectorDataSource
             new() {IsNullable=false, Name="Max Latitude", Length=0, Type="int"},
         ];
     }
- 
-    public override string ToString()
+
+    private GridDataSource() : base(_fields)
     {
-        return $"GridDataSource {Type.GetName()}";
+        GeodeticWgs84Extent = BoundingBoxes.GeodeticWgs84_Iran;
     }
 
-
-    // Get GeometryAwares [GENERIC]
-    //public List<GeodeticSheet> GetGeometryAwares(BoundingBox boundingBox)
-    //{
-    //    var geographicBoundingBox = boundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84);
-
-    //    return GeodeticIndexes.FindIndexSheets(geographicBoundingBox, Type);
-    //}
-
-    //public List<GeodeticSheet> GetGeometryAwares(Geometry<Point>? geometry)
-    //{
-    //    var geographicBoundingBox = geometry?.GetBoundingBox().Transform(MapProjects.WebMercatorToGeodeticWgs84) ?? GeodeticWgs84Extent;
-
-    //    return GeodeticIndexes.FindIndexSheets(geographicBoundingBox, Type)
-    //                            .Where(s => s.TheGeometry?.Intersects(geometry) == true)
-    //                            .ToList();
-    //}
+    public override string ToString() => $"{nameof(GridDataSource)} {Type.GetName()}";
 
     // Get as FeatureSet of Point
     public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
@@ -90,34 +69,31 @@ public class GridDataSource : VectorDataSource
         var geographicBoundingBox = geometry?.GetBoundingBox().Transform(MapProjects.WebMercatorToGeodeticWgs84) ?? GeodeticWgs84Extent;
 
         return FeatureSet<Point>.Create(string.Empty, GeodeticIndexes.FindIndexSheets(geographicBoundingBox, Type)
-                                .Where(s => s.TheGeometry?.Intersects(geometry) == true)
+                                .Where(s => geometry == null || s.TheGeometry.Intersects(geometry) == true)
                                 .Select(ToFeatureMappingFunc)
                                 .ToList());
     }
 
 
-    public override FeatureSet<Point> Search(string searchText)
-    {
-        throw new NotImplementedException();
-    }
+    public override FeatureSet<Point> Search(string searchText) => throw new NotImplementedException();
 
-    private Feature<Point> ToFeatureMappingFunc(GeodeticSheet geometryAware)
+    private Feature<Point> ToFeatureMappingFunc(GeodeticSheet geodeticSheet)
     {
         return new Feature<Point>()
         {
-            Id = geometryAware.Id,
-            LabelAttribute = nameof(geometryAware.SheetName),
-            TheGeometry = geometryAware.TheGeometry,
+            Id = geodeticSheet.Id,
+            LabelAttribute = nameof(geodeticSheet.SheetName),
+            TheGeometry = geodeticSheet.TheGeometry,
             Attributes = new Dictionary<string, object>()
             {
-                {nameof(geometryAware.Id), geometryAware.Id},
-                { nameof(geometryAware.SheetName), geometryAware.SheetName},
-                { nameof(geometryAware.SubTitle), geometryAware.SubTitle},
-                { nameof(geometryAware.Type), geometryAware.Type},
-                { "Min Longitude", geometryAware.GeodeticExtent.XMin},
-                { "Max Longitude", geometryAware.GeodeticExtent.XMax},
-                { "Min Latitude", geometryAware.GeodeticExtent.YMin},
-                { "Max Latitude", geometryAware.GeodeticExtent.YMax},
+                {nameof(geodeticSheet.Id), geodeticSheet.Id},
+                { nameof(geodeticSheet.SheetName), geodeticSheet.SheetName},
+                { nameof(geodeticSheet.SubTitle), geodeticSheet.SubTitle},
+                { nameof(geodeticSheet.Type), geodeticSheet.Type},
+                { "Min Longitude", geodeticSheet.GeodeticExtent.XMin},
+                { "Max Longitude", geodeticSheet.GeodeticExtent.XMax},
+                { "Min Latitude", geodeticSheet.GeodeticExtent.YMin},
+                { "Max Latitude", geodeticSheet.GeodeticExtent.YMax},
             }
         };
     }

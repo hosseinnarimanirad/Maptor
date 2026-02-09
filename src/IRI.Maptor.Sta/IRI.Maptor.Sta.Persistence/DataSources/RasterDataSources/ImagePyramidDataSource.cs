@@ -7,7 +7,7 @@ using IRI.Maptor.Sta.Common.Model;
 namespace IRI.Maptor.Sta.Persistence.RasterDataSources;
 
 //Note: Extent is NaN for this class
-public class ImagePyramidDataSource : OfflineGoogleMapDataSource/*<object>*/
+public class ImagePyramidDataSource : OfflineGoogleMapDataSource
 {
     public ImagePyramidDataSource(string directory, Func<int, int, int, string>? makeFileName = null) : base(new List<ImageSource>())
     {

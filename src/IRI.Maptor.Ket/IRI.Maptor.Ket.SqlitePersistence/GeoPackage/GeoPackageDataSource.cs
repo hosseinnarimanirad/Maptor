@@ -21,7 +21,8 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
     private GpkgGeometryColumn? _geometryColumn;
     private bool _disposed;
 
-    public override int Srid { get; protected set; }
+    private int _srid;
+    public override int Srid { get; /*protected set;*/ }
 
     /// <summary>
     /// Gets the layer metadata
@@ -77,7 +78,7 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
             throw new InvalidOperationException($"No geometry column found for layer: {_tableName}");
 
         // Set SRID
-        Srid = _geometryColumn.SrsId;
+        this._srid = _geometryColumn.SrsId;
 
         // Set extent from metadata
         WebMercatorExtent = new BoundingBox(

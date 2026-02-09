@@ -45,7 +45,7 @@ public class WebApiDataSource : VectorDataSource, IEditableVectorDataSource
         }
     }
 
-    public override int Srid { get; protected set; }
+    public override int Srid { get; }
 
     protected WebApiDataSource() : base(new List<Field>())
     {

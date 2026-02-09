@@ -12,7 +12,7 @@ namespace IRI.Maptor.Ket.PostgreSqlPersistence;
 public class PostGisDataSource : VectorDataSource/*<Feature<Point>>*/
 {
     public override BoundingBox WebMercatorExtent { get; protected set; }
-    public override int Srid { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+    public override int Srid { get => throw new NotImplementedException(); /*protected set => throw new NotImplementedException();*/ }
 
     private string _connectionString;
 

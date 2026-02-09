@@ -26,7 +26,7 @@ public class UtmGridDataSource : VectorDataSource
         protected set => _ = value;
     }
 
-    public override int Srid { get => SridHelper.WebMercator; protected set => _ = value; }
+    public override int Srid { get => SridHelper.WebMercator; /*protected set => _ = value; */}
 
     public override GeometryType? GeometryType
     {
@@ -46,22 +46,13 @@ public class UtmGridDataSource : VectorDataSource
             new() {IsNullable=false, Name=nameof(UtmSheet.Column), Length=0, Type="int"},
         ];
     }
-    //    {nameof(geometryAware.Id), geometryAware.Id},
-    //    {nameof(geometryAware.SheetName), geometryAware.SheetName},
-    //    { nameof(geometryAware.UtmZone), geometryAware.UtmZone},
-    //    { nameof(geometryAware.Type), geometryAware.Type},
-    //    { nameof(geometryAware.Row), geometryAware.Row},
-    //    { nameof(geometryAware.Column), geometryAware.Column},
 
     private UtmGridDataSource() : base(_fields)
     {
         GeodeticWgs84Extent = BoundingBoxes.GeodeticWgs84_Iran;
     }
 
-    public override string ToString()
-    {
-        return $"UtmGridDataSource {Type.GetName()}";
-    }
+    public override string ToString() => $"{nameof(UtmGridDataSource)} {Type.GetName()}";
 
 
     // Get as FeatureSet of Point
@@ -82,7 +73,7 @@ public class UtmGridDataSource : VectorDataSource
         var geographicBoundingBox = geometry?.GetBoundingBox().Transform(MapProjects.WebMercatorToGeodeticWgs84) ?? GeodeticWgs84Extent;
 
         var features = UtmIndexes.GetIndexSheets(geographicBoundingBox, Type, UtmZone)
-                            .Where(s => s.TheGeometry?.Intersects(geometry) == true)
+                            .Where(s => geometry is null || s.TheGeometry?.Intersects(geometry) == true)
                             .Select(ToFeatureMappingFunc)
                             .ToList();
 
@@ -90,26 +81,23 @@ public class UtmGridDataSource : VectorDataSource
     }
 
 
-    public override FeatureSet<Point> Search(string searchText)
-    {
-        throw new NotImplementedException();
-    }
+    public override FeatureSet<Point> Search(string searchText) => throw new NotImplementedException();
 
-    private Feature<Point> ToFeatureMappingFunc(UtmSheet geometryAware)
+    private Feature<Point> ToFeatureMappingFunc(UtmSheet utmSheet)
     {
         return new Feature<Point>()
         {
-            Id = geometryAware.Id,
-            LabelAttribute = nameof(geometryAware.SheetName),
-            TheGeometry = geometryAware.TheGeometry,
+            Id = utmSheet.Id,
+            LabelAttribute = nameof(utmSheet.SheetName),
+            TheGeometry = utmSheet.TheGeometry,
             Attributes = new Dictionary<string, object>()
                                 {
-                                    {nameof(geometryAware.Id), geometryAware.Id},
-                                    {nameof(geometryAware.SheetName), geometryAware.SheetName},
-                                    {nameof(geometryAware.UtmZone), geometryAware.UtmZone},
-                                    {nameof(geometryAware.Type), geometryAware.Type},
-                                    {nameof(geometryAware.Row), geometryAware.Row},
-                                    {nameof(geometryAware.Column), geometryAware.Column},
+                                    {nameof(utmSheet.Id), utmSheet.Id},
+                                    {nameof(utmSheet.SheetName), utmSheet.SheetName},
+                                    {nameof(utmSheet.UtmZone), utmSheet.UtmZone},
+                                    {nameof(utmSheet.Type), utmSheet.Type},
+                                    {nameof(utmSheet.Row), utmSheet.Row},
+                                    {nameof(utmSheet.Column), utmSheet.Column},
                                 }
         };
     }

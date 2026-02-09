@@ -17,26 +17,10 @@ public class OrdinaryJsonListSource : MemoryDataSource
         get; protected set;
     }
 
-    private OrdinaryJsonListSource(List<Feature<Point>> features)
-        : base(features)
-    {
-        //_labelFunc = labelFunc;
+    private OrdinaryJsonListSource(List<Feature<Point>> features) : base(features) { }
 
-        //_features = features;
+    public override string ToString() => $"{nameof(OrdinaryJsonListSource)}";
 
-        //WebMercatorExtent = features.Extent;//.Select(f => f.TheGeometry).GetBoundingBox();
-
-        //_mapToFeatureFunc = mapToFeatureFunc;
-
-        // 1401.11.29
-        //GeometryType = features.First().TheGeometry.Type;
-
-    }
-
-    public override string ToString()
-    {
-        return $"OrdinaryJsonListSource";
-    }
 
     public static OrdinaryJsonListSource CreateFromJsonString<TGeometryAware>(
         string jsonString,
@@ -44,7 +28,7 @@ public class OrdinaryJsonListSource : MemoryDataSource
     {
         var values = JsonHelper.Deserialize<List<TGeometryAware>>(jsonString);
 
-        return new OrdinaryJsonListSource(values.Select(v => mapToFeatureFunc(v)).ToList()); 
+        return new OrdinaryJsonListSource(values.Select(v => mapToFeatureFunc(v)).ToList());
     }
 
     public static OrdinaryJsonListSource CreateFromFile<TGeometryAware>(
@@ -55,5 +39,5 @@ public class OrdinaryJsonListSource : MemoryDataSource
 
         return CreateFromJsonString(jsonString, mapToFeatureFunc);
     }
-     
+
 }

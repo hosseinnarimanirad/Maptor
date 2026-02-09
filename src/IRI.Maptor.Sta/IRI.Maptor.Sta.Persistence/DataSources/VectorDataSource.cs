@@ -11,7 +11,7 @@ public abstract class VectorDataSource : IVectorDataSource
 {
     public virtual BoundingBox WebMercatorExtent { get; protected set; }
 
-    public abstract int Srid { get; protected set; }
+    public abstract int Srid { get; /*protected set;*/ }
 
     public virtual GeometryType? GeometryType { get; protected set; }
 

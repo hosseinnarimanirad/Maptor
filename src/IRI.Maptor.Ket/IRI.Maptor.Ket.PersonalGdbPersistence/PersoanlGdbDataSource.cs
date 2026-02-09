@@ -20,10 +20,8 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
     {
         get
         {
-            if (double.IsNaN(_extent.Width) || double.IsNaN(_extent.Height) && _spatialColumnName != null)
+            if (_extent.IsNaN() && _spatialColumnName != null)
             {
-                //this._extent = GetGeometries().GetBoundingBox();
-                //this._extent = GetBoundingBoxAndSrid();
                 this.SetBoundingBoxAndSrid();
             }
 
@@ -58,7 +56,9 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
     public Action<Feature<Point>>? UpdateAction;
 
     public string? IdColumnName { get; set; }
-    public override int Srid { get; protected set; }
+
+    private int _srid;
+    public override int Srid { get => _srid; /*protected set;*/ }
 
     public string SearchColumn { get; set; }
 
@@ -68,7 +68,7 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
         string tableDisplayName,
         string? spatialColumnName = null,
         string? labelColumnName = null,
-        Func<Point, Point> onTheFlyProj = null,
+        Func<Point, Point>? onTheFlyProj = null,
         List<GdbCodedValueDomain>? domains = null,
         List<GdbItemColumnInfo>? columns = null) : base(new List<Field>())
     {
@@ -195,7 +195,7 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
                     var maxY = (double)dataReader["ExtentTop"];
                     var srid = (int)dataReader["SRID"];
 
-                    this.Srid = srsDictionary[srid]?.Srid ?? 0;
+                    this._srid = srsDictionary[srid]?.Srid ?? 0;
                     this.GeometryType = ((EsriPGDBColumnShapeType)(int)dataReader["ShapeType"]).AsGeometryType();
                     this._extent = new BoundingBox(minX, minY, maxX, maxY).Transform(_onTheFlyProj);
                     //return new BoundingBox(minX, minY, maxX, maxY);

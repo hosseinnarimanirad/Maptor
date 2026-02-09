@@ -20,7 +20,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
     private int _uniqueId = 0;
 
-    public override int Srid { get => GetSrid(); protected set => _ = value; }
+    public override int Srid { get => GetSrid(); /*protected set => _ = value;*/ }
 
     public MemoryDataSource() : base(new List<Field>())
     {
@@ -63,10 +63,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         return _features.Srid;
     }
 
-    public override string ToString()
-    {
-        return $"MemoryDataSource";
-    }
+    public override string ToString() => $"MemoryDataSource";
 
     protected int GetNewId()
     {

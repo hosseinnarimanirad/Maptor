@@ -52,7 +52,7 @@ public class SqlServerDataSource : VectorDataSource/*<Feature<Point>>*/, IEditab
         }
     }
 
-    public override int Srid { get => GetSrid(); protected set => _ = value; }
+    public override int Srid { get => GetSrid(); /*protected set => _ = value;*/ }
 
     protected SqlServerDataSource() : base(new List<Field>())
     {

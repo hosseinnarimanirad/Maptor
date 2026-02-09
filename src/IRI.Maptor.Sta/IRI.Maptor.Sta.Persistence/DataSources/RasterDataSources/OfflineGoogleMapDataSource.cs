@@ -10,31 +10,17 @@ using IRI.Maptor.Sta.Persistence.Abstractions;
 
 namespace IRI.Maptor.Sta.Persistence.RasterDataSources;
 
-public class OfflineGoogleMapDataSource/*<T>*/ : IRasterDataSource
+public class OfflineGoogleMapDataSource : IRasterDataSource
 {
-    public BoundingBox WebMercatorExtent
-    {
-        get { return BoundingBox.NaN; }
-    }
+    public BoundingBox WebMercatorExtent => BoundingBox.NaN;
 
     private List<ImageSource> _imageSources;
-
-    public List<ImageSource> ImageSources
-    {
-        get { return _imageSources; }
-
-        private set { _imageSources = value; }
-    }
+    public List<ImageSource> ImageSources { get => _imageSources; private set => _imageSources = value; }
 
     public int Srid => SridHelper.WebMercator;
 
     public OfflineGoogleMapDataSource(List<ImageSource> imageSources)
-    {
-        //if (imageSources.GroupBy(i => i.ZoomLevel).Any(i => i.Count() < 1))
-        //{
-        //    throw new NotImplementedException();
-        //}
-
+    { 
         _imageSources = imageSources;
     }
 
