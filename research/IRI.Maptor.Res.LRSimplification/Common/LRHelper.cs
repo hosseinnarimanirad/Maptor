@@ -1445,7 +1445,7 @@ public static class LRHelper
 
         //******************************************************
         //***************** read features **********************
-        var json = GeoJson.ReadFeatures(jsonFile);
+        var json = GeoJson.LoadFromFile(jsonFile);
 
         var features = json.Select(f => f.Geometry.TransformToWeMercator()).ToList();
 

@@ -19,11 +19,13 @@ public interface IGeoJsonGeometry
     /// <summary>
     /// Gets or sets the type of the geometry (e.g., "Point", "LineString", "Polygon").
     /// </summary>
+    [JsonPropertyName("type")]
     string? Type { get; set; }
-     
+
     /// <summary>
     /// Gets the geometry type as a GeometryType enum value.
     /// </summary>
+    [JsonIgnore()]
     GeometryType GeometryType { get; }
 
     /// <summary>
@@ -59,7 +61,7 @@ public interface IGeoJsonGeometry
     /// <param name="removeSpaces">If true, all spaces will be removed from the output.</param>
     /// <returns>A JSON string representation of this geometry.</returns>
     string Serialize(bool indented, bool removeSpaces = false);
-
+     
     /// <summary>
     /// Transforms this geometry to Web Mercator projection.
     /// </summary>

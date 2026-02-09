@@ -14,7 +14,7 @@ public static class GeoJsonVsShapefile
     public static void CompareGeoJsonVsShapefile(string geoJsonFileName, string outputFolder)
     {  
         // read entire GeoJson features (with attributes)
-        var geoJsonGeometries = GeoJson.ReadFeatures(geoJsonFileName).Select(g => g.Geometry).ToList();
+        var geoJsonGeometries = GeoJson.LoadFromFile(geoJsonFileName).Select(g => g.Geometry).ToList();
 
         // serilize only the GeoJson geometries (exclude attributes)
         File.WriteAllText($"{outputFolder}\\geojson.json", JsonHelper.Serialize(geoJsonGeometries));

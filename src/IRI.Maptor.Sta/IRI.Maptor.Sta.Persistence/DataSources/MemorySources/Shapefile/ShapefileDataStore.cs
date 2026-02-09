@@ -18,15 +18,6 @@ public class ShapefileDataStore : IDataSource
 
     public int Srid => throw new NotImplementedException();
 
-    public async static Task<ShapefileDataStore> Create(string shpFileName, string spatialColumnName, int srid, Encoding encoding, string labelColumnName = null)
-    {
-        var result = new ShapefileDataStore(shpFileName, spatialColumnName, srid, encoding, labelColumnName);
-
-        await result.MakeIndex();
-
-        return result;
-    }
-
     private ShapefileDataStore()
     {
 
@@ -61,5 +52,14 @@ public class ShapefileDataStore : IDataSource
 
         await Shapefile.CreateIndex(_shpFileName);
     }
-     
+
+    public async static Task<ShapefileDataStore> Create(string shpFileName, string spatialColumnName, int srid, Encoding encoding, string labelColumnName = null)
+    {
+        var result = new ShapefileDataStore(shpFileName, spatialColumnName, srid, encoding, labelColumnName);
+
+        await result.MakeIndex();
+
+        return result;
+    }
+
 }

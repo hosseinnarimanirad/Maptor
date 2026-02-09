@@ -50,10 +50,7 @@ public class GeoJsonLineString : GeoJsonBase
     /// </summary>
     [JsonIgnore] public override bool HasM => GeoJson.DetectCoordinateDimension(Coordinates) >= 4;
 
-    /// <summary>
-    /// Initializes a new instance of GeoJsonLineString with Type set to "LineString".
-    /// </summary>
-    public GeoJsonLineString() => Type = GeoJson.LineString;
+       public GeoJsonLineString() => Type = GeoJson.LineString;
 
     /// <summary>
     /// Determines whether this LineString is null or empty.
@@ -92,6 +89,7 @@ public class GeoJsonLineString : GeoJsonBase
             _ => GeoJson.CreateGeometryFromLineCoordinates(Coordinates!, GeoJson.PointFactory, this.GeometryType, false, isLongitudeFirst, srid),
         };
     }
+
 
     /// <summary>
     /// Creates a new GeoJSON LineString from an array of coordinate arrays.

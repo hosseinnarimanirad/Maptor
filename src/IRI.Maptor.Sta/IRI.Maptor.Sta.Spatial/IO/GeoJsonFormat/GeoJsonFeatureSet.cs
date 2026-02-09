@@ -3,12 +3,16 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using System.Text.Json.Serialization;
 
 namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
- 
+
 /// <summary>
 /// Represents a GeoJSON FeatureCollection object (RFC 7946).
 /// </summary>
 public class GeoJsonFeatureSet
 {
+    private const string _geoJsonFeatureSetType = "FeatureCollection";
+
+    public static readonly GeoJsonFeatureSet Empty;
+
     /// <summary>
     /// Gets or sets the type of the GeoJSON object. Must be "FeatureCollection".
     /// </summary>
@@ -46,6 +50,11 @@ public class GeoJsonFeatureSet
         System.IO.File.WriteAllText(fileName, removeSpaces ? result.Replace(" ", string.Empty) : result);
     }
 
+    static GeoJsonFeatureSet()
+    {
+        Empty = new GeoJsonFeatureSet() { Type = _geoJsonFeatureSetType, Features = [], TotalFeatures = 0 };
+    }
+
     /// <summary>
     /// Loads a GeoJSON FeatureCollection from a file.
     /// </summary>
@@ -63,9 +72,22 @@ public class GeoJsonFeatureSet
     /// <returns>A GeoJsonFeatureSet instance.</returns>
     public static GeoJsonFeatureSet Parse(string geoJsonFeaturesSetString)
     {
-        return JsonHelper.Deserialize<GeoJsonFeatureSet>(geoJsonFeaturesSetString);
+        return JsonHelper.Deserialize<GeoJsonFeatureSet>(geoJsonFeaturesSetString) ?? Empty;
     }
-     
+
+    public static GeoJsonFeatureSet Create(IGeoJsonGeometry geometry, Dictionary<string, object>? attributes = null)
+    {
+        if (geometry == null)
+            return Empty;
+
+        return new GeoJsonFeatureSet()
+        {
+            TotalFeatures = 1,
+            Type = _geoJsonFeatureSetType,             
+            Features = [GeoJsonFeature.Create(geometry, attributes)],
+        };
+    }
+
     /// <summary>
     /// Converts a delimited file (CSV, TSV, etc.) to a GeoJSON FeatureCollection of points.
     /// </summary>

@@ -57,7 +57,7 @@ public class GeoJson_GeometryTest
         var normalizedInput = NormalizeGeoJson(geoJsonString);
 
         // Act
-        var geometry = GeoJson.Deserialize(normalizedInput);
+        var geometry = GeoJson.DeserializeGeometry(normalizedInput);
         var result = geometry.Parse(true).AsGeoJson(true).Serialize(false, true);
 
         // Assert
@@ -89,7 +89,7 @@ public class GeoJson_GeometryTest
         var normalizedInput = NormalizeGeoJson(geoJsonString);
 
         // Act
-        var geometry = GeoJson.Deserialize(normalizedInput);
+        var geometry = GeoJson.DeserializeGeometry(normalizedInput);
         var result = geometry.Parse(true).AsGeoJson(true).Serialize(false, true);
 
         // Assert
@@ -120,7 +120,7 @@ public class GeoJson_GeometryTest
         var normalizedInput = NormalizeGeoJson(geoJsonString);
 
         // Act
-        var geometry = GeoJson.Deserialize(normalizedInput);
+        var geometry = GeoJson.DeserializeGeometry(normalizedInput);
         var result = geometry.Parse(true).AsGeoJson(true).Serialize(false, true);
 
         // Assert
@@ -152,7 +152,7 @@ public class GeoJson_GeometryTest
         var normalizedInput = NormalizeGeoJson(geoJsonString);
 
         // Act
-        var geometry = GeoJson.Deserialize(normalizedInput);
+        var geometry = GeoJson.DeserializeGeometry(normalizedInput);
         var result = geometry.Parse(true).AsGeoJson(true).Serialize(false, true);
 
         // Assert
@@ -184,7 +184,7 @@ public class GeoJson_GeometryTest
         var normalizedInput = NormalizeGeoJson(geoJsonString);
 
         // Act
-        var geometry = GeoJson.Deserialize(normalizedInput);
+        var geometry = GeoJson.DeserializeGeometry(normalizedInput);
         var result = geometry.Parse(true).AsGeoJson(true).Serialize(false, true);
 
         // Assert
@@ -216,7 +216,7 @@ public class GeoJson_GeometryTest
         var normalizedInput = NormalizeGeoJson(geoJsonString);
 
         // Act
-        var geometry = GeoJson.Deserialize(normalizedInput);
+        var geometry = GeoJson.DeserializeGeometry(normalizedInput);
         var result = geometry.Parse(true).AsGeoJson(true).Serialize(false, true);
 
         // Assert

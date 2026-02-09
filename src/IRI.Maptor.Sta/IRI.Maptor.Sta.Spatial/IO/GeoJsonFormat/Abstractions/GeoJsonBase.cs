@@ -1,6 +1,8 @@
-﻿using IRI.Maptor.Sta.Common.Primitives;
+﻿using IRI.Maptor.Sta.Common.Helpers;
+using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.SpatialReferenceSystem; 
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using System.Text.Json.Serialization;
 
 namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 
@@ -19,10 +21,12 @@ public abstract class GeoJsonBase : IGeoJsonGeometry
     /// </summary>
     public abstract GeometryType GeometryType { get; }
 
-    public abstract bool HasZ{ get; }
+    [JsonIgnore]
+    public abstract bool HasZ { get; }
 
     // standard GeoJson does not supports M,
     // check the readme file for more information
+    [JsonIgnore]
     public abstract bool HasM { get; }
 
     /// <summary>
@@ -60,9 +64,16 @@ public abstract class GeoJsonBase : IGeoJsonGeometry
     /// <returns>A JSON string representation of this geometry.</returns>
     public string Serialize(bool indented, bool removeSpaces = false)
     {
-        return GeoJson.Serialize(this, indented, removeSpaces);
-    }
+        // note:
+        // in order to use polymorphic behavior GeoJsonBase
+        // should be parsed to IGeoJsonGeometry
+        return GeoJson.SerializeGeometry(this, indented, removeSpaces);
 
+        // this code do not include the coordinates property of GeoJson
+        //var result = JsonHelper.Serialize(this as IGeoJsonGeometry, indented);
+        //return removeSpaces ? result.Replace(" ", string.Empty) : result;
+    }
+     
     /// <summary>
     /// Transforms this geometry to Web Mercator projection.
     /// </summary>
@@ -90,16 +101,20 @@ public abstract class GeoJsonBase : IGeoJsonGeometry
         throw new NotSupportedException($"Unsupported geometry type: {geometry.GetType()}");
     }
 
+
+    public override string ToString() => $"{GeometryType}, HasZ:{HasZ}, HasM:{HasM}, NumberOfPoints:{NumberOfPoints()}";
+
+
     /// <summary>
     /// Converts this geometry to a GeoJSON Feature.
     /// </summary>
     /// <returns>A GeoJsonFeature instance.</returns>
-    public GeoJsonFeature AsFeature() => GeoJson.AsFeature(this);
+    public GeoJsonFeature AsFeature() => GeoJsonFeature.Create(this);
 
     /// <summary>
     /// Converts this geometry to a GeoJSON FeatureSet.
     /// </summary>
     /// <returns>A GeoJsonFeatureSet instance.</returns>
-    public GeoJsonFeatureSet AsFeatureSet() => GeoJson.AsFeatureSet(this);
+    public GeoJsonFeatureSet AsFeatureSet() => GeoJsonFeatureSet.Create(this);
 
 }

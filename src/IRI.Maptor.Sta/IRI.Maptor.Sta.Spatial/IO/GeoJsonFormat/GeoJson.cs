@@ -5,7 +5,6 @@ using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
 
 namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
@@ -39,7 +38,7 @@ public static class GeoJson
     /// <exception cref="FileNotFoundException">Thrown when the specified file does not exist.</exception>
     /// <exception cref="JsonException">Thrown when the file contains invalid JSON or cannot be parsed.</exception>
     /// <exception cref="IOException">Thrown when an I/O error occurs while reading the file.</exception>
-    public static IEnumerable<GeoJsonFeature> ReadFeatures(string fileName)
+    public static IEnumerable<GeoJsonFeature> LoadFromFile(string fileName)
     {
         if (string.IsNullOrWhiteSpace(fileName))
             throw new ArgumentNullException(nameof(fileName), "File name cannot be null or empty.");
@@ -50,18 +49,22 @@ public static class GeoJson
         try
         {
             var geoJsonString = File.ReadAllText(fileName);
-            var parsedObject = JsonNode.Parse(geoJsonString);
 
-            if (parsedObject == null)
-                return Enumerable.Empty<GeoJsonFeature>();
+            return ParseToGeoJsonFeatures(geoJsonString) ?? [];
 
-            var featuresArray = parsedObject["features"]?.AsArray();
-            if (featuresArray == null)
-                return Enumerable.Empty<GeoJsonFeature>();
+            //var parsedObject = JsonNode.Parse(geoJsonString);
 
-            return featuresArray
-                .Select(featureNode => JsonHelper.Deserialize<GeoJsonFeature>(featureNode))
-                .OfType<GeoJsonFeature>();
+            //if (parsedObject == null)
+            //    return Enumerable.Empty<GeoJsonFeature>();
+
+            //var featuresArray = parsedObject["features"]?.AsArray();
+
+            //if (featuresArray == null)
+            //    return Enumerable.Empty<GeoJsonFeature>();
+
+            //return featuresArray
+            //    .Select(JsonHelper.Deserialize<GeoJsonFeature>)
+            //    .OfType<GeoJsonFeature>();
         }
         catch (JsonException ex)
         {
@@ -72,6 +75,8 @@ public static class GeoJson
             throw new IOException($"An I/O error occurred while reading the GeoJSON file: {fileName}. {ex.Message}", ex);
         }
     }
+
+
 
     /// <summary>
     /// Saves GeoJSON features to a file.
@@ -91,11 +96,9 @@ public static class GeoJson
     /// <param name="geoJsonFeatureSet">The GeoJSON FeatureCollection string to parse.</param>
     /// <returns>An enumerable collection of GeoJSON features.</returns>
     public static IEnumerable<GeoJsonFeature>? ParseToGeoJsonFeatures(string geoJsonFeatureSet)
-    {
-        return GeoJsonFeatureSet.Parse(geoJsonFeatureSet)?.Features;
-    }
+        => GeoJsonFeatureSet.Parse(geoJsonFeatureSet)?.Features;
 
-    public static string Serialize(IGeoJsonGeometry geoJson, bool indented, bool removeSpaces = false)
+    public static string SerializeGeometry(IGeoJsonGeometry geoJson, bool indented, bool removeSpaces = false)
     {
         var result = JsonHelper.Serialize(geoJson, indented);
 
@@ -107,20 +110,13 @@ public static class GeoJson
     /// </summary>
     /// <param name="geoJsonString">The GeoJSON geometry string to deserialize.</param>
     /// <returns>An IGeoJsonGeometry instance representing the parsed geometry.</returns>
-    public static IGeoJsonGeometry? Deserialize(string geoJsonString)
-    {
-        return JsonHelper.Deserialize<IGeoJsonGeometry>(geoJsonString);
-    }
+    public static IGeoJsonGeometry? DeserializeGeometry(string geoJsonString)
+        => JsonHelper.Deserialize<IGeoJsonGeometry>(geoJsonString);
 
-    internal static GeoJsonFeature AsFeature(IGeoJsonGeometry geometry)
-    {
-        return GeoJsonFeature.Create(geometry);
-    }
+    //internal static GeoJsonFeature AsFeature(IGeoJsonGeometry geometry) => GeoJsonFeature.Create(geometry);
 
-    internal static GeoJsonFeatureSet AsFeatureSet(IGeoJsonGeometry geometry)
-    {
-        return new GeoJsonFeatureSet() { Features = new List<GeoJsonFeature>() { AsFeature(geometry) }, TotalFeatures = 1 };
-    }
+    //internal static GeoJsonFeatureSet AsFeatureSet(IGeoJsonGeometry geometry)
+    //        => new GeoJsonFeatureSet() { Features = [AsFeature(geometry)], TotalFeatures = 1 };
 
 
     #region Helper methods

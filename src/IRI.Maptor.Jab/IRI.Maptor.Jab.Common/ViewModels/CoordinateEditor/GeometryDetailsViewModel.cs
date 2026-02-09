@@ -240,15 +240,9 @@ public class GeometryDetailsViewModel : Notifier
                     break;
 
                 case "GeoJSON":
-                    var geoJson = _geometry.AsGeoJson();
-                    if (geoJson != null)
-                    {
-                        StringRepresentation = IRI.Maptor.Sta.Spatial.GeoJsonFormat.GeoJson.Serialize(geoJson, indented: true, removeSpaces: false);
-                    }
-                    else
-                    {
-                        StringRepresentation = string.Empty;
-                    }
+                    var geoJson = _geometry.AsGeoJson()?.Serialize(indented: true, removeSpaces: false);
+
+                    StringRepresentation = geoJson ?? string.Empty; 
                     break;
 
                 case "GML 2":
@@ -408,7 +402,7 @@ public class GeometryDetailsViewModel : Notifier
 
     private RelayCommand _saveGeometryCommand;
     public RelayCommand SaveGeometryCommand =>
-        _saveGeometryCommand ??= new RelayCommand(param => 
+        _saveGeometryCommand ??= new RelayCommand(param =>
         {
             _editableFeatureLayer.FinishEditing();
             RequestClose?.Invoke();
@@ -416,7 +410,7 @@ public class GeometryDetailsViewModel : Notifier
 
     private RelayCommand _cancelEditingCommand;
     public RelayCommand CancelEditingCommand =>
-        _cancelEditingCommand ??= new RelayCommand(param => 
+        _cancelEditingCommand ??= new RelayCommand(param =>
         {
             _editableFeatureLayer.CancelDrawing();
             RequestClose?.Invoke();

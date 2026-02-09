@@ -43,6 +43,7 @@ public class GeoJsonFeature
     [JsonConverter(typeof(DictionaryStringObjectConverter))]
     public Dictionary<string, object>? Properties { get; set; }
 
+
     /// <summary>
     /// Creates a new GeoJSON feature with the specified geometry and optional attributes.
     /// </summary>
@@ -55,7 +56,7 @@ public class GeoJsonFeature
         {
             Geometry = geometry,
             GeometryName = string.Empty,
-            Id = "0",
+            Id = null,
             Properties = attributes ?? new Dictionary<string, object>(),
         };
     }
@@ -71,7 +72,7 @@ public class GeoJsonFeature
         targetSrs = targetSrs ?? SrsBases.GeodeticWgs84;
 
         var geometry = this.Geometry.Parse(isLongitudeFirst, SridHelper.GeodeticWGS84);
-        
+
         // Convert IGeometry to Geometry<Point> for projection
         Geometry<Point> pointGeometry = geometry switch
         {
@@ -83,11 +84,8 @@ public class GeoJsonFeature
 
         return new Feature<Point>()
         {
-            Attributes = this.Properties/*.ToDictionary(f => f.Key, f => (object)f.Value)*/,
-            //Id = feature.id,
-            //TheGeometry = feature.Geometry.AsSqlGeography(isLongitudeFirst, SridHelper.GeodeticWGS84)
-            //                                    .Project(targetSrs.FromWgs84Geodetic<Point>, SridHelper.WebMercator).AsGeometry()
-            TheGeometry = pointGeometry.Project(targetSrs)
+            Attributes = this.Properties ?? [],
+            TheGeometry = pointGeometry.Project(targetSrs),
         };
     }
 }

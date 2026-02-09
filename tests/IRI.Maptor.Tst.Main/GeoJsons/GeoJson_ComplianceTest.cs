@@ -28,7 +28,7 @@ public class GeoJson_ComplianceTest
             ]
         }";
 
-        var polygon = GeoJson.Deserialize(polygonJson) as GeoJsonPolygon;
+        var polygon = GeoJson.DeserializeGeometry(polygonJson) as GeoJsonPolygon;
         Assert.NotNull(polygon);
 
         // Act
@@ -53,7 +53,7 @@ public class GeoJson_ComplianceTest
             ]
         }";
 
-        var polygon = GeoJson.Deserialize(polygonJson) as GeoJsonPolygon;
+        var polygon = GeoJson.DeserializeGeometry(polygonJson) as GeoJsonPolygon;
         Assert.NotNull(polygon);
 
         // Act
@@ -81,7 +81,7 @@ public class GeoJson_ComplianceTest
             ]
         }";
 
-        var polygon = GeoJson.Deserialize(polygonJson) as GeoJsonPolygon;
+        var polygon = GeoJson.DeserializeGeometry(polygonJson) as GeoJsonPolygon;
         Assert.NotNull(polygon);
 
         // Act
@@ -109,7 +109,7 @@ public class GeoJson_ComplianceTest
             ]
         }";
 
-        var multiPolygon = GeoJson.Deserialize(multiPolygonJson) as GeoJsonMultiPolygon;
+        var multiPolygon = GeoJson.DeserializeGeometry(multiPolygonJson) as GeoJsonMultiPolygon;
         Assert.NotNull(multiPolygon);
 
         // Act
@@ -135,7 +135,7 @@ public class GeoJson_ComplianceTest
             ]
         }";
 
-        var multiPolygon = GeoJson.Deserialize(multiPolygonJson) as GeoJsonMultiPolygon;
+        var multiPolygon = GeoJson.DeserializeGeometry(multiPolygonJson) as GeoJsonMultiPolygon;
         Assert.NotNull(multiPolygon);
 
         // Act
@@ -162,7 +162,7 @@ public class GeoJson_ComplianceTest
 
         // Act
         string json = emptyPoint.Serialize(indented: false);
-        var deserialized = GeoJson.Deserialize(json) as GeoJsonPoint;
+        var deserialized = GeoJson.DeserializeGeometry(json) as GeoJsonPoint;
 
         // Assert
         Assert.NotNull(deserialized);
@@ -181,7 +181,7 @@ public class GeoJson_ComplianceTest
 
         // Act
         string json = emptyMultiPoint.Serialize(indented: false);
-        var deserialized = GeoJson.Deserialize(json) as GeoJsonMultiPoint;
+        var deserialized = GeoJson.DeserializeGeometry(json) as GeoJsonMultiPoint;
 
         // Assert
         Assert.NotNull(deserialized);
@@ -200,7 +200,7 @@ public class GeoJson_ComplianceTest
 
         // Act
         string json = emptyLineString.Serialize(indented: false);
-        var deserialized = GeoJson.Deserialize(json) as GeoJsonLineString;
+        var deserialized = GeoJson.DeserializeGeometry(json) as GeoJsonLineString;
 
         // Assert
         Assert.NotNull(deserialized);
@@ -219,7 +219,7 @@ public class GeoJson_ComplianceTest
 
         // Act
         string json = emptyMultiLineString.Serialize(indented: false);
-        var deserialized = GeoJson.Deserialize(json) as GeoJsonMultiLineString;
+        var deserialized = GeoJson.DeserializeGeometry(json) as GeoJsonMultiLineString;
 
         // Assert
         Assert.NotNull(deserialized);
@@ -238,7 +238,7 @@ public class GeoJson_ComplianceTest
 
         // Act
         string json = emptyPolygon.Serialize(indented: false);
-        var deserialized = GeoJson.Deserialize(json) as GeoJsonPolygon;
+        var deserialized = GeoJson.DeserializeGeometry(json) as GeoJsonPolygon;
 
         // Assert
         Assert.NotNull(deserialized);
@@ -257,7 +257,7 @@ public class GeoJson_ComplianceTest
 
         // Act
         string json = emptyMultiPolygon.Serialize(indented: false);
-        var deserialized = GeoJson.Deserialize(json) as GeoJsonMultiPolygon;
+        var deserialized = GeoJson.DeserializeGeometry(json) as GeoJsonMultiPolygon;
 
         // Assert
         Assert.NotNull(deserialized);
@@ -326,7 +326,7 @@ public class GeoJson_ComplianceTest
             ]
         }";
 
-        var polygon = GeoJson.Deserialize(polygonJson) as GeoJsonPolygon;
+        var polygon = GeoJson.DeserializeGeometry(polygonJson) as GeoJsonPolygon;
         Assert.NotNull(polygon);
 
         // Act
@@ -351,7 +351,7 @@ public class GeoJson_ComplianceTest
             ]
         }";
 
-        var polygon = GeoJson.Deserialize(polygonJson) as GeoJsonPolygon;
+        var polygon = GeoJson.DeserializeGeometry(polygonJson) as GeoJsonPolygon;
         Assert.NotNull(polygon);
 
         // Act
@@ -379,7 +379,7 @@ public class GeoJson_ComplianceTest
         }";
 
         // Act
-        var geoJson = GeoJson.Deserialize(point4DJson);
+        var geoJson = GeoJson.DeserializeGeometry(point4DJson);
         IGeometry geometry = geoJson.Parse();
 
         // Assert
@@ -408,7 +408,7 @@ public class GeoJson_ComplianceTest
         }";
 
         // Act
-        var geoJson = GeoJson.Deserialize(originalJson);
+        var geoJson = GeoJson.DeserializeGeometry(originalJson);
         IGeometry geometry = geoJson.Parse();
         IGeoJsonGeometry roundTrip = geometry.AsGeoJson();
         string roundTripJson = roundTrip.Serialize(indented: false, removeSpaces: true);
