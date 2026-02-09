@@ -31,14 +31,14 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         }
     }
 
+    public Feature() { }
+
     public Feature(Geometry<T> geometry) : this(geometry, new Dictionary<string, object>())
     {
-
     }
 
     public Feature(Geometry<T> geometry, string label) : this(geometry, new Dictionary<string, object>() { { _defaultLabelAttributeName, label } })
     {
-
     }
 
     public Feature(Geometry<T> geometry, Dictionary<string, object> attributes)
@@ -48,10 +48,6 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         this.Attributes = attributes;
     }
 
-    public Feature()
-    {
-
-    }
 
     public GeoJsonFeature AsGeoJsonFeature()
     {
@@ -69,10 +65,7 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         };
     }
 
-    public override string ToString()
-    {
-        return $"Geometry: {TheGeometry?.Type}, Attributes: {Attributes?.Count}";
-    }
+    public override string ToString() => $"Geometry: {TheGeometry?.Type}, Attributes: {Attributes?.Count}";
 
     public Feature<T> Transform(Func<T, T> transform, int? newSrid = 0)
     {

@@ -20,11 +20,16 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
     private int _uniqueId = 0;
 
-    public override int Srid { get => GetSrid(); /*protected set => _ = value;*/ }
+    public override int Srid { get => /*GetSrid()*/ _features.Srid; /*protected set => _ = value;*/ }
 
-    public MemoryDataSource() : base(new List<Field>())
-    {
-    }
+    //// todo: remove this method
+    //public int GetSrid()
+    //{
+    //    //return _features?.SkipWhile(g => g is null || g.TheGeometry.IsNotValidOrEmpty())?.FirstOrDefault()?.TheGeometry.Srid ?? 0;
+    //    return _features.Srid;
+    //}
+
+    public MemoryDataSource() : base(new List<Field>()) { }
 
     public MemoryDataSource(List<Geometry<Point>> geometries, bool resetIds = true) : base(new List<Field>())
     {
@@ -54,21 +59,11 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
         UpdateExtent();
     }
-
-
-    // todo: remove this method
-    public int GetSrid()
-    {
-        //return _features?.SkipWhile(g => g is null || g.TheGeometry.IsNotValidOrEmpty())?.FirstOrDefault()?.TheGeometry.Srid ?? 0;
-        return _features.Srid;
-    }
+     
 
     public override string ToString() => $"MemoryDataSource";
 
-    protected int GetNewId()
-    {
-        return _uniqueId++;
-    }
+    protected int GetNewId() => _uniqueId++;
 
     protected void UpdateExtent()
     {
@@ -84,73 +79,15 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         }
         else
         {
-            return _features.FilterByGeometry(f => f.Intersects(geometry));
-
-            //var result = new FeatureSet<Point>(_features.Features.Where(f => f.TheGeometry.Intersects(geometry)).ToList());
-
-            //result.Fields = this._features.Fields;
+            return _features.FilterByGeometry(f => f.Intersects(geometry)); 
         }
     }
 
-    public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
-    {
-        return _features.FilterByGeometry(f => f.Intersects(boundingBox));
-    }
-
-    public static MemoryDataSource CreateFromShapefile(string shpFileName, string label, SrsBase targetSrs = null, bool correctFarsiCharacters = true, Encoding dataEncoding = null, Encoding headerEncoding = null)
-    {
-        var features = Shapefile.ReadAsFeature(shpFileName, dataEncoding, targetSrs, headerEncoding, correctFarsiCharacters, label);
-
-        var result = new MemoryDataSource(features);
-
-        return result;
-    }
-
-    public static async Task<MemoryDataSource> CreateFromShapefileAsync(string shpFileName, string label, Encoding dataEncoding = null, SrsBase targetSrs = null, Encoding headerEncoding = null, bool correctFarsiCharacters = true)
-    {
-        var features = await Shapefile.ReadAsFeatureAsync(shpFileName, dataEncoding, targetSrs, headerEncoding, correctFarsiCharacters, label);
-
-        var result = new MemoryDataSource(features/*, i => i.Label, i => (Feature)features.Single(tt => tt.Id == i)*/);
-
-        return result;
-    }
+    public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox) => _features.FilterByGeometry(f => f.Intersects(boundingBox));
 
 
     #region CRUD
-
-    //public override void UpdateFeature(TGeometryAware newGeometry)
-    //{
-    //    if (_idFunc == null)
-    //        return;
-
-    //    var geometry = _idFunc(newGeometry.Id);
-
-    //    var index = this._features.IndexOf(geometry);
-
-    //    //var index = newGeometry.Id;
-
-    //    //if (index < 0)
-    //    //{
-    //    //    return;
-    //    //}
-
-    //    _features[index] = newGeometry as T;
-    //}
-
-    //public virtual void Add(IGeometryAware<Point> newValue)
-    //{
-    //    Add(newValue as TGeometryAware);
-    //}
-
-    //public virtual void Remove(IGeometryAware<Point> newValue)
-    //{
-    //    Remove(newValue as TGeometryAware);
-    //}
-
-    //public virtual void Update(IGeometryAware<Point> newValue)
-    //{
-    //    Update(newValue as TGeometryAware);
-    //}
+     
 
     public virtual void Add(Feature<Point> newGeometry)
     {
@@ -196,6 +133,24 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
     #endregion
 
+
+    #region Static Methods
+
+    public static MemoryDataSource CreateFromShapefile(string shpFileName, string label, SrsBase targetSrs = null, bool correctFarsiCharacters = true, Encoding dataEncoding = null, Encoding headerEncoding = null)
+    {
+        var features = Shapefile.ReadAsFeature(shpFileName, dataEncoding, targetSrs, headerEncoding, correctFarsiCharacters, label);
+          
+        return new MemoryDataSource(features);
+    }
+
+    public static async Task<MemoryDataSource> CreateFromShapefileAsync(string shpFileName, string label, Encoding dataEncoding = null, SrsBase targetSrs = null, Encoding headerEncoding = null, bool correctFarsiCharacters = true)
+    {
+        var features = await Shapefile.ReadAsFeatureAsync(shpFileName, dataEncoding, targetSrs, headerEncoding, correctFarsiCharacters, label);
+
+        return new MemoryDataSource(features);         
+    }
+
+    #endregion
 
     public override FeatureSet<Point> Search(string searchText)
     {
