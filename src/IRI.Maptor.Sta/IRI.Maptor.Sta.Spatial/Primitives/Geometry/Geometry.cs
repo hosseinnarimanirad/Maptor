@@ -3958,7 +3958,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
 
     #region Static Create
-     
+
     public static Geometry<T> CreateNew(GeometryType type, int srid)
     {
         switch (type)
@@ -4074,17 +4074,19 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public static Geometry<T> CreatePolygon(List<T> points, int srid)
     {
+        var ring = CreatePolygonRing(points, srid);
+
         // outter ring must be CCW
-        if (SpatialUtility.IsClockwise(points))
+        if (ring.Points != null && SpatialUtility.IsClockwise(ring.Points))
         {
-            points.Reverse();
+            ring.Points.Reverse();
         }
 
         return new Geometry<T>()
         {
             Srid = srid,
             Type = GeometryType.Polygon,
-            Geometries = [CreatePolygonRing(points, srid)]
+            Geometries = [ring]
         };
     }
 
