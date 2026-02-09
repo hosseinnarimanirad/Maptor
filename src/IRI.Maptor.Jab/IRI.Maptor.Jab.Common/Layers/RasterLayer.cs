@@ -133,33 +133,28 @@ public class RasterLayer : BaseLayer
                 result.Add(layer);
             }
         }
-        else if (DataSource is OnlineGoogleMapDataSource onlineGoogleMapDataSource)
-        {
-            var tiles = await onlineGoogleMapDataSource.GetTiles(region, mapScale);
+        //else if (DataSource is OnlineGoogleMapDataSource onlineGoogleMapDataSource)
+        //{
+        //    var tiles = await onlineGoogleMapDataSource.GetTiles(region, mapScale);
 
-            foreach (var item in tiles)
-            {
-                var boundingBox = item.Item2.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
+        //    foreach (var item in tiles)
+        //    {
+        //        var boundingBox = item.Item2.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
 
-                if (item.Item2.Image is null)
-                    continue;
+        //        if (item.Item2.Image is null)
+        //            continue;
+                 
+        //        var image = Helpers.ImageUtility.CreateBitmapImage(item.Item2.Image);
 
-                //94.12.16
-                //int width = (int)(boundingBox.Width * mapScale / unitDistance);
+        //        if (image is null)
+        //            continue;
 
-                //int height = (int)(boundingBox.Height * mapScale / unitDistance);
+        //        RasterLayer layer = new RasterLayer(this, this.LayerName, image, this.Opacity, boundingBox, true);
 
-                var image = Helpers.ImageUtility.CreateBitmapImage(item.Item2.Image);
+        //        result.Add(layer);
+        //    }
 
-                if (image is null)
-                    continue;
-
-                RasterLayer layer = new RasterLayer(this, this.LayerName, image, this.Opacity, boundingBox, true);
-
-                result.Add(layer);
-            }
-
-        }
+        //}
         else if (DataSource is GeoRasterFileDataSource geoRasterFileDataSource)
         {
             var geo = geoRasterFileDataSource.Get(region);
