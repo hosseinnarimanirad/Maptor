@@ -12,7 +12,7 @@ namespace IRI.Maptor.Ket.PersonalGdbPersistence;
 
 public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// RelationalDbSource<Feature<Point>>
 {
-    protected BoundingBox _extent = BoundingBox.NaN;
+    protected BoundingBox _webMercatorExtent = BoundingBox.NaN;
 
     private const string _defaultSpatialColumnName = "SHAPE";
 
@@ -20,16 +20,16 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
     {
         get
         {
-            if (_extent.IsNaN() && _spatialColumnName != null)
+            if (_webMercatorExtent.IsNaN() && _spatialColumnName != null)
             {
                 this.SetBoundingBoxAndSrid();
             }
 
-            return _extent;
+            return _webMercatorExtent;
         }
         protected set
         {
-            _extent = value;
+            _webMercatorExtent = value;
         }
     }
 
@@ -197,7 +197,7 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
 
                     this._srid = srsDictionary[srid]?.Srid ?? 0;
                     this.GeometryType = ((EsriPGDBColumnShapeType)(int)dataReader["ShapeType"]).AsGeometryType();
-                    this._extent = new BoundingBox(minX, minY, maxX, maxY).Transform(_onTheFlyProj);
+                    this._webMercatorExtent = new BoundingBox(minX, minY, maxX, maxY).Transform(_onTheFlyProj);
                     //return new BoundingBox(minX, minY, maxX, maxY);
                 }
             }

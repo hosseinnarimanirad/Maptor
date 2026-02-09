@@ -7,16 +7,16 @@ namespace IRI.Maptor.Ket.WebApiPersistence;
 public static class WebApiInfrastructure
 {
     /// <summary>
-    /// Gets features from the API endpoint with optional query parameters
+    /// Gets features from the API endpoint with optional query parameters.
     /// </summary>
     public static async Task<FeatureSetDto?> GetFeaturesAsync(
         string baseUrl,
         string endpoint,
-        Dictionary<string, string>? queryParameters = null,
+        ListFeaturesQueryParams? queryParams = null,
         string? bearerToken = null,
         Dictionary<string, string>? headers = null)
     {
-        var url = BuildUrl(baseUrl, endpoint, queryParameters);
+        var url = BuildUrl(baseUrl, endpoint, queryParams);
 
         var response = await HttpClientHelper.HttpGetAsync<FeatureSetDto>(
             url,
@@ -24,6 +24,27 @@ public static class WebApiInfrastructure
             headers: headers);
 
         return response.HasNotNullResult() ? response.Result : null;
+    }
+
+    /// <summary>
+    /// Sends a unit-of-work DTO (added, updated, deleted) to the update endpoint.
+    /// </summary>
+    public static async Task<bool> SaveChangesAsync(
+        string baseUrl,
+        string endpoint,
+        FeatureSetChangesDto dto,
+        string? bearerToken = null,
+        Dictionary<string, string>? headers = null)
+    {
+        var url = $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
+
+        var response = await HttpClientHelper.HttpPutAsync<object>(
+            url,
+            dto,
+            bearer: bearerToken,
+            headers: headers);
+
+        return response.HasNotNullResult();
     }
 
     /// <summary>
@@ -90,18 +111,23 @@ public static class WebApiInfrastructure
     }
 
     /// <summary>
-    /// Builds a URL with query parameters
+    /// Builds a URL with query string from ListFeaturesQueryParams.
     /// </summary>
-    private static string BuildUrl(string baseUrl, string endpoint, Dictionary<string, string>? queryParameters = null)
+    private static string BuildUrl(string baseUrl, string endpoint, ListFeaturesQueryParams? queryParams = null)
     {
         var url = $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
 
-        if (queryParameters != null && queryParameters.Count > 0)
-        {
-            var queryString = string.Join("&", queryParameters.Select(kvp =>
-                $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value ?? string.Empty)}"));
-            url += $"?{queryString}";
-        }
+        if (queryParams == null)
+            return url;
+
+        var parts = new List<string>();
+        if (!string.IsNullOrEmpty(queryParams.GeometryWkbHex))
+            parts.Add($"geometry={Uri.EscapeDataString(queryParams.GeometryWkbHex)}");
+        if (!string.IsNullOrEmpty(queryParams.SearchText))
+            parts.Add($"search={Uri.EscapeDataString(queryParams.SearchText)}");
+
+        if (parts.Count > 0)
+            url += "?" + string.Join("&", parts);
 
         return url;
     }
