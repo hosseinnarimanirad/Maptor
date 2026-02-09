@@ -100,27 +100,38 @@ public class MapSettingsModel : Notifier, IMapSettings
     #region Identify
 
     // ignore unvisible layers or not in identify
-    public bool Identify_CheckIsVisible
+    public bool Identify_IncludeInvisibleLayers
     {
-        get => _settings.Identify_CheckIsVisible;
+        get => _settings.Identify_IncludeInvisibleLayers;
         set
         {
-            _settings.Identify_CheckIsVisible = value;
+            _settings.Identify_IncludeInvisibleLayers = value;
             RaisePropertyChanged();
         }
     }
 
 
     // ignore layers which are not in scale range or not
-    public bool Identify_CheckIsInScaleRange
+    public bool Identify_IncludeNotInScaleRangeLayers
     {
-        get => _settings.Identify_CheckIsInScaleRange;
+        get => _settings.Identify_IncludeNotInScaleRangeLayers;
         set
         {
-            _settings.Identify_CheckIsInScaleRange = value;
+            _settings.Identify_IncludeNotInScaleRangeLayers = value;
             RaisePropertyChanged();
         }
     }
+
+    public int Identify_SelectionTolerance
+    {
+        get => _settings.Identify_SelectionTolerance;
+        set
+        {
+            _settings.Identify_SelectionTolerance = Math.Clamp(value, 5, 14);
+            RaisePropertyChanged();
+        }
+    }
+
 
     #endregion
 

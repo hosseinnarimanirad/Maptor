@@ -13,9 +13,11 @@ public class MapSettings : IMapSettings
     public int MinGoogleZoomLevel { get; set; } = 1;
 
 
-    public bool Identify_CheckIsInScaleRange { get; set; } = true;
+    public bool Identify_IncludeNotInScaleRangeLayers { get; set; } = true;
 
-    public bool Identify_CheckIsVisible { get; set; } = true;
+    public bool Identify_IncludeInvisibleLayers { get; set; } = true;
+
+    public int Identify_SelectionTolerance { get; set; } = 7;
 
 
     public static MapSettings Default = new MapSettings();

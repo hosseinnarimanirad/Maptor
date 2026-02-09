@@ -43,8 +43,6 @@ using IRI.Maptor.Jab.Common.Models.Spatialable;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Models.Settings;
-using System.Net.Http;
-using IRI.Maptor.Jab.Common.Data;
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
@@ -1045,9 +1043,9 @@ public abstract class MapViewModelBase : ViewModelBase
     public Func<Geometry, VisualParameters, Task<Response<PolyBezierLayer>>> RequestGetBezier;
 
 
-    public Func<Point, IdentifyOptions, ObservableCollection<FeatureSet<Point>>> RequestIdentify;
+    //public Func<Point, IdentifyOptions, ObservableCollection<FeatureSet<Point>>> RequestIdentify;
 
-    public Func<string, ObservableCollection<FeatureSet<Point>>> RequestSearch;
+    //public Func<string, ObservableCollection<FeatureSet<Point>>> RequestSearch;
 
     public Func<Task<Response<Point>>> RequestGetPoint;
 
@@ -1055,7 +1053,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Func<Matrix?> RequestGetScreenToMapMatrix;
 
-    public Func<double, double> RequestToScreenMap;
+    public Func<double, double> RequestMapDistanceToScreenDistance;
+
+    public Func<double, double> RequestScreenDistanceMapDistance;
 
 
     #endregion
@@ -1386,37 +1386,30 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    public ObservableCollection<FeatureSet<Point>>? Identify(Point arg, IdentifyOptions options)
+    /// <summary>
+    /// Returns the point selected by the user in WGS84
+    /// </summary>
+    /// <returns>Selected point in WGS84</returns>
+    public Task<Response<Point>> GetPoint()
     {
-        if (RequestIdentify != null)
-            return RequestIdentify(arg, options);
-
-        else
-            return null;
+        return RequestGetPoint != null
+            ? RequestGetPoint()
+            : new Task<Response<Point>>(() => new Response<Point>() { Result = Point.NaN, IsFailed = true });
     }
 
+    #endregion
 
-    public ObservableCollection<FeatureSet<Point>>? Search(string? searchTest)
-    {
-        if (RequestSearch is null || string.IsNullOrWhiteSpace(searchTest))
-        {
-            return null;
-        }
-        else
-        {
-            return RequestSearch(searchTest);
-        }
 
-    }
-
-    public virtual void SearchByAttribute(string? searchTest)
+    #region Search  
+     
+    public virtual void SearchByAttribute(string? searchText)
     {
         RemoveAllDrawingItems();
 
-        if (string.IsNullOrWhiteSpace(searchTest))
+        if (string.IsNullOrWhiteSpace(searchText))
             return;
 
-        var result = Search(searchTest);
+        var result = Search(searchText);
 
         SelectedLayers = new ObservableCollection<SelectedLayer>();
 
@@ -1440,18 +1433,107 @@ public abstract class MapViewModelBase : ViewModelBase
 
         RemoveMapOptions();
     }
-
-    /// <summary>
-    /// Returns the point selected by the user in WGS84
-    /// </summary>
-    /// <returns>Selected point in WGS84</returns>
-    public Task<Response<Point>> GetPoint()
+     
+    public ObservableCollection<FeatureSet<Point>>? Search(string? searchText)
     {
-        return RequestGetPoint != null
-            ? RequestGetPoint()
-            : new Task<Response<Point>>(() => new Response<Point>() { Result = Point.NaN, IsFailed = true });
+        var result = new ObservableCollection<FeatureSet<Point>>();
+
+        if (string.IsNullOrWhiteSpace(searchText))
+            return result;
+
+        foreach (var layer in GetAllVectorLayers(this.Layers))
+        {
+            if (layer.Type != LayerType.VectorLayer)
+                continue;
+
+            if (!layer.IsSearchable)
+                continue;
+
+            var features = layer.DataSource.Search(searchText);
+
+            if (features is not null && !features.Features.IsNullOrEmpty())
+            {
+                features.Title = layer.LayerName;
+
+                features.LayerId = layer.LayerId;
+
+                result.Add(features);
+            }
+        }
+
+        return result;
     }
 
+    #endregion
+
+
+    #region Identify
+
+    public ObservableCollection<FeatureSet<Point>>? Identify(Point point, IdentifyOptions options)
+    {
+        var result = new ObservableCollection<FeatureSet<Point>>();
+
+        Geometry<Point> geometryBoundary;
+
+        //var offset = ScreenToMap(7);
+        var offset = this.RequestScreenDistanceMapDistance(options.SelectionTolerance);
+
+        geometryBoundary = new BoundingBox(point, offset).AsGeometry<Point>(SridHelper.WebMercator);
+
+        foreach (var layer in GetAllVectorLayers(this.Layers))
+        {
+            if (layer.Type != LayerType.VectorLayer)
+                continue;
+
+            if (!layer.IsSearchable)
+                continue;
+
+            if (layer.Visibility != System.Windows.Visibility.Visible && !options.IncludeInvisibleLayers)
+                continue;
+
+            if (!layer.IsInScaleRange && !options.IncludeNotInScaleRangeLayers)
+                continue;
+
+            var features = layer.DataSource.GetAsFeatureSet(geometryBoundary);
+
+            if (features is not null && !features.Features.IsNullOrEmpty())
+            {
+                features.Title = layer.LayerName;
+
+                features.LayerId = layer.LayerId;
+
+                features.Fields = layer.GetFields();
+
+                result.Add(features);
+            }
+        }
+
+        return result;
+
+        //return new ObservableCollection<FeatureSet<Point>>(this.GetFeatures(point, options));
+        //if (RequestIdentify != null)
+        //    return RequestIdentify(arg, options);
+
+        //else
+        //    return null;
+    }
+     
+    public List<VectorLayer> GetAllVectorLayers(IEnumerable<ILayer>? layers)
+    {
+        var result = new List<VectorLayer>();
+
+        if (layers.IsNullOrEmpty())
+        {
+            return result;
+        }
+
+        result.AddRange(layers.Where(l => l.IsSearchable).OfType<VectorLayer>());
+
+        result.AddRange(layers.Where(l => l.IsGroupLayer && l.IsSearchable).SelectMany(l => GetAllVectorLayers((l as GroupLayer).SubLayers)));
+
+        return result;
+    }
+     
     #endregion
 
 
@@ -2520,8 +2602,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
         var toScreenMap = CreateMapToScreenFunc();
 
-        var width = (int)RequestToScreenMap(boundingBox.Width);
-        var height = (int)RequestToScreenMap(boundingBox.Height);
+        var width = (int)RequestMapDistanceToScreenDistance(boundingBox.Width);
+        var height = (int)RequestMapDistanceToScreenDistance(boundingBox.Height);
 
         var visuals = await RequestGetAsDrawingVisual(boundingBox, width, height);
 

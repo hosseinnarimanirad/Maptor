@@ -11,6 +11,7 @@ public interface IMapSettings
     int MaxGoogleZoomLevel { get; set; }
     int MinGoogleZoomLevel { get; set; }
 
-    bool Identify_CheckIsInScaleRange { get; set; }
-    bool Identify_CheckIsVisible { get; set; }
+    bool Identify_IncludeNotInScaleRangeLayers { get; set; }
+    bool Identify_IncludeInvisibleLayers { get; set; }
+    int Identify_SelectionTolerance { get; set; }
 }

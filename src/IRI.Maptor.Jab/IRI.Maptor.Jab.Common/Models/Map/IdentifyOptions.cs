@@ -9,8 +9,11 @@ namespace IRI.Maptor.Jab.Common.Models;
 public class IdentifyOptions
 {
     // ignore unvisible layers or not in identify
-    public bool CheckIsVisible { get; set; } = true;
+    public bool IncludeInvisibleLayers { get; set; } = true;
 
     // ignore layers which are not in scale range or not
-    public bool CheckIsInScaleRange { get; set; } = true;
+    public bool IncludeNotInScaleRangeLayers { get; set; } = true;
+
+    // the radius in pixels on screen to select features
+    public int SelectionTolerance { get; set; } = 7;
 }

@@ -475,7 +475,7 @@ public partial class MapViewer : NotifiableUserControl
 
         };
     }
-     
+
     MapViewModelBase _presenter;
 
     #endregion
@@ -492,7 +492,7 @@ public partial class MapViewer : NotifiableUserControl
         presenter.RequestPrint = this.Print;
 
         presenter.RequestGetAsDrawingVisual = this.GetAsDrawingVisual;
-         
+
         presenter.RequestGetActualHeight = () => this.mapView.ActualHeight;
 
         presenter.RequestGetActualWidth = () => this.mapView.ActualWidth;
@@ -681,10 +681,10 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestAddGeometries = this.DrawGeometriesAsync;
 
-        presenter.RequestHighlightGeometries = this.HighlightGeometries; 
+        presenter.RequestHighlightGeometries = this.HighlightGeometries;
 
         presenter.RequestSelectGeometries = SelectGeometriesAsync;
-         
+
         presenter.RequestClearLayer = (layer, remove) => { this.ClearLayer(layer, remove); };
 
         presenter.RequestClearLayerByCriteria = this.Clear;
@@ -695,18 +695,17 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestZoomToFeature = this.ZoomToFeature;
 
-        presenter.RequestIdentify = (point, options) => new ObservableCollection<FeatureSet<sb.Point>>(this.GetFeatures(point, options));
+        //presenter.RequestIdentify = (point, options) => new ObservableCollection<FeatureSet<sb.Point>>(this.GetFeatures(point, options));
 
-        presenter.RequestSearch = searchText => new ObservableCollection<FeatureSet<sb.Point>>(this.GetFeatures(searchText));
+        //presenter.RequestSearch = searchText => new ObservableCollection<FeatureSet<sb.Point>>(this.GetFeatures(searchText));
 
         presenter.RequestGetPoint = SelectPointAsync;
 
-        presenter.RequestToScreenMap = this.MapToScreen;
-         
-        presenter.RequestGetMapToScreenMatrix = () =>
-        {
-            return this.viewTransform.Value;
-        };
+        presenter.RequestMapDistanceToScreenDistance = this.MapToScreen;
+
+        presenter.RequestScreenDistanceMapDistance = this.ScreenToMap;
+
+        presenter.RequestGetMapToScreenMatrix = () => this.viewTransform.Value;
 
         presenter.RequestGetScreenToMapMatrix = () =>
         {
@@ -723,7 +722,7 @@ public partial class MapViewer : NotifiableUserControl
         };
 
         var ostanha = EnvelopeMarkupLabelTriple.GetProvinces93Wm(a =>
-        { 
+        {
             this.ZoomToExtent(IriProvinces93WmEnvelopes.ToBoundingBox(a.Province));
         });
 
@@ -732,9 +731,9 @@ public partial class MapViewer : NotifiableUserControl
         presenter.Pan();
 
         presenter.SetMapCursorSet1();
-         
+
         await presenter.InitializeAsync();
-         
+
         presenter.RegisterMapOptions();
 
     }
@@ -765,65 +764,30 @@ public partial class MapViewer : NotifiableUserControl
         return _unitDistance.Value;
     }
 
-    public double PixelSize
-    {
-        get { return GetUnitDistance(); }
-    }
+    public double PixelSize => GetUnitDistance();
 
-    private double ToScreenScale(double mapScale)
-    {
-        //PresentationSource source = PresentationSource.FromVisual(this.mapView);
-        //double dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
-        //double unitDistance = IRI.Maptor.Sta.Common.ConstantValues.InchToMeterFactor / dpiX; // Meter
-        //return mapScale / unitDistance;
+    private double ToScreenScale(double mapScale) => mapScale / GetUnitDistance();
 
-        return mapScale / GetUnitDistance();
-    }
+    private double ToMapScale(double screenScale) => screenScale * GetUnitDistance();
 
-    private double ToMapScale(double screenScale)
-    {
-        return screenScale * GetUnitDistance();
-    }
+    // Screen => Map (WebMercator) => Geodetic (Wgs84)
 
-    public Point MapToGeodetic(Point point)
-    {
-        return this.WebMercatorToGeodetic(point);
-    }
+    public Point ScreenToMap(Point point) => this.viewTransform.Inverse.Transform(point);
+    public Point MapToScreen(Point point) => this.viewTransform.Transform(point);
 
-    public Point GeodeticToMap(Point point)
-    {
-        return MapProjects.GeodeticWgs84ToWebMercator(point.AsPoint()).AsWpfPoint();
-    }
+    public Point MapToGeodetic(Point point) => this.WebMercatorToGeodetic(point);
+    public Point GeodeticToMap(Point point) => MapProjects.GeodeticWgs84ToWebMercator(point.AsPoint()).AsWpfPoint();
 
-    public Point ScreenToGeodetic(Point point)
-    {
-        return MapToGeodetic(ScreenToMap(point));
-    }
+    public Point ScreenToGeodetic(Point point) => MapToGeodetic(ScreenToMap(point));
+    public Point GeodeticToScreen(Point point) => MapToScreen(GeodeticToMap(point));
 
-    public Point GeodeticToScreen(Point point)
-    {
-        return MapToScreen(GeodeticToMap(point));
-    }
-
-    public Point ScreenToMap(Point point)
-    {
-        return this.viewTransform.Inverse.Transform(point);
-    }
-
-    public Point MapToScreen(Point point)
-    {
-        return this.viewTransform.Transform(point);
-    }
-
-    public double MapToScreen(double webMercatorDistance)
-    {
-        return webMercatorDistance * MapScale / GetUnitDistance();
-    }
-
-    public double ScreenToMap(double screenDistance)
-    {
-        return screenDistance * GetUnitDistance() / MapScale;
-    }
+    /// <summary>
+    /// WebMercator distance in Meter
+    /// </summary>
+    /// <param name="webMercatorDistance"></param>
+    /// <returns>Screen distance in pixel</returns>
+    public double MapToScreen(double webMercatorDistance) => webMercatorDistance * MapScale / GetUnitDistance();
+    public double ScreenToMap(double screenDistance) => screenDistance * GetUnitDistance() / MapScale;
 
     private Point WebMercatorToGeodetic(Point point)
     {
@@ -835,7 +799,6 @@ public partial class MapViewer : NotifiableUserControl
         {
             return new Point(double.NaN, double.NaN);
         }
-
     }
 
     #endregion
@@ -4176,7 +4139,7 @@ public partial class MapViewer : NotifiableUserControl
         var p4 = bbox.BottomLeft;
 
         var ringPoints = new List<sb.Point> { p1, p2, p3, p4 };
-         
+
         var polygon = Geometry<sb.Point>.CreatePolygon(ringPoints, SridHelper.WebMercator);
 
         drawingCancellationToken = null;
@@ -4640,98 +4603,6 @@ public partial class MapViewer : NotifiableUserControl
     #endregion
 
 
-    #region Search
-
-    public List<FeatureSet<sb.Point>>? GetFeatures(string searchText)
-    {
-        List<FeatureSet<sb.Point>> result = new List<FeatureSet<sb.Point>>();
-
-        foreach (var layer in GetAllVectorLayers(this.Layers))
-        {
-            if (layer.Type != LayerType.VectorLayer)
-                continue;
-
-            if (!layer.IsSearchable)
-                continue;
-
-            var features = layer.DataSource.Search(searchText);
-
-            if (features is not null && !features.Features.IsNullOrEmpty())
-            {
-                features.Title = layer.LayerName;
-
-                features.LayerId = layer.LayerId;
-
-                result.Add(features);
-            }
-        }
-
-        return result;
-    }
-
-    #endregion
-
-
-    #region Identify
-
-    public List<FeatureSet<sb.Point>>? GetFeatures(sb.Point point, IdentifyOptions options)
-    {
-        List<FeatureSet<sb.Point>> result = new List<FeatureSet<sb.Point>>();
-
-        Geometry<sb.Point> geometryBoundary;
-
-        var offset = ScreenToMap(7);
-
-        geometryBoundary = new sb.BoundingBox(point, offset).AsGeometry<sb.Point>(SridHelper.WebMercator);
-
-        foreach (var layer in GetAllVectorLayers(this.Layers))
-        {
-            if (layer.Type != LayerType.VectorLayer)
-                continue;
-
-            if (!layer.IsSearchable)
-                continue;
-
-            if (options.CheckIsVisible && layer.Visibility != Visibility.Visible)
-                continue;
-
-            if (options.CheckIsInScaleRange && !layer.IsInScaleRange)
-                continue;
-
-            var features = layer.DataSource.GetAsFeatureSet(geometryBoundary);
-
-            if (features is not null && !features.Features.IsNullOrEmpty())
-            {
-                features.Title = layer.LayerName;
-
-                features.LayerId = layer.LayerId;
-
-                features.Fields = layer.GetFields();
-
-                result.Add(features);
-            }
-        }
-
-        return result;
-    }
-
-    public List<VectorLayer> GetAllVectorLayers(IEnumerable<ILayer>? layers)
-    {
-        var result = new List<VectorLayer>();
-
-        if (layers.IsNullOrEmpty())
-        {
-            return result;
-        }
-
-        result.AddRange(layers.Where(l => l.IsSearchable).OfType<VectorLayer>());
-
-        result.AddRange(layers.Where(l => l.IsGroupLayer && l.IsSearchable).SelectMany(l => GetAllVectorLayers((l as GroupLayer).SubLayers)));
-
-        return result;
-    }
-
-    #endregion
 
 
     #region Edit
@@ -4764,11 +4635,7 @@ public partial class MapViewer : NotifiableUserControl
 
         options.IsNewDrawing = false;
 
-        CurrentEditingLayer = new EditableFeatureLayer(
-                        "edit", geometry.Clone(),
-                        this.viewTransform, ScreenToMap,
-                        options)
-        { ZIndex = int.MaxValue };
+        CurrentEditingLayer = new EditableFeatureLayer("edit", geometry.Clone(), this.viewTransform, ScreenToMap, options) { ZIndex = int.MaxValue };
         //{
         //    MassEdit = true
         //};
