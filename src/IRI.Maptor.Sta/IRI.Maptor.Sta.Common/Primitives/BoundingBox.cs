@@ -226,9 +226,30 @@ public struct BoundingBox
     {
         var newTopLeft = func is null ? this.TopLeft : func(this.TopLeft);
 
-        var newButtomRight = func is null ? this.BottomRight : func(this.BottomRight);
+        var newBottomRight = func is null ? this.BottomRight : func(this.BottomRight);
 
-        return new BoundingBox(newTopLeft.X, newButtomRight.Y, newButtomRight.X, newTopLeft.Y);
+        var newTopRight = func is null ? this.TopRight : func(this.TopRight);
+        var newBottomLeft = func is null ? this.BottomLeft : func(this.BottomLeft);
+
+        if (newBottomLeft.Y != newBottomRight.Y)
+        {
+
+        }
+        if (newTopLeft.Y != newTopRight.Y)
+        {
+
+        }
+
+        if (newBottomRight.X != newTopRight.X)
+        {
+
+        }
+        if (newBottomLeft.X != newTopLeft.X)
+        {
+
+        }
+
+        return new BoundingBox(newTopLeft.X, newBottomRight.Y, newBottomRight.X, newTopLeft.Y);
     }
 
     #endregion

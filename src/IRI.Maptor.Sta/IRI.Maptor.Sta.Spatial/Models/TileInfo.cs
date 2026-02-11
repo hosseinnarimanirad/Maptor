@@ -71,11 +71,8 @@ public class TileInfo
 
     public override int GetHashCode()
     {
-        return $"{ZoomLevel}{RowNumber}{ColumnNumber}".GetHashCode();
+        return $"{ZoomLevel}-{RowNumber}-{ColumnNumber}".GetHashCode();
     }
 
-    public TileInfo Clone()
-    {
-        return new TileInfo(this.RowNumber, this.ColumnNumber, this.ZoomLevel);
-    }
+    public TileInfo Clone() => new TileInfo(this.RowNumber, this.ColumnNumber, this.ZoomLevel);
 }
