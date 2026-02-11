@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
@@ -21,7 +21,24 @@ public class RasterLayer : BaseLayer
 {
     RasterLayer _parent;
 
-    public IDataSource DataSource { get; private set; }
+    private IDataSource? _dataSource;
+
+    public IDataSource? DataSource
+    {
+        get => _dataSource;
+        private set
+        {
+            if (ReferenceEquals(_dataSource, value))
+                return;
+
+            UnsubscribeFromDataSourceStatusEvents(_dataSource);
+
+            _dataSource = value;
+
+            SyncStatusFromDataSource();
+            SubscribeToDataSourceStatusEvents(_dataSource);
+        }
+    }
 
     //private FrameworkElement? _element;
     //public FrameworkElement? Element
@@ -143,7 +160,7 @@ public class RasterLayer : BaseLayer
 
         //        if (item.Item2.Image is null)
         //            continue;
-                 
+
         //        var image = Helpers.ImageUtility.CreateBitmapImage(item.Item2.Image);
 
         //        if (image is null)
@@ -159,7 +176,7 @@ public class RasterLayer : BaseLayer
         {
             var geo = geoRasterFileDataSource.Get(region);
 
-            if (geo != null)
+            if (geo != null && geo != Sta.Common.Model.GeoReferencedImage.NaN)
             {
                 var boundingBox = geo.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
 
@@ -284,4 +301,18 @@ public class RasterLayer : BaseLayer
 
         return result;
     }
+
+
+    private void SyncStatusFromDataSource()
+    {
+        if (DataSource == null)
+            return;
+
+        IsBusy = DataSource.IsBusy;
+        IsLoaded = DataSource.IsLoaded;
+        HasPendingChanges = DataSource.HasPendingChanges;
+        IsClientFiltered = DataSource.IsClientFiltered;
+        HasError = DataSource.HasError;
+    }
+
 }

@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.MapIndexes;
 using IRI.Maptor.Sta.Spatial.Primitives;
@@ -56,19 +57,18 @@ public class UtmGridDataSource : VectorDataSource
 
 
     // Get as FeatureSet of Point
-    public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
+    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox)
     {
         var geographicBoundingBox = boundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84);
 
         var features = UtmIndexes.GetIndexSheets(geographicBoundingBox, Type, UtmZone)
-                            //.Where(s => s.TheGeometry?.Intersects(boundingBox) == true)
                             .Select(ToFeatureMappingFunc)
                             .ToList();
 
-        return FeatureSet<Point>.Create(string.Empty, features);
+        return Task.FromResult(FeatureSet<Point>.Create(string.Empty, features));
     }
 
-    public override FeatureSet<Point> GetAsFeatureSet(Geometry<Point>? geometry)
+    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
     {
         var geographicBoundingBox = geometry?.GetBoundingBox().Transform(MapProjects.WebMercatorToGeodeticWgs84) ?? GeodeticWgs84Extent;
 
@@ -77,11 +77,11 @@ public class UtmGridDataSource : VectorDataSource
                             .Select(ToFeatureMappingFunc)
                             .ToList();
 
-        return FeatureSet<Point>.Create(string.Empty, features);
+        return Task.FromResult(FeatureSet<Point>.Create(string.Empty, features));
     }
 
 
-    public override FeatureSet<Point> Search(string searchText) => throw new NotImplementedException();
+    public override Task<FeatureSet<Point>> SearchAsync(string searchText) => throw new NotImplementedException();
 
     private Feature<Point> ToFeatureMappingFunc(UtmSheet utmSheet)
     {

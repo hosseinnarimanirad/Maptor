@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using IRI.Maptor.Sta.Common.Model;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Spatial.Helpers;
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Ket.SqlitePersistence.MbTiles;
@@ -13,15 +10,15 @@ namespace IRI.Maptor.Ket.SqlitePersistence.MbTiles;
 /// Data source for MBTiles format - provides tile-based raster data from SQLite database
 /// MBTiles uses TMS (Tile Map Service) coordinate scheme where origin is bottom-left
 /// </summary>
-public class MbTilesDataSource : IRasterDataSource, IDisposable
+public class MbTilesDataSource : RasterDataSource, IDisposable
 {
     private readonly MbTilesReader _reader;
     private List<int>? _availableZoomLevels;
     private bool _disposed;
 
-    public BoundingBox WebMercatorExtent { get; private set; }
+    //public BoundingBox WebMercatorExtent { get; private set; }
 
-    public int Srid => SridHelper.WebMercator;
+    //public int Srid => SridHelper.WebMercator;
 
     public MbTilesMetadata? Metadata => _reader.Metadata;
 

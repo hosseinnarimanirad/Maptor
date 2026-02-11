@@ -1,5 +1,6 @@
-﻿using System.Data;
+using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using Microsoft.SqlServer.Types;
 
 using IRI.Maptor.Extensions;
@@ -82,7 +83,6 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
         : this(connectionString, spatialColumnName, labelColumnName)
     {
         this._tableName = tableName;
-
     }
 
     public static SqlServerDataSource CreateForQueryString(string connectionString, string queryString, string spatialColumnName, string? labelColumnName = null)
@@ -360,113 +360,108 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
 
     #region GetAsFeatureSet
 
-    public override FeatureSet<Point> GetAsFeatureSet(Geometry<Point>? geometry)
+    public Task<FeatureSet<Point>> GetAsFeatureSetWhereIntersectsWktAsync(string wktGeometryFilter)
+    {
+        return GetAsFeatureSetAsync(MakeSelectCommandWithWkt(wktGeometryFilter, false));
+    }
+
+    public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync()
+    {
+        return await GetAsFeatureSetAsync(Geometry<Point>.Empty);
+    }
+
+    public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox)
+    {
+        var whereClause = GetWhereClause(_spatialColumnName, boundingBox, GetSrid());
+        return await GetAsFeatureSetAsync(MakeSelectCommand(whereClause, false));
+    }
+
+    public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
     {
         if (geometry is not null)
         {
             var selectQuery = MakeSelectCommandWithWkb(geometry.AsWkb(), false);
-
-            return GetAsFeatureSet(selectQuery);
+            return await GetAsFeatureSetAsync(selectQuery);
         }
         else
         {
-            return GetAsFeatureSet(MakeSelectCommand(null, false));
+            return await GetAsFeatureSetAsync(MakeSelectCommand(null, false));
         }
     }
 
-    public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
+    public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(double mapScale, BoundingBox boundingBox)
     {
-        var whereClause = GetWhereClause(_spatialColumnName, boundingBox, GetSrid());
-
-        return GetAsFeatureSet(MakeSelectCommand(whereClause, false));
+        return await GetAsFeatureSetAsync(boundingBox);
     }
 
-    public FeatureSet<Point> GetAsFeatureSetWhereIntersectsWkt(string wktGeometryFilter)
+    private async Task<FeatureSet<Point>> GetAsFeatureSetAsync(string selectQuery)
     {
-        //return QueryFeatures(GetCommandString(wktGeometryFilter, false));
-        return GetAsFeatureSet(MakeSelectCommandWithWkt(wktGeometryFilter, false));
-    }
+        var result = FeatureSet<Point>.Create(string.Empty, new List<Feature<Point>>());
 
-    private FeatureSet<Point> GetAsFeatureSet(string selectQuery)
-    {
-        SqlConnection connection = new SqlConnection(_connectionString);
+        await using var connection = new SqlConnection(_connectionString);
+        await connection.OpenAsync();
 
-        FeatureSet<Point> result = FeatureSet<Point>.Create(string.Empty, new List<Feature<Point>>());
+        var command = new SqlCommand(selectQuery, connection);
+        await using var reader = await command.ExecuteReaderAsync();
 
-        try
+        for (var i = 0; i < reader.FieldCount; i++)
         {
-            var command = new SqlCommand(selectQuery, connection);
+            var type = reader.GetFieldType(i);
 
-            connection.Open();
-
-            SqlDataReader reader = command.ExecuteReader();
-
-            for (int i = 0; i < reader.FieldCount; i++)
+            if (type != typeof(SqlGeometry))
             {
-                var type = reader.GetFieldType(i);
+                result.Fields.Add(new Field() { Name = reader.GetName(i), Type = type.ToString() });
+            }
+        }
 
-                if (type != typeof(SqlGeometry))
+        if (!reader.HasRows)
+        {
+            return result;
+        }
+
+        while (await reader.ReadAsync())
+        {
+            var dict = new Dictionary<string, object>();
+
+            var feature = new Feature<Point>();
+
+            for (var i = 0; i < reader.FieldCount; i++)
+            {
+                var fieldName = reader.GetName(i);
+
+                while (dict.Keys.Contains(fieldName))
                 {
-                    result.Fields.Add(new Field() { Name = reader.GetName(i), Type = type.ToString() });
+                    fieldName = $"{fieldName}_";
                 }
-            }
 
-            if (!reader.HasRows)
-            {
-                return result;
-            }
-
-            while (reader.Read())
-            {
-                var dict = new Dictionary<string, object>();
-
-                var feature = new Feature<Point>();
-
-                for (int i = 0; i < reader.FieldCount; i++)
+                if (reader.IsDBNull(i))
                 {
-                    var fieldName = reader.GetName(i);
-
-                    while (dict.Keys.Contains(fieldName))
+                    dict.Add(fieldName, null);
+                }
+                else
+                {
+                    if (reader[i] is SqlGeometry sqlGeometry)
                     {
-                        fieldName = $"{fieldName}_";
-                    }
-
-                    if (reader.IsDBNull(i))
-                    {
-                        dict.Add(fieldName, null);
+                        feature.TheGeometry = sqlGeometry.AsGeometry();
                     }
                     else
                     {
-                        if (reader[i] is SqlGeometry)
-                        {
-                            feature.TheGeometry = ((SqlGeometry)reader[i]).AsGeometry();
-                        }
-                        else
-                        {
-                            dict.Add(fieldName, reader[i]);
-                        }
+                        dict.Add(fieldName, reader[i]);
                     }
                 }
-
-                if (!string.IsNullOrWhiteSpace(IdColumnName))
-                {
-                    feature.Id = (int)dict[IdColumnName];
-                }
-
-                feature.Attributes = dict;
-
-                result.Features.Add(feature);
             }
 
-            connection.Close();
-        }
-        catch (Exception ex)
-        {
-            connection.Close();
+            if (!string.IsNullOrWhiteSpace(IdColumnName))
+            {
+                feature.Id = (int)dict[IdColumnName];
+            }
+
+            feature.Attributes = dict;
+
+            result.Features.Add(feature);
         }
 
         return result;
-
     }
 
     #endregion
@@ -516,7 +511,7 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
         SqlServerInfrastructure.ExecuteNonQuery(command, _connectionString);
     }
 
-    public override FeatureSet<Point> Search(string searchText)
+    public override Task<FeatureSet<Point>> SearchAsync(string searchText)
     {
         throw new NotImplementedException();
     }

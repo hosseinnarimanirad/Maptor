@@ -272,6 +272,143 @@ public class GpkgVectorReader : IDisposable
     }
 
     /// <summary>
+    /// Reads all features from a layer asynchronously
+    /// </summary>
+    public async Task<List<Feature<Point>>> ReadFeaturesAsync(string tableName)
+    {
+        await EnsureConnectionOpenAsync();
+
+        var geometryColumn = GetGeometryColumnInfo(tableName);
+        if (geometryColumn == null)
+            throw new InvalidOperationException($"No geometry column found for table: {tableName}");
+
+        var features = new List<Feature<Point>>();
+
+        await using var command = _connection!.CreateCommand();
+        command.CommandText = $"SELECT * FROM {tableName}";
+
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            var feature = new Feature<Point>();
+
+            var attributes = new Dictionary<string, object?>();
+            for (var i = 0; i < reader.FieldCount; i++)
+            {
+                var columnName = reader.GetName(i);
+
+                if (columnName.Equals(geometryColumn.ColumnName, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (!reader.IsDBNull(i))
+                    {
+                        var wkb = GetGeoPackageGeometry(reader, i);
+                        if (wkb != null && wkb.Length > 0)
+                        {
+                            try
+                            {
+                                feature.TheGeometry = Geometry<Point>.FromWkb(wkb, geometryColumn.SrsId);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Trace.WriteLine($"Error parsing geometry: {ex.Message}");
+                                feature.TheGeometry = Geometry<Point>.Empty;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    attributes[columnName] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                }
+            }
+
+            feature.Attributes = attributes;
+            features.Add(feature);
+        }
+
+        return features;
+    }
+
+    /// <summary>
+    /// Reads features that intersect with the given bounding box asynchronously
+    /// </summary>
+    public async Task<List<Feature<Point>>> ReadFeaturesAsync(string tableName, BoundingBox boundingBox)
+    {
+        await EnsureConnectionOpenAsync();
+
+        var geometryColumn = GetGeometryColumnInfo(tableName);
+        if (geometryColumn == null)
+            throw new InvalidOperationException($"No geometry column found for table: {tableName}");
+
+        var features = new List<Feature<Point>>();
+
+        await using var command = _connection!.CreateCommand();
+
+        command.CommandText = $@"
+            SELECT f.*
+            FROM {tableName} f
+            WHERE f.rowid IN (
+                SELECT id FROM rtree_{tableName}_{geometryColumn.ColumnName}
+                WHERE minx <= @maxX AND maxx >= @minX 
+                  AND miny <= @maxY AND maxy >= @minY
+            )";
+
+        command.Parameters.AddWithValue("@minX", boundingBox.XMin);
+        command.Parameters.AddWithValue("@minY", boundingBox.YMin);
+        command.Parameters.AddWithValue("@maxX", boundingBox.XMax);
+        command.Parameters.AddWithValue("@maxY", boundingBox.YMax);
+
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            var feature = new Feature<Point>();
+            var attributes = new Dictionary<string, object?>();
+
+            for (var i = 0; i < reader.FieldCount; i++)
+            {
+                var columnName = reader.GetName(i);
+
+                if (columnName.Equals(geometryColumn.ColumnName, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (!reader.IsDBNull(i))
+                    {
+                        var wkb = GetGeoPackageGeometry(reader, i);
+                        if (wkb != null && wkb.Length > 0)
+                        {
+                            try
+                            {
+                                feature.TheGeometry = Geometry<Point>.FromWkb(wkb, geometryColumn.SrsId);
+                            }
+                            catch
+                            {
+                                feature.TheGeometry = Geometry<Point>.Empty;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    attributes[columnName] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                }
+            }
+
+            feature.Attributes = attributes;
+            features.Add(feature);
+        }
+
+        return features;
+    }
+
+    private Task EnsureConnectionOpenAsync()
+    {
+        if (_connection == null)
+            throw new InvalidOperationException("Connection not opened. Call Open() or OpenAsync() first.");
+        if (_connection.State == System.Data.ConnectionState.Open)
+            return Task.CompletedTask;
+        return _connection.OpenAsync();
+    }
+
+    /// <summary>
     /// Gets the number of features in a layer
     /// </summary>
     public long GetFeatureCount(string tableName)

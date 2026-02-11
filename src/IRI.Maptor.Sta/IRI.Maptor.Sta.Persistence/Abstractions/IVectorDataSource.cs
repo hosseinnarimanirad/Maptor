@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using IRI.Maptor.Sta.Common.Primitives;
@@ -12,11 +12,6 @@ public interface IVectorDataSource : IDataSource
 
     List<Field> Fields { get; set; }
      
-    FeatureSet<Point> GetAsFeatureSet();
-    FeatureSet<Point> GetAsFeatureSet(BoundingBox boundary);
-    FeatureSet<Point> GetAsFeatureSet(Geometry<Point>? geometry);
-    FeatureSet<Point> GetAsFeatureSet(double mapScale, BoundingBox boundingBox);
-
     Task<FeatureSet<Point>> GetAsFeatureSetAsync();
     Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundary);
     Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry);
@@ -26,6 +21,6 @@ public interface IVectorDataSource : IDataSource
 
 
     // Other ******************************************************************
-    FeatureSet<Point> Search(string searchText);
+    Task<FeatureSet<Point>> SearchAsync(string searchText);
 
 }

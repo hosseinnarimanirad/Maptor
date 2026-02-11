@@ -1,4 +1,5 @@
-﻿using System.Text;
+using System.Text;
+using System.Threading.Tasks;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.IO;
@@ -28,24 +29,19 @@ public static class WorldfileManager
 
         string[] lines = System.IO.File.ReadAllLines(worldFileName);
 
-        double xPixelSize = double.Parse(lines[0]);
+        return ReadImageBoundingBoxCore(lines, width, height);
+    }
 
-        double rotationAboutY = double.Parse(lines[1]);
+    public static async Task<BoundingBox> ReadImageBoundingBoxAsync(string worldFileName, int width, int height)
+    {
+        if (!System.IO.File.Exists(worldFileName))
+        {
+            throw new NotImplementedException();
+        }
 
-        double rotationAboutX = double.Parse(lines[2]);
+        string[] lines = await System.IO.File.ReadAllLinesAsync(worldFileName);
 
-        double yPixelSize = double.Parse(lines[3]);
-
-        yPixelSize = (yPixelSize > 0) ? yPixelSize : -yPixelSize;
-
-        double xOfCenterOfUpperLeftPixel = double.Parse(lines[4]);
-
-        double yOfCenterOfUpperLeftPixel = double.Parse(lines[5]);
-
-        return new BoundingBox(xMin: xOfCenterOfUpperLeftPixel - xPixelSize / 2.0,
-                                            yMin: (yOfCenterOfUpperLeftPixel + yPixelSize / 2.0) - yPixelSize * height,
-                                            xMax: (xOfCenterOfUpperLeftPixel - xPixelSize / 2.0) + xPixelSize * width,
-                                            yMax: yOfCenterOfUpperLeftPixel + yPixelSize / 2.0);
+        return ReadImageBoundingBoxCore(lines, width, height);
     }
 
     public static void SaveWorldFile(string fileName, Worldfile worldfile)
@@ -63,7 +59,65 @@ public static class WorldfileManager
         System.IO.File.WriteAllText(fileName, lines.ToString());
     }
 
-    public static GeoReferencedImage? ReadWorldfile(string imageFileName, int srid)
+    private static BoundingBox ReadImageBoundingBoxCore(string[] lines, int width, int height)
+    {
+        double xPixelSize = double.Parse(lines[0]);
+
+        double rotationAboutY = double.Parse(lines[1]);
+
+        double rotationAboutX = double.Parse(lines[2]);
+
+        double yPixelSize = double.Parse(lines[3]);
+
+        yPixelSize = (yPixelSize > 0) ? yPixelSize : -yPixelSize;
+
+        double xOfCenterOfUpperLeftPixel = double.Parse(lines[4]);
+
+        double yOfCenterOfUpperLeftPixel = double.Parse(lines[5]);
+
+        return new BoundingBox(
+            xMin: xOfCenterOfUpperLeftPixel - xPixelSize / 2.0,
+            yMin: (yOfCenterOfUpperLeftPixel + yPixelSize / 2.0) - yPixelSize * height,
+            xMax: (xOfCenterOfUpperLeftPixel - xPixelSize / 2.0) + xPixelSize * width,
+            yMax: yOfCenterOfUpperLeftPixel + yPixelSize / 2.0);
+    }
+
+    //public static GeoReferencedImage? ReadWorldfile(string imageFileName, int srid)
+    //{
+    //    if (!System.IO.File.Exists(imageFileName))
+    //        return null;
+
+    //    var size = IRI.Maptor.Ket.GdiPlus.Helpers.ImageHelper.GetSize(imageFileName);
+
+    //    var worldFileName = TryGetAssociatedWorldfileName(imageFileName);
+         
+    //    try
+    //    {
+    //        BoundingBox boundingBox;
+
+    //        if (srid == SridHelper.GeodeticWGS84)
+    //        {
+    //            boundingBox = ReadImageBoundingBox(worldFileName, size.Width, size.Height);
+    //        }
+    //        else if (srid == SridHelper.WebMercator)
+    //        {
+    //            boundingBox = ReadImageBoundingBox(worldFileName, size.Width, size.Height).Transform(MapProjects.WebMercatorToGeodeticWgs84);
+    //        }
+    //        else
+    //        {
+    //            throw new NotImplementedException("not supported srid for worldfile");
+    //        }
+
+    //        return new GeoReferencedImage(System.IO.File.ReadAllBytes(imageFileName), boundingBox);
+    //    }
+    //    catch (Exception)
+    //    {
+    //        return null;
+    //    }
+
+    //}
+
+    public static async Task<GeoReferencedImage?> ReadWorldfileAsync(string imageFileName, int srid)
     {
         if (!System.IO.File.Exists(imageFileName))
             return null;
@@ -71,31 +125,33 @@ public static class WorldfileManager
         var size = IRI.Maptor.Ket.GdiPlus.Helpers.ImageHelper.GetSize(imageFileName);
 
         var worldFileName = TryGetAssociatedWorldfileName(imageFileName);
-         
+
         try
         {
             BoundingBox boundingBox;
 
             if (srid == SridHelper.GeodeticWGS84)
             {
-                boundingBox = ReadImageBoundingBox(worldFileName, size.Width, size.Height);
+                boundingBox = await ReadImageBoundingBoxAsync(worldFileName, size.Width, size.Height);
             }
             else if (srid == SridHelper.WebMercator)
             {
-                boundingBox = ReadImageBoundingBox(worldFileName, size.Width, size.Height).Transform(MapProjects.WebMercatorToGeodeticWgs84);
+                boundingBox = (await ReadImageBoundingBoxAsync(worldFileName, size.Width, size.Height))
+                    .Transform(MapProjects.WebMercatorToGeodeticWgs84);
             }
             else
             {
                 throw new NotImplementedException("not supported srid for worldfile");
             }
 
-            return new GeoReferencedImage(System.IO.File.ReadAllBytes(imageFileName), boundingBox);
+            var imageBytes = await System.IO.File.ReadAllBytesAsync(imageFileName);
+
+            return new GeoReferencedImage(imageBytes, boundingBox);
         }
         catch (Exception)
         {
             return null;
         }
-
     }
 
     public static Worldfile? TryReadAssociatedWorldfile(string imageFileName)

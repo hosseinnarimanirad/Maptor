@@ -1,4 +1,5 @@
-﻿using System.Data.OleDb;
+using System.Data.OleDb;
+using System.Threading.Tasks;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.PersonalGdb;
@@ -10,7 +11,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Ket.PersonalGdbPersistence;
 
-public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// RelationalDbSource<Feature<Point>>
+public class PersoanlGdbDataSource : VectorDataSource
 {
     protected BoundingBox _webMercatorExtent = BoundingBox.NaN;
 
@@ -82,7 +83,7 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
 
         this._labelColumnName = labelColumnName;
 
-        _onTheFlyProj = onTheFlyProj;
+        _onTheFlyProj = onTheFlyProj ?? (p => p);
 
         _domains = domains;
 
@@ -90,9 +91,7 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
 
         SetBoundingBoxAndSrid();
     }
-
-    //
-
+     
 
     protected static string GetWhereClause(string spatialColumnName, BoundingBox boundingBox, int srid)
     {
@@ -165,11 +164,7 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
         }
     }
 
-
-
-    //
-
-
+     
     public void SetBoundingBoxAndSrid()
     {
         using (var conn = new OleDbConnection(PersonalGdbInfrastructure.GetConnectionString(_mdbFileName)))
@@ -205,47 +200,7 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
 
         //return BoundingBox.NaN;
     }
-
-    //private string GetConnectionString()
-    //{
-    //    if (System.IO.File.Exists(_mdbFileName))
-    //    {
-    //        return $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={_mdbFileName};Persist Security Info=False;";
-    //    }
-    //    else
-    //    {
-    //        return string.Empty;
-    //    }
-    //}
-
-    //protected List<Geometry<Point>> SelectGeometries(string selectQuery)
-    //{
-    //    List<Geometry<Point>> geometries = new List<Geometry<Point>>();
-
-    //    using (var conn = new OleDbConnection(GetConnectionString()))
-    //    {
-    //        conn.Open();
-
-    //        var query = $"SELECT {_spatialColumnName} FROM {_tableName}";
-
-    //        var cmd = new OleDbCommand(query, conn);
-
-    //        using (var dataReader = cmd.ExecuteReader())
-    //        {
-    //            while (dataReader.Read())
-    //            {
-    //                var esriByteGeometry = (byte[])dataReader[0];
-
-    //                var esriShape = IRI.Maptor.Sta.PersonalGdb.EsriPGdbHelper.ParseToEsriShape(esriByteGeometry, 0);
-
-    //                geometries.Add(esriShape.AsGeometry());
-    //            }
-    //        }
-    //    }
-
-    //    return geometries;
-    //}
-
+     
     protected FeatureSet<Point> Select(Geometry<Point> geometryBoundingBox)
     {
         return Select(geometryBoundingBox, null);
@@ -366,64 +321,24 @@ public class PersoanlGdbDataSource : VectorDataSource//<Feature<Point>>// Relati
 
         return result;
     }
-
-    //protected override Feature<Point> ToFeatureMappingFunc(Feature<Point> geometryAware)
-    //{
-    //    return geometryAware;
-    //}
-
-
-    public override FeatureSet<Point> GetAsFeatureSet(Geometry<Point>? geometry)
+      
+    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
     {
-        if (geometry is not null)
-        {
-            //var selectQuery = MakeSelectCommandWithWkb(geometry.AsWkb(), false);
-
-            return Select(geometry);
-        }
-        else
-        {
-            return Select(geometry/*MakeSelectCommand(null, false)*/);
-        }
+        return Task.Run(() => Select(geometry));
     }
 
-    //public override List<Feature<Point>> GetGeometryAwares(Geometry<Point>? geometry)
-    //{
-    //    return GetAsFeatureSet(geometry).Features;
-    //}
+    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox)
+    {
+        throw new NotImplementedException();
+    }
 
-    //public override void Add(Feature<Point> newValue)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public override void Remove(Feature<Point> value)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public override void Update(Feature<Point> newValue)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public override void SaveChanges()
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    public override FeatureSet<Point> Search(string searchText)
+    public override Task<FeatureSet<Point>> SearchAsync(string searchText)
     {
         if (string.IsNullOrWhiteSpace(SearchColumn))
         {
-            return null;
+            return Task.FromResult<FeatureSet<Point>>(null);
         }
 
-        return Select(null, searchText);
-    }
-
-    public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
-    {
-        throw new NotImplementedException();
+        return Task.FromResult(Select(null, searchText));
     }
 }

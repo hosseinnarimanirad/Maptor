@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -16,85 +17,7 @@ public class WebApiDataSource : MemoryDataSource
     protected WebApiSourceParameter _parameters;
 
     public string? IdColumnName { get; set; }
-
-    private bool _isLoading;
-    private bool _hasPendingChanges;
-    private bool _isSaving;
-    private bool _isClientFiltered;
     private Geometry<Point>? _filterGeometry;
-
-    /// <summary>
-    /// True while features are being loaded from the list endpoint.
-    /// </summary>
-    public bool IsLoading
-    {
-        get => _isLoading;
-        protected set
-        {
-            if (_isLoading == value) return;
-
-            _isLoading = value;
-
-            IsLoadingChanged?.Invoke(this, value);
-        }
-    }
-
-    public event EventHandler<bool>? IsLoadingChanged;
-
-    /// <summary>
-    /// True when there are unsaved add/update/delete changes.
-    /// </summary>
-    public bool HasPendingChanges
-    {
-        get => _hasPendingChanges;
-        protected set
-        {
-            if (_hasPendingChanges == value) return;
-
-            _hasPendingChanges = value;
-
-            HasPendingChangesChanged?.Invoke(this, value);
-        }
-    }
-
-    public event EventHandler<bool>? HasPendingChangesChanged;
-
-    /// <summary>
-    /// True while SaveChanges is in progress.
-    /// </summary>
-    public bool IsSaving
-    {
-        get => _isSaving;
-        protected set
-        {
-            if (_isSaving == value) return;
-
-            _isSaving = value;
-
-            IsSavingChanged?.Invoke(this, value);
-        }
-    }
-
-    public event EventHandler<bool>? IsSavingChanged;
-
-    /// <summary>
-    /// True when FilterGeometry is set and client-side filtering is applied.
-    /// </summary>
-    public bool IsClientFiltered
-    {
-        get => _isClientFiltered;
-
-        protected set
-        {
-            if (_isClientFiltered == value) return;
-
-            _isClientFiltered = value;
-
-            IsClientFilteredChanged?.Invoke(this, value);
-        }
-    }
-
-    public event EventHandler<bool>? IsClientFilteredChanged;
 
     /// <summary>
     /// Optional geometry used to filter features client-side when reading. When set, IsClientFiltered becomes true.
@@ -151,9 +74,11 @@ public class WebApiDataSource : MemoryDataSource
     /// </summary>
     public async Task LoadAsync(ListFeaturesQueryParams? queryParams = null)
     {
-        IsLoading = true;
+        IsBusy = true;
         try
         {
+            HasError = false;
+
             var featureSetDto = await WebApiInfrastructure.GetFeaturesAsync(
                 _parameters.BaseUrl,
                 _listEndPoint,
@@ -175,9 +100,14 @@ public class WebApiDataSource : MemoryDataSource
             _deletedIds.Clear();
             UpdateHasPendingChanges();
         }
+        catch
+        {
+            HasError = true;
+            throw;
+        }
         finally
         {
-            IsLoading = false;
+            IsBusy = false;
         }
     }
 
@@ -198,18 +128,18 @@ public class WebApiDataSource : MemoryDataSource
         return LoadAsync(queryParams);
     }
 
-    public override FeatureSet<Point> GetAsFeatureSet(Geometry<Point>? geometry)
+    public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
     {
         if (_features?.Features == null || _features.Features.Count == 0)
             return FeatureSet<Point>.Empty;
 
         if (FilterGeometry == null || FilterGeometry.IsNullOrEmpty())
-            return base.GetAsFeatureSet(geometry);
+            return await base.GetAsFeatureSetAsync(geometry);
 
         Predicate<Geometry<Point>> predicate = geometry == null || geometry.IsNullOrEmpty()
             ? g => g.Intersects(FilterGeometry!)
             : g => g.Intersects(FilterGeometry!) && g.Intersects(geometry);
-        return _features.FilterByGeometry(predicate);
+        return await Task.FromResult(_features.FilterByGeometry(predicate));
     }
 
     public override void Add(Feature<Point> newGeometry)
@@ -242,9 +172,11 @@ public class WebApiDataSource : MemoryDataSource
 
     public override void SaveChanges()
     {
-        IsSaving = true;
+        IsBusy = true;
         try
         {
+            HasError = false;
+
             var dto = new FeatureSetChangesDto
             {
                 Added = _addedFeatures.Select(ConvertFeatureToFeatureDto).ToList(),
@@ -269,20 +201,29 @@ public class WebApiDataSource : MemoryDataSource
                 _deletedIds.Clear();
                 UpdateHasPendingChanges();
             }
+            else
+            {
+                HasError = true;
+            }
+        }
+        catch
+        {
+            HasError = true;
+            throw;
         }
         finally
         {
-            IsSaving = false;
+            IsBusy = false;
         }
     }
 
-    public override FeatureSet<Point> Search(string searchText)
+    public override Task<FeatureSet<Point>> SearchAsync(string searchText)
     {
         if (string.IsNullOrWhiteSpace(searchText))
-            return FeatureSet<Point>.Empty;
+            return Task.FromResult(FeatureSet<Point>.Empty);
 
         if (_features?.Features == null || _features.Features.Count == 0)
-            return FeatureSet<Point>.Empty;
+            return Task.FromResult(FeatureSet<Point>.Empty);
 
         var lower = searchText.ToLowerInvariant();
         var matching = _features.Features.Where(f =>
@@ -290,11 +231,11 @@ public class WebApiDataSource : MemoryDataSource
             f.Attributes.Values.Any(v => v?.ToString()?.ToLowerInvariant().Contains(lower) == true)).ToList();
 
         if (matching.Count == 0)
-            return FeatureSet<Point>.Empty;
+            return Task.FromResult(FeatureSet<Point>.Empty);
 
         var result = FeatureSet<Point>.Create(string.Empty, matching);
         result.Fields = _features.Fields;
-        return result;
+        return Task.FromResult(result);
     }
 
     #region Conversion Helpers

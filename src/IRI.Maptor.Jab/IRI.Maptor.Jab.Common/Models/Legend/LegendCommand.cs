@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using MahApps.Metro.IconPacks;
 
@@ -142,7 +142,7 @@ public class LegendCommand : LegendCommandBase
             if (!drawingResult.HasNotNullResult())
                 return;
 
-            var features = layer.GetFeatures(drawingResult.Result);
+            var features = await layer.GetFeaturesAsync(drawingResult.Result);
 
             if (features == null)
             {
@@ -179,12 +179,12 @@ public class LegendCommand : LegendCommandBase
             Layer = layer, 
         };
 
-        result.Command = new RelayCommand((param) =>
+        result.Command = new RelayCommand(async (param) =>
         {
             if (layer == null || map == null)
                 return;
 
-            var features = layer.GetFeatures();
+            var features = await layer.GetFeaturesAsync();
 
             var newLayer = new SelectedLayer(layer, layer.GetFields());
 
@@ -260,7 +260,7 @@ public class LegendCommand : LegendCommandBase
                 if (string.IsNullOrWhiteSpace(fileName))
                     return;
 
-                layer.ExportAsShapefile(fileName);
+                await layer.ExportAsShapefileAsync(fileName);
             }
             catch (Exception ex)
             {
@@ -293,7 +293,7 @@ public class LegendCommand : LegendCommandBase
                 // به خاطر خروجی برنامه البرز نگار
                 // چون در سایت ژئوجی‌سان دات آی‌او
                 // بارگذاری می شه خروجی‌ها
-                layer.ExportAsGeoJson(fileName, true);
+                await layer.ExportAsGeoJsonAsync(fileName, true);
             }
             catch (Exception ex)
             {

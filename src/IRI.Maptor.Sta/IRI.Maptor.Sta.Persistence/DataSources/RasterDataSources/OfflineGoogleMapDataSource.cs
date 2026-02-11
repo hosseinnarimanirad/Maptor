@@ -7,18 +7,21 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using System;
+using IRI.Maptor.Sta.Persistence.DataSources;
 
 namespace IRI.Maptor.Sta.Persistence.RasterDataSources;
 
-public class OfflineGoogleMapDataSource : IRasterDataSource
+public class OfflineGoogleMapDataSource : RasterDataSource
 {
-    public BoundingBox WebMercatorExtent => BoundingBox.NaN;
+    public override BoundingBox WebMercatorExtent => BoundingBox.NaN;
 
     private List<ImageSource> _imageSources;
+     
     public List<ImageSource> ImageSources { get => _imageSources; private set => _imageSources = value; }
 
-    public int Srid => SridHelper.WebMercator;
-
+    //public int Srid => SridHelper.WebMercator;
+     
     public OfflineGoogleMapDataSource(List<ImageSource> imageSources)
     { 
         _imageSources = imageSources;

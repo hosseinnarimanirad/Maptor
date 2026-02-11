@@ -196,6 +196,23 @@
                             <Setter Property="Padding" Value="0"/>
                         </Style>
                     </TextBox.Resources>
+                    <TextBox.Style>
+                    <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TextBox">
+                                    <Border x:Name="Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="5">
+                                        <ScrollViewer x:Name="PART_ContentHost" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    </TextBox.Style>
                 </TextBox>
 
                 <!--palette control-->

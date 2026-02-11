@@ -185,16 +185,16 @@ using IRI.Maptor.Sta.Common.Primitives;
 using var dataSource = new GeoPackageDataSource("path/to/data.gpkg", "countries");
 
 // Get all features as FeatureSet
-var featureSet = dataSource.GetAsFeatureSet(null);
+var featureSet = await dataSource.GetAsFeatureSetAsync();
 Console.WriteLine($"Total features: {featureSet.Features.Count}");
 Console.WriteLine($"SRID: {featureSet.Srid}");
 
 // Get features within a bounding box
 var bbox = new BoundingBox(-10, 35, 5, 45);
-var filteredFeatureSet = dataSource.GetAsFeatureSet(bbox);
+var filteredFeatureSet = await dataSource.GetAsFeatureSetAsync(bbox);
 
 // Search features by text
-var searchResults = dataSource.Search("Germany");
+var searchResults = await dataSource.SearchAsync("Germany");
 
 // Get layer metadata
 var metadata = dataSource.LayerMetadata;

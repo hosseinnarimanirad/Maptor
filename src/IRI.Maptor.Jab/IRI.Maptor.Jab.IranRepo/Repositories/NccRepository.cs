@@ -16,7 +16,7 @@ public static class NccRepository
         if (jsonString == null)
             return null;
 
-        var features = OrdinaryJsonListSource.CreateFromJsonString<NccPoint>(jsonString, i => i.AsFeature()/*, p => p.Name*/);
+        var features = JsonListDataSource.CreateFromJsonString<NccPoint>(jsonString, i => i.AsFeature()/*, p => p.Name*/);
          
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(visualParameters)];
 

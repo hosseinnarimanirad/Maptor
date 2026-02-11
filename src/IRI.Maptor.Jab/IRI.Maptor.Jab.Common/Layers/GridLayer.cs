@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Persistence.DataSources;
@@ -24,29 +24,30 @@ public class GridLayer : SymbolizableLayer
         DataSource = source;
     }
 
-    public List<Geometry<Point>>? GetLines(BoundingBox boundingBox)
+    public async Task<List<Geometry<Point>>?> GetLinesAsync(BoundingBox boundingBox)
     {
         if (DataSource is null)
         {
             return null;
         }
 
-        return DataSource.GetAsFeatureSet(boundingBox).Features.Select(f => f.TheGeometry).ToList(); ;
+        var featureSet = await DataSource.GetAsFeatureSetAsync(boundingBox);
+        return featureSet?.Features?.Select(f => f.TheGeometry).ToList();
     }
 
     #region Overrides
 
-    public override Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
+    public override async Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
     {
         if (this.DataSource == null)
-            return Task.FromResult(FeatureSet<Point>.Empty);
+            return FeatureSet<Point>.Empty;
 
-        var featureSet = this.DataSource.GetAsFeatureSet(mapExtent);
+        var featureSet = await this.DataSource.GetAsFeatureSetAsync(mapExtent);
 
         if (featureSet?.Features == null || featureSet.Features.Count == 0)
-            return Task.FromResult(FeatureSet<Point>.Empty);
-         
-        return Task.FromResult(featureSet);
+            return FeatureSet<Point>.Empty;
+
+        return featureSet;
     }
 
     #endregion

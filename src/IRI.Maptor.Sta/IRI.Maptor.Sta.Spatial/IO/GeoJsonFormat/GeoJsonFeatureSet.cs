@@ -1,5 +1,6 @@
-﻿using IRI.Maptor.Sta.Common.Helpers;
+using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
+using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
 namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
@@ -99,6 +100,50 @@ public class GeoJsonFeatureSet
     {
         var rawData = IOHelper.ReadAllDelimitedFile(fileName, delimited);
 
+        return CreateFromDelimited(rawData, userFirstLineAsHeader);
+    }
+
+    public static async Task<GeoJsonFeatureSet> DelimitedToPointGeoJsonAsync(string fileName, bool userFirstLineAsHeader, params char[] delimited)
+    {
+        var rawData = await IOHelper.ReadAllDelimitedFileAsync(fileName, delimited);
+
+        return CreateFromDelimited(rawData, userFirstLineAsHeader);
+    }
+
+    /// <summary>
+    /// Converts a CSV file to a GeoJSON FeatureCollection of points.
+    /// </summary>
+    /// <param name="fileName">The path to the CSV file.</param>
+    /// <param name="userFirstLineAsHeader">If true, the first line is treated as a header row.</param>
+    /// <returns>A GeoJsonFeatureSet containing point features.</returns>
+    public static GeoJsonFeatureSet CsvToPointGeoJson(string fileName, bool userFirstLineAsHeader)
+    {
+        return DelimitedToPointGeoJson(fileName, userFirstLineAsHeader, IOHelper.CsvDelimiterChar);
+    }
+
+    /// <summary>
+    /// Converts a TSV (Tab-Separated Values) file to a GeoJSON FeatureCollection of points.
+    /// </summary>
+    /// <param name="fileName">The path to the TSV file.</param>
+    /// <param name="userFirstLineAsHeader">If true, the first line is treated as a header row.</param>
+    /// <returns>A GeoJsonFeatureSet containing point features.</returns>
+    public static GeoJsonFeatureSet TsvToPointGeoJson(string fileName, bool userFirstLineAsHeader)
+    {
+        return DelimitedToPointGeoJson(fileName, userFirstLineAsHeader, IOHelper.TsvDelimiterChar);
+    }
+
+    public static Task<GeoJsonFeatureSet> CsvToPointGeoJsonAsync(string fileName, bool userFirstLineAsHeader)
+    {
+        return DelimitedToPointGeoJsonAsync(fileName, userFirstLineAsHeader, IOHelper.CsvDelimiterChar);
+    }
+
+    public static Task<GeoJsonFeatureSet> TsvToPointGeoJsonAsync(string fileName, bool userFirstLineAsHeader)
+    {
+        return DelimitedToPointGeoJsonAsync(fileName, userFirstLineAsHeader, IOHelper.TsvDelimiterChar);
+    }
+
+    private static GeoJsonFeatureSet CreateFromDelimited(List<string[]> rawData, bool userFirstLineAsHeader)
+    {
         List<GeoJsonFeature> result = new List<GeoJsonFeature>();
 
         int startIndex = 0;
@@ -140,27 +185,5 @@ public class GeoJsonFeatureSet
         }
 
         return new GeoJsonFeatureSet() { Features = result, TotalFeatures = result.Count, Type = GeoJson.FeatureSet };
-    }
-
-    /// <summary>
-    /// Converts a CSV file to a GeoJSON FeatureCollection of points.
-    /// </summary>
-    /// <param name="fileName">The path to the CSV file.</param>
-    /// <param name="userFirstLineAsHeader">If true, the first line is treated as a header row.</param>
-    /// <returns>A GeoJsonFeatureSet containing point features.</returns>
-    public static GeoJsonFeatureSet CsvToPointGeoJson(string fileName, bool userFirstLineAsHeader)
-    {
-        return DelimitedToPointGeoJson(fileName, userFirstLineAsHeader, IOHelper.CsvDelimiterChar);
-    }
-
-    /// <summary>
-    /// Converts a TSV (Tab-Separated Values) file to a GeoJSON FeatureCollection of points.
-    /// </summary>
-    /// <param name="fileName">The path to the TSV file.</param>
-    /// <param name="userFirstLineAsHeader">If true, the first line is treated as a header row.</param>
-    /// <returns>A GeoJsonFeatureSet containing point features.</returns>
-    public static GeoJsonFeatureSet TsvToPointGeoJson(string fileName, bool userFirstLineAsHeader)
-    {
-        return DelimitedToPointGeoJson(fileName, userFirstLineAsHeader, IOHelper.TsvDelimiterChar);
     }
 }

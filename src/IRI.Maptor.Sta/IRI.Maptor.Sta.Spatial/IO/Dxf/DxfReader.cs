@@ -14,12 +14,12 @@ namespace IRI.Maptor.Sta.Spatial.IO.Dxf;
 /// </summary>
 public class DxfReader
 {
-    public static List<Geometry<Point>> ReadFromFile(string filePath, int? defaultSrid)
+    public static async Task<List<Geometry<Point>>> ReadFromFile(string filePath, int? defaultSrid)
     {
         if (!File.Exists(filePath))
             throw new FileNotFoundException("DXF file not found", filePath);
 
-        var content = File.ReadAllText(filePath);
+        var content = await File.ReadAllTextAsync(filePath);
         return Read(content, defaultSrid);
     }
 

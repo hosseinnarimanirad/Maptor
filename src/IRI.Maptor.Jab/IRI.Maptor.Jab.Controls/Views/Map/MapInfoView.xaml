@@ -85,7 +85,20 @@
                          Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"
                          mahApp:TextBoxHelper.SelectAllOnFocus="True">
                     <TextBox.Style>
-                        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TextBox">
+                                        <Border x:Name="Border"
+                     Background="{TemplateBinding Background}"
+                     BorderBrush="{TemplateBinding BorderBrush}"
+                     BorderThickness="{TemplateBinding BorderThickness}"
+                     CornerRadius="4">
+                                            <ScrollViewer x:Name="PART_ContentHost" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=MapPanel.IsGeodeticWgs84EditingMode}" Value="True">
                                     <Setter Property="Text" Value="{Binding Path=MapPanel.CurrentEditingPoint.X, Mode=TwoWay, StringFormat={}{0:N5}}"/>
@@ -114,7 +127,20 @@
                          mahApp:TextBoxHelper.SelectAllOnFocus="True"
                          Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                     <TextBox.Style>
-                        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TextBox">
+                                        <Border x:Name="Border"
+                     Background="{TemplateBinding Background}"
+                     BorderBrush="{TemplateBinding BorderBrush}"
+                     BorderThickness="{TemplateBinding BorderThickness}"
+                     CornerRadius="5">
+                                            <ScrollViewer x:Name="PART_ContentHost" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=MapPanel.IsGeodeticWgs84EditingMode}" Value="True">
                                     <Setter Property="Text" Value="{Binding Path=MapPanel.CurrentEditingPoint.Y, Mode=TwoWay, StringFormat={}{0:N5}}"/>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,6 +17,28 @@ public class ShapefileDataStore : IDataSource
     public BoundingBox WebMercatorExtent { get { throw new NotImplementedException(); } }
 
     public int Srid => throw new NotImplementedException();
+
+    // ShapefileDataStore exposes indexing logic only; it does not participate
+    // in loading/saving or client-side filtering directly.
+    public bool IsBusy => false;
+
+    public bool IsLoaded => true;
+
+    public bool HasPendingChanges => false;
+
+    public bool IsClientFiltered => false;
+
+    public bool HasError => false;
+
+    public event EventHandler<bool>? IsBusyChanged;
+
+    public event EventHandler<bool>? IsLoadedChanged;
+
+    public event EventHandler<bool>? HasPendingChangesChanged;
+
+    public event EventHandler<bool>? IsClientFilteredChanged;
+
+    public event EventHandler<bool>? HasErrorChanged;
 
     private ShapefileDataStore()
     {

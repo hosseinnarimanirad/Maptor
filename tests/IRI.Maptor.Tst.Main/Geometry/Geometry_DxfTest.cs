@@ -18,13 +18,13 @@ namespace IRI.Maptor.Tst.Main.TheGeometry;
 public class Geometry_DxfTest
 {
     #region Basic Round-Trip Tests
-    
+
     [Theory]
     [InlineData("Point")]
     [InlineData("Linestring")]
-    [InlineData("Polygon")] 
+    [InlineData("Polygon")]
     [InlineData("PolygonWithHole")]
-    [InlineData("PolygonWithTwoHole")] 
+    [InlineData("PolygonWithTwoHole")]
     public void RoundTrip_VariousGeometries_ShouldPreserveGeometryData(string geometrySampleName)
     {
         // Arrange
@@ -39,13 +39,13 @@ public class Geometry_DxfTest
         Assert.NotNull(restoredGeometries);
         Assert.NotEmpty(restoredGeometries);
         var restoredGeometry = restoredGeometries[0];
-        Assert.True(restoredGeometry.HasAnyPoint(), 
+        Assert.True(restoredGeometry.HasAnyPoint(),
             $"Restored geometry from {geometrySampleName} should have points");
-        
+
         // Total points should be preserved (allowing for closed polygons adding duplicate point)
         var restoredTotalPoints = restoredGeometry.TotalNumberOfPoints;
-        
-        Assert.Equal( restoredTotalPoints, originalTotalPoints);
+
+        Assert.Equal(restoredTotalPoints, originalTotalPoints);
     }
 
     [Theory]
@@ -73,17 +73,17 @@ public class Geometry_DxfTest
     #region File I/O Tests
 
     [Fact]
-    public void SaveAsDxf_AndReadFromFile_ShouldRoundTripSuccessfully()
+    public async void SaveAsDxf_AndReadFromFile_ShouldRoundTripSuccessfully()
     {
         // Arrange
         var tempFilePath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.dxf");
         var originalLineString = GeometrySamples.Linestring;
-        
+
         try
         {
             // Act
             originalLineString.SaveAsDxf(tempFilePath);
-            var restoredGeometries = DxfReader.ReadFromFile(tempFilePath, defaultSrid: 0);
+            var restoredGeometries = await DxfReader.ReadFromFile(tempFilePath, defaultSrid: 0);
 
             // Assert
             Assert.NotNull(restoredGeometries);
@@ -110,8 +110,7 @@ public class Geometry_DxfTest
         var nonExistentPath = Path.Combine(Path.GetTempPath(), $"nonexistent_{Guid.NewGuid()}.dxf");
 
         // Act & Assert
-        Assert.Throws<FileNotFoundException>(() => 
-            DxfReader.ReadFromFile(nonExistentPath, 0));
+        Assert.ThrowsAsync<FileNotFoundException>(async () => await DxfReader.ReadFromFile(nonExistentPath, 0));
     }
 
     #endregion
@@ -201,7 +200,7 @@ public class Geometry_DxfTest
 
         // Assert
         var lines = dxfContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-        
+
         // Find polyline closed flag
         bool foundClosedFlag = false;
         for (int i = 0; i < lines.Length - 1; i++)
@@ -215,7 +214,7 @@ public class Geometry_DxfTest
                 }
             }
         }
-        
+
         Assert.True(foundClosedFlag, "Polygon should produce closed polyline (flag 70 = 1)");
     }
 
@@ -289,7 +288,7 @@ public class Geometry_DxfTest
         string? nullPath = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => 
+        Assert.Throws<ArgumentException>(() =>
             geometry.SaveAsDxf(nullPath!));
     }
 
@@ -300,7 +299,7 @@ public class Geometry_DxfTest
         IRI.Maptor.Sta.Spatial.Primitives.Geometry<Point>? nullGeometry = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => 
+        Assert.Throws<ArgumentNullException>(() =>
             nullGeometry!.ToDxf());
     }
 
@@ -330,7 +329,7 @@ public class Geometry_DxfTest
         Assert.NotEmpty(restoredGeometries);
         var restoredGeometry = restoredGeometries[0];
         Assert.Equal(points.Count, restoredGeometry.Points.Count);
-        
+
         // Verify precision to 6 decimal places (DXF uses "F6" format)
         for (int i = 0; i < points.Count; i++)
         {
@@ -358,7 +357,7 @@ public class Geometry_DxfTest
         Assert.NotNull(restoredGeometries);
         Assert.NotEmpty(restoredGeometries);
         var restoredGeometry = restoredGeometries[0];
-        
+
         // Simple polygon should preserve area
         var restoredArea = restoredGeometry.EuclideanArea;
         Assert.Equal(originalArea, restoredArea, precision: 2);
@@ -380,10 +379,10 @@ public class Geometry_DxfTest
         // Assert
         Assert.NotNull(restoredGeometries);
         Assert.NotEmpty(restoredGeometries);
-        
+
         // DXF writes each ring as a separate polyline, so we expect multiple geometries in the list
         // The number of geometries should match the number of rings
-        Assert.True(restoredGeometries.Count >= originalRingCount || 
+        Assert.True(restoredGeometries.Count >= originalRingCount ||
                     restoredGeometries.Any(g => g.HasAnyPoint()));
     }
 
@@ -406,7 +405,7 @@ public class Geometry_DxfTest
     #endregion
 
     #region SRID Tests
-    
+
     // Note: DXF format does not natively store SRID information
     // SRID must be managed separately by the application
 
@@ -428,7 +427,7 @@ public class Geometry_DxfTest
         // Assert - Both should be valid DXF that can be read back
         var restored1 = DxfReader.Read(dxf1, defaultSrid: 0);
         var restored2 = DxfReader.Read(dxf2, defaultSrid: 0);
-        
+
         Assert.NotNull(restored1);
         Assert.NotNull(restored2);
         Assert.NotEmpty(restored1);

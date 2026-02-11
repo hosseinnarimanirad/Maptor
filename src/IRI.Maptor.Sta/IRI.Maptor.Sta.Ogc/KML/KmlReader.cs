@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -67,7 +68,23 @@ public static class KmlReader
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"KML file not found: {filePath}", filePath);
 
-        return await Task.Run(() => ReadFromFile(filePath, targetSrid));
+        try
+        {
+            await using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read,
+                bufferSize: 4096, useAsync: true);
+
+            var settings = new XmlReaderSettings { Async = true };
+
+            using var reader = XmlReader.Create(stream, settings);
+
+            var document = await XDocument.LoadAsync(reader, LoadOptions.None, System.Threading.CancellationToken.None);
+
+            return ExtractGeometries(document, targetSrid);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Failed to parse KML file: {filePath}", ex);
+        }
     }
 
     /// <summary>
@@ -112,6 +129,20 @@ public static class KmlReader
         {
             throw new InvalidOperationException($"Failed to parse KML file: {filePath}", ex);
         }
+    }
+
+    /// <summary>
+    /// Reads KML with feature attributes (ExtendedData) asynchronously.
+    /// </summary>
+    /// <param name="filePath">Path to the KML file</param>
+    /// <param name="targetSrid">Target SRID for the geometries (default: 4326 - WGS84)</param>
+    /// <returns>List of features with geometries and attributes</returns>
+    public static async Task<List<KmlFeature>> ReadFeaturesFromFileAsync(string filePath, int targetSrid = 4326)
+    {
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException($"KML file not found: {filePath}", filePath);
+
+        return await Task.Run(() => ReadFeaturesFromFile(filePath, targetSrid));
     }
 
     /// <summary>

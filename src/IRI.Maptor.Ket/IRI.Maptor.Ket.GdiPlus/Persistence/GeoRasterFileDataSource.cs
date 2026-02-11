@@ -1,56 +1,120 @@
-﻿using IRI.Maptor.Sta.Spatial.Primitives;
+using System;
+using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Model;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using System.Threading.Tasks;
+using IRI.Maptor.Sta.Persistence.DataSources;
 
 namespace IRI.Maptor.Ket.GdiPersistence;
 
-public class GeoRasterFileDataSource : IDataSource
+public class GeoRasterFileDataSource : RasterDataSource
 {
-    //string imageFileName;
-    GeoReferencedImage geoRaster;
+    GeoReferencedImage geoRaster = GeoReferencedImage.NaN;
 
-    public BoundingBox WebMercatorExtent { get; private set; }
+    private string? _imageFileName;
 
-    public int Srid => SridHelper.WebMercator;
+    private int _srid;
 
-    private GeoRasterFileDataSource(string imageFileName, int srid)
+    public GeoRasterFileDataSource()
     {
-        this.geoRaster = IRI.Maptor.Ket.GdiPlus.WorldfileFormat.WorldfileManager.ReadWorldfile(imageFileName, srid);
-
-        this.WebMercatorExtent = geoRaster.GeodeticWgs84BoundingBox.Transform(i => MapProjects.GeodeticWgs84ToWebMercator(i));
     }
+
+    //private GeoRasterFileDataSource(string imageFileName, int srid)
+    //{
+    //    this.geoRaster = IRI.Maptor.Ket.GdiPlus.WorldfileFormat.WorldfileManager.ReadWorldfile(imageFileName, srid);
+
+    //    this.WebMercatorExtent = geoRaster.GeodeticWgs84BoundingBox.Transform(i => MapProjects.GeodeticWgs84ToWebMercator(i));
+    //}
 
     public GeoRasterFileDataSource(GeoReferencedImage image)
     {
         this.geoRaster = image;
-        
+
         this.WebMercatorExtent = geoRaster.GeodeticWgs84BoundingBox.Transform(i => MapProjects.GeodeticWgs84ToWebMercator(i));
+
+        // Constructed directly from an already loaded image.
+        IsLoaded = true;
     }
 
-    public static GeoRasterFileDataSource Create(string imageFileName, int srid)
+    //public static GeoRasterFileDataSource Create(string imageFileName, int srid)
+    //{
+    //    try
+    //    {
+    //        return new GeoRasterFileDataSource(imageFileName, srid);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return null;
+    //    }
+    //}
+
+    public GeoRasterFileDataSource(string imageFileName, int srid)
     {
+        _imageFileName = imageFileName;
+        _srid = srid;
+    }
+
+    /// <summary>
+    /// Asynchronously loads the worldfile and initializes the raster.
+    /// Sets IsBusy while loading, HasError on failure, and IsLoaded on success.
+    /// </summary>
+    public async Task<bool> LoadAsync()
+    {
+        if (IsLoaded)
+            return true;
+
+        if (string.IsNullOrWhiteSpace(_imageFileName))
+            throw new InvalidOperationException("Image file name is not specified for GeoRasterFileDataSource.");
+
+        IsBusy = true;
+        HasError = false;
+
         try
         {
-            return new GeoRasterFileDataSource(imageFileName, srid);
+            var geo = await IRI.Maptor.Ket.GdiPlus.WorldfileFormat.WorldfileManager.ReadWorldfileAsync(_imageFileName, _srid);
+
+            if (geo is null)
+            {
+                HasError = true;
+                return false;
+            }
+
+            geoRaster = geo;
+            WebMercatorExtent = geo.GeodeticWgs84BoundingBox.Transform(i => MapProjects.GeodeticWgs84ToWebMercator(i));
+
+            IsLoaded = true;
+
+            return true;
         }
-        catch (Exception ex)
+        catch
         {
-            return null;
+            HasError = true;
+            throw;
         }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    public static async Task<GeoRasterFileDataSource?> CreateAsync(string imageFileName, int srid)
+    {
+        var result = new GeoRasterFileDataSource(imageFileName, srid);
+
+        var loaded = await result.LoadAsync();
+
+        return loaded ? result : null;
     }
 
     public GeoReferencedImage Get(BoundingBox boundingBox)//, Func<string, GeoReferencedImage> func)
     {
         if (this.WebMercatorExtent.Intersects(boundingBox))
-        {
             return geoRaster;
-        }
+
         else
-        {
-            return null;
-        }
+            return GeoReferencedImage.NaN;
 
         //try
         //{

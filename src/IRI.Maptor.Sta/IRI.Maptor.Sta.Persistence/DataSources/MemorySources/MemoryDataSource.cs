@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -10,7 +11,6 @@ using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.ShapefileFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
@@ -58,6 +58,9 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         this.Fields = Field.FromDictionary(features?.FirstOrDefault().Attributes);
 
         UpdateExtent();
+
+        // Memory data source is fully initialized with features at this point.
+        IsLoaded = true;
     }
      
 
@@ -71,19 +74,16 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     }
 
     // Get as FeatureSet of Point
-    public override FeatureSet<Point> GetAsFeatureSet(Geometry<Point>? geometry)
+    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
     {
         if (geometry.IsNullOrEmpty())
         {
-            return _features;
+            return Task.FromResult(_features);
         }
-        else
-        {
-            return _features.FilterByGeometry(f => f.Intersects(geometry)); 
-        }
+        return Task.FromResult(_features.FilterByGeometry(f => f.Intersects(geometry)));
     }
 
-    public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox) => _features.FilterByGeometry(f => f.Intersects(boundingBox));
+    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox) => Task.FromResult(_features.FilterByGeometry(f => f.Intersects(boundingBox)));
 
 
     #region CRUD
@@ -152,7 +152,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
     #endregion
 
-    public override FeatureSet<Point> Search(string searchText)
+    public override Task<FeatureSet<Point>> SearchAsync(string searchText)
     {
         throw new NotImplementedException();
     }

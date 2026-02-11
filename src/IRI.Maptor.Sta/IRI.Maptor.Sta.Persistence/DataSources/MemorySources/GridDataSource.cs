@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.MapIndexes;
@@ -55,27 +56,27 @@ public class GridDataSource : VectorDataSource
     public override string ToString() => $"{nameof(GridDataSource)} {Type.GetName()}";
 
     // Get as FeatureSet of Point
-    public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
+    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox)
     {
         var geographicBoundingBox = boundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84);
 
-        return FeatureSet<Point>.Create(string.Empty, GeodeticIndexes.FindIndexSheets(geographicBoundingBox, Type)
+        return Task.FromResult(FeatureSet<Point>.Create(string.Empty, GeodeticIndexes.FindIndexSheets(geographicBoundingBox, Type)
                                 .Select(ToFeatureMappingFunc)
-                                .ToList());
+                                .ToList()));
     }
 
-    public override FeatureSet<Point> GetAsFeatureSet(Geometry<Point>? geometry)
+    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
     {
         var geographicBoundingBox = geometry?.GetBoundingBox().Transform(MapProjects.WebMercatorToGeodeticWgs84) ?? GeodeticWgs84Extent;
 
-        return FeatureSet<Point>.Create(string.Empty, GeodeticIndexes.FindIndexSheets(geographicBoundingBox, Type)
+        return Task.FromResult(FeatureSet<Point>.Create(string.Empty, GeodeticIndexes.FindIndexSheets(geographicBoundingBox, Type)
                                 .Where(s => geometry == null || s.TheGeometry.Intersects(geometry) == true)
                                 .Select(ToFeatureMappingFunc)
-                                .ToList());
+                                .ToList()));
     }
 
 
-    public override FeatureSet<Point> Search(string searchText) => throw new NotImplementedException();
+    public override Task<FeatureSet<Point>> SearchAsync(string searchText) => throw new NotImplementedException();
 
     private Feature<Point> ToFeatureMappingFunc(GeodeticSheet geodeticSheet)
     {

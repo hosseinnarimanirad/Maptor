@@ -1,17 +1,15 @@
-﻿using System.Data;
+using System.Data;
 
-using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.AdvancedStructures;
 using IRI.Maptor.Ket.GdiPlus.Model;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Analysis;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.DataSources;
 
 namespace IRI.Maptor.Ket.GdiPersistence;
 
-public class ClusteredGeoTaggedImageSource : IDataSource
+public class ClusteredGeoTaggedImageSource : RasterDataSource
 {
     object _lock = new object();
 
@@ -19,9 +17,18 @@ public class ClusteredGeoTaggedImageSource : IDataSource
 
     public string ImageDirectory { get { return _imageDirectory; } }
 
-    public int Srid => SridHelper.WebMercator;
-
     List<GeoTaggedImage> _images;
+
+    public override BoundingBox WebMercatorExtent
+    {
+        get
+        {
+            if (_images is null)
+                return BoundingBox.NaN;
+
+            return BoundingBox.CalculateBoundingBox(_images.Select(i => i.WebMercatorLocation));
+        }
+    }
 
     private ClusteredGeoTaggedImageSource(string imageDirectory)
     {
@@ -72,6 +79,7 @@ public class ClusteredGeoTaggedImageSource : IDataSource
         }
         //});
 
+        IsLoaded = true;
     }
 
     public List<Group<GeoTaggedImage>> Get(double scale)
@@ -99,17 +107,5 @@ public class ClusteredGeoTaggedImageSource : IDataSource
         }
     }
 
-    public BoundingBox WebMercatorExtent
-    {
-        get
-        {
-            if (_images == null)
-            {
-                return BoundingBox.NaN;
-            }
-
-            return BoundingBox.CalculateBoundingBox(_images.Select(i => i.WebMercatorLocation));
-        }
-    }
 
 }

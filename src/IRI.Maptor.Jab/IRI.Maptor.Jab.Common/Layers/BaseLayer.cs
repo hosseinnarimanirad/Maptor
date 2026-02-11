@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +12,7 @@ using IRI.Maptor.Jab.Common.Assets.Commands;
 using System.Windows.Data;
 using System.Windows.Shapes;
 using IRI.Maptor.Sta.Common.Contracts.Google;
+using IRI.Maptor.Sta.Persistence.Abstractions;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -66,6 +67,118 @@ public abstract class BaseLayer : Notifier, ILayer
     public virtual RenderMode RenderMode { get => RenderMode.Default; /*protected set { } */}
 
     public virtual RasterizationMethod RasterizationMethod { get => RasterizationMethod.None;/* protected set { }*/ }
+
+    #region Data source / status flags
+
+    private bool _isBusy;
+    public virtual bool IsBusy
+    {
+        get => _isBusy;
+        protected set
+        {
+            if (_isBusy == value)
+                return;
+
+            _isBusy = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private bool _isLoaded;
+    public virtual bool IsLoaded
+    {
+        get => _isLoaded;
+        protected set
+        {
+            if (_isLoaded == value)
+                return;
+
+            _isLoaded = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private bool _hasPendingChanges;
+    public virtual bool HasPendingChanges
+    {
+        get => _hasPendingChanges;
+        protected set
+        {
+            if (_hasPendingChanges == value)
+                return;
+
+            _hasPendingChanges = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private bool _isClientFiltered;
+    public virtual bool IsClientFiltered
+    {
+        get => _isClientFiltered;
+        protected set
+        {
+            if (_isClientFiltered == value)
+                return;
+
+            _isClientFiltered = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private bool _hasError;
+    public virtual bool HasError
+    {
+        get => _hasError;
+        protected set
+        {
+            if (_hasError == value)
+                return;
+
+            _hasError = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    #region Data source status bindings
+
+    protected void UnsubscribeFromDataSourceStatusEvents(IDataSource? dataSource)
+    {
+        if (dataSource == null)
+            return;
+
+        dataSource.IsBusyChanged -= DataSource_IsBusyChanged;
+        dataSource.IsLoadedChanged -= DataSource_IsLoadedChanged;
+        dataSource.HasPendingChangesChanged -= DataSource_HasPendingChangesChanged;
+        dataSource.IsClientFilteredChanged -= DataSource_IsClientFilteredChanged;
+        dataSource.HasErrorChanged -= DataSource_HasErrorChanged;
+    }
+                    
+    protected void SubscribeToDataSourceStatusEvents(IDataSource? dataSource)
+    {
+        if (dataSource == null)
+            return;
+
+        dataSource.IsBusyChanged += DataSource_IsBusyChanged;
+        dataSource.IsLoadedChanged += DataSource_IsLoadedChanged;
+        dataSource.HasPendingChangesChanged += DataSource_HasPendingChangesChanged;
+        dataSource.IsClientFilteredChanged += DataSource_IsClientFilteredChanged;
+        dataSource.HasErrorChanged += DataSource_HasErrorChanged;
+    }
+
+    protected void DataSource_IsBusyChanged(object? sender, bool e) => IsBusy = e;
+
+    protected void DataSource_IsLoadedChanged(object? sender, bool e) => IsLoaded = e;
+
+    protected void DataSource_HasPendingChangesChanged(object? sender, bool e) => HasPendingChanges = e;
+
+    protected void DataSource_IsClientFilteredChanged(object? sender, bool e) => IsClientFiltered = e;
+
+    protected void DataSource_HasErrorChanged(object? sender, bool e) => HasError = e;
+
+    #endregion
+
+    #endregion
 
     private bool _isGroupLayer;
     public bool IsGroupLayer

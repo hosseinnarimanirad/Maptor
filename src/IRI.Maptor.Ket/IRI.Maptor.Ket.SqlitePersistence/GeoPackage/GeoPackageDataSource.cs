@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Persistence.Abstractions;
@@ -103,49 +104,64 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
     }
 
     /// <summary>
-    /// Gets all features as a FeatureSet
+    /// Gets all features as a FeatureSet asynchronously
     /// </summary>
-    public override FeatureSet<Point> GetAsFeatureSet(Geometry<Point>? geometry)
+    public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync()
+    {
+        return await GetAsFeatureSetAsync(Geometry<Point>.Empty);
+    }
+
+    /// <summary>
+    /// Gets features as a FeatureSet asynchronously
+    /// </summary>
+    public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
     {
         if (geometry == null || geometry.IsNullOrEmpty())
         {
-            // Read all features
-            var features = _reader.ReadFeatures(_tableName);
-            return FeatureSet<Point>.Create(_tableName, features/*, Srid*/);
+            var features = await _reader.ReadFeaturesAsync(_tableName);
+            return FeatureSet<Point>.Create(_tableName, features);
         }
         else
         {
-            // Read features that intersect with the geometry
             var bbox = geometry.GetBoundingBox();
-            var features = _reader.ReadFeatures(_tableName, bbox);
+            var features = await _reader.ReadFeaturesAsync(_tableName, bbox);
 
-            // Further filter by actual geometry intersection
-            var filtered = features.Where(f => 
-                f.TheGeometry != null && !f.TheGeometry.IsNullOrEmpty() && 
+            var filtered = features.Where(f =>
+                f.TheGeometry != null && !f.TheGeometry.IsNullOrEmpty() &&
                 f.TheGeometry.Intersects(geometry)).ToList();
 
-            return FeatureSet<Point>.Create(_tableName, filtered/*, Srid*/);
+            return FeatureSet<Point>.Create(_tableName, filtered);
         }
     }
 
     /// <summary>
-    /// Gets features within a bounding box as a FeatureSet
+    /// Gets features within a bounding box as a FeatureSet asynchronously
     /// </summary>
-    public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
+    public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox)
     {
-        var features = _reader.ReadFeatures(_tableName, boundingBox);
-        return FeatureSet<Point>.Create(_tableName, features/*, Srid*/);
+        var features = await _reader.ReadFeaturesAsync(_tableName, boundingBox);
+        return FeatureSet<Point>.Create(_tableName, features);
+    }
+
+    /// <summary>
+    /// Gets features as a FeatureSet asynchronously with map scale
+    /// </summary>
+    public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(double mapScale, BoundingBox boundingBox)
+    {
+        return await GetAsFeatureSetAsync(boundingBox);
     }
 
     /// <summary>
     /// Searches features by text (searches in all string attributes)
     /// </summary>
-    public override FeatureSet<Point> Search(string searchText)
+    public override async Task<FeatureSet<Point>> SearchAsync(string searchText)
     {
-        if (string.IsNullOrWhiteSpace(searchText))
-            return GetAsFeatureSet(Geometry<Point>.Empty);
+        var allFeatures = await _reader.ReadFeaturesAsync(_tableName);
 
-        var allFeatures = _reader.ReadFeatures(_tableName);
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            return FeatureSet<Point>.Create(_tableName, allFeatures);
+        }
 
         var filtered = allFeatures.Where(f =>
         {
@@ -171,7 +187,7 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
     /// Maps GeoPackage geometry type names to Maptor GeometryType enum
     /// </summary>
     private GeometryType? MapGeometryType(string gpkgTypeName)
-    { 
+    {
         var typeName = gpkgTypeName.ToUpperInvariant();
 
         if (typeName.Contains("POINT"))
@@ -179,19 +195,19 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
 
         else if (typeName.Contains("LINESTRING") || typeName.Contains("LINE"))
             return Sta.Common.Primitives.GeometryType.LineString;
-        
+
         else if (typeName.Contains("POLYGON"))
             return Sta.Common.Primitives.GeometryType.Polygon;
-        
+
         else if (typeName.Contains("MULTIPOINT"))
             return Sta.Common.Primitives.GeometryType.MultiPoint;
-        
+
         else if (typeName.Contains("MULTILINESTRING"))
             return Sta.Common.Primitives.GeometryType.MultiLineString;
-        
+
         else if (typeName.Contains("MULTIPOLYGON"))
             return Sta.Common.Primitives.GeometryType.MultiPolygon;
-        
+
         else if (typeName.Contains("GEOMETRY"))
             return null; // Mixed geometry types
 

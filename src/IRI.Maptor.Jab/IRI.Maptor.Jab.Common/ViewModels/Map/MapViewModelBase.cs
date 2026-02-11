@@ -1401,15 +1401,18 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
     #region Search  
-     
-    public virtual void SearchByAttribute(string? searchText)
+
+    public virtual async void SearchByAttribute(string? searchText)
     {
         RemoveAllDrawingItems();
 
         if (string.IsNullOrWhiteSpace(searchText))
             return;
 
-        var result = Search(searchText);
+        var result = await SearchAsync(searchText);
+
+        if (result == null)
+            return;
 
         SelectedLayers = new ObservableCollection<SelectedLayer>();
 
@@ -1433,8 +1436,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
         RemoveMapOptions();
     }
-     
-    public ObservableCollection<FeatureSet<Point>>? Search(string? searchText)
+
+    public async Task<ObservableCollection<FeatureSet<Point>>?> SearchAsync(string? searchText)
     {
         var result = new ObservableCollection<FeatureSet<Point>>();
 
@@ -1449,7 +1452,7 @@ public abstract class MapViewModelBase : ViewModelBase
             if (!layer.IsSearchable)
                 continue;
 
-            var features = layer.DataSource.Search(searchText);
+            var features = await layer.DataSource.SearchAsync(searchText);
 
             if (features is not null && !features.Features.IsNullOrEmpty())
             {
@@ -1469,16 +1472,13 @@ public abstract class MapViewModelBase : ViewModelBase
 
     #region Identify
 
-    public ObservableCollection<FeatureSet<Point>>? Identify(Point point, IdentifyOptions options)
+    public async Task<ObservableCollection<FeatureSet<Point>>?> IdentifyAsync(Point point, IdentifyOptions options)
     {
         var result = new ObservableCollection<FeatureSet<Point>>();
 
-        Geometry<Point> geometryBoundary;
-
-        //var offset = ScreenToMap(7);
         var offset = this.RequestScreenDistanceMapDistance(options.SelectionTolerance);
 
-        geometryBoundary = new BoundingBox(point, offset).AsGeometry<Point>(SridHelper.WebMercator);
+        var geometryBoundary = new BoundingBox(point, offset).AsGeometry<Point>(SridHelper.WebMercator);
 
         foreach (var layer in GetAllVectorLayers(this.Layers))
         {
@@ -1494,7 +1494,7 @@ public abstract class MapViewModelBase : ViewModelBase
             if (!layer.IsInScaleRange && !options.IncludeNotInScaleRangeLayers)
                 continue;
 
-            var features = layer.DataSource.GetAsFeatureSet(geometryBoundary);
+            var features = await layer.DataSource.GetAsFeatureSetAsync(geometryBoundary);
 
             if (features is not null && !features.Features.IsNullOrEmpty())
             {
@@ -1509,15 +1509,8 @@ public abstract class MapViewModelBase : ViewModelBase
         }
 
         return result;
-
-        //return new ObservableCollection<FeatureSet<Point>>(this.GetFeatures(point, options));
-        //if (RequestIdentify != null)
-        //    return RequestIdentify(arg, options);
-
-        //else
-        //    return null;
     }
-     
+
     public List<VectorLayer> GetAllVectorLayers(IEnumerable<ILayer>? layers)
     {
         var result = new List<VectorLayer>();
@@ -1533,7 +1526,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         return result;
     }
-     
+
     #endregion
 
 
@@ -3275,7 +3268,6 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await AddShapefile(fileName, owner);
     }
-
     public async Task AddShapefile(string fileName, object owner)
     {
         try
@@ -3329,33 +3321,6 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await AddKmlfile(fileName, owner);
     }
-
-    public virtual async Task AddKmzfile(object owner, int? maxSizeInKB)
-    {
-        IsBusy = true;
-
-        var fileName = await DialogService.ShowOpenFileDialogAsync("Compressed KML files (KMZ)|*.kmz", owner);
-
-        if (!File.Exists(fileName))
-        {
-            IsBusy = false;
-
-            return;
-        }
-
-        FileInfo info = new FileInfo(fileName);
-
-        if (maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
-        {
-            await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", owner);
-
-            return;
-        }
-
-        await AddKmzfile(fileName, owner);
-    }
-
-
     public async Task AddKmlfile(string fileName, object owner)
     {
         try
@@ -3369,7 +3334,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             try
             {
-                var kmlFeatures = KmlReader.ReadFeaturesFromFile(fileName);
+                var kmlFeatures = await KmlReader.ReadFeaturesFromFileAsync(fileName);
                 features = kmlFeatures.ToFeatures();
             }
             catch
@@ -3381,7 +3346,7 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 try
                 {
-                    var geometries = KmlReader.ReadFromFile(fileName);
+                    var geometries = await KmlReader.ReadFromFileAsync(fileName);
                     features = geometries.ToFeatures();
                 }
                 catch
@@ -3433,6 +3398,30 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    public virtual async Task AddKmzfile(object owner, int? maxSizeInKB)
+    {
+        IsBusy = true;
+
+        var fileName = await DialogService.ShowOpenFileDialogAsync("Compressed KML files (KMZ)|*.kmz", owner);
+
+        if (!File.Exists(fileName))
+        {
+            IsBusy = false;
+
+            return;
+        }
+
+        FileInfo info = new FileInfo(fileName);
+
+        if (maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
+        {
+            await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", owner);
+
+            return;
+        }
+
+        await AddKmzfile(fileName, owner);
+    }     
     public async Task AddKmzfile(string fileName, object owner)
     {
         try
@@ -3444,7 +3433,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             try
             {
-                var kmzFeatures = KmzReader.ReadFeaturesFromFile(fileName);
+                var kmzFeatures = await KmzReader.ReadFeaturesFromFileAsync(fileName);
                 features = kmzFeatures.ToFeatures();
             }
             catch
@@ -3456,7 +3445,7 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 try
                 {
-                    var geometries = KmzReader.ReadFromFile(fileName);
+                    var geometries = await KmzReader.ReadFromFileAsync(fileName);
                     features = geometries.ToFeatures();
                 }
                 catch
@@ -3539,7 +3528,6 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await AddDxffile(fileName, owner: null, srid);
     }
-
     public async Task AddDxffile(string fileName, object owner, int defaultSrid)
     {
         try
@@ -3547,7 +3535,7 @@ public abstract class MapViewModelBase : ViewModelBase
             if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
                 throw new FileNotFoundException($"DXF file '{fileName}' was not found.", fileName);
 
-            var geometries = DxfReader.ReadFromFile(fileName, defaultSrid);
+            var geometries = await DxfReader.ReadFromFile(fileName, defaultSrid);
 
             if (geometries == null || geometries.IsNullOrEmpty())
             {
@@ -3659,7 +3647,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    public virtual async Task AddWorldfile(object owner)
+    public virtual async Task AddWgs84Worldfile(object owner)
     {
         IsBusy = true;
 
@@ -3679,7 +3667,7 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         try
         {
-            var dataSource = GeoRasterFileDataSource.Create(fileName, srid);
+            var dataSource = await GeoRasterFileDataSource.CreateAsync(fileName, srid);
 
             if (dataSource == null)
             {
@@ -3785,7 +3773,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 return;
             }
 
-            GeoJsonFeatureSet featureSet = GeoJsonFeatureSet.CsvToPointGeoJson(fileName, false);
+            GeoJsonFeatureSet featureSet = await GeoJsonFeatureSet.CsvToPointGeoJsonAsync(fileName, false);
 
             if (featureSet.Features.IsNullOrEmpty())
                 return;
@@ -3837,7 +3825,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 return;
             }
 
-            GeoJsonFeatureSet featureSet = GeoJsonFeatureSet.TsvToPointGeoJson(fileName, false);
+            GeoJsonFeatureSet featureSet = await GeoJsonFeatureSet.TsvToPointGeoJsonAsync(fileName, false);
 
             if (featureSet.Features.IsNullOrEmpty())
                 return;
@@ -3893,7 +3881,7 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         try
         {
-            var dataSource = OrdinaryJsonListSource.CreateFromFile<Feature<Point>>(geoJsonFeatureSetFileName, f => f);
+            var dataSource = await JsonListDataSource.CreateFromFileAsync<Feature<Point>>(geoJsonFeatureSetFileName, f => f);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(geoJsonFeatureSetFileName), dataSource,
                 [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
@@ -4142,7 +4130,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_addWgs84WorldfileCommand == null)
             {
-                _addWgs84WorldfileCommand = new RelayCommand(async param => { await AddWorldfile(param); });
+                _addWgs84WorldfileCommand = new RelayCommand(async param => { await AddWgs84Worldfile(param); });
             }
             return _addWgs84WorldfileCommand;
         }
@@ -4741,7 +4729,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
                         var dataSource = ShapefileDataSourceFactory.Create(fileName, new WebMercator());
 
-                        var geometries = dataSource.GetAsFeatureSet()?.Features;
+                        var featureSet = await dataSource.GetAsFeatureSetAsync();
+                        var geometries = featureSet?.Features;
 
                         if (geometries.IsNullOrEmpty())
                             return;

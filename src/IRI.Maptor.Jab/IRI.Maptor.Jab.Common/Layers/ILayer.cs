@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -85,4 +85,15 @@ public interface ILayer
     bool CanRenderLayer(double mapScale);
 
     //bool CanRenderLabels(double mapScale);
+
+    // Data-source / layer status flags used for UI feedback (TOC, legend, etc.)
+    bool IsBusy { get; }
+
+    bool IsLoaded { get; }
+
+    bool HasPendingChanges { get; }
+
+    bool IsClientFiltered { get; }
+
+    bool HasError { get; }
 }

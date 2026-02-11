@@ -1,6 +1,7 @@
-﻿using Npgsql;
+using Npgsql;
 using System.Globalization;
 using System.Data;
+using System.Threading.Tasks;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -261,7 +262,12 @@ public class PostGisDataSource : VectorDataSource/*<Feature<Point>>*/
     //    throw new NotImplementedException();
     //}
 
-    public override FeatureSet<Point> GetAsFeatureSet(Geometry<Point>? geometry)
+    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox)
     {
         throw new NotImplementedException();
     }
@@ -286,12 +292,7 @@ public class PostGisDataSource : VectorDataSource/*<Feature<Point>>*/
     //    throw new NotImplementedException();
     //}
 
-    public override FeatureSet<Point> Search(string searchText)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override FeatureSet<Point> GetAsFeatureSet(BoundingBox boundingBox)
+    public override Task<FeatureSet<Point>> SearchAsync(string searchText)
     {
         throw new NotImplementedException();
     }

@@ -1,7 +1,8 @@
-﻿using IRI.Maptor.Sta.Common.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Sta.Common.Helpers;
 
@@ -66,6 +67,25 @@ public static class IOHelper
         }
 
         var lines = File.ReadAllLines(fileName);
+
+        var result = new List<string[]>();
+
+        foreach (var line in lines)
+        {
+            result.Add(line.Split(delimited));
+        }
+
+        return result;
+    }
+
+    public static async Task<List<string[]>> ReadAllDelimitedFileAsync(string fileName, params char[] delimited)
+    {
+        if (!File.Exists(fileName))
+        {
+            return new List<string[]>();
+        }
+
+        var lines = await File.ReadAllLinesAsync(fileName);
 
         var result = new List<string[]>();
 

@@ -9,23 +9,22 @@ using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.DataSources;
 
 namespace IRI.Maptor.Sta.Persistence.RasterDataSources;
 
-public class ZippedImagePyramidDataSource : IRasterDataSource
+public class ZippedImagePyramidDataSource : RasterDataSource
 {
     public const string _extentFileName = "extent.json";
 
-    private BoundingBox _webMercatorExtent;
-    public BoundingBox WebMercatorExtent
-    {
-        get => _webMercatorExtent;
-        private set => _webMercatorExtent = value;
-    }
+    //private BoundingBox _webMercatorExtent;
+    //public BoundingBox WebMercatorExtent
+    //{
+    //    get => _webMercatorExtent;
+    //    private set => _webMercatorExtent = value;
+    //}
 
-    public int Srid => SridHelper.WebMercator;
+    //public int Srid => SridHelper.WebMercator;
 
     System.IO.Compression.ZipArchive _archive;
 

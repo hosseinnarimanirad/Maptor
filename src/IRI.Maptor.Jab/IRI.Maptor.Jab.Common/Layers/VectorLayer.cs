@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
@@ -30,7 +30,24 @@ public class VectorLayer : SymbolizableLayer
 {
     #region Properties, Fields
 
-    public IVectorDataSource DataSource { get; protected set; }
+    //public IVectorDataSource DataSource { get; protected set; }
+
+    private IVectorDataSource _dataSource;
+
+    public IVectorDataSource DataSource
+    {
+        get => _dataSource;
+        protected set
+        {
+            UnsubscribeFromDataSourceStatusEvents(_dataSource);
+ 
+            _dataSource = value;
+
+            UnsubscribeFromDataSourceStatusEvents(value);
+            SubscribeToDataSourceStatusEvents(value);
+        }
+    }
+
 
     protected LayerType _type;
     public override LayerType Type
@@ -174,6 +191,10 @@ public class VectorLayer : SymbolizableLayer
         }
 
         this.VisibleRange = (visibleRange == null) ? ScaleInterval.All : visibleRange;
+
+        // Initialize and bind status flags from data source to layer.
+        SyncStatusFromDataSource();
+        //SubscribeToDataSourceStatusEvents(DataSource);
     }
 
     #endregion
@@ -315,19 +336,70 @@ public class VectorLayer : SymbolizableLayer
 
     #endregion
 
+    #region Data source status bindings
+
+    private void SyncStatusFromDataSource()
+    {
+        if (DataSource == null)
+            return;
+
+        IsBusy = DataSource.IsBusy;
+        IsLoaded = DataSource.IsLoaded;
+        HasPendingChanges = DataSource.HasPendingChanges;
+        IsClientFiltered = DataSource.IsClientFiltered;
+        HasError = DataSource.HasError;
+    }
+
+
+    //private void UnsubscribeToDataSourceStatusEvents(IVectorDataSource dataSource)
+    //{
+    //    if (dataSource == null)
+    //        return;
+
+    //    dataSource.IsBusyChanged -= DataSource_IsBusyChanged;
+    //    dataSource.IsLoadedChanged -= DataSource_IsLoadedChanged;
+    //    dataSource.HasPendingChangesChanged -= DataSource_HasPendingChangesChanged;
+    //    dataSource.IsClientFilteredChanged -= DataSource_IsClientFilteredChanged;
+    //    dataSource.HasErrorChanged -= DataSource_HasErrorChanged;
+    //}
+
+    //private void SubscribeToDataSourceStatusEvents(IVectorDataSource dataSource)
+    //{
+    //    if (dataSource == null)
+    //        return;
+
+    //    dataSource.IsBusyChanged += DataSource_IsBusyChanged;
+    //    dataSource.IsLoadedChanged += DataSource_IsLoadedChanged;
+    //    dataSource.HasPendingChangesChanged += DataSource_HasPendingChangesChanged;
+    //    dataSource.IsClientFilteredChanged += DataSource_IsClientFilteredChanged;
+    //    dataSource.HasErrorChanged += DataSource_HasErrorChanged;
+    //}
+
+    //private void DataSource_IsBusyChanged(object? sender, bool e) => IsBusy = e;
+
+    //private void DataSource_IsLoadedChanged(object? sender, bool e) => IsLoaded = e;
+
+    //private void DataSource_HasPendingChangesChanged(object? sender, bool e) => HasPendingChanges = e;
+
+    //private void DataSource_IsClientFilteredChanged(object? sender, bool e) => IsClientFiltered = e;
+
+    //private void DataSource_HasErrorChanged(object? sender, bool e) => HasError = e;
+
+    #endregion
+
 
     #region Vector Export Methods
 
-    public void ExportAsShapefile(string shpFileName)
+    public async Task ExportAsShapefileAsync(string shpFileName)
     {
-        var features = this.DataSource.GetAsFeatureSet();
+        var features = await this.DataSource.GetAsFeatureSetAsync();
 
         features.SaveAsShapefile(shpFileName, System.Text.Encoding.UTF8, null, true);
     }
 
-    public void ExportAsGeoJson(string geoJsonFileName, bool isLongitudeFirst)
+    public async Task ExportAsGeoJsonAsync(string geoJsonFileName, bool isLongitudeFirst)
     {
-        var features = this.DataSource.GetAsFeatureSet();
+        var features = await this.DataSource.GetAsFeatureSetAsync();
 
         features.SaveAsGeoJson(geoJsonFileName, isLongitudeFirst);
     }
@@ -337,11 +409,16 @@ public class VectorLayer : SymbolizableLayer
 
     #region GetGeometry & GetFeature Methods
 
-    public FeatureSet<Point>? GetFeatures() => GetFeatures(null);
+    public Task<FeatureSet<Point>?> GetFeaturesAsync() => GetFeaturesAsync(null);
+
+    public async Task<FeatureSet<Point>?> GetFeaturesAsync(Geometry<Point>? geometry)
+    {
+        if (DataSource == null)
+            return null;
+        return await DataSource.GetAsFeatureSetAsync(geometry);
+    }
 
     public List<Field>? GetFields() => DataSource?.Fields;
-
-    public FeatureSet<Point>? GetFeatures(Geometry<Point>? geometry) => DataSource.GetAsFeatureSet(geometry);
 
     #endregion
 
