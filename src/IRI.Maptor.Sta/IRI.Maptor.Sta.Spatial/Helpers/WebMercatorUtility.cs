@@ -34,7 +34,7 @@ public static class WebMercatorUtility
     static double _firstEccentricity = 0;
 
     static WebMercatorUtility()
-    {
+    { 
         MaxAllowableLatitude = 85.05112877822864;
         //MaxAllowableLatitude = 85.0;
 
@@ -380,7 +380,7 @@ public static class WebMercatorUtility
     {
         var tempLongitude = geocentricLongitude % 360;
 
-        if (tempLongitude > 180)
+        if (tempLongitude >= 180)
         {
             tempLongitude -= 180;
         }
