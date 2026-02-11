@@ -197,46 +197,8 @@ public partial class MapViewer : NotifiableUserControl
     }
 
 
-    //private int _minGoogleZoomLevel = 1;
-
-    //public int MinGoogleZoomLevel
-    //{
-    //    get { return _minGoogleZoomLevel; }
-    //    set
-    //    {
-    //        if (value > MaxGoogleZoomLevel)
-    //            return;
-
-    //        _minGoogleZoomLevel = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
-
-    //private int _maxGoogleZoomLevel = 22;
-
-    //public int MaxGoogleZoomLevel
-    //{
-    //    get { return _maxGoogleZoomLevel; }
-    //    set
-    //    {
-    //        if (value < MinGoogleZoomLevel)
-    //            return;
-
-    //        _maxGoogleZoomLevel = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
-
-    //public bool IsGoogleZoomLevelsEnabled
-    //{
-    //    get; set;
-    //}
-
-
     public UIElementCollection Elements { get { return mapView.Children; } }
 
-
-    //public bool UseDefaultCursorForMapAction { get; set; } = true;
 
     public Cursor PanCursor { get; set; } = Cursors.Hand;
     public Cursor ZoomInCursor { get; set; } = Cursors.Arrow;
@@ -261,40 +223,12 @@ public partial class MapViewer : NotifiableUserControl
             _currentMouseAction = value;
             RaisePropertyChanged();
 
-            //if (UseDefaultCursorForMapAction)
-            //{
-            //switch (value)
-            //{
-            //    case MapAction.Pan:
-            //        this.SetCursor(PanCursor);
-            //        break;
-            //    case MapAction.ZoomIn:
-            //        this.SetCursor(ZoomInCursor);
-            //        break;
-            //    case MapAction.ZoomOut:
-            //        this.SetCursor(ZoomOutCursor);
-            //        break;
-            //    case MapAction.ZoomInRectangle:
-            //        this.SetCursor(ZoomInRectangleCursor);
-            //        break;
-            //    case MapAction.ZoomOutRectangle:
-            //        this.SetCursor(ZoomOutRectangleCursor);
-            //        break;
-            //    case MapAction.None:
-            //        this.SetCursor(Cursors.AppStarting);
-            //        break;
-            //    default:
-            //        break;
-            //}
-            //}
-
             this.OnMapActionChanged?.Invoke(null, new MapActionEventArgs(value));
         }
     }
 
 
     private MapStatus _status;
-
     public MapStatus Status
     {
         get { return _status; }
@@ -463,8 +397,6 @@ public partial class MapViewer : NotifiableUserControl
         {
             this._mapScale = this.ToMapScale(this.ScreenScale);
 
-            //Debug.WriteLine($"OnZoomChanged {1.0 / _mapScale}");
-
             RaisePropertyChanged(nameof(MapScale));
 
             RaisePropertyChanged(nameof(CurrentZoomLevel));
@@ -481,7 +413,6 @@ public partial class MapViewer : NotifiableUserControl
     #endregion
 
     public async Task Register(MapViewModelBase presenter,
-                                //sb.BoundingBox? initialView = null,
                                 List<IrProvince93>? provinces = null)
     {
         if (presenter == null)
@@ -532,23 +463,6 @@ public partial class MapViewer : NotifiableUserControl
             else
                 this.DisableZoomOnDoubleClick();
         };
-
-        //presenter.ZoomSettings.Initialize();
-
-        //presenter.ZoomSettings.FireIsGoogleZoomLevelsEnabledChanged = (e) =>
-        //{
-        //    this.IsGoogleZoomLevelsEnabled = e;
-        //};
-
-        //presenter.ZoomSettings.FireMinGoogleZoomLevelChanged = (e) =>
-        //{
-        //    this.MinGoogleZoomLevel = e;
-        //};
-
-        //presenter.ZoomSettings.FireMaxGoogleZoomLevelChanged = (e) =>
-        //{
-        //    this.MaxGoogleZoomLevel = e;
-        //};
 
         presenter.Layers = this.Layers;
 
@@ -643,13 +557,10 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestRemoveLayer = this.RemoveLayer;
 
-        //presenter.RequestRemoveLayerByName = this.RemoveLayer;
-
         presenter.RequestAddLayer = (l) =>
         {
             this.SetLayer(l);
 
-            //return this.AddNonTiledLayer(l);
             this.AddLayer(l);
         };
 
@@ -833,29 +744,6 @@ public partial class MapViewer : NotifiableUserControl
         this._layerManager.Add(new RasterLayer(dataSource, layerName, scaleInterval, isBaseMap, isPyramid, Visibility.Visible, opacity, rendering), 1.0 / _mapScale);
     }
 
-    //public void SetTileService(ScaleInterval scaleInterval, MapProviderType provider, TileType type, bool isCachEnabled = false, string cacheDirectory = null, bool isOffline = false, Func<TileInfo, string> getFileName = null)
-    //{
-    //    IMapProvider mapProvider;
-
-    //    if (provider == MapProviderType.Custom)
-    //    {
-    //        mapProvider = MapProviderFactory.CreateKnownProvider(provider, type);
-    //    }
-    //    else
-    //    {
-    //        mapProvider = null;
-    //    }
-
-    //    var layer = new TileServiceLayer(mapProvider, getFileName) { VisibleRange = scaleInterval };
-
-    //    SetTileService(layer, isCachEnabled, cacheDirectory, isOffline, getFileName);
-    //}
-
-    //public void SetTileService(MapProviderType provider, TileType type, bool isCachEnabled = false, string cacheDirectory = null, bool isOffline = false, Func<TileInfo, string> getFileName = null)
-    //{
-    //    SetTileService(ScaleInterval.All, provider, type, isCachEnabled, cacheDirectory, isOffline, getFileName);
-    //}
-
     public void SetTileService(TileMapProvider mapProvider, bool isCachEnabled = false, string? cacheDirectory = null, bool isOffline = false, Func<TileInfo, string>? getFileName = null, double opacity = 1)
     {
         if (mapProvider is null)
@@ -871,21 +759,7 @@ public partial class MapViewer : NotifiableUserControl
         layer.IsOffline = isOffline;
 
         this._layerManager.Add(layer, 1.0 / _mapScale);
-
-        //SetTileService(layer, isCachEnabled, cacheDirectory, isOffline, getFileName);
     }
-
-    //private void SetTileService(TileServiceLayer layer, bool isCachEnabled = false, string cacheDirectory = null, bool isOffline = false, Func<TileInfo, string> getFileName = null)
-    //{
-    //    if (isCachEnabled && DirectoryHelper.TryCreateDirectory(cacheDirectory))
-    //    {
-    //        layer.EnableCaching(cacheDirectory);
-    //    }
-
-    //    layer.IsOffline = isOffline;
-
-    //    this._layerManager.Add(layer);
-    //}
 
     public void UnSetTileService(string providerFullName)
     {
@@ -896,46 +770,6 @@ public partial class MapViewer : NotifiableUserControl
     {
         this._layerManager.Remove(layer => layer.Type == LayerType.BaseMap && layer is TileServiceLayer && (layer as TileServiceLayer).GroupId == groupId, forceRemove: true);
     }
-
-    //public void SetVectorLayer(
-    //    string layerName,
-    //    ScaleInterval scaleInterval,
-    //    IVectorDataSource dataSource,
-    //    VisualParameters visualElements,
-    //    RenderMode renderMode = RenderMode.Default,
-    //    Func<Geometry<sb.Point>, sb.Point>? positionFunc = null,
-    //    int fontSize = 0,
-    //    Geometry? pointSymbol = null)
-    //{
-    //    //LabelParameters parameters = new LabelParameters(null, fontSize, new SolidColorBrush(Colors.Black), new FontFamily("irannastaliq"), positionFunc);
-    //    var foreground = new SolidColorBrush(Colors.Black);
-
-    //    VisualParameters labelParameters = VisualParameters.CreateLabel(ScaleInterval.All, fontSize, foreground, new FontFamily(), positionFunc ?? (g => g.GetCentroidPlusPoint()), isRtl: false);
-
-    //    var layer = new VectorLayer(layerName, dataSource, visualElements, LayerType.VectorLayer, renderMode, RasterizationMethod.DrawingVisual, scaleInterval, labelParameters );
-
-    //    this._layerManager.Add(layer, 1.0 / _mapScale);
-    //}
-
-    //public void SetVectorLayer(
-    //        ScaleInterval scaleInterval, 
-    //        IVectorDataSource dataSource, 
-    //        string layerName, 
-    //        VisualParameters visualElements,
-    //        //LabelParameters parameters, 
-    //        RenderMode rendering = RenderMode.Default, 
-    //        Geometry pointSymbol = null, 
-    //        RasterizationMethod toRasterApproach = RasterizationMethod.GdiPlus)
-    //{
-    //    if (toRasterApproach == RasterizationMethod.StreamGeometry && rendering == RenderMode.Tiled)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    var layer = new VectorLayer(layerName, dataSource, visualElements, LayerType.VectorLayer, rendering, toRasterApproach, scaleInterval, new SimplePointSymbolizer() { GeometrySymbol = pointSymbol }, parameters);
-
-    //    this._layerManager.Add(layer, 1.0 / _mapScale);
-    //}
 
     public void SetLayer(ILayer layer)
     {
@@ -957,11 +791,6 @@ public partial class MapViewer : NotifiableUserControl
             }
         }
     }
-
-    //public void RemoveLayer(string layerName)
-    //{
-    //    this._layerManager.Remove(layerName, true);
-    //}
 
     public void RemoveLayer(ILayer layer)
     {
@@ -1110,21 +939,6 @@ public partial class MapViewer : NotifiableUserControl
                   Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null)))
               );
         }
-        //else if (layer is FeatureLayer)
-        //{
-        //    Action action = () =>
-        //    {
-        //        AddFeatureLayer(layer as FeatureLayer);
-        //    };
-
-        //    var extent = this.CurrentExtent;
-
-        //    Task.Run(() =>
-        //        this.jobs.Add(new Job(
-        //            new LayerTag(mapScale) { LayerType = LayerType.FeatureLayer, BoundingBox = extent },
-        //            Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null)))
-        //         );
-        //}
         else if (layer.Type == LayerType.Complex /*|| layer.Type == LayerType.MoveableItem*/)
         {
             SpecialPointLayer? specialPointLayer = null;
@@ -1224,7 +1038,10 @@ public partial class MapViewer : NotifiableUserControl
         var mapScale = this.MapScale;
 
         //consider if layer was Labeled
-        var lines = gridLayer.GetLines(extent);
+        var lines = await gridLayer.GetLinesAsync(extent);
+
+        if (lines.IsNullOrEmpty())
+            return;
 
         VectorLayer layer = new VectorLayer(
             "temp grid",
@@ -1236,63 +1053,6 @@ public partial class MapViewer : NotifiableUserControl
 
         await this.AddNonTiledLayer(layer);
     }
-
-    //private void AddFeatureLayer(FeatureLayer featureLayer)
-    //{
-    //    try
-    //    {
-    //        var extent = this.CurrentExtent;
-
-    //        var mapScale = this.MapScale;
-
-    //        //consider if layer was Labeled
-    //        var features = featureLayer.DataSource.GetAsFeatureSet(extent.AsGeometry<sb.Point>(SridHelper.WebMercator));
-
-    //        if (this.MapScale != mapScale || this.CurrentExtent != extent)
-    //            return;
-
-    //        var area = ParseToRectangleGeometry(extent);
-
-    //        Path? path;
-
-
-    //        Func<sb.Point, sb.Point> transform = p => this.MapToScreen(p.AsWpfPoint()).AsPoint();
-
-    //        var transferedFeatures = features.Features.Select(f => new Feature<sb.Point>(f.TheGeometry.Transform(transform, f.TheGeometry.Srid), f.Attributes)).ToList();
-
-    //        switch (featureLayer.ToRasterTechnique)
-    //        {
-    //            case RasterizationApproach.GdiPlus:
-    //                path = featureLayer.AsBitmapUsingGdiPlus(transferedFeatures,
-    //                                                            null,
-    //                                                            mapScale,
-    //                                                            //extent,
-    //                                                            this.mapView.ActualWidth,
-    //                                                            this.mapView.ActualHeight,
-    //                                                            //this.MapToScreen,
-    //                                                            area);
-    //                break;
-
-    //            case RasterizationApproach.None:
-    //            default:
-    //                throw new NotImplementedException();
-    //        }
-
-    //        if (path == null || this.MapScale != mapScale || this.CurrentExtent != extent)
-    //            return;
-
-    //        if (featureLayer.IsValid)
-    //        {
-    //            this.mapView.Children.Add(path);
-
-    //            Canvas.SetZIndex(path, featureLayer.ZIndex);
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw;
-    //    }
-    //}
 
     #endregion
 
@@ -1361,7 +1121,6 @@ public partial class MapViewer : NotifiableUserControl
 
         layerTile.IsProcessing = true;
 
-        //var geoLabelPair = await layer.GetGeometryLabelPairForDisplayAsync(mapScale, tile.WebMercatorExtent);
         var feature = await layer.DataSource.GetAsFeatureSetAsync(mapScale, tile.WebMercatorExtent);
 
         if (feature is null || feature.Features.IsNullOrEmpty())
@@ -1379,15 +1138,8 @@ public partial class MapViewer : NotifiableUserControl
 
         var area = ParseToRectangleGeometry(tile.WebMercatorExtent);
 
-
-
-        //ImageBrush? imageBrush;
-
-        //var shiftX = tile.WebMercatorExtent.Center.X - totalExtent.TopLeft.X - tile.WebMercatorExtent.Width / 2.0;
-        //var shiftY = tile.WebMercatorExtent.Center.Y - totalExtent.TopLeft.Y + tile.WebMercatorExtent.Height / 2.0;
-
-        var shiftX = tile.WebMercatorExtent.TopLeft.X - totalExtent.TopLeft.X /*- tile.WebMercatorExtent.Width / 2.0*/;
-        var shiftY = tile.WebMercatorExtent.TopLeft.Y - totalExtent.TopLeft.Y /*+ tile.WebMercatorExtent.Height / 2.0*/;
+        var shiftX = tile.WebMercatorExtent.TopLeft.X - totalExtent.TopLeft.X;
+        var shiftY = tile.WebMercatorExtent.TopLeft.Y - totalExtent.TopLeft.Y;
 
         Func<sb.Point, sb.Point> transform = p => _vt.Transform(new Point(p.X - shiftX, p.Y - shiftY)).AsPoint();
 
@@ -1397,7 +1149,7 @@ public partial class MapViewer : NotifiableUserControl
 
         var imageBrush = renderingStrategy.Render(features, mapScale, tileScreenWidth, tileScreenHeight);
 
-        if (tile.ZoomLevel != this.CurrentZoomLevel)//|| MapScale != mapScale)
+        if (tile.ZoomLevel != this.CurrentZoomLevel)
         {
             Debug.Print($"MapViewer; {DateTime.Now.ToLongTimeString()}; AddTiledLayerAsync Layer escaped! ZoomLevel Conflict 3 {layer.LayerName} - {tile.ToShortString()} expected zoomLevel:{this.CurrentZoomLevel}");
             return;
@@ -1457,8 +1209,6 @@ public partial class MapViewer : NotifiableUserControl
             if (imageBrush is null || this.MapScale != mapScale || this.CurrentExtent != extent)
                 return;
 
-            //if (layer.IsValid)
-            //{
             Path path = new Path()
             {
                 Data = area,
@@ -1471,9 +1221,6 @@ public partial class MapViewer : NotifiableUserControl
             this.mapView.Children.Add(path);
 
             Canvas.SetZIndex(path, layer.ZIndex);
-            //}
-
-            //Debug.WriteLine($"MapViewer; {DateTime.Now.ToLongTimeString()}; AddNonTiledLayer finished LayerName: {layer.LayerName}");
         }
         catch (Exception ex)
         {
@@ -1517,9 +1264,7 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     private void AddEditableFeatureLayer(EditableFeatureLayer layer)
-    {
-        //Debug.WriteLine($"MapViewer; {DateTime.Now.ToShortTimeString()}; AddEditableFeatureLayer {layer.LayerName} called");
-
+    { 
         var path = layer.GetPath(this.viewTransform);
 
         //path.RenderTransform = this.viewTransform;
@@ -1540,9 +1285,7 @@ public partial class MapViewer : NotifiableUserControl
             AddComplexLayer(layer.GetEdgeLengthes(), true);
         }
 
-        AddComplexLayer(layer.GetPrimaryVerticesLabels(), true);
-
-        //Debug.WriteLine($"MapViewer; {DateTime.Now.ToShortTimeString()}; AddEditableFeatureLayer {layer.LayerName} finished");
+        AddComplexLayer(layer.GetPrimaryVerticesLabels(), true); 
     }
 
 
@@ -1572,18 +1315,12 @@ public partial class MapViewer : NotifiableUserControl
                 return;
 
             if (tile.ZoomLevel != CurrentZoomLevel || !layer.HasTheSameMapProvider(_presenter.SelectedMapProvider))
-                //(_presenter != null && !layer.HasTheSameMapProvider(_presenter.SelectedMapProvider)))
                 return;
-
-            //System.Diagnostics.Debug.WriteLine($"layer.GetTileAsync before {tile.ToShortString()} {DateTime.Now.ToLongTimeString()}");
 
             // 1401.11.07
             var geoImage = await layer.GetTileAsync(tile, _presenter.HttpClient);
 
-            //System.Diagnostics.Debug.WriteLine($"layer.GetTileAsync after  {tile.ToShortString()} {DateTime.Now.ToLongTimeString()}");
-
             if (tile.ZoomLevel != CurrentZoomLevel || !layer.HasTheSameMapProvider(this._presenter.SelectedMapProvider))
-                //(this._presenter != null && !layer.HasTheSameMapProvider(this._presenter.SelectedMapProvider)))
                 return;
 
             var webMercatorExtent = geoImage.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
@@ -1686,11 +1423,7 @@ public partial class MapViewer : NotifiableUserControl
                     else if (item is TileServiceLayer tileServiceLayer)
                     {
                         await AddTileServiceLayerAsync(tileServiceLayer, tile);
-                    }
-                    //else if (item is FeatureLayer)
-                    //{
-
-                    //}
+                    } 
                     else
                     {
                         //return;
@@ -1735,33 +1468,22 @@ public partial class MapViewer : NotifiableUserControl
     //POTENTIALLY ERROR PROUNE; Captured Variables
     //IMPROVEMENT; use vector approach for light vector layers insted of "AddLayerAsDrawing"
     public void Refresh(bool isNewExtent)
-    {
-        //UpdateTileInfos();
-        //Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh Called");
-
+    { 
         if (this.CurrentTileInfos == null)
             return;
 
         StopUnnecessaryJobs();
-
-        //Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-StopUnnecessaryJobs finished");
-
+         
         ClearNonTiled();
-
-        //Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-ClearNonTiled finished");
-
+         
         var mapScale = this.MapScale;
 
         IEnumerable<ILayer> infos = this._layerManager.UpdateAndGetLayers(1.0 / mapScale, RenderMode.Default);
-
-        //Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-UpdateAndGetLayers finished");
-
+         
         if (infos == null) return;
 
         foreach (ILayer item in infos)
-        {
-            //Debug.WriteLine($"MapViewer {DateTime.Now.ToLongTimeString()}; Refresh-Proccessing {item.LayerName}");
-
+        { 
             if (!item.CanRenderLayer(mapScale))
             {
                 item.Element = null;
@@ -1782,12 +1504,7 @@ public partial class MapViewer : NotifiableUserControl
         //ResetViewTransformForPoints();
         this.panTransformForPoints.X = 0;
         this.panTransformForPoints.Y = 0;
-
-        //Dispatcher.BeginInvoke(new Action(() =>
-        //{
-        //    ClearOld();
-
-        //}), System.Windows.Threading.DispatcherPriority.ContextIdle, null);
+         
         this.OnExtentChanged?.Invoke(null, isNewExtent);
     }
 
@@ -1916,7 +1633,6 @@ public partial class MapViewer : NotifiableUserControl
             element.MouseLeftButtonDown -= Element_MouseDownForMoveableItem;
             element.MouseLeftButtonDown += Element_MouseDownForMoveableItem;
         }
-        //else if (specialPointLayer.Type.HasFlag(LayerType.Complex) || specialPointLayer.Type.HasFlag(LayerType.EditableItem))
         else if (specialPointLayer.Type == LayerType.Complex || specialPointLayer.Type == LayerType.EditableItem)
         {
             element.Tag = new LayerTag(this.MapScale)
@@ -1945,7 +1661,6 @@ public partial class MapViewer : NotifiableUserControl
 
             if (specialPointLayer.AlwaysTop)
             {
-                //Canvas.SetZIndex(element, int.MaxValue);
                 Canvas.SetZIndex(element, specialPointLayer.ZIndex);
             }
 
@@ -2007,14 +1722,11 @@ public partial class MapViewer : NotifiableUserControl
 
         var layer = ((this.currentMoveableItem.Tag as LayerTag).Layer as SpecialPointLayer);
 
-        layer.SelectLocatable(this.currentMoveableItem);
-        //this.startMapPointLocation = ScreenToMap(this.prevMouseLocation);
+        layer.SelectLocatable(this.currentMoveableItem); 
     }
 
     public void Element_MouseMoveForMoveableItem(object sender, MouseEventArgs e)
-    {
-        //var translateTransform = ((TransformGroup)(currentMoveableItem.RenderTransform)).Children[2] as TranslateTransform;
-
+    { 
         Point currentMouseLocation = (e.GetPosition(this.mapView));
 
         var currentMapLocation = ScreenToMap(currentMouseLocation);
@@ -2035,12 +1747,7 @@ public partial class MapViewer : NotifiableUserControl
                 this.CurrentEditingPoint = new Point(locateable.X, locateable.Y);
             }
         }
-
-
-        //translateTransform.X += currentMouseLocation.X - this.prevMouseLocation.X;
-
-        //translateTransform.Y += currentMouseLocation.Y - this.prevMouseLocation.Y;
-
+         
         this.prevMouseLocation = currentMouseLocation;
 
     }
@@ -2136,6 +1843,11 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.MouseDown -= MapView_MouseDownForPanWhileSelectThePoint;
 
         this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
+
+
+        this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
+        this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
+        this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
     }
 
     public void ReleaseEvents()
@@ -2682,49 +2394,12 @@ public partial class MapViewer : NotifiableUserControl
     public async Task DrawGeometriesAsync(string layerName, List<Geometry<sb.Point>> geometries, VisualParameters visualParams)
     {
         await DrawGeometriesAsync(layerName, LayerType.Drawing, geometries, visualParams);
-
-        //if (geometries.IsNullOrEmpty())
-        //    return;
-
-        //var source = new MemoryDataSource(geometries);
-
-        //var layer = new VectorLayer(
-        //    layerName,
-        //    source,
-        //    [new SimpleSymbolizer(visualParams)],
-        //    LayerType.Drawing,
-        //    RenderMode.Default,
-        //    RasterizationMethod.DrawingVisual,
-        //    ScaleInterval.All);
-
-        //this._layerManager.Add(layer, 1.0 / _mapScale);
-
-        ////AddTiledLayer(layer);
-        //await AddNonTiledLayer(layer);
+         
     }
 
     public async Task HighlightGeometries(string layerName, List<Geometry<sb.Point>> geometries, VisualParameters visualParams)
     {
-        await DrawGeometriesAsync(layerName, LayerType.Highlight, geometries, visualParams);
-
-        //if (geometries.IsNullOrEmpty())
-        //    return;
-
-        //var source = new MemoryDataSource(geometries);
-
-        //var layer = new VectorLayer(
-        //    layerName,
-        //    source,
-        //    [new SimpleSymbolizer(visualParams)],
-        //    LayerType.Highlight,
-        //    RenderMode.Default,
-        //    RasterizationMethod.DrawingVisual,
-        //    ScaleInterval.All);
-
-        //this._layerManager.Add(layer, 1.0 / _mapScale);
-
-        ////AddTiledLayer(layer);
-        //await AddNonTiledLayer(layer);
+        await DrawGeometriesAsync(layerName, LayerType.Highlight, geometries, visualParams);         
     }
 
     public async Task SelectGeometriesAsync(string layerName, List<Geometry<sb.Point>> geometries, VisualParameters visualParams)
@@ -2732,28 +2407,6 @@ public partial class MapViewer : NotifiableUserControl
         ClearLayer(LayerType.Selection, true);
 
         await DrawGeometriesAsync(layerName, LayerType.Selection, geometries, visualParams);
-
-        //if (geometries.IsNullOrEmpty())
-        //    return;
-
-        //layerName = string.IsNullOrWhiteSpace(layerName) ? Guid.NewGuid().ToString() : layerName;
-
-        //var layer = new VectorLayer(
-        //    layerName,
-        //    new MemoryDataSource(geometries),
-        //    [new SimpleSymbolizer(visualParams)],
-        //    LayerType.Selection,
-        //    RenderMode.Default,
-        //    RasterizationMethod.DrawingVisual,
-        //    ScaleInterval.All)
-        ////new SimplePointSymbolizer() { GeometrySymbol = pointSymbol })
-        //{
-        //    ZIndex = int.MaxValue
-        //};
-
-        //this._layerManager.Add(layer, 1.0 / _mapScale);
-
-        //await AddNonTiledLayer(layer);
     }
 
     #endregion
@@ -2870,17 +2523,13 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     private void mapView_MouseUpForPan(object sender, MouseButtonEventArgs e)
-    {
-        //Debug.WriteLine(new StackTrace().GetFrame(0).GetMethod().Name, _eventEntered);
-
+    { 
         this.MouseMove -= mapView_MouseMoveForPan;
 
         this.MouseUp -= mapView_MouseUpForPan;
 
         this.IsPanning = false;
-
-        //Abort();
-
+         
         this.mapView.ReleaseMouseCapture();
 
         Point currentMouseLocation = e.GetPosition(this.mapView);
@@ -2890,9 +2539,7 @@ public partial class MapViewer : NotifiableUserControl
         double yOffset = currentMouseLocation.Y - this.startPointLocationForPan.Y;
 
         if (Math.Abs(xOffset) > 2 || Math.Abs(yOffset) > 2)
-        {
-            //Debug.WriteLine(new StackTrace().GetFrame(0).GetMethod().Name, _refreshCalled);
-
+        { 
             Refresh(isNewExtent: true);
         }
         else
@@ -2927,9 +2574,7 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     private void ExtentManager_OnTilesRemoved(object sender, CustomEventArgs<List<TileInfo>> e)
-    {
-        //Debug.Print($"ExtentManager_OnTilesRemoved: {string.Join(" # ", e.Arg.Select(i => i.ToShortString()))}");
-
+    { 
         lock (locker)
         {
             for (int i = jobs.Count - 1; i >= 0; i--)
@@ -2942,18 +2587,13 @@ public partial class MapViewer : NotifiableUserControl
 
                     continue;
                 }
-
-                //if (currentJob != null && currentJob.Operation != null)
-                //{
+                 
                 if (e.Arg.Contains(currentJob.Tag.Tile) && !this.CurrentTileInfos.Contains(currentJob.Tag.Tile))
-                {
-                    //Debug.Print($"Job Stopped [@TileRemoved] {currentJob.Tag.Tile?.ToShortString()}");
-
+                { 
                     currentJob.Operation.Abort();
 
                     this.jobs.Remove(currentJob);
-                }
-                //}
+                } 
             }
         }
 
@@ -2961,31 +2601,20 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     private void ExtentManager_OnTilesAdded(object sender, CustomEventArgs<List<TileInfo>> e)
-    {
-        //Debug.Print($"ExtentManager_OnTilesAdded: {string.Join(" # ", e.Arg.Select(i => i.ToShortString()))}");
-
+    { 
         // 1401.12.05
         IEnumerable<ILayer> infos = this._layerManager.UpdateAndGetLayers(1.0 / MapScale, RenderMode.Tiled).ToList();
 
         foreach (var item in e.Arg)
         {
             if (item.ZoomLevel != this.CurrentZoomLevel)
-            {
-                //Debug.Print($"Zoom Level Conflict [@ExtentManager_OnTilesAdded] {item.ToShortString()} ; expected zoom level: {this.CurrentZoomLevel}");
                 return;
-            }
-
 
             if (!CurrentTileInfos.Contains(item))
-            {
-                //Debug.Print($"Not in `CurrentTileInfos` [@ExtentManager_OnTilesAdded] {item.ToShortString()} ; expected zoom level: {this.CurrentZoomLevel}");
                 continue;
-            }
 
             RefreshTiles(infos, item, l => true);
-
         }
-
     }
 
     Path GetTileBorder(TileInfo tile, bool isNew, bool isOld, bool isDefault)
@@ -3030,6 +2659,27 @@ public partial class MapViewer : NotifiableUserControl
         return path;
     }
 
+    private void ClearTileBorder(TileInfo tile)
+    {
+        for (int i = this.mapView.Children.Count - 1; i >= 0; i--)
+        {
+            Shape temp = this.mapView.Children[i] as Shape;
+
+            if (temp != null)
+            {
+                var tag = temp.Tag as LayerTag;
+
+                if (tag != null && tag.LayerType != LayerType.BaseMap)
+                {
+                    if (tag.Tile.Equals(tile))
+                    {
+                        this.mapView.Children.RemoveAt(i);
+                    }
+                }
+            }
+        }
+    }
+
     //Consider removeing checking Tag is LayerTag, All childrens should have a LayerTag as Tag
     private List<Path> Find(TileInfo tile)
     {
@@ -3052,34 +2702,9 @@ public partial class MapViewer : NotifiableUserControl
         return result;
     }
 
-    private void ClearTileBorder(TileInfo tile)
-    {
-        for (int i = this.mapView.Children.Count - 1; i >= 0; i--)
-        {
-            Shape temp = this.mapView.Children[i] as Shape;
-
-            if (temp != null)
-            {
-                var tag = temp.Tag as LayerTag;
-
-                if (tag != null && tag.LayerType != LayerType.BaseMap)
-                {
-                    if (tag.Tile.Equals(tile))
-                    {
-                        this.mapView.Children.RemoveAt(i);
-                    }
-                }
-            }
-        }
-    }
-
     //It has animation
     public void Pan(double xOffset, double yOffset, Action callback = null)
-    {
-
-        //StopUnnecessaryJobs();
-
-        //ClearAnimatingItems();
+    { 
         ClearLayer(LayerType.AnimatingItem, false);
 
         counterValue = 4;
@@ -3134,9 +2759,7 @@ public partial class MapViewer : NotifiableUserControl
             if (callback != null)
             {
                 Dispatcher.BeginInvoke(callback, System.Windows.Threading.DispatcherPriority.Background, null);
-            }
-
-            //Debug.WriteLine(new StackTrace().GetFrame(0).GetMethod().Name, _methodEscaped);
+            } 
         }
     }
 
@@ -3226,14 +2849,9 @@ public partial class MapViewer : NotifiableUserControl
 
     private void mapView_MouseDownForZoom(object sender, MouseButtonEventArgs e)
     {
-        if (this.viewTransform == null)
-        //if (this.mapTransform == null)
-        {
+        if (this.viewTransform == null) 
             return;
-        }
-
-        //StopUnnecessaryJobs();
-
+          
         Mouse.Capture(this.mapView);
 
         this.firstZoomBound = e.GetPosition(this.mapView);
@@ -3275,9 +2893,7 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     private void mapView_MouseUpForZoom(object sender, MouseButtonEventArgs e)
-    {
-        //Debug.WriteLine(new StackTrace().GetFrame(0).GetMethod().Name, _eventEntered);
-
+    { 
         this.mapView.MouseUp -= mapView_MouseUpForZoom;
         this.mapView.MouseMove -= mapView_MouseMoveForZoom;
 
@@ -3294,8 +2910,7 @@ public partial class MapViewer : NotifiableUserControl
         // in order to let the right click options on map work
         if (e.ChangedButton != MouseButton.Left)
             return;
-
-        //ZoomToExtent(rect, true);
+         
         ZoomToExtent(boundingBox, true);
     }
 
@@ -3310,9 +2925,7 @@ public partial class MapViewer : NotifiableUserControl
     {
         Zoom(e.Delta > 0, e.GetPosition(this.mapView));
     }
-
-
-
+      
     public void Zoom(double mapScale)
     {
         this.ZoomAndCenter(mapScale, CurrentExtent.Center);
@@ -3363,10 +2976,7 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     private void Zoom(bool zoomIn, Point windowCenter)
-    {
-        //Debug.WriteLine(new StackTrace().GetFrame(0).GetMethod().Name, _eventEntered);
-        //Debug.Print($"e.Delta: {zoomIn}");
-
+    { 
         var mapCenter = ScreenToMap(windowCenter);
 
         if (_presenter.MapSettings.IsGoogleZoomLevelsEnabled)
@@ -3385,9 +2995,7 @@ public partial class MapViewer : NotifiableUserControl
             double newMapScale = ToMapScale(this.ScreenScale * delta);
 
             this.ZoomAndCenter(newMapScale, mapCenter.AsPoint());
-        }
-
-        //Debug.WriteLine(new StackTrace().GetFrame(0).GetMethod().Name, _eventLeaved);
+        } 
     }
 
     //It has animation
@@ -3412,9 +3020,7 @@ public partial class MapViewer : NotifiableUserControl
         ClearLayer(LayerType.AnimatingItem, false);
 
         ClearLayer(LayerType.Complex, false);
-
-        //ClearLayer(LayerType.MoveableItem, false);
-
+         
         ClearLayer(LayerType.EditableItem, false);
 
         counter = 0;
@@ -3456,9 +3062,7 @@ public partial class MapViewer : NotifiableUserControl
         //}
 
         if (double.IsNaN(scale))
-        {
             return;
-        }
 
         double pointScale = ToMapScale(scale) / this.MapScale;
 
@@ -3619,8 +3223,7 @@ public partial class MapViewer : NotifiableUserControl
     Point rectangleFirstScreenPoint;
 
     sb.Point rectangleFirstMapPoint;
-
-
+     
 
     private void MapView_MouseDownForPanWhileStartDrawing(object sender, MouseButtonEventArgs e)
     {
@@ -3684,9 +3287,7 @@ public partial class MapViewer : NotifiableUserControl
             this.ResetMapViewEvents();
 
             this.Refresh(isNewExtent: true);
-
-            //this.mapView.CaptureMouse();
-
+             
             this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
             this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartDrawing;
 
@@ -3764,41 +3365,7 @@ public partial class MapViewer : NotifiableUserControl
             //this.mapView.MouseMove += MapView_MouseMoveForDrawing;
         }
     }
-
-    //private void MapView_MouseDownForStartNewPart(object sender, MouseButtonEventArgs e)
-    //{
-    //    //Debug.WriteLine("MapView_MouseDownForStartNewPart");
-
-    //    if (e.ChangedButton != MouseButton.Left)
-    //        return;
-
-    //    this.prevMouseLocation = (e.GetPosition(this.mapView));
-
-    //    var webMercatorPoint = ScreenToMap(this.prevMouseLocation).AsPoint();
-
-    //    this.mapView.MouseDown -= MapView_MouseDownForStartNewPart;
-
-    //    if (this.drawMode == DrawMode.Point)
-    //    {
-    //        FinishDrawing();
-    //    }
-    //    else
-    //    {
-    //        //this.mapView.CaptureMouse();
-
-    //        this.drawingLayer.StartNewPart(webMercatorPoint);
-
-    //        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-    //        this.mapView.MouseMove += MapView_MouseMoveForPanWhileDrawing;
-
-    //        this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-    //        this.mapView.MouseDown += MapView_MouseDownForPanWhileDrawing;
-
-    //        this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-    //        this.mapView.MouseUp += MapView_MouseUpForForPanWhileDrawing;
-    //    }
-    //}
-
+     
     private void MapView_MouseDownForPanWhileStartNewPart(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton != MouseButton.Left)
@@ -3990,11 +3557,7 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     private void MapView_MouseMoveForDrawing(object sender, MouseEventArgs e)
-    {
-        //var webMercatorPoint = MapProjects.GeodeticWgs84ToWebMercator(CurrentPoint.AsPoint());
-
-        //ScreenToMap(point)
-
+    { 
         this.CurrentEditingPoint = ScreenToMap(e.GetPosition(this.mapView));
     }
 
@@ -4150,12 +3713,7 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     private void MapView_MouseUpForForPanWhileDrawing(object sender, MouseButtonEventArgs e)
-    {
-        //if (e.RightButton == MouseButtonState.Pressed || e.ChangedButton == MouseButton.Right)
-        //{
-        //    drawingCancellationToken.Cancel();
-        //}
-
+    { 
         if (e.ChangedButton != MouseButton.Left)
             return;
 
@@ -4694,9 +4252,7 @@ public partial class MapViewer : NotifiableUserControl
         {
 
             this._presenter.CurrentGeometryDetails = new GeometryDetailsViewModel(editableFeatureLayer, this._presenter.DialogService);
-
-            //this.DataContext = ViewModel;
-
+             
             var dialog = new Views.Dialogs.GeometryDetailsDialogView(/*editableFeatureLayer, this._presenter.DialogService*/)
             {
                 Owner = Window.GetWindow(this)
@@ -4725,8 +4281,7 @@ public partial class MapViewer : NotifiableUserControl
         editingCancellationToken.Token.Register(() =>
         {
             tcs.TrySetCanceled();
-
-            //this.SetCursor(Cursors.Arrow);
+             
             this.SetCursor(CursorSettings[_currentMouseAction]);
 
             this.RemoveEditableFeatureLayer(CurrentEditingLayer);
