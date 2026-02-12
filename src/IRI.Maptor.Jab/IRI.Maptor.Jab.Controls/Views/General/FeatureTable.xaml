@@ -6,14 +6,18 @@
              xmlns:local ="clr-namespace:IRI.Maptor.Jab.Controls.Common.Behaviors" 
              xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             x:Name="root">
+             x:Name="root" Background="Transparent">
     <UserControl.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
             <DataTemplate DataType="{x:Type model:FeatureTableToggleCommand}">
-                <ToggleButton VerticalAlignment="Center" Margin="2" Cursor="Hand" BorderThickness="0" Focusable="False" ToolTip="{Binding ToolTip}"
-                       IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"
-                       Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
-                    <ToggleButton.Style>
+                <ToggleButton Focusable="False" ToolTip="{Binding ToolTip}"
+                                IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"
+                                Style="{StaticResource circleToggleButtonLight}"
+                                Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
+                    <!--<ToggleButton.Style>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
                             <Setter Property="Foreground" Value="White"/>
                             <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
@@ -43,8 +47,9 @@
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
-                    </ToggleButton.Style>
-                    <Path Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton, Mode=FindAncestor}}" Width="16" Height="16" FlowDirection="LeftToRight">
+                    </ToggleButton.Style>-->
+                    <Path Stretch="Uniform" Width="18" Height="18" FlowDirection="LeftToRight" Margin="0"
+                          Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton, Mode=FindAncestor}}" >
                         <Path.Style>
                             <Style TargetType="{x:Type Path}" >
                                 <Style.Triggers>
@@ -61,20 +66,18 @@
                 </ToggleButton>
             </DataTemplate>
             <DataTemplate DataType="{x:Type model:FeatureTableCommand}">
-                <Button VerticalAlignment="Center" Margin="4" Cursor="Hand" 
-                        Background="{DynamicResource MahApps.Brushes.Accent}"
+                <Button Style="{StaticResource circleButtonLight}" 
                         Command="{Binding Command}" IsEnabled="{Binding IsEnabled}" 
                         CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor} }" 
-                        BorderThickness="0" Focusable="False" ToolTip="{Binding ToolTip}" Height="24" Width="24"
+                        ToolTip="{Binding ToolTip}"
                         Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Viewbox>
-                        <Path Data="{Binding PathMarkup}" Fill="White" Stretch="Uniform" FlowDirection="LeftToRight" Margin="0"/>
-                    </Viewbox>
+                        <Path Data="{Binding PathMarkup}" Fill="White" Stretch="Uniform" FlowDirection="LeftToRight" Margin="0"
+                              Width="18" Height="18" />
                 </Button> 
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -90,7 +93,9 @@
                     dgx:DataGridFilter.IsAutoFilterEnabled="True" SelectionUnit="FullRow" Background="Transparent"
                     local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True" RowHeight="10">  
         </DataGrid>
-        <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" LastChildFill="False">
+        <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" LastChildFill="False"
+            Visibility="{Binding ElementName=root, Path=IsMouseOver, Converter={StaticResource boolToVisibilityConverter}}">
+              
             <!--<telerik:RadDataPager DisplayMode="FirstLastPreviousNextNumeric,Text" IsTotalItemCountFixed="True"
                               Source="{Binding ElementName=grid, Path=Items}" PageSize="50" PageIndex="0" 
                               telerik:StyleManager.Theme="Office2016" BorderThickness="0" DockPanel.Dock="Right">
