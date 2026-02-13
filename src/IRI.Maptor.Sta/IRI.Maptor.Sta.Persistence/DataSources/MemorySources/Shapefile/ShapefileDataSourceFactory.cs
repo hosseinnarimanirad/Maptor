@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -81,4 +81,11 @@ public static class ShapefileDataSourceFactory
 
         return new ShapefileDataSource(shapefileName, geometries, attributes, map, inverseAttributeMap, targetSrs);
     }
+
+    /// <summary>
+    /// Creates a shapefile data source with header-only (lazy) load. Layer can be added immediately;
+    /// call LoadAsync() (e.g. via LayerManager) to load full data in the background.
+    /// </summary>
+    public static ShapefileDataSource CreateLazy(string shapefileName, SrsBase? targetCrs = null, Encoding? encoding = null)
+        => new ShapefileDataSource(shapefileName, targetCrs, encoding, mapShapeToFeature, inverseAttributeMap);
 }

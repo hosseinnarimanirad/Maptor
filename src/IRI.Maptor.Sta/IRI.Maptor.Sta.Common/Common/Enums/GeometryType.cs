@@ -11,7 +11,6 @@ public enum GeometryType
     GeometryCollection = 7,
     CircularString = 8,
     CompoundCurve = 9,
-    CurvePolygon = 10
+    CurvePolygon = 10,
+    None = 100,
 }
-
-

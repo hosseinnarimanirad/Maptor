@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,20 +19,71 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public class ShapefileDataSource : MemoryDataSource
 {
-    string _shapefileName;
+    private string _shapefileName;
 
-    SrsBase _targetSrs;
+    private SrsBase _sourceSrs;
 
-    SrsBase _sourceSrs;
-      
-    List<ObjectToDbfTypeMap<Feature<Point>>> _fields;
-     
+    private SrsBase? _targetSrs;
+
+    private List<ObjectToDbfTypeMap<Feature<Point>>> _objectToDbfTypeMap;
+
+    private Encoding? _encoding;
+
+    private Func<Geometry<Point>, Dictionary<string, object>, Feature<Point>> _createFeatureFunc;
+
+    private Func<Feature<Point>, List<object>> _inverseAttributeMap;
+
+    /// <summary>
+    /// Lazy constructor: reads only shapefile header for extent/geometry type; does not load features.
+    /// Call LoadAsync() to load the full data.
+    /// </summary>
+    internal ShapefileDataSource(string shapefileName,
+                                SrsBase? targetSrs,
+                                Encoding? encoding,
+                                Func<Geometry<Point>, Dictionary<string, object>, Feature<Point>> createFeatureFunc,
+                                Func<Feature<Point>, List<object>> inverseAttributeMap)
+    {
+        _shapefileName = shapefileName;
+
+        _sourceSrs = ShapefileFormat.Shapefile.TryGetSrs(shapefileName)
+            ?? throw new NotImplementedException("Shapefile SRS could not be determined.");
+
+        _targetSrs = targetSrs;
+
+        _encoding = encoding;
+
+        _createFeatureFunc = createFeatureFunc;
+
+        _inverseAttributeMap = inverseAttributeMap;
+
+        var mainHeader = ShapefileFormat.Shapefile.GetFileHeader(shapefileName);
+
+        WebMercatorExtent = mainHeader.MinimumBoundingBox;
+
+        if (targetSrs != null)
+        {
+            Func<Point, Point> transformFunc = p => p.Project(_sourceSrs, targetSrs);
+
+            WebMercatorExtent = WebMercatorExtent.Transform(transformFunc);
+        }
+
+        GeometryType = mainHeader.ShapeType.AsGeometryType() ?? Common.Primitives.GeometryType.None;
+
+        _features = FeatureSet<Point>.Empty;
+
+        Fields = new List<Field>();
+
+        _objectToDbfTypeMap = null;
+
+        IsLoaded = false;
+    }
+
     internal ShapefileDataSource(string shapefileName,
                                 IEsriShapeCollection geometries,
                                 EsriAttributeDictionary attributes,
                                 Func<Geometry<Point>, Dictionary<string, object>, Feature<Point>> map,
                                 Func<Feature<Point>, List<object>> inverseAttributeMap,
-                                SrsBase targetSrs) 
+                                SrsBase targetSrs)
     {
         if (attributes == null)
             throw new NotImplementedException();
@@ -46,52 +97,67 @@ public class ShapefileDataSource : MemoryDataSource
 
         _targetSrs = targetSrs;
 
-        Func<Point, Point>? transformFunc = null;
+        Initialize(geometries, attributes, map, inverseAttributeMap);
+    }
 
-        if (targetSrs != null)
+    public override async Task LoadAsync()
+    {
+        IsBusy = true;
+
+        try
         {
-            transformFunc = p => p.Project(_sourceSrs, targetSrs);
-        }
+            HasError = false;
+            var attributes = DbfFile.Read(ShapefileFormat.Shapefile.GetDbfFileName(_shapefileName), true, _encoding);
 
-        WebMercatorExtent = geometries.MainHeader.MinimumBoundingBox;
-         
+            var geometries = await ShapefileFormat.Shapefile.ReadShapesAsync(_shapefileName);
+
+            await Task.Delay(5000);
+
+            Initialize(geometries, attributes, _createFeatureFunc, _inverseAttributeMap);
+        }
+        catch
+        {
+            HasError = true;
+
+            throw;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private void Initialize(IEsriShapeCollection geometries,
+                             EsriAttributeDictionary attributes,
+                             Func<Geometry<Point>, Dictionary<string, object>, Feature<Point>> map,
+                             Func<Feature<Point>, List<object>> inverseAttributeMap)
+    {
+        if (attributes == null)
+            throw new NotImplementedException();
+
+        Func<Point, Point>? transformFunc = _targetSrs != null ? (p => p.Project(_sourceSrs, _targetSrs)) : null;
+
+        WebMercatorExtent = geometries.MainHeader.MinimumBoundingBox.Transform(p => p.Project(_sourceSrs, new WebMercator()));
+
         GeometryType = geometries.MainHeader.ShapeType.AsGeometryType();
 
-        if (transformFunc != null)
-        {
-            WebMercatorExtent = WebMercatorExtent.Transform(p => transformFunc(p));
-        }
-          
-        _fields = new List<ObjectToDbfTypeMap<Feature<Point>>>();
+        _objectToDbfTypeMap = new List<ObjectToDbfTypeMap<Feature<Point>>>();
 
         for (int i = 0; i < attributes.Fields.Count; i++)
-        {
-            _fields.Add(new ObjectToDbfTypeMap<Feature<Point>>(attributes.Fields[i], t => inverseAttributeMap(t)[i])); 
-        }
+            _objectToDbfTypeMap.Add(new ObjectToDbfTypeMap<Feature<Point>>(attributes.Fields[i], t => inverseAttributeMap(t)[i]));
 
         this.Fields = attributes.Fields.Select(f => f.AsField()).ToList();
 
-
         if (geometries?.Count != attributes.Attributes?.Count)
-        {
             throw new NotImplementedException();
-        }
 
         var features = new List<Feature<Point>>();
 
         for (int i = 0; i < geometries.Count; i++)
         {
-            Geometry<Point>? geometry = null;
-
-            if (transformFunc == null)
-            {
-                geometry = geometries[i].AsGeometry();//.MakeValid();
-            }
-            else
-            {
-                //targetSrs should not be null in this case
-                geometry = geometries[i].AsGeometry()/*.MakeValid()*/.Transform(transformFunc, targetSrs!.Srid);
-            }
+            Geometry<Point>? geometry = transformFunc == null
+                ? geometries[i].AsGeometry()
+                : geometries[i].AsGeometry().Transform(transformFunc, _targetSrs!.Srid);
 
             var feature = map(geometry, attributes.Attributes[i]);
 
@@ -100,13 +166,15 @@ public class ShapefileDataSource : MemoryDataSource
             features.Add(feature);
         }
 
-        _features = FeatureSet<Point>.Create(string.Empty, features); 
+        _features = FeatureSet<Point>.Create(System.IO.Path.GetFileNameWithoutExtension(_shapefileName), features);
+
+        IsLoaded = true;
     }
 
 
     public override void SaveChanges()
     {
-        Func<Feature<Point>, EsriShapeBase> geometryMap = null;
+        Func<Feature<Point>, EsriShapeBase>? geometryMap = null;
 
         //save shp, shx, dbf, prj, cpg
 
@@ -121,6 +189,6 @@ public class ShapefileDataSource : MemoryDataSource
             geometryMap = t => t.TheGeometry.AsEsriShape(_sourceSrs.Srid);
         }
 
-        ShapefileFormat.Shapefile.Save(_shapefileName, _features.Features, geometryMap, _fields, EncodingHelper.ArabicEncoding, _sourceSrs, true);
+        ShapefileFormat.Shapefile.Save(_shapefileName, _features.Features, geometryMap, _objectToDbfTypeMap, EncodingHelper.ArabicEncoding, _sourceSrs, true);
     }
 }

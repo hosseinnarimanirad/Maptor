@@ -40,6 +40,8 @@ public class ShapefileDataStore : IDataSource
 
     public event EventHandler<bool>? HasErrorChanged;
 
+    public Task LoadAsync() => Task.CompletedTask;
+
     private ShapefileDataStore()
     {
 

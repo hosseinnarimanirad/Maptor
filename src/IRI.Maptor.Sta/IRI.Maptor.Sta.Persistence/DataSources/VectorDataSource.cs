@@ -29,6 +29,8 @@ public abstract class VectorDataSource : IVectorDataSource
         this.Fields = fields;
     }
 
+    public virtual Task LoadAsync() => Task.CompletedTask;
+
     #region Status Flags
 
     public virtual bool IsBusy

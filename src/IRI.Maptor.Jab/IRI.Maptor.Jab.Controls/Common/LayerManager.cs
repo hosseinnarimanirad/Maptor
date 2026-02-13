@@ -1,11 +1,13 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Persistence.Abstractions;
 
 namespace IRI.Maptor.Jab.Controls;
 
@@ -80,6 +82,14 @@ public class LayerManager : Notifier
             {
                 Add(item, inverseMapScale);
             }
+        }
+        else
+        {
+            if (layer is VectorLayer vl && vl.DataSource is IDataSource ds && !ds.IsLoaded)
+                _ = ds.LoadAsync();
+
+            else if (layer is RasterLayer rl && rl.DataSource is IDataSource rds && !rds.IsLoaded)
+                _ = rds.LoadAsync();
         }
     }
 

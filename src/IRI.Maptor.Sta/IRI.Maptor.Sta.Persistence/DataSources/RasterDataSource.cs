@@ -1,14 +1,16 @@
-﻿using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Persistence.Abstractions;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public abstract class RasterDataSource : IRasterDataSource
 {
+    public virtual Task LoadAsync() => Task.CompletedTask;
     public virtual BoundingBox WebMercatorExtent { get; protected set; } = BoundingBox.NaN;
 
     public virtual int Srid => SridHelper.WebMercator;

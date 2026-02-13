@@ -2479,6 +2479,8 @@ public abstract class MapViewModelBase : ViewModelBase
     protected async Task<Response<Geometry<Point>>> Measure(DrawMode mode, Action action = null)
     {
         //this.IsMeasureMode = true;
+        this.ShowMapInfoPanel = true;
+
         try
         {
             MapPanel.Options = MapSettings.DrawingMeasureOptions;
@@ -3238,8 +3240,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
 
-    //*****************************************General**************************************************************
-    #region Shapefile/Worldfile/GeoJson
+    //*****************************************File Formats *********************************************************
+    #region Shapefile/Worldfile/GeoJson/KML/KMZ/Csv/Tsv/ZippedImagePyramid
 
     const string _error = "خطا";
     const string _fileLockedError = "فایل در حال استفاده توسط برنامه دیگری است. لطفا فایل را ببندید و دوباره تلاش کنید.";
@@ -3272,7 +3274,7 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         try
         {
-            var dataSource = await ShapefileDataSourceFactory.CreateAsync(fileName, new WebMercator());
+            var dataSource = ShapefileDataSourceFactory.CreateLazy(fileName, new WebMercator(), null);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
                                 dataSource,
@@ -4233,7 +4235,6 @@ public abstract class MapViewModelBase : ViewModelBase
     #region -   Measurement Commands
 
     private RelayCommand _measureLengthCommand;
-
     public RelayCommand MeasureLengthCommand
     {
         get

@@ -69,6 +69,9 @@ public class WebApiDataSource : MemoryDataSource
         IdColumnName = idColumnName;
     }
 
+    /// <inheritdoc />
+    public override async Task LoadAsync() => await LoadAsync((ListFeaturesQueryParams?)null);
+
     /// <summary>
     /// Loads features from the list endpoint and assigns them to _features. Clears change tracking.
     /// </summary>

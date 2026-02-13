@@ -178,6 +178,7 @@ public abstract class BaseLayer : Notifier, ILayer
 
     #endregion
 
+     
     #endregion
 
     private bool _isGroupLayer;
