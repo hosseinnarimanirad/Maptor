@@ -101,12 +101,56 @@
             <StackPanel Orientation="Horizontal" Margin="0">
 
                 <!--layer visiblity checkbox-->
-                <CheckBox Margin="2,0,0,0" IsChecked="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}" Visibility="Visible"
+                <CheckBox Margin="2,0,0,0" IsChecked="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}"
+                          Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"
                           VerticalAlignment="Center"  />
+                
+                <iconPacks:PackIconPhosphorIcons Kind="SpinnerGapBold" Spin="True" 
+                                                 VerticalAlignment="Center"
+                                                 Foreground="{DynamicResource MahApps.Brushes.Accent}" Margin="2,0"
+                                                 Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
+                    <!--<iconPacks:PackIconPhosphorIcons.RenderTransform>
+                        <RotateTransform Angle="0"/>
+                    </iconPacks:PackIconPhosphorIcons.RenderTransform>
+                    <iconPacks:PackIconPhosphorIcons.Style>
+                        <Style TargetType="iconPacks:PackIconPhosphorIcons">
+                            <Setter Property="Opacity" Value="0"/>
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsBusy}" Value="False">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard> 
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                 From="0" To="1"
+                                                 Duration="0:0:0.3">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <QuadraticEase EasingMode="EaseOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+ 
+                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Angle"
+                                                 From="0" To="360"
+                                                 Duration="0:0:1.5"
+                                                 RepeatBehavior="Forever">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <CircleEase EasingMode="EaseIn"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </iconPacks:PackIconPhosphorIcons.Style>-->
+                </iconPacks:PackIconPhosphorIcons>
 
                 <!--visibility toggle button with Eye and EyeOff iconPacks-->
                 <ToggleButton IsChecked="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}" ClickMode="Press" Name="Expander"
-                                Margin="2,0,0,0" Padding="0" Cursor="Hand" Visibility="Collapsed">
+                                Margin="2,0,0,0" Padding="0" Cursor="Hand"
+                                Visibility="Collapsed">
                     <ToggleButton.Style>
                         <Style TargetType="ToggleButton">
                             <Setter Property="UIElement.Focusable" Value="false" />
@@ -141,7 +185,8 @@
 
                 <!--light symbology preview-->
                 <Border Margin="0,0,2,0" Width="18" Height="18" Cursor="Hand" CornerRadius="2"
-                        Visibility="{Binding IsSymbolizable, Converter={StaticResource boolToVisibilityConverter}}">
+                        Visibility="{Binding IsSymbolizable, Converter={StaticResource boolToVisibilityConverter}}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}">
                     <Border.Style>
                         <Style TargetType="Border">
                             <Setter Property="Background" Value="Transparent"/>
@@ -169,7 +214,8 @@
 
                 <!--layer opacity control-->
                 <Slider x:Name="opacitySlider" VerticalAlignment="Center" Width="50" Minimum="0" Maximum="1" SmallChange=".1" LargeChange=".2"                         
-                            TickFrequency=".2" Value="{Binding Opacity, Mode=TwoWay}"/>
+                        TickFrequency=".2" Value="{Binding Opacity, Mode=TwoWay}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
 
 
                 <TextBlock MinWidth="30" VerticalAlignment="Center" Margin="2" 

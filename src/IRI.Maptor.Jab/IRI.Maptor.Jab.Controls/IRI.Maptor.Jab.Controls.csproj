@@ -22,8 +22,9 @@
   <ItemGroup>
     <PackageReference Include="DataGridExtensions" />
     <PackageReference Include="MahApps.Metro" />
-    <PackageReference Include="MahApps.Metro.IconPacks.Modern" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Modern" /> 
     <PackageReference Include="MahApps.Metro.IconPacks.Material" />
+    <PackageReference Include="MahApps.Metro.IconPacks.PhosphorIcons" />
   </ItemGroup>
  
   <ItemGroup>
