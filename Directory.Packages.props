@@ -15,6 +15,11 @@
 
     <PackageVersion Include="Fluent.Ribbon" Version="9.0.4" />
 
+    <PackageVersion Include="Google.Protobuf" Version="3.25.5" />
+    <PackageVersion Include="Grpc.AspNetCore" Version="2.62.0" />
+    <PackageVersion Include="Grpc.Net.Client" Version="2.62.0" />
+    <PackageVersion Include="Grpc.Tools" Version="2.62.0" />
+
     <PackageVersion Include="Jdenticon-net" Version="3.1.2" />
     <PackageVersion Include="Jdenticon.Wpf" Version="3.1.2" />
 
@@ -26,6 +31,7 @@
     <PackageVersion Include="MahApps.Metro" Version="2.4.11" />
     <PackageVersion Include="MahApps.Metro.IconPacks.Modern" Version="6.1.0" />
     <PackageVersion Include="MahApps.Metro.IconPacks.Material" Version="6.1.0" />
+    <PackageVersion Include="MahApps.Metro.IconPacks.PhosphorIcons" Version="6.1.0"/>
 
     <PackageVersion Include="MediatR" Version="12.4.1" />
 
