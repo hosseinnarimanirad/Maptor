@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Events;
@@ -28,6 +29,8 @@ public interface ILayer
     bool IsMovable { get; set; }
 
     BoundingBox Extent { get; }
+
+    IDataSource? DataSource { get; }
 
     RenderMode RenderMode { get; }
 
@@ -76,9 +79,13 @@ public interface ILayer
 
     Action<ILayer>? RequestChangeVisibility { get; set; }
 
+    Action<ILayer>? RequestRefreshWhenDataLoaded { get; set; }
+
     RelayCommand ChangeSymbologyCommand { get; }
 
     event EventHandler<CustomEventArgs<VisualParameters>> OnVisibilityChanged;
+
+    event EventHandler<ILayer> OnLayerInitilized;
 
     //event EventHandler<CustomEventArgs<VisualParameters>> OnLabelChanged;
 

@@ -1,5 +1,6 @@
 using System;
 using System.Windows;
+using System.Windows.Data;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -9,9 +10,6 @@ using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using System.Windows.Data;
-using System.Windows.Shapes;
-using IRI.Maptor.Sta.Common.Contracts.Google;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 
 namespace IRI.Maptor.Jab.Common;
@@ -29,7 +27,7 @@ public abstract class BaseLayer : Notifier, ILayer
         this.IsMovable = false;
     }
 
-    #region Layer Id
+    #region Layer Id, Name
 
     /// <summary>
     /// Id of layer in datasource or api response
@@ -60,6 +58,8 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public abstract LayerType Type { get; /*protected set;*/ }
 
+    public virtual IDataSource? DataSource => null;
+
     public virtual SpatialModelMode SpatialModelMode { get; protected set; } = SpatialModelMode.None;
 
     public virtual BoundingBox Extent { get; protected set; }
@@ -70,19 +70,43 @@ public abstract class BaseLayer : Notifier, ILayer
 
     #region Data source / status flags
 
-    private bool _isBusy;
     public virtual bool IsBusy
     {
-        get => _isBusy;
+        get => IsInitializing || IsProcessing;
+    }
+
+    private bool _isInitializing;
+    public virtual bool IsInitializing
+    {
+        get => _isInitializing;
         protected set
         {
-            if (_isBusy == value)
+            if (_isInitializing == value)
                 return;
 
-            _isBusy = value;
+            _isInitializing = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsBusy));
         }
     }
+
+
+    private bool _isProcessing;
+    public virtual bool IsProcessing
+    {
+        get => _isProcessing;
+        protected set
+        {
+            if (_isProcessing == value)
+                return;
+
+            _isProcessing = value;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsBusy));
+        }
+    }
+
+
 
     private bool _isLoaded;
     public virtual bool IsLoaded
@@ -147,38 +171,70 @@ public abstract class BaseLayer : Notifier, ILayer
         if (dataSource == null)
             return;
 
-        dataSource.IsBusyChanged -= DataSource_IsBusyChanged;
+        dataSource.IsInitializingChanged -= DataSource_IsInitializingChanged;
+        dataSource.IsProcessingChanged -= DataSource_IsProcessingChanged;
         dataSource.IsLoadedChanged -= DataSource_IsLoadedChanged;
         dataSource.HasPendingChangesChanged -= DataSource_HasPendingChangesChanged;
         dataSource.IsClientFilteredChanged -= DataSource_IsClientFilteredChanged;
         dataSource.HasErrorChanged -= DataSource_HasErrorChanged;
     }
-                    
+
     protected void SubscribeToDataSourceStatusEvents(IDataSource? dataSource)
     {
         if (dataSource == null)
             return;
 
-        dataSource.IsBusyChanged += DataSource_IsBusyChanged;
+        dataSource.IsInitializingChanged += DataSource_IsInitializingChanged;
+        dataSource.IsProcessingChanged += DataSource_IsProcessingChanged;
         dataSource.IsLoadedChanged += DataSource_IsLoadedChanged;
         dataSource.HasPendingChangesChanged += DataSource_HasPendingChangesChanged;
         dataSource.IsClientFilteredChanged += DataSource_IsClientFilteredChanged;
         dataSource.HasErrorChanged += DataSource_HasErrorChanged;
     }
 
-    protected void DataSource_IsBusyChanged(object? sender, bool e) => IsBusy = e;
+    private static void DispatcherToUi(Action action)
+    {
+        var app = Application.Current;
+        if (app?.Dispatcher == null || app.Dispatcher.HasShutdownStarted || app.Dispatcher.HasShutdownFinished)
+        {
+            action();
+            return;
+        }
+        if (app.Dispatcher.CheckAccess())
+        {
+            action();
+        }
+        else
+        {
+            app.Dispatcher.BeginInvoke(action);
+        }
+    }
 
-    protected void DataSource_IsLoadedChanged(object? sender, bool e) => IsLoaded = e;
+    //protected void DataSource_IsBusyChanged(object? sender, bool e) => DispatcherToUi(() => IsBusy = e);
 
-    protected void DataSource_HasPendingChangesChanged(object? sender, bool e) => HasPendingChanges = e;
+    private void DataSource_IsInitializingChanged(object? sender, bool e) => DispatcherToUi(() => IsInitializing = e);
 
-    protected void DataSource_IsClientFilteredChanged(object? sender, bool e) => IsClientFiltered = e;
+    private void DataSource_IsProcessingChanged(object? sender, bool e) => DispatcherToUi(() => IsProcessing = e);
 
-    protected void DataSource_HasErrorChanged(object? sender, bool e) => HasError = e;
+    protected virtual void DataSource_IsLoadedChanged(object? sender, bool e)
+    {
+        DispatcherToUi(() =>
+        {
+            IsLoaded = e;
+            if (e)
+                RequestRefreshWhenDataLoaded?.Invoke(this);
+        });
+    }
+
+    protected void DataSource_HasPendingChangesChanged(object? sender, bool e) => DispatcherToUi(() => HasPendingChanges = e);
+
+    protected void DataSource_IsClientFilteredChanged(object? sender, bool e) => DispatcherToUi(() => IsClientFiltered = e);
+
+    protected void DataSource_HasErrorChanged(object? sender, bool e) => DispatcherToUi(() => HasError = e);
 
     #endregion
 
-     
+
     #endregion
 
     private bool _isGroupLayer;
@@ -193,7 +249,7 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-    public bool IsMovable { get; set; } 
+    public bool IsMovable { get; set; }
 
     public ObservableCollection<ILayer> SubLayers { get; set; } = new();
 
@@ -234,7 +290,7 @@ public abstract class BaseLayer : Notifier, ILayer
             RaisePropertyChanged(nameof(ShowOptions));
             //ChangeSymbologyCommand?.CanExecute(null);
 
-            OnIsSelectedInTocChanged?.Invoke(this, new CustomEventArgs<BaseLayer>(this));
+            _onIsSelectedInTocChanged?.Invoke(this, new CustomEventArgs<BaseLayer>(this));
         }
     }
 
@@ -407,6 +463,12 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public Action<ILayer>? RequestChangeVisibility { get; set; }
 
+    /// <summary>
+    /// Invoked when the layer's data source finishes loading. Used to trigger map re-render (e.g. via RefreshLayerVisibility).
+    /// Set by LayerManager when adding layers with unloaded IDataSource.
+    /// </summary>
+    public Action<ILayer>? RequestRefreshWhenDataLoaded { get; set; }
+
     protected virtual void BindWithFrameworkElement(FrameworkElement? element)
     {
         if (element is null)
@@ -550,7 +612,6 @@ public abstract class BaseLayer : Notifier, ILayer
     #region Events
 
     private event EventHandler<CustomEventArgs<VisualParameters>>? _onVisibilityChanged;
-
     public event EventHandler<CustomEventArgs<VisualParameters>> OnVisibilityChanged
     {
         remove { this._onVisibilityChanged -= value; }
@@ -563,8 +624,8 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-    private event EventHandler<CustomEventArgs<string>>? _onLayerNameChanged;
 
+    private event EventHandler<CustomEventArgs<string>>? _onLayerNameChanged;
     public event EventHandler<CustomEventArgs<string>> OnLayerNameChanged
     {
         remove { this._onLayerNameChanged -= value; }
@@ -577,15 +638,35 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-    //public event EventHandler<CustomEventArgs<VisualParameters>> OnLabelChanged;
 
-    public event EventHandler<CustomEventArgs<BaseLayer>>? OnIsSelectedInTocChanged;
+    private event EventHandler<CustomEventArgs<BaseLayer>>? _onIsSelectedInTocChanged;
+    public event EventHandler<CustomEventArgs<BaseLayer>> OnIsSelectedInTocChanged
+    {
+        remove { this._onIsSelectedInTocChanged -= value; }
+        add
+        {
+            if (this._onIsSelectedInTocChanged == null)
+            {
+                this._onIsSelectedInTocChanged += value;
+            }
+        }
+    }
+
+    private event EventHandler<ILayer>? _onLayerInitilized;
+    public event EventHandler<ILayer> OnLayerInitilized
+    {
+        remove { this._onLayerInitilized -= value; }
+        add
+        {
+            if (this._onLayerInitilized == null)
+            {
+                this._onLayerInitilized += value;
+            }
+        }
+    }
+
 
     #endregion
 
-    //protected void RaiseVisibilityChanged(object? sender, CustomEventArgs<VisualParameters> e)
-    //{
-    //    this._onVisibilityChanged?.Invoke(this, e);
-    //}
 
 }

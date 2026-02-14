@@ -10,13 +10,13 @@ public static class WebApiInfrastructure
     /// Gets features from the API endpoint with optional query parameters.
     /// </summary>
     public static async Task<FeatureSetDto?> GetFeaturesAsync(
-        string baseUrl,
+        //string baseUrl,
         string endpoint,
         ListFeaturesQueryParams? queryParams = null,
         string? bearerToken = null,
         Dictionary<string, string>? headers = null)
     {
-        var url = BuildUrl(baseUrl, endpoint, queryParams);
+        var url = BuildUrl(/*baseUrl, */endpoint, queryParams);
 
         var response = await HttpClientHelper.HttpGetAsync<FeatureSetDto>(
             url,
@@ -30,16 +30,16 @@ public static class WebApiInfrastructure
     /// Sends a unit-of-work DTO (added, updated, deleted) to the update endpoint.
     /// </summary>
     public static async Task<bool> SaveChangesAsync(
-        string baseUrl,
+        //string baseUrl,
         string endpoint,
         FeatureSetChangesDto dto,
         string? bearerToken = null,
         Dictionary<string, string>? headers = null)
     {
-        var url = $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
+        //var url = $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
 
         var response = await HttpClientHelper.HttpPutAsync<object>(
-            url,
+            endpoint,
             dto,
             bearer: bearerToken,
             headers: headers);
@@ -73,13 +73,13 @@ public static class WebApiInfrastructure
     /// Adds a new feature via POST request
     /// </summary>
     public static async Task<FeatureDto?> AddFeatureAsync(
-        string baseUrl,
+        //string baseUrl,
         string endpoint,
         FeatureDto featureDto,
         string? bearerToken = null,
         Dictionary<string, string>? headers = null)
     {
-        var url = BuildUrl(baseUrl, endpoint);
+        var url = BuildUrl(/*baseUrl,*/ endpoint);
 
         var response = await HttpClientHelper.HttpPostAsync<FeatureDto>(
             url,
@@ -113,12 +113,12 @@ public static class WebApiInfrastructure
     /// <summary>
     /// Builds a URL with query string from ListFeaturesQueryParams.
     /// </summary>
-    private static string BuildUrl(string baseUrl, string endpoint, ListFeaturesQueryParams? queryParams = null)
+    private static string BuildUrl(/*string baseUrl, */string endpoint, ListFeaturesQueryParams? queryParams = null)
     {
-        var url = $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
+        //var url = $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
 
         if (queryParams == null)
-            return url;
+            return endpoint;
 
         var parts = new List<string>();
         if (!string.IsNullOrEmpty(queryParams.GeometryWkbHex))
@@ -127,8 +127,8 @@ public static class WebApiInfrastructure
             parts.Add($"search={Uri.EscapeDataString(queryParams.SearchText)}");
 
         if (parts.Count > 0)
-            url += "?" + string.Join("&", parts);
+            endpoint += "?" + string.Join("&", parts);
 
-        return url;
+        return endpoint;
     }
 }

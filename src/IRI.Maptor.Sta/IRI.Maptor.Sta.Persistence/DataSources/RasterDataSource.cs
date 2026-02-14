@@ -10,23 +10,39 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public abstract class RasterDataSource : IRasterDataSource
 {
+    public virtual DataSourceKind DataSourceKind => DataSourceKind.None;
+
     public virtual Task LoadAsync() => Task.CompletedTask;
     public virtual BoundingBox WebMercatorExtent { get; protected set; } = BoundingBox.NaN;
 
     public virtual int Srid => SridHelper.WebMercator;
 
-
-    private bool _isBusy;
-    public bool IsBusy
+     
+    private bool _isInitializing;
+    public bool IsInitializing
     {
-        get => _isBusy;
+        get => _isInitializing;
         protected set
         {
-            if (_isBusy == value)
+            if (_isInitializing == value)
                 return;
 
-            _isBusy = value;
-            IsBusyChanged?.Invoke(this, value);
+            _isInitializing = value;
+            IsProcessingChanged?.Invoke(this, value);
+        }
+    }
+
+    private bool _isProcessing;
+    public bool IsProcessing
+    {
+        get => _isProcessing;
+        protected set
+        {
+            if (_isProcessing == value)
+                return;
+
+            _isProcessing = value;
+            IsProcessingChanged?.Invoke(this, value);
         }
     }
 
@@ -66,8 +82,10 @@ public abstract class RasterDataSource : IRasterDataSource
         }
     }
 
-    public event EventHandler<bool>? IsBusyChanged;
+    public event EventHandler<bool>? IsInitializingChanged;
 
+    public event EventHandler<bool>? IsProcessingChanged;
+     
     public event EventHandler<bool>? IsLoadedChanged;
 
     public event EventHandler<bool>? HasPendingChangesChanged;
@@ -75,5 +93,4 @@ public abstract class RasterDataSource : IRasterDataSource
     public event EventHandler<bool>? IsClientFilteredChanged;
 
     public event EventHandler<bool>? HasErrorChanged;
-
 }

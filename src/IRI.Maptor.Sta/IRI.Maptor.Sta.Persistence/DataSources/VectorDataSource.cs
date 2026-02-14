@@ -10,7 +10,8 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public abstract class VectorDataSource : IVectorDataSource
 {
-    private bool _isBusy;
+    private bool _isInitializing;
+    private bool _isProcessing;
     private bool _isLoaded;
     private bool _hasPendingChanges;
     private bool _isClientFiltered;
@@ -22,6 +23,8 @@ public abstract class VectorDataSource : IVectorDataSource
 
     public virtual GeometryType? GeometryType { get; protected set; }
 
+    public virtual DataSourceKind DataSourceKind => DataSourceKind.None;
+
     public List<Field> Fields { get; set; } = new List<Field>();
 
     public VectorDataSource(List<Field> fields)
@@ -32,17 +35,30 @@ public abstract class VectorDataSource : IVectorDataSource
     public virtual Task LoadAsync() => Task.CompletedTask;
 
     #region Status Flags
-
-    public virtual bool IsBusy
+     
+    public virtual bool IsInitializing
     {
-        get => _isBusy;
+        get => _isInitializing;
         protected set
         {
-            if (_isBusy == value)
+            if (_isInitializing == value)
                 return;
 
-            _isBusy = value;
-            IsBusyChanged?.Invoke(this, value);
+            _isInitializing = value;
+            IsInitializingChanged?.Invoke(this, value);
+        }
+    }
+
+    public virtual bool IsProcessing
+    {
+        get => _isProcessing;
+        protected set
+        {
+            if (_isProcessing == value)
+                return;
+
+            _isProcessing = value;
+            IsProcessingChanged?.Invoke(this, value);
         }
     }
 
@@ -98,8 +114,10 @@ public abstract class VectorDataSource : IVectorDataSource
         }
     }
 
-    public event EventHandler<bool>? IsBusyChanged;
+    public event EventHandler<bool>? IsInitializingChanged;
 
+    public event EventHandler<bool>? IsProcessingChanged;
+     
     public event EventHandler<bool>? IsLoadedChanged;
 
     public event EventHandler<bool>? HasPendingChangesChanged;

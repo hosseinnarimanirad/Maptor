@@ -13,6 +13,8 @@ namespace IRI.Maptor.Jab.Controls;
 
 public class LayerManager : Notifier
 {
+    public Action<BaseLayer>? RequestRefreshVisibility;
+
     List<ILayer> allLayers;
 
     private ObservableCollection<ILayer> _currentLayers;
@@ -42,6 +44,9 @@ public class LayerManager : Notifier
 
         layer.OnVisibilityChanged -= RefreshLayerVisibility;
         layer.OnVisibilityChanged += RefreshLayerVisibility;
+
+        layer.OnLayerInitilized -= Layer_OnLayerInitilized;
+        layer.OnLayerInitilized += Layer_OnLayerInitilized;
 
         UpdateIsInRange(layer, inverseMapScale);
 
@@ -86,10 +91,15 @@ public class LayerManager : Notifier
         else
         {
             if (layer is VectorLayer vl && vl.DataSource is IDataSource ds && !ds.IsLoaded)
+            {
+                vl.RequestRefreshWhenDataLoaded = l => RequestRefreshVisibility?.Invoke(l as BaseLayer);
                 _ = ds.LoadAsync();
-
+            }
             else if (layer is RasterLayer rl && rl.DataSource is IDataSource rds && !rds.IsLoaded)
+            {
+                rl.RequestRefreshWhenDataLoaded = l => RequestRefreshVisibility?.Invoke(l as BaseLayer);
                 _ = rds.LoadAsync();
+            }
         }
     }
 
@@ -280,7 +290,10 @@ public class LayerManager : Notifier
         this.RequestRefreshVisibility?.Invoke(sender as BaseLayer);
     }
 
-    public Action<BaseLayer>? RequestRefreshVisibility;
+    private void Layer_OnLayerInitilized(object? sender, ILayer e)
+    {
+        this.RequestRefreshVisibility?.Invoke(sender as BaseLayer);
+    }
 
     //internal void ChangeLayerZIndex(ILayer layer, int newZIndex)
     //{

@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Common;
 using System;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -14,8 +14,9 @@ public class ILayerToLegendConverter : IValueConverter
         return layerType switch
         {
             SpatialModelMode.None => null,
-            SpatialModelMode.Point => new RectangleGeometry(new System.Windows.Rect(0, 0, 5, 5)),
-            SpatialModelMode.Polyline => new LineGeometry(new System.Windows.Point(0, 0), new System.Windows.Point(10, 10)),
+            SpatialModelMode.Point => new EllipseGeometry(new System.Windows.Rect(0, 0, 5, 5)),
+            //SpatialModelMode.Polyline => new LineGeometry(new System.Windows.Point(0, 5), new System.Windows.Point(10, 5)),
+            SpatialModelMode.Polyline => Geometry.Parse("M 0,5 L 4,2 L 8,5 L 12,2"),
             SpatialModelMode.Polygon => Geometry.Parse("F1 M 0.499,10.500L 9.769,10.500L 6.342,6.005L 9.825,1.230L 4.264,0.499L 0.837,4.938L 0.499,10.500 Z"),
             SpatialModelMode.Label => null,
             SpatialModelMode.Raster => null,

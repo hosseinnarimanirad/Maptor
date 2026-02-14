@@ -14,11 +14,14 @@ using IRI.Maptor.Sta.ShapefileFormat.Model;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
+using IRI.Maptor.Sta.Persistence.Abstractions;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public class ShapefileDataSource : MemoryDataSource
 {
+    public override DataSourceKind DataSourceKind => DataSourceKind.Shapefile;
+
     private string _shapefileName;
 
     private SrsBase _sourceSrs;
@@ -102,7 +105,7 @@ public class ShapefileDataSource : MemoryDataSource
 
     public override async Task LoadAsync()
     {
-        IsBusy = true;
+        IsInitializing = true;
 
         try
         {
@@ -110,9 +113,7 @@ public class ShapefileDataSource : MemoryDataSource
             var attributes = DbfFile.Read(ShapefileFormat.Shapefile.GetDbfFileName(_shapefileName), true, _encoding);
 
             var geometries = await ShapefileFormat.Shapefile.ReadShapesAsync(_shapefileName);
-
-            await Task.Delay(5000);
-
+             
             Initialize(geometries, attributes, _createFeatureFunc, _inverseAttributeMap);
         }
         catch
@@ -123,7 +124,7 @@ public class ShapefileDataSource : MemoryDataSource
         }
         finally
         {
-            IsBusy = false;
+            IsInitializing = false;
         }
     }
 

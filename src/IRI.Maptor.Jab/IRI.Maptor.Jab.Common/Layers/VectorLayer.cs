@@ -42,9 +42,12 @@ public class VectorLayer : SymbolizableLayer
             UnsubscribeFromDataSourceStatusEvents(_dataSource);
  
             _dataSource = value;
-
+             
             UnsubscribeFromDataSourceStatusEvents(value);
             SubscribeToDataSourceStatusEvents(value);
+
+            // Initialize and bind status flags from data source to layer.
+            SyncStatusFromDataSource();
         }
     }
 
@@ -191,10 +194,7 @@ public class VectorLayer : SymbolizableLayer
         }
 
         this.VisibleRange = (visibleRange == null) ? ScaleInterval.All : visibleRange;
-
-        // Initialize and bind status flags from data source to layer.
-        SyncStatusFromDataSource();
-        //SubscribeToDataSourceStatusEvents(DataSource);
+         
     }
 
     #endregion
@@ -338,12 +338,26 @@ public class VectorLayer : SymbolizableLayer
 
     #region Data source status bindings
 
+    protected override void DataSource_IsLoadedChanged(object? sender, bool e)
+    {
+        base.DataSource_IsLoadedChanged(sender, e);
+        if (e && DataSource is IVectorDataSource vds)
+        {
+            SpatialModelMode = vds.GeometryType.AsLayerType();
+            Extent = vds.WebMercatorExtent;
+            RaisePropertyChanged(nameof(SpatialModelMode));
+            RaisePropertyChanged(nameof(Extent));
+            RaisePropertyChanged(nameof(IsSymbolizable));
+        }
+    }
+
     private void SyncStatusFromDataSource()
     {
         if (DataSource == null)
             return;
 
-        IsBusy = DataSource.IsBusy;
+        IsInitializing = DataSource.IsInitializing;
+        IsProcessing = DataSource.IsProcessing;
         IsLoaded = DataSource.IsLoaded;
         HasPendingChanges = DataSource.HasPendingChanges;
         IsClientFiltered = DataSource.IsClientFiltered;

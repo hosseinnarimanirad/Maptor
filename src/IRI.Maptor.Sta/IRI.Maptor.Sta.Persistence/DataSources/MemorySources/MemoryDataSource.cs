@@ -20,6 +20,10 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
     private int _uniqueId = 0;
 
+    private readonly DataSourceKind _dataSourceKind;
+
+    public override DataSourceKind DataSourceKind => _dataSourceKind;
+
     public override int Srid { get => /*GetSrid()*/ _features.Srid; /*protected set => _ = value;*/ }
 
     //// todo: remove this method
@@ -29,17 +33,19 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     //    return _features.Srid;
     //}
 
-    public MemoryDataSource() : base(new List<Field>()) { }
+    public MemoryDataSource() : base(new List<Field>()) { _dataSourceKind = DataSourceKind.None; }
 
-    public MemoryDataSource(List<Geometry<Point>> geometries, bool resetIds = true) : base(new List<Field>())
+    public MemoryDataSource(List<Geometry<Point>> geometries, bool resetIds = true, DataSourceKind kind = DataSourceKind.None) : base(new List<Field>())
     {
+        _dataSourceKind = kind;
         var features = geometries.Select(g => new Feature<Point>(g) { Id = GetNewId() }).ToList();
 
         Initialize(features, resetIds);
     }
 
-    public MemoryDataSource(List<Feature<Point>> features, bool resetIds = true) : base(new List<Field>())
+    public MemoryDataSource(List<Feature<Point>> features, bool resetIds = true, DataSourceKind kind = DataSourceKind.None) : base(new List<Field>())
     {
+        _dataSourceKind = kind;
         Initialize(features, resetIds);
     }
 

@@ -8,11 +8,14 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.Persistence.Abstractions;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public class JsonListDataSource : MemoryDataSource
 {
+    public override DataSourceKind DataSourceKind => DataSourceKind.GeoJson;
+
     public override GeometryType? GeometryType
     {
         get; protected set;

@@ -6,13 +6,16 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Ket.WebApiPersistence.DTOs;
+using IRI.Maptor.Sta.Persistence.Abstractions;
 
 namespace IRI.Maptor.Ket.WebApiPersistence;
 
 public class WebApiDataSource : MemoryDataSource
 {
-    private const string _listEndPoint = "LIST";
-    private const string _updateEndPoint = "UPDATE";
+    public override DataSourceKind DataSourceKind => DataSourceKind.WebApi;
+
+    //private const string _listEndPoint = "LIST";
+    //private const string _updateEndPoint = "UPDATE";
 
     protected WebApiSourceParameter _parameters;
 
@@ -54,18 +57,21 @@ public class WebApiDataSource : MemoryDataSource
     }
 
     public WebApiDataSource(
-        string baseUrl,
+        string listUrl,
+        string syncUrl,
         string? bearerToken = null,
         Dictionary<string, string>? headers = null,
         int srid = SridHelper.WebMercator,
         string? idColumnName = null) : this()
     {
         _parameters = new WebApiSourceParameter(
-            baseUrl,
+            listUrl,
+            syncUrl,
             bearerToken,
             headers,
             srid,
             idColumnName);
+
         IdColumnName = idColumnName;
     }
 
@@ -77,14 +83,18 @@ public class WebApiDataSource : MemoryDataSource
     /// </summary>
     public async Task LoadAsync(ListFeaturesQueryParams? queryParams = null)
     {
-        IsBusy = true;
+        IsInitializing = true;
         try
         {
             HasError = false;
 
+            //var listEndpoint = !string.IsNullOrWhiteSpace(_parameters.CustomListPath)
+            //    ? _parameters.CustomListPath.TrimStart('/')
+            //    : _listEndPoint;
+
             var featureSetDto = await WebApiInfrastructure.GetFeaturesAsync(
-                _parameters.BaseUrl,
-                _listEndPoint,
+                //_parameters.BaseUrl,
+                _parameters.ListUrl,
                 queryParams,
                 _parameters.BearerToken,
                 _parameters.Headers);
@@ -92,6 +102,7 @@ public class WebApiDataSource : MemoryDataSource
             if (featureSetDto == null || featureSetDto.Features == null || featureSetDto.Features.Count == 0)
             {
                 _features = FeatureSet<Point>.Empty;
+                WebMercatorExtent = BoundingBox.NaN;
             }
             else
             {
@@ -102,15 +113,17 @@ public class WebApiDataSource : MemoryDataSource
             _updatedFeatures.Clear();
             _deletedIds.Clear();
             UpdateHasPendingChanges();
+            IsLoaded = true;
         }
         catch
         {
             HasError = true;
+            IsLoaded = false;
             throw;
         }
         finally
         {
-            IsBusy = false;
+            IsInitializing = false;
         }
     }
 
@@ -175,7 +188,7 @@ public class WebApiDataSource : MemoryDataSource
 
     public override void SaveChanges()
     {
-        IsBusy = true;
+        IsProcessing = true;
         try
         {
             HasError = false;
@@ -191,8 +204,9 @@ public class WebApiDataSource : MemoryDataSource
             };
 
             var success = WebApiInfrastructure.SaveChangesAsync(
-                _parameters.BaseUrl,
-                _updateEndPoint,
+                //_parameters.BaseUrl,
+                //_updateEndPoint,
+                _parameters.SyncUrl,
                 dto,
                 _parameters.BearerToken,
                 _parameters.Headers).GetAwaiter().GetResult();
@@ -216,7 +230,7 @@ public class WebApiDataSource : MemoryDataSource
         }
         finally
         {
-            IsBusy = false;
+            IsProcessing = false;
         }
     }
 

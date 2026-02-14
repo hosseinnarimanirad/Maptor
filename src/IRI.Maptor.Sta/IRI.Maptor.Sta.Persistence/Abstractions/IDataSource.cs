@@ -7,6 +7,11 @@ namespace IRI.Maptor.Sta.Persistence.Abstractions;
 public interface IDataSource
 {
     /// <summary>
+    /// Kind of data source for UI distinction (e.g. legend, tooltips).
+    /// </summary>
+    DataSourceKind DataSourceKind { get; }
+
+    /// <summary>
     /// Loads or refreshes the data source asynchronously.
     /// Pre-loaded sources (e.g., in-memory) may return completed task.
     /// </summary>
@@ -15,11 +20,15 @@ public interface IDataSource
 
     int Srid { get; }
 
-    /// <summary>
-    /// True while the data source is performing a long-running operation
-    /// such as loading or saving.
-    /// </summary>
-    bool IsBusy { get; }
+    ///// <summary>
+    ///// True while the data source is performing a long-running operation
+    ///// such as loading or saving.
+    ///// </summary>
+    //bool IsBusy { get; }
+
+    bool IsInitializing { get; }
+
+    bool IsProcessing { get; }
 
     /// <summary>
     /// True after the initial load operation for this data source
@@ -45,7 +54,9 @@ public interface IDataSource
     /// </summary>
     bool HasError { get; }
 
-    event EventHandler<bool>? IsBusyChanged;
+    event EventHandler<bool>? IsInitializingChanged;
+
+    event EventHandler<bool>? IsProcessingChanged;
 
     event EventHandler<bool>? IsLoadedChanged;
 

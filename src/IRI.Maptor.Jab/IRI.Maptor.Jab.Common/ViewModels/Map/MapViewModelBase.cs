@@ -21,6 +21,7 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Spatial.IO.Dxf;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Pdf;
 using IRI.Maptor.Sta.Persistence.RasterDataSources;
@@ -3365,7 +3366,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
-            var dataSource = new MemoryDataSource(features);
+            var dataSource = new MemoryDataSource(features, resetIds: true, kind: DataSourceKind.Kml);
             var geometryType = features.First().TheGeometry.Type;
             var symbolizers = features.CreateSymbolizersFromKml(geometryType);
 
@@ -3464,7 +3465,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
-            var dataSource = new MemoryDataSource(features);
+            var dataSource = new MemoryDataSource(features, resetIds: true, kind: DataSourceKind.Kml);
             var geometryType = features.First().TheGeometry.Type;
             var symbolizers = features.CreateSymbolizersFromKml(geometryType);
 
@@ -3614,6 +3615,21 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    public virtual async Task AddWgs84Worldfile(object owner)
+    {
+        IsBusy = true;
+
+        var fileName = await DialogService.ShowOpenFileDialogAsync("Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff", owner);
+
+        if (!File.Exists(fileName))
+        {
+            IsBusy = false;
+
+            return;
+        }
+
+        await AddWorldfile(fileName, SridHelper.GeodeticWGS84, owner);
+    }
     public virtual async Task AddWebMercatorWorldfile(object owner)
     {
         IsBusy = true;
@@ -3648,23 +3664,6 @@ public abstract class MapViewModelBase : ViewModelBase
             IsBusy = false;
         }
     }
-
-    public virtual async Task AddWgs84Worldfile(object owner)
-    {
-        IsBusy = true;
-
-        var fileName = await DialogService.ShowOpenFileDialogAsync("Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff", owner);
-
-        if (!File.Exists(fileName))
-        {
-            IsBusy = false;
-
-            return;
-        }
-
-        await AddWorldfile(fileName, SridHelper.GeodeticWGS84, owner);
-    }
-
     public virtual async Task AddWorldfile(string fileName, int srid, object owner)
     {
         try
@@ -3710,7 +3709,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
 
     }
-
+     
     public virtual async Task AddZippedImagePyramid(object owner)
     {
         try
@@ -3873,12 +3872,6 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await AddGeoJson(fileName, owner);
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="geoJsonFeatureSetFileName">path to GeoJsonFeatureSet file</param>
-    /// <returns></returns>
     public async Task AddGeoJson(string geoJsonFeatureSetFileName, object owner)
     {
         try
@@ -4712,7 +4705,6 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
     private RelayCommand _addShapefileToDrawingItemsCommand;
-
     public RelayCommand AddShapefileToDrawingItemsCommand
     {
         get
@@ -4817,7 +4809,6 @@ public abstract class MapViewModelBase : ViewModelBase
             return _moveDrawingItemDownCommand;
         }
     }
-
 
     #endregion
 

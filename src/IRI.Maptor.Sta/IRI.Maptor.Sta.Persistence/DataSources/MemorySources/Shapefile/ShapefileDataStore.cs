@@ -14,6 +14,8 @@ public class ShapefileDataStore : IDataSource
 
     int _srid;
 
+    public DataSourceKind DataSourceKind => DataSourceKind.Shapefile;
+
     public BoundingBox WebMercatorExtent { get { throw new NotImplementedException(); } }
 
     public int Srid => throw new NotImplementedException();
@@ -30,8 +32,14 @@ public class ShapefileDataStore : IDataSource
 
     public bool HasError => false;
 
-    public event EventHandler<bool>? IsBusyChanged;
+    public bool IsInitializing => false;
 
+    public bool IsProcessing => false;
+
+    public event EventHandler<bool>? IsInitializingChanged;
+
+    public event EventHandler<bool>? IsProcessingChanged;
+     
     public event EventHandler<bool>? IsLoadedChanged;
 
     public event EventHandler<bool>? HasPendingChangesChanged;

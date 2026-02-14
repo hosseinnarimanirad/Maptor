@@ -303,12 +303,23 @@ public class RasterLayer : BaseLayer
     }
 
 
+    protected override void DataSource_IsLoadedChanged(object? sender, bool e)
+    {
+        base.DataSource_IsLoadedChanged(sender, e);
+        if (e && DataSource is IDataSource ds && !ds.WebMercatorExtent.IsNaN())
+        {
+            _extent = ds.WebMercatorExtent;
+            RaisePropertyChanged(nameof(Extent));
+        }
+    }
+
     private void SyncStatusFromDataSource()
     {
         if (DataSource == null)
             return;
 
-        IsBusy = DataSource.IsBusy;
+        IsInitializing = DataSource.IsInitializing;
+        IsProcessing = DataSource.IsProcessing;
         IsLoaded = DataSource.IsLoaded;
         HasPendingChanges = DataSource.HasPendingChanges;
         IsClientFiltered = DataSource.IsClientFiltered;

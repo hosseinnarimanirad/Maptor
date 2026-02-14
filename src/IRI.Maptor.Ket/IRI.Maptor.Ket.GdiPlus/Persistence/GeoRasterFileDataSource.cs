@@ -68,7 +68,7 @@ public class GeoRasterFileDataSource : RasterDataSource
         if (string.IsNullOrWhiteSpace(_imageFileName))
             throw new InvalidOperationException("Image file name is not specified for GeoRasterFileDataSource.");
 
-        IsBusy = true;
+        IsInitializing = true;
         HasError = false;
 
         try
@@ -95,7 +95,7 @@ public class GeoRasterFileDataSource : RasterDataSource
         }
         finally
         {
-            IsBusy = false;
+            IsInitializing = false;
         }
     }
 
