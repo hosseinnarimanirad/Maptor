@@ -1,8 +1,10 @@
-﻿using System.Windows;
+using System;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Controls;
 
 using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Common.Assets.Converters;
 using System.Collections.ObjectModel;
 
 namespace IRI.Maptor.Jab.Controls.Views;
@@ -85,30 +87,65 @@ public partial class MapLegendView : NotifiableUserControl
         set { SetValue(LayersProperty, value); }
     }
     public static readonly DependencyProperty LayersProperty =
-        DependencyProperty.Register("Layers", typeof(ObservableCollection<ILayer>), typeof(MapLegendView), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(Layers), typeof(ObservableCollection<ILayer>), typeof(MapLegendView), new PropertyMetadata(null));
 
 
+    public string LayerNameFilterText
+    {
+        get => (string)GetValue(LayerNameFilterTextProperty);
+        set => SetValue(LayerNameFilterTextProperty, value);
+    }
+    public static readonly DependencyProperty LayerNameFilterTextProperty =
+        DependencyProperty.Register(nameof(LayerNameFilterText), typeof(string), typeof(MapLegendView),
+            new PropertyMetadata(string.Empty, OnLayerNameFilterTextChanged));
+
+    private static void OnLayerNameFilterTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var view = (MapLegendView)d;
+        var cvs = view.Resources["collectionViewSource"] as CollectionViewSource;
+        cvs?.View?.Refresh();
+    }
 
     private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
     {
-        //var item = e.Item as MapLegendItemWithOptionsModel;
         var item = e.Item as ILayer;
 
         if (item is null)
-            e.Accepted = false;
-
-        else if (!EnableFilterMode)
-            e.Accepted = true;
-
-        else
         {
-            e.Accepted =
-               item.ShowInToc && (
-               (ShowVectorLayers && item.Type == LayerType.VectorLayer) ||
-               (ShowRasterLayers && item.Type == LayerType.Raster) ||
-               (ShowRasterLayers && item.Type == LayerType.ImagePyramid) ||
-               item.Type == LayerType.GroupLayer); 
+            e.Accepted = false;
+            return;
         }
 
+        if (!EnableFilterMode)
+        {
+            e.Accepted = true;
+            return;
+        }
+
+        var passesTypeFilter = item.ShowInToc && (
+            (ShowVectorLayers && item.Type == LayerType.VectorLayer) ||
+            (ShowRasterLayers && item.Type == LayerType.Raster) ||
+            (ShowRasterLayers && item.Type == LayerType.ImagePyramid) ||
+            item.Type == LayerType.GroupLayer);
+
+        var filter = LayerNameFilterText?.Trim();
+
+        if (string.IsNullOrEmpty(filter))
+        {
+            e.Accepted = passesTypeFilter;
+            return;
+        }
+
+        if (!passesTypeFilter)
+        {
+            e.Accepted = false;
+            return;
+        }
+
+        if (item.IsGroupLayer)
+            e.Accepted = FilteredSubLayersConverter.HasMatchingDescendant(item, filter);
+
+        else
+            e.Accepted = item.LayerName?.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0;
     }
 }

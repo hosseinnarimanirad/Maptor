@@ -28,10 +28,13 @@
     <converters:EnumToBoolConverter x:Key="enumToBoolConverter"/>
     <converters:EnumToDescriptionConverter x:Key="enumToDescriptionConverter"/>
 
+    <converters:FilteredSubLayersConverter x:Key="filteredSubLayersConverter"/>
     <converters:FlowDocumentXmlToStringConverter x:Key="flowDocumentXmlToStringConverter"/>
 
     <converters:GeometryTypeToMaterialIconConverter x:Key="geometryTypeToMaterialIconConverter"/>
 
+    <converters:DataSourceKindToBrushConverter x:Key="dataSourceKindToBrushConverter"/>
+    <converters:DataSourceKindToVisibilityConverter x:Key="dataSourceKindToVisibilityConverter"/>
     <converters:ILayerToLegendConverter x:Key="iLayerToLegendConverter"/>
     <converters:IndexToBoolConverter x:Key="indexToBoolConverter"/>
 

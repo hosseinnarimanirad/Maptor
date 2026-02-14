@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="IRI.Maptor.Jab.Controls.Views.MapLegendItemView"
+<UserControl x:Class="IRI.Maptor.Jab.Controls.Views.MapLegendItemView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Name="root"
@@ -9,6 +9,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -100,11 +101,16 @@
         <StackPanel HorizontalAlignment="Stretch" Margin="0" Visibility="{Binding IsGroupLayer, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}">
             <StackPanel Orientation="Horizontal" Margin="0">
 
+                <!--source type color indicator-->
+                <Rectangle Width="2" Margin="2,2,2,0" VerticalAlignment="Stretch"
+                           Fill="{Binding DataSource.DataSourceKind, Converter={StaticResource dataSourceKindToBrushConverter}}"
+                           Visibility="{Binding DataSource.DataSourceKind, Converter={StaticResource dataSourceKindToVisibilityConverter}}"/>
+
                 <!--layer visiblity checkbox-->
                 <CheckBox Margin="2,0,0,0" IsChecked="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}"
                           Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"
                           VerticalAlignment="Center"  />
-                
+
                 <iconPacks:PackIconPhosphorIcons Kind="SpinnerGapBold" Spin="True" 
                                                  VerticalAlignment="Center"
                                                  Foreground="{DynamicResource MahApps.Brushes.Accent}" Margin="2,0"
@@ -204,11 +210,12 @@
                         <MouseBinding MouseAction="LeftClick" Command="{Binding ChangeSymbologyCommand}" CommandParameter="{Binding}"/>
                     </Border.InputBindings>
                     <Viewbox>
-                        <Path Margin="1" Data="{Binding SpatialModelMode, Converter={StaticResource iLayerToLegendConverter}, TargetNullValue={x:Static Geometry.Empty}}" x:Name="OriginalPath"
+                        <Path x:Name="OriginalPath"
+                            Margin="1"                              
+                            Data="{Binding SpatialModelMode, Converter={StaticResource iLayerToLegendConverter}, TargetNullValue={x:Static Geometry.Empty}}"
                             Fill="{Binding ElementName=root, Path=Symbology.Fill}" Stroke="{Binding ElementName=root, Path=Symbology.Stroke}"
-                            StrokeThickness="{Binding ElementName=root, Path=Symbology.StrokeThickness}" Stretch="Uniform"
+                            Stretch="Uniform"
                             HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="{Binding Opacity}"/>
-
                     </Viewbox>
                 </Border>
 
@@ -243,21 +250,21 @@
                         </Style>
                     </TextBox.Resources>
                     <TextBox.Style>
-                    <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="TextBox">
-                                    <Border x:Name="Border"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="5">
-                                        <ScrollViewer x:Name="PART_ContentHost" />
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
+                        <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TextBox">
+                                        <Border x:Name="Border"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="5">
+                                            <ScrollViewer x:Name="PART_ContentHost" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
                     </TextBox.Style>
                 </TextBox>
 
