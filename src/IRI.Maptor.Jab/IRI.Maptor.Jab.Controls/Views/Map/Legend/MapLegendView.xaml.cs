@@ -106,15 +106,16 @@ public partial class MapLegendView : NotifiableUserControl
 
 
 
-    public bool ShowFilters
+
+    public bool ShowLayerColors
     {
-        get { return (bool)GetValue(ShowFiltersProperty); }
-        set { SetValue(ShowFiltersProperty, value); }
+        get { return (bool)GetValue(ShowLayerColorsProperty); }
+        set { SetValue(ShowLayerColorsProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for ShowFilters.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty ShowFiltersProperty =
-        DependencyProperty.Register(nameof(ShowFilters), typeof(bool), typeof(MapLegendView), new PropertyMetadata(true));
+    // Using a DependencyProperty as the backing store for ShowLayerColor.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ShowLayerColorsProperty =
+        DependencyProperty.Register(nameof(ShowLayerColors), typeof(bool), typeof(MapLegendView), new PropertyMetadata(true));
 
 
 

@@ -70,7 +70,18 @@ public partial class MapDrawingLegendView : NotifiableUserControl
     public static readonly DependencyProperty ShowToolsProperty =
         DependencyProperty.Register(nameof(ShowTools), typeof(bool), typeof(MapDrawingLegendView), new PropertyMetadata(true));
 
-    
+
+    public bool ShowLayerColors
+    {
+        get { return (bool)GetValue(ShowLayerColorsProperty); }
+        set { SetValue(ShowLayerColorsProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for ShowLayerColor.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ShowLayerColorsProperty =
+        DependencyProperty.Register(nameof(ShowLayerColors), typeof(bool), typeof(MapDrawingLegendView), new PropertyMetadata(true));
+
+
     #region Expander configs
 
     private int _selectedExpanderIndex = 2;

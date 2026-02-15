@@ -70,12 +70,12 @@ public class GeneralSettingsModel : Notifier, IGeneralSettings
         }
     }
 
-    public bool Legend_ShowLegendFilters
+    public bool Legend_ShowLayerColors
     {
-        get => _settings.Legend_ShowLegendFilters;
+        get => _settings.Legend_ShowLayerColors;
         set
         {
-            _settings.Legend_ShowLegendFilters = value;
+            _settings.Legend_ShowLayerColors = value;
             RaisePropertyChanged();
         }
     }

@@ -18,18 +18,25 @@ public class DataSourceKindToBrushConverter : IValueConverter
         return kind switch
         {
             DataSourceKind.Shapefile => ModernUIColors.GreenBrush,
-            DataSourceKind.Kml => ModernUIColors.OrangeBrush,
-            DataSourceKind.Kmz => ModernUIColors.AmberBrush,
-            DataSourceKind.GeoJson => ModernUIColors.BlueBrush,
-            DataSourceKind.WebApi => ModernUIColors.VioletBrush,
-            DataSourceKind.GRPC => ModernUIColors.IndigoBrush,
-            DataSourceKind.GML => ModernUIColors.TealBrush,
-            DataSourceKind.Dxf => ModernUIColors.CrimsonBrush,
-            DataSourceKind.Worldfile => ModernUIColors.BrownBrush,
-            DataSourceKind.GeoTiff => ModernUIColors.TaupeBrush,
-            DataSourceKind.ZippedImagePyramid => ModernUIColors.CyanBrush,
-            DataSourceKind.Csv => ModernUIColors.LimeGreenBrush,
-            DataSourceKind.Tsv => ModernUIColors.LimeBrush,
+
+            DataSourceKind.Kmz => ModernUIColors.LimeGreenBrush,
+            DataSourceKind.Kml => ModernUIColors.LimeBrush,
+
+            DataSourceKind.Dxf => ModernUIColors.TealBrush,
+             
+            DataSourceKind.WebApi => ModernUIColors.CyanBrush,
+            DataSourceKind.GRPC => ModernUIColors.BlueBrush,
+
+            DataSourceKind.GeoJson => ModernUIColors.IndigoBrush,
+
+            DataSourceKind.Csv => ModernUIColors.VioletBrush,
+            DataSourceKind.Tsv => ModernUIColors.PinkBrush,
+
+            DataSourceKind.Worldfile => ModernUIColors.CrimsonBrush,
+            DataSourceKind.GeoTiff => ModernUIColors.RedBrush,
+            DataSourceKind.ZippedImagePyramid => ModernUIColors.OrangeBrush,
+
+            DataSourceKind.GML => ModernUIColors.AmberBrush,
             DataSourceKind.Other => ModernUIColors.SteelBrush,
             _ => Brushes.Transparent
         };

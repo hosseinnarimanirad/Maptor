@@ -274,6 +274,24 @@
   <data name="cmd_legend_removeAll" xml:space="preserve">
     <value>حذف همه لایه‌ها</value>
   </data>
+  <data name="cmd_legend_importLayer" xml:space="preserve">
+    <value>افزودن لایه</value>
+  </data>
+  <data name="cmd_legend_addKml" xml:space="preserve">
+    <value>افزودن KML</value>
+  </data>
+  <data name="cmd_legend_addKmz" xml:space="preserve">
+    <value>افزودن KMZ</value>
+  </data>
+  <data name="cmd_legend_addDxf" xml:space="preserve">
+    <value>افزودن DXF</value>
+  </data>
+  <data name="cmd_legend_addCsv" xml:space="preserve">
+    <value>افزودن CSV</value>
+  </data>
+  <data name="cmd_legend_addTsv" xml:space="preserve">
+    <value>افزودن TSV</value>
+  </data>
   <data name="dialog_goto_panTo" xml:space="preserve">
     <value>برو به</value>
   </data>

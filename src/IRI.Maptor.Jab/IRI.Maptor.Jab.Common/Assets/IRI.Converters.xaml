@@ -34,7 +34,7 @@
     <converters:GeometryTypeToMaterialIconConverter x:Key="geometryTypeToMaterialIconConverter"/>
 
     <converters:DataSourceKindToBrushConverter x:Key="dataSourceKindToBrushConverter"/>
-    <converters:DataSourceKindToVisibilityConverter x:Key="dataSourceKindToVisibilityConverter"/>
+    <!--<converters:DataSourceKindToVisibilityConverter x:Key="dataSourceKindToVisibilityConverter"/>-->
     <converters:ILayerToLegendConverter x:Key="iLayerToLegendConverter"/>
     <converters:IndexToBoolConverter x:Key="indexToBoolConverter"/>
 

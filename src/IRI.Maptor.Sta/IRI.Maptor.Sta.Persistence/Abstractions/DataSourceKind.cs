@@ -10,14 +10,14 @@ public enum DataSourceKind
     [Description("Shp")]
     Shapefile,
 
-    [Description("Kml")]
-    Kml,
-
     [Description("Kmz")]
     Kmz,
 
-    [Description("GeoJson")]
-    GeoJson,
+    [Description("Kml")]
+    Kml,
+
+    [Description("Dxf")]
+    Dxf,
 
     [Description("WebApi")]
     WebApi,
@@ -25,11 +25,14 @@ public enum DataSourceKind
     [Description("gRPC")]
     GRPC,
 
-    [Description("Gml")]
-    GML,
+    [Description("GeoJson")]
+    GeoJson,
 
-    [Description("Dxf")]
-    Dxf,
+    [Description("Csv")]
+    Csv,
+
+    [Description("Tsv")]
+    Tsv,
 
     [Description("Worldfile")]
     Worldfile,
@@ -40,12 +43,9 @@ public enum DataSourceKind
     [Description("image pyramid")]
     ZippedImagePyramid,
 
-    [Description("Csv")]
-    Csv,
-
-    [Description("Tsv")]
-    Tsv,
+    [Description("Gml")]
+    GML,
 
     [Description("...")]
     Other,
-}
+}     

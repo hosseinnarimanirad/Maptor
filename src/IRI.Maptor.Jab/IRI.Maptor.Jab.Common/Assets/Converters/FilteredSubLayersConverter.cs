@@ -12,10 +12,12 @@ namespace IRI.Maptor.Jab.Common.Assets.Converters;
 
 public class FilteredSubLayersConverter : IMultiValueConverter
 {
+    private static readonly List<ILayer> EmptyLayers = new();
+
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         if (values is null || values.Length < 2)
-            return new List<ILayer>();
+            return CollectionViewSource.GetDefaultView(EmptyLayers);
 
         var layers = values[0] as System.Collections.IEnumerable;
 
@@ -26,36 +28,41 @@ public class FilteredSubLayersConverter : IMultiValueConverter
         var allowedKinds = kinds?.Where(k => k.IsSelected).Select(k => k.Kind).ToList() ?? [];
 
         if (layers is null)
-            return new List<ILayer>();
+            return CollectionViewSource.GetDefaultView(EmptyLayers);
 
         var hasNameFilter = !string.IsNullOrEmpty(filterText);
         var hasKindFilter = kinds?.Any(k => k.IsSelected == false) == true;
 
+        var view = CollectionViewSource.GetDefaultView(layers);
+
         if (!hasNameFilter && !hasKindFilter)
-            return layers;
-
-        var result = new List<ILayer>();
-
-        foreach (ILayer layer in layers)
         {
-            if (layer == null) continue;
-
-            if (layer.IsGroupLayer)
+            view.Filter = null;
+        }
+        else
+        {
+            view.Filter = obj =>
             {
-
-            }
-
-            var passesName = !hasNameFilter || LayerNameMatches(layer, filterText!) ||
-                (layer.IsGroupLayer && layer.SubLayers != null && HasMatchingDescendant(layer, filterText!));
-
-            var passesKind = !hasKindFilter || IsDataSourceKindAllowed(layer, allowedKinds) ||
-                (layer.IsGroupLayer && layer.SubLayers != null && HasDescendantWithAllowedDataSourceKind(layer, allowedKinds));
-
-            if (passesName && passesKind)
-                result.Add(layer);
+                if (obj is not ILayer layer) return false;
+                return FilterPredicate(layer, filterText!, allowedKinds, hasNameFilter, hasKindFilter);
+            };
         }
 
-        return result;
+        view.Refresh();
+        return view;
+    }
+
+    private static bool FilterPredicate(ILayer layer, string filterText, List<DataSourceKind> allowedKinds, bool hasNameFilter, bool hasKindFilter)
+    {
+        if (layer == null) return false;
+
+        var passesName = !hasNameFilter || LayerNameMatches(layer, filterText) ||
+            (layer.IsGroupLayer && layer.SubLayers != null && HasMatchingDescendant(layer, filterText));
+
+        var passesKind = !hasKindFilter || IsDataSourceKindAllowed(layer, allowedKinds) ||
+            (layer.IsGroupLayer && layer.SubLayers != null && HasDescendantWithAllowedDataSourceKind(layer, allowedKinds));
+
+        return passesName && passesKind;
     }
 
 
