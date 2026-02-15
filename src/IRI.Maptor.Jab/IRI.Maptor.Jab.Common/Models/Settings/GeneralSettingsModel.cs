@@ -70,6 +70,18 @@ public class GeneralSettingsModel : Notifier, IGeneralSettings
         }
     }
 
+    public bool Legend_ShowLegendFilters
+    {
+        get => _settings.Legend_ShowLegendFilters;
+        set
+        {
+            _settings.Legend_ShowLegendFilters = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    
+
     public MahAppsThemeColor? MahAppsTheme
     {
         get => _settings.MahAppsTheme;

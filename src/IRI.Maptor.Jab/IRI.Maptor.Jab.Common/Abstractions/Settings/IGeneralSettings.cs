@@ -17,6 +17,8 @@ public interface IGeneralSettings
 
     bool Legend_ShowLegendTools { get; set; }
 
+    bool Legend_ShowLegendFilters { get; set; }
+
     MahAppsThemeColor? MahAppsTheme { get; set; }
 
 }

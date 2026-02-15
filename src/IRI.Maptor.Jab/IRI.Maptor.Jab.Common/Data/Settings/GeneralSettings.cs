@@ -19,6 +19,8 @@ public class GeneralSettings : IGeneralSettings
 
     public bool Legend_ShowLegendTools { get; set; } = false;
 
+    public bool Legend_ShowLegendFilters { get; set; } = false;
+
     public MahAppsThemeColor? MahAppsTheme { get; set; } = MahAppsThemeColor.Amber;
 
     public static GeneralSettings Default => new GeneralSettings();
