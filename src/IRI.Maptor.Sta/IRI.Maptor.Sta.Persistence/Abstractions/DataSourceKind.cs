@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace IRI.Maptor.Sta.Persistence.Abstractions;
 
 /// <summary>
@@ -5,9 +7,45 @@ namespace IRI.Maptor.Sta.Persistence.Abstractions;
 /// </summary>
 public enum DataSourceKind
 {
-    None,
+    [Description("Shp")]
     Shapefile,
+
+    [Description("Kml")]
     Kml,
+
+    [Description("Kmz")]
+    Kmz,
+
+    [Description("GeoJson")]
     GeoJson,
+
+    [Description("WebApi")]
     WebApi,
+
+    [Description("gRPC")]
+    GRPC,
+
+    [Description("Gml")]
+    GML,
+
+    [Description("Dxf")]
+    Dxf,
+
+    [Description("Worldfile")]
+    Worldfile,
+
+    [Description("GeoTiff")]
+    GeoTiff,
+
+    [Description("image pyramid")]
+    ZippedImagePyramid,
+
+    [Description("Csv")]
+    Csv,
+
+    [Description("Tsv")]
+    Tsv,
+
+    [Description("...")]
+    Other,
 }

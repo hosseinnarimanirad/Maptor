@@ -32,24 +32,27 @@ public class VectorLayer : SymbolizableLayer
 
     //public IVectorDataSource DataSource { get; protected set; }
 
-    private IVectorDataSource _dataSource;
+    private IDataSource? _dataSource;
 
-    public IVectorDataSource DataSource
+    //public override IDataSource? DataSource => _dataSource;
+
+    public override IDataSource? DataSource
     {
         get => _dataSource;
         protected set
         {
             UnsubscribeFromDataSourceStatusEvents(_dataSource);
- 
             _dataSource = value;
-             
-            UnsubscribeFromDataSourceStatusEvents(value);
-            SubscribeToDataSourceStatusEvents(value);
-
-            // Initialize and bind status flags from data source to layer.
+            if (value != null)
+            {
+                UnsubscribeFromDataSourceStatusEvents(value);
+                SubscribeToDataSourceStatusEvents(value);
+            }
             SyncStatusFromDataSource();
         }
     }
+
+    private IVectorDataSource? _vectorDataSource => _dataSource as IVectorDataSource;
 
 
     protected LayerType _type;
@@ -194,7 +197,7 @@ public class VectorLayer : SymbolizableLayer
         }
 
         this.VisibleRange = (visibleRange == null) ? ScaleInterval.All : visibleRange;
-         
+
     }
 
     #endregion
@@ -204,7 +207,10 @@ public class VectorLayer : SymbolizableLayer
 
     public override async Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
     {
-        var feature = await this.DataSource.GetAsFeatureSetAsync(mapScale, mapExtent);
+        if (_vectorDataSource is null)
+            return FeatureSet<Point>.Empty;
+
+        var feature = await _vectorDataSource.GetAsFeatureSetAsync(mapScale, mapExtent);
 
         if (feature is null || feature.HasNoGeometry())
             return FeatureSet<Point>.Empty;
@@ -341,7 +347,7 @@ public class VectorLayer : SymbolizableLayer
     protected override void DataSource_IsLoadedChanged(object? sender, bool e)
     {
         base.DataSource_IsLoadedChanged(sender, e);
-        if (e && DataSource is IVectorDataSource vds)
+        if (e && _dataSource is IVectorDataSource vds)
         {
             SpatialModelMode = vds.GeometryType.AsLayerType();
             Extent = vds.WebMercatorExtent;
@@ -406,14 +412,20 @@ public class VectorLayer : SymbolizableLayer
 
     public async Task ExportAsShapefileAsync(string shpFileName)
     {
-        var features = await this.DataSource.GetAsFeatureSetAsync();
+        if (_vectorDataSource is null)
+            return;
+
+        var features = await _vectorDataSource.GetAsFeatureSetAsync();
 
         features.SaveAsShapefile(shpFileName, System.Text.Encoding.UTF8, null, true);
     }
 
     public async Task ExportAsGeoJsonAsync(string geoJsonFileName, bool isLongitudeFirst)
     {
-        var features = await this.DataSource.GetAsFeatureSetAsync();
+        if (_vectorDataSource is null)
+            return;
+
+        var features = await _vectorDataSource.GetAsFeatureSetAsync();
 
         features.SaveAsGeoJson(geoJsonFileName, isLongitudeFirst);
     }
@@ -427,12 +439,13 @@ public class VectorLayer : SymbolizableLayer
 
     public async Task<FeatureSet<Point>?> GetFeaturesAsync(Geometry<Point>? geometry)
     {
-        if (DataSource == null)
-            return null;
-        return await DataSource.GetAsFeatureSetAsync(geometry);
+        if (_vectorDataSource is null)
+            return FeatureSet<Point>.Empty;
+
+        return await _vectorDataSource.GetAsFeatureSetAsync(geometry);
     }
 
-    public List<Field>? GetFields() => DataSource?.Fields;
+    public List<Field>? GetFields() => _vectorDataSource?.Fields;
 
     #endregion
 

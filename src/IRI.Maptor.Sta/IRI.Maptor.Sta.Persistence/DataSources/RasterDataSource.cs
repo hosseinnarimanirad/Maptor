@@ -10,7 +10,7 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public abstract class RasterDataSource : IRasterDataSource
 {
-    public virtual DataSourceKind DataSourceKind => DataSourceKind.None;
+    public virtual DataSourceKind DataSourceKind => DataSourceKind.Other;
 
     public virtual Task LoadAsync() => Task.CompletedTask;
     public virtual BoundingBox WebMercatorExtent { get; protected set; } = BoundingBox.NaN;

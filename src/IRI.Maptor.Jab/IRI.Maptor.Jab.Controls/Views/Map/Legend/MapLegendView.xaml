@@ -6,8 +6,8 @@
             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
             xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-            x:Name="root"
-            xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.Views"  >
+            x:Name="root" 
+            xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.Views">
     <userControl:NotifiableUserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,6 +21,21 @@
             <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
             <Style TargetType="{x:Type Path}" BasedOn="{StaticResource circleButtonPath}"/>
 
+            <Style x:Key="filterTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="Padding" Value="8,4"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Background" Value="#F5F5F5"/>
+                        <Setter Property="Foreground" Value="#999999"/>
+                        <Setter Property="Opacity" Value="0.8"/>
+                    </Trigger>
+                </Style.Triggers> 
+            </Style>
+
             <CollectionViewSource x:Key="collectionViewSource" 
                                   Source="{Binding Layers, RelativeSource={RelativeSource AncestorType=userControl:NotifiableUserControl}}" 
                                   Filter="CollectionViewSource_Filter">
@@ -33,7 +48,8 @@
                 <HierarchicalDataTemplate.ItemsSource>
                     <MultiBinding Converter="{StaticResource filteredSubLayersConverter}">
                         <Binding Path="SubLayers"/>
-                        <Binding Path="LayerNameFilterText" ElementName="root"/>
+                        <Binding Path="LegendViewModel.LayerNameFilterText" ElementName="root"/>
+                        <Binding Path="LegendViewModel.DataSourceKindFilterItems" ElementName="root"/>
                     </MultiBinding>
                 </HierarchicalDataTemplate.ItemsSource>
                 <HierarchicalDataTemplate.Resources>
@@ -82,16 +98,18 @@
                                     TitleFontSize="{Binding ElementName=root, Path=TitleFontSize}"/>
                 </RadioButton>
             </HierarchicalDataTemplate>
+ 
         </ResourceDictionary>
     </userControl:NotifiableUserControl.Resources>
-    <Grid>
+    <Grid >
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  
                     Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
             <Button IsEnabled="True" Focusable="False" Command="{Binding AddGeoJsonToDrawingItemsCommand}"
                     Style="{StaticResource circleButtonLight}"  
@@ -122,19 +140,99 @@
                 <iconPacks:PackIconModern Kind="LayerUp"/>
             </Button>
         </StackPanel>
-        <Line Grid.Row="1" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,4" 
+        <Line Grid.Row="1" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,2" 
                 StrokeThickness="1"
                 StrokeDashArray="8 2"
                 Stroke="{DynamicResource MahApps.Brushes.Highlight}"  
                 Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"/>
 
-        <TextBox Grid.Row="2" Margin="4" Padding="4"
-                 Text="{Binding ElementName=root, Path=LayerNameFilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 mahApp:TextBoxHelper.Watermark="فیلتر لایه‌ها"
-                 mahApp:TextBoxHelper.ClearTextButton="True"/>
+        <Border Grid.Row="2" Background="{DynamicResource MahApps.Brushes.Accent4}"
+                Margin="2" CornerRadius="4"
+                Visibility="{Binding ElementName=root, Path=ShowFilters, Converter={StaticResource boolToVisibilityConverter}}">
+        <Grid Grid.Row="2" Margin="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Margin="0"
+                      Text="{Binding ElementName=root, Path=LegendViewModel.LayerNameFilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      mahApp:ControlsHelper.CornerRadius="4"
+                      mahApp:TextBoxHelper.Watermark="فیلتر لایه‌ها" 
+                      mahApp:TextBoxHelper.ClearTextButton="True"
+                      Style="{StaticResource filterTextBox}"
+                     FontFamily="{StaticResource iranSans}"/>
+            <Button Grid.Column="1" Margin="2" Style="{StaticResource circleButtonLight}" 
+                    Command="{Binding LegendViewModel.ClearFilterCommand, ElementName=root}"
+                    IsEnabled="{Binding LegendViewModel.HasActiveFilter, ElementName=root}"
+                    ToolTip="پاک کردن فیلتر"
+                    VerticalAlignment="Center" >
+                <iconPacks:PackIconMaterial Kind="FilterOff"/>
+            </Button>
+            <ToggleButton x:Name="dataSourceKindFilterToggle"  Grid.Column="2"
+                          Style="{StaticResource circleToggleButtonLight}"
+                          VerticalAlignment="Center" Margin="2"
+                          ToolTip="فیلتر نوع منبع داده">
+                <iconPacks:PackIconMaterial Kind="Filter"/>
+            </ToggleButton>
+            <mahApp:Badged Grid.Column="2" BadgePlacementMode="BottomLeft" BadgeMargin="0"
+                Margin="0" Padding="0" Width="24" Height="22"
+                Badge="{Binding LegendViewModel.SelectedDataSourceKindCount, ElementName=root, Converter={StaticResource localizedNumberConverter}}"
+                Visibility="{Binding LegendViewModel.ShowSelectedDataSourceKindCount, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}">
+
+            </mahApp:Badged> 
+            <Popup IsOpen="{Binding IsChecked, ElementName=dataSourceKindFilterToggle}"
+                   PlacementTarget="{Binding ElementName=dataSourceKindFilterToggle}"
+                   Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
+                   PopupAnimation="Slide">
+                <Border Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
+                        BorderThickness="1" Padding="4" CornerRadius="4"
+                        DataContext="{Binding LegendViewModel, ElementName=root}">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
+                    </Border.Effect>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Center">
+                            <Button Style="{StaticResource circleButtonLight}" ToolTip="Select All"
+                                    Command="{Binding SelectAllDataSourceKindsCommand}">
+                                <iconPacks:PackIconMaterial Kind="SelectAll"/>
+                            </Button>
+                            <Button Style="{StaticResource circleButtonLight}" ToolTip="Clear All"
+                                    Command="{Binding ClearAllDataSourceKindsCommand}" Margin="4,0,0,0">
+                                <iconPacks:PackIconMaterial Kind="SelectionRemove"/>
+                            </Button>
+                        </StackPanel>
+                        <Separator/>
+                        <ListBox ItemsSource="{Binding DataSourceKindFilterItems}"
+                                 SelectionMode="Extended" MaxHeight="280" FlowDirection="LeftToRight"
+                                 BorderThickness="0" Background="Transparent">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" >
+                                        <Rectangle Width="16" HorizontalAlignment="Stretch"
+                                                   Fill="{Binding Kind, Converter={StaticResource dataSourceKindToBrushConverter}}"
+                                                   Margin="2"/>
+                                        <CheckBox Content="{Binding DisplayName}" Cursor="Hand" Margin="0,2"  
+                                                  IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                  />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </Border>
+            </Popup>
+
+        </Grid>
+        </Border>
+        <Line Grid.Row="3" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,4" 
+                StrokeThickness="1"
+                StrokeDashArray="8 2"
+                Stroke="{DynamicResource MahApps.Brushes.Highlight}"  
+                Visibility="Collapsed"/>
 
         <TreeView ItemsSource="{Binding Source={StaticResource collectionViewSource}}" ItemTemplate="{StaticResource legendTemplate}"
-                  Grid.Row="3">
+                  Grid.Row="4">
             <!--<TreeView.Resources>
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                     <Setter Property="HorizontalContentAlignment" Value="Left" />

@@ -33,9 +33,9 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     //    return _features.Srid;
     //}
 
-    public MemoryDataSource() : base(new List<Field>()) { _dataSourceKind = DataSourceKind.None; }
+    public MemoryDataSource() : base(new List<Field>()) { _dataSourceKind = DataSourceKind.Other; }
 
-    public MemoryDataSource(List<Geometry<Point>> geometries, bool resetIds = true, DataSourceKind kind = DataSourceKind.None) : base(new List<Field>())
+    public MemoryDataSource(List<Geometry<Point>> geometries, bool resetIds = true, DataSourceKind kind = DataSourceKind.Other) : base(new List<Field>())
     {
         _dataSourceKind = kind;
         var features = geometries.Select(g => new Feature<Point>(g) { Id = GetNewId() }).ToList();
@@ -43,7 +43,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         Initialize(features, resetIds);
     }
 
-    public MemoryDataSource(List<Feature<Point>> features, bool resetIds = true, DataSourceKind kind = DataSourceKind.None) : base(new List<Field>())
+    public MemoryDataSource(List<Feature<Point>> features, bool resetIds = true, DataSourceKind kind = DataSourceKind.Other) : base(new List<Field>())
     {
         _dataSourceKind = kind;
         Initialize(features, resetIds);

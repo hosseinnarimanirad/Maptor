@@ -23,10 +23,12 @@ public class RasterLayer : BaseLayer
 
     private IDataSource? _dataSource;
 
-    public IDataSource? DataSource
+    //public override IDataSource? DataSource => _dataSource;
+
+    public override IDataSource? DataSource
     {
         get => _dataSource;
-        private set
+        protected set
         {
             if (ReferenceEquals(_dataSource, value))
                 return;

@@ -1453,7 +1453,7 @@ public abstract class MapViewModelBase : ViewModelBase
             if (!layer.IsSearchable)
                 continue;
 
-            var features = await layer.DataSource.SearchAsync(searchText);
+            var features = await (layer.DataSource as IVectorDataSource)!.SearchAsync(searchText);
 
             if (features is not null && !features.Features.IsNullOrEmpty())
             {
@@ -1495,7 +1495,7 @@ public abstract class MapViewModelBase : ViewModelBase
             if (!layer.IsInScaleRange && !options.IncludeNotInScaleRangeLayers)
                 continue;
 
-            var features = await layer.DataSource.GetAsFeatureSetAsync(geometryBoundary);
+            var features = await (layer.DataSource as IVectorDataSource)!.GetAsFeatureSetAsync(geometryBoundary);
 
             if (features is not null && !features.Features.IsNullOrEmpty())
             {

@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Controls;
 
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Converters;
+using IRI.Maptor.Jab.Common.ViewModels.Map;
+using IRI.Maptor.Sta.Persistence.Abstractions;
 using System.Collections.ObjectModel;
 
 namespace IRI.Maptor.Jab.Controls.Views;
@@ -17,7 +21,27 @@ public partial class MapLegendView : NotifiableUserControl
     public MapLegendView()
     {
         InitializeComponent();
+
+        LegendViewModel = new LegendViewModel();
+
+        LegendViewModel.RequestRefresh = () =>
+        {
+            var cvs = Resources["collectionViewSource"] as CollectionViewSource;
+            cvs?.View?.Refresh();
+        };
     }
+
+    private LegendViewModel _legendViewModel;
+    public LegendViewModel LegendViewModel
+    {
+        get { return _legendViewModel; }
+        set
+        {
+            _legendViewModel = value;
+            RaisePropertyChanged();
+        }
+    }
+
 
     public string GroupName
     {
@@ -81,6 +105,20 @@ public partial class MapLegendView : NotifiableUserControl
 
 
 
+
+    public bool ShowFilters
+    {
+        get { return (bool)GetValue(ShowFiltersProperty); }
+        set { SetValue(ShowFiltersProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for ShowFilters.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ShowFiltersProperty =
+        DependencyProperty.Register(nameof(ShowFilters), typeof(bool), typeof(MapLegendView), new PropertyMetadata(true));
+
+
+
+
     public ObservableCollection<ILayer> Layers
     {
         get { return (ObservableCollection<ILayer>)GetValue(LayersProperty); }
@@ -88,23 +126,6 @@ public partial class MapLegendView : NotifiableUserControl
     }
     public static readonly DependencyProperty LayersProperty =
         DependencyProperty.Register(nameof(Layers), typeof(ObservableCollection<ILayer>), typeof(MapLegendView), new PropertyMetadata(null));
-
-
-    public string LayerNameFilterText
-    {
-        get => (string)GetValue(LayerNameFilterTextProperty);
-        set => SetValue(LayerNameFilterTextProperty, value);
-    }
-    public static readonly DependencyProperty LayerNameFilterTextProperty =
-        DependencyProperty.Register(nameof(LayerNameFilterText), typeof(string), typeof(MapLegendView),
-            new PropertyMetadata(string.Empty, OnLayerNameFilterTextChanged));
-
-    private static void OnLayerNameFilterTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var view = (MapLegendView)d;
-        var cvs = view.Resources["collectionViewSource"] as CollectionViewSource;
-        cvs?.View?.Refresh();
-    }
 
     private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
     {
@@ -128,7 +149,20 @@ public partial class MapLegendView : NotifiableUserControl
             (ShowRasterLayers && item.Type == LayerType.ImagePyramid) ||
             item.Type == LayerType.GroupLayer);
 
-        var filter = LayerNameFilterText?.Trim();
+        var allowedKinds = LegendViewModel.GetAllowedDataSourceKinds();
+
+        var passesKindFilter = item.IsGroupLayer
+            ? FilteredSubLayersConverter.HasDescendantWithAllowedDataSourceKind(item, allowedKinds)
+            : IsDataSourceKindAllowed(item, allowedKinds);
+
+        if (!passesKindFilter)
+        {
+            e.Accepted = false;
+            return;
+        }
+
+
+        var filter = LegendViewModel.LayerNameFilterText?.Trim();
 
         if (string.IsNullOrEmpty(filter))
         {
@@ -147,5 +181,11 @@ public partial class MapLegendView : NotifiableUserControl
 
         else
             e.Accepted = item.LayerName?.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
+    private static bool IsDataSourceKindAllowed(ILayer layer, List<DataSourceKind> allowedKinds)
+    {
+        var kind = layer.DataSource?.DataSourceKind ?? DataSourceKind.Other;
+        return allowedKinds.Contains(kind);
     }
 }

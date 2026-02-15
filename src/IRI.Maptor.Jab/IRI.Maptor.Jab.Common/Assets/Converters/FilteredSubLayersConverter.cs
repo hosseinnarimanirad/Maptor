@@ -5,6 +5,8 @@ using System.Linq;
 using System.Windows.Data;
 
 using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Common.Models.Legend;
+using IRI.Maptor.Sta.Persistence.Abstractions;
 
 namespace IRI.Maptor.Jab.Common.Assets.Converters;
 
@@ -19,11 +21,18 @@ public class FilteredSubLayersConverter : IMultiValueConverter
 
         var filterText = (values[1] as string)?.Trim();
 
+        var kinds = values[2] as IList<DataSourceKindFilterItem>;
+
+        var allowedKinds = kinds?.Where(k => k.IsSelected).Select(k => k.Kind).ToList() ?? [];
+
         if (layers is null)
             return new List<ILayer>();
 
-        if (string.IsNullOrEmpty(filterText))
-            return layers;/*is IList<ILayer> list ? list : layers.Cast<ILayer>().ToList();*/
+        var hasNameFilter = !string.IsNullOrEmpty(filterText);
+        var hasKindFilter = kinds?.Any(k => k.IsSelected == false) == true;
+
+        if (!hasNameFilter && !hasKindFilter)
+            return layers;
 
         var result = new List<ILayer>();
 
@@ -31,14 +40,47 @@ public class FilteredSubLayersConverter : IMultiValueConverter
         {
             if (layer == null) continue;
 
-            if (LayerNameMatches(layer, filterText))
-                result.Add(layer);
+            if (layer.IsGroupLayer)
+            {
 
-            else if (layer.IsGroupLayer && layer.SubLayers != null && HasMatchingDescendant(layer, filterText))
+            }
+
+            var passesName = !hasNameFilter || LayerNameMatches(layer, filterText!) ||
+                (layer.IsGroupLayer && layer.SubLayers != null && HasMatchingDescendant(layer, filterText!));
+
+            var passesKind = !hasKindFilter || IsDataSourceKindAllowed(layer, allowedKinds) ||
+                (layer.IsGroupLayer && layer.SubLayers != null && HasDescendantWithAllowedDataSourceKind(layer, allowedKinds));
+
+            if (passesName && passesKind)
                 result.Add(layer);
         }
 
         return result;
+    }
+
+
+    private static bool IsDataSourceKindAllowed(ILayer layer, List<DataSourceKind> allowedKinds)
+    {
+        var kind = layer.DataSource?.DataSourceKind ?? DataSourceKind.Other;
+        return allowedKinds.Contains(kind);
+    }
+
+    public static bool HasDescendantWithAllowedDataSourceKind(ILayer layer, List<DataSourceKind> allowedKinds)
+    {
+        if (layer == null) return false;
+
+        if (!layer.IsGroupLayer && IsDataSourceKindAllowed(layer, allowedKinds))
+            return true;
+
+        if (layer.SubLayers is null) return false;
+
+        foreach (var child in layer.SubLayers)
+        {
+            if (HasDescendantWithAllowedDataSourceKind(child, allowedKinds))
+                return true;
+        }
+
+        return false;
     }
 
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

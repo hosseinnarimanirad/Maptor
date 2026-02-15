@@ -58,7 +58,7 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public abstract LayerType Type { get; /*protected set;*/ }
 
-    public virtual IDataSource? DataSource => null;
+    public virtual IDataSource? DataSource { get; protected set; }
 
     public virtual SpatialModelMode SpatialModelMode { get; protected set; } = SpatialModelMode.None;
 

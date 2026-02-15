@@ -23,7 +23,7 @@ public abstract class VectorDataSource : IVectorDataSource
 
     public virtual GeometryType? GeometryType { get; protected set; }
 
-    public virtual DataSourceKind DataSourceKind => DataSourceKind.None;
+    public virtual DataSourceKind DataSourceKind => DataSourceKind.Other;
 
     public List<Field> Fields { get; set; } = new List<Field>();
 

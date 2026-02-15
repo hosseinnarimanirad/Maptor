@@ -11,7 +11,7 @@ public class DataSourceKindToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is not DataSourceKind kind || kind == DataSourceKind.None)
+        if (value is not DataSourceKind kind /*|| kind == DataSourceKind.Other*/)
             return Visibility.Collapsed;
         return Visibility.Visible;
     }

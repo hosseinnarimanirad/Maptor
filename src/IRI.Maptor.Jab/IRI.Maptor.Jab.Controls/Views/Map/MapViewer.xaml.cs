@@ -1128,7 +1128,7 @@ public partial class MapViewer : NotifiableUserControl
 
         layerTile.IsProcessing = true;
 
-        var feature = await layer.DataSource.GetAsFeatureSetAsync(mapScale, tile.WebMercatorExtent);
+        var feature = await (layer.DataSource as IVectorDataSource)!.GetAsFeatureSetAsync(mapScale, tile.WebMercatorExtent);
 
         if (feature is null || feature.Features.IsNullOrEmpty())
             return;
@@ -1194,7 +1194,7 @@ public partial class MapViewer : NotifiableUserControl
 
             var mapScale = this.MapScale;
 
-            var feature = await layer.DataSource.GetAsFeatureSetAsync(mapScale, extent);
+            var feature = await (layer.DataSource as IVectorDataSource)!.GetAsFeatureSetAsync(mapScale, extent);
 
             if (feature is null || feature.Features.IsNullOrEmpty())
                 return;
