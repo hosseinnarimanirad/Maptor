@@ -1,4 +1,5 @@
 using IRI.Maptor.Jab.Common.Assets.Fonts;
+using IRI.Maptor.Jab.Common.Assets.ColorBrushes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -223,34 +224,38 @@ public class TextboxMarkerViewModel : Notifier
 
     private static BackgroundChoice[] BuildBackgroundChoices()
     {
+        // Replaced inline hex definitions with ModernUIColors to avoid duplication.
+        // Original: ColorHelper.ToWpfColor("#FF...") for each of the 21 colors.
         var colors = new[]
         {
-            ColorHelper.ToWpfColor("#FF000000"),
-            ColorHelper.ToWpfColor("#FF61A917"),
-            ColorHelper.ToWpfColor("#FFA4C401"),
-            ColorHelper.ToWpfColor("#FF008A00"),
-            ColorHelper.ToWpfColor("#FF00ACAA"),
-            ColorHelper.ToWpfColor("#FF1CA1E2"),
-            ColorHelper.ToWpfColor("#FF0050EF"),
-            ColorHelper.ToWpfColor("#FF6900FF"),
-            ColorHelper.ToWpfColor("#FFAA00FF"),
-            ColorHelper.ToWpfColor("#FFF572D0"),
-            ColorHelper.ToWpfColor("#FFD80072"),
-            ColorHelper.ToWpfColor("#FFA10024"),
-            ColorHelper.ToWpfColor("#FFE51400"),
-            ColorHelper.ToWpfColor("#FFFA6900"),
-            ColorHelper.ToWpfColor("#FFF1A30B"),
-            ColorHelper.ToWpfColor("#FFE4C802"),
-            ColorHelper.ToWpfColor("#FF835A2C"),
-            ColorHelper.ToWpfColor("#FF6D8764"),
-            ColorHelper.ToWpfColor("#FF637685"),
-            ColorHelper.ToWpfColor("#FF756089"),
-            ColorHelper.ToWpfColor("#FF88794E"),
+            ModernUIColors.BlackColor,
+            ModernUIColors.LimeGreenColor,
+            ModernUIColors.LimeColor,
+            ModernUIColors.GreenColor,
+            ModernUIColors.TealColor,
+            ModernUIColors.CyanColor,
+            ModernUIColors.BlueColor,
+            ModernUIColors.IndigoColor,
+            ModernUIColors.VioletColor,
+            ModernUIColors.PinkColor,
+            ModernUIColors.MagentaColor,
+            ModernUIColors.CrimsonColor,
+            ModernUIColors.RedColor,
+            ModernUIColors.OrangeColor,
+            ModernUIColors.AmberColor,
+            ModernUIColors.YellowColor,
+            ModernUIColors.BrownColor,
+            ModernUIColors.OliveColor,
+            ModernUIColors.SteelColor,
+            ModernUIColors.MauveColor,
+            ModernUIColors.TaupeColor,
         };
 
         var list = new List<BackgroundChoice> { new("Theme highlight", null, true) };
+
         foreach (var c in colors)
             list.Add(new(c.ToString(), c, false));
+
         return list.ToArray();
     }
 
