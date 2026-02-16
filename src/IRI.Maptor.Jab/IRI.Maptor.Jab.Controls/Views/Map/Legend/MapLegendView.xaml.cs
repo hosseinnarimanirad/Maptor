@@ -10,6 +10,7 @@ using IRI.Maptor.Jab.Common.Assets.Converters;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using System.Collections.ObjectModel;
+using System.Windows.Threading;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 
@@ -27,7 +28,10 @@ public partial class MapLegendView : NotifiableUserControl
         LegendViewModel.RequestRefresh = () =>
         {
             var cvs = Resources["collectionViewSource"] as CollectionViewSource;
-            cvs?.View?.Refresh();
+            if (cvs?.View != null)
+            {
+                Dispatcher.BeginInvoke(() => cvs.View.Refresh(), DispatcherPriority.Loaded);
+            }
         };
     }
 

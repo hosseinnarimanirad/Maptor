@@ -270,6 +270,11 @@
                     </TextBox.Style>
                 </TextBox>
 
+                <iconPacks:PackIconMaterial Kind="Pencil" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0,0,0"
+                                            Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                            Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}"
+                                            ToolTip="تغییرات ذخیره نشده"/>
+
                 <!--palette control-->
                 <ToggleButton ClickMode="Release"  Name="palette" Margin="4 0 0 0" Padding="0" Cursor="Hand" Background="Transparent" VerticalAlignment="Center"
                               Width="16" Height="16" Visibility="{Binding HasMultiSymbolizers, Converter={StaticResource boolToVisibilityConverter}}">

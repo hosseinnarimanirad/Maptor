@@ -110,13 +110,16 @@
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
-            <Button Command="{Binding EditCommand}" Cursor="Hand" BorderThickness="0" Height="24" Margin="4" IsEnabled="{Binding IsSingleValueHighlighted}"
-                    Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}" Style="{x:Null}">
-                <iconPacks:PackIconModern Kind="Edit" Foreground="{DynamicResource MahApps.Brushes.Accent}" FlowDirection="LeftToRight"/>
+            <Button Command="{Binding EditCommand}"
+                    Style="{StaticResource circleButtonLight}"
+                    IsEnabled="{Binding IsSingleValueHighlighted}"
+                    Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}"  >
+                <iconPacks:PackIconModern Kind="Edit" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
-            <Button Command="{Binding SaveCommand}" Cursor="Hand" BorderThickness="0" Height="24" Margin="4"
+            <Button Command="{Binding SaveCommand}"
+                    Style="{StaticResource circleButtonLight}" 
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
-                <iconPacks:PackIconModern Kind="Save" Foreground="{DynamicResource MahApps.Brushes.Accent}" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconModern Kind="Save" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
             <ItemsControl ItemsSource="{Binding AssociatedLayer.FeatureTableCommands}">
                 <ItemsControl.ItemsPanel>
