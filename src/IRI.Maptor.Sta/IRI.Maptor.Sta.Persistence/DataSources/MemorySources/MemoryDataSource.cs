@@ -21,10 +21,31 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     private int _uniqueId = 0;
 
     private readonly DataSourceKind _dataSourceKind;
-
     public override DataSourceKind DataSourceKind => _dataSourceKind;
 
     public override int Srid { get => /*GetSrid()*/ _features.Srid; /*protected set => _ = value;*/ }
+
+
+    private Geometry<Point>? _filterGeometry;
+    /// <summary>
+    /// Optional geometry used to filter features client-side when reading. When set, IsClientFiltered becomes true.
+    /// </summary>
+    public Geometry<Point>? FilterGeometry
+    {
+        get => _filterGeometry;
+        set
+        {
+            _filterGeometry = value;
+
+            HasClientFilter = _filterGeometry != null && !_filterGeometry.IsNullOrEmpty();
+        }
+    }
+
+    protected readonly List<Feature<Point>> _addedFeatures = new List<Feature<Point>>();
+    protected readonly List<Feature<Point>> _updatedFeatures = new List<Feature<Point>>();
+    protected readonly List<int> _deletedIds = new List<int>();
+
+
 
     //// todo: remove this method
     //public int GetSrid()
@@ -93,20 +114,35 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
 
     #region CRUD
-     
+
+
+    protected void UpdateHasPendingChanges()
+    {
+        HasPendingChanges = _addedFeatures.Count > 0 || _updatedFeatures.Count > 0 || _deletedIds.Count > 0;
+    }
 
     public virtual void Add(Feature<Point> newGeometry)
     {
         _features.Add(newGeometry);
 
         UpdateExtent();
+
+        _addedFeatures.Add(newGeometry);
+        UpdateHasPendingChanges();
     }
 
     public virtual void Remove(Feature<Point> geometry)
     {
         _features.Remove(geometry);
-
         UpdateExtent();
+
+        if (_addedFeatures.Remove(geometry))
+        { 
+            UpdateHasPendingChanges();
+            return;
+        }
+        _deletedIds.Add(geometry.Id); 
+        UpdateHasPendingChanges();
     }
 
     public virtual void Update(Feature<Point> newGeometry)
@@ -130,13 +166,18 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         _features.Update(newGeometry);
 
         UpdateExtent();
+
+        if (!_addedFeatures.Any(a => object.ReferenceEquals(a, newGeometry)))
+            _updatedFeatures.Add(newGeometry);
+        UpdateHasPendingChanges();
     }
 
     public virtual void SaveChanges()
     {
         return;
     }
-
+     
+       
     #endregion
 
 

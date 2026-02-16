@@ -20,31 +20,7 @@ public class WebApiDataSource : MemoryDataSource
     protected WebApiSourceParameter _parameters;
 
     public string? IdColumnName { get; set; }
-    private Geometry<Point>? _filterGeometry;
-
-    /// <summary>
-    /// Optional geometry used to filter features client-side when reading. When set, IsClientFiltered becomes true.
-    /// </summary>
-    public Geometry<Point>? FilterGeometry
-    {
-        get => _filterGeometry;
-        set
-        {
-            _filterGeometry = value;
-
-            IsClientFiltered = _filterGeometry != null && !_filterGeometry.IsNullOrEmpty();
-        }
-    }
-
-    private readonly List<Feature<Point>> _addedFeatures = new List<Feature<Point>>();
-    private readonly List<Feature<Point>> _updatedFeatures = new List<Feature<Point>>();
-    private readonly List<int> _deletedIds = new List<int>();
-
-    private void UpdateHasPendingChanges()
-    {
-        HasPendingChanges = _addedFeatures.Count > 0 || _updatedFeatures.Count > 0 || _deletedIds.Count > 0;
-    }
-
+   
     protected WebApiDataSource() : base()
     {
         _features = FeatureSet<Point>.Empty;
@@ -158,33 +134,6 @@ public class WebApiDataSource : MemoryDataSource
         return await Task.FromResult(_features.FilterByGeometry(predicate));
     }
 
-    public override void Add(Feature<Point> newGeometry)
-    {
-        base.Add(newGeometry);
-        _addedFeatures.Add(newGeometry);
-        UpdateHasPendingChanges();
-    }
-
-    public override void Update(Feature<Point> newGeometry)
-    {
-        base.Update(newGeometry);
-        if (!_addedFeatures.Any(a => object.ReferenceEquals(a, newGeometry)))
-            _updatedFeatures.Add(newGeometry);
-        UpdateHasPendingChanges();
-    }
-
-    public override void Remove(Feature<Point> geometry)
-    {
-        if (_addedFeatures.Remove(geometry))
-        {
-            base.Remove(geometry);
-            UpdateHasPendingChanges();
-            return;
-        }
-        _deletedIds.Add(geometry.Id);
-        base.Remove(geometry);
-        UpdateHasPendingChanges();
-    }
 
     public override void SaveChanges()
     {

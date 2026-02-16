@@ -46,7 +46,7 @@ public interface IDataSource
     /// True when a client-side filter (for example a geometry filter)
     /// is applied on top of the underlying dataset.
     /// </summary>
-    bool IsClientFiltered { get; }
+    bool HasClientFilter { get; }
 
     /// <summary>
     /// True when the last load or save operation failed.

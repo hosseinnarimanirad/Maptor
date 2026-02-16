@@ -11,7 +11,10 @@ namespace IRI.Maptor.Jab.Common.Helpers;
 
 public class TocHelper
 {
-    public static async Task<ObservableCollection<ILayer>> LoadFiles(string rootDirectory, Func<string, ILayer> vectorLayerLoader, Func<string, Task<RasterLayer>> rasterLayerLoader)
+    public static async Task<ObservableCollection<ILayer>> LoadFiles(
+        string rootDirectory,
+        Func<string, ILayer> vectorLayerLoader,
+        Func<string, Task<RasterLayer>> rasterLayerLoader)
     {
         if (!System.IO.Directory.Exists(rootDirectory))
             return [];

@@ -21,26 +21,26 @@ public class RasterLayer : BaseLayer
 {
     RasterLayer _parent;
 
-    private IDataSource? _dataSource;
+    //private IDataSource? _dataSource;
 
-    //public override IDataSource? DataSource => _dataSource;
+    ////public override IDataSource? DataSource => _dataSource;
 
-    public override IDataSource? DataSource
-    {
-        get => _dataSource;
-        protected set
-        {
-            if (ReferenceEquals(_dataSource, value))
-                return;
+    //public override IDataSource? DataSource
+    //{
+    //    get => _dataSource;
+    //    protected set
+    //    {
+    //        if (ReferenceEquals(_dataSource, value))
+    //            return;
 
-            UnsubscribeFromDataSourceStatusEvents(_dataSource);
+    //        UnsubscribeFromDataSourceStatusEvents(_dataSource);
 
-            _dataSource = value;
+    //        _dataSource = value;
 
-            SyncStatusFromDataSource();
-            SubscribeToDataSourceStatusEvents(_dataSource);
-        }
-    }
+    //        //SyncStatusFromDataSource();
+    //        SubscribeToDataSourceStatusEvents(_dataSource);
+    //    }
+    //}
 
     //private FrameworkElement? _element;
     //public FrameworkElement? Element
@@ -67,17 +67,6 @@ public class RasterLayer : BaseLayer
         //    _type = value;
         //    RaisePropertyChanged();
         //}
-    }
-
-    private BoundingBox _extent;
-    public override BoundingBox Extent
-    {
-        get { return _extent; }
-        protected set
-        {
-            _extent = value;
-            RaisePropertyChanged();
-        }
     }
 
     public BitmapImage Image { get; set; }
@@ -239,7 +228,7 @@ public class RasterLayer : BaseLayer
 
         this.LayerName = name;
 
-        this._extent = boundingBox;
+        this.Extent/*_extent*/ = boundingBox;
 
         this.Image = image;
 
@@ -256,7 +245,7 @@ public class RasterLayer : BaseLayer
 
         if (!dataSource.WebMercatorExtent.IsNaN())
         {
-            this._extent = dataSource.WebMercatorExtent;
+            this.Extent/*_extent*/ = dataSource.WebMercatorExtent;
         }
 
         //AddTiled method is not supported for raster layers and image pyramid
@@ -315,17 +304,17 @@ public class RasterLayer : BaseLayer
         }
     }
 
-    private void SyncStatusFromDataSource()
-    {
-        if (DataSource == null)
-            return;
+    //private void SyncStatusFromDataSource()
+    //{
+    //    if (DataSource == null)
+    //        return;
 
-        IsInitializing = DataSource.IsInitializing;
-        IsProcessing = DataSource.IsProcessing;
-        IsLoaded = DataSource.IsLoaded;
-        HasPendingChanges = DataSource.HasPendingChanges;
-        IsClientFiltered = DataSource.IsClientFiltered;
-        HasError = DataSource.HasError;
-    }
+    //    IsInitializing = DataSource.IsInitializing;
+    //    IsProcessing = DataSource.IsProcessing;
+    //    IsLoaded = DataSource.IsLoaded;
+    //    HasPendingChanges = DataSource.HasPendingChanges;
+    //    IsClientFiltered = DataSource.IsClientFiltered;
+    //    HasError = DataSource.HasError;
+    //}
 
 }

@@ -144,8 +144,12 @@ public class ShapefileDataSource : MemoryDataSource
 
         _objectToDbfTypeMap = new List<ObjectToDbfTypeMap<Feature<Point>>>();
 
-        for (int i = 0; i < attributes.Fields.Count; i++)
-            _objectToDbfTypeMap.Add(new ObjectToDbfTypeMap<Feature<Point>>(attributes.Fields[i], t => inverseAttributeMap(t)[i]));
+        foreach (var field in attributes.Fields)
+        {
+            var fieldName = field.Name;
+            _objectToDbfTypeMap.Add(new ObjectToDbfTypeMap<Feature<Point>>(field, t =>
+                t.Attributes.TryGetValue(fieldName, out var v) ? v : null));
+        }
 
         this.Fields = attributes.Fields.Select(f => f.AsField()).ToList();
 
@@ -190,6 +194,11 @@ public class ShapefileDataSource : MemoryDataSource
             geometryMap = t => t.TheGeometry.AsEsriShape(_sourceSrs.Srid);
         }
 
-        ShapefileFormat.Shapefile.Save(_shapefileName, _features.Features, geometryMap, _objectToDbfTypeMap, EncodingHelper.ArabicEncoding, _sourceSrs, true);
+        ShapefileFormat.Shapefile.Save(_shapefileName, _features.Features, geometryMap, _objectToDbfTypeMap, _encoding ?? EncodingHelper.ArabicEncoding, _sourceSrs, true);
+
+        _addedFeatures.Clear();
+        _updatedFeatures.Clear();
+        _deletedIds.Clear();
+        UpdateHasPendingChanges();
     }
 }

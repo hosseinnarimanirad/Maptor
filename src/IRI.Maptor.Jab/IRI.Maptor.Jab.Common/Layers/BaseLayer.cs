@@ -11,6 +11,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using System.Data.Common;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -58,11 +59,43 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public abstract LayerType Type { get; /*protected set;*/ }
 
-    public virtual IDataSource? DataSource { get; protected set; }
+
+    //public virtual IDataSource? DataSource { get; protected set; }
+    protected IDataSource? _dataSource;
+    public virtual IDataSource? DataSource
+    {
+        get => _dataSource;
+        protected set
+        {
+            UnsubscribeFromDataSourceStatusEvents(_dataSource);
+
+            _dataSource = value;
+
+            if (value != null)
+            {
+                UnsubscribeFromDataSourceStatusEvents(value);
+                SubscribeToDataSourceStatusEvents(value);
+            }
+            //SyncStatusFromDataSource();
+
+            RaisePropertyChanged(nameof(IsLoaded));
+            RaisePropertyChanged(nameof(IsLoaded));
+        }
+    }
+
 
     public virtual SpatialModelMode SpatialModelMode { get; protected set; } = SpatialModelMode.None;
 
-    public virtual BoundingBox Extent { get; protected set; }
+    protected BoundingBox _extent;
+    public virtual BoundingBox Extent
+    {
+        get { return _extent; }
+        protected set
+        {
+            _extent = value;
+            RaisePropertyChanged();
+        }
+    }
 
     public virtual RenderMode RenderMode { get => RenderMode.Default; /*protected set { } */}
 
@@ -70,99 +103,19 @@ public abstract class BaseLayer : Notifier, ILayer
 
     #region Data source / status flags
 
-    public virtual bool IsBusy
-    {
-        get => IsInitializing || IsProcessing;
-    }
+    public virtual bool IsBusy { get => IsInitializing || IsProcessing; }
 
-    private bool _isInitializing;
-    public virtual bool IsInitializing
-    {
-        get => _isInitializing;
-        protected set
-        {
-            if (_isInitializing == value)
-                return;
+    public virtual bool IsInitializing => DataSource?.IsInitializing ?? false;
 
-            _isInitializing = value;
-            RaisePropertyChanged();
-            RaisePropertyChanged(nameof(IsBusy));
-        }
-    }
+    public virtual bool IsProcessing => DataSource?.IsProcessing ?? false;
 
+    public virtual bool IsLoaded => DataSource?.IsLoaded ?? false;
 
-    private bool _isProcessing;
-    public virtual bool IsProcessing
-    {
-        get => _isProcessing;
-        protected set
-        {
-            if (_isProcessing == value)
-                return;
+    public virtual bool HasPendingChanges => DataSource?.HasPendingChanges ?? false;
 
-            _isProcessing = value;
-            RaisePropertyChanged();
-            RaisePropertyChanged(nameof(IsBusy));
-        }
-    }
+    public virtual bool IsClientFiltered => DataSource?.HasClientFilter ?? false;
 
-
-
-    private bool _isLoaded;
-    public virtual bool IsLoaded
-    {
-        get => _isLoaded;
-        protected set
-        {
-            if (_isLoaded == value)
-                return;
-
-            _isLoaded = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private bool _hasPendingChanges;
-    public virtual bool HasPendingChanges
-    {
-        get => _hasPendingChanges;
-        protected set
-        {
-            if (_hasPendingChanges == value)
-                return;
-
-            _hasPendingChanges = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private bool _isClientFiltered;
-    public virtual bool IsClientFiltered
-    {
-        get => _isClientFiltered;
-        protected set
-        {
-            if (_isClientFiltered == value)
-                return;
-
-            _isClientFiltered = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private bool _hasError;
-    public virtual bool HasError
-    {
-        get => _hasError;
-        protected set
-        {
-            if (_hasError == value)
-                return;
-
-            _hasError = value;
-            RaisePropertyChanged();
-        }
-    }
+    public virtual bool HasError => DataSource?.HasError ?? false;
 
     #region Data source status bindings
 
@@ -212,25 +165,34 @@ public abstract class BaseLayer : Notifier, ILayer
 
     //protected void DataSource_IsBusyChanged(object? sender, bool e) => DispatcherToUi(() => IsBusy = e);
 
-    private void DataSource_IsInitializingChanged(object? sender, bool e) => DispatcherToUi(() => IsInitializing = e);
+    private void DataSource_IsInitializingChanged(object? sender, bool e) => DispatcherToUi(() =>
+    {
+        RaisePropertyChanged(nameof(IsInitializing));
+        RaisePropertyChanged(nameof(IsBusy));
+    });
 
-    private void DataSource_IsProcessingChanged(object? sender, bool e) => DispatcherToUi(() => IsProcessing = e);
+    private void DataSource_IsProcessingChanged(object? sender, bool e) => DispatcherToUi(() =>
+    {
+        RaisePropertyChanged(nameof(IsProcessing));
+        RaisePropertyChanged(nameof(IsBusy));
+    });
 
     protected virtual void DataSource_IsLoadedChanged(object? sender, bool e)
     {
         DispatcherToUi(() =>
         {
-            IsLoaded = e;
+            RaisePropertyChanged(nameof(IsLoaded));
+
             if (e)
                 RequestRefreshWhenDataLoaded?.Invoke(this);
         });
     }
 
-    protected void DataSource_HasPendingChangesChanged(object? sender, bool e) => DispatcherToUi(() => HasPendingChanges = e);
+    protected void DataSource_HasPendingChangesChanged(object? sender, bool e) => DispatcherToUi(() => RaisePropertyChanged(nameof(HasPendingChanges)));
 
-    protected void DataSource_IsClientFilteredChanged(object? sender, bool e) => DispatcherToUi(() => IsClientFiltered = e);
+    protected void DataSource_IsClientFilteredChanged(object? sender, bool e) => DispatcherToUi(() => RaisePropertyChanged(nameof(IsClientFiltered)));
 
-    protected void DataSource_HasErrorChanged(object? sender, bool e) => DispatcherToUi(() => HasError = e);
+    protected void DataSource_HasErrorChanged(object? sender, bool e) => DispatcherToUi(() => RaisePropertyChanged(nameof(HasError)));
 
     #endregion
 

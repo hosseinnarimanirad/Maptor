@@ -29,7 +29,7 @@ public class FilteredSubLayersConverter : IMultiValueConverter
 
         if (layers is null)
             return CollectionViewSource.GetDefaultView(EmptyLayers);
-
+         
         var hasNameFilter = !string.IsNullOrEmpty(filterText);
         var hasKindFilter = kinds?.Any(k => k.IsSelected == false) == true;
 
@@ -38,6 +38,7 @@ public class FilteredSubLayersConverter : IMultiValueConverter
         if (!hasNameFilter && !hasKindFilter)
         {
             view.Filter = null;
+            return layers;
         }
         else
         {
@@ -50,6 +51,11 @@ public class FilteredSubLayersConverter : IMultiValueConverter
 
         view.Refresh();
         return view;
+    }
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 
     private static bool FilterPredicate(ILayer layer, string filterText, List<DataSourceKind> allowedKinds, bool hasNameFilter, bool hasKindFilter)
@@ -88,11 +94,6 @@ public class FilteredSubLayersConverter : IMultiValueConverter
         }
 
         return false;
-    }
-
-    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-    {
-        throw new NotImplementedException();
     }
 
     private static bool LayerNameMatches(ILayer layer, string filter)

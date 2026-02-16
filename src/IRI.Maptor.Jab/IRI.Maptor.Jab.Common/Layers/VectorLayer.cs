@@ -1,11 +1,7 @@
 using System;
 using System.Linq;
-using System.Windows;
-using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 
@@ -20,8 +16,6 @@ using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
-
-using WpfPoint = System.Windows.Point;
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 
 namespace IRI.Maptor.Jab.Common;
@@ -32,25 +26,25 @@ public class VectorLayer : SymbolizableLayer
 
     //public IVectorDataSource DataSource { get; protected set; }
 
-    private IDataSource? _dataSource;
+    //private IDataSource? _dataSource;
 
     //public override IDataSource? DataSource => _dataSource;
 
-    public override IDataSource? DataSource
-    {
-        get => _dataSource;
-        protected set
-        {
-            UnsubscribeFromDataSourceStatusEvents(_dataSource);
-            _dataSource = value;
-            if (value != null)
-            {
-                UnsubscribeFromDataSourceStatusEvents(value);
-                SubscribeToDataSourceStatusEvents(value);
-            }
-            SyncStatusFromDataSource();
-        }
-    }
+    //public override IDataSource? DataSource
+    //{
+    //    get => _dataSource;
+    //    protected set
+    //    {
+    //        UnsubscribeFromDataSourceStatusEvents(_dataSource);
+    //        _dataSource = value;
+    //        if (value != null)
+    //        {
+    //            UnsubscribeFromDataSourceStatusEvents(value);
+    //            SubscribeToDataSourceStatusEvents(value);
+    //        }
+    //        //SyncStatusFromDataSource();
+    //    }
+    //}
 
     private IVectorDataSource? _vectorDataSource => _dataSource as IVectorDataSource;
 
@@ -357,18 +351,18 @@ public class VectorLayer : SymbolizableLayer
         }
     }
 
-    private void SyncStatusFromDataSource()
-    {
-        if (DataSource == null)
-            return;
+    //private void SyncStatusFromDataSource()
+    //{
+    //    if (DataSource == null)
+    //        return;
 
-        IsInitializing = DataSource.IsInitializing;
-        IsProcessing = DataSource.IsProcessing;
-        IsLoaded = DataSource.IsLoaded;
-        HasPendingChanges = DataSource.HasPendingChanges;
-        IsClientFiltered = DataSource.IsClientFiltered;
-        HasError = DataSource.HasError;
-    }
+    //    IsInitializing = DataSource.IsInitializing;
+    //    IsProcessing = DataSource.IsProcessing;
+    //    IsLoaded = DataSource.IsLoaded;
+    //    HasPendingChanges = DataSource.HasPendingChanges;
+    //    IsClientFiltered = DataSource.IsClientFiltered;
+    //    HasError = DataSource.HasError;
+    //}
 
 
     //private void UnsubscribeToDataSourceStatusEvents(IVectorDataSource dataSource)

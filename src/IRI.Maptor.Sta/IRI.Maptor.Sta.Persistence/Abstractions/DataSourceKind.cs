@@ -19,7 +19,7 @@ public enum DataSourceKind
     [Description("Dxf")]
     Dxf,
 
-    [Description("WebApi")]
+    [Description("REST")]
     WebApi,
 
     [Description("gRPC")]
