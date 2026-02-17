@@ -208,7 +208,8 @@ public class PersoanlGdbDataSource : VectorDataSource
 
     private FeatureSet<Point> Select(Geometry<Point>? geometryBoundingBox, string? searchText)
     {
-        FeatureSet<Point> result = FeatureSet<Point>.Create(string.Empty, new List<Feature<Point>>());
+        var fields = new List<Field>();
+        var featuresList = new List<Feature<Point>>();
 
         using (var conn = new OleDbConnection(PersonalGdbInfrastructure.GetConnectionString(_mdbFileName)))
         {
@@ -237,14 +238,18 @@ public class PersoanlGdbDataSource : VectorDataSource
                         }
                         else
                         {
-                            result.Fields.Add(new Field() { Name = dataReader.GetName(i), Type = type.ToString() });
+                            fields.Add(new Field() { Name = dataReader.GetName(i), Type = type.ToString() });
                         }
                     }
 
                     if (!dataReader.HasRows)
-                        return result;
+                    {
+                        var emptyResult = FeatureSet<Point>.Create(string.Empty, new List<Feature<Point>>());
+                        emptyResult.Fields = fields;
+                        return emptyResult;
+                    }
 
-                    if (result.Fields.All(f => f.Name != _labelColumnName))
+                    if (fields.All(f => f.Name != _labelColumnName))
                         _labelColumnName = null;
 
                     while (dataReader.Read())
@@ -305,7 +310,7 @@ public class PersoanlGdbDataSource : VectorDataSource
                             if (!geometryBoundingBox.IsNullOrEmpty() && !geometry.Intersects(geometryBoundingBox))
                                 continue;
 
-                            result.Features.Add(feature);
+                            featuresList.Add(feature);
 
                         }
                         catch (Exception ex)
@@ -319,6 +324,8 @@ public class PersoanlGdbDataSource : VectorDataSource
             conn.Close();
         }
 
+        var result = FeatureSet<Point>.Create(string.Empty, featuresList);
+        result.Fields = fields;
         return result;
     }
       

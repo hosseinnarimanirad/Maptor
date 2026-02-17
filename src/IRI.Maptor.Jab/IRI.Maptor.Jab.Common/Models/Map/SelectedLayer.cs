@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,6 +7,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.DataSources;
 using System.Collections.Specialized;
 using IRI.Maptor.Sta.Common.Enums;
 
@@ -58,6 +59,10 @@ public class SelectedLayer : Notifier
 
     public bool IsSingleValueHighlighted => HighlightedFeatures?.Count == 1;
 
+    public bool CanAdd => AssociatedLayer?.DataSource is IEditableVectorDataSource;
+
+    public bool CanDelete => HighlightedFeatures?.Count >= 1;
+
     public int CountOfSelectedFeatures => Features?.Count ?? 0;
 
 
@@ -86,6 +91,7 @@ public class SelectedLayer : Notifier
         this.UpdateHighlightedFeaturesOnMap(HighlightedFeatures);
 
         RaisePropertyChanged(nameof(IsSingleValueHighlighted));
+        RaisePropertyChanged(nameof(CanDelete));
     }
 
     private void TryFlashPoint(IEnumerable<Feature<Point>> point)
@@ -134,13 +140,102 @@ public class SelectedLayer : Notifier
         var feature = this.Features.Single(f => f.Id == oldGeometry.Id);
 
         feature.TheGeometry = newGeometry.TheGeometry;
+
+        RefreshFeatureInView(feature);
     }
 
     public void UpdateFeature(Feature<Point> item) => (AssociatedLayer?.DataSource as IEditableVectorDataSource)?.Update(item);
 
+    public void RefreshFeatureInView(Feature<Point> feature)
+    {
+        var idx = Features?.IndexOf(feature) ?? -1;
+        if (idx >= 0)
+        {
+            Features.RemoveAt(idx);
+            Features.Insert(idx, feature);
+        }
+    }
+
     public void SaveChanges() => (AssociatedLayer.DataSource as IEditableVectorDataSource)?.SaveChanges();
 
 
+    private RelayCommand? _addCommand;
+    public RelayCommand AddCommand
+    {
+        get
+        {
+            if (_addCommand is null)
+            {
+                _addCommand = new RelayCommand(param =>
+                {
+                    var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+                    if (dataSource is null)
+                        return;
+
+                    var vectorDataSource = AssociatedLayer?.DataSource as VectorDataSource;
+                    var geometryType = vectorDataSource?.GeometryType ?? Sta.Common.Enums.GeometryType.Point;
+                    var srid = AssociatedLayer?.DataSource?.Srid ?? 0;
+
+                    // todo
+                    // this should be changed to draw geometry using the layers type
+                    var emptyGeometry = Geometry<Point>.CreateEmpty(geometryType, srid);
+
+                    var attributes = new Dictionary<string, object>();
+                    if (Fields != null)
+                    {
+                        foreach (var field in Fields)
+                            attributes[field.Name] = null!;
+                    }
+
+                    var newId = (Features?.Select(f => f.Id).DefaultIfEmpty(0).Max() ?? 0) + 1;
+                    var newFeature = new Feature<Point>(emptyGeometry, attributes)
+                    {
+                        Id = newId
+                    };
+                    newFeature.MarkAsNew();
+
+                    dataSource.Add(newFeature);
+                    Features ??= new ObservableCollection<Feature<Point>>();
+                    Features.Add(newFeature);
+
+                    RaisePropertyChanged(nameof(CountOfSelectedFeatures));
+
+                    RequestEdit?.Invoke(newFeature);
+                });
+            }
+            return _addCommand;
+        }
+    }
+
+
+    private RelayCommand? _deleteCommand;
+    public RelayCommand DeleteCommand
+    {
+        get
+        {
+            if (_deleteCommand is null)
+            {
+                _deleteCommand = new RelayCommand(param =>
+                {
+                    var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+                    if (dataSource is null || HighlightedFeatures?.Count < 1)
+                        return;
+
+                    var toRemove = HighlightedFeatures.ToList();
+                    foreach (var feature in toRemove)
+                    {
+                        dataSource.Remove(feature);
+                        Features?.Remove(feature);
+                    }
+                    foreach (var feature in toRemove)
+                        HighlightedFeatures.Remove(feature);
+
+                    RaisePropertyChanged(nameof(CountOfSelectedFeatures));
+                });
+            }
+            return _deleteCommand;
+        }
+    }
 
 
 

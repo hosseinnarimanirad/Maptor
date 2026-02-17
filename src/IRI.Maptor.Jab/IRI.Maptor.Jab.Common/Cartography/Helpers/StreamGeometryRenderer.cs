@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -20,7 +20,7 @@ public static class StreamGeometryRenderer
 
     #region Geometry to StreamGeometry
 
-    public static StreamGeometry ParseSqlGeometry<T>(List<Feature<T>> features, /*Func<WpfPoint, WpfPoint> transform,*/ Geometry? pointSymbol = null)
+    public static StreamGeometry ParseSqlGeometry<T>(IEnumerable<Feature<T>> features, /*Func<WpfPoint, WpfPoint> transform,*/ Geometry? pointSymbol = null)
         where T : IPoint, new()
     {
         StreamGeometry result = new StreamGeometry();

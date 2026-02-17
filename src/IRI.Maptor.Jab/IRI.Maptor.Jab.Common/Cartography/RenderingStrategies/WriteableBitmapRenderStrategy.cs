@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Media;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ public class WriteableBitmapRenderStrategy : RenderStrategy
     {
     }
 
-    public override ImageBrush? Render(List<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight)
+    public override ImageBrush? Render(IEnumerable<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight)
     {
         if (features.IsNullOrEmpty())
             return null;
@@ -75,7 +75,7 @@ public class WriteableBitmapRenderStrategy : RenderStrategy
     }
 
 
-    private WriteableBitmap ParseSqlGeometry(List<Feature<Point>> features, int width, int height, Color border, Color fill, ImageSource? pointSymbol = null, Geometry<Point>? symbol = null)
+    private WriteableBitmap ParseSqlGeometry(IEnumerable<Feature<Point>> features, int width, int height, Color border, Color fill, ImageSource? pointSymbol = null, Geometry<Point>? symbol = null)
     {
 
         WriteableBitmap result = new WriteableBitmap(width, height, 96, 96, PixelFormats.Pbgra32, null);

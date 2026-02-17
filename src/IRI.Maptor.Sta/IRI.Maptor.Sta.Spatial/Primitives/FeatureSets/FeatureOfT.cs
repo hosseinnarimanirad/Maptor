@@ -1,5 +1,6 @@
 ﻿using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
@@ -72,7 +73,7 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         return new Feature<T>(TheGeometry.Transform(transform, newSrid ?? TheGeometry.Srid), this.Attributes)
         {
             Id = this.Id,
-            LabelAttribute = this.LabelAttribute
+            LabelAttribute = this.LabelAttribute,
         };
     }
 
@@ -85,6 +86,50 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         };
     }
 
+
+    #region Change Tracking
+
+    public FeatureStatus Status { get; set; } = FeatureStatus.Unchanged;
+
+    public byte[]? OldVersionWkb { get; set; }
+
+    public DateTime? LastAddOrUpdate { get; set; }
+
+    public void MarkAsRemoved()
+    {
+        this.OldVersionWkb = null;
+
+        this.LastAddOrUpdate = DateTime.UtcNow;
+
+        this.Status = (this.Status == FeatureStatus.New) ? FeatureStatus.CanceledNew : FeatureStatus.Removed;
+    }
+
+    public void MarkAsNew()
+    {
+        this.LastAddOrUpdate = DateTime.UtcNow;
+
+        this.Status = FeatureStatus.New;
+    }
+
+    public void MarkAsUpdated(Geometry<T> newGeometry)
+    {
+        this.OldVersionWkb = this.TheGeometry.AsWkb();
+
+        this.LastAddOrUpdate = DateTime.UtcNow;
+
+        this.Status = FeatureStatus.Updated;
+
+        this.TheGeometry = newGeometry;
+    }
+
+    public void MarkAsSaved()
+    {         
+        this.Status = FeatureStatus.Unchanged;
+        this.OldVersionWkb = null;
+        this.LastAddOrUpdate = null;
+    }
+
+    #endregion
 
     //#region ICustomTypeDescriptor
 

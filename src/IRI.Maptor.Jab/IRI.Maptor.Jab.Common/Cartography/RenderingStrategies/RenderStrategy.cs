@@ -1,4 +1,4 @@
-﻿using System.Windows.Media;
+using System.Windows.Media;
 using System.Collections.Generic;
 
 using IRI.Maptor.Sta.Common.Primitives;
@@ -16,5 +16,5 @@ public abstract class RenderStrategy
         _symbolizers = symbolizer;
     }
 
-    public abstract ImageBrush? Render(List<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight);
+    public abstract ImageBrush? Render(IEnumerable<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight);
 }

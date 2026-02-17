@@ -226,7 +226,7 @@
                         TickFrequency=".2" Value="{Binding Opacity, Mode=TwoWay}"
                         IsEnabled="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
 
-
+                
                 <TextBlock MinWidth="30" VerticalAlignment="Center" Margin="2" 
                             Text="{Binding ElementName=root, Path=Title}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
@@ -270,10 +270,11 @@
                     </TextBox.Style>
                 </TextBox>
 
-                <iconPacks:PackIconMaterial Kind="Pencil" Width="16" Height="16" VerticalAlignment="Center" Margin="2,0,0,0"
-                                            Foreground="{DynamicResource MahApps.Brushes.Accent}"
-                                            Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}"
-                                            ToolTip="تغییرات ذخیره نشده"/>
+                <!--show edit flat-->
+                <iconPacks:PackIconMaterial Kind="Pencil" Width="12" Height="12" VerticalAlignment="Center" Margin="4,0"
+                            Foreground="{DynamicResource MahApps.Brushes.Highlight}"
+                            Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}"
+                            ToolTip="تغییرات ذخیره نشده"/>
 
                 <!--palette control-->
                 <ToggleButton ClickMode="Release"  Name="palette" Margin="4 0 0 0" Padding="0" Cursor="Hand" Background="Transparent" VerticalAlignment="Center"

@@ -20,7 +20,7 @@ public class WebApiDataSource : MemoryDataSource
     protected WebApiSourceParameter _parameters;
 
     public string? IdColumnName { get; set; }
-   
+
     protected WebApiDataSource() : base()
     {
         _features = FeatureSet<Point>.Empty;
@@ -85,9 +85,11 @@ public class WebApiDataSource : MemoryDataSource
                 _features = ConvertFeatureSetDtoToFeatureSet(featureSetDto);
             }
 
-            _addedFeatures.Clear();
-            _updatedFeatures.Clear();
-            _deletedIds.Clear();
+            //_addedFeatures.Clear();
+            //_updatedFeatures.Clear();
+            //_deletedIds.Clear();
+            _features.ApplyChanges();
+
             UpdateHasPendingChanges();
             IsLoaded = true;
         }
@@ -144,12 +146,9 @@ public class WebApiDataSource : MemoryDataSource
 
             var dto = new FeatureSetChangesDto
             {
-                Added = _addedFeatures.Select(ConvertFeatureToFeatureDto).ToList(),
-                Updated = _updatedFeatures
-                    .Where(u => !_addedFeatures.Any(a => object.ReferenceEquals(a, u)))
-                    .Select(ConvertFeatureToFeatureDto)
-                    .ToList(),
-                DeletedIds = new List<int>(_deletedIds)
+                Added = _features.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.New).Select(ConvertFeatureToFeatureDto).ToList(),
+                Updated = _features.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.Updated).Select(ConvertFeatureToFeatureDto).ToList(),
+                DeletedIds = _features.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.Updated).Select(f => f.Id).ToList(),
             };
 
             var success = WebApiInfrastructure.SaveChangesAsync(
@@ -162,9 +161,10 @@ public class WebApiDataSource : MemoryDataSource
 
             if (success)
             {
-                _addedFeatures.Clear();
-                _updatedFeatures.Clear();
-                _deletedIds.Clear();
+                //_addedFeatures.Clear();
+                //_updatedFeatures.Clear();
+                //_deletedIds.Clear();
+                _features.ApplyChanges();
                 UpdateHasPendingChanges();
             }
             else

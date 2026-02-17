@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.IO;
 using System.Windows;
@@ -31,7 +31,7 @@ public class DrawingVisualRenderStrategy : RenderStrategy
     {
     }
 
-    public override ImageBrush? Render(List<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight)
+    public override ImageBrush? Render(IEnumerable<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight)
     {
         if (features.IsNullOrEmpty())
             return null;
@@ -43,7 +43,7 @@ public class DrawingVisualRenderStrategy : RenderStrategy
         return new ImageBrush(image);
     }
 
-    public List<DrawingVisual> AsDrawingVisual(List<Feature<Point>> features, double mapScale)
+    public List<DrawingVisual> AsDrawingVisual(IEnumerable<Feature<Point>> features, double mapScale)
     {
         var result = new List<DrawingVisual>();
 
@@ -114,7 +114,7 @@ public class DrawingVisualRenderStrategy : RenderStrategy
 
     #region Private Methods
 
-    private DrawingVisual ParseGeometry(List<Feature<Point>> features, Pen? pen, Brush? brush, SimplePointSymbolizer? pointSymbol)
+    private DrawingVisual ParseGeometry(IEnumerable<Feature<Point>> features, Pen? pen, Brush? brush, SimplePointSymbolizer? pointSymbol)
     {
         DrawingVisual result = new DrawingVisual();
 
@@ -290,12 +290,13 @@ public class DrawingVisualRenderStrategy : RenderStrategy
         }
     }
 
-    private DrawingVisual? DrawLabels(List<Feature<Point>> features, VisualParameters labels)
+    private DrawingVisual? DrawLabels(IEnumerable<Feature<Point>> features, VisualParameters labels)
     {
-        if (features.IsNullOrEmpty())
+        var featureList = features.ToList();
+        if (featureList.IsNullOrEmpty())
             return null;
 
-        var mapCoordinates = features.ConvertAll((g) => labels.PositionFunc(g.TheGeometry).AsWpfPoint()).ToList();
+        var mapCoordinates = featureList.Select(g => labels.PositionFunc(g.TheGeometry).AsWpfPoint()).ToList();
 
         DrawingVisual drawingVisual = new DrawingVisual();
 
@@ -309,9 +310,9 @@ public class DrawingVisualRenderStrategy : RenderStrategy
 
             var backgroundBrush = new SolidColorBrush(Color.FromArgb(200, 255, 255, 255));
 
-            for (int i = 0; i < features.Count; i++)
+            for (int i = 0; i < featureList.Count; i++)
             {
-                var label = features[i].Label;
+                var label = featureList[i].Label;
 
                 if (string.IsNullOrEmpty(label))
                     continue;

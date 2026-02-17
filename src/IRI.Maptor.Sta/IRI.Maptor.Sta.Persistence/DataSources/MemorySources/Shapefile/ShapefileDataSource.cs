@@ -113,7 +113,7 @@ public class ShapefileDataSource : MemoryDataSource
             var attributes = DbfFile.Read(ShapefileFormat.Shapefile.GetDbfFileName(_shapefileName), true, _encoding);
 
             var geometries = await ShapefileFormat.Shapefile.ReadShapesAsync(_shapefileName);
-             
+
             Initialize(geometries, attributes, _createFeatureFunc, _inverseAttributeMap);
         }
         catch
@@ -181,24 +181,32 @@ public class ShapefileDataSource : MemoryDataSource
     {
         Func<Feature<Point>, EsriShapeBase>? geometryMap = null;
 
+        var features = _features.Features;
+
         //save shp, shx, dbf, prj, cpg
 
         if (_targetSrs != null)
         {
             Func<Point, Point> inverseTransformFunc = p => p.Project(_targetSrs, _sourceSrs);
 
-            geometryMap = t => t.TheGeometry.AsEsriShape(_sourceSrs.Srid, inverseTransformFunc as Func<IPoint, IPoint>);
+            geometryMap = t => t.TheGeometry.AsEsriShape(_sourceSrs.Srid, inverseTransformFunc /*as Func<IPoint, IPoint>*/);
         }
         else
         {
             geometryMap = t => t.TheGeometry.AsEsriShape(_sourceSrs.Srid);
         }
 
-        ShapefileFormat.Shapefile.Save(_shapefileName, _features.Features, geometryMap, _objectToDbfTypeMap, _encoding ?? EncodingHelper.ArabicEncoding, _sourceSrs, true);
+        ShapefileFormat.Shapefile.Save(_shapefileName, features, geometryMap, _objectToDbfTypeMap, _encoding ?? EncodingHelper.ArabicEncoding, _sourceSrs, true);
 
-        _addedFeatures.Clear();
-        _updatedFeatures.Clear();
-        _deletedIds.Clear();
+        //_addedFeatures.Clear();
+        //_updatedFeatures.Clear();
+        //_deletedIds.Clear();
+        //foreach (var item in _features.Features)
+        //{ 
+        //    item.MarkAsSaved();
+        //}
+        _features.ApplyChanges();
+
         UpdateHasPendingChanges();
     }
 }

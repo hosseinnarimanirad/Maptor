@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.IO;
 using System.Windows.Media;
@@ -26,7 +26,7 @@ public class GdiBitmapRenderStrategy : RenderStrategy
     {
     }
 
-    public override ImageBrush? Render(List<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight)
+    public override ImageBrush? Render(IEnumerable<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight)
     {
         var bitmap = AsGdiBitmap(features, mapScale, screenWidth, screenHeight);
 
@@ -42,7 +42,7 @@ public class GdiBitmapRenderStrategy : RenderStrategy
         return new ImageBrush(image);
     }
 
-    public Drawing.Bitmap? AsGdiBitmap(List<Feature<Point>> features, double mapScale, double imageWidth, double imageHeight)
+    public Drawing.Bitmap? AsGdiBitmap(IEnumerable<Feature<Point>> features, double mapScale, double imageWidth, double imageHeight)
     {
         if (features.IsNullOrEmpty())
             return null;
@@ -101,7 +101,7 @@ public class GdiBitmapRenderStrategy : RenderStrategy
 
     #region Private Methods
 
-    private void Render(Drawing.Graphics graphics, List<Feature<Point>> features, Drawing.Pen pen, Drawing.Brush brush, SimplePointSymbolizer pointSymbol)
+    private void Render(Drawing.Graphics graphics, IEnumerable<Feature<Point>> features, Drawing.Pen pen, Drawing.Brush brush, SimplePointSymbolizer pointSymbol)
     {
         if (features.IsNullOrEmpty())
             return;
@@ -295,13 +295,13 @@ public class GdiBitmapRenderStrategy : RenderStrategy
         }
     }
 
-    private void DrawLabels(List<Feature<Point>> features, Drawing.Graphics graphic, VisualParameters labelParameters, string? labelAttribute = null)
+    private void DrawLabels(IEnumerable<Feature<Point>> features, Drawing.Graphics graphic, VisualParameters labelParameters, string? labelAttribute = null)
     {
-        if (features.IsNullOrEmpty())
+        var featureList = features.ToList();
+        if (featureList.IsNullOrEmpty())
             return;
 
-        var mapCoordinates = features.ConvertAll(g => labelParameters.PositionFunc(g.TheGeometry).AsWpfPoint())
-                                        .ToList();
+        var mapCoordinates = featureList.Select(g => labelParameters.PositionFunc(g.TheGeometry).AsWpfPoint()).ToList();
 
         var font = new Drawing.Font(labelParameters.FontFamily.FamilyNames.First().Value, labelParameters.FontSize, Drawing.FontStyle.Bold);
 
@@ -322,11 +322,11 @@ public class GdiBitmapRenderStrategy : RenderStrategy
             format.FormatFlags = Drawing.StringFormatFlags.DirectionRightToLeft;
         }
 
-        for (int i = 0; i < features.Count; i++)
+        for (int i = 0; i < featureList.Count; i++)
         {
             var location = mapCoordinates[i];
 
-            var labelValue = (string.IsNullOrEmpty(labelAttribute) ? features[i]?.Label : features[i]?.Attributes[labelAttribute]?.ToString()) ?? string.Empty;
+            var labelValue = (string.IsNullOrEmpty(labelAttribute) ? featureList[i]?.Label : featureList[i]?.Attributes[labelAttribute]?.ToString()) ?? string.Empty;
 
             var stringSize = graphic.MeasureString(/*features[i].Label*/labelValue, font);
 

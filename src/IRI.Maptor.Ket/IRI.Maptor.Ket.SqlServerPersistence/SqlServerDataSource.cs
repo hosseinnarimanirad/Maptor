@@ -396,7 +396,8 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
 
     private async Task<FeatureSet<Point>> GetAsFeatureSetAsync(string selectQuery)
     {
-        var result = FeatureSet<Point>.Create(string.Empty, new List<Feature<Point>>());
+        var fields = new List<Field>();
+        var featuresList = new List<Feature<Point>>();
 
         await using var connection = new SqlConnection(_connectionString);
         await connection.OpenAsync();
@@ -410,13 +411,15 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
 
             if (type != typeof(SqlGeometry))
             {
-                result.Fields.Add(new Field() { Name = reader.GetName(i), Type = type.ToString() });
+                fields.Add(new Field() { Name = reader.GetName(i), Type = type.ToString() });
             }
         }
 
         if (!reader.HasRows)
         {
-            return result;
+            var emptyResult = FeatureSet<Point>.Create(string.Empty, new List<Feature<Point>>());
+            emptyResult.Fields = fields;
+            return emptyResult;
         }
 
         while (await reader.ReadAsync())
@@ -458,9 +461,11 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
 
             feature.Attributes = dict;
 
-            result.Features.Add(feature);
+            featuresList.Add(feature);
         }
 
+        var result = FeatureSet<Point>.Create(string.Empty, featuresList);
+        result.Fields = fields;
         return result;
     }
 

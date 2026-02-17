@@ -15,7 +15,7 @@ public static class GeometryExtensions
 {
     #region Geometry > Esri Shape
 
-    public static EsriShapeBase? AsEsriShape<T>(this Geometry<T> geometry, int? srid = null, Func<IPoint, IPoint> mapFunction = null) where T : IPoint, new()
+    public static EsriShapeBase? AsEsriShape<T>(this Geometry<T> geometry, int? srid = null, Func<T, T> mapFunction = null) where T : IPoint, new()
     {
         if (geometry.IsNullOrEmpty())
             return null;
@@ -66,15 +66,25 @@ public static class GeometryExtensions
     }
 
     //Not supportig Z and M Values
-    private static EsriPoint PointToEsriPoint<T>(Geometry<T> point, int srid, Func<IPoint, IPoint> mapFunction) where T : IPoint, new()
+    private static EsriPoint PointToEsriPoint<T>(Geometry<T> point, int srid, Func<T, T> mapFunction) where T : IPoint, new()
     {
-        var esriPoint = point.AsEsriPoint(srid);
+        if (mapFunction is null)
+        {
+            return point.AsEsriPoint(srid);
+        }
+        else
+        {
+            var transferedPoint = mapFunction(point.AsPoint());
 
-        return mapFunction == null ? esriPoint : (EsriPoint)mapFunction(esriPoint);
+            return new EsriPoint(transferedPoint.X, transferedPoint.Y, srid);
+        }
+        //var esriPoint = point.AsEsriPoint(srid);
+
+        //return mapFunction == null ? esriPoint : mapFunction(point.AsPoint());
     }
 
     //Not supportig Z and M Values
-    private static EsriMultiPoint MultiPointToEsriMultiPoint<T>(Geometry<T> multiPoint, int srid, Func<IPoint, IPoint> mapFunction) where T : IPoint, new()
+    private static EsriMultiPoint MultiPointToEsriMultiPoint<T>(Geometry<T> multiPoint, int srid, Func<T, T> mapFunction) where T : IPoint, new()
     {
         if (multiPoint.IsNullOrEmpty())
         {
@@ -94,7 +104,7 @@ public static class GeometryExtensions
     }
 
     //Not supporting Z and M values
-    private static EsriPolyline LineStringToEsriPolyline<T>(Geometry<T> lineString, int srid, Func<IPoint, IPoint> mapFunction) where T : IPoint, new()
+    private static EsriPolyline LineStringToEsriPolyline<T>(Geometry<T> lineString, int srid, Func<T, T> mapFunction) where T : IPoint, new()
     {
         if (lineString.IsNullOrEmpty())
         {
@@ -105,7 +115,7 @@ public static class GeometryExtensions
     }
 
     //Not supporting Z and M values
-    private static EsriPolyline MultiLineStringToEsriPolyline<T>(Geometry<T> multiLineString, int srid, Func<IPoint, IPoint> mapFunction) where T : IPoint, new()
+    private static EsriPolyline MultiLineStringToEsriPolyline<T>(Geometry<T> multiLineString, int srid, Func<T, T> mapFunction) where T : IPoint, new()
     {
         if (multiLineString.IsNullOrEmpty())
         {
@@ -130,7 +140,7 @@ public static class GeometryExtensions
 
     //Not supporting Z and M values
     //check for cw and cww criteria
-    private static EsriPolygon PolygonToEsriPolygon<T>(Geometry<T> polygon, int srid, Func<IPoint, IPoint> mapFunction) where T : IPoint, new()
+    private static EsriPolygon PolygonToEsriPolygon<T>(Geometry<T> polygon, int srid, Func<T, T> mapFunction) where T : IPoint, new()
     {
         if (polygon.IsNullOrEmpty())
         {
@@ -155,7 +165,7 @@ public static class GeometryExtensions
 
     //Not supporting Z and M values
     //check for cw and cww criteria
-    private static EsriPolygon MultiPolygonToEsriPolygon<T>(Geometry<T> multiPolygon, int srid, Func<IPoint, IPoint> mapFunction) where T : IPoint, new()
+    private static EsriPolygon MultiPolygonToEsriPolygon<T>(Geometry<T> multiPolygon, int srid, Func<T, T> mapFunction) where T : IPoint, new()
     {
         if (multiPolygon.IsNullOrEmpty())
         {
@@ -186,7 +196,7 @@ public static class GeometryExtensions
 
     }
 
-    private static IEnumerable<EsriPoint> GetPoints<T>(Geometry<T> geometry, int srid, Func<IPoint, IPoint> mapFunction, bool isRing) where T : IPoint, new()
+    private static IEnumerable<EsriPoint> GetPoints<T>(Geometry<T> geometry, int srid, Func<T, T> mapFunction, bool isRing) where T : IPoint, new()
     {
         if (geometry.IsNullOrEmpty())
             return Enumerable.Empty<EsriPoint>();

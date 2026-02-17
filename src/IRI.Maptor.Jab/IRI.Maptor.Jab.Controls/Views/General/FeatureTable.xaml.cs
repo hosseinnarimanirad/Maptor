@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -98,20 +98,13 @@ public partial class FeatureTable : UserControl
     {
         if (e.EditAction == DataGridEditAction.Commit)
         {
-            //if (e.EditOperationType == Telerik.Windows.Controls.GridView.GridViewEditOperationType.Edit)
-            //{
             var item = e.EditingElement.DataContext as Feature<Point>;
+            if (item is null)
+                return;
 
             Presenter.UpdateFeature(item);
-            //}
-            //else if (e.EditOperationType == Telerik.Windows.Controls.GridView.GridViewEditOperationType.Insert)
-            //{
 
-            //}
-            //else
-            //{
-            //    throw new NotImplementedException();
-            //}
+            Presenter.RefreshFeatureInView(item);
         }
     }
 

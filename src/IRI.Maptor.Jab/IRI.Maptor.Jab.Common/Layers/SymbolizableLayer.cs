@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -66,6 +66,6 @@ public abstract class SymbolizableLayer : BaseLayer
         //Func<Point, Point> mapToScreen = new Func<Point, Point>(p => new Point((p.X - mapExtent.XMin) * scale, -(p.Y - mapExtent.YMax) * scale));
         var mapToScreen = Utility.CreateMapToScreenMapFunc(mapExtent, screenWidth, screenHeight);
 
-        return feature.Transform(mapToScreen).Features;
+        return feature.Transform(mapToScreen).Features.ToList();
     }
 }

@@ -26,6 +26,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     public override int Srid { get => /*GetSrid()*/ _features.Srid; /*protected set => _ = value;*/ }
 
 
+
     private Geometry<Point>? _filterGeometry;
     /// <summary>
     /// Optional geometry used to filter features client-side when reading. When set, IsClientFiltered becomes true.
@@ -41,9 +42,9 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         }
     }
 
-    protected readonly List<Feature<Point>> _addedFeatures = new List<Feature<Point>>();
-    protected readonly List<Feature<Point>> _updatedFeatures = new List<Feature<Point>>();
-    protected readonly List<int> _deletedIds = new List<int>();
+    //protected readonly List<Feature<Point>> _addedFeatures = new List<Feature<Point>>();
+    //protected readonly List<Feature<Point>> _updatedFeatures = new List<Feature<Point>>();
+    //protected readonly List<int> _deletedIds = new List<int>();
 
 
 
@@ -89,7 +90,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         // Memory data source is fully initialized with features at this point.
         IsLoaded = true;
     }
-     
+
 
     public override string ToString() => $"MemoryDataSource";
 
@@ -99,6 +100,8 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     {
         WebMercatorExtent = _features.Extent;
     }
+
+
 
     // Get as FeatureSet of Point
     public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
@@ -113,62 +116,39 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox) => Task.FromResult(_features.FilterByGeometry(f => f.Intersects(boundingBox)));
 
 
-    #region CRUD
+    #region CRUD & Tack Changes
 
 
     protected void UpdateHasPendingChanges()
     {
-        HasPendingChanges = _addedFeatures.Count > 0 || _updatedFeatures.Count > 0 || _deletedIds.Count > 0;
+        //HasPendingChanges = _addedFeatures.Count > 0 || _updatedFeatures.Count > 0 || _deletedIds.Count > 0;
+        HasPendingChanges = _features?.UpdateHasPendingChanges() ?? false;// _features?.Features != null && _features.Features.Any(f => f.Status != Common.Enums.FeatureStatus.Unchanged);
     }
 
-    public virtual void Add(Feature<Point> newGeometry)
+    public virtual void Add(Feature<Point> feature)
     {
-        _features.Add(newGeometry);
+        _features.Add(feature);
 
         UpdateExtent();
 
-        _addedFeatures.Add(newGeometry);
         UpdateHasPendingChanges();
     }
 
-    public virtual void Remove(Feature<Point> geometry)
+    public virtual void Remove(Feature<Point> feature)
     {
-        _features.Remove(geometry);
+        this._features.Remove(feature);
+
         UpdateExtent();
 
-        if (_addedFeatures.Remove(geometry))
-        { 
-            UpdateHasPendingChanges();
-            return;
-        }
-        _deletedIds.Add(geometry.Id); 
         UpdateHasPendingChanges();
     }
 
     public virtual void Update(Feature<Point> newGeometry)
     {
-        //if (_idFunc == null)
-        //    return;
-
-        //var geometry = _idFunc(newGeometry.Id);
-
-        //var index = _features.IndexOf(geometry);
-
-        ////var index = newGeometry.Id;
-
-        ////if (index < 0)
-        ////{
-        ////    return;
-        ////}
-
-        //_features[index] = newGeometry;
-
         _features.Update(newGeometry);
 
         UpdateExtent();
 
-        if (!_addedFeatures.Any(a => object.ReferenceEquals(a, newGeometry)))
-            _updatedFeatures.Add(newGeometry);
         UpdateHasPendingChanges();
     }
 
@@ -176,8 +156,8 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     {
         return;
     }
-     
-       
+
+
     #endregion
 
 
@@ -186,7 +166,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     public static MemoryDataSource CreateFromShapefile(string shpFileName, string label, SrsBase targetSrs = null, bool correctFarsiCharacters = true, Encoding dataEncoding = null, Encoding headerEncoding = null)
     {
         var features = Shapefile.ReadAsFeature(shpFileName, dataEncoding, targetSrs, headerEncoding, correctFarsiCharacters, label);
-          
+
         return new MemoryDataSource(features);
     }
 
@@ -194,7 +174,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     {
         var features = await Shapefile.ReadAsFeatureAsync(shpFileName, dataEncoding, targetSrs, headerEncoding, correctFarsiCharacters, label);
 
-        return new MemoryDataSource(features);         
+        return new MemoryDataSource(features);
     }
 
     #endregion

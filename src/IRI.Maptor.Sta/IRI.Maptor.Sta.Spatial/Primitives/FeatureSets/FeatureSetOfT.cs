@@ -1,4 +1,5 @@
-﻿using IRI.Maptor.Extensions;
+using System.Collections.Generic;
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Primitives;
 
@@ -6,7 +7,9 @@ namespace IRI.Maptor.Sta.Spatial.Primitives;
 
 public class FeatureSet<T> where T : IPoint, new()
 {
-    public static FeatureSet<T> Empty = new FeatureSet<T>() { Features = new List<Feature<T>>(), Fields = new List<Field>(), LayerId = Guid.Empty };
+    public static FeatureSet<T> Empty = new FeatureSet<T>() { _allFeatures = new List<Feature<T>>(), Fields = new List<Field>(), LayerId = Guid.Empty };
+
+    private List<Feature<T>> _allFeatures;
 
     public Guid LayerId { get; set; }
 
@@ -16,12 +19,16 @@ public class FeatureSet<T> where T : IPoint, new()
 
     public List<Field> Fields { get; set; }
 
-    public List<Feature<T>> Features { get; set; }
+    public IReadOnlyList<Feature<T>> Features => _allFeatures.Where(f => f.Status != Common.Enums.FeatureStatus.Removed &&
+                                                                        f.Status != Common.Enums.FeatureStatus.CanceledNew).ToList();
+
+    //public List<Feature<T>> LiveFeatures => Features.Where(f => f.Status != Common.Enums.FeatureStatus.Removed &&
+    //                                                            f.Status != Common.Enums.FeatureStatus.CanceledNew).ToList();
 
     public BoundingBox Extent => BoundingBox.GetMergedBoundingBox(Features.Select(f => f.TheGeometry.GetBoundingBox()));
 
     public bool IsLabeled() => string.IsNullOrEmpty(this.Features?.FirstOrDefault().LabelAttribute) == true;
-     
+
     protected FeatureSet() { }
 
     public FeatureSet<T> FilterByGeometry(Predicate<Geometry<T>> predicate)
@@ -49,7 +56,7 @@ public class FeatureSet<T> where T : IPoint, new()
         return new FeatureSet<T>()
         {
             Title = title,
-            Features = features,
+            _allFeatures = features,
             Fields = new List<Field>(),
             Srid = features.SkipWhile(f => f is null || f.TheGeometry.IsNotValidOrEmpty())?.FirstOrDefault()?.TheGeometry.Srid ?? 0,
 
@@ -83,7 +90,7 @@ public class FeatureSet<T> where T : IPoint, new()
         var result = Create(this.Title, this.Features.Select(f => f.Transform(transform, newSrid)).ToList());
 
         result.Fields = this.Fields;
-        
+
         result.LayerId = this.LayerId;
 
         return result;
@@ -94,23 +101,44 @@ public class FeatureSet<T> where T : IPoint, new()
     // todo: add geometry type, srid, ... checkes
     public void Add(Feature<T> feature)
     {
-        this.Features.Add(feature);
+        feature.MarkAsNew();
+
+        this._allFeatures.Add(feature);
     }
 
     public void Remove(Feature<T> feature)
     {
-        this.Features.Remove(feature);
+        feature.MarkAsRemoved();
+
+        if (feature.Status == Common.Enums.FeatureStatus.CanceledNew)
+        {
+            this._allFeatures.Remove(feature);
+        }
+
     }
 
     public void Update(Feature<T> newFeature)
     {
-        var index = Features.IndexOf(Features.FirstOrDefault(f => f.Id == newFeature.Id));
-
-        if (index < 0)
+        var existing = _allFeatures.FirstOrDefault(f => f.Id == newFeature.Id);
+        if (existing == null || existing.Status == Common.Enums.FeatureStatus.Removed ||
+            existing.Status == Common.Enums.FeatureStatus.CanceledNew)
             return;
 
-        Features[index] = newFeature;
+        existing.MarkAsUpdated(newFeature.TheGeometry);
     }
+
+    public void ApplyChanges()
+    {
+        _allFeatures.RemoveAll(f => f.Status == Common.Enums.FeatureStatus.Removed ||
+                                    f.Status == Common.Enums.FeatureStatus.CanceledNew);
+
+        foreach (var feature in _allFeatures)
+        {
+            feature.MarkAsSaved();
+        }
+    }
+
+    public bool UpdateHasPendingChanges() => _allFeatures?.Any(f => f.Status != Common.Enums.FeatureStatus.Unchanged) ?? false;
 
 
 
@@ -126,6 +154,6 @@ public class FeatureSet<T> where T : IPoint, new()
 
     public override int GetHashCode() => this.LayerId.GetHashCode();
 
-    public override string ToString() => $"FeatureSet, FeatureCount:{this.Features?.Count ?? 0}";
+    public override string ToString() => $"FeatureSet, FeatureCount:{Features?.Count ?? 0} (total:{_allFeatures?.Count ?? 0})";
 
 }
