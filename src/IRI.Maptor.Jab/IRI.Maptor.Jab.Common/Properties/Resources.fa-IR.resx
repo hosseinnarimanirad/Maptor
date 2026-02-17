@@ -869,4 +869,16 @@
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>کپی</value>
   </data>
+  <data name="legend_filter_Clear" xml:space="preserve">
+    <value>پاک کردن فیلتر</value>
+    <comment>clear filter button tooltip</comment>
+  </data>
+  <data name="legend_filter_filterByLayerType" xml:space="preserve">
+    <value>فیلتر نوع منبع داده</value>
+    <comment>filter by layer type togglebutton tooltip</comment>
+  </data>
+  <data name="legend_filter_searchLayerWatermark" xml:space="preserve">
+    <value>فیلتر لایه‌ها</value>
+    <comment>watermark displayed on the search layer textbox</comment>
+  </data>
 </root>

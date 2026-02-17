@@ -895,4 +895,16 @@
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>
   </data>
+  <data name="legend_filter_Clear" xml:space="preserve">
+    <value>Clear Filters</value>
+    <comment>clear filter button tooltip</comment>
+  </data>
+  <data name="legend_filter_filterByLayerType" xml:space="preserve">
+    <value>Filter By Layer Type</value>
+    <comment>filter by layer type togglebutton tooltip</comment>
+  </data>
+  <data name="legend_filter_searchLayerWatermark" xml:space="preserve">
+    <value>Search Layer</value>
+    <comment>watermark displayed on the search layer textbox</comment>
+  </data>
 </root>

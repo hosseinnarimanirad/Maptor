@@ -311,21 +311,21 @@
                 <TextBox Grid.Column="0" Margin="0"
                       Text="{Binding ElementName=root, Path=LegendViewModel.LayerNameFilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       mahApp:ControlsHelper.CornerRadius="4"
-                      mahApp:TextBoxHelper.Watermark="فیلتر لایه‌ها" 
+                      mahApp:TextBoxHelper.Watermark="{Binding [legend_filter_searchLayerWatermark], Source={StaticResource Localization}}" 
                       mahApp:TextBoxHelper.ClearTextButton="True"
                       Style="{StaticResource filterTextBox}"
                      FontFamily="{StaticResource iranSans}" VerticalAlignment="Center"/>
                 <Button Grid.Column="1" Margin="4,0" Style="{StaticResource circleButtonLight}" 
                     Command="{Binding LegendViewModel.ClearFilterCommand, ElementName=root}"
                     IsEnabled="{Binding LegendViewModel.HasActiveFilter, ElementName=root}"
-                    ToolTip="پاک کردن فیلتر"
+                    ToolTip="{Binding [legend_filter_Clear], Source={StaticResource Localization}}"
                     VerticalAlignment="Center" >
                     <iconPacks:PackIconMaterial Kind="FilterOff"/>
                 </Button>
                 <ToggleButton Grid.Column="2" x:Name="dataSourceKindFilterToggle"  
                           Style="{StaticResource circleToggleButtonLight}"
                           VerticalAlignment="Center" Margin="4,0"
-                          ToolTip="فیلتر نوع منبع داده">
+                          ToolTip="{Binding [legend_filter_filterByLayerType], Source={StaticResource Localization}}">
                     <iconPacks:PackIconMaterial Kind="Filter"/>
                 </ToggleButton>
                 <mahApp:Badged Grid.Column="2" BadgePlacementMode="BottomLeft" BadgeMargin="0"

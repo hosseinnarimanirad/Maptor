@@ -376,11 +376,47 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add CSV.
+        /// </summary>
+        public static string cmd_legend_addCsv {
+            get {
+                return ResourceManager.GetString("cmd_legend_addCsv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add DXF.
+        /// </summary>
+        public static string cmd_legend_addDxf {
+            get {
+                return ResourceManager.GetString("cmd_legend_addDxf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add GeoJson.
         /// </summary>
         public static string cmd_legend_addGeoJson {
             get {
                 return ResourceManager.GetString("cmd_legend_addGeoJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add KML.
+        /// </summary>
+        public static string cmd_legend_addKml {
+            get {
+                return ResourceManager.GetString("cmd_legend_addKml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add KMZ.
+        /// </summary>
+        public static string cmd_legend_addKmz {
+            get {
+                return ResourceManager.GetString("cmd_legend_addKmz", resourceCulture);
             }
         }
         
@@ -399,6 +435,24 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string cmd_legend_addShapefile {
             get {
                 return ResourceManager.GetString("cmd_legend_addShapefile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add TSV.
+        /// </summary>
+        public static string cmd_legend_addTsv {
+            get {
+                return ResourceManager.GetString("cmd_legend_addTsv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import layer.
+        /// </summary>
+        public static string cmd_legend_importLayer {
+            get {
+                return ResourceManager.GetString("cmd_legend_importLayer", resourceCulture);
             }
         }
         
@@ -1318,6 +1372,33 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string layer_leveling3_title {
             get {
                 return ResourceManager.GetString("layer_leveling3_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear Filters.
+        /// </summary>
+        public static string legend_filter_Clear {
+            get {
+                return ResourceManager.GetString("legend_filter_Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter By Layer Type.
+        /// </summary>
+        public static string legend_filter_filterByLayerType {
+            get {
+                return ResourceManager.GetString("legend_filter_filterByLayerType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search Layer.
+        /// </summary>
+        public static string legend_filter_searchLayerWatermark {
+            get {
+                return ResourceManager.GetString("legend_filter_searchLayerWatermark", resourceCulture);
             }
         }
         
