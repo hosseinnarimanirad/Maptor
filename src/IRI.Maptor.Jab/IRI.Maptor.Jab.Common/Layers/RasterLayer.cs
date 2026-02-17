@@ -19,7 +19,7 @@ namespace IRI.Maptor.Jab.Common;
 
 public class RasterLayer : BaseLayer
 {
-    RasterLayer _parent;
+    RasterLayer? _parent;
 
     //private IDataSource? _dataSource;
 
@@ -57,7 +57,6 @@ public class RasterLayer : BaseLayer
     //    }
     //}
 
-
     private LayerType _type;
     public override LayerType Type
     {
@@ -69,7 +68,49 @@ public class RasterLayer : BaseLayer
         //}
     }
 
-    public BitmapImage Image { get; set; }
+    public BitmapImage? Image { get; set; }
+
+
+    public RasterLayer(RasterLayer parent, string layerName, LayerType layerType/* bool isBaseMap, bool isPyramid = false*/, double opacity, BoundingBox boundingBox, BitmapImage image)
+    {
+        this.LayerId = Guid.NewGuid();
+
+        this._parent = parent;
+
+        //this._type = isBaseMap ? LayerType.BaseMap : (isPyramid ? LayerType.ImagePyramid : LayerType.Raster);
+        this._type = layerType;
+         
+        this.LayerName = layerName;
+
+        this.Extent/*_extent*/ = boundingBox;
+
+        this.Image = image;
+
+        this.Opacity = opacity;
+        //this.VisualParameters = new VisualParameters(new ImageBrush(image), isBaseMap ? null : Brushes.Black, isBaseMap ? 0 : 1, opacity);
+    }
+
+    public RasterLayer(IDataSource dataSource, string layerName, LayerType layerType, double opacity/*, RenderMode rendering = RenderMode.Default*/, /*bool isBaseMap, bool isPyramid,*/ Visibility visibility, ScaleInterval visibleRange)
+    {
+        this.LayerId = Guid.NewGuid();
+
+        this._type = layerType;/*isBaseMap ? LayerType.BaseMap : (isPyramid ? LayerType.ImagePyramid : LayerType.Raster);*/
+
+        this.DataSource = dataSource;
+
+        if (!dataSource.WebMercatorExtent.IsNaN())
+        {
+            this.Extent/*_extent*/ = dataSource.WebMercatorExtent;
+        }
+
+        this.LayerName = layerName;
+
+        this.VisibleRange = visibleRange;
+
+        this.Opacity = opacity;
+
+        this.Visibility = visibility;
+    }
 
 
     protected override void BindWithFrameworkElement(FrameworkElement? element)
@@ -89,8 +130,7 @@ public class RasterLayer : BaseLayer
             throw new NotImplementedException();
     }
 
-
-    private async Task<List<RasterLayer>> GetRasterLayer(BoundingBox region, double mapScale, double unitDistance)
+    private List<RasterLayer> GetRasterLayer(BoundingBox region, double mapScale/*, double unitDistance*/)
     {
         List<RasterLayer> result = new List<RasterLayer>();
 
@@ -105,17 +145,12 @@ public class RasterLayer : BaseLayer
 
                 var boundingBox = item.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
 
-                //94.12.16
-                //int width = (int)(boundingBox.Width * mapScale / unitDistance);
-
-                //int height = (int)(boundingBox.Height * mapScale / unitDistance);
-
                 var image = Helpers.ImageUtility.CreateBitmapImage(item.Image);
 
                 if (image is null)
                     continue;
 
-                RasterLayer layer = new RasterLayer(this, LayerName, image, Opacity, boundingBox, Type == LayerType.BaseMap, this.Type == LayerType.ImagePyramid);
+                RasterLayer layer = new RasterLayer(this, LayerName, Type /*== LayerType.BaseMap, this.Type == LayerType.ImagePyramid*/, Opacity, boundingBox, image);
 
                 result.Add(layer);
             }
@@ -136,7 +171,7 @@ public class RasterLayer : BaseLayer
                 if (image is null)
                     continue;
 
-                RasterLayer layer = new RasterLayer(this, LayerName, image, Opacity, boundingBox, Type == LayerType.BaseMap, Type == LayerType.ImagePyramid);
+                RasterLayer layer = new RasterLayer(this, LayerName, Type /*== LayerType.BaseMap, Type == LayerType.ImagePyramid*/, Opacity, boundingBox, image);
 
                 result.Add(layer);
             }
@@ -174,97 +209,24 @@ public class RasterLayer : BaseLayer
                 if (geo.Image is null)
                     return [];
 
-                //94.12.16
-                //int width = (int)(boundingBox.Width * mapScale / unitDistance);
-
-                //int height = (int)(boundingBox.Height * mapScale / unitDistance);
-
                 var image = Helpers.ImageUtility.CreateBitmapImage(geo.Image);
 
                 if (image is null)
                     return [];
 
-                RasterLayer layer = new RasterLayer(this, this.LayerName, image, Opacity, boundingBox, false);
+                RasterLayer layer = new RasterLayer(this, this.LayerName, Type/*false*/, Opacity, boundingBox, image);
 
                 result.Add(layer);
             }
         }
-        //else
-        //{ 
-        //    var featureSet = await ((SqlServerDataSource)this.DataSource).GetAsFeatureSetAsync(region);
-
-        //    foreach (var item in featureSet.Features)
-        //    { 
-        //        var boundingBox = new BoundingBox(xMin: double.Parse(item.Attributes["ImageMinX"].ToString()),
-        //                                            yMin: double.Parse(item.Attributes["ImageMinY"].ToString()),
-        //                                            xMax: double.Parse(item.Attributes["ImageMaxX"].ToString()),
-        //                                            yMax: double.Parse(item.Attributes["ImageMaxY"].ToString()));
-
-        //        // 1401.11.27
-        //        // todo: need test
-        //        // 1394.12.16
-        //        RasterLayer layer =
-        //            new RasterLayer(this, this.LayerName,
-        //                                Helpers.ImageUtility.ToImage((byte[])item.Attributes["Image"]),
-        //                                this.VisualParameters.Opacity,
-        //                                boundingBox,
-        //                                this.Type == LayerType.BaseMap);
-
-        //        result.Add(layer);
-        //    }
-        //}
 
         return result;
 
     }
 
-    public RasterLayer(RasterLayer parent, string name, BitmapImage image, double opacity, BoundingBox boundingBox, bool isBaseMap, bool isPyramid = false/*, RenderingApproach rendering = RenderingApproach.Default*/)
-    {
-        this.LayerId = Guid.NewGuid();
-
-        this._parent = parent;
-
-        this._type = isBaseMap ? LayerType.BaseMap : (isPyramid ? LayerType.ImagePyramid : LayerType.Raster);
-
-        this.LayerName = name;
-
-        this.Extent/*_extent*/ = boundingBox;
-
-        this.Image = image;
-
-        //this.VisualParameters = new VisualParameters(new ImageBrush(image), isBaseMap ? null : Brushes.Black, isBaseMap ? 0 : 1, opacity);
-    }
-
-    public RasterLayer(IDataSource dataSource, string layerName, ScaleInterval visibleRange, bool isBaseMap, bool isPyramid, Visibility visibility, double opacity, RenderMode rendering = RenderMode.Default)
-    {
-        this.LayerId = Guid.NewGuid();
-
-        this._type = isBaseMap ? LayerType.BaseMap : (isPyramid ? LayerType.ImagePyramid : LayerType.Raster);
-
-        this.DataSource = dataSource;
-
-        if (!dataSource.WebMercatorExtent.IsNaN())
-        {
-            this.Extent/*_extent*/ = dataSource.WebMercatorExtent;
-        }
-
-        //AddTiled method is not supported for raster layers and image pyramid
-        //this.Rendering = rendering;
-
-        this.LayerName = layerName;
-
-        this.VisibleRange = visibleRange;
-
-        //this.VisualParameters = new VisualParameters(null, isBaseMap ? null : Brushes.Black, isBaseMap ? 0 : 1, opacity);
-        //this.VisualParameters = new VisualParameters(null, null, 0, opacity, visibility);
-        this.Opacity = opacity;
-        this.Visibility = visibility;
-    }
-
-
     public async Task<List<Path>> ParseToPath(BoundingBox boundingBox, Transform viewTransform, double mapScale, double unitDistance)
     {
-        List<RasterLayer> layers = await GetRasterLayer(boundingBox, mapScale, unitDistance);
+        List<RasterLayer> layers = GetRasterLayer(boundingBox, mapScale/*, unitDistance*/);
 
         var result = new List<Path>();
 

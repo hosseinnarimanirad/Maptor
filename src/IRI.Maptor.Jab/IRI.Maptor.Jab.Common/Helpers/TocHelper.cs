@@ -55,7 +55,7 @@ public class TocHelper
         {
             var layerName = System.IO.Path.GetFileNameWithoutExtension(item);
 
-            var layer = new RasterLayer(new ZippedImagePyramidDataSource(item), layerName, ScaleInterval.All, false, true, System.Windows.Visibility.Collapsed, 1);
+            var layer = new RasterLayer(new ZippedImagePyramidDataSource(item), layerName, LayerType.ImagePyramid /*false, true*/, 1, System.Windows.Visibility.Collapsed, ScaleInterval.All);
 
             //layer.LayerName = layerName;
 

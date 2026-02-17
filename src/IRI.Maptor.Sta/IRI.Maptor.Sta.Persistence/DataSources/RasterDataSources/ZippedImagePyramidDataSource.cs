@@ -10,6 +10,7 @@ using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Persistence.DataSources;
+using IRI.Maptor.Sta.Persistence.Abstractions;
 
 namespace IRI.Maptor.Sta.Persistence.RasterDataSources;
 
@@ -25,6 +26,8 @@ public class ZippedImagePyramidDataSource : RasterDataSource
     //}
 
     //public int Srid => SridHelper.WebMercator;
+
+    public override DataSourceKind DataSourceKind => DataSourceKind.ZippedImagePyramid;
 
     System.IO.Compression.ZipArchive _archive;
 

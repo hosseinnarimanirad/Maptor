@@ -742,14 +742,14 @@ public partial class MapViewer : NotifiableUserControl
         this.AddComplexLayer(layer.GetLayer(MapScale), true);
     }
 
-    public void SetRasterLayer(string layerName, ScaleInterval scaleInterval, IDataSource dataSource, double opacity, bool isBaseMap = false, bool isPyramid = false, RenderMode rendering = RenderMode.Default)
-    {
-        if (dataSource == null)
-        {
-            return;
-        }
-        this._layerManager.Add(new RasterLayer(dataSource, layerName, scaleInterval, isBaseMap, isPyramid, Visibility.Visible, opacity, rendering), 1.0 / _mapScale);
-    }
+    //public void SetRasterLayer(string layerName, ScaleInterval scaleInterval, IDataSource dataSource, double opacity, bool isBaseMap = false, bool isPyramid = false, RenderMode rendering = RenderMode.Default)
+    //{
+    //    if (dataSource == null)
+    //    {
+    //        return;
+    //    }
+    //    this._layerManager.Add(new RasterLayer(dataSource, layerName, scaleInterval, isBaseMap, isPyramid, Visibility.Visible, opacity, rendering), 1.0 / _mapScale);
+    //}
 
     public void SetTileService(TileMapProvider mapProvider, bool isCachEnabled = false, string? cacheDirectory = null, bool isOffline = false, Func<TileInfo, string>? getFileName = null, double opacity = 1)
     {

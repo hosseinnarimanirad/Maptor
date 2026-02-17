@@ -17,6 +17,11 @@ public class GeoRasterFileDataSource : RasterDataSource
 
     private int _srid;
 
+    public override int Srid => _srid;
+
+    private DataSourceKind _dataSourceKind = DataSourceKind.Worldfile;
+    public override DataSourceKind DataSourceKind => _dataSourceKind;
+
     public GeoRasterFileDataSource()
     {
     }
@@ -28,9 +33,11 @@ public class GeoRasterFileDataSource : RasterDataSource
     //    this.WebMercatorExtent = geoRaster.GeodeticWgs84BoundingBox.Transform(i => MapProjects.GeodeticWgs84ToWebMercator(i));
     //}
 
-    public GeoRasterFileDataSource(GeoReferencedImage image)
+    public GeoRasterFileDataSource(GeoReferencedImage image, DataSourceKind kind)
     {
         this.geoRaster = image;
+
+        this._dataSourceKind = kind;
 
         this.WebMercatorExtent = geoRaster.GeodeticWgs84BoundingBox.Transform(i => MapProjects.GeodeticWgs84ToWebMercator(i));
 
@@ -50,17 +57,20 @@ public class GeoRasterFileDataSource : RasterDataSource
     //    }
     //}
 
-    public GeoRasterFileDataSource(string imageFileName, int srid)
+    public GeoRasterFileDataSource(string imageFileName, DataSourceKind kind, int srid)
     {
+        this._dataSourceKind = kind;
+
         _imageFileName = imageFileName;
         _srid = srid;
+
     }
 
     /// <summary>
     /// Asynchronously loads the worldfile and initializes the raster.
     /// Sets IsBusy while loading, HasError on failure, and IsLoaded on success.
     /// </summary>
-    public async Task<bool> LoadAsync()
+    public override async Task<bool> LoadAsync()
     {
         if (IsLoaded)
             return true;
@@ -99,9 +109,9 @@ public class GeoRasterFileDataSource : RasterDataSource
         }
     }
 
-    public static async Task<GeoRasterFileDataSource?> CreateAsync(string imageFileName, int srid)
+    public static async Task<GeoRasterFileDataSource?> CreateAsync(string imageFileName, DataSourceKind kind, int srid)
     {
-        var result = new GeoRasterFileDataSource(imageFileName, srid);
+        var result = new GeoRasterFileDataSource(imageFileName, kind, srid);
 
         var loaded = await result.LoadAsync();
 

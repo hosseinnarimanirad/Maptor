@@ -3424,7 +3424,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
 
         await AddKmzfile(fileName, owner);
-    }     
+    }
     public async Task AddKmzfile(string fileName, object owner)
     {
         try
@@ -3668,7 +3668,7 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         try
         {
-            var dataSource = await GeoRasterFileDataSource.CreateAsync(fileName, srid);
+            var dataSource = await GeoRasterFileDataSource.CreateAsync(fileName, DataSourceKind.Worldfile, srid);
 
             if (dataSource == null)
             {
@@ -3678,11 +3678,12 @@ public abstract class MapViewModelBase : ViewModelBase
             var rasterLayer = new RasterLayer(
                 dataSource,
                 Path.GetFileNameWithoutExtension(fileName),
-                ScaleInterval.All,
-                false,
-                false,
+                LayerType.Raster,
+                .9,
+                //false,
+                //false,
                 System.Windows.Visibility.Visible,
-                .9);
+                ScaleInterval.All);
 
             //this.SetLayer(rasterLayer);
 
@@ -3709,7 +3710,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
 
     }
-     
+
     public virtual async Task AddZippedImagePyramid(object owner)
     {
         try
@@ -3727,11 +3728,12 @@ public abstract class MapViewModelBase : ViewModelBase
 
             var rasterLayer = new RasterLayer(new ZippedImagePyramidDataSource(fileName),
                 Path.GetFileNameWithoutExtension(fileName),
-                ScaleInterval.All,
-                false,
-                true,
+                LayerType.ImagePyramid,
+                1,
+                //false,
+                //true,
                 System.Windows.Visibility.Visible,
-                1);
+                ScaleInterval.All);
 
             AddLayer(rasterLayer);
         }
