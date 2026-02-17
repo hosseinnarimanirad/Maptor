@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
-
 using IRI.Maptor.Jab.Common.Assets.ColorBrushes;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 
@@ -23,7 +22,7 @@ public class DataSourceKindToBrushConverter : IValueConverter
             DataSourceKind.Kml => ModernUIColors.LimeBrush,
 
             DataSourceKind.Dxf => ModernUIColors.TealBrush,
-             
+
             DataSourceKind.WebApi => ModernUIColors.CyanBrush,
             DataSourceKind.GRPC => ModernUIColors.BlueBrush,
 

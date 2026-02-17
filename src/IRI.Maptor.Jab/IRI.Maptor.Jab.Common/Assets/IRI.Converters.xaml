@@ -18,7 +18,7 @@
     <converters:CoordinateDimensionToMVisibilityConverter x:Key="coordinateDimensionToMVisibilityConverter"/>
     <converters:CoordinateDimensionToZVisibilityConverter x:Key="coordinateDimensionToZVisibilityConverter"/>
     <converters:CoordinateDisplayConverter x:Key="coordinateDisplayConverter"/>
-
+   
     <converters:DateTimeToPersianEllapsedDateCoarseConverter x:Key="dateTimeToPersianEllapsedDateCoarseConverter"/>
     <converters:DoubleToDoubleInverseConverter x:Key="doubleInverseConverter"/>
     <converters:DoubleToMarginTopConverter x:Key="doubleToMarginTopConverter"/>
@@ -28,6 +28,10 @@
     <converters:EnumToBoolConverter x:Key="enumToBoolConverter"/>
     <converters:EnumToDescriptionConverter x:Key="enumToDescriptionConverter"/>
 
+    <converters:FeatureStatusToBrushConverter x:Key="featureStatusToBrushConverter"/>
+    <converters:FeatureStatusToBackgroundBrushConverter x:Key="featureStatusToBackgroundBrushConverter"/>
+    <converters:FeatureStatusToMaterialIconConverter x:Key="featureStatusToMaterialIconConverter"/>
+    <converters:FeatureStatusToRowIconVisibilityConverter x:Key="featureStatusToRowIconVisibilityConverter"/>
     <converters:FilteredSubLayersConverter x:Key="filteredSubLayersConverter"/>
     <converters:FlowDocumentXmlToStringConverter x:Key="flowDocumentXmlToStringConverter"/>
 
