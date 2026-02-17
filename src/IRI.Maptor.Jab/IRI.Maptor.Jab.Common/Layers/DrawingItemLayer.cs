@@ -10,6 +10,7 @@ using IRI.Maptor.Sta.Persistence.DataSources;
 
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common;
 

@@ -11,6 +11,7 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Ket.SqlServerSpatialExtension.Helpers;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 using IRI.Maptor.Sta.Spatial.Analysis;
+using IRI.Maptor.Sta.Common.Enums;
 namespace IRI.Maptor.Extensions;
 
 public static class SqlGeometryExtensions

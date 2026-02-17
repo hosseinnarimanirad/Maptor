@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Tst.Standards.OGC.KML;
 

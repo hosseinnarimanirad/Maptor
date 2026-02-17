@@ -1,7 +1,7 @@
 ﻿using System;
 using IRI.Maptor.Sta.PersonalGdb;
-using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.ShapefileFormat;
+using IRI.Maptor.Sta.Common.Enums;
 
 
 namespace IRI.Maptor.Extensions;

@@ -10,6 +10,7 @@ using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.OfficeFormats;
 using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common.Models;
 

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.Helpers;
@@ -15,6 +14,7 @@ using IRI.Maptor.Jab.Common.Cartography.Helpers;
 
 using Drawing = System.Drawing;
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
 

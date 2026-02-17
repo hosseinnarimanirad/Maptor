@@ -5,10 +5,10 @@ using System.Windows.Media;
 using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using WpfPoint = System.Windows.Point;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common.Cartography.Helpers;
 

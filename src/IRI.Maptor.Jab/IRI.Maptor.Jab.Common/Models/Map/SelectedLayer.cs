@@ -8,6 +8,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using System.Collections.Specialized;
+using IRI.Maptor.Sta.Common.Enums;
 
 
 namespace IRI.Maptor.Jab.Common.Models.Map;

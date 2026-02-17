@@ -8,12 +8,13 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Models.Map;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives; 
+using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 using IRI.Maptor.Jab.Common.Properties;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common.Models.Legend;
 

@@ -27,6 +27,7 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using System.Threading.Tasks;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common;
 

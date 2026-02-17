@@ -8,6 +8,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.MapIndexes;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
@@ -29,7 +30,7 @@ public class GridDataSource : VectorDataSource
 
     public override GeometryType? GeometryType
     {
-        get => Common.Primitives.GeometryType.Polygon;
+        get => Common.Enums.GeometryType.Polygon;
         protected set => _ = value;
     }
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Common.Enums;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
 namespace IRI.Maptor.Tst.Assets

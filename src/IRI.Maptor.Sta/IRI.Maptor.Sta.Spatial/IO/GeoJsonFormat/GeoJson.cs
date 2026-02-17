@@ -6,6 +6,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.Analysis;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 

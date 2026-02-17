@@ -70,7 +70,7 @@ public class ShapefileDataSource : MemoryDataSource
             WebMercatorExtent = WebMercatorExtent.Transform(transformFunc);
         }
 
-        GeometryType = mainHeader.ShapeType.AsGeometryType() ?? Common.Primitives.GeometryType.None;
+        GeometryType = mainHeader.ShapeType.AsGeometryType() ?? Common.Enums.GeometryType.None;
 
         _features = FeatureSet<Point>.Empty;
 

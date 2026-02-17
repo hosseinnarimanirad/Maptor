@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
-using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 using System.Drawing;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Extensions;
 

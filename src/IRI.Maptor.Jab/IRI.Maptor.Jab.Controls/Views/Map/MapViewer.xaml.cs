@@ -3014,7 +3014,7 @@ public partial class MapViewer : NotifiableUserControl
         if (geometry.IsNullOrEmpty())
             return;
 
-        if (geometry.Type == sb.GeometryType.Point)
+        if (geometry.Type == GeometryType.Point)
         {
             //98.01.18. consider using
             this.ZoomAndCenter(WebMercatorUtility.GetGoogleMapScale(13), geometry.AsPoint());

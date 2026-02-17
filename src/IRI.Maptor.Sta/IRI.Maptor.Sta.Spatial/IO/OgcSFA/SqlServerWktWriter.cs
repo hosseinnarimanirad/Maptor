@@ -1,5 +1,5 @@
 using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Sta.Spatial.IO.OgcSFA;

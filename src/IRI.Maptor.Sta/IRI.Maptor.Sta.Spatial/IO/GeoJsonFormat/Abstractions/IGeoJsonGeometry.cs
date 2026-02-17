@@ -1,9 +1,10 @@
-﻿using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives; 
+﻿using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.Primitives;
 using System.Text.Json.Serialization;
 
 namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
- 
+
 /// <summary>
 /// Represents a GeoJSON geometry object (RFC 7946). Supports Point, MultiPoint, LineString, MultiLineString, Polygon, and MultiPolygon.
 /// </summary>

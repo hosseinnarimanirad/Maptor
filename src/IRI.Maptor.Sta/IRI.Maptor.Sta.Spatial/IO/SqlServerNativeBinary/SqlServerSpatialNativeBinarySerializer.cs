@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Enums;

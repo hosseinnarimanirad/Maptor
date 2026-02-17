@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Sta.Spatial.Services.News;
 

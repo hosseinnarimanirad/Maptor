@@ -9,6 +9,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Spatial.AdvancedStructures;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.Spatial.IO.Dxf;
+using IRI.Maptor.Sta.Common.Enums;
 
 
 namespace IRI.Maptor.Extensions;

@@ -7,10 +7,10 @@ using System.Windows.Input;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Models.Map;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Primitives;
 
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 using IRI.Maptor.Jab.Controls.Common.Behaviors;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 

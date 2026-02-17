@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Common.Enums;
 using MahApps.Metro.IconPacks;
 
 namespace IRI.Maptor.Jab.Common.Assets.Converters;

@@ -44,6 +44,7 @@ using IRI.Maptor.Jab.Common.Models.Spatialable;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Models.Settings;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 

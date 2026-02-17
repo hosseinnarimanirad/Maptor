@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IRI.Maptor.Sta.Common.Enums;
+using System;
 using System.Text.Json;
 
 namespace IRI.Maptor.Sta.Common.Contracts.Mapzen;
@@ -33,17 +34,17 @@ public class MapzenGeometry
     public object coordinates { get; set; }
     public string type { get; set; }
 
-    public IRI.Maptor.Sta.Common.Primitives.GeometryType GeometryType
+    public GeometryType GeometryType
     {
         get
         {
             if (type.ToLower().Trim() == "linestring")
             {
-                return IRI.Maptor.Sta.Common.Primitives.GeometryType.LineString;
+                return GeometryType.LineString;
             }
             else if (type.ToLower().Trim() == "polygon")
             {
-                return IRI.Maptor.Sta.Common.Primitives.GeometryType.Polygon;
+                return GeometryType.Polygon;
             }
             else
             {
@@ -56,7 +57,7 @@ public class MapzenGeometry
     {
         get
         {
-            if (GeometryType == IRI.Maptor.Sta.Common.Primitives.GeometryType.LineString)
+            if (GeometryType == GeometryType.LineString)
             {
                 return JsonSerializer.Deserialize<double[][]>(coordinates.ToString());
             }
@@ -69,7 +70,7 @@ public class MapzenGeometry
     {
         get
         {
-            if (GeometryType == IRI.Maptor.Sta.Common.Primitives.GeometryType.Polygon)
+            if (GeometryType == GeometryType.Polygon)
             {
                 return JsonSerializer.Deserialize<double[][][]>(coordinates.ToString());
             }

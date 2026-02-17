@@ -4,6 +4,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Ket.SqlServerSpatialExtension.Helpers;
 

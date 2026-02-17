@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using IRI.Maptor.Sta.Ogc.WMS;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common;
 

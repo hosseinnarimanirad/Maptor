@@ -1,4 +1,5 @@
-﻿using IRI.Maptor.Sta.Common.Helpers;
+﻿using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;

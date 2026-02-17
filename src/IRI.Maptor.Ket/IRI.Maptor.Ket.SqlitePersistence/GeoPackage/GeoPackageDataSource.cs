@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.DataSources;
@@ -191,22 +192,22 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
         var typeName = gpkgTypeName.ToUpperInvariant();
 
         if (typeName.Contains("POINT"))
-            return Sta.Common.Primitives.GeometryType.Point;
+            return Sta.Common.Enums.GeometryType.Point;
 
         else if (typeName.Contains("LINESTRING") || typeName.Contains("LINE"))
-            return Sta.Common.Primitives.GeometryType.LineString;
+            return Sta.Common.Enums.GeometryType.LineString;
 
         else if (typeName.Contains("POLYGON"))
-            return Sta.Common.Primitives.GeometryType.Polygon;
+            return Sta.Common.Enums.GeometryType.Polygon;
 
         else if (typeName.Contains("MULTIPOINT"))
-            return Sta.Common.Primitives.GeometryType.MultiPoint;
+            return Sta.Common.Enums.GeometryType.MultiPoint;
 
         else if (typeName.Contains("MULTILINESTRING"))
-            return Sta.Common.Primitives.GeometryType.MultiLineString;
+            return Sta.Common.Enums.GeometryType.MultiLineString;
 
         else if (typeName.Contains("MULTIPOLYGON"))
-            return Sta.Common.Primitives.GeometryType.MultiPolygon;
+            return Sta.Common.Enums.GeometryType.MultiPolygon;
 
         else if (typeName.Contains("GEOMETRY"))
             return null; // Mixed geometry types

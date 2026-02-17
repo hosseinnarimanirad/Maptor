@@ -3,6 +3,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using Microsoft.SqlServer.Types;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Tst.Main.TheGeometry;
 

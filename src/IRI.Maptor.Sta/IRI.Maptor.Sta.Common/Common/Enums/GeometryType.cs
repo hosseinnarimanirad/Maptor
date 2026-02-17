@@ -1,4 +1,4 @@
-﻿namespace IRI.Maptor.Sta.Common.Primitives;
+﻿namespace IRI.Maptor.Sta.Common.Enums;
 
 public enum GeometryType
 {

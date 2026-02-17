@@ -11,6 +11,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
@@ -81,12 +82,12 @@ public class GeometryEditorViewModel : Notifier
     public bool HasNoParts => this.Parts is null || this.Parts.Count < 1;
 
     public bool IsRingBase =>
-            GeometryType == IRI.Maptor.Sta.Common.Primitives.GeometryType.Polygon ||
-            GeometryType == IRI.Maptor.Sta.Common.Primitives.GeometryType.MultiPolygon;
+            GeometryType == Sta.Common.Enums.GeometryType.Polygon ||
+            GeometryType == Sta.Common.Enums.GeometryType.MultiPolygon;
 
-    public bool IsMultiGeometry => GeometryType == Sta.Common.Primitives.GeometryType.MultiPoint ||
-                                    GeometryType == Sta.Common.Primitives.GeometryType.MultiLineString ||
-                                    GeometryType == Sta.Common.Primitives.GeometryType.MultiPolygon;
+    public bool IsMultiGeometry => GeometryType == Sta.Common.Enums.GeometryType.MultiPoint ||
+                                    GeometryType == Sta.Common.Enums.GeometryType.MultiLineString ||
+                                    GeometryType == Sta.Common.Enums.GeometryType.MultiPolygon;
 
     public GeometryType? GeometryType => Geometry?.Type;
 
@@ -328,7 +329,7 @@ public class GeometryEditorViewModel : Notifier
 
     #region Parts
 
-    private List<IGeometry>? Parts => GeometryType == Sta.Common.Primitives.GeometryType.MultiPolygon ?
+    private List<IGeometry>? Parts => GeometryType == Sta.Common.Enums.GeometryType.MultiPolygon ?
                                            CurrentPolygon?.GetGeometries() :
                                             Geometry?.GetGeometries();
 
@@ -378,7 +379,7 @@ public class GeometryEditorViewModel : Notifier
 
     #region Multi Polygons
 
-    private List<IGeometry>? Polygons => GeometryType == Sta.Common.Primitives.GeometryType.MultiPolygon ?
+    private List<IGeometry>? Polygons => GeometryType == Sta.Common.Enums.GeometryType.MultiPolygon ?
                                             Geometry?.GetGeometries() : null;
 
     public IGeometry? CurrentPolygon
@@ -854,7 +855,7 @@ public class GeometryEditorViewModel : Notifier
         if (CurrentPartIndex < 0 || CurrentPartIndex >= TotalPartCount)
             return -1;
 
-        if (GeometryType == Sta.Common.Primitives.GeometryType.MultiPolygon)
+        if (GeometryType == Sta.Common.Enums.GeometryType.MultiPolygon)
             return Geometry.ToGlobalPointIndex(new PointAddress(CurrentPolygonIndex, CurrentPartIndex, localIndex));
 
         else
