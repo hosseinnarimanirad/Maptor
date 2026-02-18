@@ -67,6 +67,17 @@ public class SelectedLayer : Notifier
 
     public bool CanDelete => HighlightedFeatures?.Count >= 1;
 
+    public bool CanUndo
+    {
+        get
+        {
+            if (!IsSingleValueHighlighted || HighlightedFeatures?.FirstOrDefault() is not Feature<Point> feature)
+                return false;
+            return feature.Status == FeatureStatus.Updated && feature.OldFeature != null ||
+                   feature.Status == FeatureStatus.New;
+        }
+    }
+
     public int CountOfSelectedFeatures => Features?.Count ?? 0;
 
 
@@ -208,6 +219,7 @@ public class SelectedLayer : Notifier
         RaisePropertyChanged(nameof(IsSingleValueHighlighted));
         RaisePropertyChanged(nameof(CountOfSelectedFeatures));
         RaisePropertyChanged(nameof(CanDelete));
+        RaisePropertyChanged(nameof(CanUndo));
     }
 
     private RelayCommand? _addCommand;
@@ -337,6 +349,45 @@ public class SelectedLayer : Notifier
             }
 
             return _editCommand;
+        }
+    }
+
+
+    private RelayCommand? _undoCommand;
+    public RelayCommand UndoCommand
+    {
+        get
+        {
+            if (_undoCommand is null)
+            {
+                _undoCommand = new RelayCommand(param =>
+                {
+                    var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+                    if (dataSource is null || !CanUndo)
+                        return;
+
+                    var feature = HighlightedFeatures?.Count == 1 ? HighlightedFeatures!.First() : null;
+                    if (feature is null)
+                        return;
+
+                    if (feature.Status == FeatureStatus.Updated && feature.OldFeature != null)
+                    {
+                        dataSource.Update(feature, feature.OldFeature);
+                        feature.MarkAsSaved();
+                        RefreshFeatureInView(feature);
+                    }
+                    else if (feature.Status == FeatureStatus.New)
+                    {
+                        dataSource.Remove(feature);
+                        Features?.Remove(feature);
+                        HighlightedFeatures?.Remove(feature);
+                    }
+
+                    NotifyAll();
+                    RequestRefreshLayer?.Invoke(AssociatedLayer);
+                });
+            }
+            return _undoCommand;
         }
     }
 

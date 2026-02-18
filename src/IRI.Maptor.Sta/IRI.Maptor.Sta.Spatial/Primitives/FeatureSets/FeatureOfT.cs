@@ -136,15 +136,20 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         if (newFeature is null)
             return;
 
+        // Preserve the first version only; do not overwrite OldFeature on subsequent edits.
+        // This allows Undo to discard all unsaved edits and revert to the original state.
+        if (newFeature?.Status != FeatureStatus.New &&
+            this.OldFeature is null)
+        {
+            this.OldFeature = this.Clone();
+        }
+
         this.Attributes = newFeature.Attributes ?? GetEmptyDictionary();
 
         this.TheGeometry = newFeature.TheGeometry;
 
-        // do not mark as updated NEW features even if they were editted
         if (newFeature?.Status == FeatureStatus.New)
             return;
-
-        this.OldFeature = this.Clone();
 
         this.LastAddOrUpdate = DateTime.UtcNow;
 
