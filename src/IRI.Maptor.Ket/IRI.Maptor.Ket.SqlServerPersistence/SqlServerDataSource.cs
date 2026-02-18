@@ -35,6 +35,12 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
 
     public string? IdColumnName { get; set; }
 
+    public int NumberOfAddedFeatures => 0;
+
+    public int NumberOfDeletedFeatures => 0;
+
+    public int NumberOfUpdatedFeatures => 0;
+
     public override BoundingBox WebMercatorExtent
     {
         get

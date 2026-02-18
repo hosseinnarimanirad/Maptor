@@ -114,7 +114,9 @@
                     <Border DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=DataGridRow}}">
                         <iconPacks:PackIconMaterial Kind="{Binding Status, Converter={StaticResource featureStatusToMaterialIconConverter}}"
                                                     Width="10" Height="10" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                                    Visibility="{Binding Status, Converter={StaticResource featureStatusToRowIconVisibilityConverter}}">
+                                                    Visibility="{Binding Status, Converter={StaticResource featureStatusToRowIconVisibilityConverter}}"
+                                                    ToolTip="{Binding LastAddOrUpdate, Converter={StaticResource utcDateTimeToElapsedHoursMinutesConverter}, Mode=OneWay}"
+                                                    Background="Transparent">
                             <iconPacks:PackIconMaterial.Style>
                                 <Style TargetType="iconPacks:PackIconMaterial">
                                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>

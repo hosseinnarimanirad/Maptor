@@ -3,14 +3,15 @@ using System.Data;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Text;
 
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.ShapefileFormat;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Persistence.Abstractions;
-using IRI.Maptor.Sta.ShapefileFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using System.Text;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
@@ -118,6 +119,11 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
     #region CRUD & Tack Changes
 
+    public int NumberOfAddedFeatures => _features?.GetPendingChangeCounts(FeatureStatus.New) ?? 0;
+
+    public int NumberOfDeletedFeatures => _features?.GetPendingChangeCounts(FeatureStatus.Removed) ?? 0;
+
+    public int NumberOfUpdatedFeatures => _features?.GetPendingChangeCounts(FeatureStatus.Updated) ?? 0;
 
     protected void UpdateHasPendingChanges()
     {
@@ -132,6 +138,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         UpdateExtent();
 
         UpdateHasPendingChanges();
+        RaisePendingChangesCountsChanged();
     }
 
     public virtual void Remove(Feature<Point> feature)
@@ -141,6 +148,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         UpdateExtent();
 
         UpdateHasPendingChanges();
+        RaisePendingChangesCountsChanged();
     }
 
     public virtual bool Update(Feature<Point> oldValue, Feature<Point> newValue)
@@ -151,7 +159,13 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         UpdateExtent();
 
         UpdateHasPendingChanges();
+        RaisePendingChangesCountsChanged();
         return true;
+    }
+
+    private void RaisePendingChangesCountsChanged()
+    {
+        RaiseHasPendingChangesChanged();
     }
 
     public virtual void SaveChanges()

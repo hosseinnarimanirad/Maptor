@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -85,9 +85,11 @@ public abstract class BaseDataSource : IDataSource
                 return;
 
             _hasPendingChanges = value;
-            HasPendingChangesChanged?.Invoke(this, value);
+            RaiseHasPendingChangesChanged();
         }
     }
+
+    protected void RaiseHasPendingChangesChanged() => HasPendingChangesChanged?.Invoke(this, HasPendingChanges);
 
 
     private bool _hasClientFilter;

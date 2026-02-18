@@ -113,6 +113,12 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public virtual bool HasPendingChanges => DataSource?.HasPendingChanges ?? false;
 
+    public virtual int NumberOfAddedFeatures => (DataSource as IEditableVectorDataSource)?.NumberOfAddedFeatures ?? 0;
+
+    public virtual int NumberOfDeletedFeatures => (DataSource as IEditableVectorDataSource)?.NumberOfDeletedFeatures ?? 0;
+
+    public virtual int NumberOfUpdatedFeatures => (DataSource as IEditableVectorDataSource)?.NumberOfUpdatedFeatures ?? 0;
+
     public virtual bool IsClientFiltered => DataSource?.HasClientFilter ?? false;
 
     public virtual bool HasError => DataSource?.HasError ?? false;
@@ -188,7 +194,13 @@ public abstract class BaseLayer : Notifier, ILayer
         });
     }
 
-    protected void DataSource_HasPendingChangesChanged(object? sender, bool e) => DispatcherToUi(() => RaisePropertyChanged(nameof(HasPendingChanges)));
+    protected void DataSource_HasPendingChangesChanged(object? sender, bool e) => DispatcherToUi(() =>
+    {
+        RaisePropertyChanged(nameof(HasPendingChanges));
+        RaisePropertyChanged(nameof(NumberOfAddedFeatures));
+        RaisePropertyChanged(nameof(NumberOfDeletedFeatures));
+        RaisePropertyChanged(nameof(NumberOfUpdatedFeatures));
+    });
 
     protected void DataSource_IsClientFilteredChanged(object? sender, bool e) => DispatcherToUi(() => RaisePropertyChanged(nameof(IsClientFiltered)));
 

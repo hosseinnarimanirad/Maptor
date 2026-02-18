@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Sta.Spatial.Primitives;
@@ -151,7 +153,8 @@ public class FeatureSet<T> where T : IPoint, new()
 
     public bool UpdateHasPendingChanges() => _allFeatures?.Any(f => f.Status != Common.Enums.FeatureStatus.Unchanged) ?? false;
 
-
+    public int GetPendingChangeCounts(FeatureStatus status) => _allFeatures?.Count(f => f.Status == status) ?? 0;
+     
 
     public override bool Equals(object obj)
     {

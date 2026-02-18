@@ -5,6 +5,15 @@ namespace IRI.Maptor.Sta.Persistence.Abstractions;
 
 public interface IEditableVectorDataSource : IDataSource
 {
+    /// <summary>Number of features added (status = New).</summary>
+    int NumberOfAddedFeatures { get; }
+
+    /// <summary>Number of features deleted (status = Removed), CanceledNew are not considered.</summary>
+    int NumberOfDeletedFeatures { get; }
+
+    /// <summary>Number of features updated (status = Updated).</summary>
+    int NumberOfUpdatedFeatures { get; }
+
     void Add(Feature<Point> newValue);
 
     void Remove(Feature<Point> value);

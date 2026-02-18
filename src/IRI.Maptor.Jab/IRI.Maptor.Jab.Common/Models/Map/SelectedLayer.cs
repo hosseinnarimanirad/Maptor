@@ -23,7 +23,7 @@ public class SelectedLayer : Notifier
     public string LayerName => AssociatedLayer?.LayerName ?? string.Empty;
 
     public List<Field>? Fields { get; set; }
-
+    
     private ObservableCollection<Feature<Point>> _features;
     public ObservableCollection<Feature<Point>> Features
     {

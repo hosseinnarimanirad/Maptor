@@ -16,7 +16,7 @@ public class FeatureStatusToBrushConverter : IValueConverter
             return status switch
             {
                 FeatureStatus.Unchanged => Brushes.Black,
-                FeatureStatus.Updated => MapAppColors.AmberBrush,
+                FeatureStatus.Updated => MapAppColors.OrangeBrush,
                 FeatureStatus.New => MapAppColors.EmeraldBrush,
                 FeatureStatus.Removed => MapAppColors.RedBrush,
                 FeatureStatus.CanceledNew => MapAppColors.SteelBrush,

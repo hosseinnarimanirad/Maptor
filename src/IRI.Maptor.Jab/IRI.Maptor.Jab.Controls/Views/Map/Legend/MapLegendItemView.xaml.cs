@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Collections.Generic;
 
 using IRI.Maptor.Jab.Common;
@@ -13,12 +14,44 @@ namespace IRI.Maptor.Jab.Controls.Views;
 /// </summary>
 public partial class MapLegendItemView : UserControl//, IDisposable, INotifyPropertyChanged
 {
+    //private readonly System.Windows.Threading.DispatcherTimer _popupCloseTimer = new() { Interval = TimeSpan.FromMilliseconds(250) };
+
     public MapLegendItemView()
     {
         InitializeComponent();
+        //_popupCloseTimer.Tick += (_, _) =>
+        //{
+        //    _popupCloseTimer.Stop();
+        //    if (pendingChangesPopup != null)
+        //        pendingChangesPopup.IsOpen = false;
+        //};
         //LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
         //LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
+
+    //private void OnPencilIconMouseEnter(object sender, MouseEventArgs e)
+    //{
+    //    _popupCloseTimer.Stop();
+    //    if (pendingChangesPopup != null)
+    //        pendingChangesPopup.IsOpen = true;
+    //}
+
+    //private void OnPencilIconMouseLeave(object sender, MouseEventArgs e)
+    //{
+    //    _popupCloseTimer.Stop();
+    //    _popupCloseTimer.Start();
+    //}
+
+    //private void OnPendingChangesPopupMouseEnter(object sender, MouseEventArgs e)
+    //{
+    //    _popupCloseTimer.Stop();
+    //}
+
+    //private void OnPendingChangesPopupMouseLeave(object sender, MouseEventArgs e)
+    //{
+    //    _popupCloseTimer.Stop();
+    //    _popupCloseTimer.Start();
+    //}
 
     #region DependencyProperties
 

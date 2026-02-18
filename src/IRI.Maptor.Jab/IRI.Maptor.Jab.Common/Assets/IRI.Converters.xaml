@@ -79,6 +79,7 @@
 
     <converters:TileTypeToBoolConverter x:Key="tileTypeToBoolConverter"/>
 
+    <converters:UtcDateTimeToElapsedHoursMinutesConverter x:Key="utcDateTimeToElapsedHoursMinutesConverter"/>
     <converters:UtmZoneConverter x:Key="utmZoneConverter"/>
 
     <converters:VisibilityToBoolConverter x:Key="visibilityToBoolConverter"/>
