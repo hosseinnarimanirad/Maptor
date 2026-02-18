@@ -1194,13 +1194,22 @@ public abstract class MapViewModelBase : ViewModelBase
 
             selectedLayer.RequestRemove = () => { RemoveSelectedLayer(selectedLayer);/*this.SelectedLayers.Remove(selectedLayer);*/ };
 
+            selectedLayer.RequestRefreshLayer = RefreshLayerVisibility;
+
+            selectedLayer.RequestDraw = async (geometryType) =>
+            {
+                var result = await GetDrawingAsync(geometryType.AsDrawMode());
+
+                return result.HasNotNullResult() ? result.Result : null;
+            };
+
             selectedLayer.RequestEdit = async g =>
             {
                 var editResult = await EditAsync(g.TheGeometry, MapSettings.EditingOptions);
 
                 if (editResult.HasNotNullResult())
                 {
-                    Feature<Point> f = new Feature<Point>(editResult.Result) { Id = g.Id };
+                    Feature<Point> f = new Feature<Point>(editResult.Result) { Id = g.Id, Attributes = g.Attributes, Status = g.Status };
 
                     selectedLayer.Update(g, f);
                 }

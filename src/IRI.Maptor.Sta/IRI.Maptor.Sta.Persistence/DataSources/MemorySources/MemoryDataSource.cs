@@ -143,18 +143,21 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         UpdateHasPendingChanges();
     }
 
-    public virtual void Update(Feature<Point> newGeometry)
+    public virtual bool Update(Feature<Point> oldValue, Feature<Point> newValue)
     {
-        _features.Update(newGeometry);
+        if (!_features.Update(oldValue, newValue))
+            return false;
 
         UpdateExtent();
 
         UpdateHasPendingChanges();
+        return true;
     }
 
     public virtual void SaveChanges()
     {
-        return;
+        _features.ApplyChanges();
+        UpdateHasPendingChanges();
     }
 
 

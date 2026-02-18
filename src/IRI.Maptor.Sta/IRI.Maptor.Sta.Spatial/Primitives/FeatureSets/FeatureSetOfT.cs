@@ -117,15 +117,26 @@ public class FeatureSet<T> where T : IPoint, new()
 
     }
 
-    public void Update(Feature<T> newFeature)
+    public bool Update(Feature<T> oldFeature, Feature<T> newFeature)
     {
-        var existing = _allFeatures.FirstOrDefault(f => f.Id == newFeature.Id);
-        if (existing == null || existing.Status == Common.Enums.FeatureStatus.Removed ||
-            existing.Status == Common.Enums.FeatureStatus.CanceledNew)
-            return;
+        if (oldFeature.AreTheSame(newFeature))
+            return false;
 
-        existing.MarkAsUpdated(newFeature.TheGeometry);
+        var existing = _allFeatures.FirstOrDefault(f => f.Id == newFeature.Id);
+
+        if (existing == null ||
+            existing.Status == Common.Enums.FeatureStatus.Removed ||
+            existing.Status == Common.Enums.FeatureStatus.CanceledNew)
+            return false;
+
+        existing.MarkAsUpdated(newFeature);
+        return true;
     }
+
+    // todo: write undo functions too
+    // undoRemove
+    // undoCanceledNew
+    // undoUpdate
 
     public void ApplyChanges()
     {

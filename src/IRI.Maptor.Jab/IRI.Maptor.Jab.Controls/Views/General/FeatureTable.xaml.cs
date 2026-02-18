@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Models.Map;
@@ -19,6 +20,13 @@ namespace IRI.Maptor.Jab.Controls.Views;
 /// </summary>
 public partial class FeatureTable : UserControl
 {
+    private Feature<Point>? _pendingEditFeature;
+    private bool _editingFeature = false;
+
+    public SelectedLayer Presenter { get { return (this.DataContext as SelectedLayer)!; } }
+
+
+
     public bool IsZoomToGeometryEnabled
     {
         get { return (bool)GetValue(IsZoomToGeometryEnabledProperty); }
@@ -36,6 +44,7 @@ public partial class FeatureTable : UserControl
     public static readonly DependencyProperty CanUserEditGeometryProperty =
         DependencyProperty.Register(nameof(CanUserEditGeometry), typeof(bool), typeof(FeatureTable), new PropertyMetadata(false));
 
+
     public bool CanUserEditAttribute
     {
         get { return (bool)GetValue(CanUserEditAttributeProperty); }
@@ -45,18 +54,50 @@ public partial class FeatureTable : UserControl
         DependencyProperty.Register(nameof(CanUserEditAttribute), typeof(bool), typeof(FeatureTable), new PropertyMetadata(false));
 
 
-    public SelectedLayer Presenter { get { return this.DataContext as SelectedLayer; } }
 
     public FeatureTable()
     {
         InitializeComponent();
     }
 
+    private void grid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+    {
+        _editingFeature = true;
 
+        if (e.Row?.Item is Feature<Point> feature)
+            _pendingEditFeature = feature.Clone();// new Feature<Point>(feature.TheGeometry?.Clone(), attrsCopy) { Id = feature.Id };
+
+        else
+            _pendingEditFeature = null;
+    }
+
+    private void grid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+    {
+        try
+        {
+            if (e.EditAction == DataGridEditAction.Commit)
+            {
+                var item = e.EditingElement.DataContext as Feature<Point>;
+
+                if (item is null || _pendingEditFeature is null)
+                    return;
+
+                Presenter.Update/*Feature*/(_pendingEditFeature, item);
+            }
+        }
+        finally
+        {
+            _editingFeature = false;
+            _pendingEditFeature = null;
+        }
+    }
 
 
     private void grid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
+        if (_editingFeature)
+            return;
+
         if (IsZoomToGeometryEnabled)
         {
             var selectedItems = grid.SelectedItems.Cast<Feature<Point>>();
@@ -65,13 +106,78 @@ public partial class FeatureTable : UserControl
             {
                 if (selectedItems?.Count() == 1 && selectedItems.First().TheGeometry.Type == GeometryType.Point)
                 {
-                    Presenter.RequestFlashSinglePoint(selectedItems.First());
+                    Presenter.RequestFlashSinglePoint?.Invoke(selectedItems.First());
                 }
             });
 
             Presenter.RequestZoomTo?.Invoke(selectedItems, action);
         }
     }
+
+    private void grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var selected = grid.SelectedItems?.Count > 0
+            ? grid.SelectedItems.Cast<Feature<Point>>()
+            : Enumerable.Empty<Feature<Point>>();
+
+        this.Presenter.UpdateHighlightedFeatures(selected);
+    }
+
+    private void grid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => DataGridDictionaryBehavior.Regenerate(sender);
+
+
+    // to enable off-column row selection
+    private void grid_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (grid.ItemsSource == null)
+            return;
+
+        var pt = e.GetPosition(grid);
+
+        var hitResult = VisualTreeHelper.HitTest(grid, pt);
+
+        if (hitResult?.VisualHit is not DependencyObject hit)
+            return;
+
+        var cell = FindVisualParent<DataGridCell>(hit);
+
+        if (cell != null)
+            return;
+
+        var row = FindVisualParent<DataGridRow>(hit);
+
+        if (row == null)
+            return;
+
+        if (row.Item == null)
+            return;
+
+        if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
+        {
+            if (grid.SelectedItems.Contains(row.Item))
+                grid.SelectedItems.Remove(row.Item);
+
+            else
+                grid.SelectedItems.Add(row.Item);
+        }
+        else
+        {
+            grid.SelectedItem = row.Item;
+        }
+    }
+
+    private static T? FindVisualParent<T>(DependencyObject? child) where T : DependencyObject
+    {
+        while (child != null)
+        {
+            if (child is T parent)
+                return parent;
+            child = VisualTreeHelper.GetParent(child);
+        }
+        return null;
+    }
+
+    #region Old codes
 
     //private void grid_RowEditEnded(object sender, Telerik.Windows.Controls.GridViewRowEditEndedEventArgs e)
     //{
@@ -93,25 +199,6 @@ public partial class FeatureTable : UserControl
     //        }
     //    }
     //}
-
-    private void grid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-    {
-        if (e.EditAction == DataGridEditAction.Commit)
-        {
-            var item = e.EditingElement.DataContext as Feature<Point>;
-            if (item is null)
-                return;
-
-            Presenter.UpdateFeature(item);
-
-            Presenter.RefreshFeatureInView(item);
-        }
-    }
-
-    private void grid_AddingNewItem(object sender, AddingNewItemEventArgs e)
-    {
-
-    }
 
     //private void RadGridView_AutoGeneratingColumn(object sender, Telerik.Windows.Controls.GridViewAutoGeneratingColumnEventArgs e)
     //{
@@ -194,16 +281,6 @@ public partial class FeatureTable : UserControl
     //    this.Presenter.UpdateHighlightedFeatures(grid.SelectedItems.Cast<Feature<Point>>());
     //}
 
-    private void grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (grid.SelectedItems is null || grid.SelectedItems.Count == 0)
-            return;
 
-        this.Presenter.UpdateHighlightedFeatures(grid.SelectedItems.Cast<Feature<Point>>());
-    }
-
-    private void grid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-    {
-        DataGridDictionaryBehavior.Regenerate(sender);
-    }
+    #endregion
 }

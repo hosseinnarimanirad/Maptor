@@ -1,16 +1,16 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.DataSources;
-using System.Collections.Specialized;
 using IRI.Maptor.Sta.Common.Enums;
-
 
 namespace IRI.Maptor.Jab.Common.Models.Map;
 
@@ -47,11 +47,15 @@ public class SelectedLayer : Notifier
             _highlightedFeatures = value;
             RaisePropertyChanged();
 
-            _highlightedFeatures.CollectionChanged += highlightedFeatures_CollectionChanged;
+            if (_highlightedFeatures != null)
+            {
+                _highlightedFeatures.CollectionChanged -= highlightedFeatures_CollectionChanged;
+                _highlightedFeatures.CollectionChanged += highlightedFeatures_CollectionChanged;
+            }
 
-            this.UpdateHighlightedFeaturesOnMap(HighlightedFeatures);
+            this.RefreshHighlightedFeaturesOnMap(HighlightedFeatures);
 
-            RaisePropertyChanged(nameof(IsSingleValueHighlighted));
+            NotifyAll();
         }
     }
 
@@ -76,7 +80,11 @@ public class SelectedLayer : Notifier
 
     public Action<Feature<Point>>? RequestEdit { get; set; }
 
+    public Func<GeometryType, Task<Geometry<Point>?>> RequestDraw { get; set; }
+
     public Action? RequestRemove { get; set; }
+
+    public Action<ILayer>? RequestRefreshLayer { get; set; }
 
 
     public SelectedLayer(VectorLayer layer, List<Field>? fields)
@@ -88,10 +96,9 @@ public class SelectedLayer : Notifier
 
     private void highlightedFeatures_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        this.UpdateHighlightedFeaturesOnMap(HighlightedFeatures);
+        this.RefreshHighlightedFeaturesOnMap(HighlightedFeatures);
 
-        RaisePropertyChanged(nameof(IsSingleValueHighlighted));
-        RaisePropertyChanged(nameof(CanDelete));
+        NotifyAll();
     }
 
     private void TryFlashPoint(IEnumerable<Feature<Point>> point)
@@ -113,12 +120,12 @@ public class SelectedLayer : Notifier
         HighlightedFeatures = new ObservableCollection<Feature<Point>>(items);
     }
 
-    public void UpdateSelectedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
+    public void RefreshSelectedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
     {
         RequestFeaturesChanged?.Invoke(enumerable, strokeThickness);
     }
 
-    public void UpdateHighlightedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable)
+    public void RefreshHighlightedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable)
     {
         RequestHighlightFeaturesChanged?.Invoke(enumerable, this.AssociatedLayer.DefaultSymbology?.StrokeThickness);
     }
@@ -128,36 +135,80 @@ public class SelectedLayer : Notifier
         return Features;
     }
 
-    public void Update(Feature<Point> oldGeometry, Feature<Point> newGeometry)
+    public void Update(Feature<Point> oldFeature, Feature<Point> newFeature)
     {
         var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
 
         if (dataSource is null)
             return;
 
-        dataSource.Update(newGeometry);
+        if (Features is null)
+            return;
 
-        var feature = this.Features.Single(f => f.Id == oldGeometry.Id);
+        if (!dataSource.Update(oldFeature, newFeature))
+            return;
 
-        feature.TheGeometry = newGeometry.TheGeometry;
+        var feature = Features.SingleOrDefault(f => f.Id == oldFeature.Id);
+
+        if (feature is null)
+            return;
+
+        //feature.MarkAsUpdated(newFeature);
 
         RefreshFeatureInView(feature);
     }
 
-    public void UpdateFeature(Feature<Point> item) => (AssociatedLayer?.DataSource as IEditableVectorDataSource)?.Update(item);
+    ///// <summary>
+    ///// Updates the feature in the data source. Returns true if the feature was updated.
+    ///// Call with (oldFeature, newFeature) - for cell edits, capture oldFeature in BeginningEdit.
+    ///// </summary>
+    //public bool UpdateFeature(Feature<Point> oldFeature, Feature<Point> newFeature)
+    //{
+    //    var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+    //    if (dataSource is null)
+    //        return false;
+
+    //    if (!dataSource.Update(oldFeature, newFeature))
+    //        return false;
+
+    //    if (Features is not null)
+    //        RefreshFeatureInView(newFeature);
+
+    //    return true;
+    //}
 
     public void RefreshFeatureInView(Feature<Point> feature)
     {
+        if (Features is null)
+            return;
+
         var idx = Features?.IndexOf(feature) ?? -1;
+
         if (idx >= 0)
         {
-            Features.RemoveAt(idx);
+            Features!.RemoveAt(idx);
+
             Features.Insert(idx, feature);
         }
     }
 
-    public void SaveChanges() => (AssociatedLayer.DataSource as IEditableVectorDataSource)?.SaveChanges();
+    public void SaveChanges()
+    {
+        (AssociatedLayer.DataSource as IEditableVectorDataSource)?.SaveChanges();
 
+        // Replace collection to force DataGrid to re-bind; features now have Status=Unchanged
+        if (Features != null)
+            Features = new ObservableCollection<Feature<Point>>(Features);
+
+        NotifyAll();
+    }
+
+    private void NotifyAll()
+    {
+        RaisePropertyChanged(nameof(IsSingleValueHighlighted));
+        RaisePropertyChanged(nameof(CountOfSelectedFeatures));
+        RaisePropertyChanged(nameof(CanDelete));
+    }
 
     private RelayCommand? _addCommand;
     public RelayCommand AddCommand
@@ -166,7 +217,7 @@ public class SelectedLayer : Notifier
         {
             if (_addCommand is null)
             {
-                _addCommand = new RelayCommand(param =>
+                _addCommand = new RelayCommand(async param =>
                 {
                     var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
                     if (dataSource is null)
@@ -174,33 +225,47 @@ public class SelectedLayer : Notifier
 
                     var vectorDataSource = AssociatedLayer?.DataSource as VectorDataSource;
                     var geometryType = vectorDataSource?.GeometryType ?? Sta.Common.Enums.GeometryType.Point;
-                    var srid = AssociatedLayer?.DataSource?.Srid ?? 0;
+                    //var srid = AssociatedLayer?.DataSource?.Srid ?? 0;
 
                     // todo
                     // this should be changed to draw geometry using the layers type
-                    var emptyGeometry = Geometry<Point>.CreateEmpty(geometryType, srid);
+                    //var emptyGeometry = Geometry<Point>.CreateEmpty(geometryType, srid);
+                    var geometry = await RequestDraw(geometryType);
+
+                    if (geometry is null)
+                        return;
 
                     var attributes = new Dictionary<string, object>();
+
                     if (Fields != null)
                     {
                         foreach (var field in Fields)
-                            attributes[field.Name] = null!;
+                            attributes[field.Name] = field.GetDefaultValue();
                     }
 
                     var newId = (Features?.Select(f => f.Id).DefaultIfEmpty(0).Max() ?? 0) + 1;
-                    var newFeature = new Feature<Point>(emptyGeometry, attributes)
+
+                    var newFeature = new Feature<Point>(geometry, attributes)
                     {
                         Id = newId
                     };
+
                     newFeature.MarkAsNew();
 
                     dataSource.Add(newFeature);
+
                     Features ??= new ObservableCollection<Feature<Point>>();
+
                     Features.Add(newFeature);
 
-                    RaisePropertyChanged(nameof(CountOfSelectedFeatures));
+                    NotifyAll();
 
-                    RequestEdit?.Invoke(newFeature);
+                    if (ShowSelectedOnMap)
+                        RefreshSelectedFeaturesOnMap(Features, AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+
+                    RequestRefreshLayer?.Invoke(AssociatedLayer);
+
+                    //RequestEdit?.Invoke(newFeature);
                 });
             }
             return _addCommand;
@@ -230,7 +295,10 @@ public class SelectedLayer : Notifier
                     foreach (var feature in toRemove)
                         HighlightedFeatures.Remove(feature);
 
-                    RaisePropertyChanged(nameof(CountOfSelectedFeatures));
+                    NotifyAll();
+
+                    RequestRefreshLayer?.Invoke(AssociatedLayer);
+
                 });
             }
             return _deleteCommand;
@@ -262,8 +330,9 @@ public class SelectedLayer : Notifier
             {
                 _editCommand = new RelayCommand(param =>
                 {
-                    if (HighlightedFeatures?.Count == 1)
-                        this.RequestEdit(HighlightedFeatures.First());
+                    var feature = HighlightedFeatures?.Count == 1 ? HighlightedFeatures!.First() : null;
+                    if (feature != null)
+                        RequestEdit?.Invoke(feature);
                 });
             }
 

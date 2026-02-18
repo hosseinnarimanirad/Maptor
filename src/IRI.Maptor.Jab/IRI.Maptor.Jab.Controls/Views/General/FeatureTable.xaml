@@ -87,26 +87,68 @@
                                 ShowGroupPanel="False" IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
                              x:Name="grid" telerik:StyleManager.Theme="Office2019" SelectionMode="Extended" SelectionChanged="grid_SelectionChanged"
                                 RowEditEnded="grid_RowEditEnded" MouseDoubleClick="grid_MouseDoubleClick">-->
-        <DataGrid x:Name="grid" BorderThickness="1" ItemsSource="{Binding Features}" AutoGenerateColumns="False" SelectionMode="Extended" 
-                    IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
-                    SelectionChanged="grid_SelectionChanged" CellEditEnding="grid_CellEditEnding" EnableColumnVirtualization="False"
-                    AddingNewItem="grid_AddingNewItem" MouseDoubleClick="grid_MouseDoubleClick" DataContextChanged="grid_DataContextChanged"
-                    dgx:DataGridFilter.IsAutoFilterEnabled="True" SelectionUnit="FullRow" Background="Transparent"
-                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True" RowHeight="28"
-                    RowHeaderWidth="24" HeadersVisibility="All">
+        <DataGrid x:Name="grid"
+                    ItemsSource="{Binding Features}"
+                    IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}"
+                    CanUserAddRows="False"
+                    AutoGenerateColumns="False"
+                    SelectionMode="Extended" 
+                    SelectionUnit="FullRow"
+                    RowHeaderWidth="16"
+                    HeadersVisibility="All"
+                    Background="Transparent"
+                    BorderThickness="1"
+                    RowHeight="24"
+                    EnableColumnVirtualization="False"
+                    SelectionChanged="grid_SelectionChanged"
+                    PreviewMouseDown="grid_PreviewMouseDown"
+                    BeginningEdit="grid_BeginningEdit"
+                    CellEditEnding="grid_CellEditEnding" 
+                    MouseDoubleClick="grid_MouseDoubleClick"
+                    DataContextChanged="grid_DataContextChanged"
+                    dgx:DataGridFilter.IsAutoFilterEnabled="True"
+                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True"
+                  >
             <DataGrid.RowHeaderTemplate>
                 <DataTemplate>
                     <Border DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=DataGridRow}}">
                         <iconPacks:PackIconMaterial Kind="{Binding Status, Converter={StaticResource featureStatusToMaterialIconConverter}}"
-                                                    Width="16" Height="16" VerticalAlignment="Center"
-                                                    Foreground="{DynamicResource MahApps.Brushes.Accent}"
-                                                    Visibility="{Binding Status, Converter={StaticResource featureStatusToRowIconVisibilityConverter}}"/>
+                                                    Width="10" Height="10" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                    Visibility="{Binding Status, Converter={StaticResource featureStatusToRowIconVisibilityConverter}}">
+                            <iconPacks:PackIconMaterial.Style>
+                                <Style TargetType="iconPacks:PackIconMaterial">
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Selected.Foreground}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </iconPacks:PackIconMaterial.Style>
+                        </iconPacks:PackIconMaterial>
                     </Border>
                 </DataTemplate>
             </DataGrid.RowHeaderTemplate>
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="BorderThickness" Value="0"/> 
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    <Setter Property="Margin" Value="4,0"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=DataGridRow}}"/>
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Selected.Foreground}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
-                    <Setter Property="Background" Value="{Binding Status, Converter={StaticResource featureStatusToBackgroundBrushConverter}}"/>
+                    <!--<Setter Property="Background" Value="{Binding Status, Converter={StaticResource featureStatusToBackgroundBrushConverter}}"/>-->
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>

@@ -35,4 +35,17 @@ public static class GeometryTypeExtensions
                 throw new NotImplementedException("GeometryTypeExtensions > AsLayerType");
         }
     }
+
+    public static DrawMode AsDrawMode(this GeometryType geometryType)
+    { 
+        return geometryType switch
+        {
+            GeometryType.Point or GeometryType.MultiPoint => DrawMode.Point,
+            GeometryType.LineString or GeometryType.MultiLineString => DrawMode.Polyline,
+
+            GeometryType.Polygon or GeometryType.MultiPolygon => DrawMode.Polygon,
+
+            _ => DrawMode.Rectangle
+        };
+    }
 }

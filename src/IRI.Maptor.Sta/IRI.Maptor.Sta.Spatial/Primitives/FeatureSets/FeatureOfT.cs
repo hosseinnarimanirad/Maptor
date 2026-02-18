@@ -1,6 +1,7 @@
-﻿using IRI.Maptor.Extensions;
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
@@ -68,6 +69,24 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
 
     public override string ToString() => $"Geometry: {TheGeometry?.Type}, Attributes: {Attributes?.Count}";
 
+    /// <summary>
+    /// Returns true if this feature has the same geometry and attributes as the other (by value).
+    /// </summary>
+    public bool AreTheSame(Feature<T>? other)
+    {
+        if (other is null) return false;
+        if (ReferenceEquals(this, other)) return true;
+
+        var geometrySame = TheGeometry?.AsWkt() == other.TheGeometry?.AsWkt();
+        var attributesSame = DictionaryHelper.AreAttributesEqual(Attributes, other.Attributes);
+
+        return geometrySame && attributesSame;
+    }
+
+    public Feature<T> Clone() => new Feature<T>(this.TheGeometry.Clone(), DictionaryHelper.Copy(this.Attributes)) { Id = this.Id, LabelAttribute = this.LabelAttribute, };
+
+    public Dictionary<string, object> GetEmptyDictionary() => this.Attributes.Keys.ToDictionary(key => key, key => (object)null);
+
     public Feature<T> Transform(Func<T, T> transform, int? newSrid = 0)
     {
         return new Feature<T>(TheGeometry.Transform(transform, newSrid ?? TheGeometry.Srid), this.Attributes)
@@ -91,13 +110,14 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
 
     public FeatureStatus Status { get; set; } = FeatureStatus.Unchanged;
 
-    public byte[]? OldVersionWkb { get; set; }
+    // old version of the current feature if it has been edited
+    public Feature<T>? OldFeature { get; set; }
 
     public DateTime? LastAddOrUpdate { get; set; }
 
     public void MarkAsRemoved()
     {
-        this.OldVersionWkb = null;
+        this.OldFeature = null;
 
         this.LastAddOrUpdate = DateTime.UtcNow;
 
@@ -111,21 +131,30 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         this.Status = FeatureStatus.New;
     }
 
-    public void MarkAsUpdated(Geometry<T> newGeometry)
+    public void MarkAsUpdated(Feature<T> newFeature)
     {
-        this.OldVersionWkb = this.TheGeometry.AsWkb();
+        if (newFeature is null)
+            return;
+
+        this.Attributes = newFeature.Attributes ?? GetEmptyDictionary();
+
+        this.TheGeometry = newFeature.TheGeometry;
+
+        // do not mark as updated NEW features even if they were editted
+        if (newFeature?.Status == FeatureStatus.New)
+            return;
+
+        this.OldFeature = this.Clone();
 
         this.LastAddOrUpdate = DateTime.UtcNow;
 
         this.Status = FeatureStatus.Updated;
-
-        this.TheGeometry = newGeometry;
     }
 
     public void MarkAsSaved()
-    {         
+    {
         this.Status = FeatureStatus.Unchanged;
-        this.OldVersionWkb = null;
+        this.OldFeature = null;
         this.LastAddOrUpdate = null;
     }
 

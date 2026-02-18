@@ -498,7 +498,7 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
         throw new NotImplementedException();
     }
 
-    public void Update(Feature<Point> newValue)
+    public bool Update(Feature<Point> oldValue, Feature<Point> newValue)
     {
         throw new NotImplementedException();
     }
