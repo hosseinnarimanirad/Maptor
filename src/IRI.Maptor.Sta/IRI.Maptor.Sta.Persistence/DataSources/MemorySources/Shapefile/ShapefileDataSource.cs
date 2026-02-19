@@ -72,7 +72,7 @@ public class ShapefileDataSource : MemoryDataSource
 
         GeometryType = mainHeader.ShapeType.AsGeometryType() ?? Common.Enums.GeometryType.None;
 
-        _features = FeatureSet<Point>.Empty;
+        _featureSet = FeatureSet<Point>.Empty;
 
         Fields = new List<Field>();
 
@@ -171,7 +171,7 @@ public class ShapefileDataSource : MemoryDataSource
             features.Add(feature);
         }
 
-        _features = FeatureSet<Point>.Create(System.IO.Path.GetFileNameWithoutExtension(_shapefileName), features);
+        _featureSet = FeatureSet<Point>.Create(System.IO.Path.GetFileNameWithoutExtension(_shapefileName), features);
 
         IsLoaded = true;
     }
@@ -181,7 +181,7 @@ public class ShapefileDataSource : MemoryDataSource
     {
         Func<Feature<Point>, EsriShapeBase>? geometryMap = null;
 
-        var features = _features.Features;
+        var features = _featureSet.Features;
 
         //save shp, shx, dbf, prj, cpg
 
@@ -205,7 +205,7 @@ public class ShapefileDataSource : MemoryDataSource
         //{ 
         //    item.MarkAsSaved();
         //}
-        _features.ApplyChanges();
+        _featureSet.ApplyChanges();
 
         UpdateHasPendingChanges();
     }

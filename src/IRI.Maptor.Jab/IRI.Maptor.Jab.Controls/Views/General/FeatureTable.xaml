@@ -107,19 +107,18 @@
                     MouseDoubleClick="grid_MouseDoubleClick"
                     DataContextChanged="grid_DataContextChanged"
                     dgx:DataGridFilter.IsAutoFilterEnabled="True"
-                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True"
-                  >
+                    local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True">
             <DataGrid.RowHeaderTemplate>
                 <DataTemplate>
                     <Border DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=DataGridRow}}">
                         <iconPacks:PackIconMaterial Kind="{Binding Status, Converter={StaticResource featureStatusToMaterialIconConverter}}"
                                                     Width="10" Height="10" VerticalAlignment="Center" HorizontalAlignment="Center"
                                                     Visibility="{Binding Status, Converter={StaticResource featureStatusToRowIconVisibilityConverter}}"
-                                                    ToolTip="{Binding LastAddOrUpdate, Converter={StaticResource utcDateTimeToElapsedHoursMinutesConverter}, Mode=OneWay}"
+                                                    ToolTip="{Binding LastAddOrUpdate, Converter={StaticResource utcDateTimeToLocalTimeConverter}, Mode=OneWay}"
                                                     Background="Transparent">
                             <iconPacks:PackIconMaterial.Style>
                                 <Style TargetType="iconPacks:PackIconMaterial">
-                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                    <Setter Property="Foreground" Value="{Binding Status, Converter={StaticResource featureStatusToBrushConverter}}"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
                                             <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Selected.Foreground}"/>

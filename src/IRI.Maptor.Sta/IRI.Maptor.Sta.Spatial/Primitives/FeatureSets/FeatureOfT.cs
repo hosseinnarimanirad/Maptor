@@ -131,29 +131,102 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         this.Status = FeatureStatus.New;
     }
 
-    public void MarkAsUpdated(Feature<T> newFeature)
+    //public void MarkAsUpdated(Feature<T> newFeature)
+    //{
+    //    if (newFeature is null)
+    //        return;
+
+    //    // Preserve the first version only; do not overwrite OldFeature on subsequent edits.
+    //    // This allows Undo to discard all unsaved edits and revert to the original state.
+    //    if (newFeature?.Status != FeatureStatus.New &&
+    //        this.OldFeature is null)
+    //    {
+    //        this.OldFeature = this.Clone();
+    //    }
+
+    //    this.Attributes = newFeature.Attributes ?? GetEmptyDictionary();
+
+    //    this.TheGeometry = newFeature.TheGeometry;
+
+    //    if (newFeature?.Status == FeatureStatus.New)
+    //        return;
+
+    //    this.LastAddOrUpdate = DateTime.UtcNow;
+
+    //    this.Status = FeatureStatus.Updated;
+    //}
+
+    public void UpdateAttributes(Dictionary<string, object>? attributes)
     {
-        if (newFeature is null)
+        if (this.Status == FeatureStatus.Removed || this.Status == FeatureStatus.CanceledNew)
             return;
 
         // Preserve the first version only; do not overwrite OldFeature on subsequent edits.
         // This allows Undo to discard all unsaved edits and revert to the original state.
-        if (newFeature?.Status != FeatureStatus.New &&
-            this.OldFeature is null)
-        {
+        if (this.Status == FeatureStatus.Unchanged)
             this.OldFeature = this.Clone();
+
+        this.Attributes = attributes ?? GetEmptyDictionary();
+
+        if (this.Status == FeatureStatus.New)
+            return;
+
+        MarkAsUpdated();
+    }
+
+    public void UpdateOldAttributes(Dictionary<string, object>? attributes)
+    {
+        if (this.Status == FeatureStatus.Removed || this.Status == FeatureStatus.CanceledNew)
+            return;
+
+        // Preserve the first version only; do not overwrite OldFeature on subsequent edits.
+        // This allows Undo to discard all unsaved edits and revert to the original state.
+        if (this.Status == FeatureStatus.Unchanged)
+        {
+            this.OldFeature = new Feature<T>(this.TheGeometry.Clone(), attributes ?? this.GetEmptyDictionary())
+            {
+                Id = this.Id,
+                LabelAttribute = this.LabelAttribute
+            };
         }
 
-        this.Attributes = newFeature.Attributes ?? GetEmptyDictionary();
+        if (this.Status == FeatureStatus.New)
+            return;
 
-        this.TheGeometry = newFeature.TheGeometry;
+        MarkAsUpdated();
+    }
 
-        if (newFeature?.Status == FeatureStatus.New)
+    public bool UpdateGeometry(Geometry<T> newGeometry)
+    {
+        if (this.Status == FeatureStatus.Removed || this.Status == FeatureStatus.CanceledNew)
+            return false;
+
+        if (this.TheGeometry.AsWkt() == newGeometry.AsWkt())
+            return false;
+
+        if (this.Status == FeatureStatus.Unchanged)
+            this.OldFeature = this.Clone();
+
+        this.TheGeometry = newGeometry;
+
+        if (this.Status == FeatureStatus.New)
+            return true;
+
+        MarkAsUpdated();
+
+        return true;
+    }
+
+    public void MarkAsUpdated()
+    {
+        if (this.Status == FeatureStatus.New ||
+            this.Status == FeatureStatus.CanceledNew)
             return;
 
         this.LastAddOrUpdate = DateTime.UtcNow;
 
         this.Status = FeatureStatus.Updated;
+
     }
 
     public void MarkAsSaved()

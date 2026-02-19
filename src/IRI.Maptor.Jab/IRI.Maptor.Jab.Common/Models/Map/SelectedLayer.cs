@@ -6,11 +6,13 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Common.Enums;
+using System.Windows.Forms;
 
 namespace IRI.Maptor.Jab.Common.Models.Map;
 
@@ -23,7 +25,7 @@ public class SelectedLayer : Notifier
     public string LayerName => AssociatedLayer?.LayerName ?? string.Empty;
 
     public List<Field>? Fields { get; set; }
-    
+
     private ObservableCollection<Feature<Point>> _features;
     public ObservableCollection<Feature<Point>> Features
     {
@@ -48,10 +50,7 @@ public class SelectedLayer : Notifier
             RaisePropertyChanged();
 
             if (_highlightedFeatures != null)
-            {
-                _highlightedFeatures.CollectionChanged -= highlightedFeatures_CollectionChanged;
                 _highlightedFeatures.CollectionChanged += highlightedFeatures_CollectionChanged;
-            }
 
             this.RefreshHighlightedFeaturesOnMap(HighlightedFeatures);
 
@@ -146,7 +145,49 @@ public class SelectedLayer : Notifier
         return Features;
     }
 
-    public void Update(Feature<Point> oldFeature, Feature<Point> newFeature)
+    public bool UpdateGeometry(Feature<Point> feature, Geometry<Point> newGeometry)
+    {
+        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
+        if (dataSource is null)
+            return false;
+
+        if (Features is null)
+            return false;
+
+        if (!dataSource.UpdateGeometry(feature, newGeometry))
+            return false;
+
+        // in order to update the RowHeader icon
+        RefreshFeatureInView(feature);
+
+        return true;
+    }
+
+    //public void Update(Feature<Point> oldFeature, Feature<Point> newFeature)
+    //{
+    //    var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
+    //    if (dataSource is null)
+    //        return;
+
+    //    if (Features is null)
+    //        return;
+
+    //    if (!dataSource.update(oldFeature, newFeature))
+    //        return;
+
+    //    var feature = Features.SingleOrDefault(f => f.Id == oldFeature.Id);
+
+    //    if (feature is null)
+    //        return;
+
+    //    //feature.MarkAsUpdated(newFeature);
+
+    //    RefreshFeatureInView(feature);
+    //}
+
+    public void UpdateAttributes(Feature<Point> feature, Dictionary<string, object> oldAttributes)
     {
         var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
 
@@ -156,16 +197,10 @@ public class SelectedLayer : Notifier
         if (Features is null)
             return;
 
-        if (!dataSource.Update(oldFeature, newFeature))
+        if (!dataSource.UpdateAttributes(feature, oldAttributes))
             return;
 
-        var feature = Features.SingleOrDefault(f => f.Id == oldFeature.Id);
-
-        if (feature is null)
-            return;
-
-        //feature.MarkAsUpdated(newFeature);
-
+        // in order to update the RowHeader icon
         RefreshFeatureInView(feature);
     }
 
@@ -255,7 +290,7 @@ public class SelectedLayer : Notifier
                             attributes[field.Name] = field.GetDefaultValue();
                     }
 
-                    var newId = (Features?.Select(f => f.Id).DefaultIfEmpty(0).Max() ?? 0) + 1;
+                    var newId = dataSource.GetNewId();// (Features?.Select(f => f.Id).DefaultIfEmpty(0).Max() ?? 0) + 1;
 
                     var newFeature = new Feature<Point>(geometry, attributes)
                     {
@@ -342,7 +377,7 @@ public class SelectedLayer : Notifier
             {
                 _editCommand = new RelayCommand(param =>
                 {
-                    var feature = HighlightedFeatures?.Count == 1 ? HighlightedFeatures!.First() : null;
+                    var feature = IsSingleValueHighlighted ? HighlightedFeatures!.First() : null;
                     if (feature != null)
                         RequestEdit?.Invoke(feature);
                 });
@@ -366,14 +401,22 @@ public class SelectedLayer : Notifier
                     if (dataSource is null || !CanUndo)
                         return;
 
-                    var feature = HighlightedFeatures?.Count == 1 ? HighlightedFeatures!.First() : null;
+                    var feature = IsSingleValueHighlighted ? HighlightedFeatures!.First() : null;
+
                     if (feature is null)
                         return;
 
                     if (feature.Status == FeatureStatus.Updated && feature.OldFeature != null)
                     {
-                        dataSource.Update(feature, feature.OldFeature);
-                        feature.MarkAsSaved();
+                        dataSource.UndoChanges(feature);
+
+                        //// Apply revert directly to the displayed feature so the DataGrid attributes refresh.
+                        //// The grid's feature may differ from the data source's copy (e.g. when loaded from session).
+                        //feature.Attributes = DictionaryHelper.Copy(feature.OldFeature.Attributes ?? new Dictionary<string, object>());
+                        //if (feature.OldFeature.TheGeometry != null)
+                        //    feature.TheGeometry = feature.OldFeature.TheGeometry.Clone();
+                        //feature.MarkAsSaved();
+
                         RefreshFeatureInView(feature);
                     }
                     else if (feature.Status == FeatureStatus.New)

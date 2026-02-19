@@ -119,26 +119,83 @@ public class FeatureSet<T> where T : IPoint, new()
 
     }
 
-    public bool Update(Feature<T> oldFeature, Feature<T> newFeature)
+    //public bool Update(Feature<T> oldFeature, Feature<T> newFeature)
+    //{
+    //    if (oldFeature.AreTheSame(newFeature))
+    //        return false;
+
+    //    var existing = _allFeatures.FirstOrDefault(f => f.Id == newFeature.Id);
+
+    //    if (existing == null ||
+    //        existing.Status == Common.Enums.FeatureStatus.Removed ||
+    //        existing.Status == Common.Enums.FeatureStatus.CanceledNew)
+    //        return false;
+
+    //    existing.MarkAsUpdated(newFeature);
+    //    return true;
+    //}
+
+    public bool UpdateOldAttributes(Feature<T> feature, Dictionary<string, object> oldAttributes)
     {
-        if (oldFeature.AreTheSame(newFeature))
+        if (_allFeatures.IsNullOrEmpty())
             return false;
 
-        var existing = _allFeatures.FirstOrDefault(f => f.Id == newFeature.Id);
-
-        if (existing == null ||
-            existing.Status == Common.Enums.FeatureStatus.Removed ||
-            existing.Status == Common.Enums.FeatureStatus.CanceledNew)
+        if (!_allFeatures.Contains(feature))
             return false;
 
-        existing.MarkAsUpdated(newFeature);
+        if (feature is null)
+            return false;
+
+        feature.UpdateOldAttributes(oldAttributes);
+
         return true;
+    }
+
+    public bool UpdateGeometry(Feature<T> feature, Geometry<T> newGeometry)
+    {
+        if (_allFeatures.IsNullOrEmpty())
+            return false;
+
+        if (!_allFeatures.Contains(feature))
+            return false;
+
+        if (feature is null)
+            return false;
+
+        return feature.UpdateGeometry(newGeometry);
     }
 
     // todo: write undo functions too
     // undoRemove
     // undoCanceledNew
     // undoUpdate
+
+
+    public void UndoChanges(Feature<T> feature)
+    {
+        if (_allFeatures.IsNullOrEmpty())
+            return;
+
+        if (!_allFeatures.Contains(feature))
+            return;
+
+        if (feature is null)
+            return;
+
+        if (feature.Status == FeatureStatus.Updated && feature.OldFeature != null)
+        {
+            feature.UpdateGeometry(feature.OldFeature.TheGeometry);
+
+            feature.UpdateAttributes(feature.OldFeature.Attributes);
+        }
+        //else if (feature.Status == FeatureStatus.Removed)
+        //{
+
+        //}
+
+        feature.MarkAsSaved();
+    }
+
 
     public void ApplyChanges()
     {
@@ -154,7 +211,7 @@ public class FeatureSet<T> where T : IPoint, new()
     public bool UpdateHasPendingChanges() => _allFeatures?.Any(f => f.Status != Common.Enums.FeatureStatus.Unchanged) ?? false;
 
     public int GetPendingChangeCounts(FeatureStatus status) => _allFeatures?.Count(f => f.Status == status) ?? 0;
-     
+
 
     public override bool Equals(object obj)
     {

@@ -23,7 +23,7 @@ public class WebApiDataSource : MemoryDataSource
 
     protected WebApiDataSource() : base()
     {
-        _features = FeatureSet<Point>.Empty;
+        _featureSet = FeatureSet<Point>.Empty;
     }
 
     public WebApiDataSource(WebApiSourceParameter parameters) : this()
@@ -77,18 +77,18 @@ public class WebApiDataSource : MemoryDataSource
 
             if (featureSetDto == null || featureSetDto.Features == null || featureSetDto.Features.Count == 0)
             {
-                _features = FeatureSet<Point>.Empty;
+                _featureSet = FeatureSet<Point>.Empty;
                 WebMercatorExtent = BoundingBox.NaN;
             }
             else
             {
-                _features = ConvertFeatureSetDtoToFeatureSet(featureSetDto);
+                _featureSet = ConvertFeatureSetDtoToFeatureSet(featureSetDto);
             }
 
             //_addedFeatures.Clear();
             //_updatedFeatures.Clear();
             //_deletedIds.Clear();
-            _features.ApplyChanges();
+            _featureSet.ApplyChanges();
 
             UpdateHasPendingChanges();
             IsLoaded = true;
@@ -124,7 +124,7 @@ public class WebApiDataSource : MemoryDataSource
 
     public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
     {
-        if (_features?.Features == null || _features.Features.Count == 0)
+        if (_featureSet?.Features == null || _featureSet.Features.Count == 0)
             return FeatureSet<Point>.Empty;
 
         if (FilterGeometry == null || FilterGeometry.IsNullOrEmpty())
@@ -133,7 +133,7 @@ public class WebApiDataSource : MemoryDataSource
         Predicate<Geometry<Point>> predicate = geometry == null || geometry.IsNullOrEmpty()
             ? g => g.Intersects(FilterGeometry!)
             : g => g.Intersects(FilterGeometry!) && g.Intersects(geometry);
-        return await Task.FromResult(_features.FilterByGeometry(predicate));
+        return await Task.FromResult(_featureSet.FilterByGeometry(predicate));
     }
 
 
@@ -146,9 +146,9 @@ public class WebApiDataSource : MemoryDataSource
 
             var dto = new FeatureSetChangesDto
             {
-                Added = _features.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.New).Select(ConvertFeatureToFeatureDto).ToList(),
-                Updated = _features.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.Updated).Select(ConvertFeatureToFeatureDto).ToList(),
-                DeletedIds = _features.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.Updated).Select(f => f.Id).ToList(),
+                Added = _featureSet.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.New).Select(ConvertFeatureToFeatureDto).ToList(),
+                Updated = _featureSet.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.Updated).Select(ConvertFeatureToFeatureDto).ToList(),
+                DeletedIds = _featureSet.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.Updated).Select(f => f.Id).ToList(),
             };
 
             var success = WebApiInfrastructure.SaveChangesAsync(
@@ -164,7 +164,7 @@ public class WebApiDataSource : MemoryDataSource
                 //_addedFeatures.Clear();
                 //_updatedFeatures.Clear();
                 //_deletedIds.Clear();
-                _features.ApplyChanges();
+                _featureSet.ApplyChanges();
                 UpdateHasPendingChanges();
             }
             else
@@ -188,11 +188,11 @@ public class WebApiDataSource : MemoryDataSource
         if (string.IsNullOrWhiteSpace(searchText))
             return Task.FromResult(FeatureSet<Point>.Empty);
 
-        if (_features?.Features == null || _features.Features.Count == 0)
+        if (_featureSet?.Features == null || _featureSet.Features.Count == 0)
             return Task.FromResult(FeatureSet<Point>.Empty);
 
         var lower = searchText.ToLowerInvariant();
-        var matching = _features.Features.Where(f =>
+        var matching = _featureSet.Features.Where(f =>
             f.Attributes != null &&
             f.Attributes.Values.Any(v => v?.ToString()?.ToLowerInvariant().Contains(lower) == true)).ToList();
 
@@ -200,7 +200,7 @@ public class WebApiDataSource : MemoryDataSource
             return Task.FromResult(FeatureSet<Point>.Empty);
 
         var result = FeatureSet<Point>.Create(string.Empty, matching);
-        result.Fields = _features.Fields;
+        result.Fields = _featureSet.Fields;
         return Task.FromResult(result);
     }
 

@@ -1,5 +1,7 @@
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using System.Collections.Generic;
+using System.Xml;
 
 namespace IRI.Maptor.Sta.Persistence.Abstractions;
 
@@ -21,7 +23,15 @@ public interface IEditableVectorDataSource : IDataSource
     /// <summary>
     /// Updates the feature if it has changed. Returns true if the feature was updated, false if old and new are the same.
     /// </summary>
-    bool Update(Feature<Point> oldValue, Feature<Point> newValue);
+    //bool Update(Feature<Point> oldValue, Feature<Point> newValue);
+
+    bool UpdateGeometry(Feature<Point> feature, Geometry<Point> newGeometry);
+
+    bool UpdateAttributes(Feature<Point> feature, Dictionary<string, object> oldAttributes);
+
+    void UndoChanges(Feature<Point> feature);
 
     void SaveChanges();
+
+    int GetNewId();
 }

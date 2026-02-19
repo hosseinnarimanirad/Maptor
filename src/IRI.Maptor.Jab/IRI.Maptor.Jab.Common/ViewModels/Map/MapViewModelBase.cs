@@ -1203,16 +1203,23 @@ public abstract class MapViewModelBase : ViewModelBase
                 return result.HasNotNullResult() ? result.Result : null;
             };
 
-            selectedLayer.RequestEdit = async g =>
+            selectedLayer.RequestEdit = async oldFeature =>
             {
-                var editResult = await EditAsync(g.TheGeometry, MapSettings.EditingOptions);
+                var editResult = await EditAsync(oldFeature.TheGeometry, MapSettings.EditingOptions);
 
-                if (editResult.HasNotNullResult())
-                {
-                    Feature<Point> f = new Feature<Point>(editResult.Result) { Id = g.Id, Attributes = g.Attributes, Status = g.Status };
+                if (!editResult.HasNotNullResult())
+                    return;
 
-                    selectedLayer.Update(g, f);
-                }
+                //if (editResult.HasNotNullResult())
+                //{
+                if (oldFeature.TheGeometry.AsWkt() == editResult.Result.AsWkt())
+                    return;
+
+                //Feature<Point> newFeature = new Feature<Point>(editResult.Result) { Id = oldFeature.Id, Attributes = oldFeature.Attributes, Status = oldFeature.Status };
+
+                if (!selectedLayer.UpdateGeometry(oldFeature, editResult.Result))
+                    return;
+                //}
 
                 //Referesh
                 if (selectedLayer.ShowSelectedOnMap)

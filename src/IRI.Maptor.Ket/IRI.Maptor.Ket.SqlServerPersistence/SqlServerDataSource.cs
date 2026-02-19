@@ -503,17 +503,26 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
     {
         throw new NotImplementedException();
     }
-
-    public bool Update(Feature<Point> oldValue, Feature<Point> newValue)
-    {
-        throw new NotImplementedException();
-    }
-
+     
     public void SaveChanges()
     {
         throw new NotImplementedException();
     }
 
+    public bool UpdateGeometry(Feature<Point> feature, Geometry<Point> newGeometry)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool UpdateAttributes(Feature<Point> feature, Dictionary<string, object> oldAttributes)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void UndoChanges(Feature<Point> feature)
+    {
+        throw new NotImplementedException();
+    }
 
     #endregion
 
@@ -523,6 +532,11 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
     }
 
     public override Task<FeatureSet<Point>> SearchAsync(string searchText)
+    {
+        throw new NotImplementedException();
+    }
+
+    public int GetNewId()
     {
         throw new NotImplementedException();
     }

@@ -17,14 +17,14 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 {
-    protected FeatureSet<Point> _features;
+    protected FeatureSet<Point> _featureSet;
 
     private int _uniqueId = 0;
 
     private readonly DataSourceKind _dataSourceKind;
     public override DataSourceKind DataSourceKind => _dataSourceKind;
 
-    public override int Srid { get => /*GetSrid()*/ _features.Srid; /*protected set => _ = value;*/ }
+    public override int Srid { get => /*GetSrid()*/ _featureSet.Srid; /*protected set => _ = value;*/ }
 
 
 
@@ -80,7 +80,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
                 item.Id = GetNewId();
         }
 
-        _features = FeatureSet<Point>.Create(string.Empty, features);
+        _featureSet = FeatureSet<Point>.Create(string.Empty, features);
 
         GeometryType = features.First().TheGeometry.Type;
 
@@ -93,13 +93,13 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     }
 
 
-    public override string ToString() => $"MemoryDataSource";
+    public override string ToString() => $"{nameof(MemoryDataSource)}";
 
-    protected int GetNewId() => _uniqueId++;
+    public int GetNewId() => _uniqueId++;
 
     protected void UpdateExtent()
     {
-        WebMercatorExtent = _features.Extent;
+        WebMercatorExtent = _featureSet.Extent;
     }
 
 
@@ -109,71 +109,96 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     {
         if (geometry.IsNullOrEmpty())
         {
-            return Task.FromResult(_features);
+            return Task.FromResult(_featureSet);
         }
-        return Task.FromResult(_features.FilterByGeometry(f => f.Intersects(geometry)));
+        return Task.FromResult(_featureSet.FilterByGeometry(f => f.Intersects(geometry)));
     }
 
-    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox) => Task.FromResult(_features.FilterByGeometry(f => f.Intersects(boundingBox)));
+    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox) => Task.FromResult(_featureSet.FilterByGeometry(f => f.Intersects(boundingBox)));
 
 
     #region CRUD & Tack Changes
 
-    public int NumberOfAddedFeatures => _features?.GetPendingChangeCounts(FeatureStatus.New) ?? 0;
+    public int NumberOfAddedFeatures => _featureSet?.GetPendingChangeCounts(FeatureStatus.New) ?? 0;
 
-    public int NumberOfDeletedFeatures => _features?.GetPendingChangeCounts(FeatureStatus.Removed) ?? 0;
+    public int NumberOfDeletedFeatures => _featureSet?.GetPendingChangeCounts(FeatureStatus.Removed) ?? 0;
 
-    public int NumberOfUpdatedFeatures => _features?.GetPendingChangeCounts(FeatureStatus.Updated) ?? 0;
+    public int NumberOfUpdatedFeatures => _featureSet?.GetPendingChangeCounts(FeatureStatus.Updated) ?? 0;
 
     protected void UpdateHasPendingChanges()
     {
         //HasPendingChanges = _addedFeatures.Count > 0 || _updatedFeatures.Count > 0 || _deletedIds.Count > 0;
-        HasPendingChanges = _features?.UpdateHasPendingChanges() ?? false;// _features?.Features != null && _features.Features.Any(f => f.Status != Common.Enums.FeatureStatus.Unchanged);
+        HasPendingChanges = _featureSet?.UpdateHasPendingChanges() ?? false;// _features?.Features != null && _features.Features.Any(f => f.Status != Common.Enums.FeatureStatus.Unchanged);
+
+        RaiseHasPendingChangesChanged();
     }
 
     public virtual void Add(Feature<Point> feature)
     {
-        _features.Add(feature);
+        _featureSet.Add(feature);
 
         UpdateExtent();
 
         UpdateHasPendingChanges();
-        RaisePendingChangesCountsChanged();
     }
 
     public virtual void Remove(Feature<Point> feature)
     {
-        this._features.Remove(feature);
+        this._featureSet.Remove(feature);
 
         UpdateExtent();
 
         UpdateHasPendingChanges();
-        RaisePendingChangesCountsChanged();
     }
 
-    public virtual bool Update(Feature<Point> oldValue, Feature<Point> newValue)
+    //public virtual bool Update(Feature<Point> oldValue, Feature<Point> newValue)
+    //{
+    //    if (!_features.Update(oldValue, newValue))
+    //        return false;
+
+    //    UpdateExtent();
+
+    //    UpdateHasPendingChanges();
+    //    RaisePendingChangesCountsChanged();
+    //    return true;
+    //}
+
+    public virtual bool UpdateGeometry(Feature<Point> feature, Geometry<Point> newGeometry)
     {
-        if (!_features.Update(oldValue, newValue))
+        if (!_featureSet.UpdateGeometry(feature, newGeometry))
             return false;
 
         UpdateExtent();
 
         UpdateHasPendingChanges();
-        RaisePendingChangesCountsChanged();
         return true;
     }
 
-    private void RaisePendingChangesCountsChanged()
+    public virtual bool UpdateAttributes(Feature<Point> feature, Dictionary<string, object> oldAttributes)
     {
-        RaiseHasPendingChangesChanged();
+        _featureSet.UpdateOldAttributes(feature, oldAttributes);
+
+        UpdateHasPendingChanges();
+        return true;
+    }
+
+    public void UndoChanges(Feature<Point> feature)
+    {
+        _featureSet.UndoChanges(feature);
+
+        UpdateHasPendingChanges();
     }
 
     public virtual void SaveChanges()
     {
-        _features.ApplyChanges();
+        _featureSet.ApplyChanges();
         UpdateHasPendingChanges();
     }
 
+    //private void RaisePendingChangesCountsChanged()
+    //{
+    //    RaiseHasPendingChangesChanged();
+    //}
 
     #endregion
 
@@ -200,4 +225,5 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
     {
         throw new NotImplementedException();
     }
+
 }

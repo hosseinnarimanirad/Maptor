@@ -10,7 +10,7 @@ namespace IRI.Maptor.Jab.Common.Assets.Converters;
 /// Converts UTC DateTime to local time string for display (e.g. tooltip).
 /// Uses current culture for formatting.
 /// </summary>
-public class UtcDateTimeToElapsedHoursMinutesConverter : IValueConverter
+public class UtcDateTimeToLocalTimeConverter : IValueConverter
 {
     public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
@@ -18,7 +18,9 @@ public class UtcDateTimeToElapsedHoursMinutesConverter : IValueConverter
             return string.Empty;
 
         var localTime = dateTime.Kind == DateTimeKind.Utc ? dateTime.ToLocalTime() : dateTime;
+
         var cultureInfo = LocalizationManager.Instance.CurrentCulture;
+
         var formatted = localTime.ToString("g", cultureInfo);
 
         if (LocalizationManager.Instance.IsPersian)

@@ -12,6 +12,8 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 using IRI.Maptor.Jab.Controls.Common.Behaviors;
 using IRI.Maptor.Sta.Common.Enums;
+using System.Collections.Generic;
+using IRI.Maptor.Sta.Common.Helpers;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 
@@ -20,7 +22,8 @@ namespace IRI.Maptor.Jab.Controls.Views;
 /// </summary>
 public partial class FeatureTable : UserControl
 {
-    private Feature<Point>? _pendingEditFeature;
+    //private Feature<Point>? _pendingEditFeature;
+    private Dictionary<string, object>? _pendingAttributes;
     private bool _editingFeature = false;
 
     public SelectedLayer Presenter { get { return (this.DataContext as SelectedLayer)!; } }
@@ -65,10 +68,10 @@ public partial class FeatureTable : UserControl
         _editingFeature = true;
 
         if (e.Row?.Item is Feature<Point> feature)
-            _pendingEditFeature = feature.Clone();// new Feature<Point>(feature.TheGeometry?.Clone(), attrsCopy) { Id = feature.Id };
+            _pendingAttributes = DictionaryHelper.Copy(feature.Attributes);// new Feature<Point>(feature.TheGeometry?.Clone(), attrsCopy) { Id = feature.Id };
 
         else
-            _pendingEditFeature = null;
+            _pendingAttributes = null;
     }
 
     private void grid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -77,18 +80,21 @@ public partial class FeatureTable : UserControl
         {
             if (e.EditAction == DataGridEditAction.Commit)
             {
-                var item = e.EditingElement.DataContext as Feature<Point>;
+                var item = e.Row?.Item as Feature<Point>;
 
-                if (item is null || _pendingEditFeature is null)
+                if (item is null || _pendingAttributes is null)
                     return;
 
-                Presenter.Update/*Feature*/(_pendingEditFeature, item);
+                if (DictionaryHelper.AreAttributesEqual(_pendingAttributes, item.Attributes))
+                    return;
+
+                Presenter?.UpdateAttributes(item, _pendingAttributes);
             }
         }
         finally
         {
             _editingFeature = false;
-            _pendingEditFeature = null;
+            _pendingAttributes = null;
         }
     }
 
@@ -106,11 +112,11 @@ public partial class FeatureTable : UserControl
             {
                 if (selectedItems?.Count() == 1 && selectedItems.First().TheGeometry.Type == GeometryType.Point)
                 {
-                    Presenter.RequestFlashSinglePoint?.Invoke(selectedItems.First());
+                    Presenter?.RequestFlashSinglePoint?.Invoke(selectedItems.First());
                 }
             });
 
-            Presenter.RequestZoomTo?.Invoke(selectedItems, action);
+            Presenter?.RequestZoomTo?.Invoke(selectedItems, action);
         }
     }
 
@@ -120,7 +126,7 @@ public partial class FeatureTable : UserControl
             ? grid.SelectedItems.Cast<Feature<Point>>()
             : Enumerable.Empty<Feature<Point>>();
 
-        this.Presenter.UpdateHighlightedFeatures(selected);
+        this.Presenter?.UpdateHighlightedFeatures(selected);
     }
 
     private void grid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => DataGridDictionaryBehavior.Regenerate(sender);
