@@ -1,6 +1,7 @@
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace IRI.Maptor.Sta.Persistence.Abstractions;
@@ -39,7 +40,7 @@ public interface IEditableVectorDataSource : IDataSource
     /// </summary>
     void UndoAllChanges();
 
-    void SaveChanges();
+    Task SaveChanges();
 
     int GetNewId();
 }

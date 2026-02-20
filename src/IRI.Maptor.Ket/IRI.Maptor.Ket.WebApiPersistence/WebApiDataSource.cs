@@ -137,7 +137,7 @@ public class WebApiDataSource : MemoryDataSource
     }
 
 
-    public override void SaveChanges()
+    public override async Task SaveChanges()
     {
         if (string.IsNullOrWhiteSpace(_parameters.SyncUrl))
         {
@@ -146,6 +146,7 @@ public class WebApiDataSource : MemoryDataSource
         }
 
         IsProcessing = true;
+
         try
         {
             HasError = false;
@@ -157,13 +158,13 @@ public class WebApiDataSource : MemoryDataSource
                 DeletedIds = _featureSet.GetDeletedFeatureIds().ToList(),
             };
 
-            var success = WebApiInfrastructure.SaveChangesAsync(
+            var success = await WebApiInfrastructure.SaveChangesAsync(
                 //_parameters.BaseUrl,
                 //_updateEndPoint,
                 _parameters.SyncUrl,
                 dto,
                 _parameters.BearerToken,
-                _parameters.Headers).GetAwaiter().GetResult();
+                _parameters.Headers);
 
             if (success)
             {

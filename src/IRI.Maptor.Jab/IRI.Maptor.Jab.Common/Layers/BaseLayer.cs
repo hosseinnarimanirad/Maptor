@@ -559,7 +559,7 @@ public abstract class BaseLayer : Notifier, ILayer
         if (dataSource is null)
             return;
 
-        dataSource.SaveChanges();
+        await dataSource.SaveChanges();
     }
 
     public void UndoAllChanges()

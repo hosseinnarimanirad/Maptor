@@ -177,7 +177,7 @@ public class ShapefileDataSource : MemoryDataSource
     }
 
 
-    public override void SaveChanges()
+    public override Task SaveChanges()
     {
         Func<Feature<Point>, EsriShapeBase>? geometryMap = null;
 
@@ -208,5 +208,7 @@ public class ShapefileDataSource : MemoryDataSource
         _featureSet.ApplyChanges();
 
         UpdateHasPendingChanges();
+
+        return Task.CompletedTask;
     }
 }

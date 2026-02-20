@@ -504,7 +504,7 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
         throw new NotImplementedException();
     }
      
-    public void SaveChanges()
+    public Task SaveChanges()
     {
         throw new NotImplementedException();
     }
@@ -542,6 +542,11 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
     }
 
     public int GetNewId()
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<Feature<Point>> GetCurrentChanges()
     {
         throw new NotImplementedException();
     }
