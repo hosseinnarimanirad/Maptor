@@ -139,6 +139,12 @@ public class WebApiDataSource : MemoryDataSource
 
     public override void SaveChanges()
     {
+        if (string.IsNullOrWhiteSpace(_parameters.SyncUrl))
+        {
+            HasError = true;
+            return;
+        }
+
         IsProcessing = true;
         try
         {
@@ -148,7 +154,7 @@ public class WebApiDataSource : MemoryDataSource
             {
                 Added = _featureSet.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.New).Select(ConvertFeatureToFeatureDto).ToList(),
                 Updated = _featureSet.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.Updated).Select(ConvertFeatureToFeatureDto).ToList(),
-                DeletedIds = _featureSet.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.Updated).Select(f => f.Id).ToList(),
+                DeletedIds = _featureSet.GetDeletedFeatureIds().ToList(),
             };
 
             var success = WebApiInfrastructure.SaveChangesAsync(

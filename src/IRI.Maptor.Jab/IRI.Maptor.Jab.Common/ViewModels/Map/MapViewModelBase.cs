@@ -1196,6 +1196,15 @@ public abstract class MapViewModelBase : ViewModelBase
 
             selectedLayer.RequestRefreshLayer = RefreshLayerVisibility;
 
+            //selectedLayer.PropertyChanged += (s, e) =>
+            //{
+            //    if (e.PropertyName == nameof(SelectedLayer.CanUndo))
+            //    {
+            //        (selectedLayer.AssociatedLayer as BaseLayer)?.RaisePropertyChanged(nameof(BaseLayer.CanUndoChanges));
+            //        CommandManager.InvalidateRequerySuggested();
+            //    }
+            //};
+
             selectedLayer.RequestDraw = async (geometryType) =>
             {
                 var result = await GetDrawingAsync(geometryType.AsDrawMode());
@@ -2090,6 +2099,50 @@ public abstract class MapViewModelBase : ViewModelBase
         RequestRefreshLayerVisibility?.Invoke(layer);
     }
 
+    private void HandleRequestSaveChanges(ILayer layer)
+    {
+        var selectedLayer = SelectedLayers?.SingleOrDefault(sl => sl.Id == layer.LayerId);
+        if (selectedLayer != null)
+        {
+            selectedLayer.SaveChanges();
+        }
+        else
+        {
+            (layer.DataSource as IEditableVectorDataSource)?.SaveChanges();
+        }
+    }
+
+    private /*async*/ void HandleRequestUndoAllChanges(ILayer layer)
+    {
+        var selectedLayer = SelectedLayers?.SingleOrDefault(sl => sl.Id == layer.LayerId);
+
+        if (selectedLayer != null)
+        {
+            selectedLayer.UndoAllChanges();
+        }
+        else
+        {
+            (layer.DataSource as IEditableVectorDataSource)?.UndoAllChanges();
+
+            RefreshLayerVisibility(layer);
+
+            //if (selectedLayer != null && layer is VectorLayer vectorLayer)
+            //{
+            //    var features = await vectorLayer.GetFeaturesAsync();
+
+            //    selectedLayer.UpdateSelectedFeatures(features?.Features ?? Enumerable.Empty<Feature<Point>>());
+            //}
+        }
+    }
+
+    //private bool GetCanUndoChanges(ILayer layer)
+    //{
+    //    var selectedLayer = SelectedLayers?.SingleOrDefault(sl => sl.Id == layer.LayerId);
+    //    if (selectedLayer != null)
+    //        return selectedLayer.CanUndo;
+    //    return layer.HasPendingChanges;
+    //}
+
     public void AddLayer(SpecialPointLayer layer)
     {
         RequestAddSpecialPointLayer?.Invoke(layer);
@@ -2170,6 +2223,13 @@ public abstract class MapViewModelBase : ViewModelBase
             if ((layer as VectorLayer).RequestChangeSymbology == null)
             {
                 (layer as VectorLayer).RequestChangeSymbology = l => RequestShowSymbologyView?.Invoke(l);
+            }
+
+            if (layer is BaseLayer baseLayer)
+            {
+                baseLayer.RequestSaveChanges = HandleRequestSaveChanges;
+                baseLayer.RequestUndoAllChanges = HandleRequestUndoAllChanges;
+                //baseLayer.CanUndoChangesProvider = GetCanUndoChanges;
             }
         }
         else if (layer.Type == LayerType.Raster || layer.Type == LayerType.ImagePyramid)

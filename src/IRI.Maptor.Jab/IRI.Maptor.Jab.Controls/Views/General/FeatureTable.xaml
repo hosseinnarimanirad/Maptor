@@ -95,8 +95,7 @@
                     SelectionMode="Extended" 
                     SelectionUnit="FullRow"
                     RowHeaderWidth="16"
-                    HeadersVisibility="All"
-                    Background="Transparent"
+                    HeadersVisibility="All" 
                     BorderThickness="1"
                     RowHeight="24"
                     EnableColumnVirtualization="False"
@@ -149,7 +148,7 @@
             </DataGrid.CellStyle>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
-                    <!--<Setter Property="Background" Value="{Binding Status, Converter={StaticResource featureStatusToBackgroundBrushConverter}}"/>-->
+                    <Setter Property="Background" Value="{Binding Status, Converter={StaticResource featureStatusToBackgroundBrushConverter}}"/>
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>

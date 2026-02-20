@@ -524,6 +524,11 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
         throw new NotImplementedException();
     }
 
+    public void UndoAllChanges()
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
 
     public void ExecuteSql(string command)

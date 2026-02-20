@@ -12,6 +12,7 @@ using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -200,6 +201,7 @@ public abstract class BaseLayer : Notifier, ILayer
         RaisePropertyChanged(nameof(NumberOfAddedFeatures));
         RaisePropertyChanged(nameof(NumberOfDeletedFeatures));
         RaisePropertyChanged(nameof(NumberOfUpdatedFeatures));
+        //RaisePropertyChanged(nameof(CanUndoChanges));
     });
 
     protected void DataSource_IsClientFilteredChanged(object? sender, bool e) => DispatcherToUi(() => RaisePropertyChanged(nameof(IsClientFiltered)));
@@ -443,6 +445,26 @@ public abstract class BaseLayer : Notifier, ILayer
     /// </summary>
     public Action<ILayer>? RequestRefreshWhenDataLoaded { get; set; }
 
+    /// <summary>
+    /// Invoked when Save is requested from the layer (e.g. legend popup). Set by MapViewModel to delegate to SelectedLayer or DataSource.
+    /// </summary>
+    public Action<ILayer>? RequestSaveChanges { get; set; }
+
+    /// <summary>
+    /// Invoked when Undo is requested from the layer (e.g. legend popup). Set by MapViewModel to delegate to SelectedLayer or DataSource.
+    /// </summary>
+    public Action<ILayer>? RequestUndoAllChanges { get; set; }
+
+    /// <summary>
+    /// Used to determine if Undo is available. Set by MapViewModel.
+    /// </summary>
+    //public Func<ILayer, bool>? CanUndoChangesProvider { get; set; }
+
+    /// <summary>
+    /// Whether Undo can be performed (delegates to CanUndoChangesProvider when set).
+    /// </summary>
+    //public bool CanUndoChanges => CanUndoChangesProvider?.Invoke(this) ?? false;
+
     protected virtual void BindWithFrameworkElement(FrameworkElement? element)
     {
         if (element is null)
@@ -525,6 +547,29 @@ public abstract class BaseLayer : Notifier, ILayer
     //    return this.Labels?.IsLabeled(1.0 / mapScale) == true;
     //}
 
+    public async Task SaveChangesAsync()
+    {
+        if (RequestSaveChanges != null)
+        {
+            RequestSaveChanges.Invoke(this);
+            return;
+        }
+
+        var dataSource = DataSource as IEditableVectorDataSource;
+        if (dataSource is null)
+            return;
+
+        dataSource.SaveChanges();
+    }
+
+    public void UndoAllChanges()
+    {
+        if (RequestUndoAllChanges != null)
+        {
+            RequestUndoAllChanges.Invoke(this);
+        }
+    }
+
     #endregion
 
     private List<IFeatureTableCommand> _featureTableCommands = new();
@@ -579,6 +624,41 @@ public abstract class BaseLayer : Notifier, ILayer
             return _toggleExpandCommand;
         }
     }
+
+
+    private RelayCommand? _saveChangesCommand;
+    public RelayCommand SaveChangesCommand
+    {
+        get
+        {
+            if (_saveChangesCommand == null)
+            {
+                _saveChangesCommand = new RelayCommand(
+                    async param => await SaveChangesAsync(),
+                    param => HasPendingChanges);
+            }
+
+            return _saveChangesCommand;
+        }
+    }
+
+    private RelayCommand? _undoAllChangesCommand;
+
+    public RelayCommand UndoAllChangesCommand
+    {
+        get
+        {
+            if (_undoAllChangesCommand == null)
+            {
+                _undoAllChangesCommand = new RelayCommand(
+                    param => UndoAllChanges(),
+                    param => HasPendingChanges);
+            }
+
+            return _undoAllChangesCommand;
+        }
+    }
+
 
 
     public Action<ILayer>? RequestChangeSymbology;

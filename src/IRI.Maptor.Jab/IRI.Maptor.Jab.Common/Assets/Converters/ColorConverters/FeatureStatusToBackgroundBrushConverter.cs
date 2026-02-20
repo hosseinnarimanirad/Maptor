@@ -15,9 +15,9 @@ namespace IRI.Maptor.Jab.Common.Assets.Converters;
 /// </summary>
 public class FeatureStatusToBackgroundBrushConverter : IValueConverter
 {
-    private static readonly Brush LightEmeraldBrush = BrushHelper.CreateBrush(MapAppColors.EmeraldString, 0.2);
-    private static readonly Brush LightOrangeBrush = BrushHelper.CreateBrush(MapAppColors.OrangeString, 0.2);
-    private static readonly Brush LightRedBrush = BrushHelper.CreateBrush(MapAppColors.RedString, 0.2);
+    private static readonly Brush LightEmeraldBrush = BrushHelper.CreateBrush(ModernUIColors.GreenString, 0.2);
+    private static readonly Brush LightOrangeBrush = BrushHelper.CreateBrush(ModernUIColors.OrangeString, 0.2);
+    private static readonly Brush LightRedBrush = BrushHelper.CreateBrush(ModernUIColors.RedString, 0.3);
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {

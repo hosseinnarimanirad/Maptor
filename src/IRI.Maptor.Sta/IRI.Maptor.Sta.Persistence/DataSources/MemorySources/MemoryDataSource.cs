@@ -182,9 +182,18 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         return true;
     }
 
+    public List<Feature<Point>> GetCurrentChanges() => _featureSet?.GetCurrentChanges()?.ToList() ?? [];
+
     public void UndoChanges(Feature<Point> feature)
     {
         _featureSet.UndoChanges(feature);
+
+        UpdateHasPendingChanges();
+    }
+
+    public void UndoAllChanges()
+    {
+        _featureSet.UndoAllChanges();
 
         UpdateHasPendingChanges();
     }

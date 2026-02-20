@@ -162,5 +162,13 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
         //} 
     }
 
-     
+    private void pendingChangesPopup_Loaded(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void pendingChangesPopup_Opened(object sender, EventArgs e)
+    {
+        pendingChangesPopupBorder.DataContext = DataContext;
+    }
 }

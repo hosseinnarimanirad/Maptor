@@ -265,6 +265,12 @@
   <data name="legendItem_PendingChanges_Updated" xml:space="preserve">
     <value>ویرایش شده: </value>
   </data>
+  <data name="legendItem_PendingChanges_Save" xml:space="preserve">
+    <value>ذخیره تغییرات</value>
+  </data>
+  <data name="legendItem_PendingChanges_Undo" xml:space="preserve">
+    <value>بازگردانی تغییرات</value>
+  </data>
   <data name="cmd_legend_addGeoJson" xml:space="preserve">
     <value>افزودن GeoJson</value>
   </data>

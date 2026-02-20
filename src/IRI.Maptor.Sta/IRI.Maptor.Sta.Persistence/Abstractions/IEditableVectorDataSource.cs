@@ -29,7 +29,15 @@ public interface IEditableVectorDataSource : IDataSource
 
     bool UpdateAttributes(Feature<Point> feature, Dictionary<string, object> oldAttributes);
 
+    List<Feature<Point>> GetCurrentChanges();
+
     void UndoChanges(Feature<Point> feature);
+
+    /// <summary>
+    /// Reverts all pending changes on this data source (New and Updated features).
+    /// New features are removed; Updated features are reverted to their previous state.
+    /// </summary>
+    void UndoAllChanges();
 
     void SaveChanges();
 

@@ -72,8 +72,10 @@ public class SelectedLayer : Notifier
         {
             if (!IsSingleValueHighlighted || HighlightedFeatures?.FirstOrDefault() is not Feature<Point> feature)
                 return false;
+
             return feature.Status == FeatureStatus.Updated && feature.OldFeature != null ||
-                   feature.Status == FeatureStatus.New;
+                   feature.Status == FeatureStatus.New ||
+                   feature.Status == FeatureStatus.Removed;
         }
     }
 
@@ -249,6 +251,73 @@ public class SelectedLayer : Notifier
         NotifyAll();
     }
 
+    public void UndoCurrentRowChanges()
+    {
+        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+        if (dataSource is null || !CanUndo)
+            return;
+
+        var feature = IsSingleValueHighlighted ? HighlightedFeatures!.First() : null;
+
+        UndoFeatureChanges(dataSource, feature);
+
+        NotifyAll();
+
+        RequestRefreshLayer?.Invoke(AssociatedLayer);
+    }
+
+    public void UndoAllChanges()
+    {
+        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+        if (dataSource is null || !dataSource.HasPendingChanges)
+            return;
+
+        var features = dataSource.GetCurrentChanges();
+
+        foreach (var feature in features)
+        {
+            UndoFeatureChanges(dataSource, feature);
+        }
+
+        NotifyAll();
+
+        RequestRefreshLayer?.Invoke(AssociatedLayer);
+    }
+
+    private void UndoFeatureChanges(IEditableVectorDataSource dataSource, Feature<Point> feature)
+    {
+        if (feature is null)
+            return;
+
+        if (feature.Status == FeatureStatus.Updated && feature.OldFeature != null)
+        {
+            dataSource.UndoChanges(feature);
+
+            RefreshFeatureInView(feature);
+        }
+        else if (feature.Status == FeatureStatus.New)
+        {
+            dataSource.Remove(feature);
+
+            Features?.Remove(feature);
+
+            HighlightedFeatures?.Remove(feature);
+        }
+        else if (feature.Status == FeatureStatus.Removed)
+        {
+            dataSource.UndoChanges(feature);
+            RefreshFeatureInView(feature);
+        }
+    }
+
+    //public void UndoAllChanges()
+    //{
+    //    if (true)
+    //    {
+
+    //    }
+    //}
+
     private void NotifyAll()
     {
         RaisePropertyChanged(nameof(IsSingleValueHighlighted));
@@ -334,11 +403,13 @@ public class SelectedLayer : Notifier
                         return;
 
                     var toRemove = HighlightedFeatures.ToList();
+
                     foreach (var feature in toRemove)
                     {
                         dataSource.Remove(feature);
-                        Features?.Remove(feature);
+                        RefreshFeatureInView(feature);
                     }
+
                     foreach (var feature in toRemove)
                         HighlightedFeatures.Remove(feature);
 
@@ -397,37 +468,7 @@ public class SelectedLayer : Notifier
             {
                 _undoCommand = new RelayCommand(param =>
                 {
-                    var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
-                    if (dataSource is null || !CanUndo)
-                        return;
-
-                    var feature = IsSingleValueHighlighted ? HighlightedFeatures!.First() : null;
-
-                    if (feature is null)
-                        return;
-
-                    if (feature.Status == FeatureStatus.Updated && feature.OldFeature != null)
-                    {
-                        dataSource.UndoChanges(feature);
-
-                        //// Apply revert directly to the displayed feature so the DataGrid attributes refresh.
-                        //// The grid's feature may differ from the data source's copy (e.g. when loaded from session).
-                        //feature.Attributes = DictionaryHelper.Copy(feature.OldFeature.Attributes ?? new Dictionary<string, object>());
-                        //if (feature.OldFeature.TheGeometry != null)
-                        //    feature.TheGeometry = feature.OldFeature.TheGeometry.Clone();
-                        //feature.MarkAsSaved();
-
-                        RefreshFeatureInView(feature);
-                    }
-                    else if (feature.Status == FeatureStatus.New)
-                    {
-                        dataSource.Remove(feature);
-                        Features?.Remove(feature);
-                        HighlightedFeatures?.Remove(feature);
-                    }
-
-                    NotifyAll();
-                    RequestRefreshLayer?.Invoke(AssociatedLayer);
+                    UndoCurrentRowChanges();
                 });
             }
             return _undoCommand;

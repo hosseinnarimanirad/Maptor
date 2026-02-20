@@ -170,6 +170,10 @@ public class FeatureSet<T> where T : IPoint, new()
     // undoCanceledNew
     // undoUpdate
 
+    public IEnumerable<Feature<T>> GetCurrentChanges()
+    {
+        return _allFeatures.Where(a => a.Status != FeatureStatus.Unchanged);
+    }
 
     public void UndoChanges(Feature<T> feature)
     {
@@ -188,14 +192,29 @@ public class FeatureSet<T> where T : IPoint, new()
 
             feature.UpdateAttributes(feature.OldFeature.Attributes);
         }
-        //else if (feature.Status == FeatureStatus.Removed)
-        //{
-
-        //}
+        else if (feature.Status == FeatureStatus.Removed)
+        {
+            // Restore: MarkAsSaved reverts Status to Unchanged so feature reappears in Features.
+        }
 
         feature.MarkAsSaved();
     }
 
+    /// <summary>
+    /// Reverts all pending changes. New features are removed; Updated features are reverted to their previous state.
+    /// </summary>
+    public void UndoAllChanges()
+    {
+        if (_allFeatures.IsNullOrEmpty())
+            return;
+
+        var toProcess = GetCurrentChanges();
+
+        foreach (var feature in toProcess)
+        {
+            UndoChanges(feature);
+        }
+    }
 
     public void ApplyChanges()
     {
@@ -208,9 +227,15 @@ public class FeatureSet<T> where T : IPoint, new()
         }
     }
 
-    public bool UpdateHasPendingChanges() => _allFeatures?.Any(f => f.Status != Common.Enums.FeatureStatus.Unchanged) ?? false;
+    public bool UpdateHasPendingChanges() => GetCurrentChanges().Any();
 
     public int GetPendingChangeCounts(FeatureStatus status) => _allFeatures?.Count(f => f.Status == status) ?? 0;
+
+    /// <summary>
+    /// Returns IDs of features marked as Removed. Used when building sync DTOs to send deleted IDs to the server.
+    /// </summary>
+    public IEnumerable<int> GetDeletedFeatureIds() =>
+        _allFeatures?.Where(f => f.Status == FeatureStatus.Removed).Select(f => f.Id) ?? Enumerable.Empty<int>();
 
 
     public override bool Equals(object obj)

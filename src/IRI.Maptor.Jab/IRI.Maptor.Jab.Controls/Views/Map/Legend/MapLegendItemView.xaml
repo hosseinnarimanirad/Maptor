@@ -276,42 +276,45 @@
                 <!--show edit flag with hover popup-->
 
                 <iconPacks:PackIconMaterial Kind="Pencil" Width="16" Height="16" x:Name="pendingChangesTag"
-                                            Background="Transparent"  
+                                            Background="Transparent"
                                             Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
                     <iconPacks:PackIconMaterial.Style>
-                        <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource {x:Type iconPacks:PackIconMaterial}}">
-                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Margin" Value="4,0"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </iconPacks:PackIconMaterial.Style>
+                            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource {x:Type iconPacks:PackIconMaterial}}">
+                                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Margin" Value="4,0"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </iconPacks:PackIconMaterial.Style>
                 </iconPacks:PackIconMaterial>
 
+
                 <Popup x:Name="pendingChangesPopup" StaysOpen="True" Placement="Right" MinHeight="30" 
-                           PlacementTarget="{Binding ElementName=pendingChangesTag}" HorizontalOffset="4"
-                           AllowsTransparency="True"
-                            Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
+                            PlacementTarget="{Binding ElementName=pendingChangesTag}" HorizontalOffset="-2"
+                            AllowsTransparency="True" VerticalOffset="-10"  
+                            Loaded="pendingChangesPopup_Loaded" Opened="pendingChangesPopup_Opened">
                     <Popup.Effect>
                         <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.4" Color="Black" Direction="270"/>
                     </Popup.Effect>
                     <Popup.Style>
-                        <Style TargetType="Popup">
+                        <Style TargetType="Popup"  >
                             <Setter Property="IsOpen" Value="False"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsMouseOver, ElementName=pendingChangesTag}" Value="True">
                                     <Setter Property="IsOpen" Value="True"/>
                                 </DataTrigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="IsOpen" Value="True"/>
+                                </Trigger>
                             </Style.Triggers>
                         </Style>
                     </Popup.Style>
 
-                    <Border x:Name="pendingChangesPopupBorder"
-                                DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=Popup}}"
+                    <Border x:Name="pendingChangesPopupBorder" 
                                 Background="White"
                                 BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="6" Padding="6">
                         <Grid>
@@ -321,57 +324,76 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="3" Visibility="Collapsed">
+                                <Button Style="{StaticResource circleButtonLight}" Width="24" Height="24" Focusable="True"
+                                        Command="{Binding SaveChangesCommand}"
+                                        ToolTip="{Binding [legendItem_PendingChanges_Save], Source={StaticResource Localization}}">
+                                    <Viewbox Margin="4">
+                                        <iconPacks:PackIconModern Kind="Save" Foreground="White" FlowDirection="LeftToRight"/>
+                                    </Viewbox>
+                                </Button>
+                                <Button Style="{StaticResource circleButtonLight}"   
+                                        Command="{Binding UndoAllChangesCommand}"
+                                        ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}">
+                                    <Viewbox Margin="4">
+                                        <iconPacks:PackIconModern Kind="UndoCurve" Foreground="White" FlowDirection="LeftToRight"/>
+                                    </Viewbox>
+                                </Button>
+                            </StackPanel>
+                            <Separator Grid.Row="1" Grid.ColumnSpan="3" Visibility="Collapsed"/>
                             <!--new features-->
-                            <iconPacks:PackIconMaterial Grid.Row="0" Grid.Column="0" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,4,0"
+                            <iconPacks:PackIconMaterial Grid.Row="2" Grid.Column="0" Width="10" Height="10" VerticalAlignment="Center" Margin="0,0,4,0"
                                                             Foreground="{Binding Source={x:Static enums:FeatureStatus.New}, Converter={StaticResource featureStatusToBrushConverter}}"
                                                             Visibility="{Binding NumberOfAddedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}">
                                 <iconPacks:PackIconMaterial.Kind>
                                     <Binding Source="{x:Static enums:FeatureStatus.New}" Converter="{StaticResource featureStatusToMaterialIconConverter}"/>
                                 </iconPacks:PackIconMaterial.Kind>
                             </iconPacks:PackIconMaterial>
-                            <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,2,0"
+                            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,2,0"
                                             Text="{Binding [legendItem_PendingChanges_Added], Source={StaticResource Localization}, Mode=OneWay}"
                                             Foreground="{Binding Source={x:Static enums:FeatureStatus.New}, Converter={StaticResource featureStatusToBrushConverter}}"
                                             Visibility="{Binding NumberOfAddedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
-                            <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"
+                            <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"
                                             Text="{Binding NumberOfAddedFeatures, Converter={StaticResource localizedNumberConverter}, Mode=OneWay}"
                                             Foreground="{Binding Source={x:Static enums:FeatureStatus.New}, Converter={StaticResource featureStatusToBrushConverter}}"
                                             Visibility="{Binding NumberOfAddedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
 
                             <!--removed features-->
-                            <iconPacks:PackIconMaterial Grid.Row="1" Grid.Column="0" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,4,0"
+                            <iconPacks:PackIconMaterial Grid.Row="3" Grid.Column="0" Width="10" Height="10" VerticalAlignment="Center" Margin="0,0,4,0"
                                                             Foreground="{Binding Source={x:Static enums:FeatureStatus.Removed}, Converter={StaticResource featureStatusToBrushConverter}}"
                                                             Visibility="{Binding NumberOfDeletedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}">
                                 <iconPacks:PackIconMaterial.Kind>
                                     <Binding Source="{x:Static enums:FeatureStatus.Removed}" Converter="{StaticResource featureStatusToMaterialIconConverter}"/>
                                 </iconPacks:PackIconMaterial.Kind>
                             </iconPacks:PackIconMaterial>
-                            <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,2,0"
+                            <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,2,0"
                                             Text="{Binding [legendItem_PendingChanges_Deleted], Source={StaticResource Localization}, Mode=OneWay}"
                                             Foreground="{Binding Source={x:Static enums:FeatureStatus.Removed}, Converter={StaticResource featureStatusToBrushConverter}}"
                                             Visibility="{Binding NumberOfDeletedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
-                            <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"
+                            <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"
                                             Text="{Binding NumberOfDeletedFeatures, Converter={StaticResource localizedNumberConverter}, Mode=OneWay}"
                                             Foreground="{Binding Source={x:Static enums:FeatureStatus.Removed}, Converter={StaticResource featureStatusToBrushConverter}}"
                                             Visibility="{Binding NumberOfDeletedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
 
                             <!--updated features-->
-                            <iconPacks:PackIconMaterial Grid.Row="2" Grid.Column="0" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,4,0"
+                            <iconPacks:PackIconMaterial Grid.Row="4" Grid.Column="0" Width="10" Height="10" VerticalAlignment="Center" Margin="0,0,4,0"
                                                             Foreground="{Binding Source={x:Static enums:FeatureStatus.Updated}, Converter={StaticResource featureStatusToBrushConverter}}"
                                                             Visibility="{Binding NumberOfUpdatedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}">
                                 <iconPacks:PackIconMaterial.Kind>
                                     <Binding Source="{x:Static enums:FeatureStatus.Updated}" Converter="{StaticResource featureStatusToMaterialIconConverter}"/>
                                 </iconPacks:PackIconMaterial.Kind>
                             </iconPacks:PackIconMaterial>
-                            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,2,0"
+                            <TextBlock Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,2,0"
                                             Text="{Binding [legendItem_PendingChanges_Updated], Source={StaticResource Localization}, Mode=OneWay}"
                                             Foreground="{Binding Source={x:Static enums:FeatureStatus.Updated}, Converter={StaticResource featureStatusToBrushConverter}}"
                                             Visibility="{Binding NumberOfUpdatedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
-                            <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"
+                            <TextBlock Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"
                                             Text="{Binding NumberOfUpdatedFeatures, Converter={StaticResource localizedNumberConverter}, Mode=OneWay}"
                                             Foreground="{Binding Source={x:Static enums:FeatureStatus.Updated}, Converter={StaticResource featureStatusToBrushConverter}}"
                                             Visibility="{Binding NumberOfUpdatedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
@@ -381,6 +403,22 @@
 
                 </Popup>
 
+                <Button Style="{StaticResource circleButtonLight}" Width="24" Height="24" Focusable="True"
+                        Command="{Binding SaveChangesCommand}"
+                        ToolTip="{Binding [legendItem_PendingChanges_Save], Source={StaticResource Localization}}"
+                        Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
+                    <Viewbox Margin="4">
+                        <iconPacks:PackIconModern Kind="Save" Foreground="White" FlowDirection="LeftToRight"/>
+                    </Viewbox>
+                </Button>
+                <Button Style="{StaticResource circleButtonLight}" Width="24" Height="24" Focusable="True"  
+                        Command="{Binding UndoAllChangesCommand}"
+                        ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}"
+                        Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
+                    <Viewbox Margin="4">
+                        <iconPacks:PackIconModern Kind="UndoCurve" Foreground="White" FlowDirection="LeftToRight"/>
+                    </Viewbox>
+                </Button>
 
                 <!--palette control-->
                 <ToggleButton ClickMode="Release"  Name="palette" Margin="4 0 0 0" Padding="0" Cursor="Hand" Background="Transparent" VerticalAlignment="Center"

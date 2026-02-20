@@ -266,6 +266,12 @@
   <data name="legendItem_PendingChanges_Updated" xml:space="preserve">
     <value>Updated: </value>
   </data>
+  <data name="legendItem_PendingChanges_Save" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="legendItem_PendingChanges_Undo" xml:space="preserve">
+    <value>Undo changes</value>
+  </data>
   <data name="cmd_legend_addGeoJson" xml:space="preserve">
     <value>Add GeoJson</value>
   </data>
