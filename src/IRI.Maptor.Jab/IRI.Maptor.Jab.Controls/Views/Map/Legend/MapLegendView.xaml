@@ -444,7 +444,7 @@
                                     <Border Style="{StaticResource menuBorder}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Shapefile}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource manuIcon}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
                                             <Path Style="{StaticResource menuPath}" Data="{StaticResource shp}"/>
                                         </StackPanel>
                                     </Border>
@@ -460,7 +460,7 @@
                                     <Border Style="{StaticResource menuBorder}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Kmz}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource manuIcon}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
                                             <Path Style="{StaticResource menuPath}" Data="{StaticResource kmz}"/>
                                         </StackPanel>
                                     </Border>
@@ -475,7 +475,7 @@
                                     <Border Style="{StaticResource menuBorder}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Kml}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource manuIcon}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
                                             <Path Style="{StaticResource menuPath}" Data="{StaticResource kml}"/>
                                         </StackPanel>
                                     </Border>
@@ -490,7 +490,7 @@
                                     <Border Style="{StaticResource menuBorder}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Dxf}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource manuIcon}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
                                             <Path Style="{StaticResource menuPath}" Data="{StaticResource dxf}"/>
                                         </StackPanel>
                                     </Border>
@@ -506,7 +506,7 @@
                                     <Border Style="{StaticResource menuBorder}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.GeoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource manuIcon}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
                                             <Path Style="{StaticResource menuPath}" Data="{StaticResource json}"/>
                                         </StackPanel>
                                     </Border>
@@ -522,7 +522,7 @@
                                     <Border Style="{StaticResource menuBorder}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Csv}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource manuIcon}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
                                             <Path Style="{StaticResource menuPath}" Data="{StaticResource csv}"/>
                                         </StackPanel>
                                     </Border>
@@ -537,7 +537,7 @@
                                     <Border Style="{StaticResource menuBorder}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Tsv}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource manuIcon}"/>
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
                                             <Path Style="{StaticResource menuPath}" Data="{StaticResource tsv}"/>
                                         </StackPanel>
                                     </Border>

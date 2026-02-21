@@ -120,12 +120,12 @@
         <Setter Property="Border.CornerRadius" Value="6"/>
     </Style>
 
-    <Style x:Key="flatButtonPrimaryRound8" TargetType="Button" BasedOn="{StaticResource flatButtonPrimary}">
+    <!--<Style x:Key="flatButtonPrimaryRound8" TargetType="Button" BasedOn="{StaticResource flatButtonPrimary}">
         <Setter Property="Border.CornerRadius" Value="8"/>
     </Style>
     <Style x:Key="flatButtonGrayRound8" TargetType="Button" BasedOn="{StaticResource flatButtonGray}">
         <Setter Property="Border.CornerRadius" Value="8"/>
-    </Style>
+    </Style>-->
 
 
     <Style TargetType="Button" x:Key="circleButton">

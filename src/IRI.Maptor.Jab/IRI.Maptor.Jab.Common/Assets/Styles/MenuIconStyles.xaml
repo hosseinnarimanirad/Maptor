@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
 
-    <Style x:Key="manuIcon" TargetType="iconPacks:PackIconMaterial">
+    <Style x:Key="menuIcon" TargetType="iconPacks:PackIconMaterial">
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Height" Value="16"/>
         <Setter Property="Width" Value="16"/>

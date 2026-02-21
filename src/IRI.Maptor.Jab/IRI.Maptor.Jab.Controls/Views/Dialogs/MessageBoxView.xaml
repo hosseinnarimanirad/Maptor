@@ -5,10 +5,9 @@
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls" 
-                    xmlns:viewModel="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.Dialogs"
+                    xmlns:viewModel="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.Dialogs;assembly=IRI.Maptor.Jab.Common"
                     d:DataContext="{d:DesignInstance Type=viewModel:DialogViewModel, IsDesignTimeCreatable=True}"
-                    mc:Ignorable="d" 
-              
+                    mc:Ignorable="d"               
                     Title="{Binding Title}" FlowDirection="RightToLeft" ShowInTaskbar="False"
                     GlowBrush="{Binding Source={StaticResource MahApps.Brushes.Highlight}, TargetNullValue=Red}" ShowMaxRestoreButton="False" ShowCloseButton="False" 
                     ShowMinButton="False" ShowTitleBar="True"  

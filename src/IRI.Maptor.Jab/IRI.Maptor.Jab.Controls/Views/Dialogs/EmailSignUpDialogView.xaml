@@ -21,12 +21,12 @@
                 <Setter Property="Margin" Value="4"/>
                 <Setter Property="FlowDirection" Value="LeftToRight"/>
             </Style>
-            <Style x:Key="okButtonStyle" TargetType="Button" BasedOn="{StaticResource circleButton}">
+            <!--<Style x:Key="okButtonStyle" TargetType="Button" BasedOn="{StaticResource circleButton}">
                 <Setter Property="Background" Value="{Binding FirstOptionColor,TargetNullValue={StaticResource defaultGreen}}"/>
             </Style>
             <Style x:Key="cancelButtonStyle" TargetType="Button" BasedOn="{StaticResource circleButton}">
                 <Setter Property="Background" Value="{Binding SecondOptionColor,TargetNullValue={StaticResource defaultRed}}"/>
-            </Style>
+            </Style>-->
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
