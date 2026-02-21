@@ -229,17 +229,19 @@
                         TickFrequency=".2" Value="{Binding Opacity, Mode=TwoWay}"
                         IsEnabled="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
 
-
+                <!--layer title (textblock)-->
                 <TextBlock MinWidth="30" VerticalAlignment="Center" Margin="2" 
                             Text="{Binding ElementName=root, Path=Title}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding ElementName=root, Path=IsEditable, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
 
+                <!--number of selected features-->
                 <TextBlock VerticalAlignment="Center"
                               Text="{Binding NumberOfSelectedFeatures, Converter={StaticResource localizedNumberConverter}, StringFormat={}({0})}" 
                               FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                               Visibility="{Binding NumberOfSelectedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
 
+                <!--layer title (textbox)-->
                 <TextBox BorderThickness="1" Padding="0" VerticalAlignment="Center" MinWidth="70"
                             Text="{Binding ElementName=root, Path=Title, Mode=TwoWay}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
@@ -273,7 +275,23 @@
                     </TextBox.Style>
                 </TextBox>
 
-                <!--show edit flag with hover popup-->
+                <!--pending changes with hover popup-->
+                <Button Style="{StaticResource circleButtonLight}" Width="24" Height="24" Focusable="True"
+                        Command="{Binding SaveChangesCommand}"
+                        ToolTip="{Binding [legendItem_PendingChanges_Save], Source={StaticResource Localization}}"
+                        Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
+                    <Viewbox Margin="4">
+                        <iconPacks:PackIconModern Kind="Save" Style="{StaticResource circleButtonPackIconModern}"/>
+                    </Viewbox>
+                </Button>
+                <Button Style="{StaticResource circleButtonLight}" Width="24" Height="24" Focusable="True"  
+                        Command="{Binding UndoAllChangesCommand}"
+                        ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}"
+                        Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
+                    <Viewbox Margin="4">
+                        <iconPacks:PackIconModern Kind="UndoCurve" Style="{StaticResource circleButtonPackIconModern}"/>
+                    </Viewbox>
+                </Button>
 
                 <iconPacks:PackIconMaterial Kind="Pencil" Width="16" Height="16" x:Name="pendingChangesTag"
                                             Background="Transparent"
@@ -291,8 +309,7 @@
                             </Style>
                         </iconPacks:PackIconMaterial.Style>
                 </iconPacks:PackIconMaterial>
-
-
+ 
                 <Popup x:Name="pendingChangesPopup" StaysOpen="True" Placement="Right" MinHeight="30" 
                             PlacementTarget="{Binding ElementName=pendingChangesTag}" HorizontalOffset="-2"
                             AllowsTransparency="True" VerticalOffset="-10"  
@@ -402,23 +419,6 @@
                     </Border>
 
                 </Popup>
-
-                <Button Style="{StaticResource circleButtonLight}" Width="24" Height="24" Focusable="True"
-                        Command="{Binding SaveChangesCommand}"
-                        ToolTip="{Binding [legendItem_PendingChanges_Save], Source={StaticResource Localization}}"
-                        Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Viewbox Margin="4">
-                        <iconPacks:PackIconModern Kind="Save" Foreground="White" FlowDirection="LeftToRight"/>
-                    </Viewbox>
-                </Button>
-                <Button Style="{StaticResource circleButtonLight}" Width="24" Height="24" Focusable="True"  
-                        Command="{Binding UndoAllChangesCommand}"
-                        ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}"
-                        Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Viewbox Margin="4">
-                        <iconPacks:PackIconModern Kind="UndoCurve" Foreground="White" FlowDirection="LeftToRight"/>
-                    </Viewbox>
-                </Button>
 
                 <!--palette control-->
                 <ToggleButton ClickMode="Release"  Name="palette" Margin="4 0 0 0" Padding="0" Cursor="Hand" Background="Transparent" VerticalAlignment="Center"

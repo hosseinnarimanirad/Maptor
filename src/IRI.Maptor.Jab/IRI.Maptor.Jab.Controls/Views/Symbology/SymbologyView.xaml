@@ -17,9 +17,15 @@
                     FlowDirection="{Binding ElementName=mainGrid, Path=FlowDirection, Mode=OneWay}"
                     FontFamily="{StaticResource iranSans}"
                     GlowBrush="{DynamicResource MahApps.Brushes.Accent}" 
-                    Title="{Binding ElementName=root, Path=Ltxt_dialog_symbology_title}">                      
+                    Title="{Binding ElementName=root, Path=Ltxt_dialog_symbology_title}">
     <local:LocalizedMetroWindow.Resources>
-        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        </ResourceDictionary>
     </local:LocalizedMetroWindow.Resources>
     <Grid x:Name="mainGrid" FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}">
         <Grid.RowDefinitions>
@@ -40,27 +46,27 @@
                             mahApp:TextBoxHelper.ClearTextButton="True"
                             mahApp:TextBoxHelper.Watermark="{Binding [dialog_symbology_fill], Source={StaticResource Localization}}"
                             mahApp:TextBoxHelper.UseFloatingWatermark="True"                            
-                            mahApp:TextBoxHelper.WatermarkAlignment="Center"/> 
- 
+                            mahApp:TextBoxHelper.WatermarkAlignment="Center"/>
+
         <mahApp:ColorPicker Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="4" FlowDirection="LeftToRight" Width="230"
                             SelectedColor="{Binding Symbology.Stroke, Mode=TwoWay, Converter={StaticResource solidColorBrushToColorConverter}}"
                             mahApp:TextBoxHelper.Watermark="{Binding [dialog_symbology_stroke], Source={StaticResource Localization}}"
                             mahApp:TextBoxHelper.ClearTextButton="True" 
                             mahApp:TextBoxHelper.UseFloatingWatermark="True" 
-                            mahApp:TextBoxHelper.WatermarkAlignment="Center"/> 
+                            mahApp:TextBoxHelper.WatermarkAlignment="Center"/>
 
         <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="4"
                    Text="{Binding [dialog_symbology_strokeWidth], Source={StaticResource Localization}}"/>
-         
+
         <mahApp:NumericUpDown Grid.Row="1" Grid.Column="1" HideUpDownButtons="True" Width="80" Margin="4" Minimum="0" 
                                 mahApp:TextBoxHelper.SelectAllOnFocus="True" Value="{Binding Symbology.StrokeThickness, Mode=TwoWay}"/>
- 
+
         <StackPanel Grid.Row="2" Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Height="32" Width="32" Margin="4" Cursor="Hand" HorizontalAlignment="Right" Command="{Binding CloseCommand}">
-                <iconPacks:PackIconModern Kind="Close" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+            <Button Style="{StaticResource circleButtonLight}" Command="{Binding CloseCommand}">
+                <iconPacks:PackIconModern Kind="Close" Style="{StaticResource circleButtonPackIconModern}"/>
             </Button>
-            <Button Height="32" Width="32" Margin="4" Cursor="Hand" HorizontalAlignment="Right" Command="{Binding ApplyCommand}">
-                <iconPacks:PackIconModern Kind="Check" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Accent}"/>
+            <Button Style="{StaticResource circleButtonLight}" Command="{Binding ApplyCommand}"> 
+                <iconPacks:PackIconModern Kind="Check" Style="{StaticResource circleButtonPackIconModern}"/>
             </Button>
         </StackPanel>
     </Grid>
