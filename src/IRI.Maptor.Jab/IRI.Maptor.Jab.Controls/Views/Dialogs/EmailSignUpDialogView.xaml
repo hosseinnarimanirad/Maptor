@@ -1,16 +1,19 @@
-﻿<mahApp:MetroWindow x:Class="IRI.Maptor.Jab.Controls.Views.Dialogs.EmailSignUpDialogView"
+<mahApp:MetroWindow x:Class="IRI.Maptor.Jab.Controls.Views.Dialogs.EmailSignUpDialogView"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
             xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"              
-            xmlns:iriSecurity="clr-namespace:IRI.Maptor.Jab.Controls.Views.Security" 
+            xmlns:iriSecurity="clr-namespace:IRI.Maptor.Jab.Controls.Views.Security"
+            xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
+            xmlns:converters="clr-namespace:IRI.Maptor.Jab.Common.Assets.Converters;assembly=IRI.Maptor.Jab.Common"
             Title="{Binding Title}" FlowDirection="RightToLeft" ShowInTaskbar="False"
             GlowBrush="{Binding Source={StaticResource MahApps.Brushes.Highlight}, TargetNullValue=Red}" ShowMaxRestoreButton="False" ShowCloseButton="False" 
             ShowMinButton="False" ShowTitleBar="True"
             SizeToContent="WidthAndHeight" MinWidth="300" FontFamily="{StaticResource iranSans}" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.Resources>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <SolidColorBrush x:Key="defaultRed">#FFEA4333</SolidColorBrush>
             <SolidColorBrush x:Key="defaultGreen">#FF81BA45</SolidColorBrush>
             <Style TargetType="Path">
@@ -40,14 +43,24 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="{Binding BannerText, TargetNullValue='کاربر جدید' }" HorizontalAlignment="Center" FontSize="18" Margin="8"/>
+        <TextBlock HorizontalAlignment="Center" FontSize="18" Margin="8">
+            <TextBlock.Text>
+                <MultiBinding>
+                    <MultiBinding.Converter>
+                        <converters:FirstNonNullConverter/>
+                    </MultiBinding.Converter>
+                    <Binding Path="BannerText"/>
+                    <Binding Path="[dialog_userSignUp_bannerNewUser]" Source="{StaticResource Localization}"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
         <iriSecurity:UserNameSignUpView x:Name="userNameSignUpView" Grid.Row="1" HorizontalAlignment="Stretch" FlowDirection="RightToLeft"
                                       Padding="4" InputBorderBrush="Gray" InputBorderThickness="1"/>
         <Border Grid.Row="2" MinHeight="20">
             <StackPanel Margin="8,12">
-                <Button Margin="4" Content="ایجاد کاربر" Style="{StaticResource flatButtonPrimary}" Foreground="White" FontSize="16"
+                <Button Margin="4" Content="{Binding [dialog_userSignUp_createUser], Source={StaticResource Localization}}" Style="{StaticResource flatButtonPrimary}" Foreground="White" FontSize="16"
                         Command="{Binding SignUpCommand}" CommandParameter="{Binding ElementName=userNameSignUpView}"/>
-                <Button Margin="4" Content="انصراف" Foreground="White" FontSize="16"  Style="{StaticResource flatButtonGray}"
+                <Button Margin="4" Content="{Binding [common_cancel], Source={StaticResource Localization}}" Foreground="White" FontSize="16"  Style="{StaticResource flatButtonGray}"
                         Command="{Binding CancelCommand}">
 
                 </Button>
@@ -56,7 +69,7 @@
 
         <Grid Grid.Row="3">
             <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Stretch" Height="2" Margin="8"/>
-            <TextBlock Grid.Row="3" HorizontalAlignment="Center" Text="یا" Background="White" Padding="8,1" Foreground="Gray"/>
+            <TextBlock Grid.Row="3" HorizontalAlignment="Center" Text="{Binding [dialog_emailSignUp_or], Source={StaticResource Localization}}" Background="White" Padding="8,1" Foreground="Gray"/>
         </Grid>
 
         <!--<Button Grid.Row="4" Background="White" Margin="8" BorderBrush="#4285F4" BorderThickness="1" Padding="0" HorizontalContentAlignment="Stretch">
@@ -116,7 +129,7 @@
                     </Viewbox>
                 </Border>
                 <Border HorizontalAlignment="Stretch" Grid.Column="1">
-                    <TextBlock Grid.Column="1" Text="ثبت نام با حساب گوگل" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16" />
+                    <TextBlock Grid.Column="1" Text="{Binding [dialog_emailSignUp_signUpGoogle], Source={StaticResource Localization}}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16" />
                 </Border>
             </Grid>
         </Button>
@@ -126,7 +139,7 @@
 
         </Border>
 
-        <TextBlock Grid.Row="5" Text="نام کاربری و رمز عبور خود را وارد کنید." Foreground="Black" VerticalAlignment="Center"
+        <TextBlock Grid.Row="5" Text="{Binding [dialog_userSignUp_enterCredentials], Source={StaticResource Localization}}" Foreground="Black" VerticalAlignment="Center"
                        HorizontalAlignment="Center"/>
     </Grid>
 </mahApp:MetroWindow>

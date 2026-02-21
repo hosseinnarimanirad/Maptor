@@ -10,6 +10,16 @@ public class GeneralSettingsModel : Notifier, IGeneralSettings
 {
     protected readonly IGeneralSettings _settings;
 
+    public string? SelectedCultureName
+    {
+        get => _settings.SelectedCultureName;
+        set
+        {
+            _settings.SelectedCultureName = value;
+            RaisePropertyChanged();
+        }
+    }
+
     public double LegendFontSize
     {
         get => _settings.LegendFontSize;

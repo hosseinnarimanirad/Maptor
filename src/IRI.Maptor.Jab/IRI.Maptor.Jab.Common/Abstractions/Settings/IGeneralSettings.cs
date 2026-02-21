@@ -4,6 +4,8 @@ namespace IRI.Maptor.Jab.Common.Abstractions;
 
 public interface IGeneralSettings
 {
+    string? SelectedCultureName { get; set; }
+
     double LegendFontSize { get; set; }
 
 

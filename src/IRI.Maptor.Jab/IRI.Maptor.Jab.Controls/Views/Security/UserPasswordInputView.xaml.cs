@@ -1,8 +1,9 @@
-﻿using System.Security;
+using System.Security;
 using System.Windows;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Jab.Common.Models.Security;
+using IRI.Maptor.Jab.Common.Localization;
 
 namespace IRI.Maptor.Jab.Controls.Views.Security
 {
@@ -14,6 +15,8 @@ namespace IRI.Maptor.Jab.Controls.Views.Security
         public UserPasswordInputView()
         {
             InitializeComponent();
+            if (string.IsNullOrEmpty(UserNameWatermark))
+                UserNameWatermark = LocalizationManager.Instance["common_username"];
         }
 
         public SecureString Password => this.key.SecurePassword;
@@ -43,7 +46,7 @@ namespace IRI.Maptor.Jab.Controls.Views.Security
 
         // Using a DependencyProperty as the backing store for UserNameWatermark.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty UserNameWatermarkProperty =
-            DependencyProperty.Register(nameof(UserNameWatermark), typeof(string), typeof(UserPasswordInputView), new PropertyMetadata("نام کاربری"));
+            DependencyProperty.Register(nameof(UserNameWatermark), typeof(string), typeof(UserPasswordInputView), new PropertyMetadata(string.Empty));
 
 
 

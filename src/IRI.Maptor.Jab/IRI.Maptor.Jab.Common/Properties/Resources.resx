@@ -375,6 +375,87 @@
   <data name="dialog_geometryDetails_cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="languageSelector_title" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="common_cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="common_save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="common_confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="common_new" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="common_old" xml:space="preserve">
+    <value>Old</value>
+  </data>
+  <data name="common_username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="common_password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="common_confirmPassword" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="common_newPassword" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="common_email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="common_capsLockWarning" xml:space="preserve">
+    <value>Caps Lock is on</value>
+  </data>
+  <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
+    <value>Enter your username and password.</value>
+  </data>
+  <data name="dialog_userSignUp_createUser" xml:space="preserve">
+    <value>Create User</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>Sign in with Google</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>Sign up with Google</value>
+  </data>
+  <data name="dialog_changePassword_enterPassword" xml:space="preserve">
+    <value>Enter your desired password.</value>
+  </data>
+  <data name="dialog_changePassword_title" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="dialog_themeSelection_title" xml:space="preserve">
+    <value>Select application background color</value>
+  </data>
+  <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
+    <value>Appearance Settings</value>
+  </data>
+  <data name="manageAccount_newUsername" xml:space="preserve">
+    <value>New username</value>
+  </data>
+  <data name="manageAccount_newPassword" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="manageAccount_logOut" xml:space="preserve">
+    <value>Sign out</value>
+  </data>
+  <data name="manageAccount_changePassword" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="manageAccount_manageUsers" xml:space="preserve">
+    <value>Manage users</value>
+  </data>
+  <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
+    <value>New user</value>
+  </data>
   <data name="dialog_geometryDetails_exteriorRing" xml:space="preserve">
     <value>Exterior Ring</value>
   </data>

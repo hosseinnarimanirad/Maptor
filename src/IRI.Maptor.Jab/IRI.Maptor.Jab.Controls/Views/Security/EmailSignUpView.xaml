@@ -1,15 +1,17 @@
-﻿<local:SecurityInputUserControl x:Class="IRI.Maptor.Jab.Controls.Views.Security.EmailSignUpView"
+<local:SecurityInputUserControl x:Class="IRI.Maptor.Jab.Controls.Views.Security.EmailSignUpView"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
             xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.Views.Security"
+            xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
             xmlns:validation="clr-namespace:IRI.Maptor.Jab.Common.Assets.ValidationRules;assembly=IRI.Maptor.Jab.Common"
             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
             xmlns:i1="http://schemas.microsoft.com/xaml/behaviors" 
             xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" x:Name="root">
     <local:SecurityInputUserControl.Resources>
+        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         <Style x:Key="myErrorTemplate" TargetType="Control">
             <Setter Property="Validation.ErrorTemplate">
                 <Setter.Value>
@@ -81,7 +83,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconModern Kind="EmailMinimal" Width="24" Foreground="Gray" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <TextBox Grid.Column="1" mahApp:TextBoxHelper.Watermark="پست الکترونیکی" FontFamily="{StaticResource iranSans}" BorderThickness="0"
+                <TextBox Grid.Column="1" mahApp:TextBoxHelper.Watermark="{Binding [common_email], Source={StaticResource Localization}}" FontFamily="{StaticResource iranSans}" BorderThickness="0"
                                     MinHeight="35"  FontSize="15" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="2"
                                     TextAlignment="Center" HorizontalContentAlignment="Center" FlowDirection="LeftToRight">
                     <i1:Interaction.Triggers>
@@ -107,9 +109,9 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions> 
                 <iconPacks:PackIconModern Kind="Lock" Width="24" Foreground="Gray" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <PasswordBox Grid.Column="1" mahApp:TextBoxHelper.Watermark="رمز عبور" FontFamily="{StaticResource iranSans}" BorderThickness="0"
+                <PasswordBox Grid.Column="1" mahApp:TextBoxHelper.Watermark="{Binding [common_password], Source={StaticResource Localization}}" FontFamily="{StaticResource iranSans}" BorderThickness="0"
                                         MinHeight="35" x:Name="key" FontSize="15" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="2"    
-                                        HorizontalContentAlignment="Center" mahApp:PasswordBoxHelper.CapsLockWarningToolTip="کلید caps lock فعال است">
+                                        HorizontalContentAlignment="Center" mahApp:PasswordBoxHelper.CapsLockWarningToolTip="{Binding [common_capsLockWarning], Source={StaticResource Localization}}">
                     <mahApp:PasswordBoxHelper.RevealButtonContent>
                         <Button/>
                     </mahApp:PasswordBoxHelper.RevealButtonContent>
@@ -133,13 +135,13 @@
                 <Viewbox Width="24" HorizontalAlignment="Center">
                     <StackPanel Grid.Column="0">
                         <iconPacks:PackIconModern Kind="Lock" Width="24" Foreground="Gray" Margin="4,4,4,0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <TextBlock Text="تایید" FontSize="14" FontFamily="{StaticResource iranSans}" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                        <TextBlock Text="{Binding [common_confirm], Source={StaticResource Localization}}" FontSize="14" FontFamily="{StaticResource iranSans}" VerticalAlignment="Bottom" HorizontalAlignment="Center"
                                Margin="0,0,0,0" Foreground="Gray"/>
                     </StackPanel>
                 </Viewbox>
-                <PasswordBox Grid.Column="1" mahApp:TextBoxHelper.Watermark="تایید رمز عبور" FontFamily="{StaticResource iranSans}" BorderThickness="0"
+                <PasswordBox Grid.Column="1" mahApp:TextBoxHelper.Watermark="{Binding [common_confirmPassword], Source={StaticResource Localization}}" FontFamily="{StaticResource iranSans}" BorderThickness="0"
                                         MinHeight="35" x:Name="confirmPassword" FontSize="15" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="2"    
-                                        HorizontalContentAlignment="Center" mahApp:PasswordBoxHelper.CapsLockWarningToolTip="کلید caps lock فعال است">
+                                        HorizontalContentAlignment="Center" mahApp:PasswordBoxHelper.CapsLockWarningToolTip="{Binding [common_capsLockWarning], Source={StaticResource Localization}}">
                     <mahApp:PasswordBoxHelper.RevealButtonContent>
                         <Button/>
                     </mahApp:PasswordBoxHelper.RevealButtonContent>

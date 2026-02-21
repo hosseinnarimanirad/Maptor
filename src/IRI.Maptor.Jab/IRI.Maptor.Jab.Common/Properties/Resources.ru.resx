@@ -1,64 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -118,381 +59,301 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="cmd_drawingLegendItem_boundary" xml:space="preserve">
-    <value>مرز</value>
+    <value>Граница</value>
     <comment>drawing layer</comment>
   </data>
   <data name="cmd_drawingLegendItem_breakIntoGeometries" xml:space="preserve">
-    <value>تفکیک به هندسه</value>
+    <value>Разбить на геометрии</value>
     <comment>drawing layer</comment>
   </data>
   <data name="cmd_drawingLegendItem_breakIntoPoints" xml:space="preserve">
-    <value>تفکیک به نقاط</value>
-    <comment>drawing layer</comment>
+    <value>Разбить на точки</value>
+    <comment>drawing layer </comment>
   </data>
   <data name="cmd_drawingLegendItem_convexHull" xml:space="preserve">
-    <value>پوش محدب</value>
+    <value>Выпуклая оболочка</value>
     <comment>drawing layer</comment>
   </data>
   <data name="cmd_drawingLegendItem_downloadRegionImages" xml:space="preserve">
-    <value>دانلود تصاویر محدوده</value>
+    <value>Скачать изображения</value>
+    <comment>Drawing Layer download google, bing, etc images</comment>
   </data>
   <data name="cmd_drawingLegendItem_duplicateFeature" xml:space="preserve">
-    <value>ایجاد کپی از عارضه</value>
+    <value>Дублировать объект</value>
     <comment>drawing layer - create a clone from the feature</comment>
   </data>
   <data name="cmd_drawingLegendItem_edit" xml:space="preserve">
-    <value>ویرایش</value>
+    <value>Редактировать</value>
   </data>
   <data name="cmd_drawingLegendItem_envelope" xml:space="preserve">
-    <value>مستطیل دربرگیرنده</value>
+    <value>Огибающая</value>
     <comment>drawing layer</comment>
   </data>
   <data name="cmd_drawingLegendItem_exportAsGeoJson" xml:space="preserve">
-    <value>خروجی در قالب GeoJson</value>
+    <value>Экспорт в GeoJson</value>
   </data>
   <data name="cmd_drawingLegendItem_exportAsPng" xml:space="preserve">
-    <value>خروجی عکسی</value>
+    <value>Экспорт в PNG</value>
   </data>
   <data name="cmd_drawingLegendItem_exportAsShapefile" xml:space="preserve">
-    <value>خروجی در قالب شیپ‌فایل</value>
+    <value>Экспорт в Shapefile</value>
   </data>
   <data name="cmd_drawingLegendItem_exteriorRing" xml:space="preserve">
-    <value>حلقه خارجی</value>
+    <value>Внешнее кольцо</value>
     <comment>drawing layer</comment>
   </data>
   <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
-    <value>حذف عارضه</value>
+    <value>Удалить объект</value>
   </data>
   <data name="cmd_drawingLegend_addGeoJson" xml:space="preserve">
-    <value>بارگذاری عارضه GeoJson</value>
+    <value>Добавить GeoJson</value>
   </data>
   <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
-    <value>بارگذاری از فایل</value>
+    <value>Добавить текст широты/долготы</value>
   </data>
   <data name="cmd_drawingLegend_addShapefile" xml:space="preserve">
-    <value>بارگذاری عارضه شیپ‌فایل</value>
+    <value>Добавить Shapefile</value>
   </data>
   <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
-    <value>پایین</value>
+    <value>Переместить вниз</value>
   </data>
   <data name="cmd_drawingLegend_moveUp" xml:space="preserve">
-    <value>بالا</value>
+    <value>Переместить вверх</value>
   </data>
   <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
-    <value>حذف تمام عوارض ترسیمی</value>
+    <value>Удалить все</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
-    <value>افزودن شیپ‌فایل</value>
+    <value>Добавить Shapefile</value>
   </data>
   <data name="cmd_general_addTextToMap" xml:space="preserve">
-    <value>اضافه کردن متن</value>
+    <value>Добавить текст</value>
   </data>
   <data name="cmd_general_clearAll" xml:space="preserve">
-    <value>پاک کردن همه</value>
+    <value>Очистить все</value>
   </data>
   <data name="cmd_general_drawPoint" xml:space="preserve">
-    <value>ترسیم نقطه</value>
+    <value>Рисовать точку</value>
   </data>
   <data name="cmd_general_drawPolygon" xml:space="preserve">
-    <value>ترسیم چندضلعی</value>
+    <value>Рисовать полигон</value>
   </data>
   <data name="cmd_general_drawPolyline" xml:space="preserve">
-    <value>ترسیم خط</value>
+    <value>Рисовать линию</value>
   </data>
   <data name="cmd_general_fullExtent" xml:space="preserve">
-    <value>نمای کل</value>
+    <value>Полный охват</value>
   </data>
   <data name="cmd_general_goTo" xml:space="preserve">
-    <value>برو به...</value>
+    <value>Перейти</value>
   </data>
   <data name="cmd_general_measureArea" xml:space="preserve">
-    <value>اندازه‌گیری مساحت</value>
+    <value>Измерить площадь</value>
   </data>
   <data name="cmd_general_measureLength" xml:space="preserve">
-    <value>اندازه‌گیری فاصله</value>
+    <value>Измерить длину</value>
   </data>
   <data name="cmd_general_pan" xml:space="preserve">
-    <value>جابجایی</value>
+    <value>Панорама</value>
   </data>
   <data name="cmd_general_zoomIn" xml:space="preserve">
-    <value>بزرگ‌نمایی</value>
+    <value>Приблизить</value>
   </data>
   <data name="cmd_general_zoomNext" xml:space="preserve">
-    <value>نمای بعد</value>
+    <value>Следующий масштаб</value>
   </data>
   <data name="cmd_general_zoomOut" xml:space="preserve">
-    <value>نمای بالاتر</value>
+    <value>Отдалить</value>
   </data>
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
-    <value>نمای قبل</value>
+    <value>Предыдущий масштаб</value>
   </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">
-    <value>پاک کردن عوارض انتخابی</value>
+    <value>Очистить выбор</value>
   </data>
   <data name="cmd_legendItem_exportAsGeoJson" xml:space="preserve">
-    <value>خروجی در قالب GeoJson</value>
+    <value>Экспорт в GeoJson</value>
   </data>
   <data name="cmd_legendItem_exportAsPng" xml:space="preserve">
-    <value>خروجی عکسی</value>
+    <value>Экспорт в PNG</value>
   </data>
   <data name="cmd_legendItem_exportAsShapefile" xml:space="preserve">
-    <value>خروجی در قالب شیپ‌فایل</value>
+    <value>Экспорт в Shapefile</value>
   </data>
   <data name="cmd_legendItem_remove" xml:space="preserve">
-    <value>حذف لایه</value>
+    <value>Удалить слой</value>
   </data>
   <data name="cmd_legendItem_selectByDrawing" xml:space="preserve">
-    <value>انتخاب عوارض محدودهٔ ترسیم</value>
+    <value>Выбрать рисованием</value>
   </data>
   <data name="cmd_legendItem_showAttributes" xml:space="preserve">
-    <value>اطلاعات توصیفی</value>
+    <value>Показать атрибуты</value>
   </data>
   <data name="cmd_legendItem_showSymbology" xml:space="preserve">
-    <value>سمبل‌گذاری</value>
+    <value>Показать символы</value>
   </data>
   <data name="cmd_legendItem_toggleLayerLabel" xml:space="preserve">
-    <value>نمایش برچسب عوارض</value>
+    <value>Переключить подпись слоя</value>
   </data>
   <data name="cmd_legendItem_zoomToExtent" xml:space="preserve">
-    <value>محدودهٔ لایه</value>
+    <value>Масштаб к охвату</value>
   </data>
   <data name="legendItem_PendingChanges_Added" xml:space="preserve">
-    <value>اضافه شده: </value>
+    <value>Added: </value>
   </data>
   <data name="legendItem_PendingChanges_Deleted" xml:space="preserve">
-    <value>حذف شده: </value>
+    <value>Deleted: </value>
   </data>
   <data name="legendItem_PendingChanges_Updated" xml:space="preserve">
-    <value>ویرایش شده: </value>
+    <value>Updated: </value>
   </data>
   <data name="legendItem_PendingChanges_Save" xml:space="preserve">
-    <value>ذخیره تغییرات</value>
+    <value>Save changes</value>
   </data>
   <data name="legendItem_PendingChanges_Undo" xml:space="preserve">
-    <value>بازگردانی تغییرات</value>
+    <value>Undo changes</value>
   </data>
   <data name="cmd_legend_addGeoJson" xml:space="preserve">
-    <value>افزودن GeoJson</value>
+    <value>Add GeoJson</value>
   </data>
   <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
-    <value>افزودن از فایل</value>
+    <value>Add lat/long</value>
   </data>
   <data name="cmd_legend_addShapefile" xml:space="preserve">
-    <value>افزودن شیپ‌فایل</value>
+    <value>Add shapefile</value>
   </data>
   <data name="cmd_legend_moveDown" xml:space="preserve">
-    <value>پایین</value>
+    <value>Move down</value>
   </data>
   <data name="cmd_legend_moveUp" xml:space="preserve">
-    <value>بالا</value>
+    <value>Move up</value>
   </data>
   <data name="cmd_legend_removeAll" xml:space="preserve">
-    <value>حذف همه لایه‌ها</value>
+    <value>Remove All</value>
   </data>
   <data name="cmd_legend_importLayer" xml:space="preserve">
-    <value>افزودن لایه</value>
+    <value>Import layer</value>
   </data>
   <data name="cmd_legend_addKml" xml:space="preserve">
-    <value>افزودن KML</value>
+    <value>Add KML</value>
   </data>
   <data name="cmd_legend_addKmz" xml:space="preserve">
-    <value>افزودن KMZ</value>
+    <value>Add KMZ</value>
   </data>
   <data name="cmd_legend_addDxf" xml:space="preserve">
-    <value>افزودن DXF</value>
+    <value>Add DXF</value>
   </data>
   <data name="cmd_legend_addCsv" xml:space="preserve">
-    <value>افزودن CSV</value>
+    <value>Add CSV</value>
   </data>
   <data name="cmd_legend_addTsv" xml:space="preserve">
-    <value>افزودن TSV</value>
+    <value>Add TSV</value>
   </data>
   <data name="featureTable_rowHeader_hour" xml:space="preserve">
-    <value>ساعت</value>
+    <value>hour</value>
   </data>
   <data name="featureTable_rowHeader_minute" xml:space="preserve">
-    <value>دقیقه</value>
+    <value>minute</value>
   </data>
   <data name="dialog_goto_panTo" xml:space="preserve">
-    <value>برو به</value>
+    <value>Pan to</value>
   </data>
   <data name="dialog_goto_title" xml:space="preserve">
-    <value>بروبه مختصات</value>
+    <value>Перейти</value>
   </data>
   <data name="dialog_goto_zoomTo" xml:space="preserve">
-    <value>بزرگ‌نمایی</value>
+    <value>Zoom to</value>
   </data>
   <data name="dialog_symbology_fill" xml:space="preserve">
-    <value>رنگ سطح</value>
+    <value>Fill</value>
   </data>
   <data name="dialog_symbology_stroke" xml:space="preserve">
-    <value>رنگ مرز</value>
+    <value>Stroke</value>
   </data>
   <data name="dialog_symbology_strokeWidth" xml:space="preserve">
-    <value>ضخامت مرز</value>
+    <value>Stroke width</value>
   </data>
   <data name="dialog_symbology_title" xml:space="preserve">
-    <value>سمبل لایه</value>
+    <value>Layer Symbology</value>
   </data>
   <data name="dialog_geometryDetails_title" xml:space="preserve">
-    <value>جزئیات هندسه</value>
-    <comment>عنوان پنجره جزئیات هندسه</comment>
+    <value>Geometry Details</value>
+    <comment>Title for the geometry details dialog window</comment>
   </data>
   <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
-    <value>اطلاعات پایه</value>
+    <value>Basic Information</value>
   </data>
   <data name="dialog_geometryDetails_geometryType" xml:space="preserve">
-    <value>نوع هندسه</value>
+    <value>Geometry Type</value>
   </data>
   <data name="dialog_geometryDetails_dimension" xml:space="preserve">
-    <value>بعد</value>
+    <value>Dimension</value>
   </data>
   <data name="dialog_geometryDetails_numberOfPoints" xml:space="preserve">
-    <value>تعداد نقاط</value>
+    <value>Number of Points</value>
   </data>
   <data name="dialog_geometryDetails_numberOfGeometries" xml:space="preserve">
-    <value>تعداد هندسه‌ها</value>
+    <value>Number of Geometries</value>
   </data>
   <data name="dialog_geometryDetails_utmZone" xml:space="preserve">
-    <value>منطقه UTM</value>
+    <value>UTM Zone</value>
   </data>
   <data name="dialog_geometryDetails_points" xml:space="preserve">
-    <value>نقاط</value>
+    <value>Points</value>
   </data>
   <data name="dialog_geometryDetails_editCoordinates" xml:space="preserve">
-    <value>ویرایش مختصات</value>
+    <value>Edit Coordinates</value>
   </data>
   <data name="dialog_geometryDetails_format" xml:space="preserve">
-    <value>فرمت</value>
+    <value>Format</value>
   </data>
   <data name="dialog_geometryDetails_export" xml:space="preserve">
-    <value>خروجی</value>
+    <value>Export</value>
   </data>
   <data name="dialog_geometryDetails_save" xml:space="preserve">
-    <value>ذخیره</value>
+    <value>Save</value>
   </data>
   <data name="dialog_geometryDetails_cancel" xml:space="preserve">
-    <value>لغو</value>
-  </data>
-  <data name="languageSelector_title" xml:space="preserve">
-    <value>زبان</value>
-  </data>
-  <data name="common_cancel" xml:space="preserve">
-    <value>انصراف</value>
-  </data>
-  <data name="common_save" xml:space="preserve">
-    <value>ذخیره</value>
-  </data>
-  <data name="common_confirm" xml:space="preserve">
-    <value>تایید</value>
-  </data>
-  <data name="common_new" xml:space="preserve">
-    <value>جدید</value>
-  </data>
-  <data name="common_old" xml:space="preserve">
-    <value>قدیم</value>
-  </data>
-  <data name="common_username" xml:space="preserve">
-    <value>نام کاربری</value>
-  </data>
-  <data name="common_password" xml:space="preserve">
-    <value>رمز عبور</value>
-  </data>
-  <data name="common_confirmPassword" xml:space="preserve">
-    <value>تایید رمز عبور</value>
-  </data>
-  <data name="common_newPassword" xml:space="preserve">
-    <value>رمز عبور جدید</value>
-  </data>
-  <data name="common_email" xml:space="preserve">
-    <value>پست الکترونیکی</value>
-  </data>
-  <data name="common_capsLockWarning" xml:space="preserve">
-    <value>کلید caps lock فعال است</value>
-  </data>
-  <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
-    <value>نام کاربری و رمز عبور خود را وارد کنید.</value>
-  </data>
-  <data name="dialog_userSignUp_createUser" xml:space="preserve">
-    <value>ایجاد کاربر</value>
-  </data>
-  <data name="dialog_emailSignUp_or" xml:space="preserve">
-    <value>یا</value>
-  </data>
-  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
-    <value>ورود با حساب گوگل</value>
-  </data>
-  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
-    <value>ثبت نام با حساب گوگل</value>
-  </data>
-  <data name="dialog_changePassword_enterPassword" xml:space="preserve">
-    <value>رمز عبور مورد نظر خود را وارد کنید.</value>
-  </data>
-  <data name="dialog_changePassword_title" xml:space="preserve">
-    <value>تغییر رمز عبور</value>
-  </data>
-  <data name="dialog_themeSelection_title" xml:space="preserve">
-    <value>انتخاب رنگ زمینه برنامه</value>
-  </data>
-  <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
-    <value>تنظیمات ظاهر</value>
-  </data>
-  <data name="manageAccount_newUsername" xml:space="preserve">
-    <value>نام کاربری جدید</value>
-  </data>
-  <data name="manageAccount_newPassword" xml:space="preserve">
-    <value>رمز عبور جدید</value>
-  </data>
-  <data name="manageAccount_logOut" xml:space="preserve">
-    <value>ورود مجدد</value>
-  </data>
-  <data name="manageAccount_changePassword" xml:space="preserve">
-    <value>تغییر رمز</value>
-  </data>
-  <data name="manageAccount_manageUsers" xml:space="preserve">
-    <value>مدیریت کاربران</value>
-  </data>
-  <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
-    <value>کاربر جدید</value>
+    <value>Cancel</value>
   </data>
   <data name="dialog_geometryDetails_exteriorRing" xml:space="preserve">
-    <value>حلقه خارجی</value>
+    <value>Exterior Ring</value>
   </data>
   <data name="dialog_geometryDetails_interiorRings" xml:space="preserve">
-    <value>حلقه‌های داخلی</value>
+    <value>Interior Rings</value>
   </data>
   <data name="dialog_geometryDetails_addPart" xml:space="preserve">
-    <value>افزودن بخش</value>
+    <value>Add Part</value>
   </data>
   <data name="dialog_geometryDetails_deletePart" xml:space="preserve">
-    <value>حذف بخش</value>
+    <value>Delete Part</value>
   </data>
   <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
-    <value>افزودن نقطه</value>
+    <value>Add Point</value>
   </data>
   <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
-    <value>افزودن چندضلعی</value>
+    <value>Add Polygon</value>
   </data>
   <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
-    <value>زوم به نقطه</value>
+    <value>Zoom to Point</value>
   </data>
   <data name="geometryDetails_polygon_title" xml:space="preserve">
-    <value>چندضلعی</value>
+    <value>Polygon</value>
   </data>
   <data name="geometryDetails_coordinateGrid_azimuthToNext" xml:space="preserve">
-    <value>زاویه سمت به بعدی</value>
+    <value>Azimuth To Next</value>
   </data>
   <data name="geometryDetails_coordinateGrid_azimuthToPrevious" xml:space="preserve">
-    <value>زاویه سمت به قبلی</value>
+    <value>Azimuth To Previous</value>
   </data>
   <data name="geometryDetails_coordinateGrid_distanceToNext" xml:space="preserve">
-    <value>فاصله تا بعدی</value>
+    <value>Distance To Next</value>
   </data>
   <data name="geometryDetails_coordinateGrid_number" xml:space="preserve">
     <value>#</value>
   </data>
   <data name="geometryDetails_coordinateGrid_vertexAngle" xml:space="preserve">
-    <value>زاویه رأس</value>
+    <value>Vertex Angle</value>
   </data>
   <data name="geometryDetails_coordinateGrid_x" xml:space="preserve">
     <value>X</value>
@@ -504,22 +365,22 @@
     <value>Z</value>
   </data>
   <data name="geometryDetails_currentPoint_add" xml:space="preserve">
-    <value>افزودن نقطه</value>
+    <value>Add Point</value>
   </data>
   <data name="geometryDetails_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>کپی مختصات</value>
+    <value>Copy Coordinate</value>
   </data>
   <data name="geometryDetails_currentPoint_delete" xml:space="preserve">
-    <value>حذف نقطه</value>
+    <value>Delete Point</value>
   </data>
   <data name="geometryDetails_currentPoint_edit" xml:space="preserve">
-    <value>ویرایش</value>
+    <value>Edit</value>
   </data>
   <data name="geometryDetails_currentPoint_goToNextPoint" xml:space="preserve">
-    <value>رفتن به نقطه بعدی</value>
+    <value>Go to Next Point</value>
   </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
-    <value>رفتن به نقطه قبلی</value>
+    <value>Go to Previous Point</value>
   </data>
   <data name="geometryDetails_currentPoint_x" xml:space="preserve">
     <value>X:</value>
@@ -528,238 +389,234 @@
     <value>Y:</value>
   </data>
   <data name="geometryDetails_currentPoint_zoom" xml:space="preserve">
-    <value>جابجایی به نقطه</value>
+    <value>Pan to Point</value>
   </data>
   <data name="geometryDetails_currentPoint_zoomToPoint" xml:space="preserve">
-    <value>زوم به نقطه</value>
+    <value>Zoom to Point</value>
   </data>
   <data name="geometryDetails_options_ellipsoid" xml:space="preserve">
-    <value>بیضوی:</value>
+    <value>Ellipsoid:</value>
   </data>
   <data name="geometryDetails_options_gridOptions" xml:space="preserve">
-    <value>گزینه‌های جدول</value>
+    <value>Grid Options</value>
   </data>
   <data name="geometryDetails_options_latLongPrecision" xml:space="preserve">
-    <value>دقت عرض/طول:</value>
+    <value>Lat/Long Precision:</value>
   </data>
   <data name="geometryDetails_options_showInnerAngle" xml:space="preserve">
-    <value>نمایش زاویه داخلی</value>
+    <value>Show Inner Angle</value>
   </data>
   <data name="geometryDetails_options_showZColumn" xml:space="preserve">
-    <value>نمایش ستون Z</value>
+    <value>Show Z Column</value>
   </data>
   <data name="geometryDetails_options_srs" xml:space="preserve">
-    <value>سیستم مختصات:</value>
+    <value>SRS:</value>
   </data>
   <data name="geometryDetails_options_srsConfiguration" xml:space="preserve">
-    <value>تنظیمات سیستم مختصات</value>
+    <value>SRS Configuration</value>
   </data>
   <data name="geometryDetails_options_srsInfoFormat" xml:space="preserve">
-    <value>سیستم مختصات: {0}{1}{2}</value>
+    <value>SRS: {0}{1}{2}</value>
   </data>
   <data name="geometryDetails_options_useDecimalDegreesForAngles" xml:space="preserve">
-    <value>استفاده از درجه اعشاری برای زوایا</value>
+    <value>Use Decimal Degrees for Angles</value>
   </data>
   <data name="geometryDetails_options_utmZone" xml:space="preserve">
-    <value>منطقه UTM:</value>
+    <value>UTM Zone:</value>
   </data>
   <data name="geometryDetails_options_xyPrecision" xml:space="preserve">
-    <value>دقت X/Y:</value>
+    <value>X/Y Precision:</value>
   </data>
   <data name="geometryDetails_parts_format" xml:space="preserve">
-    <value>بخش {0} از {1}</value>
+    <value>Part {0} of {1}</value>
   </data>
   <data name="geometryDetails_parts_invalid" xml:space="preserve">
-    <value>✗ بخش هندسه نامعتبر</value>
+    <value>✗ Invalid Geometry Part</value>
   </data>
   <data name="geometryDetails_parts_noParts" xml:space="preserve">
-    <value>بدون بخش</value>
+    <value>No parts</value>
   </data>
   <data name="geometryDetails_parts_title" xml:space="preserve">
-    <value>بخش‌ها</value>
+    <value>Parts</value>
   </data>
   <data name="geometryDetails_parts_valid" xml:space="preserve">
-    <value>✓ بخش هندسه معتبر</value>
+    <value>✓ Valid Geometry Part</value>
   </data>
   <data name="geometryDetails_pointCounter_format" xml:space="preserve">
-    <value>نقطه {0} از {1} (صفحه {2} از {3})</value>
+    <value>Point {0} of {1} (Page {2} of {3})</value>
   </data>
   <data name="geometryDetails_polygons_format" xml:space="preserve">
-    <value>چندضلعی {0} از {1}</value>
+    <value>Polygon {0} of {1}</value>
   </data>
   <data name="geometryDetails_polygons_invalid" xml:space="preserve">
-    <value>✗ چندضلعی نامعتبر</value>
+    <value>✗ Invalid Polygon</value>
   </data>
   <data name="geometryDetails_polygons_noPolygon" xml:space="preserve">
-    <value>بدون چندضلعی</value>
+    <value>No Polygon</value>
   </data>
   <data name="geometryDetails_polygons_valid" xml:space="preserve">
-    <value>✓ چندضلعی معتبر</value>
-  </data>
-  <data name="dialog_showMessage_title" xml:space="preserve">
-    <value>پیام</value>
-    <comment>عنوان پیش‌فرض برای پنجره‌های پیام</comment>
+    <value>✓ Valid Polygon</value>
   </data>
   <data name="dialog_savefile_title" xml:space="preserve">
-    <value>ذخیره‌سازی</value>
-    <comment>عنوان پیش‌فرض برای پنجره‌های ذخیره فایل</comment>
+    <value>Сохранить</value>
+    <comment>Default title for save file dialogs</comment>
   </data>
   <data name="dialog_openfile_title" xml:space="preserve">
-    <value>انتخاب فایل</value>
-    <comment>عنوان پیش‌فرض برای پنجره‌های انتخاب فایل</comment>
+    <value>Выбрать файл</value>
+    <comment>Default title for open file dialogs</comment>
   </data>
   <data name="index_100k_title" xml:space="preserve">
-    <value>اندکس ۱۰۰ هزار</value>
+    <value>Index 100k</value>
   </data>
   <data name="index_10k_title" xml:space="preserve">
-    <value>اندکس ۱۰ هزار</value>
+    <value>Index 10k</value>
   </data>
   <data name="index_1kUtm_title" xml:space="preserve">
-    <value>اندکس ۱ هزار</value>
+    <value>Index 1000</value>
   </data>
   <data name="index_250k_title" xml:space="preserve">
-    <value>اندکس ۲۵۰ هزار</value>
+    <value>Index 250k</value>
   </data>
   <data name="index_25k_title" xml:space="preserve">
-    <value>اندکس ۲۵ هزار</value>
+    <value>Index 25k</value>
   </data>
   <data name="index_2kblocks_title" xml:space="preserve">
-    <value>بلوک‌های ۲ هزار</value>
+    <value>Index 2000 Blocks</value>
   </data>
   <data name="index_2kUtm_title" xml:space="preserve">
-    <value>اندکس ۲ هزار</value>
+    <value>Index 2000</value>
   </data>
   <data name="index_500UtmTitle" xml:space="preserve">
-    <value>اندکس ۵۰۰</value>
+    <value>Index 500</value>
   </data>
   <data name="index_50k_title" xml:space="preserve">
-    <value>اندکس ۵۰ هزار</value>
+    <value>Index 50k</value>
   </data>
   <data name="index_5k_title" xml:space="preserve">
-    <value>اندکس ۵ هزار</value>
+    <value>Index 5k</value>
   </data>
   <data name="layer_geodesy1_title" xml:space="preserve">
-    <value>ژئودزی ۱</value>
+    <value>Geodesy 1</value>
   </data>
   <data name="layer_geodesy2_title" xml:space="preserve">
-    <value>ژئودزی ۲</value>
+    <value>Geodesy 2</value>
   </data>
   <data name="layer_geodynamics_title" xml:space="preserve">
-    <value>ژئودینامیک</value>
+    <value>Geodynamics</value>
   </data>
   <data name="layer_gravimetry_title" xml:space="preserve">
-    <value>ثقل سنجی</value>
+    <value>Gravimetry</value>
   </data>
   <data name="layer_leveling1_title" xml:space="preserve">
-    <value>ترازیابی درجه ۱</value>
+    <value>Leveling 1</value>
   </data>
   <data name="layer_leveling2_title" xml:space="preserve">
-    <value>ترازیابی درجه ۲</value>
+    <value>Leveling 2</value>
   </data>
   <data name="layer_leveling3_title" xml:space="preserve">
-    <value>ترازیابی درجه ۳</value>
+    <value>Leveling 3</value>
   </data>
   <data name="mapPanel_currentPart_add" xml:space="preserve">
-    <value>اضافه کردن تکهٔ جدید</value>
+    <value>Add new part</value>
   </data>
   <data name="mapPanel_currentPart_delete" xml:space="preserve">
-    <value>حذف تکهٔ جاری</value>
+    <value>Delete current part</value>
   </data>
   <data name="mapPanel_currentPart_zoom" xml:space="preserve">
-    <value>بزرگ‌نمایی روی تکهٔ جاری</value>
+    <value>Zoom to current part</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>کپی مختصات</value>
+    <value>Copy current point&apos;s coordinate</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
-    <value>حذف نقطه</value>
+    <value>Delete current point</value>
   </data>
   <data name="mapPanel_currentPoint_displayCoordinate" xml:space="preserve">
-    <value>نمایش مختصات</value>
+    <value>Display Coordinates</value>
   </data>
   <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
-    <value>نقطهٔ بعدی</value>
+    <value>Next point</value>
   </data>
   <data name="mapPanel_currentPoint_goToPreviousPoint" xml:space="preserve">
-    <value>نقطه قبلی</value>
+    <value>Previous point</value>
   </data>
   <data name="mapPanel_currentPoint_zoom" xml:space="preserve">
-    <value>بزرگ‌نمایی</value>
+    <value>Zoom to current point</value>
   </data>
   <data name="mapPanel_edit_cancel" xml:space="preserve">
-    <value>لغو ویرایش</value>
+    <value>Cancel Edit</value>
   </data>
   <data name="mapPanel_edit_delete" xml:space="preserve">
-    <value>حذف</value>
+    <value>Delete</value>
   </data>
   <data name="mapPanel_edit_finish" xml:space="preserve">
-    <value>اتمام ویرایش</value>
+    <value>Finish Edit</value>
   </data>
   <data name="mapPanel_header_currentPoint" xml:space="preserve">
-    <value>نقطه جاری</value>
+    <value>Current Point</value>
   </data>
   <data name="mapPanel_header_measure" xml:space="preserve">
-    <value>اندازه‌گیری</value>
+    <value>Measurement</value>
   </data>
   <data name="mapPanel_header_multiPart" xml:space="preserve">
-    <value>عوارض چندتکه‌ای</value>
+    <value>Multi part</value>
   </data>
   <data name="mapPanel_header_srs" xml:space="preserve">
-    <value>سیستم مرجع مکانی</value>
+    <value>Spatial Reference System</value>
   </data>
   <data name="mapPanel_measure_convertToDrawing" xml:space="preserve">
-    <value>تبدیل به عارضه ترسیمی</value>
+    <value>Convert to drawing item</value>
   </data>
   <data name="mapPanel_measure_showEdgeLabels" xml:space="preserve">
-    <value>نمایش طول اضلاع</value>
+    <value>Show Edge Labels</value>
   </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">
-    <value>ارتفاع</value>
+    <value>Height</value>
   </data>
   <data name="map_draw_addPoint" xml:space="preserve">
-    <value>افزودن نقطه</value>
+    <value>Add Point</value>
   </data>
   <data name="map_draw_cancelDrawing" xml:space="preserve">
-    <value>لغو ترسیم</value>
+    <value>Cancel Drawing</value>
   </data>
   <data name="map_draw_finishDrawing" xml:space="preserve">
-    <value>پایان ترسیم</value>
+    <value>Finish Drawing</value>
   </data>
   <data name="map_draw_finishDrawingPart" xml:space="preserve">
-    <value>تکمیل بخش</value>
+    <value>Finish Drawing Part</value>
   </data>
   <data name="map_draw_newDrawing" xml:space="preserve">
-    <value>برای اتمام ترسیم روی نقطهٔ آخر مجدد کلیک کنید.</value>
+    <value>Click on the last point to finish drawing.</value>
   </data>
   <data name="map_scalebar_content" xml:space="preserve">
-    <value>مقیاس</value>
+    <value>SCALE</value>
   </data>
   <data name="map_scalebar_zoomLevel" xml:space="preserve">
-    <value>سطح</value>
+    <value>Level</value>
   </data>
   <data name="ribbon_header_drawing" xml:space="preserve">
-    <value>لایه و ترسیم</value>
+    <value>Рисование</value>
   </data>
   <data name="ribbon_header_help" xml:space="preserve">
-    <value>راهنما</value>
+    <value>Справка</value>
   </data>
   <data name="ribbon_header_map" xml:space="preserve">
-    <value>نقشه</value>
+    <value>Карта</value>
   </data>
   <data name="ribbon_header_settings" xml:space="preserve">
-    <value>تنظیمات</value>
+    <value>Настройки</value>
   </data>
   <data name="srs_ceaSubTitle" xml:space="preserve">
-    <value>ceaSubTitle</value>
+    <value>Cylindrical Equal Area</value>
   </data>
   <data name="srs_ceaTitle" xml:space="preserve">
-    <value>سیستم تصویر Cylindrical Equal Area</value>
+    <value>Cylindrical Equal Area</value>
   </data>
   <data name="srs_defaultLatitude" xml:space="preserve">
-    <value>عرض جغرافیایی:</value>
+    <value>Latitude:</value>
   </data>
   <data name="srs_defaultLongitude" xml:space="preserve">
-    <value>طول جغرافیایی:</value>
+    <value>Longitude:</value>
   </data>
   <data name="srs_defaultX" xml:space="preserve">
     <value>X:</value>
@@ -768,219 +625,241 @@
     <value>Y:</value>
   </data>
   <data name="srs_geodeticDmsSubTitle" xml:space="preserve">
-    <value>ژئودتیک</value>
+    <value>Geodetic, WGS84</value>
   </data>
   <data name="srs_geodeticDmsTitle" xml:space="preserve">
-    <value>سیستم مختصات ژئودتیک، WGS84 (درجه، دقیقه، ثانیه)</value>
+    <value>Geodetic, WGS84 (dms)</value>
   </data>
   <data name="srs_geodeticSubTitle" xml:space="preserve">
-    <value>ژئودتیک</value>
+    <value>Geodetic, WGS84</value>
   </data>
   <data name="srs_geodeticTitle" xml:space="preserve">
-    <value>سیستم مختصات ژئودتیک، WGS84 (اعشار درجه)</value>
+    <value>Geodetic, WGS84 (decimal degree)</value>
   </data>
   <data name="srs_mercatorSubTitle" xml:space="preserve">
     <value>Mercator</value>
   </data>
   <data name="srs_mercatorTitle" xml:space="preserve">
-    <value>سیستم تصویر Mercator</value>
+    <value>Mercator</value>
   </data>
   <data name="srs_tmSubTitle" xml:space="preserve">
     <value>Transeverse Mercator</value>
   </data>
   <data name="srs_tmTitle" xml:space="preserve">
-    <value>سیستم تصویر Transeverse Mercator</value>
+    <value>Transeverse Mercator</value>
   </data>
   <data name="srs_utmSubTitle" xml:space="preserve">
     <value>UTM</value>
   </data>
   <data name="srs_utmTitle" xml:space="preserve">
-    <value>سیستم تصویر UTM</value>
+    <value>Universal Transeverse Mercator (UTM)</value>
   </data>
   <data name="srs_utmZone" xml:space="preserve">
-    <value>ناحیه</value>
+    <value>Zone</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
-    <value>وب مرکاتور</value>
+    <value>Web Mercator</value>
   </data>
   <data name="srs_webMercatorTitle" xml:space="preserve">
-    <value>وب مرکاتور</value>
+    <value>Web Mercator</value>
   </data>
   <data name="tile_mapType_BlackWhite" xml:space="preserve">
-    <value>سیاه‌سفید</value>
+    <value>BlackWhite</value>
+    <comment>GoogleBlackWhite</comment>
   </data>
   <data name="tile_mapType_CleanGrey" xml:space="preserve">
-    <value>خاکستری</value>
+    <value>CleanGrey</value>
+    <comment>GoogleCleanGrey</comment>
   </data>
   <data name="tile_mapType_Comic" xml:space="preserve">
-    <value>فانتزی</value>
+    <value>Comic</value>
+    <comment>MapboxComic</comment>
   </data>
   <data name="tile_mapType_Dark" xml:space="preserve">
-    <value>تیره</value>
+    <value>Dark</value>
+    <comment>CartoDark</comment>
   </data>
   <data name="tile_mapType_HikeBike" xml:space="preserve">
-    <value>طبیعت‌گردی</value>
+    <value>HikeBike</value>
+    <comment>OsmHikeBike</comment>
   </data>
   <data name="tile_mapType_Hybrid" xml:space="preserve">
-    <value>ترکیبی</value>
+    <value>Hybrid</value>
+    <comment>GoogleHybrid, BingHybrid</comment>
   </data>
   <data name="tile_mapType_Light" xml:space="preserve">
-    <value>روشن</value>
+    <value>Light</value>
+    <comment>GoogleLight, CartoLight</comment>
   </data>
   <data name="tile_mapType_MapyTourist" xml:space="preserve">
-    <value>توریست</value>
+    <value>MapyTourist</value>
+    <comment>MapyTourist</comment>
   </data>
   <data name="tile_mapType_MapyWinter" xml:space="preserve">
-    <value>زمستان</value>
+    <value>MapyWinter</value>
+    <comment>MapyWinter</comment>
   </data>
   <data name="tile_mapType_Nature" xml:space="preserve">
-    <value>طبیعت</value>
+    <value>Nature</value>
+    <comment>GoogleNature</comment>
   </data>
   <data name="tile_mapType_NeutralBlue" xml:space="preserve">
-    <value>آبی</value>
+    <value>NeutralBlue</value>
+    <comment>GoogleNeutralBlue</comment>
   </data>
   <data name="tile_mapType_RoadMap" xml:space="preserve">
-    <value>راه</value>
+    <value>RoadMap</value>
+    <comment>GoogleRoadMap</comment>
   </data>
   <data name="tile_mapType_Satellite" xml:space="preserve">
-    <value>ماهواره</value>
+    <value>Satellite</value>
+    <comment>GoogleSatellite, BingSatellite, MapboxSatellite</comment>
   </data>
   <data name="tile_mapType_Street" xml:space="preserve">
-    <value>راه</value>
+    <value>Street</value>
+    <comment>BingStreet, OpenStreetMap, WazeStreet</comment>
   </data>
   <data name="tile_mapType_Terrain" xml:space="preserve">
-    <value>توپو</value>
+    <value>Terrain</value>
+    <comment>GoogleTerrain</comment>
   </data>
   <data name="tile_mapType_Topo" xml:space="preserve">
-    <value>توپو</value>
+    <value>Topo</value>
+    <comment>OpenTopoMap</comment>
   </data>
   <data name="tile_mapType_Traffic" xml:space="preserve">
-    <value>ترافیک</value>
+    <value>Traffic</value>
+    <comment>GoogleTraffic</comment>
   </data>
   <data name="tile_mapType_Watercolor" xml:space="preserve">
-    <value>آبرنگ</value>
+    <value>Watercolor</value>
+    <comment>StamenWatercolor</comment>
   </data>
   <data name="tile_provider_bing" xml:space="preserve">
-    <value>بینگ</value>
+    <value>BING</value>
   </data>
   <data name="tile_provider_carto" xml:space="preserve">
-    <value>کارتو</value>
+    <value>CARTO</value>
   </data>
   <data name="tile_provider_google" xml:space="preserve">
-    <value>گوگل</value>
+    <value>GOOGLE</value>
   </data>
   <data name="tile_provider_mapbox" xml:space="preserve">
-    <value>مپ‌باکس</value>
+    <value>MAPBOX</value>
   </data>
   <data name="tile_provider_nokia" xml:space="preserve">
-    <value>نوکیا</value>
+    <value>NOKIA</value>
   </data>
   <data name="tile_provider_osm" xml:space="preserve">
-    <value>OSM</value>
+    <value>OPENSTREETMAP</value>
   </data>
   <data name="tile_provider_waze" xml:space="preserve">
-    <value>ویز</value>
+    <value>WAZE</value>
   </data>
   <data name="tile_provider_yandex" xml:space="preserve">
-    <value>یاندکس</value>
+    <value>YANDEX</value>
   </data>
   <data name="ui_header_baseMaps" xml:space="preserve">
-    <value>نقشه‌های پایه</value>
+    <value>Базовые карты</value>
   </data>
   <data name="ui_header_drawingLegend" xml:space="preserve">
-    <value>عوارض ترسیمی</value>
+    <value>Рисунки</value>
   </data>
   <data name="ui_header_layerLegend" xml:space="preserve">
-    <value>لایه‌ها</value>
+    <value>Слои</value>
   </data>
   <data name="wat_security_userName" xml:space="preserve">
-    <value>نام کاربری</value>
+    <value>Имя пользователя</value>
+  </data>
+  <data name="dialog_showMessage_title" xml:space="preserve">
+    <value>Сообщение</value>
+    <comment>Default title for message dialogs</comment>
   </data>
   <data name="cmd_general_drawRectangle" xml:space="preserve">
-    <value>ترسیم مستطیل</value>
+    <value>Draw Rectangle</value>
   </data>
   <data name="theme_color_amber" xml:space="preserve">
-    <value>کهربایی</value>
+    <value>Amber</value>
   </data>
   <data name="theme_color_blue" xml:space="preserve">
-    <value>آبی</value>
+    <value>Blue</value>
   </data>
   <data name="theme_color_brown" xml:space="preserve">
-    <value>قهوه‌ای</value>
+    <value>Brown</value>
   </data>
   <data name="theme_color_cobalt" xml:space="preserve">
-    <value>لاجوردی</value>
+    <value>Cobalt</value>
   </data>
   <data name="theme_color_crimson" xml:space="preserve">
-    <value>زرشکی</value>
+    <value>Crimson</value>
   </data>
   <data name="theme_color_cyan" xml:space="preserve">
-    <value>فیروزه‌ای</value>
+    <value>Cyan</value>
   </data>
   <data name="theme_color_emerald" xml:space="preserve">
-    <value>زمردی</value>
+    <value>Emerald</value>
   </data>
   <data name="theme_color_green" xml:space="preserve">
-    <value>سبز</value>
+    <value>Green</value>
   </data>
   <data name="theme_color_indigo" xml:space="preserve">
-    <value>نیلی</value>
+    <value>Indigo</value>
   </data>
   <data name="theme_color_lime" xml:space="preserve">
-    <value>لیمویی</value>
+    <value>Lime</value>
   </data>
   <data name="theme_color_magenta" xml:space="preserve">
-    <value>ارغوانی</value>
+    <value>Magenta</value>
   </data>
   <data name="theme_color_mauve" xml:space="preserve">
-    <value>بنفش روشن</value>
+    <value>Mauve</value>
   </data>
   <data name="theme_color_olive" xml:space="preserve">
-    <value>زیتونی</value>
+    <value>Olive</value>
   </data>
   <data name="theme_color_orange" xml:space="preserve">
-    <value>نارنجی</value>
+    <value>Orange</value>
   </data>
   <data name="theme_color_pink" xml:space="preserve">
-    <value>صورتی</value>
+    <value>Pink</value>
   </data>
   <data name="theme_color_purple" xml:space="preserve">
-    <value>بنفش‌آبی</value>
+    <value>Purple</value>
   </data>
   <data name="theme_color_red" xml:space="preserve">
-    <value>قرمز</value>
+    <value>Red</value>
   </data>
   <data name="theme_color_sienna" xml:space="preserve">
-    <value>سیه‌نا</value>
+    <value>Sienna</value>
   </data>
   <data name="theme_color_steel" xml:space="preserve">
-    <value>فولادی</value>
+    <value>Steel</value>
   </data>
   <data name="theme_color_taupe" xml:space="preserve">
-    <value>خاکستری‌قهوه‌ای</value>
+    <value>Taupe</value>
   </data>
   <data name="theme_color_teal" xml:space="preserve">
-    <value>سبزآبی</value>
+    <value>Teal</value>
   </data>
   <data name="theme_color_violet" xml:space="preserve">
-    <value>بنفش</value>
+    <value>Violet</value>
   </data>
   <data name="theme_color_yellow" xml:space="preserve">
-    <value>زرد</value>
+    <value>Yellow</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
-    <value>کپی</value>
+    <value>Copy</value>
   </data>
   <data name="legend_filter_Clear" xml:space="preserve">
-    <value>پاک کردن فیلتر</value>
+    <value>Clear Filters</value>
     <comment>clear filter button tooltip</comment>
   </data>
   <data name="legend_filter_filterByLayerType" xml:space="preserve">
-    <value>فیلتر نوع منبع داده</value>
+    <value>Filter By Layer Type</value>
     <comment>filter by layer type togglebutton tooltip</comment>
   </data>
   <data name="legend_filter_searchLayerWatermark" xml:space="preserve">
-    <value>فیلتر لایه‌ها</value>
+    <value>Search Layer</value>
     <comment>watermark displayed on the search layer textbox</comment>
   </data>
 </root>

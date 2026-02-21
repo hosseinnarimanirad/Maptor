@@ -1,6 +1,8 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Resources;
 using System.Text.RegularExpressions;
 using System.Windows;
 
@@ -18,10 +20,29 @@ public class LocalizationManager : INotifyPropertyChanged
 
     private CultureInfo _currentCulture = CultureInfo.CurrentUICulture;
 
+    private readonly List<ResourceManager> _registeredManagers = new();
+    private readonly object _managersLock = new();
+
     // Custom event to avoid PropertyChanged overhead
     public event Action LanguageChanged;
 
     public event Action FlowDirectionChanged;
+
+    /// <summary>
+    /// Registers a ResourceManager for localization lookup. Registered managers are tried first (in registration order),
+    /// then Jab.Common Resources (shared across apps).
+    /// </summary>
+    public void RegisterResourceManager(ResourceManager manager)
+    {
+        if (manager == null)
+            throw new ArgumentNullException(nameof(manager));
+
+        lock (_managersLock)
+        {
+            if (!_registeredManagers.Contains(manager))
+                _registeredManagers.Add(manager);
+        }
+    }
 
     public CultureInfo CurrentCulture
     {
@@ -46,24 +67,30 @@ public class LocalizationManager : INotifyPropertyChanged
 
     public FlowDirection CurrentFlowDirection => CurrentCulture.TextInfo.IsRightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
 
-    //public string this[string key] => Resources.ResourceManager.GetString(key, CultureInfo.CurrentUICulture);
-
     public string this[string key]
     {
         get
         {
-            // Explicitly specify to fallback to default resources
-            return Resources.ResourceManager.GetString(key, CurrentCulture)
-                   ?? Resources.ResourceManager.GetString(key, CultureInfo.InvariantCulture)
-                   ?? $"#{key}"; // Fallback for missing keys
-
-            //// Explicitly use the current culture and prevent caching issues
-            //var resourceSet = Resources.ResourceManager.GetResourceSet(
-            //    CurrentCulture,
-            //    true,  // load if not found
-            //    false); // don't use cached resources
-            //return resourceSet?.GetString(key) ?? $"#{key}#";
+            // Try each manager in order: registered (app-specific) → Resources (Jab.Common, shared)
+            foreach (var manager in GetManagersInOrder())
+            {
+                var value = manager.GetString(key, CurrentCulture)
+                            ?? manager.GetString(key, CultureInfo.InvariantCulture);
+                if (value != null)
+                    return value;
+            }
+            return $"#{key}";
         }
+    }
+
+    private IEnumerable<ResourceManager> GetManagersInOrder()
+    {
+        lock (_managersLock)
+        {
+            foreach (var m in _registeredManagers)
+                yield return m;
+        }
+        yield return Resources.ResourceManager;
     }
 
     public bool IsPersian => CurrentCulture.Name.Equals("fa-IR", StringComparison.OrdinalIgnoreCase);
@@ -73,19 +100,20 @@ public class LocalizationManager : INotifyPropertyChanged
         CurrentCulture = CultureInfo.GetCultureInfo("en-US");
     }
 
-
-    //public bool IsFrench => CurrentCulture.Name.Equals("fr-FR", StringComparison.OrdinalIgnoreCase);
-
     public void SetCulture(CultureInfo culture)
     {
         CurrentCulture = culture;
-
     }
 
     public string GetDefaultValue(string key)
     {
-        return Resources.ResourceManager.GetString(key, CultureInfo.InvariantCulture)
-               ?? $"#{key}#";
+        foreach (var manager in GetManagersInOrder())
+        {
+            var value = manager.GetString(key, CultureInfo.InvariantCulture);
+            if (value != null)
+                return value;
+        }
+        return $"#{key}#";
     }
 
     public static string GetLocalizedNumberString(object value)

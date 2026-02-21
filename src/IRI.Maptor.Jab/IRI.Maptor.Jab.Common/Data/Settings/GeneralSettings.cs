@@ -7,6 +7,8 @@ namespace IRI.Maptor.Jab.Common.Data;
 
 public class GeneralSettings : IGeneralSettings
 {
+    public string? SelectedCultureName { get; set; } = "fa-IR";
+
     public double LegendFontSize { get; set; } = 10;
 
     public bool Scalebar_ShowScalebar { get; set; } = true;

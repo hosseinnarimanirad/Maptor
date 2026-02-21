@@ -17,6 +17,34 @@ namespace IRI.Maptor.Extensions;
 
 public static class SldExtensions
 {
+    public static List<ISymbolizer> ParseToSymbolizers(this StyledLayerDescriptor sld)
+    {
+        var result = new List<ISymbolizer>();
+
+        var featureTypeStyles = sld.UserLayers.SelectMany(u => u.UserStyles.SelectMany(us => us.FeatureTypeStyles)).ToList();
+
+        if (!featureTypeStyles.IsNullOrEmpty())
+        {
+            foreach (var item in featureTypeStyles)
+            {
+                result.AddRange(item.Parse());
+            }
+        }
+
+        featureTypeStyles = sld.NamedLayers.SelectMany(n => n.UserStyles.SelectMany(us => us.FeatureTypeStyles)).ToList();
+
+        if (!featureTypeStyles.IsNullOrEmpty())
+        {
+            foreach (var item in featureTypeStyles)
+            {
+                result.AddRange(item.Parse());
+            }
+        }
+
+        return result;
+    }
+
+
     public static System.Windows.Media.PenLineJoin Parse(this Sld_StrokeLineJoin sld_StrokeLineJoin)
     {
         return sld_StrokeLineJoin switch
@@ -95,33 +123,6 @@ public static class SldExtensions
         }
 
         return geometry;
-    }
-
-    public static List<ISymbolizer> ParseToSymbolizers(this StyledLayerDescriptor sld)
-    {
-        var result = new List<ISymbolizer>();
-
-        var featureTypeStyles = sld.UserLayers.SelectMany(u => u.UserStyles.SelectMany(us => us.FeatureTypeStyles)).ToList();
-
-        if (!featureTypeStyles.IsNullOrEmpty())
-        {
-            foreach (var item in featureTypeStyles)
-            {
-                result.AddRange(item.Parse());
-            }
-        }
-
-        featureTypeStyles = sld.NamedLayers.SelectMany(n => n.UserStyles.SelectMany(us => us.FeatureTypeStyles)).ToList();
-
-        if (!featureTypeStyles.IsNullOrEmpty())
-        {
-            foreach (var item in featureTypeStyles)
-            {
-                result.AddRange(item.Parse());
-            }
-        }
-
-        return result;
     }
 
     public static List<ISymbolizer> Parse(this FeatureTypeStyle featureTypeStyle)
