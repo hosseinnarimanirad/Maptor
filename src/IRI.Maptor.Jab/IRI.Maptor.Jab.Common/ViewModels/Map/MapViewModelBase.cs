@@ -3454,7 +3454,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
-            var dataSource = new MemoryDataSource(features, resetIds: true, kind: DataSourceKind.Kml);
+            var dataSource = KmlDataSource.Create(fileName, features);
             var geometryType = features.First().TheGeometry.Type;
             var symbolizers = features.CreateSymbolizersFromKml(geometryType);
 
@@ -3553,7 +3553,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
-            var dataSource = new MemoryDataSource(features, resetIds: true, kind: DataSourceKind.Kml);
+            var dataSource = KmzDataSource.Create(fileName, features);
             var geometryType = features.First().TheGeometry.Type;
             var symbolizers = features.CreateSymbolizersFromKml(geometryType);
 
@@ -3864,16 +3864,12 @@ public abstract class MapViewModelBase : ViewModelBase
                 return;
             }
 
-            GeoJsonFeatureSet featureSet = await GeoJsonFeatureSet.CsvToPointGeoJsonAsync(fileName, false);
+            var dataSource = await CsvDataSource.CreateFromFileAsync(fileName, useFirstLineAsHeader: false);
 
-            if (featureSet.Features.IsNullOrEmpty())
+            if (dataSource == null)
                 return;
 
-            var features = featureSet.Features.Select(f => f.AsFeature(true, SrsBases.WebMercator)).ToList();
-
-            var dataSource = new MemoryDataSource(features);
-
-            AddLayer(new VectorLayer("", dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
+            AddLayer(new VectorLayer(Path.GetFileNameWithoutExtension(fileName), dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
 
         }
         catch (IOException)
@@ -3916,17 +3912,12 @@ public abstract class MapViewModelBase : ViewModelBase
                 return;
             }
 
-            GeoJsonFeatureSet featureSet = await GeoJsonFeatureSet.TsvToPointGeoJsonAsync(fileName, false);
+            var dataSource = await TsvDataSource.CreateFromFileAsync(fileName, useFirstLineAsHeader: false);
 
-            if (featureSet.Features.IsNullOrEmpty())
+            if (dataSource == null)
                 return;
 
-            var features = featureSet.Features.Select(f => f.AsFeature(true, SrsBases.WebMercator)).ToList();
-
-            // todo: provide parameter instead of `null`
-            var dataSource = new MemoryDataSource(features);
-
-            AddLayer(new VectorLayer("", dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
+            AddLayer(new VectorLayer(Path.GetFileNameWithoutExtension(fileName), dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
 
         }
         catch (IOException)
@@ -3966,7 +3957,7 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         try
         {
-            var dataSource = await JsonListDataSource.CreateFromFileAsync<Feature<Point>>(geoJsonFeatureSetFileName, f => f);
+            var dataSource = await GeoJsonDataSource.CreateFromFileAsync(geoJsonFeatureSetFileName);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(geoJsonFeatureSetFileName), dataSource,
                 [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],

@@ -16,19 +16,19 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Min Scale:" VerticalAlignment="Center" Margin="4"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [sldEditor_scaleRange_minScale], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
         <mahApp:NumericUpDown Grid.Row="0" Grid.Column="1" Margin="4" 
                               Value="{Binding MinScale, Mode=TwoWay}" 
                               Minimum="0" 
                               HideUpDownButtons="True"
-                              mahApp:TextBoxHelper.Watermark="Optional - Leave empty for no minimum"/>
+                              mahApp:TextBoxHelper.Watermark="{Binding [sldEditor_scaleRange_minWatermark], Source={StaticResource Localization}}"/>
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Max Scale:" VerticalAlignment="Center" Margin="4"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding [sldEditor_scaleRange_maxScale], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
         <mahApp:NumericUpDown Grid.Row="1" Grid.Column="1" Margin="4" 
                               Value="{Binding MaxScale, Mode=TwoWay}" 
                               Minimum="0" 
                               HideUpDownButtons="True"
-                              mahApp:TextBoxHelper.Watermark="Optional - Leave empty for no maximum"/>
+                              mahApp:TextBoxHelper.Watermark="{Binding [sldEditor_scaleRange_maxWatermark], Source={StaticResource Localization}}"/>
     </Grid>
 </UserControl>
 

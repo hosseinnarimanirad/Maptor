@@ -27,11 +27,11 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Label Property:" VerticalAlignment="Center" Margin="4"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [sldEditor_textSymbolizer_labelProperty], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
             <TextBox Grid.Row="0" Grid.Column="1" Margin="4" 
                      Text="{Binding LabelPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Font Family:" VerticalAlignment="Center" Margin="4"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding [sldEditor_textSymbolizer_fontFamily], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
             <ComboBox Grid.Row="1" Grid.Column="1" Margin="4" 
                       IsEditable="True"
                       Text="{Binding FontFamily, Mode=TwoWay}">
@@ -42,12 +42,12 @@
                 <ComboBoxItem>Georgia</ComboBoxItem>
             </ComboBox>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Font Size:" VerticalAlignment="Center" Margin="4"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding [sldEditor_textSymbolizer_fontSize], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
             <mahApp:NumericUpDown Grid.Row="2" Grid.Column="1" Margin="4" 
                                   Value="{Binding FontSize, Mode=TwoWay}" 
                                   Minimum="1" Maximum="100" Interval="1"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="Font Style:" VerticalAlignment="Center" Margin="4"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding [sldEditor_textSymbolizer_fontStyle], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
             <ComboBox Grid.Row="3" Grid.Column="1" Margin="4" SelectedItem="{Binding FontStyle}">
                 <ComboBox.ItemsSource>
                     <x:Array Type="{x:Type sld:Sld_FontStyle}">
@@ -58,7 +58,7 @@
                 </ComboBox.ItemsSource>
             </ComboBox>
 
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Font Weight:" VerticalAlignment="Center" Margin="4"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding [sldEditor_textSymbolizer_fontWeight], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
             <ComboBox Grid.Row="4" Grid.Column="1" Margin="4" SelectedItem="{Binding FontWeight}">
                 <ComboBox.ItemsSource>
                     <x:Array Type="{x:Type sld:Sld_FontWeight}">
@@ -68,30 +68,30 @@
                 </ComboBox.ItemsSource>
             </ComboBox>
 
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="Font Color:" VerticalAlignment="Center" Margin="4"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="{Binding [sldEditor_textSymbolizer_fontColor], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
             <mahApp:ColorPicker Grid.Row="5" Grid.Column="1" Margin="4" 
                                 SelectedColor="{Binding FontColor, Mode=TwoWay}"/>
 
             <Separator Grid.Row="6" Grid.ColumnSpan="2" Margin="4,10"/>
 
             <CheckBox Grid.Row="7" Grid.ColumnSpan="2" Margin="4" 
-                      Content="Enable Halo (Text Outline)" 
+                      Content="{Binding [sldEditor_textSymbolizer_enableHalo], Source={StaticResource Localization}}" 
                       IsChecked="{Binding EnableHalo, Mode=TwoWay}"/>
 
-            <TextBlock Grid.Row="8" Grid.Column="0" Text="Halo Radius:" VerticalAlignment="Center" Margin="4"
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="{Binding [sldEditor_textSymbolizer_haloRadius], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"
                        IsEnabled="{Binding EnableHalo}"/>
             <mahApp:NumericUpDown Grid.Row="8" Grid.Column="1" Margin="4" 
                                   Value="{Binding HaloRadius, Mode=TwoWay}" 
                                   Minimum="0" Maximum="10" Interval="0.5"
                                   IsEnabled="{Binding EnableHalo}"/>
 
-            <TextBlock Grid.Row="9" Grid.Column="0" Text="Halo Color:" VerticalAlignment="Center" Margin="4"
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="{Binding [sldEditor_textSymbolizer_haloColor], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"
                        IsEnabled="{Binding EnableHalo}"/>
             <mahApp:ColorPicker Grid.Row="9" Grid.Column="1" Margin="4" 
                                 SelectedColor="{Binding HaloColor, Mode=TwoWay}"
                                 IsEnabled="{Binding EnableHalo}"/>
 
-            <TextBlock Grid.Row="10" Grid.Column="0" Text="Geometry Property:" VerticalAlignment="Center" Margin="4"/>
+            <TextBlock Grid.Row="10" Grid.Column="0" Text="{Binding [sldEditor_common_geometryProperty], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
             <TextBox Grid.Row="10" Grid.Column="1" Margin="4" 
                      Text="{Binding GeometryPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>

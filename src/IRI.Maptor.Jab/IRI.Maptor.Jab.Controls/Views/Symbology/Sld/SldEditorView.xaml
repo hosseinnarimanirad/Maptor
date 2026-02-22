@@ -46,7 +46,7 @@
         </Grid.RowDefinitions>
 
         <!-- Header with Style Information -->
-        <GroupBox Grid.Row="0" Header="Style Information" Margin="5">
+        <GroupBox Grid.Row="0" Header="{Binding [sldEditor_common_styleInformation], Source={StaticResource Localization}}" Margin="5">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -59,19 +59,19 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Layer Name:" VerticalAlignment="Center" Margin="4"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [sldEditor_common_layerName], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
                 <TextBox Grid.Row="0" Grid.Column="1" Margin="4" 
                          Text="{Binding LayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Style Name:" VerticalAlignment="Center" Margin="4"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding [sldEditor_common_styleName], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
                 <TextBox Grid.Row="1" Grid.Column="1" Margin="4" 
                          Text="{Binding StyleName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Style Title:" VerticalAlignment="Center" Margin="4"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding [sldEditor_common_styleTitle], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
                 <TextBox Grid.Row="2" Grid.Column="1" Margin="4" 
                          Text="{Binding StyleTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="Abstract:" VerticalAlignment="Top" Margin="4"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding [sldEditor_common_abstract], Source={StaticResource Localization}}" VerticalAlignment="Top" Margin="4"/>
                 <TextBox Grid.Row="3" Grid.Column="1" Margin="4" Height="50" 
                          TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
                          Text="{Binding StyleAbstract, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -87,7 +87,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Rules List -->
-            <GroupBox Grid.Column="0" Header="Rules">
+            <GroupBox Grid.Column="0" Header="{Binding [sldEditor_common_rules], Source={StaticResource Localization}}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -95,16 +95,16 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4">
-                        <Button Command="{Binding AddRuleCommand}" ToolTip="Add Rule" Width="32" Height="32" Margin="2">
+                        <Button Command="{Binding AddRuleCommand}" ToolTip="{Binding [sldEditor_common_addRule], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                             <iconPacks:PackIconModern Kind="Add" />
                         </Button>
-                        <Button Command="{Binding RemoveRuleCommand}" ToolTip="Remove Rule" Width="32" Height="32" Margin="2">
+                        <Button Command="{Binding RemoveRuleCommand}" ToolTip="{Binding [sldEditor_common_removeRule], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                             <iconPacks:PackIconModern Kind="Delete" />
                         </Button>
-                        <Button Command="{Binding MoveRuleUpCommand}" ToolTip="Move Up" Width="32" Height="32" Margin="2">
+                        <Button Command="{Binding MoveRuleUpCommand}" ToolTip="{Binding [sldEditor_common_moveUp], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                             <iconPacks:PackIconModern Kind="Up" />
                         </Button>
-                        <Button Command="{Binding MoveRuleDownCommand}" ToolTip="Move Down" Width="32" Height="32" Margin="2">
+                        <Button Command="{Binding MoveRuleDownCommand}" ToolTip="{Binding [sldEditor_common_moveDown], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                             <iconPacks:PackIconModern Kind="Down" />
                         </Button>
                     </StackPanel>
@@ -124,10 +124,10 @@
                         IsEnabled="{Binding SelectedRule, Converter={StaticResource BoolToVis}}">
                 
                 <!-- Rule Properties Tab -->
-                <TabItem Header="Rule Properties">
+                <TabItem Header="{Binding [sldEditor_common_ruleProperties], Source={StaticResource Localization}}">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel Margin="10">
-                            <GroupBox Header="General">
+                            <GroupBox Header="{Binding [sldEditor_common_general], Source={StaticResource Localization}}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
@@ -139,26 +139,26 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" VerticalAlignment="Center" Margin="4"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [sldEditor_common_name], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
                                     <TextBox Grid.Row="0" Grid.Column="1" Margin="4" 
                                              Text="{Binding SelectedRule.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Title:" VerticalAlignment="Center" Margin="4"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding [sldEditor_common_title], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
                                     <TextBox Grid.Row="1" Grid.Column="1" Margin="4" 
                                              Text="{Binding SelectedRule.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Abstract:" VerticalAlignment="Top" Margin="4"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding [sldEditor_common_abstract], Source={StaticResource Localization}}" VerticalAlignment="Top" Margin="4"/>
                                     <TextBox Grid.Row="2" Grid.Column="1" Margin="4" Height="50" 
                                              TextWrapping="Wrap" AcceptsReturn="True"
                                              Text="{Binding SelectedRule.Abstract, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 </Grid>
                             </GroupBox>
 
-                            <GroupBox Header="Scale Range" Margin="0,10,0,0">
+                            <GroupBox Header="{Binding [sldEditor_common_scaleRange], Source={StaticResource Localization}}" Margin="0,10,0,0">
                                 <local:ScaleRangeEditorView DataContext="{Binding SelectedRule}"/>
                             </GroupBox>
 
-                            <GroupBox Header="Filter" Margin="0,10,0,0">
+                            <GroupBox Header="{Binding [sldEditor_common_filter], Source={StaticResource Localization}}" Margin="0,10,0,0">
                                 <local:SimpleFilterEditorView DataContext="{Binding SelectedRule}"/>
                             </GroupBox>
                         </StackPanel>
@@ -166,7 +166,7 @@
                 </TabItem>
 
                 <!-- Symbolizers Tab -->
-                <TabItem Header="Symbolizers">
+                <TabItem Header="{Binding [sldEditor_common_symbolizers], Source={StaticResource Localization}}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -178,24 +178,24 @@
                         <!-- Symbolizer Toolbar -->
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4">
                             <Button Command="{Binding SelectedRule.AddPointSymbolizerCommand}" 
-                                    ToolTip="Add Point Symbolizer" Width="32" Height="32" Margin="2">
+                                    ToolTip="{Binding [sldEditor_common_addPointSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                                 <iconPacks:PackIconModern Kind="LocationDot" />
                             </Button>
                             <Button Command="{Binding SelectedRule.AddLineSymbolizerCommand}" 
-                                    ToolTip="Add Line Symbolizer" Width="32" Height="32" Margin="2">
+                                    ToolTip="{Binding [sldEditor_common_addLineSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                                 <iconPacks:PackIconModern Kind="PathMake" />
                             </Button>
                             <Button Command="{Binding SelectedRule.AddPolygonSymbolizerCommand}" 
-                                    ToolTip="Add Polygon Symbolizer" Width="32" Height="32" Margin="2">
+                                    ToolTip="{Binding [sldEditor_common_addPolygonSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                                 <iconPacks:PackIconModern Kind="Shape" />
                             </Button>
                             <Button Command="{Binding SelectedRule.AddTextSymbolizerCommand}" 
-                                    ToolTip="Add Text Symbolizer" Width="32" Height="32" Margin="2">
+                                    ToolTip="{Binding [sldEditor_common_addTextSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                                 <iconPacks:PackIconModern Kind="TextBox" />
                             </Button>
                             <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="4,0"/>
                             <Button Command="{Binding SelectedRule.RemoveSymbolizerCommand}" 
-                                    ToolTip="Remove Symbolizer" Width="32" Height="32" Margin="2">
+                                    ToolTip="{Binding [sldEditor_common_removeSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                                 <iconPacks:PackIconModern Kind="Delete" />
                             </Button>
                         </StackPanel>
@@ -210,7 +210,7 @@
                         <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" Background="LightGray"/>
 
                         <!-- Symbolizer Editor -->
-                        <GroupBox Grid.Row="3" Header="Symbolizer Properties" Margin="4">
+                        <GroupBox Grid.Row="3" Header="{Binding [sldEditor_common_symbolizerProperties], Source={StaticResource Localization}}" Margin="4">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <ContentControl Content="{Binding SelectedRule.SelectedSymbolizer}"
                                               ContentTemplateSelector="{StaticResource SymbolizerTemplateSelector}"/>
@@ -220,7 +220,7 @@
                 </TabItem>
 
                 <!-- XML Preview Tab -->
-                <TabItem Header="XML Preview">
+                <TabItem Header="{Binding [sldEditor_common_xmlPreview], Source={StaticResource Localization}}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -228,8 +228,8 @@
                         </Grid.RowDefinitions>
                         
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4">
-                            <Button Content="Export to File..." Width="120" Margin="4"/>
-                            <Button Content="Import from File..." Width="120" Margin="4"/>
+                            <Button Content="{Binding [sldEditor_common_exportToFile], Source={StaticResource Localization}}" Width="120" Margin="4"/>
+                            <Button Content="{Binding [sldEditor_common_importFromFile], Source={StaticResource Localization}}" Width="120" Margin="4"/>
                         </StackPanel>
                         
                         <TextBox Grid.Row="1" 
@@ -239,7 +239,7 @@
                                  VerticalScrollBarVisibility="Auto"
                                  HorizontalScrollBarVisibility="Auto"
                                  FontFamily="Consolas"
-                                 Text="XML preview will be displayed here"/>
+                                 Text="{Binding [sldEditor_common_xmlPreviewPlaceholder], Source={StaticResource Localization}}"/>
                     </Grid>
                 </TabItem>
             </TabControl>

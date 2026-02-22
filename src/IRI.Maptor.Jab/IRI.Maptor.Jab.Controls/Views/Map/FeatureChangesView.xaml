@@ -51,7 +51,7 @@
                 </StackPanel>
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding [featureChanges_lastModified], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
                 <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding LastAddOrUpdateFormatted}" VerticalAlignment="Center" Margin="0,0,0,4"/>
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Id:" Margin="0,0,8,0"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding [featureChanges_id], Source={StaticResource Localization}}" Margin="0,0,8,0"/>
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Id}" VerticalAlignment="Center"/>
             </Grid>
         </GroupBox>

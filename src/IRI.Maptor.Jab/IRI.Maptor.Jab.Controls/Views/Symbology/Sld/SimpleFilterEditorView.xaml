@@ -14,20 +14,20 @@
         </Grid.RowDefinitions>
 
         <CheckBox Grid.Row="0" Margin="4" 
-                  Content="Enable Filter" 
+                  Content="{Binding [sldEditor_filter_enableFilter], Source={StaticResource Localization}}" 
                   IsChecked="{Binding HasFilter, Mode=TwoWay}"/>
 
-        <GroupBox Grid.Row="1" Header="Filter Settings" Margin="4" 
+        <GroupBox Grid.Row="1" Header="{Binding [sldEditor_filter_filterSettings], Source={StaticResource Localization}}" Margin="4" 
                   IsEnabled="{Binding HasFilter}">
             <StackPanel>
-                <TextBlock Text="Filter Expression:" Margin="4"/>
+                <TextBlock Text="{Binding [sldEditor_filter_filterExpression], Source={StaticResource Localization}}" Margin="4"/>
                 <TextBox Margin="4" Height="60" TextWrapping="Wrap" 
                          AcceptsReturn="True" 
                          VerticalScrollBarVisibility="Auto"
                          Text="{Binding FilterDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          IsReadOnly="True"/>
                 <TextBlock Margin="4" FontStyle="Italic" FontSize="10" Foreground="Gray"
-                           Text="Note: This is a simplified view. For complex filters, edit the XML directly or use a specialized filter builder."/>
+                           Text="{Binding [sldEditor_filter_simplifiedViewNote], Source={StaticResource Localization}}"/>
             </StackPanel>
         </GroupBox>
     </Grid>

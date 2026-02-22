@@ -5,10 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.Views.Symbology.Sld"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
         mc:Ignorable="d"
-        Title="SLD Style Editor" Height="750" Width="950"
+        Title="{Binding [sldEditor_common_editorTitle], Source={StaticResource Localization}}" Height="750" Width="950"
         WindowStartupLocation="CenterScreen">
     <Grid>
+        <Grid.Resources>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -17,20 +21,20 @@
 
         <!-- Toolbar -->
         <ToolBar Grid.Row="0">
-            <Button Command="{Binding ImportSldCommand}" ToolTip="Import SLD from File">
+            <Button Command="{Binding ImportSldCommand}" ToolTip="{Binding [sldEditor_common_importTooltip], Source={StaticResource Localization}}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconModern Kind="FolderOpen" Margin="0,0,5,0"/>
-                    <TextBlock Text="Import"/>
+                    <TextBlock Text="{Binding [sldEditor_common_import], Source={StaticResource Localization}}"/>
                 </StackPanel>
             </Button>
-            <Button Command="{Binding ExportSldCommand}" ToolTip="Export SLD to File">
+            <Button Command="{Binding ExportSldCommand}" ToolTip="{Binding [sldEditor_common_exportTooltip], Source={StaticResource Localization}}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconModern Kind="Save" Margin="0,0,5,0"/>
-                    <TextBlock Text="Export"/>
+                    <TextBlock Text="{Binding [sldEditor_common_export], Source={StaticResource Localization}}"/>
                 </StackPanel>
             </Button>
             <Separator/>
-            <TextBlock Text="OGC SLD 1.0.0 Editor" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
+            <TextBlock Text="{Binding [sldEditor_common_editorBanner], Source={StaticResource Localization}}" VerticalAlignment="Center" FontWeight="Bold" Margin="10,0"/>
         </ToolBar>
 
         <!-- Main Editor -->
@@ -40,10 +44,10 @@
         <StatusBar Grid.Row="2">
             <StatusBarItem>
                 <TextBlock>
-                    <Run Text="Rules: "/>
+                    <Run Text="{Binding [sldEditor_common_rulesLabel], Source={StaticResource Localization}}"/>
                     <Run Text="{Binding Rules.Count, Mode=OneWay}"/>
                     <Run Text=" | "/>
-                    <Run Text="Selected: "/>
+                    <Run Text="{Binding [sldEditor_common_selected], Source={StaticResource Localization}}"/>
                     <Run Text="{Binding SelectedRule.Name, Mode=OneWay, FallbackValue='None'}"/>
                 </TextBlock>
             </StatusBarItem>

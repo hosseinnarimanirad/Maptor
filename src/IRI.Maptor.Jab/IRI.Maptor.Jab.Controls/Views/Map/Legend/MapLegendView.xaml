@@ -345,11 +345,11 @@
                         </Border.Effect>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Center">
-                                <Button Style="{StaticResource circleButtonLight}" ToolTip="Select All"
+                                <Button Style="{StaticResource circleButtonLight}" ToolTip="{Binding [legend_selectAll], Source={StaticResource Localization}}"
                                     Command="{Binding SelectAllDataSourceKindsCommand}">
                                     <iconPacks:PackIconMaterial Kind="SelectAll"/>
                                 </Button>
-                                <Button Style="{StaticResource circleButtonLight}" ToolTip="Clear All"
+                                <Button Style="{StaticResource circleButtonLight}" ToolTip="{Binding [legend_clearAll], Source={StaticResource Localization}}"
                                     Command="{Binding ClearAllDataSourceKindsCommand}" Margin="4,0,0,0">
                                     <iconPacks:PackIconMaterial Kind="SelectionRemove"/>
                                 </Button>

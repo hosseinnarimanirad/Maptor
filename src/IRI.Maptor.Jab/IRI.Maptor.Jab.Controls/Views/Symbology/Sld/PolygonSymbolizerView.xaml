@@ -23,30 +23,30 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Fill Color:" VerticalAlignment="Center" Margin="4"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [sldEditor_common_fillColor], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
         <mahApp:ColorPicker Grid.Row="0" Grid.Column="1" Margin="4" 
                             SelectedColor="{Binding FillColor, Mode=TwoWay}"/>
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Fill Opacity:" VerticalAlignment="Center" Margin="4"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding [sldEditor_common_fillOpacity], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
         <Slider Grid.Row="1" Grid.Column="1" Margin="4" 
                 Value="{Binding FillOpacity, Mode=TwoWay}" 
                 Minimum="0" Maximum="1" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Stroke Color:" VerticalAlignment="Center" Margin="4"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding [sldEditor_common_strokeColor], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
         <mahApp:ColorPicker Grid.Row="2" Grid.Column="1" Margin="4" 
                             SelectedColor="{Binding StrokeColor, Mode=TwoWay}"/>
 
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Stroke Width:" VerticalAlignment="Center" Margin="4"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding [sldEditor_common_strokeWidth], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
         <mahApp:NumericUpDown Grid.Row="3" Grid.Column="1" Margin="4" 
                               Value="{Binding StrokeWidth, Mode=TwoWay}" 
                               Minimum="0" Maximum="50" Interval="0.5"/>
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="Stroke Opacity:" VerticalAlignment="Center" Margin="4"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding [sldEditor_common_strokeOpacity], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
         <Slider Grid.Row="4" Grid.Column="1" Margin="4" 
                 Value="{Binding StrokeOpacity, Mode=TwoWay}" 
                 Minimum="0" Maximum="1" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
 
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="Line Cap:" VerticalAlignment="Center" Margin="4"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="{Binding [sldEditor_common_lineCap], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
         <ComboBox Grid.Row="5" Grid.Column="1" Margin="4" SelectedItem="{Binding LineCap}">
             <ComboBox.ItemsSource>
                 <x:Array Type="{x:Type sld:Sld_StrokeLineCap}">
@@ -57,7 +57,7 @@
             </ComboBox.ItemsSource>
         </ComboBox>
 
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="Line Join:" VerticalAlignment="Center" Margin="4"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding [sldEditor_common_lineJoin], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
         <ComboBox Grid.Row="6" Grid.Column="1" Margin="4" SelectedItem="{Binding LineJoin}">
             <ComboBox.ItemsSource>
                 <x:Array Type="{x:Type sld:Sld_StrokeLineJoin}">
@@ -68,7 +68,7 @@
             </ComboBox.ItemsSource>
         </ComboBox>
 
-        <TextBlock Grid.Row="7" Grid.Column="0" Text="Geometry Property:" VerticalAlignment="Center" Margin="4"/>
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="{Binding [sldEditor_common_geometryProperty], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
         <TextBox Grid.Row="7" Grid.Column="1" Margin="4" 
                  Text="{Binding GeometryPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
