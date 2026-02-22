@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:model="clr-namespace:IRI.Maptor.Jab.Common.Models;assembly=IRI.Maptor.Jab.Common"
+             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
              xmlns:local ="clr-namespace:IRI.Maptor.Jab.Controls.Common.Behaviors" 
              xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -13,6 +14,7 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <DataTemplate DataType="{x:Type model:FeatureTableToggleCommand}">
                 <ToggleButton Focusable="False" ToolTip="{Binding ToolTip}"
                                 IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"
@@ -208,6 +210,13 @@
                     ToolTip="Save changes"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconModern Kind="Save" Foreground="White" FlowDirection="LeftToRight"/>
+            </Button>
+            <Button Command="{Binding ViewChangesCommand}"
+                    Style="{StaticResource circleButtonLight}"
+                    IsEnabled="{Binding CanViewChanges}"
+                    ToolTip="{Binding [featureChanges_viewChanges], Source={StaticResource Localization}}"
+                    Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
+                <iconPacks:PackIconMaterial Kind="History" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
             <ItemsControl ItemsSource="{Binding AssociatedLayer.FeatureTableCommands}">
                 <ItemsControl.ItemsPanel>

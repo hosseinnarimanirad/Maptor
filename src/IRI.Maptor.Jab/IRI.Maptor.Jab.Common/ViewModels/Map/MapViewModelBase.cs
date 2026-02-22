@@ -939,6 +939,12 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action<Geometry<Point>> RequestZoomToFeature;
 
+    public Action<Geometry<Point>?, Geometry<Point>?>? RequestShowGeometryComparison;
+
+    public Action? RequestClearGeometryComparison;
+
+    public Action<Feature<Point>, List<Field>?>? RequestShowFeatureChangesDialog;
+
     public Action RequestEnableRectangleZoom;
 
     public Action RequestEnableZoomOut;
@@ -1237,6 +1243,11 @@ public abstract class MapViewModelBase : ViewModelBase
                 }
 
                 Refresh(isNewExtent: true);
+            };
+
+            selectedLayer.RequestViewChanges = feature =>
+            {
+                RequestShowFeatureChangesDialog?.Invoke(feature, selectedLayer.Fields);
             };
 
             //selectedLayer.RequestSave = l =>

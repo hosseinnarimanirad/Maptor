@@ -37,6 +37,7 @@ using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Assets.Data;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.RasterDataSources;
 using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
@@ -606,6 +607,10 @@ public partial class MapViewer : NotifiableUserControl
         presenter.RequestPan = this.Pan;
 
         presenter.RequestZoomToFeature = this.ZoomToFeature;
+
+        presenter.RequestShowGeometryComparison = this.ShowGeometryComparison;
+        presenter.RequestClearGeometryComparison = this.ClearGeometryComparison;
+        presenter.RequestShowFeatureChangesDialog = this.ShowFeatureChangesDialog;
 
         //presenter.RequestIdentify = (point, options) => new ObservableCollection<FeatureSet<sb.Point>>(this.GetFeatures(point, options));
 
@@ -3023,6 +3028,61 @@ public partial class MapViewer : NotifiableUserControl
         {
             this.ZoomToExtent(geometry.GetBoundingBox());
         }
+    }
+
+    private const string GeometryComparisonLayerName = "__FeatureChanges_GeometryComparison";
+
+    private void ShowFeatureChangesDialog(IRI.Maptor.Sta.Spatial.Primitives.Feature<sb.Point> feature, List<sb.Field>? fields)
+    {
+        var vm = new IRI.Maptor.Jab.Common.ViewModels.Map.FeatureChangesViewModel(feature, fields);
+        vm.RequestZoomToFeature = g => this.ZoomToFeature(g);
+        vm.RequestShowGeometryComparison = (oldGeo, newGeo) => _presenter.RequestShowGeometryComparison?.Invoke(oldGeo, newGeo);
+        vm.RequestZoomToExtent = (bbox, isExact, isNew, callback) => this.ZoomToExtent(bbox, false, isExact, isNew, callback);
+
+        var dialog = new Views.Dialogs.FeatureChangesDialogView
+        {
+            Owner = Window.GetWindow(this),
+            DataContext = vm
+        };
+        dialog.Closed += (s, e) => _presenter.RequestClearGeometryComparison?.Invoke();
+        dialog.ShowDialog();
+    }
+
+    private async void ShowGeometryComparison(Geometry<sb.Point>? oldGeometry, Geometry<sb.Point>? newGeometry)
+    {
+        ClearGeometryComparison();
+
+        var boxes = new List<sb.BoundingBox>();
+        if (oldGeometry != null && !oldGeometry.IsNullOrEmpty())
+        {
+            var oldGeo = oldGeometry.Srid != SridHelper.WebMercator
+                ? oldGeometry.Project(SrsBases.WebMercator)
+                : oldGeometry;
+            var oldParams = new VisualParameters(null, new SolidColorBrush(Colors.Gray), 3, 0.8)
+            { DashStyle = new System.Windows.Media.DashStyle([4, 4], 0) };
+            await DrawGeometriesAsync(GeometryComparisonLayerName + "_Old", [oldGeo], oldParams);
+            boxes.Add(oldGeo.GetBoundingBox());
+        }
+        if (newGeometry != null && !newGeometry.IsNullOrEmpty())
+        {
+            var newGeo = newGeometry.Srid != SridHelper.WebMercator
+                ? newGeometry.Project(SrsBases.WebMercator)
+                : newGeometry;
+            var newParams = VisualParameters.GetDefaultForHighlight(3);
+            await DrawGeometriesAsync(GeometryComparisonLayerName + "_New", [newGeo], newParams);
+            boxes.Add(newGeo.GetBoundingBox());
+        }
+        if (boxes.Count > 0)
+        {
+            var merged = sb.BoundingBox.GetMergedBoundingBox(boxes);
+            this.ZoomToExtent(merged);
+        }
+    }
+
+    private void ClearGeometryComparison()
+    {
+        ClearLayer(GeometryComparisonLayerName + "_Old", true);
+        ClearLayer(GeometryComparisonLayerName + "_New", true);
     }
 
     public void ZoomToExtent(sb.BoundingBox boundingBox)

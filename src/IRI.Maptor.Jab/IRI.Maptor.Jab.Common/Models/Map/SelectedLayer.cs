@@ -79,6 +79,8 @@ public class SelectedLayer : Notifier
         }
     }
 
+    public bool CanViewChanges => CanUndo;
+
     public int CountOfSelectedFeatures => Features?.Count ?? 0;
 
 
@@ -91,6 +93,8 @@ public class SelectedLayer : Notifier
     public Action<IEnumerable<Feature<Point>>, Action>? RequestZoomTo { get; set; }
 
     public Action<Feature<Point>>? RequestEdit { get; set; }
+
+    public Action<Feature<Point>>? RequestViewChanges { get; set; }
 
     public Func<GeometryType, Task<Geometry<Point>?>> RequestDraw { get; set; }
 
@@ -324,6 +328,7 @@ public class SelectedLayer : Notifier
         RaisePropertyChanged(nameof(CountOfSelectedFeatures));
         RaisePropertyChanged(nameof(CanDelete));
         RaisePropertyChanged(nameof(CanUndo));
+        RaisePropertyChanged(nameof(CanViewChanges));
     }
 
     private RelayCommand? _addCommand;
@@ -498,6 +503,23 @@ public class SelectedLayer : Notifier
                 _removeCommand = new RelayCommand(param => this.RequestRemove?.Invoke());
 
             return _removeCommand;
+        }
+    }
+
+    private RelayCommand? _viewChangesCommand;
+    public RelayCommand ViewChangesCommand
+    {
+        get
+        {
+            if (_viewChangesCommand is null)
+            {
+                _viewChangesCommand = new RelayCommand(param =>
+                {
+                    if (IsSingleValueHighlighted && HighlightedFeatures?.FirstOrDefault() is Feature<Point> feature)
+                        RequestViewChanges?.Invoke(feature);
+                });
+            }
+            return _viewChangesCommand;
         }
     }
 }
