@@ -4,14 +4,13 @@
         xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:views="clr-namespace:IRI.Maptor.Jab.Controls.Views"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
-        Title="{Binding [featureChanges_title], Source={StaticResource Localization}}"
+        Title=""
         ShowInTaskbar="False"
         SizeToContent="Height"
         GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"
         MaxWidth="700"
         MinWidth="400"
-        FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
+        FlowDirection="LeftToRight"
         WindowStartupLocation="CenterOwner"
         ShowMaxRestoreButton="True"
         ShowCloseButton="True"
@@ -20,10 +19,10 @@
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/LocalizationResources.xaml"/>
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
             <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>
         </ResourceDictionary>

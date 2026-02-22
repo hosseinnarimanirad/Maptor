@@ -419,7 +419,7 @@
     <value>گۆڕانکارییەکانی ئەندازە</value>
   </data>
   <data name="featureChanges_id" xml:space="preserve">
-    <value>Id:</value>
+    <value>ناسنامە:</value>
   </data>
   <data name="featureChanges_lastModified" xml:space="preserve">
     <value>دوایین گۆڕانکاری</value>
@@ -464,13 +464,13 @@
     <value>زۆم بۆ کۆن</value>
   </data>
   <data name="featureTable_addNew" xml:space="preserve">
-    <value>Add new</value>
+    <value>نوێ زیاد بکە</value>
   </data>
   <data name="featureTable_delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>سڕینەوە</value>
   </data>
   <data name="featureTable_editGeometry" xml:space="preserve">
-    <value>Edit geometry</value>
+    <value>دەستکاری ئەندازەیی بکە</value>
   </data>
   <data name="featureTable_rowHeader_hour" xml:space="preserve">
     <value>کاتژمێر</value>
@@ -479,10 +479,10 @@
     <value>خولەک</value>
   </data>
   <data name="featureTable_saveChanges" xml:space="preserve">
-    <value>Save changes</value>
+    <value>گۆڕانکارییەکان پاشەکەوت بکە</value>
   </data>
   <data name="featureTable_undo" xml:space="preserve">
-    <value>Undo</value>
+    <value>پاشەکشە بکە</value>
   </data>
   <data name="geometryDetails_coordinateGrid_azimuthToNext" xml:space="preserve">
     <value>ئازیمۆت بۆ دواتر</value>
@@ -494,7 +494,7 @@
     <value>دوورە لە دواتر</value>
   </data>
   <data name="geometryDetails_coordinateGrid_number" xml:space="preserve">
-    <value>#</value>
+    <value># .</value>
   </data>
   <data name="geometryDetails_coordinateGrid_vertexAngle" xml:space="preserve">
     <value>گۆشەی سەرە</value>
@@ -503,10 +503,10 @@
     <value>X</value>
   </data>
   <data name="geometryDetails_coordinateGrid_y" xml:space="preserve">
-    <value>Y</value>
+    <value>ی</value>
   </data>
   <data name="geometryDetails_coordinateGrid_z" xml:space="preserve">
-    <value>Z</value>
+    <value>ز</value>
   </data>
   <data name="geometryDetails_currentPoint_add" xml:space="preserve">
     <value>خال زیاد بکە</value>
@@ -530,7 +530,7 @@
     <value>X:</value>
   </data>
   <data name="geometryDetails_currentPoint_y" xml:space="preserve">
-    <value>Y:</value>
+    <value>ی: .</value>
   </data>
   <data name="geometryDetails_currentPoint_zoom" xml:space="preserve">
     <value>جێبەجێ بۆ خال</value>
@@ -605,73 +605,73 @@
     <value>✓ بڕگە دروستە</value>
   </data>
   <data name="index_100k_title" xml:space="preserve">
-    <value>Index 100k</value>
+    <value>ئیندێکس 100k</value>
   </data>
   <data name="index_10k_title" xml:space="preserve">
-    <value>Index 10k</value>
+    <value>ئیندێکس 10k</value>
   </data>
   <data name="index_1kUtm_title" xml:space="preserve">
-    <value>Index 1000</value>
+    <value>ئیندێکس 1000</value>
   </data>
   <data name="index_250k_title" xml:space="preserve">
-    <value>Index 250k</value>
+    <value>ئیندێکس 250k</value>
   </data>
   <data name="index_25k_title" xml:space="preserve">
-    <value>Index 25k</value>
+    <value>ئیندێکس 25k</value>
   </data>
   <data name="index_2kUtm_title" xml:space="preserve">
-    <value>Index 2000</value>
+    <value>ئیندێکس ٢٠٠٠</value>
   </data>
   <data name="index_2kblocks_title" xml:space="preserve">
-    <value>Index 2000 Blocks</value>
+    <value>ئیندێکس ٢٠٠٠ بلۆک</value>
   </data>
   <data name="index_500UtmTitle" xml:space="preserve">
-    <value>Index 500</value>
+    <value>ئیندێکس 500</value>
   </data>
   <data name="index_50k_title" xml:space="preserve">
-    <value>Index 50k</value>
+    <value>ئیندێکس 50k</value>
   </data>
   <data name="index_5k_title" xml:space="preserve">
-    <value>Index 5k</value>
+    <value>ئیندێکس 5k</value>
   </data>
   <data name="input_coordinateNote" xml:space="preserve">
-    <value>Note: Coordinates are in longitude and latitude format</value>
+    <value>تێبینی: کۆئۆردینیاتەکان بە شێوەی درێژی و پانین</value>
   </data>
   <data name="input_drawFeatureOnMap" xml:space="preserve">
-    <value>Draw feature on map</value>
+    <value>تایبەتمەندی کێشان لەسەر نەخشە</value>
   </data>
   <data name="input_geodetic" xml:space="preserve">
-    <value>Geodetic</value>
+    <value>جیۆدێتیک</value>
   </data>
   <data name="input_utm" xml:space="preserve">
     <value>UTM</value>
   </data>
   <data name="input_utmZone" xml:space="preserve">
-    <value>UTM Zone:</value>
+    <value>ناوچەی UTM:</value>
   </data>
   <data name="languageSelector_title" xml:space="preserve">
     <value>زمان</value>
   </data>
   <data name="layer_geodesy1_title" xml:space="preserve">
-    <value>Geodesy 1</value>
+    <value>جیۆدێزی 1</value>
   </data>
   <data name="layer_geodesy2_title" xml:space="preserve">
-    <value>Geodesy 2</value>
+    <value>جیۆدێزی ٢</value>
   </data>
   <data name="layer_geodynamics_title" xml:space="preserve">
-    <value>Geodynamics</value>
+    <value>جیۆداینامیک</value>
   </data>
   <data name="layer_gravimetry_title" xml:space="preserve">
-    <value>Gravimetry</value>
+    <value>کێشپێوان</value>
   </data>
   <data name="layer_leveling1_title" xml:space="preserve">
-    <value>Leveling 1</value>
+    <value>ئاستکردن 1</value>
   </data>
   <data name="layer_leveling2_title" xml:space="preserve">
-    <value>Leveling 2</value>
+    <value>ئاستکردن ٢</value>
   </data>
   <data name="layer_leveling3_title" xml:space="preserve">
-    <value>Leveling 3</value>
+    <value>ئاستکردن ٣</value>
   </data>
   <data name="legendItem_PendingChanges_Added" xml:space="preserve">
     <value>زیادکرا:</value>
@@ -689,7 +689,7 @@
     <value>نوێکراوە:</value>
   </data>
   <data name="legend_clearAll" xml:space="preserve">
-    <value>Clear All</value>
+    <value>هەمووی پاک بکەرەوە</value>
   </data>
   <data name="legend_filter_Clear" xml:space="preserve">
     <value>فلتەرەکان پاک بکەرەوە</value>
@@ -701,7 +701,7 @@
     <value>گەڕان لە قەت</value>
   </data>
   <data name="legend_selectAll" xml:space="preserve">
-    <value>Select All</value>
+    <value>هەموو هەڵبژێرە</value>
   </data>
   <data name="manageAccount_changePassword" xml:space="preserve">
     <value>گۆڕینی وشەی نهێنی</value>
@@ -719,52 +719,52 @@
     <value>ناوی بەکارهێنەری نوێ</value>
   </data>
   <data name="mapInfo_area" xml:space="preserve">
-    <value>Area</value>
+    <value>ناوچە</value>
   </data>
   <data name="mapInfo_authalicSphereArea" xml:space="preserve">
-    <value>AuthalicSphereArea:</value>
+    <value>ناوچەی ئۆتالیکسفیر:</value>
   </data>
   <data name="mapInfo_ellipsoidalArea" xml:space="preserve">
-    <value>EllipsoidalArea:</value>
+    <value>ناوچەی بیبسی:</value>
   </data>
   <data name="mapInfo_ellipsoidalLength" xml:space="preserve">
-    <value>EllipsoidalLength:</value>
+    <value>درێژی بیبسی:</value>
   </data>
   <data name="mapInfo_euclideanAreaUtm" xml:space="preserve">
-    <value>EuclideanArea (UTM):</value>
+    <value>ناوچەی ئیوکلیدی (UTM):</value>
   </data>
   <data name="mapInfo_euclideanLengthUtm" xml:space="preserve">
-    <value>EuclideanLengthInUtm:</value>
+    <value>درێژی ئیوکلیدی لە ناوUtm:</value>
   </data>
   <data name="mapInfo_euclideanLengthUtmRefined" xml:space="preserve">
     <value>EuclideanLengthInUtm_Refined:</value>
   </data>
   <data name="mapInfo_general" xml:space="preserve">
-    <value>General</value>
+    <value>گشتی</value>
   </data>
   <data name="mapInfo_groundArea" xml:space="preserve">
-    <value>GroundArea:</value>
+    <value>ڕووبەری زەوی:</value>
   </data>
   <data name="mapInfo_groundLength" xml:space="preserve">
-    <value>GroundLength:</value>
+    <value>درێژی زەوی:</value>
   </data>
   <data name="mapInfo_karneyArea" xml:space="preserve">
-    <value>KarneyArea:</value>
+    <value>ناوچەی کارنێی:</value>
   </data>
   <data name="mapInfo_length" xml:space="preserve">
-    <value>Length</value>
+    <value>درێژی</value>
   </data>
   <data name="mapInfo_meanHeight" xml:space="preserve">
-    <value>Mean Height</value>
+    <value>مامناوەندی باڵا</value>
   </data>
   <data name="mapInfo_scaleFactor" xml:space="preserve">
-    <value>Scale Factor:</value>
+    <value>فاکتەری پێوەر:</value>
   </data>
   <data name="mapInfo_sphericalLength" xml:space="preserve">
-    <value>SphericalLength:</value>
+    <value>درێژی گۆشەیی:</value>
   </data>
   <data name="mapLegendItem_layerTitle" xml:space="preserve">
-    <value>Title</value>
+    <value>ناونیشان</value>
   </data>
   <data name="mapPanel_currentPart_add" xml:space="preserve">
     <value>بەشی نوێ زیاد بکە</value>
@@ -857,199 +857,199 @@
     <value>ڕێکخستنەکان</value>
   </data>
   <data name="sldEditor_common_abstract" xml:space="preserve">
-    <value>Abstract:</value>
+    <value>پوختە:</value>
   </data>
   <data name="sldEditor_common_addLineSymbolizer" xml:space="preserve">
-    <value>Add Line Symbolizer</value>
+    <value>هێمای هێڵ زیاد بکە</value>
   </data>
   <data name="sldEditor_common_addPointSymbolizer" xml:space="preserve">
-    <value>Add Point Symbolizer</value>
+    <value>هێماکەری خاڵ زیاد بکە</value>
   </data>
   <data name="sldEditor_common_addPolygonSymbolizer" xml:space="preserve">
-    <value>Add Polygon Symbolizer</value>
+    <value>هێمای فرەگۆشە زیاد بکە</value>
   </data>
   <data name="sldEditor_common_addRule" xml:space="preserve">
-    <value>Add Rule</value>
+    <value>زیادکردنی یاسا</value>
   </data>
   <data name="sldEditor_common_addTextSymbolizer" xml:space="preserve">
-    <value>Add Text Symbolizer</value>
+    <value>زیادکردنی Text Symbolizer</value>
   </data>
   <data name="sldEditor_common_editorBanner" xml:space="preserve">
-    <value>OGC SLD 1.0.0 Editor</value>
+    <value>سەرنوسەری OGC SLD 1.0.0</value>
   </data>
   <data name="sldEditor_common_editorTitle" xml:space="preserve">
-    <value>SLD Style Editor</value>
+    <value>دەستکاریکەری شێوازی SLD</value>
   </data>
   <data name="sldEditor_common_export" xml:space="preserve">
-    <value>Export</value>
+    <value>هەناردە</value>
   </data>
   <data name="sldEditor_common_exportToFile" xml:space="preserve">
-    <value>Export to File...</value>
+    <value>هەناردەکردن بۆ فایل...</value>
   </data>
   <data name="sldEditor_common_exportTooltip" xml:space="preserve">
-    <value>Export SLD to File</value>
+    <value>هەناردەکردنی SLD بۆ فایل</value>
   </data>
   <data name="sldEditor_common_fillColor" xml:space="preserve">
-    <value>Fill Color:</value>
+    <value>ڕەنگی پڕکردنەوە:</value>
   </data>
   <data name="sldEditor_common_fillOpacity" xml:space="preserve">
-    <value>Fill Opacity:</value>
+    <value>ناڕوونی پڕکردنەوە:</value>
   </data>
   <data name="sldEditor_common_filter" xml:space="preserve">
-    <value>Filter</value>
+    <value>فلتەر</value>
   </data>
   <data name="sldEditor_common_general" xml:space="preserve">
-    <value>General</value>
+    <value>گشتی</value>
   </data>
   <data name="sldEditor_common_geometryProperty" xml:space="preserve">
-    <value>Geometry Property:</value>
+    <value>تایبەتمەندی ئەندازەیی:</value>
   </data>
   <data name="sldEditor_common_import" xml:space="preserve">
-    <value>Import</value>
+    <value>هاوردەکردن</value>
   </data>
   <data name="sldEditor_common_importFromFile" xml:space="preserve">
-    <value>Import from File...</value>
+    <value>هاوردەکردن لە فایلەوە...</value>
   </data>
   <data name="sldEditor_common_importTooltip" xml:space="preserve">
-    <value>Import SLD from File</value>
+    <value>هاوردەکردنی SLD لە فایلەوە</value>
   </data>
   <data name="sldEditor_common_layerName" xml:space="preserve">
-    <value>Layer Name:</value>
+    <value>ناوی چین:</value>
   </data>
   <data name="sldEditor_common_lineCap" xml:space="preserve">
-    <value>Line Cap:</value>
+    <value>هێڵ کاپ:</value>
   </data>
   <data name="sldEditor_common_lineJoin" xml:space="preserve">
-    <value>Line Join:</value>
+    <value>پەیوەندی هێڵ:</value>
   </data>
   <data name="sldEditor_common_moveDown" xml:space="preserve">
-    <value>Move Down</value>
+    <value>بجوڵێ بۆ خوارەوە</value>
   </data>
   <data name="sldEditor_common_moveUp" xml:space="preserve">
-    <value>Move Up</value>
+    <value>بەرەو سەرەوە بڕۆ</value>
   </data>
   <data name="sldEditor_common_name" xml:space="preserve">
-    <value>Name:</value>
+    <value>ناو:</value>
   </data>
   <data name="sldEditor_common_removeRule" xml:space="preserve">
-    <value>Remove Rule</value>
+    <value>یاسا لاببە</value>
   </data>
   <data name="sldEditor_common_removeSymbolizer" xml:space="preserve">
-    <value>Remove Symbolizer</value>
+    <value>سیمبۆلایزەر لاببە</value>
   </data>
   <data name="sldEditor_common_ruleProperties" xml:space="preserve">
-    <value>Rule Properties</value>
+    <value>تایبەتمەندیەکانی یاسا</value>
   </data>
   <data name="sldEditor_common_rules" xml:space="preserve">
-    <value>Rules</value>
+    <value>ڕێساکان</value>
   </data>
   <data name="sldEditor_common_rulesLabel" xml:space="preserve">
-    <value>Rules:</value>
+    <value>ڕێساکان:</value>
   </data>
   <data name="sldEditor_common_scaleRange" xml:space="preserve">
-    <value>Scale Range</value>
+    <value>مەودای پێوەر</value>
   </data>
   <data name="sldEditor_common_selected" xml:space="preserve">
-    <value>Selected:</value>
+    <value>هەڵبژێردراو:</value>
   </data>
   <data name="sldEditor_common_strokeColor" xml:space="preserve">
-    <value>Stroke Color:</value>
+    <value>ڕەنگی جەڵتەی مێشک:</value>
   </data>
   <data name="sldEditor_common_strokeOpacity" xml:space="preserve">
-    <value>Stroke Opacity:</value>
+    <value>جەڵتەی مێشک ناڕوون:</value>
   </data>
   <data name="sldEditor_common_strokeWidth" xml:space="preserve">
-    <value>Stroke Width:</value>
+    <value>پانایی جەڵتەی مێشک:</value>
   </data>
   <data name="sldEditor_common_styleInformation" xml:space="preserve">
-    <value>Style Information</value>
+    <value>زانیاری ستایل</value>
   </data>
   <data name="sldEditor_common_styleName" xml:space="preserve">
-    <value>Style Name:</value>
+    <value>ناوی ستایل:</value>
   </data>
   <data name="sldEditor_common_styleTitle" xml:space="preserve">
-    <value>Style Title:</value>
+    <value>ناونیشانی ستایل:</value>
   </data>
   <data name="sldEditor_common_symbolizerProperties" xml:space="preserve">
-    <value>Symbolizer Properties</value>
+    <value>تایبەتمەندیەکانی هێمادار</value>
   </data>
   <data name="sldEditor_common_symbolizers" xml:space="preserve">
-    <value>Symbolizers</value>
+    <value>هێمادارەکان</value>
   </data>
   <data name="sldEditor_common_title" xml:space="preserve">
-    <value>Title:</value>
+    <value>ناونیشان:</value>
   </data>
   <data name="sldEditor_common_xmlPreview" xml:space="preserve">
-    <value>XML Preview</value>
+    <value>پێشبینی XML</value>
   </data>
   <data name="sldEditor_common_xmlPreviewPlaceholder" xml:space="preserve">
-    <value>XML preview will be displayed here</value>
+    <value>پێشبینی XML لێرەدا پیشان دەدرێت</value>
   </data>
   <data name="sldEditor_filter_enableFilter" xml:space="preserve">
-    <value>Enable Filter</value>
+    <value>فلتەر چالاک بکە</value>
   </data>
   <data name="sldEditor_filter_filterExpression" xml:space="preserve">
-    <value>Filter Expression:</value>
+    <value>دەربڕینی فلتەر:</value>
   </data>
   <data name="sldEditor_filter_filterSettings" xml:space="preserve">
-    <value>Filter Settings</value>
+    <value>ڕێکخستنەکانی فلتەر</value>
   </data>
   <data name="sldEditor_filter_simplifiedViewNote" xml:space="preserve">
-    <value>Note: This is a simplified view. For complex filters, edit the XML directly or use a specialized filter builder.</value>
+    <value>تێبینی: ئەمە ڕوانگەیەکی سادەکراوە. بۆ فلتەرە ئاڵۆزەکان، ڕاستەوخۆ دەستکاری XML بکە یان دروستکەری فلتەری تایبەتمەند بەکاربهێنە.</value>
   </data>
   <data name="sldEditor_lineSymbolizer_dashArray" xml:space="preserve">
-    <value>Dash Array:</value>
+    <value>داش ئارای:</value>
   </data>
   <data name="sldEditor_lineSymbolizer_dashArrayWatermark" xml:space="preserve">
-    <value>e.g., 5 5 or 10 5 3 5</value>
+    <value>بۆ نموونە، 5 5 یان 10 5 3 5</value>
   </data>
   <data name="sldEditor_pointSymbolizer_markType" xml:space="preserve">
-    <value>Mark Type:</value>
+    <value>جۆری نمرەکان:</value>
   </data>
   <data name="sldEditor_pointSymbolizer_rotation" xml:space="preserve">
-    <value>Rotation:</value>
+    <value>خولانەوەی:</value>
   </data>
   <data name="sldEditor_pointSymbolizer_size" xml:space="preserve">
-    <value>Size:</value>
+    <value>قەبارە:</value>
   </data>
   <data name="sldEditor_scaleRange_maxScale" xml:space="preserve">
-    <value>Max Scale:</value>
+    <value>زۆرترین پێوەر:</value>
   </data>
   <data name="sldEditor_scaleRange_maxWatermark" xml:space="preserve">
-    <value>Optional - Leave empty for no maximum</value>
+    <value>ئیختیاری - بە بەتاڵی بەجێی بهێڵە بۆ ئەوەی هیچ زۆرترین</value>
   </data>
   <data name="sldEditor_scaleRange_minScale" xml:space="preserve">
-    <value>Min Scale:</value>
+    <value>کەمترین پێوەر:</value>
   </data>
   <data name="sldEditor_scaleRange_minWatermark" xml:space="preserve">
-    <value>Optional - Leave empty for no minimum</value>
+    <value>ئیختیاری - بە بەتاڵی بەجێبهێڵە بۆ هیچ کەمترین ئاست</value>
   </data>
   <data name="sldEditor_textSymbolizer_enableHalo" xml:space="preserve">
-    <value>Enable Halo (Text Outline)</value>
+    <value>چالاککردنی Halo (هێڵکاری دەق)</value>
   </data>
   <data name="sldEditor_textSymbolizer_fontColor" xml:space="preserve">
-    <value>Font Color:</value>
+    <value>ڕەنگی فۆنت:</value>
   </data>
   <data name="sldEditor_textSymbolizer_fontFamily" xml:space="preserve">
-    <value>Font Family:</value>
+    <value>خێزانی فۆنت:</value>
   </data>
   <data name="sldEditor_textSymbolizer_fontSize" xml:space="preserve">
-    <value>Font Size:</value>
+    <value>قەبارەی فۆنت:</value>
   </data>
   <data name="sldEditor_textSymbolizer_fontStyle" xml:space="preserve">
-    <value>Font Style:</value>
+    <value>شێوازی فۆنت:</value>
   </data>
   <data name="sldEditor_textSymbolizer_fontWeight" xml:space="preserve">
-    <value>Font Weight:</value>
+    <value>کێشی فۆنت:</value>
   </data>
   <data name="sldEditor_textSymbolizer_haloColor" xml:space="preserve">
-    <value>Halo Color:</value>
+    <value>ڕەنگی هالۆ:</value>
   </data>
   <data name="sldEditor_textSymbolizer_haloRadius" xml:space="preserve">
-    <value>Halo Radius:</value>
+    <value>تیژڕەوی هالۆ:</value>
   </data>
   <data name="sldEditor_textSymbolizer_labelProperty" xml:space="preserve">
-    <value>Label Property:</value>
+    <value>تایبەتمەندی لیبێڵ:</value>
   </data>
   <data name="srs_ceaSubTitle" xml:space="preserve">
     <value>ناوچەی یەکسانە ستوونییە</value>
@@ -1067,7 +1067,7 @@
     <value>X:</value>
   </data>
   <data name="srs_defaultY" xml:space="preserve">
-    <value>Y:</value>
+    <value>ی: .</value>
   </data>
   <data name="srs_geodeticDmsSubTitle" xml:space="preserve">
     <value>جیۆدێسی، WGS84</value>
@@ -1199,10 +1199,10 @@
     <value>ڕووناک</value>
   </data>
   <data name="tile_mapType_MapyTourist" xml:space="preserve">
-    <value>MapyTourist</value>
+    <value>ماپیتۆریست</value>
   </data>
   <data name="tile_mapType_MapyWinter" xml:space="preserve">
-    <value>MapyWinter</value>
+    <value>ماپی وینتەر</value>
   </data>
   <data name="tile_mapType_Nature" xml:space="preserve">
     <value>سروشت</value>
@@ -1235,16 +1235,16 @@
     <value>BING</value>
   </data>
   <data name="tile_provider_carto" xml:space="preserve">
-    <value>CARTO</value>
+    <value>کارتۆ</value>
   </data>
   <data name="tile_provider_google" xml:space="preserve">
-    <value>GOOGLE</value>
+    <value>گوگڵ</value>
   </data>
   <data name="tile_provider_mapbox" xml:space="preserve">
     <value>MAPBOX</value>
   </data>
   <data name="tile_provider_nokia" xml:space="preserve">
-    <value>NOKIA</value>
+    <value>نۆکیا</value>
   </data>
   <data name="tile_provider_osm" xml:space="preserve">
     <value>OPENSTREETMAP</value>

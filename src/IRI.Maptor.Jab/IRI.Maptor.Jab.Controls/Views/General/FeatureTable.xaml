@@ -196,7 +196,7 @@
                     IsEnabled="{Binding IsSingleValueHighlighted}"
                     ToolTip="{Binding [featureTable_editGeometry], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
-                <iconPacks:PackIconModern Kind="Edit" Foreground="White" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconMaterial Kind="ViewDashboardEditOutline" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
             <Button Command="{Binding UndoCommand}"
                     Style="{StaticResource circleButtonLight}"

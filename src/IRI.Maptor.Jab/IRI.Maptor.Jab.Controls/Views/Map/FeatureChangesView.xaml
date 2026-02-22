@@ -4,18 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
              xmlns:enums="clr-namespace:IRI.Maptor.Sta.Common.Enums;assembly=IRI.Maptor.Sta.Common"
              mc:Ignorable="d"
-             FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
              FontFamily="{StaticResource iranSans}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/LocalizationResources.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
             <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>
         </ResourceDictionary>
@@ -28,7 +26,8 @@
                     <iconPacks:PackIconMaterial Kind="{Binding Status, Converter={StaticResource featureStatusToMaterialIconConverter}}"
                                                 Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0"
                                                 Foreground="{Binding Status, Converter={StaticResource featureStatusToBrushConverter}}"/>
-                    <TextBlock Text="{Binding [featureChanges_title], Source={StaticResource Localization}}" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding [featureChanges_title], Source={StaticResource Localization}}"
+                               FontWeight="Bold" Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
                 </StackPanel>
             </GroupBox.Header>
             <Grid>
@@ -60,7 +59,9 @@
         <GroupBox Margin="0,0,0,8" Padding="4"
                   Visibility="{Binding ChangedAttributes.Count, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}">
             <GroupBox.Header>
-                <TextBlock Text="{Binding [featureChanges_attributeChanges], Source={StaticResource Localization}}" FontWeight="Bold"/>
+                <TextBlock Text="{Binding [featureChanges_attributeChanges], Source={StaticResource Localization}}"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
             </GroupBox.Header>
             <StackPanel>
                 <Border BorderBrush="LightGray" BorderThickness="0,0,0,2" Padding="4,2" Margin="0,0,0,4">
@@ -100,7 +101,9 @@
         <GroupBox Margin="0,0,0,8" Padding="4"
                   Visibility="{Binding HasGeometryChanges, Converter={StaticResource boolToVisibilityConverter}}">
             <GroupBox.Header>
-                <TextBlock Text="{Binding [featureChanges_geometryChanges], Source={StaticResource Localization}}" FontWeight="Bold"/>
+                <TextBlock Text="{Binding [featureChanges_geometryChanges], Source={StaticResource Localization}}"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
             </GroupBox.Header>
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
@@ -125,6 +128,8 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -138,32 +143,34 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                   
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding [featureChanges_areaOld], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding GeometryOldAreaLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding [featureChanges_areaNew], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding GeometryNewAreaLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding [featureChanges_lengthOld], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding GeometryOldLengthLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding [featureChanges_lengthNew], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
-                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GeometryNewLengthLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding [featureChanges_areaChange], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
-                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding GeometryAreaChangeLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="{Binding [featureChanges_lengthChange], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
-                    <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding GeometryLengthChangeLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
 
-                    <Separator Grid.Row="6" Grid.ColumnSpan="2"/>
+                    <Separator Grid.Row="0" Grid.ColumnSpan="4"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="{Binding [featureChanges_areaOld], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding GeometryOldAreaLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" FontWeight="Bold" Text="{Binding [featureChanges_areaNew], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding GeometryNewAreaLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="{Binding [featureChanges_lengthOld], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding GeometryOldLengthLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" FontWeight="Bold" Text="{Binding [featureChanges_lengthNew], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
+                    <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding GeometryNewLengthLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" FontWeight="Bold" Text="{Binding [featureChanges_areaChange], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GeometryAreaChangeLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
+                    <TextBlock Grid.Row="3" Grid.Column="2" FontWeight="Bold" Text="{Binding [featureChanges_lengthChange], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
+                    <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding GeometryLengthChangeLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
+
+                    <Separator Grid.Row="6" Grid.ColumnSpan="4"/>
 
                     <TextBlock Grid.Row="7" Grid.Column="0" Text="{Binding [featureChanges_wktOld], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4" VerticalAlignment="Top"/>
-                    <ScrollViewer Grid.Row="7" Grid.Column="1" FlowDirection="LeftToRight" MaxHeight="50" Margin="0" HorizontalAlignment="Stretch">
+                    <ScrollViewer Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="4" FlowDirection="LeftToRight" MaxHeight="50" Margin="0" HorizontalAlignment="Stretch">
                         <TextBlock Text="{Binding GeometryOldWkt, TargetNullValue='-'}" HorizontalAlignment="Stretch" Background="#EEEEEE"
                                     TextWrapping="Wrap" Padding="4" MaxWidth="700" Margin="0,0,0,4" FontFamily="Consolas" FontSize="11"/>
                     </ScrollViewer>
                     
-                    <Separator Grid.Row="8" Grid.ColumnSpan="2"/>
+                    <Separator Grid.Row="8" Grid.ColumnSpan="4"/>
                     
                     <TextBlock Grid.Row="9" Grid.Column="0" Text="{Binding [featureChanges_wktNew], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4" VerticalAlignment="Top"/>
-                    <ScrollViewer Grid.Row="9" Grid.Column="1" FlowDirection="LeftToRight" 
+                    <ScrollViewer Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="4" FlowDirection="LeftToRight" 
                  VerticalScrollBarVisibility="Auto" MaxHeight="50" Margin="0" HorizontalAlignment="Stretch">
                         <TextBlock Text="{Binding GeometryNewWkt, TargetNullValue='-'}" HorizontalAlignment="Stretch" Background="#EEEEEE"
                  TextWrapping="Wrap" Padding="4" MaxWidth="700" Margin="0,0,0,4" FontFamily="Consolas" FontSize="11"/>
