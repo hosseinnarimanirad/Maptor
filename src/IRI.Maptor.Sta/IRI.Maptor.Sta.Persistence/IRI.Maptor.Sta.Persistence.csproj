@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -20,7 +20,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IRI.Maptor.Sta.Common\IRI.Maptor.Sta.Common.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Sta.Ogc\IRI.Maptor.Sta.Ogc.csproj" />
     <ProjectReference Include="..\IRI.Maptor.Sta.ShapefileFormat\IRI.Maptor.Sta.ShapefileFormat.csproj" />
+    <ProjectReference Include="..\IRI.Maptor.Sta.SpatialReferenceSystem\IRI.Maptor.Sta.SpatialReferenceSystem.csproj" />
   </ItemGroup>
 
   <ItemGroup>
