@@ -70,4 +70,67 @@
   <data name="common_emailVerification" xml:space="preserve">
     <value>ईमेल सत्यापित करें</value>
   </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>फ़ीचर परिवर्तन</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>परिवर्तन देखें</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>विशेषता परिवर्तन</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>ज्यामिति परिवर्तन</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>वर्तमान पर ज़ूम करें</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>पुराने पर ज़ूम करें</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>दोनों पर ज़ूम करें</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>मानचित्र पर तुलना करें</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>पुराना मान</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>नया मान</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>विशेषता</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>अंतिम संशोधन</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>स्थिति</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (पुराना)</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (नया)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>क्षेत्र (पुराना)</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>क्षेत्र (नया)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>लंबाई (पुरानी)</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>लंबाई (नई)</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>क्षेत्र परिवर्तन</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>लंबाई परिवर्तन</value>
+  </data>
 </root>

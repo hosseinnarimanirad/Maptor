@@ -850,6 +850,69 @@
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>
   </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>تغييرات المعالم</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>عرض التغييرات</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>تغييرات السمات</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>تغييرات الهندسة</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>تكبير إلى الحالي</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>تكبير إلى القديم</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>تكبير إلى كليهما</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>مقارنة على الخريطة</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>القيمة القديمة</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>القيمة الجديدة</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>السمة</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>آخر تعديل</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (قديم)</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (جديد)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>المساحة (قديم)</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>المساحة (جديد)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>الطول (قديم)</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>الطول (جديد)</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>تغيير المساحة</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>تغيير الطول</value>
+  </data>
   <data name="legend_filter_Clear" xml:space="preserve">
     <value>Clear Filters</value>
     <comment>clear filter button tooltip</comment>

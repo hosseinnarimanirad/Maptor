@@ -850,6 +850,69 @@
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>
   </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>Modifications de l&apos;entité</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>Voir les modifications</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>Modifications des attributs</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>Modifications de la géométrie</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>Zoom sur l&apos;actuel</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>Zoom sur l&apos;ancien</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>Zoom sur les deux</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>Comparer sur la carte</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>Ancienne valeur</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>Nouvelle valeur</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>Attribut</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>Dernière modification</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>Statut</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (ancien)</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (nouveau)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>Surface (ancienne)</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>Surface (nouvelle)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>Longueur (ancienne)</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>Longueur (nouvelle)</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>Changement de surface</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>Changement de longueur</value>
+  </data>
   <data name="legend_filter_Clear" xml:space="preserve">
     <value>Clear Filters</value>
     <comment>clear filter button tooltip</comment>

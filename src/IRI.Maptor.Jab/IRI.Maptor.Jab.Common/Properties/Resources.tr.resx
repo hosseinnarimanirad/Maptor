@@ -850,6 +850,69 @@
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>
   </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>Nesne değişiklikleri</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>Değişiklikleri görüntüle</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>Öznitelik değişiklikleri</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>Geometri değişiklikleri</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>Mevcuda yakınlaştır</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>Eskisine yakınlaştır</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>İkisine yakınlaştır</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>Haritada karşılaştır</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>Eski değer</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>Yeni değer</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>Öznitelik</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>Son değişiklik</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>Durum</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (eski)</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (yeni)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>Alan (eski)</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>Alan (yeni)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>Uzunluk (eski)</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>Uzunluk (yeni)</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>Alan değişikliği</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>Uzunluk değişikliği</value>
+  </data>
   <data name="legend_filter_Clear" xml:space="preserve">
     <value>Clear Filters</value>
     <comment>clear filter button tooltip</comment>

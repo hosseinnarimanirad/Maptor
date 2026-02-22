@@ -983,6 +983,69 @@
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>کپی</value>
   </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>تغییرات عارضه</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>مشاهده تغییرات</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>تغییرات ویژگی</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>تغییرات هندسه</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>زوم به وضعیت فعلی</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>زوم به وضعیت قبلی</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>زوم به هر دو</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>مقایسه روی نقشه</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>مقدار قبلی</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>مقدار جدید</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>ویژگی</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>آخرین تغییر</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>وضعیت</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (قبلی)</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (جدید)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>مساحت (قبلی)</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>مساحت (جدید)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>طول (قبلی)</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>طول (جدید)</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>تغییر مساحت</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>تغییر طول</value>
+  </data>
   <data name="legend_filter_Clear" xml:space="preserve">
     <value>پاک کردن فیلتر</value>
     <comment>clear filter button tooltip</comment>

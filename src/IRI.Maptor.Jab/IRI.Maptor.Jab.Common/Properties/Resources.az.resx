@@ -850,6 +850,69 @@
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>
   </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>Obyekt dəyişiklikləri</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>Dəyişikliklərə bax</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>Atribut dəyişiklikləri</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>Həndəsi dəyişikliklər</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>Cariyə yaxınlaş</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>Köhnəyə yaxınlaş</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>Hər ikisinə yaxınlaş</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>Xəritədə müqayisə et</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>Köhnə dəyər</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>Yeni dəyər</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>Atribut</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>Son dəyişiklik</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (köhnə)</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (yeni)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>Sahə (köhnə)</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>Sahə (yeni)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>Uzunluq (köhnə)</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>Uzunluq (yeni)</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>Sahə dəyişikliyi</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>Uzunluq dəyişikliyi</value>
+  </data>
   <data name="legend_filter_Clear" xml:space="preserve">
     <value>Clear Filters</value>
     <comment>clear filter button tooltip</comment>

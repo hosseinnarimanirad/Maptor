@@ -850,6 +850,69 @@
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>
   </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>Օբյեկտի փոփոխություններ</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>Դիտել փոփոխությունները</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>Ատրիբուտի փոփոխություններ</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>Երկրաչափական փոփոխություններ</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>Խոշորացնել ընթացիկ</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>Խոշորացնել հին</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>Խոշորացնել երկուսին</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>Համեմատել քարտեզի վրա</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>Հին արժեք</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>Նոր արժեք</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>Ատրիբուտ</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>Վերջին փոփոխություն</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>Կարգավիճակ</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (հին)</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (նոր)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>Մակերես (հին)</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>Մակերես (նոր)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>Երկարություն (հին)</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>Երկարություն (նոր)</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>Մակերեսի փոփոխություն</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>Երկարության փոփոխություն</value>
+  </data>
   <data name="legend_filter_Clear" xml:space="preserve">
     <value>Clear Filters</value>
     <comment>clear filter button tooltip</comment>

@@ -70,4 +70,67 @@
   <data name="common_emailVerification" xml:space="preserve">
     <value>ای میل کی تصدیق کریں</value>
   </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>فیچر تبدیلیاں</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>تبدیلیاں دیکھیں</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>صفات کی تبدیلیاں</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>ہندسی تبدیلیاں</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>موجودہ پر زوم کریں</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>پرانی پر زوم کریں</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>دونوں پر زوم کریں</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>نقشے پر موازنہ کریں</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>پرانی قیمت</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>نئی قیمت</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>صفات</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>آخری تبدیلی</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>حیثیت</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (پرانی)</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (نئی)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>رقبہ (پرانی)</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>رقبہ (نئی)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>لمبائی (پرانی)</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>لمبائی (نئی)</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>رقبے کی تبدیلی</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>لمبائی کی تبدیلی</value>
+  </data>
 </root>

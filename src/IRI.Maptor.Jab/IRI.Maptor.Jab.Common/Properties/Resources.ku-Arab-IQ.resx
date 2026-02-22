@@ -850,6 +850,69 @@
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>لەبەربکەرەوە</value>
   </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>گۆڕانکارییەکانی تایبەتمەندی</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>گۆڕانکارییەکان ببینە</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>گۆڕانکارییەکانی تایبەتمەندی</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>گۆڕانکارییەکانی ئەندازە</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>زۆم بۆ ئێستا</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>زۆم بۆ کۆن</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>زۆم بۆ هەردووکیان</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>بەراورد لەسەر نەخشە</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>نرخە کۆنەکە</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>نرخە نوێیەکە</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>تایبەتمەندی</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>دوایین گۆڕانکاری</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>دۆخ</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (کۆن)</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (نوێ)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>ڕووبەر (کۆن)</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>ڕووبەر (نوێ)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>درێژی (کۆن)</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>درێژی (نوێ)</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>گۆڕانی ڕووبەر</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>گۆڕانی درێژی</value>
+  </data>
   <data name="legend_filter_Clear" xml:space="preserve">
     <value>فلتەرەکان پاک بکەرەوە</value>
     <comment>clear filter button tooltip</comment>

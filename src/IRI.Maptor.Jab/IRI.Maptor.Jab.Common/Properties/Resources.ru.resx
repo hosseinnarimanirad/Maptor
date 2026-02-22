@@ -850,6 +850,69 @@
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>
   </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>Изменения объекта</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>Просмотр изменений</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>Изменения атрибутов</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>Изменения геометрии</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>Масштаб к текущему</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>Масштаб к старому</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>Масштаб к обоим</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>Сравнить на карте</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>Старое значение</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>Новое значение</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>Атрибут</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>Последнее изменение</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (старый)</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (новый)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>Площадь (старая)</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>Площадь (новая)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>Длина (старая)</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>Длина (новая)</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>Изменение площади</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>Изменение длины</value>
+  </data>
   <data name="legend_filter_Clear" xml:space="preserve">
     <value>Clear Filters</value>
     <comment>clear filter button tooltip</comment>

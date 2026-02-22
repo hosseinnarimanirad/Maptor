@@ -70,4 +70,67 @@
   <data name="common_emailVerification" xml:space="preserve">
     <value>验证电子邮件</value>
   </data>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>要素变更</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>查看变更</value>
+  </data>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>属性变更</value>
+  </data>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>几何变更</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>缩放到当前</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>缩放到旧版</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>缩放到两者</value>
+  </data>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>在地图上比较</value>
+  </data>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>旧值</value>
+  </data>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>新值</value>
+  </data>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>属性</value>
+  </data>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>最后修改</value>
+  </data>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (旧)</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (新)</value>
+  </data>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>面积 (旧)</value>
+  </data>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>面积 (新)</value>
+  </data>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>长度 (旧)</value>
+  </data>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>长度 (新)</value>
+  </data>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>面积变化</value>
+  </data>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>长度变化</value>
+  </data>
 </root>
