@@ -64,6 +64,15 @@ public class LanguageSelectorViewModel : Notifier, IDisposable
             // Turkish
             new LanguageItem(new CultureInfo("tr-TR"), isEnabled: Enabled(disabled, "tr-TR")),
 
+            // Hindi
+            new LanguageItem(new CultureInfo("hi-IN"), isEnabled: Enabled(disabled, "hi-IN")),
+
+            // Chinese (Simplified)
+            new LanguageItem(new CultureInfo("zh-CN"), isEnabled: Enabled(disabled, "zh-CN")),
+
+            // Urdu
+            new LanguageItem(new CultureInfo("ur-PK"), isEnabled: Enabled(disabled, "ur-PK")),
+
         };
 
         _selectedLanguage = GetInitialSelection();

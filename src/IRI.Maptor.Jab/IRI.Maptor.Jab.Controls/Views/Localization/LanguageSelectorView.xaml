@@ -2,15 +2,12 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
-             FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}">
+             >
     <UserControl.Resources>
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
     </UserControl.Resources>
-    <Border Background="White" Padding="8"  
-            Effect="{DynamicResource MahApps.Effects.DropShadow}">
-        <!--BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
-            BorderThickness="1"
-            CornerRadius="4"-->
+    <Border Background="White" Padding="8" FlowDirection="LeftToRight"  
+            Effect="{DynamicResource MahApps.Effects.DropShadow}"> 
         <StackPanel>
             <TextBlock Text="{Binding [languageSelector_title], Source={StaticResource Localization}}" FontWeight="SemiBold" Margin="0,0,0,8"
                        FontSize="14"/>
@@ -46,13 +43,13 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type localization:LanguageItem}">
-                        <Grid>
+                        <Grid FlowDirection="LeftToRight">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Image Source="{Binding FlagUri}" Stretch="Uniform" Width="24" Height="18"
-                                   VerticalAlignment="Center" Margin="4,0,4,0"/>
+                                   VerticalAlignment="Top" Margin="4,0,4,0"/>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                 <TextBlock Text="{Binding EnglishName}" FontWeight="SemiBold" FontSize="12" FlowDirection="LeftToRight"/>
                                 <TextBlock Text="{Binding NativeName}" FontSize="11" Foreground="Gray"
