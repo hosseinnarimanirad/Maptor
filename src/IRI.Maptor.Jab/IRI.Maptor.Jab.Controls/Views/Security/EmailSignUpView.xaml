@@ -11,61 +11,12 @@
             xmlns:i1="http://schemas.microsoft.com/xaml/behaviors" 
             xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" x:Name="root">
     <local:SecurityInputUserControl.Resources>
-        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-        <Style x:Key="myErrorTemplate" TargetType="Control">
-            <Setter Property="Validation.ErrorTemplate">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <DockPanel LastChildFill="True">
-                            <Ellipse DockPanel.Dock="Right" ToolTip="{Binding ElementName=myControl,
-                                                Path=AdornedElement.(Validation.Errors)[0].ErrorContent}"
-                                                 Width="45" Height="45" Margin="-55,0,0,0" StrokeThickness="1" Fill="Red" >
-                                <Ellipse.Stroke>
-                                    <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
-                                        <GradientStop Color="#FFFA0404" Offset="0"/>
-                                        <GradientStop Color="#FFC9C7C7" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Ellipse.Stroke>
-                                <Ellipse.Triggers>
-                                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                                        <BeginStoryboard Storyboard="{StaticResource FlashErrorIcon}"/>
-                                    </EventTrigger>
-                                </Ellipse.Triggers>
-                            </Ellipse>
-                            <TextBlock DockPanel.Dock="Right" ToolTip="{Binding ElementName=myControl,
-                                                Path=AdornedElement.(Validation.Errors)[0].ErrorContent}" Foreground="White" FontSize="11pt"
-                                                Margin="-15,5,0,0" FontWeight="Bold">
-                                <TextBlock.Triggers>
-                                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                                        <BeginStoryboard Storyboard="{StaticResource FlashErrorIcon}"/>
-                                    </EventTrigger>
-                                </TextBlock.Triggers>
-                            </TextBlock>
-                            <Border BorderBrush="Red" BorderThickness="1">
-                                <AdornedElementPlaceholder Name="myControl"/>
-                            </Border>
-                        </DockPanel>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="true">
-                    <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="borderGroup" TargetType="Border">
-            <Setter Property="BorderBrush" Value="{Binding ElementName=root, Path=InputBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="{Binding ElementName=root, Path=InputBorderThickness}"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Width" Value="300"/>
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="Margin" Value="4"/>
-            <Setter Property="CornerRadius" Value="5"/>
-            <Setter Property="Height" Value="39"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/SecurityInputStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        </ResourceDictionary>
     </local:SecurityInputUserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -82,10 +33,9 @@
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <iconPacks:PackIconModern Kind="EmailMinimal" Width="24" Foreground="Gray" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <TextBox Grid.Column="1" mahApp:TextBoxHelper.Watermark="{Binding [common_email], Source={StaticResource Localization}}" FontFamily="{StaticResource iranSans}" BorderThickness="0"
-                                    MinHeight="35"  FontSize="15" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="2"
-                                    TextAlignment="Center" HorizontalContentAlignment="Center" FlowDirection="LeftToRight">
+                <iconPacks:PackIconMaterial Kind="Email" Style="{StaticResource securityIconMaterial}"/>
+                <TextBox Grid.Column="1" Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight"
+                         mahApp:TextBoxHelper.Watermark="{Binding [common_email], Source={StaticResource Localization}}">
                     <i1:Interaction.Triggers>
                         <i1:EventTrigger EventName="LostFocus">
                             <i1:InvokeCommandAction  Command="{Binding ValidateUserNameOrEmailCommand}" CommandParameter="{Binding ElementName=root}"/>
@@ -108,20 +58,8 @@
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions> 
-                <iconPacks:PackIconModern Kind="Lock" Width="24" Foreground="Gray" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <PasswordBox Grid.Column="1" mahApp:TextBoxHelper.Watermark="{Binding [common_password], Source={StaticResource Localization}}" FontFamily="{StaticResource iranSans}" BorderThickness="0"
-                                        MinHeight="35" x:Name="key" FontSize="15" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="2"    
-                                        HorizontalContentAlignment="Center" mahApp:PasswordBoxHelper.CapsLockWarningToolTip="{Binding [common_capsLockWarning], Source={StaticResource Localization}}">
-                    <mahApp:PasswordBoxHelper.RevealButtonContent>
-                        <Button/>
-                    </mahApp:PasswordBoxHelper.RevealButtonContent>
-                    <mahApp:PasswordBoxHelper.RevealButtonContentTemplate>
-                        <DataTemplate>
-                            <Button Background="Red" Height="30" Width="30"/>
-                        </DataTemplate>
-                    </mahApp:PasswordBoxHelper.RevealButtonContentTemplate>
-
-                </PasswordBox>
+                <iconPacks:PackIconPhosphorIcons Kind="PasswordFill" Style="{StaticResource securityIconPhosphor}"/>
+                <PasswordBox Grid.Column="1" Style="{StaticResource securityPasswordBoxBase}" x:Name="key" mahApp:TextBoxHelper.Watermark="{Binding [common_password], Source={StaticResource Localization}}"/>
             </Grid>
         </Border>
 
@@ -134,24 +72,12 @@
                 </Grid.ColumnDefinitions>
                 <Viewbox Width="24" HorizontalAlignment="Center">
                     <StackPanel Grid.Column="0">
-                        <iconPacks:PackIconModern Kind="Lock" Width="24" Foreground="Gray" Margin="4,4,4,0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <iconPacks:PackIconPhosphorIcons Kind="PasswordFill" Style="{StaticResource securityIconPhosphorConfirmRow}"/>
                         <TextBlock Text="{Binding [common_confirm], Source={StaticResource Localization}}" FontSize="14" FontFamily="{StaticResource iranSans}" VerticalAlignment="Bottom" HorizontalAlignment="Center"
                                Margin="0,0,0,0" Foreground="Gray"/>
                     </StackPanel>
                 </Viewbox>
-                <PasswordBox Grid.Column="1" mahApp:TextBoxHelper.Watermark="{Binding [common_confirmPassword], Source={StaticResource Localization}}" FontFamily="{StaticResource iranSans}" BorderThickness="0"
-                                        MinHeight="35" x:Name="confirmPassword" FontSize="15" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="2"    
-                                        HorizontalContentAlignment="Center" mahApp:PasswordBoxHelper.CapsLockWarningToolTip="{Binding [common_capsLockWarning], Source={StaticResource Localization}}">
-                    <mahApp:PasswordBoxHelper.RevealButtonContent>
-                        <Button/>
-                    </mahApp:PasswordBoxHelper.RevealButtonContent>
-                    <mahApp:PasswordBoxHelper.RevealButtonContentTemplate>
-                        <DataTemplate>
-                            <Button Background="Red" Height="30" Width="30"/>
-                        </DataTemplate>
-                    </mahApp:PasswordBoxHelper.RevealButtonContentTemplate>
-
-                </PasswordBox>
+                <PasswordBox Grid.Column="1" Style="{StaticResource securityPasswordBoxBase}" x:Name="confirmPassword" mahApp:TextBoxHelper.Watermark="{Binding [common_confirmPassword], Source={StaticResource Localization}}"/>
             </Grid>
         </Border>
 
