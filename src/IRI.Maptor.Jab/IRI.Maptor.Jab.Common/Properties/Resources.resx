@@ -411,6 +411,18 @@
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>Caps Lock is on</value>
   </data>
+  <data name="common_login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="common_register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="common_forgetPassword" xml:space="preserve">
+    <value>Forgot password</value>
+  </data>
+  <data name="common_emailVerification" xml:space="preserve">
+    <value>Verify email</value>
+  </data>
   <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
     <value>Enter your username and password.</value>
   </data>

@@ -862,4 +862,97 @@
     <value>Search Layer</value>
     <comment>watermark displayed on the search layer textbox</comment>
   </data>
+  <data name="languageSelector_title" xml:space="preserve">
+    <value>Լեզու</value>
+  </data>
+  <data name="common_cancel" xml:space="preserve">
+    <value>Չեղարկել</value>
+  </data>
+  <data name="common_save" xml:space="preserve">
+    <value>Պահպանել</value>
+  </data>
+  <data name="common_confirm" xml:space="preserve">
+    <value>Հաստատել</value>
+  </data>
+  <data name="common_new" xml:space="preserve">
+    <value>Նոր</value>
+  </data>
+  <data name="common_old" xml:space="preserve">
+    <value>Հին</value>
+  </data>
+  <data name="common_username" xml:space="preserve">
+    <value>Օգտանուն</value>
+  </data>
+  <data name="common_password" xml:space="preserve">
+    <value>Գաղտնաբառ</value>
+  </data>
+  <data name="common_confirmPassword" xml:space="preserve">
+    <value>Հաստատել գաղտնաբառը</value>
+  </data>
+  <data name="common_newPassword" xml:space="preserve">
+    <value>Նոր գաղտնաբառ</value>
+  </data>
+  <data name="common_email" xml:space="preserve">
+    <value>Էլ. փոստ</value>
+  </data>
+  <data name="common_capsLockWarning" xml:space="preserve">
+    <value>Caps Lock միացված է</value>
+  </data>
+  <data name="common_login" xml:space="preserve">
+    <value>Մուտք</value>
+  </data>
+  <data name="common_register" xml:space="preserve">
+    <value>Գրանցում</value>
+  </data>
+  <data name="common_forgetPassword" xml:space="preserve">
+    <value>Մոռացել եմ գաղտնաբառը</value>
+  </data>
+  <data name="common_emailVerification" xml:space="preserve">
+    <value>Հաստատել էլ. փոստը</value>
+  </data>
+  <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
+    <value>Մուտքագրեք ձեր օգտանունը և գաղտնաբառը:</value>
+  </data>
+  <data name="dialog_userSignUp_createUser" xml:space="preserve">
+    <value>Ստեղծել օգտատեր</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>կամ</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>Մուտք Google-ով</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>Գրանցվել Google-ով</value>
+  </data>
+  <data name="dialog_changePassword_enterPassword" xml:space="preserve">
+    <value>Մուտքագրեք ցանկալի գաղտնաբառը:</value>
+  </data>
+  <data name="dialog_changePassword_title" xml:space="preserve">
+    <value>Փոխել գաղտնաբառը</value>
+  </data>
+  <data name="dialog_themeSelection_title" xml:space="preserve">
+    <value>Ընտրել ֆոնի գույնը</value>
+  </data>
+  <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
+    <value>Արտաքին տեսքի կարգավորումներ</value>
+  </data>
+  <data name="manageAccount_newUsername" xml:space="preserve">
+    <value>Նոր օգտանուն</value>
+  </data>
+  <data name="manageAccount_newPassword" xml:space="preserve">
+    <value>Նոր գաղտնաբառ</value>
+  </data>
+  <data name="manageAccount_logOut" xml:space="preserve">
+    <value>Դուրս գալ</value>
+  </data>
+  <data name="manageAccount_changePassword" xml:space="preserve">
+    <value>Փոխել գաղտնաբառը</value>
+  </data>
+  <data name="manageAccount_manageUsers" xml:space="preserve">
+    <value>Կառավարել օգտատերերին</value>
+  </data>
+  <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
+    <value>Նոր օգտատեր</value>
+  </data>
 </root>

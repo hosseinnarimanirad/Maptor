@@ -410,6 +410,18 @@
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>کلید caps lock فعال است</value>
   </data>
+  <data name="common_login" xml:space="preserve">
+    <value>ورود</value>
+  </data>
+  <data name="common_register" xml:space="preserve">
+    <value>ثبت نام</value>
+  </data>
+  <data name="common_forgetPassword" xml:space="preserve">
+    <value>فراموشی رمز عبور</value>
+  </data>
+  <data name="common_emailVerification" xml:space="preserve">
+    <value>تایید آدرس ایمیل</value>
+  </data>
   <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
     <value>نام کاربری و رمز عبور خود را وارد کنید.</value>
   </data>

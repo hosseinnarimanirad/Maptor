@@ -862,4 +862,97 @@
     <value>Search Layer</value>
     <comment>watermark displayed on the search layer textbox</comment>
   </data>
+  <data name="languageSelector_title" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="common_cancel" xml:space="preserve">
+    <value>Ləğv et</value>
+  </data>
+  <data name="common_save" xml:space="preserve">
+    <value>Saxla</value>
+  </data>
+  <data name="common_confirm" xml:space="preserve">
+    <value>Təsdiq et</value>
+  </data>
+  <data name="common_new" xml:space="preserve">
+    <value>Yeni</value>
+  </data>
+  <data name="common_old" xml:space="preserve">
+    <value>Köhnə</value>
+  </data>
+  <data name="common_username" xml:space="preserve">
+    <value>İstifadəçi adı</value>
+  </data>
+  <data name="common_password" xml:space="preserve">
+    <value>Şifrə</value>
+  </data>
+  <data name="common_confirmPassword" xml:space="preserve">
+    <value>Şifrəni təsdiq et</value>
+  </data>
+  <data name="common_newPassword" xml:space="preserve">
+    <value>Yeni şifrə</value>
+  </data>
+  <data name="common_email" xml:space="preserve">
+    <value>E-poçt</value>
+  </data>
+  <data name="common_capsLockWarning" xml:space="preserve">
+    <value>Caps Lock aktivdir</value>
+  </data>
+  <data name="common_login" xml:space="preserve">
+    <value>Daxil ol</value>
+  </data>
+  <data name="common_register" xml:space="preserve">
+    <value>Qeydiyyat</value>
+  </data>
+  <data name="common_forgetPassword" xml:space="preserve">
+    <value>Şifrəni unutdum</value>
+  </data>
+  <data name="common_emailVerification" xml:space="preserve">
+    <value>E-poçtu təsdiq et</value>
+  </data>
+  <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
+    <value>İstifadəçi adı və şifrəni daxil edin.</value>
+  </data>
+  <data name="dialog_userSignUp_createUser" xml:space="preserve">
+    <value>İstifadəçi yarat</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>və ya</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>Google ilə daxil ol</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>Google ilə qeydiyyat</value>
+  </data>
+  <data name="dialog_changePassword_enterPassword" xml:space="preserve">
+    <value>İstədiyiniz şifrəni daxil edin.</value>
+  </data>
+  <data name="dialog_changePassword_title" xml:space="preserve">
+    <value>Şifrəni dəyiş</value>
+  </data>
+  <data name="dialog_themeSelection_title" xml:space="preserve">
+    <value>Arxa plan rəngini seçin</value>
+  </data>
+  <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
+    <value>Görünüş parametrləri</value>
+  </data>
+  <data name="manageAccount_newUsername" xml:space="preserve">
+    <value>Yeni istifadəçi adı</value>
+  </data>
+  <data name="manageAccount_newPassword" xml:space="preserve">
+    <value>Yeni şifrə</value>
+  </data>
+  <data name="manageAccount_logOut" xml:space="preserve">
+    <value>Çıxış</value>
+  </data>
+  <data name="manageAccount_changePassword" xml:space="preserve">
+    <value>Şifrəni dəyiş</value>
+  </data>
+  <data name="manageAccount_manageUsers" xml:space="preserve">
+    <value>İstifadəçiləri idarə et</value>
+  </data>
+  <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
+    <value>Yeni istifadəçi</value>
+  </data>
 </root>

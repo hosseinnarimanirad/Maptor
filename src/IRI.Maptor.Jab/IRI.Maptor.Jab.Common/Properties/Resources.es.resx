@@ -862,4 +862,97 @@
     <value>Search Layer</value>
     <comment>watermark displayed on the search layer textbox</comment>
   </data>
+  <data name="languageSelector_title" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="common_cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="common_save" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="common_confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="common_new" xml:space="preserve">
+    <value>Nuevo</value>
+  </data>
+  <data name="common_old" xml:space="preserve">
+    <value>Viejo</value>
+  </data>
+  <data name="common_username" xml:space="preserve">
+    <value>Usuario</value>
+  </data>
+  <data name="common_password" xml:space="preserve">
+    <value>Contraseña</value>
+  </data>
+  <data name="common_confirmPassword" xml:space="preserve">
+    <value>Confirmar contraseña</value>
+  </data>
+  <data name="common_newPassword" xml:space="preserve">
+    <value>Nueva contraseña</value>
+  </data>
+  <data name="common_email" xml:space="preserve">
+    <value>Correo electrónico</value>
+  </data>
+  <data name="common_capsLockWarning" xml:space="preserve">
+    <value>Caps Lock activado</value>
+  </data>
+  <data name="common_login" xml:space="preserve">
+    <value>Iniciar sesión</value>
+  </data>
+  <data name="common_register" xml:space="preserve">
+    <value>Registrarse</value>
+  </data>
+  <data name="common_forgetPassword" xml:space="preserve">
+    <value>Olvidé mi contraseña</value>
+  </data>
+  <data name="common_emailVerification" xml:space="preserve">
+    <value>Verificar correo electrónico</value>
+  </data>
+  <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
+    <value>Introduzca su nombre de usuario y contraseña.</value>
+  </data>
+  <data name="dialog_userSignUp_createUser" xml:space="preserve">
+    <value>Crear usuario</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>o</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>Iniciar sesión con Google</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>Registrarse con Google</value>
+  </data>
+  <data name="dialog_changePassword_enterPassword" xml:space="preserve">
+    <value>Introduzca la contraseña deseada.</value>
+  </data>
+  <data name="dialog_changePassword_title" xml:space="preserve">
+    <value>Cambiar contraseña</value>
+  </data>
+  <data name="dialog_themeSelection_title" xml:space="preserve">
+    <value>Seleccionar color de fondo</value>
+  </data>
+  <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
+    <value>Configuración de apariencia</value>
+  </data>
+  <data name="manageAccount_newUsername" xml:space="preserve">
+    <value>Nuevo nombre de usuario</value>
+  </data>
+  <data name="manageAccount_newPassword" xml:space="preserve">
+    <value>Nueva contraseña</value>
+  </data>
+  <data name="manageAccount_logOut" xml:space="preserve">
+    <value>Cerrar sesión</value>
+  </data>
+  <data name="manageAccount_changePassword" xml:space="preserve">
+    <value>Cambiar contraseña</value>
+  </data>
+  <data name="manageAccount_manageUsers" xml:space="preserve">
+    <value>Administrar usuarios</value>
+  </data>
+  <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
+    <value>Nuevo usuario</value>
+  </data>
 </root>

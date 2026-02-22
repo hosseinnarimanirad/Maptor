@@ -29,7 +29,9 @@
             </Style>
         </ResourceDictionary>
     </userControl:NotifiableUserControl.Resources>
-    <Border BorderThickness="1" CornerRadius="3" Padding="8,1,1,1" FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}" MinWidth="460">
+    <Border BorderThickness="1" CornerRadius="3" Padding="8,1,1,1"
+            FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
+            MinWidth="460">
         <Border.Style>
             <Style TargetType="Border">
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>

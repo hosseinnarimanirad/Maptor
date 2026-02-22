@@ -862,4 +862,97 @@
     <value>گەڕان لە قەت</value>
     <comment>watermark displayed on the search layer textbox</comment>
   </data>
+  <data name="languageSelector_title" xml:space="preserve">
+    <value>زمان</value>
+  </data>
+  <data name="common_cancel" xml:space="preserve">
+    <value>هەڵوەشاندنەوە</value>
+  </data>
+  <data name="common_save" xml:space="preserve">
+    <value>پاشەکەوت</value>
+  </data>
+  <data name="common_confirm" xml:space="preserve">
+    <value>دڵنیاکردنەوە</value>
+  </data>
+  <data name="common_new" xml:space="preserve">
+    <value>نوێ</value>
+  </data>
+  <data name="common_old" xml:space="preserve">
+    <value>کۆن</value>
+  </data>
+  <data name="common_username" xml:space="preserve">
+    <value>ناوی بەکارهێنەر</value>
+  </data>
+  <data name="common_password" xml:space="preserve">
+    <value>وشەی نهێنی</value>
+  </data>
+  <data name="common_confirmPassword" xml:space="preserve">
+    <value>دڵنیاکردنەوەی وشەی نهێنی</value>
+  </data>
+  <data name="common_newPassword" xml:space="preserve">
+    <value>وشەی نهێنی نوێ</value>
+  </data>
+  <data name="common_email" xml:space="preserve">
+    <value>ئیمەیڵ</value>
+  </data>
+  <data name="common_capsLockWarning" xml:space="preserve">
+    <value>Caps Lock چالاکە</value>
+  </data>
+  <data name="common_login" xml:space="preserve">
+    <value>چوونەژوورەوە</value>
+  </data>
+  <data name="common_register" xml:space="preserve">
+    <value>تۆمارکردن</value>
+  </data>
+  <data name="common_forgetPassword" xml:space="preserve">
+    <value>وشەی نهێنیم لەبیرچووەتەوە</value>
+  </data>
+  <data name="common_emailVerification" xml:space="preserve">
+    <value>ئیمەیڵ پشتڕاست بکەرەوە</value>
+  </data>
+  <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
+    <value>ناوی بەکارهێنەر و وشەی نهێنیت بنووسە.</value>
+  </data>
+  <data name="dialog_userSignUp_createUser" xml:space="preserve">
+    <value>دروستکردنی بەکارهێنەر</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>یان</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>چوونەژوورەوە بە Google</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>تۆمارکردن بە Google</value>
+  </data>
+  <data name="dialog_changePassword_enterPassword" xml:space="preserve">
+    <value>وشەی نهێنی دڵخواز بنووسە.</value>
+  </data>
+  <data name="dialog_changePassword_title" xml:space="preserve">
+    <value>گۆڕینی وشەی نهێنی</value>
+  </data>
+  <data name="dialog_themeSelection_title" xml:space="preserve">
+    <value>هەڵبژاردنی ڕەنگی پاشبنەما</value>
+  </data>
+  <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
+    <value>ڕێکخستنەکانی ڕووکار</value>
+  </data>
+  <data name="manageAccount_newUsername" xml:space="preserve">
+    <value>ناوی بەکارهێنەری نوێ</value>
+  </data>
+  <data name="manageAccount_newPassword" xml:space="preserve">
+    <value>وشەی نهێنی نوێ</value>
+  </data>
+  <data name="manageAccount_logOut" xml:space="preserve">
+    <value>چوونەدەرەوە</value>
+  </data>
+  <data name="manageAccount_changePassword" xml:space="preserve">
+    <value>گۆڕینی وشەی نهێنی</value>
+  </data>
+  <data name="manageAccount_manageUsers" xml:space="preserve">
+    <value>بەڕێوەبردنی بەکارهێنەران</value>
+  </data>
+  <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
+    <value>بەکارهێنەری نوێ</value>
+  </data>
 </root>

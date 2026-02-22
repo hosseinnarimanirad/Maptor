@@ -862,4 +862,97 @@
     <value>Search Layer</value>
     <comment>watermark displayed on the search layer textbox</comment>
   </data>
+  <data name="languageSelector_title" xml:space="preserve">
+    <value>اللغة</value>
+  </data>
+  <data name="common_cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="common_save" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="common_confirm" xml:space="preserve">
+    <value>تأكيد</value>
+  </data>
+  <data name="common_new" xml:space="preserve">
+    <value>جديد</value>
+  </data>
+  <data name="common_old" xml:space="preserve">
+    <value>قديم</value>
+  </data>
+  <data name="common_username" xml:space="preserve">
+    <value>اسم المستخدم</value>
+  </data>
+  <data name="common_password" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+  <data name="common_confirmPassword" xml:space="preserve">
+    <value>تأكيد كلمة المرور</value>
+  </data>
+  <data name="common_newPassword" xml:space="preserve">
+    <value>كلمة مرور جديدة</value>
+  </data>
+  <data name="common_email" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+  <data name="common_capsLockWarning" xml:space="preserve">
+    <value>Caps Lock مفعل</value>
+  </data>
+  <data name="common_login" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+  <data name="common_register" xml:space="preserve">
+    <value>التسجيل</value>
+  </data>
+  <data name="common_forgetPassword" xml:space="preserve">
+    <value>نسيت كلمة المرور</value>
+  </data>
+  <data name="common_emailVerification" xml:space="preserve">
+    <value>التحقق من البريد الإلكتروني</value>
+  </data>
+  <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
+    <value>أدخل اسم المستخدم وكلمة المرور.</value>
+  </data>
+  <data name="dialog_userSignUp_createUser" xml:space="preserve">
+    <value>إنشاء مستخدم</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>أو</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>تسجيل الدخول بحساب Google</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>التسجيل بحساب Google</value>
+  </data>
+  <data name="dialog_changePassword_enterPassword" xml:space="preserve">
+    <value>أدخل كلمة المرور المطلوبة.</value>
+  </data>
+  <data name="dialog_changePassword_title" xml:space="preserve">
+    <value>تغيير كلمة المرور</value>
+  </data>
+  <data name="dialog_themeSelection_title" xml:space="preserve">
+    <value>اختر لون الخلفية</value>
+  </data>
+  <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
+    <value>إعدادات المظهر</value>
+  </data>
+  <data name="manageAccount_newUsername" xml:space="preserve">
+    <value>اسم مستخدم جديد</value>
+  </data>
+  <data name="manageAccount_newPassword" xml:space="preserve">
+    <value>كلمة مرور جديدة</value>
+  </data>
+  <data name="manageAccount_logOut" xml:space="preserve">
+    <value>تسجيل الخروج</value>
+  </data>
+  <data name="manageAccount_changePassword" xml:space="preserve">
+    <value>تغيير كلمة المرور</value>
+  </data>
+  <data name="manageAccount_manageUsers" xml:space="preserve">
+    <value>إدارة المستخدمين</value>
+  </data>
+  <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
+    <value>مستخدم جديد</value>
+  </data>
 </root>
