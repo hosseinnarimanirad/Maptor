@@ -111,13 +111,13 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
     public FeatureStatus Status { get; set; } = FeatureStatus.Unchanged;
 
     // old version of the current feature if it has been edited
-    public Feature<T>? OldFeature { get; set; }
+    public Feature<T>? OldVersion { get; set; }
 
     public DateTime? LastAddOrUpdate { get; set; }
 
     public void MarkAsRemoved()
     {
-        this.OldFeature = null;
+        this.OldVersion = null;
 
         this.LastAddOrUpdate = DateTime.UtcNow;
 
@@ -164,7 +164,7 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         // Preserve the first version only; do not overwrite OldFeature on subsequent edits.
         // This allows Undo to discard all unsaved edits and revert to the original state.
         if (this.Status == FeatureStatus.Unchanged)
-            this.OldFeature = this.Clone();
+            this.OldVersion = this.Clone();
 
         this.Attributes = attributes ?? GetEmptyDictionary();
 
@@ -183,7 +183,7 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         // This allows Undo to discard all unsaved edits and revert to the original state.
         if (this.Status == FeatureStatus.Unchanged)
         {
-            this.OldFeature = new Feature<T>(this.TheGeometry.Clone(), attributes ?? this.GetEmptyDictionary())
+            this.OldVersion = new Feature<T>(this.TheGeometry.Clone(), attributes ?? this.GetEmptyDictionary())
             {
                 Id = this.Id,
                 LabelAttribute = this.LabelAttribute
@@ -205,7 +205,7 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
             return false;
 
         if (this.Status == FeatureStatus.Unchanged)
-            this.OldFeature = this.Clone();
+            this.OldVersion = this.Clone();
 
         this.TheGeometry = newGeometry;
 
@@ -232,7 +232,7 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
     public void MarkAsSaved()
     {
         this.Status = FeatureStatus.Unchanged;
-        this.OldFeature = null;
+        this.OldVersion = null;
         this.LastAddOrUpdate = null;
     }
 

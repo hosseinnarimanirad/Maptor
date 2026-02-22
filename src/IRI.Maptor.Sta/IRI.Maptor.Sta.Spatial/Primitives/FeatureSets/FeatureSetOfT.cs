@@ -186,11 +186,11 @@ public class FeatureSet<T> where T : IPoint, new()
         if (feature is null)
             return;
 
-        if (feature.Status == FeatureStatus.Updated && feature.OldFeature != null)
+        if (feature.Status == FeatureStatus.Updated && feature.OldVersion != null)
         {
-            feature.UpdateGeometry(feature.OldFeature.TheGeometry);
+            feature.UpdateGeometry(feature.OldVersion.TheGeometry);
 
-            feature.UpdateAttributes(feature.OldFeature.Attributes);
+            feature.UpdateAttributes(feature.OldVersion.Attributes);
         }
         else if (feature.Status == FeatureStatus.Removed)
         {

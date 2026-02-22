@@ -73,7 +73,7 @@ public class SelectedLayer : Notifier
             if (!IsSingleValueHighlighted || HighlightedFeatures?.FirstOrDefault() is not Feature<Point> feature)
                 return false;
 
-            return feature.Status == FeatureStatus.Updated && feature.OldFeature != null ||
+            return feature.Status == FeatureStatus.Updated && feature.OldVersion != null ||
                    feature.Status == FeatureStatus.New ||
                    feature.Status == FeatureStatus.Removed;
         }
@@ -289,7 +289,7 @@ public class SelectedLayer : Notifier
         if (feature is null)
             return;
 
-        if (feature.Status == FeatureStatus.Updated && feature.OldFeature != null)
+        if (feature.Status == FeatureStatus.Updated && feature.OldVersion != null)
         {
             dataSource.UndoChanges(feature);
 
