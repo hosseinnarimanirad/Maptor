@@ -60,34 +60,27 @@
   </resheader>
   <data name="cmd_drawingLegendItem_boundary" xml:space="preserve">
     <value>Граница</value>
-    <comment>drawing layer</comment>
   </data>
   <data name="cmd_drawingLegendItem_breakIntoGeometries" xml:space="preserve">
     <value>Разбить на геометрии</value>
-    <comment>drawing layer</comment>
   </data>
   <data name="cmd_drawingLegendItem_breakIntoPoints" xml:space="preserve">
     <value>Разбить на точки</value>
-    <comment>drawing layer </comment>
   </data>
   <data name="cmd_drawingLegendItem_convexHull" xml:space="preserve">
     <value>Выпуклая оболочка</value>
-    <comment>drawing layer</comment>
   </data>
   <data name="cmd_drawingLegendItem_downloadRegionImages" xml:space="preserve">
     <value>Скачать изображения</value>
-    <comment>Drawing Layer download google, bing, etc images</comment>
   </data>
   <data name="cmd_drawingLegendItem_duplicateFeature" xml:space="preserve">
     <value>Дублировать объект</value>
-    <comment>drawing layer - create a clone from the feature</comment>
   </data>
   <data name="cmd_drawingLegendItem_edit" xml:space="preserve">
     <value>Редактировать</value>
   </data>
   <data name="cmd_drawingLegendItem_envelope" xml:space="preserve">
     <value>Огибающая</value>
-    <comment>drawing layer</comment>
   </data>
   <data name="cmd_drawingLegendItem_exportAsGeoJson" xml:space="preserve">
     <value>Экспорт в GeoJson</value>
@@ -100,7 +93,6 @@
   </data>
   <data name="cmd_drawingLegendItem_exteriorRing" xml:space="preserve">
     <value>Внешнее кольцо</value>
-    <comment>drawing layer</comment>
   </data>
   <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
     <value>Удалить объект</value>
@@ -140,6 +132,9 @@
   </data>
   <data name="cmd_general_drawPolyline" xml:space="preserve">
     <value>Рисовать линию</value>
+  </data>
+  <data name="cmd_general_drawRectangle" xml:space="preserve">
+    <value>Draw Rectangle</value>
   </data>
   <data name="cmd_general_fullExtent" xml:space="preserve">
     <value>Полный охват</value>
@@ -198,29 +193,32 @@
   <data name="cmd_legendItem_zoomToExtent" xml:space="preserve">
     <value>Масштаб к охвату</value>
   </data>
-  <data name="legendItem_PendingChanges_Added" xml:space="preserve">
-    <value>Added: </value>
+  <data name="cmd_legend_addCsv" xml:space="preserve">
+    <value>Add CSV</value>
   </data>
-  <data name="legendItem_PendingChanges_Deleted" xml:space="preserve">
-    <value>Deleted: </value>
-  </data>
-  <data name="legendItem_PendingChanges_Updated" xml:space="preserve">
-    <value>Updated: </value>
-  </data>
-  <data name="legendItem_PendingChanges_Save" xml:space="preserve">
-    <value>Save changes</value>
-  </data>
-  <data name="legendItem_PendingChanges_Undo" xml:space="preserve">
-    <value>Undo changes</value>
+  <data name="cmd_legend_addDxf" xml:space="preserve">
+    <value>Add DXF</value>
   </data>
   <data name="cmd_legend_addGeoJson" xml:space="preserve">
     <value>Add GeoJson</value>
+  </data>
+  <data name="cmd_legend_addKml" xml:space="preserve">
+    <value>Add KML</value>
+  </data>
+  <data name="cmd_legend_addKmz" xml:space="preserve">
+    <value>Add KMZ</value>
   </data>
   <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
     <value>Add lat/long</value>
   </data>
   <data name="cmd_legend_addShapefile" xml:space="preserve">
     <value>Add shapefile</value>
+  </data>
+  <data name="cmd_legend_addTsv" xml:space="preserve">
+    <value>Add TSV</value>
+  </data>
+  <data name="cmd_legend_importLayer" xml:space="preserve">
+    <value>Import layer</value>
   </data>
   <data name="cmd_legend_moveDown" xml:space="preserve">
     <value>Move down</value>
@@ -231,29 +229,128 @@
   <data name="cmd_legend_removeAll" xml:space="preserve">
     <value>Remove All</value>
   </data>
-  <data name="cmd_legend_importLayer" xml:space="preserve">
-    <value>Import layer</value>
+  <data name="common_cancel" xml:space="preserve">
+    <value>Отмена</value>
   </data>
-  <data name="cmd_legend_addKml" xml:space="preserve">
-    <value>Add KML</value>
+  <data name="common_capsLockWarning" xml:space="preserve">
+    <value>Caps Lock включён</value>
   </data>
-  <data name="cmd_legend_addKmz" xml:space="preserve">
-    <value>Add KMZ</value>
+  <data name="common_confirm" xml:space="preserve">
+    <value>Подтвердить</value>
   </data>
-  <data name="cmd_legend_addDxf" xml:space="preserve">
-    <value>Add DXF</value>
+  <data name="common_confirmPassword" xml:space="preserve">
+    <value>Подтвердить пароль</value>
   </data>
-  <data name="cmd_legend_addCsv" xml:space="preserve">
-    <value>Add CSV</value>
+  <data name="common_email" xml:space="preserve">
+    <value>Эл. почта</value>
   </data>
-  <data name="cmd_legend_addTsv" xml:space="preserve">
-    <value>Add TSV</value>
+  <data name="common_emailVerification" xml:space="preserve">
+    <value>Подтвердить email</value>
   </data>
-  <data name="featureTable_rowHeader_hour" xml:space="preserve">
-    <value>hour</value>
+  <data name="common_forgetPassword" xml:space="preserve">
+    <value>Забыли пароль</value>
   </data>
-  <data name="featureTable_rowHeader_minute" xml:space="preserve">
-    <value>minute</value>
+  <data name="common_login" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="common_new" xml:space="preserve">
+    <value>Новый</value>
+  </data>
+  <data name="common_newPassword" xml:space="preserve">
+    <value>Новый пароль</value>
+  </data>
+  <data name="common_old" xml:space="preserve">
+    <value>Старый</value>
+  </data>
+  <data name="common_password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="common_register" xml:space="preserve">
+    <value>Регистрация</value>
+  </data>
+  <data name="common_save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="common_username" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="dialog_changePassword_enterPassword" xml:space="preserve">
+    <value>Введите желаемый пароль.</value>
+  </data>
+  <data name="dialog_changePassword_title" xml:space="preserve">
+    <value>Изменить пароль</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>или</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>Войти через Google</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>Регистрация через Google</value>
+  </data>
+  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
+    <value>Add Part</value>
+  </data>
+  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
+    <value>Add Point</value>
+  </data>
+  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
+    <value>Add Polygon</value>
+  </data>
+  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
+    <value>Basic Information</value>
+  </data>
+  <data name="dialog_geometryDetails_cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="dialog_geometryDetails_copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="dialog_geometryDetails_deletePart" xml:space="preserve">
+    <value>Delete Part</value>
+  </data>
+  <data name="dialog_geometryDetails_dimension" xml:space="preserve">
+    <value>Dimension</value>
+  </data>
+  <data name="dialog_geometryDetails_editCoordinates" xml:space="preserve">
+    <value>Edit Coordinates</value>
+  </data>
+  <data name="dialog_geometryDetails_export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="dialog_geometryDetails_exteriorRing" xml:space="preserve">
+    <value>Exterior Ring</value>
+  </data>
+  <data name="dialog_geometryDetails_format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="dialog_geometryDetails_geometryType" xml:space="preserve">
+    <value>Geometry Type</value>
+  </data>
+  <data name="dialog_geometryDetails_interiorRings" xml:space="preserve">
+    <value>Interior Rings</value>
+  </data>
+  <data name="dialog_geometryDetails_numberOfGeometries" xml:space="preserve">
+    <value>Number of Geometries</value>
+  </data>
+  <data name="dialog_geometryDetails_numberOfPoints" xml:space="preserve">
+    <value>Number of Points</value>
+  </data>
+  <data name="dialog_geometryDetails_points" xml:space="preserve">
+    <value>Points</value>
+  </data>
+  <data name="dialog_geometryDetails_save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="dialog_geometryDetails_title" xml:space="preserve">
+    <value>Geometry Details</value>
+  </data>
+  <data name="dialog_geometryDetails_utmZone" xml:space="preserve">
+    <value>UTM Zone</value>
+  </data>
+  <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
+    <value>Zoom to Point</value>
   </data>
   <data name="dialog_goto_panTo" xml:space="preserve">
     <value>Pan to</value>
@@ -263,6 +360,15 @@
   </data>
   <data name="dialog_goto_zoomTo" xml:space="preserve">
     <value>Zoom to</value>
+  </data>
+  <data name="dialog_openfile_title" xml:space="preserve">
+    <value>Выбрать файл</value>
+  </data>
+  <data name="dialog_savefile_title" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="dialog_showMessage_title" xml:space="preserve">
+    <value>Сообщение</value>
   </data>
   <data name="dialog_symbology_fill" xml:space="preserve">
     <value>Fill</value>
@@ -276,69 +382,107 @@
   <data name="dialog_symbology_title" xml:space="preserve">
     <value>Layer Symbology</value>
   </data>
-  <data name="dialog_geometryDetails_title" xml:space="preserve">
-    <value>Geometry Details</value>
-    <comment>Title for the geometry details dialog window</comment>
+  <data name="dialog_themeSelection_title" xml:space="preserve">
+    <value>Выбрать цвет фона</value>
   </data>
-  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
-    <value>Basic Information</value>
+  <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
+    <value>Настройки внешнего вида</value>
   </data>
-  <data name="dialog_geometryDetails_geometryType" xml:space="preserve">
-    <value>Geometry Type</value>
+  <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
+    <value>Новый пользователь</value>
   </data>
-  <data name="dialog_geometryDetails_dimension" xml:space="preserve">
-    <value>Dimension</value>
+  <data name="dialog_userSignUp_createUser" xml:space="preserve">
+    <value>Создать пользователя</value>
   </data>
-  <data name="dialog_geometryDetails_numberOfPoints" xml:space="preserve">
-    <value>Number of Points</value>
+  <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
+    <value>Введите имя пользователя и пароль.</value>
   </data>
-  <data name="dialog_geometryDetails_numberOfGeometries" xml:space="preserve">
-    <value>Number of Geometries</value>
+  <data name="featureChanges_areaChange" xml:space="preserve">
+    <value>Изменение площади</value>
   </data>
-  <data name="dialog_geometryDetails_utmZone" xml:space="preserve">
-    <value>UTM Zone</value>
+  <data name="featureChanges_areaNew" xml:space="preserve">
+    <value>Площадь (новая)</value>
   </data>
-  <data name="dialog_geometryDetails_points" xml:space="preserve">
-    <value>Points</value>
+  <data name="featureChanges_areaOld" xml:space="preserve">
+    <value>Площадь (старая)</value>
   </data>
-  <data name="dialog_geometryDetails_editCoordinates" xml:space="preserve">
-    <value>Edit Coordinates</value>
+  <data name="featureChanges_attributeChanges" xml:space="preserve">
+    <value>Изменения атрибутов</value>
   </data>
-  <data name="dialog_geometryDetails_format" xml:space="preserve">
-    <value>Format</value>
+  <data name="featureChanges_attributeName" xml:space="preserve">
+    <value>Атрибут</value>
   </data>
-  <data name="dialog_geometryDetails_export" xml:space="preserve">
-    <value>Export</value>
+  <data name="featureChanges_compareOnMap" xml:space="preserve">
+    <value>Сравнить на карте</value>
   </data>
-  <data name="dialog_geometryDetails_save" xml:space="preserve">
-    <value>Save</value>
+  <data name="featureChanges_geometryChanges" xml:space="preserve">
+    <value>Изменения геометрии</value>
   </data>
-  <data name="dialog_geometryDetails_cancel" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="featureChanges_id" xml:space="preserve">
+    <value>Id:</value>
   </data>
-  <data name="dialog_geometryDetails_exteriorRing" xml:space="preserve">
-    <value>Exterior Ring</value>
+  <data name="featureChanges_lastModified" xml:space="preserve">
+    <value>Последнее изменение</value>
   </data>
-  <data name="dialog_geometryDetails_interiorRings" xml:space="preserve">
-    <value>Interior Rings</value>
+  <data name="featureChanges_lengthChange" xml:space="preserve">
+    <value>Изменение длины</value>
   </data>
-  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
-    <value>Add Part</value>
+  <data name="featureChanges_lengthNew" xml:space="preserve">
+    <value>Длина (новая)</value>
   </data>
-  <data name="dialog_geometryDetails_deletePart" xml:space="preserve">
-    <value>Delete Part</value>
+  <data name="featureChanges_lengthOld" xml:space="preserve">
+    <value>Длина (старая)</value>
   </data>
-  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
-    <value>Add Point</value>
+  <data name="featureChanges_newValue" xml:space="preserve">
+    <value>Новое значение</value>
   </data>
-  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
-    <value>Add Polygon</value>
+  <data name="featureChanges_oldValue" xml:space="preserve">
+    <value>Старое значение</value>
   </data>
-  <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
-    <value>Zoom to Point</value>
+  <data name="featureChanges_status" xml:space="preserve">
+    <value>Статус</value>
   </data>
-  <data name="geometryDetails_polygon_title" xml:space="preserve">
-    <value>Polygon</value>
+  <data name="featureChanges_title" xml:space="preserve">
+    <value>Изменения объекта</value>
+  </data>
+  <data name="featureChanges_viewChanges" xml:space="preserve">
+    <value>Просмотр изменений</value>
+  </data>
+  <data name="featureChanges_wktNew" xml:space="preserve">
+    <value>WGS84 WKT (новый)</value>
+  </data>
+  <data name="featureChanges_wktOld" xml:space="preserve">
+    <value>WGS84 WKT (старый)</value>
+  </data>
+  <data name="featureChanges_zoomToBoth" xml:space="preserve">
+    <value>Масштаб к обоим</value>
+  </data>
+  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
+    <value>Масштаб к текущему</value>
+  </data>
+  <data name="featureChanges_zoomToOld" xml:space="preserve">
+    <value>Масштаб к старому</value>
+  </data>
+  <data name="featureTable_addNew" xml:space="preserve">
+    <value>Add new</value>
+  </data>
+  <data name="featureTable_delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="featureTable_editGeometry" xml:space="preserve">
+    <value>Edit geometry</value>
+  </data>
+  <data name="featureTable_rowHeader_hour" xml:space="preserve">
+    <value>hour</value>
+  </data>
+  <data name="featureTable_rowHeader_minute" xml:space="preserve">
+    <value>minute</value>
+  </data>
+  <data name="featureTable_saveChanges" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="featureTable_undo" xml:space="preserve">
+    <value>Undo</value>
   </data>
   <data name="geometryDetails_coordinateGrid_azimuthToNext" xml:space="preserve">
     <value>Azimuth To Next</value>
@@ -445,6 +589,9 @@
   <data name="geometryDetails_pointCounter_format" xml:space="preserve">
     <value>Point {0} of {1} (Page {2} of {3})</value>
   </data>
+  <data name="geometryDetails_polygon_title" xml:space="preserve">
+    <value>Polygon</value>
+  </data>
   <data name="geometryDetails_polygons_format" xml:space="preserve">
     <value>Polygon {0} of {1}</value>
   </data>
@@ -456,14 +603,6 @@
   </data>
   <data name="geometryDetails_polygons_valid" xml:space="preserve">
     <value>✓ Valid Polygon</value>
-  </data>
-  <data name="dialog_savefile_title" xml:space="preserve">
-    <value>Сохранить</value>
-    <comment>Default title for save file dialogs</comment>
-  </data>
-  <data name="dialog_openfile_title" xml:space="preserve">
-    <value>Выбрать файл</value>
-    <comment>Default title for open file dialogs</comment>
   </data>
   <data name="index_100k_title" xml:space="preserve">
     <value>Index 100k</value>
@@ -480,11 +619,11 @@
   <data name="index_25k_title" xml:space="preserve">
     <value>Index 25k</value>
   </data>
-  <data name="index_2kblocks_title" xml:space="preserve">
-    <value>Index 2000 Blocks</value>
-  </data>
   <data name="index_2kUtm_title" xml:space="preserve">
     <value>Index 2000</value>
+  </data>
+  <data name="index_2kblocks_title" xml:space="preserve">
+    <value>Index 2000 Blocks</value>
   </data>
   <data name="index_500UtmTitle" xml:space="preserve">
     <value>Index 500</value>
@@ -494,6 +633,24 @@
   </data>
   <data name="index_5k_title" xml:space="preserve">
     <value>Index 5k</value>
+  </data>
+  <data name="input_coordinateNote" xml:space="preserve">
+    <value>Note: Coordinates are in longitude and latitude format</value>
+  </data>
+  <data name="input_drawFeatureOnMap" xml:space="preserve">
+    <value>Draw feature on map</value>
+  </data>
+  <data name="input_geodetic" xml:space="preserve">
+    <value>Geodetic</value>
+  </data>
+  <data name="input_utm" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="input_utmZone" xml:space="preserve">
+    <value>UTM Zone:</value>
+  </data>
+  <data name="languageSelector_title" xml:space="preserve">
+    <value>Язык</value>
   </data>
   <data name="layer_geodesy1_title" xml:space="preserve">
     <value>Geodesy 1</value>
@@ -516,6 +673,99 @@
   <data name="layer_leveling3_title" xml:space="preserve">
     <value>Leveling 3</value>
   </data>
+  <data name="legendItem_PendingChanges_Added" xml:space="preserve">
+    <value>Added:</value>
+  </data>
+  <data name="legendItem_PendingChanges_Deleted" xml:space="preserve">
+    <value>Deleted:</value>
+  </data>
+  <data name="legendItem_PendingChanges_Save" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="legendItem_PendingChanges_Undo" xml:space="preserve">
+    <value>Undo changes</value>
+  </data>
+  <data name="legendItem_PendingChanges_Updated" xml:space="preserve">
+    <value>Updated:</value>
+  </data>
+  <data name="legend_clearAll" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="legend_filter_Clear" xml:space="preserve">
+    <value>Clear Filters</value>
+  </data>
+  <data name="legend_filter_filterByLayerType" xml:space="preserve">
+    <value>Filter By Layer Type</value>
+  </data>
+  <data name="legend_filter_searchLayerWatermark" xml:space="preserve">
+    <value>Search Layer</value>
+  </data>
+  <data name="legend_selectAll" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="manageAccount_changePassword" xml:space="preserve">
+    <value>Изменить пароль</value>
+  </data>
+  <data name="manageAccount_logOut" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
+  <data name="manageAccount_manageUsers" xml:space="preserve">
+    <value>Управление пользователями</value>
+  </data>
+  <data name="manageAccount_newPassword" xml:space="preserve">
+    <value>Новый пароль</value>
+  </data>
+  <data name="manageAccount_newUsername" xml:space="preserve">
+    <value>Новое имя пользователя</value>
+  </data>
+  <data name="mapInfo_area" xml:space="preserve">
+    <value>Area</value>
+  </data>
+  <data name="mapInfo_authalicSphereArea" xml:space="preserve">
+    <value>AuthalicSphereArea:</value>
+  </data>
+  <data name="mapInfo_ellipsoidalArea" xml:space="preserve">
+    <value>EllipsoidalArea:</value>
+  </data>
+  <data name="mapInfo_ellipsoidalLength" xml:space="preserve">
+    <value>EllipsoidalLength:</value>
+  </data>
+  <data name="mapInfo_euclideanAreaUtm" xml:space="preserve">
+    <value>EuclideanArea (UTM):</value>
+  </data>
+  <data name="mapInfo_euclideanLengthUtm" xml:space="preserve">
+    <value>EuclideanLengthInUtm:</value>
+  </data>
+  <data name="mapInfo_euclideanLengthUtmRefined" xml:space="preserve">
+    <value>EuclideanLengthInUtm_Refined:</value>
+  </data>
+  <data name="mapInfo_general" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="mapInfo_groundArea" xml:space="preserve">
+    <value>GroundArea:</value>
+  </data>
+  <data name="mapInfo_groundLength" xml:space="preserve">
+    <value>GroundLength:</value>
+  </data>
+  <data name="mapInfo_karneyArea" xml:space="preserve">
+    <value>KarneyArea:</value>
+  </data>
+  <data name="mapInfo_length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="mapInfo_meanHeight" xml:space="preserve">
+    <value>Mean Height</value>
+  </data>
+  <data name="mapInfo_scaleFactor" xml:space="preserve">
+    <value>Scale Factor:</value>
+  </data>
+  <data name="mapInfo_sphericalLength" xml:space="preserve">
+    <value>SphericalLength:</value>
+  </data>
+  <data name="mapLegendItem_layerTitle" xml:space="preserve">
+    <value>Title</value>
+  </data>
   <data name="mapPanel_currentPart_add" xml:space="preserve">
     <value>Add new part</value>
   </data>
@@ -526,7 +776,7 @@
     <value>Zoom to current part</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&apos;s coordinate</value>
+    <value>Copy current point&amp;amp;apos;s coordinate</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>Delete current point</value>
@@ -606,6 +856,201 @@
   <data name="ribbon_header_settings" xml:space="preserve">
     <value>Настройки</value>
   </data>
+  <data name="sldEditor_common_abstract" xml:space="preserve">
+    <value>Abstract:</value>
+  </data>
+  <data name="sldEditor_common_addLineSymbolizer" xml:space="preserve">
+    <value>Add Line Symbolizer</value>
+  </data>
+  <data name="sldEditor_common_addPointSymbolizer" xml:space="preserve">
+    <value>Add Point Symbolizer</value>
+  </data>
+  <data name="sldEditor_common_addPolygonSymbolizer" xml:space="preserve">
+    <value>Add Polygon Symbolizer</value>
+  </data>
+  <data name="sldEditor_common_addRule" xml:space="preserve">
+    <value>Add Rule</value>
+  </data>
+  <data name="sldEditor_common_addTextSymbolizer" xml:space="preserve">
+    <value>Add Text Symbolizer</value>
+  </data>
+  <data name="sldEditor_common_editorBanner" xml:space="preserve">
+    <value>OGC SLD 1.0.0 Editor</value>
+  </data>
+  <data name="sldEditor_common_editorTitle" xml:space="preserve">
+    <value>SLD Style Editor</value>
+  </data>
+  <data name="sldEditor_common_export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="sldEditor_common_exportToFile" xml:space="preserve">
+    <value>Export to File...</value>
+  </data>
+  <data name="sldEditor_common_exportTooltip" xml:space="preserve">
+    <value>Export SLD to File</value>
+  </data>
+  <data name="sldEditor_common_fillColor" xml:space="preserve">
+    <value>Fill Color:</value>
+  </data>
+  <data name="sldEditor_common_fillOpacity" xml:space="preserve">
+    <value>Fill Opacity:</value>
+  </data>
+  <data name="sldEditor_common_filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="sldEditor_common_general" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="sldEditor_common_geometryProperty" xml:space="preserve">
+    <value>Geometry Property:</value>
+  </data>
+  <data name="sldEditor_common_import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="sldEditor_common_importFromFile" xml:space="preserve">
+    <value>Import from File...</value>
+  </data>
+  <data name="sldEditor_common_importTooltip" xml:space="preserve">
+    <value>Import SLD from File</value>
+  </data>
+  <data name="sldEditor_common_layerName" xml:space="preserve">
+    <value>Layer Name:</value>
+  </data>
+  <data name="sldEditor_common_lineCap" xml:space="preserve">
+    <value>Line Cap:</value>
+  </data>
+  <data name="sldEditor_common_lineJoin" xml:space="preserve">
+    <value>Line Join:</value>
+  </data>
+  <data name="sldEditor_common_moveDown" xml:space="preserve">
+    <value>Move Down</value>
+  </data>
+  <data name="sldEditor_common_moveUp" xml:space="preserve">
+    <value>Move Up</value>
+  </data>
+  <data name="sldEditor_common_name" xml:space="preserve">
+    <value>Name:</value>
+  </data>
+  <data name="sldEditor_common_removeRule" xml:space="preserve">
+    <value>Remove Rule</value>
+  </data>
+  <data name="sldEditor_common_removeSymbolizer" xml:space="preserve">
+    <value>Remove Symbolizer</value>
+  </data>
+  <data name="sldEditor_common_ruleProperties" xml:space="preserve">
+    <value>Rule Properties</value>
+  </data>
+  <data name="sldEditor_common_rules" xml:space="preserve">
+    <value>Rules</value>
+  </data>
+  <data name="sldEditor_common_rulesLabel" xml:space="preserve">
+    <value>Rules:</value>
+  </data>
+  <data name="sldEditor_common_scaleRange" xml:space="preserve">
+    <value>Scale Range</value>
+  </data>
+  <data name="sldEditor_common_selected" xml:space="preserve">
+    <value>Selected:</value>
+  </data>
+  <data name="sldEditor_common_strokeColor" xml:space="preserve">
+    <value>Stroke Color:</value>
+  </data>
+  <data name="sldEditor_common_strokeOpacity" xml:space="preserve">
+    <value>Stroke Opacity:</value>
+  </data>
+  <data name="sldEditor_common_strokeWidth" xml:space="preserve">
+    <value>Stroke Width:</value>
+  </data>
+  <data name="sldEditor_common_styleInformation" xml:space="preserve">
+    <value>Style Information</value>
+  </data>
+  <data name="sldEditor_common_styleName" xml:space="preserve">
+    <value>Style Name:</value>
+  </data>
+  <data name="sldEditor_common_styleTitle" xml:space="preserve">
+    <value>Style Title:</value>
+  </data>
+  <data name="sldEditor_common_symbolizerProperties" xml:space="preserve">
+    <value>Symbolizer Properties</value>
+  </data>
+  <data name="sldEditor_common_symbolizers" xml:space="preserve">
+    <value>Symbolizers</value>
+  </data>
+  <data name="sldEditor_common_title" xml:space="preserve">
+    <value>Title:</value>
+  </data>
+  <data name="sldEditor_common_xmlPreview" xml:space="preserve">
+    <value>XML Preview</value>
+  </data>
+  <data name="sldEditor_common_xmlPreviewPlaceholder" xml:space="preserve">
+    <value>XML preview will be displayed here</value>
+  </data>
+  <data name="sldEditor_filter_enableFilter" xml:space="preserve">
+    <value>Enable Filter</value>
+  </data>
+  <data name="sldEditor_filter_filterExpression" xml:space="preserve">
+    <value>Filter Expression:</value>
+  </data>
+  <data name="sldEditor_filter_filterSettings" xml:space="preserve">
+    <value>Filter Settings</value>
+  </data>
+  <data name="sldEditor_filter_simplifiedViewNote" xml:space="preserve">
+    <value>Note: This is a simplified view. For complex filters, edit the XML directly or use a specialized filter builder.</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashArray" xml:space="preserve">
+    <value>Dash Array:</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashArrayWatermark" xml:space="preserve">
+    <value>e.g., 5 5 or 10 5 3 5</value>
+  </data>
+  <data name="sldEditor_pointSymbolizer_markType" xml:space="preserve">
+    <value>Mark Type:</value>
+  </data>
+  <data name="sldEditor_pointSymbolizer_rotation" xml:space="preserve">
+    <value>Rotation:</value>
+  </data>
+  <data name="sldEditor_pointSymbolizer_size" xml:space="preserve">
+    <value>Size:</value>
+  </data>
+  <data name="sldEditor_scaleRange_maxScale" xml:space="preserve">
+    <value>Max Scale:</value>
+  </data>
+  <data name="sldEditor_scaleRange_maxWatermark" xml:space="preserve">
+    <value>Optional - Leave empty for no maximum</value>
+  </data>
+  <data name="sldEditor_scaleRange_minScale" xml:space="preserve">
+    <value>Min Scale:</value>
+  </data>
+  <data name="sldEditor_scaleRange_minWatermark" xml:space="preserve">
+    <value>Optional - Leave empty for no minimum</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_enableHalo" xml:space="preserve">
+    <value>Enable Halo (Text Outline)</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontColor" xml:space="preserve">
+    <value>Font Color:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontFamily" xml:space="preserve">
+    <value>Font Family:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontSize" xml:space="preserve">
+    <value>Font Size:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontStyle" xml:space="preserve">
+    <value>Font Style:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontWeight" xml:space="preserve">
+    <value>Font Weight:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloColor" xml:space="preserve">
+    <value>Halo Color:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloRadius" xml:space="preserve">
+    <value>Halo Radius:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_labelProperty" xml:space="preserve">
+    <value>Label Property:</value>
+  </data>
   <data name="srs_ceaSubTitle" xml:space="preserve">
     <value>Cylindrical Equal Area</value>
   </data>
@@ -662,121 +1107,6 @@
   </data>
   <data name="srs_webMercatorTitle" xml:space="preserve">
     <value>Web Mercator</value>
-  </data>
-  <data name="tile_mapType_BlackWhite" xml:space="preserve">
-    <value>BlackWhite</value>
-    <comment>GoogleBlackWhite</comment>
-  </data>
-  <data name="tile_mapType_CleanGrey" xml:space="preserve">
-    <value>CleanGrey</value>
-    <comment>GoogleCleanGrey</comment>
-  </data>
-  <data name="tile_mapType_Comic" xml:space="preserve">
-    <value>Comic</value>
-    <comment>MapboxComic</comment>
-  </data>
-  <data name="tile_mapType_Dark" xml:space="preserve">
-    <value>Dark</value>
-    <comment>CartoDark</comment>
-  </data>
-  <data name="tile_mapType_HikeBike" xml:space="preserve">
-    <value>HikeBike</value>
-    <comment>OsmHikeBike</comment>
-  </data>
-  <data name="tile_mapType_Hybrid" xml:space="preserve">
-    <value>Hybrid</value>
-    <comment>GoogleHybrid, BingHybrid</comment>
-  </data>
-  <data name="tile_mapType_Light" xml:space="preserve">
-    <value>Light</value>
-    <comment>GoogleLight, CartoLight</comment>
-  </data>
-  <data name="tile_mapType_MapyTourist" xml:space="preserve">
-    <value>MapyTourist</value>
-    <comment>MapyTourist</comment>
-  </data>
-  <data name="tile_mapType_MapyWinter" xml:space="preserve">
-    <value>MapyWinter</value>
-    <comment>MapyWinter</comment>
-  </data>
-  <data name="tile_mapType_Nature" xml:space="preserve">
-    <value>Nature</value>
-    <comment>GoogleNature</comment>
-  </data>
-  <data name="tile_mapType_NeutralBlue" xml:space="preserve">
-    <value>NeutralBlue</value>
-    <comment>GoogleNeutralBlue</comment>
-  </data>
-  <data name="tile_mapType_RoadMap" xml:space="preserve">
-    <value>RoadMap</value>
-    <comment>GoogleRoadMap</comment>
-  </data>
-  <data name="tile_mapType_Satellite" xml:space="preserve">
-    <value>Satellite</value>
-    <comment>GoogleSatellite, BingSatellite, MapboxSatellite</comment>
-  </data>
-  <data name="tile_mapType_Street" xml:space="preserve">
-    <value>Street</value>
-    <comment>BingStreet, OpenStreetMap, WazeStreet</comment>
-  </data>
-  <data name="tile_mapType_Terrain" xml:space="preserve">
-    <value>Terrain</value>
-    <comment>GoogleTerrain</comment>
-  </data>
-  <data name="tile_mapType_Topo" xml:space="preserve">
-    <value>Topo</value>
-    <comment>OpenTopoMap</comment>
-  </data>
-  <data name="tile_mapType_Traffic" xml:space="preserve">
-    <value>Traffic</value>
-    <comment>GoogleTraffic</comment>
-  </data>
-  <data name="tile_mapType_Watercolor" xml:space="preserve">
-    <value>Watercolor</value>
-    <comment>StamenWatercolor</comment>
-  </data>
-  <data name="tile_provider_bing" xml:space="preserve">
-    <value>BING</value>
-  </data>
-  <data name="tile_provider_carto" xml:space="preserve">
-    <value>CARTO</value>
-  </data>
-  <data name="tile_provider_google" xml:space="preserve">
-    <value>GOOGLE</value>
-  </data>
-  <data name="tile_provider_mapbox" xml:space="preserve">
-    <value>MAPBOX</value>
-  </data>
-  <data name="tile_provider_nokia" xml:space="preserve">
-    <value>NOKIA</value>
-  </data>
-  <data name="tile_provider_osm" xml:space="preserve">
-    <value>OPENSTREETMAP</value>
-  </data>
-  <data name="tile_provider_waze" xml:space="preserve">
-    <value>WAZE</value>
-  </data>
-  <data name="tile_provider_yandex" xml:space="preserve">
-    <value>YANDEX</value>
-  </data>
-  <data name="ui_header_baseMaps" xml:space="preserve">
-    <value>Базовые карты</value>
-  </data>
-  <data name="ui_header_drawingLegend" xml:space="preserve">
-    <value>Рисунки</value>
-  </data>
-  <data name="ui_header_layerLegend" xml:space="preserve">
-    <value>Слои</value>
-  </data>
-  <data name="wat_security_userName" xml:space="preserve">
-    <value>Имя пользователя</value>
-  </data>
-  <data name="dialog_showMessage_title" xml:space="preserve">
-    <value>Сообщение</value>
-    <comment>Default title for message dialogs</comment>
-  </data>
-  <data name="cmd_general_drawRectangle" xml:space="preserve">
-    <value>Draw Rectangle</value>
   </data>
   <data name="theme_color_amber" xml:space="preserve">
     <value>Amber</value>
@@ -847,175 +1177,94 @@
   <data name="theme_color_yellow" xml:space="preserve">
     <value>Yellow</value>
   </data>
-  <data name="dialog_geometryDetails_copy" xml:space="preserve">
-    <value>Copy</value>
+  <data name="tile_mapType_BlackWhite" xml:space="preserve">
+    <value>BlackWhite</value>
   </data>
-  <data name="featureChanges_title" xml:space="preserve">
-    <value>Изменения объекта</value>
+  <data name="tile_mapType_CleanGrey" xml:space="preserve">
+    <value>CleanGrey</value>
   </data>
-  <data name="featureChanges_viewChanges" xml:space="preserve">
-    <value>Просмотр изменений</value>
+  <data name="tile_mapType_Comic" xml:space="preserve">
+    <value>Comic</value>
   </data>
-  <data name="featureChanges_attributeChanges" xml:space="preserve">
-    <value>Изменения атрибутов</value>
+  <data name="tile_mapType_Dark" xml:space="preserve">
+    <value>Dark</value>
   </data>
-  <data name="featureChanges_geometryChanges" xml:space="preserve">
-    <value>Изменения геометрии</value>
+  <data name="tile_mapType_HikeBike" xml:space="preserve">
+    <value>HikeBike</value>
   </data>
-  <data name="featureChanges_zoomToCurrent" xml:space="preserve">
-    <value>Масштаб к текущему</value>
+  <data name="tile_mapType_Hybrid" xml:space="preserve">
+    <value>Hybrid</value>
   </data>
-  <data name="featureChanges_zoomToOld" xml:space="preserve">
-    <value>Масштаб к старому</value>
+  <data name="tile_mapType_Light" xml:space="preserve">
+    <value>Light</value>
   </data>
-  <data name="featureChanges_zoomToBoth" xml:space="preserve">
-    <value>Масштаб к обоим</value>
+  <data name="tile_mapType_MapyTourist" xml:space="preserve">
+    <value>MapyTourist</value>
   </data>
-  <data name="featureChanges_compareOnMap" xml:space="preserve">
-    <value>Сравнить на карте</value>
+  <data name="tile_mapType_MapyWinter" xml:space="preserve">
+    <value>MapyWinter</value>
   </data>
-  <data name="featureChanges_oldValue" xml:space="preserve">
-    <value>Старое значение</value>
+  <data name="tile_mapType_Nature" xml:space="preserve">
+    <value>Nature</value>
   </data>
-  <data name="featureChanges_newValue" xml:space="preserve">
-    <value>Новое значение</value>
+  <data name="tile_mapType_NeutralBlue" xml:space="preserve">
+    <value>NeutralBlue</value>
   </data>
-  <data name="featureChanges_attributeName" xml:space="preserve">
-    <value>Атрибут</value>
+  <data name="tile_mapType_RoadMap" xml:space="preserve">
+    <value>RoadMap</value>
   </data>
-  <data name="featureChanges_lastModified" xml:space="preserve">
-    <value>Последнее изменение</value>
+  <data name="tile_mapType_Satellite" xml:space="preserve">
+    <value>Satellite</value>
   </data>
-  <data name="featureChanges_status" xml:space="preserve">
-    <value>Статус</value>
+  <data name="tile_mapType_Street" xml:space="preserve">
+    <value>Street</value>
   </data>
-  <data name="featureChanges_wktOld" xml:space="preserve">
-    <value>WGS84 WKT (старый)</value>
+  <data name="tile_mapType_Terrain" xml:space="preserve">
+    <value>Terrain</value>
   </data>
-  <data name="featureChanges_wktNew" xml:space="preserve">
-    <value>WGS84 WKT (новый)</value>
+  <data name="tile_mapType_Topo" xml:space="preserve">
+    <value>Topo</value>
   </data>
-  <data name="featureChanges_areaOld" xml:space="preserve">
-    <value>Площадь (старая)</value>
+  <data name="tile_mapType_Traffic" xml:space="preserve">
+    <value>Traffic</value>
   </data>
-  <data name="featureChanges_areaNew" xml:space="preserve">
-    <value>Площадь (новая)</value>
+  <data name="tile_mapType_Watercolor" xml:space="preserve">
+    <value>Watercolor</value>
   </data>
-  <data name="featureChanges_lengthOld" xml:space="preserve">
-    <value>Длина (старая)</value>
+  <data name="tile_provider_bing" xml:space="preserve">
+    <value>BING</value>
   </data>
-  <data name="featureChanges_lengthNew" xml:space="preserve">
-    <value>Длина (новая)</value>
+  <data name="tile_provider_carto" xml:space="preserve">
+    <value>CARTO</value>
   </data>
-  <data name="featureChanges_areaChange" xml:space="preserve">
-    <value>Изменение площади</value>
+  <data name="tile_provider_google" xml:space="preserve">
+    <value>GOOGLE</value>
   </data>
-  <data name="featureChanges_lengthChange" xml:space="preserve">
-    <value>Изменение длины</value>
+  <data name="tile_provider_mapbox" xml:space="preserve">
+    <value>MAPBOX</value>
   </data>
-  <data name="legend_filter_Clear" xml:space="preserve">
-    <value>Clear Filters</value>
-    <comment>clear filter button tooltip</comment>
+  <data name="tile_provider_nokia" xml:space="preserve">
+    <value>NOKIA</value>
   </data>
-  <data name="legend_filter_filterByLayerType" xml:space="preserve">
-    <value>Filter By Layer Type</value>
-    <comment>filter by layer type togglebutton tooltip</comment>
+  <data name="tile_provider_osm" xml:space="preserve">
+    <value>OPENSTREETMAP</value>
   </data>
-  <data name="legend_filter_searchLayerWatermark" xml:space="preserve">
-    <value>Search Layer</value>
-    <comment>watermark displayed on the search layer textbox</comment>
+  <data name="tile_provider_waze" xml:space="preserve">
+    <value>WAZE</value>
   </data>
-  <data name="languageSelector_title" xml:space="preserve">
-    <value>Язык</value>
+  <data name="tile_provider_yandex" xml:space="preserve">
+    <value>YANDEX</value>
   </data>
-  <data name="common_cancel" xml:space="preserve">
-    <value>Отмена</value>
+  <data name="ui_header_baseMaps" xml:space="preserve">
+    <value>Базовые карты</value>
   </data>
-  <data name="common_save" xml:space="preserve">
-    <value>Сохранить</value>
+  <data name="ui_header_drawingLegend" xml:space="preserve">
+    <value>Рисунки</value>
   </data>
-  <data name="common_confirm" xml:space="preserve">
-    <value>Подтвердить</value>
+  <data name="ui_header_layerLegend" xml:space="preserve">
+    <value>Слои</value>
   </data>
-  <data name="common_new" xml:space="preserve">
-    <value>Новый</value>
-  </data>
-  <data name="common_old" xml:space="preserve">
-    <value>Старый</value>
-  </data>
-  <data name="common_username" xml:space="preserve">
+  <data name="wat_security_userName" xml:space="preserve">
     <value>Имя пользователя</value>
-  </data>
-  <data name="common_password" xml:space="preserve">
-    <value>Пароль</value>
-  </data>
-  <data name="common_confirmPassword" xml:space="preserve">
-    <value>Подтвердить пароль</value>
-  </data>
-  <data name="common_newPassword" xml:space="preserve">
-    <value>Новый пароль</value>
-  </data>
-  <data name="common_email" xml:space="preserve">
-    <value>Эл. почта</value>
-  </data>
-  <data name="common_capsLockWarning" xml:space="preserve">
-    <value>Caps Lock включён</value>
-  </data>
-  <data name="common_login" xml:space="preserve">
-    <value>Войти</value>
-  </data>
-  <data name="common_register" xml:space="preserve">
-    <value>Регистрация</value>
-  </data>
-  <data name="common_forgetPassword" xml:space="preserve">
-    <value>Забыли пароль</value>
-  </data>
-  <data name="common_emailVerification" xml:space="preserve">
-    <value>Подтвердить email</value>
-  </data>
-  <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
-    <value>Введите имя пользователя и пароль.</value>
-  </data>
-  <data name="dialog_userSignUp_createUser" xml:space="preserve">
-    <value>Создать пользователя</value>
-  </data>
-  <data name="dialog_emailSignUp_or" xml:space="preserve">
-    <value>или</value>
-  </data>
-  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
-    <value>Войти через Google</value>
-  </data>
-  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
-    <value>Регистрация через Google</value>
-  </data>
-  <data name="dialog_changePassword_enterPassword" xml:space="preserve">
-    <value>Введите желаемый пароль.</value>
-  </data>
-  <data name="dialog_changePassword_title" xml:space="preserve">
-    <value>Изменить пароль</value>
-  </data>
-  <data name="dialog_themeSelection_title" xml:space="preserve">
-    <value>Выбрать цвет фона</value>
-  </data>
-  <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
-    <value>Настройки внешнего вида</value>
-  </data>
-  <data name="manageAccount_newUsername" xml:space="preserve">
-    <value>Новое имя пользователя</value>
-  </data>
-  <data name="manageAccount_newPassword" xml:space="preserve">
-    <value>Новый пароль</value>
-  </data>
-  <data name="manageAccount_logOut" xml:space="preserve">
-    <value>Выйти</value>
-  </data>
-  <data name="manageAccount_changePassword" xml:space="preserve">
-    <value>Изменить пароль</value>
-  </data>
-  <data name="manageAccount_manageUsers" xml:space="preserve">
-    <value>Управление пользователями</value>
-  </data>
-  <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
-    <value>Новый пользователь</value>
   </data>
 </root>

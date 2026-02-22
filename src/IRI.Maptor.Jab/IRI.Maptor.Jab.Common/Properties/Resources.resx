@@ -1084,4 +1084,286 @@
     <value>Search Layer</value>
     <comment>watermark displayed on the search layer textbox</comment>
   </data>
+  <data name="featureTable_addNew" xml:space="preserve">
+    <value>Add new</value>
+  </data>
+  <data name="featureTable_delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="featureTable_editGeometry" xml:space="preserve">
+    <value>Edit geometry</value>
+  </data>
+  <data name="featureTable_undo" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="featureTable_saveChanges" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="featureChanges_id" xml:space="preserve">
+    <value>Id:</value>
+  </data>
+  <data name="legend_selectAll" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="legend_clearAll" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="mapLegendItem_layerTitle" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="mapInfo_general" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="mapInfo_scaleFactor" xml:space="preserve">
+    <value>Scale Factor:</value>
+  </data>
+  <data name="mapInfo_meanHeight" xml:space="preserve">
+    <value>Mean Height</value>
+  </data>
+  <data name="mapInfo_length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="mapInfo_euclideanLengthUtm" xml:space="preserve">
+    <value>EuclideanLengthInUtm:</value>
+  </data>
+  <data name="mapInfo_ellipsoidalLength" xml:space="preserve">
+    <value>EllipsoidalLength:</value>
+  </data>
+  <data name="mapInfo_euclideanLengthUtmRefined" xml:space="preserve">
+    <value>EuclideanLengthInUtm_Refined:</value>
+  </data>
+  <data name="mapInfo_sphericalLength" xml:space="preserve">
+    <value>SphericalLength:</value>
+  </data>
+  <data name="mapInfo_groundLength" xml:space="preserve">
+    <value>GroundLength:</value>
+  </data>
+  <data name="mapInfo_area" xml:space="preserve">
+    <value>Area</value>
+  </data>
+  <data name="mapInfo_euclideanAreaUtm" xml:space="preserve">
+    <value>EuclideanArea (UTM):</value>
+  </data>
+  <data name="mapInfo_ellipsoidalArea" xml:space="preserve">
+    <value>EllipsoidalArea:</value>
+  </data>
+  <data name="mapInfo_authalicSphereArea" xml:space="preserve">
+    <value>AuthalicSphereArea:</value>
+  </data>
+  <data name="mapInfo_karneyArea" xml:space="preserve">
+    <value>KarneyArea:</value>
+  </data>
+  <data name="mapInfo_groundArea" xml:space="preserve">
+    <value>GroundArea:</value>
+  </data>
+  <data name="input_drawFeatureOnMap" xml:space="preserve">
+    <value>Draw feature on map</value>
+  </data>
+  <data name="input_utmZone" xml:space="preserve">
+    <value>UTM Zone:</value>
+  </data>
+  <data name="input_geodetic" xml:space="preserve">
+    <value>Geodetic</value>
+  </data>
+  <data name="input_utm" xml:space="preserve">
+    <value>UTM</value>
+  </data>
+  <data name="input_coordinateNote" xml:space="preserve">
+    <value>Note: Coordinates are in longitude and latitude format</value>
+  </data>
+  <data name="sldEditor_common_editorTitle" xml:space="preserve">
+    <value>SLD Style Editor</value>
+  </data>
+  <data name="sldEditor_common_importTooltip" xml:space="preserve">
+    <value>Import SLD from File</value>
+  </data>
+  <data name="sldEditor_common_import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="sldEditor_common_exportTooltip" xml:space="preserve">
+    <value>Export SLD to File</value>
+  </data>
+  <data name="sldEditor_common_export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="sldEditor_common_editorBanner" xml:space="preserve">
+    <value>OGC SLD 1.0.0 Editor</value>
+  </data>
+  <data name="sldEditor_common_rules" xml:space="preserve">
+    <value>Rules</value>
+  </data>
+  <data name="sldEditor_common_rulesLabel" xml:space="preserve">
+    <value>Rules: </value>
+  </data>
+  <data name="sldEditor_common_selected" xml:space="preserve">
+    <value>Selected: </value>
+  </data>
+  <data name="sldEditor_common_styleInformation" xml:space="preserve">
+    <value>Style Information</value>
+  </data>
+  <data name="sldEditor_common_layerName" xml:space="preserve">
+    <value>Layer Name:</value>
+  </data>
+  <data name="sldEditor_common_styleName" xml:space="preserve">
+    <value>Style Name:</value>
+  </data>
+  <data name="sldEditor_common_styleTitle" xml:space="preserve">
+    <value>Style Title:</value>
+  </data>
+  <data name="sldEditor_common_abstract" xml:space="preserve">
+    <value>Abstract:</value>
+  </data>
+  <data name="sldEditor_common_addRule" xml:space="preserve">
+    <value>Add Rule</value>
+  </data>
+  <data name="sldEditor_common_removeRule" xml:space="preserve">
+    <value>Remove Rule</value>
+  </data>
+  <data name="sldEditor_common_moveUp" xml:space="preserve">
+    <value>Move Up</value>
+  </data>
+  <data name="sldEditor_common_moveDown" xml:space="preserve">
+    <value>Move Down</value>
+  </data>
+  <data name="sldEditor_common_ruleProperties" xml:space="preserve">
+    <value>Rule Properties</value>
+  </data>
+  <data name="sldEditor_common_general" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="sldEditor_common_name" xml:space="preserve">
+    <value>Name:</value>
+  </data>
+  <data name="sldEditor_common_title" xml:space="preserve">
+    <value>Title:</value>
+  </data>
+  <data name="sldEditor_common_scaleRange" xml:space="preserve">
+    <value>Scale Range</value>
+  </data>
+  <data name="sldEditor_common_filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="sldEditor_common_symbolizers" xml:space="preserve">
+    <value>Symbolizers</value>
+  </data>
+  <data name="sldEditor_common_addPointSymbolizer" xml:space="preserve">
+    <value>Add Point Symbolizer</value>
+  </data>
+  <data name="sldEditor_common_addLineSymbolizer" xml:space="preserve">
+    <value>Add Line Symbolizer</value>
+  </data>
+  <data name="sldEditor_common_addPolygonSymbolizer" xml:space="preserve">
+    <value>Add Polygon Symbolizer</value>
+  </data>
+  <data name="sldEditor_common_addTextSymbolizer" xml:space="preserve">
+    <value>Add Text Symbolizer</value>
+  </data>
+  <data name="sldEditor_common_removeSymbolizer" xml:space="preserve">
+    <value>Remove Symbolizer</value>
+  </data>
+  <data name="sldEditor_common_symbolizerProperties" xml:space="preserve">
+    <value>Symbolizer Properties</value>
+  </data>
+  <data name="sldEditor_common_xmlPreview" xml:space="preserve">
+    <value>XML Preview</value>
+  </data>
+  <data name="sldEditor_common_exportToFile" xml:space="preserve">
+    <value>Export to File...</value>
+  </data>
+  <data name="sldEditor_common_importFromFile" xml:space="preserve">
+    <value>Import from File...</value>
+  </data>
+  <data name="sldEditor_common_xmlPreviewPlaceholder" xml:space="preserve">
+    <value>XML preview will be displayed here</value>
+  </data>
+  <data name="sldEditor_common_fillColor" xml:space="preserve">
+    <value>Fill Color:</value>
+  </data>
+  <data name="sldEditor_common_fillOpacity" xml:space="preserve">
+    <value>Fill Opacity:</value>
+  </data>
+  <data name="sldEditor_common_strokeColor" xml:space="preserve">
+    <value>Stroke Color:</value>
+  </data>
+  <data name="sldEditor_common_strokeWidth" xml:space="preserve">
+    <value>Stroke Width:</value>
+  </data>
+  <data name="sldEditor_common_strokeOpacity" xml:space="preserve">
+    <value>Stroke Opacity:</value>
+  </data>
+  <data name="sldEditor_common_lineCap" xml:space="preserve">
+    <value>Line Cap:</value>
+  </data>
+  <data name="sldEditor_common_lineJoin" xml:space="preserve">
+    <value>Line Join:</value>
+  </data>
+  <data name="sldEditor_common_geometryProperty" xml:space="preserve">
+    <value>Geometry Property:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_labelProperty" xml:space="preserve">
+    <value>Label Property:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontFamily" xml:space="preserve">
+    <value>Font Family:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontSize" xml:space="preserve">
+    <value>Font Size:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontStyle" xml:space="preserve">
+    <value>Font Style:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontWeight" xml:space="preserve">
+    <value>Font Weight:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_fontColor" xml:space="preserve">
+    <value>Font Color:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_enableHalo" xml:space="preserve">
+    <value>Enable Halo (Text Outline)</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloRadius" xml:space="preserve">
+    <value>Halo Radius:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloColor" xml:space="preserve">
+    <value>Halo Color:</value>
+  </data>
+  <data name="sldEditor_pointSymbolizer_markType" xml:space="preserve">
+    <value>Mark Type:</value>
+  </data>
+  <data name="sldEditor_pointSymbolizer_size" xml:space="preserve">
+    <value>Size:</value>
+  </data>
+  <data name="sldEditor_pointSymbolizer_rotation" xml:space="preserve">
+    <value>Rotation:</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashArray" xml:space="preserve">
+    <value>Dash Array:</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashArrayWatermark" xml:space="preserve">
+    <value>e.g., 5 5 or 10 5 3 5</value>
+  </data>
+  <data name="sldEditor_scaleRange_minScale" xml:space="preserve">
+    <value>Min Scale:</value>
+  </data>
+  <data name="sldEditor_scaleRange_minWatermark" xml:space="preserve">
+    <value>Optional - Leave empty for no minimum</value>
+  </data>
+  <data name="sldEditor_scaleRange_maxScale" xml:space="preserve">
+    <value>Max Scale:</value>
+  </data>
+  <data name="sldEditor_scaleRange_maxWatermark" xml:space="preserve">
+    <value>Optional - Leave empty for no maximum</value>
+  </data>
+  <data name="sldEditor_filter_enableFilter" xml:space="preserve">
+    <value>Enable Filter</value>
+  </data>
+  <data name="sldEditor_filter_filterSettings" xml:space="preserve">
+    <value>Filter Settings</value>
+  </data>
+  <data name="sldEditor_filter_filterExpression" xml:space="preserve">
+    <value>Filter Expression:</value>
+  </data>
+  <data name="sldEditor_filter_simplifiedViewNote" xml:space="preserve">
+    <value>Note: This is a simplified view. For complex filters, edit the XML directly or use a specialized filter builder.</value>
+  </data>
 </root>
