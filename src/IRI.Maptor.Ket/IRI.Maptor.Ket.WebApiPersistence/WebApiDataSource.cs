@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Helpers;
@@ -52,12 +53,12 @@ public class WebApiDataSource : MemoryDataSource
     }
 
     /// <inheritdoc />
-    public override async Task LoadAsync() => await LoadAsync((ListFeaturesQueryParams?)null);
+    public override async Task LoadAsync(CancellationToken cancellationToken = default) => await LoadAsync((ListFeaturesQueryParams?)null, cancellationToken);
 
     /// <summary>
     /// Loads features from the list endpoint and assigns them to _features. Clears change tracking.
     /// </summary>
-    public async Task LoadAsync(ListFeaturesQueryParams? queryParams = null)
+    public async Task LoadAsync(ListFeaturesQueryParams? queryParams = null, CancellationToken cancellationToken = default)
     {
         IsInitializing = true;
         try
@@ -73,7 +74,8 @@ public class WebApiDataSource : MemoryDataSource
                 _parameters.ListUrl,
                 queryParams,
                 _parameters.BearerToken,
-                _parameters.Headers);
+                _parameters.Headers,
+                cancellationToken);
 
             if (featureSetDto == null || featureSetDto.Features == null || featureSetDto.Features.Count == 0)
             {
@@ -108,18 +110,18 @@ public class WebApiDataSource : MemoryDataSource
     /// <summary>
     /// Loads features from the list endpoint with an optional server-side geometry filter.
     /// </summary>
-    public Task LoadAsync(Geometry<Point>? geometryFilter)
+    public Task LoadAsync(Geometry<Point>? geometryFilter, CancellationToken cancellationToken = default)
     {
         if (geometryFilter == null || geometryFilter.IsNullOrEmpty())
-            return LoadAsync((ListFeaturesQueryParams?)null);
+            return LoadAsync((ListFeaturesQueryParams?)null, cancellationToken);
 
         var wkbBytes = geometryFilter.AsWkb();
         if (wkbBytes == null)
-            return LoadAsync((ListFeaturesQueryParams?)null);
+            return LoadAsync((ListFeaturesQueryParams?)null, cancellationToken);
 
         var wkbHex = HexStringHelper.ToHexStringUsingBitFiddle(wkbBytes, append0x: false);
         var queryParams = new ListFeaturesQueryParams { GeometryWkbHex = wkbHex };
-        return LoadAsync(queryParams);
+        return LoadAsync(queryParams, cancellationToken);
     }
 
     public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)

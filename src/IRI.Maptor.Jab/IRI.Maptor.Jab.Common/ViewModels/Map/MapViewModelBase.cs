@@ -4,6 +4,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Windows.Media;
 using System.Windows.Input;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -1016,6 +1017,11 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action<ILayer> RequestAddLayer;
 
+    /// <summary>
+    /// Optional. When set, passed to LayerManager for LoadAsync when adding layers. Used to cancel loads on sign out.
+    /// </summary>
+    public CancellationToken LoadCancellationToken { get; set; }
+
     public Func<Geometry<Point>, Geometry<Point>> RequestTransformScreenGeometryToWebMercatorGeometry;
 
     public Action<string, List<Point>, Geometry, bool, VisualParameters> RequestAddPolyBezier;
@@ -1945,7 +1951,7 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    private void Clear(Predicate<ILayer> layersToBeRemoved, bool remove, bool forceRemove = false)
+    public void Clear(Predicate<ILayer> layersToBeRemoved, bool remove, bool forceRemove = false)
     {
         RequestClearLayerByCriteria?.Invoke(layersToBeRemoved, remove, forceRemove);
 

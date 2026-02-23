@@ -562,7 +562,7 @@ public partial class MapViewer : NotifiableUserControl
         presenter.RequestAddLayer = (l) =>
         {
             this.SetLayer(l);
-
+            _layerManager.LoadCancellationToken = presenter.LoadCancellationToken;
             this.AddLayer(l);
         };
 

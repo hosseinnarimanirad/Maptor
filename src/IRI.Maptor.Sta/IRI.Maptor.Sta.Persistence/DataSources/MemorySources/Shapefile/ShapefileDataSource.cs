@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -103,7 +104,7 @@ public class ShapefileDataSource : MemoryDataSource
         Initialize(geometries, attributes, map, inverseAttributeMap);
     }
 
-    public override async Task LoadAsync()
+    public override async Task LoadAsync(CancellationToken cancellationToken = default)
     {
         IsInitializing = true;
 

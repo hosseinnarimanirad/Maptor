@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 
 using IRI.Maptor.Extensions;
@@ -14,6 +15,11 @@ namespace IRI.Maptor.Jab.Controls;
 public class LayerManager : Notifier
 {
     public Action<BaseLayer>? RequestRefreshVisibility;
+
+    /// <summary>
+    /// Optional. When set, passed to LoadAsync when loading layer data. Used to cancel loads on sign out.
+    /// </summary>
+    public CancellationToken LoadCancellationToken { get; set; }
 
     List<ILayer> allLayers;
 
@@ -93,12 +99,12 @@ public class LayerManager : Notifier
             if (layer is VectorLayer vl && vl.DataSource is IDataSource ds && !ds.IsLoaded)
             {
                 vl.RequestRefreshWhenDataLoaded = l => RequestRefreshVisibility?.Invoke(l as BaseLayer);
-                _ = ds.LoadAsync();
+                _ = ds.LoadAsync(LoadCancellationToken);
             }
             else if (layer is RasterLayer rl && rl.DataSource is IDataSource rds && !rds.IsLoaded)
             {
                 rl.RequestRefreshWhenDataLoaded = l => RequestRefreshVisibility?.Invoke(l as BaseLayer);
-                _ = rds.LoadAsync();
+                _ = rds.LoadAsync(LoadCancellationToken);
             }
         }
     }

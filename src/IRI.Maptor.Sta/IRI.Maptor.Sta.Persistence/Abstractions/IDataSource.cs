@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using IRI.Maptor.Sta.Common.Primitives;
 
@@ -15,7 +16,7 @@ public interface IDataSource
     /// Loads or refreshes the data source asynchronously.
     /// Pre-loaded sources (e.g., in-memory) may return completed task.
     /// </summary>
-    Task LoadAsync();
+    Task LoadAsync(CancellationToken cancellationToken = default);
     BoundingBox WebMercatorExtent { get; }
 
     int Srid { get; }

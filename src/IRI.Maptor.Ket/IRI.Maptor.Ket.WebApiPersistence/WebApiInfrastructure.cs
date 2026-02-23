@@ -1,3 +1,4 @@
+using System.Threading;
 using IRI.Maptor.Ket.WebApiPersistence.DTOs;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Services;
@@ -14,14 +15,16 @@ public static class WebApiInfrastructure
         string endpoint,
         ListFeaturesQueryParams? queryParams = null,
         string? bearerToken = null,
-        Dictionary<string, string>? headers = null)
+        Dictionary<string, string>? headers = null,
+        CancellationToken cancellationToken = default)
     {
         var url = BuildUrl(/*baseUrl, */endpoint, queryParams);
 
         var response = await HttpClientHelper.HttpGetAsync<FeatureSetDto>(
             url,
             bearer: bearerToken,
-            headers: headers);
+            headers: headers,
+            cancellationToken: cancellationToken);
 
         return response.HasNotNullResult() ? response.Result : null;
     }

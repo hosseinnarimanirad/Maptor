@@ -1,10 +1,11 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Model;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.Abstractions;
-using System.Threading.Tasks;
 using IRI.Maptor.Sta.Persistence.DataSources;
 
 namespace IRI.Maptor.Ket.GdiPersistence;
@@ -70,7 +71,7 @@ public class GeoRasterFileDataSource : RasterDataSource
     /// Asynchronously loads the worldfile and initializes the raster.
     /// Sets IsBusy while loading, HasError on failure, and IsLoaded on success.
     /// </summary>
-    public override async Task<bool> LoadAsync()
+    public override async Task<bool> LoadAsync(CancellationToken cancellationToken = default)
     {
         if (IsLoaded)
             return true;

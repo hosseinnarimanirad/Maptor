@@ -3,6 +3,7 @@ using IRI.Maptor.Sta.Persistence.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
@@ -124,5 +125,5 @@ public abstract class BaseDataSource : IDataSource
 
     #endregion
 
-    public virtual Task LoadAsync() => Task.CompletedTask;
+    public virtual Task LoadAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
 }

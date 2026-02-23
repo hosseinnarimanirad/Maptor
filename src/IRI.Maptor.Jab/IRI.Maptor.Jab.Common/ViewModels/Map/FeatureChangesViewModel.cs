@@ -18,6 +18,7 @@ namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 public class FeatureChangesViewModel : Notifier
 {
     private readonly Feature<Point> _feature;
+
     private static readonly Func<Point, Point> ToWgs84 = MapProjects.WebMercatorToGeodeticWgs84;
 
     public FeatureChangesViewModel(Feature<Point> feature, IReadOnlyList<Field>? fields = null)
@@ -33,26 +34,8 @@ public class FeatureChangesViewModel : Notifier
         ChangedAttributes = new ObservableCollection<AttributeChange>(
             DictionaryHelper.GetChangedAttributes(_feature.OldVersion?.Attributes, _feature.Attributes)
                 .Select(t => new AttributeChange(t.Name, GetDisplayName(t.Name), t.OldValue, t.NewValue)));
+         
 
-        ZoomToCurrentGeometryCommand = new RelayCommand(_ => RequestZoomToFeature?.Invoke(_feature.TheGeometry));
-        ZoomToOldGeometryCommand = new RelayCommand(_ =>
-        {
-            if (_feature.OldVersion?.TheGeometry != null)
-                RequestZoomToFeature?.Invoke(_feature.OldVersion.TheGeometry);
-        }, _ => _feature.OldVersion?.TheGeometry != null);
-        ZoomToBothGeometriesCommand = new RelayCommand(_ =>
-        {
-            var boxes = new List<BoundingBox>();
-            if (_feature.TheGeometry != null)
-                boxes.Add(_feature.TheGeometry.GetBoundingBox());
-            if (_feature.OldVersion?.TheGeometry != null)
-                boxes.Add(_feature.OldVersion.TheGeometry.GetBoundingBox());
-            if (boxes.Count > 0)
-            {
-                var merged = BoundingBox.GetMergedBoundingBox(boxes);
-                RequestZoomToExtent?.Invoke(merged, false, true, null);
-            }
-        }, _ => HasGeometryChanges);
         CompareGeometriesCommand = new RelayCommand(_ =>
             RequestShowGeometryComparison?.Invoke(_feature.OldVersion?.TheGeometry, _feature.TheGeometry),
             _ => HasGeometryChanges);
@@ -96,20 +79,24 @@ public class FeatureChangesViewModel : Notifier
 
     private static string? GetWgs84Wkt(Geometry<Point>? geometry)
     {
-        if (geometry == null || geometry.IsNullOrEmpty())
+        if (geometry.IsNullOrEmpty())
             return null;
+
         var wgs84 = geometry.Srid == SridHelper.GeodeticWGS84
             ? geometry
             : geometry.Transform(ToWgs84, SridHelper.GeodeticWGS84);
-        return wgs84.AsWkt();
+
+        return wgs84.AsWkt(6);
     }
 
     private static string? GetAreaLabel(Geometry<Point>? geometry)
     {
-        if (geometry == null || geometry.IsNullOrEmpty())
+        if (geometry.IsNullOrEmpty())
             return null;
+
         if (geometry.Type != GeometryType.Polygon && geometry.Type != GeometryType.MultiPolygon)
             return null;
+
         try
         {
             var area = SpatialUtility.GetEllipsoidalArea(geometry, ToWgs84);
@@ -120,16 +107,20 @@ public class FeatureChangesViewModel : Notifier
 
     private static string? GetLengthLabel(Geometry<Point>? geometry)
     {
-        if (geometry == null || geometry.IsNullOrEmpty())
+        if (geometry.IsNullOrEmpty())
             return null;
+
         if (geometry.Type != GeometryType.LineString && geometry.Type != GeometryType.MultiLineString)
             return null;
+
         try
         {
             var wgs84 = geometry.Srid == SridHelper.GeodeticWGS84
                 ? geometry
                 : geometry.Transform(ToWgs84, SridHelper.GeodeticWGS84);
+
             var length = wgs84.GetEllipsoidalLength();
+
             return UnitHelper.GetLengthLabel(length);
         }
         catch { return null; }
@@ -138,43 +129,61 @@ public class FeatureChangesViewModel : Notifier
     private string? GetAreaChangeLabel()
     {
         var oldArea = GetAreaValue(_feature.OldVersion?.TheGeometry);
+
         var newArea = GetAreaValue(_feature.TheGeometry);
+
         if (oldArea == null && newArea == null) return null;
+
         var oldVal = oldArea ?? 0;
+
         var newVal = newArea ?? 0;
+
         var diff = newVal - oldVal;
+
         if (Math.Abs(diff) < 1e-9) return "0";
+
         var sign = diff > 0 ? "+" : "";
+
         return $"{sign}{UnitHelper.GetAreaLabel(Math.Abs(diff))}";
     }
 
     private string? GetLengthChangeLabel()
     {
         var oldLen = GetLengthValue(_feature.OldVersion?.TheGeometry);
+
         var newLen = GetLengthValue(_feature.TheGeometry);
+
         if (oldLen == null && newLen == null) return null;
+
         var oldVal = oldLen ?? 0;
+
         var newVal = newLen ?? 0;
+
         var diff = newVal - oldVal;
+
         if (Math.Abs(diff) < 1e-9) return "0";
+
         var sign = diff > 0 ? "+" : "";
+
         return $"{sign}{UnitHelper.GetLengthLabel(Math.Abs(diff))}";
     }
 
     private static double? GetAreaValue(Geometry<Point>? geometry)
     {
-        if (geometry == null || geometry.IsNullOrEmpty() ||
+        if (geometry.IsNullOrEmpty() ||
             (geometry.Type != GeometryType.Polygon && geometry.Type != GeometryType.MultiPolygon))
             return null;
+
         try { return SpatialUtility.GetEllipsoidalArea(geometry, ToWgs84); }
         catch { return null; }
     }
 
     private static double? GetLengthValue(Geometry<Point>? geometry)
     {
-        if (geometry == null || geometry.IsNullOrEmpty() ||
+        if (geometry.IsNullOrEmpty() ||
             (geometry.Type != GeometryType.LineString && geometry.Type != GeometryType.MultiLineString))
             return null;
+
         try
         {
             var wgs84 = geometry!.Srid == SridHelper.GeodeticWGS84
@@ -185,9 +194,69 @@ public class FeatureChangesViewModel : Notifier
         catch { return null; }
     }
 
-    public RelayCommand ZoomToCurrentGeometryCommand { get; }
-    public RelayCommand ZoomToOldGeometryCommand { get; }
-    public RelayCommand ZoomToBothGeometriesCommand { get; }
+    private RelayCommand _zoomToCurrentGeometryCommand;
+    public RelayCommand ZoomToCurrentGeometryCommand
+    {
+        get
+        {
+            if (_zoomToCurrentGeometryCommand == null)
+                _zoomToCurrentGeometryCommand = new RelayCommand(_ => RequestZoomToFeature?.Invoke(_feature.TheGeometry));
+
+            return _zoomToCurrentGeometryCommand;
+        }
+    }
+
+
+    private RelayCommand _zoomToOldGeometryCommand;
+    public RelayCommand ZoomToOldGeometryCommand
+    {
+        get
+        {
+            if (_zoomToOldGeometryCommand == null)
+            {
+                _zoomToOldGeometryCommand = new RelayCommand(_ =>
+                {
+                    if (_feature.OldVersion?.TheGeometry != null)
+                        RequestZoomToFeature?.Invoke(_feature.OldVersion.TheGeometry);
+
+                }, _ => _feature.OldVersion?.TheGeometry != null);
+            }
+
+            return _zoomToOldGeometryCommand;
+        }
+    }
+
+
+    private RelayCommand _zoomToBothGeometriesCommand;
+    public RelayCommand ZoomToBothGeometriesCommand
+    {
+        get
+        {
+            if (_zoomToBothGeometriesCommand == null)
+            {
+                _zoomToBothGeometriesCommand = new RelayCommand(_ =>
+                {
+                    var boxes = new List<BoundingBox>();
+
+                    if (_feature.TheGeometry != null)
+                        boxes.Add(_feature.TheGeometry.GetBoundingBox());
+
+                    if (_feature.OldVersion?.TheGeometry != null)
+                        boxes.Add(_feature.OldVersion.TheGeometry.GetBoundingBox());
+
+                    if (boxes.Count > 0)
+                    {
+                        var merged = BoundingBox.GetMergedBoundingBox(boxes);
+                        RequestZoomToExtent?.Invoke(merged, false, true, null);
+                    }
+                }, _ => HasGeometryChanges);
+            }
+
+            return _zoomToBothGeometriesCommand;
+        }
+    }
+
+     
     public RelayCommand CompareGeometriesCommand { get; }
 
     public Action<Geometry<Point>>? RequestZoomToFeature { get; set; }
