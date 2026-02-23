@@ -6,8 +6,11 @@ namespace IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 
 public static class WktWriter
 {
-    public static string AsWkt<T>(Geometry<T> geometry) where T : IPoint, new()
+    public static string AsWkt<T>(Geometry<T> geometry, int? coordinateDecimalPlaces = null) where T : IPoint, new()
     {
+        if (coordinateDecimalPlaces is < 0)
+            throw new ArgumentOutOfRangeException(nameof(coordinateDecimalPlaces), coordinateDecimalPlaces, "Coordinate decimal places must be non-negative.");
+
         bool hasZ = geometry.HasZ();
         bool hasM = geometry.HasM();
 
@@ -18,22 +21,22 @@ public static class WktWriter
         switch (geometry.Type)
         {
             case GeometryType.Point:
-                return FormattableString.Invariant($"POINT {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
+                return FormattableString.Invariant($"POINT {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false, coordinateDecimalPlaces)}");
 
             case GeometryType.LineString:
-                return FormattableString.Invariant($"LINESTRING {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
+                return FormattableString.Invariant($"LINESTRING {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false, coordinateDecimalPlaces)}");
 
             case GeometryType.Polygon:
-                return FormattableString.Invariant($"POLYGON {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: true)}");
+                return FormattableString.Invariant($"POLYGON {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: true, coordinateDecimalPlaces)}");
 
             case GeometryType.MultiPoint:
-                return FormattableString.Invariant($"MULTIPOINT {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
+                return FormattableString.Invariant($"MULTIPOINT {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false, coordinateDecimalPlaces)}");
 
             case GeometryType.MultiLineString:
-                return FormattableString.Invariant($"MULTILINESTRING {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false)}");
+                return FormattableString.Invariant($"MULTILINESTRING {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: false, coordinateDecimalPlaces)}");
 
             case GeometryType.MultiPolygon:
-                return FormattableString.Invariant($"MULTIPOLYGON {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: true)}");
+                return FormattableString.Invariant($"MULTIPOLYGON {suffixWithSpace}{WktHelpers.ToWktPointArrayString(geometry, isRingBase: true, coordinateDecimalPlaces)}");
 
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:

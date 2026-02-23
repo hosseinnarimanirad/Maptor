@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using IRI.Maptor.Extensions;
@@ -416,9 +417,19 @@ internal static class WktHelpers
     #region WKT Writing Helpers
 
     /// <summary>
+    /// Formats a coordinate value with optional decimal places.
+    /// </summary>
+    private static string FormatCoordinate(double value, int? coordinateDecimalPlaces)
+    {
+        return coordinateDecimalPlaces.HasValue
+            ? value.ToString($"F{coordinateDecimalPlaces.Value}", CultureInfo.InvariantCulture)
+            : value.ToInvariantString();
+    }
+
+    /// <summary>
     /// Formats a point as a WKT coordinate string.
     /// </summary>
-    internal static string FormatWktPoint<T>(T point, bool includeParentheses) where T : IPoint
+    internal static string FormatWktPoint<T>(T point, bool includeParentheses, int? coordinateDecimalPlaces = null) where T : IPoint
     {
         string coordinates;
 
@@ -426,22 +437,22 @@ internal static class WktHelpers
         if (point is IHasZ hasZPoint && point is IHasM hasMPoint)
         {
             // Point has both Z and M
-            coordinates = FormattableString.Invariant($"{point.X.ToInvariantString()} {point.Y.ToInvariantString()} {hasZPoint.Z.ToInvariantString()} {hasMPoint.M.ToInvariantString()}");
+            coordinates = FormattableString.Invariant($"{FormatCoordinate(point.X, coordinateDecimalPlaces)} {FormatCoordinate(point.Y, coordinateDecimalPlaces)} {FormatCoordinate(hasZPoint.Z, coordinateDecimalPlaces)} {FormatCoordinate(hasMPoint.M, coordinateDecimalPlaces)}");
         }
         else if (point is IHasZ hasZPointOnly)
         {
             // Point has only Z
-            coordinates = FormattableString.Invariant($"{point.X.ToInvariantString()} {point.Y.ToInvariantString()} {hasZPointOnly.Z.ToInvariantString()}");
+            coordinates = FormattableString.Invariant($"{FormatCoordinate(point.X, coordinateDecimalPlaces)} {FormatCoordinate(point.Y, coordinateDecimalPlaces)} {FormatCoordinate(hasZPointOnly.Z, coordinateDecimalPlaces)}");
         }
         else if (point is IHasM hasMPointOnly)
         {
             // Point has only M
-            coordinates = FormattableString.Invariant($"{point.X.ToInvariantString()} {point.Y.ToInvariantString()} {hasMPointOnly.M.ToInvariantString()}");
+            coordinates = FormattableString.Invariant($"{FormatCoordinate(point.X, coordinateDecimalPlaces)} {FormatCoordinate(point.Y, coordinateDecimalPlaces)} {FormatCoordinate(hasMPointOnly.M, coordinateDecimalPlaces)}");
         }
         else
         {
             // Point has neither Z nor M
-            coordinates = FormattableString.Invariant($"{point.X.ToInvariantString()} {point.Y.ToInvariantString()}");
+            coordinates = FormattableString.Invariant($"{FormatCoordinate(point.X, coordinateDecimalPlaces)} {FormatCoordinate(point.Y, coordinateDecimalPlaces)}");
         }
 
         return includeParentheses ? $"({coordinates})" : coordinates;
@@ -450,7 +461,7 @@ internal static class WktHelpers
     /// <summary>
     /// Formats a list of points as a WKT linestring.
     /// </summary>
-    internal static string GetWktLineString<T>(List<T> points, bool isRingBase) where T : IPoint, new()
+    internal static string GetWktLineString<T>(List<T> points, bool isRingBase, int? coordinateDecimalPlaces = null) where T : IPoint, new()
     {
         if (points == null || points.Count == 0)
             return "()";
@@ -459,14 +470,14 @@ internal static class WktHelpers
 
         foreach (var point in points)
         {
-            builder.Append(FormatWktPoint(point, includeParentheses: false));
+            builder.Append(FormatWktPoint(point, includeParentheses: false, coordinateDecimalPlaces));
             builder.Append(", ");
         }
 
         if (isRingBase && points.Count > 0)
         {
             // Close the ring by adding the first point again
-            builder.Append(FormatWktPoint(points[0], includeParentheses: false));
+            builder.Append(FormatWktPoint(points[0], includeParentheses: false, coordinateDecimalPlaces));
             builder.Append(", ");
         }
 
@@ -483,9 +494,9 @@ internal static class WktHelpers
     /// <summary>
     /// Formats a geometry's point array as a WKT string (for polygon, multi point, multi linestring, multipolygon).
     /// </summary>
-    internal static string GetWktLineStringForGeometry<T>(Geometry<T> geometry, bool isRingBase) where T : IPoint, new()
+    internal static string GetWktLineStringForGeometry<T>(Geometry<T> geometry, bool isRingBase, int? coordinateDecimalPlaces = null) where T : IPoint, new()
     {
-        var items = geometry.Geometries.Select(g => ToWktPointArrayString(g, isRingBase));
+        var items = geometry.Geometries.Select(g => ToWktPointArrayString(g, isRingBase, coordinateDecimalPlaces));
 
         StringBuilder result = new StringBuilder("(");
 
@@ -507,21 +518,21 @@ internal static class WktHelpers
     /// <summary>
     /// Converts a geometry to a WKT point array string.
     /// </summary>
-    internal static string ToWktPointArrayString<T>(Geometry<T> geometry, bool isRingBase) where T : IPoint, new()
+    internal static string ToWktPointArrayString<T>(Geometry<T> geometry, bool isRingBase, int? coordinateDecimalPlaces = null) where T : IPoint, new()
     {
         switch (geometry.Type)
         {
             case GeometryType.Point:
-                return FormatWktPoint(geometry.Points[0], includeParentheses: true);
+                return FormatWktPoint(geometry.Points[0], includeParentheses: true, coordinateDecimalPlaces);
 
             case GeometryType.LineString:
-                return GetWktLineString(geometry.Points, isRingBase);
+                return GetWktLineString(geometry.Points, isRingBase, coordinateDecimalPlaces);
 
             case GeometryType.Polygon:
             case GeometryType.MultiPoint:
             case GeometryType.MultiLineString:
             case GeometryType.MultiPolygon:
-                return GetWktLineStringForGeometry(geometry, isRingBase);
+                return GetWktLineStringForGeometry(geometry, isRingBase, coordinateDecimalPlaces);
 
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:

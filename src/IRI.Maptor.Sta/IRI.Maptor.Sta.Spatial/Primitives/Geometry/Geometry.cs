@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Extensions;
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Mathematics;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
@@ -3871,6 +3871,8 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public string AsWkt() => WktWriter.AsWkt(this);
 
+    public string AsWkt(int? coordinateDecimalPlaces) => WktWriter.AsWkt(this, coordinateDecimalPlaces);
+
     public byte[]? AsWkb() => WkbWriter.AsWkb(this);
 
     public string AsWkbHexString()
@@ -3882,6 +3884,8 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     public byte[]? AsSqlServerNativeBinary() => SqlServerSpatialNativeBinary.Serialize(this);
 
     public string AsSqlServerWkt() => SqlServerWktWriter.AsWkt(this);
+
+    public string AsSqlServerWkt(int? coordinateDecimalPlaces) => SqlServerWktWriter.AsWkt(this, coordinateDecimalPlaces);
 
     #endregion
 
