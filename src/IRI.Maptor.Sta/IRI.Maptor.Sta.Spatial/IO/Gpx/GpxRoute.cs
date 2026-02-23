@@ -1,10 +1,10 @@
 namespace IRI.Maptor.Sta.Common.IO.Gpx;
 
 /// <summary>
-/// Represents a GPX track (trk) - an ordered list of points describing a path.
+/// Represents a GPX route (rte) - an ordered list of waypoints representing a planned path.
 /// </summary>
 [Serializable]
-public class GpxTrack
+public class GpxRoute
 {
     public string? Name { get; set; }
 
@@ -20,13 +20,5 @@ public class GpxTrack
 
     public string? Type { get; set; }
 
-    public List<GpxTrackSegment> Segments { get; set; } = [];
-
-    public GpxTrack() { }
-
-    public GpxTrack(string? name, List<GpxTrackSegment> segments)
-    {
-        Name = name;
-        Segments = segments ?? [];
-    }
+    public List<GpxRoutePoint> RoutePoints { get; set; } = [];
 }
