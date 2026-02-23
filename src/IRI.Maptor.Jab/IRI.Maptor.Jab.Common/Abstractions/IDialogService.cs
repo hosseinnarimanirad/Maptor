@@ -89,4 +89,9 @@ public interface IDialogService
     // ********************************************************************
     Task<DxfOpenDialogResult?> ShowDxfOpenDialogAsync(object? ownerWindow = null, int? initialSrid = null);
 
+    // ********************************************************************
+    //                          CSV/TSV Open Dialog
+    // ********************************************************************
+    Task<CsvTsvOpenDialogResult?> ShowCsvTsvOpenDialogAsync(object? ownerWindow = null, bool initialIsCsv = true, int? initialSrid = null);
+
 }

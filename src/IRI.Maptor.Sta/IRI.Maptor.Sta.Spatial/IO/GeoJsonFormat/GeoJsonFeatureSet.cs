@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using System.Threading.Tasks;
@@ -99,15 +101,38 @@ public class GeoJsonFeatureSet
     public static GeoJsonFeatureSet DelimitedToPointGeoJson(string fileName, bool userFirstLineAsHeader, params char[] delimited)
     {
         var rawData = IOHelper.ReadAllDelimitedFile(fileName, delimited);
-
-        return CreateFromDelimited(rawData, userFirstLineAsHeader);
+        return CreateFromDelimited(rawData, userFirstLineAsHeader, isLongitudeFirst: true);
     }
 
     public static async Task<GeoJsonFeatureSet> DelimitedToPointGeoJsonAsync(string fileName, bool userFirstLineAsHeader, params char[] delimited)
     {
         var rawData = await IOHelper.ReadAllDelimitedFileAsync(fileName, delimited);
+        return CreateFromDelimited(rawData, userFirstLineAsHeader, isLongitudeFirst: true);
+    }
 
-        return CreateFromDelimited(rawData, userFirstLineAsHeader);
+    /// <summary>
+    /// Converts delimited text (e.g. pasted from clipboard) to a GeoJSON FeatureCollection of points.
+    /// </summary>
+    public static GeoJsonFeatureSet DelimitedToPointGeoJsonFromText(string text, bool useFirstLineAsHeader, bool isLongitudeFirst, params char[] delimited)
+    {
+        var rawData = IOHelper.ReadDelimitedFromText(text, delimited);
+        return CreateFromDelimited(rawData, useFirstLineAsHeader, isLongitudeFirst);
+    }
+
+    /// <summary>
+    /// Converts CSV text to a GeoJSON FeatureCollection of points.
+    /// </summary>
+    public static GeoJsonFeatureSet CsvToPointGeoJsonFromText(string text, bool useFirstLineAsHeader, bool isLongitudeFirst)
+    {
+        return DelimitedToPointGeoJsonFromText(text, useFirstLineAsHeader, isLongitudeFirst, IOHelper.CsvDelimiterChar);
+    }
+
+    /// <summary>
+    /// Converts TSV text to a GeoJSON FeatureCollection of points.
+    /// </summary>
+    public static GeoJsonFeatureSet TsvToPointGeoJsonFromText(string text, bool useFirstLineAsHeader, bool isLongitudeFirst)
+    {
+        return DelimitedToPointGeoJsonFromText(text, useFirstLineAsHeader, isLongitudeFirst, IOHelper.TsvDelimiterChar);
     }
 
     /// <summary>
@@ -142,34 +167,39 @@ public class GeoJsonFeatureSet
         return DelimitedToPointGeoJsonAsync(fileName, userFirstLineAsHeader, IOHelper.TsvDelimiterChar);
     }
 
-    private static GeoJsonFeatureSet CreateFromDelimited(List<string[]> rawData, bool userFirstLineAsHeader)
+    private static GeoJsonFeatureSet CreateFromDelimited(List<string[]> rawData, bool userFirstLineAsHeader, bool isLongitudeFirst = true)
     {
         List<GeoJsonFeature> result = new List<GeoJsonFeature>();
 
+        if (rawData == null || rawData.Count == 0)
+            return new GeoJsonFeatureSet() { Features = result, TotalFeatures = 0, Type = GeoJson.FeatureSet };
+
         int startIndex = 0;
+        List<string> header;
 
-        List<string> header = new List<string>();
-
-        if (userFirstLineAsHeader)
+        if (userFirstLineAsHeader && rawData[0].Length >= 2)
         {
             startIndex = 1;
-
-            header = rawData[0].Skip(2).ToList();
+            header = rawData[0].Length > 2 ? rawData[0].Skip(2).ToList() : new List<string>();
         }
         else
         {
-            header = Enumerable.Range(1, rawData[0].Length - 2).Select(i => $"header {i}").ToList();
+            int colCount = rawData[0].Length;
+            header = colCount > 2 ? Enumerable.Range(1, colCount - 2).Select(i => $"header {i}").ToList() : new List<string>();
         }
 
         for (int i = startIndex; i < rawData.Count; i++)
         {
-            double longitude = double.Parse(rawData[i][0]);
+            if (rawData[i].Length < 2)
+                continue;
 
-            double latitude = double.Parse(rawData[i][1]);
+            double v0 = double.Parse(rawData[i][0]);
+            double v1 = double.Parse(rawData[i][1]);
+            double longitude = isLongitudeFirst ? v0 : v1;
+            double latitude = isLongitudeFirst ? v1 : v0;
 
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
-
-            for (int p = 2; p < rawData[i].Length; p++)
+            for (int p = 2; p < rawData[i].Length && p - 2 < header.Count; p++)
             {
                 dictionary.Add(header[p - 2], rawData[i][p]);
             }

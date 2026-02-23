@@ -328,6 +328,33 @@
   <data name="dialog_dxfOpen_columnY" xml:space="preserve">
     <value>Y</value>
   </data>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>CSV / TSV आयात करें</value>
+  </data>
+  <data name="dialog_csvTsvOpen_fileWatermark" xml:space="preserve">
+    <value>फ़ाइल</value>
+  </data>
+  <data name="dialog_csvTsvOpen_browse" xml:space="preserve">
+    <value>ब्राउज़ करें...</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
+    <value>CSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatTsv" xml:space="preserve">
+    <value>TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
+    <value>पहली पंक्ति को विशेषता नामों के रूप में उपयोग करें</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
+    <value>पहला कॉलम = X (देशांतर/पूर्व), दूसरा = Y (अक्षांश/उत्तर)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderYX" xml:space="preserve">
+    <value>पहला कॉलम = Y (अक्षांश/उत्तर), दूसरा = X (देशांतर/पूर्व)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
+    <value>डेटा पेस्ट करें या चयनित फ़ाइल का पूर्वावलोकन (पहली 50 पंक्तियाँ)</value>
+  </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>
   </data>

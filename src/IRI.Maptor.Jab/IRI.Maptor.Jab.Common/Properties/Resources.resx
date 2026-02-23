@@ -396,6 +396,33 @@
   <data name="dialog_dxfOpen_columnY" xml:space="preserve">
     <value>Y</value>
   </data>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>Import CSV / TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_fileWatermark" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="dialog_csvTsvOpen_browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
+    <value>CSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatTsv" xml:space="preserve">
+    <value>TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
+    <value>Use first line as attribute names</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
+    <value>First column = X (longitude/easting), second = Y (latitude/northing)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderYX" xml:space="preserve">
+    <value>First column = Y (latitude/northing), second = X (longitude/easting)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
+    <value>Paste data or preview of selected file (top 50 lines)</value>
+  </data>
   <data name="languageSelector_title" xml:space="preserve">
     <value>Language</value>
   </data>

@@ -328,6 +328,33 @@
   <data name="dialog_dxfOpen_columnY" xml:space="preserve">
     <value>Y</value>
   </data>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>Импорт CSV / TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_fileWatermark" xml:space="preserve">
+    <value>Файл</value>
+  </data>
+  <data name="dialog_csvTsvOpen_browse" xml:space="preserve">
+    <value>Обзор...</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
+    <value>CSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatTsv" xml:space="preserve">
+    <value>TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
+    <value>Использовать первую строку как имена атрибутов</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
+    <value>Первый столбец = X (долгота/восток), второй = Y (широта/север)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderYX" xml:space="preserve">
+    <value>Первый столбец = Y (широта/север), второй = X (долгота/восток)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
+    <value>Вставьте данные или превью выбранного файла (первые 50 строк)</value>
+  </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>
   </data>

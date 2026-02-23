@@ -723,6 +723,21 @@ public class DefaultDialogService : IDialogService
             vm => ((DxfOpenDialogViewModel)vm).RequestClose = () => dialog.Close());
     }
 
+    public Task<CsvTsvOpenDialogResult?> ShowCsvTsvOpenDialogAsync(object? ownerWindow = null, bool initialIsCsv = true, int? initialSrid = null)
+    {
+        var viewModel = new CsvTsvOpenDialogViewModel(this, initialIsCsv, initialSrid);
+        var dialog = new Views.Dialogs.CsvTsvOpenDialogView();
+
+        return ShowCustomDialogAsync(
+            ownerWindow,
+            dialog,
+            viewModel,
+            vm => ((CsvTsvOpenDialogViewModel)vm).DialogResult == true && ((CsvTsvOpenDialogViewModel)vm).CsvTsvResult != null
+                ? ((CsvTsvOpenDialogViewModel)vm).CsvTsvResult
+                : null,
+            vm => ((CsvTsvOpenDialogViewModel)vm).RequestClose = () => dialog.Close());
+    }
+
     #endregion
 
     /// <summary>

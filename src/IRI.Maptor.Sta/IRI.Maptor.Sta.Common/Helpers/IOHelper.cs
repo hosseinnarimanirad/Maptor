@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using IRI.Maptor.Sta.Common.Primitives;
 
@@ -120,6 +121,18 @@ public static class IOHelper
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Parses delimited text (e.g. pasted from clipboard) into rows of columns.
+    /// </summary>
+    public static List<string[]> ReadDelimitedFromText(string text, params char[] delimited)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return new List<string[]>();
+
+        var lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        return lines.Select(line => line.Split(delimited)).ToList();
     }
 
     public static List<string[]> ReadAsCsv(string fileName)

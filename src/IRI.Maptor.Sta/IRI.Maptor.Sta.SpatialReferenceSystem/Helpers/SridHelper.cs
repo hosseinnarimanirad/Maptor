@@ -60,6 +60,16 @@ public static class SridHelper
                 return new CylindricalEqualArea();
 
             default:
+                if (srid >= 32601 && srid <= 32660)
+                {
+                    int zone = srid - 32600;
+                    return UTM.CreateForZone(Ellipsoids.WGS84, zone);
+                }
+                if (srid >= 32701 && srid <= 32760)
+                {
+                    int zone = srid - 32700;
+                    return UTM.CreateForZone(Ellipsoids.WGS84, zone);
+                }
                 return null;
         }
     }

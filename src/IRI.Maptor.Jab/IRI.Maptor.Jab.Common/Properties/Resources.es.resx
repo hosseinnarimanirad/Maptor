@@ -328,6 +328,33 @@
   <data name="dialog_dxfOpen_columnY" xml:space="preserve">
     <value>Y</value>
   </data>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>Importar CSV / TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_fileWatermark" xml:space="preserve">
+    <value>Archivo</value>
+  </data>
+  <data name="dialog_csvTsvOpen_browse" xml:space="preserve">
+    <value>Examinar...</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
+    <value>CSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatTsv" xml:space="preserve">
+    <value>TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
+    <value>Usar la primera línea como nombres de atributos</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
+    <value>Primera columna = X (longitud/este), segunda = Y (latitud/norte)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderYX" xml:space="preserve">
+    <value>Primera columna = Y (latitud/norte), segunda = X (longitud/este)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
+    <value>Pegar datos o vista previa del archivo seleccionado (primeras 50 líneas)</value>
+  </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copiar</value>
   </data>

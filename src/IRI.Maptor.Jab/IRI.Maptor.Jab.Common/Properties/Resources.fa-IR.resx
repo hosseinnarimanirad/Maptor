@@ -328,6 +328,33 @@
   <data name="dialog_dxfOpen_columnY" xml:space="preserve">
     <value>Y</value>
   </data>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>وارد کردن CSV / TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_fileWatermark" xml:space="preserve">
+    <value>فایل</value>
+  </data>
+  <data name="dialog_csvTsvOpen_browse" xml:space="preserve">
+    <value>مرور...</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
+    <value>CSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_formatTsv" xml:space="preserve">
+    <value>TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
+    <value>استفاده از خط اول به‌عنوان نام ویژگی‌ها</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
+    <value>ستون اول = X (طول جغرافیایی/شرق)، دوم = Y (عرض جغرافیایی/شمال)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_orderYX" xml:space="preserve">
+    <value>ستون اول = Y (عرض جغرافیایی/شمال)، دوم = X (طول جغرافیایی/شرق)</value>
+  </data>
+  <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
+    <value>داده را جایگذاری کنید یا پیش‌نمایش فایل انتخاب‌شده (۵۰ خط اول)</value>
+  </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>کپی</value>
   </data>

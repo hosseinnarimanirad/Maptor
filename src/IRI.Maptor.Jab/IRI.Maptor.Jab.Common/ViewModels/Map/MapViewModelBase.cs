@@ -3852,33 +3852,35 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
     /// <summary>
-    /// ستون اول و دوم طول و عرض جغرافیایی
-    /// باقی ستون‌ها هم اطلاعات توصیفی
+    /// <summary>
+    /// Opens the CSV/TSV import dialog and adds the layer.
     /// </summary>
-    /// <param name="owner"></param>
-    /// <returns></returns>
     public virtual async Task AddCsvFile(object owner, bool isLongitudeFirst)
     {
         try
         {
             IsBusy = true;
 
-            var fileName = await DialogService.ShowOpenFileDialogAsync("CSV file (*.csv)|*.csv|Text file (*.txt)|*.txt", owner);
+            var result = await DialogService.ShowCsvTsvOpenDialogAsync(ownerWindow: null, initialIsCsv: true, initialSrid: null);
 
-            if (!File.Exists(fileName))
+            if (result == null || string.IsNullOrWhiteSpace(result.RawText))
             {
                 IsBusy = false;
-
                 return;
             }
 
-            var dataSource = await CsvDataSource.CreateFromFileAsync(fileName, useFirstLineAsHeader: false);
+            MemoryDataSource dataSource = result.IsCsv
+                ? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.UseFirstLineAsHeader)
+                : await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.UseFirstLineAsHeader);
 
             if (dataSource == null)
                 return;
 
-            AddLayer(new VectorLayer(Path.GetFileNameWithoutExtension(fileName), dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
+            var layerName = !string.IsNullOrEmpty(result.FilePath)
+                ? Path.GetFileNameWithoutExtension(result.FilePath)
+                : (result.IsCsv ? "CSV Import" : "TSV Import");
 
+            AddLayer(new VectorLayer(layerName, dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
         }
         catch (IOException)
         {
@@ -3899,34 +3901,34 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
     /// <summary>
-    /// ستون اول و دوم طول و عرض جغرافیایی
-    /// باقی ستون‌ها هم اطلاعات توصیفی
+    /// Opens the CSV/TSV import dialog and adds the layer.
     /// </summary>
-    /// <param name="owner"></param>
-    /// <param name="isLongitudeFirst"></param>
-    /// <returns></returns>
     public virtual async Task AddTsvFile(object owner, bool isLongitudeFirst)
     {
         try
         {
             IsBusy = true;
 
-            var fileName = await DialogService.ShowOpenFileDialogAsync("TSV file (*.tsv)|*.tsv|Text file (*.txt)|*.txt", owner);
+            var result = await DialogService.ShowCsvTsvOpenDialogAsync(ownerWindow: null, initialIsCsv: false, initialSrid: null);
 
-            if (!File.Exists(fileName))
+            if (result == null || string.IsNullOrWhiteSpace(result.RawText))
             {
                 IsBusy = false;
-
                 return;
             }
 
-            var dataSource = await TsvDataSource.CreateFromFileAsync(fileName, useFirstLineAsHeader: false);
+            MemoryDataSource dataSource = result.IsCsv
+                ? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.UseFirstLineAsHeader)
+                : await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.UseFirstLineAsHeader);
 
             if (dataSource == null)
                 return;
 
-            AddLayer(new VectorLayer(Path.GetFileNameWithoutExtension(fileName), dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
+            var layerName = !string.IsNullOrEmpty(result.FilePath)
+                ? Path.GetFileNameWithoutExtension(result.FilePath)
+                : (result.IsCsv ? "CSV Import" : "TSV Import");
 
+            AddLayer(new VectorLayer(layerName, dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
         }
         catch (IOException)
         {
