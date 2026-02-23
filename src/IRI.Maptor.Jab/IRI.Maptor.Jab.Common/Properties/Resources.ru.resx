@@ -199,8 +199,14 @@
   <data name="cmd_legend_addDxf" xml:space="preserve">
     <value>Add DXF</value>
   </data>
+  <data name="cmd_legend_addGpx" xml:space="preserve">
+    <value>Добавить GPX</value>
+  </data>
   <data name="cmd_legend_addGeoJson" xml:space="preserve">
     <value>Add GeoJson</value>
+  </data>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>Добавить TopoJSON</value>
   </data>
   <data name="cmd_legend_addKml" xml:space="preserve">
     <value>Add KML</value>
@@ -354,6 +360,30 @@
   </data>
   <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
     <value>Вставьте данные или превью выбранного файла (первые 50 строк)</value>
+  </data>
+  <data name="dialog_geoJsonOpen_title" xml:space="preserve">
+    <value>Импорт GeoJSON</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>Импорт TopoJSON</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_fileWatermark" xml:space="preserve">
+    <value>Файл</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_browse" xml:space="preserve">
+    <value>Обзор...</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
+    <value>Первая координата = X (долгота/восток), вторая = Y (широта/север)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderYX" xml:space="preserve">
+    <value>Первая координата = Y (широта/север), вторая = X (долгота/восток)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_pasteWatermark" xml:space="preserve">
+    <value>Вставить JSON или превью выбранного файла</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
+    <value>Точки-образцы (первые 50)</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>

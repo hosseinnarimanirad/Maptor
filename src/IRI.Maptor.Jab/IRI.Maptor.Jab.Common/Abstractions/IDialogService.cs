@@ -94,4 +94,9 @@ public interface IDialogService
     // ********************************************************************
     Task<CsvTsvOpenDialogResult?> ShowCsvTsvOpenDialogAsync(object? ownerWindow = null, bool initialIsCsv = true, int? initialSrid = null);
 
+    // ********************************************************************
+    //                          GeoJSON/TopoJSON Open Dialog
+    // ********************************************************************
+    Task<GeoJsonTopoJsonOpenDialogResult?> ShowGeoJsonTopoJsonOpenDialogAsync(object? ownerWindow = null, bool isGeoJson = true, int? initialSrid = null);
+
 }

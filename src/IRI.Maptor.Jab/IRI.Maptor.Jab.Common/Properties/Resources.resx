@@ -275,6 +275,9 @@
   <data name="cmd_legend_addGeoJson" xml:space="preserve">
     <value>Add GeoJson</value>
   </data>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>Add TopoJSON</value>
+  </data>
   <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
     <value>Add lat/long</value>
   </data>
@@ -301,6 +304,9 @@
   </data>
   <data name="cmd_legend_addDxf" xml:space="preserve">
     <value>Add DXF</value>
+  </data>
+  <data name="cmd_legend_addGpx" xml:space="preserve">
+    <value>Add GPX</value>
   </data>
   <data name="cmd_legend_addCsv" xml:space="preserve">
     <value>Add CSV</value>
@@ -422,6 +428,30 @@
   </data>
   <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
     <value>Paste data or preview of selected file (top 50 lines)</value>
+  </data>
+  <data name="dialog_geoJsonOpen_title" xml:space="preserve">
+    <value>Import GeoJSON</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>Import TopoJSON</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_fileWatermark" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
+    <value>First coordinate = X (longitude/easting), second = Y (latitude/northing)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderYX" xml:space="preserve">
+    <value>First coordinate = Y (latitude/northing), second = X (longitude/easting)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_pasteWatermark" xml:space="preserve">
+    <value>Paste JSON or preview of selected file</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
+    <value>Sample points (first 50)</value>
   </data>
   <data name="languageSelector_title" xml:space="preserve">
     <value>Language</value>

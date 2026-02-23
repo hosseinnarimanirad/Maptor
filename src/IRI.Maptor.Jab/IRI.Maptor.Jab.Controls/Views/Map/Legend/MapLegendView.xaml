@@ -279,11 +279,6 @@
                     ToolTip="{Binding [cmd_legend_addGeoJson], Source={StaticResource Localization}}">
                 <Path Data="{StaticResource json}"/>
             </Button>
-            <Button IsEnabled="False" Focusable="False" Command="{Binding AddCsvCommand}"
-                    Style="{StaticResource circleButtonLight}" 
-                    ToolTip="{Binding [cmd_legend_addLatLongTxt], Source={StaticResource Localization}}">
-                <Path Data="{StaticResource txt}"/>
-            </Button>
             <Button Focusable="False" Command="{Binding AddShapefileCommand}"
                     Style="{StaticResource circleButtonLight}" 
                     ToolTip="{Binding [cmd_legend_addShapefile], Source={StaticResource Localization}}">
@@ -498,6 +493,21 @@
                                                Style="{StaticResource menuTextBlock}" />
                                 </StackPanel>
                             </Button>
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddGpxfileCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource menuRectangle}"
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Gpx}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.Gpx}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource gpx}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_legend_addGpx], Source={StaticResource Localization}}"
+                                               Style="{StaticResource menuTextBlock}" />
+                                </StackPanel>
+                            </Button>
 
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddGeoJSONfileCommand}">
                                 <StackPanel Orientation="Horizontal">
@@ -511,6 +521,22 @@
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_legend_addGeoJson], Source={StaticResource Localization}}"
+                                               Style="{StaticResource menuTextBlock}" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddTopoJsonCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource menuRectangle}"
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.TopoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.TopoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource json}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_legend_addTopoJson], Source={StaticResource Localization}}"
                                                Style="{StaticResource menuTextBlock}" />
                                 </StackPanel>
                             </Button>

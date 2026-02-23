@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using IRI.Maptor.Sta.Common.Helpers;
+using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
@@ -215,5 +216,102 @@ public class GeoJsonFeatureSet
         }
 
         return new GeoJsonFeatureSet() { Features = result, TotalFeatures = result.Count, Type = GeoJson.FeatureSet };
+    }
+
+    /// <summary>
+    /// Extracts sample points from a GeoJSON FeatureCollection for preview display.
+    /// Walks Point, MultiPoint, LineString, Polygon (and multi variants) to collect coordinates.
+    /// </summary>
+    /// <param name="featureSet">The parsed GeoJSON FeatureCollection.</param>
+    /// <param name="isLongitudeFirst">If true, coordinates are [lon, lat]; otherwise [lat, lon].</param>
+    /// <param name="maxPoints">Maximum number of points to extract. Default 50.</param>
+    /// <returns>List of raw points (X, Y) for preview; no SRS conversion.</returns>
+    public static IReadOnlyList<Point> ExtractSamplePoints(GeoJsonFeatureSet featureSet, bool isLongitudeFirst, int maxPoints = 50)
+    {
+        var result = new List<Point>();
+        if (featureSet?.Features == null)
+            return result;
+
+        foreach (var f in featureSet.Features)
+        {
+            if (result.Count >= maxPoints)
+                break;
+            if (f?.Geometry == null || f.Geometry.IsNullOrEmpty())
+                continue;
+            AddPointsFromGeometry(f.Geometry, isLongitudeFirst, result, maxPoints);
+        }
+        return result;
+    }
+
+    private static void AddPointsFromGeometry(IGeoJsonGeometry geometry, bool isLongitudeFirst, List<Point> result, int maxPoints)
+    {
+        switch (geometry)
+        {
+            case GeoJsonPoint pt when pt.Coordinates != null && pt.Coordinates.Length >= 2:
+                AddPoint(pt.Coordinates, isLongitudeFirst, result);
+                break;
+            case GeoJsonMultiPoint mp when mp.Coordinates != null:
+                foreach (var c in mp.Coordinates)
+                {
+                    if (result.Count >= maxPoints) return;
+                    if (c != null && c.Length >= 2) AddPoint(c, isLongitudeFirst, result);
+                }
+                break;
+            case GeoJsonLineString ls when ls.Coordinates != null:
+                foreach (var c in ls.Coordinates)
+                {
+                    if (result.Count >= maxPoints) return;
+                    if (c != null && c.Length >= 2) AddPoint(c, isLongitudeFirst, result);
+                }
+                break;
+            case GeoJsonMultiLineString mls when mls.Coordinates != null:
+                foreach (var line in mls.Coordinates)
+                {
+                    if (result.Count >= maxPoints) return;
+                    if (line == null) continue;
+                    foreach (var c in line)
+                    {
+                        if (result.Count >= maxPoints) return;
+                        if (c != null && c.Length >= 2) AddPoint(c, isLongitudeFirst, result);
+                    }
+                }
+                break;
+            case GeoJsonPolygon poly when poly.Coordinates != null:
+                foreach (var ring in poly.Coordinates)
+                {
+                    if (result.Count >= maxPoints) return;
+                    if (ring == null) continue;
+                    foreach (var c in ring)
+                    {
+                        if (result.Count >= maxPoints) return;
+                        if (c != null && c.Length >= 2) AddPoint(c, isLongitudeFirst, result);
+                    }
+                }
+                break;
+            case GeoJsonMultiPolygon mpoly when mpoly.Coordinates != null:
+                foreach (var polygon in mpoly.Coordinates)
+                {
+                    if (result.Count >= maxPoints) return;
+                    if (polygon == null) continue;
+                    foreach (var ring in polygon)
+                    {
+                        if (result.Count >= maxPoints) return;
+                        if (ring == null) continue;
+                        foreach (var c in ring)
+                        {
+                            if (result.Count >= maxPoints) return;
+                            if (c != null && c.Length >= 2) AddPoint(c, isLongitudeFirst, result);
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    private static void AddPoint(double[] coords, bool isLongitudeFirst, List<Point> result)
+    {
+        double x = isLongitudeFirst ? coords[0] : coords[1];
+        double y = isLongitudeFirst ? coords[1] : coords[0];
+        result.Add(new Point(x, y));
     }
 }

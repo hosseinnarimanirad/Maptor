@@ -199,8 +199,14 @@
   <data name="cmd_legend_addDxf" xml:space="preserve">
     <value>Add DXF</value>
   </data>
+  <data name="cmd_legend_addGpx" xml:space="preserve">
+    <value>GPX जोड़ें</value>
+  </data>
   <data name="cmd_legend_addGeoJson" xml:space="preserve">
     <value>Add GeoJson</value>
+  </data>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>TopoJSON जोड़ें</value>
   </data>
   <data name="cmd_legend_addKml" xml:space="preserve">
     <value>Add KML</value>
@@ -354,6 +360,30 @@
   </data>
   <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
     <value>डेटा पेस्ट करें या चयनित फ़ाइल का पूर्वावलोकन (पहली 50 पंक्तियाँ)</value>
+  </data>
+  <data name="dialog_geoJsonOpen_title" xml:space="preserve">
+    <value>GeoJSON आयात करें</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>TopoJSON आयात करें</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_fileWatermark" xml:space="preserve">
+    <value>फ़ाइल</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_browse" xml:space="preserve">
+    <value>ब्राउज़ करें...</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
+    <value>पहला निर्देशांक = X (देशांतर/पूर्व), दूसरा = Y (अक्षांश/उत्तर)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderYX" xml:space="preserve">
+    <value>पहला निर्देशांक = Y (अक्षांश/उत्तर), दूसरा = X (देशांतर/पूर्व)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_pasteWatermark" xml:space="preserve">
+    <value>JSON पेस्ट करें या चयनित फ़ाइल का पूर्वावलोकन</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
+    <value>नमूना बिंदु (पहले 50)</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>

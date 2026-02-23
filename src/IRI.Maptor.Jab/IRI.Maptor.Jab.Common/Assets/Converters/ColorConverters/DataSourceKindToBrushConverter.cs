@@ -20,6 +20,7 @@ public class DataSourceKindToBrushConverter : IValueConverter
 
             DataSourceKind.Kmz => ModernUIColors.LimeGreenBrush,
             DataSourceKind.Kml => ModernUIColors.LimeBrush,
+            DataSourceKind.Gpx => ModernUIColors.LimeBrush,
 
             DataSourceKind.Dxf => ModernUIColors.TealBrush,
 
@@ -27,6 +28,7 @@ public class DataSourceKindToBrushConverter : IValueConverter
             DataSourceKind.GRPC => ModernUIColors.BlueBrush,
 
             DataSourceKind.GeoJson => ModernUIColors.IndigoBrush,
+            DataSourceKind.TopoJson => ModernUIColors.IndigoBrush,
 
             DataSourceKind.Csv => ModernUIColors.VioletBrush,
             DataSourceKind.Tsv => ModernUIColors.PinkBrush,

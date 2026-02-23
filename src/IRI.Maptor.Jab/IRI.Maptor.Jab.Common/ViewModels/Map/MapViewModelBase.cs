@@ -30,6 +30,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 using IRI.Maptor.Ket.GdiPersistence;
 using IRI.Maptor.Sta.KmlFormat;
+using IRI.Maptor.Sta.Common.IO.Gpx;
 
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Models;
@@ -3594,6 +3595,129 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    public virtual async Task AddGpxfile(object owner, int? maxSizeInKB = null)
+    {
+        IsBusy = true;
+
+        var fileName = await DialogService.ShowOpenFileDialogAsync("GPS Exchange Format (GPX)|*.gpx", owner);
+
+        if (!File.Exists(fileName))
+        {
+            IsBusy = false;
+            return;
+        }
+
+        if (maxSizeInKB.HasValue)
+        {
+            var info = new FileInfo(fileName);
+            if (info.Length / 1000.0 > maxSizeInKB)
+            {
+                await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", _error, owner);
+                IsBusy = false;
+                return;
+            }
+        }
+
+        await AddGpxfile(fileName, owner);
+    }
+
+    public async Task AddGpxfile(string fileName, object owner)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+                throw new FileNotFoundException($"GPX file '{fileName}' was not found.", fileName);
+
+            var features = new List<Feature<Point>>();
+
+            try
+            {
+                var parsed = GpxFormat.Parse(fileName);
+                foreach (var wpt in parsed.Waypoints)
+                {
+                    var point = new Point(wpt.Longitude, wpt.Latitude);
+                    var geom = Geometry<Point>.CreatePointOrLineString(new List<Point> { point }, SridHelper.GeodeticWGS84);
+                    var attrs = new Dictionary<string, object?>();
+                    if (!string.IsNullOrWhiteSpace(wpt.Name)) attrs["name"] = wpt.Name;
+                    if (!string.IsNullOrWhiteSpace(wpt.Description)) attrs["description"] = wpt.Description;
+                    if (wpt.Elevation.HasValue) attrs["elevation"] = wpt.Elevation.Value;
+                    features.Add(new Feature<Point>(geom, attrs));
+                }
+
+                foreach (var route in parsed.Routes)
+                {
+                    if (route.RoutePoints == null || route.RoutePoints.Count < 2) continue;
+                    var points = route.RoutePoints.Select(p => new Point(p.Longitude, p.Latitude)).ToList();
+                    var geom = Geometry<Point>.CreatePointOrLineString(points, SridHelper.GeodeticWGS84);
+                    var attrs = new Dictionary<string, object?>();
+                    if (!string.IsNullOrWhiteSpace(route.Name)) attrs["name"] = route.Name;
+                    features.Add(new Feature<Point>(geom, attrs));
+                }
+
+                foreach (var track in parsed.Tracks)
+                {
+                    foreach (var segment in track.Segments ?? Enumerable.Empty<GpxTrackSegment>())
+                    {
+                        if (segment.TrackPoints == null || segment.TrackPoints.Count < 2) continue;
+                        var points = segment.TrackPoints
+                            .Select(p => new Point(p.Longitude, p.Latitude))
+                            .ToList();
+                        var geom = Geometry<Point>.CreatePointOrLineString(points, SridHelper.GeodeticWGS84);
+                        var attrs = new Dictionary<string, object?>();
+                        if (!string.IsNullOrWhiteSpace(track.Name)) attrs["name"] = track.Name;
+                        features.Add(new Feature<Point>(geom, attrs));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+                return;
+            }
+
+            if (features.IsNullOrEmpty())
+            {
+                await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل GPX یافت نشد.", _error, owner);
+                return;
+            }
+
+            features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
+
+            var dataSource = GpxDataSource.Create(fileName, features);
+            var geometryType = features.First().TheGeometry.Type;
+            var symbolizers = features.CreateSymbolizersFromKml(geometryType);
+
+            var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
+                                dataSource,
+                                symbolizers,
+                                LayerType.VectorLayer,
+                                RenderMode.Default,
+                                RasterizationMethod.GdiPlus,
+                                ScaleInterval.All)
+            {
+                IsSearchable = true
+            };
+
+            AddLayer(vectorLayer);
+        }
+        catch (IOException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        catch (Exception ex)
+        {
+            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     public virtual async Task AddDxffile(object defaultSrid, int? maxSizeInKB)
     {
         IsBusy = true;
@@ -3950,19 +4074,45 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public virtual async Task AddGeoJson(object owner)
     {
-        IsBusy = true;
+        try
+        {
+            IsBusy = true;
 
-        var fileName = await DialogService.ShowOpenFileDialogAsync("GeoJSON|*.json", owner);
+            var result = await DialogService.ShowGeoJsonTopoJsonOpenDialogAsync(owner, isGeoJson: true, null);
 
-        if (!File.Exists(fileName))
+            if (result == null || string.IsNullOrWhiteSpace(result.RawJson))
+            {
+                IsBusy = false;
+                return;
+            }
+
+            MemoryDataSource dataSource = !string.IsNullOrEmpty(result.FilePath)
+                ? await GeoJsonDataSource.CreateFromFileAsync(result.FilePath, result.IsLongitudeFirst, result.SelectedSrid)
+                : await GeoJsonDataSource.CreateFromTextAsync(result.RawJson, result.SelectedSrid, result.IsLongitudeFirst, result.FilePath ?? string.Empty);
+
+            var layerName = !string.IsNullOrEmpty(result.FilePath)
+                ? Path.GetFileNameWithoutExtension(result.FilePath)
+                : "GeoJSON Import";
+
+            AddLayer(new VectorLayer(layerName, dataSource,
+                [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
+                LayerType.VectorLayer,
+                RenderMode.Default,
+                RasterizationMethod.GdiPlus, ScaleInterval.All)
+            {
+                IsSearchable = true
+            });
+        }
+        catch (Exception ex)
+        {
+            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+        }
+        finally
         {
             IsBusy = false;
-
-            return;
         }
-
-        await AddGeoJson(fileName, owner);
     }
+
     public async Task AddGeoJson(string geoJsonFeatureSetFileName, object owner)
     {
         try
@@ -3979,6 +4129,47 @@ public abstract class MapViewModelBase : ViewModelBase
             };
 
             AddLayer/*<Feature<Point>>*/(vectorLayer);
+        }
+        catch (Exception ex)
+        {
+            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    public virtual async Task AddTopoJson(object owner)
+    {
+        try
+        {
+            IsBusy = true;
+
+            var result = await DialogService.ShowGeoJsonTopoJsonOpenDialogAsync(owner, isGeoJson: false, null);
+
+            if (result == null || string.IsNullOrWhiteSpace(result.RawJson))
+            {
+                IsBusy = false;
+                return;
+            }
+
+            MemoryDataSource dataSource = !string.IsNullOrEmpty(result.FilePath)
+                ? await TopoJsonDataSource.CreateFromFileAsync(result.FilePath, result.SelectedSrid)
+                : await TopoJsonDataSource.CreateFromTextAsync(result.RawJson, result.SelectedSrid, result.FilePath ?? string.Empty);
+
+            var layerName = !string.IsNullOrEmpty(result.FilePath)
+                ? Path.GetFileNameWithoutExtension(result.FilePath)
+                : "TopoJSON Import";
+
+            AddLayer(new VectorLayer(layerName, dataSource,
+                [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
+                LayerType.VectorLayer,
+                RenderMode.Default,
+                RasterizationMethod.GdiPlus, ScaleInterval.All)
+            {
+                IsSearchable = true
+            });
         }
         catch (Exception ex)
         {
@@ -4158,6 +4349,22 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    private RelayCommand _addTopoJsonCommand;
+    public RelayCommand AddTopoJsonCommand
+    {
+        get
+        {
+            if (_addTopoJsonCommand == null)
+            {
+                _addTopoJsonCommand = new RelayCommand(async param =>
+                {
+                    await AddTopoJson(param);
+                });
+            }
+            return _addTopoJsonCommand;
+        }
+    }
+
     private RelayCommand _addKmlfileCommand;
     public RelayCommand AddKmlfileCommand
     {
@@ -4189,6 +4396,23 @@ public abstract class MapViewModelBase : ViewModelBase
             }
 
             return _addKmzfileCommand;
+        }
+    }
+
+    private RelayCommand _addGpxfileCommand;
+    public RelayCommand AddGpxfileCommand
+    {
+        get
+        {
+            if (_addGpxfileCommand == null)
+            {
+                _addGpxfileCommand = new RelayCommand(async param =>
+                {
+                    await AddGpxfile(param, null);
+                });
+            }
+
+            return _addGpxfileCommand;
         }
     }
 

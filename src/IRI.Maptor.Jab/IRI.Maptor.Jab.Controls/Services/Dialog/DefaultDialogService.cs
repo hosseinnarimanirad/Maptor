@@ -738,6 +738,21 @@ public class DefaultDialogService : IDialogService
             vm => ((CsvTsvOpenDialogViewModel)vm).RequestClose = () => dialog.Close());
     }
 
+    public Task<GeoJsonTopoJsonOpenDialogResult?> ShowGeoJsonTopoJsonOpenDialogAsync(object? ownerWindow = null, bool isGeoJson = true, int? initialSrid = null)
+    {
+        var viewModel = new GeoJsonTopoJsonOpenDialogViewModel(this, isGeoJson, initialSrid);
+        var dialog = new Views.Dialogs.GeoJsonTopoJsonOpenDialogView();
+
+        return ShowCustomDialogAsync(
+            ownerWindow,
+            dialog,
+            viewModel,
+            vm => ((GeoJsonTopoJsonOpenDialogViewModel)vm).DialogResult == true && ((GeoJsonTopoJsonOpenDialogViewModel)vm).Result != null
+                ? ((GeoJsonTopoJsonOpenDialogViewModel)vm).Result
+                : null,
+            vm => ((GeoJsonTopoJsonOpenDialogViewModel)vm).RequestClose = () => dialog.Close());
+    }
+
     #endregion
 
     /// <summary>

@@ -22,6 +22,7 @@ public class DataSourceKindToGeometryConverter : IValueConverter
             DataSourceKind.Shapefile => "shp",
             DataSourceKind.Kmz => "kmz",
             DataSourceKind.Kml => "kml",
+            DataSourceKind.Gpx => "gpx",
             DataSourceKind.Dxf => "dxf",
             DataSourceKind.WebApi => "rest",
             DataSourceKind.GRPC => "grpc",

@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Sta.Common.Common.JsonConverters;
+using IRI.Maptor.Sta.Common.Common.JsonConverters;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
@@ -66,12 +66,14 @@ public class GeoJsonFeature
     /// </summary>
     /// <param name="isLongitudeFirst">If true, coordinates are interpreted as [longitude, latitude]; otherwise [latitude, longitude].</param>
     /// <param name="targetSrs">The target spatial reference system. Defaults to WGS84 if not specified.</param>
+    /// <param name="sourceSrid">The source spatial reference system for the coordinates. Defaults to WGS84 (4326) if null.</param>
     /// <returns>A Feature&lt;Point&gt; instance.</returns>
-    public Feature<Point> AsFeature(bool isLongitudeFirst, SrsBase? targetSrs = null)
+    public Feature<Point> AsFeature(bool isLongitudeFirst, SrsBase? targetSrs = null, int? sourceSrid = null)
     {
         targetSrs = targetSrs ?? SrsBases.GeodeticWgs84;
+        var effectiveSourceSrid = sourceSrid ?? SridHelper.GeodeticWGS84;
 
-        var geometry = this.Geometry.Parse(isLongitudeFirst, SridHelper.GeodeticWGS84);
+        var geometry = this.Geometry.Parse(isLongitudeFirst, effectiveSourceSrid);
 
         // Convert IGeometry to Geometry<Point> for projection
         Geometry<Point> pointGeometry = geometry switch

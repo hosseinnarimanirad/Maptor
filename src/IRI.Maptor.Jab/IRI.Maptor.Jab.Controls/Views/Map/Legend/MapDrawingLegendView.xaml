@@ -176,7 +176,7 @@
                         </Button>
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddShapefileToDrawingItemsCommand}"  
                                 ToolTip="{Binding [cmd_drawingLegend_addShapefile], Source={StaticResource Localization}}">
-                            <Path Style="{StaticResource buttonPath}" Data="{StaticResource shapefile}" />
+                            <Path Style="{StaticResource buttonPath}" Data="{StaticResource shp}" />
                         </Button>
                     </StackPanel>
                 </Expander>

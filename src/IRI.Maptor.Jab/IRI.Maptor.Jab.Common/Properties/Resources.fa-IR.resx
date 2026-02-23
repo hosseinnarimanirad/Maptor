@@ -199,8 +199,14 @@
   <data name="cmd_legend_addDxf" xml:space="preserve">
     <value>افزودن DXF</value>
   </data>
+  <data name="cmd_legend_addGpx" xml:space="preserve">
+    <value>افزودن GPX</value>
+  </data>
   <data name="cmd_legend_addGeoJson" xml:space="preserve">
     <value>افزودن GeoJson</value>
+  </data>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>افزودن TopoJSON</value>
   </data>
   <data name="cmd_legend_addKml" xml:space="preserve">
     <value>افزودن KML</value>
@@ -354,6 +360,30 @@
   </data>
   <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
     <value>داده را جایگذاری کنید یا پیش‌نمایش فایل انتخاب‌شده (۵۰ خط اول)</value>
+  </data>
+  <data name="dialog_geoJsonOpen_title" xml:space="preserve">
+    <value>وارد کردن GeoJSON</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>وارد کردن TopoJSON</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_fileWatermark" xml:space="preserve">
+    <value>فایل</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_browse" xml:space="preserve">
+    <value>مرور...</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
+    <value>مختصات اول = X (طول جغرافیایی/شرق)، دوم = Y (عرض جغرافیایی/شمال)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderYX" xml:space="preserve">
+    <value>مختصات اول = Y (عرض جغرافیایی/شمال)، دوم = X (طول جغرافیایی/شرق)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_pasteWatermark" xml:space="preserve">
+    <value>JSON را جایگذاری کنید یا پیش‌نمایش فایل انتخاب‌شده</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
+    <value>نقاط نمونه (۵۰ نقطه اول)</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>کپی</value>

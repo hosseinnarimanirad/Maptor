@@ -199,8 +199,14 @@
   <data name="cmd_legend_addDxf" xml:space="preserve">
     <value>Add DXF</value>
   </data>
+  <data name="cmd_legend_addGpx" xml:space="preserve">
+    <value>Add GPX</value>
+  </data>
   <data name="cmd_legend_addGeoJson" xml:space="preserve">
     <value>Add GeoJson</value>
+  </data>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>TopoJSON شامل کریں</value>
   </data>
   <data name="cmd_legend_addKml" xml:space="preserve">
     <value>Add KML</value>
@@ -354,6 +360,30 @@
   </data>
   <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
     <value>ڈیٹا پیسٹ کریں یا منتخب فائل کا پیش نظارہ (پہلی 50 لائنیں)</value>
+  </data>
+  <data name="dialog_geoJsonOpen_title" xml:space="preserve">
+    <value>GeoJSON درآمد کریں</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>TopoJSON درآمد کریں</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_fileWatermark" xml:space="preserve">
+    <value>فائل</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_browse" xml:space="preserve">
+    <value>براؤز کریں...</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
+    <value>پہلا کوآرڈینیٹ = X (طول البلد/مشرق)، دوسرا = Y (عرض البلد/شمال)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderYX" xml:space="preserve">
+    <value>پہلا کوآرڈینیٹ = Y (عرض البلد/شمال)، دوسرا = X (طول البلد/مشرق)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_pasteWatermark" xml:space="preserve">
+    <value>JSON پیسٹ کریں یا منتخب فائل کا پیش نظارہ</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
+    <value>نمونہ پوائنٹس (پہلے 50)</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>

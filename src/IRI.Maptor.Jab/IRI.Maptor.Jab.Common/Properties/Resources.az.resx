@@ -199,8 +199,14 @@
   <data name="cmd_legend_addDxf" xml:space="preserve">
     <value>DXF əlavə edin</value>
   </data>
+  <data name="cmd_legend_addGpx" xml:space="preserve">
+    <value>GPX əlavə edin</value>
+  </data>
   <data name="cmd_legend_addGeoJson" xml:space="preserve">
     <value>GeoJson əlavə edin</value>
+  </data>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>TopoJSON əlavə edin</value>
   </data>
   <data name="cmd_legend_addKml" xml:space="preserve">
     <value>KML əlavə edin</value>
@@ -354,6 +360,30 @@
   </data>
   <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
     <value>Məlumat əlavə edin və ya seçilmiş faylın önizləməsi (ilk 50 sətir)</value>
+  </data>
+  <data name="dialog_geoJsonOpen_title" xml:space="preserve">
+    <value>GeoJSON import</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>TopoJSON import</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_fileWatermark" xml:space="preserve">
+    <value>Fayl</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_browse" xml:space="preserve">
+    <value>Səhifə...</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
+    <value>Birinci koordinat = X (uzunluq/şərq), ikinci = Y (enlik/şimal)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderYX" xml:space="preserve">
+    <value>Birinci koordinat = Y (enlik/şimal), ikinci = X (uzunluq/şərq)</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_pasteWatermark" xml:space="preserve">
+    <value>JSON yapışdırın və ya seçilmiş faylın önizləməsi</value>
+  </data>
+  <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
+    <value>Nümunə nöqtələri (ilk 50)</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Kopyalayın</value>

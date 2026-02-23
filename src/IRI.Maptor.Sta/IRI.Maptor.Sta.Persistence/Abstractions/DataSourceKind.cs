@@ -16,6 +16,9 @@ public enum DataSourceKind
     [Description("Kml")]
     Kml,
 
+    [Description("Gpx")]
+    Gpx,
+
     [Description("Dxf")]
     Dxf,
 
@@ -27,6 +30,9 @@ public enum DataSourceKind
 
     [Description("GeoJson")]
     GeoJson,
+
+    [Description("TopoJson")]
+    TopoJson,
 
     [Description("Csv")]
     Csv,

@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
@@ -67,6 +70,39 @@ public static class TopoJson
     public static TopoJsonTopology FromGeometries(Dictionary<string, Geometry<Point>> geometries, bool quantize = true, int quantizationFactor = 10000)
     {
         return TopoJsonConverter.FromGeometries(geometries, quantize, quantizationFactor);
+    }
+
+    /// <summary>
+    /// Extracts sample points from a TopoJSON topology for preview display.
+    /// </summary>
+    /// <param name="topology">The parsed TopoJSON topology.</param>
+    /// <param name="srid">Spatial reference system for coordinate interpretation. Default 4326 (WGS84).</param>
+    /// <param name="maxPoints">Maximum number of points to extract. Default 50.</param>
+    /// <returns>List of raw points (X, Y) for preview.</returns>
+    public static IReadOnlyList<Point> ExtractSamplePoints(TopoJsonTopology topology, int srid = 4326, int maxPoints = 50)
+    {
+        var result = new List<Point>();
+        if (topology?.Objects == null)
+            return result;
+
+        var geometries = TopoJsonConverter.ToGeometry(topology, srid);
+        foreach (var kvp in geometries)
+        {
+            if (result.Count >= maxPoints)
+                break;
+            var geom = kvp.Value;
+            if (geom == null || geom.IsNullOrEmpty())
+                continue;
+            var points = geom.GetAllPoints();
+            if (points == null) continue;
+            foreach (var p in points)
+            {
+                if (result.Count >= maxPoints)
+                    break;
+                result.Add(new Point(p.X, p.Y));
+            }
+        }
+        return result;
     }
 }
 

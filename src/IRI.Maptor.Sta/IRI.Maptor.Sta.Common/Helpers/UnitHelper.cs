@@ -12,7 +12,7 @@ public static class UnitHelper
     {
         if (length < 1)
         {
-            return $"{length * 10:N1} cm";
+            return $"{length * 100:N1} cm";
         }
         else if (length < 1000)
         {
