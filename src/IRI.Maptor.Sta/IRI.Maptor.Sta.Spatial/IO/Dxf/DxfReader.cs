@@ -10,10 +10,42 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 namespace IRI.Maptor.Sta.Spatial.IO.Dxf;
 
 /// <summary>
+/// Result of DXF preview extraction: detected SRID from file and sample of coordinate points.
+/// </summary>
+public class DxfPreviewResult
+{
+    public int DetectedSrid { get; }
+    public IReadOnlyList<Point> SamplePoints { get; }
+
+    public DxfPreviewResult(int detectedSrid, IReadOnlyList<Point> samplePoints)
+    {
+        DetectedSrid = detectedSrid;
+        SamplePoints = samplePoints ?? Array.Empty<Point>();
+    }
+}
+
+/// <summary>
 /// DXF (Drawing Exchange Format) reader for converting DXF files to Geometry types
 /// </summary>
 public class DxfReader
 {
+    /// <summary>
+    /// Extracts preview data from a DXF file: detected SRID (if any) and up to maxSamplePoints coordinate pairs.
+    /// </summary>
+    public static async Task<DxfPreviewResult> GetPreviewAsync(string filePath, int maxSamplePoints = 50)
+    {
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException("DXF file not found", filePath);
+
+        var content = await File.ReadAllTextAsync(filePath);
+        var lines = content.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+
+        var detectedSrid = ExtractSridFromDxf(lines);
+        var samplePoints = ExtractSamplePoints(lines, maxSamplePoints);
+
+        return new DxfPreviewResult(detectedSrid, samplePoints);
+    }
+
     public static async Task<List<Geometry<Point>>> ReadFromFile(string filePath, int? defaultSrid)
     {
         if (!File.Exists(filePath))
@@ -30,15 +62,13 @@ public class DxfReader
 
         var lines = dxfContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
-        // Extract SRID from DXF if not explicitly provided
-        //if (defaultSrid == 0 || defaultSrid is null)
-        //{
-        var detectedSrid = ExtractSridFromDxf(lines);
-        if (detectedSrid > 0)
+        // Use detected SRID from DXF only when user did not provide one
+        if (!defaultSrid.HasValue || defaultSrid == 0)
         {
-            defaultSrid = detectedSrid;
+            var detectedSrid = ExtractSridFromDxf(lines);
+            if (detectedSrid > 0)
+                defaultSrid = detectedSrid;
         }
-        //}
 
         defaultSrid = defaultSrid ?? SridHelper.GeodeticWGS84;
 
@@ -113,6 +143,57 @@ public class DxfReader
         }
 
         return 0;
+    }
+
+    /// <summary>
+    /// Extracts raw (x,y) coordinate pairs from ENTITIES section up to maxSamplePoints.
+    /// </summary>
+    private static List<Point> ExtractSamplePoints(string[] lines, int maxSamplePoints)
+    {
+        var points = new List<Point>();
+        if (lines == null || lines.Length == 0)
+            return points;
+
+        int entitiesStart = -1;
+        for (int i = 0; i < lines.Length - 1; i++)
+        {
+            if (lines[i].Trim() == "0" && lines[i + 1].Trim() == "SECTION")
+            {
+                if (i + 3 < lines.Length && lines[i + 2].Trim() == "2" && lines[i + 3].Trim() == "ENTITIES")
+                {
+                    entitiesStart = i + 4;
+                    break;
+                }
+            }
+        }
+
+        if (entitiesStart < 0)
+            return points;
+
+        double? pendingX = null;
+        for (int i = entitiesStart; i < lines.Length - 1 && points.Count < maxSamplePoints; i++)
+        {
+            var groupCode = lines[i].Trim();
+            var value = lines[i + 1].Trim();
+
+            if (groupCode == "0" && (value == "ENDSEC" || value == "EOF"))
+                break;
+
+            if (groupCode == "10" && double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double x))
+            {
+                pendingX = x;
+                i++;
+            }
+            else if ((groupCode == "20" || groupCode == "21") && pendingX.HasValue &&
+                     double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double y))
+            {
+                points.Add(new Point(pendingX.Value, y));
+                pendingX = null;
+                i++;
+            }
+        }
+
+        return points;
     }
 
     private static List<Geometry<Point>> ParseEntities(string[] lines, int srid)

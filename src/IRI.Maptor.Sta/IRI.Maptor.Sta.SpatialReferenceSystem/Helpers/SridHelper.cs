@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Sta.SpatialReferenceSystem;
 
@@ -25,6 +25,11 @@ public static class SridHelper
     public const int CylindricalEqualArea = 54034;
 
     public static int GetUtmSrid(int zone) => int.Parse($"326{zone}");
+
+    /// <summary>
+    /// Returns EPSG SRID for UTM Southern hemisphere (32700 + zone).
+    /// </summary>
+    public static int GetUtmSouthSrid(int zone) => 32700 + zone;
 
     public static SrsBase AsSrsBase(int srid)
     {

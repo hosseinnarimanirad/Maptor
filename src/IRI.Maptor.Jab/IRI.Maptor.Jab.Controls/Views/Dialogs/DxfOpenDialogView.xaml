@@ -1,0 +1,190 @@
+<mahApp:MetroWindow x:Class="IRI.Maptor.Jab.Controls.Views.Dialogs.DxfOpenDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
+        Title="{Binding [cmd_legend_addDxf], Source={StaticResource Localization}}"
+        ShowInTaskbar="False"
+        SizeToContent="WidthAndHeight"
+        GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"
+        MinWidth="400"
+        MaxWidth="500"
+        FlowDirection="LeftToRight"
+        WindowStartupLocation="CenterOwner"
+        ShowMaxRestoreButton="False"
+        ShowCloseButton="True"
+        ShowMinButton="False"
+        ShowTitleBar="True"
+        FontFamily="{StaticResource iranSans}">
+    <mahApp:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/LocalizationResources.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/SecurityInputStyles.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/ButtonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <!-- DXF dialog border style (borderGroup requires root with InputBorderBrush; we use fixed values) -->
+            <Style x:Key="dxfDialogBorderGroup" TargetType="Border">
+                <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="CornerRadius" Value="5"/>
+                <Setter Property="Height" Value="39"/>
+            </Style>
+        </ResourceDictionary>
+    </mahApp:MetroWindow.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions> 
+
+        <!-- File -->
+        <Border Grid.Row="0" Style="{StaticResource dxfDialogBorderGroup}">
+            <Grid Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
+                <TextBox Grid.Column="1" Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight"
+                            mahApp:TextBoxHelper.Watermark="{Binding [dialog_dxfOpen_fileWatermark], Source={StaticResource Localization}}"
+                            Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True" >
+                </TextBox>
+                <Button Grid.Column="2" ToolTip="{Binding [dialog_dxfOpen_browse], Source={StaticResource Localization}}" Command="{Binding BrowseCommand}"
+                        Style="{StaticResource circleButtonLight}">
+                    <iconPacks:PackIconPhosphorIcons Kind="FileMagnifyingGlassFill"/>
+                </Button>
+            </Grid>
+        </Border>
+          
+
+        <!-- Spatial Reference -->
+        <Border Grid.Row="1" Style="{StaticResource dxfDialogBorderGroup}">
+            <Grid Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconPhosphorIcons Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
+                <ComboBox Grid.Column="1" Margin="4"
+                          ItemsSource="{Binding AvailableSrsOptions}"
+                          DisplayMemberPath="DisplayName"
+                          SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"
+                          VerticalAlignment="Center"
+                        BorderThickness="0"
+                        FontSize="15"
+                        MinHeight="35"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Stretch"
+                        FlowDirection="LeftToRight"/>
+            </Grid>
+        </Border>
+ 
+        <!-- UTM Zone (visible when UTM selected) -->
+        <Border Grid.Row="2" Style="{StaticResource dxfDialogBorderGroup}"
+                Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
+            <Grid Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconPhosphorIcons Kind="MapTrifoldFill" Style="{StaticResource securityIconPhosphor}"/>
+                <mahApp:NumericUpDown Grid.Column="1" FlowDirection="LeftToRight"
+                                     Minimum="1" Maximum="60"
+                                     Value="{Binding UtmZone, Mode=TwoWay}" Margin="4" VerticalAlignment="Center"/>
+
+                <ToggleButton Grid.Column="2" IsChecked="{Binding UtmHemisphereNorth, Mode=TwoWay}"
+                              Style="{StaticResource circleToggleButtonLight}"
+                              ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
+                    <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5"                                                     
+                                                    Margin="0" Width="24" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <iconPacks:PackIconPhosphorIcons.Style>
+                            <Style TargetType="iconPacks:PackIconPhosphorIcons" BasedOn="{StaticResource securityIconPhosphor}">
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding UtmHemisphereNorth}" Value="False">
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <RotateTransform Angle="90"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </iconPacks:PackIconPhosphorIcons.Style>
+                    </iconPacks:PackIconPhosphorIcons>
+                </ToggleButton>
+            </Grid>
+        </Border>
+         
+
+        <!-- Sample points -->
+        <TextBlock Grid.Row="3" Text="{Binding [dialog_dxfOpen_samplePoints], Source={StaticResource Localization}}" Margin="0,12,0,4"
+                   FontSize="12" Foreground="{DynamicResource MahApps.Brushes.Gray2}"/>
+        <DataGrid Grid.Row="4" Margin="0,0,0,8"
+                  ItemsSource="{Binding SamplePoints}"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False"
+                  MaxHeight="200"
+                  HeadersVisibility="Column"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserReorderColumns="False"
+                  SelectionMode="Single"
+                  GridLinesVisibility="Horizontal"
+                  BorderBrush="Gray"
+                  BorderThickness="1"
+                  FontSize="12">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Index}" Width="40">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="{Binding [dialog_dxfOpen_columnIndex], Source={StaticResource Localization}}"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding X, StringFormat=N6}" Width="*">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="{Binding [dialog_dxfOpen_columnX], Source={StaticResource Localization}}"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Y, StringFormat=N6}" Width="*">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="{Binding [dialog_dxfOpen_columnY], Source={StaticResource Localization}}"/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Buttons -->       
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+            <Button ToolTip="{Binding [common_cancel], Source={StaticResource Localization}}" 
+                    Style="{StaticResource circleButtonLight}"
+                    Command="{Binding CancelCommand}" Margin="4" >
+                <iconPacks:PackIconModern Kind="Close"/>
+            </Button>
+            <Button ToolTip="{Binding [common_open], Source={StaticResource Localization}}" Margin="4" 
+                    Style="{StaticResource circleButtonLight}"
+                    Command="{Binding OpenCommand}"  >
+                <iconPacks:PackIconModern Kind="Check"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</mahApp:MetroWindow>

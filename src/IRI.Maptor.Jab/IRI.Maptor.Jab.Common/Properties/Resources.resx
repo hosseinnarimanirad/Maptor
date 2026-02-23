@@ -375,11 +375,35 @@
   <data name="dialog_geometryDetails_cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="dialog_dxfOpen_fileWatermark" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="dialog_dxfOpen_browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>North / South hemisphere</value>
+  </data>
+  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
+    <value>Sample points (first 50):</value>
+  </data>
+  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
+    <value>Y</value>
+  </data>
   <data name="languageSelector_title" xml:space="preserve">
     <value>Language</value>
   </data>
   <data name="common_cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="common_open" xml:space="preserve">
+    <value>Open</value>
   </data>
   <data name="common_save" xml:space="preserve">
     <value>Save</value>

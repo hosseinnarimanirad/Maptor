@@ -164,6 +164,8 @@
         <Setter Property="Margin" Value="4"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Width" Value="32"/>

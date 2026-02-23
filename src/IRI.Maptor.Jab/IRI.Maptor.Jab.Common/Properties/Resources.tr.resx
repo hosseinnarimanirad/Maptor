@@ -232,6 +232,9 @@
   <data name="common_cancel" xml:space="preserve">
     <value>İptal</value>
   </data>
+  <data name="common_open" xml:space="preserve">
+    <value>Aç</value>
+  </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>Caps Lock açık</value>
   </data>
@@ -302,7 +305,28 @@
     <value>Basic Information</value>
   </data>
   <data name="dialog_geometryDetails_cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>İptal</value>
+  </data>
+  <data name="dialog_dxfOpen_fileWatermark" xml:space="preserve">
+    <value>Dosya</value>
+  </data>
+  <data name="dialog_dxfOpen_browse" xml:space="preserve">
+    <value>Gözat...</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>Kuzey / Güney yarımküre</value>
+  </data>
+  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
+    <value>Örnek noktalar (ilk 50):</value>
+  </data>
+  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
+    <value>Y</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copy</value>

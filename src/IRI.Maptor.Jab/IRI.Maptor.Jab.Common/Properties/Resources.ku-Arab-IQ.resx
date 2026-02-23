@@ -232,6 +232,9 @@
   <data name="common_cancel" xml:space="preserve">
     <value>هەڵوەشاندنەوە</value>
   </data>
+  <data name="common_open" xml:space="preserve">
+    <value>کردنەوە</value>
+  </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>Caps Lock چالاکە</value>
   </data>
@@ -303,6 +306,27 @@
   </data>
   <data name="dialog_geometryDetails_cancel" xml:space="preserve">
     <value>هەڵوەشاندنەوە</value>
+  </data>
+  <data name="dialog_dxfOpen_fileWatermark" xml:space="preserve">
+    <value>فایل</value>
+  </data>
+  <data name="dialog_dxfOpen_browse" xml:space="preserve">
+    <value>گەڕان...</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>بەشی باکوور / باشوور</value>
+  </data>
+  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
+    <value>خاڵەکانی نیمچە (یەکەم ٥٠):</value>
+  </data>
+  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
+    <value>Y</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>لەبەربکەرەوە</value>

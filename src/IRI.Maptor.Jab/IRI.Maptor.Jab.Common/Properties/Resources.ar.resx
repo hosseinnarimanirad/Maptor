@@ -241,6 +241,9 @@
   <data name="common_cancel" xml:space="preserve">
     <value>إلغاء</value>
   </data>
+  <data name="common_open" xml:space="preserve">
+    <value>فتح</value>
+  </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>Caps Lock مفعل</value>
   </data>
@@ -312,6 +315,27 @@
   </data>
   <data name="dialog_geometryDetails_cancel" xml:space="preserve">
     <value>يلغي</value>
+  </data>
+  <data name="dialog_dxfOpen_fileWatermark" xml:space="preserve">
+    <value>ملف</value>
+  </data>
+  <data name="dialog_dxfOpen_browse" xml:space="preserve">
+    <value>استعراض...</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>نصف الكرة الشمالي / الجنوبي</value>
+  </data>
+  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
+    <value>نقاط عينة (أول 50):</value>
+  </data>
+  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
+    <value>Y</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>ينسخ</value>

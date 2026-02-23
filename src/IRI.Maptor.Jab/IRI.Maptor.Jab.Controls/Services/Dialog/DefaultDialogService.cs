@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Jab.Common.Abstractions;
+using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
@@ -696,6 +696,31 @@ public class DefaultDialogService : IDialogService
             viewModel,
             vm => ((ChangePasswordDialogViewModel)vm).IsOk ? (ChangePasswordDialogViewModel)vm : null,
             vm => ((ChangePasswordDialogViewModel)vm).RequestClose = () => dialog.Close());
+    }
+
+    #endregion
+
+    #region DXF Open Dialog
+
+    /// <summary>
+    /// Shows the DXF open dialog where user selects file, SRS, and views sample points.
+    /// </summary>
+    /// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
+    /// <param name="initialSrid">Optional initial SRID to pre-select (e.g. from CommandParameter).</param>
+    /// <returns>The result with FilePath and SelectedSrid if user confirmed, or null if cancelled.</returns>
+    public Task<DxfOpenDialogResult?> ShowDxfOpenDialogAsync(object? ownerWindow = null, int? initialSrid = null)
+    {
+        var viewModel = new DxfOpenDialogViewModel(this, initialSrid);
+        var dialog = new Views.Dialogs.DxfOpenDialogView();
+
+        return ShowCustomDialogAsync(
+            ownerWindow,
+            dialog,
+            viewModel,
+            vm => ((DxfOpenDialogViewModel)vm).DialogResult == true
+                ? new DxfOpenDialogResult(((DxfOpenDialogViewModel)vm).FilePath, ((DxfOpenDialogViewModel)vm).EffectiveSelectedSrid)
+                : null,
+            vm => ((DxfOpenDialogViewModel)vm).RequestClose = () => dialog.Close());
     }
 
     #endregion

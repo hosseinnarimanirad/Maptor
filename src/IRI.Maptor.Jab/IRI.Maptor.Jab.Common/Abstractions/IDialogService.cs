@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Threading.Tasks;
 using IRI.Maptor.Jab.Common.Models.Security;
@@ -82,5 +82,11 @@ public interface IDialogService
     Task<bool?> ShowDialogAsync<TParent>(Window view, DialogViewModelBase viewModel);
 
     Task<bool?> ShowDialogAsync<TParent>(object? ownerWindow, Window view, DialogViewModelBase viewModel);
+
+
+    // ********************************************************************
+    //                          DXF Open Dialog
+    // ********************************************************************
+    Task<DxfOpenDialogResult?> ShowDxfOpenDialogAsync(object? ownerWindow = null, int? initialSrid = null);
 
 }

@@ -3598,32 +3598,34 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         IsBusy = true;
 
-        var fileName = await DialogService.ShowOpenFileDialogAsync("Drawing Exchange Format (DXF)|*.dxf", ownerWindow: null);
+        int? initialSrid = null;
+        if (defaultSrid != null && int.TryParse(defaultSrid.ToString(), out int parsedSrid))
+            initialSrid = parsedSrid;
 
-        if (!File.Exists(fileName))
+        var result = await DialogService.ShowDxfOpenDialogAsync(ownerWindow: null, initialSrid);
+
+        if (result == null)
         {
             IsBusy = false;
-
             return;
         }
 
-        FileInfo info = new FileInfo(fileName);
+        if (!File.Exists(result.FilePath))
+        {
+            IsBusy = false;
+            return;
+        }
+
+        FileInfo info = new FileInfo(result.FilePath);
 
         if (maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
         {
             await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", ownerWindow: null);
-
+            IsBusy = false;
             return;
         }
 
-        var srid = 0;
-
-        if (defaultSrid != null)
-        {
-            int.TryParse(defaultSrid.ToString(), out srid);
-        }
-
-        await AddDxffile(fileName, owner: null, srid);
+        await AddDxffile(result.FilePath, owner: null, result.SelectedSrid);
     }
     public async Task AddDxffile(string fileName, object owner, int defaultSrid)
     {

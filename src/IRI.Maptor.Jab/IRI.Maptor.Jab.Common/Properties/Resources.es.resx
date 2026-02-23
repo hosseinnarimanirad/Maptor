@@ -232,6 +232,9 @@
   <data name="common_cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
+  <data name="common_open" xml:space="preserve">
+    <value>Abrir</value>
+  </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>Caps Lock activado</value>
   </data>
@@ -303,6 +306,27 @@
   </data>
   <data name="dialog_geometryDetails_cancel" xml:space="preserve">
     <value>Cancelar</value>
+  </data>
+  <data name="dialog_dxfOpen_fileWatermark" xml:space="preserve">
+    <value>Archivo</value>
+  </data>
+  <data name="dialog_dxfOpen_browse" xml:space="preserve">
+    <value>Examinar...</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>Hemisferio Norte / Sur</value>
+  </data>
+  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
+    <value>Puntos de muestra (primeros 50):</value>
+  </data>
+  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
+    <value>Y</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Copiar</value>

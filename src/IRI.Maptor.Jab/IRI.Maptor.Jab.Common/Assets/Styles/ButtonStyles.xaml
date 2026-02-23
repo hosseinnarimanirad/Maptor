@@ -55,6 +55,8 @@
         <Setter Property="Background" Value="LightGray"/>
         <Setter Property="Opacity" Value="1"/>
         <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Height" Value="40"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
