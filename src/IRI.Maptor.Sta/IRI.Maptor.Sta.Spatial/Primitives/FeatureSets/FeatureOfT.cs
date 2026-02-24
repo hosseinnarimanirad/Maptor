@@ -33,6 +33,8 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         }
     }
 
+    public Guid Key { get; set; }
+
     public Feature() { }
 
     public Feature(Geometry<T> geometry) : this(geometry, new Dictionary<string, object>())

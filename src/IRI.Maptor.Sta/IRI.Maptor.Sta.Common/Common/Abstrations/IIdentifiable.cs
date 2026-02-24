@@ -7,4 +7,6 @@ namespace IRI.Maptor.Sta.Common.Abstrations;
 public interface IIdentifiable
 {
     int Id { get; set; }
+
+    Guid Key { get; set; }
 }

@@ -9,7 +9,7 @@ public class MapSettings : IMapSettings
     public bool IsDoubleClickZoomEnabled { get; set; } = true;
     public bool IsGoogleZoomLevelsEnabled { get; set; }
     public bool IsMouseWheelZoomEnabled { get; set; } = true;
-    public int MaxGoogleZoomLevel { get; set; } = 19;
+    public int MaxGoogleZoomLevel { get; set; } = 20;
     public int MinGoogleZoomLevel { get; set; } = 1;
 
 

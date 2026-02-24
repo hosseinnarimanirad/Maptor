@@ -9,6 +9,8 @@ public class GeodeticSheet : IGeometryAware<Point>
 {
     public int Id { get; set; }
 
+    public Guid Key { get; set; }
+
     public Geometry<Point> TheGeometry { get => GeodeticExtent.Transform(MapProjects.GeodeticWgs84ToWebMercator).AsGeometry<Point>(SridHelper.WebMercator); set => throw new NotImplementedException(); }
 
     public BoundingBox GeodeticExtent { get; set; }

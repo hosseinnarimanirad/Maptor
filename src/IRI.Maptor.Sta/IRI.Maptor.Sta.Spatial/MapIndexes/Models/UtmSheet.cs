@@ -29,6 +29,8 @@ public class UtmSheet : IGeometryAware<Point>
 
     public int Id { get; set; }
 
+    public Guid Key { get; set; }
+
     public BoundingBox UtmExtent { get; set; }
 
     //public Geometry GeodeticExtent

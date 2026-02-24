@@ -10,6 +10,8 @@ public abstract class IndexBase : IGeometryAware<Point>
 {
     public int Id { get; set; }
 
+    public Guid Key { get; set; }
+
     [JsonPropertyName("shne")]
     public virtual string SheetNameEn { get; set; }
 
