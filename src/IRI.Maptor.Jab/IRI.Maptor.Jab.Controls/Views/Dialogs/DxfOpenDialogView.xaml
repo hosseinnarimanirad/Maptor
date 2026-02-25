@@ -109,10 +109,9 @@
                                      Value="{Binding UtmZone, Mode=TwoWay}" Margin="4" VerticalAlignment="Center"/>
 
                 <ToggleButton Grid.Column="2" IsChecked="{Binding UtmHemisphereNorth, Mode=TwoWay}"
-                              Style="{StaticResource circleToggleButtonLight}"
+                              Style="{StaticResource circleToggleButtonLight}"  
                               ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
-                    <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5"                                                     
-                                                    Margin="0" Width="24" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5" Foreground="White">
                         <iconPacks:PackIconPhosphorIcons.Style>
                             <Style TargetType="iconPacks:PackIconPhosphorIcons" BasedOn="{StaticResource securityIconPhosphor}">
                                 <Setter Property="RenderTransform">
@@ -178,12 +177,12 @@
             <Button ToolTip="{Binding [common_cancel], Source={StaticResource Localization}}" 
                     Style="{StaticResource circleButtonLight}"
                     Command="{Binding CancelCommand}" Margin="4" >
-                <iconPacks:PackIconModern Kind="Close"/>
+                <iconPacks:PackIconModern Kind="Close" Foreground="White"/>
             </Button>
             <Button ToolTip="{Binding [common_open], Source={StaticResource Localization}}" Margin="4" 
                     Style="{StaticResource circleButtonLight}"
                     Command="{Binding OpenCommand}"  >
-                <iconPacks:PackIconModern Kind="Check"/>
+                <iconPacks:PackIconModern Kind="Check" Foreground="White"/>
             </Button>
         </StackPanel>
     </Grid>

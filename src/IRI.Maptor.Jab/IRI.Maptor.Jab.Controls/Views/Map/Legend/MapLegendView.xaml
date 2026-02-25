@@ -533,7 +533,7 @@
                                             Background="{Binding Source={x:Static sta:DataSourceKind.TopoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource json}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource topo}"/>
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_legend_addTopoJson], Source={StaticResource Localization}}"

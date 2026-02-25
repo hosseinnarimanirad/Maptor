@@ -34,7 +34,7 @@ public static class WebMercatorUtility
     static double _firstEccentricity = 0;
 
     static WebMercatorUtility()
-    { 
+    {
         MaxAllowableLatitude = 85.05112877822864;
         //MaxAllowableLatitude = 85.0;
 
@@ -164,7 +164,7 @@ public static class WebMercatorUtility
         // the latitude should be geocentric latitude not geodetic!
 
         // 1: 1 pixel
-        return Math.Cos(latitude * Math.PI / 180.0) * ToWebMercatorLength(level, 1); 
+        return Math.Cos(latitude * Math.PI / 180.0) * ToWebMercatorLength(level, 1);
     }
 
     /// <summary>
@@ -422,6 +422,11 @@ public static class WebMercatorUtility
 
     public static List<TileInfo> GeodeticBoundingBoxToGoogleTileRegions(BoundingBox geodeticBoundingBox, int zoomLevel)
     {
+        if (zoomLevel == 2)
+        {
+
+        }
+
         var maxX = Math.Min(180, geodeticBoundingBox.BottomRight.X);
         var minX = Math.Max(-180, geodeticBoundingBox.TopLeft.X);
 
@@ -446,8 +451,13 @@ public static class WebMercatorUtility
     {
         var geographicBoundingBox = webMercatorBoundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84);
 
-        if (geographicBoundingBox.Width > 270)
+        if (zoomLevel <= 3)
+            return TileInfo.GetAllForLevel(zoomLevel);
+
+        if (geographicBoundingBox.Width > 270 || zoomLevel == 2)
+        {
             geographicBoundingBox = new BoundingBox(-180, geographicBoundingBox.YMin, 180, geographicBoundingBox.YMax);
+        }
 
         return GeodeticBoundingBoxToGoogleTileRegions(geographicBoundingBox, zoomLevel);
     }

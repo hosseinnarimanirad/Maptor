@@ -16,29 +16,35 @@ public class DataSourceKindToBrushConverter : IValueConverter
 
         return kind switch
         {
-            DataSourceKind.Shapefile => ModernUIColors.GreenBrush,
-
             DataSourceKind.Kmz => ModernUIColors.LimeGreenBrush,
             DataSourceKind.Kml => ModernUIColors.LimeBrush,
-            DataSourceKind.Gpx => ModernUIColors.LimeBrush,
 
-            DataSourceKind.Dxf => ModernUIColors.TealBrush,
+            DataSourceKind.Shapefile => ModernUIColors.GreenBrush,
+
+            DataSourceKind.GML => ModernUIColors.TealBrush,
 
             DataSourceKind.WebApi => ModernUIColors.CyanBrush,
             DataSourceKind.GRPC => ModernUIColors.BlueBrush,
 
             DataSourceKind.GeoJson => ModernUIColors.IndigoBrush,
-            DataSourceKind.TopoJson => ModernUIColors.IndigoBrush,
+            DataSourceKind.TopoJson => ModernUIColors.VioletBrush,
 
-            DataSourceKind.Csv => ModernUIColors.VioletBrush,
             DataSourceKind.Tsv => ModernUIColors.PinkBrush,
+            DataSourceKind.Csv => ModernUIColors.MagentaBrush,
 
-            DataSourceKind.Worldfile => ModernUIColors.CrimsonBrush,
-            DataSourceKind.GeoTiff => ModernUIColors.RedBrush,
-            DataSourceKind.ZippedImagePyramid => ModernUIColors.OrangeBrush,
+            DataSourceKind.Gpx => ModernUIColors.CrimsonBrush,
 
-            DataSourceKind.GML => ModernUIColors.AmberBrush,
+            DataSourceKind.ZippedImagePyramid => ModernUIColors.RedBrush,
+            DataSourceKind.GeoTiff => ModernUIColors.OrangeBrush,
+            DataSourceKind.Dxf => ModernUIColors.AmberBrush,
+
+            //DataSourceKind.EPS => ModernUIColors.YellowBrush,
+            //DataSourceKind.SVG => ModernUIColors.BrownBrush,
+            //DataSourceKind.GRD => ModernUIColors.OliveBrush,
+
             DataSourceKind.Other => ModernUIColors.SteelBrush,
+            //?? => ModernUIColors.MauveColor,
+            DataSourceKind.Worldfile => ModernUIColors.TaupeColor,
             _ => Brushes.Transparent
         };
     }

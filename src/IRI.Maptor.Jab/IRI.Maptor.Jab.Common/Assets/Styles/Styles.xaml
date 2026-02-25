@@ -4,7 +4,7 @@
 
 
     <Style TargetType="{x:Type Button}" x:Key="circleButtonLight">
-        <Setter Property="Margin" Value="2,2"/>
+        <Setter Property="Margin" Value="2"/>
 
         <!-- Light theme colors -->
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
@@ -61,7 +61,7 @@
     </Style>
 
     <Style TargetType="{x:Type Button}" x:Key="circleButtonDark">
-        <Setter Property="Margin" Value="4"/>
+        <Setter Property="Margin" Value="2"/>
 
         <!-- Dark theme colors -->
         <Setter Property="Background" Value="White"/>
@@ -161,7 +161,7 @@
     </Style>
     
     <Style TargetType="{x:Type ToggleButton}" x:Key="circleToggleButtonLight">
-        <Setter Property="Margin" Value="4"/>
+        <Setter Property="Margin" Value="2"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -213,7 +213,7 @@
     </Style>
 
     <Style TargetType="{x:Type ToggleButton}" x:Key="circleToggleButtonDark">
-        <Setter Property="Margin" Value="4"/>
+        <Setter Property="Margin" Value="2"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Foreground" Value="White"/>

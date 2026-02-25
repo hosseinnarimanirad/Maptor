@@ -12,9 +12,9 @@ public class TileInfo
     public int ColumnNumber { get; private set; }
 
     public int ZoomLevel { get; private set; }
-     
+
     public BoundingBox GeodeticExtent { get; private set; }
-     
+
     public BoundingBox WebMercatorExtent
     {
         get
@@ -75,4 +75,23 @@ public class TileInfo
     }
 
     public TileInfo Clone() => new TileInfo(this.RowNumber, this.ColumnNumber, this.ZoomLevel);
+
+    public static List<TileInfo> GetAllForLevel(int level)
+    {
+        var list = new List<TileInfo>();
+
+        var count = (int)Math.Pow(2, level);
+
+        for (int i = 0; i < count; i++)
+        {
+            for (int j = 0; j < count; j++)
+            {
+                list.Add(new TileInfo(i, j, level));
+            }
+        }
+
+        return list;
+
+        //return [new TileInfo(0, 0, 2), new TileInfo(0, 1, 2), new TileInfo(1, 0, 2), new TileInfo(1, 1, 2),];
+    }
 }

@@ -104,7 +104,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_clearSelected))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Close }.Data, 
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.SelectionRemove }.Data, 
             Layer = layer,
             IsCommandVisible = false,
         };
@@ -128,7 +128,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_selectByDrawing))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.VectorPenConvert }.Data, 
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.SelectionSearch }.Data, 
             Layer = layer, 
         };
 
