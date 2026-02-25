@@ -987,11 +987,11 @@ public abstract class MapViewModelBase : ViewModelBase
 
     //public Action<string, bool> RequestClearLayerByName;
 
-    public Action<ILayer, bool> RequestClearLayer;
+    public Action<ILayer, bool, bool, bool> RequestClearLayer;
 
-    public Action<Predicate<ILayer>, bool, bool> RequestClearLayerByCriteria;
+    public Action<Predicate<ILayer>, bool, bool, bool> RequestClearLayerByCriteria;
 
-    public Action<Predicate<LayerTag>, bool, bool> RequestClearLayerByTag;
+    public Action<Predicate<LayerTag>, bool, bool, bool> RequestClearLayerByTag;
 
     public Action RequestRemovePolyBezierLayers;
 
@@ -1925,22 +1925,22 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    public void ClearLayer(ILayer layer, bool remove = true, bool forceRemove = false)
+    public void ClearLayer(ILayer layer, bool remove = true, bool forceRemove = false, bool keepEmptyParentGroup = false)
     {
-        RequestClearLayer?.Invoke(layer, remove);
+        RequestClearLayer?.Invoke(layer, remove, forceRemove, keepEmptyParentGroup);
 
         RemoveSelectedLayers(l => l.LayerId == layer.LayerId);
     }
 
-    public void ClearLayer(LayerType type, bool remove, bool forceRemove = false)
+    public void ClearLayer(LayerType type, bool remove, bool forceRemove = false, bool keepEmptyParentGroup = false)
     {
         //Clear(tag => tag.LayerType.HasFlag(type), remove, forceRemove);
-        Clear(tag => tag.LayerType == type, remove, forceRemove);
+        Clear(tag => tag.LayerType == type, remove, forceRemove, keepEmptyParentGroup);
     }
 
-    public void ClearLayer(string layerName, bool remove = true, bool forceRemove = false)
+    public void ClearLayer(string layerName, bool remove = true, bool forceRemove = false, bool keepEmptyParentGroup = false)
     {
-        Clear(layer => layer.LayerName == layerName, remove, forceRemove);
+        Clear(layer => layer.LayerName == layerName, remove, forceRemove, keepEmptyParentGroup);
         //this.RequestClearLayerByName?.Invoke(layerName, remove);
     }
 
@@ -1952,17 +1952,17 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    public void Clear(Predicate<ILayer> layersToBeRemoved, bool remove, bool forceRemove = false)
+    public void Clear(Predicate<ILayer> layersToBeRemoved, bool remove, bool forceRemove = false, bool keepEmptyParentGroup = false)
     {
-        RequestClearLayerByCriteria?.Invoke(layersToBeRemoved, remove, forceRemove);
+        RequestClearLayerByCriteria?.Invoke(layersToBeRemoved, remove, forceRemove, keepEmptyParentGroup);
 
         RemoveSelectedLayers(layersToBeRemoved);
     }
 
     //1397.08.17: potentionally error prone, do not consider removing SelectedLayers associated with the input criteria
-    public void Clear(Predicate<LayerTag> criteria, bool remove, bool forceRemove = false)
+    public void Clear(Predicate<LayerTag> criteria, bool remove, bool forceRemove = false, bool keepEmptyParentGroup = false)
     {
-        RequestClearLayerByTag?.Invoke(criteria, remove, forceRemove);
+        RequestClearLayerByTag?.Invoke(criteria, remove, forceRemove, keepEmptyParentGroup);
     }
 
     //public void RemoveLayer(string layerName)

@@ -71,7 +71,7 @@ public static class DefaultActions
             view.Close();
 
             //in order to update the symbology for the layer on the map after dialog was closed
-            mapPresenter.ClearLayer(layer, true, true);
+            mapPresenter.ClearLayer(layer, remove: true, forceRemove: true, keepEmptyParentGroup: true);
 
             mapPresenter.AddLayer(layer);
         };

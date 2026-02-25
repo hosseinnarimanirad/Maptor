@@ -19,12 +19,11 @@ public class LayerManager : Notifier
     /// <summary>
     /// Optional. When set, passed to LoadAsync when loading layer data. Used to cancel loads on sign out.
     /// </summary>
-    public CancellationToken LoadCancellationToken { get; set; }
+    public CancellationToken _loadCancellationToken { get; set; }
 
-    List<ILayer> allLayers;
+    private List<ILayer> _allLayers;
 
     private ObservableCollection<ILayer> _currentLayers;
-
     public ObservableCollection<ILayer> CurrentLayers
     {
         get { return _currentLayers; }
@@ -37,15 +36,16 @@ public class LayerManager : Notifier
 
     public LayerManager()
     {
-        this.allLayers = new List<ILayer>();
+        this._allLayers = new List<ILayer>();
 
         this.CurrentLayers = new ObservableCollection<ILayer>();
     }
 
+    public bool HasLayer(Guid layerGuid) => _allLayers.Any(l => l.LayerId == layerGuid);
 
     public void Add(ILayer layer, double inverseMapScale)
     {
-        if (allLayers.Any(l => l == layer))
+        if (_allLayers.Any(l => l == layer))
             return;
 
         layer.OnVisibilityChanged -= RefreshLayerVisibility;
@@ -61,6 +61,12 @@ public class LayerManager : Notifier
             // 1401.12.05
             if (layer.ParentLayerId != Guid.Empty)
             {
+                var parentLayer = _allLayers.FirstOrDefault(l => l.LayerId == layer.ParentLayerId);
+
+                if (parentLayer != null && parentLayer.IsGroupLayer && parentLayer.SubLayers?.Contains(layer) == false)
+                {
+                    parentLayer.SubLayers.Add(layer);
+                }
                 // do not add it to the current layers
             }
             else if (layer.ZIndex > CurrentLayers.Count || layer.ZIndex < 1)
@@ -81,9 +87,9 @@ public class LayerManager : Notifier
         //98.01.20
         //layer.ZIndex = this.allLayers.Count(i => !i.Type.HasFlag(LayerType.Complex) && !i.Type.HasFlag(LayerType.Drawing));
 
-        this.allLayers.Add(layer);
+        this._allLayers.Add(layer);
 
-        this.allLayers = GetOrderedLayers();
+        this._allLayers = GetOrderedLayers();
 
         ArrangeZIndex();
 
@@ -99,54 +105,34 @@ public class LayerManager : Notifier
             if (layer is VectorLayer vl && vl.DataSource is IDataSource ds && !ds.IsLoaded)
             {
                 vl.RequestRefreshWhenDataLoaded = l => RequestRefreshVisibility?.Invoke(l as BaseLayer);
-                _ = ds.LoadAsync(LoadCancellationToken);
+                _ = ds.LoadAsync(_loadCancellationToken);
             }
             else if (layer is RasterLayer rl && rl.DataSource is IDataSource rds && !rds.IsLoaded)
             {
                 rl.RequestRefreshWhenDataLoaded = l => RequestRefreshVisibility?.Invoke(l as BaseLayer);
-                _ = rds.LoadAsync(LoadCancellationToken);
+                _ = rds.LoadAsync(_loadCancellationToken);
             }
         }
     }
 
-    public void Remove(ILayer layer, bool forceRemove) => Clear(lyr => lyr == layer, forceRemove);
+    public void Remove(ILayer layer, bool forceRemove, bool keepEmptyParentGroup) => Remove(lyr => lyr == layer, forceRemove, keepEmptyParentGroup);
 
-    //public void Remove(string layerName, bool forceRemove) => Clear(layer => layer?.LayerName == layerName, forceRemove);
-
-    //internal void Remove(LayerType type, bool forceRemove) => Clear(layer => layer.Type.HasFlag(type), forceRemove);
-
-    public void Remove(Predicate<ILayer> rule, bool forceRemove) => Clear(rule, forceRemove);
+    //public void Remove(Predicate<ILayer> rule, bool forceRemove, bool keepEmptyParentGroup) => Clear(rule, forceRemove, keepEmptyParentGroup);
 
     public void RemoveTile(string providerFullName, bool forceRemove)
     {
-        Clear(layer => (layer as TileServiceLayer)?.ProviderFullName?.ToUpper() == providerFullName?.ToUpper(), forceRemove);
+        Remove(layer => (layer as TileServiceLayer)?.ProviderFullName?.ToUpper() == providerFullName?.ToUpper(), forceRemove, false);
     }
 
 
-    private void Clear(Predicate<ILayer> rule, bool forceRemove)
+    public void Remove(Predicate<ILayer> rule, bool forceRemove, bool keepEmptyParentGroup)
     {
-        //for (int i = CurrentLayers.Count - 1; i >= 0; i--)
-        //{
-        //    if (CurrentLayers[i].IsGroupLayer)
-        //    {
-        //        Clear(CurrentLayers[i].SubLayers, rule, forceRemove);
-        //    }
-        //    else if ((forceRemove || CurrentLayers[i]?.CanUserDelete == true) && rule(CurrentLayers[i]))
-        //    {
-        //        this.CurrentLayers.Remove(CurrentLayers[i]);
-        //    }
+        Remove(this.CurrentLayers, rule, forceRemove, keepEmptyParentGroup);
 
-        //    if (CurrentLayers[i].IsGroupLayer && CurrentLayers[i].SubLayers.Count ==0)
-        //    {
-        //        this.CurrentLayers
-        //    }
-        //}
-        Clear(this.CurrentLayers, rule, forceRemove);
-
-        this.allLayers.RemoveAll(layer => (forceRemove || layer?.CanUserDelete == true) && rule(layer));
+        this._allLayers.RemoveAll(layer => (forceRemove || layer?.CanUserDelete == true) && rule(layer));
     }
 
-    private void Clear(ObservableCollection<ILayer> layers, Predicate<ILayer> rule, bool forceRemove)
+    private void Remove(ObservableCollection<ILayer> layers, Predicate<ILayer> rule, bool forceRemove, bool keepEmptyParentGroup)
     {
         for (int i = layers.Count - 1; i >= 0; i--)
         {
@@ -154,12 +140,19 @@ public class LayerManager : Notifier
 
             if (layer.IsGroupLayer)
             {
-                Clear(layer.SubLayers, rule, forceRemove);
+                Remove(layer.SubLayers, rule, forceRemove, keepEmptyParentGroup);
             }
             else if ((forceRemove || layer.CanUserDelete == true) && rule(layer))
             {
                 layers.Remove(layer);
             }
+
+            // in the case of chaning symbology layer is removed and
+            // added agian. this behavior cause problem with dxf files
+            // after change symbology they cannot apear because their
+            // group layer has been removed
+            if (keepEmptyParentGroup)
+                continue;
 
             // remove group layer if all childs have been removed.
             // e.g. in the case of DXF group layer.
@@ -170,19 +163,22 @@ public class LayerManager : Notifier
         }
     }
 
-    public void Clear()
-    {
-        this.allLayers.Clear();
+    //public void Clear()
+    //{
+    //    this._allLayers.Clear();
 
-        for (int i = CurrentLayers.Count - 1; i >= 0; i--)
-        {
-            this.CurrentLayers.Remove(CurrentLayers[i]);
-        }
-    }
+    //    for (int i = CurrentLayers.Count - 1; i >= 0; i--)
+    //    {
+    //        this.CurrentLayers.Remove(CurrentLayers[i]);
+    //    }
+    //}
+
+
+    #region Arrange
 
     public List<ILayer> GetOrderedLayers()
     {
-        return allLayers.OrderBy(i => i.Type == LayerType.RightClickOption)
+        return _allLayers.OrderBy(i => i.Type == LayerType.RightClickOption)
                                      //.ThenBy(i => i.Type == (LayerType.MoveableItem))
                                      .ThenBy(i => i.Type == (LayerType.EditableItem))
                                      .ThenBy(i => i.Type == (LayerType.Complex))
@@ -206,11 +202,9 @@ public class LayerManager : Notifier
 
     public IEnumerable<ILayer> UpdateAndGetLayers(double inverseMapScale, RenderMode rendering)
     {
-        //Debug.WriteLine($"LayerManager; {DateTime.Now.ToLongTimeString()}; UpdateAndGetLayers called");
-
         ArrangeZIndex();
 
-        var newLayers = allLayers.Where(l => l.VisibleRange.IsInRange(inverseMapScale) && l.RenderMode == rendering)
+        var newLayers = _allLayers.Where(l => l.VisibleRange.IsInRange(inverseMapScale) && l.RenderMode == rendering)
                                     .OrderByDescending(i => i.Type == LayerType.BaseMap)
                                     //.ThenByDescending(i => i.Type == LayerType.Raster)
                                     //.ThenByDescending(i => i.Type == LayerType.ImagePyramid)
@@ -226,11 +220,6 @@ public class LayerManager : Notifier
                                     .ThenBy(i => i.Type == LayerType.Highlight)
                                     .ThenBy(i => i.Type == LayerType.GroupLayer)
                                     .ThenBy(i => i.ZIndex);
-
-        //if (rendering == RenderingApproach.Default)
-        //{
-        //    System.Diagnostics.Debug.WriteLine($"UpdateAndGetLayers layercounts:{  newLayers.Count()}");
-        //}
 
         var toBeRemovedLayers = this.CurrentLayers.Where(i => i.RenderMode == rendering && newLayers.All(l => l.LayerId != i.LayerId)).ToList();
 
@@ -251,14 +240,12 @@ public class LayerManager : Notifier
             this.CurrentLayers.Add(toBeAdded[i]);
         }
 
-        //Debug.WriteLine($"LayerManager; {DateTime.Now.ToLongTimeString()}; UpdateAndGetLayers finished");
-
         return newLayers;
     }
 
     internal void UpdateIsInRange(double inverseMapScale)
     {
-        foreach (var layer in allLayers)
+        foreach (var layer in _allLayers)
         {
             UpdateIsInRange(layer, inverseMapScale);
         }
@@ -269,6 +256,11 @@ public class LayerManager : Notifier
         layer.IsInScaleRange = layer.VisibleRange.IsInRange(inverseMapScale);
     }
 
+    #endregion
+
+
+    #region Calculate Extent
+
     public BoundingBox CalculateCurrentMapExtent()
     {
         return CalculateExtent(this.CurrentLayers);
@@ -276,7 +268,7 @@ public class LayerManager : Notifier
 
     public BoundingBox CalculateMapExtent()
     {
-        return CalculateExtent(this.allLayers);
+        return CalculateExtent(this._allLayers);
     }
 
     private BoundingBox CalculateExtent(IList<ILayer> layers)
@@ -291,18 +283,9 @@ public class LayerManager : Notifier
         return BoundingBox.GetMergedBoundingBox(extents);
     }
 
-    private void RefreshLayerVisibility(object sender, EventArgs e)
-    {
-        this.RequestRefreshVisibility?.Invoke(sender as BaseLayer);
-    }
+    #endregion
 
-    private void Layer_OnLayerInitilized(object? sender, ILayer e)
-    {
-        this.RequestRefreshVisibility?.Invoke(sender as BaseLayer);
-    }
+    private void RefreshLayerVisibility(object sender, EventArgs e) => RequestRefreshVisibility?.Invoke(sender as BaseLayer);
 
-    //internal void ChangeLayerZIndex(ILayer layer, int newZIndex)
-    //{
-
-    //}
+    private void Layer_OnLayerInitilized(object? sender, ILayer e) => RequestRefreshVisibility?.Invoke(sender as BaseLayer);
 }

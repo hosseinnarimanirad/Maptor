@@ -562,7 +562,7 @@ public partial class MapViewer : NotifiableUserControl
         presenter.RequestAddLayer = (l) =>
         {
             this.SetLayer(l);
-            _layerManager.LoadCancellationToken = presenter.LoadCancellationToken;
+            _layerManager._loadCancellationToken = presenter.LoadCancellationToken;
             this.AddLayer(l);
         };
 
@@ -598,7 +598,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestSelectGeometries = SelectGeometriesAsync;
 
-        presenter.RequestClearLayer = (layer, remove) => { this.ClearLayer(layer, remove); };
+        presenter.RequestClearLayer = (layer, remove, forceRemove, keepEmptyParentGroup) => ClearLayer(layer, remove, forceRemove, keepEmptyParentGroup);
 
         presenter.RequestClearLayerByCriteria = this.Clear;
 
@@ -780,7 +780,9 @@ public partial class MapViewer : NotifiableUserControl
 
     public void UnSetTileServices(int groupId = 1)
     {
-        this._layerManager.Remove(layer => layer.Type == LayerType.BaseMap && layer is TileServiceLayer && (layer as TileServiceLayer).GroupId == groupId, forceRemove: true);
+        this._layerManager.Remove(layer => layer.Type == LayerType.BaseMap && layer is TileServiceLayer && (layer as TileServiceLayer).GroupId == groupId,
+                                    forceRemove: true,
+                                    keepEmptyParentGroup: false);
     }
 
     public void SetLayer(ILayer layer)
@@ -806,7 +808,7 @@ public partial class MapViewer : NotifiableUserControl
 
     public void RemoveLayer(ILayer layer)
     {
-        this._layerManager.Remove(layer, true);
+        this._layerManager.Remove(layer, forceRemove: true, keepEmptyParentGroup: false);
     }
 
     public void SetSpecialPointLayer(string layerName, ScaleInterval scaleInterval, List<Locateable> items, double opacity = 1)
@@ -2053,7 +2055,7 @@ public partial class MapViewer : NotifiableUserControl
         Clear(tag => tag.IsTiled, remove: false, forceRemove: false);
     }
 
-    public void Clear(Predicate<LayerTag> criteria, bool remove, bool forceRemove = false)
+    public void Clear(Predicate<LayerTag> criteria, bool remove, bool forceRemove = false, bool keepEmptyParentGroup = false)
     {
         for (int i = this.mapView.Children.Count - 1; i >= 0; i--)
         {
@@ -2065,13 +2067,13 @@ public partial class MapViewer : NotifiableUserControl
 
                 if (remove && tag.Layer != null)
                 {
-                    _layerManager.Remove(tag.Layer, forceRemove);
+                    _layerManager.Remove(tag.Layer, forceRemove: forceRemove, keepEmptyParentGroup: keepEmptyParentGroup);
                 }
             }
         }
     }
 
-    public void Clear(Predicate<ILayer> criteria, bool remove, bool forceRemove = false)
+    public void Clear(Predicate<ILayer> criteria, bool remove, bool forceRemove = false, bool keepEmptyParentGroup = false)
     {
         for (int i = this.mapView.Children.Count - 1; i >= 0; i--)
         {
@@ -2089,7 +2091,7 @@ public partial class MapViewer : NotifiableUserControl
 
         if (remove)
         {
-            _layerManager.Remove(criteria, forceRemove);
+            _layerManager.Remove(criteria, forceRemove: forceRemove, keepEmptyParentGroup: false);
         }
     }
 
@@ -2099,9 +2101,9 @@ public partial class MapViewer : NotifiableUserControl
         Clear(tag => tag.LayerType == (type), remove, forceRemove);
     }
 
-    public void ClearLayer(ILayer layer, bool remove, bool forceRemove = false)
+    public void ClearLayer(ILayer layer, bool remove, bool forceRemove = false, bool keepEmptyParentGroup = false)
     {
-        Clear(new Predicate<LayerTag>(tag => tag.Layer == layer), remove, forceRemove);
+        Clear(new Predicate<LayerTag>(tag => tag.Layer == layer), remove, forceRemove, keepEmptyParentGroup);
 
         //in the case of image pyramids, the actual layer will not be remove
         //"tag.AncestorLayerId == layer?.Id" is not a layer in layerManagemnr
@@ -2114,7 +2116,7 @@ public partial class MapViewer : NotifiableUserControl
         //so in order to remove it, it should be done here
         if (remove)
         {
-            _layerManager.Remove(layer, forceRemove);
+            _layerManager.Remove(layer, forceRemove, keepEmptyParentGroup);
         }
     }
 
