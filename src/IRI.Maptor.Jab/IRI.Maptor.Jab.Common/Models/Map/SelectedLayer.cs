@@ -81,6 +81,8 @@ public class SelectedLayer : Notifier
 
     public bool CanViewChanges => CanUndo;
 
+    public bool HasPendingChanges => AssociatedLayer.HasPendingChanges;
+
     public int CountOfSelectedFeatures => Features?.Count ?? 0;
 
 
@@ -138,7 +140,7 @@ public class SelectedLayer : Notifier
 
     public void RefreshSelectedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
     {
-        RequestFeaturesChanged?.Invoke(enumerable, strokeThickness);
+        RequestFeaturesChanged?.Invoke(enumerable.Where(i => i.Status != FeatureStatus.Removed && i.Status != FeatureStatus.CanceledNew), strokeThickness);
     }
 
     public void RefreshHighlightedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable)
@@ -146,9 +148,9 @@ public class SelectedLayer : Notifier
         RequestHighlightFeaturesChanged?.Invoke(enumerable, this.AssociatedLayer.DefaultSymbology?.StrokeThickness);
     }
 
-    public IEnumerable<Feature<Point>> GetSelectedFeatures()
+    public IEnumerable<Feature<Point>> GetSelectedFeatures(bool includeRemoved = false)
     {
-        return Features;
+        return Features.Where(i => includeRemoved || (i.Status != FeatureStatus.Removed && i.Status != FeatureStatus.CanceledNew));
     }
 
     public bool UpdateGeometry(Feature<Point> feature, Geometry<Point> newGeometry)
@@ -248,6 +250,11 @@ public class SelectedLayer : Notifier
     {
         (AssociatedLayer.DataSource as IEditableVectorDataSource)?.SaveChanges();
 
+        var toBeRemoved = Features.Where(f => f.Status == FeatureStatus.Removed).ToList();
+
+        foreach (var item in toBeRemoved)
+            Features.Remove(item);
+
         // Replace collection to force DataGrid to re-bind; features now have Status=Unchanged
         if (Features != null)
             Features = new ObservableCollection<Feature<Point>>(Features);
@@ -268,6 +275,7 @@ public class SelectedLayer : Notifier
         NotifyAll();
 
         RequestRefreshLayer?.Invoke(AssociatedLayer);
+        RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
     }
 
     public void UndoAllChanges()
@@ -286,6 +294,7 @@ public class SelectedLayer : Notifier
         NotifyAll();
 
         RequestRefreshLayer?.Invoke(AssociatedLayer);
+        RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
     }
 
     private void UndoFeatureChanges(IEditableVectorDataSource dataSource, Feature<Point> feature)
@@ -329,6 +338,7 @@ public class SelectedLayer : Notifier
         RaisePropertyChanged(nameof(CanDelete));
         RaisePropertyChanged(nameof(CanUndo));
         RaisePropertyChanged(nameof(CanViewChanges));
+        RaisePropertyChanged(nameof(HasPendingChanges));
     }
 
     private RelayCommand? _addCommand;
@@ -382,7 +392,7 @@ public class SelectedLayer : Notifier
                     NotifyAll();
 
                     if (ShowSelectedOnMap)
-                        RefreshSelectedFeaturesOnMap(Features, AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+                        RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
 
                     RequestRefreshLayer?.Invoke(AssociatedLayer);
 
@@ -404,6 +414,7 @@ public class SelectedLayer : Notifier
                 _deleteCommand = new RelayCommand(param =>
                 {
                     var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
                     if (dataSource is null || HighlightedFeatures?.Count < 1)
                         return;
 
@@ -421,6 +432,8 @@ public class SelectedLayer : Notifier
                     NotifyAll();
 
                     RequestRefreshLayer?.Invoke(AssociatedLayer);
+
+                    RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
 
                 });
             }
@@ -487,7 +500,7 @@ public class SelectedLayer : Notifier
         get
         {
             if (_saveCommand is null)
-                _saveCommand = new RelayCommand(param => this.SaveChanges());
+                _saveCommand = new RelayCommand(param => this.SaveChanges(), _ => HasPendingChanges);
 
             return _saveCommand;
         }

@@ -218,8 +218,7 @@ public class FeatureSet<T> where T : IPoint, new()
 
     public void ApplyChanges()
     {
-        _allFeatures.RemoveAll(f => f.Status == Common.Enums.FeatureStatus.Removed ||
-                                    f.Status == Common.Enums.FeatureStatus.CanceledNew);
+        _allFeatures.RemoveAll(f => f.Status == FeatureStatus.Removed || f.Status == FeatureStatus.CanceledNew);
 
         foreach (var feature in _allFeatures)
         {

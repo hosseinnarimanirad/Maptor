@@ -1273,7 +1273,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
         else
         {
-            existingLayer.UpdateSelectedFeatures(selectedLayer.GetSelectedFeatures());
+            existingLayer.UpdateSelectedFeatures(selectedLayer.GetSelectedFeatures(includeRemoved: true));
 
             CurrentLayer = existingLayer;
 
@@ -1349,7 +1349,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await SelectGeometriesAsync(
             "__$selection",
-            enumerable.Select(i => i.TheGeometry).ToList(),
+            enumerable/*.Where(i => i.Status != FeatureStatus.Removed && i.Status != FeatureStatus.CanceledNew)*/.Select(i => i.TheGeometry).ToList(),
             VisualParameters.GetDefaultForSelection(strokeThickness));
     }
 
@@ -3364,7 +3364,11 @@ public abstract class MapViewModelBase : ViewModelBase
             return;
         }
 
+        System.Diagnostics.Debug.WriteLine($"***** AddShapefile begin {DateTime.Now.ToLongTimeString()}");
+
         await AddShapefile(fileName, owner);
+
+        System.Diagnostics.Debug.WriteLine($"***** AddShapefile end {DateTime.Now.ToLongTimeString()}");
     }
     public async Task AddShapefile(string fileName, object owner)
     {
