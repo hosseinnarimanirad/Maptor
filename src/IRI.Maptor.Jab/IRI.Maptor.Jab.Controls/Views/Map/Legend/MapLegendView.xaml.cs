@@ -11,6 +11,7 @@ using IRI.Maptor.Jab.Common.ViewModels.Map;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
+using IRI.Maptor.Jab.Common.Localization;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 
@@ -32,9 +33,9 @@ public partial class MapLegendView : NotifiableUserControl
             {
                 Dispatcher.BeginInvoke(() => cvs.View.Refresh(), DispatcherPriority.Loaded);
             }
-        };
+        }; 
     }
-
+     
     private LegendViewModel _legendViewModel;
     public LegendViewModel LegendViewModel
     {

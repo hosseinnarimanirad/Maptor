@@ -83,7 +83,7 @@
                         </Style.Triggers>
                     </Style>
                 </HierarchicalDataTemplate.Resources>
-                        <!--GroupName="{Binding ElementName=root, Path=GroupName}"-->
+                <!--GroupName="{Binding ElementName=root, Path=GroupName}"-->
                 <RadioButton Style="{StaticResource {x:Type ToggleButton}}" 
                         HorizontalAlignment="Stretch" 
                         DataContext="{Binding }" 
@@ -105,10 +105,10 @@
             <Style  x:Key="menuButton" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 <Setter Property="Padding" Value="8,6"/>
                 <Setter Property="Margin" Value="0,1"/>
-                <Setter Property="Focusable" Value="False"/>
+                <Setter Property="Focusable" Value="True"/>
                 <Setter Property="Foreground" Value="Black"/>
                 <Setter Property="Cursor" Value="Hand"/>
                 <Style.Triggers>
@@ -119,9 +119,18 @@
             </Style>
             <Style x:Key="menuTextBlock" TargetType="TextBlock">
                 <Setter Property="FontSize" Value="12"/>
-                <Setter Property="Margin" Value="6,0,0,0"/>
+                <Setter Property="Margin" Value="6,0"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="TextWrapping" Value="NoWrap"/>
+                <Setter Property="Width" Value="120"/>
                 <!--<Setter Property="Foreground" Value="White"/>-->
+            </Style>
+            <Style x:Key="menuLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Margin" Value="6,0"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
             </Style>
             <Style x:Key="menuRectangle" TargetType="Rectangle">
                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -423,19 +432,20 @@
                 <Popup IsOpen="{Binding IsChecked, ElementName=importLayerToggle}"
                        PlacementTarget="{Binding ElementName=importLayerToggle}"
                        Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
-                       PopupAnimation="Slide">
+                       PopupAnimation="Slide"
+                       x:Name="importLayerPopup">
                     <Border Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                             BorderThickness="1" Padding="4" CornerRadius="4"
-                            DataContext="{Binding DataContext, ElementName=root}">
+                            DataContext="{Binding DataContext, ElementName=root}"
+                            x:Name="importLayerBorder">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
                         </Border.Effect>
                         <StackPanel>
-                            
+
+                            <!--shapefile-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddShapefileCommand}">
                                 <StackPanel Orientation="Horizontal">
-                                    <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Shapefile}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
                                     <Border Style="{StaticResource menuBorder}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Shapefile}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
@@ -444,14 +454,13 @@
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_legend_addShapefile], Source={StaticResource Localization}}"
-                                               Style="{StaticResource menuTextBlock}" />
+                                                Style="{StaticResource menuTextBlock}"/>
                                 </StackPanel>
                             </Button>
-                            
+
+                            <!--KMZ-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddKmzfileCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Kmz}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                <StackPanel Orientation="Horizontal"> 
                                     <Border Style="{StaticResource menuBorder}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Kmz}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
@@ -459,10 +468,12 @@
                                             <Path Style="{StaticResource menuPath}" Data="{StaticResource kmz}"/>
                                         </StackPanel>
                                     </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addKmz], Source={StaticResource Localization}}"
-                                               Style="{StaticResource menuTextBlock}" />
+                                    <TextBlock Style="{StaticResource menuTextBlock}"
+                                               Text="{Binding [cmd_legend_addKmz], Source={StaticResource Localization}}"/>
                                 </StackPanel>
                             </Button>
+
+                            <!--KML-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddKmlfileCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
@@ -478,6 +489,8 @@
                                                Style="{StaticResource menuTextBlock}" />
                                 </StackPanel>
                             </Button>
+
+                            <!--DXF-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddDxffileCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
@@ -493,6 +506,8 @@
                                                Style="{StaticResource menuTextBlock}" />
                                 </StackPanel>
                             </Button>
+
+                            <!--GPX-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddGpxfileCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
@@ -509,6 +524,7 @@
                                 </StackPanel>
                             </Button>
 
+                            <!--GeoJson-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddGeoJSONfileCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
@@ -525,6 +541,7 @@
                                 </StackPanel>
                             </Button>
 
+                            <!--TopoJson-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddTopoJsonCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
@@ -541,6 +558,7 @@
                                 </StackPanel>
                             </Button>
 
+                            <!--CSV-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddCsvCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
@@ -556,6 +574,8 @@
                                                Style="{StaticResource menuTextBlock}" />
                                 </StackPanel>
                             </Button>
+
+                            <!--TSV-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddTsvCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"

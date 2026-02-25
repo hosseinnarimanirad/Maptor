@@ -5,6 +5,11 @@ using System.Windows.Data;
 using System.Windows.Media;
 
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.ShapefileFormat;
+using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
+using IRI.Maptor.Sta.Spatial.IO.TopoJson;
+using IRI.Maptor.Sta.Spatial.IO;
+using SixLabors.ImageSharp.ColorSpaces;
 
 namespace IRI.Maptor.Jab.Common.Assets.Converters;
 
@@ -27,6 +32,7 @@ public class DataSourceKindToGeometryConverter : IValueConverter
             DataSourceKind.WebApi => "rest",
             DataSourceKind.GRPC => "grpc",
             DataSourceKind.GeoJson => "json",
+            DataSourceKind.TopoJson => "topo",
             DataSourceKind.Csv => "csv",
             DataSourceKind.Tsv => "tsv",
             DataSourceKind.GeoTiff => "tif",
