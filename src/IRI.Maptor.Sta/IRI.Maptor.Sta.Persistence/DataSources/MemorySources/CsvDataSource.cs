@@ -63,21 +63,21 @@ public class CsvDataSource : MemoryDataSource
     /// <summary>
     /// Creates a CsvDataSource from a CSV file.
     /// </summary>
-    public static async Task<CsvDataSource> CreateFromFileAsync(string fileName, bool useFirstLineAsHeader = false)
+    public static async Task<CsvDataSource> CreateFromFileAsync(string fileName, GeometryType type, bool useFirstLineAsHeader = false)
     {
-        return await CreateFromFileAsync(fileName, useFirstLineAsHeader, SridHelper.GeodeticWGS84, isLongitudeFirst: true);
+        return await CreateFromFileAsync(fileName, useFirstLineAsHeader, SridHelper.GeodeticWGS84, isLongitudeFirst: true, type);
     }
 
     /// <summary>
     /// Creates a CsvDataSource from a CSV file with the specified spatial reference.
     /// </summary>
-    public static async Task<CsvDataSource> CreateFromFileAsync(string fileName, bool useFirstLineAsHeader, int sourceSrid, bool isLongitudeFirst)
+    public static async Task<CsvDataSource> CreateFromFileAsync(string fileName, bool useFirstLineAsHeader, int sourceSrid, bool isLongitudeFirst, GeometryType type)
     {
         if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
             throw new FileNotFoundException($"CSV file not found: {fileName}", fileName);
 
         var rawData = await IOHelper.ReadAllDelimitedFileAsync(fileName, IOHelper.CsvDelimiterChar);
-        var features = ParseToWebMercatorFeatures(rawData, useFirstLineAsHeader, isLongitudeFirst, sourceSrid);
+        var features = ParseToWebMercatorFeatures(rawData, useFirstLineAsHeader, isLongitudeFirst, sourceSrid, type);
 
         if (features.Count == 0)
             throw new InvalidOperationException($"No features found in CSV file: {fileName}");
@@ -88,13 +88,13 @@ public class CsvDataSource : MemoryDataSource
     /// <summary>
     /// Creates a CsvDataSource from pasted or in-memory text (e.g. from clipboard).
     /// </summary>
-    public static Task<CsvDataSource> CreateFromTextAsync(string text, int sourceSrid, bool isLongitudeFirst, bool useFirstLineAsHeader = false)
+    public static Task<CsvDataSource> CreateFromTextAsync(string text, int sourceSrid, bool isLongitudeFirst, GeometryType type, bool useFirstLineAsHeader = false)
     {
         if (string.IsNullOrWhiteSpace(text))
             throw new ArgumentException("Text cannot be empty.", nameof(text));
 
         var rawData = IOHelper.ReadDelimitedFromText(text, IOHelper.CsvDelimiterChar);
-        var features = ParseToWebMercatorFeatures(rawData, useFirstLineAsHeader, isLongitudeFirst, sourceSrid);
+        var features = ParseToWebMercatorFeatures(rawData, useFirstLineAsHeader, isLongitudeFirst, sourceSrid, type);
 
         if (features.Count == 0)
             throw new InvalidOperationException("No valid features found in the text.");
@@ -102,7 +102,7 @@ public class CsvDataSource : MemoryDataSource
         return Task.FromResult(new CsvDataSource(string.Empty, features, useFirstLineAsHeader));
     }
 
-    private static List<Feature<Point>> ParseToWebMercatorFeatures(List<string[]> rawData, bool useFirstLineAsHeader, bool isLongitudeFirst, int sourceSrid)
+    private static List<Feature<Point>> ParseToWebMercatorFeatures(List<string[]> rawData, bool useFirstLineAsHeader, bool isLongitudeFirst, int sourceSrid, GeometryType type)
     {
         if (rawData == null || rawData.Count == 0)
             return new List<Feature<Point>>();
@@ -148,6 +148,15 @@ public class CsvDataSource : MemoryDataSource
             }
 
             result.Add(new Feature<Point> { TheGeometry = projected, Attributes = attrs });
+        }
+
+        if (type == Common.Enums.GeometryType.Polygon)
+        {
+            return [Geometry<Point>.CreatePolygonOrMultiPolygon(result.Select(r => r.TheGeometry).ToList(), SridHelper.WebMercator).AsFeature()];
+        }
+        else if (type == Common.Enums.GeometryType.LineString)
+        {
+            return [Geometry<Point>.CreateLineStringFromPoints(result.Select(r => r.TheGeometry).ToList()).AsFeature()];
         }
 
         return result;

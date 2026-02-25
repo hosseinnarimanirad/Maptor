@@ -1,3 +1,5 @@
+using IRI.Maptor.Sta.Common.Enums;
+
 namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 
 /// <summary>
@@ -15,4 +17,5 @@ public record CsvTsvOpenDialogResult(
     int SelectedSrid,
     bool IsCsv,
     bool IsLongitudeFirst,
-    bool UseFirstLineAsHeader);
+    bool UseFirstLineAsHeader,
+    GeometryType GeometryType);

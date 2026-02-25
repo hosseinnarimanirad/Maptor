@@ -3998,8 +3998,8 @@ public abstract class MapViewModelBase : ViewModelBase
             }
 
             MemoryDataSource dataSource = result.IsCsv
-                ? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.UseFirstLineAsHeader)
-                : await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.UseFirstLineAsHeader);
+                ? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader)
+                : await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader);
 
             if (dataSource == null)
                 return;
@@ -4046,8 +4046,8 @@ public abstract class MapViewModelBase : ViewModelBase
             }
 
             MemoryDataSource dataSource = result.IsCsv
-                ? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.UseFirstLineAsHeader)
-                : await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.UseFirstLineAsHeader);
+                ? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader)
+                : await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader);
 
             if (dataSource == null)
                 return;

@@ -1447,4 +1447,7 @@
   <data name="sldEditor_filter_simplifiedViewNote" xml:space="preserve">
     <value>Note: This is a simplified view. For complex filters, edit the XML directly or use a specialized filter builder.</value>
   </data>
+  <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
+    <value>Geometry Type</value>
+  </data>
 </root>

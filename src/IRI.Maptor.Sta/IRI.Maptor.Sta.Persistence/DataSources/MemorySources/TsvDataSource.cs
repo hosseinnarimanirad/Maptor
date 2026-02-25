@@ -63,21 +63,21 @@ public class TsvDataSource : MemoryDataSource
     /// <summary>
     /// Creates a TsvDataSource from a TSV file.
     /// </summary>
-    public static async Task<TsvDataSource> CreateFromFileAsync(string fileName, bool useFirstLineAsHeader = false)
+    public static async Task<TsvDataSource> CreateFromFileAsync(string fileName, GeometryType type, bool useFirstLineAsHeader = false)
     {
-        return await CreateFromFileAsync(fileName, useFirstLineAsHeader, SridHelper.GeodeticWGS84, isLongitudeFirst: true);
+        return await CreateFromFileAsync(fileName, useFirstLineAsHeader, SridHelper.GeodeticWGS84, isLongitudeFirst: true, type);
     }
 
     /// <summary>
     /// Creates a TsvDataSource from a TSV file with the specified spatial reference.
     /// </summary>
-    public static async Task<TsvDataSource> CreateFromFileAsync(string fileName, bool useFirstLineAsHeader, int sourceSrid, bool isLongitudeFirst)
+    public static async Task<TsvDataSource> CreateFromFileAsync(string fileName, bool useFirstLineAsHeader, int sourceSrid, bool isLongitudeFirst, GeometryType type)
     {
         if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
             throw new FileNotFoundException($"TSV file not found: {fileName}", fileName);
 
         var rawData = await IOHelper.ReadAllDelimitedFileAsync(fileName, IOHelper.TsvDelimiterChar);
-        var features = ParseToWebMercatorFeatures(rawData, useFirstLineAsHeader, isLongitudeFirst, sourceSrid);
+        var features = ParseToWebMercatorFeatures(rawData, useFirstLineAsHeader, isLongitudeFirst, sourceSrid, type);
 
         if (features.Count == 0)
             throw new InvalidOperationException($"No features found in TSV file: {fileName}");
@@ -88,13 +88,13 @@ public class TsvDataSource : MemoryDataSource
     /// <summary>
     /// Creates a TsvDataSource from pasted or in-memory text (e.g. from clipboard).
     /// </summary>
-    public static Task<TsvDataSource> CreateFromTextAsync(string text, int sourceSrid, bool isLongitudeFirst, bool useFirstLineAsHeader = false)
+    public static Task<TsvDataSource> CreateFromTextAsync(string text, int sourceSrid, bool isLongitudeFirst, GeometryType type, bool useFirstLineAsHeader = false)
     {
         if (string.IsNullOrWhiteSpace(text))
             throw new ArgumentException("Text cannot be empty.", nameof(text));
 
         var rawData = IOHelper.ReadDelimitedFromText(text, IOHelper.TsvDelimiterChar);
-        var features = ParseToWebMercatorFeatures(rawData, useFirstLineAsHeader, isLongitudeFirst, sourceSrid);
+        var features = ParseToWebMercatorFeatures(rawData, useFirstLineAsHeader, isLongitudeFirst, sourceSrid, type);
 
         if (features.Count == 0)
             throw new InvalidOperationException("No valid features found in the text.");
@@ -102,7 +102,7 @@ public class TsvDataSource : MemoryDataSource
         return Task.FromResult(new TsvDataSource(string.Empty, features, useFirstLineAsHeader));
     }
 
-    private static List<Feature<Point>> ParseToWebMercatorFeatures(List<string[]> rawData, bool useFirstLineAsHeader, bool isLongitudeFirst, int sourceSrid)
+    private static List<Feature<Point>> ParseToWebMercatorFeatures(List<string[]> rawData, bool useFirstLineAsHeader, bool isLongitudeFirst, int sourceSrid, GeometryType type)
     {
         if (rawData == null || rawData.Count == 0)
             return new List<Feature<Point>>();
@@ -148,6 +148,15 @@ public class TsvDataSource : MemoryDataSource
             }
 
             result.Add(new Feature<Point> { TheGeometry = projected, Attributes = attrs });
+        }
+
+        if (type == Common.Enums.GeometryType.Polygon)
+        {
+            return [Geometry<Point>.Create(result.Select(r => r.TheGeometry).ToList(), Common.Enums.GeometryType.Polygon, SridHelper.WebMercator).AsFeature()];
+        }
+        else if (type == Common.Enums.GeometryType.LineString)
+        {
+            return [Geometry<Point>.Create(result.Select(r => r.TheGeometry).ToList(), Common.Enums.GeometryType.LineString, SridHelper.WebMercator).AsFeature()];
         }
 
         return result;

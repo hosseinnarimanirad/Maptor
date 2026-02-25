@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Assets.Commands;
+using IRI.Maptor.Jab.Common.Models.Common;
 using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
@@ -37,6 +40,14 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
 
         SelectedSrsOption = AvailableSrsOptions[0];
 
+        this.GeometryModes = [
+            new(GeometryType.Point, "Point"),
+            new(GeometryType.LineString,"Polyline"),
+            new(GeometryType.Polygon,"Polygon")
+            ];
+
+        this.SelectedGeometryMode = GeometryModes[0];
+
         if (initialSrid.HasValue && initialSrid.Value > 0)
             ApplyInitialSrid(initialSrid.Value);
 
@@ -46,6 +57,8 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
     }
 
     public ObservableCollection<SrsOption> AvailableSrsOptions { get; }
+
+    public List<GeometryModeModel> GeometryModes { get; }
 
     public string FilePath
     {
@@ -71,6 +84,17 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(IsUtmSelected));
             RaisePropertyChanged(nameof(EffectiveSelectedSrid));
+        }
+    }
+
+    private GeometryModeModel? _selectedGeometryMode;
+    public GeometryModeModel? SelectedGeometryMode
+    {
+        get => _selectedGeometryMode;
+        set
+        {
+            _selectedGeometryMode = value;
+            RaisePropertyChanged();
         }
     }
 
@@ -204,6 +228,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
             return;
 
         var textToImport = RawText;
+
         if (!string.IsNullOrEmpty(FilePath) && File.Exists(FilePath))
         {
             try
@@ -223,8 +248,11 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
             EffectiveSelectedSrid,
             IsCsv,
             IsLongitudeFirst,
-            UseFirstLineAsHeader);
+            UseFirstLineAsHeader,
+            SelectedGeometryMode?.Type ?? GeometryType.Point);
+
         DialogResult = true;
+
         RequestClose?.Invoke();
     }
 
