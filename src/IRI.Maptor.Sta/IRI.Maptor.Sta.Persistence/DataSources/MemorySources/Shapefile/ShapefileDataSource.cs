@@ -110,12 +110,26 @@ public class ShapefileDataSource : MemoryDataSource
 
         try
         {
+            System.Diagnostics.Debug.WriteLine($"***** LoadAsync shapefile started {DateTime.Now.ToLongTimeString()}");
+
             HasError = false;
-            var attributes = DbfFile.Read(ShapefileFormat.Shapefile.GetDbfFileName(_shapefileName), true, _encoding);
+
+            await Task.Delay(10);
+
+            var attributes = await DbfFile.ReadAsync(ShapefileFormat.Shapefile.GetDbfFileName(_shapefileName), true, _encoding);
+
+            System.Diagnostics.Debug.WriteLine($"***** LoadAsync shapefile - attributes read {DateTime.Now.ToLongTimeString()}");
 
             var geometries = await ShapefileFormat.Shapefile.ReadShapesAsync(_shapefileName);
 
+            System.Diagnostics.Debug.WriteLine($"***** LoadAsync shapefile - geometry read {DateTime.Now.ToLongTimeString()}");
+
+            //await Task.Delay(5000);
+
             Initialize(geometries, attributes, _createFeatureFunc, _inverseAttributeMap);
+
+            System.Diagnostics.Debug.WriteLine($"***** LoadAsync shapefile - Initialize passes {DateTime.Now.ToLongTimeString()}");
+
         }
         catch
         {
@@ -134,12 +148,17 @@ public class ShapefileDataSource : MemoryDataSource
                              Func<Geometry<Point>, Dictionary<string, object>, Feature<Point>> map,
                              Func<Feature<Point>, List<object>> inverseAttributeMap)
     {
+        System.Diagnostics.Debug.WriteLine($"***** Initialize shapefile started {DateTime.Now.ToLongTimeString()}");
+
         if (attributes == null)
             throw new NotImplementedException();
 
         Func<Point, Point>? transformFunc = _targetSrs != null ? (p => p.Project(_sourceSrs, _targetSrs)) : null;
 
-        WebMercatorExtent = geometries.MainHeader.MinimumBoundingBox.Transform(p => p.Project(_sourceSrs, new WebMercator()));
+        var webMercator = new WebMercator();
+         
+        //WebMercatorExtent = geometries.MainHeader.MinimumBoundingBox.Transform(p => p.Project(_sourceSrs, new WebMercator()));
+        WebMercatorExtent = BoundingBox.GetMergedBoundingBox(geometries.Select(g => g.MinimumBoundingBox.Transform(p => p.Project(_sourceSrs, webMercator))), true); 
 
         GeometryType = geometries.MainHeader.ShapeType.AsGeometryType();
 
@@ -175,6 +194,9 @@ public class ShapefileDataSource : MemoryDataSource
         _featureSet = FeatureSet<Point>.Create(System.IO.Path.GetFileNameWithoutExtension(_shapefileName), features);
 
         IsLoaded = true;
+         
+        System.Diagnostics.Debug.WriteLine($"***** Initialize shapefile finished {DateTime.Now.ToLongTimeString()}");
+
     }
 
 

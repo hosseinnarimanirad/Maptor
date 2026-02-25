@@ -175,18 +175,7 @@ public static class DbfFile
         dataEncoding = dataEncoding ?? TryDetectEncoding(dbfFileName);
 
         ChangeEncoding(dataEncoding);
-
-        //if (tryDetectEncoding)
-        //{
-        //    Encoding encoding = TryDetectEncoding(dbfFileName) ?? dataEncoding;
-
-        //    ChangeEncoding(encoding);
-        //}
-        //else
-        //{
-        //    ChangeEncoding(dataEncoding);
-        //}
-
+         
         DbfFile._fieldsEncoding = fieldHeaderEncoding ?? EncodingHelper.ArabicEncoding;
 
         DbfFile._correctFarsiCharacters = correctFarsiCharacters;
@@ -256,6 +245,105 @@ public static class DbfFile
         stream.Close();
 
         return new EsriAttributeDictionary(attributes, fields);
+    }
+
+    public static async Task<EsriAttributeDictionary> ReadAsync(
+    string dbfFileName,
+    bool correctFarsiCharacters = true,
+    Encoding? dataEncoding = null,
+    Encoding? fieldHeaderEncoding = null,
+    CancellationToken cancellationToken = default)
+    {
+        // Detect encoding synchronously (assumed to be fast, no I/O needed inside)
+        dataEncoding ??= TryDetectEncoding(dbfFileName);
+        ChangeEncoding(dataEncoding); // If this modifies global state, consider refactoring it.
+
+        var fieldsEncoding = fieldHeaderEncoding ?? EncodingHelper.ArabicEncoding;
+
+        // Get mapping functions for field parsing (now passed encoding & flag)
+        var mapFunctions = DbfFieldMappings.GetMappingFunctions(dataEncoding, correctFarsiCharacters);
+
+        // Use async file stream
+        await using var stream = new FileStream(
+            dbfFileName,
+            FileMode.Open,
+            FileAccess.Read,
+            FileShare.Read,
+            bufferSize: 4096,
+            useAsync: true);
+
+        // Read header
+        int headerSize = Marshal.SizeOf<DbfHeader>();
+        byte[] headerBuffer = new byte[headerSize];
+        await ReadExactlyAsync(stream, headerBuffer, 0, headerSize, cancellationToken);
+        var header = StreamHelper.ByteArrayToStructure<DbfHeader>(headerBuffer);
+
+        // Read field descriptors
+        int fieldDescriptorSize = Marshal.SizeOf<DbfFieldDescriptor>();
+        int numberOfFields = (header.LengthOfHeader - 33) / 32; // Could be improved with constants
+        var fields = new List<DbfFieldDescriptor>(numberOfFields);
+        byte[] fieldBuffer = new byte[fieldDescriptorSize];
+
+        for (int i = 0; i < numberOfFields; i++)
+        {
+            await ReadExactlyAsync(stream, fieldBuffer, 0, fieldDescriptorSize, cancellationToken);
+            fields.Add(DbfFieldDescriptor.Parse(fieldBuffer, fieldsEncoding));
+        }
+
+        // Optional cleanup step
+        fields = EnsureFields(fields);
+
+        // Seek to the start of records (header length is known)
+        stream.Seek(header.LengthOfHeader, SeekOrigin.Begin);
+
+        // Process records
+        var attributes = new List<Dictionary<string, object>>(header.NumberOfRecords);
+        byte[] recordBuffer = new byte[header.LengthOfEachRecord];
+
+        for (int recordIndex = 0; recordIndex < header.NumberOfRecords; recordIndex++)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            // Read entire record asynchronously
+            await ReadExactlyAsync(stream, recordBuffer, 0, header.LengthOfEachRecord, cancellationToken);
+
+            // Parse record using a memory stream (synchronous part)
+            using var recordStream = new MemoryStream(recordBuffer);
+            using var recordReader = new BinaryReader(recordStream);
+
+            // First byte is deletion marker
+            char deletedFlag = recordReader.ReadChar();
+            if (deletedFlag == '*')
+                continue; // Skip deleted record
+
+            var values = new Dictionary<string, object>(fields.Count);
+            for (int fieldIdx = 0; fieldIdx < fields.Count; fieldIdx++)
+            {
+                var field = fields[fieldIdx];
+                byte[] fieldData = recordReader.ReadBytes(field.Length);
+                values[field.Name] = mapFunctions[field.Type](fieldData);
+            }
+
+            attributes.Add(values);
+        }
+
+        return new EsriAttributeDictionary(attributes, fields);
+    }
+
+    /// <summary>
+    /// Reads exactly the requested number of bytes from the stream.
+    /// Throws if the stream ends prematurely.
+    /// </summary>
+    private static async Task ReadExactlyAsync(Stream stream, byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+    {
+        int totalRead = 0;
+        while (totalRead < count)
+        {
+            int read = await stream.ReadAsync(buffer, offset + totalRead, count - totalRead, cancellationToken);
+            if (read == 0)
+                throw new EndOfStreamException("Unexpected end of stream while reading DBF file.");
+            totalRead += read;
+        }
     }
 
     public static object[][] ReadToObject(
