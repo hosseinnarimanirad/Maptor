@@ -210,6 +210,8 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         ReconstructLocateables();
 
+        this._primaryVerticesLayer.SelectLocatable(0);
+
         if (Options.IsNewDrawing)
         {
             //add virtual vertex which show last point
