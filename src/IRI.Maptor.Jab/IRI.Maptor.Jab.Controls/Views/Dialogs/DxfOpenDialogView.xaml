@@ -9,13 +9,13 @@
         SizeToContent="WidthAndHeight"
         GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"
         MinWidth="400"
-        MaxWidth="500"
-        FlowDirection="LeftToRight"
+        MaxWidth="500" 
         WindowStartupLocation="CenterOwner"
         ShowMaxRestoreButton="False"
         ShowCloseButton="True"
         ShowMinButton="False"
         ShowTitleBar="True"
+        FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
         FontFamily="{StaticResource iranSans}">
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
@@ -26,6 +26,7 @@
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
                 <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/ButtonStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <!-- DXF dialog border style (borderGroup requires root with InputBorderBrush; we use fixed values) -->
             <Style x:Key="dxfDialogBorderGroup" TargetType="Border">
                 <Setter Property="BorderBrush" Value="Gray"/>
@@ -90,7 +91,7 @@
                         MinHeight="35"
                         VerticalContentAlignment="Center"
                         HorizontalAlignment="Stretch"
-                        FlowDirection="LeftToRight"/>
+                          FlowDirection="LeftToRight"/>
             </Grid>
         </Border>
  
@@ -104,14 +105,14 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconPhosphorIcons Kind="MapTrifoldFill" Style="{StaticResource securityIconPhosphor}"/>
-                <mahApp:NumericUpDown Grid.Column="1" FlowDirection="LeftToRight"
+                <mahApp:NumericUpDown Grid.Column="1"
                                      Minimum="1" Maximum="60"
                                      Value="{Binding UtmZone, Mode=TwoWay}" Margin="4" VerticalAlignment="Center"/>
 
                 <ToggleButton Grid.Column="2" IsChecked="{Binding UtmHemisphereNorth, Mode=TwoWay}"
-                              Style="{StaticResource circleToggleButtonLight}"  
+                              Style="{StaticResource circleToggleButtonLight}"  FlowDirection="LeftToRight"
                               ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
-                    <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5" Foreground="White">
+                    <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5" Foreground="White" >
                         <iconPacks:PackIconPhosphorIcons.Style>
                             <Style TargetType="iconPacks:PackIconPhosphorIcons" BasedOn="{StaticResource securityIconPhosphor}">
                                 <Setter Property="RenderTransform">

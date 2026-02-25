@@ -181,10 +181,13 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
     {
         if (string.IsNullOrWhiteSpace(FilePath))
             return false;
+
         if (EffectiveSelectedSrid <= 0)
             return false;
+
         if (IsUtmSelected && (UtmZone < 1 || UtmZone > 60))
             return false;
+
         return true;
     }
 
