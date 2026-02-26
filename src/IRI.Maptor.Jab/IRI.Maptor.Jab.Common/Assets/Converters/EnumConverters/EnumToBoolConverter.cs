@@ -17,7 +17,7 @@ public class EnumToBoolConverter : IValueConverter
 
         // Get the enum value as string
         var enumValue = value.ToString();
-        
+
         // Get the parameter as string
         var paramValue = parameter.ToString();
 

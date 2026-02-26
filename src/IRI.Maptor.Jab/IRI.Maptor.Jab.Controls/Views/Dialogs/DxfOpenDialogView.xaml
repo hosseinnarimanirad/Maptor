@@ -17,6 +17,15 @@
         ShowTitleBar="True"
         FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
         FontFamily="{StaticResource iranSans}">
+    <mahApp:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <TextBlock Text="{TemplateBinding Content}"
+               TextTrimming="CharacterEllipsis"
+               VerticalAlignment="Center"
+               Margin="8 0 8 0"
+               FontWeight="Bold" />
+        </DataTemplate>
+    </mahApp:MetroWindow.TitleTemplate>
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

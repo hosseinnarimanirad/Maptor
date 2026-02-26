@@ -1410,4 +1410,13 @@
   <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
     <value>نوع هندسه</value>
   </data>
+  <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
+    <value>ترتیب X/Y</value>
+  </data>
+  <data name="srs_northernHemisphere" xml:space="preserve">
+    <value>نیم‌کره شمالی</value>
+  </data>
+  <data name="srs_southernHemisphere" xml:space="preserve">
+    <value>نیم‌کره جنوبی</value>
+  </data>
 </root>

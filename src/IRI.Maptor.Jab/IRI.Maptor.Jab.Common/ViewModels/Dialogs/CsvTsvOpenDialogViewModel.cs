@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows.Input;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Models.Common;
 using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
@@ -40,13 +40,13 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
 
         SelectedSrsOption = AvailableSrsOptions[0];
 
-        this.GeometryModes = [
-            new(GeometryType.Point, "Point"),
-            new(GeometryType.LineString,"Polyline"),
-            new(GeometryType.Polygon,"Polygon")
-            ];
+        //this.GeometryModes = [
+        //    new(GeometryType.Point, "Point"),
+        //    new(GeometryType.LineString,"Polyline"),
+        //    new(GeometryType.Polygon,"Polygon")
+        //    ];
 
-        this.SelectedGeometryMode = GeometryModes[0];
+        this.SelectedGeometryMode = GeometryType.Polygon; //GeometryModes[0];
 
         if (initialSrid.HasValue && initialSrid.Value > 0)
             ApplyInitialSrid(initialSrid.Value);
@@ -54,11 +54,12 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         BrowseCommand = new RelayCommand(_ => Browse());
         OpenCommand = new RelayCommand(_ => Open(), _ => CanOpen());
         CancelCommand = new RelayCommand(_ => Cancel());
+        //SelectGeometryModeCommand = new RelayCommand(type => SelectedGeometryMode = (GeometryType)type);
     }
 
     public ObservableCollection<SrsOption> AvailableSrsOptions { get; }
 
-    public List<GeometryModeModel> GeometryModes { get; }
+    //public List<GeometryModeModel> GeometryModes { get; }
 
     public string FilePath
     {
@@ -87,8 +88,8 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         }
     }
 
-    private GeometryModeModel? _selectedGeometryMode;
-    public GeometryModeModel? SelectedGeometryMode
+    private GeometryType _selectedGeometryMode;
+    public GeometryType SelectedGeometryMode
     {
         get => _selectedGeometryMode;
         set
@@ -158,6 +159,8 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
     public RelayCommand BrowseCommand { get; }
     public RelayCommand OpenCommand { get; }
     public RelayCommand CancelCommand { get; }
+
+    //public ICommand SelectGeometryModeCommand { get; }
 
     /// <summary>
     /// Set when user clicks Open. Contains the full result for import.
@@ -249,7 +252,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
             IsCsv,
             IsLongitudeFirst,
             UseFirstLineAsHeader,
-            SelectedGeometryMode?.Type ?? GeometryType.Point);
+            SelectedGeometryMode);
 
         DialogResult = true;
 

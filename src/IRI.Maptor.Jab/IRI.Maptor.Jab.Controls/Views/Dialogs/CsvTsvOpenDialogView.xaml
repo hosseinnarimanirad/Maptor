@@ -4,6 +4,7 @@
         xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
+        xmlns:maptorEnums="clr-namespace:IRI.Maptor.Sta.Common.Enums;assembly=IRI.Maptor.Sta.Common"
         Title="{Binding [dialog_csvTsvOpen_title], Source={StaticResource Localization}}"
         ShowInTaskbar="False"
         SizeToContent="WidthAndHeight"
@@ -17,6 +18,16 @@
         ShowMinButton="False"
         ShowTitleBar="True"
         FontFamily="{StaticResource iranSans}">
+    <!---->
+    <mahApp:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <TextBlock Text="{TemplateBinding Content}"
+                TextTrimming="CharacterEllipsis"
+                VerticalAlignment="Center"
+                Margin="8 0 8 0"
+                FontWeight="Bold" />
+        </DataTemplate>
+    </mahApp:MetroWindow.TitleTemplate>
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -32,7 +43,7 @@
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="Background" Value="White"/>
-                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Padding" Value="4,0"/>
                 <Setter Property="Margin" Value="4"/>
                 <Setter Property="CornerRadius" Value="5"/>
                 <Setter Property="Height" Value="39"/>
@@ -40,7 +51,7 @@
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
 
-    <Grid Margin="16">
+    <Grid Margin="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -53,7 +64,7 @@
 
         <!-- File -->
         <Border Grid.Row="0" Style="{StaticResource csvTsvDialogBorderGroup}">
-            <Grid Margin="0">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition Width="*"/>
@@ -63,40 +74,52 @@
                 <TextBox Grid.Column="1" Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight"
                          mahApp:TextBoxHelper.Watermark="{Binding [dialog_csvTsvOpen_fileWatermark], Source={StaticResource Localization}}"
                          Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True"/>
-                <Button Grid.Column="2" ToolTip="{Binding [dialog_csvTsvOpen_browse], Source={StaticResource Localization}}" Command="{Binding BrowseCommand}"
+                <Button Grid.Column="2"
+                        ToolTip="{Binding [dialog_csvTsvOpen_browse], Source={StaticResource Localization}}"
+                        Command="{Binding BrowseCommand}"
                         Style="{StaticResource circleButtonLight}">
                     <iconPacks:PackIconPhosphorIcons Kind="FileMagnifyingGlassFill"/>
                 </Button>
             </Grid>
         </Border>
 
-        <!-- Format: CSV / TSV -->
+        <!-- Format: (CSV / TSV) | Geometry Type: (POINT/LINE/POLYGON) -->
         <Border Grid.Row="1" Style="{StaticResource csvTsvDialogBorderGroup}">
-            <Grid Margin="0">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
-                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconPhosphorIcons Kind="FileText" Style="{StaticResource securityIconPhosphor}"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="4">
                     <RadioButton Content="{Binding [dialog_csvTsvOpen_formatCsv], Source={StaticResource Localization}}" IsChecked="{Binding IsCsv, Mode=TwoWay}" Margin="0,0,16,0"/>
                     <RadioButton Content="{Binding [dialog_csvTsvOpen_formatTsv], Source={StaticResource Localization}}" IsChecked="{Binding IsCsv, Mode=TwoWay, Converter={StaticResource notConverter}}" Margin="0,0,0,0"/>
                 </StackPanel>
-                <TextBlock Grid.Column="2" VerticalAlignment="Center"
-                           Text="{Binding [dialog_csvTsvOpen_geometryType], Source={StaticResource Localization}}"  />
-                <ComboBox Grid.Column="3" VerticalAlignment="Center" Margin="4"
-                          ItemsSource="{Binding GeometryModes}" DisplayMemberPath="DisplayName" SelectedItem="{Binding SelectedGeometryMode, Mode=TwoWay}"
-                          BorderThickness="0" FontSize="15" MinHeight="35"
-                          HorizontalContentAlignment="Center"
-                          VerticalContentAlignment="Center" HorizontalAlignment="Stretch"/>
+                <iconPacks:PackIconPhosphorIcons Kind="ShapesLight" Grid.Column="3" Style="{StaticResource securityIconPhosphor}"
+                                                 ToolTip="{Binding [dialog_csvTsvOpen_geometryType],Source={StaticResource Localization}}"/>
+                <StackPanel Grid.Column="4" Orientation="Horizontal" >
+                    <RadioButton GroupName="T" Style="{StaticResource circleToggleButtonLight}"
+                                IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.Polygon}}">
+                        <iconPacks:PackIconPhosphorIcons Kind="Polygon"/>
+                    </RadioButton>
+                    <RadioButton GroupName="T" Style="{StaticResource circleToggleButtonLight}"
+                                 IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.LineString}}">
+                        <iconPacks:PackIconPhosphorIcons Kind="LineSegments"/>
+                    </RadioButton>
+                    <RadioButton GroupName="T" Style="{StaticResource circleToggleButtonLight}"
+                                 IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.Point}}">
+                        <iconPacks:PackIconPhosphorIcons Kind="DotOutlineThin"/>
+                    </RadioButton>
+                </StackPanel>
             </Grid>
         </Border>
 
         <!-- Spatial Reference -->
         <Border Grid.Row="2" Style="{StaticResource csvTsvDialogBorderGroup}">
-            <Grid Margin="0">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition Width="*"/>
@@ -107,7 +130,8 @@
                           DisplayMemberPath="DisplayName"
                           SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"
                           VerticalAlignment="Center" BorderThickness="0" FontSize="15" MinHeight="35"
-                          VerticalContentAlignment="Center" HorizontalAlignment="Stretch" FlowDirection="LeftToRight"/>
+                          VerticalContentAlignment="Center" HorizontalAlignment="Stretch" FlowDirection="LeftToRight"
+                          />
             </Grid>
         </Border>
 
@@ -116,15 +140,32 @@
                 Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="32"/> 
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconPhosphorIcons Kind="MapTrifoldFill" Style="{StaticResource securityIconPhosphor}"/>
-                <mahApp:NumericUpDown Grid.Column="1" FlowDirection="LeftToRight" Minimum="1" Maximum="60"
+                <mahApp:NumericUpDown Grid.Column="1" Minimum="1" Maximum="60" 
                                      Value="{Binding UtmZone, Mode=TwoWay}" Margin="4" VerticalAlignment="Center"/>
-                <ToggleButton Grid.Column="2" IsChecked="{Binding UtmHemisphereNorth, Mode=TwoWay}"
-                              Style="{StaticResource circleToggleButtonLight}"
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="8,2,4,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <!-- Default (northern hemisphere) -->
+                            <Setter Property="Text"
+                     Value="{Binding [srs_northernHemisphere], Source={StaticResource Localization}}"/>
+                            <Style.Triggers>
+                                <!-- Southern hemisphere (IsChecked = False) -->
+                                <DataTrigger Binding="{Binding UtmHemisphereNorth}" Value="False">
+                                    <Setter Property="Text"
+                             Value="{Binding [srs_southernHemisphere], Source={StaticResource Localization}}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <ToggleButton Grid.Column="3" IsChecked="{Binding UtmHemisphereNorth, Mode=TwoWay}"
+                              Style="{StaticResource circleToggleButtonLight}" FlowDirection="LeftToRight"
                               ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
                     <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5"
                                                     Margin="0" Width="24" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -148,37 +189,50 @@
                         </iconPacks:PackIconPhosphorIcons.Style>
                     </iconPacks:PackIconPhosphorIcons>
                 </ToggleButton>
+               
             </Grid>
         </Border>
 
         <!-- Options: Use first line as header, X,Y vs Y,X -->
-        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,4,0,4">
-            <CheckBox Content="{Binding [dialog_csvTsvOpen_useFirstLineAsHeader], Source={StaticResource Localization}}"
-                      IsChecked="{Binding UseFirstLineAsHeader, Mode=TwoWay}" Margin="0,0,16,0" VerticalAlignment="Center"/>
-            <!--<TextBlock Text="{Binding [dialog_csvTsvOpen_orderXY], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,8,0"/>-->
-            <RadioButton Content="X,Y" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="0,0,16,0" VerticalAlignment="Center"
-                         ToolTip="{Binding [dialog_csvTsvOpen_orderXY], Source={StaticResource Localization}}" />
-            <RadioButton Content="Y,X" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay, Converter={StaticResource notConverter}}" Margin="0,0,0,0" VerticalAlignment="Center"
+        <Border Grid.Row="4" Style="{StaticResource csvTsvDialogBorderGroup}">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Content="{Binding [dialog_csvTsvOpen_useFirstLineAsHeader], Source={StaticResource Localization}}"
+                      IsChecked="{Binding UseFirstLineAsHeader, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding [dialog_geoJsonTopoJsonOpen_orderCoord], Source={StaticResource Localization}}"
+                           VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
+                <RadioButton Content="X,Y" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="4,0" VerticalAlignment="Center"
+                         ToolTip="{Binding [dialog_csvTsvOpen_orderXY], Source={StaticResource Localization}}"/>
+                <RadioButton Content="Y,X" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay, Converter={StaticResource notConverter}}" Margin="4,0" VerticalAlignment="Center"
                          ToolTip="{Binding [dialog_csvTsvOpen_orderYX], Source={StaticResource Localization}}"/>
-        </StackPanel>
-        <!---->
+            </StackPanel>
+        </Border>
         <!-- Data: paste or preview (top 50 lines) -->
-
-        <TextBox Grid.Row="5" Margin="0,4,0,8" MinHeight="150" MaxHeight="250"
-                 mahApp:TextBoxHelper.Watermark="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"
+        <Grid Grid.Row="5">
+            <TextBlock                
+         Text="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"
+         IsHitTestVisible="False"
+         VerticalAlignment="Top" Padding="4"
+         Margin="8,0,0,0" 
+         Visibility="{Binding ElementName=previewTextbox, Path=Text, Converter={StaticResource stringNullOrEmptyToVisibilityConverter}}"
+         Foreground="Gray"/>
+            <!--mahApp:TextBoxHelper.Watermark="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"-->
+            <TextBox x:Name="previewTextbox" Grid.Row="5" Margin="4,0" MinHeight="150" MaxHeight="250"
+                 Background="Transparent"
                  Text="{Binding RawText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"
                  HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
-                 Padding="8" FlowDirection="LeftToRight">
-        </TextBox>
+                 Padding="4" FlowDirection="LeftToRight">
+            </TextBox>
+           
+        </Grid>
 
         <!-- Buttons -->
-        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
             <Button ToolTip="{Binding [common_cancel], Source={StaticResource Localization}}"
-                    Style="{StaticResource circleButtonLight}" Command="{Binding CancelCommand}" Margin="4">
+                    Style="{StaticResource circleButtonLight}" Command="{Binding CancelCommand}" Margin="2,2">
                 <iconPacks:PackIconModern Kind="Close" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>
             </Button>
-            <Button ToolTip="{Binding [common_open], Source={StaticResource Localization}}" Margin="4"
+            <Button ToolTip="{Binding [common_open], Source={StaticResource Localization}}" Margin="2,2"
                     Style="{StaticResource circleButtonLight}" Command="{Binding OpenCommand}">
                 <iconPacks:PackIconModern Kind="Check" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>
             </Button>

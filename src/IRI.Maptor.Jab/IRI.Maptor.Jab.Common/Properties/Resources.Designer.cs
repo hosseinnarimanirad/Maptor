@@ -961,6 +961,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to X/Y order.
+        /// </summary>
+        public static string dialog_geoJsonTopoJsonOpen_orderCoord {
+            get {
+                return ResourceManager.GetString("dialog_geoJsonTopoJsonOpen_orderCoord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First coordinate = X (longitude/easting), second = Y (latitude/northing).
         /// </summary>
         public static string dialog_geoJsonTopoJsonOpen_orderXY {
@@ -3406,6 +3415,24 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string srs_mercatorTitle {
             get {
                 return ResourceManager.GetString("srs_mercatorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Northern Hemisphere.
+        /// </summary>
+        public static string srs_northernHemisphere {
+            get {
+                return ResourceManager.GetString("srs_northernHemisphere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Southern Hemisphere.
+        /// </summary>
+        public static string srs_southernHemisphere {
+            get {
+                return ResourceManager.GetString("srs_southernHemisphere", resourceCulture);
             }
         }
         
