@@ -1,4 +1,4 @@
-﻿<userControl:NotifiableUserControl x:Class="IRI.Maptor.Jab.Controls.Views.MapDrawingLegendView"
+<userControl:NotifiableUserControl x:Class="IRI.Maptor.Jab.Controls.Views.MapDrawingLegendView"
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common" 
@@ -167,7 +167,7 @@
                     </Expander.Header>
                     <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center" >
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddGeoJsonToDrawingItemsCommand}"  
-                                ToolTip="{Binding [cmd_drawingLegend_addGeoJson], Source={StaticResource Localization}}">
+                                ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
                             <Path Style="{StaticResource buttonPath}" Data="{StaticResource json}"/>
                         </Button>
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddLongLatTxtToDrawingItemsCommand}"  
@@ -175,7 +175,7 @@
                             <Path Style="{StaticResource buttonPath}" Data="{StaticResource txt}"/>
                         </Button>
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddShapefileToDrawingItemsCommand}"  
-                                ToolTip="{Binding [cmd_drawingLegend_addShapefile], Source={StaticResource Localization}}">
+                                ToolTip="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}">
                             <Path Style="{StaticResource buttonPath}" Data="{StaticResource shp}" />
                         </Button>
                     </StackPanel>

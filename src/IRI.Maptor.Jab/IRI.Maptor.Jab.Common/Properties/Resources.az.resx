@@ -97,14 +97,8 @@
   <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
     <value>Elementi sil</value>
   </data>
-  <data name="cmd_drawingLegend_addGeoJson" xml:space="preserve">
-    <value>GeoJson əlavə et</value>
-  </data>
   <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
     <value>Lat/Long mətni əlavə et</value>
-  </data>
-  <data name="cmd_drawingLegend_addShapefile" xml:space="preserve">
-    <value>Shapefile əlavə et</value>
   </data>
   <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
     <value>Aşağı köçür</value>
@@ -114,6 +108,9 @@
   </data>
   <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
     <value>Hamısını sil</value>
+  </data>
+  <data name="cmd_general_addGeoJson" xml:space="preserve">
+    <value>Add GeoJson</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
     <value>Shapefile əlavə et</value>
@@ -202,12 +199,6 @@
   <data name="cmd_legend_addGpx" xml:space="preserve">
     <value>GPX əlavə edin</value>
   </data>
-  <data name="cmd_legend_addGeoJson" xml:space="preserve">
-    <value>GeoJson əlavə edin</value>
-  </data>
-  <data name="cmd_legend_addTopoJson" xml:space="preserve">
-    <value>TopoJSON əlavə edin</value>
-  </data>
   <data name="cmd_legend_addKml" xml:space="preserve">
     <value>KML əlavə edin</value>
   </data>
@@ -217,8 +208,8 @@
   <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
     <value>Ənlik/uzunluq əlavə edin</value>
   </data>
-  <data name="cmd_legend_addShapefile" xml:space="preserve">
-    <value>Şekil faylı əlavə edin</value>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>TopoJSON əlavə edin</value>
   </data>
   <data name="cmd_legend_addTsv" xml:space="preserve">
     <value>TSV əlavə edin</value>
@@ -237,9 +228,6 @@
   </data>
   <data name="common_cancel" xml:space="preserve">
     <value>Ləğv et</value>
-  </data>
-  <data name="common_open" xml:space="preserve">
-    <value>Aç</value>
   </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>Caps Lock aktivdir</value>
@@ -271,6 +259,9 @@
   <data name="common_old" xml:space="preserve">
     <value>Köhnə</value>
   </data>
+  <data name="common_open" xml:space="preserve">
+    <value>Aç</value>
+  </data>
   <data name="common_password" xml:space="preserve">
     <value>Şifrə</value>
   </data>
@@ -289,59 +280,20 @@
   <data name="dialog_changePassword_title" xml:space="preserve">
     <value>Şifrəni dəyiş</value>
   </data>
-  <data name="dialog_emailSignUp_or" xml:space="preserve">
-    <value>və ya</value>
+  <data name="dialog_common_browse" xml:space="preserve">
+    <value>Browse...</value>
   </data>
-  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
-    <value>Google ilə daxil ol</value>
+  <data name="dialog_common_cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
-    <value>Google ilə qeydiyyat</value>
+  <data name="dialog_common_fileWatermark" xml:space="preserve">
+    <value>File</value>
   </data>
-  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
-    <value>Hissə əlavə edin</value>
+  <data name="dialog_common_removeFile" xml:space="preserve">
+    <value>Remove File</value>
   </data>
-  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
-    <value>Nöqtə əlavə edin</value>
-  </data>
-  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
-    <value>Poliqon əlavə edin</value>
-  </data>
-  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
-    <value>Əsas məlumat</value>
-  </data>
-  <data name="dialog_geometryDetails_cancel" xml:space="preserve">
-    <value>Ləğv et</value>
-  </data>
-  <data name="dialog_dxfOpen_fileWatermark" xml:space="preserve">
-    <value>Fayl</value>
-  </data>
-  <data name="dialog_dxfOpen_browse" xml:space="preserve">
-    <value>Bax...</value>
-  </data>
-  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
-    <value>Şimal / Cənub yarımkürəsi</value>
-  </data>
-  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
-    <value>Nümunə nöqtələri (ilk 50):</value>
-  </data>
-  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
-    <value>#</value>
-  </data>
-  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
-    <value>X</value>
-  </data>
-  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
-    <value>Y</value>
-  </data>
-  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
-    <value>CSV / TSV İdxal</value>
-  </data>
-  <data name="dialog_csvTsvOpen_fileWatermark" xml:space="preserve">
-    <value>Fayl</value>
-  </data>
-  <data name="dialog_csvTsvOpen_browse" xml:space="preserve">
-    <value>Brauzla...</value>
+  <data name="dialog_common_save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
     <value>CSV</value>
@@ -349,8 +301,8 @@
   <data name="dialog_csvTsvOpen_formatTsv" xml:space="preserve">
     <value>TSV</value>
   </data>
-  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
-    <value>İlk sətri atribut adları kimi istifadə et</value>
+  <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
+    <value>Geometry Type</value>
   </data>
   <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
     <value>Birinci sütun = X (uzunluq/şərq), ikinci = Y (enlik/şimal)</value>
@@ -361,17 +313,41 @@
   <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
     <value>Məlumat əlavə edin və ya seçilmiş faylın önizləməsi (ilk 50 sətir)</value>
   </data>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>CSV / TSV İdxal</value>
+  </data>
+  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
+    <value>İlk sətri atribut adları kimi istifadə et</value>
+  </data>
+  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>Şimal / Cənub yarımkürəsi</value>
+  </data>
+  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
+    <value>Nümunə nöqtələri (ilk 50):</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>və ya</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>Google ilə daxil ol</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>Google ilə qeydiyyat</value>
+  </data>
   <data name="dialog_geoJsonOpen_title" xml:space="preserve">
     <value>GeoJSON import</value>
   </data>
-  <data name="dialog_topojsonOpen_title" xml:space="preserve">
-    <value>TopoJSON import</value>
-  </data>
-  <data name="dialog_geoJsonTopoJsonOpen_fileWatermark" xml:space="preserve">
-    <value>Fayl</value>
-  </data>
-  <data name="dialog_geoJsonTopoJsonOpen_browse" xml:space="preserve">
-    <value>Səhifə...</value>
+  <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
+    <value>X/Y order</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
     <value>Birinci koordinat = X (uzunluq/şərq), ikinci = Y (enlik/şimal)</value>
@@ -384,6 +360,18 @@
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
     <value>Nümunə nöqtələri (ilk 50)</value>
+  </data>
+  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
+    <value>Hissə əlavə edin</value>
+  </data>
+  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
+    <value>Nöqtə əlavə edin</value>
+  </data>
+  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
+    <value>Poliqon əlavə edin</value>
+  </data>
+  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
+    <value>Əsas məlumat</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Kopyalayın</value>
@@ -420,9 +408,6 @@
   </data>
   <data name="dialog_geometryDetails_points" xml:space="preserve">
     <value>Xallar</value>
-  </data>
-  <data name="dialog_geometryDetails_save" xml:space="preserve">
-    <value>Saxla</value>
   </data>
   <data name="dialog_geometryDetails_title" xml:space="preserve">
     <value>Həndəsə təfərrüatları</value>
@@ -468,6 +453,9 @@
   </data>
   <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
     <value>Görünüş parametrləri</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>TopoJSON import</value>
   </data>
   <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
     <value>Yeni istifadəçi</value>
@@ -857,7 +845,7 @@
     <value>Cari hissəyə yaxınlaşdırın</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;apos;s coordinate</value>
+    <value>Copy current point&amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>Cari nöqtəni silin</value>
@@ -1106,7 +1094,7 @@
     <value>İsteğe bağlı - Minimum olaraq boş buraxın</value>
   </data>
   <data name="sldEditor_textSymbolizer_enableHalo" xml:space="preserve">
-    <value>Halo&apos;yu aktivləşdirin (Mətn Konturu)</value>
+    <value>Halo&amp;amp;amp;apos;yu aktivləşdirin (Mətn Konturu)</value>
   </data>
   <data name="sldEditor_textSymbolizer_fontColor" xml:space="preserve">
     <value>Şrift Rəngi:</value>
@@ -1167,6 +1155,12 @@
   </data>
   <data name="srs_mercatorTitle" xml:space="preserve">
     <value>Merkator</value>
+  </data>
+  <data name="srs_northernHemisphere" xml:space="preserve">
+    <value>Northern Hemisphere</value>
+  </data>
+  <data name="srs_southernHemisphere" xml:space="preserve">
+    <value>Southern Hemisphere</value>
   </data>
   <data name="srs_tmSubTitle" xml:space="preserve">
     <value>Transvers Merkator</value>

@@ -71,10 +71,10 @@
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
                 <TextBox Grid.Column="1" Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight"
-                            mahApp:TextBoxHelper.Watermark="{Binding [dialog_dxfOpen_fileWatermark], Source={StaticResource Localization}}"
+                            mahApp:TextBoxHelper.Watermark="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"
                             Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True" >
                 </TextBox>
-                <Button Grid.Column="2" ToolTip="{Binding [dialog_dxfOpen_browse], Source={StaticResource Localization}}" Command="{Binding BrowseCommand}"
+                <Button Grid.Column="2" ToolTip="{Binding [dialog_common_browse], Source={StaticResource Localization}}" Command="{Binding BrowseCommand}"
                         Style="{StaticResource circleButtonLight}">
                     <iconPacks:PackIconPhosphorIcons Kind="FileMagnifyingGlassFill"/>
                 </Button>

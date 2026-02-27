@@ -74,10 +74,10 @@
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
                 <TextBox Grid.Column="1" Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight" FontSize="12"
-                         mahApp:TextBoxHelper.Watermark="{Binding [dialog_csvTsvOpen_fileWatermark], Source={StaticResource Localization}}"
+                         mahApp:TextBoxHelper.Watermark="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"
                          Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True"/>
                 <Button Grid.Column="2"
-                        ToolTip="{Binding [dialog_csvTsvOpen_browse], Source={StaticResource Localization}}"
+                        ToolTip="{Binding [dialog_common_browse], Source={StaticResource Localization}}"
                         Command="{Binding BrowseCommand}"
                         Style="{StaticResource circleButtonLight}">
                     <iconPacks:PackIconMaterial Kind="FileSearchOutline"/>

@@ -164,14 +164,8 @@
   <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
     <value>Remove feature</value>
   </data>
-  <data name="cmd_drawingLegend_addGeoJson" xml:space="preserve">
-    <value>Add GeoJson</value>
-  </data>
   <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
     <value>Add Lat/Long Text</value>
-  </data>
-  <data name="cmd_drawingLegend_addShapefile" xml:space="preserve">
-    <value>Add Shapefile</value>
   </data>
   <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
     <value>Move down</value>
@@ -181,6 +175,9 @@
   </data>
   <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
     <value>Remove all</value>
+  </data>
+  <data name="cmd_general_addGeoJson" xml:space="preserve">
+    <value>Add GeoJson</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
     <value>Add Shapefile</value>
@@ -272,17 +269,11 @@
   <data name="legendItem_PendingChanges_Undo" xml:space="preserve">
     <value>Undo changes</value>
   </data>
-  <data name="cmd_legend_addGeoJson" xml:space="preserve">
-    <value>Add GeoJson</value>
-  </data>
   <data name="cmd_legend_addTopoJson" xml:space="preserve">
     <value>Add TopoJSON</value>
   </data>
   <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
     <value>Add lat/long</value>
-  </data>
-  <data name="cmd_legend_addShapefile" xml:space="preserve">
-    <value>Add shapefile</value>
   </data>
   <data name="cmd_legend_moveDown" xml:space="preserve">
     <value>Move down</value>
@@ -375,17 +366,17 @@
   <data name="dialog_geometryDetails_export" xml:space="preserve">
     <value>Export</value>
   </data>
-  <data name="dialog_geometryDetails_save" xml:space="preserve">
-    <value>Save</value>
+  <data name="dialog_geometryDetails_export" xml:space="preserve">
+    <value>Export</value>
   </data>
-  <data name="dialog_geometryDetails_cancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="dialog_dxfOpen_fileWatermark" xml:space="preserve">
+  <data name="dialog_common_fileWatermark" xml:space="preserve">
     <value>File</value>
   </data>
-  <data name="dialog_dxfOpen_browse" xml:space="preserve">
+  <data name="dialog_common_browse" xml:space="preserve">
     <value>Browse...</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>North / South hemisphere</value>
   </data>
   <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
     <value>North / South hemisphere</value>
@@ -405,11 +396,8 @@
   <data name="dialog_csvTsvOpen_title" xml:space="preserve">
     <value>Import CSV / TSV</value>
   </data>
-  <data name="dialog_csvTsvOpen_fileWatermark" xml:space="preserve">
-    <value>File</value>
-  </data>
-  <data name="dialog_csvTsvOpen_browse" xml:space="preserve">
-    <value>Browse...</value>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>Import CSV / TSV</value>
   </data>
   <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
     <value>CSV</value>
@@ -435,12 +423,6 @@
   <data name="dialog_topojsonOpen_title" xml:space="preserve">
     <value>Import TopoJSON</value>
   </data>
-  <data name="dialog_geoJsonTopoJsonOpen_fileWatermark" xml:space="preserve">
-    <value>File</value>
-  </data>
-  <data name="dialog_geoJsonTopoJsonOpen_browse" xml:space="preserve">
-    <value>Browse...</value>
-  </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
     <value>First coordinate = X (longitude/easting), second = Y (latitude/northing)</value>
   </data>
@@ -455,6 +437,12 @@
   </data>
   <data name="languageSelector_title" xml:space="preserve">
     <value>Language</value>
+  </data>
+  <data name="dialog_common_cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="dialog_common_save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="common_cancel" xml:space="preserve">
     <value>Cancel</value>

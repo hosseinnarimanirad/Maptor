@@ -1,64 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -156,14 +97,8 @@
   <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
     <value>حذف عارضه</value>
   </data>
-  <data name="cmd_drawingLegend_addGeoJson" xml:space="preserve">
-    <value>بارگذاری عارضه GeoJson</value>
-  </data>
   <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
     <value>بارگذاری از فایل</value>
-  </data>
-  <data name="cmd_drawingLegend_addShapefile" xml:space="preserve">
-    <value>بارگذاری عارضه شیپ‌فایل</value>
   </data>
   <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
     <value>پایین</value>
@@ -173,6 +108,9 @@
   </data>
   <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
     <value>حذف تمام عوارض ترسیمی</value>
+  </data>
+  <data name="cmd_general_addGeoJson" xml:space="preserve">
+    <value>Add GeoJson</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
     <value>افزودن شیپ‌فایل</value>
@@ -261,12 +199,6 @@
   <data name="cmd_legend_addGpx" xml:space="preserve">
     <value>افزودن GPX</value>
   </data>
-  <data name="cmd_legend_addGeoJson" xml:space="preserve">
-    <value>افزودن GeoJson</value>
-  </data>
-  <data name="cmd_legend_addTopoJson" xml:space="preserve">
-    <value>افزودن TopoJSON</value>
-  </data>
   <data name="cmd_legend_addKml" xml:space="preserve">
     <value>افزودن KML</value>
   </data>
@@ -276,8 +208,8 @@
   <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
     <value>افزودن از فایل</value>
   </data>
-  <data name="cmd_legend_addShapefile" xml:space="preserve">
-    <value>افزودن شیپ‌فایل</value>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>افزودن TopoJSON</value>
   </data>
   <data name="cmd_legend_addTsv" xml:space="preserve">
     <value>افزودن TSV</value>
@@ -296,9 +228,6 @@
   </data>
   <data name="common_cancel" xml:space="preserve">
     <value>انصراف</value>
-  </data>
-  <data name="common_open" xml:space="preserve">
-    <value>باز کردن</value>
   </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>کلید caps lock فعال است</value>
@@ -330,6 +259,9 @@
   <data name="common_old" xml:space="preserve">
     <value>قدیم</value>
   </data>
+  <data name="common_open" xml:space="preserve">
+    <value>باز کردن</value>
+  </data>
   <data name="common_password" xml:space="preserve">
     <value>رمز عبور</value>
   </data>
@@ -348,59 +280,20 @@
   <data name="dialog_changePassword_title" xml:space="preserve">
     <value>تغییر رمز عبور</value>
   </data>
-  <data name="dialog_emailSignUp_or" xml:space="preserve">
-    <value>یا</value>
+  <data name="dialog_common_browse" xml:space="preserve">
+    <value>Browse...</value>
   </data>
-  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
-    <value>ورود با حساب گوگل</value>
+  <data name="dialog_common_cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
-    <value>ثبت نام با حساب گوگل</value>
+  <data name="dialog_common_fileWatermark" xml:space="preserve">
+    <value>File</value>
   </data>
-  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
-    <value>افزودن بخش</value>
+  <data name="dialog_common_removeFile" xml:space="preserve">
+    <value>حذف فایل</value>
   </data>
-  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
-    <value>افزودن نقطه</value>
-  </data>
-  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
-    <value>افزودن چندضلعی</value>
-  </data>
-  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
-    <value>اطلاعات پایه</value>
-  </data>
-  <data name="dialog_geometryDetails_cancel" xml:space="preserve">
-    <value>لغو</value>
-  </data>
-  <data name="dialog_dxfOpen_fileWatermark" xml:space="preserve">
-    <value>فایل</value>
-  </data>
-  <data name="dialog_dxfOpen_browse" xml:space="preserve">
-    <value>مرور...</value>
-  </data>
-  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
-    <value>نیمکره شمالی / جنوبی</value>
-  </data>
-  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
-    <value>نقاط نمونه (۵۰ تای اول):</value>
-  </data>
-  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
-    <value>#</value>
-  </data>
-  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
-    <value>X</value>
-  </data>
-  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
-    <value>Y</value>
-  </data>
-  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
-    <value>وارد کردن CSV / TSV</value>
-  </data>
-  <data name="dialog_csvTsvOpen_fileWatermark" xml:space="preserve">
-    <value>فایل</value>
-  </data>
-  <data name="dialog_csvTsvOpen_browse" xml:space="preserve">
-    <value>مرور...</value>
+  <data name="dialog_common_save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
     <value>CSV</value>
@@ -408,8 +301,8 @@
   <data name="dialog_csvTsvOpen_formatTsv" xml:space="preserve">
     <value>TSV</value>
   </data>
-  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
-    <value>استفاده از خط اول به‌عنوان نام ویژگی‌ها</value>
+  <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
+    <value>نوع هندسه</value>
   </data>
   <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
     <value>ستون اول = X (طول جغرافیایی/شرق)، دوم = Y (عرض جغرافیایی/شمال)</value>
@@ -420,17 +313,41 @@
   <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
     <value>داده را جایگذاری کنید یا پیش‌نمایش فایل انتخاب‌شده (۵۰ خط اول)</value>
   </data>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>وارد کردن CSV / TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
+    <value>استفاده از خط اول به‌عنوان نام ویژگی‌ها</value>
+  </data>
+  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>نیمکره شمالی / جنوبی</value>
+  </data>
+  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
+    <value>نقاط نمونه (۵۰ تای اول):</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>یا</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>ورود با حساب گوگل</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>ثبت نام با حساب گوگل</value>
+  </data>
   <data name="dialog_geoJsonOpen_title" xml:space="preserve">
     <value>وارد کردن GeoJSON</value>
   </data>
-  <data name="dialog_topojsonOpen_title" xml:space="preserve">
-    <value>وارد کردن TopoJSON</value>
-  </data>
-  <data name="dialog_geoJsonTopoJsonOpen_fileWatermark" xml:space="preserve">
-    <value>فایل</value>
-  </data>
-  <data name="dialog_geoJsonTopoJsonOpen_browse" xml:space="preserve">
-    <value>مرور...</value>
+  <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
+    <value>ترتیب X/Y</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
     <value>مختصات اول = X (طول جغرافیایی/شرق)، دوم = Y (عرض جغرافیایی/شمال)</value>
@@ -443,6 +360,18 @@
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
     <value>نقاط نمونه (۵۰ نقطه اول)</value>
+  </data>
+  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
+    <value>افزودن بخش</value>
+  </data>
+  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
+    <value>افزودن نقطه</value>
+  </data>
+  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
+    <value>افزودن چندضلعی</value>
+  </data>
+  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
+    <value>اطلاعات پایه</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>کپی</value>
@@ -479,9 +408,6 @@
   </data>
   <data name="dialog_geometryDetails_points" xml:space="preserve">
     <value>نقاط</value>
-  </data>
-  <data name="dialog_geometryDetails_save" xml:space="preserve">
-    <value>ذخیره</value>
   </data>
   <data name="dialog_geometryDetails_title" xml:space="preserve">
     <value>جزئیات هندسه</value>
@@ -527,6 +453,9 @@
   </data>
   <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
     <value>تنظیمات ظاهر</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>وارد کردن TopoJSON</value>
   </data>
   <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
     <value>کاربر جدید</value>
@@ -1227,6 +1156,12 @@
   <data name="srs_mercatorTitle" xml:space="preserve">
     <value>سیستم تصویر Mercator</value>
   </data>
+  <data name="srs_northernHemisphere" xml:space="preserve">
+    <value>نیم‌کره شمالی</value>
+  </data>
+  <data name="srs_southernHemisphere" xml:space="preserve">
+    <value>نیم‌کره جنوبی</value>
+  </data>
   <data name="srs_tmSubTitle" xml:space="preserve">
     <value>مرکاتور عرضی</value>
   </data>
@@ -1406,20 +1341,5 @@
   </data>
   <data name="wat_security_userName" xml:space="preserve">
     <value>نام کاربری</value>
-  </data>
-  <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
-    <value>نوع هندسه</value>
-  </data>
-  <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
-    <value>ترتیب X/Y</value>
-  </data>
-  <data name="srs_northernHemisphere" xml:space="preserve">
-    <value>نیم‌کره شمالی</value>
-  </data>
-  <data name="srs_southernHemisphere" xml:space="preserve">
-    <value>نیم‌کره جنوبی</value>
-  </data>
-  <data name="dialog_common_removeFile" xml:space="preserve">
-    <value>حذف فایل</value>
   </data>
 </root>

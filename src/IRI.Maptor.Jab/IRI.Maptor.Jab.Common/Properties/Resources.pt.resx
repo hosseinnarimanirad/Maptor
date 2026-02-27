@@ -97,14 +97,8 @@
   <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
     <value>Remover elemento</value>
   </data>
-  <data name="cmd_drawingLegend_addGeoJson" xml:space="preserve">
-    <value>Adicionar GeoJson</value>
-  </data>
   <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
     <value>Adicionar texto Lat/Long</value>
-  </data>
-  <data name="cmd_drawingLegend_addShapefile" xml:space="preserve">
-    <value>Adicionar Shapefile</value>
   </data>
   <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
     <value>Mover para baixo</value>
@@ -114,6 +108,9 @@
   </data>
   <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
     <value>Remover tudo</value>
+  </data>
+  <data name="cmd_general_addGeoJson" xml:space="preserve">
+    <value>Add GeoJson</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
     <value>Adicionar Shapefile</value>
@@ -202,12 +199,6 @@
   <data name="cmd_legend_addGpx" xml:space="preserve">
     <value>Adicionar GPX</value>
   </data>
-  <data name="cmd_legend_addGeoJson" xml:space="preserve">
-    <value>Adicionar GeoJson</value>
-  </data>
-  <data name="cmd_legend_addTopoJson" xml:space="preserve">
-    <value>Adicionar TopoJSON</value>
-  </data>
   <data name="cmd_legend_addKml" xml:space="preserve">
     <value>Adicionar KML</value>
   </data>
@@ -217,8 +208,8 @@
   <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
     <value>Adicionar latitude/longitude</value>
   </data>
-  <data name="cmd_legend_addShapefile" xml:space="preserve">
-    <value>Adicionar shapefile</value>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>Adicionar TopoJSON</value>
   </data>
   <data name="cmd_legend_addTsv" xml:space="preserve">
     <value>Adicionar TSV</value>
@@ -237,9 +228,6 @@
   </data>
   <data name="common_cancel" xml:space="preserve">
     <value>Cancelar</value>
-  </data>
-  <data name="common_open" xml:space="preserve">
-    <value>Abrir</value>
   </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>Caps Lock ativado</value>
@@ -271,6 +259,9 @@
   <data name="common_old" xml:space="preserve">
     <value>Antigo</value>
   </data>
+  <data name="common_open" xml:space="preserve">
+    <value>Abrir</value>
+  </data>
   <data name="common_password" xml:space="preserve">
     <value>Senha</value>
   </data>
@@ -289,59 +280,20 @@
   <data name="dialog_changePassword_title" xml:space="preserve">
     <value>Alterar senha</value>
   </data>
-  <data name="dialog_emailSignUp_or" xml:space="preserve">
-    <value>ou</value>
+  <data name="dialog_common_browse" xml:space="preserve">
+    <value>Browse...</value>
   </data>
-  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
-    <value>Entrar com Google</value>
+  <data name="dialog_common_cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
-    <value>Registrar com Google</value>
+  <data name="dialog_common_fileWatermark" xml:space="preserve">
+    <value>File</value>
   </data>
-  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
-    <value>Adicionar peça</value>
+  <data name="dialog_common_removeFile" xml:space="preserve">
+    <value>Remove File</value>
   </data>
-  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
-    <value>Adicionar ponto</value>
-  </data>
-  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
-    <value>Adicionar polígono</value>
-  </data>
-  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
-    <value>Informações Básicas</value>
-  </data>
-  <data name="dialog_geometryDetails_cancel" xml:space="preserve">
-    <value>Cancelar</value>
-  </data>
-  <data name="dialog_dxfOpen_fileWatermark" xml:space="preserve">
-    <value>Arquivo</value>
-  </data>
-  <data name="dialog_dxfOpen_browse" xml:space="preserve">
-    <value>Procurar...</value>
-  </data>
-  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
-    <value>Hemisfério Norte / Sul</value>
-  </data>
-  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
-    <value>Pontos de amostra (primeiros 50):</value>
-  </data>
-  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
-    <value>#</value>
-  </data>
-  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
-    <value>X</value>
-  </data>
-  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
-    <value>Y</value>
-  </data>
-  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
-    <value>Importar CSV / TSV</value>
-  </data>
-  <data name="dialog_csvTsvOpen_fileWatermark" xml:space="preserve">
-    <value>Ficheiro</value>
-  </data>
-  <data name="dialog_csvTsvOpen_browse" xml:space="preserve">
-    <value>Procurar...</value>
+  <data name="dialog_common_save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
     <value>CSV</value>
@@ -349,8 +301,8 @@
   <data name="dialog_csvTsvOpen_formatTsv" xml:space="preserve">
     <value>TSV</value>
   </data>
-  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
-    <value>Usar a primeira linha como nomes dos atributos</value>
+  <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
+    <value>Geometry Type</value>
   </data>
   <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
     <value>Primeira coluna = X (longitude/este), segunda = Y (latitude/norte)</value>
@@ -361,17 +313,41 @@
   <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
     <value>Colar dados ou pré-visualização do ficheiro selecionado (50 primeiras linhas)</value>
   </data>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>Importar CSV / TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
+    <value>Usar a primeira linha como nomes dos atributos</value>
+  </data>
+  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>Hemisfério Norte / Sul</value>
+  </data>
+  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
+    <value>Pontos de amostra (primeiros 50):</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>ou</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>Entrar com Google</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>Registrar com Google</value>
+  </data>
   <data name="dialog_geoJsonOpen_title" xml:space="preserve">
     <value>Importar GeoJSON</value>
   </data>
-  <data name="dialog_topojsonOpen_title" xml:space="preserve">
-    <value>Importar TopoJSON</value>
-  </data>
-  <data name="dialog_geoJsonTopoJsonOpen_fileWatermark" xml:space="preserve">
-    <value>Ficheiro</value>
-  </data>
-  <data name="dialog_geoJsonTopoJsonOpen_browse" xml:space="preserve">
-    <value>Procurar...</value>
+  <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
+    <value>X/Y order</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
     <value>Primeira coordenada = X (longitude/este), segunda = Y (latitude/norte)</value>
@@ -384,6 +360,18 @@
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
     <value>Pontos de amostra (primeiros 50)</value>
+  </data>
+  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
+    <value>Adicionar peça</value>
+  </data>
+  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
+    <value>Adicionar ponto</value>
+  </data>
+  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
+    <value>Adicionar polígono</value>
+  </data>
+  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
+    <value>Informações Básicas</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Cópia</value>
@@ -420,9 +408,6 @@
   </data>
   <data name="dialog_geometryDetails_points" xml:space="preserve">
     <value>Pontos</value>
-  </data>
-  <data name="dialog_geometryDetails_save" xml:space="preserve">
-    <value>Salvar</value>
   </data>
   <data name="dialog_geometryDetails_title" xml:space="preserve">
     <value>Detalhes de geometria</value>
@@ -468,6 +453,9 @@
   </data>
   <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
     <value>Configurações de aparência</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>Importar TopoJSON</value>
   </data>
   <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
     <value>Novo usuário</value>
@@ -857,7 +845,7 @@
     <value>Zoom na parte atual</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;apos;s coordinate</value>
+    <value>Copy current point&amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>Excluir ponto atual</value>
@@ -1167,6 +1155,12 @@
   </data>
   <data name="srs_mercatorTitle" xml:space="preserve">
     <value>Mercador</value>
+  </data>
+  <data name="srs_northernHemisphere" xml:space="preserve">
+    <value>Northern Hemisphere</value>
+  </data>
+  <data name="srs_southernHemisphere" xml:space="preserve">
+    <value>Southern Hemisphere</value>
   </data>
   <data name="srs_tmSubTitle" xml:space="preserve">
     <value>Mercator Transverso</value>

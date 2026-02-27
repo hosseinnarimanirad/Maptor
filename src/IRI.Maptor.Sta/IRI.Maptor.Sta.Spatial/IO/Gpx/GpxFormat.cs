@@ -507,7 +507,7 @@ public static class GpxFormat
                     {
                         var w = toWgs84(p);
                         return new GpxTrackPoint { Latitude = w.Y, Longitude = w.X };
-                    }).ToList();
+                }).ToList();
                     tracks.Add(new GpxTrack
                     {
                         Name = GetAttrString(attrs, "name") ?? "Track",

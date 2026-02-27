@@ -97,14 +97,8 @@
   <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
     <value>سڕینەوەی هێمان</value>
   </data>
-  <data name="cmd_drawingLegend_addGeoJson" xml:space="preserve">
-    <value>GeoJson زیاد بکە</value>
-  </data>
   <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
     <value>دەق لات/لۆنگ زیاد بکە</value>
-  </data>
-  <data name="cmd_drawingLegend_addShapefile" xml:space="preserve">
-    <value>Shapefile زیاد بکە</value>
   </data>
   <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
     <value>خوارەوە بجوڵێنە</value>
@@ -114,6 +108,9 @@
   </data>
   <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
     <value>هەموو بسڕەوە</value>
+  </data>
+  <data name="cmd_general_addGeoJson" xml:space="preserve">
+    <value>Add GeoJson</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
     <value>Shapefile زیاد بکە</value>
@@ -202,12 +199,6 @@
   <data name="cmd_legend_addGpx" xml:space="preserve">
     <value>GPX زیاد بکە</value>
   </data>
-  <data name="cmd_legend_addGeoJson" xml:space="preserve">
-    <value>GeoJson زیاد بکە</value>
-  </data>
-  <data name="cmd_legend_addTopoJson" xml:space="preserve">
-    <value>TopoJSON زیاد بکە</value>
-  </data>
   <data name="cmd_legend_addKml" xml:space="preserve">
     <value>KML زیاد بکە</value>
   </data>
@@ -217,8 +208,8 @@
   <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
     <value>دەق لات/لۆنگ زیاد بکە</value>
   </data>
-  <data name="cmd_legend_addShapefile" xml:space="preserve">
-    <value>Shapefile زیاد بکە</value>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>TopoJSON زیاد بکە</value>
   </data>
   <data name="cmd_legend_addTsv" xml:space="preserve">
     <value>TSV زیاد بکە</value>
@@ -237,9 +228,6 @@
   </data>
   <data name="common_cancel" xml:space="preserve">
     <value>هەڵوەشاندنەوە</value>
-  </data>
-  <data name="common_open" xml:space="preserve">
-    <value>کردنەوە</value>
   </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>Caps Lock چالاکە</value>
@@ -271,6 +259,9 @@
   <data name="common_old" xml:space="preserve">
     <value>کۆن</value>
   </data>
+  <data name="common_open" xml:space="preserve">
+    <value>کردنەوە</value>
+  </data>
   <data name="common_password" xml:space="preserve">
     <value>وشەی نهێنی</value>
   </data>
@@ -289,59 +280,20 @@
   <data name="dialog_changePassword_title" xml:space="preserve">
     <value>گۆڕینی وشەی نهێنی</value>
   </data>
-  <data name="dialog_emailSignUp_or" xml:space="preserve">
-    <value>یان</value>
+  <data name="dialog_common_browse" xml:space="preserve">
+    <value>Browse...</value>
   </data>
-  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
-    <value>چوونەژوورەوە بە Google</value>
+  <data name="dialog_common_cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
-    <value>تۆمارکردن بە Google</value>
+  <data name="dialog_common_fileWatermark" xml:space="preserve">
+    <value>File</value>
   </data>
-  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
-    <value>بەش زیاد بکە</value>
+  <data name="dialog_common_removeFile" xml:space="preserve">
+    <value>Remove File</value>
   </data>
-  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
-    <value>خال زیاد بکە</value>
-  </data>
-  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
-    <value>بڕگە زیاد بکە</value>
-  </data>
-  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
-    <value>زانیاری بنەڕەتی</value>
-  </data>
-  <data name="dialog_geometryDetails_cancel" xml:space="preserve">
-    <value>هەڵوەشاندنەوە</value>
-  </data>
-  <data name="dialog_dxfOpen_fileWatermark" xml:space="preserve">
-    <value>فایل</value>
-  </data>
-  <data name="dialog_dxfOpen_browse" xml:space="preserve">
-    <value>گەڕان...</value>
-  </data>
-  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
-    <value>بەشی باکوور / باشوور</value>
-  </data>
-  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
-    <value>خاڵەکانی نیمچە (یەکەم ٥٠):</value>
-  </data>
-  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
-    <value>#</value>
-  </data>
-  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
-    <value>X</value>
-  </data>
-  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
-    <value>Y</value>
-  </data>
-  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
-    <value>هاوردنکردنی CSV / TSV</value>
-  </data>
-  <data name="dialog_csvTsvOpen_fileWatermark" xml:space="preserve">
-    <value>فایل</value>
-  </data>
-  <data name="dialog_csvTsvOpen_browse" xml:space="preserve">
-    <value>گەڕان...</value>
+  <data name="dialog_common_save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
     <value>CSV</value>
@@ -349,8 +301,8 @@
   <data name="dialog_csvTsvOpen_formatTsv" xml:space="preserve">
     <value>TSV</value>
   </data>
-  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
-    <value>یەکەم ڕیز وەک ناوی تایبەتمەندییەکان بەکار بهێنە</value>
+  <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
+    <value>Geometry Type</value>
   </data>
   <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
     <value>یەکەم ستوون = X (درێژایی/خۆرهەڵات)، دووەم = Y (پانی/باکور)</value>
@@ -361,17 +313,41 @@
   <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
     <value>داتا paste بکە یان پیشبینینی فایلی هەڵبژێردراو (٥٠ ڕیزی یەکەم)</value>
   </data>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>هاوردنکردنی CSV / TSV</value>
+  </data>
+  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
+    <value>یەکەم ڕیز وەک ناوی تایبەتمەندییەکان بەکار بهێنە</value>
+  </data>
+  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>بەشی باکوور / باشوور</value>
+  </data>
+  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
+    <value>خاڵەکانی نیمچە (یەکەم ٥٠):</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>یان</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>چوونەژوورەوە بە Google</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>تۆمارکردن بە Google</value>
+  </data>
   <data name="dialog_geoJsonOpen_title" xml:space="preserve">
     <value>GeoJSON هاتنەژوورەوە</value>
   </data>
-  <data name="dialog_topojsonOpen_title" xml:space="preserve">
-    <value>TopoJSON هاتنەژوورەوە</value>
-  </data>
-  <data name="dialog_geoJsonTopoJsonOpen_fileWatermark" xml:space="preserve">
-    <value>فایل</value>
-  </data>
-  <data name="dialog_geoJsonTopoJsonOpen_browse" xml:space="preserve">
-    <value>گەڕان...</value>
+  <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
+    <value>X/Y order</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
     <value>یەکەم کۆردینات = X (درێژایی/خۆرهەڵات)، دووەم = Y (پانی/باکور)</value>
@@ -384,6 +360,18 @@
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
     <value>خاڵەکانی نموونە (٥٠ یەکەم)</value>
+  </data>
+  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
+    <value>بەش زیاد بکە</value>
+  </data>
+  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
+    <value>خال زیاد بکە</value>
+  </data>
+  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
+    <value>بڕگە زیاد بکە</value>
+  </data>
+  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
+    <value>زانیاری بنەڕەتی</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>لەبەربکەرەوە</value>
@@ -420,9 +408,6 @@
   </data>
   <data name="dialog_geometryDetails_points" xml:space="preserve">
     <value>خالەکان</value>
-  </data>
-  <data name="dialog_geometryDetails_save" xml:space="preserve">
-    <value>پاشەکەوت بکە</value>
   </data>
   <data name="dialog_geometryDetails_title" xml:space="preserve">
     <value>وردەکارییەکانی جیۆمەتری</value>
@@ -468,6 +453,9 @@
   </data>
   <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
     <value>ڕێکخستنەکانی ڕووکار</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>TopoJSON هاتنەژوورەوە</value>
   </data>
   <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
     <value>بەکارهێنەری نوێ</value>
@@ -1167,6 +1155,12 @@
   </data>
   <data name="srs_mercatorTitle" xml:space="preserve">
     <value>مێرکاتۆر</value>
+  </data>
+  <data name="srs_northernHemisphere" xml:space="preserve">
+    <value>Northern Hemisphere</value>
+  </data>
+  <data name="srs_southernHemisphere" xml:space="preserve">
+    <value>Southern Hemisphere</value>
   </data>
   <data name="srs_tmSubTitle" xml:space="preserve">
     <value>مێرکاتۆری پاشەکەوت</value>

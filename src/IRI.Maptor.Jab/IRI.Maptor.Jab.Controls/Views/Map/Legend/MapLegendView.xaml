@@ -285,12 +285,12 @@
             <!--Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">-->
             <Button IsEnabled="True" Focusable="False" Command="{Binding AddGeoJsonToDrawingItemsCommand}"
                     Style="{StaticResource circleButtonLight}"  
-                    ToolTip="{Binding [cmd_legend_addGeoJson], Source={StaticResource Localization}}">
+                    ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
                 <Path Data="{StaticResource json}"/>
             </Button>
             <Button Focusable="False" Command="{Binding AddShapefileCommand}"
                     Style="{StaticResource circleButtonLight}" 
-                    ToolTip="{Binding [cmd_legend_addShapefile], Source={StaticResource Localization}}">
+                    ToolTip="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}">
                 <Path Data="{StaticResource shp}"  />
             </Button>
 
@@ -453,7 +453,7 @@
                                             <Path Style="{StaticResource menuPath}" Data="{StaticResource shp}"/>
                                         </StackPanel>
                                     </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addShapefile], Source={StaticResource Localization}}"
+                                    <TextBlock Text="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}"
                                                 Style="{StaticResource menuTextBlock}"/>
                                 </StackPanel>
                             </Button>
@@ -536,7 +536,7 @@
                                             <Path Style="{StaticResource menuPath}" Data="{StaticResource json}"/>
                                         </StackPanel>
                                     </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addGeoJson], Source={StaticResource Localization}}"
+                                    <TextBlock Text="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}"
                                                Style="{StaticResource menuTextBlock}" />
                                 </StackPanel>
                             </Button>

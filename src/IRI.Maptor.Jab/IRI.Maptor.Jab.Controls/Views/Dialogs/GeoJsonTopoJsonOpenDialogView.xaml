@@ -1,4 +1,4 @@
-﻿<mahApp:MetroWindow x:Class="IRI.Maptor.Jab.Controls.Views.Dialogs.GeoJsonTopoJsonOpenDialogView"
+<mahApp:MetroWindow x:Class="IRI.Maptor.Jab.Controls.Views.Dialogs.GeoJsonTopoJsonOpenDialogView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
@@ -74,10 +74,10 @@
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
                 <TextBox Grid.Column="1" Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight"
-                         mahApp:TextBoxHelper.Watermark="{Binding [dialog_geoJsonTopoJsonOpen_fileWatermark], Source={StaticResource Localization}}"
+                         mahApp:TextBoxHelper.Watermark="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"
                          Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True"/>
                 <Button Grid.Column="2"
-                        ToolTip="{Binding [dialog_geoJsonTopoJsonOpen_browse], Source={StaticResource Localization}}"
+                        ToolTip="{Binding [dialog_common_browse], Source={StaticResource Localization}}"
                         Command="{Binding BrowseCommand}"
                         Style="{StaticResource circleButtonLight}">
                     <iconPacks:PackIconMaterial Kind="FileSearchOutline"/>

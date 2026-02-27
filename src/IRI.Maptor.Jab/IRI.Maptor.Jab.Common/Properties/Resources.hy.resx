@@ -97,14 +97,8 @@
   <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
     <value>Հեռացնել</value>
   </data>
-  <data name="cmd_drawingLegend_addGeoJson" xml:space="preserve">
-    <value>Ավելացնել GeoJson</value>
-  </data>
   <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
     <value>Ավելացնել Lat/Long տեքստ</value>
-  </data>
-  <data name="cmd_drawingLegend_addShapefile" xml:space="preserve">
-    <value>Ավելացնել Shapefile</value>
   </data>
   <data name="cmd_drawingLegend_moveDown" xml:space="preserve">
     <value>Տեղափոխել ներքև</value>
@@ -114,6 +108,9 @@
   </data>
   <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
     <value>Հեռացնել բոլորը</value>
+  </data>
+  <data name="cmd_general_addGeoJson" xml:space="preserve">
+    <value>Add GeoJson</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
     <value>Ավելացնել Shapefile</value>
@@ -202,12 +199,6 @@
   <data name="cmd_legend_addGpx" xml:space="preserve">
     <value>Ավելացնել GPX</value>
   </data>
-  <data name="cmd_legend_addGeoJson" xml:space="preserve">
-    <value>Ավելացնել GeoJson</value>
-  </data>
-  <data name="cmd_legend_addTopoJson" xml:space="preserve">
-    <value>Ավելացնել TopoJSON</value>
-  </data>
   <data name="cmd_legend_addKml" xml:space="preserve">
     <value>Ավելացնել KML</value>
   </data>
@@ -217,8 +208,8 @@
   <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
     <value>Ավելացնել lat/long</value>
   </data>
-  <data name="cmd_legend_addShapefile" xml:space="preserve">
-    <value>Ավելացնել shapefile</value>
+  <data name="cmd_legend_addTopoJson" xml:space="preserve">
+    <value>Ավելացնել TopoJSON</value>
   </data>
   <data name="cmd_legend_addTsv" xml:space="preserve">
     <value>Ավելացնել TSV</value>
@@ -237,9 +228,6 @@
   </data>
   <data name="common_cancel" xml:space="preserve">
     <value>Չեղարկել</value>
-  </data>
-  <data name="common_open" xml:space="preserve">
-    <value>Բացել</value>
   </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>Caps Lock միացված է</value>
@@ -271,6 +259,9 @@
   <data name="common_old" xml:space="preserve">
     <value>Հին</value>
   </data>
+  <data name="common_open" xml:space="preserve">
+    <value>Բացել</value>
+  </data>
   <data name="common_password" xml:space="preserve">
     <value>Գաղտնաբառ</value>
   </data>
@@ -289,59 +280,20 @@
   <data name="dialog_changePassword_title" xml:space="preserve">
     <value>Փոխել գաղտնաբառը</value>
   </data>
-  <data name="dialog_emailSignUp_or" xml:space="preserve">
-    <value>կամ</value>
+  <data name="dialog_common_browse" xml:space="preserve">
+    <value>Browse...</value>
   </data>
-  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
-    <value>Մուտք Google-ով</value>
+  <data name="dialog_common_cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
-    <value>Գրանցվել Google-ով</value>
+  <data name="dialog_common_fileWatermark" xml:space="preserve">
+    <value>File</value>
   </data>
-  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
-    <value>Ավելացնել մաս</value>
+  <data name="dialog_common_removeFile" xml:space="preserve">
+    <value>Remove File</value>
   </data>
-  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
-    <value>Ավելացնել կետ</value>
-  </data>
-  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
-    <value>Ավելացնել բազմանկյուն</value>
-  </data>
-  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
-    <value>Հիմնական տեղեկություններ</value>
-  </data>
-  <data name="dialog_geometryDetails_cancel" xml:space="preserve">
-    <value>Չեղարկել</value>
-  </data>
-  <data name="dialog_dxfOpen_fileWatermark" xml:space="preserve">
-    <value>Ֆայլ</value>
-  </data>
-  <data name="dialog_dxfOpen_browse" xml:space="preserve">
-    <value>Զննել...</value>
-  </data>
-  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
-    <value>Հյուսիսային / Հարավային կիսագունդ</value>
-  </data>
-  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
-    <value>Օրինակ կետեր (առաջին 50):</value>
-  </data>
-  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
-    <value>#</value>
-  </data>
-  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
-    <value>X</value>
-  </data>
-  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
-    <value>Y</value>
-  </data>
-  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
-    <value>CSV / TSV ներմուծում</value>
-  </data>
-  <data name="dialog_csvTsvOpen_fileWatermark" xml:space="preserve">
-    <value>Ֆայլ</value>
-  </data>
-  <data name="dialog_csvTsvOpen_browse" xml:space="preserve">
-    <value>Ընտրել...</value>
+  <data name="dialog_common_save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
     <value>CSV</value>
@@ -349,8 +301,8 @@
   <data name="dialog_csvTsvOpen_formatTsv" xml:space="preserve">
     <value>TSV</value>
   </data>
-  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
-    <value>Օգտագործել առաջին տողը որպես ատրիբուտների անուններ</value>
+  <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
+    <value>Geometry Type</value>
   </data>
   <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
     <value>Առաջին սյուն = X (երկարություն/արևելք), երկրորդ = Y (լայնություն/հյուսիս)</value>
@@ -361,17 +313,41 @@
   <data name="dialog_csvTsvOpen_pasteWatermark" xml:space="preserve">
     <value>Տվյալները փոխադրեք կամ ընտրված ֆայլի նախադիտում (առաջին 50 տող)</value>
   </data>
+  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
+    <value>CSV / TSV ներմուծում</value>
+  </data>
+  <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
+    <value>Օգտագործել առաջին տողը որպես ատրիբուտների անուններ</value>
+  </data>
+  <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="dialog_dxfOpen_columnX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="dialog_dxfOpen_columnY" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
+    <value>Հյուսիսային / Հարավային կիսագունդ</value>
+  </data>
+  <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
+    <value>Օրինակ կետեր (առաջին 50):</value>
+  </data>
+  <data name="dialog_emailSignUp_or" xml:space="preserve">
+    <value>կամ</value>
+  </data>
+  <data name="dialog_emailSignUp_signInGoogle" xml:space="preserve">
+    <value>Մուտք Google-ով</value>
+  </data>
+  <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
+    <value>Գրանցվել Google-ով</value>
+  </data>
   <data name="dialog_geoJsonOpen_title" xml:space="preserve">
     <value>GeoJSON ներմուծում</value>
   </data>
-  <data name="dialog_topojsonOpen_title" xml:space="preserve">
-    <value>TopoJSON ներմուծում</value>
-  </data>
-  <data name="dialog_geoJsonTopoJsonOpen_fileWatermark" xml:space="preserve">
-    <value>Ֆայլ</value>
-  </data>
-  <data name="dialog_geoJsonTopoJsonOpen_browse" xml:space="preserve">
-    <value>Նավարկել...</value>
+  <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
+    <value>X/Y order</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
     <value>Առաջին կոորդինատ = X (երկարություն/արևելք), երկրորդ = Y (լայնություն/հյուսիս)</value>
@@ -384,6 +360,18 @@
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
     <value>Նմուշի կետեր (առաջին 50)</value>
+  </data>
+  <data name="dialog_geometryDetails_addPart" xml:space="preserve">
+    <value>Ավելացնել մաս</value>
+  </data>
+  <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
+    <value>Ավելացնել կետ</value>
+  </data>
+  <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
+    <value>Ավելացնել բազմանկյուն</value>
+  </data>
+  <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
+    <value>Հիմնական տեղեկություններ</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
     <value>Պատճենել</value>
@@ -420,9 +408,6 @@
   </data>
   <data name="dialog_geometryDetails_points" xml:space="preserve">
     <value>Միավորներ</value>
-  </data>
-  <data name="dialog_geometryDetails_save" xml:space="preserve">
-    <value>Պահպանել</value>
   </data>
   <data name="dialog_geometryDetails_title" xml:space="preserve">
     <value>Երկրաչափության մանրամասները</value>
@@ -468,6 +453,9 @@
   </data>
   <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
     <value>Արտաքին տեսքի կարգավորումներ</value>
+  </data>
+  <data name="dialog_topojsonOpen_title" xml:space="preserve">
+    <value>TopoJSON ներմուծում</value>
   </data>
   <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
     <value>Նոր օգտատեր</value>
@@ -857,7 +845,7 @@
     <value>Zoom to current part</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;apos;s coordinate</value>
+    <value>Copy current point&amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>Delete current point</value>
@@ -1167,6 +1155,12 @@
   </data>
   <data name="srs_mercatorTitle" xml:space="preserve">
     <value>Մերկատոր</value>
+  </data>
+  <data name="srs_northernHemisphere" xml:space="preserve">
+    <value>Northern Hemisphere</value>
+  </data>
+  <data name="srs_southernHemisphere" xml:space="preserve">
+    <value>Southern Hemisphere</value>
   </data>
   <data name="srs_tmSubTitle" xml:space="preserve">
     <value>Լայնական Մերկատոր</value>

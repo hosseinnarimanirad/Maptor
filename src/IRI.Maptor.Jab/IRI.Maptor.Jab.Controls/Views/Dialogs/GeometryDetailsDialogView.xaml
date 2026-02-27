@@ -185,12 +185,12 @@
 
         <!-- Save/Cancel Buttons -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-            <Button ToolTip="{Binding [dialog_geometryDetails_cancel], Source={StaticResource Localization}}" 
+            <Button ToolTip="{Binding [dialog_common_cancel], Source={StaticResource Localization}}" 
                         Command="{Binding CancelEditingCommand}" Margin="4" 
                         Style="{StaticResource circleButtonLight}">
                 <iconPacks:PackIconModern Kind="Close"/>
             </Button>
-            <Button ToolTip="{Binding [dialog_geometryDetails_save], Source={StaticResource Localization}}" 
+            <Button ToolTip="{Binding [dialog_common_save], Source={StaticResource Localization}}" 
                         Command="{Binding SaveGeometryCommand}" Margin="4"  
                         Style="{StaticResource circleButtonLight}">
                 <iconPacks:PackIconModern Kind="Check"/>
