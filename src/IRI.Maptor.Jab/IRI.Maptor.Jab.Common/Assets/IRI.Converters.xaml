@@ -76,6 +76,7 @@
     <converters:StringToRtlFlowDirection x:Key="stringToRtlFlowDirection"/>
     <converters:StringToShapeConverter x:Key="stringToShapeConverter"/>
     <converters:StringNullOrEmptyToVisibilityConverter x:Key="stringNullOrEmptyToVisibilityConverter"/>
+    <converters:StringNotNullOrEmptyToVisibilityConverter x:Key="stringNotNullOrEmptyToVisibilityConverter"/>
     <converters:SubtractConstantConverter x:Key="subtractConstantConverter"/>
 
     <converters:TileTypeToBoolConverter x:Key="tileTypeToBoolConverter"/>

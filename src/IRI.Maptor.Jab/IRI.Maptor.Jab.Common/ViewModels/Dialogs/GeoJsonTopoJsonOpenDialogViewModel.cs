@@ -136,6 +136,8 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
     public RelayCommand OpenCommand { get; }
     public RelayCommand CancelCommand { get; }
 
+    public RelayCommand RemoveFileCommand { get; }
+
     public GeoJsonTopoJsonOpenDialogResult? Result { get; private set; }
 
     private void ApplyInitialSrid(int srid)
@@ -215,11 +217,20 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
     {
         if (string.IsNullOrWhiteSpace(RawJson))
             return false;
+
         if (EffectiveSelectedSrid <= 0)
             return false;
+
         if (IsUtmSelected && (UtmZone < 1 || UtmZone > 60))
             return false;
+
         return true;
+    }
+
+    private void RemoveSelectedFile()
+    {
+        this.FilePath = string.Empty;
+        this.RawJson = string.Empty;
     }
 
     private void Open()

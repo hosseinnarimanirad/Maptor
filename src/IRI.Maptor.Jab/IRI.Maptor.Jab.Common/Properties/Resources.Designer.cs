@@ -754,6 +754,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove File.
+        /// </summary>
+        public static string dialog_common_removeFile {
+            get {
+                return ResourceManager.GetString("dialog_common_removeFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Browse....
         /// </summary>
         public static string dialog_csvTsvOpen_browse {

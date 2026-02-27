@@ -54,6 +54,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         BrowseCommand = new RelayCommand(_ => Browse());
         OpenCommand = new RelayCommand(_ => Open(), _ => CanOpen());
         CancelCommand = new RelayCommand(_ => Cancel());
+        RemoveFileCommand = new RelayCommand(_ => RemoveSelectedFile(), _ => !string.IsNullOrEmpty(FilePath));
         //SelectGeometryModeCommand = new RelayCommand(type => SelectedGeometryMode = (GeometryType)type);
     }
 
@@ -160,6 +161,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
     public RelayCommand OpenCommand { get; }
     public RelayCommand CancelCommand { get; }
 
+    public RelayCommand RemoveFileCommand { get; }
     //public ICommand SelectGeometryModeCommand { get; }
 
     /// <summary>
@@ -218,11 +220,20 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
     {
         if (string.IsNullOrWhiteSpace(RawText))
             return false;
+
         if (EffectiveSelectedSrid <= 0)
             return false;
+
         if (IsUtmSelected && (UtmZone < 1 || UtmZone > 60))
             return false;
+
         return true;
+    }
+
+    private void RemoveSelectedFile()
+    {
+        this.FilePath = string.Empty;
+        this.RawText = string.Empty;
     }
 
     private void Open()

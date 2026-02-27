@@ -1419,4 +1419,7 @@
   <data name="srs_southernHemisphere" xml:space="preserve">
     <value>نیم‌کره جنوبی</value>
   </data>
+  <data name="dialog_common_removeFile" xml:space="preserve">
+    <value>حذف فایل</value>
+  </data>
 </root>

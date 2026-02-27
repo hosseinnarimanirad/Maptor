@@ -1459,4 +1459,7 @@
   <data name="srs_southernHemisphere" xml:space="preserve">
     <value>Southern Hemisphere</value>
   </data>
+  <data name="dialog_common_removeFile" xml:space="preserve">
+    <value>Remove File</value>
+  </data>
 </root>

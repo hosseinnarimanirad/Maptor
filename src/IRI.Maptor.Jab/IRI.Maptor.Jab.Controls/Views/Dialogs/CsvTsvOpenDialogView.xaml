@@ -9,7 +9,8 @@
         ShowInTaskbar="False"
         SizeToContent="WidthAndHeight"
         GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"
-        MinWidth="450"
+        Width="450"
+        MaxWidth="500"
         MinHeight="400"
         FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
         WindowStartupLocation="CenterOwner"
@@ -69,17 +70,26 @@
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/> 
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
-                <TextBox Grid.Column="1" Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight"
+                <TextBox Grid.Column="1" Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight" FontSize="12"
                          mahApp:TextBoxHelper.Watermark="{Binding [dialog_csvTsvOpen_fileWatermark], Source={StaticResource Localization}}"
                          Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True"/>
                 <Button Grid.Column="2"
                         ToolTip="{Binding [dialog_csvTsvOpen_browse], Source={StaticResource Localization}}"
                         Command="{Binding BrowseCommand}"
                         Style="{StaticResource circleButtonLight}">
-                    <iconPacks:PackIconPhosphorIcons Kind="FileMagnifyingGlassFill"/>
+                    <iconPacks:PackIconMaterial Kind="FileSearchOutline"/>
                 </Button>
+                <Button Grid.Column="3"
+                         ToolTip="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
+                         Command="{Binding RemoveFileCommand}"
+                         Style="{StaticResource circleButtonLight}"
+                         >
+                    <iconPacks:PackIconMaterial Kind="FileRemoveOutline"/>
+                </Button>
+              
             </Grid>
         </Border>
 
@@ -199,31 +209,32 @@
                 <CheckBox Content="{Binding [dialog_csvTsvOpen_useFirstLineAsHeader], Source={StaticResource Localization}}"
                       IsChecked="{Binding UseFirstLineAsHeader, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding [dialog_geoJsonTopoJsonOpen_orderCoord], Source={StaticResource Localization}}"
-                           VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
+                           VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"
+                           />
                 <RadioButton Content="X,Y" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="4,0" VerticalAlignment="Center"
                          ToolTip="{Binding [dialog_csvTsvOpen_orderXY], Source={StaticResource Localization}}"/>
                 <RadioButton Content="Y,X" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay, Converter={StaticResource notConverter}}" Margin="4,0" VerticalAlignment="Center"
                          ToolTip="{Binding [dialog_csvTsvOpen_orderYX], Source={StaticResource Localization}}"/>
             </StackPanel>
         </Border>
+
         <!-- Data: paste or preview (top 50 lines) -->
         <Grid Grid.Row="5">
             <TextBlock                
-         Text="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"
-         IsHitTestVisible="False"
-         VerticalAlignment="Top" Padding="4"
-         Margin="8,0,0,0" 
-         Visibility="{Binding ElementName=previewTextbox, Path=Text, Converter={StaticResource stringNullOrEmptyToVisibilityConverter}}"
-         Foreground="Gray"/>
-            <!--mahApp:TextBoxHelper.Watermark="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"-->
-            <TextBox x:Name="previewTextbox" Grid.Row="5" Margin="4,0" MinHeight="150" MaxHeight="250"
+                     Text="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"
+                     IsHitTestVisible="False"
+                     VerticalAlignment="Top" Padding="4"
+                     Margin="8,0,0,0" 
+                     Visibility="{Binding ElementName=previewTextbox, Path=Text, Converter={StaticResource stringNullOrEmptyToVisibilityConverter}}"
+                     Foreground="Gray"/>
+
+            <TextBox x:Name="previewTextbox" Grid.Row="5" Margin="4,0" MinHeight="150" MaxHeight="250" HorizontalAlignment="Stretch"
                  Background="Transparent"
                  Text="{Binding RawText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"
                  HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
-                 Padding="4" FlowDirection="LeftToRight">
-            </TextBox>
-           
+                 Padding="4" FlowDirection="LeftToRight"/>
+
         </Grid>
 
         <!-- Buttons -->

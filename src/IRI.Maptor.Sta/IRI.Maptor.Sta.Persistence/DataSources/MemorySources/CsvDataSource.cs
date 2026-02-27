@@ -152,7 +152,7 @@ public class CsvDataSource : MemoryDataSource
 
         if (type == Common.Enums.GeometryType.Polygon)
         {
-            return [Geometry<Point>.CreatePolygonOrMultiPolygon(result.Select(r => r.TheGeometry).ToList(), SridHelper.WebMercator).AsFeature()];
+            return [Geometry<Point>.CreatePolygon(result.Select(r => r.TheGeometry.AsPoint()).ToList(), SridHelper.WebMercator).AsFeature()];
         }
         else if (type == Common.Enums.GeometryType.LineString)
         {

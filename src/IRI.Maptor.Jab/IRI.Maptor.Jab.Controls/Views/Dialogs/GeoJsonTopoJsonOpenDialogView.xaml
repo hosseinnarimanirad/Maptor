@@ -9,6 +9,7 @@
         SizeToContent="WidthAndHeight"
         GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"
         MinWidth="450"
+        Width="450"
         MaxWidth="550"
         MinHeight="480"
         FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
@@ -69,6 +70,7 @@
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
                 <TextBox Grid.Column="1" Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight"
@@ -78,7 +80,14 @@
                         ToolTip="{Binding [dialog_geoJsonTopoJsonOpen_browse], Source={StaticResource Localization}}"
                         Command="{Binding BrowseCommand}"
                         Style="{StaticResource circleButtonLight}">
-                    <iconPacks:PackIconPhosphorIcons Kind="FileMagnifyingGlassFill"/>
+                    <iconPacks:PackIconMaterial Kind="FileSearchOutline"/>
+                </Button>
+                <Button Grid.Column="3"
+                       ToolTip="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
+                       Command="{Binding RemoveFileCommand}"
+                       Style="{StaticResource circleButtonLight}"
+                       >            
+                    <iconPacks:PackIconMaterial Kind="FileRemoveOutline"/>
                 </Button>
             </Grid>
         </Border>
@@ -187,12 +196,12 @@
                     Foreground="Gray"/>
             <!--mahApp:TextBoxHelper.Watermark="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"-->
             <TextBox x:Name="previewTextbox" Grid.Row="5" Margin="4,0" MinHeight="150" MaxHeight="250"
-            Background="Transparent"
-            Text="{Binding RawJson, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"
-            HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
-            Padding="4" FlowDirection="LeftToRight">
-            </TextBox>
+                Background="Transparent"
+                Text="{Binding RawJson, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
+                Padding="4" FlowDirection="LeftToRight"/>
+
 
         </Grid>
 
