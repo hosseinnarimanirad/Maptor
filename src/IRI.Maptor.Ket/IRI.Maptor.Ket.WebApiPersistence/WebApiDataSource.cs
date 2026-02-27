@@ -160,7 +160,7 @@ public class WebApiDataSource : MemoryDataSource
                 DeletedIds = _featureSet.GetDeletedFeatureIds().ToList(),
             };
 
-            var success = await WebApiInfrastructure.SaveChangesAsync(
+            var syncResult = await WebApiInfrastructure.SaveChangesAsync(
                 //_parameters.BaseUrl,
                 //_updateEndPoint,
                 _parameters.SyncUrl,
@@ -168,8 +168,23 @@ public class WebApiDataSource : MemoryDataSource
                 _parameters.BearerToken,
                 _parameters.Headers);
 
-            if (success)
+            if (syncResult is not null)
             {
+                if (syncResult.NewIds != null && syncResult.NewIds.Count > 0)
+                {
+                    foreach (var mapping in syncResult.NewIds)
+                    {
+                        if (mapping.Key == Guid.Empty)
+                            continue;
+
+                        var feature = _featureSet.Features.FirstOrDefault(f => f.Key == mapping.Key);
+                        if (feature != null)
+                        {
+                            feature.Id = mapping.Id;
+                        }
+                    }
+                }
+
                 //_addedFeatures.Clear();
                 //_updatedFeatures.Clear();
                 //_deletedIds.Clear();
@@ -273,7 +288,8 @@ public class WebApiDataSource : MemoryDataSource
 
         var feature = new Feature<Point>(geometry, featureDto.Attributes ?? new Dictionary<string, object>())
         {
-            Id = featureDto.Id
+            Id = featureDto.Id,
+            Key = featureDto.Key != Guid.Empty ? featureDto.Key : Guid.NewGuid()
         };
 
         if (!string.IsNullOrWhiteSpace(IdColumnName) && featureDto.Attributes != null && featureDto.Attributes.ContainsKey(IdColumnName))
@@ -299,11 +315,14 @@ public class WebApiDataSource : MemoryDataSource
 
         var wkbBytes = geometry.AsWkb();
 
+        var isNew = feature.Status == Sta.Common.Enums.FeatureStatus.New;
+
         return new FeatureDto
         {
-            Id = feature.Id,
+            Id = isNew ? 0 : feature.Id,
             Shape = wkbBytes ?? Array.Empty<byte>(),
-            Attributes = feature.Attributes ?? new Dictionary<string, object>()
+            Attributes = feature.Attributes ?? new Dictionary<string, object>(),
+            Key = feature.Key
         };
     }
 

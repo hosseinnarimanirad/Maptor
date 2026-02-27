@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using IRI.Maptor.Extensions;
@@ -103,6 +104,11 @@ public class FeatureSet<T> where T : IPoint, new()
     // todo: add geometry type, srid, ... checkes
     public void Add(Feature<T> feature)
     {
+        if (feature.Key == Guid.Empty)
+        {
+            feature.Key = Guid.NewGuid();
+        }
+
         feature.MarkAsNew();
 
         this._allFeatures.Add(feature);

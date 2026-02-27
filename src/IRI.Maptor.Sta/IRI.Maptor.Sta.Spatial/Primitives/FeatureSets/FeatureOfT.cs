@@ -1,3 +1,4 @@
+using System;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
@@ -35,7 +36,11 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
 
     public Guid Key { get; set; }
 
-    public Feature() { }
+    public Feature()
+    {
+        if (Key == Guid.Empty)
+            Key = Guid.NewGuid();
+    }
 
     public Feature(Geometry<T> geometry) : this(geometry, new Dictionary<string, object>())
     {
@@ -85,7 +90,7 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         return geometrySame && attributesSame;
     }
 
-    public Feature<T> Clone() => new Feature<T>(this.TheGeometry.Clone(), DictionaryHelper.Copy(this.Attributes)) { Id = this.Id, LabelAttribute = this.LabelAttribute, };
+    public Feature<T> Clone() => new Feature<T>(this.TheGeometry.Clone(), DictionaryHelper.Copy(this.Attributes)) { Id = this.Id, LabelAttribute = this.LabelAttribute, Key = this.Key, };
 
     public Dictionary<string, object> GetEmptyDictionary() => this.Attributes.Keys.ToDictionary(key => key, key => (object)null);
 
@@ -95,6 +100,7 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         {
             Id = this.Id,
             LabelAttribute = this.LabelAttribute,
+            Key = this.Key,
         };
     }
 
@@ -103,7 +109,8 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         return new Feature<T>(TheGeometry.Project(targetSrs), this.Attributes)
         {
             Id = this.Id,
-            LabelAttribute = this.LabelAttribute
+            LabelAttribute = this.LabelAttribute,
+            Key = this.Key
         };
     }
 
@@ -188,7 +195,8 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
             this.OldVersion = new Feature<T>(this.TheGeometry.Clone(), attributes ?? this.GetEmptyDictionary())
             {
                 Id = this.Id,
-                LabelAttribute = this.LabelAttribute
+                LabelAttribute = this.LabelAttribute,
+                Key = this.Key
             };
         }
 

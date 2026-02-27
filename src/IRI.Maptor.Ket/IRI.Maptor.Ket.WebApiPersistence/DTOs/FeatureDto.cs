@@ -1,3 +1,4 @@
+using System;
 using IRI.Maptor.Sta.Common.Common.JsonConverters;
 using IRI.Maptor.Sta.Common.Primitives;
 using System.Text.Json.Serialization;
@@ -12,4 +13,6 @@ public class FeatureDto
 
     [JsonConverter(typeof(DictionaryStringObjectConverter))]
     public Dictionary<string, object> Attributes { get; set; }
+
+    public Guid Key { get; set; }
 }
