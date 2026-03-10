@@ -61,29 +61,11 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add GeoJson.
-        /// </summary>
-        public static string cmd_drawingLegend_addGeoJson {
-            get {
-                return ResourceManager.GetString("cmd_drawingLegend_addGeoJson", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Add Lat/Long Text.
         /// </summary>
         public static string cmd_drawingLegend_addLatLongTxt {
             get {
                 return ResourceManager.GetString("cmd_drawingLegend_addLatLongTxt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Shapefile.
-        /// </summary>
-        public static string cmd_drawingLegend_addShapefile {
-            get {
-                return ResourceManager.GetString("cmd_drawingLegend_addShapefile", resourceCulture);
             }
         }
         
@@ -187,6 +169,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export as csv.
+        /// </summary>
+        public static string cmd_drawingLegendItem_exportAsCsv {
+            get {
+                return ResourceManager.GetString("cmd_drawingLegendItem_exportAsCsv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export as GeoJson.
         /// </summary>
         public static string cmd_drawingLegendItem_exportAsGeoJson {
@@ -228,6 +219,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string cmd_drawingLegendItem_remove {
             get {
                 return ResourceManager.GetString("cmd_drawingLegendItem_remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add GeoJson.
+        /// </summary>
+        public static string cmd_general_addGeoJson {
+            get {
+                return ResourceManager.GetString("cmd_general_addGeoJson", resourceCulture);
             }
         }
         
@@ -394,15 +394,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add GeoJson.
-        /// </summary>
-        public static string cmd_legend_addGeoJson {
-            get {
-                return ResourceManager.GetString("cmd_legend_addGeoJson", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Add GPX.
         /// </summary>
         public static string cmd_legend_addGpx {
@@ -435,15 +426,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string cmd_legend_addLatLongTxt {
             get {
                 return ResourceManager.GetString("cmd_legend_addLatLongTxt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add shapefile.
-        /// </summary>
-        public static string cmd_legend_addShapefile {
-            get {
-                return ResourceManager.GetString("cmd_legend_addShapefile", resourceCulture);
             }
         }
         
@@ -588,6 +570,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string cmd_legendItem_zoomToExtent {
             get {
                 return ResourceManager.GetString("cmd_legendItem_zoomToExtent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset Password.
+        /// </summary>
+        public static string cmd_security_resetPassword {
+            get {
+                return ResourceManager.GetString("cmd_security_resetPassword", resourceCulture);
             }
         }
         
@@ -754,6 +745,42 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Browse....
+        /// </summary>
+        public static string dialog_common_browse {
+            get {
+                return ResourceManager.GetString("dialog_common_browse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string dialog_common_cancel {
+            get {
+                return ResourceManager.GetString("dialog_common_cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X then Y.
+        /// </summary>
+        public static string dialog_common_eastingFirst {
+            get {
+                return ResourceManager.GetString("dialog_common_eastingFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File.
+        /// </summary>
+        public static string dialog_common_fileWatermark {
+            get {
+                return ResourceManager.GetString("dialog_common_fileWatermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove File.
         /// </summary>
         public static string dialog_common_removeFile {
@@ -763,20 +790,11 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Browse....
+        ///   Looks up a localized string similar to Save.
         /// </summary>
-        public static string dialog_csvTsvOpen_browse {
+        public static string dialog_common_save {
             get {
-                return ResourceManager.GetString("dialog_csvTsvOpen_browse", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to File.
-        /// </summary>
-        public static string dialog_csvTsvOpen_fileWatermark {
-            get {
-                return ResourceManager.GetString("dialog_csvTsvOpen_fileWatermark", resourceCulture);
+                return ResourceManager.GetString("dialog_common_save", resourceCulture);
             }
         }
         
@@ -853,15 +871,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Browse....
-        /// </summary>
-        public static string dialog_dxfOpen_browse {
-            get {
-                return ResourceManager.GetString("dialog_dxfOpen_browse", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to #.
         /// </summary>
         public static string dialog_dxfOpen_columnIndex {
@@ -885,15 +894,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string dialog_dxfOpen_columnY {
             get {
                 return ResourceManager.GetString("dialog_dxfOpen_columnY", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to File.
-        /// </summary>
-        public static string dialog_dxfOpen_fileWatermark {
-            get {
-                return ResourceManager.GetString("dialog_dxfOpen_fileWatermark", resourceCulture);
             }
         }
         
@@ -948,24 +948,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string dialog_geoJsonOpen_title {
             get {
                 return ResourceManager.GetString("dialog_geoJsonOpen_title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Browse....
-        /// </summary>
-        public static string dialog_geoJsonTopoJsonOpen_browse {
-            get {
-                return ResourceManager.GetString("dialog_geoJsonTopoJsonOpen_browse", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to File.
-        /// </summary>
-        public static string dialog_geoJsonTopoJsonOpen_fileWatermark {
-            get {
-                return ResourceManager.GetString("dialog_geoJsonTopoJsonOpen_fileWatermark", resourceCulture);
             }
         }
         
@@ -1047,15 +1029,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string dialog_geometryDetails_basicInfo {
             get {
                 return ResourceManager.GetString("dialog_geometryDetails_basicInfo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cancel.
-        /// </summary>
-        public static string dialog_geometryDetails_cancel {
-            get {
-                return ResourceManager.GetString("dialog_geometryDetails_cancel", resourceCulture);
             }
         }
         
@@ -1164,15 +1137,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string dialog_geometryDetails_points {
             get {
                 return ResourceManager.GetString("dialog_geometryDetails_points", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Save.
-        /// </summary>
-        public static string dialog_geometryDetails_save {
-            get {
-                return ResourceManager.GetString("dialog_geometryDetails_save", resourceCulture);
             }
         }
         

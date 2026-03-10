@@ -569,7 +569,7 @@
     <value>Ángulo de vértice</value>
   </data>
   <data name="geometryDetails_coordinateGrid_x" xml:space="preserve">
-    <value>incógnita</value>
+    <value>X</value>
   </data>
   <data name="geometryDetails_coordinateGrid_y" xml:space="preserve">
     <value>Y</value>
@@ -596,7 +596,7 @@
     <value>Ir al punto anterior</value>
   </data>
   <data name="geometryDetails_currentPoint_x" xml:space="preserve">
-    <value>INCÓGNITA:</value>
+    <value>X:</value>
   </data>
   <data name="geometryDetails_currentPoint_y" xml:space="preserve">
     <value>Y:</value>

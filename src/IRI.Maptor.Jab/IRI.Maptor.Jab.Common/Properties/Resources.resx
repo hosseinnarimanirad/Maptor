@@ -366,17 +366,11 @@
   <data name="dialog_geometryDetails_export" xml:space="preserve">
     <value>Export</value>
   </data>
-  <data name="dialog_geometryDetails_export" xml:space="preserve">
-    <value>Export</value>
-  </data>
   <data name="dialog_common_fileWatermark" xml:space="preserve">
     <value>File</value>
   </data>
   <data name="dialog_common_browse" xml:space="preserve">
     <value>Browse...</value>
-  </data>
-  <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
-    <value>North / South hemisphere</value>
   </data>
   <data name="dialog_dxfOpen_hemisphereTooltip" xml:space="preserve">
     <value>North / South hemisphere</value>
@@ -392,9 +386,6 @@
   </data>
   <data name="dialog_dxfOpen_columnY" xml:space="preserve">
     <value>Y</value>
-  </data>
-  <data name="dialog_csvTsvOpen_title" xml:space="preserve">
-    <value>Import CSV / TSV</value>
   </data>
   <data name="dialog_csvTsvOpen_title" xml:space="preserve">
     <value>Import CSV / TSV</value>
@@ -1449,5 +1440,15 @@
   </data>
   <data name="dialog_common_removeFile" xml:space="preserve">
     <value>Remove File</value>
+  </data>
+  <data name="cmd_security_resetPassword" xml:space="preserve">
+    <value>Reset Password</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsCsv" xml:space="preserve">
+    <value>Export as csv</value>
+  </data>
+  <data name="dialog_common_eastingFirst" xml:space="preserve">
+    <value>X then Y</value>
+    <comment>order of input coordinates x then y for geojson and csv/tsv dialog</comment>
   </data>
 </root>

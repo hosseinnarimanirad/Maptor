@@ -1,4 +1,4 @@
-<UserControl x:Class="IRI.Maptor.Jab.Controls.Views.FeatureTable"
+<UserControl x:Name="root" x:Class="IRI.Maptor.Jab.Controls.Views.FeatureTable"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
@@ -7,7 +7,7 @@
              xmlns:local ="clr-namespace:IRI.Maptor.Jab.Controls.Common.Behaviors" 
              xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             x:Name="root" Background="Transparent">
+             Background="Transparent">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -80,15 +80,15 @@
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid >
+    <Grid IsEnabled="{Binding AssociatedLayer.DataSource.IsProcessing, Converter={StaticResource notConverter}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <!--<DataGrid ItemsSource="{Binding Features}" AutoGenerateColumns="True" AutoGeneratingColumn="RadGridView_AutoGeneratingColumn"
-                                ShowGroupPanel="False" IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
-                             x:Name="grid" telerik:StyleManager.Theme="Office2019" SelectionMode="Extended" SelectionChanged="grid_SelectionChanged"
-                                RowEditEnded="grid_RowEditEnded" MouseDoubleClick="grid_MouseDoubleClick">-->
+                        ShowGroupPanel="False" IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}" 
+                        x:Name="grid" telerik:StyleManager.Theme="Office2019" SelectionMode="Extended" SelectionChanged="grid_SelectionChanged"
+                        RowEditEnded="grid_RowEditEnded" MouseDoubleClick="grid_MouseDoubleClick">-->
         <DataGrid x:Name="grid"
                     ItemsSource="{Binding Features}"
                     IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}"

@@ -84,6 +84,8 @@ public class EditableFeatureLayer : SymbolizableLayer
         }
     }
 
+    public bool IsMultiPartGeometry => _webMercatorGeometry?.IsMultiPartGeometry == true;
+
 
     #region Actions
 
@@ -530,10 +532,11 @@ public class EditableFeatureLayer : SymbolizableLayer
                 MakePathGeometry(g);
             }
         }
-        else
-        {
-            return;
-        }
+        //else
+        //{
+        //    return;
+        //}
+        RaisePropertyChanged(nameof(IsMultiPartGeometry));
     }
 
     private Locateable ToPrimaryLocateable(IPoint point)
@@ -1669,7 +1672,7 @@ public class EditableFeatureLayer : SymbolizableLayer
         get
         {
             if (_deleteCurrentPartCommand == null)
-                _deleteCurrentPartCommand = new RelayCommand(param => this.DeleteCurrentPart());
+                _deleteCurrentPartCommand = new RelayCommand(param => this.DeleteCurrentPart(), _ => IsMultiPartGeometry);
 
             return _deleteCurrentPartCommand;
         }

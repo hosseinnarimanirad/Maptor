@@ -85,9 +85,9 @@ public class GeometryEditorViewModel : Notifier
             GeometryType == Sta.Common.Enums.GeometryType.Polygon ||
             GeometryType == Sta.Common.Enums.GeometryType.MultiPolygon;
 
-    public bool IsMultiGeometry => GeometryType == Sta.Common.Enums.GeometryType.MultiPoint ||
-                                    GeometryType == Sta.Common.Enums.GeometryType.MultiLineString ||
-                                    GeometryType == Sta.Common.Enums.GeometryType.MultiPolygon;
+    //public bool IsMultiGeometry => GeometryType == Sta.Common.Enums.GeometryType.MultiPoint ||
+    //                                GeometryType == Sta.Common.Enums.GeometryType.MultiLineString ||
+    //                                GeometryType == Sta.Common.Enums.GeometryType.MultiPolygon;
 
     public GeometryType? GeometryType => Geometry?.Type;
 

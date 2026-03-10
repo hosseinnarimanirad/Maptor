@@ -756,6 +756,18 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    private bool _showFeatureTablesOptions;
+    public bool ShowFeatureTablesOptions
+    {
+        get { return _showFeatureTablesOptions; }
+        set
+        {
+            _showFeatureTablesOptions = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
     private bool _showMapInfoPanel;
     public bool ShowMapInfoPanel
     {
@@ -766,6 +778,7 @@ public abstract class MapViewModelBase : ViewModelBase
             RaisePropertyChanged();
         }
     }
+
 
 
     #endregion
@@ -1612,6 +1625,17 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    private bool _isDrawingLegendExpanded = false;
+    public bool IsDrawingLegendExpanded
+    {
+        get { return _isDrawingLegendExpanded; }
+        set
+        {
+            _isDrawingLegendExpanded = value;
+            RaisePropertyChanged();
+        }
+    }
+
 
     List<Func<DrawingItemLayer, ILegendCommand>>? drawingItemCommands = null;
 
@@ -1627,7 +1651,8 @@ public abstract class MapViewModelBase : ViewModelBase
                    layer => LegendCommand.CreateRemoveDrawingItemLayer(this, layer),
                    layer => LegendCommand.CreateEditDrawingItemLayer(this, layer),
                    layer => LegendCommand.CreateExportDrawingItemLayerAsShapefile(this, layer),
-                   layer => LegendCommand.CreateExportDrawingItemLayerAsGeoJson(this,layer),
+                   layer => LegendCommand.CreateExportDrawingItemLayerAsGeoJson(this, layer),
+                   layer => LegendCommand.CreateExportDrawingItemLayerAsCsv(this, layer),
                    layer => LegendToggleCommand.CreateToggleLayerLabelCommand(this, layer/*, layer.Labels*/)
                 };
             }
@@ -1654,9 +1679,7 @@ public abstract class MapViewModelBase : ViewModelBase
         var drawingResult = await GetDrawingAsync(mode, MapSettings.DrawingOptions, true);
 
         if (!drawingResult.HasNotNullResult())
-        {
             return;
-        }
 
         var featureName = $"DRAWING {DrawingItems?.Count}";
 
@@ -1697,6 +1720,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
         //this.AddLayer(item.AssociatedLayer);
         AddLayer(item);
+
+        this.IsDrawingLegendExpanded = true;
     }
 
     public void InsertDrawingItem(int index, DrawingItemLayer item)
@@ -2117,16 +2142,18 @@ public abstract class MapViewModelBase : ViewModelBase
         RequestRefreshLayerVisibility?.Invoke(layer);
     }
 
-    private void HandleRequestSaveChanges(ILayer layer)
+    private async Task HandleRequestSaveChanges(ILayer layer)
     {
         var selectedLayer = SelectedLayers?.SingleOrDefault(sl => sl.Id == layer.LayerId);
         if (selectedLayer != null)
         {
-            selectedLayer.SaveChanges();
+            await selectedLayer.SaveChangesAsync();
         }
         else
         {
-            (layer.DataSource as IEditableVectorDataSource)?.SaveChanges();
+            var dataSource = layer.DataSource as IEditableVectorDataSource;
+            if (dataSource != null)
+                await dataSource.SaveChanges();
         }
     }
 
@@ -2245,7 +2272,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             if (layer is BaseLayer baseLayer)
             {
-                baseLayer.RequestSaveChanges = HandleRequestSaveChanges;
+                baseLayer.RequestSaveChanges = async l => await HandleRequestSaveChanges(l);
                 baseLayer.RequestUndoAllChanges = HandleRequestUndoAllChanges;
                 //baseLayer.CanUndoChangesProvider = GetCanUndoChanges;
             }
@@ -4897,6 +4924,10 @@ public abstract class MapViewModelBase : ViewModelBase
                 _closeAllTablesCommand = new RelayCommand(param =>
                 {
                     this.RemoveSelectedLayers(l => true);
+
+                    this.ShowAttributeTable = false;
+
+                    this.ShowFeatureTablesOptions = false;
                 });
             }
 

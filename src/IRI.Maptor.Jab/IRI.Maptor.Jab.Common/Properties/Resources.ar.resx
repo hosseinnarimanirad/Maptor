@@ -596,7 +596,7 @@
     <value>انتقل إلى النقطة السابقة</value>
   </data>
   <data name="geometryDetails_currentPoint_x" xml:space="preserve">
-    <value>العاشر:</value>
+    <value>X:</value>
   </data>
   <data name="geometryDetails_currentPoint_y" xml:space="preserve">
     <value>ص:</value>

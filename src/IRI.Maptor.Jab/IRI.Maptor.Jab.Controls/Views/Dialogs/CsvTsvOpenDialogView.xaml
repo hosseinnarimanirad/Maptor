@@ -209,12 +209,13 @@
                 <CheckBox Content="{Binding [dialog_csvTsvOpen_useFirstLineAsHeader], Source={StaticResource Localization}}"
                       IsChecked="{Binding UseFirstLineAsHeader, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding [dialog_geoJsonTopoJsonOpen_orderCoord], Source={StaticResource Localization}}"
-                           VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"
-                           />
-                <RadioButton Content="X,Y" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="4,0" VerticalAlignment="Center"
-                         ToolTip="{Binding [dialog_csvTsvOpen_orderXY], Source={StaticResource Localization}}"/>
+                           VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold" Visibility="Collapsed"/>
+                <CheckBox Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
+                            IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>
+                <!--<RadioButton Content="X,Y" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="4,0" VerticalAlignment="Center"
+                            ToolTip="{Binding [dialog_csvTsvOpen_orderXY], Source={StaticResource Localization}}"/>
                 <RadioButton Content="Y,X" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay, Converter={StaticResource notConverter}}" Margin="4,0" VerticalAlignment="Center"
-                         ToolTip="{Binding [dialog_csvTsvOpen_orderYX], Source={StaticResource Localization}}"/>
+                            ToolTip="{Binding [dialog_csvTsvOpen_orderYX], Source={StaticResource Localization}}"/>-->
             </StackPanel>
         </Border>
 

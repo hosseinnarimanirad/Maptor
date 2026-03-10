@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Data;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -10,9 +11,7 @@ using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Sta.Persistence.Abstractions;
-using System.Data.Common;
-using System.Threading.Tasks;
+using IRI.Maptor.Sta.Persistence.Abstractions; 
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -448,7 +447,7 @@ public abstract class BaseLayer : Notifier, ILayer
     /// <summary>
     /// Invoked when Save is requested from the layer (e.g. legend popup). Set by MapViewModel to delegate to SelectedLayer or DataSource.
     /// </summary>
-    public Action<ILayer>? RequestSaveChanges { get; set; }
+    public Func<ILayer, Task>? RequestSaveChanges { get; set; }
 
     /// <summary>
     /// Invoked when Undo is requested from the layer (e.g. legend popup). Set by MapViewModel to delegate to SelectedLayer or DataSource.
@@ -551,7 +550,7 @@ public abstract class BaseLayer : Notifier, ILayer
     {
         if (RequestSaveChanges != null)
         {
-            RequestSaveChanges.Invoke(this);
+            await RequestSaveChanges.Invoke(this);
             return;
         }
 

@@ -13,34 +13,9 @@ public class EditableFeatureLayerOptions : Notifier
 
     readonly Brush _stroke;
     readonly Brush _fill;
-     
-
+      
     public bool IsNewDrawing { get; set; } = false;
 
-    //private bool _isFeatureInfoVisible;
-
-    //public bool IsFeatureInfoVisible
-    //{
-    //    get { return _isFeatureInfoVisible; }
-    //    set
-    //    {
-    //        _isFeatureInfoVisible = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
-
-
-    //private bool _isVerticesLabelVisible = false;
-
-    //public bool IsVerticesLabelVisible
-    //{
-    //    get { return _isVerticesLabelVisible && IsVerticesVisible; }
-    //    set
-    //    {
-    //        _isVerticesLabelVisible = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
 
     private bool _isEdgeLabelVisible = false;
     public bool IsEdgeLabelVisible
@@ -66,30 +41,6 @@ public class EditableFeatureLayerOptions : Notifier
         }
     }
 
-    //private bool _isVerticesVisible;
-
-    //public bool IsVerticesVisible
-    //{
-    //    get { return _isVerticesVisible; }
-    //    set
-    //    {
-    //        _isVerticesVisible = value;
-    //        RaisePropertyChanged();
-    //        RaisePropertyChanged(nameof(IsVerticesLabelVisible));
-    //    }
-    //}
-
-    //private bool _isAutoMeasureEnabled = false;
-
-    //public bool IsAutoMeasureEnabled
-    //{
-    //    get { return _isAutoMeasureEnabled; }
-    //    set
-    //    {
-    //        _isAutoMeasureEnabled = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
 
     private bool _isFinishButtonVisible = true;
     public bool IsFinishButtonVisible
@@ -188,7 +139,6 @@ public class EditableFeatureLayerOptions : Notifier
 
 
     private string _editText;
-
     public string EditText
     {
         get { return _editText; }
@@ -199,13 +149,7 @@ public class EditableFeatureLayerOptions : Notifier
         }
     }
 
-
-    //public Brush Fill { get; set; } = _stroke;
-
-    //public Brush Stroke { get; set; } = _fill;
-
-    //public double StrokeThickness { get; set; } = 4;
-
+     
     public ScaleInterval VisibleRange { get; set; } = ScaleInterval.All;
 
     public VisualParameters Visual { get; set; }// = new VisualParameters(_fill, _stroke, 4, .9);
@@ -233,7 +177,7 @@ public class EditableFeatureLayerOptions : Notifier
                 _stroke = new SolidColorBrush(new Color() { A = 204, R = brush.Color.R, G = brush.Color.G, B = brush.Color.B });
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             _fill = _defaultFill;
 
@@ -280,7 +224,7 @@ public class EditableFeatureLayerOptions : Notifier
         return new EditableFeatureLayerOptions()
         {
             IsCancelButtonVisible = true,
-            IsDeleteButtonVisible = true,
+            IsDeleteButtonVisible = false,
             IsEdgeLabelVisible = false,
             IsFinishButtonVisible = true,
 
@@ -358,7 +302,4 @@ public class EditableFeatureLayerOptions : Notifier
             //IsMultiPartSupportAvailable = isMultipartSupportAvailable
         };
     }
-
-
-
 }

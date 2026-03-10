@@ -1,11 +1,12 @@
-﻿using IRI.Maptor.Extensions;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Data;
 
+using IRI.Maptor.Extensions;
+
 namespace IRI.Maptor.Jab.Common.Assets.Converters;
 
-class MultiBooleanToVisibilityConverter : IMultiValueConverter
+public class MultiBooleanToVisibilityConverter : IMultiValueConverter
 {
     public object Convert(object[] values,
                             Type targetType,

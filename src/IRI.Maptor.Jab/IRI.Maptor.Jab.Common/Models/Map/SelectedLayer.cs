@@ -246,20 +246,29 @@ public class SelectedLayer : Notifier
         }
     }
 
-    public void SaveChanges()
+    public async Task SaveChangesAsync()
     {
-        (AssociatedLayer.DataSource as IEditableVectorDataSource)?.SaveChanges();
+        var editableSource = AssociatedLayer.DataSource as IEditableVectorDataSource;
+        
+        if (editableSource is null)
+            return;
 
-        var toBeRemoved = Features.Where(f => f.Status == FeatureStatus.Removed).ToList();
+        await editableSource.SaveChanges();
 
-        foreach (var item in toBeRemoved)
-            Features.Remove(item);
+        // Marshal grid refresh to UI thread; HTTP completion may have resumed on a background thread
+        await DispatcherInvokeAsync(() =>
+        {
+            var toBeRemoved = Features.Where(f => f.Status == FeatureStatus.Removed).ToList();
 
-        // Replace collection to force DataGrid to re-bind; features now have Status=Unchanged
-        if (Features != null)
-            Features = new ObservableCollection<Feature<Point>>(Features);
+            foreach (var item in toBeRemoved)
+                Features.Remove(item);
 
-        NotifyAll();
+            // Replace collection to force DataGrid to re-bind; features now have Status=Unchanged
+            if (Features != null)
+                Features = new ObservableCollection<Feature<Point>>(Features);
+
+            NotifyAll();
+        });
     }
 
     public void UndoCurrentRowChanges()
@@ -500,7 +509,7 @@ public class SelectedLayer : Notifier
         get
         {
             if (_saveCommand is null)
-                _saveCommand = new RelayCommand(param => this.SaveChanges(), _ => HasPendingChanges);
+                _saveCommand = new RelayCommand(async param => await this.SaveChangesAsync(), _ => HasPendingChanges);
 
             return _saveCommand;
         }
@@ -534,5 +543,25 @@ public class SelectedLayer : Notifier
             }
             return _viewChangesCommand;
         }
+    }
+
+    /// <summary>
+    /// Marshals the action to the UI thread. WPF requires collection/property updates on the UI thread.
+    /// If no dispatcher is available (e.g. unit tests), runs the action directly.
+    /// </summary>
+    private static Task DispatcherInvokeAsync(Action action)
+    {
+        var app = System.Windows.Application.Current;
+        if (app?.Dispatcher == null || app.Dispatcher.HasShutdownStarted || app.Dispatcher.HasShutdownFinished)
+        {
+            action();
+            return Task.CompletedTask;
+        }
+        if (app.Dispatcher.CheckAccess())
+        {
+            action();
+            return Task.CompletedTask;
+        }
+        return app.Dispatcher.InvokeAsync(action).Task;
     }
 }

@@ -23,6 +23,12 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public GeometryType Type { get; set; }
 
+
+    public bool IsMultiPartGeometry => Type == GeometryType.MultiPoint ||
+                                    Type == GeometryType.MultiLineString ||
+                                    Type == GeometryType.MultiPolygon;
+
+
     private List<T>? _points;
     public List<T>? Points
     {

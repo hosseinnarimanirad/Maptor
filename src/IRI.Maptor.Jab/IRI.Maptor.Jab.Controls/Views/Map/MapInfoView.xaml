@@ -47,27 +47,7 @@
             <Style TargetType="{x:Type iconPacks:PackIconModern}" BasedOn="{StaticResource circleButtonPackIconModern}"/>
             <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
             <Style TargetType="{x:Type Path}" BasedOn="{StaticResource circleButtonPath}"/>
-
-            <!--<Style TargetType="iconPacks:PackIconModern">
-                <Setter Property="Foreground" Value="White"/>
-                -->
-            <!--<Setter Property="Stretch" Value="Uniform"/>-->
-            <!--
-                <Setter Property="Margin" Value="8"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="FlowDirection" Value="LeftToRight"/>
-            </Style>
-            <Style TargetType="iconPacks:PackIconMaterial">
-                <Setter Property="Foreground" Value="White"/>
-                -->
-            <!--<Setter Property="Stretch" Value="Uniform"/>-->
-            <!--
-                <Setter Property="Margin" Value="8"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="HorizontalAlignment" Value="Center"/>
-                <Setter Property="FlowDirection" Value="LeftToRight"/>
-            </Style>-->
+ 
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
                 <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12" />
             </Style>
@@ -190,9 +170,9 @@
 
                 <!--Editing-->
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" 
-                            DataContext="{Binding CurrentEditingLayer}"
                             ToolTip="{Binding [mapPanel_measure_showEdgeLabels], Source={StaticResource Localization}}"
-                            Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">
+                            DataContext="{Binding CurrentEditingLayer}"
+                            Visibility="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Converter={StaticResource boolToVisibilityConverter}}">
                     <ToggleButton Style="{StaticResource circleToggleButtonLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                                     IsChecked="{Binding Options.IsEdgeLabelVisible, Mode=TwoWay}" 
                                     Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -231,7 +211,7 @@
                             ToolTip="{Binding [mapPanel_edit_finish], Source={StaticResource Localization}}"
                             Visibility="{Binding Options.IsFinishButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Modern Kind="Check"/>
-                    </Button>
+                    </Button> 
                 </StackPanel>
                 <!--Editing-->
 
@@ -261,12 +241,8 @@
                 <TabControl.Items>
 
                     <!--current point-->
-                    <TabItem Header="{Binding [mapPanel_header_currentPoint], Source={StaticResource Localization}}" Cursor="Hand">
-                        <TabItem.Visibility>
-                            <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
-                                <Binding Path="MapPanel.Options.IsMultiPartSupportAvailable"/>
-                            </MultiBinding>
-                        </TabItem.Visibility>
+                    <TabItem Header="{Binding [mapPanel_header_currentPoint], Source={StaticResource Localization}}" Cursor="Hand"
+                                Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal" DataContext="{Binding CurrentEditingLayer}" FlowDirection="LeftToRight" HorizontalAlignment="Center">
                             <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}"
@@ -302,6 +278,7 @@
                         <TabItem.Visibility>
                             <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
                                 <Binding Path="MapPanel.Options.IsMultiPartSupportAvailable"/>
+                                <Binding Path="IsEditMode"/>
                             </MultiBinding>
                         </TabItem.Visibility>
                         <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Center" DataContext="{Binding CurrentEditingLayer}" >
@@ -313,7 +290,7 @@
 
                             <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" IsEnabled="False"
                                         ToolTip="{Binding [mapPanel_currentPart_add], Source={StaticResource Localization}}"
-                                        Command="{Binding AddNewPartCommand}">
+                                        Command="{Binding AddNewPartCommand}" Visibility="Collapsed">
                                 <iconPacks:Modern Kind="Add"/>
                             </Button>
                             <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
@@ -437,7 +414,6 @@
                                 </Grid>
                             </Expander>
                         </StackPanel>
-
                     </TabItem>
 
                 </TabControl.Items>

@@ -1,51 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -110,7 +110,7 @@
     <value>Tümünü Kaldır</value>
   </data>
   <data name="cmd_general_addGeoJson" xml:space="preserve">
-    <value>Add GeoJson</value>
+    <value>GeoJson'u ekleyin</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
     <value>Shapefile Ekle</value>
@@ -131,7 +131,7 @@
     <value>Çizgi Çiz</value>
   </data>
   <data name="cmd_general_drawRectangle" xml:space="preserve">
-    <value>Draw Rectangle</value>
+    <value>Dikdörtgen Çiz</value>
   </data>
   <data name="cmd_general_fullExtent" xml:space="preserve">
     <value>Tam Görünüm</value>
@@ -191,40 +191,40 @@
     <value>Yakınlaştır</value>
   </data>
   <data name="cmd_legend_addCsv" xml:space="preserve">
-    <value>Add CSV</value>
+    <value>CSV ekle</value>
   </data>
   <data name="cmd_legend_addDxf" xml:space="preserve">
-    <value>Add DXF</value>
+    <value>DXF'yi ekle</value>
   </data>
   <data name="cmd_legend_addGpx" xml:space="preserve">
     <value>GPX Ekle</value>
   </data>
   <data name="cmd_legend_addKml" xml:space="preserve">
-    <value>Add KML</value>
+    <value>KML'yi ekle</value>
   </data>
   <data name="cmd_legend_addKmz" xml:space="preserve">
-    <value>Add KMZ</value>
+    <value>KMZ'yi ekle</value>
   </data>
   <data name="cmd_legend_addLatLongTxt" xml:space="preserve">
-    <value>Add lat/long</value>
+    <value>Enlem/boylam ekle</value>
   </data>
   <data name="cmd_legend_addTopoJson" xml:space="preserve">
     <value>TopoJSON Ekle</value>
   </data>
   <data name="cmd_legend_addTsv" xml:space="preserve">
-    <value>Add TSV</value>
+    <value>TSV'yi ekle</value>
   </data>
   <data name="cmd_legend_importLayer" xml:space="preserve">
-    <value>Import layer</value>
+    <value>Katmanı içe aktar</value>
   </data>
   <data name="cmd_legend_moveDown" xml:space="preserve">
-    <value>Move down</value>
+    <value>Aşağı taşı</value>
   </data>
   <data name="cmd_legend_moveUp" xml:space="preserve">
-    <value>Move up</value>
+    <value>Yukarı taşı</value>
   </data>
   <data name="cmd_legend_removeAll" xml:space="preserve">
-    <value>Remove All</value>
+    <value>Tümünü Kaldır</value>
   </data>
   <data name="common_cancel" xml:space="preserve">
     <value>İptal</value>
@@ -281,19 +281,19 @@
     <value>Şifreyi değiştir</value>
   </data>
   <data name="dialog_common_browse" xml:space="preserve">
-    <value>Browse...</value>
+    <value>Göz at...</value>
   </data>
   <data name="dialog_common_cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>İptal etmek</value>
   </data>
   <data name="dialog_common_fileWatermark" xml:space="preserve">
-    <value>File</value>
+    <value>Dosya</value>
   </data>
   <data name="dialog_common_removeFile" xml:space="preserve">
-    <value>Remove File</value>
+    <value>Dosyayı Kaldır</value>
   </data>
   <data name="dialog_common_save" xml:space="preserve">
-    <value>Save</value>
+    <value>Kaydetmek</value>
   </data>
   <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
     <value>CSV</value>
@@ -302,7 +302,7 @@
     <value>TSV</value>
   </data>
   <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
-    <value>Geometry Type</value>
+    <value>Geometri Türü</value>
   </data>
   <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
     <value>İlk sütun = X (boylam/doğu), ikinci = Y (enlem/kuzey)</value>
@@ -347,7 +347,7 @@
     <value>GeoJSON İçe Aktar</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
-    <value>X/Y order</value>
+    <value>X/Y sırası</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
     <value>İlk koordinat = X (boylam/doğu), ikinci = Y (enlem/kuzey)</value>
@@ -362,70 +362,70 @@
     <value>Örnek noktalar (ilk 50)</value>
   </data>
   <data name="dialog_geometryDetails_addPart" xml:space="preserve">
-    <value>Add Part</value>
+    <value>Parça Ekle</value>
   </data>
   <data name="dialog_geometryDetails_addPoint" xml:space="preserve">
-    <value>Add Point</value>
+    <value>Nokta Ekle</value>
   </data>
   <data name="dialog_geometryDetails_addPolygon" xml:space="preserve">
-    <value>Add Polygon</value>
+    <value>Poligon Ekle</value>
   </data>
   <data name="dialog_geometryDetails_basicInfo" xml:space="preserve">
-    <value>Basic Information</value>
+    <value>Temel Bilgiler</value>
   </data>
   <data name="dialog_geometryDetails_copy" xml:space="preserve">
-    <value>Copy</value>
+    <value>Kopyala</value>
   </data>
   <data name="dialog_geometryDetails_deletePart" xml:space="preserve">
-    <value>Delete Part</value>
+    <value>Parçayı Sil</value>
   </data>
   <data name="dialog_geometryDetails_dimension" xml:space="preserve">
-    <value>Dimension</value>
+    <value>Boyut</value>
   </data>
   <data name="dialog_geometryDetails_editCoordinates" xml:space="preserve">
-    <value>Edit Coordinates</value>
+    <value>Koordinatları Düzenle</value>
   </data>
   <data name="dialog_geometryDetails_export" xml:space="preserve">
-    <value>Export</value>
+    <value>İhracat</value>
   </data>
   <data name="dialog_geometryDetails_exteriorRing" xml:space="preserve">
-    <value>Exterior Ring</value>
+    <value>Dış Halka</value>
   </data>
   <data name="dialog_geometryDetails_format" xml:space="preserve">
-    <value>Format</value>
+    <value>Biçim</value>
   </data>
   <data name="dialog_geometryDetails_geometryType" xml:space="preserve">
-    <value>Geometry Type</value>
+    <value>Geometri Türü</value>
   </data>
   <data name="dialog_geometryDetails_interiorRings" xml:space="preserve">
-    <value>Interior Rings</value>
+    <value>İç Halkalar</value>
   </data>
   <data name="dialog_geometryDetails_numberOfGeometries" xml:space="preserve">
-    <value>Number of Geometries</value>
+    <value>Geometri Sayısı</value>
   </data>
   <data name="dialog_geometryDetails_numberOfPoints" xml:space="preserve">
-    <value>Number of Points</value>
+    <value>Puan Sayısı</value>
   </data>
   <data name="dialog_geometryDetails_points" xml:space="preserve">
-    <value>Points</value>
+    <value>Puanlar</value>
   </data>
   <data name="dialog_geometryDetails_title" xml:space="preserve">
-    <value>Geometry Details</value>
+    <value>Geometri Detayları</value>
   </data>
   <data name="dialog_geometryDetails_utmZone" xml:space="preserve">
     <value>UTM Zone</value>
   </data>
   <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
-    <value>Zoom to Point</value>
+    <value>Noktaya Yakınlaştır</value>
   </data>
   <data name="dialog_goto_panTo" xml:space="preserve">
-    <value>Pan to</value>
+    <value>Şuraya kaydır:</value>
   </data>
   <data name="dialog_goto_title" xml:space="preserve">
     <value>Git</value>
   </data>
   <data name="dialog_goto_zoomTo" xml:space="preserve">
-    <value>Zoom to</value>
+    <value>Yakınlaştır</value>
   </data>
   <data name="dialog_openfile_title" xml:space="preserve">
     <value>Dosya Seç</value>
@@ -437,16 +437,16 @@
     <value>Mesaj</value>
   </data>
   <data name="dialog_symbology_fill" xml:space="preserve">
-    <value>Fill</value>
+    <value>Doldurmak</value>
   </data>
   <data name="dialog_symbology_stroke" xml:space="preserve">
-    <value>Stroke</value>
+    <value>Felç</value>
   </data>
   <data name="dialog_symbology_strokeWidth" xml:space="preserve">
-    <value>Stroke width</value>
+    <value>Kontur genişliği</value>
   </data>
   <data name="dialog_symbology_title" xml:space="preserve">
-    <value>Layer Symbology</value>
+    <value>Katman Sembololojisi</value>
   </data>
   <data name="dialog_themeSelection_title" xml:space="preserve">
     <value>Arka plan rengi seç</value>
@@ -488,7 +488,7 @@
     <value>Geometri değişiklikleri</value>
   </data>
   <data name="featureChanges_id" xml:space="preserve">
-    <value>Id:</value>
+    <value>İD:</value>
   </data>
   <data name="featureChanges_lastModified" xml:space="preserve">
     <value>Son değişiklik</value>
@@ -533,40 +533,40 @@
     <value>Eskisine yakınlaştır</value>
   </data>
   <data name="featureTable_addNew" xml:space="preserve">
-    <value>Add new</value>
+    <value>Yeni ekle</value>
   </data>
   <data name="featureTable_delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Silmek</value>
   </data>
   <data name="featureTable_editGeometry" xml:space="preserve">
-    <value>Edit geometry</value>
+    <value>Geometriyi düzenle</value>
   </data>
   <data name="featureTable_rowHeader_hour" xml:space="preserve">
-    <value>hour</value>
+    <value>saat</value>
   </data>
   <data name="featureTable_rowHeader_minute" xml:space="preserve">
-    <value>minute</value>
+    <value>dakika</value>
   </data>
   <data name="featureTable_saveChanges" xml:space="preserve">
-    <value>Save changes</value>
+    <value>Değişiklikleri kaydet</value>
   </data>
   <data name="featureTable_undo" xml:space="preserve">
-    <value>Undo</value>
+    <value>Geri al</value>
   </data>
   <data name="geometryDetails_coordinateGrid_azimuthToNext" xml:space="preserve">
-    <value>Azimuth To Next</value>
+    <value>Azimut Sonrakine</value>
   </data>
   <data name="geometryDetails_coordinateGrid_azimuthToPrevious" xml:space="preserve">
-    <value>Azimuth To Previous</value>
+    <value>Azimut Öncekine</value>
   </data>
   <data name="geometryDetails_coordinateGrid_distanceToNext" xml:space="preserve">
-    <value>Distance To Next</value>
+    <value>Sonrakine Uzaklık</value>
   </data>
   <data name="geometryDetails_coordinateGrid_number" xml:space="preserve">
     <value>#</value>
   </data>
   <data name="geometryDetails_coordinateGrid_vertexAngle" xml:space="preserve">
-    <value>Vertex Angle</value>
+    <value>Tepe Açısı</value>
   </data>
   <data name="geometryDetails_coordinateGrid_x" xml:space="preserve">
     <value>X</value>
@@ -578,22 +578,22 @@
     <value>Z</value>
   </data>
   <data name="geometryDetails_currentPoint_add" xml:space="preserve">
-    <value>Add Point</value>
+    <value>Nokta Ekle</value>
   </data>
   <data name="geometryDetails_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy Coordinate</value>
+    <value>Koordinat Kopyala</value>
   </data>
   <data name="geometryDetails_currentPoint_delete" xml:space="preserve">
-    <value>Delete Point</value>
+    <value>Noktayı Sil</value>
   </data>
   <data name="geometryDetails_currentPoint_edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Düzenlemek</value>
   </data>
   <data name="geometryDetails_currentPoint_goToNextPoint" xml:space="preserve">
-    <value>Go to Next Point</value>
+    <value>Sonraki Noktaya Git</value>
   </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
-    <value>Go to Previous Point</value>
+    <value>Önceki Noktaya Git</value>
   </data>
   <data name="geometryDetails_currentPoint_x" xml:space="preserve">
     <value>X:</value>
@@ -602,175 +602,175 @@
     <value>Y:</value>
   </data>
   <data name="geometryDetails_currentPoint_zoom" xml:space="preserve">
-    <value>Pan to Point</value>
+    <value>Noktaya Kaydırma</value>
   </data>
   <data name="geometryDetails_currentPoint_zoomToPoint" xml:space="preserve">
-    <value>Zoom to Point</value>
+    <value>Noktaya Yakınlaştır</value>
   </data>
   <data name="geometryDetails_options_ellipsoid" xml:space="preserve">
-    <value>Ellipsoid:</value>
+    <value>Elipsoid:</value>
   </data>
   <data name="geometryDetails_options_gridOptions" xml:space="preserve">
-    <value>Grid Options</value>
+    <value>Izgara Seçenekleri</value>
   </data>
   <data name="geometryDetails_options_latLongPrecision" xml:space="preserve">
-    <value>Lat/Long Precision:</value>
+    <value>Enlem/Boylam Hassasiyeti:</value>
   </data>
   <data name="geometryDetails_options_showInnerAngle" xml:space="preserve">
-    <value>Show Inner Angle</value>
+    <value>İç Açıyı Göster</value>
   </data>
   <data name="geometryDetails_options_showZColumn" xml:space="preserve">
-    <value>Show Z Column</value>
+    <value>Z Sütununu Göster</value>
   </data>
   <data name="geometryDetails_options_srs" xml:space="preserve">
     <value>SRS:</value>
   </data>
   <data name="geometryDetails_options_srsConfiguration" xml:space="preserve">
-    <value>SRS Configuration</value>
+    <value>SRS Yapılandırması</value>
   </data>
   <data name="geometryDetails_options_srsInfoFormat" xml:space="preserve">
     <value>SRS: {0}{1}{2}</value>
   </data>
   <data name="geometryDetails_options_useDecimalDegreesForAngles" xml:space="preserve">
-    <value>Use Decimal Degrees for Angles</value>
+    <value>Açılar için Ondalık Dereceleri Kullan</value>
   </data>
   <data name="geometryDetails_options_utmZone" xml:space="preserve">
-    <value>UTM Zone:</value>
+    <value>UTM Bölgesi:</value>
   </data>
   <data name="geometryDetails_options_xyPrecision" xml:space="preserve">
-    <value>X/Y Precision:</value>
+    <value>X/Y Hassasiyeti:</value>
   </data>
   <data name="geometryDetails_parts_format" xml:space="preserve">
-    <value>Part {0} of {1}</value>
+    <value>{1} parçasının {0} kısmı</value>
   </data>
   <data name="geometryDetails_parts_invalid" xml:space="preserve">
-    <value>✗ Invalid Geometry Part</value>
+    <value>✗ Geçersiz Geometri Parçası</value>
   </data>
   <data name="geometryDetails_parts_noParts" xml:space="preserve">
-    <value>No parts</value>
+    <value>Parça yok</value>
   </data>
   <data name="geometryDetails_parts_title" xml:space="preserve">
-    <value>Parts</value>
+    <value>Parçalar</value>
   </data>
   <data name="geometryDetails_parts_valid" xml:space="preserve">
-    <value>✓ Valid Geometry Part</value>
+    <value>✓ Geçerli Geometri Parçası</value>
   </data>
   <data name="geometryDetails_pointCounter_format" xml:space="preserve">
-    <value>Point {0} of {1} (Page {2} of {3})</value>
+    <value>{1} noktasının {0} noktası ({3} sayfasının {2} Sayfası)</value>
   </data>
   <data name="geometryDetails_polygon_title" xml:space="preserve">
-    <value>Polygon</value>
+    <value>Çokgen</value>
   </data>
   <data name="geometryDetails_polygons_format" xml:space="preserve">
-    <value>Polygon {0} of {1}</value>
+    <value>{1} poligonu {0}</value>
   </data>
   <data name="geometryDetails_polygons_invalid" xml:space="preserve">
-    <value>✗ Invalid Polygon</value>
+    <value>✗ Geçersiz Çokgen</value>
   </data>
   <data name="geometryDetails_polygons_noPolygon" xml:space="preserve">
-    <value>No Polygon</value>
+    <value>Çokgen yok</value>
   </data>
   <data name="geometryDetails_polygons_valid" xml:space="preserve">
-    <value>✓ Valid Polygon</value>
+    <value>✓ Geçerli Çokgen</value>
   </data>
   <data name="index_100k_title" xml:space="preserve">
-    <value>Index 100k</value>
+    <value>Dizin 100k</value>
   </data>
   <data name="index_10k_title" xml:space="preserve">
-    <value>Index 10k</value>
+    <value>Dizin 10k</value>
   </data>
   <data name="index_1kUtm_title" xml:space="preserve">
-    <value>Index 1000</value>
+    <value>Dizin 1000</value>
   </data>
   <data name="index_250k_title" xml:space="preserve">
-    <value>Index 250k</value>
+    <value>Dizin 250k</value>
   </data>
   <data name="index_25k_title" xml:space="preserve">
-    <value>Index 25k</value>
+    <value>Dizin 25k</value>
   </data>
   <data name="index_2kUtm_title" xml:space="preserve">
-    <value>Index 2000</value>
+    <value>Dizin 2000</value>
   </data>
   <data name="index_2kblocks_title" xml:space="preserve">
-    <value>Index 2000 Blocks</value>
+    <value>Dizin 2000 Blok</value>
   </data>
   <data name="index_500UtmTitle" xml:space="preserve">
-    <value>Index 500</value>
+    <value>Dizin 500</value>
   </data>
   <data name="index_50k_title" xml:space="preserve">
-    <value>Index 50k</value>
+    <value>Endeks 50k</value>
   </data>
   <data name="index_5k_title" xml:space="preserve">
-    <value>Index 5k</value>
+    <value>Dizin 5k</value>
   </data>
   <data name="input_coordinateNote" xml:space="preserve">
-    <value>Note: Coordinates are in longitude and latitude format</value>
+    <value>Not: Koordinatlar enlem ve boylam biçimindedir</value>
   </data>
   <data name="input_drawFeatureOnMap" xml:space="preserve">
-    <value>Draw feature on map</value>
+    <value>Haritada çizim özelliği</value>
   </data>
   <data name="input_geodetic" xml:space="preserve">
-    <value>Geodetic</value>
+    <value>Jeodezik</value>
   </data>
   <data name="input_utm" xml:space="preserve">
     <value>UTM</value>
   </data>
   <data name="input_utmZone" xml:space="preserve">
-    <value>UTM Zone:</value>
+    <value>UTM Bölgesi:</value>
   </data>
   <data name="languageSelector_title" xml:space="preserve">
     <value>Dil</value>
   </data>
   <data name="layer_geodesy1_title" xml:space="preserve">
-    <value>Geodesy 1</value>
+    <value>Jeodezi 1</value>
   </data>
   <data name="layer_geodesy2_title" xml:space="preserve">
-    <value>Geodesy 2</value>
+    <value>Jeodezi 2</value>
   </data>
   <data name="layer_geodynamics_title" xml:space="preserve">
-    <value>Geodynamics</value>
+    <value>Jeodinamik</value>
   </data>
   <data name="layer_gravimetry_title" xml:space="preserve">
-    <value>Gravimetry</value>
+    <value>Gravimetri</value>
   </data>
   <data name="layer_leveling1_title" xml:space="preserve">
-    <value>Leveling 1</value>
+    <value>Tesviye 1</value>
   </data>
   <data name="layer_leveling2_title" xml:space="preserve">
-    <value>Leveling 2</value>
+    <value>Seviyelendirme 2</value>
   </data>
   <data name="layer_leveling3_title" xml:space="preserve">
-    <value>Leveling 3</value>
+    <value>Seviye 3</value>
   </data>
   <data name="legendItem_PendingChanges_Added" xml:space="preserve">
-    <value>Added:</value>
+    <value>Eklendi:</value>
   </data>
   <data name="legendItem_PendingChanges_Deleted" xml:space="preserve">
-    <value>Deleted:</value>
+    <value>Silindi:</value>
   </data>
   <data name="legendItem_PendingChanges_Save" xml:space="preserve">
-    <value>Save changes</value>
+    <value>Değişiklikleri kaydet</value>
   </data>
   <data name="legendItem_PendingChanges_Undo" xml:space="preserve">
-    <value>Undo changes</value>
+    <value>Değişiklikleri geri al</value>
   </data>
   <data name="legendItem_PendingChanges_Updated" xml:space="preserve">
-    <value>Updated:</value>
+    <value>Güncellendi:</value>
   </data>
   <data name="legend_clearAll" xml:space="preserve">
-    <value>Clear All</value>
+    <value>Tümünü Temizle</value>
   </data>
   <data name="legend_filter_Clear" xml:space="preserve">
-    <value>Clear Filters</value>
+    <value>Filtreleri Temizle</value>
   </data>
   <data name="legend_filter_filterByLayerType" xml:space="preserve">
-    <value>Filter By Layer Type</value>
+    <value>Katman Türüne Göre Filtrele</value>
   </data>
   <data name="legend_filter_searchLayerWatermark" xml:space="preserve">
-    <value>Search Layer</value>
+    <value>Arama Katmanı</value>
   </data>
   <data name="legend_selectAll" xml:space="preserve">
-    <value>Select All</value>
+    <value>Tümünü Seç</value>
   </data>
   <data name="manageAccount_changePassword" xml:space="preserve">
     <value>Şifreyi değiştir</value>
@@ -788,130 +788,130 @@
     <value>Yeni kullanıcı adı</value>
   </data>
   <data name="mapInfo_area" xml:space="preserve">
-    <value>Area</value>
+    <value>Alan</value>
   </data>
   <data name="mapInfo_authalicSphereArea" xml:space="preserve">
     <value>AuthalicSphereArea:</value>
   </data>
   <data name="mapInfo_ellipsoidalArea" xml:space="preserve">
-    <value>EllipsoidalArea:</value>
+    <value>ElipsoidalAlan:</value>
   </data>
   <data name="mapInfo_ellipsoidalLength" xml:space="preserve">
-    <value>EllipsoidalLength:</value>
+    <value>ElipsoidalUzunluk:</value>
   </data>
   <data name="mapInfo_euclideanAreaUtm" xml:space="preserve">
-    <value>EuclideanArea (UTM):</value>
+    <value>Öklid Alanı (UTM):</value>
   </data>
   <data name="mapInfo_euclideanLengthUtm" xml:space="preserve">
-    <value>EuclideanLengthInUtm:</value>
+    <value>Öklid UzunluğuInUtm:</value>
   </data>
   <data name="mapInfo_euclideanLengthUtmRefined" xml:space="preserve">
     <value>EuclideanLengthInUtm_Refined:</value>
   </data>
   <data name="mapInfo_general" xml:space="preserve">
-    <value>General</value>
+    <value>Genel</value>
   </data>
   <data name="mapInfo_groundArea" xml:space="preserve">
-    <value>GroundArea:</value>
+    <value>Zemin Alanı:</value>
   </data>
   <data name="mapInfo_groundLength" xml:space="preserve">
-    <value>GroundLength:</value>
+    <value>Zemin Uzunluğu:</value>
   </data>
   <data name="mapInfo_karneyArea" xml:space="preserve">
-    <value>KarneyArea:</value>
+    <value>Karney Bölgesi:</value>
   </data>
   <data name="mapInfo_length" xml:space="preserve">
-    <value>Length</value>
+    <value>Uzunluk</value>
   </data>
   <data name="mapInfo_meanHeight" xml:space="preserve">
-    <value>Mean Height</value>
+    <value>Ortalama Yükseklik</value>
   </data>
   <data name="mapInfo_scaleFactor" xml:space="preserve">
-    <value>Scale Factor:</value>
+    <value>Ölçek Faktörü:</value>
   </data>
   <data name="mapInfo_sphericalLength" xml:space="preserve">
-    <value>SphericalLength:</value>
+    <value>Küresel Uzunluk:</value>
   </data>
   <data name="mapLegendItem_layerTitle" xml:space="preserve">
-    <value>Title</value>
+    <value>Başlık</value>
   </data>
   <data name="mapPanel_currentPart_add" xml:space="preserve">
-    <value>Add new part</value>
+    <value>Yeni bölüm ekle</value>
   </data>
   <data name="mapPanel_currentPart_delete" xml:space="preserve">
-    <value>Delete current part</value>
+    <value>Geçerli bölümü sil</value>
   </data>
   <data name="mapPanel_currentPart_zoom" xml:space="preserve">
-    <value>Zoom to current part</value>
+    <value>Geçerli parçayı yakınlaştır</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
     <value>Copy current point&amp;amp;amp;amp;amp;apos;s coordinate</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
-    <value>Delete current point</value>
+    <value>Geçerli noktayı sil</value>
   </data>
   <data name="mapPanel_currentPoint_displayCoordinate" xml:space="preserve">
-    <value>Display Coordinates</value>
+    <value>Koordinatları Görüntüle</value>
   </data>
   <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
-    <value>Next point</value>
+    <value>Sonraki nokta</value>
   </data>
   <data name="mapPanel_currentPoint_goToPreviousPoint" xml:space="preserve">
-    <value>Previous point</value>
+    <value>Önceki nokta</value>
   </data>
   <data name="mapPanel_currentPoint_zoom" xml:space="preserve">
-    <value>Zoom to current point</value>
+    <value>Geçerli noktaya yakınlaştır</value>
   </data>
   <data name="mapPanel_edit_cancel" xml:space="preserve">
-    <value>Cancel Edit</value>
+    <value>Düzenlemeyi İptal Et</value>
   </data>
   <data name="mapPanel_edit_delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Silmek</value>
   </data>
   <data name="mapPanel_edit_finish" xml:space="preserve">
-    <value>Finish Edit</value>
+    <value>Düzenlemeyi Bitir</value>
   </data>
   <data name="mapPanel_header_currentPoint" xml:space="preserve">
-    <value>Current Point</value>
+    <value>Geçerli Nokta</value>
   </data>
   <data name="mapPanel_header_measure" xml:space="preserve">
-    <value>Measurement</value>
+    <value>Ölçüm</value>
   </data>
   <data name="mapPanel_header_multiPart" xml:space="preserve">
-    <value>Multi part</value>
+    <value>Çok parçalı</value>
   </data>
   <data name="mapPanel_header_srs" xml:space="preserve">
-    <value>Spatial Reference System</value>
+    <value>Mekansal Referans Sistemi</value>
   </data>
   <data name="mapPanel_measure_convertToDrawing" xml:space="preserve">
-    <value>Convert to drawing item</value>
+    <value>Çizim öğesine dönüştür</value>
   </data>
   <data name="mapPanel_measure_showEdgeLabels" xml:space="preserve">
-    <value>Show Edge Labels</value>
+    <value>Kenar Etiketlerini Göster</value>
   </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">
-    <value>Height</value>
+    <value>Yükseklik</value>
   </data>
   <data name="map_draw_addPoint" xml:space="preserve">
-    <value>Add Point</value>
+    <value>Nokta Ekle</value>
   </data>
   <data name="map_draw_cancelDrawing" xml:space="preserve">
-    <value>Cancel Drawing</value>
+    <value>Çizimi İptal Et</value>
   </data>
   <data name="map_draw_finishDrawing" xml:space="preserve">
-    <value>Finish Drawing</value>
+    <value>Çizimi Bitir</value>
   </data>
   <data name="map_draw_finishDrawingPart" xml:space="preserve">
-    <value>Finish Drawing Part</value>
+    <value>Çizim Parçasını Bitir</value>
   </data>
   <data name="map_draw_newDrawing" xml:space="preserve">
-    <value>Click on the last point to finish drawing.</value>
+    <value>Çizimi bitirmek için son noktaya tıklayın.</value>
   </data>
   <data name="map_scalebar_content" xml:space="preserve">
-    <value>SCALE</value>
+    <value>ÖLÇEK</value>
   </data>
   <data name="map_scalebar_zoomLevel" xml:space="preserve">
-    <value>Level</value>
+    <value>Seviye</value>
   </data>
   <data name="ribbon_header_drawing" xml:space="preserve">
     <value>Çizim</value>
@@ -926,211 +926,211 @@
     <value>Ayarlar</value>
   </data>
   <data name="sldEditor_common_abstract" xml:space="preserve">
-    <value>Abstract:</value>
+    <value>Soyut:</value>
   </data>
   <data name="sldEditor_common_addLineSymbolizer" xml:space="preserve">
-    <value>Add Line Symbolizer</value>
+    <value>Satır Simgeleştirici Ekle</value>
   </data>
   <data name="sldEditor_common_addPointSymbolizer" xml:space="preserve">
-    <value>Add Point Symbolizer</value>
+    <value>Nokta Simgeleştirici Ekle</value>
   </data>
   <data name="sldEditor_common_addPolygonSymbolizer" xml:space="preserve">
-    <value>Add Polygon Symbolizer</value>
+    <value>Çokgen Sembolleştirici Ekle</value>
   </data>
   <data name="sldEditor_common_addRule" xml:space="preserve">
-    <value>Add Rule</value>
+    <value>Kural Ekle</value>
   </data>
   <data name="sldEditor_common_addTextSymbolizer" xml:space="preserve">
-    <value>Add Text Symbolizer</value>
+    <value>Metin Simgeleştirici Ekle</value>
   </data>
   <data name="sldEditor_common_editorBanner" xml:space="preserve">
-    <value>OGC SLD 1.0.0 Editor</value>
+    <value>OGC SLD 1.0.0 Düzenleyici</value>
   </data>
   <data name="sldEditor_common_editorTitle" xml:space="preserve">
-    <value>SLD Style Editor</value>
+    <value>SLD Stil Düzenleyicisi</value>
   </data>
   <data name="sldEditor_common_export" xml:space="preserve">
-    <value>Export</value>
+    <value>İhracat</value>
   </data>
   <data name="sldEditor_common_exportToFile" xml:space="preserve">
-    <value>Export to File...</value>
+    <value>Dosyaya Aktar...</value>
   </data>
   <data name="sldEditor_common_exportTooltip" xml:space="preserve">
-    <value>Export SLD to File</value>
+    <value>SLD'yi Dosyaya Aktar</value>
   </data>
   <data name="sldEditor_common_fillColor" xml:space="preserve">
-    <value>Fill Color:</value>
+    <value>Dolgu Rengi:</value>
   </data>
   <data name="sldEditor_common_fillOpacity" xml:space="preserve">
-    <value>Fill Opacity:</value>
+    <value>Dolgu Opaklığı:</value>
   </data>
   <data name="sldEditor_common_filter" xml:space="preserve">
-    <value>Filter</value>
+    <value>Filtre</value>
   </data>
   <data name="sldEditor_common_general" xml:space="preserve">
-    <value>General</value>
+    <value>Genel</value>
   </data>
   <data name="sldEditor_common_geometryProperty" xml:space="preserve">
-    <value>Geometry Property:</value>
+    <value>Geometri Özelliği:</value>
   </data>
   <data name="sldEditor_common_import" xml:space="preserve">
-    <value>Import</value>
+    <value>İçe aktarmak</value>
   </data>
   <data name="sldEditor_common_importFromFile" xml:space="preserve">
-    <value>Import from File...</value>
+    <value>Dosyadan İçe Aktar...</value>
   </data>
   <data name="sldEditor_common_importTooltip" xml:space="preserve">
-    <value>Import SLD from File</value>
+    <value>SLD'yi Dosyadan İçe Aktar</value>
   </data>
   <data name="sldEditor_common_layerName" xml:space="preserve">
-    <value>Layer Name:</value>
+    <value>Katman Adı:</value>
   </data>
   <data name="sldEditor_common_lineCap" xml:space="preserve">
-    <value>Line Cap:</value>
+    <value>Hat Başlığı:</value>
   </data>
   <data name="sldEditor_common_lineJoin" xml:space="preserve">
-    <value>Line Join:</value>
+    <value>Hat Birleştirme:</value>
   </data>
   <data name="sldEditor_common_moveDown" xml:space="preserve">
-    <value>Move Down</value>
+    <value>Aşağı Taşı</value>
   </data>
   <data name="sldEditor_common_moveUp" xml:space="preserve">
-    <value>Move Up</value>
+    <value>Yukarı Taşı</value>
   </data>
   <data name="sldEditor_common_name" xml:space="preserve">
-    <value>Name:</value>
+    <value>İsim:</value>
   </data>
   <data name="sldEditor_common_removeRule" xml:space="preserve">
-    <value>Remove Rule</value>
+    <value>Kuralı Kaldır</value>
   </data>
   <data name="sldEditor_common_removeSymbolizer" xml:space="preserve">
-    <value>Remove Symbolizer</value>
+    <value>Sembolleştiriciyi Kaldır</value>
   </data>
   <data name="sldEditor_common_ruleProperties" xml:space="preserve">
-    <value>Rule Properties</value>
+    <value>Kural Özellikleri</value>
   </data>
   <data name="sldEditor_common_rules" xml:space="preserve">
-    <value>Rules</value>
+    <value>Tüzük</value>
   </data>
   <data name="sldEditor_common_rulesLabel" xml:space="preserve">
-    <value>Rules:</value>
+    <value>Tüzük:</value>
   </data>
   <data name="sldEditor_common_scaleRange" xml:space="preserve">
-    <value>Scale Range</value>
+    <value>Ölçek Aralığı</value>
   </data>
   <data name="sldEditor_common_selected" xml:space="preserve">
-    <value>Selected:</value>
+    <value>Seçilen:</value>
   </data>
   <data name="sldEditor_common_strokeColor" xml:space="preserve">
-    <value>Stroke Color:</value>
+    <value>Kontur Rengi:</value>
   </data>
   <data name="sldEditor_common_strokeOpacity" xml:space="preserve">
-    <value>Stroke Opacity:</value>
+    <value>Kontur Opaklığı:</value>
   </data>
   <data name="sldEditor_common_strokeWidth" xml:space="preserve">
-    <value>Stroke Width:</value>
+    <value>Kontur Genişliği:</value>
   </data>
   <data name="sldEditor_common_styleInformation" xml:space="preserve">
-    <value>Style Information</value>
+    <value>Stil Bilgileri</value>
   </data>
   <data name="sldEditor_common_styleName" xml:space="preserve">
-    <value>Style Name:</value>
+    <value>Stil Adı:</value>
   </data>
   <data name="sldEditor_common_styleTitle" xml:space="preserve">
-    <value>Style Title:</value>
+    <value>Stil Başlığı:</value>
   </data>
   <data name="sldEditor_common_symbolizerProperties" xml:space="preserve">
-    <value>Symbolizer Properties</value>
+    <value>Sembolleştirici Özellikleri</value>
   </data>
   <data name="sldEditor_common_symbolizers" xml:space="preserve">
-    <value>Symbolizers</value>
+    <value>Sembolleştiriciler</value>
   </data>
   <data name="sldEditor_common_title" xml:space="preserve">
-    <value>Title:</value>
+    <value>Başlık:</value>
   </data>
   <data name="sldEditor_common_xmlPreview" xml:space="preserve">
-    <value>XML Preview</value>
+    <value>XML Önizlemesi</value>
   </data>
   <data name="sldEditor_common_xmlPreviewPlaceholder" xml:space="preserve">
-    <value>XML preview will be displayed here</value>
+    <value>XML önizlemesi burada görüntülenecek</value>
   </data>
   <data name="sldEditor_filter_enableFilter" xml:space="preserve">
-    <value>Enable Filter</value>
+    <value>Filtreyi Etkinleştir</value>
   </data>
   <data name="sldEditor_filter_filterExpression" xml:space="preserve">
-    <value>Filter Expression:</value>
+    <value>Filtre İfadesi:</value>
   </data>
   <data name="sldEditor_filter_filterSettings" xml:space="preserve">
-    <value>Filter Settings</value>
+    <value>Filtre Ayarları</value>
   </data>
   <data name="sldEditor_filter_simplifiedViewNote" xml:space="preserve">
-    <value>Note: This is a simplified view. For complex filters, edit the XML directly or use a specialized filter builder.</value>
+    <value>Not: Bu basitleştirilmiş bir görünümdür. Karmaşık filtreler için XML'i doğrudan düzenleyin veya özel bir filtre oluşturucu kullanın.</value>
   </data>
   <data name="sldEditor_lineSymbolizer_dashArray" xml:space="preserve">
-    <value>Dash Array:</value>
+    <value>Çizgi Dizisi:</value>
   </data>
   <data name="sldEditor_lineSymbolizer_dashArrayWatermark" xml:space="preserve">
-    <value>e.g., 5 5 or 10 5 3 5</value>
+    <value>ör. 5 5 veya 10 5 3 5</value>
   </data>
   <data name="sldEditor_pointSymbolizer_markType" xml:space="preserve">
-    <value>Mark Type:</value>
+    <value>İşaretleme Türü:</value>
   </data>
   <data name="sldEditor_pointSymbolizer_rotation" xml:space="preserve">
-    <value>Rotation:</value>
+    <value>Rotasyon:</value>
   </data>
   <data name="sldEditor_pointSymbolizer_size" xml:space="preserve">
-    <value>Size:</value>
+    <value>Boyut:</value>
   </data>
   <data name="sldEditor_scaleRange_maxScale" xml:space="preserve">
-    <value>Max Scale:</value>
+    <value>Maksimum Ölçek:</value>
   </data>
   <data name="sldEditor_scaleRange_maxWatermark" xml:space="preserve">
-    <value>Optional - Leave empty for no maximum</value>
+    <value>İsteğe bağlı - Maksimum değer olmadan boş bırakın</value>
   </data>
   <data name="sldEditor_scaleRange_minScale" xml:space="preserve">
-    <value>Min Scale:</value>
+    <value>Minimum Ölçek:</value>
   </data>
   <data name="sldEditor_scaleRange_minWatermark" xml:space="preserve">
-    <value>Optional - Leave empty for no minimum</value>
+    <value>İsteğe bağlı - Minimum değer olmadan boş bırakın</value>
   </data>
   <data name="sldEditor_textSymbolizer_enableHalo" xml:space="preserve">
-    <value>Enable Halo (Text Outline)</value>
+    <value>Halo'yu Etkinleştir (Metin Anahattı)</value>
   </data>
   <data name="sldEditor_textSymbolizer_fontColor" xml:space="preserve">
-    <value>Font Color:</value>
+    <value>Yazı Tipi Rengi:</value>
   </data>
   <data name="sldEditor_textSymbolizer_fontFamily" xml:space="preserve">
-    <value>Font Family:</value>
+    <value>Yazı Tipi Ailesi:</value>
   </data>
   <data name="sldEditor_textSymbolizer_fontSize" xml:space="preserve">
-    <value>Font Size:</value>
+    <value>Yazı Tipi Boyutu:</value>
   </data>
   <data name="sldEditor_textSymbolizer_fontStyle" xml:space="preserve">
-    <value>Font Style:</value>
+    <value>Yazı Tipi Stili:</value>
   </data>
   <data name="sldEditor_textSymbolizer_fontWeight" xml:space="preserve">
-    <value>Font Weight:</value>
+    <value>Yazı Tipi Ağırlığı:</value>
   </data>
   <data name="sldEditor_textSymbolizer_haloColor" xml:space="preserve">
-    <value>Halo Color:</value>
+    <value>Hale Rengi:</value>
   </data>
   <data name="sldEditor_textSymbolizer_haloRadius" xml:space="preserve">
-    <value>Halo Radius:</value>
+    <value>Halo Yarıçapı:</value>
   </data>
   <data name="sldEditor_textSymbolizer_labelProperty" xml:space="preserve">
-    <value>Label Property:</value>
+    <value>Etiket Özelliği:</value>
   </data>
   <data name="srs_ceaSubTitle" xml:space="preserve">
-    <value>Cylindrical Equal Area</value>
+    <value>Silindirik Eşit Alan</value>
   </data>
   <data name="srs_ceaTitle" xml:space="preserve">
-    <value>Cylindrical Equal Area</value>
+    <value>Silindirik Eşit Alan</value>
   </data>
   <data name="srs_defaultLatitude" xml:space="preserve">
-    <value>Latitude:</value>
+    <value>Enlem:</value>
   </data>
   <data name="srs_defaultLongitude" xml:space="preserve">
-    <value>Longitude:</value>
+    <value>Boylam:</value>
   </data>
   <data name="srs_defaultX" xml:space="preserve">
     <value>X:</value>
@@ -1139,196 +1139,196 @@
     <value>Y:</value>
   </data>
   <data name="srs_geodeticDmsSubTitle" xml:space="preserve">
-    <value>Geodetic, WGS84</value>
+    <value>Jeodezik, WGS84</value>
   </data>
   <data name="srs_geodeticDmsTitle" xml:space="preserve">
-    <value>Geodetic, WGS84 (dms)</value>
+    <value>Jeodezik, WGS84 (dms)</value>
   </data>
   <data name="srs_geodeticSubTitle" xml:space="preserve">
-    <value>Geodetic, WGS84</value>
+    <value>Jeodezik, WGS84</value>
   </data>
   <data name="srs_geodeticTitle" xml:space="preserve">
-    <value>Geodetic, WGS84 (decimal degree)</value>
+    <value>Jeodezik, WGS84 (ondalık derece)</value>
   </data>
   <data name="srs_mercatorSubTitle" xml:space="preserve">
-    <value>Mercator</value>
+    <value>Merkator</value>
   </data>
   <data name="srs_mercatorTitle" xml:space="preserve">
-    <value>Mercator</value>
+    <value>Merkator</value>
   </data>
   <data name="srs_northernHemisphere" xml:space="preserve">
-    <value>Northern Hemisphere</value>
+    <value>Kuzey Yarımküre</value>
   </data>
   <data name="srs_southernHemisphere" xml:space="preserve">
-    <value>Southern Hemisphere</value>
+    <value>Güney Yarımküre</value>
   </data>
   <data name="srs_tmSubTitle" xml:space="preserve">
-    <value>Transeverse Mercator</value>
+    <value>Enine Merkatör</value>
   </data>
   <data name="srs_tmTitle" xml:space="preserve">
-    <value>Transeverse Mercator</value>
+    <value>Enine Merkatör</value>
   </data>
   <data name="srs_utmSubTitle" xml:space="preserve">
     <value>UTM</value>
   </data>
   <data name="srs_utmTitle" xml:space="preserve">
-    <value>Universal Transeverse Mercator (UTM)</value>
+    <value>Evrensel Enine Merkatör (UTM)</value>
   </data>
   <data name="srs_utmZone" xml:space="preserve">
-    <value>Zone</value>
+    <value>Alan</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
-    <value>Web Mercator</value>
+    <value>Web Mercatörü</value>
   </data>
   <data name="srs_webMercatorTitle" xml:space="preserve">
-    <value>Web Mercator</value>
+    <value>Web Mercatörü</value>
   </data>
   <data name="theme_color_amber" xml:space="preserve">
-    <value>Amber</value>
+    <value>kehribar</value>
   </data>
   <data name="theme_color_blue" xml:space="preserve">
-    <value>Blue</value>
+    <value>Mavi</value>
   </data>
   <data name="theme_color_brown" xml:space="preserve">
-    <value>Brown</value>
+    <value>Kahverengi</value>
   </data>
   <data name="theme_color_cobalt" xml:space="preserve">
-    <value>Cobalt</value>
+    <value>Kobalt</value>
   </data>
   <data name="theme_color_crimson" xml:space="preserve">
-    <value>Crimson</value>
+    <value>Kızıl</value>
   </data>
   <data name="theme_color_cyan" xml:space="preserve">
-    <value>Cyan</value>
+    <value>Camgöbeği</value>
   </data>
   <data name="theme_color_emerald" xml:space="preserve">
-    <value>Emerald</value>
+    <value>Zümrüt</value>
   </data>
   <data name="theme_color_green" xml:space="preserve">
-    <value>Green</value>
+    <value>Yeşil</value>
   </data>
   <data name="theme_color_indigo" xml:space="preserve">
-    <value>Indigo</value>
+    <value>Çivit mavisi</value>
   </data>
   <data name="theme_color_lime" xml:space="preserve">
-    <value>Lime</value>
+    <value>Kireç</value>
   </data>
   <data name="theme_color_magenta" xml:space="preserve">
-    <value>Magenta</value>
+    <value>Macenta</value>
   </data>
   <data name="theme_color_mauve" xml:space="preserve">
-    <value>Mauve</value>
+    <value>leylak rengi</value>
   </data>
   <data name="theme_color_olive" xml:space="preserve">
-    <value>Olive</value>
+    <value>Zeytin</value>
   </data>
   <data name="theme_color_orange" xml:space="preserve">
-    <value>Orange</value>
+    <value>Turuncu</value>
   </data>
   <data name="theme_color_pink" xml:space="preserve">
-    <value>Pink</value>
+    <value>Pembe</value>
   </data>
   <data name="theme_color_purple" xml:space="preserve">
-    <value>Purple</value>
+    <value>Mor</value>
   </data>
   <data name="theme_color_red" xml:space="preserve">
-    <value>Red</value>
+    <value>Kırmızı</value>
   </data>
   <data name="theme_color_sienna" xml:space="preserve">
-    <value>Sienna</value>
+    <value>Siena</value>
   </data>
   <data name="theme_color_steel" xml:space="preserve">
-    <value>Steel</value>
+    <value>Çelik</value>
   </data>
   <data name="theme_color_taupe" xml:space="preserve">
-    <value>Taupe</value>
+    <value>Boz kahverengi</value>
   </data>
   <data name="theme_color_teal" xml:space="preserve">
-    <value>Teal</value>
+    <value>turkuaz</value>
   </data>
   <data name="theme_color_violet" xml:space="preserve">
-    <value>Violet</value>
+    <value>Menekşe</value>
   </data>
   <data name="theme_color_yellow" xml:space="preserve">
-    <value>Yellow</value>
+    <value>Sarı</value>
   </data>
   <data name="tile_mapType_BlackWhite" xml:space="preserve">
-    <value>BlackWhite</value>
+    <value>SiyahBeyaz</value>
   </data>
   <data name="tile_mapType_CleanGrey" xml:space="preserve">
-    <value>CleanGrey</value>
+    <value>TemizGrey</value>
   </data>
   <data name="tile_mapType_Comic" xml:space="preserve">
-    <value>Comic</value>
+    <value>komik</value>
   </data>
   <data name="tile_mapType_Dark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Karanlık</value>
   </data>
   <data name="tile_mapType_HikeBike" xml:space="preserve">
-    <value>HikeBike</value>
+    <value>YürüyüşBisiklet</value>
   </data>
   <data name="tile_mapType_Hybrid" xml:space="preserve">
-    <value>Hybrid</value>
+    <value>Hibrit</value>
   </data>
   <data name="tile_mapType_Light" xml:space="preserve">
-    <value>Light</value>
+    <value>Işık</value>
   </data>
   <data name="tile_mapType_MapyTourist" xml:space="preserve">
-    <value>MapyTourist</value>
+    <value>MapyTurist</value>
   </data>
   <data name="tile_mapType_MapyWinter" xml:space="preserve">
-    <value>MapyWinter</value>
+    <value>HaritaKış</value>
   </data>
   <data name="tile_mapType_Nature" xml:space="preserve">
-    <value>Nature</value>
+    <value>Doğa</value>
   </data>
   <data name="tile_mapType_NeutralBlue" xml:space="preserve">
-    <value>NeutralBlue</value>
+    <value>NötrMavi</value>
   </data>
   <data name="tile_mapType_RoadMap" xml:space="preserve">
-    <value>RoadMap</value>
+    <value>Yol Haritası</value>
   </data>
   <data name="tile_mapType_Satellite" xml:space="preserve">
-    <value>Satellite</value>
+    <value>Uydu</value>
   </data>
   <data name="tile_mapType_Street" xml:space="preserve">
-    <value>Street</value>
+    <value>Sokak</value>
   </data>
   <data name="tile_mapType_Terrain" xml:space="preserve">
-    <value>Terrain</value>
+    <value>Arazi</value>
   </data>
   <data name="tile_mapType_Topo" xml:space="preserve">
     <value>Topo</value>
   </data>
   <data name="tile_mapType_Traffic" xml:space="preserve">
-    <value>Traffic</value>
+    <value>Trafik</value>
   </data>
   <data name="tile_mapType_Watercolor" xml:space="preserve">
-    <value>Watercolor</value>
+    <value>Suluboya</value>
   </data>
   <data name="tile_provider_bing" xml:space="preserve">
     <value>BING</value>
   </data>
   <data name="tile_provider_carto" xml:space="preserve">
-    <value>CARTO</value>
+    <value>KARTO</value>
   </data>
   <data name="tile_provider_google" xml:space="preserve">
     <value>GOOGLE</value>
   </data>
   <data name="tile_provider_mapbox" xml:space="preserve">
-    <value>MAPBOX</value>
+    <value>HARİTA KUTUSU</value>
   </data>
   <data name="tile_provider_nokia" xml:space="preserve">
     <value>NOKIA</value>
   </data>
   <data name="tile_provider_osm" xml:space="preserve">
-    <value>OPENSTREETMAP</value>
+    <value>AÇIK SOKAK HARİTASI</value>
   </data>
   <data name="tile_provider_waze" xml:space="preserve">
     <value>WAZE</value>
   </data>
   <data name="tile_provider_yandex" xml:space="preserve">
-    <value>YANDEX</value>
+    <value>YANDEX'te</value>
   </data>
   <data name="ui_header_baseMaps" xml:space="preserve">
     <value>Temel Haritalar</value>
