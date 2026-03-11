@@ -1,6 +1,4 @@
-﻿using System;
-
-using MahApps.Metro.IconPacks;
+using System;
 
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
@@ -39,8 +37,8 @@ public class MapOptionsViewModel : Notifier, ILocateable
 
     #region Symbols
 
-    private PackIconModernKind? _rightSymbol;
-    public PackIconModernKind? RightSymbol
+    private string? _rightSymbol;
+    public string? RightSymbol
     {
         get { return _rightSymbol; }
         set
@@ -51,8 +49,8 @@ public class MapOptionsViewModel : Notifier, ILocateable
     }
 
 
-    private PackIconModernKind? _leftSymbol;
-    public PackIconModernKind? LeftSymbol
+    private string? _leftSymbol;
+    public string? LeftSymbol
     {
         get { return _leftSymbol; }
         set
@@ -63,8 +61,8 @@ public class MapOptionsViewModel : Notifier, ILocateable
     }
 
 
-    private PackIconModernKind? _middleSymbol;
-    public PackIconModernKind? MiddleSymbol
+    private string? _middleSymbol;
+    public string? MiddleSymbol
     {
         get { return _middleSymbol; }
         set
@@ -75,8 +73,8 @@ public class MapOptionsViewModel : Notifier, ILocateable
     }
 
 
-    private PackIconModernKind? _upperRightSymbol;
-    public PackIconModernKind? UpperRightSymbol
+    private string? _upperRightSymbol;
+    public string? UpperRightSymbol
     {
         get { return _upperRightSymbol; }
         set
@@ -87,8 +85,8 @@ public class MapOptionsViewModel : Notifier, ILocateable
     }
 
 
-    private PackIconModernKind? _upperLeftSymbol;
-    public PackIconModernKind? UpperLeftSymbol
+    private string? _upperLeftSymbol;
+    public string? UpperLeftSymbol
     {
         get { return _upperLeftSymbol; }
         set
@@ -256,7 +254,7 @@ public class MapOptionsViewModel : Notifier, ILocateable
     #endregion
 
     public MapOptionsViewModel(string rightToolTip, string leftToolTip, string middleToolTip,
-                                PackIconModernKind? rightSymbol, PackIconModernKind? leftSymbol, PackIconModernKind? middleSymbol)
+                                string? rightSymbol, string? leftSymbol, string? middleSymbol)
     {
         RightToolTip = rightToolTip;
         LeftToolTip = leftToolTip;
