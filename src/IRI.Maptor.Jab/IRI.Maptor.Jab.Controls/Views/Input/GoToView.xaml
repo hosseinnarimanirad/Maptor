@@ -39,11 +39,11 @@
                     <ContentControl Grid.Row="0" Content="{Binding }"/>
                     <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Margin="8">
                         <Button Command="{Binding ElementName=window, Path=DataContext.PanToCommand}" Height="32" Width="32" Margin="4" Cursor="Hand">
-                            <iconPacks:PackIconModern Kind="CursorHand" VerticalAlignment="Center" HorizontalAlignment="Center"
+                            <iconPacks:PackIconMaterial Kind="HandBackRight" VerticalAlignment="Center" HorizontalAlignment="Center"
                                                       Foreground="{DynamicResource MahApps.Brushes.Accent}" FlowDirection="LeftToRight" Height="24"/>
                         </Button>
                         <Button Command="{Binding ElementName=window, Path=DataContext.ZoomToCommand}" Height="32" Width="32" Margin="4" Cursor="Hand">
-                            <iconPacks:PackIconModern Kind="MagnifyAdd" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                            <iconPacks:PackIconMaterial Kind="MagnifyPlus" VerticalAlignment="Center" HorizontalAlignment="Center" 
                                                       Foreground="{DynamicResource MahApps.Brushes.Accent}" FlowDirection="LeftToRight" Height="24"/>
                         </Button>
                     </StackPanel>

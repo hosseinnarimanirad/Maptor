@@ -34,7 +34,7 @@
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
-            <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>
+            <!--<Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>-->
 
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
                 <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12" />
@@ -167,12 +167,12 @@
                         ToolTip="{Binding [dialog_geometryDetails_export], Source={StaticResource Localization}}"  
                         Style="{StaticResource circleButtonLight}"
                         Visibility="Collapsed">
-                    <iconPacks:PackIconModern Kind="Save"/>
+                    <iconPacks:PackIconMaterial Kind="ContentSave"/>
                 </Button>
                 <Button Grid.Row="0" Grid.Column="3" Command="{Binding CopySelectedFormat}"
                          ToolTip="{Binding [dialog_geometryDetails_copy], Source={StaticResource Localization}}"  
                          Style="{StaticResource circleButtonLight}">
-                    <iconPacks:PackIconModern Kind="PageCopy"/>
+                    <iconPacks:PackIconMaterial Kind="ContentCopy"/>
                 </Button>
                 <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" FlowDirection="LeftToRight" 
                               VerticalScrollBarVisibility="Auto" MaxHeight="150" Margin="0" HorizontalAlignment="Stretch">
@@ -188,12 +188,12 @@
             <Button ToolTip="{Binding [dialog_common_cancel], Source={StaticResource Localization}}" 
                         Command="{Binding CancelEditingCommand}" Margin="4" 
                         Style="{StaticResource circleButtonLight}">
-                <iconPacks:PackIconModern Kind="Close"/>
+                <iconPacks:PackIconMaterial Kind="Close"/>
             </Button>
             <Button ToolTip="{Binding [dialog_common_save], Source={StaticResource Localization}}" 
                         Command="{Binding SaveGeometryCommand}" Margin="4"  
                         Style="{StaticResource circleButtonLight}">
-                <iconPacks:PackIconModern Kind="Check"/>
+                <iconPacks:PackIconMaterial Kind="Check"/>
             </Button>
         </StackPanel>
 

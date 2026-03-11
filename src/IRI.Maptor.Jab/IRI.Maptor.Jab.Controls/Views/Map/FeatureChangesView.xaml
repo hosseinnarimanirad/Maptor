@@ -109,7 +109,7 @@
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                     <Button Style="{StaticResource circleButtonLight}" Command="{Binding ZoomToCurrentGeometryCommand}"
                             ToolTip="{Binding [featureChanges_zoomToCurrent], Source={StaticResource Localization}}" Margin="0,0,4,0">
-                        <iconPacks:PackIconModern Kind="MagnifyAdd"/>
+                        <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
                     </Button>
                     <Button Style="{StaticResource circleButtonLight}" Command="{Binding ZoomToOldGeometryCommand}"
                             ToolTip="{Binding [featureChanges_zoomToOld], Source={StaticResource Localization}}" Margin="0,0,4,0">

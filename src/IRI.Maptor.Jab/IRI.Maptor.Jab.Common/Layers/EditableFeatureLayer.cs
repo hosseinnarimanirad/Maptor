@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Shapes;
@@ -633,9 +633,9 @@ public class EditableFeatureLayer : SymbolizableLayer
                 leftToolTip: IRI.Maptor.Jab.Common.Properties.Resources.mapPanel_currentPoint_displayCoordinate,
                 middleToolTip: IRI.Maptor.Jab.Common.Properties.Resources.mapPanel_currentPoint_delete,
 
-                rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.PageCopy,
-                leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.AxisXy,
-                middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Delete);
+                rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.ContentCopy),
+                leftSymbol: MapOptionsIcon.FromModern(MahApps.Metro.IconPacks.PackIconModernKind.AxisXy),
+                middleSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.Delete));
 
         presenter.RightCommandAction = i =>
         {
@@ -707,9 +707,9 @@ public class EditableFeatureLayer : SymbolizableLayer
             rightToolTip: IRI.Maptor.Jab.Common.Properties.Resources.mapPanel_edit_finish,
             middleToolTip: IRI.Maptor.Jab.Common.Properties.Resources.mapPanel_edit_delete,
 
-            leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Close,
-            rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Check,
-            middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Delete);
+            leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CloseThick),
+            rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold),
+            middleSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.Delete));
 
         presenter.RightCommandAction = i =>
         {

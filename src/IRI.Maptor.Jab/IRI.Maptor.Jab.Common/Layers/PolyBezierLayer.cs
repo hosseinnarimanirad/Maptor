@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -249,9 +249,9 @@ public class PolyBezierLayer : SymbolizableLayer
             leftToolTip: string.Empty,
             middleToolTip: string.Empty,
 
-            rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Clipboard,
-            leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Add,
-            middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Delete);
+            rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.ContentCopy),
+            leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.Plus),
+            middleSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.Delete));
 
         presenter.RightCommandAction = i =>
         {
@@ -490,8 +490,8 @@ public class PolyBezierLayer : SymbolizableLayer
             leftToolTip: string.Empty,
             middleToolTip: string.Empty,
 
-            rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.CitySeattle,
-            leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Check,
+            rightSymbol: MapOptionsIcon.FromModern(MahApps.Metro.IconPacks.PackIconModernKind.CitySeattle),
+            leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold),
             middleSymbol: null);
 
         presenter.RightCommandAction = i =>

@@ -3893,9 +3893,9 @@ public partial class MapViewer : NotifiableUserControl
         leftToolTip: "لغو",
         middleToolTip: "تکمیل تکه‌جاری",
 
-        rightSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Check,
-        leftSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Close,
-        middleSymbol: MahApps.Metro.IconPacks.PackIconModernKind.Checkmark);
+        rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold),
+        leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CloseThick),
+        middleSymbol: MapOptionsIcon.FromModern(MahApps.Metro.IconPacks.PackIconModernKind.Checkmark));
 
         presenter.LeftCommandAction = i =>
         {

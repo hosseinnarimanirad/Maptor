@@ -145,7 +145,7 @@
                             ToolTip="{Binding [map_draw_addPoint], Source={StaticResource Localization}}"
                             Command="{Binding AddPointToNewDrawingCommand}"
                             Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <iconPacks:Modern Kind="Add"/>
+                        <iconPacks:Material Kind="Plus"/>
                     </Button>
                     <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Left" Margin="2,0,10,0" 
                             ToolTip="{Binding [map_draw_finishDrawingPart], Source={StaticResource Localization}}"
@@ -157,12 +157,12 @@
                     <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" Margin="2" 
                             ToolTip="{Binding [map_draw_finishDrawing], Source={StaticResource Localization}}"
                             Command="{Binding FinishNewDrawingCommand}" >
-                        <iconPacks:Modern Kind="Check"/>
+                        <iconPacks:Material Kind="CheckBold"/>
                     </Button>
                     <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" Margin="2" 
                             ToolTip="{Binding [map_draw_cancelDrawing], Source={StaticResource Localization}}"
                             Command="{Binding CancelNewDrawingCommand}" >
-                        <iconPacks:Modern Kind="Close"/>
+                        <iconPacks:Material Kind="CloseThick"/>
                     </Button>
                 </DockPanel>
                 <!-- Drawing -->
@@ -197,20 +197,20 @@
                             Command="{Binding DeleteCommand}"
                             ToolTip="{Binding [mapPanel_edit_delete], Source={StaticResource Localization}}"
                             Visibility="{Binding Options.IsDeleteButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <iconPacks:Modern Kind="Delete"/>
+                        <iconPacks:Material Kind="Delete"/>
                     </Button>
 
                     <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                             Command="{Binding CancelEditingCommand}" 
                             ToolTip="{Binding [mapPanel_edit_cancel], Source={StaticResource Localization}}"
                             Visibility="{Binding Options.IsCancelButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <iconPacks:Modern Kind="Close"/>
+                        <iconPacks:Material Kind="CloseThick"/>
                     </Button>
                     <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                             Command="{Binding FinishEditingCommand}" 
                             ToolTip="{Binding [mapPanel_edit_finish], Source={StaticResource Localization}}"
                             Visibility="{Binding Options.IsFinishButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <iconPacks:Modern Kind="Check"/>
+                        <iconPacks:Material Kind="CheckBold"/>
                     </Button> 
                 </StackPanel>
                 <!--Editing-->
@@ -247,28 +247,28 @@
                             <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}"
                                         Command="{Binding GoToPreviousPointCommand}" >
-                                <iconPacks:Modern Kind="ChevronLeft" />
+                                <iconPacks:Material Kind="ChevronLeft" />
                             </Button>
                             <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_delete], Source={StaticResource Localization}}"
                                         Command="{Binding DeleteCurrentPointCommand}" >
-                                <iconPacks:Modern Kind="Delete"/>
+                                <iconPacks:Material Kind="Delete"/>
                             </Button>
                             <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_zoom], Source={StaticResource Localization}}"
                                         Command="{Binding ZoomToCurrentPointCommand}" >
-                                <iconPacks:Modern Kind="MagnifyAdd"/>
+                                <iconPacks:Material Kind="MagnifyPlus"/>
                             </Button>
                             <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_copyCoordinate], Source={StaticResource Localization}}"
                                         Command="{Binding CopyCurrentPointCommand}" 
                                         CommandParameter="{Binding DataContext.MapPanel.SpatialReference, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}">
-                                <iconPacks:Modern Kind="PageCopy"/>
+                                <iconPacks:Material Kind="ContentCopy"/>
                             </Button>
                             <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_goToNextPoint], Source={StaticResource Localization}}"
                                         Command="{Binding GoToNextPointCommand}" >
-                                <iconPacks:Modern Kind="ChevronRight"/>
+                                <iconPacks:Material Kind="ChevronRight"/>
                             </Button>
                         </StackPanel>
                     </TabItem>
@@ -285,18 +285,18 @@
                             <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPart_delete], Source={StaticResource Localization}}"
                                         Command="{Binding DeleteCurrentPartCommand}" >
-                                <iconPacks:Modern Kind="Delete"/>
+                                <iconPacks:Material Kind="Delete"/>
                             </Button>
 
                             <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" IsEnabled="False"
                                         ToolTip="{Binding [mapPanel_currentPart_add], Source={StaticResource Localization}}"
                                         Command="{Binding AddNewPartCommand}" Visibility="Collapsed">
-                                <iconPacks:Modern Kind="Add"/>
+                                <iconPacks:Material Kind="Plus"/>
                             </Button>
                             <Button Style="{StaticResource circleButtonLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPart_zoom], Source={StaticResource Localization}}"
                                         Command="{Binding ZoomToCurrentPartCommand}" >
-                                <iconPacks:Modern Kind="MagnifyAdd"/>
+                                <iconPacks:Material Kind="MagnifyPlus"/>
                             </Button>
                         </StackPanel>
                     </TabItem>
@@ -436,9 +436,9 @@
                     </Style>
                 </Border.Style>
                 <StackPanel HorizontalAlignment="Center">
-                    <iconPacks:PackIconModern Margin="2" Height="8" Kind="ChevronDown"
+                    <iconPacks:PackIconMaterial Margin="2" Height="8" Kind="ChevronDown"
                                               Visibility="{Binding MapPanel.IsDetailsNotVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
-                    <iconPacks:PackIconModern Margin="2" Height="8" Kind="ChevronUp"
+                    <iconPacks:PackIconMaterial Margin="2" Height="8" Kind="ChevronUp"
                                               Visibility="{Binding MapPanel.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
                 </StackPanel>
             </Border>

@@ -56,7 +56,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_zoomToExtent))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Magnify }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.MagnifyExpand }.Data,
             Layer = layer,
         };
 
@@ -77,7 +77,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_remove))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Delete }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.Delete }.Data,
             Layer = layer,
         };
 
@@ -332,7 +332,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_remove))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Delete }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.Delete }.Data,
             Layer = layer,
 
         };
@@ -727,7 +727,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_duplicateFeature))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.PageCopy }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.ContentCopy }.Data,
             Layer = layer,
         };
 

@@ -17,7 +17,7 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Fonts.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
-            <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>
+            <!--<Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>-->
  
             <converters:DistanceAzimuthConverter x:Key="distanceAzimuthConverter"/>
             <converters:LocalizedFormatConverter x:Key="localizedFormatConverter"/>
@@ -80,12 +80,12 @@
                               Command="{Binding DeletePolygonCommand}"
                               CommandParameter="{Binding CurrentPolygon}"
                               IsEnabled="{Binding CurrentPolygon, Converter={StaticResource notNullToBoolConverter}}">
-                        <iconPacks:PackIconModern Kind="Delete"/>
+                        <iconPacks:PackIconMaterial Kind="Delete"/>
                     </Button>
                     <Button Style="{StaticResource circleButtonLight}" 
                               Command="{Binding ZoomToCurrentPolygonCommand}"
                               IsEnabled="{Binding CurrentPolygon, Converter={StaticResource notNullToBoolConverter}}">
-                        <iconPacks:PackIconModern Kind="MagnifyAdd"/>
+                        <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
                     </Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -148,18 +148,18 @@
                 </Button>
                 <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding AddPartCommand}">
-                    <iconPacks:PackIconModern Kind="Add"/>
+                    <iconPacks:PackIconMaterial Kind="Plus"/>
                 </Button>
                 <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding DeletePartCommand}"
                             CommandParameter="{Binding CurrentPart}"
                             IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">
-                    <iconPacks:PackIconModern Kind="Delete"/>
+                    <iconPacks:PackIconMaterial Kind="Delete"/>
                 </Button>
                 <Button Style="{StaticResource circleButtonLight}" 
                             Command="{Binding ZoomToCurrentPartCommand}"
                             IsEnabled="{Binding CurrentPart, Converter={StaticResource notNullToBoolConverter}}">
-                    <iconPacks:PackIconModern Kind="MagnifyAdd"/>
+                    <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
                 </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -548,43 +548,43 @@
             <ToggleButton Style="{StaticResource circleToggleButtonLight}" 
                          IsChecked="{Binding IsEditable, Mode=TwoWay}"
                          ToolTip="{Binding [geometryDetails_currentPoint_edit], Source={StaticResource Localization}}" Visibility="Collapsed" >
-                <iconPacks:PackIconModern Kind="Edit"/>
+                <iconPacks:PackIconMaterial Kind="Pencil"/>
             </ToggleButton>
           
             <!--<Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding InsertPointBeforeSelectedCommand}"
                     ToolTip="{Binding [geometryDetails_currentPoint_insert], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="ListAdd"/>
+                <iconPacks:PackIconMaterial Kind="ListAdd"/>
             </Button>-->
             <!--<Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding AddPointCommand}"
                     ToolTip="{Binding [geometryDetails_currentPoint_add], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="Add"/>
+                <iconPacks:PackIconMaterial Kind="Add"/>
             </Button>-->
             <Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding DeleteCurrentPointCommand}"
                     IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
                     ToolTip="{Binding [geometryDetails_currentPoint_delete], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="Delete"/>
+                <iconPacks:PackIconMaterial Kind="Delete"/>
             </Button>
             <Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding ZoomToCurrentPointCommand}"
                     IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
                     ToolTip="{Binding [geometryDetails_currentPoint_zoomToPoint], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="MagnifyAdd"/>
+                <iconPacks:PackIconMaterial Kind="MagnifyPlus"/>
             </Button>
             <Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding PanToCurrentPointCommand}"
                     IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
                     ToolTip="{Binding [geometryDetails_currentPoint_zoom], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="CursorHand"  />
+                <iconPacks:PackIconMaterial Kind="HandBackRight"  />
             </Button>
 
             <Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding CopyCurrentPointCommand}"
                     IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
                     ToolTip="{Binding [geometryDetails_currentPoint_copyCoordinate], Source={StaticResource Localization}}">
-                <iconPacks:PackIconModern Kind="PageCopy"/>
+                <iconPacks:PackIconMaterial Kind="ContentCopy"/>
             </Button>
             <Button Style="{StaticResource circleButtonDark}" 
                       Command="{Binding GoToPreviousPageCommand}"  
