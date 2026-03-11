@@ -46,7 +46,7 @@ public static class WebMercatorUtility
 
         minZoomLevel = 1;
 
-        maxZoomLevel = 22;
+        maxZoomLevel = 24;
 
         //ZoomLevels = new List<ZoomScale>();
 
