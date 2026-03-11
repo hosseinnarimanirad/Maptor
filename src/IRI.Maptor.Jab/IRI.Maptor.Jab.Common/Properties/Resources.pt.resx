@@ -160,6 +160,12 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>Zoom anterior</value>
   </data>
+  <data name="cmd_general_previousView" xml:space="preserve">
+    <value>Visualização anterior</value>
+  </data>
+  <data name="cmd_general_nextView" xml:space="preserve">
+    <value>Próxima visualização</value>
+  </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">
     <value>Limpar seleção</value>
   </data>

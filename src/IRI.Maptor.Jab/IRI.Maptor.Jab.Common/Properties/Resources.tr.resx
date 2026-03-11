@@ -160,6 +160,12 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>Önceki Yakınlaştırma</value>
   </data>
+  <data name="cmd_general_previousView" xml:space="preserve">
+    <value>Önceki Görünüm</value>
+  </data>
+  <data name="cmd_general_nextView" xml:space="preserve">
+    <value>Sonraki Görünüm</value>
+  </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">
     <value>Seçimi Temizle</value>
   </data>

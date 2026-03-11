@@ -160,6 +160,12 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>放大上一个</value>
   </data>
+  <data name="cmd_general_previousView" xml:space="preserve">
+    <value>上一视图</value>
+  </data>
+  <data name="cmd_general_nextView" xml:space="preserve">
+    <value>下一个视图</value>
+  </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">
     <value>清除选定的功能</value>
   </data>

@@ -160,6 +160,12 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>التكبير السابق</value>
   </data>
+  <data name="cmd_general_previousView" xml:space="preserve">
+    <value>العرض السابق</value>
+  </data>
+  <data name="cmd_general_nextView" xml:space="preserve">
+    <value>العرض التالي</value>
+  </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">
     <value>مسح المحدد</value>
   </data>

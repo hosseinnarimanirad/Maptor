@@ -219,6 +219,12 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>نمای قبل</value>
   </data>
+  <data name="cmd_general_previousView" xml:space="preserve">
+    <value>نمای قبل</value>
+  </data>
+  <data name="cmd_general_nextView" xml:space="preserve">
+    <value>نمای بعد</value>
+  </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">
     <value>پاک کردن عوارض انتخابی</value>
   </data>

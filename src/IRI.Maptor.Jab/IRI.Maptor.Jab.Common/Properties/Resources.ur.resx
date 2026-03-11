@@ -160,6 +160,12 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>زوم پچھلا</value>
   </data>
+  <data name="cmd_general_previousView" xml:space="preserve">
+    <value>پچھلا منظر</value>
+  </data>
+  <data name="cmd_general_nextView" xml:space="preserve">
+    <value>اگلا منظر</value>
+  </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">
     <value>منتخب کردہ خصوصیات کو صاف کریں۔</value>
   </data>
