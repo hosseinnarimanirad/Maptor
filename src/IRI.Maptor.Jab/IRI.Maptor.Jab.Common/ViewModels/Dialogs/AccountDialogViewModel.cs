@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using IRI.Maptor.Sta.Common.Contracts.Google;
 using IRI.Maptor.Sta.Common.Services;
@@ -23,7 +23,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     //login
     public Func<IUserEmailPassword, Task<bool>> RequestAuthenticateAsync;
-    public Func<IUserEmailPassword, bool> RequestAuthenticate;
 
     public Action<Response<GoogleOAuthUserInfoResult>> RequestLoginWithGoogleOAuth;
 
@@ -39,7 +38,7 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     public Action RequestResetPassword;
 
-    public Action<IChangePassword> RequestChangePassword;
+    public Func<IChangePassword, Task> RequestChangePassword;
 
     //other
     public Action<IHaveEmail> RequestVerifyEmailAddress;
@@ -321,22 +320,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     #region Commands
 
-    //login
-    private RelayCommand _loginAsyncCommand;
-
-    public RelayCommand LoginAsyncCommand
-    {
-        get
-        {
-            if (_loginAsyncCommand == null)
-            {
-                _loginAsyncCommand = new RelayCommand(LoginAsync);
-            }
-
-            return _loginAsyncCommand;
-        }
-    }
-
     //****************************************************   Login  *****************************************************
     private RelayCommand _loginCommand;
 
@@ -486,9 +469,17 @@ public class AccountDialogViewModel : DialogViewModelBase
         {
             if (_changePasswordCommand == null)
             {
-                _changePasswordCommand = new RelayCommand(param =>
+                _changePasswordCommand = new RelayCommand(async param =>
                 {
-                    RequestChangePassword?.Invoke(param as IChangePassword);
+                    try
+                    {
+                        if (RequestChangePassword != null)
+                            await RequestChangePassword.Invoke(param as IChangePassword);
+                    }
+                    catch (Exception ex)
+                    {
+                        LoginMessage = ex.Message;
+                    }
                 });
             }
 
@@ -496,49 +487,6 @@ public class AccountDialogViewModel : DialogViewModelBase
         }
     }
 
-
-    //****************************************************   Show Dialog Change Password  *******************************
-    private RelayCommand _showChangePasswordDialogViewCommand;
-
-    public RelayCommand ShowChangePasswordDialogViewCommand
-    {
-        get
-        {
-            if (_showChangePasswordDialogViewCommand == null)
-            {
-                _showChangePasswordDialogViewCommand = new RelayCommand(async param =>
-                {
-
-                    var viewModel = await DialogService?.ShowChangePasswordDialog(param, ihp =>
-                    {
-                        var parameter = new SimpleUserEmailPasswordModel(ihp.Password) { UserNameOrEmail = UserName };
-
-                        return RequestAuthenticate?.Invoke(parameter) == true;
-                    });
-
-                    await ChangePassword(viewModel, param);
-
-                    //if (model == null)
-                    //{
-                    //    return;
-                    //}
-
-                    //try
-                    //{
-                    //    this.RequestChangePassword?.Invoke(model.Model);
-
-                    //    //await DialogService?.ShowMessage(param, null, "رمز عبور با موفقیت تغییر یافت", "پیغام");
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    await DialogService?.ShowMessage(param, null, ex.Message, "خطا");
-                    //}
-                });
-            }
-
-            return _showChangePasswordDialogViewCommand;
-        }
-    }
 
 
     //****************************************************   Show Dialog Sign Up  ***************************************
@@ -647,18 +595,43 @@ public class AccountDialogViewModel : DialogViewModelBase
     #endregion
 
 
-    #region Async Commands
+    //****************************************************   Show Dialog Change Password  *******************************
+    //private RelayCommand _showChangePasswordDialogViewCommand;
 
+    //public RelayCommand ShowChangePasswordDialogViewCommand
+    //{
+    //    get
+    //    {
+    //        if (_showChangePasswordDialogViewCommand == null)
+    //        {
+    //            _showChangePasswordDialogViewCommand = new RelayCommand(async param =>
+    //            {
 
-    private RelayCommand _showChangePasswordDialogViewAsyncCommand;
+    //                var viewModel = await DialogService?.ShowChangePasswordDialog(param, ihp =>
+    //                {
+    //                    var parameter = new SimpleUserEmailPasswordModel(ihp.Password) { UserNameOrEmail = UserName };
 
-    public RelayCommand ShowChangePasswordDialogViewAsyncCommand
+    //                    return RequestAuthenticate?.Invoke(parameter) == true;
+    //                });
+
+    //                await ChangePassword(viewModel, param);
+    //            });
+    //        }
+
+    //        return _showChangePasswordDialogViewCommand;
+    //    }
+    //}
+     
+     
+    private RelayCommand _showChangePasswordDialogViewCommand;
+
+    public RelayCommand ShowChangePasswordDialogViewCommand
     {
         get
         {
-            if (_showChangePasswordDialogViewAsyncCommand == null)
+            if (_showChangePasswordDialogViewCommand == null)
             {
-                _showChangePasswordDialogViewAsyncCommand = new RelayCommand(async param =>
+                _showChangePasswordDialogViewCommand = new RelayCommand(async param =>
                 {
                     var viewModel = await DialogService?.ShowChangePasswordDialog(param, ihp =>
                     {
@@ -671,12 +644,10 @@ public class AccountDialogViewModel : DialogViewModelBase
                 });
             }
 
-            return _showChangePasswordDialogViewAsyncCommand;
+            return _showChangePasswordDialogViewCommand;
         }
     }
-
-    #endregion
-
+     
     #region Private Methods
     private async Task ChangePassword(ChangePasswordDialogViewModel viewModel, object ownerWindow)
     {
@@ -687,7 +658,8 @@ public class AccountDialogViewModel : DialogViewModelBase
 
         try
         {
-            RequestChangePassword?.Invoke(viewModel.Model);
+            if (RequestChangePassword != null)
+                await RequestChangePassword.Invoke(viewModel.Model);
 
             await DialogService?.ShowMessageAsync("رمز عبور با موفقیت تغییر یافت", "پیغام", ownerWindow, null);
         }
@@ -795,7 +767,7 @@ public class AccountDialogViewModel : DialogViewModelBase
     #endregion
 
 
-    protected async void LoginAsync(object parameter)
+    protected async void Login(object parameter)
     {
         try
         {
@@ -839,46 +811,4 @@ public class AccountDialogViewModel : DialogViewModelBase
         }
     }
 
-    protected void Login(object parameter)
-    {
-        try
-        {
-            IsBusy = true;
-
-            var passContainer = parameter as IUserEmailPassword;
-
-            if (passContainer != null)
-            {
-                //this.Password = passContainer.Password;                
-
-                if (RequestAuthenticate != null)
-                {
-                    if (RequestAuthenticate(passContainer) != true)
-                    {
-                        IsSignedIn = false;
-
-                        passContainer.ClearInputValues();
-                    }
-                    else
-                    {
-                        IsSignedIn = true;
-
-                        DialogResult = true;
-                    }
-                }
-            }
-            else
-            {
-                passContainer.ClearInputValues();
-            }
-        }
-        catch (Exception ex)
-        {
-
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
 }

@@ -1530,7 +1530,50 @@ public abstract class MapViewModelBase : ViewModelBase
 
     #region Identify
 
-    public async Task<ObservableCollection<FeatureSet<Point>>?> IdentifyAsync(Point point, IdentifyOptions options)
+    public virtual async Task IdentifyAsync(Point point)
+    {
+        var identify = await this.IdentifyFeaturesAsync(point, new IdentifyOptions()
+        {
+            IncludeNotInScaleRangeLayers = this.MapSettings.Identify_IncludeNotInScaleRangeLayers,
+            IncludeInvisibleLayers = this.MapSettings.Identify_IncludeInvisibleLayers,
+            SelectionTolerance = this.MapSettings.Identify_SelectionTolerance
+        });
+
+        if (identify == null)
+            return;
+
+        this.SelectedLayers = new ObservableCollection<SelectedLayer>();
+
+        this.ShowAttributeTable = true;
+
+        foreach (var item in identify)
+        {
+            var layer = this.FindLayer(item.LayerId) as VectorLayer;
+
+            if (layer is null)
+                continue;
+
+            var fields = layer.GetFields();
+
+            var newLayer = new SelectedLayer(layer, fields)
+            {
+                ShowSelectedOnMap = true,
+                Features = new ObservableCollection<Feature<Point>>(item.Features),
+                Fields = fields
+            };
+
+            this.AddSelectedLayer(newLayer);
+        }
+
+        RemoveMapOptions();
+
+        if (SelectedLayers.Any())
+        {
+            this.CurrentLayer = this.SelectedLayers.FirstOrDefault()!;
+        }
+    }
+
+    public async Task<ObservableCollection<FeatureSet<Point>>?> IdentifyFeaturesAsync(Point point, IdentifyOptions options)
     {
         var result = new ObservableCollection<FeatureSet<Point>>();
 
@@ -4315,10 +4358,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_previousExtentCommand == null)
             {
-                _previousExtentCommand = new RelayCommand(param =>
-                {
-                    GoToPreviousExtent();
-                });
+                _previousExtentCommand = new RelayCommand(param => GoToPreviousExtent(), _ => PreviousExtentEnabled);
             }
 
             return _previousExtentCommand;
@@ -4326,17 +4366,13 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
     private RelayCommand _nextExtentCommand;
-
     public RelayCommand NextExtentCommand
     {
         get
         {
             if (_nextExtentCommand == null)
             {
-                _nextExtentCommand = new RelayCommand(param =>
-                {
-                    GoToNextExtent();
-                });
+                _nextExtentCommand = new RelayCommand(param => GoToNextExtent(), _ => NextExtentEnabled);
             }
 
             return _nextExtentCommand;
