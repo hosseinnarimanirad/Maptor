@@ -46,6 +46,7 @@
 
             <Style TargetType="{x:Type iconPacks:PackIconModern}" BasedOn="{StaticResource circleButtonPackIconModern}"/>
             <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
+            <Style TargetType="{x:Type iconPacks:PackIconPhosphorIcons}" BasedOn="{StaticResource circleButtonPackIconPhosphor}"/>
             <Style TargetType="{x:Type Path}" BasedOn="{StaticResource circleButtonPath}"/>
  
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
@@ -151,7 +152,7 @@
                             ToolTip="{Binding [map_draw_finishDrawingPart], Source={StaticResource Localization}}"
                             Command="{Binding FinishDrawingPartCommand}"
                             Visibility="{Binding MapPanel.Options.IsMultiPartSupportAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <iconPacks:Modern Kind="Checkmark"/>
+                        <iconPacks:PhosphorIcons Kind="CirclesThreePlusFill"/>
                     </Button>
 
                     <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" Margin="2" 
@@ -183,7 +184,7 @@
                             Command="{Binding ConvertToDrawingItemCommand}" 
                             ToolTip="{Binding [mapPanel_measure_convertToDrawing], Source={StaticResource Localization}}"
                             Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
-                        <iconPacks:Modern Kind="VectorPenAdd"/>
+                        <iconPacks:Material Kind="PencilPlus"/>
                     </Button>
 
                     <Button Style="{StaticResource circleButtonLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2"
@@ -308,14 +309,14 @@
                                      IsChecked="{Binding MapPanel.IsGeodeticWgs84EditingMode, Mode=TwoWay}" Width="Auto" Height="Auto"  
                                      HorizontalContentAlignment="Center" Style="{StaticResource simpleToggle}" >
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
-                                    <iconPacks:PackIconModern Kind="Globe" Margin="0 0 4 0" VerticalAlignment="Center"/>
+                                    <iconPacks:PackIconMaterial Kind="Earth" Margin="0 0 4 0" VerticalAlignment="Center"/>
                                     <TextBlock Text="WGS84" Margin="2" Foreground="White"/>
                                 </StackPanel>
                             </RadioButton>
                             <RadioButton GroupName="A" ToolTip="{Binding [srs_utmTitle], Source={StaticResource Localization}}" Foreground="White" Margin="4,2"
                                      IsChecked="{Binding MapPanel.IsUTMEditingMode, Mode=TwoWay}" Style="{StaticResource simpleToggle}" >
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
-                                    <iconPacks:PackIconModern Kind="MapTreasure" Margin="0 0 4 0" VerticalAlignment="Center"/>
+                                    <iconPacks:PackIconMaterial Kind="EarthBox" Margin="0 0 4 0" VerticalAlignment="Center"/>
                                     <TextBlock Text="UTM" Margin="2" Foreground="White"/>
                                 </StackPanel>
                             </RadioButton>
@@ -437,9 +438,11 @@
                 </Border.Style>
                 <StackPanel HorizontalAlignment="Center">
                     <iconPacks:PackIconMaterial Margin="2" Height="8" Kind="ChevronDown"
-                                              Visibility="{Binding MapPanel.IsDetailsNotVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
+                                                Visibility="{Binding MapPanel.IsDetailsNotVisible, Converter={StaticResource boolToVisibilityConverter}}"
+                                                Foreground="{DynamicResource MahApps.Brushes.Highlight}"/>
                     <iconPacks:PackIconMaterial Margin="2" Height="8" Kind="ChevronUp"
-                                              Visibility="{Binding MapPanel.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
+                                                Visibility="{Binding MapPanel.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"
+                                                Foreground="{DynamicResource MahApps.Brushes.Highlight}"/>
                 </StackPanel>
             </Border>
         </StackPanel>

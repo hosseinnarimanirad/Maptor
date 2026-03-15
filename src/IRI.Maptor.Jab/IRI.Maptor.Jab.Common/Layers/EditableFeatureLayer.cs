@@ -634,36 +634,20 @@ public class EditableFeatureLayer : SymbolizableLayer
                 middleToolTip: IRI.Maptor.Jab.Common.Properties.Resources.mapPanel_currentPoint_delete,
 
                 rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.ContentCopy),
-                leftSymbol: MapOptionsIcon.FromModern(MahApps.Metro.IconPacks.PackIconModernKind.AxisXy),
+                leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.AxisArrowInfo),
                 middleSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.Delete));
 
         presenter.RightCommandAction = i =>
-        {
-            //var geodetic = MapProjects.WebMercatorToGeodeticWgs84(presenter.Location);
-
-            //Clipboard.SetDataObject($"{geodetic.X.ToString("n4")},{geodetic.Y.ToString("n4")}");
+        { 
             var mode = RequestGetCoordinateDisplayMode?.Invoke() ?? CoordinateDisplayMode.GeodeticDecimal;
 
             ClipboardHelper.CopyToClipboard(new Point(point.X, point.Y), mode, null, null, null, null);
-
-            //var format = CoordinateHelper.Format(/*presenter.Location*/new Point(point.X, point.Y), mode, thousandSeparator: false, null, null, null, null);
-
-            //if (mode == CoordinateDisplayMode.GeodeticDms || mode == CoordinateDisplayMode.GeodeticDecimal)
-            //{
-            //    Clipboard.SetDataObject($"{format.y};{format.x}");
-            //}
-            //else
-            //{
-            //    Clipboard.SetDataObject($"{format.x};{format.y}");
-            //}
-
-
+             
             this.RemoveMapOptions();
         };
 
         presenter.LeftCommandAction = i =>
-        {
-            //RequestFinishEditing?.Invoke(this._mercatorGeometry);
+        { 
             if (_primaryVerticesLabelLayer.Items.Any(l => l.Id == locateable.Id))
             {
                 _primaryVerticesLabelLayer.Remove(locateable.Id);

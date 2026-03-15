@@ -184,7 +184,7 @@
                 <Expander Style="{StaticResource toggleHorizontalExpander}"  
                             IsExpanded="{Binding ElementName=root, Path=SelectedExpanderIndex, Converter={StaticResource indexToBoolConverter}, ConverterParameter=2}">
                     <Expander.Header>
-                        <iconPacks:PackIconModern Kind="VectorPenAdd" Foreground="White"/>
+                        <iconPacks:PackIconMaterial Kind="PencilPlus" Foreground="White"/>
                     </Expander.Header>
                     <StackPanel Orientation="Horizontal">
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding DrawPointCommand}" 

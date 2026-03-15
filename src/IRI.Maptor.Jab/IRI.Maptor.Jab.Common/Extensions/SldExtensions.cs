@@ -93,8 +93,8 @@ public static class SldExtensions
         System.Windows.Media.Geometry? geometry = mark.WellKnownNameValue switch
         {
             WellKnownMark.x => System.Windows.Media.Geometry.Parse("M90 390l120-120 130 120 30-30-130-120 130-120-30-30-130 120-120-120-30 30 120 120-120 120 30 30z"),
-            WellKnownMark.circle => null,/*System.Windows.Media.Geometry.Parse(new PackIconModern() { Kind = PackIconModernKind.LocationCircle }.Data),*/
-            WellKnownMark.star => System.Windows.Media.Geometry.Parse(new PackIconModern() { Kind = PackIconModernKind.Star, Height = height, Width = width }.Data),
+            WellKnownMark.circle => null, 
+            WellKnownMark.star => System.Windows.Media.Geometry.Parse(new PackIconMaterial() { Kind = PackIconMaterialKind.Star, Height = height, Width = width }.Data),
             WellKnownMark.triangle => System.Windows.Media.Geometry.Parse("M192 704h640l-320-448z"),
             WellKnownMark.square => System.Windows.Media.Geometry.Parse("M10,14V10H14V14H10Z"),
             _ => null

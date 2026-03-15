@@ -56,7 +56,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_zoomToExtent))
         {
-            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.MagnifyExpand }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.StretchToPageOutline }.Data,
             Layer = layer,
         };
 
@@ -136,9 +136,9 @@ public class LegendCommand : LegendCommandBase
 
         result.Command = new RelayCommand(async param =>
         {
-            var options = EditableFeatureLayerOptions.CreateDefaultForDrawing(false, false);
+            var options = EditableFeatureLayerOptions.CreateDefaultForDrawing(false, true);
 
-            options.IsOptionsAvailable = false;
+            //options.IsOptionsAvailable = false;
 
             var drawingResult = await map.GetDrawingAsync(DrawMode.Polygon, options);
 
@@ -204,8 +204,7 @@ public class LegendCommand : LegendCommandBase
             {
                 newLayer.Features = new System.Collections.ObjectModel.ObservableCollection<Feature<Point>>(features.Features);
             }
-
-
+             
             map.AddSelectedLayer(newLayer);
 
             //map.ShowAttributeTable = true;
@@ -313,12 +312,12 @@ public class LegendCommand : LegendCommandBase
     {
         return new List<Func<MapViewModelBase, ILayer, ILegendCommand>>()
         {
-            CreateSelectByDrawingFunc(),
+            CreateZoomToExtentCommandFunc,
             CreateShowAttributeTableFunc(),
-            CreateClearSelectedFunc,
             CreateRemoveLayerFunc,
             CreateExportAsPngFunc,
-            CreateZoomToExtentCommandFunc
+            CreateSelectByDrawingFunc(),
+            CreateClearSelectedFunc,
         };
     }
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Controls.Views;
-using IRI.Maptor.Sta.Common.Primitives; 
+using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
@@ -200,9 +200,9 @@ public class GoToViewModel : Notifier
 
     private List<HamburgerGoToMenuItem> GetDefaultItems()
     {
-        var globeMarkup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.Globe }.Data;
+        var globeMarkup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.Earth }.Data;
 
-        var mapTreasureMarkup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.MapTreasure }.Data;
+        var mapTreasureMarkup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.EarthBox }.Data;
 
         return new List<HamburgerGoToMenuItem>()
         {

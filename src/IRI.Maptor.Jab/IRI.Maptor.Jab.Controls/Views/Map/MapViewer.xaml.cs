@@ -3895,7 +3895,7 @@ public partial class MapViewer : NotifiableUserControl
 
         rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold),
         leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CloseThick),
-        middleSymbol: MapOptionsIcon.FromModern(MahApps.Metro.IconPacks.PackIconModernKind.Checkmark));
+        middleSymbol: MapOptionsIcon.FromPhosphorIcons(MahApps.Metro.IconPacks.PackIconPhosphorIconsKind.CirclesThreePlusFill));
 
         presenter.LeftCommandAction = i =>
         {

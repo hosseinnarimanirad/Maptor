@@ -35,7 +35,7 @@ public static class FeatureTableCommands
 
     public static FeatureTableCommand CreateZoomToExtentCommand(MapViewModelBase map)
     {
-        var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.Magnify }.Data;
+        var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.MagnifyExpand }.Data;
 
         var result = new FeatureTableCommand()
         {
@@ -75,7 +75,7 @@ public static class FeatureTableCommands
 
     public static FeatureTableCommand CreateExportToExcelCommand(MapViewModelBase map)
     {
-        var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.PageExcel }.Data;
+        var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.MicrosoftExcel }.Data;
 
         var result = new FeatureTableCommand()
         {
@@ -150,7 +150,7 @@ public static class FeatureTableCommands
 
     public static FeatureTableCommand CreateExportAsDrawingLayersCommand(MapViewModelBase map)
     {
-        var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.VectorPenAdd }.Data;
+        var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.PencilPlus }.Data;
 
         var result = new FeatureTableCommand()
         {

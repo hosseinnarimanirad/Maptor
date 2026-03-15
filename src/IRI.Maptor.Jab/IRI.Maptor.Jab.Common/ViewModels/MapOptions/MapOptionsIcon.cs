@@ -13,5 +13,8 @@ public static class MapOptionsIcon
     public static string? FromMaterial(PackIconMaterialKind kind) =>
         new PackIconMaterial() { Kind = kind }.Data;
 
+    public static string? FromPhosphorIcons(PackIconPhosphorIconsKind kind) =>
+        new PackIconPhosphorIcons() { Kind = kind }.Data;
+
     public static string? FromPath(string pathMarkup) => pathMarkup;
 }

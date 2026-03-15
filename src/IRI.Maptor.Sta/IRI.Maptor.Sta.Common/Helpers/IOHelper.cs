@@ -132,6 +132,7 @@ public static class IOHelper
             return new List<string[]>();
 
         var lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
         return lines.Select(line => line.Split(delimited)).ToList();
     }
 

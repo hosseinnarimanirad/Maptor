@@ -490,7 +490,7 @@ public class PolyBezierLayer : SymbolizableLayer
             leftToolTip: string.Empty,
             middleToolTip: string.Empty,
 
-            rightSymbol: MapOptionsIcon.FromModern(MahApps.Metro.IconPacks.PackIconModernKind.CitySeattle),
+            rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.City),
             leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold),
             middleSymbol: null);
 
