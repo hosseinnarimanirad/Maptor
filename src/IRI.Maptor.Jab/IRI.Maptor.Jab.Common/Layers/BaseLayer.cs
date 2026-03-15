@@ -11,7 +11,7 @@ using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Sta.Persistence.Abstractions; 
+using IRI.Maptor.Sta.Persistence.Abstractions;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -103,6 +103,8 @@ public abstract class BaseLayer : Notifier, ILayer
 
     #region Data source / status flags
 
+    public virtual bool IsNotBusy => !IsBusy;
+
     public virtual bool IsBusy { get => IsInitializing || IsProcessing; }
 
     public virtual bool IsInitializing => DataSource?.IsInitializing ?? false;
@@ -175,12 +177,14 @@ public abstract class BaseLayer : Notifier, ILayer
     {
         RaisePropertyChanged(nameof(IsInitializing));
         RaisePropertyChanged(nameof(IsBusy));
+        RaisePropertyChanged(nameof(IsNotBusy));
     });
 
     private void DataSource_IsProcessingChanged(object? sender, bool e) => DispatcherToUi(() =>
     {
         RaisePropertyChanged(nameof(IsProcessing));
         RaisePropertyChanged(nameof(IsBusy));
+        RaisePropertyChanged(nameof(IsNotBusy));
     });
 
     protected virtual void DataSource_IsLoadedChanged(object? sender, bool e)
@@ -235,6 +239,7 @@ public abstract class BaseLayer : Notifier, ILayer
     // is layer discoverable in identify
     public bool IsSearchable { get; set; } = false;
 
+
     private bool _isInScaleRange;
     public bool IsInScaleRange
     {
@@ -243,8 +248,11 @@ public abstract class BaseLayer : Notifier, ILayer
         {
             _isInScaleRange = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsNotInScaleRange));
         }
     }
+
+    public bool IsNotInScaleRange => !IsInScaleRange;
 
 
     #region Toc
@@ -297,10 +305,7 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-    public bool ShowOptions
-    {
-        get { return IsSelectedInToc && Commands?.Count > 0 && !IsGroupLayer; }
-    }
+    public bool ShowOptions => IsSelectedInToc && Commands?.Count > 0 && !IsGroupLayer;
 
     private bool _showInToc = true;
     public bool ShowInToc

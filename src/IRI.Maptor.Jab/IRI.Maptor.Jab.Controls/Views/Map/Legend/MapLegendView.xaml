@@ -87,9 +87,10 @@
                 <RadioButton Style="{StaticResource {x:Type ToggleButton}}" 
                         HorizontalAlignment="Stretch" 
                         DataContext="{Binding }" 
-                        IsEnabled="{Binding IsInScaleRange}" 
                         IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}"
+                             IsEnabled="True"
                         >
+                        <!--IsEnabled="{Binding IsInScaleRange}"--> 
                     <RadioButton.InputBindings>
                         <MouseBinding Gesture="LeftDoubleClick" Command="{Binding ToggleExpandCommand}"/>
                     </RadioButton.InputBindings>

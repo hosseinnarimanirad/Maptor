@@ -137,7 +137,7 @@ public class DrawingItemLayer : VectorLayer
 
         result._type = LayerType.Drawing;
 
-        result.Commands = new List<ILegendCommand>();
+        result.Commands = [];
 
         result.OnIsSelectedInTocChanged += (sender, e) =>
         {

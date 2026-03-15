@@ -46,7 +46,7 @@ using IRI.Maptor.Jab.Common.Models.Spatialable;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Models.Settings;
-using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Enums; 
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
@@ -1747,14 +1747,10 @@ public abstract class MapViewModelBase : ViewModelBase
 
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(simpleVisualParameters), new LabelSymbolizer(labelParameters, feature.LabelAttribute)];
 
-        var drawingItemLayer = CreateDrawingItemLayer(feature, featureName, symbolizers/*, id*//*, source*/);
+        var drawingItemLayer = CreateDrawingItemLayer(featureName, feature, symbolizers/*, id*//*, source*/);
 
         if (drawingItemLayer != null)
-        {
-            //this.SetLayer(shapeItem.AssociatedLayer);
             AddDrawingItem(drawingItemLayer);
-            //this.Refresh();
-        }
     }
 
     public void AddDrawingItem(DrawingItemLayer item)
@@ -1808,27 +1804,12 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    protected DrawingItemLayer CreateDrawingItemLayer(
-        Feature<Point> drawing,
-        string name,
-        //VisualParameters? visualParameters = null)
-        IEnumerable<ISymbolizer> symbolizers)
+    protected DrawingItemLayer? CreateDrawingItemLayer(string layerName, Feature<Point> drawing, IEnumerable<ISymbolizer> symbolizers)
     {
-        var drawingItemLayer = DrawingItemLayer.Create(name, drawing, symbolizers/*, id*//*, source*/);
+        var drawingItemLayer = DrawingItemLayer.Create(layerName, drawing, symbolizers);
 
-        //drawingItemLayer.OnIsSelectedInTocChanged += (sender, e) =>
-        //{
-        //    if (drawingItemLayer.IsSelectedInToc)
-        //    {
-        //        SelectedDrawingItem = drawingItemLayer;
-        //    }
-        //    else if (SelectedDrawingItem == drawingItemLayer)
-        //    {
-        //        SelectedDrawingItem = null;
-        //    }
-        //};
-
-        TrySetCommandsForDrawingItemLayer(drawingItemLayer);
+        if (drawingItemLayer != null)
+            TrySetCommandsForDrawingItemLayer(drawingItemLayer);
 
         IsPanMode = true;
 
@@ -2335,16 +2316,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     protected void TrySetCommandsForDrawingItemLayer(DrawingItemLayer layer)
     {
-        layer.Commands = DrawingItemCommands?.Select(dic => dic(layer))?.ToList();
-
-        //1398.11.14
-        //layer.Commands = new List<ILegendCommand>()
-        //        {
-        //            LegendCommand.CreateZoomToExtentCommand(this, layer),
-        //            LegendCommand.CreateRemoveDrawingItemLayer(this, layer),
-        //            LegendCommand.CreateEditDrawingItemLayer(this, layer),
-        //            LegendCommand.CreateExportDrawingItemLayerAsShapefile(this, layer),
-        //        };
+        layer.Commands = DrawingItemCommands?.Select(dic => dic(layer))?.ToList() ?? [];
 
         layer.RequestHighlightGeometry = async di =>
          {
@@ -4053,13 +4025,13 @@ public abstract class MapViewModelBase : ViewModelBase
     /// <summary>
     /// Opens the CSV/TSV import dialog and adds the layer.
     /// </summary>
-    public virtual async Task AddCsvFile(object owner, bool isLongitudeFirst)
+    public virtual async Task AddDelimitedTextFile(object owner, bool initialIsCsv)
     {
         try
         {
             IsBusy = true;
 
-            var result = await DialogService.ShowCsvTsvOpenDialogAsync(ownerWindow: null, initialIsCsv: true, initialSrid: null);
+            var result = await DialogService.ShowCsvTsvOpenDialogAsync(ownerWindow: null, initialIsCsv: initialIsCsv, initialSrid: null);
 
             if (result == null || string.IsNullOrWhiteSpace(result.RawText))
             {
@@ -4067,9 +4039,13 @@ public abstract class MapViewModelBase : ViewModelBase
                 return;
             }
 
-            MemoryDataSource dataSource = result.IsCsv
-                ? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader)
-                : await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader);
+            DataSourceKind dataSourceKind = result.IsCsv ? DataSourceKind.Csv : DataSourceKind.Tsv;
+
+            var dataSource = await TextDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, dataSourceKind, result.UseFirstLineAsHeader);
+
+            //MemoryDataSource dataSource = result.IsCsv
+                //? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader)
+                //: await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader);
 
             if (dataSource == null)
                 return;
@@ -4098,53 +4074,57 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    /// <summary>
-    /// Opens the CSV/TSV import dialog and adds the layer.
-    /// </summary>
-    public virtual async Task AddTsvFile(object owner, bool isLongitudeFirst)
-    {
-        try
-        {
-            IsBusy = true;
+    ///// <summary>
+    ///// Opens the CSV/TSV import dialog and adds the layer.
+    ///// </summary>
+    //public virtual async Task AddTsvFile(object owner, bool isLongitudeFirst)
+    //{
+    //    try
+    //    {
+    //        IsBusy = true;
 
-            var result = await DialogService.ShowCsvTsvOpenDialogAsync(ownerWindow: null, initialIsCsv: false, initialSrid: null);
+    //        var result = await DialogService.ShowCsvTsvOpenDialogAsync(ownerWindow: null, initialIsCsv: false, initialSrid: null);
 
-            if (result == null || string.IsNullOrWhiteSpace(result.RawText))
-            {
-                IsBusy = false;
-                return;
-            }
+    //        if (result == null || string.IsNullOrWhiteSpace(result.RawText))
+    //        {
+    //            IsBusy = false;
+    //            return;
+    //        }
 
-            MemoryDataSource dataSource = result.IsCsv
-                ? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader)
-                : await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader);
+    //        DataSourceKind dataSourceKind = result.IsCsv ? DataSourceKind.Csv : DataSourceKind.Tsv;
 
-            if (dataSource == null)
-                return;
+    //        var dataSource = await TextDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, dataSourceKind, result.UseFirstLineAsHeader);
 
-            var layerName = !string.IsNullOrEmpty(result.FilePath)
-                ? Path.GetFileNameWithoutExtension(result.FilePath)
-                : (result.IsCsv ? "CSV Import" : "TSV Import");
+    //        //MemoryDataSource dataSource = result.IsCsv
+    //        //    ? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader)
+    //        //    : await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader);
 
-            AddLayer(new VectorLayer(layerName, dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
-        }
-        catch (IOException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
-        catch (Exception ex)
-        {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
+    //        if (dataSource == null)
+    //            return;
+
+    //        var layerName = !string.IsNullOrEmpty(result.FilePath)
+    //            ? Path.GetFileNameWithoutExtension(result.FilePath)
+    //            : (result.IsCsv ? "CSV Import" : "TSV Import");
+
+    //        AddLayer(new VectorLayer(layerName, dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
+    //    }
+    //    catch (IOException)
+    //    {
+    //        await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+    //    }
+    //    catch (UnauthorizedAccessException)
+    //    {
+    //        await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+    //    }
+    //    finally
+    //    {
+    //        IsBusy = false;
+    //    }
+    //}
 
     public virtual async Task AddGeoJson(object owner)
     {
@@ -4547,7 +4527,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_addTsvCommand == null)
             {
-                _addTsvCommand = new RelayCommand(async param => { await AddTsvFile(param, true); });
+                _addTsvCommand = new RelayCommand(async param => { await AddDelimitedTextFile(param, false); });
             }
 
             return _addTsvCommand;
@@ -4561,7 +4541,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_addCsvCommand == null)
             {
-                _addCsvCommand = new RelayCommand(async param => { await AddCsvFile(param, true); });
+                _addCsvCommand = new RelayCommand(async param => { await AddDelimitedTextFile(param, true); });
             }
 
             return _addCsvCommand;

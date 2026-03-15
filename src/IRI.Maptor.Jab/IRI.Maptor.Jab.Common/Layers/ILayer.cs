@@ -65,6 +65,8 @@ public interface ILayer
 
     bool IsInScaleRange { get; set; }
 
+    bool IsNotInScaleRange { get; }
+
     double Opacity { get; set; }
 
     Visibility Visibility { get; set; }

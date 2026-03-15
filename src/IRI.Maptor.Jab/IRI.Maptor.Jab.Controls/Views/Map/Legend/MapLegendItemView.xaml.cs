@@ -133,17 +133,17 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
 
     #endregion
 
-    private bool _isInScaleRange;
+    //private bool _isInScaleRange;
 
-    public bool IsInScaleRange
-    {
-        get { return _isInScaleRange; }
-        set
-        {
-            _isInScaleRange = value;
-            //RaisePropertyChanged();
-        }
-    }
+    //public bool IsInScaleRange
+    //{
+    //    get { return _isInScaleRange; }
+    //    set
+    //    {
+    //        _isInScaleRange = value;
+    //        //RaisePropertyChanged();
+    //    }
+    //}
      
     //public string SymbologyExpanderHeaderText => LocalizationManager.Instance[LocalizationResourceKeys.legend_symbologyExpanderHeaderText.ToString()];
 
