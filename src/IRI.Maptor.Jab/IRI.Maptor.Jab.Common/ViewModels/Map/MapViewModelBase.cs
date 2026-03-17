@@ -4041,7 +4041,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             DataSourceKind dataSourceKind = result.IsCsv ? DataSourceKind.Csv : DataSourceKind.Tsv;
 
-            var dataSource = await TextDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, dataSourceKind, result.UseFirstLineAsHeader);
+            var dataSource = await TextDataSource.CreateFromTextAsync(result.RawText, result.GeometryType, dataSourceKind, result.SelectedSrid, result.IsLongitudeFirst, result.UseFirstLineAsHeader);
 
             //MemoryDataSource dataSource = result.IsCsv
                 //? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader)

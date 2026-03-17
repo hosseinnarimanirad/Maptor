@@ -204,7 +204,7 @@ public class LegendCommand : LegendCommandBase
             {
                 newLayer.Features = new System.Collections.ObjectModel.ObservableCollection<Feature<Point>>(features.Features);
             }
-             
+
             map.AddSelectedLayer(newLayer);
 
             //map.ShowAttributeTable = true;
@@ -247,9 +247,13 @@ public class LegendCommand : LegendCommandBase
     public static Func<MapViewModelBase, ILayer, ILegendCommand> CreateExportAsShapefileFunc = (presenter, layer) => CreateExportAsShapefile(presenter, layer as VectorLayer);
     public static ILegendCommand CreateExportAsShapefile(MapViewModelBase map, VectorLayer layer)
     {
+        var resource = System.Windows.Application.Current?.FindResource("shp");
+
+        var geometry = resource as System.Windows.Media.Geometry;
+
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsShapefile))
         {
-            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile,
+            PathMarkup = geometry?.ToString(),// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile,
             Layer = layer,
         };
 
@@ -276,9 +280,13 @@ public class LegendCommand : LegendCommandBase
     public static Func<MapViewModelBase, ILayer, ILegendCommand> CreateExportAsGeoJsonFunc = (presenter, layer) => CreateExportAsGeoJson(presenter, layer as VectorLayer);
     public static ILegendCommand CreateExportAsGeoJson(MapViewModelBase map, VectorLayer layer)
     {
+        var resource = System.Windows.Application.Current?.FindResource("json");
+
+        var geometry = resource as System.Windows.Media.Geometry;
+
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsGeoJson))
         {
-            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,
+            PathMarkup = geometry?.ToString(),// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,
             Layer = layer,
         };
 
@@ -395,9 +403,13 @@ public class LegendCommand : LegendCommandBase
     // *******************************************
     public static ILegendCommand CreateExportDrawingItemLayerAsShapefile(MapViewModelBase map, DrawingItemLayer layer)
     {
+        var resource = System.Windows.Application.Current?.FindResource("shp");
+
+        var geometry = resource as System.Windows.Media.Geometry;
+
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsShapefile))
         {
-            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile,
+            PathMarkup = geometry?.ToString(),// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile,
             Layer = layer,
         };
 
@@ -427,9 +439,13 @@ public class LegendCommand : LegendCommandBase
     // *******************************************
     public static ILegendCommand CreateExportDrawingItemLayerAsGeoJson(MapViewModelBase map, DrawingItemLayer layer)
     {
+        var resource = System.Windows.Application.Current?.FindResource("json");
+
+        var geometry = resource as System.Windows.Media.Geometry;
+
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsGeoJson))
         {
-            PathMarkup = IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,
+            PathMarkup = geometry?.ToString(),// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,
             Layer = layer,
         };
 

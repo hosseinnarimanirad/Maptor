@@ -17,7 +17,6 @@ namespace IRI.Maptor.Jab.Controls.Views.Security
             set { SetValue(InputBorderBrushProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for InputBorderBrush.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty InputBorderBrushProperty =
             DependencyProperty.Register(nameof(InputBorderBrush), typeof(Brush), typeof(SecurityInputUserControl), new PropertyMetadata(null));
 
@@ -28,7 +27,6 @@ namespace IRI.Maptor.Jab.Controls.Views.Security
             set { SetValue(InputBorderThicknessProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for InputBorderThickness.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty InputBorderThicknessProperty =
             DependencyProperty.Register(nameof(InputBorderThickness), typeof(Thickness), typeof(SecurityInputUserControl), new PropertyMetadata(new Thickness()));
 

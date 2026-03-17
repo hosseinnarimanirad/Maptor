@@ -7,8 +7,6 @@
             xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.Views.Security"
             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
             xmlns:validation="clr-namespace:IRI.Maptor.Jab.Common.Assets.ValidationRules;assembly=IRI.Maptor.Jab.Common"
-            xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-            xmlns:i1="http://schemas.microsoft.com/xaml/behaviors" 
             xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" x:Name="root">
     <local:SecurityInputUserControl.Resources>
         <ResourceDictionary>
@@ -20,27 +18,26 @@
     </local:SecurityInputUserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/> 
         </Grid.RowDefinitions>
   
-        <Border Grid.Row="1" Style="{StaticResource borderGroup}">
+        <Border Grid.Row="0" Style="{StaticResource borderGroup}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="Email" Style="{StaticResource securityIconMaterial}"/>
-                <TextBox Grid.Column="1" Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight"
+                <TextBox Grid.Column="1"
+                         Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight"
                          mahApp:TextBoxHelper.Watermark="{Binding [common_email], Source={StaticResource Localization}}">
-                    <i1:Interaction.Triggers>
+                    <!--<i1:Interaction.Triggers>
                         <i1:EventTrigger EventName="LostFocus">
                             <i1:InvokeCommandAction  Command="{Binding ValidateUserNameOrEmailCommand}" CommandParameter="{Binding ElementName=root}"/>
                         </i1:EventTrigger>
-                    </i1:Interaction.Triggers>
+                    </i1:Interaction.Triggers>-->
                     <TextBox.Text>
                         <Binding ElementName="root" Path="UserNameOrEmail" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                             <Binding.ValidationRules>
@@ -52,32 +49,35 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="3" Style="{StaticResource borderGroup}">
+        <Border Grid.Row="1" Style="{StaticResource borderGroup}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions> 
                 <iconPacks:PackIconPhosphorIcons Kind="PasswordFill" Style="{StaticResource securityIconPhosphor}"/>
-                <PasswordBox Grid.Column="1" Style="{StaticResource securityPasswordBoxBase}" x:Name="key" mahApp:TextBoxHelper.Watermark="{Binding [common_password], Source={StaticResource Localization}}"/>
+                <PasswordBox x:Name="key" Grid.Column="1"
+                             Style="{StaticResource securityPasswordBoxBase}"
+                             mahApp:TextBoxHelper.Watermark="{Binding [common_password], Source={StaticResource Localization}}"/>
             </Grid>
         </Border>
-
-
-        <Border Grid.Row="4" Style="{StaticResource borderGroup}">
+ 
+        <Border Grid.Row="2" Style="{StaticResource borderGroup}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Viewbox Width="24" HorizontalAlignment="Center">
+                <Viewbox Width="32" HorizontalAlignment="Center">
                     <StackPanel Grid.Column="0">
                         <iconPacks:PackIconPhosphorIcons Kind="PasswordFill" Style="{StaticResource securityIconPhosphorConfirmRow}"/>
-                        <TextBlock Text="{Binding [common_confirm], Source={StaticResource Localization}}" FontSize="14" FontFamily="{StaticResource iranSans}" VerticalAlignment="Bottom" HorizontalAlignment="Center"
-                               Margin="0,0,0,0" Foreground="Gray"/>
+                        <TextBlock Style="{StaticResource securityPathText}"
+                                   Text="{Binding [common_confirm], Source={StaticResource Localization}}"/>
                     </StackPanel>
                 </Viewbox>
-                <PasswordBox Grid.Column="1" Style="{StaticResource securityPasswordBoxBase}" x:Name="confirmPassword" mahApp:TextBoxHelper.Watermark="{Binding [common_confirmPassword], Source={StaticResource Localization}}"/>
+                <PasswordBox x:Name="confirmPassword" Grid.Column="1"
+                             Style="{StaticResource securityPasswordBoxBase}"
+                             mahApp:TextBoxHelper.Watermark="{Binding [common_confirmPassword], Source={StaticResource Localization}}"/>
             </Grid>
         </Border>
 

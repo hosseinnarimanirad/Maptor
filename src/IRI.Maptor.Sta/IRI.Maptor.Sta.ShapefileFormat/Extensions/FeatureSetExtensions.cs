@@ -45,7 +45,15 @@ public static class FeatureSetExtensions
     /// </summary>
     public static void SaveAsCsv(this FeatureSet<Point> featureSet, string csvFileName, bool includeHeader = true)
     {
-        SaveAsDelimited(featureSet, csvFileName, IOHelper.CsvDelimiterChar, includeHeader);
+        SaveAsDelimited(featureSet, csvFileName, IOHelper.CsvDelimiterChar, includeHeader, null);
+    }
+
+    /// <summary>
+    /// Saves point features to a CSV file in the specified target SRID. First two columns are X, Y (or longitude, latitude for WGS84); remaining columns are attributes.
+    /// </summary>
+    public static void SaveAsCsv(this FeatureSet<Point> featureSet, string csvFileName, bool includeHeader, int targetSrid)
+    {
+        SaveAsDelimited(featureSet, csvFileName, IOHelper.CsvDelimiterChar, includeHeader, targetSrid);
     }
 
     /// <summary>
@@ -53,24 +61,36 @@ public static class FeatureSetExtensions
     /// </summary>
     public static void SaveAsTsv(this FeatureSet<Point> featureSet, string tsvFileName, bool includeHeader = true)
     {
-        SaveAsDelimited(featureSet, tsvFileName, IOHelper.TsvDelimiterChar, includeHeader);
+        SaveAsDelimited(featureSet, tsvFileName, IOHelper.TsvDelimiterChar, includeHeader, null);
     }
 
-    private static void SaveAsDelimited(FeatureSet<Point> featureSet, string fileName, char delimiter, bool includeHeader)
+    /// <summary>
+    /// Saves point features to a TSV file in the specified target SRID. First two columns are X, Y (or longitude, latitude for WGS84); remaining columns are attributes.
+    /// </summary>
+    public static void SaveAsTsv(this FeatureSet<Point> featureSet, string tsvFileName, bool includeHeader, int targetSrid)
+    {
+        SaveAsDelimited(featureSet, tsvFileName, IOHelper.TsvDelimiterChar, includeHeader, targetSrid);
+    }
+
+    private static void SaveAsDelimited(FeatureSet<Point> featureSet, string fileName, char delimiter, bool includeHeader, int? targetSrid)
     {
         var features = featureSet.Features.ToList();
         if (features.Count == 0)
             return;
 
-        var srsBase = SridHelper.AsSrsBase(featureSet.Srid);
+        var sourceSrs = SridHelper.AsSrsBase(featureSet.Srid);
+        var effectiveTargetSrid = targetSrid ?? SridHelper.GeodeticWGS84;
+        var targetSrs = SridHelper.AsSrsBase(effectiveTargetSrid);
         var attributeKeys = featureSet.Fields?.Select(f => f.Name).ToList()
             ?? features.First().Attributes.Keys.OrderBy(k => k).ToList();
+
+        var coordHeader = effectiveTargetSrid == SridHelper.GeodeticWGS84 ? new[] { "longitude", "latitude" } : new[] { "X", "Y" };
 
         var lines = new List<string>();
 
         if (includeHeader)
         {
-            var header = new List<string> { "longitude", "latitude" };
+            var header = new List<string>(coordHeader);
             header.AddRange(attributeKeys);
             lines.Add(string.Join(delimiter.ToString(), header.Select(v => EscapeDelimitedValue(v, delimiter))));
         }
@@ -81,11 +101,11 @@ public static class FeatureSetExtensions
             if (point == null)
                 continue;
 
-            var wgs84 = srsBase.ToWgs84Geodetic(point);
+            var projectedPoint = targetSrs != null ? point.Project(sourceSrs, targetSrs) : sourceSrs.ToWgs84Geodetic(point);
             var values = new List<string>
             {
-                wgs84.X.ToString(CultureInfo.InvariantCulture),
-                wgs84.Y.ToString(CultureInfo.InvariantCulture)
+                projectedPoint.X.ToString(CultureInfo.InvariantCulture),
+                projectedPoint.Y.ToString(CultureInfo.InvariantCulture)
             };
 
             foreach (var key in attributeKeys)

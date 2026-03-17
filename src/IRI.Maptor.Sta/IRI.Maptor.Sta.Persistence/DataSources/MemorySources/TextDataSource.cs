@@ -25,9 +25,11 @@ public class TextDataSource : MemoryDataSource
 
     private readonly string _fileName;
     private readonly bool _useFirstLineAsHeader;
+    private readonly int _sourceSrid;
 
     private TextDataSource(string fileName,
                             List<Feature<Point>> features,
+                            int sourceSrid,
                             bool useFirstLineAsHeader,
                             DataSourceKind dataSourceKind)
         : base(features, resetIds: true, kind: dataSourceKind)
@@ -38,6 +40,8 @@ public class TextDataSource : MemoryDataSource
         _fileName = fileName ?? string.Empty;
 
         _useFirstLineAsHeader = useFirstLineAsHeader;
+
+        _sourceSrid = sourceSrid;
     }
 
     public override string ToString() => $"{nameof(TextDataSource)}";
@@ -47,10 +51,10 @@ public class TextDataSource : MemoryDataSource
         if (!string.IsNullOrWhiteSpace(_fileName))
         {
             if (DataSourceKind == DataSourceKind.Csv)
-                _featureSet.SaveAsCsv(_fileName, _useFirstLineAsHeader);
+                _featureSet.SaveAsCsv(_fileName, _useFirstLineAsHeader, _sourceSrid);
 
             else if (DataSourceKind == DataSourceKind.Tsv)
-                _featureSet.SaveAsTsv(_fileName, _useFirstLineAsHeader);
+                _featureSet.SaveAsTsv(_fileName, _useFirstLineAsHeader, _sourceSrid);
 
             else
                 throw new ArgumentException();
@@ -95,7 +99,7 @@ public class TextDataSource : MemoryDataSource
     /// <summary>
     /// Creates a CsvDataSource from a CSV file with the specified spatial reference.
     /// </summary>
-    public static async Task<TextDataSource> CreateFromFileAsync(string fileName, bool useFirstLineAsHeader, int sourceSrid, bool isLongitudeFirst, GeometryType type, DataSourceKind dataSourceKind)
+    public static async Task<TextDataSource> CreateFromFileAsync(string fileName, GeometryType type, DataSourceKind dataSourceKind, int sourceSrid, bool useFirstLineAsHeader, bool isLongitudeFirst)
     {
         if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
             throw new FileNotFoundException($"CSV/TSV file not found: {fileName}", fileName);
@@ -105,20 +109,20 @@ public class TextDataSource : MemoryDataSource
 
         var delimiter = dataSourceKind == DataSourceKind.Csv ? IOHelper.CsvDelimiterChar : IOHelper.TsvDelimiterChar;
 
-        var rawData = await IOHelper.ReadAllDelimitedFileAsync(fileName, delimiter);
+        var rawData = await IOHelper.ReadAllDelimitedFileAsync(fileName, ignoreEmptyLines: true, delimiter);
 
         var features = ParseToWebMercatorFeatures(rawData, useFirstLineAsHeader, isLongitudeFirst, sourceSrid, type);
 
         if (features.Count == 0)
             throw new InvalidOperationException($"No features found in CSV/TSV file: {fileName}");
 
-        return new TextDataSource(fileName, features, useFirstLineAsHeader, dataSourceKind);
+        return new TextDataSource(fileName, features, sourceSrid, useFirstLineAsHeader, dataSourceKind);
     }
 
     /// <summary>
     /// Creates a CsvDataSource from pasted or in-memory text (e.g. from clipboard).
     /// </summary>
-    public static Task<TextDataSource> CreateFromTextAsync(string text, int sourceSrid, bool isLongitudeFirst, GeometryType type, DataSourceKind dataSourceKind, bool useFirstLineAsHeader = false)
+    public static Task<TextDataSource> CreateFromTextAsync(string text, GeometryType type, DataSourceKind dataSourceKind, int sourceSrid, bool isLongitudeFirst, bool useFirstLineAsHeader)
     {
         if (string.IsNullOrWhiteSpace(text))
             throw new ArgumentException("Text cannot be empty.", nameof(text));
@@ -135,62 +139,117 @@ public class TextDataSource : MemoryDataSource
         if (features.Count == 0)
             throw new InvalidOperationException("No valid features found in the text.");
 
-        return Task.FromResult(new TextDataSource(string.Empty, features, useFirstLineAsHeader, dataSourceKind));
+        return Task.FromResult(new TextDataSource(string.Empty, features, sourceSrid, useFirstLineAsHeader, dataSourceKind));
+    }
+
+    private static (int xIndex, int yIndex) FindXyColumnIndices(string[] headerRow, bool isLongitudeFirst)
+    {
+        var xAliases = new[] { "x", "lon", "lng", "longitude", "long" };
+        var yAliases = new[] { "y", "lat", "latitude" };
+
+        int xIndex = -1;
+        int yIndex = -1;
+
+        for (int i = 0; i < headerRow.Length; i++)
+        {
+            var cell = headerRow[i]?.Trim() ?? string.Empty;
+            if (xIndex < 0 && xAliases.Contains(cell, StringComparer.OrdinalIgnoreCase))
+                xIndex = i;
+            if (yIndex < 0 && yAliases.Contains(cell, StringComparer.OrdinalIgnoreCase))
+                yIndex = i;
+            if (xIndex >= 0 && yIndex >= 0)
+                break;
+        }
+
+        return (xIndex >= 0 && yIndex >= 0 && xIndex != yIndex) ? (xIndex, yIndex) : (isLongitudeFirst ? (0, 1) : (1, 0));
     }
 
     private static List<Feature<Point>> ParseToWebMercatorFeatures(List<string[]> rawData, bool useFirstLineAsHeader, bool isLongitudeFirst, int sourceSrid, GeometryType type)
     {
-        if (rawData == null || rawData.Count == 0)
-            return new List<Feature<Point>>();
+        if (rawData.IsNullOrEmpty())
+            return [];
 
         var sourceSrs = SridHelper.AsSrsBase(sourceSrid);
-        if (sourceSrs == null)
+
+        if (sourceSrs is null)
             throw new ArgumentException($"Unsupported SRID: {sourceSrid}", nameof(sourceSrid));
 
-        int startIndex = 0;
-        List<string> header;
-        if (useFirstLineAsHeader && rawData[0].Length >= 2)
+        string[] headerRow;
+
+        int startIndex = useFirstLineAsHeader ? 1 : 0;
+
+        int xIndex = isLongitudeFirst ? 0 : 1;
+
+        int yIndex = isLongitudeFirst ? 1 : 0;
+
+        List<string> attributeHeaders;
+
+        if (useFirstLineAsHeader)
         {
-            startIndex = 1;
-            header = rawData[0].Length > 2 ? rawData[0].Skip(2).ToList() : new List<string>();
+            headerRow = rawData[0];
+
+            if (type == IRI.Maptor.Sta.Common.Enums.GeometryType.Point)
+            {
+                (xIndex, yIndex) = FindXyColumnIndices(headerRow, isLongitudeFirst);
+            }
+
+            attributeHeaders = new List<string>();
+
+            for (int p = 0; p < headerRow.Length; p++)
+            {
+                if (p != xIndex && p != yIndex)
+                    attributeHeaders.Add(!string.IsNullOrWhiteSpace(headerRow[p]) ? headerRow[p].Trim() : $"header {attributeHeaders.Count + 1}");
+            }
         }
         else
         {
-            int colCount = rawData[0].Length;
-            header = colCount > 2 ? Enumerable.Range(1, colCount - 2).Select(i => $"header {i}").ToList() : new List<string>();
+            int colCount = rawData.Count > 0 ? rawData[0].Length : 0;
+
+            headerRow = Array.Empty<string>();
+
+            attributeHeaders = colCount > 2 ? Enumerable.Range(1, colCount - 2).Select(i => $"header {i}").ToList() : new List<string>();
         }
 
         var webMercator = new WebMercator();
+
         var result = new List<Feature<Point>>();
 
         for (int i = startIndex; i < rawData.Count; i++)
         {
-            if (rawData[i].Length < 2)
+            if (rawData[i].Length < Math.Max(xIndex, yIndex) + 1)
                 continue;
 
-            double v0 = double.Parse(rawData[i][0]);
-            double v1 = double.Parse(rawData[i][1]);
-            double x = isLongitudeFirst ? v0 : v1;
-            double y = isLongitudeFirst ? v1 : v0;
-
+            double x = double.Parse(rawData[i][xIndex]);
+            double y = double.Parse(rawData[i][yIndex]);
+             
             var point = new Point(x, y);
-            var geom = Geometry<Point>.Create(new List<Point> { point }, IRI.Maptor.Sta.Common.Enums.GeometryType.Point, sourceSrid);
+
+            var geom = Geometry<Point>.Create([point], IRI.Maptor.Sta.Common.Enums.GeometryType.Point, sourceSrid);
+
             var projected = geom.Project(sourceSrs, webMercator);
 
-            var attrs = new Dictionary<string, object>();
-            for (int p = 2; p < rawData[i].Length && p - 2 < header.Count; p++)
+            var attributes = new Dictionary<string, object>();
+
+            int attributeIdx = 0;
+
+            for (int p = 0; p < rawData[i].Length; p++)
             {
-                attrs[header[p - 2]] = rawData[i][p];
+                if (p != xIndex && p != yIndex)
+                {
+                    var attrName = attributeIdx < attributeHeaders.Count ? attributeHeaders[attributeIdx] : $"header {attributeIdx + 1}";
+                    attributes[attrName] = rawData[i][p];
+                    attributeIdx++;
+                }
             }
 
-            result.Add(new Feature<Point> { TheGeometry = projected, Attributes = attrs });
+            result.Add(new Feature<Point> { TheGeometry = projected, Attributes = attributes });
         }
 
-        if (type == Common.Enums.GeometryType.Polygon)
+        if (type == IRI.Maptor.Sta.Common.Enums.GeometryType.Polygon)
         {
             return [Geometry<Point>.CreatePolygon(result.Select(r => r.TheGeometry.AsPoint()).ToList(), SridHelper.WebMercator).AsFeature()];
         }
-        else if (type == Common.Enums.GeometryType.LineString)
+        if (type == IRI.Maptor.Sta.Common.Enums.GeometryType.LineString)
         {
             return [Geometry<Point>.CreateLineStringFromPoints(result.Select(r => r.TheGeometry).ToList()).AsFeature()];
         }

@@ -86,6 +86,15 @@
         <Setter Property="Height" Value="39"/>
     </Style>
 
+    <Style x:Key="securityPathText" TargetType="TextBlock">
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray2}"/>
+    </Style>
+
     <Style x:Key="myErrorTemplate" TargetType="Control">
         <Setter Property="Validation.ErrorTemplate">
             <Setter.Value>

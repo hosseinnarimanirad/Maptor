@@ -60,29 +60,6 @@ namespace IRI.Maptor.Jab.Controls.Views.Security
         // Using a DependencyProperty as the backing store for UsreName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty UsreNameProperty =
             DependencyProperty.Register(nameof(UserNameOrEmail), typeof(string), typeof(UserPasswordInputView), new PropertyMetadata(string.Empty));
-
-
-
-        //public Brush InputBorderBrush
-        //{
-        //    get { return (Brush)GetValue(InputBorderBrushProperty); }
-        //    set { SetValue(InputBorderBrushProperty, value); }
-        //}
-
-        //// Using a DependencyProperty as the backing store for InputBorderBrush.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty InputBorderBrushProperty =
-        //    DependencyProperty.Register(nameof(InputBorderBrush), typeof(Brush), typeof(UserPasswordInputView), new PropertyMetadata(null));
-
-
-        //public Thickness InputBorderThickness
-        //{
-        //    get { return (Thickness)GetValue(InputBorderThicknessProperty); }
-        //    set { SetValue(InputBorderThicknessProperty, value); }
-        //}
-
-        //// Using a DependencyProperty as the backing store for InputBorderThickness.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty InputBorderThicknessProperty =
-        //    DependencyProperty.Register(nameof(InputBorderThickness), typeof(Thickness), typeof(UserPasswordInputView), new PropertyMetadata(new Thickness()));
-
+         
     }
 }

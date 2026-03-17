@@ -13,6 +13,9 @@ public static class IOHelper
 
     public const char TsvDelimiterChar = '\t';
 
+    //Pipe-separated values
+    public const char PsvDelimiterChar = '|';
+
     /// <summary>
     /// Depth-first recursive delete, with handling for descendant 
     /// directories open in Windows Explorer.
@@ -79,19 +82,20 @@ public static class IOHelper
         return result;
     }
 
-    public static async Task<List<string[]>> ReadAllDelimitedFileAsync(string fileName, params char[] delimited)
+    public static async Task<List<string[]>> ReadAllDelimitedFileAsync(string fileName, bool ignoreEmptyLines, params char[] delimited)
     {
-        if (!File.Exists(fileName))
-        {
-            return new List<string[]>();
-        }
-
-        var lines = await File.ReadAllLinesAsync(fileName);
-
         var result = new List<string[]>();
 
+        if (!File.Exists(fileName))
+            return result;
+
+        var lines = await File.ReadAllLinesAsync(fileName);
+         
         foreach (var line in lines)
         {
+            if (ignoreEmptyLines && string.IsNullOrWhiteSpace(line))
+                continue;
+
             result.Add(line.Split(delimited));
         }
 
@@ -129,21 +133,21 @@ public static class IOHelper
     public static List<string[]> ReadDelimitedFromText(string text, params char[] delimited)
     {
         if (string.IsNullOrWhiteSpace(text))
-            return new List<string[]>();
+            return [];
 
         var lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
         return lines.Select(line => line.Split(delimited)).ToList();
     }
 
-    public static List<string[]> ReadAsCsv(string fileName)
+    public static Task<List<string[]>> ReadAsCsv(string fileName, bool ignoreEmptyLines)
     {
-        return ReadAllDelimitedFile(fileName, CsvDelimiterChar);
+        return ReadAllDelimitedFileAsync(fileName, ignoreEmptyLines, CsvDelimiterChar);
     }
 
-    public static List<string[]> ReadAsTsv(string fileName)
+    public static Task<List<string[]>> ReadAsTsv(string fileName, bool ignoreEmptyLines)
     {
-        return ReadAllDelimitedFile(fileName, TsvDelimiterChar);
+        return ReadAllDelimitedFileAsync(fileName, ignoreEmptyLines, TsvDelimiterChar);
     }
 
 }
