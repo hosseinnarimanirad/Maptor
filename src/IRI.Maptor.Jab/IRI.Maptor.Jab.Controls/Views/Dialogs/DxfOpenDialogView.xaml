@@ -187,12 +187,12 @@
             <Button ToolTip="{Binding [common_cancel], Source={StaticResource Localization}}" 
                     Style="{StaticResource circleButtonLight}"
                     Command="{Binding CancelCommand}" Margin="4" >
-                <iconPacks:PackIconModern Kind="Close" Foreground="White"/>
+                <iconPacks:PackIconMaterial Kind="CloseThick" Foreground="White"/>
             </Button>
             <Button ToolTip="{Binding [common_open], Source={StaticResource Localization}}" Margin="4" 
                     Style="{StaticResource circleButtonLight}"
                     Command="{Binding OpenCommand}"  >
-                <iconPacks:PackIconModern Kind="Check" Foreground="White"/>
+                <iconPacks:PackIconMaterial Kind="CheckBold" Foreground="White"/>
             </Button>
         </StackPanel>
     </Grid>

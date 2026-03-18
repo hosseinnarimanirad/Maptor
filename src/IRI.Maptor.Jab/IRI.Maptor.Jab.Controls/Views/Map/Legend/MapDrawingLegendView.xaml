@@ -16,12 +16,11 @@
                 </ResourceDictionary.MergedDictionaries>
                 <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
              
-                <Style TargetType="{x:Type iconPacks:PackIconModern}" BasedOn="{StaticResource circleButtonPackIconModern}">
                     <!--<Setter Property="HorizontalAlignment" Value="Center"/>
                     <Setter Property="VerticalAlignment" Value="Center"/>
                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                     <Setter Property="Width" Value="16"/>-->
-                </Style>
+                <!--</Style>-->
                 <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource circleButtonPackIconMaterial}">
                     <!--<Setter Property="HorizontalAlignment" Value="Center"/>
                     <Setter Property="VerticalAlignment" Value="Center"/>
@@ -149,21 +148,22 @@
                         VerticalScrollBarVisibility="Auto"
                         Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
             <DockPanel HorizontalAlignment="Center" FlowDirection="LeftToRight">
-                <Button Style="{StaticResource circleButtonLight}" Command="{Binding MoveDrawingItemDownCommand}"  
-                        ToolTip="{Binding [cmd_drawingLegend_moveDown], Source={StaticResource Localization}}"                  
-                        IsEnabled="{Binding CanMoveDrawingItemDown}">
-                    <iconPacks:PackIconModern Kind="LayerDown" />
-                </Button>
                 <Button Style="{StaticResource circleButtonLight}" Command="{Binding MoveDrawingItemUpCommand}"  
                         ToolTip="{Binding [cmd_drawingLegend_moveUp], Source={StaticResource Localization}}" 
                         IsEnabled="{Binding CanMoveDrawingItemUp}">
-                    <iconPacks:PackIconModern Kind="LayerUp" />
+                    <iconPacks:PackIconMaterial Kind="ArrangeBringForward" />
                 </Button>
+                <Button Style="{StaticResource circleButtonLight}" Command="{Binding MoveDrawingItemDownCommand}"  
+                        ToolTip="{Binding [cmd_drawingLegend_moveDown], Source={StaticResource Localization}}"                  
+                        IsEnabled="{Binding CanMoveDrawingItemDown}">
+                    <iconPacks:PackIconMaterial Kind="ArrangeSendBackward" />
+                </Button>
+                
 
                 <Expander Style="{StaticResource toggleHorizontalExpander}"
                             IsExpanded="{Binding ElementName=root, Path=SelectedExpanderIndex, Converter={StaticResource indexToBoolConverter}, ConverterParameter=1}">
                     <Expander.Header>
-                        <iconPacks:PackIconModern Kind="Add" Foreground="White"/>
+                        <iconPacks:PackIconMaterial Kind="Plus" Foreground="White"/>
                     </Expander.Header>
                     <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center" >
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddGeoJsonToDrawingItemsCommand}"  

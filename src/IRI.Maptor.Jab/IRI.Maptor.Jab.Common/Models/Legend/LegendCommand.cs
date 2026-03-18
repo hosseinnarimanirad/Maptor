@@ -91,7 +91,7 @@ public class LegendCommand : LegendCommandBase
 
     public static ILegendCommand CreateShowSymbologyView(ILayer layer, Action showSymbologyViewAction)
     {
-        var pathMarkup = new PackIconModern() { Kind = PackIconModernKind.Cart }.Data;
+        var pathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.Cart }.Data;
 
         return Create(layer, showSymbologyViewAction, pathMarkup, nameof(Resources.cmd_legendItem_showSymbology));
     }
@@ -178,7 +178,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_showAttributes))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.PageText }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.TableLarge }.Data,
             Layer = layer,
         };
 
@@ -219,7 +219,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsPng))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Image }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.Image }.Data,
             Layer = layer,
         };
 
@@ -360,7 +360,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_edit))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Edit }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.Pencil }.Data,
             Layer = layer,
         };
 
@@ -531,7 +531,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsPng))
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Image }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.Image }.Data,
             Layer = layer,
         };
 
@@ -770,7 +770,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand()
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.FlagTriangle }.Data,
             Layer = layer,
             ToolTipResourceKey = "ساده‌سازی روش زاویه",
         };
@@ -799,7 +799,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand()
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.FlagTriangle }.Data,
             Layer = layer,
             ToolTipResourceKey = "ساده‌سازی روش مساحت",
         };
@@ -828,7 +828,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand()
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.FlagTriangle }.Data,
             Layer = layer,
             ToolTipResourceKey = "ساده‌سازی روش ویزوال",
         };
@@ -855,7 +855,7 @@ public class LegendCommand : LegendCommandBase
     {
         var result = new LegendCommand()
         {
-            PathMarkup = new PackIconModern() { Kind = PackIconModernKind.Flag }.Data,
+            PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.FlagTriangle }.Data,
             Layer = layer,
             ToolTipResourceKey = "ساده‌سازی روش داگلاس",
         };

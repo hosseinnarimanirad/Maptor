@@ -565,7 +565,7 @@ public class DefaultDialogService : IDialogService
         if (string.IsNullOrWhiteSpace(message))
             throw new ArgumentException("Message cannot be null or empty.", nameof(message));
 
-        var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.Information }.Data;
+        var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.InformationSymbol }.Data;
 
         DialogViewModel viewModel = new(true)
         {

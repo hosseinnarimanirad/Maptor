@@ -15,7 +15,6 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
-            <Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Margin="4">

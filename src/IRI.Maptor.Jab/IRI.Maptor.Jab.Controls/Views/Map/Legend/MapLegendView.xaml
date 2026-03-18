@@ -19,7 +19,6 @@
 
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
-            <Style TargetType="{x:Type iconPacks:PackIconModern}" BasedOn="{StaticResource circleButtonPackIconModern}"/>
             <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
             <Style TargetType="{x:Type Path}" BasedOn="{StaticResource circleButtonPath}"/>
 
@@ -373,7 +372,7 @@
                                                 <StackPanel Orientation="Horizontal">
                                                     <Path Style="{StaticResource menuPath}"
                                                           Data="{Binding Kind, Converter={StaticResource dataSourceKindToGeometryConverter}}"/>
-                                                    <iconPacks:PackIconMaterial Kind="Check" Margin="2,0,0,0" VerticalAlignment="Center" >
+                                                    <iconPacks:PackIconMaterial Kind="CheckBold" Margin="2,0,0,0" VerticalAlignment="Center" >
                                                         <iconPacks:PackIconMaterial.Style>
                                                             <Style TargetType="iconPacks:PackIconMaterial">
                                                                 <Setter Property="Foreground" Value="Transparent"/>

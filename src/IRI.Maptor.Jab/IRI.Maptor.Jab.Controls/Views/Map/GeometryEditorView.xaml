@@ -17,7 +17,6 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Fonts.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
-            <!--<Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>-->
  
             <converters:DistanceAzimuthConverter x:Key="distanceAzimuthConverter"/>
             <converters:LocalizedFormatConverter x:Key="localizedFormatConverter"/>
@@ -239,7 +238,7 @@
                                 Command="{Binding ApplyCurrentPointChangesCommand}" 
                                 IsEnabled="{Binding CurrentPointEditor, Converter={StaticResource notNullToBoolConverter}}"
                                 Margin="4,0,0,0">
-                            <iconPacks:PackIconMaterial Kind="Check"/>
+                            <iconPacks:PackIconMaterial Kind="CheckBold"/>
                         </Button>
                         <Button Style="{StaticResource circleButtonLight}"
                                  Command="{Binding AddPointCommand}" 

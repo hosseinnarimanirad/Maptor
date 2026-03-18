@@ -10,17 +10,18 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 using IRI.Maptor.Sta.Spatial.IO;
 using SixLabors.ImageSharp.ColorSpaces;
+using MahApps.Metro.IconPacks;
 
 namespace IRI.Maptor.Jab.Common.Assets.Converters;
 
 public class DataSourceKindToGeometryConverter : IValueConverter
 {
-    private const string FallbackKey = "otherInfo";
+    //private const string FallbackKey = "otherInfo";
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value is not DataSourceKind kind)
-            return GetFallbackGeometry();
+            return Geometry.Empty;
 
         var key = kind switch
         {
@@ -39,39 +40,38 @@ public class DataSourceKindToGeometryConverter : IValueConverter
             DataSourceKind.GML => "gml",
             DataSourceKind.Worldfile => "wrd",
             DataSourceKind.ZippedImagePyramid => "pyrd",
-            DataSourceKind.Other => FallbackKey,
-            _ => FallbackKey
+            DataSourceKind.Other or _ => string.Empty,
         };
 
-        try
-        {
-            var resource = Application.Current?.FindResource(key);
-            if (resource is Geometry geometry)
-                return geometry;
-        }
-        catch (ResourceReferenceKeyNotFoundException)
-        {
-            // key not in resource tree
-        }
+        var resource = Application.Current?.FindResource(key);
 
-        return GetFallbackGeometry();
+        if (resource is Geometry geometry)
+            return geometry;
+
+        else
+            return Geometry.Empty;
+         
     }
 
-    private static Geometry GetFallbackGeometry()
-    {
-        try
-        {
-            var resource = Application.Current?.FindResource(FallbackKey);
-            if (resource is Geometry geometry)
-                return geometry;
-        }
-        catch (ResourceReferenceKeyNotFoundException)
-        {
-            // ignore
-        }
+    //private static Geometry GetFallbackGeometry()
+    //{
+    //    ////var data = new PackIconMaterial() { Kind = PackIconMaterialKind.StretchToPageOutline }.Data;
 
-        return Geometry.Empty;
-    }
+    //    ////return Geometry.Parse(data);
+
+    //    //try
+    //    //{
+    //    //    var resource = Application.Current?.FindResource(FallbackKey);
+    //    //    if (resource is Geometry geometry)
+    //    //        return geometry;
+    //    //}
+    //    //catch (ResourceReferenceKeyNotFoundException)
+    //    //{
+    //    //    // ignore
+    //    //}
+
+    //    //return Geometry.Empty;
+    //}
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {

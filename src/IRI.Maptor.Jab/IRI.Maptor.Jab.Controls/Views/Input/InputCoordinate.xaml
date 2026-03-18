@@ -34,7 +34,7 @@
 
         <Button Grid.ColumnSpan="7" Margin="4" Command="{Binding DrawGeometryCommand}"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0">
-                <iconPacks:PackIconModern Kind="VectorPen" Width="16" Foreground="{DynamicResource MahApps.Brushes.Accent}" />
+                <iconPacks:PackIconMaterial Kind="FountainPenTip" Width="16" Foreground="{DynamicResource MahApps.Brushes.Accent}" />
                 <TextBlock Text="{Binding [input_drawFeatureOnMap], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="2,0"/>
             </StackPanel>
         </Button>
@@ -59,7 +59,7 @@
                  Visibility="{Binding ElementName=coordinateType, Path=SelectedIndex, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}" Grid.Row="1"/>
         <Button Grid.Column="6" Name="save" Grid.RowSpan="1"  Click="save_Click" Foreground="{DynamicResource MahApps.Brushes.Accent}"
                 HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4" Grid.Row="1" Padding="4">
-            <iconPacks:Modern Kind="Add" Width="16"/>
+            <iconPacks:PackIconMaterial Kind="Plus" Width="16"/>
         </Button>
         <Label Name="note" Grid.Row="4" Grid.ColumnSpan="5" FontStyle="Italic" Foreground="DarkGray" Content="{Binding [input_coordinateNote], Source={StaticResource Localization}}"/>
         <DataGrid Name="pointList" AutoGenerateColumns="False" AlternatingRowBackground="LightBlue" ItemsSource="{Binding PointCollection}"

@@ -306,7 +306,7 @@
                         ToolTip="{Binding [legendItem_PendingChanges_Save], Source={StaticResource Localization}}"
                         Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
                     <Viewbox Margin="4">
-                        <iconPacks:PackIconModern Kind="Save" Style="{StaticResource circleButtonPackIconModern}"/>
+                        <iconPacks:PackIconMaterial Kind="ContentSave" Style="{StaticResource circleButtonPackIconMaterial}"/>
                     </Viewbox>
                 </Button>
                 <Button Style="{StaticResource circleButtonLight}" Width="24" Height="24" Focusable="True"  
@@ -314,7 +314,7 @@
                         ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}"
                         Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
                     <Viewbox Margin="4">
-                        <iconPacks:PackIconModern Kind="UndoCurve" Style="{StaticResource circleButtonPackIconModern}"/>
+                        <iconPacks:PackIconMaterial Kind="Undo" Style="{StaticResource circleButtonPackIconMaterial}"/>
                     </Viewbox>
                 </Button>
 
@@ -377,14 +377,14 @@
                                         Command="{Binding SaveChangesCommand}"
                                         ToolTip="{Binding [legendItem_PendingChanges_Save], Source={StaticResource Localization}}">
                                     <Viewbox Margin="4">
-                                        <iconPacks:PackIconModern Kind="Save" Foreground="White" FlowDirection="LeftToRight"/>
+                                        <iconPacks:PackIconMaterial Kind="ContentSave" Foreground="White" FlowDirection="LeftToRight"/>
                                     </Viewbox>
                                 </Button>
                                 <Button Style="{StaticResource circleButtonLight}"   
                                         Command="{Binding UndoAllChangesCommand}"
                                         ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}">
                                     <Viewbox Margin="4">
-                                        <iconPacks:PackIconModern Kind="UndoCurve" Foreground="White" FlowDirection="LeftToRight"/>
+                                        <iconPacks:PackIconMaterial Kind="Undo" Foreground="White" FlowDirection="LeftToRight"/>
                                     </Viewbox>
                                 </Button>
                             </StackPanel>

@@ -63,10 +63,10 @@
 
         <StackPanel Grid.Row="2" Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Style="{StaticResource circleButtonLight}" Command="{Binding CloseCommand}">
-                <iconPacks:PackIconModern Kind="Close" Style="{StaticResource circleButtonPackIconModern}"/>
+                <iconPacks:PackIconMaterial Kind="CloseThick" Style="{StaticResource circleButtonPackIconMaterial}"/>
             </Button>
-            <Button Style="{StaticResource circleButtonLight}" Command="{Binding ApplyCommand}"> 
-                <iconPacks:PackIconModern Kind="Check" Style="{StaticResource circleButtonPackIconModern}"/>
+            <Button Style="{StaticResource circleButtonLight}" Command="{Binding ApplyCommand}">
+                <iconPacks:PackIconMaterial Kind="CheckBold" Style="{StaticResource circleButtonPackIconMaterial}"/>
             </Button>
         </StackPanel>
     </Grid>

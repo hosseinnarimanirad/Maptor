@@ -189,7 +189,7 @@
                     IsEnabled="{Binding CanDelete}"
                     ToolTip="{Binding [featureTable_delete], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
-                <iconPacks:PackIconModern Kind="Delete" Foreground="White" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconMaterial Kind="Delete" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
             <Button Command="{Binding EditCommand}"
                     Style="{StaticResource circleButtonLight}"
@@ -197,20 +197,20 @@
                     ToolTip="{Binding [featureTable_editGeometry], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}"
                     Padding="0">
-                <iconPacks:PackIconModern Kind="Edit" Foreground="White" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconMaterial Kind="Pencil" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
             <Button Command="{Binding UndoCommand}"
                     Style="{StaticResource circleButtonLight}"
                     IsEnabled="{Binding CanUndo}"
                     ToolTip="{Binding [featureTable_undo], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
-                <iconPacks:PackIconModern Kind="UndoCurve" Foreground="White" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconMaterial Kind="Undo" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
             <Button Command="{Binding SaveCommand}"
                     Style="{StaticResource circleButtonLight}"
                     ToolTip="{Binding [featureTable_saveChanges], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
-                <iconPacks:PackIconModern Kind="Save" Foreground="White" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconMaterial Kind="ContentSave" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
             <Button Command="{Binding ViewChangesCommand}"
                     Style="{StaticResource circleButtonLight}"

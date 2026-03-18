@@ -157,7 +157,7 @@
         </ComboBox>
 
         <Button Grid.Column="2" Command="{Binding AddCommand}">
-            <iconPacks:PackIconModern
+            <iconPacks:PackIconMaterial
                 Kind="{Binding PathKind, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                 Width="{Binding Path=PathSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" 
                 Height="{Binding Path=PathSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"

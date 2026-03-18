@@ -34,7 +34,6 @@
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
-            <!--<Style TargetType="iconPacks:PackIconModern" BasedOn="{StaticResource circleButtonPackIconModern}"/>-->
 
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
                 <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12" />
@@ -188,12 +187,12 @@
             <Button ToolTip="{Binding [dialog_common_cancel], Source={StaticResource Localization}}" 
                         Command="{Binding CancelEditingCommand}" Margin="4" 
                         Style="{StaticResource circleButtonLight}">
-                <iconPacks:PackIconMaterial Kind="Close"/>
+                <iconPacks:PackIconMaterial Kind="CloseThick"/>
             </Button>
             <Button ToolTip="{Binding [dialog_common_save], Source={StaticResource Localization}}" 
                         Command="{Binding SaveGeometryCommand}" Margin="4"  
                         Style="{StaticResource circleButtonLight}">
-                <iconPacks:PackIconMaterial Kind="Check"/>
+                <iconPacks:PackIconMaterial Kind="CheckBold"/>
             </Button>
         </StackPanel>
 

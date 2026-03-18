@@ -23,13 +23,13 @@
         <ToolBar Grid.Row="0">
             <Button Command="{Binding ImportSldCommand}" ToolTip="{Binding [sldEditor_common_importTooltip], Source={StaticResource Localization}}">
                 <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconModern Kind="FolderOpen" Margin="0,0,5,0"/>
+                    <iconPacks:PackIconMaterial Kind="FolderOpen" Margin="0,0,5,0"/>
                     <TextBlock Text="{Binding [sldEditor_common_import], Source={StaticResource Localization}}"/>
                 </StackPanel>
             </Button>
             <Button Command="{Binding ExportSldCommand}" ToolTip="{Binding [sldEditor_common_exportTooltip], Source={StaticResource Localization}}">
                 <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconModern Kind="Save" Margin="0,0,5,0"/>
+                    <iconPacks:PackIconMaterial Kind="ContentSave" Margin="0,0,5,0"/>
                     <TextBlock Text="{Binding [sldEditor_common_export], Source={StaticResource Localization}}"/>
                 </StackPanel>
             </Button>

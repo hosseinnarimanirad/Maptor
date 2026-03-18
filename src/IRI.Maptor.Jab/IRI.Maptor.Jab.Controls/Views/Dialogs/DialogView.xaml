@@ -14,7 +14,7 @@
                 SizeToContent="WidthAndHeight" MinWidth="400" FontFamily="{StaticResource iranSans}" WindowStartupLocation="CenterOwner">
     <Grid Margin="16">
         <Grid.Resources> 
-            <Style TargetType="iconPacks:PackIconModern">
+            <Style TargetType="iconPacks:PackIconMaterial">
                 <!--<Setter Property="Foreground" Value="White"/>-->
                 <!--<Setter Property="Stretch" Value="Uniform"/>-->
                 <Setter Property="Width" Value="18"/>
@@ -36,7 +36,7 @@
         <StackPanel Orientation="Horizontal" Margin="8">
             <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Margin="10" Height="40" Width="40" 
                     BorderThickness="3" CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <iconPacks:PackIconModern Kind="Information" Foreground="{StaticResource MahApps.Brushes.Accent}" />
+                <iconPacks:PackIconMaterial Kind="InformationSymbol" Foreground="{StaticResource MahApps.Brushes.Accent}" />
             </Border>
             <TextBlock Text="{Binding Message}" Margin="8,0" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap" 
                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
@@ -46,12 +46,12 @@
                     Background="{Binding SecondOptionColor, FallbackValue={DynamicResource MahApps.Brushes.Gray10}, RelativeSource={RelativeSource AncestorType=Window}}"
                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                     Visibility="{Binding IsTwoOptionsMode, Converter={StaticResource boolToVisibilityConverter}}">
-                    <iconPacks:Modern Kind="Close"/>
+                    <iconPacks:PackIconMaterial Kind="CloseThick"/>
                 </Button>
             <Button Margin="4,0" Style="{StaticResource circleButton}" Command="{Binding FirstOptionCommand}" ToolTip="{Binding FirstOptionText}"
                     Background="{Binding FirstOptionColor, FallbackValue={DynamicResource MahApps.Brushes.Accent}, RelativeSource={RelativeSource AncestorType=Window}}"
                     Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
-                    <iconPacks:Modern Kind="Check"/>
+                <iconPacks:PackIconMaterial Kind="CheckBold"/>
                 </Button>
         </StackPanel>
     </Grid>

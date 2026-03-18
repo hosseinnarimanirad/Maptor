@@ -113,7 +113,7 @@ public class ApplicationPresenter : MapViewModelBase
                 this.AddDrawingItem(simplified, $"{layer.LayerName} simplified by logistic-{this.LogisticGeometrySimplification.Title}-{this.CurrentZoomLevel}");
             });
 
-            var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.CameraFlash }.Data;
+            var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.Flash }.Data;
 
             return LegendCommand.Create(layer, action, markup, "ساده‌سازی لجستیک");
         });
@@ -132,7 +132,7 @@ public class ApplicationPresenter : MapViewModelBase
                 this.AddDrawingItem(simplified, $"{layer.LayerName} simplified by LRSv4-{this.CurrentZoomLevel}", VisualParameters.GetStroke("#DE36A1"));
             });
 
-            var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.CameraFlash }.Data;
+            var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.Flash }.Data;
 
             return LegendCommand.Create(layer, action, markup, "LRSv4");
         });
@@ -156,7 +156,7 @@ public class ApplicationPresenter : MapViewModelBase
 
             });
 
-            var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.CameraFlash }.Data;
+            var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.Flash}.Data;
 
             return LegendCommand.Create(layer, action, markup, "LRSv7");
         });
@@ -221,7 +221,7 @@ public class ApplicationPresenter : MapViewModelBase
 
             });
 
-            var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.CameraFlash }.Data;
+            var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.Flash }.Data;
 
             return LegendCommand.Create(layer, action, markup, "ALL");
         });
@@ -253,7 +253,7 @@ public class ApplicationPresenter : MapViewModelBase
                 //await ExportMapAsPngAsync(null, mapBoundingBox);
             });
 
-            var markup = new MahApps.Metro.IconPacks.PackIconModern() { Kind = MahApps.Metro.IconPacks.PackIconModernKind.Printer }.Data;
+            var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.Printer }.Data;
 
             return LegendCommand.Create(layer, action, markup, "Print 128");
         });

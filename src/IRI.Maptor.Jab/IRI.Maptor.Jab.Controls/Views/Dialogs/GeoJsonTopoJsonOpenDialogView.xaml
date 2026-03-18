@@ -248,11 +248,11 @@
         <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
             <Button ToolTip="{Binding [common_cancel], Source={StaticResource Localization}}"
                     Style="{StaticResource circleButtonLight}" Command="{Binding CancelCommand}" Margin="2">
-                <iconPacks:PackIconModern Kind="Close" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>
+                <iconPacks:PackIconMaterial Kind="CloseThick" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>
             </Button>
             <Button ToolTip="{Binding [common_open], Source={StaticResource Localization}}" Margin="2"
                     Style="{StaticResource circleButtonLight}" Command="{Binding OpenCommand}">
-                <iconPacks:PackIconModern Kind="Check" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>
+                <iconPacks:PackIconMaterial Kind="CheckBold" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>
             </Button>
         </StackPanel>
     </Grid>

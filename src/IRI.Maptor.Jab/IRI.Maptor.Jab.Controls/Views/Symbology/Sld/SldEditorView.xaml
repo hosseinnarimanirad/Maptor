@@ -96,16 +96,16 @@
 
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4">
                         <Button Command="{Binding AddRuleCommand}" ToolTip="{Binding [sldEditor_common_addRule], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
-                            <iconPacks:PackIconModern Kind="Add" />
+                            <iconPacks:PackIconMaterial Kind="Plus" />
                         </Button>
                         <Button Command="{Binding RemoveRuleCommand}" ToolTip="{Binding [sldEditor_common_removeRule], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
-                            <iconPacks:PackIconModern Kind="Delete" />
+                            <iconPacks:PackIconMaterial Kind="Delete" />
                         </Button>
                         <Button Command="{Binding MoveRuleUpCommand}" ToolTip="{Binding [sldEditor_common_moveUp], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
-                            <iconPacks:PackIconModern Kind="Up" />
+                            <iconPacks:PackIconMaterial Kind="ChevronUp" />
                         </Button>
                         <Button Command="{Binding MoveRuleDownCommand}" ToolTip="{Binding [sldEditor_common_moveDown], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
-                            <iconPacks:PackIconModern Kind="Down" />
+                            <iconPacks:PackIconMaterial Kind="ChevronDown" />
                         </Button>
                     </StackPanel>
 
@@ -179,24 +179,24 @@
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4">
                             <Button Command="{Binding SelectedRule.AddPointSymbolizerCommand}" 
                                     ToolTip="{Binding [sldEditor_common_addPointSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
-                                <iconPacks:PackIconModern Kind="LocationDot" />
+                                <iconPacks:PackIconMaterial Kind="MapMarkerPlusOutline" />
                             </Button>
                             <Button Command="{Binding SelectedRule.AddLineSymbolizerCommand}" 
                                     ToolTip="{Binding [sldEditor_common_addLineSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
-                                <iconPacks:PackIconModern Kind="PathMake" />
+                                <iconPacks:PackIconMaterial Kind="VectorPolylinePlus" />
                             </Button>
                             <Button Command="{Binding SelectedRule.AddPolygonSymbolizerCommand}" 
                                     ToolTip="{Binding [sldEditor_common_addPolygonSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
-                                <iconPacks:PackIconModern Kind="Shape" />
+                                <iconPacks:PackIconMaterial Kind="ShapePolygonPlus" />
                             </Button>
                             <Button Command="{Binding SelectedRule.AddTextSymbolizerCommand}" 
                                     ToolTip="{Binding [sldEditor_common_addTextSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
-                                <iconPacks:PackIconModern Kind="TextBox" />
+                                <iconPacks:PackIconMaterial Kind="FormatAnnotationPlus" />
                             </Button>
                             <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="4,0"/>
                             <Button Command="{Binding SelectedRule.RemoveSymbolizerCommand}" 
                                     ToolTip="{Binding [sldEditor_common_removeSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
-                                <iconPacks:PackIconModern Kind="Delete" />
+                                <iconPacks:PackIconMaterial Kind="Delete" />
                             </Button>
                         </StackPanel>
 
