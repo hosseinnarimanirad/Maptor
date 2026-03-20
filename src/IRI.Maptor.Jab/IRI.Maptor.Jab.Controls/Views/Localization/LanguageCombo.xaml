@@ -3,9 +3,9 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"  >
     <ComboBox ItemsSource="{Binding AvailableLanguages}" SelectedItem="{Binding SelectedLanguage}" HorizontalContentAlignment="Center" VerticalAlignment="Center">
-        <ComboBox.DataContext>
+        <!--<ComboBox.DataContext>
             <localization:LanguageSelectorViewModel/>
-        </ComboBox.DataContext>
+        </ComboBox.DataContext>-->
         <ComboBox.ItemTemplate>
             <DataTemplate>
                 <StackPanel Orientation="Horizontal" Margin="3">

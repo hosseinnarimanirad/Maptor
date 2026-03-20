@@ -1,13 +1,17 @@
 using System;
-
+using System.Collections.Generic;
 using IRI.Maptor.Jab.Common.Abstractions;
+using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Models.Themes;
 
 namespace IRI.Maptor.Jab.Common.Data;
 
 public class GeneralSettings : IGeneralSettings
 {
-    public string? SelectedCultureName { get; set; } = "fa-IR";
+    //public string? SelectedCultureName { get; set; } = "fa-IR";
+    public LanguageType CurrentLanguage { get; set; } = LanguageType.fa_IR;
+
+    public List<LanguageType> AvailableLanguages { get; set; } = [LanguageType.en_US, LanguageType.fa_IR];
 
     public double LegendFontSize { get; set; } = 10;
 

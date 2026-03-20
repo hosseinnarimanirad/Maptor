@@ -163,7 +163,7 @@
                 <Expander Style="{StaticResource toggleHorizontalExpander}"
                             IsExpanded="{Binding ElementName=root, Path=SelectedExpanderIndex, Converter={StaticResource indexToBoolConverter}, ConverterParameter=1}">
                     <Expander.Header>
-                        <iconPacks:PackIconMaterial Kind="Plus" Foreground="White"/>
+                        <iconPacks:PackIconMaterial Kind="FilePlusOutline" Foreground="White"/>
                     </Expander.Header>
                     <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center" >
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddGeoJsonToDrawingItemsCommand}"  
@@ -189,7 +189,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding DrawPointCommand}" 
                                 ToolTip="{Binding [cmd_general_drawPoint], Source={StaticResource Localization}}"  >
-                            <iconPacks:Material Kind="MapMarkerPlusOutline"/>
+                            <iconPacks:PackIconMaterial Kind="VectorPointPlus" Width="14"/>
                         </Button>
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding DrawPolylineCommand}" 
                                 ToolTip="{Binding [cmd_general_drawPolyline], Source={StaticResource Localization}}">

@@ -16,11 +16,13 @@ public class LocalizationManager : INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private static readonly LocalizationManager _instance = new LocalizationManager();
+
     public static LocalizationManager Instance => _instance;
 
     private CultureInfo _currentCulture = CultureInfo.CurrentUICulture;
 
     private readonly List<ResourceManager> _registeredManagers = new();
+
     private readonly object _managersLock = new();
 
     // Custom event to avoid PropertyChanged overhead

@@ -3,6 +3,8 @@ using System;
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Models.Themes;
+using IRI.Maptor.Jab.Common.Localization;
+using System.Collections.Generic;
 
 namespace IRI.Maptor.Jab.Common.Models.Settings;
 
@@ -10,15 +12,37 @@ public class GeneralSettingsModel : Notifier, IGeneralSettings
 {
     protected readonly IGeneralSettings _settings;
 
-    public string? SelectedCultureName
+    //public string? SelectedCultureName
+    //{
+    //    get => _settings.SelectedCultureName;
+    //    set
+    //    {
+    //        _settings.SelectedCultureName = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
+
+    public LanguageType CurrentLanguage
     {
-        get => _settings.SelectedCultureName;
+        get => _settings.CurrentLanguage;
         set
         {
-            _settings.SelectedCultureName = value;
+            _settings.CurrentLanguage = value;
             RaisePropertyChanged();
         }
     }
+
+
+    public List<LanguageType> AvailableLanguages
+    {
+        get => _settings.AvailableLanguages;
+        set
+        {
+            _settings.AvailableLanguages = value;
+            RaisePropertyChanged();
+        }
+    }
+
 
     public double LegendFontSize
     {

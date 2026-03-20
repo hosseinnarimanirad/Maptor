@@ -1402,7 +1402,7 @@ public partial class MapViewer : NotifiableUserControl
                 Fill = fill,
                 //Data = geometry,
                 Data = area,
-                StrokeThickness = 1,
+                StrokeThickness = _presenter.MapSettings.ShowTileBorder ? 1 : 0,
                 Stroke = Brushes.Gray,
                 StrokeDashArray = [2, 3],
                 Tag = new LayerTag(this.MapScale) { Layer = layer, Tile = tile },

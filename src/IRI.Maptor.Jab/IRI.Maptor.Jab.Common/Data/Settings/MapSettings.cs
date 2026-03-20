@@ -12,6 +12,9 @@ public class MapSettings : IMapSettings
     public int MaxGoogleZoomLevel { get; set; } = 20;
     public int MinGoogleZoomLevel { get; set; } = 1;
 
+    public bool AllowLargeDataLoading { get; set; } = false;
+
+    public bool ShowTileBorder { get; set; } = true;
 
     public bool Identify_IncludeNotInScaleRangeLayers { get; set; } = true;
 

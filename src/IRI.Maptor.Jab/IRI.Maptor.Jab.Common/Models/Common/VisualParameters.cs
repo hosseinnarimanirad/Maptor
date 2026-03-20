@@ -192,8 +192,9 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
     /// <summary>
     /// The type of joint used at the vertices of a shape's outline. 
     /// The default value is Miter.
+    /// Miter make sharp line joins to prevent it we use Round as default.
     /// </summary>
-    public PenLineJoin PenLineJoin { get; set; } = PenLineJoin.Miter;
+    public PenLineJoin PenLineJoin { get; set; } = PenLineJoin.Round;
 
     /// <summary>
     /// The limit on the ratio of the miter length to half the pen's Thickness. 

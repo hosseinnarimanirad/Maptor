@@ -10,9 +10,9 @@ using IRI.Maptor.Jab.Common.Events;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 
-public class AccountDialogViewModel : DialogViewModelBase
+public class AccountViewModel : DialogViewModelBase
 {
-    public AccountDialogViewModel(AuthenticationType type, IDialogService dialogService)
+    public AccountViewModel(AuthenticationType type, IDialogService dialogService)
     {
         Type = type;
 
@@ -148,10 +148,7 @@ public class AccountDialogViewModel : DialogViewModelBase
         }
     }
 
-    public bool HasLoginMessage
-    {
-        get { return LoginMessage?.Length > 0; }
-    }
+    public bool HasLoginMessage => LoginMessage?.Length > 0;
 
 
     #endregion
@@ -322,7 +319,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     //****************************************************   Login  *****************************************************
     private RelayCommand _loginCommand;
-
     public RelayCommand LoginCommand
     {
         get
@@ -338,7 +334,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     //****************************************************   Login Guest  ***********************************************
     private RelayCommand _loginGuestCommand;
-
     public RelayCommand LoginGuestCommand
     {
         get
@@ -359,7 +354,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     //****************************************************   Login Google OAuth  ****************************************
     private RelayCommand _loginWithGoogleOAuthCommand;
-
     public RelayCommand LoginWithGoogleOAuthCommand
     {
         get
@@ -385,7 +379,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     //****************************************************   Sign Up  ***************************************************
     private RelayCommand _signUpCommand;
-
     public RelayCommand SignUpCommand
     {
         get
@@ -402,7 +395,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     //****************************************************   Sign Out  **************************************************
     private RelayCommand _signOutCommand;
-
     public RelayCommand SignOutCommand
     {
         get
@@ -422,7 +414,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     //****************************************************   Reset Password  ********************************************
     private RelayCommand _resetPasswordCommand;
-
     public RelayCommand ResetPasswordCommand
     {
         get
@@ -442,7 +433,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     //****************************************************   Forget Password  *******************************************
     private RelayCommand _handleForgetPasswordCommand;
-
     public RelayCommand HandleForgetPasswordCommand
     {
         get
@@ -462,7 +452,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     //****************************************************   Change Password  *******************************************
     private RelayCommand _changePasswordCommand;
-
     public RelayCommand ChangePasswordCommand
     {
         get
@@ -491,7 +480,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     //****************************************************   Show Dialog Sign Up  ***************************************
     private RelayCommand _showSignUpDialogViewCommand;
-
     public RelayCommand ShowSignUpDialogViewCommand
     {
         get
@@ -530,7 +518,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
     //other
     private RelayCommand _verifyEmailAddressCommand;
-
     public RelayCommand VerifyEmailAddressCommand
     {
         get
@@ -549,7 +536,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
 
     private RelayCommand _goToTermsOfUserWebPage;
-
     public RelayCommand GoToTermsOfUserWebPage
     {
         get
@@ -569,7 +555,6 @@ public class AccountDialogViewModel : DialogViewModelBase
 
 
     private RelayCommand _clearInputValuesCommand;
-
     public RelayCommand ClearInputValuesCommand
     {
         get
@@ -592,13 +577,37 @@ public class AccountDialogViewModel : DialogViewModelBase
     }
 
 
+    private RelayCommand _showChangePasswordDialogCommand;
+    public RelayCommand ShowChangePasswordDialogCommand
+    {
+        get
+        {
+            if (_showChangePasswordDialogCommand == null)
+            {
+                _showChangePasswordDialogCommand = new RelayCommand(async param =>
+                {
+                    var viewModel = await DialogService?.ShowChangePasswordDialog(param, ihp =>
+                    {
+                        var parameter = new SimpleUserEmailPasswordModel(ihp.Password) { UserNameOrEmail = UserName };
+
+                        return RequestAuthenticateAsync(parameter);
+                    });
+
+                    await ChangePassword(viewModel, param);
+                });
+            }
+
+            return _showChangePasswordDialogCommand;
+        }
+    }
+
     #endregion
 
 
     //****************************************************   Show Dialog Change Password  *******************************
     //private RelayCommand _showChangePasswordDialogViewCommand;
 
-    //public RelayCommand ShowChangePasswordDialogViewCommand
+    //public RelayCommand ShowChangePasswordDialogCommand
     //{
     //    get
     //    {
@@ -621,33 +630,8 @@ public class AccountDialogViewModel : DialogViewModelBase
     //        return _showChangePasswordDialogViewCommand;
     //    }
     //}
-     
-     
-    private RelayCommand _showChangePasswordDialogViewCommand;
 
-    public RelayCommand ShowChangePasswordDialogViewCommand
-    {
-        get
-        {
-            if (_showChangePasswordDialogViewCommand == null)
-            {
-                _showChangePasswordDialogViewCommand = new RelayCommand(async param =>
-                {
-                    var viewModel = await DialogService?.ShowChangePasswordDialog(param, ihp =>
-                    {
-                        var parameter = new SimpleUserEmailPasswordModel(ihp.Password) { UserNameOrEmail = UserName };
 
-                        return RequestAuthenticateAsync(parameter);
-                    });
-
-                    await ChangePassword(viewModel, param);
-                });
-            }
-
-            return _showChangePasswordDialogViewCommand;
-        }
-    }
-     
     #region Private Methods
     private async Task ChangePassword(ChangePasswordDialogViewModel viewModel, object ownerWindow)
     {

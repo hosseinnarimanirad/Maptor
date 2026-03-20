@@ -1,10 +1,15 @@
+using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Models.Themes;
+using System.Collections.Generic;
 
 namespace IRI.Maptor.Jab.Common.Abstractions;
 
 public interface IGeneralSettings
 {
-    string? SelectedCultureName { get; set; }
+    //string? SelectedCultureName { get; set; }
+    LanguageType CurrentLanguage { get; set; }
+
+    List<LanguageType> AvailableLanguages { get; set; }
 
     double LegendFontSize { get; set; }
 

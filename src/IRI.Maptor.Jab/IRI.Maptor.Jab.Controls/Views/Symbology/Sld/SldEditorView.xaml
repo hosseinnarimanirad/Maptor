@@ -179,7 +179,7 @@
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4">
                             <Button Command="{Binding SelectedRule.AddPointSymbolizerCommand}" 
                                     ToolTip="{Binding [sldEditor_common_addPointSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
-                                <iconPacks:PackIconMaterial Kind="MapMarkerPlusOutline" />
+                                <iconPacks:PackIconMaterial Kind="VectorPointPlus" />
                             </Button>
                             <Button Command="{Binding SelectedRule.AddLineSymbolizerCommand}" 
                                     ToolTip="{Binding [sldEditor_common_addLineSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">

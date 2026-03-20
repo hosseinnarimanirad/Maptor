@@ -1416,4 +1416,7 @@
   <data name="dialog_common_eastingFirst" xml:space="preserve">
     <value>اول X بعد Y</value>
   </data>
+  <data name="ui_header_attributeTable" xml:space="preserve">
+    <value>جدول اطلاعات توصیفی</value>
+  </data>
 </root>

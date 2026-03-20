@@ -46,7 +46,8 @@ using IRI.Maptor.Jab.Common.Models.Spatialable;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Models.Settings;
-using IRI.Maptor.Sta.Common.Enums; 
+using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Jab.Common.Localization;
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
@@ -167,6 +168,19 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
     #region Properties
+
+
+    private LanguageSelectorViewModel? _languageSelector;
+    public LanguageSelectorViewModel? LanguageSelector
+    {
+        get { return _languageSelector; }
+        set
+        {
+            _languageSelector = value;
+            RaisePropertyChanged();
+        }
+    }
+
 
     private MapInfoViewModel _mapPanel;
     public MapInfoViewModel MapPanel
@@ -875,6 +889,10 @@ public abstract class MapViewModelBase : ViewModelBase
         this.MapProviders = BaseMapSettings.MapProviders;
 
         this.SelectedMapProvider = this.MapProviders?.FirstOrDefault(m => m.Type == BaseMapSettings.InitialBaseMap);
+
+        this.LanguageSelector = new LanguageSelectorViewModel(
+            this.GeneralSettings.AvailableLanguages,
+            languageItem => { this.GeneralSettings.CurrentLanguage = languageItem.LanguageType; });
 
         this.UpdateTilesServices();
     }
@@ -3399,7 +3417,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         FileInfo info = new FileInfo(fileName);
 
-        if (maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
+        if (!this.MapSettings.AllowLargeDataLoading && maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
         {
             await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", owner);
 
@@ -4044,8 +4062,8 @@ public abstract class MapViewModelBase : ViewModelBase
             var dataSource = await TextDataSource.CreateFromTextAsync(result.RawText, result.GeometryType, dataSourceKind, result.SelectedSrid, result.IsLongitudeFirst, result.UseFirstLineAsHeader);
 
             //MemoryDataSource dataSource = result.IsCsv
-                //? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader)
-                //: await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader);
+            //? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader)
+            //: await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader);
 
             if (dataSource == null)
                 return;

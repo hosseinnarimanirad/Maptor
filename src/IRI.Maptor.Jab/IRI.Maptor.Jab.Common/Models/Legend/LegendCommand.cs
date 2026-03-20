@@ -25,13 +25,11 @@ public class LegendCommand : LegendCommandBase
 
     private LegendCommand()
     {
-
     }
 
     public LegendCommand(string tooltipResourceKey) : base(tooltipResourceKey)
     {
     }
-
 
     #region Defaults for ILayer
 

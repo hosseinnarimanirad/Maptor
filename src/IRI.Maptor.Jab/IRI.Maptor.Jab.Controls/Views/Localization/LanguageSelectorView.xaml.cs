@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 
-namespace IRI.Maptor.Jab.Controls.Views.Localization;
+namespace IRI.Maptor.Jab.Controls.Views;
 
 /// <summary>
 /// Interaction logic for LanguageSelectorView.xaml

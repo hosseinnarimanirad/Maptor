@@ -97,6 +97,34 @@ public class MapSettingsModel : Notifier, IMapSettings
     #endregion
 
 
+    // if true, user can load large shp files
+    public bool AllowLargeDataLoading
+    {
+        get => _settings.AllowLargeDataLoading;
+        set
+        {
+            _settings.AllowLargeDataLoading = value;
+            RaisePropertyChanged(); 
+        }
+    }
+
+
+    #region Map Style
+
+    // if true, the border for webmercator tiles will apear
+    public bool ShowTileBorder
+{
+        get => _settings.ShowTileBorder;
+        set
+        {
+            _settings.ShowTileBorder = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    #endregion
+
+
     #region Identify
 
     // ignore unvisible layers or not in identify

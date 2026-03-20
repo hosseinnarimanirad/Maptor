@@ -1457,4 +1457,7 @@
     <value>X then Y</value>
     <comment>order of input coordinates x then y for geojson and csv/tsv dialog</comment>
   </data>
+  <data name="ui_header_attributeTable" xml:space="preserve">
+    <value>Attribute Table</value>
+  </data>
 </root>

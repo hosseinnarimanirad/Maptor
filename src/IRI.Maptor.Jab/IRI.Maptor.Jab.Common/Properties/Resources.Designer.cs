@@ -331,11 +331,29 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Next View.
+        /// </summary>
+        public static string cmd_general_nextView {
+            get {
+                return ResourceManager.GetString("cmd_general_nextView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pan.
         /// </summary>
         public static string cmd_general_pan {
             get {
                 return ResourceManager.GetString("cmd_general_pan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous View.
+        /// </summary>
+        public static string cmd_general_previousView {
+            get {
+                return ResourceManager.GetString("cmd_general_previousView", resourceCulture);
             }
         }
         
@@ -3910,6 +3928,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string tile_provider_yandex {
             get {
                 return ResourceManager.GetString("tile_provider_yandex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attribute Table.
+        /// </summary>
+        public static string ui_header_attributeTable {
+            get {
+                return ResourceManager.GetString("ui_header_attributeTable", resourceCulture);
             }
         }
         

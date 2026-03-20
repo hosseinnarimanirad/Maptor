@@ -11,6 +11,10 @@ public interface IMapSettings
     int MaxGoogleZoomLevel { get; set; }
     int MinGoogleZoomLevel { get; set; }
 
+    bool AllowLargeDataLoading { get; set; }
+
+    bool ShowTileBorder { get; set; }
+
     bool Identify_IncludeNotInScaleRangeLayers { get; set; }
     bool Identify_IncludeInvisibleLayers { get; set; }
     int Identify_SelectionTolerance { get; set; }
