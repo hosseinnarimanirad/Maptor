@@ -4,12 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
         xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
         xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.Views;assembly=IRI.Maptor.Jab.Controls"
         xmlns:iriJabUIComponents="clr-namespace:IRI.Maptor.Jab.MultiSelectItem.View;assembly=IRI.Maptor.Jab.MultiSelectItem"
         xmlns:MapViewer="clr-namespace:IRI.Maptor.Jab.Controls;assembly=IRI.Maptor.Jab.Controls"   
         mc:Ignorable="d" Loaded="Window_Loaded"
-        Title="Online Simplification using Logistic Regression (Demo App)" Height="850" Width="1400">
+        FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}"
+        Title="{Binding [lr_ui_title], Source={StaticResource Localization}}" Height="850" Width="1400">
     <Window.Resources>
 
         <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MahApps.Styles.Slider}"/>
@@ -39,7 +41,6 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
@@ -57,8 +58,16 @@
                     <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
                         <Setter Property="Margin" Value="4"/>
                     </Style>
+                    <Style TargetType="Expander" BasedOn="{StaticResource MahApps.Styles.Expander}">
+                        <Setter Property="Margin" Value="0,2,0,0"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="IsExpanded" Value="False"/>
+                    </Style>
                 </Grid.Resources>
-                <Expander Grid.Row="0" Cursor="Hand" Header="Toolds" IsExpanded="True">
+                
+                <!--tools-->
+                <Expander Grid.Row="0" Header="{Binding [lr_expanderTitle_tools], Source={StaticResource Localization}}">
                     <WrapPanel>
                         <Button Height="20" Content="Analyze" HorizontalAlignment="Left" Margin="2" Command="{Binding AnalyzeCommand}"/>
                         <Button Height="20" Content="Measure" HorizontalAlignment="Left" Margin="2" Command="{Binding MeasureLengthCommand}"/>
@@ -67,17 +76,21 @@
                         <Button Height="20" Content="set print area" HorizontalAlignment="Left" Margin="2" Command="{Binding SetPrintAreaCommand}"/>
                     </WrapPanel>
                 </Expander>
-                <Expander Grid.Row="1" Cursor="Hand" Header="Logistic Regression">
+
+                <!--logistic regression-->
+                <Expander Grid.Row="1" Header="{Binding [lr_expanderTitle_logisticRegression], Source={StaticResource Localization}}">
                     <WrapPanel>
                         <!--<Button Content="Create LR Model using selected drawing items" Command="{Binding CreateTrainingDataCommand}"/>-->
-                        <Button Content="Save LR model (json) ..." Command="{Binding SaveTrainingDataAsJsonCommand}"/>
-                        <Button Content="Save LR model (csv) ..." Command="{Binding SaveTrainingDataAsCsvCommand}"/>
-                        <Button Content="Load LR model ..." Command="{Binding LoadTrainingDataCommand}"/>
-                        <Button Content="Clear LR model" Command="{Binding ClearTrainingDataCommand}"/>
-                        <TextBlock Text="{Binding TrainingData.Records.Count, StringFormat={}Count:{0}, TargetNullValue=0}" FontFamily="Calibri"/>
+                        <Button Content="{Binding [lr_model_saveModelAsJson], Source={StaticResource Localization}}" Command="{Binding SaveTrainingDataAsJsonCommand}"/>
+                        <Button Content="{Binding [lr_model_saveModelAsCsv], Source={StaticResource Localization}}" Command="{Binding SaveTrainingDataAsCsvCommand}"/>
+                        <Button Content="{Binding [lr_model_loadModel], Source={StaticResource Localization}}" Command="{Binding LoadTrainingDataCommand}"/>
+                        <Button Content="{Binding [lr_model_clearModel], Source={StaticResource Localization}}" Command="{Binding ClearTrainingDataCommand}"/>
+                        <TextBlock Text="{Binding TrainingData.Records.Count, StringFormat={}#:{0}, TargetNullValue=0}" FontFamily="Calibri"/>
                     </WrapPanel>
                 </Expander>
-                <Expander Grid.Row="2" Cursor="Hand" Header="Synthetic Training Data">
+
+                <!--training-->
+                <Expander Grid.Row="2" Header="{Binding [lr_expanderTitle_trainingData], Source={StaticResource Localization}}">
                     <Grid x:Name="syntheticGrid" DataContext="{Binding SyntheticDataTrainingData}">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -94,32 +107,31 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="0" Text="Name"/>
+                        <TextBlock Grid.Row="0" Text="{Binding [lr_training_name], Source={StaticResource Localization}}"/>
                         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentItem.Title}"/>
-                        <TextBlock Text="Original" Grid.Row="1"/>
+                        <TextBlock Text="{Binding [lr_training_original], Source={StaticResource Localization}}" Grid.Row="1"/>
                         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentItem.OriginalLineString}"/>
                         <StackPanel Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding RetainCurrentItemPoints}" Content="Retain intermediate points" Margin="4"/>
+                            <CheckBox IsChecked="{Binding RetainCurrentItemPoints}" Content="{Binding [lr_training_retainIntermediatePoint], Source={StaticResource Localization}}" Margin="4"/>
                         </StackPanel>
-                        <TextBlock Grid.Row="3" Text="Simplified" />
+                        <TextBlock Grid.Row="3" Text="{Binding [lr_training_simplified], Source={StaticResource Localization}}" />
                         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CurrentItem.SimplifiedLineString}" 
                              IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
                         <!--<TextBlock Grid.Row="4" Text="Model Features"/>-->
-                        <iriJabUIComponents:MultiSelectItem Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Title="Model Features"
+                        <iriJabUIComponents:MultiSelectItem Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Title="{Binding [lr_training_modelFeatures], Source={StaticResource Localization}}"
                                                         IsMultiSelectEnabled="True" DataContext="{Binding SelectedFeatures}"
-                                                        PathSize="10" PathKind="Add" FlowDirection="LeftToRight"/>
-                        <TextBlock Grid.Row="5" Text="Parameters" />
+                                                        PathSize="10" PathKind="Plus" FlowDirection="LeftToRight"/>
+                        <TextBlock Grid.Row="5" Text="{Binding [lr_training_parameters], Source={StaticResource Localization}}" />
                         <TextBox Grid.Row="5" Grid.Column="1"  IsReadOnly="True" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
                                  Text="{Binding CurrentItem.CurrentLRParameters, Mode=OneWay}" TextWrapping="Wrap" MinHeight="105" Margin="4"/>
                         <WrapPanel Grid.Row="6" Orientation="Horizontal" Grid.ColumnSpan="2">
-                            <ToggleButton Content="Select All" IsChecked="{Binding IsAllSelected, Mode=TwoWay}"/>
-                            <Button Content="Clear All" Command="{Binding ClearAllSampleDateCommand}"/>
-                            <Button Content="New" Command="{Binding NewSampleCommand}"/>
-                            <Button Content="Preview" Command="{Binding PreviewSampleDataCommand}" Visibility="Collapsed"/>
-                            <Button Content="Add" Command="{Binding AddSampleDataCommand}"/>
-                            <Button Content="Save" Command="{Binding SaveSampleDataCommand}"/>
-                            <Button Content="Load" Command="{Binding LoadSampleDataCommand}"/>
-                            <Button Content="Build LR Model" Command="{Binding BuildModelWithSampleDataCommand}"/>
+                            <ToggleButton Content="{Binding [lr_training_cmd_selectAll], Source={StaticResource Localization}}" IsChecked="{Binding IsAllSelected, Mode=TwoWay}"/>
+                            <Button Content="{Binding [lr_training_cmd_clearAll], Source={StaticResource Localization}}" Command="{Binding ClearAllSampleDateCommand}"/>
+                            <Button Content="{Binding [lr_training_cmd_new], Source={StaticResource Localization}}" Command="{Binding NewSampleCommand}"/>
+                            <Button Content="{Binding [lr_training_cmd_add], Source={StaticResource Localization}}" Command="{Binding AddSampleDataCommand}"/>
+                            <Button Content="{Binding [lr_training_cmd_save], Source={StaticResource Localization}}" Command="{Binding SaveSampleDataCommand}"/>
+                            <Button Content="{Binding [lr_training_cmd_load], Source={StaticResource Localization}}" Command="{Binding LoadSampleDataCommand}"/>
+                            <Button Content="{Binding [lr_training_cmd_buildLRModel], Source={StaticResource Localization}}" Command="{Binding BuildModelWithSampleDataCommand}"/>
                         </WrapPanel>
                         <StackPanel Grid.Row="7" Grid.ColumnSpan="2" >
                             <Line X1="0" X2="200" Y1="0" Y2="0" StrokeThickness="1" Stroke="Black"
@@ -149,14 +161,48 @@
                         </ListBox>
                     </Grid>
                 </Expander>
-                <Expander Grid.Row="3" Cursor="Hand" Header="Drawing Items" Background="Transparent">
+
+                <!--drawing legend-->
+                <Expander Grid.Row="3" Header="{Binding [ui_header_drawingLegend], Source={StaticResource Localization}}">
                     <maptor:MapDrawingLegendView MinHeight="90" GroupName="A"/>
                 </Expander>
-                <Expander Grid.Row="4" Cursor="Hand" Header="Layer" Background="Transparent">
+
+                <!--layer legend-->
+                <Expander Grid.Row="4" Header="{Binding [ui_header_layerLegend], Source={StaticResource Localization}}">
                     <maptor:MapLegendView EnableFilterMode="True" Layers="{Binding Layers}" GroupName="B"/>
                 </Expander>
-                <Expander Grid.Row="5" Cursor="Hand" Header="Attribute Table" MaxHeight="260">
+
+                <!--attribute table-->
+                <Expander Grid.Row="5" Header="{Binding [ui_header_attributeTable], Source={StaticResource Localization}}" MaxHeight="260">
                     <maptor:FeatureTabControl/>
+                </Expander>
+
+                <!--settings-->
+                <Expander Grid.Row="6" Header="{Binding [lr_expanderTitle_settings], Source={StaticResource Localization}}">
+                    <Grid Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconMaterial Kind="Translate" Width="24" Foreground="Gray" Margin="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <ComboBox Grid.Column="1"                                   
+                                  ItemsSource="{Binding LanguageSelector.AvailableLanguages}"
+                                  SelectedValue="{Binding LanguageSelector.SelectedLanguage, Mode=TwoWay}"
+                                  FontFamily="{StaticResource iranSans}"
+                                  BorderThickness="0"
+                                  Margin="2"
+                                  FontSize="15"
+                                  MinHeight="35"
+                                  VerticalContentAlignment="Center"
+                                  HorizontalAlignment="Stretch"
+                                  FlowDirection="LeftToRight">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type localization:LanguageItem}">
+                                    <TextBlock Text="{Binding NativeName}" FlowDirection="{Binding TextFlowDirection}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </Grid>
                 </Expander>
             </Grid>
         </ScrollViewer>
@@ -171,7 +217,9 @@
                         SelectedItem="{Binding ElementName=map, Path=MapScale, Mode=TwoWay, Converter={StaticResource scaleToGoogleScaleConverter}}" />
         </StackPanel>
 
-        <maptor:Scalebar Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="4"
-                         CurrentScale="{Binding CurrentPointInverseMapScale}"/>
+        <maptor:Scalebar Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="8"
+                         ShowScaleValue="True" ShowZoomLevel="True" IsGoogleStyle="False"
+                         CurrentScale="{Binding CurrentPointInverseMapScale}"
+                         ZoomLevel="{Binding CurrentZoomLevel}"/>
     </Grid>
 </Window>

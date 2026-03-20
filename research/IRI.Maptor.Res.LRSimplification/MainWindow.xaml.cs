@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Res.LRSimplification.Common;
@@ -60,24 +60,26 @@ public partial class MainWindow : Window
     {
         var presenter = new ViewModel.ApplicationPresenter();
 
-        presenter.InitializeSettings(ProxySettings.Default, BaseMapSettings.Default, MapSettings.Default, GeneralSettings.Default);
+        var mapSettings = MapSettings.Default ;
+        mapSettings.AllowLargeDataLoading = true;
+        mapSettings.ShowTileBorder = false;
+
+        presenter.InitializeSettings(ProxySettings.Default, BaseMapSettings.Default, mapSettings, GeneralSettings.Default);
 
         await MapInitializationHelper.InitializeMapAsync(this.map, this, presenter);
 
-        await MapInitializationHelper.InitializeMapAsync(this.map, this, presenter);
-
-            //new ViewModel.ApplicationPresenter(),
-            //ProxySettings.Default,
-            //BaseMapSettings.Default,
-            //MapSettings.Default,
-            //GeneralSettings.Default);
+        //new ViewModel.ApplicationPresenter(),
+        //ProxySettings.Default,
+        //BaseMapSettings.Default,
+        //MapSettings.Default,
+        //GeneralSettings.Default);
 
         this.DataContext = presenter;
 
         presenter.RemoveAllProviders();
-         
 
-        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance); 
+
+        System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
     }
 }

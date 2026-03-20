@@ -1,4 +1,7 @@
-﻿using Microsoft.SqlServer.Types;
+using System.ComponentModel;
+using System.Globalization;
+
+using Microsoft.SqlServer.Types;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common; 
@@ -11,6 +14,12 @@ using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands; 
 using IRI.Maptor.Res.LRSimplification.ViewModel.TrainingModel;
 using IRI.Maptor.Jab.Common.ViewModels;
+using IRI.Maptor.Jab.Common.Models.Settings;
+using IRI.Maptor.Jab.Common.Data;
+using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Common.Abstractions;
+using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Res.LRSimplification.Common;
 
 
 namespace IRI.Maptor.Res.LRSimplification.ViewModel;
@@ -457,5 +466,90 @@ public class ApplicationPresenter : MapViewModelBase
         AddDrawingItem(geometry.AsGeometry());
         //AddGeometry(geometry, $"Geometry # {this.Geometries.Count}");
     }
+
+    //public override void Initialize(
+    //    IDialogService dialogService,
+    //    Action<Point> requestShowGoToView,
+    //    Action<ILayer> requestShowSymbologyView)
+    //{
+    //    base.Initialize(dialogService, requestShowGoToView, requestShowSymbologyView);
+
+    //    if (this.BaseMapSettings is not null)
+    //    {
+    //        this.BaseMapSettings.OnBaseMapUrlChanged -= BaseMapSettings_OnBaseMapUrlChanged;
+    //        this.BaseMapSettings.OnBaseMapUrlChanged += BaseMapSettings_OnBaseMapUrlChanged;
+
+    //        this.BaseMapSettings.PropertyChanged -= BaseMapSettings_PropertyChanged;
+    //        this.BaseMapSettings.PropertyChanged += BaseMapSettings_PropertyChanged;
+    //    }
+
+    //    if (this.MapSettings is not null)
+    //    {
+    //        this.MapSettings.PropertyChanged -= MapSettings_PropertyChanged;
+    //        this.MapSettings.PropertyChanged += MapSettings_PropertyChanged;
+    //    }
+
+    //    if (this.GeneralSettings is not null)
+    //    {
+    //        this.GeneralSettings.PropertyChanged -= GeneralSettings_PropertyChanged;
+    //        this.GeneralSettings.PropertyChanged += GeneralSettings_PropertyChanged;
+    //    }
+    //}
+
+    //private void BaseMapSettings_OnBaseMapUrlChanged(object? sender, EventArgs e)
+    //{
+    //}
+
+    //private void BaseMapSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    //{
+    //    if (e.PropertyName is null)
+    //        return;
+
+    //    if (e.PropertyName is not nameof(BaseMapSettingsModel.BaseMapOpacity)
+    //        and not nameof(BaseMapSettingsModel.SelectedTileMapAccessMode)
+    //        and not nameof(BaseMapSettingsModel.InitialBaseMap))
+    //        return;
+
+    //    var data = this.BaseMapSettings?.GetData();
+    //    if (data is not null)
+    //        SettingsHelper.SaveBaseMapSettings(data);
+    //}
+
+    //private void MapSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    //{
+    //    if (e.PropertyName is null)
+    //        return;
+
+    //    var data = this.MapSettings?.GetData();
+    //    if (data is not null)
+    //        SettingsHelper.SaveMapSettings(data);
+    //}
+
+    //private void GeneralSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    //{
+    //    if (e.PropertyName is null)
+    //        return;
+
+    //    if (e.PropertyName == nameof(GeneralSettingsModel.MahAppsTheme))
+    //    {
+    //        var theme = this.GeneralSettings?.MahAppsTheme;
+    //        if (theme.HasValue)
+    //            ThemeHelper.ApplyTheme(theme.Value);
+    //    }
+
+    //    if (e.PropertyName == nameof(GeneralSettingsModel.CurrentLanguage))
+    //    {
+    //        var culture = LanguageItem.Create(this.GeneralSettings?.CurrentLanguage ?? LanguageType.en_US).GetCultureInfo();
+    //        try
+    //        {
+    //            LocalizationManager.Instance.SetCulture(culture);
+    //        }
+    //        catch (CultureNotFoundException) { }
+    //    }
+
+    //    var data = this.GeneralSettings?.GetData();
+    //    if (data is not null)
+    //        SettingsHelper.SaveGeneralSettings(data);
+    //}
 }
 
