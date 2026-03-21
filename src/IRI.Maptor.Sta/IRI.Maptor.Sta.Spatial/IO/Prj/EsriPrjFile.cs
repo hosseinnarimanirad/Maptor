@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Metrics;
@@ -20,6 +20,8 @@ public class EsriPrjFile
     public const string _esriCylindricalEqualArea = "Cylindrical_Equal_Area";
     public const string _esriWebMercator = "Mercator_Auxiliary_Sphere";
 
+    public const string _spheroidWgs84 = "WGS_1984";
+
     public const string _projcs = "PROJCS";
     public const string _geogcs = "GEOGCS";
     public const string _spheroid = "SPHEROID";
@@ -40,10 +42,11 @@ public class EsriPrjFile
     public const string _standardParallel2 = "Standard_Parallel_2";
     public const string _auxiliarySphereType = "Auxiliary_Sphere_Type";
     public const string _greenwich = "Greenwich";
-    public const string _degree = "Degree";
+    public const string _degree = "degree";
     public const string _degreeValue = "0.0174532925199433";
     public const string _epsg = "EPSG";
 
+    public const string _meter = "meter";
     #endregion
 
     private EsriPrjTreeNode _rootNode;
@@ -206,13 +209,13 @@ public class EsriPrjFile
 
             if (srid == 0)
             {
-                if (Type == EsriSrType.Geogcs && spheroidValues.First().ToUpper() == "WGS_1984")
+                if (Type == EsriSrType.Geogcs && spheroidValues.First().EqualsIgnoreCase(_spheroidWgs84))
                 {
                     srid = SridHelper.GeodeticWGS84;
                 }
             }
 
-            if (toWgs84Values == null)
+            if (toWgs84Values is null)
             {
                 return new Ellipsoid(spheroidValues.First(),
                                     new Meter(double.Parse(spheroidValues.Skip(1).First(), CultureInfo.InvariantCulture)),
@@ -289,7 +292,7 @@ public class EsriPrjFile
 
     private int GetCrsSrid()
     {
-        var crsAuthorityNode = _rootNode.Children.SingleOrDefault(i => i.Name == _authority);
+        var crsAuthorityNode = _rootNode.Children.SingleOrDefault(i => i.Name.EqualsIgnoreCase(_authority));
 
         var srid = GetSridFromAuthorityNode(crsAuthorityNode);
 
@@ -297,9 +300,13 @@ public class EsriPrjFile
         ////in the authority field was not available
         if (srid == 0)
         {
-            if (Type == EsriSrType.Geogcs && Ellipsoid.Name.ToUpper() == "WGS_1984")
+            if (Type == EsriSrType.Geogcs && Ellipsoid.Name.EqualsIgnoreCase(_spheroidWgs84))
             {
                 srid = SridHelper.GeodeticWGS84;
+            }
+            else if (Type == EsriSrType.Projcs && ProjectionName.EqualsIgnoreCase(_esriWebMercator))
+            {
+                srid = SridHelper.WebMercator;
             }
         }
 
@@ -319,7 +326,7 @@ public class EsriPrjFile
     {
         int srid = 0;
 
-        if (authorityNode?.Values?.Count == 2 && authorityNode?.Values?[0] == _epsg)
+        if (authorityNode?.Values?.Count == 2 && authorityNode?.Values?[0].EqualsIgnoreCase(_epsg) == true)
         {
             int.TryParse(authorityNode.Values[1], out srid);
         }
@@ -329,12 +336,12 @@ public class EsriPrjFile
 
     public bool IsSISystem()
     {
-        var isDegree = GeogcsNode.Children.Single(i => i.Name.EqualsIgnoreCase(_unit)).Values.First().ToLower() == "degree";
+        var isDegree = GeogcsNode.Children.Single(i => i.Name.EqualsIgnoreCase(_unit)).Values.First().EqualsIgnoreCase(_degree);
 
         switch (Type)
         {
             case EsriSrType.Projcs:
-                return isDegree && _rootNode.Children.Single(i => i.Name.EqualsIgnoreCase(_unit)).Values.First().ToLower() == "meter";
+                return isDegree && _rootNode.Children.Single(i => i.Name.EqualsIgnoreCase(_unit)).Values.First().EqualsIgnoreCase(_meter);//== "meter";
 
             case EsriSrType.Geogcs:
                 return isDegree;
@@ -473,7 +480,8 @@ public class EsriPrjFile
              SpatialReferenceType.WebMercator =>
                 new WebMercator(),
 
-             SpatialReferenceType.Geodetic => throw new NotImplementedException(),
+             SpatialReferenceType.Geodetic => new NoProjection(this.Title, Ellipsoid),
+
              _ =>
                  throw new NotImplementedException()
          };
