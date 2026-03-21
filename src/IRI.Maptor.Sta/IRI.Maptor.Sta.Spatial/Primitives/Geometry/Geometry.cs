@@ -4184,19 +4184,18 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         // exterior boundary appears to traverse the boundary in a counter clockwise direction. The interior LinearRings will
         // have the opposite orientation, and appear as clockwise when viewed from the “top”,
         if (rings.IsNullOrEmpty())
-        {
             return Geometry<T>.CreateEmpty(GeometryType.Polygon, srid);
-        }
 
         if (rings.Count == 1)
-        {
             return Create(rings, GeometryType.Polygon, srid);
-            //return new Geometry<T>(rings, GeometryType.Polygon, srid);
-        }
 
         var orderedRings = rings.Select(p => (area: p.EuclideanArea, geo: p)).OrderByDescending(i => i.area).ToList();
 
+        var ringBboxes = orderedRings.Select(r => BoundingBox.CalculateBoundingBox(r.geo.GetAllPoints())).ToList();
+
         var masterPolygons = new List<Geometry<T>>();
+        var masterOuterBboxes = new List<BoundingBox>();
+        var masterHoleBboxes = new List<List<BoundingBox>>();
 
         for (int i = 0; i < orderedRings.Count; i++)
         {
@@ -4204,25 +4203,47 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
             bool isMasterRing = true;
 
+            var testPoint = currentRing.Points.First();
+
             for (int p = 0; p < masterPolygons.Count; p++)
             {
-                if (TopologyUtility.IsPointInRing(masterPolygons[p].Geometries[0], currentRing.Points.First()))
+                if (!masterOuterBboxes[p].Covers(testPoint))
+                    continue;
+
+                if (!TopologyUtility.IsPointInRing(masterPolygons[p].Geometries[0], testPoint, masterOuterBboxes[p]))
+                    continue;
+
+                bool inAnyHole = false;
+
+                for (int h = 1; h < masterPolygons[p].Geometries.Count; h++)
                 {
-                    //not in any of polygon holes
-                    if (masterPolygons[p].Geometries.Skip(1).Any(g => TopologyUtility.IsPointInRing(g, currentRing.Points.First())))
+                    var holeBbox = masterHoleBboxes[p][h - 1];
+                    if (!holeBbox.Covers(testPoint))
                         continue;
 
-                    isMasterRing = false;
-
-                    // inner rings must be CW
-                    if (!SpatialUtility.IsClockwise(currentRing.Points))
+                    if (TopologyUtility.IsPointInRing(masterPolygons[p].Geometries[h], testPoint, holeBbox))
                     {
-                        currentRing.Reverse();
+                        inAnyHole = true;
+                        break;
                     }
-
-                    masterPolygons[p].Geometries.Add(currentRing);
                 }
+
+                if (inAnyHole)
+                    continue;
+
+                isMasterRing = false;
+
+                // inner rings must be CW
+                if (!SpatialUtility.IsClockwise(currentRing.Points))
+                {
+                    currentRing.Reverse();
+                }
+
+                masterPolygons[p].Geometries.Add(currentRing);
+                masterHoleBboxes[p].Add(ringBboxes[i]);
+                break;
             }
+
             if (isMasterRing)
             {
                 // outter ring must be CCW
@@ -4232,6 +4253,8 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 }
 
                 masterPolygons.Add(Geometry<T>.Create([currentRing], GeometryType.Polygon, srid));
+                masterOuterBboxes.Add(ringBboxes[i]);
+                masterHoleBboxes.Add(new List<BoundingBox>());
             }
         }
 

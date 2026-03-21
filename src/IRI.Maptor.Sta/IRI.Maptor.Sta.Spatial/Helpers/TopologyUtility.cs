@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Extensions;
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Mathematics;
 using IRI.Maptor.Sta.Spatial.Topology;
 using IRI.Maptor.Sta.Spatial.Primitives;
@@ -65,12 +65,14 @@ public class TopologyUtility
         }
 
         Matrix tempMatrix = new Matrix(
-                               new double[][] {
-                                    new double[] { x1 - x0, x2 - x0, x3 - x0 },
-                                    new double[] { y1 - y0, y2 - y0, y3 - y0 },
-                                    new double[] { x1 * x1 - x0 * x0 + y1 * y1 - y0 * y0,
-                                                    x2 * x2 - x0 * x0 + y2 * y2 - y0 * y0,
-                                                    x3 * x3 - x0 * x0 + y3 * y3 - y0 * y0 } });
+                               [
+                                    [x1 - x0, x2 - x0, x3 - x0],
+                                    [y1 - y0, y2 - y0, y3 - y0],
+                                    [ x1 * x1 - x0 * x0 + y1 * y1 - y0 * y0,
+                                        x2 * x2 - x0 * x0 + y2 * y2 - y0 * y0,
+                                        x3 * x3 - x0 * x0 + y3 * y3 - y0 * y0 ]
+                                ]);
+
         double result = tempMatrix.Determinant;
 
         return result > 0 ? PointCircleRelation.In : result == 0 ? PointCircleRelation.On : PointCircleRelation.Out;
@@ -265,7 +267,11 @@ public class TopologyUtility
 
 
 
-    public static bool IsPointInRing<T>(Geometry<T> ring, T point) where T : IPoint, new()
+    /// <summary>
+    /// Point-in-ring test using ray casting (no trig). Points on the ring boundary are <strong>not</strong> considered inside (strict interior).
+    /// Optionally pass a precomputed envelope to avoid rebuilding it.
+    /// </summary>
+    public static bool IsPointInRing<T>(Geometry<T> ring, T point, BoundingBox? ringBoundingBox = null) where T : IPoint, new()
     {
         if (ring.IsNullOrEmpty() || point is null)
             return false;
@@ -275,25 +281,87 @@ public class TopologyUtility
         if (ring.Type != GeometryType.LineString || numberOfPoints < 3)
             throw new NotImplementedException("SpatialUtility.cs > IsPointInPolygon");
 
-        var boundingBox = ring.GetBoundingBox();
+        var boundingBox = ringBoundingBox ?? ring.GetBoundingBox();
 
-        var doesEncomapss = boundingBox.Covers(point);
+        if (!boundingBox.Covers(point))
+            return false;
 
-        if (!doesEncomapss)
+        return IsPointInPolygonRayCasting(ring.Points, point);
+    }
+
+    /// <summary>
+    /// Even–odd ray casting (+X); boundary points are not inside. Half-open y-interval on edges (<c>ymin &lt; py &lt;= ymax</c>)
+    /// avoids double-counting when the scanline passes through a vertex. Assumes a valid simple ring (no repeated closing vertex, no self-intersection).
+    /// </summary>
+    private static bool IsPointInPolygonRayCasting<T>(List<T> points, T point) where T : IPoint, new()
+    {
+        int n = points.Count;
+        double px = point.X;
+        double py = point.Y;
+
+        for (int i = 0; i < n; i++)
+        {
+            var a = points[i];
+            var b = points[(i + 1) % n];
+            if (PointIntersectsLineSegment(point, a, b))
+                return false;
+        }
+
+        bool inside = false;
+
+        for (int i = 0; i < n; i++)
+        {
+            int j = (i + 1) % n;
+            double xi = points[i].X;
+            double yi = points[i].Y;
+            double xj = points[j].X;
+            double yj = points[j].Y;
+
+            if (yi == yj)
+                continue;
+
+            double ymin = yi < yj ? yi : yj;
+            double ymax = yi < yj ? yj : yi;
+
+            if (ymin < py && py <= ymax)
+            {
+                double xIntersect = xi + (py - yi) / (yj - yi) * (xj - xi);
+                if (px < xIntersect)
+                    inside = !inside;
+            }
+        }
+
+        return inside;
+    }
+
+    /// <summary>
+    /// Original point-in-ring test: sum of signed inner angles at the query point (uses trig per edge).
+    /// Uses the legacy heuristic <c>|totalAngle| &gt; π/2</c>. Prefer <see cref="IsPointInRing{T}(Geometry{T}, T, BoundingBox?)"/> for performance.
+    /// </summary>
+    public static bool IsPointInRingUsingSignedAngles<T>(Geometry<T> ring, T point, BoundingBox? ringBoundingBox = null) where T : IPoint, new()
+    {
+        if (ring.IsNullOrEmpty() || point is null)
+            return false;
+
+        var numberOfPoints = ring.Points.Count;
+
+        if (ring.Type != GeometryType.LineString || numberOfPoints < 3)
+            throw new NotImplementedException("SpatialUtility.cs > IsPointInPolygon");
+
+        var boundingBox = ringBoundingBox ?? ring.GetBoundingBox();
+
+        if (!boundingBox.Covers(point))
             return false;
 
         double totalAngle = 0.0;
 
         for (int i = 0; i < numberOfPoints - 1; i++)
         {
-            var angle = SpatialUtility.GetSignedInnerAngle(ring.Points[i], point, ring.Points[i + 1]);
-
-            totalAngle += angle;
+            totalAngle += SpatialUtility.GetSignedInnerAngle(ring.Points[i], point, ring.Points[i + 1]);
         }
 
         totalAngle += SpatialUtility.GetSignedInnerAngle(ring.Points[numberOfPoints - 1], point, ring.Points[0]);
 
-        //if (Math.Abs(Math.Abs(totalAngle) - 2 * Math.PI) < 0.1)
         if (Math.Abs(totalAngle) > Math.PI / 2.0)
             return true;
 

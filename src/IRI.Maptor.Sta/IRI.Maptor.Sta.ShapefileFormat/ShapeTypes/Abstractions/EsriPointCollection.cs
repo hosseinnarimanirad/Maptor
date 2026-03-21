@@ -42,7 +42,7 @@ public abstract class EsriPointCollection : EsriShapeBase
             throw new ArgumentOutOfRangeException(nameof(partNo), $"Part number {partNo} is out of range. Number of parts: {NumberOfParts}.");
         return ShapeHelper.GetEsriPoints(this, Parts[partNo]);
     }
-     
+
     public override bool IsNullOrEmpty() => NumberOfPoints <= 0;
 
     /// <summary>
@@ -62,7 +62,7 @@ public abstract class EsriPointCollection : EsriShapeBase
     {
         if (this.NumberOfPoints == 0)
             return Geometry<Point>.CreateEmpty(GeometryType.MultiPoint, this.Srid);
-        
+
         return Geometry<Point>.Create(ConvertEsriPointsToPoints(this.points), GeometryType.MultiPoint, this.Srid);
     }
 
@@ -97,8 +97,14 @@ public abstract class EsriPointCollection : EsriShapeBase
             return Geometry<Point>.CreateEmpty(GeometryType.Polygon, this.Srid);
 
         var parts = new List<Geometry<Point>>(this.NumberOfParts);
+
         for (int i = 0; i < this.NumberOfParts; i++)
         {
+            //if (NumberOfParts > 1000)
+            //{
+            //    var geo = Geometry<Point>.Create(ShapeHelper.GetPoints(this, this.Parts[i]), GeometryType.LineString, this.Srid);
+            //    geo.AsGeoJsonFeatureSet().Save("e:\\polygonWith1kRing.json", false);
+            //}
             parts.Add(Geometry<Point>.Create(ShapeHelper.GetPoints(this, this.Parts[i]), GeometryType.LineString, this.Srid));
         }
 
