@@ -182,6 +182,47 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
+    public List<GoogleScale> GoogleScales => GoogleScale.GoogleScales;
+
+
+    private GoogleScale _selectedGoogleScale;
+    public GoogleScale SelectedGoogleScale
+    {
+        get { return _selectedGoogleScale; }
+        set
+        {
+            _selectedGoogleScale = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    public List<ScaleModel> StandardScales => ScaleModel.Scales;
+
+    private MapExtentPanelViewModel _mapExtentPanel ;
+    public MapExtentPanelViewModel MapExtentPanel
+    {
+        get { return _mapExtentPanel; }
+        set
+        {
+            _mapExtentPanel = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private bool _isMapExtentPanelShown;
+    public bool IsMapExtentPanelShown
+    {
+        get { return _isMapExtentPanelShown; }
+        set
+        {
+            _isMapExtentPanelShown = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
     private MapInfoViewModel _mapPanel;
     public MapInfoViewModel MapPanel
     {
@@ -850,6 +891,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
         //MapProviders = TileMapProviderFactory.GetDefault();
 
+        MapExtentPanel = new MapExtentPanelViewModel(this);
+
         MapPanel = new MapInfoViewModel();
 
         MapPanel.CurrentEditingPoint = new NotifiablePoint(0, 0, param =>
@@ -925,6 +968,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Func<BoundingBox, int, int, Task<List<DrawingVisual>>> RequestGetAsDrawingVisual;
 
+    public Func<BoundingBox, int, int, Task<BitmapSource?>> RequestCaptureThumbnailAsync;
+
     public Action<MapAction, Cursor> RequestSetDefaultCursor;
 
     public Action<Cursor> RequestSetCursor;
@@ -960,6 +1005,9 @@ public abstract class MapViewModelBase : ViewModelBase
     public Action RequestFullExtent;
 
     public Action<double> RequestZoomToScale;
+
+    /// <summary>Wheel-style zoom in/out at the center of the map view (see <see cref="ZoomInAtCenterCommand"/>).</summary>
+    public Action<bool> RequestZoomAtViewCenter;
 
     public Action<Point, double> RequestZoomToPoint;
 
@@ -2100,6 +2148,8 @@ public abstract class MapViewModelBase : ViewModelBase
         OnZoomChanged?.Invoke(this, mapScale);
 
         RaisePropertyChanged(nameof(InverseMapScale));
+
+        RaisePropertyChanged(nameof(MapScale));
     }
 
     #endregion
@@ -2491,6 +2541,16 @@ public abstract class MapViewModelBase : ViewModelBase
     public void Zoom(double mapScale)
     {
         RequestZoomToScale?.Invoke(mapScale);
+    }
+
+    public void ZoomInAtViewCenter()
+    {
+        RequestZoomAtViewCenter?.Invoke(true);
+    }
+
+    public void ZoomOutAtViewCenter()
+    {
+        RequestZoomAtViewCenter?.Invoke(false);
     }
 
     public void Zoom(double mapScale, Point center)
@@ -4374,6 +4434,34 @@ public abstract class MapViewModelBase : ViewModelBase
             }
 
             return _nextExtentCommand;
+        }
+    }
+
+    private RelayCommand _zoomInAtCenterCommand;
+    public RelayCommand ZoomInAtCenterCommand
+    {
+        get
+        {
+            if (_zoomInAtCenterCommand == null)
+            {
+                _zoomInAtCenterCommand = new RelayCommand(param => ZoomInAtViewCenter());
+            }
+
+            return _zoomInAtCenterCommand;
+        }
+    }
+
+    private RelayCommand _zoomOutAtCenterCommand;
+    public RelayCommand ZoomOutAtCenterCommand
+    {
+        get
+        {
+            if (_zoomOutAtCenterCommand == null)
+            {
+                _zoomOutAtCenterCommand = new RelayCommand(param => ZoomOutAtViewCenter());
+            }
+
+            return _zoomOutAtCenterCommand;
         }
     }
 

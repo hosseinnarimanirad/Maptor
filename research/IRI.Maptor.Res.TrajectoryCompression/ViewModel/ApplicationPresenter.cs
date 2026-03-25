@@ -17,13 +17,13 @@ public class ApplicationPresenter : MapViewModelBase
 {
     bool retain3Points;
 
-    public List<GoogleScale> StandardScales
-    {
-        get
-        {
-            return GoogleScale.Scales;
-        }
-    }
+    //public List<GoogleScale> GoogleScales
+    //{
+    //    get
+    //    {
+    //        return GoogleScale.Scales;
+    //    }
+    //}
 
 
     private double _estimatedScale;

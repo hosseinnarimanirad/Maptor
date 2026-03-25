@@ -26,14 +26,6 @@ namespace IRI.Maptor.Res.LRSimplification.ViewModel;
 
 public class ApplicationPresenter : MapViewModelBase
 {
-    public List<GoogleScale> StandardScales
-    {
-        get
-        {
-            return GoogleScale.Scales;
-        }
-    }
-
 
     private LogisticSimplification<Point> _lrsv7Model;
     private LogisticSimplification<Point> GetLRSv7Model()

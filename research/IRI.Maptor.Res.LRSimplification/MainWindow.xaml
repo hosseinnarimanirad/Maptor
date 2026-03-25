@@ -213,7 +213,7 @@
 
         <StackPanel  Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">
             <TextBlock Text="{Binding ElementName=map, Path=MapScale, Converter={StaticResource doubleInverseConverter}, StringFormat={}Scale: {0:N2}}" MinWidth="120" VerticalAlignment="Center" Margin="4"/>
-            <ComboBox VerticalAlignment="Center" ItemsSource="{Binding StandardScales}" MinWidth="120"
+            <ComboBox VerticalAlignment="Center" ItemsSource="{Binding GoogleScales}" MinWidth="120"
                         SelectedItem="{Binding ElementName=map, Path=MapScale, Mode=TwoWay, Converter={StaticResource scaleToGoogleScaleConverter}}" />
         </StackPanel>
 

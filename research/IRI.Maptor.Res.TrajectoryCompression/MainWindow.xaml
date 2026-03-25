@@ -47,7 +47,7 @@
                         <TabItem Header="General">
                             <StackPanel Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="{Binding IsDebugMode,Converter={StaticResource boolToVisibilityConverter}}" 
                         Margin="0">
-                                <ComboBox VerticalAlignment="Center" ItemsSource="{Binding StandardScales}"
+                                <ComboBox VerticalAlignment="Center" ItemsSource="{Binding GoogleScales}"
                           SelectedItem="{Binding ElementName=map, Path=MapScale, Mode=TwoWay, Converter={StaticResource scaleToGoogleScaleConverter}}" MinWidth="120"/>
                                 <TextBlock Text="{Binding ElementName=map, Path=MapScale, Converter={StaticResource doubleInverseConverter}, StringFormat={}{0:N2}}" MinWidth="120" VerticalAlignment="Center" Margin="4"/>
                                 <TextBlock Text="{Binding CurrentZoomLevel, StringFormat={}Zoom Level:{0}}" Background="White"  Margin="2" Padding="4" Opacity=".8"/>

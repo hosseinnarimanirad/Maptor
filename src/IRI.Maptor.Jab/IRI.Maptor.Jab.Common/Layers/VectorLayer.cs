@@ -256,7 +256,7 @@ public class VectorLayer : SymbolizableLayer
         {
             var googleTiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(this.Extent, zoom);
 
-            var scale = GoogleScale.Scales.Single(i => i.ZoomLevel == zoom).InverseScale;
+            var scale = GoogleScale.GoogleScales.Single(i => i.ZoomLevel == zoom).InverseScale;
 
             var directory = $"{outputFolderPath}\\{zoom}";
 
