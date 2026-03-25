@@ -3,6 +3,7 @@ using System.Windows;
 using System.Collections.Generic;
 
 using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Sta.Common.Helpers;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 
@@ -41,8 +42,7 @@ public partial class Scalebar : NotifiableUserControl
             return;
 
         double dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
-
-        double unitDistance = (1.0 / dpiX) * 1200.0 / (3937.0 * 12.0);
+        double unitDistance = ConversionHelper.InchToMeterFactor / dpiX; //(1.0 / dpiX) * 1200.0 / (3937.0 * 12.0);
 
         var minScalebarWidth = 100;
         var maxScalebarWidth = 250;
@@ -125,6 +125,19 @@ public partial class Scalebar : NotifiableUserControl
     // Using a DependencyProperty as the backing store for ShowZoomLevel.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowZoomLevelProperty =
         DependencyProperty.Register("ShowZoomLevel", typeof(bool), typeof(Scalebar), new PropertyMetadata(false));
+
+
+
+
+    public bool ShowOptions
+    {
+        get { return (bool)GetValue(ShowOptionsProperty); }
+        set { SetValue(ShowOptionsProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for ShowOptions.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ShowOptionsProperty =
+        DependencyProperty.Register("ShowOptions", typeof(bool), typeof(Scalebar), new PropertyMetadata(false));
 
 
 

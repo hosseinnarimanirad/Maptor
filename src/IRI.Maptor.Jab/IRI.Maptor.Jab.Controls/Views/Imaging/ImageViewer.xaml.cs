@@ -7,8 +7,7 @@ using System.Windows.Shapes;
 using System.Windows.Media;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.SpatialReferenceSystem; 
 
 namespace IRI.Maptor.Jab.Controls.Views;
 

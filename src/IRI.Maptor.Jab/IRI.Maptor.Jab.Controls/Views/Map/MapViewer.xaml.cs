@@ -49,6 +49,7 @@ using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
 using IRI.Maptor.Jab.Common.Data;
 using IRI.Maptor.Jab.Common.Helpers;
+using System.Windows.Media.Imaging;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
@@ -426,6 +427,8 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestGetAsDrawingVisual = this.GetAsDrawingVisual;
 
+        presenter.RequestCaptureThumbnailAsync = (ext, w, h) => this.CaptureThumbnailAsync(ext, w, h);
+
         presenter.RequestGetActualHeight = () => this.mapView.ActualHeight;
 
         presenter.RequestGetActualWidth = () => this.mapView.ActualWidth;
@@ -511,6 +514,10 @@ public partial class MapViewer : NotifiableUserControl
         this.OnEditableFeatureLayerChanged += (sender, e) => { presenter.CurrentEditingLayer = e; };
 
         presenter.RequestZoomToPoint = (center, mapScale) => this.ZoomAndCenter(mapScale, center);
+
+        presenter.RequestZoomToScale = mapScale => this.ZoomAndCenter(mapScale, this.CurrentExtent.Center);
+
+        presenter.RequestZoomAtViewCenter = zoomIn => this.ZoomAtViewCenter(zoomIn);
 
         presenter.RequestZoomAndCenterToGoogleZoomLevel = this.ZoomAndCenterToGoogleZoomLevel;
 
@@ -673,7 +680,7 @@ public partial class MapViewer : NotifiableUserControl
                 return 1;
 
             double dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
-            var dpiY = 96.0 * source.CompositionTarget.TransformToDevice.M22;
+            double dpiY = 96.0 * source.CompositionTarget.TransformToDevice.M22;
 
             if (dpiX != dpiY)
             {
@@ -2515,6 +2522,62 @@ public partial class MapViewer : NotifiableUserControl
         return visuals;
     }
 
+    public async Task<BitmapSource?> CaptureThumbnailAsync(sb.BoundingBox extent, int thumbWidth, int thumbHeight)
+    {
+        if (extent.IsNaN() || !extent.IsValid())
+            return null;
+
+        int zoomLevel = CurrentZoomLevel;
+        var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(extent, zoomLevel);
+        double scaleX = thumbWidth  / extent.Width;
+        double scaleY = thumbHeight / extent.Height;
+        var clip = new RectangleGeometry(new Rect(0, 0, thumbWidth, thumbHeight));
+
+        var baseMapVisual = new DrawingVisual();
+        using (var dc = baseMapVisual.RenderOpen())
+        {
+            dc.PushClip(clip);
+
+            var basemapLayers = _layerManager.GetOrderedLayers()
+                .OfType<TileServiceLayer>()
+                .Where(l => l.Visibility == Visibility.Visible);
+
+            foreach (var layer in basemapLayers)
+            {
+                foreach (var tile in tiles)
+                {
+                    try
+                    {
+                        var geo = await layer.GetTileAsync(tile, _presenter.HttpClient);
+                        if (!geo.IsValid) continue;
+                        var tExt = geo.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
+                        var rect = new Rect(
+                            (tExt.XMin - extent.XMin) * scaleX,
+                            (extent.YMax - tExt.YMax) * scaleY,
+                            tExt.Width  * scaleX,
+                            tExt.Height * scaleY);
+                        dc.DrawImage(ImageUtility.CreateBitmapImage(geo.Image), rect);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"MapViewer; CaptureThumbnailAsync tile error: {ex.Message}");
+                    }
+                }
+            }
+
+            dc.Pop();
+        }
+
+        var vectorVisuals = await GetAsDrawingVisual(extent, thumbWidth, thumbHeight);
+
+        var rtb = new RenderTargetBitmap(thumbWidth, thumbHeight, 96, 96, PixelFormats.Pbgra32);
+        rtb.Render(baseMapVisual);
+        foreach (var v in vectorVisuals)
+            rtb.Render(v);
+        rtb.Freeze();
+        return rtb;
+    }
+
     #endregion
 
 
@@ -2906,7 +2969,7 @@ public partial class MapViewer : NotifiableUserControl
     private void MapView_MouseDownForDoubleClickZoom(object sender, MouseButtonEventArgs e)
     {
         if (e.ClickCount > 1)
-            Zoom(true, e.GetPosition(this.mapView));
+            ZoomWheelAtWindowPoint(true, e.GetPosition(this.mapView));
     }
 
     private void mapView_MouseDownForZoom(object sender, MouseButtonEventArgs e)
@@ -2985,7 +3048,7 @@ public partial class MapViewer : NotifiableUserControl
 
     private void mapView_MouseWheel(object sender, MouseWheelEventArgs e)
     {
-        Zoom(e.Delta > 0, e.GetPosition(this.mapView));
+        ZoomWheelAtWindowPoint(e.Delta > 0, e.GetPosition(this.mapView));
     }
 
     public void Zoom(double mapScale)
@@ -3092,7 +3155,26 @@ public partial class MapViewer : NotifiableUserControl
         ZoomToExtent(boundingBox, false, true);
     }
 
-    private void Zoom(bool zoomIn, Point windowCenter)
+    /// <summary>
+    /// Wheel-style zoom step at a window (pixel) point — same behavior as mouse wheel.
+    /// </summary>
+    public void ZoomAtWindowPoint(bool zoomIn, Point windowPoint)
+    {
+        ZoomWheelAtWindowPoint(zoomIn, windowPoint);
+    }
+
+    /// <summary>
+    /// Wheel-style zoom at the center of the map view.
+    /// </summary>
+    public void ZoomAtViewCenter(bool zoomIn)
+    {
+        if (this.mapView.ActualWidth <= 0 || this.mapView.ActualHeight <= 0)
+            return;
+
+        ZoomWheelAtWindowPoint(zoomIn, new Point(this.mapView.ActualWidth / 2.0, this.mapView.ActualHeight / 2.0));
+    }
+
+    private void ZoomWheelAtWindowPoint(bool zoomIn, Point windowCenter)
     {
         var mapCenter = ScreenToMap(windowCenter);
 

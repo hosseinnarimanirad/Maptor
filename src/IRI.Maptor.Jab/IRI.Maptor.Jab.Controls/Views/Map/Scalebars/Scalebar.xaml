@@ -1,13 +1,21 @@
 ﻿<userControl:NotifiableUserControl x:Class="IRI.Maptor.Jab.Controls.Views.Scalebar" Name="layoutRoot"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
              xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common"
              Width="auto" Height="auto" >
     <userControl:NotifiableUserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Fonts.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        </ResourceDictionary>
     </userControl:NotifiableUserControl.Resources>
     <Border Background="White" CornerRadius="5" >
         <Border.Style>
@@ -26,6 +34,10 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
            
             <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Center" 
                         Visibility="{Binding ElementName=layoutRoot, Path=ShowScaleValue, Converter={StaticResource boolToVisibilityConverter}}">
@@ -70,8 +82,20 @@
                         </Grid>
                     </Border>
                 </StackPanel>
-                <TextBlock Text="{Binding ElementName=layoutRoot, Path=GroundLength, FallbackValue=0, Converter={StaticResource localizedNumberConverter}}" FlowDirection="LeftToRight" Margin="2,0" />
+                <TextBlock Text="{Binding ElementName=layoutRoot, Path=GroundLength, FallbackValue=0, Converter={StaticResource localizedNumberConverter}}"
+                           FlowDirection="LeftToRight" Margin="2,0" />
             </StackPanel>
+
+            <!--settings-->
+            <ToggleButton Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Bottom" 
+                          Height="18" Width="18"
+                          Visibility="{Binding ElementName=layoutRoot, Path=IsMouseOver, Converter={StaticResource boolToVisibilityConverter}}"
+                          IsChecked="{Binding ElementName=layoutRoot, Path=ShowOptions, Mode=TwoWay}"
+                          Style="{StaticResource circleToggleButtonLight}">
+                <Viewbox>
+                    <iconPacks:PackIconMaterial Kind="Cog" Style="{StaticResource circleButtonPackIconMaterial}"/>
+                </Viewbox>
+            </ToggleButton>
         </Grid>
     </Border>
 </userControl:NotifiableUserControl>
