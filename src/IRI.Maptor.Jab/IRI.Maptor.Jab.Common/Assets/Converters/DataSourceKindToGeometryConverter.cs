@@ -43,13 +43,21 @@ public class DataSourceKindToGeometryConverter : IValueConverter
             DataSourceKind.Other or _ => string.Empty,
         };
 
-        var resource = Application.Current?.FindResource(key);
+        try
+        {
+            // this method throws exception if key not found
+            var resource = Application.Current?.FindResource(key);
 
-        if (resource is Geometry geometry)
-            return geometry;
+            if (resource is Geometry geometry)
+                return geometry;
 
-        else
+            else
+                return Geometry.Empty;
+        }
+        catch (Exception)
+        {
             return Geometry.Empty;
+        }       
          
     }
 
