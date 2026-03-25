@@ -366,7 +366,7 @@
                                     <DataTemplate>
                                         <ToggleButton Style="{StaticResource dataSourceKindFilterItemToggleStyle}"
                                                       IsChecked="{Binding IsSelected, Mode=TwoWay}" 
-                                                      ToolTip="{Binding DisplayName}">
+                                                      ToolTip="{Binding DisplayName}" Background="Transparent">
                                             <Border Style="{StaticResource menuBorder}"
                                                     Background="{Binding Kind, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                                 <StackPanel Orientation="Horizontal">
