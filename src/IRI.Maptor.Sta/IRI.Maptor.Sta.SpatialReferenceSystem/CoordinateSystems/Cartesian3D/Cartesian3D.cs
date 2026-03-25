@@ -332,7 +332,7 @@ public class Cartesian3D<T> : ICartesian3D
 
         IAngularCollection horizontalAngle = new AngularCollection<TAngular>(this.NumberOfPoints, horizontalRange);
 
-        IAngularCollection verticalAngle = new AngularCollection<TAngular>(this.NumberOfPoints, AngleRange.MinusPiTOPi);
+        IAngularCollection verticalAngle = new AngularCollection<TAngular>(this.NumberOfPoints, AngleRange.MinusPIToPI);
 
         for (int i = 0; i < this.NumberOfPoints; i++)
         {
@@ -353,7 +353,7 @@ public class Cartesian3D<T> : ICartesian3D
 
             horizontalAngle[i] = new Radian(Math.Atan2(tempY, tempX), horizontalRange);
 
-            verticalAngle[i] = new Radian(Math.Atan2(tempZ, Math.Sqrt(tempX * tempX + tempY * tempY)), AngleRange.MinusPiTOPi);
+            verticalAngle[i] = new Radian(Math.Atan2(tempZ, Math.Sqrt(tempX * tempX + tempY * tempY)), AngleRange.MinusPIToPI);
         }
 
         return new Spherical<TLinear, TAngular>(radius, horizontalAngle, verticalAngle, this.Handedness);
@@ -364,7 +364,7 @@ public class Cartesian3D<T> : ICartesian3D
     {
         IAngularCollection horizontalAngle = new AngularCollection<TAngular>(this.NumberOfPoints, horizontalRange);
 
-        IAngularCollection verticalAngle = new AngularCollection<TAngular>(this.NumberOfPoints, AngleRange.MinusPiTOPi);
+        IAngularCollection verticalAngle = new AngularCollection<TAngular>(this.NumberOfPoints, AngleRange.MinusPIToPI);
 
         for (int i = 0; i < this.NumberOfPoints; i++)
         {
@@ -376,7 +376,7 @@ public class Cartesian3D<T> : ICartesian3D
 
             horizontalAngle[i] = new Radian(Math.Atan2(tempY, tempX), horizontalRange);
 
-            verticalAngle[i] = new Radian(Math.Atan2(tempZ, Math.Sqrt(tempX * tempX + tempY * tempY)), AngleRange.MinusPiTOPi);
+            verticalAngle[i] = new Radian(Math.Atan2(tempZ, Math.Sqrt(tempX * tempX + tempY * tempY)), AngleRange.MinusPIToPI);
         }
 
         return new Astronomical<TAngular>(horizontalAngle, verticalAngle, this.Handedness);
@@ -390,7 +390,7 @@ public class Cartesian3D<T> : ICartesian3D
 
         IAngularCollection longitude = new AngularCollection<TAngular>(this.NumberOfPoints, longitudinalRange);
 
-        IAngularCollection latitude = new AngularCollection<TAngular>(this.NumberOfPoints, AngleRange.MinusPiTOPi);
+        IAngularCollection latitude = new AngularCollection<TAngular>(this.NumberOfPoints, AngleRange.MinusPIToPI);
 
         double tempSemiMajor = ellipsoid.SemiMajorAxis.ChangeTo<TLinear>().Value;
 
@@ -453,7 +453,7 @@ public class Cartesian3D<T> : ICartesian3D
 
             do
             {
-                nTempValue = ellipsoid.CalculateN(new Radian(latitudeTempValue1, AngleRange.MinusPiTOPi)).ChangeTo<TLinear>().Value;
+                nTempValue = ellipsoid.CalculateN(new Radian(latitudeTempValue1, AngleRange.MinusPIToPI)).ChangeTo<TLinear>().Value;
 
                 hTempValue2 = pTempValue / Math.Cos(latitudeTempValue1) - nTempValue;
 
@@ -475,7 +475,7 @@ public class Cartesian3D<T> : ICartesian3D
 
             height.SetTheValue(i, hTempValue2);
 
-            latitude[i] = new Radian(latitudeTempValue2, AngleRange.MinusPiTOPi);
+            latitude[i] = new Radian(latitudeTempValue2, AngleRange.MinusPIToPI);
         }
 
         return new Geodetic<TLinear, TAngular>(height, longitude, latitude, ellipsoid, this.Handedness);
@@ -487,7 +487,7 @@ public class Cartesian3D<T> : ICartesian3D
     {
         IAngularCollection longitude = new AngularCollection<TAngular>(this.NumberOfPoints, horizontalRange);
 
-        IAngularCollection latitude = new AngularCollection<TAngular>(this.NumberOfPoints, AngleRange.MinusPiTOPi);
+        IAngularCollection latitude = new AngularCollection<TAngular>(this.NumberOfPoints, AngleRange.MinusPIToPI);
 
         double tempSemiMajor = ellipsoid.SemiMajorAxis.ChangeTo<TLinear>().Value;
 
@@ -551,7 +551,7 @@ public class Cartesian3D<T> : ICartesian3D
 
             do
             {
-                nTempValue = ellipsoid.CalculateN(new Radian(latitudeTempValue1, AngleRange.MinusPiTOPi)).ChangeTo<TLinear>().Value;
+                nTempValue = ellipsoid.CalculateN(new Radian(latitudeTempValue1, AngleRange.MinusPIToPI)).ChangeTo<TLinear>().Value;
 
                 //hTempValue2 = pTempValue / Math.Cos(latitudeTempValue1) - nTempValue;
 
@@ -573,7 +573,7 @@ public class Cartesian3D<T> : ICartesian3D
 
             //height.SetTheValue(i, hTempValue2);
 
-            latitude[i] = new Radian(latitudeTempValue2, AngleRange.MinusPiTOPi);//).ChangeTo<TAngular>();
+            latitude[i] = new Radian(latitudeTempValue2, AngleRange.MinusPIToPI);//).ChangeTo<TAngular>();
         }
 
         return new Ellipsoidal<TLinear, TAngular>(longitude, latitude, ellipsoid, this.Handedness);

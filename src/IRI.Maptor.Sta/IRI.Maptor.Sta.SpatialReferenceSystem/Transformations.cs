@@ -266,7 +266,7 @@ public static class Transformations
     {
         Geodetic<Meter, Degree> source = new Geodetic<Meter, Degree>(new LinearCollection<Meter>(new double[] { 0 }),
                                                                         new AngularCollection<Degree>(new double[] { geodeticPoint.X }, AngleRange.ZeroTo2Pi),
-                                                                        new AngularCollection<Degree>(new double[] { geodeticPoint.Y }, AngleRange.MinusPiTOPi),
+                                                                        new AngularCollection<Degree>(new double[] { geodeticPoint.Y }, AngleRange.MinusPIToPI),
                                                                         sourceDatum);
 
         var result = ChangeDatum<Meter, Degree>(source, destinationDatum);
@@ -342,7 +342,7 @@ public static class Transformations
 
         do
         {
-            nTempValue = ellipsoid.CalculateN(new Radian(latitudeTempValue1, AngleRange.MinusPiTOPi)).Value;
+            nTempValue = ellipsoid.CalculateN(new Radian(latitudeTempValue1, AngleRange.MinusPIToPI)).Value;
 
             hTempValue2 = pTempValue / Math.Cos(latitudeTempValue1) - nTempValue;
 

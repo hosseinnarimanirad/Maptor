@@ -120,7 +120,7 @@ public class Astronomical<TAngular> : IAstronomical
 
         this.m_HorizontalAngle = new AngularCollection<TAngular>(values.GetColumn(0), horizontalRange);
 
-        this.m_VerticalAngle = new AngularCollection<TAngular>(values.GetColumn(1), AngleRange.MinusPiTOPi);
+        this.m_VerticalAngle = new AngularCollection<TAngular>(values.GetColumn(1), AngleRange.MinusPIToPI);
     }
 
     #endregion

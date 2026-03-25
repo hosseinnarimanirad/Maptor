@@ -189,7 +189,7 @@ public class Cartesian2D<T> : ICartesian2D
 
             radius.SetTheValue(i, Math.Sqrt(tempX * tempX + tempY * tempY));
 
-            angle[i] = new Radian(Math.Atan2(tempY, tempX), AngleRange.MinusPiTOPi);
+            angle[i] = new Radian(Math.Atan2(tempY, tempX), AngleRange.MinusPIToPI);
         }
 
         return new Polar<TLinear, TAngular>(radius, angle, this.Handedness);

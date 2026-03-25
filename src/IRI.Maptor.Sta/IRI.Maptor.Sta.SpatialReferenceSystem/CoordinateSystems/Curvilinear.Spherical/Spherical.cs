@@ -139,7 +139,7 @@ public class Spherical<TLinear, TAngular> : ISpherical
 
         this.m_HorizontalAngle = new AngularCollection<TAngular>(values.GetColumn(1), horizontalRange);
 
-        this.m_VerticalAngle = new AngularCollection<TAngular>(values.GetColumn(2), AngleRange.MinusPiTOPi);
+        this.m_VerticalAngle = new AngularCollection<TAngular>(values.GetColumn(2), AngleRange.MinusPIToPI);
     }
 
     #endregion

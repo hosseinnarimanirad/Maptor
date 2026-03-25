@@ -108,7 +108,7 @@ public struct Cartesian3DPoint<T> : ICartesian3DPoint
 
         Radian horizontalAngle = new Radian(Math.Atan2(this.Y.Value, this.X.Value), horizontalRange);
 
-        Radian verticalAngle = new Radian(Math.Atan2(tempZ, Math.Sqrt(tempX * tempX + tempY * tempY)), AngleRange.MinusPiTOPi);
+        Radian verticalAngle = new Radian(Math.Atan2(tempZ, Math.Sqrt(tempX * tempX + tempY * tempY)), AngleRange.MinusPIToPI);
 
         return new SphericalPoint<TLinear, TAngular>(radius, horizontalAngle, verticalAngle);
     }
@@ -129,7 +129,7 @@ public struct Cartesian3DPoint<T> : ICartesian3DPoint
 
         Radian horizontalAngle = new Radian(Math.Atan2(tempY, tempX), horizontalRange);
 
-        Radian verticalAngle = new Radian(Math.Atan2(Z.Value, Math.Sqrt(tempX * tempX + tempY * tempY)), AngleRange.MinusPiTOPi);
+        Radian verticalAngle = new Radian(Math.Atan2(Z.Value, Math.Sqrt(tempX * tempX + tempY * tempY)), AngleRange.MinusPIToPI);
 
         return new AstronomicalPoint<TAngular>(horizontalAngle, verticalAngle);
     }
@@ -174,7 +174,7 @@ public struct Cartesian3DPoint<T> : ICartesian3DPoint
 
         do
         {
-            nTempValue = ellipsoid.CalculateN(new Radian(latitudeTempValue1, AngleRange.MinusPiTOPi)).ChangeTo<TLinear>().Value;
+            nTempValue = ellipsoid.CalculateN(new Radian(latitudeTempValue1, AngleRange.MinusPIToPI)).ChangeTo<TLinear>().Value;
 
             hTempValue2 = pTempValue / Math.Cos(latitudeTempValue1) - nTempValue;
 
@@ -235,7 +235,7 @@ public struct Cartesian3DPoint<T> : ICartesian3DPoint
 
         do
         {
-            nTempValue = ellipsoid.CalculateN(new Radian(latitudeTempValue1, AngleRange.MinusPiTOPi)).ChangeTo<TLinear>().Value;
+            nTempValue = ellipsoid.CalculateN(new Radian(latitudeTempValue1, AngleRange.MinusPIToPI)).ChangeTo<TLinear>().Value;
 
             latitudeTempValue2 = Math.Atan(tempZ / pTempValue *
                                                 1 / (1 - (e2TempValue * nTempValue) / (nTempValue + 0)));

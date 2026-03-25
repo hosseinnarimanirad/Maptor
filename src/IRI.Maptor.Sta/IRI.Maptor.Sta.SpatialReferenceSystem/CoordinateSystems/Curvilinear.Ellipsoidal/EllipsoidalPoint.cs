@@ -58,9 +58,9 @@ public struct EllipsoidalPoint<TLinear, TAngular> : IEllipsoidalPoint
 
     public EllipsoidalPoint(IEllipsoid ellipsoid, AngularUnit horizontalAngle, AngularUnit verticalAngle)
     {
-        if (verticalAngle.Range != AngleRange.MinusPiTOPi)
+        if (verticalAngle.Range != AngleRange.MinusPIToPI)
         {
-            verticalAngle.Range = AngleRange.MinusPiTOPi;
+            verticalAngle.Range = AngleRange.MinusPIToPI;
         }
 
         this.m_Datum = ellipsoid.ChangeTo<TLinear, TAngular>();

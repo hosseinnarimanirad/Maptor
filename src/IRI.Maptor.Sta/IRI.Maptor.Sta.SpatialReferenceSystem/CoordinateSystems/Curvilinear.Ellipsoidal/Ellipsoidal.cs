@@ -136,7 +136,7 @@ public class Ellipsoidal<TLinear, TAngular> : IEllipsoidal
 
         this._horizontalAngle = new AngularCollection<TAngular>(values.GetColumn(0), horizontalRange);
 
-        this._verticalAngle = new AngularCollection<TAngular>(values.GetColumn(1), AngleRange.MinusPiTOPi);
+        this._verticalAngle = new AngularCollection<TAngular>(values.GetColumn(1), AngleRange.MinusPIToPI);
     }
 
     #endregion

@@ -10,5 +10,5 @@ namespace IRI.Maptor.Sta.Metrics;
 public enum AngleRange
 {
     ZeroTo2Pi = 0,
-    MinusPiTOPi = 1
+    MinusPIToPI = 1
 }

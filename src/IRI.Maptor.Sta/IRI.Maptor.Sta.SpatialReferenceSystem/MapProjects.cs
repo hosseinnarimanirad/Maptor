@@ -13,6 +13,10 @@ public static class MapProjects
     //phi = 90 => q=271
     internal static double _MaxAllowableIsometricLatitude = 271;
 
+    const double degreeToRadianRatio = Math.PI / 180;
+
+    const double radianToDegreeRatio = 180.0 / Math.PI;
+
     /// <summary>
     /// 
     /// </summary>
@@ -27,11 +31,11 @@ public static class MapProjects
             latitude = _MaxConvertableToIsometricLatitude * (latitude < 0 ? -1 : 1);
         }
 
-        double angleInRadian = latitude * Math.PI / 180;
+        double angleInRadian = latitude * degreeToRadianRatio /*Math.PI / 180*/;
 
         double eSin = firstEccentricity * Math.Sin(angleInRadian);
 
-        return Math.Log(Math.Tan(Math.PI / 4 + angleInRadian / 2.0) * Math.Pow((1 - eSin) / (1 + eSin), firstEccentricity / 2.0)) * 180.0 / Math.PI;
+        return Math.Log(Math.Tan(Math.PI / 4 + angleInRadian / 2.0) * Math.Pow((1 - eSin) / (1 + eSin), firstEccentricity / 2.0)) * radianToDegreeRatio/*180.0 / Math.PI*/;
     }
 
     public static double[] GeodeticLatitudeToIsometricLatitude(double[] latitudes, double firstEccentricity)
@@ -65,7 +69,7 @@ public static class MapProjects
         //'e=sqrt((a*a-b*b)/(a*a)):First Eccentricity of the Ellipsoid
 
 
-        double tempQ = isometricLatitude * Math.PI / 180;
+        double tempQ = isometricLatitude * degreeToRadianRatio /*Math.PI / 180*/;
 
         double phi0 = 2 * Math.Atan(Math.Exp(tempQ)) - Math.PI / 2;
 
@@ -85,7 +89,7 @@ public static class MapProjects
 
             if (Math.Abs(phi0 - phi1) < 0.1E-13)
             {
-                return phi1 * 180 / Math.PI;
+                return phi1 * radianToDegreeRatio;// 180 / Math.PI;
             }
             else if (counter == 10)
             {
@@ -115,7 +119,7 @@ public static class MapProjects
     {
         //latitude must be in degree
 
-        double temp = Math.Sin(latitude * Math.PI / 180);
+        double temp = Math.Sin(latitude * degreeToRadianRatio /*Math.PI / 180*/);
 
         return a / Math.Sqrt(1.0 - e * e * temp * temp);
     }
@@ -124,7 +128,7 @@ public static class MapProjects
     {
         //latitude must be in degree
 
-        double temp01 = Math.Sin(latitude * Math.PI / 180);
+        double temp01 = Math.Sin(latitude * degreeToRadianRatio /*Math.PI / 180*/);
 
         double temp02 = 1.0 - e * e * temp01 * temp01;
 
@@ -234,8 +238,8 @@ public static class MapProjects
         return new TPoint()
         {
             X =
-                ellipsoid.SemiMajorAxis.Value * geodeticPoint.X * Math.PI / 180,
-            Y = ellipsoid.SemiMajorAxis.Value * q * Math.PI / 180
+                ellipsoid.SemiMajorAxis.Value * geodeticPoint.X * degreeToRadianRatio /*Math.PI / 180*/,
+            Y = ellipsoid.SemiMajorAxis.Value * q * degreeToRadianRatio /*Math.PI / 180*/
         };
     }
 
@@ -282,21 +286,21 @@ public static class MapProjects
 
         for (int i = 0; i < longitudes.Length; i++)
         {
-            x[i] = ellipsoid.SemiMajorAxis.Value * longitudes[i] * Math.PI / 180;
+            x[i] = ellipsoid.SemiMajorAxis.Value * longitudes[i] * degreeToRadianRatio;
 
-            y[i] = ellipsoid.SemiMajorAxis.Value * q[i] * Math.PI / 180;
+            y[i] = ellipsoid.SemiMajorAxis.Value * q[i] * degreeToRadianRatio;
         }
 
-        return new double[][] { x, y };
+        return [x, y];
     }
 
 
     public static TPoint MercatorToGeodetic<TPoint>(TPoint mercatorPoint, Ellipsoid<Meter, Degree> ellipsoid) where TPoint : IPoint, new()
     {
 
-        double longitude = mercatorPoint.X / ellipsoid.SemiMajorAxis.Value * 180 / Math.PI;
+        double longitude = mercatorPoint.X / ellipsoid.SemiMajorAxis.Value * radianToDegreeRatio;// 180 / Math.PI;
 
-        double q = mercatorPoint.Y / ellipsoid.SemiMajorAxis.Value * 180 / Math.PI;
+        double q = mercatorPoint.Y / ellipsoid.SemiMajorAxis.Value * radianToDegreeRatio;//180 / Math.PI;
 
         double latitude = IsometricLatitudeToGeodeticLatitude(q, ellipsoid.FirstEccentricity);
 
@@ -340,14 +344,14 @@ public static class MapProjects
 
         for (int i = 0; i < x.Length; i++)
         {
-            longitudes[i] = x[i] / ellipsoid.SemiMajorAxis.Value * 180 / Math.PI;
+            longitudes[i] = x[i] / ellipsoid.SemiMajorAxis.Value * radianToDegreeRatio; //180 / Math.PI;
 
-            q[i] = y[i] / ellipsoid.SemiMajorAxis.Value * 180 / Math.PI;
+            q[i] = y[i] / ellipsoid.SemiMajorAxis.Value * radianToDegreeRatio; //180 / Math.PI;
         }
 
         double[] latitudes = IsometricLatitudeToGeodeticLatitude(q, ellipsoid.FirstEccentricity);
 
-        return new double[][] { longitudes, latitudes };
+        return [longitudes, latitudes];
     }
 
     #endregion
@@ -360,7 +364,7 @@ public static class MapProjects
         var a = Ellipsoids.WGS84.SemiMajorAxis.Value;
         //var a = earthRadius;
 
-        var x = a * geodetic.X * Math.PI / 180.0;
+        var x = a * geodetic.X * degreeToRadianRatio;
 
         double y;
 
@@ -370,7 +374,7 @@ public static class MapProjects
         }
         else
         {
-            y = a * Math.Log(Math.Tan(Math.PI / 4.0 + geodetic.Y / 2.0 * Math.PI / 180.0));
+            y = a * Math.Log(Math.Tan(Math.PI / 4.0 + geodetic.Y / 2.0 * degreeToRadianRatio));
         }
 
         return new TPoint() { X = x, Y = y };
@@ -395,16 +399,19 @@ public static class MapProjects
 
     public static TPoint WebMercatorToGeodeticWgs84Slow<TPoint>(TPoint webMercator) where TPoint : IPoint, new()
     {
+        var temp = WebMercatorToMercatorWgs84(webMercator);
+
         return MercatorToGeodetic(WebMercatorToMercatorWgs84(webMercator));
     }
 
+    // todo: inverstigate needed. is the output of this method geodetic wgs84 (long,lat) or geocentric?
     public static TPoint WebMercatorToGeodeticWgs84<TPoint>(TPoint webMercator) where TPoint : IPoint, new()
     {
         var a = Ellipsoids.WGS84.SemiMajorAxis.Value;
 
-        double longitude = webMercator.X / a * 180 / Math.PI; //a = 6378137.0
+        double longitude = webMercator.X / a * radianToDegreeRatio /*180.0 / Math.PI*/; //a = 6378137.0
 
-        double latitude = 2.0 * (Math.Atan(Math.Exp(webMercator.Y / a)) - Math.PI / 4.0) * 180 / Math.PI;
+        double latitude = 2.0 * (Math.Atan(Math.Exp(webMercator.Y / a)) - Math.PI / 4.0) * radianToDegreeRatio /*180.0 / Math.PI*/;
 
         return new TPoint() { X = longitude, Y = latitude };
     }
@@ -552,11 +559,11 @@ public static class MapProjects
         double A8 = -315.0 / 131072.0 * Math.Pow(e2, 4);
 
 
-        double N = ellipsoid.CalculateN(new Degree(geodeticPoint.Y, AngleRange.MinusPiTOPi)).Value;
+        double N = ellipsoid.CalculateN(new Degree(geodeticPoint.Y, AngleRange.MinusPIToPI)).Value;
 
-        double p = geodeticPoint.Y * Math.PI / 180.0;
+        double p = geodeticPoint.Y * degreeToRadianRatio;
 
-        double l = geodeticPoint.X * Math.PI / 180.0;
+        double l = geodeticPoint.X * degreeToRadianRatio;
 
         double t = Math.Tan(p);
 
@@ -655,11 +662,11 @@ public static class MapProjects
 
         for (int i = 0; i < numberOfPoints; i++)
         {
-            double N = ellipsoid.CalculateN(new Degree(latitudes[i], AngleRange.MinusPiTOPi)).Value;
+            double N = ellipsoid.CalculateN(new Degree(latitudes[i], AngleRange.MinusPIToPI)).Value;
 
-            double p = latitudes[i] * Math.PI / 180.0;
+            double p = latitudes[i] * degreeToRadianRatio;
 
-            double l = longitudes[i] * Math.PI / 180.0;
+            double l = longitudes[i] * degreeToRadianRatio;
 
             double t = Math.Tan(p);
 
@@ -692,7 +699,7 @@ public static class MapProjects
             y[i] = y[i] * N;
         }
 
-        return new double[][] { x, y };
+        return [x, y];
     }
 
 
@@ -714,9 +721,9 @@ public static class MapProjects
             return new TPoint() { X = double.NaN, Y = double.NaN };
         }
 
-        double N = ellipsoid.CalculateN(new Degree(phiExpansionPoint * 180 / Math.PI, AngleRange.MinusPiTOPi)).Value;
+        double N = ellipsoid.CalculateN(new Degree(phiExpansionPoint * radianToDegreeRatio /*180 / Math.PI*/, AngleRange.MinusPIToPI)).Value;
 
-        double M = ellipsoid.CalculateM(new Degree(phiExpansionPoint * 180 / Math.PI, AngleRange.MinusPiTOPi)).Value;
+        double M = ellipsoid.CalculateM(new Degree(phiExpansionPoint * radianToDegreeRatio /*180 / Math.PI*/, AngleRange.MinusPIToPI)).Value;
 
         double t = Math.Tan(phiExpansionPoint);
 
@@ -729,7 +736,7 @@ public static class MapProjects
 
         longitude = longitude - 1 / 5040.0 * Math.Pow(tmPoint.X / N, 7) * (61 + 662 * t * t + 1320 * Math.Pow(t, 4) + 720 * Math.Pow(t, 6));
 
-        longitude = longitude / Math.Cos(phiExpansionPoint) * 180 / Math.PI;
+        longitude = longitude / Math.Cos(phiExpansionPoint) * radianToDegreeRatio /*180 / Math.PI*/;
 
 
         double latitude = phiExpansionPoint - t * tmPoint.X * tmPoint.X / (2 * M * N);
@@ -742,7 +749,7 @@ public static class MapProjects
 
         latitude = latitude + t * Math.Pow(tmPoint.X, 8) / (40320.0 * M * Math.Pow(N, 7)) * (1385 + 3633 * t * t + 4095 * Math.Pow(t, 4) + 1575 * Math.Pow(t, 6));
 
-        latitude = latitude * 180 / Math.PI;
+        latitude = latitude * radianToDegreeRatio/*180 / Math.PI*/;
 
         return new TPoint() { X = longitude, Y = latitude };
     }
@@ -787,9 +794,9 @@ public static class MapProjects
 
         for (int i = 0; i < x.Length; i++)
         {
-            double N = ellipsoid.CalculateN(new Degree(phiExpansionPoint[i] * 180 / Math.PI, AngleRange.MinusPiTOPi)).Value;
+            double N = ellipsoid.CalculateN(new Degree(phiExpansionPoint[i] * radianToDegreeRatio /*180 / Math.PI*/, AngleRange.MinusPIToPI)).Value;
 
-            double M = ellipsoid.CalculateM(new Degree(phiExpansionPoint[i] * 180 / Math.PI, AngleRange.MinusPiTOPi)).Value;
+            double M = ellipsoid.CalculateM(new Degree(phiExpansionPoint[i] * radianToDegreeRatio /*180 / Math.PI*/, AngleRange.MinusPIToPI)).Value;
 
             double t = Math.Tan(phiExpansionPoint[i]);
 
@@ -802,7 +809,7 @@ public static class MapProjects
 
             longitude[i] = longitude[i] - 1 / 5040.0 * Math.Pow(x[i] / N, 7) * (61 + 662 * t * t + 1320 * Math.Pow(t, 4) + 720 * Math.Pow(t, 6));
 
-            longitude[i] = longitude[i] / Math.Cos(phiExpansionPoint[i]) * 180 / Math.PI;
+            longitude[i] = longitude[i] / Math.Cos(phiExpansionPoint[i]) * radianToDegreeRatio /*180 / Math.PI*/;
 
 
             latitude[i] = phiExpansionPoint[i] - t * x[i] * x[i] / (2 * M * N);
@@ -815,10 +822,10 @@ public static class MapProjects
 
             latitude[i] = latitude[i] + t * Math.Pow(x[i], 8) / (40320.0 * M * Math.Pow(N, 7)) * (1385 + 3633 * t * t + 4095 * Math.Pow(t, 4) + 1575 * Math.Pow(t, 6));
 
-            latitude[i] = latitude[i] * 180 / Math.PI;
+            latitude[i] = latitude[i] * radianToDegreeRatio /*180 / Math.PI*/;
         }
 
-        return new double[][] { longitude, latitude };
+        return [longitude, latitude];
     }
 
     #endregion
@@ -1032,20 +1039,20 @@ public static class MapProjects
 
         double e = ellipsoid.FirstEccentricity;
 
-        double phi0 = standardLatitude * Math.PI / 180.0;
+        double phi0 = standardLatitude * degreeToRadianRatio;
 
         //double k0 = Math.Cos(phi0) / Math.Pow(1 - e * e * Math.Sin(phi0) * Math.Sin(phi0), 0.5);
         double k0 = Math.Cos(phi0) / Math.Sqrt(1 - e * e * Math.Sin(phi0) * Math.Sin(phi0));
 
-        double eSin = e * Math.Sin(geodeticPoint.Y * Math.PI / 180.0);
+        double eSin = e * Math.Sin(geodeticPoint.Y * degreeToRadianRatio);
 
         double q = (1.0 - e * e) * (
-            Math.Sin(geodeticPoint.Y * Math.PI / 180.0) / (1.0 - eSin * eSin) -
+            Math.Sin(geodeticPoint.Y * degreeToRadianRatio) / (1.0 - eSin * eSin) -
             Math.Log((1.0 - eSin) / (1.0 + eSin)) / (2.0 * e));
 
         return new TPoint()
         {
-            X = ellipsoid.SemiMajorAxis.Value * k0 * (geodeticPoint.X - centralLongitude) * Math.PI / 180.0,
+            X = ellipsoid.SemiMajorAxis.Value * k0 * (geodeticPoint.X - centralLongitude) * degreeToRadianRatio,
             Y = ellipsoid.SemiMajorAxis.Value * q / (2.0 * k0)
         };
     }
@@ -1096,24 +1103,24 @@ public static class MapProjects
 
         double e = ellipsoid.FirstEccentricity;
 
-        double phi0 = standardLatitude * Math.PI / 180.0;
+        double phi0 = standardLatitude * degreeToRadianRatio;
 
         double k0 = Math.Cos(phi0) / Math.Pow(1 - e * e * Math.Sin(phi0) * Math.Sin(phi0), 0.5);
 
         for (int i = 0; i < longitude.Length; i++)
         {
-            double eSin = e * Math.Sin(latitude[i] * Math.PI / 180.0);
+            double eSin = e * Math.Sin(latitude[i] * degreeToRadianRatio);
 
             double q = (1.0 - e * e) * (
-                Math.Sin(latitude[i] * Math.PI / 180.0) / (1.0 - eSin * eSin) -
+                Math.Sin(latitude[i] * degreeToRadianRatio) / (1.0 - eSin * eSin) -
                 Math.Log((1.0 - eSin) / (1.0 + eSin)) / (2.0 * e));
 
-            x[i] = ellipsoid.SemiMajorAxis.Value * k0 * (longitude[i] - centralLongitude) * Math.PI / 180.0;
+            x[i] = ellipsoid.SemiMajorAxis.Value * k0 * (longitude[i] - centralLongitude) * degreeToRadianRatio;
 
             y[i] = ellipsoid.SemiMajorAxis.Value * q / (2.0 * k0);
         }
 
-        return new double[][] { x, y };
+        return [x, y];
 
     }
 
@@ -1122,7 +1129,7 @@ public static class MapProjects
     {
         double e = ellipsoid.FirstEccentricity;
 
-        double phi0 = standardLatitude * Math.PI / 180.0;
+        double phi0 = standardLatitude * degreeToRadianRatio;
 
         double k0 = Math.Cos(phi0) / Math.Sqrt(1 - e * e * Math.Sin(phi0) * Math.Sin(phi0));
 
@@ -1131,11 +1138,11 @@ public static class MapProjects
             1.0 / (2.0 * e) *
             Math.Log((1.0 - e) / (1.0 + e)));
 
-        double longitude = centeralLongitude + ceaPoint.X / (ellipsoid.SemiMajorAxis.Value * k0) * 180 / Math.PI;
+        double longitude = centeralLongitude + ceaPoint.X / (ellipsoid.SemiMajorAxis.Value * k0) * radianToDegreeRatio /*180 / Math.PI*/;
 
         double beta = Math.Asin(2 * ceaPoint.Y * k0 / (ellipsoid.SemiMajorAxis.Value * qAtPole));
 
-        double deltaLambda = (centeralLongitude - longitude) * Math.PI / 180.0;
+        double deltaLambda = (centeralLongitude - longitude) * degreeToRadianRatio;
 
         double qC = qAtPole * Math.Sin(beta);
 
@@ -1178,7 +1185,7 @@ public static class MapProjects
 
         double e = ellipsoid.FirstEccentricity;
 
-        double phi0 = standardLatitude * Math.PI / 180.0;
+        double phi0 = standardLatitude * degreeToRadianRatio;
 
         double k0 = Math.Cos(phi0) / Math.Pow(1 - e * e * Math.Sin(phi0) * Math.Sin(phi0), 0.5);
 
@@ -1189,11 +1196,11 @@ public static class MapProjects
 
         for (int i = 0; i < x.Length; i++)
         {
-            longitude[i] = centeralLongitude + x[i] / (ellipsoid.SemiMajorAxis.Value * k0) * 180 / Math.PI;
+            longitude[i] = centeralLongitude + x[i] / (ellipsoid.SemiMajorAxis.Value * k0) * radianToDegreeRatio /*180 / Math.PI*/;
 
             double beta = Math.Asin(2 * y[i] * k0 / (ellipsoid.SemiMajorAxis.Value * qAtPole));
 
-            double deltaLambda = (centeralLongitude - longitude[i]) * Math.PI / 180.0;
+            double deltaLambda = (centeralLongitude - longitude[i]) * degreeToRadianRatio;
 
             //double betaC = Math.Atan(Math.Tan(beta) / Math.Cos(deltaLambda));
 
@@ -1203,7 +1210,7 @@ public static class MapProjects
             latitude[i] = IterativelyComputeLatitude(qC, e) * 180.0 / Math.PI;
         }
 
-        return new double[][] { longitude, latitude };
+        return [longitude, latitude];
 
     }
 
@@ -1239,11 +1246,11 @@ public static class MapProjects
                                                                 double firstParallel, double secondParallel)
     {
         double e = ellipsoid.FirstEccentricity;
-        double phi1 = firstParallel * Math.PI / 180.0;
-        double phi2 = secondParallel * Math.PI / 180.0;
-        double phi0 = standardLatitude * Math.PI / 180.0;
-        //double phi1 = firstParallel * Math.PI / 180.0;
-        //double phi1 = firstParallel * Math.PI / 180.0;
+        double phi1 = firstParallel * degreeToRadianRatio;
+        double phi2 = secondParallel * degreeToRadianRatio;
+        double phi0 = standardLatitude * degreeToRadianRatio;
+        //double phi1 = firstParallel *degreeToRadianRatio;
+        //double phi1 = firstParallel *degreeToRadianRatio;
         double n =
             (Math.Pow(CalculateM(e, phi1), 2) - Math.Pow(CalculateM(e, phi2), 2)) /
             (CalculateQ(e, phi2) - CalculateQ(e, phi1));
@@ -1262,16 +1269,16 @@ public static class MapProjects
 
         for (int i = 0; i < numberOfPoints; i++)
         {
-            double rho = a * Math.Sqrt(c - n * CalculateQ(e, latitude[i] * Math.PI / 180.0)) / n;
+            double rho = a * Math.Sqrt(c - n * CalculateQ(e, latitude[i] * degreeToRadianRatio)) / n;
 
-            double theta = n * (longitude[i] - centralLongitude) * Math.PI / 180.0;
+            double theta = n * (longitude[i] - centralLongitude) * degreeToRadianRatio;
 
             x[i] = rho * Math.Sin(theta);
 
             y[i] = rho0 - rho * Math.Cos(theta);
         }
 
-        return new double[][] { x, y };
+        return [x, y];
     }
 
     public static double[][] AlbersEqualAreaConicToGeodetic(double[] x, double[] y, Ellipsoid<Meter, Degree> ellipsoid,
@@ -1280,11 +1287,11 @@ public static class MapProjects
                                                                 double firstParallel, double secondParallel)
     {
         double e = ellipsoid.FirstEccentricity;
-        double phi1 = firstParallel * Math.PI / 180.0;
-        double phi2 = secondParallel * Math.PI / 180.0;
-        double phi0 = standardLatitude * Math.PI / 180.0;
-        //double phi1 = firstParallel * Math.PI / 180.0;
-        //double phi1 = firstParallel * Math.PI / 180.0;
+        double phi1 = firstParallel * degreeToRadianRatio;
+        double phi2 = secondParallel * degreeToRadianRatio;
+        double phi0 = standardLatitude * degreeToRadianRatio;
+        //double phi1 = firstParallel *degreeToRadianRatio;
+        //double phi1 = firstParallel *degreeToRadianRatio;
         double n =
             (Math.Pow(CalculateM(e, phi1), 2) - Math.Pow(CalculateM(e, phi2), 2)) /
             (CalculateQ(e, phi2) - CalculateQ(e, phi1));
@@ -1314,7 +1321,7 @@ public static class MapProjects
             latitude[i] = IterativelyComputeLatitude(q, e) * 180.0 / Math.PI;
         }
 
-        return new double[][] { longitude, latitude };
+        return [longitude, latitude];
 
     }
 
@@ -1346,7 +1353,7 @@ public static class MapProjects
     /// <returns></returns>
     public static double CalculateUTMScaleFactor(IPoint geodeticPoint, Ellipsoid<Meter, Degree> ellipsoid)
     {
-        double phi = geodeticPoint.Y * Math.PI / 180.0;
+        double phi = geodeticPoint.Y * degreeToRadianRatio;
 
         double cosinePhi = Math.Cos(phi);
 
@@ -1356,9 +1363,9 @@ public static class MapProjects
 
         double lambda0 = CalculateCentralMeridian(FindUtmZone(geodeticPoint.X));
 
-        double deltaLambda = (geodeticPoint.X - lambda0) * Math.PI / 180.0;
+        double deltaLambda = (geodeticPoint.X - lambda0) * degreeToRadianRatio;
 
-        return k0 * (1.0 + (1.0 + C) * (deltaLambda * deltaLambda * cosinePhi * cosinePhi) / 2.0); 
+        return k0 * (1.0 + (1.0 + C) * (deltaLambda * deltaLambda * cosinePhi * cosinePhi) / 2.0);
     }
 
     /// <summary>

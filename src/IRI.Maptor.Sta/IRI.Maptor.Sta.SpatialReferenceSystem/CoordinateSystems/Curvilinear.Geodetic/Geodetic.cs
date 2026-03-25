@@ -155,7 +155,7 @@ public class Geodetic<TLinear, TAngular> : IGeodetic
 
         this.m_Longitude = new AngularCollection<TAngular>(values.GetColumn(1), longitudinalRange);
 
-        this.m_Latitude = new AngularCollection<TAngular>(values.GetColumn(2), AngleRange.MinusPiTOPi);
+        this.m_Latitude = new AngularCollection<TAngular>(values.GetColumn(2), AngleRange.MinusPIToPI);
     }
 
     #endregion

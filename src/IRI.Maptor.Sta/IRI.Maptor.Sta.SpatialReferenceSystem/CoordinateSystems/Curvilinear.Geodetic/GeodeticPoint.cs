@@ -70,9 +70,9 @@ public struct GeodeticPoint<TLinear, TAngular> : IGeodeticPoint
 
     public GeodeticPoint(IEllipsoid ellipsoid, LinearUnit height, AngularUnit longitude, AngularUnit latitude)
     {
-        if (latitude.Range != AngleRange.MinusPiTOPi)
+        if (latitude.Range != AngleRange.MinusPIToPI)
         {
-            latitude.Range = AngleRange.MinusPiTOPi;
+            latitude.Range = AngleRange.MinusPIToPI;
         }
 
         this.m_Datum = ellipsoid.ChangeTo<TLinear,TAngular>();
