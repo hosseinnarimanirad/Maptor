@@ -44,7 +44,8 @@ public class DataSourceKindToBrushConverter : IValueConverter
 
             DataSourceKind.Other => ModernUIColors.SteelBrush,
             //?? => ModernUIColors.MauveColor,
-            DataSourceKind.Worldfile => ModernUIColors.TaupeColor,
+            DataSourceKind.Worldfile => ModernUIColors.TaupeBrush,
+
             _ => Brushes.Transparent
         };
     }
