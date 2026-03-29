@@ -79,7 +79,16 @@ public class SelectedLayer : Notifier
         }
     }
 
-    public bool CanViewChanges => CanUndo;
+    public bool CanViewChanges
+    {
+        get
+        {
+            if (!IsSingleValueHighlighted || HighlightedFeatures?.FirstOrDefault() is not Feature<Point> feature)
+                return false;
+
+            return feature.Status == FeatureStatus.Updated && feature.OldVersion != null;
+        }
+    }
 
     public bool HasPendingChanges => AssociatedLayer.HasPendingChanges;
 

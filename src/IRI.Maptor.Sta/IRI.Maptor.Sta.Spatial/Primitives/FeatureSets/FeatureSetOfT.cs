@@ -66,6 +66,8 @@ public class FeatureSet<T> where T : IPoint, new()
         };
     }
 
+    public IReadOnlyList<Feature<T>> GetAllFeatures() => _allFeatures;
+
     public bool HasNoGeometry() => Features.IsNullOrEmpty();
 
     public List<Geometry<T>> GetGeometries()
