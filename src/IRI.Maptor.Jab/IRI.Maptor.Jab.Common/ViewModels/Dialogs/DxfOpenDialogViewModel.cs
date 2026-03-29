@@ -49,6 +49,8 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
         BrowseCommand = new RelayCommand(async _ => await BrowseAsync());
         OpenCommand = new RelayCommand(_ => Open(), _ => CanOpen());
         CancelCommand = new RelayCommand(_ => Cancel());
+        RemoveFileCommand = new RelayCommand(_ => RemoveSelectedFile(), _ => !string.IsNullOrEmpty(FilePath));
+
     }
 
     public ObservableCollection<SrsOption> AvailableSrsOptions { get; }
@@ -116,12 +118,18 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
     public ObservableCollection<PointDisplay> SamplePoints
     {
         get => _samplePoints;
-        set { _samplePoints = value ?? new ObservableCollection<PointDisplay>(); RaisePropertyChanged(); }
+        set
+        {
+            _samplePoints = value ?? new ObservableCollection<PointDisplay>();
+            RaisePropertyChanged();
+        }
     }
 
     public RelayCommand BrowseCommand { get; }
     public RelayCommand OpenCommand { get; }
     public RelayCommand CancelCommand { get; }
+
+    public RelayCommand RemoveFileCommand { get; }
 
     private void ApplyInitialSrid(int srid)
     {
@@ -189,6 +197,12 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
             return false;
 
         return true;
+    }
+
+    private void RemoveSelectedFile()
+    {
+        this.FilePath = string.Empty;
+        this.SamplePoints = new ObservableCollection<PointDisplay>();
     }
 
     private void Open()

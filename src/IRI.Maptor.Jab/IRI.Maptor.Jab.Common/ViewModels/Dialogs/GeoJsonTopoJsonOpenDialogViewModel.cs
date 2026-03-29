@@ -46,6 +46,8 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
         BrowseCommand = new RelayCommand(_ => Browse());
         OpenCommand = new RelayCommand(_ => Open(), _ => CanOpen());
         CancelCommand = new RelayCommand(_ => Cancel());
+        RemoveFileCommand = new RelayCommand(_ => RemoveSelectedFile(), _ => !string.IsNullOrEmpty(FilePath));
+
     }
 
     public bool IsGeoJson { get; }
@@ -231,6 +233,7 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
     {
         this.FilePath = string.Empty;
         this.RawJson = string.Empty;
+        this.SamplePoints = new ObservableCollection<PointDisplay>();
     }
 
     private void Open()

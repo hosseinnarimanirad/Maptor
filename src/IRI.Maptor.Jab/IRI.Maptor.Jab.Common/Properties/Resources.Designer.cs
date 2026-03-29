@@ -934,6 +934,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import DXF.
+        /// </summary>
+        public static string dialog_dxfOpen_title {
+            get {
+                return ResourceManager.GetString("dialog_dxfOpen_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to or.
         /// </summary>
         public static string dialog_emailSignUp_or {
@@ -1582,7 +1591,7 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Undo.
+        ///   Looks up a localized string similar to Undo changes.
         /// </summary>
         public static string featureTable_undo {
             get {

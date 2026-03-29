@@ -1160,7 +1160,7 @@
     <value>Edit geometry</value>
   </data>
   <data name="featureTable_undo" xml:space="preserve">
-    <value>Undo</value>
+    <value>Undo changes</value>
   </data>
   <data name="featureTable_saveChanges" xml:space="preserve">
     <value>Save changes</value>
@@ -1459,5 +1459,8 @@
   </data>
   <data name="ui_header_attributeTable" xml:space="preserve">
     <value>Attribute Table</value>
+  </data>
+  <data name="dialog_dxfOpen_title" xml:space="preserve">
+    <value>Import DXF</value>
   </data>
 </root>

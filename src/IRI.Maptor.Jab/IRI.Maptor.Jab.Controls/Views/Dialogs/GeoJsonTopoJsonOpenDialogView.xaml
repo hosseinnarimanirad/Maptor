@@ -85,8 +85,7 @@
                 <Button Grid.Column="3"
                        ToolTip="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
                        Command="{Binding RemoveFileCommand}"
-                       Style="{StaticResource circleButtonLight}"
-                       >            
+                       Style="{StaticResource circleButtonLight}">            
                     <iconPacks:PackIconMaterial Kind="FileRemoveOutline"/>
                 </Button>
             </Grid>

@@ -169,7 +169,7 @@
     <value>حذف تمام عوارض ترسیمی</value>
   </data>
   <data name="cmd_general_addGeoJson" xml:space="preserve">
-    <value>Add GeoJson</value>
+    <value>افزودن GeoJson</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
     <value>افزودن شیپ‌فایل</value>
@@ -346,13 +346,13 @@
     <value>تغییر رمز عبور</value>
   </data>
   <data name="dialog_common_browse" xml:space="preserve">
-    <value>Browse...</value>
+    <value>انتخاب فایل...</value>
   </data>
   <data name="dialog_common_cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>لغو</value>
   </data>
   <data name="dialog_common_fileWatermark" xml:space="preserve">
-    <value>File</value>
+    <value>فایل</value>
   </data>
   <data name="dialog_common_removeFile" xml:space="preserve">
     <value>حذف فایل</value>
@@ -379,7 +379,7 @@
     <value>داده را جایگذاری کنید یا پیش‌نمایش فایل انتخاب‌شده (۵۰ خط اول)</value>
   </data>
   <data name="dialog_csvTsvOpen_title" xml:space="preserve">
-    <value>وارد کردن CSV / TSV</value>
+    <value>افزودن CSV / TSV</value>
   </data>
   <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
     <value>استفاده از خط اول به‌عنوان نام ویژگی‌ها</value>
@@ -409,7 +409,7 @@
     <value>ثبت نام با حساب گوگل</value>
   </data>
   <data name="dialog_geoJsonOpen_title" xml:space="preserve">
-    <value>وارد کردن GeoJSON</value>
+    <value>افزودن GeoJSON</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
     <value>ترتیب X/Y</value>
@@ -520,7 +520,7 @@
     <value>تنظیمات ظاهر</value>
   </data>
   <data name="dialog_topojsonOpen_title" xml:space="preserve">
-    <value>وارد کردن TopoJSON</value>
+    <value>افزودن TopoJSON</value>
   </data>
   <data name="dialog_userSignUp_bannerNewUser" xml:space="preserve">
     <value>کاربر جدید</value>
@@ -616,7 +616,7 @@
     <value>ذخیره تغییرات</value>
   </data>
   <data name="featureTable_undo" xml:space="preserve">
-    <value>واگرد</value>
+    <value>بازگردانی</value>
   </data>
   <data name="geometryDetails_coordinateGrid_azimuthToNext" xml:space="preserve">
     <value>زاویه سمت به بعدی</value>
@@ -817,7 +817,7 @@
     <value>ذخیره تغییرات</value>
   </data>
   <data name="legendItem_PendingChanges_Undo" xml:space="preserve">
-    <value>بازگردانی تغییرات</value>
+    <value>بازگردانی</value>
   </data>
   <data name="legendItem_PendingChanges_Updated" xml:space="preserve">
     <value>ویرایش شده:</value>
@@ -865,13 +865,13 @@
     <value>طول بیضی:</value>
   </data>
   <data name="mapInfo_euclideanAreaUtm" xml:space="preserve">
-    <value>Euclidean Area (UTM):</value>
+    <value>مساحت اقلیدسی (UTM):</value>
   </data>
   <data name="mapInfo_euclideanLengthUtm" xml:space="preserve">
-    <value>EuclideanLengthInUtm:</value>
+    <value>فاصله اقلیدسی (UTM)</value>
   </data>
   <data name="mapInfo_euclideanLengthUtmRefined" xml:space="preserve">
-    <value>EuclideanLengthInUtm_Refined:</value>
+    <value>فاصله اقلیدسی (UTM) اصلاح شده</value>
   </data>
   <data name="mapInfo_general" xml:space="preserve">
     <value>ژنرال</value>
@@ -1418,5 +1418,8 @@
   </data>
   <data name="ui_header_attributeTable" xml:space="preserve">
     <value>جدول اطلاعات توصیفی</value>
+  </data>
+  <data name="dialog_dxfOpen_title" xml:space="preserve">
+    <value>افزودن DXF</value>
   </data>
 </root>
