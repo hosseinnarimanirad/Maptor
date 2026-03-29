@@ -206,8 +206,13 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
                     Map.ZoomAndCenterToGoogleZoomLevel(g.ZoomLevel, center);
                 }
                 else
-                {
-                    Map.Zoom(item.Model.Scale, center);
+                {  
+                    var wgs = MapProjects.WebMercatorToGeodeticWgs84(center);
+                    double lat = wgs?.Y ?? 0;
+
+                    var webMercatorScale = Math.Cos(lat * Math.PI / 180.0) * item.Model.Scale;
+
+                    Map.Zoom(webMercatorScale, center);
                 }
             },
             _ => SelectedScaleItem is not null);

@@ -1,3 +1,5 @@
+using IRI.Maptor.Sta.Persistence.Attributes;
+using static IRI.Maptor.Sta.Persistence.Abstractions.DataSourceCategory;
 using System.ComponentModel;
 
 namespace IRI.Maptor.Sta.Persistence.Abstractions;
@@ -7,51 +9,51 @@ namespace IRI.Maptor.Sta.Persistence.Abstractions;
 /// </summary>
 public enum DataSourceKind
 {
-    [Description("Shp")]
+    [Description("Shp"), DataSourceKindInfo(Category = Vector)]
     Shapefile,
 
-    [Description("Kmz")]
+    [Description("Kmz"), DataSourceKindInfo(Category = Vector)]
     Kmz,
 
-    [Description("Kml")]
+    [Description("Kml"), DataSourceKindInfo(Category = Vector)]
     Kml,
 
-    [Description("Gpx")]
+    [Description("Gpx"), DataSourceKindInfo(Category = Vector)]
     Gpx,
 
-    [Description("Dxf")]
+    [Description("Dxf"), DataSourceKindInfo(Category = Vector)]
     Dxf,
 
-    [Description("REST")]
+    [Description("REST"), DataSourceKindInfo(Category = Service)]
     WebApi,
 
-    [Description("gRPC")]
+    [Description("gRPC"), DataSourceKindInfo(Category = Service)]
     GRPC,
 
-    [Description("GeoJson")]
+    [Description("GeoJson"), DataSourceKindInfo(Category = Vector)]
     GeoJson,
 
-    [Description("TopoJson")]
+    [Description("TopoJson"), DataSourceKindInfo(Category = Vector)]
     TopoJson,
 
-    [Description("Csv")]
+    [Description("Csv"), DataSourceKindInfo(Category = Vector)]
     Csv,
 
-    [Description("Tsv")]
+    [Description("Tsv"), DataSourceKindInfo(Category = Vector)]
     Tsv,
 
-    [Description("Worldfile")]
+    [Description("Worldfile"), DataSourceKindInfo(Category = Raster)]
     Worldfile,
 
-    [Description("GeoTiff")]
+    [Description("GeoTiff"), DataSourceKindInfo(Category = Raster)]
     GeoTiff,
 
-    [Description("image pyramid")]
+    [Description("image pyramid"), DataSourceKindInfo(Category = Raster)]
     ZippedImagePyramid,
 
-    [Description("Gml")]
+    [Description("Gml"), DataSourceKindInfo(Category = Vector)]
     GML,
 
-    [Description("...")]
+    [Description("..."), DataSourceKindInfo(Category = None)]
     Other,
-}     
+}

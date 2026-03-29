@@ -20,11 +20,13 @@ public static class ConversionHelper
         PixelToMeterFactor = PixelToMeter(1, 96);
     }
 
+    // todo: this method may need furture attention, what about M11 
     public static double PixelToMeter(double pixels, int dpi = 96)
     {
         return pixels / dpi * InchToMeterFactor;
     }
 
+    // todo: this method may need furture attention, what about M11 
     static public double MeterToPixel(double meter, int dpi = 96)
     {
         return meter / InchToMeterFactor * dpi;
