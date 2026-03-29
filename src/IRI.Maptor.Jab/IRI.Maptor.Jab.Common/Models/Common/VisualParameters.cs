@@ -566,7 +566,13 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
         return new VisualParameters(fill, BrushHelper.PickBrush(), strokeThickness, opacity, isOn: true);
     }
 
-    public static VisualParameters CreateLabel(ScaleInterval visibleRange, int fontSize, Brush? foreground, FontFamily fontFamily, Func<Geometry<Sb.Point>, Sb.Point> positionFunc, bool isRtl)
+    public static VisualParameters CreateLabel(
+        ScaleInterval visibleRange,
+        int fontSize,
+        Brush? foreground,
+        FontFamily fontFamily,
+        Func<Geometry<Sb.Point>, Sb.Point> positionFunc,
+        bool isRtl)
     {
         return new VisualParameters()
         {
@@ -575,7 +581,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
             Foreground = foreground ?? Brushes.Black,
             FontFamily = fontFamily,
             PositionFunc = positionFunc,
-            IsRtl = isRtl,
+            IsRtl = isRtl,            
         };//
     }
 

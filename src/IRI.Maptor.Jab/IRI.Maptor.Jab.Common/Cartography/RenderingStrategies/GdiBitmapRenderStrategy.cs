@@ -328,6 +328,12 @@ public class GdiBitmapRenderStrategy : RenderStrategy
 
             var labelValue = (string.IsNullOrEmpty(labelAttribute) ? featureList[i]?.Label : featureList[i]?.Attributes[labelAttribute]?.ToString()) ?? string.Empty;
 
+            if (string.IsNullOrWhiteSpace(labelValue))
+                continue;
+
+            if (labelParameters.IsRtl && double.TryParse(labelValue, out double doubleValue))
+                labelValue = labelValue.LatinNumbersToFarsiNumbers();
+
             var stringSize = graphic.MeasureString(/*features[i].Label*/labelValue, font);
 
             Drawing.PointF locationF = new Drawing.PointF((float)(location.X - stringSize.Width / 2.0), (float)(location.Y - stringSize.Height / 2.0));
