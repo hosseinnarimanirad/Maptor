@@ -6,7 +6,14 @@ namespace IRI.Maptor.Sta.SpatialReferenceSystem;
 
 public static class CoordinateHelper
 {
-    public static (string x, string y) Format(Point webMercator, CoordinateDisplayMode mode, bool thousandSeparator, int? utmZone, int? latLongPrecision, int? xyPrecision, Ellipsoid? ellipsoid)
+    public static (string x, string y) Format(
+        Point webMercator,
+        CoordinateDisplayMode mode,
+        bool thousandSeparator,
+        int? utmZone,
+        int? latLongPrecision,
+        int? xyPrecision,
+        Ellipsoid? ellipsoid)
     {
 
         // Convert Web Mercator to selected SRS 

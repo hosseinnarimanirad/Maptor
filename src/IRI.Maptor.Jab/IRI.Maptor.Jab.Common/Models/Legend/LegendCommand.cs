@@ -473,7 +473,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Export As CSV ***********
     // *******************************************
-    public static ILegendCommand CreateExportDrawingItemLayerAsCsv(MapViewModelBase map, DrawingItemLayer layer)
+    public static ILegendCommand CreateExportDrawingItemLayerAsCsv(MapViewModelBase map, DrawingItemLayer layer, CoordinateDisplayMode? coordinateDisplayMode)
     {
         var resource = System.Windows.Application.Current?.FindResource("csv");
 
@@ -506,7 +506,7 @@ public class LegendCommand : LegendCommandBase
                 foreach (var point in points)
                 {
                     var coordinate = CoordinateHelper.Format(point,
-                                                                CoordinateDisplayMode.GeodeticDecimal,
+                                                                coordinateDisplayMode ?? CoordinateDisplayMode.GeodeticDecimal,
                                                                 thousandSeparator: false, null, null, null, null);
 
                     lines.Add($"{coordinate.x}, {coordinate.y}");
@@ -886,8 +886,8 @@ public class LegendCommand : LegendCommandBase
     {
         return new List<Func<MapViewModelBase, DrawingItemLayer, ILegendCommand>>()
         {
+            (p,l) => CreateZoomToExtentCommandFunc(p,l),
             CreateRemoveDrawingItemLayer,
-            (p,l)=>LegendCommand. CreateZoomToExtentCommandFunc(p,l)
         };
     }
 

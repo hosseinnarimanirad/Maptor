@@ -199,7 +199,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public List<ScaleModel> StandardScales => ScaleModel.Scales;
 
-    private MapExtentPanelViewModel _mapExtentPanel ;
+    private MapExtentPanelViewModel _mapExtentPanel;
     public MapExtentPanelViewModel MapExtentPanel
     {
         get { return _mapExtentPanel; }
@@ -953,7 +953,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         this.RequestShowSymbologyView = requestShowSymbologyView;
 
-        this.RequestClearAll = this.ClearAll;
+        //this.RequestClearAll = this.ClearAll;
 
         //this.SetMapCursorSet1();
 
@@ -1108,7 +1108,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Func<DrawMode, EditableFeatureLayerOptions, bool, Task<Response<Geometry<Point>>>> RequestGetDrawingAsync;
 
-    public Action RequestClearAll;
+    //public Action RequestClearAll;
 
     public Action RequestCancelNewDrawing;
 
@@ -1734,6 +1734,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+
     private bool _isDrawingLegendExpanded = false;
     public bool IsDrawingLegendExpanded
     {
@@ -1761,7 +1762,7 @@ public abstract class MapViewModelBase : ViewModelBase
                    layer => LegendCommand.CreateEditDrawingItemLayer(this, layer),
                    layer => LegendCommand.CreateExportDrawingItemLayerAsShapefile(this, layer),
                    layer => LegendCommand.CreateExportDrawingItemLayerAsGeoJson(this, layer),
-                   layer => LegendCommand.CreateExportDrawingItemLayerAsCsv(this, layer),
+                   layer => LegendCommand.CreateExportDrawingItemLayerAsCsv(this, layer, CoordinatePanel?.SelectedItem?.CoordinateDisplayMode),
                    layer => LegendToggleCommand.CreateToggleLayerLabelCommand(this, layer/*, layer.Labels*/)
                 };
             }
@@ -3842,13 +3843,11 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    public virtual async Task AddDxffile(object defaultSrid, int? maxSizeInKB)
+    public virtual async Task AddDxffile(int? maxSizeInKB)
     {
         IsBusy = true;
 
         int? initialSrid = null;
-        if (defaultSrid != null && int.TryParse(defaultSrid.ToString(), out int parsedSrid))
-            initialSrid = parsedSrid;
 
         var result = await DialogService.ShowDxfOpenDialogAsync(ownerWindow: null, initialSrid);
 
@@ -4334,6 +4333,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+
     private RelayCommand _fullExtentCommand;
     public RelayCommand FullExtentCommand
     {
@@ -4348,23 +4348,6 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    private RelayCommand _clearAllCommand;
-    public RelayCommand ClearAllCommand
-
-    {
-        get
-        {
-            if (_clearAllCommand == null)
-            {
-                _clearAllCommand = new RelayCommand(param =>
-                {
-                    RequestClearAll?.Invoke();
-                });
-            }
-
-            return _clearAllCommand;
-        }
-    }
 
     private RelayCommand _rectangleZoomCommand;
     public RelayCommand RectangleZoomCommand
@@ -4380,6 +4363,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+
     private RelayCommand _zoomOutCommand;
     public RelayCommand ZoomOutCommand
     {
@@ -4393,6 +4377,7 @@ public abstract class MapViewModelBase : ViewModelBase
             return _zoomOutCommand;
         }
     }
+
 
     private RelayCommand _panCommand;
     public RelayCommand PanCommand
@@ -4423,6 +4408,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+
     private RelayCommand _nextExtentCommand;
     public RelayCommand NextExtentCommand
     {
@@ -4437,6 +4423,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+
     private RelayCommand _zoomInAtCenterCommand;
     public RelayCommand ZoomInAtCenterCommand
     {
@@ -4450,6 +4437,7 @@ public abstract class MapViewModelBase : ViewModelBase
             return _zoomInAtCenterCommand;
         }
     }
+
 
     private RelayCommand _zoomOutAtCenterCommand;
     public RelayCommand ZoomOutAtCenterCommand
@@ -4486,6 +4474,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+
     private RelayCommand _addGeoJSONfileCommand;
     public RelayCommand AddGeoJSONfileCommand
     {
@@ -4502,6 +4491,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+
     private RelayCommand _addTopoJsonCommand;
     public RelayCommand AddTopoJsonCommand
     {
@@ -4517,6 +4507,7 @@ public abstract class MapViewModelBase : ViewModelBase
             return _addTopoJsonCommand;
         }
     }
+
 
     private RelayCommand _addKmlfileCommand;
     public RelayCommand AddKmlfileCommand
@@ -4535,6 +4526,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+
     private RelayCommand _addKmzfileCommand;
     public RelayCommand AddKmzfileCommand
     {
@@ -4551,6 +4543,7 @@ public abstract class MapViewModelBase : ViewModelBase
             return _addKmzfileCommand;
         }
     }
+
 
     private RelayCommand _addGpxfileCommand;
     public RelayCommand AddGpxfileCommand
@@ -4569,6 +4562,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+
     private RelayCommand _addDxffileCommand;
     public RelayCommand AddDxffileCommand
     {
@@ -4578,13 +4572,14 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 _addDxffileCommand = new RelayCommand(async param =>
                 {
-                    await AddDxffile(param, null);
+                    await AddDxffile(null);
                 });
             }
 
             return _addDxffileCommand;
         }
     }
+
 
     private RelayCommand _addWgs84WorldfileCommand;
     public RelayCommand AddWgs84WorldfileCommand
@@ -4599,6 +4594,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+
     private RelayCommand _addWebMercatorWorldfileCommand;
     public RelayCommand AddWebMercatorWorldfileCommand
     {
@@ -4611,6 +4607,7 @@ public abstract class MapViewModelBase : ViewModelBase
             return _addWebMercatorWorldfileCommand;
         }
     }
+
 
     private RelayCommand _addZippedImagePyramidCommand;
     public RelayCommand AddZippedImagePyramidCommand
@@ -4626,6 +4623,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+
     private RelayCommand _addTsvCommand;
     public RelayCommand AddTsvCommand
     {
@@ -4639,6 +4637,7 @@ public abstract class MapViewModelBase : ViewModelBase
             return _addTsvCommand;
         }
     }
+
 
     private RelayCommand _addCsvCommand;
     public RelayCommand AddCsvCommand
@@ -4656,7 +4655,6 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
     private RelayCommand _changeBaseMapCommand;
-
     public RelayCommand ChangeBaseMapCommand
     {
         get
@@ -4688,6 +4686,62 @@ public abstract class MapViewModelBase : ViewModelBase
             }
 
             return _changeBaseMapCommand;
+        }
+    }
+
+    private RelayCommand _clearAllCommand;
+    public RelayCommand ClearAllCommand
+
+    {
+        get
+        {
+            if (_clearAllCommand == null)
+            {
+                _clearAllCommand = new RelayCommand(param =>
+                {
+                    //RequestClearAll?.Invoke();
+                    this.ClearAll();
+                });
+            }
+
+            return _clearAllCommand;
+        }
+    }
+
+
+    private RelayCommand _clearVectorLayersCommand;
+    public RelayCommand ClearVectorLayersCommand
+
+    {
+        get
+        {
+            if (_clearVectorLayersCommand == null)
+            {
+                _clearVectorLayersCommand = new RelayCommand(param =>
+                {
+                    this.Clear(l => l.DataSource?.DataSourceKind.GetCategory() == DataSourceCategory.Vector, true);
+                });
+            }
+
+            return _clearVectorLayersCommand;
+        }
+    }
+
+    private RelayCommand _clearRasterLayersCommand;
+    public RelayCommand ClearRasterLayersCommand
+
+    {
+        get
+        {
+            if (_clearRasterLayersCommand == null)
+            {
+                _clearRasterLayersCommand = new RelayCommand(param =>
+                {
+                    this.Clear(l => l.DataSource?.DataSourceKind.GetCategory() == DataSourceCategory.Raster, true);
+                });
+            }
+
+            return _clearRasterLayersCommand;
         }
     }
 
@@ -4915,153 +4969,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     #endregion
 
-    #region -   Print & Export Commands
-
-    private RelayCommand _printCommand;
-    public RelayCommand PrintCommand
-    {
-        get
-        {
-            if (_printCommand == null)
-            {
-                _printCommand = new RelayCommand(param => Print());
-            }
-
-            return _printCommand;
-        }
-    }
-
-    private RelayCommand _clipAndExportMapAsPngCommand;
-    public RelayCommand ClipAndExportMapAsPngCommand
-    {
-        get
-        {
-            if (_clipAndExportMapAsPngCommand == null)
-            {
-                _clipAndExportMapAsPngCommand = new RelayCommand(async param => await ClipAndExportMapAsPngAsync(param));
-            }
-
-            return _clipAndExportMapAsPngCommand;
-        }
-    }
-
-    private RelayCommand _exportMapAsPngCommand;
-    public RelayCommand ExportMapAsPngCommand
-    {
-        get
-        {
-            if (_exportMapAsPngCommand == null)
-            {
-                _exportMapAsPngCommand = new RelayCommand(async param => await ExportMapAsPngAsync(param));
-            }
-
-            return _exportMapAsPngCommand;
-        }
-    }
-
-    private RelayCommand _printToPdfCommand;
-    public RelayCommand PrintToPdfCommand
-    {
-        get
-        {
-            if (_printToPdfCommand == null)
-            {
-                _printToPdfCommand = new RelayCommand(async param => await PrintToPdfAsync(param));
-            }
-
-            return _printToPdfCommand;
-        }
-    }
-
-    private RelayCommand _setPrintAreaCommand;
-    public RelayCommand SetPrintAreaCommand
-    {
-        get
-        {
-            if (_setPrintAreaCommand == null)
-            {
-                _setPrintAreaCommand = new RelayCommand(async param => { await SetPrintAreaAsync(); });
-            }
-
-            return _setPrintAreaCommand;
-        }
-    }
-
-    #endregion
-
-
-    // ******************** Others *********************
-    // *************************************************
-    private RelayCommand _searchByAttributeCommand;
-    public RelayCommand SearchByAttributeCommand
-    {
-        get
-        {
-            if (_searchByAttributeCommand == null)
-            {
-                _searchByAttributeCommand = new RelayCommand(param => SearchByAttribute(param?.ToString()));
-            }
-
-            return _searchByAttributeCommand;
-        }
-    }
-
-    private RelayCommand _goToCommand;
-    public RelayCommand GoToCommand
-    {
-        get
-        {
-            if (_goToCommand == null)
-            {
-                _goToCommand = new RelayCommand(param => RequestShowGoToView?.Invoke(CurrentExtent.Center));
-            }
-
-            return _goToCommand;
-        }
-    }
-
-    private RelayCommand _checkInternetAccessCommand;
-    public RelayCommand CheckInternetAccessCommand
-    {
-        get
-        {
-            if (_checkInternetAccessCommand == null)
-            {
-                _checkInternetAccessCommand = new RelayCommand(async param => { await CheckNetAccess(); });
-            }
-
-            return _checkInternetAccessCommand;
-        }
-    }
-
-
-
-    private RelayCommand _closeAllTablesCommand;
-    public RelayCommand CloseAllTablesCommand
-    {
-        get
-        {
-            if (_closeAllTablesCommand == null)
-            {
-                _closeAllTablesCommand = new RelayCommand(param =>
-                {
-                    this.RemoveSelectedLayers(l => true);
-
-                    this.ShowAttributeTable = false;
-
-                    this.ShowFeatureTablesOptions = false;
-                });
-            }
-
-            return _closeAllTablesCommand;
-        }
-    }
-
-
-    #endregion
-
-
-    #region Drawing Items Commands
+    #region -   Drawing Items Commands
 
     private RelayCommand _addGeoJsonToDrawingItemsCommand;
     public RelayCommand AddGeoJsonToDrawingItemsCommand
@@ -5283,6 +5191,152 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
     #endregion
+
+    #region -   Print & Export Commands
+
+    private RelayCommand _printCommand;
+    public RelayCommand PrintCommand
+    {
+        get
+        {
+            if (_printCommand == null)
+            {
+                _printCommand = new RelayCommand(param => Print());
+            }
+
+            return _printCommand;
+        }
+    }
+
+    private RelayCommand _clipAndExportMapAsPngCommand;
+    public RelayCommand ClipAndExportMapAsPngCommand
+    {
+        get
+        {
+            if (_clipAndExportMapAsPngCommand == null)
+            {
+                _clipAndExportMapAsPngCommand = new RelayCommand(async param => await ClipAndExportMapAsPngAsync(param));
+            }
+
+            return _clipAndExportMapAsPngCommand;
+        }
+    }
+
+    private RelayCommand _exportMapAsPngCommand;
+    public RelayCommand ExportMapAsPngCommand
+    {
+        get
+        {
+            if (_exportMapAsPngCommand == null)
+            {
+                _exportMapAsPngCommand = new RelayCommand(async param => await ExportMapAsPngAsync(param));
+            }
+
+            return _exportMapAsPngCommand;
+        }
+    }
+
+    private RelayCommand _printToPdfCommand;
+    public RelayCommand PrintToPdfCommand
+    {
+        get
+        {
+            if (_printToPdfCommand == null)
+            {
+                _printToPdfCommand = new RelayCommand(async param => await PrintToPdfAsync(param));
+            }
+
+            return _printToPdfCommand;
+        }
+    }
+
+    private RelayCommand _setPrintAreaCommand;
+    public RelayCommand SetPrintAreaCommand
+    {
+        get
+        {
+            if (_setPrintAreaCommand == null)
+            {
+                _setPrintAreaCommand = new RelayCommand(async param => { await SetPrintAreaAsync(); });
+            }
+
+            return _setPrintAreaCommand;
+        }
+    }
+
+    #endregion
+
+
+    // ******************** Others *********************
+    // *************************************************
+    private RelayCommand _searchByAttributeCommand;
+    public RelayCommand SearchByAttributeCommand
+    {
+        get
+        {
+            if (_searchByAttributeCommand == null)
+            {
+                _searchByAttributeCommand = new RelayCommand(param => SearchByAttribute(param?.ToString()));
+            }
+
+            return _searchByAttributeCommand;
+        }
+    }
+
+    private RelayCommand _goToCommand;
+    public RelayCommand GoToCommand
+    {
+        get
+        {
+            if (_goToCommand == null)
+            {
+                _goToCommand = new RelayCommand(param => RequestShowGoToView?.Invoke(CurrentExtent.Center));
+            }
+
+            return _goToCommand;
+        }
+    }
+
+    private RelayCommand _checkInternetAccessCommand;
+    public RelayCommand CheckInternetAccessCommand
+    {
+        get
+        {
+            if (_checkInternetAccessCommand == null)
+            {
+                _checkInternetAccessCommand = new RelayCommand(async param => { await CheckNetAccess(); });
+            }
+
+            return _checkInternetAccessCommand;
+        }
+    }
+
+
+
+    private RelayCommand _closeAllTablesCommand;
+    public RelayCommand CloseAllTablesCommand
+    {
+        get
+        {
+            if (_closeAllTablesCommand == null)
+            {
+                _closeAllTablesCommand = new RelayCommand(param =>
+                {
+                    this.RemoveSelectedLayers(l => true);
+
+                    this.ShowAttributeTable = false;
+
+                    this.ShowFeatureTablesOptions = false;
+                });
+            }
+
+            return _closeAllTablesCommand;
+        }
+    }
+
+
+    #endregion
+
 
 
     #region Events
