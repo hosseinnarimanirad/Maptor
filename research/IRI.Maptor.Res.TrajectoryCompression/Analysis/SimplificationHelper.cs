@@ -779,7 +779,7 @@ public static class SimplificationHelper
             var currentScreenSize = WebMercatorUtility.ToScreenSize(level, groundBoundingBox);
             var scale = WebMercatorUtility.GetGoogleMapScale(level);
 
-            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(groundBoundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
             originalBitmap.Save($"{outputDirectory}\\{fileName}-{level}-original.png", System.Drawing.Imaging.ImageFormat.Tiff);
 

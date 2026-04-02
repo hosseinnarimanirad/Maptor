@@ -163,13 +163,13 @@ public static class ImageUtility
                                                 BitmapSizeOptions.FromWidthAndHeight(bitmap.Width, bitmap.Height));
     }
 
-    public static RenderTargetBitmap Render(List<DrawingVisual> drawingVisuals, int screenWidth, int screenHeight)
-    {
-        RenderTargetBitmap image = new RenderTargetBitmap(screenWidth, screenHeight, 96, 96, PixelFormats.Pbgra32);
+    public static RenderTargetBitmap Render(List<DrawingVisual> drawingVisuals, int imageWidth, int imageHeight)
+    {        
+        RenderTargetBitmap image = new RenderTargetBitmap(imageWidth, imageHeight, 96, 96, PixelFormats.Pbgra32);
 
-        foreach (var item in drawingVisuals)
+        foreach (var drawingVisual in drawingVisuals)
         {
-            image.Render(item);
+            image.Render(drawingVisual);
         }
 
         image.Freeze();
@@ -177,18 +177,22 @@ public static class ImageUtility
         return image;
     }
 
-    public static void MergeAndSave(string fileName, List<DrawingVisual> drawingVisuals, int width, int height, BitmapEncoder? preferedEncoder = null)
+    public static void MergeAndSave(string fileName, List<DrawingVisual> drawingVisuals, int imageWidth, int imageHeight, BitmapEncoder? preferedEncoder = null)
     {
-        if (width == 0 || height == 0)
+        if (imageWidth == 0 || imageHeight == 0)
             return;
 
-        RenderTargetBitmap image = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
+        RenderTargetBitmap image = Render(drawingVisuals, imageWidth, imageHeight);
 
-        foreach (var drawingVisual in drawingVisuals)
-        {
-            image.Render(drawingVisual);
-        }
+        //RenderTargetBitmap image = new RenderTargetBitmap(imageWidth, imageHeight, 96, 96, PixelFormats.Pbgra32);
 
+        //foreach (var drawingVisual in drawingVisuals)
+        //{
+        //    image.Render(drawingVisual);
+        //}
+
+        //image.Freeze();
+        
         Save(fileName, image, preferedEncoder);
     }
 
@@ -467,7 +471,7 @@ public static class ImageUtility
         else if (imageFormat == System.Drawing.Imaging.ImageFormat.Png)
         {
             WritePng(tiles, fileNameFunc, outputFileName, pixelWidth, pixelHeight, format, minX, minY);
-            
+
             // Generate worldfile for PNG (PNG doesn't support embedded GeoTIFF tags)
             var worldFile = WorldfileManager.Create(tiles.GetTotalImageBoundsInWebMercator(), pixelWidth, pixelHeight);
             WorldfileManager.SaveWorldFile(WorldfileManager.MakeAssociatedWorldfileName(outputFileName), worldFile);
@@ -476,7 +480,7 @@ public static class ImageUtility
         {
             // BMP or other formats - use BMP writer
             WriteBmp(tiles, fileNameFunc, outputFileName, pixelWidth, pixelHeight, format, minX, minY);
-            
+
             // Generate worldfile for BMP
             var worldFile = WorldfileManager.Create(tiles.GetTotalImageBoundsInWebMercator(), pixelWidth, pixelHeight);
             WorldfileManager.SaveWorldFile(WorldfileManager.MakeAssociatedWorldfileName(outputFileName), worldFile);
@@ -489,16 +493,16 @@ public static class ImageUtility
         // Get coordinate bounds
         var bounds = tiles.GetTotalImageBoundsInGeodetic();
         var webMercatorBounds = tiles.GetTotalImageBoundsInWebMercator();
-        
+
         // Determine if using Web Mercator or Geodetic based on coordinate ranges
         // Web Mercator coordinates are typically much larger (millions)
         bool useWebMercator = Math.Abs(webMercatorBounds.XMin) > 1000000 || Math.Abs(webMercatorBounds.YMin) > 1000000;
         var activeBounds = useWebMercator ? webMercatorBounds : bounds;
         int srid = useWebMercator ? SridHelper.WebMercator : SridHelper.GeodeticWGS84;
-        
+
         // Create GeoTIFF metadata using the builder method
         var metadata = GeoTiffMetadata.Create(activeBounds, width, height, srid);
-        
+
         // Determine bits per pixel and samples per pixel
         int bitsPerSample = System.Drawing.Image.GetPixelFormatSize(pixelFormat);
         int samplesPerPixel = bitsPerSample == 24 ? 3 : (bitsPerSample == 32 ? 4 : 1);
@@ -507,22 +511,22 @@ public static class ImageUtility
         // Prepare tile lookup
         var sortedTiles = tiles.OrderBy(t => t.RowNumber).ThenBy(t => t.ColumnNumber).ToList();
         var tileDict = sortedTiles.ToDictionary(t => (t.RowNumber, t.ColumnNumber));
-        
+
         // Create row data provider function
         byte[] getRowData(int row, int rowWidth)
         {
             byte[] rowBuffer = new byte[rowWidth * bytesPerPixel];
             Array.Clear(rowBuffer, 0, rowBuffer.Length);
-            
+
             int tileRow = row / 256;
             int pixelInTileRow = row % 256;
-            
+
             // Fill row from tiles
             for (int col = 0; col < rowWidth; col++)
             {
                 int tileCol = col / 256;
                 int pixelInTileCol = col % 256;
-                
+
                 if (tileDict.TryGetValue((minY + tileRow, minX + tileCol), out var tile))
                 {
                     var fileName = fileNameFunc(tile);
@@ -533,7 +537,7 @@ public static class ImageUtility
                         {
                             var pixel = tileBitmap.GetPixel(pixelInTileCol, pixelInTileRow);
                             int bufferPos = col * bytesPerPixel;
-                            
+
                             if (bytesPerPixel == 3)
                             {
                                 rowBuffer[bufferPos] = pixel.B;
@@ -551,10 +555,10 @@ public static class ImageUtility
                     }
                 }
             }
-            
+
             return rowBuffer;
         }
-        
+
         // Use TiffWriter to write the file
         TiffWriter.WriteGeoTiff(outputFileName, width, height, bitsPerSample, samplesPerPixel, metadata, getRowData);
     }
@@ -569,24 +573,24 @@ public static class ImageUtility
         // Prepare tile lookup
         var sortedTiles = tiles.OrderBy(t => t.RowNumber).ThenBy(t => t.ColumnNumber).ToList();
         var tileDict = sortedTiles.ToDictionary(t => (t.RowNumber, t.ColumnNumber));
-        
+
         int bytesPerPixel = bitsPerPixel / 8;
-        
+
         // Create row data provider function
         byte[] getRowData(int row)
         {
             byte[] rowBuffer = new byte[width * bytesPerPixel];
             Array.Clear(rowBuffer, 0, rowBuffer.Length);
-            
+
             int tileRow = row / 256;
             int pixelInTileRow = row % 256;
-            
+
             // Fill row from tiles
             for (int col = 0; col < width; col++)
             {
                 int tileCol = col / 256;
                 int pixelInTileCol = col % 256;
-                
+
                 if (tileDict.TryGetValue((minY + tileRow, minX + tileCol), out var tile))
                 {
                     var fileName = fileNameFunc(tile);
@@ -597,7 +601,7 @@ public static class ImageUtility
                         {
                             var pixel = tileBitmap.GetPixel(pixelInTileCol, pixelInTileRow);
                             int bufferPos = col * bytesPerPixel;
-                            
+
                             if (bytesPerPixel == 3)
                             {
                                 rowBuffer[bufferPos] = pixel.R;
@@ -615,10 +619,10 @@ public static class ImageUtility
                     }
                 }
             }
-            
+
             return rowBuffer;
         }
-        
+
         // Use PngWriter to write the file
         PngWriter.WritePng(outputFileName, width, height, bitsPerPixel, samplesPerPixel, getRowData);
     }
@@ -630,7 +634,7 @@ public static class ImageUtility
         int bytesPerPixel = bitsPerPixel / 8;
         int rowSize = ((width * bitsPerPixel + 31) / 32) * 4; // Row size must be multiple of 4
         int imageDataSize = rowSize * height;
-        
+
         using (var stream = new FileStream(outputFileName, FileMode.Create, FileAccess.Write))
         using (var writer = new BinaryWriter(stream))
         {
@@ -640,7 +644,7 @@ public static class ImageUtility
             writer.Write((ushort)0); // Reserved 1
             writer.Write((ushort)0); // Reserved 2
             writer.Write((uint)(14 + 40)); // Offset to pixel data
-            
+
             // DIB Header (40 bytes)
             writer.Write((uint)40); // Header size
             writer.Write((int)width); // Width
@@ -653,27 +657,27 @@ public static class ImageUtility
             writer.Write((int)0); // Y pixels per meter
             writer.Write((uint)0); // Colors in palette
             writer.Write((uint)0); // Important colors
-            
+
             // Pixel data (BMP stores bottom-to-top)
             byte[] rowBuffer = new byte[rowSize];
             var sortedTiles = tiles.OrderByDescending(t => t.RowNumber).ThenBy(t => t.ColumnNumber).ToList();
-            
+
             for (int row = height - 1; row >= 0; row--)
             {
                 Array.Clear(rowBuffer, 0, rowBuffer.Length);
-                
+
                 int tileRow = row / 256;
                 int pixelInTileRow = row % 256;
-                
+
                 for (int col = 0; col < width; col++)
                 {
                     int tileCol = col / 256;
                     int pixelInTileCol = col % 256;
-                    
-                    var tile = sortedTiles.FirstOrDefault(t => 
-                        t.RowNumber == minY + tileRow && 
+
+                    var tile = sortedTiles.FirstOrDefault(t =>
+                        t.RowNumber == minY + tileRow &&
                         t.ColumnNumber == minX + tileCol);
-                    
+
                     if (tile != null)
                     {
                         var fileName = fileNameFunc(tile);
@@ -684,7 +688,7 @@ public static class ImageUtility
                             {
                                 var pixel = tileBitmap.GetPixel(pixelInTileCol, pixelInTileRow);
                                 int bufferPos = col * bytesPerPixel;
-                                
+
                                 if (bytesPerPixel == 3)
                                 {
                                     rowBuffer[bufferPos] = pixel.B;
@@ -702,7 +706,7 @@ public static class ImageUtility
                         }
                     }
                 }
-                
+
                 writer.Write(rowBuffer);
             }
         }

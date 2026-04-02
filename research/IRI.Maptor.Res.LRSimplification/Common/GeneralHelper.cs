@@ -27,7 +27,7 @@ public static class GeneralHelper
 
         var scale = WebMercatorUtility.GetGoogleMapScale(level);
 
-        var bitmap = await vectorLayer.AsGdiBitmapAsync(groundBoundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+        var bitmap = await vectorLayer.AsGdiBitmapAsync(groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
         var diff = IRI.Maptor.Ket.GdiPlus.Helpers.ImageHelper.CalculateDifPlusBitmaps(originalBitmap, bitmap, true);
 
@@ -71,7 +71,7 @@ public static class GeneralHelper
 
         var scale = WebMercatorUtility.GetGoogleMapScale(level);
 
-        var bitmap = await vectorLayer.AsGdiBitmapAsync(groundBoundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+        var bitmap = await vectorLayer.AsGdiBitmapAsync(groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
         var diff = IRI.Maptor.Ket.GdiPlus.Helpers.ImageHelper.CalculateConfusionMatrixBitmaps(originalBitmap, bitmap);
 

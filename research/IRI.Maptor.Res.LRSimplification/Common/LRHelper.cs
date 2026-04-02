@@ -103,7 +103,7 @@ public static class LRHelper
 
         var originalVectorLayer = GeneralHelper.GetAsLayer("original", features);
 
-        var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+        var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
         originalBitmap.Save($"{outputDirectory}\\{fileName}-{estimatedZoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
@@ -217,7 +217,7 @@ public static class LRHelper
 
         var originalVectorLayer = GeneralHelper.GetAsLayer("original", features);
 
-        var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+        var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
         originalBitmap.Save($"{outputDirectory}\\{fileName}-{estimatedZoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
@@ -343,7 +343,7 @@ public static class LRHelper
 
             var originalVectorLayer = GeneralHelper.GetAsLayer("original", features);
 
-            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
             //originalBitmap.Save($"{outputDirectory}\\{fileName}-{estimatedZoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
@@ -470,7 +470,7 @@ public static class LRHelper
 
             var originalVectorLayer = GeneralHelper.GetAsLayer("original", features);
 
-            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
             originalBitmap.Save($"{outputDirectory}\\{fileName}-{zoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
@@ -598,7 +598,7 @@ public static class LRHelper
 
             var originalVectorLayer = GeneralHelper.GetAsLayer("original", new() { feature });
 
-            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
             //originalBitmap.Save($"{outputDirectory}\\{fileName}-{estimatedZoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
@@ -736,7 +736,7 @@ public static class LRHelper
                 if (currentScreenSize.Width > 10000 || currentScreenSize.Height > 10000)
                     continue;
 
-                var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+                var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
                 originalBitmap.Save($"{outputDirectory}\\{fileName}-{estimatedZoomLevel}-F{featureIndex}-original.png", System.Drawing.Imaging.ImageFormat.Tiff);
 
@@ -904,7 +904,7 @@ public static class LRHelper
 
             var originalVectorLayer = GeneralHelper.GetAsLayer("original", features);
 
-            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
             originalBitmap.Save($"{outputDirectory}\\{fileName}-original-F{featureIndex}-Z{zoomLevel}.png", System.Drawing.Imaging.ImageFormat.Tiff);
 
@@ -1057,7 +1057,7 @@ public static class LRHelper
 
         var originalVectorLayer = GeneralHelper.GetAsLayer("original", features);
 
-        var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+        var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
         originalBitmap.Save($"{outputDirectory}\\{fileName}-{zoomLevel}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
@@ -1190,7 +1190,7 @@ public static class LRHelper
 
             var originalVectorLayer = GeneralHelper.GetAsLayer("original", new() { feature });
 
-            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+            var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
             var toScreenMap3 = Utility.CreateMapToScreenMapFunc(boundingBox, currentScreenSize.Width, currentScreenSize.Height);
 

@@ -425,9 +425,11 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestPrint = this.Print;
 
-        presenter.RequestGetAsDrawingVisual = this.GetAsDrawingVisual;
+        //presenter.RequestGetAsDrawingVisual = this.GetAsDrawingVisual;
 
-        presenter.RequestCaptureThumbnailAsync = (ext, w, h) => this.CaptureThumbnailAsync(ext, w, h);
+        //presenter.RequestCaptureThumbnailAsync = (ext, w, h) => this.CaptureThumbnailAsync(ext, w, h);
+
+        presenter.RequestGetOrderedLayers = () => this._layerManager.GetOrderedLayers();
 
         presenter.RequestGetActualHeight = () => this.mapView.ActualHeight;
 
@@ -2487,95 +2489,6 @@ public partial class MapViewer : NotifiableUserControl
     {
         //IRI.Maptor.Jab.Common.Helpers.PrintHelper.Print(this.mapView);
         IRI.Maptor.Jab.Common.Helpers.PrintHelper.Print(this);
-    }
-
-    public async Task<List<DrawingVisual>> GetAsDrawingVisual(sb.BoundingBox boundingBox, int width, int height)
-    {
-        // print all layers in rectangle
-        var layers = this._layerManager.GetOrderedLayers();
-
-        List<DrawingVisual> visuals = new List<DrawingVisual>();
-
-        foreach (var item in layers)
-        {
-            if (item.Visibility != Visibility.Visible)
-                continue;
-
-            switch (item)
-            {
-                case VectorLayer vectorLayer:
-                    visuals.AddRange(await vectorLayer.AsDrawingVisual(boundingBox, width, height, this.MapScale));
-                    break;
-
-                case DrawingLayer drawingLayer:
-                    visuals.Add(drawingLayer.AsDrawingVisual(boundingBox, width, height, this.MapScale));
-                    break;
-
-                //case FeatureLayer featureLayer:
-                default:
-                    break;
-            }
-        }
-
-        visuals = visuals.Where(v => v != null).ToList();
-
-        return visuals;
-    }
-
-    public async Task<BitmapSource?> CaptureThumbnailAsync(sb.BoundingBox extent, int thumbWidth, int thumbHeight)
-    {
-        if (extent.IsNaN() || !extent.IsValid())
-            return null;
-
-        int zoomLevel = CurrentZoomLevel;
-        var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(extent, zoomLevel);
-        double scaleX = thumbWidth  / extent.Width;
-        double scaleY = thumbHeight / extent.Height;
-        var clip = new RectangleGeometry(new Rect(0, 0, thumbWidth, thumbHeight));
-
-        var baseMapVisual = new DrawingVisual();
-        using (var dc = baseMapVisual.RenderOpen())
-        {
-            dc.PushClip(clip);
-
-            var basemapLayers = _layerManager.GetOrderedLayers()
-                .OfType<TileServiceLayer>()
-                .Where(l => l.Visibility == Visibility.Visible);
-
-            foreach (var layer in basemapLayers)
-            {
-                foreach (var tile in tiles)
-                {
-                    try
-                    {
-                        var geo = await layer.GetTileAsync(tile, _presenter.HttpClient);
-                        if (!geo.IsValid) continue;
-                        var tExt = geo.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
-                        var rect = new Rect(
-                            (tExt.XMin - extent.XMin) * scaleX,
-                            (extent.YMax - tExt.YMax) * scaleY,
-                            tExt.Width  * scaleX,
-                            tExt.Height * scaleY);
-                        dc.DrawImage(ImageUtility.CreateBitmapImage(geo.Image), rect);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine($"MapViewer; CaptureThumbnailAsync tile error: {ex.Message}");
-                    }
-                }
-            }
-
-            dc.Pop();
-        }
-
-        var vectorVisuals = await GetAsDrawingVisual(extent, thumbWidth, thumbHeight);
-
-        var rtb = new RenderTargetBitmap(thumbWidth, thumbHeight, 96, 96, PixelFormats.Pbgra32);
-        rtb.Render(baseMapVisual);
-        foreach (var v in vectorVisuals)
-            rtb.Render(v);
-        rtb.Freeze();
-        return rtb;
     }
 
     #endregion

@@ -58,7 +58,7 @@ public static class SimplificationHelper
 
         var layerName = $"{outputDirectory}\\{featureName}-{estimatedZoomLevel}-{featureIndex}-";
 
-        var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+        var originalBitmap = await originalVectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
         originalBitmap.Save($"{layerName}-original.png", System.Drawing.Imaging.ImageFormat.Png);
 
@@ -88,7 +88,7 @@ public static class SimplificationHelper
 
             var vectorLayer = GetAsLayer($"{estimatedZoomLevel}-{lrModel.Title}", new List<Geometry<Point>>() { simplified });
 
-            var simplifiedBitmap = await vectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+            var simplifiedBitmap = await vectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
             var diff = ImageHelper.CalculateConfusionMatrixBitmaps(originalBitmap, simplifiedBitmap);
 
@@ -120,7 +120,7 @@ public static class SimplificationHelper
 
             var vectorLayer = GetAsLayer($"{estimatedZoomLevel}-{methodNames[method]}", new List<Geometry<Point>>() { simplified });
 
-            var simplifiedBitmap = await vectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+            var simplifiedBitmap = await vectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
             var diff = ImageHelper.CalculateConfusionMatrixBitmaps(originalBitmap, simplifiedBitmap);
 
@@ -186,7 +186,7 @@ public static class SimplificationHelper
 
         var vectorLayer = GetAsLayer($"{estimatedZoomLevel}-{methodName}", new List<Geometry<Point>>() { simplified });
 
-        var simplifiedBitmap = await vectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+        var simplifiedBitmap = await vectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
         var diff = ImageHelper.CalculateConfusionMatrixBitmaps(originalBitmap, simplifiedBitmap);
 
@@ -243,7 +243,7 @@ public static class SimplificationHelper
 
         var vectorLayer = GetAsLayer($"{estimatedZoomLevel}-{methodName}", simplifieds);
 
-        var simplifiedBitmap = await vectorLayer.AsGdiBitmapAsync(boundingBox, scale, currentScreenSize.Width, currentScreenSize.Height);
+        var simplifiedBitmap = await vectorLayer.AsGdiBitmapAsync(boundingBox, currentScreenSize.Width, currentScreenSize.Height, scale);
 
         var diff = ImageHelper.CalculateConfusionMatrixBitmaps(originalBitmap, simplifiedBitmap);
 
