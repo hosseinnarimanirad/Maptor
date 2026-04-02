@@ -30,9 +30,10 @@ public class GroupLayer : BaseLayer
 
     public void AddSubLayer(ILayer layer)
     {
-        layer.ParentLayerId = this.LayerId;
+        //layer.ParentLayerId = this.LayerId;
 
-        layer.ParentLayerName = this.LayerName;
+        //layer.ParentLayerName = this.LayerName;
+        layer.Parent = this;
 
         if (!this.SubLayers.Contains(layer))
         {
@@ -42,6 +43,8 @@ public class GroupLayer : BaseLayer
 
             //this.SubLayers.Add(layer);
         }
+
+        this.UpdateAllChildsVisible();
     }
 
     public override string ToString()

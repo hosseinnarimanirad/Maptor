@@ -149,6 +149,11 @@ public class SelectedLayer : Notifier
 
     public void RefreshSelectedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
     {
+        if (this.AssociatedLayer != null)
+        {
+            this.AssociatedLayer.NumberOfSelectedFeatures = enumerable.Count();
+        }
+
         RequestFeaturesChanged?.Invoke(enumerable.Where(i => i.Status != FeatureStatus.Removed && i.Status != FeatureStatus.CanceledNew), strokeThickness);
     }
 
@@ -258,7 +263,7 @@ public class SelectedLayer : Notifier
     public async Task SaveChangesAsync()
     {
         var editableSource = AssociatedLayer.DataSource as IEditableVectorDataSource;
-        
+
         if (editableSource is null)
             return;
 

@@ -176,8 +176,9 @@ public class DrawingItemLayer : VectorLayer
         //result.SpecialPointLayer = new SpecialPointLayer(layerName, locateables, .8, null, LayerType.MoveableItem)
         result.SpecialPointLayer = new SpecialPointLayer(layerName, locateables, .8, null, LayerType.Complex)
         {
-            ParentLayerId = result.LayerId,
-            ParentLayerName = result.LayerName,
+            //ParentLayerId = result.LayerId,
+            //ParentLayerName = result.LayerName,
+            Parent = result,
             IsMovable = true
         };
 

@@ -230,18 +230,7 @@ public class VectorLayer : SymbolizableLayer
 
 
     #region Raster Save And Export Methods
-
-    public async Task<System.Drawing.Bitmap?> AsGdiBitmapAsync(BoundingBox mapExtent, double mapScale, double screenWidth, double screenHeight)
-    {
-        var features = await GetRenderReadyFeatures(mapExtent, mapScale, screenWidth, screenHeight);
-
-        if (features.IsNullOrEmpty())
-            return null;
-
-        return new GdiBitmapRenderStrategy(Symbolizers).AsGdiBitmap(features, mapScale, screenWidth, screenHeight);
-    }
-
-
+     
     // Todo: this method has been totally changed but not tested!
     public async Task SaveAsGoogleTiles(string outputFolderPath, int minLevel = 1, int maxLevel = 13)
     {
@@ -267,7 +256,7 @@ public class VectorLayer : SymbolizableLayer
 
             foreach (var tile in googleTiles)
             {
-                var image = await AsGdiBitmapAsync(tile.WebMercatorExtent, scale, 256, 256);
+                var image = await AsGdiBitmapAsync(tile.WebMercatorExtent, 256, 256, scale);
 
                 if (image is null)
                     continue;
@@ -293,11 +282,11 @@ public class VectorLayer : SymbolizableLayer
                 break;
 
             case RasterizationMethod.WriteableBitmap:
-            //case RasterizationApproach.OpenTk:
             case RasterizationMethod.GdiPlus:
+            //case RasterizationApproach.OpenTk:
             case RasterizationMethod.None:
             default:
-                var image = await AsGdiBitmapAsync(mapExtent, mapScale, imageWidth, imageHeight);
+                var image = await AsGdiBitmapAsync(mapExtent, imageWidth, imageHeight, mapScale);
 
                 if (image is null)
                     return;
@@ -309,29 +298,34 @@ public class VectorLayer : SymbolizableLayer
         }
     }
 
-    public async Task<List<DrawingVisual>> AsDrawingVisual(BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
+    public async Task<System.Drawing.Bitmap?> AsGdiBitmapAsync(BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
     {
         var features = await GetRenderReadyFeatures(mapExtent, mapScale, imageWidth, imageHeight);
 
-        if (features.IsNullOrEmpty())
-            return [];
+        //if (features.IsNullOrEmpty())
+        //    return null;
 
-        return new DrawingVisualRenderStrategy(Symbolizers).AsDrawingVisual(features, mapScale);
+        return new GdiBitmapRenderStrategy(Symbolizers).AsGdiBitmap(features, mapScale, imageWidth, imageHeight);
     }
 
     public async Task<RenderTargetBitmap?> AsRenderTargetBitmap(BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
-    {
-        //var features = await GetRenderReadyFeatures(mapExtent, mapScale, imageWidth, imageHeight);
-        //if (features.IsNullOrEmpty())
-        //    return null;
-        //var drawingVisuals = new DrawingVisualRenderStrategy(Symbolizers).AsDrawingVisual(features, mapScale);
-
+    { 
         var drawingVisuals = await AsDrawingVisual(mapExtent, imageWidth, imageHeight, mapScale);
 
         if (drawingVisuals.IsNullOrEmpty())
             return null;
 
         return ImageUtility.Render(drawingVisuals, (int)imageWidth, (int)imageHeight);
+    }
+
+    public async Task<List<DrawingVisual>> AsDrawingVisual(BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
+    {
+        var features = await GetRenderReadyFeatures(mapExtent, mapScale, imageWidth, imageHeight);
+
+        //if (features.IsNullOrEmpty())
+        //    return [];
+
+        return new DrawingVisualRenderStrategy(Symbolizers).AsDrawingVisual(features, mapScale);
     }
 
     #endregion

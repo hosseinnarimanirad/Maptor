@@ -33,10 +33,13 @@ public class DrawingVisualRenderStrategy : RenderStrategy
 
     public override ImageBrush? Render(IEnumerable<Feature<Point>> features, double mapScale, double screenWidth, double screenHeight)
     {
-        if (features.IsNullOrEmpty())
-            return null;
+        //if (features.IsNullOrEmpty())
+        //    return null;
 
         var drawingVisuals = AsDrawingVisual(features, mapScale);
+
+        if (drawingVisuals.IsNullOrEmpty())
+            return null;
 
         var image = ImageUtility.Render(drawingVisuals, (int)screenWidth, (int)screenHeight);
 
@@ -46,6 +49,9 @@ public class DrawingVisualRenderStrategy : RenderStrategy
     public List<DrawingVisual> AsDrawingVisual(IEnumerable<Feature<Point>> features, double mapScale)
     {
         var result = new List<DrawingVisual>();
+
+        if (features.IsNullOrEmpty())
+            return result;
 
         foreach (var symbolizer in _symbolizers)
         {

@@ -59,9 +59,16 @@ public class LayerManager : Notifier
         try
         {
             // 1401.12.05
-            if (layer.ParentLayerId != Guid.Empty)
+            //if (layer.ParentLayerId != Guid.Empty)
+            if (!layer.IsRootLayer)
             {
+                // todo: consider using layer.Parent
                 var parentLayer = _allLayers.FirstOrDefault(l => l.LayerId == layer.ParentLayerId);
+
+                if (parentLayer != null && parentLayer != layer.Parent)
+                {
+                    // why this happened?
+                }
 
                 if (parentLayer != null && parentLayer.IsGroupLayer && parentLayer.SubLayers?.Contains(layer) == false)
                 {
@@ -180,11 +187,11 @@ public class LayerManager : Notifier
     {
         return _allLayers.OrderBy(i => i.Type == LayerType.RightClickOption)
                                      //.ThenBy(i => i.Type == (LayerType.MoveableItem))
-                                     .ThenBy(i => i.Type == (LayerType.EditableItem))
-                                     .ThenBy(i => i.Type == (LayerType.Complex))
-                                     .ThenBy(e => e.Type == (LayerType.Highlight))
-                                     .ThenBy(e => e.Type == (LayerType.Selection))
-                                     .ThenBy(i => i.Type == (LayerType.Drawing))
+                                     .ThenBy(i => i.Type == LayerType.EditableItem)
+                                     .ThenBy(i => i.Type == LayerType.Complex)
+                                     .ThenBy(e => e.Type == LayerType.Highlight)
+                                     .ThenBy(e => e.Type == LayerType.Selection)
+                                     .ThenBy(i => i.Type == LayerType.Drawing)
                                      .ThenByDescending(i => i.Type == (LayerType.BaseMap))
                                      .ThenBy(i => i.ZIndex)
                                      .ToList();
@@ -234,10 +241,15 @@ public class LayerManager : Notifier
         {
             // 1401.12.05
             // child layers are already shown in parent layer hierarchy
-            if (toBeAdded[i].ParentLayerId != Guid.Empty)
-                continue;
+            //if (toBeAdded[i].ParentLayerId != Guid.Empty)            
+            //    continue;
 
-            this.CurrentLayers.Add(toBeAdded[i]);
+            //this.CurrentLayers.Add(toBeAdded[i]);
+
+            // child layers are already shown in parent layer hierarchy
+            if (toBeAdded[i].IsRootLayer)
+                this.CurrentLayers.Add(toBeAdded[i]);
+
         }
 
         return newLayers;

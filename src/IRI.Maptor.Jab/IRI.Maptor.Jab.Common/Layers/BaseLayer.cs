@@ -12,6 +12,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using System.Linq;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -21,9 +22,9 @@ public abstract class BaseLayer : Notifier, ILayer
     {
         this.LayerId = Guid.NewGuid();
 
-        this.ParentLayerId = Guid.Empty;
+        //this.ParentLayerId = Guid.Empty;
 
-        this.ParentLayerName = string.Empty;
+        //this.ParentLayerName = string.Empty;
 
         this.IsMovable = false;
     }
@@ -38,9 +39,9 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public Guid LayerId { get; protected set; }
 
-    public Guid ParentLayerId { get; set; }
+    public Guid ParentLayerId => Parent?.LayerId ?? Guid.Empty;
 
-    public string ParentLayerName { get; set; }
+    public string ParentLayerName => Parent?.LayerName ?? string.Empty;
 
     private string _layerName = string.Empty;
     public string LayerName
@@ -54,6 +55,24 @@ public abstract class BaseLayer : Notifier, ILayer
             this._onLayerNameChanged?.Invoke(this, new CustomEventArgs<string>(value));
         }
     }
+
+    private ILayer? _parent;
+    public ILayer? Parent
+    {
+        get { return _parent; }
+        set
+        {
+            _parent = value;
+
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsRootLayer));
+            RaisePropertyChanged(nameof(ParentLayerId));
+            RaisePropertyChanged(nameof(ParentLayerName));
+        }
+    }
+
+
+    public bool IsRootLayer => Parent is null;
 
     #endregion
 
@@ -367,6 +386,9 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
+
+    //private bool triggerVisibilityChagne = true;
+
     private Visibility _visibility;
     public virtual Visibility Visibility
     {
@@ -375,9 +397,61 @@ public abstract class BaseLayer : Notifier, ILayer
         {
             _visibility = value;
             RaisePropertyChanged();
+
             SetVisibility(value);
         }
     }
+
+    private bool? _allChildsVisible;
+
+    public bool? AllChildsVisible
+    {
+        get { return _allChildsVisible; }
+        set
+        {
+            if (_allChildsVisible == value)
+                return;
+
+            // null is valid if triggered by sublayers
+            if (value is null && GetAllChildVisible() != value)
+                _allChildsVisible = false;
+
+            else
+                _allChildsVisible = value;
+
+            RaisePropertyChanged();
+
+            if (!this.IsGroupLayer)
+                return;
+
+            if (_allChildsVisible is null)
+                return;
+
+            //triggerVisibilityChagne = false;
+
+            SetVisibility(_allChildsVisible == true ? Visibility.Visible : Visibility.Collapsed);
+
+            //triggerVisibilityChagne = true;
+        }
+    }
+
+    public bool? GetAllChildVisible()
+    {
+        if (SubLayers.IsNullOrEmpty())
+            return null;
+
+        else if (SubLayers.All(s => s.Visibility == Visibility.Visible))
+            return true;
+
+        else if (SubLayers.All(s => s.Visibility == Visibility.Collapsed))
+            return false;
+
+        else
+            return null;
+    }
+
+    public void UpdateAllChildsVisible() => AllChildsVisible = GetAllChildVisible();
+
 
     private ScaleInterval _visibleRange = ScaleInterval.All;
     public ScaleInterval VisibleRange
@@ -522,6 +596,12 @@ public abstract class BaseLayer : Notifier, ILayer
                 item.Visibility = visibility;
             }
         }
+
+        if (Parent is not null)
+            Parent.UpdateAllChildsVisible();
+
+        //if (!triggerVisibilityChagne)
+        //    return;
 
         if (this.Element is null && visibility == Visibility.Visible)
         {

@@ -18,9 +18,9 @@ public interface ILayer
 
     int AuxilaryId { get; set; }
 
-    Guid ParentLayerId { get; set; }
+    Guid ParentLayerId { get; /*set; */}
 
-    string ParentLayerName { get; set; }
+    string ParentLayerName { get; /*set;*/ }
 
     string LayerName { get; set; }
 
@@ -37,6 +37,12 @@ public interface ILayer
     RasterizationMethod RasterizationMethod { get; }
 
     bool IsGroupLayer { get; set; }
+
+    bool? AllChildsVisible { get; set; }
+
+    ILayer? Parent { get; set; }
+
+    bool IsRootLayer { get; }
 
     ObservableCollection<ILayer> SubLayers { get; set; }
 
@@ -105,4 +111,7 @@ public interface ILayer
     bool IsClientFiltered { get; }
 
     bool HasError { get; }
+
+
+    void UpdateAllChildsVisible();
 }
