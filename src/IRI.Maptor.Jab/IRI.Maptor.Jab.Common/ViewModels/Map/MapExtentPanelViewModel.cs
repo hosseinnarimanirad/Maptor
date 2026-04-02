@@ -141,18 +141,18 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
                 if (string.IsNullOrEmpty(title))
                     return;
 
-                var extent   = Map.CurrentExtent;
+                var extent = Map.CurrentExtent;
                 var bookmark = MapExtentBookmark.FromTitleAndExtent(title, extent);
 
-                if (Map.RequestCaptureThumbnailAsync is not null)
+                //if (Map.RequestCaptureThumbnailAsync is not null)
+                //{
+                var bmp = await Map.CaptureThumbnailAsync(extent, 75, 75);
+                if (bmp is not null)
                 {
-                    var bmp = await Map.RequestCaptureThumbnailAsync(extent, 75, 75);
-                    if (bmp is not null)
-                    {
-                        bookmark.ThumbnailBytes = EncodePng(bmp);
-                        bookmark.LoadThumbnail();
-                    }
+                    bookmark.ThumbnailBytes = EncodePng(bmp);
+                    bookmark.LoadThumbnail();
                 }
+                //}
 
                 Bookmarks.Add(bookmark);
                 _store.Save(Bookmarks);
@@ -206,7 +206,7 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
                     Map.ZoomAndCenterToGoogleZoomLevel(g.ZoomLevel, center);
                 }
                 else
-                {  
+                {
                     var wgs = MapProjects.WebMercatorToGeodeticWgs84(center);
                     double lat = wgs?.Y ?? 0;
 

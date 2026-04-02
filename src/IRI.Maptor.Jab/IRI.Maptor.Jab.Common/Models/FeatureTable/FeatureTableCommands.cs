@@ -41,7 +41,7 @@ public static class FeatureTableCommands
         {
             PathMarkup = markup,
             //Layer = layer.AssociatedLayer,
-            ToolTip = "محدودهٔ عوارض"
+            ToolTip = "محدودهٔ عارضه"
         };
 
         result.Command = new RelayCommand((param) =>
