@@ -3,6 +3,7 @@ using System.Windows;
 
 using IRI.Maptor.Sta.Common.Helpers; 
 using IRI.Maptor.Jab.Common.Models.Security;
+using IRI.Maptor.Jab.Common.Assets.Commands;
 
 namespace IRI.Maptor.Jab.Controls.Views.Security
 {
@@ -44,6 +45,33 @@ namespace IRI.Maptor.Jab.Controls.Views.Security
         // Using a DependencyProperty as the backing store for UsreName.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty UsreNameProperty =
             DependencyProperty.Register(nameof(UserNameOrEmail), typeof(string), typeof(EmailPasswordInputView), new PropertyMetadata(string.Empty));
+
+         
+
+
+        public RelayCommand EnterCommand
+        {
+            get { return (RelayCommand)GetValue(EnterCommandProperty); }
+            set { SetValue(EnterCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for EnterCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty EnterCommandProperty =
+            DependencyProperty.Register(nameof(EnterCommand), typeof(RelayCommand), typeof(EmailPasswordInputView), new PropertyMetadata(null));
+
+
+
+
+        public object EnterCommandParameter
+        {
+            get { return (object)GetValue(EnterCommandParameterProperty); }
+            set { SetValue(EnterCommandParameterProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for EnterCommandParameter.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty EnterCommandParameterProperty =
+            DependencyProperty.Register(nameof(EnterCommandParameter), typeof(object), typeof(EmailPasswordInputView), new PropertyMetadata(null));
+
 
     }
 }
