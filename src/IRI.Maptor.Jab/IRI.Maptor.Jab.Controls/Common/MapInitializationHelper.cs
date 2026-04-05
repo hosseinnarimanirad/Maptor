@@ -38,7 +38,7 @@ public static class MapInitializationHelper
         //IBaseMapSettings? baseMapSettings,
         //IMapSettings? mapSettings,
         //IGeneralSettings? generalSettings,
-        List<IrProvince93>? provinces = null
+        List<IriProvince93>? provinces = null
         /*MapViewerConfiguration? config = null*/) where T : MapViewModelBase
     {
         if (mapView == null)
