@@ -315,7 +315,7 @@ public class VectorLayer : SymbolizableLayer
         if (drawingVisuals.IsNullOrEmpty())
             return null;
 
-        return ImageUtility.Render(drawingVisuals, (int)imageWidth, (int)imageHeight);
+        return ImageUtility.Merge(drawingVisuals, (int)imageWidth, (int)imageHeight);
     }
 
     public async Task<List<DrawingVisual>> AsDrawingVisual(BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)

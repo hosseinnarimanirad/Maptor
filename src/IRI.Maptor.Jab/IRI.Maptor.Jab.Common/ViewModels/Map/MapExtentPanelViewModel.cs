@@ -1,15 +1,14 @@
 using System;
-using System.IO;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
+
+using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Helpers;
-using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
@@ -18,13 +17,90 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
 {
     //private readonly MapViewModelBase _map;
     private readonly IMapExtentBookmarkStore _store;
+
     private bool _disposed;
 
-    private string _newBookmarkTitle = string.Empty;
-    private string _zoomLevelText = string.Empty;
-    private string _scaleText = string.Empty;
-    private string _groundResolutionText = string.Empty;
     private ScaleComboItem? _selectedScaleItem;
+    public ScaleComboItem? SelectedScaleItem
+    {
+        get => _selectedScaleItem;
+        set
+        {
+            if (_selectedScaleItem == value)
+                return;
+
+            _selectedScaleItem = value;
+            RaisePropertyChanged();
+            CommandManager.InvalidateRequerySuggested();
+        }
+    }
+
+    public ICollectionView ScaleItemsView { get; }
+
+    private readonly ObservableCollection<ScaleComboItem> _scaleItems = new();
+
+    public ObservableCollection<MapExtentBookmark> Bookmarks { get; }
+
+    /// <summary>Same instance as <see cref="_map"/> — for binding toolbar commands in XAML.</summary>
+    public MapViewModelBase Map { get; }
+
+    private string _newBookmarkTitle = string.Empty;
+    public string NewBookmarkTitle
+    {
+        get => _newBookmarkTitle;
+        set
+        {
+            if (_newBookmarkTitle == value)
+                return;
+
+            _newBookmarkTitle = value;
+            RaisePropertyChanged();
+            CommandManager.InvalidateRequerySuggested();
+        }
+    }
+
+    private string _zoomLevelText = string.Empty;
+    public string ZoomLevelText
+    {
+        get => _zoomLevelText;
+        private set
+        {
+            if (_zoomLevelText == value)
+                return;
+
+            _zoomLevelText = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private string _scaleText = string.Empty;
+    public string ScaleText
+    {
+        get => _scaleText;
+        private set
+        {
+            if (_scaleText == value)
+                return;
+
+            _scaleText = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private string _groundResolutionText = string.Empty;
+    public string GroundResolutionText
+    {
+        get => _groundResolutionText;
+        private set
+        {
+            if (_groundResolutionText == value)
+                return;
+
+            _groundResolutionText = value;
+            RaisePropertyChanged();
+        }
+    }
+
 
     public MapExtentPanelViewModel(MapViewModelBase map, IMapExtentBookmarkStore? store = null)
     {
@@ -40,97 +116,74 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
             _scaleItems.Add(new ScaleComboItem("Standard", s));
 
         var cvs = new CollectionViewSource { Source = _scaleItems };
+
         cvs.GroupDescriptions.Add(new PropertyGroupDescription(nameof(ScaleComboItem.Group)));
+
         ScaleItemsView = cvs.View;
 
         Bookmarks = new ObservableCollection<MapExtentBookmark>();
+
         foreach (var b in _store.Load())
         {
             b.LoadThumbnail();
+
             Bookmarks.Add(b);
         }
 
+        // remove invalid bookmarks
+        for (int i = Bookmarks.Count - 1; i >= 0; i--)
+        {
+            if (!Bookmarks[i].IsValid())
+            {
+                DeleteBookmark(Bookmarks[i]);
+            }
+        }
+
+        _store.Save(Bookmarks);
+
+        Map.OnZoomChanged -= OnMapZoomChanged;
         Map.OnZoomChanged += OnMapZoomChanged;
+
+        Map.OnMapExtentChanged -= OnMapExtentChangedHandler;
         Map.OnMapExtentChanged += OnMapExtentChangedHandler;
 
         RefreshMetrics();
     }
 
-    /// <summary>Same instance as <see cref="_map"/> — for binding toolbar commands in XAML.</summary>
-    public MapViewModelBase Map { get; }
-
-    public ICollectionView ScaleItemsView { get; }
-
-    private readonly ObservableCollection<ScaleComboItem> _scaleItems = new();
-
-    public ObservableCollection<MapExtentBookmark> Bookmarks { get; }
-
-    public string NewBookmarkTitle
+    private void DeleteBookmark(MapExtentBookmark? bookmark)
     {
-        get => _newBookmarkTitle;
-        set
-        {
-            if (_newBookmarkTitle == value)
-                return;
+        if (bookmark is null)
+            return;
 
-            _newBookmarkTitle = value;
-            RaisePropertyChanged();
-            CommandManager.InvalidateRequerySuggested();
-        }
+        Bookmarks.Remove(bookmark);
+
+        _store.Save(Bookmarks);
+
+        Map.RemovePredefinedExtent(bookmark.Id);
     }
 
-    public string ZoomLevelText
-    {
-        get => _zoomLevelText;
-        private set
-        {
-            if (_zoomLevelText == value)
-                return;
+    private void OnMapZoomChanged(object? sender, double mapScale) => RefreshMetrics();
 
-            _zoomLevelText = value;
-            RaisePropertyChanged();
-        }
+    private void OnMapExtentChangedHandler(object? sender, EventArgs e) => RefreshMetrics();
+
+    private void RefreshMetrics()
+    {
+        ZoomLevelText = Map.CurrentZoomLevel.ToString();
+
+        ScaleText = $"1:{Map.InverseMapScale:N0}";
+
+        var center = Map.CurrentExtent.Center;
+
+        var wgs = MapProjects.WebMercatorToGeodeticWgs84(center);
+
+        double lat = wgs?.Y ?? 0;
+
+        var gr = WebMercatorUtility.CalculateGroundResolution(Map.CurrentZoomLevel, lat);
+
+        GroundResolutionText = $"{gr:N2} m/px";
     }
 
-    public string ScaleText
-    {
-        get => _scaleText;
-        private set
-        {
-            if (_scaleText == value)
-                return;
-
-            _scaleText = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public string GroundResolutionText
-    {
-        get => _groundResolutionText;
-        private set
-        {
-            if (_groundResolutionText == value)
-                return;
-
-            _groundResolutionText = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public ScaleComboItem? SelectedScaleItem
-    {
-        get => _selectedScaleItem;
-        set
-        {
-            if (_selectedScaleItem == value)
-                return;
-
-            _selectedScaleItem = value;
-            RaisePropertyChanged();
-            CommandManager.InvalidateRequerySuggested();
-        }
-    }
+    #region Command
 
     private RelayCommand? _saveBookmarkCommand;
     public RelayCommand SaveBookmarkCommand =>
@@ -138,57 +191,63 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
             async _ =>
             {
                 var title = NewBookmarkTitle?.Trim() ?? string.Empty;
+
                 if (string.IsNullOrEmpty(title))
                     return;
 
                 var extent = Map.CurrentExtent;
+
                 var bookmark = MapExtentBookmark.FromTitleAndExtent(title, extent);
 
                 //if (Map.RequestCaptureThumbnailAsync is not null)
                 //{
-                var bmp = await Map.CaptureThumbnailAsync(extent, 75, 75);
+                var bmp = await Map.CaptureThumbnailAsync(extent, 48, 48);
+
                 if (bmp is not null)
                 {
-                    bookmark.ThumbnailBytes = EncodePng(bmp);
+                    bookmark.ThumbnailBytes = ImageUtility.GetPngBytes(bmp);
                     bookmark.LoadThumbnail();
                 }
                 //}
 
                 Bookmarks.Add(bookmark);
+
                 _store.Save(Bookmarks);
+
+                this.Map.PredefinedExtents.Add(new Models.Spatialable.EnvelopeMarkupLabelTriple(bookmark));
+
                 NewBookmarkTitle = string.Empty;
             },
             _ => !string.IsNullOrWhiteSpace(NewBookmarkTitle));
 
-    private static byte[] EncodePng(BitmapSource bmp)
-    {
-        using var ms = new MemoryStream();
-        var enc = new PngBitmapEncoder();
-        enc.Frames.Add(BitmapFrame.Create(bmp));
-        enc.Save(ms);
-        return ms.ToArray();
-    }
 
     private RelayCommand? _goToBookmarkCommand;
     public RelayCommand GoToBookmarkCommand =>
-        _goToBookmarkCommand ??= new RelayCommand(p =>
+        _goToBookmarkCommand ??= new RelayCommand(param =>
         {
-            if (p is not MapExtentBookmark b)
+            if (param is not MapExtentBookmark b)
                 return;
 
-            Map.ZoomToExtent(b.ToBoundingBox(), isExactExtent: true, isNewExtent: true);
+            Map.ZoomToExtent(b.WebMercatorExtent, isExactExtent: true, isNewExtent: true);
         });
+
 
     private RelayCommand? _deleteBookmarkCommand;
     public RelayCommand DeleteBookmarkCommand =>
-        _deleteBookmarkCommand ??= new RelayCommand(p =>
+        _deleteBookmarkCommand ??= new RelayCommand(param =>
         {
-            if (p is not MapExtentBookmark b)
-                return;
+            //if (p is not MapExtentBookmark b)
+            //    return;
 
-            Bookmarks.Remove(b);
-            _store.Save(Bookmarks);
+            DeleteBookmark(param as MapExtentBookmark);
+
+            //Bookmarks.Remove(b);
+
+            //_store.Save(Bookmarks);
+
+            //Map.RemovePredefinedExtent(b.Id);
         });
+
 
     private RelayCommand? _applyScaleCommand;
     public RelayCommand ApplyScaleCommand =>
@@ -196,6 +255,7 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
             _ =>
             {
                 var item = SelectedScaleItem;
+
                 if (item is null)
                     return;
 
@@ -208,6 +268,7 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
                 else
                 {
                     var wgs = MapProjects.WebMercatorToGeodeticWgs84(center);
+
                     double lat = wgs?.Y ?? 0;
 
                     var webMercatorScale = Math.Cos(lat * Math.PI / 180.0) * item.Model.Scale;
@@ -217,27 +278,7 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
             },
             _ => SelectedScaleItem is not null);
 
-    private void OnMapZoomChanged(object? sender, double mapScale)
-    {
-        RefreshMetrics();
-    }
-
-    private void OnMapExtentChangedHandler(object? sender, EventArgs e)
-    {
-        RefreshMetrics();
-    }
-
-    private void RefreshMetrics()
-    {
-        ZoomLevelText = Map.CurrentZoomLevel.ToString();
-        ScaleText = $"1:{Map.MapScale:N0}";
-
-        var center = Map.CurrentExtent.Center;
-        var wgs = MapProjects.WebMercatorToGeodeticWgs84(center);
-        double lat = wgs?.Y ?? 0;
-        var gr = WebMercatorUtility.CalculateGroundResolution(Map.CurrentZoomLevel, lat);
-        GroundResolutionText = $"{gr:N2} m/px";
-    }
+    #endregion
 
     public void Dispose()
     {
@@ -245,22 +286,9 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
             return;
 
         _disposed = true;
+
         Map.OnZoomChanged -= OnMapZoomChanged;
+
         Map.OnMapExtentChanged -= OnMapExtentChangedHandler;
     }
-}
-
-public sealed class ScaleComboItem
-{
-    public ScaleComboItem(string group, ScaleModel model)
-    {
-        Group = group;
-        Model = model;
-    }
-
-    public string Group { get; }
-
-    public ScaleModel Model { get; }
-
-    public string DisplayLabel => Model is GoogleScale g ? g.ToString() : $"1:{Model.InverseScale:N0}";
 }

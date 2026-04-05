@@ -52,7 +52,7 @@ public class LegendCommand : LegendCommandBase
     public static Func<MapViewModelBase, ILayer, LegendCommand> CreateZoomToExtentCommandFunc = CreateZoomToExtentCommand;
     public static LegendCommand CreateZoomToExtentCommand(MapViewModelBase map, ILayer layer)
     {
-        var result = new LegendCommand(nameof(Resources.cmd_legendItem_zoomToExtent))
+        var result = new LegendCommand(nameof(Resources.cmd_general_zoomToExtent))
         {
             PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.StretchToPageOutline }.Data,
             Layer = layer,

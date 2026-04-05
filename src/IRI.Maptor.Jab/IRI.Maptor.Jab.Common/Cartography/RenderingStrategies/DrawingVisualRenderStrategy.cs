@@ -41,7 +41,7 @@ public class DrawingVisualRenderStrategy : RenderStrategy
         if (drawingVisuals.IsNullOrEmpty())
             return null;
 
-        var image = ImageUtility.Render(drawingVisuals, (int)screenWidth, (int)screenHeight);
+        var image = ImageUtility.Merge(drawingVisuals, (int)screenWidth, (int)screenHeight);
 
         return new ImageBrush(image);
     }

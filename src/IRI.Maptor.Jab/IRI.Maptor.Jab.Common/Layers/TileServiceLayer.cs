@@ -11,6 +11,12 @@ using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Jab.Common.Abstractions;
+using System.Windows.Media;
+using IRI.Maptor.Sta.Spatial.Helpers;
+using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+using System.Diagnostics;
 
 
 namespace IRI.Maptor.Jab.Common;
@@ -253,5 +259,54 @@ public class TileServiceLayer : BaseLayer
     public bool HasTheSameMapProvider(TileMapProvider provider)
     {
         return _mapProvider == provider;
+    }
+
+    public DrawingVisual? AsDrawingVisual(BoundingBox extent, int zoomLevel, int imageWidth, int imageHeight)
+    {
+        if (extent.IsNaN() || !extent.IsValid() || imageWidth <= 0 || imageHeight <= 0)
+            return null;
+
+        var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(extent, zoomLevel);
+         
+        double scaleX = imageWidth / extent.Width;
+
+        double scaleY = imageHeight / extent.Height;
+
+        var clip = new RectangleGeometry(new System.Windows.Rect(0, 0, imageWidth, imageHeight));
+
+        var baseMapVisual = new DrawingVisual();
+
+        using (var drawingContext = baseMapVisual.RenderOpen())
+        {
+            drawingContext.PushClip(clip);
+
+            foreach (var tile in tiles)
+            {
+                try
+                {
+                    var image = this.GetCachedTileAsync(tile);
+
+                    if (!image.IsValid) continue;
+
+                    var tileExtent = image.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
+
+                    var rect = new System.Windows.Rect(
+                                    (tileExtent.XMin - extent.XMin) * scaleX,
+                                    (extent.YMax - tileExtent.YMax) * scaleY,
+                                    tileExtent.Width * scaleX,
+                                    tileExtent.Height * scaleY);
+
+                    drawingContext.DrawImage(ImageUtility.CreateBitmapImage(image.Image), rect);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"MapViewer; CaptureThumbnailAsync tile error: {ex.Message}");
+                }
+            }
+             
+            drawingContext.Pop();
+        }
+
+        return baseMapVisual;
     }
 }

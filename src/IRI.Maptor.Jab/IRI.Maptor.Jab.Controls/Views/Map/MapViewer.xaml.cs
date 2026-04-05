@@ -179,13 +179,10 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     private double _mapScale;
-
     public double MapScale
     {
-        get
-        {
-            return _mapScale;
-        }
+        get => _mapScale;
+
         set
         {
             if (this._mapScale != value)
@@ -199,6 +196,7 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
+    public double InverseMapScale => 1.0 / MapScale;
 
     public UIElementCollection Elements { get { return mapView.Children; } }
 
@@ -406,7 +404,7 @@ public partial class MapViewer : NotifiableUserControl
 
             UpdateTileInfos();
 
-            this._layerManager.UpdateIsInRange(1.0 / _mapScale);
+            this._layerManager.UpdateIsInRange(InverseMapScale);
 
         };
     }
@@ -416,7 +414,7 @@ public partial class MapViewer : NotifiableUserControl
     #endregion
 
     public async Task Register(MapViewModelBase presenter,
-                                List<IrProvince93>? provinces = null)
+                                List<IriProvince93>? provinces = null)
     {
         if (presenter == null)
             return;
@@ -647,12 +645,54 @@ public partial class MapViewer : NotifiableUserControl
             return null;
         };
 
-        var ostanha = EnvelopeMarkupLabelTriple.GetProvinces93Wm(a =>
+        var zoomToExtentAction = new Action<EnvelopeMarkupLabelTriple>(a =>
         {
-            this.ZoomToExtent(IriProvinces93WmEnvelopes.ToBoundingBox(a.Province));
+            //this.ZoomToExtent(IriProvinces93WmEnvelopes.ToBoundingBox(a.Province));
+            this.ZoomToExtent(a.WebMercatorExtent);
         });
 
-        presenter.Ostanha = provinces is null ? ostanha : ostanha.Where(o => provinces.Contains(o.Province)).ToList();
+        presenter.PredefinedExtents.CollectionChanged += (sender, e) =>
+        {
+            var newItems = e.NewItems?.Cast<EnvelopeMarkupLabelTriple>()?.ToList();
+
+            if (!newItems.IsNullOrEmpty())
+            {
+                foreach (var item in newItems)
+                {
+                    item.RequestRaiseSelected = zoomToExtentAction;
+                }
+            }
+
+            var oldItems = e.OldItems?.Cast<EnvelopeMarkupLabelTriple>()?.ToList();
+
+            if (!oldItems.IsNullOrEmpty())
+            {
+                foreach (var item in oldItems)
+                {
+                    item.RequestRaiseSelected = null;
+                }
+            }
+        };
+
+        var ostanha = EnvelopeMarkupLabelTriple.GetProvinces93Wm();
+
+        //var ostanha = EnvelopeMarkupLabelTriple.GetProvinces93Wm(a =>
+        //{
+        //    //this.ZoomToExtent(IriProvinces93WmEnvelopes.ToBoundingBox(a.Province));
+        //    this.ZoomToExtent(a.WebMercatorExtent);
+        //});
+
+        var predefinedExtents = provinces is null ? ostanha : ostanha.Where(o => o.Province.HasValue && provinces.Contains(o.Province.Value)).ToList();
+
+        foreach (var item in predefinedExtents)
+        {
+            presenter.PredefinedExtents.Add(item);
+        }
+
+        foreach (var item in presenter.MapExtentPanel.Bookmarks)
+        {
+            presenter.PredefinedExtents.Add(new EnvelopeMarkupLabelTriple(item));
+        }
 
         presenter.Pan();
 
@@ -661,6 +701,11 @@ public partial class MapViewer : NotifiableUserControl
         await presenter.InitializeAsync();
 
         presenter.RegisterMapOptions();
+
+    }
+
+    private void PredefinedExtents_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
 
     }
 
@@ -751,7 +796,7 @@ public partial class MapViewer : NotifiableUserControl
 
         layer.VisibleRange = scaleInterval;
 
-        this._layerManager.Add(layer, 1.0 / _mapScale);
+        this._layerManager.Add(layer, InverseMapScale);
 
         this.AddComplexLayer(layer.GetLayer(MapScale), true);
     }
@@ -779,7 +824,7 @@ public partial class MapViewer : NotifiableUserControl
 
         layer.IsOffline = isOffline;
 
-        this._layerManager.Add(layer, 1.0 / _mapScale);
+        this._layerManager.Add(layer, InverseMapScale);
     }
 
     public void UnSetTileService(string providerFullName)
@@ -798,7 +843,7 @@ public partial class MapViewer : NotifiableUserControl
     {
         ConfigureLayer(layer);
 
-        this._layerManager.Add(layer, 1.0 / _mapScale);
+        this._layerManager.Add(layer, InverseMapScale);
     }
 
     private void ConfigureLayer(ILayer layer)
@@ -822,7 +867,7 @@ public partial class MapViewer : NotifiableUserControl
 
     public void SetSpecialPointLayer(string layerName, ScaleInterval scaleInterval, List<Locateable> items, double opacity = 1)
     {
-        this._layerManager.Add(new SpecialPointLayer(layerName, items, opacity, scaleInterval, LayerType.Complex), 1.0 / _mapScale);
+        this._layerManager.Add(new SpecialPointLayer(layerName, items, opacity, scaleInterval, LayerType.Complex), InverseMapScale);
     }
 
     public void AddSpecialPointLayerToMap(string layerName, ScaleInterval scaleInterval, List<Locateable> items)
@@ -1453,7 +1498,7 @@ public partial class MapViewer : NotifiableUserControl
             return;
 
         // 1401.12.05
-        IEnumerable<ILayer> infos = this._layerManager.UpdateAndGetLayers(1.0 / MapScale, RenderMode.Tiled).ToList();
+        IEnumerable<ILayer> infos = this._layerManager.UpdateAndGetLayers(InverseMapScale, RenderMode.Tiled).ToList();
 
         foreach (var tile in tiles)
         {
@@ -2454,7 +2499,7 @@ public partial class MapViewer : NotifiableUserControl
             RasterizationMethod.DrawingVisual,
             ScaleInterval.All);
 
-        this._layerManager.Add(layer, 1.0 / _mapScale);
+        this._layerManager.Add(layer, InverseMapScale);
 
         //AddTiledLayer(layer);
         await AddNonTiledLayer(layer);
@@ -2641,7 +2686,7 @@ public partial class MapViewer : NotifiableUserControl
     private void ExtentManager_OnTilesAdded(object sender, CustomEventArgs<List<TileInfo>> e)
     {
         // 1401.12.05
-        IEnumerable<ILayer> infos = this._layerManager.UpdateAndGetLayers(1.0 / MapScale, RenderMode.Tiled).ToList();
+        IEnumerable<ILayer> infos = this._layerManager.UpdateAndGetLayers(InverseMapScale, RenderMode.Tiled).ToList();
 
         foreach (var item in e.Arg)
         {

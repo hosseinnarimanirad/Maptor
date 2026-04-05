@@ -7,11 +7,10 @@ using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 using System.Runtime.InteropServices;
 
-using IRI.Maptor.Sta.Spatial.Model;
-using IRI.Maptor.Ket.GdiPlus.WorldfileFormat;
 using IRI.Maptor.Sta.Spatial.IO;
-using IRI.Maptor.Ket.GdiPlus.Helpers;
+using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Ket.GdiPlus.WorldfileFormat;
 
 
 namespace IRI.Maptor.Jab.Common.Helpers;
@@ -163,8 +162,8 @@ public static class ImageUtility
                                                 BitmapSizeOptions.FromWidthAndHeight(bitmap.Width, bitmap.Height));
     }
 
-    public static RenderTargetBitmap Render(List<DrawingVisual> drawingVisuals, int imageWidth, int imageHeight)
-    {        
+    public static RenderTargetBitmap Merge(List<DrawingVisual> drawingVisuals, int imageWidth, int imageHeight)
+    {
         RenderTargetBitmap image = new RenderTargetBitmap(imageWidth, imageHeight, 96, 96, PixelFormats.Pbgra32);
 
         foreach (var drawingVisual in drawingVisuals)
@@ -182,7 +181,7 @@ public static class ImageUtility
         if (imageWidth == 0 || imageHeight == 0)
             return;
 
-        RenderTargetBitmap image = Render(drawingVisuals, imageWidth, imageHeight);
+        RenderTargetBitmap image = Merge(drawingVisuals, imageWidth, imageHeight);
 
         //RenderTargetBitmap image = new RenderTargetBitmap(imageWidth, imageHeight, 96, 96, PixelFormats.Pbgra32);
 
@@ -192,7 +191,7 @@ public static class ImageUtility
         //}
 
         //image.Freeze();
-        
+
         Save(fileName, image, preferedEncoder);
     }
 
@@ -265,6 +264,20 @@ public static class ImageUtility
 
     }
 
+    #region PNG
+
+    public static byte[] GetPngBytes(BitmapSource bmp)
+    {
+        using var ms = new MemoryStream();
+        var enc = new PngBitmapEncoder();
+        enc.Frames.Add(BitmapFrame.Create(bmp));
+        enc.Save(ms);
+        return ms.ToArray();
+    }
+
+    #endregion
+
+
     #region Byte array
 
     public static System.Drawing.Bitmap ToGdiImage(byte[] array)
@@ -323,6 +336,7 @@ public static class ImageUtility
     }
 
     #endregion
+
 
     #region Worldfile Matrix
 

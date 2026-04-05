@@ -13,68 +13,66 @@ public struct BoundingBox
     private double xMin, yMin, xMax, yMax;
 
     #region Properties
-
+     
     public double XMin
     {
         get { return xMin; }
+        //private set { xMin = value; }
     }
 
     public double YMin
     {
         get { return yMin; }
+        //private set { yMin = value; }
     }
 
     public double XMax
     {
         get { return xMax; }
+        //private set { xMax = value; }
     }
 
     public double YMax
     {
         get { return yMax; }
+        //private set { yMax = value; }
     }
 
 
     [JsonIgnore]
-    public double Width
-    {
-        get { return this.XMax - this.XMin; }
-    }
+    public double Width => this.XMax - this.XMin;
 
     [JsonIgnore]
-    public double Height
-    {
-        get { return this.YMax - this.YMin; }
-    }
+    public double Height => this.YMax - this.YMin;
 
     [JsonIgnore]
-    public Point TopRight { get { return new Point(xMax, YMax); } }
+    public Point TopRight => new Point(xMax, YMax);
 
     [JsonIgnore]
     //The system is asumed to be right handed
-    public Point TopLeft { get { return new Point(XMin, YMax); } }
+    public Point TopLeft => new Point(XMin, YMax);
 
     [JsonIgnore]
     //The system is asumed to be right handed
-    public Point BottomRight { get { return new Point(XMax, YMin); } }
+    public Point BottomRight => new Point(XMax, YMin);
 
     [JsonIgnore]
-    public Point BottomLeft { get { return new Point(XMin, YMin); } }
+    public Point BottomLeft => new Point(XMin, YMin);
 
     [JsonIgnore]
-    public Point MiddleRight { get { return new Point(xMax, Center.Y); } }
+    public Point MiddleRight => new Point(xMax, Center.Y);
 
     [JsonIgnore]
-    public Point MiddleLeft { get { return new Point(XMin, Center.Y); } }
+    public Point MiddleLeft => new Point(XMin, Center.Y);
 
     [JsonIgnore]
-    public Point MiddleTop { get { return new Point(Center.X, YMax); } }
+    public Point MiddleTop => new Point(Center.X, YMax);
 
     [JsonIgnore]
-    public Point MiddleBottom { get { return new Point(Center.X, YMin); } }
+    public Point MiddleBottom => new Point(Center.X, YMin);
 
     [JsonIgnore]
-    public Point Center { get { return new Point((XMax + XMin) / 2.0, (YMax + YMin) / 2.0); } }
+    public Point Center => new Point((XMax + XMin) / 2.0, (YMax + YMin) / 2.0);
 
     #endregion
 

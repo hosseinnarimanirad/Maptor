@@ -15,7 +15,7 @@ public sealed class JsonMapExtentBookmarkStore : IMapExtentBookmarkStore
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         WriteIndented = true,
-        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,          
     };
 
     public string? FilePath { get; set; }

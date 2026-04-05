@@ -19,7 +19,7 @@ public static class IriProvinces93WmEnvelopes
     public const string AzarbayejaneGarbi = "AQMAAAABAAAABQAAAOiuJXh5s1JBqM/VFoxjUEEcnl6RcSBUQajP1RaMY1BBHJ5ekXEgVEEY+8vae29SQeiuJXh5s1JBGPvL2ntvUkHoriV4ebNSQajP1RaMY1BB";
     public const string AzarbayejaneShargi = "AQMAAAABAAAABQAAAOACCUowJVNBUI2XtpjMUEE4tMgGXYdUQVCNl7aYzFBBOLTIBl2HVEEYfGGS2j5SQeACCUowJVNBGHxhkto+UkHgAglKMCVTQVCNl7aYzFBB";
     public const string Booshehr = "AQMAAAABAAAABQAAAEBXW/EAR1VBeC0hv3wXSEH0jlM8uXpWQXgtIb98F0hB9I5TPLl6VkGgGi/NMQNLQUBXW/EAR1VBoBovzTEDS0FAV1vxAEdVQXgtIb98F0hB";
-    public const string Chaharmahal = "AQMAAAABAAAABQAAAJhMFfBUBVVBsCXkk3/dS0FgKcugbddVQbAl5JN/3UtBYCnLoG3XVUFg7lpqr4ZNQZhMFfBUBVVBYO5aaq+GTUGYTBXwVAVVQbAl5JN/3UtB";
+    public const string ChaharmahalVaBakhtiari = "AQMAAAABAAAABQAAAJhMFfBUBVVBsCXkk3/dS0FgKcugbddVQbAl5JN/3UtBYCnLoG3XVUFg7lpqr4ZNQZhMFfBUBVVBYO5aaq+GTUGYTBXwVAVVQbAl5JN/3UtB";
     public const string Isfahan = "AQMAAAABAAAABQAAALSd7weGFFVBgJVD45BrS0HIurgN0JBXQYCVQ+OQa0tByLq4DdCQV0HA7J6kdUFPQbSd7weGFFVBwOyepHVBT0G0ne8HhhRVQYCVQ+OQa0tB";
     public const string Fars = "AQMAAAABAAAABQAAADB3LT0EfVVBOGdEsVTgR0EUHclV9plXQThnRLFU4EdBFB3JVfaZV0GQh4W652FMQTB3LT0EfVVBkIeFuudhTEEwdy09BH1VQThnRLFU4EdB";
     public const string Qazvin = "AQMAAAABAAAABQAAAAxGJfH+sFRB2GgAEwkXUEEMAisztphVQdhoABMJF1BBDAIrM7aYVUFI6gSoM9ZQQQxGJfH+sFRBSOoEqDPWUEEMRiXx/rBUQdhoABMJF1BB";
@@ -34,145 +34,145 @@ public static class IriProvinces93WmEnvelopes
     public const string KhorasanRazavi = "AQMAAAABAAAABQAAACAf9BCP4FdBYJhMlZ2WTkHs4jaeegRaQWCYTJWdlk5B7OI2nnoEWkHYEvIV6E5RQSAf9BCP4FdB2BLyFehOUUEgH/QQj+BXQWCYTJWdlk5B";
     public const string KhorasanShomali = "AQMAAAABAAAABQAAAMi6uIlHvVdBmG4Sl4a1UEEIrByCWM9YQZhuEpeGtVBBCKwcgljPWEFAHOtKtp9RQci6uIlHvVdBQBzrSrafUUHIuriJR71XQZhuEpeGtVBB";
     public const string Khozestan = "AQMAAAABAAAABQAAALC/7E7ePVRBIMnlb1adSkHwp8YDiXdVQSDJ5W9WnUpB8KfGA4l3VUFQYhCIiLZNQbC/7E7ePVRBUGIQiIi2TUGwv+xO3j1UQSDJ5W9WnUpB";
-    public const string Kohkiloye = "AQMAAAABAAAABQAAANAZUZKHL1VBsJ3vT8yoSkGY3ZPbDAlWQbCd70/MqEpBmN2T2wwJVkHwJjGQrjFMQdAZUZKHL1VB8CYxkK4xTEHQGVGShy9VQbCd70/MqEpB";
+    public const string KohgiluyehVaBoyerahmad = "AQMAAAABAAAABQAAANAZUZKHL1VBsJ3vT8yoSkGY3ZPbDAlWQbCd70/MqEpBmN2T2wwJVkHwJjGQrjFMQdAZUZKHL1VB8CYxkK4xTEHQGVGShy9VQbCd70/MqEpB";
     public const string Kordestan = "AQMAAAABAAAABQAAACyynZ9MWFNBQHDO6EZ/T0EEeAvUPn1UQUBwzuhGf09BBHgL1D59VEHQ3uDTJqZQQSyynZ9MWFNB0N7g0yamUEEssp2fTFhTQUBwzuhGf09B";
     public const string Lorestan = "AQMAAAABAAAABQAAAMT+skfV41NBUPwY09ldTUGoglGlnT1VQVD8GNPZXU1BqIJRpZ09VUEAgZXTAyBPQcT+skfV41NBAIGV0wMgT0HE/rJH1eNTQVD8GNPZXU1B";
     public const string Markazi = "AQMAAAABAAAABQAAANjFbdhFyVRBkOTyT6MbTkEEVg5tA65VQZDk8k+jG05BBFYObQOuVUFwtRWnaS5QQdjFbdhFyVRBcLUVp2kuUEHYxW3YRclUQZDk8k+jG05B";
     public const string Mazandaran = "AQMAAAABAAAABQAAAMAwmW69YVVBIKfo0CBIUEFY7C/nuvxWQSCn6NAgSFBBWOwv57r8VkFQ844f3+lQQcAwmW69YVVBUPOOH9/pUEHAMJluvWFVQSCn6NAgSFBB";
     public const string Qom = "AQMAAAABAAAABQAAAFxkO0fvRFVBoFWfqw/kTkGYIY5xVRFWQaBVn6sP5E5BmCGOcVURVkGwpnmHfPVPQVxkO0fvRFVBsKZ5h3z1T0FcZDtH70RVQaBVn6sP5E5B";
     public const string Semnan = "AQMAAAABAAAABQAAAEi/fc3CAlZBsPpczY37TkHgAgnuqjpYQbD6XM2N+05B4AIJ7qo6WEF4nKK71RtRQUi/fc3CAlZBeJyiu9UbUUFIv33NwgJWQbD6XM2N+05B";
-    public const string Sistan = "AQMAAAABAAAABQAAAODgC79f+1hBCPmg9xQARkFUliFKwONaQQj5oPcUAEZBVJYhSsDjWkGgoiPB6DBMQeDgC79f+1hBoKIjwegwTEHg4Au/X/tYQQj5oPcUAEZB";
+    public const string SistanVaBaluchestan = "AQMAAAABAAAABQAAAODgC79f+1hBCPmg9xQARkFUliFKwONaQQj5oPcUAEZBVJYhSsDjWkGgoiPB6DBMQeDgC79f+1hBoKIjwegwTEHg4Au/X/tYQQj5oPcUAEZB";
     public const string Tehran = "AQMAAAABAAAABQAAAHASg9QLYlVB0JFcbjWgT0EYldSJ3ZJWQdCRXG41oE9BGJXUid2SVkHwQc8iCXpQQXASg9QLYlVB8EHPIgl6UEFwEoPUC2JVQdCRXG41oE9B";
     public const string Yazd = "AQMAAAABAAAABQAAAGSIY203bFZBAET6FX1VSkE07zhZFw9YQQBE+hV9VUpBNO84WRcPWEEQ4C2wPRZOQWSIY203bFZBEOAtsD0WTkFkiGNtN2xWQQBE+hV9VUpB";
     public const string Zanjan = "AQMAAAABAAAABQAAAPTb1zFFCFRB2PD09kUrUEGwcmghQP5UQdjw9PZFK1BBsHJoIUD+VEHgWBercBFRQfTb1zFFCFRB4FgXq3ARUUH029cxRQhUQdjw9PZFK1BB";
 
-    public static BoundingBox ToBoundingBox(IrProvince93 iriProvinces)
+    public static BoundingBox ToBoundingBox(IriProvince93 iriProvinces)
     {
         string wmBase64Envelope = string.Empty;
 
         switch (iriProvinces)
         {
-            case IrProvince93.Alborz:
+            case IriProvince93.Alborz:
                 wmBase64Envelope = Alborz;
                 break;
 
-            case IrProvince93.Ardabil:
+            case IriProvince93.Ardabil:
                 wmBase64Envelope = Ardabil;
                 break;
 
-            case IrProvince93.AzarbayejaneGarbi:
+            case IriProvince93.AzarbayejaneGarbi:
                 wmBase64Envelope = AzarbayejaneGarbi;
                 break;
 
-            case IrProvince93.AzarbayejaneShargi:
+            case IriProvince93.AzarbayejaneShargi:
                 wmBase64Envelope = AzarbayejaneShargi;
                 break;
 
-            case IrProvince93.Booshehr:
+            case IriProvince93.Booshehr:
                 wmBase64Envelope = Booshehr;
                 break;
 
-            case IrProvince93.ChaharmahalVaBakhtiari:
-                wmBase64Envelope = Chaharmahal;
+            case IriProvince93.ChaharmahalVaBakhtiari:
+                wmBase64Envelope = ChaharmahalVaBakhtiari;
                 break;
 
-            case IrProvince93.Isfahan:
+            case IriProvince93.Isfahan:
                 wmBase64Envelope = Isfahan;
                 break;
 
-            case IrProvince93.Fars:
+            case IriProvince93.Fars:
                 wmBase64Envelope = Fars;
                 break;
 
-            case IrProvince93.Qazvin:
+            case IriProvince93.Qazvin:
                 wmBase64Envelope = Qazvin;
                 break;
 
-            case IrProvince93.Gilan:
+            case IriProvince93.Gilan:
                 wmBase64Envelope = Gilan;
                 break;
 
-            case IrProvince93.Golestan:
+            case IriProvince93.Golestan:
                 wmBase64Envelope = Golestan;
                 break;
 
-            case IrProvince93.Hamadan:
+            case IriProvince93.Hamadan:
                 wmBase64Envelope = Hamadan;
                 break;
 
-            case IrProvince93.Hormozgan:
+            case IriProvince93.Hormozgan:
                 wmBase64Envelope = Hormozgan;
                 break;
 
-            case IrProvince93.Ilam:
+            case IriProvince93.Ilam:
                 wmBase64Envelope = Ilam;
                 break;
 
-            case IrProvince93.Kerman:
+            case IriProvince93.Kerman:
                 wmBase64Envelope = Kerman;
                 break;
 
-            case IrProvince93.Kermanshah:
+            case IriProvince93.Kermanshah:
                 wmBase64Envelope = Kermanshah;
                 break;
 
-            case IrProvince93.KhorasanJonoobi:
+            case IriProvince93.KhorasanJonoobi:
                 wmBase64Envelope = KhorasanJonoobi;
                 break;
 
-            case IrProvince93.KhorasanRazavi:
+            case IriProvince93.KhorasanRazavi:
                 wmBase64Envelope = KhorasanRazavi;
                 break;
 
-            case IrProvince93.KhorasanShomali:
+            case IriProvince93.KhorasanShomali:
                 wmBase64Envelope = KhorasanShomali;
                 break;
 
-            case IrProvince93.Khozestan:
+            case IriProvince93.Khozestan:
                 wmBase64Envelope = Khozestan;
                 break;
 
-            case IrProvince93.KohgiluyehVaBoyerahmad:
-                wmBase64Envelope = Kohkiloye;
+            case IriProvince93.KohgiluyehVaBoyerahmad:
+                wmBase64Envelope = KohgiluyehVaBoyerahmad;
                 break;
 
-            case IrProvince93.Kordestan:
+            case IriProvince93.Kordestan:
                 wmBase64Envelope = Kordestan;
                 break;
 
-            case IrProvince93.Lorestan:
+            case IriProvince93.Lorestan:
                 wmBase64Envelope = Lorestan;
                 break;
 
-            case IrProvince93.Markazi:
+            case IriProvince93.Markazi:
                 wmBase64Envelope = Markazi;
                 break;
 
-            case IrProvince93.Mazandaran:
+            case IriProvince93.Mazandaran:
                 wmBase64Envelope = Mazandaran;
                 break;
 
-            case IrProvince93.Qom:
+            case IriProvince93.Qom:
                 wmBase64Envelope = Qom;
                 break;
 
-            case IrProvince93.Semnan:
+            case IriProvince93.Semnan:
                 wmBase64Envelope = Semnan;
                 break;
 
-            case IrProvince93.SistanVaBaluchestan:
-                wmBase64Envelope = Sistan;
+            case IriProvince93.SistanVaBaluchestan:
+                wmBase64Envelope = SistanVaBaluchestan;
                 break;
 
-            case IrProvince93.Tehran:
+            case IriProvince93.Tehran:
                 wmBase64Envelope = Tehran;
                 break;
 
-            case IrProvince93.Yazd:
+            case IriProvince93.Yazd:
                 wmBase64Envelope = Yazd;
                 break;
 
-            case IrProvince93.Zanjan:
+            case IriProvince93.Zanjan:
                 wmBase64Envelope = Zanjan;
                 break;
         }
@@ -184,7 +184,7 @@ public static class IriProvinces93WmEnvelopes
         return geometry.GetBoundingBox();
     }
 
-    public static BoundingBox ToBoundingBox(params IrProvince93[] iriProvinces)
+    public static BoundingBox ToBoundingBox(params IriProvince93[] iriProvinces)
     {
         if (iriProvinces.IsNullOrEmpty())
             return BoundingBox.NaN;

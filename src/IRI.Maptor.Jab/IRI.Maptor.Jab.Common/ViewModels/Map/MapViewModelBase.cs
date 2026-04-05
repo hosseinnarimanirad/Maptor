@@ -48,7 +48,6 @@ using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Models.Settings;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Localization;
-
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public abstract class MapViewModelBase : ViewModelBase
@@ -246,17 +245,6 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-
-    private List<EnvelopeMarkupLabelTriple> _ostanha;
-    public List<EnvelopeMarkupLabelTriple> Ostanha
-    {
-        get { return _ostanha; }
-        set
-        {
-            _ostanha = value;
-            RaisePropertyChanged();
-        }
-    }
 
 
     private EditableFeatureLayer _currentEditingLayer;
@@ -841,13 +829,38 @@ public abstract class MapViewModelBase : ViewModelBase
 
     #region Extent Manager
 
-    public List<BoundingBox> Extents { get; set; } = new List<BoundingBox>();
+    // extents used for fast zoom to extent by users. such as provinces etc.
+    private ObservableCollection<EnvelopeMarkupLabelTriple> _predefinedExtents = new ObservableCollection<EnvelopeMarkupLabelTriple>();
+    public ObservableCollection<EnvelopeMarkupLabelTriple> PredefinedExtents
+    {
+        get { return _predefinedExtents; }
+        set
+        {
+            _predefinedExtents = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    public void RemovePredefinedExtent(Guid id)
+    {
+        if (id == Guid.Empty)
+            return;
+
+        var item = PredefinedExtents.FirstOrDefault(p => p.Id == id);
+
+        if (item is null || !item.IsUserDefined)
+            return;
+
+        PredefinedExtents.Remove(item);
+    }
+
+    public List<BoundingBox> MapExtentHistory { get; set; } = new List<BoundingBox>();
 
     public bool NextExtentEnabled => CurrentExtentIndex > 0;
 
-    public bool PreviousExtentEnabled => CurrentExtentIndex < Extents.Count - 1;
+    public bool PreviousExtentEnabled => CurrentExtentIndex < MapExtentHistory.Count - 1;
 
-    public int ExtentHistoryLength => Extents.Count;
+    public int ExtentHistoryLength => MapExtentHistory.Count;
 
     private int _currentExtentIndex = 0;
     public int CurrentExtentIndex
@@ -865,16 +878,16 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public void GoToPreviousExtent()
     {
-        CurrentExtentIndex = Math.Min(Extents.Count - 1, CurrentExtentIndex + 1);
+        CurrentExtentIndex = Math.Min(MapExtentHistory.Count - 1, CurrentExtentIndex + 1);
 
-        ZoomToExtent(Extents[CurrentExtentIndex], isExactExtent: true, isNewExtent: false);
+        ZoomToExtent(MapExtentHistory[CurrentExtentIndex], isExactExtent: true, isNewExtent: false);
     }
 
     public void GoToNextExtent()
     {
         CurrentExtentIndex = Math.Max(0, CurrentExtentIndex - 1);
 
-        ZoomToExtent(Extents[CurrentExtentIndex], isExactExtent: true, isNewExtent: false);
+        ZoomToExtent(MapExtentHistory[CurrentExtentIndex], isExactExtent: true, isNewExtent: false);
     }
 
     #endregion
@@ -2118,15 +2131,15 @@ public abstract class MapViewModelBase : ViewModelBase
         if (CurrentExtentIndex > 0)
         {
             // remove all newer extents
-            Extents.RemoveRange(0, CurrentExtentIndex);
+            MapExtentHistory.RemoveRange(0, CurrentExtentIndex);
         }
 
-        Extents.Insert(0, currentExtent);
+        MapExtentHistory.Insert(0, currentExtent);
 
         CurrentExtentIndex = 0;
 
         if (ExtentHistoryLength > 11)
-            Extents.RemoveAt(lastExtentIndex);
+            MapExtentHistory.RemoveAt(lastExtentIndex);
     }
 
     public void FireMouseMove(WpfPoint currentPoint)
@@ -2779,16 +2792,32 @@ public abstract class MapViewModelBase : ViewModelBase
 
     #region Save As Png
 
+    public async Task<RenderTargetBitmap?> GetAsMergedDrawingVisual(BoundingBox boundingBox/*, int imageWidth, int imageHeight*/)
+    {
+        var imageWidth = (int)RequestMapDistanceToScreenDistance(boundingBox.Width);
+        var imageHeight = (int)RequestMapDistanceToScreenDistance(boundingBox.Height);
 
-    public async Task<List<DrawingVisual>> GetAsDrawingVisual(BoundingBox boundingBox/*, int width, int height*/)
+        var visuals = await GetAsDrawingVisuals(boundingBox/*, imageWidth, imageHeight*/);
+
+        if (visuals.IsNullOrEmpty())
+            return null;
+
+        return ImageUtility.Merge(visuals, imageWidth, imageHeight);
+    }
+
+    public async Task<List<DrawingVisual>> GetAsDrawingVisuals(BoundingBox boundingBox/*, int imageWidth, int imageHeight*/)
     {
         // print all layers in rectangle
         //var layers = this._layerManager.GetOrderedLayers();
         var layers = this.RequestGetOrderedLayers?.Invoke();
 
-        var width = (int)RequestMapDistanceToScreenDistance(boundingBox.Width);
-        var height = (int)RequestMapDistanceToScreenDistance(boundingBox.Height);
+        var imageWidth = (int)RequestMapDistanceToScreenDistance(boundingBox.Width);
+        var imageHeight = (int)RequestMapDistanceToScreenDistance(boundingBox.Height);
 
+        double scaleX = imageWidth / boundingBox.Width;
+        double scaleY = imageHeight / boundingBox.Height;
+        var scale = Math.Max(scaleX, scaleY);
+         
         List<DrawingVisual> visuals = new List<DrawingVisual>();
 
         foreach (var item in layers)
@@ -2801,12 +2830,16 @@ public abstract class MapViewModelBase : ViewModelBase
 
             switch (item)
             {
+                case TileServiceLayer tsl:
+                    visuals.Add(tsl.AsDrawingVisual(boundingBox, CurrentZoomLevel, imageWidth, imageHeight));
+                    break;
+
                 case VectorLayer vectorLayer:
-                    visuals.AddRange(await vectorLayer.AsDrawingVisual(boundingBox, width, height, this.MapScale));
+                    visuals.AddRange(await vectorLayer.AsDrawingVisual(boundingBox, imageWidth, imageHeight, scale/*this.MapScale*/));
                     break;
 
                 case DrawingLayer drawingLayer:
-                    visuals.Add(drawingLayer.AsDrawingVisual(boundingBox, width, height, this.MapScale));
+                    visuals.Add(drawingLayer.AsDrawingVisual(boundingBox, imageWidth, imageHeight, scale/*this.MapScale*/));
                     break;
 
                 //case FeatureLayer featureLayer:
@@ -2837,9 +2870,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
         var baseMapVisual = new DrawingVisual();
 
-        using (var dc = baseMapVisual.RenderOpen())
+        using (var drawingContext = baseMapVisual.RenderOpen())
         {
-            dc.PushClip(clip);
+            drawingContext.PushClip(clip);
 
             var basemapLayers = this.RequestGetOrderedLayers?.Invoke() //_layerManager.GetOrderedLayers()
                 .OfType<TileServiceLayer>()
@@ -2851,19 +2884,19 @@ public abstract class MapViewModelBase : ViewModelBase
                 {
                     try
                     {
-                        var geo = await layer.GetTileAsync(tile, /*_presenter.*/HttpClient);
+                        var image = layer.GetCachedTileAsync(tile);
 
-                        if (!geo.IsValid) continue;
+                        if (!image.IsValid) continue;
 
-                        var tExt = geo.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
+                        var tileExtent = image.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
 
                         var rect = new System.Windows.Rect(
-                                        (tExt.XMin - extent.XMin) * scaleX,
-                                        (extent.YMax - tExt.YMax) * scaleY,
-                                        tExt.Width * scaleX,
-                                        tExt.Height * scaleY);
+                                        (tileExtent.XMin - extent.XMin) * scaleX,
+                                        (extent.YMax - tileExtent.YMax) * scaleY,
+                                        tileExtent.Width * scaleX,
+                                        tileExtent.Height * scaleY);
 
-                        dc.DrawImage(ImageUtility.CreateBitmapImage(geo.Image), rect);
+                        drawingContext.DrawImage(ImageUtility.CreateBitmapImage(image.Image), rect);
                     }
                     catch (Exception ex)
                     {
@@ -2872,17 +2905,36 @@ public abstract class MapViewModelBase : ViewModelBase
                 }
             }
 
-            dc.Pop();
+            drawingContext.Pop();
         }
 
-        var vectorVisuals = await GetAsDrawingVisual(extent/*, thumbWidth, thumbHeight*/);
+        var vectorImage = await GetAsMergedDrawingVisual(extent/*, thumbWidth, thumbHeight*/);
+
+        var vectorVisual = new DrawingVisual();
+
+        using (var drawingContext = vectorVisual.RenderOpen())
+        {
+            drawingContext.PushClip(clip);
+
+            var scale_x = thumbWidth / vectorImage.Width;
+            var scale_y = thumbHeight / vectorImage.Height;
+
+            var rect = new System.Windows.Rect(0, 0, vectorImage.Width * scale_x, vectorImage.Height * scale_y);
+
+            drawingContext.DrawImage(vectorImage, rect);
+
+            drawingContext.Pop();
+        }
+
+        //var vectorMerged = ImageUtility.Merge(vectorVisuals, vectorVisuals);
 
         var rtb = new RenderTargetBitmap(thumbWidth, thumbHeight, 96, 96, PixelFormats.Pbgra32);
 
         rtb.Render(baseMapVisual);
 
-        foreach (var v in vectorVisuals)
-            rtb.Render(v);
+        rtb.Render(vectorVisual);
+        //foreach (var v in vectorVisuals)
+        //    rtb.Render(v);
 
         rtb.Freeze();
 
@@ -2891,6 +2943,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
     #endregion
+
 
     #region Printing
 
@@ -2934,7 +2987,7 @@ public abstract class MapViewModelBase : ViewModelBase
         var width = (int)RequestMapDistanceToScreenDistance(boundingBox.Width);
         var height = (int)RequestMapDistanceToScreenDistance(boundingBox.Height);
 
-        var visuals = await GetAsDrawingVisual(boundingBox/*, width, height*/); /*RequestGetAsDrawingVisual(boundingBox, width, height);*/
+        var visuals = await GetAsDrawingVisuals(boundingBox/*, width, height*/); /*RequestGetAsDrawingVisual(boundingBox, width, height);*/
 
         ImageUtility.MergeAndSave(fileName, visuals, width, height, new TiffBitmapEncoder());
 
@@ -5477,6 +5530,4 @@ public abstract class MapViewModelBase : ViewModelBase
     public event EventHandler OnDeleteDrawing;
 
     #endregion
-
-
 }
