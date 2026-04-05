@@ -160,10 +160,10 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>Zoom precedente</value>
   </data>
-  <data name="cmd_general_previousView" xml:space="preserve">
+  <data name="cmd_general_previousExtent" xml:space="preserve">
     <value>Vista precedente</value>
   </data>
-  <data name="cmd_general_nextView" xml:space="preserve">
+  <data name="cmd_general_nextExtent" xml:space="preserve">
     <value>Vista successiva</value>
   </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">

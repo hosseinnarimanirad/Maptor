@@ -333,9 +333,9 @@ namespace IRI.Maptor.Jab.Common.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Next View.
         /// </summary>
-        public static string cmd_general_nextView {
+        public static string cmd_general_nextExtent {
             get {
-                return ResourceManager.GetString("cmd_general_nextView", resourceCulture);
+                return ResourceManager.GetString("cmd_general_nextExtent", resourceCulture);
             }
         }
         
@@ -351,9 +351,9 @@ namespace IRI.Maptor.Jab.Common.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Previous View.
         /// </summary>
-        public static string cmd_general_previousView {
+        public static string cmd_general_previousExtent {
             get {
-                return ResourceManager.GetString("cmd_general_previousView", resourceCulture);
+                return ResourceManager.GetString("cmd_general_previousExtent", resourceCulture);
             }
         }
         
@@ -390,6 +390,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string cmd_general_zoomPrevious {
             get {
                 return ResourceManager.GetString("cmd_general_zoomPrevious", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom To Extent.
+        /// </summary>
+        public static string cmd_general_zoomToExtent {
+            get {
+                return ResourceManager.GetString("cmd_general_zoomToExtent", resourceCulture);
             }
         }
         
@@ -2380,6 +2389,96 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string map_scalebar_zoomLevel {
             get {
                 return ResourceManager.GetString("map_scalebar_zoomLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extent Manager.
+        /// </summary>
+        public static string mapExtent_common_title {
+            get {
+                return ResourceManager.GetString("mapExtent_common_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ground resolution:.
+        /// </summary>
+        public static string mapExtent_currentView_groundResolutionText {
+            get {
+                return ResourceManager.GetString("mapExtent_currentView_groundResolutionText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map scale:.
+        /// </summary>
+        public static string mapExtent_currentView_scaleText {
+            get {
+                return ResourceManager.GetString("mapExtent_currentView_scaleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current view (extent center).
+        /// </summary>
+        public static string mapExtent_currentView_title {
+            get {
+                return ResourceManager.GetString("mapExtent_currentView_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom level:.
+        /// </summary>
+        public static string mapExtent_currentView_zoomLevelText {
+            get {
+                return ResourceManager.GetString("mapExtent_currentView_zoomLevelText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to scale (at center).
+        /// </summary>
+        public static string mapExtent_gotoScale_title {
+            get {
+                return ResourceManager.GetString("mapExtent_gotoScale_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string mapExtent_new_addNew {
+            get {
+                return ResourceManager.GetString("mapExtent_new_addNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extent Title.
+        /// </summary>
+        public static string mapExtent_new_extentTitle {
+            get {
+                return ResourceManager.GetString("mapExtent_new_extentTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Extent.
+        /// </summary>
+        public static string mapExtent_new_title {
+            get {
+                return ResourceManager.GetString("mapExtent_new_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saved extents.
+        /// </summary>
+        public static string mapExtent_savedExtents_title {
+            get {
+                return ResourceManager.GetString("mapExtent_savedExtents_title", resourceCulture);
             }
         }
         

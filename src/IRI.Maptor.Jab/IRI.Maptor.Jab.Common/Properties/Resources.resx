@@ -224,10 +224,10 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>Zoom previous</value>
   </data>
-  <data name="cmd_general_previousView" xml:space="preserve">
+  <data name="cmd_general_previousExtent" xml:space="preserve">
     <value>Previous View</value>
   </data>
-  <data name="cmd_general_nextView" xml:space="preserve">
+  <data name="cmd_general_nextExtent" xml:space="preserve">
     <value>Next View</value>
   </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">
@@ -1462,5 +1462,38 @@
   </data>
   <data name="dialog_dxfOpen_title" xml:space="preserve">
     <value>Import DXF</value>
+  </data>
+  <data name="cmd_general_zoomToExtent" xml:space="preserve">
+    <value>Zoom To Extent</value>
+  </data>
+  <data name="mapExtent_common_title" xml:space="preserve">
+    <value>Extent Manager</value>
+  </data>
+  <data name="mapExtent_currentView_groundResolutionText" xml:space="preserve">
+    <value>Ground resolution:</value>
+  </data>
+  <data name="mapExtent_currentView_scaleText" xml:space="preserve">
+    <value>Map scale:</value>
+  </data>
+  <data name="mapExtent_currentView_title" xml:space="preserve">
+    <value>Current view (extent center)</value>
+  </data>
+  <data name="mapExtent_currentView_zoomLevelText" xml:space="preserve">
+    <value>Zoom level:</value>
+  </data>
+  <data name="mapExtent_gotoScale_title" xml:space="preserve">
+    <value>Go to scale (at center)</value>
+  </data>
+  <data name="mapExtent_new_addNew" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="mapExtent_new_extentTitle" xml:space="preserve">
+    <value>Extent Title</value>
+  </data>
+  <data name="mapExtent_new_title" xml:space="preserve">
+    <value>New Extent</value>
+  </data>
+  <data name="mapExtent_savedExtents_title" xml:space="preserve">
+    <value>Saved extents</value>
   </data>
 </root>

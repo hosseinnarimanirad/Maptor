@@ -160,10 +160,10 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>पिछला ज़ूम करें</value>
   </data>
-  <data name="cmd_general_previousView" xml:space="preserve">
+  <data name="cmd_general_previousExtent" xml:space="preserve">
     <value>पिछला दृश्य</value>
   </data>
-  <data name="cmd_general_nextView" xml:space="preserve">
+  <data name="cmd_general_nextExtent" xml:space="preserve">
     <value>अगला दृश्य</value>
   </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">

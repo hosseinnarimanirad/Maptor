@@ -219,10 +219,10 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>نمای قبل</value>
   </data>
-  <data name="cmd_general_previousView" xml:space="preserve">
+  <data name="cmd_general_previousExtent" xml:space="preserve">
     <value>نمای قبل</value>
   </data>
-  <data name="cmd_general_nextView" xml:space="preserve">
+  <data name="cmd_general_nextExtent" xml:space="preserve">
     <value>نمای بعد</value>
   </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">
@@ -1421,5 +1421,38 @@
   </data>
   <data name="dialog_dxfOpen_title" xml:space="preserve">
     <value>افزودن DXF</value>
+  </data>
+  <data name="cmd_general_zoomToExtent" xml:space="preserve">
+    <value>بزرگنمایی محدوده</value>
+  </data>
+  <data name="mapExtent_common_title" xml:space="preserve">
+    <value>مدیریت محدوده‌ها</value>
+  </data>
+  <data name="mapExtent_currentView_groundResolutionText" xml:space="preserve">
+    <value>قدرت تفکیک زمینی:</value>
+  </data>
+  <data name="mapExtent_currentView_scaleText" xml:space="preserve">
+    <value>مقایس:</value>
+  </data>
+  <data name="mapExtent_currentView_title" xml:space="preserve">
+    <value>اطلاعات محدوده جاری (مرکز نقشه)</value>
+  </data>
+  <data name="mapExtent_currentView_zoomLevelText" xml:space="preserve">
+    <value>سطح بزرگ‌نمایی:</value>
+  </data>
+  <data name="mapExtent_gotoScale_title" xml:space="preserve">
+    <value>برو به مقیاس (مرکز نقشه)</value>
+  </data>
+  <data name="mapExtent_new_addNew" xml:space="preserve">
+    <value>ذخیره</value>
+  </data>
+  <data name="mapExtent_new_extentTitle" xml:space="preserve">
+    <value>نام محدوده جدید</value>
+  </data>
+  <data name="mapExtent_new_title" xml:space="preserve">
+    <value>محدوده جدید</value>
+  </data>
+  <data name="mapExtent_savedExtents_title" xml:space="preserve">
+    <value>محدوده‌های ذخیره شده</value>
   </data>
 </root>
