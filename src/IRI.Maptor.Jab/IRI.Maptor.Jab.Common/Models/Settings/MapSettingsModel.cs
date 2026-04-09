@@ -108,6 +108,21 @@ public class MapSettingsModel : Notifier, IMapSettings
         }
     }
 
+    #region Clipboard
+
+    // if true, long/lat is copied to clipboard otherwise lat/long is copied
+    public bool Clipboard_IsLatitudeFirst
+    {
+        get => _settings.Clipboard_IsLatitudeFirst;
+        set
+        {
+            _settings.Clipboard_IsLatitudeFirst = value;
+            RaisePropertyChanged();
+        }
+    }
+    
+
+    #endregion
 
     #region Map Style
 

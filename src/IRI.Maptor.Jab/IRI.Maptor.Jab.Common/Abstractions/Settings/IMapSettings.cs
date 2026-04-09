@@ -13,6 +13,8 @@ public interface IMapSettings
 
     bool AllowLargeDataLoading { get; set; }
 
+    bool Clipboard_IsLatitudeFirst { get; set; }
+
     bool ShowTileBorder { get; set; }
 
     bool Identify_IncludeNotInScaleRangeLayers { get; set; }

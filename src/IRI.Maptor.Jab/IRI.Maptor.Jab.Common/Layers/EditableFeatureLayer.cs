@@ -125,6 +125,8 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public Func<CoordinateDisplayMode> RequestGetCoordinateDisplayMode;
 
+    public Func<bool> RequestGetClipboard_IsLatitudeFirst;
+
     #endregion
 
 
@@ -638,16 +640,18 @@ public class EditableFeatureLayer : SymbolizableLayer
                 middleSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.Delete));
 
         presenter.RightCommandAction = i =>
-        { 
+        {
             var mode = RequestGetCoordinateDisplayMode?.Invoke() ?? CoordinateDisplayMode.GeodeticDecimal;
 
-            ClipboardHelper.CopyToClipboard(new Point(point.X, point.Y), mode, null, null, null, null);
-             
+            var isLatitudeFirst = RequestGetClipboard_IsLatitudeFirst?.Invoke() ;
+
+            ClipboardHelper.CopyToClipboard(new Point(point.X, point.Y), mode, CopyCoordinateOptions.Default, isLatitudeFirst /*null, null, null, null*/);
+
             this.RemoveMapOptions();
         };
 
         presenter.LeftCommandAction = i =>
-        { 
+        {
             if (_primaryVerticesLabelLayer.Items.Any(l => l.Id == locateable.Id))
             {
                 _primaryVerticesLabelLayer.Remove(locateable.Id);
@@ -1274,7 +1278,9 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         Point point = new(currentPoint.X, currentPoint.Y);
 
-        ClipboardHelper.CopyToClipboard(point, mode, null, null, null, null);
+        var isLatitudeFirst = RequestGetClipboard_IsLatitudeFirst?.Invoke();
+
+        ClipboardHelper.CopyToClipboard(point, mode, CopyCoordinateOptions.Default, isLatitudeFirst/*null, null, null, null*/);
 
         //var format = CoordinateHelper.Format(point, mode, thousandSeparator: false, null, null, null, null);
 
@@ -1507,6 +1513,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     #endregion
 
+
     #region Overrides
 
     public override Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
@@ -1526,6 +1533,7 @@ public class EditableFeatureLayer : SymbolizableLayer
     }
 
     #endregion
+
 
     #region Commands
 

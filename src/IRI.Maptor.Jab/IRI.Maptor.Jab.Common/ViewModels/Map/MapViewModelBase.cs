@@ -282,6 +282,8 @@ public abstract class MapViewModelBase : ViewModelBase
                 };
 
                 _currentEditingLayer.RequestGetCoordinateDisplayMode = () => this.MapPanel.SpatialReference;
+
+                _currentEditingLayer.RequestGetClipboard_IsLatitudeFirst = () => this.MapSettings.Clipboard_IsLatitudeFirst;
             }
 
         }
@@ -320,10 +322,14 @@ public abstract class MapViewModelBase : ViewModelBase
                     RequestPanTo?.Invoke(point, null);
                 };
 
-                _currentGeometryDetails.RequestCopyCoordinate = (point) =>
+                _currentGeometryDetails.RequestCopyCoordinate = (locatable, mode) =>
                 {
-                    var geodetic = MapProjects.WebMercatorToGeodeticWgs84(point);
-                    System.Windows.Clipboard.SetDataObject($"{geodetic.X.ToString("n4")},{geodetic.Y.ToString("n4")}");
+                    //var geodetic = MapProjects.WebMercatorToGeodeticWgs84(locatable);
+                    //System.Windows.Clipboard.SetDataObject($"{geodetic.X.ToString("n4")},{geodetic.Y.ToString("n4")}");
+
+                    Point point = new(locatable.X, locatable.Y);
+
+                    ClipboardHelper.CopyToClipboard(point, mode, CopyCoordinateOptions.Default, this.MapSettings.Clipboard_IsLatitudeFirst/*null, null, null, null*/);
                 };
             }
 
@@ -3815,6 +3821,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await AddKmzfile(fileName, owner);
     }
+
     public async Task AddKmzfile(string fileName, object owner)
     {
         try

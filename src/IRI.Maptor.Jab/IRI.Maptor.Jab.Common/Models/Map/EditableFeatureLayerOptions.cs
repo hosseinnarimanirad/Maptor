@@ -13,7 +13,7 @@ public class EditableFeatureLayerOptions : Notifier
 
     readonly Brush _stroke;
     readonly Brush _fill;
-      
+     
     public bool IsNewDrawing { get; set; } = false;
 
 

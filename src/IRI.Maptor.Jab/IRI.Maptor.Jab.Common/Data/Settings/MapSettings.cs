@@ -14,6 +14,8 @@ public class MapSettings : IMapSettings
 
     public bool AllowLargeDataLoading { get; set; } = false;
 
+    public bool Clipboard_IsLatitudeFirst { get; set; } = true;
+
     public bool ShowTileBorder { get; set; } = true;
 
     public bool Identify_IncludeNotInScaleRangeLayers { get; set; } = true;

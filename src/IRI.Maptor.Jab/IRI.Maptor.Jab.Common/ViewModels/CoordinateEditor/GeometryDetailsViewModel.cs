@@ -242,7 +242,7 @@ public class GeometryDetailsViewModel : Notifier
                 case "GeoJSON":
                     var geoJson = _geometry.AsGeoJson()?.Serialize(indented: true, removeSpaces: false);
 
-                    StringRepresentation = geoJson ?? string.Empty; 
+                    StringRepresentation = geoJson ?? string.Empty;
                     break;
 
                 case "GML 2":
@@ -355,7 +355,7 @@ public class GeometryDetailsViewModel : Notifier
     /// <summary>
     /// Action to copy coordinate to clipboard
     /// </summary>
-    public Action<Point>? RequestCopyCoordinate { get; set; }
+    public Action<Locateable, CoordinateDisplayMode>? RequestCopyCoordinate { get; set; }
 
     private void GeometryEditor_RequestUpdateCurrentEditingPoint(Point webMercatorPoint)
     {
@@ -389,13 +389,14 @@ public class GeometryDetailsViewModel : Notifier
         }
     }
 
-    private void GeometryEditor_RequestCopyCoordinate(Locateable locateable)
+    private void GeometryEditor_RequestCopyCoordinate(Locateable locateable, CoordinateDisplayMode mode)
     {
-        if (locateable != null)
-        {
-            var point = new Point(locateable.X, locateable.Y);
-            RequestCopyCoordinate?.Invoke(point);
-        }
+        if (locateable is null)
+            return;
+
+        //var point = new Point(locateable.X, locateable.Y);
+
+        RequestCopyCoordinate?.Invoke(locateable, mode);
     }
 
     public event Action? RequestClose;

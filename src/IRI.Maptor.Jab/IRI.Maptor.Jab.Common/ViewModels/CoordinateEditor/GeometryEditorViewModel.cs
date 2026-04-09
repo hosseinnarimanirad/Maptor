@@ -12,6 +12,7 @@ using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
@@ -869,7 +870,7 @@ public class GeometryEditorViewModel : Notifier
 
     public event Action<Locateable>? RequestZoomToPoint;
 
-    public event Action<Locateable>? RequestCopyCoordinate;
+    public event Action<Locateable, CoordinateDisplayMode>? RequestCopyCoordinate;
 
     public event Action<IGeometry?>? RequestZoomToGeometry;
 
@@ -1155,7 +1156,7 @@ public class GeometryEditorViewModel : Notifier
         {
             if (SelectedPoint != null)
             {
-                RequestCopyCoordinate?.Invoke(SelectedPoint);
+                RequestCopyCoordinate?.Invoke(SelectedPoint, (CoordinateDisplayMode)param);
             }
         }, param => SelectedPoint != null);
 

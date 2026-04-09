@@ -507,7 +507,7 @@ public class LegendCommand : LegendCommandBase
                 {
                     var coordinate = CoordinateHelper.Format(point,
                                                                 coordinateDisplayMode ?? CoordinateDisplayMode.GeodeticDecimal,
-                                                                thousandSeparator: false, null, null, null, null);
+                                                                CopyCoordinateOptions.Default/*thousandSeparator: false, null, null, null, null*/);
 
                     lines.Add($"{coordinate.x}, {coordinate.y}");
                 }

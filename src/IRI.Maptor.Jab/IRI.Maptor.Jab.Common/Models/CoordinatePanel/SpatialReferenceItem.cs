@@ -12,9 +12,8 @@ public class SpatialReferenceItem : Notifier, IDisposable
     const string defaultXLabel = "X";
     const string defaultYLabel = "Y";
 
-    //private Func<Point, Point> _fromWgs84Geodetic;
+    private CopyCoordinateOptions _copyCoordinateOptions;
 
-    //private Func<double, string> _toString;
     private CoordinateDisplayMode _coordinateDisplayMode;
     public CoordinateDisplayMode CoordinateDisplayMode
     {
@@ -30,7 +29,6 @@ public class SpatialReferenceItem : Notifier, IDisposable
     public Action<SpatialReferenceItem> FireIsSelectedChanged;
 
     public SpatialReferenceItem(
-        //Func<Point, Point> fromWgs84Geodetic,
         CoordinateDisplayMode coordinateDisplayMode,
         string titleItemResourceKey,
         string subTitleItemResourceKey,
@@ -53,6 +51,13 @@ public class SpatialReferenceItem : Notifier, IDisposable
         this.ZoneItemResourceKey = zoneItemResourceKey;
 
         LocalizationManager.Instance.LanguageChanged += OnLanguageChanged;
+
+        this._copyCoordinateOptions = new CopyCoordinateOptions()
+        {
+            UseThousandSeparator = true,
+            LatLongPrecision = 6,
+            XyPrecision = 3
+        };
     }
 
     private void OnLanguageChanged()
@@ -73,7 +78,7 @@ public class SpatialReferenceItem : Notifier, IDisposable
     {
         //var point = _fromWgs84Geodetic(geodeticPoint);
 
-        var format = CoordinateHelper.Format(MapProjects.GeodeticWgs84ToWebMercator(geodeticPoint), CoordinateDisplayMode, thousandSeparator: true, null, 6, 3, null);
+        var format = CoordinateHelper.Format(MapProjects.GeodeticWgs84ToWebMercator(geodeticPoint), CoordinateDisplayMode, _copyCoordinateOptions /*thousandSeparator: true, null, 6, 3, null*/);
 
         //this.XValue = _toString(point.X);
         //this.YValue = _toString(point.Y);

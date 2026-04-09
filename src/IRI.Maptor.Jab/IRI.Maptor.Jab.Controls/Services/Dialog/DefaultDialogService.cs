@@ -105,7 +105,9 @@ public class DefaultDialogService : IDialogService
             return null;
 
         var originalEffect = owner.Effect;
+
         owner.Effect = new BlurEffect() { Radius = BlurRadius };
+        
         return new BlurEffectDisposable(owner, originalEffect);
     }
 
@@ -238,7 +240,7 @@ public class DefaultDialogService : IDialogService
             Multiselect = false,
             Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_openfile_title)]
         };
-
+         
         var blurDisposable = ApplyBlurEffect(owner);
         var dispatcher = GetDispatcher(owner);
 

@@ -581,6 +581,7 @@
 
             <Button Style="{StaticResource circleButtonDark}" 
                     Command="{Binding CopyCurrentPointCommand}"
+                    CommandParameter="{Binding SrsViewModel.SelectedSrsType}"
                     IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
                     ToolTip="{Binding [geometryDetails_currentPoint_copyCoordinate], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Kind="ContentCopy"/>

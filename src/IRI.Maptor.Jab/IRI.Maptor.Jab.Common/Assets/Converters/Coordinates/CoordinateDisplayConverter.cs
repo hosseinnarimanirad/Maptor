@@ -39,7 +39,22 @@ public class CoordinateDisplayConverter : IMultiValueConverter
 
         //double coordinateValue;
 
-        var format = CoordinateHelper.Format(webMercatorPoint, srsType, thousandSeparator: true, utmZone, latLongPrecision, xyPrecision, ellipsoid);
+        CopyCoordinateOptions options = new CopyCoordinateOptions()
+        {
+            UseThousandSeparator = true,
+            UtmZone = utmZone,
+        };
+
+        if (latLongPrecision is not null)
+            options.LatLongPrecision = latLongPrecision.Value;
+
+        if (xyPrecision is not null)
+            options.XyPrecision = xyPrecision.Value;
+
+        if (ellipsoid is not null)
+            options.Ellipsoid = ellipsoid.Value;
+
+        var format = CoordinateHelper.Format(webMercatorPoint, srsType, options/*thousandSeparator: true, utmZone, latLongPrecision, xyPrecision, ellipsoid*/);
 
         return isX ? format.x : format.y;
 
