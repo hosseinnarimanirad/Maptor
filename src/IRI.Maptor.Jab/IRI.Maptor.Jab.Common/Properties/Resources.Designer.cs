@@ -61,6 +61,42 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string cmd_contextMenu_copy {
+            get {
+                return ResourceManager.GetString("cmd_contextMenu_copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cut.
+        /// </summary>
+        public static string cmd_contextMenu_cut {
+            get {
+                return ResourceManager.GetString("cmd_contextMenu_cut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string cmd_contextMenu_delete {
+            get {
+                return ResourceManager.GetString("cmd_contextMenu_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste.
+        /// </summary>
+        public static string cmd_contextMenu_paste {
+            get {
+                return ResourceManager.GetString("cmd_contextMenu_paste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Lat/Long Text.
         /// </summary>
         public static string cmd_drawingLegend_addLatLongTxt {

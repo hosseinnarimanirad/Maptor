@@ -4,6 +4,7 @@
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/TextboxStyles.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Animations.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Fonts.xaml"/>
     </ResourceDictionary.MergedDictionaries> 
@@ -28,7 +29,8 @@
     </Style>
     
 
-    <Style x:Key="securityTextBoxBase" TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+    <!--<Style x:Key="securityTextBoxBase" TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">-->
+    <Style x:Key="securityTextBoxBase" TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
         <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="MinHeight" Value="35"/>
@@ -60,6 +62,16 @@
                 <DataTemplate>
                     <Button Background="Red" Height="30" Width="30"/>
                 </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}">
+                    <!--<MenuItem Header="{Binding [cmd_contextMenu_cut], Source={StaticResource Localization}}" Command="ApplicationCommands.Cut"/>
+                    <MenuItem Header="{Binding [cmd_contextMenu_copy], Source={StaticResource Localization}}" Command="ApplicationCommands.Copy"/>-->
+                    <MenuItem Header="{Binding [cmd_contextMenu_paste], Source={StaticResource Localization}}" Command="ApplicationCommands.Paste"/>
+                    <!--<MenuItem Header="{Binding [cmd_contextMenu_delete], Source={StaticResource Localization}}" Command="ApplicationCommands.Delete"/>-->
+                </ContextMenu>
             </Setter.Value>
         </Setter>
     </Style>

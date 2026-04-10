@@ -1496,4 +1496,16 @@
   <data name="mapExtent_savedExtents_title" xml:space="preserve">
     <value>Saved extents</value>
   </data>
+  <data name="cmd_contextMenu_copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="cmd_contextMenu_cut" xml:space="preserve">
+    <value>Cut</value>
+  </data>
+  <data name="cmd_contextMenu_delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="cmd_contextMenu_paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
 </root>

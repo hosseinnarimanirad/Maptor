@@ -1455,4 +1455,16 @@
   <data name="mapExtent_savedExtents_title" xml:space="preserve">
     <value>محدوده‌های ذخیره شده</value>
   </data>
+  <data name="cmd_contextMenu_copy" xml:space="preserve">
+    <value>کپی</value>
+  </data>
+  <data name="cmd_contextMenu_cut" xml:space="preserve">
+    <value>برداشت</value>
+  </data>
+  <data name="cmd_contextMenu_delete" xml:space="preserve">
+    <value>پاک کردن</value>
+  </data>
+  <data name="cmd_contextMenu_paste" xml:space="preserve">
+    <value>الصاق</value>
+  </data>
 </root>
