@@ -417,7 +417,7 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
 
             if (type != typeof(SqlGeometry))
             {
-                fields.Add(new Field() { Name = reader.GetName(i), Type = type.ToString() });
+                fields.Add(new Field() { Name = reader.GetName(i), TypeFullName = type?.FullName ?? "object"/*type.ToString()*/ });
             }
         }
 
@@ -503,7 +503,7 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
     {
         throw new NotImplementedException();
     }
-     
+
     public Task SaveChanges()
     {
         throw new NotImplementedException();

@@ -102,6 +102,6 @@ public struct DbfFieldDescriptor
         Length = this.Length,
         Precision = this.DecimalCount,
         Scale = this.Length,
-        Type = DbfFile.GetType(this).ToString()
+        TypeFullName = DbfFile.GetType(this).FullName/*.ToString()*/,       
     };
 }

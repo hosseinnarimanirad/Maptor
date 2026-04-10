@@ -100,8 +100,8 @@ public static class FeatureTableCommands
 
             if (!layer.Fields.IsNullOrEmpty())
             {
-                headers = layer.Fields.Where(f => !f.Type.ContainsIgnoreCase(FeatureTableHelper.NetTopologySuiteColumnName)).Select(f => f.Alias ?? f.Name).ToList();
-                fieldNames = layer.Fields.Where(f => !f.Type.ContainsIgnoreCase(FeatureTableHelper.NetTopologySuiteColumnName)).Select(f => f.Name).ToList();
+                headers = layer.Fields.Where(f => !f.TypeFullName.ContainsIgnoreCase(FeatureTableHelper.NetTopologySuiteColumnName)).Select(f => f.Alias ?? f.Name).ToList();
+                fieldNames = layer.Fields.Where(f => !f.TypeFullName.ContainsIgnoreCase(FeatureTableHelper.NetTopologySuiteColumnName)).Select(f => f.Name).ToList();
             }
 
             //

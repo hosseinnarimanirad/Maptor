@@ -40,12 +40,12 @@ public class UtmGridDataSource : VectorDataSource
     {
         _fields =
         [
-            new() {IsNullable=false, Name=nameof(UtmSheet.Id), Length=0, Type="int"},
-            new() {IsNullable=false, Name=nameof(UtmSheet.SheetName), Length=0, Type="string"},
-            new() {IsNullable=false, Name=nameof(UtmSheet.UtmZone), Length=0, Type="int"},
-            new() {IsNullable=false, Name=nameof(UtmSheet.Type), Length=0, Type="int"},
-            new() {IsNullable=false, Name=nameof(UtmSheet.Row), Length=0, Type="int"},
-            new() {IsNullable=false, Name=nameof(UtmSheet.Column), Length=0, Type="int"},
+            new() {IsNullable=false, Name=nameof(UtmSheet.Id), Length=0, TypeFullName = typeof(int).FullName/*"int"*/},
+            new() {IsNullable=false, Name=nameof(UtmSheet.SheetName), Length=0, TypeFullName = typeof(string).FullName/*"string"*/},
+            new() {IsNullable=false, Name=nameof(UtmSheet.UtmZone), Length=0, TypeFullName = typeof(int).FullName/*"int"*/},
+            new() {IsNullable=false, Name=nameof(UtmSheet.Type), Length=0, TypeFullName = typeof(int).FullName/*"int"*/},
+            new() {IsNullable=false, Name=nameof(UtmSheet.Row), Length=0, TypeFullName = typeof(int).FullName/*"int"*/},
+            new() {IsNullable=false, Name=nameof(UtmSheet.Column), Length=0, TypeFullName = typeof(int).FullName/*"int"*/},
         ];
     }
 

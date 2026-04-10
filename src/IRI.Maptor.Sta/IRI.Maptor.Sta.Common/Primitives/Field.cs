@@ -9,7 +9,7 @@ public class Field
 {
     public string Name { get; set; }
 
-    public string Type { get; set; }
+    public string TypeFullName { get; set; }
 
     public string? Alias { get; set; }
 
@@ -25,7 +25,7 @@ public class Field
 
     public override string ToString()
     {
-        return $"Name: {Name}; Type: {Type}; Length: {Length}; IsNullable: {IsNullable}; NumericPrecision: {Precision}; NumericScale: {Scale}; DateTimePrecision: {DateTimePrecision}";
+        return $"Name: {Name}; Length: {Length}; IsNullable: {IsNullable}; NumericPrecision: {Precision}; NumericScale: {Scale}; Type: {TypeFullName}";
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public class Field
         if (IsNullable)
             return null!;
 
-        var typeStr = Type;
+        var typeStr = TypeFullName;
         if (string.IsNullOrEmpty(typeStr))
             return null!;
 
@@ -94,13 +94,14 @@ public class Field
             {
                 Name = property.Name,
                 Alias = fieldAttribute?.Alias ?? property.Name, // Use property name if no alias
-                Type = property.PropertyType.ToString(),
+                TypeFullName = property.PropertyType.FullName/*.ToString()*/,
             });
         }
 
         return fields;
     }
 
+    // todo: potentially error-prone
     public static List<Field> FromDictionary(Dictionary<string, object>? dict)
     {
         var fields = new List<Field>();
@@ -114,7 +115,7 @@ public class Field
             {
                 Name = kvp.Key,
                 Alias = kvp.Key,
-                Type = kvp.Value?.GetType().Name ?? "object",
+                TypeFullName = kvp.Value?.GetType().FullName/*Name*/ ?? "object",
                 IsNullable = kvp.Value == null
             });
         }

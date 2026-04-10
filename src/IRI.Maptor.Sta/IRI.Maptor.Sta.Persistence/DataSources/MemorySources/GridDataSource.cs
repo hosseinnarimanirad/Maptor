@@ -26,7 +26,7 @@ public class GridDataSource : VectorDataSource
         protected set => _ = value;
     }
 
-    public override int Srid { get => SridHelper.WebMercator;   }
+    public override int Srid { get => SridHelper.WebMercator; }
 
     public override GeometryType? GeometryType
     {
@@ -38,14 +38,14 @@ public class GridDataSource : VectorDataSource
     {
         _fields =
         [
-            new() {IsNullable=false, Name=nameof(GeodeticSheet.Id), Length=0, Type="int"},
-            new() {IsNullable=false, Name=nameof(GeodeticSheet.SheetName), Length=0, Type="string"},
-            new() {IsNullable=false, Name=nameof(GeodeticSheet.SubTitle), Length=0, Type="string"},
-            new() {IsNullable=false, Name=nameof(GeodeticSheet.Type), Length=0, Type="int"},
-            new() {IsNullable=false, Name="Min Longitude", Length=0, Type="int"},
-            new() {IsNullable=false, Name="Max Longitude", Length=0, Type="int"},
-            new() {IsNullable=false, Name="Min Latitude", Length=0, Type="int"},
-            new() {IsNullable=false, Name="Max Latitude", Length=0, Type="int"},
+            new() {IsNullable=false, Name=nameof(GeodeticSheet.Id), Length=0, TypeFullName = typeof(int).FullName/*"int"*/},
+            new() {IsNullable=false, Name=nameof(GeodeticSheet.SheetName), Length=0, TypeFullName = typeof(string).FullName/*"string"*/},
+            new() {IsNullable=false, Name=nameof(GeodeticSheet.SubTitle), Length=0, TypeFullName = typeof(string).FullName/*"string"*/},
+            new() {IsNullable=false, Name=nameof(GeodeticSheet.Type), Length=0, TypeFullName = typeof(int).FullName/*"int"*/},
+            new() {IsNullable=false, Name="Min Longitude", Length=0, TypeFullName = typeof(int).FullName/*"int"*/},
+            new() {IsNullable=false, Name="Max Longitude", Length=0, TypeFullName = typeof(int).FullName/*"int"*/},
+            new() {IsNullable=false, Name="Min Latitude", Length=0, TypeFullName = typeof(int).FullName/*"int"*/},
+            new() {IsNullable=false, Name="Max Latitude", Length=0, TypeFullName = typeof(int).FullName/*"int"*/},
         ];
     }
 

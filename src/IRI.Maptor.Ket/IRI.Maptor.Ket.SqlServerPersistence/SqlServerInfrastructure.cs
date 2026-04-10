@@ -445,7 +445,10 @@ public class SqlServerInfrastructure : DataSourceInfrastructure
                     Alias = string.Empty,
                     Length = row["CHARACTER_MAXIMUM_LENGTH"] == DBNull.Value ? 0 : int.Parse(row["CHARACTER_MAXIMUM_LENGTH"].ToString()!),
                     Name = row["COLUMN_NAME"].ToString(),
-                    Type = row["DATA_TYPE"].ToString()!.ToLower(),
+
+                    // todo: add another field for sql server specific types
+                    // and use .net type for TypeFullName
+                    TypeFullName = row["DATA_TYPE"].ToString()!.ToLower(),
                     IsNullable = row["IS_NULLABLE"].ToString() == "YES",
                     Scale = row["NUMERIC_SCALE"] == DBNull.Value ? 0 : int.Parse(row["NUMERIC_SCALE"].ToString()!),
                     Precision = row["NUMERIC_PRECISION"] == DBNull.Value ? 0 : int.Parse(row["NUMERIC_PRECISION"].ToString()!),

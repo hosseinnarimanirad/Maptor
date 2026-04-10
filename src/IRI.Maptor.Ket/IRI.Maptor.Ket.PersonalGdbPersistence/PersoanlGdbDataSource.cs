@@ -91,7 +91,7 @@ public class PersoanlGdbDataSource : VectorDataSource
 
         SetBoundingBoxAndSrid();
     }
-     
+
 
     protected static string GetWhereClause(string spatialColumnName, BoundingBox boundingBox, int srid)
     {
@@ -164,7 +164,7 @@ public class PersoanlGdbDataSource : VectorDataSource
         }
     }
 
-     
+
     public void SetBoundingBoxAndSrid()
     {
         using (var conn = new OleDbConnection(PersonalGdbInfrastructure.GetConnectionString(_mdbFileName)))
@@ -200,7 +200,7 @@ public class PersoanlGdbDataSource : VectorDataSource
 
         //return BoundingBox.NaN;
     }
-     
+
     protected FeatureSet<Point> Select(Geometry<Point> geometryBoundingBox)
     {
         return Select(geometryBoundingBox, null);
@@ -238,7 +238,7 @@ public class PersoanlGdbDataSource : VectorDataSource
                         }
                         else
                         {
-                            fields.Add(new Field() { Name = dataReader.GetName(i), Type = type.ToString() });
+                            fields.Add(new Field() { Name = dataReader.GetName(i), TypeFullName = type?.FullName ?? "object" });
                         }
                     }
 
@@ -328,7 +328,7 @@ public class PersoanlGdbDataSource : VectorDataSource
         result.Fields = fields;
         return result;
     }
-      
+
     public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
     {
         return Task.Run(() => Select(geometry));
