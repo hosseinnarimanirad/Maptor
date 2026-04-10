@@ -253,6 +253,7 @@ public class WebApiDataSource : MemoryDataSource
 
         if (featureSetDto.Fields != null && featureSetDto.Fields.Count > 0)
             Fields = featureSetDto.Fields;
+
         else if (features.Count > 0 && features[0].Attributes != null)
             Fields = Field.FromDictionary(features[0].Attributes);
 

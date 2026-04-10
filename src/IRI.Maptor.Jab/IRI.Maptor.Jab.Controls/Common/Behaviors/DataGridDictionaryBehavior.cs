@@ -3,13 +3,11 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Controls;
-using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common.Models.Map;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Common.Assets.Converters;
 using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Jab.Common.Models.Map;
+using IRI.Maptor.Jab.Common.Assets.Converters;
 
 namespace IRI.Maptor.Jab.Controls.Common.Behaviors;
 
@@ -63,10 +61,10 @@ public static class DataGridDictionaryBehavior
         //if (items == null) return;
 
         var presenter = grid.DataContext as SelectedLayer;
-         
+
         if (presenter is null || presenter.Fields.IsNullOrEmpty())
             return;
-         
+
         var keys = presenter.Fields.Select(a => a.Name).ToList();
 
         // Create editable columns bound to Attributes[key]
@@ -77,15 +75,21 @@ public static class DataGridDictionaryBehavior
             if (field == null)
                 continue;
 
-            if (field.Type.ContainsIgnoreCase(FeatureTableHelper.NetTopologySuiteColumnName))
+            var fieldType = System.Type.GetType(field.TypeFullName);
+
+            if (fieldType is null)
+                continue;
+
+            if (field.TypeFullName.ContainsIgnoreCase(FeatureTableHelper.NetTopologySuiteColumnName))
                 continue;
 
 
             DataGridColumn? column = null;
 
-            var typeName = field.Type; // e.g. "System.Int32"
+            var typeName = field.TypeFullName; // e.g. "System.Int32"
 
-            if (string.Equals(typeName, "System.Boolean", StringComparison.OrdinalIgnoreCase))
+            //if (string.Equals(typeName, "System.Boolean", StringComparison.OrdinalIgnoreCase))
+            if (fieldType.IsBool())
             {
                 column = new DataGridCheckBoxColumn
                 {
@@ -97,7 +101,8 @@ public static class DataGridDictionaryBehavior
                     }
                 };
             }
-            else if (string.Equals(typeName, "System.DateTime", StringComparison.OrdinalIgnoreCase))
+            else if (fieldType.IsDateTime())
+            //else if (string.Equals(typeName, "System.DateTime", StringComparison.OrdinalIgnoreCase))
             {
                 column = new DataGridTemplateColumn
                 {
@@ -106,10 +111,11 @@ public static class DataGridDictionaryBehavior
                     CellEditingTemplate = CreateDateTemplate($"Attributes[{key}]")
                 };
             }
-            else if (typeName.StartsWith("System.Int", StringComparison.OrdinalIgnoreCase) ||
-                     typeName.StartsWith("System.Decimal", StringComparison.OrdinalIgnoreCase) ||
-                     typeName.StartsWith("System.Double", StringComparison.OrdinalIgnoreCase) ||
-                     typeName.StartsWith("System.Single", StringComparison.OrdinalIgnoreCase))
+            //else if (typeName.StartsWith("System.Int", StringComparison.OrdinalIgnoreCase) ||
+            //         typeName.StartsWith("System.Decimal", StringComparison.OrdinalIgnoreCase) ||
+            //         typeName.StartsWith("System.Double", StringComparison.OrdinalIgnoreCase) ||
+            //         typeName.StartsWith("System.Single", StringComparison.OrdinalIgnoreCase))
+            else if (fieldType.IsNumeric())
             {
                 column = new DataGridTextColumn
                 {
@@ -117,7 +123,8 @@ public static class DataGridDictionaryBehavior
                     Binding = new Binding($"Attributes[{key}]")
                     {
                         Mode = BindingMode.TwoWay,
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                        StringFormat = "0,0.####"
                     },
                     ElementStyle = new Style(typeof(TextBlock))
                     {
@@ -126,10 +133,11 @@ public static class DataGridDictionaryBehavior
                     EditingElementStyle = new Style(typeof(TextBox))
                     {
                         Setters = { new Setter(TextBox.TextAlignmentProperty, TextAlignment.Right) }
-                    }
+                    },
                 };
             }
-            else if (string.Equals(typeName, "System.String", StringComparison.OrdinalIgnoreCase))
+            //else if (string.Equals(typeName, "System.String", StringComparison.OrdinalIgnoreCase))
+            else if (fieldType == typeof(string))
             {
                 column = new DataGridTextColumn
                 {
@@ -142,47 +150,47 @@ public static class DataGridDictionaryBehavior
                     ElementStyle = new Style(typeof(TextBlock))
                     {
                         Setters =
-            {
-                new Setter(TextBlock.TextWrappingProperty, TextWrapping.NoWrap),
-                new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.LeftToRight)
-            },
+                        {
+                            new Setter(TextBlock.TextWrappingProperty, TextWrapping.NoWrap),
+                            new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.LeftToRight)
+                        },
                         Triggers =
-            {
-                new DataTrigger
-                {
-                    Binding = new Binding($"Attributes[{key}]")
-                    {
-                        Converter = new RtlFlowDirectionConverter()
-                    },
-                    Value = FlowDirection.RightToLeft,
-                    Setters =
-                    {
-                        new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.RightToLeft)
-                    }
-                }
-            }
+                        {
+                            new DataTrigger
+                            {
+                                Binding = new Binding($"Attributes[{key}]")
+                                {
+                                    Converter = new RtlFlowDirectionConverter()
+                                },
+                                Value = FlowDirection.RightToLeft,
+                                Setters =
+                                {
+                                    new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.RightToLeft)
+                                }
+                            }
+                        }
                     },
                     EditingElementStyle = new Style(typeof(TextBox))
                     {
                         Setters =
-            {
-                new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.LeftToRight)
-            },
+                        {
+                            new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.LeftToRight)
+                        },
                         Triggers =
-            {
-                new DataTrigger
-                {
-                    Binding = new Binding($"Attributes[{key}]")
-                    {
-                        Converter = new RtlFlowDirectionConverter()
-                    },
-                    Value = FlowDirection.RightToLeft,
-                    Setters =
-                    {
-                        new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.RightToLeft)
-                    }
-                }
-            }
+                        {
+                            new DataTrigger
+                            {
+                                Binding = new Binding($"Attributes[{key}]")
+                                {
+                                    Converter = new RtlFlowDirectionConverter()
+                                },
+                                Value = FlowDirection.RightToLeft,
+                                Setters =
+                                {
+                                    new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.RightToLeft)
+                                }
+                            }
+                        }
                     }
                 };
             }
