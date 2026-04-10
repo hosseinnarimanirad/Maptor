@@ -555,7 +555,8 @@
             </StackPanel>
 
             <ItemsControl BorderBrush="Black" BorderThickness="0,0,0,0" Margin="6,0,0,0"
-                            ItemsSource="{Binding ElementName=root, Path=Commands}">
+                            ItemsSource="{Binding ElementName=root, Path=Commands}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource notConverter}}">
                 <ItemsControl.Visibility>
                     <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
                         <Binding Path="IsChecked" ElementName="root"/>
