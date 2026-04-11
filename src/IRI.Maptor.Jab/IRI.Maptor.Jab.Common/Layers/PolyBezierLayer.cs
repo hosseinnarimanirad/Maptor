@@ -259,7 +259,9 @@ public class PolyBezierLayer : SymbolizableLayer
 
             //System.Windows.Clipboard.SetDataObject($"{geodetic.X.ToString("n4")},{geodetic.Y.ToString("n4")}");
 
-            ClipboardHelper.CopyToClipboard(mainLocateable.Location.AsPoint(),  CoordinateDisplayMode.GeodeticDecimal, CopyCoordinateOptions.Default/*null, null, null, null*/);
+            var options = CopyCoordinateOptions.Create();
+
+            ClipboardHelper.CopyToClipboard(mainLocateable.Location.AsPoint(),  CoordinateDisplayMode.GeodeticDecimal, options/*null, null, null, null*/);
 
             this.RemoveMapOptions();
         };

@@ -503,11 +503,13 @@ public class LegendCommand : LegendCommandBase
 
                 List<string> lines = new List<string>();
 
+                var options = CopyCoordinateOptions.Create(map.MapSettings.Clipboard_LatLongPrecision, map.MapSettings.Clipboard_XyPrecision);
+
                 foreach (var point in points)
                 {
                     var coordinate = CoordinateHelper.Format(point,
                                                                 coordinateDisplayMode ?? CoordinateDisplayMode.GeodeticDecimal,
-                                                                CopyCoordinateOptions.Default/*thousandSeparator: false, null, null, null, null*/);
+                                                                options/*thousandSeparator: false, null, null, null, null*/);
 
                     lines.Add($"{coordinate.x}, {coordinate.y}");
                 }

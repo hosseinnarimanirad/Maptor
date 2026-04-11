@@ -4,7 +4,7 @@ namespace IRI.Maptor.Sta.SpatialReferenceSystem;
 
 public class CopyCoordinateOptions
 {
-    public static readonly CopyCoordinateOptions Default = new CopyCoordinateOptions();
+    //public static readonly CopyCoordinateOptions Default = new CopyCoordinateOptions();
 
     public int? UtmZone { get; set; }
 
@@ -14,5 +14,14 @@ public class CopyCoordinateOptions
 
     public Ellipsoid Ellipsoid { get; set; } = Ellipsoids.WGS84;
 
-    public bool UseThousandSeparator { get; set; } = false; 
+    public bool UseThousandSeparator { get; set; } = false;
+
+    public static CopyCoordinateOptions Create(int latLongPrecision = 5, int xyPrecision = 2)
+    {
+        return new CopyCoordinateOptions()
+        {
+            LatLongPrecision = latLongPrecision,
+            XyPrecision = xyPrecision
+        };
+    }
 }

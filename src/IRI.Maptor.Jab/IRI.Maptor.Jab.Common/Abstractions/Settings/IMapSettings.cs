@@ -14,6 +14,8 @@ public interface IMapSettings
     bool AllowLargeDataLoading { get; set; }
 
     bool Clipboard_IsLatitudeFirst { get; set; }
+    int Clipboard_XyPrecision { get; set; }
+    int Clipboard_LatLongPrecision { get; set; }
 
     bool ShowTileBorder { get; set; }
 

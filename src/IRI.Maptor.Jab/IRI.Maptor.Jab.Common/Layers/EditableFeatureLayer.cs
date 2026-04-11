@@ -125,7 +125,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public Func<CoordinateDisplayMode> RequestGetCoordinateDisplayMode;
 
-    public Func<bool> RequestGetClipboard_IsLatitudeFirst;
+    public Func<IMapSettings> RequestGetMapSettings;
 
     #endregion
 
@@ -643,9 +643,11 @@ public class EditableFeatureLayer : SymbolizableLayer
         {
             var mode = RequestGetCoordinateDisplayMode?.Invoke() ?? CoordinateDisplayMode.GeodeticDecimal;
 
-            var isLatitudeFirst = RequestGetClipboard_IsLatitudeFirst?.Invoke() ;
+            var mapSettings = RequestGetMapSettings?.Invoke() ?? IRI.Maptor.Jab.Common.Data.MapSettings.Default;
 
-            ClipboardHelper.CopyToClipboard(new Point(point.X, point.Y), mode, CopyCoordinateOptions.Default, isLatitudeFirst /*null, null, null, null*/);
+            var options = CopyCoordinateOptions.Create(mapSettings.Clipboard_LatLongPrecision, mapSettings.Clipboard_XyPrecision);
+
+            ClipboardHelper.CopyToClipboard(new Point(point.X, point.Y), mode, options, mapSettings.Clipboard_IsLatitudeFirst /*null, null, null, null*/);
 
             this.RemoveMapOptions();
         };
@@ -1277,10 +1279,12 @@ public class EditableFeatureLayer : SymbolizableLayer
             return;
 
         Point point = new(currentPoint.X, currentPoint.Y);
+         
+        var mapSettings = RequestGetMapSettings?.Invoke() ?? IRI.Maptor.Jab.Common.Data.MapSettings.Default;
 
-        var isLatitudeFirst = RequestGetClipboard_IsLatitudeFirst?.Invoke();
+        var options = CopyCoordinateOptions.Create(mapSettings.Clipboard_LatLongPrecision, mapSettings.Clipboard_XyPrecision);
 
-        ClipboardHelper.CopyToClipboard(point, mode, CopyCoordinateOptions.Default, isLatitudeFirst/*null, null, null, null*/);
+        ClipboardHelper.CopyToClipboard(point, mode, options, mapSettings.Clipboard_IsLatitudeFirst/*null, null, null, null*/);
 
         //var format = CoordinateHelper.Format(point, mode, thousandSeparator: false, null, null, null, null);
 

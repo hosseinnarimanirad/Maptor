@@ -120,7 +120,30 @@ public class MapSettingsModel : Notifier, IMapSettings
             RaisePropertyChanged();
         }
     }
-    
+
+    public int Clipboard_XyPrecision
+    {
+        get => _settings.Clipboard_XyPrecision;
+        set
+        {
+            _settings.Clipboard_XyPrecision = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    public int Clipboard_LatLongPrecision
+    {
+        get => _settings.Clipboard_LatLongPrecision;
+        set
+        {
+            _settings.Clipboard_LatLongPrecision = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    //public bool  { get; set; }
+    //public bool  { get; set; }
+
 
     #endregion
 

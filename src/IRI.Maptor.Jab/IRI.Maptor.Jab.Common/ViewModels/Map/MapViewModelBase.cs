@@ -283,7 +283,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
                 _currentEditingLayer.RequestGetCoordinateDisplayMode = () => this.MapPanel.SpatialReference;
 
-                _currentEditingLayer.RequestGetClipboard_IsLatitudeFirst = () => this.MapSettings.Clipboard_IsLatitudeFirst;
+                _currentEditingLayer.RequestGetMapSettings = () => this.MapSettings;
             }
 
         }
@@ -329,7 +329,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
                     Point point = new(locatable.X, locatable.Y);
 
-                    ClipboardHelper.CopyToClipboard(point, mode, CopyCoordinateOptions.Default, this.MapSettings.Clipboard_IsLatitudeFirst/*null, null, null, null*/);
+                    var options = CopyCoordinateOptions.Create(this.MapSettings.Clipboard_LatLongPrecision, this.MapSettings.Clipboard_XyPrecision);
+
+                    ClipboardHelper.CopyToClipboard(point, mode, options, this.MapSettings.Clipboard_IsLatitudeFirst/*null, null, null, null*/);
                 };
             }
 
