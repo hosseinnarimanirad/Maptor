@@ -8,8 +8,8 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Fonts.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Fonts.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         </ResourceDictionary>

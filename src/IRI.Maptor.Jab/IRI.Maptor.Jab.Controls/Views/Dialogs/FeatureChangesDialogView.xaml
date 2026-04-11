@@ -4,6 +4,7 @@
         xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:views="clr-namespace:IRI.Maptor.Jab.Controls.Views"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
         Title=""
         ShowInTaskbar="False"
         SizeToContent="Height"
@@ -28,11 +29,13 @@
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/LocalizationResources.xaml"/>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
 

@@ -8,15 +8,15 @@
     <maptor:MapMarker.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Animations.xaml"/>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Colors.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Animations.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Colors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="expandableStyle" TargetType="UserControl">
                 <Style.Resources>
                     <ResourceDictionary>
                         <ResourceDictionary.MergedDictionaries>
-                            <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Animations.xaml"/>
-                            <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Colors.xaml"/>
+                            <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Animations.xaml"/>
+                            <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Colors.xaml"/>
                         </ResourceDictionary.MergedDictionaries>
                     </ResourceDictionary>
                 </Style.Resources>

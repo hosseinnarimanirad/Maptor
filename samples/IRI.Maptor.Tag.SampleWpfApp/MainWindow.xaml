@@ -45,7 +45,7 @@
 
         <StackPanel Grid.Column="1">
             <StackPanel.Resources>
-                <Style TargetType="Button" BasedOn="{StaticResource flatButtonPrimary}">
+                <Style TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.FlatPrimary}">
                     <Setter Property="Margin" Value="4"/>
                 </Style>
             </StackPanel.Resources>

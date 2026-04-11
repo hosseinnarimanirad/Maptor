@@ -11,14 +11,16 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <DataTemplate DataType="{x:Type model:FeatureTableToggleCommand}">
                 <ToggleButton Focusable="False" ToolTip="{Binding ToolTip}"
                                 IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"
-                                Style="{StaticResource circleToggleButtonLight}"
+                                Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                 Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
                     <!--<ToggleButton.Style>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
@@ -69,7 +71,7 @@
                 </ToggleButton>
             </DataTemplate>
             <DataTemplate DataType="{x:Type model:FeatureTableCommand}">
-                <Button Style="{StaticResource circleButtonLight}" 
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
                         Command="{Binding Command}" IsEnabled="{Binding IsEnabled}" 
                         CommandParameter="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor} }" 
                         ToolTip="{Binding ToolTip}"
@@ -178,21 +180,21 @@
                 </TextBlock.Text>
             </TextBlock>
             <Button Command="{Binding AddCommand}"
-                    Style="{StaticResource circleButtonLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     IsEnabled="{Binding CanAdd}"
                     ToolTip="{Binding [featureTable_addNew], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="Plus" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
             <Button Command="{Binding DeleteCommand}"
-                    Style="{StaticResource circleButtonLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     IsEnabled="{Binding CanDelete}"
                     ToolTip="{Binding [featureTable_delete], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="Delete" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
             <Button Command="{Binding EditCommand}"
-                    Style="{StaticResource circleButtonLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     IsEnabled="{Binding IsSingleValueHighlighted}"
                     ToolTip="{Binding [featureTable_editGeometry], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}"
@@ -200,20 +202,20 @@
                 <iconPacks:PackIconMaterial Kind="Pencil" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
             <Button Command="{Binding UndoCommand}"
-                    Style="{StaticResource circleButtonLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     IsEnabled="{Binding CanUndo}"
                     ToolTip="{Binding [featureTable_undo], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="Undo" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
             <Button Command="{Binding SaveCommand}"
-                    Style="{StaticResource circleButtonLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     ToolTip="{Binding [featureTable_saveChanges], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="ContentSave" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
             <Button Command="{Binding ViewChangesCommand}"
-                    Style="{StaticResource circleButtonLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     IsEnabled="{Binding CanViewChanges}"
                     ToolTip="{Binding [featureChanges_viewChanges], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">

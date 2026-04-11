@@ -11,6 +11,7 @@
     <local:SecurityInputUserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Textbox.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/SecurityInputStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
@@ -31,7 +32,7 @@
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="Email" Style="{StaticResource securityIconMaterial}"/>
                 <TextBox Grid.Column="1"
-                         Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight"
+                         Style="{StaticResource IRI.Maptor.Styles.TextBox.Large}" FlowDirection="LeftToRight"
                          mahApp:TextBoxHelper.Watermark="{Binding [common_email], Source={StaticResource Localization}}">
                     <!--<i1:Interaction.Triggers>
                         <i1:EventTrigger EventName="LostFocus">

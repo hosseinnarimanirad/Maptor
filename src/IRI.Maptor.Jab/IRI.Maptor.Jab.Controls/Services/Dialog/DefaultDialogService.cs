@@ -592,34 +592,34 @@ public class DefaultDialogService : IDialogService
 
     #region Show UserName SignUp Dialog
 
-    /// <summary>
-    /// Shows a user name sign-up dialog asynchronously, finding the owner window by type.
-    /// </summary>
-    /// <typeparam name="T">The type of window to use as owner.</typeparam>
-    /// <returns>A task that represents the asynchronous operation. The result contains the sign-up view model if successful, or null if cancelled.</returns>
-    public Task<SignUpDialogViewModel?> ShowUserNameSignUpDialogAsync<T>()
-    {
-        var owner = GetOwnerWindowByType<T>();
-        return ShowUserNameSignUpDialogAsync(owner);
-    }
+    ///// <summary>
+    ///// Shows a user name sign-up dialog asynchronously, finding the owner window by type.
+    ///// </summary>
+    ///// <typeparam name="T">The type of window to use as owner.</typeparam>
+    ///// <returns>A task that represents the asynchronous operation. The result contains the sign-up view model if successful, or null if cancelled.</returns>
+    //public Task<SignUpDialogViewModel?> ShowUserNameSignUpDialogAsync<T>()
+    //{
+    //    var owner = GetOwnerWindowByType<T>();
+    //    return ShowUserNameSignUpDialogAsync(owner);
+    //}
 
-    /// <summary>
-    /// Shows a user name sign-up dialog asynchronously with the specified owner window.
-    /// </summary>
-    /// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
-    /// <returns>A task that represents the asynchronous operation. The result contains the sign-up view model if successful, or null if cancelled.</returns>
-    public Task<SignUpDialogViewModel?> ShowUserNameSignUpDialogAsync(object? ownerWindow = null)
-    {
-        Views.Dialogs.UserNameSignUpDialogView dialog = new Views.Dialogs.UserNameSignUpDialogView();
+    ///// <summary>
+    ///// Shows a user name sign-up dialog asynchronously with the specified owner window.
+    ///// </summary>
+    ///// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
+    ///// <returns>A task that represents the asynchronous operation. The result contains the sign-up view model if successful, or null if cancelled.</returns>
+    //public Task<SignUpDialogViewModel?> ShowUserNameSignUpDialogAsync(object? ownerWindow = null)
+    //{
+    //    Views.Dialogs.UserNameSignUpDialogView dialog = new Views.Dialogs.UserNameSignUpDialogView();
 
-        SignUpDialogViewModel viewModel = new SignUpDialogViewModel(() => dialog.Close());
+    //    SignUpDialogViewModel viewModel = new SignUpDialogViewModel(() => dialog.Close());
 
-        return ShowCustomDialogAsync(
-            ownerWindow,
-            dialog,
-            viewModel,
-            vm => ((SignUpDialogViewModel)vm).IsOk ? (SignUpDialogViewModel)vm : null);
-    }
+    //    return ShowCustomDialogAsync(
+    //        ownerWindow,
+    //        dialog,
+    //        viewModel,
+    //        vm => ((SignUpDialogViewModel)vm).IsOk ? (SignUpDialogViewModel)vm : null);
+    //}
 
     #endregion
 

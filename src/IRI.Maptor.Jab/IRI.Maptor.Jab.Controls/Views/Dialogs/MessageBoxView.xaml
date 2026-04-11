@@ -14,22 +14,30 @@
                     SizeToContent="WidthAndHeight" MinWidth="400" FontFamily="{StaticResource iranSans}" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.Resources>
-            <SolidColorBrush x:Key="defaultRed">#FFEA4333</SolidColorBrush>
-            <SolidColorBrush x:Key="defaultGreen">#FF81BA45</SolidColorBrush>
-            <Style TargetType="Path">
-                <Setter Property="Fill" Value="White"/>
-                <Setter Property="Stretch" Value="Uniform"/>
-                <Setter Property="Width" Value="18"/>
-                <Setter Property="Height" Value="18"/>
-                <Setter Property="Margin" Value="4"/>
-                <Setter Property="FlowDirection" Value="LeftToRight"/>
-            </Style>
-            <Style x:Key="okButtonStyle" TargetType="Button" BasedOn="{StaticResource circleButton}">
-                <Setter Property="Background" Value="{Binding FirstOptionColor,TargetNullValue={StaticResource defaultGreen}}"/>
-            </Style>
-            <Style x:Key="cancelButtonStyle" TargetType="Button" BasedOn="{StaticResource circleButton}">
-                <Setter Property="Background" Value="{Binding SecondOptionColor,TargetNullValue={StaticResource defaultRed}}"/>
-            </Style>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                    <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
+                    <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+
+                <SolidColorBrush x:Key="defaultRed">#FFEA4333</SolidColorBrush>
+                <SolidColorBrush x:Key="defaultGreen">#FF81BA45</SolidColorBrush>
+                <Style TargetType="Path">
+                    <Setter Property="Fill" Value="White"/>
+                    <Setter Property="Stretch" Value="Uniform"/>
+                    <Setter Property="Width" Value="18"/>
+                    <Setter Property="Height" Value="18"/>
+                    <Setter Property="Margin" Value="4"/>
+                    <Setter Property="FlowDirection" Value="LeftToRight"/>
+                </Style>
+                <Style x:Key="okButtonStyle" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                    <Setter Property="Background" Value="{Binding FirstOptionColor,TargetNullValue={StaticResource defaultGreen}}"/>
+                </Style>
+                <Style x:Key="cancelButtonStyle" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                    <Setter Property="Background" Value="{Binding SecondOptionColor,TargetNullValue={StaticResource defaultRed}}"/>
+                </Style>
+            </ResourceDictionary>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -45,11 +53,10 @@
             <TextBlock Text="{Binding Message}" Margin="4,4" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"/>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            
-                <Button Margin="4,0" Style="{StaticResource okButtonStyle}" Command="{Binding FirstOptionCommand}" ToolTip="{Binding FirstOptionText}"
+            <Button Margin="4,0" Style="{StaticResource okButtonStyle}" Command="{Binding FirstOptionCommand}" ToolTip="{Binding FirstOptionText}"
                         HorizontalAlignment="Right">
-                    <Path Data="{Binding FirstOptionPathMarkup, TargetNullValue={iconPacks:Material Kind=CheckBold}}"/>
-                </Button> 
+                <Path Data="{Binding FirstOptionPathMarkup, TargetNullValue={iconPacks:Material Kind=CheckBold}}"/>
+            </Button>
         </StackPanel>
     </Grid>
 </mahApp:MetroWindow>

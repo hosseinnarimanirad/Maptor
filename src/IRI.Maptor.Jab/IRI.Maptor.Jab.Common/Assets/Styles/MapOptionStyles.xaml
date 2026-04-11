@@ -71,7 +71,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-
     </Style>
 
     <Style x:Key="mapOptionsPath" TargetType="Path">

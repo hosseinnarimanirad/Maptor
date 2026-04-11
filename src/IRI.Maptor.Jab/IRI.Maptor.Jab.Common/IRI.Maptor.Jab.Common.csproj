@@ -255,4 +255,10 @@
       <_Parameter2>SourceAssembly</_Parameter2>
     </AssemblyAttribute>
   </ItemGroup>
+  
+  <ItemGroup>
+    <Page Update="Assets\Styles\Controls.Path.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
 </Project>

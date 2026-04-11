@@ -6,7 +6,7 @@
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" 
         Loaded="Window_Loaded" Title="Sample Maptor App" Height="700" Width="900">
     <Window.Resources>
-        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource flatButtonPrimary}">
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource IRI.Maptor.Styles.Button.FlatPrimary}">
             <Setter Property="Margin" Value="4"/>
         </Style>
     </Window.Resources>
@@ -23,7 +23,7 @@
         <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1" Margin="2">
             <StackPanel Orientation="Horizontal" >
                 <StackPanel.Resources>
-                    <Style TargetType="Button" BasedOn="{StaticResource flatButtonPrimary}">
+                    <Style TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.FlatPrimary}">
                         <Setter Property="Margin" Value="4"/>
                     </Style>
                 </StackPanel.Resources>

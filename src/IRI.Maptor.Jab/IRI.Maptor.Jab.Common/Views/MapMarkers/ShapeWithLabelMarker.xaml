@@ -8,8 +8,8 @@
             <Style.Resources>
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Animations.xaml"/>
-                        <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Colors.xaml"/>
+                        <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Animations.xaml"/>
+                        <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Colors.xaml"/>
                     </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
             </Style.Resources>
@@ -33,8 +33,8 @@
     <maptor:MapMarker.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Animations.xaml"/>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Colors.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Animations.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Colors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </maptor:MapMarker.Resources>

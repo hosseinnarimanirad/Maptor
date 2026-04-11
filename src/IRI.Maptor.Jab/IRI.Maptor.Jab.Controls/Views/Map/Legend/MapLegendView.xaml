@@ -12,14 +12,16 @@
     <userControl:NotifiableUserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/MenuIconStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
-            <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
+            <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             <Style TargetType="{x:Type Path}" BasedOn="{StaticResource circleButtonPath}"/>
 
             <Style x:Key="filterTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource MahApps.Styles.TextBox}">
@@ -284,12 +286,12 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Visibility="Collapsed">
             <!--Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">-->
             <Button IsEnabled="True" Focusable="False" Command="{Binding AddGeoJsonToDrawingItemsCommand}"
-                    Style="{StaticResource circleButtonLight}"  
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
                     ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
                 <Path Data="{StaticResource json}"/>
             </Button>
             <Button Focusable="False" Command="{Binding AddShapefileCommand}"
-                    Style="{StaticResource circleButtonLight}" 
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
                     ToolTip="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}">
                 <Path Data="{StaticResource shp}"  />
             </Button>
@@ -319,7 +321,7 @@
                       mahApp:TextBoxHelper.ClearTextButton="True"
                       Style="{StaticResource filterTextBox}"
                      FontFamily="{StaticResource iranSans}" VerticalAlignment="Center"/>
-                <Button Grid.Column="1" Margin="4,0" Style="{StaticResource circleButtonLight}" 
+                <Button Grid.Column="1" Margin="4,0" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
                     Command="{Binding LegendViewModel.ClearFilterCommand, ElementName=root}"
                     IsEnabled="{Binding LegendViewModel.HasActiveFilter, ElementName=root}"
                     ToolTip="{Binding [legend_filter_Clear], Source={StaticResource Localization}}"
@@ -327,7 +329,7 @@
                     <iconPacks:PackIconMaterial Kind="FilterOff"/>
                 </Button>
                 <ToggleButton Grid.Column="2" x:Name="dataSourceKindFilterToggle"  
-                          Style="{StaticResource circleToggleButtonLight}"
+                          Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                           VerticalAlignment="Center" Margin="4,0"
                           ToolTip="{Binding [legend_filter_filterByLayerType], Source={StaticResource Localization}}">
                     <iconPacks:PackIconMaterial Kind="Filter"/>
@@ -349,11 +351,11 @@
                         </Border.Effect>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Center">
-                                <Button Style="{StaticResource circleButtonLight}" ToolTip="{Binding [legend_selectAll], Source={StaticResource Localization}}"
+                                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" ToolTip="{Binding [legend_selectAll], Source={StaticResource Localization}}"
                                     Command="{Binding SelectAllDataSourceKindsCommand}">
                                     <iconPacks:PackIconMaterial Kind="SelectAll"/>
                                 </Button>
-                                <Button Style="{StaticResource circleButtonLight}" ToolTip="{Binding [legend_clearAll], Source={StaticResource Localization}}"
+                                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" ToolTip="{Binding [legend_clearAll], Source={StaticResource Localization}}"
                                     Command="{Binding ClearAllDataSourceKindsCommand}" Margin="4,0,0,0">
                                     <iconPacks:PackIconMaterial Kind="SelectionRemove"/>
                                 </Button>
@@ -423,7 +425,7 @@
                 </Popup>
 
                 <ToggleButton Grid.Column="3" x:Name="importLayerToggle"
-                              Style="{StaticResource circleToggleButtonLight}"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                               VerticalAlignment="Center" Margin="0"
                               ToolTip="{Binding [cmd_legend_importLayer], Source={StaticResource Localization}}">
                     <iconPacks:PackIconMaterial Kind="LayersPlus"/>

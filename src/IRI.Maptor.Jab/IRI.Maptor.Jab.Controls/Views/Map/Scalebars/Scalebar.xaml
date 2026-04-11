@@ -11,8 +11,10 @@
     <userControl:NotifiableUserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Fonts.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Fonts.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         </ResourceDictionary>
@@ -91,9 +93,9 @@
                           Height="18" Width="18"
                           Visibility="{Binding ElementName=layoutRoot, Path=IsMouseOver, Converter={StaticResource boolToVisibilityConverter}}"
                           IsChecked="{Binding ElementName=layoutRoot, Path=ShowOptions, Mode=TwoWay}"
-                          Style="{StaticResource circleToggleButtonLight}">
+                          Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}">
                 <Viewbox>
-                    <iconPacks:PackIconMaterial Kind="Cog" Style="{StaticResource circleButtonPackIconMaterial}"/>
+                    <iconPacks:PackIconMaterial Kind="Cog" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                 </Viewbox>
             </ToggleButton>
         </Grid>

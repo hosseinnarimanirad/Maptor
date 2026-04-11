@@ -1,0 +1,203 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
+
+    <!--<Button Style="{StaticResource MahApps.Styles.Button.Circle}"-->
+
+    <!--Flat buttons-->
+
+    <Style x:Key="IRI.Maptor.Styles.Button.FlatPrimary" TargetType="{x:Type Button}">
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Opacity" Value="1"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Margin" Value="4"/>
+        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="Gray"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    <Border x:Name="border" Margin="0" Background="{TemplateBinding Property=Background}"
+                                CornerRadius="{TemplateBinding Border.CornerRadius}"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <Border.OpacityMask>
+                            <VisualBrush>
+                                <VisualBrush.Visual>
+                                    <Border 
+                                            Background="Black"
+                                            SnapsToDevicePixels="True"
+                                            CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource AncestorType=Border}}"
+                                            Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Border}}"
+                                            Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Border}}"
+                                            />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Border.OpacityMask>
+                        <!--if put ContentPresenter here, OpacityMask effect will not work. e.g. controls go beyound rounded edges when using CornerRadius-->
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.Button.FlatGray" TargetType="{x:Type Button}" BasedOn="{StaticResource IRI.Maptor.Styles.Button.FlatPrimary}">
+        <Setter Property="Background" Value="LightGray"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="Gray"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.Button.FlatPrimaryRound2" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.FlatPrimary}">
+        <Setter Property="Border.CornerRadius" Value="2"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.Button.FlatGrayRound2" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.FlatGray}">
+        <Setter Property="Border.CornerRadius" Value="2"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.Button.FlatPrimaryRound6" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.FlatPrimary}">
+        <Setter Property="Border.CornerRadius" Value="6"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.Button.FlatGrayRound6" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.FlatGray}">
+        <Setter Property="Border.CornerRadius" Value="6"/>
+    </Style>
+
+    <!--Circle buttons-->
+
+    <Style x:Key="IRI.Maptor.Styles.Button.CircleLight" TargetType="{x:Type Button}">
+        <Setter Property="Margin" Value="2"/>
+
+        <!-- Light theme colors -->
+        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Opacity" Value="0.9"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Ellipse x:Name="ellipse" Margin="1"
+                             Fill="{TemplateBinding Background}"
+                             Stroke="{TemplateBinding BorderBrush}"
+                             StrokeThickness="{TemplateBinding BorderThickness}">
+                            <Ellipse.Effect>
+                                <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.25" Color="Black"/>
+                            </Ellipse.Effect>
+                        </Ellipse>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+
+                        <!-- Hover -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" Value="1"/>
+                            <Setter TargetName="ellipse" Property="Fill" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                            <Setter Property="Effect" TargetName="ellipse">
+                                <Setter.Value>
+                                    <DropShadowEffect BlurRadius="3" ShadowDepth="1.5" Opacity="0.6" Color="Black"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+
+                        <!-- Disabled -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.9"/>
+                            <Setter Property="Background" Value="LightGray"/>
+                            <Setter Property="BorderBrush" Value="LightGray"/>
+                            <Setter Property="Foreground" Value="DarkGray"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.Button.CircleDark" TargetType="{x:Type Button}">
+        <Setter Property="Margin" Value="2"/>
+
+        <!-- Dark theme colors -->
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="White"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Opacity" Value="0.9"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Ellipse x:Name="ellipse" Margin="1" 
+                              Fill="{TemplateBinding Background}"
+                              Stroke="{TemplateBinding BorderBrush}"
+                              StrokeThickness="{TemplateBinding BorderThickness}">
+                            <Ellipse.Effect>
+                                <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.25" Color="Black"/>
+                            </Ellipse.Effect>
+                        </Ellipse>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+
+                        <!-- Hover -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" Value="1"/>
+                            <Setter TargetName="ellipse" Property="Effect" >
+                                <Setter.Value>
+                                    <DropShadowEffect BlurRadius="3" ShadowDepth="1.5" Opacity="0.6" Color="Black"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+
+                        <!-- Disabled -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.9"/>
+                            <Setter Property="Background" Value="LightGray"/>
+                            <Setter Property="BorderBrush" Value="LightGray"/>
+                            <Setter Property="Foreground" Value="Gray"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+
+
+</ResourceDictionary>

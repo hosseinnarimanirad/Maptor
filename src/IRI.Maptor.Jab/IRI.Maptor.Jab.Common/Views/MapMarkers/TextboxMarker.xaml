@@ -11,9 +11,11 @@
     <maptor:MapMarker.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Animations.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Colors.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Animations.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Colors.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
@@ -97,10 +99,10 @@
                                 ItemsSource="{x:Static local:TextboxMarkerViewModel.FontSizeOptions}"
                                 Style="{StaticResource MahApps.Styles.ComboBox}"
                                 SelectedItem="{Binding Formating_FontSize, Mode=TwoWay}"/>
-                            <Button Style="{StaticResource circleButtonLight}" Margin="0,0,2,0" Command="{Binding IncreaseFontSizeCommand}" ToolTip="Increase font size">
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Margin="0,0,2,0" Command="{Binding IncreaseFontSizeCommand}" ToolTip="Increase font size">
                                 <iconPacks:PackIconMaterial Kind="FormatFontSizeIncrease" Width="12" Height="12"/>
                             </Button>
-                            <Button Style="{StaticResource circleButtonLight}" Margin="0,0,2,0" Command="{Binding DecreaseFontSizeCommand}" ToolTip="Decrease font size">
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Margin="0,0,2,0" Command="{Binding DecreaseFontSizeCommand}" ToolTip="Decrease font size">
                                 <iconPacks:PackIconMaterial Kind="FormatFontSizeDecrease" Width="12" Height="12"/>
                             </Button>
                             <Separator Margin="4,0" VerticalAlignment="Stretch"/>
@@ -137,54 +139,54 @@
                         <!-- Bottom line: Bold/Italic/Underline, Alignment, RTL/LTR, and text actions -->
                         <StackPanel Orientation="Horizontal">
                             <!-- Text style -->
-                            <ToggleButton Margin="0,0,2,0" ToolTip="Bold" Style="{StaticResource circleToggleButtonLight}"
+                            <ToggleButton Margin="0,0,2,0" ToolTip="Bold" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                           IsChecked="{Binding Formating_IsBold, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatBold"/>
                             </ToggleButton>
-                            <ToggleButton Margin="0,0,2,0" ToolTip="Italic" Style="{StaticResource circleToggleButtonLight}"
+                            <ToggleButton Margin="0,0,2,0" ToolTip="Italic" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                           IsChecked="{Binding Formating_IsItalic, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatItalic"/>
                             </ToggleButton>
-                            <ToggleButton Margin="0,0,2,0" ToolTip="Underline" Style="{StaticResource circleToggleButtonLight}"
+                            <ToggleButton Margin="0,0,2,0" ToolTip="Underline" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                           IsChecked="{Binding Formating_IsUnderline, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatUnderline"/>
                             </ToggleButton>
 
                             <!-- Alignment -->
                             <Separator Margin="4,0" VerticalAlignment="Stretch"/>
-                            <ToggleButton x:Name="alignLeftButton" Margin="2,0,2,0" ToolTip="Align Left" Style="{StaticResource circleToggleButtonLight}"
+                            <ToggleButton x:Name="alignLeftButton" Margin="2,0,2,0" ToolTip="Align Left" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                           IsChecked="{Binding Formating_Alignment, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Left, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatAlignLeft"/>
                             </ToggleButton>
-                            <ToggleButton x:Name="alignCenterButton" Margin="0,0,2,0" ToolTip="Align Center" Style="{StaticResource circleToggleButtonLight}"
+                            <ToggleButton x:Name="alignCenterButton" Margin="0,0,2,0" ToolTip="Align Center" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                           IsChecked="{Binding Formating_Alignment, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Center, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatAlignCenter"/>
                             </ToggleButton>
-                            <ToggleButton x:Name="alignRightButton" Margin="0,0,2,0" ToolTip="Align Right" Style="{StaticResource circleToggleButtonLight}"
+                            <ToggleButton x:Name="alignRightButton" Margin="0,0,2,0" ToolTip="Align Right" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                           IsChecked="{Binding Formating_Alignment, Converter={StaticResource enumToBoolConverter}, ConverterParameter=Right, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatAlignRight"/>
                             </ToggleButton>
 
                             <!-- RTL / LTR -->
                             <Separator Margin="4,0" VerticalAlignment="Stretch"/>
-                            <ToggleButton x:Name="ltrButton" Margin="0,0,2,0" ToolTip="LTR" Style="{StaticResource circleToggleButtonLight}"
+                            <ToggleButton x:Name="ltrButton" Margin="0,0,2,0" ToolTip="LTR" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                           IsChecked="{Binding Formating_FlowDirection, Converter={StaticResource enumToBoolConverter}, ConverterParameter=LeftToRight, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatPilcrowArrowRight" FlowDirection="LeftToRight"/>
                             </ToggleButton>
-                            <ToggleButton x:Name="rtlButton" Margin="2,0,2,0" ToolTip="RTL" Style="{StaticResource circleToggleButtonLight}"
+                            <ToggleButton x:Name="rtlButton" Margin="2,0,2,0" ToolTip="RTL" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                           IsChecked="{Binding Formating_FlowDirection, Converter={StaticResource enumToBoolConverter}, ConverterParameter=RightToLeft, Mode=TwoWay}">
                                 <iconPacks:PackIconMaterial Kind="FormatPilcrowArrowLeft" FlowDirection="LeftToRight"/>
                             </ToggleButton>
 
                             <!-- Text actions: copy & delete -->
                             <Separator Margin="4,0" VerticalAlignment="Stretch"/>
-                            <Button Margin="0,0,2,0" ToolTip="Erase" Style="{StaticResource circleButtonLight}" Command="{Binding ClearTextCommand}">
+                            <Button Margin="0,0,2,0" ToolTip="Erase" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding ClearTextCommand}">
                                 <iconPacks:PackIconMaterial Kind="Eraser"/>
                             </Button>
-                            <Button Margin="0,0,2,0" ToolTip="Copy text" Style="{StaticResource circleButtonLight}" Command="{Binding CopyTextCommand}">
+                            <Button Margin="0,0,2,0" ToolTip="Copy text" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding CopyTextCommand}">
                                 <iconPacks:PackIconMaterial Kind="ContentCopy"/>
                             </Button>
-                            <Button Margin="0,0,0,0" ToolTip="Delete" Style="{StaticResource circleButtonLight}" Command="{Binding DeleteCommand}">
+                            <Button Margin="0,0,0,0" ToolTip="Delete" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding DeleteCommand}">
                                 <iconPacks:PackIconMaterial Kind="Delete"/>
                             </Button>
                         </StackPanel>

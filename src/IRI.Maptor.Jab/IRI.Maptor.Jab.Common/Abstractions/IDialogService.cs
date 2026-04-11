@@ -56,9 +56,9 @@ public interface IDialogService
     // ********************************************************************
     //                          SignUp Dialog
     // ********************************************************************
-    Task<SignUpDialogViewModel?> ShowUserNameSignUpDialogAsync<T>();
+    //Task<SignUpDialogViewModel?> ShowUserNameSignUpDialogAsync<T>();
 
-    Task<SignUpDialogViewModel?> ShowUserNameSignUpDialogAsync(object? ownerWindow = null);
+    //Task<SignUpDialogViewModel?> ShowUserNameSignUpDialogAsync(object? ownerWindow = null);
 
 
     #region Change Password Dialog

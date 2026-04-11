@@ -18,23 +18,16 @@
         ShowTitleBar="True"
         FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
         FontFamily="{StaticResource iranSans}">
-    <mahApp:MetroWindow.TitleTemplate>
-        <DataTemplate>
-            <TextBlock Text="{TemplateBinding Content}"
-               TextTrimming="CharacterEllipsis"
-               VerticalAlignment="Center"
-               Margin="8 0 8 0"
-               FontWeight="Bold" />
-        </DataTemplate>
-    </mahApp:MetroWindow.TitleTemplate>
+  
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/LocalizationResources.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Textbox.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/SecurityInputStyles.xaml"/>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <!-- DXF dialog border style (borderGroup requires root with InputBorderBrush; we use fixed values) -->
@@ -51,7 +44,15 @@
             </Style>
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
-
+    <mahApp:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <TextBlock Text="{TemplateBinding Content}"
+             TextTrimming="CharacterEllipsis"
+             VerticalAlignment="Center"
+             Margin="8 0 8 0"
+             FontWeight="Bold" />
+        </DataTemplate>
+    </mahApp:MetroWindow.TitleTemplate>
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -72,18 +73,18 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
-                <TextBox Grid.Column="1" Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight"
+                <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Large}" FlowDirection="LeftToRight"
                             mahApp:TextBoxHelper.Watermark="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"
                             Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True" >
                 </TextBox>
                 <Button Grid.Column="2" ToolTip="{Binding [dialog_common_browse], Source={StaticResource Localization}}" Command="{Binding BrowseCommand}"
-                        Style="{StaticResource circleButtonLight}">
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
                     <iconPacks:PackIconPhosphorIcons Kind="FileMagnifyingGlassFill"/>
                 </Button>
                 <Button Grid.Column="3"
                         ToolTip="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
                         Command="{Binding RemoveFileCommand}"
-                        Style="{StaticResource circleButtonLight}">           
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">           
                     <iconPacks:PackIconMaterial Kind="FileRemoveOutline"/>
                 </Button>
             </Grid>
@@ -127,7 +128,7 @@
                                      Value="{Binding UtmZone, Mode=TwoWay}" Margin="4" VerticalAlignment="Center"/>
 
                 <ToggleButton Grid.Column="2" IsChecked="{Binding UtmHemisphereNorth, Mode=TwoWay}"
-                              Style="{StaticResource circleToggleButtonLight}"  FlowDirection="LeftToRight"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"  FlowDirection="LeftToRight"
                               ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
                     <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5" Foreground="White" >
                         <iconPacks:PackIconPhosphorIcons.Style>
@@ -193,12 +194,12 @@
         <!-- Buttons -->       
         <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
             <Button ToolTip="{Binding [common_cancel], Source={StaticResource Localization}}" 
-                    Style="{StaticResource circleButtonLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     Command="{Binding CancelCommand}">
                 <iconPacks:PackIconMaterial Kind="CloseThick" Foreground="White"/>
             </Button>
             <Button ToolTip="{Binding [common_open], Source={StaticResource Localization}}"
-                    Style="{StaticResource circleButtonLight}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     Command="{Binding OpenCommand}">
                 <iconPacks:PackIconMaterial Kind="CheckBold" Foreground="White"/>
             </Button>

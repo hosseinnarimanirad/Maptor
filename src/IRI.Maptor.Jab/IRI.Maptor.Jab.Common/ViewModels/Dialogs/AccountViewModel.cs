@@ -479,41 +479,41 @@ public class AccountViewModel : DialogViewModelBase
 
 
     //****************************************************   Show Dialog Sign Up  ***************************************
-    private RelayCommand _showSignUpDialogViewCommand;
-    public RelayCommand ShowSignUpDialogViewCommand
-    {
-        get
-        {
-            if (_showSignUpDialogViewCommand == null)
-            {
-                //owner window should be passed via param
-                //sample: CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type esiDb:Shell}}}"
-                _showSignUpDialogViewCommand = new RelayCommand(async param =>
-                {
-                    var model = await DialogService.ShowUserNameSignUpDialogAsync(param);
+    //private RelayCommand _showSignUpDialogViewCommand;
+    //public RelayCommand ShowSignUpDialogViewCommand
+    //{
+    //    get
+    //    {
+    //        if (_showSignUpDialogViewCommand == null)
+    //        {
+    //            //owner window should be passed via param
+    //            //sample: CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type esiDb:Shell}}}"
+    //            _showSignUpDialogViewCommand = new RelayCommand(async param =>
+    //            {
+    //                var model = await DialogService.ShowUserNameSignUpDialogAsync(param);
 
-                    if (model == null)
-                    {
-                        return;
-                    }
+    //                if (model == null)
+    //                {
+    //                    return;
+    //                }
 
-                    try
-                    {
-                        RequestShowSignUpDialogView?.Invoke(model);
+    //                try
+    //                {
+    //                    RequestShowSignUpDialogView?.Invoke(model);
 
-                        await DialogService.ShowMessageAsync("کاربر جدید با موفقیت اضافه شد", "پیغام", param);
-                    }
-                    catch (Exception ex)
-                    {
-                        await DialogService.ShowMessageAsync(ex.Message, "خطا", param);
-                    }
+    //                    await DialogService.ShowMessageAsync("کاربر جدید با موفقیت اضافه شد", "پیغام", param);
+    //                }
+    //                catch (Exception ex)
+    //                {
+    //                    await DialogService.ShowMessageAsync(ex.Message, "خطا", param);
+    //                }
 
-                });
-            }
+    //            });
+    //        }
 
-            return _showSignUpDialogViewCommand;
-        }
-    }
+    //        return _showSignUpDialogViewCommand;
+    //    }
+    //}
 
 
     //other

@@ -12,7 +12,9 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
@@ -24,7 +26,7 @@
             <DataTemplate DataType="{x:Type model:LegendToggleCommand}">
                 <ToggleButton Focusable="False" ToolTip="{Binding ToolTip}"
                               IsChecked="{Binding IsSelected, Mode=TwoWay}" IsEnabled="{Binding IsEnabled}"
-                              Style="{StaticResource circleToggleButtonLight}"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                               Visibility="{Binding IsCommandVisible, Converter={StaticResource boolToVisibilityConverter}}">
                     <!--<ToggleButton.Style>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
@@ -86,7 +88,7 @@
                 </ToggleButton>
             </DataTemplate>
             <DataTemplate DataType="{x:Type model:LegendCommand}">
-                <Button Style="{StaticResource circleButtonLight}"
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                         Margin="1" Focusable="False"  
                         Command="{Binding Command}"
                         IsEnabled="{Binding IsEnabled}" 
@@ -374,20 +376,20 @@
                 </TextBox>
 
                 <!--pending changes with hover popup-->
-                <Button Style="{StaticResource circleButtonLight}" Width="24" Height="24" Focusable="True"
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"
                         Command="{Binding SaveChangesCommand}"
                         ToolTip="{Binding [legendItem_PendingChanges_Save], Source={StaticResource Localization}}"
                         Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
                     <Viewbox Margin="4">
-                        <iconPacks:PackIconMaterial Kind="ContentSave" Style="{StaticResource circleButtonPackIconMaterial}"/>
+                        <iconPacks:PackIconMaterial Kind="ContentSave" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                     </Viewbox>
                 </Button>
-                <Button Style="{StaticResource circleButtonLight}" Width="24" Height="24" Focusable="True"  
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"  
                         Command="{Binding UndoAllChangesCommand}"
                         ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}"
                         Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
                     <Viewbox Margin="4">
-                        <iconPacks:PackIconMaterial Kind="Undo" Style="{StaticResource circleButtonPackIconMaterial}"/>
+                        <iconPacks:PackIconMaterial Kind="Undo" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                     </Viewbox>
                 </Button>
 
@@ -446,14 +448,14 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="3" Visibility="Collapsed">
-                                <Button Style="{StaticResource circleButtonLight}" Width="24" Height="24" Focusable="True"
+                                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"
                                         Command="{Binding SaveChangesCommand}"
                                         ToolTip="{Binding [legendItem_PendingChanges_Save], Source={StaticResource Localization}}">
                                     <Viewbox Margin="4">
                                         <iconPacks:PackIconMaterial Kind="ContentSave" Foreground="White" FlowDirection="LeftToRight"/>
                                     </Viewbox>
                                 </Button>
-                                <Button Style="{StaticResource circleButtonLight}"   
+                                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"   
                                         Command="{Binding UndoAllChangesCommand}"
                                         ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}">
                                     <Viewbox Margin="4">
@@ -519,7 +521,7 @@
                 </Popup>
 
                 <!--palette control-->
-                <ToggleButton ClickMode="Release"  Name="palette" Margin="4 0 0 0" Padding="0" Cursor="Hand" Background="Transparent" VerticalAlignment="Center"
+                <ToggleButton ClickMode="Release" Name="palette" Margin="4 0 0 0" Padding="0" Cursor="Hand" Background="Transparent" VerticalAlignment="Center"
                               Width="16" Height="16" Visibility="{Binding HasMultiSymbolizers, Converter={StaticResource boolToVisibilityConverter}}">
                     <ToggleButton.Style>
                         <Style TargetType="ToggleButton">

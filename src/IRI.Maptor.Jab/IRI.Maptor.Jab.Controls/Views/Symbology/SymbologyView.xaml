@@ -21,7 +21,9 @@
     <local:LocalizedMetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
@@ -62,11 +64,11 @@
                                 mahApp:TextBoxHelper.SelectAllOnFocus="True" Value="{Binding Symbology.StrokeThickness, Mode=TwoWay}"/>
 
         <StackPanel Grid.Row="2" Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource circleButtonLight}" Command="{Binding CloseCommand}">
-                <iconPacks:PackIconMaterial Kind="CloseThick" Style="{StaticResource circleButtonPackIconMaterial}"/>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding CloseCommand}">
+                <iconPacks:PackIconMaterial Kind="CloseThick" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
-            <Button Style="{StaticResource circleButtonLight}" Command="{Binding ApplyCommand}">
-                <iconPacks:PackIconMaterial Kind="CheckBold" Style="{StaticResource circleButtonPackIconMaterial}"/>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding ApplyCommand}">
+                <iconPacks:PackIconMaterial Kind="CheckBold" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
         </StackPanel>
     </Grid>

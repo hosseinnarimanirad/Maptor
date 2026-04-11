@@ -4,17 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+            xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
              xmlns:enums="clr-namespace:IRI.Maptor.Sta.Common.Enums;assembly=IRI.Maptor.Sta.Common"
              mc:Ignorable="d"
              FontFamily="{StaticResource iranSans}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/LocalizationResources.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Margin="4">
@@ -106,19 +109,19 @@
             </GroupBox.Header>
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                    <Button Style="{StaticResource circleButtonLight}" Command="{Binding ZoomToCurrentGeometryCommand}"
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding ZoomToCurrentGeometryCommand}"
                             ToolTip="{Binding [featureChanges_zoomToCurrent], Source={StaticResource Localization}}" Margin="0,0,4,0">
                         <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
                     </Button>
-                    <Button Style="{StaticResource circleButtonLight}" Command="{Binding ZoomToOldGeometryCommand}"
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding ZoomToOldGeometryCommand}"
                             ToolTip="{Binding [featureChanges_zoomToOld], Source={StaticResource Localization}}" Margin="0,0,4,0">
                         <iconPacks:PackIconMaterial Kind="History"/>
                     </Button>
-                    <Button Style="{StaticResource circleButtonLight}" Command="{Binding ZoomToBothGeometriesCommand}"
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding ZoomToBothGeometriesCommand}"
                             ToolTip="{Binding [featureChanges_zoomToBoth], Source={StaticResource Localization}}" Margin="0,0,4,0">
                         <iconPacks:PackIconMaterial Kind="ArrowExpandAll"/>
                     </Button>
-                    <Button Style="{StaticResource circleButtonLight}" Command="{Binding CompareGeometriesCommand}"
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding CompareGeometriesCommand}"
                             ToolTip="{Binding [featureChanges_compareOnMap], Source={StaticResource Localization}}">
                         <iconPacks:PackIconMaterial Kind="Compare"/>
                     </Button>

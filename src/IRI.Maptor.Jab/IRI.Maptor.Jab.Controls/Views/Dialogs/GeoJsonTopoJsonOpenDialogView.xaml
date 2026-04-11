@@ -19,24 +19,19 @@
         ShowMinButton="False"
         ShowTitleBar="True"
         FontFamily="{StaticResource iranSans}">
-    <mahApp:MetroWindow.TitleTemplate>
-        <DataTemplate>
-            <TextBlock Text="{TemplateBinding Content}"
-               TextTrimming="CharacterEllipsis"
-               VerticalAlignment="Center"
-               Margin="8 0 8 0"
-               FontWeight="Bold" />
-        </DataTemplate>
-    </mahApp:MetroWindow.TitleTemplate>
+  
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/LocalizationResources.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Textbox.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/SecurityInputStyles.xaml"/>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Converters.xaml"/>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <Style x:Key="geoJsonDialogBorderGroup" TargetType="Border">
                 <Setter Property="BorderBrush" Value="Gray"/>
                 <Setter Property="BorderThickness" Value="1"/>
@@ -50,7 +45,15 @@
             </Style>
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
-
+    <mahApp:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <TextBlock Text="{TemplateBinding Content}"
+             TextTrimming="CharacterEllipsis"
+             VerticalAlignment="Center"
+             Margin="8 0 8 0"
+             FontWeight="Bold" />
+        </DataTemplate>
+    </mahApp:MetroWindow.TitleTemplate>
     <Grid Margin="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -73,19 +76,19 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
-                <TextBox Grid.Column="1" Style="{StaticResource securityTextBoxBase}" FlowDirection="LeftToRight"
+                <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Large}" FlowDirection="LeftToRight"
                          mahApp:TextBoxHelper.Watermark="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"
                          Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True"/>
                 <Button Grid.Column="2"
                         ToolTip="{Binding [dialog_common_browse], Source={StaticResource Localization}}"
                         Command="{Binding BrowseCommand}"
-                        Style="{StaticResource circleButtonLight}">
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
                     <iconPacks:PackIconMaterial Kind="FileSearchOutline"/>
                 </Button>
                 <Button Grid.Column="3"
                        ToolTip="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
                        Command="{Binding RemoveFileCommand}"
-                       Style="{StaticResource circleButtonLight}">            
+                       Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">            
                     <iconPacks:PackIconMaterial Kind="FileRemoveOutline"/>
                 </Button>
             </Grid>
@@ -138,7 +141,7 @@
                     </TextBlock.Style>
                 </TextBlock>
                 <ToggleButton Grid.Column="3" IsChecked="{Binding UtmHemisphereNorth, Mode=TwoWay}"
-                              Style="{StaticResource circleToggleButtonLight}" FlowDirection="LeftToRight"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" FlowDirection="LeftToRight"
                               ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
                     <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5"
                                                     Margin="0" Width="24" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -246,11 +249,11 @@
         <!-- Buttons -->
         <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
             <Button ToolTip="{Binding [common_cancel], Source={StaticResource Localization}}"
-                    Style="{StaticResource circleButtonLight}" Command="{Binding CancelCommand}" Margin="2">
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding CancelCommand}" Margin="2">
                 <iconPacks:PackIconMaterial Kind="CloseThick" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>
             </Button>
             <Button ToolTip="{Binding [common_open], Source={StaticResource Localization}}" Margin="2"
-                    Style="{StaticResource circleButtonLight}" Command="{Binding OpenCommand}">
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding OpenCommand}">
                 <iconPacks:PackIconMaterial Kind="CheckBold" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>
             </Button>
         </StackPanel>

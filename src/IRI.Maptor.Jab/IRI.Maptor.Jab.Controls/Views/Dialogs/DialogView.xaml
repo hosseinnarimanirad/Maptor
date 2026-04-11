@@ -13,21 +13,22 @@
                 ShowMaxRestoreButton="False" ShowCloseButton="False" ShowMinButton="False" ShowTitleBar="True"  
                 SizeToContent="WidthAndHeight" MinWidth="400" FontFamily="{StaticResource iranSans}" WindowStartupLocation="CenterOwner">
     <Grid Margin="16">
-        <Grid.Resources> 
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                    <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
+                    <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
             <Style TargetType="iconPacks:PackIconMaterial">
                 <!--<Setter Property="Foreground" Value="White"/>-->
                 <!--<Setter Property="Stretch" Value="Uniform"/>-->
                 <Setter Property="Width" Value="18"/>
-                <Setter Property="Height" Value="18"/> 
+                <Setter Property="Height" Value="18"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
-            <!--<Style x:Key="okButtonStyle" TargetType="Button" BasedOn="{StaticResource circleButton}">
-                <Setter Property="Background" Value="{Binding FirstOptionColor,TargetNullValue={StaticResource MahApps.Brushes.Accent}}"/>
-            </Style>
-            <Style x:Key="cancelButtonStyle" TargetType="Button" BasedOn="{StaticResource circleButton}">
-                <Setter Property="Background" Value="{Binding SecondOptionColor,TargetNullValue={StaticResource MahApps.Brushes.Gray3}}"/>
-            </Style>-->
+            </ResourceDictionary>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -42,17 +43,23 @@
                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
-            <Button Margin="4,0" Style="{StaticResource circleButton}" Command="{Binding SecondOptionCommand}" ToolTip="{Binding SecondOptionText}"
+            <Button Margin="4,0"
+                    Style="{StaticResource  IRI.Maptor.Styles.Button.CircleLight}"
+                    Command="{Binding SecondOptionCommand}"
+                    ToolTip="{Binding SecondOptionText}"
                     Background="{Binding SecondOptionColor, FallbackValue={DynamicResource MahApps.Brushes.Gray10}, RelativeSource={RelativeSource AncestorType=Window}}"
                     Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"
                     Visibility="{Binding IsTwoOptionsMode, Converter={StaticResource boolToVisibilityConverter}}">
-                    <iconPacks:PackIconMaterial Kind="CloseThick"/>
-                </Button>
-            <Button Margin="4,0" Style="{StaticResource circleButton}" Command="{Binding FirstOptionCommand}" ToolTip="{Binding FirstOptionText}"
+                <iconPacks:PackIconMaterial Kind="CloseThick"/>
+            </Button>
+            <Button Margin="4,0"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    Command="{Binding FirstOptionCommand}"
+                    ToolTip="{Binding FirstOptionText}"
                     Background="{Binding FirstOptionColor, FallbackValue={DynamicResource MahApps.Brushes.Accent}, RelativeSource={RelativeSource AncestorType=Window}}"
                     Foreground="{DynamicResource MahApps.Brushes.IdealForeground}">
                 <iconPacks:PackIconMaterial Kind="CheckBold"/>
-                </Button>
+            </Button>
         </StackPanel>
     </Grid>
 </mahApp:MetroWindow>

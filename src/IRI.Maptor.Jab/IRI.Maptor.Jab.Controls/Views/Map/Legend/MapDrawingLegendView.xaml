@@ -12,6 +12,8 @@
         <Grid.Resources>
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>
+                    <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                    <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                     <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
                 <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
@@ -21,7 +23,7 @@
                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                     <Setter Property="Width" Value="16"/>-->
                 <!--</Style>-->
-                <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource circleButtonPackIconMaterial}">
+                <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}">
                     <!--<Setter Property="HorizontalAlignment" Value="Center"/>
                     <Setter Property="VerticalAlignment" Value="Center"/>
                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
@@ -69,7 +71,7 @@
                                     Margin="0" Padding="0" CornerRadius="18">
                                     <StackPanel Orientation="Horizontal" Margin="0">
                                         <ToggleButton x:Name="HeaderSite"
-                                                      Margin="0" Style="{StaticResource circleToggleButtonDark}"                                   
+                                                      Margin="0" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"                                   
                                                       Width="32" Height="32"
                                                       IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                                             <!--<ToggleButton.Style >
@@ -134,7 +136,7 @@
                 </Style>
 
 
-                <Style x:Key="circleButtonDarkOverride" TargetType="{x:Type Button}" BasedOn="{StaticResource circleButtonDark}" >
+                <Style x:Key="circleButtonDarkOverride" TargetType="{x:Type Button}" BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" >
                     <Setter Property="Margin" Value="1"/>
                 </Style>
             </ResourceDictionary>
@@ -148,12 +150,12 @@
                         VerticalScrollBarVisibility="Auto"
                         Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
             <DockPanel HorizontalAlignment="Center" FlowDirection="LeftToRight">
-                <Button Style="{StaticResource circleButtonLight}" Command="{Binding MoveDrawingItemUpCommand}"  
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding MoveDrawingItemUpCommand}"  
                         ToolTip="{Binding [cmd_drawingLegend_moveUp], Source={StaticResource Localization}}" 
                         IsEnabled="{Binding CanMoveDrawingItemUp}">
                     <iconPacks:PackIconMaterial Kind="ArrangeBringForward" />
                 </Button>
-                <Button Style="{StaticResource circleButtonLight}" Command="{Binding MoveDrawingItemDownCommand}"  
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding MoveDrawingItemDownCommand}"  
                         ToolTip="{Binding [cmd_drawingLegend_moveDown], Source={StaticResource Localization}}"                  
                         IsEnabled="{Binding CanMoveDrawingItemDown}">
                     <iconPacks:PackIconMaterial Kind="ArrangeSendBackward" />

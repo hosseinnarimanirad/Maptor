@@ -141,7 +141,7 @@ public static class DataGridDictionaryBehavior
             {
                 column = new DataGridTextColumn
                 {
-                    Header = field.Alias,
+                    Header = field.Alias,                    
                     Binding = new Binding($"Attributes[{key}]")
                     {
                         Mode = BindingMode.TwoWay,

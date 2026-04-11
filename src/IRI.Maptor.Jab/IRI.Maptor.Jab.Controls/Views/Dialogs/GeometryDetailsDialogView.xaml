@@ -30,10 +30,12 @@
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource circleButtonPackIconMaterial}"/>
+            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
 
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
                 <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12" />
@@ -164,13 +166,13 @@
                           Margin="4" HorizontalAlignment="Stretch"/>
                 <Button Grid.Row="0" Grid.Column="2" 
                         ToolTip="{Binding [dialog_geometryDetails_export], Source={StaticResource Localization}}"  
-                        Style="{StaticResource circleButtonLight}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                         Visibility="Collapsed">
                     <iconPacks:PackIconMaterial Kind="ContentSave"/>
                 </Button>
                 <Button Grid.Row="0" Grid.Column="3" Command="{Binding CopySelectedFormat}"
                          ToolTip="{Binding [dialog_geometryDetails_copy], Source={StaticResource Localization}}"  
-                         Style="{StaticResource circleButtonLight}">
+                         Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
                     <iconPacks:PackIconMaterial Kind="ContentCopy"/>
                 </Button>
                 <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" FlowDirection="LeftToRight" 
@@ -186,12 +188,12 @@
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
             <Button ToolTip="{Binding [dialog_common_cancel], Source={StaticResource Localization}}" 
                         Command="{Binding CancelEditingCommand}" Margin="4" 
-                        Style="{StaticResource circleButtonLight}">
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
                 <iconPacks:PackIconMaterial Kind="CloseThick"/>
             </Button>
             <Button ToolTip="{Binding [dialog_common_save], Source={StaticResource Localization}}" 
                         Command="{Binding SaveGeometryCommand}" Margin="4"  
-                        Style="{StaticResource circleButtonLight}">
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
                 <iconPacks:PackIconMaterial Kind="CheckBold"/>
             </Button>
         </StackPanel>
