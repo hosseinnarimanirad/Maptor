@@ -1432,7 +1432,7 @@
     <value>قدرت تفکیک زمینی:</value>
   </data>
   <data name="mapExtent_currentView_scaleText" xml:space="preserve">
-    <value>مقایس:</value>
+    <value>مقیاس:</value>
   </data>
   <data name="mapExtent_currentView_title" xml:space="preserve">
     <value>اطلاعات محدوده جاری (مرکز نقشه)</value>

@@ -9,12 +9,7 @@ public static class ClipboardHelper
 
     public static void CopyToClipboard(Point webMercator, CoordinateDisplayMode mode, CopyCoordinateOptions options, bool? isLatitudeFirst = null)
     {
-        var format = CoordinateHelper.Format(webMercator, mode, options);
-        //thousandSeparator: false,
-        //utmZone: utmZone,
-        //latLongPrecision: latLongPrecision,
-        //xyPrecision: xyPrecision,
-        //ellipsoid: ellipsoid);
+        var format = CoordinateHelper.Format(webMercator, mode, options); 
 
         if ((isLatitudeFirst ?? true) && (mode == CoordinateDisplayMode.GeodeticDms || mode == CoordinateDisplayMode.GeodeticDecimal))
         {
