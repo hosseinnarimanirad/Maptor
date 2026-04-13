@@ -9,6 +9,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
+            Background="Transparent"
              d:DesignHeight="420" d:DesignWidth="280" MinWidth="220">
     <userControl:NotifiableUserControl.Resources>
         <ResourceDictionary>
@@ -17,10 +18,12 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="filterTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+            <Style x:Key="filterTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
                 <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                <Setter Property="BorderBrush" Value="White"/>
+                <!--<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ControlBackground}"/>-->
                 <Setter Property="Background" Value="White"/>
+                <Setter Property="Foreground" Value="Black"/>
                 <Setter Property="Padding" Value="8,4"/>
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Style.Triggers>
@@ -34,30 +37,31 @@
 
         </ResourceDictionary>
     </userControl:NotifiableUserControl.Resources>
-    <Border Background="#E0E0E0" CornerRadius="4" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="1" Padding="0,1"
+    <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" CornerRadius="4" Padding="0,1"
             VerticalAlignment="Top">
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                      Style="{StaticResource MahApps.Styles.ScrollViewer}">
             <StackPanel>
-                <Border Padding="4" Background="White" BorderBrush="#CCCCCC" BorderThickness="1">
+                <Border Padding="4" Background="{DynamicResource MahApps.Brushes.Accent4}" BorderBrush="{DynamicResource MahApps.Brushes.Gray6}" BorderThickness="0" CornerRadius="5">
 
                     <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" FlowDirection="LeftToRight">
-                        <Button Command="{Binding Map.ZoomInAtCenterCommand}" ToolTip="{Binding [cmd_general_zoomIn], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                        <Button Command="{Binding Map.ZoomInAtCenterCommand}" ToolTip="{Binding [cmd_general_zoomIn], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}">
                             <iconPacks:PackIconMaterial Kind="MagnifyPlus" />
                         </Button>
-                        <Button Command="{Binding Map.ZoomOutAtCenterCommand}" ToolTip="{Binding [cmd_general_zoomOut], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                        <Button Command="{Binding Map.ZoomOutAtCenterCommand}" ToolTip="{Binding [cmd_general_zoomOut], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}">
                             <iconPacks:PackIconMaterial Kind="MagnifyMinus" />
                         </Button>
-                        <Button Command="{Binding Map.PreviousExtentCommand}" ToolTip="{Binding [cmd_general_previousExtent], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Padding="6" Margin="0,0,4,4">
+                        <Button Command="{Binding Map.PreviousExtentCommand}" ToolTip="{Binding [cmd_general_previousExtent], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" Padding="6" Margin="0,0,4,4">
                             <iconPacks:PackIconMaterial Kind="ArrowLeftBold"  FlowDirection="LeftToRight"/>
                         </Button>
-                        <Button Command="{Binding Map.NextExtentCommand}" ToolTip="{Binding [cmd_general_nextExtent], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Padding="6" Margin="0,0,4,4">
+                        <Button Command="{Binding Map.NextExtentCommand}" ToolTip="{Binding [cmd_general_nextExtent], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" Padding="6" Margin="0,0,4,4">
                             <iconPacks:PackIconMaterial Kind="ArrowRightBold"/>
                         </Button>
                     </WrapPanel>
 
                 </Border>
 
-                <Border Padding="4" Background="White" BorderBrush="#CCCCCC" BorderThickness="1">
+                <Border Padding="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}" BorderBrush="{DynamicResource MahApps.Brushes.Gray6}" BorderThickness="0">
                     <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Margin="0" CornerRadius="4" Padding="4">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -68,9 +72,11 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Text="{Binding [mapExtent_new_title], Source={StaticResource Localization}}" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                            <TextBlock Grid.Row="0" Text="{Binding [mapExtent_new_title], Source={StaticResource Localization}}"
+                                        Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
+                                       FontWeight="SemiBold" Margin="0,0,0,4"/>
                             <Button Grid.Column="1" Grid.Row="1" ToolTip="{Binding [mapExtent_new_addNew], Source={StaticResource Localization}}"
-                                    Command="{Binding SaveBookmarkCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                    Command="{Binding SaveBookmarkCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
                                     Margin="4,0"
                                     VerticalAlignment="Bottom">
                                 <iconPacks:PackIconMaterial Kind="ContentSave"/>
@@ -86,10 +92,12 @@
                     </Border>
                 </Border>
 
-                <Border Padding="4" Background="White" BorderBrush="#CCCCCC" BorderThickness="1">
+                <Border Padding="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}" BorderBrush="{DynamicResource MahApps.Brushes.Gray6}" BorderThickness="0">
                     <StackPanel>
                         <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Margin="0" CornerRadius="4" Padding="4">
-                            <TextBlock Text="{Binding [mapExtent_currentView_title], Source={StaticResource Localization}}" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                            <TextBlock Text="{Binding [mapExtent_currentView_title], Source={StaticResource Localization}}"
+                                       FontWeight="SemiBold" Margin="0,0,0,4"
+                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
                         </Border>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -103,13 +111,28 @@
                             </Grid.ColumnDefinitions>
 
 
-                            <TextBlock Margin="4,2" Grid.Row="0" FontWeight="SemiBold" Text="{Binding [mapExtent_currentView_zoomLevelText], Source={StaticResource Localization}}" />
-                            <TextBlock Margin="4,2" Grid.Row="1" FontWeight="SemiBold" Text="{Binding [mapExtent_currentView_scaleText], Source={StaticResource Localization}}"/>
-                            <TextBlock Margin="4,2" Grid.Row="2" FontWeight="SemiBold" Text="{Binding [mapExtent_currentView_groundResolutionText], Source={StaticResource Localization}}"/>
+                            <TextBlock Margin="4,2" Grid.Row="0" FontWeight="SemiBold"
+                                       Text="{Binding [mapExtent_currentView_zoomLevelText], Source={StaticResource Localization}}"
+                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                            <TextBlock Margin="4,2" Grid.Row="1" FontWeight="SemiBold"
+                                       Text="{Binding [mapExtent_currentView_scaleText], Source={StaticResource Localization}}"
+                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                            <TextBlock Margin="4,2" Grid.Row="2" FontWeight="SemiBold"
+                                       Text="{Binding [mapExtent_currentView_groundResolutionText], Source={StaticResource Localization}}"
+                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
 
-                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding ZoomLevelText, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}" FlowDirection="LeftToRight"/>
-                            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding ScaleText, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}" FlowDirection="LeftToRight"/>
-                            <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding GroundResolutionText, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}" FlowDirection="LeftToRight"/>
+                            <TextBlock Grid.Column="1" Grid.Row="0"
+                                       Text="{Binding ZoomLevelText, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"
+                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
+                                       FlowDirection="LeftToRight"/>
+                            <TextBlock Grid.Column="1" Grid.Row="1"
+                                       Text="{Binding ScaleText, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"
+                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
+                                       FlowDirection="LeftToRight"/>
+                            <TextBlock Grid.Column="1" Grid.Row="2"
+                                       Text="{Binding GroundResolutionText, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"
+                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
+                                       FlowDirection="LeftToRight"/>
                         </Grid>
 
                         <!--<TextBlock Text="{Binding ZoomLevelText, StringFormat='Zoom level: {0}', Mode=OneWay}"/>
@@ -118,7 +141,7 @@
                     </StackPanel>
                 </Border>
 
-                <Border Padding="4" Background="White" BorderBrush="#CCCCCC" BorderThickness="1" Visibility="Collapsed">
+                <Border Padding="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}" BorderBrush="{DynamicResource MahApps.Brushes.Gray4}" BorderThickness="0" Visibility="Collapsed">
                     <StackPanel>
                         <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Margin="0" CornerRadius="4" Padding="4">
 
@@ -131,8 +154,10 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding [mapExtent_gotoScale_title], Source={StaticResource Localization}}" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                                <Border Grid.Row="1" Grid.Column="0" CornerRadius="4" Background="White">
+                                <TextBlock Text="{Binding [mapExtent_gotoScale_title], Source={StaticResource Localization}}"
+                                           Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
+                                           FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <Border Grid.Row="1" Grid.Column="0" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
                                     <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ScaleItemsView}" SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"
                                             DisplayMemberPath="DisplayLabel" Margin="4" MinHeight="28"
                                             BorderThickness="0"
@@ -143,14 +168,16 @@
                                             <GroupStyle>
                                                 <GroupStyle.HeaderTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="0,4,0,2"/>
+                                                        <TextBlock Text="{Binding Name}"
+                                                                   Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
+                                                                   FontWeight="Bold" Margin="0,4,0,2"/>
                                                     </DataTemplate>
                                                 </GroupStyle.HeaderTemplate>
                                             </GroupStyle>
                                         </ComboBox.GroupStyle>
                                     </ComboBox>
                                 </Border>
-                                <Button Grid.Row="1" Grid.Column="1" Command="{Binding ApplyScaleCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                <Button Grid.Row="1" Grid.Column="1" Command="{Binding ApplyScaleCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
               ToolTip="{Binding [cmd_general_zoomToExtent], Source={StaticResource Localization}}">
                                     <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
                                 </Button>
@@ -162,13 +189,15 @@
                 </Border>
 
 
-                <Border Padding="4" Background="White" BorderBrush="#CCCCCC" BorderThickness="1">
+                <Border Padding="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}" BorderBrush="#CCCCCC" BorderThickness="0">
                     <StackPanel>
                         <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Margin="0" CornerRadius="4" Padding="4">
-                            <TextBlock Text="{Binding [mapExtent_savedExtents_title], Source={StaticResource Localization}}" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                            <TextBlock Text="{Binding [mapExtent_savedExtents_title], Source={StaticResource Localization}}"
+                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
+                                       FontWeight="SemiBold" Margin="0,0,0,4"/>
                         </Border>
 
-                        <ItemsControl ItemsSource="{Binding Bookmarks}">
+                        <ItemsControl ItemsSource="{Binding Bookmarks}" Margin="0,8">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="0,0,0,6">
@@ -183,15 +212,17 @@
                                         BorderThickness="1" Margin="0,0,4,0" CornerRadius="1">
                                             <Image Source="{Binding Thumbnail}" Stretch="Uniform"/>
                                         </Border>
-                                        <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Title}"
+                                                   Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
+                                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                         <Button Grid.Column="2" ToolTip="Delete"
-                                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
                                         Command="{Binding DataContext.DeleteBookmarkCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                         CommandParameter="{Binding}">
                                             <iconPacks:PackIconMaterial Kind="DeleteOutline" Width="16" Height="16"/>
                                         </Button>
                                         <Button Grid.Column="3" 
-                                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
                                         Command="{Binding DataContext.GoToBookmarkCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                         CommandParameter="{Binding}" >
                                             <iconPacks:PackIconMaterial Kind="MagnifyExpand" Width="16" Height="16"/>
