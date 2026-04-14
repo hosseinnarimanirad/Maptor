@@ -1753,11 +1753,29 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Go to Next Page.
+        /// </summary>
+        public static string geometryDetails_currentPoint_goToNextPage {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_goToNextPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Go to Next Point.
         /// </summary>
         public static string geometryDetails_currentPoint_goToNextPoint {
             get {
                 return ResourceManager.GetString("geometryDetails_currentPoint_goToNextPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to Previous Page.
+        /// </summary>
+        public static string geometryDetails_currentPoint_goToPreviousPage {
+            get {
+                return ResourceManager.GetString("geometryDetails_currentPoint_goToPreviousPage", resourceCulture);
             }
         }
         

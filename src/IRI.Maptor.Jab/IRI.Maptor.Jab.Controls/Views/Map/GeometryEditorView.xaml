@@ -590,7 +590,7 @@
             </Button>
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
                       Command="{Binding GoToPreviousPageCommand}"  
-                      ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}">
+                      ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPage], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Kind="ChevronDoubleLeft" />
             </Button>
 
@@ -604,7 +604,8 @@
              Width="60" Margin="4,0" VerticalAlignment="Center"
              FlowDirection="LeftToRight"/>
             <TextBlock VerticalAlignment="Center" 
-                        TextBlock.TextAlignment="Right" Margin="8,0,0,0">
+                        TextBlock.TextAlignment="Right" Margin="8,0,0,0"
+                       FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
                 <TextBlock.Text>
                     <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_pointCounter_format">
                         <Binding Path="CurrentPointNumber"/>
@@ -621,7 +622,7 @@
             </Button>
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
          Command="{Binding GoToNextPageCommand}"
-         ToolTip="{Binding [geometryDetails_currentPoint_goToNextPoint], Source={StaticResource Localization}}">
+         ToolTip="{Binding [geometryDetails_currentPoint_goToNextPage], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Kind="ChevronDoubleRight"/>
             </Button>
         </StackPanel>

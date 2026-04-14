@@ -35,6 +35,13 @@
                 </Style.Triggers>
             </Style>
 
+            <Style x:Key="sectionCard" TargetType="Border">
+                <Setter Property="Padding" Value="4"/>
+                <Setter Property="CornerRadius" Value="4"/>
+                <Setter Property="Margin" Value="0,4"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+            </Style>
         </ResourceDictionary>
     </userControl:NotifiableUserControl.Resources>
     <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" CornerRadius="4" Padding="0,1"
@@ -42,7 +49,7 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                       Style="{StaticResource MahApps.Styles.ScrollViewer}">
             <StackPanel>
-                <Border Padding="4" Background="{DynamicResource MahApps.Brushes.Accent4}" BorderBrush="{DynamicResource MahApps.Brushes.Gray6}" BorderThickness="0" CornerRadius="5">
+                <Border Style="{StaticResource sectionCard}">
 
                     <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" FlowDirection="LeftToRight">
                         <Button Command="{Binding Map.ZoomInAtCenterCommand}" ToolTip="{Binding [cmd_general_zoomIn], Source={StaticResource Localization}}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}">
@@ -61,46 +68,45 @@
 
                 </Border>
 
-                <Border Padding="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}" BorderBrush="{DynamicResource MahApps.Brushes.Gray6}" BorderThickness="0">
-                    <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Margin="0" CornerRadius="4" Padding="4">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Text="{Binding [mapExtent_new_title], Source={StaticResource Localization}}"
+                <!--new extent-->
+                <Border Style="{StaticResource sectionCard}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="{Binding [mapExtent_new_title], Source={StaticResource Localization}}"
                                         Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
                                        FontWeight="SemiBold" Margin="0,0,0,4"/>
-                            <Button Grid.Column="1" Grid.Row="1" ToolTip="{Binding [mapExtent_new_addNew], Source={StaticResource Localization}}"
+                        <Button Grid.Column="1" Grid.Row="1" ToolTip="{Binding [mapExtent_new_addNew], Source={StaticResource Localization}}"
                                     Command="{Binding SaveBookmarkCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
                                     Margin="4,0"
                                     VerticalAlignment="Bottom">
-                                <iconPacks:PackIconMaterial Kind="ContentSave"/>
-                            </Button>
-                            <TextBox Grid.Column="0" Grid.Row="1" Margin="0"
+                            <iconPacks:PackIconMaterial Kind="ContentSave"/>
+                        </Button>
+                        <TextBox Grid.Column="0" Grid.Row="1" Margin="0"
                                      Text="{Binding NewBookmarkTitle, UpdateSourceTrigger=PropertyChanged}"
                                      mahApp:ControlsHelper.CornerRadius="4"
                                      mahApp:TextBoxHelper.Watermark="{Binding [mapExtent_new_extentTitle], Source={StaticResource Localization}}" 
                                      mahApp:TextBoxHelper.ClearTextButton="True"
                                      Style="{StaticResource filterTextBox}" HorizontalAlignment="Stretch"
                                      FontFamily="{StaticResource iranSans}" VerticalAlignment="Center"/>
-                        </Grid>
-                    </Border>
+                    </Grid>
                 </Border>
 
-                <Border Padding="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}" BorderBrush="{DynamicResource MahApps.Brushes.Gray6}" BorderThickness="0">
+                <!--current extent info-->
+                <Border Style="{StaticResource sectionCard}">
                     <StackPanel>
-                        <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Margin="0" CornerRadius="4" Padding="4">
-                            <TextBlock Text="{Binding [mapExtent_currentView_title], Source={StaticResource Localization}}"
+                        <TextBlock Text="{Binding [mapExtent_currentView_title], Source={StaticResource Localization}}"
                                        FontWeight="SemiBold" Margin="0,0,0,4"
                                        Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
-                        </Border>
                         <Grid>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -120,6 +126,9 @@
                             <TextBlock Margin="4,2" Grid.Row="2" FontWeight="SemiBold"
                                        Text="{Binding [mapExtent_currentView_groundResolutionText], Source={StaticResource Localization}}"
                                        Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                            <TextBlock Margin="4,2" Grid.Row="3" FontWeight="SemiBold"
+                                          Text="scaleText2"
+                                          Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
 
                             <TextBlock Grid.Column="1" Grid.Row="0"
                                        Text="{Binding ZoomLevelText, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"
@@ -133,6 +142,11 @@
                                        Text="{Binding GroundResolutionText, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"
                                        Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
                                        FlowDirection="LeftToRight"/>
+
+                            <TextBlock Grid.Column="1" Grid.Row="3"
+                                         Text="{Binding ScaleText2, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"
+                                         Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
+                                         FlowDirection="LeftToRight"/>
                         </Grid>
 
                         <!--<TextBlock Text="{Binding ZoomLevelText, StringFormat='Zoom level: {0}', Mode=OneWay}"/>
@@ -141,93 +155,87 @@
                     </StackPanel>
                 </Border>
 
-                <Border Padding="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}" BorderBrush="{DynamicResource MahApps.Brushes.Gray4}" BorderThickness="0" Visibility="Collapsed">
-                    <StackPanel>
-                        <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Margin="0" CornerRadius="4" Padding="4">
-
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding [mapExtent_gotoScale_title], Source={StaticResource Localization}}"
+                <!--go to scale-->
+                <Border Style="{StaticResource sectionCard}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding [mapExtent_gotoScale_title], Source={StaticResource Localization}}"
                                            Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
                                            FontWeight="SemiBold" Margin="0,0,0,4"/>
-                                <Border Grid.Row="1" Grid.Column="0" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
-                                    <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ScaleItemsView}" SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"
+                        <Border Grid.Row="1" Grid.Column="0" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
+                            <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ScaleItemsView}" SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"
                                             DisplayMemberPath="DisplayLabel" Margin="4" MinHeight="28"
                                             BorderThickness="0"
                                             VerticalContentAlignment="Center"
                                             HorizontalAlignment="Stretch"
                                             FlowDirection="LeftToRight">
-                                        <ComboBox.GroupStyle>
-                                            <GroupStyle>
-                                                <GroupStyle.HeaderTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="{Binding Name}"
+                                <ComboBox.GroupStyle>
+                                    <GroupStyle>
+                                        <GroupStyle.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}"
                                                                    Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
                                                                    FontWeight="Bold" Margin="0,4,0,2"/>
-                                                    </DataTemplate>
-                                                </GroupStyle.HeaderTemplate>
-                                            </GroupStyle>
-                                        </ComboBox.GroupStyle>
-                                    </ComboBox>
-                                </Border>
-                                <Button Grid.Row="1" Grid.Column="1" Command="{Binding ApplyScaleCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
-              ToolTip="{Binding [cmd_general_zoomToExtent], Source={StaticResource Localization}}">
-                                    <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
-                                </Button>
-                            </Grid>
-
+                                            </DataTemplate>
+                                        </GroupStyle.HeaderTemplate>
+                                    </GroupStyle>
+                                </ComboBox.GroupStyle>
+                            </ComboBox>
                         </Border>
-
-                    </StackPanel>
+                        <Button Grid.Row="1" Grid.Column="1" Command="{Binding ApplyScaleCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
+              ToolTip="{Binding [cmd_general_zoomToExtent], Source={StaticResource Localization}}">
+                            <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
+                        </Button>
+                    </Grid>
                 </Border>
 
-
-                <Border Padding="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}" BorderBrush="#CCCCCC" BorderThickness="0">
+                <Border Style="{StaticResource sectionCard}">
                     <StackPanel>
-                        <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Margin="0" CornerRadius="4" Padding="4">
                             <TextBlock Text="{Binding [mapExtent_savedExtents_title], Source={StaticResource Localization}}"
                                        Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
                                        FontWeight="SemiBold" Margin="0,0,0,4"/>
-                        </Border>
 
-                        <ItemsControl ItemsSource="{Binding Bookmarks}" Margin="0,8">
+                        <ItemsControl ItemsSource="{Binding Bookmarks}" Margin="0">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Margin="0,0,0,6">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="79"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Border Grid.Column="0" Width="48" Height="48"
+                                    <Border Margin="0,0,0,2" Background="{DynamicResource MahApps.Brushes.Badged.Background}" Padding="2" CornerRadius="5">
+                                        <Grid >
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="79"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0" Width="48" Height="48"
                                         BorderBrush="{DynamicResource MahApps.Brushes.Gray4}"
+                                                Background="White"
                                         BorderThickness="1" Margin="0,0,4,0" CornerRadius="1">
-                                            <Image Source="{Binding Thumbnail}" Stretch="Uniform"/>
-                                        </Border>
-                                        <TextBlock Grid.Column="1" Text="{Binding Title}"
+                                                <Image Source="{Binding Thumbnail}" Stretch="Uniform"/>
+                                            </Border>
+                                            <TextBlock Grid.Column="1" Text="{Binding Title}"
                                                    Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
                                                    VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                        <Button Grid.Column="2" ToolTip="Delete"
+                                            <Button Grid.Column="2" ToolTip="Delete"
                                         Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
                                         Command="{Binding DataContext.DeleteBookmarkCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                         CommandParameter="{Binding}">
-                                            <iconPacks:PackIconMaterial Kind="DeleteOutline" Width="16" Height="16"/>
-                                        </Button>
-                                        <Button Grid.Column="3" 
+                                                <iconPacks:PackIconMaterial Kind="DeleteOutline" Width="16" Height="16"/>
+                                            </Button>
+                                            <Button Grid.Column="3" 
                                         Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
                                         Command="{Binding DataContext.GoToBookmarkCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                         CommandParameter="{Binding}" >
-                                            <iconPacks:PackIconMaterial Kind="MagnifyExpand" Width="16" Height="16"/>
-                                        </Button>
-                                    </Grid>
+                                                <iconPacks:PackIconMaterial Kind="MagnifyExpand" Width="16" Height="16"/>
+                                            </Button>
+                                        </Grid>
+                                    </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>

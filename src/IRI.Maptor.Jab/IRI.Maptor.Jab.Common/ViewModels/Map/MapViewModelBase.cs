@@ -695,23 +695,73 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    public double InverseMapScale => 1.0 / MapScale;
 
+    /// <summary>
+    /// Current web mercator scale
+    /// </summary>
     public double MapScale => RequestMapScale?.Invoke() ?? 1;
 
-    public double CurrentPointInverseMapScale
-    {
-        get
-        {
-            var scale = RequestCurrentPointScale?.Invoke() ?? 1;
+    /// <summary>
+    /// Current web mercator inverse scale
+    /// </summary>
+    public double InverseMapScale => 1.0 / MapScale;
 
-            return Math.Round(1.0 / scale, 2);
+    /// <summary>
+    /// The actual ground scale for nearest google zoom level at the point
+    /// </summary>
+    private double _currentPointNearestGoogleScale;
+    public double CurrentPointNearestGoogleScale
+    {
+        get { return _currentPointNearestGoogleScale; }
+        set
+        {
+            _currentPointNearestGoogleScale = value;
+            RaisePropertyChanged();
         }
     }
 
-    public double CurrentPointGroundResolution => RequestCurrentPointGroundResolution?.Invoke() ?? 1;
 
-    public int CurrentZoomLevel => RequestCurrentZoomLevel?.Invoke() ?? 1;
+    /// <summary>
+    /// The actual ground scale at the point (latitude effect applied on web mercator scale)
+    /// </summary>
+    private double _currentPointScale;
+    public double CurrentPointMapScale
+    {
+        get { return _currentPointScale; }
+        set
+        {
+            _currentPointScale = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    /// <summary>
+    /// The ground distance for 1 pixel on the screen
+    /// </summary>
+    private double _currentPointGroundResolution;
+    public double CurrentPointGroundResolution
+    {
+        get { return _currentPointGroundResolution; }
+        set
+        {
+            _currentPointGroundResolution = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    // ground scale
+    public double CurrentPointInverseNearestGoogleScale => Math.Round(1.0 / CurrentPointNearestGoogleScale, 2);
+
+    public double CurrentPointInverseMapScale => Math.Round(1.0 / CurrentPointMapScale, 2);
+
+    //public double CurrentPointGroundResolution => RequestCurrentPointGroundResolution?.Invoke() ?? 1;
+
+    //public int CurrentZoomLevel => RequestCurrentZoomLevel?.Invoke() ?? 1;
+    public int NearestZoomLevel => WebMercatorUtility.GetZoomLevel(this.MapScale);
+
+
 
     public BoundingBox CurrentExtent => RequestCurrentExtent?.Invoke() ?? BoundingBoxes.Mercator_Iran;
 
@@ -1011,11 +1061,12 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Func<double> RequestMapScale;
 
-    public Func<double> RequestCurrentPointScale;
+    //public Func<double> RequestCurrentPointScale;
+    //public Func<double> RequestCurrentPointScale2;
 
-    public Func<double> RequestCurrentPointGroundResolution;
+    //public Func<double> RequestCurrentPointGroundResolution;
 
-    public Func<int> RequestCurrentZoomLevel;
+    //public Func<int> RequestCurrentZoomLevel;
 
     public Func<BoundingBox> RequestCurrentExtent;
 
@@ -2154,8 +2205,31 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         CurrentPoint = new Point(currentPoint.X, currentPoint.Y);
 
-        RaisePropertyChanged(nameof(CurrentPointInverseMapScale));
-        RaisePropertyChanged(nameof(CurrentPointGroundResolution));
+        if (this.CurrentPoint == null || double.IsNaN(this.CurrentPoint.Y))
+            return;
+
+        this.CurrentPointNearestGoogleScale = WebMercatorUtility.CalculateMapScale(this.NearestZoomLevel, currentPoint.Y);
+        RaisePropertyChanged(nameof(CurrentPointInverseNearestGoogleScale));
+
+        this.CurrentPointMapScale = WebMercatorUtility.WebMercatorScaleToMapScale(this.MapScale, CurrentPoint.Y);
+        RaisePropertyChanged(nameof(CurrentPointInverseMapScale)); 
+
+        this.CurrentPointGroundResolution = WebMercatorUtility.CalculateGroundResolution(this.NearestZoomLevel, CurrentPoint.Y);
+        var currentPointGroundResolution = WebMercatorUtility.CalculateGroundResolution(CurrentPointNearestGoogleScale);
+
+        var theScale1_local = WebMercatorUtility.CalculateMapScale(this.NearestZoomLevel, CurrentPoint.Y);
+        var theScale_equator = WebMercatorUtility.CalculateMapScale(this.NearestZoomLevel, 0);
+
+
+        var groundRes = WebMercatorUtility.CalculateGroundResolution(theScale_equator);
+        var groundRes2 = WebMercatorUtility.CalculateGroundResolution(this.NearestZoomLevel, 0);
+         
+        if (this.MapExtentPanel != null)
+        {
+            MapExtentPanel.RefreshMetrics();
+            //RaisePropertyChanged(nameof(MapExtentPanel.ScaleText));
+            //RaisePropertyChanged(nameof(MapExtentPanel.GroundResolutionText));
+        }
 
         OnMouseMove?.Invoke(this, currentPoint);
     }
@@ -2167,7 +2241,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public void FireZoomChanged(double mapScale)
     {
-        RaisePropertyChanged(nameof(CurrentZoomLevel));
+        RaisePropertyChanged(nameof(NearestZoomLevel));
 
         OnZoomChanged?.Invoke(this, mapScale);
 
@@ -2825,7 +2899,7 @@ public abstract class MapViewModelBase : ViewModelBase
         double scaleX = imageWidth / boundingBox.Width;
         double scaleY = imageHeight / boundingBox.Height;
         var scale = Math.Max(scaleX, scaleY);
-         
+
         List<DrawingVisual> visuals = new List<DrawingVisual>();
 
         foreach (var item in layers)
@@ -2839,7 +2913,7 @@ public abstract class MapViewModelBase : ViewModelBase
             switch (item)
             {
                 case TileServiceLayer tsl:
-                    visuals.Add(tsl.AsDrawingVisual(boundingBox, CurrentZoomLevel, imageWidth, imageHeight));
+                    visuals.Add(tsl.AsDrawingVisual(boundingBox, NearestZoomLevel, imageWidth, imageHeight));
                     break;
 
                 case VectorLayer vectorLayer:
@@ -2866,7 +2940,7 @@ public abstract class MapViewModelBase : ViewModelBase
         if (extent.IsNaN() || !extent.IsValid())
             return null;
 
-        int zoomLevel = CurrentZoomLevel;
+        int zoomLevel = NearestZoomLevel;
 
         var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(extent, zoomLevel);
 

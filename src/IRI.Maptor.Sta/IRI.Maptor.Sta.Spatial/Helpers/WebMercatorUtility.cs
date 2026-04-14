@@ -18,8 +18,8 @@ public static class WebMercatorUtility
     public const double EarthRadius = 6378137;
     //private const double MinLatitude = -85.05112878;
     //private const double MaxLatitude = 85.05112878;
-    private const double MinLongitude = -180;
-    private const double MaxLongitude = 180;
+    //private const double MinLongitude = -180;
+    //private const double MaxLongitude = 180;
     private const double EarthCircumference = 2 * Math.PI * EarthRadius;
 
     //
@@ -42,43 +42,11 @@ public static class WebMercatorUtility
 
         MinIsometricLatitude = MapProjects.GeodeticLatitudeToIsometricLatitude(-MaxAllowableLatitude, _firstEccentricity);
 
-        ZoomLevels = Enumerable.Range(0, 24).Reverse().Select(i => new ZoomScale(i, 591657550.50 / Math.Pow(2, i))).ToList();
+        ZoomLevels = Enumerable.Range(1, 24).Reverse().Select(i => new ZoomScale(i, 591657550.50 / Math.Pow(2, i))).ToList();
 
         minZoomLevel = 1;
 
-        maxZoomLevel = 24;
-
-        //ZoomLevels = new List<ZoomScale>();
-
-        //24:  591657550.50 / 2 ^ (24 - 1) = 70.5311
-        //23:  591657550.50 / 2 ^ (23 - 1) = 141.0622
-        //22:  591657550.50 / 2 ^ (22 - 1) = 282.1243
-        //21:  591657550.50 / 2 ^ (21 - 1) = 564.2486
-        //20:  591657550.50 / 2 ^ (20 - 1) = 1128.4972
-
-        //TO SUPPORT CORRECT ZOOM LEVEL
-        //ZoomLevels.Add(new ZoomScale(20, double.Epsilon));
-
-        //ZoomLevels.Add(new ZoomScale(19, 1128.497220));
-        //ZoomLevels.Add(new ZoomScale(18, 2256.994440));
-        //ZoomLevels.Add(new ZoomScale(17, 4513.988880));
-        //ZoomLevels.Add(new ZoomScale(16, 9027.977761));
-        //ZoomLevels.Add(new ZoomScale(15, 18055.955520));
-        //ZoomLevels.Add(new ZoomScale(14, 36111.911040));
-        //ZoomLevels.Add(new ZoomScale(13, 72223.822090));
-        //ZoomLevels.Add(new ZoomScale(12, 144447.644200));
-        //ZoomLevels.Add(new ZoomScale(11, 288895.288400));
-        //ZoomLevels.Add(new ZoomScale(10, 577790.576700));
-        //ZoomLevels.Add(new ZoomScale(9, 1155581.153000));
-        //ZoomLevels.Add(new ZoomScale(8, 2311162.307000));
-        //ZoomLevels.Add(new ZoomScale(7, 4622324.614000));
-        //ZoomLevels.Add(new ZoomScale(6, 9244649.227000));
-        //ZoomLevels.Add(new ZoomScale(5, 18489298.450000));
-        //ZoomLevels.Add(new ZoomScale(4, 36978596.910000));
-        //ZoomLevels.Add(new ZoomScale(3, 73957193.820000));
-        //ZoomLevels.Add(new ZoomScale(2, 147914387.600000));
-        //ZoomLevels.Add(new ZoomScale(1, 295828775.300000));
-        //ZoomLevels.Add(new ZoomScale(0, 591657550.500000));
+        maxZoomLevel = 24; 
     }
 
 
@@ -92,7 +60,7 @@ public static class WebMercatorUtility
     public static long CalculateScreenSize(int level)
     {
         if (level < 0 || level > 24)
-            throw new NotImplementedException();
+            throw new ArgumentOutOfRangeException();
 
         return ImageSize * (long)Math.Pow(2, level);
     }
@@ -156,11 +124,10 @@ public static class WebMercatorUtility
     /// </summary>
     /// <param name="level">google zoom level</param>
     /// <param name="latitude">in degree</param>
-    /// <returns></returns>
+    /// <returns>ground resolution in meter</returns>
     public static double CalculateGroundResolution(int level, double latitude)
     {
-        // note:
-        // todo:
+        // note: 
         // the latitude should be geocentric latitude not geodetic!
 
         // 1: 1 pixel
@@ -169,6 +136,8 @@ public static class WebMercatorUtility
 
     /// <summary>
     /// The distance on the earth equivalent to 1 pixel at the specific scale
+    /// no need to consider the latitude effect as this mapScale is the true
+    /// ground mapScale not webMercatorMapScale
     /// </summary>
     /// <param name="mapScale"></param>
     /// <returns></returns>
@@ -191,6 +160,12 @@ public static class WebMercatorUtility
     public static double CalculateMapScale(int level, double latitude)
     {
         return 1.0 / (CalculateGroundResolution(level, latitude) * ConversionHelper.MeterToPixelFactor);
+    }
+
+    
+    public static double WebMercatorScaleToMapScale(double webMercatorScale, double latitude)
+    {
+        return webMercatorScale / Math.Cos(latitude * Math.PI / 180.0);
     }
 
 
@@ -272,73 +247,86 @@ public static class WebMercatorUtility
     }
 
     public static double GetGoogleMapScale(int zoomLevel)
-    {
-        if (zoomLevel < minZoomLevel)
-        {
-            return GetGoogleMapScale(minZoomLevel);
-        }
-        else if (zoomLevel > maxZoomLevel)
-        {
-            return GetGoogleMapScale(maxZoomLevel);
-        }
-        else
-        {
-            return ZoomLevels.Single(i => i.ZoomLevel == zoomLevel).Scale;
-        }
+    { 
+        return GetGoogleZoomScale(zoomLevel).Scale;
+
+        //if (zoomLevel < minZoomLevel)
+        //{
+        //    return GetGoogleMapScale(minZoomLevel);
+        //}
+        //else if (zoomLevel > maxZoomLevel)
+        //{
+        //    return GetGoogleMapScale(maxZoomLevel);
+        //}
+        //else
+        //{
+        //    return ZoomLevels.Single(i => i.ZoomLevel == zoomLevel).Scale;
+        //}
     }
 
     public static double GetGoogleMapScale(int zoomLevel, double? latitude)
     {
-        if (latitude == null)
-        {
-            return GetGoogleMapScale(zoomLevel);
-        }
+        var zoomScale = GetGoogleZoomScale(zoomLevel);
 
-        if (zoomLevel < minZoomLevel)
-        {
-            return GetGoogleMapScale(minZoomLevel, latitude);
-        }
-        else if (zoomLevel > maxZoomLevel)
-        {
-            return GetGoogleMapScale(maxZoomLevel, latitude);
-        }
-        else
-        {
-            return ZoomLevels.Single(i => i.ZoomLevel == zoomLevel).GetScaleAt(latitude.Value);
-        }
+        return latitude is null ? zoomScale.Scale : zoomScale.GetScaleAt(latitude.Value);
+
+        //if (latitude == null)
+        //{
+        //    return GetGoogleMapScale(zoomLevel);
+        //}
+
+        //if (zoomLevel < minZoomLevel)
+        //{
+        //    return GetGoogleMapScale(minZoomLevel, latitude);
+        //}
+        //else if (zoomLevel > maxZoomLevel)
+        //{
+        //    return GetGoogleMapScale(maxZoomLevel, latitude);
+        //}
+        //else
+        //{
+        //    return ZoomLevels.Single(i => i.ZoomLevel == zoomLevel).GetScaleAt(latitude.Value);
+        //}
     }
 
     private static ZoomScale GetGoogleZoomScale(int zoomLevel)
     {
-        if (zoomLevel < minZoomLevel)
-        {
-            return GetGoogleZoomScale(minZoomLevel);
-        }
-        else if (zoomLevel > maxZoomLevel)
-        {
-            return GetGoogleZoomScale(maxZoomLevel);
-        }
-        else
-        {
-            return ZoomLevels.Single(i => i.ZoomLevel == zoomLevel);
-        }
+        zoomLevel = AdjustLevel(zoomLevel);
+
+        return ZoomLevels.Single(i => i.ZoomLevel == zoomLevel);
+
+
+        //if (zoomLevel < minZoomLevel)
+        //{
+        //    return GetGoogleZoomScale(minZoomLevel);
+        //}
+        //else if (zoomLevel > maxZoomLevel)
+        //{
+        //    return GetGoogleZoomScale(maxZoomLevel);
+        //}
+        //else
+        //{
+        //    return ZoomLevels.Single(i => i.ZoomLevel == zoomLevel);
+        //}
     }
 
 
     private static int AdjustLevel(int level)
     {
-        if (level > maxZoomLevel)
-        {
-            return maxZoomLevel;
-        }
-        else if (level < minZoomLevel)
-        {
-            return minZoomLevel;
-        }
-        else
-        {
-            return level;
-        }
+        return Math.Clamp(level, minZoomLevel, maxZoomLevel);
+
+        //if (level > maxZoomLevel)
+        //{
+        //    return maxZoomLevel;
+        //}
+        //else if (level < minZoomLevel)
+        //{
+        //    return minZoomLevel;
+        //}
+        //else
+        //{
+        //    return level;
+        //}
     }
 
     public static ZoomScale GetUpperLevel(double scale, double latitude)

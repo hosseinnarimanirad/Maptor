@@ -76,7 +76,7 @@
 
         <maptor:Scalebar Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="4"  
                          CurrentScale="{Binding CurrentPointInverseMapScale}" ShowScaleValue="True" ShowZoomLevel="True"
-                         ZoomLevel="{Binding ElementName=root, Path=DataContext.CurrentZoomLevel}"/>
+                         ZoomLevel="{Binding ElementName=root, Path=DataContext.NearestZoomLevel}"/>
         
         <maptor:CoordinatePanelView 
             Grid.Column="1" 

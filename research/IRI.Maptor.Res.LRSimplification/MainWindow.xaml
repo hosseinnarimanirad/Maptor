@@ -220,6 +220,6 @@
         <maptor:Scalebar Grid.Column="2" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="8"
                          ShowScaleValue="True" ShowZoomLevel="True" IsGoogleStyle="False"
                          CurrentScale="{Binding CurrentPointInverseMapScale}"
-                         ZoomLevel="{Binding CurrentZoomLevel}"/>
+                         ZoomLevel="{Binding NearestZoomLevel}"/>
     </Grid>
 </Window>

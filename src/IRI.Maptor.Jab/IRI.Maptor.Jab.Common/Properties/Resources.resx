@@ -1508,4 +1508,10 @@
   <data name="cmd_contextMenu_paste" xml:space="preserve">
     <value>Paste</value>
   </data>
+  <data name="geometryDetails_currentPoint_goToNextPage" xml:space="preserve">
+    <value>Go to Next Page</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
+    <value>Go to Previous Page</value>
+  </data>
 </root>

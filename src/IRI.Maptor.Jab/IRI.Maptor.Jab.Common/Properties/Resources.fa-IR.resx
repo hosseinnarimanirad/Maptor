@@ -1467,4 +1467,10 @@
   <data name="cmd_contextMenu_paste" xml:space="preserve">
     <value>جای‌گذاری</value>
   </data>
+  <data name="geometryDetails_currentPoint_goToNextPage" xml:space="preserve">
+    <value>رفتن به صفحه بعدی</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
+    <value>رفتن به صفحه قبلی</value>
+  </data>
 </root>
