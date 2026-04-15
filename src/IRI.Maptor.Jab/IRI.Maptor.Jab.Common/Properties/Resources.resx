@@ -1469,17 +1469,17 @@
   <data name="mapExtent_common_title" xml:space="preserve">
     <value>Extent Manager</value>
   </data>
-  <data name="mapExtent_currentView_groundResolutionText" xml:space="preserve">
-    <value>Ground resolution:</value>
+  <data name="mapExtent_currentView_currentPointGroundResolution" xml:space="preserve">
+    <value>Ground resolution (m/px):</value>
   </data>
-  <data name="mapExtent_currentView_scaleText" xml:space="preserve">
-    <value>Map scale:</value>
+  <data name="mapExtent_currentView_currentPointMapScale" xml:space="preserve">
+    <value>Map scale (current point):</value>
   </data>
   <data name="mapExtent_currentView_title" xml:space="preserve">
-    <value>Current view (extent center)</value>
+    <value>Current Extent</value>
   </data>
-  <data name="mapExtent_currentView_zoomLevelText" xml:space="preserve">
-    <value>Zoom level:</value>
+  <data name="mapExtent_currentView_nearestZoomLevel" xml:space="preserve">
+    <value>Nearest Zoom level:</value>
   </data>
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>Go to scale (at center)</value>
@@ -1513,5 +1513,8 @@
   </data>
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>Go to Previous Page</value>
+  </data>
+  <data name="mapExtent_currentView_nearestGoogleScale" xml:space="preserve">
+    <value>Nearest Google Scale:</value>
   </data>
 </root>

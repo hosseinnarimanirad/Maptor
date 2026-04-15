@@ -2456,38 +2456,47 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ground resolution:.
+        ///   Looks up a localized string similar to Ground resolution (m/px):.
         /// </summary>
-        public static string mapExtent_currentView_groundResolutionText {
+        public static string mapExtent_currentView_currentPointGroundResolution {
             get {
-                return ResourceManager.GetString("mapExtent_currentView_groundResolutionText", resourceCulture);
+                return ResourceManager.GetString("mapExtent_currentView_currentPointGroundResolution", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Map scale:.
+        ///   Looks up a localized string similar to Map scale (current point):.
         /// </summary>
-        public static string mapExtent_currentView_scaleText {
+        public static string mapExtent_currentView_currentPointMapScale {
             get {
-                return ResourceManager.GetString("mapExtent_currentView_scaleText", resourceCulture);
+                return ResourceManager.GetString("mapExtent_currentView_currentPointMapScale", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current view (extent center).
+        ///   Looks up a localized string similar to Nearest Google Scale:.
+        /// </summary>
+        public static string mapExtent_currentView_nearestGoogleScale {
+            get {
+                return ResourceManager.GetString("mapExtent_currentView_nearestGoogleScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nearest Zoom level:.
+        /// </summary>
+        public static string mapExtent_currentView_nearestZoomLevel {
+            get {
+                return ResourceManager.GetString("mapExtent_currentView_nearestZoomLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Extent.
         /// </summary>
         public static string mapExtent_currentView_title {
             get {
                 return ResourceManager.GetString("mapExtent_currentView_title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Zoom level:.
-        /// </summary>
-        public static string mapExtent_currentView_zoomLevelText {
-            get {
-                return ResourceManager.GetString("mapExtent_currentView_zoomLevelText", resourceCulture);
             }
         }
         

@@ -43,7 +43,7 @@
                                                       Foreground="{DynamicResource MahApps.Brushes.Accent}" FlowDirection="LeftToRight" Height="24"/>
                         </Button>
                         <Button Command="{Binding ElementName=window, Path=DataContext.ZoomToCommand}" Height="32" Width="32" Margin="4" Cursor="Hand">
-                            <iconPacks:PackIconMaterial Kind="MagnifyPlus" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                            <iconPacks:PackIconMaterial Kind="MagnifyExpand" VerticalAlignment="Center" HorizontalAlignment="Center" 
                                                       Foreground="{DynamicResource MahApps.Brushes.Accent}" FlowDirection="LeftToRight" Height="24"/>
                         </Button>
                     </StackPanel>

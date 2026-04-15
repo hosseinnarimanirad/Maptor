@@ -572,7 +572,7 @@
                     Command="{Binding ZoomToCurrentPointCommand}"
                     IsEnabled="{Binding SelectedPoint, Converter={StaticResource notNullToBoolConverter}}"
                     ToolTip="{Binding [geometryDetails_currentPoint_zoomToPoint], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial Kind="MagnifyPlus"/>
+                <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
             </Button>
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
                     Command="{Binding PanToCurrentPointCommand}"

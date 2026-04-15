@@ -1428,17 +1428,17 @@
   <data name="mapExtent_common_title" xml:space="preserve">
     <value>مدیریت محدوده‌ها</value>
   </data>
-  <data name="mapExtent_currentView_groundResolutionText" xml:space="preserve">
-    <value>قدرت تفکیک زمینی:</value>
+  <data name="mapExtent_currentView_currentPointGroundResolution" xml:space="preserve">
+    <value>قدرت تفکیک زمینی (متر/پیکسل):</value>
   </data>
-  <data name="mapExtent_currentView_scaleText" xml:space="preserve">
-    <value>مقیاس:</value>
+  <data name="mapExtent_currentView_currentPointMapScale" xml:space="preserve">
+    <value>مقیاس نقطه جاری:</value>
   </data>
   <data name="mapExtent_currentView_title" xml:space="preserve">
-    <value>اطلاعات محدوده جاری (مرکز نقشه)</value>
+    <value>اطلاعات محدوده جاری</value>
   </data>
-  <data name="mapExtent_currentView_zoomLevelText" xml:space="preserve">
-    <value>سطح بزرگ‌نمایی:</value>
+  <data name="mapExtent_currentView_nearestZoomLevel" xml:space="preserve">
+    <value>نزدیک‌ترین سطح بزرگ‌نمایی:</value>
   </data>
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>برو به مقیاس (مرکز نقشه)</value>
@@ -1472,5 +1472,8 @@
   </data>
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>رفتن به صفحه قبلی</value>
+  </data>
+  <data name="mapExtent_currentView_nearestGoogleScale" xml:space="preserve">
+    <value>مقیاس نزدیک‌ترین سطح گوگل:</value>
   </data>
 </root>

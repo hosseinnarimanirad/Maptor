@@ -764,7 +764,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
     public BoundingBox CurrentExtent => RequestCurrentExtent?.Invoke() ?? BoundingBoxes.Mercator_Iran;
-
+    
 
     public double ActualWidth => RequestGetActualWidth?.Invoke() ?? 1;
 

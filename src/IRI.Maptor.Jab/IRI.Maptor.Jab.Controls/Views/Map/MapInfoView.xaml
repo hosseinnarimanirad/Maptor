@@ -259,7 +259,7 @@
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_zoom], Source={StaticResource Localization}}"
                                         Command="{Binding ZoomToCurrentPointCommand}" >
-                                <iconPacks:Material Kind="MagnifyPlus"/>
+                                <iconPacks:Material Kind="MagnifyExpand"/>
                             </Button>
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_copyCoordinate], Source={StaticResource Localization}}"
@@ -298,7 +298,7 @@
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPart_zoom], Source={StaticResource Localization}}"
                                         Command="{Binding ZoomToCurrentPartCommand}" >
-                                <iconPacks:Material Kind="MagnifyPlus"/>
+                                <iconPacks:Material Kind="MagnifyExpand"/>
                             </Button>
                         </StackPanel>
                     </TabItem>

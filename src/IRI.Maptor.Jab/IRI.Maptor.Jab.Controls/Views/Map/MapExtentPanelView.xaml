@@ -42,6 +42,14 @@
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
             </Style>
+
+            <Style x:Key="sectionLabel" TargetType="TextBlock">
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Margin" Value="0,2,0,8"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+            </Style>
         </ResourceDictionary>
     </userControl:NotifiableUserControl.Resources>
     <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}" CornerRadius="4" Padding="0,1"
@@ -79,9 +87,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="{Binding [mapExtent_new_title], Source={StaticResource Localization}}"
-                                        Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
-                                       FontWeight="SemiBold" Margin="0,0,0,4"/>
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding [mapExtent_new_title], Source={StaticResource Localization}}"
+                                   Style="{StaticResource sectionLabel}"/>
                         <Button Grid.Column="1" Grid.Row="1" ToolTip="{Binding [mapExtent_new_addNew], Source={StaticResource Localization}}"
                                     Command="{Binding SaveBookmarkCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
                                     Margin="4,0"
@@ -102,10 +109,10 @@
                 <Border Style="{StaticResource sectionCard}">
                     <StackPanel>
                         <TextBlock Text="{Binding [mapExtent_currentView_title], Source={StaticResource Localization}}"
-                                       FontWeight="SemiBold" Margin="0,0,0,4"
-                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                                   Style="{StaticResource sectionLabel}"/>
                         <Grid>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -115,40 +122,89 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
+                            <Grid.Resources>
+                                <Style x:Key="boldText" TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                                    <Setter Property="Margin" Value="4,2"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                                <Style x:Key="normalText" TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                                    <Setter Property="FlowDirection" Value="LeftToRight"/>
+                                </Style>
+                            </Grid.Resources>
 
+                            <!--nearest google zoom level-->
+                            <TextBlock Grid.Row="0" Style="{StaticResource boldText}"
+                                       Text="{Binding [mapExtent_currentView_nearestZoomLevel], Source={StaticResource Localization}}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource normalText}"
+                                       Text="{Binding NearestZoomLevel, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
 
-                            <TextBlock Margin="4,2" Grid.Row="0" FontWeight="SemiBold"
-                                       Text="{Binding [mapExtent_currentView_zoomLevelText], Source={StaticResource Localization}}"
-                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
-                            <TextBlock Margin="4,2" Grid.Row="1" FontWeight="SemiBold"
-                                       Text="{Binding [mapExtent_currentView_scaleText], Source={StaticResource Localization}}"
-                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
-                            <TextBlock Margin="4,2" Grid.Row="2" FontWeight="SemiBold"
-                                       Text="{Binding [mapExtent_currentView_groundResolutionText], Source={StaticResource Localization}}"
-                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
-                            <TextBlock Margin="4,2" Grid.Row="3" FontWeight="SemiBold"
-                                          Text="scaleText2"
-                                          Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                            <!--nearest google scale-->
+                            <TextBlock Grid.Row="1" Style="{StaticResource boldText}"
+                                       Text="{Binding [mapExtent_currentView_nearestGoogleScale], Source={StaticResource Localization}}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource normalText}"
+                                       Text="{Binding NearestGoogleScale, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
 
-                            <TextBlock Grid.Column="1" Grid.Row="0"
-                                       Text="{Binding ZoomLevelText, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"
-                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
-                                       FlowDirection="LeftToRight"/>
-                            <TextBlock Grid.Column="1" Grid.Row="1"
-                                       Text="{Binding ScaleText, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"
-                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
-                                       FlowDirection="LeftToRight"/>
-                            <TextBlock Grid.Column="1" Grid.Row="2"
-                                       Text="{Binding GroundResolutionText, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"
-                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
-                                       FlowDirection="LeftToRight"/>
+                            <!--current point map scale-->
+                            <TextBlock Grid.Row="2" Style="{StaticResource boldText}"
+                                       Text="{Binding [mapExtent_currentView_currentPointMapScale], Source={StaticResource Localization}}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource normalText}"
+                                       Text="{Binding CurrentPointMapScale, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
 
-                            <TextBlock Grid.Column="1" Grid.Row="3"
-                                         Text="{Binding ScaleText2, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"
-                                         Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
-                                         FlowDirection="LeftToRight"/>
+                            <!--Current point ground resolution-->
+                            <TextBlock Grid.Row="3" Style="{StaticResource boldText}"
+                                       Text="{Binding [mapExtent_currentView_currentPointGroundResolution], Source={StaticResource Localization}}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{StaticResource normalText}"
+                                       Text="{Binding CurrentPointGroundResolution, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
                         </Grid>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,8">
+                            <Grid.Resources>
+                                <Style x:Key="labelBorder"  TargetType="Border">
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                    <Setter Property="BorderBrush" Value="White"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="CornerRadius" Value="4"/>
+                                    <Setter Property="Padding" Value="1"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                </Style>
+                                <Style x:Key="labelText" TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="11"/>
+                                    <Setter Property="FontWeight" Value="Normal"/>
+                                    <Setter Property="Margin" Value="4,0"/>
+                                    <Setter Property="FlowDirection" Value="LeftToRight"/>
+                                </Style>
+                            </Grid.Resources>
 
+                            <Border Margin="30" Height="75" Width="100" BorderBrush="White" BorderThickness="4"/>
+
+                            <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                <TextBlock Text="{Binding TopLabel, FallbackValue='NaN', Converter={StaticResource localizedNumberConverter}}"
+                                           Style="{StaticResource labelText}"/>
+                            </Border>
+
+                            <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <Border.LayoutTransform>
+                                    <RotateTransform Angle="90"/>
+                                </Border.LayoutTransform>
+                                <TextBlock Text="{Binding RightLabel, FallbackValue='NaN', Converter={StaticResource localizedNumberConverter}}"
+                                           Style="{StaticResource labelText}"/>
+                            </Border>
+
+                            <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                                <TextBlock Text="{Binding BottomLabel, FallbackValue='NaN', Converter={StaticResource localizedNumberConverter}}"
+                                           Style="{StaticResource labelText}"/>
+                            </Border>
+
+                            <Border Style="{StaticResource labelBorder}" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Border.LayoutTransform>
+                                    <RotateTransform Angle="-90"/>
+                                </Border.LayoutTransform>
+                                <TextBlock Text="{Binding LeftLabel, FallbackValue='NaN', Converter={StaticResource localizedNumberConverter}}"
+                                           Style="{StaticResource labelText}"/>
+                            </Border>
+                        </Grid>
                         <!--<TextBlock Text="{Binding ZoomLevelText, StringFormat='Zoom level: {0}', Mode=OneWay}"/>
                         <TextBlock Margin="0,2,0,0" Text="{Binding ScaleText, StringFormat='Map scale: {0}', Mode=OneWay}"/>
                         <TextBlock Margin="0,2,0,0" Text="{Binding GroundResolutionText, StringFormat='Ground resolution: {0}', Mode=OneWay}"/>-->
@@ -166,9 +222,8 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding [mapExtent_gotoScale_title], Source={StaticResource Localization}}"
-                                           Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
-                                           FontWeight="SemiBold" Margin="0,0,0,4"/>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource sectionLabel}"
+                                   Text="{Binding [mapExtent_gotoScale_title], Source={StaticResource Localization}}"/>
                         <Border Grid.Row="1" Grid.Column="0" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
                             <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ScaleItemsView}" SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"
                                             DisplayMemberPath="DisplayLabel" Margin="4" MinHeight="28"
@@ -198,9 +253,8 @@
 
                 <Border Style="{StaticResource sectionCard}">
                     <StackPanel>
-                            <TextBlock Text="{Binding [mapExtent_savedExtents_title], Source={StaticResource Localization}}"
-                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
-                                       FontWeight="SemiBold" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding [mapExtent_savedExtents_title], Source={StaticResource Localization}}"
+                                   Style="{StaticResource sectionLabel}"/>
 
                         <ItemsControl ItemsSource="{Binding Bookmarks}" Margin="0">
                             <ItemsControl.ItemTemplate>

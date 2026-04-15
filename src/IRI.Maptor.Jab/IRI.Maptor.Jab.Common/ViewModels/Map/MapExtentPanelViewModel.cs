@@ -10,6 +10,9 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using DocumentFormat.OpenXml.Office.CustomUI;
+using IRI.Maptor.Sta.Common.Helpers;
+using IRI.Maptor.Sta.Spatial.Analysis;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 
@@ -72,7 +75,7 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
     //        RaisePropertyChanged();
     //    }
     //}
-    public string ZoomLevelText => Map.NearestZoomLevel.ToString();
+    public string NearestZoomLevel => Map.NearestZoomLevel.ToString();
 
     //private string _scaleText = string.Empty;
     //public string ScaleText
@@ -87,8 +90,9 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
     //        RaisePropertyChanged();
     //    }
     //}
-    public string ScaleText => $"1:{Map.CurrentPointInverseNearestGoogleScale:N0}";
-    public string ScaleText2 => $"1:{Map.CurrentPointInverseMapScale:N0}";
+    public string NearestGoogleScale => FormattableString.Invariant($"1:{Map.CurrentPointInverseNearestGoogleScale:N0}");
+
+    public string CurrentPointMapScale => FormattableString.Invariant($"1:{Map.CurrentPointInverseMapScale:N0}");
 
     //private string _groundResolutionText = string.Empty;
     //public string GroundResolutionText
@@ -103,8 +107,59 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
     //        RaisePropertyChanged();
     //    }
     //}
-    public string GroundResolutionText => $"{Map.CurrentPointGroundResolution:N2} m/px";
+    public string CurrentPointGroundResolution => FormattableString.Invariant($"{Map.CurrentPointGroundResolution:N2}");
 
+    //public string CurrentExtentWidth => FormattableString.Invariant($"{Map.CurrentExtent.Width:N1}");
+
+    //public string CurrentExtentHeight => FormattableString.Invariant($"{Map.CurrentExtent.Height:N1}");
+
+
+    private string _topLabel = string.Empty;
+    public string TopLabel
+    {
+        get { return _topLabel; }
+        set
+        {
+            _topLabel = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private string _bottomLabel = string.Empty;
+    public string BottomLabel
+    {
+        get { return _bottomLabel; }
+        set
+        {
+            _bottomLabel = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private string _leftLabel = string.Empty;
+    public string LeftLabel
+    {
+        get { return _leftLabel; }
+        set
+        {
+            _leftLabel = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private string _rightLabel = string.Empty;
+    public string RightLabel
+    {
+        get { return _rightLabel; }
+        set
+        {
+            _rightLabel = value;
+            RaisePropertyChanged();
+        }
+    }
 
     public MapExtentPanelViewModel(MapViewModelBase map, IMapExtentBookmarkStore? store = null)
     {
@@ -184,10 +239,24 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
         //var gr = Map.CurrentPointGroundResolution;
 
         //GroundResolutionText = $"{gr:N2} m/px";
-        RaisePropertyChanged(nameof(ScaleText));
-        RaisePropertyChanged(nameof(GroundResolutionText));
-        RaisePropertyChanged(nameof(ZoomLevelText));
-        RaisePropertyChanged(nameof(ScaleText2));
+        RaisePropertyChanged(nameof(NearestZoomLevel));
+        RaisePropertyChanged(nameof(NearestGoogleScale));
+        RaisePropertyChanged(nameof(CurrentPointMapScale));
+        RaisePropertyChanged(nameof(CurrentPointGroundResolution));
+
+
+
+        var geodeticExtent = Map.CurrentExtent.Transform(MapProjects.WebMercatorToGeodeticWgs84);
+
+        var bottomLength = SpatialUtility.GetEllipsoidalLength(geodeticExtent.BottomLeft, geodeticExtent.BottomRight);
+        var topLength = SpatialUtility.GetEllipsoidalLength(geodeticExtent.TopLeft, geodeticExtent.TopRight);
+        var leftLength = SpatialUtility.GetEllipsoidalLength(geodeticExtent.BottomLeft, geodeticExtent.TopLeft);
+        var rightLength = SpatialUtility.GetEllipsoidalLength(geodeticExtent.BottomRight, geodeticExtent.TopRight);
+
+        BottomLabel = UnitHelper.GetLengthLabel(bottomLength);
+        TopLabel = UnitHelper.GetLengthLabel(topLength);
+        LeftLabel = UnitHelper.GetLengthLabel(leftLength);
+        RightLabel = UnitHelper.GetLengthLabel(rightLength);        
     }
 
     #region Command
@@ -206,8 +275,6 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
 
                 var bookmark = MapExtentBookmark.FromTitleAndExtent(title, extent);
 
-                //if (Map.RequestCaptureThumbnailAsync is not null)
-                //{
                 var bmp = await Map.CaptureThumbnailAsync(extent, 48, 48);
 
                 if (bmp is not null)
@@ -215,7 +282,6 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
                     bookmark.ThumbnailBytes = ImageUtility.GetPngBytes(bmp);
                     bookmark.LoadThumbnail();
                 }
-                //}
 
                 Bookmarks.Add(bookmark);
 
@@ -241,19 +307,7 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
 
     private RelayCommand? _deleteBookmarkCommand;
     public RelayCommand DeleteBookmarkCommand =>
-        _deleteBookmarkCommand ??= new RelayCommand(param =>
-        {
-            //if (p is not MapExtentBookmark b)
-            //    return;
-
-            DeleteBookmark(param as MapExtentBookmark);
-
-            //Bookmarks.Remove(b);
-
-            //_store.Save(Bookmarks);
-
-            //Map.RemovePredefinedExtent(b.Id);
-        });
+        _deleteBookmarkCommand ??= new RelayCommand(param => DeleteBookmark(param as MapExtentBookmark));
 
 
     private RelayCommand? _applyScaleCommand;
