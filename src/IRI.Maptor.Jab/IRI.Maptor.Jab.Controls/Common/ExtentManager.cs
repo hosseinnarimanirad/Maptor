@@ -1,13 +1,9 @@
-﻿
-using IRI.Maptor.Sta.Common.Model;
-using IRI.Maptor.Jab.Common;
-using System;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Jab.Common.Events;
 
