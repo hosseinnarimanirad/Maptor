@@ -109,9 +109,9 @@ public class ApplicationPresenter : MapViewModelBase
                 //var toScreenMap = this.RequestGetToScreenMap?.Invoke();
                 var toScreenMap = this.CreateMapToScreenFunc();
 
-                var simplified = layer.Geometry.Simplify(this.LogisticGeometrySimplification, /*NearestZoomLevel,*/ toScreenMap, true);
+                var simplified = layer.Geometry.Simplify(this.LogisticGeometrySimplification, /*NearestGoogleZoomLevel,*/ toScreenMap, true);
 
-                this.AddDrawingItem(simplified, $"{layer.LayerName} simplified by logistic-{this.LogisticGeometrySimplification.Title}-{this.NearestZoomLevel}");
+                this.AddDrawingItem(simplified, $"{layer.LayerName} simplified by logistic-{this.LogisticGeometrySimplification.Title}-{this.NearestGoogleZoomLevel}");
             });
 
             var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.Flash }.Data;
@@ -130,7 +130,7 @@ public class ApplicationPresenter : MapViewModelBase
 
                 var simplified = layer.Geometry.Simplify(model, toScreenMap, true);
 
-                this.AddDrawingItem(simplified, $"{layer.LayerName} simplified by LRSv4-{this.NearestZoomLevel}", VisualParameters.GetStroke("#DE36A1"));
+                this.AddDrawingItem(simplified, $"{layer.LayerName} simplified by LRSv4-{this.NearestGoogleZoomLevel}", VisualParameters.GetStroke("#DE36A1"));
             });
 
             var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.Flash }.Data;
@@ -151,7 +151,7 @@ public class ApplicationPresenter : MapViewModelBase
 
                 var simplified = layer.Geometry.Simplify(model, toScreenMap, true);
 
-                this.AddDrawingItem(simplified, $"{layer.LayerName} simplified by LRSv7-{this.NearestZoomLevel}", VisualParameters.GetStroke("#08686E"));
+                this.AddDrawingItem(simplified, $"{layer.LayerName} simplified by LRSv7-{this.NearestGoogleZoomLevel}", VisualParameters.GetStroke("#08686E"));
 
                 this.IsBusy = false;
 
@@ -177,10 +177,10 @@ public class ApplicationPresenter : MapViewModelBase
                 var lrsv7Simplified = layer.Geometry.Simplify(GetLRSv7Model(), toScreenMap, true);
                 var lrsv4lfSimplified = layer.Geometry.Simplify(GetLRSv4LfModel(), toScreenMap, true);
                 var lrsv4Simplified = layer.Geometry.Simplify(GetLRSv4Model(), toScreenMap, true);
-                var bopwSimplified = layer.Geometry.Simplify(SimplificationType.BeforeOpeningWindow, this.NearestZoomLevel, parameter);
-                var nopwSimplified = layer.Geometry.Simplify(SimplificationType.NormalOpeningWindow, this.NearestZoomLevel, parameter);
-                var rwSimplified = layer.Geometry.Simplify(SimplificationType.ReumannWitkam, this.NearestZoomLevel, parameter);
-                var rdpSimplified = layer.Geometry.Simplify(SimplificationType.RamerDouglasPeucker, this.NearestZoomLevel, parameter);
+                var bopwSimplified = layer.Geometry.Simplify(SimplificationType.BeforeOpeningWindow, this.NearestGoogleZoomLevel, parameter);
+                var nopwSimplified = layer.Geometry.Simplify(SimplificationType.NormalOpeningWindow, this.NearestGoogleZoomLevel, parameter);
+                var rwSimplified = layer.Geometry.Simplify(SimplificationType.ReumannWitkam, this.NearestGoogleZoomLevel, parameter);
+                var rdpSimplified = layer.Geometry.Simplify(SimplificationType.RamerDouglasPeucker, this.NearestGoogleZoomLevel, parameter);
 
                 var lrsv7Compression = layer.Geometry.Compression(lrsv7Simplified) * 100.0;
                 var lrsv4lfCompression = layer.Geometry.Compression(lrsv4lfSimplified) * 100.0;
@@ -192,22 +192,22 @@ public class ApplicationPresenter : MapViewModelBase
 
                 var gray = VisualParameters.GetStroke("#ADADAD", 2);
 
-                //this.AddDrawingItem(lrsv7Simplified, $"{layer.LayerName}-LRSv7-{this.NearestZoomLevel}-{lrsv7Simplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#38A6A5", 2));
-                //this.AddDrawingItem(lrsv4Simplified, $"{layer.LayerName}-LRSv4-{this.NearestZoomLevel}-{lrsv4Simplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#CC503E", 2));
+                //this.AddDrawingItem(lrsv7Simplified, $"{layer.LayerName}-LRSv7-{this.NearestGoogleZoomLevel}-{lrsv7Simplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#38A6A5", 2));
+                //this.AddDrawingItem(lrsv4Simplified, $"{layer.LayerName}-LRSv4-{this.NearestGoogleZoomLevel}-{lrsv4Simplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#CC503E", 2));
 
-                //this.AddDrawingItem(bopwSimplified, $"{layer.LayerName}-BOPW-{this.NearestZoomLevel}-{bopwSimplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#EDAD08", 2));
-                //this.AddDrawingItem(nopwSimplified, $"{layer.LayerName}-NOPW-{this.NearestZoomLevel}-{nopwSimplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#5F4690", 2));
-                //this.AddDrawingItem(rwSimplified, $"{layer.LayerName}-RW-{this.NearestZoomLevel}-{rwSimplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#73AF48", 2));
-                //this.AddDrawingItem(rdpSimplified, $"{layer.LayerName}-RDP-{this.NearestZoomLevel}-{rdpSimplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#0F8554", 2));
+                //this.AddDrawingItem(bopwSimplified, $"{layer.LayerName}-BOPW-{this.NearestGoogleZoomLevel}-{bopwSimplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#EDAD08", 2));
+                //this.AddDrawingItem(nopwSimplified, $"{layer.LayerName}-NOPW-{this.NearestGoogleZoomLevel}-{nopwSimplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#5F4690", 2));
+                //this.AddDrawingItem(rwSimplified, $"{layer.LayerName}-RW-{this.NearestGoogleZoomLevel}-{rwSimplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#73AF48", 2));
+                //this.AddDrawingItem(rdpSimplified, $"{layer.LayerName}-RDP-{this.NearestGoogleZoomLevel}-{rdpSimplified.TotalNumberOfPoints}", VisualParameters.GetStroke("#0F8554", 2));
 
-                this.AddDrawingItem(lrsv7Simplified, $"{layer.LayerName}-LRSv7-{this.NearestZoomLevel}-#{lrsv7Simplified.TotalNumberOfPoints}-c{lrsv7Compression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
-                this.AddDrawingItem(lrsv4lfSimplified, $"{layer.LayerName}-LRSv4lf-{this.NearestZoomLevel}-#{lrsv4lfSimplified.TotalNumberOfPoints}-c{lrsv4lfCompression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
-                this.AddDrawingItem(lrsv4Simplified, $"{layer.LayerName}-LRSv4-{this.NearestZoomLevel}-#{lrsv4Simplified.TotalNumberOfPoints}-c{lrsv4Compression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
+                this.AddDrawingItem(lrsv7Simplified, $"{layer.LayerName}-LRSv7-{this.NearestGoogleZoomLevel}-#{lrsv7Simplified.TotalNumberOfPoints}-c{lrsv7Compression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
+                this.AddDrawingItem(lrsv4lfSimplified, $"{layer.LayerName}-LRSv4lf-{this.NearestGoogleZoomLevel}-#{lrsv4lfSimplified.TotalNumberOfPoints}-c{lrsv4lfCompression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
+                this.AddDrawingItem(lrsv4Simplified, $"{layer.LayerName}-LRSv4-{this.NearestGoogleZoomLevel}-#{lrsv4Simplified.TotalNumberOfPoints}-c{lrsv4Compression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
 
-                this.AddDrawingItem(bopwSimplified, $"{layer.LayerName}-BOPW-{this.NearestZoomLevel}-#{bopwSimplified.TotalNumberOfPoints}-c{bopwCompression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
-                this.AddDrawingItem(nopwSimplified, $"{layer.LayerName}-NOPW-{this.NearestZoomLevel}-#{nopwSimplified.TotalNumberOfPoints}-c{nopwCompression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
-                this.AddDrawingItem(rwSimplified, $"{layer.LayerName}-RW-{this.NearestZoomLevel}-#{rwSimplified.TotalNumberOfPoints}-c{rwCompression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
-                this.AddDrawingItem(rdpSimplified, $"{layer.LayerName}-RDP-{this.NearestZoomLevel}-#{rdpSimplified.TotalNumberOfPoints}-c{rdpCompression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
+                this.AddDrawingItem(bopwSimplified, $"{layer.LayerName}-BOPW-{this.NearestGoogleZoomLevel}-#{bopwSimplified.TotalNumberOfPoints}-c{bopwCompression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
+                this.AddDrawingItem(nopwSimplified, $"{layer.LayerName}-NOPW-{this.NearestGoogleZoomLevel}-#{nopwSimplified.TotalNumberOfPoints}-c{nopwCompression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
+                this.AddDrawingItem(rwSimplified, $"{layer.LayerName}-RW-{this.NearestGoogleZoomLevel}-#{rwSimplified.TotalNumberOfPoints}-c{rwCompression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
+                this.AddDrawingItem(rdpSimplified, $"{layer.LayerName}-RDP-{this.NearestGoogleZoomLevel}-#{rdpSimplified.TotalNumberOfPoints}-c{rdpCompression:N1}", VisualParameters.GetStroke("#ADADAD", 2));
 
                 var lrModels = new List<LogisticSimplification<Point>> { GetLRSv4LfModel(), GetLRSv4Model(), GetLRSv7Model() };
                 var methods = new List<SimplificationType>()
@@ -216,7 +216,7 @@ public class ApplicationPresenter : MapViewModelBase
                 };
 
 
-                await SimplificationHelper.Compare(layer.Geometry, 0, @"E:\University.Ph.D\4. Paper2\Outputs", this.NearestZoomLevel, layer.LayerName, methods, lrModels);
+                await SimplificationHelper.Compare(layer.Geometry, 0, @"E:\University.Ph.D\4. Paper2\Outputs", this.NearestGoogleZoomLevel, layer.LayerName, methods, lrModels);
 
                 this.IsBusy = false;
 

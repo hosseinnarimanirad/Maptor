@@ -1,10 +1,11 @@
-﻿using IRI.Maptor.Sta.Common.Services;
+using IRI.Maptor.Sta.Common.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,6 +22,18 @@ public static class HttpClientHelper
     private const string AcceptXml = "text/xml";
     private const string AcceptAll = "*/*";
     private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(100);
+
+    private sealed class ApiErrorEnvelope
+    {
+        public ApiErrorPayload? Error { get; set; }
+    }
+
+    private sealed class ApiErrorPayload
+    {
+        public string? ResourceKey { get; set; }
+        public object[]? Parameters { get; set; }
+        public string? Code { get; set; }
+    }
 
     /// <summary>
     /// Creates an HttpClient instance with the specified configuration.
@@ -623,6 +636,7 @@ public static class HttpClientHelper
         }
 
         using var client = CreateHttpClient(proxy, bearer, headers, timeout, AcceptJson);
+
         try
         {
             encoding ??= Encoding.UTF8;
@@ -632,16 +646,57 @@ public static class HttpClientHelper
             using var content = new StringContent(json, encoding, contentType);
 
             using var response = await client.PutAsync(address, content, cancellationToken);
-            
-            if (!response.IsSuccessStatusCode)
+
+            var result = new Response<T>
             {
-                return await HandleHttpErrorAsync<T>(response, "PUT request failed");
-            }
+                StatusCode = (int)response.StatusCode,
+                IsSuccess = response.IsSuccessStatusCode
+            };
 
             var responseContent = await response.Content.ReadAsStringAsync();
-            var result = JsonHelper.Deserialize<T>(responseContent);
 
-            return ResponseFactory.Create(result);
+            if (response.IsSuccessStatusCode)
+            {
+                result.Result = JsonHelper.Deserialize<T>(responseContent);
+            }
+            else
+            {
+                try
+                {
+                    result.Error = JsonSerializer.Deserialize<ProblemDetails>(responseContent);
+                    if (result.Error != null && string.IsNullOrWhiteSpace(result.Error.Detail))
+                    {
+                        var apiError = JsonSerializer.Deserialize<ApiErrorEnvelope>(
+                            responseContent,
+                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                        if (!string.IsNullOrWhiteSpace(apiError?.Error?.ResourceKey))
+                        {
+                            result.Error = new ProblemDetails
+                            {
+                                Title = apiError.Error.Code ?? "Request failed",
+                                Detail = apiError.Error.ResourceKey,
+                                Status = (int)response.StatusCode
+                            };
+                        }
+                    }
+                }
+                catch
+                {
+                    // Fallback: create a simple ProblemDetails
+                    result.Error = new ProblemDetails
+                    {
+                        Title = "Request failed",
+                        Detail = responseContent,
+                        Status = (int)response.StatusCode
+                    };
+                }
+            }
+
+            //return await HandleHttpErrorAsync<T>(response, "PUT request failed");
+
+            //return ResponseFactory.Create(result);
+            return result;
         }
         catch (HttpRequestException ex)
         {
