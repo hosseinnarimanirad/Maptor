@@ -9,5 +9,7 @@ public class FeatureSetChangesDto
 
     public List<FeatureDto> Updated { get; set; } = new List<FeatureDto>();
 
+    public List<FeatureDto> Deleted { get; set; } = new List<FeatureDto>();
+
     public List<int> DeletedIds { get; set; } = new List<int>();
 }

@@ -135,6 +135,7 @@ public class WebApiDataSource : MemoryDataSource
         Predicate<Geometry<Point>> predicate = geometry == null || geometry.IsNullOrEmpty()
             ? g => g.Intersects(FilterGeometry!)
             : g => g.Intersects(FilterGeometry!) && g.Intersects(geometry);
+
         return await Task.FromResult(_featureSet.FilterByGeometry(predicate));
     }
 
@@ -157,19 +158,20 @@ public class WebApiDataSource : MemoryDataSource
             {
                 Added = _featureSet.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.New).Select(ConvertFeatureToFeatureDto).ToList(),
                 Updated = _featureSet.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.Updated).Select(ConvertFeatureToFeatureDto).ToList(),
+                Deleted = _featureSet.GetAllFeatures().Where(f => f.Status == Sta.Common.Enums.FeatureStatus.Removed).Select(ConvertFeatureToFeatureDto).ToList(),
                 DeletedIds = _featureSet.GetDeletedFeatureIds().ToList(),
             };
 
-            var syncResult = await WebApiInfrastructure.SaveChangesAsync(
-                //_parameters.BaseUrl,
-                //_updateEndPoint,
+            var response = await WebApiInfrastructure.SaveChangesAsync( 
                 _parameters.SyncUrl,
                 dto,
                 _parameters.BearerToken,
                 _parameters.Headers);
-
-            if (syncResult is not null)
+            
+            if (response.IsSuccess)
             {
+                var syncResult = response.Result;
+
                 if (syncResult.NewIds != null && syncResult.NewIds.Count > 0)
                 {
                     foreach (var mapping in syncResult.NewIds)
@@ -178,13 +180,28 @@ public class WebApiDataSource : MemoryDataSource
                             continue;
 
                         var feature = _featureSet.Features.FirstOrDefault(f => f.Key == mapping.Key);
+
                         if (feature != null)
                         {
                             feature.Id = mapping.Id;
+                            ApplyRowVersion(feature, mapping.RowVersion);
                         }
                     }
                 }
 
+                if (syncResult.UpdatedRowVersions != null && syncResult.UpdatedRowVersions.Count > 0)
+                {
+                    foreach (var mapping in syncResult.UpdatedRowVersions)
+                    {
+                        var feature = _featureSet.GetAllFeatures().FirstOrDefault(f => f.Key == mapping.Key);
+                        if (feature == null && mapping.Id > 0)
+                            feature = _featureSet.GetAllFeatures().FirstOrDefault(f => f.Id == mapping.Id);
+
+                        if (feature != null)
+                            ApplyRowVersion(feature, mapping.RowVersion);
+                    }
+                }
+                 
                 //_addedFeatures.Clear();
                 //_updatedFeatures.Clear();
                 //_deletedIds.Clear();
@@ -194,6 +211,8 @@ public class WebApiDataSource : MemoryDataSource
             else
             {
                 HasError = true;
+
+                throw new Exception(response.ErrorMessage);
             }
         }
         catch
@@ -325,6 +344,14 @@ public class WebApiDataSource : MemoryDataSource
             Attributes = feature.Attributes ?? new Dictionary<string, object>(),
             Key = feature.Key
         };
+    }
+
+    private static void ApplyRowVersion(Feature<Point> feature, byte[]? rowVersion)
+    {
+        if (feature.Attributes == null)
+            feature.Attributes = new Dictionary<string, object>();
+
+        feature.Attributes["RowVersion"] = rowVersion ?? Array.Empty<byte>();
     }
 
     #endregion

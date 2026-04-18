@@ -32,22 +32,24 @@ public static class WebApiInfrastructure
     /// <summary>
     /// Sends a unit-of-work DTO (added, updated, deleted) to the update endpoint.
     /// </summary>
-    public static async Task<SyncResultDto?> SaveChangesAsync(
-        //string baseUrl,
+    public static async Task<Response<SyncResultDto>> SaveChangesAsync(
         string endpoint,
         FeatureSetChangesDto dto,
         string? bearerToken = null,
         Dictionary<string, string>? headers = null)
     {
-        //var url = $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
+        //var response = await HttpClientHelper.HttpPutAsync<SyncResultDto>(
+        //    endpoint,
+        //    dto,
+        //    bearer: bearerToken,
+        //    headers: headers);
 
-        var response = await HttpClientHelper.HttpPutAsync<SyncResultDto>(
+        //return response.HasNotNullResult() ? response.Result : null;
+        return await HttpClientHelper.HttpPutAsync<SyncResultDto>(
             endpoint,
             dto,
             bearer: bearerToken,
             headers: headers);
-
-        return response.HasNotNullResult() ? response.Result : null;
     }
 
     /// <summary>

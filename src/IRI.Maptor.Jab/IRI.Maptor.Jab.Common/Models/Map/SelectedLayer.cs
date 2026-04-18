@@ -113,6 +113,8 @@ public class SelectedLayer : Notifier
 
     public Action<ILayer>? RequestRefreshLayer { get; set; }
 
+    public Func<string, Task> RequestShowErrorMessage { get; set; }
+
 
     public SelectedLayer(VectorLayer layer, List<Field>? fields)
     {
@@ -523,7 +525,18 @@ public class SelectedLayer : Notifier
         get
         {
             if (_saveCommand is null)
-                _saveCommand = new RelayCommand(async param => await this.SaveChangesAsync(), _ => HasPendingChanges);
+                _saveCommand = new RelayCommand(async param =>
+                {
+                    try
+                    {
+                        await this.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        await RequestShowErrorMessage(ex.Message);
+                    }
+
+                }, _ => HasPendingChanges);
 
             return _saveCommand;
         }
