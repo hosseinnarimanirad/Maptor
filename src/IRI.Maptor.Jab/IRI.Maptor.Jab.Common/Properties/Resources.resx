@@ -1472,14 +1472,14 @@
   <data name="mapExtent_currentView_currentPointGroundResolution" xml:space="preserve">
     <value>Ground resolution (m/px):</value>
   </data>
-  <data name="mapExtent_currentView_currentPointMapScale" xml:space="preserve">
-    <value>Map scale (current point):</value>
+  <data name="mapExtent_currentView_inverseMapScaleCurrentPoint" xml:space="preserve">
+    <value>Map Scale (current point):</value>
   </data>
   <data name="mapExtent_currentView_title" xml:space="preserve">
     <value>Current Extent</value>
   </data>
-  <data name="mapExtent_currentView_nearestZoomLevel" xml:space="preserve">
-    <value>Nearest Zoom level:</value>
+  <data name="mapExtent_currentView_nearestGoogleZoomLevel" xml:space="preserve">
+    <value>Nearest Google Zoom level:</value>
   </data>
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>Go to scale (at center)</value>
@@ -1514,7 +1514,19 @@
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>Go to Previous Page</value>
   </data>
-  <data name="mapExtent_currentView_nearestGoogleScale" xml:space="preserve">
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevel" xml:space="preserve">
     <value>Nearest Google Scale:</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScale" xml:space="preserve">
+    <value>Map Scale (WebMercator):</value>
+  </data>
+  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+    <value>Use ground scale for standard scales</value>
+  </data>
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+    <value>Use webmercator scale for standard scales</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint" xml:space="preserve">
+    <value>Nearest Google Scale (current point):</value>
   </data>
 </root>

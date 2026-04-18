@@ -61,57 +61,29 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
             CommandManager.InvalidateRequerySuggested();
         }
     }
+     
+    //public string NearestGoogleZoomLevel => Map.NearestGoogleZoomLevel.ToString();
 
-    //private string _zoomLevelText = string.Empty;
-    //public string ZoomLevelText
-    //{
-    //    get => _zoomLevelText;
-    //    private set
-    //    {
-    //        if (_zoomLevelText == value)
-    //            return;
+    //public string InverseMapScale_NearestGoogleZoomLevel => Map.InverseMapScale_NearestGoogleZoomLevel.ToString();
+     
+    //public string CurrentPointNearestGoogleScale => FormattableString.Invariant($"1:{Map.CurrentPointInverseNearestGoogleScale:N0}");
 
-    //        _zoomLevelText = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
-    public string NearestZoomLevel => Map.NearestZoomLevel.ToString();
+    //public string CurrentPointMapScale => FormattableString.Invariant($"1:{Map.InverseMapScale_CurrentPoint:N0}");
 
-    //private string _scaleText = string.Empty;
-    //public string ScaleText
-    //{
-    //    get => _scaleText;
-    //    private set
-    //    {
-    //        if (_scaleText == value)
-    //            return;
-
-    //        _scaleText = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
-    public string NearestGoogleScale => FormattableString.Invariant($"1:{Map.CurrentPointInverseNearestGoogleScale:N0}");
-
-    public string CurrentPointMapScale => FormattableString.Invariant($"1:{Map.CurrentPointInverseMapScale:N0}");
-
-    //private string _groundResolutionText = string.Empty;
-    //public string GroundResolutionText
-    //{
-    //    get => _groundResolutionText;
-    //    private set
-    //    {
-    //        if (_groundResolutionText == value)
-    //            return;
-
-    //        _groundResolutionText = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
-    public string CurrentPointGroundResolution => FormattableString.Invariant($"{Map.CurrentPointGroundResolution:N2}");
-
-    //public string CurrentExtentWidth => FormattableString.Invariant($"{Map.CurrentExtent.Width:N1}");
-
-    //public string CurrentExtentHeight => FormattableString.Invariant($"{Map.CurrentExtent.Height:N1}");
+    //public string WebMercatorMapScale => FormattableString.Invariant($"1:{Map.InverseMapScale:N0}");
+     
+    //public string CurrentPointGroundResolution => FormattableString.Invariant($"{Map.CurrentPointGroundResolution:N2}");
+     
+    private bool _useGroundScaleForSandardScales = true;
+    public bool UseGroundScaleForSandardScales
+    {
+        get { return _useGroundScaleForSandardScales; }
+        set
+        {
+            _useGroundScaleForSandardScales = value;
+            RaisePropertyChanged();
+        }
+    }
 
 
     private string _topLabel = string.Empty;
@@ -226,23 +198,12 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
     private void OnMapExtentChangedHandler(object? sender, EventArgs e) => RefreshMetrics();
 
     public void RefreshMetrics()
-    {
-        //ZoomLevelText = Map.NearestZoomLevel.ToString();
-
-        //ScaleText = $"1:{Map.InverseMapScale:N0}";
-        //ScaleText = $"1:{Map.CurrentPointInverseMapScale:N0}";
-
-        //var center = Map.CurrentExtent.Center;
-        //var wgs = MapProjects.WebMercatorToGeodeticWgs84(center);
-        //double lat = wgs?.Y ?? 0;
-        //var gr = WebMercatorUtility.CalculateGroundResolution(Map.NearestZoomLevel, lat);
-        //var gr = Map.CurrentPointGroundResolution;
-
-        //GroundResolutionText = $"{gr:N2} m/px";
-        RaisePropertyChanged(nameof(NearestZoomLevel));
-        RaisePropertyChanged(nameof(NearestGoogleScale));
-        RaisePropertyChanged(nameof(CurrentPointMapScale));
-        RaisePropertyChanged(nameof(CurrentPointGroundResolution));
+    { 
+        //RaisePropertyChanged(nameof(NearestGoogleZoomLevel));
+        //RaisePropertyChanged(nameof(CurrentPointNearestGoogleScale));
+        //RaisePropertyChanged(nameof(WebMercatorMapScale));
+        //RaisePropertyChanged(nameof(CurrentPointMapScale));
+        //RaisePropertyChanged(nameof(CurrentPointGroundResolution));
 
 
 
@@ -256,7 +217,7 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
         BottomLabel = UnitHelper.GetLengthLabel(bottomLength);
         TopLabel = UnitHelper.GetLengthLabel(topLength);
         LeftLabel = UnitHelper.GetLengthLabel(leftLength);
-        RightLabel = UnitHelper.GetLengthLabel(rightLength);        
+        RightLabel = UnitHelper.GetLengthLabel(rightLength);
     }
 
     #region Command
@@ -332,7 +293,7 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
 
                     double lat = wgs?.Y ?? 0;
 
-                    var webMercatorScale = Math.Cos(lat * Math.PI / 180.0) * item.Model.Scale;
+                    var webMercatorScale = UseGroundScaleForSandardScales ? Math.Cos(lat * Math.PI / 180.0) * item.Model.Scale : item.Model.Scale;
 
                     Map.Zoom(webMercatorScale, center);
                 }

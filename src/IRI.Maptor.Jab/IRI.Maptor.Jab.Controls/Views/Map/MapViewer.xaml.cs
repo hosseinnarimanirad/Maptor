@@ -246,11 +246,11 @@ public partial class MapViewer : NotifiableUserControl
     /// <summary>
     /// Based On Google Zoom Levels
     /// </summary>
-    public int NearestZoomLevel => WebMercatorUtility.GetZoomLevel(this.MapScale);
+    public int NearestGoogleZoomLevel => WebMercatorUtility.GetZoomLevel(this.MapScale);
 
     private void UpdateTileInfos()
     {
-        this.CurrentTileInfos = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(this.CurrentExtent, this.NearestZoomLevel);
+        this.CurrentTileInfos = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(this.CurrentExtent, this.NearestGoogleZoomLevel);
     }
 
     private List<TileInfo> _currentTileInfos;
@@ -379,18 +379,18 @@ public partial class MapViewer : NotifiableUserControl
 
             //if (this.CurrentPoint != null && !double.IsNaN(this.CurrentPoint.Y))
             //{
-            //    this.CurrentPointScale = WebMercatorUtility.CalculateMapScale(this.NearestZoomLevel, CurrentPoint.Y);
+            //    this.CurrentPointScale = WebMercatorUtility.CalculateMapScale(this.NearestGoogleZoomLevel, CurrentPoint.Y);
             //    this.CurrentPointScale2 = WebMercatorUtility.WebMercatorScaleToMapScale(this.MapScale, CurrentPoint.Y);
 
-            //    this.CurrentPointGroundResolution = WebMercatorUtility.CalculateGroundResolution(this.NearestZoomLevel, CurrentPoint.Y);
+            //    this.CurrentPointGroundResolution = WebMercatorUtility.CalculateGroundResolution(this.NearestGoogleZoomLevel, CurrentPoint.Y);
             //    var currentPointGroundResolution = WebMercatorUtility.CalculateGroundResolution(CurrentPointScale);
 
-            //    var theScale1_local = WebMercatorUtility.CalculateMapScale(this.NearestZoomLevel, CurrentPoint.Y);
-            //    var theScale_equator = WebMercatorUtility.CalculateMapScale(this.NearestZoomLevel, 0);
+            //    var theScale1_local = WebMercatorUtility.CalculateMapScale(this.NearestGoogleZoomLevel, CurrentPoint.Y);
+            //    var theScale_equator = WebMercatorUtility.CalculateMapScale(this.NearestGoogleZoomLevel, 0);
 
 
             //    var groundRes = WebMercatorUtility.CalculateGroundResolution(theScale_equator);
-            //    var groundRes2 = WebMercatorUtility.CalculateGroundResolution(this.NearestZoomLevel, 0);
+            //    var groundRes2 = WebMercatorUtility.CalculateGroundResolution(this.NearestGoogleZoomLevel, 0);
             //}
 
             this.OnMapMouseMove?.Invoke(sender, e);
@@ -402,8 +402,8 @@ public partial class MapViewer : NotifiableUserControl
 
             RaisePropertyChanged(nameof(MapScale));
 
-            RaisePropertyChanged(nameof(NearestZoomLevel));
-
+            RaisePropertyChanged(nameof(NearestGoogleZoomLevel));
+             
             UpdateTileInfos();
 
             this._layerManager.UpdateIsInRange(InverseMapScale);
@@ -1184,7 +1184,7 @@ public partial class MapViewer : NotifiableUserControl
         if (layerTile is null || layerTile.IsProcessing)
             return;
 
-        if (tile.ZoomLevel != this.NearestZoomLevel)
+        if (tile.ZoomLevel != this.NearestGoogleZoomLevel)
         {
             layerTile.IsProcessing = false;
             return;
@@ -1197,7 +1197,7 @@ public partial class MapViewer : NotifiableUserControl
         if (feature is null || feature.Features.IsNullOrEmpty())
             return;
 
-        if (tile.ZoomLevel != this.NearestZoomLevel || MapScale != mapScale)
+        if (tile.ZoomLevel != this.NearestGoogleZoomLevel || MapScale != mapScale)
         {
             layerTile.IsProcessing = false;
             return;
@@ -1220,9 +1220,9 @@ public partial class MapViewer : NotifiableUserControl
 
         var imageBrush = renderingStrategy.Render(features, mapScale, tileScreenWidth, tileScreenHeight);
 
-        if (tile.ZoomLevel != this.NearestZoomLevel)
+        if (tile.ZoomLevel != this.NearestGoogleZoomLevel)
         {
-            Debug.Print($"MapViewer; {DateTime.Now.ToLongTimeString()}; AddTiledLayerAsync Layer escaped! ZoomLevel Conflict 3 {layer.LayerName} - {tile.ToShortString()} expected zoomLevel:{this.NearestZoomLevel}");
+            Debug.Print($"MapViewer; {DateTime.Now.ToLongTimeString()}; AddTiledLayerAsync Layer escaped! ZoomLevel Conflict 3 {layer.LayerName} - {tile.ToShortString()} expected zoomLevel:{this.NearestGoogleZoomLevel}");
             return;
         }
 
@@ -1399,13 +1399,13 @@ public partial class MapViewer : NotifiableUserControl
             if (_presenter == null)
                 return;
 
-            if (tile.ZoomLevel != NearestZoomLevel || !layer.HasTheSameMapProvider(_presenter.SelectedMapProvider))
+            if (tile.ZoomLevel != NearestGoogleZoomLevel || !layer.HasTheSameMapProvider(_presenter.SelectedMapProvider))
                 return;
 
             // 1401.11.07
             var geoImage = await layer.GetTileAsync(tile, _presenter.HttpClient);
 
-            if (tile.ZoomLevel != NearestZoomLevel || !layer.HasTheSameMapProvider(this._presenter.SelectedMapProvider))
+            if (tile.ZoomLevel != NearestGoogleZoomLevel || !layer.HasTheSameMapProvider(this._presenter.SelectedMapProvider))
                 return;
 
             var webMercatorExtent = geoImage.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
@@ -2061,14 +2061,14 @@ public partial class MapViewer : NotifiableUserControl
             if (justTiled && !tag.IsTiled)
                 continue;
 
-            if (tag.Tile != null && (tag.Tile.ZoomLevel != this.NearestZoomLevel || !this.CurrentTileInfos.Contains(tag.Tile)))
+            if (tag.Tile != null && (tag.Tile.ZoomLevel != this.NearestGoogleZoomLevel || !this.CurrentTileInfos.Contains(tag.Tile)))
             {
                 this.mapView.Children.RemoveAt(i);
 
                 continue;
             }
 
-            if (this.CurrentTileInfos.Contains(tag.Tile) && tag.Tile.ZoomLevel == this.NearestZoomLevel)// && tag.Scale == this.MapScale)
+            if (this.CurrentTileInfos.Contains(tag.Tile) && tag.Tile.ZoomLevel == this.NearestGoogleZoomLevel)// && tag.Scale == this.MapScale)
                 continue;
 
             //Why checking both layer type and extent?
@@ -2693,7 +2693,7 @@ public partial class MapViewer : NotifiableUserControl
 
         foreach (var item in e.Arg)
         {
-            if (item.ZoomLevel != this.NearestZoomLevel)
+            if (item.ZoomLevel != this.NearestGoogleZoomLevel)
                 continue;
 
             if (!CurrentTileInfos.Contains(item))
@@ -3141,7 +3141,7 @@ public partial class MapViewer : NotifiableUserControl
 
         if (_presenter.MapSettings.IsGoogleZoomLevelsEnabled)
         {
-            int newZoomLevel = zoomIn ? WebMercatorUtility.GetNextZoomLevel(NearestZoomLevel) : WebMercatorUtility.GetPreviousZoomLevel(NearestZoomLevel);
+            int newZoomLevel = zoomIn ? WebMercatorUtility.GetNextZoomLevel(NearestGoogleZoomLevel) : WebMercatorUtility.GetPreviousZoomLevel(NearestGoogleZoomLevel);
 
             newZoomLevel = CheckGoogleZoomLevel(newZoomLevel);
 
@@ -3168,7 +3168,7 @@ public partial class MapViewer : NotifiableUserControl
 
         if (mapBoundingBox.Width + mapBoundingBox.Height < minBoundingBoxSize)
         {
-            int newZoomLevel = WebMercatorUtility.GetNextZoomLevel(NearestZoomLevel);
+            int newZoomLevel = WebMercatorUtility.GetNextZoomLevel(NearestGoogleZoomLevel);
 
             var wgs84Center = MapProjects.WebMercatorToGeodeticWgs84(mapCenter);
 

@@ -546,9 +546,9 @@ public class LegendCommand : LegendCommandBase
 
                 var groundBoundingBox = layer.Geometry.GetBoundingBox().Expand(1.1);
 
-                var currentScreenSize = WebMercatorUtility.ToScreenSize(map.NearestZoomLevel, groundBoundingBox);
+                var currentScreenSize = WebMercatorUtility.ToScreenSize(map.NearestGoogleZoomLevel, groundBoundingBox);
 
-                var mapScale = WebMercatorUtility.GetGoogleMapScale(map.NearestZoomLevel);
+                var mapScale = WebMercatorUtility.GetGoogleMapScale(map.NearestGoogleZoomLevel);
 
                 await layer.SaveAsPng(fileName, groundBoundingBox, currentScreenSize.Width, currentScreenSize.Height, mapScale);
             }
@@ -752,7 +752,7 @@ public class LegendCommand : LegendCommandBase
             {
                 var cloned = layer.Geometry.Clone();
 
-                map.AddDrawingItem(cloned, $"{layer.LayerName} cloned-{map.NearestZoomLevel}");
+                map.AddDrawingItem(cloned, $"{layer.LayerName} cloned-{map.NearestGoogleZoomLevel}");
 
             }
             catch (Exception ex)
@@ -781,7 +781,7 @@ public class LegendCommand : LegendCommandBase
             {
                 var simplified = layer.Geometry.Simplify(SimplificationType.CumulativeAngle, new SimplificationParamters() { AngleThreshold = 0.99, Retain3Points = true });
 
-                map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-{map.NearestZoomLevel}");
+                map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-{map.NearestGoogleZoomLevel}");
 
             }
             catch (Exception ex)
@@ -808,9 +808,9 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var simplified = layer.Geometry.Simplify(SimplificationType.CumulativeTriangleRoutine, map.NearestZoomLevel, new SimplificationParamters() { Retain3Points = true });
+                var simplified = layer.Geometry.Simplify(SimplificationType.CumulativeTriangleRoutine, map.NearestGoogleZoomLevel, new SimplificationParamters() { Retain3Points = true });
 
-                map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-{map.NearestZoomLevel}");
+                map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-{map.NearestGoogleZoomLevel}");
 
             }
             catch (Exception ex)
@@ -837,9 +837,9 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var simplified = layer.Geometry.Simplify(SimplificationType.VisvalingamWhyatt, map.NearestZoomLevel, new SimplificationParamters() { Retain3Points = true });
+                var simplified = layer.Geometry.Simplify(SimplificationType.VisvalingamWhyatt, map.NearestGoogleZoomLevel, new SimplificationParamters() { Retain3Points = true });
 
-                map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-VW-{map.NearestZoomLevel}");
+                map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-VW-{map.NearestGoogleZoomLevel}");
 
             }
             catch (Exception ex)
@@ -864,9 +864,9 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var simplified = layer.Geometry.Simplify(SimplificationType.RamerDouglasPeucker, map.NearestZoomLevel, new SimplificationParamters() { Retain3Points = true });
+                var simplified = layer.Geometry.Simplify(SimplificationType.RamerDouglasPeucker, map.NearestGoogleZoomLevel, new SimplificationParamters() { Retain3Points = true });
                 //VisualSimplification.sim layer.Geometry.Simplify()
-                map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-RDP-{map.NearestZoomLevel}");
+                map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-RDP-{map.NearestGoogleZoomLevel}");
 
             }
             catch (Exception ex)

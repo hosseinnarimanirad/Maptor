@@ -1429,16 +1429,16 @@
     <value>مدیریت محدوده‌ها</value>
   </data>
   <data name="mapExtent_currentView_currentPointGroundResolution" xml:space="preserve">
-    <value>قدرت تفکیک زمینی (متر/پیکسل):</value>
+    <value>قدرت تفکیک زمینی نقطه جاری (متر/پیکسل):</value>
   </data>
-  <data name="mapExtent_currentView_currentPointMapScale" xml:space="preserve">
-    <value>مقیاس نقطه جاری:</value>
+  <data name="mapExtent_currentView_inverseMapScaleCurrentPoint" xml:space="preserve">
+    <value>مقیاس (نقطه جاری):</value>
   </data>
   <data name="mapExtent_currentView_title" xml:space="preserve">
     <value>اطلاعات محدوده جاری</value>
   </data>
-  <data name="mapExtent_currentView_nearestZoomLevel" xml:space="preserve">
-    <value>نزدیک‌ترین سطح بزرگ‌نمایی:</value>
+  <data name="mapExtent_currentView_nearestGoogleZoomLevel" xml:space="preserve">
+    <value>نزدیک‌ترین سطح گوگل:</value>
   </data>
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>برو به مقیاس (مرکز نقشه)</value>
@@ -1473,7 +1473,19 @@
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>رفتن به صفحه قبلی</value>
   </data>
-  <data name="mapExtent_currentView_nearestGoogleScale" xml:space="preserve">
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevel" xml:space="preserve">
     <value>مقیاس نزدیک‌ترین سطح گوگل:</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScale" xml:space="preserve">
+    <value>مقیاس (وب‌مرکاتور):</value>
+  </data>
+  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+    <value>اعمال مقیاس زمینی برای مقیاس‌های استاندارد</value>
+  </data>
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+    <value>اعمال مقیاس وب‌مرکاتور برای مقیاس‌های استاندارد</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint" xml:space="preserve">
+    <value>مقیاس نزدیک‌ترین سطح گوگل (نقطه جاری):</value>
   </data>
 </root>

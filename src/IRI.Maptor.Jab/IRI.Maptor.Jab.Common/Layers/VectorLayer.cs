@@ -1,5 +1,7 @@
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -212,25 +214,9 @@ public class VectorLayer : SymbolizableLayer
         return feature;
     }
 
-    //public async Task<List<Feature<Point>>> GetRenderReadyFeatures(BoundingBox mapExtent, double mapScale, double screenWidth, double screenHeight)
-    //{
-    //    var feature = await this.DataSource.GetAsFeatureSetAsync(mapScale, mapExtent);
-
-    //    if (feature is null || feature.HasNoGeometry())
-    //        return new List<Feature<Point>>();
-
-    //    //double xScale = imageWidth / mapExtent.Width;
-    //    //double yScale = imageHeight / mapExtent.Height;
-    //    //double scale = xScale > yScale ? yScale : xScale;
-    //    //Func<Point, Point> mapToScreen = new Func<Point, Point>(p => new Point((p.X - mapExtent.XMin) * scale, -(p.Y - mapExtent.YMax) * scale));
-    //    var mapToScreen = Utility.CreateMapToScreenMapFunc(mapExtent, screenWidth, screenHeight);
-
-    //    return feature.Transform(mapToScreen).Features;
-    //}
-
 
     #region Raster Save And Export Methods
-     
+
     // Todo: this method has been totally changed but not tested!
     public async Task SaveAsGoogleTiles(string outputFolderPath, int minLevel = 1, int maxLevel = 13)
     {
@@ -266,36 +252,142 @@ public class VectorLayer : SymbolizableLayer
         }
     }
 
-    public async Task SaveAsPng(string fileName, BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
+    public async Task SaveAsPng(string fileName, BoundingBox mapExtent, double imageWidth, double imageHeight, double webMercatorMapScale)
     {
-        switch (this.RasterizationMethod)
+        var renderTargetBitmap = await AsRenderTargetBitmap(mapExtent, imageWidth, imageHeight, webMercatorMapScale);
+
+        if (renderTargetBitmap is null)
+            return;
+
+        // note: the rendered scalebar here is based on
+        // webmercator scale not ground scale
+        var result = ComposeWithScalebar(renderTargetBitmap, webMercatorMapScale);
+
+        ImageUtility.Save(fileName, result/*renderTargetBitmap*/);
+
+
+        //switch (this.RasterizationMethod)
+        //{
+        //    case RasterizationMethod.StreamGeometry:
+        //    case RasterizationMethod.DrawingVisual:
+        //        var renderTargetBitmap = await AsRenderTargetBitmap(mapExtent, imageWidth, imageHeight, mapScale);
+
+        //        if (renderTargetBitmap is null)
+        //            return;
+
+        //        var result = ComposeWithScalebar(renderTargetBitmap,mapScale);
+
+        //        ImageUtility.Save(fileName, result/*renderTargetBitmap*/);
+
+        //        break;
+
+        //    case RasterizationMethod.WriteableBitmap:
+        //    case RasterizationMethod.GdiPlus:
+        //    //case RasterizationApproach.OpenTk:
+        //    case RasterizationMethod.None:
+        //    default:
+        //        var image = await AsGdiBitmapAsync(mapExtent, imageWidth, imageHeight, mapScale);
+
+        //        if (image is null)
+        //            return;
+
+        //        image.Save(fileName);
+
+        //        image.Dispose();
+        //        break;
+        //}
+    }
+
+    private RenderTargetBitmap ComposeWithScalebar(BitmapSource mapImage, double mapScale)
+    {
+        const double footerHeight = 44;
+        const double horizontalPadding = 12;
+        const double verticalCenterOffset = 10;
+
+        //var inverseMapScale = 1.0 / mapScale;
+
+        var dpi = 96;
+        //var scaleModel = ScalebarExportHelper.Create(mapScale);
+        var unitDistance = ScalebarHelper.GetUnitDistance(dpi);
+        var mapLength = ScalebarHelper.ChooseRoundScale(mapScale, unitDistance);
+        var scalebarLength = ScalebarHelper.GetScalebarLength(mapLength, mapScale, unitDistance);
+
+        if (mapLength <= 0)
+            return ToRenderTargetBitmap(mapImage);
+
+        var outputWidth = mapImage.PixelWidth;
+        var outputHeight = mapImage.PixelHeight + (int)footerHeight;
+        var mapHeight = mapImage.PixelHeight;
+
+        var drawing = new DrawingVisual();
+
+        using (var drawingContext = drawing.RenderOpen())
         {
-            case RasterizationMethod.StreamGeometry:
-            case RasterizationMethod.DrawingVisual:
-                var renderTargetBitmap = await AsRenderTargetBitmap(mapExtent, imageWidth, imageHeight, mapScale);
+            drawingContext.DrawImage(mapImage, new Rect(0, 0, mapImage.PixelWidth, mapImage.PixelHeight));
 
-                if (renderTargetBitmap is null)
-                    return;
+            //drawingContext.DrawRectangle(Brushes.White, null, new Rect(0, mapHeight, outputWidth, footerHeight));
 
-                ImageUtility.Save(fileName, renderTargetBitmap);
+            var barY = mapHeight + verticalCenterOffset;
 
-                break;
+            var barRect = new Rect(horizontalPadding, barY, scalebarLength, 8);
 
-            case RasterizationMethod.WriteableBitmap:
-            case RasterizationMethod.GdiPlus:
-            //case RasterizationApproach.OpenTk:
-            case RasterizationMethod.None:
-            default:
-                var image = await AsGdiBitmapAsync(mapExtent, imageWidth, imageHeight, mapScale);
+            drawingContext.DrawRectangle(null, new Pen(Brushes.Black, 1.5), barRect);
 
-                if (image is null)
-                    return;
+            var groundLengthText = new FormattedText(
+                mapLength.ToString(),
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                new Typeface("Segoe UI"),
+                12,
+                Brushes.Black,
+                1.0);
 
-                image.Save(fileName);
+            drawingContext.DrawText(groundLengthText, new System.Windows.Point(horizontalPadding + scalebarLength + 8, barY - 3));
 
-                image.Dispose();
-                break;
+            //var details = new List<string>();
+            //if (options.ShowScaleValue)
+            //    details.Add(scaleModel.CurrentScaleText);
+
+            //if (options.ShowZoomLevel && options.ZoomLevel.HasValue)
+            //    details.Add($"Zoom {options.ZoomLevel.Value}");
+
+            //if (details.Count > 0)
+            //{
+            //    var infoText = new FormattedText(
+            //        string.Join("  ", details),
+            //        CultureInfo.CurrentCulture,
+            //        FlowDirection.LeftToRight,
+            //        new Typeface("Segoe UI"),
+            //        12,
+            //        Brushes.Black,
+            //        1.0);
+
+            //    drawingContext.DrawText(infoText, new Point(horizontalPadding, mapHeight + footerHeight - infoText.Height - 6));
+            //}
         }
+
+        var output = new RenderTargetBitmap(outputWidth, outputHeight, dpi, dpi, PixelFormats.Pbgra32);
+
+        output.Render(drawing);
+        output.Freeze();
+        return output;
+    }
+
+    private static RenderTargetBitmap ToRenderTargetBitmap(BitmapSource source)
+    {
+        if (source is RenderTargetBitmap renderTargetBitmap)
+            return renderTargetBitmap;
+
+        var drawing = new DrawingVisual();
+        using (var drawingContext = drawing.RenderOpen())
+        {
+            drawingContext.DrawImage(source, new Rect(0, 0, source.PixelWidth, source.PixelHeight));
+        }
+
+        var output = new RenderTargetBitmap(source.PixelWidth, source.PixelHeight, 96, 96, PixelFormats.Pbgra32);
+        output.Render(drawing);
+        output.Freeze();
+        return output;
     }
 
     public async Task<System.Drawing.Bitmap?> AsGdiBitmapAsync(BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
@@ -309,7 +401,7 @@ public class VectorLayer : SymbolizableLayer
     }
 
     public async Task<RenderTargetBitmap?> AsRenderTargetBitmap(BoundingBox mapExtent, double imageWidth, double imageHeight, double mapScale)
-    { 
+    {
         var drawingVisuals = await AsDrawingVisual(mapExtent, imageWidth, imageHeight, mapScale);
 
         if (drawingVisuals.IsNullOrEmpty())

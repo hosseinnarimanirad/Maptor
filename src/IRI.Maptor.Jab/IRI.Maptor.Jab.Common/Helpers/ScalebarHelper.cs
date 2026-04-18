@@ -31,14 +31,21 @@ public static class ScalebarHelper
         var minScreenLengthInMeter = minScalebarWidth * unitDistance;
         var maxScreenLengthInMeter = maxScalebarWidth * unitDistance;
 
-        var minGroundLengthInMeter = minScreenLengthInMeter * mapScale;
-        var maxGroundLengthInMeter = maxScreenLengthInMeter * mapScale;
+        var minGroundLengthInMeter = minScreenLengthInMeter / mapScale;
+        var maxGroundLengthInMeter = maxScreenLengthInMeter / mapScale;
 
         return _roundLengths.FirstOrDefault(l => l >= minGroundLengthInMeter && l <= maxGroundLengthInMeter);
     }
 
     public static double GetScalebarLength(double mapLength, double mapScale, double unitDistance)
     {
-        return (mapLength / mapScale) / unitDistance; ;
+        return (mapLength * mapScale) / unitDistance; ;
+    }
+
+    public static string GetGroundLengthLabel(double groundLengthInMeter)
+    {
+        return (groundLengthInMeter / 1000.0 >= 1) ?
+                string.Format("{0:f0} km", groundLengthInMeter / 1000) :
+                string.Format("{0} m", groundLengthInMeter);          
     }
 }

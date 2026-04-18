@@ -2465,29 +2465,47 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Map scale (current point):.
+        ///   Looks up a localized string similar to Map Scale (WebMercator):.
         /// </summary>
-        public static string mapExtent_currentView_currentPointMapScale {
+        public static string mapExtent_currentView_inverseMapScale {
             get {
-                return ResourceManager.GetString("mapExtent_currentView_currentPointMapScale", resourceCulture);
+                return ResourceManager.GetString("mapExtent_currentView_inverseMapScale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map Scale (current point):.
+        /// </summary>
+        public static string mapExtent_currentView_inverseMapScaleCurrentPoint {
+            get {
+                return ResourceManager.GetString("mapExtent_currentView_inverseMapScaleCurrentPoint", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Nearest Google Scale:.
         /// </summary>
-        public static string mapExtent_currentView_nearestGoogleScale {
+        public static string mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevel {
             get {
-                return ResourceManager.GetString("mapExtent_currentView_nearestGoogleScale", resourceCulture);
+                return ResourceManager.GetString("mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nearest Zoom level:.
+        ///   Looks up a localized string similar to Nearest Google Scale (current point):.
         /// </summary>
-        public static string mapExtent_currentView_nearestZoomLevel {
+        public static string mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint {
             get {
-                return ResourceManager.GetString("mapExtent_currentView_nearestZoomLevel", resourceCulture);
+                return ResourceManager.GetString("mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nearest Google Zoom level:.
+        /// </summary>
+        public static string mapExtent_currentView_nearestGoogleZoomLevel {
+            get {
+                return ResourceManager.GetString("mapExtent_currentView_nearestGoogleZoomLevel", resourceCulture);
             }
         }
         
@@ -2506,6 +2524,24 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string mapExtent_gotoScale_title {
             get {
                 return ResourceManager.GetString("mapExtent_gotoScale_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use ground scale for standard scales.
+        /// </summary>
+        public static string mapExtent_gotoScale_useGroundScaleForSandardScales {
+            get {
+                return ResourceManager.GetString("mapExtent_gotoScale_useGroundScaleForSandardScales", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use webmercator scale for standard scales.
+        /// </summary>
+        public static string mapExtent_gotoScale_useWebMercatorScaleForSandardScales {
+            get {
+                return ResourceManager.GetString("mapExtent_gotoScale_useWebMercatorScaleForSandardScales", resourceCulture);
             }
         }
         

@@ -9,8 +9,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-            Background="Transparent"
-             d:DesignHeight="420" d:DesignWidth="280" MinWidth="220">
+            Background="Transparent">
     <userControl:NotifiableUserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -117,6 +116,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -136,27 +136,39 @@
 
                             <!--nearest google zoom level-->
                             <TextBlock Grid.Row="0" Style="{StaticResource boldText}"
-                                       Text="{Binding [mapExtent_currentView_nearestZoomLevel], Source={StaticResource Localization}}"/>
+                                       Text="{Binding [mapExtent_currentView_nearestGoogleZoomLevel], Source={StaticResource Localization}}"/>
                             <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource normalText}"
-                                       Text="{Binding NearestZoomLevel, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
+                                       Text="{Binding Map.NearestGoogleZoomLevel, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
 
                             <!--nearest google scale-->
                             <TextBlock Grid.Row="1" Style="{StaticResource boldText}"
-                                       Text="{Binding [mapExtent_currentView_nearestGoogleScale], Source={StaticResource Localization}}"/>
+                                       Text="{Binding [mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevel], Source={StaticResource Localization}}"/>
                             <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource normalText}"
-                                       Text="{Binding NearestGoogleScale, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
+                                       Text="{Binding Map.InverseMapScale_NearestGoogleZoomLevel, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
+
+                            <!--nearest google scale (current point)-->
+                            <TextBlock Grid.Row="2" Style="{StaticResource boldText}"
+                                       Text="{Binding [mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint], Source={StaticResource Localization}}"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource normalText}"
+                                       Text="{Binding Map.InverseMapScale_NearestGoogleZoomLevel_CurrentPoint, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
+
+                            <!--WebMercator map scale-->
+                            <TextBlock Grid.Row="3" Style="{StaticResource boldText}"
+                                       Text="{Binding [mapExtent_currentView_inverseMapScale], Source={StaticResource Localization}}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{StaticResource normalText}"
+                                       Text="{Binding Map.InverseMapScale, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
 
                             <!--current point map scale-->
-                            <TextBlock Grid.Row="2" Style="{StaticResource boldText}"
-                                       Text="{Binding [mapExtent_currentView_currentPointMapScale], Source={StaticResource Localization}}"/>
-                            <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource normalText}"
-                                       Text="{Binding CurrentPointMapScale, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
+                            <TextBlock Grid.Row="4" Style="{StaticResource boldText}"
+                                       Text="{Binding [mapExtent_currentView_inverseMapScaleCurrentPoint], Source={StaticResource Localization}}"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" Style="{StaticResource normalText}"
+                                       Text="{Binding Map.InverseMapScale_CurrentPoint, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
 
                             <!--Current point ground resolution-->
-                            <TextBlock Grid.Row="3" Style="{StaticResource boldText}"
+                            <TextBlock Grid.Row="5" Style="{StaticResource boldText}"
                                        Text="{Binding [mapExtent_currentView_currentPointGroundResolution], Source={StaticResource Localization}}"/>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{StaticResource normalText}"
-                                       Text="{Binding CurrentPointGroundResolution, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
+                            <TextBlock Grid.Row="5" Grid.Column="1" Style="{StaticResource normalText}"
+                                       Text="{Binding Map.CurrentPointGroundResolution, Mode=OneWay, Converter={StaticResource localizedNumberConverter}}"/>
                         </Grid>
                         <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,8">
                             <Grid.Resources>
@@ -217,14 +229,22 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/> 
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource sectionLabel}"
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource sectionLabel}"
                                    Text="{Binding [mapExtent_gotoScale_title], Source={StaticResource Localization}}"/>
-                        <Border Grid.Row="1" Grid.Column="0" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
+                        <mahApp:ToggleSwitch Grid.Row="1" Grid.ColumnSpan="2"
+                                             FontSize="11" Cursor="Hand"
+                                             FontFamily="{StaticResource iranSans}"
+                                             Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
+                                             IsOn="{Binding UseGroundScaleForSandardScales}"
+                                             OnContent="{Binding [mapExtent_gotoScale_useGroundScaleForSandardScales], Source={StaticResource Localization}}"
+                                             OffContent="{Binding [mapExtent_gotoScale_useWebMercatorScaleForSandardScales], Source={StaticResource Localization}}"/>
+                        <Border Grid.Row="2" Grid.Column="0" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
                             <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ScaleItemsView}" SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"
                                             DisplayMemberPath="DisplayLabel" Margin="4" MinHeight="28"
                                             BorderThickness="0"
@@ -244,8 +264,8 @@
                                 </ComboBox.GroupStyle>
                             </ComboBox>
                         </Border>
-                        <Button Grid.Row="1" Grid.Column="1" Command="{Binding ApplyScaleCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
-              ToolTip="{Binding [cmd_general_zoomToExtent], Source={StaticResource Localization}}">
+                        <Button Grid.Row="2" Grid.Column="1" Command="{Binding ApplyScaleCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
+                                ToolTip="{Binding [cmd_general_zoomToExtent], Source={StaticResource Localization}}">
                             <iconPacks:PackIconMaterial Kind="MagnifyExpand"/>
                         </Button>
                     </Grid>
@@ -268,24 +288,24 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
                                             <Border Grid.Column="0" Width="48" Height="48"
-                                        BorderBrush="{DynamicResource MahApps.Brushes.Gray4}"
-                                                Background="White"
-                                        BorderThickness="1" Margin="0,0,4,0" CornerRadius="1">
+                                                    BorderBrush="{DynamicResource MahApps.Brushes.Gray4}"
+                                                    Background="White"
+                                                    BorderThickness="1" Margin="0,0,4,0" CornerRadius="1">
                                                 <Image Source="{Binding Thumbnail}" Stretch="Uniform"/>
                                             </Border>
                                             <TextBlock Grid.Column="1" Text="{Binding Title}"
-                                                   Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
-                                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
+                                                       VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                             <Button Grid.Column="2" ToolTip="Delete"
-                                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
-                                        Command="{Binding DataContext.DeleteBookmarkCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                        CommandParameter="{Binding}">
+                                                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
+                                                    Command="{Binding DataContext.DeleteBookmarkCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}">
                                                 <iconPacks:PackIconMaterial Kind="DeleteOutline" Width="16" Height="16"/>
                                             </Button>
                                             <Button Grid.Column="3" 
-                                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
-                                        Command="{Binding DataContext.GoToBookmarkCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                        CommandParameter="{Binding}" >
+                                                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
+                                                    Command="{Binding DataContext.GoToBookmarkCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}" >
                                                 <iconPacks:PackIconMaterial Kind="MagnifyExpand" Width="16" Height="16"/>
                                             </Button>
                                         </Grid>
