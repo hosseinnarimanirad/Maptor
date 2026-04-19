@@ -1174,7 +1174,7 @@
   <data name="legend_clearAll" xml:space="preserve">
     <value>Clear All</value>
   </data>
-  <data name="mapLegendItem_layerTitle" xml:space="preserve">
+  <data name="legendItem_layerTitle" xml:space="preserve">
     <value>Title</value>
   </data>
   <data name="mapInfo_general" xml:space="preserve">
@@ -1528,5 +1528,8 @@
   </data>
   <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint" xml:space="preserve">
     <value>Nearest Google Scale (current point):</value>
+  </data>
+  <data name="legendItem_reloadData" xml:space="preserve">
+    <value>Reload Data</value>
   </data>
 </root>

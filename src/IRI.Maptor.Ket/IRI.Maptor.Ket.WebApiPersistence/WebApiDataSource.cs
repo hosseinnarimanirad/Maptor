@@ -61,6 +61,7 @@ public class WebApiDataSource : MemoryDataSource
     public async Task LoadAsync(ListFeaturesQueryParams? queryParams = null, CancellationToken cancellationToken = default)
     {
         IsInitializing = true;
+
         try
         {
             HasError = false;

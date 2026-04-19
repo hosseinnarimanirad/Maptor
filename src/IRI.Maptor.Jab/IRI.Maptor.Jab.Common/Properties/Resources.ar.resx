@@ -838,7 +838,7 @@
   <data name="mapInfo_sphericalLength" xml:space="preserve">
     <value>الطول الكروي:</value>
   </data>
-  <data name="mapLegendItem_layerTitle" xml:space="preserve">
+  <data name="legendItem_layerTitle" xml:space="preserve">
     <value>عنوان</value>
   </data>
   <data name="mapPanel_currentPart_add" xml:space="preserve">

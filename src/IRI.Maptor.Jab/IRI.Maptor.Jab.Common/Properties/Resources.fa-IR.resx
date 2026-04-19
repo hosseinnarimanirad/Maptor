@@ -897,7 +897,7 @@
   <data name="mapInfo_sphericalLength" xml:space="preserve">
     <value>طول کروی:</value>
   </data>
-  <data name="mapLegendItem_layerTitle" xml:space="preserve">
+  <data name="legendItem_layerTitle" xml:space="preserve">
     <value>عنوان</value>
   </data>
   <data name="mapPanel_currentPart_add" xml:space="preserve">
@@ -1487,5 +1487,8 @@
   </data>
   <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint" xml:space="preserve">
     <value>مقیاس نزدیک‌ترین سطح گوگل (نقطه جاری):</value>
+  </data>
+  <data name="legendItem_reloadData" xml:space="preserve">
+    <value>دریافت مجدد داده‌ها</value>
   </data>
 </root>

@@ -2330,6 +2330,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reload Data.
+        /// </summary>
+        public static string legendItem_reloadData {
+            get {
+                return ResourceManager.GetString("legendItem_reloadData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change password.
         /// </summary>
         public static string manageAccount_changePassword {
@@ -2719,9 +2728,9 @@ namespace IRI.Maptor.Jab.Common.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Title.
         /// </summary>
-        public static string mapLegendItem_layerTitle {
+        public static string legendItem_layerTitle {
             get {
-                return ResourceManager.GetString("mapLegendItem_layerTitle", resourceCulture);
+                return ResourceManager.GetString("legendItem_layerTitle", resourceCulture);
             }
         }
         

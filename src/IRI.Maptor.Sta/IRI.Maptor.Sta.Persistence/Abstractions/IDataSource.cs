@@ -12,11 +12,6 @@ public interface IDataSource
     /// </summary>
     DataSourceKind DataSourceKind { get; }
 
-    /// <summary>
-    /// Loads or refreshes the data source asynchronously.
-    /// Pre-loaded sources (e.g., in-memory) may return completed task.
-    /// </summary>
-    Task LoadAsync(CancellationToken cancellationToken = default);
     BoundingBox WebMercatorExtent { get; }
 
     int Srid { get; }
@@ -66,4 +61,10 @@ public interface IDataSource
     event EventHandler<bool>? IsClientFilteredChanged;
 
     event EventHandler<bool>? HasErrorChanged;
+
+    /// <summary>
+    /// Loads or refreshes the data source asynchronously.
+    /// Pre-loaded sources (e.g., in-memory) may return completed task.
+    /// </summary>
+    Task LoadAsync(CancellationToken cancellationToken = default);
 }

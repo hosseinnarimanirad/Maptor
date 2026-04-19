@@ -880,8 +880,7 @@ public class LegendCommand : LegendCommandBase
 
     #endregion
 
-
-
+     
     #region Default Text Layer
 
     internal static List<Func<MapViewModelBase, DrawingItemLayer, ILegendCommand>> GetDefaultTextLayerCommands()

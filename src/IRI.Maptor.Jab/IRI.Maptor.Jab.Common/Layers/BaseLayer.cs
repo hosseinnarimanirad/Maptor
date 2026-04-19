@@ -517,6 +517,8 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public Action<ILayer>? RequestChangeVisibility { get; set; }
 
+    public Action<ILayer>? RequestChangeSymbology;
+
     /// <summary>
     /// Invoked when the layer's data source finishes loading. Used to trigger map re-render (e.g. via RefreshLayerVisibility).
     /// Set by LayerManager when adding layers with unloaded IDataSource.
@@ -654,6 +656,14 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
+    public async Task ReloadDataAsync()
+    {
+        if (DataSource is null)
+            return;
+
+        await DataSource.LoadAsync();         
+    }
+
     #endregion
 
     private List<IFeatureTableCommand> _featureTableCommands = new();
@@ -727,7 +737,6 @@ public abstract class BaseLayer : Notifier, ILayer
     }
 
     private RelayCommand? _undoAllChangesCommand;
-
     public RelayCommand UndoAllChangesCommand
     {
         get
@@ -744,8 +753,23 @@ public abstract class BaseLayer : Notifier, ILayer
     }
 
 
+    private RelayCommand? _reloadDataCommand;
 
-    public Action<ILayer>? RequestChangeSymbology;
+    public RelayCommand? ReloadDataCommand
+    {
+        get
+        {
+            if (_reloadDataCommand == null)
+            {
+                _reloadDataCommand = new RelayCommand(
+                    async param => await ReloadDataAsync(),
+                    param => DataSource != null && !IsBusy);
+            }
+
+            return _reloadDataCommand;
+        }
+    }
+
 
     #region Events
 

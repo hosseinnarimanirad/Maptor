@@ -8,7 +8,8 @@
              xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common"
              xmlns:enums="clr-namespace:IRI.Maptor.Sta.Common.Enums;assembly=IRI.Maptor.Sta.Common"
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
-             FontFamily="{StaticResource iranSans}">
+             FontFamily="{StaticResource iranSans}"
+             Background="Transparent">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -337,16 +338,16 @@
 
                 <!--number of selected features-->
                 <TextBlock VerticalAlignment="Center"
-                              Text="{Binding NumberOfSelectedFeatures, Converter={StaticResource localizedNumberConverter}, StringFormat={}({0})}" 
-                              FontSize="{Binding ElementName=root, Path=TitleFontSize}"
-                              Visibility="{Binding NumberOfSelectedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
+                            Text="{Binding NumberOfSelectedFeatures, Converter={StaticResource localizedNumberConverter}, StringFormat={}({0})}" 
+                            FontSize="{Binding ElementName=root, Path=TitleFontSize}"
+                            Visibility="{Binding NumberOfSelectedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
 
                 <!--layer title (textbox)-->
                 <TextBox BorderThickness="1" Padding="0" VerticalAlignment="Center" MinWidth="70"
                             Text="{Binding ElementName=root, Path=Title, Mode=TwoWay}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding ElementName=root, Path=IsEditable, Converter={StaticResource boolToVisibilityConverter}}"
-                            mahApp:TextBoxHelper.Watermark="{Binding [mapLegendItem_layerTitle], Source={StaticResource Localization}}" Margin="1" mahApp:TextBoxHelper.SelectAllOnFocus="True"
+                            mahApp:TextBoxHelper.Watermark="{Binding [legendItem_layerTitle], Source={StaticResource Localization}}" Margin="1" mahApp:TextBoxHelper.SelectAllOnFocus="True"
                             VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -374,7 +375,17 @@
                         </Style>
                     </TextBox.Style>
                 </TextBox>
-
+                
+                <!--reload data-->
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"
+                        Command="{Binding ReloadDataCommand}"
+                        ToolTip="{Binding [legendItem_reloadData], Source={StaticResource Localization}}"
+                        Visibility="{Binding IsMouseOver, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}">
+                    <Viewbox Margin="4">
+                        <iconPacks:PackIconMaterial Kind="Refresh" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+                    </Viewbox>
+                </Button>
+                
                 <!--pending changes with hover popup-->
                 <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"
                         Command="{Binding SaveChangesCommand}"
