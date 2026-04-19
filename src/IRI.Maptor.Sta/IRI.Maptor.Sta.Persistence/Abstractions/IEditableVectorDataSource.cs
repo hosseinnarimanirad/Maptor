@@ -40,7 +40,7 @@ public interface IEditableVectorDataSource : IDataSource
     /// </summary>
     void UndoAllChanges();
 
-    Task SaveChanges();
+    Task SaveChangesAsync();
 
     int GetNewId();
 }

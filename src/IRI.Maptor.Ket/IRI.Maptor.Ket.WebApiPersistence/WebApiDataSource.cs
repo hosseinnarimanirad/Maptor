@@ -8,6 +8,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Ket.WebApiPersistence.DTOs;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Common.Exceptions;
 
 namespace IRI.Maptor.Ket.WebApiPersistence;
 
@@ -141,7 +142,7 @@ public class WebApiDataSource : MemoryDataSource
     }
 
 
-    public override async Task SaveChanges()
+    public override async Task SaveChangesAsync()
     {
         if (string.IsNullOrWhiteSpace(_parameters.SyncUrl))
         {
@@ -163,12 +164,12 @@ public class WebApiDataSource : MemoryDataSource
                 DeletedIds = _featureSet.GetDeletedFeatureIds().ToList(),
             };
 
-            var response = await WebApiInfrastructure.SaveChangesAsync( 
+            var response = await WebApiInfrastructure.SaveChangesAsync(
                 _parameters.SyncUrl,
                 dto,
                 _parameters.BearerToken,
                 _parameters.Headers);
-            
+
             if (response.IsSuccess)
             {
                 var syncResult = response.Result;
@@ -202,7 +203,7 @@ public class WebApiDataSource : MemoryDataSource
                             ApplyRowVersion(feature, mapping.RowVersion);
                     }
                 }
-                 
+
                 //_addedFeatures.Clear();
                 //_updatedFeatures.Clear();
                 //_deletedIds.Clear();
@@ -213,7 +214,14 @@ public class WebApiDataSource : MemoryDataSource
             {
                 HasError = true;
 
-                throw new Exception(response.ErrorMessage);
+                if (response.Error?.Title == "ConcurrencyException")
+                {
+                    throw new ConcurrencyConflictException(response.ErrorMessage ?? string.Empty);
+                }
+                else
+                {
+                    throw new Exception(response.ErrorMessage);
+                }
             }
         }
         catch

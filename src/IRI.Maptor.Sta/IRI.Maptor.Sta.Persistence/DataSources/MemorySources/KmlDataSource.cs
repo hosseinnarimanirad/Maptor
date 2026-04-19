@@ -32,7 +32,7 @@ public class KmlDataSource : MemoryDataSource
 
     public override string ToString() => $"{nameof(KmlDataSource)}";
 
-    public override Task SaveChanges()
+    public override Task SaveChangesAsync()
     {
         var features = _featureSet.Features.ToList();
         var kmlFeatures = features.ToKmlFeatures();

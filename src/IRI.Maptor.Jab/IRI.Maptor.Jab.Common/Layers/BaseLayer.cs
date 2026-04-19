@@ -645,7 +645,7 @@ public abstract class BaseLayer : Notifier, ILayer
         if (dataSource is null)
             return;
 
-        await dataSource.SaveChanges();
+        await dataSource.SaveChangesAsync();
     }
 
     public void UndoAllChanges()

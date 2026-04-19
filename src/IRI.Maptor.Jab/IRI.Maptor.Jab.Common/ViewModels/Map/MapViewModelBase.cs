@@ -2367,7 +2367,7 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 var dataSource = layer.DataSource as IEditableVectorDataSource;
                 if (dataSource != null)
-                    await dataSource.SaveChanges();
+                    await dataSource.SaveChangesAsync();
             }
         }
         catch (Exception ex)

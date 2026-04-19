@@ -32,7 +32,7 @@ public class GpxDataSource : MemoryDataSource
 
     public override string ToString() => $"{nameof(GpxDataSource)}";
 
-    public override Task SaveChanges()
+    public override Task SaveChangesAsync()
     {
         var features = _featureSet.Features.ToList();
         GpxFormat.WriteFromFeatures(_fileName, features, MapProjects.WebMercatorToGeodeticWgs84);

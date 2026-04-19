@@ -198,7 +198,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         UpdateHasPendingChanges();
     }
 
-    public virtual Task SaveChanges()
+    public virtual Task SaveChangesAsync()
     {
         _featureSet.ApplyChanges();
         UpdateHasPendingChanges();

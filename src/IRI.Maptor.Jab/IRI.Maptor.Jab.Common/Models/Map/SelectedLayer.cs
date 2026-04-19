@@ -269,7 +269,7 @@ public class SelectedLayer : Notifier
         if (editableSource is null)
             return;
 
-        await editableSource.SaveChanges();
+        await editableSource.SaveChangesAsync();
 
         // Marshal grid refresh to UI thread; HTTP completion may have resumed on a background thread
         await DispatcherInvokeAsync(() =>

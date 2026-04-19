@@ -34,7 +34,7 @@ public class GeoJsonDataSource : MemoryDataSource
 
     public override string ToString() => $"{nameof(GeoJsonDataSource)}";
 
-    public override Task SaveChanges()
+    public override Task SaveChangesAsync()
     {
         if (!string.IsNullOrWhiteSpace(_fileName))
         {

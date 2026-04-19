@@ -31,7 +31,7 @@ public class TopoJsonDataSource : MemoryDataSource
 
     public override string ToString() => $"{nameof(TopoJsonDataSource)}";
 
-    public override Task SaveChanges()
+    public override Task SaveChangesAsync()
     {
         // TopoJSON save not supported; pasted or loaded data is read-only for persistence
         _featureSet.ApplyChanges();
