@@ -10,10 +10,9 @@ public class DialogViewModel : DialogViewModelBase
     public Action _requestFirstAction, _requestSecondAction;
 
     private string _title;
-
     public string Title
     {
-        get { return _title; }
+        get => _title;
         set
         {
             _title = value;
@@ -23,10 +22,9 @@ public class DialogViewModel : DialogViewModelBase
 
 
     private string _message;
-
     public string Message
     {
-        get { return _message; }
+        get => _message;
         set
         {
             _message = value;
@@ -34,11 +32,11 @@ public class DialogViewModel : DialogViewModelBase
         }
     }
 
-    private string _iconPathMarkup;
 
+    private string _iconPathMarkup;
     public string IconPathMarkup
     {
-        get { return _iconPathMarkup; }
+        get => _iconPathMarkup;
         set
         {
             _iconPathMarkup = value;
@@ -48,10 +46,9 @@ public class DialogViewModel : DialogViewModelBase
 
 
     private bool _isTwoOptionsMode;
-
     public bool IsTwoOptionsMode
     {
-        get { return _isTwoOptionsMode; }
+        get => _isTwoOptionsMode;
         set
         {
             _isTwoOptionsMode = value;
@@ -61,14 +58,11 @@ public class DialogViewModel : DialogViewModelBase
 
 
 
-
-
     //OK Button
     private string _firstOptionText;
-
     public string FirstOptionText
     {
-        get { return _firstOptionText; }
+        get => _firstOptionText;
         set
         {
             _firstOptionText = value;
@@ -78,10 +72,9 @@ public class DialogViewModel : DialogViewModelBase
 
 
     private string _firstOptionPathMarkup;
-
     public string FirstOptionPathMarkup
     {
-        get { return _firstOptionPathMarkup; }
+        get => _firstOptionPathMarkup;
         set
         {
             _firstOptionPathMarkup = value;
@@ -89,20 +82,18 @@ public class DialogViewModel : DialogViewModelBase
         }
     }
 
-    private Brush _firstOptionColor;
-
-    public Brush FirstOptionColor
-    {
-        get { return _firstOptionColor; }
-        set
-        {
-            _firstOptionColor = value;
-            RaisePropertyChanged();
-        }
-    }
+    //private Brush _firstOptionColor;
+    //public Brush FirstOptionColor
+    //{
+    //    get => _firstOptionColor;
+    //    set
+    //    {
+    //        _firstOptionColor = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
     private RelayCommand _firstOptionCommand;
-
     public RelayCommand FirstOptionCommand
     {
         get
@@ -126,10 +117,9 @@ public class DialogViewModel : DialogViewModelBase
 
     //Cancel Button
     private string _secondOptionText;
-
     public string SecondOptionText
     {
-        get { return _secondOptionText; }
+        get => _secondOptionText;
         set
         {
             _secondOptionText = value;
@@ -138,10 +128,9 @@ public class DialogViewModel : DialogViewModelBase
     }
 
     private string _secondOptionPathMarkup;
-
     public string SecondOptionPathMarkup
     {
-        get { return _secondOptionPathMarkup; }
+        get => _secondOptionPathMarkup;
         set
         {
             _secondOptionPathMarkup = value;
@@ -149,20 +138,18 @@ public class DialogViewModel : DialogViewModelBase
         }
     }
 
-    private Brush _secondOptionColor;
-
-    public Brush SecondOptionColor
-    {
-        get { return _secondOptionColor; }
-        set
-        {
-            _secondOptionColor = value;
-            RaisePropertyChanged();
-        }
-    }
+    //private Brush _secondOptionColor;
+    //public Brush SecondOptionColor
+    //{
+    //    get { return _secondOptionColor; }
+    //    set
+    //    {
+    //        _secondOptionColor = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
     private RelayCommand _secondOptionCommand;
-
     public RelayCommand SecondOptionCommand
     {
         get
@@ -182,6 +169,8 @@ public class DialogViewModel : DialogViewModelBase
             return _secondOptionCommand;
         }
     }
+
+
 
     public DialogViewModel()
     {

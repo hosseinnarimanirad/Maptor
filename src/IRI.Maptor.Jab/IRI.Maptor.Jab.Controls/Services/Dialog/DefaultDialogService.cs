@@ -35,7 +35,7 @@ public class DefaultDialogService : IDialogService
     }
 
     #region Helper Methods
-     
+
 
     /// <summary>
     /// Gets the owner window of the specified type from the application's windows.
@@ -107,7 +107,7 @@ public class DefaultDialogService : IDialogService
         var originalEffect = owner.Effect;
 
         owner.Effect = new BlurEffect() { Radius = BlurRadius };
-        
+
         return new BlurEffectDisposable(owner, originalEffect);
     }
 
@@ -135,7 +135,7 @@ public class DefaultDialogService : IDialogService
         if (owner != null)
         {
             dialog.Owner = owner;
-            dialog.WindowStartupLocation= WindowStartupLocation.CenterOwner;
+            dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
         }
 
         var blurDisposable = ApplyBlurEffect(owner);
@@ -240,7 +240,7 @@ public class DefaultDialogService : IDialogService
             Multiselect = false,
             Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_openfile_title)]
         };
-         
+
         var blurDisposable = ApplyBlurEffect(owner);
         var dispatcher = GetDispatcher(owner);
 
@@ -271,6 +271,7 @@ public class DefaultDialogService : IDialogService
     }
 
     #endregion
+
 
     #region Open Files Dialog
 
@@ -378,6 +379,7 @@ public class DefaultDialogService : IDialogService
     }
 
     #endregion
+
 
     #region Save File Dialog
 
@@ -490,6 +492,7 @@ public class DefaultDialogService : IDialogService
 
     #endregion
 
+
     #region Yes No Dialog
 
     /// <summary>
@@ -538,6 +541,7 @@ public class DefaultDialogService : IDialogService
 
     #endregion
 
+
     #region Show Message
 
     /// <summary>
@@ -568,13 +572,15 @@ public class DefaultDialogService : IDialogService
             throw new ArgumentException("Message cannot be null or empty.", nameof(message));
 
         var markup = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.InformationSymbol }.Data;
+        var okPath = new MahApps.Metro.IconPacks.PackIconMaterial() { Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold }.Data;
 
         DialogViewModel viewModel = new(true)
         {
             Message = message,
             Title = title ?? LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_showMessage_title)],
             IsTwoOptionsMode = false,
-            IconPathMarkup = pathMarkup ?? markup
+            IconPathMarkup = pathMarkup ?? markup,
+            FirstOptionPathMarkup = okPath
         };
 
         Views.Dialogs.MessageBoxView dialog = new Views.Dialogs.MessageBoxView();
@@ -590,38 +596,6 @@ public class DefaultDialogService : IDialogService
 
     #endregion
 
-    #region Show UserName SignUp Dialog
-
-    ///// <summary>
-    ///// Shows a user name sign-up dialog asynchronously, finding the owner window by type.
-    ///// </summary>
-    ///// <typeparam name="T">The type of window to use as owner.</typeparam>
-    ///// <returns>A task that represents the asynchronous operation. The result contains the sign-up view model if successful, or null if cancelled.</returns>
-    //public Task<SignUpDialogViewModel?> ShowUserNameSignUpDialogAsync<T>()
-    //{
-    //    var owner = GetOwnerWindowByType<T>();
-    //    return ShowUserNameSignUpDialogAsync(owner);
-    //}
-
-    ///// <summary>
-    ///// Shows a user name sign-up dialog asynchronously with the specified owner window.
-    ///// </summary>
-    ///// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
-    ///// <returns>A task that represents the asynchronous operation. The result contains the sign-up view model if successful, or null if cancelled.</returns>
-    //public Task<SignUpDialogViewModel?> ShowUserNameSignUpDialogAsync(object? ownerWindow = null)
-    //{
-    //    Views.Dialogs.UserNameSignUpDialogView dialog = new Views.Dialogs.UserNameSignUpDialogView();
-
-    //    SignUpDialogViewModel viewModel = new SignUpDialogViewModel(() => dialog.Close());
-
-    //    return ShowCustomDialogAsync(
-    //        ownerWindow,
-    //        dialog,
-    //        viewModel,
-    //        vm => ((SignUpDialogViewModel)vm).IsOk ? (SignUpDialogViewModel)vm : null);
-    //}
-
-    #endregion
 
     #region Change Password Dialog
 
@@ -702,7 +676,8 @@ public class DefaultDialogService : IDialogService
 
     #endregion
 
-    #region DXF Open Dialog
+
+    #region DXF, CSV, TSV, GeoJson Open Dialog
 
     /// <summary>
     /// Shows the DXF open dialog where user selects file, SRS, and views sample points.
@@ -756,6 +731,7 @@ public class DefaultDialogService : IDialogService
     }
 
     #endregion
+
 
     /// <summary>
     /// Shows a custom dialog asynchronously, finding the owner window by type.

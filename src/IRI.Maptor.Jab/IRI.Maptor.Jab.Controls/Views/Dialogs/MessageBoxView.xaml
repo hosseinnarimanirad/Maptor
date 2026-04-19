@@ -8,7 +8,7 @@
                     xmlns:viewModel="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.Dialogs;assembly=IRI.Maptor.Jab.Common"
                     d:DataContext="{d:DesignInstance Type=viewModel:DialogViewModel, IsDesignTimeCreatable=True}"
                     mc:Ignorable="d"               
-                    Title="{Binding Title}" FlowDirection="RightToLeft" ShowInTaskbar="False"
+                    Title="{Binding Title}" FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}" ShowInTaskbar="False"
                     GlowBrush="{Binding Source={StaticResource MahApps.Brushes.Highlight}, TargetNullValue=Red}" ShowMaxRestoreButton="False" ShowCloseButton="False" 
                     ShowMinButton="False" ShowTitleBar="True"  
                     SizeToContent="WidthAndHeight" MinWidth="400" FontFamily="{StaticResource iranSans}" WindowStartupLocation="CenterOwner">
@@ -19,24 +19,7 @@
                     <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
                     <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                     <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
-                </ResourceDictionary.MergedDictionaries>
-
-                <SolidColorBrush x:Key="defaultRed">#FFEA4333</SolidColorBrush>
-                <SolidColorBrush x:Key="defaultGreen">#FF81BA45</SolidColorBrush>
-                <Style TargetType="Path">
-                    <Setter Property="Fill" Value="White"/>
-                    <Setter Property="Stretch" Value="Uniform"/>
-                    <Setter Property="Width" Value="18"/>
-                    <Setter Property="Height" Value="18"/>
-                    <Setter Property="Margin" Value="4"/>
-                    <Setter Property="FlowDirection" Value="LeftToRight"/>
-                </Style>
-                <Style x:Key="okButtonStyle" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
-                    <Setter Property="Background" Value="{Binding FirstOptionColor,TargetNullValue={StaticResource defaultGreen}}"/>
-                </Style>
-                <Style x:Key="cancelButtonStyle" TargetType="Button" BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
-                    <Setter Property="Background" Value="{Binding SecondOptionColor,TargetNullValue={StaticResource defaultRed}}"/>
-                </Style>
+                </ResourceDictionary.MergedDictionaries>                 
             </ResourceDictionary>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -53,9 +36,13 @@
             <TextBlock Text="{Binding Message}" Margin="4,4" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"/>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            <Button Margin="4,0" Style="{StaticResource okButtonStyle}" Command="{Binding FirstOptionCommand}" ToolTip="{Binding FirstOptionText}"
-                        HorizontalAlignment="Right">
-                <Path Data="{Binding FirstOptionPathMarkup, TargetNullValue={iconPacks:Material Kind=CheckBold}}"/>
+            <Button Margin="4,0" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"                   
+                    Command="{Binding FirstOptionCommand}"
+                    ToolTip="{Binding FirstOptionText}"
+                    HorizontalAlignment="Right">
+                <Path Stretch="Uniform" Width="18" Height="18" Margin="4" FlowDirection="LeftToRight"                      
+                      Fill="{DynamicResource MahApps.Brushes.IdealForeground}"
+                      Data="{Binding FirstOptionPathMarkup}"/>
             </Button>
         </StackPanel>
     </Grid>
