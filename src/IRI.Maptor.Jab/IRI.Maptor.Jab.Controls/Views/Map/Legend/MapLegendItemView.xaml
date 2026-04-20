@@ -171,17 +171,19 @@
         <!--normal layer-->
         <StackPanel HorizontalAlignment="Stretch" Margin="0"
                     Visibility="{Binding IsGroupLayer, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}">
-            <StackPanel Orientation="Horizontal" Margin="0" IsEnabled="{Binding IsInScaleRange}">
+            <StackPanel Orientation="Horizontal" Margin="0" >
 
                 <!--source type color indicator-->
                 <Rectangle Width="6" Height="18" Margin="1,0,0,0" VerticalAlignment="Stretch"
                            Fill="{Binding DataSource.DataSourceKind, Converter={StaticResource dataSourceKindToBrushConverter}}"
                            ToolTip="{Binding DataSource.DataSourceKind}"
+                           IsEnabled="{Binding IsInScaleRange}"
                            Visibility="{Binding Path=ShowLayerColors, RelativeSource={RelativeSource AncestorType=userControl:NotifiableUserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
 
                 <!--layer visiblity checkbox-->
-                <CheckBox Margin="2,0" IsChecked="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}"
-                          VerticalAlignment="Center" Padding="0">
+                <CheckBox Margin="2,0" VerticalAlignment="Center" Padding="0"
+                          IsChecked="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}"
+                          IsEnabled="{Binding IsInScaleRange}">
                     <!--Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"-->
                     <CheckBox.Visibility>
                         <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
@@ -195,8 +197,7 @@
                 <iconPacks:PackIconPhosphorIcons Kind="SpinnerGapBold" Spin="True" Width="18" Height="18"
                                                  VerticalAlignment="Center"
                                                  Foreground="{DynamicResource MahApps.Brushes.Accent}" Margin="2,0"
-                                                 Visibility="Collapsed">
-                    <!--Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"-->
+                                                Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
 
                     <!--<iconPacks:PackIconPhosphorIcons.RenderTransform>
                         <RotateTransform Angle="0"/>
@@ -239,8 +240,9 @@
                 <!--loading layer #2-->
                 <mahApp:ProgressRing Width="18" Height="18"  IsLarge="True"
                                         VerticalAlignment="Center" Margin="2,0"
-                                        Foreground="{DynamicResource MahApps.Brushes.Accent}" 
-                                        Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"/>
+                                        Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                     Visibility="Collapsed"/>
+                <!--Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"/>-->
 
                 <!--locked layer (not in scale range layer)-->
                 <iconPacks:PackIconMaterial Kind="Lock" Width="18" Height="18"
@@ -258,10 +260,9 @@
                 </iconPacks:PackIconMaterial>
 
                 <!--visibility toggle button with Eye and EyeOff iconPacks-->
-                <ToggleButton Name="Expander"
-                                ClickMode="Press"
+                <ToggleButton Name="Expander" ClickMode="Press" Margin="2,0" Padding="0" Cursor="Hand"
                                 IsChecked="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}"                            
-                                Margin="2,0" Padding="0" Cursor="Hand"
+                                IsEnabled="{Binding IsInScaleRange}"
                                 Visibility="Collapsed">
                     <ToggleButton.Style>
                         <Style TargetType="ToggleButton">
@@ -297,8 +298,14 @@
 
                 <!--light symbology preview-->
                 <Border Margin="0,0,2,0" Width="18" Height="18" Cursor="Hand" CornerRadius="2"
-                        Visibility="{Binding IsSymbolizable, Converter={StaticResource boolToVisibilityConverter}}"
-                        IsEnabled="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}">
+                        Visibility="{Binding IsSymbolizable, Converter={StaticResource boolToVisibilityConverter}}">
+                    <!--IsEnabled="{Binding IsNotBusy, Converter={StaticResource boolToVisibilityConverter}}">-->
+                    <Border.IsEnabled>
+                        <MultiBinding Converter="{StaticResource multiBooleanToBooleanConverter}">
+                            <Binding Path="IsNotBusy"/>
+                            <Binding Path="IsInScaleRange" />
+                        </MultiBinding>
+                    </Border.IsEnabled>
                     <Border.Style>
                         <Style TargetType="Border">
                             <Setter Property="Background" Value="Transparent"/>
@@ -327,7 +334,8 @@
 
                 <!--layer opacity control-->
                 <Slider x:Name="opacitySlider" VerticalAlignment="Center" Width="50" Minimum="0" Maximum="1" SmallChange=".1" LargeChange=".2"                         
-                        TickFrequency=".2" Value="{Binding Opacity, Mode=TwoWay}"
+                        TickFrequency=".2"
+                        Value="{Binding Opacity, Mode=TwoWay}"                        
                         IsEnabled="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
 
                 <!--layer title (textblock)-->
@@ -358,7 +366,7 @@
                         </Style>
                     </TextBox.Resources>
                     <TextBox.Style>
-                        <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                        <Style TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="TextBox">
@@ -385,7 +393,7 @@
                         <iconPacks:PackIconMaterial Kind="Refresh" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                     </Viewbox>
                 </Button>
-                
+  
                 <!--pending changes with hover popup-->
                 <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"
                         Command="{Binding SaveChangesCommand}"
@@ -400,7 +408,7 @@
                         ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}"
                         Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
                     <Viewbox Margin="4">
-                        <iconPacks:PackIconMaterial Kind="Undo" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+                        <iconPacks:PackIconMaterial Kind="UndoVariant" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                     </Viewbox>
                 </Button>
 
@@ -421,6 +429,7 @@
                     </iconPacks:PackIconMaterial.Style>
                 </iconPacks:PackIconMaterial>
 
+                <!--pending changes popup-->
                 <Popup x:Name="pendingChangesPopup" StaysOpen="True" Placement="Right" MinHeight="30" 
                             PlacementTarget="{Binding ElementName=pendingChangesTag}" HorizontalOffset="-2"
                             AllowsTransparency="True" VerticalOffset="-10"  
@@ -470,7 +479,7 @@
                                         Command="{Binding UndoAllChangesCommand}"
                                         ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}">
                                     <Viewbox Margin="4">
-                                        <iconPacks:PackIconMaterial Kind="Undo" Foreground="White" FlowDirection="LeftToRight"/>
+                                        <iconPacks:PackIconMaterial Kind="UndoVariant" Foreground="White" FlowDirection="LeftToRight"/>
                                     </Viewbox>
                                 </Button>
                             </StackPanel>

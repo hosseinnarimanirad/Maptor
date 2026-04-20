@@ -211,9 +211,7 @@ public class WebApiDataSource : MemoryDataSource
                 UpdateHasPendingChanges();
             }
             else
-            {
-                HasError = true;
-
+            {                
                 if (response.Error?.Title == "ConcurrencyException")
                 {
                     throw new ConcurrencyConflictException(response.ErrorMessage ?? string.Empty);

@@ -535,6 +535,8 @@ public abstract class BaseLayer : Notifier, ILayer
     /// </summary>
     public Action<ILayer>? RequestUndoAllChanges { get; set; }
 
+    public Action<ILayer>? RequestClearSelectedLayer { get; set; }
+
     /// <summary>
     /// Used to determine if Undo is available. Set by MapViewModel.
     /// </summary>
@@ -638,6 +640,7 @@ public abstract class BaseLayer : Notifier, ILayer
         if (RequestSaveChanges != null)
         {
             await RequestSaveChanges.Invoke(this);
+
             return;
         }
 
@@ -648,20 +651,16 @@ public abstract class BaseLayer : Notifier, ILayer
         await dataSource.SaveChangesAsync();
     }
 
-    public void UndoAllChanges()
-    {
-        if (RequestUndoAllChanges != null)
-        {
-            RequestUndoAllChanges.Invoke(this);
-        }
-    }
+    public void UndoAllChanges() => RequestUndoAllChanges?.Invoke(this);
 
     public async Task ReloadDataAsync()
     {
         if (DataSource is null)
             return;
 
-        await DataSource.LoadAsync();         
+        await DataSource.LoadAsync();
+
+        RequestClearSelectedLayer?.Invoke(this);
     }
 
     #endregion
@@ -729,7 +728,7 @@ public abstract class BaseLayer : Notifier, ILayer
             {
                 _saveChangesCommand = new RelayCommand(
                     async param => await SaveChangesAsync(),
-                    param => HasPendingChanges);
+                    param => HasPendingChanges && IsNotBusy);
             }
 
             return _saveChangesCommand;
@@ -745,7 +744,7 @@ public abstract class BaseLayer : Notifier, ILayer
             {
                 _undoAllChangesCommand = new RelayCommand(
                     param => UndoAllChanges(),
-                    param => HasPendingChanges);
+                    param => HasPendingChanges && IsNotBusy);
             }
 
             return _undoAllChangesCommand;
@@ -763,7 +762,7 @@ public abstract class BaseLayer : Notifier, ILayer
             {
                 _reloadDataCommand = new RelayCommand(
                     async param => await ReloadDataAsync(),
-                    param => DataSource != null && !IsBusy);
+                    param => DataSource != null && IsNotBusy);
             }
 
             return _reloadDataCommand;

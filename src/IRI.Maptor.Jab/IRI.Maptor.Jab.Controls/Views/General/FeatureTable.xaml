@@ -201,14 +201,14 @@
                     Padding="0">
                 <iconPacks:PackIconMaterial Kind="Pencil" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
-            <Button Command="{Binding UndoCommand}"
+            <Button Command="{Binding UndoChangesCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     IsEnabled="{Binding CanUndo}"
                     ToolTip="{Binding [featureTable_undo], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
-                <iconPacks:PackIconMaterial Kind="Undo" Foreground="White" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconMaterial Kind="UndoVariant" Foreground="White" FlowDirection="LeftToRight"/>
             </Button>
-            <Button Command="{Binding SaveCommand}"
+            <Button Command="{Binding SaveChangesCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     ToolTip="{Binding [featureTable_saveChanges], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">

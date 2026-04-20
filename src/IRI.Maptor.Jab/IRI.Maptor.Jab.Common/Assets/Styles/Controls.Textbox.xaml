@@ -16,15 +16,18 @@
         </Setter>
     </Style>
 
-    <Style x:Key="IRI.Maptor.Styles.TextBox.Large" TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
+    <Style x:Key="IRI.Maptor.Styles.TextBox.Large"
+           TargetType="TextBox"
+           BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="MinHeight" Value="35"/>
-        <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="TextAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
     </Style>
+    
 </ResourceDictionary>
