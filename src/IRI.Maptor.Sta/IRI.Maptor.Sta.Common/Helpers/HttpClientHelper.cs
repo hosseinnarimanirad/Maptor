@@ -647,11 +647,12 @@ public static class HttpClientHelper
 
             using var response = await client.PutAsync(address, content, cancellationToken);
 
-            var result = new Response<T>
-            {
-                StatusCode = (int)response.StatusCode,
-                IsSuccess = response.IsSuccessStatusCode
-            };
+            var result = Response<T>.Create(isSuccess: response.IsSuccessStatusCode, statusCode: (int)response.StatusCode);
+            //new Response<T>
+            //{
+            //    StatusCode = (int)response.StatusCode,
+            //    IsSuccess = response.IsSuccessStatusCode
+            //};
 
             var responseContent = await response.Content.ReadAsStringAsync();
 

@@ -403,7 +403,7 @@ public partial class MapViewer : NotifiableUserControl
             RaisePropertyChanged(nameof(MapScale));
 
             RaisePropertyChanged(nameof(NearestGoogleZoomLevel));
-             
+
             UpdateTileInfos();
 
             this._layerManager.UpdateIsInRange(InverseMapScale);
@@ -4085,7 +4085,7 @@ public partial class MapViewer : NotifiableUserControl
             }
             else
             {
-                return new Response<Geometry<sb.Point>>();
+                return Response<Geometry<sb.Point>>.Empty;
             }
         }
         catch (TaskCanceledException)
@@ -4097,7 +4097,7 @@ public partial class MapViewer : NotifiableUserControl
                 this.Pan();
             }
 
-            return new Response<Geometry<sb.Point>>() { IsCanceled = true };
+            return Response<Geometry<sb.Point>>.CreateCanceled();//new Response<Geometry<sb.Point>>() { IsCanceled = true };
         }
         catch (Exception ex)
         {
@@ -4243,7 +4243,7 @@ public partial class MapViewer : NotifiableUserControl
 
             var result = await SelectThePoint();
 
-            return new Response<sb.Point>() { Result = result };
+            return ResponseFactory.Create(result);// new Response<sb.Point>() { Result = result };
         }
         catch (TaskCanceledException)
         {
@@ -4253,7 +4253,7 @@ public partial class MapViewer : NotifiableUserControl
 
                 this.Pan();
             }
-            return new Response<sb.Point>() { IsCanceled = true };
+            return Response<sb.Point>.CreateCanceled(); ; //new Response<sb.Point>() { IsCanceled = true };
         }
         catch (Exception ex)
         {
@@ -4486,7 +4486,7 @@ public partial class MapViewer : NotifiableUserControl
 
             //97 04 27
             //return originalGeometry;
-            return new Response<Geometry<sb.Point>>() { Result = originalGeometry, IsCanceled = true };
+            return Response<Geometry<sb.Point>>.CreateCanceled(originalGeometry);// new Response<Geometry<sb.Point>>() { Result = originalGeometry, IsCanceled = true };
         }
         catch (Exception ex)
         {
@@ -4662,7 +4662,7 @@ public partial class MapViewer : NotifiableUserControl
         {
             this.Status = MapStatus.Idle;
 
-            return new Response<PolyBezierLayer>() { Result = null, IsCanceled = true };
+            return Response<PolyBezierLayer>.CreateCanceled();// new Response<PolyBezierLayer>() { Result = null, IsCanceled = true };
         }
         catch (Exception ex)
         {
@@ -4794,7 +4794,7 @@ public partial class MapViewer : NotifiableUserControl
         {
             this.Status = MapStatus.Idle;
 
-            return new Response<Geometry<sb.Point>>() { Result = null, IsCanceled = true };
+            return Response<Geometry<sb.Point>>.CreateCanceled(); //new Response<Geometry<sb.Point>>() { Result = null, IsCanceled = true };
         }
         catch (Exception ex)
         {

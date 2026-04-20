@@ -22,7 +22,7 @@ public class Response<T>
     public string? ErrorMessage => Error?.Detail ?? Error?.Title;
 
     public T Result { get; set; }
-     
+
     public bool HasNotNullResult()
     {
         return !FailedOrCanceled() && Result != null;
@@ -37,19 +37,69 @@ public class Response<T>
     {
         return IsCanceled == true || IsFailed == true;
     }
-}
 
-public static class ResponseFactory
-{
-    public static Response<T> Create<T>(T result)
+    private Response()
+    {
+
+    }
+
+    public Response(T result)
+    {
+        this.Result = result;
+
+        this.IsSuccess = true;
+
+        this.Error = null;
+    }
+
+    public Response(ProblemDetails error)
+    {
+        this.Error = error;
+
+        this.IsSuccess = false;
+    }
+
+    public static Response<T> Empty => new Response<T>();
+
+    #region Factory methods
+
+    public static Response<T> Create(T result)
     {
         return new Response<T>() { Result = result, Error = null, IsSuccess = true };
     }
 
-    public static Response<T> CreateError<T>(string errorMessage)
+    public static Response<T> Create(bool isSuccess, int statusCode)
     {
-        var error = new ProblemDetails() { Title = errorMessage, Detail = errorMessage };
-
-        return new Response<T> { Error = error, IsSuccess = false };
+        return new Response<T>() { IsSuccess = isSuccess, StatusCode = statusCode };
     }
+
+    //public static Response<T> CreateError(string errorMessage)
+    //{
+    //    var error = new ProblemDetails() { Title = errorMessage, Detail = errorMessage };
+
+    //    return new Response<T> { Error = error, IsSuccess = false };
+    //}
+
+    public static Response<T> CreateFailed()
+    {
+        return new Response<T>() { IsSuccess = false };
+    }
+
+    //public static Response<T> CreateFailed(T result)
+    //{
+    //    return new Response<T>() { Result = result, IsSuccess = false };
+    //}
+
+    public static Response<T> CreateCanceled()
+    {
+        return new Response<T>() { IsCanceled = true };
+    }
+
+    public static Response<T> CreateCanceled(T result)
+    {
+        return new Response<T>() { Result = result, IsCanceled = true };
+    }
+
+
+    #endregion
 }

@@ -1606,11 +1606,16 @@ public abstract class MapViewModelBase : ViewModelBase
     /// Returns the point selected by the user in WGS84
     /// </summary>
     /// <returns>Selected point in WGS84</returns>
-    public Task<Response<Point>> GetPoint()
+    public async Task<Response<Point>> GetPoint()
     {
-        return RequestGetPoint != null
-            ? RequestGetPoint()
-            : new Task<Response<Point>>(() => new Response<Point>() { Result = Point.NaN, IsSuccess = false });
+        return RequestGetPoint != null ?
+            await RequestGetPoint() :
+            Response<Point>.CreateFailed();
+
+        //return RequestGetPoint != null ?
+        //    RequestGetPoint() :
+        //    //: new Task<Response<Point>>(() => Response<Point>.CreateFailed(Point.NaN));
+        //    Task.FromResult(Response<Point>.CreateFailed());
     }
 
     #endregion
@@ -2279,11 +2284,9 @@ public abstract class MapViewModelBase : ViewModelBase
     //*****************************************Editing***************************************************************
     #region Editing
 
-    public async Task<Response<Geometry<Point>>> EditAsync(Geometry<Point> geometry, EditableFeatureLayerOptions options)
+    public Task<Response<Geometry<Point>>> EditAsync(Geometry<Point> geometry, EditableFeatureLayerOptions? options)
     {
         this.ShowMapInfoPanel = true;
-
-        Response<Geometry<Point>> result = null;
 
         options = options ?? MapSettings.EditingOptions;
 
@@ -2291,23 +2294,22 @@ public abstract class MapViewModelBase : ViewModelBase
 
         if (RequestEdit != null)
         {
-            result = await RequestEdit(geometry, options);
+            return RequestEdit(geometry, options);
         }
         else
         {
-            result = await new Task<Response<Geometry<Point>>>(() => ResponseFactory.Create<Geometry<Point>>(null));
+            return Task.FromResult(Response<Geometry<Point>>.CreateFailed());
+            //return new Task<Response<Geometry<Point>>>(() => ResponseFactory.Create<Geometry<Point>>(null));
+
         }
-
-        //this.IsEditMode = false;
-
-        return result;
     }
 
-    public Task<Response<Geometry<Point>>> EditAsync(List<Point> points, bool isClosed, int srid, EditableFeatureLayerOptions options = null)
+    public async Task<Response<Geometry<Point>>> EditAsync(List<Point> points, bool isClosed, int srid, EditableFeatureLayerOptions? options = null)
     {
         if (points == null || points.Count < 1)
         {
-            return new Task<Response<Geometry<Point>>>(null);
+            //return new Task<Response<Geometry<Point>>>(null);
+            return Response<Geometry<Point>>.CreateFailed();
         }
 
         //1397.08.15.this is already done in EditAsync(geometry,options)
@@ -2318,7 +2320,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         Geometry<Point> geometry = Geometry<Point>.Create(points, type, srid);
 
-        return EditAsync(geometry, options);
+        return await EditAsync(geometry, options);
     }
 
     protected void CancelEdit()
@@ -2624,15 +2626,16 @@ public abstract class MapViewModelBase : ViewModelBase
         RequestRemovePolyBezierLayers?.Invoke();
     }
 
-    protected Task<Response<PolyBezierLayer>> GetBezier(Geometry symbol, VisualParameters decorationVisual)
+    protected async Task<Response<PolyBezierLayer>> GetBezier(Geometry symbol, VisualParameters decorationVisual)
     {
         if (RequestGetBezier != null)
         {
-            return RequestGetBezier(symbol, decorationVisual);
+            return await RequestGetBezier(symbol, decorationVisual);
         }
         else
         {
-            return new Task<Response<PolyBezierLayer>>(() => new Response<PolyBezierLayer>() { IsSuccess = false });
+            //return new Task<Response<PolyBezierLayer>>(() => Response<PolyBezierLayer>.CreateFailed());
+            return Response<PolyBezierLayer>.CreateFailed();
         }
     }
 
