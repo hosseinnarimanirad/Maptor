@@ -1491,4 +1491,13 @@
   <data name="legendItem_reloadData" xml:space="preserve">
     <value>دریافت مجدد داده‌ها</value>
   </data>
+  <data name="message_error_concurrencyConflict" xml:space="preserve">
+    <value>خطای همزمانی هنگام ذخیره‌سازی تغییرات</value>
+  </data>
+  <data name="message_error_title" xml:space="preserve">
+    <value>خطا</value>
+  </data>
+  <data name="message_error_userEmailAlreadyVerified" xml:space="preserve">
+    <value>ایمیل کاربر قبلا تایید شده است</value>
+  </data>
 </root>

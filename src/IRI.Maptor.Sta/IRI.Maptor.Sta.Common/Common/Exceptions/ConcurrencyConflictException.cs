@@ -12,7 +12,7 @@ public class ConcurrencyConflictException : DomainException
     public ConcurrencyConflictException(string message) : base(message) { }
     public ConcurrencyConflictException(string message, Exception inner) : base(message, inner) { }
 
-    public override string ResourceKey => "exception_concurrencyConflict";
+    public override string MessageResourceKey => "message_error_concurrencyConflict";
 
     public override ExceptionType ApiExceptionResultType => ExceptionType.Concurrency;
 }

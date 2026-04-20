@@ -31,12 +31,16 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal" Margin="4">
             <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Margin="10" Height="40" Width="40" BorderThickness="4" CornerRadius="20">
-                <Path Data="{Binding IconPathMarkup, TargetNullValue={iconPacks:Material Kind=InformationSymbol}}" Fill="{DynamicResource MahApps.Brushes.Accent}" Width="18" Height="18"/>
+                <Path Data="{Binding IconPathMarkup, TargetNullValue={iconPacks:Material Kind=InformationSymbol}}"
+                      Fill="{DynamicResource MahApps.Brushes.Accent}" Width="18" Height="18"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Center"
+                      Stretch="Uniform"/>
             </Border>
             <TextBlock Text="{Binding Message}" Margin="4,4" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"/>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            <Button Margin="4,0" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"                   
+            <Button Margin="8" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"                   
                     Command="{Binding FirstOptionCommand}"
                     ToolTip="{Binding FirstOptionText}"
                     HorizontalAlignment="Right">

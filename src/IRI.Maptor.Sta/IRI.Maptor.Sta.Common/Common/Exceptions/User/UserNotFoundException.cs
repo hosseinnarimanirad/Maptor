@@ -9,7 +9,7 @@ namespace IRI.Maptor.Sta.Common.Exceptions;
 
 public class UserNotFoundException : DomainException
 {
-    public override string ResourceKey => "app_sabaApi_error_userNotFound";
+    public override string MessageResourceKey => "app_sabaApi_error_userNotFound";
 
     public override ExceptionType ApiExceptionResultType => ExceptionType.NotFound;
 }

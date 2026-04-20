@@ -1532,4 +1532,13 @@
   <data name="legendItem_reloadData" xml:space="preserve">
     <value>Reload Data</value>
   </data>
+  <data name="message_error_concurrencyConflict" xml:space="preserve">
+    <value>The data was modified by another user. Please reload and try again.</value>
+  </data>
+  <data name="message_error_title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="message_error_userEmailAlreadyVerified" xml:space="preserve">
+    <value>User email is already verified</value>
+  </data>
 </root>

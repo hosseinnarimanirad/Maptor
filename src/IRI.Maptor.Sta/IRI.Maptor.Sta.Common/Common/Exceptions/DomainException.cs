@@ -18,9 +18,9 @@ public class DomainException : Exception
     {
     }
 
-    public virtual string ResourceKey => "exception_domainException";
+    public virtual string MessageResourceKey => "message_error_domainException";
 
-    public virtual object[]? ResourceParameters => null;
+    public virtual object[]? MessageResourceParameters => null;
 
     public virtual ExceptionType ApiExceptionResultType => ExceptionType.BadRequest;
 }

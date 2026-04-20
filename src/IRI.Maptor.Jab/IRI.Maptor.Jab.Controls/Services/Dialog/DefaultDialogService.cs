@@ -552,11 +552,23 @@ public class DefaultDialogService : IDialogService
     /// <param name="title">The dialog title, or null to use a default.</param>
     /// <param name="pathMarkup">The icon path markup, or null to use a default information icon.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task ShowMessageAsync<T>(string message, string? title, string? pathMarkup)
+    public async Task ShowMessageAsync<T>(string message, string? title, string? pathMarkup)
     {
         var owner = GetOwnerWindowByType<T>();
-        return ShowMessageAsync(message, title, owner, pathMarkup);
+
+        await ShowMessageAsync(message, title, owner, pathMarkup);
     }
+
+
+    public async Task ShowLocalizedMessageAsync(string messageKey, string titleKey, object? ownerWindow = null, string? pathMarkup = null)
+    {
+        var message = LocalizationManager.Instance[messageKey];
+
+        var title = LocalizationManager.Instance[titleKey];
+
+        await ShowMessageAsync(message, title, ownerWindow, pathMarkup);
+    }
+
 
     /// <summary>
     /// Shows a message dialog asynchronously with the specified owner window.
@@ -593,6 +605,7 @@ public class DefaultDialogService : IDialogService
             vm => ((DialogViewModel)vm).RequestClose = () => dialog.Close())
             .ContinueWith(_ => { }, TaskContinuationOptions.None);
     }
+
 
     #endregion
 

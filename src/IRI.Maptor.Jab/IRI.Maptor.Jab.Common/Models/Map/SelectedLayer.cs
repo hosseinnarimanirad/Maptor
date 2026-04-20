@@ -13,6 +13,8 @@ using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Common.Enums;
 using System.Windows.Forms;
+using IRI.Maptor.Sta.Common.Exceptions;
+using IRI.Maptor.Extensions;
 
 namespace IRI.Maptor.Jab.Common.Models.Map;
 
@@ -113,7 +115,7 @@ public class SelectedLayer : Notifier
 
     public Action<ILayer>? RequestRefreshLayer { get; set; }
 
-    public Func<string, Task> RequestShowErrorMessage { get; set; }
+    public Func<string, Task> RequestShowLocalizedErrorMessage { get; set; }
 
 
     public SelectedLayer(VectorLayer layer, List<Field>? fields)
@@ -502,43 +504,47 @@ public class SelectedLayer : Notifier
     }
 
 
-    private RelayCommand? _undoCommand;
-    public RelayCommand UndoCommand
+    private RelayCommand? _undoChangesCommand;
+    public RelayCommand UndoChangesCommand
     {
         get
         {
-            if (_undoCommand is null)
+            if (_undoChangesCommand is null)
             {
-                _undoCommand = new RelayCommand(param =>
+                _undoChangesCommand = new RelayCommand(param =>
                 {
                     UndoCurrentRowChanges();
                 });
             }
-            return _undoCommand;
+            return _undoChangesCommand;
         }
     }
 
 
-    private RelayCommand? _saveCommand;
-    public RelayCommand SaveCommand
+    private RelayCommand? _saveChangesCommand;
+    public RelayCommand SaveChangesCommand
     {
         get
         {
-            if (_saveCommand is null)
-                _saveCommand = new RelayCommand(async param =>
+            if (_saveChangesCommand is null)
+                _saveChangesCommand = new RelayCommand(async param =>
                 {
                     try
                     {
                         await this.SaveChangesAsync();
                     }
+                    catch(DomainException ex)
+                    {
+                        await RequestShowLocalizedErrorMessage(ex.MessageResourceKey);
+                    }
                     catch (Exception ex)
                     {
-                        await RequestShowErrorMessage(ex.Message);
+                        await RequestShowLocalizedErrorMessage(ex.Message);
                     }
 
                 }, _ => HasPendingChanges);
 
-            return _saveCommand;
+            return _saveChangesCommand;
         }
     }
 

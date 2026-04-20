@@ -6,6 +6,7 @@ using IRI.Maptor.Extensions;
 
 
 namespace IRI.Maptor.Jab.Common.Assets.Converters;
+
 public class MultiBooleanToBooleanConverter : IMultiValueConverter
 {
     public object Convert(object[] values,

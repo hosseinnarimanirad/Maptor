@@ -50,6 +50,8 @@ public interface IDialogService
     // ********************************************************************
     Task ShowMessageAsync<T>(string message, string? title, string? pathMarkup);
 
+    Task ShowLocalizedMessageAsync(string messageKey, string titleKey, object? ownerWindow = null, string? pathMarkup = null);
+
     Task ShowMessageAsync(string message, string? title, object? ownerWindow = null, string? pathMarkup = null);
 
 

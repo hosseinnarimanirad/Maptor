@@ -2285,6 +2285,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Title.
+        /// </summary>
+        public static string legendItem_layerTitle {
+            get {
+                return ResourceManager.GetString("legendItem_layerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Added: .
         /// </summary>
         public static string legendItem_PendingChanges_Added {
@@ -2726,15 +2735,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Title.
-        /// </summary>
-        public static string legendItem_layerTitle {
-            get {
-                return ResourceManager.GetString("legendItem_layerTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Add new part.
         /// </summary>
         public static string mapPanel_currentPart_add {
@@ -2893,6 +2893,33 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string mapPanel_measure_showEdgeLabels {
             get {
                 return ResourceManager.GetString("mapPanel_measure_showEdgeLabels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The data was modified by another user. Please reload and try again..
+        /// </summary>
+        public static string message_error_concurrencyConflict {
+            get {
+                return ResourceManager.GetString("message_error_concurrencyConflict", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string message_error_title {
+            get {
+                return ResourceManager.GetString("message_error_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User email is already verified.
+        /// </summary>
+        public static string message_error_userEmailAlreadyVerified {
+            get {
+                return ResourceManager.GetString("message_error_userEmailAlreadyVerified", resourceCulture);
             }
         }
         

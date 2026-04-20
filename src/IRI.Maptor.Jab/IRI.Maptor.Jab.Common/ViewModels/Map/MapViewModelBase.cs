@@ -1378,7 +1378,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
             selectedLayer.RequestRefreshLayer = RefreshLayerVisibility;
 
-            selectedLayer.RequestShowErrorMessage = async message => await DialogService.ShowMessageAsync(message, "error", null, null);
+            selectedLayer.RequestShowLocalizedErrorMessage = async (messageKey) => await DialogService.ShowLocalizedMessageAsync(messageKey, "message_error_title");
+
             //selectedLayer.PropertyChanged += (s, e) =>
             //{
             //    if (e.PropertyName == nameof(SelectedLayer.CanUndo))
@@ -2372,7 +2373,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessageAsync(ex.Message, "Error");
+            await DialogService.ShowLocalizedMessageAsync(ex.Message, "message_error_title");
         }
     }
 
@@ -2493,6 +2494,7 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 baseLayer.RequestSaveChanges = async l => await HandleRequestSaveChanges(l);
                 baseLayer.RequestUndoAllChanges = HandleRequestUndoAllChanges;
+                baseLayer.RequestClearSelectedLayer = layer => RemoveSelectedLayers(l => l.LayerId == layer.LayerId);
                 //baseLayer.CanUndoChangesProvider = GetCanUndoChanges;
             }
         }
