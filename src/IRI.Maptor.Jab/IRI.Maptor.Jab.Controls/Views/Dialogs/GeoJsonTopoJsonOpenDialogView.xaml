@@ -200,11 +200,12 @@
                     Foreground="Gray"/>
             <!--mahApp:TextBoxHelper.Watermark="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"-->
             <TextBox x:Name="previewTextbox" Grid.Row="5" Margin="4,0" MinHeight="150" MaxHeight="250"
-                Background="Transparent"
-                Text="{Binding RawJson, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"
-                HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
-                Padding="4" FlowDirection="LeftToRight"/>
+                    Background="Transparent"
+                    Style="{StaticResource IRI.Maptor.Styles.TextBox}"
+                    Text="{Binding RawJson, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
+                    Padding="4" FlowDirection="LeftToRight"/>
 
 
         </Grid>

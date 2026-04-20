@@ -230,11 +230,12 @@
                      Foreground="Gray"/>
 
             <TextBox x:Name="previewTextbox" Grid.Row="5" Margin="4,0" MinHeight="150" MaxHeight="250" HorizontalAlignment="Stretch"
-                 Background="Transparent"
-                 Text="{Binding RawText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"
-                 HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
-                 Padding="4" FlowDirection="LeftToRight"/>
+                    Background="Transparent"
+                    Style="{StaticResource IRI.Maptor.Styles.TextBox}"
+                    Text="{Binding RawText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
+                    Padding="4" FlowDirection="LeftToRight"/>
 
         </Grid>
 
