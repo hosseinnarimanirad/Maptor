@@ -1500,4 +1500,7 @@
   <data name="message_error_userEmailAlreadyVerified" xml:space="preserve">
     <value>ایمیل کاربر قبلا تایید شده است</value>
   </data>
+  <data name="dialog_common_ok" xml:space="preserve">
+    <value>تایید</value>
+  </data>
 </root>

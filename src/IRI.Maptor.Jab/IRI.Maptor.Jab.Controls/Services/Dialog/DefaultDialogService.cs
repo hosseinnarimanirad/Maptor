@@ -634,8 +634,10 @@ public class DefaultDialogService : IDialogService
     {
         //requestClose parameter for viewModel is set in the next function
         ChangePasswordDialogViewModel? viewModel = ChangePasswordDialogViewModel.Create(() => { }, requestAuthenticateAsync);
+
         if (viewModel == null)
             throw new InvalidOperationException("Failed to create ChangePasswordDialogViewModel.");
+
         return ShowChangePasswordDialog(ownerWindow, viewModel);
     }
 

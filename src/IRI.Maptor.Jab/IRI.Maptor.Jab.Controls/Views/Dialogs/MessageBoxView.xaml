@@ -50,8 +50,9 @@
                 <StackPanel Orientation="Horizontal">
                     <Path Stretch="Uniform" Width="18" Height="18" FlowDirection="LeftToRight"
                           Margin="0,0,8,0" VerticalAlignment="Center" 
-                          Data="{Binding FirstOptionPathMarkup}"/>
-                    <TextBlock Text="{Binding [FirstOptionText], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="2,0" />
+                          Data="{Binding FirstOptionPathMarkup}" Fill="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                    <TextBlock Text="{Binding [dialog_common_ok], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="2,0"
+                                />
                 </StackPanel>
             </Button>
         </StackPanel>

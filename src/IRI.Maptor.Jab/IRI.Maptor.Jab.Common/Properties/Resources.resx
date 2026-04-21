@@ -1541,4 +1541,7 @@
   <data name="message_error_userEmailAlreadyVerified" xml:space="preserve">
     <value>User email is already verified</value>
   </data>
+  <data name="dialog_common_ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
 </root>
