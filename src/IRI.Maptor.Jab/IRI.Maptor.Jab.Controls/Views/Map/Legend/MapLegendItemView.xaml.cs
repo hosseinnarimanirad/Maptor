@@ -131,6 +131,20 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
     public static readonly DependencyProperty CommandsProperty =
         DependencyProperty.Register(nameof(Commands), typeof(IEnumerable<ILegendCommand>), typeof(MapLegendItemView), new PropertyMetadata(null));
 
+
+     
+    public bool ShowReloadData
+    {
+        get { return (bool)GetValue(ShowReloadDataProperty); }
+        set { SetValue(ShowReloadDataProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for ShowReloadData.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ShowReloadDataProperty =
+        DependencyProperty.Register(nameof(ShowReloadData), typeof(bool), typeof(MapLegendItemView), new PropertyMetadata(true));
+
+
+
     #endregion
 
     //private bool _isInScaleRange;
@@ -144,7 +158,7 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
     //        //RaisePropertyChanged();
     //    }
     //}
-     
+
     //public string SymbologyExpanderHeaderText => LocalizationManager.Instance[LocalizationResourceKeys.legend_symbologyExpanderHeaderText.ToString()];
 
 

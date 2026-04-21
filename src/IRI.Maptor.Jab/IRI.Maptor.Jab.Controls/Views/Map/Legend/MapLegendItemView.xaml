@@ -169,7 +169,7 @@
         </StackPanel>
 
         <!--normal layer-->
-        <StackPanel HorizontalAlignment="Stretch" Margin="0"
+        <StackPanel HorizontalAlignment="Stretch" Margin="0" MinHeight="26"
                     Visibility="{Binding IsGroupLayer, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}">
             <StackPanel Orientation="Horizontal" Margin="0" >
 
@@ -239,9 +239,9 @@
 
                 <!--loading layer #2-->
                 <mahApp:ProgressRing Width="18" Height="18"  IsLarge="True"
-                                        VerticalAlignment="Center" Margin="2,0"
-                                        Foreground="{DynamicResource MahApps.Brushes.Accent}"
-                                     Visibility="Collapsed"/>
+                                    VerticalAlignment="Center" Margin="2,0"
+                                    Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                    Visibility="Collapsed"/>
                 <!--Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"/>-->
 
                 <!--locked layer (not in scale range layer)-->
@@ -297,7 +297,7 @@
                 </ToggleButton>
 
                 <!--light symbology preview-->
-                <Border Margin="0,0,2,0" Width="18" Height="18" Cursor="Hand" CornerRadius="2"
+                <Border Margin="0,0,2,0" Cursor="Hand" CornerRadius="2"
                         Visibility="{Binding IsSymbolizable, Converter={StaticResource boolToVisibilityConverter}}">
                     <!--IsEnabled="{Binding IsNotBusy, Converter={StaticResource boolToVisibilityConverter}}">-->
                     <Border.IsEnabled>
@@ -309,26 +309,49 @@
                     <Border.Style>
                         <Style TargetType="Border">
                             <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="BorderBrush" Value="DarkGray"/>
-                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Width" Value="18"/>
+                            <Setter Property="Height" Value="18"/>
+                            <Setter Property="Padding" Value="0"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="BorderBrush" Value="DarkGray"/>
                                     <!--<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>-->
                                 </Trigger>
+                                <DataTrigger Binding="{Binding SpatialModelMode}" Value="Point">
+                                    <!--<Setter Property="Width" Value="12"/>
+                                    <Setter Property="Height" Value="12"/>-->
+                                    <Setter Property="Padding" Value="2"/>
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </Border.Style>
                     <Border.InputBindings>
                         <MouseBinding MouseAction="LeftClick" Command="{Binding ChangeSymbologyCommand}" CommandParameter="{Binding}"/>
                     </Border.InputBindings>
-                    <Viewbox>
+                    <Viewbox VerticalAlignment="Center">
                         <Path x:Name="OriginalPath"
-                            Margin="1"                              
-                            Data="{Binding SpatialModelMode, Converter={StaticResource iLayerToLegendConverter}, TargetNullValue={x:Static Geometry.Empty}}"
-                            Fill="{Binding ElementName=root, Path=Symbology.Fill}" Stroke="{Binding ElementName=root, Path=Symbology.Stroke}"
-                            Stretch="Uniform"
-                            HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="{Binding Opacity}"/>
+                                Margin="1" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Data="{Binding SpatialModelMode, Converter={StaticResource iLayerToLegendConverter}, TargetNullValue={x:Static Geometry.Empty}}"
+                                Fill="{Binding ElementName=root, Path=Symbology.Fill}"
+                                Stroke="{Binding ElementName=root, Path=Symbology.Stroke}"
+                                Opacity="{Binding Opacity}">
+                            <Path.Style>
+                                <Style TargetType="Path">
+                                    <Setter Property="Fill" Value="Transparent"/>
+                                    <Setter Property="StrokeThickness" Value="3"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SpatialModelMode}" Value="Polyline">
+                                            <Setter Property="Fill" Value="Transparent"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SpatialModelMode}" Value="Point">
+                                            <Setter Property="StrokeThickness" Value="1"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Path.Style>
+                        </Path>
                     </Viewbox>
                 </Border>
 
@@ -385,10 +408,16 @@
                 </TextBox>
                 
                 <!--reload data-->
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True" Margin="0"
                         Command="{Binding ReloadDataCommand}"
-                        ToolTip="{Binding [legendItem_reloadData], Source={StaticResource Localization}}"
-                        Visibility="{Binding IsMouseOver, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}">
+                        ToolTip="{Binding [legendItem_reloadData], Source={StaticResource Localization}}">
+                    <!--Visibility="{Binding IsMouseOver, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}">-->
+                    <Button.Visibility>
+                        <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
+                            <Binding Path="ShowReloadData" ElementName="root"/>
+                            <Binding Path="IsMouseOver" ElementName="root"/>
+                        </MultiBinding>
+                    </Button.Visibility>
                     <Viewbox Margin="4">
                         <iconPacks:PackIconMaterial Kind="Refresh" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                     </Viewbox>
@@ -412,6 +441,7 @@
                     </Viewbox>
                 </Button>
 
+                <!--<Path Width="18" Height="18" Data="M 9,2 L 15.7,6.8 L 13.1,14.7 L 4.9,14.7 L 2.3,6.8 Z" Fill="Gray" Stroke="Blue"/>-->
                 <iconPacks:PackIconMaterial Kind="Pencil" Width="16" Height="16" x:Name="pendingChangesTag"
                                             Background="Transparent"
                                             Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">

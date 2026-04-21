@@ -246,10 +246,12 @@
                 <DataTemplate>
                     <RadioButton Style="{StaticResource {x:Type ToggleButton}}" GroupName="{Binding ElementName=root, Path=GroupName}" DataContext="{Binding }"
                                  IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}">
-                        <maptor:MapLegendItemView Title="{Binding LayerName, Mode=TwoWay}" Symbology="{Binding DefaultSymbology}"  
-                                                                     IsEditable="True" Commands="{Binding Commands}" 
-                                                                     IsChecked="{Binding IsSelectedInToc}"
-                                                                     TitleFontSize="{Binding ElementName=root, Path=TitleFontSize}"/>
+                        <maptor:MapLegendItemView ShowReloadData="False"
+                                                Title="{Binding LayerName, Mode=TwoWay}"
+                                                Symbology="{Binding DefaultSymbology}"  
+                                                IsEditable="True" Commands="{Binding Commands}" 
+                                                IsChecked="{Binding IsSelectedInToc}"
+                                                TitleFontSize="{Binding ElementName=root, Path=TitleFontSize}"/>
                     </RadioButton>
 
                 </DataTemplate>
