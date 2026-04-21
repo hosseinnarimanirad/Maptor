@@ -297,7 +297,7 @@
                 </ToggleButton>
 
                 <!--light symbology preview-->
-                <Border Margin="0,0,2,0" Cursor="Hand" CornerRadius="2"
+                <Border Margin="0,0,2,0" Cursor="Hand" CornerRadius="2" FlowDirection="LeftToRight"
                         Visibility="{Binding IsSymbolizable, Converter={StaticResource boolToVisibilityConverter}}">
                     <!--IsEnabled="{Binding IsNotBusy, Converter={StaticResource boolToVisibilityConverter}}">-->
                     <Border.IsEnabled>
@@ -334,12 +334,11 @@
                         <Path x:Name="OriginalPath"
                                 Margin="1" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Data="{Binding SpatialModelMode, Converter={StaticResource iLayerToLegendConverter}, TargetNullValue={x:Static Geometry.Empty}}"
-                                Fill="{Binding ElementName=root, Path=Symbology.Fill}"
                                 Stroke="{Binding ElementName=root, Path=Symbology.Stroke}"
                                 Opacity="{Binding Opacity}">
                             <Path.Style>
                                 <Style TargetType="Path">
-                                    <Setter Property="Fill" Value="Transparent"/>
+                                    <Setter Property="Fill" Value="{Binding ElementName=root, Path=Symbology.Fill}"/>
                                     <Setter Property="StrokeThickness" Value="3"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding SpatialModelMode}" Value="Polyline">
@@ -441,7 +440,7 @@
                     </Viewbox>
                 </Button>
 
-                <!--<Path Width="18" Height="18" Data="M 9,2 L 15.7,6.8 L 13.1,14.7 L 4.9,14.7 L 2.3,6.8 Z" Fill="Gray" Stroke="Blue"/>-->
+                <!--<Path Width="18" Height="18" Data="M 2,16 L 6,8 L 12,12 L 16,4" Fill="Transparent" Stroke="Black" FlowDirection="LeftToRight"/>-->
                 <iconPacks:PackIconMaterial Kind="Pencil" Width="16" Height="16" x:Name="pendingChangesTag"
                                             Background="Transparent"
                                             Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
