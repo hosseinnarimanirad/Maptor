@@ -375,9 +375,8 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    private ObservableCollection<ILayer> _layers;
-    private ObservableCollection<ILayer> _allNonGroupLayers = new ObservableCollection<ILayer>();
 
+    private ObservableCollection<ILayer> _layers;
     public ObservableCollection<ILayer> Layers
     {
         get { return _layers; }
@@ -403,6 +402,8 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+
+    private ObservableCollection<ILayer> _allNonGroupLayers = new ObservableCollection<ILayer>();
     public ObservableCollection<ILayer> AllNonGroupLayers
     {
         get { return _allNonGroupLayers; }
@@ -1859,7 +1860,7 @@ public abstract class MapViewModelBase : ViewModelBase
                    layer => LegendCommand.CreateEditDrawingItemLayer(this, layer),
                    layer => LegendCommand.CreateExportDrawingItemLayerAsShapefile(this, layer),
                    layer => LegendCommand.CreateExportDrawingItemLayerAsGeoJson(this, layer),
-                   layer => LegendCommand.CreateExportDrawingItemLayerAsCsv(this, layer, CoordinatePanel?.SelectedItem?.CoordinateDisplayMode),
+                   layer => LegendCommand.CreateExportDrawingItemLayerAsCsv(this, layer/*, CoordinatePanel?.SelectedItem?.CoordinateDisplayMode*/),
                    layer => LegendToggleCommand.CreateToggleLayerLabelCommand(this, layer/*, layer.Labels*/)
                 };
             }
@@ -3781,7 +3782,7 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         try
         {
-            var dataSource = ShapefileDataSourceFactory.CreateLazy(fileName, new WebMercator(), null);
+            var dataSource = ShapefileDataSourceFactory.CreateLazy(fileName, SrsBases.WebMercator, null);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
                                 dataSource,
@@ -4203,7 +4204,7 @@ public abstract class MapViewModelBase : ViewModelBase
                     return;
                 }
 
-                features = features.Select(f => f.Project(new WebMercator())).ToList();
+                features = features.Select(f => f.Project(SrsBases.WebMercator/*new WebMercator()*/)).ToList();
 
                 var dataSource = new MemoryDataSource(features);
                 var geometryType = features.First().TheGeometry.Type;
@@ -5387,7 +5388,7 @@ public abstract class MapViewModelBase : ViewModelBase
                         if (string.IsNullOrWhiteSpace(fileName))
                             return;
 
-                        var dataSource = ShapefileDataSourceFactory.Create(fileName, new WebMercator());
+                        var dataSource = ShapefileDataSourceFactory.Create(fileName, SrsBases.WebMercator/*new WebMercator()*/);
 
                         var featureSet = await dataSource.GetAsFeatureSetAsync();
                         var geometries = featureSet?.Features;

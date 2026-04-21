@@ -420,9 +420,25 @@ public class LegendCommand : LegendCommandBase
                 if (string.IsNullOrWhiteSpace(file))
                     return;
 
-                var esriShape = layer.Geometry.AsEsriShape();
+                var geodeticGeometry = layer.Geometry.Project(SrsBases.GeodeticWgs84);
 
-                IRI.Maptor.Sta.ShapefileFormat.Shapefile.Save(file, new List<EsriShapeBase>() { esriShape }, true, true);
+                var meanPoint = geodeticGeometry.GetMeanPoint();
+
+                if (meanPoint is null)
+                    return;
+
+                var utmZone = MapProjects.FindUtmZone(meanPoint.X);
+
+                var coordinateDisplayMode = map.CoordinatePanel?.SelectedItem?.CoordinateDisplayMode ?? CoordinateDisplayMode.GeodeticDecimal;
+
+                var targetSrs = SrsBase.Create(coordinateDisplayMode, utmZone) ?? SrsBases.GeodeticWgs84;
+
+                var esriShape = layer.Geometry.Project(targetSrs).AsEsriShape();
+
+                if (esriShape is null)
+                    return;
+
+                IRI.Maptor.Sta.ShapefileFormat.Shapefile.Save(file, [esriShape], true, true);
             }
             catch (Exception ex)
             {
@@ -473,7 +489,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Export As CSV ***********
     // *******************************************
-    public static ILegendCommand CreateExportDrawingItemLayerAsCsv(MapViewModelBase map, DrawingItemLayer layer, CoordinateDisplayMode? coordinateDisplayMode)
+    public static ILegendCommand CreateExportDrawingItemLayerAsCsv(MapViewModelBase map, DrawingItemLayer layer/*, CoordinateDisplayMode? coordinateDisplayMode*/)
     {
         var resource = System.Windows.Application.Current?.FindResource("csv");
 
@@ -498,17 +514,33 @@ public class LegendCommand : LegendCommandBase
                 if (layer.Geometry.IsNullOrEmpty())
                     return;
 
+                var geodeticGeometry = layer.Geometry.Project(SrsBases.WebMercator, SrsBases.GeodeticWgs84);
+
+                var meanPoint = geodeticGeometry.GetMeanPoint();
+
+                if (meanPoint is null)
+                    return;
+
+                var utmZone = MapProjects.FindUtmZone(meanPoint.X);
+
                 //save to csv
                 var points = layer.Geometry.GetAllPoints();
+
+                if (points.IsNullOrEmpty())
+                    return;
 
                 List<string> lines = new List<string>();
 
                 var options = CopyCoordinateOptions.Create(map.MapSettings.Clipboard_LatLongPrecision, map.MapSettings.Clipboard_XyPrecision);
 
+                options.UtmZone = utmZone;
+
+                var coordinateDisplayMode = map.CoordinatePanel?.SelectedItem?.CoordinateDisplayMode ?? CoordinateDisplayMode.GeodeticDecimal;
+
                 foreach (var point in points)
                 {
                     var coordinate = CoordinateHelper.Format(point,
-                                                                coordinateDisplayMode ?? CoordinateDisplayMode.GeodeticDecimal,
+                                                                coordinateDisplayMode/*coordinateDisplayMode ?? CoordinateDisplayMode.GeodeticDecimal*/,
                                                                 options/*thousandSeparator: false, null, null, null, null*/);
 
                     lines.Add($"{coordinate.x}, {coordinate.y}");
@@ -880,7 +912,7 @@ public class LegendCommand : LegendCommandBase
 
     #endregion
 
-     
+
     #region Default Text Layer
 
     internal static List<Func<MapViewModelBase, DrawingItemLayer, ILegendCommand>> GetDefaultTextLayerCommands()

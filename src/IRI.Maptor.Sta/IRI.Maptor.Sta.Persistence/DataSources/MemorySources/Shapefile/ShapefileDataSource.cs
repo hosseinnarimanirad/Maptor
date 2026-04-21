@@ -155,10 +155,10 @@ public class ShapefileDataSource : MemoryDataSource
 
         Func<Point, Point>? transformFunc = _targetSrs != null ? (p => p.Project(_sourceSrs, _targetSrs)) : null;
 
-        var webMercator = new WebMercator();
+        //var webMercator = new WebMercator();
          
         //WebMercatorExtent = geometries.MainHeader.MinimumBoundingBox.Transform(p => p.Project(_sourceSrs, new WebMercator()));
-        WebMercatorExtent = BoundingBox.GetMergedBoundingBox(geometries.Select(g => g.MinimumBoundingBox.Transform(p => p.Project(_sourceSrs, webMercator))), true); 
+        WebMercatorExtent = BoundingBox.GetMergedBoundingBox(geometries.Select(g => g.MinimumBoundingBox.Transform(p => p.Project(_sourceSrs, SrsBases.WebMercator))), true); 
 
         GeometryType = geometries.MainHeader.ShapeType.AsGeometryType();
 

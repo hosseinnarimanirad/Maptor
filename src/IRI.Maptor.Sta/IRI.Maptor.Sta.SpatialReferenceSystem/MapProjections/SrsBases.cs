@@ -11,7 +11,7 @@ public static class SrsBases
 {
     static SrsBases()
     {
-        GeodeticWgs84 = new NoProjection();
+        GeodeticWgs84 = new NoProjection("Wgs84", Ellipsoids.WGS84);
 
         WebMercator = new WebMercator();
 
@@ -77,7 +77,7 @@ public static class SrsBases
             falseEasting: 1500000.0,
             falseNorthing: 1166200.0,
             scaleFactor: 0.9987864078);
-
+                          
         UtmNorthZone38 = new UTM(Ellipsoids.WGS84, MapProjects.CalculateCentralMeridian(38));
 
         UtmNorthZone39 = new UTM(Ellipsoids.WGS84, MapProjects.CalculateCentralMeridian(39));

@@ -129,9 +129,28 @@ public abstract class SrsBase
     }
 
 
-    public static SrsBase Create(int srid)
+    public static SrsBase? Create(int srid) => SridHelper.AsSrsBase(srid);
+
+    public static SrsBase? Create(CoordinateDisplayMode mode, int? utmZone)
     {
-        return SridHelper.AsSrsBase(srid);
+        switch (mode)
+        {
+            case CoordinateDisplayMode.UTM:
+                return UTM.CreateForZone(Ellipsoids.WGS84, utmZone!.Value);
+
+            case CoordinateDisplayMode.WebMercator:
+                return SrsBases.WebMercator;
+
+            case CoordinateDisplayMode.GeodeticDecimal:
+            case CoordinateDisplayMode.GeodeticDms:
+                return SrsBases.GeodeticWgs84;
+
+            case CoordinateDisplayMode.Mercator:
+            case CoordinateDisplayMode.TM:
+            case CoordinateDisplayMode.CylindricalEqualArea:
+            default:
+                throw new ArgumentOutOfRangeException(nameof(mode));
+        }
     }
 
 }

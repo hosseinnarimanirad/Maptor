@@ -31,27 +31,27 @@ public static class SridHelper
     /// </summary>
     public static int GetUtmSouthSrid(int zone) => 32700 + zone;
 
-    public static SrsBase AsSrsBase(int srid)
+    public static SrsBase? AsSrsBase(int srid)
     {
         switch (srid)
         {
             case GeodeticWGS84:
-                return new NoProjection("Wgs84", Ellipsoids.WGS84);// { DatumName = this.Geogcs.Values?.First() };
+                return SrsBases.GeodeticWgs84/*new NoProjection("Wgs84", Ellipsoids.WGS84)*/;// { DatumName = this.Geogcs.Values?.First() };
 
             case WebMercator:
-                return new WebMercator();
+                return SrsBases.WebMercator;
 
             case UtmNorthZone38:
-                return new UTM(Ellipsoids.WGS84, MapProjects.CalculateCentralMeridian(38));
+                return SrsBases.UtmNorthZone38; // new UTM(Ellipsoids.WGS84, MapProjects.CalculateCentralMeridian(38));
 
             case UtmNorthZone39:
-                return new UTM(Ellipsoids.WGS84, MapProjects.CalculateCentralMeridian(39));
+                return SrsBases.UtmNorthZone39; // new UTM(Ellipsoids.WGS84, MapProjects.CalculateCentralMeridian(39));
 
             case UtmNorthZone40:
-                return new UTM(Ellipsoids.WGS84, MapProjects.CalculateCentralMeridian(40));
+                return SrsBases.UtmNorthZone40; // new UTM(Ellipsoids.WGS84, MapProjects.CalculateCentralMeridian(40));
 
             case UtmNorthZone41:
-                return new UTM(Ellipsoids.WGS84, MapProjects.CalculateCentralMeridian(41));
+                return SrsBases.UtmNorthZone41; // new UTM(Ellipsoids.WGS84, MapProjects.CalculateCentralMeridian(41));
 
             case Mercator:
                 return new Mercator();

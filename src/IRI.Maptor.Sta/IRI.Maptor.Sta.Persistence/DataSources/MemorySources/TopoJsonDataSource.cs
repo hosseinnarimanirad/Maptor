@@ -68,7 +68,7 @@ public class TopoJsonDataSource : MemoryDataSource
         var topology = TopoJson.Parse(jsonString);
         var geometries = TopoJson.ToGeometry(topology, sourceSrid);
 
-        var webMercator = new WebMercator();
+        //var webMercator = new WebMercator();
         var features = new List<Feature<Point>>();
 
         foreach (var kvp in geometries)
@@ -76,7 +76,7 @@ public class TopoJsonDataSource : MemoryDataSource
             if (kvp.Value == null || kvp.Value.IsNullOrEmpty())
                 continue;
 
-            var projected = kvp.Value.Project(webMercator);
+            var projected = kvp.Value.Project(SrsBases.WebMercator);
             features.Add(new Feature<Point>
             {
                 TheGeometry = projected,

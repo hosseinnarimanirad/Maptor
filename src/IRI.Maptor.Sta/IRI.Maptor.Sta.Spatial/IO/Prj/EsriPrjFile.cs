@@ -477,8 +477,7 @@ public class EsriPrjFile
                 new UTM(Ellipsoid,
                                GetParameter(EsriPrjParameterType.CentralMeridian, 0)),
 
-             SpatialReferenceType.WebMercator =>
-                new WebMercator(),
+             SpatialReferenceType.WebMercator => SrsBases.WebMercator,
 
              SpatialReferenceType.Geodetic => new NoProjection(this.Title, Ellipsoid),
 

@@ -9,8 +9,8 @@ namespace IRI.Maptor.Jab.Common.Models.CoordinatePanel;
 
 public class SpatialReferenceItem : Notifier, IDisposable
 {
-    const string defaultXLabel = "X";
-    const string defaultYLabel = "Y";
+    //const string defaultXLabel = "X";
+    //const string defaultYLabel = "Y";
 
     private CopyCoordinateOptions _copyCoordinateOptions;
 
@@ -68,12 +68,7 @@ public class SpatialReferenceItem : Notifier, IDisposable
         RaisePropertyChanged(nameof(XLabelItem));
         RaisePropertyChanged(nameof(YLabelItem));
     }
-
-    //public Point FromWgs84Geodetic(Point geodeticPoint)
-    //{
-    //    return _fromWgs84Geodetic(geodeticPoint);
-    //}
-
+     
     public void Update(Point geodeticPoint)
     {
         //var point = _fromWgs84Geodetic(geodeticPoint);

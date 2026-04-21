@@ -210,7 +210,7 @@ public class TextDataSource : MemoryDataSource
             attributeHeaders = colCount > 2 ? Enumerable.Range(1, colCount - 2).Select(i => $"header {i}").ToList() : new List<string>();
         }
 
-        var webMercator = new WebMercator();
+        //var webMercator = new WebMercator();
 
         var result = new List<Feature<Point>>();
 
@@ -226,7 +226,7 @@ public class TextDataSource : MemoryDataSource
 
             var geom = Geometry<Point>.Create([point], IRI.Maptor.Sta.Common.Enums.GeometryType.Point, sourceSrid);
 
-            var projected = geom.Project(sourceSrs, webMercator);
+            var projected = geom.Project(sourceSrs, SrsBases.WebMercator);
 
             var attributes = new Dictionary<string, object>();
 

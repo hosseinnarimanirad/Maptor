@@ -23,7 +23,7 @@ public static class IndexLayers
 
     public static async System.Threading.Tasks.Task<VectorLayer> GetLayerFromShapefileAsync(string layerName, string filePath, string color)
     {
-        var features = ShapefileDataSourceFactory.Create(filePath, new WebMercator());
+        var features = ShapefileDataSourceFactory.Create(filePath, SrsBases.WebMercator/*new WebMercator()*/);
 
         var featureSet = await features.GetAsFeatureSetAsync();
         var geo = featureSet.Features.Select(f => f.TheGeometry).ToList();
