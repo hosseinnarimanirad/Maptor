@@ -75,7 +75,7 @@ public partial class CoordinatePanelView : NotifiableUserControl
     }
 
     public static readonly DependencyProperty CurrentHeightProperty =
-        DependencyProperty.Register("CurrentHeight", typeof(double?), typeof(CoordinatePanelView), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(CurrentHeight), typeof(double?), typeof(CoordinatePanelView), new PropertyMetadata(null));
     
     
     public bool IsHeightAvailable
@@ -85,7 +85,7 @@ public partial class CoordinatePanelView : NotifiableUserControl
     }
 
     public static readonly DependencyProperty IsHeightAvailableProperty =
-        DependencyProperty.Register("IsHeightAvailable", typeof(bool), typeof(CoordinatePanelView), new PropertyMetadata(false));
+        DependencyProperty.Register(nameof(IsHeightAvailable), typeof(bool), typeof(CoordinatePanelView), new PropertyMetadata(false));
 
 
 

@@ -493,9 +493,12 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     #region Analysis
 
-    public T GetMeanPoint()
+    public T? GetMeanPoint()
     {
         var allPoints = GetAllPoints();
+
+        if (allPoints.IsNullOrEmpty())
+            return default;
 
         return new T() { X = allPoints.Sum(i => i.X) / allPoints.Count, Y = allPoints.Sum(i => i.Y) / allPoints.Count };
     }
@@ -3154,7 +3157,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         }
         else
         {
-            return null;
+            return new List<T>();
         }
     }
 
@@ -3796,7 +3799,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             }
         }
     }
-
+     
     #endregion
 
 

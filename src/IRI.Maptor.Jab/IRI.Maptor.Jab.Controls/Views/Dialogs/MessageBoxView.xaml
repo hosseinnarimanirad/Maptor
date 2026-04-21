@@ -39,14 +39,20 @@
             </Border>
             <TextBlock Text="{Binding Message}" Margin="4,4" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"/>
         </StackPanel>
-        <StackPanel Grid.Row="1">
-            <Button Margin="8" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"                   
+        <StackPanel Grid.Row="1" Margin="8">
+            <Button MinWidth="100" Margin="8,0,0,0" Height="32" Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Accent}"                   
                     Command="{Binding FirstOptionCommand}"
                     ToolTip="{Binding FirstOptionText}"
                     HorizontalAlignment="Right">
-                <Path Stretch="Uniform" Width="18" Height="18" Margin="4" FlowDirection="LeftToRight"                      
+                <!--<Path Stretch="Uniform" Width="18" Height="18" Margin="4" FlowDirection="LeftToRight"                      
                       Fill="{DynamicResource MahApps.Brushes.IdealForeground}"
-                      Data="{Binding FirstOptionPathMarkup}"/>
+                      Data="{Binding FirstOptionPathMarkup}"/>-->
+                <StackPanel Orientation="Horizontal">
+                    <Path Stretch="Uniform" Width="18" Height="18" FlowDirection="LeftToRight"
+                          Margin="0,0,8,0" VerticalAlignment="Center" 
+                          Data="{Binding FirstOptionPathMarkup}"/>
+                    <TextBlock Text="{Binding [FirstOptionText], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="2,0" />
+                </StackPanel>
             </Button>
         </StackPanel>
     </Grid>
