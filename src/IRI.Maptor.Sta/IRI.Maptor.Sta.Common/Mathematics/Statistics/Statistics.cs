@@ -36,7 +36,7 @@ public static class Statistics
 
         if (values.IsNullOrEmpty())
         {
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
         }
         
         double resultVlaue = values[0];
@@ -55,7 +55,7 @@ public static class Statistics
 
         //if (values.Length < 0)
         if (values.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         int resultVlaue = values[0];
 
@@ -118,7 +118,7 @@ public static class Statistics
     public static double GetMin(double[] values)
     {
         if (values.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         double resultVlaue = values[0];
 
@@ -137,7 +137,7 @@ public static class Statistics
     public static double GetMin(List<double> values)
     {
         if (values.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         double resultVlaue = values[0];
 
@@ -153,7 +153,7 @@ public static class Statistics
     public static int GetMin(int[] values)
     {
         if (values.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
 
         int resultVlaue = values[0];
@@ -205,7 +205,7 @@ public static class Statistics
     public static double CalculateSum(double[] values)
     {
         if (values.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
 
         double result = 0;
@@ -221,7 +221,7 @@ public static class Statistics
     private static double CalculateSum(List<double> values)
     {
         if (values.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         double result = 0;
 
@@ -256,7 +256,7 @@ public static class Statistics
     public static double CalculateMean(double[] values)
     {
         if (values.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         return Statistics.CalculateSum(values) / values.Length;
     }
@@ -264,7 +264,7 @@ public static class Statistics
     public static double CalculateMean(List<double> values)
     {
         if (values.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         return Statistics.CalculateSum(values) / values.Count;
     }
@@ -286,7 +286,7 @@ public static class Statistics
     public static double CalculateStandardDeviation(double[] values, VarianceCalculationMode mode = VarianceCalculationMode.Sample)
     {
         if (values.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         return Math.Sqrt(Statistics.CalculateVariance(values, mode));
     }
@@ -294,7 +294,7 @@ public static class Statistics
     public static double CalculateStandardDeviation(List<double> values, VarianceCalculationMode mode = VarianceCalculationMode.Sample)
     {
         if (values.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         return Math.Sqrt(Statistics.CalculateVariance(values, mode));
     }
@@ -302,7 +302,7 @@ public static class Statistics
     public static double CalculateStandardDeviation(Matrix values)
     {
         if (values is null)
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         return Math.Sqrt(Statistics.CalculateVariance(values));
     }
@@ -311,7 +311,7 @@ public static class Statistics
     public static double CalculateVariance(double[] values, VarianceCalculationMode mode = VarianceCalculationMode.Sample)
     {
         if (values.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         double result = 0;
 
@@ -341,7 +341,7 @@ public static class Statistics
     public static double CalculateVariance(List<double> values, VarianceCalculationMode mode = VarianceCalculationMode.Sample)
     {
         if (values.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         double result = 0;
 
@@ -371,7 +371,7 @@ public static class Statistics
     public static double CalculateVariance(Matrix values)
     {
         if (values is null)
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         double result = 0;
 
@@ -396,7 +396,7 @@ public static class Statistics
     public static double CalculateCovariance(double[] firstValues, double[] secondValues)
     {
         if (firstValues.IsNullOrEmpty() || secondValues.IsNullOrEmpty())
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         int length = firstValues.Length;
 
@@ -422,7 +422,7 @@ public static class Statistics
     public static double CalculateCovariance(Matrix firstValues, Matrix secondValues)
     {
         if (firstValues is null || secondValues is null)
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
 
         if (!Matrix.AreTheSameSize(firstValues, secondValues))
         {
@@ -452,7 +452,7 @@ public static class Statistics
 
         if (numberOfArrays < 0)
         {
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
         }
 
         for (int i = 0; i < numberOfArrays; i++)
@@ -493,14 +493,14 @@ public static class Statistics
 
         if (numberOfArrays < 0)
         {
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
         }
 
         int arrayLength = values[0].Length;
 
         if (arrayLength < 0)
         {
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
         }
 
         foreach (double[] item in values)
@@ -541,7 +541,7 @@ public static class Statistics
 
         if (numberOfArrays < 0)
         {
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
         }
 
         for (int i = 0; i < numberOfArrays; i++)
@@ -589,14 +589,14 @@ public static class Statistics
 
         if (numberOfArrays < 0)
         {
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
         }
 
         int arrayLength = values[0].Length;
 
         if (arrayLength < 0)
         {
-            throw new ZeroSizeArrayException();
+            throw new MaptorZeroSizeArrayException();
         }
 
         foreach (double[] item in values)

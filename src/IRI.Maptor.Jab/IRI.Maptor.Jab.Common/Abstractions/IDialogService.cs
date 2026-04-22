@@ -3,6 +3,7 @@ using System.Windows;
 using System.Threading.Tasks;
 using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
+using IRI.Maptor.Sta.Common.Exceptions;
 
 namespace IRI.Maptor.Jab.Common.Abstractions;
 
@@ -50,10 +51,11 @@ public interface IDialogService
     // ********************************************************************
     Task ShowMessageAsync<T>(string message, string? title, string? pathMarkup);
 
-    Task ShowLocalizedMessageAsync(string messageKey, string titleKey, object? ownerWindow = null, string? pathMarkup = null);
+    //Task ShowLocalizedMessageAsync(string messageKey, string titleKey, object? ownerWindow = null, string? pathMarkup = null);
 
     Task ShowMessageAsync(string message, string? title, object? ownerWindow = null, string? pathMarkup = null);
 
+    Task ShowErrorMessage(DomainException exception, object? ownerWindow = null);
 
     // ********************************************************************
     //                          SignUp Dialog

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IRI.Maptor.Sta.Common.Exceptions;
 
-public class UserNotFoundException : DomainException
+public class MaptorUserNotFoundException : DomainException
 {
     public override string MessageResourceKey => "app_sabaApi_error_userNotFound";
 

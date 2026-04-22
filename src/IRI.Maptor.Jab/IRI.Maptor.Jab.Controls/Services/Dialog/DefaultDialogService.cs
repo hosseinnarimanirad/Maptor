@@ -2,6 +2,7 @@ using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
+using IRI.Maptor.Sta.Common.Exceptions;
 using Microsoft.Win32;
 using System;
 using System.Linq;
@@ -560,15 +561,23 @@ public class DefaultDialogService : IDialogService
     }
 
 
-    public async Task ShowLocalizedMessageAsync(string messageKey, string titleKey, object? ownerWindow = null, string? pathMarkup = null)
+    //public async Task ShowLocalizedMessageAsync(string messageKey, string titleKey, object? ownerWindow = null, string? pathMarkup = null)
+    //{
+    //    var message = LocalizationManager.Instance[messageKey];
+
+    //    var title = LocalizationManager.Instance[titleKey];
+
+    //    await ShowMessageAsync(message, title, ownerWindow, pathMarkup);
+    //}
+
+    public async Task ShowErrorMessage(DomainException exception, object? ownerWindow = null)
     {
-        var message = LocalizationManager.Instance[messageKey];
+        var message = LocalizationManager.Instance[exception.MessageResourceKey];
 
-        var title = LocalizationManager.Instance[titleKey];
+        var title = LocalizationManager.Instance["message_error_title"];
 
-        await ShowMessageAsync(message, title, ownerWindow, pathMarkup);
+        await ShowMessageAsync(message, title, ownerWindow);
     }
-
 
     /// <summary>
     /// Shows a message dialog asynchronously with the specified owner window.

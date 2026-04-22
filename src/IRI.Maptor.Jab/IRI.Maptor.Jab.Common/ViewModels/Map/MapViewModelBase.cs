@@ -48,6 +48,7 @@ using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Models.Settings;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Sta.Common.Exceptions;
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public abstract class MapViewModelBase : ViewModelBase
@@ -591,7 +592,22 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    public void SetTileBaseMap(TileMapProvider? provider/*, double opacity*/)
+    private async Task ChangeBaseMap(string? mapProviderFullName)
+    {
+        try
+        {
+            var provider = MapProviders.FirstOrDefault(m => m.Is(mapProviderFullName));
+
+            SetTileBaseMap(provider/*, BaseMapOpacity*/);
+        }
+        catch (Exception ex)
+        {
+            await ShowExceptionMessageAsync(ex);
+            //Debug.WriteLine("exception at ChangeBaseMapCommand: " + ex);
+        }
+    }
+
+    public void SetTileBaseMap(TileMapProvider? provider)
     {
         if (provider is null)
             return;
@@ -600,7 +616,7 @@ public abstract class MapViewModelBase : ViewModelBase
             return;
 
         if (!MapProviders.Contains(provider))
-            throw new NotImplementedException("MapPresenter > SetTileBaseMap");
+            throw new MaptorMapProviderNotAvailableException();
 
         SelectedMapProvider = provider;
     }
@@ -1379,7 +1395,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             selectedLayer.RequestRefreshLayer = RefreshLayerVisibility;
 
-            selectedLayer.RequestShowLocalizedErrorMessage = async (messageKey) => await DialogService.ShowLocalizedMessageAsync(messageKey, "message_error_title");
+            selectedLayer.RequestShowErrorMessage = async (error) => await DialogService.ShowErrorMessage(error);
 
             //selectedLayer.PropertyChanged += (s, e) =>
             //{
@@ -2376,7 +2392,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
         catch (Exception ex)
         {
-            await DialogService.ShowLocalizedMessageAsync(ex.Message, "message_error_title");
+            await DialogService.ShowErrorMessage(new DomainException(ex.Message));
         }
     }
 
@@ -2834,17 +2850,17 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             MapPanel.Options = MapSettings.DrawingMeasureOptions;
 
-            var result = await RequestMeasure?.Invoke(mode, MapSettings.DrawingMeasureOptions, MapSettings.EditingMeasureOptions, action);
+            var result = await RequestMeasure.Invoke(mode, MapSettings.DrawingMeasureOptions, MapSettings.EditingMeasureOptions, action);
 
             //this.IsMeasureMode = false;
 
             return result;
-
-
         }
         catch (Exception ex)
         {
-            throw;
+            await ShowExceptionMessageAsync(ex);
+
+            return Response<Geometry<Point>>.Empty;
         }
     }
 
@@ -2880,32 +2896,37 @@ public abstract class MapViewModelBase : ViewModelBase
 
             viewModel.RequestDelete = () => RemoveDrawingItem(drawingItemLayer);
 
-            //drawingItemLayer.OnIsSelectedInTocChanged += (sender, e) =>
-            //{
-            //    if (drawingItemLayer.IsSelectedInToc)
-            //    {
-            //        SelectedDrawingItem = drawingItemLayer;
-            //    }
-            //    else if (SelectedDrawingItem == drawingItemLayer)
-            //    {
-            //        SelectedDrawingItem = null;
-            //    }
-            //};
-
-            //TrySetCommandsForDrawingItemLayer(drawingItemLayer);
-
             AddDrawingItem(drawingItemLayer);
-
-            return;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            await ShowExceptionMessageAsync(ex);
         }
     }
 
     #endregion
 
+    private async Task ShowExceptionMessageAsync(Exception ex)
+    {
+        if (ex is DomainException domainException)
+        {
+            await this.DialogService.ShowErrorMessage(domainException);
+        }
+        else if (ex is IOException)
+        {
+            await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
+            //await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        else if (ex is UnauthorizedAccessException)
+        {
+            await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
+            //await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        else
+        {
+            await this.DialogService.ShowErrorMessage(new MaptorUnknownException(ex.Message));
+        }
+    }
 
     #region Save As Png
 
@@ -3747,8 +3768,8 @@ public abstract class MapViewModelBase : ViewModelBase
     //*****************************************File Formats *********************************************************
     #region Shapefile/Worldfile/GeoJson/KML/KMZ/Csv/Tsv/ZippedImagePyramid
 
-    const string _error = "خطا";
-    const string _fileLockedError = "فایل در حال استفاده توسط برنامه دیگری است. لطفا فایل را ببندید و دوباره تلاش کنید.";
+    //const string _error = "خطا";
+    //const string _fileLockedError = "فایل در حال استفاده توسط برنامه دیگری است. لطفا فایل را ببندید و دوباره تلاش کنید.";
 
     public virtual async Task AddShapefile(object owner, int? maxSizeInKB)
     {
@@ -3799,7 +3820,8 @@ public abstract class MapViewModelBase : ViewModelBase
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+            await ShowExceptionMessageAsync(ex);
+            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
@@ -3836,9 +3858,7 @@ public abstract class MapViewModelBase : ViewModelBase
         try
         {
             if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
-            {
-                throw new FileNotFoundException($"KML file '{fileName}' was not found.", fileName);
-            }
+                throw new MaptorFileNotFoundException(fileName);
 
             List<Feature<Point>> features;
 
@@ -3867,14 +3887,17 @@ public abstract class MapViewModelBase : ViewModelBase
 
             if (features.IsNullOrEmpty())
             {
-                await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل KML یافت نشد.", _error, owner);
-                return;
+                throw new MaptorEmptyFileException();
+                //await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل KML یافت نشد.", _error, owner);
+                //return;
             }
 
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
             var dataSource = KmlDataSource.Create(fileName, features);
+
             var geometryType = features.First().TheGeometry.Type;
+
             var symbolizers = features.CreateSymbolizersFromKml(geometryType);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
@@ -3890,17 +3913,20 @@ public abstract class MapViewModelBase : ViewModelBase
 
             AddLayer(vectorLayer);
         }
-        catch (IOException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
+        //catch (IOException)
+        //{
+        //    await HandleError(FileIsLockedException.Instance);
+        //    //await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
+        //catch (UnauthorizedAccessException)
+        //{
+        //    await HandleError(FileIsLockedException.Instance);
+        //    //await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
         catch (Exception ex)
         {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+            await ShowExceptionMessageAsync(ex);
+            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
@@ -3938,7 +3964,8 @@ public abstract class MapViewModelBase : ViewModelBase
         try
         {
             if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
-                throw new FileNotFoundException($"KMZ file '{fileName}' was not found.", fileName);
+                throw new MaptorFileNotFoundException(fileName);
+            //throw new System.IO.FileNotFoundException($"KMZ file '{fileName}' was not found.", fileName);
 
             List<Feature<Point>> features;
 
@@ -3967,7 +3994,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
             if (features.IsNullOrEmpty())
             {
-                await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل KML یافت نشد.", _error, owner);
+                //await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل KML یافت نشد.", _error, owner);
+                await ShowExceptionMessageAsync(new MaptorEmptyFileException());
+
                 return;
             }
 
@@ -3990,18 +4019,22 @@ public abstract class MapViewModelBase : ViewModelBase
 
             AddLayer(vectorLayer);
         }
-        catch (IOException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
         catch (Exception ex)
         {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+            await ShowExceptionMessageAsync(ex);
         }
+        //catch (IOException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
+        //catch (UnauthorizedAccessException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
+        //catch (Exception ex)
+        //{
+        //    await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+        //}
         finally
         {
             IsBusy = false;
@@ -4025,8 +4058,11 @@ public abstract class MapViewModelBase : ViewModelBase
             var info = new FileInfo(fileName);
             if (info.Length / 1000.0 > maxSizeInKB)
             {
-                await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", _error, owner);
+                //await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", _error, owner);
+                await ShowExceptionMessageAsync(new MaptorFileSizeExceedToOpenException());
+
                 IsBusy = false;
+
                 return;
             }
         }
@@ -4039,59 +4075,62 @@ public abstract class MapViewModelBase : ViewModelBase
         try
         {
             if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
-                throw new FileNotFoundException($"GPX file '{fileName}' was not found.", fileName);
+                throw new MaptorFileNotFoundException(fileName);
+            //throw new System.IO.FileNotFoundException($"GPX file '{fileName}' was not found.", fileName);
 
             var features = new List<Feature<Point>>();
 
-            try
+            //try
+            //{
+            var parsed = GpxFormat.Parse(fileName);
+            foreach (var wpt in parsed.Waypoints)
             {
-                var parsed = GpxFormat.Parse(fileName);
-                foreach (var wpt in parsed.Waypoints)
-                {
-                    var point = new Point(wpt.Longitude, wpt.Latitude);
-                    var geom = Geometry<Point>.CreatePointOrLineString(new List<Point> { point }, SridHelper.GeodeticWGS84);
-                    var attrs = new Dictionary<string, object?>();
-                    if (!string.IsNullOrWhiteSpace(wpt.Name)) attrs["name"] = wpt.Name;
-                    if (!string.IsNullOrWhiteSpace(wpt.Description)) attrs["description"] = wpt.Description;
-                    if (wpt.Elevation.HasValue) attrs["elevation"] = wpt.Elevation.Value;
-                    features.Add(new Feature<Point>(geom, attrs));
-                }
+                var point = new Point(wpt.Longitude, wpt.Latitude);
+                var geom = Geometry<Point>.CreatePointOrLineString(new List<Point> { point }, SridHelper.GeodeticWGS84);
+                var attrs = new Dictionary<string, object?>();
+                if (!string.IsNullOrWhiteSpace(wpt.Name)) attrs["name"] = wpt.Name;
+                if (!string.IsNullOrWhiteSpace(wpt.Description)) attrs["description"] = wpt.Description;
+                if (wpt.Elevation.HasValue) attrs["elevation"] = wpt.Elevation.Value;
+                features.Add(new Feature<Point>(geom, attrs));
+            }
 
-                foreach (var route in parsed.Routes)
+            foreach (var route in parsed.Routes)
+            {
+                if (route.RoutePoints == null || route.RoutePoints.Count < 2) continue;
+                var points = route.RoutePoints.Select(p => new Point(p.Longitude, p.Latitude)).ToList();
+                var geom = Geometry<Point>.CreatePointOrLineString(points, SridHelper.GeodeticWGS84);
+                var attrs = new Dictionary<string, object?>();
+                if (!string.IsNullOrWhiteSpace(route.Name)) attrs["name"] = route.Name;
+                features.Add(new Feature<Point>(geom, attrs));
+            }
+
+            foreach (var track in parsed.Tracks)
+            {
+                foreach (var segment in track.Segments ?? Enumerable.Empty<GpxTrackSegment>())
                 {
-                    if (route.RoutePoints == null || route.RoutePoints.Count < 2) continue;
-                    var points = route.RoutePoints.Select(p => new Point(p.Longitude, p.Latitude)).ToList();
+                    if (segment.TrackPoints == null || segment.TrackPoints.Count < 2) continue;
+                    var points = segment.TrackPoints
+                        .Select(p => new Point(p.Longitude, p.Latitude))
+                        .ToList();
                     var geom = Geometry<Point>.CreatePointOrLineString(points, SridHelper.GeodeticWGS84);
                     var attrs = new Dictionary<string, object?>();
-                    if (!string.IsNullOrWhiteSpace(route.Name)) attrs["name"] = route.Name;
+                    if (!string.IsNullOrWhiteSpace(track.Name)) attrs["name"] = track.Name;
                     features.Add(new Feature<Point>(geom, attrs));
                 }
-
-                foreach (var track in parsed.Tracks)
-                {
-                    foreach (var segment in track.Segments ?? Enumerable.Empty<GpxTrackSegment>())
-                    {
-                        if (segment.TrackPoints == null || segment.TrackPoints.Count < 2) continue;
-                        var points = segment.TrackPoints
-                            .Select(p => new Point(p.Longitude, p.Latitude))
-                            .ToList();
-                        var geom = Geometry<Point>.CreatePointOrLineString(points, SridHelper.GeodeticWGS84);
-                        var attrs = new Dictionary<string, object?>();
-                        if (!string.IsNullOrWhiteSpace(track.Name)) attrs["name"] = track.Name;
-                        features.Add(new Feature<Point>(geom, attrs));
-                    }
-                }
             }
-            catch (Exception ex)
-            {
-                await DialogService.ShowMessageAsync(ex.Message, _error, owner);
-                return;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw;
+            //    //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+            //    //return;
+            //}
 
             if (features.IsNullOrEmpty())
             {
-                await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل GPX یافت نشد.", _error, owner);
-                return;
+                throw MaptorEmptyFileException.Instance;
+                //await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل GPX یافت نشد.", _error, owner);
+                //return;
             }
 
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
@@ -4113,17 +4152,19 @@ public abstract class MapViewModelBase : ViewModelBase
 
             AddLayer(vectorLayer);
         }
-        catch (IOException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
+        //catch (IOException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
+        //catch (UnauthorizedAccessException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
         catch (Exception ex)
         {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+            await ShowExceptionMessageAsync(ex);
+
+            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
@@ -4155,38 +4196,38 @@ public abstract class MapViewModelBase : ViewModelBase
 
         if (maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
         {
-            await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", ownerWindow: null);
+            await ShowExceptionMessageAsync(MaptorFileSizeExceedToOpenException.Instance);
+            //await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", ownerWindow: null);
             IsBusy = false;
+
             return;
         }
 
         await AddDxffile(result.FilePath, owner: null, result.SelectedSrid);
     }
+
     public async Task AddDxffile(string fileName, object owner, int defaultSrid)
     {
         try
         {
             if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
-                throw new FileNotFoundException($"DXF file '{fileName}' was not found.", fileName);
+                throw new MaptorFileNotFoundException(fileName);
+            //throw new System.IO.FileNotFoundException($"DXF file '{fileName}' was not found.", fileName);
 
             var geometries = await DxfReader.ReadFromFile(fileName, defaultSrid);
 
-            if (geometries == null || geometries.IsNullOrEmpty())
+            if (geometries.IsNullOrEmpty())
             {
-                await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
-                return;
+                throw MaptorEmptyFileException.Instance;
+                //await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
+                //return;
             }
-
-            if (geometries.Count == 0)
-            {
-                await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
-                return;
-            }
-
+             
             if (geometries.Any(g => g.Srid == 0))
             {
-                await DialogService.ShowMessageAsync("سیستم مختصات DXF یافت نشد.", _error, owner);
-                return;
+                throw MaptorDxfSrsNotFoundException.Instance;
+                //await DialogService.ShowMessageAsync("سیستم مختصات DXF یافت نشد.", _error, owner);
+                //return;
             }
 
             var groups = geometries.GroupBy(g => g.Type).ToList();
@@ -4200,8 +4241,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
                 if (features.IsNullOrEmpty())
                 {
-                    await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
-                    return;
+                    throw MaptorEmptyFileException.Instance;
+                    //await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
+                    //return;
                 }
 
                 features = features.Select(f => f.Project(SrsBases.WebMercator/*new WebMercator()*/)).ToList();
@@ -4228,17 +4270,18 @@ public abstract class MapViewModelBase : ViewModelBase
 
             AddLayer(groupLayer);
         }
-        catch (IOException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
+        //catch (IOException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
+        //catch (UnauthorizedAccessException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
         catch (Exception ex)
         {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+            await ShowExceptionMessageAsync(ex);
+            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
@@ -4261,6 +4304,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await AddWorldfile(fileName, SridHelper.GeodeticWGS84, owner);
     }
+
     public virtual async Task AddWebMercatorWorldfile(object owner)
     {
         IsBusy = true;
@@ -4278,23 +4322,25 @@ public abstract class MapViewModelBase : ViewModelBase
 
             await AddWorldfile(fileName, SridHelper.WebMercator, owner);
         }
-        catch (IOException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
+        //catch (IOException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
+        //catch (UnauthorizedAccessException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
         catch (Exception ex)
         {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+            await ShowExceptionMessageAsync(ex);
+            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
             IsBusy = false;
         }
     }
+
     public virtual async Task AddWorldfile(string fileName, int srid, object owner)
     {
         try
@@ -4302,44 +4348,35 @@ public abstract class MapViewModelBase : ViewModelBase
             var dataSource = await GeoRasterFileDataSource.CreateAsync(fileName, DataSourceKind.Worldfile, srid);
 
             if (dataSource == null)
-            {
                 return;
-            }
 
             var rasterLayer = new RasterLayer(
                 dataSource,
                 Path.GetFileNameWithoutExtension(fileName),
                 LayerType.Raster,
                 .9,
-                //false,
-                //false,
                 System.Windows.Visibility.Visible,
                 ScaleInterval.All);
 
-            //this.SetLayer(rasterLayer);
-
-            AddLayer(rasterLayer);
-
-            //this.Refresh();
-
+            AddLayer(rasterLayer); 
         }
-        catch (IOException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
+        //catch (IOException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
+        //catch (UnauthorizedAccessException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
         catch (Exception ex)
         {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+            await ShowExceptionMessageAsync(ex);
+            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
             IsBusy = false;
         }
-
     }
 
     public virtual async Task AddZippedImagePyramid(object owner)
@@ -4360,25 +4397,24 @@ public abstract class MapViewModelBase : ViewModelBase
             var rasterLayer = new RasterLayer(new ZippedImagePyramidDataSource(fileName),
                 Path.GetFileNameWithoutExtension(fileName),
                 LayerType.ImagePyramid,
-                1,
-                //false,
-                //true,
+                1, 
                 System.Windows.Visibility.Visible,
                 ScaleInterval.All);
 
             AddLayer(rasterLayer);
         }
-        catch (IOException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
+        //catch (IOException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
+        //catch (UnauthorizedAccessException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
         catch (Exception ex)
         {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+            await ShowExceptionMessageAsync(ex);
+            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
@@ -4421,76 +4457,25 @@ public abstract class MapViewModelBase : ViewModelBase
 
             AddLayer(new VectorLayer(layerName, dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
         }
-        catch (IOException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
+        //catch (IOException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
+        //catch (UnauthorizedAccessException)
+        //{
+        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        //}
         catch (Exception ex)
         {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+            await ShowExceptionMessageAsync(ex);
+            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
             IsBusy = false;
         }
     }
-
-    ///// <summary>
-    ///// Opens the CSV/TSV import dialog and adds the layer.
-    ///// </summary>
-    //public virtual async Task AddTsvFile(object owner, bool isLongitudeFirst)
-    //{
-    //    try
-    //    {
-    //        IsBusy = true;
-
-    //        var result = await DialogService.ShowCsvTsvOpenDialogAsync(ownerWindow: null, initialIsCsv: false, initialSrid: null);
-
-    //        if (result == null || string.IsNullOrWhiteSpace(result.RawText))
-    //        {
-    //            IsBusy = false;
-    //            return;
-    //        }
-
-    //        DataSourceKind dataSourceKind = result.IsCsv ? DataSourceKind.Csv : DataSourceKind.Tsv;
-
-    //        var dataSource = await TextDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, dataSourceKind, result.UseFirstLineAsHeader);
-
-    //        //MemoryDataSource dataSource = result.IsCsv
-    //        //    ? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader)
-    //        //    : await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader);
-
-    //        if (dataSource == null)
-    //            return;
-
-    //        var layerName = !string.IsNullOrEmpty(result.FilePath)
-    //            ? Path.GetFileNameWithoutExtension(result.FilePath)
-    //            : (result.IsCsv ? "CSV Import" : "TSV Import");
-
-    //        AddLayer(new VectorLayer(layerName, dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
-    //    }
-    //    catch (IOException)
-    //    {
-    //        await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-    //    }
-    //    catch (UnauthorizedAccessException)
-    //    {
-    //        await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        await DialogService.ShowMessageAsync(ex.Message, _error, owner);
-    //    }
-    //    finally
-    //    {
-    //        IsBusy = false;
-    //    }
-    //}
-
+      
     public virtual async Task AddGeoJson(object owner)
     {
         try
@@ -4524,7 +4509,8 @@ public abstract class MapViewModelBase : ViewModelBase
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+            await ShowExceptionMessageAsync(ex);
+            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
@@ -4532,32 +4518,33 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    public async Task AddGeoJson(string geoJsonFeatureSetFileName, object owner)
-    {
-        try
-        {
-            var dataSource = await GeoJsonDataSource.CreateFromFileAsync(geoJsonFeatureSetFileName);
+    //public async Task AddGeoJson(string geoJsonFeatureSetFileName, object owner)
+    //{
+    //    try
+    //    {
+    //        var dataSource = await GeoJsonDataSource.CreateFromFileAsync(geoJsonFeatureSetFileName);
 
-            var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(geoJsonFeatureSetFileName), dataSource,
-                [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
-                LayerType.VectorLayer,
-                RenderMode.Default,
-                RasterizationMethod.GdiPlus, ScaleInterval.All)
-            {
-                IsSearchable = true
-            };
+    //        var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(geoJsonFeatureSetFileName), dataSource,
+    //            [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
+    //            LayerType.VectorLayer,
+    //            RenderMode.Default,
+    //            RasterizationMethod.GdiPlus, ScaleInterval.All)
+    //        {
+    //            IsSearchable = true
+    //        };
 
-            AddLayer/*<Feature<Point>>*/(vectorLayer);
-        }
-        catch (Exception ex)
-        {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
-        }
-        finally
-        {
-            IsBusy = false;
-        }
-    }
+    //        AddLayer(vectorLayer);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        await ShowExceptionMessageAsync(ex);
+    //        //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+    //    }
+    //    finally
+    //    {
+    //        IsBusy = false;
+    //    }
+    //}
 
     public virtual async Task AddTopoJson(object owner)
     {
@@ -4592,7 +4579,8 @@ public abstract class MapViewModelBase : ViewModelBase
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessageAsync(ex.Message, _error, owner);
+            await ShowExceptionMessageAsync(ex);
+            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
@@ -4949,28 +4937,20 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_changeBaseMapCommand == null)
             {
-                _changeBaseMapCommand = new RelayCommand(/*async*/ param =>
-                {
-                    try
-                    {
-                        //var args = param.ToString().Split(',');
+                _changeBaseMapCommand = new RelayCommand(async param => await ChangeBaseMap(param?.ToString()));
+                //{
+                //try
+                //{
+                //    var provider = MapProviders.FirstOrDefault(m => m.Is(param?.ToString()));
 
-                        //var provider = args[0];
-
-                        //TileType tileType = (TileType)Enum.Parse(typeof(TileType), args[1]);
-
-                        //this.ProviderTypeFullName = provider;
-                        var provider = MapProviders.FirstOrDefault(m => m.Is(param?.ToString()));
-
-                        /*await*/
-                        SetTileBaseMap(provider/*, BaseMapOpacity*/);
-
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("exception at ChangeBaseMapCommand: " + ex);
-                    }
-                });
+                //    SetTileBaseMap(provider/*, BaseMapOpacity*/);
+                //}
+                //catch (Exception ex)
+                //{
+                //    await HandleError(ex);
+                //    //Debug.WriteLine("exception at ChangeBaseMapCommand: " + ex);
+                //}
+                //});
             }
 
             return _changeBaseMapCommand;
@@ -5043,39 +5023,25 @@ public abstract class MapViewModelBase : ViewModelBase
         get
         {
             if (_measureLengthCommand == null)
-            {
-                _measureLengthCommand = new RelayCommand(async param =>
-                {
-                    //this.MapSettings.DrawingMeasureOptions.IsEdgeLabelVisible = param == null ? true : (bool)param;
-
-                    await Measure(DrawMode.Polyline);
-                });
-            }
+                _measureLengthCommand = new RelayCommand(async param => _ = await Measure(DrawMode.Polyline));
 
             return _measureLengthCommand;
         }
     }
 
     private RelayCommand _measureAreaCommand;
-
     public RelayCommand MeasureAreaCommand
     {
         get
         {
             if (_measureAreaCommand == null)
-            {
-                _measureAreaCommand = new RelayCommand(async param =>
-                {
-                    _ = await Measure(DrawMode.Polygon);
-                });
-            }
+                _measureAreaCommand = new RelayCommand(async param => _ = await Measure(DrawMode.Polygon));
 
             return _measureAreaCommand;
         }
     }
 
     private RelayCommand _cancelMeasureCommand;
-
     public RelayCommand CancelMeasureCommand
     {
         get
@@ -5293,24 +5259,25 @@ public abstract class MapViewModelBase : ViewModelBase
 
                         if (features.Count != 1)
                         {
-                            await DialogService.ShowMessageAsync("فایل جی‌سان حاوی تک عارضه باید باشد", _error, param);
-
-                            return;
+                            throw MaptorSingleFeatureFileExpectedException.Instance;
+                            //await DialogService.ShowMessageAsync("فایل جی‌سان حاوی تک عارضه باید باشد", _error, param);
+                            //return;
                         }
 
                         AddDrawingItem(features.First().TheGeometry, Path.GetFileNameWithoutExtension(fileName)/*, null, int.MinValue*//*, dataSource*/);
                     }
-                    catch (IOException)
-                    {
-                        await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
-                    }
-                    catch (UnauthorizedAccessException)
-                    {
-                        await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
-                    }
+                    //catch (IOException)
+                    //{
+                    //    await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    //}
+                    //catch (UnauthorizedAccessException)
+                    //{
+                    //    await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    //}
                     catch (Exception ex)
                     {
-                        await DialogService.ShowMessageAsync(ex.Message, _error, param);
+                        await ShowExceptionMessageAsync(ex);
+                        //await DialogService.ShowMessageAsync(ex.Message, _error, param);
                     }
                 });
             }
@@ -5343,26 +5310,21 @@ public abstract class MapViewModelBase : ViewModelBase
                         var webMercatorPoints = wgsPoints.Select(p => p.Project(SrsBases.GeodeticWgs84, SrsBases.WebMercator)).ToList();
 
                         var geometry = Geometry<Point>.CreatePointOrLineStringOrPolygon(webMercatorPoints, SridHelper.WebMercator);
-
-                        //Feature<Point> feature = new Feature<Point>(geometry, "test label");
-
-                        //var dataSource = new MemoryDataSource([feature]);
-
-                        //var geometries = dataSource.GetAsFeatureSet()?.Features;
-
+                         
                         AddDrawingItem(geometry, Path.GetFileNameWithoutExtension(fileName)/*, null, int.MinValue*//*, dataSource*/);
                     }
-                    catch (IOException)
-                    {
-                        await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
-                    }
-                    catch (UnauthorizedAccessException)
-                    {
-                        await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
-                    }
+                    //catch (IOException)
+                    //{
+                    //    await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    //}
+                    //catch (UnauthorizedAccessException)
+                    //{
+                    //    await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    //}
                     catch (Exception ex)
                     {
-                        await DialogService.ShowMessageAsync(ex.Message, _error, param);
+                        await ShowExceptionMessageAsync(ex);
+                        //await DialogService.ShowMessageAsync(ex.Message, _error, param);
                     }
                 });
             }
@@ -5398,24 +5360,25 @@ public abstract class MapViewModelBase : ViewModelBase
 
                         if (geometries.Count != 1)
                         {
-                            await DialogService.ShowMessageAsync("شیپ فایل حاوی تک عارضه باید باشد", _error, param);
-
-                            return;
+                            throw MaptorSingleFeatureFileExpectedException.Instance;
+                            //await DialogService.ShowMessageAsync("شیپ فایل حاوی تک عارضه باید باشد", _error, param);
+                            //return;
                         }
 
                         AddDrawingItem(geometries.First().TheGeometry, Path.GetFileNameWithoutExtension(fileName)/*, null, int.MinValue*//*, dataSource*/);
                     }
-                    catch (IOException)
-                    {
-                        await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
-                    }
-                    catch (UnauthorizedAccessException)
-                    {
-                        await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
-                    }
+                    //catch (IOException)
+                    //{
+                    //    await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    //}
+                    //catch (UnauthorizedAccessException)
+                    //{
+                    //    await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    //}
                     catch (Exception ex)
                     {
-                        await DialogService.ShowMessageAsync(ex.Message, _error, param);
+                        await ShowExceptionMessageAsync(ex);
+                        //await DialogService.ShowMessageAsync(ex.Message, _error, param);
                     }
                 });
             }

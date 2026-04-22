@@ -6,10 +6,11 @@ namespace IRI.Maptor.Sta.Common.Exceptions;
 
 public enum ExceptionType
 {
-    BadRequest = 1,
-    NotFound = 2,
-    Unauthorized = 3,
-    Conflict = 4,
-    InternalServerError = 5,
-    Concurrency = 6,
+    Unknown = 1,
+    BadRequest = 2,
+    NotFound = 3,
+    Unauthorized = 4,
+    Conflict = 5,
+    InternalServerError = 6,
+    Concurrency = 7,
 }

@@ -115,7 +115,7 @@ public class SelectedLayer : Notifier
 
     public Action<ILayer>? RequestRefreshLayer { get; set; }
 
-    public Func<string, Task> RequestShowLocalizedErrorMessage { get; set; }
+    public Func<DomainException, Task> RequestShowErrorMessage { get; set; }
 
 
     public SelectedLayer(VectorLayer layer, List<Field>? fields)
@@ -533,13 +533,13 @@ public class SelectedLayer : Notifier
                     {
                         await this.SaveChangesAsync();
                     }
-                    catch(DomainException ex)
+                    catch (DomainException ex)
                     {
-                        await RequestShowLocalizedErrorMessage(ex.MessageResourceKey);
+                        await RequestShowErrorMessage(ex);
                     }
                     catch (Exception ex)
                     {
-                        await RequestShowLocalizedErrorMessage(ex.Message);
+                        await RequestShowErrorMessage(new MaptorUnknownException(ex.Message));
                     }
 
                 }, _ => HasPendingChanges);

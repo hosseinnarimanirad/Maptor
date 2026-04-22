@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IRI.Maptor.Sta.Common.Exceptions;
 
-public class InvalidPasswordException : DomainException
+public class MaptorInvalidPasswordException : DomainException
 {
     public override string MessageResourceKey => "app_sabaApi_error_invalidPassword";
 
