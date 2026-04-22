@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace IRI.Maptor.Sta.Common.Exceptions;
 
-public class MaptorAlreadyVerifiedEmailAddressException : DomainException
+public class MaptorEmailAlreadyVerifiedException : DomainException
 {
     public string EmailAddress { get; set; }
 
-    public MaptorAlreadyVerifiedEmailAddressException(string emailAddress)
+    public MaptorEmailAlreadyVerifiedException(string emailAddress)
     {
         EmailAddress = emailAddress;
     }

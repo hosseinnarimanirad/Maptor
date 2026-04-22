@@ -9,7 +9,7 @@ namespace IRI.Maptor.Sta.Common.Exceptions;
 
 public class MaptorInvalidPasswordException : DomainException
 {
-    public override string MessageResourceKey => "app_sabaApi_error_invalidPassword";
+    public override string MessageResourceKey => "message_error_invalidPassword";
 
     public override ExceptionType ApiExceptionResultType => ExceptionType.BadRequest;
 }

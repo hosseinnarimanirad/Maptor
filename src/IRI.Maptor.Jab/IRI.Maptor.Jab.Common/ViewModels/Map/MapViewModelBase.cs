@@ -3788,7 +3788,10 @@ public abstract class MapViewModelBase : ViewModelBase
 
         if (!this.MapSettings.AllowLargeDataLoading && maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
         {
-            await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", owner);
+            await ShowExceptionMessageAsync(MaptorFileSizeExceedToOpenException.Instance);
+
+            //await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", owner);
+            IsBusy = false;
 
             return;
         }
@@ -3799,6 +3802,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         System.Diagnostics.Debug.WriteLine($"***** AddShapefile end {DateTime.Now.ToLongTimeString()}");
     }
+
     public async Task AddShapefile(string fileName, object owner)
     {
         try
@@ -3846,7 +3850,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
         if (maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
         {
-            await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", owner);
+            await ShowExceptionMessageAsync(MaptorFileSizeExceedToOpenException.Instance);
+            //await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", "خطا", owner);
+            IsBusy = false;
 
             return;
         }
@@ -4059,7 +4065,7 @@ public abstract class MapViewModelBase : ViewModelBase
             if (info.Length / 1000.0 > maxSizeInKB)
             {
                 //await DialogService.ShowMessageAsync("حجم فایل انتخابی بیش از حد مجاز است", _error, owner);
-                await ShowExceptionMessageAsync(new MaptorFileSizeExceedToOpenException());
+                await ShowExceptionMessageAsync(MaptorFileSizeExceedToOpenException.Instance);
 
                 IsBusy = false;
 
