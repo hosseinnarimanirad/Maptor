@@ -33,7 +33,7 @@
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
-                    <Button Command="{Binding RemoveCommand}" Style="{x:Null}"
+                    <Button Command="{Binding RemoveSelectedLayerCommand}" Style="{x:Null}"
                             Cursor="Hand" Margin="8,2,2,2" Height="15"
                             Padding="2" VerticalAlignment="Center" BorderThickness="0">
                         <Viewbox>

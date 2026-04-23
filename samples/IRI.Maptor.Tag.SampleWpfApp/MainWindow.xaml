@@ -103,7 +103,15 @@
         </StackPanel>
 
         <Expander Header="Attributes" Background="White" VerticalAlignment="Bottom" MaxHeight="350" Grid.Row="2" Grid.ColumnSpan="2" >
-            <TabControl ItemsSource="{Binding SelectedLayers}" SelectedIndex="0" Margin="0" Padding="0" 
+            <maptor:FeatureTabControl
+                            CanUserEditGeometry="{Binding CanEditGeometry}"
+                            CanUserEditAttribute="{Binding CanEditAttribute}"
+                            IsZoomToGeometryEnabled="True" 
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            Visibility="{Binding ShowAttributeTable, Converter={StaticResource boolToVisibilityConverter}}"/>
+            
+            <!--<TabControl ItemsSource="{Binding SelectedLayers}" SelectedIndex="0" Margin="0" Padding="0" 
                         VerticalAlignment="Stretch" SelectedItem="{Binding CurrentLayer, Mode=TwoWay}">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
@@ -130,7 +138,7 @@
                         <maptor:FeatureTable DataContext="{Binding }" CanUserEditGeometry="False" IsZoomToGeometryEnabled="True"/>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
-            </TabControl> 
+            </TabControl>--> 
         </Expander>
     </Grid>
 </Window>

@@ -128,12 +128,23 @@ public class DrawingItemLayer : VectorLayer
             result.SetSymbolizer(item);
         }
 
-        var geometryType = feature.TheGeometry.Type;
+        //var geometryType = feature.TheGeometry.Type;
 
-        result.SpatialModelMode =
-            (geometryType == GeometryType.Point || geometryType == GeometryType.MultiPoint) ? SpatialModelMode.Point :
-            ((geometryType == GeometryType.LineString || geometryType == GeometryType.MultiLineString) ? SpatialModelMode.Polyline :
-            (geometryType == GeometryType.Polygon || geometryType == GeometryType.MultiPolygon) ? SpatialModelMode.Polygon : SpatialModelMode.None);
+        //result.SpatialModelMode =
+        //    (geometryType == GeometryType.Point || geometryType == GeometryType.MultiPoint) ? SpatialModelMode.Point :
+        //    ((geometryType == GeometryType.LineString || geometryType == GeometryType.MultiLineString) ? SpatialModelMode.Polyline :
+        //    (geometryType == GeometryType.Polygon || geometryType == GeometryType.MultiPolygon) ? SpatialModelMode.Polygon : SpatialModelMode.None);
+
+        result.SpatialModelMode = feature.GeometryType switch
+        {
+            GeometryType.Point => SpatialModelMode.Point,
+            GeometryType.MultiPoint => SpatialModelMode.Point,
+            GeometryType.LineString => SpatialModelMode.Polyline,
+            GeometryType.MultiLineString => SpatialModelMode.Polyline,
+            GeometryType.Polygon => SpatialModelMode.Polygon,
+            GeometryType.MultiPolygon => SpatialModelMode.Polygon,
+            _ => SpatialModelMode.None
+        };
 
         result._type = LayerType.Drawing;
 

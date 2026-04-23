@@ -82,7 +82,8 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
         _featureSet = FeatureSet<Point>.Create(string.Empty, features);
 
-        GeometryType = features.First().TheGeometry.Type;
+        //GeometryType = features.First().TheGeometry.Type;
+        GeometryType = features.FirstOrDefault()?.GeometryType;
 
         this.Fields = Field.FromDictionary(features?.FirstOrDefault().Attributes);
 
@@ -119,16 +120,15 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
     #region CRUD & Tack Changes
 
-    public int NumberOfAddedFeatures => _featureSet?.GetPendingChangeCounts(FeatureStatus.New) ?? 0;
+    public int NumberOfAddedFeatures => _featureSet?.GetPendingChangesCounts(FeatureStatus.New) ?? 0;
 
-    public int NumberOfDeletedFeatures => _featureSet?.GetPendingChangeCounts(FeatureStatus.Removed) ?? 0;
+    public int NumberOfDeletedFeatures => _featureSet?.GetPendingChangesCounts(FeatureStatus.Removed) ?? 0;
 
-    public int NumberOfUpdatedFeatures => _featureSet?.GetPendingChangeCounts(FeatureStatus.Updated) ?? 0;
+    public int NumberOfUpdatedFeatures => _featureSet?.GetPendingChangesCounts(FeatureStatus.Updated) ?? 0;
 
     protected void UpdateHasPendingChanges()
-    {
-        //HasPendingChanges = _addedFeatures.Count > 0 || _updatedFeatures.Count > 0 || _deletedIds.Count > 0;
-        HasPendingChanges = _featureSet?.UpdateHasPendingChanges() ?? false;// _features?.Features != null && _features.Features.Any(f => f.Status != Common.Enums.FeatureStatus.Unchanged);
+    { 
+        HasPendingChanges = _featureSet?.HasPendingChanges() ?? false;
 
         RaiseHasPendingChangesChanged();
     }
@@ -186,7 +186,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
     public void UndoChanges(Feature<Point> feature)
     {
-        _featureSet.UndoChanges(feature);
+        _featureSet.UndoSingleFeatureChanges(feature);
 
         UpdateHasPendingChanges();
     }

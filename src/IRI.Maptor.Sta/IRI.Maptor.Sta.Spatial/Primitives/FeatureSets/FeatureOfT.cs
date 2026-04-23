@@ -34,6 +34,10 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
         }
     }
 
+    public GeometryType GeometryType => TheGeometry?.Type ?? GeometryType.None;
+
+    public int Srid => TheGeometry?.Srid ?? 0;
+
     public Guid Key { get; set; }
 
     public Feature()
@@ -248,80 +252,6 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
 
     #endregion
 
-    //#region ICustomTypeDescriptor
-
-
-    //public string GetComponentName()
-    //{
-    //    return TypeDescriptor.GetComponentName(this, true);
-    //}
-
-    //public EventDescriptor GetDefaultEvent()
-    //{
-    //    return TypeDescriptor.GetDefaultEvent(this, true);
-    //}
-
-    //public string GetClassName()
-    //{
-    //    return TypeDescriptor.GetClassName(this, true);
-    //}
-
-    //public EventDescriptorCollection GetEvents(Attribute[] attributes)
-    //{
-    //    return TypeDescriptor.GetEvents(this, attributes, true);
-    //}
-
-    //EventDescriptorCollection System.ComponentModel.ICustomTypeDescriptor.GetEvents()
-    //{
-    //    return TypeDescriptor.GetEvents(this, true);
-    //}
-
-    //public TypeConverter GetConverter()
-    //{
-    //    return TypeDescriptor.GetConverter(this, true);
-    //}
-
-    //public object GetPropertyOwner(PropertyDescriptor pd)
-    //{
-    //    // return the dictionary containing attributes
-    //    return this.Attributes;
-    //}
-
-    //public AttributeCollection GetAttributes()
-    //{
-    //    return TypeDescriptor.GetAttributes(this, true);
-    //}
-
-    //public object GetEditor(Type editorBaseType)
-    //{
-    //    return TypeDescriptor.GetEditor(this, editorBaseType, true);
-    //}
-
-    //public PropertyDescriptor GetDefaultProperty()
-    //{
-    //    return null;
-    //}
-
-    //PropertyDescriptorCollection System.ComponentModel.ICustomTypeDescriptor.GetProperties()
-    //{
-    //    return ((ICustomTypeDescriptor)this).GetProperties(new Attribute[0]);
-    //}
-
-    //public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
-    //{
-    //    System.Collections.ArrayList properties = new System.Collections.ArrayList();
-
-    //    foreach (var e in this.Attributes)
-    //    {
-    //        properties.Add(new DictionaryPropertyDescriptor(this.Attributes, e.Key));
-    //    }
-
-    //    PropertyDescriptor[] props = (PropertyDescriptor[])properties.ToArray(typeof(PropertyDescriptor));
-
-    //    return new PropertyDescriptorCollection(props);
-    //}
-
-    //#endregion
 
 }
 

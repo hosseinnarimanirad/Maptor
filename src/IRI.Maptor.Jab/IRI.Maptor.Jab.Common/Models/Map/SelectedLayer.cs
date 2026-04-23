@@ -111,7 +111,7 @@ public class SelectedLayer : Notifier
 
     public Func<GeometryType, Task<Geometry<Point>?>> RequestDraw { get; set; }
 
-    public Action? RequestRemove { get; set; }
+    public Action? RequestRemoveSelectedLayer { get; set; }
 
     public Action<ILayer>? RequestRefreshLayer { get; set; }
 
@@ -134,7 +134,7 @@ public class SelectedLayer : Notifier
 
     private void TryFlashPoint(IEnumerable<Feature<Point>> point)
     {
-        if (point?.Count() == 1 && point.First().TheGeometry.Type == GeometryType.Point)
+        if (point?.Count() == 1 && point.First().GeometryType/*TheGeometry.Type*/ == GeometryType.Point)
         {
             RequestFlashSinglePoint?.Invoke(point.First());
         }
@@ -166,6 +166,21 @@ public class SelectedLayer : Notifier
         RequestHighlightFeaturesChanged?.Invoke(enumerable, this.AssociatedLayer.DefaultSymbology?.StrokeThickness);
     }
 
+    public void RefreshFeatureInView(Feature<Point> feature)
+    {
+        if (Features is null)
+            return;
+
+        var idx = Features?.IndexOf(feature) ?? -1;
+
+        if (idx >= 0)
+        {
+            Features!.RemoveAt(idx);
+
+            Features.Insert(idx, feature);
+        }
+    }
+
     public IEnumerable<Feature<Point>> GetSelectedFeatures(bool includeRemoved = false)
     {
         return Features.Where(i => includeRemoved || (i.Status != FeatureStatus.Removed && i.Status != FeatureStatus.CanceledNew));
@@ -189,30 +204,7 @@ public class SelectedLayer : Notifier
 
         return true;
     }
-
-    //public void Update(Feature<Point> oldFeature, Feature<Point> newFeature)
-    //{
-    //    var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
-
-    //    if (dataSource is null)
-    //        return;
-
-    //    if (Features is null)
-    //        return;
-
-    //    if (!dataSource.update(oldFeature, newFeature))
-    //        return;
-
-    //    var feature = Features.SingleOrDefault(f => f.Id == oldFeature.Id);
-
-    //    if (feature is null)
-    //        return;
-
-    //    //feature.MarkAsUpdated(newFeature);
-
-    //    RefreshFeatureInView(feature);
-    //}
-
+     
     public void UpdateAttributes(Feature<Point> feature, Dictionary<string, object> oldAttributes)
     {
         var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
@@ -230,40 +222,7 @@ public class SelectedLayer : Notifier
         RefreshFeatureInView(feature);
     }
 
-    ///// <summary>
-    ///// Updates the feature in the data source. Returns true if the feature was updated.
-    ///// Call with (oldFeature, newFeature) - for cell edits, capture oldFeature in BeginningEdit.
-    ///// </summary>
-    //public bool UpdateFeature(Feature<Point> oldFeature, Feature<Point> newFeature)
-    //{
-    //    var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
-    //    if (dataSource is null)
-    //        return false;
-
-    //    if (!dataSource.Update(oldFeature, newFeature))
-    //        return false;
-
-    //    if (Features is not null)
-    //        RefreshFeatureInView(newFeature);
-
-    //    return true;
-    //}
-
-    public void RefreshFeatureInView(Feature<Point> feature)
-    {
-        if (Features is null)
-            return;
-
-        var idx = Features?.IndexOf(feature) ?? -1;
-
-        if (idx >= 0)
-        {
-            Features!.RemoveAt(idx);
-
-            Features.Insert(idx, feature);
-        }
-    }
-
+    
     public async Task SaveChangesAsync()
     {
         var editableSource = AssociatedLayer.DataSource as IEditableVectorDataSource;
@@ -335,6 +294,12 @@ public class SelectedLayer : Notifier
 
             RefreshFeatureInView(feature);
         }
+        else if (feature.Status == FeatureStatus.Removed)
+        {
+            dataSource.UndoChanges(feature);
+
+            RefreshFeatureInView(feature);
+        }
         else if (feature.Status == FeatureStatus.New)
         {
             dataSource.Remove(feature);
@@ -343,21 +308,8 @@ public class SelectedLayer : Notifier
 
             HighlightedFeatures?.Remove(feature);
         }
-        else if (feature.Status == FeatureStatus.Removed)
-        {
-            dataSource.UndoChanges(feature);
-            RefreshFeatureInView(feature);
-        }
     }
-
-    //public void UndoAllChanges()
-    //{
-    //    if (true)
-    //    {
-
-    //    }
-    //}
-
+     
     private void NotifyAll()
     {
         RaisePropertyChanged(nameof(IsSingleValueHighlighted));
@@ -367,6 +319,8 @@ public class SelectedLayer : Notifier
         RaisePropertyChanged(nameof(CanViewChanges));
         RaisePropertyChanged(nameof(HasPendingChanges));
     }
+
+    #region Commands
 
     private RelayCommand? _addCommand;
     public RelayCommand AddCommand
@@ -467,22 +421,7 @@ public class SelectedLayer : Notifier
             return _deleteCommand;
         }
     }
-
-
-
-
-    private RelayCommand? _zoomToCommand;
-    public RelayCommand ZoomToCommand
-    {
-        get
-        {
-            if (_zoomToCommand is null)
-                _zoomToCommand = new RelayCommand(param => this.RequestZoomTo?.Invoke(HighlightedFeatures, () => { TryFlashPoint(HighlightedFeatures); }));
-
-            return _zoomToCommand;
-        }
-    }
-
+     
 
     private RelayCommand? _editCommand;
     public RelayCommand EditCommand
@@ -549,17 +488,18 @@ public class SelectedLayer : Notifier
     }
 
 
-    private RelayCommand? _removeCommand;
-    public RelayCommand RemoveCommand
+    private RelayCommand? _removeSelectedLayerCommand;
+    public RelayCommand RemoveSelectedLayerCommand
     {
         get
         {
-            if (_removeCommand is null)
-                _removeCommand = new RelayCommand(param => this.RequestRemove?.Invoke());
+            if (_removeSelectedLayerCommand is null)
+                _removeSelectedLayerCommand = new RelayCommand(param => this.RequestRemoveSelectedLayer?.Invoke());
 
-            return _removeCommand;
+            return _removeSelectedLayerCommand;
         }
     }
+
 
     private RelayCommand? _viewChangesCommand;
     public RelayCommand ViewChangesCommand
@@ -577,6 +517,22 @@ public class SelectedLayer : Notifier
             return _viewChangesCommand;
         }
     }
+
+
+    private RelayCommand? _zoomToCommand;
+    public RelayCommand ZoomToCommand
+    {
+        get
+        {
+            if (_zoomToCommand is null)
+                _zoomToCommand = new RelayCommand(param => this.RequestZoomTo?.Invoke(HighlightedFeatures, () => { TryFlashPoint(HighlightedFeatures); }));
+
+            return _zoomToCommand;
+        }
+    }
+
+
+    #endregion
 
     /// <summary>
     /// Marshals the action to the UI thread. WPF requires collection/property updates on the UI thread.

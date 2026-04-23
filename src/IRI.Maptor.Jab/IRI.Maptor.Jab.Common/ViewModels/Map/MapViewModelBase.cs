@@ -1391,7 +1391,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 ZoomToExtent(extent, false, true, callback);
             };
 
-            selectedLayer.RequestRemove = () => { RemoveSelectedLayer(selectedLayer);/*this.SelectedLayers.Remove(selectedLayer);*/ };
+            selectedLayer.RequestRemoveSelectedLayer = () => RemoveSelectedLayer(selectedLayer);
 
             selectedLayer.RequestRefreshLayer = RefreshLayerVisibility;
 
@@ -1550,7 +1550,7 @@ public abstract class MapViewModelBase : ViewModelBase
         if (enumerable.IsNullOrEmpty())
             return;
 
-        if (enumerable?.Count() < 10 && enumerable.First().TheGeometry.Type == GeometryType.Point)
+        if (enumerable?.Count() < 10 && enumerable.First().GeometryType/*TheGeometry.Type*/ == GeometryType.Point)
         {
             FlashPoints(enumerable.Select(e => e.TheGeometry.AsPoint()).ToList());
         }
@@ -3902,7 +3902,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             var dataSource = KmlDataSource.Create(fileName, features);
 
-            var geometryType = features.First().TheGeometry.Type;
+            var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
 
             var symbolizers = features.CreateSymbolizersFromKml(geometryType);
 
@@ -4009,7 +4009,7 @@ public abstract class MapViewModelBase : ViewModelBase
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
             var dataSource = KmzDataSource.Create(fileName, features);
-            var geometryType = features.First().TheGeometry.Type;
+            var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
             var symbolizers = features.CreateSymbolizersFromKml(geometryType);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
@@ -4142,7 +4142,7 @@ public abstract class MapViewModelBase : ViewModelBase
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
             var dataSource = GpxDataSource.Create(fileName, features);
-            var geometryType = features.First().TheGeometry.Type;
+            var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
             var symbolizers = features.CreateSymbolizersFromKml(geometryType);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
@@ -4228,7 +4228,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 //await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
                 //return;
             }
-             
+
             if (geometries.Any(g => g.Srid == 0))
             {
                 throw MaptorDxfSrsNotFoundException.Instance;
@@ -4255,7 +4255,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 features = features.Select(f => f.Project(SrsBases.WebMercator/*new WebMercator()*/)).ToList();
 
                 var dataSource = new MemoryDataSource(features);
-                var geometryType = features.First().TheGeometry.Type;
+                var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
                 var symbolizers = new List<ISymbolizer> { SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1) };
 
                 var vectorLayer = new VectorLayer($"{Path.GetFileNameWithoutExtension(fileName)}-{group.Key}",
@@ -4364,7 +4364,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 System.Windows.Visibility.Visible,
                 ScaleInterval.All);
 
-            AddLayer(rasterLayer); 
+            AddLayer(rasterLayer);
         }
         //catch (IOException)
         //{
@@ -4403,7 +4403,7 @@ public abstract class MapViewModelBase : ViewModelBase
             var rasterLayer = new RasterLayer(new ZippedImagePyramidDataSource(fileName),
                 Path.GetFileNameWithoutExtension(fileName),
                 LayerType.ImagePyramid,
-                1, 
+                1,
                 System.Windows.Visibility.Visible,
                 ScaleInterval.All);
 
@@ -4481,7 +4481,7 @@ public abstract class MapViewModelBase : ViewModelBase
             IsBusy = false;
         }
     }
-      
+
     public virtual async Task AddGeoJson(object owner)
     {
         try
@@ -5316,7 +5316,7 @@ public abstract class MapViewModelBase : ViewModelBase
                         var webMercatorPoints = wgsPoints.Select(p => p.Project(SrsBases.GeodeticWgs84, SrsBases.WebMercator)).ToList();
 
                         var geometry = Geometry<Point>.CreatePointOrLineStringOrPolygon(webMercatorPoints, SridHelper.WebMercator);
-                         
+
                         AddDrawingItem(geometry, Path.GetFileNameWithoutExtension(fileName)/*, null, int.MinValue*//*, dataSource*/);
                     }
                     //catch (IOException)

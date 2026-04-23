@@ -92,11 +92,13 @@ public abstract class GeoJsonBase : IGeoJsonGeometry
         if (geometry is Geometry<PointZ> pointZGeometry)
         {
             var pointGeom = Geometry<Point>.Create(pointZGeometry.Points.Select(p => new Point(p.X, p.Y)).ToList(), geometry.Type, geometry.Srid);
+
             return pointGeom.Transform(MapProjects.GeodeticWgs84ToWebMercator, SridHelper.WebMercator);
         }
         if (geometry is Geometry<PointZM> pointZMGeometry)
         {
             var pointGeom = Geometry<Point>.Create(pointZMGeometry.Points.Select(p => new Point(p.X, p.Y)).ToList(), geometry.Type, geometry.Srid);
+
             return pointGeom.Transform(MapProjects.GeodeticWgs84ToWebMercator, SridHelper.WebMercator);
         }
         throw new NotSupportedException($"Unsupported geometry type: {geometry.GetType()}");

@@ -110,7 +110,7 @@ public partial class FeatureTable : UserControl
 
             var action = new Action(() =>
             {
-                if (selectedItems?.Count() == 1 && selectedItems.First().TheGeometry.Type == GeometryType.Point)
+                if (selectedItems?.Count() == 1 && selectedItems.First().GeometryType/*TheGeometry.Type*/ == GeometryType.Point)
                 {
                     Presenter?.RequestFlashSinglePoint?.Invoke(selectedItems.First());
                 }

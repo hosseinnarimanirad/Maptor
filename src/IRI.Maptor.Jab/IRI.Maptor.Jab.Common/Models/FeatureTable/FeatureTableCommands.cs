@@ -63,7 +63,7 @@ public static class FeatureTableCommands
 
     private static void TryFlashPoint(MapViewModelBase map, IEnumerable<Feature<Point>> point)
     {
-        if (point?.Count() == 1 && point.First().TheGeometry.Type == GeometryType.Point)
+        if (point?.Count() == 1 && point.First().GeometryType/*TheGeometry.Type */== GeometryType.Point)
         {
             map.FlashHighlightedFeatures(point.First());
         }
@@ -122,7 +122,7 @@ public static class FeatureTableCommands
                             orderedRow[fieldName] = value;
                         }
                     }
-                     
+
                     rows.Add(orderedRow);
                 }
                 else

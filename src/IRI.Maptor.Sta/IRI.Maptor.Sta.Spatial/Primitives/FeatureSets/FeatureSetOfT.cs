@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
@@ -10,9 +8,7 @@ namespace IRI.Maptor.Sta.Spatial.Primitives;
 
 public class FeatureSet<T> where T : IPoint, new()
 {
-    public static FeatureSet<T> Empty = new FeatureSet<T>() { _allFeatures = new List<Feature<T>>(), Fields = new List<Field>(), LayerId = Guid.Empty };
-
-    private List<Feature<T>> _allFeatures;
+    public static readonly FeatureSet<T> Empty;
 
     public Guid LayerId { get; set; }
 
@@ -20,19 +16,68 @@ public class FeatureSet<T> where T : IPoint, new()
 
     public int Srid { get; set; }
 
+    public GeometryType GeometryType { get; set; }
+
     public List<Field> Fields { get; set; }
 
-    public IReadOnlyList<Feature<T>> Features => _allFeatures.Where(f => f.Status != Common.Enums.FeatureStatus.Removed &&
-                                                                        f.Status != Common.Enums.FeatureStatus.CanceledNew).ToList();
+    private List<Feature<T>> _allFeatures;
+
+    public IReadOnlyList<Feature<T>> Features => _allFeatures.Where(f => f.Status != FeatureStatus.Removed &&
+                                                                        f.Status != FeatureStatus.CanceledNew).ToList();
 
     //public List<Feature<T>> LiveFeatures => Features.Where(f => f.Status != Common.Enums.FeatureStatus.Removed &&
     //                                                            f.Status != Common.Enums.FeatureStatus.CanceledNew).ToList();
+
+    static FeatureSet()
+    {
+        Empty = new FeatureSet<T>()
+        {
+            LayerId = Guid.Empty,
+            Fields = new List<Field>(),
+            _allFeatures = new List<Feature<T>>(),
+        };
+    }
+
+    protected FeatureSet() { }
+
+    public bool HasNoGeometry() => Features.IsNullOrEmpty();
 
     public BoundingBox Extent => BoundingBox.GetMergedBoundingBox(Features.Select(f => f.TheGeometry.GetBoundingBox()));
 
     public bool IsLabeled() => string.IsNullOrEmpty(this.Features?.FirstOrDefault().LabelAttribute) == true;
 
-    protected FeatureSet() { }
+    public IReadOnlyList<Feature<T>> GetAllFeatures() => _allFeatures;
+
+    //public List<Geometry<T>> GetGeometries()
+    //{
+    //    if (HasNoGeometry())
+    //        return new List<Geometry<T>>();
+
+    //    return Features.Select(f => f.TheGeometry).ToList();
+    //}
+
+    //public List<string> GetLabels()
+    //{
+    //    if (this.IsLabeled())
+    //    {
+    //        return this.Features.Select(f => f.Label).ToList();
+    //    }
+    //    else
+    //    {
+    //        return new List<string>();
+    //    }
+    //}
+
+    public FeatureSet<T> Transform(Func<T, T> transform, int? newSrid = 0)
+    {
+        var result = Create(this.Title, this.Features.Select(f => f.Transform(transform, newSrid)).ToList());
+
+        result.Fields = this.Fields;
+
+        result.LayerId = this.LayerId;
+
+        return result;
+    }
 
     public FeatureSet<T> FilterByGeometry(Predicate<Geometry<T>> predicate)
     {
@@ -48,68 +93,28 @@ public class FeatureSet<T> where T : IPoint, new()
         return result;
     }
 
-    public static FeatureSet<T> Create(string title, List<Feature<T>> features)
-    {
-        if (features.IsNullOrEmpty())
-            return FeatureSet<T>.Empty;
-
-        if (features.Select(f => f.TheGeometry.Srid).Distinct().Count() > 1)
-            throw new NotImplementedException("FeatureSet<TGeometry, TPoint> => same SRID rule violated");
-
-        return new FeatureSet<T>()
-        {
-            Title = title,
-            _allFeatures = features,
-            Fields = new List<Field>(),
-            Srid = features.SkipWhile(f => f is null || f.TheGeometry.IsNotValidOrEmpty())?.FirstOrDefault()?.TheGeometry.Srid ?? 0,
-
-        };
-    }
-
-    public IReadOnlyList<Feature<T>> GetAllFeatures() => _allFeatures;
-
-    public bool HasNoGeometry() => Features.IsNullOrEmpty();
-
-    public List<Geometry<T>> GetGeometries()
-    {
-        if (HasNoGeometry())
-            return new List<Geometry<T>>();
-
-        return Features.Select(f => f.TheGeometry).ToList();
-    }
-
-    public List<string> GetLabels()
-    {
-        if (this.IsLabeled())
-        {
-            return this.Features.Select(f => f.Label).ToList();
-        }
-        else
-        {
-            return new List<string>();
-        }
-    }
-
-    public FeatureSet<T> Transform(Func<T, T> transform, int? newSrid = 0)
-    {
-        var result = Create(this.Title, this.Features.Select(f => f.Transform(transform, newSrid)).ToList());
-
-        result.Fields = this.Fields;
-
-        result.LayerId = this.LayerId;
-
-        return result;
-    }
-
 
 
     // todo: add geometry type, srid, ... checkes
+
+    public bool HasPendingChanges() => GetCurrentChanges().Any();
+
+    public int GetPendingChangesCounts(FeatureStatus status) => _allFeatures?.Count(f => f.Status == status) ?? 0;
+
+
     public void Add(Feature<T> feature)
     {
+        if (feature is null)
+            return;
+
+        if (feature.TheGeometry?.Srid != this.Srid)
+            throw new NotImplementedException("FeatureSetOfT > Add > wrong SRID");
+
+        if (feature.TheGeometry?.Type != this.GeometryType)
+            throw new NotImplementedException("FeatureSetOfT > Add > wrong geometry type");
+
         if (feature.Key == Guid.Empty)
-        {
             feature.Key = Guid.NewGuid();
-        }
 
         feature.MarkAsNew();
 
@@ -126,22 +131,6 @@ public class FeatureSet<T> where T : IPoint, new()
         }
 
     }
-
-    //public bool Update(Feature<T> oldFeature, Feature<T> newFeature)
-    //{
-    //    if (oldFeature.AreTheSame(newFeature))
-    //        return false;
-
-    //    var existing = _allFeatures.FirstOrDefault(f => f.Id == newFeature.Id);
-
-    //    if (existing == null ||
-    //        existing.Status == Common.Enums.FeatureStatus.Removed ||
-    //        existing.Status == Common.Enums.FeatureStatus.CanceledNew)
-    //        return false;
-
-    //    existing.MarkAsUpdated(newFeature);
-    //    return true;
-    //}
 
     public bool UpdateOldAttributes(Feature<T> feature, Dictionary<string, object> oldAttributes)
     {
@@ -183,7 +172,7 @@ public class FeatureSet<T> where T : IPoint, new()
         return _allFeatures.Where(a => a.Status != FeatureStatus.Unchanged);
     }
 
-    public void UndoChanges(Feature<T> feature)
+    public void UndoSingleFeatureChanges(Feature<T> feature)
     {
         if (_allFeatures.IsNullOrEmpty())
             return;
@@ -199,6 +188,11 @@ public class FeatureSet<T> where T : IPoint, new()
             feature.UpdateGeometry(feature.OldVersion.TheGeometry);
 
             feature.UpdateAttributes(feature.OldVersion.Attributes);
+        }
+        else if (feature.Status == FeatureStatus.New)
+        {
+            // for the featureSet itself there is nothing to change
+            // so it is handled outside of this class. 
         }
         else if (feature.Status == FeatureStatus.Removed)
         {
@@ -220,7 +214,7 @@ public class FeatureSet<T> where T : IPoint, new()
 
         foreach (var feature in toProcess)
         {
-            UndoChanges(feature);
+            UndoSingleFeatureChanges(feature);
         }
     }
 
@@ -233,10 +227,6 @@ public class FeatureSet<T> where T : IPoint, new()
             feature.MarkAsSaved();
         }
     }
-
-    public bool UpdateHasPendingChanges() => GetCurrentChanges().Any();
-
-    public int GetPendingChangeCounts(FeatureStatus status) => _allFeatures?.Count(f => f.Status == status) ?? 0;
 
     /// <summary>
     /// Returns IDs of features marked as Removed. Used when building sync DTOs to send deleted IDs to the server.
@@ -257,6 +247,25 @@ public class FeatureSet<T> where T : IPoint, new()
 
     public override int GetHashCode() => this.LayerId.GetHashCode();
 
-    public override string ToString() => $"FeatureSet, FeatureCount:{Features?.Count ?? 0} (total:{_allFeatures?.Count ?? 0})";
+    public override string ToString() => $"FeatureSet, Feature Count:{Features?.Count ?? 0} (Total:{_allFeatures?.Count ?? 0})";
+
+
+    public static FeatureSet<T> Create(string title, List<Feature<T>> features)
+    {
+        if (features.IsNullOrEmpty())
+            return FeatureSet<T>.Empty;
+
+        if (features.Select(f => f.TheGeometry.Srid).Distinct().Count() > 1)
+            throw new NotImplementedException("FeatureSet<TGeometry, TPoint> => same SRID rule violated");
+
+        return new FeatureSet<T>()
+        {
+            Title = title,
+            _allFeatures = features,
+            Fields = new List<Field>(),
+            Srid = features.SkipWhile(f => f is null || f.TheGeometry.IsNotValidOrEmpty())?.FirstOrDefault()?.Srid ?? 0,
+            GeometryType = features.SkipWhile(f => f is null || f.TheGeometry.IsNotValidOrEmpty())?.FirstOrDefault()?.GeometryType ?? GeometryType.None
+        };
+    }
 
 }

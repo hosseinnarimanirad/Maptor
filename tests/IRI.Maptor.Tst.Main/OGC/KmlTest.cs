@@ -909,7 +909,7 @@ public class KmlTest
         Assert.Single(features);
         var feature = features[0];
 
-        Assert.Equal(GeometryType.Point, feature.TheGeometry.Type);
+        Assert.Equal(GeometryType.Point, feature.GeometryType/*TheGeometry.Type*/);
         Assert.Equal(-0.1278, feature.TheGeometry.Points[0].X, 6);
         Assert.Equal(51.5074, feature.TheGeometry.Points[0].Y, 6);
         Assert.Equal("City Hall", feature.Attributes["Name"]);

@@ -241,7 +241,7 @@ public static class GeoParquetWriter
     private static string[] GetGeometryTypes(List<Feature<Point>> features)
     {
         return features
-            .Select(f => f.TheGeometry.Type.ToString())
+            .Select(f => f.GeometryType/*TheGeometry.Type*/.ToString())
             .Distinct()
             .ToArray();
     }

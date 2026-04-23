@@ -284,7 +284,7 @@ public class WebApiDataSource : MemoryDataSource
             Fields = Field.FromDictionary(features[0].Attributes);
 
         if (features.Count > 0 && features[0].TheGeometry != null)
-            GeometryType = features[0].TheGeometry.Type;
+            GeometryType = features[0].GeometryType;
 
         if (features.Count > 0)
         {

@@ -34,7 +34,7 @@ public static class GeoParquetTests
                     return false;
 
                 var readFeature = readFeatures[0];
-                if (readFeature.TheGeometry.Type != GeometryType.Point)
+                if (readFeature.GeometryType != GeometryType.Point)
                     return false;
 
                 return true;
@@ -105,7 +105,7 @@ public static class GeoParquetTests
         try
         {
             var point = Geometry<Point>.Create(10.0, 20.0, SridHelper.GeodeticWGS84);
-            
+
             // Convert to WKB
             var wkb = point.ToGeoParquetWkb();
             if (wkb == null || wkb.Length == 0)
@@ -168,7 +168,7 @@ public static class GeoParquetTests
     public static void RunAllTests()
     {
         Console.WriteLine("Running GeoParquet Tests...");
-        
+
         Console.WriteLine($"TestPointFeature: {(TestPointFeature() ? "PASS" : "FAIL")}");
         Console.WriteLine($"TestFeatureSet: {(TestFeatureSet() ? "PASS" : "FAIL")}");
         Console.WriteLine($"TestWkbConversion: {(TestWkbConversion() ? "PASS" : "FAIL")}");
