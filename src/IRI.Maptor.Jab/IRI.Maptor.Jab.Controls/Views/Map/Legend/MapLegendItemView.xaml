@@ -168,7 +168,7 @@
             
         </StackPanel>
 
-        <!--normal layer-->
+        <!--Normal layer-->
         <StackPanel HorizontalAlignment="Stretch" Margin="0" MinHeight="26"
                     Visibility="{Binding IsGroupLayer, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}">
             <StackPanel Orientation="Horizontal" Margin="0" >
@@ -296,8 +296,12 @@
                     </ToggleButton.Style>
                 </ToggleButton>
 
+                <iconPacks:PackIconMaterial Margin="0,0,2,0" Width="18" Height="18" VerticalAlignment="Center"  
+                                            Kind="FormatTitle" Padding="2"
+                                            Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                            Visibility="{Binding IsTextLayer, Converter={StaticResource boolToVisibilityConverter}}"/>
                 <!--light symbology preview-->
-                <Border Margin="0,0,2,0" Cursor="Hand" CornerRadius="2" FlowDirection="LeftToRight"
+                <Border Margin="0,0,2,0" Cursor="Hand" CornerRadius="2" FlowDirection="LeftToRight"  
                         Visibility="{Binding IsSymbolizable, Converter={StaticResource boolToVisibilityConverter}}">
                     <!--IsEnabled="{Binding IsNotBusy, Converter={StaticResource boolToVisibilityConverter}}">-->
                     <Border.IsEnabled>

@@ -249,6 +249,8 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public bool IsMovable { get; set; }
 
+    public bool IsTextLayer { get; protected set; } = false;
+
     public ObservableCollection<ILayer> SubLayers { get; set; } = new();
 
     //public bool IsValid { get; set; } = true;

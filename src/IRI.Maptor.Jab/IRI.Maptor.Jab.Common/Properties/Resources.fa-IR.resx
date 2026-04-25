@@ -1503,4 +1503,10 @@
   <data name="dialog_common_ok" xml:space="preserve">
     <value>تایید</value>
   </data>
+  <data name="cmd_drawingLegend_openAll" xml:space="preserve">
+    <value>بارگذاری همه</value>
+  </data>
+  <data name="cmd_drawingLegend_saveAll" xml:space="preserve">
+    <value>ذخیره‌سازی همه</value>
+  </data>
 </root>

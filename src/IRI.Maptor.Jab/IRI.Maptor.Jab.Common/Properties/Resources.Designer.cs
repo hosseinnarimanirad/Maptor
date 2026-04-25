@@ -124,11 +124,29 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open All.
+        /// </summary>
+        public static string cmd_drawingLegend_openAll {
+            get {
+                return ResourceManager.GetString("cmd_drawingLegend_openAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove all.
         /// </summary>
         public static string cmd_drawingLegend_removeAll {
             get {
                 return ResourceManager.GetString("cmd_drawingLegend_removeAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save All.
+        /// </summary>
+        public static string cmd_drawingLegend_saveAll {
+            get {
+                return ResourceManager.GetString("cmd_drawingLegend_saveAll", resourceCulture);
             }
         }
         

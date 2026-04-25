@@ -10,8 +10,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 namespace IRI.Maptor.Sta.Spatial.Primitives;
 
 
-public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
-                                           where T : IPoint, new()
+public class Feature<T> : IGeometryAware<T> where T : IPoint, new()
 {
     protected const string _defaultLabelAttributeName = "Label";
 
@@ -74,7 +73,6 @@ public class Feature<T> : IGeometryAware<T>//, ICustomTypeDescriptor
             Geometry = this.TheGeometry.Transform(toWgs84Func, SridHelper.GeodeticWGS84).AsGeoJson(isLongitudeFirst),
             Id = this.Id.ToString(),
             Properties = this.Attributes/*.ToDictionary(k => k.Key, k => k.Value)*/,
-
         };
     }
 

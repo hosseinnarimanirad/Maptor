@@ -1544,4 +1544,10 @@
   <data name="dialog_common_ok" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="cmd_drawingLegend_openAll" xml:space="preserve">
+    <value>Open All</value>
+  </data>
+  <data name="cmd_drawingLegend_saveAll" xml:space="preserve">
+    <value>Save All</value>
+  </data>
 </root>

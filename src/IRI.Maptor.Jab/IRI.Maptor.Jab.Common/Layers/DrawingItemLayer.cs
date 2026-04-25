@@ -18,9 +18,6 @@ public class DrawingItemLayer : VectorLayer
 {
     public Action<DrawingItemLayer>? RequestHighlightGeometry;
 
-
-    //public int Id { get; set; }
-
     public Guid HighlightGeometryKey { get; private set; }
 
     public Geometry? Geometry
@@ -65,7 +62,8 @@ public class DrawingItemLayer : VectorLayer
 
     public override double Opacity
     {
-        get => base.Opacity; set
+        get => base.Opacity;
+        set
         {
             base.Opacity = value;
             if (SpecialPointLayer != null)
@@ -168,13 +166,14 @@ public class DrawingItemLayer : VectorLayer
         return result;
     }
 
-    public static DrawingItemLayer CreateSpecialLayer(string layerName, List<Locateable> locateables)
+    public static DrawingItemLayer CreateTextLayer(string layerName, List<Locateable> locateables)
     {
         DrawingItemLayer result = new DrawingItemLayer(layerName, RasterizationMethod.DrawingVisual)
         {
             //_type = LayerType.MoveableItem,
             _type = LayerType.Complex,
             IsMovable = true,
+            IsTextLayer = true
         };
 
         result.SetSymbolizer(new SimpleSymbolizer(VisualParameters.GetDefaultForDrawingItems()));

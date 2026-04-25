@@ -17,8 +17,8 @@
                     <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
                 <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-             
-                    <!--<Setter Property="HorizontalAlignment" Value="Center"/>
+
+                <!--<Setter Property="HorizontalAlignment" Value="Center"/>
                     <Setter Property="VerticalAlignment" Value="Center"/>
                     <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                     <Setter Property="Width" Value="16"/>-->
@@ -150,17 +150,19 @@
                         VerticalScrollBarVisibility="Auto"
                         Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
             <DockPanel HorizontalAlignment="Center" FlowDirection="LeftToRight">
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding MoveDrawingItemUpCommand}"  
+                <Button Command="{Binding MoveDrawingItemUpCommand}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                         ToolTip="{Binding [cmd_drawingLegend_moveUp], Source={StaticResource Localization}}" 
                         IsEnabled="{Binding CanMoveDrawingItemUp}">
                     <iconPacks:PackIconMaterial Kind="ArrangeBringForward" />
                 </Button>
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding MoveDrawingItemDownCommand}"  
+                <Button Command="{Binding MoveDrawingItemDownCommand}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                         ToolTip="{Binding [cmd_drawingLegend_moveDown], Source={StaticResource Localization}}"                  
                         IsEnabled="{Binding CanMoveDrawingItemDown}">
                     <iconPacks:PackIconMaterial Kind="ArrangeSendBackward" />
                 </Button>
-                
+
 
                 <Expander Style="{StaticResource toggleHorizontalExpander}"
                             IsExpanded="{Binding ElementName=root, Path=SelectedExpanderIndex, Converter={StaticResource indexToBoolConverter}, ConverterParameter=1}">
@@ -168,15 +170,29 @@
                         <iconPacks:PackIconMaterial Kind="FilePlusOutline" Foreground="White"/>
                     </Expander.Header>
                     <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center" >
-                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddGeoJsonToDrawingItemsCommand}"  
+
+                        <Button Command="{Binding OpenDrawingItemFileCommand}"
+                                Style="{StaticResource circleButtonDarkOverride}"  
+                                ToolTip="{Binding [cmd_drawingLegend_openAll], Source={StaticResource Localization}}">
+                            <iconPacks:PackIconMaterial Kind="FileMultiple" />
+                        </Button>
+                        <Button Command="{Binding SaveDrawingItemFileCommand}"
+                                Style="{StaticResource circleButtonDarkOverride}"  
+                                ToolTip="{Binding [cmd_drawingLegend_saveAll], Source={StaticResource Localization}}">
+                            <iconPacks:PackIconMaterial Kind="ContentSaveAll"/>
+                        </Button>
+                        <Button Command="{Binding AddGeoJsonToDrawingItemsCommand}"
+                                Style="{StaticResource circleButtonDarkOverride}"                                
                                 ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
                             <Path Style="{StaticResource buttonPath}" Data="{StaticResource json}"/>
                         </Button>
-                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddLongLatTxtToDrawingItemsCommand}"  
+                        <Button Command="{Binding AddLongLatTxtToDrawingItemsCommand}"
+                                Style="{StaticResource circleButtonDarkOverride}"                                
                                 ToolTip="{Binding [cmd_drawingLegend_addLatLongTxt], Source={StaticResource Localization}}">
                             <Path Style="{StaticResource buttonPath}" Data="{StaticResource txt}"/>
                         </Button>
-                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddShapefileToDrawingItemsCommand}"  
+                        <Button Command="{Binding AddShapefileToDrawingItemsCommand}"
+                                Style="{StaticResource circleButtonDarkOverride}"                                
                                 ToolTip="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}">
                             <Path Style="{StaticResource buttonPath}" Data="{StaticResource shp}" />
                         </Button>
@@ -201,7 +217,7 @@
                                 ToolTip="{Binding [cmd_general_drawRectangle], Source={StaticResource Localization}}">
                             <iconPacks:Material Kind="ShapeRectanglePlus"/>
                         </Button>
-                        
+
                         <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding DrawPolygonCommand}" 
                                 ToolTip="{Binding [cmd_general_drawPolygon], Source={StaticResource Localization}}">
                             <iconPacks:Material Kind="ShapePolygonPlus"/>
@@ -216,13 +232,13 @@
 
             </DockPanel>
         </ScrollViewer>
-        
+
         <Line Grid.Row="1" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,4" 
               StrokeThickness="1"
               StrokeDashArray="8 2"
               Stroke="{DynamicResource MahApps.Brushes.Highlight}" 
               Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"/>
-        
+
         <ListBox Grid.Row="2" ItemsSource="{Binding DrawingItems}" SelectionMode="Single" SelectedItem="{Binding SelectedDrawingItem, Mode=TwoWay}">
             <ListBox.ItemContainerStyle>
                 <!-- Style to get rid of the selection visual -->
@@ -244,7 +260,9 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <RadioButton Style="{StaticResource {x:Type ToggleButton}}" GroupName="{Binding ElementName=root, Path=GroupName}" DataContext="{Binding }"
+                    <!--GroupName="{Binding ElementName=root, Path=GroupName}"-->
+                    <RadioButton Style="{StaticResource {x:Type ToggleButton}}"
+                                 DataContext="{Binding }"
                                  IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}">
                         <maptor:MapLegendItemView ShowReloadData="False"
                                                 Title="{Binding LayerName, Mode=TwoWay}"

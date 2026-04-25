@@ -2072,6 +2072,16 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    public void OpenDrawingItemFile()
+    {
+
+    }
+
+    public void SaveDrawingItemFile()
+    {
+
+    }
+
     #endregion
 
     //*****************************************General***************************************************************
@@ -2889,7 +2899,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             TextboxMarkerViewModel viewModel = new TextboxMarkerViewModel() { LabelValue = text };
 
-            var drawingItemLayer = DrawingItemLayer.CreateSpecialLayer("Text",
+            var drawingItemLayer = DrawingItemLayer.CreateTextLayer("Text",
             [
                 new Locateable(response.Result, AncherFunctionHandlers.BottomCenter){ Element = new TextboxMarker(){ DataContext = viewModel} }
             ]);
@@ -5446,6 +5456,42 @@ public abstract class MapViewModelBase : ViewModelBase
             return _moveDrawingItemDownCommand;
         }
     }
+
+    private RelayCommand _openDrawingItemFileCommand;
+    public RelayCommand OpenDrawingItemFileCommand
+    {
+        get
+        {
+            if (_openDrawingItemFileCommand == null)
+            {
+                _openDrawingItemFileCommand = new RelayCommand(param =>
+                {
+                    OpenDrawingItemFile();
+                });
+            }
+
+            return _openDrawingItemFileCommand;
+        }
+    }
+
+    private RelayCommand _saveDrawingItemFileCommand;
+
+    public RelayCommand SaveDrawingItemFileCommand
+    {
+        get
+        {
+            if (_saveDrawingItemFileCommand == null)
+            {
+                _saveDrawingItemFileCommand =
+                    new RelayCommand(
+                        param => SaveDrawingItemFile(),
+                        _ => DrawingItems.Count > 0);
+            }
+
+            return _saveDrawingItemFileCommand;
+        }
+    }
+
 
     #endregion
 
