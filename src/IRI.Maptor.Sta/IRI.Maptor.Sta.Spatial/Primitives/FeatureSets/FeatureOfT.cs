@@ -75,7 +75,7 @@ public class Feature<T> : IGeometryAware<T> where T : IPoint, new()
             Properties = this.Attributes/*.ToDictionary(k => k.Key, k => k.Value)*/,
         };
     }
-
+     
     public override string ToString() => $"Geometry: {TheGeometry?.Type}, Attributes: {Attributes?.Count}";
 
     /// <summary>
@@ -115,8 +115,7 @@ public class Feature<T> : IGeometryAware<T> where T : IPoint, new()
             Key = this.Key
         };
     }
-
-
+     
     #region Change Tracking
 
     public FeatureStatus Status { get; set; } = FeatureStatus.Unchanged;

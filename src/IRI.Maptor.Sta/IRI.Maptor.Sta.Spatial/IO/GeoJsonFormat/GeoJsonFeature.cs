@@ -12,6 +12,8 @@ namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 /// </summary>
 public class GeoJsonFeature
 {
+    protected const string _defaultSymbologyPropertyName = "$maptorStyleMetadata";
+
     /// <summary>
     /// Gets or sets the type of the GeoJSON object. Must be "Feature".
     /// </summary>

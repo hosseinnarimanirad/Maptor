@@ -22,6 +22,7 @@ namespace IRI.Maptor.Sta.KmlFormat;
 public static class KmlReader
 {
     private const string KmlNamespace = "http://www.opengis.net/kml/2.2";
+    private const string XmlSchemaInstanceNamespace = "http://www.w3.org/2001/XMLSchema-instance";
 
     private static XNamespace ResolveKmlNamespace(XDocument document)
     {
@@ -101,7 +102,8 @@ public static class KmlReader
 
         try
         {
-            var document = XDocument.Parse(kmlString);
+            var sanitizedKml = EnsureXmlSchemaInstanceNamespace(kmlString);
+            var document = XDocument.Parse(sanitizedKml);
             return ExtractGeometries(document, targetSrid);
         }
         catch (Exception ex)
@@ -159,7 +161,8 @@ public static class KmlReader
 
         try
         {
-            var document = XDocument.Parse(kmlString);
+            var sanitizedKml = EnsureXmlSchemaInstanceNamespace(kmlString);
+            var document = XDocument.Parse(sanitizedKml);
             return ExtractFeatures(document, targetSrid);
         }
         catch (Exception ex)
@@ -759,6 +762,45 @@ public static class KmlReader
     }
 
     #endregion
+
+    private static string EnsureXmlSchemaInstanceNamespace(string kmlContent)
+    {
+        if (string.IsNullOrWhiteSpace(kmlContent))
+        {
+            return kmlContent;
+        }
+
+        if (!kmlContent.Contains("xsi:", StringComparison.Ordinal))
+        {
+            return kmlContent;
+        }
+
+        if (kmlContent.Contains("xmlns:xsi", StringComparison.OrdinalIgnoreCase))
+        {
+            return kmlContent;
+        }
+
+        var kmlTagStart = kmlContent.IndexOf("<kml", StringComparison.OrdinalIgnoreCase);
+        if (kmlTagStart < 0)
+        {
+            return kmlContent;
+        }
+
+        var kmlTagEnd = kmlContent.IndexOf('>', kmlTagStart);
+        if (kmlTagEnd < 0)
+        {
+            return kmlContent;
+        }
+
+        var kmlStartTag = kmlContent.Substring(kmlTagStart, kmlTagEnd - kmlTagStart + 1);
+        if (kmlStartTag.Contains("xmlns:xsi", StringComparison.OrdinalIgnoreCase))
+        {
+            return kmlContent;
+        }
+
+        var xmlnsXsiDeclaration = $" xmlns:xsi=\"{XmlSchemaInstanceNamespace}\"";
+        return kmlContent.Insert(kmlTagEnd, xmlnsXsiDeclaration);
+    }
 }
 
 /// <summary>

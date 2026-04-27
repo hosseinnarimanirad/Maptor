@@ -36,6 +36,7 @@ public static class KmlExtensions
         }
 
         var groups = featureList.GroupBy(f => KmlAttributeKeys.GetStyleKey(f));
+
         var symbolizers = new List<ISymbolizer>();
 
         foreach (var group in groups)
