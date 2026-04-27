@@ -2077,9 +2077,31 @@ public abstract class MapViewModelBase : ViewModelBase
 
     }
 
-    public void SaveDrawingItemFile()
+    public async Task SaveDrawingItemFile(object owner)
     {
+        // mtd: maptor drawings
+        var fileName = await DialogService.ShowSaveFileDialogAsync("*.mtd|*.mtd", owner);
 
+        if (string.IsNullOrWhiteSpace(fileName))
+            return;
+         
+        List<KmlFeature> kmlFeatures = [];
+
+        foreach (var item in DrawingItems)
+        {
+            // todo: add support for texts
+            if (item.IsTextLayer)
+                continue;
+
+            if (item.Feature is null)
+                continue;
+
+            var kmlFeature = item.Feature.ToKmlFeature();
+            if (kmlFeature is null)
+                continue;
+
+            kmlFeatures.Add(kmlFeature);
+        }
     }
 
     #endregion
@@ -2916,27 +2938,6 @@ public abstract class MapViewModelBase : ViewModelBase
 
     #endregion
 
-    private async Task ShowExceptionMessageAsync(Exception ex)
-    {
-        if (ex is DomainException domainException)
-        {
-            await this.DialogService.ShowErrorMessage(domainException);
-        }
-        else if (ex is IOException)
-        {
-            await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
-            //await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
-        else if (ex is UnauthorizedAccessException)
-        {
-            await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
-            //await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        }
-        else
-        {
-            await this.DialogService.ShowErrorMessage(new MaptorUnknownException(ex.Message));
-        }
-    }
 
     #region Save As Png
 
@@ -3768,6 +3769,29 @@ public abstract class MapViewModelBase : ViewModelBase
     #endregion
 
 
+    private async Task ShowExceptionMessageAsync(Exception ex)
+    {
+        if (ex is DomainException domainException)
+        {
+            await this.DialogService.ShowErrorMessage(domainException);
+        }
+        else if (ex is IOException)
+        {
+            await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
+            //await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        else if (ex is UnauthorizedAccessException)
+        {
+            await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
+            //await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
+        }
+        else
+        {
+            await this.DialogService.ShowErrorMessage(new MaptorUnknownException(ex.Message));
+        }
+    }
+
+
     public void Refresh(bool isNewExtent)
     {
         RequestRefresh?.Invoke(isNewExtent);
@@ -3869,6 +3893,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await AddKmlfile(fileName, owner);
     }
+
     public async Task AddKmlfile(string fileName, object owner)
     {
         try
@@ -5484,7 +5509,7 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 _saveDrawingItemFileCommand =
                     new RelayCommand(
-                        param => SaveDrawingItemFile(),
+                        async param => await SaveDrawingItemFile(param),
                         _ => DrawingItems.Count > 0);
             }
 

@@ -47,6 +47,7 @@ public class TextboxMarkerViewModel : Notifier
                 Formating_FontFamily = IriFonts.IranSans;
                 return;
             }
+
             try
             {
                 Formating_FontFamily = new System.Windows.Media.FontFamily(_formating_FontFamilyName);
@@ -58,8 +59,8 @@ public class TextboxMarkerViewModel : Notifier
         }
     }
 
-    private System.Windows.Media.FontFamily _formating_FontFamily;
-    public System.Windows.Media.FontFamily Formating_FontFamily
+    private FontFamily _formating_FontFamily;
+    public FontFamily Formating_FontFamily
     {
         get { return _formating_FontFamily; }
         set
@@ -218,6 +219,7 @@ public class TextboxMarkerViewModel : Notifier
 
     }
 
+
     public sealed record BackgroundChoice(string Name, System.Windows.Media.Color? ColorValue, bool IsTheme);
 
     public static readonly BackgroundChoice[] BackgroundChoices = BuildBackgroundChoices();
@@ -351,6 +353,7 @@ public class TextboxMarkerViewModel : Notifier
         }
     }
 
+
     private RelayCommand? _clearTextCommand;
     public RelayCommand ClearTextCommand
     {
@@ -363,6 +366,7 @@ public class TextboxMarkerViewModel : Notifier
         }
     }
 
+
     private RelayCommand? _deleteCommand;
     public RelayCommand DeleteCommand
     {
@@ -374,6 +378,7 @@ public class TextboxMarkerViewModel : Notifier
             return _deleteCommand;
         }
     }
+
 
     public Action? RequestDelete { get; set; }
 }

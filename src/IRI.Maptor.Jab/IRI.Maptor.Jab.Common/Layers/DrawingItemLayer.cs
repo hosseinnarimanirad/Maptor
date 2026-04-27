@@ -20,10 +20,7 @@ public class DrawingItemLayer : VectorLayer
 
     public Guid HighlightGeometryKey { get; private set; }
 
-    public Geometry? Geometry
-    {
-        get => Feature?.TheGeometry;
-    }
+    public Geometry? Geometry => Feature?.TheGeometry;
 
     public override BoundingBox Extent
     {
@@ -40,10 +37,7 @@ public class DrawingItemLayer : VectorLayer
 
             return BoundingBox.NaN;
         }
-        protected set
-        {
-            throw new NotImplementedException("DrawingItemLayer > Extent ");
-        }
+        protected set => throw new NotImplementedException("DrawingItemLayer > Extent ");
     }
 
     public override System.Windows.Visibility Visibility
@@ -113,6 +107,7 @@ public class DrawingItemLayer : VectorLayer
     public bool IsSpecialLayer() => SpecialPointLayer != null;
 
     public bool CanShowHighlightGeometry() => this.IsSelectedInToc && this.Visibility == System.Windows.Visibility.Visible;
+
 
     public static DrawingItemLayer? Create(string layerName, Feature<Point> feature, IEnumerable<ISymbolizer> symbolizers)
     {
