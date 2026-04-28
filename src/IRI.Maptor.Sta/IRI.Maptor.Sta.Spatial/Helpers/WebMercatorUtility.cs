@@ -410,26 +410,32 @@ public static class WebMercatorUtility
 
     public static List<TileInfo> GeodeticBoundingBoxToGoogleTileRegions(BoundingBox geodeticBoundingBox, int zoomLevel)
     {
-        if (zoomLevel == 2)
-        {
+        zoomLevel = AdjustLevel(zoomLevel);
 
+        var clampedYMin = ClampLatitude(Math.Min(geodeticBoundingBox.YMin, geodeticBoundingBox.YMax));
+        var clampedYMax = ClampLatitude(Math.Max(geodeticBoundingBox.YMin, geodeticBoundingBox.YMax));
+
+        var normalizedMinLon = NormalizeLongitude(geodeticBoundingBox.XMin);
+        var normalizedMaxLon = NormalizeLongitude(geodeticBoundingBox.XMax);
+
+        if (IsWholeWorldLongitude(geodeticBoundingBox.XMin, geodeticBoundingBox.XMax))
+        {
+            return TileInfo.GetAllForLevel(zoomLevel);
         }
 
-        var maxX = Math.Min(180, geodeticBoundingBox.BottomRight.X);
-        var minX = Math.Max(-180, geodeticBoundingBox.TopLeft.X);
-
-        var lowerLeft = LatLonToImageNumber(geodeticBoundingBox.BottomRight.Y, minX, zoomLevel);
-
-        var upperRight = LatLonToImageNumber(geodeticBoundingBox.TopLeft.Y, maxX, zoomLevel);
-
         var result = new List<TileInfo>();
+        var seen = new HashSet<(int row, int col)>();
 
-        for (int i = (int)lowerLeft.X; i <= upperRight.X; i++)
+        foreach (var range in SplitLongitudeRanges(normalizedMinLon, normalizedMaxLon))
         {
-            for (int j = (int)upperRight.Y; j <= lowerLeft.Y; j++)
-            {
-                result.Add(new TileInfo(j, i, zoomLevel));
-            }
+            AddTilesForRange(
+                lonMinInclusive: range.min,
+                lonMaxInclusive: range.max,
+                latMin: clampedYMin,
+                latMax: clampedYMax,
+                zoomLevel: zoomLevel,
+                result: result,
+                seen: seen);
         }
 
         return result;
@@ -437,15 +443,22 @@ public static class WebMercatorUtility
 
     public static List<TileInfo> WebMercatorBoundingBoxToGoogleTileRegions(BoundingBox webMercatorBoundingBox, int zoomLevel)
     {
-        var geographicBoundingBox = webMercatorBoundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84);
+        zoomLevel = AdjustLevel(zoomLevel);
 
-        if (zoomLevel <= 3)
-            return TileInfo.GetAllForLevel(zoomLevel);
+        // Use raw WebMercator X to keep longitudinal span when viewport is panned
+        // beyond +/-180 (wrapped world views). Transforming to geodetic first may clamp
+        // both ends near +/-180 and collapse span to a single column.
+        var rawMinLongitude = WebMercatorXToLongitude(webMercatorBoundingBox.XMin);
+        var rawMaxLongitude = WebMercatorXToLongitude(webMercatorBoundingBox.XMax);
 
-        if (geographicBoundingBox.Width > 270 || zoomLevel == 2)
+        if (Math.Abs(rawMaxLongitude - rawMinLongitude) >= 360.0 - 1E-6)
         {
-            geographicBoundingBox = new BoundingBox(-180, geographicBoundingBox.YMin, 180, geographicBoundingBox.YMax);
+            return TileInfo.GetAllForLevel(zoomLevel);
         }
+
+        var topLeft = MapProjects.WebMercatorToGeodeticWgs84(webMercatorBoundingBox.TopLeft);
+        var bottomRight = MapProjects.WebMercatorToGeodeticWgs84(webMercatorBoundingBox.BottomRight);
+        var geographicBoundingBox = new BoundingBox(rawMinLongitude, bottomRight.Y, rawMaxLongitude, topLeft.Y);
 
         return GeodeticBoundingBoxToGoogleTileRegions(geographicBoundingBox, zoomLevel);
     }
@@ -546,6 +559,124 @@ public static class WebMercatorUtility
         //return new BoundingBox(min.X, min.Y, max.X, max.Y);
 
         return new BoundingBox(minLongitude, minLatitude, maxLongitude, maxLatitude);
+    }
+
+    private static double ClampLatitude(double latitude)
+    {
+        return Math.Clamp(latitude, -MaxAllowableLatitude, MaxAllowableLatitude);
+    }
+
+    private static double WebMercatorXToLongitude(double x)
+    {
+        return x / EarthRadius * 180.0 / Math.PI;
+    }
+
+    private static double NormalizeLongitude(double longitude)
+    {
+        var result = longitude % 360.0;
+
+        if (result < -180.0)
+        {
+            result += 360.0;
+        }
+        else if (result >= 180.0)
+        {
+            result -= 360.0;
+        }
+
+        return result;
+    }
+
+    private static double ToTileSafeLongitude(double longitude, bool isUpperBound)
+    {
+        const double epsilon = 1E-10;
+
+        // Keep explicit dateline bounds stable before normalization.
+        // Otherwise +180 normalizes to -180 and collapses [min, 180] into an invalid range.
+        if (isUpperBound && longitude >= 180.0 - epsilon)
+        {
+            return 180.0 - epsilon;
+        }
+
+        if (!isUpperBound && longitude <= -180.0)
+        {
+            return -180.0;
+        }
+
+        var normalized = NormalizeLongitude(longitude);
+
+        if (isUpperBound && normalized >= 180.0 - epsilon)
+        {
+            return 180.0 - epsilon;
+        }
+
+        return normalized;
+    }
+
+    private static bool IsWholeWorldLongitude(double xMin, double xMax)
+    {
+        const double epsilon = 1E-8;
+        var span = Math.Abs(xMax - xMin);
+
+        if (span >= 360.0 - epsilon)
+        {
+            return true;
+        }
+
+        var normalizedMin = NormalizeLongitude(xMin);
+        var normalizedMax = NormalizeLongitude(xMax);
+        var wrappedSpan = normalizedMax >= normalizedMin
+            ? normalizedMax - normalizedMin
+            : (180.0 - normalizedMin) + (normalizedMax + 180.0);
+
+        return wrappedSpan >= 360.0 - epsilon;
+    }
+
+    private static IEnumerable<(double min, double max)> SplitLongitudeRanges(double normalizedMin, double normalizedMax)
+    {
+        if (normalizedMin <= normalizedMax)
+        {
+            yield return (normalizedMin, normalizedMax);
+            yield break;
+        }
+
+        yield return (normalizedMin, 180.0);
+        yield return (-180.0, normalizedMax);
+    }
+
+    private static void AddTilesForRange(
+        double lonMinInclusive,
+        double lonMaxInclusive,
+        double latMin,
+        double latMax,
+        int zoomLevel,
+        List<TileInfo> result,
+        HashSet<(int row, int col)> seen)
+    {
+        var lowerLeft = LatLonToImageNumber(latMin, ToTileSafeLongitude(lonMinInclusive, isUpperBound: false), zoomLevel);
+        var upperRight = LatLonToImageNumber(latMax, ToTileSafeLongitude(lonMaxInclusive, isUpperBound: true), zoomLevel);
+
+        int tileCount = 1 << zoomLevel;
+        int minColumn = Math.Clamp((int)lowerLeft.X, 0, tileCount - 1);
+        int maxColumn = Math.Clamp((int)upperRight.X, 0, tileCount - 1);
+        int minRow = Math.Clamp((int)upperRight.Y, 0, tileCount - 1);
+        int maxRow = Math.Clamp((int)lowerLeft.Y, 0, tileCount - 1);
+
+        if (minColumn > maxColumn || minRow > maxRow)
+        {
+            return;
+        }
+
+        for (int column = minColumn; column <= maxColumn; column++)
+        {
+            for (int row = minRow; row <= maxRow; row++)
+            {
+                if (seen.Add((row, column)))
+                {
+                    result.Add(new TileInfo(row, column, zoomLevel));
+                }
+            }
+        }
     }
 
 

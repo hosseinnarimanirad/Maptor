@@ -1,5 +1,7 @@
 ﻿using IRI.Maptor.Sta.Spatial.Helpers;
+using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Tst.CoordinateSystems;
 
@@ -194,6 +196,101 @@ public class WebMercatorUtilityTest
         // Assert: Verify zoom levels match expected values
         Assert.Equal(expectedUpperZoom, upperLevel.ZoomLevel);
         Assert.Equal(expectedLowerZoom, lowerLevel.ZoomLevel);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    public void WebMercatorBoundingBoxToGoogleTileRegions_ReturnsTilesForSmallDatelineViews(int zoomLevel)
+    {
+        var topLeft = MapProjects.GeodeticWgs84ToWebMercator(new Point(179.9, 1.0));
+        var bottomRight = MapProjects.GeodeticWgs84ToWebMercator(new Point(-179.9, -1.0));
+        var wrappedWebMercatorBbox = new BoundingBox(topLeft.X, bottomRight.Y, bottomRight.X, topLeft.Y);
+
+        var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(wrappedWebMercatorBbox, zoomLevel);
+
+        Assert.NotEmpty(tiles);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    public void WebMercatorBoundingBoxToGoogleTileRegions_DoesNotReturnWholeWorldForLocalLowZoomExtent(int zoomLevel)
+    {
+        var topLeft = MapProjects.GeodeticWgs84ToWebMercator(new Point(40.0, 36.0));
+        var bottomRight = MapProjects.GeodeticWgs84ToWebMercator(new Point(42.0, 34.0));
+        var localBbox = new BoundingBox(topLeft.X, bottomRight.Y, bottomRight.X, topLeft.Y);
+
+        var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(localBbox, zoomLevel);
+
+        Assert.NotEmpty(tiles);
+        Assert.True(tiles.Count < TileInfo.GetAllForLevel(zoomLevel).Count);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    public void WebMercatorBoundingBoxToGoogleTileRegions_ReturnsWholeWorldForWholeWorldExtent(int zoomLevel)
+    {
+        var topLeft = MapProjects.GeodeticWgs84ToWebMercator(new Point(-180.0, 85.0));
+        var bottomRight = MapProjects.GeodeticWgs84ToWebMercator(new Point(180.0, -85.0));
+        var worldBbox = new BoundingBox(topLeft.X, bottomRight.Y, bottomRight.X, topLeft.Y);
+
+        var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(worldBbox, zoomLevel);
+
+        Assert.Equal(TileInfo.GetAllForLevel(zoomLevel).Count, tiles.Count);
+    }
+
+    [Fact]
+    public void WebMercatorBoundingBoxToGoogleTileRegions_ClampsPolarEdgeAndReturnsValidRows()
+    {
+        const int zoomLevel = 3;
+        var topLeft = MapProjects.GeodeticWgs84ToWebMercator(new Point(-10.0, 85.05112877));
+        var bottomRight = MapProjects.GeodeticWgs84ToWebMercator(new Point(10.0, 84.9));
+        var polarBbox = new BoundingBox(topLeft.X, bottomRight.Y, bottomRight.X, topLeft.Y);
+
+        var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(polarBbox, zoomLevel);
+
+        Assert.NotEmpty(tiles);
+        Assert.All(tiles, tile => Assert.InRange(tile.RowNumber, 0, (1 << zoomLevel) - 1));
+    }
+
+    [Fact]
+    public void WebMercatorBoundingBoxToGoogleTileRegions_HandlesEastwardPanningBeyondDateline()
+    {
+        const int zoomLevel = 4;
+        var worldHalfWidth = Math.PI * WebMercatorUtility.EarthRadius;
+        var xMin = worldHalfWidth - 2000000;  // near +180
+        var xMax = worldHalfWidth + 2000000;  // past +180 after panning east
+        var yTop = MapProjects.GeodeticWgs84ToWebMercator(new Point(0, 25)).Y;
+        var yBottom = MapProjects.GeodeticWgs84ToWebMercator(new Point(0, -25)).Y;
+        var pannedExtent = new BoundingBox(xMin, yBottom, xMax, yTop);
+
+        var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(pannedExtent, zoomLevel);
+
+        Assert.NotEmpty(tiles);
+    }
+
+    [Fact]
+    public void WebMercatorBoundingBoxToGoogleTileRegions_Zoom3_XmaxOver180_ReturnsTiles()
+    {
+        const int zoomLevel = 3;
+        var worldHalfWidth = Math.PI * WebMercatorUtility.EarthRadius;
+        var xMin = worldHalfWidth - 800000;   // just before +180
+        var xMax = worldHalfWidth + 800000;   // just after +180
+        var yTop = MapProjects.GeodeticWgs84ToWebMercator(new Point(0, 10)).Y;
+        var yBottom = MapProjects.GeodeticWgs84ToWebMercator(new Point(0, -10)).Y;
+        var bbox = new BoundingBox(xMin, yBottom, xMax, yTop);
+
+        var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(bbox, zoomLevel);
+
+        Assert.NotEmpty(tiles);
     }
 
 
