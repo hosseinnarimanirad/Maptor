@@ -42,7 +42,7 @@
             <Border Height="12" Background="Transparent" Cursor="ScrollAll" >
                 <iconPacks:PackIconMaterial Kind="DotsHorizontal" HorizontalAlignment="Center" Margin="10,0" Foreground="White"/>
             </Border>
-            <TextBox x:Name="labelBox" Grid.Column="0" 
+            <TextBox x:Name="labelBox" Grid.Column="0"                     
                     TextAlignment="{Binding Formating_Alignment}" Margin="2,4" Height="Auto"                      
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     Text="{Binding LabelValue}"
@@ -54,7 +54,7 @@
                     VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                     mahApp:TextBoxHelper.SelectAllOnFocus="True" Focusable="True"  >
                 <TextBox.Style>
-                    <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                    <Style TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="TextBox">

@@ -185,4 +185,17 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
     {
         pendingChangesPopupBorder.DataContext = DataContext;
     }
+
+    private void layerTitle_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            // Move focus to the next focusable element in the tab order
+            var request = new TraversalRequest(FocusNavigationDirection.Next);
+
+            (sender as UIElement)?.MoveFocus(request);
+
+            e.Handled = true; // Prevents the Enter key from being treated as input
+        }
+    }
 }

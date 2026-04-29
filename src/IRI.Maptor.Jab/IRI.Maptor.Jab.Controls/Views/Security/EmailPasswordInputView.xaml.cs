@@ -72,6 +72,9 @@ namespace IRI.Maptor.Jab.Controls.Views.Security
         public static readonly DependencyProperty EnterCommandParameterProperty =
             DependencyProperty.Register(nameof(EnterCommandParameter), typeof(object), typeof(EmailPasswordInputView), new PropertyMetadata(null));
 
-
+        private void root_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.email.Focus();
+        }
     }
 }

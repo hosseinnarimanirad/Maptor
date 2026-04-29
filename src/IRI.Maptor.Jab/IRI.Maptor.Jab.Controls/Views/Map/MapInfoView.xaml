@@ -67,15 +67,15 @@
                          Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"
                          mahApp:TextBoxHelper.SelectAllOnFocus="True">
                     <TextBox.Style>
-                        <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                        <Style TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="TextBox">
                                         <Border x:Name="Border"
-                     Background="{TemplateBinding Background}"
-                     BorderBrush="{TemplateBinding BorderBrush}"
-                     BorderThickness="{TemplateBinding BorderThickness}"
-                     CornerRadius="4">
+                                                 Background="{TemplateBinding Background}"
+                                                 BorderBrush="{TemplateBinding BorderBrush}"
+                                                 BorderThickness="{TemplateBinding BorderThickness}"
+                                                 CornerRadius="4">
                                             <ScrollViewer x:Name="PART_ContentHost" />
                                         </Border>
                                     </ControlTemplate>
@@ -109,15 +109,15 @@
                          mahApp:TextBoxHelper.SelectAllOnFocus="True"
                          Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                     <TextBox.Style>
-                        <Style TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                        <Style TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="TextBox">
                                         <Border x:Name="Border"
-                     Background="{TemplateBinding Background}"
-                     BorderBrush="{TemplateBinding BorderBrush}"
-                     BorderThickness="{TemplateBinding BorderThickness}"
-                     CornerRadius="5">
+                                                 Background="{TemplateBinding Background}"
+                                                 BorderBrush="{TemplateBinding BorderBrush}"
+                                                 BorderThickness="{TemplateBinding BorderThickness}"
+                                                 CornerRadius="5">
                                             <ScrollViewer x:Name="PART_ContentHost" />
                                         </Border>
                                     </ControlTemplate>
@@ -326,6 +326,7 @@
                                             Text="{Binding [srs_utmZone], Source={StaticResource Localization}}"/>
                             <TextBox DockPanel.Dock="Left" BorderThickness="1" FlowDirection="LeftToRight" MinWidth="30" Margin="2" VerticalAlignment="Center"
                                             Text="{Binding MapPanel.CurrentEditingZone, Mode=TwoWay}" MaxWidth="30"
+                                     Style="{StaticResource IRI.Maptor.Styles.TextBox}"
                                             Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
