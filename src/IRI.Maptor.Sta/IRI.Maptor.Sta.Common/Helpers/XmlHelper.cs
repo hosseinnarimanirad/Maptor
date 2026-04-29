@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -185,9 +180,12 @@ public static class XmlHelper
         if (string.IsNullOrEmpty(xmlString))
             throw new ArgumentException("XML string cannot be null or empty", nameof(xmlString));
 
+        // Remove BOM (U+FEFF) if present
+        string cleanXml = xmlString.TrimStart('\uFEFF');
+
         var serializer = new XmlSerializer(typeof(T));
 
-        using (var reader = new StringReader(xmlString))
+        using (var reader = new StringReader(cleanXml))
         {
             try
             {

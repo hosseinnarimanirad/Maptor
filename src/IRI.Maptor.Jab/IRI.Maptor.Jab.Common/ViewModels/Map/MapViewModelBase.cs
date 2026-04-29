@@ -49,6 +49,7 @@ using IRI.Maptor.Jab.Common.Models.Settings;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Sta.Common.Exceptions;
+
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public abstract class MapViewModelBase : ViewModelBase
@@ -1999,12 +2000,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public void MoveDrawingItemDown()
     {
-        //var item = TryGetSingleSelectedDrawingItem();
-
         if (SelectedDrawingItem == null)
-        {
             return;
-        }
 
         var index = DrawingItems.IndexOf(SelectedDrawingItem);
 
@@ -2015,15 +2012,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public void MoveDrawingItemUp()
     {
-        //var item = TryGetSingleSelectedDrawingItem();
-
-        //if (item.layer == null)
-        //    return;
-
         if (SelectedDrawingItem == null)
-        {
             return;
-        }
 
         var index = DrawingItems.IndexOf(SelectedDrawingItem);
 
@@ -2047,17 +2037,6 @@ public abstract class MapViewModelBase : ViewModelBase
         RemoveDrawingItem(first);
         RemoveDrawingItem(second);
 
-        //AddDrawingItem(first);
-        //AddDrawingItem(second);
-
-        //RemoveDrawingItem(first);
-
-        //RemoveDrawingItem(second);
-
-        //var newFirstLayer = CreateDrawingItemLayer(first.Feature, first.LayerName, first.Symbolizers);
-
-        //var newSecondLayer = CreateDrawingItemLayer(second.Feature, second.LayerName, second.Symbolizers);
-
         if (first.ZIndex < second.ZIndex)
         {
             InsertDrawingItem(newFirstIndex, first);
@@ -2072,36 +2051,74 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    public void OpenDrawingItemFile()
-    {
+    private const string maptorDrawingFileExtension = "mtd";
 
+    public async Task LoadDrawingItemFile(object owner)
+    {
+        var fileNames = await DialogService.ShowOpenFilesDialogAsync($"*.{maptorDrawingFileExtension}|*.{maptorDrawingFileExtension}", owner);
+
+        if (fileNames.IsNullOrEmpty())
+            return;
+
+        foreach (var fileName in fileNames)
+        {
+            // deserialize the geojsonfeature
+            var geoJsonFeatureString = System.IO.File.ReadAllText(fileName);
+
+            var layerName = System.IO.Path.GetFileNameWithoutExtension(fileName);
+
+            var layer = DrawingItemLayer.Deserialize(layerName, geoJsonFeatureString);
+
+            AddDrawingItem(layer);
+        }
     }
 
     public async Task SaveDrawingItemFile(object owner)
     {
         // mtd: maptor drawings
-        var fileName = await DialogService.ShowSaveFileDialogAsync("*.mtd|*.mtd", owner);
+        var folderName = await DialogService.ShowOpenFolderDialogAsync(owner);
 
-        if (string.IsNullOrWhiteSpace(fileName))
+        if (string.IsNullOrWhiteSpace(folderName))
             return;
-         
-        List<KmlFeature> kmlFeatures = [];
+
+        List<GeoJsonFeatureSet> geoJsonFeatures = [];
 
         foreach (var item in DrawingItems)
         {
-            // todo: add support for texts
+            // todo: add support for texts, 
             if (item.IsTextLayer)
                 continue;
+
+            var sld = item.GetSld();
 
             if (item.Feature is null)
                 continue;
 
-            var kmlFeature = item.Feature.ToKmlFeature();
-            if (kmlFeature is null)
-                continue;
+            var geoJson = item.Feature.AsGeoJsonFeature();
 
-            kmlFeatures.Add(kmlFeature);
+            geoJson.AddSldAttribute(XmlHelper.Parse(sld));
+
+            var fileName = GetUniqueFileName(folderName, item.LayerName);
+
+            System.IO.File.WriteAllText(fileName, JsonHelper.Serialize(geoJson));
         }
+    }
+
+    private string GetUniqueFileName(string folderPath, string desiredFileName)
+    {
+        string extension = Path.GetExtension(desiredFileName);
+
+        string uniqueFileName = desiredFileName;
+
+        int counter = 1;
+
+        while (File.Exists(Path.Combine(folderPath, uniqueFileName)))
+        {
+            uniqueFileName = $"{desiredFileName} ({counter++}){extension}";
+        }
+
+        // mtd: maptor drawing
+        return Path.Combine(folderPath, $"{uniqueFileName}.mtd");
     }
 
     #endregion
@@ -5489,9 +5506,9 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_openDrawingItemFileCommand == null)
             {
-                _openDrawingItemFileCommand = new RelayCommand(param =>
+                _openDrawingItemFileCommand = new RelayCommand(async param =>
                 {
-                    OpenDrawingItemFile();
+                    await LoadDrawingItemFile(param);
                 });
             }
 

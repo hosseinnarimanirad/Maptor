@@ -1,4 +1,3 @@
-
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
@@ -161,12 +160,7 @@ public class FeatureSet<T> where T : IPoint, new()
 
         return feature.UpdateGeometry(newGeometry);
     }
-
-    // todo: write undo functions too
-    // undoRemove
-    // undoCanceledNew
-    // undoUpdate
-
+     
     public IEnumerable<Feature<T>> GetCurrentChanges()
     {
         return _allFeatures.Where(a => a.Status != FeatureStatus.Unchanged);

@@ -377,12 +377,15 @@
                             Visibility="{Binding NumberOfSelectedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
 
                 <!--layer title (textbox)-->
-                <TextBox BorderThickness="1" Padding="0" VerticalAlignment="Center" MinWidth="70"
+                <TextBox x:Name="layerTitle"
+                            BorderThickness="1" Padding="0" VerticalAlignment="Center" MinWidth="70"
+                            Margin="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                             Text="{Binding ElementName=root, Path=Title, Mode=TwoWay}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding ElementName=root, Path=IsEditable, Converter={StaticResource boolToVisibilityConverter}}"
-                            mahApp:TextBoxHelper.Watermark="{Binding [legendItem_layerTitle], Source={StaticResource Localization}}" Margin="1" mahApp:TextBoxHelper.SelectAllOnFocus="True"
-                            VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                            mahApp:TextBoxHelper.Watermark="{Binding [legendItem_layerTitle], Source={StaticResource Localization}}"
+                            mahApp:TextBoxHelper.SelectAllOnFocus="True"
+                         KeyDown="layerTitle_KeyDown">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="4"/>

@@ -11,6 +11,10 @@ using IRI.Maptor.Sta.Persistence.DataSources;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Helpers;
+using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
+using IRI.Maptor.Sta.Ogc.SLD;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -108,6 +112,35 @@ public class DrawingItemLayer : VectorLayer
 
     public bool CanShowHighlightGeometry() => this.IsSelectedInToc && this.Visibility == System.Windows.Visibility.Visible;
 
+
+    public string Serialize()
+    {
+        var sld = this.GetSld();
+
+        var sldString = XmlHelper.Parse(sld);
+
+        if (this.Feature is null)
+            return string.Empty;
+
+        var feature = this.Feature.AsGeoJsonFeature();
+
+        feature.AddSldAttribute(sldString);
+
+        return JsonHelper.Serialize(feature);
+    }
+
+    public static DrawingItemLayer Deserialize(string featureName, string jsonLayer)
+    {
+        var geoJsonFeature = JsonHelper.Deserialize<GeoJsonFeature>(jsonLayer)!;
+
+        var sldString = geoJsonFeature.RetrieveSldAttribute();
+
+        var sld = XmlHelper.DeserializeFromXmlString<StyledLayerDescriptor>(sldString);
+
+        var symbolizers = sld.ParseToSymbolizers();
+
+        return Create(featureName, geoJsonFeature.AsFeature(true, SrsBases.WebMercator), symbolizers)!;
+    }
 
     public static DrawingItemLayer? Create(string layerName, Feature<Point> feature, IEnumerable<ISymbolizer> symbolizers)
     {

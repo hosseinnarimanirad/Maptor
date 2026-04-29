@@ -166,6 +166,62 @@ public class DefaultDialogService : IDialogService
 
     #endregion
 
+    #region Open Folder Dialog
+     
+    public Task<string?> ShowOpenFolderDialogAsync<T>()
+    {
+        var owner = GetOwnerWindowByType<T>();
+        return ShowOpenFolderDialogAsync(owner);
+    }
+
+    /// <summary>
+    /// Shows an open folder dialog asynchronously with the specified owner window.
+    /// </summary>
+    /// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
+    /// <returns>A task that represents the asynchronous operation. The result contains the selected file path, or null if cancelled.</returns>
+    public Task<string?> ShowOpenFolderDialogAsync(object? ownerWindow = null)
+    { 
+        var tcs = new TaskCompletionSource<string?>();
+
+        var owner = ResolveOwnerWindow(ownerWindow);
+
+        OpenFolderDialog dialog = new OpenFolderDialog()
+        {
+            Multiselect = false,
+            Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_openfile_title)]
+        };
+
+        var blurDisposable = ApplyBlurEffect(owner);
+        var dispatcher = GetDispatcher(owner);
+
+        dispatcher.BeginInvoke(new Action(() =>
+        {
+            try
+            {
+                var dialogResult = dialog.ShowDialog(owner);
+
+                if (dialogResult == true)
+                    tcs.SetResult(dialog.FolderName);
+
+                else
+                    tcs.SetResult(null);
+            }
+            catch (Exception ex)
+            {
+                tcs.SetException(ex);
+            }
+            finally
+            {
+                blurDisposable?.Dispose();
+            }
+        }));
+
+        return tcs.Task;
+    }
+
+
+    #endregion
+
     #region Open File Dialog
 
     /// <summary>
@@ -198,7 +254,7 @@ public class DefaultDialogService : IDialogService
             Multiselect = false,
             Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_openfile_title)]
         };
-
+        
         string? result = null;
 
         using (ApplyBlurEffect(owner))

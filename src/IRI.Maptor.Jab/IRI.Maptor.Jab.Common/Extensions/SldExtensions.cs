@@ -312,7 +312,7 @@ public static class SldExtensions
 
     #endregion
 
-    public static StyledLayerDescriptor ToSld(this List<ISymbolizer> symbolizers)
+    public static StyledLayerDescriptor ParseToSld(this IEnumerable<ISymbolizer> symbolizers)
     {
         var sld = new StyledLayerDescriptor
         {

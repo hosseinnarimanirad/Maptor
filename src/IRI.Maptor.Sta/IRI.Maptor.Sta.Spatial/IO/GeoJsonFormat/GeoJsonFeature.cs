@@ -46,21 +46,24 @@ public class GeoJsonFeature
     public Dictionary<string, object>? Properties { get; set; }
 
 
-    /// <summary>
-    /// Creates a new GeoJSON feature with the specified geometry and optional attributes.
-    /// </summary>
-    /// <param name="geometry">The geometry for the feature.</param>
-    /// <param name="attributes">Optional dictionary of attributes to set as properties.</param>
-    /// <returns>A new GeoJsonFeature instance.</returns>
-    public static GeoJsonFeature Create(IGeoJsonGeometry geometry, Dictionary<string, object>? attributes = null)
+    public void AddSldAttribute(string sldString)
     {
-        return new GeoJsonFeature()
+        if (this.Properties.ContainsKey(_defaultSymbologyPropertyName))
         {
-            Geometry = geometry,
-            GeometryName = string.Empty,
-            Id = null,
-            Properties = attributes ?? new Dictionary<string, object>(),
-        };
+            this.Properties[_defaultSymbologyPropertyName] = sldString;
+        }
+        else
+        {
+            this.Properties.Add(_defaultSymbologyPropertyName, sldString);
+        }
+    }
+
+    public string RetrieveSldAttribute()
+    {
+        if (this.Properties.ContainsKey(_defaultSymbologyPropertyName))
+            return Properties[_defaultSymbologyPropertyName]?.ToString()!;
+
+        return string.Empty;
     }
 
     /// <summary>
@@ -92,4 +95,23 @@ public class GeoJsonFeature
             TheGeometry = pointGeometry.Project(targetSrs),
         };
     }
+
+
+    /// <summary>
+    /// Creates a new GeoJSON feature with the specified geometry and optional attributes.
+    /// </summary>
+    /// <param name="geometry">The geometry for the feature.</param>
+    /// <param name="attributes">Optional dictionary of attributes to set as properties.</param>
+    /// <returns>A new GeoJsonFeature instance.</returns>
+    public static GeoJsonFeature Create(IGeoJsonGeometry geometry, Dictionary<string, object>? attributes = null)
+    {
+        return new GeoJsonFeature()
+        {
+            Geometry = geometry,
+            GeometryName = string.Empty,
+            Id = null,
+            Properties = attributes ?? new Dictionary<string, object>(),
+        };
+    }
+
 }

@@ -1,13 +1,15 @@
-using IRI.Maptor.Jab.Common.Cartography.Symbologies;
-using IRI.Maptor.Jab.Common.Events;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
+using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Ogc.SLD;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -66,5 +68,10 @@ public abstract class SymbolizableLayer : BaseLayer
         var mapToScreen = Utility.CreateMapToScreenMapFunc(mapExtent, screenWidth, screenHeight);
 
         return feature.Transform(mapToScreen).Features.ToList();
+    }
+
+    public StyledLayerDescriptor GetSld()
+    {
+        return this.Symbolizers.ParseToSld();
     }
 }

@@ -9,6 +9,11 @@ namespace IRI.Maptor.Jab.Common.Abstractions;
 
 public interface IDialogService
 {
+    Task<string?> ShowOpenFolderDialogAsync<T>();
+
+    Task<string?> ShowOpenFolderDialogAsync(object? ownerWindow = null);
+
+
     // ********************************************************************
     //                          Open File Dialog
     // ********************************************************************
