@@ -1050,13 +1050,16 @@ public abstract class MapViewModelBase : ViewModelBase
     public virtual void Initialize(
         IDialogService dialogService,
         Action<Point> requestShowGoToView,
-        Action<ILayer> requestShowSymbologyView)
+        Action<ILayer> requestShowSymbologyView,
+        Action<ILayer> requestShowLayerSettingsView)
     {
         this.DialogService = dialogService;
 
         this.RequestShowGoToView = requestShowGoToView;
 
         this.RequestShowSymbologyView = requestShowSymbologyView;
+
+        this.RequestShowLayerSettingsView = requestShowLayerSettingsView;
 
         //this.RequestClearAll = this.ClearAll;
 
@@ -1237,6 +1240,8 @@ public abstract class MapViewModelBase : ViewModelBase
     public Action<Point> RequestShowGoToView;
 
     public Action<ILayer> RequestShowSymbologyView;
+
+    public Action<ILayer> RequestShowLayerSettingsView;
 
     public Action<IPoint> RequestAddPointToNewDrawing;
 
@@ -2496,6 +2501,7 @@ public abstract class MapViewModelBase : ViewModelBase
     public void RegisterLayerWidthMap(VectorLayer layer)
     {
         layer.RequestChangeSymbology = l => RequestShowSymbologyView?.Invoke(l);
+        layer.RequestShowLayerSettings = l => RequestShowLayerSettingsView?.Invoke(l);
     }
 
     protected void TrySetCommands(ILayer layer)
@@ -2557,12 +2563,13 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 (layer as VectorLayer).RequestChangeSymbology = l => RequestShowSymbologyView?.Invoke(l);
             }
-
+             
             if (layer is BaseLayer baseLayer)
             {
                 baseLayer.RequestSaveChanges = async l => await HandleRequestSaveChanges(l);
                 baseLayer.RequestUndoAllChanges = HandleRequestUndoAllChanges;
                 baseLayer.RequestClearSelectedLayer = layer => RemoveSelectedLayers(l => l.LayerId == layer.LayerId);
+                baseLayer.RequestShowLayerSettings = layer => this.RequestShowLayerSettingsView(layer);
                 //baseLayer.CanUndoChangesProvider = GetCanUndoChanges;
             }
         }
@@ -2617,6 +2624,11 @@ public abstract class MapViewModelBase : ViewModelBase
         if (layer.RequestChangeSymbology == null)
         {
             layer.RequestChangeSymbology = l => RequestShowSymbologyView?.Invoke(l);
+        }
+
+        if (layer.RequestShowLayerSettings is null)
+        {
+            layer.RequestShowLayerSettings = l => RequestShowLayerSettingsView?.Invoke(l);
         }
     }
 

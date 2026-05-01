@@ -101,18 +101,17 @@
         </Grid.Resources>
 
         <!--Group layer-->
-        <StackPanel Orientation="Horizontal"
-                    Visibility="{Binding IsGroupLayer, Converter={StaticResource boolToVisibilityConverter}}">
-
-            <Viewbox Width="40" Height="24" Visibility="Collapsed">
+        <DockPanel Visibility="{Binding IsGroupLayer, Converter={StaticResource boolToVisibilityConverter}}">
+ 
+            <Viewbox DockPanel.Dock="Left" Width="40" Height="24" Visibility="Collapsed">
                 <mahApp:ToggleSwitch Margin="2" VerticalAlignment="Center" 
                                     Padding="0" MinWidth="0" MinHeight="0"                                   
                                     Content="" OffContent="" OnContent=""
                                      Cursor="Hand"
                                      IsOn="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}"/>
             </Viewbox>
-            
-            <ToggleButton Name="GroupVisibility"
+
+            <ToggleButton DockPanel.Dock="Left" Name="GroupVisibility"
                  ClickMode="Press"
                  IsChecked="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}"                            
                  Margin="2,0" Padding="0" Cursor="Hand"
@@ -149,8 +148,12 @@
                 </ToggleButton.Style>
             </ToggleButton>
 
-            <CheckBox Margin="2,0" IsChecked="{Binding AllChildsVisible, Mode=TwoWay}"
-                        VerticalAlignment="Center" Padding="0" Cursor="Hand"
+            <CheckBox DockPanel.Dock="Left"
+                      Margin="2,0"
+                      VerticalAlignment="Center"
+                      Padding="0"
+                      Cursor="Hand"
+                      IsChecked="{Binding AllChildsVisible, Mode=TwoWay}"
                       IsThreeState="True">
                 <!--Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"-->
                 <CheckBox.Visibility>
@@ -160,28 +163,41 @@
                     </MultiBinding>
                 </CheckBox.Visibility>
             </CheckBox>
+
+            <TextBlock DockPanel.Dock="Left" MinWidth="30" VerticalAlignment="Center" Margin="4"  
+                       Text="{Binding ElementName=root, Path=Title}" 
+                       FontSize="{Binding ElementName=root, Path=TitleFontSize}"
+                       Visibility="{Binding IsGroupLayer, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"/>
+
             
-            <TextBlock MinWidth="30" VerticalAlignment="Center" Margin="4"  
-                        Text="{Binding ElementName=root, Path=Title}" 
-                        FontSize="{Binding ElementName=root, Path=TitleFontSize}"
-                        Visibility="{Binding IsGroupLayer, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"/>
-            
-        </StackPanel>
+        </DockPanel>
 
         <!--Normal layer-->
         <StackPanel HorizontalAlignment="Stretch" Margin="0" MinHeight="26"
                     Visibility="{Binding IsGroupLayer, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}">
-            <StackPanel Orientation="Horizontal" Margin="0" >
+            <DockPanel Margin="0" >
 
+                <Button DockPanel.Dock="Right" Width="24" Height="24" Focusable="True" Margin="4,0"
+                        Command="{Binding ShowLayerSettingsCommand}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                    <Button.Visibility>
+                        <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
+                            <Binding Path="IsMouseOver" ElementName="root"/>
+                        </MultiBinding>
+                    </Button.Visibility>
+                    <Viewbox Margin="4">
+                        <iconPacks:PackIconMaterial Kind="DotsHorizontal" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+                    </Viewbox>
+                </Button>
                 <!--source type color indicator-->
-                <Rectangle Width="6" Height="18" Margin="1,0,0,0" VerticalAlignment="Stretch"
+                <Rectangle DockPanel.Dock="Left" Width="6" Height="18" Margin="1,0,0,0" VerticalAlignment="Stretch"
                            Fill="{Binding DataSource.DataSourceKind, Converter={StaticResource dataSourceKindToBrushConverter}}"
                            ToolTip="{Binding DataSource.DataSourceKind}"
                            IsEnabled="{Binding IsInScaleRange}"
                            Visibility="{Binding Path=ShowLayerColors, RelativeSource={RelativeSource AncestorType=userControl:NotifiableUserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
 
                 <!--layer visiblity checkbox-->
-                <CheckBox Margin="2,0" VerticalAlignment="Center" Padding="0"
+                <CheckBox DockPanel.Dock="Left" Margin="2,0" VerticalAlignment="Center" Padding="0"
                           IsChecked="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}"
                           IsEnabled="{Binding IsInScaleRange}">
                     <!--Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"-->
@@ -194,10 +210,10 @@
                 </CheckBox>
 
                 <!--loading layer #1-->
-                <iconPacks:PackIconPhosphorIcons Kind="SpinnerGapBold" Spin="True" Width="18" Height="18"
-                                                 VerticalAlignment="Center"
-                                                 Foreground="{DynamicResource MahApps.Brushes.Accent}" Margin="2,0"
-                                                Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
+                <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="SpinnerGapBold" Spin="True" Width="18" Height="18"                    
+                    VerticalAlignment="Center"
+                    Foreground="{DynamicResource MahApps.Brushes.Accent}" Margin="2,0"
+                    Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
 
                     <!--<iconPacks:PackIconPhosphorIcons.RenderTransform>
                         <RotateTransform Angle="0"/>
@@ -238,14 +254,14 @@
                 </iconPacks:PackIconPhosphorIcons>
 
                 <!--loading layer #2-->
-                <mahApp:ProgressRing Width="18" Height="18"  IsLarge="True"
+                <mahApp:ProgressRing DockPanel.Dock="Left" Width="18" Height="18"  IsLarge="True"
                                     VerticalAlignment="Center" Margin="2,0"
                                     Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                     Visibility="Collapsed"/>
                 <!--Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"/>-->
 
                 <!--locked layer (not in scale range layer)-->
-                <iconPacks:PackIconMaterial Kind="Lock" Width="18" Height="18"
+                <iconPacks:PackIconMaterial DockPanel.Dock="Left" Kind="Lock" Width="18" Height="18"
                     VerticalAlignment="Center"
                     Foreground="{DynamicResource MahApps.Brushes.Badged.Background.Disabled}" Margin="2,0"
                                                  >
@@ -260,7 +276,7 @@
                 </iconPacks:PackIconMaterial>
 
                 <!--visibility toggle button with Eye and EyeOff iconPacks-->
-                <ToggleButton Name="Expander" ClickMode="Press" Margin="2,0" Padding="0" Cursor="Hand"
+                <ToggleButton Name="Expander" DockPanel.Dock="Left" ClickMode="Press" Margin="2,0" Padding="0" Cursor="Hand"
                                 IsChecked="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}"                            
                                 IsEnabled="{Binding IsInScaleRange}"
                                 Visibility="Collapsed">
@@ -296,12 +312,13 @@
                     </ToggleButton.Style>
                 </ToggleButton>
 
-                <iconPacks:PackIconMaterial Margin="0,0,2,0" Width="18" Height="18" VerticalAlignment="Center"  
+                <iconPacks:PackIconMaterial DockPanel.Dock="Left" Margin="0,0,2,0" Width="18" Height="18" VerticalAlignment="Center"  
                                             Kind="FormatTitle" Padding="2"
                                             Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                             Visibility="{Binding IsTextLayer, Converter={StaticResource boolToVisibilityConverter}}"/>
+
                 <!--light symbology preview-->
-                <Border Margin="0,0,2,0" Cursor="Hand" CornerRadius="2" FlowDirection="LeftToRight"  
+                <Border DockPanel.Dock="Left" Margin="0,0,2,0" Cursor="Hand" CornerRadius="2" FlowDirection="LeftToRight"  
                         Visibility="{Binding IsSymbolizable, Converter={StaticResource boolToVisibilityConverter}}">
                     <!--IsEnabled="{Binding IsNotBusy, Converter={StaticResource boolToVisibilityConverter}}">-->
                     <Border.IsEnabled>
@@ -359,25 +376,25 @@
                 </Border>
 
                 <!--layer opacity control-->
-                <Slider x:Name="opacitySlider" VerticalAlignment="Center" Width="50" Minimum="0" Maximum="1" SmallChange=".1" LargeChange=".2"                         
+                <Slider x:Name="opacitySlider" DockPanel.Dock="Left" VerticalAlignment="Center" Width="50" Minimum="0" Maximum="1" SmallChange=".1" LargeChange=".2"                         
                         TickFrequency=".2"
                         Value="{Binding Opacity, Mode=TwoWay}"                        
                         IsEnabled="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
 
                 <!--layer title (textblock)-->
-                <TextBlock MinWidth="30" VerticalAlignment="Center" Margin="2" 
+                <TextBlock DockPanel.Dock="Left" MinWidth="30" VerticalAlignment="Center" Margin="2" 
                             Text="{Binding ElementName=root, Path=Title}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding ElementName=root, Path=IsEditable, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
 
                 <!--number of selected features-->
-                <TextBlock VerticalAlignment="Center"
+                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center"
                             Text="{Binding NumberOfSelectedFeatures, Converter={StaticResource localizedNumberConverter}, StringFormat={}({0})}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding NumberOfSelectedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
 
                 <!--layer title (textbox)-->
-                <TextBox x:Name="layerTitle"
+                <TextBox x:Name="layerTitle" DockPanel.Dock="Left" 
                             BorderThickness="1" Padding="0" VerticalAlignment="Center" MinWidth="70"
                             Margin="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                             Text="{Binding ElementName=root, Path=Title, Mode=TwoWay}" 
@@ -414,7 +431,7 @@
                 </TextBox>
                 
                 <!--reload data-->
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True" Margin="0"
+                <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True" Margin="0"
                         Command="{Binding ReloadDataCommand}"
                         ToolTip="{Binding [legendItem_reloadData], Source={StaticResource Localization}}">
                     <!--Visibility="{Binding IsMouseOver, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}">-->
@@ -430,7 +447,7 @@
                 </Button>
   
                 <!--pending changes with hover popup-->
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"
+                <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"
                         Command="{Binding SaveChangesCommand}"
                         ToolTip="{Binding [legendItem_PendingChanges_Save], Source={StaticResource Localization}}"
                         Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
@@ -438,7 +455,7 @@
                         <iconPacks:PackIconMaterial Kind="ContentSave" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                     </Viewbox>
                 </Button>
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"  
+                <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"  
                         Command="{Binding UndoAllChangesCommand}"
                         ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}"
                         Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
@@ -448,7 +465,7 @@
                 </Button>
 
                 <!--<Path Width="18" Height="18" Data="M 2,16 L 6,8 L 12,12 L 16,4" Fill="Transparent" Stroke="Black" FlowDirection="LeftToRight"/>-->
-                <iconPacks:PackIconMaterial Kind="Pencil" Width="16" Height="16" x:Name="pendingChangesTag"
+                <iconPacks:PackIconMaterial DockPanel.Dock="Left" Kind="Pencil" Width="16" Height="16" x:Name="pendingChangesTag"
                                             Background="Transparent"
                                             Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
                     <iconPacks:PackIconMaterial.Style>
@@ -577,7 +594,7 @@
                 </Popup>
 
                 <!--palette control-->
-                <ToggleButton ClickMode="Release" Name="palette" Margin="4 0 0 0" Padding="0" Cursor="Hand" Background="Transparent" VerticalAlignment="Center"
+                <ToggleButton ClickMode="Release" DockPanel.Dock="Left" Name="palette" Margin="4 0 0 0" Padding="0" Cursor="Hand" Background="Transparent" VerticalAlignment="Center"
                               Width="16" Height="16" Visibility="{Binding HasMultiSymbolizers, Converter={StaticResource boolToVisibilityConverter}}">
                     <ToggleButton.Style>
                         <Style TargetType="ToggleButton">
@@ -610,7 +627,7 @@
                         </Style>
                     </ToggleButton.Style>
                 </ToggleButton>
-            </StackPanel>
+            </DockPanel>
 
             <ItemsControl BorderBrush="Black" BorderThickness="0,0,0,0" Margin="6,0,0,0"
                             ItemsSource="{Binding ElementName=root, Path=Commands}"

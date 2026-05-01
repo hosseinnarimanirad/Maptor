@@ -30,7 +30,7 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-            <Style x:Key="csvTsvDialogBorderGroup" TargetType="Border">
+            <Style x:Key="cardBorder" TargetType="Border">
                 <Setter Property="BorderBrush" Value="Gray"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -64,7 +64,7 @@
         </Grid.RowDefinitions>
 
         <!-- File -->
-        <Border Grid.Row="0" Style="{StaticResource csvTsvDialogBorderGroup}">
+        <Border Grid.Row="0" Style="{StaticResource cardBorder}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -94,7 +94,7 @@
         </Border>
 
         <!-- Format: (CSV / TSV) | Geometry Type: (POINT/LINE/POLYGON) -->
-        <Border Grid.Row="1" Style="{StaticResource csvTsvDialogBorderGroup}">
+        <Border Grid.Row="1" Style="{StaticResource cardBorder}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -128,7 +128,7 @@
         </Border>
 
         <!-- Spatial Reference -->
-        <Border Grid.Row="2" Style="{StaticResource csvTsvDialogBorderGroup}">
+        <Border Grid.Row="2" Style="{StaticResource cardBorder}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -146,7 +146,7 @@
         </Border>
 
         <!-- UTM Zone (visible when UTM selected) -->
-        <Border Grid.Row="3" Style="{StaticResource csvTsvDialogBorderGroup}"
+        <Border Grid.Row="3" Style="{StaticResource cardBorder}"
                 Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
@@ -204,7 +204,7 @@
         </Border>
 
         <!-- Options: Use first line as header, X,Y vs Y,X -->
-        <Border Grid.Row="4" Style="{StaticResource csvTsvDialogBorderGroup}">
+        <Border Grid.Row="4" Style="{StaticResource cardBorder}">
             <StackPanel Orientation="Horizontal">
                 <CheckBox Content="{Binding [dialog_csvTsvOpen_useFirstLineAsHeader], Source={StaticResource Localization}}"
                       IsChecked="{Binding UseFirstLineAsHeader, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>

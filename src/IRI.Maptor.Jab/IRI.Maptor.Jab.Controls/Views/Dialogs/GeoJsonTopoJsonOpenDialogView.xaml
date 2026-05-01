@@ -32,7 +32,7 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-            <Style x:Key="geoJsonDialogBorderGroup" TargetType="Border">
+            <Style x:Key="cardBorder" TargetType="Border">
                 <Setter Property="BorderBrush" Value="Gray"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -67,7 +67,7 @@
         </Grid.RowDefinitions>
 
         <!-- File -->
-        <Border Grid.Row="0" Style="{StaticResource geoJsonDialogBorderGroup}">
+        <Border Grid.Row="0" Style="{StaticResource cardBorder}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -95,7 +95,7 @@
         </Border>
 
         <!-- Spatial Reference -->
-        <Border Grid.Row="1" Style="{StaticResource geoJsonDialogBorderGroup}">
+        <Border Grid.Row="1" Style="{StaticResource cardBorder}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -112,7 +112,7 @@
         </Border>
 
         <!-- UTM Zone (visible when UTM selected) -->
-        <Border Grid.Row="2" Style="{StaticResource geoJsonDialogBorderGroup}"
+        <Border Grid.Row="2" Style="{StaticResource cardBorder}"
                 Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
@@ -170,7 +170,7 @@
         </Border>
 
         <!-- Options: X,Y vs Y,X -->
-        <Border Grid.Row="3" Style="{StaticResource geoJsonDialogBorderGroup}">
+        <Border Grid.Row="3" Style="{StaticResource cardBorder}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding [dialog_geoJsonTopoJsonOpen_orderCoord], Source={StaticResource Localization}}"
                            VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
@@ -182,6 +182,7 @@
                          ToolTip="{Binding [dialog_geoJsonTopoJsonOpen_orderYX], Source={StaticResource Localization}}"/>-->
             </StackPanel>
         </Border>
+        
         <!-- Data: paste or preview -->
         <!--mahApp:TextBoxHelper.Watermark="{Binding [dialog_geoJsonTopoJsonOpen_pasteWatermark], Source={StaticResource Localization}}"-->
         <!--<TextBox Grid.Row="4" Margin="0,4,0,8" MinHeight="120" MaxHeight="200"

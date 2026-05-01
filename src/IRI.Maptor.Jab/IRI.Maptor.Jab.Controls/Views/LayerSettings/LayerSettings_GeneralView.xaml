@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="IRI.Maptor.Jab.Controls.Views.LayerSettings.LayerSettings_GeneralView"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+                xmlns:views="clr-namespace:IRI.Maptor.Jab.Controls.Views"
+                xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common" >
+    <Grid Margin="2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!--layer name-->
+        <TextBlock Grid.Column="0" Text="Layer name:"/>
+        <TextBox Grid.Column="1" Text="{Binding LayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <!--source-->
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Source type:"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DataSource.DataSourceKind}"/>
+        <Button Grid.Row="1" Grid.Column="2" Command="{Binding ReloadDataCommand}">
+            <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconMaterial Kind="Refresh"/>
+                <TextBlock Text="{Binding [legendItem_reloadData], Source={StaticResource Localization}}"/>
+            </StackPanel>
+        </Button>
+
+        <!--feature type-->
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Feature type:"/>
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SpatialModelMode, Mode=OneWay}"/>
+
+        <!--opacity-->
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Opacity:"/>
+        <Slider Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="1" Value="{Binding Opacity}"/>
+        <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Opacity, StringFormat=P0}"/>
+
+        <!--visible range -->
+        <!--<TextBlock Grid.Row="3" Grid.Column="0" Text="Visible scale range:"/>
+        <mahApp:RangeSlider Grid.Row="3" Grid.Column="1" Minimum="1" Maximum="26" MinRange="1" LowerValue="2" UpperValue="4" />
+        <TextBlock Grid.Row="3" Grid.Column="2" Text="1-10"/>-->
+
+        <!--spatial reference-->
+        <!--layer address (file, api)-->
+
+    </Grid>
+</UserControl>

@@ -35,7 +35,7 @@ public static class DefaultActions
     }
 
 
-    public static void GetDefaultShowSymbologyView(Window ownerWindow, ILayer layer, MapViewModelBase mapPresenter)
+    public static void GetDefaultShowSymbologyView(Window ownerWindow, ILayer layer, MapViewModelBase viewModel)
     {
         var view = new IRI.Maptor.Jab.Controls.Views.Symbology.SymbologyView();
 
@@ -71,9 +71,9 @@ public static class DefaultActions
             view.Close();
 
             //in order to update the symbology for the layer on the map after dialog was closed
-            mapPresenter.ClearLayer(layer, remove: true, forceRemove: true, keepEmptyParentGroup: true);
+            viewModel.ClearLayer(layer, remove: true, forceRemove: true, keepEmptyParentGroup: true);
 
-            mapPresenter.AddLayer(layer);
+            viewModel.AddLayer(layer);
         };
 
         //var gotoPresenter = IRI.Maptor.Jab.Controls.Presenter.GoToPresenter.Create(mapPresenter);
@@ -86,4 +86,42 @@ public static class DefaultActions
         //gotoPresenter.SelectDefaultMenu();            
     }
 
+    public static void GetDefaultShowLayerSettingsView(Window ownerWindow, ILayer layer, MapViewModelBase viewModel)
+    {
+        var view = new IRI.Maptor.Jab.Controls.Views.Dialogs.LayerSettingsDialogView();
+
+        object presenter = layer;
+         
+        //presenter.Symbology = (layer as SymbolizableLayer)!.GetMainOrDefaultSymbology().Clone();
+         
+        //presenter.RequestCloseAction = view.Close;
+
+        //presenter.RequestApplyAction = p =>
+        //{
+        //    var param = (layer as SymbolizableLayer)!.GetMainOrDefaultSymbology();
+
+        //    param.Fill = p.Symbology.Fill;
+        //    param.Stroke = p.Symbology.Stroke;
+        //    param.StrokeThickness = p.Symbology.StrokeThickness;
+
+        //    if (layer is DrawingItemLayer drawingItemLayer)
+        //    {
+        //        //update symbology
+        //        if (layer.IsSelectedInToc)
+        //            drawingItemLayer.RequestHighlightGeometry?.Invoke(drawingItemLayer);
+        //    }
+
+        //    view.Close();
+
+        //    //in order to update the symbology for the layer on the map after dialog was closed
+        //    viewModel.ClearLayer(layer, remove: true, forceRemove: true, keepEmptyParentGroup: true);
+
+        //    viewModel.AddLayer(layer);
+        //};
+         
+        view.DataContext = presenter;
+        view.Owner = ownerWindow;
+        view.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        view.Show();
+    }
 }

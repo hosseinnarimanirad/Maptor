@@ -54,10 +54,10 @@ public static class MapInitializationHelper
         await mapView.Register(presenter, provinces);
 
         // Create default services and actions
-        var (dialogService, requestShowGoToView, requestShowSymbologyView) = CreateDefaultServices(ownerWindow, presenter);
+        var (dialogService, requestShowGoToView, requestShowSymbologyView, requestShowLayerSettingsView) = CreateDefaultServices(ownerWindow, presenter);
 
         // Initialize presenter with default services
-        presenter.Initialize(dialogService, /*proxySettings, baseMapSettings, mapSettings, generalSettings,*/ requestShowGoToView, requestShowSymbologyView);
+        presenter.Initialize(dialogService, requestShowGoToView, requestShowSymbologyView, requestShowLayerSettingsView);
 
 
         // Configure MapViewer with common settings
@@ -78,14 +78,18 @@ public static class MapInitializationHelper
     /// <summary>
     /// Creates default dialog service and action delegates for the presenter.
     /// </summary>
-    private static (IDialogService dialogService, Action<Point> requestShowGoToView, Action<ILayer> requestShowSymbologyView)
+    private static (IDialogService dialogService,
+                        Action<Point> requestShowGoToView,
+                        Action<ILayer> requestShowSymbologyView,
+                        Action<ILayer> requestShowLayerSettingsView)
         CreateDefaultServices(System.Windows.Window ownerWindow, MapViewModelBase presenter)
     {
         var dialogService = new DefaultDialogService(ownerWindow);
         var requestShowGoToView = DefaultActions.GetDefaultGoToAction(ownerWindow, presenter);
         Action<ILayer> requestShowSymbologyView = layer => DefaultActions.GetDefaultShowSymbologyView(ownerWindow, layer, presenter);
+        Action<ILayer> requestShowLayerSettingsView = layer => DefaultActions.GetDefaultShowLayerSettingsView(ownerWindow, layer, presenter);
 
-        return (dialogService, requestShowGoToView, requestShowSymbologyView);
+        return (dialogService, requestShowGoToView, requestShowSymbologyView, requestShowLayerSettingsView);
     }
 
     /// <summary>

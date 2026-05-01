@@ -204,7 +204,7 @@ public class SelectedLayer : Notifier
 
         return true;
     }
-     
+
     public void UpdateAttributes(Feature<Point> feature, Dictionary<string, object> oldAttributes)
     {
         var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
@@ -222,7 +222,7 @@ public class SelectedLayer : Notifier
         RefreshFeatureInView(feature);
     }
 
-    
+
     public async Task SaveChangesAsync()
     {
         var editableSource = AssociatedLayer.DataSource as IEditableVectorDataSource;
@@ -309,7 +309,7 @@ public class SelectedLayer : Notifier
             HighlightedFeatures?.Remove(feature);
         }
     }
-     
+
     private void NotifyAll()
     {
         RaisePropertyChanged(nameof(IsSingleValueHighlighted));
@@ -332,6 +332,7 @@ public class SelectedLayer : Notifier
                 _addCommand = new RelayCommand(async param =>
                 {
                     var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
                     if (dataSource is null)
                         return;
 
@@ -378,6 +379,18 @@ public class SelectedLayer : Notifier
                     RequestRefreshLayer?.Invoke(AssociatedLayer);
 
                     //RequestEdit?.Invoke(newFeature);
+                }, param =>
+                {
+                    var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
+                    if (dataSource is null)
+                        return false;
+
+                    var vectorDataSource = AssociatedLayer?.DataSource as VectorDataSource;
+
+                    var geometryType = vectorDataSource?.GeometryType;
+
+                    return geometryType != null && geometryType != GeometryType.None;
                 });
             }
             return _addCommand;
@@ -421,7 +434,7 @@ public class SelectedLayer : Notifier
             return _deleteCommand;
         }
     }
-     
+
 
     private RelayCommand? _editCommand;
     public RelayCommand EditCommand

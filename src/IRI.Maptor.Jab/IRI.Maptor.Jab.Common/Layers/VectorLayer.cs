@@ -427,12 +427,17 @@ public class VectorLayer : SymbolizableLayer
     protected override void DataSource_IsLoadedChanged(object? sender, bool e)
     {
         base.DataSource_IsLoadedChanged(sender, e);
+
         if (e && _dataSource is IVectorDataSource vds)
         {
             SpatialModelMode = vds.GeometryType.AsLayerType();
+
             Extent = vds.WebMercatorExtent;
+
             RaisePropertyChanged(nameof(SpatialModelMode));
+
             RaisePropertyChanged(nameof(Extent));
+
             RaisePropertyChanged(nameof(IsSymbolizable));
         }
     }

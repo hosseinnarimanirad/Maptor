@@ -13,6 +13,7 @@ using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using System.Linq;
+using System.Windows.Input;
 
 namespace IRI.Maptor.Jab.Common;
 
@@ -197,6 +198,9 @@ public abstract class BaseLayer : Notifier, ILayer
         RaisePropertyChanged(nameof(IsInitializing));
         RaisePropertyChanged(nameof(IsBusy));
         RaisePropertyChanged(nameof(IsNotBusy));
+
+        // Forces all commands to re-query CanExecute
+        CommandManager.InvalidateRequerySuggested();
     });
 
     private void DataSource_IsProcessingChanged(object? sender, bool e) => DispatcherToUi(() =>
@@ -539,15 +543,7 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public Action<ILayer>? RequestClearSelectedLayer { get; set; }
 
-    /// <summary>
-    /// Used to determine if Undo is available. Set by MapViewModel.
-    /// </summary>
-    //public Func<ILayer, bool>? CanUndoChangesProvider { get; set; }
-
-    /// <summary>
-    /// Whether Undo can be performed (delegates to CanUndoChangesProvider when set).
-    /// </summary>
-    //public bool CanUndoChanges => CanUndoChangesProvider?.Invoke(this) ?? false;
+    public Action<ILayer> RequestShowLayerSettings { get; set; }
 
     protected virtual void BindWithFrameworkElement(FrameworkElement? element)
     {
@@ -755,7 +751,6 @@ public abstract class BaseLayer : Notifier, ILayer
 
 
     private RelayCommand? _reloadDataCommand;
-
     public RelayCommand? ReloadDataCommand
     {
         get
@@ -770,6 +765,22 @@ public abstract class BaseLayer : Notifier, ILayer
             return _reloadDataCommand;
         }
     }
+
+
+    private RelayCommand _showLayerSettingsCommand;
+    public RelayCommand ShowLayerSettingsCommand
+    {
+        get
+        {
+            if (_showLayerSettingsCommand == null)
+            {
+                _showLayerSettingsCommand = new RelayCommand(param => this.RequestShowLayerSettings?.Invoke(this), _ => IsNotBusy);
+            }
+
+            return _showLayerSettingsCommand;
+        }
+    }
+
 
 
     #region Events

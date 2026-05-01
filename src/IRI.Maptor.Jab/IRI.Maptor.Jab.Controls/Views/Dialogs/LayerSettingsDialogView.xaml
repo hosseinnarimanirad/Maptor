@@ -1,0 +1,69 @@
+﻿<mahApp:MetroWindow x:Class="IRI.Maptor.Jab.Controls.Views.Dialogs.LayerSettingsDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:views="clr-namespace:IRI.Maptor.Jab.Controls.Views.LayerSettings"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
+        mc:Ignorable="d"
+        ShowInTaskbar="False"
+        SizeToContent="Height"
+        GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"
+        MaxWidth="700"
+        MinWidth="400"
+        FlowDirection="LeftToRight"
+        WindowStartupLocation="CenterOwner"
+        ShowMaxRestoreButton="True"
+        ShowCloseButton="True"
+        ShowMinButton="False"
+        ShowTitleBar="True"
+        Title="LayerSettingsDialogView" Height="450" Width="600">
+    <mahApp:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <TextBlock Text="{TemplateBinding Content}"
+           TextTrimming="CharacterEllipsis"
+           VerticalAlignment="Center"
+           Margin="8 0 8 0"
+           FontWeight="Bold" />
+        </DataTemplate>
+    </mahApp:MetroWindow.TitleTemplate>
+    <mahApp:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+            <Style TargetType="{x:Type TabItem}">
+                <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="15"/>
+            </Style>
+            <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MahApps.Styles.Slider}"/>
+            <Style TargetType="TextBlock" >
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
+    </mahApp:MetroWindow.Resources>
+    <Grid>
+        <TabControl Margin="1">
+            <TabControl.Items>
+                <TabItem Header="General" >
+                    <views:LayerSettings_GeneralView/>
+                </TabItem>
+                <TabItem Header="Symbology" IsEnabled="False" />
+                <TabItem Header="Labeling" IsEnabled="False" />
+                <TabItem Header="Fields" IsEnabled="False" />
+                <TabItem Header="Filters" IsEnabled="False" />
+                <TabItem Header="Track changes" IsEnabled="False"/>
+                <TabItem Header="Statistics" IsEnabled="False" />
+                <TabItem Header="Analysis" IsEnabled="False" />
+                <TabItem Header="Security" IsEnabled="False" />
+                <TabItem Header="Export">
+                    
+                </TabItem>
+            </TabControl.Items>
+        </TabControl>
+    </Grid>
+</mahApp:MetroWindow>
