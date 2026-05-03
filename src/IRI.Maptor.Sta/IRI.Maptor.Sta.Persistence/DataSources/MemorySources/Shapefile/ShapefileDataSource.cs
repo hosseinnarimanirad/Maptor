@@ -15,7 +15,7 @@ using IRI.Maptor.Sta.ShapefileFormat.Model;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
-using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 

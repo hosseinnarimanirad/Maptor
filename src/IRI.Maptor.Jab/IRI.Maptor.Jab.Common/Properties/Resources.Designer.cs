@@ -853,6 +853,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export.
+        /// </summary>
+        public static string dialog_common_export {
+            get {
+                return ResourceManager.GetString("dialog_common_export", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File.
         /// </summary>
         public static string dialog_common_fileWatermark {
@@ -1042,6 +1051,60 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string dialog_export_exportModeAll {
+            get {
+                return ResourceManager.GetString("dialog_export_exportModeAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Highlighted.
+        /// </summary>
+        public static string dialog_export_exportModeHighlighted {
+            get {
+                return ResourceManager.GetString("dialog_export_exportModeHighlighted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected.
+        /// </summary>
+        public static string dialog_export_exportModeSelected {
+            get {
+                return ResourceManager.GetString("dialog_export_exportModeSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Features to export:.
+        /// </summary>
+        public static string dialog_export_exportModeTItle {
+            get {
+                return ResourceManager.GetString("dialog_export_exportModeTItle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project to.
+        /// </summary>
+        public static string dialog_export_IsProjectionEnabled {
+            get {
+                return ResourceManager.GetString("dialog_export_IsProjectionEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output format:.
+        /// </summary>
+        public static string dialog_export_outputFileFormat {
+            get {
+                return ResourceManager.GetString("dialog_export_outputFileFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import GeoJSON.
         /// </summary>
         public static string dialog_geoJsonOpen_title {
@@ -1053,9 +1116,9 @@ namespace IRI.Maptor.Jab.Common.Properties {
         /// <summary>
         ///   Looks up a localized string similar to X/Y order.
         /// </summary>
-        public static string dialog_geoJsonTopoJsonOpen_orderCoord {
+        public static string dialog_common_xyOrder {
             get {
-                return ResourceManager.GetString("dialog_geoJsonTopoJsonOpen_orderCoord", resourceCulture);
+                return ResourceManager.GetString("dialog_common_xyOrder", resourceCulture);
             }
         }
         

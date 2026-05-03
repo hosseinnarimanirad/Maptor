@@ -13,7 +13,7 @@
         GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"
         MaxWidth="700"
         MinWidth="400"
-        FlowDirection="LeftToRight"
+        FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
         WindowStartupLocation="CenterOwner"
         ShowMaxRestoreButton="True"
         ShowCloseButton="True"
@@ -50,19 +50,21 @@
         <TabControl Margin="1">
             <TabControl.Items>
                 <TabItem Header="General" >
-                    <views:LayerSettings_GeneralView/>
+                    <views:LayerSettings_GeneralView DataContext="{Binding Layer}"/>
+                </TabItem>
+                <TabItem Header="Export">
+                    <views:LayerSettings_ExportView DataContext="{Binding Export}"/>
                 </TabItem>
                 <TabItem Header="Symbology" IsEnabled="False" />
-                <TabItem Header="Labeling" IsEnabled="False" />
-                <TabItem Header="Fields" IsEnabled="False" />
-                <TabItem Header="Filters" IsEnabled="False" />
+                <TabItem Header="Labeling" IsEnabled="False" Visibility="Collapsed" />
+                <TabItem Header="Fields" IsEnabled="False" Visibility="Collapsed"/>
+                <TabItem Header="Filters" IsEnabled="False" Visibility="Collapsed" />
                 <TabItem Header="Track changes" IsEnabled="False"/>
-                <TabItem Header="Statistics" IsEnabled="False" />
-                <TabItem Header="Analysis" IsEnabled="False" />
-                <TabItem Header="Security" IsEnabled="False" />
-                <TabItem Header="Export">
-                    
-                </TabItem>
+                <TabItem Header="Statistics" IsEnabled="False" Visibility="Collapsed" />
+                <TabItem Header="Analysis" IsEnabled="False" Visibility="Collapsed" />
+                <TabItem Header="Security" IsEnabled="False" Visibility="Collapsed" />
+
+
             </TabControl.Items>
         </TabControl>
     </Grid>

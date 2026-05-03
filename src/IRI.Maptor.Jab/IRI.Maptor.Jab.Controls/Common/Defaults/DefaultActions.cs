@@ -1,7 +1,9 @@
 ﻿using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.ViewModels;
+using IRI.Maptor.Jab.Common.ViewModels.LayerSettings;
 using IRI.Maptor.Jab.Common.ViewModels.Symbology;
+using IRI.Maptor.Sta.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,36 +92,15 @@ public static class DefaultActions
     {
         var view = new IRI.Maptor.Jab.Controls.Views.Dialogs.LayerSettingsDialogView();
 
-        object presenter = layer;
-         
-        //presenter.Symbology = (layer as SymbolizableLayer)!.GetMainOrDefaultSymbology().Clone();
-         
-        //presenter.RequestCloseAction = view.Close;
+        LayerSettings_VectorExportViewModel exportViewModel = new LayerSettings_VectorExportViewModel(viewModel, layer as VectorLayer,/*viewModel.DialogService,*/ null)
+        {
+            SelectedDataSourceKind = layer.DataSource?.DataSourceKind ?? DataSourceKind.Shapefile
+        };
 
-        //presenter.RequestApplyAction = p =>
-        //{
-        //    var param = (layer as SymbolizableLayer)!.GetMainOrDefaultSymbology();
+        LayerSettingsViewModel layerSettingsViewModel = new LayerSettingsViewModel(layer, exportViewModel);
 
-        //    param.Fill = p.Symbology.Fill;
-        //    param.Stroke = p.Symbology.Stroke;
-        //    param.StrokeThickness = p.Symbology.StrokeThickness;
 
-        //    if (layer is DrawingItemLayer drawingItemLayer)
-        //    {
-        //        //update symbology
-        //        if (layer.IsSelectedInToc)
-        //            drawingItemLayer.RequestHighlightGeometry?.Invoke(drawingItemLayer);
-        //    }
-
-        //    view.Close();
-
-        //    //in order to update the symbology for the layer on the map after dialog was closed
-        //    viewModel.ClearLayer(layer, remove: true, forceRemove: true, keepEmptyParentGroup: true);
-
-        //    viewModel.AddLayer(layer);
-        //};
-         
-        view.DataContext = presenter;
+        view.DataContext = layerSettingsViewModel;
         view.Owner = ownerWindow;
         view.WindowStartupLocation = WindowStartupLocation.CenterOwner;
         view.Show();

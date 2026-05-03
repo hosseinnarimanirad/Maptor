@@ -121,6 +121,7 @@ public static class FeatureExtensions
         foreach (var feature in features)
         {
             var kmlFeature = feature.ToKmlFeature();
+
             if (kmlFeature != null)
             {
                 result.Add(kmlFeature);

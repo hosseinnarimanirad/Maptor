@@ -1,9 +1,5 @@
 ﻿using IRI.Maptor.Sta.Common.Attributes;
-using IRI.Maptor.Sta.Persistence.Abstractions;
-using IRI.Maptor.Sta.Persistence.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Extensions;
 
@@ -14,5 +10,12 @@ public static class DataSourceKindExtensions
         var attribute = kind.GetAttribute<DataSourceKindInfoAttribute>();
 
         return attribute?.Category ?? DataSourceCategory.None;
+    }
+
+    public static string GetFileFilter(this DataSourceKind kind)
+    {
+        var attribute = kind.GetAttribute<DataSourceKindInfoAttribute>();
+
+        return attribute?.FileFilter ?? "*.*|*.*";
     }
 }

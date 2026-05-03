@@ -73,4 +73,24 @@ public static class SridHelper
                 return null;
         }
     }
+
+    public static (bool isUtm, int? zone, bool? isNorthHemisphere) GetUtmZone(int srid)
+    {
+        if (srid >= 32601 && srid <= 32660)
+        {
+            //SelectedSrsOption = _utmOption;
+            //UtmZone = srid - 32600;
+            //IsNorthHemisphere = true;
+            return (isUtm: true, zone: srid - 32600, isNorthHemisphere: true);
+        }
+        else if (srid >= 32701 && srid <= 32760)
+        {
+            //SelectedSrsOption = _utmOption;
+            //UtmZone = srid - 32700;
+            //IsNorthHemisphere = false;
+            return (isUtm: true, zone: srid - 32700, isNorthHemisphere: false);
+        }
+
+        return (false, null, null);
+    }
 }

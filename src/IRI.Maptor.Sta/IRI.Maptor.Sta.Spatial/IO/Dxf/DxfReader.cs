@@ -15,6 +15,7 @@ namespace IRI.Maptor.Sta.Spatial.IO.Dxf;
 public class DxfPreviewResult
 {
     public int DetectedSrid { get; }
+
     public IReadOnlyList<Point> SamplePoints { get; }
 
     public DxfPreviewResult(int detectedSrid, IReadOnlyList<Point> samplePoints)

@@ -2,6 +2,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -70,6 +71,22 @@ public class FeatureSet<T> where T : IPoint, new()
     public FeatureSet<T> Transform(Func<T, T> transform, int? newSrid = 0)
     {
         var result = Create(this.Title, this.Features.Select(f => f.Transform(transform, newSrid)).ToList());
+
+        result.Fields = this.Fields;
+
+        result.LayerId = this.LayerId;
+
+        return result;
+    }
+
+    public FeatureSet<T> Project(SrsBase targetSrs)
+    {
+        var sourceSrs = SrsBase.Create(this.Srid);
+
+        if (sourceSrs != null && sourceSrs == targetSrs)
+            return this;
+
+        var result = Create(this.Title, this.Features.Select(f => f.Project(targetSrs)).ToList());
 
         result.Fields = this.Fields;
 
@@ -160,7 +177,7 @@ public class FeatureSet<T> where T : IPoint, new()
 
         return feature.UpdateGeometry(newGeometry);
     }
-     
+
     public IEnumerable<Feature<T>> GetCurrentChanges()
     {
         return _allFeatures.Where(a => a.Status != FeatureStatus.Unchanged);

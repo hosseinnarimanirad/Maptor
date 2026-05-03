@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Models.Legend;
-using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common.Assets.Converters;
 

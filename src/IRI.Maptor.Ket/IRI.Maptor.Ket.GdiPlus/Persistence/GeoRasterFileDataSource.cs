@@ -5,8 +5,8 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Model;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.DataSources;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Ket.GdiPersistence;
 

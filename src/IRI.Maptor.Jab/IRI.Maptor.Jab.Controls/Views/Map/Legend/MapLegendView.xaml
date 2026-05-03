@@ -6,7 +6,7 @@
             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
             xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-            xmlns:sta="clr-namespace:IRI.Maptor.Sta.Persistence.Abstractions;assembly=IRI.Maptor.Sta.Persistence"
+            xmlns:sta="clr-namespace:IRI.Maptor.Sta.Common.Enums;assembly=IRI.Maptor.Sta.Common"
             x:Name="root" 
             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.Views">
     <userControl:NotifiableUserControl.Resources>

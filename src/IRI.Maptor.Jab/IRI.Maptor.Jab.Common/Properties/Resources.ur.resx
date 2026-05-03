@@ -352,7 +352,7 @@
   <data name="dialog_geoJsonOpen_title" xml:space="preserve">
     <value>GeoJSON درآمد کریں</value>
   </data>
-  <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
+  <data name="dialog_common_xyOrder" xml:space="preserve">
     <value>X/Y آرڈر</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">

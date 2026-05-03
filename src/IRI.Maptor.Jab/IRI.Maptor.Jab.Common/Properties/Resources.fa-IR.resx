@@ -411,7 +411,7 @@
   <data name="dialog_geoJsonOpen_title" xml:space="preserve">
     <value>افزودن GeoJSON</value>
   </data>
-  <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
+  <data name="dialog_common_xyOrder" xml:space="preserve">
     <value>ترتیب X/Y</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
@@ -1508,5 +1508,26 @@
   </data>
   <data name="cmd_drawingLegend_saveAll" xml:space="preserve">
     <value>ذخیره‌سازی همه</value>
+  </data>
+  <data name="dialog_common_export" xml:space="preserve">
+    <value>خروجی گرفتن</value>
+  </data>
+  <data name="dialog_export_exportModeAll" xml:space="preserve">
+    <value>همه</value>
+  </data>
+  <data name="dialog_export_exportModeHighlighted" xml:space="preserve">
+    <value>عوارض هایلایت</value>
+  </data>
+  <data name="dialog_export_exportModeSelected" xml:space="preserve">
+    <value>عوارض انتخابی</value>
+  </data>
+  <data name="dialog_export_exportModeTItle" xml:space="preserve">
+    <value>عوارض مشمول:</value>
+  </data>
+  <data name="dialog_export_IsProjectionEnabled" xml:space="preserve">
+    <value>نگاشت مختصات</value>
+  </data>
+  <data name="dialog_export_outputFileFormat" xml:space="preserve">
+    <value>فرمت خروجی:</value>
   </data>
 </root>

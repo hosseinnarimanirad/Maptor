@@ -783,6 +783,7 @@ public class DefaultDialogService : IDialogService
     public Task<CsvTsvOpenDialogResult?> ShowCsvTsvOpenDialogAsync(object? ownerWindow = null, bool initialIsCsv = true, int? initialSrid = null)
     {
         var viewModel = new CsvTsvOpenDialogViewModel(this, initialIsCsv, initialSrid);
+
         var dialog = new Views.Dialogs.CsvTsvOpenDialogView();
 
         return ShowCustomDialogAsync(

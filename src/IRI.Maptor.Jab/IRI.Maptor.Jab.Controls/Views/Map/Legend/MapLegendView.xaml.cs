@@ -8,10 +8,10 @@ using System.Windows.Controls;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Assets.Converters;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
-using IRI.Maptor.Sta.Persistence.Abstractions;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 

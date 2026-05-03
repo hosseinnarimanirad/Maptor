@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace IRI.Maptor.Sta.Persistence.Abstractions;
+namespace IRI.Maptor.Sta.Common.Enums;
 
 public enum DataSourceCategory
 {

@@ -111,7 +111,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         }
     }
 
-    public bool UtmHemisphereNorth
+    public bool IsNorthHemisphere
     {
         get => _utmHemisphereNorth;
         set
@@ -175,13 +175,13 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         {
             SelectedSrsOption = _utmOption;
             UtmZone = srid - 32600;
-            UtmHemisphereNorth = true;
+            IsNorthHemisphere = true;
         }
         else if (srid >= 32701 && srid <= 32760)
         {
             SelectedSrsOption = _utmOption;
             UtmZone = srid - 32700;
-            UtmHemisphereNorth = false;
+            IsNorthHemisphere = false;
         }
         else
         {

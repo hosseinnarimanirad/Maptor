@@ -13,11 +13,95 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.KmlFormat;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Extensions;
 
 public static class FeatureSetExtensions
 {
+    public static void Export(this FeatureSet<Point> featureSet, string filePath, DataSourceKind exportFormat, SrsBase targetSrs, bool? isLongitudeFirst = null)
+    {
+        var targetFeatureSet = featureSet.Project(targetSrs);
+
+        switch (exportFormat)
+        {
+            case DataSourceKind.Shapefile:
+                SaveAsShapefile(targetFeatureSet, filePath, System.Text.Encoding.UTF8, targetSrs, overwrite: true);
+                break;
+
+            case DataSourceKind.Kml:
+                SaveAsKml(targetFeatureSet, filePath);
+                break;
+
+            case DataSourceKind.Kmz:
+                SaveAsKmz(targetFeatureSet, filePath);
+                break;
+
+            case DataSourceKind.Dxf:
+                throw new NotImplementedException("FeatureSetExtensions > Export!");
+
+            case DataSourceKind.GeoJson:
+                targetFeatureSet.SaveAsGeoJson(filePath, isLongitudeFirst ?? true);
+                break;
+
+            case DataSourceKind.TopoJson:
+                throw new NotImplementedException("FeatureSetExtensions > Export!");
+
+            case DataSourceKind.GML:
+            case DataSourceKind.Gpx:
+            case DataSourceKind.Csv:
+            case DataSourceKind.Tsv:
+            default:
+                throw new NotImplementedException("FeatureSetExtensions > Export!");
+
+            case DataSourceKind.WebApi:
+            case DataSourceKind.GRPC:
+            case DataSourceKind.Other:
+            case DataSourceKind.Worldfile:
+            case DataSourceKind.GeoTiff:
+            case DataSourceKind.ZippedImagePyramid:
+                throw new ArgumentException($"FeatureSetExtensions > Export. {exportFormat} not supported");
+
+        }
+    }
+
+    public static void SaveAsDxf(this FeatureSet<Point> featureSet, string kmlFileName)
+    {
+        var srsBase = SridHelper.AsSrsBase(featureSet.Srid);
+
+        var dxfString = featureSet.Features.Select(f => f.TheGeometry.ToDxf()).ToList();
+
+        if (dxfString is null)
+            return;
+
+        //KmlWriter.WriteToFile(kmlFeatures, kmlFileName, featureSet.Title);
+    }
+
+    public static void SaveAsKml(this FeatureSet<Point> featureSet, string kmlFileName)
+    {
+        var srsBase = SridHelper.AsSrsBase(featureSet.Srid);
+
+        List<KmlFeature>? kmlFeatures = featureSet.Features.Select(f => f.ToKmlFeature()).ToList();
+
+        if (kmlFeatures is null)
+            return;
+
+        KmlWriter.WriteToFile(kmlFeatures, kmlFileName, featureSet.Title);
+    }
+
+    public static void SaveAsKmz(this FeatureSet<Point> featureSet, string kmzFileName)
+    {
+        var srsBase = SridHelper.AsSrsBase(featureSet.Srid);
+
+        List<KmlFeature>? kmlFeatures = featureSet.Features.Select(f => f.ToKmlFeature()).ToList();
+
+        if (kmlFeatures is null)
+            return;
+
+        KmzWriter.WriteToFile(kmlFeatures, kmzFileName, featureSet.Title);
+    }
+
     public static void SaveAsShapefile(this FeatureSet<Point> featureSet, string shpFileName, Encoding encoding, SrsBase srs, bool overwrite = false)
     {
         Shapefile.SaveAsShapefile(shpFileName, featureSet.Features, f => f.TheGeometry.AsEsriShape(f.TheGeometry.Srid), false, srs, overwrite);

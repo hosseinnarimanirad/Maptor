@@ -177,17 +177,65 @@
                     Visibility="{Binding IsGroupLayer, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}">
             <DockPanel Margin="0" >
 
+                <!--Layer Options-->
                 <Button DockPanel.Dock="Right" Width="24" Height="24" Focusable="True" Margin="4,0"
-                        Command="{Binding ShowLayerSettingsCommand}"
-                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                        Command="{Binding ShowLayerSettingsCommand}" 
+                         BorderThickness="0">
+                    <Button.Style> 
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Margin" Value="2"/>
+
+                            <!-- Light theme colors -->
+                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Width" Value="32"/>
+                            <Setter Property="Height" Value="32"/>
+                            <Setter Property="Cursor" Value="Hand"/> 
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Grid Background="Transparent">  
+                                            <Viewbox Margin="2">
+                                                <iconPacks:PackIconMaterial x:Name="path"
+                                                    Kind="DotsHorizontal" Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                                                            Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+                                            </Viewbox>
+                                        </Grid>
+
+                                        <ControlTemplate.Triggers>
+                                            <!-- Hover -->
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Opacity" Value="1"/>
+                                                <Setter TargetName="path" Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                                <Setter Property="Effect" TargetName="path">
+                                                    <Setter.Value>
+                                                        <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.6" Color="Black"/>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                            <!-- Disabled -->
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="Opacity" Value="0.9"/>
+                                                <Setter Property="Background" Value="LightGray"/>
+                                                <Setter Property="BorderBrush" Value="LightGray"/>
+                                                <Setter Property="Foreground" Value="DarkGray"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
                     <Button.Visibility>
                         <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
                             <Binding Path="IsMouseOver" ElementName="root"/>
                         </MultiBinding>
                     </Button.Visibility>
-                    <Viewbox Margin="4">
-                        <iconPacks:PackIconMaterial Kind="DotsHorizontal" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
-                    </Viewbox>
+                   
                 </Button>
                 <!--source type color indicator-->
                 <Rectangle DockPanel.Dock="Left" Width="6" Height="18" Margin="1,0,0,0" VerticalAlignment="Stretch"
@@ -433,14 +481,15 @@
                 <!--reload data-->
                 <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True" Margin="0"
                         Command="{Binding ReloadDataCommand}"
-                        ToolTip="{Binding [legendItem_reloadData], Source={StaticResource Localization}}">
+                        ToolTip="{Binding [legendItem_reloadData], Source={StaticResource Localization}}"
+                        Visibility="Collapsed">
                     <!--Visibility="{Binding IsMouseOver, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}">-->
-                    <Button.Visibility>
+                    <!--<Button.Visibility>
                         <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
                             <Binding Path="ShowReloadData" ElementName="root"/>
                             <Binding Path="IsMouseOver" ElementName="root"/>
                         </MultiBinding>
-                    </Button.Visibility>
+                    </Button.Visibility>-->
                     <Viewbox Margin="4">
                         <iconPacks:PackIconMaterial Kind="Refresh" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                     </Viewbox>

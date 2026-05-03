@@ -1435,7 +1435,7 @@
   <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
     <value>Geometry Type</value>
   </data>
-  <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
+  <data name="dialog_common_xyOrder" xml:space="preserve">
     <value>X/Y order</value>
   </data>
   <data name="srs_northernHemisphere" xml:space="preserve">
@@ -1549,5 +1549,26 @@
   </data>
   <data name="cmd_drawingLegend_saveAll" xml:space="preserve">
     <value>Save All</value>
+  </data>
+  <data name="dialog_common_export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="dialog_export_exportModeAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="dialog_export_exportModeHighlighted" xml:space="preserve">
+    <value>Highlighted</value>
+  </data>
+  <data name="dialog_export_exportModeSelected" xml:space="preserve">
+    <value>Selected</value>
+  </data>
+  <data name="dialog_export_exportModeTItle" xml:space="preserve">
+    <value>Features to export:</value>
+  </data>
+  <data name="dialog_export_IsProjectionEnabled" xml:space="preserve">
+    <value>Project to</value>
+  </data>
+  <data name="dialog_export_outputFileFormat" xml:space="preserve">
+    <value>Output format:</value>
   </data>
 </root>

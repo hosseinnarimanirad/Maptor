@@ -127,7 +127,7 @@
                                      Minimum="1" Maximum="60"
                                      Value="{Binding UtmZone, Mode=TwoWay}" Margin="4" VerticalAlignment="Center"/>
 
-                <ToggleButton Grid.Column="2" IsChecked="{Binding UtmHemisphereNorth, Mode=TwoWay}"
+                <ToggleButton Grid.Column="2" IsChecked="{Binding IsNorthHemisphere, Mode=TwoWay}"
                               Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"  FlowDirection="LeftToRight"
                               ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
                     <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5" Foreground="White" >
@@ -139,7 +139,7 @@
                                     </Setter.Value>
                                 </Setter>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding UtmHemisphereNorth}" Value="False">
+                                    <DataTrigger Binding="{Binding IsNorthHemisphere}" Value="False">
                                         <Setter Property="RenderTransform">
                                             <Setter.Value>
                                                 <RotateTransform Angle="90"/>

@@ -166,7 +166,7 @@
                      Value="{Binding [srs_northernHemisphere], Source={StaticResource Localization}}"/>
                             <Style.Triggers>
                                 <!-- Southern hemisphere (IsChecked = False) -->
-                                <DataTrigger Binding="{Binding UtmHemisphereNorth}" Value="False">
+                                <DataTrigger Binding="{Binding IsNorthHemisphere}" Value="False">
                                     <Setter Property="Text"
                              Value="{Binding [srs_southernHemisphere], Source={StaticResource Localization}}"/>
                                 </DataTrigger>
@@ -174,7 +174,7 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
-                <ToggleButton Grid.Column="3" IsChecked="{Binding UtmHemisphereNorth, Mode=TwoWay}"
+                <ToggleButton Grid.Column="3" IsChecked="{Binding IsNorthHemisphere, Mode=TwoWay}"
                               Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" FlowDirection="LeftToRight"
                               ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
                     <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5"
@@ -187,7 +187,7 @@
                                     </Setter.Value>
                                 </Setter>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding UtmHemisphereNorth}" Value="False">
+                                    <DataTrigger Binding="{Binding IsNorthHemisphere}" Value="False">
                                         <Setter Property="RenderTransform">
                                             <Setter.Value>
                                                 <RotateTransform Angle="90"/>
@@ -208,7 +208,7 @@
             <StackPanel Orientation="Horizontal">
                 <CheckBox Content="{Binding [dialog_csvTsvOpen_useFirstLineAsHeader], Source={StaticResource Localization}}"
                       IsChecked="{Binding UseFirstLineAsHeader, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>
-                <TextBlock Text="{Binding [dialog_geoJsonTopoJsonOpen_orderCoord], Source={StaticResource Localization}}"
+                <TextBlock Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
                            VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold" Visibility="Collapsed"/>
                 <CheckBox Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
                             IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>

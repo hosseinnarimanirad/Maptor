@@ -129,6 +129,21 @@ public abstract class SrsBase
     }
 
 
+    public static bool operator ==(SrsBase? first, SrsBase? second)
+    {
+        if (first is null || second is null)
+            return false;
+
+        if (first.Srid != second.Srid)
+            return false;
+
+        // more checks
+
+        return true;
+    }
+
+    public static bool operator !=(SrsBase? first, SrsBase? second) => !(first == second);
+
     public static SrsBase? Create(int srid) => SridHelper.AsSrsBase(srid);
 
     public static SrsBase? Create(CoordinateDisplayMode mode, int? utmZone)

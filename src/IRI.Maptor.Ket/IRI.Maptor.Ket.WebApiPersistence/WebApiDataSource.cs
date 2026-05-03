@@ -7,8 +7,8 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Ket.WebApiPersistence.DTOs;
-using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Common.Exceptions;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Ket.WebApiPersistence;
 

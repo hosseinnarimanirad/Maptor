@@ -43,7 +43,7 @@
 
         <!--opacity-->
         <TextBlock Grid.Row="3" Grid.Column="0" Text="Opacity:"/>
-        <Slider Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="1" Value="{Binding Opacity}"/>
+        <Slider Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="1" SmallChange="0.01" LargeChange="0.01" Value="{Binding Opacity}"/>
         <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Opacity, StringFormat=P0}"/>
 
         <!--visible range -->

@@ -352,7 +352,7 @@
   <data name="dialog_geoJsonOpen_title" xml:space="preserve">
     <value>GeoJSON आयात करें</value>
   </data>
-  <data name="dialog_geoJsonTopoJsonOpen_orderCoord" xml:space="preserve">
+  <data name="dialog_common_xyOrder" xml:space="preserve">
     <value>एक्स/वाई ऑर्डर</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
