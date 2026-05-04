@@ -83,6 +83,11 @@ public static class DataGridDictionaryBehavior
             if (field.TypeFullName.ContainsIgnoreCase(FeatureTableHelper.NetTopologySuiteColumnName))
                 continue;
 
+            // todo: Consider adding a field in Field class to
+            //       identify which fields can be shown on the
+            //       attribute table
+            if (field.Name.EqualsIgnoreCase("rowversion"))
+                continue;
 
             DataGridColumn? column = null;
 
@@ -141,7 +146,7 @@ public static class DataGridDictionaryBehavior
             {
                 column = new DataGridTextColumn
                 {
-                    Header = field.Alias,                    
+                    Header = field.Alias,
                     Binding = new Binding($"Attributes[{key}]")
                     {
                         Mode = BindingMode.TwoWay,

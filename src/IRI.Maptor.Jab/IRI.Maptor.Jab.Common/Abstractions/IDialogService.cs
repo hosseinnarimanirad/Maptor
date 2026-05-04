@@ -40,7 +40,7 @@ public interface IDialogService
     string? ShowSaveFileDialog<T>(string filter, string? fileName = null);
     string? ShowSaveFileDialog(string filter, object? owner = null, string? fileName = null);
 
-    Task<string?> ShowSaveFileDialogAsync<T>(string filter, string? fileName = null);
+    Task<string?> ShowSaveFileDialogAsync<T>(string filter, string fileName);
     Task<string?> ShowSaveFileDialogAsync(string filter, object? ownerWindow = null, string? fileName = null);
 
 
@@ -56,11 +56,13 @@ public interface IDialogService
     // ********************************************************************
     Task ShowMessageAsync<T>(string message, string? title, string? pathMarkup);
 
-    //Task ShowLocalizedMessageAsync(string messageKey, string titleKey, object? ownerWindow = null, string? pathMarkup = null);
+    Task ShowLocalizedMessageAsync(string messageKey, string titleKey, object? ownerWindow = null, string? pathMarkup = null);
 
     Task ShowMessageAsync(string message, string? title, object? ownerWindow = null, string? pathMarkup = null);
 
     Task ShowErrorMessage(DomainException exception, object? ownerWindow = null);
+
+    Task ShowMessage_DoneSuccessfully(object? ownerWindow = null);
 
     // ********************************************************************
     //                          SignUp Dialog

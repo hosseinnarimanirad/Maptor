@@ -59,6 +59,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" MinHeight="120"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -206,10 +207,11 @@
         <!-- Options: Use first line as header, X,Y vs Y,X -->
         <Border Grid.Row="4" Style="{StaticResource cardBorder}">
             <StackPanel Orientation="Horizontal">
-                <CheckBox Content="{Binding [dialog_csvTsvOpen_useFirstLineAsHeader], Source={StaticResource Localization}}"
-                      IsChecked="{Binding UseFirstLineAsHeader, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
                            VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold" Visibility="Collapsed"/>
+                <iconPacks:PackIconPhosphorIcons Kind="ListNumbers" Style="{StaticResource securityIconPhosphor}"/>
+                <TextBlock Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
+                            VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
                 <CheckBox Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
                             IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>
                 <!--<RadioButton Content="X,Y" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="4,0" VerticalAlignment="Center"
@@ -219,8 +221,13 @@
             </StackPanel>
         </Border>
 
-        <!-- Data: paste or preview (top 50 lines) -->
-        <Grid Grid.Row="5">
+        <Border Grid.Row="5" Style="{StaticResource cardBorder}">
+            <CheckBox Content="{Binding [dialog_csvTsvOpen_useFirstLineAsHeader], Source={StaticResource Localization}}"
+                        IsChecked="{Binding UseFirstLineAsHeader, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>
+        </Border>
+
+            <!-- Data: paste or preview (top 50 lines) -->
+        <Grid Grid.Row="6">
             <TextBlock                
                      Text="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"
                      IsHitTestVisible="False"
@@ -240,7 +247,7 @@
         </Grid>
 
         <!-- Buttons -->
-        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
+        <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
             <Button ToolTip="{Binding [common_cancel], Source={StaticResource Localization}}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding CancelCommand}" Margin="2,2">
                 <iconPacks:PackIconMaterial Kind="CloseThick" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>

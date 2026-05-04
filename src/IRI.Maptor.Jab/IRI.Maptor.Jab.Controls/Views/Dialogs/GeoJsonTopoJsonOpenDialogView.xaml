@@ -172,6 +172,7 @@
         <!-- Options: X,Y vs Y,X -->
         <Border Grid.Row="3" Style="{StaticResource cardBorder}">
             <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconPhosphorIcons Kind="ListNumbers" Style="{StaticResource securityIconPhosphor}"/>
                 <TextBlock Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
                            VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
                 <CheckBox Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
