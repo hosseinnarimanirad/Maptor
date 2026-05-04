@@ -30,6 +30,12 @@
             </Style>
             <Style TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
                 <Setter Property="Margin" Value="4,0"/>
+                <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style>
+            <Style TargetType="mahApp:ToggleSwitch" BasedOn="{StaticResource MahApps.Styles.ToggleSwitch}">
+                <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -87,7 +93,9 @@
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconPhosphorIcons Kind="VectorTwo" Style="{StaticResource securityIconPhosphor}"/>
                 <mahApp:ToggleSwitch Margin="4" Grid.Column="1"
-                                     Content="{Binding [dialog_export_IsProjectionEnabled], Source={StaticResource Localization}}"
+                                     Content="{Binding [dialog_export_enabledProjection], Source={StaticResource Localization}}"
+                                     OnContent="{Binding [dialog_export_enabledProjection], Source={StaticResource Localization}}"
+                                     OffContent="{Binding [dialog_export_disabledProjection], Source={StaticResource Localization}}"
                                      IsOn="{Binding IsProjectionEnabled}"/>
               
             </Grid>
@@ -111,8 +119,14 @@
             </Grid>
         </Border>
             <!-- UTM Zone (visible when UTM selected) -->
-        <Border Grid.Row="4" Style="{StaticResource cardBorder}"
-              Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
+        <Border Grid.Row="4" Style="{StaticResource cardBorder}">
+            <!--Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">-->
+            <Border.Visibility>
+                <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
+                    <Binding Path="IsProjectionEnabled" ElementName="root"/>
+                    <Binding Path="IsUtmSelected" ElementName="root"/>
+                </MultiBinding>
+            </Border.Visibility>
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -126,6 +140,7 @@
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="8,2,4,0">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
+                            <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
                             <!-- Default (northern hemisphere) -->
                             <Setter Property="Text" 
                                     Value="{Binding [srs_northernHemisphere], Source={StaticResource Localization}}"/>

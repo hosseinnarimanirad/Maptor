@@ -51,7 +51,7 @@
         <Border Grid.Row="0" Style="{StaticResource cardBorder}" BorderThickness="0" Background="{DynamicResource MahApps.Brushes.Accent4}">
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
-                <TextBlock Grid.Column="0" Text="Layer name:"/>
+                <TextBlock Grid.Column="0" Text="{Binding [layerSettings_general_layerName], Source={StaticResource Localization}}"/>
                 <TextBox Grid.Column="1" BorderThickness="0" MinWidth="150"
                          Text="{Binding LayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          IsEnabled="{Binding LayerNameCanBeChanged}"
@@ -63,7 +63,7 @@
         <Border Grid.Row="1" Style="{StaticResource cardBorder}" >
             <DockPanel LastChildFill="True">
                 <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
-                <TextBlock DockPanel.Dock="Left" Text="Source type:"/>
+                <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_sourceType], Source={StaticResource Localization}}"/>
                 <Button DockPanel.Dock="Right"
                         Style="{StaticResource IRI.Maptor.Styles.Button}"
                         Command="{Binding ReloadDataCommand}">
@@ -82,7 +82,7 @@
             <DockPanel LastChildFill="False">
                 <iconPacks:PackIconPhosphorIcons Kind="ShapesLight" Style="{StaticResource securityIconPhosphor}"
                                   ToolTip="{Binding [dialog_csvTsvOpen_geometryType],Source={StaticResource Localization}}"/>
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Feature type:"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding [layerSettings_general_featureType], Source={StaticResource Localization}}"/>
                 <!--<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SpatialModelMode, Mode=OneWay}"/>-->
                 <!--<iconPacks:PackIconPhosphorIcons Kind="ShapesLight" Grid.Column="3" VerticalAlignment="Center"
                                                     ToolTip="{Binding [dialog_csvTsvOpen_geometryType],Source={StaticResource Localization}}"/>-->
@@ -149,7 +149,7 @@
         <Border Grid.Row="3" Style="{StaticResource cardBorder}">
             <DockPanel >
                 <iconPacks:PackIconMaterial Kind="SquareOpacity" Style="{StaticResource securityIconMaterial}" />
-                <TextBlock DockPanel.Dock="Left" Text="Opacity:"/>
+                <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_opacity], Source={StaticResource Localization}}"/>
                 <TextBlock DockPanel.Dock="Right" Text="{Binding Opacity, StringFormat=P0}"/>
                 <Slider Margin="10,4" Cursor="Hand"
                         Minimum="0" Maximum="1" SmallChange="0.01" LargeChange="0.01" Value="{Binding Opacity}"

@@ -1565,7 +1565,7 @@
   <data name="dialog_export_exportModeTItle" xml:space="preserve">
     <value>Features to export:</value>
   </data>
-  <data name="dialog_export_IsProjectionEnabled" xml:space="preserve">
+  <data name="dialog_export_enabledProjection" xml:space="preserve">
     <value>Project to</value>
   </data>
   <data name="dialog_export_outputFileFormat" xml:space="preserve">
@@ -1576,5 +1576,53 @@
   </data>
   <data name="message_info_title" xml:space="preserve">
     <value>Message</value>
+  </data>
+  <data name="dialog_export_disabledProjection" xml:space="preserve">
+    <value>User Default SRS</value>
+  </data>
+  <data name="dialog_layerSettings_title" xml:space="preserve">
+    <value>Layer Settings</value>
+  </data>
+  <data name="layerSettings_analysis_title" xml:space="preserve">
+    <value>Analysis</value>
+  </data>
+  <data name="layerSettings_export_title" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="layerSettings_fields_title" xml:space="preserve">
+    <value>Fields</value>
+  </data>
+  <data name="layerSettings_filters_title" xml:space="preserve">
+    <value>Filters</value>
+  </data>
+  <data name="layerSettings_general_featureType" xml:space="preserve">
+    <value>Feature Type:</value>
+  </data>
+  <data name="layerSettings_general_layerName" xml:space="preserve">
+    <value>Layer Name:</value>
+  </data>
+  <data name="layerSettings_general_opacity" xml:space="preserve">
+    <value>Opacity:</value>
+  </data>
+  <data name="layerSettings_general_sourceType" xml:space="preserve">
+    <value>Source Type:</value>
+  </data>
+  <data name="layerSettings_general_title" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="layerSettings_labeling" xml:space="preserve">
+    <value>Labeling</value>
+  </data>
+  <data name="layerSettings_security_title" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="layerSettings_statistics_title" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
+  <data name="layerSettings_symbology_title" xml:space="preserve">
+    <value>Symbology</value>
+  </data>
+  <data name="layerSettings_trackChanges_title" xml:space="preserve">
+    <value>Track Changes</value>
   </data>
 </root>

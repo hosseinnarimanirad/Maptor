@@ -1060,6 +1060,24 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Default SRS.
+        /// </summary>
+        public static string dialog_export_disabledProjection {
+            get {
+                return ResourceManager.GetString("dialog_export_disabledProjection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project to.
+        /// </summary>
+        public static string dialog_export_enabledProjection {
+            get {
+                return ResourceManager.GetString("dialog_export_enabledProjection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All.
         /// </summary>
         public static string dialog_export_exportModeAll {
@@ -1092,15 +1110,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string dialog_export_exportModeTItle {
             get {
                 return ResourceManager.GetString("dialog_export_exportModeTItle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Project to.
-        /// </summary>
-        public static string dialog_export_IsProjectionEnabled {
-            get {
-                return ResourceManager.GetString("dialog_export_IsProjectionEnabled", resourceCulture);
             }
         }
         
@@ -1353,6 +1362,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string dialog_goto_zoomTo {
             get {
                 return ResourceManager.GetString("dialog_goto_zoomTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Layer Settings.
+        /// </summary>
+        public static string dialog_layerSettings_title {
+            get {
+                return ResourceManager.GetString("dialog_layerSettings_title", resourceCulture);
             }
         }
         
@@ -2326,6 +2344,132 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string layer_leveling3_title {
             get {
                 return ResourceManager.GetString("layer_leveling3_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Analysis.
+        /// </summary>
+        public static string layerSettings_analysis_title {
+            get {
+                return ResourceManager.GetString("layerSettings_analysis_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export.
+        /// </summary>
+        public static string layerSettings_export_title {
+            get {
+                return ResourceManager.GetString("layerSettings_export_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fields.
+        /// </summary>
+        public static string layerSettings_fields_title {
+            get {
+                return ResourceManager.GetString("layerSettings_fields_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filters.
+        /// </summary>
+        public static string layerSettings_filters_title {
+            get {
+                return ResourceManager.GetString("layerSettings_filters_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feature Type:.
+        /// </summary>
+        public static string layerSettings_general_featureType {
+            get {
+                return ResourceManager.GetString("layerSettings_general_featureType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Layer Name:.
+        /// </summary>
+        public static string layerSettings_general_layerName {
+            get {
+                return ResourceManager.GetString("layerSettings_general_layerName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opacity:.
+        /// </summary>
+        public static string layerSettings_general_opacity {
+            get {
+                return ResourceManager.GetString("layerSettings_general_opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source Type:.
+        /// </summary>
+        public static string layerSettings_general_sourceType {
+            get {
+                return ResourceManager.GetString("layerSettings_general_sourceType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        public static string layerSettings_general_title {
+            get {
+                return ResourceManager.GetString("layerSettings_general_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Labeling.
+        /// </summary>
+        public static string layerSettings_labeling {
+            get {
+                return ResourceManager.GetString("layerSettings_labeling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Security.
+        /// </summary>
+        public static string layerSettings_security_title {
+            get {
+                return ResourceManager.GetString("layerSettings_security_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Statistics.
+        /// </summary>
+        public static string layerSettings_statistics_title {
+            get {
+                return ResourceManager.GetString("layerSettings_statistics_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Symbology.
+        /// </summary>
+        public static string layerSettings_symbology_title {
+            get {
+                return ResourceManager.GetString("layerSettings_symbology_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Track Changes.
+        /// </summary>
+        public static string layerSettings_trackChanges_title {
+            get {
+                return ResourceManager.GetString("layerSettings_trackChanges_title", resourceCulture);
             }
         }
         

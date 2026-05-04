@@ -19,7 +19,7 @@
         ShowCloseButton="True"
         ShowMinButton="False"
         ShowTitleBar="True"
-        Title="LayerSettingsDialogView" Height="450" Width="600">
+        Title="{Binding [dialog_layerSettings_title], Source={StaticResource Localization}}" Height="450" Width="600">
     <mahApp:MetroWindow.TitleTemplate>
         <DataTemplate>
             <TextBlock Text="{TemplateBinding Content}"
@@ -51,20 +51,20 @@
     <Grid>
         <TabControl Margin="1" Style="{StaticResource MahApps.Styles.TabControl}">
             <TabControl.Items>
-                <TabItem Header="General">
+                <TabItem Header="{Binding [layerSettings_general_title], Source={StaticResource Localization}}">
                     <views:LayerSettings_GeneralView DataContext="{Binding Layer}"/>
                 </TabItem>
-                <TabItem Header="Export">
+                <TabItem Header="{Binding [layerSettings_export_title], Source={StaticResource Localization}}">
                     <views:LayerSettings_ExportView DataContext="{Binding Export}"/>
                 </TabItem>
-                <TabItem Header="Symbology" IsEnabled="False" />
-                <TabItem Header="Labeling" IsEnabled="False" Visibility="Collapsed" />
-                <TabItem Header="Fields" IsEnabled="False" Visibility="Collapsed"/>
-                <TabItem Header="Filters" IsEnabled="False" Visibility="Collapsed" />
-                <TabItem Header="Track changes" IsEnabled="False"/>
-                <TabItem Header="Statistics" IsEnabled="False" Visibility="Collapsed" />
-                <TabItem Header="Analysis" IsEnabled="False" Visibility="Collapsed" />
-                <TabItem Header="Security" IsEnabled="False" Visibility="Collapsed" />
+                <TabItem IsEnabled="False" Header="{Binding [layerSettings_symbology_title], Source={StaticResource Localization}}"/>
+                <TabItem IsEnabled="False" Header="{Binding [layerSettings_trackChanges_title], Source={StaticResource Localization}}"/>
+                <TabItem IsEnabled="False" Visibility="Collapsed" Header="{Binding [layerSettings_labeling], Source={StaticResource Localization}}"/>
+                <TabItem IsEnabled="False" Visibility="Collapsed" Header="{Binding [layerSettings_fields_title], Source={StaticResource Localization}}"/>
+                <TabItem IsEnabled="False" Visibility="Collapsed" Header="{Binding [layerSettings_filters_title], Source={StaticResource Localization}}"/>
+                <TabItem IsEnabled="False" Visibility="Collapsed" Header="{Binding [layerSettings_statistics_title], Source={StaticResource Localization}}"/>
+                <TabItem IsEnabled="False" Visibility="Collapsed" Header="{Binding [layerSettings_analysis_title], Source={StaticResource Localization}}"/>
+                <TabItem IsEnabled="False" Visibility="Collapsed" Header="{Binding [layerSettings_security_title], Source={StaticResource Localization}}"/>
 
 
             </TabControl.Items>
