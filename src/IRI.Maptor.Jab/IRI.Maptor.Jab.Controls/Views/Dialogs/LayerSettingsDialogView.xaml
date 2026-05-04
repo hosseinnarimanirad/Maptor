@@ -36,20 +36,22 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-            <Style TargetType="{x:Type TabItem}">
-                <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="15"/>
+            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}">
+                <Setter Property="mahApp:HeaderedControlHelper.HeaderFontFamily" Value="{StaticResource iranSans}"/>
             </Style>
             <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MahApps.Styles.Slider}"/>
             <Style TargetType="TextBlock" >
                 <Setter Property="Margin" Value="4"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
             </Style>
+             
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
     <Grid>
-        <TabControl Margin="1">
+        <TabControl Margin="1" Style="{StaticResource MahApps.Styles.TabControl}">
             <TabControl.Items>
-                <TabItem Header="General" >
+                <TabItem Header="General">
                     <views:LayerSettings_GeneralView DataContext="{Binding Layer}"/>
                 </TabItem>
                 <TabItem Header="Export">

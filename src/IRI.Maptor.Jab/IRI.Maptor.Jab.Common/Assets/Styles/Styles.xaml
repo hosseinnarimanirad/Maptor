@@ -6,6 +6,8 @@
         <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Textbox.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.TabItem.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ScrollBar.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

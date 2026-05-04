@@ -163,12 +163,7 @@
             </DataGrid.RowStyle>
         </DataGrid>
         <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" LastChildFill="False"
-            Visibility="{Binding ElementName=root, Path=IsMouseOver, Converter={StaticResource boolToVisibilityConverter}}">
-              
-            <!--<telerik:RadDataPager DisplayMode="FirstLastPreviousNextNumeric,Text" IsTotalItemCountFixed="True"
-                              Source="{Binding ElementName=grid, Path=Items}" PageSize="50" PageIndex="0" 
-                              telerik:StyleManager.Theme="Office2016" BorderThickness="0" DockPanel.Dock="Right">
-            </telerik:RadDataPager>-->
+            Visibility="{Binding ElementName=root, Path=IsMouseOver, Converter={StaticResource boolToVisibilityConverter}}"> 
             <TextBlock MinWidth="50"
                        VerticalAlignment="Center" FontFamily="{StaticResource iranSans}"
                        DockPanel.Dock="Left" Margin="4">

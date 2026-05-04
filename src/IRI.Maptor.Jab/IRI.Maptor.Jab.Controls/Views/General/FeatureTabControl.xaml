@@ -9,8 +9,8 @@
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"    
              x:Name="root">
     <UserControl.Resources>
-        <Style TargetType="{x:Type TabItem}">
-            <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="15"></Setter>
+        <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}">
+            <!--<Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12"/>-->
         </Style>
         <DataTemplate x:Key="FeatureTableTemplate">
             <maptor:FeatureTable 

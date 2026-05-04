@@ -49,10 +49,11 @@
             <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             <Style TargetType="{x:Type iconPacks:PackIconPhosphorIcons}" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconPhosphorIcons.CircleLightButtonContent}"/>
             <Style TargetType="{x:Type Path}" BasedOn="{StaticResource circleButtonPath}"/>
- 
-            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
-                <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12" />
+
+            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}">
+                <Setter Property="mahApp:HeaderedControlHelper.HeaderFontFamily" Value="{StaticResource iranSans}"/>
             </Style>
+
         </ResourceDictionary>
     </UserControl.Resources>
     <Border CornerRadius="15" BorderThickness="3" MinWidth="420" VerticalAlignment="Top" HorizontalAlignment="Center" 
@@ -244,7 +245,8 @@
 
                     <!--current point-->
                     <TabItem Header="{Binding [mapPanel_header_currentPoint], Source={StaticResource Localization}}" Cursor="Hand"
-                                Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">
+                                Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}"
+                             >
                         <StackPanel Orientation="Horizontal" DataContext="{Binding CurrentEditingLayer}" FlowDirection="LeftToRight" HorizontalAlignment="Center">
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" Margin="2" 
                                         ToolTip="{Binding [mapPanel_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}"
@@ -304,7 +306,8 @@
                     </TabItem>
 
                     <!--spatial reference system-->
-                    <TabItem Header="{Binding [mapPanel_header_srs], Source={StaticResource Localization}}" Cursor="Hand">
+                    <TabItem Header="{Binding [mapPanel_header_srs], Source={StaticResource Localization}}" Cursor="Hand"
+                             >
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <RadioButton GroupName="A" ToolTip="{Binding [srs_geodeticWgs84Title], Source={StaticResource Localization}}" Foreground="White" Margin="4,2" 
                                      IsChecked="{Binding MapPanel.IsGeodeticWgs84EditingMode, Mode=TwoWay}" Width="Auto" Height="Auto"  
