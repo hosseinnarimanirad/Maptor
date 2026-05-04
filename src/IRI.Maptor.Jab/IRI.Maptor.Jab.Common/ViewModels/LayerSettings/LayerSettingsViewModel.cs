@@ -29,6 +29,7 @@ public class LayerSettingsViewModel : Notifier
             RaisePropertyChanged();
         }
     }
+     
 
     public LayerSettingsViewModel(ILayer layer, LayerSettings_VectorExportViewModel exportViewModel)
     {

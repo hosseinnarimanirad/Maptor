@@ -1571,4 +1571,10 @@
   <data name="dialog_export_outputFileFormat" xml:space="preserve">
     <value>Output format:</value>
   </data>
+  <data name="message_info_doneSuccessfully" xml:space="preserve">
+    <value>Operation Done Successfully</value>
+  </data>
+  <data name="message_info_title" xml:space="preserve">
+    <value>Message</value>
+  </data>
 </root>

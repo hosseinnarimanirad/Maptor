@@ -5,14 +5,38 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
                 xmlns:views="clr-namespace:IRI.Maptor.Jab.Controls.Views"
+                xmlns:maptorJab="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common"
                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                 xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common" >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+    <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>
+    <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Textbox.xaml"/>-->
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/SecurityInputStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="cardBorder" TargetType="Border">
+                <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="Padding" Value="4,0"/>
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="CornerRadius" Value="5"/>
+                <Setter Property="Height" Value="39"/>
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
+                <Setter Property="Margin" Value="2"/>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid Margin="2">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -24,27 +48,114 @@
         </Grid.RowDefinitions>
 
         <!--layer name-->
-        <TextBlock Grid.Column="0" Text="Layer name:"/>
-        <TextBox Grid.Column="1" Text="{Binding LayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Border Grid.Row="0" Style="{StaticResource cardBorder}" BorderThickness="0" Background="{DynamicResource MahApps.Brushes.Accent4}">
+            <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
+                <TextBlock Grid.Column="0" Text="Layer name:"/>
+                <TextBox Grid.Column="1" BorderThickness="0" MinWidth="150"
+                         Text="{Binding LayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding LayerNameCanBeChanged}"
+                         Style="{StaticResource IRI.Maptor.Styles.TextBox.Input}"/>
+            </StackPanel>
+        </Border>
 
         <!--source-->
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Source type:"/>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DataSource.DataSourceKind}"/>
-        <Button Grid.Row="1" Grid.Column="2" Command="{Binding ReloadDataCommand}">
-            <StackPanel Orientation="Horizontal">
-                <iconPacks:PackIconMaterial Kind="Refresh"/>
-                <TextBlock Text="{Binding [legendItem_reloadData], Source={StaticResource Localization}}"/>
-            </StackPanel>
-        </Button>
+        <Border Grid.Row="1" Style="{StaticResource cardBorder}" >
+            <DockPanel LastChildFill="True">
+                <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
+                <TextBlock DockPanel.Dock="Left" Text="Source type:"/>
+                <Button DockPanel.Dock="Right"
+                        Style="{StaticResource IRI.Maptor.Styles.Button}"
+                        Command="{Binding ReloadDataCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="Refresh" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <TextBlock Text="{Binding [legendItem_reloadData], Source={StaticResource Localization}}"/>
+                    </StackPanel>
+                </Button>
+                <TextBlock Text="{Binding DataSource.DataSourceKind}"/>
+            </DockPanel>
+        </Border>
+
 
         <!--feature type-->
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Feature type:"/>
-        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SpatialModelMode, Mode=OneWay}"/>
+        <Border Grid.Row="2" Style="{StaticResource cardBorder}">
+            <DockPanel LastChildFill="False">
+                <iconPacks:PackIconPhosphorIcons Kind="ShapesLight" Style="{StaticResource securityIconPhosphor}"
+                                  ToolTip="{Binding [dialog_csvTsvOpen_geometryType],Source={StaticResource Localization}}"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Feature type:"/>
+                <!--<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SpatialModelMode, Mode=OneWay}"/>-->
+                <!--<iconPacks:PackIconPhosphorIcons Kind="ShapesLight" Grid.Column="3" VerticalAlignment="Center"
+                                                    ToolTip="{Binding [dialog_csvTsvOpen_geometryType],Source={StaticResource Localization}}"/>-->
+                <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Right">
+                    <StackPanel.Resources>
+                        <Style TargetType="Ellipse" x:Key="ModeHighlightEllipse">
+                            <Setter Property="Width" Value="32"/>
+                            <Setter Property="Height" Value="32"/>
+                            <Setter Property="Margin" Value="2"/>
+                            <Setter Property="StrokeThickness" Value="1"/>
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect BlurRadius="2" ShadowDepth="1" Opacity="0.25" Color="Black"/>
+                                </Setter.Value>
+                            </Setter>
+                            <!-- Default fill (deselected) -->
+                            <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.SystemControlDisabledBaseLow}"/>
+                            <Setter Property="Stroke" Value="Gray"/>
+
+                            <Style.Triggers>
+                                <!-- Trigger that activates when current mode == ellipse's Tag -->
+                                <DataTrigger Value="True">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource enumMatchConverter}">
+                                            <Binding Path="SpatialModelMode"/>
+                                            <Binding Path="Tag" RelativeSource="{RelativeSource Self}"/>
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
+                                    <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+                                    <Setter Property="Stroke" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Resources>
+                    <!-- Polygon -->
+                    <Grid>
+                        <Ellipse Style="{StaticResource ModeHighlightEllipse}"
+                                    Tag="{x:Static maptorJab:SpatialModelMode.Polygon}"/>
+                        <iconPacks:PackIconPhosphorIcons Kind="Polygon" Foreground="White"
+                                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- Polyline -->
+                    <Grid>
+                        <Ellipse Style="{StaticResource ModeHighlightEllipse}"
+                                    Tag="{x:Static maptorJab:SpatialModelMode.Polyline}"/>
+                        <iconPacks:PackIconPhosphorIcons Kind="LineSegments" Foreground="White"
+                                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- Point -->
+                    <Grid>
+                        <Ellipse Style="{StaticResource ModeHighlightEllipse}"
+                                    Tag="{x:Static maptorJab:SpatialModelMode.Point}"/>
+                        <iconPacks:PackIconPhosphorIcons Kind="DotOutlineThin" Foreground="White"
+                                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
 
         <!--opacity-->
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Opacity:"/>
-        <Slider Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="1" SmallChange="0.01" LargeChange="0.01" Value="{Binding Opacity}"/>
-        <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Opacity, StringFormat=P0}"/>
+        <Border Grid.Row="3" Style="{StaticResource cardBorder}">
+            <DockPanel >
+                <iconPacks:PackIconMaterial Kind="SquareOpacity" Style="{StaticResource securityIconMaterial}" />
+                <TextBlock DockPanel.Dock="Left" Text="Opacity:"/>
+                <TextBlock DockPanel.Dock="Right" Text="{Binding Opacity, StringFormat=P0}"/>
+                <Slider Margin="10,4" Cursor="Hand"
+                        Minimum="0" Maximum="1" SmallChange="0.01" LargeChange="0.01" Value="{Binding Opacity}"
+                        Style="{StaticResource MahApps.Styles.Slider}"/>
+            </DockPanel>
+        </Border>
 
         <!--visible range -->
         <!--<TextBlock Grid.Row="3" Grid.Column="0" Text="Visible scale range:"/>

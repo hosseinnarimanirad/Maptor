@@ -25,6 +25,7 @@
     <converters:DoubleToReducedDoubleByPercentConverter x:Key="doubleToReducedDoubleByPercentConverter"/>
 
     <converters:EllipsoidNameConverter x:Key="ellipsoidNameConverter"/>
+    <converters:EnumMatchConverter x:Key="enumMatchConverter"/>
     <converters:EnumToBoolConverter x:Key="enumToBoolConverter"/>
     <converters:EnumToDescriptionConverter x:Key="enumToDescriptionConverter"/>
 

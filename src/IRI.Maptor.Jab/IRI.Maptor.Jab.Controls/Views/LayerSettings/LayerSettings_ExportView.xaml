@@ -48,19 +48,21 @@
         <!--export format type-->
         <Border Grid.Row="0" Style="{StaticResource cardBorder}">
             <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
                 <TextBlock Text="{Binding [dialog_export_outputFileFormat], Source={StaticResource Localization}}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
                 <RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.Shapefile}}" Content="SHP" />
                 <RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.Dxf}}" Content="DXF"/>
                 <RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.Kml}}" Content="KML"/>
                 <RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.Kmz}}" Content="KMZ"/>
                 <RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.GeoJson}}" Content="GeoJson"/>
-                <RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.TopoJson}}" Content="TopoJson"/>
+                <!--<RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.TopoJson}}" Content="TopoJson"/>-->
             </StackPanel>
         </Border>
 
         <!--what to export-->
         <Border Grid.Row="1" Style="{StaticResource cardBorder}">
             <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconMaterial Kind="SelectMarker" Style="{StaticResource securityIconMaterial}"/>
                 <TextBlock Text="{Binding [dialog_export_exportModeTItle], Source={StaticResource Localization}}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
                 <RadioButton GroupName="B"
                              IsChecked="{Binding SelectedExportMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorCommon:ExportFeatureMode.All}}"
@@ -80,26 +82,36 @@
                 Visibility="{Binding ShowSrsOptions, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <mahApp:ToggleSwitch Margin="4"
+                <iconPacks:PackIconPhosphorIcons Kind="VectorTwo" Style="{StaticResource securityIconPhosphor}"/>
+                <mahApp:ToggleSwitch Margin="4" Grid.Column="1"
                                      Content="{Binding [dialog_export_IsProjectionEnabled], Source={StaticResource Localization}}"
                                      IsOn="{Binding IsProjectionEnabled}"/>
-                <iconPacks:PackIconPhosphorIcons Grid.Column="1" Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
-                <ComboBox Grid.Column="2" Margin="4" BorderThickness="0" FontSize="15" MinHeight="35"
-                          VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
-                          FlowDirection="LeftToRight"
-                          IsEnabled="{Binding IsProjectionEnabled}"
-                          ItemsSource="{Binding AvailableSrsOptions}"
-                          DisplayMemberPath="DisplayName"
-                          SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"/>
+              
             </Grid>
         </Border>
 
-        <!-- UTM Zone (visible when UTM selected) -->
         <Border Grid.Row="3" Style="{StaticResource cardBorder}"
+                Visibility="{Binding IsProjectionEnabled, Converter={StaticResource boolToVisibilityConverter}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/> 
+                </Grid.ColumnDefinitions>
+                <iconPacks:PackIconPhosphorIcons Grid.Column="0" Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
+                <ComboBox Grid.Column="1" Margin="4" BorderThickness="0" FontSize="15" MinHeight="35"
+                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
+                            FlowDirection="LeftToRight"
+                            IsEnabled="{Binding IsProjectionEnabled}"
+                            ItemsSource="{Binding AvailableSrsOptions}"
+                            DisplayMemberPath="DisplayName"
+                            SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"/>
+            </Grid>
+        </Border>
+            <!-- UTM Zone (visible when UTM selected) -->
+        <Border Grid.Row="4" Style="{StaticResource cardBorder}"
               Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
@@ -157,9 +169,10 @@
         </Border>
 
         <!-- Options: X,Y vs Y,X -->
-        <Border Grid.Row="4" Style="{StaticResource cardBorder}"
+        <Border Grid.Row="5" Style="{StaticResource cardBorder}"
                 Visibility="{Binding ShowXYOrderOptions, Converter={StaticResource boolToVisibilityConverter}}">
             <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconPhosphorIcons Kind="ListNumbers" Style="{StaticResource securityIconPhosphor}"/>
                 <TextBlock Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
                          VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
                 <CheckBox Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
@@ -172,9 +185,9 @@
         </Border>
 
         <Button Margin="4" Grid.Row="6" HorizontalAlignment="Right" 
-                    ToolTip="{Binding [dialog_common_export], Source={StaticResource Localization}}" 
-                    Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Accent}"
-                    Command="{Binding ExportCommand}">
+                ToolTip="{Binding [dialog_common_export], Source={StaticResource Localization}}" 
+                Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Accent}"
+                Command="{Binding ExportCommand}">
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconMaterial Kind="FileExport" Margin="0,0,8,0" VerticalAlignment="Center" />
                 <TextBlock Text="{Binding [dialog_common_export], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="2,0" />

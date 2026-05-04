@@ -94,13 +94,11 @@
                                     VerticalAlignment="Bottom">
                             <iconPacks:PackIconMaterial Kind="ContentSave"/>
                         </Button>
-                        <TextBox Grid.Column="0" Grid.Row="1" Margin="0"
+                        <TextBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch"
                                      Text="{Binding NewBookmarkTitle, UpdateSourceTrigger=PropertyChanged}"
-                                     mahApp:ControlsHelper.CornerRadius="4"
                                      mahApp:TextBoxHelper.Watermark="{Binding [mapExtent_new_extentTitle], Source={StaticResource Localization}}" 
                                      mahApp:TextBoxHelper.ClearTextButton="True"
-                                     Style="{StaticResource filterTextBox}" HorizontalAlignment="Stretch"
-                                     FontFamily="{StaticResource iranSans}" VerticalAlignment="Center"/>
+                                     Style="{StaticResource IRI.Maptor.Styles.TextBox.Input}"/>
                     </Grid>
                 </Border>
 
@@ -245,7 +243,9 @@
                                              OnContent="{Binding [mapExtent_gotoScale_useGroundScaleForSandardScales], Source={StaticResource Localization}}"
                                              OffContent="{Binding [mapExtent_gotoScale_useWebMercatorScaleForSandardScales], Source={StaticResource Localization}}"/>
                         <Border Grid.Row="2" Grid.Column="0" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
-                            <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ScaleItemsView}" SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"
+                            <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ScaleItemsView}"
+                                      SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"
+                                      mahApp:ControlsHelper.CornerRadius="4"
                                             DisplayMemberPath="DisplayLabel" Margin="4" MinHeight="28"
                                             BorderThickness="0"
                                             VerticalContentAlignment="Center"

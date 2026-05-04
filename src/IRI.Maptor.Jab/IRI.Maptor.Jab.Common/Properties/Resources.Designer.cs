@@ -898,6 +898,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to X/Y order.
+        /// </summary>
+        public static string dialog_common_xyOrder {
+            get {
+                return ResourceManager.GetString("dialog_common_xyOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CSV.
         /// </summary>
         public static string dialog_csvTsvOpen_formatCsv {
@@ -1110,15 +1119,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string dialog_geoJsonOpen_title {
             get {
                 return ResourceManager.GetString("dialog_geoJsonOpen_title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to X/Y order.
-        /// </summary>
-        public static string dialog_common_xyOrder {
-            get {
-                return ResourceManager.GetString("dialog_common_xyOrder", resourceCulture);
             }
         }
         
@@ -3010,6 +3010,24 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string message_error_userEmailAlreadyVerified {
             get {
                 return ResourceManager.GetString("message_error_userEmailAlreadyVerified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operation Done Successfully.
+        /// </summary>
+        public static string message_info_doneSuccessfully {
+            get {
+                return ResourceManager.GetString("message_info_doneSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message.
+        /// </summary>
+        public static string message_info_title {
+            get {
+                return ResourceManager.GetString("message_info_title", resourceCulture);
             }
         }
         

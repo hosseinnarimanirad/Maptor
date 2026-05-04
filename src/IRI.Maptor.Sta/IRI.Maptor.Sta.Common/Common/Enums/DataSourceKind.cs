@@ -10,50 +10,50 @@ namespace IRI.Maptor.Sta.Common.Enums;
 public enum DataSourceKind
 {
     [Description("Shp"), DataSourceKindInfo(Category = Vector, FileFilter = "ESRI Shapefile|*.shp")]
-    Shapefile,
+    Shapefile = 1,
 
     [Description("Kmz"), DataSourceKindInfo(Category = Vector, FileFilter = "Compressed KML (KMZ)|*.kmz")]
-    Kmz,
+    Kmz = 2,
 
     [Description("Kml"), DataSourceKindInfo(Category = Vector, FileFilter = "Keyhole Markup Language (KML)|*.kml")]
-    Kml,
+    Kml = 3,
 
     [Description("Gpx"), DataSourceKindInfo(Category = Vector, FileFilter = "GPS Exchange Format (GPX)|*.gpx")]
-    Gpx,
+    Gpx = 4,
 
     [Description("Dxf"), DataSourceKindInfo(Category = Vector, FileFilter = "Drawing Exchange Format (DXF)|*.dxf")]
-    Dxf,
+    Dxf = 5,
 
     [Description("REST"), DataSourceKindInfo(Category = Service, FileFilter = "")]
-    WebApi,
+    WebApi = 6,
 
     [Description("gRPC"), DataSourceKindInfo(Category = Service, FileFilter = "")]
-    GRPC,
+    GRPC = 7,
 
     [Description("GeoJson"), DataSourceKindInfo(Category = Vector, FileFilter = "Geographic JSON (GeoJSON)|*.json")]
-    GeoJson,
+    GeoJson = 8,
 
     [Description("TopoJson"), DataSourceKindInfo(Category = Vector, FileFilter = "Topological GeoJSON (TopoJSON)|*.topojson")]
-    TopoJson,
+    TopoJson = 9,
 
     [Description("Csv"), DataSourceKindInfo(Category = Vector, FileFilter = "Comma Separated Values (CSV)|*.csv")]
-    Csv,
+    Csv = 10,
 
     [Description("Tsv"), DataSourceKindInfo(Category = Vector, FileFilter = "Tab Separated Values (TSV)|*.tsv")]
-    Tsv,
+    Tsv = 11,
 
     [Description("Worldfile"), DataSourceKindInfo(Category = Raster, FileFilter = "Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff")]
-    Worldfile,
+    Worldfile = 12,
 
     [Description("GeoTiff"), DataSourceKindInfo(Category = Raster, FileFilter = "Georeferenced TIFF (GeoTIFF)|*.tiff")]
-    GeoTiff,
+    GeoTiff = 13,
 
     [Description("image pyramid"), DataSourceKindInfo(Category = Raster, FileFilter = "Image Pyramid file|*.pyrmd")]
-    ZippedImagePyramid,
+    ZippedImagePyramid = 14,
 
     [Description("Gml"), DataSourceKindInfo(Category = Vector, FileFilter = "Geography Markup Language (GML)|*.gml")]
-    GML,
+    GML = 15,
 
     [Description("..."), DataSourceKindInfo(Category = None, FileFilter = "All files (*.*)|*.*")]
-    Other,
+    Other = 100,
 }

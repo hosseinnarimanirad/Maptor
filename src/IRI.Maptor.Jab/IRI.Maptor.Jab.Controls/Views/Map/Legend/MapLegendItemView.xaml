@@ -232,10 +232,10 @@
                     </Button.Style>
                     <Button.Visibility>
                         <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
+                            <Binding Path="ShowMoreOptions" ElementName="root"/>
                             <Binding Path="IsMouseOver" ElementName="root"/>
                         </MultiBinding>
-                    </Button.Visibility>
-                   
+                    </Button.Visibility>                   
                 </Button>
                 <!--source type color indicator-->
                 <Rectangle DockPanel.Dock="Left" Width="6" Height="18" Margin="1,0,0,0" VerticalAlignment="Stretch"

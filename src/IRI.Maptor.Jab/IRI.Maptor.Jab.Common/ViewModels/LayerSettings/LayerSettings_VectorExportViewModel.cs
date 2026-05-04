@@ -155,10 +155,12 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
 
         SelectedSrsOption = AvailableSrsOptions[0];
 
+        SelectedDataSourceKind = DataSourceKind.Shapefile;
+
         if (initialSrid.HasValue && initialSrid.Value > 0)
             ApplyInitialSrid(initialSrid.Value);
 
-        ExportCommand = new RelayCommand(_ => Export(), _ => CanOpen());
+        ExportCommand = new RelayCommand(_ => Export(), _ => CanExport());
         this.viewModel = viewModel;
         this.layer = layer;
     }
@@ -196,10 +198,13 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
         }
     }
 
-    private bool CanOpen()
+    private bool CanExport()
     {
         if (IsProjectionEnabled)
             return true;
+
+        if (SelectedDataSourceKind < 0)
+            return false;
 
         if (EffectiveSelectedSrid <= 0)
             return false;
@@ -212,7 +217,7 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
 
     private async Task Export()
     {
-        if (!CanOpen())
+        if (!CanExport())
             return;
 
         //this.RequestExport?.Invoke();
@@ -228,7 +233,7 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
 
         var filter = SelectedDataSourceKind.GetFileFilter();
 
-        var fileName = await viewModel.DialogService.ShowSaveFileDialogAsync(filter, layer.LayerName);
+        var fileName = await viewModel.DialogService.ShowSaveFileDialogAsync(filter, null, layer.LayerName);
 
         if (string.IsNullOrWhiteSpace(fileName))
             return;
@@ -254,6 +259,8 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
         var targetFeatureSet = features.Project(targetSrs);
 
         targetFeatureSet.Export(fileName, SelectedDataSourceKind, targetSrs, IsLongitudeFirst);
+
+        await viewModel.DialogService.ShowMessage_DoneSuccessfully();
     }
 
 }

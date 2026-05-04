@@ -99,7 +99,7 @@ public abstract class BaseLayer : Notifier, ILayer
             //SyncStatusFromDataSource();
 
             RaisePropertyChanged(nameof(IsLoaded));
-            RaisePropertyChanged(nameof(IsLoaded));
+            RaisePropertyChanged(nameof(LayerNameCanBeChanged));
         }
     }
 
@@ -144,6 +144,20 @@ public abstract class BaseLayer : Notifier, ILayer
     public virtual bool IsClientFiltered => DataSource?.HasClientFilter ?? false;
 
     public virtual bool HasError => DataSource?.HasError ?? false;
+
+    public virtual bool LayerNameCanBeChanged
+    {
+        get
+        {
+            var dataSourceKind = DataSource?.DataSourceKind;
+
+            if (dataSourceKind is null)
+                return false;
+
+            return dataSourceKind != Sta.Common.Enums.DataSourceKind.WebApi &&
+                dataSourceKind != Sta.Common.Enums.DataSourceKind.GRPC;
+        }
+    }
 
     #region Data source status bindings
 

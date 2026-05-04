@@ -167,7 +167,7 @@ public class DefaultDialogService : IDialogService
     #endregion
 
     #region Open Folder Dialog
-     
+
     public Task<string?> ShowOpenFolderDialogAsync<T>()
     {
         var owner = GetOwnerWindowByType<T>();
@@ -180,7 +180,7 @@ public class DefaultDialogService : IDialogService
     /// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
     /// <returns>A task that represents the asynchronous operation. The result contains the selected file path, or null if cancelled.</returns>
     public Task<string?> ShowOpenFolderDialogAsync(object? ownerWindow = null)
-    { 
+    {
         var tcs = new TaskCompletionSource<string?>();
 
         var owner = ResolveOwnerWindow(ownerWindow);
@@ -254,7 +254,7 @@ public class DefaultDialogService : IDialogService
             Multiselect = false,
             Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_openfile_title)]
         };
-        
+
         string? result = null;
 
         using (ApplyBlurEffect(owner))
@@ -491,7 +491,7 @@ public class DefaultDialogService : IDialogService
     /// <param name="filter">The file filter string (e.g., "Text files (*.txt)|*.txt|All files (*.*)|*.*").</param>
     /// <param name="fileName">The default file name, or null to use an empty string.</param>
     /// <returns>A task that represents the asynchronous operation. The result contains the selected file path, or null if cancelled.</returns>
-    public Task<string?> ShowSaveFileDialogAsync<T>(string filter, string? fileName = null)
+    public Task<string?> ShowSaveFileDialogAsync<T>(string filter, string fileName)
     {
         var owner = GetOwnerWindowByType<T>();
         return ShowSaveFileDialogAsync(filter, owner, fileName);
@@ -617,14 +617,19 @@ public class DefaultDialogService : IDialogService
     }
 
 
-    //public async Task ShowLocalizedMessageAsync(string messageKey, string titleKey, object? ownerWindow = null, string? pathMarkup = null)
-    //{
-    //    var message = LocalizationManager.Instance[messageKey];
+    public async Task ShowLocalizedMessageAsync(string messageKey, string titleKey, object? ownerWindow = null, string? pathMarkup = null)
+    {
+        var message = LocalizationManager.Instance[messageKey];
 
-    //    var title = LocalizationManager.Instance[titleKey];
+        var title = LocalizationManager.Instance[titleKey];
 
-    //    await ShowMessageAsync(message, title, ownerWindow, pathMarkup);
-    //}
+        await ShowMessageAsync(message, title, ownerWindow, pathMarkup);
+    }
+
+    public async Task ShowMessage_DoneSuccessfully(object? ownerWindow = null)
+    {
+        await ShowLocalizedMessageAsync("message_info_doneSuccessfully", "message_info_title", ownerWindow);
+    }
 
     public async Task ShowErrorMessage(DomainException exception, object? ownerWindow = null)
     {

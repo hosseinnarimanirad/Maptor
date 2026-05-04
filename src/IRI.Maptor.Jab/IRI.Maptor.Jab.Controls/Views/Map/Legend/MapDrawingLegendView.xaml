@@ -139,6 +139,8 @@
                 <Style x:Key="circleButtonDarkOverride" TargetType="{x:Type Button}" BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" >
                     <Setter Property="Margin" Value="1"/>
                 </Style>
+
+                <Style TargetType="ScrollBar" BasedOn="{StaticResource  IRI.Maptor.Styles.ScrollBar}"/>
             </ResourceDictionary>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -162,7 +164,11 @@
                         IsEnabled="{Binding CanMoveDrawingItemDown}">
                     <iconPacks:PackIconMaterial Kind="ArrangeSendBackward" />
                 </Button>
-
+                <Button Command="{Binding SaveDrawingItemFileCommand}"
+                          Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
+                          ToolTip="{Binding [cmd_drawingLegend_saveAll], Source={StaticResource Localization}}">
+                    <iconPacks:PackIconMaterial Kind="ContentSaveAll"/>
+                </Button>
 
                 <Expander Style="{StaticResource toggleHorizontalExpander}"
                             IsExpanded="{Binding ElementName=root, Path=SelectedExpanderIndex, Converter={StaticResource indexToBoolConverter}, ConverterParameter=1}">
@@ -176,11 +182,7 @@
                                 ToolTip="{Binding [cmd_drawingLegend_openAll], Source={StaticResource Localization}}">
                             <iconPacks:PackIconMaterial Kind="FileMultiple" />
                         </Button>
-                        <Button Command="{Binding SaveDrawingItemFileCommand}"
-                                Style="{StaticResource circleButtonDarkOverride}"  
-                                ToolTip="{Binding [cmd_drawingLegend_saveAll], Source={StaticResource Localization}}">
-                            <iconPacks:PackIconMaterial Kind="ContentSaveAll"/>
-                        </Button>
+                      
                         <Button Command="{Binding AddGeoJsonToDrawingItemsCommand}"
                                 Style="{StaticResource circleButtonDarkOverride}"                                
                                 ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
@@ -264,7 +266,7 @@
                     <RadioButton Style="{StaticResource {x:Type ToggleButton}}"
                                  DataContext="{Binding }"
                                  IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}">
-                        <maptor:MapLegendItemView ShowReloadData="False"
+                        <maptor:MapLegendItemView ShowReloadData="False" ShowMoreOptions="False"
                                                 Title="{Binding LayerName, Mode=TwoWay}"
                                                 Symbology="{Binding DefaultSymbology}"  
                                                 IsEditable="True" Commands="{Binding Commands}" 

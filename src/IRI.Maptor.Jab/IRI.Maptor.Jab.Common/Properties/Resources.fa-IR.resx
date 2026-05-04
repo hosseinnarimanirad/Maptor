@@ -1530,4 +1530,10 @@
   <data name="dialog_export_outputFileFormat" xml:space="preserve">
     <value>فرمت خروجی:</value>
   </data>
+  <data name="message_info_doneSuccessfully" xml:space="preserve">
+    <value>با موفقیت انجام شد</value>
+  </data>
+  <data name="message_info_title" xml:space="preserve">
+    <value>پیام</value>
+  </data>
 </root>

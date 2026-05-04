@@ -88,7 +88,7 @@
         <Setter Property="MinHeight" Value="32"/>
         <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
     </Style>
-   
+
     <Style x:Key="IRI.Maptor.Styles.Button.Dialogs.Accent" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Dialogs.Accent}">
         <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="6"/>
         <Setter Property="Cursor" Value="Hand"/>
@@ -97,6 +97,17 @@
         <Setter Property="MinHeight" Value="32"/>
         <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
     </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.Button" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
+        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="6"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="MinHeight" Value="32"/>
+        <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
+        <Setter Property="Margin" Value="2"/>
+    </Style>
+
 
     <!--Circle buttons-->
 

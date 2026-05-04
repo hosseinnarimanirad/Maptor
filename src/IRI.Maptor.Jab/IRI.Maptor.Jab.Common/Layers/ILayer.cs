@@ -112,6 +112,7 @@ public interface ILayer
 
     bool HasError { get; }
 
+    bool LayerNameCanBeChanged { get; }
 
     void UpdateAllChildsVisible();
 }

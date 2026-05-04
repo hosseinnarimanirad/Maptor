@@ -143,6 +143,17 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
     public static readonly DependencyProperty ShowReloadDataProperty =
         DependencyProperty.Register(nameof(ShowReloadData), typeof(bool), typeof(MapLegendItemView), new PropertyMetadata(true));
 
+     
+
+    public bool ShowMoreOptions
+    {
+        get { return (bool)GetValue(ShowMoreOptionsProperty); }
+        set { SetValue(ShowMoreOptionsProperty, value); }
+    }
+
+    public static readonly DependencyProperty ShowMoreOptionsProperty =
+        DependencyProperty.Register(nameof(ShowMoreOptions), typeof(bool), typeof(MapLegendItemView), new PropertyMetadata(true));
+
 
 
     #endregion
