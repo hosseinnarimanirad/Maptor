@@ -68,7 +68,7 @@ geometry.WriteToDxfFile(
 // Get DXF string without saving
 string dxfContent = geometry.AsDxf(visualParams);
 ```
-
+ 
 ## Color Support
 
 ### DxfColorInfo Class
@@ -218,6 +218,22 @@ foreach (var (geo, index) in geometries.Select((g, i) => (g, i)))
     var colorInfo = GetColorForIndex(index);
     DxfWriter.WriteToFile(geo, $@"C:\output\geometry_{index}.dxf", colorInfo);
 }
+```
+
+### Export Multiple Geometries
+
+You can write a list of geometries into a single DXF file. All geometries share the same ENTITIES section.
+
+```csharp
+var geometries = new List<Geometry<Point>> { polygon1, line1, point1 };
+
+// Uniform styling for all geometries
+var colorInfo = new DxfColorInfo(strokeColor: RgbColor(0,0,0), fillColor: RgbColor(255,0,0));
+DxfWriter.WriteToFile(geometries, "output.dxf", colorInfo);
+
+// Per‑geometry styling
+DxfWriter.WriteToFile(geometries, "output_per_style.dxf", geom => GetColorForGeometry(geom));
+
 ```
 
 ## Notes

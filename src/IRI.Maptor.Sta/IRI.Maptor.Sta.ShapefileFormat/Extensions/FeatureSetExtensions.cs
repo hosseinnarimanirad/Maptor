@@ -15,6 +15,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Spatial.IO.Dxf;
 
 namespace IRI.Maptor.Extensions;
 
@@ -39,7 +40,8 @@ public static class FeatureSetExtensions
                 break;
 
             case DataSourceKind.Dxf:
-                throw new NotImplementedException("FeatureSetExtensions > Export!");
+                SaveAsDxf(targetFeatureSet, filePath);
+                break;
 
             case DataSourceKind.GeoJson:
                 targetFeatureSet.SaveAsGeoJson(filePath, isLongitudeFirst ?? true);
@@ -66,16 +68,16 @@ public static class FeatureSetExtensions
         }
     }
 
-    public static void SaveAsDxf(this FeatureSet<Point> featureSet, string kmlFileName)
+    public static void SaveAsDxf(this FeatureSet<Point> featureSet, string dxfFileName)
     {
         var srsBase = SridHelper.AsSrsBase(featureSet.Srid);
 
-        var dxfString = featureSet.Features.Select(f => f.TheGeometry.ToDxf()).ToList();
+        var geometries = featureSet.Features.Select(f => f.TheGeometry).ToList();
 
-        if (dxfString is null)
+        if (geometries is null)
             return;
 
-        //KmlWriter.WriteToFile(kmlFeatures, kmlFileName, featureSet.Title);
+        DxfWriter.WriteToFile(geometries, dxfFileName);
     }
 
     public static void SaveAsKml(this FeatureSet<Point> featureSet, string kmlFileName)

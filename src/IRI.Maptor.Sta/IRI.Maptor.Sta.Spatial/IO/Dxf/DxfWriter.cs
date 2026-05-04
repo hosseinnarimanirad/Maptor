@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
@@ -27,14 +27,100 @@ public class DxfWriter
         File.WriteAllText(filePath, dxfContent);
         return filePath;
     }
-    
+
     public static string Write(Geometry<Point> geometry)
-    {
+    { 
         return Write(geometry, null);
+    }
+
+    public static string WriteToFile(IEnumerable<Geometry<Point>> geometries, string filePath, DxfColorInfo? colorInfo = null)
+    {
+        var content = Write(geometries, colorInfo);
+        File.WriteAllText(filePath, content);
+        return filePath;
+    }
+
+    /// <summary>Writes a collection of geometries to a DXF file using per‑geometry color info.</summary>
+    public static string WriteToFile(IEnumerable<Geometry<Point>> geometries, string filePath, Func<Geometry<Point>, DxfColorInfo?> getColorInfo)
+    {
+        var content = Write(geometries, getColorInfo);
+        File.WriteAllText(filePath, content);
+        return filePath;
+    }
+
+    public static string Write(IEnumerable<Geometry<Point>> geometries, DxfColorInfo? colorInfo = null)
+    {
+        if (geometries == null)
+            throw new ArgumentNullException(nameof(geometries));
+
+        ResetHandleCounter();
+        var sb = new StringBuilder();
+        WriteHeader(sb);
+        WriteTables(sb);
+        WriteEntities(sb, geometries, colorInfo);
+        WriteEndOfFile(sb);
+        return sb.ToString();
+    }
+
+    private static void WriteEntities(StringBuilder sb, IEnumerable<Geometry<Point>> geometries, DxfColorInfo? colorInfo)
+    {
+        sb.AppendLine("0");
+        sb.AppendLine("SECTION");
+        sb.AppendLine("2");
+        sb.AppendLine("ENTITIES");
+
+        foreach (var geom in geometries)
+        {
+            if (geom != null)
+                WriteGeometryEntities(sb, geom, colorInfo);
+        }
+
+        sb.AppendLine("0");
+        sb.AppendLine("ENDSEC");
+        sb.AppendLine();
+    }
+
+    private static void WriteEntities(StringBuilder sb, IEnumerable<Geometry<Point>> geometries, Func<Geometry<Point>, DxfColorInfo?> getColorInfo)
+    {
+        sb.AppendLine("0");
+        sb.AppendLine("SECTION");
+        sb.AppendLine("2");
+        sb.AppendLine("ENTITIES");
+
+        foreach (var geom in geometries)
+        {
+            if (geom != null)
+            {
+                var colorInfo = getColorInfo(geom);
+                WriteGeometryEntities(sb, geom, colorInfo);
+            }
+        }
+
+        sb.AppendLine("0");
+        sb.AppendLine("ENDSEC");
+        sb.AppendLine();
+    }
+
+    public static string Write(IEnumerable<Geometry<Point>> geometries, Func<Geometry<Point>, DxfColorInfo?> getColorInfo)
+    {
+        if (geometries == null)
+            throw new ArgumentNullException(nameof(geometries));
+        if (getColorInfo == null)
+            throw new ArgumentNullException(nameof(getColorInfo));
+
+        ResetHandleCounter();
+        var sb = new StringBuilder();
+        WriteHeader(sb);
+        WriteTables(sb);
+        WriteEntities(sb, geometries, getColorInfo);
+        WriteEndOfFile(sb);
+        return sb.ToString();
     }
 
     public static string Write(Geometry<Point> geometry, DxfColorInfo? colorInfo)
     {
+        ResetHandleCounter();  // add this line
+
         var sb = new StringBuilder();
         
         // Write DXF sections
