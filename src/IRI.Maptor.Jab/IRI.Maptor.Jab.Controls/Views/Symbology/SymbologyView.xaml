@@ -1,8 +1,8 @@
-﻿<local:LocalizedMetroWindow x:Class="IRI.Maptor.Jab.Controls.Views.Symbology.SymbologyView"
+﻿<userControl:LocalizedMetroWindow x:Class="IRI.Maptor.Jab.Controls.Views.Symbology.SymbologyView"
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
                     xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
-                    xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls.Views" 
+                    xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common.Views;assembly=IRI.Maptor.Jab.Common" 
                     xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     x:Name="root"
@@ -18,7 +18,7 @@
                     FontFamily="{StaticResource iranSans}"
                     GlowBrush="{DynamicResource MahApps.Brushes.Accent}" 
                     Title="{Binding ElementName=root, Path=Ltxt_dialog_symbology_title}">
-    <local:LocalizedMetroWindow.Resources>
+    <userControl:LocalizedMetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
@@ -28,7 +28,7 @@
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         </ResourceDictionary>
-    </local:LocalizedMetroWindow.Resources>
+    </userControl:LocalizedMetroWindow.Resources>
     <Grid x:Name="mainGrid" FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -72,4 +72,4 @@
             </Button>
         </StackPanel>
     </Grid>
-</local:LocalizedMetroWindow>
+</userControl:LocalizedMetroWindow>

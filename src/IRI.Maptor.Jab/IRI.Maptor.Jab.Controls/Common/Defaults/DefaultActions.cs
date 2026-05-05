@@ -1,8 +1,8 @@
 ﻿using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.ViewModels;
-using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.ViewModels.LayerSettings;
 using IRI.Maptor.Jab.Common.ViewModels.Symbology;
+using IRI.Maptor.Jab.Controls.ViewModels;
 using IRI.Maptor.Sta.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ public static class DefaultActions
         {
             var gotoPresenter = GoToViewModel.Create(mapPresenter);
 
-            var gotoView = new IRI.Maptor.Jab.Controls.Views.GoToMetroWindow(gotoPresenter);
+            var gotoView = new IRI.Maptor.Jab.Common.Views.GoToMetroWindow(gotoPresenter);
 
             //gotoView.DataContext = gotoPresenter;
             gotoView.Owner = ownerWindow;

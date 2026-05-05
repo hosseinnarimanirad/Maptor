@@ -7,7 +7,7 @@
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
              xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:converters="clr-namespace:IRI.Maptor.Jab.Common.Assets.Converters;assembly=IRI.Maptor.Jab.Common"
-             xmlns:views="clr-namespace:IRI.Maptor.Jab.Controls.Views"
+             xmlns:views="clr-namespace:IRI.Maptor.Jab.Common.Views;assembly=IRI.Maptor.Jab.Common"
              FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
              mc:Ignorable="d" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="2">
     <UserControl.Resources>

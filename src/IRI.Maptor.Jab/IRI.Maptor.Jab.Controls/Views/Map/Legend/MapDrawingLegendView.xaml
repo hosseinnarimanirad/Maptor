@@ -1,7 +1,7 @@
 <userControl:NotifiableUserControl x:Class="IRI.Maptor.Jab.Controls.Views.MapDrawingLegendView"
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common" 
+                xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common.Views;assembly=IRI.Maptor.Jab.Common" 
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                 xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"

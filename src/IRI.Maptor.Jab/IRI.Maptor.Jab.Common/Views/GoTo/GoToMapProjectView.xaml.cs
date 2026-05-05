@@ -1,9 +1,6 @@
-﻿using System;
-using System.Windows.Controls;
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Localization;
+﻿using System.Windows.Controls;
 
-namespace IRI.Maptor.Jab.Controls.Views;
+namespace IRI.Maptor.Jab.Common.Views;
 
 /// <summary>
 /// Interaction logic for GoToMapProjectView.xaml

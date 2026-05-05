@@ -1,7 +1,7 @@
 <userControl:NotifiableUserControl x:Class="IRI.Maptor.Jab.Controls.Views.MapLegendView"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
-            xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common" 
+            xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common.Views;assembly=IRI.Maptor.Jab.Common" 
             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
@@ -451,7 +451,7 @@
                                             Background="{Binding Source={x:Static sta:DataSourceKind.EsriJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource topo}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource json}"/>
                                         </StackPanel>
                                     </Border>
                                     <TextBlock Text="{Binding [cmd_legend_addEsriJson], Source={StaticResource Localization}}"

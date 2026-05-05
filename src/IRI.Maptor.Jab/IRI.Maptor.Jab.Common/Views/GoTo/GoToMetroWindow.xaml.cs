@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 
 using MahApps.Metro.Controls;
 using IRI.Maptor.Jab.Common.Localization;
-using IRI.Maptor.Jab.Common.ViewModels;
+using IRI.Maptor.Jab.Controls.ViewModels;
 
-namespace IRI.Maptor.Jab.Controls.Views;
+namespace IRI.Maptor.Jab.Common.Views;
 
 /// <summary>
 /// Interaction logic for GoToMetroWindow.xaml

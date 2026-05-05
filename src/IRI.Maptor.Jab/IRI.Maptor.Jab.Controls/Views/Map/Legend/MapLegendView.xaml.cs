@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Jab.Common.Views;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 

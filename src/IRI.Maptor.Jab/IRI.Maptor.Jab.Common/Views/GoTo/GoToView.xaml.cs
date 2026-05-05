@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using IRI.Maptor.Jab.Common.ViewModels;
+using IRI.Maptor.Jab.Controls.ViewModels;
 
-namespace IRI.Maptor.Jab.Controls.Views;
+namespace IRI.Maptor.Jab.Common.Views;
 
 /// <summary>
 /// Interaction logic for GoToView.xaml

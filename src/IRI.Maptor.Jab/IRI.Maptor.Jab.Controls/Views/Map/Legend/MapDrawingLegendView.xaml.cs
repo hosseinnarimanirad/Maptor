@@ -1,10 +1,6 @@
 ﻿using System.Windows;
-using System.ComponentModel;
-using System.Windows.Controls;
-using System.Runtime.CompilerServices;
-using IRI.Maptor.Jab.Common.Localization;
-using IRI.Maptor.Jab.Common;
-using System;
+
+using IRI.Maptor.Jab.Common.Views;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 

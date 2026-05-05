@@ -1,17 +1,17 @@
-﻿<iriControls:LocalizedMetroWindow x:Class="IRI.Maptor.Jab.Controls.Views.GoToMetroWindow"
+﻿<maptor:LocalizedMetroWindow x:Class="IRI.Maptor.Jab.Common.Views.GoToMetroWindow"
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"              
                     xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
+                    xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Common.Views"
+                    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     x:Name="root" 
                     FlowDirection="{Binding ElementName=mainView, Path=FlowDirection, Mode=OneWay}"
-                    xmlns:iriControls="clr-namespace:IRI.Maptor.Jab.Controls.Views"  
                     WindowStyle="ToolWindow" Width="550" Height="250" ShowIconOnTitleBar="False" ShowInTaskbar="False"
                     Title="{Binding ElementName=root, Path=Ltxt_dialog_goto_title}" ShowMaxRestoreButton="False" ShowMinButton="False"
                     GlowBrush="{DynamicResource MahApps.Brushes.Accent}" >
-    <iriControls:LocalizedMetroWindow.Resources>
+    <maptor:LocalizedMetroWindow.Resources>
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-    </iriControls:LocalizedMetroWindow.Resources>
-    <iriControls:GoToView x:Name="mainView" FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"/>
-</iriControls:LocalizedMetroWindow>
+    </maptor:LocalizedMetroWindow.Resources>
+    <maptor:GoToView x:Name="mainView" FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"/>
+</maptor:LocalizedMetroWindow>

@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 
 using MahApps.Metro.Controls;
 using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Common.Views;
 
 namespace IRI.Maptor.Jab.Controls.Views.Symbology;
 

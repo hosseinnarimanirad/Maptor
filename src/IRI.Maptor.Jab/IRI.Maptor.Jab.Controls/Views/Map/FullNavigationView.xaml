@@ -1,7 +1,7 @@
 ﻿<userControl:NotifiableUserControl x:Class="IRI.Maptor.Jab.Controls.Views.FullNavigationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common" 
+             xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common.Views;assembly=IRI.Maptor.Jab.Common" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IRI.Maptor.Jab.Controls"
              Width="auto" Height="Auto" Opacity=".8">

@@ -4,7 +4,6 @@
 using System;
 using System.Linq;
 using System.Windows;
-using System.Net.Http;
 using System.Threading;
 using System.Diagnostics;
 using System.Windows.Input;
@@ -34,7 +33,6 @@ using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Jab.Common.ViewModels;
-using IRI.Maptor.Jab.Common.Assets.Data;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
@@ -47,9 +45,7 @@ using IRI.Maptor.Jab.Common.Views.Controls;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
-using IRI.Maptor.Jab.Common.Data;
-using IRI.Maptor.Jab.Common.Helpers;
-using System.Windows.Media.Imaging;
+using IRI.Maptor.Jab.Common.Views;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 

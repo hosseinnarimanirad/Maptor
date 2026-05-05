@@ -3,6 +3,7 @@ using System.Windows;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
+using IRI.Maptor.Jab.Common.Views;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 

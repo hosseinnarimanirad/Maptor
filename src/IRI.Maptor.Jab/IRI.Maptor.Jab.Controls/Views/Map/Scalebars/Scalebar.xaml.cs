@@ -1,11 +1,8 @@
-﻿using System.Linq;
-using System.Windows;
-using System.Collections.Generic;
+﻿using System.Windows;
 
-using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Common.Views;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Jab.Common.Helpers;
-using System;
 
 namespace IRI.Maptor.Jab.Controls.Views;
 

@@ -5,7 +5,7 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:model="clr-namespace:IRI.Maptor.Jab.Common.Models.Legend;assembly=IRI.Maptor.Jab.Common" 
              xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common;assembly=IRI.Maptor.Jab.Common"
+             xmlns:userControl="clr-namespace:IRI.Maptor.Jab.Common.Views;assembly=IRI.Maptor.Jab.Common"
              xmlns:enums="clr-namespace:IRI.Maptor.Sta.Common.Enums;assembly=IRI.Maptor.Sta.Common"
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
              FontFamily="{StaticResource iranSans}"
