@@ -37,7 +37,7 @@
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}">
-                <Setter Property="mahApp:HeaderedControlHelper.HeaderFontFamily" Value="{StaticResource iranSans}"/>
+                <Setter Property="mahApp:HeaderedControlHelper.HeaderFontFamily" Value="{StaticResource iranSans}"/> 
             </Style>
             <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MahApps.Styles.Slider}"/>
             <Style TargetType="TextBlock" >
@@ -49,6 +49,7 @@
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
     <Grid>
+        <Rectangle Height="30" VerticalAlignment="Top" Fill="{DynamicResource MahApps.Brushes.Accent3}" />
         <TabControl Margin="1" Style="{StaticResource MahApps.Styles.TabControl}">
             <TabControl.Items>
                 <TabItem Header="{Binding [layerSettings_general_title], Source={StaticResource Localization}}">

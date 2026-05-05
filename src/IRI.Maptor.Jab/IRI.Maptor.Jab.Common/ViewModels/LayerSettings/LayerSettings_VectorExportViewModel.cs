@@ -160,7 +160,7 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
         if (initialSrid.HasValue && initialSrid.Value > 0)
             ApplyInitialSrid(initialSrid.Value);
 
-        ExportCommand = new RelayCommand(_ => Export(), _ => CanExport());
+        ExportCommand = new RelayCommand(async _ => await Export(), _ => CanExport());
         this.viewModel = viewModel;
         this.layer = layer;
     }

@@ -61,6 +61,7 @@
                 <RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.Kml}}" Content="KML"/>
                 <RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.Kmz}}" Content="KMZ"/>
                 <RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.GeoJson}}" Content="GeoJson"/>
+                <RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.EsriJson}}" Content="EsriJson"/>
                 <!--<RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.TopoJson}}" Content="TopoJson"/>-->
             </StackPanel>
         </Border>
