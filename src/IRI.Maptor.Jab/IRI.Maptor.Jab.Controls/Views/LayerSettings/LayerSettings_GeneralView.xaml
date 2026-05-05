@@ -150,9 +150,10 @@
             <DockPanel >
                 <iconPacks:PackIconMaterial Kind="SquareOpacity" Style="{StaticResource securityIconMaterial}" />
                 <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_opacity], Source={StaticResource Localization}}"/>
-                <TextBlock DockPanel.Dock="Right" Text="{Binding Opacity, StringFormat=P0}"/>
+                <TextBlock DockPanel.Dock="Right" Text="{Binding Opacity, StringFormat=P0}" Width="40"/>
                 <Slider Margin="10,4" Cursor="Hand"
                         Minimum="0" Maximum="1" SmallChange="0.01" LargeChange="0.01" Value="{Binding Opacity}"
+                        TickPlacement="Both" TickFrequency="0.05"  
                         Style="{StaticResource MahApps.Styles.Slider}"/>
             </DockPanel>
         </Border>

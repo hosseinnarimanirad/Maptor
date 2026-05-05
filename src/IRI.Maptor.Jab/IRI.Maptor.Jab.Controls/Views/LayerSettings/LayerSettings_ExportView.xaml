@@ -93,7 +93,6 @@
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconPhosphorIcons Kind="VectorTwo" Style="{StaticResource securityIconPhosphor}"/>
                 <mahApp:ToggleSwitch Margin="4" Grid.Column="1"
-                                     Content="{Binding [dialog_export_enabledProjection], Source={StaticResource Localization}}"
                                      OnContent="{Binding [dialog_export_enabledProjection], Source={StaticResource Localization}}"
                                      OffContent="{Binding [dialog_export_disabledProjection], Source={StaticResource Localization}}"
                                      IsOn="{Binding IsProjectionEnabled}"/>
@@ -123,8 +122,8 @@
             <!--Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">-->
             <Border.Visibility>
                 <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
-                    <Binding Path="IsProjectionEnabled" ElementName="root"/>
-                    <Binding Path="IsUtmSelected" ElementName="root"/>
+                    <Binding Path="IsProjectionEnabled"/>
+                    <Binding Path="IsUtmSelected"/>
                 </MultiBinding>
             </Border.Visibility>
             <Grid Margin="0">

@@ -442,6 +442,23 @@
                                 </StackPanel>
                             </Button>
 
+                            <!--EsriJson-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddEsriJsonCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource menuRectangle}"
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.EsriJson}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.EsriJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource topo}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_legend_addEsriJson], Source={StaticResource Localization}}"
+                                               Style="{StaticResource menuTextBlock}" />
+                                </StackPanel>
+                            </Button>
+
                             <!--CSV-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddCsvCommand}">
                                 <StackPanel Orientation="Horizontal">
