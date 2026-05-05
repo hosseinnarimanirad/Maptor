@@ -33,6 +33,12 @@ public static class JsonHelper
                 });
     }
 
+
+    public static string Serialize<T>(T value, JsonSerializerOptions options)
+    {
+        return JsonSerializer.Serialize(value, options);
+    }
+
     public static string SerializeWithIgnoreNullOption<T>(T value)
     {
         return JsonSerializer.Serialize(value, _ignoreNullValue);

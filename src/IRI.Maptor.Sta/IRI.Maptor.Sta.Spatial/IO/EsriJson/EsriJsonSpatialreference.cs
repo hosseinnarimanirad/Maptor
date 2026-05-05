@@ -4,7 +4,7 @@ namespace IRI.Maptor.Sta.Spatial.Primitives.Esri;
 
 //[DataContract]
 //[JsonObject]
-public class EsriJsonSpatialreference
+public class EsriJsonSpatialReference
 {
     //[DataMember(Name = "wkid")]
     [JsonPropertyName("wkid")]

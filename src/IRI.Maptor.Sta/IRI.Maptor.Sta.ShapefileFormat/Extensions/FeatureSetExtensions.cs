@@ -16,6 +16,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Spatial.IO.Dxf;
+using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 
 namespace IRI.Maptor.Extensions;
 
@@ -49,6 +50,10 @@ public static class FeatureSetExtensions
 
             case DataSourceKind.TopoJson:
                 throw new NotImplementedException("FeatureSetExtensions > Export!");
+
+            case DataSourceKind.EsriJson:
+                SaveAsEsriJson(targetFeatureSet, filePath);
+                break;
 
             case DataSourceKind.GML:
             case DataSourceKind.Gpx:
@@ -124,6 +129,21 @@ public static class FeatureSetExtensions
         };
 
         jsonFeatureSet.Save(geoJsonFileName, false, true);
+    }
+
+    public static void SaveAsEsriJson(this FeatureSet<Point> featureSet, string esriJsonFileName)
+    {
+        var esriFeatures = featureSet.Features.Select(f => f.AsEsriJsonFeature()).ToList();
+
+        var esriFeatureSet = new EsriJsonFeatureSet()
+        {
+            Features = esriFeatures,
+            FieldAliases = featureSet.Fields?.ToDictionary(f => f.Name, f => f.Alias) ?? new Dictionary<string, string?>(),
+            Fields = featureSet.Fields,
+            SpatialReference = new EsriJsonSpatialReference() { LatestWkid = featureSet.Srid }
+        };
+
+        esriFeatureSet.Save(esriJsonFileName, false, true);
     }
 
     /// <summary>

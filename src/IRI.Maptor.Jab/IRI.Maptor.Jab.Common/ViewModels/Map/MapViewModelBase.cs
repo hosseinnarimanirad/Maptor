@@ -49,7 +49,7 @@ using IRI.Maptor.Jab.Common.Models.Settings;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Sta.Common.Exceptions;
-
+using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public abstract class MapViewModelBase : ViewModelBase
@@ -4316,7 +4316,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
                 features = features.Select(f => f.Project(SrsBases.WebMercator/*new WebMercator()*/)).ToList();
 
-                var dataSource = new MemoryDataSource(features);
+                var dataSource = new MemoryDataSource(features, true, DataSourceKind.Dxf);
                 var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
                 var symbolizers = new List<ISymbolizer> { SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1) };
 
@@ -4655,7 +4655,7 @@ public abstract class MapViewModelBase : ViewModelBase
             IsBusy = false;
         }
     }
-     
+
     public virtual async Task AddEsriJson(object owner, int? maxSizeInKB)
     {
         IsBusy = true;
@@ -4692,35 +4692,17 @@ public abstract class MapViewModelBase : ViewModelBase
 
             List<Feature<Point>> features;
 
-            try
-            {
-                var kmlFeatures = await KmlReader.ReadFeaturesFromFileAsync(fileName);
-                features = kmlFeatures.ToFeatures();
-            }
-            catch
-            {
-                features = new List<Feature<Point>>();
-            }
+            // read esri geojsons
+            var featureSet = EsriJsonFeatureSet.Load(fileName);
 
-            if (features.IsNullOrEmpty())
-            {
-                try
-                {
-                    var geometries = await KmlReader.ReadFromFileAsync(fileName);
-                    features = geometries.ToFeatures();
-                }
-                catch
-                {
-                    features = new List<Feature<Point>>();
-                }
-            }
+            if (featureSet is null || featureSet.Features.IsNullOrEmpty())
+                throw new MaptorEmptyFileException();
 
-            if (features.IsNullOrEmpty())
-                throw new MaptorEmptyFileException(); 
+            var sourceSrid = featureSet.SpatialReference.LatestWkid ?? featureSet.SpatialReference.Wkid;
 
-            features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
+            features = featureSet.Features.Select(f => f.AsFeature(SrsBases.WebMercator, sourceSrid)).ToList();
 
-            var dataSource = KmlDataSource.Create(fileName, features);
+            var dataSource = new MemoryDataSource(features, false, DataSourceKind.EsriJson);
 
             var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
 
@@ -4738,10 +4720,10 @@ public abstract class MapViewModelBase : ViewModelBase
             };
 
             AddLayer(vectorLayer);
-        } 
+        }
         catch (Exception ex)
         {
-            await ShowExceptionMessageAsync(ex); 
+            await ShowExceptionMessageAsync(ex);
         }
         finally
         {
@@ -4955,7 +4937,7 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 _addEsriJsonCommand = new RelayCommand(async param =>
                 {
-                    await AddEsriJson(param);
+                    await AddEsriJson(param, null);
                 });
             }
             return _addEsriJsonCommand;

@@ -856,7 +856,7 @@ public static class SqlGeometryExtensions
     private static double?[][] GetLineStringOrRing(SqlGeometry lineStringOrRing)
     {
         if (lineStringOrRing.IsNullOrEmpty())
-            return new double?[0][];
+            return [];
 
         int numberOfPoints = lineStringOrRing.STNumPoints().Value;
 
@@ -885,7 +885,7 @@ public static class SqlGeometryExtensions
             X = geometry.STX.Value,
             Y = geometry.STY.Value,
             Type = EsriJsonGeometryType.point,
-            SpatialReference = new EsriJsonSpatialreference() { Wkid = geometry.GetSrid() }
+            SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.GetSrid() }
         };
     }
 
@@ -913,7 +913,7 @@ public static class SqlGeometryExtensions
         {
             Points = points,
             Type = EsriJsonGeometryType.multipoint,
-            SpatialReference = new EsriJsonSpatialreference() { Wkid = geometry.GetSrid() }
+            SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.GetSrid() }
         };
     }
 
@@ -934,7 +934,7 @@ public static class SqlGeometryExtensions
         {
             Paths = paths,
             Type = EsriJsonGeometryType.polyline,
-            SpatialReference = new EsriJsonSpatialreference() { Wkid = geometry.GetSrid() }
+            SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.GetSrid() }
         };
     }
 
@@ -962,7 +962,7 @@ public static class SqlGeometryExtensions
         {
             Paths = result,
             Type = EsriJsonGeometryType.polyline,
-            SpatialReference = new EsriJsonSpatialreference() { Wkid = geometry.GetSrid() }
+            SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.GetSrid() }
         };
     }
 
@@ -984,7 +984,7 @@ public static class SqlGeometryExtensions
         {
             Paths = rings,
             Type = EsriJsonGeometryType.polygon,
-            SpatialReference = new EsriJsonSpatialreference() { Wkid = geometry.GetSrid() }
+            SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.GetSrid() }
         };
     }
 
@@ -1012,7 +1012,7 @@ public static class SqlGeometryExtensions
         {
             Paths = rings,
             Type = EsriJsonGeometryType.polygon,
-            SpatialReference = new EsriJsonSpatialreference() { Wkid = geometry.GetSrid() }
+            SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.GetSrid() }
         };
     }
 

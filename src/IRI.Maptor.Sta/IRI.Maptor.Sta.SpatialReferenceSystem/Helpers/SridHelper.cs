@@ -10,6 +10,8 @@ public static class SridHelper
 
     public const int WebMercator = 3857;
 
+    public const int EsriWebMercator = 102100;
+
     public const int UtmNorthZone38 = 32638;
 
     public const int UtmNorthZone39 = 32639;
@@ -39,6 +41,7 @@ public static class SridHelper
                 return SrsBases.GeodeticWgs84/*new NoProjection("Wgs84", Ellipsoids.WGS84)*/;// { DatumName = this.Geogcs.Values?.First() };
 
             case WebMercator:
+            case EsriWebMercator:
                 return SrsBases.WebMercator;
 
             case UtmNorthZone38:

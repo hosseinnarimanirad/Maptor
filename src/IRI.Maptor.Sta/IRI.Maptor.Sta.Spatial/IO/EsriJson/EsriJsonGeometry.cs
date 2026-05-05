@@ -10,13 +10,22 @@ namespace IRI.Maptor.Sta.Spatial.Primitives.Esri;
 //[JsonObject]
 public class EsriJsonGeometry
 {
-    const string pointType = "POINT";
-    const string multiPointType = "MULTIPOINT";
-    const string polylineType = "POLYLINE";
-    const string polygonType = "POLYGON";
+    //const string pointType = "POINT";
+    //const string multiPointType = "MULTIPOINT";
+    //const string polylineType = "POLYLINE";
+    //const string polygonType = "POLYGON";
 
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public EsriJsonGeometryType Type { get; set; }
+    private EsriJsonGeometryType? _geometryType;
+
+    //[JsonConverter(typeof(JsonStringEnumConverter))]
+    //public EsriJsonGeometryType Type { get; set; }
+
+    [JsonIgnore]
+    public EsriJsonGeometryType Type
+    {
+        get => _geometryType ?? GetGeometryType();
+        set => _geometryType = value;
+    }
 
     public double? X { get; set; }
 
@@ -39,15 +48,40 @@ public class EsriJsonGeometry
     //polyline
     public double?[][][] Paths { get; set; }
 
-    public EsriJsonSpatialreference SpatialReference { get; set; }
+    public EsriJsonSpatialReference SpatialReference { get; set; }
 
-    public static EsriJsonGeometry Parse(string esriGeometryJsonString, EsriJsonGeometryType type)
+    public EsriJsonGeometryType GetGeometryType()
+    {
+        if (X.HasValue)
+        {
+            return EsriJsonGeometryType.point;
+        }
+        else if (Points != null)
+        {
+            return EsriJsonGeometryType.multipoint;
+        }
+        else if (Rings != null)
+        {
+            return EsriJsonGeometryType.polygon;
+        }
+        else if (Paths != null)
+        {
+            return EsriJsonGeometryType.polyline;
+        }
+        else
+        {
+            throw new NotImplementedException("EsriJsonGeometry > GetGeometryType");
+        }
+
+    }
+
+    public static EsriJsonGeometry? Parse(string esriGeometryJsonString/*, EsriJsonGeometryType type*/)
     {
         try
         {
             var result = JsonHelper.Deserialize<EsriJsonGeometry>(esriGeometryJsonString);
 
-            result.Type = type;
+            //result.Type = type;
 
             return result;
         }
@@ -148,4 +182,21 @@ public class EsriJsonGeometry
 
     }
 
+    public static EsriJsonGeometry CreateEmpty(EsriJsonGeometryType type) => new EsriJsonGeometry() { Type = type, };
+
+    public IGeometry Parse(int srid)
+    {
+        if (HasM == true)
+        {
+            return Geometry<IRI.Maptor.Sta.Common.Primitives.PointZM>.FromWkt(this.AsWkt(), srid);
+        }
+        else if (HasZ == true)
+        {
+            return Geometry<IRI.Maptor.Sta.Common.Primitives.PointZ>.FromWkt(this.AsWkt(), srid);
+        }
+        else
+        {
+            return Geometry<IRI.Maptor.Sta.Common.Primitives.Point>.FromWkt(this.AsWkt(), srid);
+        }
+    }
 }

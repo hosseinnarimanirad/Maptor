@@ -19,7 +19,7 @@ public static class SqlSpatialHelper
 
     public static SqlGeometry ParseFromEsriJson(string esriGeometryJson, string type)
     {
-        return Parse(EsriJsonGeometry.Parse(esriGeometryJson, EnumHelper.Parse<EsriJsonGeometryType>(type)).AsWkt());
+        return Parse(EsriJsonGeometry.Parse(esriGeometryJson/*, EnumHelper.Parse<EsriJsonGeometryType>(type)*/).AsWkt());
     }
 
     public static void AddEmptySqlGeometry(SqlGeometryBuilder builder, GeometryType type)

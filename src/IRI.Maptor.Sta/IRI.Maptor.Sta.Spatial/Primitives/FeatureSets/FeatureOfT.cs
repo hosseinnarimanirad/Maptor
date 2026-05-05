@@ -4,6 +4,7 @@ using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
+using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
@@ -63,7 +64,12 @@ public class Feature<T> : IGeometryAware<T> where T : IPoint, new()
 
     public GeoJsonFeature AsGeoJsonFeature()
     {
-        return new GeoJsonFeature() { Geometry = TheGeometry.Project(SrsBases.GeodeticWgs84).AsGeoJson(), Id = Id.ToString(), Properties = Attributes };
+        return new GeoJsonFeature()
+        {
+            Geometry = TheGeometry.Project(SrsBases.GeodeticWgs84).AsGeoJson(),
+            Id = Id.ToString(),
+            Properties = Attributes
+        };
     }
 
     public GeoJsonFeature AsGeoJsonFeature(Func<T, T> toWgs84Func, bool isLongitudeFirst)
@@ -73,6 +79,15 @@ public class Feature<T> : IGeometryAware<T> where T : IPoint, new()
             Geometry = this.TheGeometry.Transform(toWgs84Func, SridHelper.GeodeticWGS84).AsGeoJson(isLongitudeFirst),
             Id = this.Id.ToString(),
             Properties = this.Attributes/*.ToDictionary(k => k.Key, k => k.Value)*/,
+        };
+    }
+
+    public EsriJsonFeature AsEsriJsonFeature()
+    {
+        return new EsriJsonFeature()
+        {
+            Geometry = TheGeometry.AsEsriJsonGeometry(),
+            Attributes = this.Attributes,
         };
     }
 

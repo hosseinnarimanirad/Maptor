@@ -5,20 +5,26 @@
     <Style x:Key="IRI.Maptor.Styles.TabItem"
           TargetType="{x:Type TabItem}" BasedOn="{StaticResource MahApps.Styles.TabItem}">
         <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="14"/>
+        <Setter Property="mahApp:HeaderedControlHelper.HeaderForeground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
         <!--<Setter Property="mahApp:HeaderedControlHelper.HeaderFontFamily" Value="{StaticResource iranSans}"/>-->
-        <Setter Property="Cursor" Value="Hand"/> 
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0,0,0,4"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                <Setter Property="mahApp:HeaderedControlHelper.HeaderFontWeight" Value="Bold"/>
+            </Trigger>
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
                 <Setter Property="mahApp:HeaderedControlHelper.HeaderFontWeight" Value="Bold"/>
-                <Setter Property="mahApp:HeaderedControlHelper.HeaderForeground" Value="Black"/>
+                <Setter Property="mahApp:HeaderedControlHelper.HeaderForeground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Opacity" Value="0.5"/>
+                <Setter Property="Opacity" Value="0.6"/>
                 <Setter Property="Foreground" Value="Gray"/>
                 <Setter Property="Cursor" Value="Arrow"/>
             </Trigger>

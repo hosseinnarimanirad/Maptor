@@ -10,6 +10,7 @@ using IRI.Maptor.Sta.Spatial.AdvancedStructures;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.Spatial.IO.Dxf;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Spatial.Primitives.Esri;
 
 
 namespace IRI.Maptor.Extensions;
@@ -238,7 +239,7 @@ public static class Sta_GeometryExtensions
             Coordinates = points,
         };
     }
-     
+
     private static GeoJsonLineString GeometryLineStringToGeoJsonPolyline<T>(this Geometry<T> lineString, bool isLongitudeFirst) where T : IPoint, new()
     {
         //This check is required
@@ -253,7 +254,7 @@ public static class Sta_GeometryExtensions
             Type = GeoJson.LineString,
         };
     }
-     
+
     private static GeoJsonMultiLineString GeometryMultiLineStringToGeoJsonPolyline<T>(this Geometry<T> multiLineString, bool isLongitudeFirst) where T : IPoint, new()
     {
         //This check is required
@@ -275,7 +276,7 @@ public static class Sta_GeometryExtensions
             Type = GeoJson.MultiLineString,
         };
     }
-     
+
     private static GeoJsonPolygon GeometryPolygonToGeoJsonPolygon<T>(this Geometry<T> polygon, bool isLongitudeFirst) where T : IPoint, new()
     {
         //This check is required
@@ -298,7 +299,7 @@ public static class Sta_GeometryExtensions
             Type = GeoJson.Polygon,
         };
     }
-     
+
     private static GeoJsonMultiPolygon GeometryMultiPolygonToGeoJsonMultiPolygon<T>(this Geometry<T> multiPolygon, bool isLongitudeFirst) where T : IPoint, new()
     {
         //This check is required
@@ -320,6 +321,240 @@ public static class Sta_GeometryExtensions
             Type = GeoJson.MultiPolygon,
         };
     }
+
+    #endregion
+
+
+    #region To EsriJsonGeometry
+
+
+    public static EsriJsonGeometry AsEsriJsonGeometry<T>(this Geometry<T> geometry) where T : IPoint, new()
+    {
+        switch (geometry.Type)
+        {
+            case GeometryType.Point:
+                return geometry.SqlPointToEsriJsonPoint();
+
+            case GeometryType.LineString:
+                return geometry.SqlLineStringToEsriJsonPolyline();
+
+            case GeometryType.Polygon:
+                return geometry.SqlPolygonToEsriJsonPolygon();
+
+            case GeometryType.MultiPoint:
+                return geometry.SqlMultiPointToEsriJsonMultiPoint();
+
+            case GeometryType.MultiLineString:
+                return geometry.SqlMultiLineStringToEsriJsonPolyline();
+
+            case GeometryType.MultiPolygon:
+                return geometry.SqlMultiPolygonToEsriJsonMultiPolygon();
+
+            case GeometryType.GeometryCollection:
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            case GeometryType.None:
+            default:
+                throw new NotImplementedException("Sta_GeometryExtensions > AsEsriJsonGeometry");
+        }
+
+    }
+
+    private static double?[] GetEsriJsonObjectPoint<T>(T point) where T : IPoint, new()
+    {
+        if (point.IsNaN())
+            return [];
+
+        return point switch
+        {
+            PointZM pzm => [pzm.X, pzm.Y, pzm.Z, pzm.M],
+            PointZ pz => [pz.X, pz.Y, pz.Z],
+            _ => [point.X, point.Y]
+        };
+
+    }
+
+    private static double?[][] GetLineStringOrRing<T>(Geometry<T> lineStringOrRing) where T : IPoint, new()
+    {
+        if (lineStringOrRing.IsNullOrEmpty())
+            return [];
+
+        int numberOfPoints = lineStringOrRing.NumberOfPoints;
+
+        double?[][] result = new double?[numberOfPoints][];
+
+        for (int i = 0; i < numberOfPoints; i++)
+        {
+            result[i] = GetEsriJsonObjectPoint(lineStringOrRing.Points[i]);
+        }
+
+        return result;
+    }
+
+    private static EsriJsonGeometry SqlPointToEsriJsonPoint<T>(this Geometry<T> geometry) where T : IPoint, new()
+    {
+        //This check is required
+        if (geometry.IsNullOrEmpty())
+            return EsriJsonGeometry.CreateEmpty(EsriJsonGeometryType.point);
+
+        var point = geometry.AsPoint();
+
+        var result = new EsriJsonGeometry()
+        {
+            X = point.X,
+            Y = point.Y,
+            Type = EsriJsonGeometryType.point,
+            SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.Srid }
+        };
+
+        if (point is PointZM pointZm)
+        {
+            result.Z = pointZm.Z;
+            result.M = pointZm.M;
+        }
+        else if (point is PointZ pointZ)
+        {
+            result.Z = pointZ.Z;
+        }
+
+        return result;
+    }
+
+    private static EsriJsonGeometry SqlMultiPointToEsriJsonMultiPoint<T>(this Geometry<T> geometry) where T : IPoint, new()
+    {
+        //This check is required
+        if (geometry.IsNullOrEmpty())
+            return EsriJsonGeometry.CreateEmpty(EsriJsonGeometryType.multipoint);
+        //{
+        //    Type = EsriJsonGeometryType.multipoint,
+        //    Points = new double?[0][],
+        //};
+
+        var numberOfGeometries = geometry.NumberOfGeometries;
+
+        double?[][] points = new double?[numberOfGeometries][];
+
+        for (int i = 0; i < numberOfGeometries; i++)
+        {
+            points[i] = GetEsriJsonObjectPoint(geometry.Geometries[i].AsPoint());
+        }
+
+        return new EsriJsonGeometry()
+        {
+            Points = points,
+            Type = EsriJsonGeometryType.multipoint,
+            SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.Srid }
+        };
+    }
+
+    private static EsriJsonGeometry SqlLineStringToEsriJsonPolyline<T>(this Geometry<T> geometry) where T : IPoint, new()
+    {
+        //This check is required
+        if (geometry.IsNullOrEmpty())
+            return EsriJsonGeometry.CreateEmpty(EsriJsonGeometryType.polyline);
+        //return new EsriJsonGeometry()
+        //{
+        //    Type = EsriJsonGeometryType.polyline,
+        //    Paths = [],
+        //};
+
+        double?[][][] paths = [GetLineStringOrRing(geometry)];
+
+        return new EsriJsonGeometry()
+        {
+            Paths = paths,
+            Type = EsriJsonGeometryType.polyline,
+            SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.Srid }
+        };
+    }
+
+    private static EsriJsonGeometry SqlMultiLineStringToEsriJsonPolyline<T>(this Geometry<T> geometry) where T : IPoint, new()
+    {
+        //This check is required
+        if (geometry.IsNullOrEmpty())
+            return EsriJsonGeometry.CreateEmpty(EsriJsonGeometryType.polyline);
+        //return new EsriJsonGeometry()
+        //{
+        //    Type = EsriJsonGeometryType.polyline,
+        //    Paths = new double?[0][][],
+        //};
+
+        int numberOfParts = geometry.NumberOfGeometries;
+
+        double?[][][] result = new double?[numberOfParts][][];
+
+        for (int i = 0; i < numberOfParts; i++)
+        {
+            result[i] = GetLineStringOrRing(geometry.Geometries[i]);
+        }
+
+        return new EsriJsonGeometry()
+        {
+            Paths = result,
+            Type = EsriJsonGeometryType.polyline,
+            SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.Srid }
+        };
+    }
+
+    //todo: 1399.08.19; this method is not OK, look at SqlGeometry To Geometry
+    private static EsriJsonGeometry SqlPolygonToEsriJsonPolygon<T>(this Geometry<T> geometry) where T : IPoint, new()
+    {
+        //This check is required
+        if (geometry.IsNullOrEmpty())
+            return EsriJsonGeometry.CreateEmpty(EsriJsonGeometryType.polygon);
+        //return new EsriJsonGeometry()
+        //{
+        //    Type = EsriJsonGeometryType.polygon,
+        //    Rings = [],
+        //};
+
+        int numberOfParts = geometry.NumberOfGeometries;
+
+        //double?[][][] rings = new double?[1][][] { GetLineStringOrRing(geometry) };
+        double?[][][] rings = new double?[numberOfParts][][];
+
+        for (int i = 0; i < numberOfParts; i++)
+        {
+            rings[i] = GetLineStringOrRing(geometry.Geometries[i]);
+        }
+
+        return new EsriJsonGeometry()
+        {
+            Paths = rings,
+            Type = EsriJsonGeometryType.polygon,
+            SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.Srid }
+        };
+    }
+
+    private static EsriJsonGeometry SqlMultiPolygonToEsriJsonMultiPolygon<T>(this Geometry<T> geometry) where T : IPoint, new()
+    {
+        //This check is required
+        if (geometry.IsNullOrEmpty())
+            return EsriJsonGeometry.CreateEmpty(EsriJsonGeometryType.polygon);
+        //return new EsriJsonGeometry()
+        //{
+        //    Type = EsriJsonGeometryType.polygon,
+        //    Rings = new double?[0][][],
+        //};
+
+        int numberOfParts = geometry.NumberOfGeometries;
+
+        double?[][][] rings = new double?[numberOfParts][][];
+
+        for (int i = 0; i < numberOfParts; i++)
+        {
+            rings[i] = GetLineStringOrRing(geometry.Geometries[i]);
+        }
+
+        return new EsriJsonGeometry()
+        {
+            Paths = rings,
+            Type = EsriJsonGeometryType.polygon,
+            SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.Srid }
+        };
+    }
+
 
     #endregion
 

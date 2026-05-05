@@ -26,6 +26,7 @@ public class DataSourceKindToGeometryConverter : IValueConverter
             DataSourceKind.WebApi => "rest",
             DataSourceKind.GRPC => "grpc",
             DataSourceKind.GeoJson => "json",
+            DataSourceKind.EsriJson => "json",
             DataSourceKind.TopoJson => "topo",
             DataSourceKind.Csv => "csv",
             DataSourceKind.Tsv => "tsv",
