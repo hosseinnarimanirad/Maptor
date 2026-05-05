@@ -3,12 +3,6 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using IRI.Maptor.Sta.ShapefileFormat;
-using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-using IRI.Maptor.Sta.Spatial.IO.TopoJson;
-using IRI.Maptor.Sta.Spatial.IO;
-using SixLabors.ImageSharp.ColorSpaces;
-using MahApps.Metro.IconPacks;
 using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common.Assets.Converters;
@@ -56,8 +50,8 @@ public class DataSourceKindToGeometryConverter : IValueConverter
         catch (Exception)
         {
             return Geometry.Empty;
-        }       
-         
+        }
+
     }
 
     //private static Geometry GetFallbackGeometry()

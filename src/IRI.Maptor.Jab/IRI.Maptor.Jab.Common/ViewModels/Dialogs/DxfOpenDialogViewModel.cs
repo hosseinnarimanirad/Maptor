@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.IO.Dxf;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
@@ -155,11 +156,13 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
 
     private async Task BrowseAsync()
     {
-        var path = _dialogService.ShowOpenFileDialog("Drawing Exchange Format (DXF)|*.dxf", null);
+        var path = await _dialogService.ShowOpenFileDialogAsync(DataSourceKind.Dxf/*"Drawing Exchange Format (DXF)|*.dxf"*/, null);
+
         if (string.IsNullOrEmpty(path))
             return;
 
         FilePath = path;
+
         await LoadPreviewAsync();
     }
 

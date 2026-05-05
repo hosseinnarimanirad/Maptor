@@ -1,14 +1,18 @@
+using System;
+using System.Linq;
+using System.Windows;
+using System.Threading.Tasks;
+using System.Windows.Media.Effects;
+
+using Microsoft.Win32;
+
+using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Exceptions;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
-using IRI.Maptor.Sta.Common.Exceptions;
-using Microsoft.Win32;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media.Effects;
 
 namespace IRI.Maptor.Jab.Controls.Services.Dialog;
 
@@ -230,41 +234,41 @@ public class DefaultDialogService : IDialogService
     /// <typeparam name="T">The type of window to use as owner.</typeparam>
     /// <param name="filter">The file filter string (e.g., "Text files (*.txt)|*.txt|All files (*.*)|*.*").</param>
     /// <returns>The selected file path, or null if the user cancelled.</returns>
-    public string? ShowOpenFileDialog<T>(string filter)
-    {
-        var owner = GetOwnerWindowByType<T>();
-        return ShowOpenFileDialog(filter, owner);
-    }
+    //public string? ShowOpenFileDialog<T>(string filter)
+    //{
+    //    var owner = GetOwnerWindowByType<T>();
+    //    return ShowOpenFileDialog(filter, owner);
+    //}
 
-    /// <summary>
-    /// Shows an open file dialog with the specified owner window.
-    /// </summary>
-    /// <param name="filter">The file filter string (e.g., "Text files (*.txt)|*.txt|All files (*.*)|*.*").</param>
-    /// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
-    /// <returns>The selected file path, or null if the user cancelled.</returns>
-    public string? ShowOpenFileDialog(string filter, object? ownerWindow = null)
-    {
-        if (string.IsNullOrWhiteSpace(filter))
-            throw new ArgumentException("Filter cannot be null or empty.", nameof(filter));
+    ///// <summary>
+    ///// Shows an open file dialog with the specified owner window.
+    ///// </summary>
+    ///// <param name="filter">The file filter string (e.g., "Text files (*.txt)|*.txt|All files (*.*)|*.*").</param>
+    ///// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
+    ///// <returns>The selected file path, or null if the user cancelled.</returns>
+    //public string? ShowOpenFileDialog(string filter, object? ownerWindow = null)
+    //{
+    //    if (string.IsNullOrWhiteSpace(filter))
+    //        throw new ArgumentException("Filter cannot be null or empty.", nameof(filter));
 
-        var owner = ResolveOwnerWindow(ownerWindow);
-        OpenFileDialog dialog = new OpenFileDialog()
-        {
-            Filter = filter,
-            Multiselect = false,
-            Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_openfile_title)]
-        };
+    //    var owner = ResolveOwnerWindow(ownerWindow);
+    //    OpenFileDialog dialog = new OpenFileDialog()
+    //    {
+    //        Filter = filter,
+    //        Multiselect = false,
+    //        Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_openfile_title)]
+    //    };
 
-        string? result = null;
+    //    string? result = null;
 
-        using (ApplyBlurEffect(owner))
-        {
-            if (dialog.ShowDialog(owner) == true)
-                result = dialog.FileName;
-        }
+    //    using (ApplyBlurEffect(owner))
+    //    {
+    //        if (dialog.ShowDialog(owner) == true)
+    //            result = dialog.FileName;
+    //    }
 
-        return result;
-    }
+    //    return result;
+    //}
 
     /// <summary>
     /// Shows an open file dialog asynchronously, finding the owner window by type.
@@ -327,52 +331,59 @@ public class DefaultDialogService : IDialogService
         return tcs.Task;
     }
 
+    public async Task<string?> ShowOpenFileDialogAsync(DataSourceKind kind, object? ownerWindow = null)
+    {
+        var filter = kind.GetFileFilter();
+
+        return await ShowOpenFileDialogAsync(filter, ownerWindow);
+    }
+
     #endregion
 
 
     #region Open Files Dialog
 
-    /// <summary>
-    /// Shows an open files dialog (multiple selection), finding the owner window by type.
-    /// </summary>
-    /// <typeparam name="T">The type of window to use as owner.</typeparam>
-    /// <param name="filter">The file filter string (e.g., "Text files (*.txt)|*.txt|All files (*.*)|*.*").</param>
-    /// <returns>An array of selected file paths, or null if the user cancelled.</returns>
-    public string[]? ShowOpenFilesDialog<T>(string filter)
-    {
-        var owner = GetOwnerWindowByType<T>();
-        return ShowOpenFilesDialog(filter, owner);
-    }
+    ///// <summary>
+    ///// Shows an open files dialog (multiple selection), finding the owner window by type.
+    ///// </summary>
+    ///// <typeparam name="T">The type of window to use as owner.</typeparam>
+    ///// <param name="filter">The file filter string (e.g., "Text files (*.txt)|*.txt|All files (*.*)|*.*").</param>
+    ///// <returns>An array of selected file paths, or null if the user cancelled.</returns>
+    //public string[]? ShowOpenFilesDialog<T>(string filter)
+    //{
+    //    var owner = GetOwnerWindowByType<T>();
+    //    return ShowOpenFilesDialog(filter, owner);
+    //}
 
-    /// <summary>
-    /// Shows an open files dialog (multiple selection) with the specified owner window.
-    /// </summary>
-    /// <param name="filter">The file filter string (e.g., "Text files (*.txt)|*.txt|All files (*.*)|*.*").</param>
-    /// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
-    /// <returns>An array of selected file paths, or null if the user cancelled.</returns>
-    public string[]? ShowOpenFilesDialog(string filter, object? ownerWindow = null)
-    {
-        if (string.IsNullOrWhiteSpace(filter))
-            throw new ArgumentException("Filter cannot be null or empty.", nameof(filter));
+    ///// <summary>
+    ///// Shows an open files dialog (multiple selection) with the specified owner window.
+    ///// </summary>
+    ///// <param name="filter">The file filter string (e.g., "Text files (*.txt)|*.txt|All files (*.*)|*.*").</param>
+    ///// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
+    ///// <returns>An array of selected file paths, or null if the user cancelled.</returns>
+    //public string[]? ShowOpenFilesDialog(string filter, object? ownerWindow = null)
+    //{
+    //    if (string.IsNullOrWhiteSpace(filter))
+    //        throw new ArgumentException("Filter cannot be null or empty.", nameof(filter));
 
-        var owner = ResolveOwnerWindow(ownerWindow);
-        OpenFileDialog dialog = new OpenFileDialog()
-        {
-            Filter = filter,
-            Multiselect = true,
-            Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_openfile_title)]
-        };
+    //    var owner = ResolveOwnerWindow(ownerWindow);
+    //    OpenFileDialog dialog = new OpenFileDialog()
+    //    {
+    //        Filter = filter,
+    //        Multiselect = true,
+    //        Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_openfile_title)]
+    //    };
 
-        string[]? result = null;
+    //    string[]? result = null;
 
-        using (ApplyBlurEffect(owner))
-        {
-            if (dialog.ShowDialog(owner) == true)
-                result = dialog.FileNames;
-        }
+    //    using (ApplyBlurEffect(owner))
+    //    {
+    //        if (dialog.ShowDialog(owner) == true)
+    //            result = dialog.FileNames;
+    //    }
 
-        return result;
-    }
+    //    return result;
+    //}
 
     /// <summary>
     /// Shows an open files dialog (multiple selection) asynchronously, finding the owner window by type.
@@ -440,49 +451,49 @@ public class DefaultDialogService : IDialogService
 
     #region Save File Dialog
 
-    /// <summary>
-    /// Shows a save file dialog, finding the owner window by type.
-    /// </summary>
-    /// <typeparam name="T">The type of window to use as owner.</typeparam>
-    /// <param name="filter">The file filter string (e.g., "Text files (*.txt)|*.txt|All files (*.*)|*.*").</param>
-    /// <param name="fileName">The default file name, or null to use an empty string.</param>
-    /// <returns>The selected file path, or null if the user cancelled.</returns>
-    public string? ShowSaveFileDialog<T>(string filter, string? fileName = null)
-    {
-        var owner = GetOwnerWindowByType<T>();
-        return ShowSaveFileDialog(filter, owner, fileName);
-    }
+    ///// <summary>
+    ///// Shows a save file dialog, finding the owner window by type.
+    ///// </summary>
+    ///// <typeparam name="T">The type of window to use as owner.</typeparam>
+    ///// <param name="filter">The file filter string (e.g., "Text files (*.txt)|*.txt|All files (*.*)|*.*").</param>
+    ///// <param name="fileName">The default file name, or null to use an empty string.</param>
+    ///// <returns>The selected file path, or null if the user cancelled.</returns>
+    //public string? ShowSaveFileDialog<T>(string filter, string? fileName = null)
+    //{
+    //    var owner = GetOwnerWindowByType<T>();
+    //    return ShowSaveFileDialog(filter, owner, fileName);
+    //}
 
-    /// <summary>
-    /// Shows a save file dialog with the specified owner window.
-    /// </summary>
-    /// <param name="filter">The file filter string (e.g., "Text files (*.txt)|*.txt|All files (*.*)|*.*").</param>
-    /// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
-    /// <param name="fileName">The default file name, or null to use an empty string.</param>
-    /// <returns>The selected file path, or null if the user cancelled.</returns>
-    public string? ShowSaveFileDialog(string filter, object? ownerWindow = null, string? fileName = null)
-    {
-        if (string.IsNullOrWhiteSpace(filter))
-            throw new ArgumentException("Filter cannot be null or empty.", nameof(filter));
+    ///// <summary>
+    ///// Shows a save file dialog with the specified owner window.
+    ///// </summary>
+    ///// <param name="filter">The file filter string (e.g., "Text files (*.txt)|*.txt|All files (*.*)|*.*").</param>
+    ///// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
+    ///// <param name="fileName">The default file name, or null to use an empty string.</param>
+    ///// <returns>The selected file path, or null if the user cancelled.</returns>
+    //public string? ShowSaveFileDialog(string filter, object? ownerWindow = null, string? fileName = null)
+    //{
+    //    if (string.IsNullOrWhiteSpace(filter))
+    //        throw new ArgumentException("Filter cannot be null or empty.", nameof(filter));
 
-        var owner = ResolveOwnerWindow(ownerWindow);
-        SaveFileDialog dialog = new SaveFileDialog()
-        {
-            Filter = filter,
-            FileName = fileName ?? string.Empty,
-            Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_savefile_title)]
-        };
+    //    var owner = ResolveOwnerWindow(ownerWindow);
+    //    SaveFileDialog dialog = new SaveFileDialog()
+    //    {
+    //        Filter = filter,
+    //        FileName = fileName ?? string.Empty,
+    //        Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_savefile_title)]
+    //    };
 
-        string? result = null;
+    //    string? result = null;
 
-        using (ApplyBlurEffect(owner))
-        {
-            if (dialog.ShowDialog(owner) == true)
-                result = dialog.FileName;
-        }
+    //    using (ApplyBlurEffect(owner))
+    //    {
+    //        if (dialog.ShowDialog(owner) == true)
+    //            result = dialog.FileName;
+    //    }
 
-        return result;
-    }
+    //    return result;
+    //}
 
     /// <summary>
     /// Shows a save file dialog asynchronously, finding the owner window by type.
@@ -545,6 +556,13 @@ public class DefaultDialogService : IDialogService
         }));
 
         return tcs.Task;
+    }
+
+    public async Task<string?> ShowSaveFileDialogAsync(DataSourceKind kind, object? ownerWindow = null, string? fileName = null)
+    {
+        var filter = kind.GetFileFilter();
+
+        return await ShowSaveFileDialogAsync(filter, ownerWindow, fileName);
     }
 
     #endregion
@@ -773,6 +791,7 @@ public class DefaultDialogService : IDialogService
     public Task<DxfOpenDialogResult?> ShowDxfOpenDialogAsync(object? ownerWindow = null, int? initialSrid = null)
     {
         var viewModel = new DxfOpenDialogViewModel(this, initialSrid);
+
         var dialog = new Views.Dialogs.DxfOpenDialogView();
 
         return ShowCustomDialogAsync(

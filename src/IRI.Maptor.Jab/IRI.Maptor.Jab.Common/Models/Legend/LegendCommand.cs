@@ -259,7 +259,7 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var fileName = await map.DialogService.ShowSaveFileDialogAsync("*.shp|*.shp", null, layer.LayerName);
+                var fileName = await map.DialogService.ShowSaveFileDialogAsync(DataSourceKind.Shapefile /*"*.shp|*.shp"*/, null, layer.LayerName);
 
                 if (string.IsNullOrWhiteSpace(fileName))
                     return;
@@ -292,7 +292,7 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var fileName = await map.DialogService.ShowSaveFileDialogAsync("*.json|*.json", null, layer.LayerName);
+                var fileName = await map.DialogService.ShowSaveFileDialogAsync(DataSourceKind.GeoJson/*"*.json|*.json"*/, null, layer.LayerName);
 
                 if (string.IsNullOrWhiteSpace(fileName))
                     return;
@@ -415,7 +415,7 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var file = map.DialogService.ShowSaveFileDialog("*.shp|*.shp", null, layer.LayerName);
+                var file = await map.DialogService.ShowSaveFileDialogAsync(DataSourceKind.Shapefile/*"*.shp|*.shp"*/, null, layer.LayerName);
 
                 if (string.IsNullOrWhiteSpace(file))
                     return;
@@ -467,7 +467,7 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var file = map.DialogService.ShowSaveFileDialog("*.json|*.json", null, layer.LayerName);
+                var file = await map.DialogService.ShowSaveFileDialogAsync(DataSourceKind.GeoJson/*"*.json|*.json"*/, null, layer.LayerName);
 
                 if (string.IsNullOrWhiteSpace(file))
                     return;
@@ -506,7 +506,7 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var file = map.DialogService.ShowSaveFileDialog("*.csv|*.csv", null, layer.LayerName);
+                var file = await map.DialogService.ShowSaveFileDialogAsync(DataSourceKind.Csv/*"*.csv|*.csv"*/, null, layer.LayerName);
 
                 if (string.IsNullOrWhiteSpace(file))
                     return;
@@ -571,7 +571,7 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var fileName = map.DialogService.ShowSaveFileDialog("*.png|*.png", null, layer.LayerName);
+                var fileName = await map.DialogService.ShowSaveFileDialogAsync("*.png|*.png", null, layer.LayerName);
 
                 if (string.IsNullOrWhiteSpace(fileName))
                     return;

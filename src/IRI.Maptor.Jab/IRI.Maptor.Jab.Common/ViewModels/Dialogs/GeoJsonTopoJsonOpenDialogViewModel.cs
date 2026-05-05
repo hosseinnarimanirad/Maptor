@@ -2,10 +2,12 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
 using IRI.Maptor.Jab.Common.Properties;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.Spatial.IO.TopoJson;
@@ -195,12 +197,15 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
         }
     }
 
-    private void Browse()
+    private async Task Browse()
     {
-        var filter = IsGeoJson
-            ? "GeoJSON (*.json;*.geojson)|*.json;*.geojson|All files (*.*)|*.*"
-            : "TopoJSON (*.json;*.topojson)|*.json;*.topojson|All files (*.*)|*.*";
-        var path = _dialogService.ShowOpenFileDialog(filter, null);
+        //var filter = IsGeoJson
+        //    ? "GeoJSON (*.json;*.geojson)|*.json;*.geojson|All files (*.*)|*.*"
+        //    : "TopoJSON (*.json;*.topojson)|*.json;*.topojson|All files (*.*)|*.*";
+        var filter = IsGeoJson ? DataSourceKind.GeoJson : DataSourceKind.TopoJson;
+
+        var path = await _dialogService.ShowOpenFileDialogAsync(filter, null);
+
         if (string.IsNullOrEmpty(path))
             return;
 

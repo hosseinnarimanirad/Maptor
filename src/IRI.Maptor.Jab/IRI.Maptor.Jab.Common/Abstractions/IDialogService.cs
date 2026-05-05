@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 using IRI.Maptor.Sta.Common.Exceptions;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common.Abstractions;
 
@@ -17,18 +18,19 @@ public interface IDialogService
     // ********************************************************************
     //                          Open File Dialog
     // ********************************************************************
-    string? ShowOpenFileDialog<T>(string filter);
-    string? ShowOpenFileDialog(string filter, object? owner = null);
+    //string? ShowOpenFileDialog<T>(string filter);
+    //string? ShowOpenFileDialog(string filter, object? owner = null);
 
     Task<string?> ShowOpenFileDialogAsync<T>(string filter);
     Task<string?> ShowOpenFileDialogAsync(string filter, object? ownerWindow = null);
+    Task<string?> ShowOpenFileDialogAsync(DataSourceKind kind, object? ownerWindow = null);
 
 
     // ********************************************************************
     //                          Open Files Dialog
     // ********************************************************************
-    string[]? ShowOpenFilesDialog<T>(string filter);
-    string[]? ShowOpenFilesDialog(string filter, object? owner = null);
+    //string[]? ShowOpenFilesDialog<T>(string filter);
+    //string[]? ShowOpenFilesDialog(string filter, object? owner = null);
 
     Task<string[]?> ShowOpenFilesDialogAsync<T>(string filter);
     Task<string[]?> ShowOpenFilesDialogAsync(string filter, object? ownerWindow = null);
@@ -37,12 +39,12 @@ public interface IDialogService
     // ********************************************************************
     //                          Save File Dialog
     // ********************************************************************
-    string? ShowSaveFileDialog<T>(string filter, string? fileName = null);
-    string? ShowSaveFileDialog(string filter, object? owner = null, string? fileName = null);
+    //string? ShowSaveFileDialog<T>(string filter, string? fileName = null);
+    //string? ShowSaveFileDialog(string filter, object? owner = null, string? fileName = null);
 
     Task<string?> ShowSaveFileDialogAsync<T>(string filter, string fileName);
     Task<string?> ShowSaveFileDialogAsync(string filter, object? ownerWindow = null, string? fileName = null);
-
+    Task<string?> ShowSaveFileDialogAsync(DataSourceKind kind, object? ownerWindow = null, string? fileName = null);
 
     // ********************************************************************
     //                          Yes/No Dialog

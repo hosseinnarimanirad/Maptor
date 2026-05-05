@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Windows.Media;
+using System.Collections.Generic;
 using System.Windows.Media.Imaging;
-using System.IO;
+
+using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Tst.Main.Benchmarking;
 
@@ -17,7 +17,7 @@ static class ShapefileToBitmap
         DateTime t0 = DateTime.Now;
 
         Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
-        dialog.Filter = "*.shp|*.shp";
+        dialog.Filter = DataSourceKind.Shapefile.GetFileFilter();/*"*.shp|*.shp"*/;
 
         if (dialog.ShowDialog() == false)
         {

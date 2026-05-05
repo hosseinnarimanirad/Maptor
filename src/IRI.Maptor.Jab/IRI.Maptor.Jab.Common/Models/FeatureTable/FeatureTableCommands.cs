@@ -84,7 +84,7 @@ public static class FeatureTableCommands
             ToolTip = "خروجی اکسل"
         };
 
-        result.Command = new RelayCommand((param) =>
+        result.Command = new RelayCommand(async (param) =>
         {
             var layer = param as SelectedLayer;
 
@@ -132,7 +132,7 @@ public static class FeatureTableCommands
             }
 
             //گرفتن مسیر فایل
-            var fileName = map.DialogService.ShowSaveFileDialog("*.xlsx|*.xlsx", null, layer.LayerName);
+            var fileName = await map.DialogService.ShowSaveFileDialogAsync("*.xlsx|*.xlsx", null, layer.LayerName);
 
             if (string.IsNullOrWhiteSpace(fileName))
                 return;

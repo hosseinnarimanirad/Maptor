@@ -475,6 +475,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add EsriJson.
+        /// </summary>
+        public static string cmd_legend_addEsriJson {
+            get {
+                return ResourceManager.GetString("cmd_legend_addEsriJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add GPX.
         /// </summary>
         public static string cmd_legend_addGpx {

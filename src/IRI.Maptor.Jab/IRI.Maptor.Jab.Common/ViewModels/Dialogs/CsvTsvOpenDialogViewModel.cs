@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.Assets.Commands;
@@ -191,12 +192,15 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         }
     }
 
-    private void Browse()
+    private async Task Browse()
     {
-        var filter = IsCsv
-            ? "CSV file (*.csv)|*.csv|Text file (*.txt)|*.txt"
-            : "TSV file (*.tsv)|*.tsv|Text file (*.txt)|*.txt";
-        var path = _dialogService.ShowOpenFileDialog(filter, null);
+        //var filter = IsCsv
+        //    ? "CSV file (*.csv)|*.csv|Text file (*.txt)|*.txt"
+        //    : "TSV file (*.tsv)|*.tsv|Text file (*.txt)|*.txt";
+        var filter = IsCsv ? DataSourceKind.Csv : DataSourceKind.Tsv;
+
+        var path = await _dialogService.ShowOpenFileDialogAsync(filter, null);
+
         if (string.IsNullOrEmpty(path))
             return;
 

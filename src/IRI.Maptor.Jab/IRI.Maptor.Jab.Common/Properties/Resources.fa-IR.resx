@@ -1584,4 +1584,7 @@
   <data name="layerSettings_trackChanges_title" xml:space="preserve">
     <value>تغییرات ذخیره نشده</value>
   </data>
+  <data name="cmd_legend_addEsriJson" xml:space="preserve">
+    <value>افزودن EsriJson</value>
+  </data>
 </root>

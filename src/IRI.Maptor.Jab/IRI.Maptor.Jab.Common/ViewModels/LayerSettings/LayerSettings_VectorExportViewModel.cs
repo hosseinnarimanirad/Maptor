@@ -231,9 +231,7 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
 
         //RequestClose?.Invoke();
 
-        var filter = SelectedDataSourceKind.GetFileFilter();
-
-        var fileName = await viewModel.DialogService.ShowSaveFileDialogAsync(filter, null, layer.LayerName);
+        var fileName = await viewModel.DialogService.ShowSaveFileDialogAsync(SelectedDataSourceKind, null, layer.LayerName);
 
         if (string.IsNullOrWhiteSpace(fileName))
             return;

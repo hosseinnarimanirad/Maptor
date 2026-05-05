@@ -1625,4 +1625,7 @@
   <data name="layerSettings_trackChanges_title" xml:space="preserve">
     <value>Track Changes</value>
   </data>
+  <data name="cmd_legend_addEsriJson" xml:space="preserve">
+    <value>Add EsriJson</value>
+  </data>
 </root>

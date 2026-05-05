@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Abstractions;
@@ -155,7 +156,7 @@ public class GeometryDetailsViewModel : Notifier
     public RelayCommand ExportCommand =>
         _exportCommand ??= new RelayCommand(param => ExportCurrentFormat());
 
-    private async void ExportCurrentFormat()
+    private async Task ExportCurrentFormat()
     {
         if (string.IsNullOrEmpty(StringRepresentation))
         {
@@ -183,7 +184,7 @@ public class GeometryDetailsViewModel : Notifier
             _ => ".txt"
         };
 
-        var fileName = _dialogService.ShowSaveFileDialog(
+        var fileName = await _dialogService.ShowSaveFileDialogAsync(
             $"{SelectedFormat} files (*{extension})|*{extension}|All files (*.*)|*.*",
             null,
             $"geometry{extension}");

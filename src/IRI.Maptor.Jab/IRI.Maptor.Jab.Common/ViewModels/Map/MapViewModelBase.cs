@@ -2563,7 +2563,7 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 (layer as VectorLayer).RequestChangeSymbology = l => RequestShowSymbologyView?.Invoke(l);
             }
-             
+
             if (layer is BaseLayer baseLayer)
             {
                 baseLayer.RequestSaveChanges = async l => await HandleRequestSaveChanges(l);
@@ -3829,16 +3829,13 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
     //*****************************************File Formats *********************************************************
-    #region Shapefile/Worldfile/GeoJson/KML/KMZ/Csv/Tsv/ZippedImagePyramid
-
-    //const string _error = "خطا";
-    //const string _fileLockedError = "فایل در حال استفاده توسط برنامه دیگری است. لطفا فایل را ببندید و دوباره تلاش کنید.";
+    #region Shapefile/Worldfile/GeoJson/KML/KMZ/Csv/Tsv/ZippedImagePyramid/etc.
 
     public virtual async Task AddShapefile(object owner, int? maxSizeInKB)
     {
         IsBusy = true;
 
-        var fileName = await DialogService.ShowOpenFileDialogAsync("shapefile|*.shp", owner);
+        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.Shapefile/*"shapefile|*.shp"*/, owner);
 
         if (!File.Exists(fileName))
         {
@@ -3900,7 +3897,7 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         IsBusy = true;
 
-        var fileName = await DialogService.ShowOpenFileDialogAsync("Keyhole Markup Language (KML)|*.kml", owner);
+        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.Kml/*"Keyhole Markup Language (KML)|*.kml"*/, owner);
 
         if (!File.Exists(fileName))
         {
@@ -4008,7 +4005,7 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         IsBusy = true;
 
-        var fileName = await DialogService.ShowOpenFileDialogAsync("Compressed KML files (KMZ)|*.kmz", owner);
+        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.Kmz/*"Compressed KML files (KMZ)|*.kmz"*/, owner);
 
         if (!File.Exists(fileName))
         {
@@ -4115,7 +4112,7 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         IsBusy = true;
 
-        var fileName = await DialogService.ShowOpenFileDialogAsync("GPS Exchange Format (GPX)|*.gpx", owner);
+        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.Gpx/*"GPS Exchange Format (GPX)|*.gpx"*/, owner);
 
         if (!File.Exists(fileName))
         {
@@ -4153,6 +4150,7 @@ public abstract class MapViewModelBase : ViewModelBase
             //try
             //{
             var parsed = GpxFormat.Parse(fileName);
+
             foreach (var wpt in parsed.Waypoints)
             {
                 var point = new Point(wpt.Longitude, wpt.Latitude);
@@ -4363,7 +4361,7 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         IsBusy = true;
 
-        var fileName = await DialogService.ShowOpenFileDialogAsync("Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff", owner);
+        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.Worldfile/*"Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff"*/, owner);
 
         if (!File.Exists(fileName))
         {
@@ -4381,7 +4379,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         try
         {
-            var fileName = await DialogService.ShowOpenFileDialogAsync("Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff", owner);
+            var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.Worldfile/*"Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff"*/, owner);
 
             if (!File.Exists(fileName))
             {
@@ -4455,7 +4453,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             IsBusy = true;
 
-            var fileName = await DialogService.ShowOpenFileDialogAsync("Image Pyramid file|*.pyrmd", owner);
+            var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.ZippedImagePyramid/*"Image Pyramid file|*.pyrmd"*/, owner);
 
             if (!File.Exists(fileName))
             {
@@ -4657,6 +4655,99 @@ public abstract class MapViewModelBase : ViewModelBase
             IsBusy = false;
         }
     }
+     
+    public virtual async Task AddEsriJson(object owner, int? maxSizeInKB)
+    {
+        IsBusy = true;
+
+        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.EsriJson, owner);
+
+        if (!File.Exists(fileName))
+        {
+            IsBusy = false;
+
+            return;
+        }
+
+        FileInfo info = new FileInfo(fileName);
+
+        if (maxSizeInKB.HasValue && info.Length / 10000.0 > maxSizeInKB) //5k
+        {
+            await ShowExceptionMessageAsync(MaptorFileSizeExceedToOpenException.Instance);
+
+            IsBusy = false;
+
+            return;
+        }
+
+        await AddEsriJson(fileName, owner);
+    }
+
+    public async Task AddEsriJson(string fileName, object owner)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+                throw new MaptorFileNotFoundException(fileName);
+
+            List<Feature<Point>> features;
+
+            try
+            {
+                var kmlFeatures = await KmlReader.ReadFeaturesFromFileAsync(fileName);
+                features = kmlFeatures.ToFeatures();
+            }
+            catch
+            {
+                features = new List<Feature<Point>>();
+            }
+
+            if (features.IsNullOrEmpty())
+            {
+                try
+                {
+                    var geometries = await KmlReader.ReadFromFileAsync(fileName);
+                    features = geometries.ToFeatures();
+                }
+                catch
+                {
+                    features = new List<Feature<Point>>();
+                }
+            }
+
+            if (features.IsNullOrEmpty())
+                throw new MaptorEmptyFileException(); 
+
+            features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
+
+            var dataSource = KmlDataSource.Create(fileName, features);
+
+            var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
+
+            var symbolizers = features.CreateSymbolizersFromKml(geometryType);
+
+            var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
+                                dataSource,
+                                symbolizers,
+                                LayerType.VectorLayer,
+                                RenderMode.Default,
+                                RasterizationMethod.GdiPlus,
+                                ScaleInterval.All)
+            {
+                IsSearchable = true
+            };
+
+            AddLayer(vectorLayer);
+        } 
+        catch (Exception ex)
+        {
+            await ShowExceptionMessageAsync(ex); 
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
 
     #endregion
 
@@ -4851,6 +4942,23 @@ public abstract class MapViewModelBase : ViewModelBase
                 });
             }
             return _addTopoJsonCommand;
+        }
+    }
+
+
+    private RelayCommand _addEsriJsonCommand;
+    public RelayCommand AddEsriJsonCommand
+    {
+        get
+        {
+            if (_addEsriJsonCommand == null)
+            {
+                _addEsriJsonCommand = new RelayCommand(async param =>
+                {
+                    await AddEsriJson(param);
+                });
+            }
+            return _addEsriJsonCommand;
         }
     }
 
@@ -5306,7 +5414,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 {
                     try
                     {
-                        var fileName = await DialogService.ShowOpenFileDialogAsync("*.json|*.json", param);
+                        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.GeoJson/*"*.json|*.json"*/, param);
 
                         if (string.IsNullOrWhiteSpace(fileName))
                             return;
@@ -5367,7 +5475,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 {
                     try
                     {
-                        var fileName = await DialogService.ShowOpenFileDialogAsync("*.csv|*.csv", param);
+                        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.Csv/*"*.csv|*.csv"*/, param);
 
                         if (string.IsNullOrWhiteSpace(fileName))
                             return;
@@ -5415,7 +5523,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 {
                     try
                     {
-                        var fileName = await DialogService.ShowOpenFileDialogAsync("*.shp|*.shp", param);
+                        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.Shapefile/*"*.shp|*.shp"*/, param);
 
                         if (string.IsNullOrWhiteSpace(fileName))
                             return;

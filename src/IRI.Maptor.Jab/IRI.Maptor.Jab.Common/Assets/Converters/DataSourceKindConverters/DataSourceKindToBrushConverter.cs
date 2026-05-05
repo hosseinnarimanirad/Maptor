@@ -2,8 +2,8 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
-using IRI.Maptor.Jab.Common.Assets.ColorBrushes;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Jab.Common.Assets.ColorBrushes;
 
 namespace IRI.Maptor.Jab.Common.Assets.Converters;
 
@@ -39,12 +39,14 @@ public class DataSourceKindToBrushConverter : IValueConverter
             DataSourceKind.Dxf => ModernUIColors.AmberBrush,
 
             //DataSourceKind.EPS => ModernUIColors.YellowBrush,
+            DataSourceKind.EsriJson => ModernUIColors.BrownBrush,
             //DataSourceKind.SVG => ModernUIColors.BrownBrush,
             //DataSourceKind.GRD => ModernUIColors.OliveBrush,
 
             DataSourceKind.Other => ModernUIColors.SteelBrush,
             //?? => ModernUIColors.MauveColor,
             DataSourceKind.Worldfile => ModernUIColors.TaupeBrush,
+
 
             _ => Brushes.Transparent
         };

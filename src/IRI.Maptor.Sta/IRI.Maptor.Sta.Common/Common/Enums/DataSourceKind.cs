@@ -30,16 +30,16 @@ public enum DataSourceKind
     [Description("gRPC"), DataSourceKindInfo(Category = Service, FileFilter = "")]
     GRPC = 7,
 
-    [Description("GeoJson"), DataSourceKindInfo(Category = Vector, FileFilter = "Geographic JSON (GeoJSON)|*.json")]
+    [Description("GeoJson"), DataSourceKindInfo(Category = Vector, FileFilter = "Geographic JSON (GeoJSON) (*.json;*.geojson)|*.json;*.geojson")]
     GeoJson = 8,
 
-    [Description("TopoJson"), DataSourceKindInfo(Category = Vector, FileFilter = "Topological GeoJSON (TopoJSON)|*.topojson")]
+    [Description("TopoJson"), DataSourceKindInfo(Category = Vector, FileFilter = "Topological GeoJSON (TopoJSON) (*.json;*.topojson)|*.json;*.topojson")]
     TopoJson = 9,
 
-    [Description("Csv"), DataSourceKindInfo(Category = Vector, FileFilter = "Comma Separated Values (CSV)|*.csv")]
+    [Description("Csv"), DataSourceKindInfo(Category = Vector, FileFilter = "Comma Separated Values (CSV) (*.csv)|*.csv|Text files (*.txt)|*.txt")]
     Csv = 10,
 
-    [Description("Tsv"), DataSourceKindInfo(Category = Vector, FileFilter = "Tab Separated Values (TSV)|*.tsv")]
+    [Description("Tsv"), DataSourceKindInfo(Category = Vector, FileFilter = "Tab Separated Values (TSV) (*.tsv)|*.tsv|Text files (*.txt)|*.txt")]
     Tsv = 11,
 
     [Description("Worldfile"), DataSourceKindInfo(Category = Raster, FileFilter = "Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff")]
@@ -53,6 +53,10 @@ public enum DataSourceKind
 
     [Description("Gml"), DataSourceKindInfo(Category = Vector, FileFilter = "Geography Markup Language (GML)|*.gml")]
     GML = 15,
+
+    [Description("EsriJson"), DataSourceKindInfo(Category = Vector, FileFilter = "ESRI Json Geometry (json)|*.json")]
+    EsriJson = 16,
+
 
     [Description("..."), DataSourceKindInfo(Category = None, FileFilter = "All files (*.*)|*.*")]
     Other = 100,
