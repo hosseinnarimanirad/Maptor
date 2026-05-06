@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using IRI.Maptor.Sta.Common.Enums;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 public class CoordinateDimensionToZVisibilityConverter : IValueConverter
 {

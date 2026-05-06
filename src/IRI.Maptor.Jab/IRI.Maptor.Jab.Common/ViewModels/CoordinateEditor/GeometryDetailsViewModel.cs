@@ -1,23 +1,21 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Abstractions;
-using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Helpers;
-using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
-using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Sta.Common.Helpers;
+using IRI.Maptor.Jab.Common.Services;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;

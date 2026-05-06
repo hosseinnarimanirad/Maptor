@@ -1,17 +1,16 @@
 using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using IRI.Maptor.Jab.Common.Abstractions;
-using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
-using IRI.Maptor.Jab.Common.Properties;
+using System.Collections.ObjectModel;
+
 using IRI.Maptor.Sta.Common.Enums;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
+using IRI.Maptor.Jab.Common.Services;
+using IRI.Maptor.Jab.Common.Properties;
 using IRI.Maptor.Sta.Spatial.IO.TopoJson;
+using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 

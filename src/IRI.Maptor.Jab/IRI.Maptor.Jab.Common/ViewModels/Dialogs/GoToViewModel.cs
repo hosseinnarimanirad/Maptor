@@ -3,18 +3,14 @@ using System.Linq;
 using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common;
-//using IRI.Maptor.Jab.Controls.Views;
+using IRI.Maptor.Jab.Controls;
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Common.Assets.Commands;
+using IRI.Maptor.Jab.Common.Models.GoTo;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using IRI.Maptor.Jab.Common.ViewModels;
-using IRI.Maptor.Jab.Common.Models.GoTo;
-using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Jab.Common.Views;
 
-namespace IRI.Maptor.Jab.Controls.ViewModels;
+namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public class GoToViewModel : Notifier
 {

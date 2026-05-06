@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace IRI.Maptor.Jab.Common.Views.MapOptions
+namespace IRI.Maptor.Jab.Controls.MapOptions
 {
     /// <summary>
     /// Interaction logic for MapThreeOptions.xaml

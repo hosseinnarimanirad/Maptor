@@ -3,9 +3,9 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 using IRI.Maptor.Sta.Common.Enums;
-using IRI.Maptor.Jab.Common.Assets.ColorBrushes;
+using IRI.Maptor.Jab.Common.ColorBrushes;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 public class DataSourceKindToBrushConverter : IValueConverter
 {

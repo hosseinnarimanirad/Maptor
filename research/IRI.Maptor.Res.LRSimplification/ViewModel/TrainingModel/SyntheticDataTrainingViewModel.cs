@@ -6,10 +6,9 @@ using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.MultiSelectItem.ViewModel;
 
 using Sb = IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Jab.Common.ViewModels;
 
 namespace IRI.Maptor.Res.LRSimplification.ViewModel.TrainingModel;
 

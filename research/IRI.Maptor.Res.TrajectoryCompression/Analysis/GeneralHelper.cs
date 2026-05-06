@@ -8,6 +8,7 @@ using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Jab.Common.Layers;
 
 
 namespace IRI.Maptor.Res.TrajectoryCompression;

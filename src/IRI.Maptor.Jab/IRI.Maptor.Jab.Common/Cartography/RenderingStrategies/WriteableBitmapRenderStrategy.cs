@@ -7,12 +7,11 @@ using System.Windows.Media.Imaging;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Common.Cartography.Helpers;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Sta.Common.Enums;
 
 
-namespace IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
+namespace IRI.Maptor.Jab.Common.Cartography;
 
 public class WriteableBitmapRenderStrategy : RenderStrategy
 {

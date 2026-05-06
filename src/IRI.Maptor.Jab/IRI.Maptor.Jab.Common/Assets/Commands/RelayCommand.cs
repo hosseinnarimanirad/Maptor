@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace IRI.Maptor.Jab.Common.Assets.Commands
+namespace IRI.Maptor.Jab.Common
 {
     /// <summary>
     /// A command whose sole purpose is to 
@@ -16,7 +16,7 @@ namespace IRI.Maptor.Jab.Common.Assets.Commands
         #region Fields
 
         readonly Action<object> _execute;
-        readonly Predicate<object>? _canExecute;        
+        readonly Predicate<object>? _canExecute;
 
         #endregion // Fields
 
@@ -42,7 +42,7 @@ namespace IRI.Maptor.Jab.Common.Assets.Commands
                 throw new ArgumentNullException("execute");
 
             _execute = execute;
-            _canExecute = canExecute;           
+            _canExecute = canExecute;
         }
 
         #endregion // Constructors

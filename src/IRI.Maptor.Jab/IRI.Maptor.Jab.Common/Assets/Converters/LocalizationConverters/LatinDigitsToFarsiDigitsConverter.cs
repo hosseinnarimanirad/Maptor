@@ -3,7 +3,7 @@ using System.Windows.Data;
 using System.Globalization;
 using IRI.Maptor.Extensions;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 class LatinDigitsToFarsiDigitsConverter : IValueConverter
 {

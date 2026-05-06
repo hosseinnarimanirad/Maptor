@@ -5,7 +5,7 @@ using System.Globalization;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Extensions;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 public class StringToColorConverter : IValueConverter
 {

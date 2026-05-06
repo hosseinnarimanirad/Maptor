@@ -5,8 +5,9 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using Ellipsoid = IRI.Maptor.Sta.SpatialReferenceSystem.Ellipsoid<IRI.Maptor.Sta.Metrics.Meter, IRI.Maptor.Sta.Metrics.Degree>;
+using IRI.Maptor.Jab.Common.Models;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 public class CoordinateDisplayConverter : IMultiValueConverter
 {

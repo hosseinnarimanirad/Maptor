@@ -1,6 +1,7 @@
-﻿using System;
+﻿using IRI.Maptor.Jab.Common.Layers;
+using System;
 
-namespace IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
+namespace IRI.Maptor.Jab.Common.Cartography;
 
 public static class RenderStrategyContext
 {

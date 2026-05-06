@@ -1,7 +1,7 @@
-﻿<maptor:MapMarker x:Class="IRI.Maptor.Jab.Common.Views.MapMarkers.PhotoMarker"
+﻿<maptor:MapMarker x:Class="IRI.Maptor.Jab.Controls.MapMarkers.PhotoMarker"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"          
-             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Common.Views" 
+             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls" 
              Width="100" Height="100" Opacity=".9">
     <maptor:MapMarker.Resources>
         <ResourceDictionary>

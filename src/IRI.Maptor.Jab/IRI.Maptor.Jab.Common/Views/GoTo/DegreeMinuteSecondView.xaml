@@ -1,6 +1,6 @@
-﻿<maptor:NotifiableUserControl x:Class="IRI.Maptor.Jab.Common.Views.DegreeMinuteSecondView"
+﻿<maptor:NotifiableUserControl x:Class="IRI.Maptor.Jab.Controls.DegreeMinuteSecondView"
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Common.Views"
+                xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
                 xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                 x:Name="root">

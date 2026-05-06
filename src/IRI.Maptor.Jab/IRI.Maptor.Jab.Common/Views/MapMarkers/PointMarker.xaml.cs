@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
-using IRI.Maptor.Jab.Common.Abstractions;
 
-namespace IRI.Maptor.Jab.Common.Views.MapMarkers;
+
+namespace IRI.Maptor.Jab.Controls.MapMarkers;
  
 public partial class PointMarker : MapMarker
 {

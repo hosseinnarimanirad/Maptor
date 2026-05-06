@@ -4,8 +4,8 @@ using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.ViewModels;
-using IRI.Maptor.Jab.Common.Views.MapMarkers;
-using IRI.Maptor.Jab.Common.Assets.Commands;
+using IRI.Maptor.Jab.Controls.MapMarkers;
+using IRI.Maptor.Jab.Common.Layers;
 
 namespace IRI.Maptor.Tag.SampleWpfApp.ViewModel;
 

@@ -1,9 +1,9 @@
-﻿using IRI.Maptor.Jab.Common.Abstractions;
+﻿
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace IRI.Maptor.Jab.Common.Views.MapMarkers;
+namespace IRI.Maptor.Jab.Controls.MapMarkers;
  
 public partial class ShapeWithLabelMarker : MapMarker
 {

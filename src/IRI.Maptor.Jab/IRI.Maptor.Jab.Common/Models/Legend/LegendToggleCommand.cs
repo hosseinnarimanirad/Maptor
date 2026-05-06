@@ -1,9 +1,10 @@
 ﻿using System;
-using IRI.Maptor.Jab.Common.Assets.Commands;
+
 using IRI.Maptor.Jab.Common.Localization;
 using MahApps.Metro.IconPacks;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Events;
+using IRI.Maptor.Jab.Common.Layers;
 
 namespace IRI.Maptor.Jab.Common.Models.Legend;
 

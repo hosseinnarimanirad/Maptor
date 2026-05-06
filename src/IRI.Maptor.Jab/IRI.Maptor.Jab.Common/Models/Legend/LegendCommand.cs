@@ -3,20 +3,18 @@ using System.Collections.Generic;
 using MahApps.Metro.IconPacks;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Sta.Spatial.Analysis;
+using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Sta.Spatial.Helpers;
+using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Jab.Common.ViewModels;
-using IRI.Maptor.Jab.Common.Models.Map;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Jab.Common.Properties;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
-using IRI.Maptor.Jab.Common.Properties;
-using IRI.Maptor.Sta.Common.Enums;
-using System.Linq;
+
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Jab.Common.Models.Legend;
 

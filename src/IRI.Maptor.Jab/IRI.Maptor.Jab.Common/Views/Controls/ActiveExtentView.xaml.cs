@@ -6,7 +6,7 @@ using System.Windows.Shapes;
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
 
-namespace IRI.Maptor.Jab.Common.Views.Controls;
+namespace IRI.Maptor.Jab.Controls.Controls;
 
 public partial class ActiveExtentView : MapMarker
 {

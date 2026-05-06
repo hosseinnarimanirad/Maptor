@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using System.Threading.Tasks;
-using IRI.Maptor.Sta.Ogc.WMS;
-using IRI.Maptor.Sta.Common.Enums;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public class SpecialPointLayer : BaseLayer
 {
@@ -32,7 +31,7 @@ public class SpecialPointLayer : BaseLayer
 
     public override BoundingBox Extent
     {
-        get => (Items.Count < 1) ? BoundingBox.NaN : BoundingBox.CalculateBoundingBox(Items.Select(i => new Point(i.X, i.Y)));
+        get => Items.Count < 1 ? BoundingBox.NaN : BoundingBox.CalculateBoundingBox(Items.Select(i => new Point(i.X, i.Y)));
         protected set => throw new NotImplementedException();
     }
 
@@ -59,7 +58,7 @@ public class SpecialPointLayer : BaseLayer
 
     public SpecialPointLayer(string name, IEnumerable<Locateable> items, double opacity = 1, ScaleInterval? visibleRange = null, LayerType type = LayerType.Complex)
     {
-        this.LayerId = Guid.NewGuid();
+        LayerId = Guid.NewGuid();
 
 
         //if (type.HasFlag(LayerType.Complex) ||
@@ -72,18 +71,18 @@ public class SpecialPointLayer : BaseLayer
             type == LayerType.GridAndGraticule ||
             //type == LayerType.MoveableItem ||
             type == LayerType.EditableItem)
-            this._type = type;
+            _type = type;
         else
             throw new NotImplementedException();
 
-        this.LayerName = name;
+        LayerName = name;
 
-        this.ZIndex = int.MaxValue;
+        ZIndex = int.MaxValue;
 
-        this.Items = new ObservableCollection<Locateable>();
+        Items = new ObservableCollection<Locateable>();
 
-        this.Items.CollectionChanged -= Items_CollectionChanged;
-        this.Items.CollectionChanged += Items_CollectionChanged;
+        Items.CollectionChanged -= Items_CollectionChanged;
+        Items.CollectionChanged += Items_CollectionChanged;
 
         if (visibleRange == null)
         {
@@ -103,7 +102,7 @@ public class SpecialPointLayer : BaseLayer
 
         foreach (var item in items)
         {
-            this.Items.Add(item);
+            Items.Add(item);
         }
 
     }
@@ -131,21 +130,21 @@ public class SpecialPointLayer : BaseLayer
 
     public IEnumerable<Locateable> Get(Guid id)
     {
-        return this.Items.Where(i => i.Id == id);
+        return Items.Where(i => i.Id == id);
     }
 
     public void Remove(Guid id)
     {
-        if (this.Items.Count(i => i.Id == id) > 1)
+        if (Items.Count(i => i.Id == id) > 1)
         {
             throw new NotImplementedException("more than one locateable found");
         }
 
-        for (int i = this.Items.Count - 1; i >= 0; i--)
+        for (int i = Items.Count - 1; i >= 0; i--)
         {
-            if (this.Items[i].Id == id)
+            if (Items[i].Id == id)
             {
-                this.Items.RemoveAt(i);
+                Items.RemoveAt(i);
             }
         }
     }
@@ -174,7 +173,7 @@ public class SpecialPointLayer : BaseLayer
             Items[i].IsSelected = Items[i].Element == element;
         }
 
-        this.RequestSelectedLocatableChanged?.Invoke(FindSelectedLocatable(), FindSelectedLocatableIndex());
+        RequestSelectedLocatableChanged?.Invoke(FindSelectedLocatable(), FindSelectedLocatableIndex());
     }
 
     public void SelectLocatable(int index)
@@ -195,12 +194,12 @@ public class SpecialPointLayer : BaseLayer
         }
 
         if (change)
-            this.RequestSelectedLocatableChanged?.Invoke(FindSelectedLocatable(), FindSelectedLocatableIndex());
+            RequestSelectedLocatableChanged?.Invoke(FindSelectedLocatable(), FindSelectedLocatableIndex());
     }
 
     public Locateable? FindSelectedLocatable()
     {
-        return this.Items.FirstOrDefault(l => l.IsSelected);
+        return Items.FirstOrDefault(l => l.IsSelected);
 
         //for (int i = 0; i < Items.Count; i++)
         //{
@@ -261,11 +260,11 @@ public class SpecialPointLayer : BaseLayer
 
     public /*override*/ Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
     {
-        if (this.Items.IsNullOrEmpty())
+        if (Items.IsNullOrEmpty())
             return Task.FromResult(FeatureSet<Point>.Empty);
 
         // Filter points within bounding box
-        var points = this.Items
+        var points = Items
             .Where(item => mapExtent.Contains(new Point(item.X, item.Y)))
             .Select(item => new Point(item.X, item.Y))
             .ToList();
@@ -287,7 +286,7 @@ public class SpecialPointLayer : BaseLayer
 
         //return new List<Feature<Point>> { new Feature<Point>(geometry) };
 
-        return Task.FromResult(FeatureSet<Point>.Create($"{nameof(SpecialPointLayer)}-{this.LayerId}", [geometry.AsFeature()]));
+        return Task.FromResult(FeatureSet<Point>.Create($"{nameof(SpecialPointLayer)}-{LayerId}", [geometry.AsFeature()]));
         //return new List<Feature<Point>> { new Feature<Point>(geometry) };
     }
 

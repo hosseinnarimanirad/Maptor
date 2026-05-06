@@ -10,7 +10,7 @@ using MahApps.Metro.Controls;
 
 using IRI.Maptor.Jab.Common.Localization;
 
-namespace IRI.Maptor.Jab.Common.Views;
+namespace IRI.Maptor.Jab.Controls;
 
 public class LocalizedMetroWindow : MetroWindow, IDisposable, INotifyPropertyChanged
 {

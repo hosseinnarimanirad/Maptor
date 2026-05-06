@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
-
-using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Sta.Common.Enums;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 public class FilteredSubLayersConverter : IMultiValueConverter
 {

@@ -10,7 +10,7 @@ using IRI.Maptor.Sta.Common.Abstrations;
 using WpfPoint = System.Windows.Point;
 using IRI.Maptor.Sta.Common.Enums;
 
-namespace IRI.Maptor.Jab.Common.Cartography.Helpers;
+namespace IRI.Maptor.Jab.Common.Cartography;
 
 public static class StreamGeometryRenderer
 {

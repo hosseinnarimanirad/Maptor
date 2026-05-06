@@ -5,18 +5,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
+using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Sta.Common.Exceptions;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.DataSources;
-using IRI.Maptor.Sta.Common.Enums;
-using System.Windows.Forms;
-using IRI.Maptor.Sta.Common.Exceptions;
-using IRI.Maptor.Extensions;
 
-namespace IRI.Maptor.Jab.Common.Models.Map;
+namespace IRI.Maptor.Jab.Common.Models;
 
 public class SelectedLayer : Notifier
 {
@@ -54,7 +51,7 @@ public class SelectedLayer : Notifier
             if (_highlightedFeatures != null)
                 _highlightedFeatures.CollectionChanged += highlightedFeatures_CollectionChanged;
 
-            this.RefreshHighlightedFeaturesOnMap(HighlightedFeatures);
+            RefreshHighlightedFeaturesOnMap(HighlightedFeatures);
 
             NotifyAll();
         }
@@ -120,14 +117,14 @@ public class SelectedLayer : Notifier
 
     public SelectedLayer(VectorLayer layer, List<Field>? fields)
     {
-        this.AssociatedLayer = layer;
+        AssociatedLayer = layer;
 
-        this.Fields = fields;
+        Fields = fields;
     }
 
     private void highlightedFeatures_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        this.RefreshHighlightedFeaturesOnMap(HighlightedFeatures);
+        RefreshHighlightedFeaturesOnMap(HighlightedFeatures);
 
         NotifyAll();
     }
@@ -153,9 +150,9 @@ public class SelectedLayer : Notifier
 
     public void RefreshSelectedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
     {
-        if (this.AssociatedLayer != null)
+        if (AssociatedLayer != null)
         {
-            this.AssociatedLayer.NumberOfSelectedFeatures = enumerable.Count();
+            AssociatedLayer.NumberOfSelectedFeatures = enumerable.Count();
         }
 
         RequestFeaturesChanged?.Invoke(enumerable.Where(i => i.Status != FeatureStatus.Removed && i.Status != FeatureStatus.CanceledNew), strokeThickness);
@@ -163,7 +160,7 @@ public class SelectedLayer : Notifier
 
     public void RefreshHighlightedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable)
     {
-        RequestHighlightFeaturesChanged?.Invoke(enumerable, this.AssociatedLayer.DefaultSymbology?.StrokeThickness);
+        RequestHighlightFeaturesChanged?.Invoke(enumerable, AssociatedLayer.DefaultSymbology?.StrokeThickness);
     }
 
     public void RefreshFeatureInView(Feature<Point> feature)
@@ -183,7 +180,7 @@ public class SelectedLayer : Notifier
 
     public IEnumerable<Feature<Point>> GetSelectedFeatures(bool includeRemoved = false)
     {
-        return Features.Where(i => includeRemoved || (i.Status != FeatureStatus.Removed && i.Status != FeatureStatus.CanceledNew));
+        return Features.Where(i => includeRemoved || i.Status != FeatureStatus.Removed && i.Status != FeatureStatus.CanceledNew);
     }
 
     public bool UpdateGeometry(Feature<Point> feature, Geometry<Point> newGeometry)
@@ -337,7 +334,7 @@ public class SelectedLayer : Notifier
                         return;
 
                     var vectorDataSource = AssociatedLayer?.DataSource as VectorDataSource;
-                    var geometryType = vectorDataSource?.GeometryType ?? Sta.Common.Enums.GeometryType.Point;
+                    var geometryType = vectorDataSource?.GeometryType ?? GeometryType.Point;
                     //var srid = AssociatedLayer?.DataSource?.Srid ?? 0;
 
                     // todo
@@ -483,7 +480,7 @@ public class SelectedLayer : Notifier
                 {
                     try
                     {
-                        await this.SaveChangesAsync();
+                        await SaveChangesAsync();
                     }
                     catch (DomainException ex)
                     {
@@ -507,7 +504,7 @@ public class SelectedLayer : Notifier
         get
         {
             if (_removeSelectedLayerCommand is null)
-                _removeSelectedLayerCommand = new RelayCommand(param => this.RequestRemoveSelectedLayer?.Invoke());
+                _removeSelectedLayerCommand = new RelayCommand(param => RequestRemoveSelectedLayer?.Invoke());
 
             return _removeSelectedLayerCommand;
         }
@@ -538,7 +535,7 @@ public class SelectedLayer : Notifier
         get
         {
             if (_zoomToCommand is null)
-                _zoomToCommand = new RelayCommand(param => this.RequestZoomTo?.Invoke(HighlightedFeatures, () => { TryFlashPoint(HighlightedFeatures); }));
+                _zoomToCommand = new RelayCommand(param => RequestZoomTo?.Invoke(HighlightedFeatures, () => { TryFlashPoint(HighlightedFeatures); }));
 
             return _zoomToCommand;
         }

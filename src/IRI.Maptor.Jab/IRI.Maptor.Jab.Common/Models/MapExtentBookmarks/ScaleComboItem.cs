@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Jab.Common.Models;
+namespace IRI.Maptor.Jab.Common.Models.MapExtentBookmarks;
 
 public sealed class ScaleComboItem
 {

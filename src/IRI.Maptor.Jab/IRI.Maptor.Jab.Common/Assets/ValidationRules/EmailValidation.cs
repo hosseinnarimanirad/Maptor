@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace IRI.Maptor.Jab.Common.Assets.ValidationRules
+namespace IRI.Maptor.Jab.Common.ValidationRules
 {
     public class EmailValidation : ValidationRule
     {

@@ -4,9 +4,9 @@ using System.Windows.Media;
 using System.Globalization;
 
 using IRI.Maptor.Sta.Common.Enums;
-using IRI.Maptor.Jab.Common.Assets.ColorBrushes;
+using IRI.Maptor.Jab.Common.ColorBrushes;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 public class FeatureStatusToBrushConverter : IValueConverter
 {

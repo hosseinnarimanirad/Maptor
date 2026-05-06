@@ -9,7 +9,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 
 using Drawing = System.Drawing;
 
-namespace IRI.Maptor.Jab.Common.Cartography.Helpers;
+namespace IRI.Maptor.Jab.Common.Cartography;
 
 public class GeometryHelper
 {

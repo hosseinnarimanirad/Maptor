@@ -13,14 +13,14 @@ using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Jab.Common.Cartography;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
-using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public class VectorLayer : SymbolizableLayer
 {
@@ -75,7 +75,7 @@ public class VectorLayer : SymbolizableLayer
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(HasSelectedFeatures));
 
-            this.OnSelectedFeaturesChanged?.Invoke(this, new CustomEventArgs<VectorLayer>(this));
+            OnSelectedFeaturesChanged?.Invoke(this, new CustomEventArgs<VectorLayer>(this));
         }
     }
 
@@ -154,18 +154,18 @@ public class VectorLayer : SymbolizableLayer
                             RasterizationMethod toRasterTechnique,
                             ScaleInterval? visibleRange)
     {
-        this.LayerId = Guid.NewGuid();
+        LayerId = Guid.NewGuid();
 
-        this.DataSource = dataSource;
+        DataSource = dataSource;
 
-        this._rendering = rendering;
+        _rendering = rendering;
 
-        this._rasterizationApproach = toRasterTechnique;
+        _rasterizationApproach = toRasterTechnique;
 
 
-        this._type = type;
+        _type = type;
 
-        this.SpatialModelMode = dataSource.GeometryType.AsLayerType();
+        SpatialModelMode = dataSource.GeometryType.AsLayerType();
 
         //if (layerType is not null)
         //    this._type |= layerType.Value;
@@ -183,22 +183,22 @@ public class VectorLayer : SymbolizableLayer
         //    this._type = type;
         //}
 
-        this.Extent = dataSource.WebMercatorExtent;
+        Extent = dataSource.WebMercatorExtent;
 
-        this.LayerName = layerName;
+        LayerName = layerName;
 
         foreach (var item in symbolizers)
         {
-            this.SetSymbolizer(item);
+            SetSymbolizer(item);
         }
 
-        this.VisibleRange = (visibleRange == null) ? ScaleInterval.All : visibleRange;
+        VisibleRange = visibleRange == null ? ScaleInterval.All : visibleRange;
 
     }
 
     #endregion
 
-    public override string ToString() => $"{Enum.GetName(this.Type)} - {this.DataSource?.ToString()}";
+    public override string ToString() => $"{Enum.GetName(Type)} - {DataSource?.ToString()}";
 
 
     public override async Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
@@ -229,7 +229,7 @@ public class VectorLayer : SymbolizableLayer
 
         foreach (var zoom in zoomLevels)
         {
-            var googleTiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(this.Extent, zoom);
+            var googleTiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(Extent, zoom);
 
             var scale = GoogleScale.GoogleScales.Single(i => i.ZoomLevel == zoom).InverseScale;
 

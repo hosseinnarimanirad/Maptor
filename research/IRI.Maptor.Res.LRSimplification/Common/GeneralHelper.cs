@@ -7,6 +7,7 @@ using IRI.Maptor.Sta.Mathematics;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Jab.Common.Layers;
 
 namespace IRI.Maptor.Res.LRSimplification.Common;
 

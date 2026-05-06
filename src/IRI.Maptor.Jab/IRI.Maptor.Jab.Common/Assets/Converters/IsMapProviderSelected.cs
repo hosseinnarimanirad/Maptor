@@ -3,7 +3,7 @@ using System.Windows.Data;
 using System.Globalization;
 using IRI.Maptor.Jab.Common.TileServices;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 public class IsMapProviderSelected : IValueConverter
 {

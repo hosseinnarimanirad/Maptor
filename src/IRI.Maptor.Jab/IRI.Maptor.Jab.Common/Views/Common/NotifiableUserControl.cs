@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Windows.Controls;
 using System.Runtime.CompilerServices;
 
-namespace IRI.Maptor.Jab.Common.Views;
+namespace IRI.Maptor.Jab.Controls;
 
 public class NotifiableUserControl : UserControl, INotifyPropertyChanged
 {

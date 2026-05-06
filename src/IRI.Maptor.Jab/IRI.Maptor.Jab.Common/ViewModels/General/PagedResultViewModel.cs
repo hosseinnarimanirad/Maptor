@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using IRI.Maptor.Jab.Common.Assets.Commands;
-
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public class PagedResultViewModel<T> : Notifier

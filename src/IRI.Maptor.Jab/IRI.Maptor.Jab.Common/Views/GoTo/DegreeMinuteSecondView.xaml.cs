@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using IRI.Maptor.Jab.Common;
 using System;
 
-namespace IRI.Maptor.Jab.Common.Views;
+namespace IRI.Maptor.Jab.Controls;
 
 /// <summary>
 /// Interaction logic for DegreeMinuteSecondView.xaml

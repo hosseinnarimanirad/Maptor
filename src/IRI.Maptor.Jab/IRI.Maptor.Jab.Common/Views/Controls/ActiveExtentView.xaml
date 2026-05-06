@@ -1,7 +1,7 @@
-﻿<maptor:MapMarker x:Class="IRI.Maptor.Jab.Common.Views.Controls.ActiveExtentView"
+﻿<maptor:MapMarker x:Class="IRI.Maptor.Jab.Controls.Controls.ActiveExtentView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Common.Views"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
              x:Name="root" Width="200" Height="150">
     <maptor:MapMarker.RenderTransform>
         <TransformGroup>

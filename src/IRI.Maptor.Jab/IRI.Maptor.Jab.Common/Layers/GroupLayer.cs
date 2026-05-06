@@ -3,7 +3,7 @@ using System.Linq;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public class GroupLayer : BaseLayer
 {
@@ -15,17 +15,17 @@ public class GroupLayer : BaseLayer
 
     public GroupLayer(string title)
     {
-        this.LayerName = title;
+        LayerName = title;
 
-        this.IsGroupLayer = true;
+        IsGroupLayer = true;
 
-        this.SubLayers = new System.Collections.ObjectModel.ObservableCollection<ILayer>();
+        SubLayers = new System.Collections.ObjectModel.ObservableCollection<ILayer>();
 
-        this.VisibleRange = ScaleInterval.All;
+        VisibleRange = ScaleInterval.All;
 
-        this.ShowInToc = true;
+        ShowInToc = true;
 
-        this.Visibility = System.Windows.Visibility.Collapsed;
+        Visibility = System.Windows.Visibility.Collapsed;
     }
 
     public void AddSubLayer(ILayer layer)
@@ -35,21 +35,21 @@ public class GroupLayer : BaseLayer
         //layer.ParentLayerName = this.LayerName;
         layer.Parent = this;
 
-        if (!this.SubLayers.Contains(layer))
+        if (!SubLayers.Contains(layer))
         {
-            var index = this.SubLayers.Count(x => x.ZIndex > layer.ZIndex);
-            
-            this.SubLayers.Insert(index, layer);
+            var index = SubLayers.Count(x => x.ZIndex > layer.ZIndex);
+
+            SubLayers.Insert(index, layer);
 
             //this.SubLayers.Add(layer);
         }
 
-        this.UpdateAllChildsVisible();
+        UpdateAllChildsVisible();
     }
 
     public override string ToString()
     {
-        return $"GROUP LAYER - {LayerName}: ({this.SubLayers?.Count ?? 0})";
+        return $"GROUP LAYER - {LayerName}: ({SubLayers?.Count ?? 0})";
     }
 
 }

@@ -4,7 +4,7 @@ using System.Windows.Media;
 using System.Globalization;
 using System.Windows.Shapes;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 public class StreamGeometryToPathConverter : IValueConverter
 {

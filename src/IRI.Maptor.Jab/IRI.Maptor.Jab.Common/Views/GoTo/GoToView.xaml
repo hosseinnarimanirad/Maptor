@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="IRI.Maptor.Jab.Common.Views.GoToView"
+﻿<UserControl x:Class="IRI.Maptor.Jab.Controls.GoToView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"

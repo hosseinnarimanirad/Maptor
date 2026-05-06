@@ -35,14 +35,10 @@ using IRI.Maptor.Sta.Common.IO.Gpx;
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Helpers;
-using IRI.Maptor.Jab.Common.Models.Map;
-using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
-using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Views.MapMarkers;
-using IRI.Maptor.Jab.Common.Models.Spatialable;
+using IRI.Maptor.Jab.Controls.MapMarkers;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Models.Settings;
@@ -50,6 +46,10 @@ using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Sta.Common.Exceptions;
 using IRI.Maptor.Sta.Spatial.Primitives.Esri;
+using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Common.Data.Settings;
+using IRI.Maptor.Jab.Common.Services;
+
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public abstract class MapViewModelBase : ViewModelBase

@@ -7,9 +7,9 @@ using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Jab.Common.Layers;
 
 namespace IRI.Maptor.Res.TrajectoryCompression;
 

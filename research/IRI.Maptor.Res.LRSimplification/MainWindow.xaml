@@ -6,9 +6,7 @@
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization;assembly=IRI.Maptor.Jab.Common"
         xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
-        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.Views;assembly=IRI.Maptor.Jab.Controls"
-        xmlns:iriJabUIComponents="clr-namespace:IRI.Maptor.Jab.MultiSelectItem.View;assembly=IRI.Maptor.Jab.MultiSelectItem"
-        xmlns:MapViewer="clr-namespace:IRI.Maptor.Jab.Controls;assembly=IRI.Maptor.Jab.Controls"   
+        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls;assembly=IRI.Maptor.Jab.Common"    
         mc:Ignorable="d" Loaded="Window_Loaded"
         FlowDirection="{Binding CurrentFlowDirection, Source={StaticResource Localization}}"
         Title="{Binding [lr_ui_title], Source={StaticResource Localization}}" Height="850" Width="1400">
@@ -118,7 +116,7 @@
                         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CurrentItem.SimplifiedLineString}" 
                              IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
                         <!--<TextBlock Grid.Row="4" Text="Model Features"/>-->
-                        <iriJabUIComponents:MultiSelectItem Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Title="{Binding [lr_training_modelFeatures], Source={StaticResource Localization}}"
+                        <maptor:MultiSelectItem Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Title="{Binding [lr_training_modelFeatures], Source={StaticResource Localization}}"
                                                         IsMultiSelectEnabled="True" DataContext="{Binding SelectedFeatures}"
                                                         PathSize="10" PathKind="Plus" FlowDirection="LeftToRight"/>
                         <TextBlock Grid.Row="5" Text="{Binding [lr_training_parameters], Source={StaticResource Localization}}" />

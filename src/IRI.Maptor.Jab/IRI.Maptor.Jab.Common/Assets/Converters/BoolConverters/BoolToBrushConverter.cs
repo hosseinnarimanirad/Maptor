@@ -3,7 +3,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Globalization;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 public class BoolToBrushConverter : IValueConverter
 {

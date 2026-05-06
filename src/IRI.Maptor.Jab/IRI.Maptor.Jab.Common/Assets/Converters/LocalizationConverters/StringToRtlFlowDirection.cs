@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 public class StringToRtlFlowDirection : IValueConverter
 {

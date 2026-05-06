@@ -1,12 +1,10 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Jab.Common.Models.Legend;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 

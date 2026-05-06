@@ -1,9 +1,7 @@
-﻿using IRI.Maptor.Jab.Common.Models.CoordinatePanel;
+﻿using System.Linq;
 using System.Collections.ObjectModel;
-using System.Linq;
-using IRI.Maptor.Jab.Common.Models;
-using System.Windows;
-using IRI.Maptor.Jab.Common.Localization;
+
+using IRI.Maptor.Jab.Common.Models.CoordinatePanel;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Ket.GdiPersistence;
 using IRI.Maptor.Sta.Common.Primitives;
 
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public class ClusteredPointLayer : BaseLayer
 {
@@ -23,12 +22,12 @@ public class ClusteredPointLayer : BaseLayer
     ClusteredGeoTaggedImageSource? _source;
 
     Func<string, System.Windows.FrameworkElement>? _viewMaker;
-     
+
     private ClusteredPointLayer()
     {
 
     }
-     
+
     public SpecialPointLayer? GetLayer(double scale)
     {
         if (_source is null || _viewMaker is null)

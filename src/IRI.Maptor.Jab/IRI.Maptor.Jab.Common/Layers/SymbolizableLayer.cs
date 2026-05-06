@@ -11,7 +11,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public abstract class SymbolizableLayer : BaseLayer
 {
@@ -33,10 +33,10 @@ public abstract class SymbolizableLayer : BaseLayer
             //symbolizer.Param.OnIsOnChanged -= RaiseVisibilityChanged;
             //symbolizer.Param.OnIsOnChanged += RaiseVisibilityChanged;
 
-            this._visualParameters.Add(symbolizer.Param);
+            _visualParameters.Add(symbolizer.Param);
         }
 
-        this._symbolizers.Add(symbolizer);
+        _symbolizers.Add(symbolizer);
 
         RaisePropertyChanged(nameof(HasMultiSymbolizers));
         RaisePropertyChanged(nameof(DefaultSymbology));
@@ -49,14 +49,14 @@ public abstract class SymbolizableLayer : BaseLayer
     public VisualParameters? DefaultLabel => _visualParameters?.FirstOrDefault(s => s.HasLabelParameters);
 
     public VisualParameters GetMainOrDefaultSymbology() => _symbolizers.FirstOrDefault(v => v is SimpleSymbolizer)?.Param ?? VisualParameters.CreateNew();
-     
+
     public VisualParameters? GetDefaultLabelParams() => _symbolizers.FirstOrDefault(v => v is LabelSymbolizer)?.Param ?? null;
 
     public abstract Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale);
-     
+
     public async Task<List<Feature<Point>>> GetRenderReadyFeatures(BoundingBox mapExtent, double mapScale, double screenWidth, double screenHeight)
     {
-        var feature = await this.GetFeatureSet(mapExtent, mapScale);
+        var feature = await GetFeatureSet(mapExtent, mapScale);
 
         if (feature is null || feature.HasNoGeometry())
             return new List<Feature<Point>>();
@@ -72,6 +72,6 @@ public abstract class SymbolizableLayer : BaseLayer
 
     public StyledLayerDescriptor GetSld()
     {
-        return this.Symbolizers.ParseToSld();
+        return Symbolizers.ParseToSld();
     }
 }

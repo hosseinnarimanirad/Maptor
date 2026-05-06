@@ -1,7 +1,7 @@
 using IRI.Maptor.Jab.Common.Helpers;
 using System.Windows.Media;
 
-namespace IRI.Maptor.Jab.Common.Assets.ColorBrushes;
+namespace IRI.Maptor.Jab.Common.ColorBrushes;
 
 public static class ModernUIColors
 {

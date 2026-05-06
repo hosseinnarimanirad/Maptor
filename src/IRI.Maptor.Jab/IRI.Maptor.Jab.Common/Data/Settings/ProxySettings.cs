@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Jab.Common.Abstractions;
+﻿using IRI.Maptor.Jab.Common.Data.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

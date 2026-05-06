@@ -10,24 +10,23 @@ using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Models.Legend;
-using IRI.Maptor.Jab.Common.Assets.Commands;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using System.Linq;
 using System.Windows.Input;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public abstract class BaseLayer : Notifier, ILayer
 {
     public BaseLayer()
     {
-        this.LayerId = Guid.NewGuid();
+        LayerId = Guid.NewGuid();
 
         //this.ParentLayerId = Guid.Empty;
 
         //this.ParentLayerName = string.Empty;
 
-        this.IsMovable = false;
+        IsMovable = false;
     }
 
     #region Layer Id, Name
@@ -53,7 +52,7 @@ public abstract class BaseLayer : Notifier, ILayer
             _layerName = value;
             RaisePropertyChanged();
 
-            this._onLayerNameChanged?.Invoke(this, new CustomEventArgs<string>(value));
+            _onLayerNameChanged?.Invoke(this, new CustomEventArgs<string>(value));
         }
     }
 
@@ -385,9 +384,9 @@ public abstract class BaseLayer : Notifier, ILayer
         get
         {
             //return this.Type.HasFlag(LayerType.Point) || this.Type.HasFlag(LayerType.Polyline) || this.Type.HasFlag(LayerType.Polygon);
-            return this.SpatialModelMode == SpatialModelMode.Point ||
-                    this.SpatialModelMode == SpatialModelMode.Polyline ||
-                    this.SpatialModelMode == SpatialModelMode.Polygon;
+            return SpatialModelMode == SpatialModelMode.Point ||
+                    SpatialModelMode == SpatialModelMode.Polyline ||
+                    SpatialModelMode == SpatialModelMode.Polygon;
         }
     }
 
@@ -441,7 +440,7 @@ public abstract class BaseLayer : Notifier, ILayer
 
             RaisePropertyChanged();
 
-            if (!this.IsGroupLayer)
+            if (!IsGroupLayer)
                 return;
 
             if (_allChildsVisible is null)
@@ -520,11 +519,11 @@ public abstract class BaseLayer : Notifier, ILayer
     private FrameworkElement? _element;
     public FrameworkElement? Element
     {
-        get { return this._element; }
+        get { return _element; }
 
         set
         {
-            this._element = value;
+            _element = value;
 
             if (value is not null)
             {
@@ -565,10 +564,10 @@ public abstract class BaseLayer : Notifier, ILayer
             return;
 
         Binding binding4 = new Binding() { Source = this, Path = new PropertyPath(nameof(Visibility)), Mode = BindingMode.TwoWay };
-        element.SetBinding(FrameworkElement.VisibilityProperty, binding4);
+        element.SetBinding(UIElement.VisibilityProperty, binding4);
 
         Binding binding5 = new Binding() { Source = this, Path = new PropertyPath(nameof(Opacity)), Mode = BindingMode.TwoWay };
-        element.SetBinding(FrameworkElement.OpacityProperty, binding5);
+        element.SetBinding(UIElement.OpacityProperty, binding5);
     }
 
 
@@ -619,15 +618,15 @@ public abstract class BaseLayer : Notifier, ILayer
         //if (!triggerVisibilityChagne)
         //    return;
 
-        if (this.Element is null && visibility == Visibility.Visible)
+        if (Element is null && visibility == Visibility.Visible)
         {
-            this.RequestChangeVisibility?.Invoke(this);
+            RequestChangeVisibility?.Invoke(this);
         }
     }
 
     public void ToggleVisibility()
     {
-        if (this.Visibility == Visibility.Visible)
+        if (Visibility == Visibility.Visible)
         {
             TurnOff();
         }
@@ -639,7 +638,7 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public bool CanRenderLayer(double mapScale)
     {
-        return this.Visibility == Visibility.Visible && this.VisibleRange.IsInRange(1.0 / mapScale);
+        return Visibility == Visibility.Visible && VisibleRange.IsInRange(1.0 / mapScale);
     }
 
     //public bool CanRenderLabels(double mapScale)
@@ -709,7 +708,7 @@ public abstract class BaseLayer : Notifier, ILayer
             if (_changeSymbologyCommand == null)
             {
                 //_changeSymbologyCommand = new RelayCommand(param => { this.RequestChangeSymbology?.Invoke(this); }, param => IsSelectedInToc);
-                _changeSymbologyCommand = new RelayCommand(param => { this.RequestChangeSymbology?.Invoke(this); });
+                _changeSymbologyCommand = new RelayCommand(param => { RequestChangeSymbology?.Invoke(this); });
             }
 
             return _changeSymbologyCommand;
@@ -723,7 +722,7 @@ public abstract class BaseLayer : Notifier, ILayer
         {
             if (_toggleExpandCommand == null)
             {
-                _toggleExpandCommand = new RelayCommand(param => { this.IsExpandedInToc = !this.IsExpandedInToc; });
+                _toggleExpandCommand = new RelayCommand(param => { IsExpandedInToc = !IsExpandedInToc; });
             }
 
             return _toggleExpandCommand;
@@ -788,7 +787,7 @@ public abstract class BaseLayer : Notifier, ILayer
         {
             if (_showLayerSettingsCommand == null)
             {
-                _showLayerSettingsCommand = new RelayCommand(param => this.RequestShowLayerSettings?.Invoke(this), _ => IsNotBusy);
+                _showLayerSettingsCommand = new RelayCommand(param => RequestShowLayerSettings?.Invoke(this), _ => IsNotBusy);
             }
 
             return _showLayerSettingsCommand;
@@ -802,12 +801,12 @@ public abstract class BaseLayer : Notifier, ILayer
     private event EventHandler<CustomEventArgs<VisualParameters>>? _onVisibilityChanged;
     public event EventHandler<CustomEventArgs<VisualParameters>> OnVisibilityChanged
     {
-        remove { this._onVisibilityChanged -= value; }
+        remove { _onVisibilityChanged -= value; }
         add
         {
-            if (this._onVisibilityChanged == null)
+            if (_onVisibilityChanged == null)
             {
-                this._onVisibilityChanged += value;
+                _onVisibilityChanged += value;
             }
         }
     }
@@ -816,12 +815,12 @@ public abstract class BaseLayer : Notifier, ILayer
     private event EventHandler<CustomEventArgs<string>>? _onLayerNameChanged;
     public event EventHandler<CustomEventArgs<string>> OnLayerNameChanged
     {
-        remove { this._onLayerNameChanged -= value; }
+        remove { _onLayerNameChanged -= value; }
         add
         {
-            if (this._onLayerNameChanged == null)
+            if (_onLayerNameChanged == null)
             {
-                this._onLayerNameChanged += value;
+                _onLayerNameChanged += value;
             }
         }
     }
@@ -830,12 +829,12 @@ public abstract class BaseLayer : Notifier, ILayer
     private event EventHandler<CustomEventArgs<BaseLayer>>? _onIsSelectedInTocChanged;
     public event EventHandler<CustomEventArgs<BaseLayer>> OnIsSelectedInTocChanged
     {
-        remove { this._onIsSelectedInTocChanged -= value; }
+        remove { _onIsSelectedInTocChanged -= value; }
         add
         {
-            if (this._onIsSelectedInTocChanged == null)
+            if (_onIsSelectedInTocChanged == null)
             {
-                this._onIsSelectedInTocChanged += value;
+                _onIsSelectedInTocChanged += value;
             }
         }
     }
@@ -843,12 +842,12 @@ public abstract class BaseLayer : Notifier, ILayer
     private event EventHandler<ILayer>? _onLayerInitilized;
     public event EventHandler<ILayer> OnLayerInitilized
     {
-        remove { this._onLayerInitilized -= value; }
+        remove { _onLayerInitilized -= value; }
         add
         {
-            if (this._onLayerInitilized == null)
+            if (_onLayerInitilized == null)
             {
-                this._onLayerInitilized += value;
+                _onLayerInitilized += value;
             }
         }
     }

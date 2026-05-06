@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using IRI.Maptor.Jab.Common.Assets.Attributes;
+using IRI.Maptor.Jab.Common.Attributes;
 
 namespace IRI.Maptor.Jab.Common.Models.Themes;
 

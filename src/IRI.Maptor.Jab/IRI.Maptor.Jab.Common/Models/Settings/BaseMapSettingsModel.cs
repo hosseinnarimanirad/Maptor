@@ -1,9 +1,9 @@
 ﻿using System;
 
 using IRI.Maptor.Sta.Spatial.Model;
-using IRI.Maptor.Jab.Common.Abstractions;
 using IRI.Maptor.Jab.Common.TileServices;
 using System.Collections.Generic;
+using IRI.Maptor.Jab.Common.Data.Settings;
 
 namespace IRI.Maptor.Jab.Common.Models.Settings;
 

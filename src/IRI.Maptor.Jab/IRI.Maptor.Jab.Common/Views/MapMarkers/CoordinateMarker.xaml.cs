@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Windows.Input;
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
-namespace IRI.Maptor.Jab.Common.Views.MapMarkers;
+namespace IRI.Maptor.Jab.Controls.MapMarkers;
 
 public partial class CoordinateMarker : MapMarker
 {

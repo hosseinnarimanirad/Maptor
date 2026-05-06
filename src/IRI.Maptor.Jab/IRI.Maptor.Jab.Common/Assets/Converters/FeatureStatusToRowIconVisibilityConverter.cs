@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using IRI.Maptor.Sta.Common.Enums;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 /// <summary>
 /// Collapses the row status icon when Status is Unchanged; Visible otherwise.

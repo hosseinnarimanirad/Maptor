@@ -1,4 +1,5 @@
-﻿using IRI.Maptor.Jab.Common.ViewModels;
+﻿using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Pdf;
 using IRI.Maptor.Sta.Spatial.Helpers;

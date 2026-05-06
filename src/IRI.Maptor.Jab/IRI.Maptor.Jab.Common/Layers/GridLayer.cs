@@ -1,13 +1,12 @@
+using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
+
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Persistence.DataSources;
-using System.Linq;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
-using System.Threading.Tasks;
-using IRI.Maptor.Sta.Ogc.WMS;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public class GridLayer : SymbolizableLayer
 {
@@ -39,10 +38,10 @@ public class GridLayer : SymbolizableLayer
 
     public override async Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
     {
-        if (this.DataSource == null)
+        if (DataSource == null)
             return FeatureSet<Point>.Empty;
 
-        var featureSet = await this.DataSource.GetAsFeatureSetAsync(mapExtent);
+        var featureSet = await DataSource.GetAsFeatureSetAsync(mapExtent);
 
         if (featureSet?.Features == null || featureSet.Features.Count == 0)
             return FeatureSet<Point>.Empty;

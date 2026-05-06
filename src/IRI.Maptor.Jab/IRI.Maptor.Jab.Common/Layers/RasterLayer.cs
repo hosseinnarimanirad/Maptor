@@ -1,11 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Windows.Media.Imaging;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Models;
@@ -15,7 +15,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.RasterDataSources;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public class RasterLayer : BaseLayer
 {
@@ -73,43 +73,43 @@ public class RasterLayer : BaseLayer
 
     public RasterLayer(RasterLayer parent, string layerName, LayerType layerType/* bool isBaseMap, bool isPyramid = false*/, double opacity, BoundingBox boundingBox, BitmapImage image)
     {
-        this.LayerId = Guid.NewGuid();
+        LayerId = Guid.NewGuid();
 
-        this._parent = parent;
+        _parent = parent;
 
         //this._type = isBaseMap ? LayerType.BaseMap : (isPyramid ? LayerType.ImagePyramid : LayerType.Raster);
-        this._type = layerType;
-         
-        this.LayerName = layerName;
+        _type = layerType;
 
-        this.Extent/*_extent*/ = boundingBox;
+        LayerName = layerName;
 
-        this.Image = image;
+        Extent/*_extent*/ = boundingBox;
 
-        this.Opacity = opacity;
+        Image = image;
+
+        Opacity = opacity;
         //this.VisualParameters = new VisualParameters(new ImageBrush(image), isBaseMap ? null : Brushes.Black, isBaseMap ? 0 : 1, opacity);
     }
 
     public RasterLayer(IDataSource dataSource, string layerName, LayerType layerType, double opacity/*, RenderMode rendering = RenderMode.Default*/, /*bool isBaseMap, bool isPyramid,*/ Visibility visibility, ScaleInterval visibleRange)
     {
-        this.LayerId = Guid.NewGuid();
+        LayerId = Guid.NewGuid();
 
-        this._type = layerType;/*isBaseMap ? LayerType.BaseMap : (isPyramid ? LayerType.ImagePyramid : LayerType.Raster);*/
+        _type = layerType;/*isBaseMap ? LayerType.BaseMap : (isPyramid ? LayerType.ImagePyramid : LayerType.Raster);*/
 
-        this.DataSource = dataSource;
+        DataSource = dataSource;
 
         if (!dataSource.WebMercatorExtent.IsNaN())
         {
-            this.Extent/*_extent*/ = dataSource.WebMercatorExtent;
+            Extent/*_extent*/ = dataSource.WebMercatorExtent;
         }
 
-        this.LayerName = layerName;
+        LayerName = layerName;
 
-        this.VisibleRange = visibleRange;
+        VisibleRange = visibleRange;
 
-        this.Opacity = opacity;
+        Opacity = opacity;
 
-        this.Visibility = visibility;
+        Visibility = visibility;
     }
 
 
@@ -120,11 +120,11 @@ public class RasterLayer : BaseLayer
 
         if (element is Path || element is Rectangle)
         {
-            Binding binding4 = new Binding() { Source = this._parent, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
-            element.SetBinding(Path.VisibilityProperty, binding4);
+            Binding binding4 = new Binding() { Source = _parent, Path = new PropertyPath("Visibility"), Mode = BindingMode.TwoWay };
+            element.SetBinding(UIElement.VisibilityProperty, binding4);
 
-            Binding binding5 = new Binding() { Source = this._parent, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
-            element.SetBinding(Path.OpacityProperty, binding5);
+            Binding binding5 = new Binding() { Source = _parent, Path = new PropertyPath("Opacity"), Mode = BindingMode.TwoWay };
+            element.SetBinding(UIElement.OpacityProperty, binding5);
         }
         else
             throw new NotImplementedException();
@@ -214,7 +214,7 @@ public class RasterLayer : BaseLayer
                 if (image is null)
                     return [];
 
-                RasterLayer layer = new RasterLayer(this, this.LayerName, Type/*false*/, Opacity, boundingBox, image);
+                RasterLayer layer = new RasterLayer(this, LayerName, Type/*false*/, Opacity, boundingBox, image);
 
                 result.Add(layer);
             }
@@ -244,7 +244,7 @@ public class RasterLayer : BaseLayer
             {
                 Fill = new ImageBrush(item.Image),
                 Data = geometry,
-                Tag = new LayerTag(mapScale) { Layer = item, IsDrawn = true, BoundingBox = item.Extent, AncestorLayerId = this.LayerId }
+                Tag = new LayerTag(mapScale) { Layer = item, IsDrawn = true, BoundingBox = item.Extent, AncestorLayerId = LayerId }
             };
 
             item.Element = path;

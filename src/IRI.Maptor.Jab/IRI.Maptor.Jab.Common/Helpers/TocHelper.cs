@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Persistence.RasterDataSources;
 using System.Threading.Tasks;
+using IRI.Maptor.Jab.Common.Layers;
 
 
 namespace IRI.Maptor.Jab.Common.Helpers;

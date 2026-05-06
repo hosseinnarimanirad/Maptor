@@ -4,10 +4,10 @@ using System.Windows.Media;
 using System.Globalization;
 
 using IRI.Maptor.Sta.Common.Enums;
-using IRI.Maptor.Jab.Common.Assets.ColorBrushes;
 using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Jab.Common.ColorBrushes;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 /// <summary>
 /// Converts FeatureStatus to background-appropriate brushes (light tints).

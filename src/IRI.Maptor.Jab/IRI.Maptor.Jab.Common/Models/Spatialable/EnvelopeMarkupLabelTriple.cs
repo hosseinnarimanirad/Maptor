@@ -6,9 +6,9 @@ using System.Windows.Media.Imaging;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Common.Assets.Commands;
+using IRI.Maptor.Jab.Common.Models.MapExtentBookmarks;
 
-namespace IRI.Maptor.Jab.Common.Models.Spatialable;
+namespace IRI.Maptor.Jab.Common.Models;
 
 public class EnvelopeMarkupLabelTriple : Notifier
 {
@@ -77,29 +77,29 @@ public class EnvelopeMarkupLabelTriple : Notifier
 
     public EnvelopeMarkupLabelTriple(IriProvince93 province)
     {
-        this.Province = province;
+        Province = province;
 
-        this.Label = province.GetDescription();
+        Label = province.GetDescription();
 
-        this.PathMarkup = province.GetPathMarkup();
+        PathMarkup = province.GetPathMarkup();
 
-        this.WebMercatorExtent = province.GetWebMercatorExtent();
+        WebMercatorExtent = province.GetWebMercatorExtent();
 
-        this.IsUserDefined = false;
+        IsUserDefined = false;
     }
 
     public EnvelopeMarkupLabelTriple(MapExtentBookmark bookmark)
     {
         //this.Province = province;
-        this.Id = bookmark.Id;
+        Id = bookmark.Id;
 
-        this.Label = bookmark.Title;
+        Label = bookmark.Title;
 
-        this.Thumbnail = bookmark.Thumbnail;
+        Thumbnail = bookmark.Thumbnail;
 
-        this.WebMercatorExtent = bookmark.WebMercatorExtent;
+        WebMercatorExtent = bookmark.WebMercatorExtent;
 
-        this.IsUserDefined = true;
+        IsUserDefined = true;
     }
 
     public Action<EnvelopeMarkupLabelTriple>? RequestRaiseSelected { get; set; }
@@ -110,7 +110,7 @@ public class EnvelopeMarkupLabelTriple : Notifier
         get
         {
             if (_selectedCommand == null)
-                _selectedCommand = new RelayCommand((param) => this.RequestRaiseSelected?.Invoke(this));
+                _selectedCommand = new RelayCommand((param) => RequestRaiseSelected?.Invoke(this));
 
             return _selectedCommand;
         }

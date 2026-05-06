@@ -2,18 +2,17 @@ using System;
 using System.Linq;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Common.Cartography.Symbologies;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using System.Threading.Tasks;
-using IRI.Maptor.Sta.Ogc.WMS;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public class SpecialLineLayer : SymbolizableLayer
 {
@@ -21,7 +20,7 @@ public class SpecialLineLayer : SymbolizableLayer
 
     public const string DefaultArrowString = "F1 M 6.75,9L 8.75,11L 16,18L 9.5,18L 0,9L 9.5,0L 16,0L 8.75,7L 6.75,9 Z";
 
-    public static readonly System.Windows.Media.Geometry DefaultArrow = System.Windows.Media.Geometry.Parse(DefaultArrowString);
+    public static readonly Geometry DefaultArrow = Geometry.Parse(DefaultArrowString);
 
     List<Point> _pointCollection;
 
@@ -32,11 +31,11 @@ public class SpecialLineLayer : SymbolizableLayer
     /// </summary>
     public List<Point> PointCollection => _pointCollection;
 
-    System.Windows.Media.Geometry _symbol;
-    public System.Windows.Media.Geometry Symbol
+    Geometry _symbol;
+    public Geometry Symbol
     {
         get { return _symbol; }
-        set { this._symbol = value; }
+        set { _symbol = value; }
     }
 
     public bool CanEdit { get; set; } = true;
@@ -47,16 +46,16 @@ public class SpecialLineLayer : SymbolizableLayer
     /// <param name="pointCollection"></param>
     /// <param name="extent"></param>
     /// <param name="polyBezierMode"></param>
-    public SpecialLineLayer(System.Windows.Media.Geometry symbol, VisualParameters parameters, List<Point> pointCollection, bool canEdit = true, bool polyBezierMode = true)
+    public SpecialLineLayer(Geometry symbol, VisualParameters parameters, List<Point> pointCollection, bool canEdit = true, bool polyBezierMode = true)
     {
         if (!polyBezierMode)
             throw new NotImplementedException();
 
         var visualParameters = parameters ?? VisualParameters.CreateNew(1);
 
-        this.SetSymbolizer(new SimpleSymbolizer(visualParameters));
+        SetSymbolizer(new SimpleSymbolizer(visualParameters));
 
-        this.ZIndex = int.MaxValue;
+        ZIndex = int.MaxValue;
 
         Update(symbol, pointCollection, canEdit, polyBezierMode);
     }
@@ -74,15 +73,15 @@ public class SpecialLineLayer : SymbolizableLayer
         return new PathGeometry(new List<PathFigure>() { figure });
     }
 
-    public void Update(System.Windows.Media.Geometry symbol, List<Point> pointCollection, bool canEdit = true, bool polyBezierMode = true)
+    public void Update(Geometry symbol, List<Point> pointCollection, bool canEdit = true, bool polyBezierMode = true)
     {
-        this._symbol = symbol;
+        _symbol = symbol;
 
-        this.Extent = BoundingBox.CalculateBoundingBox(pointCollection);
+        Extent = BoundingBox.CalculateBoundingBox(pointCollection);
 
         _pointCollection = pointCollection;
 
-        this._isPolyBezierMode = polyBezierMode;
+        _isPolyBezierMode = polyBezierMode;
     }
 
     public List<Path> GetPaths(Transform toScreen, BoundingBox mapBoundingBox, Action mouseDownAction = null)
@@ -112,7 +111,7 @@ public class SpecialLineLayer : SymbolizableLayer
 
         for (int i = 0; i <= tolerance; i++)
         {
-            double fraction = (i) / tolerance;
+            double fraction = i / tolerance;
 
             System.Windows.Point location, direction;
 
@@ -121,7 +120,7 @@ public class SpecialLineLayer : SymbolizableLayer
             if (!screenLimit.Intersects(new Point(location.X, location.Y)))
                 continue;
 
-            var param = this.GetMainOrDefaultSymbology();
+            var param = GetMainOrDefaultSymbology();
 
             Path tempPath = new Path() { Fill = param.Fill, Data = _symbol };
 
@@ -161,7 +160,7 @@ public class SpecialLineLayer : SymbolizableLayer
 
     public override Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
     {
-        var pointCollection = this.PointCollection;
+        var pointCollection = PointCollection;
 
         if (pointCollection == null || pointCollection.Count < 2)
             return Task.FromResult(FeatureSet<Point>.Empty);
@@ -174,7 +173,7 @@ public class SpecialLineLayer : SymbolizableLayer
         if (!lineGeometry.Intersects(extentGeometry))
             return Task.FromResult(FeatureSet<Point>.Empty);
 
-        return Task.FromResult(FeatureSet<Point>.Create($"{nameof(SpecialLineLayer)}-{this.LayerId}", [lineGeometry.AsFeature()])); 
+        return Task.FromResult(FeatureSet<Point>.Create($"{nameof(SpecialLineLayer)}-{LayerId}", [lineGeometry.AsFeature()]));
 
     }
 }

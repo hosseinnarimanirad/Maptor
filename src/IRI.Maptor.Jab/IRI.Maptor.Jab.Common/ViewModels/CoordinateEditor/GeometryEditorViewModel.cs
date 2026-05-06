@@ -6,13 +6,13 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
-using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 

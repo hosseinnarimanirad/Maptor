@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace IRI.Maptor.Jab.Common.Assets.ColorBrushes;
+namespace IRI.Maptor.Jab.Common.ColorBrushes;
 
 public static class MapAppColors
 {

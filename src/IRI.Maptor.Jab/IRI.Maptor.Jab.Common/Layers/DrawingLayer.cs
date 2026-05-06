@@ -13,7 +13,7 @@ using IRI.Maptor.Sta.Ogc.WMS;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Common.Enums;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public class DrawingLayer : SymbolizableLayer
 {
@@ -39,7 +39,7 @@ public class DrawingLayer : SymbolizableLayer
 
     public DrawingLayer(DrawMode mode, Transform toScreen, Func<double, double> screenToMap, Point startMercatorPoint, EditableFeatureLayerOptions options)
     {
-        this._mode = mode;
+        _mode = mode;
 
         GeometryType type;
 
@@ -62,24 +62,24 @@ public class DrawingLayer : SymbolizableLayer
 
         //var options = new EditableFeatureLayerOptions() { IsVerticesLabelVisible = isEdgeLengthVisible };
 
-        this._editableFeatureLayer = new EditableFeatureLayer("edit", new List<Point>() { startMercatorPoint }, toScreen, screenToMap, type, options) { ZIndex = int.MaxValue };
+        _editableFeatureLayer = new EditableFeatureLayer("edit", new List<Point>() { startMercatorPoint }, toScreen, screenToMap, type, options) { ZIndex = int.MaxValue };
 
         // todo: consider this line why not just assigning OnRequestFinishDrawing 
         _editableFeatureLayer.OnRequestFinishDrawing += (sender, e) => OnRequestFinishDrawing?.Invoke(this, EventArgs.Empty);
 
-        this._editableFeatureLayer.RequestFinishEditing = g =>
+        _editableFeatureLayer.RequestFinishEditing = g =>
         {
-            this.RequestFinishEditing?.Invoke(g);
+            RequestFinishEditing?.Invoke(g);
         };
 
-        this._editableFeatureLayer.RequestCancelDrawing = () => { this.RequestCancelDrawing?.Invoke(); };
+        _editableFeatureLayer.RequestCancelDrawing = () => { RequestCancelDrawing?.Invoke(); };
 
-        this.VisibleRange = ScaleInterval.All;
+        VisibleRange = ScaleInterval.All;
 
         //this.VisualParameters = new VisualParameters(mode == DrawMode.Polygon ? new SolidColorBrush(Colors.YellowGreen) : null, new SolidColorBrush(Colors.Blue), 3, 1);
         var param = new VisualParameters(mode == DrawMode.Polygon ? new SolidColorBrush(Colors.YellowGreen) : null, new SolidColorBrush(Colors.Blue), 3, 1);
 
-        this.SetSymbolizer(new SimpleSymbolizer(param));
+        SetSymbolizer(new SimpleSymbolizer(param));
     }
 
     public Action<Geometry<Point>> RequestFinishEditing;
@@ -90,27 +90,27 @@ public class DrawingLayer : SymbolizableLayer
 
     public EditableFeatureLayer GetLayer()
     {
-        return this._editableFeatureLayer;
+        return _editableFeatureLayer;
     }
 
     public void AddVertex(Point webMercatorPoint)
     {
-        this._editableFeatureLayer.AddVertex(webMercatorPoint);
+        _editableFeatureLayer.AddVertex(webMercatorPoint);
     }
 
     public void UpdateLastVertexLocation(Point point)
     {
-        this._editableFeatureLayer.UpdateLastSemiVertexLocation(point);
+        _editableFeatureLayer.UpdateLastSemiVertexLocation(point);
     }
 
     public void AddSemiVertex(Point webMercatorPoint)
     {
-        this._editableFeatureLayer.AddSemiVertex(webMercatorPoint);
+        _editableFeatureLayer.AddSemiVertex(webMercatorPoint);
     }
 
     public Geometry<Point> GetFinalGeometry()
     {
-        var geometry = this._editableFeatureLayer.GetFinalGeometry();
+        var geometry = _editableFeatureLayer.GetFinalGeometry();
 
         if (geometry.Type == GeometryType.MultiPolygon)
         {
@@ -124,17 +124,17 @@ public class DrawingLayer : SymbolizableLayer
 
     public bool HasAnyPoint()
     {
-        return this._editableFeatureLayer == null ? false : this._editableFeatureLayer.HasAnyPoint();
+        return _editableFeatureLayer == null ? false : _editableFeatureLayer.HasAnyPoint();
     }
 
     public bool TryFinishDrawingPart()
     {
-        return this._editableFeatureLayer.TryFinishDrawingPart();
+        return _editableFeatureLayer.TryFinishDrawingPart();
     }
 
     public void StartNewPart(Point webMercatorPoint)
     {
-        this._editableFeatureLayer.StartNewPart(webMercatorPoint);
+        _editableFeatureLayer.StartNewPart(webMercatorPoint);
     }
 
     public DrawingVisual? AsDrawingVisual(BoundingBox mapExtent, int imageWidth, int imageHeight, double mapScale)
@@ -144,7 +144,7 @@ public class DrawingLayer : SymbolizableLayer
         if (geometry == null)
             return null;
 
-        return geometry.AsDrawingVisual(this.GetMainOrDefaultSymbology()/*this.VisualParameters*/, imageWidth, imageHeight, mapExtent);
+        return geometry.AsDrawingVisual(GetMainOrDefaultSymbology()/*this.VisualParameters*/, imageWidth, imageHeight, mapExtent);
 
         //double xScale = imageWidth / mapExtent.Width;
         //double yScale = imageHeight / mapExtent.Height;

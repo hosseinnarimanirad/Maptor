@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Security.Principal;
+using IRI.Maptor.Jab.Common.Services;
 
-using IRI.Maptor.Jab.Common.Abstractions;
- 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public class ViewModelBase : Notifier

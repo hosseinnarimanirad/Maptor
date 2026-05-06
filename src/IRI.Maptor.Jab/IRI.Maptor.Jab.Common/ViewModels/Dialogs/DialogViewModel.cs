@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Windows.Media;
-
-using IRI.Maptor.Jab.Common.Assets.Commands;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 

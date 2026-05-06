@@ -13,7 +13,7 @@
 
 //using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 //using IRI.Maptor.Jab.Common.Cartography.Symbologies;
-//using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
+//using IRI.Maptor.Jab.Common.Cartography;
 
 //namespace IRI.Maptor.Jab.Common;
 

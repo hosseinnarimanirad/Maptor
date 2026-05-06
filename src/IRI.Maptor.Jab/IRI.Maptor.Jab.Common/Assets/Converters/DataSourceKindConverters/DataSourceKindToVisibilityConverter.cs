@@ -5,7 +5,7 @@
 
 //using IRI.Maptor.Sta.Persistence.Abstractions;
 
-//namespace IRI.Maptor.Jab.Common.Assets.Converters;
+//namespace IRI.Maptor.Jab.Common.Converters;
 
 //public class DataSourceKindToVisibilityConverter : IValueConverter
 //{

@@ -1,8 +1,8 @@
 ﻿using System.Windows.Media;
 using System.Windows.Controls;
-using IRI.Maptor.Jab.Common.Abstractions;
 
-namespace IRI.Maptor.Jab.Common.Views.MapMarkers;
+
+namespace IRI.Maptor.Jab.Controls.MapMarkers;
 
 /// <summary>
 /// Interaction logic for CountableShapeMarker.xaml

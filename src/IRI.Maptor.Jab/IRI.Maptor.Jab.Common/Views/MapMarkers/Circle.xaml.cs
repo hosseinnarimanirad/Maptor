@@ -1,8 +1,7 @@
-﻿using System.Windows.Media;
-using System.Windows.Controls;
-using IRI.Maptor.Jab.Common.Abstractions;
+﻿using System.Windows.Media; 
 
-namespace IRI.Maptor.Jab.Common.Views.MapMarkers;
+
+namespace IRI.Maptor.Jab.Controls.MapMarkers;
 
 public partial class Circle : MapMarker
 {

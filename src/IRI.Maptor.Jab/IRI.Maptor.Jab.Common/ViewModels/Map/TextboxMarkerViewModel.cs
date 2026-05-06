@@ -1,12 +1,12 @@
-using IRI.Maptor.Jab.Common.Assets.Fonts;
-using IRI.Maptor.Jab.Common.Assets.ColorBrushes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using IRI.Maptor.Jab.Common.Assets.Commands;
+using System.Collections.Generic;
+
 using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Jab.Common.ColorBrushes;
+using IRI.Maptor.Jab.Common.Assets.Fonts;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 

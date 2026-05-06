@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using System.Windows.Media.Imaging;
 using IRI.Maptor.Sta.Common.Primitives;
 
-namespace IRI.Maptor.Jab.Common.Models;
+namespace IRI.Maptor.Jab.Common.Models.MapExtentBookmarks;
 
 public class MapExtentBookmark
 {

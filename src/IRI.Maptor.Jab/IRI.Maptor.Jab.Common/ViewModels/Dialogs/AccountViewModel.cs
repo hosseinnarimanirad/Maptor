@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using IRI.Maptor.Sta.Common.Contracts.Google;
+
+using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Sta.Common.Services;
-using IRI.Maptor.Jab.Common.Assets.Commands;
+using IRI.Maptor.Jab.Common.Services;
 using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Sta.Spatial.Services.Google;
-using IRI.Maptor.Jab.Common.Abstractions;
-using IRI.Maptor.Jab.Common.Events;
+using IRI.Maptor.Sta.Common.Contracts.Google;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 

@@ -1,17 +1,16 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Models.FeatureChanges;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Helpers;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.Primitives; 
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Jab.Common.Models.FeatureChanges;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 

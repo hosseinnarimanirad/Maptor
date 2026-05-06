@@ -1,22 +1,21 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Sta.Persistence.DataSources;
 
-using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
-using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Sta.Ogc.SLD;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-using IRI.Maptor.Sta.Ogc.SLD;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
+using IRI.Maptor.Jab.Common.Models;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public class DrawingItemLayer : VectorLayer
 {
@@ -86,7 +85,7 @@ public class DrawingItemLayer : VectorLayer
             }
             else
             {
-                this.DataSource = new MemoryDataSource([_feature]);
+                DataSource = new MemoryDataSource([_feature]);
 
                 //this.Extent = _feature.TheGeometry.GetBoundingBox();
             }
@@ -97,32 +96,32 @@ public class DrawingItemLayer : VectorLayer
 
     private DrawingItemLayer(string layerName, RasterizationMethod rasterizationMethod)
     {
-        this.LayerName = layerName;
-        this._rasterizationApproach = rasterizationMethod;
-        this.ZIndex = int.MaxValue;
-        this.HighlightGeometryKey = Guid.NewGuid();
+        LayerName = layerName;
+        _rasterizationApproach = rasterizationMethod;
+        ZIndex = int.MaxValue;
+        HighlightGeometryKey = Guid.NewGuid();
     }
 
     private DrawingItemLayer(string layerName, Feature<Point> feature, RasterizationMethod rasterizationMethod) : this(layerName, rasterizationMethod)
     {
-        this.Feature = feature;
+        Feature = feature;
     }
 
     public bool IsSpecialLayer() => SpecialPointLayer != null;
 
-    public bool CanShowHighlightGeometry() => this.IsSelectedInToc && this.Visibility == System.Windows.Visibility.Visible;
+    public bool CanShowHighlightGeometry() => IsSelectedInToc && Visibility == System.Windows.Visibility.Visible;
 
 
     public string Serialize()
     {
-        var sld = this.GetSld();
+        var sld = GetSld();
 
         var sldString = XmlHelper.Parse(sld);
 
-        if (this.Feature is null)
+        if (Feature is null)
             return string.Empty;
 
-        var feature = this.Feature.AsGeoJsonFeature();
+        var feature = Feature.AsGeoJsonFeature();
 
         feature.AddSldAttribute(sldString);
 

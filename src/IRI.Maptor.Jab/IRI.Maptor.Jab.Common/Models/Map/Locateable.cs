@@ -3,12 +3,13 @@ using System.Windows.Media.Animation;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Events;
-using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Jab.Controls.MapMarkers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+
 using WpfPoint = System.Windows.Point;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Models;
 
 public class Locateable : Notifier
 {
@@ -45,10 +46,10 @@ public class Locateable : Notifier
             _x = value;
             RaisePropertyChanged();
 
-            this._location.X = value;
+            _location.X = value;
 
             if (CanTriggerPositionChange)
-                this.OnPositionChanged?.Invoke(this, new ChangeEventArgs<WpfPoint>(oldValue, new WpfPoint(_x, _y)));
+                OnPositionChanged?.Invoke(this, new ChangeEventArgs<WpfPoint>(oldValue, new WpfPoint(_x, _y)));
         }
     }
 
@@ -69,10 +70,10 @@ public class Locateable : Notifier
             _y = value;
             RaisePropertyChanged();
 
-            this._location.Y = value;
+            _location.Y = value;
 
             if (CanTriggerPositionChange)
-                this.OnPositionChanged?.Invoke(this, new ChangeEventArgs<WpfPoint>(oldValue, new WpfPoint(_x, _y)));
+                OnPositionChanged?.Invoke(this, new ChangeEventArgs<WpfPoint>(oldValue, new WpfPoint(_x, _y)));
         }
     }
 
@@ -93,7 +94,7 @@ public class Locateable : Notifier
         {
             _isSelected = value;
             RaisePropertyChanged();
-            this.RequestChangeIsSelected?.Invoke(value);
+            RequestChangeIsSelected?.Invoke(value);
         }
     }
 
@@ -103,12 +104,12 @@ public class Locateable : Notifier
         get { return _element; }
         set
         {
-            this._element = value;
-            this._element.MouseDown -= Element_MouseDown;
-            this._element.MouseDown += Element_MouseDown;
+            _element = value;
+            _element.MouseDown -= Element_MouseDown;
+            _element.MouseDown += Element_MouseDown;
 
-            this._element.MouseUp -= _element_MouseUp;
-            this._element.MouseUp += _element_MouseUp;
+            _element.MouseUp -= _element_MouseUp;
+            _element.MouseUp += _element_MouseUp;
         }
     }
 
@@ -121,25 +122,25 @@ public class Locateable : Notifier
     {
         if (ancherFunction == null)
         {
-            this.AncherFunction = AncherFunctionHandlers.CenterCenter;
+            AncherFunction = AncherFunctionHandlers.CenterCenter;
         }
         else
         {
-            this.AncherFunction = ancherFunction;
+            AncherFunction = ancherFunction;
         }
 
-        this._location = new System.Windows.Point(0, 0);
+        _location = new WpfPoint(0, 0);
     }
 
     public Locateable(Point wgs84GeodeticPosition, AncherFunctionHandler? ancherFunction = null) : this(ancherFunction)
     {
         var webMercator = MapProjects.GeodeticWgs84ToWebMercator(wgs84GeodeticPosition);
 
-        this.X = webMercator.X;
+        X = webMercator.X;
 
-        this.Y = webMercator.Y;
+        Y = webMercator.Y;
 
-        this._location = webMercator.AsWpfPoint();
+        _location = webMercator.AsWpfPoint();
     }
 
     //public Locateable(FrameworkElement element, Popup infoWindow, SpecialPointLayer.AncherFunctionHandler ancherFunction = null)
@@ -179,7 +180,7 @@ public class Locateable : Notifier
 
     void Element_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        this.OnRequestHandleMouseDown?.Invoke(null, EventArgs.Empty);
+        OnRequestHandleMouseDown?.Invoke(null, EventArgs.Empty);
     }
 
     private void _element_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -189,31 +190,31 @@ public class Locateable : Notifier
 
     public void RaiseMouseUpEvent()
     {
-        this.OnRequestHandleMouseUp?.Invoke(null, EventArgs.Empty);
+        OnRequestHandleMouseUp?.Invoke(null, EventArgs.Empty);
     }
 
 
     public void Select()
     {
-        if (this.Element is null)
+        if (Element is null)
             return;
 
-        var element = (Views.MapMarkers.LocationMarker)this.Element;
+        var element = (LocationMarker)Element;
 
         element.BeginAnimation(System.Windows.FrameworkElement.HeightProperty, new DoubleAnimation(250, new System.Windows.Duration(new TimeSpan(0, 0, 1))) { FillBehavior = FillBehavior.HoldEnd });
     }
 
     public void Unselect()
     {
-        if (this.Element == null)
+        if (Element == null)
             return;
 
-        var storyBoard = this.Element.FindResource("mapMarkerResetOnMouseLeave") as Storyboard;
+        var storyBoard = Element.FindResource("mapMarkerResetOnMouseLeave") as Storyboard;
 
         if (storyBoard == null)
             return;
 
-        storyBoard.Begin(this.Element);
+        storyBoard.Begin(Element);
     }
 
     public static Locateable CreateFromWebMercatorPoint(Point webMercatorPoint, AncherFunctionHandler? ancherFunctionHandler = null)

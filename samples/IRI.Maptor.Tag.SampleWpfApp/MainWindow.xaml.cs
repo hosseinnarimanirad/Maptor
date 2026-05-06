@@ -3,11 +3,11 @@ using System.Globalization;
 using System.Text;
 using System.Windows;
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Controls.Common;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Data;
+using IRI.Maptor.Jab.Common.Models;
 
 namespace IRI.Maptor.Tag.SampleWpfApp;
 

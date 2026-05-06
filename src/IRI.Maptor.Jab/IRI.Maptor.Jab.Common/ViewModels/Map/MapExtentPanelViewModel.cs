@@ -6,13 +6,10 @@ using System.Collections.ObjectModel;
 
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Helpers;
-using IRI.Maptor.Sta.Spatial.Helpers;
-using IRI.Maptor.Jab.Common.Abstractions;
-using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
-using DocumentFormat.OpenXml.Office.CustomUI;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Jab.Common.Models.MapExtentBookmarks;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 
@@ -248,7 +245,7 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
 
                 _store.Save(Bookmarks);
 
-                this.Map.PredefinedExtents.Add(new Models.Spatialable.EnvelopeMarkupLabelTriple(bookmark));
+                this.Map.PredefinedExtents.Add(new EnvelopeMarkupLabelTriple(bookmark));
 
                 NewBookmarkTitle = string.Empty;
             },

@@ -6,12 +6,12 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using IRI.Maptor.Jab.Common.Assets.Commands;
+
 using IRI.Maptor.Jab.Common.Assets.Fonts;
 using IRI.Maptor.Jab.Common.Helpers;
-using IRI.Maptor.Jab.Common.Views;
+using IRI.Maptor.Jab.Controls;
 
-namespace IRI.Maptor.Jab.Common.Views.MapMarkers;
+namespace IRI.Maptor.Jab.Controls.MapMarkers;
 
 public partial class TextboxMarker : MapMarker
 {

@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 
 using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Jab.Controls.MapMarkers;
 
 namespace IRI.Maptor.Jab.Common.Models;
 
@@ -154,9 +155,9 @@ public class EditableFeatureLayerOptions : Notifier
 
     public VisualParameters Visual { get; set; }// = new VisualParameters(_fill, _stroke, 4, .9);
 
-    public Func<FrameworkElement> MakePrimaryVertex { get; set; } = () => new Views.MapMarkers.Circle(1);
+    public Func<FrameworkElement> MakePrimaryVertex { get; set; } = () => new Circle(1);
 
-    public Func<FrameworkElement> MakeSecondaryVertex { get; set; } = () => new Views.MapMarkers.Circle(.6);
+    public Func<FrameworkElement> MakeSecondaryVertex { get; set; } = () => new Circle(.6);
 
     public EditableFeatureLayerOptions()
     {

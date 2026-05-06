@@ -1,10 +1,11 @@
+using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 public class PointNumberConverter : IMultiValueConverter
 {

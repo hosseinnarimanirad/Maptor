@@ -1,0 +1,630 @@
+<maptor:NotifiableUserControl x:Class="IRI.Maptor.Jab.Controls.MapLegendView"
+            x:Name="root" 
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+            xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
+            xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+            xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
+            xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+            xmlns:sta="clr-namespace:IRI.Maptor.Sta.Common.Enums;assembly=IRI.Maptor.Sta.Common"
+            xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase">
+    <maptor:NotifiableUserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/MenuIconStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+
+            <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+            <Style TargetType="{x:Type Path}" BasedOn="{StaticResource circleButtonPath}"/>
+
+            <!--<Style x:Key="filterTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource MahApps.Styles.TextBox}">
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="Padding" Value="8,4"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Background" Value="#F5F5F5"/>
+                        <Setter Property="Foreground" Value="#999999"/>
+                        <Setter Property="Opacity" Value="0.8"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>-->
+
+            <CollectionViewSource x:Key="collectionViewSource" 
+                                  Source="{Binding Layers, RelativeSource={RelativeSource AncestorType=maptor:NotifiableUserControl}}" 
+                                  Filter="CollectionViewSource_Filter">
+                <CollectionViewSource.SortDescriptions>
+                    <scm:SortDescription PropertyName="TocOrder" Direction="Descending"/>
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
+
+            <HierarchicalDataTemplate x:Key="legendTemplate">
+                <HierarchicalDataTemplate.ItemsSource>
+                    <MultiBinding Converter="{StaticResource filteredSubLayersConverter}">
+                        <Binding Path="SubLayers"/>
+                        <Binding Path="LegendViewModel.LayerNameFilterText" ElementName="root"/>
+                        <Binding Path="LegendViewModel.DataSourceKindFilterItems" ElementName="root"/>
+                    </MultiBinding>
+                </HierarchicalDataTemplate.ItemsSource>
+                <HierarchicalDataTemplate.Resources>
+                    <Style TargetType="ToggleButton">
+                        <Setter Property="BorderThickness" Value="4,0,0,0"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="LightGray"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </HierarchicalDataTemplate.Resources>
+                <!--GroupName="{Binding ElementName=root, Path=GroupName}"-->
+                <RadioButton Style="{StaticResource {x:Type ToggleButton}}" 
+                        HorizontalAlignment="Stretch" 
+                        DataContext="{Binding }" 
+                        IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}"
+                             IsEnabled="True"
+                        >
+                        <!--IsEnabled="{Binding IsInScaleRange}"--> 
+                    <RadioButton.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding ToggleExpandCommand}"/>
+                    </RadioButton.InputBindings>
+                    <maptor:MapLegendItemView Title="{Binding LayerName}" 
+                                    Symbology="{Binding DefaultSymbology}"  
+                                    HorizontalAlignment="Stretch"
+                                    Commands="{Binding Commands}"
+                                    IsChecked="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}"
+                                    TitleFontSize="{Binding ElementName=root, Path=TitleFontSize}"/>
+                </RadioButton>
+            </HierarchicalDataTemplate>
+
+            <Style  x:Key="menuButton" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent4}"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="Padding" Value="8,6"/>
+                <Setter Property="Margin" Value="0,1"/>
+                <Setter Property="Focusable" Value="True"/>
+                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="menuTextBlock" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Margin" Value="6,0"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="TextWrapping" Value="NoWrap"/>
+                <Setter Property="Width" Value="120"/>
+                <!--<Setter Property="Foreground" Value="White"/>-->
+            </Style>
+            <Style x:Key="menuLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Margin" Value="6,0"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            </Style>
+            <Style x:Key="menuRectangle" TargetType="Rectangle">
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Setter Property="Width" Value="6"/>
+                <Setter Property="Height" Value="18"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0,0,8,0"/>
+            </Style>
+            <Style x:Key="dataSourceKindFilterItemToggleStyle" TargetType="ToggleButton">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="ScrollBar" BasedOn="{StaticResource  IRI.Maptor.Styles.ScrollBar}"/>
+        </ResourceDictionary>
+    </maptor:NotifiableUserControl.Resources>
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Visibility="Collapsed">
+            <!--Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">-->
+            <Button IsEnabled="True" Focusable="False" Command="{Binding AddGeoJsonToDrawingItemsCommand}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
+                    ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
+                <Path Data="{StaticResource json}"/>
+            </Button>
+            <Button Focusable="False" Command="{Binding AddShapefileCommand}"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                    ToolTip="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}">
+                <Path Data="{StaticResource shp}"  />
+            </Button>
+
+        </StackPanel>
+        <Line Grid.Row="1" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,2" 
+                StrokeThickness="1"
+                StrokeDashArray="8 2"
+                Stroke="{DynamicResource MahApps.Brushes.Highlight}"
+              Visibility="Collapsed"/>
+        <!--Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"/>-->
+
+        <Border Grid.Row="2" Background="{DynamicResource MahApps.Brushes.Accent4}"
+                Margin="2" CornerRadius="4"
+                Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
+            <Grid Grid.Row="2" Margin="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0"  
+                      Text="{Binding ElementName=root, Path=LegendViewModel.LayerNameFilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                      mahApp:TextBoxHelper.Watermark="{Binding [legend_filter_searchLayerWatermark], Source={StaticResource Localization}}" 
+                      mahApp:TextBoxHelper.ClearTextButton="True"
+                      Style="{StaticResource IRI.Maptor.Styles.TextBox.Input}"/>
+                <Button Grid.Column="1" Margin="4,0" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                    Command="{Binding LegendViewModel.ClearFilterCommand, ElementName=root}"
+                    IsEnabled="{Binding LegendViewModel.HasActiveFilter, ElementName=root}"
+                    ToolTip="{Binding [legend_filter_Clear], Source={StaticResource Localization}}"
+                    VerticalAlignment="Center" >
+                    <iconPacks:PackIconMaterial Kind="FilterOff"/>
+                </Button>
+                <ToggleButton Grid.Column="2" x:Name="dataSourceKindFilterToggle"  
+                          Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                          VerticalAlignment="Center" Margin="4,0"
+                          ToolTip="{Binding [legend_filter_filterByLayerType], Source={StaticResource Localization}}">
+                    <iconPacks:PackIconMaterial Kind="Filter"/>
+                </ToggleButton>
+                <mahApp:Badged Grid.Column="2" BadgePlacementMode="BottomLeft" BadgeMargin="0"
+                                Margin="0" Padding="0" Width="24" Height="22"
+                                Badge="{Binding LegendViewModel.SelectedDataSourceKindCount, ElementName=root, Converter={StaticResource localizedNumberConverter}}"
+                                Visibility="{Binding LegendViewModel.ShowSelectedDataSourceKindCount, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}"/>
+                <!--{Binding IsChecked, ElementName=dataSourceKindFilterToggle}-->
+                <Popup IsOpen="{Binding IsChecked, ElementName=dataSourceKindFilterToggle}"
+                   PlacementTarget="{Binding ElementName=dataSourceKindFilterToggle}"
+                   Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
+                   PopupAnimation="Slide">
+                    <Border Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
+                        BorderThickness="1" Padding="4" CornerRadius="4"
+                        DataContext="{Binding LegendViewModel, ElementName=root}">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Center">
+                                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" ToolTip="{Binding [legend_selectAll], Source={StaticResource Localization}}"
+                                    Command="{Binding SelectAllDataSourceKindsCommand}">
+                                    <iconPacks:PackIconMaterial Kind="SelectAll"/>
+                                </Button>
+                                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" ToolTip="{Binding [legend_clearAll], Source={StaticResource Localization}}"
+                                    Command="{Binding ClearAllDataSourceKindsCommand}" Margin="4,0,0,0">
+                                    <iconPacks:PackIconMaterial Kind="SelectionRemove"/>
+                                </Button>
+                            </StackPanel>
+                            <Separator/>
+                            <ListBox ItemsSource="{Binding DataSourceKindFilterItems}"
+                                 SelectionMode="Extended" MaxHeight="280" FlowDirection="LeftToRight"
+                                 BorderThickness="0" Background="Transparent"  Padding="0,0,8,0" >
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <ToggleButton Style="{StaticResource dataSourceKindFilterItemToggleStyle}"
+                                                      IsChecked="{Binding IsSelected, Mode=TwoWay}" 
+                                                      ToolTip="{Binding DisplayName}" Background="Transparent">
+                                            <Border Style="{StaticResource menuBorder}"
+                                                    Background="{Binding Kind, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Path Style="{StaticResource menuPath}"
+                                                          Data="{Binding Kind, Converter={StaticResource dataSourceKindToGeometryConverter}}"/>
+                                                    <iconPacks:PackIconMaterial Kind="CheckBold" Margin="2,0,0,0" VerticalAlignment="Center" >
+                                                        <iconPacks:PackIconMaterial.Style>
+                                                            <Style TargetType="iconPacks:PackIconMaterial">
+                                                                <Setter Property="Foreground" Value="Transparent"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
+                                                                                 Value="True">
+                                                                        <Setter Property="Foreground" Value="White"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
+                                                                                 Value="True">
+                                                                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </iconPacks:PackIconMaterial.Style>
+                                                    </iconPacks:PackIconMaterial>
+                                                    <!--<Path Width="16" Height="16" VerticalAlignment="Center" Margin="2,0,0,0"
+                                                          Stroke="White" StrokeThickness="1" Stretch="Uniform">
+                                                        <Path.Data>
+                                                            <EllipseGeometry Center="8,8" RadiusX="6" RadiusY="6"/>
+                                                        </Path.Data>
+                                                        <Path.Style>
+                                                            <Style TargetType="Path">
+                                                                <Setter Property="Fill" Value="White"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
+                                                                                  Value="True">
+                                                                        <Setter Property="Fill"
+                                                                                Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ToggleButton}}"
+                                                                                Value="True">
+                                                                        <Setter Property="Fill"
+                                                                                Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Path.Style>
+                                                    </Path>-->
+                                                </StackPanel>
+                                            </Border>
+                                        </ToggleButton>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+
+                <ToggleButton Grid.Column="3" x:Name="importLayerToggle"
+                              Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
+                              VerticalAlignment="Center" Margin="0"
+                              ToolTip="{Binding [cmd_legend_importLayer], Source={StaticResource Localization}}">
+                    <iconPacks:PackIconMaterial Kind="LayersPlus"/>
+                </ToggleButton>
+                <!--IsOpen="{Binding IsChecked, ElementName=importLayerToggle}"-->
+                <Popup IsOpen="{Binding IsChecked, ElementName=importLayerToggle}"
+                       PlacementTarget="{Binding ElementName=importLayerToggle}"
+                       Placement="Bottom" StaysOpen="False" AllowsTransparency="True"
+                       PopupAnimation="Slide"
+                       x:Name="importLayerPopup">
+                    <Border Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
+                            BorderThickness="1" Padding="4" CornerRadius="4"
+                            DataContext="{Binding DataContext, ElementName=root}"
+                            x:Name="importLayerBorder">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
+                        </Border.Effect>
+                        <StackPanel>
+
+                            <!--shapefile-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddShapefileCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.Shapefile}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource shp}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}"
+                                                Style="{StaticResource menuTextBlock}"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!--KMZ-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddKmzfileCommand}">
+                                <StackPanel Orientation="Horizontal"> 
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.Kmz}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource kmz}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Style="{StaticResource menuTextBlock}"
+                                               Text="{Binding [cmd_legend_addKmz], Source={StaticResource Localization}}"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!--KML-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddKmlfileCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource menuRectangle}"
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Kml}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.Kml}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource kml}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_legend_addKml], Source={StaticResource Localization}}"
+                                               Style="{StaticResource menuTextBlock}" />
+                                </StackPanel>
+                            </Button>
+
+                            <!--DXF-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddDxffileCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource menuRectangle}"
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Dxf}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.Dxf}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource dxf}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_legend_addDxf], Source={StaticResource Localization}}"
+                                               Style="{StaticResource menuTextBlock}" />
+                                </StackPanel>
+                            </Button>
+
+                            <!--GPX-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddGpxfileCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource menuRectangle}"
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Gpx}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.Gpx}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource gpx}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_legend_addGpx], Source={StaticResource Localization}}"
+                                               Style="{StaticResource menuTextBlock}" />
+                                </StackPanel>
+                            </Button>
+
+                            <!--GeoJson-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddGeoJSONfileCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource menuRectangle}"
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.GeoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.GeoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource json}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}"
+                                               Style="{StaticResource menuTextBlock}" />
+                                </StackPanel>
+                            </Button>
+
+                            <!--TopoJson-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddTopoJsonCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource menuRectangle}"
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.TopoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.TopoJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource topo}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_legend_addTopoJson], Source={StaticResource Localization}}"
+                                               Style="{StaticResource menuTextBlock}" />
+                                </StackPanel>
+                            </Button>
+
+                            <!--EsriJson-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddEsriJsonCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource menuRectangle}"
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.EsriJson}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.EsriJson}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource json}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_legend_addEsriJson], Source={StaticResource Localization}}"
+                                               Style="{StaticResource menuTextBlock}" />
+                                </StackPanel>
+                            </Button>
+
+                            <!--CSV-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddCsvCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource menuRectangle}"
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Csv}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.Csv}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource csv}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_legend_addCsv], Source={StaticResource Localization}}"
+                                               Style="{StaticResource menuTextBlock}" />
+                                </StackPanel>
+                            </Button>
+
+                            <!--TSV-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddTsvCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource menuRectangle}"
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Tsv}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.Tsv}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource tsv}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_legend_addTsv], Source={StaticResource Localization}}"
+                                               Style="{StaticResource menuTextBlock}" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Popup>
+            </Grid>
+        </Border>
+        <Line Grid.Row="3" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,4" 
+                StrokeThickness="1"
+                StrokeDashArray="8 2"
+                Stroke="{DynamicResource MahApps.Brushes.Highlight}"  
+                Visibility="Collapsed"/>
+
+        <TreeView Grid.Row="4"
+                  ItemsSource="{Binding Source={StaticResource collectionViewSource}}"
+                  ItemTemplate="{StaticResource legendTemplate}"
+                  VirtualizingPanel.IsVirtualizing="False"
+                    VirtualizingPanel.VirtualizationMode="Standard">
+            <!--<TreeView.Resources>
+                <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                </Style>
+            </TreeView.Resources>-->
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpandedInToc, Mode=TwoWay}" />
+                    <!--<Setter Property="IsSelected" Value="{Binding IsSelectedInToc, Mode=TwoWay}" />-->
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TreeViewItem">
+                                <StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" MinWidth="19" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <!--the arrow to expand/collapse treeviewitem-->
+                                        <ToggleButton IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Release" Name="Expander"
+                                                      Margin="0" Padding="0">
+                                            <ToggleButton.Style>
+                                                <Style TargetType="ToggleButton">
+                                                    <Setter Property="UIElement.Focusable" Value="false" />
+                                                    <Setter Property="FrameworkElement.Width" Value="16" />
+                                                    <Setter Property="FrameworkElement.Height" Value="16" />
+                                                    <Setter Property="Control.Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ToggleButton">
+                                                                <Grid Width="16" Height="16" Background="Transparent" Cursor="Hand">
+                                                                    <Viewbox Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                        <Path Fill="{DynamicResource MahApps.Brushes.Accent}" Name="ExpandPath">
+                                                                            <Path.Data>
+                                                                                <PathGeometry Figures="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
+                                                                            </Path.Data>
+                                                                            <Path.RenderTransform>
+                                                                                <!--<RotateTransform Angle="135" CenterX="3" CenterY="3" />-->
+                                                                                <RotateTransform Angle="0" CenterX="0" CenterY="0" />
+                                                                            </Path.RenderTransform>
+                                                                        </Path>
+                                                                    </Viewbox>
+                                                                </Grid>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="UIElement.IsMouseOver" Value="True">
+                                                                        <Setter TargetName="ExpandPath" Property="Shape.Stroke" Value="{DynamicResource MahApps.Brushes.Highlight}" />
+                                                                        <!--<Setter TargetName="ExpandPath" Property="Shape.Fill" Value="#00FFFFFF" />-->
+                                                                    </Trigger>
+                                                                    <Trigger Property="ToggleButton.IsChecked" Value="True">
+                                                                        <Setter TargetName="ExpandPath" Property="UIElement.RenderTransform">
+                                                                            <Setter.Value>
+                                                                                <RotateTransform Angle="90" CenterX="12" CenterY="12" />
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                        <!--<Setter TargetName="ExpandPath" Property="Shape.Fill" Value="#FF595959" />-->
+                                                                        <!--<Setter TargetName="ExpandPath" Property="Shape.Stroke" Value="#FF262626" />-->
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ToggleButton.Style>
+                                        </ToggleButton>
+                                        <Border x:Name="Bd"
+                                            HorizontalAlignment="Stretch"
+                                            BorderThickness="{TemplateBinding Border.BorderThickness}"
+                                            BorderBrush="{TemplateBinding Border.BorderBrush}"
+                                            Padding="{TemplateBinding Control.Padding}"
+                                            Background="{TemplateBinding Panel.Background}"
+                                            SnapsToDevicePixels="True"
+                                            Grid.Column="1">
+                                            <ContentPresenter x:Name="PART_Header"
+                                            Content="{TemplateBinding HeaderedContentControl.Header}"
+                                            ContentTemplate="{TemplateBinding HeaderedContentControl.HeaderTemplate}"
+                                            ContentStringFormat="{TemplateBinding HeaderedItemsControl.HeaderStringFormat}"
+                                            ContentTemplateSelector="{TemplateBinding HeaderedItemsControl.HeaderTemplateSelector}"
+                                            ContentSource="Header"
+                                            HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
+                                            SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                                        </Border>
+                                        <ItemsPresenter x:Name="ItemsHost" Grid.Column="1" Grid.Row="1" />
+                                    </Grid>
+                                </StackPanel>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="TreeViewItem.IsExpanded" Value="False">
+                                        <Setter TargetName="ItemsHost" Property="UIElement.Visibility" Value="Collapsed" />
+                                    </Trigger>
+                                    <Trigger Property="ItemsControl.HasItems" Value="False">
+                                        <Setter TargetName="Expander" Property="UIElement.Visibility" Value="Hidden" />
+                                    </Trigger>
+                                    <Trigger Property="TreeViewItem.IsSelected" Value="True">
+                                        <!--<Setter TargetName="Bd" Property="Panel.Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />-->
+                                        <Setter TargetName="Bd" Property="Panel.Background" Value="Transparent" />
+                                        <Setter Property="TextElement.Foreground"  Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                                    </Trigger>
+                                    <!--<MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="TreeViewItem.IsSelected" Value="True" />
+                                            <Condition Property="Selector.IsSelectionActive" Value="False" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter TargetName="Bd"  Property="Panel.Background"  Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+                                        <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                                    </MultiTrigger>-->
+                                    <Trigger Property="UIElement.IsEnabled" Value="False">
+                                        <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
+
+    </Grid>
+</maptor:NotifiableUserControl>

@@ -5,7 +5,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
-namespace IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
+namespace IRI.Maptor.Jab.Common.Cartography;
 
 public abstract class RenderStrategy
 {

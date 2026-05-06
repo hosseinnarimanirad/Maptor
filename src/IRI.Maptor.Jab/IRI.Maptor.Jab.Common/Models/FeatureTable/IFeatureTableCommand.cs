@@ -1,6 +1,4 @@
-﻿using IRI.Maptor.Jab.Common.Assets.Commands; 
-
-namespace IRI.Maptor.Jab.Common.Models;
+﻿namespace IRI.Maptor.Jab.Common.Models;
 
 public interface IFeatureTableCommand
 {

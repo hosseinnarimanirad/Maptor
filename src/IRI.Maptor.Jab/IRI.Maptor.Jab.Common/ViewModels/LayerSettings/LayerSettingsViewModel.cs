@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IRI.Maptor.Jab.Common.Layers;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.LayerSettings;
 

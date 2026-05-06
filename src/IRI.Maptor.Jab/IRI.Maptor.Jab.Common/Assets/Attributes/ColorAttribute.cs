@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IRI.Maptor.Jab.Common.Assets.Attributes;
+namespace IRI.Maptor.Jab.Common.Attributes;
 
 [AttributeUsage(AttributeTargets.Field)]
 public class ColorAttribute : Attribute

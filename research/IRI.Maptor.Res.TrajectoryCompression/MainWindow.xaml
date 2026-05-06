@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"        
-        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.Views;assembly=IRI.Maptor.Jab.Controls"
+        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls;assembly=IRI.Maptor.Jab.Common"
         mc:Ignorable="d" Loaded="Window_Loaded"
         Title="Trajectory Compression - (Powered by #MakanNegar)" Height="450" Width="800">
     <Grid>

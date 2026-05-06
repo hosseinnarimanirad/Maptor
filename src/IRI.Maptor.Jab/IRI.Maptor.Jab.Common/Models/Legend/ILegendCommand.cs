@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Jab.Common.Assets.Commands;
+﻿using IRI.Maptor.Jab.Common.Layers;
 
 namespace IRI.Maptor.Jab.Common.Models.Legend;
 

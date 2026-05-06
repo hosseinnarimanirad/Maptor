@@ -6,7 +6,7 @@ using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Common.Cartography.RenderingStrategies;
+using IRI.Maptor.Jab.Common.Cartography;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Sta.Spatial.IO.Dxf;
 using System.Linq;

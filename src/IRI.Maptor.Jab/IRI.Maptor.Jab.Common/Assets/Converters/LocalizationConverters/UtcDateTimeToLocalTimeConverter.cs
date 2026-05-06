@@ -4,7 +4,7 @@ using System.Windows.Data;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Localization;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 /// <summary>
 /// Converts UTC DateTime to local time string for display (e.g. tooltip).

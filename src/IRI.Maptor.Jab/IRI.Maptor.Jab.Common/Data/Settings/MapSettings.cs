@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Jab.Common.Abstractions;
+﻿using IRI.Maptor.Jab.Common.Data.Settings;
 using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Jab.Common.Data;

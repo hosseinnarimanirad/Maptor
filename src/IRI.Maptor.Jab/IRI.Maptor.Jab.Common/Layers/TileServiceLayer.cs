@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Net;
-using System.Net.Http;
 using System.Windows;
-using System.Windows.Shapes;
-using System.Windows.Data;
+using System.Diagnostics;
+using System.Windows.Media;
 using System.Threading.Tasks;
 
 using IRI.Maptor.Sta.Common.Model;
 using IRI.Maptor.Sta.Spatial.Model;
+using IRI.Maptor.Jab.Common.Helpers;
+using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.TileServices;
-using IRI.Maptor.Jab.Common.Abstractions;
-using System.Windows.Media;
-using IRI.Maptor.Sta.Spatial.Helpers;
-using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
-using System.Diagnostics;
 
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public class TileServiceLayer : BaseLayer
 {
@@ -30,7 +25,7 @@ public class TileServiceLayer : BaseLayer
     static TileServiceLayer()
     {
         //notFoundImage = IRI.Maptor.Jab.Common.Helpers.ImageUtility.AsByteArray(Properties.Resources.imageNotFound);
-        notFoundImage = IRI.Maptor.Jab.Common.Helpers.ImageUtility.AsByteArray(Properties.Resources.whiteImage);
+        notFoundImage = ImageUtility.AsByteArray(Properties.Resources.whiteImage);
     }
 
     private readonly TileCacheAddress _cache;
@@ -53,7 +48,7 @@ public class TileServiceLayer : BaseLayer
         get { return _isCacheEnabled; }
         set
         {
-            this._isCacheEnabled = value;
+            _isCacheEnabled = value;
             RaisePropertyChanged();
         }
     }
@@ -68,11 +63,11 @@ public class TileServiceLayer : BaseLayer
 
     public TileServiceLayer(TileMapProvider mapProvider, double opacity, Func<TileInfo, string>? getFileName = null)
     {
-        this._cache = new TileCacheAddress(mapProvider.ProviderEn, mapProvider.MapTypeEn, getFileName);
+        _cache = new TileCacheAddress(mapProvider.ProviderEn, mapProvider.MapTypeEn, getFileName);
 
-        this.Opacity = opacity;
+        Opacity = opacity;
 
-        this._mapProvider = mapProvider;
+        _mapProvider = mapProvider;
     }
 
 
@@ -166,7 +161,7 @@ public class TileServiceLayer : BaseLayer
 
             client.Headers.Add(HttpRequestHeader.UserAgent, "App!");
 
-            var url = this._mapProvider.GetUrl(tile);
+            var url = _mapProvider.GetUrl(tile);
 
             if (url == null)
                 return GetNotFoundImage(tile);
@@ -175,7 +170,7 @@ public class TileServiceLayer : BaseLayer
 
             var byteImage = await client.DownloadDataTaskAsync(url);
 
-            if (IRI.Maptor.Jab.Common.Helpers.ImageUtility.CreateBitmapImage(byteImage) == null)
+            if (ImageUtility.CreateBitmapImage(byteImage) == null)
                 return GetNotFoundImage(tile);
 
             return new GeoReferencedImage(byteImage, tile.GeodeticExtent);
@@ -222,7 +217,7 @@ public class TileServiceLayer : BaseLayer
             if (IsOffline && _mapProvider.ShouldBeConnectedToInternet())
                 return GetNotFoundImage(tile);
 
-            var url = this._mapProvider.GetUrl(tile);
+            var url = _mapProvider.GetUrl(tile);
 
             if (url == null)
                 return GetNotFoundImage(tile);
@@ -233,7 +228,7 @@ public class TileServiceLayer : BaseLayer
             //var byteImage = await response.Content.ReadAsByteArrayAsync();
             var byteImage = await client.GetByteArrayAsync(url);
 
-            if (IRI.Maptor.Jab.Common.Helpers.ImageUtility.CreateBitmapImage(byteImage) == null)
+            if (ImageUtility.CreateBitmapImage(byteImage) == null)
                 return GetNotFoundImage(tile);
 
             return new GeoReferencedImage(byteImage, tile.GeodeticExtent);
@@ -248,7 +243,7 @@ public class TileServiceLayer : BaseLayer
     {
         IsCacheEnabled = true;
 
-        this._cache.BaseDirectory = baseDirectory;
+        _cache.BaseDirectory = baseDirectory;
     }
 
     private GeoReferencedImage GetNotFoundImage(TileInfo tile)
@@ -267,12 +262,12 @@ public class TileServiceLayer : BaseLayer
             return null;
 
         var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(extent, zoomLevel);
-         
+
         double scaleX = imageWidth / extent.Width;
 
         double scaleY = imageHeight / extent.Height;
 
-        var clip = new RectangleGeometry(new System.Windows.Rect(0, 0, imageWidth, imageHeight));
+        var clip = new RectangleGeometry(new Rect(0, 0, imageWidth, imageHeight));
 
         var baseMapVisual = new DrawingVisual();
 
@@ -284,13 +279,13 @@ public class TileServiceLayer : BaseLayer
             {
                 try
                 {
-                    var image = this.GetCachedTileAsync(tile);
+                    var image = GetCachedTileAsync(tile);
 
                     if (!image.IsValid) continue;
 
                     var tileExtent = image.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
 
-                    var rect = new System.Windows.Rect(
+                    var rect = new Rect(
                                     (tileExtent.XMin - extent.XMin) * scaleX,
                                     (extent.YMax - tileExtent.YMax) * scaleY,
                                     tileExtent.Width * scaleX,
@@ -303,7 +298,7 @@ public class TileServiceLayer : BaseLayer
                     Debug.WriteLine($"MapViewer; CaptureThumbnailAsync tile error: {ex.Message}");
                 }
             }
-             
+
             drawingContext.Pop();
         }
 

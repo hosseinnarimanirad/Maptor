@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace IRI.Maptor.Jab.Common.Assets.ValidationRules
+namespace IRI.Maptor.Jab.Common.ValidationRules
 {
     public abstract class BaseValidationRule : ValidationRule
     {

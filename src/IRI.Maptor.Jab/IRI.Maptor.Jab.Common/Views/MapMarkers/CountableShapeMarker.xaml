@@ -1,10 +1,7 @@
-﻿<maptor:MapMarker x:Class="IRI.Maptor.Jab.Common.Views.MapMarkers.CountableShapeMarker"
+﻿<maptor:MapMarker x:Class="IRI.Maptor.Jab.Controls.MapMarkers.CountableShapeMarker"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Common.Views"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:IRI.Maptor.Jab.Common.Views.MapMarkers"
+             xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
              Width="30" Height="30">
     <maptor:MapMarker.Resources>
         <ResourceDictionary>

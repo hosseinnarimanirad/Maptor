@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
@@ -13,15 +14,15 @@ using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Jab.Common.Views.MapMarkers;
+using IRI.Maptor.Jab.Controls.MapMarkers;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
-using LineSegment = System.Windows.Media.LineSegment;
 using WpfPoint = System.Windows.Point;
-using System.Threading.Tasks;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Jab.Controls.MapOptions;
+using LineSegment = System.Windows.Media.LineSegment;
 
-namespace IRI.Maptor.Jab.Common;
+namespace IRI.Maptor.Jab.Common.Layers;
 
 public class PolyBezierLayer : SymbolizableLayer
 {
@@ -89,18 +90,18 @@ public class PolyBezierLayer : SymbolizableLayer
 
     private PolyBezierLayer(VisualParameters? parameters)
     {
-        this.LayerId = Guid.NewGuid();
+        LayerId = Guid.NewGuid();
 
-        this.VisibleRange = ScaleInterval.All;
+        VisibleRange = ScaleInterval.All;
 
         //this.VisualParameters = new VisualParameters(Colors.Black, Colors.Gray, 2, .9);
         //this.VisualParameters = parameters ?? VisualParameters.CreateNew(1);
-        this.SetSymbolizer(new SimpleSymbolizer(parameters ?? VisualParameters.CreateNew()));
+        SetSymbolizer(new SimpleSymbolizer(parameters ?? VisualParameters.CreateNew()));
     }
 
-    public PolyBezierLayer(List<Point> mercatorPolyline, Transform toScreen, System.Windows.Media.Geometry decoration, VisualParameters parameters) : this(parameters)
+    public PolyBezierLayer(List<Point> mercatorPolyline, Transform toScreen, Geometry decoration, VisualParameters parameters) : this(parameters)
     {
-        this._toScreen = toScreen;
+        _toScreen = toScreen;
 
         if (mercatorPolyline?.Count() < 2)
         {
@@ -109,12 +110,12 @@ public class PolyBezierLayer : SymbolizableLayer
 
         this.mercatorPolyline = mercatorPolyline;
 
-        this._decorateLayer = new SpecialLineLayer(decoration, parameters, null);
+        _decorateLayer = new SpecialLineLayer(decoration, parameters, null);
 
         Initialize();
     }
 
-    public static PolyBezierLayer Create(string name, List<Point> mercatorPolyBezierPoints, Transform toScreen, System.Windows.Media.Geometry decoration, VisualParameters parameters)
+    public static PolyBezierLayer Create(string name, List<Point> mercatorPolyBezierPoints, Transform toScreen, Geometry decoration, VisualParameters parameters)
     {
         if (mercatorPolyBezierPoints?.Count() < 2)
             throw new NotImplementedException();
@@ -168,7 +169,7 @@ public class PolyBezierLayer : SymbolizableLayer
 
         _polyBezier.Points.Clear();
 
-        this._mainLocateables = mercatorPolyline.Select(i => AsLocateable(i, Colors.Green)).ToList();
+        _mainLocateables = mercatorPolyline.Select(i => AsLocateable(i, Colors.Green)).ToList();
 
         for (int i = 0; i < _mainLocateables.Count; i++)
         {
@@ -191,7 +192,7 @@ public class PolyBezierLayer : SymbolizableLayer
 
             control1.OnPositionChanged += controlLocateable_OnPositionChanged;
 
-            this._controlLocateables.Add(control1);
+            _controlLocateables.Add(control1);
 
             _controlLines.Add(controlLine1);
 
@@ -205,7 +206,7 @@ public class PolyBezierLayer : SymbolizableLayer
 
             control2.OnPositionChanged += controlLocateable_OnPositionChanged;
 
-            this._controlLocateables.Add(control2);
+            _controlLocateables.Add(control2);
 
             _controlLines.Add(controlLine2);
         }
@@ -226,18 +227,18 @@ public class PolyBezierLayer : SymbolizableLayer
 
         PathGeometry mainGeometry = new PathGeometry(new List<PathFigure>() { mainFigure });
 
-        this._mainPath = new Path() { Data = mainGeometry, Stroke = _stroke, StrokeThickness = 3, Opacity = .9 };
+        _mainPath = new Path() { Data = mainGeometry, Stroke = _stroke, StrokeThickness = 3, Opacity = .9 };
 
 
         PathFigureCollection controlFigureCollection = new PathFigureCollection(_controlLines);
 
         PathGeometry controlGeometry = new PathGeometry(controlFigureCollection);
 
-        this._controlPath = new Path() { Data = controlGeometry, Stroke = new SolidColorBrush(Colors.Red), StrokeThickness = 1 };
+        _controlPath = new Path() { Data = controlGeometry, Stroke = new SolidColorBrush(Colors.Red), StrokeThickness = 1 };
 
-        this._mainLayer = new SpecialPointLayer("1", _mainLocateables, .9, ScaleInterval.All, LayerType.EditableItem /*| LayerType.MoveableItem*/) { AlwaysTop = true, IsMovable = true };
+        _mainLayer = new SpecialPointLayer("1", _mainLocateables, .9, ScaleInterval.All, LayerType.EditableItem /*| LayerType.MoveableItem*/) { AlwaysTop = true, IsMovable = true };
 
-        this._controlLayer = new SpecialPointLayer("2", _controlLocateables, .9, ScaleInterval.All, LayerType.EditableItem /*| LayerType.MoveableItem*/) { AlwaysTop = true, IsMovable = true };
+        _controlLayer = new SpecialPointLayer("2", _controlLocateables, .9, ScaleInterval.All, LayerType.EditableItem /*| LayerType.MoveableItem*/) { AlwaysTop = true, IsMovable = true };
     }
 
     private void mainElement_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -261,16 +262,16 @@ public class PolyBezierLayer : SymbolizableLayer
 
             var options = CopyCoordinateOptions.Create();
 
-            ClipboardHelper.CopyToClipboard(mainLocateable.Location.AsPoint(),  CoordinateDisplayMode.GeodeticDecimal, options/*null, null, null, null*/);
+            ClipboardHelper.CopyToClipboard(mainLocateable.Location.AsPoint(), CoordinateDisplayMode.GeodeticDecimal, options/*null, null, null, null*/);
 
-            this.RemoveMapOptions();
+            RemoveMapOptions();
         };
 
         presenter.LeftCommandAction = i =>
         {
             Add(mainLocateable);
 
-            this.RemoveMapOptions();
+            RemoveMapOptions();
         };
 
         presenter.MiddleCommandAction = i =>
@@ -278,12 +279,12 @@ public class PolyBezierLayer : SymbolizableLayer
             //delete mainlocateable
             Remove(mainLocateable);
 
-            this.RemoveMapOptions();
+            RemoveMapOptions();
         };
 
         if (RequestRightClickOptions != null)
         {
-            RequestRightClickOptions(new Views.MapOptions.MapThreeOptions(), e, presenter);
+            RequestRightClickOptions(new MapThreeOptions(), e, presenter);
         }
     }
 
@@ -374,32 +375,32 @@ public class PolyBezierLayer : SymbolizableLayer
 
     private void AddLayer(ILayer layer)
     {
-        this.RequestAddLayer?.Invoke(layer);
+        RequestAddLayer?.Invoke(layer);
     }
 
     private void RemoveLayer(ILayer layer)
     {
-        this.RequestRemoveLayer?.Invoke(layer);
+        RequestRemoveLayer?.Invoke(layer);
     }
 
     private void Refresh()
     {
-        this.RequestRefresh?.Invoke(this);
+        RequestRefresh?.Invoke(this);
     }
 
     private void FinishEditing()
     {
-        if (this.RequestFinishEditing != null)
+        if (RequestFinishEditing != null)
         {
-            this.RequestFinishEditing(this);
+            RequestFinishEditing(this);
         }
     }
 
     private void RemoveMapOptions()
     {
-        if (this.RequestRemoveRightClickOptions != null)
+        if (RequestRemoveRightClickOptions != null)
         {
-            this.RequestRemoveRightClickOptions();
+            RequestRemoveRightClickOptions();
         }
     }
 
@@ -438,13 +439,13 @@ public class PolyBezierLayer : SymbolizableLayer
 
         PathGeometry mainGeometry = new PathGeometry(new List<PathFigure>() { mainFigure });
 
-        this._mainPath = new Path() { Tag = "PolyBezier _mainPath temp Tag", Data = mainGeometry, Stroke = _stroke, StrokeThickness = 4, Opacity = .9, Cursor = Cursors.Hand };
+        _mainPath = new Path() { Tag = "PolyBezier _mainPath temp Tag", Data = mainGeometry, Stroke = _stroke, StrokeThickness = 4, Opacity = .9, Cursor = Cursors.Hand };
 
         _mainPath.Tag = new LayerTag(0) { Layer = this, IsTiled = false, LayerType = LayerType.EditableItem };
 
 
 
-        this._mainPath.MouseRightButtonDown += _mainPath_MouseRightButtonDown;
+        _mainPath.MouseRightButtonDown += _mainPath_MouseRightButtonDown;
 
         _mainPath.MouseEnter += (sender, e) => { _mainPath.StrokeThickness = 6; };
         _mainPath.MouseLeave += (sender, e) => { _mainPath.StrokeThickness = 4; };
@@ -453,30 +454,30 @@ public class PolyBezierLayer : SymbolizableLayer
 
         PathGeometry controlGeometry = new PathGeometry(controlFigureCollection);
 
-        this._controlPath = new Path() { Data = controlGeometry, Stroke = new SolidColorBrush(Colors.Red), StrokeThickness = 1 };
+        _controlPath = new Path() { Data = controlGeometry, Stroke = new SolidColorBrush(Colors.Red), StrokeThickness = 1 };
 
         _controlPath.Tag = new LayerTag(0) { Layer = this, IsTiled = false, LayerType = LayerType.EditableItem };
 
-        this._mainLayer = new SpecialPointLayer($"POLYBEZIER MAIN {LayerId}", _mainLocateables, .9, ScaleInterval.All, LayerType.EditableItem /*| LayerType.MoveableItem*/) { AlwaysTop = true, IsMovable = true };
+        _mainLayer = new SpecialPointLayer($"POLYBEZIER MAIN {LayerId}", _mainLocateables, .9, ScaleInterval.All, LayerType.EditableItem /*| LayerType.MoveableItem*/) { AlwaysTop = true, IsMovable = true };
 
-        this._controlLayer = new SpecialPointLayer($"POLYBEZIER CONTROL {LayerId}", _controlLocateables, .9, ScaleInterval.All, LayerType.EditableItem /*| LayerType.MoveableItem*/) { AlwaysTop = true, IsMovable = true };
+        _controlLayer = new SpecialPointLayer($"POLYBEZIER CONTROL {LayerId}", _controlLocateables, .9, ScaleInterval.All, LayerType.EditableItem /*| LayerType.MoveableItem*/) { AlwaysTop = true, IsMovable = true };
 
 
-        this._mainPath.MouseLeftButtonDown += (sender, e) =>
+        _mainPath.MouseLeftButtonDown += (sender, e) =>
         {
-            this.IsControlsShown = !this.IsControlsShown;
+            IsControlsShown = !IsControlsShown;
 
-            var newVisibility = this.IsControlsShown ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+            var newVisibility = IsControlsShown ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
 
-            this.GetControlPath().Visibility = newVisibility;
+            GetControlPath().Visibility = newVisibility;
 
-            if (this.IsControlsShown)
+            if (IsControlsShown)
             {
-                AddLayer(this.GetControlPointLayer());
+                AddLayer(GetControlPointLayer());
             }
             else
             {
-                RemoveLayer(this.GetControlPointLayer());
+                RemoveLayer(GetControlPointLayer());
             }
         };
 
@@ -504,22 +505,22 @@ public class PolyBezierLayer : SymbolizableLayer
 
             Decorate();
 
-            this.RemoveMapOptions();
+            RemoveMapOptions();
         };
 
         presenter.LeftCommandAction = i =>
         {
             FinishEditing();
 
-            this.RemoveMapOptions();
+            RemoveMapOptions();
         };
 
-        RequestRightClickOptions?.Invoke(new Views.MapOptions.MapTwoOptions(), e, presenter);
+        RequestRightClickOptions?.Invoke(new MapTwoOptions(), e, presenter);
     }
 
     private void Decorate()
     {
-        if (!(this._decorateLayer?.Symbol != null))
+        if (!(_decorateLayer?.Symbol != null))
             return;
 
         RemoveLayer(_decorateLayer);
@@ -559,9 +560,9 @@ public class PolyBezierLayer : SymbolizableLayer
 
         var index = _controlLocateables.IndexOf(locateable);
 
-        this._polyBezier.Points[index + index / 2] = _toScreen.Transform(locateable.Location);
+        _polyBezier.Points[index + index / 2] = _toScreen.Transform(locateable.Location);
 
-        (this._controlLines[index].Segments[0] as LineSegment).Point = _toScreen.Transform(locateable.Location);
+        (_controlLines[index].Segments[0] as LineSegment).Point = _toScreen.Transform(locateable.Location);
 
         //if (IsDecorated)
         //{
@@ -590,29 +591,29 @@ public class PolyBezierLayer : SymbolizableLayer
 
         if (index > 0)
         {
-            this._polyBezier.Points[3 * index - 1] = _toScreen.Transform(locateable.Location);
+            _polyBezier.Points[3 * index - 1] = _toScreen.Transform(locateable.Location);
 
-            this._controlLines[2 * index - 1].StartPoint = _toScreen.Transform(locateable.Location);
+            _controlLines[2 * index - 1].StartPoint = _toScreen.Transform(locateable.Location);
 
-            this._controlLocateables[2 * index - 1].X += e.NewValue.X - e.OldValue.X;
-            this._controlLocateables[2 * index - 1].Y += e.NewValue.Y - e.OldValue.Y;
+            _controlLocateables[2 * index - 1].X += e.NewValue.X - e.OldValue.X;
+            _controlLocateables[2 * index - 1].Y += e.NewValue.Y - e.OldValue.Y;
 
-            if (index < this._mainLocateables.Count - 1)
+            if (index < _mainLocateables.Count - 1)
             {
-                this._controlLines[2 * index].StartPoint = _toScreen.Transform(locateable.Location);
+                _controlLines[2 * index].StartPoint = _toScreen.Transform(locateable.Location);
 
-                this._controlLocateables[2 * index].X += e.NewValue.X - e.OldValue.X;
-                this._controlLocateables[2 * index].Y += e.NewValue.Y - e.OldValue.Y;
+                _controlLocateables[2 * index].X += e.NewValue.X - e.OldValue.X;
+                _controlLocateables[2 * index].Y += e.NewValue.Y - e.OldValue.Y;
             }
         }
         else
         {
             (_mainPath.Data as PathGeometry)!.Figures.First().StartPoint = _toScreen.Transform(locateable.Location);
 
-            this._controlLines[0].StartPoint = _toScreen.Transform(locateable.Location);
+            _controlLines[0].StartPoint = _toScreen.Transform(locateable.Location);
 
-            this._controlLocateables[0].X += e.NewValue.X - e.OldValue.X;
-            this._controlLocateables[0].Y += e.NewValue.Y - e.OldValue.Y;
+            _controlLocateables[0].X += e.NewValue.X - e.OldValue.X;
+            _controlLocateables[0].Y += e.NewValue.Y - e.OldValue.Y;
         }
 
         //if (IsDecorated)

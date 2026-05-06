@@ -1,11 +1,9 @@
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Assets.Commands;
+using System;
+using System.Collections.ObjectModel;
+
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Jab.Common.Models.Themes;
 using IRI.Maptor.Jab.Common.Models.Settings;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Themes;
 

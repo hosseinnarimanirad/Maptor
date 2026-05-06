@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using System.Xml.Serialization;
-using IRI.Maptor.Jab.Common.Assets.Commands;
+
 using IRI.Maptor.Sta.Ogc.SLD;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Symbology;

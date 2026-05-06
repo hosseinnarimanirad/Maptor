@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using IRI.Maptor.Jab.Common.Abstractions;
+using System.Collections.ObjectModel;
+
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common.Assets.Commands;
-using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
-using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.LayerSettings;
 

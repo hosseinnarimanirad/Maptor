@@ -4,7 +4,7 @@ using System.Globalization;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Localization;
 
-namespace IRI.Maptor.Jab.Common.Assets.Converters;
+namespace IRI.Maptor.Jab.Common.Converters;
 
 public class LocalizedNumberConverter : IValueConverter
 {

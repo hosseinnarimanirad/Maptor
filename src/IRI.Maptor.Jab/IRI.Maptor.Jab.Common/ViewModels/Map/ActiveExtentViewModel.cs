@@ -4,6 +4,7 @@ using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Jab.Common.Models;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 
@@ -14,9 +15,7 @@ public class ActiveExtentViewModel : Notifier
     public event EventHandler? OnExtentChanging;
 
     public ActiveExtentViewModel(Locateable mapCenter, double mapWidth, double mapHeight)
-    {
-        //MapPresenter = mapPresenter;
-
+    { 
         MapCenter = mapCenter;
 
         Extent = new BoundingBox(new Point(mapCenter.X, mapCenter.Y), mapWidth, mapHeight);
