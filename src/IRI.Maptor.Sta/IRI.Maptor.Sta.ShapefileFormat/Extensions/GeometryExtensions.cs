@@ -8,12 +8,14 @@ using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 using System.Drawing;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Contracts.Bing;
+using IRI.Maptor.Sta.Spatial.Analysis;
 
 namespace IRI.Maptor.Extensions;
 
 public static class GeometryExtensions
 {
-    #region Geometry > Esri Shape
+    #region Geometry To Esri Shape
 
     public static EsriShapeBase? AsEsriShape<T>(this Geometry<T> geometry, int? srid = null, Func<T, T> mapFunction = null) where T : IPoint, new()
     {
@@ -97,7 +99,7 @@ public static class GeometryExtensions
 
         for (int i = 0; i < numberOfGeometries; i++)
         {
-            points.AddRange(GetPoints(multiPoint.Geometries[i], srid, mapFunction, isRing: false));
+            points.AddRange(GetPoints(multiPoint.Geometries[i], srid, mapFunction, isRing: false, isExteriorRing: false));
         }
 
         return new EsriMultiPoint(points.ToArray());
@@ -111,7 +113,7 @@ public static class GeometryExtensions
             return new EsriPolyline();
         }
 
-        return new EsriPolyline(GetPoints(lineString, srid, mapFunction, isRing: false).ToArray());
+        return new EsriPolyline(GetPoints(lineString, srid, mapFunction, isRing: false, isExteriorRing: false).ToArray());
     }
 
     //Not supporting Z and M values
@@ -132,7 +134,7 @@ public static class GeometryExtensions
         {
             parts.Add(points.Count);
 
-            points.AddRange(GetPoints(multiLineString.Geometries[i], srid, mapFunction, isRing: false));
+            points.AddRange(GetPoints(multiLineString.Geometries[i], srid, mapFunction, isRing: false, isExteriorRing: false));
         }
 
         return new EsriPolyline(points.ToArray(), parts.ToArray());
@@ -157,7 +159,9 @@ public static class GeometryExtensions
         {
             parts.Add(points.Count);
 
-            points.AddRange(GetPoints(polygon.Geometries[i], srid, mapFunction, isRing: true));
+            var currentPoints = GetPoints(polygon.Geometries[i], srid, mapFunction, isRing: true, isExteriorRing: i == 0);
+
+            points.AddRange(currentPoints);
         }
 
         return new EsriPolygon(points.ToArray(), parts.ToArray());
@@ -188,7 +192,11 @@ public static class GeometryExtensions
             {
                 parts.Add(points.Count);
 
-                points.AddRange(GetPoints(tempPolygon.Geometries[j], srid, mapFunction, isRing: true));
+                //points.AddRange(GetPoints(tempPolygon.Geometries[j], srid, mapFunction, isRing: true));
+
+                var currentPoints = GetPoints(tempPolygon.Geometries[j], srid, mapFunction, isRing: true, isExteriorRing: j == 0);
+
+                points.AddRange(currentPoints);
             }
         }
 
@@ -196,10 +204,10 @@ public static class GeometryExtensions
 
     }
 
-    private static IEnumerable<EsriPoint> GetPoints<T>(Geometry<T> geometry, int srid, Func<T, T> mapFunction, bool isRing) where T : IPoint, new()
+    private static List<EsriPoint> GetPoints<T>(Geometry<T> geometry, int srid, Func<T, T> mapFunction, bool isRing, bool isExteriorRing) where T : IPoint, new()
     {
         if (geometry.IsNullOrEmpty())
-            return Enumerable.Empty<EsriPoint>();
+            return Enumerable.Empty<EsriPoint>().ToList();
 
         List<EsriPoint> result = new List<EsriPoint>(geometry.Points.Count);
 
@@ -218,6 +226,17 @@ public static class GeometryExtensions
 
                 result.Add(new EsriPoint(temporaryPoint.X, temporaryPoint.Y, srid));
             }
+        }
+
+        // exterior ring in shapefile is clockwise
+        if (isExteriorRing && !SpatialUtility.IsClockwise(result))
+        {
+            result.Reverse();
+        }
+        // interior rings in shapefile are counterclockwise
+        else if (!isExteriorRing && SpatialUtility.IsClockwise(result))
+        {
+            result.Reverse();
         }
 
         // The rings are closed (the first and last vertex of a ring MUST be the same).

@@ -3799,7 +3799,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             }
         }
     }
-     
+
     #endregion
 
 
@@ -3952,7 +3952,11 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public Feature<T> AsFeature()
     {
-        return new Feature<T>(this, new Dictionary<string, object>() { { "_", " " } });
+        var area = this.EuclideanArea;
+
+        var length = this.GetEuclideanLength();
+
+        return new Feature<T>(this, new Dictionary<string, object>() { { "Area", area }, { "Length", length } });
     }
 
     public GeoJsonFeatureSet AsGeoJsonFeatureSet()

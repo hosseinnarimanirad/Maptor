@@ -13,8 +13,8 @@ namespace IRI.Maptor.Sta.Spatial.IO.EsriJson;
 
 public static class EsriJsonHelper
 {
-    internal static string PointArrayToString(double?[][] pointArray)
-    {
+    internal static string PointArrayToString(double?[][] pointArray, bool isRing/*, bool shouldBeClockwiseRing*/)
+    { 
         //return $"{pointArray.Select(i => string.Join(", ", string.Join(" ", i)))}";
         return $"({string.Join(",", pointArray.Select(i => string.Join(" ", i.ToStringOrNull())))})";
     }
@@ -99,7 +99,7 @@ public static class EsriJsonHelper
         if (geometry is null || geometry.Points.IsNullOrEmpty())
             return WktConstants.EmptyMultiPoint;
 
-        return FormattableString.Invariant($"MULTIPOINT{EsriJsonHelper.PointArrayToString(geometry.Points)}");
+        return FormattableString.Invariant($"MULTIPOINT{EsriJsonHelper.PointArrayToString(geometry.Points, isRing: false)}");
     }
 
     internal static string PolylineToWkt(EsriJsonGeometry geometry)
@@ -116,11 +116,11 @@ public static class EsriJsonHelper
 
         if (validPaths.Length == 1)
         {
-            return FormattableString.Invariant($"LINESTRING{PointArrayToString(geometry.Paths[0])}");
+            return FormattableString.Invariant($"LINESTRING{PointArrayToString(geometry.Paths[0], isRing: false)}");
         }
         else
         {
-            return FormattableString.Invariant($"MULTILINESTRING({string.Join(", ", validPaths.Select(PointArrayToString))})");
+            return FormattableString.Invariant($"MULTILINESTRING({string.Join(", ", validPaths.Select(l => PointArrayToString(l, isRing: false)))})");
         }
 
     }
@@ -131,14 +131,14 @@ public static class EsriJsonHelper
             return WktConstants.EmptyPolygon;
 
         var rings = geometry.Rings;
-          
+
         if (rings.Length == 1)
         {
-            return FormattableString.Invariant($"POLYGON({PointArrayToString(geometry.Rings[0])})");
+            return FormattableString.Invariant($"POLYGON({PointArrayToString(geometry.Rings[0], isRing: true)})");
         }
         else
         {
-            return FormattableString.Invariant($"MULTIPOLYGON({string.Join(", ", geometry.Rings.Select(i => $"({PointArrayToString(i)})"))})");
+            return FormattableString.Invariant($"MULTIPOLYGON({string.Join(", ", geometry.Rings.Select(i => $"({PointArrayToString(i, isRing: true)})"))})");
         }
     }
 }
