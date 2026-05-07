@@ -131,7 +131,10 @@ public abstract class SrsBase
 
     public static bool operator ==(SrsBase? first, SrsBase? second)
     {
-        if (first is null || second is null)
+        if (first is null && second is null)
+            return true;
+
+        if ((first is null) ^ (second is null))
             return false;
 
         if (first.Srid != second.Srid)
