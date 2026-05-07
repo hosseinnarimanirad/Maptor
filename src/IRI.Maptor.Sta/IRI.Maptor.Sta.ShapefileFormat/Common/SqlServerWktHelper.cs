@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
-using IRI.Maptor.Sta.Spatial.Primitives.Esri;
+using IRI.Maptor.Sta.Spatial.IO.EsriJson;
 
 namespace IRI.Maptor.Sta.ShapefileFormat;
 

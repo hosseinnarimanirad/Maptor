@@ -90,15 +90,46 @@ public class Field
         {
             var fieldAttribute = property.GetCustomAttribute<FieldAttribute>();
 
+            if (fieldAttribute?.CanRead == false)
+                continue;
+
+            // Determine the underlying type (unwrap Nullable<T>)
+            var propertyType = property.PropertyType;
+
+            var underlyingType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
+
+            // Determine if the property is nullable
+            bool isNullable = Nullable.GetUnderlyingType(propertyType) != null || !propertyType.IsValueType;
+
             fields.Add(new Field
             {
                 Name = property.Name,
                 Alias = fieldAttribute?.Alias ?? property.Name, // Use property name if no alias
-                TypeFullName = property.PropertyType.FullName/*.ToString()*/,
+                TypeFullName = propertyType.FullName/*.ToString()*/,
+                IsNullable = isNullable,
+                Length = fieldAttribute?.Length ?? 0,
+                Precision = GetDefaultPrecision(underlyingType),
+                Scale = GetDefaultScale(underlyingType),
+                DateTimePrecision = GetDefaultDateTimePrecision(underlyingType)
             });
         }
 
         return fields;
+    }
+
+    private static int GetDefaultPrecision(Type type)
+    {
+        return type == typeof(decimal) ? 18 : 0;
+    }
+
+    private static int GetDefaultScale(Type type)
+    {
+        return type == typeof(decimal) ? 2 : 0;
+    }
+
+    private static int GetDefaultDateTimePrecision(Type type)
+    {
+        return (type == typeof(DateTime) || type == typeof(DateTimeOffset)) ? 3 : 0; // milliseconds
     }
 
     // todo: potentially error-prone
@@ -111,12 +142,21 @@ public class Field
 
         foreach (var kvp in dict)
         {
+            var value = kvp.Value;
+            var type = value?.GetType();
+
+            // Unwrap Nullable<T> if present
+            var underlyingType = Nullable.GetUnderlyingType(type ?? typeof(object)) ?? type;
+
+            // Determine nullability
+            bool isNullable = value is null || (type != null && Nullable.GetUnderlyingType(type) != null);
+
             fields.Add(new Field
             {
                 Name = kvp.Key,
                 Alias = kvp.Key,
                 TypeFullName = kvp.Value?.GetType().FullName/*Name*/ ?? "object",
-                IsNullable = kvp.Value == null
+                IsNullable = isNullable
             });
         }
 

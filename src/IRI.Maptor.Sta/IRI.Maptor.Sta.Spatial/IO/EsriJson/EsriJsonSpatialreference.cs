@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace IRI.Maptor.Sta.Spatial.Primitives.Esri;
+namespace IRI.Maptor.Sta.Spatial.IO.EsriJson;
 
 //[DataContract]
 //[JsonObject]

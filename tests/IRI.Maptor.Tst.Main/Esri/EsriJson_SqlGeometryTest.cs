@@ -1,6 +1,6 @@
 ﻿using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Helpers;
-using IRI.Maptor.Sta.Spatial.Primitives.Esri;
+using IRI.Maptor.Sta.Spatial.IO.EsriJson;
 using static IRI.Maptor.Tst.Assets.EsriJsonSamples;
 
 namespace IRI.Maptor.Tst.Main.Esri;

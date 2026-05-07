@@ -250,7 +250,9 @@ public class WebApiDataSource : MemoryDataSource
             return Task.FromResult(FeatureSet<Point>.Empty);
 
         var result = FeatureSet<Point>.Create(string.Empty, matching);
+
         result.Fields = _featureSet.Fields;
+
         return Task.FromResult(result);
     }
 
@@ -293,7 +295,11 @@ public class WebApiDataSource : MemoryDataSource
                 WebMercatorExtent = extent;
         }
 
-        return FeatureSet<Point>.Create(string.Empty, features);
+        var result = FeatureSet<Point>.Create(string.Empty, features);
+
+        result.Fields = this.Fields;
+
+        return result;
     }
 
     private Feature<Point>? ConvertFeatureDtoToFeature(FeatureDto featureDto)

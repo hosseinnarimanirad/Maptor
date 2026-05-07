@@ -3,7 +3,7 @@ using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives.Esri;
+using IRI.Maptor.Sta.Spatial.IO.EsriJson;
 
 namespace IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 

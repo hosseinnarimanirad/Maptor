@@ -2,23 +2,13 @@
 using System.Text.Json.Serialization;
 
 using IRI.Maptor.Sta.Common.Helpers;
+using IRI.Maptor.Sta.Spatial.Primitives;
 
-namespace IRI.Maptor.Sta.Spatial.Primitives.Esri;
+namespace IRI.Maptor.Sta.Spatial.IO.EsriJson;
 
-//[DataContract]
-
-//[JsonObject]
 public class EsriJsonGeometry
 {
-    //const string pointType = "POINT";
-    //const string multiPointType = "MULTIPOINT";
-    //const string polylineType = "POLYLINE";
-    //const string polygonType = "POLYGON";
-
     private EsriJsonGeometryType? _geometryType;
-
-    //[JsonConverter(typeof(JsonStringEnumConverter))]
-    //public EsriJsonGeometryType Type { get; set; }
 
     [JsonIgnore]
     public EsriJsonGeometryType Type
@@ -35,14 +25,18 @@ public class EsriJsonGeometry
 
     public double? M { get; set; }
 
-    public bool? HasM { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool HasM { get; set; } = false;
 
-    public bool? HasZ { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public bool HasZ { get; set; } = false;
 
     //multipoint
     public double?[][] Points { get; set; }
 
     //polygon
+    // exterior ring is CW, interior rings are CCW
+    // last point is repeated
     public double?[][][] Rings { get; set; }
 
     //polyline
@@ -54,19 +48,19 @@ public class EsriJsonGeometry
     {
         if (X.HasValue)
         {
-            return EsriJsonGeometryType.point;
+            return EsriJsonGeometryType.esriGeometryPoint;
         }
         else if (Points != null)
         {
-            return EsriJsonGeometryType.multipoint;
+            return EsriJsonGeometryType.esriGeometryMultipoint;
         }
         else if (Rings != null)
         {
-            return EsriJsonGeometryType.polygon;
+            return EsriJsonGeometryType.esriGeometryPolygon;
         }
         else if (Paths != null)
         {
-            return EsriJsonGeometryType.polyline;
+            return EsriJsonGeometryType.esriGeometryPolyline;
         }
         else
         {
@@ -75,13 +69,11 @@ public class EsriJsonGeometry
 
     }
 
-    public static EsriJsonGeometry? Parse(string esriGeometryJsonString/*, EsriJsonGeometryType type*/)
+    public static EsriJsonGeometry? Parse(string esriGeometryJsonString)
     {
         try
         {
             var result = JsonHelper.Deserialize<EsriJsonGeometry>(esriGeometryJsonString);
-
-            //result.Type = type;
 
             return result;
         }
@@ -96,91 +88,91 @@ public class EsriJsonGeometry
     {
         switch (Type)
         {
-            case EsriJsonGeometryType.point:
-                return PointToWkt();
+            case EsriJsonGeometryType.esriGeometryPoint:
+                return EsriJsonHelper.PointToWkt(this);
 
-            case EsriJsonGeometryType.multipoint:
-                return MultiPointToWkt();
+            case EsriJsonGeometryType.esriGeometryMultipoint:
+                return EsriJsonHelper.MultiPointToWkt(this);
 
-            case EsriJsonGeometryType.polyline:
-                return PolylineToWkt();
+            case EsriJsonGeometryType.esriGeometryPolyline:
+                return EsriJsonHelper.PolylineToWkt(this);
 
-            case EsriJsonGeometryType.polygon:
-                return PolygonToWkt();
+            case EsriJsonGeometryType.esriGeometryPolygon:
+                return EsriJsonHelper.PolygonToWkt(this);
 
             default:
                 throw new NotImplementedException();
         }
     }
 
-    private string PointToWkt()
-    {
-        var xValue = X.ToStringOrNull(false);
+    //private string PointToWkt()
+    //{
+    //    var xValue = X.ToStringOrNull(false);
 
-        var yValue = Y.ToStringOrNull(false);
+    //    var yValue = Y.ToStringOrNull(false);
 
-        if (string.IsNullOrEmpty(xValue) || string.IsNullOrEmpty(yValue))
-        {
-            return "POINT EMPTY";
-        }
+    //    if (string.IsNullOrEmpty(xValue) || string.IsNullOrEmpty(yValue))
+    //    {
+    //        return "POINT EMPTY";
+    //    }
 
-        var mValue = M.ToStringOrNull(false);
-        var zValue = Z.ToStringOrNull(mValue.Length > 0);
+    //    var mValue = M.ToStringOrNull(false);
+    //    var zValue = Z.ToStringOrNull(mValue.Length > 0);
 
-        if (string.IsNullOrEmpty(zValue) && string.IsNullOrEmpty(mValue))
-        {
-            return FormattableString.Invariant($"POINT({xValue.ToString(CultureInfo.InvariantCulture)} {yValue})");
-        }
-        else
-        {
-            return FormattableString.Invariant($"POINT({xValue} {yValue} {zValue} {mValue})");
-        }
+    //    if (string.IsNullOrEmpty(zValue) && string.IsNullOrEmpty(mValue))
+    //    {
+    //        return FormattableString.Invariant($"POINT({xValue.ToString(CultureInfo.InvariantCulture)} {yValue})");
+    //    }
+    //    else
+    //    {
+    //        return FormattableString.Invariant($"POINT({xValue} {yValue} {zValue} {mValue})");
+    //    }
 
-    }
+    //}
 
-    private string MultiPointToWkt()
-    {
-        if (!(Points?.Length > 0))
-        {
-            return "MULTIPOINT EMPTY";
-        }
+    //private string MultiPointToWkt()
+    //{
+    //    if (!(Points?.Length > 0))
+    //    {
+    //        return "MULTIPOINT EMPTY";
+    //    }
 
-        return FormattableString.Invariant($"MULTIPOINT{EsriJsonHelper.PointArrayToString(Points)}");
-    }
+    //    return FormattableString.Invariant($"MULTIPOINT{EsriJsonHelper.PointArrayToString(Points)}");
+    //}
 
-    private string PolylineToWkt()
-    {
-        if (!(Paths?.Length > 0))
-        {
-            return "LINESTRING EMPTY";
-        }
-        else if (Paths.Length == 1)
-        {
-            return FormattableString.Invariant($"LINESTRING{EsriJsonHelper.PointArrayToString(Paths[0])}");
-        }
-        else
-        {
-            return FormattableString.Invariant($"MULTILINESTRING({string.Join(", ", Paths.Select(i => EsriJsonHelper.PointArrayToString(i)))})");
-        }
+    //private string PolylineToWkt()
+    //{
+    //    if (!(Paths?.Length > 0))
+    //    {
+    //        return "LINESTRING EMPTY";
+    //    }
+    //    else if (Paths.Length == 1)
+    //    {
+    //        return FormattableString.Invariant($"LINESTRING{EsriJsonHelper.PointArrayToString(Paths[0])}");
+    //    }
+    //    else
+    //    {
+    //        return FormattableString.Invariant($"MULTILINESTRING({string.Join(", ", Paths.Select(i => EsriJsonHelper.PointArrayToString(i)))})");
+    //    }
 
-    }
+    //}
 
-    private string PolygonToWkt()
-    {
-        if (!(Rings?.Length > 0))
-        {
-            return "POLYGON EMPTY";
-        }
-        else if (Rings.Length == 1)
-        {
-            return FormattableString.Invariant($"POLYGON({EsriJsonHelper.PointArrayToString(Rings[0])})");
-        }
-        else
-        {
-            return FormattableString.Invariant($"MULTIPOLYGON({string.Join(", ", Rings.Select(i => $"({EsriJsonHelper.PointArrayToString(i)})"))})");
-        }
+    //private string PolygonToWkt()
+    //{
+    //    if (!(Rings?.Length > 0))
+    //    {
+    //        return "POLYGON EMPTY";
+    //    }
+    //    else if (Rings.Length == 1)
+    //    {
+    //        return FormattableString.Invariant($"POLYGON({EsriJsonHelper.PointArrayToString(Rings[0])})");
+    //    }
+    //    else
+    //    {
+    //        return FormattableString.Invariant($"MULTIPOLYGON({string.Join(", ", Rings.Select(i => $"({EsriJsonHelper.PointArrayToString(i)})"))})");
+    //    }
 
-    }
+    //}
 
     public static EsriJsonGeometry CreateEmpty(EsriJsonGeometryType type) => new EsriJsonGeometry() { Type = type, };
 

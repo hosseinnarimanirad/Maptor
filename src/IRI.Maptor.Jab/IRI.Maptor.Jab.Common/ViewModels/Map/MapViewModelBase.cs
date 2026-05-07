@@ -45,7 +45,7 @@ using IRI.Maptor.Jab.Common.Models.Settings;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Sta.Common.Exceptions;
-using IRI.Maptor.Sta.Spatial.Primitives.Esri;
+using IRI.Maptor.Sta.Spatial.IO.EsriJson;
 using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Jab.Common.Data.Settings;
 using IRI.Maptor.Jab.Common.Services;
@@ -4693,14 +4693,14 @@ public abstract class MapViewModelBase : ViewModelBase
             List<Feature<Point>> features;
 
             // read esri geojsons
-            var featureSet = EsriJsonFeatureSet.Load(fileName);
+            var esriFeatureSet = EsriJsonFeatureSet.Load(fileName);
 
-            if (featureSet is null || featureSet.Features.IsNullOrEmpty())
+            if (esriFeatureSet is null || esriFeatureSet.Features.IsNullOrEmpty())
                 throw new MaptorEmptyFileException();
 
-            var sourceSrid = featureSet.SpatialReference.LatestWkid ?? featureSet.SpatialReference.Wkid;
+            var featureSet = esriFeatureSet.AsFeatureSet();
 
-            features = featureSet.Features.Select(f => f.AsFeature(SrsBases.WebMercator, sourceSrid)).ToList();
+            features = featureSet.Features.Select(f => f.Project(SrsBases.WebMercator)).ToList();
 
             var dataSource = new MemoryDataSource(features, false, DataSourceKind.EsriJson);
 

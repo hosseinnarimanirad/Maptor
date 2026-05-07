@@ -9,6 +9,12 @@ public class FieldAttribute : Attribute
 {
     public string Alias { get; set; }
 
+	public int Length { get; set; }
+
+	public bool CanRead { get; set; } = true;
+
+	public bool CanWrite { get; set; } = true;
+
 	//public FieldAttribute(string alias)
 	//{
 	//	this.Alias = alias;

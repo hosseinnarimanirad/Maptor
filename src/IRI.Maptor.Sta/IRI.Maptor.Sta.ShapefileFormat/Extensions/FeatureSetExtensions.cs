@@ -1,22 +1,18 @@
-using IRI.Maptor.Sta.ShapefileFormat;
-using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
-using IRI.Maptor.Extensions;
-using IRI.Maptor.Sta.Common.Helpers;
-using IRI.Maptor.Sta.ShapefileFormat.Dbf;
-using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
+using System.Globalization;
+
 using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.IO.Dxf;
-using IRI.Maptor.Sta.Spatial.Primitives.Esri;
+using IRI.Maptor.Sta.ShapefileFormat;
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.Spatial.IO.EsriJson;
+using IRI.Maptor.Sta.ShapefileFormat.Dbf;
+using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Extensions;
 
@@ -24,6 +20,9 @@ public static class FeatureSetExtensions
 {
     public static void Export(this FeatureSet<Point> featureSet, string filePath, DataSourceKind exportFormat, SrsBase targetSrs, bool? isLongitudeFirst = null)
     {
+        if (featureSet is null)
+            return;
+
         var targetFeatureSet = featureSet.Project(targetSrs);
 
         switch (exportFormat)
@@ -75,6 +74,9 @@ public static class FeatureSetExtensions
 
     public static void SaveAsDxf(this FeatureSet<Point> featureSet, string dxfFileName)
     {
+        if (featureSet is null)
+            return;
+
         var srsBase = SridHelper.AsSrsBase(featureSet.Srid);
 
         var geometries = featureSet.Features.Select(f => f.TheGeometry).ToList();
@@ -87,6 +89,9 @@ public static class FeatureSetExtensions
 
     public static void SaveAsKml(this FeatureSet<Point> featureSet, string kmlFileName)
     {
+        if (featureSet is null)
+            return;
+
         var srsBase = SridHelper.AsSrsBase(featureSet.Srid);
 
         List<KmlFeature>? kmlFeatures = featureSet.Features.Select(f => f.ToKmlFeature()).ToList();
@@ -99,6 +104,9 @@ public static class FeatureSetExtensions
 
     public static void SaveAsKmz(this FeatureSet<Point> featureSet, string kmzFileName)
     {
+        if (featureSet is null)
+            return;
+
         var srsBase = SridHelper.AsSrsBase(featureSet.Srid);
 
         List<KmlFeature>? kmlFeatures = featureSet.Features.Select(f => f.ToKmlFeature()).ToList();
@@ -111,6 +119,9 @@ public static class FeatureSetExtensions
 
     public static void SaveAsShapefile(this FeatureSet<Point> featureSet, string shpFileName, Encoding encoding, SrsBase srs, bool overwrite = false)
     {
+        if (featureSet is null)
+            return;
+
         Shapefile.SaveAsShapefile(shpFileName, featureSet.Features, f => f.TheGeometry.AsEsriShape(f.TheGeometry.Srid), false, srs, overwrite);
 
         DbfFile.Write(Shapefile.GetDbfFileName(shpFileName), featureSet.Features.Select(f => f.Attributes).ToList(), encoding, overwrite);
@@ -118,6 +129,9 @@ public static class FeatureSetExtensions
 
     public static void SaveAsGeoJson(this FeatureSet<Point> featureSet, string geoJsonFileName, bool isLongitudeFirst)
     {
+        if (featureSet is null)
+            return;
+
         var srsBase = SridHelper.AsSrsBase(featureSet.Srid);
 
         var features = featureSet.Features.Select(f => f.AsGeoJsonFeature(p => srsBase.ToWgs84Geodetic(p), isLongitudeFirst)).ToList();
@@ -133,16 +147,11 @@ public static class FeatureSetExtensions
 
     public static void SaveAsEsriJson(this FeatureSet<Point> featureSet, string esriJsonFileName)
     {
-        var esriFeatures = featureSet.Features.Select(f => f.AsEsriJsonFeature()).ToList();
+        if (featureSet is null)
+            return;
 
-        var esriFeatureSet = new EsriJsonFeatureSet()
-        {
-            Features = esriFeatures,
-            FieldAliases = featureSet.Fields?.ToDictionary(f => f.Name, f => f.Alias) ?? new Dictionary<string, string?>(),
-            Fields = featureSet.Fields,
-            SpatialReference = new EsriJsonSpatialReference() { LatestWkid = featureSet.Srid }
-        };
-
+        var esriFeatureSet = EsriJsonFeatureSet.Parse(featureSet);
+         
         esriFeatureSet.Save(esriJsonFileName, false, true);
     }
 
@@ -151,6 +160,9 @@ public static class FeatureSetExtensions
     /// </summary>
     public static void SaveAsCsv(this FeatureSet<Point> featureSet, string csvFileName, bool includeHeader = true)
     {
+        if (featureSet is null)
+            return;
+
         SaveAsDelimited(featureSet, csvFileName, IOHelper.CsvDelimiterChar, includeHeader, null);
     }
 

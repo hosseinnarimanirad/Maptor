@@ -53,6 +53,8 @@ public static class JsonHelper
         });
     }
 
+    public static T? Deserialize<T>(string jsonString, JsonSerializerOptions options) => JsonSerializer.Deserialize<T>(jsonString, options);
+
     public static T? Deserialize<T>(string jsonString, JsonConverter converter)
     {
         return JsonSerializer.Deserialize<T>(jsonString, new JsonSerializerOptions()

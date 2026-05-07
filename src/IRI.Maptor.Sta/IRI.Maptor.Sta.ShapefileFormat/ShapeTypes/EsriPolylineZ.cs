@@ -12,7 +12,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Sta.Spatial.Primitives.Esri;
+using IRI.Maptor.Sta.Spatial.IO.EsriJson;
 
 
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;

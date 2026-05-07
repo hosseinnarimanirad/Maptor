@@ -2,9 +2,10 @@
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Spatial.Primitives.Esri;
+using IRI.Maptor.Sta.Spatial.IO.EsriJson;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 
 namespace IRI.Maptor.Ket.SqlServerSpatialExtension.Helpers;
 
@@ -110,37 +111,37 @@ public static class SqlSpatialHelper
 
     public static SqlGeometry CreateEmptyPoint(int srid)
     {
-        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars("POINT EMPTY"), srid);
+        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyPoint), srid);
     }
 
     public static SqlGeometry CreateEmptyLineString(int srid)
     {
-        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars("LINESTRING EMPTY"), srid);
+        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyLineString), srid);
     }
 
     public static SqlGeometry CreateEmptyPolygon(int srid)
     {
-        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars("POLYGON EMPTY"), srid);
+        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyPolygon), srid);
     }
 
     public static SqlGeometry CreateEmptyMultipoint(int srid)
     {
-        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars("MULTIPOINT EMPTY"), srid);
+        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyMultiPoint), srid);
     }
 
     public static SqlGeometry CreateEmptyMultiLineString(int srid)
     {
-        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars("MULTILINESTRING EMPTY"), srid);
+        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyMultiLineString), srid);
     }
 
     public static SqlGeometry CreateEmptyMultiPolygon(int srid)
     {
-        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars("MULTIPOLYGON EMPTY"), srid);
+        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyMultiPolygon), srid);
     }
 
     public static SqlGeometry CreateEmptyGeometryCollection(int srid)
     {
-        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars("GEOMETRYCOLLECTION EMPTY"), srid);
+        return SqlGeometry.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyGeometryCollection/*"GEOMETRYCOLLECTION EMPTY"*/), srid);
     }
 
     public static BoundingBox GetBoundingBoxFromEnvelopes(List<SqlGeometry> envelopes)
@@ -172,7 +173,7 @@ public static class SqlSpatialHelper
         }
 
         var points = geometries.Select(g => g.AsPoint()).ToList();
-         
+
         return Geometry<Point>.CreatePointOrLineString(points, geometries.SkipWhile(g => g.STSrid.IsNull)?.FirstOrDefault()?.STSrid.Value ?? 0).AsSqlGeometry();
     }
 
@@ -269,32 +270,32 @@ public static class SqlSpatialHelper
 
     public static SqlGeography CreateEmptyGeoPoint(int srid)
     {
-        return SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars("POINT EMPTY"), srid);
+        return SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyPoint /*"POINT EMPTY"*/), srid);
     }
 
     public static SqlGeography CreateEmptyGeoLineString(int srid)
     {
-        return SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars("LINESTRING EMPTY"), srid);
+        return SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyLineString/*"LINESTRING EMPTY"*/), srid);
     }
 
     public static SqlGeography CreateEmptyGeoPolygon(int srid)
     {
-        return SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars("POLYGON EMPTY"), srid);
+        return SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyPolygon/*"POLYGON EMPTY"*/), srid);
     }
 
     public static SqlGeography CreateEmptyGeoMultipoint(int srid)
     {
-        return SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars("MULTIPOINT EMPTY"), srid);
+        return SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyMultiPoint/*"MULTIPOINT EMPTY"*/), srid);
     }
 
     public static SqlGeography CreateEmptyGeoMultiLineString(int srid)
     {
-        return SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars("MULTILINESTRING EMPTY"), srid);
+        return SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyMultiLineString/*"MULTILINESTRING EMPTY"*/), srid);
     }
 
     public static SqlGeography CreateEmptyGeoMultiPolygon(int srid)
     {
-        return SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars("MULTIPOLYGON EMPTY"), srid);
+        return SqlGeography.STGeomFromText(new System.Data.SqlTypes.SqlChars(WktConstants.EmptyMultiPolygon/*"MULTIPOLYGON EMPTY"*/), srid);
     }
 
     public static SqlGeography CreateEmptyGeographyCollection(int srid)
@@ -322,6 +323,6 @@ public static class SqlSpatialHelper
 
         return new BoundingBox(xValues.Min(), yValues.Min(), xValues.Max(), yValues.Max());
     }
-     
-    #endregion 
+
+    #endregion
 }

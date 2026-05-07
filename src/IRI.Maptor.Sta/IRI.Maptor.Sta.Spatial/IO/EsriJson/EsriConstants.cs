@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace IRI.Maptor.Sta.Spatial.Primitives.Esri;
+namespace IRI.Maptor.Sta.Spatial.IO.EsriJson;
 
 public class EsriConstants
 {

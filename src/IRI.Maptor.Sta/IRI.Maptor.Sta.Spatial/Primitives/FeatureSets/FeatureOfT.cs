@@ -4,7 +4,7 @@ using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-using IRI.Maptor.Sta.Spatial.Primitives.Esri;
+using IRI.Maptor.Sta.Spatial.IO.EsriJson;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 

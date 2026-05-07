@@ -5,7 +5,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.Spatial.Primitives.Esri;
+using IRI.Maptor.Sta.Spatial.IO.EsriJson;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Ket.SqlServerSpatialExtension.Helpers;
@@ -877,14 +877,14 @@ public static class SqlGeometryExtensions
         if (geometry.IsNullOrEmpty())
             return new EsriJsonGeometry()
             {
-                Type = EsriJsonGeometryType.point,
+                Type = EsriJsonGeometryType.esriGeometryPoint,
             };
 
         return new EsriJsonGeometry()
         {
             X = geometry.STX.Value,
             Y = geometry.STY.Value,
-            Type = EsriJsonGeometryType.point,
+            Type = EsriJsonGeometryType.esriGeometryPoint,
             SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.GetSrid() }
         };
     }
@@ -896,7 +896,7 @@ public static class SqlGeometryExtensions
         if (geometry.IsNullOrEmpty())
             return new EsriJsonGeometry()
             {
-                Type = EsriJsonGeometryType.multipoint,
+                Type = EsriJsonGeometryType.esriGeometryMultipoint,
                 Points = new double?[0][],
             };
 
@@ -912,7 +912,7 @@ public static class SqlGeometryExtensions
         return new EsriJsonGeometry()
         {
             Points = points,
-            Type = EsriJsonGeometryType.multipoint,
+            Type = EsriJsonGeometryType.esriGeometryMultipoint,
             SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.GetSrid() }
         };
     }
@@ -924,7 +924,7 @@ public static class SqlGeometryExtensions
         if (geometry.IsNullOrEmpty())
             return new EsriJsonGeometry()
             {
-                Type = EsriJsonGeometryType.polyline,
+                Type = EsriJsonGeometryType.esriGeometryPolyline,
                 Paths = new double?[0][][],
             };
 
@@ -933,7 +933,7 @@ public static class SqlGeometryExtensions
         return new EsriJsonGeometry()
         {
             Paths = paths,
-            Type = EsriJsonGeometryType.polyline,
+            Type = EsriJsonGeometryType.esriGeometryPolyline,
             SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.GetSrid() }
         };
     }
@@ -945,7 +945,7 @@ public static class SqlGeometryExtensions
         if (geometry.IsNullOrEmpty())
             return new EsriJsonGeometry()
             {
-                Type = EsriJsonGeometryType.polyline,
+                Type = EsriJsonGeometryType.esriGeometryPolyline,
                 Paths = new double?[0][][],
             };
 
@@ -961,7 +961,7 @@ public static class SqlGeometryExtensions
         return new EsriJsonGeometry()
         {
             Paths = result,
-            Type = EsriJsonGeometryType.polyline,
+            Type = EsriJsonGeometryType.esriGeometryPolyline,
             SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.GetSrid() }
         };
     }
@@ -974,7 +974,7 @@ public static class SqlGeometryExtensions
         if (geometry.IsNullOrEmpty())
             return new EsriJsonGeometry()
             {
-                Type = EsriJsonGeometryType.polygon,
+                Type = EsriJsonGeometryType.esriGeometryPolygon,
                 Rings = new double?[0][][],
             };
 
@@ -983,7 +983,7 @@ public static class SqlGeometryExtensions
         return new EsriJsonGeometry()
         {
             Paths = rings,
-            Type = EsriJsonGeometryType.polygon,
+            Type = EsriJsonGeometryType.esriGeometryPolygon,
             SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.GetSrid() }
         };
     }
@@ -995,7 +995,7 @@ public static class SqlGeometryExtensions
         if (geometry.IsNullOrEmpty())
             return new EsriJsonGeometry()
             {
-                Type = EsriJsonGeometryType.polygon,
+                Type = EsriJsonGeometryType.esriGeometryPolygon,
                 Rings = new double?[0][][],
             };
 
@@ -1011,7 +1011,7 @@ public static class SqlGeometryExtensions
         return new EsriJsonGeometry()
         {
             Paths = rings,
-            Type = EsriJsonGeometryType.polygon,
+            Type = EsriJsonGeometryType.esriGeometryPolygon,
             SpatialReference = new EsriJsonSpatialReference() { Wkid = geometry.GetSrid() }
         };
     }
