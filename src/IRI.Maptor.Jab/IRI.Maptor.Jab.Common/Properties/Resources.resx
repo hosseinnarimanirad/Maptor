@@ -1628,4 +1628,13 @@
   <data name="cmd_legend_addEsriJson" xml:space="preserve">
     <value>Add EsriJson</value>
   </data>
+  <data name="dialog_common_formatJson" xml:space="preserve">
+    <value>Format Json</value>
+  </data>
+  <data name="dialog_common_minifiedJson" xml:space="preserve">
+    <value>Minified Json</value>
+  </data>
+  <data name="dialog_common_prettyJson" xml:space="preserve">
+    <value>Pretty Json</value>
+  </data>
 </root>

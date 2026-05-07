@@ -1587,4 +1587,13 @@
   <data name="cmd_legend_addEsriJson" xml:space="preserve">
     <value>افزودن EsriJson</value>
   </data>
+  <data name="dialog_common_formatJson" xml:space="preserve">
+    <value>مرتب‌سازی ساختار درختی json</value>
+  </data>
+  <data name="dialog_common_minifiedJson" xml:space="preserve">
+    <value>ساختار فشرده</value>
+  </data>
+  <data name="dialog_common_prettyJson" xml:space="preserve">
+    <value>ساختار خوش‌فرمت</value>
+  </data>
 </root>

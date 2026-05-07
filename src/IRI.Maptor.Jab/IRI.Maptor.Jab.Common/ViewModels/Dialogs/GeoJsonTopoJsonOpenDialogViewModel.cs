@@ -11,6 +11,7 @@ using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
+using System.Text.Json;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 
@@ -48,6 +49,7 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
         OpenCommand = new RelayCommand(_ => Open(), _ => CanOpen());
         CancelCommand = new RelayCommand(_ => Cancel());
         RemoveFileCommand = new RelayCommand(_ => RemoveSelectedFile(), _ => !string.IsNullOrEmpty(FilePath));
+        FormatJsonCommand = new RelayCommand(_ => FormatJson(true), _ => !string.IsNullOrEmpty(RawJson));
 
     }
 
@@ -60,7 +62,12 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
     public string FilePath
     {
         get => _filePath;
-        set { _filePath = value ?? string.Empty; RaisePropertyChanged(); }
+        set
+        {
+            _filePath = value ?? string.Empty;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsRawTextReadOnly));
+        }
     }
 
     public string RawJson
@@ -74,6 +81,8 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
             RaisePropertyChanged(nameof(CanOpen));
         }
     }
+
+    public bool IsRawTextReadOnly => !string.IsNullOrWhiteSpace(FilePath);
 
     public SrsOption? SelectedSrsOption
     {
@@ -129,6 +138,19 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
         }
     }
 
+    private bool _isPrettyJson = false;
+    public bool IsPrettyJson
+    {
+        get { return _isPrettyJson; }
+        set
+        {
+            _isPrettyJson = value;
+            RaisePropertyChanged();
+            FormatJson(value);
+        }
+    }
+
+
     public ObservableCollection<PointDisplay> SamplePoints
     {
         get => _samplePoints;
@@ -141,7 +163,30 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
 
     public RelayCommand RemoveFileCommand { get; }
 
+    public RelayCommand FormatJsonCommand { get; set; }
+
     public GeoJsonTopoJsonOpenDialogResult? Result { get; private set; }
+
+    private void FormatJson(bool isPretty)
+    {
+        try
+        {
+            // Parse the JSON into a DOM
+            using JsonDocument document = JsonDocument.Parse(RawJson);
+
+            // Serialize back with indentation
+            string prettyJson = JsonSerializer.Serialize(document.RootElement, new JsonSerializerOptions
+            {
+                WriteIndented = isPretty
+            });
+
+            RawJson = prettyJson;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 
     private void ApplyInitialSrid(int srid)
     {
@@ -246,6 +291,7 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
             return;
 
         var jsonToImport = RawJson;
+
         if (!string.IsNullOrEmpty(FilePath) && File.Exists(FilePath))
         {
             try

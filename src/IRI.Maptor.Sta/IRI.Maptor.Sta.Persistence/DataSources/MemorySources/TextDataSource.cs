@@ -36,6 +36,8 @@ public class TextDataSource : MemoryDataSource
         if (dataSourceKind != DataSourceKind.Csv && dataSourceKind != DataSourceKind.Tsv)
             throw new ArgumentException();
 
+        _dataSourceKind = dataSourceKind;
+
         _fileName = fileName ?? string.Empty;
 
         _useFirstLineAsHeader = useFirstLineAsHeader;
@@ -236,7 +238,9 @@ public class TextDataSource : MemoryDataSource
                 if (p != xIndex && p != yIndex)
                 {
                     var attrName = attributeIdx < attributeHeaders.Count ? attributeHeaders[attributeIdx] : $"header {attributeIdx + 1}";
+
                     attributes[attrName] = rawData[i][p];
+
                     attributeIdx++;
                 }
             }

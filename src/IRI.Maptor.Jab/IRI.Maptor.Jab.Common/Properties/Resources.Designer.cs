@@ -880,11 +880,38 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Format Json.
+        /// </summary>
+        public static string dialog_common_formatJson {
+            get {
+                return ResourceManager.GetString("dialog_common_formatJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minified Json.
+        /// </summary>
+        public static string dialog_common_minifiedJson {
+            get {
+                return ResourceManager.GetString("dialog_common_minifiedJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string dialog_common_ok {
             get {
                 return ResourceManager.GetString("dialog_common_ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pretty Json.
+        /// </summary>
+        public static string dialog_common_prettyJson {
+            get {
+                return ResourceManager.GetString("dialog_common_prettyJson", resourceCulture);
             }
         }
         

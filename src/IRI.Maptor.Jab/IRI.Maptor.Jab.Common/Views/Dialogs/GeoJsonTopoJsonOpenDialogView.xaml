@@ -19,7 +19,7 @@
         ShowMinButton="False"
         ShowTitleBar="True"
         FontFamily="{StaticResource iranSans}">
-  
+
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -88,7 +88,7 @@
                 <Button Grid.Column="3"
                        ToolTip="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
                        Command="{Binding RemoveFileCommand}"
-                       Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">            
+                       Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
                     <iconPacks:PackIconMaterial Kind="FileRemoveOutline"/>
                 </Button>
             </Grid>
@@ -165,25 +165,64 @@
                         </iconPacks:PackIconPhosphorIcons.Style>
                     </iconPacks:PackIconPhosphorIcons>
                 </ToggleButton>
-               
+
             </Grid>
         </Border>
 
         <!-- Options: X,Y vs Y,X -->
         <Border Grid.Row="3" Style="{StaticResource cardBorder}">
-            <StackPanel Orientation="Horizontal">
-                <iconPacks:PackIconPhosphorIcons Kind="ListNumbers" Style="{StaticResource securityIconPhosphor}"/>
-                <TextBlock Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
+            <DockPanel>
+                <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="ListNumbers" Style="{StaticResource securityIconPhosphor}"/>
+                <TextBlock DockPanel.Dock="Left" Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
                            VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
-                <CheckBox Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
+
+
+
+                <ToggleButton DockPanel.Dock="Right" IsChecked="{Binding IsPrettyJson, Mode=TwoWay}"
+                               Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" FlowDirection="LeftToRight"
+                               ToolTip="{Binding [dialog_common_formatJson], Source={StaticResource Localization}}">
+                    <iconPacks:PackIconMaterial Kind="FileTree" RenderTransformOrigin="0.5,0.5"
+                                     Margin="0" Width="24" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                    </iconPacks:PackIconMaterial>
+                </ToggleButton>
+                <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="8,2,4,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock"> 
+                            <Setter Property="Text" Value="{Binding [dialog_common_prettyJson], Source={StaticResource Localization}}"/>
+                            <Style.Triggers> 
+                                <DataTrigger Binding="{Binding IsPrettyJson}" Value="False">
+                                    <Setter Property="Text" Value="{Binding [dialog_common_minifiedJson], Source={StaticResource Localization}}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <mahApp:ToggleSwitch DockPanel.Dock="Right" Cursor="Hand" Margin="4" Visibility="Collapsed"
+                                     IsOn="{Binding IsPrettyJson, Mode=TwoWay}"
+                                     OnContent="{Binding [dialog_common_prettyJson], Source={StaticResource Localization}}"
+                                     OffContent="{Binding [dialog_common_minifiedJson], Source={StaticResource Localization}}"
+                                     IsEnabled="{Binding IsRawTextReadOnly}"
+                                     FontFamily="{StaticResource iranSans}" Width="115"
+                                     />
+                <Button DockPanel.Dock="Right" Visibility="Collapsed"
+                        ToolTip="{Binding [dialog_common_formatJson], Source={StaticResource Localization}}"
+                        Command="{Binding FormatJsonCommand}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                    <iconPacks:PackIconMaterial Kind="CodeBlockBraces"/>
+                </Button>
+
+                <CheckBox DockPanel.Dock="Left" Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
                             IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>
+
                 <!--<RadioButton Content="X,Y" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="4,0" VerticalAlignment="Center"
                          ToolTip="{Binding [dialog_geoJsonTopoJsonOpen_orderXY], Source={StaticResource Localization}}"/>
                 <RadioButton Content="Y,X" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay, Converter={StaticResource notConverter}}" Margin="4,0" VerticalAlignment="Center"
                          ToolTip="{Binding [dialog_geoJsonTopoJsonOpen_orderYX], Source={StaticResource Localization}}"/>-->
-            </StackPanel>
+            </DockPanel>
         </Border>
-        
+
         <!-- Data: paste or preview -->
         <!--mahApp:TextBoxHelper.Watermark="{Binding [dialog_geoJsonTopoJsonOpen_pasteWatermark], Source={StaticResource Localization}}"-->
         <!--<TextBox Grid.Row="4" Margin="0,4,0,8" MinHeight="120" MaxHeight="200"
@@ -207,7 +246,8 @@
                     Text="{Binding RawJson, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
-                    Padding="4" FlowDirection="LeftToRight"/>
+                    Padding="4" FlowDirection="LeftToRight"
+                     IsReadOnly="{Binding IsRawTextReadOnly}"/>
 
 
         </Grid>

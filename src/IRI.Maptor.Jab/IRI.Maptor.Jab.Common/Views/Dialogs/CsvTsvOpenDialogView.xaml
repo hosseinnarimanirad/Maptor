@@ -242,7 +242,8 @@
                     Text="{Binding RawText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
-                    Padding="4" FlowDirection="LeftToRight"/>
+                    Padding="4" FlowDirection="LeftToRight"
+                    IsReadOnly="{Binding IsRawTextReadOnly}"/>
 
         </Grid>
 

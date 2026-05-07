@@ -64,7 +64,12 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
     public string FilePath
     {
         get => _filePath;
-        set { _filePath = value ?? string.Empty; RaisePropertyChanged(); }
+        set
+        {
+            _filePath = value ?? string.Empty;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsRawTextReadOnly));
+        }
     }
 
     /// <summary>
@@ -73,8 +78,15 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
     public string RawText
     {
         get => _rawText;
-        set { _rawText = value ?? string.Empty; RaisePropertyChanged(); RaisePropertyChanged(nameof(CanOpen)); }
+        set
+        {
+            _rawText = value ?? string.Empty;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(CanOpen));
+        }
     }
+
+    public bool IsRawTextReadOnly => !string.IsNullOrWhiteSpace(FilePath);
 
     public SrsOption? SelectedSrsOption
     {
@@ -203,6 +215,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
             return;
 
         FilePath = path;
+
         try
         {
             var content = File.ReadAllText(path);
