@@ -736,11 +736,29 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to kilometer.
+        /// </summary>
+        public static string common_kilometer {
+            get {
+                return ResourceManager.GetString("common_kilometer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string common_login {
             get {
                 return ResourceManager.GetString("common_login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to meter.
+        /// </summary>
+        public static string common_meter {
+            get {
+                return ResourceManager.GetString("common_meter", resourceCulture);
             }
         }
         
@@ -849,6 +867,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string dialog_common_cancel {
             get {
                 return ResourceManager.GetString("dialog_common_cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string dialog_common_close {
+            get {
+                return ResourceManager.GetString("dialog_common_close", resourceCulture);
             }
         }
         
@@ -2870,141 +2897,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Area.
-        /// </summary>
-        public static string mapInfo_area {
-            get {
-                return ResourceManager.GetString("mapInfo_area", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to AuthalicSphereArea:.
-        /// </summary>
-        public static string mapInfo_authalicSphereArea {
-            get {
-                return ResourceManager.GetString("mapInfo_authalicSphereArea", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to EllipsoidalArea:.
-        /// </summary>
-        public static string mapInfo_ellipsoidalArea {
-            get {
-                return ResourceManager.GetString("mapInfo_ellipsoidalArea", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to EllipsoidalLength:.
-        /// </summary>
-        public static string mapInfo_ellipsoidalLength {
-            get {
-                return ResourceManager.GetString("mapInfo_ellipsoidalLength", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to EuclideanArea (UTM):.
-        /// </summary>
-        public static string mapInfo_euclideanAreaUtm {
-            get {
-                return ResourceManager.GetString("mapInfo_euclideanAreaUtm", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to EuclideanLengthInUtm:.
-        /// </summary>
-        public static string mapInfo_euclideanLengthUtm {
-            get {
-                return ResourceManager.GetString("mapInfo_euclideanLengthUtm", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to EuclideanLengthInUtm_Refined:.
-        /// </summary>
-        public static string mapInfo_euclideanLengthUtmRefined {
-            get {
-                return ResourceManager.GetString("mapInfo_euclideanLengthUtmRefined", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to General.
-        /// </summary>
-        public static string mapInfo_general {
-            get {
-                return ResourceManager.GetString("mapInfo_general", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to GroundArea:.
-        /// </summary>
-        public static string mapInfo_groundArea {
-            get {
-                return ResourceManager.GetString("mapInfo_groundArea", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to GroundLength:.
-        /// </summary>
-        public static string mapInfo_groundLength {
-            get {
-                return ResourceManager.GetString("mapInfo_groundLength", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to KarneyArea:.
-        /// </summary>
-        public static string mapInfo_karneyArea {
-            get {
-                return ResourceManager.GetString("mapInfo_karneyArea", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Length.
-        /// </summary>
-        public static string mapInfo_length {
-            get {
-                return ResourceManager.GetString("mapInfo_length", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mean Height.
-        /// </summary>
-        public static string mapInfo_meanHeight {
-            get {
-                return ResourceManager.GetString("mapInfo_meanHeight", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Scale Factor:.
-        /// </summary>
-        public static string mapInfo_scaleFactor {
-            get {
-                return ResourceManager.GetString("mapInfo_scaleFactor", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to SphericalLength:.
-        /// </summary>
-        public static string mapInfo_sphericalLength {
-            get {
-                return ResourceManager.GetString("mapInfo_sphericalLength", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Add new part.
         /// </summary>
         public static string mapPanel_currentPart_add {
@@ -3019,6 +2911,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string mapPanel_currentPart_delete {
             get {
                 return ResourceManager.GetString("mapPanel_currentPart_delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multi part.
+        /// </summary>
+        public static string mapPanel_currentPart_title {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPart_title", resourceCulture);
             }
         }
         
@@ -3077,6 +2978,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current Point.
+        /// </summary>
+        public static string mapPanel_currentPoint_title {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPoint_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zoom to current point.
         /// </summary>
         public static string mapPanel_currentPoint_zoom {
@@ -3091,6 +3001,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string mapPanel_edit_cancel {
             get {
                 return ResourceManager.GetString("mapPanel_edit_cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Convert to drawing item.
+        /// </summary>
+        public static string mapPanel_edit_convertToDrawing {
+            get {
+                return ResourceManager.GetString("mapPanel_edit_convertToDrawing", resourceCulture);
             }
         }
         
@@ -3113,56 +3032,173 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current Point.
+        ///   Looks up a localized string similar to Show Edge Labels.
         /// </summary>
-        public static string mapPanel_header_currentPoint {
+        public static string mapPanel_edit_showEdgeLabels {
             get {
-                return ResourceManager.GetString("mapPanel_header_currentPoint", resourceCulture);
+                return ResourceManager.GetString("mapPanel_edit_showEdgeLabels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Geometry Details.
+        /// </summary>
+        public static string mapPanel_edit_showGeometryDetails {
+            get {
+                return ResourceManager.GetString("mapPanel_edit_showGeometryDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Area.
+        /// </summary>
+        public static string mapPanel_measure_areaTitle {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_areaTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authalic Sphere:.
+        /// </summary>
+        public static string mapPanel_measure_authalicSphereArea {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_authalicSphereArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ellipsoidal:.
+        /// </summary>
+        public static string mapPanel_measure_ellipsoidalArea {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_ellipsoidalArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ellipsoidal:.
+        /// </summary>
+        public static string mapPanel_measure_ellipsoidalLength {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_ellipsoidalLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Euclidean (UTM):.
+        /// </summary>
+        public static string mapPanel_measure_euclideanAreaUtm {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_euclideanAreaUtm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Euclidean (Utm):.
+        /// </summary>
+        public static string mapPanel_measure_euclideanLengthUtm {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_euclideanLengthUtm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Euclidean (Utm) Refined:.
+        /// </summary>
+        public static string mapPanel_measure_euclideanLengthUtmRefined {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_euclideanLengthUtmRefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General Info.
+        /// </summary>
+        public static string mapPanel_measure_generalTitle {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_generalTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ground Area:.
+        /// </summary>
+        public static string mapPanel_measure_groundArea {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_groundArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ground Length:.
+        /// </summary>
+        public static string mapPanel_measure_groundLength {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_groundLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Karney:.
+        /// </summary>
+        public static string mapPanel_measure_karneyArea {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_karneyArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Length.
+        /// </summary>
+        public static string mapPanel_measure_lengthTitle {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_lengthTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mean Height:.
+        /// </summary>
+        public static string mapPanel_measure_meanHeight {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_meanHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scale Factor:.
+        /// </summary>
+        public static string mapPanel_measure_scaleFactor {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_scaleFactor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spherical::.
+        /// </summary>
+        public static string mapPanel_measure_sphericalLength {
+            get {
+                return ResourceManager.GetString("mapPanel_measure_sphericalLength", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Measurement.
         /// </summary>
-        public static string mapPanel_header_measure {
+        public static string mapPanel_measure_title {
             get {
-                return ResourceManager.GetString("mapPanel_header_measure", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Multi part.
-        /// </summary>
-        public static string mapPanel_header_multiPart {
-            get {
-                return ResourceManager.GetString("mapPanel_header_multiPart", resourceCulture);
+                return ResourceManager.GetString("mapPanel_measure_title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Spatial Reference System.
         /// </summary>
-        public static string mapPanel_header_srs {
+        public static string mapPanel_srs_title {
             get {
-                return ResourceManager.GetString("mapPanel_header_srs", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Convert to drawing item.
-        /// </summary>
-        public static string mapPanel_measure_convertToDrawing {
-            get {
-                return ResourceManager.GetString("mapPanel_measure_convertToDrawing", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Show Edge Labels.
-        /// </summary>
-        public static string mapPanel_measure_showEdgeLabels {
-            get {
-                return ResourceManager.GetString("mapPanel_measure_showEdgeLabels", resourceCulture);
+                return ResourceManager.GetString("mapPanel_srs_title", resourceCulture);
             }
         }
         

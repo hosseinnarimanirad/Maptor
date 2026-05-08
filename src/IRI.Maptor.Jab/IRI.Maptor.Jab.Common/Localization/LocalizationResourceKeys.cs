@@ -65,9 +65,9 @@
 //    dialog_symbology_stroke,
 //    dialog_symbology_strokeWidth,
      
-//    mapPanel_header_currentPoint,
-//    mapPanel_header_multiPart,
-//    mapPanel_header_srs,
+//    mapPanel_currentPoint_title,
+//    mapPanel_currentPart_title,
+//    mapPanel_srs_title,
 
 //    srs_ceaSubTitle,
 //    srs_ceaTitle,

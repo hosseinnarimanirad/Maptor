@@ -793,49 +793,49 @@
   <data name="manageAccount_newUsername" xml:space="preserve">
     <value>Новое имя пользователя</value>
   </data>
-  <data name="mapInfo_area" xml:space="preserve">
+  <data name="mapPanel_measure_areaTitle" xml:space="preserve">
     <value>Область</value>
   </data>
-  <data name="mapInfo_authalicSphereArea" xml:space="preserve">
+  <data name="mapPanel_measure_authalicSphereArea" xml:space="preserve">
     <value>АуталикСфераАреа:</value>
   </data>
-  <data name="mapInfo_ellipsoidalArea" xml:space="preserve">
+  <data name="mapPanel_measure_ellipsoidalArea" xml:space="preserve">
     <value>ЭллипсоидальнаяПлощадь:</value>
   </data>
-  <data name="mapInfo_ellipsoidalLength" xml:space="preserve">
+  <data name="mapPanel_measure_ellipsoidalLength" xml:space="preserve">
     <value>ЭллипсоидальнаяДлина:</value>
   </data>
-  <data name="mapInfo_euclideanAreaUtm" xml:space="preserve">
+  <data name="mapPanel_measure_euclideanAreaUtm" xml:space="preserve">
     <value>Евклидова Область (UTM):</value>
   </data>
-  <data name="mapInfo_euclideanLengthUtm" xml:space="preserve">
+  <data name="mapPanel_measure_euclideanLengthUtm" xml:space="preserve">
     <value>ЕвклидоваДлинаИнУтм:</value>
   </data>
-  <data name="mapInfo_euclideanLengthUtmRefined" xml:space="preserve">
+  <data name="mapPanel_measure_euclideanLengthUtmRefined" xml:space="preserve">
     <value>EuclideanLengthInUtm_Refined:</value>
   </data>
-  <data name="mapInfo_general" xml:space="preserve">
+  <data name="mapPanel_measure_generalTitle" xml:space="preserve">
     <value>Общий</value>
   </data>
-  <data name="mapInfo_groundArea" xml:space="preserve">
+  <data name="mapPanel_measure_groundArea" xml:space="preserve">
     <value>Площадь земли:</value>
   </data>
-  <data name="mapInfo_groundLength" xml:space="preserve">
+  <data name="mapPanel_measure_groundLength" xml:space="preserve">
     <value>Длина земли:</value>
   </data>
-  <data name="mapInfo_karneyArea" xml:space="preserve">
+  <data name="mapPanel_measure_karneyArea" xml:space="preserve">
     <value>КарнейРайон:</value>
   </data>
-  <data name="mapInfo_length" xml:space="preserve">
+  <data name="mapPanel_measure_lengthTitle" xml:space="preserve">
     <value>Длина</value>
   </data>
-  <data name="mapInfo_meanHeight" xml:space="preserve">
+  <data name="mapPanel_measure_meanHeight" xml:space="preserve">
     <value>Средняя высота</value>
   </data>
-  <data name="mapInfo_scaleFactor" xml:space="preserve">
+  <data name="mapPanel_measure_scaleFactor" xml:space="preserve">
     <value>Масштабный коэффициент:</value>
   </data>
-  <data name="mapInfo_sphericalLength" xml:space="preserve">
+  <data name="mapPanel_measure_sphericalLength" xml:space="preserve">
     <value>СферическаяДлина:</value>
   </data>
   <data name="legendItem_layerTitle" xml:space="preserve">
@@ -877,22 +877,22 @@
   <data name="mapPanel_edit_finish" xml:space="preserve">
     <value>Завершить редактирование</value>
   </data>
-  <data name="mapPanel_header_currentPoint" xml:space="preserve">
+  <data name="mapPanel_currentPoint_title" xml:space="preserve">
     <value>Текущая точка</value>
   </data>
-  <data name="mapPanel_header_measure" xml:space="preserve">
+  <data name="mapPanel_measure_title" xml:space="preserve">
     <value>Измерение</value>
   </data>
-  <data name="mapPanel_header_multiPart" xml:space="preserve">
+  <data name="mapPanel_currentPart_title" xml:space="preserve">
     <value>Мульти часть</value>
   </data>
-  <data name="mapPanel_header_srs" xml:space="preserve">
+  <data name="mapPanel_srs_title" xml:space="preserve">
     <value>Пространственная система отсчета</value>
   </data>
-  <data name="mapPanel_measure_convertToDrawing" xml:space="preserve">
+  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
     <value>Преобразовать в элемент рисунка</value>
   </data>
-  <data name="mapPanel_measure_showEdgeLabels" xml:space="preserve">
+  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
     <value>Показать метки краев</value>
   </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">

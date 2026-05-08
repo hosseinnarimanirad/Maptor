@@ -1,4 +1,4 @@
-<UserControl x:Class="IRI.Maptor.Jab.Controls.MapInfoView"
+<UserControl x:Class="IRI.Maptor.Jab.Controls.MapPanelView"
             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"        
             xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
@@ -17,7 +17,9 @@
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
             <Style  TargetType="{x:Type ToggleButton}" x:Key="simpleToggle">
-                <Setter Property="Margin" Value="4"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Margin" Value="4,2"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
                 <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Padding" Value="2"/>
@@ -173,7 +175,7 @@
 
                 <!--Editing-->
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" 
-                            ToolTip="{Binding [mapPanel_measure_showEdgeLabels], Source={StaticResource Localization}}"
+                            ToolTip="{Binding [mapPanel_edit_showEdgeLabels], Source={StaticResource Localization}}"
                             DataContext="{Binding CurrentEditingLayer}"
                             Visibility="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Converter={StaticResource boolToVisibilityConverter}}">
                     <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
@@ -184,14 +186,14 @@
 
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                             Command="{Binding ConvertToDrawingItemCommand}" 
-                            ToolTip="{Binding [mapPanel_measure_convertToDrawing], Source={StaticResource Localization}}"
+                            ToolTip="{Binding [mapPanel_edit_convertToDrawing], Source={StaticResource Localization}}"
                             Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Material Kind="PencilPlus"/>
                     </Button>
 
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2"
                             Command="{Binding ShowGeometryDetailsCommand}"
-                            ToolTip=""
+                            ToolTip="{Binding [mapPanel_edit_showGeometryDetails], Source={StaticResource Localization}}"
                             Visibility="{Binding Options.IsGeometryDetailsAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Material Kind="Tune"/>
                     </Button>
@@ -214,7 +216,7 @@
                             ToolTip="{Binding [mapPanel_edit_finish], Source={StaticResource Localization}}"
                             Visibility="{Binding Options.IsFinishButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Material Kind="CheckBold"/>
-                    </Button> 
+                    </Button>
                 </StackPanel>
                 <!--Editing-->
 
@@ -244,32 +246,32 @@
                 <TabControl.Items>
 
                     <!--current point-->
-                    <TabItem Header="{Binding [mapPanel_header_currentPoint], Source={StaticResource Localization}}" Cursor="Hand"
+                    <TabItem Header="{Binding [mapPanel_currentPoint_title], Source={StaticResource Localization}}" Cursor="Hand"
                                 Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}"
                              >
                         <StackPanel Orientation="Horizontal" DataContext="{Binding CurrentEditingLayer}" FlowDirection="LeftToRight" HorizontalAlignment="Center">
-                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
                                         ToolTip="{Binding [mapPanel_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}"
                                         Command="{Binding GoToPreviousPointCommand}" >
                                 <iconPacks:Material Kind="ChevronLeft" />
                             </Button>
-                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
                                         ToolTip="{Binding [mapPanel_currentPoint_delete], Source={StaticResource Localization}}"
                                         Command="{Binding DeleteCurrentPointCommand}" >
                                 <iconPacks:Material Kind="Delete"/>
                             </Button>
-                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
                                         ToolTip="{Binding [mapPanel_currentPoint_zoom], Source={StaticResource Localization}}"
                                         Command="{Binding ZoomToCurrentPointCommand}" >
                                 <iconPacks:Material Kind="MagnifyExpand"/>
                             </Button>
-                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
                                         ToolTip="{Binding [mapPanel_currentPoint_copyCoordinate], Source={StaticResource Localization}}"
                                         Command="{Binding CopyCurrentPointCommand}" 
                                         CommandParameter="{Binding DataContext.MapPanel.SpatialReference, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}">
                                 <iconPacks:Material Kind="ContentCopy"/>
                             </Button>
-                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
                                         ToolTip="{Binding [mapPanel_currentPoint_goToNextPoint], Source={StaticResource Localization}}"
                                         Command="{Binding GoToNextPointCommand}" >
                                 <iconPacks:Material Kind="ChevronRight"/>
@@ -278,7 +280,7 @@
                     </TabItem>
 
                     <!--multi part-->
-                    <TabItem Header="{Binding [mapPanel_header_multiPart], Source={StaticResource Localization}}" Cursor="Hand" >
+                    <TabItem Header="{Binding [mapPanel_currentPart_title], Source={StaticResource Localization}}" Cursor="Hand" >
                         <TabItem.Visibility>
                             <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
                                 <Binding Path="MapPanel.Options.IsMultiPartSupportAvailable"/>
@@ -286,18 +288,18 @@
                             </MultiBinding>
                         </TabItem.Visibility>
                         <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Center" DataContext="{Binding CurrentEditingLayer}" >
-                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
                                         ToolTip="{Binding [mapPanel_currentPart_delete], Source={StaticResource Localization}}"
                                         Command="{Binding DeleteCurrentPartCommand}" >
                                 <iconPacks:Material Kind="Delete"/>
                             </Button>
 
-                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" Margin="2" IsEnabled="False"
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" IsEnabled="False"
                                         ToolTip="{Binding [mapPanel_currentPart_add], Source={StaticResource Localization}}"
                                         Command="{Binding AddNewPartCommand}" Visibility="Collapsed">
                                 <iconPacks:Material Kind="Plus"/>
                             </Button>
-                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" Margin="2" 
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
                                         ToolTip="{Binding [mapPanel_currentPart_zoom], Source={StaticResource Localization}}"
                                         Command="{Binding ZoomToCurrentPartCommand}" >
                                 <iconPacks:Material Kind="MagnifyExpand"/>
@@ -306,19 +308,20 @@
                     </TabItem>
 
                     <!--spatial reference system-->
-                    <TabItem Header="{Binding [mapPanel_header_srs], Source={StaticResource Localization}}" Cursor="Hand"
-                             >
+                    <TabItem Header="{Binding [mapPanel_srs_title], Source={StaticResource Localization}}" Cursor="Hand">
+
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <RadioButton GroupName="A" ToolTip="{Binding [srs_geodeticWgs84Title], Source={StaticResource Localization}}" Foreground="White" Margin="4,2" 
-                                     IsChecked="{Binding MapPanel.IsGeodeticWgs84EditingMode, Mode=TwoWay}" Width="Auto" Height="Auto"  
-                                     HorizontalContentAlignment="Center" Style="{StaticResource simpleToggle}" >
+                            <RadioButton GroupName="A" Style="{StaticResource simpleToggle}"
+                                        ToolTip="{Binding [srs_geodeticWgs84Title], Source={StaticResource Localization}}" 
+                                        IsChecked="{Binding MapPanel.IsGeodeticWgs84EditingMode, Mode=TwoWay}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
                                     <iconPacks:PackIconMaterial Kind="Earth" Margin="0 0 4 0" VerticalAlignment="Center"/>
                                     <TextBlock Text="WGS84" Margin="2" Foreground="White"/>
                                 </StackPanel>
                             </RadioButton>
-                            <RadioButton GroupName="A" ToolTip="{Binding [srs_utmTitle], Source={StaticResource Localization}}" Foreground="White" Margin="4,2"
-                                     IsChecked="{Binding MapPanel.IsUTMEditingMode, Mode=TwoWay}" Style="{StaticResource simpleToggle}" >
+                            <RadioButton GroupName="A" Style="{StaticResource simpleToggle}"
+                                         ToolTip="{Binding [srs_utmTitle], Source={StaticResource Localization}}"
+                                        IsChecked="{Binding MapPanel.IsUTMEditingMode, Mode=TwoWay}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
                                     <iconPacks:PackIconMaterial Kind="EarthBox" Margin="0 0 4 0" VerticalAlignment="Center"/>
                                     <TextBlock Text="UTM" Margin="2" Foreground="White"/>
@@ -328,20 +331,21 @@
                                             Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}"
                                             Text="{Binding [srs_utmZone], Source={StaticResource Localization}}"/>
                             <TextBox DockPanel.Dock="Left" BorderThickness="1" FlowDirection="LeftToRight" MinWidth="30" Margin="2" VerticalAlignment="Center"
-                                            Text="{Binding MapPanel.CurrentEditingZone, Mode=TwoWay}" MaxWidth="30"
+                                        Text="{Binding MapPanel.CurrentEditingZone, Mode=TwoWay}" MaxWidth="30"
+                                     mahApp:ControlsHelper.CornerRadius="4"
                                      Style="{StaticResource IRI.Maptor.Styles.TextBox}"
                                             Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}">
-                                <TextBox.Resources>
+                                <!--<TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius" Value="3"/>
                                     </Style>
-                                </TextBox.Resources>
+                                </TextBox.Resources>-->
                             </TextBox>
                         </StackPanel>
                     </TabItem>
 
                     <!--measure-->
-                    <TabItem Header="{Binding [mapPanel_header_measure], Source={StaticResource Localization}}" Cursor="Hand">
+                    <TabItem Header="{Binding [mapPanel_measure_title], Source={StaticResource Localization}}" Cursor="Hand">
                         <StackPanel>
                             <StackPanel.Resources>
                                 <Style TargetType="TextBlock">
@@ -349,8 +353,21 @@
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                     <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>-->
                                 </Style>
+                                <Style x:Key="headerTitle" TargetType="TextBlock" BasedOn="{StaticResource MahApps.Styles.TextBlock}">
+                                    <Setter Property="Margin" Value="2"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                                    <Setter Property="FontSize" Value="13"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                                <Style x:Key="headerBorder" TargetType="Border">
+                                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                    <Setter Property="Padding" Value="6,0"/>
+                                    <Setter Property="CornerRadius" Value="4"/>
+                                </Style>
                             </StackPanel.Resources>
-                            <GroupBox Header="{Binding [mapInfo_general], Source={StaticResource Localization}}">
+
+                            <!--general group-->
+                            <GroupBox Header="{Binding [mapPanel_measure_generalTitle], Source={StaticResource Localization}}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
@@ -358,65 +375,96 @@
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapInfo_scaleFactor], Source={StaticResource Localization}}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.ScaleFactor, StringFormat={}{0:N5}}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="2"  FontWeight="Bold" Text="{Binding [mapInfo_meanHeight], Source={StaticResource Localization}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapPanel_measure_scaleFactor], Source={StaticResource Localization}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.ScaleFactor, Converter={StaticResource localizedNumberConverter}, ConverterParameter=N5}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2"  FontWeight="Bold" Text="{Binding [mapPanel_measure_meanHeight], Source={StaticResource Localization}}"/>
                                     <DockPanel Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" LastChildFill="True">
+                                        <TextBlock Text="(m)" DockPanel.Dock="Right"/>
                                         <TextBox Text="{Binding CurrentEditingLayer.Height, StringFormat={}{0:N0}}" DockPanel.Dock="Right" Margin="4" Width="50" VerticalAlignment="Center"/>
                                         <Slider Margin="2" Minimum="0" Maximum="5000" Value="{Binding CurrentEditingLayer.Height, UpdateSourceTrigger=PropertyChanged}" MinWidth="70"/>
                                     </DockPanel>
                                 </Grid>
                             </GroupBox>
-                            <Expander Header="{Binding [mapInfo_length], Source={StaticResource Localization}}" IsExpanded="False">
+                            <Expander IsExpanded="False">
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding [mapPanel_measure_lengthTitle], Source={StaticResource Localization}}"
+                                                   Style="{StaticResource headerTitle}"/>
+                                        <TextBlock Text=":" Style="{StaticResource headerTitle}"/>
+                                        <!--<TextBlock Text="{Binding CurrentEditingLayer.GroundLength, StringFormat={}{0:N1}}"-->
+                                        <Border Style="{StaticResource headerBorder}">
+                                            <TextBlock Text="{Binding CurrentEditingLayer.GroundLength, Converter={StaticResource localizedNumberConverter}}"
+                                                        Style="{StaticResource headerTitle}"/>
+                                        </Border>
+                                        <TextBlock Style="{StaticResource headerTitle}"
+                                                   Text="{Binding [common_meter], Source={StaticResource Localization}}"/>
+                                    </StackPanel>
+                                </Expander.Header>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
+                                        <ColumnDefinition Width="30"/>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="auto"/>
                                         <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapPanel_measure_euclideanLengthUtm], Source={StaticResource Localization}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" FontWeight="Normal" Text="{Binding CurrentEditingLayer.EuclideanLengthInUtm, Converter={StaticResource localizedNumberConverter}}"
+                                               HorizontalAlignment="Right"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="3" FontWeight="Bold" Text="{Binding [mapPanel_measure_ellipsoidalLength], Source={StaticResource Localization}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="4" FontWeight="Normal" Text="{Binding CurrentEditingLayer.EllipsoidalLength, Converter={StaticResource localizedNumberConverter}}"
+                                               HorizontalAlignment="Right"/>
 
+                                    <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapPanel_measure_euclideanLengthUtmRefined], Source={StaticResource Localization}}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" FontWeight="Normal" Text="{Binding CurrentEditingLayer.EuclideanLengthInUtm_Refined, Converter={StaticResource localizedNumberConverter}}"
+                                               HorizontalAlignment="Right"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="3" FontWeight="Bold" Text="{Binding [mapPanel_measure_sphericalLength], Source={StaticResource Localization}}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="4" FontWeight="Normal" Text="{Binding CurrentEditingLayer.SphericalLength, Converter={StaticResource localizedNumberConverter}}"
+                                               HorizontalAlignment="Right"/>
 
-                                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapInfo_euclideanLengthUtm], Source={StaticResource Localization}}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanLengthInUtm, StringFormat={}{0:N1}}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="2" FontWeight="Bold" Text="{Binding [mapInfo_ellipsoidalLength], Source={StaticResource Localization}}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding CurrentEditingLayer.EllipsoidalLength, StringFormat={}{0:N1}}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapInfo_euclideanLengthUtmRefined], Source={StaticResource Localization}}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanLengthInUtm_Refined, StringFormat={}{0:N1}}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="2" FontWeight="Bold" Text="{Binding [mapInfo_sphericalLength], Source={StaticResource Localization}}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding CurrentEditingLayer.SphericalLength, StringFormat={}{0:N1}}"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapInfo_groundLength], Source={StaticResource Localization}}"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CurrentEditingLayer.GroundLength, StringFormat={}{0:N1}}"/>
                                 </Grid>
                             </Expander>
-                            <Expander Header="{Binding [mapInfo_area], Source={StaticResource Localization}}" IsEnabled="True">
+                            <Expander IsExpanded="False">
+                                <Expander.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding [mapPanel_measure_areaTitle], Source={StaticResource Localization}}"
+                                                    Style="{StaticResource headerTitle}"/>
+                                        <TextBlock Text=":" Style="{StaticResource headerTitle}"/>
+                                        <Border Style="{StaticResource headerBorder}">
+                                            <TextBlock Style="{StaticResource headerTitle}"
+                                                       Text="{Binding CurrentEditingLayer.GroundArea, Converter={StaticResource localizedNumberConverter}, ConverterParameter=N1}"
+                                                       Background="Transparent"
+                                                       ToolTip="{Binding [mapPanel_measure_groundArea], Source={StaticResource Localization}}"/>
+                                        </Border>
+                                        <TextBlock Style="{StaticResource headerTitle}"
+                                                    Text="{Binding [common_meter], Source={StaticResource Localization}}"/>
+                                    </StackPanel>
+                                </Expander.Header>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
+                                        <ColumnDefinition Width="30"/>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/> 
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapInfo_euclideanAreaUtm], Source={StaticResource Localization}}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentEditingLayer.EuclideanArea, StringFormat={}{0:N1}}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="2" FontWeight="Bold" Text="{Binding [mapInfo_ellipsoidalArea], Source={StaticResource Localization}}"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding CurrentEditingLayer.EllipsoidalArea, StringFormat={}{0:N1}}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapInfo_authalicSphereArea], Source={StaticResource Localization}}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentEditingLayer.AuthalicSphereArea, StringFormat={}{0:N1}}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="2" FontWeight="Bold" Text="{Binding [mapInfo_karneyArea], Source={StaticResource Localization}}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding CurrentEditingLayer.KarneyArea, StringFormat={}{0:N1}}"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapInfo_groundArea], Source={StaticResource Localization}}"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CurrentEditingLayer.GroundArea, StringFormat={}{0:N1}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapPanel_measure_euclideanAreaUtm], Source={StaticResource Localization}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" FontWeight="Normal" Text="{Binding CurrentEditingLayer.EuclideanArea, Converter={StaticResource localizedNumberConverter}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="3" FontWeight="Bold" Text="{Binding [mapPanel_measure_ellipsoidalArea], Source={StaticResource Localization}}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="4" FontWeight="Normal" Text="{Binding CurrentEditingLayer.EllipsoidalArea, Converter={StaticResource localizedNumberConverter}}"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapPanel_measure_authalicSphereArea], Source={StaticResource Localization}}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" FontWeight="Normal" Text="{Binding CurrentEditingLayer.AuthalicSphereArea, Converter={StaticResource localizedNumberConverter}}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="3" FontWeight="Bold" Text="{Binding [mapPanel_measure_karneyArea], Source={StaticResource Localization}}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="4" FontWeight="Normal" Text="{Binding CurrentEditingLayer.KarneyArea, Converter={StaticResource localizedNumberConverter}}"/>
                                 </Grid>
                             </Expander>
                         </StackPanel>

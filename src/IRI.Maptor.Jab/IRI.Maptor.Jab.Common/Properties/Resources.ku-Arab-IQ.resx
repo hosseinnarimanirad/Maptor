@@ -793,49 +793,49 @@
   <data name="manageAccount_newUsername" xml:space="preserve">
     <value>ناوی بەکارهێنەری نوێ</value>
   </data>
-  <data name="mapInfo_area" xml:space="preserve">
+  <data name="mapPanel_measure_areaTitle" xml:space="preserve">
     <value>ناوچە</value>
   </data>
-  <data name="mapInfo_authalicSphereArea" xml:space="preserve">
+  <data name="mapPanel_measure_authalicSphereArea" xml:space="preserve">
     <value>ناوچەی ئۆتالیکسفیر:</value>
   </data>
-  <data name="mapInfo_ellipsoidalArea" xml:space="preserve">
+  <data name="mapPanel_measure_ellipsoidalArea" xml:space="preserve">
     <value>ناوچەی بیبسی:</value>
   </data>
-  <data name="mapInfo_ellipsoidalLength" xml:space="preserve">
+  <data name="mapPanel_measure_ellipsoidalLength" xml:space="preserve">
     <value>درێژی بیبسی:</value>
   </data>
-  <data name="mapInfo_euclideanAreaUtm" xml:space="preserve">
+  <data name="mapPanel_measure_euclideanAreaUtm" xml:space="preserve">
     <value>ناوچەی ئیوکلیدی (UTM):</value>
   </data>
-  <data name="mapInfo_euclideanLengthUtm" xml:space="preserve">
+  <data name="mapPanel_measure_euclideanLengthUtm" xml:space="preserve">
     <value>درێژی ئیوکلیدی لە ناوUtm:</value>
   </data>
-  <data name="mapInfo_euclideanLengthUtmRefined" xml:space="preserve">
+  <data name="mapPanel_measure_euclideanLengthUtmRefined" xml:space="preserve">
     <value>EuclideanLengthInUtm_Refined:</value>
   </data>
-  <data name="mapInfo_general" xml:space="preserve">
+  <data name="mapPanel_measure_generalTitle" xml:space="preserve">
     <value>گشتی</value>
   </data>
-  <data name="mapInfo_groundArea" xml:space="preserve">
+  <data name="mapPanel_measure_groundArea" xml:space="preserve">
     <value>ڕووبەری زەوی:</value>
   </data>
-  <data name="mapInfo_groundLength" xml:space="preserve">
+  <data name="mapPanel_measure_groundLength" xml:space="preserve">
     <value>درێژی زەوی:</value>
   </data>
-  <data name="mapInfo_karneyArea" xml:space="preserve">
+  <data name="mapPanel_measure_karneyArea" xml:space="preserve">
     <value>ناوچەی کارنێی:</value>
   </data>
-  <data name="mapInfo_length" xml:space="preserve">
+  <data name="mapPanel_measure_lengthTitle" xml:space="preserve">
     <value>درێژی</value>
   </data>
-  <data name="mapInfo_meanHeight" xml:space="preserve">
+  <data name="mapPanel_measure_meanHeight" xml:space="preserve">
     <value>مامناوەندی باڵا</value>
   </data>
-  <data name="mapInfo_scaleFactor" xml:space="preserve">
+  <data name="mapPanel_measure_scaleFactor" xml:space="preserve">
     <value>فاکتەری پێوەر:</value>
   </data>
-  <data name="mapInfo_sphericalLength" xml:space="preserve">
+  <data name="mapPanel_measure_sphericalLength" xml:space="preserve">
     <value>درێژی گۆشەیی:</value>
   </data>
   <data name="legendItem_layerTitle" xml:space="preserve">
@@ -877,22 +877,22 @@
   <data name="mapPanel_edit_finish" xml:space="preserve">
     <value>دەستکاری تەواو بکە</value>
   </data>
-  <data name="mapPanel_header_currentPoint" xml:space="preserve">
+  <data name="mapPanel_currentPoint_title" xml:space="preserve">
     <value>خالی ئێستا</value>
   </data>
-  <data name="mapPanel_header_measure" xml:space="preserve">
+  <data name="mapPanel_measure_title" xml:space="preserve">
     <value>پێوانە</value>
   </data>
-  <data name="mapPanel_header_multiPart" xml:space="preserve">
+  <data name="mapPanel_currentPart_title" xml:space="preserve">
     <value>چەند بەش</value>
   </data>
-  <data name="mapPanel_header_srs" xml:space="preserve">
+  <data name="mapPanel_srs_title" xml:space="preserve">
     <value>سیستەمی ئاماژەپێدانی شوێن</value>
   </data>
-  <data name="mapPanel_measure_convertToDrawing" xml:space="preserve">
+  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
     <value>بگۆڕە بۆ ئایتمی کێشان</value>
   </data>
-  <data name="mapPanel_measure_showEdgeLabels" xml:space="preserve">
+  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
     <value>نیشانەی لێوار پیشان بدە</value>
   </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">

@@ -6,7 +6,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 
-public class MapInfoViewModel : Notifier
+public class MapPanelViewModel : Notifier
 {
     private bool _isDetailsVisible;
     public bool IsDetailsVisible
@@ -189,7 +189,7 @@ public class MapInfoViewModel : Notifier
         }
     }
 
-    public MapInfoViewModel()
+    public MapPanelViewModel()
     {
         //RaisePropertyChanged(nameof(IsGeodeticWgs84EditingMode));
     }

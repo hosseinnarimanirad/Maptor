@@ -12,7 +12,16 @@ public class LocalizedNumberConverter : IValueConverter
     {
         if (value == null) return null;
 
-        return LocalizationManager.GetLocalizedNumberString(value);
+        if (value is not double number)
+            return Binding.DoNothing;
+
+        // Get format string from parameter, default to "N1"
+        string format = parameter as string ?? "N1";
+
+        // Format the number using invariant culture to get consistent digits
+        string formatted = number.ToString(format, CultureInfo.InvariantCulture);
+         
+        return LocalizationManager.GetLocalizedNumberString(formatted);
 
         //if (value is IFormattable formattable)
         //{

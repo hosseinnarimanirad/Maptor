@@ -5,11 +5,11 @@ using System.Windows.Controls;
 namespace IRI.Maptor.Jab.Controls;
 
 /// <summary>
-/// Interaction logic for MapInfoView.xaml
+/// Interaction logic for MapPanelView.xaml
 /// </summary>
-public partial class MapInfoView : UserControl
+public partial class MapPanelView : UserControl
 {
-    public MapInfoView()  
+    public MapPanelView()  
     {
         InitializeComponent(); 
     }       

@@ -793,49 +793,49 @@
   <data name="manageAccount_newUsername" xml:space="preserve">
     <value>新用户名</value>
   </data>
-  <data name="mapInfo_area" xml:space="preserve">
+  <data name="mapPanel_measure_areaTitle" xml:space="preserve">
     <value>区域</value>
   </data>
-  <data name="mapInfo_authalicSphereArea" xml:space="preserve">
+  <data name="mapPanel_measure_authalicSphereArea" xml:space="preserve">
     <value>真实球体区域：</value>
   </data>
-  <data name="mapInfo_ellipsoidalArea" xml:space="preserve">
+  <data name="mapPanel_measure_ellipsoidalArea" xml:space="preserve">
     <value>椭圆体面积：</value>
   </data>
-  <data name="mapInfo_ellipsoidalLength" xml:space="preserve">
+  <data name="mapPanel_measure_ellipsoidalLength" xml:space="preserve">
     <value>椭圆体长度：</value>
   </data>
-  <data name="mapInfo_euclideanAreaUtm" xml:space="preserve">
+  <data name="mapPanel_measure_euclideanAreaUtm" xml:space="preserve">
     <value>欧几里德面积 (UTM)：</value>
   </data>
-  <data name="mapInfo_euclideanLengthUtm" xml:space="preserve">
+  <data name="mapPanel_measure_euclideanLengthUtm" xml:space="preserve">
     <value>Utm 中的欧几里得长度：</value>
   </data>
-  <data name="mapInfo_euclideanLengthUtmRefined" xml:space="preserve">
+  <data name="mapPanel_measure_euclideanLengthUtmRefined" xml:space="preserve">
     <value>EuclideanLengthInUtm_Refined：</value>
   </data>
-  <data name="mapInfo_general" xml:space="preserve">
+  <data name="mapPanel_measure_generalTitle" xml:space="preserve">
     <value>一般的</value>
   </data>
-  <data name="mapInfo_groundArea" xml:space="preserve">
+  <data name="mapPanel_measure_groundArea" xml:space="preserve">
     <value>地面面积：</value>
   </data>
-  <data name="mapInfo_groundLength" xml:space="preserve">
+  <data name="mapPanel_measure_groundLength" xml:space="preserve">
     <value>接地长度：</value>
   </data>
-  <data name="mapInfo_karneyArea" xml:space="preserve">
+  <data name="mapPanel_measure_karneyArea" xml:space="preserve">
     <value>卡尼地区：</value>
   </data>
-  <data name="mapInfo_length" xml:space="preserve">
+  <data name="mapPanel_measure_lengthTitle" xml:space="preserve">
     <value>长度</value>
   </data>
-  <data name="mapInfo_meanHeight" xml:space="preserve">
+  <data name="mapPanel_measure_meanHeight" xml:space="preserve">
     <value>平均身高</value>
   </data>
-  <data name="mapInfo_scaleFactor" xml:space="preserve">
+  <data name="mapPanel_measure_scaleFactor" xml:space="preserve">
     <value>比例因子：</value>
   </data>
-  <data name="mapInfo_sphericalLength" xml:space="preserve">
+  <data name="mapPanel_measure_sphericalLength" xml:space="preserve">
     <value>球体长度：</value>
   </data>
   <data name="legendItem_layerTitle" xml:space="preserve">
@@ -877,22 +877,22 @@
   <data name="mapPanel_edit_finish" xml:space="preserve">
     <value>完成编辑</value>
   </data>
-  <data name="mapPanel_header_currentPoint" xml:space="preserve">
+  <data name="mapPanel_currentPoint_title" xml:space="preserve">
     <value>当前点</value>
   </data>
-  <data name="mapPanel_header_measure" xml:space="preserve">
+  <data name="mapPanel_measure_title" xml:space="preserve">
     <value>测量</value>
   </data>
-  <data name="mapPanel_header_multiPart" xml:space="preserve">
+  <data name="mapPanel_currentPart_title" xml:space="preserve">
     <value>多部分</value>
   </data>
-  <data name="mapPanel_header_srs" xml:space="preserve">
+  <data name="mapPanel_srs_title" xml:space="preserve">
     <value>空间参考系统</value>
   </data>
-  <data name="mapPanel_measure_convertToDrawing" xml:space="preserve">
+  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
     <value>转换为绘图项目</value>
   </data>
-  <data name="mapPanel_measure_showEdgeLabels" xml:space="preserve">
+  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
     <value>显示边缘标签</value>
   </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">

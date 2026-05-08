@@ -333,22 +333,22 @@ public static class Sta_GeometryExtensions
         switch (geometry.Type)
         {
             case GeometryType.Point:
-                return geometry.SqlPointToEsriJsonPoint();
+                return geometry.PointToEsriJsonPoint();
 
             case GeometryType.LineString:
-                return geometry.SqlLineStringToEsriJsonPolyline();
+                return geometry.LineStringToEsriJsonPolyline();
 
             case GeometryType.Polygon:
-                return geometry.SqlPolygonToEsriJsonPolygon();
+                return geometry.PolygonToEsriJsonPolygon();
 
             case GeometryType.MultiPoint:
-                return geometry.SqlMultiPointToEsriJsonMultiPoint();
+                return geometry.MultiPointToEsriJsonMultiPoint();
 
             case GeometryType.MultiLineString:
-                return geometry.SqlMultiLineStringToEsriJsonPolyline();
+                return geometry.MultiLineStringToEsriJsonPolyline();
 
             case GeometryType.MultiPolygon:
-                return geometry.SqlMultiPolygonToEsriJsonMultiPolygon();
+                return geometry.MultiPolygonToEsriJsonMultiPolygon();
 
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:
@@ -375,7 +375,7 @@ public static class Sta_GeometryExtensions
 
     }
 
-    private static double?[][] GetLineStringOrRing<T>(Geometry<T> lineStringOrRing) where T : IPoint, new()
+    private static double?[][] GetLineStringOrRing<T>(Geometry<T> lineStringOrRing, bool isRing) where T : IPoint, new()
     {
         if (lineStringOrRing.IsNullOrEmpty())
             return [];
@@ -389,10 +389,11 @@ public static class Sta_GeometryExtensions
             result[i] = GetEsriJsonObjectPoint(lineStringOrRing.Points[i]);
         }
 
-        return result;
+        // ring orientation is different for Geometry<T> and esri json geometries
+        return isRing ? result.Reverse().ToArray() : result;
     }
 
-    private static EsriJsonGeometry SqlPointToEsriJsonPoint<T>(this Geometry<T> geometry) where T : IPoint, new()
+    private static EsriJsonGeometry PointToEsriJsonPoint<T>(this Geometry<T> geometry) where T : IPoint, new()
     {
         //This check is required
         if (geometry.IsNullOrEmpty())
@@ -421,7 +422,7 @@ public static class Sta_GeometryExtensions
         return result;
     }
 
-    private static EsriJsonGeometry SqlMultiPointToEsriJsonMultiPoint<T>(this Geometry<T> geometry) where T : IPoint, new()
+    private static EsriJsonGeometry MultiPointToEsriJsonMultiPoint<T>(this Geometry<T> geometry) where T : IPoint, new()
     {
         //This check is required
         if (geometry.IsNullOrEmpty())
@@ -448,7 +449,7 @@ public static class Sta_GeometryExtensions
         };
     }
 
-    private static EsriJsonGeometry SqlLineStringToEsriJsonPolyline<T>(this Geometry<T> geometry) where T : IPoint, new()
+    private static EsriJsonGeometry LineStringToEsriJsonPolyline<T>(this Geometry<T> geometry) where T : IPoint, new()
     {
         //This check is required
         if (geometry.IsNullOrEmpty())
@@ -459,7 +460,7 @@ public static class Sta_GeometryExtensions
         //    Paths = [],
         //};
 
-        double?[][][] paths = [GetLineStringOrRing(geometry)];
+        double?[][][] paths = [GetLineStringOrRing(geometry, isRing: false)];
 
         return new EsriJsonGeometry()
         {
@@ -469,7 +470,7 @@ public static class Sta_GeometryExtensions
         };
     }
 
-    private static EsriJsonGeometry SqlMultiLineStringToEsriJsonPolyline<T>(this Geometry<T> geometry) where T : IPoint, new()
+    private static EsriJsonGeometry MultiLineStringToEsriJsonPolyline<T>(this Geometry<T> geometry) where T : IPoint, new()
     {
         //This check is required
         if (geometry.IsNullOrEmpty())
@@ -486,7 +487,7 @@ public static class Sta_GeometryExtensions
 
         for (int i = 0; i < numberOfParts; i++)
         {
-            result[i] = GetLineStringOrRing(geometry.Geometries[i]);
+            result[i] = GetLineStringOrRing(geometry.Geometries[i], isRing: false);
         }
 
         return new EsriJsonGeometry()
@@ -498,7 +499,7 @@ public static class Sta_GeometryExtensions
     }
 
     //todo: 1399.08.19; this method is not OK, look at SqlGeometry To Geometry
-    private static EsriJsonGeometry SqlPolygonToEsriJsonPolygon<T>(this Geometry<T> geometry) where T : IPoint, new()
+    private static EsriJsonGeometry PolygonToEsriJsonPolygon<T>(this Geometry<T> geometry) where T : IPoint, new()
     {
         //This check is required
         if (geometry.IsNullOrEmpty())
@@ -516,7 +517,7 @@ public static class Sta_GeometryExtensions
 
         for (int i = 0; i < numberOfParts; i++)
         {
-            rings[i] = GetLineStringOrRing(geometry.Geometries[i]);
+            rings[i] = GetLineStringOrRing(geometry.Geometries[i], isRing: true);
         }
 
         return new EsriJsonGeometry()
@@ -527,7 +528,7 @@ public static class Sta_GeometryExtensions
         };
     }
 
-    private static EsriJsonGeometry SqlMultiPolygonToEsriJsonMultiPolygon<T>(this Geometry<T> geometry) where T : IPoint, new()
+    private static EsriJsonGeometry MultiPolygonToEsriJsonMultiPolygon<T>(this Geometry<T> geometry) where T : IPoint, new()
     {
         //This check is required
         if (geometry.IsNullOrEmpty())
@@ -544,7 +545,7 @@ public static class Sta_GeometryExtensions
 
         for (int i = 0; i < numberOfParts; i++)
         {
-            rings[i] = GetLineStringOrRing(geometry.Geometries[i]);
+            rings[i] = GetLineStringOrRing(geometry.Geometries[i], isRing: true);
         }
 
         return new EsriJsonGeometry()

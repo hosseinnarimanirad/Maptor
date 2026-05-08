@@ -793,49 +793,49 @@
   <data name="manageAccount_newUsername" xml:space="preserve">
     <value>नया उपयोक्तानाम</value>
   </data>
-  <data name="mapInfo_area" xml:space="preserve">
+  <data name="mapPanel_measure_areaTitle" xml:space="preserve">
     <value>क्षेत्र</value>
   </data>
-  <data name="mapInfo_authalicSphereArea" xml:space="preserve">
+  <data name="mapPanel_measure_authalicSphereArea" xml:space="preserve">
     <value>प्रामाणिक क्षेत्र:</value>
   </data>
-  <data name="mapInfo_ellipsoidalArea" xml:space="preserve">
+  <data name="mapPanel_measure_ellipsoidalArea" xml:space="preserve">
     <value>दीर्घवृत्ताकार क्षेत्र:</value>
   </data>
-  <data name="mapInfo_ellipsoidalLength" xml:space="preserve">
+  <data name="mapPanel_measure_ellipsoidalLength" xml:space="preserve">
     <value>दीर्घवृत्ताकार लंबाई:</value>
   </data>
-  <data name="mapInfo_euclideanAreaUtm" xml:space="preserve">
+  <data name="mapPanel_measure_euclideanAreaUtm" xml:space="preserve">
     <value>यूक्लिडियन क्षेत्र (UTM):</value>
   </data>
-  <data name="mapInfo_euclideanLengthUtm" xml:space="preserve">
+  <data name="mapPanel_measure_euclideanLengthUtm" xml:space="preserve">
     <value>यूक्लिडियनलंबाईयूटीएम:</value>
   </data>
-  <data name="mapInfo_euclideanLengthUtmRefined" xml:space="preserve">
+  <data name="mapPanel_measure_euclideanLengthUtmRefined" xml:space="preserve">
     <value>EuclideanLengthInUtm_Refined:</value>
   </data>
-  <data name="mapInfo_general" xml:space="preserve">
+  <data name="mapPanel_measure_generalTitle" xml:space="preserve">
     <value>सामान्य</value>
   </data>
-  <data name="mapInfo_groundArea" xml:space="preserve">
+  <data name="mapPanel_measure_groundArea" xml:space="preserve">
     <value>ग्राउंड एरिया:</value>
   </data>
-  <data name="mapInfo_groundLength" xml:space="preserve">
+  <data name="mapPanel_measure_groundLength" xml:space="preserve">
     <value>ज़मीन की लंबाई:</value>
   </data>
-  <data name="mapInfo_karneyArea" xml:space="preserve">
+  <data name="mapPanel_measure_karneyArea" xml:space="preserve">
     <value>कार्नीक्षेत्र:</value>
   </data>
-  <data name="mapInfo_length" xml:space="preserve">
+  <data name="mapPanel_measure_lengthTitle" xml:space="preserve">
     <value>लंबाई</value>
   </data>
-  <data name="mapInfo_meanHeight" xml:space="preserve">
+  <data name="mapPanel_measure_meanHeight" xml:space="preserve">
     <value>माध्य ऊँचाई</value>
   </data>
-  <data name="mapInfo_scaleFactor" xml:space="preserve">
+  <data name="mapPanel_measure_scaleFactor" xml:space="preserve">
     <value>पैमाने का कारक:</value>
   </data>
-  <data name="mapInfo_sphericalLength" xml:space="preserve">
+  <data name="mapPanel_measure_sphericalLength" xml:space="preserve">
     <value>गोलाकार लंबाई:</value>
   </data>
   <data name="legendItem_layerTitle" xml:space="preserve">
@@ -877,22 +877,22 @@
   <data name="mapPanel_edit_finish" xml:space="preserve">
     <value>संपादित करें समाप्त करें</value>
   </data>
-  <data name="mapPanel_header_currentPoint" xml:space="preserve">
+  <data name="mapPanel_currentPoint_title" xml:space="preserve">
     <value>वर्तमान बिंदु</value>
   </data>
-  <data name="mapPanel_header_measure" xml:space="preserve">
+  <data name="mapPanel_measure_title" xml:space="preserve">
     <value>माप</value>
   </data>
-  <data name="mapPanel_header_multiPart" xml:space="preserve">
+  <data name="mapPanel_currentPart_title" xml:space="preserve">
     <value>बहु भाग</value>
   </data>
-  <data name="mapPanel_header_srs" xml:space="preserve">
+  <data name="mapPanel_srs_title" xml:space="preserve">
     <value>स्थानिक संदर्भ प्रणाली</value>
   </data>
-  <data name="mapPanel_measure_convertToDrawing" xml:space="preserve">
+  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
     <value>ड्राइंग आइटम में कनवर्ट करें</value>
   </data>
-  <data name="mapPanel_measure_showEdgeLabels" xml:space="preserve">
+  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
     <value>एज लेबल दिखाएँ</value>
   </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">

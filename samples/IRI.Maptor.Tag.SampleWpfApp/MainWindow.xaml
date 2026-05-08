@@ -72,7 +72,7 @@
 
         <maptor:MapViewer Grid.Row="1" Grid.Column="1" x:Name="map" BorderBrush="Black" BorderThickness="1"/>
 
-        <maptor:MapInfoView Grid.Row="1" Grid.Column="1" DataContext="{Binding }"/>
+        <maptor:MapPanelView Grid.Row="1" Grid.Column="1" DataContext="{Binding }"/>
 
         <maptor:Scalebar Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="4"  
                          CurrentScale="{Binding MapScale_CurrentPoint}" ShowScaleValue="True" ShowZoomLevel="True"

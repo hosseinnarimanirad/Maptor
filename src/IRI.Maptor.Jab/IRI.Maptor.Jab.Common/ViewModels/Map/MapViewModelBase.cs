@@ -224,8 +224,8 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    private MapInfoViewModel _mapPanel;
-    public MapInfoViewModel MapPanel
+    private MapPanelViewModel _mapPanel;
+    public MapPanelViewModel MapPanel
     {
         get { return _mapPanel; }
         set
@@ -998,7 +998,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         MapExtentPanel = new MapExtentPanelViewModel(this);
 
-        MapPanel = new MapInfoViewModel();
+        MapPanel = new MapPanelViewModel();
 
         MapPanel.CurrentEditingPoint = new NotifiablePoint(0, 0, param =>
           {

@@ -852,50 +852,50 @@
   <data name="manageAccount_newUsername" xml:space="preserve">
     <value>نام کاربری جدید</value>
   </data>
-  <data name="mapInfo_area" xml:space="preserve">
-    <value>منطقه</value>
+  <data name="mapPanel_measure_areaTitle" xml:space="preserve">
+    <value>مساحت</value>
   </data>
-  <data name="mapInfo_authalicSphereArea" xml:space="preserve">
-    <value>AuthalicSphere Area:</value>
+  <data name="mapPanel_measure_authalicSphereArea" xml:space="preserve">
+    <value>اتالیک (Authalic Sphere):</value>
   </data>
-  <data name="mapInfo_ellipsoidalArea" xml:space="preserve">
-    <value>ناحیه بیضی:</value>
+  <data name="mapPanel_measure_ellipsoidalArea" xml:space="preserve">
+    <value>روی بیضوی:</value>
   </data>
-  <data name="mapInfo_ellipsoidalLength" xml:space="preserve">
-    <value>طول بیضی:</value>
+  <data name="mapPanel_measure_ellipsoidalLength" xml:space="preserve">
+    <value>روی بیضوی:</value>
   </data>
-  <data name="mapInfo_euclideanAreaUtm" xml:space="preserve">
-    <value>مساحت اقلیدسی (UTM):</value>
+  <data name="mapPanel_measure_euclideanAreaUtm" xml:space="preserve">
+    <value>اقلیدسی (UTM):</value>
   </data>
-  <data name="mapInfo_euclideanLengthUtm" xml:space="preserve">
-    <value>فاصله اقلیدسی (UTM)</value>
+  <data name="mapPanel_measure_euclideanLengthUtm" xml:space="preserve">
+    <value>اقلیدسی (UTM):</value>
   </data>
-  <data name="mapInfo_euclideanLengthUtmRefined" xml:space="preserve">
-    <value>فاصله اقلیدسی (UTM) اصلاح شده</value>
+  <data name="mapPanel_measure_euclideanLengthUtmRefined" xml:space="preserve">
+    <value>اقلیدسی (UTM) اصلاح شده:</value>
   </data>
-  <data name="mapInfo_general" xml:space="preserve">
-    <value>ژنرال</value>
+  <data name="mapPanel_measure_generalTitle" xml:space="preserve">
+    <value>اطلاعات کلی</value>
   </data>
-  <data name="mapInfo_groundArea" xml:space="preserve">
-    <value>مساحت زمین:</value>
+  <data name="mapPanel_measure_groundArea" xml:space="preserve">
+    <value>روی زمین:</value>
   </data>
-  <data name="mapInfo_groundLength" xml:space="preserve">
-    <value>طول زمین:</value>
+  <data name="mapPanel_measure_groundLength" xml:space="preserve">
+    <value>روی زمین:</value>
   </data>
-  <data name="mapInfo_karneyArea" xml:space="preserve">
-    <value>منطقه کارنی:</value>
+  <data name="mapPanel_measure_karneyArea" xml:space="preserve">
+    <value>کارنی (Karney):</value>
   </data>
-  <data name="mapInfo_length" xml:space="preserve">
-    <value>طول</value>
+  <data name="mapPanel_measure_lengthTitle" xml:space="preserve">
+    <value>طول/محیط</value>
   </data>
-  <data name="mapInfo_meanHeight" xml:space="preserve">
-    <value>ارتفاع متوسط</value>
+  <data name="mapPanel_measure_meanHeight" xml:space="preserve">
+    <value>ارتفاع متوسط:</value>
   </data>
-  <data name="mapInfo_scaleFactor" xml:space="preserve">
+  <data name="mapPanel_measure_scaleFactor" xml:space="preserve">
     <value>ضریب مقیاس:</value>
   </data>
-  <data name="mapInfo_sphericalLength" xml:space="preserve">
-    <value>طول کروی:</value>
+  <data name="mapPanel_measure_sphericalLength" xml:space="preserve">
+    <value>روی کره</value>
   </data>
   <data name="legendItem_layerTitle" xml:space="preserve">
     <value>عنوان</value>
@@ -936,22 +936,22 @@
   <data name="mapPanel_edit_finish" xml:space="preserve">
     <value>اتمام ویرایش</value>
   </data>
-  <data name="mapPanel_header_currentPoint" xml:space="preserve">
+  <data name="mapPanel_currentPoint_title" xml:space="preserve">
     <value>نقطه جاری</value>
   </data>
-  <data name="mapPanel_header_measure" xml:space="preserve">
+  <data name="mapPanel_measure_title" xml:space="preserve">
     <value>اندازه‌گیری</value>
   </data>
-  <data name="mapPanel_header_multiPart" xml:space="preserve">
+  <data name="mapPanel_currentPart_title" xml:space="preserve">
     <value>عوارض چندتکه‌ای</value>
   </data>
-  <data name="mapPanel_header_srs" xml:space="preserve">
+  <data name="mapPanel_srs_title" xml:space="preserve">
     <value>سیستم مرجع مکانی</value>
   </data>
-  <data name="mapPanel_measure_convertToDrawing" xml:space="preserve">
+  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
     <value>تبدیل به عارضه ترسیمی</value>
   </data>
-  <data name="mapPanel_measure_showEdgeLabels" xml:space="preserve">
+  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
     <value>نمایش طول اضلاع</value>
   </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">
@@ -1595,5 +1595,17 @@
   </data>
   <data name="dialog_common_prettyJson" xml:space="preserve">
     <value>ساختار خوش‌فرمت</value>
+  </data>
+  <data name="dialog_common_close" xml:space="preserve">
+    <value>بستن</value>
+  </data>
+  <data name="mapPanel_edit_showGeometryDetails" xml:space="preserve">
+    <value>نمایش جزییات هندسه</value>
+  </data>
+  <data name="common_kilometer" xml:space="preserve">
+    <value>کیلومتر</value>
+  </data>
+  <data name="common_meter" xml:space="preserve">
+    <value>متر</value>
   </data>
 </root>

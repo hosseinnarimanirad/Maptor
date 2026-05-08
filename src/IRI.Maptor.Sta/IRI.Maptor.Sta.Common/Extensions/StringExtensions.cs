@@ -33,6 +33,17 @@ public static class StringExtensions
             .Replace(" ", " ")
             .Replace("‌", " ")
             .Replace("ھ", "ه");//.Replace("ئ", "ی");
+
+
+        //// better approach (performance) but more code
+        //char[] persianDigits = { '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹' };
+        //char[] result = str.ToCharArray();
+        //for (int i = 0; i < result.Length; i++)
+        //{
+        //    if (char.IsDigit(result[i]))
+        //        result[i] = persianDigits[result[i] - '0'];
+        //}
+        //return new string(result);
     }
 
     public static string LatinNumbersToFarsiNumbers(this string value)

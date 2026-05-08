@@ -774,22 +774,22 @@
   <data name="mapPanel_edit_finish" xml:space="preserve">
     <value>Finish Edit</value>
   </data>
-  <data name="mapPanel_header_currentPoint" xml:space="preserve">
+  <data name="mapPanel_currentPoint_title" xml:space="preserve">
     <value>Current Point</value>
   </data>
-  <data name="mapPanel_header_measure" xml:space="preserve">
+  <data name="mapPanel_measure_title" xml:space="preserve">
     <value>Measurement</value>
   </data>
-  <data name="mapPanel_header_multiPart" xml:space="preserve">
+  <data name="mapPanel_currentPart_title" xml:space="preserve">
     <value>Multi part</value>
   </data>
-  <data name="mapPanel_header_srs" xml:space="preserve">
+  <data name="mapPanel_srs_title" xml:space="preserve">
     <value>Spatial Reference System</value>
   </data>
-  <data name="mapPanel_measure_convertToDrawing" xml:space="preserve">
+  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
     <value>Convert to drawing item</value>
   </data>
-  <data name="mapPanel_measure_showEdgeLabels" xml:space="preserve">
+  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
     <value>Show Edge Labels</value>
   </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">
@@ -1177,50 +1177,50 @@
   <data name="legendItem_layerTitle" xml:space="preserve">
     <value>Title</value>
   </data>
-  <data name="mapInfo_general" xml:space="preserve">
-    <value>General</value>
+  <data name="mapPanel_measure_generalTitle" xml:space="preserve">
+    <value>General Info</value>
   </data>
-  <data name="mapInfo_scaleFactor" xml:space="preserve">
+  <data name="mapPanel_measure_scaleFactor" xml:space="preserve">
     <value>Scale Factor:</value>
   </data>
-  <data name="mapInfo_meanHeight" xml:space="preserve">
-    <value>Mean Height</value>
+  <data name="mapPanel_measure_meanHeight" xml:space="preserve">
+    <value>Mean Height:</value>
   </data>
-  <data name="mapInfo_length" xml:space="preserve">
+  <data name="mapPanel_measure_lengthTitle" xml:space="preserve">
     <value>Length</value>
   </data>
-  <data name="mapInfo_euclideanLengthUtm" xml:space="preserve">
-    <value>EuclideanLengthInUtm:</value>
+  <data name="mapPanel_measure_euclideanLengthUtm" xml:space="preserve">
+    <value>Euclidean (Utm):</value>
   </data>
-  <data name="mapInfo_ellipsoidalLength" xml:space="preserve">
-    <value>EllipsoidalLength:</value>
+  <data name="mapPanel_measure_ellipsoidalLength" xml:space="preserve">
+    <value>Ellipsoidal:</value>
   </data>
-  <data name="mapInfo_euclideanLengthUtmRefined" xml:space="preserve">
-    <value>EuclideanLengthInUtm_Refined:</value>
+  <data name="mapPanel_measure_euclideanLengthUtmRefined" xml:space="preserve">
+    <value>Euclidean (Utm) Refined:</value>
   </data>
-  <data name="mapInfo_sphericalLength" xml:space="preserve">
-    <value>SphericalLength:</value>
+  <data name="mapPanel_measure_sphericalLength" xml:space="preserve">
+    <value>Spherical::</value>
   </data>
-  <data name="mapInfo_groundLength" xml:space="preserve">
-    <value>GroundLength:</value>
+  <data name="mapPanel_measure_groundLength" xml:space="preserve">
+    <value>Ground Length:</value>
   </data>
-  <data name="mapInfo_area" xml:space="preserve">
+  <data name="mapPanel_measure_areaTitle" xml:space="preserve">
     <value>Area</value>
   </data>
-  <data name="mapInfo_euclideanAreaUtm" xml:space="preserve">
-    <value>EuclideanArea (UTM):</value>
+  <data name="mapPanel_measure_euclideanAreaUtm" xml:space="preserve">
+    <value>Euclidean (UTM):</value>
   </data>
-  <data name="mapInfo_ellipsoidalArea" xml:space="preserve">
-    <value>EllipsoidalArea:</value>
+  <data name="mapPanel_measure_ellipsoidalArea" xml:space="preserve">
+    <value>Ellipsoidal:</value>
   </data>
-  <data name="mapInfo_authalicSphereArea" xml:space="preserve">
-    <value>AuthalicSphereArea:</value>
+  <data name="mapPanel_measure_authalicSphereArea" xml:space="preserve">
+    <value>Authalic Sphere:</value>
   </data>
-  <data name="mapInfo_karneyArea" xml:space="preserve">
-    <value>KarneyArea:</value>
+  <data name="mapPanel_measure_karneyArea" xml:space="preserve">
+    <value>Karney:</value>
   </data>
-  <data name="mapInfo_groundArea" xml:space="preserve">
-    <value>GroundArea:</value>
+  <data name="mapPanel_measure_groundArea" xml:space="preserve">
+    <value>Ground Area:</value>
   </data>
   <data name="input_drawFeatureOnMap" xml:space="preserve">
     <value>Draw feature on map</value>
@@ -1636,5 +1636,17 @@
   </data>
   <data name="dialog_common_prettyJson" xml:space="preserve">
     <value>Pretty Json</value>
+  </data>
+  <data name="dialog_common_close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="mapPanel_edit_showGeometryDetails" xml:space="preserve">
+    <value>Show Geometry Details</value>
+  </data>
+  <data name="common_kilometer" xml:space="preserve">
+    <value>kilometer</value>
+  </data>
+  <data name="common_meter" xml:space="preserve">
+    <value>meter</value>
   </data>
 </root>
