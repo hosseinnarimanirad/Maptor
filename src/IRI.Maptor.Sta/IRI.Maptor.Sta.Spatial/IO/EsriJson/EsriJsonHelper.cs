@@ -1,4 +1,5 @@
 ﻿using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,44 @@ namespace IRI.Maptor.Sta.Spatial.IO.EsriJson;
 
 public static class EsriJsonHelper
 {
-    internal static string PointArrayToString(double?[][] pointArray, bool isRing/*, bool shouldBeClockwiseRing*/)
-    { 
-        //return $"{pointArray.Select(i => string.Join(", ", string.Join(" ", i)))}";
-        return $"({string.Join(",", pointArray.Select(i => string.Join(" ", i.ToStringOrNull())))})";
+    internal static string PointArrayToString(double?[][] pointArray, bool isRing, bool shouldBeClockwiseRing)
+    {
+        if (pointArray is null)
+            return string.Empty;
+
+        var validIndices = pointArray
+            .Select((p, idx) => new { Point = p, Index = idx })
+            .Where(x => x.Point != null && x.Point.Length >= 2 && x.Point[0].HasValue && x.Point[1].HasValue)
+            .Select(x => x.Index)
+            .ToList();
+
+        if (validIndices.Count == 0)
+            return string.Empty;
+
+        // If orientation correction is needed, we will build a new ordered list of points
+        List<double?[]> orderedPoints;
+
+        if (isRing && validIndices.Count >= 3)
+        {
+            // Extract X,Y for orientation check (only from valid points)
+            var pointsForOrientation = validIndices
+                .Select(i => new IRI.Maptor.Sta.Common.Primitives.Point(pointArray[i][0]!.Value, pointArray[i][1]!.Value))
+                .ToList();
+
+            bool isClockwise = SpatialUtility.IsClockwise(pointsForOrientation);
+
+            if ((shouldBeClockwiseRing && !isClockwise) ||
+                (!shouldBeClockwiseRing && isClockwise))
+            {
+                // Reverse the order of valid points (preserving all coordinates)
+                validIndices.Reverse();
+            }
+        }
+
+        // Build the final list of points in the required order (including Z/M)
+        orderedPoints = validIndices.Select(i => pointArray[i]).ToList();
+
+        return $"({string.Join(",", orderedPoints.Select(i => string.Join(" ", i.ToStringOrNull())))})";
     }
 
     internal static string ToStringOrNull(this double? value, bool returnNullString)
@@ -99,7 +134,7 @@ public static class EsriJsonHelper
         if (geometry is null || geometry.Points.IsNullOrEmpty())
             return WktConstants.EmptyMultiPoint;
 
-        return FormattableString.Invariant($"MULTIPOINT{EsriJsonHelper.PointArrayToString(geometry.Points, isRing: false)}");
+        return FormattableString.Invariant($"MULTIPOINT{EsriJsonHelper.PointArrayToString(geometry.Points, isRing: false, false)}");
     }
 
     internal static string PolylineToWkt(EsriJsonGeometry geometry)
@@ -116,11 +151,11 @@ public static class EsriJsonHelper
 
         if (validPaths.Length == 1)
         {
-            return FormattableString.Invariant($"LINESTRING{PointArrayToString(geometry.Paths[0], isRing: false)}");
+            return FormattableString.Invariant($"LINESTRING{PointArrayToString(geometry.Paths[0], isRing: false, false)}");
         }
         else
         {
-            return FormattableString.Invariant($"MULTILINESTRING({string.Join(", ", validPaths.Select(l => PointArrayToString(l, isRing: false)))})");
+            return FormattableString.Invariant($"MULTILINESTRING({string.Join(", ", validPaths.Select(l => PointArrayToString(l, isRing: false, false)))})");
         }
 
     }
@@ -134,11 +169,13 @@ public static class EsriJsonHelper
 
         if (rings.Length == 1)
         {
-            return FormattableString.Invariant($"POLYGON({PointArrayToString(geometry.Rings[0], isRing: true)})");
+            return FormattableString.Invariant(
+                $"POLYGON({PointArrayToString(geometry.Rings[0], isRing: true, false)})");
         }
         else
         {
-            return FormattableString.Invariant($"MULTIPOLYGON({string.Join(", ", geometry.Rings.Select(i => $"({PointArrayToString(i, isRing: true)})"))})");
+            return FormattableString.Invariant(
+                $"MULTIPOLYGON({string.Join(", ", geometry.Rings.Select((i, index) => $"({PointArrayToString(i, isRing: true, index != 0)})"))})");
         }
     }
 }
