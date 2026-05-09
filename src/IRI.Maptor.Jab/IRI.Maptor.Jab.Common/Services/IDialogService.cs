@@ -94,8 +94,8 @@ public interface IDialogService
     // ********************************************************************
     Task<bool?> ShowDialogAsync<TParent>(Window view, DialogViewModelBase viewModel);
 
-    Task<bool?> ShowDialogAsync<TParent>(object? ownerWindow, Window view, DialogViewModelBase viewModel);
-
+    Task<bool?> ShowDialogAsync(object? ownerWindow, Window view, DialogViewModelBase viewModel);
+     
 
     // ********************************************************************
     //                          DXF Open Dialog

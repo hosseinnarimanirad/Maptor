@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
-                    xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro">
+                    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls">
     <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
     <Style x:Key="IRI.Maptor.Styles.TextBox" TargetType="TextBox" BasedOn="{StaticResource MahApps.Styles.TextBox}">

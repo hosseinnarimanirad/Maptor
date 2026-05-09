@@ -12,15 +12,25 @@ public class LocalizedNumberConverter : IValueConverter
     {
         if (value == null) return null;
 
-        if (value is not double number)
-            return Binding.DoNothing;
+        //if (value is not double number)
+        //    return Binding.DoNothing;
+        decimal number;
+
+        try
+        {
+            number = System.Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+        }
+        catch
+        {
+            return Binding.DoNothing; // Not a numeric type
+        }
 
         // Get format string from parameter, default to "N1"
         string format = parameter as string ?? "N1";
 
         // Format the number using invariant culture to get consistent digits
         string formatted = number.ToString(format, CultureInfo.InvariantCulture);
-         
+
         return LocalizationManager.GetLocalizedNumberString(formatted);
 
         //if (value is IFormattable formattable)

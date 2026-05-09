@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.Resources;
-using System.Text.RegularExpressions;
 using System.Windows;
+using System.Resources; 
+using System.Globalization;
+using System.ComponentModel;
+using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Properties;

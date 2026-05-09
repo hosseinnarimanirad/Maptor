@@ -22,7 +22,7 @@ namespace IRI.Maptor.Jab.Common.Services;
 /// </summary>
 public class DefaultDialogService : IDialogService
 {
-    private const int DefaultBlurRadius = 5;
+    private const int DefaultBlurRadius = 4;
 
     /// <summary>
     /// Gets or sets the blur radius applied to the owner window when showing dialogs.
@@ -849,7 +849,7 @@ public class DefaultDialogService : IDialogService
     public Task<bool?> ShowDialogAsync<TParent>(Window view, DialogViewModelBase viewModel)
     {
         var owner = GetOwnerWindowByType<TParent>();
-        return ShowDialogAsync<TParent>(owner, view, viewModel);
+        return ShowDialogAsync(owner, view, viewModel);
     }
 
     /// <summary>
@@ -860,10 +860,11 @@ public class DefaultDialogService : IDialogService
     /// <param name="view">The window to show as a dialog.</param>
     /// <param name="viewModel">The dialog view model.</param>
     /// <returns>A task that represents the asynchronous operation. The result is true if accepted, false if cancelled, or null if closed without result.</returns>
-    public Task<bool?> ShowDialogAsync<TParent>(object? ownerWindow, Window view, DialogViewModelBase viewModel)
+    public Task<bool?> ShowDialogAsync(object? ownerWindow, Window view, DialogViewModelBase viewModel)
     {
         if (view == null)
             throw new ArgumentNullException(nameof(view));
+
         if (viewModel == null)
             throw new ArgumentNullException(nameof(viewModel));
 

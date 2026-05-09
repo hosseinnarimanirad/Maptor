@@ -1,8 +1,9 @@
 ﻿using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.LayerSettings;
 
-public class LayerSettingsViewModel : Notifier
+public class LayerSettingsViewModel : DialogViewModelBase
 {
     private ILayer _layer;
     public ILayer Layer

@@ -4,7 +4,7 @@
              xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls" 
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization" 
-             xmlns:mahApp="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
@@ -14,7 +14,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="filterTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
                 <Setter Property="BorderThickness" Value="0"/>

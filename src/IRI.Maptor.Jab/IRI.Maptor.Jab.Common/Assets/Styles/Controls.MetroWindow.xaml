@@ -1,0 +1,35 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+                    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization">
+    <!--xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"-->
+
+    <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+
+    <Style x:Key="IRI.Maptor.Styles.MetroWindow.Dialog"
+           TargetType="{x:Type mahApp:MetroWindow}">
+        <Setter Property="MinWidth" Value="500"/>
+        <Setter Property="MaxWidth" Value="550"/>
+        <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+
+        <Setter Property="GlowBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+        <Setter Property="FlowDirection" Value="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"/>
+        <Setter Property="Padding" Value="10"/>
+        <!--this property cannot be set in styles-->
+        <!--<Setter Property="WindowStartupLocation" Value="CenterOwner"/>-->
+
+        <Setter Property="ShowInTaskbar" Value="False"/>
+        <Setter Property="ShowCloseButton" Value="True"/>
+        <Setter Property="ShowMinButton" Value="False"/>
+        <Setter Property="ShowMaxRestoreButton" Value="False"/>
+        <Setter Property="ShowTitleBar" Value="True"/>
+        <Setter Property="WindowStyle" Value="ThreeDBorderWindow"/>
+        <Setter Property="ResizeMode" Value="NoResize"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
+                <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

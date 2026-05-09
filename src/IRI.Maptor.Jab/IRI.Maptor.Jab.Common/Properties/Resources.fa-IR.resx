@@ -1525,7 +1525,7 @@
     <value>عوارض مشمول:</value>
   </data>
   <data name="dialog_export_enabledProjection" xml:space="preserve">
-    <value>نگاشت مختصات</value>
+    <value>نگاشت مختصات به:</value>
   </data>
   <data name="dialog_export_outputFileFormat" xml:space="preserve">
     <value>فرمت خروجی:</value>

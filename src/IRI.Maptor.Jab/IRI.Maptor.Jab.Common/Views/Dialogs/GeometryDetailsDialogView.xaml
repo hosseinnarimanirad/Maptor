@@ -1,49 +1,30 @@
 <mahApp:MetroWindow x:Class="IRI.Maptor.Jab.Controls.Dialogs.GeometryDetailsDialogView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls" 
-        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
-        xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor" 
-        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
-        Title="{Binding DialogTitle, RelativeSource={RelativeSource AncestorType=mahApp:MetroWindow}}"          
-        ShowInTaskbar="False"
-        SizeToContent="Height"
-        GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"                    
-        MaxWidth="750"
-        FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
-        WindowStartupLocation="CenterOwner"
-        ShowMaxRestoreButton="True" 
-        ShowCloseButton="True" 
-        ShowMinButton="False"
-        ShowTitleBar="True">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
+    xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor" 
+
+    Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
+    Title="{Binding DialogTitle, RelativeSource={RelativeSource AncestorType=mahApp:MetroWindow}}"          
+    SizeToContent="Height"
+    MaxWidth="750"
+    ShowMaxRestoreButton="True" 
+    WindowStartupLocation="CenterOwner">
     <mahApp:MetroWindow.TitleTemplate>
         <DataTemplate>
-            <TextBlock Text="{TemplateBinding Content}"
-               TextTrimming="CharacterEllipsis"
-               VerticalAlignment="Center"
-               Margin="8 0 8 0"
-               FontWeight="Bold" />
+            <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}" />
         </DataTemplate>
     </mahApp:MetroWindow.TitleTemplate>
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/> 
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
-
-            <!--<Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
-                <Setter Property="mahApp:HeaderedControlHelper.HeaderFontSize" Value="12" />
-            </Style>-->
-            <Style x:Key="item" TargetType="TextBlock" >
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Margin" Value="4"/>
-                <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
-            </Style>
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
 
@@ -52,8 +33,8 @@
         <!-- Basic Information Section -->
         <GroupBox Grid.Row="0" Margin="0,0,0,2" Padding="4">
             <GroupBox.Header>
-                <TextBlock Text="{Binding [dialog_geometryDetails_basicInfo], Source={StaticResource Localization}}" Foreground="White"
-                           Style="{StaticResource item}" Margin="0"/>
+                <TextBlock Text="{Binding [dialog_geometryDetails_basicInfo], Source={StaticResource Localization}}"
+                           Style="{StaticResource IRI.Maptor.Styles.TextBlock.HeaderTitle}"/>
             </GroupBox.Header>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -68,28 +49,28 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource item}"
+                <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Form}"
                            Text="{Binding [dialog_geometryDetails_geometryType], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
                 <TextBlock Grid.Row="0" Grid.Column="1" 
                            Text="{Binding GeometryType}" 
                            FontWeight="Bold" Margin="4" VerticalAlignment="Center"/>
 
-                <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource item}"
+                <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Form}"
                            Text="{Binding [dialog_geometryDetails_dimension], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
                 <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Dimension}" 
                            FontWeight="Bold" Margin="4" VerticalAlignment="Center"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource item}"
+                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Form}"
                            Text="{Binding [dialog_geometryDetails_numberOfPoints], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding NumberOfPoints, Converter={StaticResource localizedNumberConverter}}" 
                            Margin="4" VerticalAlignment="Center"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource item}" 
+                <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Form}" 
                            Text="{Binding [dialog_geometryDetails_numberOfGeometries], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
                 <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding NumberOfGeometries, Converter={StaticResource localizedNumberConverter}}" 
                            Margin="4" VerticalAlignment="Center"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource item}"
+                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Form}"
                            Text="{Binding [dialog_geometryDetails_utmZone], Source={StaticResource Localization}, StringFormat='{}{0}:'}" />
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="4">
                     <TextBlock Text="{Binding UtmZone, TargetNullValue='N/A'}" 
@@ -112,7 +93,7 @@
                       IsExpanded="True">
             <Expander.Header>
                 <TextBlock Text="{Binding [dialog_geometryDetails_editCoordinates], Source={StaticResource Localization}}" Foreground="White"
-               Style="{StaticResource item}" Margin="0" Cursor="Hand"/>
+               Style="{StaticResource IRI.Maptor.Styles.TextBlock.Form}" Margin="0" Cursor="Hand"/>
             </Expander.Header>
             <ContentControl Content="{Binding GeometryEditor}">
                 <ContentControl.Resources> 
@@ -127,7 +108,7 @@
         <Expander Grid.Row="2" Margin="0,0,0,8" Padding="8" IsExpanded="False">
             <Expander.Header>
                 <TextBlock Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}}" Foreground="White"
-                            Style="{StaticResource item}" Margin="0" Cursor="Hand"/>
+                            Style="{StaticResource IRI.Maptor.Styles.TextBlock.Form}" Margin="0" Cursor="Hand"/>
             </Expander.Header>
             <Grid>
                 <Grid.RowDefinitions>

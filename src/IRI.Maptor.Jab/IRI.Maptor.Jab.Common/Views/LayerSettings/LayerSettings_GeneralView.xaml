@@ -15,19 +15,9 @@
     <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Textbox.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/SecurityInputStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="cardBorder" TargetType="Border">
-                <Setter Property="BorderBrush" Value="Gray"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Background" Value="White"/>
-                <Setter Property="Padding" Value="4,0"/>
-                <Setter Property="Margin" Value="4"/>
-                <Setter Property="CornerRadius" Value="5"/>
-                <Setter Property="Height" Value="39"/>
-            </Style>
+          
             <Style TargetType="TextBlock">
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
@@ -47,7 +37,7 @@
         </Grid.RowDefinitions>
 
         <!--layer name-->
-        <Border Grid.Row="0" Style="{StaticResource cardBorder}" BorderThickness="0" Background="{DynamicResource MahApps.Brushes.Accent4}">
+        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" BorderThickness="0" Background="{DynamicResource MahApps.Brushes.Accent4}">
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
                 <TextBlock Grid.Column="0" Text="{Binding [layerSettings_general_layerName], Source={StaticResource Localization}}"/>
@@ -59,7 +49,7 @@
         </Border>
 
         <!--source-->
-        <Border Grid.Row="1" Style="{StaticResource cardBorder}" >
+        <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" >
             <DockPanel LastChildFill="True">
                 <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
                 <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_sourceType], Source={StaticResource Localization}}"/>
@@ -77,7 +67,7 @@
 
 
         <!--feature type-->
-        <Border Grid.Row="2" Style="{StaticResource cardBorder}">
+        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <DockPanel LastChildFill="False">
                 <iconPacks:PackIconPhosphorIcons Kind="ShapesLight" Style="{StaticResource securityIconPhosphor}"
                                   ToolTip="{Binding [dialog_csvTsvOpen_geometryType],Source={StaticResource Localization}}"/>
@@ -145,7 +135,7 @@
 
 
         <!--opacity-->
-        <Border Grid.Row="3" Style="{StaticResource cardBorder}">
+        <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <DockPanel >
                 <iconPacks:PackIconMaterial Kind="SquareOpacity" Style="{StaticResource securityIconMaterial}" />
                 <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_opacity], Source={StaticResource Localization}}"/>

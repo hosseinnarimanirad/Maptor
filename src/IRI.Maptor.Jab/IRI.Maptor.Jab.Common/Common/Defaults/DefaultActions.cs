@@ -5,6 +5,8 @@ using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.ViewModels.Symbology;
 using IRI.Maptor.Jab.Common.ViewModels.LayerSettings;
 using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Common.Services;
+using System.Threading.Tasks;
 
 namespace IRI.Maptor.Jab.Common.Defaults;
 
@@ -37,17 +39,9 @@ public static class DefaultActions
         var view = new IRI.Maptor.Jab.Controls.Symbology.SymbologyView();
 
         var presenter = new SymbologyViewModel();
-
-        //if (layer is DrawingItemLayer)
-        //{ 
-        //    presenter.Symbology = (layer as DrawingItemLayer).OriginalSymbology.Clone();
-        //}
-        //else
-        //{ 
-        //presenter.Symbology = layer.VisualParameters.Clone();
+         
         presenter.Symbology = (layer as SymbolizableLayer)!.GetMainOrDefaultSymbology().Clone();
-        //}
-
+        
         presenter.RequestCloseAction = view.Close;
 
         presenter.RequestApplyAction = p =>
@@ -83,7 +77,7 @@ public static class DefaultActions
         //gotoPresenter.SelectDefaultMenu();            
     }
 
-    public static void GetDefaultShowLayerSettingsView(Window ownerWindow, ILayer layer, MapViewModelBase viewModel)
+    public static async Task GetDefaultShowLayerSettingsView(IDialogService dialogService, Window ownerWindow, ILayer layer, MapViewModelBase viewModel)
     {
         var view = new IRI.Maptor.Jab.Controls.Dialogs.LayerSettingsDialogView();
 
@@ -95,10 +89,12 @@ public static class DefaultActions
 
         LayerSettingsViewModel layerSettingsViewModel = new LayerSettingsViewModel(layer, exportViewModel);
 
+        await dialogService.ShowDialogAsync(ownerWindow, view, layerSettingsViewModel);
 
-        view.DataContext = layerSettingsViewModel;
-        view.Owner = ownerWindow;
-        view.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        view.Show();
+
+        //view.DataContext = layerSettingsViewModel;
+        //view.Owner = ownerWindow;
+        //view.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        //view.ShowDialog();
     }
 }

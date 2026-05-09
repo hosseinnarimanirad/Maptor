@@ -1,57 +1,29 @@
 <mahApp:MetroWindow x:Class="IRI.Maptor.Jab.Controls.Dialogs.GeoJsonTopoJsonOpenDialogView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
-        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
-        Title="{Binding DialogTitle}"
-        ShowInTaskbar="False"
-        SizeToContent="WidthAndHeight"
-        GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"
-        MinWidth="450"
-        Width="450"
-        MaxWidth="550"
-        MinHeight="480"
-        FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
-        WindowStartupLocation="CenterOwner"
-        ShowMaxRestoreButton="False"
-        ShowCloseButton="True"
-        ShowMinButton="False"
-        ShowTitleBar="True"
-        FontFamily="{StaticResource iranSans}">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
+
+    Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
+    Title="{Binding DialogTitle}"      
+    WindowStartupLocation="CenterOwner">
 
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Textbox.xaml"/>-->
+            <ResourceDictionary.MergedDictionaries> 
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/SecurityInputStyles.xaml"/>
-                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
-                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/> 
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-            <Style x:Key="cardBorder" TargetType="Border">
-                <Setter Property="BorderBrush" Value="Gray"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="Background" Value="White"/>
-                <Setter Property="Padding" Value="4,0"/>
-                <Setter Property="Margin" Value="4"/>
-                <Setter Property="CornerRadius" Value="5"/>
-                <Setter Property="Height" Value="39"/>
-            </Style>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>            
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
+    
     <mahApp:MetroWindow.TitleTemplate>
         <DataTemplate>
-            <TextBlock Text="{TemplateBinding Content}"
-             TextTrimming="CharacterEllipsis"
-             VerticalAlignment="Center"
-             Margin="8 0 8 0"
-             FontWeight="Bold" />
+            <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}" />
         </DataTemplate>
     </mahApp:MetroWindow.TitleTemplate>
     <Grid Margin="4">
@@ -67,7 +39,7 @@
         </Grid.RowDefinitions>
 
         <!-- File -->
-        <Border Grid.Row="0" Style="{StaticResource cardBorder}">
+        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -95,7 +67,7 @@
         </Border>
 
         <!-- Spatial Reference -->
-        <Border Grid.Row="1" Style="{StaticResource cardBorder}">
+        <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -112,7 +84,7 @@
         </Border>
 
         <!-- UTM Zone (visible when UTM selected) -->
-        <Border Grid.Row="2" Style="{StaticResource cardBorder}"
+        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
                 Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
@@ -170,7 +142,7 @@
         </Border>
 
         <!-- Options: X,Y vs Y,X -->
-        <Border Grid.Row="3" Style="{StaticResource cardBorder}">
+        <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <DockPanel>
                 <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="ListNumbers" Style="{StaticResource securityIconPhosphor}"/>
                 <TextBlock DockPanel.Dock="Left" Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"

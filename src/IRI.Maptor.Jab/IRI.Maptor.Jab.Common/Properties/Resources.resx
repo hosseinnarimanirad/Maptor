@@ -1578,7 +1578,7 @@
     <value>Message</value>
   </data>
   <data name="dialog_export_disabledProjection" xml:space="preserve">
-    <value>User Default SRS</value>
+    <value>Use Default SRS</value>
   </data>
   <data name="dialog_layerSettings_title" xml:space="preserve">
     <value>Layer Settings</value>

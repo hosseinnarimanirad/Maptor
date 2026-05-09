@@ -80,12 +80,15 @@ public static class MapInitializationHelper
                         Action<Point> requestShowGoToView,
                         Action<ILayer> requestShowSymbologyView,
                         Action<ILayer> requestShowLayerSettingsView)
-        CreateDefaultServices(System.Windows.Window ownerWindow, MapViewModelBase presenter)
+            CreateDefaultServices(System.Windows.Window ownerWindow, MapViewModelBase presenter)
     {
         var dialogService = new DefaultDialogService(ownerWindow);
+
         var requestShowGoToView = DefaultActions.GetDefaultGoToAction(ownerWindow, presenter);
+
         Action<ILayer> requestShowSymbologyView = layer => DefaultActions.GetDefaultShowSymbologyView(ownerWindow, layer, presenter);
-        Action<ILayer> requestShowLayerSettingsView = layer => DefaultActions.GetDefaultShowLayerSettingsView(ownerWindow, layer, presenter);
+
+        Action<ILayer> requestShowLayerSettingsView = async layer => await DefaultActions.GetDefaultShowLayerSettingsView(dialogService, ownerWindow, layer, presenter);
 
         return (dialogService, requestShowGoToView, requestShowSymbologyView, requestShowLayerSettingsView);
     }

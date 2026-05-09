@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls">
+    <Style x:Key="IRI.Maptor.Styles.ToggleSwitch.Form"
+           TargetType="mahApp:ToggleSwitch"
+           BasedOn="{StaticResource MahApps.Styles.ToggleSwitch}">
+        <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Margin" Value="4"/>
+    </Style>
+</ResourceDictionary>

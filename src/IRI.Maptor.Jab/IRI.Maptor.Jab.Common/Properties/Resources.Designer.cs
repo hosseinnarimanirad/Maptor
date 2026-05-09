@@ -1123,7 +1123,7 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User Default SRS.
+        ///   Looks up a localized string similar to Use Default SRS.
         /// </summary>
         public static string dialog_export_disabledProjection {
             get {
