@@ -389,8 +389,14 @@ public static class Sta_GeometryExtensions
             result[i] = GetEsriJsonObjectPoint(lineStringOrRing.Points[i]);
         }
 
+        if (isRing)
+        {
+            Array.Reverse(result);
+        }
+
         // ring orientation is different for Geometry<T> and esri json geometries
-        return isRing ? result.Reverse().ToArray() : result;
+        //return isRing ? result.Reverse().ToArray() : result;
+        return result;
     }
 
     private static EsriJsonGeometry PointToEsriJsonPoint<T>(this Geometry<T> geometry) where T : IPoint, new()
