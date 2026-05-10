@@ -102,7 +102,7 @@
                     HorizontalAlignment="Right" Margin="8">
             <Button x:Name="CancelButton"
                     Command="{Binding CancelCommand}"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs}" >
+                    Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Cancel}" >
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="CloseThick" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.DialogButtonContent}"/>
                     <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.DialogButtonContent}"
@@ -111,7 +111,7 @@
             </Button>
             <Button x:Name="SaveButton" Margin="8,0,0,0"
                     Command="{Binding SaveCommand}"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Accent}">
+                    Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="CheckBold" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.DialogButtonContent}"/>
                     <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.DialogButtonContent}"

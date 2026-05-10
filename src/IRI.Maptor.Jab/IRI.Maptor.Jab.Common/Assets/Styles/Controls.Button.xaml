@@ -82,37 +82,111 @@
         <Setter Property="Border.CornerRadius" Value="6"/>
     </Style>
 
-    <Style x:Key="IRI.Maptor.Styles.Button.Dialogs" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Dialogs}">
+    <Style x:Key="IRI.Maptor.Styles.Button.Dialogs.Cancel" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Dialogs}">
         <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="6"/>
-        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Height" Value="32"/>
         <Setter Property="MinHeight" Value="32"/>
         <Setter Property="MinWidth" Value="100" />
-        <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
+        <Setter Property="Margin" Value="0 0 8 0"/>
+        <Setter Property="Padding" Value="8 3"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Opacity" Value="1"/> 
+        <!-- subtle neutral -->
+         
+        <Setter Property="BorderThickness" Value="2"/>
+
+        <Style.Triggers> 
+            <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
+                <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
-    <Style x:Key="IRI.Maptor.Styles.Button.Dialogs.Accent" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
-        
-        <Setter Property="MinHeight" Value="35" />
+    <Style x:Key="IRI.Maptor.Styles.Button.Dialogs.Primary" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
+        <!--<Setter Property="MinHeight" Value="35" />-->
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="MinHeight" Value="32"/>
         <Setter Property="MinWidth" Value="100" />
+        <Setter Property="Margin" Value="8 0 0 0"/>
+        <Setter Property="Padding" Value="8 3"/>
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="mahApp:ControlsHelper.ContentCharacterCasing" Value="Normal" />
-        
         <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="6"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="MinHeight" Value="32"/>
-        <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <!--<Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>-->
 
         <Style.Triggers>
+            <!-- Hover -->
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="6"/>
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+            </Trigger>
+            <!-- Pressed -->
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="6"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+            </Trigger>
+
+            <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
+                <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <Style x:Key="IRI.Maptor.Styles.Button.Dialogs.Primary.Circle" 
+       TargetType="{x:Type Button}" 
+       BasedOn="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}">
+        <!-- Override shape: square & round -->
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="MinHeight" Value="0"/>
+        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
+        <!-- half of 32 -->
+        <!-- Layout adjustments for circular icon button -->
+        <Setter Property="Margin" Value="0 0 8 0"/>
+        <!-- or adjust as needed -->
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Style.Triggers>
+            <!-- Override hover trigger to keep circular shape -->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
+                <!-- Inherits Background and BorderBrush from base trigger, but we must ensure CornerRadius stays 16 -->
+            </Trigger>
+            <!-- Override pressed trigger to keep circular shape -->
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
+            </Trigger>
+            <!-- Optional: keep focus visual without changing corner radius -->
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
             </Trigger>
         </Style.Triggers>
     </Style>
+    
+    <Style x:Key="IRI.Maptor.Styles.Button.Dialogs.Cancel.Circle" 
+       TargetType="{x:Type Button}" 
+       BasedOn="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Cancel}">
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="MinHeight" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="16"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+
 
     <Style x:Key="IRI.Maptor.Styles.Button" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
         <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="6"/>

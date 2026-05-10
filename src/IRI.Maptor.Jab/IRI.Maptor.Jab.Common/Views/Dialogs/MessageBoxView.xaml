@@ -45,7 +45,7 @@
             <TextBlock Text="{Binding Message}" Margin="4,4" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Margin="8">
-            <Button MinWidth="100" Margin="8,0,0,0" Height="32" Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Accent}"                   
+            <Button MinWidth="100" Margin="8,0,0,0" Height="32" Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"                   
                     Command="{Binding FirstOptionCommand}"
                     ToolTip="{Binding FirstOptionText}"
                     HorizontalAlignment="Right">

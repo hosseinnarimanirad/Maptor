@@ -204,7 +204,7 @@
 
         <Button Margin="4" Grid.Row="6" HorizontalAlignment="Right" 
                 ToolTip="{Binding [dialog_common_export], Source={StaticResource Localization}}" 
-                Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Accent}"
+                Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
                 Command="{Binding ExportCommand}">
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconMaterial Kind="FileExport" Margin="0,0,8,0" VerticalAlignment="Center" />
