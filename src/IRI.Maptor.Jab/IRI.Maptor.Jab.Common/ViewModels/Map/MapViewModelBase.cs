@@ -5145,8 +5145,13 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_clearVectorLayersCommand == null)
             {
-                _clearVectorLayersCommand = new RelayCommand(param =>
+                _clearVectorLayersCommand = new RelayCommand(async param =>
                 {
+                    var sure = await DialogService.ShowYesNoDialogAsync("Are you sure?", "Confirmation");
+
+                    if (sure != true)
+                        return;
+
                     this.Clear(l => l.DataSource?.DataSourceKind.GetCategory() == DataSourceCategory.Vector, true);
                 });
             }

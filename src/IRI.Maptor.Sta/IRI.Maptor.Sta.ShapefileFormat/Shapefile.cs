@@ -17,7 +17,7 @@ using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
-using IRI.Maptor.Sta.Spatial.Extensions;
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.IO.Prj;
 
 

@@ -581,6 +581,7 @@ public class DefaultDialogService : IDialogService
     public Task<bool?> ShowYesNoDialogAsync<T>(string message, string? title = null)
     {
         var owner = GetOwnerWindowByType<T>();
+
         return ShowYesNoDialogAsync(message, title, owner);
     }
 

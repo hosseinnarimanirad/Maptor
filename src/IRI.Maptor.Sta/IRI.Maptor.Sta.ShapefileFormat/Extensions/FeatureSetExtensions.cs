@@ -1,6 +1,7 @@
 using System.Text;
 using System.Globalization;
 
+using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Helpers;
@@ -85,6 +86,7 @@ public static class FeatureSetExtensions
             return;
 
         DxfWriter.WriteToFile(geometries, dxfFileName);
+
     }
 
     public static void SaveAsKml(this FeatureSet<Point> featureSet, string kmlFileName)
@@ -151,7 +153,7 @@ public static class FeatureSetExtensions
             return;
 
         var esriFeatureSet = EsriJsonFeatureSet.Parse(featureSet);
-         
+
         esriFeatureSet.Save(esriJsonFileName, false, true);
     }
 

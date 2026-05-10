@@ -3877,7 +3877,7 @@ public partial class MapViewer : NotifiableUserControl
             return;
 
         //e.Handled = true;
-
+         
         this.prevMouseLocation = e.GetPosition(this.mapView);
 
         var webMercatorPoint = ScreenToMap(this.prevMouseLocation).AsPoint();
