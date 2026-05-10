@@ -8,10 +8,15 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.IO.Prj;
 
-namespace IRI.Maptor.Sta.Spatial.Extensions;
+namespace IRI.Maptor.Extensions;
 
 public static class CoordinateSystemExtensions
 {
+    public static string AsEsriCrsWkt(this SrsBase srsBase)
+    {
+        return AsEsriPrj(srsBase).AsEsriCrsWkt();   
+    }
+
     public static EsriPrjFile AsEsriPrj(this SrsBase mapProjection)
     {
         switch (mapProjection.Type)

@@ -579,7 +579,7 @@ public static class Sta_GeometryExtensions
             throw new ArgumentNullException(nameof(geometry));
 
         DxfWriter.ResetHandleCounter();
-        return DxfWriter.Write(geometry);
+        return DxfWriter.Write(geometry, null);
     }
 
     /// <summary>
