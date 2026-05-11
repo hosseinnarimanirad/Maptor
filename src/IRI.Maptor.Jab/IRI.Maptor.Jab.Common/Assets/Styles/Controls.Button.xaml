@@ -4,7 +4,7 @@
                     xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization">
 
     <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-
+ 
     <!--base button style-->
     <Style x:Key="IRI.Maptor.Styles.ButtonBase"
            TargetType="{x:Type Button}"
@@ -31,13 +31,37 @@
     </Style>
 
     <!--normal button styles-->
-    <Style x:Key="IRI.Maptor.Styles.Button.Primary"
+    <Style x:Key="IRI.Maptor.Styles.Button.Primary"     
            TargetType="{x:Type Button}"
            BasedOn="{StaticResource IRI.Maptor.Styles.ButtonBase}">
 
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+
+        <!--<Setter Property="FocusVisualStyle" Value="{StaticResource IRI.Maptor.Styles.Button.Primary.FocusVisual}"/>-->
+        <Setter Property="FocusVisualStyle">
+            <Setter.Value>
+                <Style>
+                    <Setter Property="Control.Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Border>
+                                    <Rectangle Margin="2"
+                                                StrokeThickness="2"
+                                                RadiusX="6"
+                                                RadiusY="6"
+                                                Stroke="{DynamicResource MahApps.Brushes.Highlight}"
+                                                StrokeDashArray="2 2"
+                                                SnapsToDevicePixels="True"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+
+            </Setter.Value>
+        </Setter>
 
         <Style.Triggers>
             <!-- Hover -->
@@ -55,11 +79,13 @@
             </Trigger>
             <!--Disabled-->
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Opacity" Value="1"/>
+                <Setter Property="Opacity" Value="0.5"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                <!--<Setter Property="Opacity" Value="1"/>
                 <Setter Property="Cursor" Value="Arrow"/>
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>-->
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -68,39 +94,60 @@
            TargetType="{x:Type Button}"
            BasedOn="{StaticResource IRI.Maptor.Styles.ButtonBase}">
 
-        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Button.Flat.Foreground}"/>
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="FocusVisualStyle">
+            <Setter.Value>
+                <Style>
+                    <Setter Property="Control.Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Border>
+                                    <Rectangle Margin="2"
+                                         StrokeThickness="2"
+                                         RadiusX="6"
+                                         RadiusY="6"
+                                         Stroke="{DynamicResource MahApps.Brushes.Highlight}"
+                                         StrokeDashArray="2 2"
+                                         SnapsToDevicePixels="True"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
 
+            </Setter.Value>
+        </Setter>
         <Style.Triggers>
             <!-- Hover: slightly darker background, deeper accent border -->
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>-->
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray9}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
             </Trigger>
 
             <!-- Pressed: even darker background, keep accent border -->
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray10}"/>
+                <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray10}"/>-->
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
             </Trigger>
 
             <!-- Disabled: lower contrast, grayed out -->
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Opacity" Value="1"/>
+                <Setter Property="Opacity" Value="0.6"/> 
+                <!--<Setter Property="Opacity" Value="1"/>-->
                 <Setter Property="Cursor" Value="Arrow"/>
-                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+                <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>-->
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
             </Trigger>
 
             <!-- Focus: optional, keep consistent -->
-            <Trigger Property="IsFocused" Value="True">
-                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                <Setter Property="BorderThickness" Value="2"/>
-            </Trigger>
+            <!--<Trigger Property="IsFocused" Value="True">
+                <Setter Property="BorderThickness" Value="0"/>
+            </Trigger>-->
         </Style.Triggers>
     </Style>
 
@@ -108,7 +155,7 @@
     <Style x:Key="IRI.Maptor.Styles.Button.Primary.Large"
            TargetType="{x:Type Button}"
            BasedOn="{StaticResource IRI.Maptor.Styles.Button.Primary}">
-        
+
         <Setter Property="Height" Value="40"/>
         <Setter Property="Margin" Value="4"/>
         <Setter Property="FontSize" Value="16"/>
@@ -117,7 +164,7 @@
     <Style x:Key="IRI.Maptor.Styles.Button.Secondary.Large"
            TargetType="{x:Type Button}"
            BasedOn="{StaticResource IRI.Maptor.Styles.Button.Secondary}">
-        
+
         <Setter Property="Height" Value="40"/>
         <Setter Property="Margin" Value="4"/>
         <Setter Property="FontSize" Value="16"/>
