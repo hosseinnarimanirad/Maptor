@@ -263,7 +263,30 @@
 
         <!-- Buttons -->
         <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
-            <Button ToolTip="{Binding [common_cancel], Source={StaticResource Localization}}"
+            <Button Margin="2,2" ToolTip="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
+               Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}"
+               Command="{Binding CancelCommand}" >
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="CloseThick"
+                                           Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                           Text="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"/>
+                </StackPanel>
+            </Button>
+            <Button Margin="2,2" ToolTip="{Binding [common_open], Source={StaticResource Localization}}" 
+               Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
+               Command="{Binding OpenCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="CheckBold"
+                                           Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                          Text="{Binding [common_open], Source={StaticResource Localization}}"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        
+        <!--<StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
+            <Button ToolTip="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding CancelCommand}" Margin="2">
                 <iconPacks:PackIconMaterial Kind="CloseThick" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>
             </Button>
@@ -271,6 +294,6 @@
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding OpenCommand}">
                 <iconPacks:PackIconMaterial Kind="CheckBold" Foreground="{DynamicResource Fluent.Ribbon.Brushes.IdealForegroundColorBrush}"/>
             </Button>
-        </StackPanel>
+        </StackPanel>-->
     </Grid>
 </mahApp:MetroWindow>

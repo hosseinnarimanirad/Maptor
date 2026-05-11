@@ -17,6 +17,5 @@
             <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}" />
         </DataTemplate>
     </mahApp:MetroWindow.TitleTemplate>
-
     <maptor:FeatureChangesView/>
 </mahApp:MetroWindow>

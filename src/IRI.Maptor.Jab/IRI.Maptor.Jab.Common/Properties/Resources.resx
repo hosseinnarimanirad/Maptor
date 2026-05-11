@@ -441,9 +441,6 @@
   <data name="dialog_common_save" xml:space="preserve">
     <value>Save</value>
   </data>
-  <data name="common_cancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
   <data name="common_open" xml:space="preserve">
     <value>Open</value>
   </data>
@@ -1648,5 +1645,17 @@
   </data>
   <data name="common_meter" xml:space="preserve">
     <value>meter</value>
+  </data>
+  <data name="dialog_common_areYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
+  <data name="dialog_common_confirmTitle" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="dialog_common_no" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="dialog_common_yes" xml:space="preserve">
+    <value>Yes</value>
   </data>
 </root>

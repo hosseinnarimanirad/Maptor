@@ -11,9 +11,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
-                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/> 
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
@@ -150,14 +148,17 @@
 
                     <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Bold" Text="{Binding [featureChanges_areaOld], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
                     <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding GeometryOldAreaLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
-                    <TextBlock Grid.Row="1" Grid.Column="2" FontWeight="Bold" Text="{Binding [featureChanges_areaNew], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
-                    <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding GeometryNewAreaLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
-                    <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="{Binding [featureChanges_lengthOld], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding GeometryOldLengthLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Bold" Text="{Binding [featureChanges_areaNew], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding GeometryNewAreaLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
+                    
+                    <TextBlock Grid.Row="1" Grid.Column="2" FontWeight="Bold" Text="{Binding [featureChanges_lengthOld], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding GeometryOldLengthLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
                     <TextBlock Grid.Row="2" Grid.Column="2" FontWeight="Bold" Text="{Binding [featureChanges_lengthNew], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
                     <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding GeometryNewLengthLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
+
                     <TextBlock Grid.Row="3" Grid.Column="0" FontWeight="Bold" Text="{Binding [featureChanges_areaChange], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
                     <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GeometryAreaChangeLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
+
                     <TextBlock Grid.Row="3" Grid.Column="2" FontWeight="Bold" Text="{Binding [featureChanges_lengthChange], Source={StaticResource Localization}, StringFormat='{}{0}:'}" Margin="0,0,8,4"/>
                     <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding GeometryLengthChangeLabel, TargetNullValue='-'}" Margin="0,0,0,4"/>
 

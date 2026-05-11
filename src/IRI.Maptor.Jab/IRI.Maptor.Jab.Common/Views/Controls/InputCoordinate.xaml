@@ -57,9 +57,9 @@
                Visibility="{Binding ElementName=coordinateType, Path=SelectedIndex, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}" Grid.Row="1"/>
         <TextBox Name="zone" Grid.Column="5" Text="{Binding Zone}" LostFocus="zone_LostFocus" VerticalAlignment="Center"
                  Visibility="{Binding ElementName=coordinateType, Path=SelectedIndex, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}" Grid.Row="1"/>
-        <Button Grid.Column="6" Name="save" Grid.RowSpan="1"  Click="save_Click" Foreground="{DynamicResource MahApps.Brushes.Accent}"
-                HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4" Grid.Row="1" Padding="4">
-            <iconPacks:PackIconMaterial Kind="Plus" Width="16"/>
+        <Button Grid.Row="1" Grid.Column="6" Name="save" Grid.RowSpan="1"  Click="save_Click"
+                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+            <iconPacks:PackIconMaterial Kind="Plus" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
         </Button>
         <Label Name="note" Grid.Row="4" Grid.ColumnSpan="5" FontStyle="Italic" Foreground="DarkGray" Content="{Binding [input_coordinateNote], Source={StaticResource Localization}}"/>
         <DataGrid Name="pointList" AutoGenerateColumns="False" AlternatingRowBackground="LightBlue" ItemsSource="{Binding PointCollection}"

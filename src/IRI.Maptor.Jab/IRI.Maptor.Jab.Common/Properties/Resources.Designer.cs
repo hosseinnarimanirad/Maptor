@@ -673,15 +673,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cancel.
-        /// </summary>
-        public static string common_cancel {
-            get {
-                return ResourceManager.GetString("common_cancel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Caps Lock is on.
         /// </summary>
         public static string common_capsLockWarning {
@@ -853,6 +844,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure?.
+        /// </summary>
+        public static string dialog_common_areYouSure {
+            get {
+                return ResourceManager.GetString("dialog_common_areYouSure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Browse....
         /// </summary>
         public static string dialog_common_browse {
@@ -876,6 +876,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string dialog_common_close {
             get {
                 return ResourceManager.GetString("dialog_common_close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmation.
+        /// </summary>
+        public static string dialog_common_confirmTitle {
+            get {
+                return ResourceManager.GetString("dialog_common_confirmTitle", resourceCulture);
             }
         }
         
@@ -925,6 +934,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        public static string dialog_common_no {
+            get {
+                return ResourceManager.GetString("dialog_common_no", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string dialog_common_ok {
@@ -966,6 +984,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string dialog_common_xyOrder {
             get {
                 return ResourceManager.GetString("dialog_common_xyOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        public static string dialog_common_yes {
+            get {
+                return ResourceManager.GetString("dialog_common_yes", resourceCulture);
             }
         }
         

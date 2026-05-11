@@ -53,9 +53,9 @@
         <Border Grid.Row="2" MinHeight="20">
             <StackPanel Margin="8,12">
                 <Button Margin="4" Content="{Binding [dialog_userSignUp_createUser], Source={StaticResource Localization}}"
-                        Style="{StaticResource IRI.Maptor.Styles.Button.FlatPrimary}" Foreground="White" FontSize="16"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.Primary.Large}" Foreground="White" FontSize="16"
                         Command="{Binding SignUpCommand}" CommandParameter="{Binding ElementName=userNameSignUpView}"/>
-                <Button Margin="4" Content="{Binding [common_cancel], Source={StaticResource Localization}}" Foreground="White" FontSize="16"  Style="{StaticResource IRI.Maptor.Styles.Button.FlatGray}"
+                <Button Margin="4" Content="{Binding [dialog_common_cancel], Source={StaticResource Localization}}" Foreground="White" FontSize="16"  Style="{StaticResource IRI.Maptor.Styles.Button.Secondary.Large}"
                         Command="{Binding CancelCommand}">
 
                 </Button>
@@ -93,7 +93,7 @@
         </Button>-->
         <Button Grid.Row="4" Margin="8" BorderBrush="#4285F4" BorderThickness="0" Padding="0" HorizontalContentAlignment="Stretch"
                             Width="296" Command="{Binding LoginWithGoogleOAuthCommand}"
-                Style="{StaticResource IRI.Maptor.Styles.Button.FlatPrimary}">
+                Style="{StaticResource IRI.Maptor.Styles.Button.Primary.Large}">
             
             <Grid FlowDirection="LeftToRight" HorizontalAlignment="Stretch" Margin="0">
                 <Grid.ColumnDefinitions>

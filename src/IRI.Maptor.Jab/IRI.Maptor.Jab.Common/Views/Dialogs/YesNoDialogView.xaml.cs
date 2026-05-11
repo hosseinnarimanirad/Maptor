@@ -19,9 +19,9 @@ namespace IRI.Maptor.Jab.Controls.Dialogs;
 /// <summary>
 /// Interaction logic for AreYouSureDialog.xaml
 /// </summary>
-public partial class DialogView : MetroWindow
+public partial class YesNoDialogView : MetroWindow
 {
-    public DialogView()
+    public YesNoDialogView()
     {
         InitializeComponent();            
     }

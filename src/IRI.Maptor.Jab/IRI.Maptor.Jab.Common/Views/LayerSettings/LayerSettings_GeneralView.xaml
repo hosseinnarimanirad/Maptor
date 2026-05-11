@@ -54,11 +54,12 @@
                 <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
                 <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_sourceType], Source={StaticResource Localization}}"/>
                 <Button DockPanel.Dock="Right"
-                        Style="{StaticResource IRI.Maptor.Styles.Button}"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
                         Command="{Binding ReloadDataCommand}">
                     <StackPanel Orientation="Horizontal">
-                        <iconPacks:PackIconMaterial Kind="Refresh" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBlock Text="{Binding [legendItem_reloadData], Source={StaticResource Localization}}"/>
+                        <iconPacks:PackIconMaterial Kind="Refresh" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"  />
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                                   Text="{Binding [legendItem_reloadData], Source={StaticResource Localization}}"/>
                     </StackPanel>
                 </Button>
                 <TextBlock Text="{Binding DataSource.DataSourceKind}"/>

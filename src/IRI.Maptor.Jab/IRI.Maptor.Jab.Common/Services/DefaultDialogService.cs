@@ -606,7 +606,7 @@ public class DefaultDialogService : IDialogService
             IsTwoOptionsMode = true
         };
 
-        DialogView dialog = new DialogView();
+        YesNoDialogView dialog = new YesNoDialogView();
 
         return ShowCustomDialogAsync(
             ownerWindow,

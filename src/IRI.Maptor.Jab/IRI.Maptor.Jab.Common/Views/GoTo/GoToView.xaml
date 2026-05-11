@@ -38,13 +38,13 @@
                     </Grid.RowDefinitions> 
                     <ContentControl Grid.Row="0" Content="{Binding }"/>
                     <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Margin="8">
-                        <Button Command="{Binding ElementName=window, Path=DataContext.PanToCommand}" Height="32" Width="32" Margin="4" Cursor="Hand">
-                            <iconPacks:PackIconMaterial Kind="HandBackRight" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                                      Foreground="{DynamicResource MahApps.Brushes.Accent}" FlowDirection="LeftToRight" Height="24"/>
+                        <Button Command="{Binding ElementName=window, Path=DataContext.PanToCommand}"
+                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                            <iconPacks:PackIconMaterial Kind="HandBackRight" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                         </Button>
-                        <Button Command="{Binding ElementName=window, Path=DataContext.ZoomToCommand}" Height="32" Width="32" Margin="4" Cursor="Hand">
-                            <iconPacks:PackIconMaterial Kind="MagnifyExpand" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                                                      Foreground="{DynamicResource MahApps.Brushes.Accent}" FlowDirection="LeftToRight" Height="24"/>
+                        <Button Command="{Binding ElementName=window, Path=DataContext.ZoomToCommand}"
+                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                            <iconPacks:PackIconMaterial Kind="MagnifyExpand" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                         </Button>
                     </StackPanel>
                 </Grid>

@@ -39,8 +39,7 @@
 
 
     <!--PackIcon inside a light circle button-->
-    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent"
-           TargetType="iconPacks:PackIconMaterial">
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent" TargetType="iconPacks:PackIconMaterial">
         <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ButtonBase}}"/>
         <Setter Property="Margin" Value="4"/>
         <Setter Property="Width" Value="18"/>
@@ -56,7 +55,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.DialogButtonContent"
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.ButtonContent"
            TargetType="iconPacks:PackIconMaterial"
            BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}">
         <Setter Property="Margin" Value="0,0,8,0"/>
@@ -78,6 +77,19 @@
                 <Setter Property="Opacity" Value="1"/>
             </DataTrigger>
         </Style.Triggers>
+    </Style>
+
+
+    <Style x:Key="IRI.Maptor.Styles.Path.ButtonContent" TargetType="{x:Type Path}">
+        <Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ButtonBase}}"/>
+        <Setter Property="Width" Value="18"/>
+        <Setter Property="Height" Value="18"/>
+        <Setter Property="Margin" Value="4"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="Stretch" Value="Uniform"/>
+        <Setter Property="Opacity" Value="0.9"/>
     </Style>
 
     

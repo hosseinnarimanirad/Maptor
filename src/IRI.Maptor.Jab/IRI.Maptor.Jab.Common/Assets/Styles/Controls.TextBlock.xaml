@@ -48,7 +48,7 @@
     </Style>
 
     <!--Dialog-->
-    <Style x:Key="IRI.Maptor.Styles.TextBlock.DialogButtonContent"
+    <Style x:Key="IRI.Maptor.Styles.TextBlock.ButtonContent"
            TargetType="TextBlock"
            BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
         <Setter Property="Margin" Value="2,0"/>

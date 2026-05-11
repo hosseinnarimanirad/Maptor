@@ -291,9 +291,6 @@
   <data name="cmd_legend_removeAll" xml:space="preserve">
     <value>حذف همه لایه‌ها</value>
   </data>
-  <data name="common_cancel" xml:space="preserve">
-    <value>انصراف</value>
-  </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>کلید caps lock فعال است</value>
   </data>
@@ -1607,5 +1604,17 @@
   </data>
   <data name="common_meter" xml:space="preserve">
     <value>متر</value>
+  </data>
+  <data name="dialog_common_areYouSure" xml:space="preserve">
+    <value>مطمئن هستی؟</value>
+  </data>
+  <data name="dialog_common_confirmTitle" xml:space="preserve">
+    <value>تاییدیه</value>
+  </data>
+  <data name="dialog_common_no" xml:space="preserve">
+    <value>خیر</value>
+  </data>
+  <data name="dialog_common_yes" xml:space="preserve">
+    <value>بله</value>
   </data>
 </root>
