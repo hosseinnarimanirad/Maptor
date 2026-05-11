@@ -4,16 +4,18 @@
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls">
 
     <Style x:Key="IRI.Maptor.Styles.RadioButton.Form" TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
-        <Setter Property="Margin" Value="4,0"/>
+        <Setter Property="Margin" Value="4,0,8,0"/>
         <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Background" Value="Transparent"/>
     </Style>
     
     <Style x:Key="IRI.Maptor.Styles.RadioButton.FormLatin" TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
-        <Setter Property="Margin" Value="4,0"/>
+        <Setter Property="Margin" Value="4,0,8,0"/>
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Background" Value="Transparent"/>
     </Style>
 </ResourceDictionary>

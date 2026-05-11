@@ -9,20 +9,16 @@
                 xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization" >
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
-    <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>
-    <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Textbox.xaml"/>-->
+            <ResourceDictionary.MergedDictionaries> 
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/SecurityInputStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-          
-            <Style TargetType="TextBlock">
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
-                <Setter Property="Margin" Value="2"/>
+
+            <Style TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Form}">
+                <Setter Property="Width" Value="50"/>
             </Style>
+
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Margin="2">
@@ -37,10 +33,10 @@
         </Grid.RowDefinitions>
 
         <!--layer name-->
-        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" BorderThickness="0" Background="{DynamicResource MahApps.Brushes.Accent4}">
+        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"  >
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
-                <TextBlock Grid.Column="0" Text="{Binding [layerSettings_general_layerName], Source={StaticResource Localization}}"/>
+                <TextBlock Text="{Binding [layerSettings_general_layerName], Source={StaticResource Localization}}"/>
                 <TextBox Grid.Column="1" BorderThickness="0" MinWidth="150"
                          Text="{Binding LayerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          IsEnabled="{Binding LayerNameCanBeChanged}"
@@ -52,7 +48,7 @@
         <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" >
             <DockPanel LastChildFill="True">
                 <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
-                <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_sourceType], Source={StaticResource Localization}}"/>
+                <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_sourceType], Source={StaticResource Localization}}" />
                 <Button DockPanel.Dock="Right"
                         Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
                         Command="{Binding ReloadDataCommand}">
@@ -62,7 +58,7 @@
                                    Text="{Binding [legendItem_reloadData], Source={StaticResource Localization}}"/>
                     </StackPanel>
                 </Button>
-                <TextBlock Text="{Binding DataSource.DataSourceKind}"/>
+                <TextBlock Text="{Binding DataSource.DataSourceKind}" HorizontalAlignment="Left"/>
             </DockPanel>
         </Border>
 
