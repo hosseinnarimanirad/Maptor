@@ -351,10 +351,12 @@ public static class KmzWriter
         }
 
         // Create or overwrite the KMZ file
-        using (var archive = ZipFile.Open(kmzFilePath, File.Exists(kmzFilePath) ? ZipArchiveMode.Update : ZipArchiveMode.Create))
+        //using (var archive = ZipFile.Open(kmzFilePath, File.Exists(kmzFilePath) ? ZipArchiveMode.Update : ZipArchiveMode.Create))
+        using (var fileStream = new FileStream(kmzFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+        using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Update))
         {
             // Remove existing KML entry if present
-            var existingKmlEntry = archive.Entries.FirstOrDefault(
+            var existingKmlEntry = archive.Entries?.FirstOrDefault(
                 e => e.FullName.EndsWith(".kml", StringComparison.OrdinalIgnoreCase));
             existingKmlEntry?.Delete();
 
