@@ -58,7 +58,7 @@
         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Control.Background}"/>
 
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="6"/>
+        <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="4"/>
         <Setter Property="mahApp:TextBoxHelper.SelectAllOnFocus" Value="True"/>
         <!--<Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">

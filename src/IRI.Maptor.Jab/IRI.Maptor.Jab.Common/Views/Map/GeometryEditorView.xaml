@@ -213,8 +213,9 @@
             <Grid FlowDirection="LeftToRight" >
                 <StackPanel >
                     <!-- Current Point Editor -->
-                    <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
-                        <TextBlock Text="{Binding [geometryDetails_currentPoint_x], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="20"/>
+                    <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" Background="{DynamicResource MahApps.Brushes.Accent4}">
+                        <TextBlock Text="{Binding [geometryDetails_currentPoint_x], Source={StaticResource Localization}}"
+                                   VerticalAlignment="Center" Margin="4,0,0,0" Width="20"/>
                         <!-- DMS Mode: Use DegreeMinuteSecondView -->
                         <maptor:DegreeMinuteSecondView x:Name="dmsXView" DataContext="{Binding CurrentPointEditor.DmsX}" 
                                                       MaxDegreeValue="180" MinDegreeValue="-180" 
@@ -223,9 +224,10 @@
                         <!-- Non-DMS Mode: Use TextBox -->
                         <TextBox Text="{Binding CurrentPointEditor.CoordinateX, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                                  Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
-                                 Width="150" Margin="0,0,8,0" FlowDirection="LeftToRight" VerticalAlignment="Center"
-                                 mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
-                        <TextBlock Text="{Binding [geometryDetails_currentPoint_y], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="20"/>
+                                 Width="150" Margin="0,0,8,0" 
+                                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}"/>
+                        <TextBlock Text="{Binding [geometryDetails_currentPoint_y], Source={StaticResource Localization}}"
+                                   VerticalAlignment="Center" Margin="4,0,0,0" Width="20"/>
                         <!-- DMS Mode: Use DegreeMinuteSecondView -->
                         <maptor:DegreeMinuteSecondView DataContext="{Binding CurrentPointEditor.DmsY}" 
                                                       MaxDegreeValue="90" MinDegreeValue="-90"
@@ -234,8 +236,8 @@
                         <!-- Non-DMS Mode: Use TextBox -->
                         <TextBox Text="{Binding CurrentPointEditor.CoordinateY, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                                  Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
-                                 Width="150" Margin="0,0,8,0" FlowDirection="LeftToRight" VerticalAlignment="Center"
-                                 mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
+                                 Width="150" Margin="0,0,8,0" 
+                                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}"/>
                         <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                                 Command="{Binding ApplyCurrentPointChangesCommand}" 
                                 IsEnabled="{Binding CurrentPointEditor, Converter={StaticResource notNullToBoolConverter}}"
@@ -253,7 +255,8 @@
                         </ToggleButton>
                     </StackPanel>
                     <!-- SRS Info TextBlock -->
-                    <TextBlock VerticalAlignment="Center" Margin="4,4,0,0" FontStyle="Italic" Foreground="Gray" FontSize="11" HorizontalAlignment="Left">
+                    <TextBlock VerticalAlignment="Center" Margin="8,4,8,0" FontStyle="Italic" Foreground="Gray" FontSize="11"  
+                               FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}">
                         <TextBlock.Text>
                             <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_options_srsInfoFormat">
                                 <Binding Path="SrsViewModel.SelectedSrsType"/>
