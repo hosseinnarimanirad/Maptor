@@ -159,18 +159,18 @@ public class DxfWriter
             sb.AppendLine("9");
             sb.AppendLine("$EXTMIN");
             sb.AppendLine("10");
-            sb.AppendLine(bbox.Value.XMin.ToString("F6", inv));
+            sb.AppendLine(bbox.Value.XMin.ToString("F14", inv));
             sb.AppendLine("20");
-            sb.AppendLine(bbox.Value.YMin.ToString("F6", inv));
+            sb.AppendLine(bbox.Value.YMin.ToString("F14", inv));
             sb.AppendLine("30");
             sb.AppendLine("0.0");
 
             sb.AppendLine("9");
             sb.AppendLine("$EXTMAX");
             sb.AppendLine("10");
-            sb.AppendLine(bbox.Value.XMax.ToString("F6", inv));
+            sb.AppendLine(bbox.Value.XMax.ToString("F14", inv));
             sb.AppendLine("20");
-            sb.AppendLine(bbox.Value.YMax.ToString("F6", inv));
+            sb.AppendLine(bbox.Value.YMax.ToString("F14", inv));
             sb.AppendLine("30");
             sb.AppendLine("0.0");
 
@@ -272,11 +272,11 @@ public class DxfWriter
             var inv = CultureInfo.InvariantCulture;
 
             sb.AppendLine("12");
-            sb.AppendLine(centerX.ToString("F6", inv));
+            sb.AppendLine(centerX.ToString("F14", inv));
             sb.AppendLine("22");
-            sb.AppendLine(centerY.ToString("F6", inv));
+            sb.AppendLine(centerY.ToString("F14", inv));
             sb.AppendLine("40");
-            sb.AppendLine(viewHeight.ToString("F6", inv));
+            sb.AppendLine(viewHeight.ToString("F14", inv));
         }
         else
         {
@@ -644,9 +644,9 @@ public class DxfWriter
         sb.AppendLine("100");
         sb.AppendLine("AcDbPoint");
         sb.AppendLine("10");
-        sb.AppendLine(p.X.ToString("F6", inv));
+        sb.AppendLine(p.X.ToString("F14", inv));
         sb.AppendLine("20");
-        sb.AppendLine(p.Y.ToString("F6", inv));
+        sb.AppendLine(p.Y.ToString("F14", inv));
         sb.AppendLine("30");
         sb.AppendLine("0.0");
     }
@@ -667,15 +667,15 @@ public class DxfWriter
         if (colorInfo?.StrokeThickness > 0)
         {
             sb.AppendLine("43");
-            sb.AppendLine(colorInfo.StrokeThickness.ToString("F6", inv));
+            sb.AppendLine(colorInfo.StrokeThickness.ToString("F14", inv));
         }
 
         foreach (var point in geometry.Points)
         {
             sb.AppendLine("10");
-            sb.AppendLine(point.X.ToString("F6", inv));
+            sb.AppendLine(point.X.ToString("F14", inv));
             sb.AppendLine("20");
-            sb.AppendLine(point.Y.ToString("F6", inv));
+            sb.AppendLine(point.Y.ToString("F14", inv));
         }
     }
 
@@ -697,15 +697,15 @@ public class DxfWriter
         if (colorInfo?.StrokeThickness > 0)
         {
             sb.AppendLine("43");
-            sb.AppendLine(colorInfo.StrokeThickness.ToString("F6", inv));
+            sb.AppendLine(colorInfo.StrokeThickness.ToString("F14", inv));
         }
 
         foreach (var point in exterior.Points)
         {
             sb.AppendLine("10");
-            sb.AppendLine(point.X.ToString("F6", inv));
+            sb.AppendLine(point.X.ToString("F14", inv));
             sb.AppendLine("20");
-            sb.AppendLine(point.Y.ToString("F6", inv));
+            sb.AppendLine(point.Y.ToString("F14", inv));
         }
 
         // Add HATCH for fill if fill color provided
@@ -795,9 +795,9 @@ public class DxfWriter
         foreach (var pt in points)
         {
             sb.AppendLine("10");
-            sb.AppendLine(pt.X.ToString("F6", inv));
+            sb.AppendLine(pt.X.ToString("F14", inv));
             sb.AppendLine("20");
-            sb.AppendLine(pt.Y.ToString("F6", inv));
+            sb.AppendLine(pt.Y.ToString("F14", inv));
         }
         sb.AppendLine("97");
         sb.AppendLine("0");
