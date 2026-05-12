@@ -87,17 +87,17 @@
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding [mapExtent_new_title], Source={StaticResource Localization}}"
                                    Style="{StaticResource sectionLabel}"/>
-                        <Button Grid.Column="1" Grid.Row="1" ToolTip="{Binding [mapExtent_new_addNew], Source={StaticResource Localization}}"
-                                    Command="{Binding SaveBookmarkCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
-                                    Margin="4,0"
-                                    VerticalAlignment="Bottom">
+                        <Button Grid.Column="1" Grid.Row="1"
+                                ToolTip="{Binding [mapExtent_new_addNew], Source={StaticResource Localization}}"
+                                Command="{Binding SaveBookmarkCommand}" Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}">
                             <iconPacks:PackIconMaterial Kind="ContentSave"/>
                         </Button>
-                        <TextBox Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch"
-                                     Text="{Binding NewBookmarkTitle, UpdateSourceTrigger=PropertyChanged}"
-                                     mahApp:TextBoxHelper.Watermark="{Binding [mapExtent_new_extentTitle], Source={StaticResource Localization}}" 
-                                     mahApp:TextBoxHelper.ClearTextButton="True"
-                                     Style="{StaticResource IRI.Maptor.Styles.TextBox.Input}"/>
+                        <TextBox Grid.Column="0" Grid.Row="1"  
+                                Text="{Binding NewBookmarkTitle, UpdateSourceTrigger=PropertyChanged}"
+                                mahApp:TextBoxHelper.Watermark="{Binding [mapExtent_new_extentTitle], Source={StaticResource Localization}}" 
+                                mahApp:TextBoxHelper.ClearTextButton="True"
+                                Style="{StaticResource IRI.Maptor.Styles.TextBox.Input}"
+                                Background="White"/>
                     </Grid>
                 </Border>
 

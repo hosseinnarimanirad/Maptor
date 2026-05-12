@@ -98,9 +98,8 @@
             </ScrollViewer>
         </GroupBox>
 
-        <StackPanel Grid.Row="4" Orientation="Horizontal" 
-                    HorizontalAlignment="Right" Margin="8">
-            <Button x:Name="CancelButton"
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
+            <Button IsCancel="True"
                     Command="{Binding CancelCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}" >
                 <StackPanel Orientation="Horizontal">
@@ -109,11 +108,11 @@
                                 Text="{Binding [dialog_common_cancel], Source={StaticResource Localization}}" />
                 </StackPanel>
             </Button>
-            <Button x:Name="SaveButton" Margin="8,0,0,0"
+            <Button IsDefault="True"
                     Command="{Binding SaveCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}">
                 <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterial Kind="CheckBold" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                    <iconPacks:PackIconMaterial Kind="ContentSave" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
                     <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
                                 Text="{Binding [dialog_common_save], Source={StaticResource Localization}}"  />
                 </StackPanel>

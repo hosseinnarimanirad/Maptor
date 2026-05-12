@@ -49,7 +49,7 @@
 
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
-            <Button Margin="2,2"
+            <Button IsCancel="True"
                     Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}"
                     Command="{Binding SecondOptionCommand}" >
                 <StackPanel Orientation="Horizontal">
@@ -58,9 +58,9 @@
                                 Text="{Binding [dialog_common_no], Source={StaticResource Localization}}"/>
                 </StackPanel>
             </Button>
-            <Button Margin="2,2"
+            <Button IsDefault="True"
                     Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
-                    Command="{Binding FirstOptionCommand}"  >
+                    Command="{Binding FirstOptionCommand}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="CheckBold"
                                         Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>

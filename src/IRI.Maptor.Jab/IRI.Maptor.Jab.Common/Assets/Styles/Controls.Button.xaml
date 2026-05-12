@@ -129,7 +129,7 @@
 
             <!-- Pressed: even darker background, keep accent border -->
             <Trigger Property="IsPressed" Value="True">
-                <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray10}"/>-->
+                <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Button.Flat.Foreground}"/>-->
                 <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
             </Trigger>
@@ -175,7 +175,7 @@
            TargetType="{x:Type Button}"
            BasedOn="{StaticResource IRI.Maptor.Styles.Button.Primary}">
 
-        <Setter Property="Margin" Value="8 0 0 0"/>
+        <Setter Property="Margin" Value="0 4 8 8"/>
         <Setter Property="Padding" Value="8 3"/>
     </Style>
 
@@ -183,7 +183,7 @@
            TargetType="{x:Type Button}"
            BasedOn="{StaticResource IRI.Maptor.Styles.Button.Secondary}">
 
-        <Setter Property="Margin" Value="0 0 8 0"/>
+        <Setter Property="Margin" Value="0 4 8 8"/>
         <Setter Property="Padding" Value="8 3"/>
     </Style>
 

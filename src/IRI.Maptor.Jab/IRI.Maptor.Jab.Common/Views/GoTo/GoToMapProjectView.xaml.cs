@@ -10,5 +10,10 @@ public partial class GoToMapProjectView : UserControl
     public GoToMapProjectView() 
     {
         InitializeComponent(); 
-    } 
+    }
+
+    private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+
+    }
 }

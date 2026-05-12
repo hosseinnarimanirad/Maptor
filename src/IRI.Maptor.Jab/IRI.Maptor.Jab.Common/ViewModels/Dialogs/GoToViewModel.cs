@@ -70,17 +70,17 @@ public class GoToViewModel : Notifier
         }
     }
 
-    private bool _isPaneOpen;
+    //private bool _isPaneOpen;
 
-    public bool IsPaneOpen
-    {
-        get { return _isPaneOpen; }
-        set
-        {
-            _isPaneOpen = value;
-            RaisePropertyChanged();
-        }
-    }
+    //public bool IsPaneOpen
+    //{
+    //    get { return _isPaneOpen; }
+    //    set
+    //    {
+    //        _isPaneOpen = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
 
     private readonly DegreeMinuteSecondModel _longitudeDms;
@@ -155,7 +155,7 @@ public class GoToViewModel : Notifier
         _latitudeDms.OnValueChanged -= OnValueChangedHandler;
         _latitudeDms.OnValueChanged += OnValueChangedHandler;
 
-        IsPaneOpen = false;
+        //IsPaneOpen = false;
     }
 
     private void OnValueChangedHandler(object? sender, EventArgs e)
@@ -269,7 +269,7 @@ public class GoToViewModel : Notifier
         if (!MenuItems.IsNullOrEmpty())
         {
             SelectedItem = MenuItems.First();
-            IsPaneOpen = false;
+            //IsPaneOpen = false;
         }
 
     }

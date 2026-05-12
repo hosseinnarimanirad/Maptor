@@ -23,14 +23,16 @@
         <TextBlock Margin="4" Grid.Row="0" Grid.Column="0" Text="{Binding [srs_defaultLongitude], Source={StaticResource Localization}}" VerticalAlignment="Center"/>
         <maptor:DegreeMinuteSecondView Margin="4" Grid.Row="0" Grid.Column="1" DataContext="{Binding LongitudeDms, Mode=OneWay}" HideUpDownButtons="True" 
                                       MinDegreeValue="0" MaxDegreeValue="359"/>
-        <TextBox Margin="4" Grid.Row="0" Grid.Column="2" Text="{Binding LongitudeDms.Value, Mode=TwoWay}" MinWidth="72" VerticalAlignment="Center" FlowDirection="LeftToRight" 
-                 mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
+        <TextBox Grid.Row="0" Grid.Column="2"
+                 Text="{Binding LongitudeDms.Value, Mode=TwoWay}"
+                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}" BorderThickness="1"/>
 
         <TextBlock Margin="4" Grid.Row="1" Grid.Column="0" Text="{Binding [srs_defaultLatitude], Source={StaticResource Localization}}" VerticalAlignment="Center"/>
         <maptor:DegreeMinuteSecondView Margin="4" Grid.Row="1" Grid.Column="1" DataContext="{Binding LatitudeDms, Mode=OneWay}" 
                                       MaxDegreeValue="90" MinDegreeValue="-90" HideUpDownButtons="True"/>
-        <TextBox Margin="4" Grid.Row="1" Grid.Column="2" Text="{Binding LatitudeDms.Value, Mode=TwoWay}" MinWidth="72" VerticalAlignment="Center" FlowDirection="LeftToRight"
-                 mahApp:TextBoxHelper.SelectAllOnFocus="True"/>
+        <TextBox Grid.Row="1" Grid.Column="2"
+                 Text="{Binding LatitudeDms.Value, Mode=TwoWay}"
+                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}" BorderThickness="1"/>
        
     </Grid> 
 </UserControl>

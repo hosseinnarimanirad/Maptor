@@ -163,7 +163,7 @@
         </StackPanel>-->
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
-            <Button Margin="2,2" ToolTip="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
+            <Button IsCancel="True"
                     Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}"
                     Command="{Binding CancelEditingCommand}" >
                 <StackPanel Orientation="Horizontal">
@@ -172,7 +172,7 @@
                                 Text="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"/>
                 </StackPanel>
             </Button>
-            <Button Margin="2,2" ToolTip="{Binding [dialog_common_save], Source={StaticResource Localization}}" 
+            <Button IsDefault="True"
                     Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
                     Command="{Binding SaveGeometryCommand}">
                 <StackPanel Orientation="Horizontal">

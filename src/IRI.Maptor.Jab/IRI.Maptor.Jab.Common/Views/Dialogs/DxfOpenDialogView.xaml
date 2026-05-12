@@ -11,15 +11,15 @@
     Width="500"              
     Height="600" 
     WindowStartupLocation="CenterOwner">
-  
+
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries> 
+            <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/SecurityInputStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>            
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
     <mahApp:MetroWindow.TitleTemplate>
@@ -35,7 +35,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions> 
+        </Grid.RowDefinitions>
 
         <!-- File -->
         <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
@@ -47,7 +47,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
-                <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Large}" FlowDirection="LeftToRight"
+                <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}" FlowDirection="LeftToRight"
                             mahApp:TextBoxHelper.Watermark="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"
                             Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True" >
                 </TextBox>
@@ -58,12 +58,12 @@
                 <Button Grid.Column="3"
                         ToolTip="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
                         Command="{Binding RemoveFileCommand}"
-                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">           
+                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
                     <iconPacks:PackIconMaterial Kind="FileRemoveOutline"/>
                 </Button>
             </Grid>
         </Border>
-          
+
 
         <!-- Spatial Reference -->
         <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
@@ -76,6 +76,7 @@
                 <ComboBox Grid.Column="1" Margin="4"
                           ItemsSource="{Binding AvailableSrsOptions}"
                           DisplayMemberPath="DisplayName"
+                          mahApp:ControlsHelper.CornerRadius="6"
                           SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"
                           VerticalAlignment="Center"
                         BorderThickness="0"
@@ -86,7 +87,7 @@
                           FlowDirection="LeftToRight"/>
             </Grid>
         </Border>
- 
+
         <!-- UTM Zone (visible when UTM selected) -->
         <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
                 Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
@@ -99,6 +100,7 @@
                 <iconPacks:PackIconPhosphorIcons Kind="MapTrifoldFill" Style="{StaticResource securityIconPhosphor}"/>
                 <mahApp:NumericUpDown Grid.Column="1"
                                      Minimum="1" Maximum="60"
+                                      mahApp:ControlsHelper.CornerRadius="4"
                                      Value="{Binding UtmZone, Mode=TwoWay}" Margin="4" VerticalAlignment="Center"/>
 
                 <ToggleButton Grid.Column="2" IsChecked="{Binding IsNorthHemisphere, Mode=TwoWay}"
@@ -127,7 +129,7 @@
                 </ToggleButton>
             </Grid>
         </Border>
-         
+
 
         <!-- Sample points -->
         <TextBlock Grid.Row="3" Text="{Binding [dialog_dxfOpen_samplePoints], Source={StaticResource Localization}}" Margin="0,12,0,4"
@@ -167,28 +169,27 @@
 
         <!-- Buttons -->
         <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
-            <Button Margin="2,2" ToolTip="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
-             Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}"
-             Command="{Binding CancelCommand}" >
+            <Button IsCancel="True"
+                     Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}"
+                     Command="{Binding CancelCommand}" >
                 <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterial Kind="CloseThick"
-                                         Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                    <iconPacks:PackIconMaterial Kind="CloseThick" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
                     <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
-                         Text="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"/>
+                                Text="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"/>
                 </StackPanel>
             </Button>
-            <Button Margin="2,2" ToolTip="{Binding [common_open], Source={StaticResource Localization}}" 
-             Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
-             Command="{Binding OpenCommand}">
+            
+            <Button IsDefault="True"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
+                    Command="{Binding OpenCommand}">
                 <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterial Kind="CheckBold"
-                                         Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                    <iconPacks:PackIconMaterial Kind="FolderOpen" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
                     <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
                         Text="{Binding [common_open], Source={StaticResource Localization}}"/>
                 </StackPanel>
             </Button>
         </StackPanel>
-        
+
         <!--<StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
             <Button ToolTip="{Binding [dialog_common_cancel], Source={StaticResource Localization}}" 
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"

@@ -7,9 +7,16 @@
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     x:Name="root" 
                     FlowDirection="{Binding ElementName=mainView, Path=FlowDirection, Mode=OneWay}"
-                    WindowStyle="ToolWindow" Width="550" Height="250" ShowIconOnTitleBar="False" ShowInTaskbar="False"
-                    Title="{Binding ElementName=root, Path=Ltxt_dialog_goto_title}" ShowMaxRestoreButton="False" ShowMinButton="False"
-                    GlowBrush="{DynamicResource MahApps.Brushes.Accent}" >
+                    Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
+                             
+                    Title="{Binding [dialog_goto_title], Source={StaticResource Localization}}"
+                    WindowStartupLocation="CenterOwner">
+                    <!--Title="{Binding ElementName=root, Path=Ltxt_dialog_goto_title}"-->                    
+    <maptor:LocalizedMetroWindow.TitleTemplate>
+        <DataTemplate>
+            <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}"/>
+        </DataTemplate>
+    </maptor:LocalizedMetroWindow.TitleTemplate>
     <maptor:LocalizedMetroWindow.Resources>
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
     </maptor:LocalizedMetroWindow.Resources>

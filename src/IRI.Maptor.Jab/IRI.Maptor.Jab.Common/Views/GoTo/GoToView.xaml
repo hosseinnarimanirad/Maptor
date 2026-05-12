@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             x:Name="window"
+             x:Name="window" Height="190"
              xmlns:model="clr-namespace:IRI.Maptor.Jab.Common.Models.GoTo">
     <UserControl.Resources>
         <DataTemplate x:Key="MenuItemTemplate" DataType="{x:Type model:HamburgerGoToMenuItem}">
@@ -19,13 +19,14 @@
                 <Path Grid.Column="0" Width="28" Data="{Binding Icon}" Fill="White" Stretch="Uniform" FlowDirection="LeftToRight"/>
                 <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding SubTitle}" HorizontalAlignment="Center" FontSize="11"
                            Visibility="{Binding HasSubTitle, Converter={StaticResource boolToVisibilityConverter}}"/>
-                <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="15" Foreground="White" Text="{Binding Title}" Grid.RowSpan="2"/>
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="12" Foreground="White" Text="{Binding Title}" Grid.RowSpan="2"
+                           FontFamily="Seoge UI"/>
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
  
-    <mahApp:HamburgerMenu   x:Name="hamburgerMenuControl" PaneBackground="{DynamicResource MahApps.Brushes.Highlight}" 
-                            IsPaneOpen="{Binding IsPaneOpen, Mode=TwoWay}" DisplayMode="CompactInline"
+    <mahApp:HamburgerMenu x:Name="hamburgerMenuControl" PaneBackground="{DynamicResource MahApps.Brushes.Highlight}" 
+                            IsPaneOpen="False" DisplayMode="CompactInline"  
                             ItemTemplate="{StaticResource MenuItemTemplate}" CompactPaneLength="48" 
                             HamburgerHeight="48" Content="{Binding SelectedItem.Content}"
                             SelectedItem="{Binding SelectedItem, Mode=TwoWay}" ItemsSource="{Binding MenuItems}">
