@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using IRI.Maptor.Sta.Common.Helpers;
@@ -83,6 +84,17 @@ public class EsriJsonGeometry
         }
     }
 
+    public override string ToString()
+    {
+        var options = new JsonSerializerOptions()
+        {
+            WriteIndented = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+        };
+
+        return JsonHelper.Serialize(this, options);
+    }
 
     public string AsWkt()
     {
@@ -190,5 +202,14 @@ public class EsriJsonGeometry
         {
             return Geometry<IRI.Maptor.Sta.Common.Primitives.Point>.FromWkt(this.AsWkt(), srid);
         }
+    }
+
+    public EsriJsonFeature AsFeature()
+    {
+        return new EsriJsonFeature()
+        {
+            Attributes = new Dictionary<string, object>() { { "Type", Type.ToString() } },
+            Geometry = this,
+        };
     }
 }

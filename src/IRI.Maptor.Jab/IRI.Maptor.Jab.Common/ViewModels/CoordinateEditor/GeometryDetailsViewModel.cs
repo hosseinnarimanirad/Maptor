@@ -266,10 +266,16 @@ public class GeometryDetailsViewModel : Notifier
                     break;
 
                 case "Esri JSON Geometry":
-                    // Not directly available, leave empty for now
-                    StringRepresentation = string.Empty;
+                    if (_geometry is Geometry<Point> egeom)
+                    {
+                        StringRepresentation = egeom.AsEsriJsonGeometry().ToString() ?? string.Empty;
+                    }
+                    else
+                    {
+                        StringRepresentation = string.Empty;
+                    }
                     break;
-
+                      
                 case "TopoJSON":
                     if (_geometry is Geometry<Point> topoGeom && !topoGeom.IsNullOrEmpty())
                     {
