@@ -96,7 +96,7 @@
                                 Text="{Binding NewBookmarkTitle, UpdateSourceTrigger=PropertyChanged}"
                                 mahApp:TextBoxHelper.Watermark="{Binding [mapExtent_new_extentTitle], Source={StaticResource Localization}}" 
                                 mahApp:TextBoxHelper.ClearTextButton="True"
-                                Style="{StaticResource IRI.Maptor.Styles.TextBox.Input}"
+                                Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
                                 Background="White"/>
                     </Grid>
                 </Border>
@@ -235,21 +235,17 @@
                         <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource sectionLabel}"
                                    Text="{Binding [mapExtent_gotoScale_title], Source={StaticResource Localization}}"/>
                         <mahApp:ToggleSwitch Grid.Row="1" Grid.ColumnSpan="2"
-                                             FontSize="11" Cursor="Hand"
-                                             FontFamily="{StaticResource iranSans}"
+                                             Style="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Small}"
                                              Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
                                              IsOn="{Binding UseGroundScaleForSandardScales}"
                                              OnContent="{Binding [mapExtent_gotoScale_useGroundScaleForSandardScales], Source={StaticResource Localization}}"
                                              OffContent="{Binding [mapExtent_gotoScale_useWebMercatorScaleForSandardScales], Source={StaticResource Localization}}"/>
                         <Border Grid.Row="2" Grid.Column="0" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
-                            <ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding ScaleItemsView}"
-                                      SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"
-                                      mahApp:ControlsHelper.CornerRadius="4"
-                                            DisplayMemberPath="DisplayLabel" Margin="4" MinHeight="28"
-                                            BorderThickness="0"
-                                            VerticalContentAlignment="Center"
-                                            HorizontalAlignment="Stretch"
-                                            FlowDirection="LeftToRight">
+                            <ComboBox Grid.Row="1" Grid.Column="0"
+                                        ItemsSource="{Binding ScaleItemsView}"
+                                        SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"
+                                        Style="{StaticResource IRI.Maptor.Styles.ComboBox.Form.Latin}"
+                                        DisplayMemberPath="DisplayLabel" Background="White">
                                 <ComboBox.GroupStyle>
                                     <GroupStyle>
                                         <GroupStyle.HeaderTemplate>

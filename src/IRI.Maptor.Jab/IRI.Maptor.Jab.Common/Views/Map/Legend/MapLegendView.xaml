@@ -201,7 +201,7 @@
                       Text="{Binding ElementName=root, Path=LegendViewModel.LayerNameFilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                       mahApp:TextBoxHelper.Watermark="{Binding [legend_filter_searchLayerWatermark], Source={StaticResource Localization}}" 
                       mahApp:TextBoxHelper.ClearTextButton="True"
-                      Style="{StaticResource IRI.Maptor.Styles.TextBox.Input}"/>
+                      Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"/>
                 <Button Grid.Column="1" Margin="4,0" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
                     Command="{Binding LegendViewModel.ClearFilterCommand, ElementName=root}"
                     IsEnabled="{Binding LegendViewModel.HasActiveFilter, ElementName=root}"

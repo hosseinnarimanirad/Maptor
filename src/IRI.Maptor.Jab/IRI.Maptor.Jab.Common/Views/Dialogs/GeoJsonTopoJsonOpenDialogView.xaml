@@ -48,7 +48,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
-                <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}"
+                <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}"
                          mahApp:TextBoxHelper.Watermark="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"
                          Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True"/>
                 <Button Grid.Column="2"
@@ -74,13 +74,11 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconPhosphorIcons Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
-                <ComboBox Grid.Column="1" Margin="4"
+                <ComboBox Grid.Column="1"  
                           ItemsSource="{Binding AvailableSrsOptions}"
                           DisplayMemberPath="DisplayName"
-                          mahApp:ControlsHelper.CornerRadius="6"
-                          SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"
-                          VerticalAlignment="Center" BorderThickness="0" FontSize="15" MinHeight="35"
-                          VerticalContentAlignment="Center" HorizontalAlignment="Stretch" FlowDirection="LeftToRight"/>
+                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Form.Latin}"
+                          SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}" />
             </Grid>
         </Border>
 
@@ -96,8 +94,9 @@
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconPhosphorIcons Kind="MapTrifoldFill" Style="{StaticResource securityIconPhosphor}"/>
                 <mahApp:NumericUpDown Grid.Column="1" Minimum="1" Maximum="60"
-                                      mahApp:ControlsHelper.CornerRadius="4"
-                                     Value="{Binding UtmZone, Mode=TwoWay}" Margin="4" VerticalAlignment="Center"/>
+                                        mahApp:ControlsHelper.CornerRadius="4"
+                                        Value="{Binding UtmZone, Mode=TwoWay}"
+                                        Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}"/>
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="8,2,4,0">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
@@ -173,12 +172,12 @@
                     </TextBlock.Style>
                 </TextBlock>
 
-                <mahApp:ToggleSwitch DockPanel.Dock="Right" Cursor="Hand" Margin="4" Visibility="Collapsed"
+                <mahApp:ToggleSwitch DockPanel.Dock="Right" Visibility="Collapsed"
+                                     Style="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Normal}"
                                      IsOn="{Binding IsPrettyJson, Mode=TwoWay}"
                                      OnContent="{Binding [dialog_common_prettyJson], Source={StaticResource Localization}}"
                                      OffContent="{Binding [dialog_common_minifiedJson], Source={StaticResource Localization}}"
                                      IsEnabled="{Binding IsRawTextReadOnly}"
-                                     FontFamily="{StaticResource iranSans}" Width="115"
                                      />
                 <Button DockPanel.Dock="Right" Visibility="Collapsed"
                         ToolTip="{Binding [dialog_common_formatJson], Source={StaticResource Localization}}"
@@ -187,8 +186,10 @@
                     <iconPacks:PackIconMaterial Kind="CodeBlockBraces"/>
                 </Button>
 
-                <CheckBox DockPanel.Dock="Left" Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
-                            IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>
+                <CheckBox DockPanel.Dock="Left"
+                          Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
+                            Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"
+                            IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" />
 
                 <!--<RadioButton Content="X,Y" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="4,0" VerticalAlignment="Center"
                          ToolTip="{Binding [dialog_geoJsonTopoJsonOpen_orderXY], Source={StaticResource Localization}}"/>

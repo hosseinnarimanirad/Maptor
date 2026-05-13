@@ -19,17 +19,17 @@
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding [srs_utmZone], Source={StaticResource Localization}}" Margin="4" VerticalAlignment="Center"/>
         <!--<TextBlock Text="Zone" Margin="4" VerticalAlignment="Center"/>-->
-        <mahApp:NumericUpDown Grid.Column="1" HorizontalAlignment="Left" Margin="4" Minimum="0" Maximum="60"
-                              mahApp:TextBoxHelper.SelectAllOnFocus="True"
-                              mahApp:ControlsHelper.CornerRadius="6"
+        <mahApp:NumericUpDown Grid.Column="1" Minimum="0" Maximum="60"
+                              
+                              Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}" 
                               Value="{Binding UtmZone, Mode=TwoWay, StringFormat={}{0:00}}" MinWidth="75"/>
         
         <TextBlock Grid.Row="1" Text="X" Margin="4" VerticalAlignment="Center"/>
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding X, Mode=TwoWay}" 
-                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}" BorderThickness="1"/>
+                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Small.En}" BorderThickness="1"/>
         
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Y" Margin="4" VerticalAlignment="Center"/>
         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Y, Mode=TwoWay}"
-                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}" BorderThickness="1"/>
+                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Small.En}" BorderThickness="1"/>
     </Grid>
 </UserControl>

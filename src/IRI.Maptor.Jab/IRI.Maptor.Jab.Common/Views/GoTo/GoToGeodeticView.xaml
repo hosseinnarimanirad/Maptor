@@ -16,23 +16,24 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/> 
         </Grid.RowDefinitions>
 
         <TextBlock Margin="4" Grid.Row="0" Grid.Column="0" Text="{Binding [srs_defaultLongitude], Source={StaticResource Localization}}" VerticalAlignment="Center"/>
-        <maptor:DegreeMinuteSecondView Margin="4" Grid.Row="0" Grid.Column="1" DataContext="{Binding LongitudeDms, Mode=OneWay}" HideUpDownButtons="True" 
-                                      MinDegreeValue="0" MaxDegreeValue="359"/>
+        <maptor:DegreeMinuteSecondView Margin="4,0" Grid.Row="0" Grid.Column="1" DataContext="{Binding LongitudeDms, Mode=OneWay}" HideUpDownButtons="True" 
+                                      MinDegreeValue="0" MaxDegreeValue="359"
+                                       VerticalAlignment="Center"/>
         <TextBox Grid.Row="0" Grid.Column="2"
                  Text="{Binding LongitudeDms.Value, Mode=TwoWay}"
-                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}" BorderThickness="1"/>
+                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Small.En}" BorderThickness="1"/>
 
         <TextBlock Margin="4" Grid.Row="1" Grid.Column="0" Text="{Binding [srs_defaultLatitude], Source={StaticResource Localization}}" VerticalAlignment="Center"/>
-        <maptor:DegreeMinuteSecondView Margin="4" Grid.Row="1" Grid.Column="1" DataContext="{Binding LatitudeDms, Mode=OneWay}" 
-                                      MaxDegreeValue="90" MinDegreeValue="-90" HideUpDownButtons="True"/>
+        <maptor:DegreeMinuteSecondView Margin="4,0" Grid.Row="1" Grid.Column="1" DataContext="{Binding LatitudeDms, Mode=OneWay}" 
+                                      MaxDegreeValue="90" MinDegreeValue="-90" HideUpDownButtons="True"
+                                       VerticalAlignment="Center"/>
         <TextBox Grid.Row="1" Grid.Column="2"
-                 Text="{Binding LatitudeDms.Value, Mode=TwoWay}"
-                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}" BorderThickness="1"/>
+                 Text="{Binding LatitudeDms.Value, Mode=TwoWay}" 
+                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Small.En}" BorderThickness="1"/>
        
     </Grid> 
 </UserControl>

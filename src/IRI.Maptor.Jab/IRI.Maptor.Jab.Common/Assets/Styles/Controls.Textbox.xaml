@@ -44,8 +44,8 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="IRI.Maptor.Styles.TextBox.Input" TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
-        <!--<Setter Property="Height" Value="32"/>-->
+    <Style x:Key="IRI.Maptor.Styles.TextBox.Normal" TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
+        <Setter Property="Height" Value="32"/>
 
         <Setter Property="Margin" Value="4"/>
         <Setter Property="Padding" Value="8,4"/>
@@ -68,10 +68,24 @@
         </Style.Triggers>-->
     </Style>
 
-    <Style x:Key="IRI.Maptor.Styles.TextBox.Input.En" TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox.Input}">
+    <Style x:Key="IRI.Maptor.Styles.TextBox.Normal.En" TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox.Normal}">
         <Setter Property="FlowDirection" Value="LeftToRight"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="FontSize" Value="14"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
+                <Setter Property="FontFamily" Value="Segoe UI"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.TextBox.Small.En" TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox.Normal}">
+        <Setter Property="FlowDirection" Value="LeftToRight"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="MinHeight" Value="26"/>
+        <Setter Property="Height" Value="auto"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="BorderThickness" Value="1.5"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
                 <Setter Property="FontFamily" Value="Segoe UI"/>

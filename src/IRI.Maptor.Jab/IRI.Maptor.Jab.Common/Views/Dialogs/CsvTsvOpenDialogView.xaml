@@ -48,7 +48,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
-                <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}" 
+                <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}" 
                          mahApp:TextBoxHelper.Watermark="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"
                          Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True"/>
                 <Button Grid.Column="2"
@@ -80,8 +80,12 @@
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconPhosphorIcons Kind="FileText" Style="{StaticResource securityIconPhosphor}"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="4">
-                    <RadioButton Content="{Binding [dialog_csvTsvOpen_formatCsv], Source={StaticResource Localization}}" IsChecked="{Binding IsCsv, Mode=TwoWay}" Margin="0,0,16,0"/>
-                    <RadioButton Content="{Binding [dialog_csvTsvOpen_formatTsv], Source={StaticResource Localization}}" IsChecked="{Binding IsCsv, Mode=TwoWay, Converter={StaticResource notConverter}}" Margin="0,0,0,0"/>
+                    <RadioButton Content="{Binding [dialog_csvTsvOpen_formatCsv], Source={StaticResource Localization}}"
+                                 IsChecked="{Binding IsCsv, Mode=TwoWay}"
+                                 Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form.Latin}" />
+                    <RadioButton Content="{Binding [dialog_csvTsvOpen_formatTsv], Source={StaticResource Localization}}"
+                                 IsChecked="{Binding IsCsv, Mode=TwoWay, Converter={StaticResource notConverter}}"
+                                 Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form.Latin}" />
                 </StackPanel>
                 <iconPacks:PackIconPhosphorIcons Kind="ShapesLight" Grid.Column="3" Style="{StaticResource securityIconPhosphor}"
                                                  ToolTip="{Binding [dialog_csvTsvOpen_geometryType],Source={StaticResource Localization}}"/>
@@ -110,14 +114,11 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconPhosphorIcons Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
-                <ComboBox Grid.Column="1" Margin="4"
+                <ComboBox Grid.Column="1" 
                           ItemsSource="{Binding AvailableSrsOptions}"
-                          DisplayMemberPath="DisplayName"
-                          mahApp:ControlsHelper.CornerRadius="6"
+                          DisplayMemberPath="DisplayName"                           
                           SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"
-                          VerticalAlignment="Center" BorderThickness="0" FontSize="15" MinHeight="35"
-                          VerticalContentAlignment="Center" HorizontalAlignment="Stretch" FlowDirection="LeftToRight"
-                          />
+                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Form.Latin}"/>
             </Grid>
         </Border>
 
@@ -133,8 +134,9 @@
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconPhosphorIcons Kind="MapTrifoldFill" Style="{StaticResource securityIconPhosphor}"/>
                 <mahApp:NumericUpDown Grid.Column="1" Minimum="1" Maximum="60"
-                                      mahApp:ControlsHelper.CornerRadius="4"
-                                     Value="{Binding UtmZone, Mode=TwoWay}" Margin="4" VerticalAlignment="Center"/>
+                                        mahApp:ControlsHelper.CornerRadius="4"
+                                        Value="{Binding UtmZone, Mode=TwoWay}"
+                                        Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}" />
                 <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="8,2,4,0">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
@@ -189,7 +191,8 @@
                 <TextBlock Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
                             VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
                 <CheckBox Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
-                            IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>
+                            IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}"
+                          Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"/>
                 <!--<RadioButton Content="X,Y" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="4,0" VerticalAlignment="Center"
                             ToolTip="{Binding [dialog_csvTsvOpen_orderXY], Source={StaticResource Localization}}"/>
                 <RadioButton Content="Y,X" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay, Converter={StaticResource notConverter}}" Margin="4,0" VerticalAlignment="Center"
@@ -199,7 +202,8 @@
 
         <Border Grid.Row="5" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <CheckBox Content="{Binding [dialog_csvTsvOpen_useFirstLineAsHeader], Source={StaticResource Localization}}"
-                        IsChecked="{Binding UseFirstLineAsHeader, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"/>
+                      Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"
+                        IsChecked="{Binding UseFirstLineAsHeader, Mode=TwoWay}" />
         </Border>
 
         <!-- Data: paste or preview (top 50 lines) -->

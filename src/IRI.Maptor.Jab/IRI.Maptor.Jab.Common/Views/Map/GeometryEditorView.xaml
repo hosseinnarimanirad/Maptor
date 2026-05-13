@@ -209,54 +209,56 @@
         </StackPanel>
 
         <!-- SRS Selection and Current Point Editor Section -->
-        <Border Grid.Row="2" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,1,0,0" Padding="4" Margin="0,0,0,4">
-            <Grid FlowDirection="LeftToRight" >
-                <StackPanel >
+        <Border Grid.Row="2" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,1,0,0" Padding="0" Margin="0,0,0,4">
+            <Grid >
+                <StackPanel Margin="0">
                     <!-- Current Point Editor -->
-                    <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" Background="{DynamicResource MahApps.Brushes.Accent4}">
-                        <TextBlock Text="{Binding [geometryDetails_currentPoint_x], Source={StaticResource Localization}}"
+                    <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Padding="0,4" Margin="2" CornerRadius="4">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding [geometryDetails_currentPoint_x], Source={StaticResource Localization}}"
                                    VerticalAlignment="Center" Margin="4,0,0,0" Width="20"/>
-                        <!-- DMS Mode: Use DegreeMinuteSecondView -->
-                        <maptor:DegreeMinuteSecondView x:Name="dmsXView" DataContext="{Binding CurrentPointEditor.DmsX}" 
+                            <!-- DMS Mode: Use DegreeMinuteSecondView -->
+                            <maptor:DegreeMinuteSecondView x:Name="dmsXView" DataContext="{Binding CurrentPointEditor.DmsX}" 
                                                       MaxDegreeValue="180" MinDegreeValue="-180" 
                                                       HideUpDownButtons="False" Margin="0,0,8,0"
                                                       Visibility="{Binding DataContext.CurrentPointEditor.IsDmsMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
-                        <!-- Non-DMS Mode: Use TextBox -->
-                        <TextBox Text="{Binding CurrentPointEditor.CoordinateX, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                            <!-- Non-DMS Mode: Use TextBox -->
+                            <TextBox Text="{Binding CurrentPointEditor.CoordinateX, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                                  Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
                                  Width="150" Margin="0,0,8,0" 
-                                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}"/>
-                        <TextBlock Text="{Binding [geometryDetails_currentPoint_y], Source={StaticResource Localization}}"
+                                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}"/>
+                            <TextBlock Text="{Binding [geometryDetails_currentPoint_y], Source={StaticResource Localization}}"
                                    VerticalAlignment="Center" Margin="4,0,0,0" Width="20"/>
-                        <!-- DMS Mode: Use DegreeMinuteSecondView -->
-                        <maptor:DegreeMinuteSecondView DataContext="{Binding CurrentPointEditor.DmsY}" 
+                            <!-- DMS Mode: Use DegreeMinuteSecondView -->
+                            <maptor:DegreeMinuteSecondView DataContext="{Binding CurrentPointEditor.DmsY}" 
                                                       MaxDegreeValue="90" MinDegreeValue="-90"
                                                       HideUpDownButtons="False" Margin="0,0,8,0"
                                                       Visibility="{Binding DataContext.CurrentPointEditor.IsDmsMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
-                        <!-- Non-DMS Mode: Use TextBox -->
-                        <TextBox Text="{Binding CurrentPointEditor.CoordinateY, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
+                            <!-- Non-DMS Mode: Use TextBox -->
+                            <TextBox Text="{Binding CurrentPointEditor.CoordinateY, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" 
                                  Visibility="{Binding CurrentPointEditor.IsDmsMode, Converter={StaticResource boolToInverseVisibilityConverter}}"
                                  Width="150" Margin="0,0,8,0" 
-                                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Input.En}"/>
-                        <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                 Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}"/>
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                                 Command="{Binding ApplyCurrentPointChangesCommand}" 
                                 IsEnabled="{Binding CurrentPointEditor, Converter={StaticResource notNullToBoolConverter}}"
                                 Margin="4,0,0,0">
-                            <iconPacks:PackIconMaterial Kind="CheckBold"/>
-                        </Button>
-                        <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                <iconPacks:PackIconMaterial Kind="CheckBold"/>
+                            </Button>
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                                  Command="{Binding AddPointCommand}" 
                                  IsEnabled="{Binding CurrentPointEditor, Converter={StaticResource notNullToBoolConverter}}"
                                  Margin="4,0,0,0">
-                            <iconPacks:PackIconMaterial Kind="Plus"/>
-                        </Button>
-                        <ToggleButton x:Name="srsConfigToggleButton" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" Margin="8,0,0,0">
-                            <iconPacks:PackIconMaterial Kind="Cog"/>
-                        </ToggleButton>
-                    </StackPanel>
+                                <iconPacks:PackIconMaterial Kind="Plus"/>
+                            </Button>
+                            <ToggleButton x:Name="srsConfigToggleButton" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" Margin="8,0,0,0">
+                                <iconPacks:PackIconMaterial Kind="Cog"/>
+                            </ToggleButton>
+                        </StackPanel>
+                    </Border>
                     <!-- SRS Info TextBlock -->
                     <TextBlock VerticalAlignment="Center" Margin="8,4,8,0" FontStyle="Italic" Foreground="Gray" FontSize="11"  
-                               FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}">
+                               >
                         <TextBlock.Text>
                             <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_options_srsInfoFormat">
                                 <Binding Path="SrsViewModel.SelectedSrsType"/>
@@ -268,8 +270,9 @@
                 </StackPanel>
 
                 <!-- SRS Configuration Popup -->
+                <!--{Binding IsChecked, ElementName=srsConfigToggleButton}-->
                 <Popup x:Name="srsConfigPopup" 
-                       IsOpen="{Binding IsChecked, ElementName=srsConfigToggleButton}"
+                       IsOpen="True"
                        Placement="Bottom"
                        PlacementTarget="{Binding ElementName=srsConfigToggleButton}"
                        StaysOpen="False"
@@ -283,14 +286,14 @@
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="8" Color="Gray" Opacity="0.5" ShadowDepth="2"/>
                         </Border.Effect>
-                        <StackPanel Orientation="Vertical" FlowDirection="LeftToRight" MinWidth="200">
+                        <StackPanel Orientation="Vertical"  MinWidth="200">
                             <TextBlock Text="{Binding [geometryDetails_options_srsConfiguration], Source={StaticResource Localization}}" FontWeight="Bold" Margin="0,0,0,8"/>
                             <!-- SRS Type -->
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                 <TextBlock Text="{Binding [geometryDetails_options_srs], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
                                 <ComboBox ItemsSource="{Binding SrsViewModel.AvailableSrsTypes}" 
-                                          SelectedItem="{Binding SrsViewModel.SelectedSrsType, Mode=TwoWay}" 
-                                          Width="150">
+                                          SelectedItem="{Binding SrsViewModel.SelectedSrsType, Mode=TwoWay}"
+                                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Small.Latin}" Width="150">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
@@ -312,42 +315,45 @@
                                 <TextBlock Text="{Binding [geometryDetails_options_ellipsoid], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
                                 <ComboBox ItemsSource="{Binding SrsViewModel.AvailableEllipsoids}" 
                                           SelectedItem="{Binding SrsViewModel.SelectedEllipsoid, Mode=TwoWay}"
-                                          DisplayMemberPath="Name"
-                                          Width="150"/>
+                                          DisplayMemberPath="Name" 
+                                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Small.Latin}"/>
                             </StackPanel>
                             <!-- UTM Zone -->
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
                                         Visibility="{Binding SrsViewModel.IsUtmZoneVisible, Converter={StaticResource boolToVisibilityConverter}}">
                                 <TextBlock Text="{Binding [geometryDetails_options_utmZone], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
-                                <mahApp:NumericUpDown Value="{Binding SrsViewModel.UtmZone, Mode=TwoWay}" 
-                                                     Minimum="1" Maximum="60" 
-                                                     Width="150"/>
+                                <mahApp:NumericUpDown Minimum="1" Maximum="60"
+                                                      Value="{Binding SrsViewModel.UtmZone, Mode=TwoWay}"                                                      
+                                                      Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}" />
                             </StackPanel>
                             <!-- Coordinate Precision -->
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                 <TextBlock Text="{Binding [geometryDetails_options_latLongPrecision], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
-                                <mahApp:NumericUpDown Value="{Binding SrsViewModel.LatLongPrecision, Mode=TwoWay}" 
-                                                     Minimum="0" Maximum="10" 
-                                                     Width="150"/>
+                                <mahApp:NumericUpDown Minimum="0" Maximum="10"
+                                                      Value="{Binding SrsViewModel.LatLongPrecision, Mode=TwoWay}"
+                                                      Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
                                 <TextBlock Text="{Binding [geometryDetails_options_xyPrecision], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
-                                <mahApp:NumericUpDown Value="{Binding SrsViewModel.XYPrecision, Mode=TwoWay}" 
-                                                     Minimum="0" Maximum="10" 
-                                                     Width="150"/>
+                                <mahApp:NumericUpDown Minimum="0" Maximum="10"
+                                                      Value="{Binding SrsViewModel.XYPrecision, Mode=TwoWay}"
+                                                      Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}"/>
                             </StackPanel>
                             <!-- Grid Options Section -->
                             <Border BorderBrush="LightGray" BorderThickness="0,1,0,0" Margin="0,8,0,4"/>
                             <TextBlock Text="{Binding [geometryDetails_options_gridOptions], Source={StaticResource Localization}}" FontWeight="Bold" Margin="0,0,0,8"/>
+
                             <CheckBox Content="{Binding [geometryDetails_options_showInnerAngle], Source={StaticResource Localization}}" 
                                       IsChecked="{Binding ShowInnerAngle, Mode=TwoWay}"
-                                      Margin="0,0,0,4"/>
+                                      Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"/>
+                            
                             <CheckBox Content="{Binding [geometryDetails_options_useDecimalDegreesForAngles], Source={StaticResource Localization}}" 
                                       IsChecked="{Binding UseDecimalDegreesForAngles, Mode=TwoWay}"
-                                      Margin="0,0,0,4"/>
+                                      Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"/>
+                            
                             <CheckBox Content="{Binding [geometryDetails_options_showZColumn], Source={StaticResource Localization}}" 
                                       IsChecked="{Binding ShowZColumn, Mode=TwoWay}"
-                                      Margin="0,0,0,4"/>
+                                      Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"  />
                         </StackPanel>
                     </Border>
                 </Popup>

@@ -107,6 +107,7 @@
                 <mahApp:ToggleSwitch Margin="2" VerticalAlignment="Center" 
                                     Padding="0" MinWidth="0" MinHeight="0"                                   
                                     Content="" OffContent="" OnContent=""
+                                     Style="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Normal}"
                                      Cursor="Hand"
                                      IsOn="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}"/>
             </Viewbox>

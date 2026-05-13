@@ -6,18 +6,10 @@
 
     <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
-    <Style x:Key="IRI.Maptor.Styles.ToggleSwitch.Normal"
-           TargetType="mahApp:ToggleSwitch"
-           BasedOn="{StaticResource MahApps.Styles.ToggleSwitch}">
-
-        <Setter Property="FontSize" Value="13"/>
-        <Setter Property="FontWeight" Value="Normal"/>
-        
+    <Style x:Key="IRI.Maptor.Styles.CheckBox.Normal" TargetType="CheckBox" BasedOn="{StaticResource MahApps.Styles.CheckBox}">
         <Setter Property="Margin" Value="4"/>
+        <Setter Property="FontSize" Value="13"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-
-        <Setter Property="Cursor" Value="Hand"/>
- 
         <Style.Triggers>
             <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
                 <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
@@ -25,10 +17,8 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="IRI.Maptor.Styles.ToggleSwitch.Small"
-        TargetType="mahApp:ToggleSwitch"
-        BasedOn="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Normal}">
-
-        <Setter Property="FontSize" Value="11"/> 
+    <Style x:Key="IRI.Maptor.Styles.CheckBox.Small" TargetType="CheckBox" BasedOn="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}">
+        <Setter Property="Margin" Value="2"/>
     </Style>
+
 </ResourceDictionary>

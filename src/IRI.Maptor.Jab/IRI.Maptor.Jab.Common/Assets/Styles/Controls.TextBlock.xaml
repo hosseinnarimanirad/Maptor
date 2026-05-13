@@ -36,7 +36,7 @@
     </Style>
 
     <!--Form-->
-    <Style x:Key="IRI.Maptor.Styles.TextBlock.Form"
+    <Style x:Key="IRI.Maptor.Styles.TextBlock.Normal"
            TargetType="TextBlock"
            BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
         <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Text}"/>
@@ -44,9 +44,9 @@
         <Setter Property="FontSize" Value="12"/>
     </Style>
 
-    <Style x:Key="IRI.Maptor.Styles.TextBlock.FormBold"
+    <Style x:Key="IRI.Maptor.Styles.TextBlock.Normal.Bold"
            TargetType="TextBlock"
-           BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Form}">
+           BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}">
         <Setter Property="FontWeight" Value="Bold"/>
     </Style>
 

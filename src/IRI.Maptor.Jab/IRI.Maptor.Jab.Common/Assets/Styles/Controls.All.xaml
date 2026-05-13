@@ -13,6 +13,9 @@
         <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleSwitch.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Border.xaml"/>
         <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.MetroWindow.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.CheckBox.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ComboBox.xaml"/>
+        <ResourceDictionary Source="/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.NumericUpDown.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

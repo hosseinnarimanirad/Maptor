@@ -3,19 +3,24 @@
                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls">
 
-    <Style x:Key="IRI.Maptor.Styles.RadioButton.Form" TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
-        <Setter Property="Margin" Value="4,0,8,0"/>
-        <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Background" Value="Transparent"/>
-    </Style>
-    
-    <Style x:Key="IRI.Maptor.Styles.RadioButton.FormLatin" TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
-        <Setter Property="Margin" Value="4,0,8,0"/>
+    <Style x:Key="IRI.Maptor.Styles.RadioButton.Base" TargetType="RadioButton" BasedOn="{StaticResource MahApps.Styles.RadioButton}">
         <Setter Property="FontWeight" Value="Normal"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Background" Value="Transparent"/>
+       
+    </Style>
+    
+    <Style x:Key="IRI.Maptor.Styles.RadioButton.Form" TargetType="RadioButton" BasedOn="{StaticResource IRI.Maptor.Styles.RadioButton.Base}">
+        <Setter Property="Margin" Value="0,0,16,0"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
+                <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.RadioButton.Form.Latin" TargetType="RadioButton" BasedOn="{StaticResource IRI.Maptor.Styles.RadioButton.Base}">
+        <Setter Property="Margin" Value="0,0,16,0"/> 
     </Style>
 </ResourceDictionary>

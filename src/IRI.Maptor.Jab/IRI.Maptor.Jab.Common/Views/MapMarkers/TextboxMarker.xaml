@@ -93,11 +93,11 @@
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
                             <ComboBox MinWidth="100" VerticalAlignment="Center" Margin="0,0,2,0"
                                 ItemsSource="{x:Static local:TextboxMarkerViewModel.FontFamilyOptions}"
-                                Style="{StaticResource MahApps.Styles.ComboBox}"
+                                Style="{StaticResource IRI.Maptor.Styles.ComboBox.Small.Latin}"
                                 SelectedItem="{Binding Formating_FontFamilyName, Mode=TwoWay}"/>
                             <ComboBox MinWidth="50" VerticalAlignment="Center" Margin="2,0"
                                 ItemsSource="{x:Static local:TextboxMarkerViewModel.FontSizeOptions}"
-                                Style="{StaticResource MahApps.Styles.ComboBox}"
+                                Style="{StaticResource IRI.Maptor.Styles.ComboBox.Small.Latin}"
                                 SelectedItem="{Binding Formating_FontSize, Mode=TwoWay}"/>
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Margin="0,0,2,0" Command="{Binding IncreaseFontSizeCommand}" ToolTip="Increase font size">
                                 <iconPacks:PackIconMaterial Kind="FormatFontSizeIncrease" Width="12" Height="12"/>
@@ -109,7 +109,8 @@
 
                             <ComboBox MinWidth="120" VerticalAlignment="Center" Margin="2,0"
                                       ItemsSource="{x:Static local:TextboxMarkerViewModel.BackgroundChoices}"
-                                      SelectedItem="{Binding SelectedBackgroundChoice, Mode=TwoWay}">
+                                      SelectedItem="{Binding SelectedBackgroundChoice, Mode=TwoWay}"
+                                      Style="{StaticResource IRI.Maptor.Styles.ComboBox.Small.Latin}" >
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">

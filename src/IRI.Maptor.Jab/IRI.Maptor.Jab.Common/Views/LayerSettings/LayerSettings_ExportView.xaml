@@ -15,7 +15,7 @@
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
-            <Style TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Form}"/>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -35,17 +35,17 @@
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
                 <TextBlock Text="{Binding [dialog_export_outputFileFormat], Source={StaticResource Localization}}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
-                <RadioButton GroupName="A" Content="SHP" Style="{StaticResource IRI.Maptor.Styles.RadioButton.FormLatin}"
+                <RadioButton GroupName="A" Content="SHP" Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form.Latin}"
                              IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.Shapefile}}" />
-                <RadioButton GroupName="A" Content="DXF" Style="{StaticResource IRI.Maptor.Styles.RadioButton.FormLatin}"
+                <RadioButton GroupName="A" Content="DXF" Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form.Latin}"
                              IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.Dxf}}"/>
-                <RadioButton GroupName="A" Content="KML" Style="{StaticResource IRI.Maptor.Styles.RadioButton.FormLatin}"
+                <RadioButton GroupName="A" Content="KML" Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form.Latin}"
                              IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.Kml}}" />
-                <RadioButton GroupName="A" Content="KMZ" Style="{StaticResource IRI.Maptor.Styles.RadioButton.FormLatin}"
+                <RadioButton GroupName="A" Content="KMZ" Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form.Latin}"
                              IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.Kmz}}" />
-                <RadioButton GroupName="A" Content="GeoJson" Style="{StaticResource IRI.Maptor.Styles.RadioButton.FormLatin}"
+                <RadioButton GroupName="A" Content="GeoJson" Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form.Latin}"
                              IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.GeoJson}}" />
-                <RadioButton GroupName="A" Content="EsriJson" Style="{StaticResource IRI.Maptor.Styles.RadioButton.FormLatin}"
+                <RadioButton GroupName="A" Content="EsriJson" Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form.Latin}"
                              IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.EsriJson}}" />
                 <!--<RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.TopoJson}}" Content="TopoJson"/>-->
             </StackPanel>
@@ -57,12 +57,15 @@
                 <iconPacks:PackIconMaterial Kind="SelectMarker" Style="{StaticResource securityIconMaterial}"/>
                 <TextBlock Text="{Binding [dialog_export_exportModeTItle], Source={StaticResource Localization}}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
                 <RadioButton GroupName="B"
+                             Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form}"
                              IsChecked="{Binding SelectedExportMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorCommon:ExportFeatureMode.All}}"
                              Content="{Binding [dialog_export_exportModeAll], Source={StaticResource Localization}}"/>
                 <RadioButton GroupName="B" IsEnabled="False"
+                             Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form}"
                              IsChecked="{Binding SelectedExportMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorCommon:ExportFeatureMode.Selected}}"
                              Content="{Binding [dialog_export_exportModeSelected], Source={StaticResource Localization}}"/>
                 <RadioButton GroupName="B" IsEnabled="False"
+                             Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form}"
                              IsChecked="{Binding SelectedExportMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorCommon:ExportFeatureMode.Highlighted}}"
                              Content="{Binding [dialog_export_exportModeHighlighted], Source={StaticResource Localization}}"/>
             </StackPanel>
@@ -102,18 +105,24 @@
                 </Grid.ColumnDefinitions>-->
             <DockPanel>
                 <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
-                <mahApp:ToggleSwitch DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Form}"
+                <mahApp:ToggleSwitch DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Normal}"
                       OnContent="{Binding [dialog_export_enabledProjection], Source={StaticResource Localization}}"
                       OffContent="{Binding [dialog_export_disabledProjection], Source={StaticResource Localization}}"
                       IsOn="{Binding IsProjectionEnabled}" />
-                <ComboBox Margin="4" BorderThickness="0" FontSize="12" MinHeight="35" FontWeight="Normal"
+                <!--<ComboBox Margin="4" BorderThickness="0" FontSize="12" MinHeight="35" FontWeight="Normal"
                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
                             FlowDirection="LeftToRight" mahApp:ControlsHelper.CornerRadius="4"
                             IsEnabled="{Binding IsProjectionEnabled}"
                             ItemsSource="{Binding AvailableSrsOptions}"
                             DisplayMemberPath="DisplayName"
                             SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"
-                          Visibility="{Binding IsProjectionEnabled, Converter={StaticResource boolToVisibilityConverter}}"/>
+                          Visibility="{Binding IsProjectionEnabled, Converter={StaticResource boolToVisibilityConverter}}"/>-->
+                <ComboBox Style="{StaticResource IRI.Maptor.Styles.ComboBox.Form.Latin}"
+                            DisplayMemberPath="DisplayName"                            
+                            ItemsSource="{Binding AvailableSrsOptions}"
+                            SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"
+                            IsEnabled="{Binding IsProjectionEnabled}"
+                            Visibility="{Binding IsProjectionEnabled, Converter={StaticResource boolToVisibilityConverter}}"/>
             </DockPanel>
         </Border>
 
@@ -179,9 +188,9 @@
                     </TextBlock.Style>
                 </TextBlock>
 
-                <mahApp:NumericUpDown Grid.Column="1" Minimum="1" Maximum="60" BorderThickness="1" FontWeight="Normal" MinWidth="100"
-                      mahApp:ControlsHelper.CornerRadius="4"
-                   Value="{Binding UtmZone, Mode=TwoWay}" Margin="4" VerticalAlignment="Center"/>
+                <mahApp:NumericUpDown Grid.Column="1" Minimum="1" Maximum="60"  
+                                      Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Normal}"
+                                      Value="{Binding UtmZone, Mode=TwoWay}" />
 
             </DockPanel>
         </Border>
@@ -194,8 +203,8 @@
                 <TextBlock Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
                          VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
                 <CheckBox Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
-                          IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="8,0,16,0" VerticalAlignment="Center"
-                          FontFamily="{StaticResource iranSans}"/>
+                          Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"
+                          IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" />
                 <!--<RadioButton Content="X,Y" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="4,0" VerticalAlignment="Center"
                        ToolTip="{Binding [dialog_geoJsonTopoJsonOpen_orderXY], Source={StaticResource Localization}}"/>
               <RadioButton Content="Y,X" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay, Converter={StaticResource notConverter}}" Margin="4,0" VerticalAlignment="Center"
