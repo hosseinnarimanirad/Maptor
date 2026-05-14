@@ -118,7 +118,7 @@
                           ItemsSource="{Binding AvailableSrsOptions}"
                           DisplayMemberPath="DisplayName"                           
                           SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"
-                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Form.Latin}"/>
+                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"/>
             </Grid>
         </Border>
 

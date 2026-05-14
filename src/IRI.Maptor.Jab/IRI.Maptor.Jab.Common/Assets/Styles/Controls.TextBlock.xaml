@@ -60,5 +60,22 @@
     </Style>
 
 
+    <Style x:Key="IRI.Maptor.Styles.TextBlock.Title"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.TextBlock.Hint"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
 </ResourceDictionary>
     

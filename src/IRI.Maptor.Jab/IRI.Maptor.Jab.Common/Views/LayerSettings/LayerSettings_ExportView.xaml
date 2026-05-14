@@ -117,7 +117,7 @@
                             DisplayMemberPath="DisplayName"
                             SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"
                           Visibility="{Binding IsProjectionEnabled, Converter={StaticResource boolToVisibilityConverter}}"/>-->
-                <ComboBox Style="{StaticResource IRI.Maptor.Styles.ComboBox.Form.Latin}"
+                <ComboBox Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
                             DisplayMemberPath="DisplayName"                            
                             ItemsSource="{Binding AvailableSrsOptions}"
                             SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"

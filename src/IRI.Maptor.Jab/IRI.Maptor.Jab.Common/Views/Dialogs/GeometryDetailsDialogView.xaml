@@ -117,7 +117,7 @@
                                     Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}, StringFormat='{}{0}:'}" 
                                     Margin="4" VerticalAlignment="Center"/>
                         <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding AvailableFormats}"
-                                   Style="{StaticResource IRI.Maptor.Styles.ComboBox.Form.Latin}"  
+                                   Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"  
                                    SelectedItem="{Binding SelectedFormat, Mode=TwoWay}"/>
                         <Button Grid.Row="0" Grid.Column="2" 
                                  ToolTip="{Binding [dialog_geometryDetails_export], Source={StaticResource Localization}}"  

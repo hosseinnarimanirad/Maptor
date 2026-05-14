@@ -20,7 +20,7 @@
         <Setter Property="mahApp:ControlsHelper.CornerRadius" Value="6"/>
     </Style>
 
-    <Style x:Key="IRI.Maptor.Styles.ComboBox.Form" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Base}">
+    <Style x:Key="IRI.Maptor.Styles.ComboBox.Normal" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Base}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding Source={StaticResource Localization}, Path=IsPersian}" Value="True">
                 <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
@@ -28,22 +28,22 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="IRI.Maptor.Styles.ComboBox.Large" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Form}">
+    <Style x:Key="IRI.Maptor.Styles.ComboBox.Large" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Normal}">
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="MinHeight" Value="35"/>
     </Style>
 
-    <Style x:Key="IRI.Maptor.Styles.ComboBox.Form.Latin" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Base}">
+    <Style x:Key="IRI.Maptor.Styles.ComboBox.Normal.Latin" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Base}">
         <Setter Property="FlowDirection" Value="LeftToRight"/>
     </Style>
 
-    <Style x:Key="IRI.Maptor.Styles.ComboBox.Small.Latin" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Form.Latin}">
+    <Style x:Key="IRI.Maptor.Styles.ComboBox.Small.Latin" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}">
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="MinHeight" Value="24"/>
     </Style>
     
-    <Style x:Key="IRI.Maptor.Styles.ComboBox.Large.Latin" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Form.Latin}">
+    <Style x:Key="IRI.Maptor.Styles.ComboBox.Large.Latin" TargetType="ComboBox" BasedOn="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}">
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="MinHeight" Value="35"/>
     </Style>

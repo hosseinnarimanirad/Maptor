@@ -621,7 +621,7 @@ public class HttpParameters
 {
     public string Address { get; set; }
 
-    public object Data { get; set; }
+    public object? Data { get; set; }
 
     public Encoding Encoding { get; set; }
 

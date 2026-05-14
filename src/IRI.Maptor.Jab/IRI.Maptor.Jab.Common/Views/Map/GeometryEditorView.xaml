@@ -270,9 +270,9 @@
                 </StackPanel>
 
                 <!-- SRS Configuration Popup -->
-                <!--{Binding IsChecked, ElementName=srsConfigToggleButton}-->
+                <!---->
                 <Popup x:Name="srsConfigPopup" 
-                       IsOpen="True"
+                       IsOpen="{Binding IsChecked, ElementName=srsConfigToggleButton}"
                        Placement="Bottom"
                        PlacementTarget="{Binding ElementName=srsConfigToggleButton}"
                        StaysOpen="False"

@@ -16,10 +16,10 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="filterTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
+            <!--<Style x:Key="filterTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox}">
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="BorderBrush" Value="White"/>
-                <!--<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ControlBackground}"/>-->
+                --><!--<Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ControlBackground}"/>--><!--
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="Foreground" Value="Black"/>
                 <Setter Property="Padding" Value="8,4"/>
@@ -31,7 +31,7 @@
                         <Setter Property="Opacity" Value="0.8"/>
                     </Trigger>
                 </Style.Triggers>
-            </Style>
+            </Style>-->
 
             <Style x:Key="sectionCard" TargetType="Border">
                 <Setter Property="Padding" Value="4"/>
@@ -244,7 +244,7 @@
                             <ComboBox Grid.Row="1" Grid.Column="0"
                                         ItemsSource="{Binding ScaleItemsView}"
                                         SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"
-                                        Style="{StaticResource IRI.Maptor.Styles.ComboBox.Form.Latin}"
+                                        Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
                                         DisplayMemberPath="DisplayLabel" Background="White">
                                 <ComboBox.GroupStyle>
                                     <GroupStyle>

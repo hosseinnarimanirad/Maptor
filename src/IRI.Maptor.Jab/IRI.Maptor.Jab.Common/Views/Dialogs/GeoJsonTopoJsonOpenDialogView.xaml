@@ -77,7 +77,7 @@
                 <ComboBox Grid.Column="1"  
                           ItemsSource="{Binding AvailableSrsOptions}"
                           DisplayMemberPath="DisplayName"
-                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Form.Latin}"
+                          Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
                           SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}" />
             </Grid>
         </Border>
