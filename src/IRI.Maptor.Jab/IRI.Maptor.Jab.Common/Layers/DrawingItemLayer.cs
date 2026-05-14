@@ -25,6 +25,8 @@ public class DrawingItemLayer : VectorLayer
 
     public Geometry? Geometry => Feature?.TheGeometry;
 
+    public Geometry? Wgs84Geometry => Geometry?.Project(SrsBases.GeodeticWgs84);
+
     public override BoundingBox Extent
     {
         get
