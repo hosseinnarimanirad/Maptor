@@ -3959,6 +3959,11 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         return new Feature<T>(this, new Dictionary<string, object>() { { "Area", area }, { "Length", length } });
     }
 
+    public FeatureSet<T> AsFeatureSet()
+    {
+        return FeatureSet<T>.Create(string.Empty, [this.AsFeature()]);
+    }
+
     public GeoJsonFeatureSet AsGeoJsonFeatureSet()
     {
         return new GeoJsonFeatureSet()

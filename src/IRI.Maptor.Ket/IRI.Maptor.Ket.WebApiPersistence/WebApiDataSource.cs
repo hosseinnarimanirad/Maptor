@@ -6,9 +6,9 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
-using IRI.Maptor.Ket.WebApiPersistence.DTOs;
 using IRI.Maptor.Sta.Common.Exceptions;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Spatial.Dtos;
 
 namespace IRI.Maptor.Ket.WebApiPersistence;
 
@@ -86,7 +86,16 @@ public class WebApiDataSource : MemoryDataSource
             }
             else
             {
-                _featureSet = ConvertFeatureSetDtoToFeatureSet(featureSetDto);
+                if (featureSetDto.Srid == 0)
+                {
+                    featureSetDto.SetSrid(_parameters.Srid);
+                }
+
+                //_featureSet = ConvertFeatureSetDtoToFeatureSet(featureSetDto);
+                _featureSet = featureSetDto.AsFeatureSet(this.IdColumnName);
+                this.Fields = _featureSet.Fields;
+                this.GeometryType = _featureSet.GeometryType;
+                this.WebMercatorExtent = _featureSet.Extent;
             }
 
             //_addedFeatures.Clear();
@@ -108,6 +117,7 @@ public class WebApiDataSource : MemoryDataSource
             IsInitializing = false;
         }
     }
+
 
     /// <summary>
     /// Loads features from the list endpoint with an optional server-side geometry filter.
@@ -158,9 +168,9 @@ public class WebApiDataSource : MemoryDataSource
 
             var dto = new FeatureSetChangesDto
             {
-                Added = _featureSet.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.New).Select(ConvertFeatureToFeatureDto).ToList(),
-                Updated = _featureSet.Features.Where(f => f.Status == Sta.Common.Enums.FeatureStatus.Updated).Select(ConvertFeatureToFeatureDto).ToList(),
-                Deleted = _featureSet.GetAllFeatures().Where(f => f.Status == Sta.Common.Enums.FeatureStatus.Removed).Select(ConvertFeatureToFeatureDto).ToList(),
+                Added = _featureSet.Features.Where(f => f.Status == FeatureStatus.New).Select(f => FeatureDto.Parse(f, SridHelper.GeodeticWGS84)).ToList(),
+                Updated = _featureSet.Features.Where(f => f.Status == FeatureStatus.Updated).Select(f => FeatureDto.Parse(f, SridHelper.GeodeticWGS84)).ToList(),
+                Deleted = _featureSet.GetAllFeatures().Where(f => f.Status == FeatureStatus.Removed).Select(f => FeatureDto.Parse(f, SridHelper.GeodeticWGS84)).ToList(),
                 DeletedIds = _featureSet.GetDeletedFeatureIds().ToList(),
             };
 
@@ -211,7 +221,7 @@ public class WebApiDataSource : MemoryDataSource
                 UpdateHasPendingChanges();
             }
             else
-            {                
+            {
                 if (response.Error?.Title == "ConcurrencyException")
                 {
                     throw new ConcurrencyConflictException(response.ErrorMessage ?? string.Empty);
@@ -258,106 +268,111 @@ public class WebApiDataSource : MemoryDataSource
 
     #region Conversion Helpers
 
-    private FeatureSet<Point> ConvertFeatureSetDtoToFeatureSet(FeatureSetDto featureSetDto)
-    {
-        var features = new List<Feature<Point>>();
+    //private FeatureSet<Point> ConvertFeatureSetDtoToFeatureSet(FeatureSetDto featureSetDto)
+    //{
+    //    var features = new List<Feature<Point>>();
 
-        foreach (var featureDto in featureSetDto.Features)
-        {
-            try
-            {
-                var feature = ConvertFeatureDtoToFeature(featureDto);
-                if (feature != null)
-                    features.Add(feature);
-            }
-            catch
-            {
-                continue;
-            }
-        }
+    //    foreach (var featureDto in featureSetDto.Features)
+    //    {
+    //        try
+    //        {
+    //            //var feature = ConvertFeatureDtoToFeature(featureDto);
+    //            var feature = featureDto.AsFeature(IdColumnName, SridHelper.WebMercator);
 
-        if (features.Count == 0)
-            return FeatureSet<Point>.Empty;
+    //            if (feature != null)
+    //                features.Add(feature);
+    //        }
+    //        catch
+    //        {
+    //            continue;
+    //        }
+    //    }
 
-        if (featureSetDto.Fields != null && featureSetDto.Fields.Count > 0)
-            Fields = featureSetDto.Fields;
+    //    if (features.Count == 0)
+    //        return FeatureSet<Point>.Empty;
 
-        else if (features.Count > 0 && features[0].Attributes != null)
-            Fields = Field.FromDictionary(features[0].Attributes);
+    //    if (featureSetDto.Fields != null && featureSetDto.Fields.Count > 0)
+    //        Fields = featureSetDto.Fields;
 
-        if (features.Count > 0 && features[0].TheGeometry != null)
-            GeometryType = features[0].GeometryType;
+    //    else if (features.Count > 0 && features[0].Attributes != null)
+    //        Fields = Field.FromDictionary(features[0].Attributes);
 
-        if (features.Count > 0)
-        {
-            var extent = BoundingBox.GetMergedBoundingBox(features.Select(f => f.TheGeometry.GetBoundingBox()));
-            if (!double.IsNaN(extent.Width) && !double.IsNaN(extent.Height))
-                WebMercatorExtent = extent;
-        }
+    //    if (features.Count > 0 && features[0].TheGeometry != null)
+    //        GeometryType = features[0].GeometryType;
 
-        var result = FeatureSet<Point>.Create(string.Empty, features);
+    //    if (features.Count > 0)
+    //    {
+    //        var extent = BoundingBox.GetMergedBoundingBox(features.Select(f => f.TheGeometry.GetBoundingBox()));
+    //        if (!double.IsNaN(extent.Width) && !double.IsNaN(extent.Height))
+    //            WebMercatorExtent = extent;
+    //    }
 
-        result.Fields = this.Fields;
+    //    var result = FeatureSet<Point>.Create(string.Empty, features);
 
-        return result;
-    }
+    //    result.Fields = this.Fields;
 
-    private Feature<Point>? ConvertFeatureDtoToFeature(FeatureDto featureDto)
-    {
-        if (featureDto.Shape == null || featureDto.Shape.Length == 0)
-            return null;
+    //    return result;
+    //}
 
-        var geometry = Geometry<Point>.FromWkb(featureDto.Shape, _parameters.Srid);
-        if (geometry == null || geometry.IsNullOrEmpty())
-            return null;
+    //private Feature<Point>? ConvertFeatureDtoToFeature(FeatureDto featureDto)
+    //{
+    //    if (featureDto.Shape == null || featureDto.Shape.Length == 0)
+    //        return null;
 
-        if (_parameters.Srid != SridHelper.WebMercator)
-        {
-            if (_parameters.Srid == SridHelper.GeodeticWGS84)
-                geometry = geometry.Transform(MapProjects.GeodeticWgs84ToWebMercator, SridHelper.WebMercator);
-            else
-                geometry = geometry.Transform(p => p, SridHelper.WebMercator);
-        }
+    //    var geometry = Geometry<Point>.FromWkb(featureDto.Shape, _parameters.Srid);
 
-        var feature = new Feature<Point>(geometry, featureDto.Attributes ?? new Dictionary<string, object>())
-        {
-            Id = featureDto.Id,
-            Key = featureDto.Key != Guid.Empty ? featureDto.Key : Guid.NewGuid()
-        };
+    //    if (geometry == null || geometry.IsNullOrEmpty())
+    //        return null;
 
-        if (!string.IsNullOrWhiteSpace(IdColumnName) && featureDto.Attributes != null && featureDto.Attributes.ContainsKey(IdColumnName))
-        {
-            if (featureDto.Attributes[IdColumnName] is int id)
-                feature.Id = id;
-        }
+    //    if (_parameters.Srid != SridHelper.WebMercator)
+    //    {
+    //        if (_parameters.Srid == SridHelper.GeodeticWGS84)
+    //            geometry = geometry.Transform(MapProjects.GeodeticWgs84ToWebMercator, SridHelper.WebMercator);
 
-        return feature;
-    }
+    //        else
+    //            geometry = geometry.Transform(p => p, SridHelper.WebMercator);
+    //    }
 
-    private FeatureDto ConvertFeatureToFeatureDto(Feature<Point> feature)
-    {
-        var geometry = feature.TheGeometry;
+    //    var feature = new Feature<Point>(geometry, featureDto.Attributes ?? new Dictionary<string, object>())
+    //    {
+    //        Id = featureDto.Id,
+    //        Key = featureDto.Key != Guid.Empty ? featureDto.Key : Guid.NewGuid(),
+    //    };
 
-        if (_parameters.Srid != SridHelper.WebMercator && geometry.Srid == SridHelper.WebMercator)
-        {
-            if (_parameters.Srid == SridHelper.GeodeticWGS84)
-                geometry = geometry.Transform(MapProjects.WebMercatorToGeodeticWgs84, SridHelper.GeodeticWGS84);
-            else
-                geometry = geometry.Transform(p => p, _parameters.Srid);
-        }
+    //    if (!string.IsNullOrWhiteSpace(IdColumnName) && featureDto.Attributes != null && featureDto.Attributes.ContainsKey(IdColumnName))
+    //    {
+    //        if (featureDto.Attributes[IdColumnName] is int id)
+    //            feature.Id = id;
+    //    }
 
-        var wkbBytes = geometry.AsWkb();
+    //    return feature;
+    //}
 
-        var isNew = feature.Status == Sta.Common.Enums.FeatureStatus.New;
+    //private FeatureDto ConvertFeatureToFeatureDto(Feature<Point> feature)
+    //{
+    //    var geometry = feature.TheGeometry;
 
-        return new FeatureDto
-        {
-            Id = isNew ? 0 : feature.Id,
-            Shape = wkbBytes ?? Array.Empty<byte>(),
-            Attributes = feature.Attributes ?? new Dictionary<string, object>(),
-            Key = feature.Key
-        };
-    }
+    //    if (_parameters.Srid != SridHelper.WebMercator && geometry.Srid == SridHelper.WebMercator)
+    //    {
+    //        if (_parameters.Srid == SridHelper.GeodeticWGS84)
+    //            geometry = geometry.Transform(MapProjects.WebMercatorToGeodeticWgs84, SridHelper.GeodeticWGS84);
+    //        else
+    //            geometry = geometry.Transform(p => p, _parameters.Srid);
+    //    }
+
+    //    var wkbBytes = geometry.AsWkb();
+
+    //    var isNew = feature.Status == Sta.Common.Enums.FeatureStatus.New;
+
+    //    return new FeatureDto
+    //    {
+    //        Id = isNew ? 0 : feature.Id,
+    //        Shape = wkbBytes ?? Array.Empty<byte>(),
+    //        Attributes = feature.Attributes ?? new Dictionary<string, object>(),
+    //        Key = feature.Key,
+    //        Srid = feature.Srid
+    //    };
+    //}
 
     private static void ApplyRowVersion(Feature<Point> feature, byte[]? rowVersion)
     {

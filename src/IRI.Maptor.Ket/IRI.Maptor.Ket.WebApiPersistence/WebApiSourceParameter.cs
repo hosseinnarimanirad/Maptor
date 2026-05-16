@@ -4,8 +4,6 @@ namespace IRI.Maptor.Ket.WebApiPersistence;
 
 public class WebApiSourceParameter
 {
-    //public string BaseUrl { get; set; }
-
     public string? BearerToken { get; set; }
 
     public Dictionary<string, string>? Headers { get; set; }
@@ -19,10 +17,10 @@ public class WebApiSourceParameter
     /// Use for APIs where the list endpoint is a custom path (e.g. "/Substation/ListSubstat").
     /// </summary>
     public string ListUrl { get; set; }
+
     public string SyncUrl { get; set; }
 
     public WebApiSourceParameter(
-        //string baseUrl,
         string listUrl,
         string syncUrl,
         string? bearerToken = null,
@@ -30,7 +28,6 @@ public class WebApiSourceParameter
         int srid = SridHelper.WebMercator,
         string? idColumnName = null)
     {
-        //BaseUrl = baseUrl;
         ListUrl = listUrl;
         SyncUrl = syncUrl;
 

@@ -19,5 +19,9 @@
       <Pack>True</Pack>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs\" />
+  </ItemGroup>
    
 </Project>
