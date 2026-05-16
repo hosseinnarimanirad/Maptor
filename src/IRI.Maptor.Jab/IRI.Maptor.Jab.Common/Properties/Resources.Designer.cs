@@ -4562,6 +4562,33 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Email Address.
+        /// </summary>
+        public static string validation_msg_invalidEmail {
+            get {
+                return ResourceManager.GetString("validation_msg_invalidEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot be null or empty.
+        /// </summary>
+        public static string validation_msg_nullOrEmptyString {
+            get {
+                return ResourceManager.GetString("validation_msg_nullOrEmptyString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown Exception.
+        /// </summary>
+        public static string validation_msg_unknownError {
+            get {
+                return ResourceManager.GetString("validation_msg_unknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Name.
         /// </summary>
         public static string wat_security_userName {

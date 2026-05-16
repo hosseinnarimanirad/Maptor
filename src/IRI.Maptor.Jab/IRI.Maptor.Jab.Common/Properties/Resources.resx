@@ -1658,4 +1658,13 @@
   <data name="dialog_common_yes" xml:space="preserve">
     <value>Yes</value>
   </data>
+  <data name="validation_msg_invalidEmail" xml:space="preserve">
+    <value>Invalid Email Address</value>
+  </data>
+  <data name="validation_msg_unknownError" xml:space="preserve">
+    <value>Unknown Exception</value>
+  </data>
+  <data name="validation_msg_nullOrEmptyString" xml:space="preserve">
+    <value>Cannot be null or empty</value>
+  </data>
 </root>

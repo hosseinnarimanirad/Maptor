@@ -31,7 +31,7 @@
                 <TextBox Grid.Column="1"
                          Style="{StaticResource IRI.Maptor.Styles.TextBox.Large}"
                          mahApp:TextBoxHelper.Watermark="{Binding [common_username], Source={StaticResource Localization}}"
-                         Text="{Binding ElementName=root, Path=UserNameOrEmail, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                         Text="{Binding ElementName=root, Path=UserNameOrEmail, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
                 </TextBox>
             </Grid>
         </Border>

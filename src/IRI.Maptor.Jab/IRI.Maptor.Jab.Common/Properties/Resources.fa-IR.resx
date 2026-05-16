@@ -1617,4 +1617,13 @@
   <data name="dialog_common_yes" xml:space="preserve">
     <value>بله</value>
   </data>
+  <data name="validation_msg_invalidEmail" xml:space="preserve">
+    <value>ادرس ایمیل نامعتبر است</value>
+  </data>
+  <data name="validation_msg_unknownError" xml:space="preserve">
+    <value>خطای ناشناخته</value>
+  </data>
+  <data name="validation_msg_nullOrEmptyString" xml:space="preserve">
+    <value>فیلد نمی‌تواند خالی باشد</value>
+  </data>
 </root>

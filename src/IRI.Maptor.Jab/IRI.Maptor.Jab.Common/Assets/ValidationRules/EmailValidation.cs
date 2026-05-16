@@ -21,14 +21,22 @@ namespace IRI.Maptor.Jab.Common.ValidationRules
                 {
                     Regex regex = new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
 
-                    return new ValidationResult(regex.IsMatch(stringValue), null);
+                    var isValid = regex.IsMatch(stringValue);
+
+                    var errorContent = Localization.LocalizationManager.Instance["validation_msg_invalidEmail"];
+
+                    return new ValidationResult(isValid, isValid ? null : errorContent);
                 }
 
-                return new ValidationResult(false, "invalid");
+                var content = Localization.LocalizationManager.Instance["validation_msg_nullOrEmptyString"];
+
+                return new ValidationResult(false, content);
             }
             catch
             {
-                return new ValidationResult(false, "invalid");
+                var error = Localization.LocalizationManager.Instance["validation_msg_unknownError"];
+
+                return new ValidationResult(false, error);
             }
 
 
