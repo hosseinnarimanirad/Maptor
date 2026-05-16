@@ -49,7 +49,7 @@
                             Visibility="{Binding ElementName=layoutRoot, Path=ShowZoomLevel, Converter={StaticResource boolToVisibilityConverter}}">
                     <TextBlock Text="("/>
                     <TextBlock Text="{Binding [map_scalebar_zoomLevel], Source={StaticResource Localization}, StringFormat={}{0}}"/>
-                    <TextBlock Text="{Binding ElementName=layoutRoot, Path=ZoomLevel, StringFormat={}{0}, Converter={StaticResource localizedNumberConverter}, FallbackValue=-1}" Margin="4,0,0,0"/>
+                    <TextBlock Text="{Binding ElementName=layoutRoot, Path=ZoomLevel, StringFormat={}{0}, Converter={StaticResource localizedNumberConverter}, ConverterParameter=N0, FallbackValue=-1}" Margin="4,0,0,0"/>
                     <TextBlock Text=")"/>
                 </StackPanel>
             </StackPanel>
