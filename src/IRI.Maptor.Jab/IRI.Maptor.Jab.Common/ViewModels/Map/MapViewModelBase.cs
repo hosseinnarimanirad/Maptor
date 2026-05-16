@@ -1954,7 +1954,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public void AddDrawingItem(DrawingItemLayer item)
     {
-        DrawingItems.Add(item);
+        DrawingItems.Insert(0, item);
 
         //this.AddLayer(item.AssociatedLayer);
         AddLayer(item);
@@ -2024,7 +2024,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         var otherLayer = DrawingItems[index + 1];
 
-        ReorderDrawingItems(SelectedDrawingItem, otherLayer);
+        SwapDrawingItems(SelectedDrawingItem, otherLayer);
     }
 
     public void MoveDrawingItemUp()
@@ -2036,36 +2036,48 @@ public abstract class MapViewModelBase : ViewModelBase
 
         var otherLayer = DrawingItems[index - 1];
 
-        ReorderDrawingItems(SelectedDrawingItem, otherLayer);
+        SwapDrawingItems(SelectedDrawingItem, otherLayer);
     }
 
-    public void ReorderDrawingItems(DrawingItemLayer first, DrawingItemLayer second)
+    public void SwapDrawingItems(DrawingItemLayer first, DrawingItemLayer second)
     {
-        var newFirstIndex = DrawingItems.IndexOf(second);
+        // 1. Guard against null or same reference
+        if (first == null || second == null) return;
+        if (first == second) return;
 
+        var newFirstIndex = DrawingItems.IndexOf(second);
         var newSecondIndex = DrawingItems.IndexOf(first);
 
+        // Validate that both items exist
+        if (newFirstIndex == -1 || newSecondIndex == -1)
+            throw new InvalidOperationException("One of the items was not found in the collection.");
+
+        // Swap the ZIndex values
         var tempZIndex = first.ZIndex;
 
         first.ZIndex = second.ZIndex;
 
         second.ZIndex = tempZIndex;
 
-        RemoveDrawingItem(first);
-        RemoveDrawingItem(second);
+        DrawingItems.Move(newFirstIndex, newSecondIndex);
 
-        if (first.ZIndex < second.ZIndex)
-        {
-            InsertDrawingItem(newFirstIndex, first);
+        Refresh(isNewExtent: false);
 
-            InsertDrawingItem(newSecondIndex, second);
-        }
-        else
-        {
-            InsertDrawingItem(newSecondIndex, second);
+        //RemoveDrawingItem(first);
+        //RemoveDrawingItem(second);
 
-            InsertDrawingItem(newFirstIndex, first);
-        }
+        //if (newSecondIndex < newFirstIndex)
+        //{
+        //    InsertDrawingItem(newSecondIndex, second);
+
+        //    InsertDrawingItem(newFirstIndex, first);
+        //}
+        //else
+        //{
+        //    InsertDrawingItem(newFirstIndex, first);
+
+        //    InsertDrawingItem(newSecondIndex, second);
+        //}
     }
 
     private const string maptorDrawingFileExtension = "mtd";

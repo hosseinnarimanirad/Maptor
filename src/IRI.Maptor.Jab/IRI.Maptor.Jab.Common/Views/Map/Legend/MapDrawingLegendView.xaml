@@ -181,7 +181,7 @@
                                 ToolTip="{Binding [cmd_drawingLegend_openAll], Source={StaticResource Localization}}">
                             <iconPacks:PackIconMaterial Kind="FileMultiple" />
                         </Button>
-                      
+
                         <Button Command="{Binding AddGeoJsonToDrawingItemsCommand}"
                                 Style="{StaticResource circleButtonDarkOverride}"                                
                                 ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
@@ -262,17 +262,24 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <!--GroupName="{Binding ElementName=root, Path=GroupName}"-->
-                    <RadioButton Style="{StaticResource {x:Type ToggleButton}}"
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!--<TextBlock Grid.Column="0" Text="{Binding ZIndex}" Margin="4"/>-->
+                        <RadioButton Grid.Column="1" Style="{StaticResource {x:Type ToggleButton}}"
                                  DataContext="{Binding }"
                                  IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}">
-                        <maptor:MapLegendItemView ShowReloadData="False" ShowMoreOptions="False"
+                            <maptor:MapLegendItemView ShowReloadData="False" ShowMoreOptions="False"
                                                 Title="{Binding LayerName, Mode=TwoWay}"
                                                 Symbology="{Binding DefaultSymbology}"  
                                                 IsEditable="True" Commands="{Binding Commands}" 
                                                 IsChecked="{Binding IsSelectedInToc}"
                                                 TitleFontSize="{Binding ElementName=root, Path=TitleFontSize}"/>
-                    </RadioButton>
-
+                        </RadioButton>
+                        
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

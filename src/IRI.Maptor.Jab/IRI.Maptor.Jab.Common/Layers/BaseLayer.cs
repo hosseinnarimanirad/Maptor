@@ -272,7 +272,18 @@ public abstract class BaseLayer : Notifier, ILayer
 
     //public bool IsValid { get; set; } = true;
 
-    public int ZIndex { get; set; }
+    //public int ZIndex { get; set; }
+    private int _zIndex;
+    public int ZIndex
+    {
+        get { return _zIndex; }
+        set
+        {
+            _zIndex = value;
+            RaisePropertyChanged();
+        }
+    }
+
 
     // is layer discoverable in identify
     public bool IsSearchable { get; set; } = false;

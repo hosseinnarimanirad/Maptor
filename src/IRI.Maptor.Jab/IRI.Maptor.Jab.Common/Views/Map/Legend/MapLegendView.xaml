@@ -217,7 +217,8 @@
                 </ToggleButton>
                 <mahApp:Badged Grid.Column="2" BadgePlacementMode="BottomLeft" BadgeMargin="0"
                                 Margin="0" Padding="0" Width="24" Height="22"
-                                Badge="{Binding LegendViewModel.SelectedDataSourceKindCount, ElementName=root, Converter={StaticResource localizedNumberConverter}}"
+                               FontFamily="{StaticResource iranSans}"
+                                Badge="{Binding LegendViewModel.SelectedDataSourceKindCount, ElementName=root, Converter={StaticResource localizedNumberConverter}, ConverterParameter=N0}"
                                 Visibility="{Binding LegendViewModel.ShowSelectedDataSourceKindCount, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}"/>
                 <!--{Binding IsChecked, ElementName=dataSourceKindFilterToggle}-->
                 <Popup IsOpen="{Binding IsChecked, ElementName=dataSourceKindFilterToggle}"
