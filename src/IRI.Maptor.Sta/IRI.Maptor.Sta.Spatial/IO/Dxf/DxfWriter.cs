@@ -228,7 +228,7 @@ public class DxfWriter
         sb.AppendLine("2");
         sb.AppendLine("TABLES");
 
-        // ---------- VPORT table (critical for initial view) ----------
+        // ========== VPORT table ==========
         sb.AppendLine("0");
         sb.AppendLine("TABLE");
         sb.AppendLine("2");
@@ -268,7 +268,7 @@ public class DxfWriter
             double centerX = (bbox.Value.XMin + bbox.Value.XMax) / 2.0;
             double centerY = (bbox.Value.YMin + bbox.Value.YMax) / 2.0;
             double height = bbox.Value.YMax - bbox.Value.YMin;
-            double viewHeight = height * 1.2; // add 20% margin
+            double viewHeight = height * 1.2;
             var inv = CultureInfo.InvariantCulture;
 
             sb.AppendLine("12");
@@ -291,7 +291,7 @@ public class DxfWriter
         sb.AppendLine("0");
         sb.AppendLine("ENDTAB");
 
-        // ---------- LTYPE table (linetypes) ----------
+        // ========== LTYPE table – FIXED COUNT ==========
         sb.AppendLine("0");
         sb.AppendLine("TABLE");
         sb.AppendLine("2");
@@ -301,7 +301,7 @@ public class DxfWriter
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTable");
         sb.AppendLine("70");
-        sb.AppendLine("1");
+        sb.AppendLine("3");          // ← 3 entries, not 1
 
         // ByBlock
         sb.AppendLine("0");
@@ -372,7 +372,7 @@ public class DxfWriter
         sb.AppendLine("0");
         sb.AppendLine("ENDTAB");
 
-        // ---------- LAYER table ----------
+        // ========== LAYER table ==========
         sb.AppendLine("0");
         sb.AppendLine("TABLE");
         sb.AppendLine("2");
@@ -404,7 +404,217 @@ public class DxfWriter
         sb.AppendLine("0");
         sb.AppendLine("ENDTAB");
 
-        // ---------- BLOCK_RECORD table ----------
+        // ========== STYLE table ==========
+        sb.AppendLine("0");
+        sb.AppendLine("TABLE");
+        sb.AppendLine("2");
+        sb.AppendLine("STYLE");
+        sb.AppendLine("5");
+        sb.AppendLine("3");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbSymbolTable");
+        sb.AppendLine("70");
+        sb.AppendLine("1");
+
+        sb.AppendLine("0");
+        sb.AppendLine("STYLE");
+        sb.AppendLine("5");
+        sb.AppendLine("11");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbSymbolTableRecord");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbTextStyleTableRecord");
+        sb.AppendLine("2");
+        sb.AppendLine("Standard");
+        sb.AppendLine("70");
+        sb.AppendLine("0");
+        sb.AppendLine("40");
+        sb.AppendLine("0.0");
+        sb.AppendLine("41");
+        sb.AppendLine("1.0");
+        sb.AppendLine("50");
+        sb.AppendLine("0.0");
+        sb.AppendLine("71");
+        sb.AppendLine("0");
+        sb.AppendLine("42");
+        sb.AppendLine("0.2");
+        sb.AppendLine("3");
+        sb.AppendLine("txt");
+        sb.AppendLine("4");
+        sb.AppendLine("");
+
+        sb.AppendLine("0");
+        sb.AppendLine("ENDTAB");
+
+        // ========== VIEW table ==========
+        sb.AppendLine("0");
+        sb.AppendLine("TABLE");
+        sb.AppendLine("2");
+        sb.AppendLine("VIEW");
+        sb.AppendLine("5");
+        sb.AppendLine("6");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbSymbolTable");
+        sb.AppendLine("70");
+        sb.AppendLine("0");
+        sb.AppendLine("0");
+        sb.AppendLine("ENDTAB");
+
+        // ========== UCS table ==========
+        sb.AppendLine("0");
+        sb.AppendLine("TABLE");
+        sb.AppendLine("2");
+        sb.AppendLine("UCS");
+        sb.AppendLine("5");
+        sb.AppendLine("7");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbSymbolTable");
+        sb.AppendLine("70");
+        sb.AppendLine("0");
+        sb.AppendLine("0");
+        sb.AppendLine("ENDTAB");
+
+        // ========== APPID table (CRITICAL) ==========
+        sb.AppendLine("0");
+        sb.AppendLine("TABLE");
+        sb.AppendLine("2");
+        sb.AppendLine("APPID");
+        sb.AppendLine("5");
+        sb.AppendLine("9");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbSymbolTable");
+        sb.AppendLine("70");
+        sb.AppendLine("1");
+
+        sb.AppendLine("0");
+        sb.AppendLine("APPID");
+        sb.AppendLine("5");
+        sb.AppendLine("12");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbSymbolTableRecord");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbRegAppTableRecord");
+        sb.AppendLine("2");
+        sb.AppendLine("ACAD");
+        sb.AppendLine("70");
+        sb.AppendLine("0");
+
+        sb.AppendLine("0");
+        sb.AppendLine("ENDTAB");
+
+        // ========== DIMSTYLE table ==========
+        sb.AppendLine("0");
+        sb.AppendLine("TABLE");
+        sb.AppendLine("2");
+        sb.AppendLine("DIMSTYLE");
+        sb.AppendLine("5");
+        sb.AppendLine("A");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbSymbolTable");
+        sb.AppendLine("70");
+        sb.AppendLine("1");
+
+        sb.AppendLine("0");
+        sb.AppendLine("DIMSTYLE");
+        sb.AppendLine("5");
+        sb.AppendLine("D");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbSymbolTableRecord");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbDimStyleTableRecord");
+        sb.AppendLine("2");
+        sb.AppendLine("Standard");
+        sb.AppendLine("70");
+        sb.AppendLine("0");
+        sb.AppendLine("3");
+        sb.AppendLine("");
+        sb.AppendLine("4");
+        sb.AppendLine("");
+        sb.AppendLine("5");
+        sb.AppendLine("");
+        sb.AppendLine("6");
+        sb.AppendLine("");
+        sb.AppendLine("7");
+        sb.AppendLine("");
+        sb.AppendLine("40");
+        sb.AppendLine("0.0");
+        sb.AppendLine("41");
+        sb.AppendLine("0.0");
+        sb.AppendLine("42");
+        sb.AppendLine("0.0");
+        sb.AppendLine("43");
+        sb.AppendLine("0.0");
+        sb.AppendLine("44");
+        sb.AppendLine("0.0");
+        sb.AppendLine("45");
+        sb.AppendLine("0.0");
+        sb.AppendLine("46");
+        sb.AppendLine("0.0");
+        sb.AppendLine("47");
+        sb.AppendLine("0.0");
+        sb.AppendLine("48");
+        sb.AppendLine("0.0");
+        sb.AppendLine("140");
+        sb.AppendLine("0.0");
+        sb.AppendLine("141");
+        sb.AppendLine("0.0");
+        sb.AppendLine("142");
+        sb.AppendLine("0.0");
+        sb.AppendLine("143");
+        sb.AppendLine("0.0");
+        sb.AppendLine("144");
+        sb.AppendLine("0.0");
+        sb.AppendLine("145");
+        sb.AppendLine("0.0");
+        sb.AppendLine("146");
+        sb.AppendLine("0.0");
+        sb.AppendLine("147");
+        sb.AppendLine("0.0");
+        sb.AppendLine("73");
+        sb.AppendLine("0");
+        sb.AppendLine("74");
+        sb.AppendLine("0");
+        sb.AppendLine("77");
+        sb.AppendLine("1");
+        sb.AppendLine("78");
+        sb.AppendLine("8");
+        sb.AppendLine("79");
+        sb.AppendLine("0");
+        sb.AppendLine("170");
+        sb.AppendLine("0");
+        sb.AppendLine("171");
+        sb.AppendLine("3");
+        sb.AppendLine("172");
+        sb.AppendLine("1");
+        sb.AppendLine("173");
+        sb.AppendLine("0");
+        sb.AppendLine("174");
+        sb.AppendLine("0");
+        sb.AppendLine("175");
+        sb.AppendLine("0");
+        sb.AppendLine("176");
+        sb.AppendLine("3");
+        sb.AppendLine("177");
+        sb.AppendLine("1");
+        sb.AppendLine("178");
+        sb.AppendLine("0");
+        sb.AppendLine("270");
+        sb.AppendLine("2");
+        sb.AppendLine("271");
+        sb.AppendLine("2");
+        sb.AppendLine("272");
+        sb.AppendLine("2");
+        sb.AppendLine("273");
+        sb.AppendLine("2");
+        sb.AppendLine("274");
+        sb.AppendLine("3");
+        sb.AppendLine("275");
+        sb.AppendLine("0");
+
+        sb.AppendLine("0");
+        sb.AppendLine("ENDTAB");
+
+        // ========== BLOCK_RECORD table (only *Model_Space) ==========
         sb.AppendLine("0");
         sb.AppendLine("TABLE");
         sb.AppendLine("2");
@@ -414,9 +624,8 @@ public class DxfWriter
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTable");
         sb.AppendLine("70");
-        sb.AppendLine("2");
+        sb.AppendLine("1");          // only one record
 
-        // *Model_Space record
         sb.AppendLine("0");
         sb.AppendLine("BLOCK_RECORD");
         sb.AppendLine("5");
@@ -436,32 +645,14 @@ public class DxfWriter
         sb.AppendLine("281");
         sb.AppendLine("0");
 
-        // *Paper_Space record (minimal)
-        sb.AppendLine("0");
-        sb.AppendLine("BLOCK_RECORD");
-        sb.AppendLine("5");
-        sb.AppendLine("1B");
-        sb.AppendLine("100");
-        sb.AppendLine("AcDbSymbolTableRecord");
-        sb.AppendLine("100");
-        sb.AppendLine("AcDbBlockTableRecord");
-        sb.AppendLine("2");
-        sb.AppendLine("*Paper_Space");
-        sb.AppendLine("340");
-        sb.AppendLine("1E");
-        sb.AppendLine("70");
-        sb.AppendLine("0");
-        sb.AppendLine("280");
-        sb.AppendLine("1");
-        sb.AppendLine("281");
-        sb.AppendLine("0");
+        // *Paper_Space record removed because its block is not defined.
+        // If you want to keep it, uncomment the block definition in WriteBlocks().
 
         sb.AppendLine("0");
         sb.AppendLine("ENDTAB");
 
         sb.AppendLine("0");
         sb.AppendLine("ENDSEC");
-        //sb.AppendLine()
     }
 
     // ----------------------------------------------------------------------
@@ -516,9 +707,50 @@ public class DxfWriter
         sb.AppendLine("100");
         sb.AppendLine("AcDbBlockEnd");
 
+        // If you want *Paper_Space, uncomment the following block:
+        /*
+        sb.AppendLine("0");
+        sb.AppendLine("BLOCK");
+        sb.AppendLine("5");
+        sb.AppendLine("1E");
+        sb.AppendLine("330");
+        sb.AppendLine("1B");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbEntity");
+        sb.AppendLine("8");
+        sb.AppendLine("0");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbBlockBegin");
+        sb.AppendLine("2");
+        sb.AppendLine("*Paper_Space");
+        sb.AppendLine("70");
+        sb.AppendLine("0");
+        sb.AppendLine("10");
+        sb.AppendLine("0.0");
+        sb.AppendLine("20");
+        sb.AppendLine("0.0");
+        sb.AppendLine("30");
+        sb.AppendLine("0.0");
+        sb.AppendLine("3");
+        sb.AppendLine("*Paper_Space");
+        sb.AppendLine("1");
+        sb.AppendLine("");
+        sb.AppendLine("0");
+        sb.AppendLine("ENDBLK");
+        sb.AppendLine("5");
+        sb.AppendLine("1F");
+        sb.AppendLine("330");
+        sb.AppendLine("1E");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbEntity");
+        sb.AppendLine("8");
+        sb.AppendLine("0");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbBlockEnd");
+        */
+
         sb.AppendLine("0");
         sb.AppendLine("ENDSEC");
-        //sb.AppendLine()
     }
 
     // ----------------------------------------------------------------------

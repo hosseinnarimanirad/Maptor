@@ -916,6 +916,18 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
 
+    private double _currentHeight;
+    public double CurrentHeight
+    {
+        get { return _currentHeight; }
+        set
+        {
+            _currentHeight = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
     #endregion
 
 
