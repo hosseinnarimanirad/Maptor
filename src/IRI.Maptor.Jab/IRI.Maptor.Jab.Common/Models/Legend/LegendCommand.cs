@@ -15,6 +15,7 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using System.Globalization;
 
 namespace IRI.Maptor.Jab.Common.Models.Legend;
 
@@ -249,7 +250,7 @@ public class LegendCommand : LegendCommandBase
 
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsShapefile))
         {
-            PathMarkup = geometry?.ToString(),// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile,
+            PathMarkup = geometry?.ToString(CultureInfo.InvariantCulture),// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile,
             Layer = layer,
         };
 
@@ -282,7 +283,7 @@ public class LegendCommand : LegendCommandBase
 
         var result = new LegendCommand(nameof(Resources.cmd_legendItem_exportAsGeoJson))
         {
-            PathMarkup = geometry?.ToString(),// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,
+            PathMarkup = geometry?.ToString(CultureInfo.InvariantCulture),// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,
             Layer = layer,
         };
 
@@ -405,7 +406,7 @@ public class LegendCommand : LegendCommandBase
 
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsShapefile))
         {
-            PathMarkup = geometry?.ToString(),// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile,
+            PathMarkup = geometry?.ToString(CultureInfo.InvariantCulture),// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.shapefile,
             Layer = layer,
         };
 
@@ -457,7 +458,7 @@ public class LegendCommand : LegendCommandBase
 
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsGeoJson))
         {
-            PathMarkup = geometry?.ToString(),// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,
+            PathMarkup = geometry?.ToString(CultureInfo.InvariantCulture),// IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,
             Layer = layer,
         };
 
@@ -496,7 +497,7 @@ public class LegendCommand : LegendCommandBase
 
         var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsCsv))
         {
-            PathMarkup = geometry!.ToString(),//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,
+            PathMarkup = geometry!.ToString(CultureInfo.InvariantCulture),//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,
             Layer = layer,
         };
 
