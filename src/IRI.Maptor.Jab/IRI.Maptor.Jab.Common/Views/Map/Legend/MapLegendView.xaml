@@ -11,9 +11,7 @@
     <maptor:NotifiableUserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
-                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/> 
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/MenuIconStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -47,13 +45,7 @@
             </CollectionViewSource>
 
             <HierarchicalDataTemplate x:Key="legendTemplate">
-                <HierarchicalDataTemplate.ItemsSource>
-                    <MultiBinding Converter="{StaticResource filteredSubLayersConverter}">
-                        <Binding Path="SubLayers"/>
-                        <Binding Path="LegendViewModel.LayerNameFilterText" ElementName="root"/>
-                        <Binding Path="LegendViewModel.DataSourceKindFilterItems" ElementName="root"/>
-                    </MultiBinding>
-                </HierarchicalDataTemplate.ItemsSource>
+
                 <HierarchicalDataTemplate.Resources>
                     <Style TargetType="ToggleButton">
                         <Setter Property="BorderThickness" Value="4,0,0,0"/>
@@ -83,24 +75,42 @@
                         </Style.Triggers>
                     </Style>
                 </HierarchicalDataTemplate.Resources>
-                <!--GroupName="{Binding ElementName=root, Path=GroupName}"-->
-                <RadioButton Style="{StaticResource {x:Type ToggleButton}}" 
+
+                <HierarchicalDataTemplate.ItemsSource>
+                    <MultiBinding Converter="{StaticResource filteredSubLayersConverter}">
+                        <Binding Path="SubLayers"/>
+                        <Binding Path="LegendViewModel.LayerNameFilterText" ElementName="root"/>
+                        <Binding Path="LegendViewModel.DataSourceKindFilterItems" ElementName="root"/>
+                    </MultiBinding>
+                </HierarchicalDataTemplate.ItemsSource>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding ZIndex}" Margin="4" ToolTip="ZIndex"/>
+                    <TextBlock Grid.Column="1" Text="{Binding TocOrder}" Margin="4" ToolTip="TocOrder"/>
+                    <!--GroupName="{Binding ElementName=root, Path=GroupName}"-->
+                    <RadioButton Grid.Column="2" Style="{StaticResource {x:Type ToggleButton}}" 
                         HorizontalAlignment="Stretch" 
                         DataContext="{Binding }" 
                         IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}"
                              IsEnabled="True"
                         >
-                        <!--IsEnabled="{Binding IsInScaleRange}"--> 
-                    <RadioButton.InputBindings>
-                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding ToggleExpandCommand}"/>
-                    </RadioButton.InputBindings>
-                    <maptor:MapLegendItemView Title="{Binding LayerName}" 
+                        <!--IsEnabled="{Binding IsInScaleRange}"-->
+                        <RadioButton.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding ToggleExpandCommand}"/>
+                        </RadioButton.InputBindings>
+                        <maptor:MapLegendItemView Title="{Binding LayerName}" 
                                     Symbology="{Binding DefaultSymbology}"  
                                     HorizontalAlignment="Stretch"
                                     Commands="{Binding Commands}"
                                     IsChecked="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}"
                                     TitleFontSize="{Binding ElementName=root, Path=TitleFontSize}"/>
-                </RadioButton>
+                    </RadioButton>
+                </Grid>
             </HierarchicalDataTemplate>
 
             <Style  x:Key="menuButton" TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Flat}">
@@ -120,6 +130,7 @@
             </Style>
             <Style x:Key="menuTextBlock" TargetType="TextBlock">
                 <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
                 <Setter Property="Margin" Value="6,0"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -193,6 +204,8 @@
             <Grid Grid.Row="2" Margin="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -306,7 +319,7 @@
                     </Border>
                 </Popup>
 
-                <ToggleButton Grid.Column="3" x:Name="importLayerToggle"
+                <ToggleButton Grid.Column="5" x:Name="importLayerToggle"
                               Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                               VerticalAlignment="Center" Margin="0"
                               ToolTip="{Binding [cmd_legend_importLayer], Source={StaticResource Localization}}">
@@ -344,7 +357,7 @@
 
                             <!--KMZ-->
                             <Button Style="{StaticResource menuButton}" Command="{Binding AddKmzfileCommand}">
-                                <StackPanel Orientation="Horizontal"> 
+                                <StackPanel Orientation="Horizontal">
                                     <Border Style="{StaticResource menuBorder}"
                                             Background="{Binding Source={x:Static sta:DataSourceKind.Kmz}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
@@ -507,7 +520,7 @@
                   ItemsSource="{Binding Source={StaticResource collectionViewSource}}"
                   ItemTemplate="{StaticResource legendTemplate}"
                   VirtualizingPanel.IsVirtualizing="False"
-                    VirtualizingPanel.VirtualizationMode="Standard">
+                  VirtualizingPanel.VirtualizationMode="Standard">
             <!--<TreeView.Resources>
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                     <Setter Property="HorizontalContentAlignment" Value="Left" />

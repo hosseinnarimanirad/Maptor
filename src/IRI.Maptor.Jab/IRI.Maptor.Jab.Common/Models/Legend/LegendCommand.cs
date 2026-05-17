@@ -16,6 +16,7 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using System.Globalization;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace IRI.Maptor.Jab.Common.Models.Legend;
 
@@ -311,6 +312,40 @@ public class LegendCommand : LegendCommandBase
         return result;
     }
 
+
+    //public static ILegendCommand CreateMoveLayerOrderUp(MapViewModelBase map, VectorLayer layer)
+    //{
+    //    var result = new LegendCommand(nameof(Resources.cmd_legend_moveUp))
+    //    {
+    //        PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.Image }.Data,
+    //        Layer = layer,
+    //    };
+
+    //    result.Command = new RelayCommand(async param =>
+    //    {
+    //        try
+    //        {
+
+    //            if (layer.Parent == null)
+    //            {
+    //                var index = map.Layers.IndexOf(layer);
+    //            }
+    //            else
+    //            {
+    //            }
+
+    //            var otherLayer = DrawingItems[index - 1];
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            await map.DialogService.ShowMessageAsync(ex.Message, null, param);
+    //        }
+    //    });
+
+    //    return result;
+
+
+    //}
 
 
     internal static List<Func<MapViewModelBase, ILayer, ILegendCommand>> GetDefaultVectorLayerCommands()

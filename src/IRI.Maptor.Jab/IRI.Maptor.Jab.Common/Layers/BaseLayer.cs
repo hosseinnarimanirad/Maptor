@@ -378,6 +378,21 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
+    public bool CanReorderInToc =>
+        Type == LayerType.ImagePyramid ||
+        Type == LayerType.Raster ||
+        Type == LayerType.VectorLayer ||
+        Type == LayerType.GroupLayer;
+
+    //y(i => i.Type == LayerType.RightClickOption)
+    //                             //.ThenBy(i => i.Type == (LayerType.MoveableItem))
+    //                             .ThenBy(i => i.Type == LayerType.EditableItem)
+    //                             .ThenBy(i => i.Type == LayerType.Complex)
+    //                             .ThenBy(e => e.Type == LayerType.Highlight)
+    //                             .ThenBy(e => e.Type == LayerType.Selection)
+    //                             .ThenBy(i => i.Type == LayerType.Drawing)
+    //                             .ThenByDescending(i => i.Type == LayerType.BaseMap)
+
     private bool _canUserDelete = true;
     public bool CanUserDelete
     {
@@ -402,6 +417,30 @@ public abstract class BaseLayer : Notifier, ILayer
     }
 
     public virtual bool HasMultiSymbolizers => false;
+
+
+    private bool _canMoveLayerUp;
+    public bool CanMoveLayerUp
+    {
+        get { return _canMoveLayerUp; }
+        set
+        {
+            _canMoveLayerUp = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private bool _canMoveLayerDown;
+    public bool CanMoveLayerDown
+    {
+        get { return _canMoveLayerDown; }
+        set
+        {
+            _canMoveLayerDown = value;
+            RaisePropertyChanged();
+        }
+    }
 
     #endregion
 
@@ -569,6 +608,9 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public Action<ILayer> RequestShowLayerSettings { get; set; }
 
+    public Func<ILayer, Task> RequestMoveLayerDown { get; set; }
+    public Func<ILayer, Task> RequestMoveLayerUp { get; set; }
+
     protected virtual void BindWithFrameworkElement(FrameworkElement? element)
     {
         if (element is null)
@@ -580,6 +622,7 @@ public abstract class BaseLayer : Notifier, ILayer
         Binding binding5 = new Binding() { Source = this, Path = new PropertyPath(nameof(Opacity)), Mode = BindingMode.TwoWay };
         element.SetBinding(UIElement.OpacityProperty, binding5);
     }
+
 
 
     //public void BindWithFrameworkElement(FrameworkElement? element)
@@ -805,6 +848,50 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
+    private RelayCommand _moveLayerUpCommand;
+    public RelayCommand MoveLayerUpCommand
+    {
+        get
+        {
+            if (_moveLayerUpCommand == null)
+            {
+                _moveLayerUpCommand = new RelayCommand(
+                    async param =>
+                    {
+                        if (RequestMoveLayerUp is not null)
+                        {
+                            await this.RequestMoveLayerUp.Invoke(this);
+                        }
+                    },
+                    _ => CanMoveLayerUp);
+            }
+
+            return _moveLayerUpCommand;
+        }
+    }
+
+
+    private RelayCommand _moveLayerDownCommand;
+    public RelayCommand MoveLayerDownCommand
+    {
+        get
+        {
+            if (_moveLayerDownCommand == null)
+            {
+                _moveLayerDownCommand = new RelayCommand(
+                    async param =>
+                    {
+                        if (RequestMoveLayerDown is not null)
+                        {
+                            await this.RequestMoveLayerDown.Invoke(this);
+                        } 
+                    },
+                    _ => CanMoveLayerDown);
+            }
+
+            return _moveLayerDownCommand;
+        }
+    }
 
 
     #region Events

@@ -49,7 +49,7 @@ public class GroupLayer : BaseLayer
 
     public override string ToString()
     {
-        return $"GROUP LAYER - {LayerName}: ({SubLayers?.Count ?? 0})";
+        return $"GROUP LAYER - {LayerName}; Sublayers: ({SubLayers?.Count ?? 0}), TocOrder: {TocOrder}";
     }
 
 }

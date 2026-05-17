@@ -5,6 +5,10 @@ using System.Collections.ObjectModel;
 
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Models.Legend;
+using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Common.Converters;
+using DocumentFormat.OpenXml.InkML;
+using System.Threading.Tasks;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 
@@ -40,7 +44,8 @@ public class LegendViewModel : Notifier
             RaisePropertyChanged(nameof(LayerNameFilterText));
             RaisePropertyChanged(nameof(HasActiveFilter));
 
-            RequestRefresh?.Invoke();
+            RequestRefreshView?.Invoke();
+            RequestNotifyFilterChanged?.Invoke();
         }
     }
 
@@ -52,13 +57,45 @@ public class LegendViewModel : Notifier
         !string.IsNullOrWhiteSpace(_layerNameFilterText) ||
         (SelectedDataSourceKindCount > 0 && SelectedDataSourceKindCount < (_dataSourceKindFilterItems?.Count ?? 0));
 
-    public Action? RequestRefresh { get; set; }
+    public Func<Task>? RequestRefreshView { get; set; }
+
+    public Action? RequestNotifyFilterChanged { get; set; }
 
     public List<DataSourceKind> GetAllowedDataSourceKinds()
     {
         var selected = _dataSourceKindFilterItems?.Where(i => i.IsSelected).Select(i => i.Kind).ToList() ?? [];
 
         return selected;
+    }
+
+    private bool PassKindFilter(ILayer layer)
+    {
+        var allowedKinds = this.GetAllowedDataSourceKinds();
+
+        var passesKindFilter = layer.IsGroupLayer
+            ? FilteredSubLayersConverter.HasDescendantWithAllowedDataSourceKind(layer, allowedKinds)
+            : allowedKinds.Contains(layer.DataSource?.DataSourceKind ?? DataSourceKind.Other);
+
+        return passesKindFilter;
+    }
+
+    private bool PassNameFilter(ILayer layer)
+    {
+        var filter = this.LayerNameFilterText?.Trim();
+
+        if (string.IsNullOrEmpty(filter))
+            return true;
+
+        if (layer.IsGroupLayer)
+            return FilteredSubLayersConverter.HasMatchingDescendant(layer, filter);
+
+        else
+            return layer.LayerName?.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
+    public bool IsFilterPassed(ILayer layer)
+    {
+        return PassKindFilter(layer) && PassNameFilter(layer);
     }
 
     private void DataSourceKindFilterItem_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -72,7 +109,8 @@ public class LegendViewModel : Notifier
             RaisePropertyChanged(nameof(ShowSelectedDataSourceKindCount));
             RaisePropertyChanged(nameof(HasActiveFilter));
 
-            RequestRefresh?.Invoke();
+            RequestRefreshView?.Invoke();
+            RequestNotifyFilterChanged?.Invoke();
         }
     }
 
@@ -91,7 +129,8 @@ public class LegendViewModel : Notifier
             RaisePropertyChanged(nameof(ShowSelectedDataSourceKindCount));
             RaisePropertyChanged(nameof(HasActiveFilter));
 
-            RequestRefresh?.Invoke();
+            RequestRefreshView?.Invoke();
+            RequestNotifyFilterChanged?.Invoke();
         });
 
     private RelayCommand? _clearAllDataSourceKindsCommand;
@@ -109,7 +148,8 @@ public class LegendViewModel : Notifier
             RaisePropertyChanged(nameof(ShowSelectedDataSourceKindCount));
             RaisePropertyChanged(nameof(HasActiveFilter));
 
-            RequestRefresh?.Invoke();
+            RequestRefreshView?.Invoke();
+            RequestNotifyFilterChanged?.Invoke();
         });
 
     private RelayCommand? _clearFilterCommand;
@@ -129,6 +169,7 @@ public class LegendViewModel : Notifier
             RaisePropertyChanged(nameof(ShowSelectedDataSourceKindCount));
             RaisePropertyChanged(nameof(HasActiveFilter));
 
-            RequestRefresh?.Invoke();
+            RequestRefreshView?.Invoke();
+            RequestNotifyFilterChanged?.Invoke();
         });
 }

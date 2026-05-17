@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
@@ -16,7 +18,7 @@ public class FilteredSubLayersConverter : IMultiValueConverter
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         if (values is null || values.Length < 2)
-            return CollectionViewSource.GetDefaultView(EmptyLayers);
+            return GetSortedView(EmptyLayers);
 
         var layers = values[0] as System.Collections.IEnumerable;
 
@@ -27,12 +29,12 @@ public class FilteredSubLayersConverter : IMultiValueConverter
         var allowedKinds = kinds?.Where(k => k.IsSelected).Select(k => k.Kind).ToList() ?? [];
 
         if (layers is null)
-            return CollectionViewSource.GetDefaultView(EmptyLayers);
+            return GetSortedView(EmptyLayers);
          
         var hasNameFilter = !string.IsNullOrEmpty(filterText);
         var hasKindFilter = kinds?.Any(k => k.IsSelected == false) == true;
 
-        var view = CollectionViewSource.GetDefaultView(layers);
+        var view = GetSortedView(layers);
 
         if (!hasNameFilter && !hasKindFilter)
         {
@@ -55,6 +57,20 @@ public class FilteredSubLayersConverter : IMultiValueConverter
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
+    }
+
+    // Helper method: returns an ICollectionView sorted by TocOrder descending
+    private static ICollectionView GetSortedView(IEnumerable collection)
+    {
+        var view = CollectionViewSource.GetDefaultView(collection);
+
+        using (view.DeferRefresh())  // Prevents multiple refreshes
+        {
+            view.SortDescriptions.Clear();
+            view.SortDescriptions.Add(new SortDescription("TocOrder", ListSortDirection.Descending));
+        }
+
+        return view;
     }
 
     private static bool FilterPredicate(ILayer layer, string filterText, List<DataSourceKind> allowedKinds, bool hasNameFilter, bool hasKindFilter)

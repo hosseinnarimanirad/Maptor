@@ -71,13 +71,13 @@ public class LayerManager : Notifier
 
                 if (parentLayer != null && parentLayer.IsGroupLayer && parentLayer.SubLayers?.Contains(layer) == false)
                 {
-                    parentLayer.SubLayers.Add(layer);
+                    parentLayer.SubLayers.Insert(0, layer);
                 }
                 // do not add it to the current layers
             }
             else if (layer.ZIndex > CurrentLayers.Count || layer.ZIndex < 1)
             {
-                CurrentLayers.Add(layer);
+                CurrentLayers.Insert(0, layer);
             }
             else
             {
@@ -92,6 +92,17 @@ public class LayerManager : Notifier
 
         //98.01.20
         //layer.ZIndex = this.allLayers.Count(i => !i.Type.HasFlag(LayerType.Complex) && !i.Type.HasFlag(LayerType.Drawing));
+
+        var layers = layer.Parent != null ?
+            layer.Parent.SubLayers.ToList() :
+            _allLayers.Where(l => l.Parent == null).ToList();
+
+        if (/*layer.TocOrder == 0 ||*/ layers.Any(l => l.TocOrder == layer.TocOrder))
+        {
+            var maxToc = layers.Select(l => l.TocOrder).DefaultIfEmpty(0).Max();
+
+            layer.TocOrder = maxToc + 1;
+        }
 
         _allLayers.Add(layer);
 

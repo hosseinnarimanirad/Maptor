@@ -198,7 +198,7 @@ public class VectorLayer : SymbolizableLayer
 
     #endregion
 
-    public override string ToString() => $"{Enum.GetName(Type)} - {DataSource?.ToString()}";
+    public override string ToString() => $"{Enum.GetName(Type)} - {DataSource?.ToString()}, TocOrder:{TocOrder}";
 
 
     public override async Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)

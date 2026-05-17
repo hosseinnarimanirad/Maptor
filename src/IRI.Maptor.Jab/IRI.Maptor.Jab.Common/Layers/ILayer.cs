@@ -8,6 +8,7 @@ using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using System.Threading.Tasks;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 
@@ -66,6 +67,8 @@ public interface ILayer
 
     int TocOrder { get; set; }
 
+    bool CanReorderInToc { get; }
+
     bool CanUserDelete { get; }
 
     bool IsInScaleRange { get; set; }
@@ -87,6 +90,9 @@ public interface ILayer
     Action<ILayer>? RequestChangeVisibility { get; set; }
 
     Action<ILayer>? RequestRefreshWhenDataLoaded { get; set; }
+
+    public Func<ILayer, Task> RequestMoveLayerDown { get; set; }
+    public Func<ILayer, Task> RequestMoveLayerUp { get; set; }
 
     RelayCommand ChangeSymbologyCommand { get; }
 
@@ -112,6 +118,9 @@ public interface ILayer
     bool HasError { get; }
 
     bool LayerNameCanBeChanged { get; }
+
+    bool CanMoveLayerUp { get; set; }
+    bool CanMoveLayerDown { get; set; }
 
     void UpdateAllChildsVisible();
 }

@@ -26,28 +26,65 @@ public partial class MapLegendView : NotifiableUserControl
     {
         InitializeComponent();
 
-        LegendViewModel = new LegendViewModel();
+        //LegendViewModel = new LegendViewModel();
 
-        LegendViewModel.RequestRefresh = () =>
-        {
-            var cvs = Resources["collectionViewSource"] as CollectionViewSource;
-            if (cvs?.View != null)
-            {
-                Dispatcher.BeginInvoke(() => cvs.View.Refresh(), DispatcherPriority.Loaded);
-            }
-        }; 
+        //LegendViewModel.RequestRefresh = () =>
+        //{
+        //    var cvs = Resources["collectionViewSource"] as CollectionViewSource;
+
+        //    if (cvs?.View != null)
+        //    {
+        //        Dispatcher.BeginInvoke(() => cvs.View.Refresh(), DispatcherPriority.Loaded);
+        //    }
+        //};
     }
-     
-    private LegendViewModel _legendViewModel;
+
+    //private LegendViewModel _legendViewModel;
+    //public LegendViewModel LegendViewModel
+    //{
+    //    get { return _legendViewModel; }
+    //    set
+    //    {
+    //        _legendViewModel = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
+
+
+
     public LegendViewModel LegendViewModel
     {
-        get { return _legendViewModel; }
-        set
-        {
-            _legendViewModel = value;
-            RaisePropertyChanged();
-        }
+        get { return (LegendViewModel)GetValue(LegendViewModelProperty); }
+        set { SetValue(LegendViewModelProperty, value); }
     }
+
+    // Using a DependencyProperty as the backing store for LegendViewModel.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty LegendViewModelProperty =
+        DependencyProperty.Register("LegendViewModel",
+                                    typeof(LegendViewModel),
+                                    typeof(MapLegendView),
+                                    new PropertyMetadata(new PropertyChangedCallback((dp, dpE) =>
+                                    {
+                                        var control = dp as MapLegendView;
+
+                                        var obj = dpE.NewValue as LegendViewModel;
+
+                                        if (obj is null || control is null) return;
+
+                                        obj.RequestRefreshView = async () =>
+                                        {
+                                            var cvs = control.Resources["collectionViewSource"] as CollectionViewSource;
+
+                                            if (cvs?.View != null)
+                                            {
+                                                await control.Dispatcher.BeginInvoke(() => cvs.View.Refresh(), DispatcherPriority.Render);
+                                            }
+                                        };
+
+
+                                    })));
+
+
 
 
     public string GroupName
@@ -157,43 +194,50 @@ public partial class MapLegendView : NotifiableUserControl
             (ShowRasterLayers && item.Type == LayerType.ImagePyramid) ||
             item.Type == LayerType.GroupLayer);
 
-        var allowedKinds = LegendViewModel.GetAllowedDataSourceKinds();
-
-        var passesKindFilter = item.IsGroupLayer
-            ? FilteredSubLayersConverter.HasDescendantWithAllowedDataSourceKind(item, allowedKinds)
-            : IsDataSourceKindAllowed(item, allowedKinds);
-
-        if (!passesKindFilter)
-        {
-            e.Accepted = false;
-            return;
-        }
-
-
-        var filter = LegendViewModel.LayerNameFilterText?.Trim();
-
-        if (string.IsNullOrEmpty(filter))
-        {
-            e.Accepted = passesTypeFilter;
-            return;
-        }
-
         if (!passesTypeFilter)
         {
             e.Accepted = false;
             return;
         }
 
-        if (item.IsGroupLayer)
-            e.Accepted = FilteredSubLayersConverter.HasMatchingDescendant(item, filter);
+        e.Accepted = LegendViewModel.IsFilterPassed(item);
 
-        else
-            e.Accepted = item.LayerName?.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0;
+        //var allowedKinds = LegendViewModel.GetAllowedDataSourceKinds();
+
+        //var passesKindFilter = item.IsGroupLayer
+        //    ? FilteredSubLayersConverter.HasDescendantWithAllowedDataSourceKind(item, allowedKinds)
+        //    : IsDataSourceKindAllowed(item, allowedKinds);
+
+        //var passesKindFilter = LegendViewModel.PassKindFilter(item);
+
+        //if (!passesKindFilter)
+        //{
+        //    e.Accepted = false;
+        //    return;
+        //}
+
+        //var passesLayerNameFilter = LegendViewModel.PassNameFilter(item);
+
+        //e.Accepted = passesLayerNameFilter;
+
+        //var filter = LegendViewModel.LayerNameFilterText?.Trim();
+
+        //if (string.IsNullOrEmpty(filter))
+        //{
+        //    e.Accepted = passesTypeFilter;
+        //    return;
+        //}
+
+        //if (item.IsGroupLayer)
+        //    e.Accepted = FilteredSubLayersConverter.HasMatchingDescendant(item, filter);
+
+        //else
+        //    e.Accepted = item.LayerName?.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
-    private static bool IsDataSourceKindAllowed(ILayer layer, List<DataSourceKind> allowedKinds)
-    {
-        var kind = layer.DataSource?.DataSourceKind ?? DataSourceKind.Other;
-        return allowedKinds.Contains(kind);
-    }
+    //private static bool IsDataSourceKindAllowed(ILayer layer, List<DataSourceKind> allowedKinds)
+    //{
+    //    var kind = layer.DataSource?.DataSourceKind ?? DataSourceKind.Other;
+    //    return allowedKinds.Contains(kind);
+    //}
 }

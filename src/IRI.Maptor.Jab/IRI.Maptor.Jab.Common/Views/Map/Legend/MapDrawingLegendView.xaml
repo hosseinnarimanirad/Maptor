@@ -10,25 +10,13 @@
     <Grid>
         <Grid.Resources>
             <ResourceDictionary>
-                <ResourceDictionary.MergedDictionaries>
-                    <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
-                    <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
+                <ResourceDictionary.MergedDictionaries> 
                     <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
                 <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
-                <!--<Setter Property="HorizontalAlignment" Value="Center"/>
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                    <Setter Property="Width" Value="16"/>-->
-                <!--</Style>-->
-                <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}">
-                    <!--<Setter Property="HorizontalAlignment" Value="Center"/>
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                    <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                    <Setter Property="Width" Value="16"/>-->
-                </Style>
-
+                <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+ 
                 <!--the whole toolds toggle button-->
                 <Style TargetType="ToggleButton">
                     <Setter Property="BorderThickness" Value="4,0,0,0"/>
@@ -267,7 +255,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <!--<TextBlock Grid.Column="0" Text="{Binding ZIndex}" Margin="4"/>-->
+                        <TextBlock Grid.Column="0" Text="{Binding ZIndex}" Margin="4"/>
                         <RadioButton Grid.Column="1" Style="{StaticResource {x:Type ToggleButton}}"
                                  DataContext="{Binding }"
                                  IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}">

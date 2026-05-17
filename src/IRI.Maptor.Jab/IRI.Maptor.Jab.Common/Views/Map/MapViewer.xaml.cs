@@ -540,6 +540,8 @@ public partial class MapViewer : NotifiableUserControl
             AddPointToNewDrawing((sb.Point)p);
         };
 
+        presenter.RequestUpdateZIndex = l => UpdateZIndex(l);
+
         presenter.RequestGetDrawingAsync = (mode, options, display) => GetDrawingAsync(mode, options, display);
 
         presenter.RequestCancelNewDrawing = CancelDrawing;
@@ -851,11 +853,39 @@ public partial class MapViewer : NotifiableUserControl
         if (layer.RequestChangeVisibility is null)
             layer.RequestChangeVisibility = RefreshLayerVisibility;
 
+        if (layer.RequestMoveLayerUp is null)
+        {
+            layer.RequestMoveLayerUp = l => _presenter.MoveLayerUp(l);
+        }
+
+        if (layer.RequestMoveLayerDown is null)
+        {
+            layer.RequestMoveLayerDown = l => _presenter.MoveLayerDown(l);
+        }
+
         if (!layer.SubLayers.IsNullOrEmpty())
         {
             foreach (var sublayer in layer.SubLayers)
             {
                 ConfigureLayer(sublayer);
+            }
+        }
+    }
+
+    private void UpdateZIndex(ILayer layer)
+    {
+        for (int i = 0; i < this.mapView.Children.Count; i++)
+        {
+            var child = this.mapView.Children[i];
+
+            var tag = ((FrameworkElement)child).Tag as LayerTag;
+
+            if (tag == null)
+                continue;
+
+            if (tag.Layer == layer)
+            {
+                Canvas.SetZIndex(child, layer.ZIndex);
             }
         }
     }
@@ -3877,7 +3907,7 @@ public partial class MapViewer : NotifiableUserControl
             return;
 
         //e.Handled = true;
-         
+
         this.prevMouseLocation = e.GetPosition(this.mapView);
 
         var webMercatorPoint = ScreenToMap(this.prevMouseLocation).AsPoint();

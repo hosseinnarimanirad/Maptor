@@ -236,6 +236,19 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
+    private LegendViewModel _legendViewModel;
+    public LegendViewModel LegendViewModel
+    {
+        get { return _legendViewModel; }
+        set
+        {
+            _legendViewModel = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+
     private CoordinatePanelViewModel _coordinatePanel;
     public CoordinatePanelViewModel CoordinatePanel
     {
@@ -414,6 +427,24 @@ public abstract class MapViewModelBase : ViewModelBase
     private void Layers_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         UpdateAllNonGroupLayers();
+
+        UpdateLayerTocReorder(Layers);
+    }
+
+    private void UpdateLayerTocReorder(ObservableCollection<ILayer> layers)
+    {
+        var orderedLayers = layers.Where(l => l.CanReorderInToc && LegendViewModel.IsFilterPassed(l)).OrderByDescending(l => l.TocOrder).ToList();
+
+        foreach (var item in orderedLayers)
+        {
+            item.CanMoveLayerDown = orderedLayers.IndexOf(item) < orderedLayers.Count - 1;
+            item.CanMoveLayerUp = orderedLayers.IndexOf(item) > 0;
+
+            if (item.IsGroupLayer)
+            {
+                UpdateLayerTocReorder(item.SubLayers);
+            }
+        }
     }
 
     private void UpdateAllNonGroupLayers()
@@ -421,6 +452,7 @@ public abstract class MapViewModelBase : ViewModelBase
         var newLayers = GetAllLayers(Layers);
 
         _allNonGroupLayers.Clear();
+
         foreach (var layer in newLayers)
         {
             _allNonGroupLayers.Add(layer);
@@ -1004,11 +1036,15 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             RaisePropertyChanged(nameof(CanMoveDrawingItemDown));
             RaisePropertyChanged(nameof(CanMoveDrawingItemUp));
+
+            UpdateDrawingItems();
         };
 
         //MapProviders = TileMapProviderFactory.GetDefault();
 
         MapExtentPanel = new MapExtentPanelViewModel(this);
+
+        LegendViewModel = new LegendViewModel() { RequestNotifyFilterChanged = () => UpdateLayerTocReorder(Layers) };
 
         MapPanel = new MapPanelViewModel();
 
@@ -1256,6 +1292,8 @@ public abstract class MapViewModelBase : ViewModelBase
     public Action<ILayer> RequestShowLayerSettingsView;
 
     public Action<IPoint> RequestAddPointToNewDrawing;
+
+    public Action<ILayer>? RequestUpdateZIndex;
 
     public Func<Geometry<Point>, EditableFeatureLayerOptions, Task<Response<Geometry<Point>>>> RequestEdit;
 
@@ -1851,7 +1889,8 @@ public abstract class MapViewModelBase : ViewModelBase
             if (SelectedDrawingItem == null)
                 return false;
 
-            return SelectedDrawingItem.IsSelectedInToc && DrawingItems.IndexOf(SelectedDrawingItem) > 0;
+            return SelectedDrawingItem.IsSelectedInToc && CanMoveUpForDrawingItem(SelectedDrawingItem);
+            //DrawingItems.IndexOf(SelectedDrawingItem) > 0;
         }
     }
 
@@ -1862,7 +1901,17 @@ public abstract class MapViewModelBase : ViewModelBase
             if (SelectedDrawingItem == null)
                 return false;
 
-            return SelectedDrawingItem.IsSelectedInToc && DrawingItems.IndexOf(SelectedDrawingItem) < DrawingItems.Count - 1;
+            return SelectedDrawingItem.IsSelectedInToc && CanMoveDownForDrawingItem(SelectedDrawingItem);
+            // DrawingItems.IndexOf(SelectedDrawingItem) < DrawingItems.Count - 1;
+        }
+    }
+
+    private void UpdateDrawingItems()
+    {
+        foreach (var item in DrawingItems)
+        {
+            item.CanMoveLayerDown = CanMoveDownForDrawingItem(item);
+            item.CanMoveLayerUp = CanMoveUpForDrawingItem(item);
         }
     }
 
@@ -2015,28 +2064,44 @@ public abstract class MapViewModelBase : ViewModelBase
         return drawingItemLayer;
     }
 
-    public void MoveDrawingItemDown()
+    private bool CanMoveUpForDrawingItem(DrawingItemLayer? layer)
     {
-        if (SelectedDrawingItem == null)
+        if (layer == null)
+            return false;
+
+        return DrawingItems.IndexOf(layer) > 0;
+    }
+
+    private bool CanMoveDownForDrawingItem(DrawingItemLayer? layer)
+    {
+        if (layer == null)
+            return false;
+
+        return DrawingItems.IndexOf(layer) < DrawingItems.Count - 1;
+    }
+
+    public void MoveDrawingItemDown(DrawingItemLayer? layer)
+    {
+        if (layer == null)
             return;
 
-        var index = DrawingItems.IndexOf(SelectedDrawingItem);
+        var index = DrawingItems.IndexOf(layer);
 
         var otherLayer = DrawingItems[index + 1];
 
-        SwapDrawingItems(SelectedDrawingItem, otherLayer);
+        SwapDrawingItems(layer, otherLayer);
     }
 
-    public void MoveDrawingItemUp()
+    public void MoveDrawingItemUp(DrawingItemLayer? layer)
     {
-        if (SelectedDrawingItem == null)
+        if (layer == null)
             return;
 
-        var index = DrawingItems.IndexOf(SelectedDrawingItem);
+        var index = DrawingItems.IndexOf(layer);
 
         var otherLayer = DrawingItems[index - 1];
 
-        SwapDrawingItems(SelectedDrawingItem, otherLayer);
+        SwapDrawingItems(layer, otherLayer);
     }
 
     public void SwapDrawingItems(DrawingItemLayer first, DrawingItemLayer second)
@@ -2060,8 +2125,21 @@ public abstract class MapViewModelBase : ViewModelBase
         second.ZIndex = tempZIndex;
 
         DrawingItems.Move(newFirstIndex, newSecondIndex);
+        // consider
+        //DrawingItems.Move(newSecondIndex, newFirstIndex);
 
-        Refresh(isNewExtent: false);
+        // update layers
+        //first.CanMoveLayerDown = CanMoveDownForDrawingItem(first);
+        //first.CanMoveLayerUp = CanMoveUpForDrawingItem(first);
+
+        //second.CanMoveLayerDown = CanMoveDownForDrawingItem(second);
+        //second.CanMoveLayerUp = CanMoveUpForDrawingItem(second);
+
+        RequestUpdateZIndex?.Invoke(first);
+
+        RequestUpdateZIndex?.Invoke(second);
+
+        //Refresh(isNewExtent: false);
 
         //RemoveDrawingItem(first);
         //RemoveDrawingItem(second);
@@ -2155,6 +2233,136 @@ public abstract class MapViewModelBase : ViewModelBase
     //*****************************************General***************************************************************
 
     #region General
+
+    //private ILayer? GetNextTocReorderableLayer(ObservableCollection<ILayer> layers, int currentIndex, bool asc)
+    //{
+    //    var startIndex = asc ? currentIndex + 1 : currentIndex - 1;
+
+    //    if (asc)
+    //    {
+    //        for (int i = startIndex; i < layers.Count; i++)
+    //        {
+    //            if (layers[i].CanReorderInToc)
+    //                return layers[i];
+    //        }
+    //    }
+    //    else
+    //    {
+    //        for (int i = startIndex; i >= 0; i--)
+    //        {
+    //            if (layers[i].CanReorderInToc)
+    //                return layers[i];
+    //        }
+    //    }
+
+    //    return null;
+    //}
+
+    public async Task MoveLayerDown(ILayer? layer)
+    {
+        if (layer == null)
+            return;
+
+        if (layer is DrawingItemLayer dil)
+        {
+            MoveDrawingItemDown(dil);
+        }
+        else
+        {
+            if (layer.Parent is null)
+            {
+                await MoveLayerDown(Layers, layer);
+            }
+            else
+            {
+                await MoveLayerDown(layer.Parent.SubLayers, layer);
+            }
+        }
+    }
+
+    public async Task MoveLayerDown(ObservableCollection<ILayer> layers, ILayer layer)
+    {
+        var nextLayer = layers.OrderByDescending(l => l.TocOrder)
+                                .FirstOrDefault(l => LegendViewModel.IsFilterPassed(l) && l.CanReorderInToc && l.TocOrder < layer.TocOrder);
+        //var nextIndex = currentIndex + 1;
+
+        //var nextLayer = GetNextTocReorderableLayer(layers, currentIndex, asc: true);
+
+        if (nextLayer is null)
+            return;
+
+        await SwapLayerOrders(layer, nextLayer/*layers[nextIndex]*/);
+
+        UpdateLayerTocReorder(layers);
+    }
+
+
+    public async Task MoveLayerUp(ILayer? layer)
+    {
+        if (layer == null)
+            return;
+
+        if (LegendViewModel.HasActiveFilter)
+            return;
+
+        if (layer is DrawingItemLayer dil)
+        {
+            MoveDrawingItemUp(dil);
+        }
+        else
+        {
+            if (layer.Parent is null)
+            {
+                await MoveLayerUp(Layers, layer);
+            }
+            else
+            {
+                await MoveLayerUp(layer.Parent.SubLayers, layer);
+            }
+        }
+    }
+
+    public async Task MoveLayerUp(ObservableCollection<ILayer> layers, ILayer layer)
+    {
+        var nextLayer = layers.OrderBy(l => l.TocOrder).FirstOrDefault(l => LegendViewModel.IsFilterPassed(l) && l.CanReorderInToc && l.TocOrder > layer.TocOrder);
+        //var nextIndex = currentIndex - 1;
+
+        //var nextLayer = GetNextTocReorderableLayer(layers, currentIndex, asc: false);
+
+        if (nextLayer is null)
+            return;
+
+        await SwapLayerOrders(layer, nextLayer/*layers[nextIndex]*/);
+
+        UpdateLayerTocReorder(layers);
+
+    }
+
+    private async Task SwapLayerOrders(ILayer first, ILayer second)
+    {
+        var tempTocOrder = first.TocOrder;
+        first.TocOrder = second.TocOrder;
+        second.TocOrder = tempTocOrder;
+
+        var tempZIndex = first.ZIndex;
+        first.ZIndex = second.ZIndex;
+        second.ZIndex = tempZIndex;
+
+        first.LayerName = $"{first.LayerName}: {first.TocOrder}";
+        second.LayerName = $"{second.LayerName}: {second.TocOrder}";
+
+        if (LegendViewModel.RequestRefreshView is not null)
+        {
+            await LegendViewModel.RequestRefreshView.Invoke();
+        }
+
+
+        RequestUpdateZIndex?.Invoke(first);
+
+        RequestUpdateZIndex?.Invoke(second);
+
+        //Refresh(isNewExtent: false);
+    }
 
     public void UpdateBaseMapOpacity(double opacity)
     {
@@ -2526,6 +2734,9 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         layer.RequestChangeSymbology = l => RequestShowSymbologyView?.Invoke(l);
         layer.RequestShowLayerSettings = l => RequestShowLayerSettingsView?.Invoke(l);
+
+        layer.RequestMoveLayerUp = l => MoveLayerUp(l);
+        layer.RequestMoveLayerDown = l => MoveLayerDown(l);
     }
 
     protected void TrySetCommands(ILayer layer)
@@ -2539,6 +2750,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
             return;
         }
+
+        layer.RequestMoveLayerUp = l => MoveLayerUp(l);
+        layer.RequestMoveLayerDown = l => MoveLayerDown(l);
 
         if (layer is VectorLayer)
         {
@@ -2594,6 +2808,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 baseLayer.RequestUndoAllChanges = HandleRequestUndoAllChanges;
                 baseLayer.RequestClearSelectedLayer = layer => RemoveSelectedLayers(l => l.LayerId == layer.LayerId);
                 baseLayer.RequestShowLayerSettings = layer => this.RequestShowLayerSettingsView(layer);
+
                 //baseLayer.CanUndoChangesProvider = GetCanUndoChanges;
             }
         }
@@ -2644,6 +2859,9 @@ public abstract class MapViewModelBase : ViewModelBase
                 ClearLayer(drawingLayer.HighlightGeometryKey.ToString(), true, true);
             }
         };
+
+        //layer.RequestMoveLayerUp = l => this.MoveLayerUp(l);
+        //layer.RequestMoveLayerDown = l => this.MoveLayerDown(l);
 
         if (layer.RequestChangeSymbology == null)
         {
@@ -4901,6 +5119,40 @@ public abstract class MapViewModelBase : ViewModelBase
 
     #region -   Layer Management Commands
 
+    //private RelayCommand _moveLayerUpCommand;
+
+    //public RelayCommand MoveLayerUpCommand
+    //{
+    //    get
+    //    {
+    //        if (_moveLayerUpCommand == null)
+    //        {
+    //            _moveLayerUpCommand = new RelayCommand(param =>MoveLayerUp(), this.);
+    //        }
+
+    //        return _moveLayerUpCommand;
+    //    }
+    //}
+
+
+    //private RelayCommand _moveLayerDownCommand;
+
+    //public RelayCommand MoveLayerDownCommand
+    //{
+    //    get
+    //    {
+    //        if (_moveLayerDownCommand == null)
+    //        {
+    //            _moveLayerDownCommand = new RelayCommand(param =>
+    //            {
+    //            });
+    //        }
+
+    //        return _moveLayerDownCommand;
+    //    }
+    //}
+
+
     private RelayCommand _addShapefileCommand;
     public RelayCommand AddShapefileCommand
     {
@@ -5604,7 +5856,7 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 _moveDrawingItemUpCommand = new RelayCommand(param =>
                 {
-                    MoveDrawingItemUp();
+                    MoveDrawingItemUp(SelectedDrawingItem);
                 });
             }
 
@@ -5622,7 +5874,7 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 _moveDrawingItemDownCommand = new RelayCommand(param =>
                 {
-                    MoveDrawingItemDown();
+                    MoveDrawingItemDown(SelectedDrawingItem);
                 });
             }
 
