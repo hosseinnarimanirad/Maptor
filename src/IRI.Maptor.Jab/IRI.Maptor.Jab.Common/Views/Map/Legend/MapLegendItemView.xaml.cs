@@ -61,8 +61,6 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
         get { return (string)GetValue(TitleProperty); }
         set { SetValue(TitleProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for LayerName.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register(nameof(Title), typeof(string), typeof(MapLegendItemView), new PropertyMetadata(new PropertyChangedCallback((d, dp) =>
         {
@@ -76,13 +74,12 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
             }
         })));
 
+
     public double TitleFontSize
     {
         get { return (double)GetValue(TitleFontSizeProperty); }
         set { SetValue(TitleFontSizeProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for FontSize.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty TitleFontSizeProperty =
         DependencyProperty.Register(nameof(TitleFontSize), typeof(double), typeof(MapLegendItemView), new PropertyMetadata(13.0));
 
@@ -92,8 +89,6 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
         get { return (bool)GetValue(IsEditableProperty); }
         set { SetValue(IsEditableProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for IsEditable.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty IsEditableProperty =
         DependencyProperty.Register(nameof(IsEditable), typeof(bool), typeof(MapLegendItemView), new PropertyMetadata(false));
 
@@ -103,11 +98,8 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
         get { return (VisualParameters)GetValue(SymbologyProperty); }
         set { SetValue(SymbologyProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for Symbology.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty SymbologyProperty =
         DependencyProperty.Register(nameof(Symbology), typeof(VisualParameters), typeof(MapLegendItemView), new PropertyMetadata(null));
-
 
 
     public bool IsChecked
@@ -115,11 +107,8 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
         get { return (bool)GetValue(IsCheckedProperty); }
         set { SetValue(IsCheckedProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for IsChecked.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty IsCheckedProperty =
         DependencyProperty.Register(nameof(IsChecked), typeof(bool), typeof(MapLegendItemView), new PropertyMetadata(false));
-
 
 
     public IEnumerable<ILegendCommand> Commands
@@ -127,11 +116,8 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
         get { return (IEnumerable<ILegendCommand>)GetValue(CommandsProperty); }
         set { SetValue(CommandsProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for Commands.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty CommandsProperty =
         DependencyProperty.Register(nameof(Commands), typeof(IEnumerable<ILegendCommand>), typeof(MapLegendItemView), new PropertyMetadata(null));
-
 
      
     public bool ShowReloadData
@@ -139,23 +125,17 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
         get { return (bool)GetValue(ShowReloadDataProperty); }
         set { SetValue(ShowReloadDataProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for ShowReloadData.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowReloadDataProperty =
         DependencyProperty.Register(nameof(ShowReloadData), typeof(bool), typeof(MapLegendItemView), new PropertyMetadata(true));
 
-     
 
     public bool ShowMoreOptions
     {
         get { return (bool)GetValue(ShowMoreOptionsProperty); }
         set { SetValue(ShowMoreOptionsProperty, value); }
     }
-
     public static readonly DependencyProperty ShowMoreOptionsProperty =
         DependencyProperty.Register(nameof(ShowMoreOptions), typeof(bool), typeof(MapLegendItemView), new PropertyMetadata(true));
-
-
 
     #endregion
 
@@ -188,15 +168,15 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
         //} 
     }
 
-    private void pendingChangesPopup_Loaded(object sender, RoutedEventArgs e)
-    {
+    //private void pendingChangesPopup_Loaded(object sender, RoutedEventArgs e)
+    //{
 
-    }
+    //}
 
-    private void pendingChangesPopup_Opened(object sender, EventArgs e)
-    {
-        pendingChangesPopupBorder.DataContext = DataContext;
-    }
+    //private void pendingChangesPopup_Opened(object sender, EventArgs e)
+    //{
+    //    //pendingChangesPopupBorder.DataContext = DataContext;
+    //}
 
     private void layerTitle_KeyDown(object sender, KeyEventArgs e)
     {

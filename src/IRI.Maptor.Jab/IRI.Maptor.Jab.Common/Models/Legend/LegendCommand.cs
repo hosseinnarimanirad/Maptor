@@ -150,7 +150,7 @@ public class LegendCommand : LegendCommandBase
                 return;
             }
 
-            var newLayer = new SelectedLayer(layer, layer.GetFields())
+            var newLayer = new SelectedLayer(map.DialogService, layer, layer.GetFields())
             {
                 ShowSelectedOnMap = true
             };
@@ -187,7 +187,7 @@ public class LegendCommand : LegendCommandBase
 
             var features = await layer.GetFeaturesAsync();
 
-            var newLayer = new SelectedLayer(layer, layer.GetFields());
+            var newLayer = new SelectedLayer(map.DialogService, layer, layer.GetFields());
 
             //newLayer.RequestSave = l =>
             //{

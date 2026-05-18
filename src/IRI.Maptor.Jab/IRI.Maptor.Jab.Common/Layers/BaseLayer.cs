@@ -320,7 +320,11 @@ public abstract class BaseLayer : Notifier, ILayer
             _isSelectedInToc = value;
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(ShowOptions));
-            //ChangeSymbologyCommand?.CanExecute(null);
+
+            if (this.IsGroupLayer)
+            {
+                this.IsExpandedInToc = value;
+            }
 
             _onIsSelectedInTocChanged?.Invoke(this, new CustomEventArgs<BaseLayer>(this));
         }
@@ -339,18 +343,12 @@ public abstract class BaseLayer : Notifier, ILayer
 
             _isExpandedInToc = value;
             RaisePropertyChanged();
-            //RaisePropertyChanged(nameof(ShowOptions));
-            //ChangeSymbologyCommand?.CanExecute(null);
 
-            //OnIsSelectedInTocChanged?.Invoke(this, new CustomEventArgs<BaseLayer>(this));
-
-            //if (this.IsGroupLayer && !this.SubLayers.IsNullOrEmpty())
-            //{
-            //    foreach (var subLayer in SubLayers)
-            //    {
-            //        subLayer.IsExpandedInToc = value;
-            //    }
-            //}
+            if (this.IsGroupLayer)
+            {
+                // in order to sync the isexpanded and isselected for group layer
+                _isSelectedInToc = value;
+            }
         }
     }
 
@@ -602,7 +600,7 @@ public abstract class BaseLayer : Notifier, ILayer
     /// <summary>
     /// Invoked when Undo is requested from the layer (e.g. legend popup). Set by MapViewModel to delegate to SelectedLayer or DataSource.
     /// </summary>
-    public Action<ILayer>? RequestUndoAllChanges { get; set; }
+    public Func<ILayer, Task>? RequestUndoAllChanges { get; set; }
 
     public Action<ILayer>? RequestClearSelectedLayer { get; set; }
 
@@ -716,7 +714,11 @@ public abstract class BaseLayer : Notifier, ILayer
         await dataSource.SaveChangesAsync();
     }
 
-    public void UndoAllChanges() => RequestUndoAllChanges?.Invoke(this);
+    public async Task UndoAllChanges()
+    {
+        if (RequestUndoAllChanges is not null)
+            await RequestUndoAllChanges.Invoke(this);
+    }
 
     public async Task ReloadDataAsync()
     {
@@ -808,7 +810,7 @@ public abstract class BaseLayer : Notifier, ILayer
             if (_undoAllChangesCommand == null)
             {
                 _undoAllChangesCommand = new RelayCommand(
-                    param => UndoAllChanges(),
+                    async param => await UndoAllChanges(),
                     param => HasPendingChanges && IsNotBusy);
             }
 
@@ -884,7 +886,7 @@ public abstract class BaseLayer : Notifier, ILayer
                         if (RequestMoveLayerDown is not null)
                         {
                             await this.RequestMoveLayerDown.Invoke(this);
-                        } 
+                        }
                     },
                     _ => CanMoveLayerDown);
             }

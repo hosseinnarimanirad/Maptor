@@ -24,8 +24,6 @@
                     <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
                 <Style TargetType="iconPacks:PackIconMaterial">
-                    <!--<Setter Property="Foreground" Value="White"/>-->
-                    <!--<Setter Property="Stretch" Value="Uniform"/>-->
                     <Setter Property="Width" Value="18"/>
                     <Setter Property="Height" Value="18"/>
                     <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -37,18 +35,26 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Margin="4,0"  >
-            <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Margin="4" Height="40" Width="40" 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <!--<StackPanel Orientation="Horizontal" Margin="4,0"  >-->
+        <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Margin="4" Height="40" Width="40" 
                     BorderThickness="3" CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <iconPacks:PackIconMaterial Kind="InformationSymbol" Foreground="{StaticResource MahApps.Brushes.Accent}" />
-            </Border>
-            <TextBlock Text="{Binding [dialog_common_areYouSure], Source={StaticResource Localization}}"
-                       Margin="8,0" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap" 
+            <iconPacks:PackIconMaterial Kind="InformationSymbol" Foreground="{StaticResource MahApps.Brushes.Accent}" />
+        </Border>
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0">
+            <TextBlock Grid.Row="0" Text="{Binding Message}"  
+                       Visibility="{Binding HasMessage, Converter={StaticResource boolToVisibilityConverter}}"
+                       VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"/>
+            <TextBlock Grid.Row="1" Grid.Column="1"
+                       Text="{Binding [dialog_common_areYouSure], Source={StaticResource Localization}}"
+                       VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap" 
                        Foreground="{DynamicResource MahApps.Brushes.ThemeForeground}"/>
         </StackPanel>
-
-
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
+         
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
             <Button IsCancel="True"
                     Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}"
                     Command="{Binding SecondOptionCommand}" >

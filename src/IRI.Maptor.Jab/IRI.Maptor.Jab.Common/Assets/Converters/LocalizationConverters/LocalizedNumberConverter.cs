@@ -12,7 +12,7 @@ public class LocalizedNumberConverter : IValueConverter
     {
         if (value == null) return null;
          
-        string format = parameter as string ?? "N1";
+        string format = parameter as string ?? "N0";
 
         decimal number;
         string formatted;

@@ -25,32 +25,7 @@ public partial class MapLegendView : NotifiableUserControl
     public MapLegendView()
     {
         InitializeComponent();
-
-        //LegendViewModel = new LegendViewModel();
-
-        //LegendViewModel.RequestRefresh = () =>
-        //{
-        //    var cvs = Resources["collectionViewSource"] as CollectionViewSource;
-
-        //    if (cvs?.View != null)
-        //    {
-        //        Dispatcher.BeginInvoke(() => cvs.View.Refresh(), DispatcherPriority.Loaded);
-        //    }
-        //};
     }
-
-    //private LegendViewModel _legendViewModel;
-    //public LegendViewModel LegendViewModel
-    //{
-    //    get { return _legendViewModel; }
-    //    set
-    //    {
-    //        _legendViewModel = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
-
-
 
     public LegendViewModel LegendViewModel
     {
@@ -58,9 +33,8 @@ public partial class MapLegendView : NotifiableUserControl
         set { SetValue(LegendViewModelProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for LegendViewModel.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty LegendViewModelProperty =
-        DependencyProperty.Register("LegendViewModel",
+        DependencyProperty.Register(nameof(LegendViewModel),
                                     typeof(LegendViewModel),
                                     typeof(MapLegendView),
                                     new PropertyMetadata(new PropertyChangedCallback((dp, dpE) =>
@@ -83,8 +57,6 @@ public partial class MapLegendView : NotifiableUserControl
 
 
                                     })));
-
-
 
 
     public string GroupName
@@ -156,8 +128,6 @@ public partial class MapLegendView : NotifiableUserControl
         get { return (bool)GetValue(ShowLayerColorsProperty); }
         set { SetValue(ShowLayerColorsProperty, value); }
     }
-
-    // Using a DependencyProperty as the backing store for ShowLayerColor.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowLayerColorsProperty =
         DependencyProperty.Register(nameof(ShowLayerColors), typeof(bool), typeof(MapLegendView), new PropertyMetadata(true));
 
@@ -171,6 +141,7 @@ public partial class MapLegendView : NotifiableUserControl
     }
     public static readonly DependencyProperty LayersProperty =
         DependencyProperty.Register(nameof(Layers), typeof(ObservableCollection<ILayer>), typeof(MapLegendView), new PropertyMetadata(null));
+
 
     private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
     {

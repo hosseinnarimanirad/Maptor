@@ -1465,6 +1465,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pending changes to layers will be discarded.
+        /// </summary>
+        public static string dialog_msg_discardPendingChanges {
+            get {
+                return ResourceManager.GetString("dialog_msg_discardPendingChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select File.
         /// </summary>
         public static string dialog_openfile_title {

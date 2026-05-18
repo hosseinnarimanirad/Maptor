@@ -12,11 +12,14 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.DataSources;
+using IRI.Maptor.Jab.Common.Services;
 
 namespace IRI.Maptor.Jab.Common.Models;
 
 public class SelectedLayer : Notifier
 {
+    private IDialogService _dialogService;
+
     public Guid Id => AssociatedLayer?.LayerId ?? Guid.Empty;
 
     public VectorLayer AssociatedLayer { get; set; }
@@ -42,6 +45,11 @@ public class SelectedLayer : Notifier
         get { return _highlightedFeatures; }
         set
         {
+            System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
+
+            System.Diagnostics.Trace.WriteLine($"HighlightedFeatures #1 ({watch.ElapsedMilliseconds})");
+            watch.Restart();
+
             if (_highlightedFeatures != null)
                 _highlightedFeatures.CollectionChanged -= highlightedFeatures_CollectionChanged;
 
@@ -51,9 +59,19 @@ public class SelectedLayer : Notifier
             if (_highlightedFeatures != null)
                 _highlightedFeatures.CollectionChanged += highlightedFeatures_CollectionChanged;
 
+            System.Diagnostics.Trace.WriteLine($"HighlightedFeatures #2 ({watch.ElapsedMilliseconds})");
+            watch.Restart();
+
             RefreshHighlightedFeaturesOnMap(HighlightedFeatures);
 
+            System.Diagnostics.Trace.WriteLine($"HighlightedFeatures #3 ({watch.ElapsedMilliseconds})");
+            watch.Restart();
+
             NotifyAll();
+
+            System.Diagnostics.Trace.WriteLine($"HighlightedFeatures #4 ({watch.ElapsedMilliseconds})");
+            watch.Restart();
+
         }
     }
 
@@ -115,8 +133,10 @@ public class SelectedLayer : Notifier
     public Func<DomainException, Task> RequestShowErrorMessage { get; set; }
 
 
-    public SelectedLayer(VectorLayer layer, List<Field>? fields)
+    public SelectedLayer(IDialogService dialogService, VectorLayer layer, List<Field>? fields)
     {
+        _dialogService = dialogService;
+
         AssociatedLayer = layer;
 
         Fields = fields;
@@ -247,6 +267,7 @@ public class SelectedLayer : Notifier
 
     public void UndoCurrentRowChanges()
     {
+
         var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
         if (dataSource is null || !CanUndo)
             return;
@@ -258,12 +279,14 @@ public class SelectedLayer : Notifier
         NotifyAll();
 
         RequestRefreshLayer?.Invoke(AssociatedLayer);
+
         RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
     }
 
     public void UndoAllChanges()
     {
         var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
         if (dataSource is null || !dataSource.HasPendingChanges)
             return;
 
@@ -460,8 +483,13 @@ public class SelectedLayer : Notifier
         {
             if (_undoChangesCommand is null)
             {
-                _undoChangesCommand = new RelayCommand(param =>
+                _undoChangesCommand = new RelayCommand(async param =>
                 {
+                    var message = IRI.Maptor.Jab.Common.Properties.Resources.dialog_msg_discardPendingChanges;
+
+                    if (await _dialogService.ShowYesNoDialogAsync(message) == false)
+                        return;
+
                     UndoCurrentRowChanges();
                 });
             }

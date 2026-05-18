@@ -1626,4 +1626,7 @@
   <data name="validation_msg_nullOrEmptyString" xml:space="preserve">
     <value>فیلد نمی‌تواند خالی باشد</value>
   </data>
+  <data name="dialog_msg_discardPendingChanges" xml:space="preserve">
+    <value>تغییرات ذخیره نشده لایه‌ها لغو می‌شود</value>
+  </data>
 </root>

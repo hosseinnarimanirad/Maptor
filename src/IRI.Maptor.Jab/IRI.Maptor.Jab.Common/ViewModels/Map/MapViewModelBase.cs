@@ -419,19 +419,18 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
     private ObservableCollection<ILayer> _allNonGroupLayers = new ObservableCollection<ILayer>();
-    public ObservableCollection<ILayer> AllNonGroupLayers
-    {
-        get { return _allNonGroupLayers; }
-    }
+    public ObservableCollection<ILayer> AllNonGroupLayers => _allNonGroupLayers;
+
+    public bool HasPendingChanges => AllNonGroupLayers.Any(l => l.HasPendingChanges);
 
     private void Layers_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         UpdateAllNonGroupLayers();
 
-        UpdateLayerTocReorder(Layers);
+        UpdateLayerTocOrder(Layers);
     }
 
-    private void UpdateLayerTocReorder(ObservableCollection<ILayer> layers)
+    public void UpdateLayerTocOrder(IEnumerable<ILayer> layers)
     {
         var orderedLayers = layers.Where(l => l.CanReorderInToc && LegendViewModel.IsFilterPassed(l)).OrderByDescending(l => l.TocOrder).ToList();
 
@@ -442,7 +441,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             if (item.IsGroupLayer)
             {
-                UpdateLayerTocReorder(item.SubLayers);
+                UpdateLayerTocOrder(item.SubLayers);
             }
         }
     }
@@ -459,6 +458,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
 
         RaisePropertyChanged(nameof(AllNonGroupLayers));
+        RaisePropertyChanged(nameof(HasPendingChanges));
     }
 
     //LegendCommand.CreateZoomToExtentCommand(this, layer),
@@ -1044,7 +1044,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         MapExtentPanel = new MapExtentPanelViewModel(this);
 
-        LegendViewModel = new LegendViewModel() { RequestNotifyFilterChanged = () => UpdateLayerTocReorder(Layers) };
+        LegendViewModel = new LegendViewModel() { RequestNotifyFilterChanged = () => UpdateLayerTocOrder(Layers) };
 
         MapPanel = new MapPanelViewModel();
 
@@ -1719,7 +1719,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             var fields = layer.GetFields();
 
-            var newLayer = new SelectedLayer/*<Feature<Point>>*/(layer, fields)
+            var newLayer = new SelectedLayer/*<Feature<Point>>*/(this.DialogService, layer, fields)
             {
                 ShowSelectedOnMap = true,
                 Features = new ObservableCollection<Feature<Point>>(item.Features)
@@ -1791,7 +1791,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             var fields = layer.GetFields();
 
-            var newLayer = new SelectedLayer(layer, fields)
+            var newLayer = new SelectedLayer(this.DialogService, layer, fields)
             {
                 ShowSelectedOnMap = true,
                 Features = new ObservableCollection<Feature<Point>>(item.Features),
@@ -2293,7 +2293,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await SwapLayerOrders(layer, nextLayer/*layers[nextIndex]*/);
 
-        UpdateLayerTocReorder(layers);
+        UpdateLayerTocOrder(layers);
     }
 
 
@@ -2334,7 +2334,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await SwapLayerOrders(layer, nextLayer/*layers[nextIndex]*/);
 
-        UpdateLayerTocReorder(layers);
+        UpdateLayerTocOrder(layers);
 
     }
 
@@ -2682,8 +2682,15 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    private /*async*/ void HandleRequestUndoAllChanges(ILayer layer)
+    private async Task HandleRequestUndoAllChanges(ILayer layer)
     {
+        var message = IRI.Maptor.Jab.Common.Properties.Resources.dialog_msg_discardPendingChanges;
+
+        var sure = await DialogService.ShowYesNoDialogAsync(message);
+
+        if (sure == false)
+            return;
+
         var selectedLayer = SelectedLayers?.SingleOrDefault(sl => sl.Id == layer.LayerId);
 
         if (selectedLayer != null)
@@ -2804,8 +2811,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
             if (layer is BaseLayer baseLayer)
             {
-                baseLayer.RequestSaveChanges = async l => await HandleRequestSaveChanges(l);
-                baseLayer.RequestUndoAllChanges = HandleRequestUndoAllChanges;
+                baseLayer.RequestSaveChanges = async layer => await HandleRequestSaveChanges(layer);
+                baseLayer.RequestUndoAllChanges = async layer => await HandleRequestUndoAllChanges(layer);
                 baseLayer.RequestClearSelectedLayer = layer => RemoveSelectedLayers(l => l.LayerId == layer.LayerId);
                 baseLayer.RequestShowLayerSettings = layer => this.RequestShowLayerSettingsView(layer);
 
@@ -5423,7 +5430,7 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 _clearVectorLayersCommand = new RelayCommand(async param =>
                 {
-                    var sure = await DialogService.ShowYesNoDialogAsync("Are you sure?", "Confirmation");
+                    var sure = await DialogService.ShowYesNoDialogAsync(string.Empty);
 
                     if (sure != true)
                         return;

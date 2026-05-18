@@ -9,12 +9,15 @@ using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
+using IRI.Maptor.Sta.Ogc.WMS;
 
 namespace IRI.Maptor.Jab.Common.Models;
 
 public class LayerManager : Notifier
 {
     public Action<BaseLayer>? RequestRefreshVisibility;
+
+    public Action<IEnumerable<ILayer>> RequestUpdateLayerTocOrder;
 
     /// <summary>
     /// Optional. When set, passed to LoadAsync when loading layer data. Used to cancel loads on sign out.
@@ -90,27 +93,13 @@ public class LayerManager : Notifier
             CurrentLayers.Add(layer);
         }
 
-
-        //98.01.20
-        //layer.ZIndex = this.allLayers.Count(i => !i.Type.HasFlag(LayerType.Complex) && !i.Type.HasFlag(LayerType.Drawing));
-
-        var layers = layer.Parent != null ?
-            layer.Parent.SubLayers.ToList() :
-            _allLayers.Where(l => l.Parent == null).ToList();
-
-        if (/*layer.TocOrder == 0 ||*/ layers.Any(l => l.TocOrder == layer.TocOrder))
-        {
-            var maxToc = layers.Select(l => l.TocOrder).DefaultIfEmpty(0).Max();
-
-            layer.TocOrder = maxToc + 1;
-
-            if (legendViewModel?.RequestRefreshView is not null)
-            {
-                legendViewModel.RequestRefreshView.Invoke();
-            }
-        }
-
         _allLayers.Add(layer);
+
+        // ********************************************************************
+        // update toc order values
+        ArrangeTocOrder(legendViewModel, layer);
+
+        // ********************************************************************
 
         _allLayers = GetOrderedLayers();
 
@@ -211,6 +200,29 @@ public class LayerManager : Notifier
                                      .ThenByDescending(i => i.Type == LayerType.BaseMap)
                                      .ThenBy(i => i.ZIndex)
                                      .ToList();
+    }
+
+    private void ArrangeTocOrder(LegendViewModel legendViewModel, ILayer layer)
+    {
+        var layers = layer.Parent != null ?
+            layer.Parent.SubLayers :
+            _allLayers.Where(l => l.Parent == null);
+
+        if (layers.Any(l => l.TocOrder == layer.TocOrder))
+        {
+            var maxToc = layers.Select(l => l.TocOrder).DefaultIfEmpty(0).Max();
+
+            layer.TocOrder = maxToc + 1;
+
+            if (legendViewModel?.RequestRefreshView is not null)
+            {
+                legendViewModel.RequestRefreshView.Invoke();
+            }
+        }
+
+        // add this code so when adding new layers (e.g. DXF)
+        // its move up/down buttons have correct enabled/disabled value
+        RequestUpdateLayerTocOrder?.Invoke(layers);
     }
 
     private void ArrangeZIndex()

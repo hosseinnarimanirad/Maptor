@@ -420,6 +420,8 @@ public partial class MapViewer : NotifiableUserControl
 
         _presenter = presenter;
 
+        _layerManager.RequestUpdateLayerTocOrder = presenter.UpdateLayerTocOrder;
+
         presenter.RequestPrint = this.Print;
 
         //presenter.RequestGetAsDrawingVisual = this.GetAsDrawingVisual;
