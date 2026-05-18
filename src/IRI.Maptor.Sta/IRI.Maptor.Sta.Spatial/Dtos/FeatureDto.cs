@@ -88,11 +88,13 @@ public class FeatureDto
 
         var isNew = feature.Status == Sta.Common.Enums.FeatureStatus.New;
 
+        var srid = geometry.Srid;
+
         return new FeatureDto
         {
             Id = isNew ? 0 : feature.Id,
             Key = feature.Key,
-            Srid = feature.Srid,
+            Srid = srid,
             Shape = wkbBytes ?? Array.Empty<byte>(),
             Attributes = feature.Attributes ?? new Dictionary<string, object>(),
         };
