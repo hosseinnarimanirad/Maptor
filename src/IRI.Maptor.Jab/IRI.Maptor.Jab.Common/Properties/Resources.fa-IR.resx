@@ -1629,4 +1629,7 @@
   <data name="dialog_msg_discardPendingChanges" xml:space="preserve">
     <value>تغییرات ذخیره نشده لایه‌ها لغو می‌شود</value>
   </data>
+  <data name="message_error_lockedFile" xml:space="preserve">
+    <value>فایل مورد نظر در نرم افزار دیگری باز است یا قفل شده است</value>
+  </data>
 </root>

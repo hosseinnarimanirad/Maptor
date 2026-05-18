@@ -3248,6 +3248,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File is locked or in used by another program.
+        /// </summary>
+        public static string message_error_lockedFile {
+            get {
+                return ResourceManager.GetString("message_error_lockedFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string message_error_title {

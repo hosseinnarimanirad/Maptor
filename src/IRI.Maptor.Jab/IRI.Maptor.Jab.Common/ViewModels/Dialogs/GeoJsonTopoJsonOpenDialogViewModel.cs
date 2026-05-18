@@ -12,12 +12,13 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
 using System.Text.Json;
+using IRI.Maptor.Sta.Common.Exceptions;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 
 public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
 {
-    private readonly IDialogService _dialogService;
+    //private readonly IDialogService _dialogService;
     private readonly SrsOption _utmOption;
     private string _filePath = string.Empty;
     private string _rawJson = string.Empty;
@@ -29,7 +30,7 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
 
     public GeoJsonTopoJsonOpenDialogViewModel(IDialogService dialogService, bool isGeoJson = true, int? initialSrid = null)
     {
-        _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+        DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         IsGeoJson = isGeoJson;
 
         _utmOption = new SrsOption { DisplayName = "UTM (user-defined zone)", IsUtm = true };
@@ -167,7 +168,7 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
 
     public GeoJsonTopoJsonOpenDialogResult? Result { get; private set; }
 
-    private void FormatJson(bool isPretty)
+    private async void FormatJson(bool isPretty)
     {
         try
         {
@@ -182,9 +183,9 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
 
             RawJson = prettyJson;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw;
+            await ShowExceptionMessageAsync(ex);
         }
     }
 
@@ -248,7 +249,7 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
         //    : "TopoJSON (*.json;*.topojson)|*.json;*.topojson|All files (*.*)|*.*";
         var filter = IsGeoJson ? DataSourceKind.GeoJson : DataSourceKind.TopoJson;
 
-        var path = await _dialogService.ShowOpenFileDialogAsync(filter, null);
+        var path = await DialogService.ShowOpenFileDialogAsync(filter, null);
 
         if (string.IsNullOrEmpty(path))
             return;
@@ -319,5 +320,26 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
     {
         DialogResult = null;
         RequestClose?.Invoke();
+    }
+
+
+    private async Task ShowExceptionMessageAsync(Exception ex)
+    {
+        if (ex is DomainException domainException)
+        {
+            await this.DialogService.ShowErrorMessage(domainException);
+        }
+        else if (ex is IOException)
+        {
+            await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
+        }
+        else if (ex is UnauthorizedAccessException)
+        {
+            await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
+        }
+        else
+        {
+            await this.DialogService.ShowErrorMessage(new MaptorUnknownException(ex.Message));
+        }
     }
 }

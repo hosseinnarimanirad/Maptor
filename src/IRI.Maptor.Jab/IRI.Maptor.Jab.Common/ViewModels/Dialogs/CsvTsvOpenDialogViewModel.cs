@@ -8,12 +8,13 @@ using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Services;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
+using IRI.Maptor.Sta.Common.Exceptions;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 
 public class CsvTsvOpenDialogViewModel : DialogViewModelBase
 {
-    private readonly IDialogService _dialogService;
+    //private readonly IDialogService _dialogService;
     private readonly SrsOption _utmOption;
     private string _filePath = string.Empty;
     private string _rawText = string.Empty;
@@ -26,7 +27,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
 
     public CsvTsvOpenDialogViewModel(IDialogService dialogService, bool initialIsCsv = true, int? initialSrid = null)
     {
-        _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+        DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
         _isCsv = initialIsCsv;
 
         _utmOption = new SrsOption { DisplayName = "UTM (user-defined zone)", IsUtm = true };
@@ -209,7 +210,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         //    : "TSV file (*.tsv)|*.tsv|Text file (*.txt)|*.txt";
         var filter = IsCsv ? DataSourceKind.Csv : DataSourceKind.Tsv;
 
-        var path = await _dialogService.ShowOpenFileDialogAsync(filter, null);
+        var path = await DialogService.ShowOpenFileDialogAsync(filter, null);
 
         if (string.IsNullOrEmpty(path))
             return;
@@ -289,5 +290,26 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
     {
         DialogResult = null;
         RequestClose?.Invoke();
+    }
+
+
+    private async Task ShowExceptionMessageAsync(Exception ex)
+    {
+        if (ex is DomainException domainException)
+        {
+            await this.DialogService.ShowErrorMessage(domainException);
+        }
+        else if (ex is IOException)
+        {
+            await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
+        }
+        else if (ex is UnauthorizedAccessException)
+        {
+            await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
+        }
+        else
+        {
+            await this.DialogService.ShowErrorMessage(new MaptorUnknownException(ex.Message));
+        }
     }
 }

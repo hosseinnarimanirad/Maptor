@@ -8,6 +8,8 @@ using IRI.Maptor.Sta.Spatial.IO.Dxf;
 using IRI.Maptor.Jab.Common.Services;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
+using IRI.Maptor.Sta.Common.Exceptions;
+using System.IO;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 
@@ -20,7 +22,7 @@ public class PointDisplay
 
 public class DxfOpenDialogViewModel : DialogViewModelBase
 {
-    private readonly IDialogService _dialogService;
+    //private readonly IDialogService _dialogService;
     private readonly SrsOption _utmOption;
     private string _filePath = string.Empty;
     private SrsOption? _selectedSrsOption;
@@ -31,7 +33,7 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
 
     public DxfOpenDialogViewModel(IDialogService dialogService, int? initialSrid = null)
     {
-        _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+        DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
         _utmOption = new SrsOption { DisplayName = "UTM (user-defined zone)", IsUtm = true };
         AvailableSrsOptions = new ObservableCollection<SrsOption>
@@ -155,7 +157,7 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
 
     private async Task BrowseAsync()
     {
-        var path = await _dialogService.ShowOpenFileDialogAsync(DataSourceKind.Dxf/*"Drawing Exchange Format (DXF)|*.dxf"*/, null);
+        var path = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.Dxf/*"Drawing Exchange Format (DXF)|*.dxf"*/, null);
 
         if (string.IsNullOrEmpty(path))
             return;
@@ -171,6 +173,7 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
             return;
 
         IsLoading = true;
+
         try
         {
             var preview = await DxfReader.GetPreviewAsync(FilePath, 50);
@@ -180,6 +183,10 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
 
             if (preview.DetectedSrid > 0)
                 ApplyInitialSrid(preview.DetectedSrid);
+        }
+        catch (Exception ex)
+        {
+            await ShowExceptionMessageAsync(ex);
         }
         finally
         {
@@ -220,4 +227,26 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
         DialogResult = false;
         RequestClose?.Invoke();
     }
+
+
+    private async Task ShowExceptionMessageAsync(Exception ex)
+        {
+        if (ex is DomainException domainException)
+        {
+            await this.DialogService.ShowErrorMessage(domainException);
+        }
+        else if (ex is IOException)
+        {
+            await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
+        }
+        else if (ex is UnauthorizedAccessException)
+        {
+            await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
+        }
+        else
+        {
+            await this.DialogService.ShowErrorMessage(new MaptorUnknownException(ex.Message));
+        }
+    }
+
 }

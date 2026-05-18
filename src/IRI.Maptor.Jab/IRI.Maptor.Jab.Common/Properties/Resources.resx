@@ -1673,4 +1673,7 @@
   <data name="dialog_msg_discardPendingChanges" xml:space="preserve">
     <value>Pending changes to layers will be discarded</value>
   </data>
+  <data name="message_error_lockedFile" xml:space="preserve">
+    <value>File is locked or in used by another program</value>
+  </data>
 </root>
