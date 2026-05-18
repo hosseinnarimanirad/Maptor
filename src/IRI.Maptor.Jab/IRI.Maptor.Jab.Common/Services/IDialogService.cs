@@ -49,8 +49,8 @@ public interface IDialogService
     // ********************************************************************
     //                          Yes/No Dialog
     // ********************************************************************
-    Task<bool?> ShowYesNoDialogAsync<T>(string message, string? title = null);
-    Task<bool?> ShowYesNoDialogAsync(string message, string? title, object? owner = null);
+    Task<bool?> ShowYesNoDialogAsync<T>(string message);
+    Task<bool?> ShowYesNoDialogAsync(string message, object? owner = null);
 
 
     // ********************************************************************
@@ -95,7 +95,7 @@ public interface IDialogService
     Task<bool?> ShowDialogAsync<TParent>(Window view, DialogViewModelBase viewModel);
 
     Task<bool?> ShowDialogAsync(object? ownerWindow, Window view, DialogViewModelBase viewModel);
-     
+
 
     // ********************************************************************
     //                          DXF Open Dialog

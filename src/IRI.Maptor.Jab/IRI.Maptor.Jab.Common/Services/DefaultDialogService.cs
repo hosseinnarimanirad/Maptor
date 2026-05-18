@@ -10,7 +10,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Controls.Dialogs;
 using IRI.Maptor.Sta.Common.Exceptions;
-using IRI.Maptor.Jab.Common.Localization; 
+using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Models.Themes;
 using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
@@ -578,11 +578,11 @@ public class DefaultDialogService : IDialogService
     /// <param name="message">The message to display.</param>
     /// <param name="title">The dialog title, or null to use a default.</param>
     /// <returns>A task that represents the asynchronous operation. The result is true for yes, false for no, or null if cancelled.</returns>
-    public Task<bool?> ShowYesNoDialogAsync<T>(string message, string? title = null)
+    public Task<bool?> ShowYesNoDialogAsync<T>(string message)
     {
         var owner = GetOwnerWindowByType<T>();
 
-        return ShowYesNoDialogAsync(message, title, owner);
+        return ShowYesNoDialogAsync(message, owner);
     }
 
     /// <summary>
@@ -592,17 +592,14 @@ public class DefaultDialogService : IDialogService
     /// <param name="title">The dialog title, or null to use a default.</param>
     /// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
     /// <returns>A task that represents the asynchronous operation. The result is true for yes, false for no, or null if cancelled.</returns>
-    public Task<bool?> ShowYesNoDialogAsync(string message, string? title, object? ownerWindow = null)
+    public Task<bool?> ShowYesNoDialogAsync(string message, object? ownerWindow = null)
     {
-        if (string.IsNullOrWhiteSpace(message))
-            throw new ArgumentException("Message cannot be null or empty.", nameof(message));
-
         var owner = ResolveOwnerWindow(ownerWindow);
 
         DialogViewModel viewModel = new(true)
         {
             Message = message,
-            Title = title ?? string.Empty,
+            Title = string.Empty,
             IsTwoOptionsMode = true
         };
 

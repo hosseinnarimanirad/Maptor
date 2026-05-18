@@ -26,9 +26,11 @@ public class DialogViewModel : DialogViewModelBase
         {
             _message = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(HasMessage));
         }
     }
 
+    public bool HasMessage => !string.IsNullOrEmpty(_message);
 
     private string _iconPathMarkup;
     public string IconPathMarkup
@@ -156,7 +158,7 @@ public class DialogViewModel : DialogViewModelBase
                 _secondOptionCommand = new RelayCommand(param =>
                 {
                     _requestSecondAction?.Invoke();
-                    
+
                     DialogResult = false;
 
                     RequestClose?.Invoke();
@@ -176,6 +178,6 @@ public class DialogViewModel : DialogViewModelBase
 
     public DialogViewModel(bool isTwoOptionsMode = true)
     {
-        IsTwoOptionsMode = isTwoOptionsMode; 
+        IsTwoOptionsMode = isTwoOptionsMode;
     }
 }
