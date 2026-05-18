@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +14,11 @@ using System.Collections.Generic;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Jab.Common.Behaviors;
 using IRI.Maptor.Jab.Common.Models;
+using System.Windows.Interop;
+using System.Windows.Threading;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace IRI.Maptor.Jab.Controls;
 
@@ -24,7 +29,12 @@ public partial class FeatureTable : UserControl
 {
     //private Feature<Point>? _pendingEditFeature;
     private Dictionary<string, object>? _pendingAttributes;
+
     private bool _editingFeature = false;
+
+    private SelectedLayer? _currentLayer;
+
+    private INotifyCollectionChanged? _currentFeaturesCollection;
 
     public SelectedLayer Presenter { get { return (this.DataContext as SelectedLayer)!; } }
 
@@ -56,8 +66,7 @@ public partial class FeatureTable : UserControl
     public static readonly DependencyProperty CanUserEditAttributeProperty =
         DependencyProperty.Register(nameof(CanUserEditAttribute), typeof(bool), typeof(FeatureTable), new PropertyMetadata(false));
 
-
-
+      
     public FeatureTable()
     {
         InitializeComponent();
@@ -97,8 +106,7 @@ public partial class FeatureTable : UserControl
             _pendingAttributes = null;
         }
     }
-
-
+     
     private void grid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         if (_editingFeature)
@@ -129,9 +137,8 @@ public partial class FeatureTable : UserControl
         this.Presenter?.UpdateHighlightedFeatures(selected);
     }
 
-    private void grid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => DataGridDictionaryBehavior.Regenerate(sender);
-
-
+    //private void grid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => DataGridDictionaryBehavior.Regenerate(sender);
+     
     // to enable off-column row selection
     private void grid_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
@@ -171,6 +178,7 @@ public partial class FeatureTable : UserControl
             grid.SelectedItem = row.Item;
         }
     }
+     
 
     private static T? FindVisualParent<T>(DependencyObject? child) where T : DependencyObject
     {
@@ -182,6 +190,8 @@ public partial class FeatureTable : UserControl
         }
         return null;
     }
+
+
 
     #region Old codes
 
@@ -287,6 +297,87 @@ public partial class FeatureTable : UserControl
     //    this.Presenter.UpdateHighlightedFeatures(grid.SelectedItems.Cast<Feature<Point>>());
     //}
 
+
+    #endregion
+
+
+
+    private void grid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        DataGridDictionaryBehavior.Regenerate(sender);
+        UnsubscribeFromLayerEvents();
+        _currentLayer = DataContext as SelectedLayer;
+        SubscribeToLayerEvents(_currentLayer);
+    }
+
+    #region Scroll to new row added
+
+    
+    private void UnsubscribeFromLayerEvents()
+    {
+        if (_currentLayer is INotifyPropertyChanged inpc)
+            inpc.PropertyChanged -= Layer_PropertyChanged;
+
+        UnsubscribeFromFeaturesCollection();
+        _currentLayer = null;
+    }
+
+    private void SubscribeToLayerEvents(SelectedLayer? layer)
+    {
+        if (layer == null) return;
+
+        // Listen for replacement of the entire Features collection
+        if (layer is INotifyPropertyChanged inpc)
+            inpc.PropertyChanged += Layer_PropertyChanged;
+
+        // Subscribe to the current Features collection
+        SubscribeToFeaturesCollection(layer.Features);
+    }
+
+    private void UnsubscribeFromFeaturesCollection()
+    {
+        if (_currentFeaturesCollection != null)
+            _currentFeaturesCollection.CollectionChanged -= Features_CollectionChanged;
+        _currentFeaturesCollection = null;
+    }
+
+    private void SubscribeToFeaturesCollection(ObservableCollection<Feature<Point>>? collection)
+    {
+        UnsubscribeFromFeaturesCollection();
+
+        if (collection == null) return;
+
+        _currentFeaturesCollection = collection;
+        collection.CollectionChanged += Features_CollectionChanged;
+    }
+
+    private void Layer_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SelectedLayer.Features) && _currentLayer != null)
+        {
+            // The entire collection was replaced – re‑subscribe
+            SubscribeToFeaturesCollection(_currentLayer.Features);
+        }
+    }
+
+    private void Features_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add && e.NewItems != null)
+        {
+            // Find the first newly added feature that is marked as "New"
+            var newFeature = e.NewItems.Cast<Feature<Point>>()
+                               .FirstOrDefault(f => f.Status == FeatureStatus.New);
+
+            if (newFeature != null)
+            {
+                // Scroll after the UI has updated the items control
+                grid.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    grid.ScrollIntoView(newFeature);
+                }), System.Windows.Threading.DispatcherPriority.Background);
+            }
+        }
+    }
 
     #endregion
 }
