@@ -77,7 +77,7 @@ public partial class MapLegendView : NotifiableUserControl
 
                                             if (cvs?.View != null)
                                             {
-                                                await control.Dispatcher.BeginInvoke(() => cvs.View.Refresh(), DispatcherPriority.Render);
+                                                await control.Dispatcher.BeginInvoke(() => cvs.View.Refresh(), DispatcherPriority.Normal);
                                             }
                                         };
 

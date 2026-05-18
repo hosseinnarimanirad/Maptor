@@ -2348,8 +2348,8 @@ public abstract class MapViewModelBase : ViewModelBase
         first.ZIndex = second.ZIndex;
         second.ZIndex = tempZIndex;
 
-        first.LayerName = $"{first.LayerName}: {first.TocOrder}";
-        second.LayerName = $"{second.LayerName}: {second.TocOrder}";
+        //first.LayerName = $"{first.LayerName}: {first.TocOrder}";
+        //second.LayerName = $"{second.LayerName}: {second.TocOrder}";
 
         if (LegendViewModel.RequestRefreshView is not null)
         {

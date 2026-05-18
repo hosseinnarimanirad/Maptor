@@ -798,7 +798,7 @@ public partial class MapViewer : NotifiableUserControl
 
         layer.VisibleRange = scaleInterval;
 
-        this._layerManager.Add(layer, InverseMapScale);
+        this._layerManager.Add(_presenter.LegendViewModel, layer, InverseMapScale);
 
         this.AddComplexLayer(layer.GetLayer(MapScale), true);
     }
@@ -826,7 +826,7 @@ public partial class MapViewer : NotifiableUserControl
 
         layer.IsOffline = isOffline;
 
-        this._layerManager.Add(layer, InverseMapScale);
+        this._layerManager.Add(_presenter.LegendViewModel, layer, InverseMapScale);
     }
 
     public void UnSetTileService(string providerFullName)
@@ -845,7 +845,7 @@ public partial class MapViewer : NotifiableUserControl
     {
         ConfigureLayer(layer);
 
-        this._layerManager.Add(layer, InverseMapScale);
+        this._layerManager.Add(_presenter.LegendViewModel, layer, InverseMapScale);
     }
 
     private void ConfigureLayer(ILayer layer)
@@ -897,7 +897,7 @@ public partial class MapViewer : NotifiableUserControl
 
     public void SetSpecialPointLayer(string layerName, ScaleInterval scaleInterval, List<Locateable> items, double opacity = 1)
     {
-        this._layerManager.Add(new SpecialPointLayer(layerName, items, opacity, scaleInterval, LayerType.Complex), InverseMapScale);
+        this._layerManager.Add(_presenter.LegendViewModel, new SpecialPointLayer(layerName, items, opacity, scaleInterval, LayerType.Complex), InverseMapScale);
     }
 
     public void AddSpecialPointLayerToMap(string layerName, ScaleInterval scaleInterval, List<Locateable> items)
@@ -2529,7 +2529,7 @@ public partial class MapViewer : NotifiableUserControl
             RasterizationMethod.DrawingVisual,
             ScaleInterval.All);
 
-        this._layerManager.Add(layer, InverseMapScale);
+        this._layerManager.Add(_presenter.LegendViewModel, layer, InverseMapScale);
 
         //AddTiledLayer(layer);
         await AddNonTiledLayer(layer);

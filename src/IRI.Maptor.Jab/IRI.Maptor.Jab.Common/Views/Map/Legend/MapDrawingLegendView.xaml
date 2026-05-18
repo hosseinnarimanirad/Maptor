@@ -255,7 +255,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding ZIndex}" Margin="4"/>
+                        <!--<TextBlock Grid.Column="0" Text="{Binding ZIndex}" Margin="4"/>-->
                         <RadioButton Grid.Column="1" Style="{StaticResource {x:Type ToggleButton}}"
                                  DataContext="{Binding }"
                                  IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}">

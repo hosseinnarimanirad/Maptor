@@ -8,6 +8,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Jab.Common.ViewModels.Map;
 
 namespace IRI.Maptor.Jab.Common.Models;
 
@@ -42,7 +43,7 @@ public class LayerManager : Notifier
 
     public bool HasLayer(Guid layerGuid) => _allLayers.Any(l => l.LayerId == layerGuid);
 
-    public void Add(ILayer layer, double inverseMapScale)
+    public void Add(LegendViewModel legendViewModel, ILayer layer, double inverseMapScale)
     {
         if (_allLayers.Any(l => l == layer))
             return;
@@ -102,6 +103,11 @@ public class LayerManager : Notifier
             var maxToc = layers.Select(l => l.TocOrder).DefaultIfEmpty(0).Max();
 
             layer.TocOrder = maxToc + 1;
+
+            if (legendViewModel?.RequestRefreshView is not null)
+            {
+                legendViewModel.RequestRefreshView.Invoke();
+            }
         }
 
         _allLayers.Add(layer);
@@ -114,7 +120,7 @@ public class LayerManager : Notifier
         {
             foreach (var item in layer.SubLayers)
             {
-                Add(item, inverseMapScale);
+                Add(legendViewModel, item, inverseMapScale);
             }
         }
         else
@@ -209,11 +215,35 @@ public class LayerManager : Notifier
 
     private void ArrangeZIndex()
     {
-        var orderedLayers = GetOrderedLayers();
+        var orderedLayers = GetOrderedLayers().Where(l => l.Parent is null).OrderBy(l => l.TocOrder).ToList();
 
-        for (int i = 0; i < orderedLayers.Count(); i++)
+        var zindex = 1;
+
+        for (int i = 0; i < orderedLayers.Count; i++)
         {
-            orderedLayers[i].ZIndex = i;
+            ArrangeZIndex(orderedLayers[i], ref zindex);
+        }
+
+        //for (int i = 0; i < orderedLayers.Count(); i++)
+        //{
+        //    orderedLayers[i].ZIndex = i;
+        //}
+    }
+
+    private void ArrangeZIndex(ILayer layer, ref int zIndex)
+    {
+        layer.ZIndex = zIndex;
+
+        zIndex++;
+
+        if (layer.IsGroupLayer)
+        {
+            var subLayers = layer.SubLayers.OrderBy(l => l.TocOrder).ToList();
+
+            for (int i = 0; i < subLayers.Count; i++)
+            {
+                ArrangeZIndex(subLayers[i], ref zIndex);
+            }
         }
     }
 

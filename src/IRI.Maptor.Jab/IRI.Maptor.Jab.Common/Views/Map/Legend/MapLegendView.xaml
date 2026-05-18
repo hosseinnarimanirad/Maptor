@@ -90,8 +90,8 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="{Binding ZIndex}" Margin="4" ToolTip="ZIndex"/>
-                    <TextBlock Grid.Column="1" Text="{Binding TocOrder}" Margin="4" ToolTip="TocOrder"/>
+                    <!--<TextBlock Grid.Column="0" Text="{Binding ZIndex}" Margin="4" ToolTip="ZIndex"/>
+                    <TextBlock Grid.Column="1" Text="{Binding TocOrder}" Margin="4" ToolTip="TocOrder"/>-->
                     <!--GroupName="{Binding ElementName=root, Path=GroupName}"-->
                     <RadioButton Grid.Column="2" Style="{StaticResource {x:Type ToggleButton}}" 
                         HorizontalAlignment="Stretch" 
