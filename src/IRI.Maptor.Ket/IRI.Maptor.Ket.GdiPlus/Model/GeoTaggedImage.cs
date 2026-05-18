@@ -34,6 +34,9 @@ public class GeoTaggedImage
                 {
                     this.GeographicLocation = Helpers.ImageHelper.GetWgs84Location(bitmap);
 
+                    if (GeographicLocation.IsNaN())
+                        return;
+
                     var webMercator = MapProjects.GeodeticWgs84ToWebMercator((Point)GeographicLocation);
 
                     this.WebMercatorLocation = new PointZM(webMercator.X, webMercator.Y, GeographicLocation.Z);
