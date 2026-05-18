@@ -20,6 +20,18 @@ public class DxfWriter
     private const string HANDLE_BLOCK_MODEL_SPACE = "20";
     private const string HANDLE_ENDBLK_MODEL_SPACE = "21";
 
+    // Table handles (fixed)
+    private const string HANDLE_VPORT_TABLE = "8";
+    private const string HANDLE_LTYPE_TABLE = "5";
+    private const string HANDLE_LAYER_TABLE = "2";
+    private const string HANDLE_STYLE_TABLE = "3";
+    private const string HANDLE_VIEW_TABLE = "6";
+    private const string HANDLE_UCS_TABLE = "7";
+    private const string HANDLE_APPID_TABLE = "9";
+    private const string HANDLE_DIMSTYLE_TABLE = "A";
+    private const string HANDLE_BLOCK_RECORD_TABLE = "1";
+    private const string HANDLE_ENDBLK_PAPER_SPACE = "1C";
+
     private static int _handleCounter = 0x100; // start after reserved handles
 
     public static void ResetHandleCounter()
@@ -44,53 +56,41 @@ public class DxfWriter
     public static string WriteToFile(Geometry<Point> geometry, string filePath, DxfColorInfo? colorInfo)
     {
         var content = Write(geometry, colorInfo);
-
         File.WriteAllText(filePath, content);
-         
         if (geometry is not null)
         {
             WritePrj(filePath, geometry.Srid);
         }
-
         return filePath;
     }
 
     public static string WriteToFile(IEnumerable<Geometry<Point>> geometries, string filePath, DxfColorInfo? colorInfo = null)
     {
         var content = Write(geometries, colorInfo);
-
         File.WriteAllText(filePath, content);
-
         var srid = geometries?.FirstOrDefault().Srid;
-
         if (srid is not null)
         {
             WritePrj(filePath, srid.Value);
         }
-
         return filePath;
     }
 
     public static string WriteToFile(IEnumerable<Geometry<Point>> geometries, string filePath, Func<Geometry<Point>, DxfColorInfo?> getColorInfo)
     {
         var content = Write(geometries, getColorInfo);
-
         File.WriteAllText(filePath, content);
-
         var srid = geometries?.FirstOrDefault().Srid;
-
         if (srid is not null)
         {
             WritePrj(filePath, srid.Value);
         }
-
         return filePath;
     }
 
     private static void WritePrj(string filePath, int srid)
     {
         string prjPath = Path.ChangeExtension(filePath, ".prj");
-
         File.WriteAllText(prjPath, SridHelper.AsSrsBase(srid)?.AsEsriCrsWkt());
     }
 
@@ -109,8 +109,10 @@ public class DxfWriter
 
         var bbox = ComputeBoundingBox(geometries);
         WriteHeader(sb, bbox);
+        //WriteClasses(sb);      
         WriteTables(sb, bbox);
         WriteBlocks(sb);
+        WriteObjects(sb);
         WriteEntities(sb, geometries, colorInfo);
         WriteEndOfFile(sb);
 
@@ -129,8 +131,10 @@ public class DxfWriter
 
         var bbox = ComputeBoundingBox(geometries);
         WriteHeader(sb, bbox);
+        //WriteClasses(sb);     
         WriteTables(sb, bbox);
         WriteBlocks(sb);
+        WriteObjects(sb);
         WriteEntities(sb, geometries, getColorInfo);
         WriteEndOfFile(sb);
 
@@ -138,7 +142,7 @@ public class DxfWriter
     }
 
     // ----------------------------------------------------------------------
-    // Header section with bounding box
+    // Header section with bounding box, HANDSEED, CODEPAGE
     // ----------------------------------------------------------------------
 
     private static void WriteHeader(StringBuilder sb, BoundingBox? bbox)
@@ -152,7 +156,17 @@ public class DxfWriter
         sb.AppendLine("1");
         sb.AppendLine(DXF_VERSION);
 
-        // Required for ArcMap: drawing extents
+        // Required for handle usage
+        sb.AppendLine("9");
+        sb.AppendLine("$HANDSEED");
+        sb.AppendLine("5");
+        sb.AppendLine("200");
+
+        sb.AppendLine("9");
+        sb.AppendLine("$DWGCODEPAGE");
+        sb.AppendLine("3");
+        sb.AppendLine("ANSI_1256");
+
         if (bbox.HasValue)
         {
             var inv = CultureInfo.InvariantCulture;
@@ -174,7 +188,6 @@ public class DxfWriter
             sb.AppendLine("30");
             sb.AppendLine("0.0");
 
-            // LIMITS (optional but recommended)
             sb.AppendLine("9");
             sb.AppendLine("$LIMMIN");
             sb.AppendLine("10");
@@ -192,13 +205,11 @@ public class DxfWriter
 
         sb.AppendLine("0");
         sb.AppendLine("ENDSEC");
-        //sb.AppendLine()
     }
 
     private static BoundingBox? ComputeBoundingBox(IEnumerable<Geometry<Point>> geometries)
     {
         double? minX = null, minY = null, maxX = null, maxY = null;
-
         foreach (var geom in geometries)
         {
             if (geom == null) continue;
@@ -211,14 +222,60 @@ public class DxfWriter
                 if (!maxY.HasValue || point.Y > maxY) maxY = point.Y;
             }
         }
-
         if (minX.HasValue && minY.HasValue && maxX.HasValue && maxY.HasValue)
             return new BoundingBox(minX.Value, minY.Value, maxX.Value, maxY.Value);
         return null;
     }
 
+    //private static void WriteClasses(StringBuilder sb)
+    //{
+    //    sb.AppendLine("0");
+    //    sb.AppendLine("SECTION");
+    //    sb.AppendLine("2");
+    //    sb.AppendLine("CLASSES");
+
+    //    // Class 1: AcDbDictionary
+    //    sb.AppendLine("0");
+    //    sb.AppendLine("CLASS");
+    //    sb.AppendLine("1");
+    //    sb.AppendLine("AcDbDictionary");
+    //    sb.AppendLine("2");
+    //    sb.AppendLine("AcDbDictionary");
+    //    sb.AppendLine("3");
+    //    sb.AppendLine("0");
+    //    sb.AppendLine("90");
+    //    sb.AppendLine("0");
+    //    sb.AppendLine("91");
+    //    sb.AppendLine("0");
+    //    sb.AppendLine("280");      // was-a-proxy flag
+    //    sb.AppendLine("0");        // 0 = not a proxy
+    //    sb.AppendLine("281");      // is-an-entity flag (required)
+    //    sb.AppendLine("0");        // 0 = not an entity
+
+    //    // Class 2: AcDbPlaceHolder
+    //    sb.AppendLine("0");
+    //    sb.AppendLine("CLASS");
+    //    sb.AppendLine("1");
+    //    sb.AppendLine("AcDbPlaceHolder");
+    //    sb.AppendLine("2");
+    //    sb.AppendLine("AcDbPlaceHolder");
+    //    sb.AppendLine("3");
+    //    sb.AppendLine("0");
+    //    sb.AppendLine("90");
+    //    sb.AppendLine("0");
+    //    sb.AppendLine("91");
+    //    sb.AppendLine("0");
+    //    sb.AppendLine("280");
+    //    sb.AppendLine("0");
+    //    sb.AppendLine("281");
+    //    sb.AppendLine("0");
+
+    //    sb.AppendLine("0");
+    //    sb.AppendLine("ENDSEC");
+    //}
+
     // ----------------------------------------------------------------------
-    // TABLES section (includes VPORT, LTYPE, LAYER, BLOCK_RECORD)
+    // TABLES section – all required tables with correct 330 pointers
     // ----------------------------------------------------------------------
 
     private static void WriteTables(StringBuilder sb, BoundingBox? bbox)
@@ -291,7 +348,7 @@ public class DxfWriter
         sb.AppendLine("0");
         sb.AppendLine("ENDTAB");
 
-        // ========== LTYPE table – FIXED COUNT ==========
+        // ========== LTYPE table ==========
         sb.AppendLine("0");
         sb.AppendLine("TABLE");
         sb.AppendLine("2");
@@ -301,13 +358,15 @@ public class DxfWriter
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTable");
         sb.AppendLine("70");
-        sb.AppendLine("3");          // ← 3 entries, not 1
+        sb.AppendLine("3");
 
         // ByBlock
         sb.AppendLine("0");
         sb.AppendLine("LTYPE");
         sb.AppendLine("5");
         sb.AppendLine("14");
+        sb.AppendLine("330");
+        sb.AppendLine("5");
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTableRecord");
         sb.AppendLine("100");
@@ -330,6 +389,8 @@ public class DxfWriter
         sb.AppendLine("LTYPE");
         sb.AppendLine("5");
         sb.AppendLine("15");
+        sb.AppendLine("330");
+        sb.AppendLine("5");
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTableRecord");
         sb.AppendLine("100");
@@ -352,6 +413,8 @@ public class DxfWriter
         sb.AppendLine("LTYPE");
         sb.AppendLine("5");
         sb.AppendLine("16");
+        sb.AppendLine("330");
+        sb.AppendLine("5");
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTableRecord");
         sb.AppendLine("100");
@@ -388,6 +451,8 @@ public class DxfWriter
         sb.AppendLine("LAYER");
         sb.AppendLine("5");
         sb.AppendLine("10");
+        sb.AppendLine("330");
+        sb.AppendLine("2");
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTableRecord");
         sb.AppendLine("100");
@@ -400,6 +465,14 @@ public class DxfWriter
         sb.AppendLine("7");
         sb.AppendLine("6");
         sb.AppendLine("CONTINUOUS");
+        sb.AppendLine("280");
+        sb.AppendLine("0");
+        sb.AppendLine("390");
+        sb.AppendLine("0");
+        sb.AppendLine("347");
+        sb.AppendLine("0");
+        sb.AppendLine("370");
+        sb.AppendLine("-3");
 
         sb.AppendLine("0");
         sb.AppendLine("ENDTAB");
@@ -420,6 +493,8 @@ public class DxfWriter
         sb.AppendLine("STYLE");
         sb.AppendLine("5");
         sb.AppendLine("11");
+        sb.AppendLine("330");
+        sb.AppendLine("3");
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTableRecord");
         sb.AppendLine("100");
@@ -457,6 +532,7 @@ public class DxfWriter
         sb.AppendLine("AcDbSymbolTable");
         sb.AppendLine("70");
         sb.AppendLine("0");
+
         sb.AppendLine("0");
         sb.AppendLine("ENDTAB");
 
@@ -471,10 +547,11 @@ public class DxfWriter
         sb.AppendLine("AcDbSymbolTable");
         sb.AppendLine("70");
         sb.AppendLine("0");
+
         sb.AppendLine("0");
         sb.AppendLine("ENDTAB");
 
-        // ========== APPID table (CRITICAL) ==========
+        // ========== APPID table ==========
         sb.AppendLine("0");
         sb.AppendLine("TABLE");
         sb.AppendLine("2");
@@ -490,6 +567,8 @@ public class DxfWriter
         sb.AppendLine("APPID");
         sb.AppendLine("5");
         sb.AppendLine("12");
+        sb.AppendLine("330");
+        sb.AppendLine("9");
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTableRecord");
         sb.AppendLine("100");
@@ -509,15 +588,25 @@ public class DxfWriter
         sb.AppendLine("DIMSTYLE");
         sb.AppendLine("5");
         sb.AppendLine("A");
+        sb.AppendLine("330");
+        sb.AppendLine("0");
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTable");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbDimStyleTable");
         sb.AppendLine("70");
         sb.AppendLine("1");
+        sb.AppendLine("71");
+        sb.AppendLine("1");
+        sb.AppendLine("340");
+        sb.AppendLine("11");
 
         sb.AppendLine("0");
         sb.AppendLine("DIMSTYLE");
-        sb.AppendLine("5");
+        sb.AppendLine("105");
         sb.AppendLine("D");
+        sb.AppendLine("330");
+        sb.AppendLine("A");
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTableRecord");
         sb.AppendLine("100");
@@ -526,16 +615,6 @@ public class DxfWriter
         sb.AppendLine("Standard");
         sb.AppendLine("70");
         sb.AppendLine("0");
-        sb.AppendLine("3");
-        sb.AppendLine("");
-        sb.AppendLine("4");
-        sb.AppendLine("");
-        sb.AppendLine("5");
-        sb.AppendLine("");
-        sb.AppendLine("6");
-        sb.AppendLine("");
-        sb.AppendLine("7");
-        sb.AppendLine("");
         sb.AppendLine("40");
         sb.AppendLine("0.0");
         sb.AppendLine("41");
@@ -578,43 +657,11 @@ public class DxfWriter
         sb.AppendLine("1");
         sb.AppendLine("78");
         sb.AppendLine("8");
-        sb.AppendLine("79");
-        sb.AppendLine("0");
-        sb.AppendLine("170");
-        sb.AppendLine("0");
-        sb.AppendLine("171");
-        sb.AppendLine("3");
-        sb.AppendLine("172");
-        sb.AppendLine("1");
-        sb.AppendLine("173");
-        sb.AppendLine("0");
-        sb.AppendLine("174");
-        sb.AppendLine("0");
-        sb.AppendLine("175");
-        sb.AppendLine("0");
-        sb.AppendLine("176");
-        sb.AppendLine("3");
-        sb.AppendLine("177");
-        sb.AppendLine("1");
-        sb.AppendLine("178");
-        sb.AppendLine("0");
-        sb.AppendLine("270");
-        sb.AppendLine("2");
-        sb.AppendLine("271");
-        sb.AppendLine("2");
-        sb.AppendLine("272");
-        sb.AppendLine("2");
-        sb.AppendLine("273");
-        sb.AppendLine("2");
-        sb.AppendLine("274");
-        sb.AppendLine("3");
-        sb.AppendLine("275");
-        sb.AppendLine("0");
 
         sb.AppendLine("0");
         sb.AppendLine("ENDTAB");
 
-        // ========== BLOCK_RECORD table (only *Model_Space) ==========
+        // ========== BLOCK_RECORD table ==========
         sb.AppendLine("0");
         sb.AppendLine("TABLE");
         sb.AppendLine("2");
@@ -624,12 +671,15 @@ public class DxfWriter
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTable");
         sb.AppendLine("70");
-        sb.AppendLine("1");          // only one record
+        sb.AppendLine("3");
 
+        // *Model_Space
         sb.AppendLine("0");
         sb.AppendLine("BLOCK_RECORD");
         sb.AppendLine("5");
-        sb.AppendLine(HANDLE_BLOCK_RECORD_MODEL_SPACE);
+        sb.AppendLine(HANDLE_BLOCK_RECORD_MODEL_SPACE); // "1F"
+        sb.AppendLine("330");
+        sb.AppendLine("1");
         sb.AppendLine("100");
         sb.AppendLine("AcDbSymbolTableRecord");
         sb.AppendLine("100");
@@ -637,7 +687,7 @@ public class DxfWriter
         sb.AppendLine("2");
         sb.AppendLine("*Model_Space");
         sb.AppendLine("340");
-        sb.AppendLine(HANDLE_BLOCK_MODEL_SPACE);
+        sb.AppendLine(HANDLE_BLOCK_MODEL_SPACE); // "20"
         sb.AppendLine("70");
         sb.AppendLine("0");
         sb.AppendLine("280");
@@ -645,8 +695,49 @@ public class DxfWriter
         sb.AppendLine("281");
         sb.AppendLine("0");
 
-        // *Paper_Space record removed because its block is not defined.
-        // If you want to keep it, uncomment the block definition in WriteBlocks().
+        // *Paper_Space
+        sb.AppendLine("0");
+        sb.AppendLine("BLOCK_RECORD");
+        sb.AppendLine("5");
+        sb.AppendLine("1B");
+        sb.AppendLine("330");
+        sb.AppendLine("1");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbSymbolTableRecord");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbBlockTableRecord");
+        sb.AppendLine("2");
+        sb.AppendLine("*Paper_Space");
+        sb.AppendLine("340");
+        sb.AppendLine("1E");
+        sb.AppendLine("70");
+        sb.AppendLine("0");
+        sb.AppendLine("280");
+        sb.AppendLine("1");
+        sb.AppendLine("281");
+        sb.AppendLine("0");
+
+        // *Paper_Space0
+        sb.AppendLine("0");
+        sb.AppendLine("BLOCK_RECORD");
+        sb.AppendLine("5");
+        sb.AppendLine("5D");
+        sb.AppendLine("330");
+        sb.AppendLine("1");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbSymbolTableRecord");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbBlockTableRecord");
+        sb.AppendLine("2");
+        sb.AppendLine("*Paper_Space0");
+        sb.AppendLine("340");
+        sb.AppendLine("5F");   // handle of *Paper_Space0 block (changed from 5E to avoid conflict)
+        sb.AppendLine("70");
+        sb.AppendLine("0");
+        sb.AppendLine("280");
+        sb.AppendLine("1");
+        sb.AppendLine("281");
+        sb.AppendLine("0");
 
         sb.AppendLine("0");
         sb.AppendLine("ENDTAB");
@@ -670,9 +761,9 @@ public class DxfWriter
         sb.AppendLine("0");
         sb.AppendLine("BLOCK");
         sb.AppendLine("5");
-        sb.AppendLine(HANDLE_BLOCK_MODEL_SPACE);
+        sb.AppendLine(HANDLE_BLOCK_MODEL_SPACE); // "20"
         sb.AppendLine("330");
-        sb.AppendLine(HANDLE_BLOCK_RECORD_MODEL_SPACE);
+        sb.AppendLine(HANDLE_BLOCK_RECORD_MODEL_SPACE); // "1F"
         sb.AppendLine("100");
         sb.AppendLine("AcDbEntity");
         sb.AppendLine("8");
@@ -697,7 +788,7 @@ public class DxfWriter
         sb.AppendLine("0");
         sb.AppendLine("ENDBLK");
         sb.AppendLine("5");
-        sb.AppendLine(HANDLE_ENDBLK_MODEL_SPACE);
+        sb.AppendLine(HANDLE_ENDBLK_MODEL_SPACE); // "21"
         sb.AppendLine("330");
         sb.AppendLine(HANDLE_BLOCK_MODEL_SPACE);
         sb.AppendLine("100");
@@ -707,8 +798,7 @@ public class DxfWriter
         sb.AppendLine("100");
         sb.AppendLine("AcDbBlockEnd");
 
-        // If you want *Paper_Space, uncomment the following block:
-        /*
+        // *Paper_Space block definition
         sb.AppendLine("0");
         sb.AppendLine("BLOCK");
         sb.AppendLine("5");
@@ -717,6 +807,8 @@ public class DxfWriter
         sb.AppendLine("1B");
         sb.AppendLine("100");
         sb.AppendLine("AcDbEntity");
+        sb.AppendLine("67");
+        sb.AppendLine("1");                     // paper space flag
         sb.AppendLine("8");
         sb.AppendLine("0");
         sb.AppendLine("100");
@@ -735,26 +827,512 @@ public class DxfWriter
         sb.AppendLine("*Paper_Space");
         sb.AppendLine("1");
         sb.AppendLine("");
+
         sb.AppendLine("0");
         sb.AppendLine("ENDBLK");
         sb.AppendLine("5");
-        sb.AppendLine("1F");
+        sb.AppendLine("1C");
         sb.AppendLine("330");
         sb.AppendLine("1E");
         sb.AppendLine("100");
         sb.AppendLine("AcDbEntity");
+        sb.AppendLine("67");
+        sb.AppendLine("1");
         sb.AppendLine("8");
         sb.AppendLine("0");
         sb.AppendLine("100");
         sb.AppendLine("AcDbBlockEnd");
-        */
+
+        // *Paper_Space0 block definition (handles changed to avoid conflict with LAYOUT)
+        sb.AppendLine("0");
+        sb.AppendLine("BLOCK");
+        sb.AppendLine("5");
+        sb.AppendLine("5F");                     // changed from "5E"
+        sb.AppendLine("330");
+        sb.AppendLine("5D");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbEntity");
+        sb.AppendLine("67");
+        sb.AppendLine("1");
+        sb.AppendLine("8");
+        sb.AppendLine("0");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbBlockBegin");
+        sb.AppendLine("2");
+        sb.AppendLine("*Paper_Space0");
+        sb.AppendLine("70");
+        sb.AppendLine("0");
+        sb.AppendLine("10");
+        sb.AppendLine("0.0");
+        sb.AppendLine("20");
+        sb.AppendLine("0.0");
+        sb.AppendLine("30");
+        sb.AppendLine("0.0");
+        sb.AppendLine("3");
+        sb.AppendLine("*Paper_Space0");
+        sb.AppendLine("1");
+        sb.AppendLine("");
+
+        sb.AppendLine("0");
+        sb.AppendLine("ENDBLK");
+        sb.AppendLine("5");
+        sb.AppendLine("60");                    // changed from "5F"
+        sb.AppendLine("330");
+        sb.AppendLine("5F");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbEntity");
+        sb.AppendLine("67");
+        sb.AppendLine("1");
+        sb.AppendLine("8");
+        sb.AppendLine("0");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbBlockEnd");
+
+        sb.AppendLine("0");
+        sb.AppendLine("ENDSEC");
+    }
+
+    private static void WriteObjects(StringBuilder sb)
+    {
+        sb.AppendLine("0");
+        sb.AppendLine("SECTION");
+        sb.AppendLine("2");
+        sb.AppendLine("OBJECTS");
+
+        // Root named object dictionary (handle = "C")
+        sb.AppendLine("0");
+        sb.AppendLine("DICTIONARY");
+        sb.AppendLine("5");
+        sb.AppendLine("C");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbDictionary");
+        sb.AppendLine("281");
+        sb.AppendLine("1");
+        sb.AppendLine("3");
+        sb.AppendLine("ACAD_GROUP");
+        sb.AppendLine("350");
+        sb.AppendLine("E");
+        sb.AppendLine("3");
+        sb.AppendLine("ACAD_LAYOUT");
+        sb.AppendLine("350");
+        sb.AppendLine("F");
+
+        // GROUP dictionary (empty)
+        sb.AppendLine("0");
+        sb.AppendLine("DICTIONARY");
+        sb.AppendLine("5");
+        sb.AppendLine("E");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbDictionary");
+        sb.AppendLine("281");
+        sb.AppendLine("1");
+
+        // LAYOUT dictionary
+        sb.AppendLine("0");
+        sb.AppendLine("DICTIONARY");
+        sb.AppendLine("5");
+        sb.AppendLine("F");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbDictionary");
+        sb.AppendLine("281");
+        sb.AppendLine("1");
+        sb.AppendLine("3");
+        sb.AppendLine("Model");
+        sb.AppendLine("350");
+        sb.AppendLine("22");
+        sb.AppendLine("3");
+        sb.AppendLine("Layout1");
+        sb.AppendLine("350");
+        sb.AppendLine("59");
+        sb.AppendLine("3");
+        sb.AppendLine("Layout2");
+        sb.AppendLine("350");
+        sb.AppendLine("5E");
+
+        // LAYOUT for Model Space (handle 22)
+        sb.AppendLine("0");
+        sb.AppendLine("LAYOUT");
+        sb.AppendLine("5");
+        sb.AppendLine("22");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbPlotSettings");
+        sb.AppendLine("1");
+        sb.AppendLine("");
+        sb.AppendLine("2");
+        sb.AppendLine("none_device");
+        sb.AppendLine("4");
+        sb.AppendLine("ANSI_A_(8.50_x_11.00_Inches)");
+        sb.AppendLine("6");
+        sb.AppendLine("");
+        sb.AppendLine("40");
+        sb.AppendLine("0.0");
+        sb.AppendLine("41");
+        sb.AppendLine("0.0");
+        sb.AppendLine("42");
+        sb.AppendLine("0.0");
+        sb.AppendLine("43");
+        sb.AppendLine("0.0");
+        sb.AppendLine("44");
+        sb.AppendLine("0.0");
+        sb.AppendLine("45");
+        sb.AppendLine("0.0");
+        sb.AppendLine("46");
+        sb.AppendLine("0.0");
+        sb.AppendLine("47");
+        sb.AppendLine("0.0");
+        sb.AppendLine("48");
+        sb.AppendLine("0.0");
+        sb.AppendLine("49");
+        sb.AppendLine("0.0");
+        sb.AppendLine("140");
+        sb.AppendLine("0.0");
+        sb.AppendLine("141");
+        sb.AppendLine("0.0");
+        sb.AppendLine("142");
+        sb.AppendLine("1.0");
+        sb.AppendLine("143");
+        sb.AppendLine("1.0");
+        sb.AppendLine("70");
+        sb.AppendLine("688");
+        sb.AppendLine("72");
+        sb.AppendLine("0");
+        sb.AppendLine("73");
+        sb.AppendLine("0");
+        sb.AppendLine("74");
+        sb.AppendLine("0");
+        sb.AppendLine("7");
+        sb.AppendLine("");
+        sb.AppendLine("75");
+        sb.AppendLine("0");
+        sb.AppendLine("147");
+        sb.AppendLine("1.0");
+        sb.AppendLine("76");
+        sb.AppendLine("0");
+        sb.AppendLine("77");
+        sb.AppendLine("2");
+        sb.AppendLine("78");
+        sb.AppendLine("300");
+        sb.AppendLine("148");
+        sb.AppendLine("0.0");
+        sb.AppendLine("149");
+        sb.AppendLine("0.0");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbLayout");
+        sb.AppendLine("1");
+        sb.AppendLine("Model");
+        sb.AppendLine("70");
+        sb.AppendLine("1");
+        sb.AppendLine("71");
+        sb.AppendLine("0");
+        sb.AppendLine("10");
+        sb.AppendLine("0.0");
+        sb.AppendLine("20");
+        sb.AppendLine("0.0");
+        sb.AppendLine("11");
+        sb.AppendLine("12.0");
+        sb.AppendLine("21");
+        sb.AppendLine("9.0");
+        sb.AppendLine("12");
+        sb.AppendLine("0.0");
+        sb.AppendLine("22");
+        sb.AppendLine("0.0");
+        sb.AppendLine("32");
+        sb.AppendLine("0.0");
+        sb.AppendLine("14");
+        sb.AppendLine("0.0");
+        sb.AppendLine("24");
+        sb.AppendLine("0.0");
+        sb.AppendLine("34");
+        sb.AppendLine("0.0");
+        sb.AppendLine("15");
+        sb.AppendLine("0.0");
+        sb.AppendLine("25");
+        sb.AppendLine("0.0");
+        sb.AppendLine("35");
+        sb.AppendLine("0.0");
+        sb.AppendLine("146");
+        sb.AppendLine("0.0");
+        sb.AppendLine("13");
+        sb.AppendLine("0.0");
+        sb.AppendLine("23");
+        sb.AppendLine("0.0");
+        sb.AppendLine("33");
+        sb.AppendLine("0.0");
+        sb.AppendLine("16");
+        sb.AppendLine("1.0");
+        sb.AppendLine("26");
+        sb.AppendLine("0.0");
+        sb.AppendLine("36");
+        sb.AppendLine("0.0");
+        sb.AppendLine("17");
+        sb.AppendLine("0.0");
+        sb.AppendLine("27");
+        sb.AppendLine("1.0");
+        sb.AppendLine("37");
+        sb.AppendLine("0.0");
+        sb.AppendLine("76");
+        sb.AppendLine("0");
+        sb.AppendLine("330");
+        sb.AppendLine("1F");   // points to *Model_Space block record
+
+        // LAYOUT for Layout1 (Paper Space) – handle 59
+        sb.AppendLine("0");
+        sb.AppendLine("LAYOUT");
+        sb.AppendLine("5");
+        sb.AppendLine("59");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbPlotSettings");
+        sb.AppendLine("1");
+        sb.AppendLine("");
+        sb.AppendLine("2");
+        sb.AppendLine("None");
+        sb.AppendLine("4");
+        sb.AppendLine("");
+        sb.AppendLine("6");
+        sb.AppendLine("");
+        sb.AppendLine("40");
+        sb.AppendLine("0.0");
+        sb.AppendLine("41");
+        sb.AppendLine("0.0");
+        sb.AppendLine("42");
+        sb.AppendLine("0.0");
+        sb.AppendLine("43");
+        sb.AppendLine("0.0");
+        sb.AppendLine("44");
+        sb.AppendLine("0.0");
+        sb.AppendLine("45");
+        sb.AppendLine("0.0");
+        sb.AppendLine("46");
+        sb.AppendLine("0.0");
+        sb.AppendLine("47");
+        sb.AppendLine("0.0");
+        sb.AppendLine("48");
+        sb.AppendLine("0.0");
+        sb.AppendLine("49");
+        sb.AppendLine("0.0");
+        sb.AppendLine("140");
+        sb.AppendLine("0.0");
+        sb.AppendLine("141");
+        sb.AppendLine("0.0");
+        sb.AppendLine("142");
+        sb.AppendLine("1.0");
+        sb.AppendLine("143");
+        sb.AppendLine("1.0");
+        sb.AppendLine("70");
+        sb.AppendLine("688");
+        sb.AppendLine("72");
+        sb.AppendLine("0");
+        sb.AppendLine("73");
+        sb.AppendLine("0");
+        sb.AppendLine("74");
+        sb.AppendLine("5");
+        sb.AppendLine("7");
+        sb.AppendLine("");
+        sb.AppendLine("75");
+        sb.AppendLine("16");
+        sb.AppendLine("147");
+        sb.AppendLine("1.0");
+        sb.AppendLine("76");
+        sb.AppendLine("0");
+        sb.AppendLine("77");
+        sb.AppendLine("2");
+        sb.AppendLine("78");
+        sb.AppendLine("300");
+        sb.AppendLine("148");
+        sb.AppendLine("0.0");
+        sb.AppendLine("149");
+        sb.AppendLine("0.0");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbLayout");
+        sb.AppendLine("1");
+        sb.AppendLine("Layout1");
+        sb.AppendLine("70");
+        sb.AppendLine("1");
+        sb.AppendLine("71");
+        sb.AppendLine("1");
+        sb.AppendLine("10");
+        sb.AppendLine("0.0");
+        sb.AppendLine("20");
+        sb.AppendLine("0.0");
+        sb.AppendLine("11");
+        sb.AppendLine("12.0");
+        sb.AppendLine("21");
+        sb.AppendLine("9.0");
+        sb.AppendLine("12");
+        sb.AppendLine("0.0");
+        sb.AppendLine("22");
+        sb.AppendLine("0.0");
+        sb.AppendLine("32");
+        sb.AppendLine("0.0");
+        sb.AppendLine("14");
+        sb.AppendLine("0.0");
+        sb.AppendLine("24");
+        sb.AppendLine("0.0");
+        sb.AppendLine("34");
+        sb.AppendLine("0.0");
+        sb.AppendLine("15");
+        sb.AppendLine("0.0");
+        sb.AppendLine("25");
+        sb.AppendLine("0.0");
+        sb.AppendLine("35");
+        sb.AppendLine("0.0");
+        sb.AppendLine("146");
+        sb.AppendLine("0.0");
+        sb.AppendLine("13");
+        sb.AppendLine("0.0");
+        sb.AppendLine("23");
+        sb.AppendLine("0.0");
+        sb.AppendLine("33");
+        sb.AppendLine("0.0");
+        sb.AppendLine("16");
+        sb.AppendLine("1.0");
+        sb.AppendLine("26");
+        sb.AppendLine("0.0");
+        sb.AppendLine("36");
+        sb.AppendLine("0.0");
+        sb.AppendLine("17");
+        sb.AppendLine("0.0");
+        sb.AppendLine("27");
+        sb.AppendLine("1.0");
+        sb.AppendLine("37");
+        sb.AppendLine("0.0");
+        sb.AppendLine("76");
+        sb.AppendLine("0");
+        sb.AppendLine("330");
+        sb.AppendLine("1B");   // points to *Paper_Space block record
+
+        // LAYOUT for Layout2 (Paper Space0) – handle 5E
+        sb.AppendLine("0");
+        sb.AppendLine("LAYOUT");
+        sb.AppendLine("5");
+        sb.AppendLine("5E");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbPlotSettings");
+        sb.AppendLine("1");
+        sb.AppendLine("");
+        sb.AppendLine("2");
+        sb.AppendLine("None");
+        sb.AppendLine("4");
+        sb.AppendLine("");
+        sb.AppendLine("6");
+        sb.AppendLine("");
+        sb.AppendLine("40");
+        sb.AppendLine("0.0");
+        sb.AppendLine("41");
+        sb.AppendLine("0.0");
+        sb.AppendLine("42");
+        sb.AppendLine("0.0");
+        sb.AppendLine("43");
+        sb.AppendLine("0.0");
+        sb.AppendLine("44");
+        sb.AppendLine("0.0");
+        sb.AppendLine("45");
+        sb.AppendLine("0.0");
+        sb.AppendLine("46");
+        sb.AppendLine("0.0");
+        sb.AppendLine("47");
+        sb.AppendLine("0.0");
+        sb.AppendLine("48");
+        sb.AppendLine("0.0");
+        sb.AppendLine("49");
+        sb.AppendLine("0.0");
+        sb.AppendLine("140");
+        sb.AppendLine("0.0");
+        sb.AppendLine("141");
+        sb.AppendLine("0.0");
+        sb.AppendLine("142");
+        sb.AppendLine("1.0");
+        sb.AppendLine("143");
+        sb.AppendLine("1.0");
+        sb.AppendLine("70");
+        sb.AppendLine("688");
+        sb.AppendLine("72");
+        sb.AppendLine("0");
+        sb.AppendLine("73");
+        sb.AppendLine("0");
+        sb.AppendLine("74");
+        sb.AppendLine("5");
+        sb.AppendLine("7");
+        sb.AppendLine("");
+        sb.AppendLine("75");
+        sb.AppendLine("16");
+        sb.AppendLine("147");
+        sb.AppendLine("1.0");
+        sb.AppendLine("76");
+        sb.AppendLine("0");
+        sb.AppendLine("77");
+        sb.AppendLine("2");
+        sb.AppendLine("78");
+        sb.AppendLine("300");
+        sb.AppendLine("148");
+        sb.AppendLine("0.0");
+        sb.AppendLine("149");
+        sb.AppendLine("0.0");
+        sb.AppendLine("100");
+        sb.AppendLine("AcDbLayout");
+        sb.AppendLine("1");
+        sb.AppendLine("Layout2");
+        sb.AppendLine("70");
+        sb.AppendLine("1");
+        sb.AppendLine("71");
+        sb.AppendLine("2");
+        sb.AppendLine("10");
+        sb.AppendLine("0.0");
+        sb.AppendLine("20");
+        sb.AppendLine("0.0");
+        sb.AppendLine("11");
+        sb.AppendLine("12.0");
+        sb.AppendLine("21");
+        sb.AppendLine("9.0");
+        sb.AppendLine("12");
+        sb.AppendLine("0.0");
+        sb.AppendLine("22");
+        sb.AppendLine("0.0");
+        sb.AppendLine("32");
+        sb.AppendLine("0.0");
+        sb.AppendLine("14");
+        sb.AppendLine("0.0");
+        sb.AppendLine("24");
+        sb.AppendLine("0.0");
+        sb.AppendLine("34");
+        sb.AppendLine("0.0");
+        sb.AppendLine("15");
+        sb.AppendLine("0.0");
+        sb.AppendLine("25");
+        sb.AppendLine("0.0");
+        sb.AppendLine("35");
+        sb.AppendLine("0.0");
+        sb.AppendLine("146");
+        sb.AppendLine("0.0");
+        sb.AppendLine("13");
+        sb.AppendLine("0.0");
+        sb.AppendLine("23");
+        sb.AppendLine("0.0");
+        sb.AppendLine("33");
+        sb.AppendLine("0.0");
+        sb.AppendLine("16");
+        sb.AppendLine("1.0");
+        sb.AppendLine("26");
+        sb.AppendLine("0.0");
+        sb.AppendLine("36");
+        sb.AppendLine("0.0");
+        sb.AppendLine("17");
+        sb.AppendLine("0.0");
+        sb.AppendLine("27");
+        sb.AppendLine("1.0");
+        sb.AppendLine("37");
+        sb.AppendLine("0.0");
+        sb.AppendLine("76");
+        sb.AppendLine("0");
+        sb.AppendLine("330");
+        sb.AppendLine("5D");   // points to *Paper_Space0 block record
 
         sb.AppendLine("0");
         sb.AppendLine("ENDSEC");
     }
 
     // ----------------------------------------------------------------------
-    // ENTITIES section – main geometry output with proper handles and 330 pointers
+    // ENTITIES section – main geometry output
     // ----------------------------------------------------------------------
 
     private static void WriteEntities(StringBuilder sb, IEnumerable<Geometry<Point>> geometries, DxfColorInfo? globalColorInfo)
@@ -772,7 +1350,6 @@ public class DxfWriter
 
         sb.AppendLine("0");
         sb.AppendLine("ENDSEC");
-        //sb.AppendLine()
     }
 
     private static void WriteEntities(StringBuilder sb, IEnumerable<Geometry<Point>> geometries, Func<Geometry<Point>, DxfColorInfo?> getColorInfo)
@@ -793,12 +1370,8 @@ public class DxfWriter
 
         sb.AppendLine("0");
         sb.AppendLine("ENDSEC");
-        //sb.AppendLine()
     }
 
-    /// <summary>
-    /// Writes a geometry entity with the required 330 pointer to *Model_Space.
-    /// </summary>
     private static void WriteGeometryWithPointer(StringBuilder sb, Geometry<Point> geometry, DxfColorInfo? colorInfo)
     {
         if (geometry == null || !geometry.HasAnyPoint())
@@ -817,23 +1390,20 @@ public class DxfWriter
 
         string handle = GetNextHandle();
 
-        // Common entity header for all types
         sb.AppendLine("0");
         sb.AppendLine(GetEntityTypeName(geometry));
         sb.AppendLine("5");
         sb.AppendLine(handle);
         sb.AppendLine("330");
-        sb.AppendLine(HANDLE_BLOCK_RECORD_MODEL_SPACE); // points to *Model_Space block record
+        sb.AppendLine(HANDLE_BLOCK_RECORD_MODEL_SPACE); // owner = *Model_Space block record
         sb.AppendLine("100");
         sb.AppendLine("AcDbEntity");
         sb.AppendLine("8");
         sb.AppendLine("0"); // layer name
 
-        // Write color/transparency if provided
         if (colorInfo?.StrokeColor != null)
             WriteColorCodes(sb, colorInfo.StrokeColor.Value, colorInfo.Opacity);
 
-        // Write geometry-specific data
         switch (geometry.Type)
         {
             case GeometryType.Point:
@@ -846,7 +1416,6 @@ public class DxfWriter
                 WritePolygonBody(sb, geometry, colorInfo);
                 break;
             default:
-                // Fallback: try as line string
                 WriteLineStringBody(sb, geometry, colorInfo);
                 break;
         }
@@ -863,16 +1432,11 @@ public class DxfWriter
         };
     }
 
-    // ----------------------------------------------------------------------
-    // Geometry body writers (no 0/330/100, just the entity-specific codes)
-    // ----------------------------------------------------------------------
-
     private static void WritePointBody(StringBuilder sb, Geometry<Point> geometry, DxfColorInfo? colorInfo)
     {
         if (geometry.Points == null || geometry.Points.Count == 0) return;
         var p = geometry.Points[0];
         var inv = CultureInfo.InvariantCulture;
-
         sb.AppendLine("100");
         sb.AppendLine("AcDbPoint");
         sb.AppendLine("10");
@@ -887,21 +1451,17 @@ public class DxfWriter
     {
         if (geometry.Points == null || geometry.Points.Count < 2) return;
         var inv = CultureInfo.InvariantCulture;
-
         sb.AppendLine("100");
         sb.AppendLine("AcDbPolyline");
         sb.AppendLine("90");
         sb.AppendLine(geometry.Points.Count.ToString());
         sb.AppendLine("70");
         sb.AppendLine("0"); // open polyline
-
-        // Optional constant width
         if (colorInfo?.StrokeThickness > 0)
         {
             sb.AppendLine("43");
             sb.AppendLine(colorInfo.StrokeThickness.ToString("F14", inv));
         }
-
         foreach (var point in geometry.Points)
         {
             sb.AppendLine("10");
@@ -916,22 +1476,18 @@ public class DxfWriter
         if (geometry.Geometries == null || geometry.Geometries.Count == 0) return;
         var exterior = geometry.Geometries[0];
         if (exterior.Points == null || exterior.Points.Count < 3) return;
-
         var inv = CultureInfo.InvariantCulture;
-
         sb.AppendLine("100");
         sb.AppendLine("AcDbPolyline");
         sb.AppendLine("90");
         sb.AppendLine(exterior.Points.Count.ToString());
         sb.AppendLine("70");
-        sb.AppendLine("1"); // closed polyline
-
+        sb.AppendLine("1"); // closed
         if (colorInfo?.StrokeThickness > 0)
         {
             sb.AppendLine("43");
             sb.AppendLine(colorInfo.StrokeThickness.ToString("F14", inv));
         }
-
         foreach (var point in exterior.Points)
         {
             sb.AppendLine("10");
@@ -939,8 +1495,6 @@ public class DxfWriter
             sb.AppendLine("20");
             sb.AppendLine(point.Y.ToString("F14", inv));
         }
-
-        // Add HATCH for fill if fill color provided
         if (colorInfo?.FillColor != null)
             WriteHatchEntity(sb, geometry, colorInfo.FillColor.Value, colorInfo.Opacity);
     }
@@ -965,9 +1519,7 @@ public class DxfWriter
         sb.AppendLine("AcDbEntity");
         sb.AppendLine("8");
         sb.AppendLine("0");
-
         WriteColorCodes(sb, fillColor, opacity);
-
         sb.AppendLine("100");
         sb.AppendLine("AcDbHatch");
         sb.AppendLine("10");
@@ -990,18 +1542,13 @@ public class DxfWriter
         sb.AppendLine("0");
         sb.AppendLine("91");
         sb.AppendLine(geometry.Geometries.Count.ToString());
-
-        // Exterior boundary
         WriteHatchBoundary(sb, exterior.Points, isOuter: true);
-
-        // Holes
         for (int i = 1; i < geometry.Geometries.Count; i++)
         {
             var hole = geometry.Geometries[i];
             if (hole.Points != null && hole.Points.Count > 0)
                 WriteHatchBoundary(sb, hole.Points, isOuter: false);
         }
-
         sb.AppendLine("75");
         sb.AppendLine("1");
         sb.AppendLine("76");
@@ -1023,7 +1570,6 @@ public class DxfWriter
         sb.AppendLine("1");
         sb.AppendLine("97");
         sb.AppendLine(points.Count.ToString());
-
         foreach (var pt in points)
         {
             sb.AppendLine("10");
@@ -1043,7 +1589,6 @@ public class DxfWriter
     {
         sb.AppendLine("420");
         sb.AppendLine(color.ToDxfTrueColor().ToString());
-
         byte alpha = color.GetAlpha(opacity);
         if (alpha < 255)
         {
