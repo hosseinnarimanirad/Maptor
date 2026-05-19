@@ -13,7 +13,19 @@ public abstract class BaseDataSource : IDataSource
 {
     public virtual DataSourceKind DataSourceKind => DataSourceKind.Other;
 
-    public virtual BoundingBox WebMercatorExtent { get; protected set; } = BoundingBox.NaN;
+    private BoundingBox _webMercatorExtent = BoundingBox.NaN;
+    public virtual BoundingBox WebMercatorExtent
+    {
+        get { return _webMercatorExtent; }
+        protected set
+        {
+            _webMercatorExtent = value;
+
+            this.OnExtentChanged?.Invoke(this, value);
+        }
+    }
+    //public virtual BoundingBox WebMercatorExtent { get; protected set; } = BoundingBox.NaN;
+
 
     public abstract int Srid { get; /*protected set;*/ }
 
@@ -30,6 +42,8 @@ public abstract class BaseDataSource : IDataSource
     public event EventHandler<bool>? IsClientFilteredChanged;
 
     public event EventHandler<bool>? HasErrorChanged;
+
+    public event EventHandler<BoundingBox>? OnExtentChanged;
 
 
     private bool _isInitializing;

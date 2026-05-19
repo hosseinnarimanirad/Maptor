@@ -112,7 +112,7 @@ public abstract class BaseLayer : Notifier, ILayer
         protected set
         {
             _extent = value;
-            RaisePropertyChanged();
+            RaisePropertyChanged();            
         }
     }
 
@@ -171,6 +171,7 @@ public abstract class BaseLayer : Notifier, ILayer
         dataSource.HasPendingChangesChanged -= DataSource_HasPendingChangesChanged;
         dataSource.IsClientFilteredChanged -= DataSource_IsClientFilteredChanged;
         dataSource.HasErrorChanged -= DataSource_HasErrorChanged;
+        dataSource.OnExtentChanged -= DataSource_ExtentChanged;
     }
 
     protected void SubscribeToDataSourceStatusEvents(IDataSource? dataSource)
@@ -184,6 +185,12 @@ public abstract class BaseLayer : Notifier, ILayer
         dataSource.HasPendingChangesChanged += DataSource_HasPendingChangesChanged;
         dataSource.IsClientFilteredChanged += DataSource_IsClientFilteredChanged;
         dataSource.HasErrorChanged += DataSource_HasErrorChanged;
+        dataSource.OnExtentChanged += DataSource_ExtentChanged; 
+    }
+
+    private void DataSource_ExtentChanged(object? sender, BoundingBox e)
+    {
+        this.Extent = e;
     }
 
     private static void DispatcherToUi(Action action)

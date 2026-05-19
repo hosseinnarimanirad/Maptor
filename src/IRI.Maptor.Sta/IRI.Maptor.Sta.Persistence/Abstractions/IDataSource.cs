@@ -63,6 +63,8 @@ public interface IDataSource
 
     event EventHandler<bool>? HasErrorChanged;
 
+    event EventHandler<BoundingBox>? OnExtentChanged;
+
     /// <summary>
     /// Loads or refreshes the data source asynchronously.
     /// Pre-loaded sources (e.g., in-memory) may return completed task.

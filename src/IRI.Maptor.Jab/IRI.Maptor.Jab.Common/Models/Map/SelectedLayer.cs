@@ -215,7 +215,7 @@ public class SelectedLayer : Notifier
 
         if (!dataSource.UpdateGeometry(feature, newGeometry))
             return false;
-
+         
         // in order to update the RowHeader icon
         RefreshFeatureInView(feature);
 
