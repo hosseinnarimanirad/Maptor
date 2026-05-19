@@ -176,14 +176,12 @@
             </TextBlock>
             <Button Command="{Binding AddCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                    IsEnabled="{Binding CanAdd}"
                     ToolTip="{Binding [featureTable_addNew], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="Plus" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
             <Button Command="{Binding DeleteCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                    IsEnabled="{Binding CanDelete}"
                     ToolTip="{Binding [featureTable_delete], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="Delete" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>

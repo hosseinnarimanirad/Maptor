@@ -126,7 +126,7 @@ public class FeatureSet<T> where T : IPoint, new()
         if (feature.TheGeometry?.Srid != this.Srid)
             throw new NotImplementedException("FeatureSetOfT > Add > wrong SRID");
 
-        if (feature.TheGeometry?.Type != this.GeometryType)
+        if (feature.TheGeometry?.Category != this.GeometryType.GetCategory())
             throw new NotImplementedException("FeatureSetOfT > Add > wrong geometry type");
 
         if (feature.Key == Guid.Empty)
@@ -268,12 +268,12 @@ public class FeatureSet<T> where T : IPoint, new()
 
         if (features.Select(f => f.TheGeometry.Srid).Distinct().Count() > 1)
             throw new NotImplementedException("FeatureSet<TGeometry, TPoint> => same SRID rule violated");
-
+         
         return new FeatureSet<T>()
         {
             Title = title,
             _allFeatures = features,
-            Fields = new List<Field>(),
+            Fields = Field.FromDictionary(features?.FirstOrDefault().Attributes),
             Srid = features.SkipWhile(f => f is null || f.TheGeometry.IsNotValidOrEmpty())?.FirstOrDefault()?.Srid ?? 0,
             GeometryType = features.SkipWhile(f => f is null || f.TheGeometry.IsNotValidOrEmpty())?.FirstOrDefault()?.GeometryType ?? GeometryType.None
         };

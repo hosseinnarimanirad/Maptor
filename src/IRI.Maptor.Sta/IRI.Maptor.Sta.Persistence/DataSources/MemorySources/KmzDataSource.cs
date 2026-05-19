@@ -32,12 +32,15 @@ public class KmzDataSource : MemoryDataSource
     public override string ToString() => $"{nameof(KmzDataSource)}";
 
     public override Task SaveChangesAsync()
-    {
-        var features = _featureSet.Features.ToList();
-        var kmlFeatures = features.ToKmlFeatures();
+    { 
+        var kmlFeatures = _featureSet.Features.ToKmlFeatures();
+
         KmzWriter.WriteToFile(kmlFeatures, _fileName, null, MapProjects.WebMercatorToGeodeticWgs84);
+
         _featureSet.ApplyChanges();
+
         UpdateHasPendingChanges();
+
         return Task.CompletedTask;
     }
 

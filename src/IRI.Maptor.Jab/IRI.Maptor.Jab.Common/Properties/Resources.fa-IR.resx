@@ -172,7 +172,7 @@
     <value>افزودن GeoJson</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
-    <value>افزودن شیپ‌فایل</value>
+    <value>افزودن Shapefile</value>
   </data>
   <data name="cmd_general_addTextToMap" xml:space="preserve">
     <value>اضافه کردن متن</value>

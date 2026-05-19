@@ -79,10 +79,6 @@ public class SelectedLayer : Notifier
 
     public bool IsSingleValueHighlighted => HighlightedFeatures?.Count == 1;
 
-    public bool CanAdd => AssociatedLayer?.DataSource is IEditableVectorDataSource;
-
-    public bool CanDelete => HighlightedFeatures?.Count >= 1;
-
     public bool CanUndo
     {
         get
@@ -215,7 +211,7 @@ public class SelectedLayer : Notifier
 
         if (!dataSource.UpdateGeometry(feature, newGeometry))
             return false;
-         
+
         // in order to update the RowHeader icon
         RefreshFeatureInView(feature);
 
@@ -334,10 +330,102 @@ public class SelectedLayer : Notifier
     {
         RaisePropertyChanged(nameof(IsSingleValueHighlighted));
         RaisePropertyChanged(nameof(CountOfSelectedFeatures));
-        RaisePropertyChanged(nameof(CanDelete));
         RaisePropertyChanged(nameof(CanUndo));
         RaisePropertyChanged(nameof(CanViewChanges));
         RaisePropertyChanged(nameof(HasPendingChanges));
+    }
+
+
+    private async Task Add()
+    {
+        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
+        if (dataSource is null)
+            return;
+
+        var vectorDataSource = AssociatedLayer?.DataSource as VectorDataSource;
+        var geometryType = vectorDataSource?.GeometryType ?? GeometryType.Point;
+        //var srid = AssociatedLayer?.DataSource?.Srid ?? 0;
+
+        // todo
+        // this should be changed to draw geometry using the layers type
+        //var emptyGeometry = Geometry<Point>.CreateEmpty(geometryType, srid);
+        var geometry = await RequestDraw(geometryType);
+
+        if (geometry is null)
+            return;
+
+        var attributes = new Dictionary<string, object>();
+
+        if (Fields != null)
+        {
+            foreach (var field in Fields)
+                attributes[field.Name] = field.GetDefaultValue();
+        }
+
+        var newId = dataSource.GetNewId();// (Features?.Select(f => f.Id).DefaultIfEmpty(0).Max() ?? 0) + 1;
+
+        var newFeature = new Feature<Point>(geometry, attributes)
+        {
+            Id = newId
+        };
+
+        newFeature.MarkAsNew();
+
+        dataSource.Add(newFeature);
+
+        Features ??= new ObservableCollection<Feature<Point>>();
+
+        Features.Add(newFeature);
+
+        NotifyAll();
+
+        if (ShowSelectedOnMap)
+            RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+
+        RequestRefreshLayer?.Invoke(AssociatedLayer);
+
+        //RequestEdit?.Invoke(newFeature);
+    }
+
+    private bool CanExecuteAddFeature()
+    {
+        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
+        if (dataSource is null)
+            return false;
+
+        var vectorDataSource = AssociatedLayer?.DataSource as VectorDataSource;
+
+        var geometryType = vectorDataSource?.GeometryType;
+
+        return geometryType != null && geometryType != GeometryType.None;
+    }
+
+    private void Delete()
+    {
+        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
+        if (dataSource is null || HighlightedFeatures?.Count < 1)
+            return;
+
+        var toRemove = HighlightedFeatures.ToList();
+
+        foreach (var feature in toRemove)
+        {
+            dataSource.Remove(feature);
+            RefreshFeatureInView(feature);
+        }
+
+        foreach (var feature in toRemove)
+            HighlightedFeatures.Remove(feature);
+
+        NotifyAll();
+
+        RequestRefreshLayer?.Invoke(AssociatedLayer);
+
+        RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+
     }
 
     #region Commands
@@ -349,70 +437,11 @@ public class SelectedLayer : Notifier
         {
             if (_addCommand is null)
             {
-                _addCommand = new RelayCommand(async param =>
-                {
-                    var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
-
-                    if (dataSource is null)
-                        return;
-
-                    var vectorDataSource = AssociatedLayer?.DataSource as VectorDataSource;
-                    var geometryType = vectorDataSource?.GeometryType ?? GeometryType.Point;
-                    //var srid = AssociatedLayer?.DataSource?.Srid ?? 0;
-
-                    // todo
-                    // this should be changed to draw geometry using the layers type
-                    //var emptyGeometry = Geometry<Point>.CreateEmpty(geometryType, srid);
-                    var geometry = await RequestDraw(geometryType);
-
-                    if (geometry is null)
-                        return;
-
-                    var attributes = new Dictionary<string, object>();
-
-                    if (Fields != null)
-                    {
-                        foreach (var field in Fields)
-                            attributes[field.Name] = field.GetDefaultValue();
-                    }
-
-                    var newId = dataSource.GetNewId();// (Features?.Select(f => f.Id).DefaultIfEmpty(0).Max() ?? 0) + 1;
-
-                    var newFeature = new Feature<Point>(geometry, attributes)
-                    {
-                        Id = newId
-                    };
-
-                    newFeature.MarkAsNew();
-
-                    dataSource.Add(newFeature);
-
-                    Features ??= new ObservableCollection<Feature<Point>>();
-
-                    Features.Add(newFeature);
-
-                    NotifyAll();
-
-                    if (ShowSelectedOnMap)
-                        RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
-
-                    RequestRefreshLayer?.Invoke(AssociatedLayer);
-
-                    //RequestEdit?.Invoke(newFeature);
-                }, param =>
-                {
-                    var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
-
-                    if (dataSource is null)
-                        return false;
-
-                    var vectorDataSource = AssociatedLayer?.DataSource as VectorDataSource;
-
-                    var geometryType = vectorDataSource?.GeometryType;
-
-                    return geometryType != null && geometryType != GeometryType.None;
-                });
+                _addCommand = new RelayCommand(
+                    async param => await this.Add(),
+                    param => this.CanExecuteAddFeature());
             }
+
             return _addCommand;
         }
     }
@@ -425,32 +454,9 @@ public class SelectedLayer : Notifier
         {
             if (_deleteCommand is null)
             {
-                _deleteCommand = new RelayCommand(param =>
-                {
-                    var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
-
-                    if (dataSource is null || HighlightedFeatures?.Count < 1)
-                        return;
-
-                    var toRemove = HighlightedFeatures.ToList();
-
-                    foreach (var feature in toRemove)
-                    {
-                        dataSource.Remove(feature);
-                        RefreshFeatureInView(feature);
-                    }
-
-                    foreach (var feature in toRemove)
-                        HighlightedFeatures.Remove(feature);
-
-                    NotifyAll();
-
-                    RequestRefreshLayer?.Invoke(AssociatedLayer);
-
-                    RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
-
-                });
+                _deleteCommand = new RelayCommand(param => this.Delete(), param => HighlightedFeatures?.Count >= 1);
             }
+
             return _deleteCommand;
         }
     }

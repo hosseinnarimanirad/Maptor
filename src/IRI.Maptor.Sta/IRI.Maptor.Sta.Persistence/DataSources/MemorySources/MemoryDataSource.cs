@@ -85,7 +85,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         //GeometryType = features.First().TheGeometry.Type;
         GeometryType = features.FirstOrDefault()?.GeometryType;
 
-        this.Fields = Field.FromDictionary(features?.FirstOrDefault().Attributes);
+        this.Fields = _featureSet.Fields/*Field.FromDictionary(features?.FirstOrDefault().Attributes)*/;
 
         UpdateExtent();
 

@@ -68,6 +68,7 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
     {
         // Get layer metadata
         var layers = _reader.GetFeatureLayers();
+
         _layerMetadata = layers.FirstOrDefault(l => l.TableName.Equals(_tableName, StringComparison.OrdinalIgnoreCase));
 
         if (_layerMetadata == null)

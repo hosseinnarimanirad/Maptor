@@ -38,20 +38,7 @@ public static class KmlWriter
         var kmlString = ToKml(geometry, name, description, projectToGeodeticFunc);
         File.WriteAllText(filePath, kmlString);
     }
-
-    /// <summary>
-    /// Writes multiple geometries to a KML file
-    /// </summary>
-    public static void WriteToFile(
-        List<Geometry<Point>> geometries,
-        string filePath,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
-    {
-        var kmlString = ToKml(geometries, documentName, projectToGeodeticFunc);
-        File.WriteAllText(filePath, kmlString);
-    }
-
+     
     /// <summary>
     /// Writes features with attributes to a KML file
     /// </summary>
