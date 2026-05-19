@@ -172,36 +172,15 @@
     <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/> 
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Visibility="Collapsed">
-            <!--Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">-->
-            <Button IsEnabled="True" Focusable="False" Command="{Binding AddGeoJsonToDrawingItemsCommand}"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
-                    ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
-                <Path Data="{StaticResource json}"/>
-            </Button>
-            <Button Focusable="False" Command="{Binding AddShapefileCommand}"
-                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
-                    ToolTip="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}">
-                <Path Data="{StaticResource shp}"  />
-            </Button>
 
-        </StackPanel>
-        <Line Grid.Row="1" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,2" 
-                StrokeThickness="1"
-                StrokeDashArray="8 2"
-                Stroke="{DynamicResource MahApps.Brushes.Highlight}"
-              Visibility="Collapsed"/>
-        <!--Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"/>-->
-
-        <Border Grid.Row="2" Background="{DynamicResource MahApps.Brushes.Accent4}"
+        <!--filter and tools-->
+        <Border Grid.Row="0" Background="{DynamicResource MahApps.Brushes.Accent4}"
                 Margin="2" CornerRadius="4"
                 Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
-            <Grid Grid.Row="2" Margin="4">
+            <Grid Margin="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -404,19 +383,36 @@
                                 </StackPanel>
                             </Button>
 
-                            <!--GPX-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddGpxfileCommand}">
+                            <!--CSV-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddCsvCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Gpx}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Csv}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
                                     <Border Style="{StaticResource menuBorder}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.Gpx}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.Csv}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource gpx}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource csv}"/>
                                         </StackPanel>
                                     </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addGpx], Source={StaticResource Localization}}"
+                                    <TextBlock Text="{Binding [cmd_legend_addCsv], Source={StaticResource Localization}}"
+                                               Style="{StaticResource menuTextBlock}" />
+                                </StackPanel>
+                            </Button>
+
+                            <!--TSV-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddTsvCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Style="{StaticResource menuRectangle}"
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Tsv}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                    <Border Style="{StaticResource menuBorder}"
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.Tsv}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource tsv}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="{Binding [cmd_legend_addTsv], Source={StaticResource Localization}}"
                                                Style="{StaticResource menuTextBlock}" />
                                 </StackPanel>
                             </Button>
@@ -471,52 +467,38 @@
                                                Style="{StaticResource menuTextBlock}" />
                                 </StackPanel>
                             </Button>
-
-                            <!--CSV-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddCsvCommand}">
+                            
+                            <!--GPX-->
+                            <Button Style="{StaticResource menuButton}" Command="{Binding AddGpxfileCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Csv}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
+                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Gpx}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
                                     <Border Style="{StaticResource menuBorder}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.Csv}, Converter={StaticResource dataSourceKindToBrushConverter}}">
+                                            Background="{Binding Source={x:Static sta:DataSourceKind.Gpx}, Converter={StaticResource dataSourceKindToBrushConverter}}">
                                         <StackPanel Orientation="Horizontal">
                                             <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource csv}"/>
+                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource gpx}"/>
                                         </StackPanel>
                                     </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addCsv], Source={StaticResource Localization}}"
+                                    <TextBlock Text="{Binding [cmd_legend_addGpx], Source={StaticResource Localization}}"
                                                Style="{StaticResource menuTextBlock}" />
                                 </StackPanel>
                             </Button>
 
-                            <!--TSV-->
-                            <Button Style="{StaticResource menuButton}" Command="{Binding AddTsvCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Rectangle Style="{StaticResource menuRectangle}"
-                                               Fill="{Binding Source={x:Static sta:DataSourceKind.Tsv}, Converter={StaticResource dataSourceKindToBrushConverter}}"/>
-                                    <Border Style="{StaticResource menuBorder}"
-                                            Background="{Binding Source={x:Static sta:DataSourceKind.Tsv}, Converter={StaticResource dataSourceKindToBrushConverter}}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <iconPacks:PackIconMaterial Style="{StaticResource menuIcon}"/>
-                                            <Path Style="{StaticResource menuPath}" Data="{StaticResource tsv}"/>
-                                        </StackPanel>
-                                    </Border>
-                                    <TextBlock Text="{Binding [cmd_legend_addTsv], Source={StaticResource Localization}}"
-                                               Style="{StaticResource menuTextBlock}" />
-                                </StackPanel>
-                            </Button>
+
                         </StackPanel>
                     </Border>
                 </Popup>
             </Grid>
         </Border>
-        <Line Grid.Row="3" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,4" 
+        
+        <Line Grid.Row="1" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,4" 
                 StrokeThickness="1"
                 StrokeDashArray="8 2"
                 Stroke="{DynamicResource MahApps.Brushes.Highlight}"  
                 Visibility="Collapsed"/>
 
-        <TreeView Grid.Row="4"
+        <TreeView Grid.Row="2"
                   ItemsSource="{Binding Source={StaticResource collectionViewSource}}"
                   ItemTemplate="{StaticResource legendTemplate}"
                   VirtualizingPanel.IsVirtualizing="False"
