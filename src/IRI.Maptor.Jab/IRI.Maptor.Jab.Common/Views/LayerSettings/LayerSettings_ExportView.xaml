@@ -145,7 +145,7 @@
                 </Grid.ColumnDefinitions>-->
             <DockPanel>
                 <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="MapTrifoldFill" Style="{StaticResource securityIconPhosphor}"/>
-                <TextBlock DockPanel.Dock="Left" Text="ناحیه UTM:"/>
+                <TextBlock DockPanel.Dock="Left" Text="{Binding [srs_utmZone_full], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
 
                 <ToggleButton DockPanel.Dock="Right" IsChecked="{Binding IsNorthHemisphere, Mode=TwoWay}"
                             Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" FlowDirection="LeftToRight"

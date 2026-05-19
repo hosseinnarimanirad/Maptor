@@ -357,9 +357,6 @@
   <data name="dialog_geometryDetails_numberOfGeometries" xml:space="preserve">
     <value>Number of Geometries</value>
   </data>
-  <data name="dialog_geometryDetails_utmZone" xml:space="preserve">
-    <value>UTM Zone</value>
-  </data>
   <data name="dialog_geometryDetails_points" xml:space="preserve">
     <value>Points</value>
   </data>
@@ -635,9 +632,6 @@
   </data>
   <data name="geometryDetails_options_useDecimalDegreesForAngles" xml:space="preserve">
     <value>Use Decimal Degrees for Angles</value>
-  </data>
-  <data name="geometryDetails_options_utmZone" xml:space="preserve">
-    <value>UTM Zone:</value>
   </data>
   <data name="geometryDetails_options_xyPrecision" xml:space="preserve">
     <value>X/Y Precision:</value>
@@ -1222,9 +1216,6 @@
   <data name="input_drawFeatureOnMap" xml:space="preserve">
     <value>Draw feature on map</value>
   </data>
-  <data name="input_utmZone" xml:space="preserve">
-    <value>UTM Zone:</value>
-  </data>
   <data name="input_geodetic" xml:space="preserve">
     <value>Geodetic</value>
   </data>
@@ -1675,5 +1666,8 @@
   </data>
   <data name="message_error_lockedFile" xml:space="preserve">
     <value>File is locked or in used by another program</value>
+  </data>
+  <data name="srs_utmZone_full" xml:space="preserve">
+    <value>UTM Zone</value>
   </data>
 </root>

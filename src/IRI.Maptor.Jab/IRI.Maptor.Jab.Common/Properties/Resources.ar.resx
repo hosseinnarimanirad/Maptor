@@ -418,9 +418,7 @@
   <data name="dialog_geometryDetails_title" xml:space="preserve">
     <value>تفاصيل الهندسة</value>
   </data>
-  <data name="dialog_geometryDetails_utmZone" xml:space="preserve">
-    <value>منطقة يو تي ام</value>
-  </data>
+ 
   <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
     <value>تكبير إلى نقطة</value>
   </data>
@@ -640,9 +638,7 @@
   <data name="geometryDetails_options_useDecimalDegreesForAngles" xml:space="preserve">
     <value>استخدم الدرجات العشرية للزوايا</value>
   </data>
-  <data name="geometryDetails_options_utmZone" xml:space="preserve">
-    <value>منطقة يو تي إم:</value>
-  </data>
+ 
   <data name="geometryDetails_options_xyPrecision" xml:space="preserve">
     <value>دقة X/Y:</value>
   </data>
@@ -721,9 +717,7 @@
   <data name="input_utm" xml:space="preserve">
     <value>يو تي إم</value>
   </data>
-  <data name="input_utmZone" xml:space="preserve">
-    <value>منطقة يو تي إم:</value>
-  </data>
+ 
   <data name="languageSelector_title" xml:space="preserve">
     <value>اللغة</value>
   </data>

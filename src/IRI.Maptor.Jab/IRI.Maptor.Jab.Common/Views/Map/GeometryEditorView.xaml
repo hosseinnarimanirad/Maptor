@@ -321,7 +321,8 @@
                             <!-- UTM Zone -->
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,4"
                                         Visibility="{Binding SrsViewModel.IsUtmZoneVisible, Converter={StaticResource boolToVisibilityConverter}}">
-                                <TextBlock Text="{Binding [geometryDetails_options_utmZone], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
+                                <TextBlock Text="{Binding [srs_utmZone_full], Source={StaticResource Localization}, StringFormat='{}{0}:'}"
+                                           VerticalAlignment="Center" Margin="0,0,4,0" Width="80"/>
                                 <mahApp:NumericUpDown Minimum="1" Maximum="60"
                                                       Value="{Binding SrsViewModel.UtmZone, Mode=TwoWay}"                                                      
                                                       Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}" />
@@ -351,9 +352,9 @@
                                       IsChecked="{Binding UseDecimalDegreesForAngles, Mode=TwoWay}"
                                       Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"/>
                             
-                            <CheckBox Content="{Binding [geometryDetails_options_showZColumn], Source={StaticResource Localization}}" 
+                            <!--<CheckBox Content="{Binding [geometryDetails_options_showZColumn], Source={StaticResource Localization}}" 
                                       IsChecked="{Binding ShowZColumn, Mode=TwoWay}"
-                                      Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"  />
+                                      Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"  />-->
                         </StackPanel>
                     </Border>
                 </Popup>
@@ -370,9 +371,9 @@
                   Style="{DynamicResource MahApps.Styles.DataGrid}" CanUserReorderColumns="True"
                   HeadersVisibility="Column" AlternationCount="2000000000"
                   SelectionMode="Single" Height="200"  
-                  SelectionUnit="FullRow"  >
+                  SelectionUnit="FullRow"
+                  FontFamily="Seoge UI">
             <DataGrid.Columns>
-
                 <DataGridTemplateColumn Width="Auto" MinWidth="40">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
@@ -440,7 +441,9 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="*" MinWidth="100"
+
+                <!--z column-->
+                <!--<DataGridTemplateColumn Width="*" MinWidth="100"
                                          Visibility="{Binding DataContext.ShowZColumn, RelativeSource={RelativeSource AncestorType=DataGrid}, Converter={StaticResource boolToVisibilityConverter}}">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
@@ -453,7 +456,8 @@
                                      FlowDirection="LeftToRight" Margin="1"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
+                
                 <DataGridTemplateColumn Width="*" MinWidth="120">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>

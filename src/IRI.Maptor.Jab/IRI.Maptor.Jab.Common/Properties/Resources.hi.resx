@@ -418,9 +418,7 @@
   <data name="dialog_geometryDetails_title" xml:space="preserve">
     <value>ज्यामिति विवरण</value>
   </data>
-  <data name="dialog_geometryDetails_utmZone" xml:space="preserve">
-    <value>UTM Zone</value>
-  </data>
+ 
   <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
     <value>बिंदु पर ज़ूम करें</value>
   </data>
@@ -640,9 +638,7 @@
   <data name="geometryDetails_options_useDecimalDegreesForAngles" xml:space="preserve">
     <value>कोणों के लिए दशमलव अंशों का उपयोग करें</value>
   </data>
-  <data name="geometryDetails_options_utmZone" xml:space="preserve">
-    <value>यूटीएम जोन:</value>
-  </data>
+  
   <data name="geometryDetails_options_xyPrecision" xml:space="preserve">
     <value>एक्स/वाई परिशुद्धता:</value>
   </data>
@@ -721,9 +717,7 @@
   <data name="input_utm" xml:space="preserve">
     <value>UTM</value>
   </data>
-  <data name="input_utmZone" xml:space="preserve">
-    <value>यूटीएम जोन:</value>
-  </data>
+ 
   <data name="languageSelector_title" xml:space="preserve">
     <value>भाषा</value>
   </data>

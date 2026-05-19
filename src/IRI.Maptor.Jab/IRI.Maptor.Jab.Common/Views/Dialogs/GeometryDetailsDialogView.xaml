@@ -71,7 +71,7 @@
                            Margin="4" VerticalAlignment="Center"/>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
-                           Text="{Binding [dialog_geometryDetails_utmZone], Source={StaticResource Localization}, StringFormat='{}{0}:'}" />
+                           Text="{Binding [srs_utmZone_full], Source={StaticResource Localization}, StringFormat='{}{0}:'}" />
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="4">
                     <TextBlock Text="{Binding UtmZone, TargetNullValue='N/A'}" 
                                FontWeight="Bold" VerticalAlignment="Center"/>

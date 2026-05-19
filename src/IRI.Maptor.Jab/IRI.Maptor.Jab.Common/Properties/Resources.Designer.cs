@@ -1411,15 +1411,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UTM Zone.
-        /// </summary>
-        public static string dialog_geometryDetails_utmZone {
-            get {
-                return ResourceManager.GetString("dialog_geometryDetails_utmZone", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Zoom to Point.
         /// </summary>
         public static string dialog_geometryDetails_zoomToPoint {
@@ -2113,15 +2104,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UTM Zone:.
-        /// </summary>
-        public static string geometryDetails_options_utmZone {
-            get {
-                return ResourceManager.GetString("geometryDetails_options_utmZone", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to X/Y Precision:.
         /// </summary>
         public static string geometryDetails_options_xyPrecision {
@@ -2362,15 +2344,6 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string input_utm {
             get {
                 return ResourceManager.GetString("input_utm", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to UTM Zone:.
-        /// </summary>
-        public static string input_utmZone {
-            get {
-                return ResourceManager.GetString("input_utmZone", resourceCulture);
             }
         }
         
@@ -4081,6 +4054,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string srs_utmZone {
             get {
                 return ResourceManager.GetString("srs_utmZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UTM Zone.
+        /// </summary>
+        public static string srs_utmZone_full {
+            get {
+                return ResourceManager.GetString("srs_utmZone_full", resourceCulture);
             }
         }
         

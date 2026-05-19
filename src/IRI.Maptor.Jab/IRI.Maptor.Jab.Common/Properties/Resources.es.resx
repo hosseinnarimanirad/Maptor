@@ -418,9 +418,7 @@
   <data name="dialog_geometryDetails_title" xml:space="preserve">
     <value>Detalles de geometría</value>
   </data>
-  <data name="dialog_geometryDetails_utmZone" xml:space="preserve">
-    <value>Zona UTM</value>
-  </data>
+ 
   <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
     <value>Zoom al punto</value>
   </data>
@@ -640,9 +638,7 @@
   <data name="geometryDetails_options_useDecimalDegreesForAngles" xml:space="preserve">
     <value>Usar grados decimales para los ángulos</value>
   </data>
-  <data name="geometryDetails_options_utmZone" xml:space="preserve">
-    <value>Zona UTM:</value>
-  </data>
+  
   <data name="geometryDetails_options_xyPrecision" xml:space="preserve">
     <value>Precisión X/Y:</value>
   </data>
@@ -721,9 +717,7 @@
   <data name="input_utm" xml:space="preserve">
     <value>UTM</value>
   </data>
-  <data name="input_utmZone" xml:space="preserve">
-    <value>Zona UTM:</value>
-  </data>
+ 
   <data name="languageSelector_title" xml:space="preserve">
     <value>Idioma</value>
   </data>

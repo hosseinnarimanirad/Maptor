@@ -53,7 +53,7 @@
         <TextBox Name="x" Grid.Column="1" FlowDirection="LeftToRight" VerticalAlignment="Center" MinWidth="72" Grid.Row="1"></TextBox>
         <Label Grid.Column="2" VerticalAlignment="Center" Grid.Row="1">Y:</Label>
         <TextBox Name="y" Grid.Column="3" FlowDirection="LeftToRight" VerticalAlignment="Center" MinWidth="72" Grid.Row="1"></TextBox>
-        <Label Name="zoneLabel" Grid.Column="4" Content="{Binding [input_utmZone], Source={StaticResource Localization}}"
+        <Label Name="zoneLabel" Grid.Column="4" Content="{Binding [srs_utmZone_full], Source={StaticResource Localization}}"
                Visibility="{Binding ElementName=coordinateType, Path=SelectedIndex, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}" Grid.Row="1"/>
         <TextBox Name="zone" Grid.Column="5" Text="{Binding Zone}" LostFocus="zone_LostFocus" VerticalAlignment="Center"
                  Visibility="{Binding ElementName=coordinateType, Path=SelectedIndex, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}" Grid.Row="1"/>

@@ -6,14 +6,14 @@ using IRI.Maptor.Sta.SpatialReferenceSystem.Models;
 
 namespace IRI.Maptor.Sta.SpatialReferenceSystem;
 
-public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
+public struct Ellipsoid<TLinear, TAngular> : IEllipsoid, IEquatable<Ellipsoid<TLinear, TAngular>>
     where TLinear : LinearUnit, new()
     where TAngular : AngularUnit, new()
 {
     #region Fields
 
     private Cartesian3DPoint<TLinear> _datumTranslation;
-     
+
     private OrientationParameter _datumMisalignment;
 
     private LinearUnit _semiMajorAxis;
@@ -83,9 +83,9 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
     #region Constructors
 
     public Ellipsoid(
-            string name, 
-            LinearUnit semiMajorAxis, 
-            double inverseFlattening, 
+            string name,
+            LinearUnit semiMajorAxis,
+            double inverseFlattening,
             int srid)
         : this(name,
                 semiMajorAxis,
@@ -96,11 +96,11 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
     { }
 
     public Ellipsoid(
-            string name, 
-            LinearUnit semiMajorAxis, 
+            string name,
+            LinearUnit semiMajorAxis,
             LinearUnit semiMinorAxis,
-            ICartesian3DPoint datumTranslation, 
-            OrientationParameter datumMisalignment, 
+            ICartesian3DPoint datumTranslation,
+            OrientationParameter datumMisalignment,
             int srid)
         : this(name,
                 semiMajorAxis,
@@ -111,11 +111,11 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
     { }
 
     public Ellipsoid(
-            string name, 
-            LinearUnit semiMajorAxis, 
+            string name,
+            LinearUnit semiMajorAxis,
             double inverseFlattening,
-            ICartesian3DPoint datumTranslation, 
-            OrientationParameter datumMisalignment, 
+            ICartesian3DPoint datumTranslation,
+            OrientationParameter datumMisalignment,
             int srid)
     {
         _datumTranslation = new Cartesian3DPoint<TLinear>(datumTranslation.X, datumTranslation.Y, datumTranslation.Z);
@@ -158,7 +158,7 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
 
 
     #region Methods
-     
+
     public double CalculateN(double Latitude)
     {
         double sin = Math.Sin(Latitude * Math.PI / 180);
@@ -200,17 +200,17 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
 
     public override bool Equals(object obj)
     {
-        if (obj.GetType() == typeof(IEllipsoid))
-        {
-            return this == (IEllipsoid)obj;
-        }
-
-        return false;
+        return obj is Ellipsoid<TLinear, TAngular> other && Equals(other);
     }
 
-    public override int GetHashCode() => ToString().GetHashCode();
+    public override int GetHashCode() => HashCode.Combine(Name, SemiMajorAxis, SemiMinorAxis, Srid);
 
     public override string ToString() => Name;
+
+    public bool Equals(Ellipsoid<TLinear, TAngular> other)
+    {
+        return this == other;
+    }
 
     public Ellipsoid<TNewLinearType, TNewAngularType> ChangeTo<TNewLinearType, TNewAngularType>()
         where TNewLinearType : LinearUnit, new()
@@ -236,14 +236,21 @@ public struct Ellipsoid<TLinear, TAngular> : IEllipsoid
 
     public static bool operator ==(Ellipsoid<TLinear, TAngular> firstEllipsoid, IEllipsoid secondEllipsoid)
     {
-        return firstEllipsoid.DatumTranslation == secondEllipsoid.DatumTranslation &&
+        bool translationEqual = (firstEllipsoid.DatumTranslation.X?.Value ?? 0) == (secondEllipsoid.DatumTranslation.X?.Value ?? 0) &&
+                            (firstEllipsoid.DatumTranslation.Y?.Value ?? 0) == (secondEllipsoid.DatumTranslation.Y?.Value ?? 0) &&
+                            (firstEllipsoid.DatumTranslation.Z?.Value ?? 0) == (secondEllipsoid.DatumTranslation.Z?.Value ?? 0);
+
+        return translationEqual &&
                 firstEllipsoid.DatumMisalignment == secondEllipsoid.DatumMisalignment &&
-                firstEllipsoid.Name == secondEllipsoid.Name &&
+                //firstEllipsoid.Name == secondEllipsoid.Name &&
                 firstEllipsoid.SemiMajorAxis == secondEllipsoid.SemiMajorAxis &&
-                firstEllipsoid.SemiMinorAxis == secondEllipsoid.SemiMinorAxis;
+                firstEllipsoid.SemiMinorAxis == secondEllipsoid.SemiMinorAxis &&
+                firstEllipsoid.Srid == secondEllipsoid.Srid;
     }
 
     public static bool operator !=(Ellipsoid<TLinear, TAngular> firstEllipsoid, IEllipsoid secondEllipsoid) => !(firstEllipsoid == secondEllipsoid);
 
     #endregion
+
+
 }

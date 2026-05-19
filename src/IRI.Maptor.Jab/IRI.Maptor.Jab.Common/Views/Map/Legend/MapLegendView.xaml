@@ -531,6 +531,7 @@
                     <Setter Property="IsExpanded" Value="{Binding IsExpandedInToc, Mode=TwoWay}" />
                     <!--<Setter Property="IsSelected" Value="{Binding IsSelectedInToc, Mode=TwoWay}" />-->
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="TreeViewItem">
