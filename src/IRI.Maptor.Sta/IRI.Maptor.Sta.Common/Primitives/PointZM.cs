@@ -7,15 +7,15 @@ using IRI.Maptor.Sta.Common.Abstrations;
 namespace IRI.Maptor.Sta.Common.Primitives;
 
 public class PointZM : IPoint, IHasZ, IHasM
-{ 
+{
     public double X { get; set; }
-     
+
     public double Y { get; set; }
-     
+
     public double Z { get; set; }
 
     public double M { get; set; }
-     
+
     public PointZM()
     {
     }
@@ -75,8 +75,11 @@ public class PointZM : IPoint, IHasZ, IHasM
     }
 
 
-    public byte[] AsWkb()
+    public byte[]? AsWkb()
     {
+        if (IsNaN())
+            return null;
+
         byte[] result = new byte[29];
 
         result[0] = (byte)WkbByteOrder.WkbNdr;
@@ -107,6 +110,20 @@ public class PointZM : IPoint, IHasZ, IHasM
     }
 
     public bool IsNaN() => double.IsNaN(X) || double.IsNaN(Y) || double.IsNaN(Z);
+
+
+    public string AsDelimited(char delimiter, int precision, bool useThousandSeparator)
+    {
+        var xFormatted = FormatHelper.FormatWithPrecision(X, precision, useThousandSeparator);
+
+        var yFormatted = FormatHelper.FormatWithPrecision(Y, precision, useThousandSeparator);
+
+        var mFormatted = FormatHelper.FormatWithPrecision(M, precision, useThousandSeparator);
+
+        var zFormatted = FormatHelper.FormatWithPrecision(Z, precision, useThousandSeparator);
+
+        return $"{xFormatted}{delimiter}{yFormatted}{delimiter}{zFormatted}{delimiter}{mFormatted}";
+    }
 
     #region Static Methods and Operators
 

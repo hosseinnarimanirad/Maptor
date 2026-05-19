@@ -1,15 +1,12 @@
 ﻿// besmellahe rahmane rahim
 // Allahomma ajjel le-valiyek al-faraj
 
-using System;
-using System.Collections.Generic;
-
-using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 using IRI.Maptor.Sta.Spatial.IO.EsriJson;
+using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
+using IRI.Maptor.Sta.Common.Helpers;
 
 
 namespace IRI.Maptor.Sta.ShapefileFormat.EsriType;
@@ -41,7 +38,7 @@ public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
         get { return this.measure; }
         set { this.measure = value; }
     }
-     
+
     public EsriPointZ() { }
 
     public EsriPointZ(double x, double y, double z, int srid)
@@ -90,7 +87,7 @@ public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
 
 
     public override BoundingBox MinimumBoundingBox => new BoundingBox(this.X, this.Y, this.X, this.Y);
-     
+
     public override byte[] WriteContentsToByte()
     {
         System.IO.MemoryStream result = new System.IO.MemoryStream();
@@ -111,7 +108,7 @@ public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
     public override int ContentLength => ShapeConstants.PointZContentLengthInWords;
 
     public override EsriShapeType EsriType => EsriShapeType.EsriPointZM;
-     
+
     /// <summary>
     /// Returs Kml representation of the point. Note: Z,M values are ignored. Point must be in Lat/Long System
     /// </summary>
@@ -120,7 +117,7 @@ public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
     {
         return KmlPlacemarkHelper.CreatePointPlacemark(new Point(this.X, this.Y), projectToGeodeticFunc, color);
     }
-     
+
     public override EsriShapeBase Transform(Func<IPoint, IPoint> transform, int newSrid)
     {
         var result = transform(this);
@@ -161,5 +158,16 @@ public class EsriPointZ : EsriShapeBase, IPoint, IHasZ
         BitConverter.TryWriteBytes(buffer.Slice(24, 8), Measure);
 
         return buffer.ToArray();  // Only allocates when creating final array
+    }
+
+    public string AsDelimited(char delimiter, int precision, bool useThousandSeparator)
+    {
+        var xFormatted = FormatHelper.FormatWithPrecision(X, precision, useThousandSeparator);
+
+        var yFormatted = FormatHelper.FormatWithPrecision(Y, precision, useThousandSeparator);
+
+        var zFormatted = FormatHelper.FormatWithPrecision(Z, precision, useThousandSeparator);
+
+        return $"{xFormatted}{delimiter}{yFormatted}{delimiter}{zFormatted}";
     }
 }

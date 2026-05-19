@@ -1,5 +1,6 @@
 ﻿using System;
 using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Jab.Common.Models;
@@ -99,7 +100,7 @@ public class NotifiablePoint : Notifier, IPoint
         throw new NotImplementedException();
     }
 
-    public byte[] AsWkb()
+    public byte[]? AsWkb()
     {
         throw new NotImplementedException();
     }
@@ -130,5 +131,10 @@ public class NotifiablePoint : Notifier, IPoint
         BitConverter.TryWriteBytes(buffer.Slice(8, 8), Y);
 
         return buffer.ToArray();  // Only allocates when creating final array
+    }
+
+    public string AsDelimited(char delimiter, int precision, bool useThousandSeparator)
+    {
+        return $"{FormatHelper.FormatWithPrecision(X, precision, useThousandSeparator)}{delimiter}{FormatHelper.FormatWithPrecision(Y, precision, useThousandSeparator)}";
     }
 }

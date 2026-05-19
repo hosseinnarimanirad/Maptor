@@ -3,6 +3,7 @@
 
 using System;
 using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Sta.Spatial.DigitalTerrainModeling;
@@ -122,5 +123,10 @@ public struct AttributedPoint : IPoint
     public bool IsNaN()
     {
         return double.IsNaN(X) || double.IsNaN(Y);
+    }
+
+    public string AsDelimited(char delimiter, int precision, bool useThousandSeparator)
+    {
+        return $"{FormatHelper.FormatWithPrecision(X, precision, useThousandSeparator)}{delimiter}{FormatHelper.FormatWithPrecision(Y, precision, useThousandSeparator)}";
     }
 }

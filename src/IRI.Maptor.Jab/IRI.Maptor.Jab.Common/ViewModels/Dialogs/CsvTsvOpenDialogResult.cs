@@ -11,7 +11,8 @@ namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 /// <param name="IsCsv">True for CSV (comma-delimited), false for TSV (tab-delimited).</param>
 /// <param name="IsLongitudeFirst">True for X,Y (longitude,latitude) order, false for Y,X.</param>
 /// <param name="UseFirstLineAsHeader">True if first line contains attribute names.</param>
-public record CsvTsvOpenDialogResult(
+public record CsvTsvOptions(
+    bool IsFileSelected,
     string? FilePath,
     string RawText,
     int SelectedSrid,

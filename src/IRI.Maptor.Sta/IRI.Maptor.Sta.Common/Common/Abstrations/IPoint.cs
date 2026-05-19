@@ -15,14 +15,16 @@ public interface IPoint
 
     //double DistanceTo(IPoint point);
 
-    byte[] AsWkb();
+    byte[]? AsWkb();
 
     bool IsNaN();
 
     byte[] AsByteArray();
 
+    string AsDelimited(char delimiter, int precision, bool useThousandSeparator);
+
     //bool HasM();
 
     //bool HasZ();
-     
+
 }

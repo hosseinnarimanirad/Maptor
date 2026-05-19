@@ -12,8 +12,11 @@ public class PointZ : Point, IHasZ
     public double Z { get; set; }
 
 
-    public override byte[] AsWkb()
+    public override byte[]? AsWkb()
     {
+        if (IsNaN())
+            return null;
+
         byte[] result = new byte[29];
 
         result[0] = (byte)WkbByteOrder.WkbNdr;
@@ -42,5 +45,16 @@ public class PointZ : Point, IHasZ
             return false;
 
         return this.X == point.X && this.Y == point.Y;
+    }
+
+    public override string AsDelimited(char delimiter, int precision, bool useThousandSeparator)
+    {
+        var xFormatted = FormatHelper.FormatWithPrecision(X, precision, useThousandSeparator);
+
+        var yFormatted = FormatHelper.FormatWithPrecision(Y, precision, useThousandSeparator);
+
+        var zFormatted = FormatHelper.FormatWithPrecision(Z, precision, useThousandSeparator);
+
+        return $"{xFormatted}{delimiter}{yFormatted}{delimiter}{zFormatted}";
     }
 }

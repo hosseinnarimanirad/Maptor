@@ -4759,7 +4759,29 @@ public abstract class MapViewModelBase : ViewModelBase
 
             DataSourceKind dataSourceKind = result.IsCsv ? DataSourceKind.Csv : DataSourceKind.Tsv;
 
-            var dataSource = await TextDataSource.CreateFromTextAsync(result.RawText, result.GeometryType, dataSourceKind, result.SelectedSrid, result.IsLongitudeFirst, result.UseFirstLineAsHeader);
+            TextDataSource dataSource;
+
+            if (result.IsFileSelected)
+            {
+                dataSource = await TextDataSource.CreateFromFileAsync(
+                                        result.FilePath!,
+                                        result.GeometryType,
+                                        dataSourceKind,
+                                        result.SelectedSrid,
+                                        result.IsLongitudeFirst,
+                                        result.UseFirstLineAsHeader);
+            }
+            else
+            {
+                dataSource = await TextDataSource.CreateFromTextAsync(
+                                        result.RawText,
+                                        result.GeometryType,
+                                        dataSourceKind,
+                                        result.SelectedSrid,
+                                        result.IsLongitudeFirst,
+                                        result.UseFirstLineAsHeader);
+            }
+
 
             //MemoryDataSource dataSource = result.IsCsv
             //? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader)
@@ -4807,8 +4829,8 @@ public abstract class MapViewModelBase : ViewModelBase
                 return;
             }
 
-            MemoryDataSource dataSource = !string.IsNullOrEmpty(result.FilePath)
-                ? await GeoJsonDataSource.CreateFromFileAsync(result.FilePath, result.IsLongitudeFirst, result.SelectedSrid)
+            MemoryDataSource dataSource = result.IsFileSelected
+                ? await GeoJsonDataSource.CreateFromFileAsync(result.FilePath!, result.IsLongitudeFirst, result.SelectedSrid)
                 : await GeoJsonDataSource.CreateFromTextAsync(result.RawJson, result.SelectedSrid, result.IsLongitudeFirst, result.FilePath ?? string.Empty);
 
             var layerName = !string.IsNullOrEmpty(result.FilePath)
@@ -4877,8 +4899,8 @@ public abstract class MapViewModelBase : ViewModelBase
                 return;
             }
 
-            MemoryDataSource dataSource = !string.IsNullOrEmpty(result.FilePath)
-                ? await TopoJsonDataSource.CreateFromFileAsync(result.FilePath, result.SelectedSrid)
+            MemoryDataSource dataSource = result.IsFileSelected
+                ? await TopoJsonDataSource.CreateFromFileAsync(result.FilePath!, result.SelectedSrid)
                 : await TopoJsonDataSource.CreateFromTextAsync(result.RawJson, result.SelectedSrid, result.FilePath ?? string.Empty);
 
             var layerName = !string.IsNullOrEmpty(result.FilePath)

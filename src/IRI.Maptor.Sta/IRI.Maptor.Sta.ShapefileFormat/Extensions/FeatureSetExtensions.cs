@@ -199,45 +199,65 @@ public static class FeatureSetExtensions
             return;
 
         var sourceSrs = SridHelper.AsSrsBase(featureSet.Srid);
+
         var effectiveTargetSrid = targetSrid ?? SridHelper.GeodeticWGS84;
+
         var targetSrs = SridHelper.AsSrsBase(effectiveTargetSrid);
-        var attributeKeys = featureSet.Fields?.Select(f => f.Name).ToList()
-            ?? features.First().Attributes.Keys.OrderBy(k => k).ToList();
+
+        if (targetSrs is null)
+            return;
+
+        var projectedFeatures = features.Select(f => f.Project(targetSrs)).ToList();
+
+        //var attributeKeys = featureSet.Fields?.Select(f => f.Name).ToList()
+        //    ?? features.First().Attributes.Keys.OrderBy(k => k).ToList();
 
         var coordHeader = effectiveTargetSrid == SridHelper.GeodeticWGS84 ? new[] { "longitude", "latitude" } : new[] { "X", "Y" };
 
-        var lines = new List<string>();
+        StringBuilder lines = new StringBuilder();
 
         if (includeHeader)
         {
             var header = new List<string>(coordHeader);
-            header.AddRange(attributeKeys);
-            lines.Add(string.Join(delimiter.ToString(), header.Select(v => EscapeDelimitedValue(v, delimiter))));
+
+            //header.AddRange(attributeKeys);
+
+            //lines.Add(string.Join(delimiter.ToString(), header.Select(v => EscapeDelimitedValue(v, delimiter))));
+
+            lines.AppendLine(string.Join(delimiter.ToString(), header.Select(v => EscapeDelimitedValue(v, delimiter))));
         }
 
-        foreach (var feature in features)
+        foreach (var feature in projectedFeatures)
         {
-            var point = feature.TheGeometry.GetAllPoints().FirstOrDefault();
-            if (point == null)
-                continue;
+            var delimited = feature.TheGeometry.AsDelimited(delimiter, 14, false);
 
-            var projectedPoint = targetSrs != null ? point.Project(sourceSrs, targetSrs) : sourceSrs.ToWgs84Geodetic(point);
-            var values = new List<string>
-            {
-                projectedPoint.X.ToString(CultureInfo.InvariantCulture),
-                projectedPoint.Y.ToString(CultureInfo.InvariantCulture)
-            };
+            lines.AppendLine(delimited);
 
-            foreach (var key in attributeKeys)
-            {
-                var val = feature.Attributes.TryGetValue(key, out var v) ? v : null;
-                values.Add(val?.ToString() ?? string.Empty);
-            }
+            lines.AppendLine();
+            lines.AppendLine();
 
-            lines.Add(string.Join(delimiter.ToString(), values.Select(v => EscapeDelimitedValue(v, delimiter))));
+            //var point = feature.TheGeometry.GetAllPoints().FirstOrDefault();
+
+            //if (point == null)
+            //    continue;
+
+            //var projectedPoint = targetSrs != null ? point.Project(sourceSrs, targetSrs) : sourceSrs.ToWgs84Geodetic(point);
+            //var values = new List<string>
+            //{
+            //    projectedPoint.X.ToString(CultureInfo.InvariantCulture),
+            //    projectedPoint.Y.ToString(CultureInfo.InvariantCulture)
+            //};
+
+            //foreach (var key in attributeKeys)
+            //{
+            //    var val = feature.Attributes.TryGetValue(key, out var v) ? v : null;
+            //    values.Add(val?.ToString() ?? string.Empty);
+            //}
+
+            //lines.Add(string.Join(delimiter.ToString(), values.Select(v => EscapeDelimitedValue(v, delimiter))));
         }
 
-        File.WriteAllLines(fileName, lines);
+        File.WriteAllText(fileName, lines.ToString());
     }
 
     private static string EscapeDelimitedValue(string value, char delimiter)

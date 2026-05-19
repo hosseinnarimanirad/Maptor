@@ -10,6 +10,7 @@ using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.Spatial.IO.SqlServerNativeBinary;
 using IRI.Maptor.Sta.Common.Enums;
+using System.Text;
 
 namespace IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -3895,6 +3896,69 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     public string AsSqlServerWkt() => SqlServerWktWriter.AsWkt(this);
 
     public string AsSqlServerWkt(int? coordinateDecimalPlaces) => SqlServerWktWriter.AsWkt(this, coordinateDecimalPlaces);
+
+    #endregion
+
+
+    #region CSV/TSV
+
+    public string AsDelimited(char delimiter, int precision, bool useThousandSeparator = false)
+    {
+        if (this.IsNullOrEmpty())
+        {
+            return string.Empty;
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        switch (this.Type)
+        {
+            case GeometryType.Point:
+            case GeometryType.LineString:
+                AsDelimited(this.Points, delimiter, precision, useThousandSeparator, result);
+                break;
+
+            case GeometryType.Polygon:
+            case GeometryType.MultiPoint:
+            case GeometryType.MultiLineString:
+            case GeometryType.MultiPolygon:
+                AsDelimited(this.Geometries, delimiter, precision, useThousandSeparator, result);
+                break;
+
+            case GeometryType.GeometryCollection:
+            case GeometryType.CircularString:
+            case GeometryType.CompoundCurve:
+            case GeometryType.CurvePolygon:
+            case GeometryType.None:
+            default:
+                throw new NotImplementedException("Geometry > AsDelimited");
+        }
+
+        return result.ToString();
+    }
+
+    private void AsDelimited(List<T>? points, char delimiter, int precision, bool useThousandSeparator, StringBuilder sb)
+    {
+        if (points.IsNullOrEmpty())
+            return;
+
+        foreach (var point in points)
+        {
+            sb.AppendLine(point.AsDelimited(delimiter, precision, useThousandSeparator));
+        }
+    }
+
+    private void AsDelimited(List<Geometry<T>>? geometries, char delimiter, int precision, bool useThousandSeparator, StringBuilder sb)
+    {
+        if (geometries.IsNullOrEmpty())
+            return;
+
+        foreach (var geometry in geometries)
+        {
+            sb.AppendLine(geometry.AsDelimited(delimiter, precision, useThousandSeparator));
+            sb.AppendLine();
+        }
+    }
 
     #endregion
 

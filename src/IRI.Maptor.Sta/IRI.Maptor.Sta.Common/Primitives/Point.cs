@@ -103,8 +103,11 @@ public class Point : IPoint
     }
 
 
-    public virtual byte[] AsWkb()
+    public virtual byte[]? AsWkb()
     {
+        if (IsNaN())
+            return null;
+
         byte[] result = new byte[21];
 
         result[0] = (byte)WkbByteOrder.WkbNdr;
@@ -155,6 +158,14 @@ public class Point : IPoint
         return buffer.ToArray();  // Only allocates when creating final array
     }
 
+    public virtual string AsDelimited(char delimiter, int precision, bool useThousandSeparator)
+    {
+        var xFormatted = FormatHelper.FormatWithPrecision(X, precision, useThousandSeparator);
+
+        var yFormatted = FormatHelper.FormatWithPrecision(Y, precision, useThousandSeparator);
+
+        return $"{xFormatted}{delimiter}{yFormatted}";
+    }
 
     #region Static Methods
 

@@ -1,13 +1,10 @@
 ﻿// besmellahe rahmane rahim
 // Allahomma ajjel le-valiyek al-faraj
 
-using System;
-using System.Collections.Generic;
-
-using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
 
@@ -142,5 +139,17 @@ public class EsriPointM : EsriShapeBase, IPoint, IHasM
         BitConverter.TryWriteBytes(buffer.Slice(16, 8), M);
 
         return buffer.ToArray();  // Only allocates when creating final array
+    }
+
+
+    public string AsDelimited(char delimiter, int precision, bool useThousandSeparator)
+    {
+        var xFormatted = FormatHelper.FormatWithPrecision(X, precision, useThousandSeparator);
+
+        var yFormatted = FormatHelper.FormatWithPrecision(Y, precision, useThousandSeparator);
+
+        var mFormatted = FormatHelper.FormatWithPrecision(M, precision, useThousandSeparator);
+
+        return $"{xFormatted}{delimiter}{yFormatted}{delimiter}{mFormatted}";
     }
 }

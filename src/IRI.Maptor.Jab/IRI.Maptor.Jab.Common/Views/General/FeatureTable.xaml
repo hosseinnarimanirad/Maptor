@@ -179,14 +179,14 @@
                     IsEnabled="{Binding CanAdd}"
                     ToolTip="{Binding [featureTable_addNew], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
-                <iconPacks:PackIconMaterial Kind="Plus" Foreground="White" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconMaterial Kind="Plus" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
             <Button Command="{Binding DeleteCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     IsEnabled="{Binding CanDelete}"
                     ToolTip="{Binding [featureTable_delete], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
-                <iconPacks:PackIconMaterial Kind="Delete" Foreground="White" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconMaterial Kind="Delete" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
             <Button Command="{Binding EditCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
@@ -194,27 +194,27 @@
                     ToolTip="{Binding [featureTable_editGeometry], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}"
                     Padding="0">
-                <iconPacks:PackIconMaterial Kind="Pencil" Foreground="White" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconMaterial Kind="Pencil" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
             <Button Command="{Binding UndoChangesCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     IsEnabled="{Binding CanUndo}"
                     ToolTip="{Binding [featureTable_undo], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
-                <iconPacks:PackIconMaterial Kind="UndoVariant" Foreground="White" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconMaterial Kind="UndoVariant" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
             <Button Command="{Binding SaveChangesCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     ToolTip="{Binding [featureTable_saveChanges], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
-                <iconPacks:PackIconMaterial Kind="ContentSave" Foreground="White" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconMaterial Kind="ContentSave" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
             <Button Command="{Binding ViewChangesCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     IsEnabled="{Binding CanViewChanges}"
                     ToolTip="{Binding [featureChanges_viewChanges], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
-                <iconPacks:PackIconMaterial Kind="History" Foreground="White" FlowDirection="LeftToRight"/>
+                <iconPacks:PackIconMaterial Kind="History" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
             <ItemsControl ItemsSource="{Binding AssociatedLayer.FeatureTableCommands}">
                 <ItemsControl.ItemsPanel>

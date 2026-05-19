@@ -11,8 +11,11 @@ public class PointM : Point, IHasM
 {
     public double M { get; set; }
 
-    public override byte[] AsWkb()
+    public override byte[]? AsWkb()
     {
+        if (IsNaN())
+            return null;
+
         byte[] result = new byte[29];
 
         result[0] = (byte)WkbByteOrder.WkbNdr;
@@ -43,4 +46,14 @@ public class PointM : Point, IHasM
         return this.X == point.X && this.Y == point.Y;
     }
 
+    public override string AsDelimited(char delimiter, int precision, bool useThousandSeparator)
+    {
+        var xFormatted = FormatHelper.FormatWithPrecision(X, precision, useThousandSeparator);
+
+        var yFormatted = FormatHelper.FormatWithPrecision(Y, precision, useThousandSeparator);
+
+        var mFormatted = FormatHelper.FormatWithPrecision(M, precision, useThousandSeparator);
+
+        return $"{xFormatted}{delimiter}{yFormatted}{delimiter}{mFormatted}";
+    }
 }

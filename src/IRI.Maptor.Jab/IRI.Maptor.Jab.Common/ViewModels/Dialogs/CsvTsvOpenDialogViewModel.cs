@@ -69,6 +69,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         {
             _filePath = value ?? string.Empty;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsFileSelected));
             RaisePropertyChanged(nameof(IsRawTextReadOnly));
         }
     }
@@ -87,7 +88,9 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         }
     }
 
-    public bool IsRawTextReadOnly => !string.IsNullOrWhiteSpace(FilePath);
+    public bool IsFileSelected => !string.IsNullOrWhiteSpace(FilePath);
+
+    public bool IsRawTextReadOnly => IsFileSelected;
 
     public SrsOption? SelectedSrsOption
     {
@@ -179,7 +182,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
     /// <summary>
     /// Set when user clicks Open. Contains the full result for import.
     /// </summary>
-    public CsvTsvOpenDialogResult? CsvTsvResult { get; private set; }
+    public CsvTsvOptions? CsvTsvResult { get; private set; }
 
     private void ApplyInitialSrid(int srid)
     {
@@ -272,7 +275,8 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
             }
         }
 
-        CsvTsvResult = new CsvTsvOpenDialogResult(
+        CsvTsvResult = new CsvTsvOptions(
+            IsFileSelected,
             string.IsNullOrEmpty(FilePath) ? null : FilePath,
             textToImport,
             EffectiveSelectedSrid,

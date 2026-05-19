@@ -100,7 +100,13 @@ public class TextDataSource : MemoryDataSource
     /// <summary>
     /// Creates a CsvDataSource from a CSV file with the specified spatial reference.
     /// </summary>
-    public static async Task<TextDataSource> CreateFromFileAsync(string fileName, GeometryType type, DataSourceKind dataSourceKind, int sourceSrid, bool useFirstLineAsHeader, bool isLongitudeFirst)
+    public static async Task<TextDataSource> CreateFromFileAsync(
+        string fileName,
+        GeometryType type,
+        DataSourceKind dataSourceKind,
+        int sourceSrid,
+        bool isLongitudeFirst,
+        bool useFirstLineAsHeader)
     {
         if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
             throw new FileNotFoundException($"CSV/TSV file not found: {fileName}", fileName);
@@ -123,7 +129,13 @@ public class TextDataSource : MemoryDataSource
     /// <summary>
     /// Creates a CsvDataSource from pasted or in-memory text (e.g. from clipboard).
     /// </summary>
-    public static Task<TextDataSource> CreateFromTextAsync(string text, GeometryType type, DataSourceKind dataSourceKind, int sourceSrid, bool isLongitudeFirst, bool useFirstLineAsHeader)
+    public static Task<TextDataSource> CreateFromTextAsync(
+        string text,
+        GeometryType type,
+        DataSourceKind dataSourceKind,
+        int sourceSrid,
+        bool isLongitudeFirst,
+        bool useFirstLineAsHeader)
     {
         if (string.IsNullOrWhiteSpace(text))
             throw new ArgumentException("Text cannot be empty.", nameof(text));
@@ -142,6 +154,8 @@ public class TextDataSource : MemoryDataSource
 
         return Task.FromResult(new TextDataSource(string.Empty, features, sourceSrid, useFirstLineAsHeader, dataSourceKind));
     }
+
+    //public static async Task<TextDataSource> Create(CsvTsvOpenDialogResult)
 
     private static (int xIndex, int yIndex) FindXyColumnIndices(string[] headerRow, bool isLongitudeFirst)
     {

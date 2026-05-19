@@ -67,6 +67,7 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
         {
             _filePath = value ?? string.Empty;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsFileSelected));
             RaisePropertyChanged(nameof(IsRawTextReadOnly));
         }
     }
@@ -83,7 +84,9 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
         }
     }
 
-    public bool IsRawTextReadOnly => !string.IsNullOrWhiteSpace(FilePath);
+    public bool IsFileSelected => !string.IsNullOrWhiteSpace(FilePath);
+
+    public bool IsRawTextReadOnly => IsFileSelected;
 
     public SrsOption? SelectedSrsOption
     {
@@ -166,7 +169,7 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
 
     public RelayCommand FormatJsonCommand { get; set; }
 
-    public GeoJsonTopoJsonOpenDialogResult? Result { get; private set; }
+    public GeoJsonTopoJsonOptions? Result { get; private set; }
 
     private async void FormatJson(bool isPretty)
     {
@@ -306,7 +309,8 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
             }
         }
 
-        Result = new GeoJsonTopoJsonOpenDialogResult(
+        Result = new GeoJsonTopoJsonOptions(
+            IsFileSelected,
             string.IsNullOrEmpty(FilePath) ? null : FilePath,
             jsonToImport,
             EffectiveSelectedSrid,
