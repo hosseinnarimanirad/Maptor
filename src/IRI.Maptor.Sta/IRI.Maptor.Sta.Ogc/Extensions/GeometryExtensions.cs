@@ -137,27 +137,7 @@ public static class Sta_KmlExtensions
 
         return KmlWriter.ToKml(pointGeometries, documentName, projectToGeodeticFunc);
     }
-
-    /// <summary>
-    /// Converts a list of geometries to KML and saves to a file
-    /// </summary>
-    /// <param name="geometries">List of geometries to convert</param>
-    /// <param name="filePath">Output file path</param>
-    /// <param name="documentName">Document name</param>
-    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
-    public static void SaveAsKml<T>(
-        this System.Collections.Generic.List<Geometry<T>> geometries,
-        string filePath,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null) where T : IPoint, new()
-    {
-        var pointGeometries = geometries
-            .Select(g => ConvertToPointGeometry(g))
-            .ToList();
-
-        KmlWriter.WriteToFile(pointGeometries, filePath, documentName, projectToGeodeticFunc);
-    }
-
+     
     /// <summary>
     /// Converts a list of geometries to KML and saves to a file asynchronously
     /// </summary>

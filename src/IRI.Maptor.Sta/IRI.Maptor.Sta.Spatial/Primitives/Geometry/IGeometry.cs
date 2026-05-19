@@ -20,7 +20,7 @@ public interface IGeometry
 
     BoundingBox GetBoundingBox();
 
-    List<Point> GetPoints();
+    //List<Point> GetPoints();
 
     bool IsLeafGeometry();
 

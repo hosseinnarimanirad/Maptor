@@ -24,10 +24,12 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public GeometryType Type { get; set; }
 
+    public GeometryCategory Category => Type.GetCategory();
 
-    public bool IsMultiPartGeometry => Type == GeometryType.MultiPoint ||
-                                    Type == GeometryType.MultiLineString ||
-                                    Type == GeometryType.MultiPolygon;
+    //public bool IsMultiPartGeometry => Type == GeometryType.MultiPoint ||
+    //                                Type == GeometryType.MultiLineString ||
+    //                                Type == GeometryType.MultiPolygon;
+    public bool IsMultiPartGeometry => Type.IsMultiPartGeometry();
 
 
     private List<T>? _points;
@@ -83,72 +85,8 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     private Geometry()
     {
-
     }
-
-    //private Geometry(List<T> points, GeometryType type, int srid) : this(points, type, false, srid) { }
-
-    //// note: in the case of rings (isClosed=true) first point should not be repeated as last point
-    //public Geometry(List<T> points, GeometryType type, bool isClosed, int srid)
-    //{
-    //    this.Type = type;
-
-    //    this.Srid = srid;
-
-    //    if (type == GeometryType.LineString || type == GeometryType.Point)
-    //    {
-    //        if (type == GeometryType.LineString && isClosed && points?.Count > 0)
-    //        {
-    //            var lastPoint = points[points.Count - 1];
-
-    //            var firstPoint = points[0];
-
-    //            // in some cases (e.g. reading KML files) the last point is repeated
-    //            if (lastPoint.X == firstPoint.X && lastPoint.Y == firstPoint.Y)
-    //            {
-    //                this.Points = points.Take(points.Count - 1).ToList();
-
-    //                return;
-    //            }
-    //            //throw new ArgumentException("the first point should not be repeated as last point in rings");
-    //        }
-
-    //        this.Points = points;
-    //    }
-    //    else if (type == GeometryType.MultiPoint)
-    //    {
-    //        this.Geometries = points.Select(p => Geometry<T>.Create([p], GeometryType.Point, srid)).ToList();
-    //    }
-    //    else
-    //    {
-    //        throw new NotImplementedException("Geometry > Constructor");
-    //    }
-    //}
-
-    //public Geometry(Geometry<T> geometry, GeometryType type, int srid) : this([geometry], type, srid) { }
-
-    //public Geometry(List<Geometry<T>> geometries, GeometryType type, int srid)
-    //{
-    //    if (type != GeometryType.MultiLineString && type != GeometryType.MultiPoint && type != GeometryType.MultiPolygon && type != GeometryType.Polygon && type != GeometryType.GeometryCollection)
-    //        throw new NotImplementedException();
-
-    //    this.Geometries = geometries;
-
-    //    this.Type = type;
-
-    //    this.Srid = srid;
-
-    //    if (geometries.Count > 0)
-    //    {
-    //        var tempSubType = geometries.First().Type;
-
-    //        if (geometries.Any(i => i.Type != tempSubType))
-    //        {
-    //            this.Type = GeometryType.GeometryCollection;
-    //        }
-    //    }
-    //}
-
+     
     #endregion
 
 
@@ -171,28 +109,28 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         return CoordinateDimension.TwoD;
     }
 
-    public List<Point> GetPoints()
-    {
-        if (Points is null)
-            return null;
+    //public List<Point> GetPoints()
+    //{
+    //    if (Points is null)
+    //        return null;
 
-        if (this.Points is List<Point> points)
-        {
-            return points;
-        }
-        else
-            return this.Points.Select(p => new Point(p.X, p.Y)).ToList();
-    }
+    //    if (this.Points is List<Point> points)
+    //    {
+    //        return points;
+    //    }
+    //    else
+    //        return this.Points.Select(p => new Point(p.X, p.Y)).ToList();
+    //}
 
     public override string ToString()
     {
         return $"{Type} - #Points: {NumberOfPoints} - #Parts: {Geometries?.Count()}";
     }
 
-    public bool IsRingBase()
-    {
-        return this.Type == GeometryType.Polygon || this.Type == GeometryType.MultiPolygon || this.Type == GeometryType.CurvePolygon;
-    }
+    public bool IsRingBase() => this.Type.IsRingBase();
+    //{
+        //return this.Type == GeometryType.Polygon || this.Type == GeometryType.MultiPolygon || this.Type == GeometryType.CurvePolygon;
+    //}
 
     public bool HasAnyPoint()
     {
@@ -278,25 +216,22 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         }
     }
 
-    public BoundingBox GetBoundingBox()
-    {
-        return BoundingBox.CalculateBoundingBox(GetAllPoints());
-    }
+    public BoundingBox GetBoundingBox() => BoundingBox.CalculateBoundingBox(GetAllPoints());
 
-    public bool IsPointOrMultiPoint()
-    {
-        return Type == GeometryType.Point || Type == GeometryType.MultiPoint;
-    }
+    public bool IsPointOrMultiPoint() => this.Type.GetCategory() == GeometryCategory.Point;
+    //{
+    //    return Type == GeometryType.Point || Type == GeometryType.MultiPoint;
+    //}
 
-    public bool IsLineStringOrMultiLineString()
-    {
-        return Type == GeometryType.LineString || Type == GeometryType.MultiLineString;
-    }
+    public bool IsLineStringOrMultiLineString() => this.Type.GetCategory() == GeometryCategory.Polyline;
+    //{
+    //    return Type == GeometryType.LineString || Type == GeometryType.MultiLineString;
+    //}
 
-    public bool IsPolygonOrMultiPolygon()
-    {
-        return Type == GeometryType.Polygon || Type == GeometryType.MultiPolygon;
-    }
+    public bool IsPolygonOrMultiPolygon() => this.Type.GetCategory() == GeometryCategory.Polygon;
+    //{
+    //    return Type == GeometryType.Polygon || Type == GeometryType.MultiPolygon;
+    //}
 
     public List<IGeometry>? GetGeometries() => Geometries?.Cast<IGeometry>().ToList();
 
@@ -745,7 +680,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 return Geometry<T>.Empty;
 
             case GeometryType.MultiPoint:
-                return Geometry<T>.Create(this.Geometries.Select(i => i.Transform(transform)).ToList(), GeometryType.MultiPoint, newSrid);
+                return Geometry<T>.Create(this.Geometries.Select(i => i.Transform(transform, newSrid)).ToList(), GeometryType.MultiPoint, newSrid);
 
             case GeometryType.Point:
                 return Geometry<T>.Create(this.Points.Select(i => transform(i)).ToList(), GeometryType.Point, newSrid);
@@ -754,13 +689,13 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 return Geometry<T>.Create(this.Points.Select(i => transform(i)).ToList(), GeometryType.LineString, newSrid);
 
             case GeometryType.MultiLineString:
-                return Geometry<T>.Create(this.Geometries.Select(i => i.Transform(transform)).ToList(), GeometryType.MultiLineString, newSrid);
+                return Geometry<T>.Create(this.Geometries.Select(i => i.Transform(transform, newSrid)).ToList(), GeometryType.MultiLineString, newSrid);
 
             case GeometryType.MultiPolygon:
-                return Geometry<T>.Create(this.Geometries.Select(i => i.Transform(transform)).ToList(), GeometryType.MultiPolygon, newSrid);
+                return Geometry<T>.Create(this.Geometries.Select(i => i.Transform(transform, newSrid)).ToList(), GeometryType.MultiPolygon, newSrid);
 
             case GeometryType.Polygon:
-                return Geometry<T>.Create(this.Geometries.Select(i => i.Transform(transform)).ToList(), GeometryType.Polygon, newSrid);
+                return Geometry<T>.Create(this.Geometries.Select(i => i.Transform(transform, newSrid)).ToList(), GeometryType.Polygon, newSrid);
 
             default:
                 throw new NotImplementedException();
