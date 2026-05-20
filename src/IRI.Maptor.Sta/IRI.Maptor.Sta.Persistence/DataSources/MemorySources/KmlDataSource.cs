@@ -17,9 +17,9 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 /// </summary>
 public class KmlDataSource : MemoryDataSource
 {
-    public override DataSourceKind DataSourceKind => DataSourceKind.Kml;
-
     private readonly string _fileName;
+
+    public override DataSourceKind DataSourceKind => DataSourceKind.Kml;
 
     private KmlDataSource(string fileName, List<Feature<Point>> features)
         : base(features, resetIds: true, kind: DataSourceKind.Kml)

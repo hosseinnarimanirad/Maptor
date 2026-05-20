@@ -47,34 +47,7 @@ public class GeoJsonDataSource : MemoryDataSource
 
         return Task.CompletedTask;
     }
-
-    /// <summary>
-    /// Creates a GeoJsonDataSource from a GeoJSON file.
-    /// </summary>
-    public static GeoJsonDataSource CreateFromFile(string fileName, bool isLongitudeFirst = true)
-    {
-        if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
-            throw new FileNotFoundException($"GeoJSON file not found: {fileName}", fileName);
-
-        var featureSet = GeoJsonFeatureSet.Parse(File.ReadAllText(fileName));
-        var features = (featureSet.Features ?? [])
-            .Select(f => f.AsFeature(isLongitudeFirst, SrsBases.WebMercator))
-            .ToList();
-
-        if (features.Count == 0)
-            throw new InvalidOperationException($"No features found in GeoJSON file: {fileName}");
-
-        return new GeoJsonDataSource(fileName, features, isLongitudeFirst);
-    }
-
-    ///// <summary>
-    ///// Creates a GeoJsonDataSource from a GeoJSON file asynchronously.
-    ///// </summary>
-    //public static async Task<GeoJsonDataSource> CreateFromFileAsync(string fileName, bool isLongitudeFirst = true)
-    //{
-    //    return await CreateFromFileAsync(fileName, isLongitudeFirst, SridHelper.GeodeticWGS84);
-    //}
-
+     
     /// <summary>
     /// Creates a GeoJsonDataSource from a GeoJSON file with the specified spatial reference.
     /// </summary>

@@ -12,7 +12,7 @@ using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
-public class GridDataSource : VectorDataSource
+public class GeodeticGridDataSource : VectorDataSource
 {
     private readonly static List<Field> _fields = new List<Field>();
 
@@ -34,7 +34,7 @@ public class GridDataSource : VectorDataSource
         protected set => _ = value;
     }
 
-    static GridDataSource()
+    static GeodeticGridDataSource()
     {
         _fields =
         [
@@ -49,12 +49,12 @@ public class GridDataSource : VectorDataSource
         ];
     }
 
-    private GridDataSource() : base(_fields)
+    private GeodeticGridDataSource() : base(_fields)
     {
         GeodeticWgs84Extent = BoundingBoxes.GeodeticWgs84_Iran;
     }
 
-    public override string ToString() => $"{nameof(GridDataSource)} {Type.GetName()}";
+    public override string ToString() => $"{nameof(GeodeticGridDataSource)} {Type.GetName()}";
 
     // Get as FeatureSet of Point
     public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox)
@@ -100,9 +100,9 @@ public class GridDataSource : VectorDataSource
         };
     }
 
-    public static GridDataSource Create(GeodeticIndexType indexType)
+    public static GeodeticGridDataSource Create(GeodeticIndexType indexType)
     {
-        GridDataSource result = new GridDataSource();
+        GeodeticGridDataSource result = new GeodeticGridDataSource();
 
         result.Type = indexType;
 

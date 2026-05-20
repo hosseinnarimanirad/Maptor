@@ -19,9 +19,9 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 /// </summary>
 public class GpxDataSource : MemoryDataSource
 {
-    public override DataSourceKind DataSourceKind => DataSourceKind.Gpx;
-
     private readonly string _fileName;
+
+    public override DataSourceKind DataSourceKind => DataSourceKind.Gpx;
 
     private GpxDataSource(string fileName, List<Feature<Point>> features)
         : base(features, resetIds: true, kind: DataSourceKind.Gpx)

@@ -227,26 +227,7 @@ public static class Sta_KmlExtensions
     #endregion
 
     #region KMZ Extensions
-
-    /// <summary>
-    /// Converts a geometry to KMZ and saves it to a file
-    /// </summary>
-    /// <param name="geometry">Geometry to convert</param>
-    /// <param name="filePath">Output KMZ file path</param>
-    /// <param name="name">Feature name</param>
-    /// <param name="description">Feature description</param>
-    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
-    public static void SaveAsKmz<T>(
-        this Geometry<T> geometry,
-        string filePath,
-        string? name = null,
-        string? description = null,
-        Func<Point, Point>? projectToGeodeticFunc = null) where T : IPoint, new()
-    {
-        var pointGeometry = ConvertToPointGeometry(geometry);
-        KmzWriter.WriteToFile(pointGeometry, filePath, name, description, projectToGeodeticFunc);
-    }
-
+      
     /// <summary>
     /// Converts a geometry to KMZ and saves it to a file asynchronously
     /// </summary>
@@ -263,32 +244,14 @@ public static class Sta_KmlExtensions
         Func<Point, Point>? projectToGeodeticFunc = null) where T : IPoint, new()
     {
         var pointGeometry = ConvertToPointGeometry(geometry);
+
         await KmzWriter.WriteToFileAsync(
             new System.Collections.Generic.List<Geometry<Point>> { pointGeometry },
             filePath,
             name,
             projectToGeodeticFunc);
     }
-
-    /// <summary>
-    /// Converts a list of geometries to KMZ and saves to a file
-    /// </summary>
-    /// <param name="geometries">List of geometries to convert</param>
-    /// <param name="filePath">Output KMZ file path</param>
-    /// <param name="documentName">Document name</param>
-    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
-    public static void SaveAsKmz<T>(
-        this System.Collections.Generic.List<Geometry<T>> geometries,
-        string filePath,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null) where T : IPoint, new()
-    {
-        var pointGeometries = geometries
-            .Select(g => ConvertToPointGeometry(g))
-            .ToList();
-
-        KmzWriter.WriteToFile(pointGeometries, filePath, documentName, projectToGeodeticFunc);
-    }
+     
 
     /// <summary>
     /// Converts a list of geometries to KMZ and saves to a file asynchronously
@@ -310,24 +273,6 @@ public static class Sta_KmlExtensions
         await KmzWriter.WriteToFileAsync(pointGeometries, filePath, documentName, projectToGeodeticFunc);
     }
 
-    /// <summary>
-    /// Converts a list of KML features to KMZ and saves to a file
-    /// </summary>
-    /// <param name="features">List of features to convert</param>
-    /// <param name="filePath">Output KMZ file path</param>
-    /// <param name="documentName">Document name</param>
-    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
-    public static void SaveAsKmz(
-        this System.Collections.Generic.List<KmlFeature> features,
-        string filePath,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
-    {
-        if (features == null || features.Count == 0)
-            return;
-
-        KmzWriter.WriteToFile(features, filePath, documentName, projectToGeodeticFunc);
-    }
 
     /// <summary>
     /// Converts a list of KML features to KMZ and saves to a file asynchronously

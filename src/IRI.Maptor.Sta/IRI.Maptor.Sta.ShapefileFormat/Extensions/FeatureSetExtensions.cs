@@ -14,6 +14,7 @@ using IRI.Maptor.Sta.ShapefileFormat.Dbf;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 
 namespace IRI.Maptor.Extensions;
 
@@ -104,7 +105,7 @@ public static class FeatureSetExtensions
         await KmlWriter.WriteToFileAsync(kmlFeatures, kmlFileName, featureSet.Title);
     }
 
-    public static void SaveAsKmz(this FeatureSet<Point> featureSet, string kmzFileName)
+    public static async Task SaveAsKmz(this FeatureSet<Point> featureSet, string kmzFileName)
     {
         if (featureSet is null)
             return;
@@ -116,7 +117,7 @@ public static class FeatureSetExtensions
         if (kmlFeatures is null)
             return;
 
-        KmzWriter.WriteToFile(kmlFeatures, kmzFileName, featureSet.Title);
+        await KmzWriter.WriteToFileAsync(kmlFeatures, kmzFileName, featureSet.Title);
     }
 
     public static void SaveAsShapefile(this FeatureSet<Point> featureSet, string shpFileName, Encoding encoding, SrsBase srs, bool overwrite = false)
@@ -136,7 +137,7 @@ public static class FeatureSetExtensions
 
         var srsBase = SridHelper.AsSrsBase(featureSet.Srid);
 
-        var features = featureSet.Features.Select(f => f.AsGeoJsonFeature(p => srsBase.ToWgs84Geodetic(p), isLongitudeFirst)).ToList();
+        var features = featureSet.Features.Select(f => f.AsGeoJsonFeature(srsBase.ToWgs84Geodetic, isLongitudeFirst)).ToList();
 
         GeoJsonFeatureSet jsonFeatureSet = new GeoJsonFeatureSet()
         {
@@ -145,6 +146,14 @@ public static class FeatureSetExtensions
         };
 
         jsonFeatureSet.Save(geoJsonFileName, false, true);
+    }
+
+    public static async Task SaveAsTopoJson(this FeatureSet<Point> featureSet, string topoJsonFileName)
+    {
+        if (featureSet is null)
+            return;
+
+        await TopoJson.WriteToFileAsync(featureSet.Features, topoJsonFileName);
     }
 
     public static void SaveAsEsriJson(this FeatureSet<Point> featureSet, string esriJsonFileName)

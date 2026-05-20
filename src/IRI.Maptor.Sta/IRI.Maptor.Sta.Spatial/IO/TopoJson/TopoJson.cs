@@ -16,9 +16,10 @@ public static class TopoJson
     /// <summary>
     /// Read TopoJSON from file
     /// </summary>
-    public static TopoJsonTopology ReadFromFile(string fileName)
+    public static async Task<TopoJsonTopology> ReadFromFileAsync(string fileName)
     {
-        var topoJsonString = File.ReadAllText(fileName);
+        var topoJsonString = await File.ReadAllTextAsync(fileName);
+
         return Parse(topoJsonString);
     }
 
@@ -27,17 +28,84 @@ public static class TopoJson
     /// </summary>
     public static TopoJsonTopology Parse(string topoJsonString)
     {
-        return JsonHelper.Deserialize<TopoJsonTopology>(topoJsonString) 
+        return JsonHelper.Deserialize<TopoJsonTopology>(topoJsonString)
                ?? throw new InvalidOperationException("Failed to parse TopoJSON");
+    }
+
+    /// <summary>
+    /// Writes a list of Geometry objects to a TopoJSON file, automatically assigning names.
+    /// </summary>
+    /// <param name="geometries">List of geometries to export.</param>
+    /// <param name="fileName">Output file path.</param>
+    /// <param name="objectNamePrefix">Prefix for auto-generated object names (default "geometry").</param>
+    /// <param name="quantize">Whether to apply quantization (default true).</param>
+    /// <param name="quantizationFactor">Quantization factor (default 10000).</param>
+    /// <param name="indented">Whether to produce pretty-printed JSON (default true).</param>
+    public static async Task WriteToFileAsync(
+        IReadOnlyList<Geometry<Point>> geometries,
+        string fileName,
+        string objectNamePrefix = "geometry",
+        bool quantize = true,
+        int quantizationFactor = 10000,
+        bool indented = true)
+    {
+        if (geometries == null || geometries.Count == 0)
+            throw new ArgumentException("The geometries list is null or empty.", nameof(geometries));
+
+        // Build a dictionary with automatically named objects
+        var namedGeometries = new Dictionary<string, Geometry<Point>>();
+
+        for (int i = 0; i < geometries.Count; i++)
+        {
+            var geom = geometries[i];
+
+            if (geom != null && !geom.IsNullOrEmpty())
+            {
+                string name = $"{objectNamePrefix}{i}";
+
+                namedGeometries[name] = geom;
+            }
+        }
+
+        if (namedGeometries.Count == 0)
+            throw new InvalidOperationException("No valid geometries to write.");
+
+        var topology = FromGeometries(namedGeometries, quantize, quantizationFactor);
+
+        await WriteToFileAsync(topology, fileName, indented);
+    }
+
+    /// <summary>
+    /// Writes a list of Feature<Point> objects to a TopoJSON file, preserving attributes and IDs.
+    /// </summary>
+    /// <param name="features">List of features to write.</param>
+    /// <param name="fileName">Output file path.</param>
+    /// <param name="quantize">Whether to apply quantization (default true).</param>
+    /// <param name="quantizationFactor">Quantization factor (default 10000).</param>
+    /// <param name="indented">Whether to produce pretty-printed JSON (default true).</param>  
+    public static async Task WriteToFileAsync(
+        IReadOnlyList<Feature<Point>> features,
+        string fileName,
+        bool quantize = true,
+        int quantizationFactor = 10000,
+        bool indented = true)
+    {
+        if (features == null || features.Count == 0)
+            throw new ArgumentException("The features list is null or empty.", nameof(features));
+
+        var topology = TopoJsonConverter.FromFeatures(features, quantize, quantizationFactor);
+
+        await WriteToFileAsync(topology, fileName, indented);
     }
 
     /// <summary>
     /// Write TopoJSON to file
     /// </summary>
-    public static void WriteToFile(TopoJsonTopology topology, string fileName, bool indented = true)
+    public static async Task WriteToFileAsync(TopoJsonTopology topology, string fileName, bool indented = true)
     {
         var json = Serialize(topology, indented);
-        File.WriteAllText(fileName, json);
+
+        await File.WriteAllTextAsync(fileName, json);
     }
 
     /// <summary>

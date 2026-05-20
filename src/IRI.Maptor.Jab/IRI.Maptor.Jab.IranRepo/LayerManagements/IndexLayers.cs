@@ -333,7 +333,7 @@ public static class IndexLayers
     {
         var fontFamily = new FontFamily("Times New Roman");
 
-        GridDataSource source50k = GridDataSource.Create(GeodeticIndexType.Ncc50k);
+        GeodeticGridDataSource source50k = GeodeticGridDataSource.Create(GeodeticIndexType.Ncc50k);
 
         var label = LabelSymbolizer.Create(14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(9), isRtl: false);
 
@@ -366,7 +366,7 @@ public static class IndexLayers
     {
         var fontFamily = new FontFamily("Times New Roman");
 
-        GridDataSource source25k = GridDataSource.Create(GeodeticIndexType.Ncc25k);
+        GeodeticGridDataSource source25k = GeodeticGridDataSource.Create(GeodeticIndexType.Ncc25k);
 
         var label = LabelSymbolizer.Create(14, Brushes.Red, fontFamily, i => i.GetCentroidPlusPoint(), ScaleInterval.Create(10, 19), isRtl: false);
 
@@ -406,7 +406,7 @@ public static class IndexLayers
             new VectorLayer(
                 //"اندکس ۱۰ هزار",
                 IRI.Maptor.Jab.Common.Properties.Resources.index_10k_title,
-                GridDataSource.Create(GeodeticIndexType.Ncc10k),
+                GeodeticGridDataSource.Create(GeodeticIndexType.Ncc10k),
                 [symbolizer, label],
                 LayerType.VectorLayer,
                 RenderMode.Default,
@@ -436,7 +436,7 @@ public static class IndexLayers
             new VectorLayer(
                 //"اندکس ۵ هزار",
                 IRI.Maptor.Jab.Common.Properties.Resources.index_5k_title,
-                GridDataSource.Create(GeodeticIndexType.Ncc5k),
+                GeodeticGridDataSource.Create(GeodeticIndexType.Ncc5k),
                 [symbolizer, label],
                 LayerType.VectorLayer,
                 RenderMode.Default,

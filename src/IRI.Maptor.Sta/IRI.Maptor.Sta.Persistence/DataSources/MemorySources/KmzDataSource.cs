@@ -19,9 +19,9 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 /// </summary>
 public class KmzDataSource : MemoryDataSource
 {
-    public override DataSourceKind DataSourceKind => DataSourceKind.Kmz;
-
     private readonly string _fileName;
+
+    public override DataSourceKind DataSourceKind => DataSourceKind.Kmz;
 
     private KmzDataSource(string fileName, List<Feature<Point>> features)
         : base(features, resetIds: true, kind: DataSourceKind.Kmz)
@@ -31,17 +31,15 @@ public class KmzDataSource : MemoryDataSource
 
     public override string ToString() => $"{nameof(KmzDataSource)}";
 
-    public override Task SaveChangesAsync()
+    public override async Task SaveChangesAsync()
     { 
         var kmlFeatures = _webMercatorFeatureSet.Features.ToKmlFeatures();
 
-        KmzWriter.WriteToFile(kmlFeatures, _fileName, null, MapProjects.WebMercatorToGeodeticWgs84);
+        await KmzWriter.WriteToFileAsync(kmlFeatures, _fileName, null, MapProjects.WebMercatorToGeodeticWgs84);
 
         _webMercatorFeatureSet.ApplyChanges();
 
         UpdateHasPendingChanges();
-
-        return Task.CompletedTask;
     }
 
     /// <summary>

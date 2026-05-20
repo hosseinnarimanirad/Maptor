@@ -4523,7 +4523,7 @@ public abstract class MapViewModelBase : ViewModelBase
         await AddDxffile(result.FilePath, owner: null, result.SelectedSrid);
     }
 
-    public async Task AddDxffile(string fileName, object owner, int defaultSrid)
+    public async Task AddDxffile(string fileName, object owner, int sourceSrid)
     {
         try
         {
@@ -4531,7 +4531,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 throw new MaptorFileNotFoundException(fileName);
             //throw new System.IO.FileNotFoundException($"DXF file '{fileName}' was not found.", fileName);
 
-            var geometries = await DxfReader.ReadFromFile(fileName, defaultSrid);
+            var geometries = await DxfReader.ReadFromFile(fileName, sourceSrid);
 
             if (geometries.IsNullOrEmpty())
             {

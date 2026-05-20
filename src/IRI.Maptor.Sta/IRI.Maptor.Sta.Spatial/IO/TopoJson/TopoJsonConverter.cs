@@ -11,6 +11,9 @@ namespace IRI.Maptor.Sta.Spatial.IO.TopoJson;
 /// </summary>
 public static class TopoJsonConverter
 {
+
+    #region Geometry<Point> to TopoJson
+
     /// <summary>
     /// Convert a single Geometry to TopoJSON topology
     /// </summary>
@@ -73,26 +76,90 @@ public static class TopoJsonConverter
         return topology;
     }
 
+
     /// <summary>
-    /// Convert TopoJSON topology to geometries
+    /// Converts a list of Feature&lt;Point&gt; objects to a TopoJSON topology,
+    /// preserving each feature's ID and properties.
     /// </summary>
-    public static Dictionary<string, Geometry<Point>> ToGeometry(TopoJsonTopology topology, int srid = 4326)
+    /// <param name="features">List of features to convert.</param>
+    /// <param name="quantize">Whether to apply quantization.</param>
+    /// <param name="quantizationFactor">Quantization factor (e.g., 10000).</param>
+    /// <returns>TopoJSON topology containing all features as separate objects.</returns>
+    public static TopoJsonTopology FromFeatures(
+        IReadOnlyList<Feature<Point>> features,
+        bool quantize = true,
+        int quantizationFactor = 10000)
     {
-        var result = new Dictionary<string, Geometry<Point>>();
+        if (features == null || features.Count == 0)
+            throw new ArgumentException("The features list is null or empty.", nameof(features));
 
-        if (topology?.Objects == null)
-            return result;
+        var topology = new TopoJsonTopology();
+        var arcBuilder = new ArcBuilder();
 
-        foreach (var kvp in topology.Objects)
+        // Collect all points from all geometries to compute bounding box and transform
+        var allPoints = new List<Point>();
+        foreach (var feature in features)
         {
-            var geometry = ConvertToGeometry(kvp.Value, topology.Arcs, topology.Transform, srid);
-            if (geometry != null && !geometry.IsNullOrEmpty())
+            var geom = feature.TheGeometry;
+            if (geom != null && !geom.IsNullOrEmpty())
+                allPoints.AddRange(geom.GetAllPoints());
+        }
+
+        if (allPoints.Count > 0)
+        {
+            var minX = allPoints.Min(p => p.X);
+            var minY = allPoints.Min(p => p.Y);
+            var maxX = allPoints.Max(p => p.X);
+            var maxY = allPoints.Max(p => p.Y);
+            topology.BBox = new[] { minX, minY, maxX, maxY };
+
+            if (quantize && (maxX - minX) > 0 && (maxY - minY) > 0)
             {
-                result[kvp.Key] = geometry;
+                topology.Transform = new TopoJsonTransform
+                {
+                    Scale = new[]
+                    {
+                    (maxX - minX) / quantizationFactor,
+                    (maxY - minY) / quantizationFactor
+                },
+                    Translate = new[] { minX, minY }
+                };
             }
         }
 
-        return result;
+        // Convert each feature to a TopoJSON geometry object
+        for (int i = 0; i < features.Count; i++)
+        {
+            var feature = features[i];
+            var geometry = feature.TheGeometry;
+            if (geometry == null || geometry.IsNullOrEmpty())
+                continue;
+
+            // Convert the geometry (reuse existing conversion logic)
+            var topoGeometry = ConvertGeometry(geometry, arcBuilder, topology.Transform);
+            if (topoGeometry == null)
+                continue;
+
+            // Attach feature properties and ID
+            if (feature.Attributes != null && feature.Attributes.Count > 0)
+                topoGeometry.Properties = new Dictionary<string, object>(feature.Attributes);
+
+            if (feature.Id != 0)
+                topoGeometry.Id = feature.Id.ToString();
+
+            // Use feature ID if available, otherwise generate a name
+            string objectName = feature.Id != 0 ? feature.Id.ToString() : $"feature_{i}";
+            // Ensure uniqueness: if duplicate ID appears, append index
+
+            if (topology.Objects.ContainsKey(objectName))
+                objectName = $"{objectName}_{i}";
+            topology.Objects[objectName] = topoGeometry;
+        }
+
+        // Build arcs from the collected arcs
+        topology.Arcs = arcBuilder.BuildArcs();
+
+        return topology;
     }
 
     private static TopoJsonGeometry ConvertGeometry(Geometry<Point> geometry, ArcBuilder arcBuilder, TopoJsonTransform? transform)
@@ -208,6 +275,106 @@ public static class TopoJsonConverter
 
         return new TopoJsonMultiPolygon { Arcs = arcs };
     }
+
+    /// <summary>
+    /// Helper class for building arcs from geometries
+    /// </summary>
+    private class ArcBuilder
+    {
+        private readonly List<List<int[]>> _arcs = new();
+        private readonly Dictionary<string, int> _arcMap = new();
+
+        public int AddArc(List<Point> points, TopoJsonTransform? transform)
+        {
+            // Create arc key for deduplication
+            var key = CreateArcKey(points);
+
+            // Check if this arc already exists
+            if (_arcMap.TryGetValue(key, out var existingIndex))
+            {
+                return existingIndex;
+            }
+
+            // Convert points to quantized delta-encoded coordinates
+            var arc = new List<int[]>();
+            var prevX = 0;
+            var prevY = 0;
+
+            foreach (var point in points)
+            {
+                int x, y;
+
+                if (transform != null)
+                {
+                    var quantized = transform.Inverse(point.X, point.Y);
+                    x = quantized[0];
+                    y = quantized[1];
+                }
+                else
+                {
+                    x = (int)Math.Round(point.X);
+                    y = (int)Math.Round(point.Y);
+                }
+
+                // Delta encoding
+                arc.Add(new[] { x - prevX, y - prevY });
+                prevX = x;
+                prevY = y;
+            }
+
+            var index = _arcs.Count;
+            _arcs.Add(arc);
+            _arcMap[key] = index;
+
+            return index;
+        }
+
+        public List<List<int[]>> BuildArcs()
+        {
+            return _arcs;
+        }
+
+        private static string CreateArcKey(List<Point> points)
+        {
+            // Simple key based on start and end points
+            // In a production system, you might want a more sophisticated key
+            if (points.Count == 0)
+                return string.Empty;
+
+            var first = points.First();
+            var last = points.Last();
+            return $"{first.X:F6},{first.Y:F6}|{last.X:F6},{last.Y:F6}|{points.Count}";
+        }
+    }
+
+    #endregion
+
+
+    #region TopoJson to Geometry<Point>
+
+    /// <summary>
+    /// Convert TopoJSON topology to geometries
+    /// </summary>
+    public static Dictionary<string, Geometry<Point>> ToGeometry(TopoJsonTopology topology, int srid = 4326)
+    {
+        var result = new Dictionary<string, Geometry<Point>>();
+
+        if (topology?.Objects == null)
+            return result;
+
+        foreach (var kvp in topology.Objects)
+        {
+            var geometry = ConvertToGeometry(kvp.Value, topology.Arcs, topology.Transform, srid);
+
+            if (geometry != null && !geometry.IsNullOrEmpty())
+            {
+                result[kvp.Key] = geometry;
+            }
+        }
+
+        return result;
+    }
+
 
     private static Geometry<Point>? ConvertToGeometry(TopoJsonGeometry topoGeometry, List<List<int[]>> arcs, TopoJsonTransform? transform, int srid)
     {
@@ -383,75 +550,7 @@ public static class TopoJsonConverter
         return points;
     }
 
-    /// <summary>
-    /// Helper class for building arcs from geometries
-    /// </summary>
-    private class ArcBuilder
-    {
-        private readonly List<List<int[]>> _arcs = new();
-        private readonly Dictionary<string, int> _arcMap = new();
+    #endregion
 
-        public int AddArc(List<Point> points, TopoJsonTransform? transform)
-        {
-            // Create arc key for deduplication
-            var key = CreateArcKey(points);
-
-            // Check if this arc already exists
-            if (_arcMap.TryGetValue(key, out var existingIndex))
-            {
-                return existingIndex;
-            }
-
-            // Convert points to quantized delta-encoded coordinates
-            var arc = new List<int[]>();
-            var prevX = 0;
-            var prevY = 0;
-
-            foreach (var point in points)
-            {
-                int x, y;
-
-                if (transform != null)
-                {
-                    var quantized = transform.Inverse(point.X, point.Y);
-                    x = quantized[0];
-                    y = quantized[1];
-                }
-                else
-                {
-                    x = (int)Math.Round(point.X);
-                    y = (int)Math.Round(point.Y);
-                }
-
-                // Delta encoding
-                arc.Add(new[] { x - prevX, y - prevY });
-                prevX = x;
-                prevY = y;
-            }
-
-            var index = _arcs.Count;
-            _arcs.Add(arc);
-            _arcMap[key] = index;
-
-            return index;
-        }
-
-        public List<List<int[]>> BuildArcs()
-        {
-            return _arcs;
-        }
-
-        private static string CreateArcKey(List<Point> points)
-        {
-            // Simple key based on start and end points
-            // In a production system, you might want a more sophisticated key
-            if (points.Count == 0)
-                return string.Empty;
-
-            var first = points.First();
-            var last = points.Last();
-            return $"{first.X:F6},{first.Y:F6}|{last.X:F6},{last.Y:F6}|{points.Count}";
-        }
-    }
 }
 

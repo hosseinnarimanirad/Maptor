@@ -19,15 +19,13 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 /// </summary>
 public class TextDataSource : MemoryDataSource
 {
-    //private DataSourceKind _dataSourceKind;
-
-    public override DataSourceKind DataSourceKind => _dataSourceKind/*DataSourceKind.Csv*/;
-
     private readonly string _fileName;
+
+    private readonly int _sourceSrid;
 
     private readonly bool _useFirstLineAsHeader;
 
-    private readonly int _sourceSrid;
+    public override DataSourceKind DataSourceKind => _dataSourceKind/*DataSourceKind.Csv*/;
 
     private TextDataSource(string fileName,
                             List<Feature<Point>> features,

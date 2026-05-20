@@ -109,7 +109,7 @@ public partial class MainWindow : Window
     /// <summary>
     /// Sample code to read TopoJSON file
     /// </summary>
-    private void Button_ReadTopoJson_Click(object sender, RoutedEventArgs e)
+    private async void Button_ReadTopoJson_Click(object sender, RoutedEventArgs e)
     {
         // Open file dialog to select TopoJSON file
         var openFileDialog = new OpenFileDialog
@@ -127,7 +127,7 @@ public partial class MainWindow : Window
                 var fileName = openFileDialog.FileName;
 
                 // Method 1: Read TopoJSON file
-                var topology = TopoJson.ReadFromFile(fileName);
+                var topology = await TopoJson.ReadFromFileAsync(fileName);
 
                 // Display topology information
                 var info = new StringBuilder();

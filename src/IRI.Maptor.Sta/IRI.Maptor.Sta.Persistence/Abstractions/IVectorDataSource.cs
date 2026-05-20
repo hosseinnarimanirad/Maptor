@@ -24,4 +24,5 @@ public interface IVectorDataSource : IDataSource
     // Other ******************************************************************
     Task<FeatureSet<Point>> SearchAsync(string searchText);
 
+     
 }

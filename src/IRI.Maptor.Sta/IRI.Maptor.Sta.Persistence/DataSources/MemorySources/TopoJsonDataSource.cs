@@ -18,24 +18,34 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 /// </summary>
 public class TopoJsonDataSource : MemoryDataSource
 {
-    public override DataSourceKind DataSourceKind => DataSourceKind.TopoJson;
-
     private readonly string _fileName;
 
-    private TopoJsonDataSource(string fileName, List<Feature<Point>> features)
+    private readonly int _sourceSrid;
+
+    public override DataSourceKind DataSourceKind => DataSourceKind.TopoJson;
+
+    private TopoJsonDataSource(string fileName, List<Feature<Point>> features, int sourceSrid)
         : base(features, resetIds: true, kind: DataSourceKind.TopoJson)
     {
         _fileName = fileName ?? string.Empty;
+
+        _sourceSrid = sourceSrid;
     }
 
     public override string ToString() => $"{nameof(TopoJsonDataSource)}";
 
-    public override Task SaveChangesAsync()
+    public override async Task SaveChangesAsync()
     {
-        // TopoJSON save not supported; pasted or loaded data is read-only for persistence
+        if (!string.IsNullOrWhiteSpace(_fileName))
+        {
+            var featureSet = _webMercatorFeatureSet.Project(_sourceSrid);
+
+            await featureSet.SaveAsTopoJson(_fileName);
+        }
+
         _webMercatorFeatureSet.ApplyChanges();
+
         UpdateHasPendingChanges();
-        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -64,7 +74,11 @@ public class TopoJsonDataSource : MemoryDataSource
 
     private static TopoJsonDataSource CreateFromJson(string jsonString, string fileName, int sourceSrid)
     {
+        if (sourceSrid == 0)
+            throw new NotImplementedException("TopoJsonDataSource > CreateFromJson > srid cannot be 0!");
+
         var topology = TopoJson.Parse(jsonString);
+
         var geometries = TopoJson.ToGeometry(topology, sourceSrid);
 
         //var webMercator = new WebMercator();
@@ -88,6 +102,6 @@ public class TopoJsonDataSource : MemoryDataSource
                 ? "No features found in the TopoJSON text."
                 : $"No features found in TopoJSON file: {fileName}");
 
-        return new TopoJsonDataSource(fileName ?? string.Empty, features);
+        return new TopoJsonDataSource(fileName ?? string.Empty, features, sourceSrid);
     }
 }

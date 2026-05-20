@@ -13,11 +13,11 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public class DxfDataSource : MemoryDataSource
 {
-    public override DataSourceKind DataSourceKind => DataSourceKind.Dxf;
-
     private readonly string _fileName;
 
     private readonly int _sourceSrid;
+
+    public override DataSourceKind DataSourceKind => DataSourceKind.Dxf;
 
     private DxfDataSource(string fileName, List<Feature<Point>> features)
         : base(features, resetIds: true, kind: DataSourceKind.Kml)

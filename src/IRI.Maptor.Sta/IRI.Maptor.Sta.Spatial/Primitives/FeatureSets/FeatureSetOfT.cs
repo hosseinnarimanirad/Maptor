@@ -79,6 +79,16 @@ public class FeatureSet<T> where T : IPoint, new()
         return result;
     }
 
+    public FeatureSet<T> Project(int srid)
+    {
+        var srs = SrsBase.Create(srid);
+
+        if (srs is null)
+            return Empty;
+
+        return Project(srs);
+    }
+
     public FeatureSet<T> Project(SrsBase targetSrs)
     {
         var sourceSrs = SrsBase.Create(this.Srid);
@@ -268,7 +278,7 @@ public class FeatureSet<T> where T : IPoint, new()
 
         if (features.Select(f => f.TheGeometry.Srid).Distinct().Count() > 1)
             throw new NotImplementedException("FeatureSet<TGeometry, TPoint> => same SRID rule violated");
-         
+
         return new FeatureSet<T>()
         {
             Title = title,

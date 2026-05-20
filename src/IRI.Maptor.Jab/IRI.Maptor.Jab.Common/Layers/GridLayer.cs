@@ -16,9 +16,9 @@ public class GridLayer : SymbolizableLayer
 
     //public override RenderingApproach Rendering { get; protected set; }
 
-    public GridDataSource DataSource { get; set; }
+    public GeodeticGridDataSource DataSource { get; set; }
 
-    public GridLayer(GridDataSource source)
+    public GridLayer(GeodeticGridDataSource source)
     {
         DataSource = source;
     }
