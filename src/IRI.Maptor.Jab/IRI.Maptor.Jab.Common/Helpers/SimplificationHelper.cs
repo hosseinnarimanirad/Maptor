@@ -73,7 +73,7 @@ public static class SimplificationHelper
 
         GeoJsonFeatureSet originalFeatureSet = feature.AsGeoJsonFeatureSet();
 
-        originalFeatureSet.Save($"{layerName}-original.json", false, true);
+        await originalFeatureSet.SaveAsync($"{layerName}-original.json", false, true);
 
         if (length_Original == 0)
             return new List<SimplificationAccuracy>();
@@ -183,7 +183,7 @@ public static class SimplificationHelper
 
         GeoJsonFeatureSet originalFeatureSet = feature.AsGeoJsonFeatureSet();
 
-        originalFeatureSet.Save($"{layerName}-original.json", false, true);
+        await originalFeatureSet.SaveAsync($"{layerName}-original.json", false, true);
 
         var vectorLayer = GetAsLayer($"{estimatedZoomLevel}-{methodName}", new List<Geometry<Point>>() { simplified });
 

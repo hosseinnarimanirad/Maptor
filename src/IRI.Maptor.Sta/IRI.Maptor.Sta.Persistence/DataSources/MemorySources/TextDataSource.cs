@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,15 +49,15 @@ public class TextDataSource : MemoryDataSource
 
     public override string ToString() => $"{nameof(TextDataSource)}";
 
-    public override Task SaveChangesAsync()
+    public override async Task SaveChangesAsync()
     {
         if (!string.IsNullOrWhiteSpace(_fileName))
         {
             if (DataSourceKind == DataSourceKind.Csv)
-                _webMercatorFeatureSet.SaveAsCsv(_fileName, _useFirstLineAsHeader, _sourceSrid);
+                await _webMercatorFeatureSet.SaveAsCsv(_fileName, _useFirstLineAsHeader, _sourceSrid);
 
             else if (DataSourceKind == DataSourceKind.Tsv)
-                _webMercatorFeatureSet.SaveAsTsv(_fileName, _useFirstLineAsHeader, _sourceSrid);
+                await _webMercatorFeatureSet.SaveAsTsv(_fileName, _useFirstLineAsHeader, _sourceSrid);
 
             else
                 throw new ArgumentException();
@@ -64,9 +65,7 @@ public class TextDataSource : MemoryDataSource
 
         _webMercatorFeatureSet.ApplyChanges();
 
-        UpdateHasPendingChanges();
-
-        return Task.CompletedTask;
+        UpdateHasPendingChanges();        
     }
 
     ///// <summary>
@@ -235,9 +234,9 @@ public class TextDataSource : MemoryDataSource
             if (rawData[i].Length < Math.Max(xIndex, yIndex) + 1)
                 continue;
 
-            double x = double.Parse(rawData[i][xIndex]);
-            double y = double.Parse(rawData[i][yIndex]);
-             
+            double x = double.Parse(rawData[i][xIndex], CultureInfo.InvariantCulture);
+            double y = double.Parse(rawData[i][yIndex], CultureInfo.InvariantCulture);
+
             var point = new Point(x, y);
 
             var geom = Geometry<Point>.Create([point], IRI.Maptor.Sta.Common.Enums.GeometryType.Point, sourceSrid);

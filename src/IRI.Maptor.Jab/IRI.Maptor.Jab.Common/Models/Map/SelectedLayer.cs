@@ -259,6 +259,8 @@ public class SelectedLayer : Notifier
 
             NotifyAll();
         });
+         
+        await this._dialogService?.ShowMessage_DoneSuccessfully();
     }
 
     public void UndoCurrentRowChanges()

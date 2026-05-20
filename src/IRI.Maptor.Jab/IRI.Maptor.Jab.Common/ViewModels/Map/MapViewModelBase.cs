@@ -2665,6 +2665,7 @@ public abstract class MapViewModelBase : ViewModelBase
         try
         {
             var selectedLayer = SelectedLayers?.SingleOrDefault(sl => sl.Id == layer.LayerId);
+
             if (selectedLayer != null)
             {
                 await selectedLayer.SaveChangesAsync();
@@ -2672,8 +2673,11 @@ public abstract class MapViewModelBase : ViewModelBase
             else
             {
                 var dataSource = layer.DataSource as IEditableVectorDataSource;
+
                 if (dataSource != null)
                     await dataSource.SaveChangesAsync();
+
+                await DialogService.ShowMessage_DoneSuccessfully();
             }
         }
         catch (Exception ex)
@@ -4063,6 +4067,10 @@ public abstract class MapViewModelBase : ViewModelBase
             await this.DialogService.ShowErrorMessage(MaptorLockedFileException.Instance);
             //await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
         }
+        else if (ex is FormatException)
+        {
+            await this.DialogService.ShowErrorMessage(MaptorFormatException.Instance);
+        }
         else
         {
             await this.DialogService.ShowErrorMessage(new MaptorUnknownException(ex.Message));
@@ -4581,12 +4589,12 @@ public abstract class MapViewModelBase : ViewModelBase
                 {
                     IsSearchable = true
                 };
-                 
+
                 groupLayer.AddSubLayer(vectorLayer);
             }
 
             AddLayer(groupLayer);
-        } 
+        }
         catch (Exception ex)
         {
             await ShowExceptionMessageAsync(ex);
@@ -4956,7 +4964,7 @@ public abstract class MapViewModelBase : ViewModelBase
             List<Feature<Point>> features;
 
             // read esri geojsons
-            var esriFeatureSet = EsriJsonFeatureSet.Load(fileName);
+            var esriFeatureSet = await EsriJsonFeatureSet.Load(fileName);
 
             if (esriFeatureSet is null || esriFeatureSet.Features.IsNullOrEmpty())
                 throw new MaptorEmptyFileException();
@@ -5703,7 +5711,7 @@ public abstract class MapViewModelBase : ViewModelBase
                         if (string.IsNullOrWhiteSpace(fileName))
                             return;
 
-                        var featureSet = GeoJsonFeatureSet.Load(fileName);
+                        var featureSet = await GeoJsonFeatureSet.LoadAsync(fileName);
 
                         if (featureSet.Features.IsNullOrEmpty())
                             return;

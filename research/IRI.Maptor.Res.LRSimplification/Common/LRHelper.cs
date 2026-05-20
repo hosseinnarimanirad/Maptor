@@ -715,7 +715,7 @@ public static class LRHelper
              
             GeoJsonFeatureSet originalFeatureSet = feature.AsGeoJsonFeatureSet();
 
-            originalFeatureSet.Save($"{outputDirectory}\\{fileName}-F{featureIndex}.json", false, true);
+            await originalFeatureSet.SaveAsync($"{outputDirectory}\\{fileName}-F{featureIndex}.json", false, true);
 
             foreach (var coef in coefs)
             {
@@ -916,7 +916,7 @@ public static class LRHelper
 
             GeoJsonFeatureSet originalFeatureSet = feature.AsGeoJsonFeatureSet();
 
-            originalFeatureSet.Save($"{outputDirectory}\\{fileName}-F{featureIndex}.json", false, true);
+            await originalFeatureSet.SaveAsync($"{outputDirectory}\\{fileName}-F{featureIndex}.json", false, true);
 
             foreach (var coef in coefs)
             {

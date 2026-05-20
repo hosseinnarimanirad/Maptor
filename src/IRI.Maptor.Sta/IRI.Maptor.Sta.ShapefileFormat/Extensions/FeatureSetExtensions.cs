@@ -38,22 +38,22 @@ public static class FeatureSetExtensions
                 break;
 
             case DataSourceKind.Kmz:
-                SaveAsKmz(targetFeatureSet, filePath);
+                await SaveAsKmzAsync(targetFeatureSet, filePath);
                 break;
 
             case DataSourceKind.Dxf:
-                SaveAsDxf(targetFeatureSet, filePath);
+                await SaveAsDxf(targetFeatureSet, filePath);
                 break;
 
             case DataSourceKind.GeoJson:
-                targetFeatureSet.SaveAsGeoJson(filePath, isLongitudeFirst ?? true);
+                await targetFeatureSet.SaveAsGeoJson(filePath, isLongitudeFirst ?? true);
                 break;
 
             case DataSourceKind.TopoJson:
                 throw new NotImplementedException("FeatureSetExtensions > Export!");
 
             case DataSourceKind.EsriJson:
-                SaveAsEsriJson(targetFeatureSet, filePath);
+                await SaveAsEsriJson(targetFeatureSet, filePath);
                 break;
 
             case DataSourceKind.GML:
@@ -74,7 +74,17 @@ public static class FeatureSetExtensions
         }
     }
 
-    public static void SaveAsDxf(this FeatureSet<Point> featureSet, string dxfFileName)
+    public static void SaveAsShapefile(this FeatureSet<Point> featureSet, string shpFileName, Encoding encoding, SrsBase srs, bool overwrite = false)
+    {
+        if (featureSet is null)
+            return;
+
+        Shapefile.SaveAsShapefile(shpFileName, featureSet.Features, f => f.TheGeometry.AsEsriShape(f.TheGeometry.Srid), false, srs, overwrite);
+
+        DbfFile.Write(Shapefile.GetDbfFileName(shpFileName), featureSet.Features.Select(f => f.Attributes).ToList(), encoding, overwrite);
+    }
+
+    public static async Task SaveAsDxf(this FeatureSet<Point> featureSet, string dxfFileName)
     {
         if (featureSet is null)
             return;
@@ -86,8 +96,7 @@ public static class FeatureSetExtensions
         if (geometries is null)
             return;
 
-        DxfWriter.WriteToFileAsync(geometries, dxfFileName);
-
+        await DxfWriter.WriteToFileAsync(geometries, dxfFileName);
     }
 
     public static async Task SaveAsKmlAsync(this FeatureSet<Point> featureSet, string kmlFileName)
@@ -105,7 +114,7 @@ public static class FeatureSetExtensions
         await KmlWriter.WriteToFileAsync(kmlFeatures, kmlFileName, featureSet.Title);
     }
 
-    public static async Task SaveAsKmz(this FeatureSet<Point> featureSet, string kmzFileName)
+    public static async Task SaveAsKmzAsync(this FeatureSet<Point> featureSet, string kmzFileName)
     {
         if (featureSet is null)
             return;
@@ -120,17 +129,7 @@ public static class FeatureSetExtensions
         await KmzWriter.WriteToFileAsync(kmlFeatures, kmzFileName, featureSet.Title);
     }
 
-    public static void SaveAsShapefile(this FeatureSet<Point> featureSet, string shpFileName, Encoding encoding, SrsBase srs, bool overwrite = false)
-    {
-        if (featureSet is null)
-            return;
-
-        Shapefile.SaveAsShapefile(shpFileName, featureSet.Features, f => f.TheGeometry.AsEsriShape(f.TheGeometry.Srid), false, srs, overwrite);
-
-        DbfFile.Write(Shapefile.GetDbfFileName(shpFileName), featureSet.Features.Select(f => f.Attributes).ToList(), encoding, overwrite);
-    }
-
-    public static void SaveAsGeoJson(this FeatureSet<Point> featureSet, string geoJsonFileName, bool isLongitudeFirst)
+    public static async Task SaveAsGeoJson(this FeatureSet<Point> featureSet, string geoJsonFileName, bool isLongitudeFirst)
     {
         if (featureSet is null)
             return;
@@ -145,7 +144,7 @@ public static class FeatureSetExtensions
             TotalFeatures = features.Count,
         };
 
-        jsonFeatureSet.Save(geoJsonFileName, false, true);
+        await jsonFeatureSet.SaveAsync(geoJsonFileName, false, true);
     }
 
     public static async Task SaveAsTopoJson(this FeatureSet<Point> featureSet, string topoJsonFileName)
@@ -156,126 +155,15 @@ public static class FeatureSetExtensions
         await TopoJson.WriteToFileAsync(featureSet.Features, topoJsonFileName);
     }
 
-    public static void SaveAsEsriJson(this FeatureSet<Point> featureSet, string esriJsonFileName)
+    public static async Task SaveAsEsriJson(this FeatureSet<Point> featureSet, string esriJsonFileName)
     {
         if (featureSet is null)
             return;
 
         var esriFeatureSet = EsriJsonFeatureSet.Parse(featureSet);
 
-        esriFeatureSet.Save(esriJsonFileName, false, true);
+        await esriFeatureSet.Save(esriJsonFileName, false, true);
     }
 
-    /// <summary>
-    /// Saves point features to a CSV file. First two columns are longitude, latitude (WGS84); remaining columns are attributes.
-    /// </summary>
-    public static void SaveAsCsv(this FeatureSet<Point> featureSet, string csvFileName, bool includeHeader = true)
-    {
-        if (featureSet is null)
-            return;
-
-        SaveAsDelimited(featureSet, csvFileName, IOHelper.CsvDelimiterChar, includeHeader, null);
-    }
-
-    /// <summary>
-    /// Saves point features to a CSV file in the specified target SRID. First two columns are X, Y (or longitude, latitude for WGS84); remaining columns are attributes.
-    /// </summary>
-    public static void SaveAsCsv(this FeatureSet<Point> featureSet, string csvFileName, bool includeHeader, int targetSrid)
-    {
-        SaveAsDelimited(featureSet, csvFileName, IOHelper.CsvDelimiterChar, includeHeader, targetSrid);
-    }
-
-    /// <summary>
-    /// Saves point features to a TSV file. First two columns are longitude, latitude (WGS84); remaining columns are attributes.
-    /// </summary>
-    public static void SaveAsTsv(this FeatureSet<Point> featureSet, string tsvFileName, bool includeHeader = true)
-    {
-        SaveAsDelimited(featureSet, tsvFileName, IOHelper.TsvDelimiterChar, includeHeader, null);
-    }
-
-    /// <summary>
-    /// Saves point features to a TSV file in the specified target SRID. First two columns are X, Y (or longitude, latitude for WGS84); remaining columns are attributes.
-    /// </summary>
-    public static void SaveAsTsv(this FeatureSet<Point> featureSet, string tsvFileName, bool includeHeader, int targetSrid)
-    {
-        SaveAsDelimited(featureSet, tsvFileName, IOHelper.TsvDelimiterChar, includeHeader, targetSrid);
-    }
-
-    private static void SaveAsDelimited(FeatureSet<Point> featureSet, string fileName, char delimiter, bool includeHeader, int? targetSrid)
-    {
-        var features = featureSet.Features.ToList();
-        if (features.Count == 0)
-            return;
-
-        var sourceSrs = SridHelper.AsSrsBase(featureSet.Srid);
-
-        var effectiveTargetSrid = targetSrid ?? SridHelper.GeodeticWGS84;
-
-        var targetSrs = SridHelper.AsSrsBase(effectiveTargetSrid);
-
-        if (targetSrs is null)
-            return;
-
-        var projectedFeatures = features.Select(f => f.Project(targetSrs)).ToList();
-
-        //var attributeKeys = featureSet.Fields?.Select(f => f.Name).ToList()
-        //    ?? features.First().Attributes.Keys.OrderBy(k => k).ToList();
-
-        var coordHeader = effectiveTargetSrid == SridHelper.GeodeticWGS84 ? new[] { "longitude", "latitude" } : new[] { "X", "Y" };
-
-        StringBuilder lines = new StringBuilder();
-
-        if (includeHeader)
-        {
-            var header = new List<string>(coordHeader);
-
-            //header.AddRange(attributeKeys);
-
-            //lines.Add(string.Join(delimiter.ToString(), header.Select(v => EscapeDelimitedValue(v, delimiter))));
-
-            lines.AppendLine(string.Join(delimiter.ToString(), header.Select(v => EscapeDelimitedValue(v, delimiter))));
-        }
-
-        foreach (var feature in projectedFeatures)
-        {
-            var delimited = feature.TheGeometry.AsDelimited(delimiter, 14, false);
-
-            lines.AppendLine(delimited);
-
-            lines.AppendLine();
-            lines.AppendLine();
-
-            //var point = feature.TheGeometry.GetAllPoints().FirstOrDefault();
-
-            //if (point == null)
-            //    continue;
-
-            //var projectedPoint = targetSrs != null ? point.Project(sourceSrs, targetSrs) : sourceSrs.ToWgs84Geodetic(point);
-            //var values = new List<string>
-            //{
-            //    projectedPoint.X.ToString(CultureInfo.InvariantCulture),
-            //    projectedPoint.Y.ToString(CultureInfo.InvariantCulture)
-            //};
-
-            //foreach (var key in attributeKeys)
-            //{
-            //    var val = feature.Attributes.TryGetValue(key, out var v) ? v : null;
-            //    values.Add(val?.ToString() ?? string.Empty);
-            //}
-
-            //lines.Add(string.Join(delimiter.ToString(), values.Select(v => EscapeDelimitedValue(v, delimiter))));
-        }
-
-        File.WriteAllText(fileName, lines.ToString());
-    }
-
-    private static string EscapeDelimitedValue(string value, char delimiter)
-    {
-        if (string.IsNullOrEmpty(value))
-            return value;
-        if (value.Contains(delimiter) || value.Contains('"') || value.Contains('\n') || value.Contains('\r'))
-            return "\"" + value.Replace("\"", "\"\"") + "\"";
-        return value;
-    }
 
 }

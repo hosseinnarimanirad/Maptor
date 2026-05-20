@@ -1670,4 +1670,19 @@
   <data name="srs_utmZone_full" xml:space="preserve">
     <value>UTM Zone</value>
   </data>
+  <data name="common_geometryType_point" xml:space="preserve">
+    <value>Point Feature</value>
+  </data>
+  <data name="common_geometryType_polygon" xml:space="preserve">
+    <value>Polygon Feature</value>
+  </data>
+  <data name="common_geometryType_polyline" xml:space="preserve">
+    <value>Polyline Feature</value>
+  </data>
+  <data name="message_error_formatException" xml:space="preserve">
+    <value>Format Exception</value>
+  </data>
+  <data name="message_error_unknown" xml:space="preserve">
+    <value>Unknown error</value>
+  </data>
 </root>

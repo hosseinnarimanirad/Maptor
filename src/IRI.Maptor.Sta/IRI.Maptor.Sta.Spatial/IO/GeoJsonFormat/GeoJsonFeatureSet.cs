@@ -14,7 +14,7 @@ namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 public class GeoJsonFeatureSet
 {
     #region Fields & Properties
-     
+
     private const string _geoJsonFeatureSetType = "FeatureCollection";
 
     public static readonly GeoJsonFeatureSet Empty;
@@ -56,11 +56,11 @@ public class GeoJsonFeatureSet
     /// <param name="fileName">The path where the file will be saved.</param>
     /// <param name="indented">If true, the JSON output will be indented.</param>
     /// <param name="removeSpaces">If true, all spaces will be removed from the output.</param>
-    public void Save(string fileName, bool indented, bool removeSpaces = false)
+    public async Task SaveAsync(string fileName, bool indented, bool removeSpaces = false)
     {
         var result = JsonHelper.Serialize(this, indented);
 
-        System.IO.File.WriteAllText(fileName, removeSpaces ? result.Replace(" ", string.Empty) : result);
+        await System.IO.File.WriteAllTextAsync(fileName, removeSpaces ? result.Replace(" ", string.Empty) : result);
     }
 
     /// <summary>
@@ -68,9 +68,11 @@ public class GeoJsonFeatureSet
     /// </summary>
     /// <param name="fileName">The path to the GeoJSON file.</param>
     /// <returns>A GeoJsonFeatureSet instance.</returns>
-    public static GeoJsonFeatureSet Load(string fileName)
+    public static async Task<GeoJsonFeatureSet> LoadAsync(string fileName)
     {
-        return Parse(System.IO.File.ReadAllText(fileName));
+        var geojsonText = await System.IO.File.ReadAllTextAsync(fileName);
+
+        return Parse(geojsonText);
     }
 
     /// <summary>
@@ -91,11 +93,11 @@ public class GeoJsonFeatureSet
         return new GeoJsonFeatureSet()
         {
             TotalFeatures = 1,
-            Type = _geoJsonFeatureSetType,             
+            Type = _geoJsonFeatureSetType,
             Features = [GeoJsonFeature.Create(geometry, attributes)],
         };
     }
-     
+
 
     /// <summary>
     /// Extracts sample points from a GeoJSON FeatureCollection for preview display.

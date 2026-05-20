@@ -8,7 +8,7 @@
 
     Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
     Title="{Binding [dialog_csvTsvOpen_title], Source={StaticResource Localization}}"    
-    WindowStartupLocation="CenterOwner"> 
+    WindowStartupLocation="CenterOwner">
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
@@ -91,16 +91,21 @@
                                                  ToolTip="{Binding [dialog_csvTsvOpen_geometryType],Source={StaticResource Localization}}"/>
                 <StackPanel Grid.Column="4" Orientation="Horizontal" >
                     <RadioButton GroupName="T" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.Polygon}}">
+                                IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.Polygon}}"
+                                ToolTip="{Binding [common_geometryType_point], Source={StaticResource Localization}}">
                         <iconPacks:PackIconPhosphorIcons Kind="Polygon"/>
                     </RadioButton>
                     <RadioButton GroupName="T" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                 IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.LineString}}">
+                                 IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.LineString}}"
+                                 ToolTip="{Binding [common_geometryType_polyline], Source={StaticResource Localization}}">
                         <iconPacks:PackIconPhosphorIcons Kind="LineSegments"/>
                     </RadioButton>
                     <RadioButton GroupName="T" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                 IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.Point}}">
-                        <iconPacks:PackIconPhosphorIcons Kind="DotOutlineThin"/>
+                                 IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.Point}}"
+                                 ToolTip="{Binding [common_geometryType_polygon], Source={StaticResource Localization}}">
+                        <Viewbox>
+                            <iconPacks:PackIconPhosphorIcons Kind="DotOutlineThin" Margin="20" Padding="0"/>
+                        </Viewbox>
                     </RadioButton>
                 </StackPanel>
             </Grid>
@@ -238,7 +243,7 @@
                                 Text="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"/>
                 </StackPanel>
             </Button>
-            
+
             <Button IsDefault="True"
                     Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
                     Command="{Binding OpenCommand}">

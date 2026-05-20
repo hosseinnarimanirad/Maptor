@@ -37,7 +37,7 @@ public class EsriJsonFeatureSet
         Empty = new EsriJsonFeatureSet() { Features = [], Fields = [], SpatialReference = new EsriJsonSpatialReference() { Wkid = 0 } };
     }
 
-    public void Save(string fileName, bool indented, bool removeSpaces = false)
+    public async Task Save(string fileName, bool indented, bool removeSpaces = false)
     {
         var options = new JsonSerializerOptions()
         {
@@ -48,7 +48,7 @@ public class EsriJsonFeatureSet
 
         var result = JsonHelper.Serialize(this, options);
 
-        System.IO.File.WriteAllText(fileName, removeSpaces ? result.Replace(" ", string.Empty) : result);
+        await System.IO.File.WriteAllTextAsync(fileName, removeSpaces ? result.Replace(" ", string.Empty) : result);
     }
 
     public FeatureSet<Point> AsFeatureSet()
@@ -75,9 +75,11 @@ public class EsriJsonFeatureSet
         return result;
     }
 
-    public static EsriJsonFeatureSet? Load(string fileName)
+    public static async Task<EsriJsonFeatureSet?> Load(string fileName)
     {
-        return Parse(System.IO.File.ReadAllText(fileName));
+        var esriJsonText = await File.ReadAllTextAsync(fileName);
+
+        return Parse(esriJsonText);
     }
 
     public static EsriJsonFeatureSet? Parse(string jsonString)

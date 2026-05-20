@@ -1623,4 +1623,19 @@
   <data name="srs_utmZone_full" xml:space="preserve">
     <value>ناحیه UTM</value>
   </data>
+  <data name="common_geometryType_point" xml:space="preserve">
+    <value>عارضه نقطه‌ای</value>
+  </data>
+  <data name="common_geometryType_polygon" xml:space="preserve">
+    <value>عارضه سطحی</value>
+  </data>
+  <data name="common_geometryType_polyline" xml:space="preserve">
+    <value>عارضه خطی</value>
+  </data>
+  <data name="message_error_formatException" xml:space="preserve">
+    <value>خطا در پردازش فرمت داده‌ای</value>
+  </data>
+  <data name="message_error_unknown" xml:space="preserve">
+    <value>خطای ناشناخته</value>
+  </data>
 </root>

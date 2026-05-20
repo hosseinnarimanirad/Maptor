@@ -727,6 +727,33 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Point Feature.
+        /// </summary>
+        public static string common_geometryType_point {
+            get {
+                return ResourceManager.GetString("common_geometryType_point", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Polygon Feature.
+        /// </summary>
+        public static string common_geometryType_polygon {
+            get {
+                return ResourceManager.GetString("common_geometryType_polygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Polyline Feature.
+        /// </summary>
+        public static string common_geometryType_polyline {
+            get {
+                return ResourceManager.GetString("common_geometryType_polyline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to kilometer.
         /// </summary>
         public static string common_kilometer {
@@ -3221,6 +3248,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Format Exception.
+        /// </summary>
+        public static string message_error_formatException {
+            get {
+                return ResourceManager.GetString("message_error_formatException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File is locked or in used by another program.
         /// </summary>
         public static string message_error_lockedFile {
@@ -3235,6 +3271,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string message_error_title {
             get {
                 return ResourceManager.GetString("message_error_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown error.
+        /// </summary>
+        public static string message_error_unknown {
+            get {
+                return ResourceManager.GetString("message_error_unknown", resourceCulture);
             }
         }
         

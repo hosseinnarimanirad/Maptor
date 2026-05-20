@@ -208,7 +208,7 @@ public class LayerManager : Notifier
             layer.Parent.SubLayers :
             _allLayers.Where(l => l.Parent == null);
 
-        if (layers.Any(l => l.TocOrder == layer.TocOrder))
+        if (layers.Any(l => l.TocOrder == layer.TocOrder && l != layer))
         {
             var maxToc = layers.Select(l => l.TocOrder).DefaultIfEmpty(0).Max();
 

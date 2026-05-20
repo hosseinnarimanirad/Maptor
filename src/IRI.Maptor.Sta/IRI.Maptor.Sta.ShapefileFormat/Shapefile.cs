@@ -309,80 +309,6 @@ public static class Shapefile
 
     #region Write (Save) Shapefile 
 
-    public static void Save(string shpFileName, IEnumerable<EsriShapeBase> shapes, bool createDbf = false, bool overwrite = false, SrsBase srs = null)
-    {
-        if (shapes.IsNullOrEmpty())
-        {
-            return;
-        }
-
-        var directory = System.IO.Path.GetDirectoryName(shpFileName);
-
-        if (!System.IO.Directory.Exists(directory) && !string.IsNullOrEmpty(directory))
-        {
-            System.IO.Directory.CreateDirectory(directory);
-        }
-
-        IEsriShapeCollection collection = new EsriShapeCollection<EsriShapeBase>(shapes);
-
-        EsriShapeType shapeType = shapes.First().EsriType;
-
-        using (System.IO.MemoryStream featureWriter = new System.IO.MemoryStream())
-        {
-            int recordNumber = 0;
-
-            foreach (EsriShapeBase item in shapes)
-            {
-                featureWriter.Write(ShpWriter.WriteHeaderToByte(++recordNumber, item), 0, 2 * ShapeConstants.IntegerSize);
-
-                featureWriter.Write(item.WriteContentsToByte(), 0, 2 * item.ContentLength);
-            }
-
-            using (System.IO.MemoryStream shpWriter = new System.IO.MemoryStream())
-            {
-                int fileLength = (int)featureWriter.Length / 2 + 50;
-
-                shpWriter.Write(ShpWriter.WriteMainHeader(collection, fileLength, shapeType), 0, 100);
-
-                shpWriter.Write(featureWriter.ToArray(), 0, (int)featureWriter.Length);
-
-                //var mode = overwrite ? System.IO.FileMode.Create : System.IO.FileMode.CreateNew;
-                var mode = Shapefile.GetMode(shpFileName, overwrite);
-
-                System.IO.FileStream stream = new System.IO.FileStream(shpFileName, mode);
-
-                shpWriter.WriteTo(stream);
-
-                stream.Close();
-
-                shpWriter.Close();
-
-                featureWriter.Close();
-            }
-        }
-
-        ShxWriter.Write(Shapefile.GetShxFileName(shpFileName), collection, shapeType, overwrite);
-
-        if (createDbf)
-        {
-            Dbf.DbfFile.WriteDefault(Shapefile.GetDbfFileName(shpFileName), collection.Count, overwrite);
-        }
-
-        //try to automatically find srs
-        if (srs == null)
-        {
-            var srid = shapes.First()?.Srid ?? 0;
-
-            srs = SridHelper.AsSrsBase(srid);
-        }
-
-        if (srs != null)
-        {
-            SaveAsPrj(shpFileName, srs, overwrite);
-        }
-
-    }
-
     //public static void Save<T>(string shpFileName, IEnumerable<T> objects, Func<T, IEsriShape> map, bool createDbf = false, bool overwrite = false)
     //{
     //    if (objects.IsNullOrEmpty())
@@ -457,6 +383,80 @@ public static class Shapefile
         Save(shpFileName, data, createEmptyDbf, overwrite, srs);
 
         //SaveAsPrj(shpFileName, crs, overwrite);
+    }
+
+    public static void Save(string shpFileName, IEnumerable<EsriShapeBase> shapes, bool createDbf = false, bool overwrite = false, SrsBase srs = null)
+    {
+        if (shapes.IsNullOrEmpty())
+        {
+            return;
+        }
+
+        var directory = System.IO.Path.GetDirectoryName(shpFileName);
+
+        if (!System.IO.Directory.Exists(directory) && !string.IsNullOrEmpty(directory))
+        {
+            System.IO.Directory.CreateDirectory(directory);
+        }
+
+        IEsriShapeCollection collection = new EsriShapeCollection<EsriShapeBase>(shapes);
+
+        EsriShapeType shapeType = shapes.First().EsriType;
+
+        using (System.IO.MemoryStream featureWriter = new System.IO.MemoryStream())
+        {
+            int recordNumber = 0;
+
+            foreach (EsriShapeBase item in shapes)
+            {
+                featureWriter.Write(ShpWriter.WriteHeaderToByte(++recordNumber, item), 0, 2 * ShapeConstants.IntegerSize);
+
+                featureWriter.Write(item.WriteContentsToByte(), 0, 2 * item.ContentLength);
+            }
+
+            using (System.IO.MemoryStream shpWriter = new System.IO.MemoryStream())
+            {
+                int fileLength = (int)featureWriter.Length / 2 + 50;
+
+                shpWriter.Write(ShpWriter.WriteMainHeader(collection, fileLength, shapeType), 0, 100);
+
+                shpWriter.Write(featureWriter.ToArray(), 0, (int)featureWriter.Length);
+
+                //var mode = overwrite ? System.IO.FileMode.Create : System.IO.FileMode.CreateNew;
+                var mode = Shapefile.GetMode(shpFileName, overwrite);
+
+                System.IO.FileStream stream = new System.IO.FileStream(shpFileName, mode);
+
+                shpWriter.WriteTo(stream);
+
+                stream.Close();
+
+                shpWriter.Close();
+
+                featureWriter.Close();
+            }
+        }
+
+        ShxWriter.Write(Shapefile.GetShxFileName(shpFileName), collection, shapeType, overwrite);
+
+        if (createDbf)
+        {
+            Dbf.DbfFile.WriteDefault(Shapefile.GetDbfFileName(shpFileName), collection.Count, overwrite);
+        }
+
+        //try to automatically find srs
+        if (srs == null)
+        {
+            var srid = shapes.First()?.Srid ?? 0;
+
+            srs = SridHelper.AsSrsBase(srid);
+        }
+
+        if (srs != null)
+        {
+            SaveAsPrj(shpFileName, srs, overwrite);
+        }
+
     }
 
     public static void SaveAsShapefile<T>(string shpFileName, IEnumerable<T> data, Func<T, EsriShapeBase> map, bool createEmptyDbf, SrsBase srs, bool overwrite = false)

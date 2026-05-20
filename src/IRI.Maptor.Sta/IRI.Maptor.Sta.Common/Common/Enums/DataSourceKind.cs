@@ -36,10 +36,10 @@ public enum DataSourceKind
     [Description("TopoJson"), DataSourceKindInfo(Category = Vector, FileFilter = "Topological GeoJSON (TopoJSON) (*.json;*.topojson)|*.json;*.topojson")]
     TopoJson = 9,
 
-    [Description("Csv"), DataSourceKindInfo(Category = Vector, FileFilter = "Comma Separated Values (CSV) (*.csv)|*.csv|Text files (*.txt)|*.txt")]
+    [Description("Csv"), DataSourceKindInfo(Category = Vector, FileFilter = "Text files (*.txt)|*.txt|Comma Separated Values (CSV) (*.csv)|*.csv")]
     Csv = 10,
 
-    [Description("Tsv"), DataSourceKindInfo(Category = Vector, FileFilter = "Tab Separated Values (TSV) (*.tsv)|*.tsv|Text files (*.txt)|*.txt")]
+    [Description("Tsv"), DataSourceKindInfo(Category = Vector, FileFilter = "Text files (*.txt)|*.txt|Tab Separated Values (TSV) (*.tsv)|*.tsv")]
     Tsv = 11,
 
     [Description("Worldfile"), DataSourceKindInfo(Category = Raster, FileFilter = "Worldfile|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff")]

@@ -510,7 +510,7 @@ public class LegendCommand : LegendCommandBase
 
                 GeoJsonFeatureSet featureSet = new GeoJsonFeatureSet() { Features = new List<GeoJsonFeature>() { feature }, TotalFeatures = 1 };
 
-                featureSet.Save(file, false, false);
+                await featureSet.SaveAsync(file, false, false);
             }
             catch (Exception ex)
             {

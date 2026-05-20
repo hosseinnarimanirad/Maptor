@@ -512,7 +512,7 @@ public class VectorLayer : SymbolizableLayer
 
         var features = await _vectorDataSource.GetAsFeatureSetAsync();
 
-        features.SaveAsGeoJson(geoJsonFileName, isLongitudeFirst);
+        await features.SaveAsGeoJson(geoJsonFileName, isLongitudeFirst);
     }
 
     #endregion

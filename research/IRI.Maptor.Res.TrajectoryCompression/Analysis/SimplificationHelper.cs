@@ -476,7 +476,7 @@ public static class SimplificationHelper
 
             GeoJsonFeatureSet originalFeatureSet = feature.AsGeoJsonFeatureSet();
 
-            originalFeatureSet.Save($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-original.json", false, true);
+            await originalFeatureSet.SaveAsync($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-original.json", false, true);
 
 
             foreach (var coef in groundResolutionCoefs)
@@ -521,7 +521,7 @@ public static class SimplificationHelper
 
                     GeoJsonFeatureSet featureSet = simplified.AsGeoJsonFeatureSet();
 
-                    featureSet.Save($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{coef}-{method}.json", false, true);
+                    await featureSet.SaveAsync($"{outputDirectoryForFeature}\\{fileName}-{featureIndex}-{estimatedZoomLevel}-{coef}-{method}.json", false, true);
                 }
 
                 var screenSize = WebMercatorUtility.ToScreenSize(estimatedZoomLevel, boundingBox);

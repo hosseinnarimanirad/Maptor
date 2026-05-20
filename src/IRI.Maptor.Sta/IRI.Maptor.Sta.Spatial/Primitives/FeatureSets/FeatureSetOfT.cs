@@ -1,8 +1,12 @@
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using System.Globalization;
+using System.Text;
 
 namespace IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -45,6 +49,13 @@ public class FeatureSet<T> where T : IPoint, new()
     public BoundingBox Extent => BoundingBox.GetMergedBoundingBox(Features.Select(f => f.TheGeometry.GetBoundingBox()));
 
     public bool IsLabeled() => string.IsNullOrEmpty(this.Features?.FirstOrDefault().LabelAttribute) == true;
+
+    public List<string> GetAttributeNames()
+    {
+        return this.Fields?.Select(f => f.Name).ToList() ??
+                this.Features.FirstOrDefault()?.Attributes?.Keys?.OrderBy(k => k)?.ToList() ??
+                new List<string>();
+    }
 
     public IReadOnlyList<Feature<T>> GetAllFeatures() => _allFeatures;
 
@@ -289,4 +300,112 @@ public class FeatureSet<T> where T : IPoint, new()
         };
     }
 
+
+    #region Export
+
+    // ************************ Delimited files ****************************************
+    /// <summary>
+    /// Saves point features to a CSV file in the specified target SRID. First two columns are X, Y (or longitude, latitude for WGS84); remaining columns are attributes.
+    /// </summary>
+    public async Task SaveAsCsv(string csvFileName, bool includeHeader, int? targetSrid = null)
+    {
+        await SaveAsDelimited(csvFileName, IOHelper.CsvDelimiterChar, includeHeader, targetSrid);
+    }
+
+    /// <summary>
+    /// Saves point features to a TSV file in the specified target SRID.
+    /// First two columns are X, Y (or longitude, latitude for WGS84);
+    /// remaining columns are attributes.
+    /// </summary>
+    public async Task SaveAsTsv(string tsvFileName, bool includeHeader, int? targetSrid = null)
+    {
+        await SaveAsDelimited(tsvFileName, IOHelper.TsvDelimiterChar, includeHeader, targetSrid);
+    }
+
+    private async Task SaveAsDelimited(string fileName, char delimiter, bool includeHeader, int? targetSrid)
+    {
+        if (this.Features.IsNullOrEmpty())
+            return;
+
+        var effectiveTargetSrid = targetSrid ?? SridHelper.GeodeticWGS84;
+
+        IReadOnlyList<Feature<T>> targetFeatures = this.Features;
+
+        if (targetSrid.HasValue)
+        {
+            var targetSrs = SridHelper.AsSrsBase(effectiveTargetSrid);
+
+            if (targetSrs is null)
+                throw new NotImplementedException($"FeatureSetOfT > SaveAsDelimited > unknwon srid {targetSrid.Value}");
+
+            targetFeatures = this.Project(targetSrs).Features;
+        }
+
+        var attributeKeys = GetAttributeNames();
+
+        var coordHeader = effectiveTargetSrid == SridHelper.GeodeticWGS84 ? new[] { "longitude", "latitude" } : new[] { "X", "Y" };
+
+        StringBuilder lines = new StringBuilder();
+
+        // write header of file
+        if (includeHeader)
+        {
+            var header = new List<string>(coordHeader);
+
+            if (this.GeometryType == GeometryType.Point)
+            {
+                header.AddRange(attributeKeys);
+            }
+
+            lines.AppendLine(string.Join(delimiter.ToString(), header.Select(v => EscapeDelimitedValue(v, delimiter))));
+        }
+
+        // writing content
+        foreach (var feature in targetFeatures)
+        {
+            if (feature.GeometryType == GeometryType.Point)
+            {
+                var point = feature.TheGeometry.AsPoint();
+                 
+                var values = new List<string>
+                {
+                    point.X.ToString(CultureInfo.InvariantCulture),
+                    point.Y.ToString(CultureInfo.InvariantCulture)
+                };
+
+                foreach (var key in attributeKeys)
+                {
+                    var val = feature.Attributes.TryGetValue(key, out var v) ? v : null;
+
+                    values.Add(val?.ToString() ?? string.Empty);
+                }
+                 
+                lines.AppendLine(string.Join(delimiter.ToString(), values.Select(v => EscapeDelimitedValue(v, delimiter))));
+            }
+            else
+            {
+                var delimited = feature.TheGeometry.AsDelimited(delimiter, 14, false);
+
+                lines.AppendLine(delimited);
+
+                // two line space means next feature
+                lines.AppendLine();
+                lines.AppendLine();
+            }
+        }
+
+        await File.WriteAllTextAsync(fileName, lines.ToString());
+    }
+
+    private static string EscapeDelimitedValue(string value, char delimiter)
+    {
+        if (string.IsNullOrEmpty(value))
+            return string.Empty;
+
+        if (value.Contains(delimiter) || value.Contains('"') || value.Contains('\n') || value.Contains('\r'))
+            return "\"" + value.Replace("\"", "\"\"") + "\"";
+        return value;
+    }
+
+    #endregion
 }
