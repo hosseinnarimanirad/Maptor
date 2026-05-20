@@ -25,7 +25,7 @@ public class WebApiDataSource : MemoryDataSource
 
     protected WebApiDataSource() : base()
     {
-        _featureSet = FeatureSet<Point>.Empty;
+        _webMercatorFeatureSet = FeatureSet<Point>.Empty;
     }
 
     public WebApiDataSource(WebApiSourceParameter parameters) : this()
@@ -81,7 +81,7 @@ public class WebApiDataSource : MemoryDataSource
 
             if (featureSetDto == null || featureSetDto.Features == null || featureSetDto.Features.Count == 0)
             {
-                _featureSet = FeatureSet<Point>.Empty;
+                _webMercatorFeatureSet = FeatureSet<Point>.Empty;
                 WebMercatorExtent = BoundingBox.NaN;
             }
             else
@@ -92,16 +92,16 @@ public class WebApiDataSource : MemoryDataSource
                 }
 
                 //_featureSet = ConvertFeatureSetDtoToFeatureSet(featureSetDto);
-                _featureSet = featureSetDto.AsFeatureSet(this.IdColumnName);
-                this.Fields = _featureSet.Fields;
-                this.GeometryType = _featureSet.GeometryType;
-                this.WebMercatorExtent = _featureSet.Extent;
+                _webMercatorFeatureSet = featureSetDto.AsFeatureSet(this.IdColumnName);
+                this.Fields = _webMercatorFeatureSet.Fields;
+                this.GeometryType = _webMercatorFeatureSet.GeometryType;
+                this.WebMercatorExtent = _webMercatorFeatureSet.Extent;
             }
 
             //_addedFeatures.Clear();
             //_updatedFeatures.Clear();
             //_deletedIds.Clear();
-            _featureSet.ApplyChanges();
+            _webMercatorFeatureSet.ApplyChanges();
 
             UpdateHasPendingChanges();
             IsLoaded = true;
@@ -138,7 +138,7 @@ public class WebApiDataSource : MemoryDataSource
 
     public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
     {
-        if (_featureSet?.Features == null || _featureSet.Features.Count == 0)
+        if (_webMercatorFeatureSet?.Features == null || _webMercatorFeatureSet.Features.Count == 0)
             return FeatureSet<Point>.Empty;
 
         if (FilterGeometry == null || FilterGeometry.IsNullOrEmpty())
@@ -148,7 +148,7 @@ public class WebApiDataSource : MemoryDataSource
             ? g => g.Intersects(FilterGeometry!)
             : g => g.Intersects(FilterGeometry!) && g.Intersects(geometry);
 
-        return await Task.FromResult(_featureSet.FilterByGeometry(predicate));
+        return await Task.FromResult(_webMercatorFeatureSet.FilterByGeometry(predicate));
     }
 
 
@@ -168,10 +168,10 @@ public class WebApiDataSource : MemoryDataSource
 
             var dto = new FeatureSetChangesDto
             {
-                Added = _featureSet.Features.Where(f => f.Status == FeatureStatus.New).Select(f => FeatureDto.Parse(f, SridHelper.GeodeticWGS84)).ToList(),
-                Updated = _featureSet.Features.Where(f => f.Status == FeatureStatus.Updated).Select(f => FeatureDto.Parse(f, SridHelper.GeodeticWGS84)).ToList(),
-                Deleted = _featureSet.GetAllFeatures().Where(f => f.Status == FeatureStatus.Removed).Select(f => FeatureDto.Parse(f, SridHelper.GeodeticWGS84)).ToList(),
-                DeletedIds = _featureSet.GetDeletedFeatureIds().ToList(),
+                Added = _webMercatorFeatureSet.Features.Where(f => f.Status == FeatureStatus.New).Select(f => FeatureDto.Parse(f, SridHelper.GeodeticWGS84)).ToList(),
+                Updated = _webMercatorFeatureSet.Features.Where(f => f.Status == FeatureStatus.Updated).Select(f => FeatureDto.Parse(f, SridHelper.GeodeticWGS84)).ToList(),
+                Deleted = _webMercatorFeatureSet.GetAllFeatures().Where(f => f.Status == FeatureStatus.Removed).Select(f => FeatureDto.Parse(f, SridHelper.GeodeticWGS84)).ToList(),
+                DeletedIds = _webMercatorFeatureSet.GetDeletedFeatureIds().ToList(),
             };
 
             var response = await WebApiInfrastructure.SaveChangesAsync(
@@ -191,7 +191,7 @@ public class WebApiDataSource : MemoryDataSource
                         if (mapping.Key == Guid.Empty)
                             continue;
 
-                        var feature = _featureSet.Features.FirstOrDefault(f => f.Key == mapping.Key);
+                        var feature = _webMercatorFeatureSet.Features.FirstOrDefault(f => f.Key == mapping.Key);
 
                         if (feature != null)
                         {
@@ -205,9 +205,9 @@ public class WebApiDataSource : MemoryDataSource
                 {
                     foreach (var mapping in syncResult.UpdatedRowVersions)
                     {
-                        var feature = _featureSet.GetAllFeatures().FirstOrDefault(f => f.Key == mapping.Key);
+                        var feature = _webMercatorFeatureSet.GetAllFeatures().FirstOrDefault(f => f.Key == mapping.Key);
                         if (feature == null && mapping.Id > 0)
-                            feature = _featureSet.GetAllFeatures().FirstOrDefault(f => f.Id == mapping.Id);
+                            feature = _webMercatorFeatureSet.GetAllFeatures().FirstOrDefault(f => f.Id == mapping.Id);
 
                         if (feature != null)
                             ApplyRowVersion(feature, mapping.RowVersion);
@@ -217,7 +217,7 @@ public class WebApiDataSource : MemoryDataSource
                 //_addedFeatures.Clear();
                 //_updatedFeatures.Clear();
                 //_deletedIds.Clear();
-                _featureSet.ApplyChanges();
+                _webMercatorFeatureSet.ApplyChanges();
                 UpdateHasPendingChanges();
             }
             else
@@ -248,11 +248,11 @@ public class WebApiDataSource : MemoryDataSource
         if (string.IsNullOrWhiteSpace(searchText))
             return Task.FromResult(FeatureSet<Point>.Empty);
 
-        if (_featureSet?.Features == null || _featureSet.Features.Count == 0)
+        if (_webMercatorFeatureSet?.Features == null || _webMercatorFeatureSet.Features.Count == 0)
             return Task.FromResult(FeatureSet<Point>.Empty);
 
         var lower = searchText.ToLowerInvariant();
-        var matching = _featureSet.Features.Where(f =>
+        var matching = _webMercatorFeatureSet.Features.Where(f =>
             f.Attributes != null &&
             f.Attributes.Values.Any(v => v?.ToString()?.ToLowerInvariant().Contains(lower) == true)).ToList();
 
@@ -261,7 +261,7 @@ public class WebApiDataSource : MemoryDataSource
 
         var result = FeatureSet<Point>.Create(string.Empty, matching);
 
-        result.Fields = _featureSet.Fields;
+        result.Fields = _webMercatorFeatureSet.Fields;
 
         return Task.FromResult(result);
     }

@@ -4116,7 +4116,7 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         try
         {
-            var dataSource = ShapefileDataSourceFactory.CreateLazy(fileName, SrsBases.WebMercator, null);
+            var dataSource = ShapefileDataSourceFactory.CreateLazy(fileName, /*SrsBases.WebMercator,*/ null);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
                                 dataSource,
@@ -4565,8 +4565,10 @@ public abstract class MapViewModelBase : ViewModelBase
 
                 features = features.Select(f => f.Project(SrsBases.WebMercator/*new WebMercator()*/)).ToList();
 
-                var dataSource = new MemoryDataSource(features, true, DataSourceKind.Dxf);
-                var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
+                var dataSource = DxfDataSource.Create(fileName, features);
+
+                //var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
+
                 var symbolizers = new List<ISymbolizer> { SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1) };
 
                 var vectorLayer = new VectorLayer($"{Path.GetFileNameWithoutExtension(fileName)}-{group.Key}",
@@ -4579,22 +4581,12 @@ public abstract class MapViewModelBase : ViewModelBase
                 {
                     IsSearchable = true
                 };
-
-                //AddLayer(vectorLayer);
-
+                 
                 groupLayer.AddSubLayer(vectorLayer);
             }
 
             AddLayer(groupLayer);
-        }
-        //catch (IOException)
-        //{
-        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        //}
-        //catch (UnauthorizedAccessException)
-        //{
-        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        //}
+        } 
         catch (Exception ex)
         {
             await ShowExceptionMessageAsync(ex);
@@ -4831,7 +4823,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             MemoryDataSource dataSource = result.IsFileSelected
                 ? await GeoJsonDataSource.CreateFromFileAsync(result.FilePath!, result.IsLongitudeFirst, result.SelectedSrid)
-                : await GeoJsonDataSource.CreateFromTextAsync(result.RawJson, result.SelectedSrid, result.IsLongitudeFirst, result.FilePath ?? string.Empty);
+                : await GeoJsonDataSource.CreateFromTextAsync(result.RawJson, result.IsLongitudeFirst, result.SelectedSrid);
 
             var layerName = !string.IsNullOrEmpty(result.FilePath)
                 ? Path.GetFileNameWithoutExtension(result.FilePath)
@@ -5820,7 +5812,7 @@ public abstract class MapViewModelBase : ViewModelBase
                         if (string.IsNullOrWhiteSpace(fileName))
                             return;
 
-                        var dataSource = ShapefileDataSourceFactory.Create(fileName, SrsBases.WebMercator/*new WebMercator()*/);
+                        var dataSource = ShapefileDataSourceFactory.Create(fileName/*, SrsBases.WebMercator*//*new WebMercator()*/);
 
                         var featureSet = await dataSource.GetAsFeatureSetAsync();
                         var geometries = featureSet?.Features;

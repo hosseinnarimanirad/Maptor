@@ -33,7 +33,7 @@ public class TopoJsonDataSource : MemoryDataSource
     public override Task SaveChangesAsync()
     {
         // TopoJSON save not supported; pasted or loaded data is read-only for persistence
-        _featureSet.ApplyChanges();
+        _webMercatorFeatureSet.ApplyChanges();
         UpdateHasPendingChanges();
         return Task.CompletedTask;
     }

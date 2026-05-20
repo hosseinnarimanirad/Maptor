@@ -97,7 +97,7 @@ public partial class MainWindow : Window
 
     private async Task TestDxf(string fileName, string wkt)
     {
-        Geometry<IRI.Maptor.Sta.Common.Primitives.Point>.FromWkt(wkt, 0).SaveAsDxf(fileName);
+        await Geometry<IRI.Maptor.Sta.Common.Primitives.Point>.FromWkt(wkt, 0).SaveAsDxfAsync(fileName);
 
         var geometries = await DxfReader.ReadFromFile(fileName, defaultSrid: 0);
 

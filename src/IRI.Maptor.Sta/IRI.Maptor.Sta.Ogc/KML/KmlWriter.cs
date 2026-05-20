@@ -28,7 +28,7 @@ public static class KmlWriter
     /// <summary>
     /// Writes a single geometry to a KML file
     /// </summary>
-    public static void WriteToFile(
+    public static async Task WriteToFileAsync(
         Geometry<Point> geometry,
         string filePath,
         string? name = null,
@@ -36,20 +36,22 @@ public static class KmlWriter
         Func<Point, Point>? projectToGeodeticFunc = null)
     {
         var kmlString = ToKml(geometry, name, description, projectToGeodeticFunc);
-        File.WriteAllText(filePath, kmlString);
+
+        await File.WriteAllTextAsync(filePath, kmlString);
     }
      
     /// <summary>
     /// Writes features with attributes to a KML file
     /// </summary>
-    public static void WriteToFile(
+    public static async Task WriteToFileAsync(
         List<KmlFeature> features,
         string filePath,
         string? documentName = null,
         Func<Point, Point>? projectToGeodeticFunc = null)
     {
         var kmlString = ToKml(features, documentName, projectToGeodeticFunc);
-        File.WriteAllText(filePath, kmlString);
+
+        await File.WriteAllTextAsync(filePath, kmlString);
     }
 
     /// <summary>
@@ -62,6 +64,7 @@ public static class KmlWriter
         Func<Point, Point>? projectToGeodeticFunc = null)
     {
         var kmlString = ToKml(geometries, documentName, projectToGeodeticFunc);
+
         await File.WriteAllTextAsync(filePath, kmlString);
     }
 

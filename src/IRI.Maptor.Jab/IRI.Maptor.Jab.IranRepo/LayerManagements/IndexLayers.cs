@@ -1,19 +1,19 @@
 using System.Windows.Media;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Helpers;
-using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.MapIndexes;
-using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
-using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using IRI.Maptor.Jab.Common.ViewModels;
-using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+
+using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Common.ViewModels;
+using IRI.Maptor.Jab.Common.Models.Legend;
+using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 namespace IRI.Maptor.Jab.IranRepo;
 
@@ -24,7 +24,7 @@ public static class IndexLayers
 
     public static async System.Threading.Tasks.Task<VectorLayer> GetLayerFromShapefileAsync(string layerName, string filePath, string color)
     {
-        var features = ShapefileDataSourceFactory.Create(filePath, SrsBases.WebMercator/*new WebMercator()*/);
+        var features = ShapefileDataSourceFactory.Create(filePath/*, SrsBases.WebMercator*//*new WebMercator()*/);
 
         var featureSet = await features.GetAsFeatureSetAsync();
         var geo = featureSet.Features.Select(f => f.TheGeometry).ToList();

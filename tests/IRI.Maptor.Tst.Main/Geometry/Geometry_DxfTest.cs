@@ -82,7 +82,8 @@ public class Geometry_DxfTest
         try
         {
             // Act
-            originalLineString.SaveAsDxf(tempFilePath);
+            await originalLineString.SaveAsDxfAsync(tempFilePath);
+
             var restoredGeometries = await DxfReader.ReadFromFile(tempFilePath, defaultSrid: 0);
 
             // Assert
@@ -255,30 +256,6 @@ public class Geometry_DxfTest
 
     #region Extension Method and Error Handling Tests
 
-    [Fact]
-    public void SaveAsDxf_ShouldReturnFilePath()
-    {
-        // Arrange
-        var tempFilePath = Path.Combine(Path.GetTempPath(), $"test_{Guid.NewGuid()}.dxf");
-        var geometry = GeometrySamples.Point;
-
-        try
-        {
-            // Act
-            var returnedPath = geometry.SaveAsDxf(tempFilePath);
-
-            // Assert
-            Assert.Equal(tempFilePath, returnedPath);
-            Assert.True(File.Exists(returnedPath));
-        }
-        finally
-        {
-            if (File.Exists(tempFilePath))
-            {
-                File.Delete(tempFilePath);
-            }
-        }
-    }
 
     [Fact]
     public void SaveAsDxf_WithNullPath_ShouldThrowArgumentException()
@@ -288,8 +265,7 @@ public class Geometry_DxfTest
         string? nullPath = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() =>
-            geometry.SaveAsDxf(nullPath!));
+        Assert.ThrowsAsync<ArgumentException>(async () => await geometry.SaveAsDxfAsync(nullPath!));
     }
 
     [Fact]

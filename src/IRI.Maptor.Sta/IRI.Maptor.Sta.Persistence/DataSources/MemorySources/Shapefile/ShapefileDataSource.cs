@@ -9,7 +9,6 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.ShapefileFormat.Dbf;
 using IRI.Maptor.Sta.ShapefileFormat.Model;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
@@ -27,7 +26,7 @@ public class ShapefileDataSource : MemoryDataSource
 
     private SrsBase _sourceSrs;
 
-    private SrsBase? _targetSrs;
+    //private SrsBase? _targetSrs;
 
     private List<ObjectToDbfTypeMap<Feature<Point>>> _objectToDbfTypeMap;
 
@@ -42,7 +41,7 @@ public class ShapefileDataSource : MemoryDataSource
     /// Call LoadAsync() to load the full data.
     /// </summary>
     internal ShapefileDataSource(string shapefileName,
-                                SrsBase? targetSrs,
+                                //SrsBase? targetSrs,
                                 Encoding? encoding,
                                 Func<Geometry<Point>, Dictionary<string, object>, Feature<Point>> createFeatureFunc,
                                 Func<Feature<Point>, List<object>> inverseAttributeMap)
@@ -52,7 +51,7 @@ public class ShapefileDataSource : MemoryDataSource
         _sourceSrs = ShapefileFormat.Shapefile.TryGetSrs(shapefileName)
             ?? throw new NotImplementedException("Shapefile SRS could not be determined.");
 
-        _targetSrs = targetSrs;
+        //_targetSrs = targetSrs;
 
         _encoding = encoding;
 
@@ -62,18 +61,18 @@ public class ShapefileDataSource : MemoryDataSource
 
         var mainHeader = ShapefileFormat.Shapefile.GetFileHeader(shapefileName);
 
-        WebMercatorExtent = mainHeader.MinimumBoundingBox;
+        WebMercatorExtent = mainHeader.MinimumBoundingBox.Transform(p => p.Project(_sourceSrs, SrsBases.WebMercator));
 
-        if (targetSrs != null)
-        {
-            Func<Point, Point> transformFunc = p => p.Project(_sourceSrs, targetSrs);
+        //if (targetSrs != null)
+        //{
+        //    Func<Point, Point> transformFunc = p => p.Project(_sourceSrs, targetSrs);
 
-            WebMercatorExtent = WebMercatorExtent.Transform(transformFunc);
-        }
+        //    WebMercatorExtent = WebMercatorExtent.Transform(transformFunc);
+        //}
 
         GeometryType = mainHeader.ShapeType.AsGeometryType() ?? Common.Enums.GeometryType.None;
 
-        _featureSet = FeatureSet<Point>.Empty;
+        _webMercatorFeatureSet = FeatureSet<Point>.Empty;
 
         Fields = new List<Field>();
 
@@ -85,9 +84,9 @@ public class ShapefileDataSource : MemoryDataSource
     internal ShapefileDataSource(string shapefileName,
                                 IEsriShapeCollection geometries,
                                 EsriAttributeDictionary attributes,
-                                Func<Geometry<Point>, Dictionary<string, object>, Feature<Point>> map,
-                                Func<Feature<Point>, List<object>> inverseAttributeMap,
-                                SrsBase targetSrs)
+                                Func<Geometry<Point>, Dictionary<string, object>, Feature<Point>> createFeatureFunc,
+                                Func<Feature<Point>, List<object>> inverseAttributeMap)//,
+                                //SrsBase targetSrs)
     {
         if (attributes == null)
             throw new NotImplementedException();
@@ -99,9 +98,9 @@ public class ShapefileDataSource : MemoryDataSource
         if (_sourceSrs is null)
             throw new NotImplementedException();
 
-        _targetSrs = targetSrs;
+        //_targetSrs = targetSrs;
 
-        Initialize(geometries, attributes, map, inverseAttributeMap);
+        Initialize(geometries, attributes, createFeatureFunc, inverseAttributeMap);
     }
 
     public override async Task LoadAsync(CancellationToken cancellationToken = default)
@@ -129,7 +128,6 @@ public class ShapefileDataSource : MemoryDataSource
             Initialize(geometries, attributes, _createFeatureFunc, _inverseAttributeMap);
 
             System.Diagnostics.Debug.WriteLine($"***** LoadAsync shapefile - Initialize passes {DateTime.Now.ToLongTimeString()}");
-
         }
         catch
         {
@@ -153,12 +151,12 @@ public class ShapefileDataSource : MemoryDataSource
         if (attributes == null)
             throw new NotImplementedException();
 
-        Func<Point, Point>? transformFunc = _targetSrs != null ? (p => p.Project(_sourceSrs, _targetSrs)) : null;
+        //Func<Point, Point>? transformFunc = _targetSrs != null ? (p => p.Project(_sourceSrs, _targetSrs)) : null;
 
         //var webMercator = new WebMercator();
-         
+
         //WebMercatorExtent = geometries.MainHeader.MinimumBoundingBox.Transform(p => p.Project(_sourceSrs, new WebMercator()));
-        WebMercatorExtent = BoundingBox.GetMergedBoundingBox(geometries.Select(g => g.MinimumBoundingBox.Transform(p => p.Project(_sourceSrs, SrsBases.WebMercator))), true); 
+        WebMercatorExtent = BoundingBox.GetMergedBoundingBox(geometries.Select(g => g.MinimumBoundingBox.Transform(p => p.Project(_sourceSrs, SrsBases.WebMercator))), true);
 
         GeometryType = geometries.MainHeader.ShapeType.AsGeometryType();
 
@@ -180,9 +178,10 @@ public class ShapefileDataSource : MemoryDataSource
 
         for (int i = 0; i < geometries.Count; i++)
         {
-            Geometry<Point>? geometry = transformFunc == null
-                ? geometries[i].AsGeometry()
-                : geometries[i].AsGeometry().Transform(transformFunc, _targetSrs!.Srid);
+            //Geometry<Point>? geometry = transformFunc == null
+            //    ? geometries[i].AsGeometry()
+            //    : geometries[i].AsGeometry().Transform(transformFunc, _targetSrs!.Srid);
+            var geometry = geometries[i].AsGeometry().Project(SrsBases.WebMercator);
 
             var feature = map(geometry, attributes.Attributes[i]);
 
@@ -191,10 +190,10 @@ public class ShapefileDataSource : MemoryDataSource
             features.Add(feature);
         }
 
-        _featureSet = FeatureSet<Point>.Create(System.IO.Path.GetFileNameWithoutExtension(_shapefileName), features);
+        _webMercatorFeatureSet = FeatureSet<Point>.Create(System.IO.Path.GetFileNameWithoutExtension(_shapefileName), features);
 
         IsLoaded = true;
-         
+
         System.Diagnostics.Debug.WriteLine($"***** Initialize shapefile finished {DateTime.Now.ToLongTimeString()}");
 
     }
@@ -202,33 +201,26 @@ public class ShapefileDataSource : MemoryDataSource
 
     public override Task SaveChangesAsync()
     {
-        Func<Feature<Point>, EsriShapeBase>? geometryMap = null;
+        Func<Feature<Point>, EsriShapeBase?> geometryMap = f => f.TheGeometry.Project(_sourceSrs).AsEsriShape(_sourceSrs.Srid);
 
-        var features = _featureSet.Features;
+        var features = _webMercatorFeatureSet.Features;
 
         //save shp, shx, dbf, prj, cpg
 
-        if (_targetSrs != null)
-        {
-            Func<Point, Point> inverseTransformFunc = p => p.Project(_targetSrs, _sourceSrs);
+        //if (_targetSrs != null)
+        //{
+        //    Func<Point, Point> inverseTransformFunc = p => p.Project(_targetSrs, _sourceSrs);
 
-            geometryMap = t => t.TheGeometry.AsEsriShape(_sourceSrs.Srid, inverseTransformFunc /*as Func<IPoint, IPoint>*/);
-        }
-        else
-        {
-            geometryMap = t => t.TheGeometry.AsEsriShape(_sourceSrs.Srid);
-        }
+        //    geometryMap = t => t.TheGeometry.AsEsriShape(_sourceSrs.Srid, inverseTransformFunc);
+        //}
+        //else
+        //{
+        //    geometryMap = t => t.TheGeometry.AsEsriShape(_sourceSrs.Srid);
+        //}
 
         ShapefileFormat.Shapefile.Save(_shapefileName, features, geometryMap, _objectToDbfTypeMap, _encoding ?? EncodingHelper.ArabicEncoding, _sourceSrs, true);
 
-        //_addedFeatures.Clear();
-        //_updatedFeatures.Clear();
-        //_deletedIds.Clear();
-        //foreach (var item in _features.Features)
-        //{ 
-        //    item.MarkAsSaved();
-        //}
-        _featureSet.ApplyChanges();
+        _webMercatorFeatureSet.ApplyChanges();
 
         UpdateHasPendingChanges();
 

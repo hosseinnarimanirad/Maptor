@@ -19,11 +19,14 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 /// </summary>
 public class TextDataSource : MemoryDataSource
 {
-    private DataSourceKind _dataSourceKind;
+    //private DataSourceKind _dataSourceKind;
+
     public override DataSourceKind DataSourceKind => _dataSourceKind/*DataSourceKind.Csv*/;
 
     private readonly string _fileName;
+
     private readonly bool _useFirstLineAsHeader;
+
     private readonly int _sourceSrid;
 
     private TextDataSource(string fileName,
@@ -36,7 +39,7 @@ public class TextDataSource : MemoryDataSource
         if (dataSourceKind != DataSourceKind.Csv && dataSourceKind != DataSourceKind.Tsv)
             throw new ArgumentException();
 
-        _dataSourceKind = dataSourceKind;
+        //_dataSourceKind = dataSourceKind;
 
         _fileName = fileName ?? string.Empty;
 
@@ -52,16 +55,16 @@ public class TextDataSource : MemoryDataSource
         if (!string.IsNullOrWhiteSpace(_fileName))
         {
             if (DataSourceKind == DataSourceKind.Csv)
-                _featureSet.SaveAsCsv(_fileName, _useFirstLineAsHeader, _sourceSrid);
+                _webMercatorFeatureSet.SaveAsCsv(_fileName, _useFirstLineAsHeader, _sourceSrid);
 
             else if (DataSourceKind == DataSourceKind.Tsv)
-                _featureSet.SaveAsTsv(_fileName, _useFirstLineAsHeader, _sourceSrid);
+                _webMercatorFeatureSet.SaveAsTsv(_fileName, _useFirstLineAsHeader, _sourceSrid);
 
             else
                 throw new ArgumentException();
         }
 
-        _featureSet.ApplyChanges();
+        _webMercatorFeatureSet.ApplyChanges();
 
         UpdateHasPendingChanges();
 

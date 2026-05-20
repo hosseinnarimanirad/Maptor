@@ -19,7 +19,7 @@ namespace IRI.Maptor.Extensions;
 
 public static class FeatureSetExtensions
 {
-    public static void Export(this FeatureSet<Point> featureSet, string filePath, DataSourceKind exportFormat, SrsBase targetSrs, bool? isLongitudeFirst = null)
+    public static async Task Export(this FeatureSet<Point> featureSet, string filePath, DataSourceKind exportFormat, SrsBase targetSrs, bool? isLongitudeFirst = null)
     {
         if (featureSet is null)
             return;
@@ -33,7 +33,7 @@ public static class FeatureSetExtensions
                 break;
 
             case DataSourceKind.Kml:
-                SaveAsKml(targetFeatureSet, filePath);
+                await SaveAsKmlAsync(targetFeatureSet, filePath);
                 break;
 
             case DataSourceKind.Kmz:
@@ -85,11 +85,11 @@ public static class FeatureSetExtensions
         if (geometries is null)
             return;
 
-        DxfWriter.WriteToFile(geometries, dxfFileName);
+        DxfWriter.WriteToFileAsync(geometries, dxfFileName);
 
     }
 
-    public static void SaveAsKml(this FeatureSet<Point> featureSet, string kmlFileName)
+    public static async Task SaveAsKmlAsync(this FeatureSet<Point> featureSet, string kmlFileName)
     {
         if (featureSet is null)
             return;
@@ -101,7 +101,7 @@ public static class FeatureSetExtensions
         if (kmlFeatures is null)
             return;
 
-        KmlWriter.WriteToFile(kmlFeatures, kmlFileName, featureSet.Title);
+        await KmlWriter.WriteToFileAsync(kmlFeatures, kmlFileName, featureSet.Title);
     }
 
     public static void SaveAsKmz(this FeatureSet<Point> featureSet, string kmzFileName)

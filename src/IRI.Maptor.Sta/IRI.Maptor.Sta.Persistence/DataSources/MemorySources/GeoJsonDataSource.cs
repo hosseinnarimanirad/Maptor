@@ -19,10 +19,11 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 /// </summary>
 public class GeoJsonDataSource : MemoryDataSource
 {
-    public override DataSourceKind DataSourceKind => DataSourceKind.GeoJson;
-
     private readonly string _fileName;
+
     private readonly bool _isLongitudeFirst;
+
+    public override DataSourceKind DataSourceKind => DataSourceKind.GeoJson;
 
     private GeoJsonDataSource(string fileName, List<Feature<Point>> features, bool isLongitudeFirst = true)
         : base(features, resetIds: true, kind: DataSourceKind.GeoJson)
@@ -37,10 +38,13 @@ public class GeoJsonDataSource : MemoryDataSource
     {
         if (!string.IsNullOrWhiteSpace(_fileName))
         {
-            _featureSet.SaveAsGeoJson(_fileName, _isLongitudeFirst);
+            _webMercatorFeatureSet.SaveAsGeoJson(_fileName, _isLongitudeFirst);
         }
-        _featureSet.ApplyChanges();
+
+        _webMercatorFeatureSet.ApplyChanges();
+
         UpdateHasPendingChanges();
+
         return Task.CompletedTask;
     }
 
@@ -63,13 +67,13 @@ public class GeoJsonDataSource : MemoryDataSource
         return new GeoJsonDataSource(fileName, features, isLongitudeFirst);
     }
 
-    /// <summary>
-    /// Creates a GeoJsonDataSource from a GeoJSON file asynchronously.
-    /// </summary>
-    public static async Task<GeoJsonDataSource> CreateFromFileAsync(string fileName, bool isLongitudeFirst = true)
-    {
-        return await CreateFromFileAsync(fileName, isLongitudeFirst, SridHelper.GeodeticWGS84);
-    }
+    ///// <summary>
+    ///// Creates a GeoJsonDataSource from a GeoJSON file asynchronously.
+    ///// </summary>
+    //public static async Task<GeoJsonDataSource> CreateFromFileAsync(string fileName, bool isLongitudeFirst = true)
+    //{
+    //    return await CreateFromFileAsync(fileName, isLongitudeFirst, SridHelper.GeodeticWGS84);
+    //}
 
     /// <summary>
     /// Creates a GeoJsonDataSource from a GeoJSON file with the specified spatial reference.
@@ -80,24 +84,27 @@ public class GeoJsonDataSource : MemoryDataSource
             throw new FileNotFoundException($"GeoJSON file not found: {fileName}", fileName);
 
         var jsonString = await File.ReadAllTextAsync(fileName);
+
         return CreateFromJson(jsonString, fileName, isLongitudeFirst, sourceSrid);
     }
 
     /// <summary>
     /// Creates a GeoJsonDataSource from pasted or in-memory JSON text.
     /// </summary>
-    public static Task<GeoJsonDataSource> CreateFromTextAsync(string jsonText, int sourceSrid, bool isLongitudeFirst, string fileName = "")
+    public static Task<GeoJsonDataSource> CreateFromTextAsync(string jsonText, bool isLongitudeFirst, int sourceSrid)
     {
         if (string.IsNullOrWhiteSpace(jsonText))
             throw new ArgumentException("JSON text cannot be empty.", nameof(jsonText));
 
-        var ds = CreateFromJson(jsonText, fileName ?? string.Empty, isLongitudeFirst, sourceSrid);
+        var ds = CreateFromJson(jsonText, string.Empty, isLongitudeFirst, sourceSrid);
+
         return Task.FromResult(ds);
     }
 
     private static GeoJsonDataSource CreateFromJson(string jsonString, string fileName, bool isLongitudeFirst, int sourceSrid)
     {
         var featureSet = GeoJsonFeatureSet.Parse(jsonString);
+
         var features = (featureSet.Features ?? [])
             .Select(f => f.AsFeature(isLongitudeFirst, SrsBases.WebMercator, sourceSrid))
             .ToList();

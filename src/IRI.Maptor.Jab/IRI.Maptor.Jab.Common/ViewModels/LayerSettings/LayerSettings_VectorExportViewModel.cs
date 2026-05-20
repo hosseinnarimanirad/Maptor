@@ -251,7 +251,7 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
 
         var targetFeatureSet = features.Project(targetSrs);
 
-        targetFeatureSet.Export(fileName, SelectedDataSourceKind, targetSrs, IsLongitudeFirst);
+        await targetFeatureSet.Export(fileName, SelectedDataSourceKind, targetSrs, IsLongitudeFirst);
 
         await viewModel.DialogService.ShowMessage_DoneSuccessfully();
     }

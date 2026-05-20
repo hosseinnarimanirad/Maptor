@@ -579,6 +579,7 @@ public static class Sta_GeometryExtensions
             throw new ArgumentNullException(nameof(geometry));
 
         DxfWriter.ResetHandleCounter();
+
         return DxfWriter.Write(geometry, null);
     }
 
@@ -588,7 +589,7 @@ public static class Sta_GeometryExtensions
     /// <param name="geometry">The geometry to save</param>
     /// <param name="filePath">The path to save the DXF file</param>
     /// <returns>The path to the saved file</returns>
-    public static string SaveAsDxf(this Geometry<Point> geometry, string filePath)
+    public static async Task SaveAsDxfAsync(this Geometry<Point> geometry, string filePath)
     {
         if (geometry == null)
             throw new ArgumentNullException(nameof(geometry));
@@ -597,7 +598,8 @@ public static class Sta_GeometryExtensions
             throw new ArgumentException("File path cannot be null or empty", nameof(filePath));
 
         DxfWriter.ResetHandleCounter();
-        return DxfWriter.WriteToFile(geometry, filePath);
+
+        await DxfWriter.WriteToFileAsync(geometry, filePath);
     }
 
     #endregion

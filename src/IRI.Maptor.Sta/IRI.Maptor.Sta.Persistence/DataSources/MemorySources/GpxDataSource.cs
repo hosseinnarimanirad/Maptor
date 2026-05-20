@@ -33,9 +33,9 @@ public class GpxDataSource : MemoryDataSource
 
     public override Task SaveChangesAsync()
     {
-        var features = _featureSet.Features.ToList();
+        var features = _webMercatorFeatureSet.Features.ToList();
         GpxFormat.WriteFromFeatures(_fileName, features, MapProjects.WebMercatorToGeodeticWgs84);
-        _featureSet.ApplyChanges();
+        _webMercatorFeatureSet.ApplyChanges();
         UpdateHasPendingChanges();
         return Task.CompletedTask;
     }

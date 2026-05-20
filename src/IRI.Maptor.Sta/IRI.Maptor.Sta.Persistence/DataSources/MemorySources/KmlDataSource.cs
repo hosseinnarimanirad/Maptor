@@ -29,14 +29,15 @@ public class KmlDataSource : MemoryDataSource
 
     public override string ToString() => $"{nameof(KmlDataSource)}";
 
-    public override Task SaveChangesAsync()
+    public override async Task SaveChangesAsync()
     {
-        var features = _featureSet.Features.ToList();
-        var kmlFeatures = features.ToKmlFeatures();
-        KmlWriter.WriteToFile(kmlFeatures, _fileName, null, MapProjects.WebMercatorToGeodeticWgs84);
-        _featureSet.ApplyChanges();
+        var kmlFeatures = _webMercatorFeatureSet.Features.ToKmlFeatures();
+
+        await KmlWriter.WriteToFileAsync(kmlFeatures, _fileName, null, MapProjects.WebMercatorToGeodeticWgs84);
+
+        _webMercatorFeatureSet.ApplyChanges();
+
         UpdateHasPendingChanges();
-        return Task.CompletedTask;
     }
 
     /// <summary>

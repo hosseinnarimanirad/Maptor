@@ -48,43 +48,54 @@ public class DxfWriter
     // Public write methods
     // ----------------------------------------------------------------------
 
-    public static string WriteToFile(Geometry<Point> geometry, string filePath)
+    public static async Task WriteToFileAsync(Geometry<Point> geometry, string filePath)
     {
-        return WriteToFile(geometry, filePath, null);
+        await WriteToFileAsync(geometry, filePath, null);
     }
 
-    public static string WriteToFile(Geometry<Point> geometry, string filePath, DxfColorInfo? colorInfo)
+    public static async Task WriteToFileAsync(Geometry<Point> geometry, string filePath, DxfColorInfo? colorInfo)
     {
         var content = Write(geometry, colorInfo);
-        File.WriteAllText(filePath, content);
+
+        await File.WriteAllTextAsync(filePath, content);
+
         if (geometry is not null)
         {
             WritePrj(filePath, geometry.Srid);
         }
-        return filePath;
+
+        //return filePath;
     }
 
-    public static string WriteToFile(IEnumerable<Geometry<Point>> geometries, string filePath, DxfColorInfo? colorInfo = null)
+    public static async Task WriteToFileAsync(IEnumerable<Geometry<Point>> geometries, string filePath, DxfColorInfo? colorInfo = null)
     {
         var content = Write(geometries, colorInfo);
-        File.WriteAllText(filePath, content);
+
+        await File.WriteAllTextAsync(filePath, content);
+
         var srid = geometries?.FirstOrDefault().Srid;
+
         if (srid is not null)
         {
             WritePrj(filePath, srid.Value);
         }
-        return filePath;
+
+        //return filePath;
     }
 
     public static string WriteToFile(IEnumerable<Geometry<Point>> geometries, string filePath, Func<Geometry<Point>, DxfColorInfo?> getColorInfo)
     {
         var content = Write(geometries, getColorInfo);
+
         File.WriteAllText(filePath, content);
+
         var srid = geometries?.FirstOrDefault().Srid;
+
         if (srid is not null)
         {
             WritePrj(filePath, srid.Value);
         }
+
         return filePath;
     }
 

@@ -2,13 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
-
-using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Spatial.IO.Dxf;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
@@ -18,6 +17,8 @@ public class DxfDataSource : MemoryDataSource
 
     private readonly string _fileName;
 
+    private readonly int _sourceSrid;
+
     private DxfDataSource(string fileName, List<Feature<Point>> features)
         : base(features, resetIds: true, kind: DataSourceKind.Kml)
     {
@@ -26,14 +27,22 @@ public class DxfDataSource : MemoryDataSource
 
     public override string ToString() => $"{nameof(DxfDataSource)}";
 
-    public override Task SaveChangesAsync()
+    public override async Task SaveChangesAsync()
     {
-        var features = _featureSet.Features.ToList();
-        var kmlFeatures = features.ToKmlFeatures();
-        KmlWriter.WriteToFile(kmlFeatures, _fileName, null, MapProjects.WebMercatorToGeodeticWgs84);
-        _featureSet.ApplyChanges();
+        var sourceSrs = SrsBase.Create(_sourceSrid);
+
+        if (sourceSrs is null)
+            return;
+
+        var features = _webMercatorFeatureSet.Features.Select(f => f.Project(sourceSrs)).ToList();
+
+        await DxfWriter.WriteToFileAsync(features.Select(f => f.TheGeometry), _fileName);
+
+        _webMercatorFeatureSet.ApplyChanges();
+
         UpdateHasPendingChanges();
-        return Task.CompletedTask;
+
+        //return Task.CompletedTask;
     }
 
     /// <summary>
@@ -44,7 +53,8 @@ public class DxfDataSource : MemoryDataSource
     {
         if (string.IsNullOrWhiteSpace(fileName))
             throw new ArgumentNullException(nameof(fileName));
-        if (features == null || features.Count == 0)
+
+        if (features.IsNullOrEmpty())
             throw new ArgumentException("At least one feature is required.", nameof(features));
 
         return new DxfDataSource(fileName, features);

@@ -10,6 +10,7 @@ using IRI.Maptor.Jab.Common.Cartography;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Sta.Spatial.IO.Dxf;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace IRI.Maptor.Extensions;
 
@@ -156,10 +157,11 @@ public static class GeometryExtensions
     /// <param name="filePath">The output file path</param>
     /// <param name="visualParameters">Visual parameters containing stroke, fill, thickness, and opacity</param>
     /// <returns>The file path</returns>
-    public static string WriteToDxfFile(this Geometry<Point> geometry, string filePath, VisualParameters visualParameters)
+    public static async Task WriteToDxfFileAsync(this Geometry<Point> geometry, string filePath, VisualParameters visualParameters)
     {
         var colorInfo = visualParameters.ToDxfColorInfo();
-        return DxfWriter.WriteToFile(geometry, filePath, colorInfo);
+
+        await DxfWriter.WriteToFileAsync(geometry, filePath, colorInfo);
     }
 
     /// <summary>
@@ -172,10 +174,11 @@ public static class GeometryExtensions
     /// <param name="strokeThickness">Line thickness</param>
     /// <param name="opacity">Opacity (note: DXF has limited opacity support via transparency)</param>
     /// <returns>The file path</returns>
-    public static string WriteToDxfFile(this Geometry<Point> geometry, string filePath, Brush? stroke = null, Brush? fill = null, double strokeThickness = 1.0, double opacity = 1.0)
+    public static async Task WriteToDxfFileAsync(this Geometry<Point> geometry, string filePath, Brush? stroke = null, Brush? fill = null, double strokeThickness = 1.0, double opacity = 1.0)
     {
         var colorInfo = CreateDxfColorInfo(stroke, fill, strokeThickness, opacity);
-        return DxfWriter.WriteToFile(geometry, filePath, colorInfo);
+
+        await DxfWriter.WriteToFileAsync(geometry, filePath, colorInfo);
     }
 
     /// <summary>
