@@ -34,18 +34,16 @@ public class GeoJsonDataSource : MemoryDataSource
 
     public override string ToString() => $"{nameof(GeoJsonDataSource)}";
 
-    public override Task SaveChangesAsync()
+    public override async Task SaveChangesAsync()
     {
         if (!string.IsNullOrWhiteSpace(_fileName))
         {
-            _webMercatorFeatureSet.SaveAsGeoJson(_fileName, _isLongitudeFirst);
+            await _webMercatorFeatureSet.SaveAsGeoJson(_fileName, _isLongitudeFirst);
         }
 
         _webMercatorFeatureSet.ApplyChanges();
 
-        UpdateHasPendingChanges();
-
-        return Task.CompletedTask;
+        UpdateHasPendingChanges(); 
     }
      
     /// <summary>

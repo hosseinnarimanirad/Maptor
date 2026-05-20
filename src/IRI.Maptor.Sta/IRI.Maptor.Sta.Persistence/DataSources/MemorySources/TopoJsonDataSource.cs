@@ -22,6 +22,15 @@ public class TopoJsonDataSource : MemoryDataSource
 
     private readonly int _sourceSrid;
 
+    // ************************************************************************
+    //// The official TopoJSON specification follows the same recommendation as
+    //// GeoJSON. It defines the order of elements for a position as x, y, z.
+    //// For geographic coordinates (using the WGS84 datum), this translates
+    //// to longitude, latitude, altitude but for the sake of flexibility we
+    //// my support reodering of esting/northing in future
+    // ************************************************************************
+    //private readonly bool _isLongitudeFirst;
+
     public override DataSourceKind DataSourceKind => DataSourceKind.TopoJson;
 
     private TopoJsonDataSource(string fileName, List<Feature<Point>> features, int sourceSrid)
