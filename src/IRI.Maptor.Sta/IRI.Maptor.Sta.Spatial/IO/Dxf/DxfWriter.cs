@@ -123,7 +123,12 @@ public class DxfWriter
         //WriteClasses(sb);      
         WriteTables(sb, bbox);
         WriteBlocks(sb);
-        WriteObjects(sb);
+
+        // Extract SRID from first non‑null geometry
+        int? srid = geometries.FirstOrDefault(g => g != null)?.Srid;
+        string? wkt = srid.HasValue ? SridHelper.AsSrsBase(srid.Value)?.AsEsriCrsWkt() : null;
+
+        WriteObjects(sb, wkt);
         WriteEntities(sb, geometries, colorInfo);
         WriteEndOfFile(sb);
 
@@ -145,7 +150,12 @@ public class DxfWriter
         //WriteClasses(sb);     
         WriteTables(sb, bbox);
         WriteBlocks(sb);
-        WriteObjects(sb);
+
+        // Extract SRID from first non‑null geometry
+        int? srid = geometries.FirstOrDefault(g => g != null)?.Srid;
+        string? wkt = srid.HasValue ? SridHelper.AsSrsBase(srid.Value)?.AsEsriCrsWkt() : null;
+
+        WriteObjects(sb, wkt);
         WriteEntities(sb, geometries, getColorInfo);
         WriteEndOfFile(sb);
 
@@ -903,7 +913,7 @@ public class DxfWriter
         sb.AppendLine("ENDSEC");
     }
 
-    private static void WriteObjects(StringBuilder sb)
+    private static void WriteObjects(StringBuilder sb, string? wkt)
     {
         sb.AppendLine("0");
         sb.AppendLine("SECTION");
@@ -927,6 +937,15 @@ public class DxfWriter
         sb.AppendLine("ACAD_LAYOUT");
         sb.AppendLine("350");
         sb.AppendLine("F");
+
+        // ESRI_PRJ entry (if WKT is provided)
+        if (!string.IsNullOrEmpty(wkt))
+        {
+            sb.AppendLine("3");
+            sb.AppendLine("ESRI_PRJ");
+            sb.AppendLine("350");
+            sb.AppendLine("A5");   // handle of the XRECORD
+        }
 
         // GROUP dictionary (empty)
         sb.AppendLine("0");
@@ -1084,7 +1103,7 @@ public class DxfWriter
         sb.AppendLine("76");
         sb.AppendLine("0");
         sb.AppendLine("330");
-        sb.AppendLine("1F");   // points to *Model_Space block record
+        sb.AppendLine("1F");
 
         // LAYOUT for Layout1 (Paper Space) – handle 59
         sb.AppendLine("0");
@@ -1210,7 +1229,7 @@ public class DxfWriter
         sb.AppendLine("76");
         sb.AppendLine("0");
         sb.AppendLine("330");
-        sb.AppendLine("1B");   // points to *Paper_Space block record
+        sb.AppendLine("1B");
 
         // LAYOUT for Layout2 (Paper Space0) – handle 5E
         sb.AppendLine("0");
@@ -1336,7 +1355,22 @@ public class DxfWriter
         sb.AppendLine("76");
         sb.AppendLine("0");
         sb.AppendLine("330");
-        sb.AppendLine("5D");   // points to *Paper_Space0 block record
+        sb.AppendLine("5D");
+
+        // XRECORD for ESRI_PRJ (if WKT provided)
+        if (!string.IsNullOrEmpty(wkt))
+        {
+            sb.AppendLine("0");
+            sb.AppendLine("XRECORD");
+            sb.AppendLine("5");
+            sb.AppendLine("A5");
+            sb.AppendLine("100");
+            sb.AppendLine("AcDbXrecord");
+            sb.AppendLine("280");
+            sb.AppendLine("1");
+            sb.AppendLine("1");
+            sb.AppendLine(wkt);
+        }
 
         sb.AppendLine("0");
         sb.AppendLine("ENDSEC");
