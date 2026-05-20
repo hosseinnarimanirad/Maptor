@@ -64,6 +64,18 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
 
     public ObservableCollection<SrsOption> AvailableSrsOptions { get; }
 
+    private SrsOption _sourceLayerSrs;
+    public SrsOption SourceLayerSrs
+    {
+        get { return _sourceLayerSrs; }
+        set
+        {
+            _sourceLayerSrs = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
     private SrsOption? _selectedSrsOption;
     public SrsOption? SelectedSrsOption
     {
@@ -136,11 +148,12 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
     //public LayerSettings_ExportResult? Result { get; private set; }
 
 
-    public LayerSettings_VectorExportViewModel(MapViewModelBase viewModel, VectorLayer layer, /*IDialogService dialogService,*/ int? initialSrid = null)
+    public LayerSettings_VectorExportViewModel(MapViewModelBase viewModel, VectorLayer layer)
     {
         //_dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
         _utmOption = new SrsOption { DisplayName = "UTM (user-defined zone)", IsUtm = true };
+
         AvailableSrsOptions = new ObservableCollection<SrsOption>
         {
             new() { FixedSrid = SridHelper.GeodeticWGS84, DisplayName = "WGS84 (EPSG:4326)", IsUtm = false },
@@ -152,11 +165,19 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
 
         SelectedDataSourceKind = DataSourceKind.Shapefile;
 
-        if (initialSrid.HasValue && initialSrid.Value > 0)
-            ApplyInitialSrid(initialSrid.Value);
+        if (layer.DataSource is not null)
+        {
+            ApplyInitialSrid(layer.DataSource.OriginalSrid);
+        }
+        else
+        {
+
+        }
 
         ExportCommand = new RelayCommand(async _ => await Export(), _ => CanExport());
+
         this.viewModel = viewModel;
+
         this.layer = layer;
     }
 
@@ -184,12 +205,21 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
             SelectedSrsOption = _utmOption;
             UtmZone = utmZoneInfo.zone!.Value;
             IsNorthHemisphere = utmZoneInfo.isNorthHemisphere!.Value;
+
+            var hemishpereNote = utmZoneInfo.isNorthHemisphere == true ? "N" : "S";
+
+            SourceLayerSrs = new SrsOption() { IsUtm = true, FixedSrid = srid, DisplayName = $"UTM Zone {utmZoneInfo.zone} ({hemishpereNote})" };
         }
         else
         {
             var match = AvailableSrsOptions.FirstOrDefault(o => !o.IsUtm && o.FixedSrid == srid);
+
             if (match != null)
+            {
                 SelectedSrsOption = match;
+
+                SourceLayerSrs = match;
+            }
         }
     }
 

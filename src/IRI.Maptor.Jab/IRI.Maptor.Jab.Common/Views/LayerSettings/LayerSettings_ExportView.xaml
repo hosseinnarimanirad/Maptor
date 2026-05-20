@@ -55,7 +55,7 @@
         <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconMaterial Kind="SelectMarker" Style="{StaticResource securityIconMaterial}"/>
-                <TextBlock Text="{Binding [dialog_export_exportModeTItle], Source={StaticResource Localization}}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
+                <TextBlock Text="{Binding [dialog_export_exportModeTitle], Source={StaticResource Localization}}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
                 <RadioButton GroupName="B"
                              Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form}"
                              IsChecked="{Binding SelectedExportMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorCommon:ExportFeatureMode.All}}"
@@ -73,50 +73,30 @@
 
 
         <!-- Spatial Reference Switch -->
-        <!--<Border Grid.Row="2" Style="{StaticResource cardBorder}"
+        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
                 Visibility="{Binding ShowSrsOptions, Converter={StaticResource boolToVisibilityConverter}}">
             <StackPanel Orientation="Horizontal">
-                -->
-        <!--<Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="32"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>-->
-        <!--
-                <iconPacks:PackIconPhosphorIcons Kind="VectorTwo" Style="{StaticResource securityIconPhosphor}"/>
-               
+
+                <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
+                <TextBlock Text="{Binding [dialog_export_sourceSrs], Source={StaticResource Localization}, StringFormat={}{0}:}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
+
+                <TextBlock Text="{Binding SourceLayerSrs.DisplayName}"
+                           FontFamily="Seoge UI"
+                           FlowDirection="LeftToRight" FontWeight="Normal" VerticalAlignment="Center" Margin="4"/>
             </StackPanel>
-            -->
-        <!--</Grid>-->
-        <!--
-        </Border>-->
+        </Border>
 
         <!--Spatial Reference Combobox-->
         <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
-            Visibility="{Binding ShowSrsOptions, Converter={StaticResource boolToVisibilityConverter}}">
-            <!--<Border.Visibility>
-                <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
-                    <Binding Path="ShowSrsOptions"/>
-            </Border.Visibility>-->
-            <!--<Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="32"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>-->
+                Visibility="{Binding ShowSrsOptions, Converter={StaticResource boolToVisibilityConverter}}">
             <DockPanel>
                 <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
+                <TextBlock Text="{Binding [dialog_export_targetSrs], Source={StaticResource Localization}, StringFormat={}{0}:}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
+
                 <mahApp:ToggleSwitch DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Normal}"
                       OnContent="{Binding [dialog_export_enabledProjection], Source={StaticResource Localization}}"
                       OffContent="{Binding [dialog_export_disabledProjection], Source={StaticResource Localization}}"
                       IsOn="{Binding IsProjectionEnabled}" />
-                <!--<ComboBox Margin="4" BorderThickness="0" FontSize="12" MinHeight="35" FontWeight="Normal"
-                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch"
-                            FlowDirection="LeftToRight" mahApp:ControlsHelper.CornerRadius="4"
-                            IsEnabled="{Binding IsProjectionEnabled}"
-                            ItemsSource="{Binding AvailableSrsOptions}"
-                            DisplayMemberPath="DisplayName"
-                            SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"
-                          Visibility="{Binding IsProjectionEnabled, Converter={StaticResource boolToVisibilityConverter}}"/>-->
                 <ComboBox Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
                             DisplayMemberPath="DisplayName"                            
                             ItemsSource="{Binding AvailableSrsOptions}"
@@ -128,7 +108,6 @@
 
         <!-- UTM Zone (visible when UTM selected) -->
         <Border Grid.Row="4" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
-            <!--Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">-->
             <Border.Visibility>
                 <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
                     <Binding Path="ShowSrsOptions"/>
@@ -136,16 +115,10 @@
                     <Binding Path="IsUtmSelected"/>
                 </MultiBinding>
             </Border.Visibility>
-            <!--<Grid Margin="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="32"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>-->
             <DockPanel>
                 <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="MapTrifoldFill" Style="{StaticResource securityIconPhosphor}"/>
-                <TextBlock DockPanel.Dock="Left" Text="{Binding [srs_utmZone_full], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+                <TextBlock DockPanel.Dock="Left" Text="{Binding [srs_utmZone_full], Source={StaticResource Localization}, StringFormat='{}{0}:'}"
+                           />
 
                 <ToggleButton DockPanel.Dock="Right" IsChecked="{Binding IsNorthHemisphere, Mode=TwoWay}"
                             Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" FlowDirection="LeftToRight"
@@ -172,10 +145,11 @@
                         </iconPacks:PackIconPhosphorIcons.Style>
                     </iconPacks:PackIconPhosphorIcons>
                 </ToggleButton>
-                <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="10,0,2,0" FontWeight="Normal">
+                <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="10,0,2,0"
+                           Foreground="Black">
                     <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
+                            <!--<Setter Property="FontFamily" Value="{StaticResource iranSans}"/>-->
                             <!-- Default (northern hemisphere) -->
                             <Setter Property="Text" Value="{Binding [srs_northernHemisphere], Source={StaticResource Localization}}"/>
                             <Style.Triggers>
