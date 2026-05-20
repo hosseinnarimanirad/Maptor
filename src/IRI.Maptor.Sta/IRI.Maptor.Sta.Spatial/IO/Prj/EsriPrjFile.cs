@@ -292,25 +292,64 @@ public class EsriPrjFile
 
     private int GetCrsSrid()
     {
+        // First, try to get SRID from AUTHORITY node
         var crsAuthorityNode = _rootNode.Children.SingleOrDefault(i => i.Name.EqualsIgnoreCase(_authority));
 
         var srid = GetSridFromAuthorityNode(crsAuthorityNode);
 
-        ////1399.06.13
-        ////in the authority field was not available
-        if (srid == 0)
+        if (srid != 0)
+            return srid;
+
+        // Second, try to detect UTM projections
+        if (Type == EsriSrType.Projcs && ProjectionName.EqualsIgnoreCase(_esriTransverseMercator))
         {
-            if (Type == EsriSrType.Geogcs && Ellipsoid.Name.EqualsIgnoreCase(_spheroidWgs84))
-            {
-                srid = SridHelper.GeodeticWGS84;
-            }
-            else if (Type == EsriSrType.Projcs && ProjectionName.EqualsIgnoreCase(_esriWebMercator))
-            {
-                srid = SridHelper.WebMercator;
-            }
+            srid = TryDetectUtm();
+        }
+        // try Geodetic WGS84
+        else if (Type == EsriSrType.Geogcs && Ellipsoid.Name.EqualsIgnoreCase(_spheroidWgs84))
+        {
+            srid = SridHelper.GeodeticWGS84;
+        }
+        // try web mercator
+        else if (Type == EsriSrType.Projcs && ProjectionName.EqualsIgnoreCase(_esriWebMercator))
+        {
+            srid = SridHelper.WebMercator;
         }
 
         return srid;
+    }
+
+    private int TryDetectUtm()
+    {
+        // UTM specific parameters
+        double scaleFactor = GetParameter(EsriPrjParameterType.ScaleFactor, double.NaN);
+        double falseEasting = GetParameter(EsriPrjParameterType.FalseEasting, double.NaN);
+        double centralMeridian = GetParameter(EsriPrjParameterType.CentralMeridian, double.NaN);
+        double falseNorthing = GetParameter(EsriPrjParameterType.FalseNorthing, double.NaN);
+
+        // UTM has scale factor 0.9996 and false easting 500000
+        const double eps = 1e-8;
+
+        if (Math.Abs(scaleFactor - 0.9996) < eps && Math.Abs(falseEasting - 500000.0) < eps && !double.IsNaN(centralMeridian))
+        {
+            // Determine zone from central meridian: zone = (centralMeridian + 183) / 6
+            int zone = (int)Math.Round((centralMeridian + 183.0) / 6.0);
+
+            if (zone >= 1 && zone <= 60)
+            {
+                // Hemisphere: North if false northing is 0, South if 10000000
+                if (Math.Abs(falseNorthing) < eps)
+                {
+                    return 32600 + zone;   // EPSG for UTM north
+                }
+                else if (Math.Abs(falseNorthing - 10000000.0) < eps)
+                {
+                    return 32700 + zone;   // EPSG for UTM south
+                }
+            }
+        }
+
+        return 0;
     }
 
     private int GetEllipsoidSrid()
@@ -427,7 +466,7 @@ public class EsriPrjFile
     {
         var parameters = _rootNode.Children.Where(i => i.Name.EqualsIgnoreCase(_parameter)).ToList();
 
-        return double.Parse(parameters.Single(i => i.Values.First().EqualsIgnoreCase(parameterName)).Values.Skip(1).First());
+        return double.Parse(parameters.Single(i => i.Values.First().EqualsIgnoreCase(parameterName)).Values.Skip(1).First(), CultureInfo.InvariantCulture);
     }
 
     #endregion
