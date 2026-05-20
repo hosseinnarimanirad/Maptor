@@ -81,7 +81,7 @@ public static class DefaultActions
     {
         var view = new IRI.Maptor.Jab.Controls.Dialogs.LayerSettingsDialogView();
 
-        LayerSettings_VectorExportViewModel exportViewModel = new LayerSettings_VectorExportViewModel(viewModel, layer as VectorLayer,/*viewModel.DialogService,*/ null)
+        LayerSettings_VectorExportViewModel exportViewModel = new LayerSettings_VectorExportViewModel(viewModel, layer as VectorLayer)
         {
             // in the case of webapi setting it to layer.DataSource.DataSourceKind is not good
             //SelectedDataSourceKind = /*layer.DataSource?.DataSourceKind ??*/ DataSourceKind.Shapefile

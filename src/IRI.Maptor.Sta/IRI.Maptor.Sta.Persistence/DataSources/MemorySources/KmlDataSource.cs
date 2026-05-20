@@ -21,6 +21,8 @@ public class KmlDataSource : MemoryDataSource
 
     public override DataSourceKind DataSourceKind => DataSourceKind.Kml;
 
+    public override int OriginalSrid => SridHelper.GeodeticWGS84;
+
     private KmlDataSource(string fileName, List<Feature<Point>> features)
         : base(features, resetIds: true, kind: DataSourceKind.Kml)
     {

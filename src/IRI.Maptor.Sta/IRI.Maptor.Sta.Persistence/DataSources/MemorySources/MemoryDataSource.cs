@@ -61,24 +61,24 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         Initialize(features, resetIds);
     }
 
-    public MemoryDataSource(List<Feature<Point>> features, bool resetIds = true, DataSourceKind kind = DataSourceKind.Other) : this()
+    public MemoryDataSource(List<Feature<Point>> webMercatorFeatures, bool resetIds = true, DataSourceKind kind = DataSourceKind.Other) : this()
     { 
         _dataSourceKind = kind;
 
-        Initialize(features, resetIds);
+        Initialize(webMercatorFeatures, resetIds);
     }
 
-    private void Initialize(List<Feature<Point>> features, bool resetIds)
+    private void Initialize(List<Feature<Point>> webMercatorFeatures, bool resetIds)
     {
         if (resetIds)
         {
-            foreach (var item in features)
+            foreach (var item in webMercatorFeatures)
                 item.Id = GetNewId();
         }
 
-        _webMercatorFeatureSet = FeatureSet<Point>.Create(string.Empty, features);
+        _webMercatorFeatureSet = FeatureSet<Point>.Create(string.Empty, webMercatorFeatures);
 
-        GeometryType = features.FirstOrDefault()?.GeometryType;
+        GeometryType = webMercatorFeatures.FirstOrDefault()?.GeometryType;
 
         this.Fields = _webMercatorFeatureSet.Fields/*Field.FromDictionary(features?.FirstOrDefault().Attributes)*/;
 

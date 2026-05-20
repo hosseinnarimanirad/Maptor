@@ -23,6 +23,8 @@ public class KmzDataSource : MemoryDataSource
 
     public override DataSourceKind DataSourceKind => DataSourceKind.Kmz;
 
+    public override int OriginalSrid => SridHelper.GeodeticWGS84;
+
     private KmzDataSource(string fileName, List<Feature<Point>> features)
         : base(features, resetIds: true, kind: DataSourceKind.Kmz)
     {

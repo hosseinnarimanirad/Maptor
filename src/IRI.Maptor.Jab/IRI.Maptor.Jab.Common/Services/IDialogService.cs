@@ -100,7 +100,7 @@ public interface IDialogService
     // ********************************************************************
     //                          DXF Open Dialog
     // ********************************************************************
-    Task<DxfOpenDialogResult?> ShowDxfOpenDialogAsync(object? ownerWindow = null, int? initialSrid = null);
+    Task<DxfOpenDialogResult?> ShowDxfOpenDialogAsync(object? ownerWindow = null);
 
     // ********************************************************************
     //                          CSV/TSV Open Dialog

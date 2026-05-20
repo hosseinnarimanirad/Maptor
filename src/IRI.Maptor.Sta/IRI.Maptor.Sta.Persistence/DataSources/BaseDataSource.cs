@@ -29,6 +29,11 @@ public abstract class BaseDataSource : IDataSource
 
     public abstract int Srid { get; /*protected set;*/ }
 
+    // in the case of dxfDataSource, csvDataSource, shapefileDataSource
+    // this indicate the original srid of the file that is used when
+    // saving to the file
+    public virtual int OriginalSrid => Srid;
+
     #region Status Flags
 
     public event EventHandler<bool>? IsInitializingChanged;

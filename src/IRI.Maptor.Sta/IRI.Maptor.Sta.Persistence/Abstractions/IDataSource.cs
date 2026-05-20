@@ -17,6 +17,8 @@ public interface IDataSource
 
     int Srid { get; }
 
+    int OriginalSrid { get; }
+
     ///// <summary>
     ///// True while the data source is performing a long-running operation
     ///// such as loading or saving.

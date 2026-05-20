@@ -785,11 +785,10 @@ public class DefaultDialogService : IDialogService
     /// Shows the DXF open dialog where user selects file, SRS, and views sample points.
     /// </summary>
     /// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
-    /// <param name="initialSrid">Optional initial SRID to pre-select (e.g. from CommandParameter).</param>
     /// <returns>The result with FilePath and SelectedSrid if user confirmed, or null if cancelled.</returns>
-    public Task<DxfOpenDialogResult?> ShowDxfOpenDialogAsync(object? ownerWindow = null, int? initialSrid = null)
+    public Task<DxfOpenDialogResult?> ShowDxfOpenDialogAsync(object? ownerWindow = null)
     {
-        var viewModel = new DxfOpenDialogViewModel(this, initialSrid);
+        var viewModel = new DxfOpenDialogViewModel(this);
 
         var dialog = new DxfOpenDialogView();
 

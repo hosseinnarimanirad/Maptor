@@ -28,6 +28,8 @@ public class TextDataSource : MemoryDataSource
 
     public override DataSourceKind DataSourceKind => _dataSourceKind/*DataSourceKind.Csv*/;
 
+    public override int OriginalSrid => _sourceSrid;
+
     private TextDataSource(string fileName,
                             List<Feature<Point>> features,
                             int sourceSrid,

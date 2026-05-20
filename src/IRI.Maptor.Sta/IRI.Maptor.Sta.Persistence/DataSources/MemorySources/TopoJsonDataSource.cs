@@ -31,6 +31,8 @@ public class TopoJsonDataSource : MemoryDataSource
     // ************************************************************************
     //private readonly bool _isLongitudeFirst;
 
+    public override int OriginalSrid => _sourceSrid;
+
     public override DataSourceKind DataSourceKind => DataSourceKind.TopoJson;
 
     private TopoJsonDataSource(string fileName, List<Feature<Point>> features, int sourceSrid)

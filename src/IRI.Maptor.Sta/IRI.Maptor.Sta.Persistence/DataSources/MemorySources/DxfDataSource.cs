@@ -19,10 +19,17 @@ public class DxfDataSource : MemoryDataSource
 
     public override DataSourceKind DataSourceKind => DataSourceKind.Dxf;
 
-    private DxfDataSource(string fileName, List<Feature<Point>> features)
-        : base(features, resetIds: true, kind: DataSourceKind.Kml)
+    public override int OriginalSrid => _sourceSrid;
+
+    private DxfDataSource(
+        string fileName,
+        List<Feature<Point>> features,
+        int sourceSrid)
+        : base(features, resetIds: true, kind: DataSourceKind.Dxf)
     {
         _fileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
+
+        _sourceSrid = sourceSrid;
     }
 
     public override string ToString() => $"{nameof(DxfDataSource)}";
@@ -49,14 +56,17 @@ public class DxfDataSource : MemoryDataSource
     /// Creates a KmlDataSource from the given file path and features.
     /// Features should already be in Web Mercator.
     /// </summary>
-    public static DxfDataSource Create(string fileName, List<Feature<Point>> features)
-    {
+    public static DxfDataSource Create(
+        string fileName,
+        List<Feature<Point>> features,
+        int sourceSrid)
+    {        
         if (string.IsNullOrWhiteSpace(fileName))
             throw new ArgumentNullException(nameof(fileName));
 
         if (features.IsNullOrEmpty())
             throw new ArgumentException("At least one feature is required.", nameof(features));
 
-        return new DxfDataSource(fileName, features);
+        return new DxfDataSource(fileName, features, sourceSrid);
     }
 }
