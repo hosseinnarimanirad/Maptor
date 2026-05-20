@@ -1506,7 +1506,7 @@
   <data name="dialog_export_exportModeSelected" xml:space="preserve">
     <value>عوارض انتخابی</value>
   </data>
-  <data name="dialog_export_exportModeTItle" xml:space="preserve">
+  <data name="dialog_export_exportModeTitle" xml:space="preserve">
     <value>عوارض مشمول:</value>
   </data>
   <data name="dialog_export_enabledProjection" xml:space="preserve">
@@ -1522,7 +1522,7 @@
     <value>پیام</value>
   </data>
   <data name="dialog_export_disabledProjection" xml:space="preserve">
-    <value>سیستم مختصات پیش‌فرض</value>
+    <value>سیستم مختصات لایه</value>
   </data>
   <data name="dialog_layerSettings_title" xml:space="preserve">
     <value>تنظیمات لایه</value>
@@ -1637,5 +1637,11 @@
   </data>
   <data name="message_error_unknown" xml:space="preserve">
     <value>خطای ناشناخته</value>
+  </data>
+  <data name="dialog_export_sourceSrs" xml:space="preserve">
+    <value>سیستم مختصات لایه</value>
+  </data>
+  <data name="dialog_export_targetSrs" xml:space="preserve">
+    <value>سیستم مختصات خروجی</value>
   </data>
 </root>

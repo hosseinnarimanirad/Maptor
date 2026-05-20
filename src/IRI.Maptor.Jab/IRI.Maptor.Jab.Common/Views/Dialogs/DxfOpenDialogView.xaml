@@ -63,10 +63,9 @@
                 </Button>
             </Grid>
         </Border>
-
-
+ 
         <!-- Spatial Reference -->
-        <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+        <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" IsEnabled="{Binding CanUserChooseSrs}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -82,7 +81,7 @@
         </Border>
 
         <!-- UTM Zone (visible when UTM selected) -->
-        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
+        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" IsEnabled="{Binding CanUserChooseSrs}"
                 Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
@@ -126,7 +125,8 @@
 
 
         <!-- Sample points -->
-        <TextBlock Grid.Row="3" Text="{Binding [dialog_dxfOpen_samplePoints], Source={StaticResource Localization}}" Margin="0,12,0,4"
+        <TextBlock Grid.Row="3" Text="{Binding [dialog_dxfOpen_samplePoints], Source={StaticResource Localization}}"
+                   Margin="4,2,0,4"
                    FontSize="12" Foreground="{DynamicResource MahApps.Brushes.Gray2}"/>
         <DataGrid Grid.Row="4" Margin="0,0,0,8"
                   ItemsSource="{Binding SamplePoints}"

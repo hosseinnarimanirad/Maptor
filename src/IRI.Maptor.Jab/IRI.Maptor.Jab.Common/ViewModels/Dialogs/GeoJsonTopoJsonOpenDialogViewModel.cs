@@ -194,17 +194,25 @@ public class GeoJsonTopoJsonOpenDialogViewModel : DialogViewModelBase
 
     private void ApplyInitialSrid(int srid)
     {
-        if (srid >= 32601 && srid <= 32660)
+        //if (srid >= 32601 && srid <= 32660)
+        //{
+        //    SelectedSrsOption = _utmOption;
+        //    UtmZone = srid - 32600;
+        //    IsNorthHemisphere = true;
+        //}
+        //else if (srid >= 32701 && srid <= 32760)
+        //{
+        //    SelectedSrsOption = _utmOption;
+        //    UtmZone = srid - 32700;
+        //    IsNorthHemisphere = false;
+        //}
+        var utmZoneInfo = SridHelper.GetUtmZone(srid);
+
+        if (utmZoneInfo.isUtm)
         {
             SelectedSrsOption = _utmOption;
-            UtmZone = srid - 32600;
-            IsNorthHemisphere = true;
-        }
-        else if (srid >= 32701 && srid <= 32760)
-        {
-            SelectedSrsOption = _utmOption;
-            UtmZone = srid - 32700;
-            IsNorthHemisphere = false;
+            UtmZone = utmZoneInfo.zone!.Value;
+            IsNorthHemisphere = utmZoneInfo.isNorthHemisphere!.Value;
         }
         else
         {

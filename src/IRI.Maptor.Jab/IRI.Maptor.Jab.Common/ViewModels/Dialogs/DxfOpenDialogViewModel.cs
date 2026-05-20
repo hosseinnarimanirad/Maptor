@@ -24,45 +24,24 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
 {
     //private readonly IDialogService _dialogService;
     private readonly SrsOption _utmOption;
-    private string _filePath = string.Empty;
-    private SrsOption? _selectedSrsOption;
-    private int _utmZone = 39;
-    private bool _utmHemisphereNorth = true;
-    private bool _isLoading;
+
+
     private ObservableCollection<PointDisplay> _samplePoints = new();
-
-    public DxfOpenDialogViewModel(IDialogService dialogService, int? initialSrid = null)
+    public ObservableCollection<PointDisplay> SamplePoints
     {
-        DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-
-        _utmOption = new SrsOption { DisplayName = "UTM (user-defined zone)", IsUtm = true };
-        AvailableSrsOptions = new ObservableCollection<SrsOption>
+        get => _samplePoints;
+        set
         {
-            new() { FixedSrid = SridHelper.GeodeticWGS84, DisplayName = "WGS84 (EPSG:4326)", IsUtm = false },
-            _utmOption,
-            new() { FixedSrid = SridHelper.WebMercator, DisplayName = "Web Mercator (EPSG:3857)", IsUtm = false }
-        };
-
-        SelectedSrsOption = AvailableSrsOptions[0];
-
-        if (initialSrid.HasValue && initialSrid.Value > 0)
-            ApplyInitialSrid(initialSrid.Value);
-
-        BrowseCommand = new RelayCommand(async _ => await BrowseAsync());
-        OpenCommand = new RelayCommand(_ => Open(), _ => CanOpen());
-        CancelCommand = new RelayCommand(_ => Cancel());
-        RemoveFileCommand = new RelayCommand(_ => RemoveSelectedFile(), _ => !string.IsNullOrEmpty(FilePath));
-
+            _samplePoints = value ?? new ObservableCollection<PointDisplay>();
+            RaisePropertyChanged();
+        }
     }
+
 
     public ObservableCollection<SrsOption> AvailableSrsOptions { get; }
 
-    public string FilePath
-    {
-        get => _filePath;
-        set { _filePath = value ?? string.Empty; RaisePropertyChanged(); }
-    }
 
+    private SrsOption? _selectedSrsOption;
     public SrsOption? SelectedSrsOption
     {
         get => _selectedSrsOption;
@@ -75,6 +54,28 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
         }
     }
 
+
+    private string _filePath = string.Empty;
+    public string FilePath
+    {
+        get => _filePath;
+        set { _filePath = value ?? string.Empty; RaisePropertyChanged(); }
+    }
+
+
+    private bool _canUserChooseSrs = true;
+    public bool CanUserChooseSrs
+    {
+        get { return _canUserChooseSrs; }
+        set
+        {
+            _canUserChooseSrs = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private int _utmZone = 39;
     public int UtmZone
     {
         get => _utmZone;
@@ -86,12 +87,14 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
         }
     }
 
+
+    private bool _isNorthHemisphere = true;
     public bool IsNorthHemisphere
     {
-        get => _utmHemisphereNorth;
+        get => _isNorthHemisphere;
         set
         {
-            _utmHemisphereNorth = value;
+            _isNorthHemisphere = value;
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(EffectiveSelectedSrid));
         }
@@ -106,50 +109,67 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
             if (SelectedSrsOption == null)
                 return 0;
             if (SelectedSrsOption.IsUtm)
-                return _utmHemisphereNorth ? SridHelper.GetUtmSrid(_utmZone) : SridHelper.GetUtmSouthSrid(_utmZone);
+                return _isNorthHemisphere ? SridHelper.GetUtmSrid(_utmZone) : SridHelper.GetUtmSouthSrid(_utmZone);
             return SelectedSrsOption.FixedSrid ?? 0;
         }
     }
 
+
+    private bool _isLoading;
     public bool IsLoading
     {
         get => _isLoading;
         set { _isLoading = value; RaisePropertyChanged(); }
     }
 
-    public ObservableCollection<PointDisplay> SamplePoints
+    public DxfOpenDialogViewModel(IDialogService dialogService)
     {
-        get => _samplePoints;
-        set
+        DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+
+        _utmOption = new SrsOption { DisplayName = "UTM (user-defined zone)", IsUtm = true };
+        AvailableSrsOptions = new ObservableCollection<SrsOption>
         {
-            _samplePoints = value ?? new ObservableCollection<PointDisplay>();
-            RaisePropertyChanged();
-        }
+            new() { FixedSrid = SridHelper.GeodeticWGS84, DisplayName = "WGS84 (EPSG:4326)", IsUtm = false },
+            _utmOption,
+            new() { FixedSrid = SridHelper.WebMercator, DisplayName = "Web Mercator (EPSG:3857)", IsUtm = false }
+        };
+
+        SelectedSrsOption = AvailableSrsOptions[0];
+
+        BrowseCommand = new RelayCommand(async _ => await BrowseAsync());
+        OpenCommand = new RelayCommand(_ => Open(), _ => CanOpen());
+        CancelCommand = new RelayCommand(_ => Cancel());
+        RemoveFileCommand = new RelayCommand(_ => RemoveSelectedFile(), _ => !string.IsNullOrEmpty(FilePath));
+
     }
 
-    public RelayCommand BrowseCommand { get; }
-    public RelayCommand OpenCommand { get; }
-    public RelayCommand CancelCommand { get; }
-
-    public RelayCommand RemoveFileCommand { get; }
 
     private void ApplyInitialSrid(int srid)
-    {
-        if (srid >= 32601 && srid <= 32660)
+    { 
+        var utmZoneInfo = SridHelper.GetUtmZone(srid);
+
+        if (utmZoneInfo.isUtm)
         {
             SelectedSrsOption = _utmOption;
-            UtmZone = srid - 32600;
-            IsNorthHemisphere = true;
+            UtmZone = utmZoneInfo.zone!.Value;
+            IsNorthHemisphere = utmZoneInfo.isNorthHemisphere!.Value;
         }
-        else if (srid >= 32701 && srid <= 32760)
-        {
-            SelectedSrsOption = _utmOption;
-            UtmZone = srid - 32700;
-            IsNorthHemisphere = false;
-        }
+        //if (srid >= 32601 && srid <= 32660)
+        //{
+        //    SelectedSrsOption = _utmOption;
+        //    UtmZone = srid - 32600;
+        //    IsNorthHemisphere = true;
+        //}
+        //else if (srid >= 32701 && srid <= 32760)
+        //{
+        //    SelectedSrsOption = _utmOption;
+        //    UtmZone = srid - 32700;
+        //    IsNorthHemisphere = false;
+        //}
         else
         {
             var match = AvailableSrsOptions.FirstOrDefault(o => !o.IsUtm && o.FixedSrid == srid);
+
             if (match != null)
                 SelectedSrsOption = match;
         }
@@ -182,7 +202,15 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
                 preview.SamplePoints.Select((p, i) => new PointDisplay { Index = i + 1, X = p.X, Y = p.Y }));
 
             if (preview.DetectedSrid > 0)
+            {
                 ApplyInitialSrid(preview.DetectedSrid);
+
+                CanUserChooseSrs = false;
+            }
+            else
+            {
+                CanUserChooseSrs = true;
+            }
         }
         catch (Exception ex)
         {
@@ -230,7 +258,7 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
 
 
     private async Task ShowExceptionMessageAsync(Exception ex)
-        {
+    {
         if (ex is DomainException domainException)
         {
             await this.DialogService.ShowErrorMessage(domainException);
@@ -248,5 +276,17 @@ public class DxfOpenDialogViewModel : DialogViewModelBase
             await this.DialogService.ShowErrorMessage(new MaptorUnknownException(ex.Message));
         }
     }
+
+    #region Commands
+
+    public RelayCommand BrowseCommand { get; }
+
+    public RelayCommand OpenCommand { get; }
+
+    public RelayCommand CancelCommand { get; }
+
+    public RelayCommand RemoveFileCommand { get; }
+
+    #endregion
 
 }

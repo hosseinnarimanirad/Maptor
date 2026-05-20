@@ -1550,7 +1550,7 @@
   <data name="dialog_export_exportModeSelected" xml:space="preserve">
     <value>Selected</value>
   </data>
-  <data name="dialog_export_exportModeTItle" xml:space="preserve">
+  <data name="dialog_export_exportModeTitle" xml:space="preserve">
     <value>Features to export:</value>
   </data>
   <data name="dialog_export_enabledProjection" xml:space="preserve">
@@ -1684,5 +1684,11 @@
   </data>
   <data name="message_error_unknown" xml:space="preserve">
     <value>Unknown error</value>
+  </data>
+  <data name="dialog_export_sourceSrs" xml:space="preserve">
+    <value>Source SRS</value>
+  </data>
+  <data name="dialog_export_targetSrs" xml:space="preserve">
+    <value>Target SRS</value>
   </data>
 </root>

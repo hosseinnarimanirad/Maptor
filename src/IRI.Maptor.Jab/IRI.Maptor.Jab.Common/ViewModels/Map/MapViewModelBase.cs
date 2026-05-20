@@ -4500,10 +4500,8 @@ public abstract class MapViewModelBase : ViewModelBase
     public virtual async Task AddDxffile(int? maxSizeInKB)
     {
         IsBusy = true;
-
-        int? initialSrid = null;
-
-        var result = await DialogService.ShowDxfOpenDialogAsync(ownerWindow: null, initialSrid);
+         
+        var result = await DialogService.ShowDxfOpenDialogAsync(ownerWindow: null);
 
         if (result == null)
         {
@@ -4573,7 +4571,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
                 features = features.Select(f => f.Project(SrsBases.WebMercator/*new WebMercator()*/)).ToList();
 
-                var dataSource = DxfDataSource.Create(fileName, features);
+                var dataSource = DxfDataSource.Create(fileName, features, sourceSrid);
 
                 //var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
 

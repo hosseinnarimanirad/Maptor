@@ -1224,9 +1224,9 @@ namespace IRI.Maptor.Jab.Common.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Features to export:.
         /// </summary>
-        public static string dialog_export_exportModeTItle {
+        public static string dialog_export_exportModeTitle {
             get {
-                return ResourceManager.GetString("dialog_export_exportModeTItle", resourceCulture);
+                return ResourceManager.GetString("dialog_export_exportModeTitle", resourceCulture);
             }
         }
         
@@ -1236,6 +1236,24 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string dialog_export_outputFileFormat {
             get {
                 return ResourceManager.GetString("dialog_export_outputFileFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source SRS.
+        /// </summary>
+        public static string dialog_export_sourceSrs {
+            get {
+                return ResourceManager.GetString("dialog_export_sourceSrs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target SRS.
+        /// </summary>
+        public static string dialog_export_targetSrs {
+            get {
+                return ResourceManager.GetString("dialog_export_targetSrs", resourceCulture);
             }
         }
         
