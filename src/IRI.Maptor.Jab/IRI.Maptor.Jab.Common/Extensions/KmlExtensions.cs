@@ -19,7 +19,7 @@ namespace IRI.Maptor.Extensions;
 
 public static class KmlExtensions
 {
-    private static readonly HttpClient HttpClient = new();
+    private static readonly HttpClient HttpClient = new() { Timeout = TimeSpan.FromSeconds(30) };
 
     private static readonly XNamespace Kml = "http://www.opengis.net/kml/2.2";
 

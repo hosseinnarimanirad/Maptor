@@ -39,7 +39,7 @@ public static class KmlWriter
 
         await File.WriteAllTextAsync(filePath, kmlString);
     }
-     
+
     /// <summary>
     /// Writes features with attributes to a KML file
     /// </summary>
@@ -82,7 +82,7 @@ public static class KmlWriter
         Func<Point, Point>? projectToGeodeticFunc = null)
     {
         XNamespace kml = KmlNamespace;
-        
+
         var kmlDoc = new XDocument(
             new XDeclaration("1.0", "UTF-8", null),
             new XElement(kml + "kml",
@@ -105,7 +105,7 @@ public static class KmlWriter
         Func<Point, Point>? projectToGeodeticFunc = null)
     {
         XNamespace kml = KmlNamespace;
-        
+
         var kmlDoc = new XDocument(
             new XDeclaration("1.0", "UTF-8", null),
             new XElement(kml + "kml",
@@ -149,7 +149,7 @@ public static class KmlWriter
             CreatePlacemarkElement(g, $"Feature {index + 1}", null, projectToGeodeticFunc, kml)).ToArray();
 
         var document = new XElement(kml + "Document", placemarks);
-        
+
         if (!string.IsNullOrWhiteSpace(documentName))
         {
             document.AddFirst(new XElement(kml + "name", documentName));
@@ -177,7 +177,7 @@ public static class KmlWriter
             CreatePlacemarkElementFromPointZ(g, $"Feature {index + 1}", null, projectToGeodeticFunc, kml)).ToArray();
 
         var document = new XElement(kml + "Document", placemarks);
-        
+
         if (!string.IsNullOrWhiteSpace(documentName))
         {
             document.AddFirst(new XElement(kml + "name", documentName));
@@ -212,7 +212,7 @@ public static class KmlWriter
         }).ToArray();
 
         var document = new XElement(kml + "Document", placemarks);
-        
+
         if (!string.IsNullOrWhiteSpace(documentName))
         {
             document.AddFirst(new XElement(kml + "name", documentName));
@@ -426,12 +426,15 @@ public static class KmlWriter
     private static void AddStyleElements(XElement placemark, KmlFeature feature, XNamespace kml)
     {
         var style = feature.Style;
+        bool styleUrlAdded = false;
 
+        // 1. Process explicit Style object
         if (style != null)
         {
-            if (!style.StyleUrl.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(style.StyleUrl))
             {
                 placemark.Add(new XElement(kml + "styleUrl", style.StyleUrl));
+                styleUrlAdded = true;
             }
 
             if (style.InlineStyle != null)
@@ -440,34 +443,46 @@ public static class KmlWriter
                 EnsureIconStyle(inlineClone, style, kml);
                 placemark.Add(inlineClone);
             }
-            else if (style.NormalStyle == null && !style.IconHref.IsNullOrEmpty())
+            else if (style.NormalStyle == null && !string.IsNullOrEmpty(style.IconHref))
             {
                 placemark.Add(CreateIconStyleElement(style.IconHref!, style.IconScale, kml));
             }
-
-            return;
         }
 
-        if (feature.Attributes == null)
+        // 2. If no styleUrl from Style object, try attributes
+        if (!styleUrlAdded && feature.Attributes != null)
         {
-            return;
+            // Prefer explicit KmlStyleUrl
+            if (feature.Attributes.TryGetValue(KmlAttributeKeys.StyleUrl, out var styleUrlObj) &&
+                styleUrlObj is string styleUrl && !string.IsNullOrWhiteSpace(styleUrl))
+            {
+                placemark.Add(new XElement(kml + "styleUrl", styleUrl));
+                styleUrlAdded = true;
+            }
+            // Otherwise use KmlStyleId (add missing '#')
+            else if (feature.Attributes.TryGetValue(KmlAttributeKeys.StyleId, out var styleIdObj) &&
+                     styleIdObj is string styleId && !string.IsNullOrWhiteSpace(styleId))
+            {
+                placemark.Add(new XElement(kml + "styleUrl", "#" + styleId));
+                styleUrlAdded = true;
+            }
         }
 
-        if (!feature.Attributes.TryGetValue(KmlAttributeKeys.IconHref, out var iconHrefObj) ||
-            iconHrefObj is not string iconHref ||
-            string.IsNullOrWhiteSpace(iconHref))
+        // 3. Fallback: create an inline icon style from attributes (if no styleUrl was added)
+        if (feature.Attributes == null) return;
+
+        if (!styleUrlAdded &&
+            feature.Attributes.TryGetValue(KmlAttributeKeys.IconHref, out var iconHrefObj) &&
+            iconHrefObj is string iconHref && !string.IsNullOrWhiteSpace(iconHref))
         {
-            return;
+            double? iconScale = null;
+            if (feature.Attributes.TryGetValue(KmlAttributeKeys.IconScale, out var scaleString) &&
+                double.TryParse(scaleString, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsedScale))
+            {
+                iconScale = parsedScale;
+            }
+            placemark.Add(CreateIconStyleElement(iconHref, iconScale, kml));
         }
-
-        double? iconScale = null;
-        if (feature.Attributes.TryGetValue(KmlAttributeKeys.IconScale, out var scaleString) &&
-            double.TryParse(scaleString, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsedScale))
-        {
-            iconScale = parsedScale;
-        }
-
-        placemark.Add(CreateIconStyleElement(iconHref, iconScale, kml));
     }
 
     private static void EnsureIconStyle(XElement styleElement, KmlStyleMetadata metadata, XNamespace kml)
