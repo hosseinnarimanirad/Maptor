@@ -30,6 +30,8 @@ public class ClusteredGeoTaggedImageSource : RasterDataSource
         }
     }
 
+    public override string SourceAddress => ImageDirectory; 
+
     private ClusteredGeoTaggedImageSource(string imageDirectory)
     {
         this._imageDirectory = imageDirectory;

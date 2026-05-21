@@ -1644,4 +1644,10 @@
   <data name="dialog_export_targetSrs" xml:space="preserve">
     <value>سیستم مختصات خروجی</value>
   </data>
+  <data name="dialog_common_browseFolder" xml:space="preserve">
+    <value>باز کردن پوشه...</value>
+  </data>
+  <data name="layerSettings_general_sourceAddress" xml:space="preserve">
+    <value>منبع داده</value>
+  </data>
 </root>

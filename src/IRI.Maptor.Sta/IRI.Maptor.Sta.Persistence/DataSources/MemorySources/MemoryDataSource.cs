@@ -24,6 +24,8 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
     private int _uniqueId = 0;
 
+    public override string SourceAddress => $"Memory Data Source";
+
     protected readonly DataSourceKind _dataSourceKind;
     public override DataSourceKind DataSourceKind => _dataSourceKind;
 

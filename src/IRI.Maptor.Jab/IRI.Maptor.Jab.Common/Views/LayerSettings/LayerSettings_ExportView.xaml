@@ -73,8 +73,7 @@
 
 
         <!-- Spatial Reference Switch -->
-        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
-                Visibility="{Binding ShowSrsOptions, Converter={StaticResource boolToVisibilityConverter}}">
+        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <StackPanel Orientation="Horizontal">
 
                 <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>

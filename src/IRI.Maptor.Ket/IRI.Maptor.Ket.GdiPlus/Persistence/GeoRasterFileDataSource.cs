@@ -1,12 +1,8 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Model;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
-using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Ket.GdiPersistence;
 
@@ -22,6 +18,8 @@ public class GeoRasterFileDataSource : RasterDataSource
 
     private DataSourceKind _dataSourceKind = DataSourceKind.Worldfile;
     public override DataSourceKind DataSourceKind => _dataSourceKind;
+
+    public override string SourceAddress => _imageFileName ?? string.Empty;
 
     public GeoRasterFileDataSource()
     {

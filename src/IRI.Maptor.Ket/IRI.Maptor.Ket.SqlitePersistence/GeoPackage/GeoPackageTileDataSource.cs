@@ -28,6 +28,8 @@ public class GeoPackageTileDataSource : RasterDataSource, IDisposable
 
     //public int Srid => SridHelper.WebMercator;
 
+    public override string SourceAddress => $"GeoPackage Tile Data Source: {_tableName}";
+
     /// <summary>
     /// Gets the layer metadata
     /// </summary>

@@ -34,6 +34,8 @@ public abstract class BaseDataSource : IDataSource
     // saving to the file
     public virtual int OriginalSrid => Srid;
 
+    public abstract string SourceAddress { get; }
+
     #region Status Flags
 
     public event EventHandler<bool>? IsInitializingChanged;

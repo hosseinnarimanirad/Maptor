@@ -33,6 +33,8 @@ public class TopoJsonDataSource : MemoryDataSource
 
     public override int OriginalSrid => _sourceSrid;
 
+    public override string SourceAddress => $"TopoJson file: {_fileName}";
+
     public override DataSourceKind DataSourceKind => DataSourceKind.TopoJson;
 
     private TopoJsonDataSource(string fileName, List<Feature<Point>> features, int sourceSrid)

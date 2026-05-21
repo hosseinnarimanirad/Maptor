@@ -1,16 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
-using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.IO.Gpx;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using IRI.Maptor.Sta.Common.IO.Gpx;
-using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
@@ -20,6 +17,8 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 public class GpxDataSource : MemoryDataSource
 {
     private readonly string _fileName;
+
+    public override string SourceAddress => $"Gpx file: {_fileName}";
 
     public override DataSourceKind DataSourceKind => DataSourceKind.Gpx;
 

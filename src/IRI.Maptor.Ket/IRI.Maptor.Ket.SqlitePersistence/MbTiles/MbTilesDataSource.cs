@@ -15,10 +15,13 @@ public class MbTilesDataSource : RasterDataSource, IDisposable
     private readonly MbTilesReader _reader;
     private List<int>? _availableZoomLevels;
     private bool _disposed;
+    private string _filePath;
 
     //public BoundingBox WebMercatorExtent { get; private set; }
 
     //public int Srid => SridHelper.WebMercator;
+
+    public override string SourceAddress => $"MbTiles: {_filePath}";
 
     public MbTilesMetadata? Metadata => _reader.Metadata;
 
@@ -29,6 +32,8 @@ public class MbTilesDataSource : RasterDataSource, IDisposable
     /// <param name="openImmediately">If true, opens the database immediately</param>
     public MbTilesDataSource(string filePath, bool openImmediately = true)
     {
+        _filePath = filePath;
+
         _reader = new MbTilesReader(filePath);
 
         if (openImmediately)

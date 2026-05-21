@@ -21,6 +21,8 @@ public class WebApiDataSource : MemoryDataSource
 
     protected WebApiSourceParameter _parameters;
 
+    public override string SourceAddress => $"WebApi: {_parameters?.ListUrl ?? string.Empty}";
+
     public string? IdColumnName { get; set; }
 
     protected WebApiDataSource() : base()

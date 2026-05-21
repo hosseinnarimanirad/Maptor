@@ -19,6 +19,8 @@ public class KmlDataSource : MemoryDataSource
 {
     private readonly string _fileName;
 
+    public override string SourceAddress => $"Kml file: {_fileName}";
+
     public override DataSourceKind DataSourceKind => DataSourceKind.Kml;
 
     public override int OriginalSrid => SridHelper.GeodeticWGS84;

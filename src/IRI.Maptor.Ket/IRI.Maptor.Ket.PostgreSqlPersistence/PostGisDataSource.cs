@@ -23,6 +23,10 @@ public class PostGisDataSource : VectorDataSource/*<Feature<Point>>*/
 
     private string _schema;
 
+    private string _serverName;
+
+    public override string SourceAddress => $"Postgres Server: {_serverName}";
+
     public PostGisDataSource(
         string server,
         string user,
@@ -34,9 +38,10 @@ public class PostGisDataSource : VectorDataSource/*<Feature<Point>>*/
         string schema = "public")
         : this(PostgreSqlInfrastructure.GetConnectionString(server, user, password, database, port), tableName, spatialColumnName, schema)
     {
+        _serverName = server;
     }
 
-    public PostGisDataSource(string connectionString, string tableName, string spatialColumnName, string schema = "public") : base(new List<Field>())
+    private PostGisDataSource(string connectionString, string tableName, string spatialColumnName, string schema = "public") : base(new List<Field>())
     {
         this._connectionString = connectionString;
         //string.Format("Server={0}; UID={1}; PWD={2}; Database={3}; Port={4}", server, user, password, database, port);

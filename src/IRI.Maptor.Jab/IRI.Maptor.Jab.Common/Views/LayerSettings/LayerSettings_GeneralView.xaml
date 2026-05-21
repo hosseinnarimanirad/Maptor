@@ -44,8 +44,27 @@
             </StackPanel>
         </Border>
 
-        <!--source-->
+        <!--source address-->
         <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" >
+            <DockPanel LastChildFill="True">
+                <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
+                <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_sourceAddress], Source={StaticResource Localization}}" Width="Auto"/>
+                <Button DockPanel.Dock="Right"
+                        Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
+                        Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="FolderOpen" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"  />
+                        <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                                   Text="{Binding [dialog_common_browseFolder], Source={StaticResource Localization}}"/>
+                    </StackPanel>
+                </Button>
+                <TextBlock Text="{Binding DataSource.SourceAddress}" HorizontalAlignment="Stretch" Width="auto"
+                           FlowDirection="LeftToRight" FontFamily="Seoge UI "/>
+            </DockPanel>
+        </Border>
+
+        <!--source type-->
+        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" >
             <DockPanel LastChildFill="True">
                 <iconPacks:PackIconMaterial Kind="Layers" Style="{StaticResource securityIconMaterial}"/>
                 <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_sourceType], Source={StaticResource Localization}}" />
@@ -61,10 +80,9 @@
                 <TextBlock Text="{Binding DataSource.DataSourceKind}" HorizontalAlignment="Left"/>
             </DockPanel>
         </Border>
-
-
+  
         <!--feature type-->
-        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+        <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <DockPanel LastChildFill="False">
                 <iconPacks:PackIconPhosphorIcons Kind="ShapesLight" Style="{StaticResource securityIconPhosphor}"
                                   ToolTip="{Binding [dialog_csvTsvOpen_geometryType],Source={StaticResource Localization}}"/>
@@ -123,8 +141,10 @@
                     <Grid>
                         <Ellipse Style="{StaticResource ModeHighlightEllipse}"
                                     Tag="{x:Static maptorJab:SpatialModelMode.Point}"/>
-                        <iconPacks:PackIconPhosphorIcons Kind="DotOutlineThin" Foreground="White"
-                                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Viewbox>
+                            <iconPacks:PackIconPhosphorIcons Kind="DotOutlineThin" Foreground="White"
+                                          VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20" Padding="0"/>
+                        </Viewbox>
                     </Grid>
                 </StackPanel>
             </DockPanel>
@@ -132,7 +152,7 @@
 
 
         <!--opacity-->
-        <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+        <Border Grid.Row="4" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <DockPanel >
                 <iconPacks:PackIconMaterial Kind="SquareOpacity" Style="{StaticResource securityIconMaterial}" />
                 <TextBlock DockPanel.Dock="Left" Text="{Binding [layerSettings_general_opacity], Source={StaticResource Localization}}"/>

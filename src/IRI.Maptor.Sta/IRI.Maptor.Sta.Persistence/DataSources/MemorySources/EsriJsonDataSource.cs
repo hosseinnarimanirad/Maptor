@@ -19,7 +19,9 @@ public class EsriJsonDataSource : MemoryDataSource
 
     private readonly int _sourceSrid;
 
-    public override DataSourceKind DataSourceKind => DataSourceKind.Dxf;
+    public override string SourceAddress => $"Esri Json file: {_fileName}";
+
+    public override DataSourceKind DataSourceKind => DataSourceKind.EsriJson;
 
     private EsriJsonDataSource(string fileName, List<Feature<Point>> features)
         : base(features, resetIds: true, kind: DataSourceKind.Kml)

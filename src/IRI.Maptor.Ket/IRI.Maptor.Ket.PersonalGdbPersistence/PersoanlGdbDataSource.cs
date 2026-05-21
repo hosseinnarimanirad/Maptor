@@ -61,6 +61,9 @@ public class PersoanlGdbDataSource : VectorDataSource
     private int _srid;
     public override int Srid { get => _srid; /*protected set;*/ }
 
+
+    public override string SourceAddress => _mdbFileName;
+
     public string SearchColumn { get; set; }
 
     public PersoanlGdbDataSource(

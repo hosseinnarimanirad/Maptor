@@ -16,6 +16,8 @@ public class UtmGridDataSource : VectorDataSource
 {
     private readonly static List<Field> _fields = new List<Field>();
 
+    public override string SourceAddress => $"Utm Grid";
+
     public int UtmZone { get; set; }
 
     public UtmIndexType Type { get; protected set; }

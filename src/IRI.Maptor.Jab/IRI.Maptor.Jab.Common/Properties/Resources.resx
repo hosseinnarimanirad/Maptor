@@ -1691,4 +1691,10 @@
   <data name="dialog_export_targetSrs" xml:space="preserve">
     <value>Target SRS</value>
   </data>
+  <data name="dialog_common_browseFolder" xml:space="preserve">
+    <value>Browse Folder...</value>
+  </data>
+  <data name="layerSettings_general_sourceAddress" xml:space="preserve">
+    <value>Source Address</value>
+  </data>
 </root>

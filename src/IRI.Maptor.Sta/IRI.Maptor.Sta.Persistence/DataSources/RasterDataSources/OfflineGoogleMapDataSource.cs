@@ -21,7 +21,10 @@ public class OfflineGoogleMapDataSource : RasterDataSource
     public List<ImageSource> ImageSources { get => _imageSources; private set => _imageSources = value; }
 
     //public int Srid => SridHelper.WebMercator;
-     
+
+    public override string SourceAddress => $"Offline Google Map Data Source";
+
+
     public OfflineGoogleMapDataSource(List<ImageSource> imageSources)
     { 
         _imageSources = imageSources;

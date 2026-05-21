@@ -59,10 +59,10 @@ public class DxfWriter
 
         await File.WriteAllTextAsync(filePath, content);
 
-        if (geometry is not null)
-        {
-            WritePrj(filePath, geometry.Srid);
-        }
+        //if (geometry is not null)
+        //{
+        //    WritePrj(filePath, geometry.Srid);
+        //}
 
         //return filePath;
     }
@@ -73,12 +73,12 @@ public class DxfWriter
 
         await File.WriteAllTextAsync(filePath, content);
 
-        var srid = geometries?.FirstOrDefault().Srid;
+        //var srid = geometries?.FirstOrDefault().Srid;
 
-        if (srid is not null)
-        {
-            WritePrj(filePath, srid.Value);
-        }
+        //if (srid is not null)
+        //{
+        //    WritePrj(filePath, srid.Value);
+        //}
 
         //return filePath;
     }
@@ -91,19 +91,19 @@ public class DxfWriter
 
         var srid = geometries?.FirstOrDefault().Srid;
 
-        if (srid is not null)
-        {
-            WritePrj(filePath, srid.Value);
-        }
+        //if (srid is not null)
+        //{
+        //    WritePrj(filePath, srid.Value);
+        //}
 
         return filePath;
     }
 
-    private static void WritePrj(string filePath, int srid)
-    {
-        string prjPath = Path.ChangeExtension(filePath, ".prj");
-        File.WriteAllText(prjPath, SridHelper.AsSrsBase(srid)?.AsEsriCrsWkt());
-    }
+    //private static void WritePrj(string filePath, int srid)
+    //{
+    //    string prjPath = Path.ChangeExtension(filePath, ".prj");
+    //    File.WriteAllText(prjPath, SridHelper.AsSrsBase(srid)?.AsEsriCrsWkt());
+    //}
 
     public static string Write(Geometry<Point> geometry, DxfColorInfo? colorInfo)
     {

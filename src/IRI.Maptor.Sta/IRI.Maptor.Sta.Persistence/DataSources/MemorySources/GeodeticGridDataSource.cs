@@ -20,6 +20,8 @@ public class GeodeticGridDataSource : VectorDataSource
 
     public BoundingBox GeodeticWgs84Extent { get; set; }
 
+    public override string SourceAddress => $"Geodetic Grid Data Source";
+
     public override BoundingBox WebMercatorExtent
     {
         get => GeodeticWgs84Extent.Transform(MapProjects.GeodeticWgs84ToWebMercator);

@@ -26,6 +26,8 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
     private int _srid;
     public override int Srid { get; /*protected set;*/ }
 
+    public override string SourceAddress => $"GeoPackage Data Source: {_tableName}";
+
     /// <summary>
     /// Gets the layer metadata
     /// </summary>

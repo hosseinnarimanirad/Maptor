@@ -23,6 +23,8 @@ public class GeoJsonDataSource : MemoryDataSource
 
     private readonly bool _isLongitudeFirst;
 
+    public override string SourceAddress => $"GeoJson file: {_fileName}";
+
     public override DataSourceKind DataSourceKind => DataSourceKind.GeoJson;
 
     private GeoJsonDataSource(string fileName, List<Feature<Point>> features, bool isLongitudeFirst = true)

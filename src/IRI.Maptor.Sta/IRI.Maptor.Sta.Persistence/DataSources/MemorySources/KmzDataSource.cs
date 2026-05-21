@@ -21,6 +21,8 @@ public class KmzDataSource : MemoryDataSource
 {
     private readonly string _fileName;
 
+    public override string SourceAddress => $"Kmz file: {_fileName}";
+
     public override DataSourceKind DataSourceKind => DataSourceKind.Kmz;
 
     public override int OriginalSrid => SridHelper.GeodeticWGS84;

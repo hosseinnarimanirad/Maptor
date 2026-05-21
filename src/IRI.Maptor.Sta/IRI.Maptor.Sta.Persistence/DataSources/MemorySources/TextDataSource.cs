@@ -26,6 +26,8 @@ public class TextDataSource : MemoryDataSource
 
     private readonly bool _useFirstLineAsHeader;
 
+    public override string SourceAddress => $"{DataSourceKind} file: {_fileName}";
+
     public override DataSourceKind DataSourceKind => _dataSourceKind/*DataSourceKind.Csv*/;
 
     public override int OriginalSrid => _sourceSrid;

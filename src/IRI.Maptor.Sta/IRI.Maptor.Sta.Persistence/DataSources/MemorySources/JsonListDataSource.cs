@@ -14,6 +14,8 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public class JsonListDataSource : MemoryDataSource
 {
+    public override string SourceAddress => $"Json List file";
+
     public override DataSourceKind DataSourceKind => DataSourceKind.GeoJson;
 
     public override GeometryType? GeometryType

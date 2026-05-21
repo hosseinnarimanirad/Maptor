@@ -11,6 +11,7 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Common.Enums;
+using System.IO;
 
 namespace IRI.Maptor.Sta.Persistence.RasterDataSources;
 
@@ -27,7 +28,11 @@ public class ZippedImagePyramidDataSource : RasterDataSource
 
     //public int Srid => SridHelper.WebMercator;
 
+    public override string SourceAddress => $"Zipped Image Pyramid: {_worldFilePyramidFileName}";
+
     public override DataSourceKind DataSourceKind => DataSourceKind.ZippedImagePyramid;
+
+    string _worldFilePyramidFileName;
 
     System.IO.Compression.ZipArchive _archive;
 
@@ -61,6 +66,8 @@ public class ZippedImagePyramidDataSource : RasterDataSource
     {
         if (!System.IO.File.Exists(worldFilePyramidFileName))
             throw new NotImplementedException();
+
+        _worldFilePyramidFileName = worldFilePyramidFileName;
 
         _archive = System.IO.Compression.ZipFile.OpenRead(worldFilePyramidFileName);
 

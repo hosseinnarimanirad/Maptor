@@ -60,6 +60,8 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
 
     public override int Srid { get => GetSrid(); /*protected set => _ = value;*/ }
 
+    public override string SourceAddress => $"SQL Server Source: {_tableName}";
+
     protected SqlServerDataSource() : base(new List<Field>())
     {
 

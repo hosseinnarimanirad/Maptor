@@ -889,6 +889,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Browse Folder....
+        /// </summary>
+        public static string dialog_common_browseFolder {
+            get {
+                return ResourceManager.GetString("dialog_common_browseFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string dialog_common_cancel {
@@ -2524,6 +2533,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string layerSettings_general_opacity {
             get {
                 return ResourceManager.GetString("layerSettings_general_opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source Address.
+        /// </summary>
+        public static string layerSettings_general_sourceAddress {
+            get {
+                return ResourceManager.GetString("layerSettings_general_sourceAddress", resourceCulture);
             }
         }
         

@@ -20,6 +20,8 @@ namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public class ShapefileDataSource : MemoryDataSource
 {
+    public override string SourceAddress => $"Shapefile: {_shapefileName}";
+
     public override DataSourceKind DataSourceKind => DataSourceKind.Shapefile;
 
     private string _shapefileName;

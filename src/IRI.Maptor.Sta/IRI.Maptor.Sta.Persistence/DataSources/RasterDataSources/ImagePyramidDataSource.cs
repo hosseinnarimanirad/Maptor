@@ -9,8 +9,14 @@ namespace IRI.Maptor.Sta.Persistence.RasterDataSources;
 //Note: Extent is NaN for this class
 public class ImagePyramidDataSource : OfflineGoogleMapDataSource
 {
+    private string _directory;
+
+    public override string SourceAddress => $"Image pyramid: {_directory}";
+
     public ImagePyramidDataSource(string directory, Func<int, int, int, string>? makeFileName = null) : base(new List<ImageSource>())
     {
+        _directory = directory;
+
         var availableZoomLevels = System.IO.Directory.EnumerateDirectories(directory, "*.*", System.IO.SearchOption.TopDirectoryOnly).ToList();
 
         if (makeFileName == null)
