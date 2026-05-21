@@ -628,7 +628,7 @@ public static class KmlWriter
         }
 
         return new XElement(kml + "LineString",
-            new XElement(kml + "coordinates", FormatCoordinates(points)));
+            new XElement(kml + "coordinates", FormatCoordinates(points, isRing: false)));
     }
 
     private static XElement CreatePolygonElement(
@@ -653,7 +653,7 @@ public static class KmlWriter
 
             polygon.Add(new XElement(kml + "outerBoundaryIs",
                 new XElement(kml + "LinearRing",
-                    new XElement(kml + "coordinates", FormatCoordinates(points)))));
+                    new XElement(kml + "coordinates", FormatCoordinates(points, isRing: true)))));
         }
 
         // Inner boundaries (holes)
@@ -672,7 +672,7 @@ public static class KmlWriter
 
                     polygon.Add(new XElement(kml + "innerBoundaryIs",
                         new XElement(kml + "LinearRing",
-                            new XElement(kml + "coordinates", FormatCoordinates(points)))));
+                            new XElement(kml + "coordinates", FormatCoordinates(points, isRing: true)))));
                 }
             }
         }
@@ -745,7 +745,7 @@ public static class KmlWriter
         }
 
         return new XElement(kml + "LineString",
-            new XElement(kml + "coordinates", FormatCoordinates(pointsZ.Cast<Point>().ToList())));
+            new XElement(kml + "coordinates", FormatCoordinates(pointsZ, isRing: false)));
     }
 
     private static XElement CreatePolygonElementFromPointZ(
@@ -776,7 +776,7 @@ public static class KmlWriter
 
             polygon.Add(new XElement(kml + "outerBoundaryIs",
                 new XElement(kml + "LinearRing",
-                    new XElement(kml + "coordinates", FormatCoordinates(pointsZ.Cast<Point>().ToList())))));
+                    new XElement(kml + "coordinates", FormatCoordinates(pointsZ, isRing: true)))));
         }
 
         // Inner boundaries (holes)
@@ -801,7 +801,7 @@ public static class KmlWriter
 
                     polygon.Add(new XElement(kml + "innerBoundaryIs",
                         new XElement(kml + "LinearRing",
-                            new XElement(kml + "coordinates", FormatCoordinates(pointsZ.Cast<Point>().ToList())))));
+                            new XElement(kml + "coordinates", FormatCoordinates(pointsZ, isRing: true)))));
                 }
             }
         }
@@ -829,20 +829,39 @@ public static class KmlWriter
 
     #region Private Helper Methods - Coordinate Formatting
 
-    private static string FormatCoordinate(Point point)
+    private static string FormatCoordinate<T>(T point) where T : IPoint
     {
         // KML format: longitude,latitude[,altitude]
         if (point is PointZ pointZ)
         {
             return string.Format(CultureInfo.InvariantCulture, "{0:G17},{1:G17},{2:G17}", pointZ.X, pointZ.Y, pointZ.Z);
         }
+
         return string.Format(CultureInfo.InvariantCulture, "{0:G17},{1:G17}", point.X, point.Y);
     }
 
-    private static string FormatCoordinates(List<Point> points)
+    private static string FormatCoordinates<T>(List<T> points, bool isRing) where T : IPoint
     {
+        if (points.IsNullOrEmpty())
+            return string.Empty;
+
+        var pts = points;
+
+        if (isRing && points.Count > 0)
+        {
+            var first = points[0];
+
+            var last = points[points.Count - 1];
+
+            // Compare by value; you may use a small tolerance if needed
+            if (!first.Equals(last))
+            {
+                pts = new List<T>(points) { first };
+            }
+        }
+
         // KML coordinates are separated by spaces
-        return string.Join(" ", points.Select(p => FormatCoordinate(p)));
+        return string.Join(" ", pts.Select(p => FormatCoordinate(p)));
     }
 
     #endregion
