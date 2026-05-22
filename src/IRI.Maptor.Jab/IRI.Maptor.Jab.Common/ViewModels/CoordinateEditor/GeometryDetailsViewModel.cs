@@ -279,7 +279,7 @@ public class GeometryDetailsViewModel : Notifier
                 case "TopoJSON":
                     if (_geometry is Geometry<Point> topoGeom && !topoGeom.IsNullOrEmpty())
                     {
-                        var topoJson = TopoJsonConverter.FromGeometry(topoGeom);
+                        var topoJson = TopoJsonConverter.FromFeatures([topoGeom.AsFeature()]);
                         StringRepresentation = JsonSerializer.Serialize(topoJson);
                     }
                     else

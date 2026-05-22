@@ -4,8 +4,10 @@ namespace IRI.Maptor.Sta.Spatial.IO.TopoJson;
 
 public class TopoJsonLineString : TopoJsonGeometry
 {
-    [JsonPropertyName("type")]
-    public override string Type => "LineString";
+
+    //[JsonPropertyName("type")]
+    [JsonIgnore]
+    public override string Type { get; set; } //=> "LineString";
 
     /// <summary>
     /// Arc indices that form this line string
@@ -13,5 +15,10 @@ public class TopoJsonLineString : TopoJsonGeometry
     /// </summary>
     [JsonPropertyName("arcs")]
     public List<int> Arcs { get; set; } = new();
+
+    public TopoJsonLineString()
+    {
+        Type = "LineString";
+    }
 }
 

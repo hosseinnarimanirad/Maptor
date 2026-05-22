@@ -156,7 +156,7 @@ public partial class MainWindow : Window
 
                 foreach (var kvp in geometries)
                 {
-                    var geometry = kvp.Value;
+                    var geometry = kvp.Value.TheGeometry;
                     info.AppendLine($"   • {kvp.Key}: {geometry.Type}");
                     info.AppendLine($"      Points: {geometry.TotalNumberOfPoints}");
 
@@ -201,7 +201,7 @@ public partial class MainWindow : Window
                 if (geometries.Count > 0)
                 {
                     var firstGeometry = geometries.First().Value;
-                    var wkt = firstGeometry.AsWkt();
+                    var wkt = firstGeometry.TheGeometry.AsWkt();
 
                     // Save WKT to a text file next to the TopoJSON file
                     var wktFileName = Path.ChangeExtension(fileName, ".wkt");

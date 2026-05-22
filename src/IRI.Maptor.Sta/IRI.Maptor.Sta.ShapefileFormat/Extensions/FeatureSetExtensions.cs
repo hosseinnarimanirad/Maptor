@@ -50,7 +50,8 @@ public static class FeatureSetExtensions
                 break;
 
             case DataSourceKind.TopoJson:
-                throw new NotImplementedException("FeatureSetExtensions > Export!");
+                await targetFeatureSet.SaveAsTopoJson(filePath);
+                break;
 
             case DataSourceKind.EsriJson:
                 await SaveAsEsriJson(targetFeatureSet, filePath);

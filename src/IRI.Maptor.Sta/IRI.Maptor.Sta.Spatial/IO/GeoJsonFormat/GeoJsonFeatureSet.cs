@@ -1,10 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
+using System.Text.Json.Serialization;
+
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
-using System.Threading.Tasks;
-using System.Text.Json.Serialization;
 
 namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 
@@ -37,11 +34,11 @@ public class GeoJsonFeatureSet
     [JsonPropertyName("features")]
     public List<GeoJsonFeature>? Features { get; set; }
 
-    /// <summary>
-    /// Gets or sets the coordinate reference system. Note: CRS is deprecated in RFC 7946.
-    /// </summary>
-    [JsonPropertyName("crs")]
-    public GeoJsonCrs? Crs { get; set; }
+    ///// <summary>
+    ///// Gets or sets the coordinate reference system. Note: CRS is deprecated in RFC 7946.
+    ///// </summary>
+    //[JsonPropertyName("crs")]
+    //public GeoJsonCrs? Crs { get; set; }
 
     #endregion
 

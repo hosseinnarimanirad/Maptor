@@ -186,7 +186,7 @@ public static class Sta_GeometryExtensions
         if (isRing)
         {
             // 1400.02.04
-            // In GeoJson polygons the last point must be repeated
+            // In GeoJson polygons, the last point must be repeated
             result = new double[numberOfPoints + 1][];
 
             result[numberOfPoints] = GetGeoJsonObjectPoint<T>(lineStringOrRing.Points[0], isLongitudeFirst);

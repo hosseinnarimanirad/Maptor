@@ -51,7 +51,7 @@ public class GeoJsonLineString : GeoJsonBase
     /// </summary>
     [JsonIgnore] public override bool HasM => GeoJson.DetectCoordinateDimension(Coordinates) >= 4;
 
-       public GeoJsonLineString() => Type = GeoJson.LineString;
+    public GeoJsonLineString() => Type = GeoJson.LineString;
 
     /// <summary>
     /// Determines whether this LineString is null or empty.

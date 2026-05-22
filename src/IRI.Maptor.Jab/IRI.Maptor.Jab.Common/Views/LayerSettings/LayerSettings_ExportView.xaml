@@ -47,6 +47,8 @@
                              IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.GeoJson}}" />
                 <RadioButton GroupName="A" Content="EsriJson" Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form.Latin}"
                              IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.EsriJson}}" />
+                <RadioButton GroupName="A" Content="TopoJson" Style="{StaticResource IRI.Maptor.Styles.RadioButton.Form.Latin}"
+                            IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.TopoJson}}" />
                 <!--<RadioButton GroupName="A" IsChecked="{Binding SelectedDataSourceKind, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorDsKind:DataSourceKind.TopoJson}}" Content="TopoJson"/>-->
             </StackPanel>
         </Border>

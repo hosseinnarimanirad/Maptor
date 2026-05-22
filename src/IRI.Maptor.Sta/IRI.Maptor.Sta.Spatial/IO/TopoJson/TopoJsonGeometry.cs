@@ -1,3 +1,4 @@
+using IRI.Maptor.Sta.Common.Common.JsonConverters;
 using System.Text.Json.Serialization;
 
 namespace IRI.Maptor.Sta.Spatial.IO.TopoJson;
@@ -16,7 +17,8 @@ namespace IRI.Maptor.Sta.Spatial.IO.TopoJson;
 public abstract class TopoJsonGeometry
 {
     [JsonPropertyName("type")]
-    public abstract string Type { get; }
+    ////[JsonIgnore]
+    public abstract string Type { get; set; }
 
     [JsonPropertyName("id")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -24,6 +26,7 @@ public abstract class TopoJsonGeometry
 
     [JsonPropertyName("properties")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonConverter(typeof(DictionaryStringObjectConverter))]
     public Dictionary<string, object>? Properties { get; set; }
 }
 

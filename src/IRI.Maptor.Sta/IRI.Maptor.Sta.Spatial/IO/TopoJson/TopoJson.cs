@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -13,6 +14,19 @@ namespace IRI.Maptor.Sta.Spatial.IO.TopoJson;
 /// </summary>
 public static class TopoJson
 {
+    public static readonly JsonSerializerOptions DefaultOptions = new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals,
+        WriteIndented = false,
+        // default; can be overridden per call
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        AllowOutOfOrderMetadataProperties = true,
+    };
+
+
+
+
     /// <summary>
     /// Read TopoJSON from file
     /// </summary>
@@ -28,52 +42,54 @@ public static class TopoJson
     /// </summary>
     public static TopoJsonTopology Parse(string topoJsonString)
     {
-        return JsonHelper.Deserialize<TopoJsonTopology>(topoJsonString)
+        var topology = JsonHelper.Deserialize<TopoJsonTopology>(topoJsonString, DefaultOptions)
                ?? throw new InvalidOperationException("Failed to parse TopoJSON");
+
+        return topology;
     }
 
-    /// <summary>
-    /// Writes a list of Geometry objects to a TopoJSON file, automatically assigning names.
-    /// </summary>
-    /// <param name="geometries">List of geometries to export.</param>
-    /// <param name="fileName">Output file path.</param>
-    /// <param name="objectNamePrefix">Prefix for auto-generated object names (default "geometry").</param>
-    /// <param name="quantize">Whether to apply quantization (default true).</param>
-    /// <param name="quantizationFactor">Quantization factor (default 10000).</param>
-    /// <param name="indented">Whether to produce pretty-printed JSON (default true).</param>
-    public static async Task WriteToFileAsync(
-        IReadOnlyList<Geometry<Point>> geometries,
-        string fileName,
-        string objectNamePrefix = "geometry",
-        bool quantize = true,
-        int quantizationFactor = 10000,
-        bool indented = true)
-    {
-        if (geometries == null || geometries.Count == 0)
-            throw new ArgumentException("The geometries list is null or empty.", nameof(geometries));
+    ///// <summary>
+    ///// Writes a list of Geometry objects to a TopoJSON file, automatically assigning names.
+    ///// </summary>
+    ///// <param name="geometries">List of geometries to export.</param>
+    ///// <param name="fileName">Output file path.</param>
+    ///// <param name="objectNamePrefix">Prefix for auto-generated object names (default "geometry").</param>
+    ///// <param name="quantize">Whether to apply quantization (default true).</param>
+    ///// <param name="quantizationFactor">Quantization factor (default 10000).</param>
+    ///// <param name="indented">Whether to produce pretty-printed JSON (default true).</param>
+    //public static async Task WriteToFileAsync(
+    //    IReadOnlyList<Geometry<Point>> geometries,
+    //    string fileName,
+    //    string objectNamePrefix = "geometry",
+    //    bool quantize = true,
+    //    int quantizationFactor = 10000,
+    //    bool indented = true)
+    //{
+    //    if (geometries == null || geometries.Count == 0)
+    //        throw new ArgumentException("The geometries list is null or empty.", nameof(geometries));
 
-        // Build a dictionary with automatically named objects
-        var namedGeometries = new Dictionary<string, Geometry<Point>>();
+    //    // Build a dictionary with automatically named objects
+    //    var namedGeometries = new Dictionary<string, Geometry<Point>>();
 
-        for (int i = 0; i < geometries.Count; i++)
-        {
-            var geom = geometries[i];
+    //    for (int i = 0; i < geometries.Count; i++)
+    //    {
+    //        var geom = geometries[i];
 
-            if (geom != null && !geom.IsNullOrEmpty())
-            {
-                string name = $"{objectNamePrefix}{i}";
+    //        if (geom != null && !geom.IsNullOrEmpty())
+    //        {
+    //            string name = $"{objectNamePrefix}{i}";
 
-                namedGeometries[name] = geom;
-            }
-        }
+    //            namedGeometries[name] = geom;
+    //        }
+    //    }
 
-        if (namedGeometries.Count == 0)
-            throw new InvalidOperationException("No valid geometries to write.");
+    //    if (namedGeometries.Count == 0)
+    //        throw new InvalidOperationException("No valid geometries to write.");
 
-        var topology = FromGeometries(namedGeometries, quantize, quantizationFactor);
+    //    var topology = FromGeometries(namedGeometries, quantize, quantizationFactor);
 
-        await WriteToFileAsync(topology, fileName, indented);
-    }
+    //    await WriteToFileAsync(topology, fileName, indented);
+    //}
 
     /// <summary>
     /// Writes a list of Feature<Point> objects to a TopoJSON file, preserving attributes and IDs.
@@ -88,12 +104,13 @@ public static class TopoJson
         string fileName,
         bool quantize = true,
         int quantizationFactor = 10000,
-        bool indented = true)
+        bool indented = true,
+        string collectionName = "data")
     {
         if (features == null || features.Count == 0)
             throw new ArgumentException("The features list is null or empty.", nameof(features));
 
-        var topology = TopoJsonConverter.FromFeatures(features, quantize, quantizationFactor);
+        var topology = TopoJsonConverter.FromFeatures(features, quantize, quantizationFactor, collectionName);
 
         await WriteToFileAsync(topology, fileName, indented);
     }
@@ -116,29 +133,29 @@ public static class TopoJson
         return JsonHelper.Serialize(topology, indented);
     }
 
-    /// <summary>
-    /// Convert Geometry to TopoJSON
-    /// </summary>
-    public static TopoJsonTopology FromGeometry(Geometry<Point> geometry, string objectName = "geometry", bool quantize = true, int quantizationFactor = 10000)
-    {
-        return TopoJsonConverter.FromGeometry(geometry, objectName, quantize, quantizationFactor);
-    }
+    ///// <summary>
+    ///// Convert Geometry to TopoJSON
+    ///// </summary>
+    //public static TopoJsonTopology FromGeometry(Geometry<Point> geometry, string objectName = "geometry", bool quantize = true, int quantizationFactor = 10000)
+    //{
+    //    return TopoJsonConverter.FromGeometry(geometry, objectName, quantize, quantizationFactor);
+    //}
 
     /// <summary>
     /// Convert TopoJSON to Geometry
     /// </summary>
-    public static Dictionary<string, Geometry<Point>> ToGeometry(TopoJsonTopology topology, int srid = 4326)
+    public static Dictionary<string, Feature<Point>> ToGeometry(TopoJsonTopology topology, int srid = 4326)
     {
         return TopoJsonConverter.ToGeometry(topology, srid);
     }
 
-    /// <summary>
-    /// Convert multiple geometries to TopoJSON with shared topology
-    /// </summary>
-    public static TopoJsonTopology FromGeometries(Dictionary<string, Geometry<Point>> geometries, bool quantize = true, int quantizationFactor = 10000)
-    {
-        return TopoJsonConverter.FromGeometries(geometries, quantize, quantizationFactor);
-    }
+    ///// <summary>
+    ///// Convert multiple geometries to TopoJSON with shared topology
+    ///// </summary>
+    //public static TopoJsonTopology FromGeometries(Dictionary<string, Geometry<Point>> geometries, bool quantize = true, int quantizationFactor = 10000)
+    //{
+    //    return TopoJsonConverter.FromGeometries(geometries, quantize, quantizationFactor);
+    //}
 
     /// <summary>
     /// Extracts sample points from a TopoJSON topology for preview display.
@@ -154,14 +171,18 @@ public static class TopoJson
             return result;
 
         var geometries = TopoJsonConverter.ToGeometry(topology, srid);
+
         foreach (var kvp in geometries)
         {
             if (result.Count >= maxPoints)
                 break;
             var geom = kvp.Value;
-            if (geom == null || geom.IsNullOrEmpty())
+
+            if (geom == null || geom.TheGeometry.IsNullOrEmpty())
                 continue;
-            var points = geom.GetAllPoints();
+
+            var points = geom.TheGeometry.GetAllPoints();
+
             if (points == null) continue;
             foreach (var p in points)
             {

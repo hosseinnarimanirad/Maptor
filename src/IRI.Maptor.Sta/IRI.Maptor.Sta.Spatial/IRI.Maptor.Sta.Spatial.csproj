@@ -31,8 +31,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="IO\TopoJson\" />
-  </ItemGroup>
-
 </Project>

@@ -127,7 +127,7 @@ public class Feature<T> : IGeometryAware<T> where T : IPoint, new()
         {
             Id = this.Id,
             LabelAttribute = this.LabelAttribute,
-            Key = this.Key
+            Key = this.Key,             
         };
     }
 

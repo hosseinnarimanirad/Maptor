@@ -6,6 +6,18 @@ namespace IRI.Maptor.Sta.Common.Helpers;
 
 public static class JsonHelper
 {
+
+    // Single, reusable options instance with all necessary settings
+    public static readonly JsonSerializerOptions DefaultOptions = new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals,
+        WriteIndented = false,
+        // default; can be overridden per call
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
+
     static readonly JsonSerializerOptions _ignoreNullValue;
 
     static JsonHelper()
@@ -46,11 +58,7 @@ public static class JsonHelper
 
     public static T? Deserialize<T>(string jsonString)
     {
-        return JsonSerializer.Deserialize<T>(jsonString, new JsonSerializerOptions()
-        {
-            PropertyNameCaseInsensitive = true,
-            NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals
-        });
+        return JsonSerializer.Deserialize<T>(jsonString, DefaultOptions);
     }
 
     public static T? Deserialize<T>(string jsonString, JsonSerializerOptions options) => JsonSerializer.Deserialize<T>(jsonString, options);

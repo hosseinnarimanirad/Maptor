@@ -99,15 +99,18 @@ public class TopoJsonDataSource : MemoryDataSource
 
         foreach (var kvp in geometries)
         {
-            if (kvp.Value == null || kvp.Value.IsNullOrEmpty())
+            if (kvp.Value == null || kvp.Value.TheGeometry.IsNullOrEmpty())
                 continue;
 
             var projected = kvp.Value.Project(SrsBases.WebMercator);
-            features.Add(new Feature<Point>
-            {
-                TheGeometry = projected,
-                Attributes = new Dictionary<string, object> { { "object", kvp.Key } }
-            });
+
+            features.Add(projected);
+
+            //features.Add(new Feature<Point>
+            //{
+            //    TheGeometry = pr,
+            //    Attributes = new Dictionary<string, object> { { "object", kvp.Key } }
+            //});
         }
 
         if (features.Count == 0)

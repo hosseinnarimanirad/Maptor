@@ -1,6 +1,8 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.Text.Json;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
@@ -14,67 +16,67 @@ public static class TopoJsonConverter
 
     #region Geometry<Point> to TopoJson
 
-    /// <summary>
-    /// Convert a single Geometry to TopoJSON topology
-    /// </summary>
-    public static TopoJsonTopology FromGeometry(Geometry<Point> geometry, string objectName = "geometry", bool quantize = true, int quantizationFactor = 10000)
-    {
-        var geometries = new Dictionary<string, Geometry<Point>> { { objectName, geometry } };
-        return FromGeometries(geometries, quantize, quantizationFactor);
-    }
+    ///// <summary>
+    ///// Convert a single Geometry to TopoJSON topology
+    ///// </summary>
+    //public static TopoJsonTopology FromGeometry(Geometry<Point> geometry, string objectName = "geometry", bool quantize = true, int quantizationFactor = 10000)
+    //{
+    //    var geometries = new Dictionary<string, Geometry<Point>> { { objectName, geometry } };
+    //    return FromGeometries(geometries, quantize, quantizationFactor);
+    //}
 
-    /// <summary>
-    /// Convert multiple geometries to TopoJSON with shared topology
-    /// </summary>
-    public static TopoJsonTopology FromGeometries(Dictionary<string, Geometry<Point>> geometries, bool quantize = true, int quantizationFactor = 10000)
-    {
-        var topology = new TopoJsonTopology();
-        var arcBuilder = new ArcBuilder();
+    ///// <summary>
+    ///// Convert multiple geometries to TopoJSON with shared topology
+    ///// </summary>
+    //public static TopoJsonTopology FromGeometries(Dictionary<string, Geometry<Point>> geometries, bool quantize = true, int quantizationFactor = 10000)
+    //{
+    //    var topology = new TopoJsonTopology();
+    //    var arcBuilder = new ArcBuilder();
 
-        // Calculate bounding box
-        var allPoints = geometries.Values
-            .Where(g => g != null && !g.IsNullOrEmpty())
-            .SelectMany(g => g.GetAllPoints())
-            .ToList();
+    //    // Calculate bounding box
+    //    var allPoints = geometries.Values
+    //        .Where(g => g != null && !g.IsNullOrEmpty())
+    //        .SelectMany(g => g.GetAllPoints())
+    //        .ToList();
 
-        if (allPoints.Count > 0)
-        {
-            var minX = allPoints.Min(p => p.X);
-            var minY = allPoints.Min(p => p.Y);
-            var maxX = allPoints.Max(p => p.X);
-            var maxY = allPoints.Max(p => p.Y);
+    //    if (allPoints.Count > 0)
+    //    {
+    //        var minX = allPoints.Min(p => p.X);
+    //        var minY = allPoints.Min(p => p.Y);
+    //        var maxX = allPoints.Max(p => p.X);
+    //        var maxY = allPoints.Max(p => p.Y);
 
-            topology.BBox = new[] { minX, minY, maxX, maxY };
+    //        topology.BBox = new[] { minX, minY, maxX, maxY };
 
-            // Setup quantization if requested
-            if (quantize && (maxX - minX) > 0 && (maxY - minY) > 0)
-            {
-                topology.Transform = new TopoJsonTransform
-                {
-                    Scale = new[]
-                    {
-                        (maxX - minX) / quantizationFactor,
-                        (maxY - minY) / quantizationFactor
-                    },
-                    Translate = new[] { minX, minY }
-                };
-            }
-        }
+    //        // Setup quantization if requested
+    //        if (quantize && (maxX - minX) > 0 && (maxY - minY) > 0)
+    //        {
+    //            topology.Transform = new TopoJsonTransform
+    //            {
+    //                Scale = new[]
+    //                {
+    //                    (maxX - minX) / quantizationFactor,
+    //                    (maxY - minY) / quantizationFactor
+    //                },
+    //                Translate = new[] { minX, minY }
+    //            };
+    //        }
+    //    }
 
-        // Convert each geometry
-        foreach (var kvp in geometries)
-        {
-            if (kvp.Value == null || kvp.Value.IsNullOrEmpty())
-                continue;
+    //    // Convert each geometry
+    //    foreach (var kvp in geometries)
+    //    {
+    //        if (kvp.Value == null || kvp.Value.IsNullOrEmpty())
+    //            continue;
 
-            topology.Objects[kvp.Key] = ConvertGeometry(kvp.Value, arcBuilder, topology.Transform);
-        }
+    //        topology.Objects[kvp.Key] = ConvertGeometry(kvp.Value, arcBuilder, topology.Transform);
+    //    }
 
-        // Build arcs
-        topology.Arcs = arcBuilder.BuildArcs();
+    //    // Build arcs
+    //    topology.Arcs = arcBuilder.BuildArcs();
 
-        return topology;
-    }
+    //    return topology;
+    //}
 
 
     /// <summary>
@@ -86,9 +88,10 @@ public static class TopoJsonConverter
     /// <param name="quantizationFactor">Quantization factor (e.g., 10000).</param>
     /// <returns>TopoJSON topology containing all features as separate objects.</returns>
     public static TopoJsonTopology FromFeatures(
-        IReadOnlyList<Feature<Point>> features,
-        bool quantize = true,
-        int quantizationFactor = 10000)
+    IReadOnlyList<Feature<Point>> features,
+    bool quantize = true,
+    int quantizationFactor = 10000,
+    string collectionName = "data")   // optional name for the collection
     {
         if (features == null || features.Count == 0)
             throw new ArgumentException("The features list is null or empty.", nameof(features));
@@ -96,7 +99,7 @@ public static class TopoJsonConverter
         var topology = new TopoJsonTopology();
         var arcBuilder = new ArcBuilder();
 
-        // Collect all points from all geometries to compute bounding box and transform
+        // Collect all points for bounding box & transform (unchanged)
         var allPoints = new List<Point>();
         foreach (var feature in features)
         {
@@ -127,7 +130,9 @@ public static class TopoJsonConverter
             }
         }
 
-        // Convert each feature to a TopoJSON geometry object
+        // Build a list of geometries for the collection
+        var geometries = new List<TopoJsonGeometry>();
+
         for (int i = 0; i < features.Count; i++)
         {
             var feature = features[i];
@@ -135,28 +140,28 @@ public static class TopoJsonConverter
             if (geometry == null || geometry.IsNullOrEmpty())
                 continue;
 
-            // Convert the geometry (reuse existing conversion logic)
+            // Convert the geometry (reuse existing conversion)
             var topoGeometry = ConvertGeometry(geometry, arcBuilder, topology.Transform);
             if (topoGeometry == null)
                 continue;
 
-            // Attach feature properties and ID
+            // Attach properties and ID
             if (feature.Attributes != null && feature.Attributes.Count > 0)
                 topoGeometry.Properties = new Dictionary<string, object>(feature.Attributes);
-
             if (feature.Id != 0)
                 topoGeometry.Id = feature.Id.ToString();
 
-            // Use feature ID if available, otherwise generate a name
-            string objectName = feature.Id != 0 ? feature.Id.ToString() : $"feature_{i}";
-            // Ensure uniqueness: if duplicate ID appears, append index
-
-            if (topology.Objects.ContainsKey(objectName))
-                objectName = $"{objectName}_{i}";
-            topology.Objects[objectName] = topoGeometry;
+            geometries.Add(topoGeometry);
         }
 
-        // Build arcs from the collected arcs
+        // Create the GeometryCollection and add it to the objects dictionary
+        var collection = new TopoJsonGeometryCollection
+        {
+            Geometries = geometries
+        };
+        topology.Objects[collectionName] = collection;
+
+        // Build arcs
         topology.Arcs = arcBuilder.BuildArcs();
 
         return topology;
@@ -355,20 +360,36 @@ public static class TopoJsonConverter
     /// <summary>
     /// Convert TopoJSON topology to geometries
     /// </summary>
-    public static Dictionary<string, Geometry<Point>> ToGeometry(TopoJsonTopology topology, int srid = 4326)
+    public static Dictionary<string, Feature<Point>> ToGeometry(TopoJsonTopology topology, int srid = 4326)
     {
-        var result = new Dictionary<string, Geometry<Point>>();
+        var result = new Dictionary<string, Feature<Point>>();
 
         if (topology?.Objects == null)
             return result;
 
         foreach (var kvp in topology.Objects)
         {
-            var geometry = ConvertToGeometry(kvp.Value, topology.Arcs, topology.Transform, srid);
-
-            if (geometry != null && !geometry.IsNullOrEmpty())
+            // Handle GeometryCollection specially
+            if (kvp.Value is TopoJsonGeometryCollection collection)
             {
-                result[kvp.Key] = geometry;
+                var flattened = FlattenGeometryCollection(collection, kvp.Key, topology.Arcs, topology.Transform, srid);
+                foreach (var item in flattened)
+                {
+                    // Avoid duplicate keys (unlikely but safe)
+                    var finalKey = item.Key;
+
+                    while (result.ContainsKey(finalKey))
+                        finalKey += "_";
+
+                    result[finalKey] = item.Value;
+                }
+            }
+            else
+            {
+                var geometry = ConvertToGeometry(kvp.Value, topology.Arcs, topology.Transform, srid);
+
+                if (geometry != null && !geometry.IsNullOrEmpty())
+                    result[kvp.Key] = new Feature<Point>(geometry, kvp.Value.Properties!);
             }
         }
 
@@ -505,52 +526,108 @@ public static class TopoJsonConverter
     private static List<Point> ResolveArcs(List<int> arcIndices, List<List<int[]>> arcs, TopoJsonTransform? transform)
     {
         var points = new List<Point>();
-        var currentX = 0.0;
-        var currentY = 0.0;
-        var isFirst = true;
+        bool isFirstArc = true;
 
         foreach (var arcIndex in arcIndices)
         {
-            var isReversed = arcIndex < 0;
-            var actualIndex = isReversed ? ~arcIndex : arcIndex;
+            bool isReversed = arcIndex < 0;
+            int actualIndex = isReversed ? ~arcIndex : arcIndex;
+            if (actualIndex >= arcs.Count) continue;
 
-            if (actualIndex >= arcs.Count)
-                continue;
+            var deltaArc = arcs[actualIndex];
+            if (deltaArc == null || deltaArc.Count == 0) continue;
 
-            var arc = arcs[actualIndex];
-            var arcPoints = isReversed ? Enumerable.Reverse(arc).ToList() : arc;
-
-            foreach (var point in arcPoints)
+            // 1. Build absolute quantized points for this arc (start from 0,0)
+            var quantizedPoints = new List<int[]>();
+            int x = 0, y = 0;
+            foreach (var delta in deltaArc)
             {
-                // Delta decoding
-                currentX += point[0];
-                currentY += point[1];
+                x += delta[0];
+                y += delta[1];
+                quantizedPoints.Add(new[] { x, y });
+            }
 
-                // Apply transform if present
-                var x = currentX;
-                var y = currentY;
+            // 2. Reverse if needed
+            if (isReversed)
+                quantizedPoints.Reverse();
+
+            // 3. Convert to real coordinates and add to result
+            for (int i = 0; i < quantizedPoints.Count; i++)
+            {
+                // Skip the first point of subsequent arcs (it duplicates the last point of previous arc)
+                if (!isFirstArc && i == 0)
+                    continue;
+
+                var q = quantizedPoints[i];
+                double lon = q[0];
+                double lat = q[1];
 
                 if (transform != null)
                 {
-                    var transformed = transform.Apply(new[] { (int)currentX, (int)currentY });
-                    x = transformed[0];
-                    y = transformed[1];
+                    var transformed = transform.Apply(q);
+                    lon = transformed[0];
+                    lat = transformed[1];
                 }
 
-                // Skip first point of subsequent arcs (already added from previous arc)
-                if (!isFirst || points.Count == 0)
-                {
-                    points.Add(new Point(x, y));
-                }
-
-                isFirst = false;
+                points.Add(new Point(lon, lat));
             }
+
+            isFirstArc = false;
         }
 
         return points;
     }
-
     #endregion
 
+    /// <summary>
+    /// Flattens a GeometryCollection into multiple Geometry<Point> objects, one per nested geometry.
+    /// Names are generated as "parentName_index" (e.g., "myCollection_0", "myCollection_1").
+    /// Recursively flattens nested collections.
+    /// </summary>
+    private static Dictionary<string, Feature<Point>> FlattenGeometryCollection(
+    TopoJsonGeometryCollection collection,
+    string parentName,
+    List<List<int[]>> arcs,
+    TopoJsonTransform? transform,
+    int srid)
+    {
+        var result = new Dictionary<string, Feature<Point>>();
+
+        if (collection?.Geometries == null)
+            return result;
+
+        for (int i = 0; i < collection.Geometries.Count; i++)
+        {
+            var nestedGeometry = collection.Geometries[i];
+
+            //var nestedGeometry = JsonHelper.Deserialize<TopoJsonGeometry>(element.GetRawText(), JsonHelper.DefaultOptions);
+
+            if (nestedGeometry == null) continue;
+
+            if (nestedGeometry is TopoJsonGeometryCollection subCollection)
+            {
+                var subResult = FlattenGeometryCollection(subCollection, $"{parentName}_{i}", arcs, transform, srid);
+
+                foreach (var subItem in subResult)
+                    result[subItem.Key] = subItem.Value;
+            }
+            else
+            {
+                var converted = ConvertToGeometry(nestedGeometry, arcs, transform, srid);
+
+                if (converted != null && !converted.IsNullOrEmpty())
+                {
+                    string name = $"{parentName}_{i}";
+
+                    while (result.ContainsKey(name))
+                        name += "_";
+
+                    result[name] = new Feature<Point>(converted, nestedGeometry.Properties!);
+                }
+            }
+        }
+
+        return result;
+    }
 }
 

@@ -32,11 +32,11 @@ public class GeoJsonFeature
     [JsonPropertyName("geometry")]
     public IGeoJsonGeometry? Geometry { get; set; }
 
-    /// <summary>
-    /// Gets or sets the geometry name. Optional.
-    /// </summary>
-    [JsonPropertyName("geometry_name")]
-    public string? GeometryName { get; set; }
+    ///// <summary>
+    ///// Gets or sets the geometry name. Optional.
+    ///// </summary>
+    //[JsonPropertyName("geometry_name")]
+    //public string? GeometryName { get; set; }
 
     /// <summary>
     /// Gets or sets the properties of the feature as a dictionary of key-value pairs.
@@ -108,7 +108,7 @@ public class GeoJsonFeature
         return new GeoJsonFeature()
         {
             Geometry = geometry,
-            GeometryName = string.Empty,
+            //GeometryName = string.Empty,
             Id = null,
             Properties = attributes ?? new Dictionary<string, object>(),
         };
