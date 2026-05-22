@@ -3701,7 +3701,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         }
     }
 
-    public void FixPolygonRings()
+    public void FixPolygonRingOrientations()
     {
         if (this.IsEmpty())
             return;
@@ -3711,7 +3711,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             if (this.Geometries[0] is null)
                 return;
 
-            for (int i = 1; i < Geometries.Count; i++)
+            for (int i = 0; i < Geometries.Count; i++)
             {
                 // Only the first outter ring is CCW
                 var shouldBeClockwise = i != 0;
@@ -3731,7 +3731,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         {
             foreach (var item in Geometries)
             {
-                item.FixPolygonRings();
+                item.FixPolygonRingOrientations();
             }
         }
     }

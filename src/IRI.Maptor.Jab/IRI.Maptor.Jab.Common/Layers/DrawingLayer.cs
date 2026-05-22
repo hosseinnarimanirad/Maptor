@@ -112,13 +112,6 @@ public class DrawingLayer : SymbolizableLayer
     {
         var geometry = _editableFeatureLayer.GetFinalGeometry();
 
-        if (geometry.Type == GeometryType.MultiPolygon)
-        {
-            var rings = geometry.Geometries?.SelectMany(g => g.Geometries).ToList();
-
-            return Geometry<Point>.CreatePolygonOrMultiPolygon(rings, geometry.Srid);
-        }
-
         return geometry;
     }
 

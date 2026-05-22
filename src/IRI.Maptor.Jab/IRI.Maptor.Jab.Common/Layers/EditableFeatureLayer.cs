@@ -1118,7 +1118,22 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public SpecialPointLayer GetPrimaryVerticesLabels() => _primaryVerticesLabelLayer;
 
-    public Geometry GetFinalGeometry() => _webMercatorGeometry;
+    public Geometry GetFinalGeometry()
+    {
+        if (_webMercatorGeometry.IsRingBase())
+        {
+            _webMercatorGeometry.FixPolygonRingOrientations();
+        }
+
+        if (_webMercatorGeometry.Type == GeometryType.MultiPolygon)
+        {
+            var rings = _webMercatorGeometry.Geometries?.SelectMany(g => g.Geometries).ToList();
+
+            return Geometry<Point>.CreatePolygonOrMultiPolygon(rings, _webMercatorGeometry.Srid);
+        }
+         
+        return _webMercatorGeometry;
+    }
 
     public Locateable? AddVertex(Point webMercatorPoint)
     {
