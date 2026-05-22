@@ -65,7 +65,7 @@ public static class AreaStatisticsHelper
 
             var threshold = groundLevel * groundLevel / 4.0;
 
-            SimplificationParamters parameters = new SimplificationParamters()
+            SimplificationParameters parameters = new SimplificationParameters()
             {
                 AreaThreshold = threshold,
                 Retain3Points = retain3Points

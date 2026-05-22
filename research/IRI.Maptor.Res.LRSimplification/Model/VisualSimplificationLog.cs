@@ -60,7 +60,7 @@ public class VisualSimplificationLog
         string methodName,
         long elapsedMilliseconds,
         double coef,
-        SimplificationParamters parameters,
+        SimplificationParameters parameters,
         double tlvdPerLength = 0,
         ConfusionMatrix? confusionMatrix = null)
     {
@@ -111,7 +111,7 @@ public class VisualSimplificationLog
         string methodName,
         long elapsedMilliseconds,
         double coef,
-        SimplificationParamters parameters,
+        SimplificationParameters parameters,
         double tlvdPerLength = 0,
         ConfusionMatrix? confusionMatrix = null)
     //,double coef)

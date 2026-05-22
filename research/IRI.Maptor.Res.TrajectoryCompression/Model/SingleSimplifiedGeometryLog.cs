@@ -80,7 +80,7 @@ public class SingleSimplifiedGeometryLog
         int level,
         string methodName,
         long elapsedMilliseconds,
-        SimplificationParamters parameters,
+        SimplificationParameters parameters,
         double coef)
     {
         this.FileName = fileName;

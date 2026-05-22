@@ -166,7 +166,7 @@ public static class SimplificationHelper
             {
                 var threshold = webMercatorResolution * coef;
 
-                var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
                 foreach (var method in methods)
                 {
@@ -324,7 +324,7 @@ public static class SimplificationHelper
             {
                 var threshold = webMercatorResolution * coef;
 
-                var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
                 var temp = new NineAlgoSixMeasureLog
                             (fileName,
@@ -483,7 +483,7 @@ public static class SimplificationHelper
             {
                 var threshold = webMercatorResolution * coef;
 
-                var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
                 var temp = new NineAlgoSixMeasureLog
                             (fileName,
@@ -748,7 +748,7 @@ public static class SimplificationHelper
         StringBuilder builder = new StringBuilder();
         builder.AppendLine(LogStructure.GetHeader());
         var originalVectorLayer = GeneralHelper.GetAsLayer("original", features);
-        builder.AppendLine(new LogStructure(fileName, totalNumberOfPoints, features, 0, 0, "original", 0, new SimplificationParamters(), 1).ToTsv());
+        builder.AppendLine(new LogStructure(fileName, totalNumberOfPoints, features, 0, 0, "original", 0, new SimplificationParameters(), 1).ToTsv());
 
         var startIndex = Math.Max(3, estimatedScale - 5);
         var count = Math.Max(estimatedScale - startIndex + 2, 3);
@@ -799,7 +799,7 @@ public static class SimplificationHelper
 
                     var n = Math.Max(2, (uint)(features.Sum(f => f.TotalNumberOfPoints) / features.Count() * (2 + 8 * (coef - groundResolutionCoefs_Min) / groundResolutionCoefs_Range)));
 
-                    var parameters = new SimplificationParamters()
+                    var parameters = new SimplificationParameters()
                     {
                         N = n,
                         AreaThreshold = threshold * threshold,

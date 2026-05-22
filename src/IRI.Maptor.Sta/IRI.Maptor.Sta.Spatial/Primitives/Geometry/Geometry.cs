@@ -86,7 +86,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     private Geometry()
     {
     }
-     
+
     #endregion
 
 
@@ -129,7 +129,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public bool IsRingBase() => this.Type.IsRingBase();
     //{
-        //return this.Type == GeometryType.Polygon || this.Type == GeometryType.MultiPolygon || this.Type == GeometryType.CurvePolygon;
+    //return this.Type == GeometryType.Polygon || this.Type == GeometryType.MultiPolygon || this.Type == GeometryType.CurvePolygon;
     //}
 
     public bool HasAnyPoint()
@@ -164,10 +164,10 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 return this.Points?.Count == 1;
 
             case GeometryType.LineString:
-                return this.Points.Count > 1;
+                return this.Points?.Count > 1;
 
             case GeometryType.Polygon:
-                return this.Geometries?.Count > 0 && this.Geometries?.All(g => g.Points?.Count >= 3) == true;
+                return this.Geometries?.Count > 0 && this.Geometries?.All(g => g?.Points?.Count >= 3) == true;
 
             case GeometryType.MultiPoint:
             case GeometryType.MultiLineString:
@@ -477,7 +477,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         }
     }
 
-    //must be reviewed: 
+
     public T GetNearestPoint(IPoint point)
     {
         if (this.IsLeafGeometry())
@@ -502,10 +502,12 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         }
         else
         {
-            var nearestPoints = this.Geometries.Select(g => g.GetNearestPoint(point)).ToList();
-
-            //must be reviewed
-            return nearestPoints.First();
+            // Collect the nearest point from each sub‑geometry,
+            // then pick the one closest to the input point.
+            return this.Geometries
+                .Select(g => g.GetNearestPoint(point))
+                .OrderBy(candidate => SpatialUtility.GetEuclideanLength(candidate, point))
+                .First();
         }
     }
 
@@ -559,95 +561,95 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     /// <param name="type"></param>
     /// <param name="secondaryParameter">may be area threshold for `AdditiveByAreaAngle` or look ahead parameter for `Lang`</param>
     /// <returns></returns>
-    public Geometry<T> Simplify(SimplificationType type, SimplificationParamters paramters)
+    public Geometry<T> Simplify(SimplificationType type, SimplificationParameters parameter)
     {
         Func<List<T>, List<T>> filter;
 
         switch (type)
         {
             case SimplificationType.NthPoint:
-                filter = pList => Simplifications.SimplifyByNthPoint(pList, paramters);
+                filter = pList => Simplifications.SimplifyByNthPoint(pList, parameter);
                 break;
 
             case SimplificationType.RandomPointSelection:
-                filter = pList => Simplifications.SimplifyByRandomPointSelection(pList, paramters);
+                filter = pList => Simplifications.SimplifyByRandomPointSelection(pList, parameter);
                 break;
 
             case SimplificationType.EuclideanDistance:
-                filter = pList => Simplifications.SimplifyByEuclideanDistance(pList, paramters);
+                filter = pList => Simplifications.SimplifyByEuclideanDistance(pList, parameter);
                 break;
 
             case SimplificationType.TriangleRoutine:
-                filter = pList => Simplifications.SimplifyByTriangleRoutine(pList, paramters);
+                filter = pList => Simplifications.SimplifyByTriangleRoutine(pList, parameter);
                 break;
 
             case SimplificationType.CumulativeTriangleRoutine:
-                filter = pList => Simplifications.SimplifyByCumulativeTriangleRoutine(pList, paramters);
+                filter = pList => Simplifications.SimplifyByCumulativeTriangleRoutine(pList, parameter);
                 break;
 
             case SimplificationType.ModifiedTriangleRoutine:
-                filter = pList => Simplifications.SimplifyByModifiedTriangleRoutine(pList, paramters);
+                filter = pList => Simplifications.SimplifyByModifiedTriangleRoutine(pList, parameter);
                 break;
 
             case SimplificationType.Angle:
-                filter = pList => Simplifications.SimplifyByAngle(pList, paramters);
+                filter = pList => Simplifications.SimplifyByAngle(pList, parameter);
                 break;
 
             case SimplificationType.CumulativeAngle:
-                filter = pList => Simplifications.SimplifyByCumulativeAngle(pList, paramters);
+                filter = pList => Simplifications.SimplifyByCumulativeAngle(pList, parameter);
                 break;
 
             case SimplificationType.CumulativeEuclideanDistance:
-                filter = pList => Simplifications.SimplifyByCumulativeEuclideanDistance(pList, paramters);
+                filter = pList => Simplifications.SimplifyByCumulativeEuclideanDistance(pList, parameter);
                 break;
 
             case SimplificationType.VisvalingamWhyatt:
-                filter = pList => Simplifications.SimplifyByVisvalingamWhyatt(pList, paramters, this.IsRingBase());
+                filter = pList => Simplifications.SimplifyByVisvalingamWhyatt(pList, parameter, this.IsRingBase());
                 break;
 
             case SimplificationType.RamerDouglasPeucker:
-                filter = pList => Simplifications.SimplifyByRamerDouglasPeucker(pList, paramters);
+                filter = pList => Simplifications.SimplifyByRamerDouglasPeucker(pList, parameter);
                 break;
 
             case SimplificationType.Lang:
-                filter = pList => Simplifications.SimplifyByLang(pList, paramters);
+                filter = pList => Simplifications.SimplifyByLang(pList, parameter);
                 break;
 
             case SimplificationType.ReumannWitkam:
-                filter = pList => Simplifications.SimplifyByReumannWitkam(pList, paramters);
+                filter = pList => Simplifications.SimplifyByReumannWitkam(pList, parameter);
                 break;
 
             case SimplificationType.SleeveFitting:
-                filter = pList => Simplifications.SimplifyBySleeveFitting(pList, paramters);
+                filter = pList => Simplifications.SimplifyBySleeveFitting(pList, parameter);
                 break;
 
             case SimplificationType.PerpendicularDistance:
-                filter = pList => Simplifications.SimplifyByPerpendicularDistance(pList, paramters);
+                filter = pList => Simplifications.SimplifyByPerpendicularDistance(pList, parameter);
                 break;
 
             case SimplificationType.ModifiedPerpendicularDistance:
-                filter = pList => Simplifications.SimplifyByModifiedPerpendicularDistance(pList, paramters);
+                filter = pList => Simplifications.SimplifyByModifiedPerpendicularDistance(pList, parameter);
                 break;
 
             case SimplificationType.NormalOpeningWindow:
-                filter = pList => Simplifications.SimplifyByNormalOpeningWindow(pList, paramters);
+                filter = pList => Simplifications.SimplifyByNormalOpeningWindow(pList, parameter);
                 break;
 
             case SimplificationType.BeforeOpeningWindow:
-                filter = pList => Simplifications.SimplifyByBeforeOpeningWindow(pList, paramters);
+                filter = pList => Simplifications.SimplifyByBeforeOpeningWindow(pList, parameter);
                 break;
 
 
             case SimplificationType.AdditiveAreaPlus:
-                filter = pList => Simplifications.SimplifyByAdditiveAreaPlus(pList, paramters);
+                filter = pList => Simplifications.SimplifyByAdditiveAreaPlus(pList, parameter);
                 break;
 
             case SimplificationType.CumulativeAreaAngle:
-                filter = pList => Simplifications.SimplifyByCumulativeAngleArea(pList, paramters);
+                filter = pList => Simplifications.SimplifyByCumulativeAngleArea(pList, parameter);
                 break;
 
             case SimplificationType.APSC:
-                filter = pList => Simplifications.SimplifyByAPSC(pList, paramters);
+                filter = pList => Simplifications.SimplifyByAPSC(pList, parameter);
                 break;
 
             default:
@@ -657,15 +659,15 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         return this.FilterPoints(filter);
     }
 
-    public Geometry<T> Simplify(SimplificationType type, int zoomLevel, SimplificationParamters paramters)
+    public Geometry<T> Simplify(SimplificationType type, int zoomLevel, SimplificationParameters parameter)
     {
-        var threshold = WebMercatorUtility.CalculateGroundResolution(zoomLevel, paramters.AverageLatitude ?? 0); //0 seconds!
+        var threshold = WebMercatorUtility.CalculateGroundResolution(zoomLevel, parameter.AverageLatitude ?? 0); //0 seconds!
 
-        paramters.AreaThreshold = threshold * threshold;
+        parameter.AreaThreshold = threshold * threshold;
 
-        paramters.DistanceThreshold = threshold;
+        parameter.DistanceThreshold = threshold;
 
-        return Simplify(type, paramters);
+        return Simplify(type, parameter);
     }
 
     public Geometry<T> Transform(Func<T, T> transform, int newSrid = 0)
@@ -727,7 +729,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 else if (this.NumberOfGeometries == 0)
                     return true;
                 else
-                    return this.Geometries.Zip(other.Geometries, (g1, g2) => g1.HasTheSameSignature(g2)).Any(f => f);
+                    return this.Geometries.Zip(other.Geometries, (g1, g2) => g1.HasTheSameSignature(g2)).All(f => f);
 
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:
@@ -909,11 +911,16 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 return polygon.IntersectsLineStringOrRing(this, isRing: false);
 
             case GeometryType.Polygon:
-                if (TopologyUtility.IsPointInPolygon(this, polygon.GetLastPoint()))
+                if (TopologyUtility.IsPointInPolygon(this, polygon.GetLastPoint()) ||
+                    TopologyUtility.IsPointInPolygon(polygon, this.GetLastPoint()))
                     return true;
 
-                //else if (TopologyUtility.IsPointInPolygon(polygon, this.GetLastPoint()))
-                //    return true;
+                //case GeometryType.Polygon:
+                //    if (TopologyUtility.IsPointInPolygon(this, polygon.GetLastPoint()))
+                //        return true;
+
+                ////else if (TopologyUtility.IsPointInPolygon(polygon, this.GetLastPoint()))
+                ////    return true;
 
 
                 return this.Geometries.Any(g => polygon.IntersectsLineStringOrRing(g, isRing: true));
@@ -3209,13 +3216,24 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         }
     }
 
+    //public void InsertPoint(T newPoint, int index)
+    //{
+    //    var points = this.Points.ToList();
+
+    //    points.Insert(index, newPoint);
+
+    //    this.Points = points.ToList();
+    //}
     public void InsertPoint(T newPoint, int index)
     {
-        var points = this.Points.ToList();
+        if (this.Points == null)
+            throw new InvalidOperationException($"Cannot insert point into geometry of type {this.Type}");
 
-        points.Insert(index, newPoint);
+        if (index < 0 || index > this.Points.Count)
+            throw new ArgumentOutOfRangeException(nameof(index));
 
-        this.Points = points.ToList();
+        // Insert directly
+        this.Points.Insert(index, newPoint);
     }
 
     public void Remove(T point)
@@ -3909,38 +3927,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     #region Sql Server Native Binary
 
-    public byte[] AsSqlServerByte()
-    {
-        //using (var ms = new MemoryStream())
-        //using (var bw = new BinaryWriter(ms))
-        //{
-        //    bw.Write(Srid);          // SRID (little-endian)
-        //    bw.Write((byte)0x01);    // Version marker
-        //    bw.Write((byte)0x0C);    // Version marker
-
-        //    // Write the actual geography bytes
-        //    var wkb = AsWkb(); 
-        //    bw.Write(wkb);
-
-        //    return ms.ToArray();
-        //}
-
-        // ************************************************************
-        //string hex = "0xE6100000010C10FA420AD60941406069CF8839A54840";
-
-        //if (hex.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
-        //    hex = hex.Substring(2);
-
-        //var result = Enumerable.Range(0, hex.Length / 2)
-        //.Select(x => Convert.ToByte(hex.Substring(x * 2, 2), 16))
-        //.ToArray();
-
-        //var hex2 = "0x" + BitConverter.ToString(result).Replace("-", "");
-        // ************************************************************
-
-
-        return null;
-    }
+    public byte[]? AsSqlServerByte() => SqlServerSpatialNativeBinary.Serialize(this);
 
 
 
@@ -4980,83 +4967,168 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     }
 
 
+    //private void ReevaluateGeometryType()
+    //{
+    //    if (this == null || this.IsNullOrEmpty())
+    //    {
+    //        return;
+    //    }
+
+    //    var numberOfPoints = this.Points?.Count;
+
+    //    var numberOfGeometries = this.Geometries?.Count;
+
+    //    //حالت نقطه یا خط
+    //    if (numberOfPoints > 0)
+    //    {
+    //        if (numberOfPoints == 1)
+    //        {
+    //            this.Type = GeometryType.Point;
+    //        }
+    //        else
+    //        {
+    //            this.Type = GeometryType.LineString;
+    //        }
+    //    }
+    //    //سایر حالت‌ها
+    //    else if (numberOfGeometries > 0)
+    //    {
+    //        var types = this.Geometries.Select(g => g.Type).Distinct();
+
+    //        //حالت ترکیبی
+    //        if (types.Count() > 1)
+    //        {
+    //            this.Type = GeometryType.GeometryCollection;
+    //        }
+    //        else
+    //        {
+    //            var subGeometryType = this.Geometries.First().Type;
+
+    //            switch (subGeometryType)
+    //            {
+    //                //حالت چند نقطه‌ای
+    //                case GeometryType.Point:
+    //                    this.Type = GeometryType.MultiPoint;
+    //                    break;
+
+    //                //حالت چند خطی یا چند ضلعی
+    //                case GeometryType.LineString:
+    //                    if (this.Type == GeometryType.LineString)
+    //                        this.Type = GeometryType.MultiLineString;
+    //                    else if (this.Type == GeometryType.Polygon)
+    //                        // 1400.06.28
+    //                        //this.Type = GeometryType.MultiPolygon;
+    //                        this.Type = GeometryType.Polygon;
+
+    //                    break;
+
+    //                //حالت چندضلعی‌های چند تکه‌ای
+    //                case GeometryType.Polygon:
+    //                    this.Type = GeometryType.MultiPolygon;
+    //                    break;
+
+    //                case GeometryType.MultiPoint:
+    //                case GeometryType.MultiLineString:
+    //                case GeometryType.MultiPolygon:
+    //                    this.Type = GeometryType.GeometryCollection;
+    //                    break;
+
+    //                case GeometryType.GeometryCollection:
+    //                case GeometryType.CircularString:
+    //                case GeometryType.CompoundCurve:
+    //                case GeometryType.CurvePolygon:
+    //                default:
+    //                    throw new NotImplementedException("Geometry.cs > ReevaluateGeometryType");
+    //            }
+    //        }
+    //    }
+
+    //    return;
+    //}
+
     private void ReevaluateGeometryType()
     {
         if (this == null || this.IsNullOrEmpty())
-        {
             return;
-        }
 
-        var numberOfPoints = this.Points?.Count;
-
-        var numberOfGeometries = this.Geometries?.Count;
-
-        //حالت نقطه یا خط
-        if (numberOfPoints > 0)
+        // If Points is non-null, we have a leaf geometry
+        if (this.Points != null)
         {
-            if (numberOfPoints == 1)
+            if (this.Points.Count == 1)
             {
                 this.Type = GeometryType.Point;
             }
-            else
+            else if (this.Points.Count > 1)
             {
                 this.Type = GeometryType.LineString;
             }
+            // No need to restructure – leaf geometries already have correct data layout.
+            return;
         }
-        //سایر حالت‌ها
-        else if (numberOfGeometries > 0)
+
+        // If Geometries is null or empty, nothing to do
+        if (this.Geometries == null || this.Geometries.Count == 0)
+            return;
+
+        var types = this.Geometries.Select(g => g.Type).Distinct().ToList();
+        bool isHomogeneous = types.Count == 1;
+
+        if (!isHomogeneous)
         {
-            var types = this.Geometries.Select(g => g.Type).Distinct();
-
-            //حالت ترکیبی
-            if (types.Count() > 1)
-            {
-                this.Type = GeometryType.GeometryCollection;
-            }
-            else
-            {
-                var subGeometryType = this.Geometries.First().Type;
-
-                switch (subGeometryType)
-                {
-                    //حالت چند نقطه‌ای
-                    case GeometryType.Point:
-                        this.Type = GeometryType.MultiPoint;
-                        break;
-
-                    //حالت چند خطی یا چند ضلعی
-                    case GeometryType.LineString:
-                        if (this.Type == GeometryType.LineString)
-                            this.Type = GeometryType.MultiLineString;
-                        else if (this.Type == GeometryType.Polygon)
-                            // 1400.06.28
-                            //this.Type = GeometryType.MultiPolygon;
-                            this.Type = GeometryType.Polygon;
-
-                        break;
-
-                    //حالت چندضلعی‌های چند تکه‌ای
-                    case GeometryType.Polygon:
-                        this.Type = GeometryType.MultiPolygon;
-                        break;
-
-                    case GeometryType.MultiPoint:
-                    case GeometryType.MultiLineString:
-                    case GeometryType.MultiPolygon:
-                        this.Type = GeometryType.GeometryCollection;
-                        break;
-
-                    case GeometryType.GeometryCollection:
-                    case GeometryType.CircularString:
-                    case GeometryType.CompoundCurve:
-                    case GeometryType.CurvePolygon:
-                    default:
-                        throw new NotImplementedException("Geometry.cs > ReevaluateGeometryType");
-                }
-            }
+            // Mixed types -> GeometryCollection, data already correct
+            this.Type = GeometryType.GeometryCollection;
+            return;
         }
 
-        return;
+        var subType = types[0];
+        int geomCount = this.Geometries.Count;
+
+        switch (subType)
+        {
+            case GeometryType.Point when geomCount == 1:
+                // MultiPoint with one point -> convert to a single Point
+                var singlePoint = this.Geometries[0].Points[0];
+                this.Points = new List<T> { singlePoint };
+                this.Geometries = null;
+                this.Type = GeometryType.Point;
+                break;
+
+            case GeometryType.Point:
+                // Keep as MultiPoint
+                this.Type = GeometryType.MultiPoint;
+                // Data is already Geometries list of Points – correct.
+                break;
+
+            case GeometryType.LineString when geomCount == 1:
+                // MultiLineString with one line -> convert to a single LineString
+                var singleLine = this.Geometries[0];
+                this.Points = new List<T>(singleLine.Points);
+                this.Geometries = null;
+                this.Type = GeometryType.LineString;
+                break;
+
+            case GeometryType.LineString:
+                // Keep as MultiLineString
+                this.Type = GeometryType.MultiLineString;
+                break;
+
+            case GeometryType.Polygon when geomCount == 1:
+                // MultiPolygon with one polygon -> convert to a single Polygon
+                var singlePolygon = this.Geometries[0];
+                this.Geometries = new List<Geometry<T>>(singlePolygon.Geometries); // copy rings
+                this.Type = GeometryType.Polygon;
+                break;
+
+            case GeometryType.Polygon:
+                // Keep as MultiPolygon
+                this.Type = GeometryType.MultiPolygon;
+                break;
+
+            default:
+                // For any other case, default to GeometryCollection to be safe
+                this.Type = GeometryType.GeometryCollection;
+                break;
+        }
     }
 
     #endregion

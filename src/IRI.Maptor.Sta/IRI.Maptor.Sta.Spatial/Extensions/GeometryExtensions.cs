@@ -610,7 +610,7 @@ public static class Sta_GeometryExtensions
     public static List<Geometry<Point>> Simplify(
       this IEnumerable<Geometry<Point>> geometries,
       SimplificationType type,
-      SimplificationParamters paramters,
+      SimplificationParameters paramters,
       bool reduceToPoint = true)
     {
         try

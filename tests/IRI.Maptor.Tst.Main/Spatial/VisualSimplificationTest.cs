@@ -29,7 +29,7 @@ namespace IRI.Maptor.Tst.Spatial
                 new Point(9.0,9.0),
             };
 
-            var result = Simplifications.SimplifyByRamerDouglasPeucker(originalList, new SimplificationParamters() { DistanceThreshold = 1.0 });
+            var result = Simplifications.SimplifyByRamerDouglasPeucker(originalList, new SimplificationParameters() { DistanceThreshold = 1.0 });
 
             Assert.Equal(result.Count, 5);
 
@@ -56,7 +56,7 @@ namespace IRI.Maptor.Tst.Spatial
                 new Point(-0.56421, 0.99072) //M
             };
 
-            var result = Simplifications.SimplifyByPerpendicularDistance(originalList, new SimplificationParamters() { DistanceThreshold = 1 });
+            var result = Simplifications.SimplifyByPerpendicularDistance(originalList, new SimplificationParameters() { DistanceThreshold = 1 });
 
             Assert.Equal(6, result.Count);
             Assert.Equal(true, result.Contains(originalList[1]));
@@ -97,7 +97,7 @@ namespace IRI.Maptor.Tst.Spatial
             };
 
             // Create the simplification table
-            var simplifiedList = Simplifications.SimplifyByAPSC(originalList, new SimplificationParamters() { AreaThreshold = 50 });
+            var simplifiedList = Simplifications.SimplifyByAPSC(originalList, new SimplificationParameters() { AreaThreshold = 50 });
 
             //[(47.2, 86.4),
             Assert.Equal(new Point(47.2, 86.4), simplifiedList[0]);

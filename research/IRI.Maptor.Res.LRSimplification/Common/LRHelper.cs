@@ -112,7 +112,7 @@ public static class LRHelper
 
         var threshold = webMercatorResolution /** coef*/;
 
-        var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+        var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
         foreach (var lrModel in lrModels)
         {
@@ -226,7 +226,7 @@ public static class LRHelper
 
         var threshold = webMercatorResolution /** coef*/;
 
-        var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+        var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
         foreach (var lrModel in lrModels)
         {
@@ -352,7 +352,7 @@ public static class LRHelper
 
             var threshold = webMercatorResolution /** coef*/;
 
-            var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+            var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
             foreach (var lrModel in lrModels)
             {
@@ -479,7 +479,7 @@ public static class LRHelper
 
             var threshold = webMercatorResolution /** coef*/;
 
-            var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+            var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
             foreach (var lrModel in lrModels)
             {
@@ -606,7 +606,7 @@ public static class LRHelper
 
             var threshold = webMercatorResolution   /** coef*/;
 
-            var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+            var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
             foreach (var lrModel in lrModels)
             {
@@ -744,7 +744,7 @@ public static class LRHelper
 
                 var threshold = webMercatorResolution   /** coef*/;
 
-                var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+                var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
                 var accuracies = new List<SimplificationAccuracy>();
 
@@ -912,7 +912,7 @@ public static class LRHelper
 
             var threshold = webMercatorResolution /** coef*/;
 
-            var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+            var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
             GeoJsonFeatureSet originalFeatureSet = feature.AsGeoJsonFeatureSet();
 
@@ -956,7 +956,7 @@ public static class LRHelper
                 {
                     threshold = webMercatorResolution * coef;
 
-                    parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+                    parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
                     var result = await IRI.Maptor.Jab.Common.Helpers.SimplificationHelper.CompareBySingleFeature(
                                    feature,
@@ -1065,7 +1065,7 @@ public static class LRHelper
 
         var threshold = webMercatorResolution /** coef*/;
 
-        var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+        var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
         foreach (var lrModel in lrModels)
         {
@@ -1099,7 +1099,7 @@ public static class LRHelper
             {
                 threshold = webMercatorResolution * coef;
 
-                parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+                parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
                 var result = await IRI.Maptor.Jab.Common.Helpers.SimplificationHelper.CompareByLayer(
                          features,
@@ -1196,7 +1196,7 @@ public static class LRHelper
 
             var threshold = webMercatorResolution   /** coef*/;
 
-            var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
+            var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = retain3Points };
 
             var length_Original = feature.GetEuclideanLength();
 

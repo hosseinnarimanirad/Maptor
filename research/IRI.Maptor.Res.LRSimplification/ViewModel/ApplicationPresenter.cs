@@ -169,7 +169,7 @@ public class ApplicationPresenter : MapViewModelBase
                 this.IsBusy = true;
 
                 var toScreenMap = this.CreateMapToScreenFunc();
-                var parameter = new SimplificationParamters() { Retain3Points = true };
+                var parameter = new SimplificationParameters() { Retain3Points = true };
 
                 double originalNumberOfPoints = layer.Geometry.TotalNumberOfPoints;
 

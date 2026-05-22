@@ -1,6 +1,6 @@
 ﻿namespace IRI.Maptor.Sta.Spatial.Analysis;
 
-public class SimplificationParamters
+public class SimplificationParameters
 {
     // 1401.02.26
     // used in n-th point simplification methods

@@ -845,7 +845,7 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var simplified = layer.Geometry.Simplify(SimplificationType.CumulativeAngle, new SimplificationParamters() { AngleThreshold = 0.99, Retain3Points = true });
+                var simplified = layer.Geometry.Simplify(SimplificationType.CumulativeAngle, new SimplificationParameters() { AngleThreshold = 0.99, Retain3Points = true });
 
                 map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-{map.NearestGoogleZoomLevel}");
 
@@ -874,7 +874,7 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var simplified = layer.Geometry.Simplify(SimplificationType.CumulativeTriangleRoutine, map.NearestGoogleZoomLevel, new SimplificationParamters() { Retain3Points = true });
+                var simplified = layer.Geometry.Simplify(SimplificationType.CumulativeTriangleRoutine, map.NearestGoogleZoomLevel, new SimplificationParameters() { Retain3Points = true });
 
                 map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-{map.NearestGoogleZoomLevel}");
 
@@ -903,7 +903,7 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var simplified = layer.Geometry.Simplify(SimplificationType.VisvalingamWhyatt, map.NearestGoogleZoomLevel, new SimplificationParamters() { Retain3Points = true });
+                var simplified = layer.Geometry.Simplify(SimplificationType.VisvalingamWhyatt, map.NearestGoogleZoomLevel, new SimplificationParameters() { Retain3Points = true });
 
                 map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-VW-{map.NearestGoogleZoomLevel}");
 
@@ -930,7 +930,7 @@ public class LegendCommand : LegendCommandBase
         {
             try
             {
-                var simplified = layer.Geometry.Simplify(SimplificationType.RamerDouglasPeucker, map.NearestGoogleZoomLevel, new SimplificationParamters() { Retain3Points = true });
+                var simplified = layer.Geometry.Simplify(SimplificationType.RamerDouglasPeucker, map.NearestGoogleZoomLevel, new SimplificationParameters() { Retain3Points = true });
                 //VisualSimplification.sim layer.Geometry.Simplify()
                 map.AddDrawingItem(simplified, $"{layer.LayerName} simplified-RDP-{map.NearestGoogleZoomLevel}");
 

@@ -9,7 +9,7 @@ namespace IRI.Maptor.Sta.Spatial.Analysis;
 
 public static class Simplifications
 {
-    public static List<T> SimplifyByAdditiveAreaPlus<T>(List<T> pointList, SimplificationParamters paramters) where T : IPoint
+    public static List<T> SimplifyByAdditiveAreaPlus<T>(List<T> pointList, SimplificationParameters paramters) where T : IPoint
     {
         if (pointList.IsNullOrEmpty())
             return new List<T>();
@@ -68,7 +68,7 @@ public static class Simplifications
     /// <param name="pointList"></param>
     /// <param name="threshold">Must be between 0 and 1</param>
     /// <returns></returns>
-    public static List<T> SimplifyByCumulativeAngle<T>(List<T> pointList, SimplificationParamters paramters) where T : IPoint
+    public static List<T> SimplifyByCumulativeAngle<T>(List<T> pointList, SimplificationParameters paramters) where T : IPoint
     {
         if (pointList.IsNullOrEmpty())
             return new List<T>();
@@ -116,7 +116,7 @@ public static class Simplifications
     /// <param name="pointList"></param>
     /// <param name="anglethreshold">Must be between 0 and 1</param>
     /// <returns></returns>
-    public static List<T> SimplifyByCumulativeAngleArea<T>(List<T> pointList, SimplificationParamters paramters) where T : IPoint
+    public static List<T> SimplifyByCumulativeAngleArea<T>(List<T> pointList, SimplificationParameters paramters) where T : IPoint
     {
         if (pointList.IsNullOrEmpty())
             return new List<T>();
@@ -170,7 +170,7 @@ public static class Simplifications
         return result;
     }
 
-    public static List<T> SimplifyByCumulativeEuclideanDistance<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint
+    public static List<T> SimplifyByCumulativeEuclideanDistance<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
         if (pointList.IsNullOrEmpty())
             return new List<T>();
@@ -220,7 +220,7 @@ public static class Simplifications
     // ***********************************************************************************************
     // ref: Tobler, W. R. (1966). Numerical map generalization: Department of Geography, University of
     //      Michigan Ann Arbour, MI, USA
-    public static List<T> SimplifyByAngle<T>(List<T> pointList, SimplificationParamters paramters) where T : IPoint
+    public static List<T> SimplifyByAngle<T>(List<T> pointList, SimplificationParameters paramters) where T : IPoint
     {
         if (pointList.IsNullOrEmpty())
             return new List<T>();
@@ -254,7 +254,7 @@ public static class Simplifications
     // ***********************************************************************************************
     // ref: Tobler, W. R. (1966). Numerical map generalization: Department of Geography, University of
     //      Michigan Ann Arbour, MI, USA
-    public static List<T> SimplifyByEuclideanDistance<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint
+    public static List<T> SimplifyByEuclideanDistance<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
         var result = new List<T>();
 
@@ -298,7 +298,7 @@ public static class Simplifications
     // ***********************************************************************************************
     // ref: Tobler, W. R. (1966). Numerical map generalization: Department of Geography, University of
     //      Michigan Ann Arbour, MI, USA
-    public static List<T> SimplifyByNthPoint<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint
+    public static List<T> SimplifyByNthPoint<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
         var result = new List<T>();
 
@@ -340,7 +340,7 @@ public static class Simplifications
     // 1401.06.24
     // ref: Tobler, W. R. (1966). Numerical map generalization: Department of Geography, University of
     //      Michigan Ann Arbour, MI, USA
-    public static List<T> SimplifyByRandomPointSelection<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint
+    public static List<T> SimplifyByRandomPointSelection<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
         var result = new List<T>();
 
@@ -382,7 +382,7 @@ public static class Simplifications
     // ***********************************************************************************************
     // ***********************************************************************************************
     // ref: Lang, T., 1969, Rules for robot draughtsmen. Geographical Magazine, vol.62, No.1, pp.50-51
-    public static List<T> SimplifyByLang<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint, new()
+    public static List<T> SimplifyByLang<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
     {
         var result = new List<T>();
 
@@ -459,7 +459,7 @@ public static class Simplifications
     //      required to represent a digitized line or its caricature. Cartographica: the international
     //      journal for geographic information and geovisualization, 1973. 10(2): p. 112-122
     // link: https://doi.org/10.3138/FM57-6770-U75U-7727
-    public static List<T> SimplifyByRamerDouglasPeucker<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint, new()
+    public static List<T> SimplifyByRamerDouglasPeucker<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
     {
         var result = new List<T>();
 
@@ -518,7 +518,7 @@ public static class Simplifications
     // ref: K. Reumann and A.P.M. Witkam. Optimizing curve segmentation in computer graphics.
     //      In Proceedings of the International Computing Symposium, pages 467–472, 1974
     // link: http://psimpl.sourceforge.net/reumann-witkam.html
-    public static List<T> SimplifyByReumannWitkam<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint, new()
+    public static List<T> SimplifyByReumannWitkam<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
     {
         var result = new List<T>();
 
@@ -581,7 +581,7 @@ public static class Simplifications
     //      and Usability Evaluation. Master’s thesis, Uppsala University, Department of Information
     //      Technology, 2011
     // link: http://psimpl.sourceforge.net/perpendicular-distance.html
-    public static List<T> SimplifyByPerpendicularDistance<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint, new()
+    public static List<T> SimplifyByPerpendicularDistance<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
     {
         var result = new List<T>();
 
@@ -648,7 +648,7 @@ public static class Simplifications
     // ***********************************************************************************************
     // 1401.06.24
     // Modified methods means the traverse pattern has been modified
-    public static List<T> SimplifyByModifiedPerpendicularDistance<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint, new()
+    public static List<T> SimplifyByModifiedPerpendicularDistance<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
     {
         var result = new List<T>();
 
@@ -727,7 +727,7 @@ public static class Simplifications
     // ref: Visvalingam, M. and Whyatt, J. D. (1993). ‘Line generalization by repeated elimination
     //      of points’, The Cartographic Journal, 30, 46–51
     // link: https://www.tandfonline.com/doi/abs/10.1179/000870493786962263
-    public static List<T> SimplifyByVisvalingamWhyatt<T>(List<T> pointList, SimplificationParamters parameters, bool isRing) where T : IPoint
+    public static List<T> SimplifyByVisvalingamWhyatt<T>(List<T> pointList, SimplificationParameters parameters, bool isRing) where T : IPoint
     {
         if (pointList.IsNullOrEmpty())
             return new List<T>();
@@ -825,7 +825,7 @@ public static class Simplifications
     // 1401.01.03
     // ref: Zhao, Z. and A. Saalfeld. Linear-time sleeve-fitting polyline simplification algorithms.
     //      In. Proceedings of AutoCarto 13. pages 214–223, 1997
-    public static List<T> SimplifyBySleeveFitting<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint, new()
+    public static List<T> SimplifyBySleeveFitting<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
     {
         var result = new List<T>();
 
@@ -885,7 +885,7 @@ public static class Simplifications
     // ref: Meratnia, N., & Rolf, A. (2004, March). Spatiotemporal compression techniques for moving
     //      point objects. In International Conference on Extending Database Technology (pp. 765-782).
     //      Springer, Berlin, Heidelberg. 
-    public static List<T> SimplifyByNormalOpeningWindow<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint, new()
+    public static List<T> SimplifyByNormalOpeningWindow<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
     {
         var result = new List<T>();
 
@@ -953,7 +953,7 @@ public static class Simplifications
     // ref: Meratnia, N., & Rolf, A. (2004, March). Spatiotemporal compression techniques for moving
     //      point objects. In International Conference on Extending Database Technology (pp. 765-782).
     //      Springer, Berlin, Heidelberg. 
-    public static List<T> SimplifyByBeforeOpeningWindow<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint, new()
+    public static List<T> SimplifyByBeforeOpeningWindow<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
     {
         var result = new List<T>();
 
@@ -1019,7 +1019,7 @@ public static class Simplifications
     // ref: Ekdemir, S., Efficient Implementation of Polyline Simplification for Large Datasets
     //      and Usability Evaluation. Master’s thesis, Uppsala University, Department of Information
     //      Technology, 2011
-    public static List<T> SimplifyByTriangleRoutine<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint
+    public static List<T> SimplifyByTriangleRoutine<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
         List<T> result = new List<T>();
 
@@ -1067,7 +1067,7 @@ public static class Simplifications
     // ***********************************************************************************************
     // ***********************************************************************************************
     // 1401.06.24
-    public static List<T> SimplifyByModifiedTriangleRoutine<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint
+    public static List<T> SimplifyByModifiedTriangleRoutine<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
         List<T> result = new List<T>();
 
@@ -1121,7 +1121,7 @@ public static class Simplifications
     // ***********************************************************************************************
     // ***********************************************************************************************
     // Threshold values are summed in each iteration
-    public static List<T> SimplifyByCumulativeTriangleRoutine<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint
+    public static List<T> SimplifyByCumulativeTriangleRoutine<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
         List<T> result = new List<T>();
 
@@ -1176,7 +1176,7 @@ public static class Simplifications
         return result;
     }
 
-    public static List<T> SimplifyByCumulativeTriangleRoutine2<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint
+    public static List<T> SimplifyByCumulativeTriangleRoutine2<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
         List<T> result = new List<T>();
 
@@ -1238,7 +1238,7 @@ public static class Simplifications
     // Simplification of polylines by segment collapse: Minimizing areal displacement while preserving area.
     // International Journal of Cartography, 6(1), 22-46.
     // link: https://www.tandfonline.com/doi/abs/10.1080/23729333.2019.1631535
-    public static List<T> SimplifyByAPSC<T>(List<T> pointList, SimplificationParamters parameters) where T : IPoint, new()
+    public static List<T> SimplifyByAPSC<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint, new()
     {
         List<T> result = new List<T>();
 
@@ -1261,7 +1261,7 @@ public static class Simplifications
 
     #region Private Methods
 
-    private static List<T> DivideForDouglasPeucker<T>(List<T> pointList, SimplificationParamters paramters, int divideIndex) where T : IPoint, new()
+    private static List<T> DivideForDouglasPeucker<T>(List<T> pointList, SimplificationParameters paramters, int divideIndex) where T : IPoint, new()
     {
         var leftList = pointList.Take(divideIndex + 1).ToList();
 

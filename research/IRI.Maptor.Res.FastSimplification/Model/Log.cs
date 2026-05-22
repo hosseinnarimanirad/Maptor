@@ -30,7 +30,7 @@ public class Log
         List<Geometry<Point>> originalGeometries,
         List<Geometry<Point>> simplifiedGeometries,
         long elapsedMilliseconds,
-        SimplificationParamters parameters)
+        SimplificationParameters parameters)
     {
         this.FileName = fileName;
 

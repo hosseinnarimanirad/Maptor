@@ -67,7 +67,7 @@ public static class SimplificationHelper
 
         var threshold = webMercatorResolution   /** coef*/;
 
-        var parameters = new SimplificationParamters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = true };
+        var parameters = new SimplificationParameters() { AreaThreshold = threshold * threshold, DistanceThreshold = threshold, Retain3Points = true };
 
         var length_Original = feature.GetEuclideanLength();
 

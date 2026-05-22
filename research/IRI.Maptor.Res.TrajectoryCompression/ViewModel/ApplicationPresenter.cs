@@ -164,7 +164,7 @@ public class ApplicationPresenter : MapViewModelBase
                         this.AddLayer(originalLayer);
                     }
 
-                    SimplificationParamters parameters = new SimplificationParamters()
+                    SimplificationParameters parameters = new SimplificationParameters()
                     {
                         DistanceThreshold = DistanceTolerance,
                         Retain3Points = retain3Points,
