@@ -282,7 +282,7 @@ public class FeatureSet<T> where T : IPoint, new()
     public override string ToString() => $"FeatureSet, Feature Count:{Features?.Count ?? 0} (Total:{_allFeatures?.Count ?? 0})";
 
 
-    public static FeatureSet<T> Create(string title, List<Feature<T>> features)
+    public static FeatureSet<T> Create(string title, IEnumerable<Feature<T>> features)
     {
         if (features.IsNullOrEmpty())
             return FeatureSet<T>.Empty;
@@ -293,7 +293,7 @@ public class FeatureSet<T> where T : IPoint, new()
         return new FeatureSet<T>()
         {
             Title = title,
-            _allFeatures = features,
+            _allFeatures = features.ToList(),
             Fields = Field.FromDictionary(features?.FirstOrDefault().Attributes),
             Srid = features.SkipWhile(f => f is null || f.TheGeometry.IsNotValidOrEmpty())?.FirstOrDefault()?.Srid ?? 0,
             GeometryType = features.SkipWhile(f => f is null || f.TheGeometry.IsNotValidOrEmpty())?.FirstOrDefault()?.GeometryType ?? GeometryType.None

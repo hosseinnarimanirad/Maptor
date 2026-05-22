@@ -55,7 +55,7 @@ public class EsriJsonFeatureSet
     {
         var srid = this.SpatialReference.LatestWkid ?? this.SpatialReference.Wkid;
 
-        var features = this.Features.Select(f => f.AsFeature(null, srid)).ToList();
+        var features = this.Features.Select(f => f.AsFeature(srid)).ToList();
 
         var result = FeatureSet<Point>.Create("esri json", features);
 
@@ -104,8 +104,8 @@ public class EsriJsonFeatureSet
         //}
 
         return result;
-
     }
+
 
     // todo: remove added Take(2) for test
     public static EsriJsonFeatureSet? Parse(FeatureSet<Point> featureSet)

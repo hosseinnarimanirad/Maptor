@@ -152,7 +152,7 @@ public partial class MainWindow : Window
                 info.AppendLine("📐 Objects:");
 
                 // Convert TopoJSON to Geometry objects
-                var geometries = TopoJson.ToGeometry(topology, srid: 4326);
+                var geometries = TopoJson.ToFeature(topology, srid: 4326);
 
                 foreach (var kvp in geometries)
                 {

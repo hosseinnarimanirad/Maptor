@@ -46,7 +46,11 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
 
 
     // Coordinate System
-    public bool ShowSrsOptions => SelectedDataSourceKind == DataSourceKind.Shapefile || SelectedDataSourceKind == DataSourceKind.Dxf;
+    public bool ShowSrsOptions =>
+        SelectedDataSourceKind == DataSourceKind.Shapefile ||
+        SelectedDataSourceKind == DataSourceKind.Dxf ||
+        SelectedDataSourceKind == DataSourceKind.EsriJson;//||
+        //SelectedDataSourceKind == DataSourceKind.TopoJson;
 
     private readonly SrsOption _utmOption;
     private readonly MapViewModelBase viewModel;

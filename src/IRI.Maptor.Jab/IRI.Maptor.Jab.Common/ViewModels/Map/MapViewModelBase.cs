@@ -4899,7 +4899,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             MemoryDataSource dataSource = result.IsFileSelected
                 ? await TopoJsonDataSource.CreateFromFileAsync(result.FilePath!, result.SelectedSrid)
-                : await TopoJsonDataSource.CreateFromTextAsync(result.RawJson, result.SelectedSrid, result.FilePath ?? string.Empty);
+                : await TopoJsonDataSource.CreateFromTextAsync(result.RawJson, result.SelectedSrid);
 
             var layerName = !string.IsNullOrEmpty(result.FilePath)
                 ? Path.GetFileNameWithoutExtension(result.FilePath)
@@ -4959,27 +4959,32 @@ public abstract class MapViewModelBase : ViewModelBase
             if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
                 throw new MaptorFileNotFoundException(fileName);
 
-            List<Feature<Point>> features;
+            //List<Feature<Point>> features;
+
+            var dataSource = await EsriJsonDataSource.CreateFromFileAsync(fileName);
+
+            if (dataSource is null)
+                return;
 
             // read esri geojsons
-            var esriFeatureSet = await EsriJsonFeatureSet.Load(fileName);
+            //var esriFeatureSet = await EsriJsonFeatureSet.Load(fileName);
 
-            if (esriFeatureSet is null || esriFeatureSet.Features.IsNullOrEmpty())
-                throw new MaptorEmptyFileException();
+            //if (esriFeatureSet is null || esriFeatureSet.Features.IsNullOrEmpty())
+            //    throw new MaptorEmptyFileException();
 
-            var featureSet = esriFeatureSet.AsFeatureSet();
+            //var featureSet = esriFeatureSet.AsFeatureSet();
 
-            features = featureSet.Features.Select(f => f.Project(SrsBases.WebMercator)).ToList();
+            //features = featureSet.Features.Select(f => f.Project(SrsBases.WebMercator)).ToList();
 
-            var dataSource = new MemoryDataSource(features, false, DataSourceKind.EsriJson);
+            //var dataSource = new MemoryDataSource(features, false, DataSourceKind.EsriJson);
 
-            var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
+            //var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
 
-            var symbolizers = features.CreateSymbolizersFromKml(geometryType);
+            //var symbolizers = features.CreateSymbolizersFromKml(geometryType);
 
             var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
                                 dataSource,
-                                symbolizers,
+                                [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
                                 LayerType.VectorLayer,
                                 RenderMode.Default,
                                 RasterizationMethod.GdiPlus,

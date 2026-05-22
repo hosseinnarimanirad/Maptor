@@ -10,14 +10,16 @@ A .NET Standard implementation of TopoJSON for compact representation of geograp
 - **Full TopoJSON Support**  
   ✅ TopoJSON Specification compliant  
   ✅ Geometry types: `Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`  
-  ⚠️ `GeometryCollection` is parsed but skipped during conversion (logged to Debug output)  
+  ✅ `GeometryCollection` is fully supported (parsed and written) 
   ✅ Arc-based topology for eliminating redundancy
   ✅ Quantization support for size reduction
+  ✅ **Power BI Shape Map ready** – writing a list of features produces a single `GeometryCollection
   
 - **Conversion Tools**  
   🔄 TopoJSON ↔ Geometry<Point>  
-  🔄 Automatic topology extraction
-  🔄 Shared arc deduplication
+  🔄 Automatic topology extraction  
+  🔄 Shared arc deduplication  
+  🔄 Properties dictionary automatically converted to proper .NET types (`int`, `double`, `string`, `bool`, etc.) 
 
 ## 📦 What is TopoJSON?
 
@@ -41,47 +43,55 @@ dotnet add package IRI.Maptor.Sta.Spatial
 using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 
 // Read from file
-var topology = TopoJson.ReadFromFile("map.topojson");
+var topology = await TopoJson.ReadFromFileAsync("map.topojson");
 
 // Parse from string
-var topoJsonString = File.ReadAllText("map.topojson");
+string topoJsonString = File.ReadAllText("map.topojson");
 var topology = TopoJson.Parse(topoJsonString);
 
-// Convert to Geometry
-var geometries = TopoJson.ToGeometry(topology, srid: 4326);
-
-foreach (var kvp in geometries)
+// Convert to Features (with strongly typed properties)
+var features = TopoJson.ToFeature(topology, srid: 4326);
+foreach (var kvp in features)
 {
-    Console.WriteLine($"Object '{kvp.Key}': {kvp.Value.Type}");
+    Console.WriteLine($"Feature '{kvp.Key}': {kvp.Value.TheGeometry.Type}");
+    if (kvp.Value.Attributes.ContainsKey("BranchId"))
+    {
+        int branchId = (int)kvp.Value.Attributes["BranchId"];
+        Console.WriteLine($"  BranchId: {branchId}");
+    }
 }
 ```
 
-### Writing TopoJSON
+### Writing TopoJSON (Power BI compatible)
+
+When writing a list of features, the library automatically groups them into a single GeometryCollection – exactly what Power BI Shape Map expects.
 
 ```csharp
 using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
-// Create geometry
-var points = new List<Point>
+// Create features with attributes
+var features = new List<Feature<Point>>();
+foreach (var region in regionsData)
 {
-    new Point(0, 0),
-    new Point(10, 0),
-    new Point(10, 10),
-    new Point(0, 10),
-    new Point(0, 0)
-};
-var polygon = Geometry<Point>.Create(points.Take(4).ToList(), GeometryType.Polygon, 4326);
+    var geometry = Geometry<Point>.Create(region.Points, GeometryType.Polygon, 4326);
+    var attributes = new Dictionary<string, object>
+    {
+        ["Name"] = region.Name,
+        ["Population"] = region.Population,
+        ["IsCapital"] = region.IsCapital
+    };
+    features.Add(new Feature<Point>(geometry, attributes));
+}
 
-// Convert to TopoJSON with quantization
-var topology = TopoJson.FromGeometry(polygon, "myPolygon", quantize: true, quantizationFactor: 10000);
-
-// Write to file
-TopoJson.WriteToFile(topology, "output.topojson", indented: true);
+// Write to TopoJSON file (the output will contain a single "data" GeometryCollection)
+await TopoJson.WriteToFileAsync(features, "output.topojson", quantize: true, quantizationFactor: 10000, collectionName: "regions");
 ```
 
 ### Converting Multiple Geometries with Shared Topology
+
+If you need to write raw geometries without attributes, use FromGeometries (which also groups them into a GeometryCollection):
 
 ```csharp
 var geometries = new Dictionary<string, Geometry<Point>>
@@ -103,13 +113,13 @@ TopoJSON supports quantization to reduce file size further:
 
 ```csharp
 // High precision (larger file)
-var topology1 = TopoJson.FromGeometry(geometry, "data", quantize: true, quantizationFactor: 1000000);
+var topology1 = TopoJsonConverter.FromFeatures(features, quantize: true, quantizationFactor: 1000000);
 
 // Lower precision (smaller file)
-var topology2 = TopoJson.FromGeometry(geometry, "data", quantize: true, quantizationFactor: 10000);
+var topology2 = TopoJsonConverter.FromFeatures(features, quantize: true, quantizationFactor: 10000);
 
 // No quantization (exact coordinates)
-var topology3 = TopoJson.FromGeometry(geometry, "data", quantize: false);
+var topology3 = TopoJsonConverter.FromFeatures(features, quantize: false);
 ```
 
 ## 🔧 Advanced Usage
@@ -117,7 +127,7 @@ var topology3 = TopoJson.FromGeometry(geometry, "data", quantize: false);
 ### Working with Arcs
 
 ```csharp
-var topology = TopoJson.ReadFromFile("map.topojson");
+var topology = await TopoJson.ReadFromFileAsync("map.topojson");
 
 Console.WriteLine($"Number of arcs: {topology.Arcs.Count}");
 Console.WriteLine($"Number of objects: {topology.Objects.Count}");
@@ -159,6 +169,7 @@ Example comparison for a typical geographic dataset:
 
 ## 🎯 Use Cases
 
+- **Power BI Shape Maps** – Write features directly to a format ready for the Shape Map visual (single `GeometryCollection`)
 - **Web mapping** - Reduce bandwidth for vector tiles
 - **Data archival** - Store geographic data efficiently
 - **Topology analysis** - Maintain shared boundaries
@@ -178,7 +189,7 @@ Example comparison for a typical geographic dataset:
 
 ## 🐞 Known Limitations
 
-- **GeometryCollection**: Recognized during parsing but skipped during geometry conversion. A debug message is logged when encountered. Consider converting individual geometries separately.
 - Very large datasets (>100k arcs) may have slower conversion times
 - Topology simplification is not yet implemented (use pre-simplified geometries)
+- Only 2D coordinates are currently supported (Z and M are ignored)
 

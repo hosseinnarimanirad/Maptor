@@ -76,12 +76,12 @@ public class TopoJsonDataSource : MemoryDataSource
     /// <summary>
     /// Creates a TopoJsonDataSource from pasted or in-memory JSON text.
     /// </summary>
-    public static Task<TopoJsonDataSource> CreateFromTextAsync(string jsonText, int sourceSrid = 4326, string fileName = "")
+    public static Task<TopoJsonDataSource> CreateFromTextAsync(string jsonText, int sourceSrid = 4326)
     {
         if (string.IsNullOrWhiteSpace(jsonText))
             throw new ArgumentException("JSON text cannot be empty.", nameof(jsonText));
 
-        var ds = CreateFromJson(jsonText, fileName ?? string.Empty, sourceSrid);
+        var ds = CreateFromJson(jsonText, string.Empty, sourceSrid);
         return Task.FromResult(ds);
     }
 
@@ -92,7 +92,7 @@ public class TopoJsonDataSource : MemoryDataSource
 
         var topology = TopoJson.Parse(jsonString);
 
-        var geometries = TopoJson.ToGeometry(topology, sourceSrid);
+        var geometries = TopoJson.ToFeature(topology, sourceSrid);
 
         //var webMercator = new WebMercator();
         var features = new List<Feature<Point>>();

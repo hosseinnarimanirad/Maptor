@@ -144,7 +144,7 @@ public static class TopoJson
     /// <summary>
     /// Convert TopoJSON to Geometry
     /// </summary>
-    public static Dictionary<string, Feature<Point>> ToGeometry(TopoJsonTopology topology, int srid = 4326)
+    public static Dictionary<string, Feature<Point>> ToFeature(TopoJsonTopology topology, int srid = 4326)
     {
         return TopoJsonConverter.ToGeometry(topology, srid);
     }

@@ -21,4 +21,9 @@ public class EsriJsonSpatialReference
     //[DataMember(Name = "latestVcsWkid")]
     [JsonPropertyName("latestVcsWkid")]
     public int? LatestVcsWkid { get; set; }
+
+    public override string ToString()
+    {
+        return $"Wkid: {Wkid}, LatestWkid: {LatestWkid}";
+    }
 }

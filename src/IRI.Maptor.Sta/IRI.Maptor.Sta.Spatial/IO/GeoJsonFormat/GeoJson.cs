@@ -7,6 +7,7 @@ using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Enums;
+using System.Text.Json.Serialization;
 
 namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 
@@ -15,6 +16,16 @@ namespace IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 /// </summary>
 public static class GeoJson
 {
+    public static readonly JsonSerializerOptions DefaultOptions = new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals,
+        WriteIndented = false,
+        // default; can be overridden per call
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        AllowOutOfOrderMetadataProperties = true,
+    };
+
     public const string Point = "Point";
     public const string MultiPoint = "MultiPoint";
     public const string LineString = "LineString";
@@ -76,9 +87,7 @@ public static class GeoJson
             throw new IOException($"An I/O error occurred while reading the GeoJSON file: {fileName}. {ex.Message}", ex);
         }
     }
-
-
-
+     
     /// <summary>
     /// Saves GeoJSON features to a file.
     /// </summary>
@@ -86,7 +95,7 @@ public static class GeoJson
     /// <param name="features">The collection of GeoJSON features to save.</param>
     public static void SaveFeatures(string fileName, IEnumerable<GeoJsonFeature> features)
     {
-        var content = JsonHelper.Serialize(features);
+        var content = JsonHelper.Serialize(features, DefaultOptions);
 
         File.WriteAllText(fileName, content);
     }
@@ -101,7 +110,9 @@ public static class GeoJson
 
     public static string SerializeGeometry(IGeoJsonGeometry geoJson, bool indented, bool removeSpaces = false)
     {
-        var result = JsonHelper.Serialize(geoJson, indented);
+        DefaultOptions.WriteIndented = indented;
+
+        var result = JsonHelper.Serialize(geoJson, DefaultOptions);
 
         return removeSpaces ? result.Replace(" ", string.Empty) : result;
     }
@@ -112,14 +123,8 @@ public static class GeoJson
     /// <param name="geoJsonString">The GeoJSON geometry string to deserialize.</param>
     /// <returns>An IGeoJsonGeometry instance representing the parsed geometry.</returns>
     public static IGeoJsonGeometry? DeserializeGeometry(string geoJsonString)
-        => JsonHelper.Deserialize<IGeoJsonGeometry>(geoJsonString);
-
-    //internal static GeoJsonFeature AsFeature(IGeoJsonGeometry geometry) => GeoJsonFeature.Create(geometry);
-
-    //internal static GeoJsonFeatureSet AsFeatureSet(IGeoJsonGeometry geometry)
-    //        => new GeoJsonFeatureSet() { Features = [AsFeature(geometry)], TotalFeatures = 1 };
-
-
+        => JsonHelper.Deserialize<IGeoJsonGeometry>(geoJsonString, DefaultOptions);
+     
     #region Helper methods
 
 
@@ -158,31 +163,7 @@ public static class GeoJson
     #endregion
 
 
-    /// <summary>
-    /// Creates a point instance from coordinate array based on dimension.
-    /// 2D coordinates [longitude, latitude] → Point
-    /// 3D coordinates [longitude, latitude, elevation] → PointZ
-    /// 4D coordinates [longitude, latitude, elevation, measure] → PointZM
-    /// </summary>
-    /// <param name="coords">Coordinate array with 2, 3, or 4 elements.</param>
-    /// <param name="isLongitudeFirst">If true, coordinates are interpreted as [longitude, latitude]; otherwise [latitude, longitude].</param>
-    /// <returns>An IPoint instance (Point, PointZ, or PointZM).</returns>
-    //internal static IPoint CreatePointFromCoordinates(double[] coords, bool isLongitudeFirst = true)
-    //{
-    //    if (coords == null || coords.Length < 2)
-    //        throw new ArgumentException("Coordinates must have at least 2 elements.", nameof(coords));
-
-    //    double x = isLongitudeFirst ? coords[0] : coords[1];
-    //    double y = isLongitudeFirst ? coords[1] : coords[0];
-
-    //    return coords.Length switch
-    //    {
-    //        2 => new Point(x, y),
-    //        3 => new PointZ { X = x, Y = y, Z = coords[2] },
-    //        4 => new PointZM { X = x, Y = y, Z = coords[2], M = coords[3] },
-    //        _ => throw new ArgumentException($"Unsupported coordinate dimension: {coords.Length}. Expected 2, 3, or 4.", nameof(coords))
-    //    };
-    //}
+    #region Helper methods for Geometry<T> and IPoint types conversions
 
     internal static T CreatePointFromCoordinates<T>(double[] coords, IPointFactory<T> pointFactory, bool isLongitudeFirst = true) where T : IPoint
     {
@@ -199,35 +180,7 @@ public static class GeoJson
     {
         return coords?.Select(c => CreatePointFromCoordinates(c, pointFactory, isLongitudeFirst)).ToList() ?? new List<T>();
     }
-
-    /// <summary>
-    /// Creates a Geometry instance with the appropriate point type based on coordinate dimensions.
-    /// </summary>
-    /// <param name="coordinates">Single coordinate array.</param>
-    /// <param name="geometryType">The type of geometry to create.</param>
-    /// <param name="isLongitudeFirst">If true, coordinates are interpreted as [longitude, latitude].</param>
-    /// <param name="srid">The spatial reference system identifier.</param>
-    /// <returns>An IGeometry instance with appropriate point type.</returns>
-    //internal static Geometry<T> CreatePointGeometryFromCoordinates<T>(
-    //    double[] coordinates,
-    //    IPointFactory<T> pointFactory,
-    //    GeometryType geometryType,
-    //    bool isLongitudeFirst = true,
-    //    int srid = 0) where T : IPoint, new()
-    //{
-    //    var point = CreatePointFromCoordinates(coordinates, pointFactory, isLongitudeFirst);
-
-    //    return new Geometry<T>([point], geometryType, srid);
-
-    //    //return point switch
-    //    //{
-    //    //    PointZM pzm => new Geometry<PointZM>(new List<PointZM> { pzm }, geometryType, srid),
-    //    //    PointZ pz => new Geometry<PointZ>(new List<PointZ> { pz }, geometryType, srid),
-    //    //    Point p => new Geometry<Point>(new List<Point> { p }, geometryType, srid),
-    //    //    _ => throw new NotSupportedException($"Unsupported point type: {point.GetType()}")
-    //    //};
-    //}
-
+     
     /// <summary>
     /// Creates a Geometry instance with the appropriate point type based on coordinate dimensions.
     /// All coordinates are normalized to the maximum dimension found.
@@ -251,15 +204,7 @@ public static class GeoJson
 
         var pointsToUse = isRing && coordinates.Length > 0 ? coordinates.Take(coordinates.Length - 1) : coordinates;
 
-        return Geometry<T>.Create(pointsToUse.Select(c => CreatePointFromCoordinates(c, pointFactory, isLongitudeFirst)).ToList(), geometryType, srid);
-
-        //return maxDim switch
-        //{
-        //    2 => new Geometry<Point>(coordinates.Select(c => CreatePointFromCoordinates(c, pointFactory, isLongitudeFirst)).ToList(), geometryType, srid),
-        //    3 => new Geometry<PointZ>(coordinates.Select(c => CreatePointFromCoordinates(c, pointZFactory, isLongitudeFirst)).ToList(), geometryType, srid),
-        //    4 => new Geometry<PointZM>(coordinates.Select(c => CreatePointFromCoordinates(c, pointZMFactory, isLongitudeFirst)).ToList(), geometryType, srid),
-        //    _ => throw new NotSupportedException($"Unsupported coordinate dimension: {maxDim}")
-        //};
+        return Geometry<T>.Create(pointsToUse.Select(c => CreatePointFromCoordinates(c, pointFactory, isLongitudeFirst)).ToList(), geometryType, srid); 
     }
 
     /// <summary>
@@ -283,30 +228,9 @@ public static class GeoJson
         var ringGeometries = rings.Select(ring => CreateGeometryFromLineCoordinates(ring, pointFactory, GeometryType.LineString, isRing: true, isLongitudeFirst, srid)).ToList();
 
         return Geometry<T>.Create(ringGeometries, geometryType, srid);
-
-        //// All rings should have the same point type, so use the first one to determine the type
-        //return ringGeometries[0] switch
-        //{
-        //    Geometry<Point> => new Geometry<Point>(ringGeometries.Cast<Geometry<Point>>().ToList(), geometryType, srid),
-        //    Geometry<PointZ> => new Geometry<PointZ>(ringGeometries.Cast<Geometry<PointZ>>().ToList(), geometryType, srid),
-        //    Geometry<PointZM> => new Geometry<PointZM>(ringGeometries.Cast<Geometry<PointZM>>().ToList(), geometryType, srid),
-        //    _ => throw new NotSupportedException($"Unsupported geometry type: {ringGeometries[0].GetType()}")
-        //};
+         
     }
 
-    /// <summary>
-    /// Creates an empty geometry with the specified type and SRID.
-    /// </summary>
-    /// <param name="geometryType">The type of geometry.</param>
-    /// <param name="srid">The spatial reference system identifier.</param>
-    /// <returns>An empty IGeometry instance.</returns>
-    //internal static IGeometry CreateEmptyGeometry(GeometryType geometryType, int srid = 0)
-    //{
-    //    // Default to Point for empty geometries
-    //    return Geometry<Point>.CreateEmpty(geometryType, srid);
-    //}
-
-    #region Polygon Ring Orientation Validation (RFC 7946 Section 3.1.6)
 
     /// <summary>
     /// Validates that a polygon ring follows the correct orientation per RFC 7946.

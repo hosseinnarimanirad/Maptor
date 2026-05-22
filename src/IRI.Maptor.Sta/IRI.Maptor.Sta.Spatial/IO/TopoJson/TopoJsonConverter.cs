@@ -243,12 +243,15 @@ public static class TopoJsonConverter
         foreach (var ring in geometry.Geometries)
         {
             var points = ring.GetAllPoints();
+
             // Close the ring if not already closed
             if (!points.First().Equals(points.Last()))
             {
                 points = new List<Point>(points) { points.First() };
             }
+
             var arcIndex = arcBuilder.AddArc(points, transform);
+
             arcs.Add(new List<int> { arcIndex });
         }
 
@@ -266,12 +269,15 @@ public static class TopoJsonConverter
             foreach (var ring in polygon.Geometries)
             {
                 var points = ring.GetAllPoints();
+
                 // Close the ring if not already closed
                 if (!points.First().Equals(points.Last()))
                 {
                     points = new List<Point>(points) { points.First() };
                 }
+
                 var arcIndex = arcBuilder.AddArc(points, transform);
+
                 polygonArcs.Add(new List<int> { arcIndex });
             }
 

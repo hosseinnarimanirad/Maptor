@@ -54,7 +54,7 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
 
     public MemoryDataSource() : base(new List<Field>()) { _dataSourceKind = DataSourceKind.Other; }
 
-    public MemoryDataSource(List<Geometry<Point>> geometries, bool resetIds = true, DataSourceKind kind = DataSourceKind.Other) : this()
+    public MemoryDataSource(IEnumerable<Geometry<Point>> geometries, bool resetIds = true, DataSourceKind kind = DataSourceKind.Other) : this()
     { 
         _dataSourceKind = kind;
 
@@ -63,14 +63,14 @@ public class MemoryDataSource : VectorDataSource, IEditableVectorDataSource
         Initialize(features, resetIds);
     }
 
-    public MemoryDataSource(List<Feature<Point>> webMercatorFeatures, bool resetIds = true, DataSourceKind kind = DataSourceKind.Other) : this()
+    public MemoryDataSource(IEnumerable<Feature<Point>> webMercatorFeatures, bool resetIds = true, DataSourceKind kind = DataSourceKind.Other) : this()
     { 
         _dataSourceKind = kind;
 
         Initialize(webMercatorFeatures, resetIds);
     }
 
-    private void Initialize(List<Feature<Point>> webMercatorFeatures, bool resetIds)
+    private void Initialize(IEnumerable<Feature<Point>> webMercatorFeatures, bool resetIds)
     {
         if (resetIds)
         {
