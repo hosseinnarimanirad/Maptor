@@ -10,8 +10,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
-                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.Button.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
@@ -55,12 +53,11 @@
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}">
                 <Setter Property="mahApp:HeaderedControlHelper.HeaderFontFamily" Value="{StaticResource iranSans}"/>
             </Style>
-
         </ResourceDictionary>
     </UserControl.Resources>
     <Border CornerRadius="15" BorderThickness="3" MinWidth="420" VerticalAlignment="Top" HorizontalAlignment="Center" 
-                    Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent3}" Opacity=".95"
-                    Margin="4" Visibility="{Binding IsDrawEditMeasureMode, Converter={StaticResource boolToVisibilityConverter}}">
+            Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent3}" Opacity=".95"
+            Margin="4" Visibility="{Binding IsDrawEditMeasureMode, Converter={StaticResource boolToVisibilityConverter}}">
         <StackPanel FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}">
             <DockPanel Margin="0" >
 
@@ -73,19 +70,6 @@
                          Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                     <TextBox.Style>
                         <Style TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}">
-                            <!--<Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="TextBox">
-                                        <Border x:Name="Border"
-                                                 Background="{TemplateBinding Background}"
-                                                 BorderBrush="{TemplateBinding BorderBrush}"
-                                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                                 CornerRadius="4">
-                                            <ScrollViewer x:Name="PART_ContentHost" />
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>-->
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=MapPanel.IsGeodeticWgs84EditingMode}" Value="True">
                                     <Setter Property="Text" Value="{Binding Path=MapPanel.CurrentEditingPoint.X, Mode=TwoWay, StringFormat={}{0:N5}}"/>
@@ -96,11 +80,6 @@
                             </Style.Triggers>
                         </Style>
                     </TextBox.Style>
-                    <!--<TextBox.Resources>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="4"/>
-                        </Style>
-                    </TextBox.Resources>-->
                 </TextBox>
 
                 <TextBlock DockPanel.Dock="Left" Text="Y:" Margin="8 0 0 0"
@@ -112,19 +91,6 @@
                          Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                     <TextBox.Style>
                         <Style TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}">
-                            <!--<Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="TextBox">
-                                        <Border x:Name="Border"
-                                                 Background="{TemplateBinding Background}"
-                                                 BorderBrush="{TemplateBinding BorderBrush}"
-                                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                                 CornerRadius="5">
-                                            <ScrollViewer x:Name="PART_ContentHost" />
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>-->
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=MapPanel.IsGeodeticWgs84EditingMode}" Value="True">
                                     <Setter Property="Text" Value="{Binding Path=MapPanel.CurrentEditingPoint.Y, Mode=TwoWay, StringFormat={}{0:N5}}"/>
@@ -135,11 +101,6 @@
                             </Style.Triggers>
                         </Style>
                     </TextBox.Style>
-                    <!--<TextBox.Resources>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="4"/>
-                        </Style>
-                    </TextBox.Resources>-->
                 </TextBox>
 
                 <!--Drawing-->
@@ -217,8 +178,6 @@
                         <iconPacks:Material Kind="CheckBold"/>
                     </Button>
                 </StackPanel>
-                <!--Editing-->
-
             </DockPanel>
 
             <!--new drawing information text-->
@@ -319,7 +278,7 @@
                                 </StackPanel>
                             </RadioButton>
                             <RadioButton GroupName="A" Style="{StaticResource simpleToggle}"
-                                         ToolTip="{Binding [srs_utmTitle], Source={StaticResource Localization}}"
+                                        ToolTip="{Binding [srs_utmTitle], Source={StaticResource Localization}}"
                                         IsChecked="{Binding MapPanel.IsUTMEditingMode, Mode=TwoWay}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
                                     <iconPacks:PackIconMaterial Kind="EarthBox" Margin="0 0 4 0" VerticalAlignment="Center"/>
@@ -327,18 +286,13 @@
                                 </StackPanel>
                             </RadioButton>
                             <TextBlock DockPanel.Dock="Left" Margin="4"
-                                            Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}"
-                                            Text="{Binding [srs_utmZone], Source={StaticResource Localization}}"/>
+                                        Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}"
+                                        Text="{Binding [srs_utmZone], Source={StaticResource Localization}}"/>
                             <TextBox DockPanel.Dock="Left" BorderThickness="1" FlowDirection="LeftToRight" MinWidth="30" Margin="2" VerticalAlignment="Center"
                                         Text="{Binding MapPanel.CurrentEditingZone, Mode=TwoWay}" MaxWidth="30"
-                                     mahApp:ControlsHelper.CornerRadius="4"
-                                     Style="{StaticResource IRI.Maptor.Styles.TextBox}"
-                                            Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}">
-                                <!--<TextBox.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="3"/>
-                                    </Style>
-                                </TextBox.Resources>-->
+                                        mahApp:ControlsHelper.CornerRadius="4"
+                                        Style="{StaticResource IRI.Maptor.Styles.TextBox}"
+                                        Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}">
                             </TextBox>
                         </StackPanel>
                     </TabItem>
@@ -350,7 +304,6 @@
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Margin" Value="2"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <!--<Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>-->
                                 </Style>
                                 <Style x:Key="headerTitle" TargetType="TextBlock" BasedOn="{StaticResource MahApps.Styles.TextBlock}">
                                     <Setter Property="Margin" Value="2"/>
@@ -364,7 +317,6 @@
                                     <Setter Property="CornerRadius" Value="4"/>
                                 </Style>
                             </StackPanel.Resources>
-
                             <!--general group-->
                             <GroupBox Header="{Binding [mapPanel_measure_generalTitle], Source={StaticResource Localization}}">
                                 <Grid>
@@ -384,13 +336,13 @@
                                     </DockPanel>
                                 </Grid>
                             </GroupBox>
+                            <!--length-->
                             <Expander IsExpanded="False">
                                 <Expander.Header>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding [mapPanel_measure_lengthTitle], Source={StaticResource Localization}}"
                                                    Style="{StaticResource headerTitle}"/>
                                         <TextBlock Text=":" Style="{StaticResource headerTitle}"/>
-                                        <!--<TextBlock Text="{Binding CurrentEditingLayer.GroundLength, StringFormat={}{0:N1}}"-->
                                         <Border Style="{StaticResource headerBorder}">
                                             <TextBlock Text="{Binding CurrentEditingLayer.GroundLength, Converter={StaticResource localizedNumberConverter}}"
                                                         Style="{StaticResource headerTitle}"/>
@@ -427,6 +379,7 @@
 
                                 </Grid>
                             </Expander>
+                            <!--area-->
                             <Expander IsExpanded="False">
                                 <Expander.Header>
                                     <StackPanel Orientation="Horizontal">
@@ -452,7 +405,7 @@
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/> 
+                                        <RowDefinition Height="auto"/>
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Bold" Text="{Binding [mapPanel_measure_euclideanAreaUtm], Source={StaticResource Localization}}"/>
@@ -473,7 +426,7 @@
             </TabControl>
 
             <!--options semi expander at the below-->
-            <Border Height="Auto" Margin="0 5 0 0" CornerRadius="0 0 13 13" 
+            <!--<Border Height="Auto" Margin="0 5 0 0" CornerRadius="0 0 13 13" 
                     Cursor="Hand" Visibility="{Binding MapPanel.Options.IsOptionsAvailable, Converter={StaticResource boolToVisibilityConverter}}">
                 <Border.InputBindings>
                     <MouseBinding MouseAction="LeftClick" Command="{Binding MapPanel.ToggleDetailsVisibilityCommand}"/>
@@ -496,7 +449,55 @@
                                                 Visibility="{Binding MapPanel.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"
                                                 Foreground="{DynamicResource MahApps.Brushes.Highlight}"/>
                 </StackPanel>
-            </Border>
+            </Border>-->
+            <Button Margin="0 5 0 0" 
+                    Visibility="{Binding MapPanel.Options.IsOptionsAvailable, Converter={StaticResource boolToVisibilityConverter}}"
+                    Command="{Binding MapPanel.ToggleDetailsVisibilityCommand}" >
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                        <!-- Remove default button chrome and set custom template -->
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            CornerRadius="0 0 13 13"
+                                            BorderThickness="0">
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <!-- Hover effect: change background (the Border uses TemplateBinding) -->
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <!-- Original content (StackPanel with two icons) -->
+                <StackPanel HorizontalAlignment="Center">
+                    <iconPacks:PackIconMaterial Margin="2" Height="8" Kind="ChevronDown"
+                                    Visibility="{Binding MapPanel.IsDetailsNotVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
+                    <!--Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"/>-->
+                    <iconPacks:PackIconMaterial Margin="2" Height="8" Kind="ChevronUp"
+                                    Visibility="{Binding MapPanel.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"/>
+                    <!--Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType=Button}}"/>-->
+                </StackPanel>
+            </Button>
         </StackPanel>
     </Border>
 </UserControl>
