@@ -11,8 +11,8 @@
     Title="{Binding DialogTitle, RelativeSource={RelativeSource AncestorType=mahApp:MetroWindow}}"          
     SizeToContent="Height"
     MaxWidth="750"
-    ShowMaxRestoreButton="True" 
-    WindowStartupLocation="CenterOwner">
+    ShowMaxRestoreButton="True"  
+    WindowStartupLocation="CenterOwner" >
     <mahApp:MetroWindow.TitleTemplate>
         <DataTemplate>
             <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}" />
@@ -31,7 +31,7 @@
     <StackPanel Margin="4">
 
         <!-- Basic Information Section -->
-        <GroupBox Grid.Row="0" Margin="0,0,0,2" Padding="4">
+        <GroupBox Grid.Row="0" Margin="0,0,0,0" Padding="4">
             <GroupBox.Header>
                 <TextBlock Text="{Binding [dialog_geometryDetails_basicInfo], Source={StaticResource Localization}}"
                            Style="{StaticResource IRI.Maptor.Styles.TextBlock.HeaderTitle}"/>
@@ -42,11 +42,16 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/> 
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
@@ -60,19 +65,19 @@
                 <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Dimension}" 
                            FontWeight="Bold" Margin="4" VerticalAlignment="Center"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
+                <TextBlock Grid.Row="0" Grid.Column="4" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
                            Text="{Binding [dialog_geometryDetails_numberOfPoints], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding NumberOfPoints, Converter={StaticResource localizedNumberConverter}}" 
+                <TextBlock Grid.Row="0" Grid.Column="5" Text="{Binding NumberOfPoints, Converter={StaticResource localizedNumberConverter}}" 
                            Margin="4" VerticalAlignment="Center"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" 
+                <TextBlock Grid.Row="0" Grid.Column="6" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" 
                            Text="{Binding [dialog_geometryDetails_numberOfGeometries], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
-                <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding NumberOfGeometries, Converter={StaticResource localizedNumberConverter}}" 
+                <TextBlock Grid.Row="0" Grid.Column="7" Text="{Binding NumberOfGeometries, Converter={StaticResource localizedNumberConverter}}" 
                            Margin="4" VerticalAlignment="Center"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
+                <TextBlock Grid.Row="0" Grid.Column="8" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
                            Text="{Binding [srs_utmZone_full], Source={StaticResource Localization}, StringFormat='{}{0}:'}" />
-                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="4">
+                <StackPanel Grid.Row="0" Grid.Column="9" Orientation="Horizontal" Margin="4">
                     <TextBlock Text="{Binding UtmZone, TargetNullValue='N/A'}" 
                                FontWeight="Bold" VerticalAlignment="Center"/>
                     <TextBlock Margin="8,0,0,0" VerticalAlignment="Center"

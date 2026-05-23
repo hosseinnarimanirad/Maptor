@@ -3723,13 +3723,13 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     {
         if (this.IsEmpty())
             return;
-
+         
         if (this.Type == GeometryType.Polygon)
         {
             if (this.Geometries[0] is null)
                 return;
 
-            for (int i = 0; i < Geometries.Count; i++)
+            for (int i = 0; i < this.Geometries.Count; i++)
             {
                 // Only the first outter ring is CCW
                 var shouldBeClockwise = i != 0;
@@ -3747,7 +3747,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         }
         else if (this.Type == GeometryType.MultiPolygon)
         {
-            foreach (var item in Geometries)
+            foreach (var item in this.Geometries)
             {
                 item.FixPolygonRingOrientations();
             }

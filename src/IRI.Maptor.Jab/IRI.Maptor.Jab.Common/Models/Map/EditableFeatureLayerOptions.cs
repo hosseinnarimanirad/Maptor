@@ -39,6 +39,7 @@ public class EditableFeatureLayerOptions : Notifier
         {
             _isMeasureVisible = value;
             RaisePropertyChanged();
+            this.RequestHandleIsEdgeLabelVisibleChanged?.Invoke();
         }
     }
 

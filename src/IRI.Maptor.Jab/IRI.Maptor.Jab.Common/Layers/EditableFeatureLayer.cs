@@ -369,7 +369,7 @@ public class EditableFeatureLayer : SymbolizableLayer
         if (!_webMercatorGeometry.IsValid())
             return;
 
-        if (Options.IsEdgeLabelVisible)
+        if (Options.IsMeasureVisible && Options.IsEdgeLabelVisible)
         {
             var edges = _webMercatorGeometry.GetLineSegments().Select(i => ToEdgeLengthLocatable(i.Start, i.End));
 

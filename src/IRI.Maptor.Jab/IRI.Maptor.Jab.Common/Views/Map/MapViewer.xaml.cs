@@ -1394,10 +1394,10 @@ public partial class MapViewer : NotifiableUserControl
 
         AddComplexLayer(layer.GetVertices(), false);
 
-        if (layer.Options.IsMeasureVisible)
-        {
-            AddComplexLayer(layer.GetEdgeLengthes(), true);
-        }
+        //if (layer.Options.IsMeasureVisible)
+        //{
+        AddComplexLayer(layer.GetEdgeLengthes(), true);
+        //}
 
         AddComplexLayer(layer.GetPrimaryVerticesLabels(), true);
     }

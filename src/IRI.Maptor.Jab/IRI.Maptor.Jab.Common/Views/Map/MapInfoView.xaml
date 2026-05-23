@@ -136,14 +136,20 @@
                 <!--Editing-->
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" 
                             ToolTip="{Binding [mapPanel_edit_showEdgeLabels], Source={StaticResource Localization}}"
-                            DataContext="{Binding CurrentEditingLayer}"
+                            DataContext="{Binding CurrentEditingLayer}" 
                             Visibility="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Converter={StaticResource boolToVisibilityConverter}}">
                     <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                                     IsChecked="{Binding Options.IsEdgeLabelVisible, Mode=TwoWay}" 
-                                    Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                                    Visibility="{Binding Options.IsMeasureVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Material Kind="MapMarkerDistance"/>
                     </ToggleButton>
-
+                    
+                    <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
+                                    IsChecked="{Binding Options.IsMeasureVisible, Mode=TwoWay}">
+                        <!--Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">-->
+                        <iconPacks:PhosphorIcons Kind="Ruler"/>
+                    </ToggleButton>
+                    
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
                             Command="{Binding ConvertToDrawingItemCommand}" 
                             ToolTip="{Binding [mapPanel_edit_convertToDrawing], Source={StaticResource Localization}}"
@@ -450,7 +456,7 @@
                                                 Foreground="{DynamicResource MahApps.Brushes.Highlight}"/>
                 </StackPanel>
             </Border>-->
-            <Button Margin="0 5 0 0" 
+            <Button Margin="0 5 0 0" Cursor="Hand"
                     Visibility="{Binding MapPanel.Options.IsOptionsAvailable, Converter={StaticResource boolToVisibilityConverter}}"
                     Command="{Binding MapPanel.ToggleDetailsVisibilityCommand}" >
                 <Button.Style>
