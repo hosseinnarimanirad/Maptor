@@ -694,25 +694,29 @@ public abstract class MapViewModelBase : ViewModelBase
             _mapStatus = value;
             RaisePropertyChanged();
 
-            switch (_mapStatus)
-            {
-                case MapStatus.Drawing:
-                    IsDrawMode = true;
-                    break;
-                case MapStatus.Editing:
-                    IsEditMode = true;
-                    break;
-                //case MapStatus.Measuring:
-                //    this.IsMeasureMode = true;
-                //    break;
-                case MapStatus.Idle:
-                    IsDrawMode = false;
-                    IsEditMode = false;
-                    break;
-                default:
-                    break;
-            }
+            IsDrawMode = _mapStatus == MapStatus.Drawing;
+            IsEditMode = _mapStatus == MapStatus.Editing;
 
+            //switch (_mapStatus)
+            //{
+            //    case MapStatus.Drawing:
+            //        IsDrawMode = true;
+            //        IsEditMode = false;
+            //        break;
+            //    case MapStatus.Editing:
+            //        IsEditMode = true;
+            //        IsDrawMode = false;
+            //        break;
+            //    //case MapStatus.Measuring:
+            //    //    this.IsMeasureMode = true;
+            //    //    break;
+            //    case MapStatus.Idle:
+            //        IsDrawMode = false;
+            //        IsEditMode = false;
+            //        break;
+            //    default:
+            //        break;
+            //}
         }
     }
 
