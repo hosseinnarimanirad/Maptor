@@ -254,7 +254,7 @@
 
                     <!--group layer title-->
                     <TextBlock DockPanel.Dock="Left" MinWidth="30" VerticalAlignment="Center" Margin="4"  
-                                Text="{Binding ElementName=root, Path=Title}" 
+                                Text="{Binding LayerName, Mode=TwoWay}" 
                                 FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                                 Visibility="{Binding IsGroupLayer, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}"/>
 
@@ -610,7 +610,7 @@
 
                         <!--layer title (textblock)-->
                         <TextBlock DockPanel.Dock="Left" MinWidth="30" VerticalAlignment="Center" Margin="2" 
-                            Text="{Binding ElementName=root, Path=Title}" 
+                            Text="{Binding LayerName}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding ElementName=root, Path=IsEditable, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>
 
@@ -624,7 +624,7 @@
                         <TextBox x:Name="layerTitle" DockPanel.Dock="Left" 
                             BorderThickness="1" Padding="0" VerticalAlignment="Center" MinWidth="70"
                             Margin="1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                            Text="{Binding ElementName=root, Path=Title, Mode=TwoWay}" 
+                            Text="{Binding LayerName, Mode=TwoWay}" 
                             FontSize="{Binding ElementName=root, Path=TitleFontSize}"
                             Visibility="{Binding ElementName=root, Path=IsEditable, Converter={StaticResource boolToVisibilityConverter}}"
                             mahApp:TextBoxHelper.Watermark="{Binding [legendItem_layerTitle], Source={StaticResource Localization}}"

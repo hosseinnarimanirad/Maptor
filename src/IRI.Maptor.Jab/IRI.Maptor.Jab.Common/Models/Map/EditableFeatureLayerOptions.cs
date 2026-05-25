@@ -9,14 +9,56 @@ namespace IRI.Maptor.Jab.Common.Models;
 
 public class EditableFeatureLayerOptions : Notifier
 {
+    public Action? RequestHandleMeasureVisibilityChanged;
+
     static readonly Brush _defaultStroke = BrushHelper.CreateBrush("#FF1CA1E2");
     static readonly Brush _defaultFill = BrushHelper.CreateBrush("#661CA1E2");
 
     readonly Brush _stroke;
     readonly Brush _fill;
-     
-    public bool IsNewDrawing { get; set; } = false;
 
+    //public bool IsNewDrawing { get; set; } = false;
+    private bool _isNewDrawing;
+    public bool IsNewDrawing
+    {
+        get { return _isNewDrawing; }
+        set
+        {
+            _isNewDrawing = value;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(Status));
+        }
+    }
+
+
+    private bool _isMeasureMode = false;
+    public bool IsMeasureMode
+    {
+        get { return _isMeasureMode; }
+        set
+        {
+            _isMeasureMode = value;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(Status));
+        }
+    }
+
+
+    //public bool IsEditing { get; set; } = false;
+    private bool _isEditing = false;
+    public bool IsEditing
+    {
+        get { return _isEditing; }
+        set
+        {
+            _isEditing = value;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(Status));
+        }
+    }
+
+
+    // ****************************** Measure ******************************
 
     private bool _isEdgeLabelVisible = false;
     public bool IsEdgeLabelVisible
@@ -26,7 +68,7 @@ public class EditableFeatureLayerOptions : Notifier
         {
             _isEdgeLabelVisible = value;
             RaisePropertyChanged();
-            this.RequestHandleIsEdgeLabelVisibleChanged?.Invoke();
+            this.RequestHandleMeasureVisibilityChanged?.Invoke();
         }
     }
 
@@ -39,57 +81,57 @@ public class EditableFeatureLayerOptions : Notifier
         {
             _isMeasureVisible = value;
             RaisePropertyChanged();
-            this.RequestHandleIsEdgeLabelVisibleChanged?.Invoke();
+            this.RequestHandleMeasureVisibilityChanged?.Invoke();
         }
     }
 
 
-    private bool _isFinishButtonVisible = true;
-    public bool IsFinishButtonVisible
-    {
-        get { return _isFinishButtonVisible; }
-        set
-        {
-            _isFinishButtonVisible = value;
-            RaisePropertyChanged();
-        }
-    }
+    //private bool _isFinishButtonVisible = true;
+    //public bool IsFinishEditButtonVisible
+    //{
+    //    get { return _isFinishButtonVisible; }
+    //    set
+    //    {
+    //        _isFinishButtonVisible = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
 
-    private bool _isCancelButtonVisible = true;
-    public bool IsCancelButtonVisible
-    {
-        get { return _isCancelButtonVisible; }
-        set
-        {
-            _isCancelButtonVisible = value;
-            RaisePropertyChanged();
-        }
-    }
+    //private bool _isCancelButtonVisible = true;
+    //public bool IsCancelEditButtonVisible
+    //{
+    //    get { return _isCancelButtonVisible; }
+    //    set
+    //    {
+    //        _isCancelButtonVisible = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
 
-    private bool _isDeleteButtonVisible;
-    public bool IsDeleteButtonVisible
-    {
-        get { return _isDeleteButtonVisible; }
-        set
-        {
-            _isDeleteButtonVisible = value;
-            RaisePropertyChanged();
-        }
-    }
+    //private bool _isDeleteButtonVisible;
+    //public bool IsDeleteButtonVisible
+    //{
+    //    get { return _isDeleteButtonVisible; }
+    //    set
+    //    {
+    //        _isDeleteButtonVisible = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
 
-    private bool _isMeasureButtonVisible;
-    public bool IsMeasureButtonVisible
-    {
-        get { return _isMeasureButtonVisible; }
-        set
-        {
-            _isMeasureButtonVisible = value;
-            RaisePropertyChanged();
-        }
-    }
+    //private bool _isMeasureButtonVisible;
+    //public bool IsMeasureButtonVisible
+    //{
+    //    get { return _isMeasureButtonVisible; }
+    //    set
+    //    {
+    //        _isMeasureButtonVisible = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
 
     private bool _isManualInputAvailable = true;
@@ -128,37 +170,51 @@ public class EditableFeatureLayerOptions : Notifier
     }
 
 
-    private bool _isOptionsAvailable = true;
-    public bool IsOptionsAvailable
+    private bool _showAdvancedOptions = true;
+    public bool ShowAdvancedOptions
     {
-        get { return _isOptionsAvailable; }
+        get { return _showAdvancedOptions; }
         set
         {
-            _isOptionsAvailable = value;
+            _showAdvancedOptions = value;
             RaisePropertyChanged();
         }
     }
 
 
-    private string _editText;
-    public string EditText
+    private bool _isLinkedToMouseMove;
+    public bool IsLinkedToMouseMove
     {
-        get { return _editText; }
+        get { return _isLinkedToMouseMove; }
         set
         {
-            _editText = value;
+            _isLinkedToMouseMove = value;
             RaisePropertyChanged();
         }
     }
 
-     
-    public ScaleInterval VisibleRange { get; set; } = ScaleInterval.All;
 
-    public VisualParameters Visual { get; set; }// = new VisualParameters(_fill, _stroke, 4, .9);
+    //private string _editText;
+    //public string EditText
+    //{
+    //    get { return _editText; }
+    //    set
+    //    {
+    //        _editText = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
-    public Func<FrameworkElement> MakePrimaryVertex { get; set; } = () => new Circle(1);
 
-    public Func<FrameworkElement> MakeSecondaryVertex { get; set; } = () => new Circle(.6);
+    public string Status => $"IsEditing:{IsEditing}, IsMeasureMode:{IsMeasureMode}, IsNewDrawing:{IsNewDrawing}";
+
+    //public ScaleInterval VisibleRange { get; set; } = ScaleInterval.All;
+
+    public VisualParameters Visual { get; private set; }// = new VisualParameters(_fill, _stroke, 4, .9);
+
+    //public Func<FrameworkElement> MakePrimaryVertex { get; set; } = () => new Circle(1);
+
+    //public Func<FrameworkElement> MakeSecondaryVertex { get; set; } = () => new Circle(.6);
 
     public EditableFeatureLayerOptions()
     {
@@ -195,113 +251,126 @@ public class EditableFeatureLayerOptions : Notifier
 
     public static EditableFeatureLayerOptions CreateDefault() => new EditableFeatureLayerOptions();
 
-    public Action RequestHandleIsEdgeLabelVisibleChanged;
 
-
-    public static EditableFeatureLayerOptions CreateDefaultForDrawing(bool isMultipartSupportAvailable, bool isManualInputAvailable, bool isOptionsAvailable = true)
+    public static EditableFeatureLayerOptions CreateDefaultForDrawing(
+        bool isMultipartSupportAvailable,
+        bool isManualInputAvailable,
+        bool showAdvancedOptions = true)
     {
         return new EditableFeatureLayerOptions()
         {
-            IsCancelButtonVisible = true,
-            IsDeleteButtonVisible = false,
+            Visual = VisualParameters.GetDefaultForDrawing(),
+
+            // measure
             IsEdgeLabelVisible = false,
-            IsFinishButtonVisible = true,
+            IsMeasureVisible = false,
+            //IsMeasureButtonVisible = false,
+
+            // edit
+            //IsFinishEditButtonVisible = false,
+            //IsCancelEditButtonVisible = false,
+            //IsDeleteButtonVisible = false,
 
             IsManualInputAvailable = isManualInputAvailable,
-
-            IsMeasureVisible = false,
-            IsMeasureButtonVisible = false,
-
             IsMultiPartSupportAvailable = isMultipartSupportAvailable,
+            IsGeometryDetailsAvailable = false,
+
+            ShowAdvancedOptions = showAdvancedOptions,
+
             IsNewDrawing = true,
-            IsOptionsAvailable = isOptionsAvailable,
-
-            //IsVerticesVisible = false,
-            //IsVerticesLabelVisible = false,
+            IsEditing = false,
+            IsMeasureMode = false,
         };
     }
 
-    public static EditableFeatureLayerOptions CreateDefaultForEditing(bool isMultipartSupportAvailable, bool isManualInputAvailable, bool isOptionsAvailable = true)
+    public static EditableFeatureLayerOptions CreateDefaultForEditing(
+        bool isMultipartSupportAvailable,
+        bool isManualInputAvailable,
+        bool showAdvancedOptions = true)
     {
         return new EditableFeatureLayerOptions()
         {
-            IsCancelButtonVisible = true,
-            IsDeleteButtonVisible = false,
+            // measure
             IsEdgeLabelVisible = false,
-            IsFinishButtonVisible = true,
+            IsMeasureVisible = false,
+            //IsMeasureButtonVisible = false,
+
+            // edit
+            //IsFinishEditButtonVisible = true,
+            //IsCancelEditButtonVisible = true,
+            //IsDeleteButtonVisible = false,
 
             IsManualInputAvailable = isManualInputAvailable,
-
-            IsMeasureVisible = false,
-            IsMeasureButtonVisible = false,
-
             IsMultiPartSupportAvailable = isMultipartSupportAvailable,
-            IsNewDrawing = false,
-            IsOptionsAvailable = isOptionsAvailable,
+            IsGeometryDetailsAvailable = false,
 
-            //IsVerticesVisible = true,
-            //IsVerticesLabelVisible = true
+            ShowAdvancedOptions = showAdvancedOptions,
+
+            IsNewDrawing = false,
+            IsEditing = true,
+            IsMeasureMode = false,
         };
     }
 
-    public static EditableFeatureLayerOptions CreateDefaultForDrawingMeasure(bool isEdgeLabelVisible, bool isMultipartSupportAvailable, bool isManualInputAvailable, bool isOptionsAvailable = true)
+    public static EditableFeatureLayerOptions CreateDefaultForDrawingMeasure(
+        bool isEdgeLabelVisible,
+        bool isMultipartSupportAvailable,
+        bool isManualInputAvailable,
+        bool showAdvancedOptions = true)
     {
         return new EditableFeatureLayerOptions()
         {
             Visual = VisualParameters.GetDefaultForMeasurements(),
 
-            IsCancelButtonVisible = true,
-            IsDeleteButtonVisible = false,
+            // measure
             IsEdgeLabelVisible = isEdgeLabelVisible,
-            IsFinishButtonVisible = true,
+            IsMeasureVisible = true,
+            //IsMeasureButtonVisible = false,
+
+            // edit
+            //IsFinishEditButtonVisible = false,
+            //IsCancelEditButtonVisible = false,
+            //IsDeleteButtonVisible = false,
 
             IsManualInputAvailable = isManualInputAvailable,
-
-            IsMeasureVisible = true,
-            IsMeasureButtonVisible = false,
-
             IsMultiPartSupportAvailable = isMultipartSupportAvailable,
-            IsNewDrawing = true,
-            IsOptionsAvailable = isOptionsAvailable,
-
             IsGeometryDetailsAvailable = false,
 
-            //IsEdgeLabelVisible = isEdgeLabelVisible,
-            //IsOptionsAvailable = isOptionsAvailable,
-            //IsManualInputAvailable = isManualInputAvailable,
-            //IsMultiPartSupportAvailable = isMultipartSupportAvailable
+            ShowAdvancedOptions = showAdvancedOptions,
+
+            IsNewDrawing = true,
+            IsEditing = false,
+            IsMeasureMode = true,
         };
     }
 
-    public static EditableFeatureLayerOptions CreateDefaultForEditingMeasure(bool isMultipartSupportAvailable, bool isManualInputAvailable, bool isOptionsAvailable = true)
+    public static EditableFeatureLayerOptions CreateDefaultForEditingMeasure(
+        bool isMultipartSupportAvailable,
+        bool isManualInputAvailable,
+        bool showAdvancedOptions = true)
     {
         return new EditableFeatureLayerOptions()
         {
-            IsCancelButtonVisible = false,
-            IsDeleteButtonVisible = true,
-            IsEdgeLabelVisible = true,
-            IsFinishButtonVisible = false,
+            // measure
+            IsEdgeLabelVisible = false,
+            IsMeasureVisible = true,
+            //IsMeasureButtonVisible = true,
+
+            // edit
+            //IsFinishEditButtonVisible = false,
+            //IsCancelEditButtonVisible = false,
+            //IsDeleteButtonVisible = true,
 
             IsManualInputAvailable = isManualInputAvailable,
-
-            IsMeasureVisible = true,
-            IsMeasureButtonVisible = true,
-
             IsMultiPartSupportAvailable = isMultipartSupportAvailable,
-            IsNewDrawing = false,
-            IsOptionsAvailable = isOptionsAvailable,
-
             IsGeometryDetailsAvailable = false,
 
-            //IsEdgeLabelVisible = true,
-            //IsMeasureVisible = true,
-            //IsFinishButtonVisible = false,
-            //IsCancelButtonVisible = false,
-            //IsDeleteButtonVisible = true,
-            //IsMeasureButtonVisible = true,
-            //IsOptionsAvailable = isOptionsAvailable,
-            //IsManualInputAvailable = isManualInputAvailable,
-            //IsMultiPartSupportAvailable = isMultipartSupportAvailable
+
+            ShowAdvancedOptions = showAdvancedOptions,
+
+            IsNewDrawing = false,
+            IsEditing = true,
+            IsMeasureMode = true,
         };
     }
 }

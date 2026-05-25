@@ -259,8 +259,7 @@
                         <RadioButton Grid.Column="1" Style="{StaticResource {x:Type ToggleButton}}"
                                  DataContext="{Binding }"
                                  IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}">
-                            <maptor:MapLegendItemView ShowReloadData="False" ShowMoreOptions="False"
-                                                Title="{Binding LayerName, Mode=TwoWay}"
+                            <maptor:MapLegendItemView ShowReloadData="False" ShowMoreOptions="False"                                                 
                                                 Symbology="{Binding DefaultSymbology}"  
                                                 IsEditable="True" Commands="{Binding Commands}" 
                                                 IsChecked="{Binding IsSelectedInToc}"

@@ -105,7 +105,7 @@ public partial class MapViewer : NotifiableUserControl
 
     public event EventHandler<bool> OnExtentChanged;
 
-    public event EventHandler<EditableFeatureLayer> OnEditableFeatureLayerChanged;
+    //public event EventHandler<EditableFeatureLayer> OnEditableFeatureLayerChanged;
 
     #endregion
 
@@ -420,7 +420,7 @@ public partial class MapViewer : NotifiableUserControl
 
         _presenter = presenter;
 
-        _layerManager.RequestUpdateLayerTocOrder = presenter.UpdateLayerTocOrder;
+        _layerManager.RequestUpdateLayerTocOrder = presenter.UpdateLayerCanMoveUpDown;
 
         presenter.RequestPrint = this.Print;
 
@@ -513,7 +513,7 @@ public partial class MapViewer : NotifiableUserControl
 
         this.OnMapActionChanged += (sender, e) => { presenter.FireMapActionChanged(e.Action); };
 
-        this.OnEditableFeatureLayerChanged += (sender, e) => { presenter.CurrentEditingLayer = e; };
+        //this.OnEditableFeatureLayerChanged += (sender, e) => { presenter.CurrentEditingLayer = e; };
 
         presenter.RequestZoomToPoint = (center, mapScale) => this.ZoomAndCenter(mapScale, center);
 
@@ -544,7 +544,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestUpdateZIndex = l => UpdateZIndex(l);
 
-        presenter.RequestGetDrawingAsync = (mode, options, display) => GetDrawingAsync(mode, options, display);
+        presenter.RequestGetDrawingAsync = (mode/*, options*/) => GetDrawingAsync(mode/*, options*/);
 
         presenter.RequestCancelNewDrawing = CancelDrawing;
 
@@ -1973,29 +1973,34 @@ public partial class MapViewer : NotifiableUserControl
 
 
         //this.mapView.MouseDown -= MapView_MouseDownForStartDrawing;
-        this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-        this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
+        //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
+        //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
+        //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
+        Unsubscribe_DrawingEvents_StartDrawing();
 
 
-        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
-        this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-        this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
+        //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
+        //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
+        //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
+        Unsubscribe_DrawingEvents_StartNewPart();
 
 
-        this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-        this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
+        Unsubscribe_DrawingEvents_Draw();
+
+        //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
+
+        //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
+        //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
+        //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
 
         this.mapView.MouseMove -= MapView_MouseMoveSelectThePoint;
         this.mapView.MouseDown -= MapView_MouseDownForPanWhileSelectThePoint;
 
-        this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
 
-
-        this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
-        this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
-        this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
+        Unsubscribe_DrawingEvents_StartRectangleDrawing();
+        //this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
+        //this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
+        //this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
     }
 
     public void ReleaseEvents()
@@ -3386,15 +3391,13 @@ public partial class MapViewer : NotifiableUserControl
 
     #region Draw Shapes
 
-    bool displayDrawingPath = false;
+    DrawingLayer? drawingLayer;
 
-    DrawingLayer drawingLayer;
-
-    EditableFeatureLayerOptions drawingOptions = new EditableFeatureLayerOptions();
+    //EditableFeatureLayerOptions drawingOptions = new EditableFeatureLayerOptions();
 
     DrawMode drawMode;
 
-    Action<Point> onMoveForDrawAction = null;
+    Action<Point>? onMoveForDrawAction = null;
 
     bool itWasPanningWhileDrawing { get; set; }
 
@@ -3404,8 +3407,7 @@ public partial class MapViewer : NotifiableUserControl
 
     CancellationTokenSource? drawingCancellationToken;
 
-    TaskCompletionSource<Response<Geometry<sb.Point>>> drawingTcs;
-
+    TaskCompletionSource<Response<Geometry<sb.Point>>>? drawingTcs;
 
 
     // Rectangle used for drag-based rectangle drawing (DrawMode.Rectangle)
@@ -3416,6 +3418,166 @@ public partial class MapViewer : NotifiableUserControl
     sb.Point rectangleFirstMapPoint;
 
 
+    // todo: validation on geometry
+    public async Task<Response<Geometry<sb.Point>>> GetDrawingAsync(DrawMode mode/*, EditableFeatureLayerOptions options*/)
+    {
+        try
+        {
+            CancelAsyncMapInteractions();
+
+            this.Status = MapStatus.Drawing;
+
+            var result = await GetDrawing(mode/*, options*/);
+
+            this.Status = MapStatus.Idle;
+
+            if (result.HasNotNullResult())
+            {
+                // todo: validation on geometry
+                return ResponseFactory.Create(result.Result/*.AsSqlGeometry().MakeValid().AsGeometry()*/);
+            }
+            else
+            {
+                return Response<Geometry<sb.Point>>.Empty;
+            }
+        }
+        catch (TaskCanceledException)
+        {
+            if (drawingCancellationToken == null)
+            {
+                this.Status = MapStatus.Idle;
+
+                this.Pan();
+            }
+
+            return Response<Geometry<sb.Point>>.CreateCanceled();//new Response<Geometry<sb.Point>>() { IsCanceled = true };
+        }
+        catch (Exception ex)
+        {
+            this.Status = MapStatus.Idle;
+
+            drawingTcs = null;
+
+            drawingCancellationToken = null;
+
+            this.Pan();
+
+            throw;
+        }
+        finally
+        {
+            if (drawingLayer != null)
+            {
+                //this.Status = MapStatus.Idle;
+                drawingLayer.Dispose();
+                drawingLayer = null;
+                //this.Pan();
+            }
+        }
+    }
+
+    public void CancelDrawing() => this.drawingCancellationToken?.Cancel();
+
+
+    private Task<Response<Geometry<sb.Point>>> GetDrawing(DrawMode mode/*, EditableFeatureLayerOptions options*/)
+    {
+        drawingTcs = new TaskCompletionSource<Response<Geometry<sb.Point>>>();
+
+        drawingCancellationToken = new CancellationTokenSource();
+
+        //in order to not show delete button when drawing new measure
+        this.CurrentEditingLayer = null;
+
+        var currentExtextCenterInWebMercator = this.CurrentExtent.Center;
+
+        this.CurrentEditingPoint = new Point(currentExtextCenterInWebMercator.X, currentExtextCenterInWebMercator.Y);
+
+        //this.displayDrawingPath = display;
+
+        //options.IsNewDrawing = true;
+
+        //this.drawingOptions = options;
+
+        this.drawMode = mode;
+
+        if (this.viewTransform == null || drawMode == DrawMode.Freehand)
+            drawingTcs.TrySetCanceled();
+
+        ResetMapViewEvents();
+
+        this.SetCursor(Cursors.Cross);
+
+        drawingCancellationToken.Token.Register(() =>
+        {
+            drawingTcs.TrySetCanceled();
+
+            //this.SetCursor(Cursors.Arrow);
+            this.SetCursor(CursorSettings[_currentMouseAction]);
+
+
+            Unsubscribe_DrawingEvents_StartDrawing();
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
+            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
+
+            Unsubscribe_DrawingEvents_Draw();
+            //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
+
+            //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
+
+            Unsubscribe_DrawingEvents_StartRectangleDrawing();
+            //this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
+            //this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
+            //this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
+
+            this.mapView.Children.Remove(drawingRectangle);
+
+            if (drawingLayer != null)
+            {
+                this.ClearLayer(drawingLayer, remove: true, forceRemove: true);
+
+                RemoveEditableFeatureLayer(drawingLayer.GetLayer());
+            }
+
+            drawingTcs = null;
+
+            drawingCancellationToken = null;
+
+        }, useSynchronizationContext: false);
+
+        if (this.drawMode == DrawMode.Rectangle)
+        {
+            // Drag-based axis-aligned rectangle drawing
+            Subscribe_DrawingEvents_StartRectangleDrawing();
+        }
+        else
+        {
+            // Existing point/polyline/polygon drawing
+            Subscribe_DrawingEvents_StartDrawing();
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
+            //this.mapView.MouseDown += MapView_MouseDownForPanWhileStartDrawing;
+
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
+            //this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartDrawing;
+
+            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
+            //this.mapView.MouseUp += MapView_MouseUpForPanWhileStartDrawing;
+
+            //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
+            //this.mapView.MouseMove += MapView_MouseMoveForDrawing;
+            //this.mapView.MouseDown -= MapView_MouseDownForStartDrawing;
+            //this.mapView.MouseDown += MapView_MouseDownForStartDrawing;
+        }
+
+        //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
+        //this.mapView.MouseMove += MapView_MouseMoveForDrawing;
+
+        return drawingTcs.Task;
+    }
+
+    // *********************** Events: Start Drawing *********************** 
     private void MapView_MouseDownForPanWhileStartDrawing(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton != MouseButton.Left)
@@ -3426,20 +3588,14 @@ public partial class MapViewer : NotifiableUserControl
         itWasPanningWhileStartDrawing = false;
 
         this.prevMouseLocation = e.GetPosition(this.mapView);
-
-        //if (e.ChangedButton != MouseButton.Left)
-        //    return;
-
-        //this.prevMouseLocation = e.GetPosition(this.mapView);
-
-        //var webMercatorPoint = ScreenToMap(this.prevMouseLocation).AsPoint();
-
-        //AddFirstPointForNewDrawing(webMercatorPoint);
     }
 
     private void MapView_MouseMoveForPanWhileStartDrawing(object sender, MouseEventArgs e)
     {
         Point currentMouseLocation = e.GetPosition(this.mapView);
+
+        if (_presenter.MapPanel.Options.IsLinkedToMouseMove)
+            this.CurrentEditingPoint = ScreenToMap(currentMouseLocation);
 
         if (e.LeftButton == MouseButtonState.Pressed)
         {
@@ -3479,14 +3635,15 @@ public partial class MapViewer : NotifiableUserControl
 
             this.Refresh(isNewExtent: true);
 
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-            this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartDrawing;
+            Subscribe_DrawingEvents_StartDrawing();
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
+            //this.mapView.MouseDown += MapView_MouseDownForPanWhileStartDrawing;
 
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-            this.mapView.MouseDown += MapView_MouseDownForPanWhileStartDrawing;
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
+            //this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartDrawing;
 
-            this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-            this.mapView.MouseUp += MapView_MouseUpForPanWhileStartDrawing;
+            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
+            //this.mapView.MouseUp += MapView_MouseUpForPanWhileStartDrawing;
 
             itWasPanningWhileStartDrawing = false;
 
@@ -3507,56 +3664,29 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-
-    private void AddFirstPointForNewDrawing(sb.Point webMercatorPoint)
+    private void Subscribe_DrawingEvents_StartDrawing()
     {
-        if (true)
-        {
-            if (webMercatorPoint.IsNaN())
-                return;
-        }
-
         this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-        this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
+        this.mapView.MouseDown += MapView_MouseDownForPanWhileStartDrawing;
+
         this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
+        this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartDrawing;
 
-        this.ClearLayer(drawingLayer, remove: true, forceRemove: true);
+        this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
+        this.mapView.MouseUp += MapView_MouseUpForPanWhileStartDrawing;
 
-        this.drawingLayer = new DrawingLayer(this.drawMode, this.viewTransform, ScreenToMap, webMercatorPoint, drawingOptions);
-
-        this.drawingLayer.OnRequestFinishDrawing += (s, arg) =>
-        {
-            FinishDrawing();
-        };
-
-        this.drawingLayer.RequestCancelDrawing = () => this.CancelDrawing();
-
-        this.SetLayer(drawingLayer);
-
-        this.AddEditableFeatureLayer(drawingLayer.GetLayer());
-
-        if (this.drawMode == DrawMode.Point)
-        {
-            FinishDrawing();
-        }
-        else
-        {
-            //this.mapView.CaptureMouse();
-
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-            this.mapView.MouseMove += MapView_MouseMoveForPanWhileDrawing;
-
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-            this.mapView.MouseDown += MapView_MouseDownForPanWhileDrawing;
-
-            this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-            this.mapView.MouseUp += MapView_MouseUpForForPanWhileDrawing;
-
-            //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-            //this.mapView.MouseMove += MapView_MouseMoveForDrawing;
-        }
+        // *******************************************************************
     }
 
+    private void Unsubscribe_DrawingEvents_StartDrawing()
+    {
+        this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
+        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
+        this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
+    }
+
+
+    // *********************** Events: Start New Part *********************** 
     private void MapView_MouseDownForPanWhileStartNewPart(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton != MouseButton.Left)
@@ -3570,68 +3700,12 @@ public partial class MapViewer : NotifiableUserControl
 
     }
 
-    private void MapView_MouseUpForPanWhileStartNewPart(object sender, MouseButtonEventArgs e)
-    {
-        if (itWasPanningWhileStartNewPart)
-        {
-            this.ResetMapViewEvents();
-
-            this.Refresh(isNewExtent: true);
-
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
-            this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartNewPart;
-
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-            this.mapView.MouseDown += MapView_MouseDownForPanWhileStartNewPart;
-
-            this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
-            this.mapView.MouseUp += MapView_MouseUpForPanWhileStartNewPart;
-
-            itWasPanningWhileStartNewPart = false;
-
-            this.SetCursor(Cursors.Cross);
-
-            return;
-        }
-        else
-        {
-            if (e.ChangedButton != MouseButton.Left)
-                return;
-
-            this.prevMouseLocation = (e.GetPosition(this.mapView));
-
-            var webMercatorPoint = ScreenToMap(this.prevMouseLocation).AsPoint();
-
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-            this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
-
-            if (this.drawMode == DrawMode.Point)
-            {
-                FinishDrawing();
-            }
-            else
-            {
-                this.drawingLayer.StartNewPart(webMercatorPoint);
-
-                this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-                this.mapView.MouseMove += MapView_MouseMoveForPanWhileDrawing;
-
-                this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-                this.mapView.MouseDown += MapView_MouseDownForPanWhileDrawing;
-
-                this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-                this.mapView.MouseUp += MapView_MouseUpForForPanWhileDrawing;
-
-                //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-                //this.mapView.MouseMove += MapView_MouseMoveForDrawing;
-            }
-        }
-    }
-
     private void MapView_MouseMoveForPanWhileStartNewPart(object sender, MouseEventArgs e)
     {
         Point currentMouseLocation = e.GetPosition(this.mapView);
+
+        if (_presenter.MapPanel.Options.IsLinkedToMouseMove)
+            this.CurrentEditingPoint = ScreenToMap(currentMouseLocation);
 
         if (e.LeftButton == MouseButtonState.Pressed)
         {
@@ -3663,98 +3737,112 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    private void AddPointToNewDrawing(sb.Point webMercatorPoint)
+    private void MapView_MouseUpForPanWhileStartNewPart(object sender, MouseButtonEventArgs e)
     {
-        if (drawingLayer == null)
+        if (itWasPanningWhileStartNewPart)
         {
-            AddFirstPointForNewDrawing(webMercatorPoint);
+            this.ResetMapViewEvents();
+
+            this.Refresh(isNewExtent: true);
+
+            Subscribe_DrawingEvents_StartNewPart();
+
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
+            //this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartNewPart;
+
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
+            //this.mapView.MouseDown += MapView_MouseDownForPanWhileStartNewPart;
+
+            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
+            //this.mapView.MouseUp += MapView_MouseUpForPanWhileStartNewPart;
+
+            itWasPanningWhileStartNewPart = false;
+
+            this.SetCursor(Cursors.Cross);
+
+            return;
         }
         else
         {
-            DoMoveForStartDrawing(webMercatorPoint);
+            if (e.ChangedButton != MouseButton.Left)
+                return;
 
-            AddPointForNewDrawing(webMercatorPoint);
+            this.prevMouseLocation = (e.GetPosition(this.mapView));
+
+            var webMercatorPoint = ScreenToMap(this.prevMouseLocation).AsPoint();
+
+            Unsubscribe_DrawingEvents_StartNewPart();
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
+            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
+
+            if (this.drawMode == DrawMode.Point)
+            {
+                FinishDrawing();
+            }
+            else
+            {
+                this.drawingLayer.StartNewPart(webMercatorPoint);
+
+                Subscribe_DrawingEvents_Draw();
+                //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
+                //this.mapView.MouseMove += MapView_MouseMoveForPanWhileDrawing;
+
+                //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
+                //this.mapView.MouseDown += MapView_MouseDownForPanWhileDrawing;
+
+                //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
+                //this.mapView.MouseUp += MapView_MouseUpForForPanWhileDrawing;
+
+                //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
+                //this.mapView.MouseMove += MapView_MouseMoveForDrawing;
+            }
         }
     }
 
-    private void FinishDrawingPart()
+    private void Subscribe_DrawingEvents_StartNewPart()
     {
-        if (drawingLayer != null && drawingLayer.TryFinishDrawingPart())
-        {
-            this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-            //this.mapView.MouseDown -= MapView_MouseDownForStartDrawing;
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-            this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
+        this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
+        this.mapView.MouseDown += MapView_MouseDownForPanWhileStartNewPart;
 
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
+        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
+        this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartNewPart;
 
-
-            //1399.08.22
-            //this.mapView.MouseDown -= MapView_MouseDownForStartNewPart;
-            //this.mapView.MouseDown += MapView_MouseDownForStartNewPart;
-
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
-            this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartNewPart;
-
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-            this.mapView.MouseDown += MapView_MouseDownForPanWhileStartNewPart;
-
-            this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
-            this.mapView.MouseUp += MapView_MouseUpForPanWhileStartNewPart;
-
-            //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-            //this.mapView.MouseMove += MapView_MouseMoveForDrawing;
-
-        }
+        this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
+        this.mapView.MouseUp += MapView_MouseUpForPanWhileStartNewPart;
     }
 
-    private void FinishDrawing()
+    private void Unsubscribe_DrawingEvents_StartNewPart()
     {
-        if (drawingLayer?.GetFinalGeometry()?.IsValid() == true)
-        {
+        this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
+        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
+        this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
 
-            this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-
-            //this.mapView.MouseDown -= MapView_MouseDownForStartDrawing;
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-            this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-
-            //1399.08.22
-            //this.mapView.MouseDown -= MapView_MouseDownForStartNewPart;
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-            this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
-
-            this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-
-            ResetMapViewEvents();
-
-            this.ClearLayer(drawingLayer, remove: true, forceRemove: true);
-
-            this.RemoveEditableFeatureLayer(drawingLayer.GetLayer());
-
-            drawingCancellationToken = null;
-
-            drawingTcs.SetResult(ResponseFactory.Create(drawingLayer.GetFinalGeometry()));
-
-            this.Pan();
-        }
+        //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
+        //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
+        //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart; 
     }
 
-    private void MapView_MouseMoveForDrawing(object sender, MouseEventArgs e)
+
+    // *********************** Events: Drawing ***********************
+    private void MapView_MouseDownForPanWhileDrawing(object sender, MouseButtonEventArgs e)
     {
-        this.CurrentEditingPoint = ScreenToMap(e.GetPosition(this.mapView));
+        if (e.ChangedButton != MouseButton.Left)
+            return;
+
+        e.Handled = true;
+
+        itWasPanningWhileDrawing = false;
+
+        this.prevMouseLocation = e.GetPosition(this.mapView);
     }
 
     private void MapView_MouseMoveForPanWhileDrawing(object sender, MouseEventArgs e)
     {
         Point currentMouseLocation = e.GetPosition(this.mapView);
+
+        if (_presenter.MapPanel.Options.IsLinkedToMouseMove)
+            this.CurrentEditingPoint = ScreenToMap(currentMouseLocation);
 
         if (e.LeftButton == MouseButtonState.Pressed)
         {
@@ -3790,19 +3878,42 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    private void MapView_MouseDownForPanWhileDrawing(object sender, MouseButtonEventArgs e)
+    private void MapView_MouseUpForForPanWhileDrawing(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton != MouseButton.Left)
             return;
 
-        e.Handled = true;
-
-        itWasPanningWhileDrawing = false;
+        //e.Handled = true;
 
         this.prevMouseLocation = e.GetPosition(this.mapView);
+
+        var webMercatorPoint = ScreenToMap(this.prevMouseLocation).AsPoint();
+
+        AddPointForNewDrawing(webMercatorPoint);
     }
 
+    //private void MapView_MouseMoveForDrawing(object sender, MouseEventArgs e) => this.CurrentEditingPoint = ScreenToMap(e.GetPosition(this.mapView));
 
+    private void Subscribe_DrawingEvents_Draw()
+    {
+        this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
+        this.mapView.MouseDown += MapView_MouseDownForPanWhileDrawing;
+
+        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
+        this.mapView.MouseMove += MapView_MouseMoveForPanWhileDrawing;
+
+        this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
+        this.mapView.MouseUp += MapView_MouseUpForForPanWhileDrawing;
+    }
+
+    private void Unsubscribe_DrawingEvents_Draw()
+    {
+        this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
+        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
+        this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
+    }
+
+    // *********************** Rectangle Drawing Events *********************** 
     private void MapView_MouseDownForRectangleDrawing(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton != MouseButton.Left)
@@ -3817,11 +3928,20 @@ public partial class MapViewer : NotifiableUserControl
 
         this.rectangleFirstMapPoint = ScreenToMap(this.rectangleFirstScreenPoint).AsPoint();
 
+        //var visual = _presenter.MapSettings.DrawingOptions.Visual;
+
+        var visual = EditableFeatureLayerOptions.CreateDefaultForDrawing(false, false, false).Visual;
+
         this.drawingRectangle = new Rectangle()
         {
-            Stroke = drawingOptions.Visual.Stroke,
-            StrokeThickness = drawingOptions.Visual.StrokeThickness,
-            Fill = drawingOptions.Visual.Fill,
+            Stroke = visual.Stroke,
+            StrokeThickness = visual.StrokeThickness,
+            Fill = visual.Fill,
+            StrokeDashArray = visual.DashStyle.Dashes,
+
+            //Stroke = drawingOptions.Visual.Stroke,
+            //StrokeThickness = drawingOptions.Visual.StrokeThickness,
+            //Fill = drawingOptions.Visual.Fill,
             Tag = new LayerTag(-1) { IsTiled = false, LayerType = LayerType.Drawing }
         };
 
@@ -3861,9 +3981,10 @@ public partial class MapViewer : NotifiableUserControl
         if (e.ChangedButton != MouseButton.Left)
             return;
 
-        this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
-        this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
-        this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
+        Unsubscribe_DrawingEvents_StartRectangleDrawing();
+        //this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
+        //this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
+        //this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
 
         this.mapView.Children.Remove(drawingRectangle);
 
@@ -3903,18 +4024,166 @@ public partial class MapViewer : NotifiableUserControl
         this.Pan();
     }
 
-    private void MapView_MouseUpForForPanWhileDrawing(object sender, MouseButtonEventArgs e)
+    private void Subscribe_DrawingEvents_StartRectangleDrawing()
     {
-        if (e.ChangedButton != MouseButton.Left)
+        this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
+        this.mapView.MouseDown += MapView_MouseDownForRectangleDrawing;
+
+        this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
+        this.mapView.MouseMove += MapView_MouseMoveForRectangleDrawing;
+
+        this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
+        this.mapView.MouseUp += MapView_MouseUpForRectangleDrawing;
+    }
+
+    private void Unsubscribe_DrawingEvents_StartRectangleDrawing()
+    {
+        this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
+        this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
+        this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
+    }
+
+
+    private void AddFirstPointForNewDrawing(sb.Point webMercatorPoint)
+    {
+        if (webMercatorPoint.IsNaN())
             return;
 
-        //e.Handled = true;
+        Unsubscribe_DrawingEvents_StartDrawing();
+        //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
+        //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
+        //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
 
-        this.prevMouseLocation = e.GetPosition(this.mapView);
+        if (drawingLayer != null)
+        {
+            this.ClearLayer(drawingLayer, remove: true, forceRemove: true);
+            drawingLayer.Dispose();
+        }
 
-        var webMercatorPoint = ScreenToMap(this.prevMouseLocation).AsPoint();
+        this.drawingLayer = new DrawingLayer(
+            this.drawMode,
+            this.viewTransform,
+            ScreenToMap,
+            webMercatorPoint,
+            _presenter.RequestSelectedLocatableChanged,
+            _presenter.MapPanel.Options);
 
-        AddPointForNewDrawing(webMercatorPoint);
+        this.drawingLayer.OnRequestFinishDrawing += (s, arg) =>
+        {
+            FinishDrawing();
+        };
+
+        this.drawingLayer.RequestCancelDrawing = () => this.CancelDrawing();
+
+        this.SetLayer(drawingLayer);
+
+        this.AddEditableFeatureLayer(drawingLayer.GetLayer());
+
+        if (this.drawMode == DrawMode.Point)
+        {
+            FinishDrawing();
+        }
+        else
+        {
+            Subscribe_DrawingEvents_Draw();
+
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
+            //this.mapView.MouseMove += MapView_MouseMoveForPanWhileDrawing;
+
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
+            //this.mapView.MouseDown += MapView_MouseDownForPanWhileDrawing;
+
+            //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
+            //this.mapView.MouseUp += MapView_MouseUpForForPanWhileDrawing;
+        }
+    }
+
+    private void AddPointToNewDrawing(sb.Point webMercatorPoint)
+    {
+        if (drawingLayer == null)
+        {
+            AddFirstPointForNewDrawing(webMercatorPoint);
+        }
+        else
+        {
+            DoMoveForStartDrawing(webMercatorPoint);
+
+            AddPointForNewDrawing(webMercatorPoint);
+        }
+    }
+
+
+    private void FinishDrawingPart()
+    {
+        if (drawingLayer != null && drawingLayer.TryFinishDrawingPart())
+        {
+
+            Unsubscribe_DrawingEvents_StartDrawing();
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
+            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
+
+            Unsubscribe_DrawingEvents_Draw();
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
+            //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
+
+
+            //1399.08.22
+            //this.mapView.MouseDown -= MapView_MouseDownForStartNewPart;
+            //this.mapView.MouseDown += MapView_MouseDownForStartNewPart;
+
+            Subscribe_DrawingEvents_StartNewPart();
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
+            //this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartNewPart;
+
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
+            //this.mapView.MouseDown += MapView_MouseDownForPanWhileStartNewPart;
+
+            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
+            //this.mapView.MouseUp += MapView_MouseUpForPanWhileStartNewPart;
+
+            ////this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
+            ////this.mapView.MouseMove += MapView_MouseMoveForDrawing;
+
+        }
+    }
+
+    private void FinishDrawing()
+    {
+        if (drawingLayer?.GetFinalFixedGeometry()?.IsValid() == true)
+        {
+
+
+            Unsubscribe_DrawingEvents_StartDrawing();
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
+            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
+
+            Unsubscribe_DrawingEvents_StartNewPart();
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
+            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
+
+            Unsubscribe_DrawingEvents_Draw();
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
+            //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
+
+            //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
+
+            ResetMapViewEvents();
+
+            this.ClearLayer(drawingLayer, remove: true, forceRemove: true);
+
+            this.RemoveEditableFeatureLayer(drawingLayer.GetLayer());
+
+            drawingCancellationToken = null;
+
+            drawingTcs.SetResult(ResponseFactory.Create(drawingLayer.GetFinalFixedGeometry()));
+
+            this.Pan();
+        }
     }
 
     private void DoMoveForStartDrawing(sb.Point webMercatorPoint)
@@ -3936,19 +4205,19 @@ public partial class MapViewer : NotifiableUserControl
 
             this.drawingLayer.AddSemiVertex(webMercatorPoint);
 
-            //this.mapView.CaptureMouse();
 
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-            this.mapView.MouseMove += MapView_MouseMoveForPanWhileDrawing;
+            Subscribe_DrawingEvents_Draw();
+            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
+            //this.mapView.MouseMove += MapView_MouseMoveForPanWhileDrawing;
 
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-            this.mapView.MouseDown += MapView_MouseDownForPanWhileDrawing;
+            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
+            //this.mapView.MouseDown += MapView_MouseDownForPanWhileDrawing;
 
-            this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-            this.mapView.MouseUp += MapView_MouseUpForForPanWhileDrawing;
+            //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
+            //this.mapView.MouseUp += MapView_MouseUpForForPanWhileDrawing;
 
-            this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-            this.mapView.MouseMove += MapView_MouseMoveForDrawing;
+            //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
+            //this.mapView.MouseMove += MapView_MouseMoveForDrawing;
 
             itWasPanningWhileDrawing = false;
 
@@ -3995,168 +4264,6 @@ public partial class MapViewer : NotifiableUserControl
 
         return view;
     }
-
-    private Task<Response<Geometry<sb.Point>>> GetDrawing(DrawMode mode, EditableFeatureLayerOptions options, bool display = false)
-    {
-        drawingTcs = new TaskCompletionSource<Response<Geometry<sb.Point>>>();
-
-        drawingCancellationToken = new CancellationTokenSource();
-
-        //in order to not show delete button when drawing new measure
-        this.CurrentEditingLayer = null;
-
-        this.displayDrawingPath = display;
-
-        options.IsNewDrawing = true;
-
-        this.drawingOptions = options;
-
-        this.drawMode = mode;
-
-        if (this.viewTransform == null || drawMode == DrawMode.Freehand)
-            drawingTcs.TrySetCanceled();
-
-        ResetMapViewEvents();
-
-        this.SetCursor(Cursors.Cross);
-
-        drawingCancellationToken.Token.Register(() =>
-        {
-            drawingTcs.TrySetCanceled();
-
-            //this.SetCursor(Cursors.Arrow);
-            this.SetCursor(CursorSettings[_currentMouseAction]);
-
-            this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-
-            //this.mapView.MouseDown -= MapView_MouseDownForStartDrawing;
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-            this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-
-            this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-
-            this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
-            this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
-            this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
-
-            this.mapView.Children.Remove(drawingRectangle);
-
-            this.ClearLayer(drawingLayer, remove: true, forceRemove: true);
-
-            if (drawingLayer != null)
-            {
-                RemoveEditableFeatureLayer(drawingLayer.GetLayer());
-            }
-
-            drawingTcs = null;
-
-            drawingCancellationToken = null;
-
-        }, useSynchronizationContext: false);
-
-        if (this.drawMode == DrawMode.Rectangle)
-        {
-            // Drag-based axis-aligned rectangle drawing
-            this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
-            this.mapView.MouseDown += MapView_MouseDownForRectangleDrawing;
-
-            this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
-            this.mapView.MouseMove += MapView_MouseMoveForRectangleDrawing;
-
-            this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
-            this.mapView.MouseUp += MapView_MouseUpForRectangleDrawing;
-        }
-        else
-        {
-            // Existing point/polyline/polygon drawing
-            this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-            this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartDrawing;
-
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-            this.mapView.MouseDown += MapView_MouseDownForPanWhileStartDrawing;
-
-            this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-            this.mapView.MouseUp += MapView_MouseUpForPanWhileStartDrawing;
-
-            this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-            this.mapView.MouseMove += MapView_MouseMoveForDrawing;
-            //this.mapView.MouseDown -= MapView_MouseDownForStartDrawing;
-            //this.mapView.MouseDown += MapView_MouseDownForStartDrawing;
-        }
-
-        return drawingTcs.Task;
-
-    }
-
-    // todo: validation on geometry
-    public async Task<Response<Geometry<sb.Point>>> GetDrawingAsync(DrawMode mode, EditableFeatureLayerOptions? options = null, bool display = false, bool makeValid = true)
-    {
-        try
-        {
-            CancelAsyncMapInteractions();
-
-            this.Status = MapStatus.Drawing;
-
-            options = options ?? EditableFeatureLayerOptions.CreateDefault();
-
-            var result = await GetDrawing(mode, options, display);
-
-            this.Status = MapStatus.Idle;
-
-            if (result.HasNotNullResult())
-            {
-                // todo: validation on geometry
-                return ResponseFactory.Create(result.Result/*.AsSqlGeometry().MakeValid().AsGeometry()*/);
-            }
-            else
-            {
-                return Response<Geometry<sb.Point>>.Empty;
-            }
-        }
-        catch (TaskCanceledException)
-        {
-            if (drawingCancellationToken == null)
-            {
-                this.Status = MapStatus.Idle;
-
-                this.Pan();
-            }
-
-            return Response<Geometry<sb.Point>>.CreateCanceled();//new Response<Geometry<sb.Point>>() { IsCanceled = true };
-        }
-        catch (Exception ex)
-        {
-            this.Status = MapStatus.Idle;
-
-            drawingTcs = null;
-
-            drawingCancellationToken = null;
-
-            this.Pan();
-
-            throw;
-        }
-        finally
-        {
-            //this.Status = MapStatus.Idle;
-
-            drawingLayer = null;
-            //this.Pan();
-        }
-    }
-
-    public void CancelDrawing()
-    {
-        if (this.drawingCancellationToken != null)
-        {
-            this.drawingCancellationToken.Cancel();
-        }
-    }
-
 
 
     #endregion
@@ -4352,11 +4459,9 @@ public partial class MapViewer : NotifiableUserControl
     #endregion
 
 
-
-
     #region Edit
 
-    CancellationTokenSource editingCancellationToken;
+    CancellationTokenSource? editingCancellationToken;
 
     private EditableFeatureLayer? _currentEditingLayer;
 
@@ -4367,11 +4472,14 @@ public partial class MapViewer : NotifiableUserControl
         {
             _currentEditingLayer = value;
             RaisePropertyChanged();
-            this.OnEditableFeatureLayerChanged?.Invoke(null, value);
+            //this.OnEditableFeatureLayerChanged?.Invoke(null, value);
+
+            if (_presenter != null)
+                _presenter.CurrentEditingLayer = value;
         }
     }
 
-    private Task<Response<Geometry<sb.Point>>> EditGeometry(Geometry<sb.Point> geometry, EditableFeatureLayerOptions options)
+    private Task<Response<Geometry<sb.Point>>> EditGeometry(Geometry<sb.Point> geometry/*, EditableFeatureLayerOptions options*/)
     {
         editingCancellationToken = new CancellationTokenSource();
 
@@ -4380,35 +4488,21 @@ public partial class MapViewer : NotifiableUserControl
         if (CurrentEditingLayer != null)
         {
             this.RemoveEditableFeatureLayer(CurrentEditingLayer);
+            CurrentEditingLayer.Dispose();
         }
 
-        options.IsNewDrawing = false;
+        //options.IsNewDrawing = false;
 
-        CurrentEditingLayer = new EditableFeatureLayer("edit", geometry.Clone(), this.viewTransform, ScreenToMap, options) { ZIndex = int.MaxValue };
-        //{
-        //    MassEdit = true
-        //};
-
-        //1397.08.19
-        //var tempCurrentPosition = new Point();
-
-        //this.OnMapMouseMove += (sender, e) =>
-        //{
-        //    var screenPoint = e.GetPosition(this.mapView);
-
-        //    var mapPoint = ScreenToMap(screenPoint).AsPoint();
-
-        //    var tempDistance = tempCurrentPosition.AsPoint().DistanceTo(screenPoint.AsPoint());
-
-        //    if (tempDistance < 10)
-        //    {
-        //        return;
-        //    }
-
-        //    tempCurrentPosition = screenPoint;
-
-        //    CurrentEditingLayer?.FindNearestPoint(mapPoint);
-        //};
+        CurrentEditingLayer = new EditableFeatureLayer(
+            "edit",
+            geometry.Clone(),
+            this.viewTransform,
+            ScreenToMap,
+            _presenter.RequestSelectedLocatableChanged,
+            _presenter.MapPanel.Options/*, options*/)
+        {
+            ZIndex = int.MaxValue
+        };
 
         CurrentEditingLayer.RequestRightClickOptions = this.AddRightClickOptions;
 
@@ -4429,6 +4523,7 @@ public partial class MapViewer : NotifiableUserControl
 
             this.RemoveEditableFeatureLayer(CurrentEditingLayer);
 
+            CurrentEditingLayer?.Dispose();
             CurrentEditingLayer = null;
 
             editingCancellationToken = null;
@@ -4460,10 +4555,12 @@ public partial class MapViewer : NotifiableUserControl
 
             this.RemoveEditableFeatureLayer(CurrentEditingLayer);
 
+            CurrentEditingLayer?.Dispose();
             CurrentEditingLayer = null;
 
             editingCancellationToken = null;
         };
+
 
         this.SetLayer(CurrentEditingLayer);
 
@@ -4475,6 +4572,8 @@ public partial class MapViewer : NotifiableUserControl
 
             this.SetCursor(CursorSettings[_currentMouseAction]);
 
+            //options.RequestHandleMeasureVisibilityChanged = null;
+
             this.RemoveEditableFeatureLayer(CurrentEditingLayer);
 
             tcs = null;
@@ -4484,13 +4583,11 @@ public partial class MapViewer : NotifiableUserControl
         return tcs.Task;
     }
 
-    public async Task<Response<Geometry<sb.Point>>> EditGeometryAsync(Geometry<sb.Point> originalGeometry, EditableFeatureLayerOptions options)
+    public async Task<Response<Geometry<sb.Point>>> EditGeometryAsync(Geometry<sb.Point> originalGeometry/*, EditableFeatureLayerOptions options*/)
     {
-        Geometry<sb.Point> originalClone = null;
-
         try
         {
-            originalClone = originalGeometry.Clone();
+            Geometry<sb.Point> originalClone = originalGeometry.Clone();
 
             //if (editingCancellationToken != null)
             //{
@@ -4500,7 +4597,7 @@ public partial class MapViewer : NotifiableUserControl
 
             this.Status = MapStatus.Editing;
 
-            var result = await EditGeometry(originalGeometry, options);
+            var result = await EditGeometry(originalGeometry/*, options*/);
 
             this.Status = MapStatus.Idle;
 
@@ -4536,6 +4633,158 @@ public partial class MapViewer : NotifiableUserControl
     public void FinishEditing()
     {
         CurrentEditingLayer?.FinishEditing();
+    }
+
+    #endregion
+
+
+    #region Measure Area/Distance
+
+    const string measureLayerName = "_@measureLayer";
+    SpecialPointLayer measureLayer;
+
+    CancellationTokenSource? _measureCancellationToken;
+
+    Guid _measureId;
+
+
+    public async Task<Response<Geometry<sb.Point>>> MeasureAsync(
+        DrawMode mode,
+        //EditableFeatureLayerOptions drawingOptions,
+        //EditableFeatureLayerOptions editingOptions,
+        Action action)
+    {
+        _measureId = Guid.NewGuid();
+
+        try
+        {
+            CancelAsyncMapInteractions();
+
+            CancelMeasure();
+
+            return await Measure(mode, /*drawingOptions, editingOptions,*/ action, _measureId);
+        }
+        catch (TaskCanceledException)
+        {
+            this.Status = MapStatus.Idle;
+
+            return Response<Geometry<sb.Point>>.CreateCanceled();
+        }
+        catch (Exception ex)
+        {
+            this._measureCancellationToken = null;
+
+            this.Status = MapStatus.Idle;
+
+            throw;
+        }
+    }
+
+    // todo: validation on geometry
+    private async Task<Response<Geometry<sb.Point>>> Measure(
+        DrawMode mode,
+        //EditableFeatureLayerOptions drawingOptions,
+        //EditableFeatureLayerOptions editingOptions,
+        Action action,
+        Guid guid)
+    {
+        this._measureCancellationToken = new CancellationTokenSource();
+
+        this._measureCancellationToken.Token.Register(() =>
+        {
+            this.ClearLayer(measureLayer, remove: true, forceRemove: true);
+
+            //drawingOptions.RequestHandleMeasureVisibilityChanged = null;
+            //editingOptions.RequestHandleMeasureVisibilityChanged = null;
+
+            _measureCancellationToken = null;
+
+            CancelDrawing();
+
+            CancelEditGeometry();
+        });
+
+        this.ClearLayer(measureLayer, remove: true, forceRemove: true);
+
+        var measureLocatable = new Locateable(new sb.Point(0, 0), AncherFunctionHandlers.BottomCenter)
+        {
+            Element = new IRI.Maptor.Jab.Controls.MapMarkers.LabelMarker(string.Empty)
+        };
+
+        measureLayer = new SpecialPointLayer(measureLayerName, measureLocatable, 1, ScaleInterval.All, LayerType.Complex);
+
+        this.SetLayer(measureLayer);
+
+        onMoveForDrawAction = p =>
+        {
+            this.AddComplexLayer(measureLayer, true);
+
+            var offsetOnMap = ScreenToMap(20);
+
+            measureLayer.Items.First().X = p.X;
+            measureLayer.Items.First().Y = p.Y + offsetOnMap;
+
+            var marker = (measureLayer.Items.First().Element as IRI.Maptor.Jab.Controls.MapMarkers.LabelMarker);
+
+            try
+            {
+                // should not change the ring orientation here!
+                // so use GetLastGeometry
+                var geo = drawingLayer.GetLastGeometry().Clone();
+
+                geo.InsertLastPoint(p.AsPoint());
+
+                // todo: validation on geometry
+                //var geoAsGeodetic = geo.AsSqlGeometry().WebMercatorToGeodeticWgs84().MakeValid();
+                //var measureValue = mode == DrawMode.Polygon ? UnitHelper.GetAreaLabel(geoAsGeodetic.STArea().Value) : UnitHelper.GetLengthLabel(geoAsGeodetic.STLength().Value);
+                //marker.ToolTip = mode == DrawMode.Polygon ? geoAsGeodetic.STArea().Value : geoAsGeodetic.STLength().Value;
+
+                var measureValue = SpatialUtility.GetEllipsoidMeasureLabel(geo, MapProjects.WebMercatorToGeodeticWgs84);
+
+                marker.ToolTip = SpatialUtility.GetEllipsoidMeasure(geo, MapProjects.WebMercatorToGeodeticWgs84);
+
+                marker.LabelValue = measureValue;
+
+
+            }
+            catch (Exception ex)
+            {
+                marker.LabelValue = "عارضه نامعتبر";
+            }
+        };
+
+        var result = await GetDrawingAsync(mode/*, drawingOptions*/);
+
+        this.ClearLayer(measureLayer, remove: true, forceRemove: true);
+
+        //if (result.HasNotNullResult())
+        //{
+        //    //_presenter.MapPanel.Options = EditableFeatureLayerOptions.CreateDefaultForEditingMeasure(true, true, true); /*editingOptions*/;
+
+        //    result = await EditGeometryAsync(result.Result/*, editingOptions*/);
+        //}
+
+        if (_measureId == guid)
+        {
+            onMoveForDrawAction = null;
+
+            _measureCancellationToken = null;
+
+            if (result == null)
+            {
+                this.Pan();
+            }
+        }
+
+        return result;
+    }
+
+    public void CancelMeasure()
+    {
+        if (_measureCancellationToken != null)
+        {
+            _measureCancellationToken.Cancel();
+        }
     }
 
     #endregion
@@ -4665,7 +4914,7 @@ public partial class MapViewer : NotifiableUserControl
         return await tcs.Task;
     }
 
-    public async Task<Response<PolyBezierLayer>> GetBezierAsync(Geometry decoration = null, VisualParameters decorationVisual = null)
+    public async Task<Response<PolyBezierLayer>> GetBezierAsync(Geometry? decoration = null, VisualParameters? decorationVisual = null)
     {
         try
         {
@@ -4711,137 +4960,4 @@ public partial class MapViewer : NotifiableUserControl
 
     #endregion
 
-
-    #region Measure Area/Distance
-
-    SpecialPointLayer measureLayer;
-
-    CancellationTokenSource _measureCancellationToken;
-
-    Guid _measureId;
-
-
-    // todo: validation on geometry
-    private async Task<Response<Geometry<sb.Point>>> Measure(DrawMode mode, EditableFeatureLayerOptions drawingOptions, EditableFeatureLayerOptions editingOptions, Action action, Guid guid)
-    {
-        this._measureCancellationToken = new CancellationTokenSource();
-
-        this._measureCancellationToken.Token.Register(() =>
-        {
-            this.ClearLayer(measureLayer, remove: true, forceRemove: true);
-
-            _measureCancellationToken = null;
-
-            CancelDrawing();
-
-            CancelEditGeometry();
-        });
-
-
-        this.ClearLayer(measureLayer, remove: true, forceRemove: true);
-
-        var measureLocatable = new Locateable(new sb.Point(0, 0), AncherFunctionHandlers.BottomCenter) { Element = new IRI.Maptor.Jab.Controls.MapMarkers.LabelMarker("test") };
-
-        measureLayer = new SpecialPointLayer("measure", measureLocatable, 1, ScaleInterval.All, LayerType.Complex);
-
-        this.SetLayer(measureLayer);
-
-        onMoveForDrawAction = p =>
-        {
-            this.AddComplexLayer(measureLayer, true);
-
-            var offset = ScreenToMap(20);
-
-            measureLayer.Items.First().X = p.X;
-            measureLayer.Items.First().Y = p.Y + offset;
-
-            var marker = (measureLayer.Items.First().Element as IRI.Maptor.Jab.Controls.MapMarkers.LabelMarker);
-
-            try
-            {
-                var geo = drawingLayer.GetFinalGeometry().Clone();
-
-                geo.InsertLastPoint(p.AsPoint());
-
-                // todo: validation on geometry
-                //var geoAsGeodetic = geo.AsSqlGeometry().WebMercatorToGeodeticWgs84().MakeValid();
-                //var measureValue = mode == DrawMode.Polygon ? UnitHelper.GetAreaLabel(geoAsGeodetic.STArea().Value) : UnitHelper.GetLengthLabel(geoAsGeodetic.STLength().Value);
-                //marker.ToolTip = mode == DrawMode.Polygon ? geoAsGeodetic.STArea().Value : geoAsGeodetic.STLength().Value;
-
-                var measureValue = SpatialUtility.GetEllipsoidMeasureLabel(geo, MapProjects.WebMercatorToGeodeticWgs84);
-
-                marker.ToolTip = SpatialUtility.GetEllipsoidMeasure(geo, MapProjects.WebMercatorToGeodeticWgs84);
-
-                marker.LabelValue = measureValue;
-
-
-            }
-            catch (Exception ex)
-            {
-                marker.LabelValue = "عارضه نامعتبر";
-            }
-        };
-
-        var result = await GetDrawingAsync(mode, drawingOptions, true);
-
-        this.ClearLayer(measureLayer, remove: true, forceRemove: true);
-
-        if (result.HasNotNullResult())
-        {
-            result = await EditGeometryAsync(result.Result, editingOptions);
-        }
-
-        if (_measureId == guid)
-        {
-            onMoveForDrawAction = null;
-
-            _measureCancellationToken = null;
-
-            if (result == null)
-            {
-                this.Pan();
-            }
-        }
-
-        return result;
-    }
-
-    //public async Task<sb.Geometry> MeasureAsync(DrawMode mode, bool isEdgeLabelVisible, Action action)
-    public async Task<Response<Geometry<sb.Point>>> MeasureAsync(DrawMode mode, EditableFeatureLayerOptions drawingOptions, EditableFeatureLayerOptions editingOptions, Action action)
-    {
-        _measureId = Guid.NewGuid();
-
-        try
-        {
-            CancelAsyncMapInteractions();
-
-            CancelMeasure();
-
-            return await Measure(mode, drawingOptions, editingOptions, action, _measureId);
-        }
-        catch (TaskCanceledException)
-        {
-            this.Status = MapStatus.Idle;
-
-            return Response<Geometry<sb.Point>>.CreateCanceled(); //new Response<Geometry<sb.Point>>() { Result = null, IsCanceled = true };
-        }
-        catch (Exception ex)
-        {
-            this._measureCancellationToken = null;
-
-            this.Status = MapStatus.Idle;
-
-            throw;
-        }
-    }
-
-    public void CancelMeasure()
-    {
-        if (_measureCancellationToken != null)
-        {
-            _measureCancellationToken.Cancel();
-        }
-    }
-
-    #endregion
 }

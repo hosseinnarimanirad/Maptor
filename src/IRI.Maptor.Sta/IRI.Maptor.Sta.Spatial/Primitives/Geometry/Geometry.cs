@@ -3124,6 +3124,9 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     {
         switch (this.Type)
         {
+            case GeometryType.Point:
+                return this.AsPoint();
+
             case GeometryType.LineString:
             case GeometryType.MultiLineString:
                 return this.GetLastPoint();
@@ -3132,7 +3135,6 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             case GeometryType.MultiPolygon:
                 return this.GetMeanPoint();
 
-            case GeometryType.Point:
             case GeometryType.MultiPoint:
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:

@@ -56,23 +56,23 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
 
     #region DependencyProperties
 
-    public string Title
-    {
-        get { return (string)GetValue(TitleProperty); }
-        set { SetValue(TitleProperty, value); }
-    }
-    public static readonly DependencyProperty TitleProperty =
-        DependencyProperty.Register(nameof(Title), typeof(string), typeof(MapLegendItemView), new PropertyMetadata(new PropertyChangedCallback((d, dp) =>
-        {
-            try
-            {
-                ((MapLegendItemView)d).UpdateTitle((string)dp.NewValue);
-            }
-            catch (Exception)
-            {
-                return;
-            }
-        })));
+    //public string Title
+    //{
+    //    get { return (string)GetValue(TitleProperty); }
+    //    set { SetValue(TitleProperty, value); }
+    //}
+    //public static readonly DependencyProperty TitleProperty =
+    //    DependencyProperty.Register(nameof(Title), typeof(string), typeof(MapLegendItemView), new PropertyMetadata(new PropertyChangedCallback((d, dp) =>
+    //    {
+    //        try
+    //        {
+    //            ((MapLegendItemView)d).UpdateTitle((string)dp.NewValue);
+    //        }
+    //        catch (Exception)
+    //        {
+    //            return;
+    //        }
+    //    })));
 
 
     public double TitleFontSize
@@ -154,19 +154,19 @@ public partial class MapLegendItemView : UserControl//, IDisposable, INotifyProp
     //public string SymbologyExpanderHeaderText => LocalizationManager.Instance[LocalizationResourceKeys.legend_symbologyExpanderHeaderText.ToString()];
 
 
-    private void UpdateTitle(string newValue)
-    {
-        if (this.DataContext is DrawingItemLayer layer)
-        {
-            layer.LayerName = newValue;
-        }
-        //var layer = (this.DataContext as DrawingItemLayer);
+    //private void UpdateTitle(string newValue)
+    //{
+    //    if (this.DataContext is DrawingItemLayer layer)
+    //    {
+    //        layer.LayerName = newValue;
+    //    }
+    //    //var layer = (this.DataContext as DrawingItemLayer);
 
-        //if (layer != null)
-        //{
-        //    layer.LayerName = newValue;
-        //} 
-    }
+    //    //if (layer != null)
+    //    //{
+    //    //    layer.LayerName = newValue;
+    //    //} 
+    //}
 
     //private void pendingChangesPopup_Loaded(object sender, RoutedEventArgs e)
     //{

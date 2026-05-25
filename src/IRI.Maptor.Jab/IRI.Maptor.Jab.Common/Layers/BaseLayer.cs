@@ -613,8 +613,8 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public Action<ILayer> RequestShowLayerSettings { get; set; }
 
-    public Func<ILayer, Task> RequestMoveLayerDown { get; set; }
-    public Func<ILayer, Task> RequestMoveLayerUp { get; set; }
+    public Func<ILayer, Task>? RequestMoveLayerDown { get; set; }
+    public Func<ILayer, Task>? RequestMoveLayerUp { get; set; }
 
     protected virtual void BindWithFrameworkElement(FrameworkElement? element)
     {

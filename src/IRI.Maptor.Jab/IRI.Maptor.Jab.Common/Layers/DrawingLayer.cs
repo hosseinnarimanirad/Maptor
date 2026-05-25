@@ -15,8 +15,10 @@ using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 
-public class DrawingLayer : SymbolizableLayer
+public class DrawingLayer : SymbolizableLayer, IDisposable
 {
+    public event EventHandler OnRequestFinishDrawing;
+
     DrawMode _mode;
 
     EditableFeatureLayer _editableFeatureLayer;
@@ -37,7 +39,13 @@ public class DrawingLayer : SymbolizableLayer
     //    protected set => throw new NotImplementedException();
     //}
 
-    public DrawingLayer(DrawMode mode, Transform toScreen, Func<double, double> screenToMap, Point startMercatorPoint, EditableFeatureLayerOptions options)
+    public DrawingLayer(
+        DrawMode mode,
+        Transform toScreen,
+        Func<double, double> screenToMap,
+        Point startMercatorPoint,
+        Action<Locateable?, int> requestSelectedLocatableChanged,
+        EditableFeatureLayerOptions options)
     {
         _mode = mode;
 
@@ -62,7 +70,17 @@ public class DrawingLayer : SymbolizableLayer
 
         //var options = new EditableFeatureLayerOptions() { IsVerticesLabelVisible = isEdgeLengthVisible };
 
-        _editableFeatureLayer = new EditableFeatureLayer("edit", new List<Point>() { startMercatorPoint }, toScreen, screenToMap, type, options) { ZIndex = int.MaxValue };
+        _editableFeatureLayer = new EditableFeatureLayer(
+            "edit",
+            [startMercatorPoint],
+            toScreen,
+            screenToMap,
+            type,
+            requestSelectedLocatableChanged,
+            options)
+        {
+            ZIndex = int.MaxValue
+        };
 
         // todo: consider this line why not just assigning OnRequestFinishDrawing 
         _editableFeatureLayer.OnRequestFinishDrawing += (sender, e) => OnRequestFinishDrawing?.Invoke(this, EventArgs.Empty);
@@ -82,11 +100,11 @@ public class DrawingLayer : SymbolizableLayer
         SetSymbolizer(new SimpleSymbolizer(param));
     }
 
-    public Action<Geometry<Point>> RequestFinishEditing;
 
-    public Action RequestCancelDrawing { get; set; }
+    public Action<Geometry<Point>>? RequestFinishEditing;
 
-    public event EventHandler OnRequestFinishDrawing;
+    public Action? RequestCancelDrawing { get; set; }
+
 
     public EditableFeatureLayer GetLayer()
     {
@@ -108,9 +126,14 @@ public class DrawingLayer : SymbolizableLayer
         _editableFeatureLayer.AddSemiVertex(webMercatorPoint);
     }
 
-    public Geometry<Point> GetFinalGeometry()
+    public Geometry<Point> GetLastGeometry()
     {
-        var geometry = _editableFeatureLayer.GetFinalGeometry();
+        return _editableFeatureLayer.GetLastGeometry();
+    }
+
+    public Geometry<Point> GetFinalFixedGeometry()
+    {
+        var geometry = _editableFeatureLayer.GetFinalFixedGeometry();
 
         return geometry;
     }
@@ -132,7 +155,7 @@ public class DrawingLayer : SymbolizableLayer
 
     public DrawingVisual? AsDrawingVisual(BoundingBox mapExtent, int imageWidth, int imageHeight, double mapScale)
     {
-        var geometry = _editableFeatureLayer.GetFinalGeometry();
+        var geometry = _editableFeatureLayer.GetFinalFixedGeometry();
 
         if (geometry == null)
             return null;
@@ -164,4 +187,41 @@ public class DrawingLayer : SymbolizableLayer
     {
         return _editableFeatureLayer.GetFeatureSet(mapExtent, mapScale) ?? Task.FromResult(FeatureSet<Point>.Empty);
     }
+
+
+    #region IDispose
+
+    private bool _disposed = false;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                this.RequestCancelDrawing = null;
+                this.RequestChangeSymbology = null;
+                this.RequestChangeVisibility = null;
+                this.RequestClearSelectedLayer = null;
+                this.RequestFinishEditing = null;
+                this.RequestMoveLayerDown = null;
+                this.RequestMoveLayerUp = null;
+                this.RequestSaveChanges = null;
+
+                if (this._editableFeatureLayer != null)
+                    this._editableFeatureLayer.Dispose();
+            }
+
+            // Dispose unmanaged resources here if any
+            _disposed = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
 }

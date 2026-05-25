@@ -49,7 +49,6 @@ using IRI.Maptor.Sta.Spatial.IO.EsriJson;
 using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Jab.Common.Data.Settings;
 using IRI.Maptor.Jab.Common.Services;
-
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public abstract class MapViewModelBase : ViewModelBase
@@ -262,8 +261,8 @@ public abstract class MapViewModelBase : ViewModelBase
 
 
 
-    private EditableFeatureLayer _currentEditingLayer;
-    public EditableFeatureLayer CurrentEditingLayer
+    private EditableFeatureLayer? _currentEditingLayer;
+    public EditableFeatureLayer? CurrentEditingLayer
     {
         get { return _currentEditingLayer; }
         set
@@ -273,19 +272,19 @@ public abstract class MapViewModelBase : ViewModelBase
 
             if (_currentEditingLayer != null)
             {
-                _currentEditingLayer.RequestSelectedLocatableChanged = (l, index) =>
-                {
-                    if (l is null)
-                        return;
+                _currentEditingLayer.RequestSelectedLocatableChanged = this.RequestSelectedLocatableChanged;
+                //    (l, index) =>
+                //{
+                //    if (l is null)
+                //        return;
 
-                    UpdateCurrentEditingPoint(new Point(l.X, l.Y));
+                //    UpdateCurrentEditingPoint(new Point(l.X, l.Y));
 
-                    if (CurrentGeometryDetails is not null)
-                    {
-                        CurrentGeometryDetails.GeometryEditor.UpdateSelectedPoint(l, index);
-                    }
-                };
-
+                //    if (CurrentGeometryDetails is not null)
+                //    {
+                //        CurrentGeometryDetails.GeometryEditor.UpdateSelectedPoint(l, index);
+                //    }
+                //}; 
                 _currentEditingLayer.RequestZoomToPoint = (p) =>
                 {
                     Zoom(WebMercatorUtility.GetGoogleMapScale(14), p);
@@ -427,10 +426,10 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         UpdateAllNonGroupLayers();
 
-        UpdateLayerTocOrder(Layers);
+        UpdateLayerCanMoveUpDown(Layers);
     }
 
-    public void UpdateLayerTocOrder(IEnumerable<ILayer> layers)
+    public void UpdateLayerCanMoveUpDown(IEnumerable<ILayer> layers)
     {
         var orderedLayers = layers.Where(l => l.CanReorderInToc && LegendViewModel.IsFilterPassed(l)).OrderByDescending(l => l.TocOrder).ToList();
 
@@ -441,7 +440,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             if (item.IsGroupLayer)
             {
-                UpdateLayerTocOrder(item.SubLayers);
+                UpdateLayerCanMoveUpDown(item.SubLayers);
             }
         }
     }
@@ -1044,7 +1043,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         MapExtentPanel = new MapExtentPanelViewModel(this);
 
-        LegendViewModel = new LegendViewModel() { RequestNotifyFilterChanged = () => UpdateLayerTocOrder(Layers) };
+        LegendViewModel = new LegendViewModel() { RequestNotifyFilterChanged = () => UpdateLayerCanMoveUpDown(Layers) };
 
         MapPanel = new MapPanelViewModel();
 
@@ -1066,6 +1065,19 @@ public abstract class MapViewModelBase : ViewModelBase
           });
 
         CoordinatePanel = new CoordinatePanelViewModel();
+
+        RequestSelectedLocatableChanged = (l, index) =>
+        {
+            if (l is null)
+                return;
+
+            UpdateCurrentEditingPoint(new Point(l.X, l.Y));
+
+            if (CurrentGeometryDetails is not null)
+            {
+                CurrentGeometryDetails.GeometryEditor.UpdateSelectedPoint(l, index);
+            }
+        };
     }
 
     public virtual void InitializeSettings(
@@ -1265,7 +1277,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action<string, List<Point>, Geometry, bool, VisualParameters> RequestAddPolyBezier;
 
-    public Func<DrawMode, EditableFeatureLayerOptions, bool, Task<Response<Geometry<Point>>>> RequestGetDrawingAsync;
+    public Func<DrawMode, /*EditableFeatureLayerOptions,*/ Task<Response<Geometry<Point>>>> RequestGetDrawingAsync;
 
     //public Action RequestClearAll;
 
@@ -1281,7 +1293,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action OnRequestShowAboutMe;
 
-    public Func<DrawMode, EditableFeatureLayerOptions, EditableFeatureLayerOptions, Action, Task<Response<Geometry<Point>>>> RequestMeasure;
+    public Func<DrawMode, /*EditableFeatureLayerOptions, EditableFeatureLayerOptions, */Action, Task<Response<Geometry<Point>>>> RequestMeasure;
 
     public Action RequestCancelMeasure;
 
@@ -1295,7 +1307,11 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action<ILayer>? RequestUpdateZIndex;
 
-    public Func<Geometry<Point>, EditableFeatureLayerOptions, Task<Response<Geometry<Point>>>> RequestEdit;
+
+    public Action<Locateable?, int> RequestSelectedLocatableChanged;
+
+
+    public Func<Geometry<Point>, /*EditableFeatureLayerOptions, */Task<Response<Geometry<Point>>>> RequestEdit;
 
     public Func<Geometry, VisualParameters, Task<Response<PolyBezierLayer>>> RequestGetBezier;
 
@@ -1967,7 +1983,7 @@ public abstract class MapViewModelBase : ViewModelBase
         IsPanMode = true;
         //ResetMode(mode);
 
-        var drawingResult = await GetDrawingAsync(mode, MapSettings.DrawingOptions, true);
+        var drawingResult = await GetDrawingAsync(mode, MapSettings.DrawingOptions);
 
         if (!drawingResult.HasNotNullResult())
             return;
@@ -2293,7 +2309,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await SwapLayerOrders(layer, nextLayer/*layers[nextIndex]*/);
 
-        UpdateLayerTocOrder(layers);
+        UpdateLayerCanMoveUpDown(layers);
     }
 
 
@@ -2334,7 +2350,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await SwapLayerOrders(layer, nextLayer/*layers[nextIndex]*/);
 
-        UpdateLayerTocOrder(layers);
+        UpdateLayerCanMoveUpDown(layers);
 
     }
 
@@ -2355,7 +2371,6 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             await LegendViewModel.RequestRefreshView.Invoke();
         }
-
 
         RequestUpdateZIndex?.Invoke(first);
 
@@ -2591,13 +2606,13 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         this.ShowMapInfoPanel = true;
 
-        options = options ?? MapSettings.EditingOptions;
+        //options = options ?? MapSettings.EditingOptions;
 
-        MapPanel.Options = options;
+        MapPanel.Options = options ?? MapSettings.EditingOptions;
 
         if (RequestEdit != null)
         {
-            return RequestEdit(geometry, options);
+            return RequestEdit(geometry/*, options*/);
         }
         else
         {
@@ -3070,7 +3085,7 @@ public abstract class MapViewModelBase : ViewModelBase
     //*****************************************Drawing***************************************************************
     #region Drawing
 
-    public async Task<Response<Geometry<Point>>> GetDrawingAsync(DrawMode mode, EditableFeatureLayerOptions? options = null, bool display = true)
+    public async Task<Response<Geometry<Point>>> GetDrawingAsync(DrawMode mode, EditableFeatureLayerOptions? options = null)
     {
         //this.IsDrawMode = true;
 
@@ -3080,7 +3095,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         MapPanel.Options = options;
 
-        var result = await RequestGetDrawingAsync?.Invoke(mode, options, display);
+        var result = await RequestGetDrawingAsync?.Invoke(mode/*, options*/);
 
         //this.IsDrawMode = false;
 
@@ -3162,11 +3177,25 @@ public abstract class MapViewModelBase : ViewModelBase
 
         try
         {
+            MapSettings.DrawingMeasureOptions.RequestHandleMeasureVisibilityChanged = null;
+            System.Diagnostics.Trace.WriteLine("RequestHandleMeasureVisibilityChanged called #1");
+
+            // only in the case of length measurement show edge lengths by default.
+            MapSettings.DrawingMeasureOptions.IsEdgeLabelVisible = mode == DrawMode.Polyline;
+
             MapPanel.Options = MapSettings.DrawingMeasureOptions;
 
-            var result = await RequestMeasure.Invoke(mode, MapSettings.DrawingMeasureOptions, MapSettings.EditingMeasureOptions, action);
+            var result = await RequestMeasure.Invoke(mode, /*MapSettings.DrawingMeasureOptions, MapSettings.EditingMeasureOptions,*/ action);
 
-            //this.IsMeasureMode = false;
+            if (result.HasNotNullResult())
+            {
+                MapPanel.Options = MapSettings.EditingMeasureOptions;
+
+                await RequestEdit.Invoke(result.Result);
+            }
+
+            MapSettings.DrawingMeasureOptions.RequestHandleMeasureVisibilityChanged = null;
+            System.Diagnostics.Trace.WriteLine("RequestHandleMeasureVisibilityChanged called #3");
 
             return result;
         }
@@ -4500,7 +4529,7 @@ public abstract class MapViewModelBase : ViewModelBase
     public virtual async Task AddDxffile(int? maxSizeInKB)
     {
         IsBusy = true;
-         
+
         var result = await DialogService.ShowDxfOpenDialogAsync(ownerWindow: null);
 
         if (result == null)
@@ -5627,16 +5656,16 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    private RelayCommand _finishDrawingPartCommand;
-    public RelayCommand FinishDrawingPartCommand
+    private RelayCommand _finishNewDrawingPartCommand;
+    public RelayCommand FinishNewDrawingPartCommand
     {
         get
         {
-            if (_finishDrawingPartCommand == null)
+            if (_finishNewDrawingPartCommand == null)
             {
-                _finishDrawingPartCommand = new RelayCommand(param => FinishDrawingPart());
+                _finishNewDrawingPartCommand = new RelayCommand(param => FinishDrawingPart());
             }
-            return _finishDrawingPartCommand;
+            return _finishNewDrawingPartCommand;
         }
     }
 

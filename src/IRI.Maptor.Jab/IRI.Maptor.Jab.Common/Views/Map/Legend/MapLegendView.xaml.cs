@@ -14,6 +14,8 @@ using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Controls;
 using IRI.Maptor.Jab.Common.Layers;
+using System.Diagnostics;
+using System.Windows.Media;
 
 namespace IRI.Maptor.Jab.Controls;
 
@@ -26,6 +28,7 @@ public partial class MapLegendView : NotifiableUserControl
     {
         InitializeComponent();
     }
+     
 
     public LegendViewModel LegendViewModel
     {
@@ -51,11 +54,9 @@ public partial class MapLegendView : NotifiableUserControl
 
                                             if (cvs?.View != null)
                                             {
-                                                await control.Dispatcher.BeginInvoke(() => cvs.View.Refresh(), DispatcherPriority.Normal);
+                                                await control.Dispatcher.InvokeAsync(() => cvs.View.Refresh(), DispatcherPriority.Normal);
                                             }
                                         };
-
-
                                     })));
 
 
@@ -171,7 +172,7 @@ public partial class MapLegendView : NotifiableUserControl
             return;
         }
 
-        e.Accepted = LegendViewModel.IsFilterPassed(item);
+        e.Accepted = LegendViewModel.IsFilterPassedCached(item);
 
         //var allowedKinds = LegendViewModel.GetAllowedDataSourceKinds();
 

@@ -216,19 +216,21 @@ public class MapSettingsModel : Notifier, IMapSettings
 
     public IMapSettings GetData() => _settings;
 
+
+
     private EditableFeatureLayerOptions _drawingOptions = EditableFeatureLayerOptions.CreateDefaultForDrawing(true, true, true);
-    public EditableFeatureLayerOptions DrawingOptions { get => _drawingOptions; set => _drawingOptions = value; }
+    public EditableFeatureLayerOptions DrawingOptions { get => _drawingOptions; /*set => _drawingOptions = value;*/ }
 
 
     private EditableFeatureLayerOptions _editingOptions = EditableFeatureLayerOptions.CreateDefaultForEditing(true, true);
-    public EditableFeatureLayerOptions EditingOptions { get => _editingOptions; set => _editingOptions = value; }
+    public EditableFeatureLayerOptions EditingOptions { get => _editingOptions; /*set => _editingOptions = value;*/ }
 
 
     private EditableFeatureLayerOptions _drawingMeasureOptions = EditableFeatureLayerOptions.CreateDefaultForDrawingMeasure(true, true, true);
-    public EditableFeatureLayerOptions DrawingMeasureOptions { get => _drawingMeasureOptions; set => _drawingMeasureOptions = value; }
+    public EditableFeatureLayerOptions DrawingMeasureOptions { get => _drawingMeasureOptions; /*set => _drawingMeasureOptions = value;*/ }
 
 
     private EditableFeatureLayerOptions _editingMeasureOptions = EditableFeatureLayerOptions.CreateDefaultForEditingMeasure(true, true);
-    public EditableFeatureLayerOptions EditingMeasureOptions { get => _editingMeasureOptions; set => _editingMeasureOptions = value; }
+    public EditableFeatureLayerOptions EditingMeasureOptions { get => _editingMeasureOptions; /*set => _editingMeasureOptions = value;*/ }
 
 }

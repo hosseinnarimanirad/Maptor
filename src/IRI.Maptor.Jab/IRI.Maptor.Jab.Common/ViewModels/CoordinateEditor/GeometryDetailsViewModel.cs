@@ -53,7 +53,7 @@ public class GeometryDetailsViewModel : Notifier
 
         SelectedFormat = "WKT"; // Default format
 
-        this.Geometry = editableFeatureLayer.GetFinalGeometry();
+        this.Geometry = editableFeatureLayer.GetFinalFixedGeometry();
 
         this.GeometryEditor = new GeometryEditorViewModel(_editableFeatureLayer);
     }
@@ -62,7 +62,7 @@ public class GeometryDetailsViewModel : Notifier
     {
         // Refresh geometry when parts are added/deleted
         // This will trigger UpdateAllProperties() which updates all dependent properties
-        Geometry = _editableFeatureLayer.GetFinalGeometry();
+        Geometry = _editableFeatureLayer.GetFinalFixedGeometry();
     }
 
     private IGeometry _geometry;

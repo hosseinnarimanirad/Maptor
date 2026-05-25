@@ -204,6 +204,9 @@ public class LayerManager : Notifier
 
     private void ArrangeTocOrder(LegendViewModel legendViewModel, ILayer layer)
     {
+        if (!layer.ShowInToc)
+            return;
+
         var layers = layer.Parent != null ?
             layer.Parent.SubLayers :
             _allLayers.Where(l => l.Parent == null);

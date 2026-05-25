@@ -61,6 +61,27 @@
         <StackPanel FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}">
             <DockPanel Margin="0" >
 
+
+                <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" DockPanel.Dock="Left" HorizontalAlignment="Right" Margin="2" 
+                                IsChecked="{Binding MapPanel.Options.IsLinkedToMouseMove, Mode=TwoWay}" 
+                                Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"
+                                ToolTip="{Binding [mapPanel_currentPoint_linkToMouseMove], Source={StaticResource Localization}}">
+                    <iconPacks:PackIconPhosphorIcons>
+                        <iconPacks:PackIconPhosphorIcons.Style>
+                            <Style TargetType="iconPacks:PackIconPhosphorIcons">
+                                <Setter Property="Kind" Value="LinkBreakBold"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
+                                        <Setter Property="Kind" Value="LinkBold"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </iconPacks:PackIconPhosphorIcons.Style>
+                    </iconPacks:PackIconPhosphorIcons>
+                </ToggleButton>
+
+                
+                <!--input X-->
                 <TextBlock DockPanel.Dock="Left" Text="X:" Margin="8 0 0 0"
                            Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
                 <TextBox DockPanel.Dock="Left"
@@ -72,7 +93,7 @@
                         <Style TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=MapPanel.IsGeodeticWgs84EditingMode}" Value="True">
-                                    <Setter Property="Text" Value="{Binding Path=MapPanel.CurrentEditingPoint.X, Mode=TwoWay, StringFormat={}{0:N5}}"/>
+                                    <Setter Property="Text" Value="{Binding Path=MapPanel.CurrentEditingPoint.X, Mode=TwoWay, StringFormat={}{0:N6}}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Path=MapPanel.IsGeodeticWgs84EditingMode}" Value="False">
                                     <Setter Property="Text" Value="{Binding Path=MapPanel.CurrentEditingPoint.X, Mode=TwoWay, StringFormat={}{0:N2}}"/>
@@ -82,6 +103,7 @@
                     </TextBox.Style>
                 </TextBox>
 
+                <!--input Y-->
                 <TextBlock DockPanel.Dock="Left" Text="Y:" Margin="8 0 0 0"
                            Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
                 <TextBox DockPanel.Dock="Left" 
@@ -103,22 +125,29 @@
                     </TextBox.Style>
                 </TextBox>
 
+
+
+
                 <!--Drawing-->
                 <DockPanel DockPanel.Dock="Right" LastChildFill="False"
                             Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}">
+                    <!--Add Point-->
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Left" Margin="2" 
                             ToolTip="{Binding [map_draw_addPoint], Source={StaticResource Localization}}"
                             Command="{Binding AddPointToNewDrawingCommand}"
                             Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Material Kind="Plus"/>
                     </Button>
+
+                    <!--Finish Drawing Part-->
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Left" Margin="2,0,10,0" 
                             ToolTip="{Binding [map_draw_finishDrawingPart], Source={StaticResource Localization}}"
-                            Command="{Binding FinishDrawingPartCommand}"
+                            Command="{Binding FinishNewDrawingPartCommand}"
                             Visibility="{Binding MapPanel.Options.IsMultiPartSupportAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:PhosphorIcons Kind="CirclesThreePlusFill"/>
                     </Button>
 
+                    <!--Finish Drawing-->
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Right" Margin="2" 
                             ToolTip="{Binding [map_draw_finishDrawing], Source={StaticResource Localization}}"
                             Command="{Binding FinishNewDrawingCommand}" >
@@ -132,55 +161,59 @@
                 </DockPanel>
                 <!-- Drawing -->
 
+                <TextBlock Text="{Binding MapPanel.Options.Status, FallbackValue=Error}" Foreground="Red" MinWidth="100"
+                           Background="Yellow" Visibility="Collapsed" />
 
                 <!--Editing-->
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right" 
                             ToolTip="{Binding [mapPanel_edit_showEdgeLabels], Source={StaticResource Localization}}"
-                            DataContext="{Binding CurrentEditingLayer}" 
-                            Visibility="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}, Converter={StaticResource boolToVisibilityConverter}}">
+                            Visibility="{Binding MapPanel.Options.IsEditing, Converter={StaticResource boolToVisibilityConverter}}">
+
                     <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
-                                    IsChecked="{Binding Options.IsEdgeLabelVisible, Mode=TwoWay}" 
-                                    Visibility="{Binding Options.IsMeasureVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                                    IsChecked="{Binding MapPanel.Options.IsEdgeLabelVisible, Mode=TwoWay}" 
+                                    Visibility="{Binding MapPanel.Options.IsMeasureVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Material Kind="MapMarkerDistance"/>
                     </ToggleButton>
-                    
+
+
                     <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
-                                    IsChecked="{Binding Options.IsMeasureVisible, Mode=TwoWay}">
+                                    IsChecked="{Binding MapPanel.Options.IsMeasureVisible, Mode=TwoWay}" >
                         <!--Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">-->
                         <iconPacks:PhosphorIcons Kind="Ruler"/>
                     </ToggleButton>
-                    
+
+
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
-                            Command="{Binding ConvertToDrawingItemCommand}" 
+                            Command="{Binding CurrentEditingLayer.ConvertToDrawingItemCommand}" 
                             ToolTip="{Binding [mapPanel_edit_convertToDrawing], Source={StaticResource Localization}}"
-                            Visibility="{Binding Options.IsMeasureButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                            Visibility="{Binding MapPanel.Options.IsMeasureMode, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Material Kind="PencilPlus"/>
                     </Button>
 
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2"
-                            Command="{Binding ShowGeometryDetailsCommand}"
+                            Command="{Binding CurrentEditingLayer.ShowGeometryDetailsCommand}"
                             ToolTip="{Binding [mapPanel_edit_showGeometryDetails], Source={StaticResource Localization}}"
-                            Visibility="{Binding Options.IsGeometryDetailsAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                            Visibility="{Binding MapPanel.Options.IsGeometryDetailsAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Material Kind="Tune"/>
                     </Button>
 
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
-                            Command="{Binding DeleteCommand}"
+                            Command="{Binding CurrentEditingLayer.DeleteCommand}"
                             ToolTip="{Binding [mapPanel_edit_delete], Source={StaticResource Localization}}"
-                            Visibility="{Binding Options.IsDeleteButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                            Visibility="{Binding MapPanel.Options.IsMeasureMode, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                         <iconPacks:Material Kind="Delete"/>
                     </Button>
 
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
-                            Command="{Binding CancelEditingCommand}" 
+                            Command="{Binding CurrentEditingLayer.CancelEditingCommand}" 
                             ToolTip="{Binding [mapPanel_edit_cancel], Source={StaticResource Localization}}"
-                            Visibility="{Binding Options.IsCancelButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                            Visibility="{Binding MapPanel.Options.IsMeasureMode, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False, FallbackValue=Collapsed}">
                         <iconPacks:Material Kind="CloseThick"/>
                     </Button>
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="2" 
-                            Command="{Binding FinishEditingCommand}" 
+                            Command="{Binding CurrentEditingLayer.FinishEditingCommand}" 
                             ToolTip="{Binding [mapPanel_edit_finish], Source={StaticResource Localization}}"
-                            Visibility="{Binding Options.IsFinishButtonVisible, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
+                            Visibility="{Binding MapPanel.Options.IsMeasureMode, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False, FallbackValue=Collapsed}">
                         <iconPacks:Material Kind="CheckBold"/>
                     </Button>
                 </StackPanel>
@@ -203,7 +236,7 @@
             <TabControl SelectedIndex="2" Background="Transparent"  >
                 <TabControl.Visibility>
                     <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
-                        <Binding Path="MapPanel.Options.IsOptionsAvailable"/>
+                        <Binding Path="MapPanel.Options.ShowAdvancedOptions"/>
                         <Binding Path="MapPanel.IsDetailsVisible"/>
                     </MultiBinding>
                 </TabControl.Visibility>
@@ -251,7 +284,7 @@
                                 <Binding Path="IsEditMode"/>
                             </MultiBinding>
                         </TabItem.Visibility>
-                        <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Center" DataContext="{Binding CurrentEditingLayer}" >
+                        <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Center" DataContext="{Binding CurrentEditingLayer}">
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
                                         ToolTip="{Binding [mapPanel_currentPart_delete], Source={StaticResource Localization}}"
                                         Command="{Binding DeleteCurrentPartCommand}" >
@@ -457,8 +490,8 @@
                 </StackPanel>
             </Border>-->
             <Button Margin="0 5 0 0" Cursor="Hand"
-                    Visibility="{Binding MapPanel.Options.IsOptionsAvailable, Converter={StaticResource boolToVisibilityConverter}}"
-                    Command="{Binding MapPanel.ToggleDetailsVisibilityCommand}" >
+                    Visibility="{Binding MapPanel.Options.ShowAdvancedOptions, Converter={StaticResource boolToVisibilityConverter}}"
+                    Command="{Binding MapPanel.ToggleAdvancedVisibilityCommand}" >
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>

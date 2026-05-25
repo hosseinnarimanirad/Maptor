@@ -38,7 +38,8 @@
 
             <CollectionViewSource x:Key="collectionViewSource" 
                                   Source="{Binding Layers, RelativeSource={RelativeSource AncestorType=maptor:NotifiableUserControl}}" 
-                                  Filter="CollectionViewSource_Filter">
+                                  Filter="CollectionViewSource_Filter"
+                                  IsLiveSortingRequested="True">
                 <CollectionViewSource.SortDescriptions>
                     <scm:SortDescription PropertyName="TocOrder" Direction="Descending"/>
                 </CollectionViewSource.SortDescriptions>
@@ -103,7 +104,7 @@
                         <RadioButton.InputBindings>
                             <MouseBinding Gesture="LeftDoubleClick" Command="{Binding ToggleExpandCommand}"/>
                         </RadioButton.InputBindings>
-                        <maptor:MapLegendItemView Title="{Binding LayerName}" 
+                        <maptor:MapLegendItemView 
                                     Symbology="{Binding DefaultSymbology}"  
                                     HorizontalAlignment="Stretch"
                                     Commands="{Binding Commands}"
@@ -501,8 +502,8 @@
         <TreeView Grid.Row="2"
                   ItemsSource="{Binding Source={StaticResource collectionViewSource}}"
                   ItemTemplate="{StaticResource legendTemplate}"
-                  VirtualizingPanel.IsVirtualizing="False"
-                  VirtualizingPanel.VirtualizationMode="Standard">
+                  VirtualizingPanel.IsVirtualizing="True"
+                  VirtualizingPanel.VirtualizationMode="Recycling">
             <!--<TreeView.Resources>
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                     <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -619,8 +620,25 @@
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
+
+                    <Setter Property="ItemsPanel">
+                        <Setter.Value>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling"/>
+                            </ItemsPanelTemplate>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </TreeView.ItemContainerStyle>
+            <!--<TreeView.ItemsPanel>
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling"/>
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </TreeView.ItemsPanel>-->
         </TreeView>
 
     </Grid>

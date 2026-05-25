@@ -1697,4 +1697,7 @@
   <data name="layerSettings_general_sourceAddress" xml:space="preserve">
     <value>Source Address</value>
   </data>
+  <data name="mapPanel_currentPoint_linkToMouseMove" xml:space="preserve">
+    <value>Link to mouse position on map</value>
+  </data>
 </root>

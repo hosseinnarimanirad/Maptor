@@ -74,7 +74,7 @@ public class GeometryEditorViewModel : Notifier
     }
 
 
-    public Geometry<Point>? Geometry => _featureLayer?.GetFinalGeometry();
+    public Geometry<Point>? Geometry => _featureLayer?.GetFinalFixedGeometry();
 
     public bool IsEmptyGeometry => this.Geometry.IsNullOrEmpty() || this.HasNoPoints;
 

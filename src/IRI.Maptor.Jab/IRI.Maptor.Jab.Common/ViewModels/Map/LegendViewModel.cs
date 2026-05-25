@@ -18,6 +18,8 @@ public class LegendViewModel : Notifier
 
     private bool _triggerKindChanged = true;
 
+    private Dictionary<ILayer, bool> _filterCache = new();
+
     public LegendViewModel()
     {
         _dataSourceKindFilterItems = new ObservableCollection<DataSourceKindFilterItem>(
@@ -27,6 +29,27 @@ public class LegendViewModel : Notifier
 
         foreach (var item in _dataSourceKindFilterItems)
             item.PropertyChanged += DataSourceKindFilterItem_PropertyChanged;
+    }
+
+
+    private void InvalidateFilterCache()
+    {
+        _filterCache.Clear();
+        RequestRefreshView?.Invoke(); // now with cache cleared
+    }
+
+    public bool IsFilterPassedCached(ILayer layer)
+    {
+        if (layer == null) return false;
+
+        if (_filterCache.TryGetValue(layer, out bool cachedResult))
+            return cachedResult;
+
+        bool result = IsFilterPassed(layer);
+
+        _filterCache[layer] = result;
+
+        return result;
     }
 
     private readonly ObservableCollection<DataSourceKindFilterItem> _dataSourceKindFilterItems;
@@ -44,7 +67,8 @@ public class LegendViewModel : Notifier
             RaisePropertyChanged(nameof(LayerNameFilterText));
             RaisePropertyChanged(nameof(HasActiveFilter));
 
-            RequestRefreshView?.Invoke();
+            InvalidateFilterCache();
+            //RequestRefreshView?.Invoke();
             RequestNotifyFilterChanged?.Invoke();
         }
     }
@@ -109,7 +133,8 @@ public class LegendViewModel : Notifier
             RaisePropertyChanged(nameof(ShowSelectedDataSourceKindCount));
             RaisePropertyChanged(nameof(HasActiveFilter));
 
-            RequestRefreshView?.Invoke();
+            InvalidateFilterCache();
+            //RequestRefreshView?.Invoke();
             RequestNotifyFilterChanged?.Invoke();
         }
     }
@@ -129,7 +154,8 @@ public class LegendViewModel : Notifier
             RaisePropertyChanged(nameof(ShowSelectedDataSourceKindCount));
             RaisePropertyChanged(nameof(HasActiveFilter));
 
-            RequestRefreshView?.Invoke();
+            InvalidateFilterCache();
+            //RequestRefreshView?.Invoke();
             RequestNotifyFilterChanged?.Invoke();
         });
 
@@ -148,7 +174,8 @@ public class LegendViewModel : Notifier
             RaisePropertyChanged(nameof(ShowSelectedDataSourceKindCount));
             RaisePropertyChanged(nameof(HasActiveFilter));
 
-            RequestRefreshView?.Invoke();
+            InvalidateFilterCache();
+            //RequestRefreshView?.Invoke();
             RequestNotifyFilterChanged?.Invoke();
         });
 
@@ -169,7 +196,8 @@ public class LegendViewModel : Notifier
             RaisePropertyChanged(nameof(ShowSelectedDataSourceKindCount));
             RaisePropertyChanged(nameof(HasActiveFilter));
 
-            RequestRefreshView?.Invoke();
+            InvalidateFilterCache();
+            //RequestRefreshView?.Invoke();
             RequestNotifyFilterChanged?.Invoke();
         });
 }

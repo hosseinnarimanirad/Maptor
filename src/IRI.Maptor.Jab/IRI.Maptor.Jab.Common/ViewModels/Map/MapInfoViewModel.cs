@@ -217,18 +217,18 @@ public class MapPanelViewModel : Notifier
         }
     }
 
-    private RelayCommand _toggleDetailsVisibilityCommand;
+    private RelayCommand _toggleAdvancedVisibilityCommand;
 
-    public RelayCommand ToggleDetailsVisibilityCommand
+    public RelayCommand ToggleAdvancedVisibilityCommand
     {
         get
         {
-            if (_toggleDetailsVisibilityCommand == null)
+            if (_toggleAdvancedVisibilityCommand == null)
             {
-                _toggleDetailsVisibilityCommand = new RelayCommand(param => { IsDetailsVisible = !IsDetailsVisible; });
+                _toggleAdvancedVisibilityCommand = new RelayCommand(param => { IsDetailsVisible = !IsDetailsVisible; });
             }
 
-            return _toggleDetailsVisibilityCommand;
+            return _toggleAdvancedVisibilityCommand;
         }
     }
 

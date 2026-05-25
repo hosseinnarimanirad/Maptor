@@ -162,8 +162,8 @@
                 </Style>
             </DataGrid.RowStyle>
         </DataGrid>
-        <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" LastChildFill="False"
-                    Visibility="{Binding ElementName=root, Path=IsMouseOver, Converter={StaticResource boolToVisibilityConverter}}"> 
+        <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" LastChildFill="False">
+            <!--Visibility="{Binding ElementName=root, Path=IsMouseOver, Converter={StaticResource boolToVisibilityConverter}}">--> 
             <TextBlock MinWidth="50"
                        VerticalAlignment="Center" FontFamily="{StaticResource iranSans}"
                        DockPanel.Dock="Left" Margin="4">

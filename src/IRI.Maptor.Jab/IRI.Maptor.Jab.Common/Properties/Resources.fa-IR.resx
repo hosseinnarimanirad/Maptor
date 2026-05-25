@@ -1650,4 +1650,7 @@
   <data name="layerSettings_general_sourceAddress" xml:space="preserve">
     <value>منبع داده</value>
   </data>
+  <data name="mapPanel_currentPoint_linkToMouseMove" xml:space="preserve">
+    <value>لینک مختصات جاری به موقعیت موس روی نقشه</value>
+  </data>
 </root>

@@ -3050,6 +3050,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Link to mouse position on map.
+        /// </summary>
+        public static string mapPanel_currentPoint_linkToMouseMove {
+            get {
+                return ResourceManager.GetString("mapPanel_currentPoint_linkToMouseMove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current Point.
         /// </summary>
         public static string mapPanel_currentPoint_title {

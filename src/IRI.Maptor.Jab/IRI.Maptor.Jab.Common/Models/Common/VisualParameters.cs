@@ -618,15 +618,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 
         return new VisualParameters(new SolidColorBrush(fill), new SolidColorBrush(stroke), strokeThickness, 1);
     }
-
-
-    public static VisualParameters GetDefaultForDrawing(DrawMode mode)
-    {
-        var result = new VisualParameters(mode == DrawMode.Polygon ? DefaultDrawingFill : null, DefaultDrawingStroke, 2, .7);
-
-        return result;
-    }
-
+   
     public static VisualParameters GetDefaultForSelection(double? strokeThickness)
     {
         return new VisualParameters(DefaultSelectionFill, DefaultSelectionStroke, strokeThickness ?? 2, 0.9);
@@ -671,14 +663,15 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 
 
 
+    public static SolidColorBrush DefaultSelectionStroke = new SolidColorBrush(Colors.Cyan);
+
+    public static SolidColorBrush DefaultSelectionFill = new SolidColorBrush(new Color() { B = 255, G = 255, R = 0, A = 160 });
+
+
     public static SolidColorBrush DefaultHighlightStroke = new SolidColorBrush(Colors.Yellow);
 
     public static SolidColorBrush DefaultHighlightFill = new SolidColorBrush(new Color() { B = 0, G = 255, R = 255, A = 50 });
 
-
-    public static SolidColorBrush DefaultSelectionStroke = new SolidColorBrush(Colors.Cyan);
-
-    public static SolidColorBrush DefaultSelectionFill = new SolidColorBrush(new Color() { B = 255, G = 255, R = 0, A = 160 });
 
 
     public static SolidColorBrush DefaultDrawingStroke = new SolidColorBrush(new Color() { R = 255, G = 200, B = 0, A = 250 });
@@ -695,23 +688,64 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 
     public static SolidColorBrush DefaultRoutingLineThick = new SolidColorBrush(new Color() { R = 102, G = 157, B = 246, A = 255 });//#256FD7
 
-    public static DashStyle GetDefaultDashStyleForMeasurements()
+
+    static readonly Brush _defaultDrawingStroke = BrushHelper.CreateBrush("#FF1CA1E2")!;
+    static readonly Brush _defaultDrawingFill = BrushHelper.CreateBrush("#661CA1E2")!;
+
+    public static VisualParameters GetDefaultsForDrawOnMap()
     {
-        return new DashStyle([2, 1], 0);
+        Brush _fill, _stroke;
+
+        try
+        {
+            var brush = (SolidColorBrush)Application.Current.Resources["MahApps.Brushes.Accent"];
+
+            if (brush == null)
+            {
+                _fill = _defaultDrawingFill;
+
+                _stroke = _defaultDrawingStroke;
+            }
+            else
+            {
+                _fill = new SolidColorBrush(new Color() { A = 100, R = brush.Color.R, G = brush.Color.G, B = brush.Color.B });
+
+                _stroke = new SolidColorBrush(new Color() { A = 204, R = brush.Color.R, G = brush.Color.G, B = brush.Color.B });
+            }
+        }
+        catch (Exception)
+        {
+            _fill = _defaultDrawingFill;
+
+            _stroke = _defaultDrawingStroke;
+        }
+
+        return new VisualParameters(_fill, _stroke, 4, 0.9);
     }
 
     public static VisualParameters GetDefaultForMeasurements()
     {
-        return new VisualParameters(BrushHelper.CreateBrush(ColorHelper.ToWpfColor("#FBB03B"), 0.3), BrushHelper.CreateBrush("#FBB03B"), 3, 1)
-        {
-            DashStyle = VisualParameters.GetDefaultDashStyleForMeasurements()
-        };
+        //return new VisualParameters(BrushHelper.CreateBrush(ColorHelper.ToWpfColor("#FBB03B"), 0.3), BrushHelper.CreateBrush("#FBB03B"), 3, 1)
+        //{
+        //    DashStyle = new DashStyle([2, 1], 0)
+        //};
+        var result = GetDefaultsForDrawOnMap();
+
+        result.DashStyle = new DashStyle([2, 1], 0);
+
+        return result;
     }
 
-    public static VisualParameters GetDefaultForDrawingItems()
+    public static VisualParameters GetDefaultForDrawing()
     {
-        return new VisualParameters(null, BrushHelper.PickGoodBrush(), 2, 1);
+        var result = GetDefaultsForDrawOnMap();
+
+        result.DashStyle = new DashStyle([2, 1], 0);
+
+        return result;
     }
+
+    public static VisualParameters GetDefaultForDrawingItems() => new VisualParameters(null, BrushHelper.PickGoodBrush(), 2, 1);
 
     public static VisualParameters GetDefaultForDrawingItemLabels(Brush foreground)
     {

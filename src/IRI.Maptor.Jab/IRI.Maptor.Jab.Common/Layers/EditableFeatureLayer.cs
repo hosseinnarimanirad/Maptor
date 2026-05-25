@@ -30,14 +30,19 @@ using LineSegment = System.Windows.Media.LineSegment;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 using IRI.Maptor.Jab.Common.Data.Settings;
 using IRI.Maptor.Jab.Common.Views;
+using IRI.Maptor.Jab.Common.Localization;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 
-public class EditableFeatureLayer : SymbolizableLayer
+public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 {
     Transform _toScreen;
 
     Func<double, double> _screenToMap;
+
+    private Func<FrameworkElement> MakePrimaryVertex { get; set; } = () => new Circle(1);
+
+    private Func<FrameworkElement> MakeSecondaryVertex { get; set; } = () => new Circle(.6);
 
     private Geometry _webMercatorGeometry;
 
@@ -61,7 +66,23 @@ public class EditableFeatureLayer : SymbolizableLayer
     private SpecialPointLayer _primaryVerticesLabelLayer;
 
 
-    public EditableFeatureLayerOptions Options { get; }
+    //public EditableFeatureLayerOptions Options { get; }
+    private EditableFeatureLayerOptions _options;
+    public EditableFeatureLayerOptions Options
+    {
+        get { return _options; }
+        set
+        {
+            if (_options != null)
+            {
+                _options.RequestHandleMeasureVisibilityChanged = null;
+            }
+
+            _options = value;
+            RaisePropertyChanged();
+        }
+    }
+
 
     public override BoundingBox Extent
     {
@@ -114,7 +135,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public Action<EditableFeatureLayer>? RequestCancelEditing;
 
-    public event EventHandler? OnRequestDeleteGeometry;
+    //public Action<EditableFeatureLayer>? RequestDeleteLayer;
 
     public Action<Locateable?, int>? RequestSelectedLocatableChanged;
 
@@ -125,27 +146,31 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public event Action? LocateablesReconstructed;
 
-    public Func<CoordinateDisplayMode> RequestGetCoordinateDisplayMode;
+    public Func<CoordinateDisplayMode>? RequestGetCoordinateDisplayMode;
 
-    public Func<IMapSettings> RequestGetMapSettings;
+    public Func<IMapSettings>? RequestGetMapSettings;
 
     #endregion
+
+
 
 
     /// <summary>
     /// For Polygons do not repeat first point in the last point
     /// </summary>
     /// <param name="name"></param>
-    /// <param name="mercatorPoints"></param>
+    /// <param name="webMercatorPoints"></param>
     /// <param name="isClosed"></param>
     public EditableFeatureLayer(
         string name,
-        List<Point> mercatorPoints,
+        List<Point> webMercatorPoints,
         Transform toScreen,
         Func<double, double> screenToMap,
         GeometryType type,
+        Action<Locateable?, int> requestSelectedLocatableChanged,
         EditableFeatureLayerOptions? options = null)
-        : this(name, Geometry.Create(mercatorPoints, type, SridHelper.WebMercator), toScreen, screenToMap, options)
+        : this(name, Geometry.Create(webMercatorPoints, type, SridHelper.WebMercator), toScreen, screenToMap,
+                requestSelectedLocatableChanged, options)
     {
     }
 
@@ -160,11 +185,13 @@ public class EditableFeatureLayer : SymbolizableLayer
         Geometry webMercatorGeometry,
         Transform toScreen,
         Func<double, double> screenToMap,
-        EditableFeatureLayerOptions? options = null)
+        Action<Locateable?, int> requestSelectedLocatableChanged,
+        EditableFeatureLayerOptions options)
     {
         Options = options ?? EditableFeatureLayerOptions.CreateDefault();
 
-        Options.RequestHandleIsEdgeLabelVisibleChanged = UpdateEdgeLables;
+        Options.RequestHandleMeasureVisibilityChanged = UpdateEdgeLables;
+        System.Diagnostics.Trace.WriteLine("RequestHandleMeasureVisibilityChanged called #2");
 
         LayerName = name;
 
@@ -194,7 +221,7 @@ public class EditableFeatureLayer : SymbolizableLayer
         //{
         //    this._feature.MouseUp += (sender, e) => { this.RegisterMapOptionsForNewPath(e); };
         //}
-        if (!Options.IsNewDrawing)
+        if (!Options.IsNewDrawing && !Options.IsMeasureMode)
         {
             _feature.MouseRightButtonDown += (sender, e) => { RegisterMapOptionsForEditPath(e); };
         }
@@ -203,6 +230,8 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         //var layerType = Options.IsNewDrawing ? LayerType.EditableItem : LayerType.MoveableItem | LayerType.EditableItem;
         var layerType = LayerType.EditableItem;
+
+        this.RequestSelectedLocatableChanged = requestSelectedLocatableChanged;
 
         _primaryVerticesLayer = new SpecialPointLayer("#vert", new List<Locateable>(), 1, ScaleInterval.All, layerType) { AlwaysTop = true, IsMovable = isMovable };
 
@@ -216,7 +245,8 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         ReconstructLocateables();
 
-        _primaryVerticesLayer.SelectLocatable(0);
+        SelectPoint(0);
+        //_primaryVerticesLayer.SelectLocatable(0);
 
         if (Options.IsNewDrawing)
         {
@@ -367,6 +397,9 @@ public class EditableFeatureLayer : SymbolizableLayer
         _edgeLabelLayer.Items.Clear();
 
         if (!_webMercatorGeometry.IsValid())
+            return;
+
+        if (this._webMercatorGeometry.Type.GetCategory() == GeometryCategory.Point)
             return;
 
         if (Options.IsMeasureVisible && Options.IsEdgeLabelVisible)
@@ -547,7 +580,7 @@ public class EditableFeatureLayer : SymbolizableLayer
     {
         var webMercatorPoint = point;
 
-        var element = Options.MakePrimaryVertex();
+        var element = /*Options*/this.MakePrimaryVertex();
 
         var locateable = new Locateable(AncherFunctionHandlers.CenterCenter)
         {
@@ -608,7 +641,7 @@ public class EditableFeatureLayer : SymbolizableLayer
         var webMercatorPoint = new Point((first.X + second.X) / 2.0, (first.Y + second.Y) / 2.0);
 
         //var element = new View.MapMarkers.Circle(.6);
-        var element = Options.MakeSecondaryVertex();
+        var element = /*Options*/this.MakeSecondaryVertex();
 
         var locateable = new Locateable(AncherFunctionHandlers.CenterCenter) { Element = element, X = webMercatorPoint.X, Y = webMercatorPoint.Y };
 
@@ -697,11 +730,12 @@ public class EditableFeatureLayer : SymbolizableLayer
             //middleToolTip: _delete,
             leftToolTip: Properties.Resources.mapPanel_edit_cancel,
             rightToolTip: Properties.Resources.mapPanel_edit_finish,
-            middleToolTip: Properties.Resources.mapPanel_edit_delete,
+            middleToolTip: string.Empty /*Properties.Resources.mapPanel_edit_delete*/,
 
             leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CloseThick),
             rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold),
-            middleSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.Delete));
+            middleSymbol: string.Empty //MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.Delete)
+            );
 
         presenter.RightCommandAction = i =>
         {
@@ -713,21 +747,13 @@ public class EditableFeatureLayer : SymbolizableLayer
 
         presenter.LeftCommandAction = i =>
         {
-            RequestCancelEditing?.Invoke(this);
+            //RequestCancelEditing?.Invoke(this);
 
-            RemoveMapOptions();
+            //RemoveMapOptions();
+            CancelEditing();
         };
 
-        presenter.MiddleCommandAction = i =>
-        {
-            RequestCancelEditing?.Invoke(this);
-
-            OnRequestDeleteGeometry?.Invoke(this, EventArgs.Empty);
-
-            RemoveMapOptions();
-        };
-
-        RequestRightClickOptions?.Invoke(new MapThreeOptions(false), e, presenter);
+        RequestRightClickOptions?.Invoke(new MapTwoOptions(false), e, presenter);
 
     }
 
@@ -1118,21 +1144,28 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public SpecialPointLayer GetPrimaryVerticesLabels() => _primaryVerticesLabelLayer;
 
-    public Geometry GetFinalGeometry()
+    public Geometry GetLastGeometry()
     {
-        if (_webMercatorGeometry.IsRingBase())
-        {
-            _webMercatorGeometry.FixPolygonRingOrientations();
-        }
-
         if (_webMercatorGeometry.Type == GeometryType.MultiPolygon)
         {
             var rings = _webMercatorGeometry.Geometries?.SelectMany(g => g.Geometries).ToList();
 
             return Geometry<Point>.CreatePolygonOrMultiPolygon(rings, _webMercatorGeometry.Srid);
         }
-         
+
         return _webMercatorGeometry;
+    }
+
+    public Geometry GetFinalFixedGeometry()
+    {
+        var result = GetLastGeometry();
+
+        if (result.IsRingBase())
+        {
+            result.FixPolygonRingOrientations();
+        }
+
+        return result;
     }
 
     public Locateable? AddVertex(Point webMercatorPoint)
@@ -1260,6 +1293,15 @@ public class EditableFeatureLayer : SymbolizableLayer
         RequestFinishEditing?.Invoke(_webMercatorGeometry);
     }
 
+    public void CancelEditing()
+    {
+        _edgeLabelLayer.Items.Clear();
+
+        RequestCancelEditing?.Invoke(this);
+
+        RemoveMapOptions();
+    }
+
     private void GoToPreviousPoint() => _primaryVerticesLayer.SelectPreviousLocatable();
 
     private void GoToNextPoint() => _primaryVerticesLayer.SelectNextLocatable();
@@ -1271,9 +1313,13 @@ public class EditableFeatureLayer : SymbolizableLayer
         if (locateable == null)
             return;
 
+        var index = _primaryVerticesLayer.FindSelectedLocatableIndex();
+
         _primaryVerticesLabelLayer.Remove(locateable.Id);
 
         TryDeleteVertex(locateable.X, locateable.Y, _webMercatorGeometry, _webMercatorGeometry.Type == GeometryType.Polygon || _webMercatorGeometry.Type == GeometryType.MultiPolygon);
+
+        SelectPoint(Math.Max(0, index - 1));
 
         RequestRefresh?.Invoke(this);
     }
@@ -1539,7 +1585,7 @@ public class EditableFeatureLayer : SymbolizableLayer
 
     public override Task<FeatureSet<Point>> GetFeatureSet(BoundingBox mapExtent, double mapScale)
     {
-        var geometry = GetFinalGeometry();
+        var geometry = GetFinalFixedGeometry();
         if (geometry == null || geometry.IsNullOrEmpty())
             return Task.FromResult(FeatureSet<Point>.Empty);
 
@@ -1592,8 +1638,7 @@ public class EditableFeatureLayer : SymbolizableLayer
             if (_deleteCommand == null)
                 _deleteCommand = new RelayCommand(param =>
                 {
-                    RequestCancelEditing?.Invoke(this);
-                    OnRequestDeleteGeometry?.Invoke(this, EventArgs.Empty);
+                    CancelEditing();
                 });
 
             return _deleteCommand;
@@ -1735,6 +1780,52 @@ public class EditableFeatureLayer : SymbolizableLayer
     }
 
 
+
+    #endregion
+
+
+
+    #region IDispose
+
+    private bool _disposed = false;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                this.RequestCancelDrawing = null;
+                this.RequestCancelEditing = null;
+                this.RequestChangeSymbology = null;
+                this.RequestChangeVisibility = null;
+                this.RequestClearSelectedLayer = null;
+                this.RequestConvertToDrawingItem = null;
+                this.RequestFinishEditing = null;
+                this.RequestGetCoordinateDisplayMode = null;
+                this.RequestGetMapSettings = null;
+                this.RequestMoveLayerDown = null;
+                this.RequestMoveLayerUp = null;
+                this.RequestRefresh = null;
+                this.RequestRemoveRightClickOptions = null;
+                this.RequestRightClickOptions = null;
+                this.RequestSaveChanges = null;
+                this.RequestSelectedLocatableChanged = null;
+                this.RequestShowGeometryDetails = null;
+                this.RequestZoomToGeometry = null;
+                this.RequestZoomToPoint = null;
+            }
+
+            // Dispose unmanaged resources here if any
+            _disposed = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
     #endregion
 }
