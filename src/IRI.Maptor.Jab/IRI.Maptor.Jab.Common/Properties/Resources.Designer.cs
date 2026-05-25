@@ -844,6 +844,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Square Meter.
+        /// </summary>
+        public static string common_squareMeter {
+            get {
+                return ResourceManager.GetString("common_squareMeter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Username.
         /// </summary>
         public static string common_username {
