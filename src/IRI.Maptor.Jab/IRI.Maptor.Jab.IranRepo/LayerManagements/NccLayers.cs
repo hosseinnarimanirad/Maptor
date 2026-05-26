@@ -9,12 +9,13 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.Layers;
+using System.Collections.ObjectModel;
 
 namespace IRI.Maptor.Jab.IranRepo;
 
 public static class NccLayers
 { 
-    public static List<ILayer> GetLayers(MapViewModelBase map)
+    public static ObservableCollection<ILayer> GetLayers(MapViewModelBase map)
     {
         var fontFamily = new FontFamily("Times New Roman");
 
@@ -112,9 +113,11 @@ public static class NccLayers
             geodynamic.Commands = GetCommands<NccPoint>(map, geodynamic/*, geodynamicLabels*/);
         }
 
-        return new List<ILayer>() { leveling1, leveling2, leveling3, geodesy1, geodesy2, gravity, geodynamic }
+        var result =  new List<ILayer>() { leveling1, leveling2, leveling3, geodesy1, geodesy2, gravity, geodynamic }       
                     ?.Where(l => l != null)
                     ?.ToList() ?? [];
+
+        return new ObservableCollection<ILayer>(result);
     }
 
     private static List<ILegendCommand> GetCommands<T>(MapViewModelBase map, VectorLayer layer/*, LabelParameters label*/)

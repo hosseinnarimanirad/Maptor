@@ -1968,7 +1968,7 @@ public partial class MapViewer : NotifiableUserControl
         //this.mapView.MouseMove -= mapView_MouseMoveForPan;
         Unsubscribe_Pan();
 
-        this.mapView.MouseUp -= mapView_MouseDownForZoomOut;
+        this.mapView.MouseUp -= mapView_MouseUpForZoomOut;
         this.mapView.MouseDown -= mapView_MouseDownForZoom;
         this.mapView.MouseUp -= mapView_MouseUpForZoom;
 
@@ -2912,8 +2912,7 @@ public partial class MapViewer : NotifiableUserControl
     Point firstZoomBound;
 
     int counter; int counterValue;
-
-    //POTENTIALLY ERROR PROUNE; Tag value should not be `string`
+     
     Rectangle rectangle = new Rectangle()
     {
         Stroke = new SolidColorBrush(new Color() { R = 255, G = 200, B = 0, A = 255 }),
@@ -2964,8 +2963,8 @@ public partial class MapViewer : NotifiableUserControl
     {
         ResetMapViewEvents();
 
-        this.mapView.MouseUp -= mapView_MouseDownForZoomOut;
-        this.mapView.MouseUp += mapView_MouseDownForZoomOut;
+        this.mapView.MouseUp -= mapView_MouseUpForZoomOut;
+        this.mapView.MouseUp += mapView_MouseUpForZoomOut;
 
         this.CurrentMouseAction = MapAction.ZoomOut;
     }
@@ -2976,6 +2975,12 @@ public partial class MapViewer : NotifiableUserControl
         if (e.ClickCount > 1)
             ZoomWheelAtWindowPoint(true, e.GetPosition(this.mapView));
     }
+
+    private void mapView_MouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        ZoomWheelAtWindowPoint(e.Delta > 0, e.GetPosition(this.mapView));
+    }
+
 
     private void mapView_MouseDownForZoom(object sender, MouseButtonEventArgs e)
     {
@@ -3044,17 +3049,13 @@ public partial class MapViewer : NotifiableUserControl
         ZoomToExtent(boundingBox, true);
     }
 
-    private void mapView_MouseDownForZoomOut(object sender, MouseButtonEventArgs e)
+    private void mapView_MouseUpForZoomOut(object sender, MouseButtonEventArgs e)
     {
         Point canvasPosition = e.GetPosition(this.mapView);
 
         ZoomToPoint(canvasPosition, .75);
     }
 
-    private void mapView_MouseWheel(object sender, MouseWheelEventArgs e)
-    {
-        ZoomWheelAtWindowPoint(e.Delta > 0, e.GetPosition(this.mapView));
-    }
 
     public void Zoom(double mapScale)
     {
@@ -3100,60 +3101,6 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    private const string GeometryComparisonLayerName = "__FeatureChanges_GeometryComparison";
-
-    private void ShowFeatureChangesDialog(IRI.Maptor.Sta.Spatial.Primitives.Feature<sb.Point> feature, List<sb.Field>? fields)
-    {
-        var vm = new IRI.Maptor.Jab.Common.ViewModels.Map.FeatureChangesViewModel(feature, fields);
-        vm.RequestZoomToFeature = g => this.ZoomToFeature(g);
-        vm.RequestShowGeometryComparison = (oldGeo, newGeo) => _presenter.RequestShowGeometryComparison?.Invoke(oldGeo, newGeo);
-        vm.RequestZoomToExtent = (bbox, isExact, isNew, callback) => this.ZoomToExtent(bbox, false, isExact, isNew, callback);
-
-        var dialog = new FeatureChangesDialogView
-        {
-            Owner = Window.GetWindow(this),
-            DataContext = vm
-        };
-        dialog.Closed += (s, e) => _presenter.RequestClearGeometryComparison?.Invoke();
-        dialog.ShowDialog();
-    }
-
-    private async void ShowGeometryComparison(Geometry<sb.Point>? oldGeometry, Geometry<sb.Point>? newGeometry)
-    {
-        ClearGeometryComparison();
-
-        var boxes = new List<sb.BoundingBox>();
-        if (oldGeometry != null && !oldGeometry.IsNullOrEmpty())
-        {
-            var oldGeo = oldGeometry.Srid != SridHelper.WebMercator
-                ? oldGeometry.Project(SrsBases.WebMercator)
-                : oldGeometry;
-            var oldParams = new VisualParameters(null, new SolidColorBrush(Colors.Gray), 3, 0.8)
-            { DashStyle = new System.Windows.Media.DashStyle([4, 4], 0) };
-            await DrawGeometriesAsync(GeometryComparisonLayerName + "_Old", [oldGeo], oldParams);
-            boxes.Add(oldGeo.GetBoundingBox());
-        }
-        if (newGeometry != null && !newGeometry.IsNullOrEmpty())
-        {
-            var newGeo = newGeometry.Srid != SridHelper.WebMercator
-                ? newGeometry.Project(SrsBases.WebMercator)
-                : newGeometry;
-            var newParams = VisualParameters.GetDefaultForHighlight(3);
-            await DrawGeometriesAsync(GeometryComparisonLayerName + "_New", [newGeo], newParams);
-            boxes.Add(newGeo.GetBoundingBox());
-        }
-        if (boxes.Count > 0)
-        {
-            var merged = sb.BoundingBox.GetMergedBoundingBox(boxes);
-            this.ZoomToExtent(merged);
-        }
-    }
-
-    private void ClearGeometryComparison()
-    {
-        ClearLayer(GeometryComparisonLayerName + "_Old", true);
-        ClearLayer(GeometryComparisonLayerName + "_New", true);
-    }
 
     public void ZoomToExtent(sb.BoundingBox boundingBox)
     {
@@ -3393,6 +3340,67 @@ public partial class MapViewer : NotifiableUserControl
         //}
 
         //return googleZoomLevel;
+    }
+
+    #endregion
+
+
+
+    #region Feature Changes and Geometry Comparison
+
+    private const string GeometryComparisonLayerName = "__FeatureChanges_GeometryComparison";
+
+    private void ShowFeatureChangesDialog(IRI.Maptor.Sta.Spatial.Primitives.Feature<sb.Point> feature, List<sb.Field>? fields)
+    {
+        var vm = new IRI.Maptor.Jab.Common.ViewModels.Map.FeatureChangesViewModel(feature, fields);
+        vm.RequestZoomToFeature = g => this.ZoomToFeature(g);
+        vm.RequestShowGeometryComparison = (oldGeo, newGeo) => _presenter.RequestShowGeometryComparison?.Invoke(oldGeo, newGeo);
+        vm.RequestZoomToExtent = (bbox, isExact, isNew, callback) => this.ZoomToExtent(bbox, false, isExact, isNew, callback);
+
+        var dialog = new FeatureChangesDialogView
+        {
+            Owner = Window.GetWindow(this),
+            DataContext = vm
+        };
+        dialog.Closed += (s, e) => _presenter.RequestClearGeometryComparison?.Invoke();
+        dialog.ShowDialog();
+    }
+
+    private async void ShowGeometryComparison(Geometry<sb.Point>? oldGeometry, Geometry<sb.Point>? newGeometry)
+    {
+        ClearGeometryComparison();
+
+        var boxes = new List<sb.BoundingBox>();
+        if (oldGeometry != null && !oldGeometry.IsNullOrEmpty())
+        {
+            var oldGeo = oldGeometry.Srid != SridHelper.WebMercator
+                ? oldGeometry.Project(SrsBases.WebMercator)
+                : oldGeometry;
+            var oldParams = new VisualParameters(null, new SolidColorBrush(Colors.Gray), 3, 0.8)
+            { DashStyle = new System.Windows.Media.DashStyle([4, 4], 0) };
+            await DrawGeometriesAsync(GeometryComparisonLayerName + "_Old", [oldGeo], oldParams);
+            boxes.Add(oldGeo.GetBoundingBox());
+        }
+        if (newGeometry != null && !newGeometry.IsNullOrEmpty())
+        {
+            var newGeo = newGeometry.Srid != SridHelper.WebMercator
+                ? newGeometry.Project(SrsBases.WebMercator)
+                : newGeometry;
+            var newParams = VisualParameters.GetDefaultForHighlight(3);
+            await DrawGeometriesAsync(GeometryComparisonLayerName + "_New", [newGeo], newParams);
+            boxes.Add(newGeo.GetBoundingBox());
+        }
+        if (boxes.Count > 0)
+        {
+            var merged = sb.BoundingBox.GetMergedBoundingBox(boxes);
+            this.ZoomToExtent(merged);
+        }
+    }
+
+    private void ClearGeometryComparison()
+    {
+        ClearLayer(GeometryComparisonLayerName + "_Old", true);
+        ClearLayer(GeometryComparisonLayerName + "_New", true);
     }
 
     #endregion
