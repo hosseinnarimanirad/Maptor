@@ -1963,9 +1963,10 @@ public partial class MapViewer : NotifiableUserControl
         //this.SetCursor(Cursors.Arrow);
         this.SetCursor(CursorSettings[_currentMouseAction]);
 
-        this.mapView.MouseDown -= mapView_MouseDownForPan;
-        this.mapView.MouseUp -= mapView_MouseUpForPan;
-        this.mapView.MouseMove -= mapView_MouseMoveForPan;
+        //this.mapView.MouseDown -= mapView_MouseDownForPan;
+        //this.mapView.MouseUp -= mapView_MouseUpForPan;
+        //this.mapView.MouseMove -= mapView_MouseMoveForPan;
+        Unsubscribe_Pan();
 
         this.mapView.MouseUp -= mapView_MouseDownForZoomOut;
         this.mapView.MouseDown -= mapView_MouseDownForZoom;
@@ -2642,6 +2643,30 @@ public partial class MapViewer : NotifiableUserControl
         this.MouseUp += mapView_MouseUpForPan;
     }
 
+    private void mapView_MouseMoveForPan(object sender, MouseEventArgs e)
+    {
+        Point currentMouseLocation = e.GetPosition(this.mapView);
+
+        double xOffset = currentMouseLocation.X - this.prevMouseLocation.X;
+
+        double yOffset = currentMouseLocation.Y - this.prevMouseLocation.Y;
+
+        if (Math.Abs(xOffset) > 2 || Math.Abs(yOffset) > 2)
+        {
+            this.panTransform.X += xOffset * 1.0 / this.zoomTransform.ScaleX;
+
+            this.panTransform.Y += yOffset * 1.0 / this.zoomTransform.ScaleY;
+
+            this.prevMouseLocation = currentMouseLocation;
+
+            this.panTransformForPoints.X += xOffset;
+
+            this.panTransformForPoints.Y += yOffset;
+
+            UpdateTileInfos();
+        }
+    }
+
     private void mapView_MouseUpForPan(object sender, MouseButtonEventArgs e)
     {
         this.MouseMove -= mapView_MouseMoveForPan;
@@ -2668,30 +2693,15 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    private void mapView_MouseMoveForPan(object sender, MouseEventArgs e)
+     
+
+    private void Unsubscribe_Pan()
     {
-        Point currentMouseLocation = e.GetPosition(this.mapView);
-
-        double xOffset = currentMouseLocation.X - this.prevMouseLocation.X;
-
-        double yOffset = currentMouseLocation.Y - this.prevMouseLocation.Y;
-
-        if (Math.Abs(xOffset) > 2 || Math.Abs(yOffset) > 2)
-        {
-            this.panTransform.X += xOffset * 1.0 / this.zoomTransform.ScaleX;
-
-            this.panTransform.Y += yOffset * 1.0 / this.zoomTransform.ScaleY;
-
-            this.prevMouseLocation = currentMouseLocation;
-
-            this.panTransformForPoints.X += xOffset;
-
-            this.panTransformForPoints.Y += yOffset;
-
-            UpdateTileInfos();
-        }
-
+        this.mapView.MouseDown -= mapView_MouseDownForPan;
+        this.mapView.MouseMove -= mapView_MouseMoveForPan;
+        this.mapView.MouseUp -= mapView_MouseUpForPan; 
     }
+
 
     private void ExtentManager_OnTilesRemoved(object sender, CustomEventArgs<List<TileInfo>> e)
     {
@@ -2823,7 +2833,7 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     //It has animation
-    public void Pan(double xOffset, double yOffset, Action callback = null)
+    public void Pan(double xOffset, double yOffset, Action? callback = null)
     {
         ClearLayer(LayerType.AnimatingItem, false);
 
@@ -3357,8 +3367,7 @@ public partial class MapViewer : NotifiableUserControl
         Refresh(isNewExtent: true);
     }
 
-
-
+     
     private Task AnimateAsync(Action action, DoubleAnimation animation)
     {
         TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();

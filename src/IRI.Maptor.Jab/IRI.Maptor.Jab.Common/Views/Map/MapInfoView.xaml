@@ -85,8 +85,8 @@
                 <TextBlock DockPanel.Dock="Left" Text="X:" Margin="8 0 0 0"
                            Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
                 <TextBox DockPanel.Dock="Left"
-                         MaxWidth="90"
-                         MinWidth="80"
+                         MaxWidth="100"
+                         MinWidth="100"
                          BorderThickness="1.5" 
                          Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                     <TextBox.Style>
@@ -107,15 +107,15 @@
                 <TextBlock DockPanel.Dock="Left" Text="Y:" Margin="8 0 0 0"
                            Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
                 <TextBox DockPanel.Dock="Left" 
-                         MaxWidth="90" 
-                         MinWidth="80"
+                         MaxWidth="100" 
+                         MinWidth="100"
                          BorderThickness="1.5"
                          Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}">
                     <TextBox.Style>
                         <Style TargetType="TextBox" BasedOn="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=MapPanel.IsGeodeticWgs84EditingMode}" Value="True">
-                                    <Setter Property="Text" Value="{Binding Path=MapPanel.CurrentEditingPoint.Y, Mode=TwoWay, StringFormat={}{0:N5}}"/>
+                                    <Setter Property="Text" Value="{Binding Path=MapPanel.CurrentEditingPoint.Y, Mode=TwoWay, StringFormat={}{0:N6}}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Path=MapPanel.IsGeodeticWgs84EditingMode}" Value="False">
                                     <Setter Property="Text" Value="{Binding Path=MapPanel.CurrentEditingPoint.Y, Mode=TwoWay, StringFormat={}{0:N2}}"/>
@@ -332,9 +332,9 @@
                                         Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}"
                                         Text="{Binding [srs_utmZone], Source={StaticResource Localization}}"/>
                             <TextBox DockPanel.Dock="Left" BorderThickness="1" FlowDirection="LeftToRight" MinWidth="30" Margin="2" VerticalAlignment="Center"
-                                        Text="{Binding MapPanel.CurrentEditingZone, Mode=TwoWay}" MaxWidth="30"
+                                        Text="{Binding MapPanel.CurrentEditingZone, Mode=TwoWay}" MaxWidth="40"
                                         mahApp:ControlsHelper.CornerRadius="4"
-                                        Style="{StaticResource IRI.Maptor.Styles.TextBox}"
+                                        Style="{StaticResource IRI.Maptor.Styles.TextBox.Small.En}"
                                         Visibility="{Binding MapPanel.IsUTMEditingMode, Converter={StaticResource boolToVisibilityConverter}}">
                             </TextBox>
                         </StackPanel>
