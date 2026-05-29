@@ -103,7 +103,8 @@ public class VectorLayer : SymbolizableLayer
                         VisualParameters parameters,
                         LayerType type,
                         RenderMode renderMode,
-                        RasterizationMethod rasterizationMethod)
+                        RasterizationMethod rasterizationMethod,
+                        string tocGroup = IRI.Maptor.Jab.Common.ViewModels.Map.LegendViewModel.DefaultTocGroup)
     {
         if (features.IsNullOrEmpty())
             throw new NotImplementedException();
@@ -115,7 +116,7 @@ public class VectorLayer : SymbolizableLayer
         if (parameters.HasLabelParameters)
             symbolizers.Add(new LabelSymbolizer(parameters));
 
-        Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, ScaleInterval.All);
+        Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, ScaleInterval.All, tocGroup);
     }
 
     public VectorLayer(string layerName,
@@ -124,14 +125,15 @@ public class VectorLayer : SymbolizableLayer
                         LayerType type,
                         RenderMode renderMode,
                         RasterizationMethod rasterizationMethod,
-                        ScaleInterval visibleRange)
+                        ScaleInterval visibleRange,
+                        string tocGroup = IRI.Maptor.Jab.Common.ViewModels.Map.LegendViewModel.DefaultTocGroup)
     {
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(parameters)];
 
         if (parameters.HasLabelParameters)
             symbolizers.Add(new LabelSymbolizer(parameters));
 
-        Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange);
+        Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange, tocGroup);
     }
 
     public VectorLayer(string layerName,
@@ -140,10 +142,11 @@ public class VectorLayer : SymbolizableLayer
                       LayerType type,
                       RenderMode renderMode,
                       RasterizationMethod rasterizationMethod,
-                      ScaleInterval visibleRange)//,
+                      ScaleInterval visibleRange,
+                      string tocGroup = IRI.Maptor.Jab.Common.ViewModels.Map.LegendViewModel.DefaultTocGroup)//,
                                                  //VisualParameters? labeling = null)
     {
-        Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange);
+        Initialize(layerName, dataSource, symbolizers, type, renderMode, rasterizationMethod, visibleRange, tocGroup);
     }
 
     private void Initialize(string layerName,
@@ -152,7 +155,8 @@ public class VectorLayer : SymbolizableLayer
                             LayerType type,
                             RenderMode rendering,
                             RasterizationMethod toRasterTechnique,
-                            ScaleInterval? visibleRange)
+                            ScaleInterval? visibleRange,
+                            string tocGroup)
     {
         LayerId = Guid.NewGuid();
 
@@ -162,6 +166,7 @@ public class VectorLayer : SymbolizableLayer
 
         _rasterizationApproach = toRasterTechnique;
 
+        this.TocGroup = tocGroup;
 
         _type = type;
 

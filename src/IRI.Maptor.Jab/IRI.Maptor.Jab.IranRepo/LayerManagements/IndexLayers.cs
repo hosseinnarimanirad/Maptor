@@ -22,6 +22,8 @@ public static class IndexLayers
 {
     static FontFamily fontFamily = new FontFamily("Times New Roman");
 
+    public const string TocGroup = "INDEX";
+
     public static async System.Threading.Tasks.Task<VectorLayer> GetLayerFromShapefileAsync(string layerName, string filePath, string color)
     {
         var features = ShapefileDataSourceFactory.Create(filePath/*, SrsBases.WebMercator*//*new WebMercator()*/);
@@ -29,7 +31,14 @@ public static class IndexLayers
         var featureSet = await features.GetAsFeatureSetAsync();
         var geo = featureSet.Features.Select(f => f.TheGeometry).ToList();
 
-        return new VectorLayer(layerName, geo, new VisualParameters(null, color, 1, 1), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.DrawingVisual)
+        return new VectorLayer(
+            layerName,
+            geo,
+            new VisualParameters(null, color, 1, 1),
+            LayerType.VectorLayer,
+            RenderMode.Default,
+            RasterizationMethod.DrawingVisual,
+            TocGroup)
         {
             Visibility = System.Windows.Visibility.Collapsed
         };
@@ -53,9 +62,9 @@ public static class IndexLayers
             LayerType.VectorLayer,
             RenderMode.Default,
             RasterizationMethod.DrawingVisual,
-            ScaleInterval.Create(4))
-        {
-            ShowInToc = false,
+            ScaleInterval.Create(4),
+            TocGroup)
+        { 
             CanUserDelete = false,
             Visibility = System.Windows.Visibility.Collapsed,
             TocOrder = 10
@@ -80,9 +89,9 @@ public static class IndexLayers
             LayerType.VectorLayer,
             RenderMode.Default,
             RasterizationMethod.GdiPlus,
-            ScaleInterval.Create(5))
-        {
-            ShowInToc = false,
+            ScaleInterval.Create(5),
+            TocGroup)
+        { 
             CanUserDelete = false,
             Visibility = System.Windows.Visibility.Collapsed,
             TocOrder = 9
@@ -106,9 +115,9 @@ public static class IndexLayers
             LayerType.VectorLayer,
             RenderMode.Default,
             RasterizationMethod.GdiPlus,
-            ScaleInterval.Create(9))
-        {
-            ShowInToc = false,
+            ScaleInterval.Create(9),
+            TocGroup)
+        { 
             CanUserDelete = false,
             Visibility = System.Windows.Visibility.Collapsed,
             TocOrder = 8,
@@ -133,9 +142,9 @@ public static class IndexLayers
             LayerType.VectorLayer,
             RenderMode.Default,
             RasterizationMethod.GdiPlus,
-            ScaleInterval.Create(10))
-        {
-            ShowInToc = false,
+            ScaleInterval.Create(10),
+            TocGroup)
+        { 
             CanUserDelete = false,
             Visibility = System.Windows.Visibility.Collapsed,
             TocOrder = 7,
@@ -216,9 +225,9 @@ public static class IndexLayers
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(6))
-            {
-                ShowInToc = false,
+                ScaleInterval.Create(6),
+                TocGroup)
+            { 
                 CanUserDelete = false,
                 Visibility = System.Windows.Visibility.Collapsed,
                 TocOrder = 4
@@ -248,9 +257,9 @@ public static class IndexLayers
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(11))
-            {
-                ShowInToc = false,
+                ScaleInterval.Create(11),
+                TocGroup)
+            { 
                 CanUserDelete = false,
                 Visibility = System.Windows.Visibility.Collapsed,
                 TocOrder = 3
@@ -280,9 +289,9 @@ public static class IndexLayers
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(13))
-            {
-                ShowInToc = false,
+                ScaleInterval.Create(13),
+                TocGroup)
+            { 
                 CanUserDelete = false,
                 Visibility = System.Windows.Visibility.Collapsed,
                 TocOrder = 2
@@ -312,9 +321,9 @@ public static class IndexLayers
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(14))
-            {
-                ShowInToc = false,
+                ScaleInterval.Create(14),
+                TocGroup)
+            { 
                 CanUserDelete = false,
                 Visibility = System.Windows.Visibility.Collapsed,
                 TocOrder = 1
@@ -348,9 +357,9 @@ public static class IndexLayers
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(7))
-            {
-                ShowInToc = false,
+                ScaleInterval.Create(7),
+                TocGroup)
+            { 
                 CanUserDelete = false,
                 Visibility = System.Windows.Visibility.Collapsed,
                 TocOrder = 8,
@@ -381,9 +390,9 @@ public static class IndexLayers
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(8))
-            {
-                ShowInToc = false,
+                ScaleInterval.Create(8),
+                TocGroup)
+            { 
                 CanUserDelete = false,
                 Visibility = System.Windows.Visibility.Collapsed,
                 TocOrder = 7,
@@ -411,9 +420,9 @@ public static class IndexLayers
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(9))
-            {
-                ShowInToc = false,
+                ScaleInterval.Create(9),
+                TocGroup)
+            { 
                 CanUserDelete = false,
                 Visibility = System.Windows.Visibility.Collapsed,
                 TocOrder = 6,
@@ -441,9 +450,9 @@ public static class IndexLayers
                 LayerType.VectorLayer,
                 RenderMode.Default,
                 RasterizationMethod.DrawingVisual,
-                ScaleInterval.Create(10))
-            {
-                ShowInToc = false,
+                ScaleInterval.Create(10),
+                TocGroup)
+            { 
                 CanUserDelete = false,
                 Visibility = System.Windows.Visibility.Collapsed,
                 TocOrder = 5,

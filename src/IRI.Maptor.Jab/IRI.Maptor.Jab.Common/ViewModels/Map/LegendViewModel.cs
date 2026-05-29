@@ -14,11 +14,60 @@ namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 
 public class LegendViewModel : Notifier
 {
+    public const string DefaultTocGroup = "DEFAULT";
+
     private string _layerNameFilterText = string.Empty;
 
     private bool _triggerKindChanged = true;
 
     private Dictionary<ILayer, bool> _filterCache = new();
+
+    private string _tocGroup = DefaultTocGroup;
+    public string TocGroup
+    {
+        get { return _tocGroup; }
+        set
+        {
+            _tocGroup = value;
+            RaisePropertyChanged();
+        }
+    }
+
+
+    private readonly ObservableCollection<DataSourceKindFilterItem> _dataSourceKindFilterItems;
+    public ObservableCollection<DataSourceKindFilterItem> DataSourceKindFilterItems => _dataSourceKindFilterItems;
+
+    public string LayerNameFilterText
+    {
+        get => _layerNameFilterText;
+        set
+        {
+            if (_layerNameFilterText == value) return;
+
+            _layerNameFilterText = value ?? string.Empty;
+
+            RaisePropertyChanged(nameof(LayerNameFilterText));
+            RaisePropertyChanged(nameof(HasActiveFilter));
+
+            InvalidateFilterCache();
+            //RequestRefreshView?.Invoke();
+            RequestNotifyFilterChanged?.Invoke();
+        }
+    }
+
+    public int SelectedDataSourceKindCount => _dataSourceKindFilterItems?.Count(i => i.IsSelected) ?? 0;
+
+    public bool ShowSelectedDataSourceKindCount => SelectedDataSourceKindCount != (DataSourceKindFilterItems?.Count ?? 0);
+
+    public bool HasActiveFilter =>
+        !string.IsNullOrWhiteSpace(_layerNameFilterText) ||
+        (SelectedDataSourceKindCount > 0 && SelectedDataSourceKindCount < (_dataSourceKindFilterItems?.Count ?? 0));
+
+
+    public Func<Task>? RequestRefreshView { get; set; }
+
+    public Action? RequestNotifyFilterChanged { get; set; }
+
 
     public LegendViewModel()
     {
@@ -51,39 +100,6 @@ public class LegendViewModel : Notifier
 
         return result;
     }
-
-    private readonly ObservableCollection<DataSourceKindFilterItem> _dataSourceKindFilterItems;
-    public ObservableCollection<DataSourceKindFilterItem> DataSourceKindFilterItems => _dataSourceKindFilterItems;
-
-    public string LayerNameFilterText
-    {
-        get => _layerNameFilterText;
-        set
-        {
-            if (_layerNameFilterText == value) return;
-
-            _layerNameFilterText = value ?? string.Empty;
-
-            RaisePropertyChanged(nameof(LayerNameFilterText));
-            RaisePropertyChanged(nameof(HasActiveFilter));
-
-            InvalidateFilterCache();
-            //RequestRefreshView?.Invoke();
-            RequestNotifyFilterChanged?.Invoke();
-        }
-    }
-
-    public int SelectedDataSourceKindCount => _dataSourceKindFilterItems?.Count(i => i.IsSelected) ?? 0;
-
-    public bool ShowSelectedDataSourceKindCount => SelectedDataSourceKindCount != (DataSourceKindFilterItems?.Count ?? 0);
-
-    public bool HasActiveFilter =>
-        !string.IsNullOrWhiteSpace(_layerNameFilterText) ||
-        (SelectedDataSourceKindCount > 0 && SelectedDataSourceKindCount < (_dataSourceKindFilterItems?.Count ?? 0));
-
-    public Func<Task>? RequestRefreshView { get; set; }
-
-    public Action? RequestNotifyFilterChanged { get; set; }
 
     public List<DataSourceKind> GetAllowedDataSourceKinds()
     {
@@ -139,6 +155,8 @@ public class LegendViewModel : Notifier
         }
     }
 
+    #region Commands
+
     private RelayCommand? _selectAllDataSourceKindsCommand;
     public RelayCommand SelectAllDataSourceKindsCommand =>
         _selectAllDataSourceKindsCommand ??= new RelayCommand(_ =>
@@ -159,6 +177,7 @@ public class LegendViewModel : Notifier
             RequestNotifyFilterChanged?.Invoke();
         });
 
+
     private RelayCommand? _clearAllDataSourceKindsCommand;
     public RelayCommand ClearAllDataSourceKindsCommand =>
         _clearAllDataSourceKindsCommand ??= new RelayCommand(_ =>
@@ -178,6 +197,7 @@ public class LegendViewModel : Notifier
             //RequestRefreshView?.Invoke();
             RequestNotifyFilterChanged?.Invoke();
         });
+
 
     private RelayCommand? _clearFilterCommand;
     public RelayCommand ClearFilterCommand =>
@@ -200,4 +220,7 @@ public class LegendViewModel : Notifier
             //RequestRefreshView?.Invoke();
             RequestNotifyFilterChanged?.Invoke();
         });
+
+    #endregion
+
 }

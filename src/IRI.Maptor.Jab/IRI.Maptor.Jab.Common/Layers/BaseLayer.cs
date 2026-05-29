@@ -13,6 +13,8 @@ using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using System.Linq;
 using System.Windows.Input;
+using System.ComponentModel;
+using IRI.Maptor.Jab.Common.ViewModels.Map;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 
@@ -112,7 +114,7 @@ public abstract class BaseLayer : Notifier, ILayer
         protected set
         {
             _extent = value;
-            RaisePropertyChanged();            
+            RaisePropertyChanged();
         }
     }
 
@@ -185,7 +187,7 @@ public abstract class BaseLayer : Notifier, ILayer
         dataSource.HasPendingChangesChanged += DataSource_HasPendingChangesChanged;
         dataSource.IsClientFilteredChanged += DataSource_IsClientFilteredChanged;
         dataSource.HasErrorChanged += DataSource_HasErrorChanged;
-        dataSource.OnExtentChanged += DataSource_ExtentChanged; 
+        dataSource.OnExtentChanged += DataSource_ExtentChanged;
     }
 
     private void DataSource_ExtentChanged(object? sender, BoundingBox e)
@@ -337,6 +339,7 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
+
     private bool _isExpandedInToc;
     public bool IsExpandedInToc
     {
@@ -359,7 +362,13 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-    public bool ShowOptions => IsSelectedInToc && Commands?.Count > 0 && !IsGroupLayer;
+
+    public bool CanReorderInToc =>
+        Type == LayerType.ImagePyramid ||
+        Type == LayerType.Raster ||
+        Type == LayerType.VectorLayer ||
+        Type == LayerType.GroupLayer;
+
 
     private bool _showInToc = true;
     public bool ShowInToc
@@ -372,6 +381,7 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
+
     private int _tocOrder;
     public int TocOrder
     {
@@ -382,12 +392,21 @@ public abstract class BaseLayer : Notifier, ILayer
             RaisePropertyChanged();
         }
     }
+ 
 
-    public bool CanReorderInToc =>
-        Type == LayerType.ImagePyramid ||
-        Type == LayerType.Raster ||
-        Type == LayerType.VectorLayer ||
-        Type == LayerType.GroupLayer;
+    private string _tocGroup = LegendViewModel.DefaultTocGroup;
+    public string TocGroup
+    {
+        get { return _tocGroup; }
+        set
+        {
+            _tocGroup = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    public bool ShowOptions => IsSelectedInToc && Commands?.Count > 0 && !IsGroupLayer;
+     
 
     //y(i => i.Type == LayerType.RightClickOption)
     //                             //.ThenBy(i => i.Type == (LayerType.MoveableItem))
@@ -613,8 +632,8 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public Action<ILayer> RequestShowLayerSettings { get; set; }
 
-    public Func<ILayer, Task>? RequestMoveLayerDown { get; set; }
-    public Func<ILayer, Task>? RequestMoveLayerUp { get; set; }
+    public Func<ILayer, ICollectionView?, Task>? RequestMoveLayerDown { get; set; }
+    public Func<ILayer, ICollectionView?, Task>? RequestMoveLayerUp { get; set; }
 
     protected virtual void BindWithFrameworkElement(FrameworkElement? element)
     {
@@ -869,7 +888,7 @@ public abstract class BaseLayer : Notifier, ILayer
                     {
                         if (RequestMoveLayerUp is not null)
                         {
-                            await this.RequestMoveLayerUp.Invoke(this);
+                            await this.RequestMoveLayerUp.Invoke(this, param as ICollectionView);
                         }
                     },
                     _ => CanMoveLayerUp);
@@ -892,7 +911,7 @@ public abstract class BaseLayer : Notifier, ILayer
                     {
                         if (RequestMoveLayerDown is not null)
                         {
-                            await this.RequestMoveLayerDown.Invoke(this);
+                            await this.RequestMoveLayerDown.Invoke(this, param as ICollectionView);
                         }
                     },
                     _ => CanMoveLayerDown);

@@ -95,7 +95,7 @@
                 <maptor:MapDrawingLegendView MinHeight="90"/>
             </Expander>
             <Expander Header="{Binding [ui_header_layerLegend], Source={StaticResource Localization}}" IsExpanded="True" Margin="0,1,0,0" Cursor="Hand">
-                <maptor:MapLegendView EnableFilterMode="True"  Layers="{Binding Layers}"  GroupName="B"/>
+                <maptor:MapLegendView LegendViewModel="{Binding LegendViewModel}" />
             </Expander>
             <Expander Header="Map extent" IsExpanded="True" Margin="0,1,0,0" Cursor="Hand">
                 <maptor:MapExtentPanelView   MaxHeight="420"/>

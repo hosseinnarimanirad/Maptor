@@ -14,17 +14,17 @@ public partial class MapDrawingLegendView : NotifiableUserControl
         InitializeComponent();
     }
      
-    public string GroupName
-    {
-        get { return (string)GetValue(GroupNameProperty); }
-        set
-        {
-            SetValue(GroupNameProperty, value);
-            RaisePropertyChanged(nameof(ShowTools));
-        }
-    }
-    public static readonly DependencyProperty GroupNameProperty =
-        DependencyProperty.Register(nameof(GroupName), typeof(string), typeof(MapDrawingLegendView), new PropertyMetadata("D"));
+    //public string GroupName
+    //{
+    //    get { return (string)GetValue(GroupNameProperty); }
+    //    set
+    //    {
+    //        SetValue(GroupNameProperty, value);
+    //        RaisePropertyChanged(nameof(ShowTools));
+    //    }
+    //}
+    //public static readonly DependencyProperty GroupNameProperty =
+    //    DependencyProperty.Register(nameof(GroupName), typeof(string), typeof(MapDrawingLegendView), new PropertyMetadata("D"));
 
 
     public double TitleFontSize

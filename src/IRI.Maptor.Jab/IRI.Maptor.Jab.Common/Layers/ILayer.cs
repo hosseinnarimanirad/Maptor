@@ -9,6 +9,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 
@@ -59,15 +60,21 @@ public interface ILayer
 
     //void Invalidate();
 
+    #region Toc
+
     bool IsSelectedInToc { get; set; }
 
     bool IsExpandedInToc { get; set; }
 
+    bool CanReorderInToc { get; }
+
     bool ShowInToc { get; set; }
 
     int TocOrder { get; set; }
+     
+    string TocGroup { get; set; }
 
-    bool CanReorderInToc { get; }
+    #endregion
 
     bool CanUserDelete { get; }
 
@@ -91,8 +98,8 @@ public interface ILayer
 
     Action<ILayer>? RequestRefreshWhenDataLoaded { get; set; }
 
-    public Func<ILayer, Task> RequestMoveLayerDown { get; set; }
-    public Func<ILayer, Task> RequestMoveLayerUp { get; set; }
+    public Func<ILayer, ICollectionView?, Task> RequestMoveLayerDown { get; set; }
+    public Func<ILayer, ICollectionView?, Task> RequestMoveLayerUp { get; set; }
 
     RelayCommand ChangeSymbologyCommand { get; }
 

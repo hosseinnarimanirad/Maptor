@@ -14,7 +14,9 @@ using System.Collections.ObjectModel;
 namespace IRI.Maptor.Jab.IranRepo;
 
 public static class NccLayers
-{ 
+{
+    public const string TocGroup = "NCC";
+
     public static ObservableCollection<ILayer> GetLayers(MapViewModelBase map)
     {
         var fontFamily = new FontFamily("Times New Roman");

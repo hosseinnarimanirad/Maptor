@@ -183,8 +183,12 @@
 
                         </StackPanel.Resources>
                         <StackPanel DockPanel.Dock="Right" Background="{x:Null}" >
-                            <Button Style="{StaticResource ChevronUpButton}" Command="{Binding MoveLayerUpCommand}"/>
-                            <Button Style="{StaticResource ChevronDownButton}" Command="{Binding MoveLayerDownCommand}"/>
+                            <Button Style="{StaticResource ChevronUpButton}"
+                                    Command="{Binding MoveLayerUpCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TreeView}, Path=ItemsSource}"/>
+                            <Button Style="{StaticResource ChevronDownButton}"
+                                    Command="{Binding MoveLayerDownCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TreeView}, Path=ItemsSource}"/>
                         </StackPanel>
                     </StackPanel >
 

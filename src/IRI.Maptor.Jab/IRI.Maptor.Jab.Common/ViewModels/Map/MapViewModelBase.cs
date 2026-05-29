@@ -49,6 +49,7 @@ using IRI.Maptor.Sta.Spatial.IO.EsriJson;
 using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Jab.Common.Data.Settings;
 using IRI.Maptor.Jab.Common.Services;
+using System.ComponentModel;
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public abstract class MapViewModelBase : ViewModelBase
@@ -426,12 +427,26 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         UpdateAllNonGroupLayers();
 
-        UpdateLayerCanMoveUpDown(Layers);
+        var newItems = e.NewItems?.OfType<ILayer>()?.Where(l => l.ShowInToc && l.CanReorderInToc) ?? Enumerable.Empty<ILayer>();
+
+        var oldItems = e.OldItems?.OfType<ILayer>()?.Where(l => l.ShowInToc && l.CanReorderInToc) ?? Enumerable.Empty<ILayer>();
+
+        var affectedGroups = newItems.Concat(oldItems)
+                                     .Select(layer => layer.TocGroup)
+                                     .Distinct()
+                                     .ToList();
+
+        foreach (var group in affectedGroups)
+        {
+            UpdateLayerCanMoveUpDown(Layers, group);
+        }
     }
 
-    public void UpdateLayerCanMoveUpDown(IEnumerable<ILayer> layers)
+    public void UpdateLayerCanMoveUpDown(IEnumerable<ILayer> layers, string tocGroup)
     {
-        var orderedLayers = layers.Where(l => l.CanReorderInToc && LegendViewModel.IsFilterPassed(l)).OrderByDescending(l => l.TocOrder).ToList();
+        var orderedLayers = layers.Where(l => l.CanReorderInToc && l.TocGroup == tocGroup /*&& LegendViewModel.IsFilterPassed(l)*/)
+                                    .OrderByDescending(l => l.TocOrder)
+                                    .ToList();
 
         foreach (var item in orderedLayers)
         {
@@ -440,7 +455,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             if (item.IsGroupLayer)
             {
-                UpdateLayerCanMoveUpDown(item.SubLayers);
+                UpdateLayerCanMoveUpDown(item.SubLayers, tocGroup);
             }
         }
     }
@@ -1047,7 +1062,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
         MapExtentPanel = new MapExtentPanelViewModel(this);
 
-        LegendViewModel = new LegendViewModel() { RequestNotifyFilterChanged = () => UpdateLayerCanMoveUpDown(Layers) };
+        LegendViewModel = new LegendViewModel();
+
+        LegendViewModel.RequestNotifyFilterChanged = () => UpdateLayerCanMoveUpDown(Layers, LegendViewModel.TocGroup);
 
         MapPanel = new MapPanelViewModel();
 
@@ -2278,9 +2295,9 @@ public abstract class MapViewModelBase : ViewModelBase
     //    return null;
     //}
 
-    public async Task MoveLayerDown(ILayer? layer)
+    public async Task MoveLayerDown(ILayer? layer, ICollectionView? collectionView)
     {
-        if (layer == null)
+        if (layer is null || collectionView is null)
             return;
 
         if (layer is DrawingItemLayer dil)
@@ -2291,7 +2308,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (layer.Parent is null)
             {
-                await MoveLayerDown(Layers, layer);
+                await MoveLayerDown(collectionView.OfType<ILayer>().ToList(), layer);
             }
             else
             {
@@ -2300,7 +2317,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    public async Task MoveLayerDown(ObservableCollection<ILayer> layers, ILayer layer)
+    public async Task MoveLayerDown(IList<ILayer> layers, ILayer layer)
     {
         var nextLayer = layers.OrderByDescending(l => l.TocOrder)
                                 .FirstOrDefault(l => LegendViewModel.IsFilterPassed(l) && l.CanReorderInToc && l.TocOrder < layer.TocOrder);
@@ -2313,17 +2330,17 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await SwapLayerOrders(layer, nextLayer/*layers[nextIndex]*/);
 
-        UpdateLayerCanMoveUpDown(layers);
+        UpdateLayerCanMoveUpDown(layers, layer.TocGroup);
     }
 
 
-    public async Task MoveLayerUp(ILayer? layer)
+    public async Task MoveLayerUp(ILayer? layer, ICollectionView? collectionView)
     {
-        if (layer == null)
+        if (layer is null || collectionView is null)
             return;
 
-        if (LegendViewModel.HasActiveFilter)
-            return;
+        //if (LegendViewModel.HasActiveFilter)
+        //    return;
 
         if (layer is DrawingItemLayer dil)
         {
@@ -2333,7 +2350,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (layer.Parent is null)
             {
-                await MoveLayerUp(Layers, layer);
+                await MoveLayerUp(collectionView.OfType<ILayer>().ToList(), layer);
             }
             else
             {
@@ -2342,7 +2359,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    public async Task MoveLayerUp(ObservableCollection<ILayer> layers, ILayer layer)
+    public async Task MoveLayerUp(IList<ILayer> layers, ILayer layer)
     {
         var nextLayer = layers.OrderBy(l => l.TocOrder).FirstOrDefault(l => LegendViewModel.IsFilterPassed(l) && l.CanReorderInToc && l.TocOrder > layer.TocOrder);
         //var nextIndex = currentIndex - 1;
@@ -2354,7 +2371,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         await SwapLayerOrders(layer, nextLayer/*layers[nextIndex]*/);
 
-        UpdateLayerCanMoveUpDown(layers);
+        UpdateLayerCanMoveUpDown(layers, layer.TocGroup);
 
     }
 
@@ -2765,8 +2782,8 @@ public abstract class MapViewModelBase : ViewModelBase
         layer.RequestChangeSymbology = l => RequestShowSymbologyView?.Invoke(l);
         layer.RequestShowLayerSettings = l => RequestShowLayerSettingsView?.Invoke(l);
 
-        layer.RequestMoveLayerUp = l => MoveLayerUp(l);
-        layer.RequestMoveLayerDown = l => MoveLayerDown(l);
+        layer.RequestMoveLayerUp = (l, cv) => MoveLayerUp(l, cv);
+        layer.RequestMoveLayerDown = (l, cv) => MoveLayerDown(l, cv);
     }
 
     protected void TrySetCommands(ILayer layer)
@@ -2781,8 +2798,8 @@ public abstract class MapViewModelBase : ViewModelBase
             return;
         }
 
-        layer.RequestMoveLayerUp = l => MoveLayerUp(l);
-        layer.RequestMoveLayerDown = l => MoveLayerDown(l);
+        layer.RequestMoveLayerUp = (l, cv) => MoveLayerUp(l, cv);
+        layer.RequestMoveLayerDown = (l, cv) => MoveLayerDown(l, cv);
 
         if (layer is VectorLayer)
         {
@@ -4165,7 +4182,8 @@ public abstract class MapViewModelBase : ViewModelBase
                                 LayerType.VectorLayer,
                                 RenderMode.Default,
                                 RasterizationMethod.GdiPlus,
-                                ScaleInterval.All)
+                                ScaleInterval.All,
+                                LegendViewModel.DefaultTocGroup)
             {
                 IsSearchable = true
             };
@@ -4263,7 +4281,8 @@ public abstract class MapViewModelBase : ViewModelBase
                                 LayerType.VectorLayer,
                                 RenderMode.Default,
                                 RasterizationMethod.GdiPlus,
-                                ScaleInterval.All)
+                                ScaleInterval.All,
+                                LegendViewModel.DefaultTocGroup)
             {
                 IsSearchable = true
             };
@@ -4369,7 +4388,8 @@ public abstract class MapViewModelBase : ViewModelBase
                                 LayerType.VectorLayer,
                                 RenderMode.Default,
                                 RasterizationMethod.GdiPlus,
-                                ScaleInterval.All)
+                                ScaleInterval.All,
+                                LegendViewModel.DefaultTocGroup)
             {
                 IsSearchable = true
             };
@@ -4503,7 +4523,8 @@ public abstract class MapViewModelBase : ViewModelBase
                                 LayerType.VectorLayer,
                                 RenderMode.Default,
                                 RasterizationMethod.GdiPlus,
-                                ScaleInterval.All)
+                                ScaleInterval.All,
+                                LegendViewModel.DefaultTocGroup)
             {
                 IsSearchable = true
             };
@@ -4616,7 +4637,8 @@ public abstract class MapViewModelBase : ViewModelBase
                                     LayerType.VectorLayer,
                                     RenderMode.Default,
                                     RasterizationMethod.GdiPlus,
-                                    ScaleInterval.All)
+                                    ScaleInterval.All,
+                                    LegendViewModel.DefaultTocGroup)
                 {
                     IsSearchable = true
                 };
@@ -4825,7 +4847,15 @@ public abstract class MapViewModelBase : ViewModelBase
                 ? Path.GetFileNameWithoutExtension(result.FilePath)
                 : (result.IsCsv ? "CSV Import" : "TSV Import");
 
-            AddLayer(new VectorLayer(layerName, dataSource, VisualParameters.CreateNew(0.9), LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All) { IsSearchable = true });
+            AddLayer(new VectorLayer(
+                            layerName,
+                            dataSource,
+                            VisualParameters.CreateNew(0.9),
+                            LayerType.VectorLayer,
+                            RenderMode.Default,
+                            RasterizationMethod.GdiPlus,
+                            ScaleInterval.All,
+                            LegendViewModel.DefaultTocGroup) { IsSearchable = true });
         }
         //catch (IOException)
         //{
@@ -4872,7 +4902,9 @@ public abstract class MapViewModelBase : ViewModelBase
                 [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
                 LayerType.VectorLayer,
                 RenderMode.Default,
-                RasterizationMethod.GdiPlus, ScaleInterval.All)
+                RasterizationMethod.GdiPlus,
+                ScaleInterval.All,
+                LegendViewModel.DefaultTocGroup)
             {
                 IsSearchable = true
             });
@@ -4942,7 +4974,9 @@ public abstract class MapViewModelBase : ViewModelBase
                 [SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1)],
                 LayerType.VectorLayer,
                 RenderMode.Default,
-                RasterizationMethod.GdiPlus, ScaleInterval.All)
+                RasterizationMethod.GdiPlus,
+                ScaleInterval.All,
+                LegendViewModel.DefaultTocGroup)
             {
                 IsSearchable = true
             });
@@ -5021,7 +5055,8 @@ public abstract class MapViewModelBase : ViewModelBase
                                 LayerType.VectorLayer,
                                 RenderMode.Default,
                                 RasterizationMethod.GdiPlus,
-                                ScaleInterval.All)
+                                ScaleInterval.All,
+                                LegendViewModel.DefaultTocGroup)
             {
                 IsSearchable = true
             };

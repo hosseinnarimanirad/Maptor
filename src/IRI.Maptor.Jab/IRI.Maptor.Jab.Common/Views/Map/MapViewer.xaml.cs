@@ -857,12 +857,12 @@ public partial class MapViewer : NotifiableUserControl
 
         if (layer.RequestMoveLayerUp is null)
         {
-            layer.RequestMoveLayerUp = l => _presenter.MoveLayerUp(l);
+            layer.RequestMoveLayerUp = (l, cv) => _presenter.MoveLayerUp(l, cv);
         }
 
         if (layer.RequestMoveLayerDown is null)
         {
-            layer.RequestMoveLayerDown = l => _presenter.MoveLayerDown(l);
+            layer.RequestMoveLayerDown = (l, cv) => _presenter.MoveLayerDown(l, cv);
         }
 
         if (!layer.SubLayers.IsNullOrEmpty())
@@ -1149,7 +1149,8 @@ public partial class MapViewer : NotifiableUserControl
             VisualParameters.CreateNew(1),
             LayerType.VectorLayer,
             RenderMode.Default,
-            RasterizationMethod.DrawingVisual);
+            RasterizationMethod.DrawingVisual,
+            LegendViewModel.DefaultTocGroup);
 
         await this.AddNonTiledLayer(layer);
     }
@@ -2535,7 +2536,8 @@ public partial class MapViewer : NotifiableUserControl
             layerType,
             RenderMode.Default,
             RasterizationMethod.DrawingVisual,
-            ScaleInterval.All);
+            ScaleInterval.All,
+            LegendViewModel.DefaultTocGroup);
 
         this._layerManager.Add(_presenter.LegendViewModel, layer, InverseMapScale);
 
@@ -2693,13 +2695,13 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-     
+
 
     private void Unsubscribe_Pan()
     {
         this.mapView.MouseDown -= mapView_MouseDownForPan;
         this.mapView.MouseMove -= mapView_MouseMoveForPan;
-        this.mapView.MouseUp -= mapView_MouseUpForPan; 
+        this.mapView.MouseUp -= mapView_MouseUpForPan;
     }
 
 
@@ -2912,7 +2914,7 @@ public partial class MapViewer : NotifiableUserControl
     Point firstZoomBound;
 
     int counter; int counterValue;
-     
+
     Rectangle rectangle = new Rectangle()
     {
         Stroke = new SolidColorBrush(new Color() { R = 255, G = 200, B = 0, A = 255 }),
@@ -3314,7 +3316,7 @@ public partial class MapViewer : NotifiableUserControl
         Refresh(isNewExtent: true);
     }
 
-     
+
     private Task AnimateAsync(Action action, DoubleAnimation animation)
     {
         TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();

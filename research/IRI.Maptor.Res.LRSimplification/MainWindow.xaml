@@ -162,12 +162,12 @@
 
                 <!--drawing legend-->
                 <Expander Grid.Row="3" Header="{Binding [ui_header_drawingLegend], Source={StaticResource Localization}}">
-                    <maptor:MapDrawingLegendView MinHeight="90" GroupName="A"/>
+                    <maptor:MapDrawingLegendView MinHeight="90"  />
                 </Expander>
 
                 <!--layer legend-->
                 <Expander Grid.Row="4" Header="{Binding [ui_header_layerLegend], Source={StaticResource Localization}}">
-                    <maptor:MapLegendView EnableFilterMode="True" Layers="{Binding Layers}" GroupName="B"/>
+                    <maptor:MapLegendView LegendViewModel="{Binding LegendViewModel}"  />
                 </Expander>
 
                 <!--attribute table-->

@@ -18,13 +18,21 @@ public static class NccRepository
             return null;
 
         var features = JsonListDataSource.CreateFromJsonString<NccPoint>(jsonString, i => i.AsFeature()/*, p => p.Name*/);
-         
+
         List<ISymbolizer> symbolizers = [new SimpleSymbolizer(visualParameters)];
 
         if (label is not null)
             symbolizers.Add(new LabelSymbolizer(label));
 
-        var vectorLayer = new VectorLayer(layerTitle, features, symbolizers, LayerType.VectorLayer, RenderMode.Default, RasterizationMethod.GdiPlus, ScaleInterval.All)
+        var vectorLayer = new VectorLayer(
+            layerTitle,
+            features,
+            symbolizers,
+            LayerType.VectorLayer,
+            RenderMode.Default,
+            RasterizationMethod.GdiPlus,
+            ScaleInterval.All,
+            NccLayers.TocGroup)
         {
             ShowInToc = false,
             CanUserDelete = false,

@@ -17,7 +17,7 @@ public class LayerManager : Notifier
 {
     public Action<BaseLayer>? RequestRefreshVisibility;
 
-    public Action<IEnumerable<ILayer>> RequestUpdateLayerTocOrder;
+    public Action<IEnumerable<ILayer>, string> RequestUpdateLayerTocOrder;
 
     /// <summary>
     /// Optional. When set, passed to LoadAsync when loading layer data. Used to cancel loads on sign out.
@@ -225,7 +225,7 @@ public class LayerManager : Notifier
 
         // add this code so when adding new layers (e.g. DXF)
         // its move up/down buttons have correct enabled/disabled value
-        RequestUpdateLayerTocOrder?.Invoke(layers);
+        RequestUpdateLayerTocOrder?.Invoke(layers, layer.TocGroup);
     }
 
     private void ArrangeZIndex()

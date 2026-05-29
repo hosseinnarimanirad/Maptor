@@ -16,6 +16,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Common.ViewModels.Map;
 
 
 namespace IRI.Maptor.Jab.Common.Helpers;
@@ -29,7 +30,8 @@ public static class SimplificationHelper
                                             VisualParameters.GetStroke(Colors.Blue, 1),
                                             LayerType.VectorLayer,
                                             RenderMode.Default,
-                                            RasterizationMethod.DrawingVisual);
+                                            RasterizationMethod.DrawingVisual,
+                                            LegendViewModel.DefaultTocGroup);
 
         vectorLayer.Visibility = System.Windows.Visibility.Hidden;
 

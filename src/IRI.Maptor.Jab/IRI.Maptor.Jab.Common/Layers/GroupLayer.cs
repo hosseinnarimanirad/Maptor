@@ -13,18 +13,18 @@ public class GroupLayer : BaseLayer
 
     //public override RenderingApproach Rendering { get => RenderingApproach.Default; protected set => throw new NotImplementedException(); }
 
-    public GroupLayer(string title)
+    public GroupLayer(string title, string tocGroup = IRI.Maptor.Jab.Common.ViewModels.Map.LegendViewModel.DefaultTocGroup)
     {
         LayerName = title;
 
         IsGroupLayer = true;
 
+        this.TocGroup = tocGroup;
+
         SubLayers = new System.Collections.ObjectModel.ObservableCollection<ILayer>();
 
         VisibleRange = ScaleInterval.All;
-
-        ShowInToc = true;
-
+         
         Visibility = System.Windows.Visibility.Collapsed;
     }
 

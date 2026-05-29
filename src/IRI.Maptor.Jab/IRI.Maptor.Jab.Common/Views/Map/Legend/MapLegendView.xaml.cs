@@ -1,21 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Controls;
-
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Converters;
-using IRI.Maptor.Jab.Common.ViewModels.Map;
-using System.Collections.ObjectModel;
 using System.Windows.Threading;
-using IRI.Maptor.Jab.Common.Localization;
-using IRI.Maptor.Sta.Common.Enums;
-using IRI.Maptor.Jab.Controls;
+using System.Collections.ObjectModel;
+
+using IRI.Maptor.Extensions;
+using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Layers;
-using System.Diagnostics;
-using System.Windows.Media;
+using IRI.Maptor.Jab.Common.ViewModels.Map;
 
 namespace IRI.Maptor.Jab.Controls;
 
@@ -28,7 +19,7 @@ public partial class MapLegendView : NotifiableUserControl
     {
         InitializeComponent();
     }
-     
+
 
     public LegendViewModel LegendViewModel
     {
@@ -60,22 +51,22 @@ public partial class MapLegendView : NotifiableUserControl
                                     })));
 
 
-    public string GroupName
-    {
-        get { return (string)GetValue(GroupNameProperty); }
-        set { SetValue(GroupNameProperty, value); }
-    }
-    public static readonly DependencyProperty GroupNameProperty =
-        DependencyProperty.Register(nameof(GroupName), typeof(string), typeof(MapLegendView), new PropertyMetadata("A"));
+    //public string GroupName
+    //{
+    //    get { return (string)GetValue(GroupNameProperty); }
+    //    set { SetValue(GroupNameProperty, value); }
+    //}
+    //public static readonly DependencyProperty GroupNameProperty =
+    //    DependencyProperty.Register(nameof(GroupName), typeof(string), typeof(MapLegendView), new PropertyMetadata("A"));
 
 
-    public bool EnableFilterMode
-    {
-        get { return (bool)GetValue(EnableFilterModeProperty); }
-        set { SetValue(EnableFilterModeProperty, value); }
-    }
-    public static readonly DependencyProperty EnableFilterModeProperty =
-        DependencyProperty.Register(nameof(EnableFilterMode), typeof(bool), typeof(MapLegendView), new PropertyMetadata(true));
+    //public bool EnableFilterMode
+    //{
+    //    get { return (bool)GetValue(EnableFilterModeProperty); }
+    //    set { SetValue(EnableFilterModeProperty, value); }
+    //}
+    //public static readonly DependencyProperty EnableFilterModeProperty =
+    //    DependencyProperty.Register(nameof(EnableFilterMode), typeof(bool), typeof(MapLegendView), new PropertyMetadata(true));
 
 
     public bool ShowVectorLayers
@@ -85,7 +76,6 @@ public partial class MapLegendView : NotifiableUserControl
     }
     public static readonly DependencyProperty ShowVectorLayersProperty =
         DependencyProperty.Register(nameof(ShowVectorLayers), typeof(bool), typeof(MapLegendView), new PropertyMetadata(true));
-
 
 
     public bool ShowRasterLayers
@@ -116,12 +106,8 @@ public partial class MapLegendView : NotifiableUserControl
         }
     }
 
-    // Using a DependencyProperty as the backing store for ShowTools.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowToolsProperty =
         DependencyProperty.Register(nameof(ShowTools), typeof(bool), typeof(MapLegendView), new PropertyMetadata(true));
-
-
-
 
 
     public bool ShowLayerColors
@@ -134,14 +120,23 @@ public partial class MapLegendView : NotifiableUserControl
 
 
 
-
-    public ObservableCollection<ILayer> Layers
+    public string TocGroup
     {
-        get { return (ObservableCollection<ILayer>)GetValue(LayersProperty); }
-        set { SetValue(LayersProperty, value); }
+        get { return (string)GetValue(TocGroupProperty); }
+        set { SetValue(TocGroupProperty, value); }
     }
-    public static readonly DependencyProperty LayersProperty =
-        DependencyProperty.Register(nameof(Layers), typeof(ObservableCollection<ILayer>), typeof(MapLegendView), new PropertyMetadata(null));
+
+    public static readonly DependencyProperty TocGroupProperty =
+        DependencyProperty.Register(nameof(TocGroup), typeof(string), typeof(MapLegendView), new PropertyMetadata("NORMAL"));
+
+
+    //public ObservableCollection<ILayer> Layers
+    //{
+    //    get { return (ObservableCollection<ILayer>)GetValue(LayersProperty); }
+    //    set { SetValue(LayersProperty, value); }
+    //}
+    //public static readonly DependencyProperty LayersProperty =
+    //    DependencyProperty.Register(nameof(Layers), typeof(ObservableCollection<ILayer>), typeof(MapLegendView), new PropertyMetadata(null));
 
 
     private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
@@ -154,9 +149,16 @@ public partial class MapLegendView : NotifiableUserControl
             return;
         }
 
-        if (!EnableFilterMode)
+        //if (!EnableFilterMode)
+        //{
+        //    e.Accepted = true;
+        //    return;
+        //}
+
+        if (string.IsNullOrWhiteSpace(this.TocGroup) ||
+            this.TocGroup.EqualsIgnoreCase(item.TocGroup))
         {
-            e.Accepted = true;
+            e.Accepted = false;
             return;
         }
 

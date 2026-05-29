@@ -36,8 +36,9 @@
                 </Style.Triggers>
             </Style>-->
 
-            <CollectionViewSource x:Key="collectionViewSource" 
-                                  Source="{Binding Layers, RelativeSource={RelativeSource AncestorType=maptor:NotifiableUserControl}}" 
+                                  <!--Source="{Binding Layers, RelativeSource={RelativeSource AncestorType=maptor:NotifiableUserControl}}"--> 
+            <CollectionViewSource x:Key="collectionViewSource"
+                                  Source="{Binding Layers}"
                                   Filter="CollectionViewSource_Filter"
                                   IsLiveSortingRequested="True">
                 <CollectionViewSource.SortDescriptions>
