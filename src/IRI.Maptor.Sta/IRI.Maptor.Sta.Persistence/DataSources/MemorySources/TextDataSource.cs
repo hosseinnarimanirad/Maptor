@@ -69,7 +69,7 @@ public class TextDataSource : MemoryDataSource
 
         _webMercatorFeatureSet.ApplyChanges();
 
-        UpdateHasPendingChanges();        
+        UpdateHasPendingChanges();
     }
 
     ///// <summary>
@@ -163,8 +163,8 @@ public class TextDataSource : MemoryDataSource
 
     private static (int xIndex, int yIndex) FindXyColumnIndices(string[] headerRow, bool isLongitudeFirst)
     {
-        var xAliases = new[] { "x", "lon", "lng", "longitude", "long" };
-        var yAliases = new[] { "y", "lat", "latitude" };
+        var xAliases = new[] { "x", "E", "lon", "lng", "longitude", "long" };
+        var yAliases = new[] { "y", "N", "lat", "latitude" };
 
         int xIndex = -1;
         int yIndex = -1;
