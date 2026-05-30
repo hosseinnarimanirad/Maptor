@@ -15,8 +15,9 @@ namespace IRI.Maptor.Jab.Common
     {
         #region Fields
 
-        readonly Action<object> _execute;
-        readonly Predicate<object>? _canExecute;
+        readonly Action<object?> _execute;
+        readonly Predicate<object?>? _canExecute;
+        private EventHandler? _canExecuteChanged;
 
         #endregion // Fields
 
@@ -26,7 +27,7 @@ namespace IRI.Maptor.Jab.Common
         /// Creates a new command that can always execute.
         /// </summary>
         /// <param name="execute">The execution logic.</param>
-        public RelayCommand(Action<object> execute)
+        public RelayCommand(Action<object?> execute)
             : this(execute, null)
         {
         }
@@ -36,7 +37,7 @@ namespace IRI.Maptor.Jab.Common
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action<object> execute, Predicate<object>? canExecute)
+        public RelayCommand(Action<object?> execute, Predicate<object?>? canExecute)
         {
             if (execute == null)
                 throw new ArgumentNullException("execute");
@@ -45,27 +46,37 @@ namespace IRI.Maptor.Jab.Common
             _canExecute = canExecute;
         }
 
-        #endregion // Constructors
+        #endregion  
 
         #region ICommand Members
 
         [DebuggerStepThrough]
-        public bool CanExecute(object parameter)
-        {
-            return _canExecute == null ? true : _canExecute(parameter);
-        }
+        public bool CanExecute(object? parameter) => _canExecute == null || _canExecute(parameter);
+
+        public void Execute(object? parameter) => _execute(parameter);
+
 
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add
+            {
+                _canExecuteChanged += value;
+                CommandManager.RequerySuggested += value;
+            }
+
+            remove
+            {
+                _canExecuteChanged -= value;
+                CommandManager.RequerySuggested -= value;
+            }
         }
 
-        public void Execute(object parameter)
-        {
-            _execute(parameter);
-        }
 
         #endregion // ICommand Members
+
+        public void RaiseCanExecuteChanged()
+        {
+            _canExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

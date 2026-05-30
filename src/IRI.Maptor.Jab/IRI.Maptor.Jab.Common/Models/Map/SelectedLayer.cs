@@ -13,6 +13,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Jab.Common.Services;
+using System.Windows.Input;
 
 namespace IRI.Maptor.Jab.Common.Models;
 
@@ -39,17 +40,13 @@ public class SelectedLayer : Notifier
         }
     }
 
+
     private ObservableCollection<Feature<Point>> _highlightedFeatures = new ObservableCollection<Feature<Point>>();
     public ObservableCollection<Feature<Point>> HighlightedFeatures
     {
         get { return _highlightedFeatures; }
         set
         {
-            System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-
-            System.Diagnostics.Trace.WriteLine($"HighlightedFeatures #1 ({watch.ElapsedMilliseconds})");
-            watch.Restart();
-
             if (_highlightedFeatures != null)
                 _highlightedFeatures.CollectionChanged -= highlightedFeatures_CollectionChanged;
 
@@ -59,19 +56,9 @@ public class SelectedLayer : Notifier
             if (_highlightedFeatures != null)
                 _highlightedFeatures.CollectionChanged += highlightedFeatures_CollectionChanged;
 
-            System.Diagnostics.Trace.WriteLine($"HighlightedFeatures #2 ({watch.ElapsedMilliseconds})");
-            watch.Restart();
-
             RefreshHighlightedFeaturesOnMap(HighlightedFeatures);
 
-            System.Diagnostics.Trace.WriteLine($"HighlightedFeatures #3 ({watch.ElapsedMilliseconds})");
-            watch.Restart();
-
             NotifyAll();
-
-            System.Diagnostics.Trace.WriteLine($"HighlightedFeatures #4 ({watch.ElapsedMilliseconds})");
-            watch.Restart();
-
         }
     }
 
@@ -107,26 +94,30 @@ public class SelectedLayer : Notifier
 
     public int CountOfSelectedFeatures => Features?.Count ?? 0;
 
+    #region Actions and Funcs
 
-    public Action<IEnumerable<Feature<Point>>, double?>? RequestFeaturesChanged { get; set; }
 
-    public Action<IEnumerable<Feature<Point>>, double?>? RequestHighlightFeaturesChanged { get; set; }
+    public Func<IEnumerable<Feature<Point>>, double?, Task>? RequestFeaturesChangedAsync { get; set; }
+
+    public Func<IEnumerable<Feature<Point>>, double?, Task>? RequestHighlightFeaturesChangedAsync { get; set; }
 
     public Action<Feature<Point>>? RequestFlashSinglePoint { get; set; }
 
     public Action<IEnumerable<Feature<Point>>, Action>? RequestZoomTo { get; set; }
 
-    public Action<Feature<Point>>? RequestEdit { get; set; }
+    public Func<Feature<Point>, Task>? RequestEditAsync { get; set; }
 
     public Action<Feature<Point>>? RequestViewChanges { get; set; }
 
-    public Func<GeometryType, Task<Geometry<Point>?>> RequestDraw { get; set; }
+    public Func<GeometryType, Task<Geometry<Point>?>>? RequestDrawAsync { get; set; }
 
     public Action? RequestRemoveSelectedLayer { get; set; }
 
     public Action<ILayer>? RequestRefreshLayer { get; set; }
 
-    public Func<DomainException, Task> RequestShowErrorMessage { get; set; }
+    public Func<DomainException, Task>? RequestShowErrorMessageAsync { get; set; }
+
+    #endregion
 
 
     public SelectedLayer(IDialogService dialogService, VectorLayer layer, List<Field>? fields)
@@ -138,9 +129,9 @@ public class SelectedLayer : Notifier
         Fields = fields;
     }
 
-    private void highlightedFeatures_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private async void highlightedFeatures_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        RefreshHighlightedFeaturesOnMap(HighlightedFeatures);
+        await RefreshHighlightedFeaturesOnMap(HighlightedFeatures);
 
         NotifyAll();
     }
@@ -164,19 +155,22 @@ public class SelectedLayer : Notifier
         HighlightedFeatures = new ObservableCollection<Feature<Point>>(items);
     }
 
-    public void RefreshSelectedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
+    public async Task RefreshSelectedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
     {
         if (AssociatedLayer != null)
         {
             AssociatedLayer.NumberOfSelectedFeatures = enumerable.Count();
         }
 
-        RequestFeaturesChanged?.Invoke(enumerable.Where(i => i.Status != FeatureStatus.Removed && i.Status != FeatureStatus.CanceledNew), strokeThickness);
+        await RequestFeaturesChangedAsync?.Invoke(enumerable.Where(i => i.Status != FeatureStatus.Removed && i.Status != FeatureStatus.CanceledNew), strokeThickness);
     }
 
-    public void RefreshHighlightedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable)
+    public async Task RefreshHighlightedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable)
     {
-        RequestHighlightFeaturesChanged?.Invoke(enumerable, AssociatedLayer.DefaultSymbology?.StrokeThickness);
+        if (RequestHighlightFeaturesChangedAsync is null)
+            return;
+
+        await RequestHighlightFeaturesChangedAsync.Invoke(enumerable, AssociatedLayer.DefaultSymbology?.StrokeThickness);
     }
 
     public void RefreshFeatureInView(Feature<Point> feature)
@@ -236,52 +230,7 @@ public class SelectedLayer : Notifier
     }
 
 
-    public async Task SaveChangesAsync()
-    {
-        var editableSource = AssociatedLayer.DataSource as IEditableVectorDataSource;
-
-        if (editableSource is null)
-            return;
-
-        await editableSource.SaveChangesAsync();
-
-        // Marshal grid refresh to UI thread; HTTP completion may have resumed on a background thread
-        await DispatcherInvokeAsync(() =>
-        {
-            var toBeRemoved = Features.Where(f => f.Status == FeatureStatus.Removed).ToList();
-
-            foreach (var item in toBeRemoved)
-                Features.Remove(item);
-
-            // Replace collection to force DataGrid to re-bind; features now have Status=Unchanged
-            if (Features != null)
-                Features = new ObservableCollection<Feature<Point>>(Features);
-
-            NotifyAll();
-        });
-         
-        await this._dialogService?.ShowMessage_DoneSuccessfully();
-    }
-
-    public void UndoCurrentRowChanges()
-    {
-
-        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
-        if (dataSource is null || !CanUndo)
-            return;
-
-        var feature = IsSingleValueHighlighted ? HighlightedFeatures!.First() : null;
-
-        UndoFeatureChanges(dataSource, feature);
-
-        NotifyAll();
-
-        RequestRefreshLayer?.Invoke(AssociatedLayer);
-
-        RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
-    }
-
-    public void UndoAllChanges()
+    public async Task UndoAllChangesAsync()
     {
         var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
 
@@ -298,7 +247,8 @@ public class SelectedLayer : Notifier
         NotifyAll();
 
         RequestRefreshLayer?.Invoke(AssociatedLayer);
-        RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+
+        await RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
     }
 
     private void UndoFeatureChanges(IEditableVectorDataSource dataSource, Feature<Point> feature)
@@ -335,10 +285,78 @@ public class SelectedLayer : Notifier
         RaisePropertyChanged(nameof(CanUndo));
         RaisePropertyChanged(nameof(CanViewChanges));
         RaisePropertyChanged(nameof(HasPendingChanges));
+
+        CommandManager.InvalidateRequerySuggested();
     }
 
 
-    private async Task Add()
+    private bool CanExecuteAddFeature()
+    {
+        if (this.AssociatedLayer is null)
+            return false;
+
+        if (this.AssociatedLayer.IsBusy)
+            return false;
+
+        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
+        if (dataSource is null)
+            return false;
+
+        var vectorDataSource = AssociatedLayer?.DataSource as VectorDataSource;
+
+        var geometryType = vectorDataSource?.GeometryType;
+
+        return geometryType != null && geometryType != GeometryType.None;
+    }
+
+    private bool CanExecuteDeleteFeature()
+    {
+        if (this.AssociatedLayer is null)
+            return false;
+
+        if (this.AssociatedLayer.IsBusy)
+            return false;
+
+        return HighlightedFeatures?.Count >= 1;
+    }
+
+    private bool CanExecuteEditFeature()
+    {
+        if (this.AssociatedLayer is null)
+            return false;
+
+        if (this.AssociatedLayer.IsBusy)
+            return false;
+
+        return IsSingleValueHighlighted;
+    }
+
+    private bool CanExecuteUndoEditFeature()
+    {
+        if (this.AssociatedLayer is null)
+            return false;
+
+        if (this.AssociatedLayer.IsBusy)
+            return false;
+
+        return CanUndo;
+    }
+
+    private bool CanExecuteSaveChanges()
+    {
+
+        if (this.AssociatedLayer is null)
+            return false;
+
+        if (this.AssociatedLayer.IsBusy)
+            return false;
+
+        return HasPendingChanges;
+    }
+
+
+    private async Task AddAsync()
     {
         var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
 
@@ -352,7 +370,7 @@ public class SelectedLayer : Notifier
         // todo
         // this should be changed to draw geometry using the layers type
         //var emptyGeometry = Geometry<Point>.CreateEmpty(geometryType, srid);
-        var geometry = await RequestDraw(geometryType);
+        var geometry = await RequestDrawAsync(geometryType);
 
         if (geometry is null)
             return;
@@ -383,28 +401,14 @@ public class SelectedLayer : Notifier
         NotifyAll();
 
         if (ShowSelectedOnMap)
-            RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+            await RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
 
         RequestRefreshLayer?.Invoke(AssociatedLayer);
 
         //RequestEdit?.Invoke(newFeature);
     }
 
-    private bool CanExecuteAddFeature()
-    {
-        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
-
-        if (dataSource is null)
-            return false;
-
-        var vectorDataSource = AssociatedLayer?.DataSource as VectorDataSource;
-
-        var geometryType = vectorDataSource?.GeometryType;
-
-        return geometryType != null && geometryType != GeometryType.None;
-    }
-
-    private void Delete()
+    private async Task DeleteAsync()
     {
         var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
 
@@ -426,9 +430,87 @@ public class SelectedLayer : Notifier
 
         RequestRefreshLayer?.Invoke(AssociatedLayer);
 
-        RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+        await RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
 
     }
+
+    private async Task EditAsync()
+    {
+        var feature = IsSingleValueHighlighted ? HighlightedFeatures!.First() : null;
+
+        if (feature != null)
+            await RequestEditAsync?.Invoke(feature);
+
+        NotifyAll();
+    }
+
+    public async Task UndoCurrentRowChangesAsync()
+    {
+        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
+        if (dataSource is null || !CanUndo || dataSource.IsInitializing || dataSource.IsProcessing)
+            return;
+
+        var feature = IsSingleValueHighlighted ? HighlightedFeatures!.First() : null;
+
+        UndoFeatureChanges(dataSource, feature);
+
+        NotifyAll();
+
+        RequestRefreshLayer?.Invoke(AssociatedLayer);
+
+        await RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+    }
+
+    private async Task UndoChangesAsync()
+    {
+        var message = IRI.Maptor.Jab.Common.Properties.Resources.dialog_msg_discardPendingChanges;
+
+        if (await _dialogService.ShowYesNoDialogAsync(message) == false)
+            return;
+
+        await UndoCurrentRowChangesAsync();
+    }
+
+
+    public async Task SaveChangesAsync()
+    {
+        try
+        {
+            var editableSource = AssociatedLayer.DataSource as IEditableVectorDataSource;
+
+            if (editableSource is null)
+                return;
+
+            await editableSource.SaveChangesAsync();
+
+            // Marshal grid refresh to UI thread; HTTP completion may have resumed on a background thread
+            await DispatcherInvokeAsync(() =>
+            {
+                var toBeRemoved = Features.Where(f => f.Status == FeatureStatus.Removed).ToList();
+
+                foreach (var item in toBeRemoved)
+                    Features.Remove(item);
+
+                // Replace collection to force DataGrid to re-bind; features now have Status=Unchanged
+                if (Features != null)
+                    Features = new ObservableCollection<Feature<Point>>(Features);
+
+                NotifyAll();
+            });
+
+            await this._dialogService?.ShowMessage_DoneSuccessfully();
+        }
+        catch (DomainException ex)
+        {
+            await RequestShowErrorMessageAsync(ex);
+        }
+        catch (Exception ex)
+        {
+            await RequestShowErrorMessageAsync(new MaptorUnknownException(ex.Message));
+        }
+    }
+
 
     #region Commands
 
@@ -440,7 +522,7 @@ public class SelectedLayer : Notifier
             if (_addCommand is null)
             {
                 _addCommand = new RelayCommand(
-                    async param => await this.Add(),
+                    async param => await this.AddAsync(),
                     param => this.CanExecuteAddFeature());
             }
 
@@ -456,7 +538,7 @@ public class SelectedLayer : Notifier
         {
             if (_deleteCommand is null)
             {
-                _deleteCommand = new RelayCommand(param => this.Delete(), param => HighlightedFeatures?.Count >= 1);
+                _deleteCommand = new RelayCommand(async param => await this.DeleteAsync(), param => CanExecuteDeleteFeature());
             }
 
             return _deleteCommand;
@@ -471,12 +553,7 @@ public class SelectedLayer : Notifier
         {
             if (_editCommand is null)
             {
-                _editCommand = new RelayCommand(param =>
-                {
-                    var feature = IsSingleValueHighlighted ? HighlightedFeatures!.First() : null;
-                    if (feature != null)
-                        RequestEdit?.Invoke(feature);
-                });
+                _editCommand = new RelayCommand(async param => await EditAsync(), param => CanExecuteEditFeature());
             }
 
             return _editCommand;
@@ -491,16 +568,9 @@ public class SelectedLayer : Notifier
         {
             if (_undoChangesCommand is null)
             {
-                _undoChangesCommand = new RelayCommand(async param =>
-                {
-                    var message = IRI.Maptor.Jab.Common.Properties.Resources.dialog_msg_discardPendingChanges;
-
-                    if (await _dialogService.ShowYesNoDialogAsync(message) == false)
-                        return;
-
-                    UndoCurrentRowChanges();
-                });
+                _undoChangesCommand = new RelayCommand(async param => await UndoChangesAsync(), param => CanExecuteUndoEditFeature());
             }
+
             return _undoChangesCommand;
         }
     }
@@ -512,22 +582,7 @@ public class SelectedLayer : Notifier
         get
         {
             if (_saveChangesCommand is null)
-                _saveChangesCommand = new RelayCommand(async param =>
-                {
-                    try
-                    {
-                        await SaveChangesAsync();
-                    }
-                    catch (DomainException ex)
-                    {
-                        await RequestShowErrorMessage(ex);
-                    }
-                    catch (Exception ex)
-                    {
-                        await RequestShowErrorMessage(new MaptorUnknownException(ex.Message));
-                    }
-
-                }, _ => HasPendingChanges);
+                _saveChangesCommand = new RelayCommand(async param => await SaveChangesAsync(), _ => CanExecuteSaveChanges());
 
             return _saveChangesCommand;
         }

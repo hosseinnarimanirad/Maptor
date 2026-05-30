@@ -126,7 +126,16 @@ public abstract class BaseLayer : Notifier, ILayer
 
     public virtual bool IsNotBusy => !IsBusy;
 
-    public virtual bool IsBusy { get => IsInitializing || IsProcessing; }
+    private bool _isBusy = false;
+    public virtual bool IsBusy
+    {
+        get => IsInitializing || IsProcessing || _isBusy;
+        set
+        {
+            _isBusy = value;
+            RaisePropertyChanged();
+        }
+    }
 
     public virtual bool IsInitializing => DataSource?.IsInitializing ?? false;
 
@@ -392,7 +401,7 @@ public abstract class BaseLayer : Notifier, ILayer
             RaisePropertyChanged();
         }
     }
- 
+
 
     protected string _tocGroup = LegendViewModel.DefaultTocGroup;
     public virtual string TocGroup
@@ -406,7 +415,7 @@ public abstract class BaseLayer : Notifier, ILayer
     }
 
     public bool ShowOptions => IsSelectedInToc && Commands?.Count > 0 && !IsGroupLayer;
-     
+
 
     //y(i => i.Type == LayerType.RightClickOption)
     //                             //.ThenBy(i => i.Type == (LayerType.MoveableItem))

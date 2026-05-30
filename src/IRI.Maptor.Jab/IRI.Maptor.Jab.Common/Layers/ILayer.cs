@@ -71,7 +71,7 @@ public interface ILayer
     //bool ShowInToc { get; set; }
 
     int TocOrder { get; set; }
-     
+
     string TocGroup { get; set; }
 
     #endregion
@@ -114,7 +114,7 @@ public interface ILayer
     //bool CanRenderLabels(double mapScale);
 
     // Data-source / layer status flags used for UI feedback (TOC, legend, etc.)
-    bool IsBusy { get; }
+    bool IsBusy { get; set; }
 
     bool IsLoaded { get; }
 

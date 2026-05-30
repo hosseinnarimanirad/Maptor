@@ -1460,7 +1460,7 @@ public abstract class MapViewModelBase : ViewModelBase
     //*****************************************Selected Layers & Select Geometries & DrawGeometries & Identify & FlashPoints ******************
     #region Selected Layers & Select/Draw Geometries & Identify & FlashPoints 
 
-    public void AddSelectedLayer(SelectedLayer selectedLayer)
+    public async Task AddSelectedLayer(SelectedLayer selectedLayer)
     {
         if (selectedLayer is null)
             return;
@@ -1471,9 +1471,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
         if (existingLayer == null)
         {
-            selectedLayer.RequestFeaturesChanged = ShowSelectedFeatures;
+            selectedLayer.RequestFeaturesChangedAsync = ShowSelectedFeatures;
 
-            selectedLayer.RequestHighlightFeaturesChanged = ShowHighlightedFeatures;
+            selectedLayer.RequestHighlightFeaturesChangedAsync = ShowHighlightedFeatures;
 
             selectedLayer.RequestFlashSinglePoint = FlashHighlightedFeatures;
 
@@ -1488,7 +1488,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             selectedLayer.RequestRefreshLayer = RefreshLayerVisibility;
 
-            selectedLayer.RequestShowErrorMessage = async (error) => await DialogService.ShowErrorMessage(error);
+            selectedLayer.RequestShowErrorMessageAsync = async (error) => await DialogService.ShowErrorMessage(error);
 
             //selectedLayer.PropertyChanged += (s, e) =>
             //{
@@ -1499,36 +1499,47 @@ public abstract class MapViewModelBase : ViewModelBase
             //    }
             //};
 
-            selectedLayer.RequestDraw = async (geometryType) =>
+            selectedLayer.RequestDrawAsync = async (geometryType) =>
             {
                 var result = await GetDrawingAsync(geometryType.AsDrawMode());
 
                 return result.HasNotNullResult() ? result.Result : null;
             };
 
-            selectedLayer.RequestEdit = async oldFeature =>
+            selectedLayer.RequestEditAsync = async oldFeature =>
             {
+                selectedLayer.AssociatedLayer.IsBusy = true;
+
                 var editResult = await EditAsync(oldFeature.TheGeometry, MapSettings.EditingOptions);
 
                 if (!editResult.HasNotNullResult())
-                    return;
+                {
+                    selectedLayer.AssociatedLayer.IsBusy = false;
 
-                //if (editResult.HasNotNullResult())
-                //{
+                    return;
+                }
+
                 if (oldFeature.TheGeometry.AsWkt() == editResult.Result.AsWkt())
-                    return;
+                {
+                    selectedLayer.AssociatedLayer.IsBusy = false;
 
-                //Feature<Point> newFeature = new Feature<Point>(editResult.Result) { Id = oldFeature.Id, Attributes = oldFeature.Attributes, Status = oldFeature.Status };
+                    return;
+                }
 
                 if (!selectedLayer.UpdateGeometry(oldFeature, editResult.Result))
+                {
+                    selectedLayer.AssociatedLayer.IsBusy = false;
+
                     return;
-                //}
+                }
 
                 //Referesh
                 if (selectedLayer.ShowSelectedOnMap)
                 {
-                    ShowSelectedFeatures(selectedLayer.GetSelectedFeatures(), selectedLayer?.AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+                    await ShowSelectedFeatures(selectedLayer.GetSelectedFeatures(), selectedLayer?.AssociatedLayer?.DefaultSymbology?.StrokeThickness);
                 }
+
+                selectedLayer.AssociatedLayer.IsBusy = false;
 
                 Refresh(isNewExtent: true);
             };
@@ -1537,19 +1548,14 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 RequestShowFeatureChangesDialog?.Invoke(feature, selectedLayer.Fields);
             };
-
-            //selectedLayer.RequestSave = l =>
-            //{
-            //    l.Save();
-            //};
-
+             
             SelectedLayers.Add(selectedLayer);
 
             CurrentLayer = selectedLayer;
 
             if (selectedLayer.ShowSelectedOnMap)
             {
-                ShowSelectedFeatures(selectedLayer.GetSelectedFeatures(), selectedLayer.AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+                await ShowSelectedFeatures(selectedLayer.GetSelectedFeatures(), selectedLayer.AssociatedLayer?.DefaultSymbology?.StrokeThickness);
             }
         }
         else
@@ -1560,7 +1566,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             if (selectedLayer.ShowSelectedOnMap)
             {
-                ShowSelectedFeatures(selectedLayer.GetSelectedFeatures(), selectedLayer.AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+                await ShowSelectedFeatures(selectedLayer.GetSelectedFeatures(), selectedLayer.AssociatedLayer?.DefaultSymbology?.StrokeThickness);
             }
         }
 
@@ -1618,7 +1624,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    private async void ShowSelectedFeatures(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
+    private async Task ShowSelectedFeatures(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
     {
         ClearLayer(LayerType.Selection, true);
         ClearLayer(LayerType.Highlight, true);
@@ -1634,7 +1640,7 @@ public abstract class MapViewModelBase : ViewModelBase
             VisualParameters.GetDefaultForSelection(strokeThickness));
     }
 
-    private async void ShowHighlightedFeatures(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
+    private async Task ShowHighlightedFeatures(IEnumerable<Feature<Point>> enumerable, double? strokeThickness)
     {
         ClearLayer(LayerType.Highlight, true);
         //ClearLayer("__$highlight", true);
@@ -2735,7 +2741,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         if (selectedLayer != null)
         {
-            selectedLayer.UndoAllChanges();
+            await selectedLayer.UndoAllChangesAsync();
         }
         else
         {
@@ -4855,7 +4861,8 @@ public abstract class MapViewModelBase : ViewModelBase
                             RenderMode.Default,
                             RasterizationMethod.GdiPlus,
                             ScaleInterval.All,
-                            LegendViewModel.DefaultTocGroup) { IsSearchable = true });
+                            LegendViewModel.DefaultTocGroup)
+            { IsSearchable = true });
         }
         //catch (IOException)
         //{

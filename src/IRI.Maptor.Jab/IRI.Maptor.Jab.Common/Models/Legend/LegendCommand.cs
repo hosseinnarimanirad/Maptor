@@ -398,6 +398,8 @@ public class LegendCommand : LegendCommandBase
 
         result.Command = new RelayCommand(async param =>
         {
+            layer.IsBusy = true;
+
             var editResult = await map.EditAsync(layer.Geometry, map.MapSettings.EditingOptions);
 
             if (!(editResult.IsCanceled == true))
@@ -426,6 +428,10 @@ public class LegendCommand : LegendCommandBase
                 //    (layer.DataSource as IEditableVectorDataSource/*<Feature<Point>, Point>*/)?.Update(new Feature<Point>(editResult.Result) { Id = layer.Id });
                 //}
             }
+
+
+            layer.IsBusy = false;
+
         });
 
         return result;
