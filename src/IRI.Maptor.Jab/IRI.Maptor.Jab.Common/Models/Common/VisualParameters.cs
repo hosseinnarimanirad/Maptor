@@ -692,7 +692,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
     static readonly Brush _defaultDrawingStroke = BrushHelper.CreateBrush("#FF1CA1E2")!;
     static readonly Brush _defaultDrawingFill = BrushHelper.CreateBrush("#661CA1E2")!;
 
-    public static VisualParameters GetDefaultsForDrawOnMap()
+    private static VisualParameters GetDefaultsForDrawOnMap()
     {
         Brush _fill, _stroke;
 
@@ -720,7 +720,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
             _stroke = _defaultDrawingStroke;
         }
 
-        return new VisualParameters(_fill, _stroke, 4, 0.9);
+        return new VisualParameters(_fill, _stroke, 2, 0.9);
     }
 
     public static VisualParameters GetDefaultForMeasurements()
