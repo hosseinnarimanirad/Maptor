@@ -2297,7 +2297,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public async Task MoveLayerDown(ILayer? layer, ICollectionView? collectionView)
     {
-        if (layer is null || collectionView is null)
+        if (layer is null)
             return;
 
         if (layer is DrawingItemLayer dil)
@@ -2306,7 +2306,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
         else
         {
-            if (layer.Parent is null)
+            if (layer.Parent is null && collectionView is not null)
             {
                 await MoveLayerDown(collectionView.OfType<ILayer>().ToList(), layer);
             }
@@ -2336,7 +2336,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public async Task MoveLayerUp(ILayer? layer, ICollectionView? collectionView)
     {
-        if (layer is null || collectionView is null)
+        if (layer is null)
             return;
 
         //if (LegendViewModel.HasActiveFilter)
@@ -2348,7 +2348,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
         else
         {
-            if (layer.Parent is null)
+            if (layer.Parent is null && collectionView is not null)
             {
                 await MoveLayerUp(collectionView.OfType<ILayer>().ToList(), layer);
             }

@@ -64,6 +64,8 @@
 
     <converters:PointNumberConverter x:Key="pointNumberConverter"/>
 
+    <converters:RootItemsSourceConverter x:Key="rootItemsSourceConverter"/>
+
     <converters:SrsTypeToIconConverter x:Key="srsTypeToIconConverter"/>
     <converters:SrsTypeToDescriptionConverter x:Key="srsTypeToDescriptionConverter"/>
     <!--<converters:CountLessThanOneToBoolConverter x:Key="countLessThanOneToBoolConverter"/>-->

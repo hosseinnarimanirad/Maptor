@@ -128,6 +128,8 @@
                 </Style>
 
                 <Style TargetType="ScrollBar" BasedOn="{StaticResource  IRI.Maptor.Styles.ScrollBar}"/>
+
+                <CollectionViewSource x:Key="drawingItemsViewSource" Source="{Binding DrawingItems}" />
             </ResourceDictionary>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -228,7 +230,7 @@
               Stroke="{DynamicResource MahApps.Brushes.Highlight}" 
               Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"/>
 
-        <ListBox Grid.Row="2" ItemsSource="{Binding DrawingItems}" SelectionMode="Single" SelectedItem="{Binding SelectedDrawingItem, Mode=TwoWay}">
+        <ListBox Grid.Row="2" ItemsSource="{Binding Source={StaticResource drawingItemsViewSource}}" SelectionMode="Single" SelectedItem="{Binding SelectedDrawingItem, Mode=TwoWay}">
             <ListBox.ItemContainerStyle>
                 <!-- Style to get rid of the selection visual -->
                 <Style TargetType="{x:Type ListBoxItem}">
