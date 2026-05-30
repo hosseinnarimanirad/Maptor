@@ -127,7 +127,7 @@ public partial class MapLegendView : NotifiableUserControl
     }
 
     public static readonly DependencyProperty TocGroupProperty =
-        DependencyProperty.Register(nameof(TocGroup), typeof(string), typeof(MapLegendView), new PropertyMetadata("NORMAL"));
+        DependencyProperty.Register(nameof(TocGroup), typeof(string), typeof(MapLegendView), new PropertyMetadata(LegendViewModel.DefaultTocGroup));
 
 
     //public ObservableCollection<ILayer> Layers
@@ -148,25 +148,21 @@ public partial class MapLegendView : NotifiableUserControl
             e.Accepted = false;
             return;
         }
-
-        //if (!EnableFilterMode)
-        //{
-        //    e.Accepted = true;
-        //    return;
-        //}
-
+         
         if (string.IsNullOrWhiteSpace(this.TocGroup) ||
-            this.TocGroup.EqualsIgnoreCase(item.TocGroup))
+            !this.TocGroup.EqualsIgnoreCase(item.TocGroup))
         {
             e.Accepted = false;
             return;
         }
 
-        var passesTypeFilter = item.ShowInToc && (
+        var passesTypeFilter = /*item.ShowInToc && (*/
             (ShowVectorLayers && item.Type == LayerType.VectorLayer) ||
             (ShowRasterLayers && item.Type == LayerType.Raster) ||
             (ShowRasterLayers && item.Type == LayerType.ImagePyramid) ||
-            item.Type == LayerType.GroupLayer);
+            item.Type == LayerType.GroupLayer
+            //)
+            ;
 
         if (!passesTypeFilter)
         {
@@ -175,38 +171,7 @@ public partial class MapLegendView : NotifiableUserControl
         }
 
         e.Accepted = LegendViewModel.IsFilterPassedCached(item);
-
-        //var allowedKinds = LegendViewModel.GetAllowedDataSourceKinds();
-
-        //var passesKindFilter = item.IsGroupLayer
-        //    ? FilteredSubLayersConverter.HasDescendantWithAllowedDataSourceKind(item, allowedKinds)
-        //    : IsDataSourceKindAllowed(item, allowedKinds);
-
-        //var passesKindFilter = LegendViewModel.PassKindFilter(item);
-
-        //if (!passesKindFilter)
-        //{
-        //    e.Accepted = false;
-        //    return;
-        //}
-
-        //var passesLayerNameFilter = LegendViewModel.PassNameFilter(item);
-
-        //e.Accepted = passesLayerNameFilter;
-
-        //var filter = LegendViewModel.LayerNameFilterText?.Trim();
-
-        //if (string.IsNullOrEmpty(filter))
-        //{
-        //    e.Accepted = passesTypeFilter;
-        //    return;
-        //}
-
-        //if (item.IsGroupLayer)
-        //    e.Accepted = FilteredSubLayersConverter.HasMatchingDescendant(item, filter);
-
-        //else
-        //    e.Accepted = item.LayerName?.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0;
+         
     }
 
     //private static bool IsDataSourceKindAllowed(ILayer layer, List<DataSourceKind> allowedKinds)

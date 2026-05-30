@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Persistence.DataSources;
+using IRI.Maptor.Jab.Common.ViewModels.Map;
+using System;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 
@@ -15,6 +17,12 @@ public class GridLayer : SymbolizableLayer
     //public override BoundingBox Extent { get; protected set; }
 
     //public override RenderingApproach Rendering { get; protected set; }
+
+    public override string TocGroup
+    {
+        get => LegendViewModel.NoneTocGroup;
+        set => throw new NotImplementedException();
+    }
 
     public GeodeticGridDataSource DataSource { get; set; }
 

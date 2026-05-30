@@ -34,7 +34,7 @@ public static class NccRepository
             ScaleInterval.All,
             NccLayers.TocGroup)
         {
-            ShowInToc = false,
+            //ShowInToc = false,
             CanUserDelete = false,
             Visibility = System.Windows.Visibility.Collapsed
         };

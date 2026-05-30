@@ -68,7 +68,7 @@ public interface ILayer
 
     bool CanReorderInToc { get; }
 
-    bool ShowInToc { get; set; }
+    //bool ShowInToc { get; set; }
 
     int TocOrder { get; set; }
      

@@ -1,10 +1,7 @@
 ﻿using System;
 
 using IRI.Maptor.Sta.Common.Primitives;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using IRI.Maptor.Jab.Common.ViewModels.Map;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 
@@ -12,6 +9,11 @@ public class ActiveExtentLayer : BaseLayer
 {
     public override LayerType Type => LayerType.ActiveExtent;
 
+    public override string TocGroup
+    {
+        get => LegendViewModel.NoneTocGroup;
+        set => throw new NotImplementedException();
+    }
     //// check if it is needed
     //private BoundingBox _activeExtent;
     //public BoundingBox ActiveExtent

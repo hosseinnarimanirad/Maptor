@@ -1,14 +1,13 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Sta.Common.Enums;
-using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Jab.Common.Converters;
-using DocumentFormat.OpenXml.InkML;
-using System.Threading.Tasks;
+using IRI.Maptor.Jab.Common.Models.Legend;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 
@@ -16,11 +15,13 @@ public class LegendViewModel : Notifier
 {
     public const string DefaultTocGroup = "DEFAULT";
 
+    public const string NoneTocGroup = "None";
+
     private string _layerNameFilterText = string.Empty;
 
     private bool _triggerKindChanged = true;
 
-    private Dictionary<ILayer, bool> _filterCache = new();
+    //private Dictionary<ILayer, bool> _filterCache = new();
 
     private string _tocGroup = DefaultTocGroup;
     public string TocGroup
@@ -83,21 +84,15 @@ public class LegendViewModel : Notifier
 
     private void InvalidateFilterCache()
     {
-        _filterCache.Clear();
-        RequestRefreshView?.Invoke(); // now with cache cleared
+        RequestRefreshView?.Invoke(); 
     }
 
     public bool IsFilterPassedCached(ILayer layer)
     {
         if (layer == null) return false;
-
-        if (_filterCache.TryGetValue(layer, out bool cachedResult))
-            return cachedResult;
-
+         
         bool result = IsFilterPassed(layer);
-
-        _filterCache[layer] = result;
-
+         
         return result;
     }
 

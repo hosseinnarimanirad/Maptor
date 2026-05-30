@@ -370,16 +370,16 @@ public abstract class BaseLayer : Notifier, ILayer
         Type == LayerType.GroupLayer;
 
 
-    private bool _showInToc = true;
-    public bool ShowInToc
-    {
-        get { return _showInToc; }
-        set
-        {
-            _showInToc = value;
-            RaisePropertyChanged();
-        }
-    }
+    //private bool _showInToc = true;
+    //public bool ShowInToc
+    //{
+    //    get { return _showInToc; }
+    //    set
+    //    {
+    //        _showInToc = value;
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
 
     private int _tocOrder;
@@ -394,8 +394,8 @@ public abstract class BaseLayer : Notifier, ILayer
     }
  
 
-    private string _tocGroup = LegendViewModel.DefaultTocGroup;
-    public string TocGroup
+    protected string _tocGroup = LegendViewModel.DefaultTocGroup;
+    public virtual string TocGroup
     {
         get { return _tocGroup; }
         set

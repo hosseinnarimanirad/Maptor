@@ -1,36 +1,39 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Diagnostics;
 using System.Windows.Media;
 using System.Windows.Input;
-using System.Threading;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows.Media.Imaging;
+using System.Collections.ObjectModel;
 using WpfPoint = System.Windows.Point;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
+using IRI.Maptor.Sta.Pdf;
+using IRI.Maptor.Sta.KmlFormat;
+using IRI.Maptor.Sta.Spatial.Model;
+using IRI.Maptor.Sta.Spatial.IO.Dxf;
+using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Common.IO.Gpx;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Services;
-using IRI.Maptor.Sta.Spatial.Model;
+using IRI.Maptor.Sta.Common.Exceptions;
+using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Helpers;
+using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Sta.Spatial.IO.Dxf;
+using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.DataSources;
-using IRI.Maptor.Sta.Pdf;
+using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.RasterDataSources;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 using IRI.Maptor.Ket.GdiPersistence;
-using IRI.Maptor.Sta.KmlFormat;
-using IRI.Maptor.Sta.Common.IO.Gpx;
 
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Models;
@@ -42,14 +45,11 @@ using IRI.Maptor.Jab.Controls.MapMarkers;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Models.Settings;
-using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Localization;
-using IRI.Maptor.Sta.Common.Exceptions;
-using IRI.Maptor.Sta.Spatial.IO.EsriJson;
 using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Jab.Common.Data.Settings;
 using IRI.Maptor.Jab.Common.Services;
-using System.ComponentModel;
+
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
 public abstract class MapViewModelBase : ViewModelBase
@@ -427,9 +427,9 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         UpdateAllNonGroupLayers();
 
-        var newItems = e.NewItems?.OfType<ILayer>()?.Where(l => l.ShowInToc && l.CanReorderInToc) ?? Enumerable.Empty<ILayer>();
+        var newItems = e.NewItems?.OfType<ILayer>()?.Where(l => /*l.ShowInToc && */l.CanReorderInToc) ?? Enumerable.Empty<ILayer>();
 
-        var oldItems = e.OldItems?.OfType<ILayer>()?.Where(l => l.ShowInToc && l.CanReorderInToc) ?? Enumerable.Empty<ILayer>();
+        var oldItems = e.OldItems?.OfType<ILayer>()?.Where(l => /*l.ShowInToc && */l.CanReorderInToc) ?? Enumerable.Empty<ILayer>();
 
         var affectedGroups = newItems.Concat(oldItems)
                                      .Select(layer => layer.TocGroup)

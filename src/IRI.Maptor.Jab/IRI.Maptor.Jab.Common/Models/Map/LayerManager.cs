@@ -7,9 +7,8 @@ using System.Threading;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
-using IRI.Maptor.Sta.Ogc.WMS;
+using IRI.Maptor.Sta.Persistence.Abstractions;
 
 namespace IRI.Maptor.Jab.Common.Models;
 
@@ -24,8 +23,10 @@ public class LayerManager : Notifier
     /// </summary>
     public CancellationToken _loadCancellationToken { get; set; }
 
+    // flat structure
     private List<ILayer> _allLayers;
 
+    // hierarchical structure
     private ObservableCollection<ILayer> _currentLayers;
     public ObservableCollection<ILayer> CurrentLayers
     {
@@ -204,7 +205,9 @@ public class LayerManager : Notifier
 
     private void ArrangeTocOrder(LegendViewModel legendViewModel, ILayer layer)
     {
-        if (!layer.ShowInToc)
+        //if (!layer.ShowInToc)
+        //    return;
+        if (legendViewModel?.TocGroup != layer.TocGroup)
             return;
 
         var layers = layer.Parent != null ?
@@ -266,7 +269,7 @@ public class LayerManager : Notifier
     {
         ArrangeZIndex();
 
-        var newLayers = _allLayers.Where(l => l.VisibleRange.IsInRange(inverseMapScale) && l.RenderMode == rendering)
+        var newLayers = _allLayers.Where(l => /*l.VisibleRange.IsInRange(inverseMapScale) &&*/ l.RenderMode == rendering)
                                     .OrderByDescending(i => i.Type == LayerType.BaseMap)
                                     //.ThenByDescending(i => i.Type == LayerType.Raster)
                                     //.ThenByDescending(i => i.Type == LayerType.ImagePyramid)

@@ -12,6 +12,7 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Jab.Common.ViewModels.Map;
 
 
 namespace IRI.Maptor.Jab.Common.Layers;
@@ -60,6 +61,11 @@ public class TileServiceLayer : BaseLayer
 
     public bool IsOffline { get; set; }
 
+    public override string TocGroup
+    {
+        get => LegendViewModel.NoneTocGroup;
+        set => throw new NotImplementedException();
+    }
 
     public TileServiceLayer(TileMapProvider mapProvider, double opacity, Func<TileInfo, string>? getFileName = null)
     {
