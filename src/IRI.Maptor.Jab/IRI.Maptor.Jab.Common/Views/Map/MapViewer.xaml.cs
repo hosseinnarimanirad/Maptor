@@ -4023,7 +4023,11 @@ public partial class MapViewer : NotifiableUserControl
 
         if (bbox.Width == 0 || bbox.Height == 0)
         {
-            drawingTcs.TrySetCanceled();
+            //try to get drawing again
+            Subscribe_DrawingEvents_StartRectangleDrawing();
+
+            //drawingTcs.TrySetCanceled();
+
             return;
         }
 
