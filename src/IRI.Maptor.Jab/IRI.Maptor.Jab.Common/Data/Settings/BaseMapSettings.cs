@@ -37,7 +37,7 @@ public class BaseMapSettings : /*ValueObject, */IBaseMapSettings
         this.IsBaseMapCacheEnabled = true;
         this.BaseMapOpacity = 0.7;
 
-        this.SelectedTileMapAccessMode = TileMapAccessMode.ProxyApp;
+        this.SelectedTileMapAccessMode = TileMapAccessMode.Internet;
 
         this.MapProviders = TileMapProviderFactory.GetDefault();
 

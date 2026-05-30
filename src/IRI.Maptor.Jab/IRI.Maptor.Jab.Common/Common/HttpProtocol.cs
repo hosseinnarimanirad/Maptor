@@ -14,17 +14,19 @@ public class HttpProtocol : IHttpProtocol
     {
         _httpClient = httpClient;
     }
-     
+
     public void ConfigHttpClient(ProxySettingsModel? model)
     {
         var proxy = model?.GetProxy();
+
+        var timeout = model?.TimeOutInSeconds ?? 15;
 
         if (proxy?.Address != null)
         {
             HttpClientHandler handler = new HttpClientHandler();
             handler.Proxy = proxy;
             handler.UseProxy = true;
-            _httpClient = new HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: 10) };
+            _httpClient = new HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: timeout) };
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "app!");
         }
         else
@@ -32,7 +34,7 @@ public class HttpProtocol : IHttpProtocol
             HttpClientHandler handler = new HttpClientHandler();
             handler.Proxy = null;
             handler.UseProxy = false;
-            _httpClient = new HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: 10) };
+            _httpClient = new HttpClient(handler) { Timeout = new TimeSpan(0, 0, seconds: timeout) };
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "app!");
         }
     }

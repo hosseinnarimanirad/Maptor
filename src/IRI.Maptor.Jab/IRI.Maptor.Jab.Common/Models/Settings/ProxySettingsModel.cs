@@ -68,6 +68,17 @@ public class ProxySettingsModel : Notifier, IProxySettings
         }
     }
 
+    private int _timeOutInSeconds = 30;
+    public int TimeOutInSeconds
+    {
+        get { return _timeOutInSeconds; }
+        set
+        {
+            _timeOutInSeconds = value;
+            RaisePropertyChanged();
+        }
+    }
+
 
     public ProxySettingsModel(IProxySettings settings/*, Action<ProxySettingsModel> fireProxyChanged*/)
     {
