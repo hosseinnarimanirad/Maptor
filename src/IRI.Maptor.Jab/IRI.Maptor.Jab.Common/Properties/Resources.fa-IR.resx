@@ -1656,4 +1656,7 @@
   <data name="mapPanel_currentPoint_linkToMouseMove" xml:space="preserve">
     <value>لینک مختصات جاری به موقعیت موس روی نقشه</value>
   </data>
+  <data name="dialog_msg_confirmDeleteFeatures" xml:space="preserve">
+    <value>حذف عوارض انتخابی</value>
+  </data>
 </root>

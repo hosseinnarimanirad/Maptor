@@ -410,28 +410,78 @@ public class SelectedLayer : Notifier
 
     private async Task DeleteAsync()
     {
-        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
-
-        if (dataSource is null || HighlightedFeatures?.Count < 1)
-            return;
-
-        var toRemove = HighlightedFeatures.ToList();
-
-        foreach (var feature in toRemove)
+        try
         {
-            dataSource.Remove(feature);
-            RefreshFeatureInView(feature);
+            System.Diagnostics.Trace.WriteLine("#********************************** DeleteAsync **********************************");
+
+            var message = IRI.Maptor.Jab.Common.Properties.Resources.dialog_msg_confirmDeleteFeatures;
+
+            if (await _dialogService.ShowYesNoDialogAsync(message) == false)
+                return;
+
+            this.AssociatedLayer.IsBusy = true;
+
+            var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
+            if (dataSource is null || HighlightedFeatures?.Count < 1)
+                return;
+
+            var toRemove = HighlightedFeatures.ToList();
+
+            System.Diagnostics.Trace.WriteLine("#DeleteAsync  before remove from datasource");
+
+            foreach (var feature in toRemove)
+            {
+                dataSource.Remove(feature);
+                //RefreshFeatureInView(feature);
+            }
+
+            System.Diagnostics.Trace.WriteLine("#DeleteAsync  after remove from datasource");
+
+            await DispatcherInvokeAsync(() =>
+            {
+                if (Features != null)
+                {
+                    var view = System.Windows.Data.CollectionViewSource.GetDefaultView(Features);
+                    view?.Refresh();
+                }
+            });
+
+            System.Diagnostics.Trace.WriteLine("#DeleteAsync  after DispatcherInvokeAsync");
+
+            HighlightedFeatures.Clear();
+
+            System.Diagnostics.Trace.WriteLine("#DeleteAsync  after HighlightedFeatures.Clear");
+
+            //foreach (var feature in toRemove)
+            //    HighlightedFeatures.Remove(feature);
+
+            NotifyAll();
+
+            System.Diagnostics.Trace.WriteLine("#DeleteAsync  after NotifyAll");
+
+            RequestRefreshLayer?.Invoke(AssociatedLayer);
+
+            System.Diagnostics.Trace.WriteLine("#DeleteAsync  after RequestRefreshLayer");
+
+            await RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+
+            System.Diagnostics.Trace.WriteLine("#DeleteAsync  after RefreshSelectedFeaturesOnMap");
+
         }
-
-        foreach (var feature in toRemove)
-            HighlightedFeatures.Remove(feature);
-
-        NotifyAll();
-
-        RequestRefreshLayer?.Invoke(AssociatedLayer);
-
-        await RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
-
+        catch (DomainException ex)
+        {
+            await _dialogService.ShowErrorMessage(ex);
+        }
+        catch(Exception ex)
+        {
+            
+        }
+        finally
+        { 
+            this.AssociatedLayer.IsBusy = false;
+        }
+         
     }
 
     private async Task EditAsync()

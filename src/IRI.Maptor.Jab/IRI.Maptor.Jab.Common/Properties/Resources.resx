@@ -1703,4 +1703,7 @@
   <data name="mapPanel_currentPoint_linkToMouseMove" xml:space="preserve">
     <value>Link to mouse position on map</value>
   </data>
+  <data name="dialog_msg_confirmDeleteFeatures" xml:space="preserve">
+    <value>Deleting Features</value>
+  </data>
 </root>

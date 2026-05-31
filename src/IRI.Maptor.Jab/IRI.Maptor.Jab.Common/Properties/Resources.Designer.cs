@@ -1519,6 +1519,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deleting Features.
+        /// </summary>
+        public static string dialog_msg_confirmDeleteFeatures {
+            get {
+                return ResourceManager.GetString("dialog_msg_confirmDeleteFeatures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pending changes to layers will be discarded.
         /// </summary>
         public static string dialog_msg_discardPendingChanges {
