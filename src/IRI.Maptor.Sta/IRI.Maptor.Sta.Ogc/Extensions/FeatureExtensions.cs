@@ -4,6 +4,8 @@ using System.Globalization;
 using IRI.Maptor.Sta.KmlFormat;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Extensions;
 
@@ -20,9 +22,13 @@ public static class FeatureExtensions
             return null;
         }
 
+        var geometry = feature.TheGeometry.Srid == SridHelper.GeodeticWGS84
+            ? feature.TheGeometry
+            : feature.TheGeometry.Project(SrsBases.GeodeticWgs84);
+
         var kmlFeature = new KmlFeature
         {
-            Geometry = feature.TheGeometry,
+            Geometry = geometry,
             Id = feature.Id.ToString(CultureInfo.InvariantCulture),
             Attributes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         };

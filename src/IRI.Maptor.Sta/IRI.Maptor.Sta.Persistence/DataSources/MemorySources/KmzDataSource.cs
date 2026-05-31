@@ -39,7 +39,7 @@ public class KmzDataSource : MemoryDataSource
     { 
         var kmlFeatures = _webMercatorFeatureSet.Features.ToKmlFeatures();
 
-        await KmzWriter.WriteToFileAsync(kmlFeatures, _fileName, null, MapProjects.WebMercatorToGeodeticWgs84);
+        await KmzWriter.WriteToFileAsync(kmlFeatures, _fileName);
 
         _webMercatorFeatureSet.ApplyChanges();
 

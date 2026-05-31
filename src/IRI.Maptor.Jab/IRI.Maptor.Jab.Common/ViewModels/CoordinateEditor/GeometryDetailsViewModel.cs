@@ -17,6 +17,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
@@ -257,7 +258,10 @@ public class GeometryDetailsViewModel : Notifier
                 case "KML":
                     if (_geometry is Geometry<Point> geom)
                     {
-                        StringRepresentation = geom.AsKml() ?? string.Empty;
+                        var kmlGeometry = geom.Srid == SridHelper.GeodeticWGS84
+                            ? geom
+                            : geom.Project(SrsBases.GeodeticWgs84);
+                        StringRepresentation = kmlGeometry.AsKml() ?? string.Empty;
                     }
                     else
                     {

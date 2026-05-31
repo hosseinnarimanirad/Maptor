@@ -37,7 +37,7 @@ public class KmlDataSource : MemoryDataSource
     {
         var kmlFeatures = _webMercatorFeatureSet.Features.ToKmlFeatures();
 
-        await KmlWriter.WriteToFileAsync(kmlFeatures, _fileName, null, MapProjects.WebMercatorToGeodeticWgs84);
+        await KmlWriter.WriteToFileAsync(kmlFeatures, _fileName);
 
         _webMercatorFeatureSet.ApplyChanges();
 

@@ -29,15 +29,13 @@ public static class KmzWriter
     /// <param name="kmzFilePath">Path to the output KMZ file</param>
     /// <param name="name">Feature name</param>
     /// <param name="description">Feature description</param>
-    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
     public static void WriteToFile(
         Geometry<Point> geometry,
         string kmzFilePath,
         string? name = null,
-        string? description = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? description = null)
     {
-        var kmlString = KmlWriter.ToKml(geometry, name, description, projectToGeodeticFunc);
+        var kmlString = KmlWriter.ToKml(geometry, name, description);
 
         WriteKmlToKmz(kmzFilePath, kmlString, DefaultKmlFileName);
     }
@@ -49,15 +47,13 @@ public static class KmzWriter
     /// <param name="kmzFilePath">Path to the output KMZ file</param>
     /// <param name="name">Feature name</param>
     /// <param name="description">Feature description</param>
-    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
     public static void WriteToFile(
         Geometry<PointZ> geometry,
         string kmzFilePath,
         string? name = null,
-        string? description = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? description = null)
     {
-        var kmlString = KmlWriter.ToKml(geometry, name, description, projectToGeodeticFunc);
+        var kmlString = KmlWriter.ToKml(geometry, name, description);
         WriteKmlToKmz(kmzFilePath, kmlString, DefaultKmlFileName);
     }
 
@@ -68,15 +64,13 @@ public static class KmzWriter
     /// <param name="kmzFilePath">Path to the output KMZ file</param>
     /// <param name="name">Feature name</param>
     /// <param name="description">Feature description</param>
-    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
     public static void WriteToFile(
         IGeometry geometry,
         string kmzFilePath,
         string? name = null,
-        string? description = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? description = null)
     {
-        var kmlString = KmlWriter.ToKml(geometry, name, description, projectToGeodeticFunc);
+        var kmlString = KmlWriter.ToKml(geometry, name, description);
         WriteKmlToKmz(kmzFilePath, kmlString, DefaultKmlFileName);
     }
 
@@ -154,14 +148,12 @@ public static class KmzWriter
     /// <param name="geometries">List of geometries to write</param>
     /// <param name="kmzFilePath">Path to the output KMZ file</param>
     /// <param name="documentName">Document name</param>
-    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
     public static async Task WriteToFileAsync(
         List<Geometry<Point>> geometries,
         string kmzFilePath,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? documentName = null)
     {
-        var kmlString = KmlWriter.ToKml(geometries, documentName, projectToGeodeticFunc);
+        var kmlString = KmlWriter.ToKml(geometries, documentName);
         await WriteKmlToKmzAsync(kmzFilePath, kmlString, DefaultKmlFileName);
     }
 
@@ -171,14 +163,12 @@ public static class KmzWriter
     /// <param name="geometries">List of geometries with Z values to write</param>
     /// <param name="kmzFilePath">Path to the output KMZ file</param>
     /// <param name="documentName">Document name</param>
-    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
     public static async Task WriteToFileAsync(
         List<Geometry<PointZ>> geometries,
         string kmzFilePath,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? documentName = null)
     {
-        var kmlString = KmlWriter.ToKml(geometries, documentName, projectToGeodeticFunc);
+        var kmlString = KmlWriter.ToKml(geometries, documentName);
         await WriteKmlToKmzAsync(kmzFilePath, kmlString, DefaultKmlFileName);
     }
 
@@ -188,14 +178,12 @@ public static class KmzWriter
     /// <param name="geometries">List of geometries to write (supports both 2D and 3D)</param>
     /// <param name="kmzFilePath">Path to the output KMZ file</param>
     /// <param name="documentName">Document name</param>
-    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
     public static async Task WriteToFileAsync(
         List<IGeometry> geometries,
         string kmzFilePath,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? documentName = null)
     {
-        var kmlString = KmlWriter.ToKml(geometries, documentName, projectToGeodeticFunc);
+        var kmlString = KmlWriter.ToKml(geometries, documentName);
         await WriteKmlToKmzAsync(kmzFilePath, kmlString, DefaultKmlFileName);
     }
 
@@ -205,14 +193,12 @@ public static class KmzWriter
     /// <param name="features">List of features to write</param>
     /// <param name="kmzFilePath">Path to the output KMZ file</param>
     /// <param name="documentName">Document name</param>
-    /// <param name="projectToGeodeticFunc">Optional function to project coordinates to WGS84</param>
     public static async Task WriteToFileAsync(
         List<KmlFeature> features,
         string kmzFilePath,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? documentName = null)
     {
-        var kmlString = KmlWriter.ToKml(features, documentName, projectToGeodeticFunc);
+        var kmlString = KmlWriter.ToKml(features, documentName);
         await WriteKmlToKmzAsync(kmzFilePath, kmlString, DefaultKmlFileName);
     }
 

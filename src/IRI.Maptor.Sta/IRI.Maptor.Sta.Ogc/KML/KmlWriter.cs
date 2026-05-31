@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using IRI.Maptor.Extensions;
@@ -11,6 +10,7 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Sta.KmlFormat;
 
@@ -32,10 +32,9 @@ public static class KmlWriter
         Geometry<Point> geometry,
         string filePath,
         string? name = null,
-        string? description = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? description = null)
     {
-        var kmlString = ToKml(geometry, name, description, projectToGeodeticFunc);
+        var kmlString = ToKml(geometry, name, description);
 
         await File.WriteAllTextAsync(filePath, kmlString);
     }
@@ -46,10 +45,9 @@ public static class KmlWriter
     public static async Task WriteToFileAsync(
         List<KmlFeature> features,
         string filePath,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? documentName = null)
     {
-        var kmlString = ToKml(features, documentName, projectToGeodeticFunc);
+        var kmlString = ToKml(features, documentName);
 
         await File.WriteAllTextAsync(filePath, kmlString);
     }
@@ -60,10 +58,9 @@ public static class KmlWriter
     public static async Task WriteToFileAsync(
         List<Geometry<Point>> geometries,
         string filePath,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? documentName = null)
     {
-        var kmlString = ToKml(geometries, documentName, projectToGeodeticFunc);
+        var kmlString = ToKml(geometries, documentName);
 
         await File.WriteAllTextAsync(filePath, kmlString);
     }
@@ -78,16 +75,17 @@ public static class KmlWriter
     public static string ToKml(
         Geometry<Point> geometry,
         string? name = null,
-        string? description = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? description = null)
     {
+        EnsureGeodeticWgs84(geometry);
+
         XNamespace kml = KmlNamespace;
 
         var kmlDoc = new XDocument(
             new XDeclaration("1.0", "UTF-8", null),
             new XElement(kml + "kml",
                 new XElement(kml + "Document",
-                    CreatePlacemarkElement(geometry, name, description, projectToGeodeticFunc, kml)
+                    CreatePlacemarkElement(geometry, name, description, kml)
                 )
             )
         );
@@ -101,16 +99,17 @@ public static class KmlWriter
     public static string ToKml(
         Geometry<PointZ> geometry,
         string? name = null,
-        string? description = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? description = null)
     {
+        EnsureGeodeticWgs84(geometry);
+
         XNamespace kml = KmlNamespace;
 
         var kmlDoc = new XDocument(
             new XDeclaration("1.0", "UTF-8", null),
             new XElement(kml + "kml",
                 new XElement(kml + "Document",
-                    CreatePlacemarkElementFromPointZ(geometry, name, description, projectToGeodeticFunc, kml)
+                    CreatePlacemarkElementFromPointZ(geometry, name, description, kml)
                 )
             )
         );
@@ -124,13 +123,12 @@ public static class KmlWriter
     public static string ToKml(
         IGeometry geometry,
         string? name = null,
-        string? description = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? description = null)
     {
         return geometry switch
         {
-            Geometry<PointZ> gz => ToKml(gz, name, description, projectToGeodeticFunc),
-            Geometry<Point> g => ToKml(g, name, description, projectToGeodeticFunc),
+            Geometry<PointZ> gz => ToKml(gz, name, description),
+            Geometry<Point> g => ToKml(g, name, description),
             _ => throw new NotSupportedException($"Unsupported geometry type: {geometry.GetType()}")
         };
     }
@@ -140,13 +138,17 @@ public static class KmlWriter
     /// </summary>
     public static string ToKml(
         List<Geometry<Point>> geometries,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? documentName = null)
     {
+        foreach (var geometry in geometries)
+        {
+            EnsureGeodeticWgs84(geometry);
+        }
+
         XNamespace kml = KmlNamespace;
 
         var placemarks = geometries.Select((g, index) =>
-            CreatePlacemarkElement(g, $"Feature {index + 1}", null, projectToGeodeticFunc, kml)).ToArray();
+            CreatePlacemarkElement(g, $"Feature {index + 1}", null, kml)).ToArray();
 
         var document = new XElement(kml + "Document", placemarks);
 
@@ -168,13 +170,17 @@ public static class KmlWriter
     /// </summary>
     public static string ToKml(
         List<Geometry<PointZ>> geometries,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? documentName = null)
     {
+        foreach (var geometry in geometries)
+        {
+            EnsureGeodeticWgs84(geometry);
+        }
+
         XNamespace kml = KmlNamespace;
 
         var placemarks = geometries.Select((g, index) =>
-            CreatePlacemarkElementFromPointZ(g, $"Feature {index + 1}", null, projectToGeodeticFunc, kml)).ToArray();
+            CreatePlacemarkElementFromPointZ(g, $"Feature {index + 1}", null, kml)).ToArray();
 
         var document = new XElement(kml + "Document", placemarks);
 
@@ -196,8 +202,7 @@ public static class KmlWriter
     /// </summary>
     public static string ToKml(
         List<IGeometry> geometries,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? documentName = null)
     {
         XNamespace kml = KmlNamespace;
 
@@ -205,8 +210,8 @@ public static class KmlWriter
         {
             return g switch
             {
-                Geometry<PointZ> gz => CreatePlacemarkElementFromPointZ(gz, $"Feature {index + 1}", null, projectToGeodeticFunc, kml),
-                Geometry<Point> gp => CreatePlacemarkElement(gp, $"Feature {index + 1}", null, projectToGeodeticFunc, kml),
+                Geometry<PointZ> gz => CreatePlacemarkElementFromPointZ(gz, $"Feature {index + 1}", null, kml),
+                Geometry<Point> gp => CreatePlacemarkElement(gp, $"Feature {index + 1}", null, kml),
                 _ => throw new NotSupportedException($"Unsupported geometry type: {g.GetType()}")
             };
         }).ToArray();
@@ -231,13 +236,20 @@ public static class KmlWriter
     /// </summary>
     public static string ToKml(
         List<KmlFeature> features,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? documentName = null)
     {
+        foreach (var feature in features)
+        {
+            if (feature.Geometry != null)
+            {
+                EnsureGeodeticWgs84(feature.Geometry);
+            }
+        }
+
         XNamespace kml = KmlNamespace;
 
         var placemarks = features.Select(f =>
-            CreatePlacemarkFromFeature(f, projectToGeodeticFunc, kml)).ToArray();
+            CreatePlacemarkFromFeature(f, kml)).ToArray();
 
         var document = new XElement(kml + "Document");
 
@@ -266,15 +278,22 @@ public static class KmlWriter
     /// </summary>
     public static string ToKmlWithFolders(
         Dictionary<string, List<Geometry<Point>>> folders,
-        string? documentName = null,
-        Func<Point, Point>? projectToGeodeticFunc = null)
+        string? documentName = null)
     {
+        foreach (var geometries in folders.Values)
+        {
+            foreach (var geometry in geometries)
+            {
+                EnsureGeodeticWgs84(geometry);
+            }
+        }
+
         XNamespace kml = KmlNamespace;
 
         var folderElements = folders.Select(kvp =>
         {
             var placemarks = kvp.Value.Select((g, index) =>
-                CreatePlacemarkElement(g, $"Feature {index + 1}", null, projectToGeodeticFunc, kml)).ToArray();
+                CreatePlacemarkElement(g, $"Feature {index + 1}", null, kml)).ToArray();
 
             return new XElement(kml + "Folder",
                 new XElement(kml + "name", kvp.Key),
@@ -298,15 +317,35 @@ public static class KmlWriter
 
     #endregion
 
+    #region Private Helper Methods - SRID Validation
+
+    private static void EnsureGeodeticWgs84<T>(Geometry<T> geometry) where T : IPoint, new()
+    {
+        if (geometry == null || geometry.IsNullOrEmpty())
+        {
+            return;
+        }
+
+        if (geometry.Srid != SridHelper.GeodeticWGS84)
+        {
+            throw new ArgumentException(
+                $"Geometry must be in WGS84 (SRID {SridHelper.GeodeticWGS84}), but was {geometry.Srid}.",
+                nameof(geometry));
+        }
+    }
+
+    #endregion
+
     #region Private Helper Methods - Placemark Creation
 
     private static XElement CreatePlacemarkElement(
         Geometry<Point> geometry,
         string? name,
         string? description,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
+        EnsureGeodeticWgs84(geometry);
+
         var placemark = new XElement(kml + "Placemark");
 
         if (!string.IsNullOrWhiteSpace(name))
@@ -319,7 +358,7 @@ public static class KmlWriter
             placemark.Add(new XElement(kml + "description", description));
         }
 
-        var geometryElement = CreateGeometryElement(geometry, projectToGeodeticFunc, kml);
+        var geometryElement = CreateGeometryElement(geometry, kml);
         if (geometryElement != null)
         {
             placemark.Add(geometryElement);
@@ -332,9 +371,10 @@ public static class KmlWriter
         Geometry<PointZ> geometry,
         string? name,
         string? description,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
+        EnsureGeodeticWgs84(geometry);
+
         var placemark = new XElement(kml + "Placemark");
 
         if (!string.IsNullOrWhiteSpace(name))
@@ -347,7 +387,7 @@ public static class KmlWriter
             placemark.Add(new XElement(kml + "description", description));
         }
 
-        var geometryElement = CreateGeometryElementFromPointZ(geometry, projectToGeodeticFunc, kml);
+        var geometryElement = CreateGeometryElementFromPointZ(geometry, kml);
         if (geometryElement != null)
         {
             placemark.Add(geometryElement);
@@ -358,7 +398,6 @@ public static class KmlWriter
 
     private static XElement CreatePlacemarkFromFeature(
         KmlFeature feature,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
         var placemark = new XElement(kml + "Placemark");
@@ -387,7 +426,7 @@ public static class KmlWriter
                 new XElement(kml + "SchemaData", simpleDataElements)));
         }
 
-        var geometryElement = CreateGeometryElement(feature.Geometry, projectToGeodeticFunc, kml);
+        var geometryElement = CreateGeometryElement(feature.Geometry, kml);
         if (geometryElement != null)
         {
             placemark.Add(geometryElement);
@@ -555,7 +594,6 @@ public static class KmlWriter
 
     private static XElement? CreateGeometryElement(
         Geometry<Point> geometry,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
         if (geometry == null || geometry.IsNullOrEmpty())
@@ -563,20 +601,19 @@ public static class KmlWriter
 
         return geometry.Type switch
         {
-            GeometryType.Point => CreatePointElement(geometry, projectToGeodeticFunc, kml),
-            GeometryType.LineString => CreateLineStringElement(geometry, projectToGeodeticFunc, kml),
-            GeometryType.Polygon => CreatePolygonElement(geometry, projectToGeodeticFunc, kml),
-            GeometryType.MultiPoint => CreateMultiGeometryElement(geometry, projectToGeodeticFunc, kml),
-            GeometryType.MultiLineString => CreateMultiGeometryElement(geometry, projectToGeodeticFunc, kml),
-            GeometryType.MultiPolygon => CreateMultiGeometryElement(geometry, projectToGeodeticFunc, kml),
-            GeometryType.GeometryCollection => CreateMultiGeometryElement(geometry, projectToGeodeticFunc, kml),
+            GeometryType.Point => CreatePointElement(geometry, kml),
+            GeometryType.LineString => CreateLineStringElement(geometry, kml),
+            GeometryType.Polygon => CreatePolygonElement(geometry, kml),
+            GeometryType.MultiPoint => CreateMultiGeometryElement(geometry, kml),
+            GeometryType.MultiLineString => CreateMultiGeometryElement(geometry, kml),
+            GeometryType.MultiPolygon => CreateMultiGeometryElement(geometry, kml),
+            GeometryType.GeometryCollection => CreateMultiGeometryElement(geometry, kml),
             _ => null
         };
     }
 
     private static XElement? CreateGeometryElementFromPointZ(
         Geometry<PointZ> geometry,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
         if (geometry == null || geometry.IsNullOrEmpty())
@@ -584,30 +621,25 @@ public static class KmlWriter
 
         return geometry.Type switch
         {
-            GeometryType.Point => CreatePointElementFromPointZ(geometry, projectToGeodeticFunc, kml),
-            GeometryType.LineString => CreateLineStringElementFromPointZ(geometry, projectToGeodeticFunc, kml),
-            GeometryType.Polygon => CreatePolygonElementFromPointZ(geometry, projectToGeodeticFunc, kml),
-            GeometryType.MultiPoint => CreateMultiGeometryElementFromPointZ(geometry, projectToGeodeticFunc, kml),
-            GeometryType.MultiLineString => CreateMultiGeometryElementFromPointZ(geometry, projectToGeodeticFunc, kml),
-            GeometryType.MultiPolygon => CreateMultiGeometryElementFromPointZ(geometry, projectToGeodeticFunc, kml),
-            GeometryType.GeometryCollection => CreateMultiGeometryElementFromPointZ(geometry, projectToGeodeticFunc, kml),
+            GeometryType.Point => CreatePointElementFromPointZ(geometry, kml),
+            GeometryType.LineString => CreateLineStringElementFromPointZ(geometry, kml),
+            GeometryType.Polygon => CreatePolygonElementFromPointZ(geometry, kml),
+            GeometryType.MultiPoint => CreateMultiGeometryElementFromPointZ(geometry, kml),
+            GeometryType.MultiLineString => CreateMultiGeometryElementFromPointZ(geometry, kml),
+            GeometryType.MultiPolygon => CreateMultiGeometryElementFromPointZ(geometry, kml),
+            GeometryType.GeometryCollection => CreateMultiGeometryElementFromPointZ(geometry, kml),
             _ => null
         };
     }
 
     private static XElement CreatePointElement(
         Geometry<Point> geometry,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
         if (geometry.Points == null || geometry.Points.Count == 0)
             return new XElement(kml + "Point");
 
         var point = geometry.Points[0];
-        if (projectToGeodeticFunc != null)
-        {
-            point = projectToGeodeticFunc(point);
-        }
 
         return new XElement(kml + "Point",
             new XElement(kml + "coordinates", FormatCoordinate(point)));
@@ -615,25 +647,17 @@ public static class KmlWriter
 
     private static XElement CreateLineStringElement(
         Geometry<Point> geometry,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
         if (geometry.Points == null || geometry.Points.Count == 0)
             return new XElement(kml + "LineString");
 
-        var points = geometry.Points;
-        if (projectToGeodeticFunc != null)
-        {
-            points = points.Select(projectToGeodeticFunc).ToList();
-        }
-
         return new XElement(kml + "LineString",
-            new XElement(kml + "coordinates", FormatCoordinates(points, isRing: false)));
+            new XElement(kml + "coordinates", FormatCoordinates(geometry.Points, isRing: false)));
     }
 
     private static XElement CreatePolygonElement(
         Geometry<Point> geometry,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
         if (geometry.Geometries == null || geometry.Geometries.Count == 0)
@@ -645,15 +669,9 @@ public static class KmlWriter
         var outerRing = geometry.Geometries[0];
         if (outerRing.Points != null && outerRing.Points.Count > 0)
         {
-            var points = outerRing.Points;
-            if (projectToGeodeticFunc != null)
-            {
-                points = points.Select(projectToGeodeticFunc).ToList();
-            }
-
             polygon.Add(new XElement(kml + "outerBoundaryIs",
                 new XElement(kml + "LinearRing",
-                    new XElement(kml + "coordinates", FormatCoordinates(points, isRing: true)))));
+                    new XElement(kml + "coordinates", FormatCoordinates(outerRing.Points, isRing: true)))));
         }
 
         // Inner boundaries (holes)
@@ -664,15 +682,9 @@ public static class KmlWriter
                 var innerRing = geometry.Geometries[i];
                 if (innerRing.Points != null && innerRing.Points.Count > 0)
                 {
-                    var points = innerRing.Points;
-                    if (projectToGeodeticFunc != null)
-                    {
-                        points = points.Select(projectToGeodeticFunc).ToList();
-                    }
-
                     polygon.Add(new XElement(kml + "innerBoundaryIs",
                         new XElement(kml + "LinearRing",
-                            new XElement(kml + "coordinates", FormatCoordinates(points, isRing: true)))));
+                            new XElement(kml + "coordinates", FormatCoordinates(innerRing.Points, isRing: true)))));
                 }
             }
         }
@@ -682,14 +694,13 @@ public static class KmlWriter
 
     private static XElement CreateMultiGeometryElement(
         Geometry<Point> geometry,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
         if (geometry.Geometries == null || geometry.Geometries.Count == 0)
             return new XElement(kml + "MultiGeometry");
 
         var geometryElements = geometry.Geometries
-            .Select(g => CreateGeometryElement(g, projectToGeodeticFunc, kml))
+            .Select(g => CreateGeometryElement(g, kml))
             .Where(g => g != null)
             .ToArray();
 
@@ -698,27 +709,12 @@ public static class KmlWriter
 
     private static XElement CreatePointElementFromPointZ(
         Geometry<PointZ> geometry,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
         if (geometry.Points == null || geometry.Points.Count == 0)
             return new XElement(kml + "Point");
 
         var pointZ = geometry.Points[0];
-        Point point = pointZ;
-        if (projectToGeodeticFunc != null)
-        {
-            point = projectToGeodeticFunc(point);
-            // If projection function returns a PointZ, use it; otherwise create PointZ from original Z
-            if (point is PointZ projectedPointZ)
-            {
-                pointZ = projectedPointZ;
-            }
-            else
-            {
-                pointZ = new PointZ { X = point.X, Y = point.Y, Z = pointZ.Z };
-            }
-        }
 
         return new XElement(kml + "Point",
             new XElement(kml + "coordinates", FormatCoordinate(pointZ)));
@@ -726,31 +722,17 @@ public static class KmlWriter
 
     private static XElement CreateLineStringElementFromPointZ(
         Geometry<PointZ> geometry,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
         if (geometry.Points == null || geometry.Points.Count == 0)
             return new XElement(kml + "LineString");
 
-        var pointsZ = geometry.Points;
-        if (projectToGeodeticFunc != null)
-        {
-            pointsZ = pointsZ.Select(pz =>
-            {
-                Point projected = projectToGeodeticFunc(pz);
-                if (projected is PointZ projectedPz)
-                    return projectedPz;
-                return new PointZ { X = projected.X, Y = projected.Y, Z = pz.Z };
-            }).ToList();
-        }
-
         return new XElement(kml + "LineString",
-            new XElement(kml + "coordinates", FormatCoordinates(pointsZ, isRing: false)));
+            new XElement(kml + "coordinates", FormatCoordinates(geometry.Points, isRing: false)));
     }
 
     private static XElement CreatePolygonElementFromPointZ(
         Geometry<PointZ> geometry,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
         if (geometry.Geometries == null || geometry.Geometries.Count == 0)
@@ -762,21 +744,9 @@ public static class KmlWriter
         var outerRing = geometry.Geometries[0];
         if (outerRing.Points != null && outerRing.Points.Count > 0)
         {
-            var pointsZ = outerRing.Points;
-            if (projectToGeodeticFunc != null)
-            {
-                pointsZ = pointsZ.Select(pz =>
-                {
-                    Point projected = projectToGeodeticFunc(pz);
-                    if (projected is PointZ projectedPz)
-                        return projectedPz;
-                    return new PointZ { X = projected.X, Y = projected.Y, Z = pz.Z };
-                }).ToList();
-            }
-
             polygon.Add(new XElement(kml + "outerBoundaryIs",
                 new XElement(kml + "LinearRing",
-                    new XElement(kml + "coordinates", FormatCoordinates(pointsZ, isRing: true)))));
+                    new XElement(kml + "coordinates", FormatCoordinates(outerRing.Points, isRing: true)))));
         }
 
         // Inner boundaries (holes)
@@ -787,21 +757,9 @@ public static class KmlWriter
                 var innerRing = geometry.Geometries[i];
                 if (innerRing.Points != null && innerRing.Points.Count > 0)
                 {
-                    var pointsZ = innerRing.Points;
-                    if (projectToGeodeticFunc != null)
-                    {
-                        pointsZ = pointsZ.Select(pz =>
-                        {
-                            Point projected = projectToGeodeticFunc(pz);
-                            if (projected is PointZ projectedPz)
-                                return projectedPz;
-                            return new PointZ { X = projected.X, Y = projected.Y, Z = pz.Z };
-                        }).ToList();
-                    }
-
                     polygon.Add(new XElement(kml + "innerBoundaryIs",
                         new XElement(kml + "LinearRing",
-                            new XElement(kml + "coordinates", FormatCoordinates(pointsZ, isRing: true)))));
+                            new XElement(kml + "coordinates", FormatCoordinates(innerRing.Points, isRing: true)))));
                 }
             }
         }
@@ -811,14 +769,13 @@ public static class KmlWriter
 
     private static XElement CreateMultiGeometryElementFromPointZ(
         Geometry<PointZ> geometry,
-        Func<Point, Point>? projectToGeodeticFunc,
         XNamespace kml)
     {
         if (geometry.Geometries == null || geometry.Geometries.Count == 0)
             return new XElement(kml + "MultiGeometry");
 
         var geometryElements = geometry.Geometries
-            .Select(g => CreateGeometryElementFromPointZ(g, projectToGeodeticFunc, kml))
+            .Select(g => CreateGeometryElementFromPointZ(g, kml))
             .Where(g => g != null)
             .ToArray();
 

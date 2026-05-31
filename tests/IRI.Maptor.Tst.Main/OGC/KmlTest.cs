@@ -9,6 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Tst.Standards.OGC.KML;
 
@@ -1228,6 +1230,62 @@ public class KmlTest
                 Assert.Equal(geometries[i].GetGeometries().Count, reparsed[i].GetGeometries().Count);
             }
         }
+    }
+
+    #endregion
+
+    #region SRID Validation Tests
+
+    [Fact]
+    public void ToKml_ThrowsWhenGeometryIsNotWgs84()
+    {
+        var webMercatorPoint = Geometry<Point>.Create(1000000, 2000000, SridHelper.WebMercator);
+
+        var exception = Assert.Throws<ArgumentException>(() => KmlWriter.ToKml(webMercatorPoint));
+
+        Assert.Contains("4326", exception.Message);
+        Assert.Contains(SridHelper.WebMercator.ToString(), exception.Message);
+    }
+
+    [Fact]
+    public void ToKmlFeature_ProjectsWebMercatorToWgs84()
+    {
+        var webMercatorPoint = Geometry<Point>.Create(0, 0, SridHelper.WebMercator);
+        var feature = new Feature<Point>(webMercatorPoint) { Id = 1 };
+
+        var kmlFeature = feature.ToKmlFeature();
+
+        Assert.NotNull(kmlFeature);
+        Assert.Equal(SridHelper.GeodeticWGS84, kmlFeature!.Geometry.Srid);
+        Assert.Equal(0, kmlFeature.Geometry.Points[0].X, 6);
+        Assert.Equal(0, kmlFeature.Geometry.Points[0].Y, 6);
+    }
+
+    [Fact]
+    public void ToKmlFeature_WebMercatorFeatureProducesValidKml()
+    {
+        var webMercatorPoint = MapProjects.GeodeticWgs84ToWebMercator(new Point(51.5074, -0.1278));
+        var geometry = Geometry<Point>.Create(webMercatorPoint.X, webMercatorPoint.Y, SridHelper.WebMercator);
+        var feature = new Feature<Point>(geometry, new Dictionary<string, object> { ["Name"] = "London" }) { Id = 1 };
+
+        var kmlFeatures = new List<Feature<Point>> { feature }.ToKmlFeatures();
+        var kmlOutput = KmlWriter.ToKml(kmlFeatures);
+
+        Assert.Contains("51.507", kmlOutput);
+        Assert.Contains("-0.127", kmlOutput);
+    }
+
+    [Fact]
+    public void ToKmlFeature_SkipsProjectionWhenAlreadyWgs84()
+    {
+        var geometry = Geometry<Point>.Create(51.5074, -0.1278, SridHelper.GeodeticWGS84);
+        var feature = new Feature<Point>(geometry) { Id = 1 };
+
+        var kmlFeature = feature.ToKmlFeature();
+
+        Assert.NotNull(kmlFeature);
+        Assert.Equal(51.5074, kmlFeature!.Geometry.Points[0].X, 6);
+        Assert.Equal(-0.1278, kmlFeature.Geometry.Points[0].Y, 6);
     }
 
     #endregion
