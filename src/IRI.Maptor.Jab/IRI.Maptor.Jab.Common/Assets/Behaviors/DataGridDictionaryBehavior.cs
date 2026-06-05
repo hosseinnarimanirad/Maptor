@@ -89,12 +89,29 @@ public static class DataGridDictionaryBehavior
             if (field.Name.EqualsIgnoreCase("rowversion"))
                 continue;
 
+            if (!field.CanRead)
+                continue;
+
             DataGridColumn? column = null;
+            var isColumnReadOnly = !field.CanWrite;
 
             var typeName = field.TypeFullName; // e.g. "System.Int32"
 
+            if (field.AllowedValues != null && field.AllowedValues.Length > 0)
+            {
+                column = new DataGridComboBoxColumn
+                {
+                    Header = field.Alias,
+                    ItemsSource = field.AllowedValues,
+                    SelectedItemBinding = new Binding($"Attributes[{key}]")
+                    {
+                        Mode = BindingMode.TwoWay,
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    }
+                };
+            }
             //if (string.Equals(typeName, "System.Boolean", StringComparison.OrdinalIgnoreCase))
-            if (fieldType.IsBool())
+            else if (fieldType.IsBool())
             {
                 column = new DataGridCheckBoxColumn
                 {
@@ -112,8 +129,8 @@ public static class DataGridDictionaryBehavior
                 column = new DataGridTemplateColumn
                 {
                     Header = field.Alias,
-                    CellTemplate = CreateDateTemplate($"Attributes[{key}]"),
-                    CellEditingTemplate = CreateDateTemplate($"Attributes[{key}]")
+                    CellTemplate = CreateDateDisplayTemplate($"Attributes[{key}]"),
+                    CellEditingTemplate = CreateDateEditingTemplate($"Attributes[{key}]")
                 };
             }
             //else if (typeName.StartsWith("System.Int", StringComparison.OrdinalIgnoreCase) ||
@@ -213,12 +230,28 @@ public static class DataGridDictionaryBehavior
                 };
             }
 
+            if (column != null)
+                column.IsReadOnly = isColumnReadOnly;
+
             grid.Columns.Add(column);
         }
     }
 
-    // Helper for DatePicker template
-    private static DataTemplate CreateDateTemplate(string bindingPath)
+    private static DataTemplate CreateDateDisplayTemplate(string bindingPath)
+    {
+        var template = new DataTemplate();
+        var factory = new FrameworkElementFactory(typeof(TextBlock));
+        factory.SetBinding(TextBlock.TextProperty, new Binding(bindingPath)
+        {
+            Mode = BindingMode.OneWay,
+            Converter = new LocalizedDateTimeConverter()
+        });
+        template.VisualTree = factory;
+        return template;
+    }
+
+    // Helper for DatePicker editing template
+    private static DataTemplate CreateDateEditingTemplate(string bindingPath)
     {
         var template = new DataTemplate();
 

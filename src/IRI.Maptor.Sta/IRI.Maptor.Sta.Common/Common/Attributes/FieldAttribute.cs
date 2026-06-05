@@ -15,6 +15,8 @@ public class FieldAttribute : Attribute
 
 	public bool CanWrite { get; set; } = true;
 
+	public string[] AllowedValues { get; set; } = Array.Empty<string>();
+
 	//public FieldAttribute(string alias)
 	//{
 	//	this.Alias = alias;

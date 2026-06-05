@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using System.Collections.Generic;
 
@@ -22,6 +23,12 @@ public class Field
     public int Scale { get; set; }
 
     public int DateTimePrecision { get; set; }
+
+    public bool CanRead { get; set; } = true;
+
+    public bool CanWrite { get; set; } = true;
+
+    public string[] AllowedValues { get; set; } = Array.Empty<string>();
 
     public override string ToString()
     {
@@ -108,6 +115,9 @@ public class Field
                 TypeFullName = propertyType.FullName/*.ToString()*/,
                 IsNullable = isNullable,
                 Length = fieldAttribute?.Length ?? 0,
+                CanRead = fieldAttribute?.CanRead ?? true,
+                CanWrite = fieldAttribute?.CanWrite ?? true,
+                AllowedValues = fieldAttribute?.AllowedValues ?? Array.Empty<string>(),
                 Precision = GetDefaultPrecision(underlyingType),
                 Scale = GetDefaultScale(underlyingType),
                 DateTimePrecision = GetDefaultDateTimePrecision(underlyingType)
