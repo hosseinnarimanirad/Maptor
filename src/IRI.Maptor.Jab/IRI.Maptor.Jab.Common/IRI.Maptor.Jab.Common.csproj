@@ -15,6 +15,10 @@
     <None Remove="Assets\Cursors\MapCursorSet1\MagnifyMinusRightHanded.cur" />
     <None Remove="Assets\Cursors\MapCursorSet1\MagnifyPlusRightHanded.cur" />
     <None Remove="Assets\Cursors\MapCursorSet1\PrecisionSelect.cur" />
+    <None Remove="Assets\Cursors\MaptorCursorSet\DrawPoint.cur" />
+    <None Remove="Assets\Cursors\MaptorCursorSet\information.cur" />
+    <None Remove="Assets\Cursors\MaptorCursorSet\ZoomIn.cur" />
+    <None Remove="Assets\Cursors\MaptorCursorSet\ZoomOut.cur" />
     <None Remove="Assets\Fonts\IRANSans.ttf" />
     <None Remove="Assets\Images\BaseMaps\72\bingHybrid72.jpg" />
     <None Remove="Assets\Images\BaseMaps\72\bingSatellite72.jpg" />
@@ -98,6 +102,10 @@
     <Resource Include="Assets\Cursors\MapCursorSet1\MagnifyMinusRightHanded.cur" />
     <Resource Include="Assets\Cursors\MapCursorSet1\MagnifyPlusRightHanded.cur" />
     <Resource Include="Assets\Cursors\MapCursorSet1\PrecisionSelect.cur" />
+    <Resource Include="Assets\Cursors\MaptorCursorSet\DrawPoint.cur" />
+    <Resource Include="Assets\Cursors\MaptorCursorSet\information.cur" />
+    <Resource Include="Assets\Cursors\MaptorCursorSet\ZoomIn.cur" />
+    <Resource Include="Assets\Cursors\MaptorCursorSet\ZoomOut.cur" />
     <Resource Include="Assets\Fonts\IRANSans.ttf" />
     <Resource Include="Assets\Images\BaseMaps\72\bingHybrid72.jpg" />
     <Resource Include="Assets\Images\BaseMaps\72\bingSatellite72.jpg" />

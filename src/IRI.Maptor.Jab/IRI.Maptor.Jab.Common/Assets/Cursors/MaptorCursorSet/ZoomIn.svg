@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!-- ####################################################################
+
+This file was generates automatically via the 
+IconPacks.Browser (MIT-License). 
+
+Visit https://github.com/MahApps/MahApps.Metro.IconPacks and 
+https://github.com/MahApps/MahApps.Metro.IconPacks/blob/develop/LICENSE 
+for more information.
+ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+Icon-Name: 			Zoomin
+Iconpack:			Fontaudio
+Iconpack-Homepage: 	https://github.com/fefanto/fontaudio
+Iconpack-License:	https://github.com/fefanto/fontaudio#license
+
+#####################################################################-->
+
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="16"
+     height="16">
+    <path d="M120.46 97.71C90.294 89.06 58.829 106.502 50.179 136.667C41.529 166.832 58.971 198.297 89.136 206.947C119.301 215.597 150.766 198.155 159.416 167.99C163.833 152.587 157.479 129.988 150.069 117.118C149.455 116.051 209.281 64.054 209.281 64.054L191.854 46.424L138.34 103.144S128.107 99.903 120.46 97.71zM104 112C126.091 112 144 129.909 144 152S126.091 192 104 192S64 174.091 64 152S81.909 112 104 112z M111.912 175.953H95.962V159.916H80V143.924H95.962V128H111.912V143.924H128V159.916H111.912z"
+          style="fill:#000000;
+                 stroke:none
+                 stroke-width:0;
+                 stroke-linecap:flat;
+                 stroke-linejoin:miter;"
+          transform="matrix(0.09831701394661951,0,0,-0.09831701394661951,-4.645737880757138,20.564269034455084)" />
+</svg>

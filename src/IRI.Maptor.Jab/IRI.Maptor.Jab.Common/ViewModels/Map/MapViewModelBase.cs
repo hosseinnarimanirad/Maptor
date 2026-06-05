@@ -288,7 +288,8 @@ public abstract class MapViewModelBase : ViewModelBase
                 //}; 
                 _currentEditingLayer.RequestZoomToPoint = (p) =>
                 {
-                    Zoom(WebMercatorUtility.GetGoogleMapScale(14), p);
+                    //Zoom(WebMercatorUtility.GetGoogleMapScale(14), p);
+                    ZoomToExtent(p.AsGeometry(SridHelper.WebMercator).GetBoundingBox(), isExactExtent: false, isNewExtent: true);                    
                 };
 
                 _currentEditingLayer.RequestZoomToGeometry = g =>
@@ -1247,6 +1248,8 @@ public abstract class MapViewModelBase : ViewModelBase
     public Func<List<ILayer>> RequestGetOrderedLayers;
 
     public Action<MapAction, Cursor> RequestSetDefaultCursor;
+
+    public Action<IReadOnlyDictionary<MapAction, Cursor>>? RequestApplyCursorSet;
 
     public Action<Cursor> RequestSetCursor;
 
@@ -2529,16 +2532,13 @@ public abstract class MapViewModelBase : ViewModelBase
         IsConnected = await NetworkUtilities.IsConnectedToInternet(proxy);
     }
 
-    public void SetMapCursorSet1()
+    public void SetMapCursors()
     {
-        var zoomInCursor = new Cursor(System.Windows.Application.GetResourceStream(new Uri("/IRI.Maptor.Jab.Common;component/Assets/Cursors/MapCursorSet1/MagnifyPlusRightHanded.cur", UriKind.Relative)).Stream, false);
-        SetDefaultCursor(MapAction.ZoomInRectangle, zoomInCursor);
-        SetDefaultCursor(MapAction.ZoomIn, zoomInCursor);
-
-        var zoomOutCursor = new Cursor(System.Windows.Application.GetResourceStream(new Uri("/IRI.Maptor.Jab.Common;component/Assets/Cursors/MapCursorSet1/MagnifyMinusRightHanded.cur", UriKind.Relative)).Stream, false);
-        //SetDefaultCursor(MapAction.ZoomOutRectangle, zoomOutCursor);
-        SetDefaultCursor(MapAction.ZoomOut, zoomOutCursor);
+        RequestApplyCursorSet?.Invoke(MapCursorHelper.CreateDefaultSet());
     }
+
+    [Obsolete("Use SetMapCursors() instead.")]
+    public void SetMapCursorSet1() => SetMapCursors();
 
     public void SetDefaultCursor(MapAction action, Cursor cursor)
     {

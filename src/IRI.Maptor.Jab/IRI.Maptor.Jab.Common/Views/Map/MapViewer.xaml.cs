@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Collections.Generic;
+using IRI.Maptor.Jab.Common.Helpers;
 using System.Collections.ObjectModel;
 using System.Windows.Media.Animation;
 
@@ -199,10 +200,14 @@ public partial class MapViewer : NotifiableUserControl
 
 
     public Cursor PanCursor { get; set; } = Cursors.Hand;
-    public Cursor ZoomInCursor { get; set; } = Cursors.Arrow;
-    public Cursor ZoomOutCursor { get; set; } = Cursors.Arrow;
+    public Cursor ZoomInCursor { get; set; } = Cursors.Cross;
+    public Cursor ZoomOutCursor { get; set; } = Cursors.Cross;
     public Cursor ZoomInRectangleCursor { get; set; } = Cursors.Cross;
     public Cursor ZoomOutRectangleCursor { get; set; } = Cursors.Cross;
+    public Cursor DrawPointCursor { get; set; } = Cursors.Cross;
+    public Cursor DrawPolylineCursor { get; set; } = Cursors.Cross;
+    public Cursor DrawPolygonCursor { get; set; } = Cursors.Cross;
+    public Cursor DrawRectangleCursor { get; set; } = Cursors.Cross;
 
     private Dictionary<MapAction, Cursor> CursorSettings;
 
@@ -389,12 +394,11 @@ public partial class MapViewer : NotifiableUserControl
             { MapAction.ZoomIn, ZoomInCursor },
             { MapAction.ZoomOut, ZoomOutCursor },
             { MapAction.ZoomInRectangle, ZoomInRectangleCursor },
-            //{ MapAction.ZoomOutRectangle, ZoomOutRectangleCursor },
-            { MapAction.DrawPoint, Cursors.Cross },
-            { MapAction.DrawPolyline, Cursors.Cross },
-            { MapAction.DrawPolygon, Cursors.Cross },
-            { MapAction.DrawRectangle, Cursors.Cross },
-            { MapAction.None, Cursors.AppStarting },
+            { MapAction.DrawPoint, DrawPointCursor },
+            { MapAction.DrawPolyline, DrawPolylineCursor },
+            { MapAction.DrawPolygon, DrawPolygonCursor },
+            { MapAction.DrawRectangle, DrawRectangleCursor },
+            { MapAction.None, Cursors.Arrow },
         };
 
         this.RegisterRightClickOptions();
@@ -487,6 +491,8 @@ public partial class MapViewer : NotifiableUserControl
         presenter.RegisterAction = async (i) => { await this.Register(i); };
 
         presenter.RequestSetDefaultCursor = this.SetDefaultCursor;
+
+        presenter.RequestApplyCursorSet = this.ApplyCursorSet;
 
         presenter.RequestSetCursor = this.SetCursor;
 
@@ -750,7 +756,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.Pan();
 
-        presenter.SetMapCursorSet1();
+        presenter.SetMapCursors();
 
         await presenter.InitializeAsync();
 
@@ -2041,6 +2047,49 @@ public partial class MapViewer : NotifiableUserControl
     public void SetDefaultCursor(MapAction action, Cursor cursor)
     {
         this.CursorSettings[action] = cursor;
+        UpdateCursorProperty(action, cursor);
+    }
+
+    public void ApplyCursorSet(IReadOnlyDictionary<MapAction, Cursor> cursors)
+    {
+        foreach (var entry in cursors)
+        {
+            this.CursorSettings[entry.Key] = entry.Value;
+            UpdateCursorProperty(entry.Key, entry.Value);
+        }
+
+        this.SetCursor(this.CursorSettings[this.MapAction]);
+    }
+
+    private void UpdateCursorProperty(MapAction action, Cursor cursor)
+    {
+        switch (action)
+        {
+            case MapAction.Pan:
+                PanCursor = cursor;
+                break;
+            case MapAction.ZoomIn:
+                ZoomInCursor = cursor;
+                break;
+            case MapAction.ZoomOut:
+                ZoomOutCursor = cursor;
+                break;
+            case MapAction.ZoomInRectangle:
+                ZoomInRectangleCursor = cursor;
+                break;
+            case MapAction.DrawPoint:
+                DrawPointCursor = cursor;
+                break;
+            case MapAction.DrawPolyline:
+                DrawPolylineCursor = cursor;
+                break;
+            case MapAction.DrawPolygon:
+                DrawPolygonCursor = cursor;
+                break;
+            case MapAction.DrawRectangle:
+                DrawRectangleCursor = cursor;
+                break;
+        }
     }
 
     public void SetCursor(Cursor cursor)
@@ -3639,7 +3688,7 @@ public partial class MapViewer : NotifiableUserControl
 
         ResetMapViewEvents();
 
-        this.SetCursor(Cursors.Cross);
+        this.SetCursor(this.CursorSettings[this.MapAction]);
 
         drawingCancellationToken.Token.Register(() =>
         {
@@ -3752,7 +3801,7 @@ public partial class MapViewer : NotifiableUserControl
             _onDrawPhaseAfterPan?.Invoke(mapPt);
             BeginDrawPhase(_onDrawPhaseClick!, _onDrawPhaseMove, _onDrawPhaseAfterPan);
             _itWasPanning = false;
-            this.SetCursor(Cursors.Cross);
+            this.SetCursor(this.CursorSettings[this.MapAction]);
             return;
         }
 
@@ -4068,7 +4117,7 @@ public partial class MapViewer : NotifiableUserControl
 
         ResetMapViewEvents();
 
-        this.SetCursor(Cursors.Cross);
+        this.SetCursor(this.DrawPointCursor);
 
         MouseButtonEventHandler action = null;
 
@@ -4087,7 +4136,7 @@ public partial class MapViewer : NotifiableUserControl
 
                 this.Refresh(isNewExtent: true);
 
-                this.SetCursor(Cursors.Cross);
+                this.SetCursor(this.DrawPointCursor);
 
                 this.mapView.MouseMove -= MapView_MouseMoveSelectThePoint;
                 this.mapView.MouseMove += MapView_MouseMoveSelectThePoint;
