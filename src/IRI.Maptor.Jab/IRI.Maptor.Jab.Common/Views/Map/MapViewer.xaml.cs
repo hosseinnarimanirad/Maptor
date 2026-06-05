@@ -418,6 +418,8 @@ public partial class MapViewer : NotifiableUserControl
 
         this.viewTransform.Children.Add(zoomTransform);
 
+        this.mapView.MouseDown += MapView_MiddleButtonDown;
+
         this.mapView.MouseMove += (sender, e) =>
         {
             this.CurrentPoint = ScreenToGeodetic(e.GetPosition(this.mapView));
@@ -1915,8 +1917,6 @@ public partial class MapViewer : NotifiableUserControl
 
         this.prevMouseLocation = (e.GetPosition(this.mapView));
 
-        this.startPointLocationForPan = this.prevMouseLocation;
-
         var layer = ((this.currentMoveableItem.Tag as LayerTag).Layer as SpecialPointLayer);
 
         layer.SelectLocatable(this.currentMoveableItem);
@@ -2609,9 +2609,6 @@ public partial class MapViewer : NotifiableUserControl
 
     Point prevMouseLocation;
 
-    //POSSIBLY EXTRA FIELD
-    Point startPointLocationForPan;
-
     //bool isPanEnabled = false;
 
     private void ActivatePanMode()
@@ -2662,13 +2659,11 @@ public partial class MapViewer : NotifiableUserControl
 
         this.prevMouseLocation = e.GetPosition(this.mapView);
 
-        this.startPointLocationForPan = this.prevMouseLocation;
+        this.mapView.MouseMove -= mapView_MouseMoveForPan;
+        this.mapView.MouseMove += mapView_MouseMoveForPan;
 
-        this.MouseMove -= mapView_MouseMoveForPan;
-        this.MouseMove += mapView_MouseMoveForPan;
-
-        this.MouseUp -= mapView_MouseUpForPan;
-        this.MouseUp += mapView_MouseUpForPan;
+        this.mapView.MouseUp -= mapView_MouseUpForPan;
+        this.mapView.MouseUp += mapView_MouseUpForPan;
     }
 
     private void mapView_MouseMoveForPan(object sender, MouseEventArgs e)
@@ -2681,44 +2676,23 @@ public partial class MapViewer : NotifiableUserControl
 
         if (Math.Abs(xOffset) > 2 || Math.Abs(yOffset) > 2)
         {
-            this.panTransform.X += xOffset * 1.0 / this.zoomTransform.ScaleX;
-
-            this.panTransform.Y += yOffset * 1.0 / this.zoomTransform.ScaleY;
+            ApplyPanOffset(xOffset, yOffset);
 
             this.prevMouseLocation = currentMouseLocation;
-
-            this.panTransformForPoints.X += xOffset;
-
-            this.panTransformForPoints.Y += yOffset;
-
-            UpdateTileInfos();
         }
     }
 
     private void mapView_MouseUpForPan(object sender, MouseButtonEventArgs e)
     {
-        this.MouseMove -= mapView_MouseMoveForPan;
+        this.mapView.MouseMove -= mapView_MouseMoveForPan;
 
-        this.MouseUp -= mapView_MouseUpForPan;
+        this.mapView.MouseUp -= mapView_MouseUpForPan;
 
         this.IsPanning = false;
 
         this.mapView.ReleaseMouseCapture();
 
-        Point currentMouseLocation = e.GetPosition(this.mapView);
-
-        double xOffset = currentMouseLocation.X - this.startPointLocationForPan.X;
-
-        double yOffset = currentMouseLocation.Y - this.startPointLocationForPan.Y;
-
-        if (Math.Abs(xOffset) > 2 || Math.Abs(yOffset) > 2)
-        {
-            Refresh(isNewExtent: true);
-        }
-        else
-        {
-            //Debug.WriteLine(new StackTrace().GetFrame(0).GetMethod().Name, _methodEscaped);
-        }
+        Refresh(isNewExtent: true);
     }
 
 
@@ -2728,6 +2702,68 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.MouseDown -= mapView_MouseDownForPan;
         this.mapView.MouseMove -= mapView_MouseMoveForPan;
         this.mapView.MouseUp -= mapView_MouseUpForPan;
+    }
+
+    /// <summary>
+    /// Applies a screen-space drag offset to both transforms that represent the map pan.
+    /// All pan operations funnel through here so the logic stays in one place.
+    /// </summary>
+    private void ApplyPanOffset(double dx, double dy)
+    {
+        this.panTransform.X += dx / this.zoomTransform.ScaleX;
+        this.panTransform.Y += dy / this.zoomTransform.ScaleY;
+        this.panTransformForPoints.X += dx;
+        this.panTransformForPoints.Y += dy;
+        UpdateTileInfos();
+    }
+
+    // Middle-button pan — active in every mode (handlers are registered once at init and never removed).
+
+    private void MapView_MiddleButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton != MouseButton.Middle)
+            return;
+
+        Mouse.Capture(this.mapView);
+
+        this.prevMouseLocation = e.GetPosition(this.mapView);
+
+        this.mapView.MouseMove -= MapView_MiddleButtonMove;
+        this.mapView.MouseMove += MapView_MiddleButtonMove;
+
+        this.mapView.MouseUp -= MapView_MiddleButtonUp;
+        this.mapView.MouseUp += MapView_MiddleButtonUp;
+    }
+
+    private void MapView_MiddleButtonMove(object sender, MouseEventArgs e)
+    {
+        if (e.MiddleButton != MouseButtonState.Pressed)
+            return;
+
+        Point current = e.GetPosition(this.mapView);
+
+        double dx = current.X - this.prevMouseLocation.X;
+        double dy = current.Y - this.prevMouseLocation.Y;
+
+        if (Math.Abs(dx) > 1 || Math.Abs(dy) > 1)
+        {
+            ApplyPanOffset(dx, dy);
+
+            this.prevMouseLocation = current;
+        }
+    }
+
+    private void MapView_MiddleButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton != MouseButton.Middle)
+            return;
+
+        this.mapView.MouseMove -= MapView_MiddleButtonMove;
+        this.mapView.MouseUp -= MapView_MiddleButtonUp;
+
+        this.mapView.ReleaseMouseCapture();
+
+        Refresh(isNewExtent: true);
     }
 
 
@@ -3154,27 +3190,62 @@ public partial class MapViewer : NotifiableUserControl
         ZoomWheelAtWindowPoint(zoomIn, new Point(this.mapView.ActualWidth / 2.0, this.mapView.ActualHeight / 2.0));
     }
 
-    private void ZoomWheelAtWindowPoint(bool zoomIn, Point windowCenter)
+    private void ZoomWheelAtWindowPoint(bool zoomIn, Point windowPoint)
     {
-        var mapCenter = ScreenToMap(windowCenter);
+        ZoomInPlaceAtWindowPoint(zoomIn, windowPoint);
+    }
+
+    /// <summary>
+    /// Zooms in or out keeping <paramref name="windowPoint"/> fixed on screen.
+    /// The map coordinate under the mouse stays at exactly the same pixel position after the zoom.
+    /// Math: newPanX = (windowPoint.X - cx) / Sx_new + cx - mapUnderMouse.X
+    /// </summary>
+    private void ZoomInPlaceAtWindowPoint(bool zoomIn, Point windowPoint)
+    {
+        if (this.mapView.ActualWidth <= 0 || this.mapView.ActualHeight <= 0)
+            return;
+
+        double newScreenScale;
 
         if (_presenter.MapSettings.IsGoogleZoomLevelsEnabled)
         {
-            int newZoomLevel = zoomIn ? WebMercatorUtility.GetNextZoomLevel(NearestGoogleZoomLevel) : WebMercatorUtility.GetPreviousZoomLevel(NearestGoogleZoomLevel);
+            int newZoomLevel = zoomIn
+                ? WebMercatorUtility.GetNextZoomLevel(NearestGoogleZoomLevel)
+                : WebMercatorUtility.GetPreviousZoomLevel(NearestGoogleZoomLevel);
 
             newZoomLevel = CheckGoogleZoomLevel(newZoomLevel);
 
-            //98.01.18. consider using
-            this.ZoomAndCenter(WebMercatorUtility.GetGoogleMapScale(newZoomLevel), mapCenter.AsPoint());
+            newScreenScale = ToScreenScale(WebMercatorUtility.GetGoogleMapScale(newZoomLevel));
         }
         else
         {
-            double delta = zoomIn ? 1.5 : 0.5;
-
-            double newMapScale = ToMapScale(this.ScreenScale * delta);
-
-            this.ZoomAndCenter(newMapScale, mapCenter.AsPoint());
+            newScreenScale = this.ScreenScale * (zoomIn ? 1.5 : (1.0 / 1.5));
         }
+
+        double cx = this.mapView.ActualWidth / 2.0;
+        double cy = this.mapView.ActualHeight / 2.0;
+        double Sx = newScreenScale * baseScaleX;
+        double Sy = newScreenScale * baseScaleY;
+
+        // Capture the map coordinate under the cursor BEFORE changing any transform.
+        Point mapUnderMouse = ScreenToMap(windowPoint);
+
+        // Adjust pan so that mapUnderMouse ends up back at windowPoint after the scale change.
+        this.panTransform.X = (windowPoint.X - cx) / Sx + cx - mapUnderMouse.X;
+        this.panTransform.Y = (windowPoint.Y - cy) / Sy + cy - mapUnderMouse.Y;
+
+        this.panTransformForPoints.X = 0;
+        this.panTransformForPoints.Y = 0;
+
+        this.zoomTransform.CenterX = cx;
+        this.zoomTransform.CenterY = cy;
+        this.zoomTransform.ScaleX = Sx;
+        this.zoomTransform.ScaleY = Sy;
+        this._theScreenScale = Sx;
+
+        this.OnZoomChanged?.Invoke(null, ZoomEventArgs.EmptyArg);
+
+        Refresh(isNewExtent: true);
     }
 
     //It has animation
@@ -3619,20 +3690,20 @@ public partial class MapViewer : NotifiableUserControl
         Action<sb.Point>? onAfterPan = null)
     {
         EndDrawPhase();
-        _onDrawPhaseClick    = onConfirmedClick;
-        _onDrawPhaseMove     = onMove;
+        _onDrawPhaseClick = onConfirmedClick;
+        _onDrawPhaseMove = onMove;
         _onDrawPhaseAfterPan = onAfterPan;
-        _itWasPanning        = false;
+        _itWasPanning = false;
         this.mapView.MouseDown += DrawPhase_MouseDown;
         this.mapView.MouseMove += DrawPhase_MouseMove;
-        this.mapView.MouseUp   += DrawPhase_MouseUp;
+        this.mapView.MouseUp += DrawPhase_MouseUp;
     }
 
     private void EndDrawPhase()
     {
         this.mapView.MouseDown -= DrawPhase_MouseDown;
         this.mapView.MouseMove -= DrawPhase_MouseMove;
-        this.mapView.MouseUp   -= DrawPhase_MouseUp;
+        this.mapView.MouseUp -= DrawPhase_MouseUp;
     }
 
     private void DrawPhase_MouseDown(object sender, MouseButtonEventArgs e)
@@ -3641,7 +3712,7 @@ public partial class MapViewer : NotifiableUserControl
             return;
 
         e.Handled = true;
-        _itWasPanning     = false;
+        _itWasPanning = false;
         prevMouseLocation = e.GetPosition(this.mapView);
     }
 
@@ -3659,12 +3730,8 @@ public partial class MapViewer : NotifiableUserControl
 
             if (Math.Abs(dx) > _knownAsPanThreshold || Math.Abs(dy) > _knownAsPanThreshold)
             {
-                this.panTransform.X         += dx / this.zoomTransform.ScaleX;
-                this.panTransform.Y         += dy / this.zoomTransform.ScaleY;
-                prevMouseLocation            = currentLoc;
-                this.panTransformForPoints.X += dx;
-                this.panTransformForPoints.Y += dy;
-                UpdateTileInfos();
+                ApplyPanOffset(dx, dy);
+                prevMouseLocation = currentLoc;
                 _itWasPanning = true;
             }
         }
@@ -3759,7 +3826,7 @@ public partial class MapViewer : NotifiableUserControl
         if (e.ChangedButton != MouseButton.Left)
             return;
 
-        Unsubscribe_DrawingEvents_StartRectangleDrawing(); 
+        Unsubscribe_DrawingEvents_StartRectangleDrawing();
 
         if (drawingRectangle != null)
             this.mapView.Children.Remove(drawingRectangle);
@@ -3861,8 +3928,8 @@ public partial class MapViewer : NotifiableUserControl
         {
             BeginDrawPhase(
                 onConfirmedClick: AddPointForNewDrawing,
-                onMove:           pt => { drawingLayer.UpdateLastVertexLocation(pt); onMoveForDrawAction?.Invoke(pt.AsWpfPoint()); },
-                onAfterPan:       pt => drawingLayer.AddSemiVertex(pt));
+                onMove: pt => { drawingLayer.UpdateLastVertexLocation(pt); onMoveForDrawAction?.Invoke(pt.AsWpfPoint()); },
+                onAfterPan: pt => drawingLayer.AddSemiVertex(pt));
         }
     }
 
@@ -3928,8 +3995,8 @@ public partial class MapViewer : NotifiableUserControl
             drawingLayer.StartNewPart(pt);
             BeginDrawPhase(
                 onConfirmedClick: AddPointForNewDrawing,
-                onMove:           pt2 => { drawingLayer.UpdateLastVertexLocation(pt2); onMoveForDrawAction?.Invoke(pt2.AsWpfPoint()); },
-                onAfterPan:       pt2 => drawingLayer.AddSemiVertex(pt2));
+                onMove: pt2 => { drawingLayer.UpdateLastVertexLocation(pt2); onMoveForDrawAction?.Invoke(pt2.AsWpfPoint()); },
+                onAfterPan: pt2 => drawingLayer.AddSemiVertex(pt2));
         }
     }
 
@@ -3938,7 +4005,7 @@ public partial class MapViewer : NotifiableUserControl
         this.drawingLayer.AddVertex(pt);
         this.drawingLayer.AddSemiVertex(pt);
     }
-    
+
 
     private FrameworkElement GetRightClickOptionsForDraw()
     {
@@ -4145,17 +4212,9 @@ public partial class MapViewer : NotifiableUserControl
 
             if (Math.Abs(xOffset) > _knownAsPanThreshold || Math.Abs(yOffset) > _knownAsPanThreshold)
             {
-                this.panTransform.X += xOffset * 1.0 / this.zoomTransform.ScaleX;
-
-                this.panTransform.Y += yOffset * 1.0 / this.zoomTransform.ScaleY;
+                ApplyPanOffset(xOffset, yOffset);
 
                 this.prevMouseLocation = currentMouseLocation;
-
-                this.panTransformForPoints.X += xOffset;
-
-                this.panTransformForPoints.Y += yOffset;
-
-                UpdateTileInfos();
 
                 this.itWasPanningWhileSelectThePoint = true;
             }
