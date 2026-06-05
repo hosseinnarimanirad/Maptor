@@ -19,7 +19,7 @@ public static class BingMapService
 
             var url = $"https://dev.virtualearth.net/REST/v1/Routes/Isochrones?waypoint={pointString}&maxTime={timeLimit}&timeUnit=second&key={key}";
 
-            return await NetHelper.HttpGetAsync<BingIsolineResult>(url);
+            return await HttpTransport.GetAsync<BingIsolineResult>(url);
         }
         catch (Exception ex)
         {

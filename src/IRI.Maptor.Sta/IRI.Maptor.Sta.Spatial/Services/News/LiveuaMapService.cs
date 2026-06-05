@@ -17,7 +17,7 @@ public static class LiveuaMapService
 
         var url = $"http://{region}.liveuamap.com/ajax/do?act=pts&curid=0&time={minutes}&last=0";
 
-        var result = await IRI.Maptor.Sta.Common.Helpers.NetHelper.HttpGetAsync<LiveuaMapApiResults>(url);
+        var result = await IRI.Maptor.Sta.Common.Helpers.HttpTransport.GetAsync<LiveuaMapApiResults>(url);
           
         return result?.Result;
     }

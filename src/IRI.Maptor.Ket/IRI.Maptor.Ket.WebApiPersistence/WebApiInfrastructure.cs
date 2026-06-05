@@ -19,7 +19,7 @@ public static class WebApiInfrastructure
     {
         var url = BuildUrl(/*baseUrl, */endpoint, queryParams);
 
-        var response = await HttpClientHelper.HttpGetAsync<FeatureSetDto>(
+        var response = await HttpTransport.GetAsync<FeatureSetDto>(
             url,
             bearer: bearerToken,
             headers: headers,
@@ -37,14 +37,14 @@ public static class WebApiInfrastructure
         string? bearerToken = null,
         Dictionary<string, string>? headers = null)
     {
-        //var response = await HttpClientHelper.HttpPutAsync<SyncResultDto>(
+        //var response = await HttpTransport.PutAsync<SyncResultDto>(
         //    endpoint,
         //    dto,
         //    bearer: bearerToken,
         //    headers: headers);
 
         //return response.HasNotNullResult() ? response.Result : null;
-        return await HttpClientHelper.HttpPutAsync<SyncResultDto>(
+        return await HttpTransport.PutAsync<SyncResultDto>(
             endpoint,
             dto,
             bearer: bearerToken,
@@ -64,7 +64,7 @@ public static class WebApiInfrastructure
     {
         var url = $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}/{featureId}";
 
-        var response = await HttpClientHelper.HttpPutAsync<object>(
+        var response = await HttpTransport.PutAsync<object>(
             url,
             featureDto,
             bearer: bearerToken,
@@ -85,7 +85,7 @@ public static class WebApiInfrastructure
     {
         var url = BuildUrl(/*baseUrl,*/ endpoint);
 
-        var response = await HttpClientHelper.HttpPostAsync<FeatureDto>(
+        var response = await HttpTransport.PostAsync<FeatureDto>(
             url,
             featureDto,
             bearer: bearerToken,
@@ -106,7 +106,7 @@ public static class WebApiInfrastructure
     {
         var url = $"{baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}/{featureId}";
 
-        var response = await HttpClientHelper.HttpDeleteAsync(
+        var response = await HttpTransport.DeleteAsync(
             url,
             bearer: bearerToken,
             headers: headers);

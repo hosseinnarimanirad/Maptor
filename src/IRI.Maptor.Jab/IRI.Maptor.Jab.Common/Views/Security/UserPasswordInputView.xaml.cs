@@ -1,7 +1,6 @@
 using System.Security;
 using System.Windows;
 using IRI.Maptor.Sta.Common.Helpers;
-using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Jab.Common.Localization;
 
@@ -24,7 +23,7 @@ namespace IRI.Maptor.Jab.Controls.Security
          
         public bool IsValidEmail()
         {
-            return NetHelper.IsValidEmail(UserNameOrEmail);
+            return NetworkUtilities.IsValidEmail(UserNameOrEmail);
         }
  
         public void ClearInputValues()

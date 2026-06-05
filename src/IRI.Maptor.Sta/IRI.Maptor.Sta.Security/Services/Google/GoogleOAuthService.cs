@@ -37,7 +37,7 @@ namespace IRI.Maptor.Sta.Spatial.Services.Google
             const string code_challenge_method = "S256";
 
             // Creates a redirect URI using an available port on the loopback address.
-            string redirectURI = string.Format("http://{0}:{1}/", IPAddress.Loopback, NetHelper.GetRandomUnusedPort());
+            string redirectURI = string.Format("http://{0}:{1}/", IPAddress.Loopback, NetworkUtilities.GetRandomUnusedPort());
             //output("redirect URI: " + redirectURI);
 
             // Creates an HttpListener to listen for requests on that redirect URI.

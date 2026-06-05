@@ -39,7 +39,7 @@ public static class GoogleMapService
 
             var url = $"https://maps.googleapis.com/maps/api/directions/json?origin={startString}&destination={endString}&alternatives=true&departure_time={time}&key={key}";
 
-            return await IRI.Maptor.Sta.Common.Helpers.NetHelper.HttpGetAsync<GoogleDirectionsResult>(url);
+            return await IRI.Maptor.Sta.Common.Helpers.HttpTransport.GetAsync<GoogleDirectionsResult>(url);
         }
         catch (Exception ex)
         {
@@ -61,7 +61,7 @@ public static class GoogleMapService
 
             var url = $"https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins={originString}&destinations={destinationString}&departure_time={time}&key={key}";
 
-            return await IRI.Maptor.Sta.Common.Helpers.NetHelper.HttpGetAsync<GoogleDistanceMatrixResult>(url);
+            return await IRI.Maptor.Sta.Common.Helpers.HttpTransport.GetAsync<GoogleDistanceMatrixResult>(url);
         }
         catch (Exception ex)
         {
@@ -87,12 +87,12 @@ public static class GoogleMapService
     {
         //var url = $"https://maps.googleapis.com/maps/api/directions/json?origin={startString}&destination={endString}&alternatives=true&departure_time={time}&key={key}";
 
-        return await IRI.Maptor.Sta.Common.Helpers.NetHelper.HttpGetAsync<GooglePlacesResult>($"{googlePlacesApiUrl}query={query}&key={key}");
+        return await IRI.Maptor.Sta.Common.Helpers.HttpTransport.GetAsync<GooglePlacesResult>($"{googlePlacesApiUrl}query={query}&key={key}");
     }
 
     public static Response<GooglePlacesResult> Search(string query, string key)
     {
-        return IRI.Maptor.Sta.Common.Helpers.NetHelper.HttpGet<GooglePlacesResult>($"{googlePlacesApiUrl}query={query}&key={key}");
+        return IRI.Maptor.Sta.Common.Helpers.HttpTransport.Get<GooglePlacesResult>($"{googlePlacesApiUrl}query={query}&key={key}");
     }
 
 

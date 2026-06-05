@@ -20,7 +20,7 @@ public static class MapzenService
 
         var url = $"http://matrix.mapzen.com/isochrone?id=Walk_From_Office&api_key={apiKey}";
 
-        var result = await IRI.Maptor.Sta.Common.Helpers.NetHelper.HttpPostAsync<MapzenIsochroneResult>(new IRI.Maptor.Sta.Common.Helpers.HttpParameters() { Address = url, Data = parameter });
+        var result = await IRI.Maptor.Sta.Common.Helpers.HttpTransport.PostAsync<MapzenIsochroneResult>(url, parameter);
 
         if (result == null)
         {

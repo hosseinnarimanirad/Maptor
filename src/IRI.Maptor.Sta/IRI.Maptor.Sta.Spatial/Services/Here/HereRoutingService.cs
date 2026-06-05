@@ -19,7 +19,7 @@ public static class HereRoutingService
 
             var url = $"https://isoline.route.api.here.com/routing/7.2/calculateisoline.json?app_id={appId}&app_code={appCode}&start=geo!{pointString}&range={timeLimit}&rangetype=time&mode=shortest;car;traffic:enabled";
 
-            return await IRI.Maptor.Sta.Common.Helpers.NetHelper.HttpGetAsync<HereIsolineResult>(url);
+            return await IRI.Maptor.Sta.Common.Helpers.HttpTransport.GetAsync<HereIsolineResult>(url);
         }
         catch (Exception ex)
         {

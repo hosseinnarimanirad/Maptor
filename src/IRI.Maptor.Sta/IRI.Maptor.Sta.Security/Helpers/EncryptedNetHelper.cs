@@ -19,7 +19,7 @@ public static class EncryptedNetHelper
             var message = EncryptedMessage.Create(parameter, encPubKey);
 
             //var response = await NetHelper.HttpPostAsync<EncryptedMessage>(url, message, null, proxy);
-            var response = await NetHelper.HttpPostAsync<EncryptedMessage>(new HttpParameters() { Address = url, Data = message, Proxy = proxy });
+            var response = await HttpTransport.PostAsync<EncryptedMessage>(url, message, proxy: proxy);
 
             if (response.HasNotNullResult())
             {
@@ -46,7 +46,7 @@ public static class EncryptedNetHelper
             var message = EncryptedMessage.Create(parameter, encPubKey);
 
             //var response = await NetHelper.HttpPostAsync<EncryptedMessage>(url, message, null, proxy);
-            var response = await NetHelper.HttpPostAsync<TResponse>(new HttpParameters() { Address = url, Data = message, Proxy = proxy });
+            var response = await HttpTransport.PostAsync<TResponse>(url, message, proxy: proxy);
 
             return response;
         }

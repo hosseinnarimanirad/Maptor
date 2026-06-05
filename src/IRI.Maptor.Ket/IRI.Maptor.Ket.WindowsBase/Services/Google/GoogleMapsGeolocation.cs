@@ -53,7 +53,7 @@ public static class GoogleMapsGeolocationService
 
             var url = $"https://www.googleapis.com/geolocation/v1/geolocate?key={key}";
 
-            return await NetHelper.HttpPostAsync<GoogleGeolocationResult>(new HttpParameters() { Address = url, Data = parameter, Proxy = proxy });
+            return await HttpTransport.PostAsync<GoogleGeolocationResult>(url, parameter, proxy: proxy);
         }
         catch (Exception ex)
         {
@@ -75,7 +75,7 @@ public static class GoogleMapsGeolocationService
             var url = $"https://www.googleapis.com/geolocation/v1/geolocate?key={key}";
 
             //return Helpers.NetHelper.HttpPost<GoogleGeolocationResult>(url, parameter, null, null);
-            return NetHelper.HttpPost<GoogleGeolocationResult>(new HttpParameters() { Address = url, Data = parameter });
+            return HttpTransport.PostAsync<GoogleGeolocationResult>(url, parameter).GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {

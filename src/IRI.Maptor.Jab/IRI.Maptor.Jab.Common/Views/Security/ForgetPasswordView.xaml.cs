@@ -24,7 +24,7 @@ namespace IRI.Maptor.Jab.Controls.Security
 
         public bool IsValidEmail( )
         {
-            return NetHelper.IsValidEmail(Email);
+            return NetworkUtilities.IsValidEmail(Email);
         }
 
 

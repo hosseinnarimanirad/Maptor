@@ -33,6 +33,6 @@ public class SimpleUserEmailPasswordModel : IUserEmailPassword
 
     public bool IsValidEmail()
     {
-        return NetHelper.IsValidEmail(UserNameOrEmail);
+        return NetworkUtilities.IsValidEmail(UserNameOrEmail);
     }
 }

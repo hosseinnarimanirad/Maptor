@@ -2,7 +2,6 @@
 using System.Windows;
 
 using IRI.Maptor.Sta.Common.Helpers;
-using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Jab.Common.Models.Security;
 
 
@@ -24,7 +23,7 @@ namespace IRI.Maptor.Jab.Controls.Security
          
         public bool IsValidEmail()
         {
-            return NetHelper.IsValidEmail(UserNameOrEmail);
+            return NetworkUtilities.IsValidEmail(UserNameOrEmail);
         }
 
         //same code exist in UserNameSignUpView & ChangeUserPasswordView
