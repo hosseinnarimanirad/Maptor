@@ -29,6 +29,7 @@ public static class MapCursorHelper
             { MapAction.DrawPolyline, Cursors.Cross },
             { MapAction.DrawPolygon, Cursors.Cross },
             { MapAction.DrawRectangle, Cursors.Cross },
+            { MapAction.Identify, Load("information.cur") },
             { MapAction.None, Cursors.Arrow },
         };
     }

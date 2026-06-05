@@ -208,6 +208,7 @@ public partial class MapViewer : NotifiableUserControl
     public Cursor DrawPolylineCursor { get; set; } = Cursors.Cross;
     public Cursor DrawPolygonCursor { get; set; } = Cursors.Cross;
     public Cursor DrawRectangleCursor { get; set; } = Cursors.Cross;
+    public Cursor IdentifyCursor { get; set; } = Cursors.Arrow;
 
     private Dictionary<MapAction, Cursor> CursorSettings;
 
@@ -270,6 +271,9 @@ public partial class MapViewer : NotifiableUserControl
             case MapAction.DrawPolyline:
             case MapAction.DrawPolygon:
                 //Draw(action.ToDrawMode());
+                break;
+            case MapAction.Identify:
+                // Event handlers reset above; SelectPointAsync() called by VM loop.
                 break;
                 // ... other cases
         }
@@ -398,6 +402,7 @@ public partial class MapViewer : NotifiableUserControl
             { MapAction.DrawPolyline, DrawPolylineCursor },
             { MapAction.DrawPolygon, DrawPolygonCursor },
             { MapAction.DrawRectangle, DrawRectangleCursor },
+            { MapAction.Identify, IdentifyCursor },
             { MapAction.None, Cursors.Arrow },
         };
 
@@ -602,6 +607,8 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestGetDrawingAsync = (mode, continuousDrawing) => GetDrawingAsync(mode, continuousDrawing);
 
+        presenter.RequestSelectPointAsync = () => SelectPointAsync(continuousMode: true);
+
         presenter.RequestCancelNewDrawing = CancelDrawing;
 
         presenter.RequestFinishDrawingPart = FinishDrawingPart;
@@ -683,7 +690,7 @@ public partial class MapViewer : NotifiableUserControl
 
         //presenter.RequestSearch = searchText => new ObservableCollection<FeatureSet<sb.Point>>(this.GetFeatures(searchText));
 
-        presenter.RequestGetPoint = SelectPointAsync;
+        presenter.RequestGetPoint = () => SelectPointAsync();
 
         presenter.RequestMapDistanceToScreenDistance = this.MapToScreen;
 
@@ -762,6 +769,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RegisterMapOptions();
 
+        ActivatePanMode();
     }
 
     private void PredefinedExtents_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -2089,6 +2097,9 @@ public partial class MapViewer : NotifiableUserControl
             case MapAction.DrawRectangle:
                 DrawRectangleCursor = cursor;
                 break;
+            case MapAction.Identify:
+                IdentifyCursor = cursor;
+                break;
         }
     }
 
@@ -2349,7 +2360,7 @@ public partial class MapViewer : NotifiableUserControl
 
     #region RightClick Options
 
-    FrameworkElement rightClickOptions;
+    FrameworkElement? rightClickOptions;
 
     ILocateable rightClickDataContext;
 
@@ -2365,14 +2376,14 @@ public partial class MapViewer : NotifiableUserControl
 
     public void RegisterRightClickOptions()
     {
-        this.mapView.MouseUp -= mapView_MouseUpForRightClickOptions;
-        this.mapView.MouseUp += mapView_MouseUpForRightClickOptions;
+        this.MouseUp -= mapView_MouseUpForRightClickOptions;
+        this.MouseUp += mapView_MouseUpForRightClickOptions;
     }
 
     public void RegisterRightClickContextOptions<T>(ILocateable context) where T : FrameworkElement, new()
     {
-        this.mapView.MouseUp -= mapView_MouseUpForRightClickOptions;
-        this.mapView.MouseUp += mapView_MouseUpForRightClickOptions;
+        this.MouseUp -= mapView_MouseUpForRightClickOptions;
+        this.MouseUp += mapView_MouseUpForRightClickOptions;
 
         this.rightClickOptions = new T();
 
@@ -2383,8 +2394,8 @@ public partial class MapViewer : NotifiableUserControl
 
     public void RegisterRightClickContextOptions(FrameworkElement view, ILocateable context)
     {
-        this.mapView.MouseUp -= mapView_MouseUpForRightClickOptions;
-        this.mapView.MouseUp += mapView_MouseUpForRightClickOptions;
+        this.MouseUp -= mapView_MouseUpForRightClickOptions;
+        this.MouseUp += mapView_MouseUpForRightClickOptions;
 
         this.rightClickOptions = view;
 
@@ -2398,7 +2409,7 @@ public partial class MapViewer : NotifiableUserControl
     {
         this.rightClickOptions = null;
 
-        this.mapView.MouseUp -= mapView_MouseUpForRightClickOptions;
+        this.MouseUp -= mapView_MouseUpForRightClickOptions;
     }
 
     void mapView_MouseUpForRightClickOptions(object sender, MouseButtonEventArgs e)
@@ -4195,7 +4206,7 @@ public partial class MapViewer : NotifiableUserControl
     /// Returns the point selected by the user in WGS84
     /// </summary>
     /// <returns></returns>
-    public async Task<Response<sb.Point>> SelectPointAsync()
+    public async Task<Response<sb.Point>> SelectPointAsync(bool continuousMode = false)
     {
         try
         {
@@ -4206,7 +4217,7 @@ public partial class MapViewer : NotifiableUserControl
 
             var result = await SelectThePoint();
 
-            return ResponseFactory.Create(result);// new Response<sb.Point>() { Result = result };
+            return ResponseFactory.Create(result);
         }
         catch (TaskCanceledException)
         {
@@ -4214,10 +4225,10 @@ public partial class MapViewer : NotifiableUserControl
             {
                 this.Status = MapStatus.Idle;
 
-                //this.Pan();
-                this._presenter.MapAction = MapAction.Pan;
+                if (!continuousMode)
+                    this._presenter.MapAction = MapAction.Pan;
             }
-            return Response<sb.Point>.CreateCanceled(); ; //new Response<sb.Point>() { IsCanceled = true };
+            return Response<sb.Point>.CreateCanceled();
         }
         catch (Exception ex)
         {
@@ -4225,15 +4236,15 @@ public partial class MapViewer : NotifiableUserControl
 
             selectPointCancelationToken = null;
 
-            //this.Pan();
-            this._presenter.MapAction = MapAction.Pan;
+            if (!continuousMode)
+                this._presenter.MapAction = MapAction.Pan;
 
             throw;
         }
         finally
         {
-            //this.Pan();
-            this._presenter.MapAction = MapAction.Pan;
+            if (!continuousMode)
+                this._presenter.MapAction = MapAction.Pan;
         }
     }
 

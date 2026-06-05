@@ -757,8 +757,14 @@ public abstract class MapViewModelBase : ViewModelBase
             if (previous.IsDrawAction())
                 StopDrawModeLoop();
 
+            if (previous.IsIdentifyAction())
+                StopIdentifyModeLoop();
+
             if (value.IsDrawAction())
                 StartDrawModeLoop(value);
+
+            if (value.IsIdentifyAction())
+                StartIdentifyModeLoop();
 
             //else if (value == MapAction.Pan)
             //    RequestPan?.Invoke();
@@ -1387,6 +1393,8 @@ public abstract class MapViewModelBase : ViewModelBase
     public Action<string, List<Point>, Geometry, bool, VisualParameters> RequestAddPolyBezier;
 
     public Func<DrawMode, bool, Task<Response<Geometry<Point>>>> RequestGetDrawingAsync;
+
+    public Func<Task<Response<Point>>>? RequestSelectPointAsync;
 
     //public Action RequestClearAll;
 
@@ -3236,6 +3244,64 @@ public abstract class MapViewModelBase : ViewModelBase
         finally
         {
             if (MapAction == action)
+                MapAction = MapAction.Pan;
+        }
+    }
+
+    // ── Identify mode loop ────────────────────────────────────────────────────
+
+    private CancellationTokenSource? _identifyModeCts;
+
+    private void StartIdentifyModeLoop()
+    {
+        StopIdentifyModeLoop();
+        _identifyModeCts = new CancellationTokenSource();
+        _ = RunIdentifyModeLoopAsync(_identifyModeCts.Token);
+    }
+
+    private void StopIdentifyModeLoop()
+    {
+        if (_identifyModeCts == null)
+            return;
+
+        _identifyModeCts.Cancel();
+        _identifyModeCts.Dispose();
+        _identifyModeCts = null;
+    }
+
+    private async Task RunIdentifyModeLoopAsync(CancellationToken ct)
+    {
+        try
+        {
+            while (!ct.IsCancellationRequested && MapAction == MapAction.Identify)
+            {
+                try
+                {
+                    if (RequestSelectPointAsync == null)
+                        break;
+
+                    var result = await RequestSelectPointAsync();
+
+                    if (ct.IsCancellationRequested || MapAction != MapAction.Identify)
+                        break;
+
+                    if (result.IsCanceled)
+                        continue;
+
+                    if (result.HasNotNullResult())
+                        await IdentifyAsync(MapProjects.GeodeticWgs84ToWebMercator(result.Result));
+                    //await IdentifyAsync(result.Result);
+                }
+                catch (OperationCanceledException)
+                {
+                    if (ct.IsCancellationRequested) break;
+                }
+            }
+        }
+        catch (OperationCanceledException) { }
+        finally
+        {
+            if (MapAction == MapAction.Identify)
                 MapAction = MapAction.Pan;
         }
     }
@@ -5782,6 +5848,10 @@ public abstract class MapViewModelBase : ViewModelBase
             return _drawRectangleCommand;
         }
     }
+
+    private RelayCommand _identifyModeCommand;
+    public RelayCommand IdentifyModeCommand =>
+        _identifyModeCommand ??= new RelayCommand(_ => MapAction = MapAction.Identify);
 
     private RelayCommand _drawPolylineCommand;
     public RelayCommand DrawPolylineCommand

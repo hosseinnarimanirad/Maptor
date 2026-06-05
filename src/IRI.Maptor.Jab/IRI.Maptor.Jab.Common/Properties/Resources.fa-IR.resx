@@ -1659,4 +1659,7 @@
   <data name="dialog_msg_confirmDeleteFeatures" xml:space="preserve">
     <value>حذف عوارض انتخابی</value>
   </data>
+  <data name="cmd_general_identify" xml:space="preserve">
+    <value>شناسایی عارضه</value>
+  </data>
 </root>

@@ -1,5 +1,8 @@
+using System.Text.Json.Serialization;
+
 namespace IRI.Maptor.Sta.Common.Attributes;
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum FieldTextDirection
 {
     /// <summary>Auto-detect from content (default).</summary>

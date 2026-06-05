@@ -17,5 +17,6 @@ public enum MapAction
     DrawPolyline,
     DrawPolygon,
     DrawRectangle,
+    Identify,
     None,
 }

@@ -1706,4 +1706,7 @@
   <data name="dialog_msg_confirmDeleteFeatures" xml:space="preserve">
     <value>Deleting Features</value>
   </data>
+  <data name="cmd_general_identify" xml:space="preserve">
+    <value>Identify</value>
+  </data>
 </root>

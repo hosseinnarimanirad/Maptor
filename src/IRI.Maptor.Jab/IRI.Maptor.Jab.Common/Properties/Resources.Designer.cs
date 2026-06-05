@@ -367,6 +367,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Identify.
+        /// </summary>
+        public static string cmd_general_identify {
+            get {
+                return ResourceManager.GetString("cmd_general_identify", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Measure area.
         /// </summary>
         public static string cmd_general_measureArea {
