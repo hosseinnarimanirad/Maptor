@@ -15,6 +15,8 @@ namespace IRI.Maptor.Jab.Controls.MapMarkers;
 
 public partial class TextboxMarker : MapMarker
 {
+    public static bool IsOptionsEnabled { get; set; } = false;
+
     private readonly DispatcherTimer _popupCloseTimer = new() { Interval = TimeSpan.FromMilliseconds(250) };
 
     
@@ -76,7 +78,10 @@ public partial class TextboxMarker : MapMarker
 
     private void OnMarkerMouseEnter(object sender, MouseEventArgs e)
     {
+        if (!IsOptionsEnabled) return;
+
         _popupCloseTimer.Stop();
+
         formatPopup.IsOpen = true;
     }
 
@@ -96,7 +101,12 @@ public partial class TextboxMarker : MapMarker
         _popupCloseTimer.Stop();
         _popupCloseTimer.Start();
     }
-     
+
+    private void root_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        e.Handled = true;
+    }
+
     //public string LabelValue
     //{
     //    get { return (string)GetValue(LabelValueProperty); }
@@ -147,7 +157,7 @@ public partial class TextboxMarker : MapMarker
     //    }
     //}
 
-     
+
     //public bool IsBold
     //{
     //    get { return (bool)GetValue(IsBoldProperty); }

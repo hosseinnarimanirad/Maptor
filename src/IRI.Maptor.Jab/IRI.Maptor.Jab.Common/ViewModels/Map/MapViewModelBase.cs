@@ -289,7 +289,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 _currentEditingLayer.RequestZoomToPoint = (p) =>
                 {
                     //Zoom(WebMercatorUtility.GetGoogleMapScale(14), p);
-                    ZoomToExtent(p.AsGeometry(SridHelper.WebMercator).GetBoundingBox(), isExactExtent: false, isNewExtent: true);                    
+                    ZoomToExtent(p.AsGeometry(SridHelper.WebMercator).GetBoundingBox(), isExactExtent: false, isNewExtent: true);
                 };
 
                 _currentEditingLayer.RequestZoomToGeometry = g =>
@@ -760,11 +760,17 @@ public abstract class MapViewModelBase : ViewModelBase
             if (previous.IsIdentifyAction())
                 StopIdentifyModeLoop();
 
+            if (previous == MapAction.DrawText)
+                StopTextModeLoop();
+
             if (value.IsDrawAction())
                 StartDrawModeLoop(value);
 
             if (value.IsIdentifyAction())
                 StartIdentifyModeLoop();
+
+            if (value == MapAction.DrawText)
+                StartTextModeLoop();
 
             //else if (value == MapAction.Pan)
             //    RequestPan?.Invoke();
@@ -885,7 +891,7 @@ public abstract class MapViewModelBase : ViewModelBase
     /// </summary>
     public string InverseMapScale => $"1:{Math.Round(1.0 / MapScale, 0)}";
 
-     
+
     public BoundingBox CurrentExtent => RequestCurrentExtent?.Invoke() ?? BoundingBoxes.Mercator_Iran;
 
 
@@ -3456,18 +3462,7 @@ public abstract class MapViewModelBase : ViewModelBase
             if (!response.HasNotNullResult())
                 return;
 
-            var text = string.Empty;//"sample text!";
-
-            TextboxMarkerViewModel viewModel = new TextboxMarkerViewModel() { LabelValue = text };
-
-            var drawingItemLayer = DrawingItemLayer.CreateTextLayer("Text",
-            [
-                new Locateable(response.Result, AncherFunctionHandlers.BottomCenter){ Element = new TextboxMarker(){ DataContext = viewModel} }
-            ]);
-
-            viewModel.RequestDelete = () => RemoveDrawingItem(drawingItemLayer);
-
-            AddDrawingItem(drawingItemLayer);
+            await AddTextToMapAt(response.Result);
         }
         catch (Exception ex)
         {
@@ -3475,7 +3470,78 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
+    private async Task AddTextToMapAt(Point geodeticPoint)
+    {
+        TextboxMarkerViewModel viewModel = new TextboxMarkerViewModel() { LabelValue = string.Empty };
+
+        var drawingItemLayer = DrawingItemLayer.CreateTextLayer("Text",
+        [
+            new Locateable(geodeticPoint, AncherFunctionHandlers.BottomCenter){ Element = new TextboxMarker(){ DataContext = viewModel} }
+        ]);
+
+        viewModel.RequestDelete = () => RemoveDrawingItem(drawingItemLayer);
+
+        AddDrawingItem(drawingItemLayer);
+    }
+
     #endregion
+
+    // ── DrawText mode loop ────────────────────────────────────────────────────
+
+    private CancellationTokenSource? _textModeCts;
+
+    private void StartTextModeLoop()
+    {
+        StopTextModeLoop();
+        _textModeCts = new CancellationTokenSource();
+        _ = RunTextModeLoopAsync(_textModeCts.Token);
+    }
+
+    private void StopTextModeLoop()
+    {
+        if (_textModeCts == null)
+            return;
+
+        _textModeCts.Cancel();
+        _textModeCts.Dispose();
+        _textModeCts = null;
+    }
+
+    private async Task RunTextModeLoopAsync(CancellationToken ct)
+    {
+        try
+        {
+            while (!ct.IsCancellationRequested && MapAction == MapAction.DrawText)
+            {
+                try
+                {
+                    if (RequestSelectPointAsync == null)
+                        break;
+
+                    var result = await RequestSelectPointAsync();
+
+                    if (ct.IsCancellationRequested || MapAction != MapAction.DrawText)
+                        break;
+
+                    if (result.IsCanceled)
+                        continue;
+
+                    if (result.HasNotNullResult())
+                        await AddTextToMapAt(result.Result);
+                }
+                catch (OperationCanceledException)
+                {
+                    if (ct.IsCancellationRequested) break;
+                }
+            }
+        }
+        catch (OperationCanceledException) { }
+        finally
+        {
+            if (MapAction == MapAction.DrawText)
+                MapAction = MapAction.Pan;
+        }
+    }
 
 
     #region Save As Png
@@ -5816,12 +5882,16 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_addTextToMapCommand == null)
             {
-                _addTextToMapCommand = new RelayCommand(async param => await AddTextToMap());
+                _addTextToMapCommand = new RelayCommand(_ => MapAction = MapAction.DrawText);
             }
 
             return _addTextToMapCommand;
         }
     }
+
+    //private RelayCommand _drawTextModeCommand;
+    //public RelayCommand DrawTextModeCommand =>
+    //    _drawTextModeCommand ??= new RelayCommand(_ => MapAction = MapAction.DrawText);
 
     private RelayCommand _drawPolygonCommand;
     public RelayCommand DrawPolygonCommand

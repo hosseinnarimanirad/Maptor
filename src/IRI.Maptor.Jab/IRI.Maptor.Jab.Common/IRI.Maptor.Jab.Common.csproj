@@ -12,9 +12,6 @@
 
 
   <ItemGroup>
-    <None Remove="Assets\Cursors\MapCursorSet1\MagnifyMinusRightHanded.cur" />
-    <None Remove="Assets\Cursors\MapCursorSet1\MagnifyPlusRightHanded.cur" />
-    <None Remove="Assets\Cursors\MapCursorSet1\PrecisionSelect.cur" />
     <None Remove="Assets\Cursors\MaptorCursorSet\DrawPoint.cur" />
     <None Remove="Assets\Cursors\MaptorCursorSet\information.cur" />
     <None Remove="Assets\Cursors\MaptorCursorSet\ZoomIn.cur" />
@@ -99,9 +96,6 @@
  
 
   <ItemGroup>
-    <Resource Include="Assets\Cursors\MapCursorSet1\MagnifyMinusRightHanded.cur" />
-    <Resource Include="Assets\Cursors\MapCursorSet1\MagnifyPlusRightHanded.cur" />
-    <Resource Include="Assets\Cursors\MapCursorSet1\PrecisionSelect.cur" />
     <Resource Include="Assets\Cursors\MaptorCursorSet\DrawPoint.cur" />
     <Resource Include="Assets\Cursors\MaptorCursorSet\information.cur" />
     <Resource Include="Assets\Cursors\MaptorCursorSet\ZoomIn.cur" />

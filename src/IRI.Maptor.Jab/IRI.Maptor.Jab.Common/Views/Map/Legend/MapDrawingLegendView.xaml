@@ -219,11 +219,11 @@
                                 ToolTip="{Binding [cmd_general_drawPolygon], Source={StaticResource Localization}}">
                             <iconPacks:Material Kind="ShapePolygonPlus"/>
                         </ToggleButton>
-                        <Button Style="{StaticResource circleButtonDarkOverride}"
-                                Command="{Binding AddTextToMapCommand}" 
+                        <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"
+                                IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawText}}"
                                 ToolTip="{Binding [cmd_general_addTextToMap], Source={StaticResource Localization}}">
                             <iconPacks:Material Kind="FormatAnnotationPlus"/>
-                        </Button>
+                        </ToggleButton>
                     </StackPanel>
                 </Expander>
 

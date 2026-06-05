@@ -30,6 +30,7 @@ public static class MapCursorHelper
             { MapAction.DrawPolygon, Cursors.Cross },
             { MapAction.DrawRectangle, Cursors.Cross },
             { MapAction.Identify, Load("information.cur") },
+            { MapAction.DrawText, Load("DrawPoint.cur") },
             { MapAction.None, Cursors.Arrow },
         };
     }

@@ -48,6 +48,7 @@ using IRI.Maptor.Jab.Controls;
 using IRI.Maptor.Jab.Controls.Dialogs;
 using IRI.Maptor.Jab.Controls.MapOptions;
 using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Controls.MapMarkers;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
@@ -209,6 +210,7 @@ public partial class MapViewer : NotifiableUserControl
     public Cursor DrawPolygonCursor { get; set; } = Cursors.Cross;
     public Cursor DrawRectangleCursor { get; set; } = Cursors.Cross;
     public Cursor IdentifyCursor { get; set; } = Cursors.Arrow;
+    public Cursor DrawTextCursor { get; set; } = Cursors.Cross;
 
     private Dictionary<MapAction, Cursor> CursorSettings;
 
@@ -248,6 +250,8 @@ public partial class MapViewer : NotifiableUserControl
 
         // Change internal interaction mode without firing any event back
         viewer.SwitchToMode(newAction);
+
+        TextboxMarker.IsOptionsEnabled = newAction == MapAction.Pan || newAction == MapAction.DrawText;
     }
 
     private void SwitchToMode(MapAction action)
@@ -274,6 +278,8 @@ public partial class MapViewer : NotifiableUserControl
                 break;
             case MapAction.Identify:
                 // Event handlers reset above; SelectPointAsync() called by VM loop.
+                break;
+            case MapAction.DrawText:
                 break;
                 // ... other cases
         }
@@ -403,6 +409,7 @@ public partial class MapViewer : NotifiableUserControl
             { MapAction.DrawPolygon, DrawPolygonCursor },
             { MapAction.DrawRectangle, DrawRectangleCursor },
             { MapAction.Identify, IdentifyCursor },
+            { MapAction.DrawText, DrawTextCursor },
             { MapAction.None, Cursors.Arrow },
         };
 
@@ -2100,6 +2107,9 @@ public partial class MapViewer : NotifiableUserControl
             case MapAction.Identify:
                 IdentifyCursor = cursor;
                 break;
+            case MapAction.DrawText:
+                DrawTextCursor = cursor;
+                break;
         }
     }
 
@@ -3783,7 +3793,7 @@ public partial class MapViewer : NotifiableUserControl
         if (_presenter.MapPanel.Options.IsLinkedToMouseMove)
             this.CurrentEditingPoint = ScreenToMap(currentLoc);
 
-        if (e.LeftButton == MouseButtonState.Pressed)
+        if (e.LeftButton == MouseButtonState.Pressed && !itemIsMoving)
         {
             double dx = currentLoc.X - prevMouseLocation.X;
             double dy = currentLoc.Y - prevMouseLocation.Y;
@@ -4137,6 +4147,10 @@ public partial class MapViewer : NotifiableUserControl
             if (e.ChangedButton != MouseButton.Left)
                 return;
 
+            // do not prevent mouse up for moveing movable item with e.Handled=true
+            if (itemIsMoving)
+                return;
+
             e.Handled = true;
 
             this.prevMouseLocation = e.GetPosition(this.mapView);
@@ -4162,8 +4176,9 @@ public partial class MapViewer : NotifiableUserControl
 
                 return;
             }
-            else
-            {
+            // do not return point if it was moveing movable item 
+            else if (!itemIsMoving)
+            { 
                 this.mapView.MouseMove -= MapView_MouseMoveSelectThePoint;
                 this.mapView.MouseDown -= MapView_MouseDownForPanWhileSelectThePoint;
                 this.mapView.MouseUp -= action;
@@ -4264,7 +4279,7 @@ public partial class MapViewer : NotifiableUserControl
     {
         Point currentMouseLocation = e.GetPosition(this.mapView);
 
-        if (e.LeftButton == MouseButtonState.Pressed)
+        if (e.LeftButton == MouseButtonState.Pressed && !itemIsMoving)
         {
             double xOffset = currentMouseLocation.X - this.prevMouseLocation.X;
 

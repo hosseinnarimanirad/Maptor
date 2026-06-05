@@ -7,7 +7,7 @@
                      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
                     x:Name="root" Background="Transparent" Canvas.ZIndex="1000000"
-                    MinWidth="150" >
+                    MinWidth="150" MouseUp="root_MouseUp" >
     <maptor:MapMarker.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -82,7 +82,7 @@
                     </Style>
                 </TextBox.Style>
             </TextBox>
-            <Popup x:Name="formatPopup" StaysOpen="True" Placement="Top" IsOpen="True" 
+            <Popup x:Name="formatPopup" StaysOpen="True" Placement="Top" 
                    PlacementTarget="{Binding ElementName=root}" HorizontalOffset="0" VerticalOffset="-5"
                    AllowsTransparency="True">
                 <Border x:Name="popupBorder" Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="1,1,2,1" 
