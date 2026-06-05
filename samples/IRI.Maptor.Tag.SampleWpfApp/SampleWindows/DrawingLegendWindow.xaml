@@ -38,7 +38,8 @@
             <maptor:MapDrawingLegendView MinHeight="90"/>
         </Expander>
 
-        <maptor:MapViewer Grid.Row="1" Grid.Column="1" x:Name="map" BorderBrush="Black" BorderThickness="1"/>
+        <maptor:MapViewer Grid.Row="1" Grid.Column="1" x:Name="map" BorderBrush="Black" BorderThickness="1"
+                          MapAction="{Binding MapAction, Mode=OneWay}"/>
         <maptor:MapPanelView Grid.Row="1" Grid.Column="1" DataContext="{Binding }"/>
 
     </Grid>

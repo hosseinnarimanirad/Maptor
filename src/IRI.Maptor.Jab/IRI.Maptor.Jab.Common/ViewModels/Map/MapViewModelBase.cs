@@ -742,13 +742,46 @@ public abstract class MapViewModelBase : ViewModelBase
         get { return _mapAction; }
         set
         {
+            if (_mapAction == value)
+                return;
+
+            var previous = _mapAction;
+
             _mapAction = value;
+
             RaisePropertyChanged();
-            RaisePropertyChanged(nameof(IsPanMode));
-            RaisePropertyChanged(nameof(IsZoomInMode));
-            RaisePropertyChanged(nameof(IsZoomOutMode));
+
+            //RaiseMapActionModeProperties();
+
+            if (previous.IsDrawAction())
+                StopDrawModeLoop();
+
+            if (value.IsDrawAction())
+                StartDrawModeLoop(value);
+
+            //else if (value == MapAction.Pan)
+            //    RequestPan?.Invoke();
+
+            //else if (value == MapAction.ZoomIn || value == MapAction.ZoomInRectangle)
+            //    RequestEnableRectangleZoom?.Invoke();
+
+            //else if (value == MapAction.ZoomOut || value == MapAction.ZoomOutRectangle)
+            //    RequestEnableZoomOut?.Invoke();
         }
     }
+
+    private CancellationTokenSource? _drawModeCts;
+
+    //private void RaiseMapActionModeProperties()
+    //{
+    //    RaisePropertyChanged(nameof(IsPanMode));
+    //    RaisePropertyChanged(nameof(IsZoomInMode));
+    //    RaisePropertyChanged(nameof(IsZoomOutMode));
+    //    RaisePropertyChanged(nameof(IsDrawPointMode));
+    //    RaisePropertyChanged(nameof(IsDrawPolylineMode));
+    //    RaisePropertyChanged(nameof(IsDrawPolygonMode));
+    //    RaisePropertyChanged(nameof(IsDrawRectangleMode));
+    //}
 
 
     private bool _isBusy;
@@ -845,8 +878,7 @@ public abstract class MapViewModelBase : ViewModelBase
     /// </summary>
     public string InverseMapScale => $"1:{Math.Round(1.0 / MapScale, 0)}";
 
-
-
+     
     public BoundingBox CurrentExtent => RequestCurrentExtent?.Invoke() ?? BoundingBoxes.Mercator_Iran;
 
 
@@ -885,49 +917,102 @@ public abstract class MapViewModelBase : ViewModelBase
     public bool IsDrawEditMeasureMode => IsEditMode || IsDrawMode;
 
 
-    public bool IsPanMode
-    {
-        get { return MapAction == MapAction.Pan; }
-        set
-        {
-            if (value)
-            {
-                Pan();
-            }
+    //public bool IsPanMode
+    //{
+    //    get { return MapAction == MapAction.Pan; }
+    //    set
+    //    {
+    //        if (value)
+    //            MapAction = MapAction.Pan;
 
-            RaisePropertyChanged();
-        }
-    }
+    //        RaisePropertyChanged();
+    //    }
+    //}
+    //public bool IsDrawPointMode
+    //{
+    //    get { return MapAction == MapAction.DrawPoint; }
+    //    set
+    //    {
+    //        if (value)
+    //            MapAction = MapAction.DrawPoint;
+    //        else if (MapAction == MapAction.DrawPoint)
+    //            MapAction = MapAction.Pan;
+
+    //        RaisePropertyChanged();
+    //    }
+    //}
+    //public bool IsDrawPolylineMode
+    //{
+    //    get { return MapAction == MapAction.DrawPolyline; }
+    //    set
+    //    {
+    //        if (value)
+    //            MapAction = MapAction.DrawPolyline;
+    //        else if (MapAction == MapAction.DrawPolyline)
+    //            MapAction = MapAction.Pan;
+
+    //        RaisePropertyChanged();
+    //    }
+    //}
+    //public bool IsDrawPolygonMode
+    //{
+    //    get { return MapAction == MapAction.DrawPolygon; }
+    //    set
+    //    {
+    //        if (value)
+    //            MapAction = MapAction.DrawPolygon;
+    //        else if (MapAction == MapAction.DrawPolygon)
+    //            MapAction = MapAction.Pan;
+
+    //        RaisePropertyChanged();
+    //    }
+    //}
+    //public bool IsDrawRectangleMode
+    //{
+    //    get { return MapAction == MapAction.DrawRectangle; }
+    //    set
+    //    {
+    //        if (value)
+    //            MapAction = MapAction.DrawRectangle;
+
+    //        else if (MapAction == MapAction.DrawRectangle)
+    //            MapAction = MapAction.Pan;
+
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
 
-    public bool IsZoomInMode
-    {
-        get { return MapAction == MapAction.ZoomIn || MapAction == MapAction.ZoomInRectangle; }
-        set
-        {
-            if (value)
-            {
-                EnableRectangleZoomIn();
-            }
+    //public bool IsZoomInMode
+    //{
+    //    get { return MapAction == MapAction.ZoomIn || MapAction == MapAction.ZoomInRectangle; }
+    //    set
+    //    {
+    //        if (value)
+    //        {
+    //            this.MapAction = MapAction.ZoomInRectangle;
+    //            //EnableRectangleZoomIn();
+    //        }
 
-            RaisePropertyChanged();
-        }
-    }
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
 
-    public bool IsZoomOutMode
-    {
-        get { return MapAction == MapAction.ZoomOut || MapAction == MapAction.ZoomOutRectangle; }
-        set
-        {
-            if (value)
-            {
-                EnableZoomOut();
-            }
+    //public bool IsZoomOutMode
+    //{
+    //    get { return MapAction == MapAction.ZoomOut || MapAction == MapAction.ZoomOutRectangle; }
+    //    set
+    //    {
+    //        if (value)
+    //        {
+    //            //EnableZoomOut();
+    //            this.MapAction = MapAction.ZoomOut;
+    //        }
 
-            RaisePropertyChanged();
-        }
-    }
+    //        RaisePropertyChanged();
+    //    }
+    //}
 
 
     private bool _showAttributeTable = false;
@@ -1218,13 +1303,13 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action<Feature<Point>, List<Field>?>? RequestShowFeatureChangesDialog;
 
-    public Action RequestEnableRectangleZoom;
+    //public Action RequestEnableRectangleZoom;
 
-    public Action RequestEnableZoomOut;
+    //public Action RequestEnableZoomOut;
 
-    public Action RequestPan;
+    //public Action RequestPan;
 
-    public Action<Point, Action> RequestPanTo;
+    public Action<Point, Action?> RequestPanTo;
 
     //public Action<int, Point, Action, bool> RequestZoomToLevelAndCenter;
 
@@ -1298,7 +1383,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action<string, List<Point>, Geometry, bool, VisualParameters> RequestAddPolyBezier;
 
-    public Func<DrawMode, /*EditableFeatureLayerOptions,*/ Task<Response<Geometry<Point>>>> RequestGetDrawingAsync;
+    public Func<DrawMode, bool, Task<Response<Geometry<Point>>>> RequestGetDrawingAsync;
 
     //public Action RequestClearAll;
 
@@ -1548,7 +1633,7 @@ public abstract class MapViewModelBase : ViewModelBase
             {
                 RequestShowFeatureChangesDialog?.Invoke(feature, selectedLayer.Fields);
             };
-             
+
             SelectedLayers.Add(selectedLayer);
 
             CurrentLayer = selectedLayer;
@@ -2005,21 +2090,6 @@ public abstract class MapViewModelBase : ViewModelBase
     //}
 
 
-    private async Task DrawAsync(DrawMode mode)
-    {
-        IsPanMode = true;
-        //ResetMode(mode);
-
-        var drawingResult = await GetDrawingAsync(mode, MapSettings.DrawingOptions);
-
-        if (!drawingResult.HasNotNullResult())
-            return;
-
-        var featureName = $"DRAWING {DrawingItems?.Count}";
-
-        AddDrawingItem(drawingResult.Result, featureName);
-    }
-
     public void AddDrawingItem(
         Geometry<Point> drawing,
         string? name = null,
@@ -2101,8 +2171,6 @@ public abstract class MapViewModelBase : ViewModelBase
 
         if (drawingItemLayer != null)
             TrySetCommandsForDrawingItemLayer(drawingItemLayer);
-
-        IsPanMode = true;
 
         return drawingItemLayer;
     }
@@ -2458,7 +2526,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         var proxy = ProxySettings is null ? null : this.ProxySettings.GetProxy();// RequestGetProxy?.Invoke();
 
-        IsConnected = await NetHelper.IsConnectedToInternet(proxy);
+        IsConnected = await NetworkUtilities.IsConnectedToInternet(proxy);
     }
 
     public void SetMapCursorSet1()
@@ -2468,7 +2536,7 @@ public abstract class MapViewModelBase : ViewModelBase
         SetDefaultCursor(MapAction.ZoomIn, zoomInCursor);
 
         var zoomOutCursor = new Cursor(System.Windows.Application.GetResourceStream(new Uri("/IRI.Maptor.Jab.Common;component/Assets/Cursors/MapCursorSet1/MagnifyMinusRightHanded.cur", UriKind.Relative)).Stream, false);
-        SetDefaultCursor(MapAction.ZoomOutRectangle, zoomOutCursor);
+        //SetDefaultCursor(MapAction.ZoomOutRectangle, zoomOutCursor);
         SetDefaultCursor(MapAction.ZoomOut, zoomOutCursor);
     }
 
@@ -2534,15 +2602,7 @@ public abstract class MapViewModelBase : ViewModelBase
     //}
 
 
-    public void FireMapStatusChanged(MapStatus status)
-    {
-        MapStatus = status;
-    }
 
-    public void FireMapActionChanged(MapAction action)
-    {
-        MapAction = action;
-    }
 
     public void FireMapExtentChanged(BoundingBox currentExtent, bool isNewExtent)
     {
@@ -3023,15 +3083,16 @@ public abstract class MapViewModelBase : ViewModelBase
         RequestZoomAndCenterToGoogleZoomLevel?.Invoke(zoomLevel, centerMapPoint, callback, withAnimation);
     }
 
-    public void EnableRectangleZoomIn()
-    {
-        RequestEnableRectangleZoom?.Invoke();
-    }
+    //public void EnableRectangleZoomIn()
+    //{
+    //    //RequestEnableRectangleZoom?.Invoke();
+    //    this.MapAction = MapAction.ZoomInRectangle;
+    //}
 
-    public void EnableZoomOut()
-    {
-        RequestEnableZoomOut?.Invoke();
-    }
+    //public void EnableZoomOut()
+    //{
+    //    RequestEnableZoomOut?.Invoke();
+    //}
 
     public void GoToIranExtent()
     {
@@ -3091,15 +3152,16 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public void Pan()
     {
-        RequestPan?.Invoke();
+        //RequestPan?.Invoke();
+        this.MapAction = MapAction.Pan;
     }
 
-    public void PanTo(Point point, Action callback)
+    public void PanTo(Point point, Action? callback)
     {
         RequestPanTo?.Invoke(point, callback);
     }
 
-    public void PanToGeographicPoint(Point point, Action callback = null)
+    public void PanToGeographicPoint(Point point, Action? callback = null)
     {
         var webMercatorPoint = MapProjects.GeodeticWgs84ToWebMercator(point);
 
@@ -3112,21 +3174,92 @@ public abstract class MapViewModelBase : ViewModelBase
     //*****************************************Drawing***************************************************************
     #region Drawing
 
-    public async Task<Response<Geometry<Point>>> GetDrawingAsync(DrawMode mode, EditableFeatureLayerOptions? options = null)
+    private void StartDrawModeLoop(MapAction action)
     {
-        //this.IsDrawMode = true;
+        StopDrawModeLoop();
 
+        _drawModeCts = new CancellationTokenSource();
+        var ct = _drawModeCts.Token;
+        _ = RunDrawModeLoopAsync(action, ct);
+    }
+
+    private void StopDrawModeLoop()
+    {
+        if (_drawModeCts == null)
+            return;
+
+        _drawModeCts.Cancel();
+        _drawModeCts.Dispose();
+        _drawModeCts = null;
+
+        RequestCancelNewDrawing?.Invoke();
+    }
+
+
+    private async Task RunDrawModeLoopAsync(MapAction action, CancellationToken ct)
+    {
+        try
+        {
+            var drawMode = action.ToDrawMode();
+
+            while (!ct.IsCancellationRequested && MapAction == action)
+            {
+                try
+                {
+                    var result = await GetDrawingAsync(drawMode, MapSettings.DrawingOptions, continuousDrawing: true);
+
+                    if (ct.IsCancellationRequested || MapAction != action)
+                        break;
+
+                    if (result.IsCanceled)
+                    {
+                        // Cancel requested while drawing was active – loop continues, but no new drawing starts immediately
+                        continue;
+                    }
+
+                    if (result.HasNotNullResult())
+                    {
+                        var featureName = $"DRAWING {DrawingItems?.Count}";
+                        AddDrawingItem(result.Result, featureName);
+                        await Task.Delay(400, ct);
+                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    // If the loop token was cancelled (StopDrawModeLoop), exit completely
+                    if (ct.IsCancellationRequested) break;
+                    // Otherwise (per-drawing cancellation) just continue
+                }
+            }
+        }
+        catch (OperationCanceledException) { }
+        finally
+        {
+            if (MapAction == action)
+                MapAction = MapAction.Pan;
+        }
+    }
+
+    public async Task<Response<Geometry<Point>>> GetDrawingAsync(
+        DrawMode mode,
+        EditableFeatureLayerOptions? options = null,
+        bool continuousDrawing = false)
+    {
         this.ShowMapInfoPanel = mode != DrawMode.Rectangle;
 
         options = options ?? MapSettings.DrawingOptions;
 
         MapPanel.Options = options;
 
-        var result = await RequestGetDrawingAsync?.Invoke(mode/*, options*/);
+        if (RequestGetDrawingAsync == null)
+            return Response<Geometry<Point>>.Empty;
 
-        //this.IsDrawMode = false;
+        return await RequestGetDrawingAsync.Invoke(mode, continuousDrawing);
+    }
 
-        return result;
+    public void ExitDrawMode()
+    {
+        StopDrawModeLoop();
     }
 
     protected void CancelNewDrawing()
@@ -3199,7 +3332,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
     protected async Task<Response<Geometry<Point>>> Measure(DrawMode mode, Action action = null)
     {
-        //this.IsMeasureMode = true;
+        if (MapAction.IsDrawAction())
+            MapAction = MapAction.Pan;
+
         this.ShowMapInfoPanel = true;
 
         try
@@ -5124,7 +5259,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_rectangleZoomCommand == null)
             {
-                _rectangleZoomCommand = new RelayCommand(param => EnableRectangleZoomIn());
+                _rectangleZoomCommand = new RelayCommand(param => this.MapAction = MapAction.ZoomInRectangle/*EnableRectangleZoomIn()*/);
             }
 
             return _rectangleZoomCommand;
@@ -5139,7 +5274,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_zoomOutCommand == null)
             {
-                _zoomOutCommand = new RelayCommand(param => EnableZoomOut());
+                _zoomOutCommand = new RelayCommand(param => this.MapAction = MapAction.ZoomOut/*EnableZoomOut()*/);
             }
 
             return _zoomOutCommand;
@@ -5629,7 +5764,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_drawPolygonCommand == null)
             {
-                _drawPolygonCommand = new RelayCommand(async param => await DrawAsync(DrawMode.Polygon));
+                _drawPolygonCommand = new RelayCommand(param => this.MapAction = MapAction.DrawPolygon /*IsDrawPolygonMode = !IsDrawPolygonMode*/);
             }
             return _drawPolygonCommand;
         }
@@ -5642,7 +5777,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_drawRectangleCommand == null)
             {
-                _drawRectangleCommand = new RelayCommand(async param => await DrawAsync(DrawMode.Rectangle));
+                _drawRectangleCommand = new RelayCommand(param => this.MapAction = MapAction.DrawRectangle /*IsDrawRectangleMode = !IsDrawRectangleMode*/);
             }
             return _drawRectangleCommand;
         }
@@ -5655,7 +5790,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_drawPolylineCommand == null)
             {
-                _drawPolylineCommand = new RelayCommand(async param => await DrawAsync(DrawMode.Polyline));
+                _drawPolylineCommand = new RelayCommand(param => this.MapAction = MapAction.DrawPolyline /*IsDrawPolylineMode = !IsDrawPolylineMode*/);
             }
             return _drawPolylineCommand;
         }
@@ -5668,7 +5803,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_drawPointCommand == null)
             {
-                _drawPointCommand = new RelayCommand(async param => await DrawAsync(DrawMode.Point));
+                _drawPointCommand = new RelayCommand(param => this.MapAction = MapAction.DrawPoint /*IsDrawPointMode = !IsDrawPointMode*/);
             }
             return _drawPointCommand;
         }

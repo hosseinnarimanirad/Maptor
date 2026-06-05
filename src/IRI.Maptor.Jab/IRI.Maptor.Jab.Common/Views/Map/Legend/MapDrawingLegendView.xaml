@@ -4,6 +4,7 @@
                 xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls" 
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                xmlns:maptorJab="clr-namespace:IRI.Maptor.Jab.Common"
                 xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
                 mc:Ignorable="d" x:Name="root" >
@@ -196,24 +197,30 @@
                         <iconPacks:PackIconMaterial Kind="PencilPlus" Foreground="White"/>
                     </Expander.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding DrawPointCommand}" 
+                        <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"
+                                IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawPoint}}"
                                 ToolTip="{Binding [cmd_general_drawPoint], Source={StaticResource Localization}}"  >
                             <iconPacks:PackIconMaterial Kind="VectorPointPlus" Width="14"/>
-                        </Button>
-                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding DrawPolylineCommand}" 
+                        </ToggleButton>
+                        
+                        <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"
+                                IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawPolyline}}"
                                 ToolTip="{Binding [cmd_general_drawPolyline], Source={StaticResource Localization}}">
                             <iconPacks:Material Kind="VectorPolylinePlus"/>
-                        </Button>
-                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding DrawRectangleCommand}" 
+                        </ToggleButton>
+                        <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"
+                                IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawRectangle}}"
                                 ToolTip="{Binding [cmd_general_drawRectangle], Source={StaticResource Localization}}">
                             <iconPacks:Material Kind="ShapeRectanglePlus"/>
-                        </Button>
+                        </ToggleButton>
 
-                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding DrawPolygonCommand}" 
+                        <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"
+                                IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawPolygon}}"
                                 ToolTip="{Binding [cmd_general_drawPolygon], Source={StaticResource Localization}}">
                             <iconPacks:Material Kind="ShapePolygonPlus"/>
-                        </Button>
-                        <Button Style="{StaticResource circleButtonDarkOverride}" Command="{Binding AddTextToMapCommand}" 
+                        </ToggleButton>
+                        <Button Style="{StaticResource circleButtonDarkOverride}"
+                                Command="{Binding AddTextToMapCommand}" 
                                 ToolTip="{Binding [cmd_general_addTextToMap], Source={StaticResource Localization}}">
                             <iconPacks:Material Kind="FormatAnnotationPlus"/>
                         </Button>

@@ -21,7 +21,7 @@
             <ColumnDefinition Width="350"/>
         </Grid.ColumnDefinitions>
 
-        <maptor:MapViewer Margin="0" Grid.ColumnSpan="3"  x:Name="map"/>
+        <maptor:MapViewer Margin="0" Grid.ColumnSpan="3"  x:Name="map" MapAction="{Binding MapAction, Mode=OneWay}"/>
         <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" 
                ResizeBehavior="PreviousAndNext" ShowsPreview="True"/>
 

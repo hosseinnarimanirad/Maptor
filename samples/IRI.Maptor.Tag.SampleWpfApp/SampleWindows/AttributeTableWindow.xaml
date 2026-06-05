@@ -22,7 +22,7 @@
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <maptor:MapViewer Margin="0" Grid.Column="2"  x:Name="map"/>
+        <maptor:MapViewer Margin="0" Grid.Column="2"  x:Name="map" MapAction="{Binding MapAction, Mode=OneWay}"/>
         
         <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="LightGray" ResizeBehavior="PreviousAndNext" ShowsPreview="True"/>
         <GridSplitter Grid.Row="1" Grid.ColumnSpan="3" Height="5" HorizontalAlignment="Stretch" Background="LightGray" ResizeBehavior="PreviousAndNext" ShowsPreview="True"/>

@@ -12,6 +12,10 @@ public enum MapAction
     ZoomIn,
     ZoomOut,
     ZoomInRectangle,
-    ZoomOutRectangle,
+    //ZoomOutRectangle,
+    DrawPoint,
+    DrawPolyline,
+    DrawPolygon,
+    DrawRectangle,
     None,
 }

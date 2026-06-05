@@ -206,7 +206,7 @@
         </ScrollViewer>
         <GridSplitter Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Width="5" ResizeBehavior="PreviousAndNext"/>
         <Border Grid.Column="2" Grid.Row="0"  BorderBrush="Black" BorderThickness="1" Margin="1"/>
-        <maptor:MapViewer Grid.Row="0" Grid.Column="2" x:Name="map"/>
+        <maptor:MapViewer Grid.Row="0" Grid.Column="2" x:Name="map" MapAction="{Binding MapAction, Mode=OneWay}"/>
         <maptor:MapPanelView Grid.Column="2" DataContext="{Binding }" />
 
         <StackPanel  Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="4">

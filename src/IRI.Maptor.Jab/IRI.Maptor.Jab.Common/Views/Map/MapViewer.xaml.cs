@@ -101,7 +101,7 @@ public partial class MapViewer : NotifiableUserControl
 
     public event EventHandler<MapStatusEventArgs> OnStatusChanged;
 
-    public event EventHandler<MapActionEventArgs> OnMapActionChanged;
+    //public event EventHandler<MapActionEventArgs> OnMapActionChanged;
 
     public event EventHandler<bool> OnExtentChanged;
 
@@ -206,25 +206,69 @@ public partial class MapViewer : NotifiableUserControl
 
     private Dictionary<MapAction, Cursor> CursorSettings;
 
-    private MapAction _currentMouseAction = MapAction.Pan;
+    //private MapAction _currentMouseAction = MapAction.Pan;
+    //public MapAction CurrentMouseAction
+    //{
+    //    get { return _currentMouseAction; }
+    //    set
+    //    {
+    //        this.SetCursor(CursorSettings[value]);
 
-    public MapAction CurrentMouseAction
+    //        if (_currentMouseAction == value)
+    //            return;
+
+    //        _currentMouseAction = value;
+    //        RaisePropertyChanged();
+
+    //        this.OnMapActionChanged?.Invoke(null, new MapActionEventArgs(value));
+    //    }
+    //}
+
+    public static readonly DependencyProperty MapActionProperty =
+    DependencyProperty.Register(nameof(MapAction), typeof(MapAction), typeof(MapViewer),
+        new PropertyMetadata(MapAction.Pan, OnMapActionChanged));
+
+    public MapAction MapAction
     {
-        get { return _currentMouseAction; }
-        set
-        {
-            this.SetCursor(CursorSettings[value]);
-
-            if (_currentMouseAction == value)
-                return;
-
-            _currentMouseAction = value;
-            RaisePropertyChanged();
-
-            this.OnMapActionChanged?.Invoke(null, new MapActionEventArgs(value));
-        }
+        get => (MapAction)GetValue(MapActionProperty);
+        set => SetValue(MapActionProperty, value);
     }
 
+    private static void OnMapActionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var viewer = (MapViewer)d;
+        var newAction = (MapAction)e.NewValue;
+        viewer.SetCursor(viewer.CursorSettings[newAction]);
+
+        // Change internal interaction mode without firing any event back
+        viewer.SwitchToMode(newAction);
+    }
+
+    private void SwitchToMode(MapAction action)
+    {
+        // Unsubscribe from all old input handlers
+        ResetMapViewEvents();
+
+        switch (action)
+        {
+            case MapAction.Pan:
+                ActivatePanMode();
+                break;
+            case MapAction.ZoomInRectangle:
+                ZoomIn();
+                break;
+
+            case MapAction.ZoomOut:
+                ZoomOutPoint();
+                break;
+            case MapAction.DrawPoint:
+            case MapAction.DrawPolyline:
+            case MapAction.DrawPolygon:
+                //Draw(action.ToDrawMode());
+                break;
+                // ... other cases
+        }
+    }
 
     private MapStatus _status;
     public MapStatus Status
@@ -345,7 +389,11 @@ public partial class MapViewer : NotifiableUserControl
             { MapAction.ZoomIn, ZoomInCursor },
             { MapAction.ZoomOut, ZoomOutCursor },
             { MapAction.ZoomInRectangle, ZoomInRectangleCursor },
-            { MapAction.ZoomOutRectangle, ZoomOutRectangleCursor },
+            //{ MapAction.ZoomOutRectangle, ZoomOutRectangleCursor },
+            { MapAction.DrawPoint, Cursors.Cross },
+            { MapAction.DrawPolyline, Cursors.Cross },
+            { MapAction.DrawPolygon, Cursors.Cross },
+            { MapAction.DrawRectangle, Cursors.Cross },
             { MapAction.None, Cursors.AppStarting },
         };
 
@@ -448,9 +496,9 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestFullExtent = this.FullExtent;
 
-        presenter.RequestEnableRectangleZoom = this.ZoomIn;
+        //presenter.RequestEnableRectangleZoom = this.ZoomIn;
 
-        presenter.RequestEnableZoomOut = this.ZoomOutPoint;
+        //presenter.RequestEnableZoomOut = this.ZoomOutPoint;
 
         presenter.FireIsMouseWheelZoomEnabledChanged = e =>
         {
@@ -509,9 +557,9 @@ public partial class MapViewer : NotifiableUserControl
             presenter.UpdateCurrentEditingPoint(e.Point.AsPoint());
         };
 
-        this.OnStatusChanged += (sender, e) => { presenter.FireMapStatusChanged(e.Status); };
+        this.OnStatusChanged += (sender, e) => presenter.MapStatus = e.Status;
 
-        this.OnMapActionChanged += (sender, e) => { presenter.FireMapActionChanged(e.Action); };
+        //this.OnMapActionChanged += (sender, e) => presenter.MapAction = e.Action;
 
         //this.OnEditableFeatureLayerChanged += (sender, e) => { presenter.CurrentEditingLayer = e; };
 
@@ -544,7 +592,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestUpdateZIndex = l => UpdateZIndex(l);
 
-        presenter.RequestGetDrawingAsync = (mode/*, options*/) => GetDrawingAsync(mode/*, options*/);
+        presenter.RequestGetDrawingAsync = (mode, continuousDrawing) => GetDrawingAsync(mode, continuousDrawing);
 
         presenter.RequestCancelNewDrawing = CancelDrawing;
 
@@ -615,7 +663,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestClearLayerByTag = this.Clear;
 
-        presenter.RequestPan = this.Pan;
+        //presenter.RequestPan = this.Pan;
 
         presenter.RequestZoomToFeature = this.ZoomToFeature;
 
@@ -1961,8 +2009,7 @@ public partial class MapViewer : NotifiableUserControl
     //POTENTIALLY ERROR PROUNE; not sure everything is considered or not
     private void ResetMapViewEvents()
     {
-        //this.SetCursor(Cursors.Arrow);
-        this.SetCursor(CursorSettings[_currentMouseAction]);
+        //this.SetCursor(CursorSettings[_currentMouseAction]);
 
         //this.mapView.MouseDown -= mapView_MouseDownForPan;
         //this.mapView.MouseUp -= mapView_MouseUpForPan;
@@ -1974,26 +2021,7 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.MouseUp -= mapView_MouseUpForZoom;
 
 
-        //this.mapView.MouseDown -= MapView_MouseDownForStartDrawing;
-        //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-        //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-        //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-        Unsubscribe_DrawingEvents_StartDrawing();
-
-
-        //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-        //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
-        //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
-        Unsubscribe_DrawingEvents_StartNewPart();
-
-
-        Unsubscribe_DrawingEvents_Draw();
-
-        //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-
-        //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-        //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-        //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
+        EndDrawPhase();
 
         this.mapView.MouseMove -= MapView_MouseMoveSelectThePoint;
         this.mapView.MouseDown -= MapView_MouseDownForPanWhileSelectThePoint;
@@ -2017,9 +2045,7 @@ public partial class MapViewer : NotifiableUserControl
 
     public void SetCursor(Cursor cursor)
     {
-        if (itWasPanningWhileDrawing ||
-            itWasPanningWhileStartDrawing ||
-            itWasPanningWhileStartNewPart ||
+        if (_itWasPanning ||
             itWasPanningWhileSelectThePoint)
             return;
 
@@ -2588,7 +2614,7 @@ public partial class MapViewer : NotifiableUserControl
 
     //bool isPanEnabled = false;
 
-    public void Pan()
+    private void ActivatePanMode()
     {
         //this.isPanEnabled = true;
 
@@ -2597,16 +2623,16 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.MouseDown -= mapView_MouseDownForPan;
         this.mapView.MouseDown += mapView_MouseDownForPan;
 
-        this.CurrentMouseAction = MapAction.Pan;
+        //this.CurrentMouseAction = MapAction.Pan;
 
         //this.mapView.MouseUp -= mapView_MouseUpForPan;
         //this.mapView.MouseUp += mapView_MouseUpForPan;
     }
 
-    public void ReleasePan()
+    public void ReleasePanMode()
     {
-        //this.isPanEnabled = false;
-        this.CurrentMouseAction = MapAction.None;
+        //this.CurrentMouseAction = MapAction.None;
+        this._presenter.MapAction = MapAction.None;
 
         ResetMapViewEvents();
 
@@ -2958,7 +2984,7 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.MouseDown -= mapView_MouseDownForZoom;
         this.mapView.MouseDown += mapView_MouseDownForZoom;
 
-        this.CurrentMouseAction = MapAction.ZoomInRectangle;
+        //this.CurrentMouseAction = MapAction.ZoomInRectangle;
     }
 
     public void ZoomOutPoint()
@@ -2968,7 +2994,7 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.MouseUp -= mapView_MouseUpForZoomOut;
         this.mapView.MouseUp += mapView_MouseUpForZoomOut;
 
-        this.CurrentMouseAction = MapAction.ZoomOut;
+        //this.CurrentMouseAction = MapAction.ZoomOut;
     }
 
 
@@ -3412,17 +3438,17 @@ public partial class MapViewer : NotifiableUserControl
 
     DrawingLayer? drawingLayer;
 
-    //EditableFeatureLayerOptions drawingOptions = new EditableFeatureLayerOptions();
-
     DrawMode drawMode;
+
+    bool _continuousDrawing = false;
 
     Action<Point>? onMoveForDrawAction = null;
 
-    bool itWasPanningWhileDrawing { get; set; }
-
-    bool itWasPanningWhileStartDrawing { get; set; }
-
-    bool itWasPanningWhileStartNewPart { get; set; }
+    // ── Draw-phase input state (shared across all click-or-pan phases) ──────
+    Action<sb.Point>? _onDrawPhaseClick;
+    Action<sb.Point>? _onDrawPhaseMove;
+    Action<sb.Point>? _onDrawPhaseAfterPan;
+    bool _itWasPanning;
 
     CancellationTokenSource? drawingCancellationToken;
 
@@ -3437,23 +3463,29 @@ public partial class MapViewer : NotifiableUserControl
     sb.Point rectangleFirstMapPoint;
 
 
-    // todo: validation on geometry
-    public async Task<Response<Geometry<sb.Point>>> GetDrawingAsync(DrawMode mode/*, EditableFeatureLayerOptions options*/)
+    public async Task<Response<Geometry<sb.Point>>> GetDrawingAsync(DrawMode mode, bool continuousDrawing = false)
     {
+        this._continuousDrawing = continuousDrawing;
+
         try
         {
-            CancelAsyncMapInteractions();
+            if (continuousDrawing)
+            {
+                CancelEditGeometry();
+                CancelGetBezier();
+            }
+            else
+                CancelAsyncMapInteractions();
 
             this.Status = MapStatus.Drawing;
 
-            var result = await GetDrawing(mode/*, options*/);
+            var result = await GetDrawing(mode);
 
             this.Status = MapStatus.Idle;
 
             if (result.HasNotNullResult())
             {
-                // todo: validation on geometry
-                return ResponseFactory.Create(result.Result/*.AsSqlGeometry().MakeValid().AsGeometry()*/);
+                return ResponseFactory.Create(result.Result);
             }
             else
             {
@@ -3466,7 +3498,7 @@ public partial class MapViewer : NotifiableUserControl
             {
                 this.Status = MapStatus.Idle;
 
-                this.Pan();
+                RestoreNavigationAfterDrawing();
             }
 
             return Response<Geometry<sb.Point>>.CreateCanceled();//new Response<Geometry<sb.Point>>() { IsCanceled = true };
@@ -3479,7 +3511,7 @@ public partial class MapViewer : NotifiableUserControl
 
             drawingCancellationToken = null;
 
-            this.Pan();
+            RestoreNavigationAfterDrawing();
 
             throw;
         }
@@ -3487,40 +3519,52 @@ public partial class MapViewer : NotifiableUserControl
         {
             if (drawingLayer != null)
             {
-                //this.Status = MapStatus.Idle;
                 drawingLayer.Dispose();
                 drawingLayer = null;
-                //this.Pan();
             }
         }
     }
 
-    public void CancelDrawing() => this.drawingCancellationToken?.Cancel();
+    private void RestoreNavigationAfterDrawing()
+    {
+        if (!_continuousDrawing)
+            this._presenter.MapAction = MapAction.Pan;
+        // In continuous mode the loop's finally block handles the MapAction transition.
+    }
+
+    public void CancelDrawing()
+    {
+        bool hadStarted = drawingLayer != null;
+
+        drawingCancellationToken?.Cancel();
+
+        if (!hadStarted)
+        {
+            _presenter.ExitDrawMode();
+        }
+    }
 
 
-    private Task<Response<Geometry<sb.Point>>> GetDrawing(DrawMode mode/*, EditableFeatureLayerOptions options*/)
+    private Task<Response<Geometry<sb.Point>>> GetDrawing(DrawMode mode)
     {
         drawingTcs = new TaskCompletionSource<Response<Geometry<sb.Point>>>();
 
         drawingCancellationToken = new CancellationTokenSource();
 
-        //in order to not show delete button when drawing new measure
         this.CurrentEditingLayer = null;
 
         var currentExtextCenterInWebMercator = this.CurrentExtent.Center;
 
         this.CurrentEditingPoint = new Point(currentExtextCenterInWebMercator.X, currentExtextCenterInWebMercator.Y);
 
-        //this.displayDrawingPath = display;
-
-        //options.IsNewDrawing = true;
-
-        //this.drawingOptions = options;
-
         this.drawMode = mode;
 
         if (this.viewTransform == null || drawMode == DrawMode.Freehand)
+        {
             drawingTcs.TrySetCanceled();
+
+            return drawingTcs.Task;
+        }
 
         ResetMapViewEvents();
 
@@ -3530,28 +3574,12 @@ public partial class MapViewer : NotifiableUserControl
         {
             drawingTcs.TrySetCanceled();
 
-            //this.SetCursor(Cursors.Arrow);
-            this.SetCursor(CursorSettings[_currentMouseAction]);
-
-
-            Unsubscribe_DrawingEvents_StartDrawing();
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-
-            Unsubscribe_DrawingEvents_Draw();
-            //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-
-            //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
+            EndDrawPhase();
 
             Unsubscribe_DrawingEvents_StartRectangleDrawing();
-            //this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
-            //this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
-            //this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
 
-            this.mapView.Children.Remove(drawingRectangle);
+            if (drawingRectangle != null)
+                this.mapView.Children.Remove(drawingRectangle);
 
             if (drawingLayer != null)
             {
@@ -3573,363 +3601,100 @@ public partial class MapViewer : NotifiableUserControl
         }
         else
         {
-            // Existing point/polyline/polygon drawing
-            Subscribe_DrawingEvents_StartDrawing();
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-            //this.mapView.MouseDown += MapView_MouseDownForPanWhileStartDrawing;
-
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-            //this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartDrawing;
-
-            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-            //this.mapView.MouseUp += MapView_MouseUpForPanWhileStartDrawing;
-
-            //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-            //this.mapView.MouseMove += MapView_MouseMoveForDrawing;
-            //this.mapView.MouseDown -= MapView_MouseDownForStartDrawing;
-            //this.mapView.MouseDown += MapView_MouseDownForStartDrawing;
+            // Waiting for user's first click
+            BeginDrawPhase(onConfirmedClick: AddFirstPointForNewDrawing);
         }
-
-        //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-        //this.mapView.MouseMove += MapView_MouseMoveForDrawing;
 
         return drawingTcs.Task;
     }
 
-    // *********************** Events: Start Drawing *********************** 
-    private void MapView_MouseDownForPanWhileStartDrawing(object sender, MouseButtonEventArgs e)
+    // *********************** Unified Draw-Phase Event Handlers ***********************
+    // All three drawing phases (waiting for first click, placing vertices, waiting for
+    // new-part click) share the same pan-or-click logic. BeginDrawPhase wires up these
+    // three handlers with phase-specific callbacks; EndDrawPhase tears them down.
+
+    private void BeginDrawPhase(
+        Action<sb.Point> onConfirmedClick,
+        Action<sb.Point>? onMove = null,
+        Action<sb.Point>? onAfterPan = null)
+    {
+        EndDrawPhase();
+        _onDrawPhaseClick    = onConfirmedClick;
+        _onDrawPhaseMove     = onMove;
+        _onDrawPhaseAfterPan = onAfterPan;
+        _itWasPanning        = false;
+        this.mapView.MouseDown += DrawPhase_MouseDown;
+        this.mapView.MouseMove += DrawPhase_MouseMove;
+        this.mapView.MouseUp   += DrawPhase_MouseUp;
+    }
+
+    private void EndDrawPhase()
+    {
+        this.mapView.MouseDown -= DrawPhase_MouseDown;
+        this.mapView.MouseMove -= DrawPhase_MouseMove;
+        this.mapView.MouseUp   -= DrawPhase_MouseUp;
+    }
+
+    private void DrawPhase_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton != MouseButton.Left)
             return;
 
         e.Handled = true;
-
-        itWasPanningWhileStartDrawing = false;
-
-        this.prevMouseLocation = e.GetPosition(this.mapView);
+        _itWasPanning     = false;
+        prevMouseLocation = e.GetPosition(this.mapView);
     }
 
-    private void MapView_MouseMoveForPanWhileStartDrawing(object sender, MouseEventArgs e)
+    private void DrawPhase_MouseMove(object sender, MouseEventArgs e)
     {
-        Point currentMouseLocation = e.GetPosition(this.mapView);
+        var currentLoc = e.GetPosition(this.mapView);
 
         if (_presenter.MapPanel.Options.IsLinkedToMouseMove)
-            this.CurrentEditingPoint = ScreenToMap(currentMouseLocation);
+            this.CurrentEditingPoint = ScreenToMap(currentLoc);
 
         if (e.LeftButton == MouseButtonState.Pressed)
         {
-            double xOffset = currentMouseLocation.X - this.prevMouseLocation.X;
+            double dx = currentLoc.X - prevMouseLocation.X;
+            double dy = currentLoc.Y - prevMouseLocation.Y;
 
-            double yOffset = currentMouseLocation.Y - this.prevMouseLocation.Y;
-
-            if (Math.Abs(xOffset) > _knownAsPanThreshold || Math.Abs(yOffset) > _knownAsPanThreshold)
+            if (Math.Abs(dx) > _knownAsPanThreshold || Math.Abs(dy) > _knownAsPanThreshold)
             {
-                this.panTransform.X += xOffset * 1.0 / this.zoomTransform.ScaleX;
-
-                this.panTransform.Y += yOffset * 1.0 / this.zoomTransform.ScaleY;
-
-                this.prevMouseLocation = currentMouseLocation;
-
-                this.panTransformForPoints.X += xOffset;
-
-                this.panTransformForPoints.Y += yOffset;
-
+                this.panTransform.X         += dx / this.zoomTransform.ScaleX;
+                this.panTransform.Y         += dy / this.zoomTransform.ScaleY;
+                prevMouseLocation            = currentLoc;
+                this.panTransformForPoints.X += dx;
+                this.panTransformForPoints.Y += dy;
                 UpdateTileInfos();
-
-                this.itWasPanningWhileStartDrawing = true;
+                _itWasPanning = true;
             }
-            else { }
         }
         else
         {
-
+            var mapPt = ScreenToMap(currentLoc).AsPoint();
+            _onDrawPhaseMove?.Invoke(mapPt);
         }
     }
 
-    private void MapView_MouseUpForPanWhileStartDrawing(object sender, MouseButtonEventArgs e)
+    private void DrawPhase_MouseUp(object sender, MouseButtonEventArgs e)
     {
-        if (itWasPanningWhileStartDrawing)
+        if (_itWasPanning)
         {
+            var mapPt = ScreenToMap(e.GetPosition(this.mapView)).AsPoint();
             this.ResetMapViewEvents();
-
             this.Refresh(isNewExtent: true);
-
-            Subscribe_DrawingEvents_StartDrawing();
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-            //this.mapView.MouseDown += MapView_MouseDownForPanWhileStartDrawing;
-
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-            //this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartDrawing;
-
-            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-            //this.mapView.MouseUp += MapView_MouseUpForPanWhileStartDrawing;
-
-            itWasPanningWhileStartDrawing = false;
-
+            _onDrawPhaseAfterPan?.Invoke(mapPt);
+            BeginDrawPhase(_onDrawPhaseClick!, _onDrawPhaseMove, _onDrawPhaseAfterPan);
+            _itWasPanning = false;
             this.SetCursor(Cursors.Cross);
-
             return;
         }
-        else
-        {
-            if (e.ChangedButton != MouseButton.Left)
-                return;
 
-            this.prevMouseLocation = e.GetPosition(this.mapView);
-
-            var webMercatorPoint = ScreenToMap(this.prevMouseLocation).AsPoint();
-
-            AddFirstPointForNewDrawing(webMercatorPoint);
-        }
-    }
-
-    private void Subscribe_DrawingEvents_StartDrawing()
-    {
-        this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-        this.mapView.MouseDown += MapView_MouseDownForPanWhileStartDrawing;
-
-        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-        this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartDrawing;
-
-        this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-        this.mapView.MouseUp += MapView_MouseUpForPanWhileStartDrawing;
-
-        // *******************************************************************
-    }
-
-    private void Unsubscribe_DrawingEvents_StartDrawing()
-    {
-        this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-        this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-    }
-
-
-    // *********************** Events: Start New Part *********************** 
-    private void MapView_MouseDownForPanWhileStartNewPart(object sender, MouseButtonEventArgs e)
-    {
         if (e.ChangedButton != MouseButton.Left)
             return;
 
-        e.Handled = true;
-
-        itWasPanningWhileStartNewPart = false;
-
-        this.prevMouseLocation = e.GetPosition(this.mapView);
-
-    }
-
-    private void MapView_MouseMoveForPanWhileStartNewPart(object sender, MouseEventArgs e)
-    {
-        Point currentMouseLocation = e.GetPosition(this.mapView);
-
-        if (_presenter.MapPanel.Options.IsLinkedToMouseMove)
-            this.CurrentEditingPoint = ScreenToMap(currentMouseLocation);
-
-        if (e.LeftButton == MouseButtonState.Pressed)
-        {
-            double xOffset = currentMouseLocation.X - this.prevMouseLocation.X;
-
-            double yOffset = currentMouseLocation.Y - this.prevMouseLocation.Y;
-
-            if (Math.Abs(xOffset) > _knownAsPanThreshold || Math.Abs(yOffset) > _knownAsPanThreshold)
-            {
-                this.panTransform.X += xOffset * 1.0 / this.zoomTransform.ScaleX;
-
-                this.panTransform.Y += yOffset * 1.0 / this.zoomTransform.ScaleY;
-
-                this.prevMouseLocation = currentMouseLocation;
-
-                this.panTransformForPoints.X += xOffset;
-
-                this.panTransformForPoints.Y += yOffset;
-
-                UpdateTileInfos();
-
-                this.itWasPanningWhileStartNewPart = true;
-            }
-            else { }
-        }
-        else
-        {
-
-        }
-    }
-
-    private void MapView_MouseUpForPanWhileStartNewPart(object sender, MouseButtonEventArgs e)
-    {
-        if (itWasPanningWhileStartNewPart)
-        {
-            this.ResetMapViewEvents();
-
-            this.Refresh(isNewExtent: true);
-
-            Subscribe_DrawingEvents_StartNewPart();
-
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
-            //this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartNewPart;
-
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-            //this.mapView.MouseDown += MapView_MouseDownForPanWhileStartNewPart;
-
-            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
-            //this.mapView.MouseUp += MapView_MouseUpForPanWhileStartNewPart;
-
-            itWasPanningWhileStartNewPart = false;
-
-            this.SetCursor(Cursors.Cross);
-
-            return;
-        }
-        else
-        {
-            if (e.ChangedButton != MouseButton.Left)
-                return;
-
-            this.prevMouseLocation = (e.GetPosition(this.mapView));
-
-            var webMercatorPoint = ScreenToMap(this.prevMouseLocation).AsPoint();
-
-            Unsubscribe_DrawingEvents_StartNewPart();
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
-
-            if (this.drawMode == DrawMode.Point)
-            {
-                FinishDrawing();
-            }
-            else
-            {
-                this.drawingLayer.StartNewPart(webMercatorPoint);
-
-                Subscribe_DrawingEvents_Draw();
-                //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-                //this.mapView.MouseMove += MapView_MouseMoveForPanWhileDrawing;
-
-                //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-                //this.mapView.MouseDown += MapView_MouseDownForPanWhileDrawing;
-
-                //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-                //this.mapView.MouseUp += MapView_MouseUpForForPanWhileDrawing;
-
-                //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-                //this.mapView.MouseMove += MapView_MouseMoveForDrawing;
-            }
-        }
-    }
-
-    private void Subscribe_DrawingEvents_StartNewPart()
-    {
-        this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-        this.mapView.MouseDown += MapView_MouseDownForPanWhileStartNewPart;
-
-        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
-        this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartNewPart;
-
-        this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
-        this.mapView.MouseUp += MapView_MouseUpForPanWhileStartNewPart;
-    }
-
-    private void Unsubscribe_DrawingEvents_StartNewPart()
-    {
-        this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
-        this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
-
-        //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-        //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
-        //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart; 
-    }
-
-
-    // *********************** Events: Drawing ***********************
-    private void MapView_MouseDownForPanWhileDrawing(object sender, MouseButtonEventArgs e)
-    {
-        if (e.ChangedButton != MouseButton.Left)
-            return;
-
-        e.Handled = true;
-
-        itWasPanningWhileDrawing = false;
-
-        this.prevMouseLocation = e.GetPosition(this.mapView);
-    }
-
-    private void MapView_MouseMoveForPanWhileDrawing(object sender, MouseEventArgs e)
-    {
-        Point currentMouseLocation = e.GetPosition(this.mapView);
-
-        if (_presenter.MapPanel.Options.IsLinkedToMouseMove)
-            this.CurrentEditingPoint = ScreenToMap(currentMouseLocation);
-
-        if (e.LeftButton == MouseButtonState.Pressed)
-        {
-            double xOffset = currentMouseLocation.X - this.prevMouseLocation.X;
-
-            double yOffset = currentMouseLocation.Y - this.prevMouseLocation.Y;
-
-            if (Math.Abs(xOffset) > _knownAsPanThreshold || Math.Abs(yOffset) > _knownAsPanThreshold)
-            {
-                this.panTransform.X += xOffset * 1.0 / this.zoomTransform.ScaleX;
-
-                this.panTransform.Y += yOffset * 1.0 / this.zoomTransform.ScaleY;
-
-                this.prevMouseLocation = currentMouseLocation;
-
-                this.panTransformForPoints.X += xOffset;
-
-                this.panTransformForPoints.Y += yOffset;
-
-                UpdateTileInfos();
-
-                this.itWasPanningWhileDrawing = true;
-            }
-            else { }
-        }
-        else
-        {
-            var mapLocation = ScreenToMap(currentMouseLocation);
-
-            this.drawingLayer.UpdateLastVertexLocation(mapLocation.AsPoint());
-
-            onMoveForDrawAction?.Invoke(mapLocation);
-        }
-    }
-
-    private void MapView_MouseUpForForPanWhileDrawing(object sender, MouseButtonEventArgs e)
-    {
-        if (e.ChangedButton != MouseButton.Left)
-            return;
-
-        //e.Handled = true;
-
-        this.prevMouseLocation = e.GetPosition(this.mapView);
-
-        var webMercatorPoint = ScreenToMap(this.prevMouseLocation).AsPoint();
-
-        AddPointForNewDrawing(webMercatorPoint);
-    }
-
-    //private void MapView_MouseMoveForDrawing(object sender, MouseEventArgs e) => this.CurrentEditingPoint = ScreenToMap(e.GetPosition(this.mapView));
-
-    private void Subscribe_DrawingEvents_Draw()
-    {
-        this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-        this.mapView.MouseDown += MapView_MouseDownForPanWhileDrawing;
-
-        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-        this.mapView.MouseMove += MapView_MouseMoveForPanWhileDrawing;
-
-        this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-        this.mapView.MouseUp += MapView_MouseUpForForPanWhileDrawing;
-    }
-
-    private void Unsubscribe_DrawingEvents_Draw()
-    {
-        this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-        this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-        this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
+        prevMouseLocation = e.GetPosition(this.mapView);
+        var pt = ScreenToMap(prevMouseLocation).AsPoint();
+        _onDrawPhaseClick?.Invoke(pt);
     }
 
     // *********************** Rectangle Drawing Events *********************** 
@@ -3947,8 +3712,6 @@ public partial class MapViewer : NotifiableUserControl
 
         this.rectangleFirstMapPoint = ScreenToMap(this.rectangleFirstScreenPoint).AsPoint();
 
-        //var visual = _presenter.MapSettings.DrawingOptions.Visual;
-
         var visual = EditableFeatureLayerOptions.CreateDefaultForDrawing(false, false, false).Visual;
 
         this.drawingRectangle = new Rectangle()
@@ -3957,10 +3720,6 @@ public partial class MapViewer : NotifiableUserControl
             StrokeThickness = visual.StrokeThickness,
             Fill = visual.Fill,
             StrokeDashArray = visual.DashStyle.Dashes,
-
-            //Stroke = drawingOptions.Visual.Stroke,
-            //StrokeThickness = drawingOptions.Visual.StrokeThickness,
-            //Fill = drawingOptions.Visual.Fill,
             Tag = new LayerTag(-1) { IsTiled = false, LayerType = LayerType.Drawing }
         };
 
@@ -4000,12 +3759,10 @@ public partial class MapViewer : NotifiableUserControl
         if (e.ChangedButton != MouseButton.Left)
             return;
 
-        Unsubscribe_DrawingEvents_StartRectangleDrawing();
-        //this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
-        //this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
-        //this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
+        Unsubscribe_DrawingEvents_StartRectangleDrawing(); 
 
-        this.mapView.Children.Remove(drawingRectangle);
+        if (drawingRectangle != null)
+            this.mapView.Children.Remove(drawingRectangle);
 
         this.mapView.ReleaseMouseCapture();
 
@@ -4023,10 +3780,7 @@ public partial class MapViewer : NotifiableUserControl
 
         if (bbox.Width == 0 || bbox.Height == 0)
         {
-            //try to get drawing again
             Subscribe_DrawingEvents_StartRectangleDrawing();
-
-            //drawingTcs.TrySetCanceled();
 
             return;
         }
@@ -4044,7 +3798,7 @@ public partial class MapViewer : NotifiableUserControl
 
         drawingTcs.SetResult(ResponseFactory.Create(polygon));
 
-        this.Pan();
+        RestoreNavigationAfterDrawing();
     }
 
     private void Subscribe_DrawingEvents_StartRectangleDrawing()
@@ -4072,10 +3826,7 @@ public partial class MapViewer : NotifiableUserControl
         if (webMercatorPoint.IsNaN())
             return;
 
-        Unsubscribe_DrawingEvents_StartDrawing();
-        //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-        //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-        //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
+        EndDrawPhase();
 
         if (drawingLayer != null)
         {
@@ -4108,16 +3859,10 @@ public partial class MapViewer : NotifiableUserControl
         }
         else
         {
-            Subscribe_DrawingEvents_Draw();
-
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-            //this.mapView.MouseMove += MapView_MouseMoveForPanWhileDrawing;
-
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-            //this.mapView.MouseDown += MapView_MouseDownForPanWhileDrawing;
-
-            //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-            //this.mapView.MouseUp += MapView_MouseUpForForPanWhileDrawing;
+            BeginDrawPhase(
+                onConfirmedClick: AddPointForNewDrawing,
+                onMove:           pt => { drawingLayer.UpdateLastVertexLocation(pt); onMoveForDrawAction?.Invoke(pt.AsWpfPoint()); },
+                onAfterPan:       pt => drawingLayer.AddSemiVertex(pt));
         }
     }
 
@@ -4129,8 +3874,8 @@ public partial class MapViewer : NotifiableUserControl
         }
         else
         {
-            DoMoveForStartDrawing(webMercatorPoint);
-
+            drawingLayer.UpdateLastVertexLocation(webMercatorPoint);
+            onMoveForDrawAction?.Invoke(webMercatorPoint.AsWpfPoint());
             AddPointForNewDrawing(webMercatorPoint);
         }
     }
@@ -4140,117 +3885,60 @@ public partial class MapViewer : NotifiableUserControl
     {
         if (drawingLayer != null && drawingLayer.TryFinishDrawingPart())
         {
-
-            Unsubscribe_DrawingEvents_StartDrawing();
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-
-            Unsubscribe_DrawingEvents_Draw();
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-            //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-
-
-            //1399.08.22
-            //this.mapView.MouseDown -= MapView_MouseDownForStartNewPart;
-            //this.mapView.MouseDown += MapView_MouseDownForStartNewPart;
-
-            Subscribe_DrawingEvents_StartNewPart();
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
-            //this.mapView.MouseMove += MapView_MouseMoveForPanWhileStartNewPart;
-
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-            //this.mapView.MouseDown += MapView_MouseDownForPanWhileStartNewPart;
-
-            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
-            //this.mapView.MouseUp += MapView_MouseUpForPanWhileStartNewPart;
-
-            ////this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-            ////this.mapView.MouseMove += MapView_MouseMoveForDrawing;
-
+            BeginDrawPhase(onConfirmedClick: StartNewPartAt);
         }
     }
 
     private void FinishDrawing()
     {
-        if (drawingLayer?.GetFinalFixedGeometry()?.IsValid() == true)
+        var geometry = drawingLayer?.GetFinalFixedGeometry();
+
+        if (geometry?.IsValid() != true)
         {
-
-
-            Unsubscribe_DrawingEvents_StartDrawing();
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartDrawing;
-            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartDrawing;
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartDrawing;
-
-            Unsubscribe_DrawingEvents_StartNewPart();
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileStartNewPart;
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileStartNewPart;
-            //this.mapView.MouseUp -= MapView_MouseUpForPanWhileStartNewPart;
-
-            Unsubscribe_DrawingEvents_Draw();
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-            //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-
-            //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-
-            ResetMapViewEvents();
-
-            this.ClearLayer(drawingLayer, remove: true, forceRemove: true);
-
-            this.RemoveEditableFeatureLayer(drawingLayer.GetLayer());
-
-            drawingCancellationToken = null;
-
-            drawingTcs.SetResult(ResponseFactory.Create(drawingLayer.GetFinalFixedGeometry()));
-
-            this.Pan();
-        }
-    }
-
-    private void DoMoveForStartDrawing(sb.Point webMercatorPoint)
-    {
-        this.drawingLayer.UpdateLastVertexLocation(webMercatorPoint);
-
-        onMoveForDrawAction?.Invoke(webMercatorPoint.AsWpfPoint());
-    }
-
-    private void AddPointForNewDrawing(sb.Point webMercatorPoint)
-    {
-        if (itWasPanningWhileDrawing)
-        {
-            //this.mapView.ReleaseMouseCapture();
-
-            this.ResetMapViewEvents();
-
-            this.Refresh(isNewExtent: true);
-
-            this.drawingLayer.AddSemiVertex(webMercatorPoint);
-
-
-            Subscribe_DrawingEvents_Draw();
-            //this.mapView.MouseMove -= MapView_MouseMoveForPanWhileDrawing;
-            //this.mapView.MouseMove += MapView_MouseMoveForPanWhileDrawing;
-
-            //this.mapView.MouseDown -= MapView_MouseDownForPanWhileDrawing;
-            //this.mapView.MouseDown += MapView_MouseDownForPanWhileDrawing;
-
-            //this.mapView.MouseUp -= MapView_MouseUpForForPanWhileDrawing;
-            //this.mapView.MouseUp += MapView_MouseUpForForPanWhileDrawing;
-
-            //this.mapView.MouseMove -= MapView_MouseMoveForDrawing;
-            //this.mapView.MouseMove += MapView_MouseMoveForDrawing;
-
-            itWasPanningWhileDrawing = false;
-
+            CancelDrawing();   // or show validation feedback before cancelling
             return;
         }
 
-        this.drawingLayer.AddVertex(webMercatorPoint);
+        EndDrawPhase();
 
-        this.drawingLayer.AddSemiVertex(webMercatorPoint);
+        ResetMapViewEvents();
+
+        this.ClearLayer(drawingLayer, remove: true, forceRemove: true);
+
+        this.RemoveEditableFeatureLayer(drawingLayer.GetLayer());
+
+        drawingLayer = null;
+
+        drawingCancellationToken = null;
+
+        drawingTcs.SetResult(ResponseFactory.Create(geometry));
+
+        RestoreNavigationAfterDrawing();
+
     }
+
+    private void StartNewPartAt(sb.Point pt)
+    {
+        if (drawMode == DrawMode.Point)
+        {
+            FinishDrawing();
+        }
+        else
+        {
+            drawingLayer.StartNewPart(pt);
+            BeginDrawPhase(
+                onConfirmedClick: AddPointForNewDrawing,
+                onMove:           pt2 => { drawingLayer.UpdateLastVertexLocation(pt2); onMoveForDrawAction?.Invoke(pt2.AsWpfPoint()); },
+                onAfterPan:       pt2 => drawingLayer.AddSemiVertex(pt2));
+        }
+    }
+
+    private void AddPointForNewDrawing(sb.Point pt)
+    {
+        this.drawingLayer.AddVertex(pt);
+        this.drawingLayer.AddSemiVertex(pt);
+    }
+    
 
     private FrameworkElement GetRightClickOptionsForDraw()
     {
@@ -4299,7 +3987,7 @@ public partial class MapViewer : NotifiableUserControl
 
     public bool itWasPanningWhileSelectThePoint { get; set; }
 
-    CancellationTokenSource selectPointCancelationToken;
+    CancellationTokenSource? selectPointCancelationToken;
 
     /// <summary>
     /// Returns the point selected by the user in WGS84
@@ -4353,7 +4041,7 @@ public partial class MapViewer : NotifiableUserControl
                 this.mapView.MouseDown -= MapView_MouseDownForPanWhileSelectThePoint;
                 this.mapView.MouseUp -= action;
 
-                this.SetCursor(CursorSettings[_currentMouseAction]);
+                //this.SetCursor(CursorSettings[_currentMouseAction]);
 
                 selectPointTcs.SetResult(ScreenToGeodetic(Mouse.GetPosition(this.mapView)).AsPoint());
             }
@@ -4372,7 +4060,7 @@ public partial class MapViewer : NotifiableUserControl
         {
             selectPointTcs.TrySetCanceled();
 
-            this.SetCursor(CursorSettings[_currentMouseAction]);
+            //this.SetCursor(CursorSettings[_currentMouseAction]);
 
             this.mapView.MouseMove -= MapView_MouseMoveSelectThePoint;
             this.mapView.MouseDown -= MapView_MouseDownForPanWhileSelectThePoint;
@@ -4410,7 +4098,8 @@ public partial class MapViewer : NotifiableUserControl
             {
                 this.Status = MapStatus.Idle;
 
-                this.Pan();
+                //this.Pan();
+                this._presenter.MapAction = MapAction.Pan;
             }
             return Response<sb.Point>.CreateCanceled(); ; //new Response<sb.Point>() { IsCanceled = true };
         }
@@ -4420,13 +4109,15 @@ public partial class MapViewer : NotifiableUserControl
 
             selectPointCancelationToken = null;
 
-            this.Pan();
+            //this.Pan();
+            this._presenter.MapAction = MapAction.Pan;
 
             throw;
         }
         finally
         {
-            this.Pan();
+            //this.Pan();
+            this._presenter.MapAction = MapAction.Pan;
         }
     }
 
@@ -4593,7 +4284,7 @@ public partial class MapViewer : NotifiableUserControl
         {
             tcs.TrySetCanceled();
 
-            this.SetCursor(CursorSettings[_currentMouseAction]);
+            //this.SetCursor(CursorSettings[_currentMouseAction]);
 
             //options.RequestHandleMeasureVisibilityChanged = null;
 
@@ -4795,7 +4486,8 @@ public partial class MapViewer : NotifiableUserControl
 
             if (result == null)
             {
-                this.Pan();
+                //this.Pan();
+                this._presenter.MapAction = MapAction.Pan;
             }
         }
 
@@ -4906,7 +4598,7 @@ public partial class MapViewer : NotifiableUserControl
             tcs.TrySetCanceled();
 
             //this.SetCursor(Cursors.Arrow);
-            this.SetCursor(CursorSettings[_currentMouseAction]);
+            //this.SetCursor(CursorSettings[_currentMouseAction]);
 
         }, useSynchronizationContext: false);
 
