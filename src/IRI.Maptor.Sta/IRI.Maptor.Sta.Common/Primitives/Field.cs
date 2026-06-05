@@ -30,6 +30,10 @@ public class Field
 
     public string[] AllowedValues { get; set; } = Array.Empty<string>();
 
+    public string? DisplayFormat { get; set; }
+
+    public FieldTextDirection TextDirection { get; set; } = FieldTextDirection.Auto;
+
     public override string ToString()
     {
         return $"Name: {Name}; Length: {Length}; IsNullable: {IsNullable}; NumericPrecision: {Precision}; NumericScale: {Scale}; Type: {TypeFullName}";
@@ -118,6 +122,8 @@ public class Field
                 CanRead = fieldAttribute?.CanRead ?? true,
                 CanWrite = fieldAttribute?.CanWrite ?? true,
                 AllowedValues = fieldAttribute?.AllowedValues ?? Array.Empty<string>(),
+                DisplayFormat = fieldAttribute?.DisplayFormat,
+                TextDirection = fieldAttribute?.TextDirection ?? FieldTextDirection.Auto,
                 Precision = GetDefaultPrecision(underlyingType),
                 Scale = GetDefaultScale(underlyingType),
                 DateTimePrecision = GetDefaultDateTimePrecision(underlyingType)

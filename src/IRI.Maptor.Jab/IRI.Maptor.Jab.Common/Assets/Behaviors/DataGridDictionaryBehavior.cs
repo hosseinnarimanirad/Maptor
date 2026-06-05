@@ -8,6 +8,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Jab.Common.Converters;
 using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Sta.Common.Attributes;
 
 namespace IRI.Maptor.Jab.Common.Behaviors;
 
@@ -129,7 +130,7 @@ public static class DataGridDictionaryBehavior
                 column = new DataGridTemplateColumn
                 {
                     Header = field.Alias,
-                    CellTemplate = CreateDateDisplayTemplate($"Attributes[{key}]"),
+                    CellTemplate = CreateDateDisplayTemplate($"Attributes[{key}]", field.DisplayFormat),
                     CellEditingTemplate = CreateDateEditingTemplate($"Attributes[{key}]")
                 };
             }
@@ -146,7 +147,7 @@ public static class DataGridDictionaryBehavior
                     {
                         Mode = BindingMode.TwoWay,
                         UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-                        StringFormat = "0,0.####"
+                        StringFormat = field.DisplayFormat ?? "0,0.####"
                     },
                     ElementStyle = new Style(typeof(TextBlock))
                     {
@@ -169,51 +170,8 @@ public static class DataGridDictionaryBehavior
                         Mode = BindingMode.TwoWay,
                         UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
                     },
-                    ElementStyle = new Style(typeof(TextBlock))
-                    {
-                        Setters =
-                        {
-                            new Setter(TextBlock.TextWrappingProperty, TextWrapping.NoWrap),
-                            new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.LeftToRight)
-                        },
-                        Triggers =
-                        {
-                            new DataTrigger
-                            {
-                                Binding = new Binding($"Attributes[{key}]")
-                                {
-                                    Converter = new RtlFlowDirectionConverter()
-                                },
-                                Value = FlowDirection.RightToLeft,
-                                Setters =
-                                {
-                                    new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.RightToLeft)
-                                }
-                            }
-                        }
-                    },
-                    EditingElementStyle = new Style(typeof(TextBox))
-                    {
-                        Setters =
-                        {
-                            new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.LeftToRight)
-                        },
-                        Triggers =
-                        {
-                            new DataTrigger
-                            {
-                                Binding = new Binding($"Attributes[{key}]")
-                                {
-                                    Converter = new RtlFlowDirectionConverter()
-                                },
-                                Value = FlowDirection.RightToLeft,
-                                Setters =
-                                {
-                                    new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.RightToLeft)
-                                }
-                            }
-                        }
-                    }
+                    ElementStyle = CreateStringElementStyle(typeof(TextBlock), $"Attributes[{key}]", field.TextDirection),
+                    EditingElementStyle = CreateStringElementStyle(typeof(TextBox), $"Attributes[{key}]", field.TextDirection)
                 };
             }
             else
@@ -237,14 +195,14 @@ public static class DataGridDictionaryBehavior
         }
     }
 
-    private static DataTemplate CreateDateDisplayTemplate(string bindingPath)
+    private static DataTemplate CreateDateDisplayTemplate(string bindingPath, string? format = null)
     {
         var template = new DataTemplate();
         var factory = new FrameworkElementFactory(typeof(TextBlock));
         factory.SetBinding(TextBlock.TextProperty, new Binding(bindingPath)
         {
             Mode = BindingMode.OneWay,
-            Converter = new LocalizedDateTimeConverter()
+            Converter = new LocalizedDateTimeConverter { Format = format }
         });
         template.VisualTree = factory;
         return template;
@@ -264,5 +222,43 @@ public static class DataGridDictionaryBehavior
 
         template.VisualTree = factory;
         return template;
+    }
+
+    /// <summary>
+    /// Builds the element/editing style for a string column.
+    /// When <paramref name="textDirection"/> is <see cref="FieldTextDirection.Auto"/> the existing
+    /// content-sniffing converter is used (DataTrigger). When it is explicit the direction is fixed
+    /// directly as a setter and the auto-detection trigger is omitted entirely.
+    /// </summary>
+    private static Style CreateStringElementStyle(Type targetType, string bindingPath, FieldTextDirection textDirection)
+    {
+        var style = new Style(targetType);
+
+        if (textDirection == FieldTextDirection.Auto)
+        {
+            // Default LTR, switch to RTL when content is detected as RTL.
+            style.Setters.Add(new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.LeftToRight));
+            if (targetType == typeof(TextBlock))
+                style.Setters.Add(new Setter(TextBlock.TextWrappingProperty, TextWrapping.NoWrap));
+
+            style.Triggers.Add(new DataTrigger
+            {
+                Binding = new Binding(bindingPath) { Converter = new RtlFlowDirectionConverter() },
+                Value = FlowDirection.RightToLeft,
+                Setters = { new Setter(FrameworkElement.FlowDirectionProperty, FlowDirection.RightToLeft) }
+            });
+        }
+        else
+        {
+            var direction = textDirection == FieldTextDirection.RightToLeft
+                ? FlowDirection.RightToLeft
+                : FlowDirection.LeftToRight;
+
+            style.Setters.Add(new Setter(FrameworkElement.FlowDirectionProperty, direction));
+            if (targetType == typeof(TextBlock))
+                style.Setters.Add(new Setter(TextBlock.TextWrappingProperty, TextWrapping.NoWrap));
+        }
+
+        return style;
     }
 }
