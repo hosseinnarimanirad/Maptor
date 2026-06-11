@@ -11,13 +11,13 @@
     <Grid>
         <Grid.Resources>
             <ResourceDictionary>
-                <ResourceDictionary.MergedDictionaries> 
+                <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
                 </ResourceDictionary.MergedDictionaries>
                 <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
                 <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
- 
+
                 <!--the whole toolds toggle button-->
                 <Style TargetType="ToggleButton">
                     <Setter Property="BorderThickness" Value="4,0,0,0"/>
@@ -55,7 +55,7 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="Expander">
                                 <Border x:Name="expanderBorder" 
-                                    Background="{DynamicResource MahApps.Brushes.Accent3}"
+                                    Background="White"
                                     Margin="0" Padding="0" CornerRadius="18">
                                     <StackPanel Orientation="Horizontal" Margin="0">
                                         <ToggleButton x:Name="HeaderSite"
@@ -141,93 +141,96 @@
         <ScrollViewer HorizontalScrollBarVisibility="Auto"
                         VerticalScrollBarVisibility="Auto"
                         Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
-            <DockPanel HorizontalAlignment="Center" FlowDirection="LeftToRight">
-                <Button Command="{Binding MoveDrawingItemUpCommand}"
+            <Border Background="{DynamicResource MahApps.Brushes.Accent4}"
+                    Margin="2" CornerRadius="4">
+                <DockPanel Margin="4" HorizontalAlignment="Center" FlowDirection="LeftToRight">
+                    <Button Command="{Binding MoveDrawingItemUpCommand}"
                         Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                         ToolTip="{Binding [cmd_drawingLegend_moveUp], Source={StaticResource Localization}}" 
                         IsEnabled="{Binding CanMoveDrawingItemUp}">
-                    <iconPacks:PackIconMaterial Kind="ArrangeBringForward" />
-                </Button>
-                <Button Command="{Binding MoveDrawingItemDownCommand}"
+                        <iconPacks:PackIconMaterial Kind="ArrangeBringForward" />
+                    </Button>
+                    <Button Command="{Binding MoveDrawingItemDownCommand}"
                         Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                         ToolTip="{Binding [cmd_drawingLegend_moveDown], Source={StaticResource Localization}}"                  
                         IsEnabled="{Binding CanMoveDrawingItemDown}">
-                    <iconPacks:PackIconMaterial Kind="ArrangeSendBackward" />
-                </Button>
-                <Button Command="{Binding SaveDrawingItemFileCommand}"
+                        <iconPacks:PackIconMaterial Kind="ArrangeSendBackward" />
+                    </Button>
+                    <Button Command="{Binding SaveDrawingItemFileCommand}"
                           Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
                           ToolTip="{Binding [cmd_drawingLegend_saveAll], Source={StaticResource Localization}}">
-                    <iconPacks:PackIconMaterial Kind="ContentSaveAll"/>
-                </Button>
+                        <iconPacks:PackIconMaterial Kind="ContentSaveAll"/>
+                    </Button>
 
-                <Expander Style="{StaticResource toggleHorizontalExpander}"
+                    <Expander Style="{StaticResource toggleHorizontalExpander}"
                             IsExpanded="{Binding ElementName=root, Path=SelectedExpanderIndex, Converter={StaticResource indexToBoolConverter}, ConverterParameter=1}">
-                    <Expander.Header>
-                        <iconPacks:PackIconMaterial Kind="FilePlusOutline" Foreground="White"/>
-                    </Expander.Header>
-                    <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center" >
+                        <Expander.Header>
+                            <iconPacks:PackIconMaterial Kind="FilePlusOutline" Foreground="White"/>
+                        </Expander.Header>
+                        <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center" >
 
-                        <Button Command="{Binding OpenDrawingItemFileCommand}"
-                                Style="{StaticResource circleButtonDarkOverride}"  
+                            <Button Command="{Binding OpenDrawingItemFileCommand}"
+                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
                                 ToolTip="{Binding [cmd_drawingLegend_openAll], Source={StaticResource Localization}}">
-                            <iconPacks:PackIconMaterial Kind="FileMultiple" />
-                        </Button>
+                                <iconPacks:PackIconMaterial Kind="FileMultiple" />
+                            </Button>
 
-                        <Button Command="{Binding AddGeoJsonToDrawingItemsCommand}"
-                                Style="{StaticResource circleButtonDarkOverride}"                                
+                            <Button Command="{Binding AddGeoJsonToDrawingItemsCommand}"
+                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"                                
                                 ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
-                            <Path Style="{StaticResource buttonPath}" Data="{StaticResource json}"/>
-                        </Button>
-                        <Button Command="{Binding AddLongLatTxtToDrawingItemsCommand}"
-                                Style="{StaticResource circleButtonDarkOverride}"                                
+                                <Path Style="{StaticResource IRI.Maptor.Styles.Path.ButtonContent}" Data="{StaticResource json}"/>
+                            </Button>
+                            <Button Command="{Binding AddLongLatTxtToDrawingItemsCommand}"
+                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"                                
                                 ToolTip="{Binding [cmd_drawingLegend_addLatLongTxt], Source={StaticResource Localization}}">
-                            <Path Style="{StaticResource buttonPath}" Data="{StaticResource txt}"/>
-                        </Button>
-                        <Button Command="{Binding AddShapefileToDrawingItemsCommand}"
-                                Style="{StaticResource circleButtonDarkOverride}"                                
+                                <Path Style="{StaticResource IRI.Maptor.Styles.Path.ButtonContent}" Data="{StaticResource txt}"/>
+                            </Button>
+                            <Button Command="{Binding AddShapefileToDrawingItemsCommand}"
+                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"                                
                                 ToolTip="{Binding [cmd_general_addShapefile], Source={StaticResource Localization}}">
-                            <Path Style="{StaticResource buttonPath}" Data="{StaticResource shp}" />
-                        </Button>
-                    </StackPanel>
-                </Expander>
+                                <Path Style="{StaticResource IRI.Maptor.Styles.Path.ButtonContent}" Data="{StaticResource shp}" />
+                            </Button>
+                        </StackPanel>
+                    </Expander>
 
-                <Expander Style="{StaticResource toggleHorizontalExpander}"  
+                    <Expander Style="{StaticResource toggleHorizontalExpander}"  
                             IsExpanded="{Binding ElementName=root, Path=SelectedExpanderIndex, Converter={StaticResource indexToBoolConverter}, ConverterParameter=2}">
-                    <Expander.Header>
-                        <iconPacks:PackIconMaterial Kind="PencilPlus" Foreground="White"/>
-                    </Expander.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"
+                        <Expander.Header>
+                            <iconPacks:PackIconMaterial Kind="PencilPlus" Foreground="White"/>
+                        </Expander.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                 IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawPoint}}"
                                 ToolTip="{Binding [cmd_general_drawPoint], Source={StaticResource Localization}}"  >
-                            <iconPacks:PackIconMaterial Kind="VectorPointPlus" Width="14"/>
-                        </ToggleButton>
-                        
-                        <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"
+                                <iconPacks:PackIconMaterial Kind="VectorPointPlus" Width="14"/>
+                            </ToggleButton>
+
+                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                 IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawPolyline}}"
                                 ToolTip="{Binding [cmd_general_drawPolyline], Source={StaticResource Localization}}">
-                            <iconPacks:Material Kind="VectorPolylinePlus"/>
-                        </ToggleButton>
-                        <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"
+                                <iconPacks:Material Kind="VectorPolylinePlus"/>
+                            </ToggleButton>
+                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                 IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawRectangle}}"
                                 ToolTip="{Binding [cmd_general_drawRectangle], Source={StaticResource Localization}}">
-                            <iconPacks:Material Kind="ShapeRectanglePlus"/>
-                        </ToggleButton>
+                                <iconPacks:Material Kind="ShapeRectanglePlus"/>
+                            </ToggleButton>
 
-                        <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"
+                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                 IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawPolygon}}"
                                 ToolTip="{Binding [cmd_general_drawPolygon], Source={StaticResource Localization}}">
-                            <iconPacks:Material Kind="ShapePolygonPlus"/>
-                        </ToggleButton>
-                        <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"
+                                <iconPacks:Material Kind="ShapePolygonPlus"/>
+                            </ToggleButton>
+                            <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                 IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawText}}"
                                 ToolTip="{Binding [cmd_general_addTextToMap], Source={StaticResource Localization}}">
-                            <iconPacks:Material Kind="FormatAnnotationPlus"/>
-                        </ToggleButton>
-                    </StackPanel>
-                </Expander>
+                                <iconPacks:Material Kind="FormatAnnotationPlus"/>
+                            </ToggleButton>
+                        </StackPanel>
+                    </Expander>
 
-            </DockPanel>
+                </DockPanel>
+            </Border>
         </ScrollViewer>
 
         <Line Grid.Row="1" X1="0" X2="100" Stretch="Fill" Opacity="1" Margin="0,4" 
@@ -273,7 +276,7 @@
                                                 IsChecked="{Binding IsSelectedInToc}"
                                                 TitleFontSize="{Binding ElementName=root, Path=TitleFontSize}"/>
                         </RadioButton>
-                        
+
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
