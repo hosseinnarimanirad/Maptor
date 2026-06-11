@@ -242,7 +242,7 @@
                                              OffContent="{Binding [mapExtent_gotoScale_useWebMercatorScaleForSandardScales], Source={StaticResource Localization}}"/>
                         <Border Grid.Row="2" Grid.Column="0" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
                             <ComboBox Grid.Row="1" Grid.Column="0"
-                                        ItemsSource="{Binding ScaleItemsView}"
+                                        ItemsSource="{Binding ScaleItemsView}" Foreground="Black"
                                         SelectedItem="{Binding SelectedScaleItem, Mode=TwoWay}"
                                         Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
                                         DisplayMemberPath="DisplayLabel" Background="White">
