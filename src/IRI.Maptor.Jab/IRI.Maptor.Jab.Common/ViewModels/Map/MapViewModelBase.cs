@@ -743,6 +743,8 @@ public abstract class MapViewModelBase : ViewModelBase
         get { return _mapAction; }
         set
         {
+            this.UpdateMapCursor();
+
             if (_mapAction == value)
                 return;
 
@@ -751,6 +753,7 @@ public abstract class MapViewModelBase : ViewModelBase
             _mapAction = value;
 
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsIdentifyMode));
 
             //RaiseMapActionModeProperties();
 
@@ -780,6 +783,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
             //else if (value == MapAction.ZoomOut || value == MapAction.ZoomOutRectangle)
             //    RequestEnableZoomOut?.Invoke();
+
         }
     }
 
@@ -929,6 +933,14 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public bool IsDrawEditMeasureMode => IsEditMode || IsDrawMode;
 
+    public bool IsIdentifyMode
+    {
+        get => MapAction == MapAction.Identify;
+        set
+        {
+            MapAction = value ? MapAction.Identify : MapAction.Pan;
+        }
+    }
 
     //public bool IsPanMode
     //{
@@ -1263,7 +1275,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Action<IReadOnlyDictionary<MapAction, Cursor>>? RequestApplyCursorSet;
 
-    public Action<Cursor> RequestSetCursor;
+    public Action RequestUpdateMapCursor;
 
     public Func<double> RequestGetActualWidth;
 
@@ -1401,6 +1413,8 @@ public abstract class MapViewModelBase : ViewModelBase
     public Func<DrawMode, bool, Task<Response<Geometry<Point>>>> RequestGetDrawingAsync;
 
     public Func<Task<Response<Point>>>? RequestSelectPointAsync;
+
+    public Action? RequestCancelSelectPoint;
 
     //public Action RequestClearAll;
 
@@ -2559,9 +2573,9 @@ public abstract class MapViewModelBase : ViewModelBase
         RequestSetDefaultCursor?.Invoke(action, cursor);
     }
 
-    public void SetCursor(Cursor cursor)
+    public void UpdateMapCursor()
     {
-        RequestSetCursor?.Invoke(cursor);
+        RequestUpdateMapCursor?.Invoke();
     }
 
 
@@ -3273,6 +3287,11 @@ public abstract class MapViewModelBase : ViewModelBase
         _identifyModeCts.Cancel();
         _identifyModeCts.Dispose();
         _identifyModeCts = null;
+
+        // Cancel the pending view-side point-select session so the loop awaiting
+        // it unblocks now (while MapAction already changed) and cannot later flip
+        // MapAction back to Pan from its finally block.
+        RequestCancelSelectPoint?.Invoke();
     }
 
     private async Task RunIdentifyModeLoopAsync(CancellationToken ct)
@@ -3402,7 +3421,7 @@ public abstract class MapViewModelBase : ViewModelBase
     //*****************************************Measure***************************************************************
     #region Measure
 
-    protected async Task<Response<Geometry<Point>>> Measure(DrawMode mode, Action action = null)
+    protected async Task<Response<Geometry<Point>>> Measure(DrawMode mode, Action? action = null)
     {
         if (MapAction.IsDrawAction())
             MapAction = MapAction.Pan;
@@ -3438,6 +3457,11 @@ public abstract class MapViewModelBase : ViewModelBase
             await ShowExceptionMessageAsync(ex);
 
             return Response<Geometry<Point>>.Empty;
+        }
+        finally
+        {
+            // After a measurement (draw + optional geometry edit) always return to Pan.
+            MapAction = MapAction.Pan;
         }
     }
 
@@ -3505,6 +3529,9 @@ public abstract class MapViewModelBase : ViewModelBase
         _textModeCts.Cancel();
         _textModeCts.Dispose();
         _textModeCts = null;
+
+        // Cancel the pending view-side point-select session (see StopIdentifyModeLoop).
+        RequestCancelSelectPoint?.Invoke();
     }
 
     private async Task RunTextModeLoopAsync(CancellationToken ct)
@@ -3717,6 +3744,8 @@ public abstract class MapViewModelBase : ViewModelBase
         var boundingBox = polygon.Result.GetBoundingBox();
 
         await ExportMapAsPngAsync(owner, boundingBox);
+
+        this.MapAction = MapAction.Pan;
     }
 
     public async Task ExportMapAsPngAsync(object owner)
@@ -5921,7 +5950,10 @@ public abstract class MapViewModelBase : ViewModelBase
 
     private RelayCommand _identifyModeCommand;
     public RelayCommand IdentifyModeCommand =>
-        _identifyModeCommand ??= new RelayCommand(_ => MapAction = MapAction.Identify);
+        _identifyModeCommand ??= new RelayCommand(param =>
+        {
+            MapAction = MapAction == MapAction.Identify ? MapAction.Pan : MapAction.Identify;
+        });
 
     private RelayCommand _drawPolylineCommand;
     public RelayCommand DrawPolylineCommand

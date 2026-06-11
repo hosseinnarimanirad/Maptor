@@ -246,7 +246,8 @@ public partial class MapViewer : NotifiableUserControl
     {
         var viewer = (MapViewer)d;
         var newAction = (MapAction)e.NewValue;
-        viewer.SetCursor(viewer.CursorSettings[newAction]);
+        //viewer.SetCursor(viewer.CursorSettings[newAction]);
+        viewer.UpdateMapCursor();
 
         // Change internal interaction mode without firing any event back
         viewer.SwitchToMode(newAction);
@@ -256,9 +257,18 @@ public partial class MapViewer : NotifiableUserControl
 
     private void SwitchToMode(MapAction action)
     {
-        // Unsubscribe from all old input handlers
-        ResetMapViewEvents();
+        // A genuine tool switch ends any in-progress modal edit session.
+        // Editing coexists with Pan (MapAction stays Pan while editing) and is
+        // driven by EditableFeatureLayer + moveable-item handlers rather than a
+        // mouse-handler session, so it is cancelled here at the real MapAction
+        // boundary — not in EndActiveInteraction(), which runs as a sub-step of
+        // many operations that an active edit must survive (e.g. panning).
+        if (editingCancellationToken != null)
+            CancelEditGeometry();
 
+        // Each activator below calls EndActiveInteraction() itself.
+        // For modes with no dedicated activator (Identify, DrawText, Draw*)
+        // we end the current session here so handlers never leak.
         switch (action)
         {
             case MapAction.Pan:
@@ -267,21 +277,14 @@ public partial class MapViewer : NotifiableUserControl
             case MapAction.ZoomInRectangle:
                 ZoomIn();
                 break;
-
             case MapAction.ZoomOut:
                 ZoomOutPoint();
                 break;
-            case MapAction.DrawPoint:
-            case MapAction.DrawPolyline:
-            case MapAction.DrawPolygon:
-                //Draw(action.ToDrawMode());
+            default:
+                // Identify, DrawText, DrawPoint/Polyline/Polygon/Rectangle:
+                // input is driven by the VM async loop; no mode-level handlers here.
+                EndActiveInteraction();
                 break;
-            case MapAction.Identify:
-                // Event handlers reset above; SelectPointAsync() called by VM loop.
-                break;
-            case MapAction.DrawText:
-                break;
-                // ... other cases
         }
     }
 
@@ -408,7 +411,7 @@ public partial class MapViewer : NotifiableUserControl
             { MapAction.DrawPolyline, DrawPolylineCursor },
             { MapAction.DrawPolygon, DrawPolygonCursor },
             { MapAction.DrawRectangle, DrawRectangleCursor },
-            { MapAction.Identify, IdentifyCursor },
+            { MapAction.Identify, DrawPointCursor/*IdentifyCursor*/ },
             { MapAction.DrawText, DrawTextCursor },
             { MapAction.None, Cursors.Arrow },
         };
@@ -506,7 +509,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestApplyCursorSet = this.ApplyCursorSet;
 
-        presenter.RequestSetCursor = this.SetCursor;
+        presenter.RequestUpdateMapCursor = this.UpdateMapCursor;
 
         presenter.RequestRefresh = this.Refresh;
 
@@ -615,6 +618,8 @@ public partial class MapViewer : NotifiableUserControl
         presenter.RequestGetDrawingAsync = (mode, continuousDrawing) => GetDrawingAsync(mode, continuousDrawing);
 
         presenter.RequestSelectPointAsync = () => SelectPointAsync(continuousMode: true);
+
+        presenter.RequestCancelSelectPoint = CancelSelectPoint;
 
         presenter.RequestCancelNewDrawing = CancelDrawing;
 
@@ -1732,6 +1737,14 @@ public partial class MapViewer : NotifiableUserControl
 
     #region Moveable Item
 
+    // Moveable-item handlers (vertex drag during edit/draw, draggable markers) are
+    // attached per-element, independent of the MapAction interaction-session model,
+    // and intentionally coexist with whatever gesture/interaction is active.
+    // Coordination is via the `itemIsMoving` flag: while an element is being dragged,
+    // ClickOrPanGesture (draw/select-point), pan, and rectangle handlers all early-return
+    // on `itemIsMoving`, so a vertex drag never triggers a map pan or a stray click.
+    // Element_MouseDownForMoveableItem also sets e.Handled so the gesture's MouseUp
+    // skips its click/pan logic for that gesture stroke.
     bool itemIsMoving = false;
 
     FrameworkElement currentMoveableItem;
@@ -2030,28 +2043,9 @@ public partial class MapViewer : NotifiableUserControl
     //POTENTIALLY ERROR PROUNE; not sure everything is considered or not
     private void ResetMapViewEvents()
     {
-        //this.SetCursor(CursorSettings[_currentMouseAction]);
-
-        //this.mapView.MouseDown -= mapView_MouseDownForPan;
-        //this.mapView.MouseUp -= mapView_MouseUpForPan;
-        //this.mapView.MouseMove -= mapView_MouseMoveForPan;
-        Unsubscribe_Pan();
-
-        this.mapView.MouseUp -= mapView_MouseUpForZoomOut;
-        this.mapView.MouseDown -= mapView_MouseDownForZoom;
-        this.mapView.MouseUp -= mapView_MouseUpForZoom;
-
-
-        EndDrawPhase();
-
-        this.mapView.MouseMove -= MapView_MouseMoveSelectThePoint;
-        this.mapView.MouseDown -= MapView_MouseDownForPanWhileSelectThePoint;
-
-
-        Unsubscribe_DrawingEvents_StartRectangleDrawing();
-        //this.mapView.MouseDown -= MapView_MouseDownForRectangleDrawing;
-        //this.mapView.MouseMove -= MapView_MouseMoveForRectangleDrawing;
-        //this.mapView.MouseUp -= MapView_MouseUpForRectangleDrawing;
+        // End the current mode-level interaction session (pan/zoom/etc.)
+        // and any in-progress draw sub-phase, rectangle, or select-point gesture.
+        EndActiveInteraction();
     }
 
     public void ReleaseEvents()
@@ -2113,16 +2107,14 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
+    public void UpdateMapCursor() => SetCursor(this.CursorSettings[this.MapAction]);
+
     public void SetCursor(Cursor cursor)
     {
-        if (_itWasPanning ||
-            itWasPanningWhileSelectThePoint)
+        // Suppress cursor changes while any click-or-pan gesture is mid-pan
+        // to prevent visual flicker on the drag stroke.
+        if (_drawPhaseGesture?.IsPanning == true || _selectPointGesture?.IsPanning == true)
             return;
-
-        // this condition prevent the cursor to
-        // change to cross in drawig mode
-        //if (this.Status == MapStatus.Drawing)
-        //    return;
 
         this.mapView.Cursor = cursor;
     }
@@ -2425,10 +2417,12 @@ public partial class MapViewer : NotifiableUserControl
     void mapView_MouseUpForRightClickOptions(object sender, MouseButtonEventArgs e)
     {
         //Do not raise when other options are available
-        if (e.OriginalSource != this.mapView && this.Status != MapStatus.Drawing)
-        {
+        //if (e.OriginalSource != this.mapView && this.Status != MapStatus.Drawing)
+        //{
+        //    return;
+        //}
+        if (this.MapAction != MapAction.Pan)
             return;
-        }
 
         RemoveRightClickOptions();
 
@@ -2675,25 +2669,242 @@ public partial class MapViewer : NotifiableUserControl
     #endregion
 
 
+    #region Interaction Sessions
+
+    // ── Abstraction ──────────────────────────────────────────────────────────
+    // Each MapAction that needs mouse handlers owns one IMapInteraction instance.
+    // SwitchToMode ends the current session via EndActiveInteraction() before
+    // activating the new one, so handlers from the previous mode can never leak.
+
+    private interface IMapInteraction
+    {
+        void Attach();
+        void Detach();
+    }
+
+    private IMapInteraction? _activeInteraction;
+
+    /// <summary>
+    /// Idempotent teardown: detaches the current interaction's handlers,
+    /// clears the field, and also ends any draw-phase, rectangle-draw, or
+    /// select-point gesture that may be running inside an async operation.
+    /// </summary>
+    private void EndActiveInteraction()
+    {
+        _activeInteraction?.Detach();
+        _activeInteraction = null;
+
+        // End click-or-pan gesture sessions managed by the async pipelines.
+        _selectPointGesture?.End();
+        _selectPointGesture = null;
+
+        EndDrawPhase();
+        Unsubscribe_DrawingEvents_StartRectangleDrawing();
+    }
+
+    // ── Interaction implementations ───────────────────────────────────────────
+
+    private sealed class PanInteraction : IMapInteraction
+    {
+        private readonly MapViewer _v;
+        internal PanInteraction(MapViewer v) => _v = v;
+
+        public void Attach()
+        {
+            _v.mapView.MouseDown -= _v.mapView_MouseDownForPan;
+            _v.mapView.MouseDown += _v.mapView_MouseDownForPan;
+        }
+
+        public void Detach()
+        {
+            _v.mapView.MouseDown -= _v.mapView_MouseDownForPan;
+            _v.mapView.MouseMove -= _v.mapView_MouseMoveForPan;
+            _v.mapView.MouseUp -= _v.mapView_MouseUpForPan;
+            _v.IsPanning = false;
+        }
+    }
+
+    private sealed class ZoomRectangleInteraction : IMapInteraction
+    {
+        private readonly MapViewer _v;
+        internal ZoomRectangleInteraction(MapViewer v) => _v = v;
+
+        public void Attach()
+        {
+            _v.mapView.MouseDown -= _v.mapView_MouseDownForZoom;
+            _v.mapView.MouseDown += _v.mapView_MouseDownForZoom;
+        }
+
+        public void Detach()
+        {
+            _v.mapView.MouseDown -= _v.mapView_MouseDownForZoom;
+            _v.mapView.MouseMove -= _v.mapView_MouseMoveForZoom;
+            _v.mapView.MouseUp -= _v.mapView_MouseUpForZoom;
+            if (_v.mapView.IsMouseCaptured)
+                _v.mapView.ReleaseMouseCapture();
+        }
+    }
+
+    private sealed class ZoomOutInteraction : IMapInteraction
+    {
+        private readonly MapViewer _v;
+        internal ZoomOutInteraction(MapViewer v) => _v = v;
+
+        public void Attach()
+        {
+            _v.mapView.MouseUp -= _v.mapView_MouseUpForZoomOut;
+            _v.mapView.MouseUp += _v.mapView_MouseUpForZoomOut;
+        }
+
+        public void Detach()
+        {
+            _v.mapView.MouseUp -= _v.mapView_MouseUpForZoomOut;
+        }
+    }
+
+    // ── Shared click-or-pan gesture primitive ────────────────────────────────
+    // Used by both the draw-phase input loop and select-point (identify/text).
+    // Owns named MouseDown/Move/Up handlers so it can always be fully detached.
+    // On pan: refreshes and stays subscribed (no remove/re-subscribe needed).
+    // On click: fires onClick with a WebMercator sb.Point and stays subscribed;
+    //           caller is responsible for calling End() if it wants to stop.
+
+    private ClickOrPanGesture? _selectPointGesture;
+    private ClickOrPanGesture? _drawPhaseGesture;
+
+    private sealed class ClickOrPanGesture
+    {
+        private readonly MapViewer _v;
+        private readonly Action<sb.Point> _onClick;
+        private readonly Action<sb.Point>? _onHover;
+        private readonly Action<sb.Point>? _onAfterPan;
+        private readonly Action<sb.Point>? _onAnyMove;
+        private bool _wasPanning;
+
+        public bool IsPanning => _wasPanning;
+
+        /// <summary>
+        /// Belt-and-suspenders guard against a late, already-queued mouse event
+        /// firing after this gesture has been superseded or torn down. When set,
+        /// handlers no-op unless this returns true (e.g. the gesture is still the
+        /// one installed on the viewer).
+        /// </summary>
+        public Func<bool>? IsActive { get; set; }
+
+        internal ClickOrPanGesture(
+            MapViewer v,
+            Action<sb.Point> onClick,
+            Action<sb.Point>? onHover = null,
+            Action<sb.Point>? onAfterPan = null,
+            Action<sb.Point>? onAnyMove = null)
+        {
+            _v = v;
+            _onClick = onClick;
+            _onHover = onHover;
+            _onAfterPan = onAfterPan;
+            _onAnyMove = onAnyMove;
+        }
+
+        private bool Stale => IsActive != null && !IsActive();
+
+        public void Begin()
+        {
+            End();
+            _wasPanning = false;
+            _v.mapView.MouseDown += OnMouseDown;
+            _v.mapView.MouseMove += OnMouseMove;
+            _v.mapView.MouseUp += OnMouseUp;
+        }
+
+        public void End()
+        {
+            _wasPanning = false;
+            _v.mapView.MouseDown -= OnMouseDown;
+            _v.mapView.MouseMove -= OnMouseMove;
+            _v.mapView.MouseUp -= OnMouseUp;
+        }
+
+        private void OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (Stale)
+                return;
+
+            if (e.ChangedButton != MouseButton.Left)
+                return;
+
+            e.Handled = true;
+            _wasPanning = false;
+            _v.prevMouseLocation = e.GetPosition(_v.mapView);
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            if (Stale)
+                return;
+
+            var loc = e.GetPosition(_v.mapView);
+            var mapPt = _v.ScreenToMap(loc).AsPoint();
+
+            _onAnyMove?.Invoke(mapPt);
+
+            if (e.LeftButton == MouseButtonState.Pressed && !_v.itemIsMoving)
+            {
+                double dx = loc.X - _v.prevMouseLocation.X;
+                double dy = loc.Y - _v.prevMouseLocation.Y;
+
+                if (Math.Abs(dx) > _v._knownAsPanThreshold || Math.Abs(dy) > _v._knownAsPanThreshold)
+                {
+                    _v.ApplyPanOffset(dx, dy);
+                    _v.prevMouseLocation = loc;
+                    _wasPanning = true;
+                }
+            }
+            else
+            {
+                _onHover?.Invoke(mapPt);
+            }
+        }
+
+        private void OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (Stale)
+                return;
+
+            if (_v.itemIsMoving)
+                return;
+
+            if (_wasPanning)
+            {
+                _wasPanning = false;
+                _v.Refresh(isNewExtent: true);
+                //_v.SetCursor(_v.CursorSettings[_v.MapAction]);
+                _v.UpdateMapCursor();
+                _onAfterPan?.Invoke(_v.ScreenToMap(e.GetPosition(_v.mapView)).AsPoint());
+                return;
+            }
+
+            if (e.ChangedButton != MouseButton.Left)
+                return;
+
+            _v.prevMouseLocation = e.GetPosition(_v.mapView);
+            _onClick(_v.ScreenToMap(_v.prevMouseLocation).AsPoint());
+        }
+    }
+
+    #endregion
+
+
     #region Pan
 
     Point prevMouseLocation;
-
+    bool shouldRefreshOnPanMouseUp = false;
     //bool isPanEnabled = false;
 
     private void ActivatePanMode()
     {
-        //this.isPanEnabled = true;
-
-        ResetMapViewEvents();
-
-        this.mapView.MouseDown -= mapView_MouseDownForPan;
-        this.mapView.MouseDown += mapView_MouseDownForPan;
-
-        //this.CurrentMouseAction = MapAction.Pan;
-
-        //this.mapView.MouseUp -= mapView_MouseUpForPan;
-        //this.mapView.MouseUp += mapView_MouseUpForPan;
+        EndActiveInteraction();
+        _activeInteraction = new PanInteraction(this);
+        _activeInteraction.Attach();
     }
 
     public void ReleasePanMode()
@@ -2716,6 +2927,9 @@ public partial class MapViewer : NotifiableUserControl
 
             return;
         }
+
+        if (e.ChangedButton != MouseButton.Left)
+            return;
 
         this.IsPanning = true;
         //Abort();
@@ -2749,6 +2963,8 @@ public partial class MapViewer : NotifiableUserControl
             ApplyPanOffset(xOffset, yOffset);
 
             this.prevMouseLocation = currentMouseLocation;
+
+            shouldRefreshOnPanMouseUp = true;
         }
     }
 
@@ -2762,7 +2978,12 @@ public partial class MapViewer : NotifiableUserControl
 
         this.mapView.ReleaseMouseCapture();
 
-        Refresh(isNewExtent: true);
+        if (shouldRefreshOnPanMouseUp)
+        {
+            shouldRefreshOnPanMouseUp = false;
+
+            Refresh(isNewExtent: true);
+        }
     }
 
 
@@ -3085,22 +3306,16 @@ public partial class MapViewer : NotifiableUserControl
 
     public void ZoomIn()
     {
-        ResetMapViewEvents();
-
-        this.mapView.MouseDown -= mapView_MouseDownForZoom;
-        this.mapView.MouseDown += mapView_MouseDownForZoom;
-
-        //this.CurrentMouseAction = MapAction.ZoomInRectangle;
+        EndActiveInteraction();
+        _activeInteraction = new ZoomRectangleInteraction(this);
+        _activeInteraction.Attach();
     }
 
     public void ZoomOutPoint()
     {
-        ResetMapViewEvents();
-
-        this.mapView.MouseUp -= mapView_MouseUpForZoomOut;
-        this.mapView.MouseUp += mapView_MouseUpForZoomOut;
-
-        //this.CurrentMouseAction = MapAction.ZoomOut;
+        EndActiveInteraction();
+        _activeInteraction = new ZoomOutInteraction(this);
+        _activeInteraction.Attach();
     }
 
 
@@ -3585,11 +3800,8 @@ public partial class MapViewer : NotifiableUserControl
 
     Action<Point>? onMoveForDrawAction = null;
 
-    // ── Draw-phase input state (shared across all click-or-pan phases) ──────
-    Action<sb.Point>? _onDrawPhaseClick;
-    Action<sb.Point>? _onDrawPhaseMove;
-    Action<sb.Point>? _onDrawPhaseAfterPan;
-    bool _itWasPanning;
+    // Draw-phase input is managed by the shared ClickOrPanGesture (_drawPhaseGesture)
+    // declared in #region Interaction Sessions.
 
     CancellationTokenSource? drawingCancellationToken;
 
@@ -3668,9 +3880,19 @@ public partial class MapViewer : NotifiableUserControl
 
     private void RestoreNavigationAfterDrawing()
     {
-        if (!_continuousDrawing)
+        if (_continuousDrawing)
+        {
+            // In continuous mode the loop's finally block handles the MapAction transition.
+            return;
+        }
+
+        // A modal draw session tore down the active interaction. If MapAction is
+        // already Pan, the VM setter is idempotent and would NOT re-run SwitchToMode,
+        // leaving no active pan handler — so re-attach pan directly in that case.
+        if (this._presenter.MapAction == MapAction.Pan)
+            ActivatePanMode();
+        else
             this._presenter.MapAction = MapAction.Pan;
-        // In continuous mode the loop's finally block handles the MapAction transition.
     }
 
     public void CancelDrawing()
@@ -3709,7 +3931,18 @@ public partial class MapViewer : NotifiableUserControl
 
         ResetMapViewEvents();
 
-        this.SetCursor(this.CursorSettings[this.MapAction]);
+        //this.SetCursor(this.CursorSettings[this.MapAction]);
+
+        MapAction mapAction = mode switch
+        {
+            DrawMode.Point => MapAction.DrawPoint,
+            DrawMode.Polyline => MapAction.DrawPolyline,
+            DrawMode.Polygon => MapAction.DrawPolygon,
+            DrawMode.Rectangle => MapAction.DrawRectangle,
+            _ => MapAction.DrawPolygon
+        };
+
+        this.SetCursor(this.CursorSettings[mapAction]);
 
         drawingCancellationToken.Token.Register(() =>
         {
@@ -3750,9 +3983,11 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     // *********************** Unified Draw-Phase Event Handlers ***********************
-    // All three drawing phases (waiting for first click, placing vertices, waiting for
-    // new-part click) share the same pan-or-click logic. BeginDrawPhase wires up these
-    // three handlers with phase-specific callbacks; EndDrawPhase tears them down.
+    // All drawing phases (waiting for first click, placing vertices, waiting for a
+    // new-part click) share the same click-or-pan logic via ClickOrPanGesture.
+    // BeginDrawPhase creates and starts a gesture with phase-specific callbacks;
+    // EndDrawPhase ends and clears it. On pan the gesture refreshes and stays
+    // subscribed — no remove-and-re-arm cycle is needed.
 
     private void BeginDrawPhase(
         Action<sb.Point> onConfirmedClick,
@@ -3760,78 +3995,26 @@ public partial class MapViewer : NotifiableUserControl
         Action<sb.Point>? onAfterPan = null)
     {
         EndDrawPhase();
-        _onDrawPhaseClick = onConfirmedClick;
-        _onDrawPhaseMove = onMove;
-        _onDrawPhaseAfterPan = onAfterPan;
-        _itWasPanning = false;
-        this.mapView.MouseDown += DrawPhase_MouseDown;
-        this.mapView.MouseMove += DrawPhase_MouseMove;
-        this.mapView.MouseUp += DrawPhase_MouseUp;
+        var gesture = new ClickOrPanGesture(
+            this,
+            onClick: onConfirmedClick,
+            onHover: onMove,
+            onAfterPan: onAfterPan,
+            onAnyMove: mapPt =>
+            {
+                if (_presenter.MapPanel.Options.IsLinkedToMouseMove)
+                    CurrentEditingPoint = mapPt.AsWpfPoint();
+            });
+        // Only act while this exact gesture is still the installed draw-phase gesture.
+        gesture.IsActive = () => ReferenceEquals(_drawPhaseGesture, gesture);
+        _drawPhaseGesture = gesture;
+        _drawPhaseGesture.Begin();
     }
 
     private void EndDrawPhase()
     {
-        this.mapView.MouseDown -= DrawPhase_MouseDown;
-        this.mapView.MouseMove -= DrawPhase_MouseMove;
-        this.mapView.MouseUp -= DrawPhase_MouseUp;
-    }
-
-    private void DrawPhase_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-        if (e.ChangedButton != MouseButton.Left)
-            return;
-
-        e.Handled = true;
-        _itWasPanning = false;
-        prevMouseLocation = e.GetPosition(this.mapView);
-    }
-
-    private void DrawPhase_MouseMove(object sender, MouseEventArgs e)
-    {
-        var currentLoc = e.GetPosition(this.mapView);
-
-        if (_presenter.MapPanel.Options.IsLinkedToMouseMove)
-            this.CurrentEditingPoint = ScreenToMap(currentLoc);
-
-        if (e.LeftButton == MouseButtonState.Pressed && !itemIsMoving)
-        {
-            double dx = currentLoc.X - prevMouseLocation.X;
-            double dy = currentLoc.Y - prevMouseLocation.Y;
-
-            if (Math.Abs(dx) > _knownAsPanThreshold || Math.Abs(dy) > _knownAsPanThreshold)
-            {
-                ApplyPanOffset(dx, dy);
-                prevMouseLocation = currentLoc;
-                _itWasPanning = true;
-            }
-        }
-        else
-        {
-            var mapPt = ScreenToMap(currentLoc).AsPoint();
-            _onDrawPhaseMove?.Invoke(mapPt);
-        }
-    }
-
-    private void DrawPhase_MouseUp(object sender, MouseButtonEventArgs e)
-    {
-        if (_itWasPanning)
-        {
-            var mapPt = ScreenToMap(e.GetPosition(this.mapView)).AsPoint();
-            this.ResetMapViewEvents();
-            this.Refresh(isNewExtent: true);
-            _onDrawPhaseAfterPan?.Invoke(mapPt);
-            BeginDrawPhase(_onDrawPhaseClick!, _onDrawPhaseMove, _onDrawPhaseAfterPan);
-            _itWasPanning = false;
-            this.SetCursor(this.CursorSettings[this.MapAction]);
-            return;
-        }
-
-        if (e.ChangedButton != MouseButton.Left)
-            return;
-
-        prevMouseLocation = e.GetPosition(this.mapView);
-        var pt = ScreenToMap(prevMouseLocation).AsPoint();
-        _onDrawPhaseClick?.Invoke(pt);
+        _drawPhaseGesture?.End();
+        _drawPhaseGesture = null;
     }
 
     // *********************** Rectangle Drawing Events *********************** 
@@ -4119,108 +4302,55 @@ public partial class MapViewer : NotifiableUserControl
 
     #region SelectPoint
 
-
     double _knownAsPanThreshold = 3;
-
-    public bool itWasPanningWhileSelectThePoint { get; set; }
 
     CancellationTokenSource? selectPointCancelationToken;
 
     /// <summary>
-    /// Returns the point selected by the user in WGS84
+    /// Returns the point selected by the user in WGS84.
+    /// Uses ClickOrPanGesture so all handlers are named and fully removable;
+    /// no anonymous closure can survive a MapAction switch.
     /// </summary>
-    /// <returns></returns>
     private Task<sb.Point> SelectThePoint()
     {
-        var selectPointTcs = new TaskCompletionSource<sb.Point>();
-
         selectPointCancelationToken = new CancellationTokenSource();
 
         ResetMapViewEvents();
 
         this.SetCursor(this.DrawPointCursor);
 
-        MouseButtonEventHandler action = null;
+        var tcs = new TaskCompletionSource<sb.Point>();
 
-        action = (sender, e) =>
-        {
-            if (e.ChangedButton != MouseButton.Left)
-                return;
-
-            // do not prevent mouse up for moveing movable item with e.Handled=true
-            if (itemIsMoving)
-                return;
-
-            e.Handled = true;
-
-            this.prevMouseLocation = e.GetPosition(this.mapView);
-
-            if (itWasPanningWhileSelectThePoint)
+        var gesture = new ClickOrPanGesture(
+            this,
+            onClick: mapPt =>
             {
-                this.ResetMapViewEvents();
-
-                this.Refresh(isNewExtent: true);
-
-                this.SetCursor(this.DrawPointCursor);
-
-                this.mapView.MouseMove -= MapView_MouseMoveSelectThePoint;
-                this.mapView.MouseMove += MapView_MouseMoveSelectThePoint;
-
-                this.mapView.MouseDown -= MapView_MouseDownForPanWhileSelectThePoint;
-                this.mapView.MouseDown += MapView_MouseDownForPanWhileSelectThePoint;
-
-                this.mapView.MouseUp -= action;
-                this.mapView.MouseUp += action;
-
-                itWasPanningWhileSelectThePoint = false;
-
-                return;
-            }
-            // do not return point if it was moveing movable item 
-            else if (!itemIsMoving)
-            { 
-                this.mapView.MouseMove -= MapView_MouseMoveSelectThePoint;
-                this.mapView.MouseDown -= MapView_MouseDownForPanWhileSelectThePoint;
-                this.mapView.MouseUp -= action;
-
-                //this.SetCursor(CursorSettings[_currentMouseAction]);
-
-                selectPointTcs.SetResult(ScreenToGeodetic(Mouse.GetPosition(this.mapView)).AsPoint());
-            }
-        };
-
-        this.mapView.MouseMove -= MapView_MouseMoveSelectThePoint;
-        this.mapView.MouseMove += MapView_MouseMoveSelectThePoint;
-
-        this.mapView.MouseDown -= MapView_MouseDownForPanWhileSelectThePoint;
-        this.mapView.MouseDown += MapView_MouseDownForPanWhileSelectThePoint;
-
-        this.mapView.MouseUp -= action;
-        this.mapView.MouseUp += action;
+                // Detach gesture before completing the task so no stale handler
+                // can fire if the caller immediately starts another interaction.
+                _selectPointGesture?.End();
+                _selectPointGesture = null;
+                tcs.TrySetResult(MapToGeodetic(mapPt.AsWpfPoint()).AsPoint());
+            });
+        // Only act while this exact gesture is still the installed select-point gesture.
+        gesture.IsActive = () => ReferenceEquals(_selectPointGesture, gesture);
+        _selectPointGesture = gesture;
 
         selectPointCancelationToken.Token.Register(() =>
         {
-            selectPointTcs.TrySetCanceled();
-
-            //this.SetCursor(CursorSettings[_currentMouseAction]);
-
-            this.mapView.MouseMove -= MapView_MouseMoveSelectThePoint;
-            this.mapView.MouseDown -= MapView_MouseDownForPanWhileSelectThePoint;
-            this.mapView.MouseUp -= action;
-
-            selectPointTcs = null;
-
+            _selectPointGesture?.End();
+            _selectPointGesture = null;
+            tcs.TrySetCanceled();
             selectPointCancelationToken = null;
-
         }, useSynchronizationContext: false);
 
-        return selectPointTcs.Task;
+        _selectPointGesture.Begin();
+
+        return tcs.Task;
     }
 
     /// <summary>
-    /// Returns the point selected by the user in WGS84
+    /// Returns the point selected by the user in WGS84.
     /// </summary>
-    /// <returns></returns>
     public async Task<Response<sb.Point>> SelectPointAsync(bool continuousMode = false)
     {
         try
@@ -4263,46 +4393,10 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    private void MapView_MouseDownForPanWhileSelectThePoint(object sender, MouseButtonEventArgs e)
+    public void CancelSelectPoint()
     {
-        if (e.ChangedButton != MouseButton.Left)
-            return;
-
-        e.Handled = true;
-
-        itWasPanningWhileSelectThePoint = false;
-
-        this.prevMouseLocation = e.GetPosition(this.mapView);
+        selectPointCancelationToken?.Cancel();
     }
-
-    private void MapView_MouseMoveSelectThePoint(object sender, MouseEventArgs e)
-    {
-        Point currentMouseLocation = e.GetPosition(this.mapView);
-
-        if (e.LeftButton == MouseButtonState.Pressed && !itemIsMoving)
-        {
-            double xOffset = currentMouseLocation.X - this.prevMouseLocation.X;
-
-            double yOffset = currentMouseLocation.Y - this.prevMouseLocation.Y;
-
-            if (Math.Abs(xOffset) > _knownAsPanThreshold || Math.Abs(yOffset) > _knownAsPanThreshold)
-            {
-                ApplyPanOffset(xOffset, yOffset);
-
-                this.prevMouseLocation = currentMouseLocation;
-
-                this.itWasPanningWhileSelectThePoint = true;
-            }
-            else { }
-        }
-        else
-        {
-            //var mapLocation = ScreenToMap(currentMouseLocation);
-            //this.drawingLayer.UpdateLastVertexLocation(mapLocation.AsPoint());
-            //onMoveForDrawAction?.Invoke(mapLocation);
-        }
-    }
-
 
     #endregion
 
@@ -4413,6 +4507,12 @@ public partial class MapViewer : NotifiableUserControl
         this.SetLayer(CurrentEditingLayer);
 
         AddEditableFeatureLayer(CurrentEditingLayer);
+
+        // Allow the user to pan the map (left-drag on an empty area) while editing
+        // the geometry. Vertex / mid-vertex markers are moveable items that take
+        // priority via itemIsMoving + e.Handled, so PanInteraction only kicks in on
+        // empty areas and never interferes with add/remove/move vertex operations.
+        ActivatePanMode();
 
         editingCancellationToken.Token.Register(() =>
         {
@@ -4600,7 +4700,7 @@ public partial class MapViewer : NotifiableUserControl
                 marker.LabelValue = "عارضه نامعتبر";
             }
         };
-
+         
         var result = await GetDrawingAsync(mode/*, drawingOptions*/);
 
         this.ClearLayer(measureLayer, remove: true, forceRemove: true);
@@ -4624,6 +4724,9 @@ public partial class MapViewer : NotifiableUserControl
                 this._presenter.MapAction = MapAction.Pan;
             }
         }
+
+        //this.SetCursor(this.CursorSettings[this.MapAction]);
+        this.UpdateMapCursor();
 
         return result;
     }
