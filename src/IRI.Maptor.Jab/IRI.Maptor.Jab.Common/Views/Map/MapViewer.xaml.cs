@@ -2421,7 +2421,10 @@ public partial class MapViewer : NotifiableUserControl
         //{
         //    return;
         //}
-        if (this.MapAction != MapAction.Pan)
+        if (this.MapAction != MapAction.Pan &&
+            this.MapAction != MapAction.ZoomIn &&
+            this.MapAction != MapAction.ZoomInRectangle &&
+            this.MapAction != MapAction.ZoomOut)
             return;
 
         RemoveRightClickOptions();
@@ -3268,13 +3271,15 @@ public partial class MapViewer : NotifiableUserControl
 
     int counter; int counterValue;
 
-    Rectangle rectangle = new Rectangle()
-    {
-        Stroke = new SolidColorBrush(new Color() { R = 255, G = 200, B = 0, A = 255 }),
-        StrokeThickness = 2,
-        Fill = new SolidColorBrush(new Color() { R = 255, G = 240, B = 0, A = 40 }),
-        Tag = new LayerTag(-1) { IsTiled = false, LayerType = LayerType.Drawing }
-    };
+    Rectangle zoomRectangle = null;
+
+    //Rectangle rectangle = new Rectangle()
+    //{
+    //    Stroke = new SolidColorBrush(new Color() { R = 255, G = 200, B = 0, A = 255 }),
+    //    StrokeThickness = 2,
+    //    Fill = new SolidColorBrush(new Color() { R = 255, G = 240, B = 0, A = 40 }),
+    //    Tag = new LayerTag(-1) { IsTiled = false, LayerType = LayerType.Drawing }
+    //};
 
     public void EnableZoomOnDoubleClick()
     {
@@ -3340,13 +3345,25 @@ public partial class MapViewer : NotifiableUserControl
 
         this.firstZoomBound = e.GetPosition(this.mapView);
 
-        rectangle.Width = 0; rectangle.Height = 0;
 
-        rectangle.Fill.Freeze();
+        var visual = EditableFeatureLayerOptions.CreateDefaultForDrawing(false, false, false).Visual;
 
-        this.mapView.Children.Add(rectangle);
+        this.zoomRectangle = new Rectangle()
+        {
+            Stroke = visual.Stroke,
+            StrokeThickness = visual.StrokeThickness,
+            Fill = visual.Fill,
+            StrokeDashArray = visual.DashStyle.Dashes,
+            Tag = new LayerTag(-1) { IsTiled = false, LayerType = LayerType.Drawing }
+        };
 
-        Canvas.SetZIndex(rectangle, int.MaxValue);
+        zoomRectangle.Width = 0; zoomRectangle.Height = 0;
+
+        zoomRectangle.Fill!.Freeze();
+
+        this.mapView.Children.Add(zoomRectangle);
+
+        Canvas.SetZIndex(zoomRectangle, int.MaxValue);
 
         this.mapView.MouseUp -= mapView_MouseUpForZoom;
         this.mapView.MouseUp += mapView_MouseUpForZoom;
@@ -3369,11 +3386,11 @@ public partial class MapViewer : NotifiableUserControl
 
         Rect rect = new Rect(this.firstZoomBound, currMouseLocation);
 
-        rectangle.Width = rect.Width; rectangle.Height = rect.Height;
+        zoomRectangle.Width = rect.Width; zoomRectangle.Height = rect.Height;
 
-        Canvas.SetTop(rectangle, rect.Top);
+        Canvas.SetTop(zoomRectangle, rect.Top);
 
-        Canvas.SetLeft(rectangle, rect.Left);
+        Canvas.SetLeft(zoomRectangle, rect.Left);
     }
 
     private void mapView_MouseUpForZoom(object sender, MouseButtonEventArgs e)
@@ -3381,7 +3398,7 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.MouseUp -= mapView_MouseUpForZoom;
         this.mapView.MouseMove -= mapView_MouseMoveForZoom;
 
-        this.mapView.Children.Remove(rectangle);
+        this.mapView.Children.Remove(zoomRectangle);
 
         Point currMouseLocation = e.GetPosition(this.mapView);
 
@@ -4700,7 +4717,7 @@ public partial class MapViewer : NotifiableUserControl
                 marker.LabelValue = "عارضه نامعتبر";
             }
         };
-         
+
         var result = await GetDrawingAsync(mode/*, drawingOptions*/);
 
         this.ClearLayer(measureLayer, remove: true, forceRemove: true);
