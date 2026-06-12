@@ -1709,4 +1709,7 @@
   <data name="cmd_general_identify" xml:space="preserve">
     <value>Identify</value>
   </data>
+  <data name="common_loadingText" xml:space="preserve">
+    <value>LOADING...</value>
+  </data>
 </root>

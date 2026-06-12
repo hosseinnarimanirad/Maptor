@@ -7,9 +7,9 @@ namespace IRI.Maptor.Jab.Controls;
 /// <summary>
 /// Interaction logic for DottedBusyIndicator.xaml
 /// </summary>
-public partial class DottedBusyIndicatorView : UserControl
+public partial class DottedBusyIndicatorView2 : UserControl
 {
-    public DottedBusyIndicatorView()
+    public DottedBusyIndicatorView2()
     {
         InitializeComponent();
     }
@@ -38,6 +38,8 @@ public partial class DottedBusyIndicatorView : UserControl
         DependencyProperty.Register(nameof(DotSize), typeof(int), typeof(DottedBusyIndicatorView), new PropertyMetadata(8));
 
 
+
+
     public bool ShowLoadingText
     {
         get { return (bool)GetValue(ShowLoadingTextProperty); }
@@ -47,5 +49,6 @@ public partial class DottedBusyIndicatorView : UserControl
     // Using a DependencyProperty as the backing store for ShowLoadingText.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty ShowLoadingTextProperty =
         DependencyProperty.Register("ShowLoadingText", typeof(bool), typeof(DottedBusyIndicatorView), new PropertyMetadata(false));
+
 
 }

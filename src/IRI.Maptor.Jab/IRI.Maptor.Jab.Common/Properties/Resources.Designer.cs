@@ -772,6 +772,15 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to LOADING....
+        /// </summary>
+        public static string common_loadingText {
+            get {
+                return ResourceManager.GetString("common_loadingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string common_login {

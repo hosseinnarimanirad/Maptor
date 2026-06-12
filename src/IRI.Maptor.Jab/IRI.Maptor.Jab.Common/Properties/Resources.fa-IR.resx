@@ -1662,4 +1662,7 @@
   <data name="cmd_general_identify" xml:space="preserve">
     <value>شناسایی عارضه</value>
   </data>
+  <data name="common_loadingText" xml:space="preserve">
+    <value>صبر لطفا...</value>
+  </data>
 </root>

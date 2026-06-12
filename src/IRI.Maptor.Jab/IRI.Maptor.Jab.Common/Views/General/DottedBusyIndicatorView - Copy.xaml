@@ -1,0 +1,175 @@
+﻿<UserControl x:Class="IRI.Maptor.Jab.Controls.DottedBusyIndicatorView2"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             Name="root">
+    <UserControl.Resources>
+        <!-- Default dot size if not set externally -->
+        <sys:Double x:Key="DefaultDotSize">14</sys:Double>
+    </UserControl.Resources>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel.Triggers>
+                <EventTrigger RoutedEvent="StackPanel.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <!-- Dot 1: slow fade and gentle scale -->
+                            <DoubleAnimationUsingKeyFrames 
+                                Storyboard.TargetName="Dot1" 
+                                Storyboard.TargetProperty="Opacity">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.15"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                                <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="0.15"/>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames 
+                                Storyboard.TargetName="Dot1" 
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.6"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                                <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="0.6"/>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames 
+                                Storyboard.TargetName="Dot1" 
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.6"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                                <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="0.6"/>
+                            </DoubleAnimationUsingKeyFrames>
+
+                            <!-- Dot 2: delayed 0.5s -->
+                            <DoubleAnimationUsingKeyFrames 
+                                Storyboard.TargetName="Dot2" 
+                                Storyboard.TargetProperty="Opacity"
+                                BeginTime="0:0:0.5">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.15"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                                <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="0.15"/>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames 
+                                Storyboard.TargetName="Dot2" 
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                BeginTime="0:0:0.5">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.6"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                                <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="0.6"/>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames 
+                                Storyboard.TargetName="Dot2" 
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                BeginTime="0:0:0.5">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.6"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                                <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="0.6"/>
+                            </DoubleAnimationUsingKeyFrames>
+
+                            <!-- Dot 3: delayed 1.0s -->
+                            <DoubleAnimationUsingKeyFrames 
+                                Storyboard.TargetName="Dot3" 
+                                Storyboard.TargetProperty="Opacity"
+                                BeginTime="0:0:1.0">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.15"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                                <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="0.15"/>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames 
+                                Storyboard.TargetName="Dot3" 
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                BeginTime="0:0:1.0">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.6"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                                <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="0.6"/>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames 
+                                Storyboard.TargetName="Dot3" 
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                BeginTime="0:0:1.0">
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0.6"/>
+                                <EasingDoubleKeyFrame KeyTime="0:0:0.6" Value="1">
+                                    <EasingDoubleKeyFrame.EasingFunction>
+                                        <CubicEase EasingMode="EaseInOut"/>
+                                    </EasingDoubleKeyFrame.EasingFunction>
+                                </EasingDoubleKeyFrame>
+                                <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="0.6"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </StackPanel.Triggers>
+
+            <!-- Dot 1 -->
+            <Ellipse Name="Dot1"
+                     Width="{Binding ElementName=root, Path=DotSize, FallbackValue=14}"
+                     Height="{Binding ElementName=root, Path=DotSize, FallbackValue=14}"
+                     Fill="{Binding ElementName=root, Path=DotBrush}"
+                     RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <ScaleTransform ScaleX="0.6" ScaleY="0.6"/>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+            <!-- Dot 2 -->
+            <Ellipse Name="Dot2"
+                     Width="{Binding ElementName=root, Path=DotSize, FallbackValue=14}"
+                     Height="{Binding ElementName=root, Path=DotSize, FallbackValue=14}"
+                     Fill="{Binding ElementName=root, Path=DotBrush}"
+                     Margin="8,0,0,0"
+                     RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <ScaleTransform ScaleX="0.6" ScaleY="0.6"/>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+            <!-- Dot 3 -->
+            <Ellipse Name="Dot3"
+                     Width="{Binding ElementName=root, Path=DotSize, FallbackValue=14}"
+                     Height="{Binding ElementName=root, Path=DotSize, FallbackValue=14}"
+                     Fill="{Binding ElementName=root, Path=DotBrush}"
+                     Margin="8,0,0,0"
+                     RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <ScaleTransform ScaleX="0.6" ScaleY="0.6"/>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+        </StackPanel>
+        <TextBlock Text="LOADING..."
+                       Foreground="White"
+                       FontSize="12"
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center"
+                       Margin="0,2,0,2"
+                       Opacity="0.9"
+                       Visibility="{Binding ElementName=root, Path=ShowLoadingText, Converter={StaticResource boolToVisibilityConverter}}"/>
+    </StackPanel>
+</UserControl>
