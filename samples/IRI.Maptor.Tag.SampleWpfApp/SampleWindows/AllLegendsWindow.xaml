@@ -26,7 +26,7 @@
                ResizeBehavior="PreviousAndNext" ShowsPreview="True"/>
 
         <Border HorizontalAlignment="Stretch" BorderThickness="1" BorderBrush="LightGray" Margin="0,5" Padding="5" Grid.Column="2"
-                Background="{StaticResource MahApps.Brushes.Accent}"
+                Background="{DynamicResource MahApps.Brushes.Accent}"
                 Visibility="{Binding IsTocShown, Converter={StaticResource boolToVisibilityConverter}}" >
             <DockPanel>
                 <Expander Header="BaseMaps" DockPanel.Dock="Top" IsExpanded="True"  Margin="0,1,0,0" Cursor="Hand">

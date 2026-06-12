@@ -28,7 +28,7 @@
         <GridSplitter Grid.Row="1" Grid.ColumnSpan="3" Height="5" HorizontalAlignment="Stretch" Background="LightGray" ResizeBehavior="PreviousAndNext" ShowsPreview="True"/>
         
         <GroupBox Header="Layer Legend" HorizontalAlignment="Stretch" BorderThickness="1" BorderBrush="LightGray" Margin="0,5" Padding="5" Grid.Column="0"
-            Background="{StaticResource MahApps.Brushes.Accent}" 
+            Background="{DynamicResource MahApps.Brushes.Accent}" 
             Visibility="{Binding IsTocShown, Converter={StaticResource boolToVisibilityConverter}}" >
             <maptor:MapLegendView LegendViewModel="{Binding LegendViewModel}" />
         </GroupBox>

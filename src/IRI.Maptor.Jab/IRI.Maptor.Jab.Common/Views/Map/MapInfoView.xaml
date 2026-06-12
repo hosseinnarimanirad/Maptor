@@ -62,6 +62,7 @@
             <DockPanel Margin="0" >
 
 
+                <!--link current point toggle-->
                 <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" DockPanel.Dock="Left" HorizontalAlignment="Right" Margin="2" 
                                 IsChecked="{Binding MapPanel.Options.IsLinkedToMouseMove, Mode=TwoWay}" 
                                 Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"
@@ -103,6 +104,7 @@
                     </TextBox.Style>
                 </TextBox>
 
+                
                 <!--input Y-->
                 <TextBlock DockPanel.Dock="Left" Text="Y:" Margin="8 0 0 0"
                            Visibility="{Binding MapPanel.Options.IsManualInputAvailable, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
@@ -124,9 +126,7 @@
                         </Style>
                     </TextBox.Style>
                 </TextBox>
-
-
-
+  
 
                 <!--Drawing-->
                 <DockPanel DockPanel.Dock="Right" LastChildFill="False"
@@ -222,7 +222,7 @@
             <!--new drawing information text-->
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" TextDecorations="Underline" Margin="8,0"
                        Text="{Binding [map_draw_newDrawing], Source={StaticResource Localization}}"
-                       Foreground="{StaticResource  MahApps.Brushes.Accent2}"
+                       Foreground="{DynamicResource MahApps.Brushes.Accent2}"
                        Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}">
                 <!--<TextBlock.Visibility>
                     <MultiBinding Converter="{StaticResource multiBooleanToVisibilityConverter}">
@@ -341,7 +341,8 @@
                     </TabItem>
 
                     <!--measure-->
-                    <TabItem Header="{Binding [mapPanel_measure_title], Source={StaticResource Localization}}" Cursor="Hand">
+                    <TabItem Header="{Binding [mapPanel_measure_title], Source={StaticResource Localization}}" Cursor="Hand"
+                             Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">
                         <StackPanel>
                             <StackPanel.Resources>
                                 <Style TargetType="TextBlock">
@@ -361,7 +362,8 @@
                                 </Style>
                             </StackPanel.Resources>
                             <!--general group-->
-                            <GroupBox Header="{Binding [mapPanel_measure_generalTitle], Source={StaticResource Localization}}">
+                            <GroupBox Header="{Binding [mapPanel_measure_generalTitle], Source={StaticResource Localization}}"
+                                      Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>

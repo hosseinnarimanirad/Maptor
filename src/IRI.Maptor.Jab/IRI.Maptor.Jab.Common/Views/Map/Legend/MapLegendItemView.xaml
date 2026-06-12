@@ -337,6 +337,7 @@
                                     <Binding Path="IsMouseOver" ElementName="root"/>
                                 </MultiBinding>
                             </StackPanel.Visibility>
+                            
                             <StackPanel.Resources>
                                 <Style x:Key="ChevronUpButton" TargetType="Button">
                                     <Setter Property="Width" Value="16"/>
