@@ -200,29 +200,29 @@
                         </Expander.Header>
                         <StackPanel Orientation="Horizontal">
                             <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawPoint}}"
+                                IsChecked="{Binding IsDrawPointMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_drawPoint], Source={StaticResource Localization}}"  >
                                 <iconPacks:PackIconMaterial Kind="VectorPointPlus" Width="14"/>
                             </ToggleButton>
 
                             <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawPolyline}}"
+                                IsChecked="{Binding IsDrawPolylineMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_drawPolyline], Source={StaticResource Localization}}">
                                 <iconPacks:Material Kind="VectorPolylinePlus"/>
                             </ToggleButton>
                             <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawRectangle}}"
+                                IsChecked="{Binding IsDrawRectangleMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_drawRectangle], Source={StaticResource Localization}}">
                                 <iconPacks:Material Kind="ShapeRectanglePlus"/>
                             </ToggleButton>
 
                             <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawPolygon}}"
+                                IsChecked="{Binding IsDrawPolygonMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_drawPolygon], Source={StaticResource Localization}}">
                                 <iconPacks:Material Kind="ShapePolygonPlus"/>
                             </ToggleButton>
                             <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
-                                IsChecked="{Binding MapAction, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorJab:MapAction.DrawText}}"
+                                IsChecked="{Binding IsDrawTextMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_addTextToMap], Source={StaticResource Localization}}">
                                 <iconPacks:Material Kind="FormatAnnotationPlus"/>
                             </ToggleButton>

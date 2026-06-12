@@ -751,8 +751,16 @@ public abstract class MapViewModelBase : ViewModelBase
             var previous = _mapAction;
 
             _mapAction = value;
-
+             
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsZoomInMode));
+            RaisePropertyChanged(nameof(IsZoomOutMode));
+            RaisePropertyChanged(nameof(IsZoomInRectangleMode));
+            RaisePropertyChanged(nameof(IsDrawPointMode));
+            RaisePropertyChanged(nameof(IsDrawPolylineMode));
+            RaisePropertyChanged(nameof(IsDrawPolygonMode));
+            RaisePropertyChanged(nameof(IsDrawRectangleMode));
+            RaisePropertyChanged(nameof(IsDrawTextMode));
             RaisePropertyChanged(nameof(IsIdentifyMode));
 
             //RaiseMapActionModeProperties();
@@ -933,79 +941,61 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public bool IsDrawEditMeasureMode => IsEditMode || IsDrawMode;
 
+
+    public bool IsZoomInMode
+    {
+        get => MapAction == MapAction.ZoomIn;
+        set => MapAction = value ? MapAction.ZoomIn : MapAction.Pan;
+    }
+
+    public bool IsZoomOutMode
+    {
+        get => MapAction == MapAction.ZoomOut;
+        set => MapAction = value ? MapAction.ZoomOut : MapAction.Pan;
+    }
+
+    public bool IsZoomInRectangleMode
+    {
+        get => MapAction == MapAction.ZoomInRectangle;
+        set => MapAction = value ? MapAction.ZoomInRectangle : MapAction.Pan;
+    }
+
+    public bool IsDrawPointMode
+    {
+        get => MapAction == MapAction.DrawPoint;
+        set => MapAction = value ? MapAction.DrawPoint : MapAction.Pan;
+    }
+
+    public bool IsDrawPolylineMode
+    {
+        get => MapAction == MapAction.DrawPolyline;
+        set => MapAction = value ? MapAction.DrawPolyline : MapAction.Pan;
+    }
+
+    public bool IsDrawPolygonMode
+    {
+        get => MapAction == MapAction.DrawPolygon;
+        set => MapAction = value ? MapAction.DrawPolygon : MapAction.Pan;
+    }
+
+    public bool IsDrawRectangleMode
+    {
+        get => MapAction == MapAction.DrawRectangle;
+        set => MapAction = value ? MapAction.DrawRectangle : MapAction.Pan;
+    }
+
+    public bool IsDrawTextMode
+    {
+        get => MapAction == MapAction.DrawText;
+        set => MapAction = value ? MapAction.DrawText : MapAction.Pan;
+    }
+
     public bool IsIdentifyMode
     {
         get => MapAction == MapAction.Identify;
-        set
-        {
-            MapAction = value ? MapAction.Identify : MapAction.Pan;
-        }
+        set => MapAction = value ? MapAction.Identify : MapAction.Pan;
     }
 
-    //public bool IsPanMode
-    //{
-    //    get { return MapAction == MapAction.Pan; }
-    //    set
-    //    {
-    //        if (value)
-    //            MapAction = MapAction.Pan;
-
-    //        RaisePropertyChanged();
-    //    }
-    //}
-    //public bool IsDrawPointMode
-    //{
-    //    get { return MapAction == MapAction.DrawPoint; }
-    //    set
-    //    {
-    //        if (value)
-    //            MapAction = MapAction.DrawPoint;
-    //        else if (MapAction == MapAction.DrawPoint)
-    //            MapAction = MapAction.Pan;
-
-    //        RaisePropertyChanged();
-    //    }
-    //}
-    //public bool IsDrawPolylineMode
-    //{
-    //    get { return MapAction == MapAction.DrawPolyline; }
-    //    set
-    //    {
-    //        if (value)
-    //            MapAction = MapAction.DrawPolyline;
-    //        else if (MapAction == MapAction.DrawPolyline)
-    //            MapAction = MapAction.Pan;
-
-    //        RaisePropertyChanged();
-    //    }
-    //}
-    //public bool IsDrawPolygonMode
-    //{
-    //    get { return MapAction == MapAction.DrawPolygon; }
-    //    set
-    //    {
-    //        if (value)
-    //            MapAction = MapAction.DrawPolygon;
-    //        else if (MapAction == MapAction.DrawPolygon)
-    //            MapAction = MapAction.Pan;
-
-    //        RaisePropertyChanged();
-    //    }
-    //}
-    //public bool IsDrawRectangleMode
-    //{
-    //    get { return MapAction == MapAction.DrawRectangle; }
-    //    set
-    //    {
-    //        if (value)
-    //            MapAction = MapAction.DrawRectangle;
-
-    //        else if (MapAction == MapAction.DrawRectangle)
-    //            MapAction = MapAction.Pan;
-
-    //        RaisePropertyChanged();
-    //    }
-    //}
 
 
     //public bool IsZoomInMode
@@ -1927,44 +1917,59 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public virtual async Task IdentifyAsync(Point point)
     {
-        var identify = await this.IdentifyFeaturesAsync(point, new IdentifyOptions()
+        try
         {
-            IncludeNotInScaleRangeLayers = this.MapSettings.Identify_IncludeNotInScaleRangeLayers,
-            IncludeInvisibleLayers = this.MapSettings.Identify_IncludeInvisibleLayers,
-            SelectionTolerance = this.MapSettings.Identify_SelectionTolerance
-        });
+            this.IsBusy = true;
 
-        if (identify == null)
-            return;
+            await Task.Delay(5000);
 
-        this.SelectedLayers = new ObservableCollection<SelectedLayer>();
-
-        this.ShowAttributeTable = true;
-
-        foreach (var item in identify)
-        {
-            var layer = this.FindLayer(item.LayerId) as VectorLayer;
-
-            if (layer is null)
-                continue;
-
-            var fields = layer.GetFields();
-
-            var newLayer = new SelectedLayer(this.DialogService, layer, fields)
+            var identify = await this.IdentifyFeaturesAsync(point, new IdentifyOptions()
             {
-                ShowSelectedOnMap = true,
-                Features = new ObservableCollection<Feature<Point>>(item.Features),
-                Fields = fields
-            };
+                IncludeNotInScaleRangeLayers = this.MapSettings.Identify_IncludeNotInScaleRangeLayers,
+                IncludeInvisibleLayers = this.MapSettings.Identify_IncludeInvisibleLayers,
+                SelectionTolerance = this.MapSettings.Identify_SelectionTolerance
+            });
 
-            this.AddSelectedLayer(newLayer);
+            if (identify == null)
+                return;
+
+            this.SelectedLayers = new ObservableCollection<SelectedLayer>();
+
+            this.ShowAttributeTable = true;
+
+            foreach (var item in identify)
+            {
+                var layer = this.FindLayer(item.LayerId) as VectorLayer;
+
+                if (layer is null)
+                    continue;
+
+                var fields = layer.GetFields();
+
+                var newLayer = new SelectedLayer(this.DialogService, layer, fields)
+                {
+                    ShowSelectedOnMap = true,
+                    Features = new ObservableCollection<Feature<Point>>(item.Features),
+                    Fields = fields
+                };
+
+                await this.AddSelectedLayer(newLayer);
+            }
+
+            RemoveMapOptions();
+
+            if (SelectedLayers.Any())
+            {
+                this.CurrentLayer = this.SelectedLayers.FirstOrDefault()!;
+            }
         }
-
-        RemoveMapOptions();
-
-        if (SelectedLayers.Any())
+        catch (Exception)
         {
-            this.CurrentLayer = this.SelectedLayers.FirstOrDefault()!;
+
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
