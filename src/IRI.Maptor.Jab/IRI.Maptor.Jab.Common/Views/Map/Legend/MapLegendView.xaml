@@ -179,7 +179,7 @@
         </Grid.RowDefinitions>
 
         <!--filter and tools-->
-        <Border Grid.Row="0" Background="{DynamicResource MahApps.Brushes.Accent4}"
+        <Border Grid.Row="0" Background="{DynamicResource MahApps.Brushes.Accent3}"
                 Margin="2" CornerRadius="4"
                 Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid Margin="4">
@@ -498,7 +498,7 @@
                 StrokeThickness="1"
                 StrokeDashArray="8 2"
                 Stroke="{DynamicResource MahApps.Brushes.Highlight}"  
-                Visibility="Collapsed"/>
+                Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}"/>
 
         <TreeView Grid.Row="2"
                   ItemsSource="{Binding Source={StaticResource collectionViewSource}}"

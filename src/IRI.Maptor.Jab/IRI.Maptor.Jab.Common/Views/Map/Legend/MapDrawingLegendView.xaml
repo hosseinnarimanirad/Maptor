@@ -141,7 +141,7 @@
         <ScrollViewer HorizontalScrollBarVisibility="Auto"
                         VerticalScrollBarVisibility="Auto"
                         Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
-            <Border Background="{DynamicResource MahApps.Brushes.Accent4}"
+            <Border Background="{DynamicResource MahApps.Brushes.Accent3}"
                     Margin="2" CornerRadius="4">
                 <DockPanel Margin="4" HorizontalAlignment="Center" FlowDirection="LeftToRight">
                     <Button Command="{Binding MoveDrawingItemUpCommand}"
