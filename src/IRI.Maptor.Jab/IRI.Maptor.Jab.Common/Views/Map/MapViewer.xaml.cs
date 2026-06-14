@@ -101,7 +101,7 @@ public partial class MapViewer : NotifiableUserControl
 
     public EventHandler<PointEventArgs> CurrentEditingPointChanged;
 
-    public event EventHandler<MapStatusEventArgs> OnStatusChanged;
+    public event EventHandler<MapStatusEventArgs> OnMapStatusChanged;
 
     //public event EventHandler<MapActionEventArgs> OnMapActionChanged;
 
@@ -209,7 +209,7 @@ public partial class MapViewer : NotifiableUserControl
     public Cursor DrawPolylineCursor { get; set; } = Cursors.Cross;
     public Cursor DrawPolygonCursor { get; set; } = Cursors.Cross;
     public Cursor DrawRectangleCursor { get; set; } = Cursors.Cross;
-    public Cursor IdentifyCursor { get; set; } = Cursors.Arrow;
+    public Cursor IdentifyCursor { get; set; } = Cursors.Cross/*Cursors.Arrow*/;
     public Cursor DrawTextCursor { get; set; } = Cursors.Cross;
 
     private Dictionary<MapAction, Cursor> CursorSettings;
@@ -263,7 +263,7 @@ public partial class MapViewer : NotifiableUserControl
         // mouse-handler session, so it is cancelled here at the real MapAction
         // boundary — not in EndActiveInteraction(), which runs as a sub-step of
         // many operations that an active edit must survive (e.g. panning).
-        if (editingCancellationToken != null)
+        if (_editingCancellationToken != null)
             CancelEditGeometry();
 
         // Each activator below calls EndActiveInteraction() itself.
@@ -296,7 +296,7 @@ public partial class MapViewer : NotifiableUserControl
         {
             _status = value;
             RaisePropertyChanged();
-            this.OnStatusChanged?.Invoke(null, new MapStatusEventArgs(value));
+            this.OnMapStatusChanged?.Invoke(null, new MapStatusEventArgs(value));
         }
     }
 
@@ -580,7 +580,7 @@ public partial class MapViewer : NotifiableUserControl
             presenter.UpdateCurrentEditingPoint(e.Point.AsPoint());
         };
 
-        this.OnStatusChanged += (sender, e) => presenter.MapStatus = e.Status;
+        this.OnMapStatusChanged += (sender, e) => presenter.MapStatus = e.Status;
 
         //this.OnMapActionChanged += (sender, e) => presenter.MapAction = e.Action;
 
@@ -2416,11 +2416,16 @@ public partial class MapViewer : NotifiableUserControl
 
     void mapView_MouseUpForRightClickOptions(object sender, MouseButtonEventArgs e)
     {
+        //if (sender != this)
+        //{
+
+        //}
         //Do not raise when other options are available
         //if (e.OriginalSource != this.mapView && this.Status != MapStatus.Drawing)
         //{
         //    return;
         //}
+
         if (this.MapAction != MapAction.Pan &&
             this.MapAction != MapAction.ZoomIn &&
             this.MapAction != MapAction.ZoomInRectangle &&
@@ -3820,7 +3825,7 @@ public partial class MapViewer : NotifiableUserControl
     // Draw-phase input is managed by the shared ClickOrPanGesture (_drawPhaseGesture)
     // declared in #region Interaction Sessions.
 
-    CancellationTokenSource? drawingCancellationToken;
+    CancellationTokenSource? _drawingCancellationToken;
 
     TaskCompletionSource<Response<Geometry<sb.Point>>>? drawingTcs;
 
@@ -3832,6 +3837,20 @@ public partial class MapViewer : NotifiableUserControl
 
     sb.Point rectangleFirstMapPoint;
 
+    private CancellationTokenSource GetNewDrawingToken()
+    {
+        var old = Interlocked.Exchange(ref _drawingCancellationToken, null);
+
+        old?.Cancel();
+
+        old?.Dispose();
+
+        var newToken = new CancellationTokenSource();
+
+        _drawingCancellationToken = newToken;
+
+        return newToken;
+    }
 
     public async Task<Response<Geometry<sb.Point>>> GetDrawingAsync(DrawMode mode, bool continuousDrawing = false)
     {
@@ -3851,7 +3870,7 @@ public partial class MapViewer : NotifiableUserControl
 
             var result = await GetDrawing(mode);
 
-            this.Status = MapStatus.Idle;
+            //this.Status = MapStatus.Idle;
 
             if (result.HasNotNullResult())
             {
@@ -3864,9 +3883,9 @@ public partial class MapViewer : NotifiableUserControl
         }
         catch (TaskCanceledException)
         {
-            if (drawingCancellationToken == null)
+            if (_drawingCancellationToken == null)
             {
-                this.Status = MapStatus.Idle;
+                //this.Status = MapStatus.Idle;
 
                 RestoreNavigationAfterDrawing();
             }
@@ -3875,11 +3894,14 @@ public partial class MapViewer : NotifiableUserControl
         }
         catch (Exception ex)
         {
-            this.Status = MapStatus.Idle;
+            //this.Status = MapStatus.Idle;
 
             drawingTcs = null;
 
-            drawingCancellationToken = null;
+            //_drawingCancellationToken = null;
+            var token = Interlocked.Exchange(ref _drawingCancellationToken, null);
+
+            token?.Dispose();
 
             RestoreNavigationAfterDrawing();
 
@@ -3892,6 +3914,8 @@ public partial class MapViewer : NotifiableUserControl
                 drawingLayer.Dispose();
                 drawingLayer = null;
             }
+
+            this.Status = MapStatus.Idle;
         }
     }
 
@@ -3916,7 +3940,12 @@ public partial class MapViewer : NotifiableUserControl
     {
         bool hadStarted = drawingLayer != null;
 
-        drawingCancellationToken?.Cancel();
+        //_drawingCancellationToken?.Cancel();
+        var token = Interlocked.Exchange(ref _drawingCancellationToken, null);
+
+        token?.Cancel();
+
+        token?.Dispose();
 
         if (!hadStarted)
         {
@@ -3929,7 +3958,8 @@ public partial class MapViewer : NotifiableUserControl
     {
         drawingTcs = new TaskCompletionSource<Response<Geometry<sb.Point>>>();
 
-        drawingCancellationToken = new CancellationTokenSource();
+        //_drawingCancellationToken = new CancellationTokenSource();
+        var cts = GetNewDrawingToken(); // atomically replaces and returns new token
 
         this.CurrentEditingLayer = null;
 
@@ -3961,7 +3991,7 @@ public partial class MapViewer : NotifiableUserControl
 
         this.SetCursor(this.CursorSettings[mapAction]);
 
-        drawingCancellationToken.Token.Register(() =>
+        cts.Token.Register(() =>
         {
             drawingTcs.TrySetCanceled();
 
@@ -3979,9 +4009,13 @@ public partial class MapViewer : NotifiableUserControl
                 RemoveEditableFeatureLayer(drawingLayer.GetLayer());
             }
 
+            // Atomically nullify field only if it still points to this token
+            Interlocked.CompareExchange(ref _drawingCancellationToken, null, cts);
+
             drawingTcs = null;
 
-            drawingCancellationToken = null;
+            cts.Dispose(); // dispose after cancellation
+            //_drawingCancellationToken = null;
 
         }, useSynchronizationContext: false);
 
@@ -4131,7 +4165,10 @@ public partial class MapViewer : NotifiableUserControl
 
         var polygon = Geometry<sb.Point>.CreatePolygon(ringPoints, SridHelper.WebMercator);
 
-        drawingCancellationToken = null;
+        //_drawingCancellationToken = null;
+        var token = Interlocked.Exchange(ref _drawingCancellationToken, null);
+
+        token?.Dispose();
 
         drawingTcs.SetResult(ResponseFactory.Create(polygon));
 
@@ -4246,7 +4283,10 @@ public partial class MapViewer : NotifiableUserControl
 
         drawingLayer = null;
 
-        drawingCancellationToken = null;
+        //_drawingCancellationToken = null;
+        var token = Interlocked.Exchange(ref _drawingCancellationToken, null);
+
+        token?.Dispose();
 
         drawingTcs.SetResult(ResponseFactory.Create(geometry));
 
@@ -4321,7 +4361,87 @@ public partial class MapViewer : NotifiableUserControl
 
     double _knownAsPanThreshold = 3;
 
-    CancellationTokenSource? selectPointCancelationToken;
+    CancellationTokenSource? _selectPointCancellationToken;
+
+    private CancellationTokenSource GetNewSelectPointToken()
+    {
+        // Exchange the field with null, get the old token
+        var old = Interlocked.Exchange(ref _selectPointCancellationToken, null);
+
+        if (old != null)
+        {
+            old.Cancel();
+            old.Dispose();
+        }
+
+        // Create new token and assign it back to the field
+        var newToken = new CancellationTokenSource();
+
+        _selectPointCancellationToken = newToken;
+
+        return newToken;
+    }
+
+    /// <summary>
+    /// Returns the point selected by the user in WGS84.
+    /// </summary>
+    public async Task<Response<sb.Point>> SelectPointAsync(bool continuousMode = false)
+    {
+        try
+        {
+            // Cancel any ongoing selection and safely replace the token
+            var oldToken = Interlocked.Exchange(ref _selectPointCancellationToken, null);
+
+            if (oldToken != null)
+            {
+                await oldToken.CancelAsync();
+                oldToken.Dispose();
+            }
+
+            //if (_selectPointCancellationToken != null)
+            //{
+            //    await _selectPointCancellationToken.CancelAsync();
+            //}
+
+            var result = await SelectThePoint();
+
+            return ResponseFactory.Create(result);
+        }
+        catch (TaskCanceledException)
+        {
+            // todo: check this uncomment has any side effects
+            //if (selectPointCancelationToken == null)
+            //{
+            //    //this.Status = MapStatus.Idle;
+
+            //    if (!continuousMode)
+            //        this._presenter.MapAction = MapAction.Pan;
+            //}
+            return Response<sb.Point>.CreateCanceled();
+        }
+        catch (Exception ex)
+        {
+            //this.Status = MapStatus.Idle;
+
+            //_selectPointCancellationToken = null;
+
+            //if (!continuousMode)
+            //    this._presenter.MapAction = MapAction.Pan;
+
+            var token = Interlocked.Exchange(ref _selectPointCancellationToken, null);
+
+            token?.Dispose();
+
+            throw;
+        }
+        finally
+        {
+            this.Status = MapStatus.Idle;
+
+            if (!continuousMode)
+                this._presenter.MapAction = MapAction.Pan;
+        }
+    }
 
     /// <summary>
     /// Returns the point selected by the user in WGS84.
@@ -4330,13 +4450,13 @@ public partial class MapViewer : NotifiableUserControl
     /// </summary>
     private Task<sb.Point> SelectThePoint()
     {
-        selectPointCancelationToken = new CancellationTokenSource();
+        //_selectPointCancelationToken = new CancellationTokenSource();
+        var cts = GetNewSelectPointToken();
+        var tcs = new TaskCompletionSource<sb.Point>();
 
         ResetMapViewEvents();
 
         this.SetCursor(this.DrawPointCursor);
-
-        var tcs = new TaskCompletionSource<sb.Point>();
 
         var gesture = new ClickOrPanGesture(
             this,
@@ -4352,12 +4472,15 @@ public partial class MapViewer : NotifiableUserControl
         gesture.IsActive = () => ReferenceEquals(_selectPointGesture, gesture);
         _selectPointGesture = gesture;
 
-        selectPointCancelationToken.Token.Register(() =>
+        cts.Token.Register(() =>
         {
+            // Atomically nullify the field only if it still points to this token
+            Interlocked.CompareExchange(ref _selectPointCancellationToken, null, cts);
             _selectPointGesture?.End();
             _selectPointGesture = null;
             tcs.TrySetCanceled();
-            selectPointCancelationToken = null;
+            // Dispose the token after cancellation (safe because it won't be used again)
+            cts.Dispose();
         }, useSynchronizationContext: false);
 
         _selectPointGesture.Begin();
@@ -4365,54 +4488,14 @@ public partial class MapViewer : NotifiableUserControl
         return tcs.Task;
     }
 
-    /// <summary>
-    /// Returns the point selected by the user in WGS84.
-    /// </summary>
-    public async Task<Response<sb.Point>> SelectPointAsync(bool continuousMode = false)
-    {
-        try
-        {
-            if (selectPointCancelationToken != null)
-            {
-                selectPointCancelationToken.Cancel();
-            }
-
-            var result = await SelectThePoint();
-
-            return ResponseFactory.Create(result);
-        }
-        catch (TaskCanceledException)
-        {
-            if (selectPointCancelationToken == null)
-            {
-                this.Status = MapStatus.Idle;
-
-                if (!continuousMode)
-                    this._presenter.MapAction = MapAction.Pan;
-            }
-            return Response<sb.Point>.CreateCanceled();
-        }
-        catch (Exception ex)
-        {
-            this.Status = MapStatus.Idle;
-
-            selectPointCancelationToken = null;
-
-            if (!continuousMode)
-                this._presenter.MapAction = MapAction.Pan;
-
-            throw;
-        }
-        finally
-        {
-            if (!continuousMode)
-                this._presenter.MapAction = MapAction.Pan;
-        }
-    }
-
     public void CancelSelectPoint()
     {
-        selectPointCancelationToken?.Cancel();
+        //_selectPointCancellationToken?.Cancel();
+        var token = Interlocked.Exchange(ref _selectPointCancellationToken, null);
+
+        token?.Cancel();
+
+        token?.Dispose();
     }
 
     #endregion
@@ -4420,7 +4503,7 @@ public partial class MapViewer : NotifiableUserControl
 
     #region Edit
 
-    CancellationTokenSource? editingCancellationToken;
+    CancellationTokenSource? _editingCancellationToken;
 
     private EditableFeatureLayer? _currentEditingLayer;
 
@@ -4430,24 +4513,47 @@ public partial class MapViewer : NotifiableUserControl
         set
         {
             _currentEditingLayer = value;
+
             RaisePropertyChanged();
-            //this.OnEditableFeatureLayerChanged?.Invoke(null, value);
 
             if (_presenter != null)
                 _presenter.CurrentEditingLayer = value;
         }
     }
 
-    private Task<Response<Geometry<sb.Point>>> EditGeometry(Geometry<sb.Point> geometry/*, EditableFeatureLayerOptions options*/)
+    /// <summary>
+    /// Helper: atomically replaces the editing cancellation token.
+    /// Cancels and disposes the old token, then creates and returns a new one.
+    /// </summary>
+    private CancellationTokenSource GetNewEditingToken()
     {
-        editingCancellationToken = new CancellationTokenSource();
+        var old = Interlocked.Exchange(ref _editingCancellationToken, null);
+        if (old != null)
+        {
+            old.Cancel();
+            old.Dispose();
+        }
+        var newToken = new CancellationTokenSource();
+
+        _editingCancellationToken = newToken;
+
+        return newToken;
+    }
+
+    private Task<Response<Geometry<sb.Point>>> EditGeometry(Geometry<sb.Point> geometry)
+    {
+        //_editingCancellationToken = new CancellationTokenSource();
+        var cts = GetNewEditingToken();
 
         var tcs = new TaskCompletionSource<Response<Geometry<sb.Point>>>();
 
         if (CurrentEditingLayer != null)
         {
             this.RemoveEditableFeatureLayer(CurrentEditingLayer);
+
             CurrentEditingLayer.Dispose();
+
+            CurrentEditingLayer = null;
         }
 
         //options.IsNewDrawing = false;
@@ -4458,7 +4564,7 @@ public partial class MapViewer : NotifiableUserControl
             this.viewTransform,
             ScreenToMap,
             _presenter.RequestSelectedLocatableChanged,
-            _presenter.MapPanel.Options/*, options*/)
+            _presenter.MapPanel.Options)
         {
             ZIndex = int.MaxValue
         };
@@ -4483,9 +4589,12 @@ public partial class MapViewer : NotifiableUserControl
             this.RemoveEditableFeatureLayer(CurrentEditingLayer);
 
             CurrentEditingLayer?.Dispose();
+
             CurrentEditingLayer = null;
 
-            editingCancellationToken = null;
+            // Token already disposed via GetNewEditingToken, but nullify field
+            Interlocked.Exchange(ref _editingCancellationToken, null)?.Dispose();
+            //_editingCancellationToken = null;
         };
 
         CurrentEditingLayer.RequestConvertToDrawingItem = (g) =>
@@ -4517,7 +4626,8 @@ public partial class MapViewer : NotifiableUserControl
             CurrentEditingLayer?.Dispose();
             CurrentEditingLayer = null;
 
-            editingCancellationToken = null;
+            Interlocked.Exchange(ref _editingCancellationToken, null)?.Dispose();
+            //_editingCancellationToken = null;
         };
 
 
@@ -4531,8 +4641,10 @@ public partial class MapViewer : NotifiableUserControl
         // empty areas and never interferes with add/remove/move vertex operations.
         ActivatePanMode();
 
-        editingCancellationToken.Token.Register(() =>
+        cts.Token.Register(() =>
         {
+            Interlocked.CompareExchange(ref _editingCancellationToken, null, cts);
+
             tcs.TrySetCanceled();
 
             //this.SetCursor(CursorSettings[_currentMouseAction]);
@@ -4541,18 +4653,30 @@ public partial class MapViewer : NotifiableUserControl
 
             this.RemoveEditableFeatureLayer(CurrentEditingLayer);
 
-            tcs = null;
+            CurrentEditingLayer?.Dispose();
+            CurrentEditingLayer = null;
+            cts.Dispose();
 
         }, useSynchronizationContext: false);
 
         return tcs.Task;
     }
 
-    public async Task<Response<Geometry<sb.Point>>> EditGeometryAsync(Geometry<sb.Point> originalGeometry/*, EditableFeatureLayerOptions options*/)
+    public async Task<Response<Geometry<sb.Point>>> EditGeometryAsync(Geometry<sb.Point> originalGeometry)
     {
         try
         {
-            Geometry<sb.Point> originalClone = originalGeometry.Clone();
+            //Geometry<sb.Point> originalClone = originalGeometry.Clone();
+
+            // Cancel any ongoing edit and replace token
+            var oldToken = Interlocked.Exchange(ref _editingCancellationToken, null);
+
+            if (oldToken != null)
+            {
+                await oldToken.CancelAsync(); // stay on UI thread
+
+                oldToken.Dispose();
+            }
 
             //if (editingCancellationToken != null)
             //{
@@ -4564,35 +4688,48 @@ public partial class MapViewer : NotifiableUserControl
 
             var result = await EditGeometry(originalGeometry/*, options*/);
 
-            this.Status = MapStatus.Idle;
+            //this.Status = MapStatus.Idle;
 
             return result;
         }
         catch (TaskCanceledException)
         {
-            if (editingCancellationToken == null)
-            {
-                this.Status = MapStatus.Idle;
-            }
+            // todo: check if commenting this line has any side effects
+            //if (editingCancellationToken == null)
+            //{
+            //    this.Status = MapStatus.Idle;
+            //}
 
             //97 04 27
             //return originalGeometry;
-            return Response<Geometry<sb.Point>>.CreateCanceled(originalGeometry);// new Response<Geometry<sb.Point>>() { Result = originalGeometry, IsCanceled = true };
+            return Response<Geometry<sb.Point>>.CreateCanceled(originalGeometry);
         }
         catch (Exception ex)
         {
-            this.Status = MapStatus.Idle;
+            var token = Interlocked.Exchange(ref _editingCancellationToken, null);
+
+            token?.Dispose();
 
             throw;
+        }
+        finally
+        {
+            this.Status = MapStatus.Idle;
         }
     }
 
     public void CancelEditGeometry()
     {
-        if (editingCancellationToken != null)
-        {
-            editingCancellationToken.Cancel();
-        }
+        var token = Interlocked.Exchange(ref _editingCancellationToken, null);
+
+        token?.Cancel();
+
+        token?.Dispose();
+
+        //if (_editingCancellationToken != null)
+        //{
+        //    _editingCancellationToken.Cancel();
+        //}
     }
 
     public void FinishEditing()
@@ -4606,68 +4743,101 @@ public partial class MapViewer : NotifiableUserControl
     #region Measure Area/Distance
 
     const string measureLayerName = "_@measureLayer";
+
     SpecialPointLayer measureLayer;
 
     CancellationTokenSource? _measureCancellationToken;
 
-    Guid _measureId;
-
-
-    public async Task<Response<Geometry<sb.Point>>> MeasureAsync(
-        DrawMode mode,
-        //EditableFeatureLayerOptions drawingOptions,
-        //EditableFeatureLayerOptions editingOptions,
-        Action action)
+    /// <summary>
+    /// Helper: atomically replaces the measure cancellation token.
+    /// </summary>
+    private CancellationTokenSource GetNewMeasureToken()
     {
-        _measureId = Guid.NewGuid();
+        var old = Interlocked.Exchange(ref _measureCancellationToken, null);
 
+        old?.Cancel();
+
+        old?.Dispose();
+
+        var newToken = new CancellationTokenSource();
+
+        _measureCancellationToken = newToken;
+
+        return newToken;
+    }
+
+    public async Task<Response<Geometry<sb.Point>>> MeasureAsync(DrawMode mode, Action action)
+    {
         try
         {
+            // Cancel any ongoing measure operation. Awaiting the old token's
+            // cancellation here (before starting the next session) is what lets
+            // Measure rely purely on token identity for staleness — the old
+            // session's Register cleanup runs to completion before the new one
+            // mutates any shared state.
+            var oldToken = Interlocked.Exchange(ref _measureCancellationToken, null);
+
+            if (oldToken != null)
+            {
+                await oldToken.CancelAsync();
+
+                oldToken.Dispose();
+            }
+
             CancelAsyncMapInteractions();
 
             CancelMeasure();
 
-            return await Measure(mode, /*drawingOptions, editingOptions,*/ action, _measureId);
+            return await Measure(mode, action);
         }
         catch (TaskCanceledException)
         {
-            this.Status = MapStatus.Idle;
+            //this.Status = MapStatus.Idle;
 
             return Response<Geometry<sb.Point>>.CreateCanceled();
         }
         catch (Exception ex)
         {
-            this._measureCancellationToken = null;
+            var token = Interlocked.Exchange(ref _measureCancellationToken, null);
 
-            this.Status = MapStatus.Idle;
+            token?.Dispose();
+
+            //this._measureCancellationToken = null;
+
+            //this.Status = MapStatus.Idle;
 
             throw;
+        }
+        finally
+        {
+            this.Status = MapStatus.Idle;
         }
     }
 
     // todo: validation on geometry
-    private async Task<Response<Geometry<sb.Point>>> Measure(
-        DrawMode mode,
-        //EditableFeatureLayerOptions drawingOptions,
-        //EditableFeatureLayerOptions editingOptions,
-        Action action,
-        Guid guid)
+    private async Task<Response<Geometry<sb.Point>>> Measure(DrawMode mode, Action action)
     {
-        this._measureCancellationToken = new CancellationTokenSource();
+        //this._measureCancellationToken = new CancellationTokenSource();
+        var cts = GetNewMeasureToken();
 
-        this._measureCancellationToken.Token.Register(() =>
+        cts.Token.Register(() =>
         {
+            // A cancelled measure session cleans up its own state. A superseding
+            // MeasureAsync awaits this (await oldToken.CancelAsync()) BEFORE starting
+            // the next session, so measureLayer/onMoveForDrawAction still belong to
+            // THIS session here — the cleanup is unconditional, mirroring GetDrawing.
+            onMoveForDrawAction = null;
+
             this.ClearLayer(measureLayer, remove: true, forceRemove: true);
-
-            //drawingOptions.RequestHandleMeasureVisibilityChanged = null;
-            //editingOptions.RequestHandleMeasureVisibilityChanged = null;
-
-            _measureCancellationToken = null;
 
             CancelDrawing();
 
             CancelEditGeometry();
-        });
+
+            Interlocked.CompareExchange(ref _measureCancellationToken, null, cts);
+
+            cts.Dispose();
+        }, useSynchronizationContext: true); // prevent non UI thread access to ClearLayer method that cause exception
 
         this.ClearLayer(measureLayer, remove: true, forceRemove: true);
 
@@ -4682,14 +4852,24 @@ public partial class MapViewer : NotifiableUserControl
 
         onMoveForDrawAction = p =>
         {
+            // Ignore late callbacks once this session is no longer the current one.
+            if (!ReferenceEquals(_measureCancellationToken, cts)) return;
+
+            if (measureLayer == null || measureLayer.Items.Count == 0) return;
+
             this.AddComplexLayer(measureLayer, true);
 
             var offsetOnMap = ScreenToMap(20);
 
-            measureLayer.Items.First().X = p.X;
-            measureLayer.Items.First().Y = p.Y + offsetOnMap;
+            //measureLayer.Items.First().X = p.X;
+            //measureLayer.Items.First().Y = p.Y + offsetOnMap;
+            var firstItem = measureLayer.Items.First();
+            firstItem.X = p.X;
+            firstItem.Y = p.Y + offsetOnMap;
 
-            var marker = (measureLayer.Items.First().Element as IRI.Maptor.Jab.Controls.MapMarkers.LabelMarker);
+            //var marker = (measureLayer.Items.First().Element as IRI.Maptor.Jab.Controls.MapMarkers.LabelMarker);
+            var marker = firstItem.Element as LabelMarker;
+            if (marker == null || drawingLayer == null) return;
 
             try
             {
@@ -4699,18 +4879,11 @@ public partial class MapViewer : NotifiableUserControl
 
                 geo.InsertLastPoint(p.AsPoint());
 
-                // todo: validation on geometry
-                //var geoAsGeodetic = geo.AsSqlGeometry().WebMercatorToGeodeticWgs84().MakeValid();
-                //var measureValue = mode == DrawMode.Polygon ? UnitHelper.GetAreaLabel(geoAsGeodetic.STArea().Value) : UnitHelper.GetLengthLabel(geoAsGeodetic.STLength().Value);
-                //marker.ToolTip = mode == DrawMode.Polygon ? geoAsGeodetic.STArea().Value : geoAsGeodetic.STLength().Value;
-
                 var measureValue = SpatialUtility.GetEllipsoidMeasureLabel(geo, MapProjects.WebMercatorToGeodeticWgs84);
 
                 marker.ToolTip = SpatialUtility.GetEllipsoidMeasure(geo, MapProjects.WebMercatorToGeodeticWgs84);
 
                 marker.LabelValue = measureValue;
-
-
             }
             catch (Exception ex)
             {
@@ -4718,42 +4891,50 @@ public partial class MapViewer : NotifiableUserControl
             }
         };
 
-        var result = await GetDrawingAsync(mode/*, drawingOptions*/);
-
-        this.ClearLayer(measureLayer, remove: true, forceRemove: true);
-
-        //if (result.HasNotNullResult())
-        //{
-        //    //_presenter.MapPanel.Options = EditableFeatureLayerOptions.CreateDefaultForEditingMeasure(true, true, true); /*editingOptions*/;
-
-        //    result = await EditGeometryAsync(result.Result/*, editingOptions*/);
-        //}
-
-        if (_measureId == guid)
+        try
         {
-            onMoveForDrawAction = null;
+            var result = await GetDrawingAsync(mode);
 
-            _measureCancellationToken = null;
+            return result;
+        }
+        //catch (Exception)
+        //{
 
-            if (result == null)
+        //    throw;
+        //}
+        finally
+        {
+            // Only the current (non-superseded) session may clear the measure layer
+            // and reset the cursor. CompareExchange returns the prior field value: if
+            // it equals cts this is the live session (normal completion) — claim it
+            // (null) and clean up; otherwise a newer Measure owns the state, so do
+            // nothing. This prevents a stale session from snapping the cursor back to
+            // Pan/Hand mid-measure.
+            if (ReferenceEquals(Interlocked.CompareExchange(ref _measureCancellationToken, null, cts), cts))
             {
-                //this.Pan();
-                this._presenter.MapAction = MapAction.Pan;
+                ClearLayer(measureLayer, remove: true, forceRemove: true);
+
+                onMoveForDrawAction = null;
+
+                cts.Dispose();
+
+                UpdateMapCursor();
             }
         }
-
-        //this.SetCursor(this.CursorSettings[this.MapAction]);
-        this.UpdateMapCursor();
-
-        return result;
     }
 
     public void CancelMeasure()
     {
-        if (_measureCancellationToken != null)
-        {
-            _measureCancellationToken.Cancel();
-        }
+        var token = Interlocked.Exchange(ref _measureCancellationToken, null);
+
+        token?.Cancel();
+
+        token?.Dispose();
+
+        //if (_measureCancellationToken != null)
+        //{
+        //    _measureCancellationToken.Cancel();
+        //}
     }
 
     #endregion
@@ -4784,7 +4965,25 @@ public partial class MapViewer : NotifiableUserControl
 
     #region Bezier
 
-    CancellationTokenSource bezierCancellationToken;
+    private CancellationTokenSource? _bezierCancellationToken;
+
+    /// <summary>
+    /// Helper: atomically replaces the bezier cancellation token.
+    /// </summary>
+    private CancellationTokenSource GetNewBezierToken()
+    {
+        var old = Interlocked.Exchange(ref _bezierCancellationToken, null);
+
+        old?.Cancel();
+
+        old?.Dispose();
+
+        var newToken = new CancellationTokenSource();
+
+        _bezierCancellationToken = newToken;
+
+        return newToken;
+    }
 
     private void RegisterPolyBezierLayer(PolyBezierLayer layer)
     {
@@ -4843,16 +5042,18 @@ public partial class MapViewer : NotifiableUserControl
 
     private async Task<Response<PolyBezierLayer>> GetBezier(Geometry decoration, VisualParameters decorationVisual)
     {
-        bezierCancellationToken = new CancellationTokenSource();
+        //_bezierCancellationToken = new CancellationTokenSource();
+        var cts = GetNewBezierToken();
 
         var tcs = new TaskCompletionSource<Response<PolyBezierLayer>>();
 
-        bezierCancellationToken.Token.Register(() =>
+        cts.Token.Register(() =>
         {
+            Interlocked.CompareExchange(ref _bezierCancellationToken, null, cts);
+
             tcs.TrySetCanceled();
 
-            //this.SetCursor(Cursors.Arrow);
-            //this.SetCursor(CursorSettings[_currentMouseAction]);
+            cts.Dispose();
 
         }, useSynchronizationContext: false);
 
@@ -4860,25 +5061,46 @@ public partial class MapViewer : NotifiableUserControl
 
         if (!drawingResult.HasNotNullResult())
         {
-            bezierCancellationToken.Cancel();
+            // Cancellation already handled via token; just return canceled response
+            return Response<PolyBezierLayer>.CreateCanceled();
         }
-        else
+
+        var polyline = drawingResult.Result.Points.Cast<sb.Point>().ToList();
+
+        var layer = new PolyBezierLayer(polyline, this.viewTransform, decoration, decorationVisual);
+
+        RegisterPolyBezierLayer(layer);
+
+        layer.RequestFinishEditing = result =>
         {
-            var polyline = drawingResult.Result.Points.Cast<sb.Point>().ToList();
+            tcs.SetResult(ResponseFactory.Create<PolyBezierLayer>(result));
+        };
 
-            PolyBezierLayer layer = new PolyBezierLayer(polyline, this.viewTransform, decoration, decorationVisual);
+        this.SetLayer(layer);
 
-            RegisterPolyBezierLayer(layer);
+        this.AddPolyBezierLayer(layer);
 
-            layer.RequestFinishEditing = r =>
-            {
-                tcs.SetResult(ResponseFactory.Create<PolyBezierLayer>(r));
-            };
+        //if (!drawingResult.HasNotNullResult())
+        //{
+        //    _bezierCancellationToken.Cancel();
+        //}
+        //else
+        //{
+        //    var polyline = drawingResult.Result.Points.Cast<sb.Point>().ToList();
 
-            this.SetLayer(layer);
+        //    PolyBezierLayer layer = new PolyBezierLayer(polyline, this.viewTransform, decoration, decorationVisual);
 
-            this.AddPolyBezierLayer(layer);
-        }
+        //    RegisterPolyBezierLayer(layer);
+
+        //    layer.RequestFinishEditing = r =>
+        //    {
+        //        tcs.SetResult(ResponseFactory.Create<PolyBezierLayer>(r));
+        //    };
+
+        //    this.SetLayer(layer);
+
+        //    this.AddPolyBezierLayer(layer);
+        //}
 
         return await tcs.Task;
     }
@@ -4887,16 +5109,27 @@ public partial class MapViewer : NotifiableUserControl
     {
         try
         {
-            if (bezierCancellationToken != null)
+
+            // Cancel any ongoing bezier operation
+
+            var oldToken = Interlocked.Exchange(ref _bezierCancellationToken, null);
+
+            if (oldToken != null)
             {
-                bezierCancellationToken.Cancel();
+                await oldToken.CancelAsync(); // stay on UI thread
+                oldToken.Dispose();
             }
+
+            //if (_bezierCancellationToken != null)
+            //{
+            //    _bezierCancellationToken.Cancel();
+            //}
 
             this.Status = MapStatus.Drawing;
 
             var result = await GetBezier(decoration, decorationVisual);
 
-            this.Status = MapStatus.Idle;
+            //this.Status = MapStatus.Idle;
 
             if (result.HasNotNullResult())
             {
@@ -4907,24 +5140,36 @@ public partial class MapViewer : NotifiableUserControl
         }
         catch (TaskCanceledException)
         {
-            this.Status = MapStatus.Idle;
+            //this.Status = MapStatus.Idle;
 
-            return Response<PolyBezierLayer>.CreateCanceled();// new Response<PolyBezierLayer>() { Result = null, IsCanceled = true };
+            return Response<PolyBezierLayer>.CreateCanceled();
         }
         catch (Exception ex)
         {
-            this.Status = MapStatus.Idle;
+            var token = Interlocked.Exchange(ref _bezierCancellationToken, null);
+
+            token?.Dispose();
 
             throw;
+        }
+        finally
+        {
+            this.Status = MapStatus.Idle;
         }
     }
 
     public void CancelGetBezier()
     {
-        if (bezierCancellationToken != null)
-        {
-            bezierCancellationToken.Cancel();
-        }
+        var token = Interlocked.Exchange(ref _bezierCancellationToken, null);
+
+        token?.Cancel();
+
+        token?.Dispose();
+
+        //if (_bezierCancellationToken != null)
+        //{
+        //    _bezierCancellationToken.Cancel();
+        //}
     }
 
     #endregion
