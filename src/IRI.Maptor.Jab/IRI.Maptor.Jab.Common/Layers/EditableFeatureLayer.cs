@@ -48,6 +48,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     private Path _feature;
 
+    private MouseButtonEventHandler? _featureRightButtonUpHandler;
+
     private PathGeometry _pathGeometry;
 
     private RecursiveCollection<Locateable> _vertices;
@@ -223,7 +225,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         //}
         if (!Options.IsNewDrawing && !Options.IsMeasureMode)
         {
-            _feature.MouseRightButtonDown += (sender, e) => { RegisterMapOptionsForEditPath(e); };
+            _featureRightButtonUpHandler = (sender, e) => { RegisterMapOptionsForEditPath(e); };
+
+            _feature.MouseRightButtonUp += _featureRightButtonUpHandler;
         }
 
         bool isMovable = !Options.IsNewDrawing;
@@ -357,6 +361,12 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     private void ReconstructLocateables()
     {
+        // Unwire the previous generation of locateables before discarding them so their
+        // event subscriptions (and WPF marker elements) can be garbage collected.
+        _vertices?.GetFlattenCollection().ForEach(l => l.Detach());
+
+        _midVertices?.GetFlattenCollection().ForEach(l => l.Detach());
+
         _vertices = new RecursiveCollection<Locateable>();
 
         _midVertices = new RecursiveCollection<Locateable>();
@@ -576,12 +586,14 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         RaisePropertyChanged(nameof(IsMultiPartGeometry));
     }
 
+
+
     private Locateable ToPrimaryLocateable(IPoint point)
     {
         var webMercatorPoint = point;
 
         var element = /*Options*/this.MakePrimaryVertex();
-
+        
         var locateable = new Locateable(AncherFunctionHandlers.CenterCenter)
         {
             Element = element,
@@ -598,26 +610,44 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         if (Options.IsNewDrawing)
         {
-            //Finish Drawing if click on any point
-            locateable.Element.MouseDown += (sender, e) =>
-            {
-                if (e.LeftButton == MouseButtonState.Pressed)
-                {
-                    OnRequestFinishDrawing?.Invoke(this, EventArgs.Empty);
+            locateable.Element.MouseDown -= Element_MouseDown;
+            locateable.Element.MouseDown += Element_MouseDown;
 
-                    e.Handled = true;
-                }
-            };
+            locateable.OnDetach += () => locateable.Element.MouseDown -= Element_MouseDown;
+
+            //Finish Drawing if click on any point
+            //locateable.Element.MouseDown += (sender, e) =>
+            //{
+            //    if (e.LeftButton == MouseButtonState.Pressed)
+            //    {
+            //        OnRequestFinishDrawing?.Invoke(this, EventArgs.Empty);
+
+            //        e.Handled = true;
+            //    }
+            //};
         }
         else
         {
-            element.MouseRightButtonDown += (sender, e) =>
+            MouseButtonEventHandler rightDown = (sender, e) =>
             {
-                //locateable.IsSelected = true;
-
                 _primaryVerticesLayer.SelectLocatable(locateable.Element);
+            };
+
+            MouseButtonEventHandler rightUp = (sender, e) =>
+            {
+                e.Handled = true;
 
                 RegisterMapOptionsForVertices(e, webMercatorPoint, locateable);
+            };
+
+            element.MouseRightButtonDown += rightDown;
+
+            element.MouseRightButtonUp += rightUp;
+
+            locateable.OnDetach += () =>
+            {
+                element.MouseRightButtonDown -= rightDown;
+                element.MouseRightButtonUp -= rightUp;
             };
         }
 
@@ -635,6 +665,18 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         return locateable;
     }
+     
+
+    // Finish Drawing if click on any point
+    private void Element_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed)
+        {
+            OnRequestFinishDrawing?.Invoke(this, EventArgs.Empty);
+
+            e.Handled = true;
+        }
+    }
 
     private Locateable ToSecondaryLocateable(IPoint first, IPoint second)
     {
@@ -645,7 +687,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         var locateable = new Locateable(AncherFunctionHandlers.CenterCenter) { Element = element, X = webMercatorPoint.X, Y = webMercatorPoint.Y };
 
-        element.MouseLeftButtonDown += (sender, e) =>
+        MouseButtonEventHandler leftDown = (sender, e) =>
         {
             webMercatorPoint.X = locateable.X;
 
@@ -657,15 +699,16 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             RequestRefresh?.Invoke(this);
         };
 
+        element.MouseLeftButtonDown += leftDown;
+
+        locateable.OnDetach += () => element.MouseLeftButtonDown -= leftDown;
+
         return locateable;
     }
 
     private void RegisterMapOptionsForVertices(MouseButtonEventArgs e, IPoint point, Locateable locateable)
     {
         var presenter = new MapOptionsViewModel(
-                //rightToolTip: _copy,
-                //leftToolTip: _displayCoordinates,
-                //middleToolTip: _delete,
                 rightToolTip: Properties.Resources.mapPanel_currentPoint_copyCoordinate,
                 leftToolTip: Properties.Resources.mapPanel_currentPoint_displayCoordinate,
                 middleToolTip: Properties.Resources.mapPanel_currentPoint_delete,
@@ -725,21 +768,17 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     private void RegisterMapOptionsForEditPath(MouseButtonEventArgs e)
     {
         var presenter = new MapOptionsViewModel(
-            //leftToolTip: _cancel,
-            //rightToolTip: _finish,
-            //middleToolTip: _delete,
             leftToolTip: Properties.Resources.mapPanel_edit_cancel,
             rightToolTip: Properties.Resources.mapPanel_edit_finish,
-            middleToolTip: string.Empty /*Properties.Resources.mapPanel_edit_delete*/,
+            middleToolTip: string.Empty,
 
             leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CloseThick),
             rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold),
-            middleSymbol: string.Empty //MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.Delete)
+            middleSymbol: string.Empty
             );
 
         presenter.RightCommandAction = i =>
         {
-            //RequestFinishEditing?.Invoke(this._webMercatorGeometry);
             FinishEditing();
 
             RemoveMapOptions();
@@ -747,9 +786,6 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         presenter.LeftCommandAction = i =>
         {
-            //RequestCancelEditing?.Invoke(this);
-
-            //RemoveMapOptions();
             CancelEditing();
         };
 
@@ -1288,6 +1324,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     public void FinishEditing()
     {
+        RemoveMapOptions();
+
         _webMercatorGeometry.ClearEmptyGeometries();
 
         RequestFinishEditing?.Invoke(_webMercatorGeometry);
@@ -1295,11 +1333,11 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     public void CancelEditing()
     {
+        RemoveMapOptions();
+
         _edgeLabelLayer.Items.Clear();
 
         RequestCancelEditing?.Invoke(this);
-
-        RemoveMapOptions();
     }
 
     private void GoToPreviousPoint() => _primaryVerticesLayer.SelectPreviousLocatable();
@@ -1814,6 +1852,49 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
                 this.RequestShowGeometryDetails = null;
                 this.RequestZoomToGeometry = null;
                 this.RequestZoomToPoint = null;
+
+                // Detach and release every locateable still held by the point layers so their
+                // per-vertex handlers (wired in ToPrimaryLocateable/ToSecondaryLocateable) don't
+                // outlive the layer. Detach must run *before* the items are cleared.
+                foreach (var layer in new[] { _primaryVerticesLayer, _midVerticesLayer, _edgeLabelLayer, _primaryVerticesLabelLayer })
+                {
+                    if (layer?.Items == null)
+                        continue;
+
+                    foreach (var locateable in layer.Items.ToList())
+                    {
+                        locateable.Detach();
+                    }
+
+                    layer.Items.Clear();
+
+                    // Release the closures captured by the renderer (MapViewer) and by this layer.
+                    layer.HandleCollectionChanged = null;
+                    layer.RequestSelectedLocatableChanged = null;
+                }
+
+                // Unsubscribe the path's right-click handler and drop the geometry it holds.
+                if (_feature != null && _featureRightButtonUpHandler != null)
+                {
+                    _feature.MouseRightButtonUp -= _featureRightButtonUpHandler;
+                }
+                _featureRightButtonUpHandler = null;
+
+                if (_feature != null)
+                {
+                    _feature.Data = null;
+                }
+                _pathGeometry?.Figures.Clear();
+
+                // The shared/long-lived Options object would otherwise keep this layer alive.
+                if (_options != null)
+                {
+                    _options.RequestHandleMeasureVisibilityChanged = null;
+                }
+
+                _vertices = null;
+                _midVertices = null;
+                this.LocateablesReconstructed = null;
             }
 
             // Dispose unmanaged resources here if any

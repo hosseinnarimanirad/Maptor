@@ -21,7 +21,14 @@ public class Locateable : Notifier
 
     public Action<bool> RequestChangeIsSelected;
 
+    /// <summary>
+    /// Cleanup callback. External code that subscribes handlers directly to <see cref="Element"/>
+    /// should append the matching unsubscribe logic here so <see cref="Detach"/> can remove them.
+    /// </summary>
+    internal Action? OnDetach;
+
     public AncherFunctionHandler AncherFunction;
+
 
     public Guid Id { get; set; }
 
@@ -30,6 +37,7 @@ public class Locateable : Notifier
     public bool CanTriggerPositionChange { get; set; } = true;
 
     private double _x;
+
     /// <summary>
     /// Web Mercator X coordinate
     /// </summary>
@@ -53,7 +61,9 @@ public class Locateable : Notifier
         }
     }
 
+
     private double _y;
+
     /// <summary>
     /// Web Mercator Y coordinate
     /// </summary>
@@ -81,10 +91,7 @@ public class Locateable : Notifier
     /// <summary>
     /// Web Mercator System.Windows.Point
     /// </summary>
-    public WpfPoint Location
-    {
-        get { return _location; }
-    }
+    public WpfPoint Location => _location;
 
     private bool _isSelected;
     public bool IsSelected
@@ -104,12 +111,18 @@ public class Locateable : Notifier
         get { return _element; }
         set
         {
+            if (_element != null)
+            {
+                _element.MouseDown -= Element_MouseDown;
+                _element.MouseUp -= Element_MouseUp;
+            }
+
             _element = value;
             _element.MouseDown -= Element_MouseDown;
             _element.MouseDown += Element_MouseDown;
 
-            _element.MouseUp -= _element_MouseUp;
-            _element.MouseUp += _element_MouseUp;
+            _element.MouseUp -= Element_MouseUp;
+            _element.MouseUp += Element_MouseUp;
         }
     }
 
@@ -143,55 +156,12 @@ public class Locateable : Notifier
         _location = webMercator.AsWpfPoint();
     }
 
-    //public Locateable(FrameworkElement element, Popup infoWindow, SpecialPointLayer.AncherFunctionHandler ancherFunction = null)
-    //{
-    //    this.Popup = infoWindow;
 
-    //    if (ancherFunction == null)
-    //    {
-    //        this.AncherFunction = SpecialPointLayer.CenterCenter;
-    //    }
-    //    else
-    //    {
-    //        this.AncherFunction = ancherFunction;
-    //    }
+    private void Element_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e) => OnRequestHandleMouseDown?.Invoke(null, EventArgs.Empty);
 
-    //    this.Element = element;
+    private void Element_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) => RaiseMouseUpEvent();
 
-    //    if (infoWindow != null)
-    //    {
-    //        infoWindow.AllowsTransparency = true;
-
-    //        infoWindow.Child = new IRI.Maptor.Jab.Common.UserControls.SimpleInfoControl();
-
-    //        infoWindow.PopupAnimation = PopupAnimation.Slide;
-
-    //        infoWindow.PlacementTarget = element;
-
-    //        infoWindow.Placement = PlacementMode.Left;
-
-    //        infoWindow.Focus();
-
-    //        infoWindow.StaysOpen = false;
-
-    //        //this.Element.MouseDown += Element_MouseDown;
-    //    }
-    //}
-
-    void Element_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-    {
-        OnRequestHandleMouseDown?.Invoke(null, EventArgs.Empty);
-    }
-
-    private void _element_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-    {
-        RaiseMouseUpEvent();
-    }
-
-    public void RaiseMouseUpEvent()
-    {
-        OnRequestHandleMouseUp?.Invoke(null, EventArgs.Empty);
-    }
+    public void RaiseMouseUpEvent() => OnRequestHandleMouseUp?.Invoke(null, EventArgs.Empty);
 
 
     public void Select()
@@ -215,6 +185,28 @@ public class Locateable : Notifier
             return;
 
         storyBoard.Begin(Element);
+    }
+
+    /// <summary>
+    /// Unsubscribes all handlers wired to this locateable and its <see cref="Element"/> so the
+    /// instance (and its WPF element) can be garbage collected. Safe to call multiple times.
+    /// </summary>
+    public void Detach()
+    {
+        if (_element != null)
+        {
+            _element.MouseDown -= Element_MouseDown;
+            _element.MouseUp -= Element_MouseUp;
+        }
+
+        OnPositionChanged = null;
+        OnRequestHandleMouseDown = null;
+        OnRequestHandleMouseUp = null;
+
+        RequestChangeIsSelected = null;
+
+        OnDetach?.Invoke();
+        OnDetach = null;
     }
 
     public static Locateable CreateFromWebMercatorPoint(Point webMercatorPoint, AncherFunctionHandler? ancherFunctionHandler = null)

@@ -751,7 +751,7 @@ public abstract class MapViewModelBase : ViewModelBase
             var previous = _mapAction;
 
             _mapAction = value;
-             
+
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(IsZoomInMode));
             RaisePropertyChanged(nameof(IsZoomOutMode));
@@ -3254,7 +3254,7 @@ public abstract class MapViewModelBase : ViewModelBase
                     {
                         var featureName = $"DRAWING {DrawingItems?.Count}";
                         AddDrawingItem(result.Result, featureName);
-                        await Task.Delay(400, ct);
+                        await Task.Delay(500, ct);
                     }
                 }
                 catch (OperationCanceledException)
@@ -3465,8 +3465,12 @@ public abstract class MapViewModelBase : ViewModelBase
         }
         finally
         {
-            // After a measurement (draw + optional geometry edit) always return to Pan.
-            MapAction = MapAction.Pan;
+            // check if it is not the case of canceling previous draw
+            if (MapStatus != MapStatus.Drawing)
+            {
+                // After a measurement (draw + optional geometry edit) always return to Pan.
+                MapAction = MapAction.Pan;
+            }
         }
     }
 
