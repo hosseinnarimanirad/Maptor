@@ -2789,6 +2789,12 @@ public partial class MapViewer : NotifiableUserControl
         private readonly Action<sb.Point>? _onAnyMove;
         private bool _wasPanning;
 
+        // True once this gesture instance has observed the left-button MouseDown of
+        // the current press. A MouseUp is only treated as a click/pan-end when its
+        // matching press was seen by THIS gesture (prevents an orphan MouseUp — e.g.
+        // from a vertex click that finished the previous drawing — leaking in as a point).
+        private bool _leftButtonDownObserved;
+
         public bool IsPanning => _wasPanning;
 
         /// <summary>
@@ -2819,6 +2825,7 @@ public partial class MapViewer : NotifiableUserControl
         {
             End();
             _wasPanning = false;
+            _leftButtonDownObserved = false;
             _v.mapView.MouseDown += OnMouseDown;
             _v.mapView.MouseMove += OnMouseMove;
             _v.mapView.MouseUp += OnMouseUp;
@@ -2827,6 +2834,7 @@ public partial class MapViewer : NotifiableUserControl
         public void End()
         {
             _wasPanning = false;
+            _leftButtonDownObserved = false;
             _v.mapView.MouseDown -= OnMouseDown;
             _v.mapView.MouseMove -= OnMouseMove;
             _v.mapView.MouseUp -= OnMouseUp;
@@ -2840,6 +2848,7 @@ public partial class MapViewer : NotifiableUserControl
             if (e.ChangedButton != MouseButton.Left)
                 return;
 
+            _leftButtonDownObserved = true;
             e.Handled = true;
             _wasPanning = false;
             _v.prevMouseLocation = e.GetPosition(_v.mapView);
@@ -2876,6 +2885,15 @@ public partial class MapViewer : NotifiableUserControl
         private void OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             if (Stale)
+                return;
+
+            // A click/pan-end is only valid if THIS gesture observed the matching
+            // left-button press. Ignore an "orphan" MouseUp from a click whose
+            // MouseDown was consumed elsewhere (e.g. a vertex click that finished the
+            // previous drawing) — otherwise that click leaks in as the first point.
+            bool downObserved = _leftButtonDownObserved;
+            _leftButtonDownObserved = false;
+            if (!downObserved)
                 return;
 
             if (_v.itemIsMoving)
@@ -3856,6 +3874,11 @@ public partial class MapViewer : NotifiableUserControl
     {
         this._continuousDrawing = continuousDrawing;
 
+        // This call's session identity. A newer GetDrawing installs a different token
+        // (via GetNewDrawingToken), so a superseded call can detect it is no longer current
+        // and must not clobber shared state (Status / drawingLayer) in its finally.
+        CancellationTokenSource? myToken = null;
+
         try
         {
             if (continuousDrawing)
@@ -3868,7 +3891,11 @@ public partial class MapViewer : NotifiableUserControl
 
             this.Status = MapStatus.Drawing;
 
-            var result = await GetDrawing(mode);
+            var task = GetDrawing(mode);     // synchronously assigns _drawingCancellationToken
+
+            myToken = _drawingCancellationToken;   // capture this session's token (reference only)
+
+            var result = await task;
 
             //this.Status = MapStatus.Idle;
 
@@ -3909,13 +3936,20 @@ public partial class MapViewer : NotifiableUserControl
         }
         finally
         {
-            if (drawingLayer != null)
+            // Only tear down if this call is still the current session (its token is still
+            // installed) or no session is current (ended normally / by user-cancel → null).
+            // A superseded call (a newer draw installed a different token) must not run, or it
+            // would reset Status to Idle / dispose the new session's layer.
+            if (_drawingCancellationToken == null || ReferenceEquals(_drawingCancellationToken, myToken))
             {
-                drawingLayer.Dispose();
-                drawingLayer = null;
-            }
+                if (drawingLayer != null)
+                {
+                    drawingLayer.Dispose();
+                    drawingLayer = null;
+                }
 
-            this.Status = MapStatus.Idle;
+                this.Status = MapStatus.Idle;
+            }
         }
     }
 
@@ -3957,6 +3991,9 @@ public partial class MapViewer : NotifiableUserControl
     private Task<Response<Geometry<sb.Point>>> GetDrawing(DrawMode mode)
     {
         drawingTcs = new TaskCompletionSource<Response<Geometry<sb.Point>>>();
+
+        // New session: nothing drawn yet -> Finish / Finish-part start disabled.
+        UpdateFinishDrawingCommandStates();
 
         //_drawingCancellationToken = new CancellationTokenSource();
         var cts = GetNewDrawingToken(); // atomically replaces and returns new token
@@ -4007,7 +4044,13 @@ public partial class MapViewer : NotifiableUserControl
                 this.ClearLayer(drawingLayer, remove: true, forceRemove: true);
 
                 RemoveEditableFeatureLayer(drawingLayer.GetLayer());
+
+                drawingLayer.Dispose();   // dispose here since the (now session-guarded) finally may skip it
+                drawingLayer = null;
             }
+
+            // Drawing torn down -> disable Finish / Finish-part.
+            UpdateFinishDrawingCommandStates();
 
             // Atomically nullify field only if it still points to this token
             Interlocked.CompareExchange(ref _drawingCancellationToken, null, cts);
@@ -4221,6 +4264,9 @@ public partial class MapViewer : NotifiableUserControl
             FinishDrawing();
         };
 
+        // The layer owns geometry-change detection; recompute Finish/Finish-part state on its signal.
+        this.drawingLayer.OnGeometryChanged += UpdateFinishDrawingCommandStates;
+
         this.drawingLayer.RequestCancelDrawing = () => this.CancelDrawing();
 
         this.SetLayer(drawingLayer);
@@ -4283,6 +4329,9 @@ public partial class MapViewer : NotifiableUserControl
 
         drawingLayer = null;
 
+        // Drawing completed -> disable Finish / Finish-part until the next session.
+        UpdateFinishDrawingCommandStates();
+
         //_drawingCancellationToken = null;
         var token = Interlocked.Exchange(ref _drawingCancellationToken, null);
 
@@ -4314,6 +4363,23 @@ public partial class MapViewer : NotifiableUserControl
     {
         this.drawingLayer.AddVertex(pt);
         this.drawingLayer.AddSemiVertex(pt);
+    }
+
+    /// <summary>
+    /// Pushes the current drawing-validity state to the presenter so the Finish / Finish-part
+    /// commands can re-evaluate CanExecute. Validity uses <see cref="Geometry.IsValid"/> (orientation
+    /// independent), so the cheaper <c>GetLastGeometry()</c> is used for both. Call this only when the
+    /// confirmed vertex/part count actually changes — not on every WPF requery.
+    /// </summary>
+    private void UpdateFinishDrawingCommandStates()
+    {
+        if (_presenter == null)
+            return;
+
+        var isValid = drawingLayer?.GetLastGeometry()?.IsValid() == true;
+
+        _presenter.CanFinishNewDrawing = isValid;
+        _presenter.CanFinishDrawingPart = isValid;
     }
 
 
@@ -4387,6 +4453,10 @@ public partial class MapViewer : NotifiableUserControl
     /// </summary>
     public async Task<Response<sb.Point>> SelectPointAsync(bool continuousMode = false)
     {
+        // This call's select-point session identity (see GetDrawingAsync's myToken). A superseded
+        // session can detect it is no longer current and must not clobber shared state in its finally.
+        CancellationTokenSource? myToken = null;
+
         try
         {
             // Cancel any ongoing selection and safely replace the token
@@ -4403,7 +4473,11 @@ public partial class MapViewer : NotifiableUserControl
             //    await _selectPointCancellationToken.CancelAsync();
             //}
 
-            var result = await SelectThePoint();
+            var task = SelectThePoint();              // synchronously installs _selectPointCancellationToken
+
+            myToken = _selectPointCancellationToken;  // capture this session's token (reference only)
+
+            var result = await task;
 
             return ResponseFactory.Create(result);
         }
@@ -4436,10 +4510,18 @@ public partial class MapViewer : NotifiableUserControl
         }
         finally
         {
-            this.Status = MapStatus.Idle;
+            // Only this call, while it is still the installed select-point session, may reset shared
+            // state. A superseded/cancelled session (its token was nulled or replaced — e.g. the user
+            // switched from Identify to a Draw tool) must NOT reset Status/MapAction, or it would
+            // clobber the newly-started interaction (flip Status from Drawing back to Idle, hiding
+            // MapInfoView).
+            if (ReferenceEquals(_selectPointCancellationToken, myToken))
+            {
+                this.Status = MapStatus.Idle;
 
-            if (!continuousMode)
-                this._presenter.MapAction = MapAction.Pan;
+                if (!continuousMode)
+                    this._presenter.MapAction = MapAction.Pan;
+            }
         }
     }
 

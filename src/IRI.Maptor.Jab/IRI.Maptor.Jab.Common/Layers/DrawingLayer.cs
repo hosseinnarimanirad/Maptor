@@ -19,6 +19,9 @@ public class DrawingLayer : SymbolizableLayer, IDisposable
 {
     public event EventHandler OnRequestFinishDrawing;
 
+    /// <summary>Forwarded from the inner editable layer: geometry points/parts were added or removed.</summary>
+    public event Action? OnGeometryChanged;
+
     DrawMode _mode;
 
     EditableFeatureLayer _editableFeatureLayer;
@@ -84,6 +87,8 @@ public class DrawingLayer : SymbolizableLayer, IDisposable
 
         // todo: consider this line why not just assigning OnRequestFinishDrawing 
         _editableFeatureLayer.OnRequestFinishDrawing += (sender, e) => OnRequestFinishDrawing?.Invoke(this, EventArgs.Empty);
+
+        _editableFeatureLayer.OnGeometryChanged += () => OnGeometryChanged?.Invoke();
 
         _editableFeatureLayer.RequestFinishEditing = g =>
         {
@@ -199,6 +204,7 @@ public class DrawingLayer : SymbolizableLayer, IDisposable
         {
             if (disposing)
             {
+                this.OnGeometryChanged = null;
                 this.RequestCancelDrawing = null;
                 this.RequestChangeSymbology = null;
                 this.RequestChangeVisibility = null;

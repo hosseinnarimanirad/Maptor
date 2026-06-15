@@ -44,17 +44,17 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     private Func<FrameworkElement> MakeSecondaryVertex { get; set; } = () => new Circle(.6);
 
-    private Geometry _webMercatorGeometry;
+    private Geometry? _webMercatorGeometry;
 
-    private Path _feature;
+    private Path? _feature;
 
     private MouseButtonEventHandler? _featureRightButtonUpHandler;
 
-    private PathGeometry _pathGeometry;
+    private PathGeometry? _pathGeometry;
 
-    private RecursiveCollection<Locateable> _vertices;
+    private RecursiveCollection<Locateable>? _vertices;
 
-    private RecursiveCollection<Locateable> _midVertices;
+    private RecursiveCollection<Locateable>? _midVertices;
 
 
     private SpecialPointLayer _primaryVerticesLayer;
@@ -147,6 +147,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     public Action<Geometry>? RequestZoomToGeometry;
 
     public event Action? LocateablesReconstructed;
+
+    /// <summary>Raised whenever the geometry's points/parts are added or removed (not on coordinate moves).</summary>
+    public event Action? OnGeometryChanged;
 
     public Func<CoordinateDisplayMode>? RequestGetCoordinateDisplayMode;
 
@@ -397,6 +400,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         // Notify that Locateables have been reconstructed
         LocateablesReconstructed?.Invoke();
+
+        // Structural change (points/parts added or removed) funnels through here.
+        OnGeometryChanged?.Invoke();
     }
 
 
@@ -1076,6 +1082,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             {
                 _edgeLabelLayer.Items.Add(ToEdgeLengthLocatable(geometry.Points[geometry.Points.Count - 2], webMercatorPoint));
             }
+
+            // Incremental add bypasses ReconstructLocateables, so notify here.
+            OnGeometryChanged?.Invoke();
 
             return locateable;
         }
@@ -1858,10 +1867,10 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
                 // outlive the layer. Detach must run *before* the items are cleared.
                 foreach (var layer in new[] { _primaryVerticesLayer, _midVerticesLayer, _edgeLabelLayer, _primaryVerticesLabelLayer })
                 {
-                    if (layer?.Items == null)
+                    if (layer?.Items is null)
                         continue;
 
-                    foreach (var locateable in layer.Items.ToList())
+                    foreach (var locateable in layer.Items)
                     {
                         locateable.Detach();
                     }
@@ -1878,12 +1887,14 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
                 {
                     _feature.MouseRightButtonUp -= _featureRightButtonUpHandler;
                 }
+
                 _featureRightButtonUpHandler = null;
 
                 if (_feature != null)
                 {
                     _feature.Data = null;
                 }
+
                 _pathGeometry?.Figures.Clear();
 
                 // The shared/long-lived Options object would otherwise keep this layer alive.
@@ -1893,8 +1904,12 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
                 }
 
                 _vertices = null;
+
                 _midVertices = null;
+
                 this.LocateablesReconstructed = null;
+
+                this.OnGeometryChanged = null;
             }
 
             // Dispose unmanaged resources here if any

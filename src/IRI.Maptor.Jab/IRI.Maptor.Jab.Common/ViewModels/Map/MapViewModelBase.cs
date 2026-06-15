@@ -944,56 +944,146 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public bool IsZoomInMode
     {
-        get => MapAction == MapAction.ZoomIn;
-        set => MapAction = value ? MapAction.ZoomIn : MapAction.Pan;
+        get => MapAction == MapAction.ZoomIn; 
+        set
+        {
+            if (value)
+            {
+                MapAction = MapAction.ZoomIn;
+            }
+            else if (MapAction == MapAction.ZoomIn)
+            {
+                MapAction = MapAction.Pan;
+            }
+        }
     }
 
     public bool IsZoomOutMode
     {
-        get => MapAction == MapAction.ZoomOut;
-        set => MapAction = value ? MapAction.ZoomOut : MapAction.Pan;
+        get => MapAction == MapAction.ZoomOut; 
+        set
+        {
+            if (value)
+            {
+                MapAction = MapAction.ZoomOut;
+            }
+            else if (MapAction == MapAction.ZoomOut)
+            {
+                MapAction = MapAction.Pan;
+            }
+        }
     }
 
     public bool IsZoomInRectangleMode
     {
-        get => MapAction == MapAction.ZoomInRectangle;
-        set => MapAction = value ? MapAction.ZoomInRectangle : MapAction.Pan;
+        get => MapAction == MapAction.ZoomInRectangle; 
+        set
+        {
+            if (value)
+            {
+                MapAction = MapAction.ZoomInRectangle;
+            }
+            else if (MapAction == MapAction.ZoomInRectangle)
+            {
+                MapAction = MapAction.Pan;
+            }
+        }
     }
 
     public bool IsDrawPointMode
     {
         get => MapAction == MapAction.DrawPoint;
-        set => MapAction = value ? MapAction.DrawPoint : MapAction.Pan;
+        set
+        {
+            if (value)
+            {
+                MapAction = MapAction.DrawPoint;
+            }
+            else if (MapAction == MapAction.DrawPoint)
+            {
+                MapAction = MapAction.Pan;
+            }
+        }
     }
 
     public bool IsDrawPolylineMode
     {
         get => MapAction == MapAction.DrawPolyline;
-        set => MapAction = value ? MapAction.DrawPolyline : MapAction.Pan;
+        set
+        {
+            if (value)
+            {
+                MapAction = MapAction.DrawPolyline;
+            }
+            else if (MapAction == MapAction.DrawPolyline)
+            {
+                MapAction = MapAction.Pan;
+            }
+        }
     }
 
     public bool IsDrawPolygonMode
     {
         get => MapAction == MapAction.DrawPolygon;
-        set => MapAction = value ? MapAction.DrawPolygon : MapAction.Pan;
+        set
+        {
+            if (value)
+            {
+                MapAction = MapAction.DrawPolygon;
+            }
+            else if (MapAction == MapAction.DrawPolygon)
+            {
+                MapAction = MapAction.Pan;
+            }
+        }
     }
 
     public bool IsDrawRectangleMode
     {
-        get => MapAction == MapAction.DrawRectangle;
-        set => MapAction = value ? MapAction.DrawRectangle : MapAction.Pan;
+        get => MapAction == MapAction.DrawRectangle; 
+        set
+        {
+            if (value)
+            {
+                MapAction = MapAction.DrawRectangle;
+            }
+            else if (MapAction == MapAction.DrawRectangle)
+            {
+                MapAction = MapAction.Pan;
+            }
+        }
     }
 
     public bool IsDrawTextMode
     {
         get => MapAction == MapAction.DrawText;
-        set => MapAction = value ? MapAction.DrawText : MapAction.Pan;
+        set
+        {
+            if (value)
+            {
+                MapAction = MapAction.DrawText;
+            }
+            else if (MapAction == MapAction.DrawText)
+            {
+                MapAction = MapAction.Pan;
+            }
+        }
     }
 
     public bool IsIdentifyMode
     {
         get => MapAction == MapAction.Identify;
-        set => MapAction = value ? MapAction.Identify : MapAction.Pan;
+        set
+        {
+            if (value)
+            {
+                MapAction = MapAction.Identify;
+            }
+            else if (MapAction == MapAction.Identify)
+            {
+                MapAction = MapAction.Pan;
+            }
+        }
     }
 
 
@@ -1413,6 +1503,44 @@ public abstract class MapViewModelBase : ViewModelBase
     public Action RequestFinishDrawingPart;
 
     public Action RequestFinishNewDrawing;
+
+    private bool _canFinishNewDrawing;
+    /// <summary>
+    /// True when the in-progress geometry is valid enough to finish the whole drawing.
+    /// Pushed from the view (MapViewer) whenever the confirmed vertices change.
+    /// </summary>
+    public bool CanFinishNewDrawing
+    {
+        get => _canFinishNewDrawing;
+        set
+        {
+            if (_canFinishNewDrawing == value)
+                return;
+
+            _canFinishNewDrawing = value;
+            RaisePropertyChanged();
+            FinishNewDrawingCommand.RaiseCanExecuteChanged();
+        }
+    }
+
+    private bool _canFinishDrawingPart;
+    /// <summary>
+    /// True when the current part is valid enough to close it and start a new part.
+    /// Pushed from the view (MapViewer) whenever the confirmed vertices change.
+    /// </summary>
+    public bool CanFinishDrawingPart
+    {
+        get => _canFinishDrawingPart;
+        set
+        {
+            if (_canFinishDrawingPart == value)
+                return;
+
+            _canFinishDrawingPart = value;
+            RaisePropertyChanged();
+            FinishNewDrawingPartCommand.RaiseCanExecuteChanged();
+        }
+    }
 
     public Action RequestCancelEdit;
 
@@ -3211,9 +3339,9 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         StopDrawModeLoop();
 
-        _drawModeCts = new CancellationTokenSource();
-        var ct = _drawModeCts.Token;
-        _ = RunDrawModeLoopAsync(action, ct);
+        var cts = new CancellationTokenSource();
+        _drawModeCts = cts;
+        _ = RunDrawModeLoopAsync(action, cts);
     }
 
     private void StopDrawModeLoop()
@@ -3229,8 +3357,10 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    private async Task RunDrawModeLoopAsync(MapAction action, CancellationToken ct)
+    private async Task RunDrawModeLoopAsync(MapAction action, CancellationTokenSource cts)
     {
+        var ct = cts.Token;
+
         try
         {
             var drawMode = action.ToDrawMode();
@@ -3268,7 +3398,10 @@ public abstract class MapViewModelBase : ViewModelBase
         catch (OperationCanceledException) { }
         finally
         {
-            if (MapAction == action)
+            // Only this loop, while it is still the installed one, may return to Pan.
+            // A superseded loop (a newer StartDrawModeLoop already replaced _drawModeCts,
+            // or StopDrawModeLoop nulled it) must NOT clobber the global MapAction.
+            if (ReferenceEquals(_drawModeCts, cts) && MapAction == action)
                 MapAction = MapAction.Pan;
         }
     }
@@ -3355,7 +3488,16 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public void ExitDrawMode()
     {
-        StopDrawModeLoop();
+        // Only a genuine user cancel (the draw loop is still installed) returns to Pan. When this is
+        // reached as part of a tool switch, StopDrawModeLoop already ran and nulled _drawModeCts before
+        // the setter installs the new draw loop — so here we must NOT clobber MapAction back to Pan.
+        if (_drawModeCts == null)
+            return;
+
+        // Cancelling the whole draw tool: go back to Pan. The MapAction setter raises the
+        // IsDraw*Mode change notifications (so the active Draw button unchecks) and, because the
+        // previous action was a draw action, calls StopDrawModeLoop() itself — so the loop still stops.
+        MapAction = MapAction.Pan;
     }
 
     protected void CancelNewDrawing()
@@ -3367,9 +3509,11 @@ public abstract class MapViewModelBase : ViewModelBase
 
     private void FinishNewDrawing()
     {
-        RequestFinishNewDrawing?.Invoke(); //this is called in MapViewer
+        //this is called in MapViewer
+        RequestFinishNewDrawing?.Invoke();
 
-        OnFinishNewDrawing?.Invoke(null, EventArgs.Empty); //this is called in the apps
+        //this is called in the apps
+        OnFinishNewDrawing?.Invoke(null, EventArgs.Empty);
     }
 
     private void FinishDrawingPart()
@@ -6025,7 +6169,9 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_finishNewDrawingPartCommand == null)
             {
-                _finishNewDrawingPartCommand = new RelayCommand(param => FinishDrawingPart());
+                _finishNewDrawingPartCommand = new RelayCommand(
+                    param => FinishDrawingPart(),
+                    param => CanFinishDrawingPart);
             }
             return _finishNewDrawingPartCommand;
         }
@@ -6038,7 +6184,9 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_finishNewDrawingCommand == null)
             {
-                _finishNewDrawingCommand = new RelayCommand(param => FinishNewDrawing());
+                _finishNewDrawingCommand = new RelayCommand(
+                    param => FinishNewDrawing(),
+                    param => CanFinishNewDrawing);
             }
             return _finishNewDrawingCommand;
         }

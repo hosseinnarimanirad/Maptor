@@ -131,6 +131,7 @@
                 <!--Drawing-->
                 <DockPanel DockPanel.Dock="Right" LastChildFill="False"
                             Visibility="{Binding IsDrawMode, Converter={StaticResource boolToVisibilityConverter}}">
+
                     <!--Add Point-->
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Left" Margin="2" 
                             ToolTip="{Binding [map_draw_addPoint], Source={StaticResource Localization}}"
@@ -147,19 +148,20 @@
                         <iconPacks:PhosphorIcons Kind="CirclesThreePlusFill"/>
                     </Button>
 
-                    <!--Finish Drawing-->
+                    <!--Finish New Drawing-->
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Right" Margin="2" 
                             ToolTip="{Binding [map_draw_finishDrawing], Source={StaticResource Localization}}"
                             Command="{Binding FinishNewDrawingCommand}" >
                         <iconPacks:Material Kind="CheckBold"/>
                     </Button>
+
+                    <!--Cancel New Drawing-->
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" DockPanel.Dock="Right" Margin="2" 
                             ToolTip="{Binding [map_draw_cancelDrawing], Source={StaticResource Localization}}"
                             Command="{Binding CancelNewDrawingCommand}" >
                         <iconPacks:Material Kind="CloseThick"/>
                     </Button>
                 </DockPanel>
-                <!-- Drawing -->
 
                 <TextBlock Text="{Binding MapPanel.Options.Status, FallbackValue=Error}" Foreground="Red" MinWidth="100"
                            Background="Yellow" Visibility="Collapsed" />
@@ -473,30 +475,6 @@
             </TabControl>
 
             <!--options semi expander at the below-->
-            <!--<Border Height="Auto" Margin="0 5 0 0" CornerRadius="0 0 13 13" 
-                    Cursor="Hand" Visibility="{Binding MapPanel.Options.IsOptionsAvailable, Converter={StaticResource boolToVisibilityConverter}}">
-                <Border.InputBindings>
-                    <MouseBinding MouseAction="LeftClick" Command="{Binding MapPanel.ToggleDetailsVisibilityCommand}"/>
-                </Border.InputBindings>
-                <Border.Style>
-                    <Style>
-                        <Setter Property="Border.Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
-                        <Style.Triggers>
-                            <Trigger Property="Border.IsMouseOver" Value="True">
-                                <Setter Property="Border.Background" Value="{DynamicResource MahApps.Brushes.Accent2}" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-                <StackPanel HorizontalAlignment="Center">
-                    <iconPacks:PackIconMaterial Margin="2" Height="8" Kind="ChevronDown"
-                                                Visibility="{Binding MapPanel.IsDetailsNotVisible, Converter={StaticResource boolToVisibilityConverter}}"
-                                                Foreground="{DynamicResource MahApps.Brushes.Highlight}"/>
-                    <iconPacks:PackIconMaterial Margin="2" Height="8" Kind="ChevronUp"
-                                                Visibility="{Binding MapPanel.IsDetailsVisible, Converter={StaticResource boolToVisibilityConverter}}"
-                                                Foreground="{DynamicResource MahApps.Brushes.Highlight}"/>
-                </StackPanel>
-            </Border>-->
             <Button Margin="0 5 0 0" Cursor="Hand"
                     Visibility="{Binding MapPanel.Options.ShowAdvancedOptions, Converter={StaticResource boolToVisibilityConverter}}"
                     Command="{Binding MapPanel.ToggleAdvancedVisibilityCommand}" >
