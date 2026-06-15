@@ -7,9 +7,9 @@ namespace IRI.Maptor.Jab.Controls;
 /// <summary>
 /// Interaction logic for MapPanelView.xaml
 /// </summary>
-public partial class MapPanelView : UserControl
+public partial class SketchBarView : UserControl
 {
-    public MapPanelView()  
+    public SketchBarView()  
     {
         InitializeComponent(); 
     }       

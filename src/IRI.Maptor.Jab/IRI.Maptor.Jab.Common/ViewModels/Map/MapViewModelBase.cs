@@ -224,13 +224,13 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
-    private MapPanelViewModel _mapPanel;
-    public MapPanelViewModel MapPanel
+    private SketchBarViewModel _sketchBar;
+    public SketchBarViewModel SketchBar
     {
-        get { return _mapPanel; }
+        get { return _sketchBar; }
         set
         {
-            _mapPanel = value;
+            _sketchBar = value;
             RaisePropertyChanged();
         }
     }
@@ -297,7 +297,7 @@ public abstract class MapViewModelBase : ViewModelBase
                     ZoomToExtent(g.GetBoundingBox(), isExactExtent: false, isNewExtent: true);
                 };
 
-                _currentEditingLayer.RequestGetCoordinateDisplayMode = () => this.MapPanel.SpatialReference;
+                _currentEditingLayer.RequestGetCoordinateDisplayMode = () => this.SketchBar.SpatialReference;
 
                 _currentEditingLayer.RequestGetMapSettings = () => this.MapSettings;
             }
@@ -713,12 +713,15 @@ public abstract class MapViewModelBase : ViewModelBase
             IsDrawMode = _mapStatus == MapStatus.Drawing;
             IsEditMode = _mapStatus == MapStatus.Editing;
 
-            // Panel visibility is now driven solely by ShowMapInfoPanel. Leaving draw/edit/measure
-            // (Status back to Idle) must hide it — this replaces the old inner Border binding to
-            // IsDrawEditMeasureMode. It stays true for an active mode because the start points
-            // (EditAsync/GetDrawingAsync/Measure) set it true and only Idle resets it.
+            // Panel visibility is driven solely by ShowMapInfoPanel. Idle hides it; entering Editing
+            // shows it (editing always uses the SketchBar — this also keeps it visible across a
+            // Measure's Drawing -> Idle -> Editing transition, whose edit phase enters via RequestEdit
+            // and would otherwise leave the panel hidden). Drawing is left to GetDrawingAsync, which
+            // sets it per mode (false for Rectangle).
             if (_mapStatus == MapStatus.Idle)
                 ShowMapInfoPanel = false;
+            else if (_mapStatus == MapStatus.Editing)
+                ShowMapInfoPanel = true;
 
             //switch (_mapStatus)
             //{
@@ -1268,9 +1271,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
         LegendViewModel.RequestNotifyFilterChanged = () => UpdateLayerCanMoveUpDown(Layers, LegendViewModel.TocGroup);
 
-        MapPanel = new MapPanelViewModel();
+        SketchBar = new SketchBarViewModel();
 
-        MapPanel.CurrentEditingPoint = new NotifiablePoint(0, 0, param =>
+        SketchBar.CurrentEditingPoint = new NotifiablePoint(0, 0, param =>
           {
               if (CurrentEditingLayer == null)
               {
@@ -1278,13 +1281,13 @@ public abstract class MapViewModelBase : ViewModelBase
                   return;
               }
 
-              if (MapPanel.CurrentWebMercatorEditingPoint.IsNaN())
+              if (SketchBar.CurrentWebMercatorEditingPoint.IsNaN())
                   return;
 
-              CurrentEditingLayer.ChangeCurrentEditingPoint(MapPanel.CurrentWebMercatorEditingPoint);
+              CurrentEditingLayer.ChangeCurrentEditingPoint(SketchBar.CurrentWebMercatorEditingPoint);
 
               if (CurrentGeometryDetails is not null)
-                  CurrentGeometryDetails.ChangeCurrentEditingPoint(MapPanel.CurrentWebMercatorEditingPoint);
+                  CurrentGeometryDetails.ChangeCurrentEditingPoint(SketchBar.CurrentWebMercatorEditingPoint);
           });
 
         CoordinatePanel = new CoordinatePanelViewModel();
@@ -2868,7 +2871,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         //options = options ?? MapSettings.EditingOptions;
 
-        MapPanel.Options = options ?? MapSettings.EditingOptions;
+        SketchBar.Options = options ?? MapSettings.EditingOptions;
 
         if (RequestEdit != null)
         {
@@ -2892,7 +2895,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         //1397.08.15.this is already done in EditAsync(geometry,options)
         //options = options ?? this.MapSettings.EditingOptions;
-        //this.MapPanel.Options = options;
+        //this.SketchBar.Options = options;
 
         var type = points.Count == 1 ? GeometryType.Point : isClosed ? GeometryType.Polygon : GeometryType.LineString;
 
@@ -2921,7 +2924,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public void UpdateCurrentEditingPoint(Point webMercatorPoint)
     {
-        MapPanel.UpdateCurrentEditingPoint(webMercatorPoint);
+        SketchBar.UpdateCurrentEditingPoint(webMercatorPoint);
     }
 
     #endregion
@@ -3490,7 +3493,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         options = options ?? MapSettings.DrawingOptions;
 
-        MapPanel.Options = options;
+        SketchBar.Options = options;
 
         if (RequestGetDrawingAsync == null)
             return Response<Geometry<Point>>.Empty;
@@ -3544,10 +3547,10 @@ public abstract class MapViewModelBase : ViewModelBase
 
     private void AddPointToNewDrawing()
     {
-        if (MapPanel.CurrentWebMercatorEditingPoint.IsNaN())
+        if (SketchBar.CurrentWebMercatorEditingPoint.IsNaN())
             return;
 
-        RequestAddPointToNewDrawing?.Invoke(MapPanel.CurrentWebMercatorEditingPoint);
+        RequestAddPointToNewDrawing?.Invoke(SketchBar.CurrentWebMercatorEditingPoint);
     }
 
     #endregion
@@ -3597,13 +3600,13 @@ public abstract class MapViewModelBase : ViewModelBase
             // only in the case of length measurement show edge lengths by default.
             MapSettings.DrawingMeasureOptions.IsEdgeLabelVisible = mode == DrawMode.Polyline;
 
-            MapPanel.Options = MapSettings.DrawingMeasureOptions;
+            SketchBar.Options = MapSettings.DrawingMeasureOptions;
 
             var result = await RequestMeasure.Invoke(mode, /*MapSettings.DrawingMeasureOptions, MapSettings.EditingMeasureOptions,*/ action);
 
             if (result.HasNotNullResult())
             {
-                MapPanel.Options = MapSettings.EditingMeasureOptions;
+                SketchBar.Options = MapSettings.EditingMeasureOptions;
 
                 await RequestEdit.Invoke(result.Result);
             }

@@ -4103,7 +4103,7 @@ public partial class MapViewer : NotifiableUserControl
             onAfterPan: onAfterPan,
             onAnyMove: mapPt =>
             {
-                if (_presenter.MapPanel.Options.IsLinkedToMouseMove)
+                if (_presenter.SketchBar.Options.IsLinkedToMouseMove)
                     CurrentEditingPoint = mapPt.AsWpfPoint();
             });
         // Only act while this exact gesture is still the installed draw-phase gesture.
@@ -4264,7 +4264,7 @@ public partial class MapViewer : NotifiableUserControl
             ScreenToMap,
             webMercatorPoint,
             _presenter.RequestSelectedLocatableChanged,
-            _presenter.MapPanel.Options);
+            _presenter.SketchBar.Options);
 
         this.drawingLayer.OnRequestFinishDrawing += (s, arg) =>
         {
@@ -4653,7 +4653,7 @@ public partial class MapViewer : NotifiableUserControl
             this.viewTransform,
             ScreenToMap,
             _presenter.RequestSelectedLocatableChanged,
-            _presenter.MapPanel.Options)
+            _presenter.SketchBar.Options)
         {
             ZIndex = int.MaxValue
         };
