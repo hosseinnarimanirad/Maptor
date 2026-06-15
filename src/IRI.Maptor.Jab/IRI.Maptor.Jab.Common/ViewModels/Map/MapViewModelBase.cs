@@ -713,6 +713,13 @@ public abstract class MapViewModelBase : ViewModelBase
             IsDrawMode = _mapStatus == MapStatus.Drawing;
             IsEditMode = _mapStatus == MapStatus.Editing;
 
+            // Panel visibility is now driven solely by ShowMapInfoPanel. Leaving draw/edit/measure
+            // (Status back to Idle) must hide it — this replaces the old inner Border binding to
+            // IsDrawEditMeasureMode. It stays true for an active mode because the start points
+            // (EditAsync/GetDrawingAsync/Measure) set it true and only Idle resets it.
+            if (_mapStatus == MapStatus.Idle)
+                ShowMapInfoPanel = false;
+
             //switch (_mapStatus)
             //{
             //    case MapStatus.Drawing:
@@ -931,7 +938,6 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             _isDrawMode = value;
             RaisePropertyChanged();
-            RaisePropertyChanged(nameof(IsDrawEditMeasureMode));
         }
     }
 
@@ -944,12 +950,8 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             _isEditMode = value;
             RaisePropertyChanged();
-            RaisePropertyChanged(nameof(IsDrawEditMeasureMode));
         }
     }
-
-
-    public bool IsDrawEditMeasureMode => IsEditMode || IsDrawMode;
 
 
     public bool IsZoomInMode
