@@ -775,7 +775,17 @@ public abstract class MapViewModelBase : ViewModelBase
                 StopTextModeLoop();
 
             if (value.IsDrawAction())
+            {
+                // Leaving an in-progress measure for a draw tool: tear the measure down first so its
+                // inner drawing token/layer are gone before the new draw's GetDrawing runs. Otherwise
+                // the stale measure drawing token's inline cancel callback nulls the freshly-created
+                // drawingTcs, throwing NRE in GetDrawing. No-op when no measure is active. Running this
+                // BEFORE StartDrawModeLoop — while _drawModeCts is still null — also keeps
+                // CancelDrawing's no-points ExitDrawMode path from clobbering the new draw back to Pan.
+                RequestCancelMeasure?.Invoke();
+
                 StartDrawModeLoop(value);
+            }
 
             if (value.IsIdentifyAction())
                 StartIdentifyModeLoop();

@@ -2143,6 +2143,7 @@ public partial class MapViewer : NotifiableUserControl
 
         CancelGetBezier();
 
+        // do not uncomment other wise may not measure at all
         //CancelMeasure();
     }
 
@@ -4746,6 +4747,10 @@ public partial class MapViewer : NotifiableUserControl
 
     public async Task<Response<Geometry<sb.Point>>> EditGeometryAsync(Geometry<sb.Point> originalGeometry)
     {
+        // This call's edit-session identity (see GetDrawingAsync's myToken). A superseded session can
+        // detect it is no longer current and must not clobber shared state in its finally.
+        CancellationTokenSource? myToken = null;
+
         try
         {
             //Geometry<sb.Point> originalClone = originalGeometry.Clone();
@@ -4768,7 +4773,11 @@ public partial class MapViewer : NotifiableUserControl
 
             this.Status = MapStatus.Editing;
 
-            var result = await EditGeometry(originalGeometry/*, options*/);
+            var task = EditGeometry(originalGeometry/*, options*/);   // synchronously installs _editingCancellationToken
+
+            myToken = _editingCancellationToken;                       // capture this session's token (reference only)
+
+            var result = await task;
 
             //this.Status = MapStatus.Idle;
 
@@ -4796,7 +4805,18 @@ public partial class MapViewer : NotifiableUserControl
         }
         finally
         {
-            this.Status = MapStatus.Idle;
+            // Edit is the sole owner of its Editing->Idle reset (no inner method does it), but a
+            // superseding interaction (Edit->Draw / Edit->Measure / Edit->Edit) cancels this edit's
+            // token WITHOUT this session knowing. Guard so a superseded edit cannot clobber the new
+            // session:
+            //  - Status must still be Editing (a newer Draw/Measure already moved it to Drawing -> skip).
+            //  - and no *different* edit must have taken over (null = finished/cancelled as the current
+            //    session; == myToken = still us; a different non-null token = Edit->Edit -> skip).
+            if (this.Status == MapStatus.Editing &&
+                (_editingCancellationToken == null || ReferenceEquals(_editingCancellationToken, myToken)))
+            {
+                this.Status = MapStatus.Idle;
+            }
         }
     }
 
@@ -4850,6 +4870,11 @@ public partial class MapViewer : NotifiableUserControl
 
     public async Task<Response<Geometry<sb.Point>>> MeasureAsync(DrawMode mode, Action action)
     {
+        // This call's measure-session identity. A newer MeasureAsync installs a different token
+        // (via GetNewMeasureToken inside Measure), so a superseded call detects it is no longer
+        // current and must not reset Status in its finally.
+        CancellationTokenSource? myToken = null;
+
         try
         {
             // Cancel any ongoing measure operation. Awaiting the old token's
@@ -4870,7 +4895,11 @@ public partial class MapViewer : NotifiableUserControl
 
             CancelMeasure();
 
-            return await Measure(mode, action);
+            var task = Measure(mode, action);       // synchronously installs _measureCancellationToken
+
+            myToken = _measureCancellationToken;     // capture this session's token (reference only)
+
+            return await task;
         }
         catch (TaskCanceledException)
         {
@@ -4892,7 +4921,13 @@ public partial class MapViewer : NotifiableUserControl
         }
         finally
         {
-            this.Status = MapStatus.Idle;
+            // Only this call, while it is still the installed measure session, may reset Status.
+            // A superseded session (user switched to another Measure tool) must NOT reset Status to
+            // Idle — that clobbers the new session's Drawing status, hiding the measure panel and
+            // dropping back to Pan. On a legitimate end the inner GetDrawingAsync / EditGeometryAsync
+            // already drive Status to Idle, so this is only the current session's safety net.
+            if (ReferenceEquals(_measureCancellationToken, myToken))
+                this.Status = MapStatus.Idle;
         }
     }
 
