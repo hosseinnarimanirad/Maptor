@@ -3898,6 +3898,12 @@ public partial class MapViewer : NotifiableUserControl
 
             this.Status = MapStatus.Drawing;
 
+            // The draw session owns its panel visibility: shown for vertex-based draw/measure, hidden
+            // for the drag-based Rectangle. Set here (after Status, as the new session's final setup) so
+            // it wins over a superseded interaction's transient Idle -> ShowMapInfoPanel=false during a
+            // tool switch (e.g. Measure Length -> Measure Area).
+            this._presenter.ShowMapInfoPanel = mode != DrawMode.Rectangle;
+
             var task = GetDrawing(mode);     // synchronously assigns _drawingCancellationToken
 
             myToken = _drawingCancellationToken;   // capture this session's token (reference only)

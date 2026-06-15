@@ -3491,8 +3491,8 @@ public abstract class MapViewModelBase : ViewModelBase
         EditableFeatureLayerOptions? options = null,
         bool continuousDrawing = false)
     {
-        this.ShowMapInfoPanel = mode != DrawMode.Rectangle;
-
+        // ShowMapInfoPanel for the draw phase is owned by View.GetDrawingAsync (set as the new draw
+        // session's final setup, so it survives a tool switch's teardown). Here we only set the title.
         SketchBar.SetMode(mode switch
         {
             DrawMode.Point     => SketchBarMode.DrawPoint,
@@ -3600,8 +3600,8 @@ public abstract class MapViewModelBase : ViewModelBase
         if (MapAction.IsDrawAction())
             MapAction = MapAction.Pan;
 
-        this.ShowMapInfoPanel = true;
-
+        // ShowMapInfoPanel for the measure-draw phase is owned by View.GetDrawingAsync (set as the new
+        // draw session's final setup, so it survives a Measure Length <-> Area switch). Here: title only.
         SketchBar.SetMode(mode == DrawMode.Polyline ? SketchBarMode.MeasureLength : SketchBarMode.MeasureArea);
 
         try
