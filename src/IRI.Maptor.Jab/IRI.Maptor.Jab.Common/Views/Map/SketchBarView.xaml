@@ -56,7 +56,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Border CornerRadius="15" BorderThickness="2 0" MinWidth="420" VerticalAlignment="Top" HorizontalAlignment="Center" 
-            Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent3}" Opacity=".95"
+            Background="White" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Opacity=".95"
             Margin="4">
         <StackPanel FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}">
             <Border  Background="{DynamicResource MahApps.Brushes.Accent}" 
@@ -490,8 +490,8 @@
                     Command="{Binding SketchBar.ToggleAdvancedVisibilityCommand}" >
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
-                        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                        <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>
                         <!-- Remove default button chrome and set custom template -->
                         <Setter Property="Template">
                             <Setter.Value>
@@ -505,15 +505,16 @@
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                         <!-- Hover effect: change background (the Border uses TemplateBinding) -->
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}"/>
-                                <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>
+                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                <!--<Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>-->
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                                <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>
+                                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.5"/>

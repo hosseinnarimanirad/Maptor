@@ -3725,7 +3725,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     {
         if (this.IsEmpty())
             return;
-         
+
         if (this.Type == GeometryType.Polygon)
         {
             if (this.Geometries[0] is null)
@@ -4200,6 +4200,9 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         for (int i = 0; i < orderedRings.Count; i++)
         {
             var currentRing = orderedRings[i].geo;
+
+            if (currentRing.NumberOfPoints < 3)
+                continue;
 
             bool isMasterRing = true;
 

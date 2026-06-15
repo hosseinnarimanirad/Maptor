@@ -2867,6 +2867,14 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public Task<Response<Geometry<Point>>> EditAsync(Geometry<Point> geometry, EditableFeatureLayerOptions? options)
     {
+        // Editing supersedes any active draw/identify tool and coexists with Pan (see SwitchToMode).
+        // Switch to Pan first so the tool's continuous loop fully stops BEFORE the edit starts; otherwise
+        // the loop re-enters its drawing session (which calls CancelEditGeometry) and cancels the edit, so
+        // the first edit click is lost. Done before the edit token is installed, so SwitchToMode does not
+        // cancel it. Mirrors the nothing-drawn path (CancelDrawing -> ExitDrawMode -> Pan). No-op if Pan.
+        if (MapAction != MapAction.Pan)
+            MapAction = MapAction.Pan;
+
         this.ShowMapInfoPanel = true;
 
         SketchBar.SetMode(SketchBarMode.Editing);

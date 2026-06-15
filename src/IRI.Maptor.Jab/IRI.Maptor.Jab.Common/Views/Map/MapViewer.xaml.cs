@@ -2432,11 +2432,11 @@ public partial class MapViewer : NotifiableUserControl
         //    return;
         //}
 
-        if (this.MapAction != MapAction.Pan &&
-            this.MapAction != MapAction.ZoomIn &&
-            this.MapAction != MapAction.ZoomInRectangle &&
-            this.MapAction != MapAction.ZoomOut)
-            return;
+        //if (this.MapAction != MapAction.Pan &&
+        //    this.MapAction != MapAction.ZoomIn &&
+        //    this.MapAction != MapAction.ZoomInRectangle &&
+        //    this.MapAction != MapAction.ZoomOut)
+        //    return;
 
         RemoveRightClickOptions();
 
@@ -3961,7 +3961,12 @@ public partial class MapViewer : NotifiableUserControl
                     drawingLayer = null;
                 }
 
-                this.Status = MapStatus.Idle;
+                // Only return to Idle if this draw is still the active interaction. A newer Edit
+                // (e.g. editing a feature while the continuous draw loop is running) uses a different
+                // token field and already moved Status to Editing; resetting to Idle here would clobber
+                // it -> ShowMapInfoPanel=false. Mirrors EditGeometryAsync's `Status == Editing` guard.
+                if (this.Status == MapStatus.Drawing)
+                    this.Status = MapStatus.Idle;
             }
         }
     }
@@ -4416,14 +4421,17 @@ public partial class MapViewer : NotifiableUserControl
         {
             this.FinishDrawing();
             this.RemoveRightClickOptions();
-        }
-        ;
+        };
+
+        presenter.CanExecuteRightCommandAction = i => _presenter.CanFinishNewDrawing;
+         
         presenter.MiddleCommandAction = i =>
         {
             this.FinishDrawingPart();
             this.RemoveRightClickOptions();
         };
 
+        presenter.CanExecuteMiddleCommandAction = i => _presenter.CanFinishDrawingPart;
 
         var view = new MapThreeOptions(true);
 
