@@ -801,6 +801,27 @@
   <data name="map_draw_newDrawing" xml:space="preserve">
     <value>Click on the last point to finish drawing.</value>
   </data>
+  <data name="sketchBar_title_drawPoint" xml:space="preserve">
+    <value>Draw Point</value>
+  </data>
+  <data name="sketchBar_title_drawPolyline" xml:space="preserve">
+    <value>Draw Line</value>
+  </data>
+  <data name="sketchBar_title_drawPolygon" xml:space="preserve">
+    <value>Draw Polygon</value>
+  </data>
+  <data name="sketchBar_title_drawRectangle" xml:space="preserve">
+    <value>Draw Rectangle</value>
+  </data>
+  <data name="sketchBar_title_measureLength" xml:space="preserve">
+    <value>Measuring Length</value>
+  </data>
+  <data name="sketchBar_title_measureArea" xml:space="preserve">
+    <value>Measuring Area</value>
+  </data>
+  <data name="sketchBar_title_editing" xml:space="preserve">
+    <value>Editing</value>
+  </data>
   <data name="map_scalebar_content" xml:space="preserve">
     <value>SCALE</value>
   </data>

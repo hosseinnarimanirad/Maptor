@@ -960,6 +960,27 @@
   <data name="map_draw_newDrawing" xml:space="preserve">
     <value>برای اتمام ترسیم روی نقطهٔ آخر مجدد کلیک کنید.</value>
   </data>
+  <data name="sketchBar_title_drawPoint" xml:space="preserve">
+    <value>رسم نقطه</value>
+  </data>
+  <data name="sketchBar_title_drawPolyline" xml:space="preserve">
+    <value>رسم خط</value>
+  </data>
+  <data name="sketchBar_title_drawPolygon" xml:space="preserve">
+    <value>رسم چندضلعی</value>
+  </data>
+  <data name="sketchBar_title_drawRectangle" xml:space="preserve">
+    <value>رسم مستطیل</value>
+  </data>
+  <data name="sketchBar_title_measureLength" xml:space="preserve">
+    <value>اندازه‌گیری طول</value>
+  </data>
+  <data name="sketchBar_title_measureArea" xml:space="preserve">
+    <value>اندازه‌گیری مساحت</value>
+  </data>
+  <data name="sketchBar_title_editing" xml:space="preserve">
+    <value>ویرایش</value>
+  </data>
   <data name="map_scalebar_content" xml:space="preserve">
     <value>مقیاس</value>
   </data>

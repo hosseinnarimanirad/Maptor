@@ -2869,6 +2869,8 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         this.ShowMapInfoPanel = true;
 
+        SketchBar.SetMode(SketchBarMode.Editing);
+
         //options = options ?? MapSettings.EditingOptions;
 
         SketchBar.Options = options ?? MapSettings.EditingOptions;
@@ -3491,6 +3493,14 @@ public abstract class MapViewModelBase : ViewModelBase
     {
         this.ShowMapInfoPanel = mode != DrawMode.Rectangle;
 
+        SketchBar.SetMode(mode switch
+        {
+            DrawMode.Point     => SketchBarMode.DrawPoint,
+            DrawMode.Polyline  => SketchBarMode.DrawPolyline,
+            DrawMode.Rectangle => SketchBarMode.DrawRectangle,
+            _                  => SketchBarMode.DrawPolygon,
+        });
+
         options = options ?? MapSettings.DrawingOptions;
 
         SketchBar.Options = options;
@@ -3591,6 +3601,8 @@ public abstract class MapViewModelBase : ViewModelBase
             MapAction = MapAction.Pan;
 
         this.ShowMapInfoPanel = true;
+
+        SketchBar.SetMode(mode == DrawMode.Polyline ? SketchBarMode.MeasureLength : SketchBarMode.MeasureArea);
 
         try
         {

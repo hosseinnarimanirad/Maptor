@@ -1,13 +1,44 @@
 ﻿using System;
 
 using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 
+/// <summary>The semantic state shown in the SketchBar header (what the user is actually doing).</summary>
+public enum SketchBarMode { DrawPoint, DrawPolyline, DrawPolygon, DrawRectangle, MeasureLength, MeasureArea, Editing }
+
 public class SketchBarViewModel : Notifier
 {
+    private SketchBarMode? _mode;
+
+    /// <summary>
+    /// State-aware, localized title for the SketchBar header. Get-only and driven by <see cref="SetMode"/>
+    /// so it is a single source of truth and re-localizes live when the UI language changes.
+    /// </summary>
+    public string Title => _mode is null ? string.Empty : LocalizationManager.Instance[TitleKey(_mode.Value)];
+
+    /// <summary>Sets the current semantic mode; the map VM picks it at each draw/measure/edit entry point.</summary>
+    public void SetMode(SketchBarMode mode)
+    {
+        _mode = mode;
+        RaisePropertyChanged(nameof(Title));
+    }
+
+    private static string TitleKey(SketchBarMode mode) => mode switch
+    {
+        SketchBarMode.DrawPoint     => "sketchBar_title_drawPoint",
+        SketchBarMode.DrawPolyline  => "sketchBar_title_drawPolyline",
+        SketchBarMode.DrawPolygon   => "sketchBar_title_drawPolygon",
+        SketchBarMode.DrawRectangle => "sketchBar_title_drawRectangle",
+        SketchBarMode.MeasureLength => "sketchBar_title_measureLength",
+        SketchBarMode.MeasureArea   => "sketchBar_title_measureArea",
+        SketchBarMode.Editing       => "sketchBar_title_editing",
+        _                           => string.Empty,
+    };
+
     private bool _isDetailsVisible;
     public bool IsDetailsVisible
     {
@@ -192,6 +223,9 @@ public class SketchBarViewModel : Notifier
     public SketchBarViewModel()
     {
         //RaisePropertyChanged(nameof(IsGeodeticWgs84EditingMode));
+
+        // Re-localize the title when the UI language switches at runtime.
+        LocalizationManager.Instance.LanguageChanged += () => RaisePropertyChanged(nameof(Title));
     }
 
     private Point FromWebMercator(Point webMercatorPoint)
