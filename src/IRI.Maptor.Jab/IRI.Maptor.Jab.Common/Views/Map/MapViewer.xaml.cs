@@ -214,6 +214,10 @@ public partial class MapViewer : NotifiableUserControl
 
     private Dictionary<MapAction, Cursor> CursorSettings;
 
+    // The cursor last applied by SetCursor — the active interaction's cursor (draw/measure/identify),
+    // which is NOT necessarily CursorSettings[MapAction] (e.g. Measure runs with MapAction == Pan).
+    private Cursor _activeCursor = Cursors.Arrow;
+
     //private MapAction _currentMouseAction = MapAction.Pan;
     //public MapAction CurrentMouseAction
     //{
@@ -2116,6 +2120,7 @@ public partial class MapViewer : NotifiableUserControl
         if (_drawPhaseGesture?.IsPanning == true || _selectPointGesture?.IsPanning == true)
             return;
 
+        _activeCursor = cursor;
         this.mapView.Cursor = cursor;
     }
 
@@ -2904,8 +2909,9 @@ public partial class MapViewer : NotifiableUserControl
             {
                 _wasPanning = false;
                 _v.Refresh(isNewExtent: true);
-                //_v.SetCursor(_v.CursorSettings[_v.MapAction]);
-                _v.UpdateMapCursor();
+                // Restore the active interaction's cursor (set by GetDrawing/SelectThePoint), NOT
+                // CursorSettings[MapAction] — during Measure MapAction is Pan, which would wrongly snap to Hand.
+                _v.SetCursor(_v._activeCursor);
                 _onAfterPan?.Invoke(_v.ScreenToMap(e.GetPosition(_v.mapView)).AsPoint());
                 return;
             }
