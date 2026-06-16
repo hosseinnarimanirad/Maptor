@@ -19,11 +19,11 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Fonts.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
- 
+
             <converters:DistanceAzimuthConverter x:Key="distanceAzimuthConverter"/>
             <converters:LocalizedFormatConverter x:Key="localizedFormatConverter"/>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-            
+
             <!-- Conditional font styles for Persian localization -->
             <Style x:Key="persianHeaderTextBlockStyle" TargetType="TextBlock">
                 <Style.Triggers>
@@ -58,20 +58,22 @@
         </Grid.RowDefinitions>
 
         <!--Polygon section-->
-        <Border Grid.Row="0" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,0,0,1">
-            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="4">
+        <Border Grid.Row="0" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,0,0,1"
+                FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="4"
+                        >
                 <TextBlock Text="{Binding [geometryDetails_polygon_title], Source={StaticResource Localization}}"
                            FontWeight="Bold" Margin="0,4,10,4" VerticalAlignment="Center" Style="{StaticResource persianPolygonTextBlockStyle}"/>
-                <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                <StackPanel Orientation="Horizontal" >
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                         Command="{Binding GoToPreviousPolygonCommand}"
                         IsEnabled="{Binding IsPreviousPolygonAvailable, FallbackValue=False}">
-                        <iconPacks:PackIconMaterial Kind="ChevronLeft"/>
+                        <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
                     </Button>
-                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                    <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                         Command="{Binding GoToNextPolygonCommand}"
                         IsEnabled="{Binding IsNextPolygonAvailable, FallbackValue=False}">
-                        <iconPacks:PackIconMaterial Kind="ChevronRight"/>
+                        <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
                     </Button>
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
                             Command="{Binding AddPolygonCommand}">
@@ -133,19 +135,19 @@
         </Border>
         <!-- Geometry parts -->
 
-        <StackPanel Grid.Row="1" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Left" Margin="4"
-                    >
+        <StackPanel Grid.Row="1" DockPanel.Dock="Right" Orientation="Horizontal" Margin="4" 
+                    FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
             <TextBlock Text="{Binding [geometryDetails_parts_title], Source={StaticResource Localization}}" VerticalAlignment="Center" FontWeight="Bold" Margin="0,4,10,4" Style="{StaticResource persianPartsTextBlockStyle}"/>
-            <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+            <StackPanel Orientation="Horizontal" >
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                             Command="{Binding GoToPreviousPartCommand}"
                             IsEnabled="{Binding IsPreviousPartAvailable}">
-                    <iconPacks:PackIconMaterial Kind="ChevronLeft"/>
+                    <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
                 </Button>
-                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                             Command="{Binding GoToNextPartCommand}"
                             IsEnabled="{Binding IsNextPartAvailable}">
-                    <iconPacks:PackIconMaterial Kind="ChevronRight"/>
+                    <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
                 </Button>
                 <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
                             Command="{Binding AddPartCommand}">
@@ -209,7 +211,8 @@
         </StackPanel>
 
         <!-- SRS Selection and Current Point Editor Section -->
-        <Border Grid.Row="2" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,1,0,0" Padding="0" Margin="0,0,0,4">
+        <Border Grid.Row="2" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,1,0,0" Padding="0" Margin="0,0,0,4"
+                FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
             <Grid >
                 <StackPanel Margin="0">
                     <!-- Current Point Editor -->
@@ -347,11 +350,11 @@
                             <CheckBox Content="{Binding [geometryDetails_options_showInnerAngle], Source={StaticResource Localization}}" 
                                       IsChecked="{Binding ShowInnerAngle, Mode=TwoWay}"
                                       Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"/>
-                            
+
                             <CheckBox Content="{Binding [geometryDetails_options_useDecimalDegreesForAngles], Source={StaticResource Localization}}" 
                                       IsChecked="{Binding UseDecimalDegreesForAngles, Mode=TwoWay}"
                                       Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"/>
-                            
+
                             <!--<CheckBox Content="{Binding [geometryDetails_options_showZColumn], Source={StaticResource Localization}}" 
                                       IsChecked="{Binding ShowZColumn, Mode=TwoWay}"
                                       Style="{StaticResource IRI.Maptor.Styles.CheckBox.Small}"  />-->
@@ -362,7 +365,8 @@
         </Border>
 
         <!-- Coordinate grid -->
-        <DataGrid Grid.Row="3" FlowDirection="LeftToRight"  x:Name="dataGrid"
+        <DataGrid Grid.Row="3" x:Name="dataGrid"
+                  FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }"
                   ItemsSource="{Binding CurrentPagePoints}" 
                   SelectedItem="{Binding SelectedPoint, Mode=TwoWay}"
                   AutoGenerateColumns="False" SelectionChanged="DataGrid_SelectionChanged"
@@ -457,7 +461,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>-->
-                
+
                 <DataGridTemplateColumn Width="*" MinWidth="120">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
@@ -556,15 +560,16 @@
         </DataGrid>
 
         <!-- Grid's buttons with point counter and navigation buttons -->
-        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Stretch" FlowDirection="LeftToRight" Margin="0,4,0,0"
-                    Background="{DynamicResource MahApps.Brushes.Accent}">
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,4,0,0"
+                    Background="{DynamicResource MahApps.Brushes.Accent}"
+                    FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
 
             <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" 
                          IsChecked="{Binding IsEditable, Mode=TwoWay}"
                          ToolTip="{Binding [geometryDetails_currentPoint_edit], Source={StaticResource Localization}}" Visibility="Collapsed" >
                 <iconPacks:PackIconMaterial Kind="Pencil"/>
             </ToggleButton>
-          
+
             <!--<Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
                     Command="{Binding InsertPointBeforeSelectedCommand}"
                     ToolTip="{Binding [geometryDetails_currentPoint_insert], Source={StaticResource Localization}}">
@@ -604,18 +609,31 @@
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
                       Command="{Binding GoToPreviousPageCommand}"  
                       ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPage], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial Kind="ChevronDoubleLeft" />
+                <iconPacks:PackIconMaterial>
+                    <iconPacks:PackIconMaterial.Style>
+                        <Style TargetType="iconPacks:PackIconMaterial"
+                                BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}">
+                            <Setter Property="Kind" Value="ChevronDoubleLeft"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Source={x:Static localization:LocalizationManager.Instance}, Path=CurrentFlowDirection}"
+                                            Value="{x:Static FlowDirection.RightToLeft}">
+                                    <Setter Property="Kind" Value="ChevronDoubleRight"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </iconPacks:PackIconMaterial.Style>
+                </iconPacks:PackIconMaterial>
             </Button>
 
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
                       Command="{Binding GoToPreviousPointCommand}"
                       ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial Kind="ChevronLeft"/>
+                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
             </Button>
             <ComboBox ItemsSource="{Binding AvailablePageSizes}"
-             SelectedItem="{Binding SelectedPageSize, Mode=TwoWay}"
-             Width="60" Margin="4,0" VerticalAlignment="Center"
-             FlowDirection="LeftToRight"/>
+                     SelectedItem="{Binding SelectedPageSize, Mode=TwoWay}"
+                     Width="60" Margin="4,0" VerticalAlignment="Center"
+                     FlowDirection="LeftToRight"/>
             <TextBlock VerticalAlignment="Center" 
                         TextBlock.TextAlignment="Right" Margin="8,0,0,0"
                        FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
@@ -628,15 +646,28 @@
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
           Command="{Binding GoToNextPointCommand}"
           ToolTip="{Binding [geometryDetails_currentPoint_goToNextPoint], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial Kind="ChevronRight"/>
+                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
             </Button>
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
-         Command="{Binding GoToNextPageCommand}"
-         ToolTip="{Binding [geometryDetails_currentPoint_goToNextPage], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial Kind="ChevronDoubleRight"/>
+                     Command="{Binding GoToNextPageCommand}"
+                     ToolTip="{Binding [geometryDetails_currentPoint_goToNextPage], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial>
+                    <iconPacks:PackIconMaterial.Style>
+                        <Style TargetType="iconPacks:PackIconMaterial"
+                                BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}">
+                            <Setter Property="Kind" Value="ChevronDoubleRight"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Source={x:Static localization:LocalizationManager.Instance}, Path=CurrentFlowDirection}"
+                         Value="{x:Static FlowDirection.RightToLeft}">
+                                    <Setter Property="Kind" Value="ChevronDoubleLeft"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </iconPacks:PackIconMaterial.Style>
+                </iconPacks:PackIconMaterial>
             </Button>
         </StackPanel>
 

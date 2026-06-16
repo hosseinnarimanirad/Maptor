@@ -958,7 +958,7 @@
     <value>تکمیل بخش</value>
   </data>
   <data name="map_draw_newDrawing" xml:space="preserve">
-    <value>برای اتمام ترسیم روی نقطهٔ آخر مجدد کلیک کنید.</value>
+    <value>برای اتمام ترسیم روی یکی از نقاط کلیک کنید.</value>
   </data>
   <data name="sketchBar_title_drawPoint" xml:space="preserve">
     <value>رسم نقطه</value>

@@ -799,7 +799,7 @@
     <value>Finish Drawing Part</value>
   </data>
   <data name="map_draw_newDrawing" xml:space="preserve">
-    <value>Click on the last point to finish drawing.</value>
+    <value>Click on any point to finish drawing.</value>
   </data>
   <data name="sketchBar_title_drawPoint" xml:space="preserve">
     <value>Draw Point</value>

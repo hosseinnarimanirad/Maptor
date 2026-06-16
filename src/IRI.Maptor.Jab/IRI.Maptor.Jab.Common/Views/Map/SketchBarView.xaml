@@ -259,12 +259,12 @@
                                 Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}" >
                         <StackPanel DataContext="{Binding CurrentEditingLayer}"
                                     Orientation="Horizontal" 
-                                    FlowDirection="LeftToRight" HorizontalAlignment="Center"
+                                    HorizontalAlignment="Center"
                                     Visibility="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=TabControl}, Converter={StaticResource boolToVisibilityConverter}}">
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
                                         ToolTip="{Binding [mapPanel_currentPoint_goToPreviousPoint], Source={StaticResource Localization}}"
                                         Command="{Binding GoToPreviousPointCommand}" >
-                                <iconPacks:Material Kind="ChevronLeft" />
+                                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
                             </Button>
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
                                         ToolTip="{Binding [mapPanel_currentPoint_delete], Source={StaticResource Localization}}"
@@ -285,7 +285,7 @@
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
                                         ToolTip="{Binding [mapPanel_currentPoint_goToNextPoint], Source={StaticResource Localization}}"
                                         Command="{Binding GoToNextPointCommand}" >
-                                <iconPacks:Material Kind="ChevronRight"/>
+                                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
                             </Button>
                         </StackPanel>
                     </TabItem>
@@ -298,7 +298,7 @@
                                 <Binding Path="IsEditMode"/>
                             </MultiBinding>
                         </TabItem.Visibility>
-                        <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Center"
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
                                     DataContext="{Binding CurrentEditingLayer}"
                                     Visibility="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=TabControl}, Converter={StaticResource boolToVisibilityConverter}}">
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
@@ -355,7 +355,7 @@
                     <!--measure-->
                     <TabItem Header="{Binding [mapPanel_measure_title], Source={StaticResource Localization}}" Cursor="Hand"
                              Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">
-                        <StackPanel>
+                        <StackPanel Visibility="{Binding IsEditMode, Converter={StaticResource boolToVisibilityConverter}}">
                             <StackPanel.Resources>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Margin" Value="2"/>

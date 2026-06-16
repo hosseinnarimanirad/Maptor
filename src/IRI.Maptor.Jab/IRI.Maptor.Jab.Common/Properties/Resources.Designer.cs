@@ -2843,7 +2843,7 @@ namespace IRI.Maptor.Jab.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Click on the last point to finish drawing..
+        ///   Looks up a localized string similar to Click on any point to finish drawing..
         /// </summary>
         public static string map_draw_newDrawing {
             get {
@@ -3424,6 +3424,69 @@ namespace IRI.Maptor.Jab.Common.Properties {
         public static string ribbon_header_settings {
             get {
                 return ResourceManager.GetString("ribbon_header_settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw Point.
+        /// </summary>
+        public static string sketchBar_title_drawPoint {
+            get {
+                return ResourceManager.GetString("sketchBar_title_drawPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw Polygon.
+        /// </summary>
+        public static string sketchBar_title_drawPolygon {
+            get {
+                return ResourceManager.GetString("sketchBar_title_drawPolygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw Line.
+        /// </summary>
+        public static string sketchBar_title_drawPolyline {
+            get {
+                return ResourceManager.GetString("sketchBar_title_drawPolyline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Draw Rectangle.
+        /// </summary>
+        public static string sketchBar_title_drawRectangle {
+            get {
+                return ResourceManager.GetString("sketchBar_title_drawRectangle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Editing.
+        /// </summary>
+        public static string sketchBar_title_editing {
+            get {
+                return ResourceManager.GetString("sketchBar_title_editing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Measuring Area.
+        /// </summary>
+        public static string sketchBar_title_measureArea {
+            get {
+                return ResourceManager.GetString("sketchBar_title_measureArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Measuring Length.
+        /// </summary>
+        public static string sketchBar_title_measureLength {
+            get {
+                return ResourceManager.GetString("sketchBar_title_measureLength", resourceCulture);
             }
         }
         

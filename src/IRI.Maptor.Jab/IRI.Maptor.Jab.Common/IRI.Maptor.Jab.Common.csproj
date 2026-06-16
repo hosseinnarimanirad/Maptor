@@ -59,6 +59,7 @@
     <None Remove="Assets\Images\imageNotFound.jpg" />
     <None Remove="Assets\Images\Logos\google.png" />
     <None Remove="Properties\Resources.resx~RF2341c1.TMP" />
+    <None Remove="Views\Map\SketchBarView.xaml~RF205a3a.TMP" />
   </ItemGroup>
 
   <ItemGroup>
