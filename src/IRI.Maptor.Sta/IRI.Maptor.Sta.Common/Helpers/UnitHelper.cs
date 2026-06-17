@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,15 +13,15 @@ public static class UnitHelper
     {
         if (length < 1)
         {
-            return $"{length * 100:N1} cm";
+            return string.Format(CultureInfo.InvariantCulture, "{0:N1} cm", length * 100);
         }
         else if (length < 1000)
         {
-            return $"{length:N2} m";
+            return string.Format(CultureInfo.InvariantCulture, "{0:N2} m", length); ;
         }
         else
         {
-            return $"{length / 1E3:N1} Km";
+            return string.Format(CultureInfo.InvariantCulture, "{0:N1} Km", length / 1E3);
         }
         //else
         //{
@@ -32,11 +33,11 @@ public static class UnitHelper
     {
         if (area < 1E6)
         {
-            return $"{area:N2} m\xB2";
+            return string.Format(CultureInfo.InvariantCulture, "{0:N2} m\xB2", area);
         }
         else
         {
-            return $"{area / 1E6:N1} Km\xB2";
+            return string.Format(CultureInfo.InvariantCulture, "{0:N1} Km\xB2", area / 1E6);
         }
     }
 
