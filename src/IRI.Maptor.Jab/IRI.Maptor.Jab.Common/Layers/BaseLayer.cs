@@ -134,6 +134,7 @@ public abstract class BaseLayer : Notifier, ILayer
         {
             _isBusy = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsNotBusy));
         }
     }
 
