@@ -1,7 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-
+using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
@@ -12,7 +12,7 @@ namespace IRI.Maptor.Jab.Controls;
 /// <summary>
 /// Interaction logic for LineStringEditorView.xaml
 /// </summary>
-public partial class GeometryEditorView : UserControl
+public partial class GeometryEditorView : NotifiableUserControl
 {
     public static readonly DependencyProperty SelectedPageSizeProperty =
         DependencyProperty.Register(
@@ -75,6 +75,14 @@ public partial class GeometryEditorView : UserControl
     {
         InitializeComponent();
         this.DataContextChanged += LineStringEditorView_DataContextChanged;
+
+        LocalizationManager.Instance.LanguageChanged += OnLanguageChanged;
+
+    }
+
+    private void OnLanguageChanged()
+    {
+        //RaisePropertyChanged();
     }
 
     private GeometryEditorViewModel? _currentPresenter;
