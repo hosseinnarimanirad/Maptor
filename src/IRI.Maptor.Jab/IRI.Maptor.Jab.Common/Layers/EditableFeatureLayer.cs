@@ -599,7 +599,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         var webMercatorPoint = point;
 
         var element = /*Options*/this.MakePrimaryVertex();
-        
+
         var locateable = new Locateable(AncherFunctionHandlers.CenterCenter)
         {
             Element = element,
@@ -671,7 +671,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         return locateable;
     }
-     
+
 
     // Finish Drawing if click on any point
     private void Element_MouseDown(object sender, MouseButtonEventArgs e)
@@ -1195,7 +1195,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         {
             var rings = _webMercatorGeometry.Geometries?.SelectMany(g => g.Geometries).ToList();
 
-            return Geometry<Point>.CreatePolygonOrMultiPolygon(rings, _webMercatorGeometry.Srid);
+            // should not fixOrientation is false to prevent early ring orientation change base on e.g. 3 points
+            return Geometry<Point>.CreatePolygonOrMultiPolygon(rings, _webMercatorGeometry.Srid, fixOrientation: false);
         }
 
         return _webMercatorGeometry;

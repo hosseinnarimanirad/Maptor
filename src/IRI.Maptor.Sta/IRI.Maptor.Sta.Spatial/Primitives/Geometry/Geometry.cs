@@ -4177,7 +4177,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
         return CreatePointOrLineString(points, geometries?.FirstOrDefault()?.Srid ?? 0);
     }
 
-    public static Geometry<T> CreatePolygonOrMultiPolygon(List<Geometry<T>> rings, int srid)
+    public static Geometry<T> CreatePolygonOrMultiPolygon(List<Geometry<T>> rings, int srid, bool fixOrientation = true)
     {
         // OGC SFA for polygon:
         // The exterior boundary LinearRing defines the “top” of the surface which is the side of the surface from which the
@@ -4237,7 +4237,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
                 isMasterRing = false;
 
                 // inner rings must be CW
-                if (!SpatialUtility.IsClockwise(currentRing.Points))
+                if (fixOrientation && !SpatialUtility.IsClockwise(currentRing.Points))
                 {
                     currentRing.Reverse();
                 }
@@ -4250,7 +4250,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             if (isMasterRing)
             {
                 // outter ring must be CCW
-                if (SpatialUtility.IsClockwise(currentRing.Points))
+                if (fixOrientation && SpatialUtility.IsClockwise(currentRing.Points))
                 {
                     currentRing.Reverse();
                 }

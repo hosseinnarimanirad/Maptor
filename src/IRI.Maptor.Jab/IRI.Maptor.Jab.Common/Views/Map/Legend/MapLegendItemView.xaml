@@ -447,9 +447,9 @@
 
                         <!--loading layer #1-->
                         <iconPacks:PackIconPhosphorIcons DockPanel.Dock="Left" Kind="SpinnerGapBold" Spin="True" Width="18" Height="18"                    
-                    VerticalAlignment="Center"
-                    Foreground="{DynamicResource MahApps.Brushes.Accent}" Margin="2,0"
-                    Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource MahApps.Brushes.Accent}" Margin="2,0"
+                            Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=True}">
 
                             <!--<iconPacks:PackIconPhosphorIcons.RenderTransform>
                         <RotateTransform Angle="0"/>
@@ -498,8 +498,8 @@
 
                         <!--locked layer (not in scale range layer)-->
                         <iconPacks:PackIconMaterial DockPanel.Dock="Left" Kind="Lock" Width="18" Height="18"
-                    VerticalAlignment="Center"
-                    Foreground="{DynamicResource MahApps.Brushes.Badged.Background.Disabled}" Margin="2,0"
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{DynamicResource MahApps.Brushes.Badged.Background.Disabled}" Margin="2,0"
                                                  >
                             <!--Visibility="{Binding IsInScaleRange, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"-->
                             <iconPacks:PackIconMaterial.Visibility>
