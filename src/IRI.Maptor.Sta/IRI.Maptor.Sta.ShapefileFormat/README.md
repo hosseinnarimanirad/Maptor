@@ -45,7 +45,7 @@ dotnet add package IRI.Maptor.Sta.ShapefileFormat
 
 ### PackageReference
 ```xml
-<PackageReference Include="IRI.Maptor.Sta.ShapefileFormat" Version="2.8.6" />
+<PackageReference Include="IRI.Maptor.Sta.ShapefileFormat" />
 ```
 
 ## 💻 Usage

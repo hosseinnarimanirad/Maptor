@@ -37,7 +37,7 @@ Console.WriteLine($"0.00001° ≈ {distance:0.##} meters E/W");
 ## 📚 Learn More
 
 For detailed technical analysis:  
-    ![StackExchange: How precise should lat/long storage be?](https://gis.stackexchange.com/a/208739)
+    [StackExchange: How precise should lat/long storage be?](https://gis.stackexchange.com/a/208739)
 
 
 ## 🤝 Contribute

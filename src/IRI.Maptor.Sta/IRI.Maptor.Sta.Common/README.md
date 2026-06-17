@@ -41,7 +41,7 @@ Install via **NuGet**:
 Install-Package IRI.Maptor.Sta.Common
 ```
 
-Supports **.NET 8.0 and later**.
+Targets **.NET Standard 2.1** — compatible with .NET 5+ and .NET Core 3.x.
 
 ---
 

@@ -1,7 +1,7 @@
 # 🌍 GeoJson Support in Maptor
 
 ![GeoJson](https://img.shields.io/badge/GeoJson-RFC_7946_compliant-blue) 
-![.NET](https://img.shields.io/badge/.NET-Standard_2.0-green)
+![.NET](https://img.shields.io/badge/.NET-Standard_2.1-green)
 
 A .NET Standard implementation of GeoJson (RFC 7946) for spatial data interchange, supporting read/write operations, conversion to/from geometry types, and validation.
 
