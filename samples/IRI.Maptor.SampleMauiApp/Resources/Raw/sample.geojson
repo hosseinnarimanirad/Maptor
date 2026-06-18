@@ -1,0 +1,41 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Tehran (point)" },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [51.3890, 35.6892]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "A line" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [51.40, 35.70],
+          [51.42, 35.72],
+          [51.44, 35.71]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "A polygon" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [51.36, 35.68],
+            [51.40, 35.68],
+            [51.40, 35.71],
+            [51.36, 35.71],
+            [51.36, 35.68]
+          ]
+        ]
+      }
+    }
+  ]
+}
