@@ -1,5 +1,4 @@
-﻿using IRI.Maptor.Jab.Common.Models.Security;
-
+﻿using IRI.Maptor.Jab.Core.Models.Security;
 using IRI.Maptor.Sta.Common.Helpers;
 using System.Security;
 

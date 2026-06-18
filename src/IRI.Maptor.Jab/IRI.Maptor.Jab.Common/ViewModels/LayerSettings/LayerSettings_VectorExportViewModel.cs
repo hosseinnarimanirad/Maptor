@@ -10,6 +10,7 @@ using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Common.Models.DxfOpenDialog;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.LayerSettings;
 

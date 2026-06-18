@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Windows.Controls;
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
 
 namespace IRI.Maptor.Jab.Controls;
 

@@ -2,9 +2,10 @@
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.IranRepo;
 

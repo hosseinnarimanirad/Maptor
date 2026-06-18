@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using IRI.Maptor.Jab.Common.Models.Security;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Models.Security;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 

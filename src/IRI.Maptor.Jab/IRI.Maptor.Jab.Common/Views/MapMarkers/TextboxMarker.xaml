@@ -3,7 +3,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
                      xmlns:local="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.Map"
-                     xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
+                     xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
                      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
                     x:Name="root" Background="Transparent" Canvas.ZIndex="1000000"

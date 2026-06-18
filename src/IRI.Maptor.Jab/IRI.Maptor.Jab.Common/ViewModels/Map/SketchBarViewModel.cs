@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 
 using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 

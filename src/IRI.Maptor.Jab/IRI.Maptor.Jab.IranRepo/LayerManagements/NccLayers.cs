@@ -1,7 +1,6 @@
-﻿using System.Windows.Media;
+using System.Windows.Media;
 
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -10,6 +9,8 @@ using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Jab.Common.Layers;
 using System.Collections.ObjectModel;
+using IRI.Maptor.Jab.Core.Layers;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.IranRepo;
 
@@ -23,7 +24,7 @@ public static class NccLayers
 
         var leveling1 = NccRepository.GetLayer(
             "leveling1", 
-            IRI.Maptor.Jab.Common.Properties.Resources.layer_leveling1_title,
+            IRI.Maptor.Jab.Core.Properties.Resources.layer_leveling1_title,
             new VisualParameters("#88A10024", "#FFA10024", 1, .9)
             {
                 PointSymbol = new SimplePointSymbolizer(10),
@@ -37,7 +38,7 @@ public static class NccLayers
 
 
         var leveling2 = NccRepository.GetLayer("leveling2",
-            IRI.Maptor.Jab.Common.Properties.Resources.layer_leveling2_title,
+            IRI.Maptor.Jab.Core.Properties.Resources.layer_leveling2_title,
             new VisualParameters("#88E51400", "#FFE51400", 1, .9)
             {
                 PointSymbol = new SimplePointSymbolizer(8),
@@ -50,7 +51,7 @@ public static class NccLayers
         }
 
         var leveling3 = NccRepository.GetLayer("leveling3",
-            IRI.Maptor.Jab.Common.Properties.Resources.layer_leveling3_title,
+            IRI.Maptor.Jab.Core.Properties.Resources.layer_leveling3_title,
             new VisualParameters("#88FA6900", "#FFFA6900", 1, .9)
             {
                 PointSymbol = new SimplePointSymbolizer(6),
@@ -64,7 +65,7 @@ public static class NccLayers
 
 
         var geodesy1 = NccRepository.GetLayer("geodesy1", 
-            IRI.Maptor.Jab.Common.Properties.Resources.layer_geodesy1_title,
+            IRI.Maptor.Jab.Core.Properties.Resources.layer_geodesy1_title,
             new VisualParameters("#880050EF", "#FF0050EF", 1, .9)
             {
                 PointSymbol = new SimplePointSymbolizer(10),
@@ -77,7 +78,7 @@ public static class NccLayers
         }
 
         var geodesy2 = NccRepository.GetLayer("geodesy2", 
-            IRI.Maptor.Jab.Common.Properties.Resources.layer_geodesy2_title,
+            IRI.Maptor.Jab.Core.Properties.Resources.layer_geodesy2_title,
             new VisualParameters("#881CA1E2", "#FF1CA1E2", 1, .9)
             {
                 PointSymbol = new SimplePointSymbolizer(8),
@@ -90,7 +91,7 @@ public static class NccLayers
         }
 
         var gravity = NccRepository.GetLayer("gravity",
-            IRI.Maptor.Jab.Common.Properties.Resources.layer_gravimetry_title,
+            IRI.Maptor.Jab.Core.Properties.Resources.layer_gravimetry_title,
             new VisualParameters("#88AA00FF", "#FFAA00FF", 1, .9)
             {
                 PointSymbol = new SimplePointSymbolizer(10),
@@ -103,7 +104,7 @@ public static class NccLayers
         }
 
         var geodynamic = NccRepository.GetLayer("geodynamic", 
-            IRI.Maptor.Jab.Common.Properties.Resources.layer_geodynamics_title,
+            IRI.Maptor.Jab.Core.Properties.Resources.layer_geodynamics_title,
             new VisualParameters("#88A4C401", "#FFA4C401", 1, .9)
             {
                 PointSymbol = new SimplePointSymbolizer(10),

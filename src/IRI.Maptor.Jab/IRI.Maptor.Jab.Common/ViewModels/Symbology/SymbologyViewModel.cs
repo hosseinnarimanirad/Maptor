@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IRI.Maptor.Jab.Core;
+using System;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Symbology;
 

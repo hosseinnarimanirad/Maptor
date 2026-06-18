@@ -1,11 +1,11 @@
-﻿<maptor:NotifiableUserControl x:Class="IRI.Maptor.Jab.Controls.Scalebar" x:Name="layoutRoot"
+<maptor:NotifiableUserControl x:Class="IRI.Maptor.Jab.Controls.Scalebar" x:Name="layoutRoot"
                                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                                     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls" 
                                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-                                    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
+                                    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
                                     xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls" 
                                     Width="auto" Height="auto" >
     <maptor:NotifiableUserControl.Resources>

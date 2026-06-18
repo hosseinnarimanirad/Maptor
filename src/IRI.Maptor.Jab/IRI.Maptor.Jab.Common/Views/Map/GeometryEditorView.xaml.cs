@@ -1,11 +1,11 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using IRI.Maptor.Jab.Common.Localization;
-using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Core.Localization;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.Controls;
 

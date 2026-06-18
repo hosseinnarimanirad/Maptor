@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-
-using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.Common.Converters;
 

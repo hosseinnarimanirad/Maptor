@@ -6,6 +6,8 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Controls.MapMarkers;
 using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Tag.SampleWpfApp.ViewModel;
 

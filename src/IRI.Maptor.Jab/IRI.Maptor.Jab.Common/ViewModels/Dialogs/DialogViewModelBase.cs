@@ -1,6 +1,5 @@
 ﻿using System;
-
-using IRI.Maptor.Jab.Common.Events;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 

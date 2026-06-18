@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using IRI.Maptor.Jab.Core.Localization;
 
 namespace IRI.Maptor.Jab.Common.ValidationRules
 {
@@ -23,18 +24,18 @@ namespace IRI.Maptor.Jab.Common.ValidationRules
 
                     var isValid = regex.IsMatch(stringValue);
 
-                    var errorContent = Localization.LocalizationManager.Instance["validation_msg_invalidEmail"];
+                    var errorContent = LocalizationManager.Instance["validation_msg_invalidEmail"];
 
                     return new ValidationResult(isValid, isValid ? null : errorContent);
                 }
 
-                var content = Localization.LocalizationManager.Instance["validation_msg_nullOrEmptyString"];
+                var content = LocalizationManager.Instance["validation_msg_nullOrEmptyString"];
 
                 return new ValidationResult(false, content);
             }
             catch
             {
-                var error = Localization.LocalizationManager.Instance["validation_msg_unknownError"];
+                var error = LocalizationManager.Instance["validation_msg_unknownError"];
 
                 return new ValidationResult(false, error);
             }

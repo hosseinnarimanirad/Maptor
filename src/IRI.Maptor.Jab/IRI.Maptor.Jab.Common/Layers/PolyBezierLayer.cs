@@ -21,6 +21,9 @@ using WpfPoint = System.Windows.Point;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Controls.MapOptions;
 using LineSegment = System.Windows.Media.LineSegment;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Layers;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 

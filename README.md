@@ -3,20 +3,17 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/hosseinnarimanirad/Maptor/blob/master/LICENSE)
 [![Build](https://img.shields.io/github/actions/workflow/status/hosseinnarimanirad/Maptor/master-release.yml)](https://github.com/hosseinnarimanirad/Maptor/actions)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![.NET](https://img.shields.io/badge/.NET-8.0-blue.svg)](https://dotnet.microsoft.com/download/dotnet/8.0)
+[![.NET Standard](https://img.shields.io/badge/.NET%20Standard-2.1-blue.svg)](https://dotnet.microsoft.com/download/dotnet/8.0)
 [![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Spatial.svg?style=flat-square)](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
 ![GitHub last commit](https://img.shields.io/github/last-commit/hosseinnarimanirad/Maptor)
 
 **A comprehensive .NET GIS library for spatial data modeling, processing, and visualization**
 
-Maptor is a powerful, open-source .NET library designed to make spatial operations, geospatial data processing, and map visualization accessible and efficient. Built for **.NET 8+**, it provides a complete toolkit for geometry operations, coordinate transformations, data I/O, and advanced spatial algorithms.
+Maptor is a powerful, open-source .NET library designed to make spatial operations, geospatial data processing, and map visualization accessible and efficient. Core packages target **.NET Standard 2.1** (compatible with .NET 5+). The WPF map viewer targets **.NET 8 (Windows)**.
 
 ---
 
 ## 🚀 Quick Start
-
-### Add a Console Project
-Add a new C# console project
 
 ### Installation
 ```bash
@@ -35,17 +32,14 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 var point1 = new Point(51.5074, -0.1278); // London
 var point2 = new Point(40.7128, -74.0060); // New York
 
-
-// Create geometries
-var line = Geometry<Point>.CreatePointOrLineString(SridHelper.GeodeticWGS84, point1, point2);
-
-
-var ellipsoidal_length = line.GetEllipsoidalLength();
-var spherical_length = line.GetSphericalLength();
+// Create a line from a list of points
+var line = Geometry<Point>.CreatePointOrLineString(
+    new List<Point> { point1, point2 },
+    SridHelper.GeodeticWGS84);
 
 // Calculate length
-Console.WriteLine($"ellipsoidal distance: {ellipsoidal_length:N1} km");
-Console.WriteLine($"  spherical distance: {spherical_length:N1} km");
+Console.WriteLine($"ellipsoidal distance: {line.GetEllipsoidalLength():N1} km");
+Console.WriteLine($"  spherical distance: {line.GetSphericalLength():N1} km");
 
 // Convert to GeoJSON
 var geoJsonLine = line.AsGeoJson().Serialize(indented: true);
@@ -93,7 +87,7 @@ Console.Read();
   - Efficient compression and quantization options
 
 ### 🧮 **Advanced Algorithms**
-- **Graph algorithms**: BFS, DFS, Dijkstra, Minimum Spanning Tree, MinCut
+- **Graph algorithms**: BFS, DFS, Dijkstra, Bellman-Ford, Floyd-Warshall, Kruskal, Prim, SCC
 - **Machine learning**: Clustering, Apriori, Logistic Regression
 - **Computational geometry**: Triangulation, simplification, generalization
 - **Spatial analysis**: Interpolation, statistics, terrain modeling
@@ -111,29 +105,31 @@ Maptor follows a modular architecture with clear separation of concerns:
 
 ```
 Maptor/
-├── 📦 IRI.Maptor.Sta/          # Core spatial operations & algorithms
+├── 📦 IRI.Maptor.Sta/          # Core spatial operations & algorithms (netstandard2.1)
 │   ├── Spatial                 # Geometry types, spatial algorithms
-│   │   ├── IO/                # Format I/O (DXF, SVG, EPS, TopoJSON, PMTiles, CesiumTerrain, etc.)
+│   │   ├── IO/                 # Format I/O (DXF, SVG, EPS, TopoJSON, PMTiles, CesiumTerrain, …)
 │   │   └── Analysis/           # Spatial analysis algorithms
 │   ├── SpatialReferenceSystem  # Coordinate systems & transformations
 │   ├── ShapefileFormat         # ESRI Shapefile I/O
-│   ├── Ogc                     # OGC standards implementation
+│   ├── Ogc                     # OGC standards (WFS, WMS, GML, KML, SLD, SFA)
 │   ├── Graph                   # Graph algorithms
 │   ├── MachineLearning         # ML algorithms for spatial data
 │   ├── GeoParquet              # GeoParquet format support
 │   ├── Pdf                     # PDF vector format support
 │   ├── Security                # Security/cryptography primitives
 │   └── Persistence             # Persistence abstractions
-├── 🔧 IRI.Maptor.Ket/          # Infrastructure & persistence
+├── 🔧 IRI.Maptor.Ket/          # Infrastructure & persistence adapters (net8.0-windows)
 │   ├── SqlServerPersistence    # SQL Server integration
 │   ├── PostgreSqlPersistence   # PostGIS integration
 │   ├── SqlitePersistence       # SQLite/GeoPackage/MBTiles support
-│   ├── PersonalGdbPersistence # Personal Geodatabase support
+│   ├── PersonalGdbPersistence  # Personal Geodatabase support
 │   ├── GdiPlus                 # Raster data handling
 │   └── WebApiPersistence       # Web API data sources
-├── 🖥️ IRI.Maptor.Jab/          # WPF UI components
-│   ├── Controls                # Map viewer, dialogs
-│   ├── Common                  # MVVM infrastructure 
+├── 🖥️ IRI.Maptor.Jab/          # WPF UI components (net8.0-windows)
+│   └── Common                  # Map viewer, MVVM infrastructure, layers, symbology
+├── 🧩 IRI.Maptor.Bag/          # Higher-level building blocks
+│   ├── Geospatial
+│   └── SpatialDataManagement
 └── 🧪 Tests & Samples/         # Comprehensive test suite & examples
 ```
 
@@ -146,22 +142,22 @@ Maptor/
 | [IRI.Maptor.Sta.Spatial](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial) | Core spatial functionalities (GeoJSON, analysis, etc.) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Spatial.svg?style=flat-square) |
 | [IRI.Maptor.Sta.ShapefileFormat](https://www.nuget.org/packages/IRI.Maptor.Sta.ShapefileFormat) | Read/Write shapefile (shp, shx, dbf, prj, etc.) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.ShapefileFormat.svg?style=flat-square) |
 | [IRI.Maptor.Sta.SpatialReferenceSystem](https://www.nuget.org/packages/IRI.Maptor.Sta.SpatialReferenceSystem) | Coordinate system transformations | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.SpatialReferenceSystem.svg?style=flat-square) |
-| [IRI.Maptor.Sta.Ogc](https://www.nuget.org/packages/IRI.Maptor.Sta.Ogc) | OGC standard implementations | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Ogc.svg?style=flat-square) |
+| [IRI.Maptor.Sta.Ogc](https://www.nuget.org/packages/IRI.Maptor.Sta.Ogc) | OGC standard implementations (WFS, WMS, GML, KML, SLD) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Ogc.svg?style=flat-square) |
 | [IRI.Maptor.Sta.Graph](https://www.nuget.org/packages/IRI.Maptor.Sta.Graph) | Graph Algorithms (BFS, DFS, Dijkstra, etc.) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Graph.svg?style=flat-square) |
-| [IRI.Maptor.Jab.Common](https://www.nuget.org/packages/IRI.Maptor.Jab.Common) | WPF Map user controls | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Jab.Common.svg?style=flat-square) |
+| [IRI.Maptor.Jab.Common](https://www.nuget.org/packages/IRI.Maptor.Jab.Common) | WPF Map viewer and UI controls | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Jab.Common.svg?style=flat-square) |
 
 <details>
 <summary>▶ Show more packages</summary>
 
 | Package | Description | Version |
 |---------|-------------|---------|
-| [IRI.Maptor.Jab.Common](https://www.nuget.org/packages/IRI.Maptor.Jab.Common) | Basic UI models, rendering methods | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Jab.Common.svg?style=flat-square) |
+| [IRI.Maptor.Sta.Common](https://www.nuget.org/packages/IRI.Maptor.Sta.Common) | Foundational utilities and abstractions | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Common.svg?style=flat-square) |
+| [IRI.Maptor.Sta.MachineLearning](https://www.nuget.org/packages/IRI.Maptor.Sta.MachineLearning) | Clustering, Apriori, Logistic Regression | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.MachineLearning.svg?style=flat-square) |
+| [IRI.Maptor.Sta.Pdf](https://www.nuget.org/packages/IRI.Maptor.Sta.Pdf) | PDF vector format support | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Pdf.svg?style=flat-square) |
+| [IRI.Maptor.Sta.GeoParquet](https://www.nuget.org/packages/IRI.Maptor.Sta.GeoParquet) | GeoParquet columnar format support | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.GeoParquet.svg?style=flat-square) |
 | [IRI.Maptor.Ket.SqlServerPersistence](https://www.nuget.org/packages/IRI.Maptor.Ket.SqlServerPersistence) | SQL Server spatial integration | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.SqlServerPersistence.svg?style=flat-square) |
 | [IRI.Maptor.Ket.PostgreSqlPersistence](https://www.nuget.org/packages/IRI.Maptor.Ket.PostgreSqlPersistence) | PostGIS integration | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.PostgreSqlPersistence.svg?style=flat-square) |
 | [IRI.Maptor.Ket.SqlitePersistence](https://www.nuget.org/packages/IRI.Maptor.Ket.SqlitePersistence) | SQLite/GeoPackage/MBTiles support | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.SqlitePersistence.svg?style=flat-square) |
-| [IRI.Maptor.Sta.MachineLearning](https://www.nuget.org/packages/IRI.Maptor.Sta.MachineLearning) | Clustering, Apriori, Logistic Regression | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.MachineLearning.svg?style=flat-square) |
-| [IRI.Maptor.Sta.Pdf](https://www.nuget.org/packages/IRI.Maptor.Sta.Pdf) | PDF vector format support | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Pdf.svg?style=flat-square) |
-| [IRI.Maptor.Sta.Common](https://www.nuget.org/packages/IRI.Maptor.Sta.Common) | Foundational utilities and abstractions | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Common.svg?style=flat-square) |
 
 </details>
 
@@ -241,7 +237,7 @@ dotnet run
 
 ## 🧪 Testing & Quality
 
-- **1,300+ C# files** with comprehensive test coverage
+- **12,000+ C# files** across the solution
 - **Unit tests** for core functionality 
 - **Performance benchmarks** for some algorithms
 - **Continuous integration** with GitHub Actions

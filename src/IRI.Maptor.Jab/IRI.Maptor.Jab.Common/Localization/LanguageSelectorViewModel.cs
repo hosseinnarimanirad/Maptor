@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Localization;
 
 namespace IRI.Maptor.Jab.Common.Localization;
 

@@ -5,8 +5,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
-using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Jab.Common.Models.Legend;
+using IRI.Maptor.Jab.Core.Layers;
 using IRI.Maptor.Sta.Common.Enums;
 
 namespace IRI.Maptor.Jab.Common.Converters;

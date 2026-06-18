@@ -5,7 +5,8 @@ using System.Collections.ObjectModel;
 
 using IRI.Maptor.Sta.Ogc;
 using IRI.Maptor.Sta.Ogc.SLD;
- 
+using IRI.Maptor.Jab.Core;
+
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Symbology;
 

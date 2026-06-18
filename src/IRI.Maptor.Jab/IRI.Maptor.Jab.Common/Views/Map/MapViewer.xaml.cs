@@ -49,6 +49,9 @@ using IRI.Maptor.Jab.Controls.Dialogs;
 using IRI.Maptor.Jab.Controls.MapOptions;
 using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Jab.Controls.MapMarkers;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Layers;
+using IRI.Maptor.Jab.Core.Models;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 
@@ -935,14 +938,13 @@ public partial class MapViewer : NotifiableUserControl
         if (layer.RequestChangeVisibility is null)
             layer.RequestChangeVisibility = RefreshLayerVisibility;
 
-        if (layer.RequestMoveLayerUp is null)
+        if (layer is IWpfLayer wpfLayer)
         {
-            layer.RequestMoveLayerUp = (l, cv) => _presenter.MoveLayerUp(l, cv);
-        }
+            if (wpfLayer.RequestMoveLayerUp is null)
+                wpfLayer.RequestMoveLayerUp = (l, cv) => _presenter.MoveLayerUp(l, cv);
 
-        if (layer.RequestMoveLayerDown is null)
-        {
-            layer.RequestMoveLayerDown = (l, cv) => _presenter.MoveLayerDown(l, cv);
+            if (wpfLayer.RequestMoveLayerDown is null)
+                wpfLayer.RequestMoveLayerDown = (l, cv) => _presenter.MoveLayerDown(l, cv);
         }
 
         if (!layer.SubLayers.IsNullOrEmpty())
@@ -1062,7 +1064,7 @@ public partial class MapViewer : NotifiableUserControl
         //if (layer.VisualParameters == null || layer.VisualParameters.Visibility != Visibility.Visible)
         if (!layer.CanRenderLayer(mapScale))
         {
-            layer.Element = null;
+            if (layer is IWpfLayer wl1) wl1.Element = null;
 
             return;
         }
@@ -1629,7 +1631,7 @@ public partial class MapViewer : NotifiableUserControl
             {
                 if (!item.CanRenderLayer(mapScale))
                 {
-                    item.Element = null;
+                    if (item is IWpfLayer wi1) wi1.Element = null;
 
                     continue;
                 }
@@ -1715,7 +1717,7 @@ public partial class MapViewer : NotifiableUserControl
         {
             if (!item.CanRenderLayer(mapScale))
             {
-                item.Element = null;
+                if (item is IWpfLayer wi2) wi2.Element = null;
 
                 continue;
             }
@@ -4403,14 +4405,18 @@ public partial class MapViewer : NotifiableUserControl
 
     private FrameworkElement GetRightClickOptionsForDraw()
     {
-        var presenter = new MapOptionsViewModel(
-        rightToolTip: "تکمیل",
-        leftToolTip: "لغو",
-        middleToolTip: "تکمیل تکه‌جاری",
+        //IRI.Maptor.Jab.Core.Properties.Resources.mapPanel_currentPoint_copyCoordinate
+        //leftToolTip: IRI.Maptor.Jab.Core.Properties.Resources.mapPanel_edit_cancel,
+        //rightToolTip: IRI.Maptor.Jab.Core.Properties.Resources.mapPanel_edit_finish,
 
-        rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold),
-        leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CloseThick),
-        middleSymbol: MapOptionsIcon.FromPhosphorIcons(MahApps.Metro.IconPacks.PackIconPhosphorIconsKind.CirclesThreePlusFill));
+        var presenter = new MapOptionsViewModel(
+            rightToolTip: IRI.Maptor.Jab.Core.Properties.Resources.map_draw_finishDrawing,        //"تکمیل",
+            leftToolTip: IRI.Maptor.Jab.Core.Properties.Resources.map_draw_cancelDrawing,         // "لغو",
+            middleToolTip: IRI.Maptor.Jab.Core.Properties.Resources.map_draw_finishDrawingPart,   // "تکمیل تکه‌جاری",
+         
+            rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold),
+            leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CloseThick),
+            middleSymbol: MapOptionsIcon.FromPhosphorIcons(MahApps.Metro.IconPacks.PackIconPhosphorIconsKind.CirclesThreePlusFill));
 
         presenter.LeftCommandAction = i =>
         {
@@ -4424,7 +4430,7 @@ public partial class MapViewer : NotifiableUserControl
         };
 
         presenter.CanExecuteRightCommandAction = i => _presenter.CanFinishNewDrawing;
-         
+
         presenter.MiddleCommandAction = i =>
         {
             this.FinishDrawingPart();

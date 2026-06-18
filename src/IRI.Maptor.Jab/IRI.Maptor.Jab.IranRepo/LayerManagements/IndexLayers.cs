@@ -10,10 +10,12 @@ using IRI.Maptor.Sta.Persistence.DataSources;
 
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Jab.Common.Layers;
-using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Layers;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.IranRepo;
 
@@ -56,7 +58,7 @@ public static class IndexLayers
 
         //"اندکس ۲۵۰ هزار", 
         return new VectorLayer(
-            IRI.Maptor.Jab.Common.Properties.Resources.index_250k_title,
+            IRI.Maptor.Jab.Core.Properties.Resources.index_250k_title,
             source,
             [symbolizer, index250kLabels],
             LayerType.VectorLayer,
@@ -83,7 +85,7 @@ public static class IndexLayers
 
         return new VectorLayer(
             //"اندکس ۱۰۰ هزار", 
-            IRI.Maptor.Jab.Common.Properties.Resources.index_100k_title,
+            IRI.Maptor.Jab.Core.Properties.Resources.index_100k_title,
             source,
              [symbolizer, index100kLabels],
             LayerType.VectorLayer,
@@ -109,7 +111,7 @@ public static class IndexLayers
 
         return new VectorLayer(
             //"اندکس ۵۰ هزار", 
-            IRI.Maptor.Jab.Common.Properties.Resources.index_50k_title,
+            IRI.Maptor.Jab.Core.Properties.Resources.index_50k_title,
             source,
             [symbolizer,],
             LayerType.VectorLayer,
@@ -136,7 +138,7 @@ public static class IndexLayers
 
         return new VectorLayer(
             //"اندکس ۲۵ هزار", 
-            IRI.Maptor.Jab.Common.Properties.Resources.index_25k_title,
+            IRI.Maptor.Jab.Core.Properties.Resources.index_25k_title,
             source,
             [symbolizer,],
             LayerType.VectorLayer,
@@ -219,7 +221,7 @@ public static class IndexLayers
         var layer =
             new VectorLayer(
                 //"بلوک‌های ۲ هزار",
-                IRI.Maptor.Jab.Common.Properties.Resources.index_2kblocks_title,
+                IRI.Maptor.Jab.Core.Properties.Resources.index_2kblocks_title,
                 source,
                 [symbolizer, label],
                 LayerType.VectorLayer,
@@ -251,7 +253,7 @@ public static class IndexLayers
         var layer =
             new VectorLayer(
                 //"اندکس ۲ هزار",
-                IRI.Maptor.Jab.Common.Properties.Resources.index_2kUtm_title,
+                IRI.Maptor.Jab.Core.Properties.Resources.index_2kUtm_title,
                 source,
                 [symbolizer, label],
                 LayerType.VectorLayer,
@@ -283,7 +285,7 @@ public static class IndexLayers
         var layer =
             new VectorLayer(
                 //"اندکس ۱ هزار",
-                IRI.Maptor.Jab.Common.Properties.Resources.index_1kUtm_title,
+                IRI.Maptor.Jab.Core.Properties.Resources.index_1kUtm_title,
                 source,
                 [symbolizer, label],
                 LayerType.VectorLayer,
@@ -315,7 +317,7 @@ public static class IndexLayers
         var layer =
             new VectorLayer(
                 //"اندکس ۵۰۰",
-                IRI.Maptor.Jab.Common.Properties.Resources.index_500UtmTitle,
+                IRI.Maptor.Jab.Core.Properties.Resources.index_500UtmTitle,
                 source,
                 [symbolizer, label],
                 LayerType.VectorLayer,
@@ -351,7 +353,7 @@ public static class IndexLayers
         var layer50k =
             new VectorLayer(
                 //"اندکس ۵۰ هزار",
-                IRI.Maptor.Jab.Common.Properties.Resources.index_50k_title,
+                IRI.Maptor.Jab.Core.Properties.Resources.index_50k_title,
                 source50k,
                 [symbolizer, label],
                 LayerType.VectorLayer,
@@ -384,7 +386,7 @@ public static class IndexLayers
         var layer25k =
             new VectorLayer(
                 //"اندکس ۲۵ هزار",
-                IRI.Maptor.Jab.Common.Properties.Resources.index_25k_title,
+                IRI.Maptor.Jab.Core.Properties.Resources.index_25k_title,
                 source25k,
                 [symbolizer, label],
                 LayerType.VectorLayer,
@@ -414,7 +416,7 @@ public static class IndexLayers
         var layer10k =
             new VectorLayer(
                 //"اندکس ۱۰ هزار",
-                IRI.Maptor.Jab.Common.Properties.Resources.index_10k_title,
+                IRI.Maptor.Jab.Core.Properties.Resources.index_10k_title,
                 GeodeticGridDataSource.Create(GeodeticIndexType.Ncc10k),
                 [symbolizer, label],
                 LayerType.VectorLayer,
@@ -444,7 +446,7 @@ public static class IndexLayers
         var layer5k =
             new VectorLayer(
                 //"اندکس ۵ هزار",
-                IRI.Maptor.Jab.Common.Properties.Resources.index_5k_title,
+                IRI.Maptor.Jab.Core.Properties.Resources.index_5k_title,
                 GeodeticGridDataSource.Create(GeodeticIndexType.Ncc5k),
                 [symbolizer, label],
                 LayerType.VectorLayer,

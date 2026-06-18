@@ -1,6 +1,5 @@
 ﻿using System.Windows;
-
-using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Core;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Jab.Common.Models.GoTo

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
-using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Layers;
+using IRI.Maptor.Jab.Core.Models;
 using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Jab.Common.Layers;

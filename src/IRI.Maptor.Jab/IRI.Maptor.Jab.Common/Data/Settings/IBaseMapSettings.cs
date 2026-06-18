@@ -1,4 +1,6 @@
 ﻿using IRI.Maptor.Jab.Common.TileServices;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.TileServices;
 using System.Collections.Generic;
 
 namespace IRI.Maptor.Jab.Common.Data.Settings;

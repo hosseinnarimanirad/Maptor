@@ -1,4 +1,4 @@
-using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Core;
 using System;
 using System.Windows.Data;
 using System.Windows.Media;

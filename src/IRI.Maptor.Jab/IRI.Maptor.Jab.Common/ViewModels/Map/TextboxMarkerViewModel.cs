@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Jab.Common.ColorBrushes;
 using IRI.Maptor.Jab.Common.Assets.Fonts;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 

@@ -4,7 +4,7 @@
     xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
+    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
     xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor" 
 
     Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"

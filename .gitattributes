@@ -1,7 +1,8 @@
 ###############################################################################
-# Set default behavior to automatically normalize line endings.
+# Set default behavior to normalize line endings to CRLF (Windows).
+# This matches the .editorconfig setting end_of_line = crlf
 ###############################################################################
-* text=auto
+* text eol=crlf
 
 ###############################################################################
 # Set default behavior for command prompt diff.

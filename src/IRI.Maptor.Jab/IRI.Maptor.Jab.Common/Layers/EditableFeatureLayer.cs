@@ -30,7 +30,9 @@ using LineSegment = System.Windows.Media.LineSegment;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 using IRI.Maptor.Jab.Common.Data.Settings;
 using IRI.Maptor.Jab.Common.Views;
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 
@@ -715,9 +717,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     private void RegisterMapOptionsForVertices(MouseButtonEventArgs e, IPoint point, Locateable locateable)
     {
         var presenter = new MapOptionsViewModel(
-                rightToolTip: Properties.Resources.mapPanel_currentPoint_copyCoordinate,
-                leftToolTip: Properties.Resources.mapPanel_currentPoint_displayCoordinate,
-                middleToolTip: Properties.Resources.mapPanel_currentPoint_delete,
+                rightToolTip: IRI.Maptor.Jab.Core.Properties.Resources.mapPanel_currentPoint_copyCoordinate,
+                leftToolTip: IRI.Maptor.Jab.Core.Properties.Resources.mapPanel_currentPoint_displayCoordinate,
+                middleToolTip: IRI.Maptor.Jab.Core.Properties.Resources.mapPanel_currentPoint_delete,
 
                 rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.ContentCopy),
                 leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.AxisArrowInfo),
@@ -774,8 +776,8 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     private void RegisterMapOptionsForEditPath(MouseButtonEventArgs e)
     {
         var presenter = new MapOptionsViewModel(
-            leftToolTip: Properties.Resources.mapPanel_edit_cancel,
-            rightToolTip: Properties.Resources.mapPanel_edit_finish,
+            leftToolTip: IRI.Maptor.Jab.Core.Properties.Resources.mapPanel_edit_cancel,
+            rightToolTip: IRI.Maptor.Jab.Core.Properties.Resources.mapPanel_edit_finish,
             middleToolTip: string.Empty,
 
             leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CloseThick),

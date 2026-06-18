@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Sta.Spatial.Model;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.Models;
 

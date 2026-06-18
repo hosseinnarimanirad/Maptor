@@ -9,7 +9,7 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Common.Properties;
+using IRI.Maptor.Jab.Core.Properties;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 
@@ -17,6 +17,8 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using System.Globalization;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Layers;
 
 namespace IRI.Maptor.Jab.Common.Models.Legend;
 
@@ -460,6 +462,9 @@ public class LegendCommand : LegendCommandBase
                 if (string.IsNullOrWhiteSpace(file))
                     return;
 
+                if (layer.Geometry.IsNullOrEmpty())
+                    return;
+
                 var geodeticGeometry = layer.Geometry.Project(SrsBases.GeodeticWgs84);
 
                 var meanPoint = geodeticGeometry.GetMeanPoint();
@@ -529,7 +534,7 @@ public class LegendCommand : LegendCommandBase
 
     // ***************** Export As CSV ***********
     // *******************************************
-    public static ILegendCommand CreateExportDrawingItemLayerAsCsv(MapViewModelBase map, DrawingItemLayer layer/*, CoordinateDisplayMode? coordinateDisplayMode*/)
+    public static ILegendCommand CreateExportDrawingItemLayerAsCsv(MapViewModelBase map, DrawingItemLayer layer)
     {
         var resource = System.Windows.Application.Current?.FindResource("csv");
 
@@ -587,6 +592,59 @@ public class LegendCommand : LegendCommandBase
                 }
 
                 await System.IO.File.WriteAllLinesAsync(file, lines);
+            }
+            catch (Exception ex)
+            {
+                await map.DialogService.ShowMessageAsync(ex.Message, null, param);
+            }
+        });
+
+        return result;
+    }
+
+    // ***************** Export As DXF ***********
+    // *******************************************
+    public static ILegendCommand CreateExportDrawingItemLayerAsDxf(MapViewModelBase map, DrawingItemLayer layer)
+    {
+        var resource = System.Windows.Application.Current?.FindResource("dxf");
+
+        var geometry = resource as System.Windows.Media.Geometry;
+
+
+        var result = new LegendCommand(nameof(Resources.cmd_drawingLegendItem_exportAsDxf))
+        {
+            PathMarkup = geometry!.ToString(CultureInfo.InvariantCulture),//IRI.Maptor.Jab.Common.Assets.ShapeStrings.Others.json,
+            Layer = layer,
+        };
+
+        result.Command = new RelayCommand(async param =>
+        {
+            try
+            {
+                var file = await map.DialogService.ShowSaveFileDialogAsync(DataSourceKind.Dxf, null, layer.LayerName);
+
+                if (string.IsNullOrWhiteSpace(file))
+                    return;
+
+                if (layer.Geometry.IsNullOrEmpty())
+                    return;
+
+                var geodeticGeometry = layer.Geometry.Project(SrsBases.GeodeticWgs84);
+
+                var meanPoint = geodeticGeometry.GetMeanPoint();
+
+                if (meanPoint is null)
+                    return;
+
+                var utmZone = MapProjects.FindUtmZone(meanPoint.X);
+
+                var coordinateDisplayMode = map.CoordinatePanel?.SelectedItem?.CoordinateDisplayMode ?? CoordinateDisplayMode.GeodeticDecimal;
+
+                var targetSrs = SrsBase.Create(coordinateDisplayMode, utmZone) ?? SrsBases.GeodeticWgs84;
+
+                var targetGeometry = layer.Geometry.Project(targetSrs);
+
+                await targetGeometry.SaveAsDxfAsync(file);
             }
             catch (Exception ex)
             {

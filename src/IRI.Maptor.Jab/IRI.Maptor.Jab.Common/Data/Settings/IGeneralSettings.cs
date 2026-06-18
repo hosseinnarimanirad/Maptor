@@ -1,5 +1,5 @@
-using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Models.Themes;
+using IRI.Maptor.Jab.Core.Localization;
 using System.Collections.Generic;
 
 namespace IRI.Maptor.Jab.Common.Data.Settings;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Reflection;
@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 
 using MahApps.Metro.Controls;
 
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
 
 namespace IRI.Maptor.Jab.Controls;
 

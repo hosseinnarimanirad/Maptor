@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.ObjectModel;
-
-using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Persistence.RasterDataSources;
 using System.Threading.Tasks;
 using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Layers;
+using IRI.Maptor.Jab.Core.Models;
 
 
 namespace IRI.Maptor.Jab.Common.Helpers;

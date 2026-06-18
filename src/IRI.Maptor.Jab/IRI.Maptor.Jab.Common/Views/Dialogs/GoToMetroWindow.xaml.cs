@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 using MahApps.Metro.Controls;
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
 using IRI.Maptor.Jab.Common.ViewModels;
 
 namespace IRI.Maptor.Jab.Controls;
@@ -33,6 +33,6 @@ public partial class GoToMetroWindow : LocalizedMetroWindow
         this.DataContext = presenter;
     } 
 
-    //public string Ltxt_dialog_goto_title => LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_goto_title)];
+    //public string Ltxt_dialog_goto_title => LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Core.Properties.Resources.dialog_goto_title)];
 
 }

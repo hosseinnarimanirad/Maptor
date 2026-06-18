@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.Symbology.Sld"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
+        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
         mc:Ignorable="d"
         Title="{Binding [sldEditor_common_editorTitle], Source={StaticResource Localization}}" Height="750" Width="950"
         WindowStartupLocation="CenterScreen">

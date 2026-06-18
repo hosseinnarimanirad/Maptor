@@ -9,6 +9,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 
 using Sb = IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.ViewModels;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Res.LRSimplification.ViewModel.TrainingModel;
 

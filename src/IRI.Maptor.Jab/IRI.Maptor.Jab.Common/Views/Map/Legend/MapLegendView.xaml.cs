@@ -4,9 +4,9 @@ using System.Windows.Threading;
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Layers;
 
 namespace IRI.Maptor.Jab.Controls;
 

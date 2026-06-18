@@ -1,4 +1,6 @@
-﻿namespace IRI.Maptor.Jab.Common.Models;
+﻿using IRI.Maptor.Jab.Core;
+
+namespace IRI.Maptor.Jab.Common.Models;
 
 public class FeatureTableCommand : Notifier, IFeatureTableCommand
 {

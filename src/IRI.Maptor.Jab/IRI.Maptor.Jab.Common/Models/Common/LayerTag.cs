@@ -1,5 +1,6 @@
 ﻿using System;
-using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Layers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Model;
 

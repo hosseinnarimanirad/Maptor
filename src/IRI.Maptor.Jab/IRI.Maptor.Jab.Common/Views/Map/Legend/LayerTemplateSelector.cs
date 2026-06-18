@@ -1,11 +1,11 @@
-﻿using IRI.Maptor.Jab.Common.Layers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
+using IRI.Maptor.Jab.Core.Layers;
 
 namespace IRI.Maptor.Jab.Controls;
 

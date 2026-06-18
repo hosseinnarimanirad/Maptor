@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
 using MahApps.Metro.IconPacks;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Events;
@@ -38,7 +38,7 @@ public class LegendToggleCommand : LegendCommandBase
 
     public LegendToggleCommand()
     {
-        Localization.LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
+        LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
 
     private void Instance_LanguageChanged()
@@ -52,7 +52,7 @@ public class LegendToggleCommand : LegendCommandBase
         {
             PathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.FormatTitle }.Data,
             NotSelectedPathMarkup = new PackIconMaterial() { Kind = PackIconMaterialKind.FormatStrikethrough}.Data,
-            ToolTipResourceKey = nameof(IRI.Maptor.Jab.Common.Properties.Resources.cmd_legendItem_toggleLayerLabel),
+            ToolTipResourceKey = nameof(IRI.Maptor.Jab.Core.Properties.Resources.cmd_legendItem_toggleLayerLabel),
             Layer = layer,
             //IsSelected = layer.Labels?.IsOn == true
             IsSelected = layer.GetDefaultLabelParams()?.IsSelected == true

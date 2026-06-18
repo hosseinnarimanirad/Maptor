@@ -1,4 +1,5 @@
 ﻿using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
 using System.Configuration;
 using System.Data;
 using System.Windows;

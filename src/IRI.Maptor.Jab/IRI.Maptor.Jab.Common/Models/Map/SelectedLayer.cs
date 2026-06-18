@@ -14,6 +14,8 @@ using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Jab.Common.Services;
 using System.Windows.Input;
+using IRI.Maptor.Jab.Core.Layers;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.Models;
 
@@ -414,7 +416,7 @@ public class SelectedLayer : Notifier
         {
             System.Diagnostics.Trace.WriteLine("#********************************** DeleteAsync **********************************");
 
-            var message = IRI.Maptor.Jab.Common.Properties.Resources.dialog_msg_confirmDeleteFeatures;
+            var message = IRI.Maptor.Jab.Core.Properties.Resources.dialog_msg_confirmDeleteFeatures;
 
             if (await _dialogService.ShowYesNoDialogAsync(message) == false)
                 return;
@@ -514,7 +516,7 @@ public class SelectedLayer : Notifier
 
     private async Task UndoChangesAsync()
     {
-        var message = IRI.Maptor.Jab.Common.Properties.Resources.dialog_msg_discardPendingChanges;
+        var message = IRI.Maptor.Jab.Core.Properties.Resources.dialog_msg_discardPendingChanges;
 
         if (await _dialogService.ShowYesNoDialogAsync(message) == false)
             return;

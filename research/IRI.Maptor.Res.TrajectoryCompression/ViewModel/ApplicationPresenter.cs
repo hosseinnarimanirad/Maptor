@@ -10,6 +10,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Layers;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Res.TrajectoryCompression;
 

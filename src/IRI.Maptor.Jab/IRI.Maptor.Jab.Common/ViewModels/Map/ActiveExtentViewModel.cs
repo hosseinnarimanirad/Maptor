@@ -5,6 +5,7 @@ using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 

@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
 using IRI.Maptor.Sta.Common.Exceptions;
 using System;
 using System.Collections.Generic;

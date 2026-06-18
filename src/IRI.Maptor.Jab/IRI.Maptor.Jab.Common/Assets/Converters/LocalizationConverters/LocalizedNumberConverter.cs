@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Windows.Data;
 using System.Globalization;
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
 
 namespace IRI.Maptor.Jab.Common.Converters;
 

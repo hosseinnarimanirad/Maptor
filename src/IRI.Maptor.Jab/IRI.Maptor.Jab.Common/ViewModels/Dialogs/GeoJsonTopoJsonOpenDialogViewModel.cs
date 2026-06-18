@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Services;
-using IRI.Maptor.Jab.Common.Properties;
+using IRI.Maptor.Jab.Core.Properties;
 using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;

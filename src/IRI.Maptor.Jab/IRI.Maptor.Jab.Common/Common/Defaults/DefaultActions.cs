@@ -7,6 +7,7 @@ using IRI.Maptor.Jab.Common.ViewModels.LayerSettings;
 using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Jab.Common.Services;
 using System.Threading.Tasks;
+using IRI.Maptor.Jab.Core.Layers;
 
 namespace IRI.Maptor.Jab.Common.Defaults;
 

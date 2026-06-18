@@ -9,7 +9,6 @@ using System.Windows.Media.Imaging;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Models;
-using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -19,6 +18,8 @@ using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 

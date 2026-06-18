@@ -13,6 +13,8 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.TileServices;
 
 
 namespace IRI.Maptor.Jab.Common.Layers;

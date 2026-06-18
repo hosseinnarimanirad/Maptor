@@ -9,12 +9,14 @@ using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Layers;
 
 namespace IRI.Maptor.Jab.Common.Models;
 
 public class LayerManager : Notifier
 {
-    public Action<BaseLayer>? RequestRefreshVisibility;
+    public Action<IRI.Maptor.Jab.Common.Layers.BaseLayer>? RequestRefreshVisibility;
 
     public Action<IEnumerable<ILayer>, string> RequestUpdateLayerTocOrder;
 
@@ -52,8 +54,11 @@ public class LayerManager : Notifier
         if (_allLayers.Any(l => l == layer))
             return;
 
-        layer.OnVisibilityChanged -= RefreshLayerVisibility;
-        layer.OnVisibilityChanged += RefreshLayerVisibility;
+        if (layer is IWpfLayer wpfLayer)
+        {
+            wpfLayer.OnVisibilityChanged -= RefreshLayerVisibility;
+            wpfLayer.OnVisibilityChanged += RefreshLayerVisibility;
+        }
 
         layer.OnLayerInitilized -= Layer_OnLayerInitilized;
         layer.OnLayerInitilized += Layer_OnLayerInitilized;
@@ -117,12 +122,12 @@ public class LayerManager : Notifier
         {
             if (layer is VectorLayer vl && vl.DataSource is IDataSource ds && !ds.IsLoaded)
             {
-                vl.RequestRefreshWhenDataLoaded = l => RequestRefreshVisibility?.Invoke(l as BaseLayer);
+                vl.RequestRefreshWhenDataLoaded = l => RequestRefreshVisibility?.Invoke(l as IRI.Maptor.Jab.Common.Layers.BaseLayer);
                 _ = ds.LoadAsync(_loadCancellationToken);
             }
             else if (layer is RasterLayer rl && rl.DataSource is IDataSource rds && !rds.IsLoaded)
             {
-                rl.RequestRefreshWhenDataLoaded = l => RequestRefreshVisibility?.Invoke(l as BaseLayer);
+                rl.RequestRefreshWhenDataLoaded = l => RequestRefreshVisibility?.Invoke(l as IRI.Maptor.Jab.Common.Layers.BaseLayer);
                 _ = rds.LoadAsync(_loadCancellationToken);
             }
         }
@@ -355,7 +360,7 @@ public class LayerManager : Notifier
 
     #endregion
 
-    private void RefreshLayerVisibility(object sender, EventArgs e) => RequestRefreshVisibility?.Invoke(sender as BaseLayer);
+    private void RefreshLayerVisibility(object sender, EventArgs e) => RequestRefreshVisibility?.Invoke(sender as IRI.Maptor.Jab.Common.Layers.BaseLayer);
 
-    private void Layer_OnLayerInitilized(object? sender, ILayer e) => RequestRefreshVisibility?.Invoke(sender as BaseLayer);
+    private void Layer_OnLayerInitilized(object? sender, ILayer e) => RequestRefreshVisibility?.Invoke(sender as IRI.Maptor.Jab.Common.Layers.BaseLayer);
 }

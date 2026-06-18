@@ -7,6 +7,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.Models.MapExtentBookmarks;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.Models;
 

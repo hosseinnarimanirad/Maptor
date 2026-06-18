@@ -1,5 +1,5 @@
-﻿using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Core.Localization;
 using System.Windows.Controls;
 
 namespace IRI.Maptor.Jab.Controls;

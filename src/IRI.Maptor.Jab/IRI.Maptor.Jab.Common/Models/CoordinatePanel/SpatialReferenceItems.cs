@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using static IRI.Maptor.Jab.Common.Properties.Resources;
-//using static IRI.Maptor.Jab.Common.Localization.LocalizationResourceKeys;
+using static IRI.Maptor.Jab.Core.Properties.Resources;
+//using static IRI.Maptor.Jab.Core.Localization.LocalizationResourceKeys;
 
 namespace IRI.Maptor.Jab.Common.Models.CoordinatePanel;
 

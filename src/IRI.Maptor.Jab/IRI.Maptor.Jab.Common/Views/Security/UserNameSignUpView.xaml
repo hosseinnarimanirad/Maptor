@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"                              
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.Security"
-        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
+        xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
         xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls" x:Name="root">
     <maptor:SecurityInputUserControl.Resources>
         <ResourceDictionary>

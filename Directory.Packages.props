@@ -35,6 +35,9 @@
 
     <PackageVersion Include="MediatR" Version="12.4.1" />
 
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="8.0.100" />
+    <PackageVersion Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.100" />
+
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="6.0.1" />
     <PackageVersion Include="Microsoft.Data.Sqlite.Core" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />

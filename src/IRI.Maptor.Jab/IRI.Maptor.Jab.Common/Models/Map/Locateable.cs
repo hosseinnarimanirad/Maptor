@@ -8,6 +8,7 @@ using IRI.Maptor.Jab.Controls.MapMarkers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 using WpfPoint = System.Windows.Point;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.Models;
 

@@ -49,6 +49,9 @@ using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Jab.Common.Data.Settings;
 using IRI.Maptor.Jab.Common.Services;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Layers;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
@@ -2064,7 +2067,7 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             this.IsBusy = true;
 
-            await Task.Delay(5000);
+            //await Task.Delay(5000);
 
             var identify = await this.IdentifyFeaturesAsync(point, new IdentifyOptions()
             {
@@ -2250,6 +2253,7 @@ public abstract class MapViewModelBase : ViewModelBase
                    layer => LegendCommand.CreateEditDrawingItemLayer(this, layer),
                    layer => LegendCommand.CreateExportDrawingItemLayerAsShapefile(this, layer),
                    layer => LegendCommand.CreateExportDrawingItemLayerAsGeoJson(this, layer),
+                   layer => LegendCommand.CreateExportDrawingItemLayerAsDxf(this, layer),
                    layer => LegendCommand.CreateExportDrawingItemLayerAsCsv(this, layer/*, CoordinatePanel?.SelectedItem?.CoordinateDisplayMode*/),
                    layer => LegendToggleCommand.CreateToggleLayerLabelCommand(this, layer/*, layer.Labels*/)
                 };
@@ -2976,7 +2980,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     private async Task HandleRequestUndoAllChanges(ILayer layer)
     {
-        var message = IRI.Maptor.Jab.Common.Properties.Resources.dialog_msg_discardPendingChanges;
+        var message = IRI.Maptor.Jab.Core.Properties.Resources.dialog_msg_discardPendingChanges;
 
         var sure = await DialogService.ShowYesNoDialogAsync(message);
 
@@ -3050,8 +3054,11 @@ public abstract class MapViewModelBase : ViewModelBase
             return;
         }
 
-        layer.RequestMoveLayerUp = (l, cv) => MoveLayerUp(l, cv);
-        layer.RequestMoveLayerDown = (l, cv) => MoveLayerDown(l, cv);
+        if (layer is not IWpfLayer wpfLayer)
+            return;
+
+        wpfLayer.RequestMoveLayerUp = (l, cv) => MoveLayerUp(l, cv);
+        wpfLayer.RequestMoveLayerDown = (l, cv) => MoveLayerDown(l, cv);
 
         if (layer is VectorLayer)
         {
@@ -3066,13 +3073,13 @@ public abstract class MapViewModelBase : ViewModelBase
                         commands.Add(item(this, drawingItemLayer));
                     }
 
-                    layer.Commands = commands;
+                    wpfLayer.Commands = commands;
 
                     return;
                 }
             }
 
-            if (!(layer?.Commands?.Count > 0))
+            if (!(wpfLayer?.Commands?.Count > 0))
             {
                 var commands = new List<ILegendCommand>();
 
@@ -3081,10 +3088,10 @@ public abstract class MapViewModelBase : ViewModelBase
                     commands.Add(item(this, layer));
                 }
 
-                layer.Commands = commands;
+                wpfLayer.Commands = commands;
             }
 
-            if (!(layer?.FeatureTableCommands?.Count > 0))
+            if (!(wpfLayer?.FeatureTableCommands?.Count > 0))
             {
                 var commands = new List<IFeatureTableCommand>();
 
@@ -3093,7 +3100,7 @@ public abstract class MapViewModelBase : ViewModelBase
                     commands.Add(item(this));
                 }
 
-                layer.FeatureTableCommands = commands;
+                wpfLayer.FeatureTableCommands = commands;
             }
 
             if ((layer as VectorLayer).RequestChangeSymbology == null)
@@ -3101,7 +3108,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 (layer as VectorLayer).RequestChangeSymbology = l => RequestShowSymbologyView?.Invoke(l);
             }
 
-            if (layer is BaseLayer baseLayer)
+            if (layer is IRI.Maptor.Jab.Common.Layers.BaseLayer baseLayer)
             {
                 baseLayer.RequestSaveChanges = async layer => await HandleRequestSaveChanges(layer);
                 baseLayer.RequestUndoAllChanges = async layer => await HandleRequestUndoAllChanges(layer);
@@ -3113,9 +3120,9 @@ public abstract class MapViewModelBase : ViewModelBase
         }
         else if (layer.Type == LayerType.Raster || layer.Type == LayerType.ImagePyramid)
         {
-            if (!(layer?.Commands?.Count > 0))
+            if (!(wpfLayer?.Commands?.Count > 0))
             {
-                layer.Commands = new List<ILegendCommand>()
+                wpfLayer.Commands = new List<ILegendCommand>()
                 {
                     LegendCommand.CreateZoomToExtentCommand(this, layer),
                     LegendCommand.CreateRemoveLayer(this, layer),
@@ -3409,7 +3416,7 @@ public abstract class MapViewModelBase : ViewModelBase
                     {
                         var featureName = $"DRAWING {DrawingItems?.Count}";
                         AddDrawingItem(result.Result, featureName);
-                        await Task.Delay(500, ct);
+                        //await Task.Delay(500, ct);
                     }
                 }
                 catch (OperationCanceledException)
@@ -3791,7 +3798,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         foreach (var item in layers)
         {
-            if (item.Visibility != System.Windows.Visibility.Visible)
+            if (!item.IsVisible)
                 continue;
 
             if (item.IsNotInScaleRange)

@@ -1,5 +1,6 @@
-﻿using IRI.Maptor.Jab.Common.Layers;
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Layers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +66,7 @@ public abstract class LegendCommandBase : Notifier, ILegendCommand
 
     protected LegendCommandBase()
     {
-        Localization.LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
+        LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
     }
 
     public LegendCommandBase(string tooltipResourceKey) : this()

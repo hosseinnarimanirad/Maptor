@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using IRI.Maptor.Jab.Controls;
-using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Common.Defaults;
 using IRI.Maptor.Jab.Common.Services;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Jab.Core.Layers;
 
 namespace IRI.Maptor.Jab.Common.Models;
 

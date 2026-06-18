@@ -1,8 +1,8 @@
 using System.Security;
 using System.Windows;
 using IRI.Maptor.Sta.Common.Helpers;
-using IRI.Maptor.Jab.Common.Models.Security;
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
+using IRI.Maptor.Jab.Core.Models.Security;
 
 
 namespace IRI.Maptor.Jab.Controls.Security

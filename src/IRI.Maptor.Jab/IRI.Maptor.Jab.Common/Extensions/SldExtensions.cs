@@ -5,7 +5,6 @@ using System.Linq;
 using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Sta.Ogc.SLD;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
-using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Helpers;
 using System.Windows.Media;
 using IRI.Maptor.Sta.Ogc;
@@ -13,6 +12,7 @@ using MahApps.Metro.IconPacks;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
 using System.Globalization;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Extensions;
 

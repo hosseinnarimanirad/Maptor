@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="IRI.Maptor.Jab.Controls.GoToGeodeticView"
+<UserControl x:Class="IRI.Maptor.Jab.Controls.GoToGeodeticView"
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls" 
                 xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
-                xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization" 
+                xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core" 
                 x:Name="window" >
     <UserControl.Resources>
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>

@@ -12,9 +12,7 @@ public static class ResourceHelper
     /// <param name="fileAddress">e.g. @"IRI.Maptor.Jab.Common;component/Assets/Images/BaseMaps/satellite.jpg" </param>
     /// <returns></returns>
     public static byte[] ReadBinaryStreamFromResource(string fileAddress)
-    {
-        //Uri uri = new Uri(@"Restaurant;component/Asset/Images/" + name, UriKind.Relative);
-
+    { 
         Uri uri = new Uri(fileAddress, UriKind.Relative);
 
         Stream stream = Application.GetResourceStream(uri).Stream;

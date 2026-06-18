@@ -1,10 +1,10 @@
 using System;
 using System.Windows;
 using System.Threading.Tasks;
-using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 using IRI.Maptor.Sta.Common.Exceptions;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Jab.Core.Models.Security;
 
 namespace IRI.Maptor.Jab.Common.Services;
 

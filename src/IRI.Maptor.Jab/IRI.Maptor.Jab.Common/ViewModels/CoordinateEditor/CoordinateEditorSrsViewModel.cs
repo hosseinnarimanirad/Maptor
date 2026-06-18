@@ -6,6 +6,7 @@ using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 using Ellipsoid = IRI.Maptor.Sta.SpatialReferenceSystem.Ellipsoid<IRI.Maptor.Sta.Metrics.Meter, IRI.Maptor.Sta.Metrics.Degree>;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 

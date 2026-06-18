@@ -10,10 +10,10 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Controls.Dialogs;
 using IRI.Maptor.Sta.Common.Exceptions;
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
 using IRI.Maptor.Jab.Common.Models.Themes;
-using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
+using IRI.Maptor.Jab.Core.Models.Security;
 
 namespace IRI.Maptor.Jab.Common.Services;
 
@@ -193,7 +193,7 @@ public class DefaultDialogService : IDialogService
         OpenFolderDialog dialog = new OpenFolderDialog()
         {
             Multiselect = false,
-            Title = LocalizationManager.Instance[nameof(Properties.Resources.dialog_openfile_title)]
+            Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Core.Properties.Resources.dialog_openfile_title)]
         };
 
         var blurDisposable = ApplyBlurEffect(owner);
@@ -257,7 +257,7 @@ public class DefaultDialogService : IDialogService
     //    {
     //        Filter = filter,
     //        Multiselect = false,
-    //        Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_openfile_title)]
+    //        Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Core.Properties.Resources.dialog_openfile_title)]
     //    };
 
     //    string? result = null;
@@ -300,7 +300,7 @@ public class DefaultDialogService : IDialogService
         {
             Filter = filter,
             Multiselect = false,
-            Title = LocalizationManager.Instance[nameof(Properties.Resources.dialog_openfile_title)]
+            Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Core.Properties.Resources.dialog_openfile_title)]
         };
 
         var blurDisposable = ApplyBlurEffect(owner);
@@ -372,7 +372,7 @@ public class DefaultDialogService : IDialogService
     //    {
     //        Filter = filter,
     //        Multiselect = true,
-    //        Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_openfile_title)]
+    //        Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Core.Properties.Resources.dialog_openfile_title)]
     //    };
 
     //    string[]? result = null;
@@ -415,7 +415,7 @@ public class DefaultDialogService : IDialogService
         {
             Filter = filter,
             Multiselect = true,
-            Title = LocalizationManager.Instance[nameof(Properties.Resources.dialog_openfile_title)]
+            Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Core.Properties.Resources.dialog_openfile_title)]
         };
 
         var blurDisposable = ApplyBlurEffect(owner);
@@ -482,7 +482,7 @@ public class DefaultDialogService : IDialogService
     //    {
     //        Filter = filter,
     //        FileName = fileName ?? string.Empty,
-    //        Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Common.Properties.Resources.dialog_savefile_title)]
+    //        Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Core.Properties.Resources.dialog_savefile_title)]
     //    };
 
     //    string? result = null;
@@ -527,7 +527,7 @@ public class DefaultDialogService : IDialogService
         {
             Filter = filter,
             FileName = fileName ?? string.Empty,
-            Title = LocalizationManager.Instance[nameof(Properties.Resources.dialog_savefile_title)]
+            Title = LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Core.Properties.Resources.dialog_savefile_title)]
         };
 
         var blurDisposable = ApplyBlurEffect(owner);
@@ -676,7 +676,7 @@ public class DefaultDialogService : IDialogService
         DialogViewModel viewModel = new(true)
         {
             Message = message,
-            Title = title ?? LocalizationManager.Instance[nameof(Properties.Resources.dialog_showMessage_title)],
+            Title = title ?? LocalizationManager.Instance[nameof(IRI.Maptor.Jab.Core.Properties.Resources.dialog_showMessage_title)],
             IsTwoOptionsMode = false,
             IconPathMarkup = pathMarkup ?? markup,
             FirstOptionPathMarkup = okPath

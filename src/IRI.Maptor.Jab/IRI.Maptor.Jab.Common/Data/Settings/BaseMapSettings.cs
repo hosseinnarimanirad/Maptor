@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Jab.Common.Data.Settings;
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.TileServices;
 
 namespace IRI.Maptor.Jab.Common.Data;
 

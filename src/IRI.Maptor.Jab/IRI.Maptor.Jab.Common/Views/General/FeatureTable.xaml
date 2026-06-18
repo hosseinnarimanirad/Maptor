@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:model="clr-namespace:IRI.Maptor.Jab.Common.Models"
-             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
+             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
              xmlns:local ="clr-namespace:IRI.Maptor.Jab.Common.Behaviors" 
              xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"

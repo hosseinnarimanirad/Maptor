@@ -1,4 +1,12 @@
-﻿[*.{cs,vb}]
+﻿# Global settings for all files
+[*]
+# insert_final_newline disabled to prevent Cursor from repeatedly adding newlines
+insert_final_newline = false
+trim_trailing_whitespace = true
+
+[*.{cs,vb}]
+# Disable insert_final_newline to prevent Cursor from repeatedly adding newlines
+insert_final_newline = false
 
 # IDE0060: Remove unused parameter
 dotnet_code_quality_unused_parameters = all:suggestion
@@ -7,6 +15,8 @@ dotnet_code_quality_unused_parameters = all:suggestion
 dotnet_diagnostic.CS1591.severity = silent
 
 [*.cs]
+# Disable insert_final_newline to prevent Cursor from repeatedly adding newlines
+insert_final_newline = false
 csharp_style_namespace_declarations= file_scoped:silent
 csharp_using_directive_placement = outside_namespace:silent
 csharp_prefer_simple_using_statement = true:suggestion

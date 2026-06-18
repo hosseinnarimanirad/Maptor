@@ -1,5 +1,5 @@
 ﻿using IRI.Maptor.Extensions;
-using IRI.Maptor.Jab.Common.Events;
+using IRI.Maptor.Jab.Core;
 using System;
 using System.Text.Json.Serialization;
 

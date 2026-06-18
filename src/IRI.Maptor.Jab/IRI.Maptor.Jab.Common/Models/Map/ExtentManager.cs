@@ -2,10 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
-using IRI.Maptor.Jab.Common;
 using IRI.Maptor.Sta.Spatial.Model;
-using IRI.Maptor.Jab.Common.Events;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.Models;
 

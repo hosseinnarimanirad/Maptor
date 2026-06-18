@@ -1,3 +1,5 @@
+using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Localization;
 using System;
 using System.Globalization;
 using System.Windows;

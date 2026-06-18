@@ -7,6 +7,7 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
 using System;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 

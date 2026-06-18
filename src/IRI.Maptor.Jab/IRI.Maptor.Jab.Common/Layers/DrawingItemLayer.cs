@@ -14,6 +14,7 @@ using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 

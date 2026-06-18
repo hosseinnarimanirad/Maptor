@@ -2,8 +2,8 @@
 using System.Windows;
 
 using IRI.Maptor.Sta.Common.Helpers;
-using IRI.Maptor.Jab.Common.Models.Security;
 using IRI.Maptor.Jab.Common;
+using IRI.Maptor.Jab.Core.Models.Security;
 
 
 namespace IRI.Maptor.Jab.Controls.Security

@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Sta.Common.Enums;
-using IRI.Maptor.Jab.Common.Layers;
 using IRI.Maptor.Jab.Common.Converters;
 using IRI.Maptor.Jab.Common.Models.Legend;
+using IRI.Maptor.Jab.Core.Layers;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 

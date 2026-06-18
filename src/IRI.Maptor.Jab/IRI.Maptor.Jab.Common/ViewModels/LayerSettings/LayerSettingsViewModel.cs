@@ -1,5 +1,5 @@
-﻿using IRI.Maptor.Jab.Common.Layers;
-using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
+﻿using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
+using IRI.Maptor.Jab.Core.Layers;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.LayerSettings;
 

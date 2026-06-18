@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 using IRI.Maptor.Jab.Controls;
 using IRI.Maptor.Sta.Common.Helpers;
@@ -59,7 +59,7 @@ public partial class Scalebar : NotifiableUserControl
         //this.Min = (groundLengthInMeter / 1000.0 > 1) ? "0 km" : "0 m";
 
         //RaisePropertyChanged(nameof(GroundLength)); 
-        this.CurrentScaleText = IRI.Maptor.Jab.Common.Localization.LocalizationManager.GetLocalizedNumberString($"1:{(1 / mapScale):N0}");
+        this.CurrentScaleText = IRI.Maptor.Jab.Core.Localization.LocalizationManager.GetLocalizedNumberString($"1:{(1 / mapScale):N0}");
     }
 
 

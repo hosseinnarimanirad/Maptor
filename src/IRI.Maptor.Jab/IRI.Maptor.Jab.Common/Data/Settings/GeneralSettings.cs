@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using IRI.Maptor.Jab.Common.Data.Settings;
-using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Models.Themes;
+using IRI.Maptor.Jab.Core.Localization;
 
 namespace IRI.Maptor.Jab.Common.Data;
 

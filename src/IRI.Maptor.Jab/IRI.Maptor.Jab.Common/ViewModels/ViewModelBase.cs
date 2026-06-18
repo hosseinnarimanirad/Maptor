@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Principal;
 using IRI.Maptor.Jab.Common.Services;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 

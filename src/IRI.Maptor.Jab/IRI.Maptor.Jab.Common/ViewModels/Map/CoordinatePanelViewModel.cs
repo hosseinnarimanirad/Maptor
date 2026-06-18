@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Jab.Common.Models.CoordinatePanel;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Map;
 

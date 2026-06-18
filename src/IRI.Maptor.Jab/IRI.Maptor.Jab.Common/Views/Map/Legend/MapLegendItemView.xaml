@@ -7,7 +7,7 @@
              xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls"
              xmlns:enums="clr-namespace:IRI.Maptor.Sta.Common.Enums;assembly=IRI.Maptor.Sta.Common"
-             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Common.Localization"
+             xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
              FontFamily="{StaticResource iranSans}"
              Background="Transparent">
     <UserControl.Resources>

@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Data;
 using MahApps.Metro.Controls;
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
 
 namespace IRI.Maptor.Jab.Controls.Dialogs;
 

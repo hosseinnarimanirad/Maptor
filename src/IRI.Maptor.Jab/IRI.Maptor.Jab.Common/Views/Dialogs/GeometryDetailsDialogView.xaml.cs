@@ -7,11 +7,11 @@ using MahApps.Metro.Controls;
 
 using IRI.Maptor.Jab.Common;
 
-using IRI.Maptor.Jab.Common.Localization;
+using IRI.Maptor.Jab.Core.Localization;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Models.CoordinateEditor;
-using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.Controls.Dialogs;
 

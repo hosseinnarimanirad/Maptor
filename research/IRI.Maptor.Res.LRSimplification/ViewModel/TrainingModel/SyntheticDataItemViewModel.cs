@@ -1,7 +1,7 @@
-﻿using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Sta.MachineLearning;
+﻿using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Jab.Core;
 
 namespace IRI.Maptor.Res.LRSimplification.ViewModel.TrainingModel;
 
