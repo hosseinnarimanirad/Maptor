@@ -71,7 +71,32 @@ public static class GeoJsonLayerFactory
         {
             Parts = parts,
             Extent = extent,
+            Description = DescribeParts(parts, LayerSource.GeoJson),
         };
+    }
+
+    /// <summary>
+    /// Builds a description like "Point (GeoJson)" / "Polygon (Drawn)" from the dominant
+    /// geometry kind. Mixed-geometry layers are described as "Mixed".
+    /// </summary>
+    internal static string DescribeParts(IReadOnlyList<RenderPart> parts, LayerSource source)
+    {
+        var kinds = parts.Select(p => p.Kind).Distinct().ToList();
+
+        string kind = kinds.Count switch
+        {
+            0 => "Empty",
+            1 => kinds[0] switch
+            {
+                RenderKind.Point => "Point",
+                RenderKind.Line => "Line",
+                RenderKind.Polygon => "Polygon",
+                _ => "Geometry",
+            },
+            _ => "Mixed",
+        };
+
+        return $"{kind} ({source})";
     }
 
     private static Geometry<Point> ToPoint<TP>(Geometry<TP> geometry) where TP : IPoint, new()

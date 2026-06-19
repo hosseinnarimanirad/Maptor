@@ -5,6 +5,13 @@ using Microsoft.Maui.Graphics;
 
 namespace IRI.Maptor.Jab.Maui.Layers;
 
+/// <summary>How a <see cref="MapLayer"/> was created — used to build its description.</summary>
+public enum LayerSource
+{
+    GeoJson,
+    Drawn,
+}
+
 /// <summary>
 /// A lightweight vector layer (typically loaded from GeoJSON) shown on the
 /// <see cref="Controls.MapViewer"/>. Geometry is pre-projected to WebMercator and stored
@@ -14,6 +21,7 @@ namespace IRI.Maptor.Jab.Maui.Layers;
 public sealed class MapLayer : ObservableBase
 {
     private string _name;
+    private string _description = string.Empty;
     private bool _isVisible = true;
     private Color _color;
     private double _strokeWidth = 2;
@@ -29,6 +37,16 @@ public sealed class MapLayer : ObservableBase
     {
         get => _name;
         set => SetProperty(ref _name, value);
+    }
+
+    /// <summary>
+    /// Auto-generated, human-readable layer kind, e.g. "Point (GeoJson)", "Polygon (Drawn)".
+    /// Built from the geometry type and <see cref="LayerSource"/> at creation time.
+    /// </summary>
+    public string Description
+    {
+        get => _description;
+        set => SetProperty(ref _description, value);
     }
 
     public bool IsVisible

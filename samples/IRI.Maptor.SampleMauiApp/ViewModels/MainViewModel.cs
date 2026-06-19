@@ -38,6 +38,7 @@ public class MainViewModel : ObservableBase
     private string? _statusMessage;
     private bool _isBusy;
     private bool _isLegendVisible;
+    private bool _isRecording;
 
     public MainViewModel()
         : this(new LocationService(), new GeoJsonFileService())
@@ -56,6 +57,7 @@ public class MainViewModel : ObservableBase
         AddGeoJsonCommand = new RelayCommand(async () => await AddGeoJsonAsync());
         LoadSampleCommand = new RelayCommand(async () => await LoadSampleAsync());
         ToggleLegendCommand = new RelayCommand(() => IsLegendVisible = !IsLegendVisible);
+        RecordCommand = new RelayCommand(ToggleRecording);
     }
 
     /// <summary>Vector layers shown on the map and listed in the legend.</summary>
@@ -125,8 +127,16 @@ public class MainViewModel : ObservableBase
     public string? StatusMessage
     {
         get => _statusMessage;
-        set => SetProperty(ref _statusMessage, value);
+        set
+        {
+            if (SetProperty(ref _statusMessage, value))
+            {
+                OnPropertyChanged(nameof(HasStatus));
+            }
+        }
     }
+
+    public bool HasStatus => !string.IsNullOrEmpty(StatusMessage);
 
     public bool IsBusy
     {
@@ -139,6 +149,21 @@ public class MainViewModel : ObservableBase
         get => _isLegendVisible;
         set => SetProperty(ref _isLegendVisible, value);
     }
+
+    public bool IsRecording
+    {
+        get => _isRecording;
+        set
+        {
+            if (SetProperty(ref _isRecording, value))
+            {
+                OnPropertyChanged(nameof(RecordColor));
+            }
+        }
+    }
+
+    /// <summary>Glyph color for the record button: red while recording, white otherwise.</summary>
+    public Color RecordColor => IsRecording ? Colors.Red : Colors.White;
 
     public ObservableCollection<MauiBaseMap> BaseMaps { get; } = new(Enum.GetValues<MauiBaseMap>());
 
@@ -156,7 +181,22 @@ public class MainViewModel : ObservableBase
 
     public RelayCommand ToggleLegendCommand { get; }
 
+    public RelayCommand RecordCommand { get; }
+
     public string Coordinates => $"Lat {Latitude:F4}°, Lon {Longitude:F4}°, Zoom {ZoomLevel}";
+
+    /// <summary>Navigate to a free-form "lat, lon" string (used by the search button).</summary>
+    public void GoTo(string locationText)
+    {
+        LocationText = locationText;
+        GoToTypedLocation();
+    }
+
+    private void ToggleRecording()
+    {
+        IsRecording = !IsRecording;
+        StatusMessage = IsRecording ? "Recording…" : null;
+    }
 
     private void GoToTypedLocation()
     {

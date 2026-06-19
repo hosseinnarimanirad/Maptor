@@ -3,123 +3,172 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Maui.Controls;assembly=IRI.Maptor.Jab.Maui"
              x:Class="IRI.Maptor.SampleMauiApp.MainPage"
+             Shell.NavBarIsVisible="False"
              Title="Maptor MAUI Map">
 
-    <Grid>
+    <Grid RowDefinitions="Auto,*">
 
-        <!-- The map fills the page -->
-        <maptor:MapViewer x:Name="Map"
-                          Latitude="{Binding Latitude}"
-                          Longitude="{Binding Longitude}"
-                          ZoomLevel="{Binding ZoomLevel}"
-                          BaseMap="{Binding SelectedBaseMap}"
-                          MarkerLatitude="{Binding MarkerLatitude}"
-                          MarkerLongitude="{Binding MarkerLongitude}"
-                          Layers="{Binding Layers}" />
+        <!-- ===== Top navigation bar (solid color) ===== -->
+        <Grid Grid.Row="0"
+              BackgroundColor="{StaticResource Primary}"
+              ColumnDefinitions="Auto,*,Auto"
+              Padding="12,8"
+              ColumnSpacing="4">
 
-        <!-- Top controls: go-to coordinates, my-location, basemap, layers -->
-        <VerticalStackLayout Margin="12"
-                             Spacing="6"
-                             HorizontalOptions="Fill"
-                             VerticalOptions="Start">
+            <!-- Left: app icon + title -->
+            <HorizontalStackLayout Grid.Column="0"
+                                   Spacing="8"
+                                   VerticalOptions="Center">
+                <Label Text="🗺"
+                       FontSize="22"
+                       VerticalOptions="Center" />
+                <Label Text="Maptor"
+                       TextColor="White"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
 
-            <Border Padding="6"
-                    BackgroundColor="#E6FFFFFF"
+            <!-- Right: layers, record, more -->
+            <HorizontalStackLayout Grid.Column="2"
+                                   Spacing="2"
+                                   VerticalOptions="Center">
+                <Button Text="≣"
+                        Command="{Binding ToggleLegendCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        FontSize="22"
+                        Padding="0"
+                        WidthRequest="44"
+                        HeightRequest="44" />
+                <Button Text="⏺"
+                        Command="{Binding RecordCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="{Binding RecordColor}"
+                        FontSize="20"
+                        Padding="0"
+                        WidthRequest="44"
+                        HeightRequest="44" />
+                <Button Text="⋮"
+                        Clicked="OnMoreClicked"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        FontSize="24"
+                        Padding="0"
+                        WidthRequest="44"
+                        HeightRequest="44" />
+            </HorizontalStackLayout>
+        </Grid>
+
+        <!-- ===== Map area ===== -->
+        <Grid Grid.Row="1">
+
+            <!-- The map fills the area -->
+            <maptor:MapViewer x:Name="Map"
+                              Latitude="{Binding Latitude}"
+                              Longitude="{Binding Longitude}"
+                              ZoomLevel="{Binding ZoomLevel}"
+                              BaseMap="{Binding SelectedBaseMap}"
+                              MarkerLatitude="{Binding MarkerLatitude}"
+                              MarkerLongitude="{Binding MarkerLongitude}"
+                              Layers="{Binding Layers}" />
+
+            <!-- Top-left tool buttons (my location, search, take photo) -->
+            <VerticalStackLayout Margin="12"
+                                 Spacing="8"
+                                 HorizontalOptions="Start"
+                                 VerticalOptions="Start">
+                <Button Text="📍"
+                        Command="{Binding MyLocationCommand}"
+                        BackgroundColor="#B3FFFFFF"
+                        TextColor="#242424"
+                        FontSize="18"
+                        Padding="0"
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        CornerRadius="8" />
+                <Button Text="🔍"
+                        Clicked="OnSearchClicked"
+                        BackgroundColor="#B3FFFFFF"
+                        TextColor="#242424"
+                        FontSize="18"
+                        Padding="0"
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        CornerRadius="8" />
+                <Button Text="📷"
+                        Clicked="OnTakePhotoClicked"
+                        BackgroundColor="#B3FFFFFF"
+                        TextColor="#242424"
+                        FontSize="18"
+                        Padding="0"
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        CornerRadius="8" />
+            </VerticalStackLayout>
+
+            <!-- Busy + status (top-center) -->
+            <VerticalStackLayout Margin="12"
+                                 Spacing="6"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Start">
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   WidthRequest="22"
+                                   HeightRequest="22"
+                                   Color="{StaticResource Primary}" />
+                <Label Text="{Binding StatusMessage}"
+                       TextColor="White"
+                       BackgroundColor="#CC000000"
+                       Padding="8,3"
+                       FontSize="12"
+                       IsVisible="{Binding HasStatus}"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <!-- Coordinate readout (bottom-left) -->
+            <Border Margin="12"
+                    Padding="8,4"
+                    HorizontalOptions="Start"
+                    VerticalOptions="End"
+                    BackgroundColor="#CC000000"
                     StrokeShape="RoundRectangle 8">
-                <Grid ColumnDefinitions="*,Auto,Auto"
-                      ColumnSpacing="6">
-
-                    <Entry Grid.Column="0"
-                           Text="{Binding LocationText}"
-                           Placeholder="Paste lat, lon  (e.g. 35.6892, 51.3890)"
-                           Keyboard="Text"
-                           ReturnCommand="{Binding GoToCommand}" />
-
-                    <Button Grid.Column="1"
-                            Text="Go"
-                            Command="{Binding GoToCommand}" />
-
-                    <Button Grid.Column="2"
-                            Text="📍 My Location"
-                            Command="{Binding MyLocationCommand}" />
-                </Grid>
+                <Label Text="{Binding Coordinates}"
+                       TextColor="White"
+                       FontSize="12" />
             </Border>
 
-            <!-- Basemap switcher + layer actions (compact row) -->
-            <HorizontalStackLayout Spacing="6" HorizontalOptions="Start">
-                <Border Padding="6,0"
-                        BackgroundColor="#E6FFFFFF"
-                        StrokeShape="RoundRectangle 8">
-                    <Picker ItemsSource="{Binding BaseMaps}"
-                            SelectedItem="{Binding SelectedBaseMap}"
-                            WidthRequest="160"
-                            Title="Basemap" />
-                </Border>
+            <!-- Zoom buttons (bottom-right) -->
+            <VerticalStackLayout Margin="12"
+                                 Spacing="8"
+                                 HorizontalOptions="End"
+                                 VerticalOptions="End">
+                <Button Text="+"
+                        Command="{Binding ZoomInCommand}"
+                        WidthRequest="48"
+                        HeightRequest="48"
+                        FontSize="22"
+                        Padding="0"
+                        CornerRadius="24" />
+                <Button Text="−"
+                        Command="{Binding ZoomOutCommand}"
+                        WidthRequest="48"
+                        HeightRequest="48"
+                        FontSize="22"
+                        Padding="0"
+                        CornerRadius="24" />
+            </VerticalStackLayout>
 
-                <Button Text="＋ GeoJSON" Command="{Binding AddGeoJsonCommand}" />
-                <Button Text="Sample" Command="{Binding LoadSampleCommand}" />
-                <Button Text="Layers" Command="{Binding ToggleLegendCommand}" />
-            </HorizontalStackLayout>
-
-            <HorizontalStackLayout Spacing="6" IsVisible="{Binding IsBusy}">
-                <ActivityIndicator IsRunning="{Binding IsBusy}"
-                                   WidthRequest="18"
-                                   HeightRequest="18"
-                                   Color="White" />
-            </HorizontalStackLayout>
-
-            <Label Text="{Binding StatusMessage}"
-                   TextColor="White"
-                   BackgroundColor="#CC000000"
-                   Padding="6,2"
-                   FontSize="12"
-                   HorizontalOptions="Start" />
-
-        </VerticalStackLayout>
-
-        <!-- Coordinate readout (bottom-left) -->
-        <Border Margin="12"
-                Padding="8,4"
-                HorizontalOptions="Start"
-                VerticalOptions="End"
-                BackgroundColor="#CC000000"
-                StrokeShape="RoundRectangle 8">
-            <Label Text="{Binding Coordinates}"
-                   TextColor="White"
-                   FontSize="12" />
-        </Border>
-
-        <!-- Zoom buttons (bottom-right) -->
-        <VerticalStackLayout Margin="12"
-                             Spacing="8"
-                             HorizontalOptions="End"
-                             VerticalOptions="End">
-            <Button Text="+"
-                    Command="{Binding ZoomInCommand}"
-                    WidthRequest="48"
-                    HeightRequest="48"
-                    FontSize="22"
-                    Padding="0"
-                    CornerRadius="24" />
-            <Button Text="−"
-                    Command="{Binding ZoomOutCommand}"
-                    WidthRequest="48"
-                    HeightRequest="48"
-                    FontSize="22"
-                    Padding="0"
-                    CornerRadius="24" />
-        </VerticalStackLayout>
-
-        <!-- Legend / layer list (collapsible, top-right) -->
-        <maptor:MapLegendView ItemsSource="{Binding Layers}"
-                              Map="{x:Reference Map}"
-                              IsVisible="{Binding IsLegendVisible}"
-                              WidthRequest="300"
-                              MaximumHeightRequest="320"
-                              HorizontalOptions="End"
-                              VerticalOptions="Start"
-                              Margin="12,96,12,12" />
-
+            <!-- Slide-in layers sidebar (basemap picker + layer list) -->
+            <maptor:MapLayersSidebar Map="{x:Reference Map}"
+                                     ItemsSource="{Binding Layers}"
+                                     BaseMaps="{Binding BaseMaps}"
+                                     SelectedBaseMap="{Binding SelectedBaseMap}"
+                                     AddLayerCommand="{Binding AddGeoJsonCommand}"
+                                     IsOpen="{Binding IsLegendVisible}"
+                                     HorizontalOptions="Fill"
+                                     VerticalOptions="Fill" />
+        </Grid>
     </Grid>
 
 </ContentPage>

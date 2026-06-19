@@ -1,4 +1,4 @@
-using IRI.Maptor.Jab.Common.TileServices;
+using IRI.Maptor.Jab.Core.TileServices;
 using IRI.Maptor.Sta.Spatial.Model;
 
 namespace IRI.Maptor.Jab.Maui.Controls;
