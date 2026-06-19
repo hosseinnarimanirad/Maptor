@@ -79,4 +79,10 @@ public sealed class MapLayer : ObservableBase
 
     /// <summary>Bounds of the layer in WebMercator, used for zoom-to-layer. Null if empty.</summary>
     public BoundingBox? Extent { get; init; }
+
+    /// <summary>
+    /// The original GeoJSON the layer was built from, if any. Stored so a project can be
+    /// saved to disk and the layer rebuilt later. Null for layers with no serializable source.
+    /// </summary>
+    public string? SourceGeoJson { get; init; }
 }

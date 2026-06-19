@@ -72,6 +72,7 @@ public static class GeoJsonLayerFactory
             Parts = parts,
             Extent = extent,
             Description = DescribeParts(parts, LayerSource.GeoJson),
+            SourceGeoJson = geoJsonText,
         };
     }
 

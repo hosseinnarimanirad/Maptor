@@ -4,7 +4,6 @@ using System.Windows.Input;
 using IRI.Maptor.Jab.Maui.Layers;
 
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Maui.Graphics;
 
 namespace IRI.Maptor.Jab.Maui.Controls;
@@ -20,30 +19,15 @@ namespace IRI.Maptor.Jab.Maui.Controls;
 /// / <see cref="SelectedBaseMap"/> to the basemap options, set <see cref="Map"/> for
 /// zoom-to-layer, and drive <see cref="IsOpen"/> from the toolbar's "layers" button.
 /// </summary>
-public class MapLayersSidebar : ContentView
+public class MapLayersSidebar : SlideOverSidebar
 {
-    private const double PanelWidth = 320;
-    private const uint SlideDuration = 220;
-
-    // Dark SW-Maps-like palette.
-    private static readonly Color PanelBackground = Color.FromArgb("#222A33");
-    private static readonly Color Accent = Color.FromArgb("#4DB6AC");
-    private static readonly Color PrimaryText = Colors.White;
-    private static readonly Color SecondaryText = Color.FromArgb("#A7B0BA");
-    private static readonly Color Divider = Color.FromArgb("#384450");
-
     private static readonly Color[] _swatchPalette =
     {
         Colors.Red, Colors.RoyalBlue, Colors.ForestGreen, Colors.Orange,
         Colors.MediumPurple, Colors.Brown, Colors.Teal, Colors.DeepPink, Colors.Black,
     };
 
-    private readonly Grid _root;
-    private readonly Border _panel;
     private readonly CollectionView _list;
-    private readonly Button _expandButton;
-
-    private bool _expanded;
 
     public MapLayersSidebar()
     {
@@ -60,33 +44,7 @@ public class MapLayersSidebar : ContentView
             },
         };
 
-        _expandButton = IconButton("⤢", OnExpandClicked);
-
-        _panel = new Border
-        {
-            BackgroundColor = PanelBackground,
-            StrokeThickness = 0,
-            WidthRequest = PanelWidth,
-            HorizontalOptions = LayoutOptions.End,
-            VerticalOptions = LayoutOptions.Fill,
-            Padding = new Thickness(12, 10),
-            Content = BuildPanelContent(),
-        };
-
-        _root = new Grid
-        {
-            // Let taps on the exposed map (outside the panel) pass through.
-            InputTransparent = true,
-            CascadeInputTransparent = false,
-        };
-        _root.Add(_panel);
-
-        InputTransparent = true;
-        CascadeInputTransparent = false;
-        Content = _root;
-
-        // Start hidden off the right edge.
-        _panel.TranslationX = PanelWidth;
+        SetPanelContent(BuildPanelContent());
     }
 
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
@@ -139,33 +97,9 @@ public class MapLayersSidebar : ContentView
         set => SetValue(AddLayerCommandProperty, value);
     }
 
-    public static readonly BindableProperty IsOpenProperty = BindableProperty.Create(
-        nameof(IsOpen), typeof(bool), typeof(MapLayersSidebar), false, BindingMode.TwoWay, propertyChanged: OnIsOpenChanged);
-
-    /// <summary>Whether the panel is slid in (open). Animate by toggling this.</summary>
-    public bool IsOpen
-    {
-        get => (bool)GetValue(IsOpenProperty);
-        set => SetValue(IsOpenProperty, value);
-    }
-
-    private double CurrentPanelWidth => _panel.WidthRequest > 0 ? _panel.WidthRequest : PanelWidth;
-
     private static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)
     {
         ((MapLayersSidebar)bindable)._list.ItemsSource = newValue as IEnumerable;
-    }
-
-    private static async void OnIsOpenChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var self = (MapLayersSidebar)bindable;
-        await self.AnimateAsync((bool)newValue);
-    }
-
-    private async Task AnimateAsync(bool open)
-    {
-        var target = open ? 0 : CurrentPanelWidth;
-        await _panel.TranslateTo(target, 0, SlideDuration, Easing.CubicOut);
     }
 
     private View BuildPanelContent()
@@ -215,8 +149,8 @@ public class MapLayersSidebar : ContentView
         };
 
         header.Add(title, 0);
-        header.Add(_expandButton, 1);
-        header.Add(IconButton("✕", OnCloseClicked), 2);
+        header.Add(CreateExpandButton(), 1);
+        header.Add(CreateCloseButton(), 2);
 
         return header;
     }
@@ -374,37 +308,6 @@ public class MapLayersSidebar : ContentView
 
         return grid;
     }
-
-    private static Button IconButton(string glyph, EventHandler onClicked)
-    {
-        var button = new Button
-        {
-            Text = glyph,
-            FontSize = 18,
-            BackgroundColor = Colors.Transparent,
-            TextColor = PrimaryText,
-            WidthRequest = 40,
-            HeightRequest = 40,
-            Padding = 0,
-        };
-        button.Clicked += onClicked;
-        return button;
-    }
-
-    private void OnExpandClicked(object? sender, EventArgs e)
-    {
-        _expanded = !_expanded;
-        _panel.WidthRequest = _expanded ? Math.Max(PanelWidth, _root.Width) : PanelWidth;
-        _expandButton.Text = _expanded ? "⤡" : "⤢";
-
-        // Keep it flush when open after a width change.
-        if (IsOpen)
-        {
-            _panel.TranslationX = 0;
-        }
-    }
-
-    private void OnCloseClicked(object? sender, EventArgs e) => IsOpen = false;
 
     private void OnColorClicked(object? sender, EventArgs e)
     {

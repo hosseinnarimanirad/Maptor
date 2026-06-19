@@ -36,7 +36,10 @@ public class MapViewer : ContentView
     // Gesture scratch state.
     private double _panStartCenterX;
     private double _panStartCenterY;
-    private double _pinchStartResolution;
+    private int _pinchStartZoom;
+    private double _pinchLastScale = 1;
+    private double _pinchOriginX = 0.5;
+    private double _pinchOriginY = 0.5;
 
     // Extent requested before the control had a size; applied on first layout.
     private BoundingBox? _pendingExtent;
@@ -380,7 +383,8 @@ public class MapViewer : ContentView
 
     #endregion
 
-    #region Gestures
+    /// <summary>Raised when the map is single-tapped (e.g. to dismiss overlays).</summary>
+    public event EventHandler? MapTapped;
 
     private void AddGestures()
     {
@@ -395,7 +399,13 @@ public class MapViewer : ContentView
         var doubleTap = new TapGestureRecognizer { NumberOfTapsRequired = 2 };
         doubleTap.Tapped += OnDoubleTapped;
         _canvas.GestureRecognizers.Add(doubleTap);
+
+        var singleTap = new TapGestureRecognizer { NumberOfTapsRequired = 1 };
+        singleTap.Tapped += OnSingleTapped;
+        _canvas.GestureRecognizers.Add(singleTap);
     }
+
+    private void OnSingleTapped(object? sender, TappedEventArgs e) => MapTapped?.Invoke(this, EventArgs.Empty);
 
     private void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
@@ -420,29 +430,62 @@ public class MapViewer : ContentView
         }
     }
 
+    // A pinch must change the apparent size by at least this fraction to count as a
+    // zoom in/out; below it the gesture is treated as noise and the level is unchanged.
+    private const double PinchThreshold = 0.15;
+
     private void OnPinchUpdated(object? sender, PinchGestureUpdatedEventArgs e)
     {
         switch (e.Status)
         {
             case GestureStatus.Started:
-                _pinchStartResolution = _resolution;
+                _pinchStartZoom = MapViewerMath.ResolutionToZoom(_resolution);
+                _pinchLastScale = 1;
+                _pinchOriginX = e.ScaleOrigin.X;
+                _pinchOriginY = e.ScaleOrigin.Y;
                 break;
 
             case GestureStatus.Running:
-                if (e.Scale <= 0)
+                // Track the gesture but defer the actual zoom to a single discrete step on
+                // completion, so one pinch moves exactly one zoom level.
+                if (e.Scale > 0)
                 {
-                    break;
+                    _pinchLastScale = e.Scale;
+                    _pinchOriginX = e.ScaleOrigin.X;
+                    _pinchOriginY = e.ScaleOrigin.Y;
                 }
 
-                ZoomAboutNormalizedPoint(e.ScaleOrigin.X, e.ScaleOrigin.Y, _pinchStartResolution / e.Scale);
                 break;
 
             case GestureStatus.Completed:
             case GestureStatus.Canceled:
-                WriteBackState();
-                RefreshDrawable();
+                ApplyPinchStep();
                 break;
         }
+    }
+
+    private void ApplyPinchStep()
+    {
+        var targetZoom = _pinchStartZoom;
+
+        if (_pinchLastScale > 1 + PinchThreshold)
+        {
+            targetZoom = _pinchStartZoom + 1; // fingers spread → zoom in
+        }
+        else if (_pinchLastScale < 1 - PinchThreshold)
+        {
+            targetZoom = _pinchStartZoom - 1; // fingers pinch → zoom out
+        }
+
+        targetZoom = Math.Clamp(targetZoom, MapViewerMath.MinZoom, MapViewerMath.MaxZoom);
+
+        if (targetZoom != _pinchStartZoom)
+        {
+            ZoomAboutNormalizedPoint(_pinchOriginX, _pinchOriginY, MapViewerMath.ZoomToResolution(targetZoom));
+        }
+
+        WriteBackState();
+        RefreshDrawable();
     }
 
     private void OnDoubleTapped(object? sender, TappedEventArgs e)
