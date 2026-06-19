@@ -2443,15 +2443,16 @@ public partial class MapViewer : NotifiableUserControl
         RemoveRightClickOptions();
 
         if (e.ChangedButton != MouseButton.Right || itemIsMoving)
-        {
             return;
-        }
+
+        if (_inMiddleOfDrawingRectangle)
+            return;
 
         var screenLocation = e.GetPosition(this.mapView);
 
         FrameworkElement? view = null;
 
-        if (this.Status == MapStatus.Drawing)
+        if (this.Status == MapStatus.Drawing && this.MapAction != MapAction.DrawRectangle)
         {
             view = GetRightClickOptionsForDraw();
 
@@ -3864,6 +3865,8 @@ public partial class MapViewer : NotifiableUserControl
 
     sb.Point rectangleFirstMapPoint;
 
+    bool _inMiddleOfDrawingRectangle = false;
+
     private CancellationTokenSource GetNewDrawingToken()
     {
         var old = Interlocked.Exchange(ref _drawingCancellationToken, null);
@@ -4177,6 +4180,8 @@ public partial class MapViewer : NotifiableUserControl
         if (e.LeftButton != MouseButtonState.Pressed)
             return;
 
+        _inMiddleOfDrawingRectangle = true;
+
         Point currentMouseLocation = e.GetPosition(this.mapView);
 
         Rect rect = new Rect(this.rectangleFirstScreenPoint, currentMouseLocation);
@@ -4194,6 +4199,8 @@ public partial class MapViewer : NotifiableUserControl
             return;
 
         Unsubscribe_DrawingEvents_StartRectangleDrawing();
+
+        _inMiddleOfDrawingRectangle = false;
 
         if (drawingRectangle != null)
             this.mapView.Children.Remove(drawingRectangle);
@@ -4413,7 +4420,7 @@ public partial class MapViewer : NotifiableUserControl
             rightToolTip: IRI.Maptor.Jab.Core.Properties.Resources.map_draw_finishDrawing,        //"تکمیل",
             leftToolTip: IRI.Maptor.Jab.Core.Properties.Resources.map_draw_cancelDrawing,         // "لغو",
             middleToolTip: IRI.Maptor.Jab.Core.Properties.Resources.map_draw_finishDrawingPart,   // "تکمیل تکه‌جاری",
-         
+
             rightSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CheckBold),
             leftSymbol: MapOptionsIcon.FromMaterial(MahApps.Metro.IconPacks.PackIconMaterialKind.CloseThick),
             middleSymbol: MapOptionsIcon.FromPhosphorIcons(MahApps.Metro.IconPacks.PackIconPhosphorIconsKind.CirclesThreePlusFill));

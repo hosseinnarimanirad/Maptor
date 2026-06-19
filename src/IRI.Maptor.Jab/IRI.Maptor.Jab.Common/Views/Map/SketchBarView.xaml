@@ -301,21 +301,31 @@
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
                                     DataContext="{Binding CurrentEditingLayer}"
                                     Visibility="{Binding DataContext.IsEditMode, RelativeSource={RelativeSource AncestorType=TabControl}, Converter={StaticResource boolToVisibilityConverter}}">
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                    Command="{Binding GoToPreviousPartCommand}"
+                                    IsEnabled="{Binding IsPreviousPartAvailable}">
+                                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
+                            </Button>
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
-                                        ToolTip="{Binding [mapPanel_currentPart_delete], Source={StaticResource Localization}}"
-                                        Command="{Binding DeleteCurrentPartCommand}" >
+                                    ToolTip="{Binding [mapPanel_currentPart_delete], Source={StaticResource Localization}}"
+                                    Command="{Binding DeleteCurrentPartCommand}" >
                                 <iconPacks:Material Kind="Delete"/>
                             </Button>
 
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" IsEnabled="False"
-                                        ToolTip="{Binding [mapPanel_currentPart_add], Source={StaticResource Localization}}"
-                                        Command="{Binding AddNewPartCommand}" Visibility="Collapsed">
+                                    ToolTip="{Binding [mapPanel_currentPart_add], Source={StaticResource Localization}}"
+                                    Command="{Binding AddNewPartCommand}" Visibility="Collapsed">
                                 <iconPacks:Material Kind="Plus"/>
                             </Button>
                             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" HorizontalAlignment="Right" 
-                                        ToolTip="{Binding [mapPanel_currentPart_zoom], Source={StaticResource Localization}}"
-                                        Command="{Binding ZoomToCurrentPartCommand}" >
+                                    ToolTip="{Binding [mapPanel_currentPart_zoom], Source={StaticResource Localization}}"
+                                    Command="{Binding ZoomToCurrentPartCommand}" >
                                 <iconPacks:Material Kind="MagnifyExpand"/>
+                            </Button>
+                            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                    Command="{Binding GoToNextPartCommand}"
+                                    IsEnabled="{Binding IsNextPartAvailable}">
+                                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
                             </Button>
                         </StackPanel>
                     </TabItem>

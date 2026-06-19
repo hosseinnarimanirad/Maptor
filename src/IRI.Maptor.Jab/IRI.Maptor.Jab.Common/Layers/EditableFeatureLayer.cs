@@ -112,6 +112,18 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     public bool IsMultiPartGeometry => _webMercatorGeometry?.IsMultiPartGeometry == true;
 
+    public bool IsPreviousPartAvailable => FindCurrentPartIndex() > 0;
+
+    public bool IsNextPartAvailable
+    {
+        get
+        {
+            var current = FindCurrentPartIndex();
+
+            return current >= 0 && current < GetPartsLocateables().Count - 1;
+        }
+    }
+
 
     #region Actions
 
@@ -243,7 +255,13 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         _primaryVerticesLayer = new SpecialPointLayer("#vert", new List<Locateable>(), 1, ScaleInterval.All, layerType) { AlwaysTop = true, IsMovable = isMovable };
 
-        _primaryVerticesLayer.RequestSelectedLocatableChanged = (l, i) => RequestSelectedLocatableChanged?.Invoke(l, i);
+        _primaryVerticesLayer.RequestSelectedLocatableChanged = (l, i) =>
+        {
+            RequestSelectedLocatableChanged?.Invoke(l, i);
+
+            RaisePropertyChanged(nameof(IsPreviousPartAvailable));
+            RaisePropertyChanged(nameof(IsNextPartAvailable));
+        };
 
         _midVerticesLayer = new SpecialPointLayer("#int. vert", new List<Locateable>(), .7, ScaleInterval.All, layerType) { AlwaysTop = true, IsMovable = isMovable };
 
@@ -404,6 +422,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         // Structural change (points/parts added or removed) funnels through here.
         OnGeometryChanged?.Invoke();
+
+        RaisePropertyChanged(nameof(IsPreviousPartAvailable));
+        RaisePropertyChanged(nameof(IsNextPartAvailable));
     }
 
 
@@ -1468,6 +1489,95 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         RequestZoomToGeometry?.Invoke(part);
     }
 
+    // Flattens _vertices into the ordered list of parts (each part = its primary vertices).
+    private List<List<Locateable>> GetPartsLocateables()
+    {
+        var result = new List<List<Locateable>>();
+
+        if (_vertices != null)
+            CollectParts(_vertices, result);
+
+        return result;
+    }
+
+    private static void CollectParts(RecursiveCollection<Locateable> node, List<List<Locateable>> result)
+    {
+        if (node.Collections == null)
+        {
+            if (node.Values != null)
+                result.Add(node.Values);
+        }
+        else
+        {
+            foreach (var child in node.Collections)
+                CollectParts(child, result);
+        }
+    }
+
+    private int FindCurrentPartIndex()
+    {
+        var selected = _primaryVerticesLayer.FindSelectedLocatable();
+
+        if (selected == null)
+            return -1;
+
+        var parts = GetPartsLocateables();
+
+        for (int i = 0; i < parts.Count; i++)
+        {
+            if (parts[i].Contains(selected))
+                return i;
+        }
+
+        return -1;
+    }
+
+    private void GoToPart(int partIndex)
+    {
+        var parts = GetPartsLocateables();
+
+        if (partIndex < 0 || partIndex >= parts.Count)
+            return;
+
+        var part = parts[partIndex];
+
+        if (part.Count == 0)
+            return;
+
+        // Selecting the first vertex of the part makes it the "current part" for delete/zoom/measure.
+        _primaryVerticesLayer.SelectLocatable(part[0].Element);
+    }
+
+    private void GoToPreviousPart()
+    {
+        var count = GetPartsLocateables().Count;
+
+        if (count == 0)
+            return;
+
+        var current = FindCurrentPartIndex();
+
+        if (current < 0)
+            current = 0;
+
+        GoToPart(current - 1 >= 0 ? current - 1 : count - 1);
+    }
+
+    private void GoToNextPart()
+    {
+        var count = GetPartsLocateables().Count;
+
+        if (count == 0)
+            return;
+
+        var current = FindCurrentPartIndex();
+
+        if (current < 0)
+            current = 0;
+
+        GoToPart(current + 1 < count ? current + 1 : 0);
+    }
+
     public void FindNearestPoint(Point point)
     {
         var nearestPoint = _webMercatorGeometry.GetNearestPoint(point);
@@ -1795,6 +1905,32 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
                 _zoomToCurrentPartCommand = new RelayCommand(param => ZoomToCurrentPart());
 
             return _zoomToCurrentPartCommand;
+        }
+    }
+
+
+    private RelayCommand? _goToPreviousPartCommand;
+    public RelayCommand GoToPreviousPartCommand
+    {
+        get
+        {
+            if (_goToPreviousPartCommand == null)
+                _goToPreviousPartCommand = new RelayCommand(param => GoToPreviousPart(), _ => IsPreviousPartAvailable);
+
+            return _goToPreviousPartCommand;
+        }
+    }
+
+
+    private RelayCommand? _goToNextPartCommand;
+    public RelayCommand GoToNextPartCommand
+    {
+        get
+        {
+            if (_goToNextPartCommand == null)
+                _goToNextPartCommand = new RelayCommand(param => GoToNextPart(), _ => IsNextPartAvailable);
+
+            return _goToNextPartCommand;
         }
     }
 

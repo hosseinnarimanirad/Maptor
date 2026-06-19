@@ -6449,8 +6449,13 @@ public abstract class MapViewModelBase : ViewModelBase
         {
             if (_removeAllDrawingItemsCommand == null)
             {
-                _removeAllDrawingItemsCommand = new RelayCommand(param =>
+                _removeAllDrawingItemsCommand = new RelayCommand(async param =>
                 {
+                    var sure = await DialogService.ShowYesNoDialogAsync(string.Empty);
+
+                    if (sure != true)
+                        return;
+
                     RemoveAllDrawingItems();
                 });
             }
