@@ -1,10 +1,10 @@
 ﻿using System.Text;
 using System.Windows;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Tag.SampleWpfApp.ViewModel;
-using IRI.Maptor.Jab.Common.Data;
 using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Core.Data;
+using IRI.Maptor.Jab.Core.TileServices;
 
 namespace IRI.Maptor.Tag.SampleWpfApp.SampleWindows;
 /// <summary>

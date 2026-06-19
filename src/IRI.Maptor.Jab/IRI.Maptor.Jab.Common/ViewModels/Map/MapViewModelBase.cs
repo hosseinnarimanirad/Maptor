@@ -38,7 +38,6 @@ using IRI.Maptor.Ket.GdiPersistence;
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Helpers;
-using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
 using IRI.Maptor.Jab.Controls.MapMarkers;
@@ -47,11 +46,12 @@ using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
 using IRI.Maptor.Jab.Common.Models.Settings;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Layers;
-using IRI.Maptor.Jab.Common.Data.Settings;
 using IRI.Maptor.Jab.Common.Services;
 using IRI.Maptor.Jab.Core;
 using IRI.Maptor.Jab.Core.Layers;
 using IRI.Maptor.Jab.Core.Models;
+using IRI.Maptor.Jab.Core.Data;
+using IRI.Maptor.Jab.Core.TileServices;
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
@@ -75,7 +75,7 @@ public abstract class MapViewModelBase : ViewModelBase
             if (_proxySettings != null)
                 _proxySettings.PropertyChanged -= ProxySettings_OnProxyChanged;
 
-            _proxySettings = value ?? new ProxySettingsModel(Data.ProxySettings.Default);
+            _proxySettings = value ?? new ProxySettingsModel(Core.Data.ProxySettings.Default);
 
             RaisePropertyChanged();
 
@@ -99,7 +99,7 @@ public abstract class MapViewModelBase : ViewModelBase
                 _baseMapSettings.OnBaseMapUrlChanged -= BaseMapSettings_OnBaseMapUrlChanged;
             }
 
-            _baseMapSettings = value ?? new BaseMapSettingsModel(IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default/*, UpdateBaseMapOpacity*/);
+            _baseMapSettings = value ?? new BaseMapSettingsModel(Core.Data.BaseMapSettings.Default/*, UpdateBaseMapOpacity*/);
 
             RaisePropertyChanged();
 
@@ -143,7 +143,7 @@ public abstract class MapViewModelBase : ViewModelBase
         get { return _generalSettings; }
         private set
         {
-            _generalSettings = value ?? new GeneralSettingsModel(IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
+            _generalSettings = value ?? new GeneralSettingsModel(Core.Data.GeneralSettings.Default);
 
             RaisePropertyChanged();
         }
@@ -1315,13 +1315,13 @@ public abstract class MapViewModelBase : ViewModelBase
         IMapSettings? mapSettings,
         IGeneralSettings? generalSettings)
     {
-        this.ProxySettings = new ProxySettingsModel(proxySettings ?? IRI.Maptor.Jab.Common.Data.ProxySettings.Default);
+        this.ProxySettings = new ProxySettingsModel(proxySettings ?? Core.Data.ProxySettings.Default);
 
-        this.BaseMapSettings = new BaseMapSettingsModel(baseMapSettings ?? IRI.Maptor.Jab.Common.Data.BaseMapSettings.Default);
+        this.BaseMapSettings = new BaseMapSettingsModel(baseMapSettings ?? Core.Data.BaseMapSettings.Default);
 
-        this.MapSettings = new MapSettingsModel(mapSettings ?? IRI.Maptor.Jab.Common.Data.MapSettings.Default);
+        this.MapSettings = new MapSettingsModel(mapSettings ?? Core.Data.MapSettings.Default);
 
-        this.GeneralSettings = new GeneralSettingsModel(generalSettings ?? IRI.Maptor.Jab.Common.Data.GeneralSettings.Default);
+        this.GeneralSettings = new GeneralSettingsModel(generalSettings ?? Core.Data.GeneralSettings.Default);
 
         this.MapProviders = BaseMapSettings.MapProviders;
 

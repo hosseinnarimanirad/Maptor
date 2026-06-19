@@ -1,8 +1,7 @@
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Jab.Core.Localization;
-using IRI.Maptor.Jab.Core.TileServices;
 
-namespace IRI.Maptor.Jab.Common.TileServices;
+namespace IRI.Maptor.Jab.Core.TileServices;
 
 public class TileServiceUrlStrategy_ProxyApp : TileServiceUrlStrategy
 {
@@ -22,12 +21,12 @@ public class TileServiceUrlStrategy_ProxyApp : TileServiceUrlStrategy
     {
         // Get the original tile URL from the web URL factory
         var originalUrlFunc = TileMapWebUrlFactory.GetMakeUrlFunc(_providerResourceKey, _mapTypeResourceKey);
-        
+
         if (originalUrlFunc == null)
             return null;
 
         var originalUrl = originalUrlFunc(tile);
-        
+
         if (string.IsNullOrWhiteSpace(originalUrl))
             return null;
 
@@ -40,7 +39,7 @@ public class TileServiceUrlStrategy_ProxyApp : TileServiceUrlStrategy
         // IMPORTANT: Use Uri.EscapeDataString (NOT HttpUtility.UrlEncode) for query parameter values
         // Uri.EscapeDataString is RFC 3986 compliant and properly encodes URLs for query parameters
         var encodedUrl = Uri.EscapeDataString(originalUrl);
-        
+
         return $"{_proxyBaseUrl}/api/tile?url={encodedUrl}&provider={providerName}&mapType={mapTypeName}&z={tile.ZoomLevel}&x={tile.ColumnNumber}&y={tile.RowNumber}";
     }
 }

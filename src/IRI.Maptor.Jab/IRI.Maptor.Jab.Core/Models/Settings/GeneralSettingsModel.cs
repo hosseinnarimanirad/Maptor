@@ -1,28 +1,12 @@
-using System;
-
-using IRI.Maptor.Sta.Spatial.Model;
-using IRI.Maptor.Jab.Common.Models.Themes;
-using System.Collections.Generic;
-using IRI.Maptor.Jab.Common.Data.Settings;
-using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Data;
 using IRI.Maptor.Jab.Core.Localization;
 
-namespace IRI.Maptor.Jab.Common.Models.Settings;
+namespace IRI.Maptor.Jab.Core.Models;
 
 public class GeneralSettingsModel : Notifier, IGeneralSettings
 {
     protected readonly IGeneralSettings _settings;
-
-    //public string? SelectedCultureName
-    //{
-    //    get => _settings.SelectedCultureName;
-    //    set
-    //    {
-    //        _settings.SelectedCultureName = value;
-    //        RaisePropertyChanged();
-    //    }
-    //}
-
+     
     public LanguageType CurrentLanguage
     {
         get => _settings.CurrentLanguage;
@@ -115,7 +99,7 @@ public class GeneralSettingsModel : Notifier, IGeneralSettings
         }
     }
 
-    
+
 
     public MahAppsThemeColor? MahAppsTheme
     {

@@ -3,7 +3,7 @@ using IRI.Maptor.Sta.Spatial.Model;
 
 using static IRI.Maptor.Jab.Core.Properties.Resources;
 
-namespace IRI.Maptor.Jab.Common.TileServices;
+namespace IRI.Maptor.Jab.Core.TileServices;
 
 public static class TileMapWebUrlFactory
 {
@@ -27,7 +27,7 @@ public static class TileMapWebUrlFactory
         for (int i = levelOfDetail; i > 0; i--)
         {
             char digit = '0';
-            int mask = 1 << (i - 1);
+            int mask = 1 << i - 1;
             if ((tileX & mask) != 0)
             {
                 digit++;
@@ -146,13 +146,13 @@ public static class TileMapWebUrlFactory
     public static string GetServer(int min = 0, int max = 3)
     {
         //first bound is inclusive second bound is exclusive
-        return IRI.Maptor.Sta.Common.Helpers.RandomHelper.Get(min, max + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
+        return Sta.Common.Helpers.RandomHelper.Get(min, max + 1).ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 
     public static char GetServerCharacter(int min = 0, int max = 2)
     {
         //first bound is inclusive second bound is exclusive
-        var random = IRI.Maptor.Sta.Common.Helpers.RandomHelper.Get(min, max + 1);
+        var random = Sta.Common.Helpers.RandomHelper.Get(min, max + 1);
 
         return _serverChar[random];
     }
@@ -223,6 +223,6 @@ public static class TileMapWebUrlFactory
             (nameof(tile_provider_mapbox), nameof(tile_mapType_Satellite)) => CreateFromXyzUrlCharServer("https://{@server}.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w"),
 
             (_, _) => tile => null
-        }; ; 
+        }; ;
     }
 }

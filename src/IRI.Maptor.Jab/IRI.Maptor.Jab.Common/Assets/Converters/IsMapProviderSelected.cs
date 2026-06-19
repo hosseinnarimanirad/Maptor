@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Data;
 using System.Globalization;
-using IRI.Maptor.Jab.Common.TileServices;
+using IRI.Maptor.Jab.Core.TileServices;
 
 namespace IRI.Maptor.Jab.Common.Converters;
 

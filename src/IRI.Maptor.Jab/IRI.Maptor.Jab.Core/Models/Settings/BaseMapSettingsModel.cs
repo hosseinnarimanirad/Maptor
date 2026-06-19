@@ -1,13 +1,12 @@
 ﻿using System;
 
 using IRI.Maptor.Sta.Spatial.Model;
-using IRI.Maptor.Jab.Common.TileServices;
 using System.Collections.Generic;
-using IRI.Maptor.Jab.Common.Data.Settings;
 using IRI.Maptor.Jab.Core;
 using IRI.Maptor.Jab.Core.TileServices;
+using IRI.Maptor.Jab.Core.Data;
 
-namespace IRI.Maptor.Jab.Common.Models.Settings;
+namespace IRI.Maptor.Jab.Core.Models;
 
 public class BaseMapSettingsModel : Notifier, IBaseMapSettings
 {

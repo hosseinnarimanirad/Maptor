@@ -1,12 +1,7 @@
-using IRI.Maptor.Jab.Common.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using IRI.Maptor.Jab.Core.Attributes;
 
-namespace IRI.Maptor.Jab.Common.Models.Themes;
-      
+namespace IRI.Maptor.Jab.Core.Models;
+
 public enum MahAppsThemeColor
 {
     [Color("#FF34A134")]

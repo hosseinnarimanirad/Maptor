@@ -1,9 +1,9 @@
 ﻿using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Data;
 using System;
 using System.Text;
 using System.Windows;
 using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Core.Data;
 
 
 namespace IRI.Maptor.Res.TrajectoryCompression;

@@ -3,8 +3,8 @@ using System.Windows;
 using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Res.LRSimplification.Common;
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Data;
 using IRI.Maptor.Jab.Common.Models;
+using IRI.Maptor.Jab.Core.Data;
 
 namespace IRI.Maptor.Res.LRSimplification;
 /// <summary>

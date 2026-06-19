@@ -1,18 +1,13 @@
-using System;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Jab.Core.Localization;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Jab.Core.Localization;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
 
-namespace IRI.Maptor.Jab.Common.Models.CoordinatePanel;
+namespace IRI.Maptor.Jab.Core.Models;
 
 public class SpatialReferenceItem : Notifier, IDisposable
 {
-    //const string defaultXLabel = "X";
-    //const string defaultYLabel = "Y";
-
     private CopyCoordinateOptions _copyCoordinateOptions;
 
     private CoordinateDisplayMode _coordinateDisplayMode;
@@ -37,23 +32,21 @@ public class SpatialReferenceItem : Notifier, IDisposable
         string yLabelResourceKey,
         string? zoneItemResourceKey = "")
     {
-        //this._fromWgs84Geodetic = fromWgs84Geodetic;
+        CoordinateDisplayMode = coordinateDisplayMode;
 
-        this.CoordinateDisplayMode = coordinateDisplayMode;
+        TitleItemResourceKey = titleItemResourceKey;
 
-        this.TitleItemResourceKey = titleItemResourceKey;
+        SubTitleItemResourceKey = subTitleItemResourceKey;
 
-        this.SubTitleItemResourceKey = subTitleItemResourceKey;
+        XLabelItemResourceKey = xLabelResourceKey;
 
-        this.XLabelItemResourceKey = xLabelResourceKey;
+        YLabelItemResourceKey = yLabelResourceKey;
 
-        this.YLabelItemResourceKey = yLabelResourceKey;
-
-        this.ZoneItemResourceKey = zoneItemResourceKey;
+        ZoneItemResourceKey = zoneItemResourceKey;
 
         LocalizationManager.Instance.LanguageChanged += OnLanguageChanged;
 
-        this._copyCoordinateOptions = new CopyCoordinateOptions()
+        _copyCoordinateOptions = new CopyCoordinateOptions()
         {
             UseThousandSeparator = true,
             LatLongPrecision = 6,
@@ -69,27 +62,21 @@ public class SpatialReferenceItem : Notifier, IDisposable
         RaisePropertyChanged(nameof(XLabelItem));
         RaisePropertyChanged(nameof(YLabelItem));
     }
-     
+
     public void Update(Point geodeticPoint)
     {
-        //var point = _fromWgs84Geodetic(geodeticPoint);
+        var format = CoordinateHelper.Format(MapProjects.GeodeticWgs84ToWebMercator(geodeticPoint), CoordinateDisplayMode, _copyCoordinateOptions);
 
-        var format = CoordinateHelper.Format(MapProjects.GeodeticWgs84ToWebMercator(geodeticPoint), CoordinateDisplayMode, _copyCoordinateOptions /*thousandSeparator: true, null, 6, 3, null*/);
+        XValue = format.x;
+        YValue = format.y;
 
-        //this.XValue = _toString(point.X);
-        //this.YValue = _toString(point.Y);
+        ZoneNumber = MapProjects.FindUtmZone(geodeticPoint.X).ToString();
 
-        this.XValue = format.x;
-        this.YValue = format.y;
-
-        this.ZoneNumber = MapProjects.FindUtmZone(geodeticPoint.X).ToString();
-
-        //if (UILanguage == LanguageMode.Persian)
         if (LocalizationManager.Instance.IsPersian)
         {
-            this.XValue = this.XValue.LatinNumbersToFarsiNumbers();
-            this.YValue = this.YValue.LatinNumbersToFarsiNumbers();
-            this.ZoneNumber = this.ZoneNumber.LatinNumbersToFarsiNumbers();
+            XValue = XValue.LatinNumbersToFarsiNumbers();
+            YValue = YValue.LatinNumbersToFarsiNumbers();
+            ZoneNumber = ZoneNumber.LatinNumbersToFarsiNumbers();
         }
     }
 
@@ -188,30 +175,13 @@ public class SpatialReferenceItem : Notifier, IDisposable
 
             if (value)
             {
-                this.FireIsSelectedChanged?.Invoke(this);
+                FireIsSelectedChanged?.Invoke(this);
             }
 
         }
     }
 
 
-    //public string GetPositionString(Point geodeticPoint) //where T : IPoint, new()
-    //{
-    //    var point = _fromWgs84Geodetic(geodeticPoint);
-
-    //    //var point = FromWgs84Geodetic(geodeticPoint);
-
-
-    //    //var x = _toString(point.X);
-
-    //    //var y = _toString(point.Y);
-
-    //    //return $"{x},{y}";
-
-    //    var format = CoordinateHelper.Format(MapProjects.GeodeticWgs84ToWebMercator(point), _coordinateDisplayMode, null, 6, 3, null);
-
-    //    return $"{format.x}, {format.y}";
-    //}
 
     #region IDispose
 

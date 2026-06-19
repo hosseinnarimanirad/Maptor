@@ -21,18 +21,17 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Controls.MapOptions;
 using IRI.Maptor.Jab.Controls.MapMarkers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
-using IRI.Maptor.Jab.Common.Models.DataStructure;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
 
 using WpfPoint = System.Windows.Point;
 using Point = IRI.Maptor.Sta.Common.Primitives.Point;
 using LineSegment = System.Windows.Media.LineSegment;
 using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
-using IRI.Maptor.Jab.Common.Data.Settings;
 using IRI.Maptor.Jab.Common.Views;
 using IRI.Maptor.Jab.Core.Localization;
 using IRI.Maptor.Jab.Core;
 using IRI.Maptor.Jab.Core.Models;
+using IRI.Maptor.Jab.Core.Data;
 
 namespace IRI.Maptor.Jab.Common.Layers;
 
@@ -729,7 +728,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         {
             var mode = RequestGetCoordinateDisplayMode?.Invoke() ?? CoordinateDisplayMode.GeodeticDecimal;
 
-            var mapSettings = RequestGetMapSettings?.Invoke() ?? Data.MapSettings.Default;
+            var mapSettings = RequestGetMapSettings?.Invoke() ?? MapSettings.Default;
 
             var options = CopyCoordinateOptions.Create(mapSettings.Clipboard_LatLongPrecision, mapSettings.Clipboard_XyPrecision);
 
@@ -1393,7 +1392,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         Point point = new(currentPoint.X, currentPoint.Y);
 
-        var mapSettings = RequestGetMapSettings?.Invoke() ?? Data.MapSettings.Default;
+        var mapSettings = RequestGetMapSettings?.Invoke() ?? MapSettings.Default;
 
         var options = CopyCoordinateOptions.Create(mapSettings.Clipboard_LatLongPrecision, mapSettings.Clipboard_XyPrecision);
 

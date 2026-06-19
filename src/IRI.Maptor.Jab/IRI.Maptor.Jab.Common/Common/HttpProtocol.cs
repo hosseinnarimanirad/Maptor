@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using IRI.Maptor.Jab.Common.Models.Settings;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.Common;
 

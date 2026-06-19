@@ -10,7 +10,6 @@ using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
 using IRI.Maptor.Jab.Core;

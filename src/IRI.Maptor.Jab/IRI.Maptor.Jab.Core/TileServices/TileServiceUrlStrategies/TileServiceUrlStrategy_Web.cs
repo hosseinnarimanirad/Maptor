@@ -1,7 +1,6 @@
 ﻿using IRI.Maptor.Sta.Spatial.Model;
-using IRI.Maptor.Jab.Core.TileServices;
 
-namespace IRI.Maptor.Jab.Common.TileServices;
+namespace IRI.Maptor.Jab.Core.TileServices;
 
 public class TileServiceUrlStrategy_Web : TileServiceUrlStrategy
 {

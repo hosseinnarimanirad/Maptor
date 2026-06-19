@@ -1,7 +1,5 @@
-﻿using System.Linq; 
-using System.Collections.Generic;
-
-namespace IRI.Maptor.Jab.Common.Models.DataStructure;
+﻿
+namespace IRI.Maptor.Jab.Core.Models;
 
 public class RecursiveCollection<T>
 {
@@ -13,9 +11,9 @@ public class RecursiveCollection<T>
 
     public List<T> GetFlattenCollection()
     {
-        if (this.Collections is null)
+        if (Collections is null)
         {
-            return this.Values;
+            return Values;
         }
         else
         {

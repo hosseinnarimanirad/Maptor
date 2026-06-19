@@ -1,14 +1,8 @@
-using IRI.Maptor.Jab.Core.Localization;
 using IRI.Maptor.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IRI.Maptor.Jab.Common.Attributes;
-using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Localization;
+using IRI.Maptor.Jab.Core.Attributes;
 
-namespace IRI.Maptor.Jab.Common.Models.Themes;
+namespace IRI.Maptor.Jab.Core.Models;
 
 public class ThemeInfoModel : Notifier, IDisposable
 {
@@ -48,12 +42,8 @@ public class ThemeInfoModel : Notifier, IDisposable
     {
         Id = (int)color;
 
-        this.Color = color;
-
-        //ColorName = color.ToString();
-
-        //this.DisplayNameResourceKey = displayNameResourceKey;
-
+        Color = color;
+         
         AccentColor = color.GetAttribute<ColorAttribute>()?.HexColor ?? string.Empty;
 
         Mode = mode;
@@ -78,7 +68,7 @@ public class ThemeInfoModel : Notifier, IDisposable
         if (other is null)
             return false;
 
-        return other.Color == this.Color;
+        return other.Color == Color;
     }
 
     #region IDispose

@@ -23,7 +23,6 @@ using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Services;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Jab.Common.TileServices;
 using IRI.Maptor.Sta.Persistence.DataSources;
 
 using IRI.Maptor.Sta.Common.Enums;
@@ -52,6 +51,7 @@ using IRI.Maptor.Jab.Controls.MapMarkers;
 using IRI.Maptor.Jab.Core;
 using IRI.Maptor.Jab.Core.Layers;
 using IRI.Maptor.Jab.Core.Models;
+using IRI.Maptor.Jab.Core.TileServices;
 
 //using Geometry = IRI.Maptor.Sta.Spatial.Primitives.Geometry<IRI.Maptor.Sta.Common.Primitives.Point>;
 

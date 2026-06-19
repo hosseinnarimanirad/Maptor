@@ -1,6 +1,6 @@
 using System;
-using IRI.Maptor.Jab.Common.Data.Settings;
 using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Data;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Model;
 

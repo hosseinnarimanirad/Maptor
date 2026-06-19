@@ -2,9 +2,8 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Core;
 using IRI.Maptor.Sta.Spatial.Model;
 using IRI.Maptor.Jab.Core.Localization;
-using IRI.Maptor.Jab.Core.TileServices;
 
-namespace IRI.Maptor.Jab.Common.TileServices;
+namespace IRI.Maptor.Jab.Core.TileServices;
 
 public class TileMapProvider : ValueObjectNotifier, IDisposable
 {
@@ -15,7 +14,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
     public string FullName => $"{ProviderEn}-{MapTypeEn}";
 
     public string Title { get { return $"{Provider}-{MapType}"; } }
-     
+
     private string _providerResourceKey { get; set; }
     public string Provider => LocalizationManager.Instance[_providerResourceKey];
     public string ProviderEn => LocalizationManager.Instance.GetDefaultValue(_providerResourceKey);
@@ -49,10 +48,10 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
     }
 
     public TileMapAccessMode Mode { get; protected set; } = TileMapAccessMode.Internet;
-     
+
     //in the case of google traffic map, caching should be avoided
     public bool AllowCache { get; set; } = true;
-     
+
     protected TileMapProvider(TileMapProvider mapProvider)
         : this(mapProvider.Type, mapProvider._providerResourceKey, mapProvider._mapTypeResourceKey, mapProvider.Thumbnail, mapProvider.Thumbnail72, mapProvider.Mode)
     {
@@ -65,16 +64,16 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
         byte[]? thumbnail,
         byte[]? thumbnail72,
         TileMapAccessMode mode = TileMapAccessMode.Internet)
-    { 
+    {
         _urlStrategy = new TileServiceUrlStrategy_Web(providerResourceKey, mapTypeResourceKey);
 
-        this._providerResourceKey = providerResourceKey;
-        this._mapTypeResourceKey = mapTypeResourceKey;
-        this._thumbnail = thumbnail;
-        this._thumbnail72 = thumbnail72;
+        _providerResourceKey = providerResourceKey;
+        _mapTypeResourceKey = mapTypeResourceKey;
+        _thumbnail = thumbnail;
+        _thumbnail72 = thumbnail72;
 
-        this.Mode = mode;
-        this.Type = baseMapType;
+        Mode = mode;
+        Type = baseMapType;
 
         LocalizationManager.Instance.LanguageChanged -= Instance_LanguageChanged;
         LocalizationManager.Instance.LanguageChanged += Instance_LanguageChanged;
@@ -101,7 +100,7 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
 
     public virtual string? GetUrl(TileInfo tile) => _urlStrategy.GetUrl(tile);
 
-    public bool Is(string? fullName) => !string.IsNullOrWhiteSpace(fullName) && this.FullName.EqualsIgnoreCase(fullName);
+    public bool Is(string? fullName) => !string.IsNullOrWhiteSpace(fullName) && FullName.EqualsIgnoreCase(fullName);
 
     // this is the set strategy method for TileMapProvider as the Context of the TileServiceUrlStrategy
     public void ChangeMode(TileMapAccessMode newMode, string? localNetworkBaseUrl, string? proxyAppBaseUrl)
@@ -109,8 +108,8 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
         //if (this.Mode == newMode)
         //    return;
 
-        this.Mode = newMode;
-         
+        Mode = newMode;
+
         switch (newMode)
         {
             case TileMapAccessMode.Internet:

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using IRI.Maptor.Jab.Common.Models.Themes;
+using IRI.Maptor.Jab.Core.Models;
 using IRI.Maptor.Sta.Common.Helpers;
 //using static IRI.Maptor.Jab.Common.Models.Themes.MahAppsThemeColor;
 

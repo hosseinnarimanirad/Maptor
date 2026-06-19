@@ -1,9 +1,7 @@
-﻿using System;
-using IRI.Maptor.Jab.Common.Data.Settings;
-using IRI.Maptor.Jab.Common.Events;
-using IRI.Maptor.Jab.Core;
+﻿using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Data;
 
-namespace IRI.Maptor.Jab.Common.Models.Settings;
+namespace IRI.Maptor.Jab.Core.Models;
 
 public class ProxySettingsModel : Notifier, IProxySettings
 {
@@ -83,7 +81,7 @@ public class ProxySettingsModel : Notifier, IProxySettings
 
     public ProxySettingsModel(IProxySettings settings/*, Action<ProxySettingsModel> fireProxyChanged*/)
     {
-        this._settings = settings;
+        _settings = settings;
 
         //FireProxyChanged = fireProxyChanged;
 

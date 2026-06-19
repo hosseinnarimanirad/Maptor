@@ -1,10 +1,9 @@
 using IRI.Maptor.Jab.Core;
 using IRI.Maptor.Sta.Spatial.Model;
-using IRI.Maptor.Jab.Core.TileServices;
 
 using static IRI.Maptor.Jab.Core.Properties.Resources;
 
-namespace IRI.Maptor.Jab.Common.TileServices;
+namespace IRI.Maptor.Jab.Core.TileServices;
 
 public static class TileMapProviderFactory
 {

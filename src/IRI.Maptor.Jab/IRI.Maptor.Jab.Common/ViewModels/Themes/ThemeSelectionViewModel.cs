@@ -2,9 +2,8 @@ using System;
 using System.Collections.ObjectModel;
 
 using IRI.Maptor.Jab.Common.Helpers;
-using IRI.Maptor.Jab.Common.Models.Themes;
-using IRI.Maptor.Jab.Common.Models.Settings;
 using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Core.Models;
 
 namespace IRI.Maptor.Jab.Common.ViewModels.Themes;
 
