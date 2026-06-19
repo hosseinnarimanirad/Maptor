@@ -15,18 +15,25 @@
               Padding="12,8"
               ColumnSpacing="4">
 
-            <!-- Left: app icon + title -->
+            <!-- Left: app icon + title + current project -->
             <HorizontalStackLayout Grid.Column="0"
                                    Spacing="8"
                                    VerticalOptions="Center">
                 <Label Text="🗺"
                        FontSize="22"
                        VerticalOptions="Center" />
-                <Label Text="Maptor"
-                       TextColor="White"
-                       FontSize="18"
-                       FontAttributes="Bold"
-                       VerticalOptions="Center" />
+                <VerticalStackLayout Spacing="0"
+                                     VerticalOptions="Center">
+                    <Label Text="Maptor"
+                           TextColor="White"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+                    <Label Text="{Binding CurrentProjectName}"
+                           IsVisible="{Binding HasCurrentProject}"
+                           TextColor="#D8FFFFFF"
+                           FontSize="12"
+                           LineBreakMode="TailTruncation" />
+                </VerticalStackLayout>
             </HorizontalStackLayout>
 
             <!-- Right: layers, record, more -->
@@ -41,16 +48,8 @@
                         Padding="0"
                         WidthRequest="44"
                         HeightRequest="44" />
-                <Button Text="⏺"
-                        Command="{Binding RecordCommand}"
-                        BackgroundColor="Transparent"
-                        TextColor="{Binding RecordColor}"
-                        FontSize="20"
-                        Padding="0"
-                        WidthRequest="44"
-                        HeightRequest="44" />
                 <Button Text="⋮"
-                        Clicked="OnMoreClicked"
+                        Command="{Binding ToggleProjectsCommand}"
                         BackgroundColor="Transparent"
                         TextColor="White"
                         FontSize="24"
@@ -165,9 +164,14 @@
                                      BaseMaps="{Binding BaseMaps}"
                                      SelectedBaseMap="{Binding SelectedBaseMap}"
                                      AddLayerCommand="{Binding AddGeoJsonCommand}"
-                                     IsOpen="{Binding IsLegendVisible}"
-                                     HorizontalOptions="Fill"
-                                     VerticalOptions="Fill" />
+                                     IsOpen="{Binding IsLegendVisible}" />
+
+            <!-- Slide-in projects sidebar (saved projects) -->
+            <maptor:ProjectsSidebar ItemsSource="{Binding Projects}"
+                                    IsOpen="{Binding IsProjectsVisible}"
+                                    AddProjectCommand="{Binding AddProjectCommand}"
+                                    SelectProjectCommand="{Binding OpenProjectCommand}"
+                                    DeleteProjectCommand="{Binding DeleteProjectCommand}" />
         </Grid>
     </Grid>
 

@@ -674,8 +674,6 @@
     <value>Select File</value>
     <comment>Default title for open file dialogs</comment>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  
   <data name="index_100k_title" xml:space="preserve">
     <value>Index 100k</value>
   </data>
@@ -1003,7 +1001,6 @@
   <data name="wat_security_userName" xml:space="preserve">
     <value>User Name</value>
   </data>
-  
   <data name="dialog_showMessage_title" xml:space="preserve">
     <value>Message</value>
     <comment>Default title for message dialogs</comment>
@@ -1490,7 +1487,7 @@
     <value>Go to scale (at center)</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
-    <value>Save</value>
+    <value>Add New</value>
   </data>
   <data name="mapExtent_new_extentTitle" xml:space="preserve">
     <value>Extent Title</value>

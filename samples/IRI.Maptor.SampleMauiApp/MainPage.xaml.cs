@@ -11,6 +11,15 @@ public partial class MainPage : ContentPage
 		InitializeComponent();
 
 		BindingContext = _viewModel;
+
+		Map.MapTapped += (_, _) => _viewModel.CloseSidebars();
+	}
+
+	protected override async void OnAppearing()
+	{
+		base.OnAppearing();
+
+		await _viewModel.LoadProjectsAsync();
 	}
 
 	private async void OnSearchClicked(object? sender, EventArgs e)
@@ -46,26 +55,6 @@ public partial class MainPage : ContentPage
 		catch (Exception)
 		{
 			_viewModel.StatusMessage = "Could not capture a photo. Check camera permissions.";
-		}
-	}
-
-	private async void OnMoreClicked(object? sender, EventArgs e)
-	{
-		var choice = await DisplayActionSheet(
-			"More options",
-			"Cancel",
-			null,
-			"Add GeoJSON…",
-			"Load sample");
-
-		switch (choice)
-		{
-			case "Add GeoJSON…":
-				_viewModel.AddGeoJsonCommand.Execute(null);
-				break;
-			case "Load sample":
-				_viewModel.LoadSampleCommand.Execute(null);
-				break;
 		}
 	}
 }
