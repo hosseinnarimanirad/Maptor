@@ -58,6 +58,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="cmd_contextMenu_copy" xml:space="preserve">
+    <value>Պատճենել</value>
+  </data>
+  <data name="cmd_contextMenu_cut" xml:space="preserve">
+    <value>Կտրել</value>
+  </data>
+  <data name="cmd_contextMenu_delete" xml:space="preserve">
+    <value>Ջնջել</value>
+  </data>
+  <data name="cmd_contextMenu_paste" xml:space="preserve">
+    <value>Տեղադրել</value>
+  </data>
   <data name="cmd_drawingLegendItem_boundary" xml:space="preserve">
     <value>Սահման</value>
   </data>
@@ -81,6 +93,12 @@
   </data>
   <data name="cmd_drawingLegendItem_envelope" xml:space="preserve">
     <value>Ծրար</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsCsv" xml:space="preserve">
+    <value>Արտահանել որպես csv</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsDxf" xml:space="preserve">
+    <value>Արտահանել որպես Dxf</value>
   </data>
   <data name="cmd_drawingLegendItem_exportAsGeoJson" xml:space="preserve">
     <value>Արտահանել GeoJson</value>
@@ -106,11 +124,17 @@
   <data name="cmd_drawingLegend_moveUp" xml:space="preserve">
     <value>Տեղափոխել վեր</value>
   </data>
+  <data name="cmd_drawingLegend_openAll" xml:space="preserve">
+    <value>Բացել բոլորը</value>
+  </data>
   <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
     <value>Հեռացնել բոլորը</value>
   </data>
+  <data name="cmd_drawingLegend_saveAll" xml:space="preserve">
+    <value>Պահպանել բոլորը</value>
+  </data>
   <data name="cmd_general_addGeoJson" xml:space="preserve">
-    <value>Add GeoJson</value>
+    <value>Ավելացնել GeoJson</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
     <value>Ավելացնել Shapefile</value>
@@ -139,14 +163,23 @@
   <data name="cmd_general_goTo" xml:space="preserve">
     <value>Գնալ</value>
   </data>
+  <data name="cmd_general_identify" xml:space="preserve">
+    <value>Նույնականացնել</value>
+  </data>
   <data name="cmd_general_measureArea" xml:space="preserve">
     <value>Չափել մակերես</value>
   </data>
   <data name="cmd_general_measureLength" xml:space="preserve">
     <value>Չափել երկարություն</value>
   </data>
+  <data name="cmd_general_nextExtent" xml:space="preserve">
+    <value>Հաջորդ դիտում</value>
+  </data>
   <data name="cmd_general_pan" xml:space="preserve">
     <value>Տեղափոխել</value>
+  </data>
+  <data name="cmd_general_previousExtent" xml:space="preserve">
+    <value>Նախորդ դիտում</value>
   </data>
   <data name="cmd_general_zoomIn" xml:space="preserve">
     <value>Մեծացնել</value>
@@ -160,11 +193,8 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>Նախորդ մասշտաբ</value>
   </data>
-  <data name="cmd_general_previousExtent" xml:space="preserve">
-    <value>Նախորդ դիտում</value>
-  </data>
-  <data name="cmd_general_nextExtent" xml:space="preserve">
-    <value>Հաջորդ դիտում</value>
+  <data name="cmd_general_zoomToExtent" xml:space="preserve">
+    <value>Մեծացնել ընդգրկույթին</value>
   </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">
     <value>Մաքրել ընտրությունը</value>
@@ -202,6 +232,9 @@
   <data name="cmd_legend_addDxf" xml:space="preserve">
     <value>Ավելացնել DXF</value>
   </data>
+  <data name="cmd_legend_addEsriJson" xml:space="preserve">
+    <value>Ավելացնել EsriJson</value>
+  </data>
   <data name="cmd_legend_addGpx" xml:space="preserve">
     <value>Ավելացնել GPX</value>
   </data>
@@ -232,8 +265,8 @@
   <data name="cmd_legend_removeAll" xml:space="preserve">
     <value>Հեռացնել բոլորը</value>
   </data>
-  <data name="common_cancel" xml:space="preserve">
-    <value>Չեղարկել</value>
+  <data name="cmd_security_resetPassword" xml:space="preserve">
+    <value>Վերականգնել գաղտնաբառը</value>
   </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>Caps Lock միացված է</value>
@@ -253,8 +286,26 @@
   <data name="common_forgetPassword" xml:space="preserve">
     <value>Մոռացել եմ գաղտնաբառը</value>
   </data>
+  <data name="common_geometryType_point" xml:space="preserve">
+    <value>Կետային օբյեկտ</value>
+  </data>
+  <data name="common_geometryType_polygon" xml:space="preserve">
+    <value>Բազմանկյունային օբյեկտ</value>
+  </data>
+  <data name="common_geometryType_polyline" xml:space="preserve">
+    <value>Բազմագիծ օբյեկտ</value>
+  </data>
+  <data name="common_kilometer" xml:space="preserve">
+    <value>կիլոմետր</value>
+  </data>
+  <data name="common_loadingText" xml:space="preserve">
+    <value>ԲԵՌՆՎՈՒՄ Է...</value>
+  </data>
   <data name="common_login" xml:space="preserve">
     <value>Մուտք</value>
+  </data>
+  <data name="common_meter" xml:space="preserve">
+    <value>մետր</value>
   </data>
   <data name="common_new" xml:space="preserve">
     <value>Նոր</value>
@@ -277,6 +328,9 @@
   <data name="common_save" xml:space="preserve">
     <value>Պահպանել</value>
   </data>
+  <data name="common_squareMeter" xml:space="preserve">
+    <value>Քառակուսի մետր</value>
+  </data>
   <data name="common_username" xml:space="preserve">
     <value>Օգտանուն</value>
   </data>
@@ -286,20 +340,59 @@
   <data name="dialog_changePassword_title" xml:space="preserve">
     <value>Փոխել գաղտնաբառը</value>
   </data>
+  <data name="dialog_common_areYouSure" xml:space="preserve">
+    <value>Վստա՞հ եք:</value>
+  </data>
   <data name="dialog_common_browse" xml:space="preserve">
-    <value>Browse...</value>
+    <value>Ընտրել...</value>
+  </data>
+  <data name="dialog_common_browseFolder" xml:space="preserve">
+    <value>Ընտրել թղթապանակ...</value>
   </data>
   <data name="dialog_common_cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Չեղարկել</value>
+  </data>
+  <data name="dialog_common_close" xml:space="preserve">
+    <value>Փակել</value>
+  </data>
+  <data name="dialog_common_confirmTitle" xml:space="preserve">
+    <value>Հաստատում</value>
+  </data>
+  <data name="dialog_common_eastingFirst" xml:space="preserve">
+    <value>Նախ X, ապա Y</value>
+  </data>
+  <data name="dialog_common_export" xml:space="preserve">
+    <value>Արտահանել</value>
   </data>
   <data name="dialog_common_fileWatermark" xml:space="preserve">
-    <value>File</value>
+    <value>Ֆայլ</value>
+  </data>
+  <data name="dialog_common_formatJson" xml:space="preserve">
+    <value>Ձևաչափել Json-ը</value>
+  </data>
+  <data name="dialog_common_minifiedJson" xml:space="preserve">
+    <value>Սեղմված Json</value>
+  </data>
+  <data name="dialog_common_no" xml:space="preserve">
+    <value>Ոչ</value>
+  </data>
+  <data name="dialog_common_ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="dialog_common_prettyJson" xml:space="preserve">
+    <value>Ընթեռնելի Json</value>
   </data>
   <data name="dialog_common_removeFile" xml:space="preserve">
-    <value>Remove File</value>
+    <value>Հեռացնել ֆայլը</value>
   </data>
   <data name="dialog_common_save" xml:space="preserve">
-    <value>Save</value>
+    <value>Պահպանել</value>
+  </data>
+  <data name="dialog_common_xyOrder" xml:space="preserve">
+    <value>X/Y հերթականություն</value>
+  </data>
+  <data name="dialog_common_yes" xml:space="preserve">
+    <value>Այո</value>
   </data>
   <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
     <value>CSV</value>
@@ -308,7 +401,7 @@
     <value>TSV</value>
   </data>
   <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
-    <value>Geometry Type</value>
+    <value>Երկրաչափության տեսակ</value>
   </data>
   <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
     <value>Առաջին սյուն = X (երկարություն/արևելք), երկրորդ = Y (լայնություն/հյուսիս)</value>
@@ -340,6 +433,9 @@
   <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
     <value>Օրինակ կետեր (առաջին 50):</value>
   </data>
+  <data name="dialog_dxfOpen_title" xml:space="preserve">
+    <value>Ներմուծել DXF</value>
+  </data>
   <data name="dialog_emailSignUp_or" xml:space="preserve">
     <value>կամ</value>
   </data>
@@ -349,11 +445,35 @@
   <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
     <value>Գրանցվել Google-ով</value>
   </data>
+  <data name="dialog_export_disabledProjection" xml:space="preserve">
+    <value>Օգտագործել լռելյայն SRS</value>
+  </data>
+  <data name="dialog_export_enabledProjection" xml:space="preserve">
+    <value>Պրոյեկտել ի</value>
+  </data>
+  <data name="dialog_export_exportModeAll" xml:space="preserve">
+    <value>Բոլորը</value>
+  </data>
+  <data name="dialog_export_exportModeHighlighted" xml:space="preserve">
+    <value>Ընդգծվածները</value>
+  </data>
+  <data name="dialog_export_exportModeSelected" xml:space="preserve">
+    <value>Ընտրվածները</value>
+  </data>
+  <data name="dialog_export_exportModeTitle" xml:space="preserve">
+    <value>Արտահանվող օբյեկտներ:</value>
+  </data>
+  <data name="dialog_export_outputFileFormat" xml:space="preserve">
+    <value>Ելքային ձևաչափ:</value>
+  </data>
+  <data name="dialog_export_sourceSrs" xml:space="preserve">
+    <value>Աղբյուրի SRS</value>
+  </data>
+  <data name="dialog_export_targetSrs" xml:space="preserve">
+    <value>Նպատակային SRS</value>
+  </data>
   <data name="dialog_geoJsonOpen_title" xml:space="preserve">
     <value>GeoJSON ներմուծում</value>
-  </data>
-  <data name="dialog_common_xyOrder" xml:space="preserve">
-    <value>X/Y order</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
     <value>Առաջին կոորդինատ = X (երկարություն/արևելք), երկրորդ = Y (լայնություն/հյուսիս)</value>
@@ -418,7 +538,6 @@
   <data name="dialog_geometryDetails_title" xml:space="preserve">
     <value>Երկրաչափության մանրամասները</value>
   </data>
- 
   <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
     <value>Մեծացնել դեպի կետ</value>
   </data>
@@ -430,6 +549,15 @@
   </data>
   <data name="dialog_goto_zoomTo" xml:space="preserve">
     <value>Մեծացնել</value>
+  </data>
+  <data name="dialog_layerSettings_title" xml:space="preserve">
+    <value>Շերտի կարգավորումներ</value>
+  </data>
+  <data name="dialog_msg_confirmDeleteFeatures" xml:space="preserve">
+    <value>Օբյեկտների ջնջում</value>
+  </data>
+  <data name="dialog_msg_discardPendingChanges" xml:space="preserve">
+    <value>Շերտերի սպասվող փոփոխությունները կչեղարկվեն</value>
   </data>
   <data name="dialog_openfile_title" xml:space="preserve">
     <value>Ընտրել ֆայլ</value>
@@ -570,7 +698,7 @@
     <value>#</value>
   </data>
   <data name="geometryDetails_coordinateGrid_vertexAngle" xml:space="preserve">
-    <value>Vertex Angle</value>
+    <value>Գագաթի անկյուն</value>
   </data>
   <data name="geometryDetails_coordinateGrid_x" xml:space="preserve">
     <value>X</value>
@@ -593,8 +721,14 @@
   <data name="geometryDetails_currentPoint_edit" xml:space="preserve">
     <value>Խմբագրել</value>
   </data>
+  <data name="geometryDetails_currentPoint_goToNextPage" xml:space="preserve">
+    <value>Անցնել հաջորդ էջ</value>
+  </data>
   <data name="geometryDetails_currentPoint_goToNextPoint" xml:space="preserve">
     <value>Գնացեք հաջորդ կետ</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
+    <value>Անցնել նախորդ էջ</value>
   </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
     <value>Գնացեք նախորդ կետ</value>
@@ -638,7 +772,6 @@
   <data name="geometryDetails_options_useDecimalDegreesForAngles" xml:space="preserve">
     <value>Անկյունների համար օգտագործեք տասնորդական աստիճաններ</value>
   </data>
- 
   <data name="geometryDetails_options_xyPrecision" xml:space="preserve">
     <value>X/Y Ճշգրտություն:</value>
   </data>
@@ -694,9 +827,9 @@
     <value>Ինդեքս 2000</value>
   </data>
   <data name="index_2kblocks_title" xml:space="preserve">
-    <value>Index 2000 Blocks</value>
+    <value>Ինդեքսավորել 2000 բլոկ</value>
   </data>
-  <data name="index_500UtmTitle" xml:space="preserve">
+  <data name="index_500Utm_title" xml:space="preserve">
     <value>Ինդեքս 500</value>
   </data>
   <data name="index_50k_title" xml:space="preserve">
@@ -712,65 +845,115 @@
     <value>Քարտեզի վրա նկարել հատկանիշը</value>
   </data>
   <data name="input_geodetic" xml:space="preserve">
-    <value>Geodetic</value>
+    <value>Գեոդեզիական</value>
   </data>
   <data name="input_utm" xml:space="preserve">
     <value>UTM</value>
   </data>
- 
   <data name="languageSelector_title" xml:space="preserve">
     <value>Լեզու</value>
   </data>
+  <data name="layerSettings_analysis_title" xml:space="preserve">
+    <value>Վերլուծություն</value>
+  </data>
+  <data name="layerSettings_export_title" xml:space="preserve">
+    <value>Արտահանում</value>
+  </data>
+  <data name="layerSettings_fields_title" xml:space="preserve">
+    <value>Դաշտեր</value>
+  </data>
+  <data name="layerSettings_filters_title" xml:space="preserve">
+    <value>Զտիչներ</value>
+  </data>
+  <data name="layerSettings_general_featureType" xml:space="preserve">
+    <value>Օբյեկտի տեսակ:</value>
+  </data>
+  <data name="layerSettings_general_layerName" xml:space="preserve">
+    <value>Շերտի անվանում:</value>
+  </data>
+  <data name="layerSettings_general_opacity" xml:space="preserve">
+    <value>Անթափանցելիություն:</value>
+  </data>
+  <data name="layerSettings_general_sourceAddress" xml:space="preserve">
+    <value>Աղբյուրի հասցե</value>
+  </data>
+  <data name="layerSettings_general_sourceType" xml:space="preserve">
+    <value>Աղբյուրի տեսակ:</value>
+  </data>
+  <data name="layerSettings_general_title" xml:space="preserve">
+    <value>Ընդհանուր</value>
+  </data>
+  <data name="layerSettings_labeling" xml:space="preserve">
+    <value>Պիտակավորում</value>
+  </data>
+  <data name="layerSettings_security_title" xml:space="preserve">
+    <value>Անվտանգություն</value>
+  </data>
+  <data name="layerSettings_statistics_title" xml:space="preserve">
+    <value>Վիճակագրություն</value>
+  </data>
+  <data name="layerSettings_symbology_title" xml:space="preserve">
+    <value>Սիմվոլիկա</value>
+  </data>
+  <data name="layerSettings_trackChanges_title" xml:space="preserve">
+    <value>Հետևել փոփոխություններին</value>
+  </data>
   <data name="layer_geodesy1_title" xml:space="preserve">
-    <value>Geodesy 1</value>
+    <value>Գեոդեզիա 1</value>
   </data>
   <data name="layer_geodesy2_title" xml:space="preserve">
-    <value>Geodesy 2</value>
+    <value>Գեոդեզիա 2</value>
   </data>
   <data name="layer_geodynamics_title" xml:space="preserve">
-    <value>Geodynamics</value>
+    <value>Գեոդինամիկա</value>
   </data>
   <data name="layer_gravimetry_title" xml:space="preserve">
-    <value>Gravimetry</value>
+    <value>Գրավիմետրիա</value>
   </data>
   <data name="layer_leveling1_title" xml:space="preserve">
-    <value>Leveling 1</value>
+    <value>Նիվելիրացում 1</value>
   </data>
   <data name="layer_leveling2_title" xml:space="preserve">
-    <value>Leveling 2</value>
+    <value>Նիվելիրացում 2</value>
   </data>
   <data name="layer_leveling3_title" xml:space="preserve">
-    <value>Leveling 3</value>
+    <value>Նիվելիրացում 3</value>
   </data>
-  <data name="legendItem_PendingChanges_Added" xml:space="preserve">
-    <value>Added:</value>
+  <data name="legendItem_layerTitle" xml:space="preserve">
+    <value>Վերնագիր</value>
   </data>
-  <data name="legendItem_PendingChanges_Deleted" xml:space="preserve">
-    <value>Deleted:</value>
+  <data name="legendItem_pendingChanges_added" xml:space="preserve">
+    <value>Ավելացված: </value>
   </data>
-  <data name="legendItem_PendingChanges_Save" xml:space="preserve">
-    <value>Save changes</value>
+  <data name="legendItem_pendingChanges_deleted" xml:space="preserve">
+    <value>Ջնջված: </value>
   </data>
-  <data name="legendItem_PendingChanges_Undo" xml:space="preserve">
-    <value>Undo changes</value>
+  <data name="legendItem_pendingChanges_save" xml:space="preserve">
+    <value>Պահպանել փոփոխությունները</value>
   </data>
-  <data name="legendItem_PendingChanges_Updated" xml:space="preserve">
-    <value>Updated:</value>
+  <data name="legendItem_pendingChanges_undo" xml:space="preserve">
+    <value>Չեղարկել փոփոխությունները</value>
+  </data>
+  <data name="legendItem_pendingChanges_updated" xml:space="preserve">
+    <value>Թարմացված: </value>
+  </data>
+  <data name="legendItem_reloadData" xml:space="preserve">
+    <value>Վերաբեռնել տվյալները</value>
   </data>
   <data name="legend_clearAll" xml:space="preserve">
-    <value>Clear All</value>
+    <value>Մաքրել բոլորը</value>
   </data>
-  <data name="legend_filter_Clear" xml:space="preserve">
-    <value>Clear Filters</value>
+  <data name="legend_filter_clear" xml:space="preserve">
+    <value>Մաքրել զտիչները</value>
   </data>
   <data name="legend_filter_filterByLayerType" xml:space="preserve">
-    <value>Filter By Layer Type</value>
+    <value>Զտել ըստ շերտի տեսակի</value>
   </data>
   <data name="legend_filter_searchLayerWatermark" xml:space="preserve">
-    <value>Search Layer</value>
+    <value>Որոնել շերտ</value>
   </data>
   <data name="legend_selectAll" xml:space="preserve">
-    <value>Select All</value>
+    <value>Ընտրել բոլորը</value>
   </data>
   <data name="manageAccount_changePassword" xml:space="preserve">
     <value>Փոխել գաղտնաբառը</value>
@@ -787,8 +970,110 @@
   <data name="manageAccount_newUsername" xml:space="preserve">
     <value>Նոր օգտանուն</value>
   </data>
+  <data name="manageAccount_userName" xml:space="preserve">
+    <value>Օգտանուն</value>
+  </data>
+  <data name="mapExtent_common_title" xml:space="preserve">
+    <value>Ընդգրկույթի կառավարիչ</value>
+  </data>
+  <data name="mapExtent_currentView_currentPointGroundResolution" xml:space="preserve">
+    <value>Գետնի լուծաչափ (մ/պիքս):</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScale" xml:space="preserve">
+    <value>Քարտեզի մասշտաբ (WebMercator):</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleCurrentPoint" xml:space="preserve">
+    <value>Քարտեզի մասշտաբ (ընթացիկ կետ):</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevel" xml:space="preserve">
+    <value>Մոտակա Google մասշտաբ:</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint" xml:space="preserve">
+    <value>Մոտակա Google մասշտաբ (ընթացիկ կետ):</value>
+  </data>
+  <data name="mapExtent_currentView_nearestGoogleZoomLevel" xml:space="preserve">
+    <value>Մոտակա Google մասշտաբման մակարդակ:</value>
+  </data>
+  <data name="mapExtent_currentView_title" xml:space="preserve">
+    <value>Ընթացիկ ընդգրկույթ</value>
+  </data>
+  <data name="mapExtent_gotoScale_title" xml:space="preserve">
+    <value>Անցնել մասշտաբին (կենտրոնում)</value>
+  </data>
+  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+    <value>Ստանդարտ մասշտաբների համար օգտագործել գետնի մասշտաբ</value>
+  </data>
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+    <value>Ստանդարտ մասշտաբների համար օգտագործել webmercator մասշտաբ</value>
+  </data>
+  <data name="mapExtent_new_addNew" xml:space="preserve">
+    <value>Ավելացնել նոր</value>
+  </data>
+  <data name="mapExtent_new_extentTitle" xml:space="preserve">
+    <value>Ընդգրկույթի վերնագիր</value>
+  </data>
+  <data name="mapExtent_new_title" xml:space="preserve">
+    <value>Նոր ընդգրկույթ</value>
+  </data>
+  <data name="mapExtent_savedExtents_title" xml:space="preserve">
+    <value>Պահպանված ընդգրկույթներ</value>
+  </data>
+  <data name="mapPanel_currentPart_add" xml:space="preserve">
+    <value>Ավելացնել նոր մաս</value>
+  </data>
+  <data name="mapPanel_currentPart_delete" xml:space="preserve">
+    <value>Ջնջել ընթացիկ մասը</value>
+  </data>
+  <data name="mapPanel_currentPart_title" xml:space="preserve">
+    <value>Բազմամաս</value>
+  </data>
+  <data name="mapPanel_currentPart_zoom" xml:space="preserve">
+    <value>Մեծացնել ընթացիկ մասին</value>
+  </data>
+  <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
+    <value>Copy current point&amp;amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
+  </data>
+  <data name="mapPanel_currentPoint_delete" xml:space="preserve">
+    <value>Ջնջել ընթացիկ կետը</value>
+  </data>
+  <data name="mapPanel_currentPoint_displayCoordinate" xml:space="preserve">
+    <value>Ցուցադրել կոորդինատները</value>
+  </data>
+  <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
+    <value>Հաջորդ կետ</value>
+  </data>
+  <data name="mapPanel_currentPoint_goToPreviousPoint" xml:space="preserve">
+    <value>Նախորդ կետ</value>
+  </data>
+  <data name="mapPanel_currentPoint_linkToMouseMove" xml:space="preserve">
+    <value>Կապել մկնիկի դիրքի հետ քարտեզի վրա</value>
+  </data>
+  <data name="mapPanel_currentPoint_title" xml:space="preserve">
+    <value>Ընթացիկ կետ</value>
+  </data>
+  <data name="mapPanel_currentPoint_zoom" xml:space="preserve">
+    <value>Մեծացնել ընթացիկ կետին</value>
+  </data>
+  <data name="mapPanel_edit_cancel" xml:space="preserve">
+    <value>Չեղարկել խմբագրումը</value>
+  </data>
+  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
+    <value>Փոխարկել գծագրման տարրի</value>
+  </data>
+  <data name="mapPanel_edit_delete" xml:space="preserve">
+    <value>Ջնջել</value>
+  </data>
+  <data name="mapPanel_edit_finish" xml:space="preserve">
+    <value>Ավարտել խմբագրումը</value>
+  </data>
+  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
+    <value>Ցույց տալ եզրերի պիտակները</value>
+  </data>
+  <data name="mapPanel_edit_showGeometryDetails" xml:space="preserve">
+    <value>Ցույց տալ երկրաչափության մանրամասները</value>
+  </data>
   <data name="mapPanel_measure_areaTitle" xml:space="preserve">
-    <value>Area</value>
+    <value>Մակերես</value>
   </data>
   <data name="mapPanel_measure_authalicSphereArea" xml:space="preserve">
     <value>AuthalicSphereArea:</value>
@@ -821,97 +1106,70 @@
     <value>KarneyArea:</value>
   </data>
   <data name="mapPanel_measure_lengthTitle" xml:space="preserve">
-    <value>Length</value>
+    <value>Երկարություն</value>
   </data>
   <data name="mapPanel_measure_meanHeight" xml:space="preserve">
     <value>Mean Height</value>
   </data>
   <data name="mapPanel_measure_scaleFactor" xml:space="preserve">
-    <value>Scale Factor:</value>
+    <value>Մասշտաբի գործակից:</value>
   </data>
   <data name="mapPanel_measure_sphericalLength" xml:space="preserve">
     <value>SphericalLength:</value>
   </data>
-  <data name="legendItem_layerTitle" xml:space="preserve">
-    <value>Title</value>
-  </data>
-  <data name="mapPanel_currentPart_add" xml:space="preserve">
-    <value>Add new part</value>
-  </data>
-  <data name="mapPanel_currentPart_delete" xml:space="preserve">
-    <value>Delete current part</value>
-  </data>
-  <data name="mapPanel_currentPart_zoom" xml:space="preserve">
-    <value>Zoom to current part</value>
-  </data>
-  <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
-  </data>
-  <data name="mapPanel_currentPoint_delete" xml:space="preserve">
-    <value>Delete current point</value>
-  </data>
-  <data name="mapPanel_currentPoint_displayCoordinate" xml:space="preserve">
-    <value>Display Coordinates</value>
-  </data>
-  <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
-    <value>Next point</value>
-  </data>
-  <data name="mapPanel_currentPoint_goToPreviousPoint" xml:space="preserve">
-    <value>Previous point</value>
-  </data>
-  <data name="mapPanel_currentPoint_zoom" xml:space="preserve">
-    <value>Zoom to current point</value>
-  </data>
-  <data name="mapPanel_edit_cancel" xml:space="preserve">
-    <value>Cancel Edit</value>
-  </data>
-  <data name="mapPanel_edit_delete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="mapPanel_edit_finish" xml:space="preserve">
-    <value>Finish Edit</value>
-  </data>
-  <data name="mapPanel_currentPoint_title" xml:space="preserve">
-    <value>Current Point</value>
-  </data>
   <data name="mapPanel_measure_title" xml:space="preserve">
-    <value>Measurement</value>
-  </data>
-  <data name="mapPanel_currentPart_title" xml:space="preserve">
-    <value>Multi part</value>
+    <value>Չափում</value>
   </data>
   <data name="mapPanel_srs_title" xml:space="preserve">
-    <value>Spatial Reference System</value>
-  </data>
-  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
-    <value>Convert to drawing item</value>
-  </data>
-  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
-    <value>Show Edge Labels</value>
+    <value>Տարածական հղման համակարգ</value>
   </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">
-    <value>Height</value>
+    <value>Բարձրություն</value>
   </data>
   <data name="map_draw_addPoint" xml:space="preserve">
-    <value>Add Point</value>
+    <value>Ավելացնել կետ</value>
   </data>
   <data name="map_draw_cancelDrawing" xml:space="preserve">
-    <value>Cancel Drawing</value>
+    <value>Չեղարկել գծագրումը</value>
   </data>
   <data name="map_draw_finishDrawing" xml:space="preserve">
-    <value>Finish Drawing</value>
+    <value>Ավարտել գծագրումը</value>
   </data>
   <data name="map_draw_finishDrawingPart" xml:space="preserve">
-    <value>Finish Drawing Part</value>
+    <value>Ավարտել գծագրման մասը</value>
   </data>
   <data name="map_draw_newDrawing" xml:space="preserve">
     <value>Click on the last point to finish drawing.</value>
   </data>
   <data name="map_scalebar_content" xml:space="preserve">
-    <value>SCALE</value>
+    <value>ՄԱՍՇՏԱԲ</value>
   </data>
   <data name="map_scalebar_zoomLevel" xml:space="preserve">
-    <value>Level</value>
+    <value>Մակարդակ</value>
+  </data>
+  <data name="message_error_concurrencyConflict" xml:space="preserve">
+    <value>Տվյալները փոփոխվել են մեկ այլ օգտատիրոջ կողմից: Խնդրում ենք վերաբեռնել և կրկին փորձել:</value>
+  </data>
+  <data name="message_error_formatException" xml:space="preserve">
+    <value>Ձևաչափի սխալ</value>
+  </data>
+  <data name="message_error_lockedFile" xml:space="preserve">
+    <value>Ֆայլը կողպված է կամ օգտագործվում է մեկ այլ ծրագրի կողմից</value>
+  </data>
+  <data name="message_error_title" xml:space="preserve">
+    <value>Սխալ</value>
+  </data>
+  <data name="message_error_unknown" xml:space="preserve">
+    <value>Անհայտ սխալ</value>
+  </data>
+  <data name="message_error_userEmailAlreadyVerified" xml:space="preserve">
+    <value>Օգտատիրոջ էլ. փոստն արդեն հաստատված է</value>
+  </data>
+  <data name="message_info_doneSuccessfully" xml:space="preserve">
+    <value>Գործողությունը հաջողությամբ կատարվեց</value>
+  </data>
+  <data name="message_info_title" xml:space="preserve">
+    <value>Հաղորդագրություն</value>
   </data>
   <data name="ribbon_header_drawing" xml:space="preserve">
     <value>Գծագրություն</value>
@@ -925,47 +1183,68 @@
   <data name="ribbon_header_settings" xml:space="preserve">
     <value>Կարգավորումներ</value>
   </data>
+  <data name="sketchBar_title_drawPoint" xml:space="preserve">
+    <value>Գծել կետ</value>
+  </data>
+  <data name="sketchBar_title_drawPolygon" xml:space="preserve">
+    <value>Գծել բազմանկյուն</value>
+  </data>
+  <data name="sketchBar_title_drawPolyline" xml:space="preserve">
+    <value>Գծել գիծ</value>
+  </data>
+  <data name="sketchBar_title_drawRectangle" xml:space="preserve">
+    <value>Գծել ուղղանկյուն</value>
+  </data>
+  <data name="sketchBar_title_editing" xml:space="preserve">
+    <value>Խմբագրում</value>
+  </data>
+  <data name="sketchBar_title_measureArea" xml:space="preserve">
+    <value>Մակերեսի չափում</value>
+  </data>
+  <data name="sketchBar_title_measureLength" xml:space="preserve">
+    <value>Երկարության չափում</value>
+  </data>
   <data name="sldEditor_common_abstract" xml:space="preserve">
-    <value>Abstract:</value>
+    <value>Համառոտագիր:</value>
   </data>
   <data name="sldEditor_common_addLineSymbolizer" xml:space="preserve">
-    <value>Add Line Symbolizer</value>
+    <value>Ավելացնել գծի սիմվոլիզատոր</value>
   </data>
   <data name="sldEditor_common_addPointSymbolizer" xml:space="preserve">
-    <value>Add Point Symbolizer</value>
+    <value>Ավելացնել կետի սիմվոլիզատոր</value>
   </data>
   <data name="sldEditor_common_addPolygonSymbolizer" xml:space="preserve">
-    <value>Add Polygon Symbolizer</value>
+    <value>Ավելացնել բազմանկյան սիմվոլիզատոր</value>
   </data>
   <data name="sldEditor_common_addRule" xml:space="preserve">
-    <value>Add Rule</value>
+    <value>Ավելացնել կանոն</value>
   </data>
   <data name="sldEditor_common_addTextSymbolizer" xml:space="preserve">
-    <value>Add Text Symbolizer</value>
+    <value>Ավելացնել տեքստի սիմվոլիզատոր</value>
   </data>
   <data name="sldEditor_common_editorBanner" xml:space="preserve">
-    <value>OGC SLD 1.0.0 Editor</value>
+    <value>OGC SLD 1.0.0 խմբագրիչ</value>
   </data>
   <data name="sldEditor_common_editorTitle" xml:space="preserve">
-    <value>SLD Style Editor</value>
+    <value>SLD ոճի խմբագրիչ</value>
   </data>
   <data name="sldEditor_common_export" xml:space="preserve">
-    <value>Export</value>
+    <value>Արտահանել</value>
   </data>
   <data name="sldEditor_common_exportToFile" xml:space="preserve">
-    <value>Export to File...</value>
+    <value>Արտահանել ֆայլ...</value>
   </data>
   <data name="sldEditor_common_exportTooltip" xml:space="preserve">
-    <value>Export SLD to File</value>
+    <value>Արտահանել SLD ֆայլ</value>
   </data>
   <data name="sldEditor_common_fillColor" xml:space="preserve">
-    <value>Fill Color:</value>
+    <value>Լցման գույն:</value>
   </data>
   <data name="sldEditor_common_fillOpacity" xml:space="preserve">
-    <value>Fill Opacity:</value>
+    <value>Լցման անթափանցելիություն:</value>
   </data>
   <data name="sldEditor_common_filter" xml:space="preserve">
-    <value>Filter</value>
+    <value>Զտիչ</value>
   </data>
   <data name="sldEditor_common_general" xml:space="preserve">
     <value>Գեներալ</value>
@@ -1016,7 +1295,7 @@
     <value>Կանոններ:</value>
   </data>
   <data name="sldEditor_common_scaleRange" xml:space="preserve">
-    <value>Scale Range</value>
+    <value>Մասշտաբի միջակայք</value>
   </data>
   <data name="sldEditor_common_selected" xml:space="preserve">
     <value>Ընտրված՝</value>
@@ -1037,7 +1316,7 @@
     <value>Ոճի անունը.</value>
   </data>
   <data name="sldEditor_common_styleTitle" xml:space="preserve">
-    <value>Style Title:</value>
+    <value>Ոճի վերնագիր:</value>
   </data>
   <data name="sldEditor_common_symbolizerProperties" xml:space="preserve">
     <value>Սիմվոլիզատորի հատկությունները</value>
@@ -1067,7 +1346,7 @@
     <value>Նշում. Սա պարզեցված տեսք է: Բարդ ֆիլտրերի դեպքում ուղղակիորեն խմբագրեք XML-ը կամ օգտագործեք մասնագիտացված զտիչ:</value>
   </data>
   <data name="sldEditor_lineSymbolizer_dashArray" xml:space="preserve">
-    <value>Dash Array:</value>
+    <value>Գծիկների զանգված:</value>
   </data>
   <data name="sldEditor_lineSymbolizer_dashArrayWatermark" xml:space="preserve">
     <value>օրինակ՝ 5 5 կամ 10 5 3 5</value>
@@ -1088,7 +1367,7 @@
     <value>Լրացուցիչ - Դատարկ թողեք առանց առավելագույնի</value>
   </data>
   <data name="sldEditor_scaleRange_minScale" xml:space="preserve">
-    <value>Min Scale:</value>
+    <value>Նվազագույն մասշտաբ:</value>
   </data>
   <data name="sldEditor_scaleRange_minWatermark" xml:space="preserve">
     <value>Լրացուցիչ - Դատարկ թողեք առանց նվազագույնի</value>
@@ -1157,10 +1436,10 @@
     <value>Մերկատոր</value>
   </data>
   <data name="srs_northernHemisphere" xml:space="preserve">
-    <value>Northern Hemisphere</value>
+    <value>Հյուսիսային կիսագունդ</value>
   </data>
   <data name="srs_southernHemisphere" xml:space="preserve">
-    <value>Southern Hemisphere</value>
+    <value>Հարավային կիսագունդ</value>
   </data>
   <data name="srs_tmSubTitle" xml:space="preserve">
     <value>Լայնական Մերկատոր</value>
@@ -1172,10 +1451,13 @@
     <value>UTM</value>
   </data>
   <data name="srs_utmTitle" xml:space="preserve">
-    <value>Universal Transeverse Mercator (UTM)</value>
+    <value>Ունիվերսալ լայնակի Մերկատոր (UTM)</value>
   </data>
   <data name="srs_utmZone" xml:space="preserve">
     <value>Գոտի</value>
+  </data>
+  <data name="srs_utmZone_full" xml:space="preserve">
+    <value>UTM Zone</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>Web Mercator</value>
@@ -1199,7 +1481,7 @@
     <value>Բոսորագույն</value>
   </data>
   <data name="theme_color_cyan" xml:space="preserve">
-    <value>Cyan</value>
+    <value>Երկնագույն</value>
   </data>
   <data name="theme_color_emerald" xml:space="preserve">
     <value>Զմրուխտ</value>
@@ -1252,58 +1534,58 @@
   <data name="theme_color_yellow" xml:space="preserve">
     <value>Դեղին</value>
   </data>
-  <data name="tile_mapType_BlackWhite" xml:space="preserve">
+  <data name="tile_mapType_blackWhite" xml:space="preserve">
     <value>Սև Սպիտակ</value>
   </data>
-  <data name="tile_mapType_CleanGrey" xml:space="preserve">
+  <data name="tile_mapType_cleanGrey" xml:space="preserve">
     <value>CleanGrey</value>
   </data>
-  <data name="tile_mapType_Comic" xml:space="preserve">
+  <data name="tile_mapType_comic" xml:space="preserve">
     <value>Կատակերգություն</value>
   </data>
-  <data name="tile_mapType_Dark" xml:space="preserve">
+  <data name="tile_mapType_dark" xml:space="preserve">
     <value>Մութ</value>
   </data>
-  <data name="tile_mapType_HikeBike" xml:space="preserve">
+  <data name="tile_mapType_hikeBike" xml:space="preserve">
     <value>Արշավ հեծանիվ</value>
   </data>
-  <data name="tile_mapType_Hybrid" xml:space="preserve">
+  <data name="tile_mapType_hybrid" xml:space="preserve">
     <value>Հիբրիդ</value>
   </data>
-  <data name="tile_mapType_Light" xml:space="preserve">
+  <data name="tile_mapType_light" xml:space="preserve">
     <value>Լույս</value>
   </data>
-  <data name="tile_mapType_MapyTourist" xml:space="preserve">
+  <data name="tile_mapType_mapyTourist" xml:space="preserve">
     <value>MapyTourist</value>
   </data>
-  <data name="tile_mapType_MapyWinter" xml:space="preserve">
+  <data name="tile_mapType_mapyWinter" xml:space="preserve">
     <value>MapyWinter</value>
   </data>
-  <data name="tile_mapType_Nature" xml:space="preserve">
+  <data name="tile_mapType_nature" xml:space="preserve">
     <value>Բնություն</value>
   </data>
-  <data name="tile_mapType_NeutralBlue" xml:space="preserve">
+  <data name="tile_mapType_neutralBlue" xml:space="preserve">
     <value>Չեզոք Կապույտ</value>
   </data>
-  <data name="tile_mapType_RoadMap" xml:space="preserve">
+  <data name="tile_mapType_roadMap" xml:space="preserve">
     <value>Ճանապարհային քարտեզ</value>
   </data>
-  <data name="tile_mapType_Satellite" xml:space="preserve">
+  <data name="tile_mapType_satellite" xml:space="preserve">
     <value>Արբանյակային</value>
   </data>
-  <data name="tile_mapType_Street" xml:space="preserve">
+  <data name="tile_mapType_street" xml:space="preserve">
     <value>Փողոց</value>
   </data>
-  <data name="tile_mapType_Terrain" xml:space="preserve">
+  <data name="tile_mapType_terrain" xml:space="preserve">
     <value>Տեղանք</value>
   </data>
-  <data name="tile_mapType_Topo" xml:space="preserve">
+  <data name="tile_mapType_topo" xml:space="preserve">
     <value>Տոպո</value>
   </data>
-  <data name="tile_mapType_Traffic" xml:space="preserve">
+  <data name="tile_mapType_traffic" xml:space="preserve">
     <value>Երթևեկություն</value>
   </data>
-  <data name="tile_mapType_Watercolor" xml:space="preserve">
+  <data name="tile_mapType_watercolor" xml:space="preserve">
     <value>Ջրաներկ</value>
   </data>
   <data name="tile_provider_bing" xml:space="preserve">
@@ -1330,6 +1612,9 @@
   <data name="tile_provider_yandex" xml:space="preserve">
     <value>ՅԱՆԴԵՔՍ</value>
   </data>
+  <data name="ui_header_attributeTable" xml:space="preserve">
+    <value>Ատրիբուտների աղյուսակ</value>
+  </data>
   <data name="ui_header_baseMaps" xml:space="preserve">
     <value>Հիմնական քարտեզներ</value>
   </data>
@@ -1339,7 +1624,13 @@
   <data name="ui_header_layerLegend" xml:space="preserve">
     <value>Շերտեր</value>
   </data>
-  <data name="wat_security_userName" xml:space="preserve">
-    <value>Օգտանուն</value>
+  <data name="validation_msg_invalidEmail" xml:space="preserve">
+    <value>Անվավեր էլ. փոստի հասցե</value>
+  </data>
+  <data name="validation_msg_nullOrEmptyString" xml:space="preserve">
+    <value>Չի կարող լինել դատարկ</value>
+  </data>
+  <data name="validation_msg_unknownError" xml:space="preserve">
+    <value>Անհայտ բացառություն</value>
   </data>
 </root>

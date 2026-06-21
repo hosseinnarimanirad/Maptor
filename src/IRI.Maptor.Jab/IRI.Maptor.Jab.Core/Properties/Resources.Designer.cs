@@ -2376,9 +2376,9 @@ namespace IRI.Maptor.Jab.Core.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Index 500.
         /// </summary>
-        public static string index_500UtmTitle {
+        public static string index_500Utm_title {
             get {
-                return ResourceManager.GetString("index_500UtmTitle", resourceCulture);
+                return ResourceManager.GetString("index_500Utm_title", resourceCulture);
             }
         }
         
@@ -2655,9 +2655,9 @@ namespace IRI.Maptor.Jab.Core.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Clear Filters.
         /// </summary>
-        public static string legend_filter_Clear {
+        public static string legend_filter_clear {
             get {
-                return ResourceManager.GetString("legend_filter_Clear", resourceCulture);
+                return ResourceManager.GetString("legend_filter_clear", resourceCulture);
             }
         }
         
@@ -2700,45 +2700,45 @@ namespace IRI.Maptor.Jab.Core.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Added: .
         /// </summary>
-        public static string legendItem_PendingChanges_Added {
+        public static string legendItem_pendingChanges_added {
             get {
-                return ResourceManager.GetString("legendItem_PendingChanges_Added", resourceCulture);
+                return ResourceManager.GetString("legendItem_pendingChanges_added", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Deleted: .
         /// </summary>
-        public static string legendItem_PendingChanges_Deleted {
+        public static string legendItem_pendingChanges_deleted {
             get {
-                return ResourceManager.GetString("legendItem_PendingChanges_Deleted", resourceCulture);
+                return ResourceManager.GetString("legendItem_pendingChanges_deleted", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Save changes.
         /// </summary>
-        public static string legendItem_PendingChanges_Save {
+        public static string legendItem_pendingChanges_save {
             get {
-                return ResourceManager.GetString("legendItem_PendingChanges_Save", resourceCulture);
+                return ResourceManager.GetString("legendItem_pendingChanges_save", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Undo changes.
         /// </summary>
-        public static string legendItem_PendingChanges_Undo {
+        public static string legendItem_pendingChanges_undo {
             get {
-                return ResourceManager.GetString("legendItem_PendingChanges_Undo", resourceCulture);
+                return ResourceManager.GetString("legendItem_pendingChanges_undo", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Updated: .
         /// </summary>
-        public static string legendItem_PendingChanges_Updated {
+        public static string legendItem_pendingChanges_updated {
             get {
-                return ResourceManager.GetString("legendItem_PendingChanges_Updated", resourceCulture);
+                return ResourceManager.GetString("legendItem_pendingChanges_updated", resourceCulture);
             }
         }
         
@@ -4273,15 +4273,6 @@ namespace IRI.Maptor.Jab.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string String1 {
-            get {
-                return ResourceManager.GetString("String1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Amber.
         /// </summary>
         public static string theme_color_amber {
@@ -4491,162 +4482,162 @@ namespace IRI.Maptor.Jab.Core.Properties {
         /// <summary>
         ///   Looks up a localized string similar to BlackWhite.
         /// </summary>
-        public static string tile_mapType_BlackWhite {
+        public static string tile_mapType_blackWhite {
             get {
-                return ResourceManager.GetString("tile_mapType_BlackWhite", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_blackWhite", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to CleanGrey.
         /// </summary>
-        public static string tile_mapType_CleanGrey {
+        public static string tile_mapType_cleanGrey {
             get {
-                return ResourceManager.GetString("tile_mapType_CleanGrey", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_cleanGrey", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Comic.
         /// </summary>
-        public static string tile_mapType_Comic {
+        public static string tile_mapType_comic {
             get {
-                return ResourceManager.GetString("tile_mapType_Comic", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_comic", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Dark.
         /// </summary>
-        public static string tile_mapType_Dark {
+        public static string tile_mapType_dark {
             get {
-                return ResourceManager.GetString("tile_mapType_Dark", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_dark", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to HikeBike.
         /// </summary>
-        public static string tile_mapType_HikeBike {
+        public static string tile_mapType_hikeBike {
             get {
-                return ResourceManager.GetString("tile_mapType_HikeBike", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_hikeBike", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Hybrid.
         /// </summary>
-        public static string tile_mapType_Hybrid {
+        public static string tile_mapType_hybrid {
             get {
-                return ResourceManager.GetString("tile_mapType_Hybrid", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_hybrid", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Light.
         /// </summary>
-        public static string tile_mapType_Light {
+        public static string tile_mapType_light {
             get {
-                return ResourceManager.GetString("tile_mapType_Light", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_light", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to MapyTourist.
         /// </summary>
-        public static string tile_mapType_MapyTourist {
+        public static string tile_mapType_mapyTourist {
             get {
-                return ResourceManager.GetString("tile_mapType_MapyTourist", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_mapyTourist", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to MapyWinter.
         /// </summary>
-        public static string tile_mapType_MapyWinter {
+        public static string tile_mapType_mapyWinter {
             get {
-                return ResourceManager.GetString("tile_mapType_MapyWinter", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_mapyWinter", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Nature.
         /// </summary>
-        public static string tile_mapType_Nature {
+        public static string tile_mapType_nature {
             get {
-                return ResourceManager.GetString("tile_mapType_Nature", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_nature", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to NeutralBlue.
         /// </summary>
-        public static string tile_mapType_NeutralBlue {
+        public static string tile_mapType_neutralBlue {
             get {
-                return ResourceManager.GetString("tile_mapType_NeutralBlue", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_neutralBlue", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to RoadMap.
         /// </summary>
-        public static string tile_mapType_RoadMap {
+        public static string tile_mapType_roadMap {
             get {
-                return ResourceManager.GetString("tile_mapType_RoadMap", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_roadMap", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Satellite.
         /// </summary>
-        public static string tile_mapType_Satellite {
+        public static string tile_mapType_satellite {
             get {
-                return ResourceManager.GetString("tile_mapType_Satellite", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_satellite", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Street.
         /// </summary>
-        public static string tile_mapType_Street {
+        public static string tile_mapType_street {
             get {
-                return ResourceManager.GetString("tile_mapType_Street", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_street", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Terrain.
         /// </summary>
-        public static string tile_mapType_Terrain {
+        public static string tile_mapType_terrain {
             get {
-                return ResourceManager.GetString("tile_mapType_Terrain", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_terrain", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Topo.
         /// </summary>
-        public static string tile_mapType_Topo {
+        public static string tile_mapType_topo {
             get {
-                return ResourceManager.GetString("tile_mapType_Topo", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_topo", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Traffic.
         /// </summary>
-        public static string tile_mapType_Traffic {
+        public static string tile_mapType_traffic {
             get {
-                return ResourceManager.GetString("tile_mapType_Traffic", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_traffic", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Watercolor.
         /// </summary>
-        public static string tile_mapType_Watercolor {
+        public static string tile_mapType_watercolor {
             get {
-                return ResourceManager.GetString("tile_mapType_Watercolor", resourceCulture);
+                return ResourceManager.GetString("tile_mapType_watercolor", resourceCulture);
             }
         }
         
@@ -4788,9 +4779,9 @@ namespace IRI.Maptor.Jab.Core.Properties {
         /// <summary>
         ///   Looks up a localized string similar to User Name.
         /// </summary>
-        public static string wat_security_userName {
+        public static string manageAccount_userName {
             get {
-                return ResourceManager.GetString("wat_security_userName", resourceCulture);
+                return ResourceManager.GetString("manageAccount_userName", resourceCulture);
             }
         }
     }

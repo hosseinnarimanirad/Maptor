@@ -260,19 +260,19 @@
   <data name="cmd_legendItem_zoomToExtent" xml:space="preserve">
     <value>Zoom To Extent</value>
   </data>
-  <data name="legendItem_PendingChanges_Added" xml:space="preserve">
+  <data name="legendItem_pendingChanges_added" xml:space="preserve">
     <value>Added: </value>
   </data>
-  <data name="legendItem_PendingChanges_Deleted" xml:space="preserve">
+  <data name="legendItem_pendingChanges_deleted" xml:space="preserve">
     <value>Deleted: </value>
   </data>
-  <data name="legendItem_PendingChanges_Updated" xml:space="preserve">
+  <data name="legendItem_pendingChanges_updated" xml:space="preserve">
     <value>Updated: </value>
   </data>
-  <data name="legendItem_PendingChanges_Save" xml:space="preserve">
+  <data name="legendItem_pendingChanges_save" xml:space="preserve">
     <value>Save changes</value>
   </data>
-  <data name="legendItem_PendingChanges_Undo" xml:space="preserve">
+  <data name="legendItem_pendingChanges_undo" xml:space="preserve">
     <value>Undo changes</value>
   </data>
   <data name="cmd_legend_addTopoJson" xml:space="preserve">
@@ -695,7 +695,7 @@
   <data name="index_2kUtm_title" xml:space="preserve">
     <value>Index 2000</value>
   </data>
-  <data name="index_500UtmTitle" xml:space="preserve">
+  <data name="index_500Utm_title" xml:space="preserve">
     <value>Index 500</value>
   </data>
   <data name="index_50k_title" xml:space="preserve">
@@ -893,75 +893,75 @@
   <data name="srs_webMercatorTitle" xml:space="preserve">
     <value>Web Mercator</value>
   </data>
-  <data name="tile_mapType_BlackWhite" xml:space="preserve">
+  <data name="tile_mapType_blackWhite" xml:space="preserve">
     <value>BlackWhite</value>
     <comment>GoogleBlackWhite</comment>
   </data>
-  <data name="tile_mapType_CleanGrey" xml:space="preserve">
+  <data name="tile_mapType_cleanGrey" xml:space="preserve">
     <value>CleanGrey</value>
     <comment>GoogleCleanGrey</comment>
   </data>
-  <data name="tile_mapType_Comic" xml:space="preserve">
+  <data name="tile_mapType_comic" xml:space="preserve">
     <value>Comic</value>
     <comment>MapboxComic</comment>
   </data>
-  <data name="tile_mapType_Dark" xml:space="preserve">
+  <data name="tile_mapType_dark" xml:space="preserve">
     <value>Dark</value>
     <comment>CartoDark</comment>
   </data>
-  <data name="tile_mapType_HikeBike" xml:space="preserve">
+  <data name="tile_mapType_hikeBike" xml:space="preserve">
     <value>HikeBike</value>
     <comment>OsmHikeBike</comment>
   </data>
-  <data name="tile_mapType_Hybrid" xml:space="preserve">
+  <data name="tile_mapType_hybrid" xml:space="preserve">
     <value>Hybrid</value>
     <comment>GoogleHybrid, BingHybrid</comment>
   </data>
-  <data name="tile_mapType_Light" xml:space="preserve">
+  <data name="tile_mapType_light" xml:space="preserve">
     <value>Light</value>
     <comment>GoogleLight, CartoLight</comment>
   </data>
-  <data name="tile_mapType_MapyTourist" xml:space="preserve">
+  <data name="tile_mapType_mapyTourist" xml:space="preserve">
     <value>MapyTourist</value>
     <comment>MapyTourist</comment>
   </data>
-  <data name="tile_mapType_MapyWinter" xml:space="preserve">
+  <data name="tile_mapType_mapyWinter" xml:space="preserve">
     <value>MapyWinter</value>
     <comment>MapyWinter</comment>
   </data>
-  <data name="tile_mapType_Nature" xml:space="preserve">
+  <data name="tile_mapType_nature" xml:space="preserve">
     <value>Nature</value>
     <comment>GoogleNature</comment>
   </data>
-  <data name="tile_mapType_NeutralBlue" xml:space="preserve">
+  <data name="tile_mapType_neutralBlue" xml:space="preserve">
     <value>NeutralBlue</value>
     <comment>GoogleNeutralBlue</comment>
   </data>
-  <data name="tile_mapType_RoadMap" xml:space="preserve">
+  <data name="tile_mapType_roadMap" xml:space="preserve">
     <value>RoadMap</value>
     <comment>GoogleRoadMap</comment>
   </data>
-  <data name="tile_mapType_Satellite" xml:space="preserve">
+  <data name="tile_mapType_satellite" xml:space="preserve">
     <value>Satellite</value>
     <comment>GoogleSatellite, BingSatellite, MapboxSatellite</comment>
   </data>
-  <data name="tile_mapType_Street" xml:space="preserve">
+  <data name="tile_mapType_street" xml:space="preserve">
     <value>Street</value>
     <comment>BingStreet, OpenStreetMap, WazeStreet</comment>
   </data>
-  <data name="tile_mapType_Terrain" xml:space="preserve">
+  <data name="tile_mapType_terrain" xml:space="preserve">
     <value>Terrain</value>
     <comment>GoogleTerrain</comment>
   </data>
-  <data name="tile_mapType_Topo" xml:space="preserve">
+  <data name="tile_mapType_topo" xml:space="preserve">
     <value>Topo</value>
     <comment>OpenTopoMap</comment>
   </data>
-  <data name="tile_mapType_Traffic" xml:space="preserve">
+  <data name="tile_mapType_traffic" xml:space="preserve">
     <value>Traffic</value>
     <comment>GoogleTraffic</comment>
   </data>
-  <data name="tile_mapType_Watercolor" xml:space="preserve">
+  <data name="tile_mapType_watercolor" xml:space="preserve">
     <value>Watercolor</value>
     <comment>StamenWatercolor</comment>
   </data>
@@ -998,7 +998,7 @@
   <data name="ui_header_layerLegend" xml:space="preserve">
     <value>Layers</value>
   </data>
-  <data name="wat_security_userName" xml:space="preserve">
+  <data name="manageAccount_userName" xml:space="preserve">
     <value>User Name</value>
   </data>
   <data name="dialog_showMessage_title" xml:space="preserve">
@@ -1143,7 +1143,7 @@
   <data name="featureChanges_lengthChange" xml:space="preserve">
     <value>Length change</value>
   </data>
-  <data name="legend_filter_Clear" xml:space="preserve">
+  <data name="legend_filter_clear" xml:space="preserve">
     <value>Clear Filters</value>
     <comment>clear filter button tooltip</comment>
   </data>
@@ -1671,9 +1671,6 @@
   </data>
   <data name="validation_msg_nullOrEmptyString" xml:space="preserve">
     <value>Cannot be null or empty</value>
-  </data>
-  <data name="String1" xml:space="preserve">
-    <value />
   </data>
   <data name="dialog_msg_discardPendingChanges" xml:space="preserve">
     <value>Pending changes to layers will be discarded</value>

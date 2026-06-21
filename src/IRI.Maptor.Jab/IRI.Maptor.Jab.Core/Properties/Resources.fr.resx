@@ -58,6 +58,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="cmd_contextMenu_copy" xml:space="preserve">
+    <value>Copier</value>
+  </data>
+  <data name="cmd_contextMenu_cut" xml:space="preserve">
+    <value>Couper</value>
+  </data>
+  <data name="cmd_contextMenu_delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="cmd_contextMenu_paste" xml:space="preserve">
+    <value>Coller</value>
+  </data>
   <data name="cmd_drawingLegendItem_boundary" xml:space="preserve">
     <value>Limite</value>
   </data>
@@ -74,13 +86,19 @@
     <value>Télécharger les images</value>
   </data>
   <data name="cmd_drawingLegendItem_duplicateFeature" xml:space="preserve">
-    <value>Dupliquer l&amp;amp;amp;amp;amp;amp;apos;élément</value>
+    <value>Dupliquer l&amp;amp;amp;amp;amp;amp;amp;apos;élément</value>
   </data>
   <data name="cmd_drawingLegendItem_edit" xml:space="preserve">
     <value>Modifier</value>
   </data>
   <data name="cmd_drawingLegendItem_envelope" xml:space="preserve">
     <value>Enveloppe</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsCsv" xml:space="preserve">
+    <value>Exporter en CSV</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsDxf" xml:space="preserve">
+    <value>Exporter en DXF</value>
   </data>
   <data name="cmd_drawingLegendItem_exportAsGeoJson" xml:space="preserve">
     <value>Exporter en GeoJson</value>
@@ -95,7 +113,7 @@
     <value>Anneau extérieur</value>
   </data>
   <data name="cmd_drawingLegendItem_remove" xml:space="preserve">
-    <value>Supprimer l&amp;amp;amp;amp;amp;amp;apos;élément</value>
+    <value>Supprimer l&amp;amp;amp;amp;amp;amp;amp;apos;élément</value>
   </data>
   <data name="cmd_drawingLegend_addLatLongTxt" xml:space="preserve">
     <value>Ajouter texte Lat/Long</value>
@@ -106,11 +124,17 @@
   <data name="cmd_drawingLegend_moveUp" xml:space="preserve">
     <value>Déplacer vers le haut</value>
   </data>
+  <data name="cmd_drawingLegend_openAll" xml:space="preserve">
+    <value>Tout ouvrir</value>
+  </data>
   <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
     <value>Tout supprimer</value>
   </data>
+  <data name="cmd_drawingLegend_saveAll" xml:space="preserve">
+    <value>Tout enregistrer</value>
+  </data>
   <data name="cmd_general_addGeoJson" xml:space="preserve">
-    <value>Add GeoJson</value>
+    <value>Ajouter GeoJson</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
     <value>Ajouter Shapefile</value>
@@ -139,14 +163,23 @@
   <data name="cmd_general_goTo" xml:space="preserve">
     <value>Aller à</value>
   </data>
+  <data name="cmd_general_identify" xml:space="preserve">
+    <value>Identifier</value>
+  </data>
   <data name="cmd_general_measureArea" xml:space="preserve">
     <value>Mesurer la surface</value>
   </data>
   <data name="cmd_general_measureLength" xml:space="preserve">
     <value>Mesurer la longueur</value>
   </data>
+  <data name="cmd_general_nextExtent" xml:space="preserve">
+    <value>Vue suivante</value>
+  </data>
   <data name="cmd_general_pan" xml:space="preserve">
     <value>Déplacer</value>
+  </data>
+  <data name="cmd_general_previousExtent" xml:space="preserve">
+    <value>Vue précédente</value>
   </data>
   <data name="cmd_general_zoomIn" xml:space="preserve">
     <value>Zoom avant</value>
@@ -160,11 +193,8 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>Zoom précédent</value>
   </data>
-  <data name="cmd_general_previousExtent" xml:space="preserve">
-    <value>Vue précédente</value>
-  </data>
-  <data name="cmd_general_nextExtent" xml:space="preserve">
-    <value>Vue suivante</value>
+  <data name="cmd_general_zoomToExtent" xml:space="preserve">
+    <value>Zoom sur l'étendue</value>
   </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">
     <value>Effacer la sélection</value>
@@ -191,16 +221,19 @@
     <value>Afficher la symbologie</value>
   </data>
   <data name="cmd_legendItem_toggleLayerLabel" xml:space="preserve">
-    <value>Basculer l&amp;amp;amp;amp;amp;amp;apos;étiquette de couche</value>
+    <value>Basculer l&amp;amp;amp;amp;amp;amp;amp;apos;étiquette de couche</value>
   </data>
   <data name="cmd_legendItem_zoomToExtent" xml:space="preserve">
-    <value>Zoom sur l&amp;amp;amp;amp;amp;amp;apos;étendue</value>
+    <value>Zoom sur l&amp;amp;amp;amp;amp;amp;amp;apos;étendue</value>
   </data>
   <data name="cmd_legend_addCsv" xml:space="preserve">
     <value>Ajouter un fichier CSV</value>
   </data>
   <data name="cmd_legend_addDxf" xml:space="preserve">
     <value>Ajouter un fichier DXF</value>
+  </data>
+  <data name="cmd_legend_addEsriJson" xml:space="preserve">
+    <value>Ajouter EsriJson</value>
   </data>
   <data name="cmd_legend_addGpx" xml:space="preserve">
     <value>Ajouter GPX</value>
@@ -232,8 +265,8 @@
   <data name="cmd_legend_removeAll" xml:space="preserve">
     <value>Supprimer tout</value>
   </data>
-  <data name="common_cancel" xml:space="preserve">
-    <value>Annuler</value>
+  <data name="cmd_security_resetPassword" xml:space="preserve">
+    <value>Réinitialiser le mot de passe</value>
   </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>Verr. Maj. activé</value>
@@ -248,13 +281,31 @@
     <value>E-mail</value>
   </data>
   <data name="common_emailVerification" xml:space="preserve">
-    <value>Vérifier l&amp;amp;amp;amp;amp;apos;e-mail</value>
+    <value>Vérifier l&amp;amp;amp;amp;amp;amp;apos;e-mail</value>
   </data>
   <data name="common_forgetPassword" xml:space="preserve">
     <value>Mot de passe oublié</value>
   </data>
+  <data name="common_geometryType_point" xml:space="preserve">
+    <value>Entité ponctuelle</value>
+  </data>
+  <data name="common_geometryType_polygon" xml:space="preserve">
+    <value>Entité polygonale</value>
+  </data>
+  <data name="common_geometryType_polyline" xml:space="preserve">
+    <value>Entité linéaire</value>
+  </data>
+  <data name="common_kilometer" xml:space="preserve">
+    <value>kilomètre</value>
+  </data>
+  <data name="common_loadingText" xml:space="preserve">
+    <value>CHARGEMENT...</value>
+  </data>
   <data name="common_login" xml:space="preserve">
     <value>Connexion</value>
+  </data>
+  <data name="common_meter" xml:space="preserve">
+    <value>mètre</value>
   </data>
   <data name="common_new" xml:space="preserve">
     <value>Nouveau</value>
@@ -272,13 +323,16 @@
     <value>Mot de passe</value>
   </data>
   <data name="common_register" xml:space="preserve">
-    <value>S&amp;amp;amp;amp;amp;apos;inscrire</value>
+    <value>S&amp;amp;amp;amp;amp;amp;apos;inscrire</value>
   </data>
   <data name="common_save" xml:space="preserve">
     <value>Enregistrer</value>
   </data>
+  <data name="common_squareMeter" xml:space="preserve">
+    <value>Mètre carré</value>
+  </data>
   <data name="common_username" xml:space="preserve">
-    <value>Nom d&amp;amp;amp;amp;amp;apos;utilisateur</value>
+    <value>Nom d&amp;amp;amp;amp;amp;amp;apos;utilisateur</value>
   </data>
   <data name="dialog_changePassword_enterPassword" xml:space="preserve">
     <value>Entrez le mot de passe souhaité.</value>
@@ -286,20 +340,59 @@
   <data name="dialog_changePassword_title" xml:space="preserve">
     <value>Changer le mot de passe</value>
   </data>
+  <data name="dialog_common_areYouSure" xml:space="preserve">
+    <value>Êtes-vous sûr ?</value>
+  </data>
   <data name="dialog_common_browse" xml:space="preserve">
-    <value>Browse...</value>
+    <value>Parcourir...</value>
+  </data>
+  <data name="dialog_common_browseFolder" xml:space="preserve">
+    <value>Parcourir le dossier...</value>
   </data>
   <data name="dialog_common_cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Annuler</value>
+  </data>
+  <data name="dialog_common_close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="dialog_common_confirmTitle" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="dialog_common_eastingFirst" xml:space="preserve">
+    <value>X puis Y</value>
+  </data>
+  <data name="dialog_common_export" xml:space="preserve">
+    <value>Exporter</value>
   </data>
   <data name="dialog_common_fileWatermark" xml:space="preserve">
-    <value>File</value>
+    <value>Fichier</value>
+  </data>
+  <data name="dialog_common_formatJson" xml:space="preserve">
+    <value>Formater le JSON</value>
+  </data>
+  <data name="dialog_common_minifiedJson" xml:space="preserve">
+    <value>JSON minifié</value>
+  </data>
+  <data name="dialog_common_no" xml:space="preserve">
+    <value>Non</value>
+  </data>
+  <data name="dialog_common_ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="dialog_common_prettyJson" xml:space="preserve">
+    <value>JSON formaté</value>
   </data>
   <data name="dialog_common_removeFile" xml:space="preserve">
-    <value>Remove File</value>
+    <value>Supprimer le fichier</value>
   </data>
   <data name="dialog_common_save" xml:space="preserve">
-    <value>Save</value>
+    <value>Enregistrer</value>
+  </data>
+  <data name="dialog_common_xyOrder" xml:space="preserve">
+    <value>Ordre X/Y</value>
+  </data>
+  <data name="dialog_common_yes" xml:space="preserve">
+    <value>Oui</value>
   </data>
   <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
     <value>CSV</value>
@@ -308,7 +401,7 @@
     <value>TSV</value>
   </data>
   <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
-    <value>Geometry Type</value>
+    <value>Type de géométrie</value>
   </data>
   <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
     <value>Première colonne = X (longitude/est), seconde = Y (latitude/nord)</value>
@@ -323,7 +416,7 @@
     <value>Importer CSV / TSV</value>
   </data>
   <data name="dialog_csvTsvOpen_useFirstLineAsHeader" xml:space="preserve">
-    <value>Utiliser la première ligne comme noms d&amp;amp;apos;attributs</value>
+    <value>Utiliser la première ligne comme noms d&amp;amp;amp;apos;attributs</value>
   </data>
   <data name="dialog_dxfOpen_columnIndex" xml:space="preserve">
     <value>#</value>
@@ -338,7 +431,10 @@
     <value>Hémisphère Nord / Sud</value>
   </data>
   <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
-    <value>Points d&amp;amp;apos;échantillon (50 premiers):</value>
+    <value>Points d&amp;amp;amp;apos;échantillon (50 premiers):</value>
+  </data>
+  <data name="dialog_dxfOpen_title" xml:space="preserve">
+    <value>Importer DXF</value>
   </data>
   <data name="dialog_emailSignUp_or" xml:space="preserve">
     <value>ou</value>
@@ -347,13 +443,37 @@
     <value>Se connecter avec Google</value>
   </data>
   <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
-    <value>S&amp;amp;amp;amp;amp;apos;inscrire avec Google</value>
+    <value>S&amp;amp;amp;amp;amp;amp;apos;inscrire avec Google</value>
+  </data>
+  <data name="dialog_export_disabledProjection" xml:space="preserve">
+    <value>Utiliser le SRS par défaut</value>
+  </data>
+  <data name="dialog_export_enabledProjection" xml:space="preserve">
+    <value>Projeter vers</value>
+  </data>
+  <data name="dialog_export_exportModeAll" xml:space="preserve">
+    <value>Tout</value>
+  </data>
+  <data name="dialog_export_exportModeHighlighted" xml:space="preserve">
+    <value>En surbrillance</value>
+  </data>
+  <data name="dialog_export_exportModeSelected" xml:space="preserve">
+    <value>Sélectionné</value>
+  </data>
+  <data name="dialog_export_exportModeTitle" xml:space="preserve">
+    <value>Entités à exporter :</value>
+  </data>
+  <data name="dialog_export_outputFileFormat" xml:space="preserve">
+    <value>Format de sortie :</value>
+  </data>
+  <data name="dialog_export_sourceSrs" xml:space="preserve">
+    <value>SRS source</value>
+  </data>
+  <data name="dialog_export_targetSrs" xml:space="preserve">
+    <value>SRS cible</value>
   </data>
   <data name="dialog_geoJsonOpen_title" xml:space="preserve">
     <value>Importer GeoJSON</value>
-  </data>
-  <data name="dialog_common_xyOrder" xml:space="preserve">
-    <value>X/Y order</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
     <value>Première coordonnée = X (longitude/est), seconde = Y (latitude/nord)</value>
@@ -365,7 +485,7 @@
     <value>Coller JSON ou aperçu du fichier sélectionné</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_samplePoints" xml:space="preserve">
-    <value>Points d&amp;amp;apos;échantillon (50 premiers)</value>
+    <value>Points d&amp;amp;amp;apos;échantillon (50 premiers)</value>
   </data>
   <data name="dialog_geometryDetails_addPart" xml:space="preserve">
     <value>Ajouter une pièce</value>
@@ -418,7 +538,6 @@
   <data name="dialog_geometryDetails_title" xml:space="preserve">
     <value>Détails de la géométrie</value>
   </data>
- 
   <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
     <value>Zoomer sur un point</value>
   </data>
@@ -430,6 +549,15 @@
   </data>
   <data name="dialog_goto_zoomTo" xml:space="preserve">
     <value>Zoomer sur</value>
+  </data>
+  <data name="dialog_layerSettings_title" xml:space="preserve">
+    <value>Paramètres de la couche</value>
+  </data>
+  <data name="dialog_msg_confirmDeleteFeatures" xml:space="preserve">
+    <value>Suppression d'entités</value>
+  </data>
+  <data name="dialog_msg_discardPendingChanges" xml:space="preserve">
+    <value>Les modifications en attente sur les couches seront annulées</value>
   </data>
   <data name="dialog_openfile_title" xml:space="preserve">
     <value>Sélectionner un fichier</value>
@@ -456,7 +584,7 @@
     <value>Sélectionner la couleur de fond</value>
   </data>
   <data name="dialog_themeSelection_windowTitle" xml:space="preserve">
-    <value>Paramètres d&amp;amp;amp;amp;amp;apos;apparence</value>
+    <value>Paramètres d&amp;amp;amp;amp;amp;amp;apos;apparence</value>
   </data>
   <data name="dialog_topojsonOpen_title" xml:space="preserve">
     <value>Importer TopoJSON</value>
@@ -468,7 +596,7 @@
     <value>Créer un utilisateur</value>
   </data>
   <data name="dialog_userSignUp_enterCredentials" xml:space="preserve">
-    <value>Entrez votre nom d&amp;amp;amp;amp;amp;apos;utilisateur et mot de passe.</value>
+    <value>Entrez votre nom d&amp;amp;amp;amp;amp;amp;apos;utilisateur et mot de passe.</value>
   </data>
   <data name="featureChanges_areaChange" xml:space="preserve">
     <value>Changement de surface</value>
@@ -516,7 +644,7 @@
     <value>Statut</value>
   </data>
   <data name="featureChanges_title" xml:space="preserve">
-    <value>Modifications de l&amp;amp;amp;amp;amp;amp;apos;entité</value>
+    <value>Modifications de l&amp;amp;amp;amp;amp;amp;amp;apos;entité</value>
   </data>
   <data name="featureChanges_viewChanges" xml:space="preserve">
     <value>Voir les modifications</value>
@@ -531,10 +659,10 @@
     <value>Zoom sur les deux</value>
   </data>
   <data name="featureChanges_zoomToCurrent" xml:space="preserve">
-    <value>Zoom sur l&amp;amp;amp;amp;amp;amp;apos;actuel</value>
+    <value>Zoom sur l&amp;amp;amp;amp;amp;amp;amp;apos;actuel</value>
   </data>
   <data name="featureChanges_zoomToOld" xml:space="preserve">
-    <value>Zoom sur l&amp;amp;amp;amp;amp;amp;apos;ancien</value>
+    <value>Zoom sur l&amp;amp;amp;amp;amp;amp;amp;apos;ancien</value>
   </data>
   <data name="featureTable_addNew" xml:space="preserve">
     <value>Ajouter un nouveau</value>
@@ -564,7 +692,7 @@
     <value>Azimut au précédent</value>
   </data>
   <data name="geometryDetails_coordinateGrid_distanceToNext" xml:space="preserve">
-    <value>Distance jusqu&amp;amp;amp;apos;au prochain</value>
+    <value>Distance jusqu&amp;amp;amp;amp;apos;au prochain</value>
   </data>
   <data name="geometryDetails_coordinateGrid_number" xml:space="preserve">
     <value>#</value>
@@ -593,8 +721,14 @@
   <data name="geometryDetails_currentPoint_edit" xml:space="preserve">
     <value>Modifier</value>
   </data>
+  <data name="geometryDetails_currentPoint_goToNextPage" xml:space="preserve">
+    <value>Page suivante</value>
+  </data>
   <data name="geometryDetails_currentPoint_goToNextPoint" xml:space="preserve">
     <value>Aller au point suivant</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
+    <value>Page précédente</value>
   </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
     <value>Aller au point précédent</value>
@@ -621,7 +755,7 @@
     <value>Précision latitude/longue :</value>
   </data>
   <data name="geometryDetails_options_showInnerAngle" xml:space="preserve">
-    <value>Afficher l&amp;amp;amp;apos;angle intérieur</value>
+    <value>Afficher l&amp;amp;amp;amp;apos;angle intérieur</value>
   </data>
   <data name="geometryDetails_options_showZColumn" xml:space="preserve">
     <value>Afficher la colonne Z</value>
@@ -638,7 +772,6 @@
   <data name="geometryDetails_options_useDecimalDegreesForAngles" xml:space="preserve">
     <value>Utiliser des degrés décimaux pour les angles</value>
   </data>
-  
   <data name="geometryDetails_options_xyPrecision" xml:space="preserve">
     <value>Précision X/Y :</value>
   </data>
@@ -696,7 +829,7 @@
   <data name="index_2kblocks_title" xml:space="preserve">
     <value>Indexer 2000 blocs</value>
   </data>
-  <data name="index_500UtmTitle" xml:space="preserve">
+  <data name="index_500Utm_title" xml:space="preserve">
     <value>Indice 500</value>
   </data>
   <data name="index_50k_title" xml:space="preserve">
@@ -709,68 +842,118 @@
     <value>Remarque : les coordonnées sont au format longitude et latitude</value>
   </data>
   <data name="input_drawFeatureOnMap" xml:space="preserve">
-    <value>Draw feature on map</value>
+    <value>Dessiner l'entité sur la carte</value>
   </data>
   <data name="input_geodetic" xml:space="preserve">
-    <value>Geodetic</value>
+    <value>Géodésique</value>
   </data>
   <data name="input_utm" xml:space="preserve">
     <value>UTM</value>
   </data>
- 
   <data name="languageSelector_title" xml:space="preserve">
     <value>Langue</value>
   </data>
+  <data name="layerSettings_analysis_title" xml:space="preserve">
+    <value>Analyse</value>
+  </data>
+  <data name="layerSettings_export_title" xml:space="preserve">
+    <value>Exporter</value>
+  </data>
+  <data name="layerSettings_fields_title" xml:space="preserve">
+    <value>Champs</value>
+  </data>
+  <data name="layerSettings_filters_title" xml:space="preserve">
+    <value>Filtres</value>
+  </data>
+  <data name="layerSettings_general_featureType" xml:space="preserve">
+    <value>Type d'entité :</value>
+  </data>
+  <data name="layerSettings_general_layerName" xml:space="preserve">
+    <value>Nom de la couche :</value>
+  </data>
+  <data name="layerSettings_general_opacity" xml:space="preserve">
+    <value>Opacité :</value>
+  </data>
+  <data name="layerSettings_general_sourceAddress" xml:space="preserve">
+    <value>Adresse source</value>
+  </data>
+  <data name="layerSettings_general_sourceType" xml:space="preserve">
+    <value>Type de source :</value>
+  </data>
+  <data name="layerSettings_general_title" xml:space="preserve">
+    <value>Général</value>
+  </data>
+  <data name="layerSettings_labeling" xml:space="preserve">
+    <value>Étiquetage</value>
+  </data>
+  <data name="layerSettings_security_title" xml:space="preserve">
+    <value>Sécurité</value>
+  </data>
+  <data name="layerSettings_statistics_title" xml:space="preserve">
+    <value>Statistiques</value>
+  </data>
+  <data name="layerSettings_symbology_title" xml:space="preserve">
+    <value>Symbologie</value>
+  </data>
+  <data name="layerSettings_trackChanges_title" xml:space="preserve">
+    <value>Suivi des modifications</value>
+  </data>
   <data name="layer_geodesy1_title" xml:space="preserve">
-    <value>Geodesy 1</value>
+    <value>Géodésie 1</value>
   </data>
   <data name="layer_geodesy2_title" xml:space="preserve">
-    <value>Geodesy 2</value>
+    <value>Géodésie 2</value>
   </data>
   <data name="layer_geodynamics_title" xml:space="preserve">
-    <value>Geodynamics</value>
+    <value>Géodynamique</value>
   </data>
   <data name="layer_gravimetry_title" xml:space="preserve">
-    <value>Gravimetry</value>
+    <value>Gravimétrie</value>
   </data>
   <data name="layer_leveling1_title" xml:space="preserve">
-    <value>Leveling 1</value>
+    <value>Nivellement 1</value>
   </data>
   <data name="layer_leveling2_title" xml:space="preserve">
-    <value>Leveling 2</value>
+    <value>Nivellement 2</value>
   </data>
   <data name="layer_leveling3_title" xml:space="preserve">
-    <value>Leveling 3</value>
+    <value>Nivellement 3</value>
   </data>
-  <data name="legendItem_PendingChanges_Added" xml:space="preserve">
-    <value>Added:</value>
+  <data name="legendItem_layerTitle" xml:space="preserve">
+    <value>Titre</value>
   </data>
-  <data name="legendItem_PendingChanges_Deleted" xml:space="preserve">
-    <value>Deleted:</value>
+  <data name="legendItem_pendingChanges_added" xml:space="preserve">
+    <value>Ajouté : </value>
   </data>
-  <data name="legendItem_PendingChanges_Save" xml:space="preserve">
-    <value>Save changes</value>
+  <data name="legendItem_pendingChanges_deleted" xml:space="preserve">
+    <value>Supprimé : </value>
   </data>
-  <data name="legendItem_PendingChanges_Undo" xml:space="preserve">
-    <value>Undo changes</value>
+  <data name="legendItem_pendingChanges_save" xml:space="preserve">
+    <value>Enregistrer les modifications</value>
   </data>
-  <data name="legendItem_PendingChanges_Updated" xml:space="preserve">
-    <value>Updated:</value>
+  <data name="legendItem_pendingChanges_undo" xml:space="preserve">
+    <value>Annuler les modifications</value>
+  </data>
+  <data name="legendItem_pendingChanges_updated" xml:space="preserve">
+    <value>Mis à jour : </value>
+  </data>
+  <data name="legendItem_reloadData" xml:space="preserve">
+    <value>Recharger les données</value>
   </data>
   <data name="legend_clearAll" xml:space="preserve">
-    <value>Clear All</value>
+    <value>Tout effacer</value>
   </data>
-  <data name="legend_filter_Clear" xml:space="preserve">
-    <value>Clear Filters</value>
+  <data name="legend_filter_clear" xml:space="preserve">
+    <value>Effacer les filtres</value>
   </data>
   <data name="legend_filter_filterByLayerType" xml:space="preserve">
-    <value>Filter By Layer Type</value>
+    <value>Filtrer par type de couche</value>
   </data>
   <data name="legend_filter_searchLayerWatermark" xml:space="preserve">
-    <value>Search Layer</value>
+    <value>Rechercher une couche</value>
   </data>
   <data name="legend_selectAll" xml:space="preserve">
-    <value>Select All</value>
+    <value>Tout sélectionner</value>
   </data>
   <data name="manageAccount_changePassword" xml:space="preserve">
     <value>Changer le mot de passe</value>
@@ -785,10 +968,112 @@
     <value>Nouveau mot de passe</value>
   </data>
   <data name="manageAccount_newUsername" xml:space="preserve">
-    <value>Nouveau nom d&amp;amp;amp;amp;amp;apos;utilisateur</value>
+    <value>Nouveau nom d&amp;amp;amp;amp;amp;amp;apos;utilisateur</value>
+  </data>
+  <data name="manageAccount_userName" xml:space="preserve">
+    <value>Nom d&amp;amp;amp;amp;amp;amp;amp;apos;utilisateur</value>
+  </data>
+  <data name="mapExtent_common_title" xml:space="preserve">
+    <value>Gestionnaire d'étendue</value>
+  </data>
+  <data name="mapExtent_currentView_currentPointGroundResolution" xml:space="preserve">
+    <value>Résolution au sol (m/px) :</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScale" xml:space="preserve">
+    <value>Échelle de la carte (WebMercator) :</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleCurrentPoint" xml:space="preserve">
+    <value>Échelle de la carte (point actuel) :</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevel" xml:space="preserve">
+    <value>Échelle Google la plus proche :</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint" xml:space="preserve">
+    <value>Échelle Google la plus proche (point actuel) :</value>
+  </data>
+  <data name="mapExtent_currentView_nearestGoogleZoomLevel" xml:space="preserve">
+    <value>Niveau de zoom Google le plus proche :</value>
+  </data>
+  <data name="mapExtent_currentView_title" xml:space="preserve">
+    <value>Étendue actuelle</value>
+  </data>
+  <data name="mapExtent_gotoScale_title" xml:space="preserve">
+    <value>Aller à l'échelle (au centre)</value>
+  </data>
+  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+    <value>Utiliser l'échelle au sol pour les échelles standard</value>
+  </data>
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+    <value>Utiliser l'échelle WebMercator pour les échelles standard</value>
+  </data>
+  <data name="mapExtent_new_addNew" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="mapExtent_new_extentTitle" xml:space="preserve">
+    <value>Titre de l'étendue</value>
+  </data>
+  <data name="mapExtent_new_title" xml:space="preserve">
+    <value>Nouvelle étendue</value>
+  </data>
+  <data name="mapExtent_savedExtents_title" xml:space="preserve">
+    <value>Étendues enregistrées</value>
+  </data>
+  <data name="mapPanel_currentPart_add" xml:space="preserve">
+    <value>Ajouter une nouvelle pièce</value>
+  </data>
+  <data name="mapPanel_currentPart_delete" xml:space="preserve">
+    <value>Supprimer la pièce actuelle</value>
+  </data>
+  <data name="mapPanel_currentPart_title" xml:space="preserve">
+    <value>Plusieurs parties</value>
+  </data>
+  <data name="mapPanel_currentPart_zoom" xml:space="preserve">
+    <value>Zoom sur la partie actuelle</value>
+  </data>
+  <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
+    <value>Copy current point&amp;amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
+  </data>
+  <data name="mapPanel_currentPoint_delete" xml:space="preserve">
+    <value>Supprimer le point actuel</value>
+  </data>
+  <data name="mapPanel_currentPoint_displayCoordinate" xml:space="preserve">
+    <value>Afficher les coordonnées</value>
+  </data>
+  <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
+    <value>Point suivant</value>
+  </data>
+  <data name="mapPanel_currentPoint_goToPreviousPoint" xml:space="preserve">
+    <value>Point précédent</value>
+  </data>
+  <data name="mapPanel_currentPoint_linkToMouseMove" xml:space="preserve">
+    <value>Lier à la position de la souris sur la carte</value>
+  </data>
+  <data name="mapPanel_currentPoint_title" xml:space="preserve">
+    <value>Point actuel</value>
+  </data>
+  <data name="mapPanel_currentPoint_zoom" xml:space="preserve">
+    <value>Zoomer sur le point actuel</value>
+  </data>
+  <data name="mapPanel_edit_cancel" xml:space="preserve">
+    <value>Annuler Modifier</value>
+  </data>
+  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
+    <value>Convertir en élément de dessin</value>
+  </data>
+  <data name="mapPanel_edit_delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="mapPanel_edit_finish" xml:space="preserve">
+    <value>Terminer Modifier</value>
+  </data>
+  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
+    <value>Afficher les étiquettes de bord</value>
+  </data>
+  <data name="mapPanel_edit_showGeometryDetails" xml:space="preserve">
+    <value>Afficher les détails de la géométrie</value>
   </data>
   <data name="mapPanel_measure_areaTitle" xml:space="preserve">
-    <value>Area</value>
+    <value>Surface</value>
   </data>
   <data name="mapPanel_measure_authalicSphereArea" xml:space="preserve">
     <value>AuthalicSphereArea:</value>
@@ -827,67 +1112,16 @@
     <value>Hauteur moyenne</value>
   </data>
   <data name="mapPanel_measure_scaleFactor" xml:space="preserve">
-    <value>Facteur d&amp;amp;amp;apos;échelle :</value>
+    <value>Facteur d&amp;amp;amp;amp;apos;échelle :</value>
   </data>
   <data name="mapPanel_measure_sphericalLength" xml:space="preserve">
     <value>Longueur sphérique :</value>
   </data>
-  <data name="legendItem_layerTitle" xml:space="preserve">
-    <value>Titre</value>
-  </data>
-  <data name="mapPanel_currentPart_add" xml:space="preserve">
-    <value>Ajouter une nouvelle pièce</value>
-  </data>
-  <data name="mapPanel_currentPart_delete" xml:space="preserve">
-    <value>Supprimer la pièce actuelle</value>
-  </data>
-  <data name="mapPanel_currentPart_zoom" xml:space="preserve">
-    <value>Zoom sur la partie actuelle</value>
-  </data>
-  <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
-  </data>
-  <data name="mapPanel_currentPoint_delete" xml:space="preserve">
-    <value>Supprimer le point actuel</value>
-  </data>
-  <data name="mapPanel_currentPoint_displayCoordinate" xml:space="preserve">
-    <value>Afficher les coordonnées</value>
-  </data>
-  <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
-    <value>Point suivant</value>
-  </data>
-  <data name="mapPanel_currentPoint_goToPreviousPoint" xml:space="preserve">
-    <value>Point précédent</value>
-  </data>
-  <data name="mapPanel_currentPoint_zoom" xml:space="preserve">
-    <value>Zoomer sur le point actuel</value>
-  </data>
-  <data name="mapPanel_edit_cancel" xml:space="preserve">
-    <value>Annuler Modifier</value>
-  </data>
-  <data name="mapPanel_edit_delete" xml:space="preserve">
-    <value>Supprimer</value>
-  </data>
-  <data name="mapPanel_edit_finish" xml:space="preserve">
-    <value>Terminer Modifier</value>
-  </data>
-  <data name="mapPanel_currentPoint_title" xml:space="preserve">
-    <value>Point actuel</value>
-  </data>
   <data name="mapPanel_measure_title" xml:space="preserve">
     <value>Mesures</value>
   </data>
-  <data name="mapPanel_currentPart_title" xml:space="preserve">
-    <value>Plusieurs parties</value>
-  </data>
   <data name="mapPanel_srs_title" xml:space="preserve">
     <value>Système de référence spatiale</value>
-  </data>
-  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
-    <value>Convertir en élément de dessin</value>
-  </data>
-  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
-    <value>Afficher les étiquettes de bord</value>
   </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">
     <value>Hauteur</value>
@@ -913,6 +1147,30 @@
   <data name="map_scalebar_zoomLevel" xml:space="preserve">
     <value>Niveau</value>
   </data>
+  <data name="message_error_concurrencyConflict" xml:space="preserve">
+    <value>Les données ont été modifiées par un autre utilisateur. Veuillez recharger et réessayer.</value>
+  </data>
+  <data name="message_error_formatException" xml:space="preserve">
+    <value>Exception de format</value>
+  </data>
+  <data name="message_error_lockedFile" xml:space="preserve">
+    <value>Le fichier est verrouillé ou utilisé par un autre programme</value>
+  </data>
+  <data name="message_error_title" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="message_error_unknown" xml:space="preserve">
+    <value>Erreur inconnue</value>
+  </data>
+  <data name="message_error_userEmailAlreadyVerified" xml:space="preserve">
+    <value>L'e-mail de l'utilisateur est déjà vérifié</value>
+  </data>
+  <data name="message_info_doneSuccessfully" xml:space="preserve">
+    <value>Opération réalisée avec succès</value>
+  </data>
+  <data name="message_info_title" xml:space="preserve">
+    <value>Message</value>
+  </data>
   <data name="ribbon_header_drawing" xml:space="preserve">
     <value>Dessin</value>
   </data>
@@ -924,6 +1182,27 @@
   </data>
   <data name="ribbon_header_settings" xml:space="preserve">
     <value>Paramètres</value>
+  </data>
+  <data name="sketchBar_title_drawPoint" xml:space="preserve">
+    <value>Dessiner un point</value>
+  </data>
+  <data name="sketchBar_title_drawPolygon" xml:space="preserve">
+    <value>Dessiner un polygone</value>
+  </data>
+  <data name="sketchBar_title_drawPolyline" xml:space="preserve">
+    <value>Dessiner une ligne</value>
+  </data>
+  <data name="sketchBar_title_drawRectangle" xml:space="preserve">
+    <value>Dessiner un rectangle</value>
+  </data>
+  <data name="sketchBar_title_editing" xml:space="preserve">
+    <value>Édition</value>
+  </data>
+  <data name="sketchBar_title_measureArea" xml:space="preserve">
+    <value>Mesure de surface</value>
+  </data>
+  <data name="sketchBar_title_measureLength" xml:space="preserve">
+    <value>Mesure de longueur</value>
   </data>
   <data name="sldEditor_common_abstract" xml:space="preserve">
     <value>Abstrait:</value>
@@ -977,10 +1256,10 @@
     <value>Importer</value>
   </data>
   <data name="sldEditor_common_importFromFile" xml:space="preserve">
-    <value>Importer à partir d&amp;amp;amp;apos;un fichier...</value>
+    <value>Importer à partir d&amp;amp;amp;amp;apos;un fichier...</value>
   </data>
   <data name="sldEditor_common_importTooltip" xml:space="preserve">
-    <value>Importer SLD à partir d&amp;amp;amp;apos;un fichier</value>
+    <value>Importer SLD à partir d&amp;amp;amp;amp;apos;un fichier</value>
   </data>
   <data name="sldEditor_common_layerName" xml:space="preserve">
     <value>Nom du calque :</value>
@@ -1016,7 +1295,7 @@
     <value>Règles:</value>
   </data>
   <data name="sldEditor_common_scaleRange" xml:space="preserve">
-    <value>Plage d&amp;amp;amp;apos;échelle</value>
+    <value>Plage d&amp;amp;amp;amp;apos;échelle</value>
   </data>
   <data name="sldEditor_common_selected" xml:space="preserve">
     <value>Choisi:</value>
@@ -1052,7 +1331,7 @@
     <value>Aperçu XML</value>
   </data>
   <data name="sldEditor_common_xmlPreviewPlaceholder" xml:space="preserve">
-    <value>L&amp;amp;amp;apos;aperçu XML sera affiché ici</value>
+    <value>L&amp;amp;amp;amp;apos;aperçu XML sera affiché ici</value>
   </data>
   <data name="sldEditor_filter_enableFilter" xml:space="preserve">
     <value>Activer le filtre</value>
@@ -1064,7 +1343,7 @@
     <value>Paramètres de filtre</value>
   </data>
   <data name="sldEditor_filter_simplifiedViewNote" xml:space="preserve">
-    <value>Remarque : Il s&amp;amp;amp;apos;agit d&amp;amp;amp;apos;une vue simplifiée. Pour les filtres complexes, modifiez le XML directement ou utilisez un générateur de filtres spécialisé.</value>
+    <value>Remarque : Il s&amp;amp;amp;amp;apos;agit d&amp;amp;amp;amp;apos;une vue simplifiée. Pour les filtres complexes, modifiez le XML directement ou utilisez un générateur de filtres spécialisé.</value>
   </data>
   <data name="sldEditor_lineSymbolizer_dashArray" xml:space="preserve">
     <value>Tableau de bord :</value>
@@ -1076,7 +1355,7 @@
     <value>Type de marque :</value>
   </data>
   <data name="sldEditor_pointSymbolizer_rotation" xml:space="preserve">
-    <value>Rotation:</value>
+    <value>Rotation :</value>
   </data>
   <data name="sldEditor_pointSymbolizer_size" xml:space="preserve">
     <value>Taille:</value>
@@ -1118,7 +1397,7 @@
     <value>Rayon du halo :</value>
   </data>
   <data name="sldEditor_textSymbolizer_labelProperty" xml:space="preserve">
-    <value>Propriété de l&amp;amp;amp;apos;étiquette :</value>
+    <value>Propriété de l&amp;amp;amp;amp;apos;étiquette :</value>
   </data>
   <data name="srs_ceaSubTitle" xml:space="preserve">
     <value>Surface égale cylindrique</value>
@@ -1127,10 +1406,10 @@
     <value>Surface égale cylindrique</value>
   </data>
   <data name="srs_defaultLatitude" xml:space="preserve">
-    <value>Latitude:</value>
+    <value>Latitude :</value>
   </data>
   <data name="srs_defaultLongitude" xml:space="preserve">
-    <value>Longitude:</value>
+    <value>Longitude :</value>
   </data>
   <data name="srs_defaultX" xml:space="preserve">
     <value>X :</value>
@@ -1157,10 +1436,10 @@
     <value>Mercator</value>
   </data>
   <data name="srs_northernHemisphere" xml:space="preserve">
-    <value>Northern Hemisphere</value>
+    <value>Hémisphère nord</value>
   </data>
   <data name="srs_southernHemisphere" xml:space="preserve">
-    <value>Southern Hemisphere</value>
+    <value>Hémisphère sud</value>
   </data>
   <data name="srs_tmSubTitle" xml:space="preserve">
     <value>Mercator transversal</value>
@@ -1176,6 +1455,9 @@
   </data>
   <data name="srs_utmZone" xml:space="preserve">
     <value>Zone</value>
+  </data>
+  <data name="srs_utmZone_full" xml:space="preserve">
+    <value>UTM Zone</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>Mercator Web</value>
@@ -1252,58 +1534,58 @@
   <data name="theme_color_yellow" xml:space="preserve">
     <value>Jaune</value>
   </data>
-  <data name="tile_mapType_BlackWhite" xml:space="preserve">
+  <data name="tile_mapType_blackWhite" xml:space="preserve">
     <value>NoirBlanc</value>
   </data>
-  <data name="tile_mapType_CleanGrey" xml:space="preserve">
+  <data name="tile_mapType_cleanGrey" xml:space="preserve">
     <value>Gris Propre</value>
   </data>
-  <data name="tile_mapType_Comic" xml:space="preserve">
+  <data name="tile_mapType_comic" xml:space="preserve">
     <value>Comique</value>
   </data>
-  <data name="tile_mapType_Dark" xml:space="preserve">
+  <data name="tile_mapType_dark" xml:space="preserve">
     <value>Sombre</value>
   </data>
-  <data name="tile_mapType_HikeBike" xml:space="preserve">
+  <data name="tile_mapType_hikeBike" xml:space="preserve">
     <value>RandonnéeVélo</value>
   </data>
-  <data name="tile_mapType_Hybrid" xml:space="preserve">
+  <data name="tile_mapType_hybrid" xml:space="preserve">
     <value>Hybride</value>
   </data>
-  <data name="tile_mapType_Light" xml:space="preserve">
+  <data name="tile_mapType_light" xml:space="preserve">
     <value>Lumière</value>
   </data>
-  <data name="tile_mapType_MapyTourist" xml:space="preserve">
+  <data name="tile_mapType_mapyTourist" xml:space="preserve">
     <value>MapyTourist</value>
   </data>
-  <data name="tile_mapType_MapyWinter" xml:space="preserve">
+  <data name="tile_mapType_mapyWinter" xml:space="preserve">
     <value>MapyHiver</value>
   </data>
-  <data name="tile_mapType_Nature" xml:space="preserve">
+  <data name="tile_mapType_nature" xml:space="preserve">
     <value>Nature</value>
   </data>
-  <data name="tile_mapType_NeutralBlue" xml:space="preserve">
+  <data name="tile_mapType_neutralBlue" xml:space="preserve">
     <value>NeutreBleu</value>
   </data>
-  <data name="tile_mapType_RoadMap" xml:space="preserve">
+  <data name="tile_mapType_roadMap" xml:space="preserve">
     <value>Feuille de route</value>
   </data>
-  <data name="tile_mapType_Satellite" xml:space="preserve">
+  <data name="tile_mapType_satellite" xml:space="preserve">
     <value>Satellite</value>
   </data>
-  <data name="tile_mapType_Street" xml:space="preserve">
+  <data name="tile_mapType_street" xml:space="preserve">
     <value>Rue</value>
   </data>
-  <data name="tile_mapType_Terrain" xml:space="preserve">
+  <data name="tile_mapType_terrain" xml:space="preserve">
     <value>Terrain</value>
   </data>
-  <data name="tile_mapType_Topo" xml:space="preserve">
+  <data name="tile_mapType_topo" xml:space="preserve">
     <value>Topo</value>
   </data>
-  <data name="tile_mapType_Traffic" xml:space="preserve">
+  <data name="tile_mapType_traffic" xml:space="preserve">
     <value>Trafic</value>
   </data>
-  <data name="tile_mapType_Watercolor" xml:space="preserve">
+  <data name="tile_mapType_watercolor" xml:space="preserve">
     <value>Aquarelle</value>
   </data>
   <data name="tile_provider_bing" xml:space="preserve">
@@ -1330,6 +1612,9 @@
   <data name="tile_provider_yandex" xml:space="preserve">
     <value>YANDEX</value>
   </data>
+  <data name="ui_header_attributeTable" xml:space="preserve">
+    <value>Table attributaire</value>
+  </data>
   <data name="ui_header_baseMaps" xml:space="preserve">
     <value>Cartes de base</value>
   </data>
@@ -1339,7 +1624,13 @@
   <data name="ui_header_layerLegend" xml:space="preserve">
     <value>Couches</value>
   </data>
-  <data name="wat_security_userName" xml:space="preserve">
-    <value>Nom d&amp;amp;amp;amp;amp;amp;apos;utilisateur</value>
+  <data name="validation_msg_invalidEmail" xml:space="preserve">
+    <value>Adresse e-mail invalide</value>
+  </data>
+  <data name="validation_msg_nullOrEmptyString" xml:space="preserve">
+    <value>Ne peut pas être nul ou vide</value>
+  </data>
+  <data name="validation_msg_unknownError" xml:space="preserve">
+    <value>Exception inconnue</value>
   </data>
 </root>

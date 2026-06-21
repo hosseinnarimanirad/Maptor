@@ -58,6 +58,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="cmd_contextMenu_copy" xml:space="preserve">
+    <value>لەبەرگرتنەوە</value>
+  </data>
+  <data name="cmd_contextMenu_cut" xml:space="preserve">
+    <value>بڕین</value>
+  </data>
+  <data name="cmd_contextMenu_delete" xml:space="preserve">
+    <value>سڕینەوە</value>
+  </data>
+  <data name="cmd_contextMenu_paste" xml:space="preserve">
+    <value>لکاندن</value>
+  </data>
   <data name="cmd_drawingLegendItem_boundary" xml:space="preserve">
     <value>سنوور</value>
   </data>
@@ -81,6 +93,12 @@
   </data>
   <data name="cmd_drawingLegendItem_envelope" xml:space="preserve">
     <value>پاکەت</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsCsv" xml:space="preserve">
+    <value>هەناردەکردن وەک csv</value>
+  </data>
+  <data name="cmd_drawingLegendItem_exportAsDxf" xml:space="preserve">
+    <value>هەناردەکردن وەک Dxf</value>
   </data>
   <data name="cmd_drawingLegendItem_exportAsGeoJson" xml:space="preserve">
     <value>وەک GeoJson دەرەوە بکە</value>
@@ -106,11 +124,17 @@
   <data name="cmd_drawingLegend_moveUp" xml:space="preserve">
     <value>سەرەوە بجوڵێنە</value>
   </data>
+  <data name="cmd_drawingLegend_openAll" xml:space="preserve">
+    <value>کردنەوەی هەموو</value>
+  </data>
   <data name="cmd_drawingLegend_removeAll" xml:space="preserve">
     <value>هەموو بسڕەوە</value>
   </data>
+  <data name="cmd_drawingLegend_saveAll" xml:space="preserve">
+    <value>پاشەکەوتکردنی هەموو</value>
+  </data>
   <data name="cmd_general_addGeoJson" xml:space="preserve">
-    <value>Add GeoJson</value>
+    <value>زیادکردنی GeoJson</value>
   </data>
   <data name="cmd_general_addShapefile" xml:space="preserve">
     <value>Shapefile زیاد بکە</value>
@@ -139,14 +163,23 @@
   <data name="cmd_general_goTo" xml:space="preserve">
     <value>بڕۆ بۆ</value>
   </data>
+  <data name="cmd_general_identify" xml:space="preserve">
+    <value>ناسینەوە</value>
+  </data>
   <data name="cmd_general_measureArea" xml:space="preserve">
     <value>ڕووبەر پێوانە بکە</value>
   </data>
   <data name="cmd_general_measureLength" xml:space="preserve">
     <value>درێژایی پێوانە بکە</value>
   </data>
+  <data name="cmd_general_nextExtent" xml:space="preserve">
+    <value>بینینی داهاتوو</value>
+  </data>
   <data name="cmd_general_pan" xml:space="preserve">
     <value>جوڵاندن</value>
+  </data>
+  <data name="cmd_general_previousExtent" xml:space="preserve">
+    <value>بینینی پێشوو</value>
   </data>
   <data name="cmd_general_zoomIn" xml:space="preserve">
     <value>نزیککردنەوە</value>
@@ -160,11 +193,8 @@
   <data name="cmd_general_zoomPrevious" xml:space="preserve">
     <value>زوومی پێشوو</value>
   </data>
-  <data name="cmd_general_previousExtent" xml:space="preserve">
-    <value>بینینی پێشوو</value>
-  </data>
-  <data name="cmd_general_nextExtent" xml:space="preserve">
-    <value>بینینی داهاتوو</value>
+  <data name="cmd_general_zoomToExtent" xml:space="preserve">
+    <value>زووم بۆ سنوور</value>
   </data>
   <data name="cmd_legendItem_clearSelected" xml:space="preserve">
     <value>هەڵبژاردنەکان پاک بکەرەوە</value>
@@ -202,6 +232,9 @@
   <data name="cmd_legend_addDxf" xml:space="preserve">
     <value>DXF زیاد بکە</value>
   </data>
+  <data name="cmd_legend_addEsriJson" xml:space="preserve">
+    <value>زیادکردنی EsriJson</value>
+  </data>
   <data name="cmd_legend_addGpx" xml:space="preserve">
     <value>GPX زیاد بکە</value>
   </data>
@@ -232,8 +265,8 @@
   <data name="cmd_legend_removeAll" xml:space="preserve">
     <value>هەموو بسڕەوە</value>
   </data>
-  <data name="common_cancel" xml:space="preserve">
-    <value>هەڵوەشاندنەوە</value>
+  <data name="cmd_security_resetPassword" xml:space="preserve">
+    <value>ڕێکخستنەوەی وشەی نهێنی</value>
   </data>
   <data name="common_capsLockWarning" xml:space="preserve">
     <value>Caps Lock چالاکە</value>
@@ -253,8 +286,26 @@
   <data name="common_forgetPassword" xml:space="preserve">
     <value>وشەی نهێنیم لەبیرچووەتەوە</value>
   </data>
+  <data name="common_geometryType_point" xml:space="preserve">
+    <value>تایبەتمەندی خاڵ</value>
+  </data>
+  <data name="common_geometryType_polygon" xml:space="preserve">
+    <value>تایبەتمەندی چەندگۆشە</value>
+  </data>
+  <data name="common_geometryType_polyline" xml:space="preserve">
+    <value>تایبەتمەندی چەندهێڵ</value>
+  </data>
+  <data name="common_kilometer" xml:space="preserve">
+    <value>کیلۆمەتر</value>
+  </data>
+  <data name="common_loadingText" xml:space="preserve">
+    <value>بارکردن...</value>
+  </data>
   <data name="common_login" xml:space="preserve">
     <value>چوونەژوورەوە</value>
+  </data>
+  <data name="common_meter" xml:space="preserve">
+    <value>مەتر</value>
   </data>
   <data name="common_new" xml:space="preserve">
     <value>نوێ</value>
@@ -277,6 +328,9 @@
   <data name="common_save" xml:space="preserve">
     <value>پاشەکەوت</value>
   </data>
+  <data name="common_squareMeter" xml:space="preserve">
+    <value>مەتر چوارگۆشە</value>
+  </data>
   <data name="common_username" xml:space="preserve">
     <value>ناوی بەکارهێنەر</value>
   </data>
@@ -286,20 +340,59 @@
   <data name="dialog_changePassword_title" xml:space="preserve">
     <value>گۆڕینی وشەی نهێنی</value>
   </data>
+  <data name="dialog_common_areYouSure" xml:space="preserve">
+    <value>دڵنیایت؟</value>
+  </data>
   <data name="dialog_common_browse" xml:space="preserve">
-    <value>Browse...</value>
+    <value>گەڕان...</value>
+  </data>
+  <data name="dialog_common_browseFolder" xml:space="preserve">
+    <value>گەڕانی فۆڵدەر...</value>
   </data>
   <data name="dialog_common_cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>هەڵوەشاندنەوە</value>
+  </data>
+  <data name="dialog_common_close" xml:space="preserve">
+    <value>داخستن</value>
+  </data>
+  <data name="dialog_common_confirmTitle" xml:space="preserve">
+    <value>پشتڕاستکردنەوە</value>
+  </data>
+  <data name="dialog_common_eastingFirst" xml:space="preserve">
+    <value>X پاشان Y</value>
+  </data>
+  <data name="dialog_common_export" xml:space="preserve">
+    <value>هەناردەکردن</value>
   </data>
   <data name="dialog_common_fileWatermark" xml:space="preserve">
-    <value>File</value>
+    <value>فایل</value>
+  </data>
+  <data name="dialog_common_formatJson" xml:space="preserve">
+    <value>فۆڕماتی Json</value>
+  </data>
+  <data name="dialog_common_minifiedJson" xml:space="preserve">
+    <value>Json بچووککراوە</value>
+  </data>
+  <data name="dialog_common_no" xml:space="preserve">
+    <value>نەخێر</value>
+  </data>
+  <data name="dialog_common_ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="dialog_common_prettyJson" xml:space="preserve">
+    <value>Json ڕێکخراو</value>
   </data>
   <data name="dialog_common_removeFile" xml:space="preserve">
-    <value>Remove File</value>
+    <value>لابردنی فایل</value>
   </data>
   <data name="dialog_common_save" xml:space="preserve">
-    <value>Save</value>
+    <value>پاشەکەوتکردن</value>
+  </data>
+  <data name="dialog_common_xyOrder" xml:space="preserve">
+    <value>ڕیزبەندی X/Y</value>
+  </data>
+  <data name="dialog_common_yes" xml:space="preserve">
+    <value>بەڵێ</value>
   </data>
   <data name="dialog_csvTsvOpen_formatCsv" xml:space="preserve">
     <value>CSV</value>
@@ -308,7 +401,7 @@
     <value>TSV</value>
   </data>
   <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
-    <value>Geometry Type</value>
+    <value>جۆری شێوەناسی</value>
   </data>
   <data name="dialog_csvTsvOpen_orderXY" xml:space="preserve">
     <value>یەکەم ستوون = X (درێژایی/خۆرهەڵات)، دووەم = Y (پانی/باکور)</value>
@@ -340,6 +433,9 @@
   <data name="dialog_dxfOpen_samplePoints" xml:space="preserve">
     <value>خاڵەکانی نیمچە (یەکەم ٥٠):</value>
   </data>
+  <data name="dialog_dxfOpen_title" xml:space="preserve">
+    <value>هاوردەکردنی DXF</value>
+  </data>
   <data name="dialog_emailSignUp_or" xml:space="preserve">
     <value>یان</value>
   </data>
@@ -349,11 +445,35 @@
   <data name="dialog_emailSignUp_signUpGoogle" xml:space="preserve">
     <value>تۆمارکردن بە Google</value>
   </data>
+  <data name="dialog_export_disabledProjection" xml:space="preserve">
+    <value>بەکارهێنانی SRS بنەڕەتی</value>
+  </data>
+  <data name="dialog_export_enabledProjection" xml:space="preserve">
+    <value>پڕۆجێکردن بۆ</value>
+  </data>
+  <data name="dialog_export_exportModeAll" xml:space="preserve">
+    <value>هەموو</value>
+  </data>
+  <data name="dialog_export_exportModeHighlighted" xml:space="preserve">
+    <value>نیشانکراوەکان</value>
+  </data>
+  <data name="dialog_export_exportModeSelected" xml:space="preserve">
+    <value>هەڵبژێردراوەکان</value>
+  </data>
+  <data name="dialog_export_exportModeTitle" xml:space="preserve">
+    <value>تایبەتمەندییەکان بۆ هەناردەکردن:</value>
+  </data>
+  <data name="dialog_export_outputFileFormat" xml:space="preserve">
+    <value>فۆڕماتی دەرئەنجام:</value>
+  </data>
+  <data name="dialog_export_sourceSrs" xml:space="preserve">
+    <value>SRS سەرچاوە</value>
+  </data>
+  <data name="dialog_export_targetSrs" xml:space="preserve">
+    <value>SRS ئامانج</value>
+  </data>
   <data name="dialog_geoJsonOpen_title" xml:space="preserve">
     <value>GeoJSON هاتنەژوورەوە</value>
-  </data>
-  <data name="dialog_common_xyOrder" xml:space="preserve">
-    <value>X/Y order</value>
   </data>
   <data name="dialog_geoJsonTopoJsonOpen_orderXY" xml:space="preserve">
     <value>یەکەم کۆردینات = X (درێژایی/خۆرهەڵات)، دووەم = Y (پانی/باکور)</value>
@@ -418,7 +538,6 @@
   <data name="dialog_geometryDetails_title" xml:space="preserve">
     <value>وردەکارییەکانی جیۆمەتری</value>
   </data>
- 
   <data name="dialog_geometryDetails_zoomToPoint" xml:space="preserve">
     <value>زووم بۆ خال</value>
   </data>
@@ -430,6 +549,15 @@
   </data>
   <data name="dialog_goto_zoomTo" xml:space="preserve">
     <value>زووم بۆ</value>
+  </data>
+  <data name="dialog_layerSettings_title" xml:space="preserve">
+    <value>ڕێکخستنەکانی چین</value>
+  </data>
+  <data name="dialog_msg_confirmDeleteFeatures" xml:space="preserve">
+    <value>سڕینەوەی تایبەتمەندییەکان</value>
+  </data>
+  <data name="dialog_msg_discardPendingChanges" xml:space="preserve">
+    <value>گۆڕانکارییە چاوەڕوانکراوەکانی چینەکان فڕێدەدرێن</value>
   </data>
   <data name="dialog_openfile_title" xml:space="preserve">
     <value>پەڕگە هەڵبژێرە</value>
@@ -593,8 +721,14 @@
   <data name="geometryDetails_currentPoint_edit" xml:space="preserve">
     <value>دەستکاری بکە</value>
   </data>
+  <data name="geometryDetails_currentPoint_goToNextPage" xml:space="preserve">
+    <value>بڕۆ بۆ لاپەڕەی دواتر</value>
+  </data>
   <data name="geometryDetails_currentPoint_goToNextPoint" xml:space="preserve">
     <value>بڕۆ بۆ خالی دواتر</value>
+  </data>
+  <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
+    <value>بڕۆ بۆ لاپەڕەی پێشوو</value>
   </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
     <value>بڕۆ بۆ خالی پێشوو</value>
@@ -638,7 +772,6 @@
   <data name="geometryDetails_options_useDecimalDegreesForAngles" xml:space="preserve">
     <value>بە پلەی دەهیی بۆ گۆشەکان بەکاربێنە</value>
   </data>
-  
   <data name="geometryDetails_options_xyPrecision" xml:space="preserve">
     <value>وردی X/Y:</value>
   </data>
@@ -696,7 +829,7 @@
   <data name="index_2kblocks_title" xml:space="preserve">
     <value>ئیندێکس ٢٠٠٠ بلۆک</value>
   </data>
-  <data name="index_500UtmTitle" xml:space="preserve">
+  <data name="index_500Utm_title" xml:space="preserve">
     <value>ئیندێکس 500</value>
   </data>
   <data name="index_50k_title" xml:space="preserve">
@@ -717,9 +850,53 @@
   <data name="input_utm" xml:space="preserve">
     <value>UTM</value>
   </data>
- 
   <data name="languageSelector_title" xml:space="preserve">
     <value>زمان</value>
+  </data>
+  <data name="layerSettings_analysis_title" xml:space="preserve">
+    <value>شیکاری</value>
+  </data>
+  <data name="layerSettings_export_title" xml:space="preserve">
+    <value>هەناردەکردن</value>
+  </data>
+  <data name="layerSettings_fields_title" xml:space="preserve">
+    <value>خانەکان</value>
+  </data>
+  <data name="layerSettings_filters_title" xml:space="preserve">
+    <value>پاڵاوتنەکان</value>
+  </data>
+  <data name="layerSettings_general_featureType" xml:space="preserve">
+    <value>جۆری تایبەتمەندی:</value>
+  </data>
+  <data name="layerSettings_general_layerName" xml:space="preserve">
+    <value>ناوی چین:</value>
+  </data>
+  <data name="layerSettings_general_opacity" xml:space="preserve">
+    <value>ڕووناکی:</value>
+  </data>
+  <data name="layerSettings_general_sourceAddress" xml:space="preserve">
+    <value>ناونیشانی سەرچاوە</value>
+  </data>
+  <data name="layerSettings_general_sourceType" xml:space="preserve">
+    <value>جۆری سەرچاوە:</value>
+  </data>
+  <data name="layerSettings_general_title" xml:space="preserve">
+    <value>گشتی</value>
+  </data>
+  <data name="layerSettings_labeling" xml:space="preserve">
+    <value>ناونیشانگوزاری</value>
+  </data>
+  <data name="layerSettings_security_title" xml:space="preserve">
+    <value>ئاسایش</value>
+  </data>
+  <data name="layerSettings_statistics_title" xml:space="preserve">
+    <value>ئامار</value>
+  </data>
+  <data name="layerSettings_symbology_title" xml:space="preserve">
+    <value>نیشانەناسی</value>
+  </data>
+  <data name="layerSettings_trackChanges_title" xml:space="preserve">
+    <value>بەدواداچوونی گۆڕانکارییەکان</value>
   </data>
   <data name="layer_geodesy1_title" xml:space="preserve">
     <value>جیۆدێزی 1</value>
@@ -742,25 +919,31 @@
   <data name="layer_leveling3_title" xml:space="preserve">
     <value>ئاستکردن ٣</value>
   </data>
-  <data name="legendItem_PendingChanges_Added" xml:space="preserve">
+  <data name="legendItem_layerTitle" xml:space="preserve">
+    <value>ناونیشان</value>
+  </data>
+  <data name="legendItem_pendingChanges_added" xml:space="preserve">
     <value>زیادکرا:</value>
   </data>
-  <data name="legendItem_PendingChanges_Deleted" xml:space="preserve">
+  <data name="legendItem_pendingChanges_deleted" xml:space="preserve">
     <value>سڕدراوە:</value>
   </data>
-  <data name="legendItem_PendingChanges_Save" xml:space="preserve">
+  <data name="legendItem_pendingChanges_save" xml:space="preserve">
     <value>گۆڕانکارییەکان پاشەکەوت بکە</value>
   </data>
-  <data name="legendItem_PendingChanges_Undo" xml:space="preserve">
+  <data name="legendItem_pendingChanges_undo" xml:space="preserve">
     <value>گۆڕانکارییەکان پووچ بکەرەوە</value>
   </data>
-  <data name="legendItem_PendingChanges_Updated" xml:space="preserve">
+  <data name="legendItem_pendingChanges_updated" xml:space="preserve">
     <value>نوێکراوە:</value>
+  </data>
+  <data name="legendItem_reloadData" xml:space="preserve">
+    <value>بارکردنەوەی داتا</value>
   </data>
   <data name="legend_clearAll" xml:space="preserve">
     <value>هەمووی پاک بکەرەوە</value>
   </data>
-  <data name="legend_filter_Clear" xml:space="preserve">
+  <data name="legend_filter_clear" xml:space="preserve">
     <value>فلتەرەکان پاک بکەرەوە</value>
   </data>
   <data name="legend_filter_filterByLayerType" xml:space="preserve">
@@ -786,6 +969,108 @@
   </data>
   <data name="manageAccount_newUsername" xml:space="preserve">
     <value>ناوی بەکارهێنەری نوێ</value>
+  </data>
+  <data name="manageAccount_userName" xml:space="preserve">
+    <value>ناوی بەکارهێنەر</value>
+  </data>
+  <data name="mapExtent_common_title" xml:space="preserve">
+    <value>بەڕێوەبەری سنوور</value>
+  </data>
+  <data name="mapExtent_currentView_currentPointGroundResolution" xml:space="preserve">
+    <value>ڕوونی زەوی (م/پیکسڵ):</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScale" xml:space="preserve">
+    <value>پێوانەی نەخشە (WebMercator):</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleCurrentPoint" xml:space="preserve">
+    <value>پێوانەی نەخشە (خاڵی ئێستا):</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevel" xml:space="preserve">
+    <value>نزیکترین پێوانەی Google:</value>
+  </data>
+  <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint" xml:space="preserve">
+    <value>نزیکترین پێوانەی Google (خاڵی ئێستا):</value>
+  </data>
+  <data name="mapExtent_currentView_nearestGoogleZoomLevel" xml:space="preserve">
+    <value>نزیکترین ئاستی زوومی Google:</value>
+  </data>
+  <data name="mapExtent_currentView_title" xml:space="preserve">
+    <value>سنووری ئێستا</value>
+  </data>
+  <data name="mapExtent_gotoScale_title" xml:space="preserve">
+    <value>بڕۆ بۆ پێوانە (لە ناوەند)</value>
+  </data>
+  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+    <value>بەکارهێنانی پێوانەی زەوی بۆ پێوانە ستانداردەکان</value>
+  </data>
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+    <value>بەکارهێنانی پێوانەی webmercator بۆ پێوانە ستانداردەکان</value>
+  </data>
+  <data name="mapExtent_new_addNew" xml:space="preserve">
+    <value>زیادکردنی نوێ</value>
+  </data>
+  <data name="mapExtent_new_extentTitle" xml:space="preserve">
+    <value>ناونیشانی سنوور</value>
+  </data>
+  <data name="mapExtent_new_title" xml:space="preserve">
+    <value>سنووری نوێ</value>
+  </data>
+  <data name="mapExtent_savedExtents_title" xml:space="preserve">
+    <value>سنوورە پاشەکەوتکراوەکان</value>
+  </data>
+  <data name="mapPanel_currentPart_add" xml:space="preserve">
+    <value>بەشی نوێ زیاد بکە</value>
+  </data>
+  <data name="mapPanel_currentPart_delete" xml:space="preserve">
+    <value>بەشی ئێستا بسڕەوە</value>
+  </data>
+  <data name="mapPanel_currentPart_title" xml:space="preserve">
+    <value>چەند بەش</value>
+  </data>
+  <data name="mapPanel_currentPart_zoom" xml:space="preserve">
+    <value>زووم بۆ بەشی ئێستا</value>
+  </data>
+  <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
+    <value>کۆردیناتی خالی ئێستا لەبەربکەرەوە</value>
+  </data>
+  <data name="mapPanel_currentPoint_delete" xml:space="preserve">
+    <value>خالی ئێستا بسڕەوە</value>
+  </data>
+  <data name="mapPanel_currentPoint_displayCoordinate" xml:space="preserve">
+    <value>کۆردیناتەکان پیشان بدە</value>
+  </data>
+  <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
+    <value>خالی دواتر</value>
+  </data>
+  <data name="mapPanel_currentPoint_goToPreviousPoint" xml:space="preserve">
+    <value>خالی پێشوو</value>
+  </data>
+  <data name="mapPanel_currentPoint_linkToMouseMove" xml:space="preserve">
+    <value>بەستن بە شوێنی ماوس لەسەر نەخشە</value>
+  </data>
+  <data name="mapPanel_currentPoint_title" xml:space="preserve">
+    <value>خالی ئێستا</value>
+  </data>
+  <data name="mapPanel_currentPoint_zoom" xml:space="preserve">
+    <value>زووم بۆ خالی ئێستا</value>
+  </data>
+  <data name="mapPanel_edit_cancel" xml:space="preserve">
+    <value>دەستکاری هەڵوەشێنەرەوە</value>
+  </data>
+  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
+    <value>بگۆڕە بۆ ئایتمی کێشان</value>
+  </data>
+  <data name="mapPanel_edit_delete" xml:space="preserve">
+    <value>سڕینەوە</value>
+  </data>
+  <data name="mapPanel_edit_finish" xml:space="preserve">
+    <value>دەستکاری تەواو بکە</value>
+  </data>
+  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
+    <value>نیشانەی لێوار پیشان بدە</value>
+  </data>
+  <data name="mapPanel_edit_showGeometryDetails" xml:space="preserve">
+    <value>پیشاندانی وردەکارییەکانی شێوەناسی</value>
   </data>
   <data name="mapPanel_measure_areaTitle" xml:space="preserve">
     <value>ناوچە</value>
@@ -832,62 +1117,11 @@
   <data name="mapPanel_measure_sphericalLength" xml:space="preserve">
     <value>درێژی گۆشەیی:</value>
   </data>
-  <data name="legendItem_layerTitle" xml:space="preserve">
-    <value>ناونیشان</value>
-  </data>
-  <data name="mapPanel_currentPart_add" xml:space="preserve">
-    <value>بەشی نوێ زیاد بکە</value>
-  </data>
-  <data name="mapPanel_currentPart_delete" xml:space="preserve">
-    <value>بەشی ئێستا بسڕەوە</value>
-  </data>
-  <data name="mapPanel_currentPart_zoom" xml:space="preserve">
-    <value>زووم بۆ بەشی ئێستا</value>
-  </data>
-  <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>کۆردیناتی خالی ئێستا لەبەربکەرەوە</value>
-  </data>
-  <data name="mapPanel_currentPoint_delete" xml:space="preserve">
-    <value>خالی ئێستا بسڕەوە</value>
-  </data>
-  <data name="mapPanel_currentPoint_displayCoordinate" xml:space="preserve">
-    <value>کۆردیناتەکان پیشان بدە</value>
-  </data>
-  <data name="mapPanel_currentPoint_goToNextPoint" xml:space="preserve">
-    <value>خالی دواتر</value>
-  </data>
-  <data name="mapPanel_currentPoint_goToPreviousPoint" xml:space="preserve">
-    <value>خالی پێشوو</value>
-  </data>
-  <data name="mapPanel_currentPoint_zoom" xml:space="preserve">
-    <value>زووم بۆ خالی ئێستا</value>
-  </data>
-  <data name="mapPanel_edit_cancel" xml:space="preserve">
-    <value>دەستکاری هەڵوەشێنەرەوە</value>
-  </data>
-  <data name="mapPanel_edit_delete" xml:space="preserve">
-    <value>سڕینەوە</value>
-  </data>
-  <data name="mapPanel_edit_finish" xml:space="preserve">
-    <value>دەستکاری تەواو بکە</value>
-  </data>
-  <data name="mapPanel_currentPoint_title" xml:space="preserve">
-    <value>خالی ئێستا</value>
-  </data>
   <data name="mapPanel_measure_title" xml:space="preserve">
     <value>پێوانە</value>
   </data>
-  <data name="mapPanel_currentPart_title" xml:space="preserve">
-    <value>چەند بەش</value>
-  </data>
   <data name="mapPanel_srs_title" xml:space="preserve">
     <value>سیستەمی ئاماژەپێدانی شوێن</value>
-  </data>
-  <data name="mapPanel_edit_convertToDrawing" xml:space="preserve">
-    <value>بگۆڕە بۆ ئایتمی کێشان</value>
-  </data>
-  <data name="mapPanel_edit_showEdgeLabels" xml:space="preserve">
-    <value>نیشانەی لێوار پیشان بدە</value>
   </data>
   <data name="map_coordinatePanel_height" xml:space="preserve">
     <value>بەرزی</value>
@@ -913,6 +1147,30 @@
   <data name="map_scalebar_zoomLevel" xml:space="preserve">
     <value>ئاست</value>
   </data>
+  <data name="message_error_concurrencyConflict" xml:space="preserve">
+    <value>داتاکە لەلایەن بەکارهێنەرێکی تر گۆڕدراوە. تکایە بارکردنەوە بکە و دووبارە هەوڵ بدەرەوە.</value>
+  </data>
+  <data name="message_error_formatException" xml:space="preserve">
+    <value>هەڵەی فۆڕمات</value>
+  </data>
+  <data name="message_error_lockedFile" xml:space="preserve">
+    <value>فایل قوفڵکراوە یان لەلایەن بەرنامەیەکی ترەوە بەکاردێت</value>
+  </data>
+  <data name="message_error_title" xml:space="preserve">
+    <value>هەڵە</value>
+  </data>
+  <data name="message_error_unknown" xml:space="preserve">
+    <value>هەڵەی نەزانراو</value>
+  </data>
+  <data name="message_error_userEmailAlreadyVerified" xml:space="preserve">
+    <value>ئیمەیڵی بەکارهێنەر پێشتر پشتڕاستکراوەتەوە</value>
+  </data>
+  <data name="message_info_doneSuccessfully" xml:space="preserve">
+    <value>کردارەکە بە سەرکەوتوویی ئەنجامدرا</value>
+  </data>
+  <data name="message_info_title" xml:space="preserve">
+    <value>پەیام</value>
+  </data>
   <data name="ribbon_header_drawing" xml:space="preserve">
     <value>کێشان</value>
   </data>
@@ -924,6 +1182,27 @@
   </data>
   <data name="ribbon_header_settings" xml:space="preserve">
     <value>ڕێکخستنەکان</value>
+  </data>
+  <data name="sketchBar_title_drawPoint" xml:space="preserve">
+    <value>وێنەکێشانی خاڵ</value>
+  </data>
+  <data name="sketchBar_title_drawPolygon" xml:space="preserve">
+    <value>وێنەکێشانی چەندگۆشە</value>
+  </data>
+  <data name="sketchBar_title_drawPolyline" xml:space="preserve">
+    <value>وێنەکێشانی هێڵ</value>
+  </data>
+  <data name="sketchBar_title_drawRectangle" xml:space="preserve">
+    <value>وێنەکێشانی لاکێشە</value>
+  </data>
+  <data name="sketchBar_title_editing" xml:space="preserve">
+    <value>دەستکاریکردن</value>
+  </data>
+  <data name="sketchBar_title_measureArea" xml:space="preserve">
+    <value>پێوانی ڕووبەر</value>
+  </data>
+  <data name="sketchBar_title_measureLength" xml:space="preserve">
+    <value>پێوانی درێژی</value>
   </data>
   <data name="sldEditor_common_abstract" xml:space="preserve">
     <value>پوختە:</value>
@@ -1157,10 +1436,10 @@
     <value>مێرکاتۆر</value>
   </data>
   <data name="srs_northernHemisphere" xml:space="preserve">
-    <value>Northern Hemisphere</value>
+    <value>نیوگۆی باکوور</value>
   </data>
   <data name="srs_southernHemisphere" xml:space="preserve">
-    <value>Southern Hemisphere</value>
+    <value>نیوگۆی باشوور</value>
   </data>
   <data name="srs_tmSubTitle" xml:space="preserve">
     <value>مێرکاتۆری پاشەکەوت</value>
@@ -1176,6 +1455,9 @@
   </data>
   <data name="srs_utmZone" xml:space="preserve">
     <value>ناوچە</value>
+  </data>
+  <data name="srs_utmZone_full" xml:space="preserve">
+    <value>UTM Zone</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>مێرکاتۆری وێب</value>
@@ -1252,58 +1534,58 @@
   <data name="theme_color_yellow" xml:space="preserve">
     <value>زەرد</value>
   </data>
-  <data name="tile_mapType_BlackWhite" xml:space="preserve">
+  <data name="tile_mapType_blackWhite" xml:space="preserve">
     <value>ڕەش و سپی</value>
   </data>
-  <data name="tile_mapType_CleanGrey" xml:space="preserve">
+  <data name="tile_mapType_cleanGrey" xml:space="preserve">
     <value>خۆڵەمێشی پاک</value>
   </data>
-  <data name="tile_mapType_Comic" xml:space="preserve">
+  <data name="tile_mapType_comic" xml:space="preserve">
     <value>کۆمێدیا</value>
   </data>
-  <data name="tile_mapType_Dark" xml:space="preserve">
+  <data name="tile_mapType_dark" xml:space="preserve">
     <value>تار</value>
   </data>
-  <data name="tile_mapType_HikeBike" xml:space="preserve">
+  <data name="tile_mapType_hikeBike" xml:space="preserve">
     <value>گەڕان و بایسکڵ</value>
   </data>
-  <data name="tile_mapType_Hybrid" xml:space="preserve">
+  <data name="tile_mapType_hybrid" xml:space="preserve">
     <value>تێکەڵ</value>
   </data>
-  <data name="tile_mapType_Light" xml:space="preserve">
+  <data name="tile_mapType_light" xml:space="preserve">
     <value>ڕووناک</value>
   </data>
-  <data name="tile_mapType_MapyTourist" xml:space="preserve">
+  <data name="tile_mapType_mapyTourist" xml:space="preserve">
     <value>ماپیتۆریست</value>
   </data>
-  <data name="tile_mapType_MapyWinter" xml:space="preserve">
+  <data name="tile_mapType_mapyWinter" xml:space="preserve">
     <value>ماپی وینتەر</value>
   </data>
-  <data name="tile_mapType_Nature" xml:space="preserve">
+  <data name="tile_mapType_nature" xml:space="preserve">
     <value>سروشت</value>
   </data>
-  <data name="tile_mapType_NeutralBlue" xml:space="preserve">
+  <data name="tile_mapType_neutralBlue" xml:space="preserve">
     <value>شینی بێلایەن</value>
   </data>
-  <data name="tile_mapType_RoadMap" xml:space="preserve">
+  <data name="tile_mapType_roadMap" xml:space="preserve">
     <value>نەخشەی ڕێگا</value>
   </data>
-  <data name="tile_mapType_Satellite" xml:space="preserve">
+  <data name="tile_mapType_satellite" xml:space="preserve">
     <value>مانگەدەست</value>
   </data>
-  <data name="tile_mapType_Street" xml:space="preserve">
+  <data name="tile_mapType_street" xml:space="preserve">
     <value>شەقام</value>
   </data>
-  <data name="tile_mapType_Terrain" xml:space="preserve">
+  <data name="tile_mapType_terrain" xml:space="preserve">
     <value>زەوی</value>
   </data>
-  <data name="tile_mapType_Topo" xml:space="preserve">
+  <data name="tile_mapType_topo" xml:space="preserve">
     <value>تۆپۆگرافی</value>
   </data>
-  <data name="tile_mapType_Traffic" xml:space="preserve">
+  <data name="tile_mapType_traffic" xml:space="preserve">
     <value>هاتوچۆ</value>
   </data>
-  <data name="tile_mapType_Watercolor" xml:space="preserve">
+  <data name="tile_mapType_watercolor" xml:space="preserve">
     <value>ئاوی ڕەنگ</value>
   </data>
   <data name="tile_provider_bing" xml:space="preserve">
@@ -1330,6 +1612,9 @@
   <data name="tile_provider_yandex" xml:space="preserve">
     <value>YANDEX</value>
   </data>
+  <data name="ui_header_attributeTable" xml:space="preserve">
+    <value>خشتەی تایبەتمەندییەکان</value>
+  </data>
   <data name="ui_header_baseMaps" xml:space="preserve">
     <value>نەخشە بنەڕەتییەکان</value>
   </data>
@@ -1339,7 +1624,13 @@
   <data name="ui_header_layerLegend" xml:space="preserve">
     <value>قەتەکان</value>
   </data>
-  <data name="wat_security_userName" xml:space="preserve">
-    <value>ناوی بەکارهێنەر</value>
+  <data name="validation_msg_invalidEmail" xml:space="preserve">
+    <value>ناونیشانی ئیمەیڵی نادروست</value>
+  </data>
+  <data name="validation_msg_nullOrEmptyString" xml:space="preserve">
+    <value>ناتوانێت بەتاڵ یان پووچ بێت</value>
+  </data>
+  <data name="validation_msg_unknownError" xml:space="preserve">
+    <value>هەڵەی نەزانراو</value>
   </data>
 </root>
