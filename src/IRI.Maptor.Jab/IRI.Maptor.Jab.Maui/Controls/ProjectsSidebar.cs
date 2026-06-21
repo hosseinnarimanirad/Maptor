@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Windows.Input;
 
+using IRI.Maptor.Jab.Core.Localization;
+using IRI.Maptor.Jab.Maui.Localization;
 using IRI.Maptor.Jab.Maui.Projects;
 
 using Microsoft.Maui.Controls;
@@ -22,17 +24,19 @@ public class ProjectsSidebar : SlideOverSidebar
 
     public ProjectsSidebar()
     {
+        var emptyLabel = new Label
+        {
+            HorizontalOptions = LayoutOptions.Center,
+            Margin = new Thickness(0, 18),
+            TextColor = SecondaryText,
+        };
+        emptyLabel.SetLoc(Label.TextProperty, "projectsPanel_empty");
+
         _list = new CollectionView
         {
             SelectionMode = SelectionMode.None,
             ItemTemplate = new DataTemplate(CreateRow),
-            EmptyView = new Label
-            {
-                Text = "No projects yet. Tap “＋ New project”.",
-                HorizontalOptions = LayoutOptions.Center,
-                Margin = new Thickness(0, 18),
-                TextColor = SecondaryText,
-            },
+            EmptyView = emptyLabel,
         };
 
         SetPanelContent(BuildPanelContent());
@@ -118,12 +122,12 @@ public class ProjectsSidebar : SlideOverSidebar
 
         var title = new Label
         {
-            Text = "Projects",
             TextColor = PrimaryText,
             FontSize = 18,
             FontAttributes = FontAttributes.Bold,
             VerticalOptions = LayoutOptions.Center,
         };
+        title.SetLoc(Label.TextProperty, "projectsPanel_title");
 
         header.Add(title, 0);
         header.Add(CreateCloseButton(), 1);
@@ -135,7 +139,6 @@ public class ProjectsSidebar : SlideOverSidebar
     {
         var add = new Button
         {
-            Text = "＋ New project",
             FontSize = 15,
             FontAttributes = FontAttributes.Bold,
             TextColor = PrimaryText,
@@ -143,6 +146,7 @@ public class ProjectsSidebar : SlideOverSidebar
             HeightRequest = 42,
             CornerRadius = 6,
         };
+        add.SetLoc(Button.TextProperty, "projectsPanel_newButton");
         add.SetBinding(Button.CommandProperty, new Binding(nameof(AddProjectCommand), source: this));
 
         return add;
@@ -184,7 +188,9 @@ public class ProjectsSidebar : SlideOverSidebar
             TextColor = SecondaryText,
             FontSize = 12,
         };
-        count.SetBinding(Label.TextProperty, new Binding($"{nameof(Project.Layers)}.Count", stringFormat: "{0} layers"));
+        count.SetBinding(Label.TextProperty, new Binding(
+            $"{nameof(Project.Layers)}.Count",
+            stringFormat: LocalizationManager.Instance["projectsPanel_layerCount"]));
 
         var textStack = new VerticalStackLayout
         {

@@ -1,3 +1,5 @@
+using IRI.Maptor.Jab.Core.Localization;
+
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 
@@ -45,9 +47,9 @@ public abstract class SlideOverSidebar : ContentView
         VerticalOptions = LayoutOptions.Fill;
         Content = _panel;
 
-        // Start hidden (collapsed) off the right edge.
+        // Start hidden (collapsed) off the outer edge — right in LTR, left in RTL.
         IsVisible = false;
-        _panel.TranslationX = PanelWidth;
+        _panel.TranslationX = HiddenOffset;
     }
 
     public static readonly BindableProperty IsOpenProperty = BindableProperty.Create(
@@ -95,6 +97,11 @@ public abstract class SlideOverSidebar : ContentView
             : _panel.WidthRequest > 0 ? _panel.WidthRequest
             : PanelWidth;
 
+    // The off-screen resting position. With full RTL mirroring the panel is anchored to the
+    // visual left, so it must hide toward the left (negative translation) instead of the right.
+    private double HiddenOffset
+        => LocalizationManager.Instance.IsRightToLeft ? -CurrentPanelWidth : CurrentPanelWidth;
+
     private static async void OnIsOpenChanged(BindableObject bindable, object oldValue, object newValue)
     {
         await ((SlideOverSidebar)bindable).AnimateAsync((bool)newValue);
@@ -104,12 +111,14 @@ public abstract class SlideOverSidebar : ContentView
     {
         if (open)
         {
+            // Start from the correct hidden side (in case the language changed while closed).
+            _panel.TranslationX = HiddenOffset;
             IsVisible = true;
             await _panel.TranslateTo(0, 0, SlideDuration, Easing.CubicOut);
         }
         else
         {
-            await _panel.TranslateTo(CurrentPanelWidth, 0, SlideDuration, Easing.CubicIn);
+            await _panel.TranslateTo(HiddenOffset, 0, SlideDuration, Easing.CubicIn);
             IsVisible = false;
         }
     }

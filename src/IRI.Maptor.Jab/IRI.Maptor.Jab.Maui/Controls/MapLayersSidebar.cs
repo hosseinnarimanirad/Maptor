@@ -2,6 +2,7 @@ using System.Collections;
 using System.Windows.Input;
 
 using IRI.Maptor.Jab.Maui.Layers;
+using IRI.Maptor.Jab.Maui.Localization;
 
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
@@ -31,17 +32,19 @@ public class MapLayersSidebar : SlideOverSidebar
 
     public MapLayersSidebar()
     {
+        var emptyLabel = new Label
+        {
+            HorizontalOptions = LayoutOptions.Center,
+            Margin = new Thickness(0, 18),
+            TextColor = SecondaryText,
+        };
+        emptyLabel.SetLoc(Label.TextProperty, "layersPanel_empty");
+
         _list = new CollectionView
         {
             SelectionMode = SelectionMode.None,
             ItemTemplate = new DataTemplate(CreateRow),
-            EmptyView = new Label
-            {
-                Text = "No layers yet. Tap ＋ to import.",
-                HorizontalOptions = LayoutOptions.Center,
-                Margin = new Thickness(0, 18),
-                TextColor = SecondaryText,
-            },
+            EmptyView = emptyLabel,
         };
 
         SetPanelContent(BuildPanelContent());
@@ -141,12 +144,12 @@ public class MapLayersSidebar : SlideOverSidebar
 
         var title = new Label
         {
-            Text = "Layers",
             TextColor = PrimaryText,
             FontSize = 18,
             FontAttributes = FontAttributes.Bold,
             VerticalOptions = LayoutOptions.Center,
         };
+        title.SetLoc(Label.TextProperty, "layersPanel_title");
 
         header.Add(title, 0);
         header.Add(CreateExpandButton(), 1);
@@ -169,19 +172,19 @@ public class MapLayersSidebar : SlideOverSidebar
 
         var label = new Label
         {
-            Text = "Background Map",
             TextColor = Accent,
             FontSize = 13,
             VerticalOptions = LayoutOptions.Center,
         };
+        label.SetLoc(Label.TextProperty, "layersPanel_backgroundMapLabel");
 
         var picker = new Picker
         {
             TextColor = PrimaryText,
             TitleColor = SecondaryText,
-            Title = "Select basemap",
             HorizontalOptions = LayoutOptions.Fill,
         };
+        picker.SetLoc(Picker.TitleProperty, "layersPanel_basemapPickerTitle");
         picker.SetBinding(Picker.ItemsSourceProperty, new Binding(nameof(BaseMaps), source: this));
         picker.SetBinding(Picker.SelectedItemProperty, new Binding(nameof(SelectedBaseMap), BindingMode.TwoWay, source: this));
 
@@ -204,11 +207,11 @@ public class MapLayersSidebar : SlideOverSidebar
 
         var label = new Label
         {
-            Text = "Layers",
             TextColor = Accent,
             FontSize = 13,
             VerticalOptions = LayoutOptions.Center,
         };
+        label.SetLoc(Label.TextProperty, "layersPanel_sectionTitle");
 
         var add = new Button
         {

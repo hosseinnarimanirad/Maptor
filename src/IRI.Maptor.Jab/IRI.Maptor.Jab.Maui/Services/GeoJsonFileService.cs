@@ -1,3 +1,4 @@
+using IRI.Maptor.Jab.Core.Localization;
 using IRI.Maptor.Jab.Maui.Layers;
 
 using Microsoft.Maui.Graphics;
@@ -22,7 +23,7 @@ public sealed class GeoJsonFileService : IGeoJsonFileService
     {
         var result = await FilePicker.Default.PickAsync(new PickOptions
         {
-            PickerTitle = "Select a GeoJSON file",
+            PickerTitle = LocalizationManager.Instance["dialog_filePicker_geoJsonTitle"],
             FileTypes = _geoJsonFileType,
         });
 

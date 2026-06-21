@@ -541,6 +541,5 @@ public class MapViewer : ContentView
 
         RefreshDrawable();
     }
-
-    #endregion
+     
 }
