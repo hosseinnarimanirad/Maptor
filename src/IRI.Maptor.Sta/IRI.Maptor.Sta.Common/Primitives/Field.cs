@@ -1,8 +1,10 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 using IRI.Maptor.Sta.Common.Attributes;
+using IRI.Maptor.Sta.Common.Common.JsonConverters;
 
 namespace IRI.Maptor.Sta.Common.Primitives;
 
@@ -28,7 +30,8 @@ public class Field
 
     public bool CanWrite { get; set; } = true;
 
-    public string[] AllowedValues { get; set; } = Array.Empty<string>();
+    [JsonConverter(typeof(ObjectArrayConverter))]
+    public object[] AllowedValues { get; set; } = [];
 
     public string? DisplayFormat { get; set; }
 
@@ -121,7 +124,7 @@ public class Field
                 Length = fieldAttribute?.Length ?? 0,
                 CanRead = fieldAttribute?.CanRead ?? true,
                 CanWrite = fieldAttribute?.CanWrite ?? true,
-                AllowedValues = fieldAttribute?.AllowedValues ?? Array.Empty<string>(),
+                AllowedValues = fieldAttribute?.AllowedValues ?? [],
                 DisplayFormat = fieldAttribute?.DisplayFormat,
                 TextDirection = fieldAttribute?.TextDirection ?? FieldTextDirection.Auto,
                 Precision = GetDefaultPrecision(underlyingType),
