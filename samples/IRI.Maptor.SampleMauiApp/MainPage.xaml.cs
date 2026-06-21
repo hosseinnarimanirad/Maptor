@@ -1,3 +1,5 @@
+using IRI.Maptor.Jab.Core.Localization;
+using IRI.Maptor.Jab.Maui.Localization;
 using IRI.Maptor.SampleMauiApp.ViewModels;
 
 namespace IRI.Maptor.SampleMauiApp;
@@ -6,11 +8,16 @@ public partial class MainPage : ContentPage
 {
 	private readonly MainViewModel _viewModel = new();
 
+	private static string L(string key) => LocalizationManager.Instance[key];
+
 	public MainPage()
 	{
 		InitializeComponent();
 
 		BindingContext = _viewModel;
+
+		// Mirror the whole page for RTL languages now and on every language change.
+		LocalizationFlow.Apply(this);
 
 		Map.MapTapped += (_, _) => _viewModel.CloseSidebars();
 	}
@@ -25,9 +32,9 @@ public partial class MainPage : ContentPage
 	private async void OnSearchClicked(object? sender, EventArgs e)
 	{
 		var text = await DisplayPromptAsync(
-			"Search location",
-			"Enter coordinates as 'lat, lon'",
-			placeholder: "35.6892, 51.3890",
+			L("dialog_search_title"),
+			L("dialog_search_message"),
+			placeholder: L("dialog_search_placeholder"),
 			initialValue: _viewModel.LocationText);
 
 		if (!string.IsNullOrWhiteSpace(text))
@@ -42,7 +49,7 @@ public partial class MainPage : ContentPage
 		{
 			if (!MediaPicker.Default.IsCaptureSupported)
 			{
-				_viewModel.StatusMessage = "Camera is not available on this device.";
+				_viewModel.StatusMessage = L("status_cameraUnavailable");
 				return;
 			}
 
@@ -50,11 +57,30 @@ public partial class MainPage : ContentPage
 
 			_viewModel.StatusMessage = photo is null
 				? null // cancelled
-				: $"Photo captured: {photo.FileName}";
+				: string.Format(L("status_photoCaptured"), photo.FileName);
 		}
 		catch (Exception)
 		{
-			_viewModel.StatusMessage = "Could not capture a photo. Check camera permissions.";
+			_viewModel.StatusMessage = L("status_photoError");
+		}
+	}
+
+	private async void OnLanguageClicked(object? sender, EventArgs e)
+	{
+		var choice = await DisplayActionSheet(
+			L("nav_languageMenuTitle"),
+			L("nav_cancel"),
+			null,
+			L("lang_english"),
+			L("lang_farsi"));
+
+		if (choice == L("lang_english"))
+		{
+			App.SetLanguage("en-US");
+		}
+		else if (choice == L("lang_farsi"))
+		{
+			App.SetLanguage("fa-IR");
 		}
 	}
 }

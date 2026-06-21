@@ -2,14 +2,19 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Maui.Controls;assembly=IRI.Maptor.Jab.Maui"
+             xmlns:loc="clr-namespace:IRI.Maptor.Jab.Maui.Localization;assembly=IRI.Maptor.Jab.Maui"
              x:Class="IRI.Maptor.SampleMauiApp.MainPage"
              Shell.NavBarIsVisible="False"
              Title="Maptor MAUI Map">
 
-    <Grid RowDefinitions="Auto,*">
+    <!-- Header row uses a fixed height (not Auto): on Android an Auto row whose content is
+         nested StackLayouts can collapse to ~0 during the pan gesture's re-layout, letting the
+         map row expand and draw tiles over the header. A deterministic height prevents that. -->
+    <Grid RowDefinitions="56,*">
 
         <!-- ===== Top navigation bar (solid color) ===== -->
         <Grid Grid.Row="0"
+              ZIndex="1"
               BackgroundColor="{StaticResource Primary}"
               ColumnDefinitions="Auto,*,Auto"
               Padding="12,8"
@@ -40,6 +45,14 @@
             <HorizontalStackLayout Grid.Column="2"
                                    Spacing="2"
                                    VerticalOptions="Center">
+                <Button Text="🌐"
+                        Clicked="OnLanguageClicked"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        FontSize="20"
+                        Padding="0"
+                        WidthRequest="44"
+                        HeightRequest="44" />
                 <Button Text="≣"
                         Command="{Binding ToggleLegendCommand}"
                         BackgroundColor="Transparent"
@@ -60,7 +73,8 @@
         </Grid>
 
         <!-- ===== Map area ===== -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1"
+              IsClippedToBounds="True">
 
             <!-- The map fills the area -->
             <maptor:MapViewer x:Name="Map"

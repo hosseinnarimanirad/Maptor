@@ -199,7 +199,7 @@
                 <Button Grid.Column="1" Margin="4,0" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" 
                     Command="{Binding LegendViewModel.ClearFilterCommand, ElementName=root}"
                     IsEnabled="{Binding LegendViewModel.HasActiveFilter, ElementName=root}"
-                    ToolTip="{Binding [legend_filter_Clear], Source={StaticResource Localization}}"
+                    ToolTip="{Binding [legend_filter_clear], Source={StaticResource Localization}}"
                     VerticalAlignment="Center" >
                     <iconPacks:PackIconMaterial Kind="FilterOff"/>
                 </Button>

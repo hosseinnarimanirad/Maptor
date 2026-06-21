@@ -686,7 +686,7 @@
                         <!--pending changes with hover popup-->
                         <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"
                                 Command="{Binding SaveChangesCommand}"
-                                ToolTip="{Binding [legendItem_PendingChanges_Save], Source={StaticResource Localization}}"
+                                ToolTip="{Binding [legendItem_pendingChanges_save], Source={StaticResource Localization}}"
                                 Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
                             <Viewbox Margin="4">
                                 <iconPacks:PackIconMaterial Kind="ContentSave" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
@@ -695,7 +695,7 @@
 
                         <Button DockPanel.Dock="Left" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"  
                                 Command="{Binding UndoAllChangesCommand}"
-                                ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}"
+                                ToolTip="{Binding [legendItem_pendingChanges_undo], Source={StaticResource Localization}}"
                                 Visibility="{Binding HasPendingChanges, Converter={StaticResource boolToVisibilityConverter}}">
                             <Viewbox Margin="4">
                                 <iconPacks:PackIconMaterial Kind="UndoVariant" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
@@ -761,14 +761,14 @@
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="3" Visibility="Collapsed">
                                         <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Width="24" Height="24" Focusable="True"
                                         Command="{Binding SaveChangesCommand}"
-                                        ToolTip="{Binding [legendItem_PendingChanges_Save], Source={StaticResource Localization}}">
+                                        ToolTip="{Binding [legendItem_pendingChanges_save], Source={StaticResource Localization}}">
                                             <Viewbox Margin="4">
                                                 <iconPacks:PackIconMaterial Kind="ContentSave" Foreground="White" FlowDirection="LeftToRight"/>
                                             </Viewbox>
                                         </Button>
                                         <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"   
                                         Command="{Binding UndoAllChangesCommand}"
-                                        ToolTip="{Binding [legendItem_PendingChanges_Undo], Source={StaticResource Localization}}">
+                                        ToolTip="{Binding [legendItem_pendingChanges_undo], Source={StaticResource Localization}}">
                                             <Viewbox Margin="4">
                                                 <iconPacks:PackIconMaterial Kind="UndoVariant" Foreground="White" FlowDirection="LeftToRight"/>
                                             </Viewbox>
@@ -784,7 +784,7 @@
                                         </iconPacks:PackIconMaterial.Kind>
                                     </iconPacks:PackIconMaterial>
                                     <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,2,0"
-                                            Text="{Binding [legendItem_PendingChanges_Added], Source={StaticResource Localization}, Mode=OneWay}"
+                                            Text="{Binding [legendItem_pendingChanges_added], Source={StaticResource Localization}, Mode=OneWay}"
                                             Foreground="{Binding Source={x:Static enums:FeatureStatus.New}, Converter={StaticResource featureStatusToBrushConverter}}"
                                             Visibility="{Binding NumberOfAddedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
                                     <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"
@@ -801,7 +801,7 @@
                                         </iconPacks:PackIconMaterial.Kind>
                                     </iconPacks:PackIconMaterial>
                                     <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,2,0"
-                                            Text="{Binding [legendItem_PendingChanges_Deleted], Source={StaticResource Localization}, Mode=OneWay}"
+                                            Text="{Binding [legendItem_pendingChanges_deleted], Source={StaticResource Localization}, Mode=OneWay}"
                                             Foreground="{Binding Source={x:Static enums:FeatureStatus.Removed}, Converter={StaticResource featureStatusToBrushConverter}}"
                                             Visibility="{Binding NumberOfDeletedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
                                     <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"
@@ -818,7 +818,7 @@
                                         </iconPacks:PackIconMaterial.Kind>
                                     </iconPacks:PackIconMaterial>
                                     <TextBlock Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,2,0"
-                                            Text="{Binding [legendItem_PendingChanges_Updated], Source={StaticResource Localization}, Mode=OneWay}"
+                                            Text="{Binding [legendItem_pendingChanges_updated], Source={StaticResource Localization}, Mode=OneWay}"
                                             Foreground="{Binding Source={x:Static enums:FeatureStatus.Updated}, Converter={StaticResource featureStatusToBrushConverter}}"
                                             Visibility="{Binding NumberOfUpdatedFeatures, Converter={StaticResource intGreaterThanIntParameterToVisibilityConverter}, ConverterParameter=0}"/>
                                     <TextBlock Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right"

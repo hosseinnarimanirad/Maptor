@@ -187,40 +187,40 @@ public static class TileMapWebUrlFactory
         return (providerResourceKey, mapTypeResourceKey) switch
         {
             // BING
-            (nameof(tile_provider_bing), nameof(tile_mapType_Satellite)) => tile => MakeBingSatelliteUrl(tile, GetServer()),
-            (nameof(tile_provider_bing), nameof(tile_mapType_Street)) => tile => MakeBingStreetUrl(tile, GetServer()),
-            (nameof(tile_provider_bing), nameof(tile_mapType_Hybrid)) => tile => MakeBingHybridUrl(tile, GetServer()),
+            (nameof(tile_provider_bing), nameof(tile_mapType_satellite)) => tile => MakeBingSatelliteUrl(tile, GetServer()),
+            (nameof(tile_provider_bing), nameof(tile_mapType_street)) => tile => MakeBingStreetUrl(tile, GetServer()),
+            (nameof(tile_provider_bing), nameof(tile_mapType_hybrid)) => tile => MakeBingHybridUrl(tile, GetServer()),
 
             // GOOGLE
-            (nameof(tile_provider_google), nameof(tile_mapType_CleanGrey)) => MakeGoogleCleanGreyUrl,
-            (nameof(tile_provider_google), nameof(tile_mapType_BlackWhite)) => MakeGoogleBlackWhiteUrl,
-            (nameof(tile_provider_google), nameof(tile_mapType_Traffic)) => tile => MakeGoogleTerafficUrl(tile, GetServer()),
-            (nameof(tile_provider_google), nameof(tile_mapType_Satellite)) => tile => MakeGoogleSatelliteUrl(tile, GetServer()),
-            (nameof(tile_provider_google), nameof(tile_mapType_Hybrid)) => tile => MakeGoogleHybridUrl(tile, GetServer()),
-            (nameof(tile_provider_google), nameof(tile_mapType_RoadMap)) => tile => MakeGoogleRoadMapUrl(tile, GetServer()),
-            (nameof(tile_provider_google), nameof(tile_mapType_Terrain)) => tile => MakeGoogleTerrainUrl(tile, GetServer()),
-            (nameof(tile_provider_google), nameof(tile_mapType_Light)) => CreateFromXyzUrlIntServer("https://mt{@server}.google.com/vt/lyrs=r&x={x}&y={y}&z={z}"),
-            (nameof(tile_provider_google), nameof(tile_mapType_Nature)) => CreateFromXyzUrlIntServer("https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjV8cC5oOiNGRkE4MDB8cC5nOjEscy50OjQ5fHAuaDojNTNGRjAwfHAuczotNzN8cC5sOjQwfHAuZzoxLHMudDo1MHxwLmg6I0ZCRkYwMHxwLmc6MSxzLnQ6NTF8cC5oOiMwMEZGRkR8cC5sOjMwfHAuZzoxLHMudDo2fHAuaDojMDBCRkZGfHAuczo2fHAubDo4fHAuZzoxLHMudDoyfHAuaDojNjc5NzE0fHAuczozMy40fHAubDotMjUuNHxwLmc6MQ!4e0!23i1301875"),
-            (nameof(tile_provider_google), nameof(tile_mapType_NeutralBlue)) => CreateFromXyzUrlIntServer("https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjZ8cy5lOmd8cC5jOiNmZjE5MzM0MSxzLnQ6NXxzLmU6Z3xwLmM6I2ZmMmM1YTcxLHMudDozfHMuZTpnfHAuYzojZmYyOTc2OGF8cC5sOi0zNyxzLnQ6MnxzLmU6Z3xwLmM6I2ZmNDA2ZDgwLHMudDo0fHMuZTpnfHAuYzojZmY0MDZkODAscy5lOmwudC5zfHAudjpvbnxwLmM6I2ZmM2U2MDZmfHAudzoyfHAuZzowLjg0LHMuZTpsLnQuZnxwLmM6I2ZmZmZmZmZmLHMudDoxfHMuZTpnfHAudzowLjZ8cC5jOiNmZjFhMzU0MSxzLmU6bC5pfHAudjpvZmYscy50OjQwfHMuZTpnfHAuYzojZmYyYzVhNzE!4e0!23i1301875"),
+            (nameof(tile_provider_google), nameof(tile_mapType_cleanGrey)) => MakeGoogleCleanGreyUrl,
+            (nameof(tile_provider_google), nameof(tile_mapType_blackWhite)) => MakeGoogleBlackWhiteUrl,
+            (nameof(tile_provider_google), nameof(tile_mapType_traffic)) => tile => MakeGoogleTerafficUrl(tile, GetServer()),
+            (nameof(tile_provider_google), nameof(tile_mapType_satellite)) => tile => MakeGoogleSatelliteUrl(tile, GetServer()),
+            (nameof(tile_provider_google), nameof(tile_mapType_hybrid)) => tile => MakeGoogleHybridUrl(tile, GetServer()),
+            (nameof(tile_provider_google), nameof(tile_mapType_roadMap)) => tile => MakeGoogleRoadMapUrl(tile, GetServer()),
+            (nameof(tile_provider_google), nameof(tile_mapType_terrain)) => tile => MakeGoogleTerrainUrl(tile, GetServer()),
+            (nameof(tile_provider_google), nameof(tile_mapType_light)) => CreateFromXyzUrlIntServer("https://mt{@server}.google.com/vt/lyrs=r&x={x}&y={y}&z={z}"),
+            (nameof(tile_provider_google), nameof(tile_mapType_nature)) => CreateFromXyzUrlIntServer("https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjV8cC5oOiNGRkE4MDB8cC5nOjEscy50OjQ5fHAuaDojNTNGRjAwfHAuczotNzN8cC5sOjQwfHAuZzoxLHMudDo1MHxwLmg6I0ZCRkYwMHxwLmc6MSxzLnQ6NTF8cC5oOiMwMEZGRkR8cC5sOjMwfHAuZzoxLHMudDo2fHAuaDojMDBCRkZGfHAuczo2fHAubDo4fHAuZzoxLHMudDoyfHAuaDojNjc5NzE0fHAuczozMy40fHAubDotMjUuNHxwLmc6MQ!4e0!23i1301875"),
+            (nameof(tile_provider_google), nameof(tile_mapType_neutralBlue)) => CreateFromXyzUrlIntServer("https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjZ8cy5lOmd8cC5jOiNmZjE5MzM0MSxzLnQ6NXxzLmU6Z3xwLmM6I2ZmMmM1YTcxLHMudDozfHMuZTpnfHAuYzojZmYyOTc2OGF8cC5sOi0zNyxzLnQ6MnxzLmU6Z3xwLmM6I2ZmNDA2ZDgwLHMudDo0fHMuZTpnfHAuYzojZmY0MDZkODAscy5lOmwudC5zfHAudjpvbnxwLmM6I2ZmM2U2MDZmfHAudzoyfHAuZzowLjg0LHMuZTpsLnQuZnxwLmM6I2ZmZmZmZmZmLHMudDoxfHMuZTpnfHAudzowLjZ8cC5jOiNmZjFhMzU0MSxzLmU6bC5pfHAudjpvZmYscy50OjQwfHMuZTpnfHAuYzojZmYyYzVhNzE!4e0!23i1301875"),
 
             // OSM
-            (nameof(tile_provider_osm), nameof(tile_mapType_Street)) => tile => MakeOpenStreetMapUrl(tile, GetServerCharacter()),
-            (nameof(tile_provider_osm), nameof(tile_mapType_Topo)) => tile => MakeOpenTopoMapUrl(tile, GetServerCharacter()),
-            (nameof(tile_provider_osm), nameof(tile_mapType_MapyWinter)) => MakeMapyWinterUrl,
-            (nameof(tile_provider_osm), nameof(tile_mapType_MapyTourist)) => MakeMapyTouristUrl,
-            (nameof(tile_provider_osm), nameof(tile_mapType_HikeBike)) => MakeOsmHikeBikeUrl,
-            (nameof(tile_provider_osm), nameof(tile_mapType_Watercolor)) => MakeStamenWatercolorUrl,
+            (nameof(tile_provider_osm), nameof(tile_mapType_street)) => tile => MakeOpenStreetMapUrl(tile, GetServerCharacter()),
+            (nameof(tile_provider_osm), nameof(tile_mapType_topo)) => tile => MakeOpenTopoMapUrl(tile, GetServerCharacter()),
+            (nameof(tile_provider_osm), nameof(tile_mapType_mapyWinter)) => MakeMapyWinterUrl,
+            (nameof(tile_provider_osm), nameof(tile_mapType_mapyTourist)) => MakeMapyTouristUrl,
+            (nameof(tile_provider_osm), nameof(tile_mapType_hikeBike)) => MakeOsmHikeBikeUrl,
+            (nameof(tile_provider_osm), nameof(tile_mapType_watercolor)) => MakeStamenWatercolorUrl,
 
             // WAZE
-            (nameof(tile_provider_waze), nameof(tile_mapType_Street)) => MakeWazeRoadMapUrl,
+            (nameof(tile_provider_waze), nameof(tile_mapType_street)) => MakeWazeRoadMapUrl,
 
             // CARTO
-            (nameof(tile_provider_carto), nameof(tile_mapType_Dark)) => MakeCartoDarkUrl,
-            (nameof(tile_provider_carto), nameof(tile_mapType_Light)) => MakeCartoLightUrl,
+            (nameof(tile_provider_carto), nameof(tile_mapType_dark)) => MakeCartoDarkUrl,
+            (nameof(tile_provider_carto), nameof(tile_mapType_light)) => MakeCartoLightUrl,
 
             // MAPBOX
-            (nameof(tile_provider_mapbox), nameof(tile_mapType_Comic)) => CreateFromXyzUrlCharServer("https://{@server}.tiles.mapbox.com/v4/mapbox.comic/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w"),
-            (nameof(tile_provider_mapbox), nameof(tile_mapType_Satellite)) => CreateFromXyzUrlCharServer("https://{@server}.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w"),
+            (nameof(tile_provider_mapbox), nameof(tile_mapType_comic)) => CreateFromXyzUrlCharServer("https://{@server}.tiles.mapbox.com/v4/mapbox.comic/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w"),
+            (nameof(tile_provider_mapbox), nameof(tile_mapType_satellite)) => CreateFromXyzUrlCharServer("https://{@server}.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w"),
 
             (_, _) => tile => null
         }; ;

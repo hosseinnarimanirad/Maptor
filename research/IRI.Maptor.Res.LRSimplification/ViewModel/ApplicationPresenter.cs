@@ -1,24 +1,14 @@
-using System.ComponentModel;
-using System.Globalization;
-
 using Microsoft.SqlServer.Types;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common;
-using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Sta.MachineLearning;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Jab.Common.Models.Legend;
 using IRI.Maptor.Res.LRSimplification.ViewModel.TrainingModel;
-using IRI.Maptor.Jab.Common.ViewModels;
-using IRI.Maptor.Jab.Common.Models.Settings;
-using IRI.Maptor.Jab.Common.Data;
-using IRI.Maptor.Jab.Common.Localization;
-
-using IRI.Maptor.Jab.Common.Layers;
-using IRI.Maptor.Res.LRSimplification.Common;
 
 
 namespace IRI.Maptor.Res.LRSimplification.ViewModel;

@@ -42,7 +42,7 @@ public static class TileMapProviderFactory
                 _bingSatellite = TileMapProvider.Create(
                     BaseMapType.Bing_Satellite,
                     nameof(tile_provider_bing),
-                    nameof(tile_mapType_Satellite),
+                    nameof(tile_mapType_satellite),
                     //tile => MakeBingSatelliteUrl(tile, GetServer()),
                     ReadEmbeddedImage($"{baseMapUri}/bingSatellite.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/bingSatellite72.jpg"));
@@ -62,7 +62,7 @@ public static class TileMapProviderFactory
                 _bingStreet = TileMapProvider.Create(
                     BaseMapType.Bing_Street,
                     nameof(tile_provider_bing),
-                    nameof(tile_mapType_Street),
+                    nameof(tile_mapType_street),
                     //tile => MakeBingStreetUrl(tile, GetServer()),
                     ReadEmbeddedImage($"{baseMapUri}/bingStreet.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/bingStreet72.jpg"));
@@ -83,7 +83,7 @@ public static class TileMapProviderFactory
                 _bingHybrid = TileMapProvider.Create(
                     BaseMapType.Bing_Hybrid,
                     nameof(tile_provider_bing),
-                    nameof(tile_mapType_Hybrid),
+                    nameof(tile_mapType_hybrid),
                     //tile => MakeBingHybridUrl(tile, GetServer()),
                     ReadEmbeddedImage($"{baseMapUri}/bingHybrid.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/bingHybrid72.jpg"));
@@ -108,7 +108,7 @@ public static class TileMapProviderFactory
                 _googleCleanGrey = TileMapProvider.Create(
                     BaseMapType.Google_CleanGrey,
                     nameof(tile_provider_google),
-                    nameof(tile_mapType_CleanGrey),
+                    nameof(tile_mapType_cleanGrey),
                     //MakeGoogleCleanGreyUrl,
                     ReadEmbeddedImage($"{baseMapUri}/googleTerrain.png"),
                     ReadEmbeddedImage($"{baseMapUri}/72/googleGrey72.jpg"));
@@ -129,7 +129,7 @@ public static class TileMapProviderFactory
                 _googleBlackWhite = TileMapProvider.Create(
                     BaseMapType.Google_BlackWhite,
                     nameof(tile_provider_google),
-                    nameof(tile_mapType_BlackWhite),
+                    nameof(tile_mapType_blackWhite),
                     //MakeGoogleBlackWhiteUrl,
                     ReadEmbeddedImage($"{baseMapUri}/googleTerrain.png"),
                     ReadEmbeddedImage($"{baseMapUri}/72/googleBlackWhite72.jpg"));
@@ -150,7 +150,7 @@ public static class TileMapProviderFactory
                 _googleTraffic = TileMapProvider.Create(
                     BaseMapType.Google_Traffic,
                     nameof(tile_provider_google),
-                    nameof(tile_mapType_Traffic),
+                    nameof(tile_mapType_traffic),
                     //tile => MakeGoogleTerafficUrl(tile, GetServer()),
                     ReadEmbeddedImage($"{baseMapUri}/googleTerrain.png"),
                     ReadEmbeddedImage($"{baseMapUri}/72/googleTraffic72.jpg"));
@@ -173,7 +173,7 @@ public static class TileMapProviderFactory
                 _googleSatellite = TileMapProvider.Create(
                     BaseMapType.Google_Satellite,
                     nameof(tile_provider_google),
-                    nameof(tile_mapType_Satellite),
+                    nameof(tile_mapType_satellite),
                     //tile => MakeGoogleSatelliteUrl(tile, GetServer()),
                     ReadEmbeddedImage($"{baseMapUri}/googleSatellite.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/googleSatellite72.jpg"));
@@ -194,7 +194,7 @@ public static class TileMapProviderFactory
                 _googleHybrid = TileMapProvider.Create(
                     BaseMapType.Google_Hybrid,
                     nameof(tile_provider_google),
-                    nameof(tile_mapType_Hybrid),
+                    nameof(tile_mapType_hybrid),
                     //tile => MakeGoogleHybridUrl(tile, GetServer()),
                     ReadEmbeddedImage($"{baseMapUri}/googleHybrid.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/googleHybrid72.jpg"));
@@ -215,7 +215,7 @@ public static class TileMapProviderFactory
                 _googleRoadMap = TileMapProvider.Create(
                     BaseMapType.Google_RoadMap,
                     nameof(tile_provider_google),
-                    nameof(tile_mapType_RoadMap),
+                    nameof(tile_mapType_roadMap),
                     //tile => MakeGoogleRoadMapUrl(tile, GetServer()),
                     ReadEmbeddedImage($"{baseMapUri}/googleRoadmap.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/googleRoadMap72.jpg"));
@@ -236,7 +236,7 @@ public static class TileMapProviderFactory
                 _googleTerrain = TileMapProvider.Create(
                     BaseMapType.Google_Terrain,
                     nameof(tile_provider_google),
-                    nameof(tile_mapType_Terrain),
+                    nameof(tile_mapType_terrain),
                     //tile => MakeGoogleTerrainUrl(tile, GetServer()),
                     ReadEmbeddedImage($"{baseMapUri}/googleTerrain.png"),
                     ReadEmbeddedImage($"{baseMapUri}/72/googleTerrain72.jpg"));
@@ -277,7 +277,7 @@ public static class TileMapProviderFactory
             //{
             //    _googleLight = CreateFromXyzUrlIntServer(
             //        nameof(tile_provider_google),
-            //        nameof(tile_mapType_Light),
+            //        nameof(tile_mapType_light),
             //        "https://mt{@server}.google.com/vt/lyrs=r&x={x}&y={y}&z={z}",
             //       $"{baseMapUri}/googleTerrain.png",
             //       $"{baseMapUri}/72/googleLight72.jpg");
@@ -288,7 +288,7 @@ public static class TileMapProviderFactory
                 _googleLight = TileMapProvider.Create(
                     BaseMapType.Google_Light,
                     nameof(tile_provider_google),
-                    nameof(tile_mapType_Light),
+                    nameof(tile_mapType_light),
                     //"https://mt{@server}.google.com/vt/lyrs=r&x={x}&y={y}&z={z}",
                     ReadEmbeddedImage($"{baseMapUri}/googleTerrain.png"),
                     ReadEmbeddedImage($"{baseMapUri}/72/googleLight72.jpg"));
@@ -309,7 +309,7 @@ public static class TileMapProviderFactory
                 _googleNature = TileMapProvider.Create(
                     BaseMapType.Google_Nature,
                     nameof(tile_provider_google),
-                    nameof(tile_mapType_Nature),
+                    nameof(tile_mapType_nature),
                     //"https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjV8cC5oOiNGRkE4MDB8cC5nOjEscy50OjQ5fHAuaDojNTNGRjAwfHAuczotNzN8cC5sOjQwfHAuZzoxLHMudDo1MHxwLmg6I0ZCRkYwMHxwLmc6MSxzLnQ6NTF8cC5oOiMwMEZGRkR8cC5sOjMwfHAuZzoxLHMudDo2fHAuaDojMDBCRkZGfHAuczo2fHAubDo4fHAuZzoxLHMudDoyfHAuaDojNjc5NzE0fHAuczozMy40fHAubDotMjUuNHxwLmc6MQ!4e0!23i1301875",
                     ReadEmbeddedImage($"{baseMapUri}/googleTerrain.png"),
                     ReadEmbeddedImage($"{baseMapUri}/72/googleNature72.jpg"));
@@ -331,7 +331,7 @@ public static class TileMapProviderFactory
                 _googleNeutralBlue = TileMapProvider.Create(
                     BaseMapType.Google_NeutralBlue,
                     nameof(tile_provider_google),
-                    nameof(tile_mapType_NeutralBlue),
+                    nameof(tile_mapType_neutralBlue),
                     //"https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i{y}!3m14!2snl!3sUS!5e18!12m1!1e68!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy50OjZ8cy5lOmd8cC5jOiNmZjE5MzM0MSxzLnQ6NXxzLmU6Z3xwLmM6I2ZmMmM1YTcxLHMudDozfHMuZTpnfHAuYzojZmYyOTc2OGF8cC5sOi0zNyxzLnQ6MnxzLmU6Z3xwLmM6I2ZmNDA2ZDgwLHMudDo0fHMuZTpnfHAuYzojZmY0MDZkODAscy5lOmwudC5zfHAudjpvbnxwLmM6I2ZmM2U2MDZmfHAudzoyfHAuZzowLjg0LHMuZTpsLnQuZnxwLmM6I2ZmZmZmZmZmLHMudDoxfHMuZTpnfHAudzowLjZ8cC5jOiNmZjFhMzU0MSxzLmU6bC5pfHAudjpvZmYscy50OjQwfHMuZTpnfHAuYzojZmYyYzVhNzE!4e0!23i1301875",
                     ReadEmbeddedImage($"{baseMapUri}/googleTerrain.png"),
                     ReadEmbeddedImage($"{baseMapUri}/72/googleNeutralBlue72.jpg"));
@@ -370,7 +370,7 @@ public static class TileMapProviderFactory
                 _openStreetMap = TileMapProvider.Create(
                     BaseMapType.OSM_OpenStreetMap,
                     nameof(tile_provider_osm),
-                    nameof(tile_mapType_Street),
+                    nameof(tile_mapType_street),
                     //tile => MakeOpenStreetMapUrl(tile, GetServerCharacter()),
                     ReadEmbeddedImage($"{baseMapUri}/openStreetMap.png"),
                     ReadEmbeddedImage($"{baseMapUri}/72/osmOpenStreetMap72.jpg"));
@@ -391,7 +391,7 @@ public static class TileMapProviderFactory
                 _openTopoMap = TileMapProvider.Create(
                     BaseMapType.OSM_OpenTopoMap,
                     nameof(tile_provider_osm),
-                    nameof(tile_mapType_Topo),
+                    nameof(tile_mapType_topo),
                     //tile => MakeOpenTopoMapUrl(tile, GetServerCharacter()),
                     ReadEmbeddedImage($"{baseMapUri}/openTopoMap.png"),
                     ReadEmbeddedImage($"{baseMapUri}/72/osmOpenTopoMap72.jpg"));
@@ -412,7 +412,7 @@ public static class TileMapProviderFactory
                 _mapyWinter = TileMapProvider.Create(
                     BaseMapType.OSM_MapyWinter,
                     nameof(tile_provider_osm),
-                    nameof(tile_mapType_MapyWinter),
+                    nameof(tile_mapType_mapyWinter),
                     //MakeMapyWinterUrl,
                     ReadEmbeddedImage($"{baseMapUri}/mapyWinter.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/osmMapyWinter72.jpg"));
@@ -433,7 +433,7 @@ public static class TileMapProviderFactory
                 _mapyTourist = TileMapProvider.Create(
                     BaseMapType.OSM_MapyTourist,
                     nameof(tile_provider_osm),
-                    nameof(tile_mapType_MapyTourist),
+                    nameof(tile_mapType_mapyTourist),
                     //MakeMapyTouristUrl,
                     ReadEmbeddedImage($"{baseMapUri}/mapyTourism.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/osmMapyTourist72.jpg"));
@@ -454,7 +454,7 @@ public static class TileMapProviderFactory
                 _osmHikeBike = TileMapProvider.Create(
                     BaseMapType.OSM_OsmHikeBike,
                     nameof(tile_provider_osm),
-                    nameof(tile_mapType_HikeBike),
+                    nameof(tile_mapType_hikeBike),
                     //MakeOsmHikeBikeUrl,
                     ReadEmbeddedImage($"{baseMapUri}/osmHikeBike.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/osmHikeBike72.jpg"));
@@ -475,7 +475,7 @@ public static class TileMapProviderFactory
                 _stamentWatercolor = TileMapProvider.Create(
                     BaseMapType.OSM_StamenWatercolor,
                     nameof(tile_provider_osm),
-                    nameof(tile_mapType_Watercolor),
+                    nameof(tile_mapType_watercolor),
                     //MakeStamenWatercolorUrl,
                     ReadEmbeddedImage($"{baseMapUri}/stamenWatercolor.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/stamenWatercolor.jpg"));
@@ -500,7 +500,7 @@ public static class TileMapProviderFactory
                 _wazeStreet = TileMapProvider.Create(
                     BaseMapType.Waze_Street,
                     nameof(tile_provider_waze),
-                    nameof(tile_mapType_Street),
+                    nameof(tile_mapType_street),
                     //MakeWazeRoadMapUrl,
                     ReadEmbeddedImage($"{baseMapUri}/waze.png"),
                     ReadEmbeddedImage($"{baseMapUri}/72/wazeStreet72.jpg"));
@@ -525,7 +525,7 @@ public static class TileMapProviderFactory
                 _cartoDark = TileMapProvider.Create(
                     BaseMapType.Carto_Dark,
                     nameof(tile_provider_carto),
-                    nameof(tile_mapType_Dark),
+                    nameof(tile_mapType_dark),
                     //MakeCartoDarkUrl,
                     ReadEmbeddedImage($"{baseMapUri}/cartoDark.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/cartoDark72.jpg"));
@@ -545,7 +545,7 @@ public static class TileMapProviderFactory
                 _cartoLight = TileMapProvider.Create(
                     BaseMapType.Carto_Light,
                     nameof(tile_provider_carto),
-                    nameof(tile_mapType_Light),
+                    nameof(tile_mapType_light),
                     //MakeCartoLightUrl,
                     ReadEmbeddedImage($"{baseMapUri}/cartoLight.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/cartoLight72.jpg"));
@@ -569,7 +569,7 @@ public static class TileMapProviderFactory
                 _mapboxComic = TileMapProvider.Create(
                     BaseMapType.Mapbox_Comic,
                     nameof(tile_provider_mapbox),
-                    nameof(tile_mapType_Comic),
+                    nameof(tile_mapType_comic),
                     //"https://{@server}.tiles.mapbox.com/v4/mapbox.comic/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w",
                     ReadEmbeddedImage($"{baseMapUri}/72/mapboxComic72.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/mapboxComic72.jpg"));
@@ -590,7 +590,7 @@ public static class TileMapProviderFactory
                 _mapboxSatellite = TileMapProvider.Create(
                     BaseMapType.Mapbox_Satellite,
                     nameof(tile_provider_mapbox),
-                    nameof(tile_mapType_Satellite),
+                    nameof(tile_mapType_satellite),
                     //"https://{@server}.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.jpg?access_token=pk.eyJ1IjoibW9ob2tvZW1haWxob3N0aW5mbyIsImEiOiJjanU5bmFlbDcxYjNkNDRuenB1cHF6YXo0In0.sdTlXpsCH35pTyzOGK3K8w",
                     ReadEmbeddedImage($"{baseMapUri}/72/mapboxComic72.jpg"),
                     ReadEmbeddedImage($"{baseMapUri}/72/mapboxComic72.jpg"));

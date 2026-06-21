@@ -317,7 +317,7 @@ public static class IndexLayers
         var layer =
             new VectorLayer(
                 //"اندکس ۵۰۰",
-                IRI.Maptor.Jab.Core.Properties.Resources.index_500UtmTitle,
+                IRI.Maptor.Jab.Core.Properties.Resources.index_500Utm_title,
                 source,
                 [symbolizer, label],
                 LayerType.VectorLayer,

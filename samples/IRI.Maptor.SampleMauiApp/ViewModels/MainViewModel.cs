@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
+using IRI.Maptor.Jab.Core.Localization;
 using IRI.Maptor.Jab.Maui.Controls;
 using IRI.Maptor.Jab.Maui.Helpers;
 using IRI.Maptor.Jab.Maui.Layers;
@@ -18,6 +19,8 @@ namespace IRI.Maptor.SampleMauiApp.ViewModels;
 public class MainViewModel : ObservableBase
 {
     private const int LocationZoomLevel = 15;
+
+    private static string L(string key) => LocalizationManager.Instance[key];
 
     private static readonly Color[] _layerPalette =
     {
@@ -92,6 +95,9 @@ public class MainViewModel : ObservableBase
 
         // Persist the current project whenever its layers change.
         Layers.CollectionChanged += OnLayersChanged;
+
+        // Re-translate the coordinate readout immediately when the language changes.
+        LocalizationManager.Instance.LanguageChanged += () => OnPropertyChanged(nameof(Coordinates));
     }
 
     /// <summary>Vector layers shown on the map and listed in the legend.</summary>
@@ -229,7 +235,7 @@ public class MainViewModel : ObservableBase
 
     public RelayCommand<Project> DeleteProjectCommand { get; }
 
-    public string Coordinates => $"Lat {Latitude:F4}°, Lon {Longitude:F4}°, Zoom {ZoomLevel}";
+    public string Coordinates => string.Format(L("map_coordinatesFormat"), Latitude, Longitude, ZoomLevel);
 
     /// <summary>Navigate to a free-form "lat, lon" string (used by the search button).</summary>
     public void GoTo(string locationText)
@@ -277,9 +283,9 @@ public class MainViewModel : ObservableBase
         }
 
         var name = await page.DisplayPromptAsync(
-            "New project",
-            "Project name",
-            initialValue: $"Project {Projects.Count + 1}");
+            L("dialog_newProject_title"),
+            L("dialog_newProject_message"),
+            initialValue: string.Format(L("dialog_newProject_initialName"), Projects.Count + 1));
 
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -300,7 +306,7 @@ public class MainViewModel : ObservableBase
         _suppressPersist = false;
 
         IsProjectsVisible = false;
-        StatusMessage = $"Project '{project.Name}' created.";
+        StatusMessage = string.Format(L("status_projectCreated"), project.Name);
     }
 
     private Task OpenProjectAsync(Project? project)
@@ -332,7 +338,7 @@ public class MainViewModel : ObservableBase
 
         IsProjectsVisible = false;
         IsLegendVisible = true;
-        StatusMessage = $"Opened '{project.Name}'.";
+        StatusMessage = string.Format(L("status_projectOpened"), project.Name);
 
         return Task.CompletedTask;
     }
@@ -448,7 +454,7 @@ public class MainViewModel : ObservableBase
         }
         else
         {
-            StatusMessage = "Enter coordinates as 'lat, lon' (e.g. 35.6892, 51.3890)";
+            StatusMessage = L("status_coordError");
         }
     }
 
@@ -460,7 +466,7 @@ public class MainViewModel : ObservableBase
         }
 
         IsBusy = true;
-        StatusMessage = "Getting your location…";
+        StatusMessage = L("status_gettingLocation");
 
         try
         {
@@ -468,7 +474,7 @@ public class MainViewModel : ObservableBase
 
             if (location is null)
             {
-                StatusMessage = "Location unavailable. Check permissions and that location is enabled.";
+                StatusMessage = L("status_locationUnavailable");
                 return;
             }
 
@@ -489,7 +495,7 @@ public class MainViewModel : ObservableBase
         }
 
         IsBusy = true;
-        StatusMessage = "Opening GeoJSON…";
+        StatusMessage = L("status_openingGeoJson");
 
         try
         {
@@ -509,7 +515,7 @@ public class MainViewModel : ObservableBase
         }
         catch (Exception)
         {
-            StatusMessage = "Could not load that file as GeoJSON.";
+            StatusMessage = L("status_geoJsonError");
         }
         finally
         {
@@ -525,7 +531,7 @@ public class MainViewModel : ObservableBase
         }
 
         IsBusy = true;
-        StatusMessage = "Loading sample…";
+        StatusMessage = L("status_loadingSample");
 
         try
         {
@@ -542,7 +548,7 @@ public class MainViewModel : ObservableBase
         }
         catch (Exception)
         {
-            StatusMessage = "Could not load the bundled sample.";
+            StatusMessage = L("status_sampleError");
         }
         finally
         {
