@@ -1,11 +1,11 @@
-﻿using IRI.Maptor.Extensions;
+﻿using System.Data.OleDb;
+
 using IRI.Maptor.Extensions;
+using IRI.Maptor.Sta.Spatial.IO.Prj;
+using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Ket.PersonalGdbPersistence.Model;
 using IRI.Maptor.Ket.PersonalGdbPersistence.Xml;
-using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.IO.Prj;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
-using System.Data.OleDb;
 
 namespace IRI.Maptor.Ket.PersonalGdbPersistence;
 
@@ -15,16 +15,76 @@ public static class PersonalGdbInfrastructure
 
     internal static readonly string GdbGeomColumnsTable = "GDB_GeomColumns";
 
+    internal static readonly string GdbItemsTable = "GDB_Items";
+
+    // Canonical ESRI schema namespace the Xml/* models are bound to. GDB 'Definition' XML
+    // stamps this namespace with the authoring ArcGIS version (e.g. .../10.6, .../11.0); the
+    // raw XML is normalized to this value before deserialization so any 10.x/11.x GDB matches.
+    // Must be a const (not static readonly) so it can be referenced from [XmlType] attributes.
+    public const string EsriSchemaNamespace = "http://www.esri.com/schemas/ArcGIS/10.8";
+
+    // ACE OLEDB provider ids in preference order (newest first); resolved against the
+    // providers actually registered on the machine, with the 12.0 string as a final fallback.
+    private static readonly string[] _aceProviderPreference =
+    {
+        "Microsoft.ACE.OLEDB.16.0",
+        "Microsoft.ACE.OLEDB.12.0",
+    };
+
+    // Resolved once, thread-safely: GetConnectionString can be called concurrently because
+    // PersoanlGdbDataSource runs reads via Task.Run.
+    private static readonly Lazy<string> _aceProvider = new(ResolveAceProvider);
+
+    private static readonly System.Text.RegularExpressions.Regex _esriSchemaNamespaceRegex =
+        new(@"http://www\.esri\.com/schemas/ArcGIS/[0-9.]+",
+            System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    // Rewrites any versioned ESRI schema namespace in the GDB 'Definition' XML to the canonical
+    // EsriSchemaNamespace so deserialization is independent of the authoring ArcGIS version.
+    internal static string NormalizeSchemaVersion(string? definitionXml) =>
+        string.IsNullOrEmpty(definitionXml)
+            ? definitionXml ?? string.Empty
+            : _esriSchemaNamespaceRegex.Replace(definitionXml, EsriSchemaNamespace);
+
+    // Picks an installed ACE OLEDB provider (preferring the newest), so the adapter works
+    // whether the machine has the 12.0 or the 16.0 Access Database Engine. Falls back to 12.0
+    // to preserve the previous behavior when provider enumeration yields nothing.
+    private static string ResolveAceProvider()
+    {
+        try
+        {
+            var installed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            using (var providers = new OleDbEnumerator().GetElements())
+            {
+                foreach (System.Data.DataRow row in providers.Rows)
+                {
+                    var name = row["SOURCES_NAME"]?.ToString();
+
+                    if (!string.IsNullOrEmpty(name))
+                        installed.Add(name);
+                }
+            }
+
+            var match = _aceProviderPreference.FirstOrDefault(installed.Contains);
+
+            if (match is not null)
+                return match;
+        }
+        catch (Exception)
+        {
+            // enumeration unavailable: fall through to the default below
+        }
+
+        return "Microsoft.ACE.OLEDB.12.0";
+    }
+
     public static string GetConnectionString(string mdbFileName)
     {
-        if (System.IO.File.Exists(mdbFileName))
-        {
-            return $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={mdbFileName};Persist Security Info=False;";
-        }
-        else
-        {
-            return string.Empty;
-        }
+        if (!System.IO.File.Exists(mdbFileName))
+            throw new System.IO.FileNotFoundException("Personal geodatabase (.mdb) file was not found.", mdbFileName);
+
+        return $"Provider={_aceProvider.Value};Data Source={mdbFileName};Persist Security Info=False;";
     }
 
     public static Dictionary<int, SrsBase> GetSpatialReferenceSystems(OleDbConnection connection)
@@ -34,28 +94,31 @@ public static class PersonalGdbInfrastructure
             //connection.Open();
             var query = FormattableString.Invariant(@$"SELECT SRID, SRTEXT FROM {GdbSpatialRefTable}");
 
-            var cmd = new OleDbCommand(query, connection);
-
             Dictionary<int, SrsBase> result = new Dictionary<int, SrsBase>();
 
+            using (var cmd = new OleDbCommand(query, connection))
             using (var dataReader = cmd.ExecuteReader())
             {
                 while (dataReader.Read())
                 {
-                    var srid = (int)dataReader["SRID"];
-                    var srtext = (string)dataReader["SRTEXT"];
+                    if (dataReader["SRTEXT"] == DBNull.Value)
+                        continue;
+
+                    var srid = Convert.ToInt32(dataReader["SRID"]);
+                    var srtext = dataReader["SRTEXT"].ToString()!;
 
                     var srsbase = EsriPrjFile.Parse(srtext).AsMapProjection();
 
-                    result.Add(srid, srsbase);
+                    // indexer (not Add) tolerates duplicate SRID rows in GDB_SpatialRefs
+                    result[srid] = srsbase;
                 }
             }
 
             return result;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw new NotImplementedException("PersonalGdbInfrastructure > GetSpatialReferenceSystems");
+            throw new InvalidOperationException("PersonalGdbInfrastructure > GetSpatialReferenceSystems", ex);
         }
     }
 
@@ -71,38 +134,30 @@ public static class PersonalGdbInfrastructure
         //< DEFeatureDataset
         try
         {
+            // Item type is detected by the leading XML tag of the 'Definition' column. This
+            // assumes the stored XML starts exactly with that tag (no <?xml?> prolog/BOM/leading
+            // whitespace), which holds for ESRI-authored personal geodatabases.
             var query = FormattableString.Invariant(
                 @$"SELECT   Name, PhysicalName, Path, Definition
-                    FROM    GDB_Items
+                    FROM    {GdbItemsTable}
                     WHERE   (Definition LIKE '{definitionStartsWith}%')");
 
             using (var cmd = new OleDbCommand(query, connection))
+            using (var dataReader = cmd.ExecuteReader())
             {
                 List<GdbItem> result = new List<GdbItem>();
 
-                using (var dataReader = cmd.ExecuteReader())
+                while (dataReader.Read())
                 {
-                    while (dataReader.Read())
+                    GdbItem gdbItem = new GdbItem()
                     {
-                        try
-                        {
+                        Name = dataReader[nameof(GdbItem.Name)].ToString()!,
+                        PhysicalName = dataReader[nameof(GdbItem.PhysicalName)].ToString()!,
+                        Path = dataReader[nameof(GdbItem.Path)].ToString()!,
+                        Definition = dataReader[nameof(GdbItem.Definition)].ToString()!,
+                    };
 
-                            GdbItem gdbItem = new GdbItem()
-                            {
-                                Name = dataReader[nameof(GdbItem.Name)].ToString()!,
-                                PhysicalName = dataReader[nameof(GdbItem.PhysicalName)].ToString()!,
-                                Path = dataReader[nameof(GdbItem.Path)].ToString()!,
-                                Definition = dataReader[nameof(GdbItem.Definition)].ToString()!,
-                            };
-
-                            result.Add(gdbItem);
-
-                        }
-                        catch (Exception ex)
-                        {
-                            throw;
-                        }
-                    }
+                    result.Add(gdbItem);
                 }
 
                 return result;
@@ -110,7 +165,7 @@ public static class PersonalGdbInfrastructure
         }
         catch (Exception ex)
         {
-            throw new NotImplementedException("PersonalGdbInfrastructure > GetGdbItems");
+            throw new InvalidOperationException("PersonalGdbInfrastructure > GetGdbItems", ex);
         }
     }
 
@@ -137,7 +192,7 @@ public static class PersonalGdbInfrastructure
         // with the '<DEFeatureClassInfo' strings for featureDatasets
         // <DEFeatureClassInfo
 
-        var featureClassInfos = IRI.Maptor.Sta.Common.Helpers.XmlHelper.DeserializeFromXmlString<GdbXml_FeatureClass>(definition);
+        var featureClassInfos = IRI.Maptor.Sta.Common.Helpers.XmlHelper.DeserializeFromXmlString<GdbXml_FeatureClass>(NormalizeSchemaVersion(definition));
 
         return featureClassInfos is null || featureClassInfos.GPFieldInfoExs is null
             ? result
@@ -152,31 +207,22 @@ public static class PersonalGdbInfrastructure
 
         foreach (var item in items)
         {
-            try
+            var info = IRI.Maptor.Sta.Common.Helpers.XmlHelper.DeserializeFromXmlString<GdbXml_CodedValueDomain>(NormalizeSchemaVersion(item.Definition));
+
+            // CodedValues can be null for a domain definition without a <CodedValues> node
+            if (info is null || info.CodedValues is null || info.CodedValues.Items.IsNullOrEmpty())
+                continue;
+
+            result.Add(new GdbCodedValueDomain()
             {
-
-                var info = IRI.Maptor.Sta.Common.Helpers.XmlHelper.DeserializeFromXmlString<GdbXml_CodedValueDomain>(item.Definition);
-
-                if (info is null || info.CodedValues.Items.IsNullOrEmpty())
-                    continue;
-
-                result.Add(new GdbCodedValueDomain()
+                DomainName = info.DomainName,
+                FieldType = info.FieldType,
+                Values = info.CodedValues.Items.Select(c => new GdbCodedValue()
                 {
-                    DomainName = info.DomainName,
-                    FieldType = info.FieldType,
-                    Values = info.CodedValues.Items.Select(c => new GdbCodedValue()
-                    {
-                        Name = c.Name,
-                        Code = c.Code
-                    }).ToList()
-                });
-
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+                    Name = c.Name,
+                    Code = c.Code
+                }).ToList()
+            });
         }
 
         return result.OrderBy(r => r.DomainName).ToList();
@@ -199,7 +245,7 @@ public static class PersonalGdbInfrastructure
 
                 // todo: add another field for sql server specific types
                 // and use .net type for TypeFullName
-                TypeFullName = OleDbTypeToSqlServerType(byte.Parse(row["DATA_TYPE"].ToString()!)),
+                TypeFullName = OleDbTypeToSqlServerType(Convert.ToInt32(row["DATA_TYPE"])),
                 IsNullable = row["IS_NULLABLE"].ToString() == "YES",
                 Scale = row["NUMERIC_SCALE"] == DBNull.Value ? 0 : int.Parse(row["NUMERIC_SCALE"].ToString()!),
                 Precision = row["NUMERIC_PRECISION"] == DBNull.Value ? 0 : int.Parse(row["NUMERIC_PRECISION"].ToString()!),
@@ -213,100 +259,6 @@ public static class PersonalGdbInfrastructure
 
         return fields.OrderBy(i => i.Name).ToList();
     }
-
-    private static string GetDataTypeName(int oleDbType)
-    {
-        // Map OLEDB type to friendly name
-        return oleDbType switch
-        {
-            2 => "smallInt",
-            3 => "int",
-            4 => "Single",
-            5 => "Double",
-            6 => "Currency",
-            7 => "Date",
-            11 => "Boolean",
-            17 => "Byte",
-            72 => "GUID",
-            128 => "Binary",
-            130 => "Text",
-            131 => "Decimal",
-            133 => "Date",
-            134 => "Time",
-            135 => "DateTime",
-            _ => $"Unknown ({oleDbType})"
-        };
-    }
-
-    //private static string OleDbTypeToSqlServerType(int oleDbType, int length, int preceision, int scale, int datePreceision)
-    //{
-    //    switch (oleDbType)
-    //    {
-    //        // Numeric Types
-    //        case 2:  // SmallInt
-    //            return "smallint";
-
-    //        case 20:
-    //            return "bigint";
-
-    //        case 3:  // Int
-    //            return "int";
-
-    //        case 4:  // Single (Float)
-    //            return "real";
-
-    //        case 5:  // Double
-    //            return "float";
-
-    //        case 6:  // Currency (Money)
-    //            return "money";
-
-    //        case 17: // Byte (TinyInt)
-    //            return "tinyint";
-
-    //        case 131: // Decimal/Numeric
-    //            return scale != 0 ? $"decimal({scale}, {preceision})" : "decimal(18, 2)";
-
-    //        // Date/Time Types
-    //        case 7:  // Date (Legacy)
-    //        case 133: // Date (SQL Server)
-    //            return "date";
-
-    //        case 134: // Time
-    //            return "time";
-
-    //        case 135: // DateTime
-    //            return $"datetime2({datePreceision})";
-
-    //        // String Types
-    //        case 130: // Text (VarChar)
-    //            return length <= 8000 ? $"varchar({length})" : "varchar(MAX)";
-
-    //        case 202: // Wide Text (NVarChar)
-    //            return length <= 4000 ? $"nvarchar({length})" : "nvarchar(MAX)";
-
-    //        case 203: // Memo (Long Text)
-    //            return "nvarchar(MAX)";
-
-    //        // Binary Types
-    //        case 128: // Binary (VarBinary)
-    //            return length <= 8000 ? $"varbinary({length})" : "varbinary(MAX)";
-
-    //        case 204: // Long Binary (OLE Object)
-    //            return "varbinary(MAX)";
-
-    //        case 72:  // GUID
-    //            return "uniqueidentifier";
-
-    //        // Boolean
-    //        case 11: // Boolean (Bit)
-    //            return "bit";
-
-    //        // Fallback
-    //        default:
-    //            return $"UNKNOWN (OleDbType: {oleDbType})";
-    //    }
-    //}
 
     public static string OleDbTypeToSqlServerType(int oleDbType)
     {

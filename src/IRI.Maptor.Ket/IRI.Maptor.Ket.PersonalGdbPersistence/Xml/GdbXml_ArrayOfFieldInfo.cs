@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace IRI.Maptor.Ket.PersonalGdbPersistence.Xml;
 
 [Serializable]
-[XmlType("ArrayOfGPFieldInfoEx", Namespace = "http://www.esri.com/schemas/ArcGIS/10.8")]
+[XmlType("ArrayOfGPFieldInfoEx", Namespace = PersonalGdbInfrastructure.EsriSchemaNamespace)]
 public class GdbXml_ArrayOfFieldInfo
 {
     [XmlAttribute("type", Namespace = System.Xml.Schema.XmlSchema.InstanceNamespace)]

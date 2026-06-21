@@ -9,7 +9,7 @@ namespace IRI.Maptor.Ket.PersonalGdbPersistence.Xml;
 
 
 [Serializable]
-[XmlType("DEFeatureClassInfo", Namespace = "http://www.esri.com/schemas/ArcGIS/10.8")]
+[XmlType("DEFeatureClassInfo", Namespace = PersonalGdbInfrastructure.EsriSchemaNamespace)]
 [XmlRoot("DEFeatureClassInfo", IsNullable = false)]
 public class GdbXml_FeatureClass
 {
@@ -25,7 +25,7 @@ public class GdbXml_FeatureClass
         Xmlns = new XmlSerializerNamespaces();
         Xmlns.Add("xs", System.Xml.Schema.XmlSchema.Namespace);
         Xmlns.Add("xsi", System.Xml.Schema.XmlSchema.InstanceNamespace);
-        Xmlns.Add("typens", "http://www.esri.com/schemas/ArcGIS/10.8");
+        Xmlns.Add("typens", PersonalGdbInfrastructure.EsriSchemaNamespace);
         Xmlns.Add("", "");
     }
 

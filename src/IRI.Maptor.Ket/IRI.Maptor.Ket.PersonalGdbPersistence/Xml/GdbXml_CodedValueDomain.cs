@@ -10,7 +10,7 @@ namespace IRI.Maptor.Ket.PersonalGdbPersistence.Xml;
 
 [Serializable()]
 [System.ComponentModel.DesignerCategory("code")]
-[XmlType("GPCodedValueDomain2", Namespace = "http://www.esri.com/schemas/ArcGIS/10.8")]
+[XmlType("GPCodedValueDomain2", Namespace = PersonalGdbInfrastructure.EsriSchemaNamespace)]
 [XmlRoot("GPCodedValueDomain2")]
 public class GdbXml_CodedValueDomain
 {
@@ -25,7 +25,7 @@ public class GdbXml_CodedValueDomain
         Xmlns = new XmlSerializerNamespaces();
         Xmlns.Add("xsi", System.Xml.Schema.XmlSchema.InstanceNamespace);
         Xmlns.Add("xs", System.Xml.Schema.XmlSchema.Namespace);
-        Xmlns.Add("typens", "http://www.esri.com/schemas/ArcGIS/10.8");
+        Xmlns.Add("typens", PersonalGdbInfrastructure.EsriSchemaNamespace);
     }
 
 

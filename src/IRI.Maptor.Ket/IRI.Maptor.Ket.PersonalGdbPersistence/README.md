@@ -5,6 +5,8 @@
 
 A **.NET 8 (Windows)** persistence adapter for **ESRI Personal Geodatabases** (`.mdb` files) — accessed via OleDb / Microsoft Access Database Engine.
 
+Geodatabases authored by any **ArcGIS 10.x or 11.x** version are supported — the version-stamped ESRI schema namespace in the geodatabase metadata is normalized automatically, so reads are independent of the authoring ArcGIS version. The adapter also picks whichever **ACE OLEDB provider** (12.0 or 16.0) is installed on the machine.
+
 ---
 
 ## Features

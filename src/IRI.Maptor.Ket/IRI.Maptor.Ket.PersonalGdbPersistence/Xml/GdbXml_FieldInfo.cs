@@ -9,7 +9,7 @@ namespace IRI.Maptor.Ket.PersonalGdbPersistence.Xml;
 
 
 [Serializable]
-[XmlType("GPFieldInfoEx", Namespace = "http://www.esri.com/schemas/ArcGIS/10.8")]
+[XmlType("GPFieldInfoEx", Namespace = PersonalGdbInfrastructure.EsriSchemaNamespace)]
 public class GdbXml_FieldInfo
 {
     [XmlAttribute("type", Namespace = System.Xml.Schema.XmlSchema.InstanceNamespace)]

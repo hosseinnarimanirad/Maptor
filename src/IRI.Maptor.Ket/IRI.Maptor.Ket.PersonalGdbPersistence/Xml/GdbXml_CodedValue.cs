@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace IRI.Maptor.Ket.PersonalGdbPersistence.Xml;
 
 [Serializable]
-[XmlType("CodedValue", Namespace = "http://www.esri.com/schemas/ArcGIS/10.8")]
+[XmlType("CodedValue", Namespace = PersonalGdbInfrastructure.EsriSchemaNamespace)]
 public class GdbXml_CodedValue
 {
     [XmlAttribute("type", Namespace = System.Xml.Schema.XmlSchema.InstanceNamespace)]
