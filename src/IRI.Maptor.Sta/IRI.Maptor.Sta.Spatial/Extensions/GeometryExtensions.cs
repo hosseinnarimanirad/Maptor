@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 
 using IRI.Maptor.Sta.Spatial.Analysis;
+using IRI.Maptor.Sta.Spatial.Analysis.Network;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Abstrations;
@@ -772,6 +773,104 @@ public static class Sta_GeometryExtensions
 
             throw;
         }
+    }
+
+    #endregion
+
+    #region Linear Referencing
+
+    /// <summary>
+    /// Returns the coordinate located a given <paramref name="distance"/> along a line, measured from
+    /// its first vertex (or its last vertex when <paramref name="fromEnd"/> is true).
+    /// <para>
+    /// Distance and interpolation are SRID-aware: for <see cref="SridHelper.GeodeticWGS84"/> the walk
+    /// uses ellipsoidal (Vincenty) segment lengths and the result is placed with a geodesic bearing +
+    /// move; otherwise both are planar (Euclidean + linear interpolation). Only X/Y are interpolated.
+    /// </para>
+    /// <para>
+    /// <paramref name="distance"/> &lt;= 0 returns the start point; a distance at or beyond the total
+    /// length returns the last point (clamped, not extrapolated).
+    /// </para>
+    /// </summary>
+    public static T GetPointAtDistance<T>(this Geometry<T> line, double distance, bool fromEnd = false) where T : IPoint, new()
+    {
+        if (line == null || line.IsNullOrEmpty())
+            throw new ArgumentException("Geometry is null or empty.", nameof(line));
+
+        var points = line.GetAllPoints();
+
+        if (points.Count < 2)
+            throw new ArgumentException("Geometry must be a line with at least two vertices.", nameof(line));
+
+        if (fromEnd)
+        {
+            points = new List<T>(points);
+            points.Reverse();
+        }
+
+        if (distance <= 0)
+            return new T { X = points[0].X, Y = points[0].Y };
+
+        bool isGeodetic = line.Srid == SridHelper.GeodeticWGS84;
+
+        double accumulated = 0;
+
+        for (int i = 0; i < points.Count - 1; i++)
+        {
+            var a = points[i];
+            var b = points[i + 1];
+
+            double segmentLength = isGeodetic
+                ? SpatialUtility.GetEllipsoidalLength(a, b)
+                : SpatialUtility.GetEuclideanLength(a, b);
+
+            if (segmentLength <= 0)
+                continue;
+
+            if (accumulated + segmentLength >= distance)
+            {
+                double remaining = distance - accumulated;
+
+                if (isGeodetic)
+                {
+                    double bearing = SpatialUtility.GetBearingGeodesic(a, b);
+
+                    return SpatialUtility.MovePointAlongGeodesic(a, bearing, remaining);
+                }
+
+                double t = remaining / segmentLength;
+
+                return new T
+                {
+                    X = a.X + t * (b.X - a.X),
+                    Y = a.Y + t * (b.Y - a.Y)
+                };
+            }
+
+            accumulated += segmentLength;
+        }
+
+        // distance is at or beyond the total length: clamp to the last vertex.
+        var last = points[points.Count - 1];
+
+        return new T { X = last.X, Y = last.Y };
+    }
+
+    /// <summary>
+    /// Returns the coordinate located a given <paramref name="distance"/> along an edge, measured from
+    /// the specified junction node. The node must be one of the edge's two endpoints.
+    /// </summary>
+    public static T GetPointAtDistanceFromNode<T>(this LineNetworkEdge<T> edge, int nodeId, double distance) where T : IPoint, new()
+    {
+        if (edge == null)
+            throw new ArgumentNullException(nameof(edge));
+
+        if (nodeId != edge.StartNodeId && nodeId != edge.EndNodeId)
+            throw new ArgumentException($"Node {nodeId} is not an endpoint of edge {edge.Id}.", nameof(nodeId));
+
+        bool fromEnd = nodeId == edge.EndNodeId;
+
+        return edge.Feature.GetPointAtDistance(distance, fromEnd);
     }
 
     #endregion
