@@ -35,7 +35,7 @@ jobs:
       run: |
         $patterns = "${{ env.PROJECT_PREFIXES }}".Split(' ') | ForEach-Object { "$_*.csproj" }
         Get-ChildItem -Path ./src -Recurse -Include $patterns | ForEach-Object {
-          dotnet restore $_.FullName
+          dotnet restore $_.FullName --source ${{ env.NUGET_SOURCE }}
         }
 
     - name: Build
