@@ -23,12 +23,11 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Restore dependencies
+      shell: pwsh
       run: |
-        $prefixes = "${{ env.PROJECT_PREFIXES }}".Split(' ')
-        foreach ($prefix in $prefixes) {
-          Get-ChildItem -Path ./src -Recurse -Filter "${prefix}*.csproj" | ForEach-Object {
-            dotnet restore $_.FullName
-          }
+        $patterns = "${{ env.PROJECT_PREFIXES }}".Split(' ') | ForEach-Object { "$_*.csproj" }
+        Get-ChildItem -Path ./src -Recurse -Include $patterns | ForEach-Object {
+          dotnet restore $_.FullName
         }
 
     - name: Build
@@ -39,7 +38,7 @@ jobs:
             dotnet build $_.FullName `
               --configuration Release `
               --no-restore `
-              /p:NoWarn=$"{{ env.NOWARN_CODES }}" `
+              /p:NoWarn="${{ env.NOWARN_CODES }}" `
               /p:WarningLevel=0 `
               /p:GenerateDocumentationFile=false `
               --verbosity minimal
