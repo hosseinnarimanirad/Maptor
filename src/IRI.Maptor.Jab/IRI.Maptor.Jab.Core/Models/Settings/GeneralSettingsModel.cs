@@ -99,7 +99,16 @@ public class GeneralSettingsModel : Notifier, IGeneralSettings
         }
     }
 
-
+    public bool FeatureTable_UseMultiRowTabs
+    {
+        get => _settings.FeatureTable_UseMultiRowTabs;
+        set
+        {
+            _settings.FeatureTable_UseMultiRowTabs = value;
+            RaisePropertyChanged();
+        }
+    }
+     
 
     public MahAppsThemeColor? MahAppsTheme
     {

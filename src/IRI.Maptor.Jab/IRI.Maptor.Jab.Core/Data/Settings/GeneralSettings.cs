@@ -24,6 +24,8 @@ public class GeneralSettings : IGeneralSettings
 
     public bool Legend_ShowLayerColors { get; set; } = false;
 
+    public bool FeatureTable_UseMultiRowTabs { get; set; } = true;
+
     public MahAppsThemeColor? MahAppsTheme { get; set; } = MahAppsThemeColor.Amber;
 
     public static GeneralSettings Default => new GeneralSettings();

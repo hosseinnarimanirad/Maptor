@@ -9,18 +9,105 @@
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"    
              x:Name="root">
     <UserControl.Resources>
-        <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}"> 
-        </Style>
+        <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource IRI.Maptor.Styles.TabItem}" />
+        <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         <DataTemplate x:Key="FeatureTableTemplate">
-            <maptor:FeatureTable 
-                DataContext="{Binding}"  
+            <maptor:FeatureTable
+                DataContext="{Binding}"
                 IsZoomToGeometryEnabled="{Binding IsZoomToGeometryEnabled, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}"
-                CanUserEditGeometry="{Binding CanUserEditGeometry, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}" 
+                CanUserEditGeometry="{Binding CanUserEditGeometry, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}"
                 CanUserEditAttribute="{Binding CanUserEditAttribute, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}" />
         </DataTemplate>
+        <!-- Single-line, horizontally-scrollable header (default behaviour).
+             MahApps' TabControl template hard-codes a TabPanel (no ItemsPresenter), so
+             TabControl.ItemsPanel is ignored. Retemplate so the header host is a single-line,
+             horizontally-scrollable StackPanel with left/right scroll buttons; the content area
+             still stretches. The scroll buttons auto-hide when all tabs fit (ScrollableWidth = 0). -->
+        <ControlTemplate x:Key="ScrollTabsTemplate" TargetType="{x:Type TabControl}">
+                <Grid KeyboardNavigation.TabNavigation="Local">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <!-- Header strip: [scroll-left] | scrollable single-line headers | [scroll-right] -->
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <RepeatButton x:Name="PART_ScrollLeft" Grid.Column="0" Style="{x:Null}"
+                                      Command="{x:Static ScrollBar.LineLeftCommand}"
+                                      CommandTarget="{Binding ElementName=PART_HeaderScroll}"
+                                      Cursor="Hand" Background="Transparent" BorderThickness="0"
+                                      Padding="2" Width="20" VerticalAlignment="Stretch">
+                            <Viewbox Width="12">
+                                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"
+                                                            Foreground="{DynamicResource MahApps.Brushes.Highlight}" />
+                            </Viewbox>
+                        </RepeatButton>
+                        <ScrollViewer x:Name="PART_HeaderScroll" Grid.Column="1"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Disabled"
+                                      Focusable="False">
+                            <StackPanel x:Name="HeaderPanel" Orientation="Horizontal" IsItemsHost="True" />
+                        </ScrollViewer>
+                        <RepeatButton x:Name="PART_ScrollRight" Grid.Column="2" Style="{x:Null}"
+                                      Command="{x:Static ScrollBar.LineRightCommand}"
+                                      CommandTarget="{Binding ElementName=PART_HeaderScroll}"
+                                      Cursor="Hand" Background="Transparent" BorderThickness="0"
+                                      Padding="2" Width="20" VerticalAlignment="Stretch">
+                            <Viewbox Width="12">
+                                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"
+                                                            Foreground="{DynamicResource MahApps.Brushes.Highlight}" />
+                            </Viewbox>
+                        </RepeatButton>
+                    </Grid>
+                    <Border Grid.Row="1" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter ContentSource="SelectedContent" />
+                    </Border>
+                </Grid>
+                <ControlTemplate.Triggers>
+                    <!-- Hide the scroll buttons when every tab fits (no horizontal overflow). -->
+                    <Trigger SourceName="PART_HeaderScroll" Property="ScrollViewer.ScrollableWidth" Value="0">
+                        <Setter TargetName="PART_ScrollLeft" Property="Visibility" Value="Collapsed" />
+                        <Setter TargetName="PART_ScrollRight" Property="Visibility" Value="Collapsed" />
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        <!-- Multi-row header: tab headers wrap onto additional rows instead of scrolling. -->
+        <ControlTemplate x:Key="WrapTabsTemplate" TargetType="{x:Type TabControl}">
+            <Grid KeyboardNavigation.TabNavigation="Local">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <WrapPanel Grid.Row="0" Orientation="Horizontal" IsItemsHost="True" />
+                <Border Grid.Row="1" Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                    <ContentPresenter ContentSource="SelectedContent" />
+                </Border>
+            </Grid>
+        </ControlTemplate>
     </UserControl.Resources>
-    <TabControl ItemsSource="{Binding SelectedLayers}" VerticalAlignment="Stretch" Margin="0" 
+    <TabControl ItemsSource="{Binding SelectedLayers}" VerticalAlignment="Stretch" Margin="0"
                 SelectedItem="{Binding CurrentLayer, Mode=TwoWay}" Padding="0" SelectedIndex="0">
+        <!-- Pick the header layout based on FeatureTabControl.UseMultiRowTabs.
+             Default = single-line scrollable; True = multi-row wrapping. The inline Template must
+             stay a Style setter (not a local TabControl.Template value) so the DataTrigger can swap it. -->
+        <TabControl.Style>
+            <Style TargetType="{x:Type TabControl}">
+                <Setter Property="Template" Value="{StaticResource ScrollTabsTemplate}" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding UseMultiRowTabs, RelativeSource={RelativeSource AncestorType=maptor:FeatureTabControl}}" Value="True">
+                        <Setter Property="Template" Value="{StaticResource WrapTabsTemplate}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </TabControl.Style>
         <!--<TabControl.Resources>
             --><!--the whole tabheader part's color--><!--
             <Style TargetType="TabPanel">

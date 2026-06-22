@@ -51,4 +51,17 @@ public partial class FeatureTabControl : UserControl
     public static readonly DependencyProperty CanUserEditAttributeProperty =
         DependencyProperty.Register(nameof(CanUserEditAttribute), typeof(bool), typeof(FeatureTabControl), new PropertyMetadata(false));
 
+
+    /// <summary>
+    /// When false (default) the tab headers stay on a single, horizontally-scrollable row with
+    /// left/right scroll buttons. When true the headers wrap onto multiple rows instead of scrolling.
+    /// </summary>
+    public bool UseMultiRowTabs
+    {
+        get { return (bool)GetValue(UseMultiRowTabsProperty); }
+        set { SetValue(UseMultiRowTabsProperty, value); }
+    }
+    public static readonly DependencyProperty UseMultiRowTabsProperty =
+        DependencyProperty.Register(nameof(UseMultiRowTabs), typeof(bool), typeof(FeatureTabControl), new PropertyMetadata(false));
+
 }

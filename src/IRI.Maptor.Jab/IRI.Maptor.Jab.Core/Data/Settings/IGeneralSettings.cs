@@ -26,6 +26,8 @@ public interface IGeneralSettings
 
     bool Legend_ShowLayerColors { get; set; }
 
+    bool FeatureTable_UseMultiRowTabs { get; set; } 
+
     MahAppsThemeColor? MahAppsTheme { get; set; }
 
 }
