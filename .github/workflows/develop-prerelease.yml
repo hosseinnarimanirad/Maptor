@@ -46,7 +46,7 @@ jobs:
             dotnet build $_.FullName `
               --configuration Release `
               --no-restore `
-              "/p:NoWarn=${{ env.NOWARN_CODES }}" `
+              /p:NoWarn=$"{{ env.NOWARN_CODES }}" `
               /p:WarningLevel=0 `
               /p:GenerateDocumentationFile=false `
               --verbosity minimal
