@@ -4766,25 +4766,59 @@ public abstract class MapViewModelBase : ViewModelBase
 
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
-            var dataSource = KmlDataSource.Create(fileName, features);
+            // Group by geometry type so that a KML with mixed feature types (e.g. points + polygon)
+            // is loaded as a GroupLayer with one VectorLayer per type, just like AddDxffile.
+            var groups = features.GroupBy(f => f.GeometryType).ToList();
 
-            var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
-
-            var symbolizers = features.CreateSymbolizersFromKml(geometryType);
-
-            var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
-                                dataSource,
-                                symbolizers,
-                                LayerType.VectorLayer,
-                                RenderMode.Default,
-                                RasterizationMethod.GdiPlus,
-                                ScaleInterval.All,
-                                LegendViewModel.DefaultTocGroup)
+            if (groups.Count == 1)
             {
-                IsSearchable = true
-            };
+                var dataSource = KmlDataSource.Create(fileName, features);
 
-            AddLayer(vectorLayer);
+                var symbolizers = features.CreateSymbolizersFromKml(features.First().GeometryType);
+
+                var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
+                                    dataSource,
+                                    symbolizers,
+                                    LayerType.VectorLayer,
+                                    RenderMode.Default,
+                                    RasterizationMethod.GdiPlus,
+                                    ScaleInterval.All,
+                                    LegendViewModel.DefaultTocGroup)
+                {
+                    IsSearchable = true
+                };
+
+                AddLayer(vectorLayer);
+            }
+            else
+            {
+                var groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName));
+
+                foreach (var group in groups)
+                {
+                    var groupFeatures = group.ToList();
+
+                    var dataSource = KmlDataSource.Create(fileName, groupFeatures);
+
+                    var symbolizers = groupFeatures.CreateSymbolizersFromKml(group.Key);
+
+                    var vectorLayer = new VectorLayer($"{Path.GetFileNameWithoutExtension(fileName)}-{group.Key}",
+                                        dataSource,
+                                        symbolizers,
+                                        LayerType.VectorLayer,
+                                        RenderMode.Default,
+                                        RasterizationMethod.GdiPlus,
+                                        ScaleInterval.All,
+                                        LegendViewModel.DefaultTocGroup)
+                    {
+                        IsSearchable = true
+                    };
+
+                    groupLayer.AddSubLayer(vectorLayer);
+                }
+
+                AddLayer(groupLayer);
+            }
         }
         //catch (IOException)
         //{
@@ -4875,23 +4909,59 @@ public abstract class MapViewModelBase : ViewModelBase
 
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
-            var dataSource = KmzDataSource.Create(fileName, features);
-            var geometryType = features.First().GeometryType/*TheGeometry.Type*/;
-            var symbolizers = features.CreateSymbolizersFromKml(geometryType);
+            // Group by geometry type so that a KMZ with mixed feature types (e.g. points + polygon)
+            // is loaded as a GroupLayer with one VectorLayer per type, just like AddDxffile.
+            var groups = features.GroupBy(f => f.GeometryType).ToList();
 
-            var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
-                                dataSource,
-                                symbolizers,
-                                LayerType.VectorLayer,
-                                RenderMode.Default,
-                                RasterizationMethod.GdiPlus,
-                                ScaleInterval.All,
-                                LegendViewModel.DefaultTocGroup)
+            if (groups.Count == 1)
             {
-                IsSearchable = true
-            };
+                var dataSource = KmzDataSource.Create(fileName, features);
 
-            AddLayer(vectorLayer);
+                var symbolizers = features.CreateSymbolizersFromKml(features.First().GeometryType);
+
+                var vectorLayer = new VectorLayer(Path.GetFileNameWithoutExtension(fileName),
+                                    dataSource,
+                                    symbolizers,
+                                    LayerType.VectorLayer,
+                                    RenderMode.Default,
+                                    RasterizationMethod.GdiPlus,
+                                    ScaleInterval.All,
+                                    LegendViewModel.DefaultTocGroup)
+                {
+                    IsSearchable = true
+                };
+
+                AddLayer(vectorLayer);
+            }
+            else
+            {
+                var groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName));
+
+                foreach (var group in groups)
+                {
+                    var groupFeatures = group.ToList();
+
+                    var dataSource = KmzDataSource.Create(fileName, groupFeatures);
+
+                    var symbolizers = groupFeatures.CreateSymbolizersFromKml(group.Key);
+
+                    var vectorLayer = new VectorLayer($"{Path.GetFileNameWithoutExtension(fileName)}-{group.Key}",
+                                        dataSource,
+                                        symbolizers,
+                                        LayerType.VectorLayer,
+                                        RenderMode.Default,
+                                        RasterizationMethod.GdiPlus,
+                                        ScaleInterval.All,
+                                        LegendViewModel.DefaultTocGroup)
+                    {
+                        IsSearchable = true
+                    };
+
+                    groupLayer.AddSubLayer(vectorLayer);
+                }
+
+                AddLayer(groupLayer);
+            }
         }
         catch (Exception ex)
         {

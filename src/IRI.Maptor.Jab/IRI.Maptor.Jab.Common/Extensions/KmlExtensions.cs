@@ -475,16 +475,33 @@ public static class KmlExtensions
 
     private static void EnsureDefaults(VisualParameters visual, GeometryType geometryType)
     {
-        if (visual.Stroke == null && IsLineGeometry(geometryType))
+        if (IsMissingBrush(visual.Stroke) && IsLineGeometry(geometryType))
         {
             visual.Stroke = BrushHelper.PickBrush();
+
+            if (visual.StrokeThickness <= 0)
+            {
+                visual.StrokeThickness = 1;
+            }
         }
 
-        if (visual.Fill == null && IsPolygonGeometry(geometryType))
+        if (IsMissingBrush(visual.Fill) && IsMissingBrush(visual.Stroke) && IsPolygonGeometry(geometryType))
         {
+            // A polygon styled only with a point/icon style (or no usable style) would otherwise be
+            // invisible (the VisualParameters constructor coerces a null Fill to Brushes.Transparent
+            // and the Stroke stays null). Give it a visible default fill and outline.
             visual.Fill = BrushHelper.PickBrush();
+            visual.Stroke ??= Brushes.Black;
+
+            if (visual.StrokeThickness <= 0)
+            {
+                visual.StrokeThickness = 1;
+            }
         }
     }
+
+    private static bool IsMissingBrush(Brush? brush) =>
+        brush == null || ReferenceEquals(brush, Brushes.Transparent);
 
     private static bool IsPointGeometry(GeometryType geometryType) =>
         geometryType == GeometryType.Point || geometryType == GeometryType.MultiPoint;
