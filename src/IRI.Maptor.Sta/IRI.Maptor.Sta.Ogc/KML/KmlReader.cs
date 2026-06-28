@@ -50,7 +50,7 @@ public static class KmlReader
 
         try
         {
-            var document = XDocument.Load(filePath);
+            var document = LoadSanitizedDocument(filePath);
             return ExtractGeometries(document, targetSrid);
         }
         catch (Exception ex)
@@ -72,15 +72,8 @@ public static class KmlReader
 
         try
         {
-            await using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read,
-                bufferSize: 4096, useAsync: true);
-
-            var settings = new XmlReaderSettings { Async = true };
-
-            using var reader = XmlReader.Create(stream, settings);
-
-            var document = await XDocument.LoadAsync(reader, LoadOptions.None, System.Threading.CancellationToken.None);
-
+            var kmlString = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
+            var document = ParseSanitizedDocument(kmlString);
             return ExtractGeometries(document, targetSrid);
         }
         catch (Exception ex)
@@ -102,8 +95,7 @@ public static class KmlReader
 
         try
         {
-            var sanitizedKml = EnsureXmlSchemaInstanceNamespace(kmlString);
-            var document = XDocument.Parse(sanitizedKml);
+            var document = ParseSanitizedDocument(kmlString);
             return ExtractGeometries(document, targetSrid);
         }
         catch (Exception ex)
@@ -125,7 +117,7 @@ public static class KmlReader
 
         try
         {
-            var document = XDocument.Load(filePath);
+            var document = LoadSanitizedDocument(filePath);
             return ExtractFeatures(document, targetSrid);
         }
         catch (Exception ex)
@@ -145,7 +137,16 @@ public static class KmlReader
         if (!File.Exists(filePath))
             throw new FileNotFoundException($"KML file not found: {filePath}", filePath);
 
-        return await Task.Run(() => ReadFeaturesFromFile(filePath, targetSrid));
+        try
+        {
+            var kmlString = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
+            var document = ParseSanitizedDocument(kmlString);
+            return ExtractFeatures(document, targetSrid);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Failed to parse KML file: {filePath}", ex);
+        }
     }
 
     /// <summary>
@@ -161,8 +162,7 @@ public static class KmlReader
 
         try
         {
-            var sanitizedKml = EnsureXmlSchemaInstanceNamespace(kmlString);
-            var document = XDocument.Parse(sanitizedKml);
+            var document = ParseSanitizedDocument(kmlString);
             return ExtractFeatures(document, targetSrid);
         }
         catch (Exception ex)
@@ -762,6 +762,24 @@ public static class KmlReader
     }
 
     #endregion
+
+    /// <summary>
+    /// Reads a KML file from disk and parses it after repairing an undeclared <c>xsi:</c> prefix.
+    /// File-based loading must go through this (not raw XDocument.Load) so that KML using
+    /// <c>xsi:schemaLocation</c> without an <c>xmlns:xsi</c> declaration still parses — the same
+    /// repair the string-based <see cref="Parse"/> path performs.
+    /// </summary>
+    private static XDocument LoadSanitizedDocument(string filePath)
+    {
+        var kmlString = File.ReadAllText(filePath);
+        return ParseSanitizedDocument(kmlString);
+    }
+
+    private static XDocument ParseSanitizedDocument(string kmlString)
+    {
+        var sanitizedKml = EnsureXmlSchemaInstanceNamespace(kmlString);
+        return XDocument.Parse(sanitizedKml);
+    }
 
     private static string EnsureXmlSchemaInstanceNamespace(string kmlContent)
     {
