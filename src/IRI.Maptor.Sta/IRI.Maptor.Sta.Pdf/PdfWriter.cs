@@ -307,13 +307,18 @@ public static class PdfWriter
 
         ApplyStyling(gfx, options, isPolygon: false);
 
-        // Draw circle for point
-        gfx.DrawEllipse(GetPen(options), pdfPoint.X - radius, pdfPoint.Y - radius, radius * 2, radius * 2);
-        
-        // Fill if fill color is specified
-        if (options.FillColor.HasValue)
+        // Fill if a non-transparent fill is specified.
+        var brush = GetBrush(options);
+        if (brush != null)
         {
-            gfx.DrawEllipse(GetBrush(options), pdfPoint.X - radius, pdfPoint.Y - radius, radius * 2, radius * 2);
+            gfx.DrawEllipse(brush, pdfPoint.X - radius, pdfPoint.Y - radius, radius * 2, radius * 2);
+        }
+
+        // Draw circle outline if the stroke is not transparent.
+        var pen = GetPen(options);
+        if (pen != null)
+        {
+            gfx.DrawEllipse(pen, pdfPoint.X - radius, pdfPoint.Y - radius, radius * 2, radius * 2);
         }
     }
 
@@ -328,7 +333,10 @@ public static class PdfWriter
         var pdfPoints = geometry.Points.Select(p => TransformPoint(p, bbox, pageWidth, pageHeight, options)).ToArray();
 
         ApplyStyling(gfx, options, isPolygon: false);
-        gfx.DrawLines(GetPen(options), pdfPoints);
+
+        var pen = GetPen(options);
+        if (pen != null)
+            gfx.DrawLines(pen, pdfPoints);
     }
 
     /// <summary>
@@ -348,14 +356,20 @@ public static class PdfWriter
 
         ApplyStyling(gfx, options, isPolygon: true);
 
-        // Fill polygon if fill color is specified
-        if (options.FillColor.HasValue)
+        var brush = GetBrush(options);
+        var pen = GetPen(options);
+
+        // Fill polygon only if a non-transparent fill is specified.
+        if (brush != null)
         {
-            gfx.DrawPolygon(GetBrush(options), exteriorPoints, XFillMode.Alternate);
+            gfx.DrawPolygon(brush, exteriorPoints, XFillMode.Alternate);
         }
 
-        // Draw polygon outline
-        gfx.DrawPolygon(GetPen(options), exteriorPoints);
+        // Draw polygon outline only if the stroke is not transparent.
+        if (pen != null)
+        {
+            gfx.DrawPolygon(pen, exteriorPoints);
+        }
 
         // Draw interior rings (holes) if any
         for (int ringIndex = 1; ringIndex < geometry.Geometries.Count; ringIndex++)
@@ -364,15 +378,16 @@ public static class PdfWriter
             if (ring.Points != null && ring.Points.Count > 0)
             {
                 var holePoints = ring.Points.Select(p => TransformPoint(p, bbox, pageWidth, pageHeight, options)).ToArray();
-                
-                // Fill hole (with background color or no fill)
-                if (options.FillColor.HasValue)
+
+                if (brush != null)
                 {
-                    gfx.DrawPolygon(GetBrush(options), holePoints, XFillMode.Alternate);
+                    gfx.DrawPolygon(brush, holePoints, XFillMode.Alternate);
                 }
-                
-                // Draw hole outline
-                gfx.DrawPolygon(GetPen(options), holePoints);
+
+                if (pen != null)
+                {
+                    gfx.DrawPolygon(pen, holePoints);
+                }
             }
         }
     }
@@ -443,21 +458,37 @@ public static class PdfWriter
     }
 
     /// <summary>
-    /// Gets pen for drawing strokes
+    /// Gets the pen for drawing strokes, or null when the stroke is fully transparent
+    /// (so a transparent stroke is never painted as a visible/white outline).
+    /// When no stroke color is specified, a default black pen is used.
     /// </summary>
-    private static XPen GetPen(PdfOptions options)
+    private static XPen? GetPen(PdfOptions options)
     {
-        var color = options.GetStrokeColor() ?? XColors.Black;
-        return new XPen(color, options.StrokeWidth);
+        var color = options.GetStrokeColor();
+        if (color.HasValue)
+        {
+            // Explicitly transparent stroke => no outline.
+            if (color.Value.A <= 0)
+                return null;
+
+            return new XPen(color.Value, options.StrokeWidth);
+        }
+
+        // No stroke color specified: keep the default black outline.
+        return new XPen(XColors.Black, options.StrokeWidth);
     }
 
     /// <summary>
-    /// Gets brush for filling
+    /// Gets the brush for filling, or null when there is no fill color or the fill is fully
+    /// transparent. A transparent fill must NOT be painted (never as white).
     /// </summary>
-    private static XBrush GetBrush(PdfOptions options)
+    private static XBrush? GetBrush(PdfOptions options)
     {
-        var color = options.GetFillColor() ?? XColors.Black;
-        return new XSolidBrush(color);
+        var color = options.GetFillColor();
+        if (!color.HasValue || color.Value.A <= 0)
+            return null;
+
+        return new XSolidBrush(color.Value);
     }
 
     /// <summary>
@@ -552,105 +583,38 @@ public static class PdfWriter
         page.Width = pageWidth;
         page.Height = pageHeight;
 
-        var gfx = XGraphics.FromPdfPage(page);
+        // Group layers into render units; each unit becomes one toggleable PDF layer.
+        var units = BuildRenderUnits(layers, rasterLayers, GroupByLayerName);
 
-        try
+        if (supportPdfLayers)
         {
-            // Combine raster and vector layers, sort by ZIndex
-            var allLayerItems = new List<(int ZIndex, bool IsRaster, object Data)>();
-            
-            // Add raster layers
-            if (rasterLayers != null)
+            // Draw each layer into its own appended content stream, then wrap that finalized
+            // stream in marked content (/OC /ocN BDC ... EMC) bound to an Optional Content Group,
+            // so PDF viewers can toggle the layer. Each layer uses its own XGraphics, disposed
+            // before the next, so its content stream is complete before we wrap its bytes.
+            for (int i = 0; i < units.Count; i++)
             {
-                foreach (var rasterLayer in rasterLayers)
+                var unit = units[i];
+
+                var ocgRef = CreatePdfLayer(document, unit.LayerName);
+                var propertyName = RegisterOptionalContentProperty(page, ocgRef, i);
+
+                var existingContents = SnapshotContentStreams(page);
+                using (var layerGfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append))
                 {
-                    allLayerItems.Add((rasterLayer.ZIndex, true, rasterLayer));
+                    DrawUnit(layerGfx, unit, mapExtent, pageWidth, pageHeight, baseOptions);
                 }
-            }
-            
-            // Add vector layers
-            foreach (var vectorLayer in layers)
-            {
-                allLayerItems.Add((vectorLayer.ZIndex, false, vectorLayer));
-            }
-            
-            // Sort all layers by ZIndex (ascending - lower ZIndex drawn first)
-            var sortedLayers = allLayerItems.OrderBy(l => l.ZIndex).ToList();
-
-            // Draw each layer
-            foreach (var layerItem in sortedLayers)
-            {
-                PdfDictionary pdfLayer = null;
-                
-                if (supportPdfLayers)
-                {
-                    // Create PDF layer for this map layer
-                    string layerName = layerItem.IsRaster 
-                        ? ((RasterLayerPdfData)layerItem.Data).LayerName 
-                        : ((LayerPdfData)layerItem.Data).LayerName;
-                    
-                    if (string.IsNullOrWhiteSpace(layerName))
-                        layerName = layerItem.IsRaster ? "Raster Layer" : "Vector Layer";
-                    
-                    pdfLayer = CreatePdfLayer(document, layerName);
-                    BeginLayerContent(gfx, pdfLayer);
-                }
-                
-                try
-                {
-                    if (layerItem.IsRaster)
-                    {
-                        // Draw raster layer
-                        var rasterLayerData = (RasterLayerPdfData)layerItem.Data;
-                        if (rasterLayerData.Tiles != null && rasterLayerData.Tiles.Count > 0)
-                        {
-                            var combinedOpacity = baseOptions.Opacity * rasterLayerData.Opacity;
-                            WriteRasterTilesForLayer(gfx, rasterLayerData.Tiles, mapExtent, pageWidth, pageHeight, baseOptions, combinedOpacity);
-                        }
-                    }
-                    else
-                    {
-                        // Draw vector layer
-                        var layerData = (LayerPdfData)layerItem.Data;
-                        if (layerData.Features == null || layerData.Features.Count == 0)
-                            continue;
-
-                        // Combine layer opacity with base opacity
-                        var combinedOpacity = baseOptions.Opacity * layerData.Opacity;
-
-                        // Create layer-specific options
-                        var layerOptions = new PdfOptions
-                        {
-                            StrokeColor = layerData.Options.StrokeColor,
-                            FillColor = layerData.Options.FillColor,
-                            StrokeWidth = layerData.Options.StrokeWidth,
-                            Opacity = combinedOpacity,
-                            BoundingBoxPadding = baseOptions.BoundingBoxPadding, // Use base padding for transformation
-                            PointCircleRadius = layerData.Options.PointCircleRadius
-                        };
-
-                        // Draw all features in this layer
-                        foreach (var feature in layerData.Features)
-                        {
-                            if (feature?.TheGeometry == null || feature.TheGeometry.IsNullOrEmpty())
-                                continue;
-
-                            WriteGeometryForLayer(gfx, feature.TheGeometry, mapExtent, pageWidth, pageHeight, layerOptions);
-                        }
-                    }
-                }
-                finally
-                {
-                    if (supportPdfLayers && pdfLayer != null)
-                    {
-                        EndLayerContent(gfx);
-                    }
-                }
+                WrapNewContentStreamsWithOptionalContent(page, existingContents, propertyName);
             }
         }
-        finally
+        else
         {
-            gfx.Dispose();
+            // Non-layered path: draw everything directly on the page.
+            using var gfx = XGraphics.FromPdfPage(page);
+            foreach (var unit in units)
+            {
+                DrawUnit(gfx, unit, mapExtent, pageWidth, pageHeight, baseOptions);
+            }
         }
 
         using var stream = new MemoryStream();
@@ -772,13 +736,17 @@ public static class PdfWriter
         var pdfPoint = transform(point);
         var radius = options.PointCircleRadius;
 
-        var pen = GetPen(options);
-        gfx.DrawEllipse(pen, pdfPoint.X - radius, pdfPoint.Y - radius, radius * 2, radius * 2);
-
-        if (options.FillColor.HasValue)
+        // Fill first, then outline. Skip whichever is transparent (never paint white).
+        var brush = GetBrush(options);
+        if (brush != null)
         {
-            var brush = GetBrush(options);
             gfx.DrawEllipse(brush, pdfPoint.X - radius, pdfPoint.Y - radius, radius * 2, radius * 2);
+        }
+
+        var pen = GetPen(options);
+        if (pen != null)
+        {
+            gfx.DrawEllipse(pen, pdfPoint.X - radius, pdfPoint.Y - radius, radius * 2, radius * 2);
         }
     }
 
@@ -789,7 +757,8 @@ public static class PdfWriter
 
         var pdfPoints = geometry.Points.Select(transform).ToArray();
         var pen = GetPen(options);
-        gfx.DrawLines(pen, pdfPoints);
+        if (pen != null)
+            gfx.DrawLines(pen, pdfPoints);
     }
 
     private static void WritePolygonForLayer(XGraphics gfx, Geometry<Point> geometry, Func<Point, XPoint> transform, PdfOptions options)
@@ -804,16 +773,20 @@ public static class PdfWriter
 
         var exteriorPoints = exteriorRing.Points.Select(transform).ToArray();
 
-        // Fill polygon if fill color is specified
-        if (options.FillColor.HasValue)
+        var brush = GetBrush(options);
+        var pen = GetPen(options);
+
+        // Fill polygon only if a non-transparent fill is specified.
+        if (brush != null)
         {
-            var brush = GetBrush(options);
             gfx.DrawPolygon(brush, exteriorPoints, XFillMode.Alternate);
         }
 
-        // Draw polygon outline
-        var pen = GetPen(options);
-        gfx.DrawPolygon(pen, exteriorPoints);
+        // Draw polygon outline only if the stroke is not transparent.
+        if (pen != null)
+        {
+            gfx.DrawPolygon(pen, exteriorPoints);
+        }
 
         // Draw interior rings (holes) if any
         for (int ringIndex = 1; ringIndex < geometry.Geometries.Count; ringIndex++)
@@ -823,13 +796,15 @@ public static class PdfWriter
             {
                 var holePoints = ring.Points.Select(transform).ToArray();
 
-                if (options.FillColor.HasValue)
+                if (brush != null)
                 {
-                    var brush = GetBrush(options);
                     gfx.DrawPolygon(brush, holePoints, XFillMode.Alternate);
                 }
 
-                gfx.DrawPolygon(pen, holePoints);
+                if (pen != null)
+                {
+                    gfx.DrawPolygon(pen, holePoints);
+                }
             }
         }
     }
@@ -921,219 +896,266 @@ public static class PdfWriter
     }
 
     /// <summary>
-    /// Creates a PDF Optional Content Group (layer) for the given layer name
-    /// Returns the OCG dictionary (reference will be created when added to arrays)
+    /// Default grouping policy: true => one OCG per map layer (grouped by LayerName);
+    /// false => one OCG per symbolizer/raster entry.
     /// </summary>
-    private static PdfDictionary CreatePdfLayer(PdfDocument document, string layerName)
+    private const bool GroupByLayerName = true;
+
+    /// <summary>
+    /// A single toggleable PDF layer, aggregating all the input entries (raster + vector
+    /// symbolizers) that belong to the same map layer.
+    /// </summary>
+    private sealed class RenderUnit
     {
-        // Create OCG dictionary
+        public string LayerName = string.Empty;
+        public int OrderZIndex;
+        public int FirstIndex;
+        public List<RasterLayerPdfData> Rasters = new();
+        public List<LayerPdfData> Vectors = new();
+
+        public bool HasContent =>
+            Rasters.Any(r => r.Tiles != null && r.Tiles.Count > 0) ||
+            Vectors.Any(v => v.Features != null && v.Features.Count > 0);
+    }
+
+    /// <summary>
+    /// Groups raster and vector layer entries into render units (one per toggleable PDF layer),
+    /// preserving draw order by ZIndex and skipping units that have nothing to draw.
+    /// </summary>
+    private static List<RenderUnit> BuildRenderUnits(
+        List<LayerPdfData> vectors,
+        List<RasterLayerPdfData>? rasters,
+        bool groupByLayerName)
+    {
+        // Flatten to a common list, preserving input order for stable tie-breaking.
+        var items = new List<(int ZIndex, int Index, bool IsRaster, string Name, object Data)>();
+        int index = 0;
+
+        if (rasters != null)
+        {
+            foreach (var r in rasters)
+            {
+                var name = string.IsNullOrWhiteSpace(r.LayerName) ? "Raster Layer" : r.LayerName;
+                items.Add((r.ZIndex, index++, true, name, r));
+            }
+        }
+
+        foreach (var v in vectors)
+        {
+            var name = string.IsNullOrWhiteSpace(v.LayerName) ? "Vector Layer" : v.LayerName;
+            items.Add((v.ZIndex, index++, false, name, v));
+        }
+
+        var units = new List<RenderUnit>();
+        var byKey = new Dictionary<string, RenderUnit>();
+
+        foreach (var item in items)
+        {
+            // Group key: by layer name, or unique per item to disable grouping.
+            var key = groupByLayerName ? item.Name : ("__" + item.Index);
+
+            if (!byKey.TryGetValue(key, out var unit))
+            {
+                unit = new RenderUnit
+                {
+                    LayerName = item.Name,
+                    OrderZIndex = item.ZIndex,
+                    FirstIndex = item.Index
+                };
+                byKey[key] = unit;
+                units.Add(unit);
+            }
+            else if (item.ZIndex < unit.OrderZIndex)
+            {
+                unit.OrderZIndex = item.ZIndex;
+            }
+
+            if (item.IsRaster)
+                unit.Rasters.Add((RasterLayerPdfData)item.Data);
+            else
+                unit.Vectors.Add((LayerPdfData)item.Data);
+        }
+
+        // Keep only units with drawable content; order by ZIndex then first appearance.
+        return units
+            .Where(u => u.HasContent)
+            .OrderBy(u => u.OrderZIndex)
+            .ThenBy(u => u.FirstIndex)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Draws a render unit (rasters beneath vectors) onto the given graphics target.
+    /// Shared by the layered (per-form) and non-layered (direct page) paths.
+    /// </summary>
+    private static void DrawUnit(
+        XGraphics target,
+        RenderUnit unit,
+        BoundingBox mapExtent,
+        double pageWidth,
+        double pageHeight,
+        PdfOptions baseOptions)
+    {
+        // Rasters first (drawn beneath the vector features).
+        foreach (var rasterLayerData in unit.Rasters)
+        {
+            if (rasterLayerData.Tiles == null || rasterLayerData.Tiles.Count == 0)
+                continue;
+
+            var combinedOpacity = baseOptions.Opacity * rasterLayerData.Opacity;
+            WriteRasterTilesForLayer(target, rasterLayerData.Tiles, mapExtent, pageWidth, pageHeight, baseOptions, combinedOpacity);
+        }
+
+        // Then vector symbolizer entries, in their original order.
+        foreach (var layerData in unit.Vectors)
+        {
+            if (layerData.Features == null || layerData.Features.Count == 0)
+                continue;
+
+            var combinedOpacity = baseOptions.Opacity * layerData.Opacity;
+
+            var layerOptions = new PdfOptions
+            {
+                StrokeColor = layerData.Options.StrokeColor,
+                FillColor = layerData.Options.FillColor,
+                StrokeWidth = layerData.Options.StrokeWidth,
+                Opacity = combinedOpacity,
+                BoundingBoxPadding = baseOptions.BoundingBoxPadding, // Use base padding for transformation
+                PointCircleRadius = layerData.Options.PointCircleRadius
+            };
+
+            foreach (var feature in layerData.Features)
+            {
+                if (feature?.TheGeometry == null || feature.TheGeometry.IsNullOrEmpty())
+                    continue;
+
+                WriteGeometryForLayer(target, feature.TheGeometry, mapExtent, pageWidth, pageHeight, layerOptions);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Creates a PDF Optional Content Group (OCG / toggleable layer) and returns its indirect
+    /// reference. The OCG is made an indirect object so the reference is valid immediately.
+    /// </summary>
+    private static PdfReference CreatePdfLayer(PdfDocument document, string layerName)
+    {
+        // Create the OCG dictionary and make it an indirect object. Without this,
+        // PdfArray.Add embeds the dictionary inline and ocg.Reference stays null.
         var ocg = new PdfDictionary(document);
         ocg.Elements["/Type"] = new PdfName("/OCG");
-        ocg.Elements["/Name"] = new PdfString(layerName);
-        
-        // Access catalog through Internals property
+        ocg.Elements["/Name"] = new PdfString(layerName ?? string.Empty, PdfStringEncoding.Unicode);
+        document.Internals.AddObject(ocg);
+
         var catalog = document.Internals.Catalog;
-        
-        // Add to document's OCProperties if not already present
+
+        // Create the /OCProperties tree once, with a default configuration (/D).
         if (catalog.Elements["/OCProperties"] == null)
         {
             var ocProperties = new PdfDictionary(document);
-            var ocgs = new PdfArray(document);
-            ocProperties.Elements["/OCGs"] = ocgs;
-            
-            // Create default viewing state
+            ocProperties.Elements["/OCGs"] = new PdfArray(document);
+
             var d = new PdfDictionary(document);
+            d.Elements["/Name"] = new PdfString("Default", PdfStringEncoding.Unicode);
             d.Elements["/BaseState"] = new PdfName("/ON");
-            var order = new PdfArray(document);
-            d.Elements["/Order"] = order;
+            d.Elements["/Order"] = new PdfArray(document);
+            d.Elements["/ON"] = new PdfArray(document);
             ocProperties.Elements["/D"] = d;
-            
+
             catalog.Elements["/OCProperties"] = ocProperties;
         }
-        
-        // Add OCG to document's OCProperties - adding to array will create reference automatically
-        var ocProps = catalog.Elements["/OCProperties"] as PdfDictionary;
-        var ocgsArray = ocProps.Elements["/OCGs"] as PdfArray;
-        ocgsArray.Elements.Add(ocg);
-        
-        // Add to Order array for default viewing state
-        // After adding to ocgsArray, the reference should be available
-        var dDict = ocProps.Elements["/D"] as PdfDictionary;
-        var orderArray = dDict.Elements["/Order"] as PdfArray;
-        // Add the dictionary - PdfSharpCore will handle the reference when saving
-        orderArray.Elements.Add(ocg);
-        
-        return ocg;
-    }
 
+        var ocProps = (PdfDictionary)catalog.Elements["/OCProperties"];
+        var dDict = (PdfDictionary)ocProps.Elements["/D"];
 
-    /// <summary>
-    /// Begins a marked content sequence with optional content group
-    /// Inserts BDC (Begin Marked Content) operator with /OC tag and OCG reference
-    /// Note: This method works by flushing XGraphics and then inserting the BDC operator
-    /// into the content stream. Subsequent XGraphics operations will append after this operator.
-    /// </summary>
-    private static void BeginLayerContent(XGraphics gfx, PdfDictionary ocg)
-    {
-        if (gfx == null || ocg == null)
-            return;
+        // Register the OCG's indirect reference in /OCGs, the default /Order, and /ON (visible).
+        ((PdfArray)ocProps.Elements["/OCGs"]).Elements.Add(ocg.Reference);
+        ((PdfArray)dDict.Elements["/Order"]).Elements.Add(ocg.Reference);
+        ((PdfArray)dDict.Elements["/ON"]).Elements.Add(ocg.Reference);
 
-        try
-        {
-            // Access the page's content stream through Internals
-            var page = gfx.PdfPage;
-            var document = page.Owner;
-
-            // Get the OCG reference - ensure it exists in the document
-            var ocgRef = EnsureOcgReference(document, ocg);
-            if (ocgRef == null)
-                return;
-
-            // Get or create the content stream dictionary
-            PdfDictionary? contentStreamDict = GetOrCreateContentStream(page, document);
-            if (contentStreamDict == null)
-                return;
-
-            // Get or create the stream data
-            var currentStream = contentStreamDict.Stream;
-            byte[]? currentBytes = currentStream?.Value;
-            
-            // Write BDC operator to content stream
-            // Format: /OC ocgReference BDC
-            // PDF content stream syntax: /OC objNumber genNumber R BDC
-            // Get object number from reference (will be assigned during save if not yet assigned)
-            var objectId = ocgRef.ObjectID;
-            int objNumber = objectId.ObjectNumber;
-            int genNumber = objectId.GenerationNumber;
-            var bdcOperator = $"/OC {objNumber} {genNumber} R BDC\n";
-            var bdcBytes = System.Text.Encoding.ASCII.GetBytes(bdcOperator);
-
-            // Append BDC operator to content stream
-            if (currentBytes == null || currentBytes.Length == 0)
-            {
-                contentStreamDict.CreateStream(bdcBytes);
-            }
-            else
-            {
-                var newContent = new byte[currentBytes.Length + bdcBytes.Length];
-                Buffer.BlockCopy(currentBytes, 0, newContent, 0, currentBytes.Length);
-                Buffer.BlockCopy(bdcBytes, 0, newContent, currentBytes.Length, bdcBytes.Length);
-                contentStreamDict.Stream.Value = newContent;
-            }
-        }
-        catch (Exception ex)
-        {
-            // If marking content fails, log but don't throw - layers will still be created
-            // but won't be toggleable
-            Debug.WriteLine($"Failed to begin layer content marking: {ex.Message}");
-        }
-    }
-
-    /// <summary>
-    /// Ensures the OCG has a proper reference in the document's OCProperties
-    /// Returns the OCG dictionary's reference object
-    /// </summary>
-    private static PdfReference? EnsureOcgReference(PdfDocument document, PdfDictionary ocg)
-    {
-        // Ensure the OCG is added to the document so it gets a reference
-        // The reference is automatically created when the dictionary is added to arrays
-        var catalog = document.Internals.Catalog;
-        var ocProps = catalog.Elements["/OCProperties"] as PdfDictionary;
-        if (ocProps == null)
-            return ocg.Reference;
-
-        var ocgsArray = ocProps.Elements["/OCGs"] as PdfArray;
-        if (ocgsArray == null)
-            return ocg.Reference;
-
-        // The OCG should already be in the array from CreatePdfLayer
-        // PdfSharpCore will create a reference automatically when saving
-        // For now, return the reference if it exists, or it will be created during save
         return ocg.Reference;
     }
 
     /// <summary>
-    /// Ends a marked content sequence
-    /// Inserts EMC (End Marked Content) operator
+    /// Registers the OCG reference under a unique name in the page's /Resources /Properties
+    /// dictionary and returns that name (e.g. "/oc0") for use as a BDC marked-content operand.
     /// </summary>
-    private static void EndLayerContent(XGraphics gfx)
+    private static string RegisterOptionalContentProperty(PdfPage page, PdfReference ocgRef, int index)
     {
-        if (gfx == null)
-            return;
+        var document = page.Owner;
 
-        try
+        // page.Resources is the same resource dictionary the page's XGraphics uses.
+        var resources = page.Resources;
+
+        var properties = resources.Elements.GetDictionary("/Properties");
+        if (properties == null)
         {
-            // Access the page's content stream
-            var page = gfx.PdfPage;
-
-            // Get the content stream dictionary
-            PdfDictionary? contentStreamDict = GetContentStream(page);
-            if (contentStreamDict == null)
-                return;
-
-            var currentStream = contentStreamDict.Stream;
-            byte[]? currentBytes = currentStream?.Value;
-            if (currentBytes == null || currentBytes.Length == 0)
-                return;
-
-            // Create EMC operator (End Marked Content)
-            var emcOperator = "EMC\n";
-            var emcBytes = System.Text.Encoding.ASCII.GetBytes(emcOperator);
-
-            // Append EMC operator to content stream
-            var newContent = new byte[currentBytes.Length + emcBytes.Length];
-            Buffer.BlockCopy(currentBytes, 0, newContent, 0, currentBytes.Length);
-            Buffer.BlockCopy(emcBytes, 0, newContent, currentBytes.Length, emcBytes.Length);
-            contentStreamDict.Stream.Value = newContent;
+            properties = new PdfDictionary(document);
+            resources.Elements["/Properties"] = properties;
         }
-        catch (Exception ex)
-        {
-            // If marking content fails, log but don't throw
-            Debug.WriteLine($"Failed to end layer content marking: {ex.Message}");
-        }
+
+        var name = "/oc" + index;
+        properties.Elements[name] = ocgRef;
+        return name;
     }
 
     /// <summary>
-    /// Gets or creates the content stream dictionary for a page
+    /// Captures the set of content-stream dictionaries currently attached to the page.
     /// </summary>
-    private static PdfDictionary? GetOrCreateContentStream(PdfPage page, PdfDocument document)
+    private static HashSet<PdfDictionary> SnapshotContentStreams(PdfPage page)
     {
-        var contentsElement = page.Elements["/Contents"];
-        
-        if (contentsElement is PdfDictionary dict)
+        var set = new HashSet<PdfDictionary>();
+        foreach (var item in page.Contents.Elements)
         {
-            return dict;
+            var dict = (item as PdfReference)?.Value as PdfDictionary ?? item as PdfDictionary;
+            if (dict != null)
+                set.Add(dict);
         }
-        else if (contentsElement is PdfReference contentsRef)
-        {
-            return contentsRef.Value as PdfDictionary;
-        }
-        else
-        {
-            // Create new content stream dictionary
-            var newStreamDict = new PdfDictionary(document);
-            page.Elements["/Contents"] = newStreamDict;
-            return newStreamDict;
-        }
+        return set;
     }
 
     /// <summary>
-    /// Gets the content stream dictionary for a page
+    /// Wraps every content stream added to the page since <paramref name="existing"/> was captured
+    /// in an optional-content marked-content sequence (/OC name BDC ... EMC). The streams are
+    /// already finalized (their XGraphics is disposed) and not yet compressed, so the byte
+    /// prepend/append is safe; PdfSharpCore compresses them on save.
     /// </summary>
-    private static PdfDictionary? GetContentStream(PdfPage page)
+    private static void WrapNewContentStreamsWithOptionalContent(PdfPage page, HashSet<PdfDictionary> existing, string propertyName)
     {
-        var contentsElement = page.Elements["/Contents"];
-        
-        if (contentsElement is PdfDictionary dict)
+        var bdcBytes = System.Text.Encoding.ASCII.GetBytes("/OC " + propertyName + " BDC\n");
+        var emcBytes = System.Text.Encoding.ASCII.GetBytes("\nEMC\n");
+
+        foreach (var item in page.Contents.Elements)
         {
-            return dict;
+            var dict = (item as PdfReference)?.Value as PdfDictionary ?? item as PdfDictionary;
+            if (dict == null || existing.Contains(dict))
+                continue;
+
+            var currentBytes = dict.Stream?.Value;
+            if (currentBytes == null)
+            {
+                dict.CreateStream(ConcatBytes(bdcBytes, emcBytes));
+            }
+            else
+            {
+                dict.Stream.Value = ConcatBytes(bdcBytes, currentBytes, emcBytes);
+            }
         }
-        else if (contentsElement is PdfReference contentsRef)
-        {
-            return contentsRef.Value as PdfDictionary;
-        }
-        
-        return null;
     }
+
+    private static byte[] ConcatBytes(params byte[][] arrays)
+    {
+        var length = arrays.Sum(a => a.Length);
+        var result = new byte[length];
+        var offset = 0;
+        foreach (var a in arrays)
+        {
+            Buffer.BlockCopy(a, 0, result, offset, a.Length);
+            offset += a.Length;
+        }
+        return result;
+    }
+
+
 }
 

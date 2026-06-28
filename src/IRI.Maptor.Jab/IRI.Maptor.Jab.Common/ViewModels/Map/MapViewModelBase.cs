@@ -4766,9 +4766,10 @@ public abstract class MapViewModelBase : ViewModelBase
 
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
-            // Group by geometry type so that a KML with mixed feature types (e.g. points + polygon)
-            // is loaded as a GroupLayer with one VectorLayer per type, just like AddDxffile.
-            var groups = features.GroupBy(f => f.GeometryType).ToList();
+            // Group by geometry category (Point/Polyline/Polygon) so that a KML with mixed feature
+            // types (e.g. points + polygon) is loaded as a GroupLayer with one VectorLayer per
+            // category - single- and multi-part of the same kind (Polygon + MultiPolygon) merge.
+            var groups = features.GroupBy(f => f.GeometryType.GetCategory()).ToList();
 
             if (groups.Count == 1)
             {
@@ -4800,7 +4801,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
                     var dataSource = KmlDataSource.Create(fileName, groupFeatures);
 
-                    var symbolizers = groupFeatures.CreateSymbolizersFromKml(group.Key);
+                    var symbolizers = groupFeatures.CreateSymbolizersFromKml(groupFeatures.First().GeometryType);
 
                     var vectorLayer = new VectorLayer($"{Path.GetFileNameWithoutExtension(fileName)}-{group.Key}",
                                         dataSource,
@@ -4909,9 +4910,10 @@ public abstract class MapViewModelBase : ViewModelBase
 
             features = features.Select(f => f.Transform(MapProjects.GeodeticWgs84ToWebMercator<Point>, SridHelper.WebMercator)).ToList();
 
-            // Group by geometry type so that a KMZ with mixed feature types (e.g. points + polygon)
-            // is loaded as a GroupLayer with one VectorLayer per type, just like AddDxffile.
-            var groups = features.GroupBy(f => f.GeometryType).ToList();
+            // Group by geometry category (Point/Polyline/Polygon) so that a KMZ with mixed feature
+            // types (e.g. points + polygon) is loaded as a GroupLayer with one VectorLayer per
+            // category - single- and multi-part of the same kind (Polygon + MultiPolygon) merge.
+            var groups = features.GroupBy(f => f.GeometryType.GetCategory()).ToList();
 
             if (groups.Count == 1)
             {
@@ -4943,7 +4945,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
                     var dataSource = KmzDataSource.Create(fileName, groupFeatures);
 
-                    var symbolizers = groupFeatures.CreateSymbolizersFromKml(group.Key);
+                    var symbolizers = groupFeatures.CreateSymbolizersFromKml(groupFeatures.First().GeometryType);
 
                     var vectorLayer = new VectorLayer($"{Path.GetFileNameWithoutExtension(fileName)}-{group.Key}",
                                         dataSource,
@@ -5174,7 +5176,9 @@ public abstract class MapViewModelBase : ViewModelBase
                 //return;
             }
 
-            var groups = geometries.GroupBy(g => g.Type).ToList();
+            // Group by geometry category (Point/Polyline/Polygon) so single- and multi-part of the
+            // same kind (e.g. Polygon + MultiPolygon) merge into one sub-layer, like KML/KMZ.
+            var groups = geometries.GroupBy(g => g.Type.GetCategory()).ToList();
 
             // create the parent group layer
             GroupLayer groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName));
