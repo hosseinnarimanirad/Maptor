@@ -409,6 +409,21 @@ public class GpkgVectorReader : IDisposable
     }
 
     /// <summary>
+    /// Returns true if the GeoPackage defines an R-tree spatial index for the given table/column
+    /// (the bbox query overloads require it; callers should fall back to a full scan otherwise).
+    /// </summary>
+    public bool HasSpatialIndex(string tableName, string columnName)
+    {
+        EnsureConnectionOpen();
+
+        using var command = _connection!.CreateCommand();
+        command.CommandText = "SELECT 1 FROM sqlite_master WHERE type='table' AND name = @name LIMIT 1";
+        command.Parameters.AddWithValue("@name", $"rtree_{tableName}_{columnName}");
+
+        return command.ExecuteScalar() != null;
+    }
+
+    /// <summary>
     /// Gets the number of features in a layer
     /// </summary>
     public long GetFeatureCount(string tableName)

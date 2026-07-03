@@ -57,6 +57,12 @@ public enum DataSourceKind
     [Description("EsriJson"), DataSourceKindInfo(Category = Vector, FileFilter = "ESRI Json Geometry (json)|*.json")]
     EsriJson = 16,
 
+    [Description("MBTiles"), DataSourceKindInfo(Category = Raster, FileFilter = "MBTiles tileset|*.mbtiles")]
+    MBTiles = 17,
+
+    [Description("GeoPackage"), DataSourceKindInfo(Category = Vector, FileFilter = "OGC GeoPackage|*.gpkg")]
+    GeoPackage = 18,
+
 
     [Description("..."), DataSourceKindInfo(Category = None, FileFilter = "All files (*.*)|*.*")]
     Other = 100,

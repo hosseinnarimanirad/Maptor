@@ -9,6 +9,7 @@ using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Jab.Common.Cartography.Legend;
 
 
 namespace IRI.Maptor.Jab.Common.Layers;
@@ -38,8 +39,11 @@ public abstract class SymbolizableLayer : BaseLayer
 
         _symbolizers.Add(symbolizer);
 
+        _symbologyLegend = null;
+
         RaisePropertyChanged(nameof(HasMultiSymbolizers));
         RaisePropertyChanged(nameof(DefaultSymbology));
+        RaisePropertyChanged(nameof(SymbologyLegend));
     }
 
     public override bool HasMultiSymbolizers => Symbolizers?.Count(s => s is not LabelSymbolizer) > 1;
@@ -74,4 +78,54 @@ public abstract class SymbolizableLayer : BaseLayer
     {
         return Symbolizers.ParseToSld();
     }
+
+    #region Symbology details (complex-SLD legend)
+
+    private bool _isSymbologyDetailsOpen;
+
+    /// <summary>
+    /// Bound to the legend "palette" toggle. When true, the map legend shows a details panel with
+    /// the per-rule swatches, filters and scale ranges for this layer's (complex) symbology.
+    /// </summary>
+    public bool IsSymbologyDetailsOpen
+    {
+        get => _isSymbologyDetailsOpen;
+        set
+        {
+            _isSymbologyDetailsOpen = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private SymbologyLegend? _symbologyLegend;
+
+    /// <summary>
+    /// Lazily-built legend model (per-rule swatch + filter/scale text) for the details panel.
+    /// Rebuilt whenever the symbolizers change (see <see cref="SetSymbolizer"/>).
+    /// </summary>
+    public SymbologyLegend SymbologyLegend => _symbologyLegend ??= SldLegendBuilder.Build(GetSld());
+
+    private RelayCommand? _exportSymbologyLegendCommand;
+
+    /// <summary>Exports the current symbology legend to a PNG chosen via a save-file dialog.</summary>
+    public RelayCommand ExportSymbologyLegendCommand =>
+        _exportSymbologyLegendCommand ??= new RelayCommand(_ => ExportSymbologyLegend());
+
+    private void ExportSymbologyLegend()
+    {
+        var dialog = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter = "PNG image (*.png)|*.png",
+            FileName = $"{LayerName}-legend.png"
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            // GetSld() yields a single synthetic style, so its group header is not meaningful here.
+            var options = new SldLegendOptions { ShowGroupHeaders = false };
+            SldLegendPngRenderer.RenderToFile(GetSld(), dialog.FileName, options);
+        }
+    }
+
+    #endregion
 }

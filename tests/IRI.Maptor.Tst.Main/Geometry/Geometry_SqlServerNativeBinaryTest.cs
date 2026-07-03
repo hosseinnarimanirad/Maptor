@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 
 using IRI.Maptor.Sta.Spatial.IO;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.IO.SqlServerNativeBinary;
@@ -54,6 +55,7 @@ public class Geometry_SqlServerNativeBinaryTest
     [InlineData("MULTIPOLYGON (((0 0 9, 0 3 9, 3 3 9, 3 0 9, 0 0 9), (2 1 9, 1 2 9, 1 1 9, 2 1 9)), ((9 9 9, 9 10 9, 10 9 9, 9 9 9)))")] // MultiPolygonZ
     [InlineData("MULTIPOLYGON (((0 0 0 8, 0 3 0 8, 3 3 0 8, 3 0 0 8, 0 0 0 8), (2 1 0 8, 1 2 0 8, 1 1 0 8, 2 1 0 8)), ((9 9 0 8, 9 10 0 8, 10 9 0 8, 9 9 0 8)))")] // MultiPolygonM
     [InlineData("MULTIPOLYGON (((0 0 9 8, 0 3 9 8, 3 3 9 8, 3 0 9 8, 0 0 9 8), (2 1 9 8, 1 2 9 8, 1 1 9 8, 2 1 9 8)), ((9 9 9 8, 9 10 9 8, 10 9 9 8, 9 9 9 8)))")] // MultiPolygonZM
+    // GeometryCollection is covered by TestGeometryCollectionNativeRoundTrip below (SqlServerWktWriter/Reader do not support it).
     public void TestSqlNativeBinaryDeserialize(string wktGeometry)
     {
         //var bytes = HexStringHelper.ToByteArray("0xE6100000010C363CBD529621F23F2D78D15790363640");
@@ -108,9 +110,10 @@ public class Geometry_SqlServerNativeBinaryTest
     [InlineData("MULTIPOLYGON (((0 0 0 8, 0 3 0 8, 3 3 0 8, 3 0 0 8, 0 0 0 8), (2 1 0 8, 1 2 0 8, 1 1 0 8, 2 1 0 8)), ((9 9 0 8, 9 10 0 8, 10 9 0 8, 9 9 0 8)))")] // MultiPolygonM
     [InlineData("MULTIPOLYGON (((0 0 9 8, 0 3 9 8, 3 3 9 8, 3 0 9 8, 0 0 9 8), (2 1 9 8, 1 2 9 8, 1 1 9 8, 2 1 9 8)), ((9 9 9 8, 9 10 9 8, 10 9 9 8, 9 9 9 8)))")] // MultiPolygonZM
     [InlineData("MULTIPOLYGON (((0 0, 0 6, 6 6, 6 0, 0 0), (1 5, 1 1, 5 1, 5 5, 1 5)), ((4 4, 4 2, 2 2, 2 4, 4 4),(3.5 3.5, 2.5 3.5, 2.5 2.5, 3.5 2.5, 3.5 3.5)))")]
+    // GeometryCollection is covered by TestGeometryCollectionNativeRoundTrip below (SqlServerWktWriter/Reader do not support it).
     public void TestSqlNativeBinarySerialize(string wktGeometry)
     {
-        // ARRANGE 
+        // ARRANGE
         wktGeometry = wktGeometry.Replace(", ", ",");
         var geometry = SqlServerWktReader.Parse(wktGeometry, _srid);
         var sqlGeometry = Microsoft.SqlServer.Types.SqlGeometry.Parse(new System.Data.SqlTypes.SqlString(wktGeometry));
@@ -121,8 +124,34 @@ public class Geometry_SqlServerNativeBinaryTest
         // ACT
         var actualBinary = geometry.AsSqlServerNativeBinary();
 
-        // ASSERT - Compare byte arrays 
+        // ASSERT - Compare byte arrays
         Assert.Equal(expectedBinary, actualBinary);
         Assert.True(expectedBinary!.SequenceEqual(actualBinary!));
+    }
+
+    // GeometryCollection has no SqlServerWkt reader/writer support, so it is validated by a byte-exact native
+    // round-trip: SQL Server's own bytes -> our Deserialize -> our Serialize must reproduce the identical bytes.
+    // Matching SQL Server byte-for-byte confirms both directions and the Points/Figures/Shapes tree layout.
+    [Theory]
+    [InlineData("GEOMETRYCOLLECTION (POINT (1 2), LINESTRING (3 4, 5 6))")]
+    [InlineData("GEOMETRYCOLLECTION (POINT (4 0), LINESTRING (4 2, 5 3), POLYGON ((0 0, 3 0, 3 3, 0 3, 0 0), (1 1, 1 2, 2 2, 2 1, 1 1)))")] // spec §3.1.4 example
+    [InlineData("GEOMETRYCOLLECTION (POINT (1 2), MULTIPOLYGON (((0 0, 3 0, 3 3, 0 3, 0 0)), ((5 5, 6 5, 6 6, 5 6, 5 5))))")] // nested multipolygon
+    [InlineData("GEOMETRYCOLLECTION (MULTIPOINT ((0 0), (1 1)), MULTILINESTRING ((0 0, 1 1), (2 2, 3 3)))")]
+    [InlineData("GEOMETRYCOLLECTION (POINT (1 2 3), LINESTRING (3 4 5, 5 6 7))")] // GeometryCollectionZ
+    public void TestGeometryCollectionNativeRoundTrip(string wktGeometry)
+    {
+        // ARRANGE — SQL Server's canonical native binary for the collection
+        wktGeometry = wktGeometry.Replace(", ", ",");
+        var sqlGeometry = Microsoft.SqlServer.Types.SqlGeometry.Parse(new System.Data.SqlTypes.SqlString(wktGeometry));
+        sqlGeometry.STSrid = _srid;
+        var expectedBinary = sqlGeometry.Serialize().Buffer;
+
+        // ACT — round-trip through our deserializer and serializer
+        var geometry = SqlServerSpatialNativeBinary.Deserialize(expectedBinary);
+        var actualBinary = geometry.AsSqlServerNativeBinary();
+
+        // ASSERT
+        Assert.Equal(GeometryType.GeometryCollection, geometry.Type);
+        Assert.Equal(expectedBinary, actualBinary);
     }
 }

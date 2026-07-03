@@ -4,6 +4,7 @@ using System.Linq;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
+using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Abstrations;
@@ -13,7 +14,19 @@ namespace IRI.Maptor.Sta.Spatial.IO.SqlServerNativeBinary;
 public static partial class SqlServerSpatialNativeBinary
 {
 
-    public static byte[]? Serialize<T>(Geometry<T> geometry) where T : IPoint, new()
+    /// <summary>
+    /// Serializes a <see cref="Geometry{T}"/> into the SQL Server native binary (MS-SSCLRT) format,
+    /// suitable for storing directly into a SQL Server <c>geometry</c> or <c>geography</c> column.
+    /// </summary>
+    /// <param name="geometry">The geometry to serialize.</param>
+    /// <param name="isGeography">
+    /// When true, the output targets a SQL Server <c>geography</c> column: each point is written as
+    /// (Latitude, Longitude) per [MS-SSCLRT] §2.1.5, polygon rings are oriented to the geography rule
+    /// (exterior counter-clockwise / holes clockwise, §2.1.3), and an SRID of 0 is emitted as 4326
+    /// (geography's default; §2.1.1 requires SRID 4120–4999). When false (default), the output targets a
+    /// <c>geometry</c> column, storing (X, Y) with the SRID unchanged.
+    /// </param>
+    public static byte[]? Serialize<T>(Geometry<T> geometry, bool isGeography = false) where T : IPoint, new()
     {
         if (geometry == null)
             return null;
@@ -21,37 +34,45 @@ public static partial class SqlServerSpatialNativeBinary
         bool hasZ = geometry.HasZ();
         bool hasM = geometry.HasM();
 
+        // [MS-SSCLRT] §2.1.1: geography SRID must be in 4120-4999; default is 4326. A geometry with SRID 0
+        // (unspecified) would be rejected as a geography, so substitute the geography default.
+        int srid = (isGeography && geometry.Srid == 0) ? 4326 : geometry.Srid;
+
         using (var ms = new MemoryStream())
         using (var bw = new BinaryWriter(ms))
         {
             // Header: SRID + Version + Serialization Properties
-            bw.Write(geometry.Srid);          // SRID (little-endian)
+            bw.Write(srid);                   // SRID (little-endian)
             bw.Write((byte)0x01);             // Version = 1
 
             // Handle geometry types
             if (geometry.Type == GeometryType.Point)
             {
-                SerializePoint(bw, geometry, hasZ: hasZ, hasM: hasM);
+                SerializePoint(bw, geometry, hasZ: hasZ, hasM: hasM, isGeography: isGeography);
             }
             else if (geometry.Type == GeometryType.LineString)
             {
-                SerializeLineString(bw, geometry, hasZ: hasZ, hasM: hasM);
+                SerializeLineString(bw, geometry, hasZ: hasZ, hasM: hasM, isGeography: isGeography);
             }
             else if (geometry.Type == GeometryType.MultiPoint)
             {
-                SerializeMultiPoint(bw, geometry, hasZ: hasZ, hasM: hasM);
+                SerializeMultiPoint(bw, geometry, hasZ: hasZ, hasM: hasM, isGeography: isGeography);
             }
             else if (geometry.Type == GeometryType.MultiLineString)
             {
-                SerializeMultiLineString(bw, geometry, hasZ: hasZ, hasM: hasM);
+                SerializeMultiLineString(bw, geometry, hasZ: hasZ, hasM: hasM, isGeography: isGeography);
             }
             else if (geometry.Type == GeometryType.Polygon)
             {
-                SerializePolygon(bw, geometry, hasZ: hasZ, hasM: hasM);
+                SerializePolygon(bw, geometry, hasZ: hasZ, hasM: hasM, isGeography: isGeography);
             }
             else if (geometry.Type == GeometryType.MultiPolygon)
             {
-                SerializeMultiPolygon(bw, geometry, hasZ: hasZ, hasM: hasM);
+                SerializeMultiPolygon(bw, geometry, hasZ: hasZ, hasM: hasM, isGeography: isGeography);
+            }
+            else if (geometry.Type == GeometryType.GeometryCollection)
+            {
+                SerializeGeometryCollection(bw, geometry, hasZ: hasZ, hasM: hasM, isGeography: isGeography);
             }
             else
             {
@@ -62,7 +83,48 @@ public static partial class SqlServerSpatialNativeBinary
         }
     }
 
-    private static void SerializePoint<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM) where T : IPoint, new()
+    /// <summary>
+    /// Writes a single coordinate pair, swapping into (Latitude, Longitude) order for geography instances
+    /// ([MS-SSCLRT] §2.1.5: geography stores Latitude then Longitude; §2.1.6: geometry stores X then Y).
+    /// </summary>
+    private static void WriteXY(BinaryWriter writer, IPoint point, bool isGeography)
+    {
+        if (isGeography)
+        {
+            writer.Write(point.Y); // Latitude
+            writer.Write(point.X); // Longitude
+        }
+        else
+        {
+            writer.Write(point.X);
+            writer.Write(point.Y);
+        }
+    }
+
+    /// <summary>
+    /// Returns the ring's points oriented per the geography ring rule ([MS-SSCLRT] §2.1.3): exterior rings
+    /// counter-clockwise (left-hand rule), interior rings (holes) clockwise. For geometry (non-geography) the
+    /// points are returned unchanged, since SQL Server geometry does not constrain ring orientation.
+    /// </summary>
+    private static List<T> OrientRingForGeography<T>(List<T> ringPoints, bool isExterior, bool isGeography) where T : IPoint
+    {
+        if (!isGeography || ringPoints.Count < 3)
+            return ringPoints;
+
+        bool isClockwise = SpatialUtility.IsClockwise(ringPoints);
+
+        // exterior must be counter-clockwise; holes must be clockwise
+        bool needsReverse = isExterior ? isClockwise : !isClockwise;
+
+        if (!needsReverse)
+            return ringPoints;
+
+        var reversed = new List<T>(ringPoints);
+        reversed.Reverse();
+        return reversed;
+    }
+
+    private static void SerializePoint<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM, bool isGeography) where T : IPoint, new()
     {
         // Check if point is empty
         bool isEmpty = geometry.Points == null || geometry.Points.Count == 0;
@@ -112,8 +174,7 @@ public static partial class SqlServerSpatialNativeBinary
             writer.Write((byte)serializationProps);
 
             // Write X, Y coordinates
-            writer.Write(point.X);
-            writer.Write(point.Y);
+            WriteXY(writer, point, isGeography);
 
             // Write Z coordinate if present
             if (hasZ && point is IHasZ zPoint)
@@ -133,7 +194,7 @@ public static partial class SqlServerSpatialNativeBinary
         }
     }
 
-    private static void SerializeLineString<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM) where T : IPoint, new()
+    private static void SerializeLineString<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM, bool isGeography) where T : IPoint, new()
     {
         // Check if LineString is empty
         bool isEmpty = geometry.Points == null || geometry.Points.Count == 0;
@@ -179,10 +240,8 @@ public static partial class SqlServerSpatialNativeBinary
             writer.Write((byte)serializationProps);
 
             // Write 2 points (X, Y for each)
-            writer.Write(point1.X);
-            writer.Write(point1.Y);
-            writer.Write(point2.X);
-            writer.Write(point2.Y);
+            WriteXY(writer, point1, isGeography);
+            WriteXY(writer, point2, isGeography);
 
             // Write Z coordinates if present (2 values sequentially)
             if (hasZ && point1 is IHasZ zPoint1 && point2 is IHasZ zPoint2)
@@ -225,8 +284,7 @@ public static partial class SqlServerSpatialNativeBinary
             // Write all X, Y pairs sequentially
             foreach (var point in geometry.Points)
             {
-                writer.Write(point.X);
-                writer.Write(point.Y);
+                WriteXY(writer, point, isGeography);
             }
 
             // Write all Z values sequentially if present
@@ -278,7 +336,7 @@ public static partial class SqlServerSpatialNativeBinary
         }
     }
 
-    private static void SerializeMultiPoint<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM) where T : IPoint, new()
+    private static void SerializeMultiPoint<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM, bool isGeography) where T : IPoint, new()
     {
         // Check if MultiPoint is empty
         bool isEmpty = geometry.Geometries == null || geometry.Geometries.Count == 0;
@@ -341,8 +399,7 @@ public static partial class SqlServerSpatialNativeBinary
         // Write all X, Y pairs sequentially
         foreach (var point in allPoints)
         {
-            writer.Write(point.X);
-            writer.Write(point.Y);
+            WriteXY(writer, point, isGeography);
         }
 
         // Write all Z values sequentially if present
@@ -404,7 +461,7 @@ public static partial class SqlServerSpatialNativeBinary
         }
     }
 
-    private static void SerializeMultiLineString<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM) where T : IPoint, new()
+    private static void SerializeMultiLineString<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM, bool isGeography) where T : IPoint, new()
     {
         // Check if MultiLineString is empty
         bool isEmpty = geometry.Geometries == null || geometry.Geometries.Count == 0;
@@ -479,8 +536,7 @@ public static partial class SqlServerSpatialNativeBinary
         // Write all X, Y pairs sequentially (from all LineStrings)
         foreach (var point in allPoints)
         {
-            writer.Write(point.X);
-            writer.Write(point.Y);
+            WriteXY(writer, point, isGeography);
         }
 
         // Write all Z values sequentially if present
@@ -542,7 +598,7 @@ public static partial class SqlServerSpatialNativeBinary
         }
     }
 
-    private static void SerializePolygon<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM) where T : IPoint, new()
+    private static void SerializePolygon<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM, bool isGeography) where T : IPoint, new()
     {
         // Check if Polygon is empty
         bool isEmpty = geometry.Geometries == null || geometry.Geometries.Count == 0;
@@ -576,15 +632,19 @@ public static partial class SqlServerSpatialNativeBinary
         var ringPointCounts = new List<int>(ringCount);
         var cumulativeOffsets = new List<int>(ringCount + 1) { 0 };
 
-        foreach (var ringGeometry in geometry.Geometries)
+        for (int ringIndex = 0; ringIndex < ringCount; ringIndex++)
         {
+            var ringGeometry = geometry.Geometries[ringIndex];
+
             if (ringGeometry.Type != GeometryType.LineString)
                 throw new ArgumentException("Polygon geometry must contain only LineString geometries (rings)");
 
             if (ringGeometry.Points == null || ringGeometry.Points.Count == 0)
                 throw new ArgumentException("Each ring geometry in Polygon must contain at least one point");
 
-            var ringPoints = ringGeometry.Points;
+            // Geography requires exterior rings counter-clockwise and holes clockwise ([MS-SSCLRT] §2.1.3);
+            // reorient here so writes succeed regardless of the source winding. No-op for geometry.
+            var ringPoints = OrientRingForGeography(ringGeometry.Points, isExterior: ringIndex == 0, isGeography);
             var firstPoint = ringPoints[0];
             var lastPoint = ringPoints[ringPoints.Count - 1];
             
@@ -634,8 +694,7 @@ public static partial class SqlServerSpatialNativeBinary
         // Write all X, Y pairs sequentially (from all rings)
         foreach (var point in allPoints)
         {
-            writer.Write(point.X);
-            writer.Write(point.Y);
+            WriteXY(writer, point, isGeography);
         }
 
         // Write all Z values sequentially if present
@@ -698,7 +757,7 @@ public static partial class SqlServerSpatialNativeBinary
         writer.Write((byte)0x03); // OpenGIS Type (0x03 = Polygon)
     }
 
-    private static void SerializeMultiPolygon<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM) where T : IPoint, new()
+    private static void SerializeMultiPolygon<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM, bool isGeography) where T : IPoint, new()
     {
         // Check if MultiPolygon is empty
         bool isEmpty = geometry.Geometries == null || geometry.Geometries.Count == 0;
@@ -755,19 +814,20 @@ public static partial class SqlServerSpatialNativeBinary
                 if (ringGeometry.Points == null || ringGeometry.Points.Count == 0)
                     throw new ArgumentException("Each ring geometry in Polygon must contain at least one point");
 
-                var ringPoints = ringGeometry.Points;
-                var firstPoint = ringPoints[0];
-                var lastPoint = ringPoints[ringPoints.Count - 1];
-                
-                // SQL Server format requires explicit closing point (first point repeated)
-                // Check if ring is already closed
-                bool isAlreadyClosed = (firstPoint.X == lastPoint.X && firstPoint.Y == lastPoint.Y);
-                
-                // Determine ring type (exterior or interior)
-                // First ring of each polygon is exterior, rest are interior
+                // Determine ring type (exterior or interior) up front so geography orientation can use it.
+                // First ring of each polygon is exterior, rest are interior.
                 bool isExteriorRing = (ringAttributes.Count == currentPolygonFirstFigureIndex);
                 byte ringAttribute = isExteriorRing ? (byte)0x02 : (byte)0x00;
                 ringAttributes.Add(ringAttribute);
+
+                // Geography requires exterior rings CCW / holes CW ([MS-SSCLRT] §2.1.3); reorient. No-op for geometry.
+                var ringPoints = OrientRingForGeography(ringGeometry.Points, isExteriorRing, isGeography);
+                var firstPoint = ringPoints[0];
+                var lastPoint = ringPoints[ringPoints.Count - 1];
+
+                // SQL Server format requires explicit closing point (first point repeated)
+                // Check if ring is already closed
+                bool isAlreadyClosed = (firstPoint.X == lastPoint.X && firstPoint.Y == lastPoint.Y);
 
                 // Count includes closing point
                 var pointCount = isAlreadyClosed ? ringPoints.Count : ringPoints.Count + 1;
@@ -812,8 +872,7 @@ public static partial class SqlServerSpatialNativeBinary
         // Write all X, Y pairs sequentially (from all rings of all polygons)
         foreach (var point in allPoints)
         {
-            writer.Write(point.X);
-            writer.Write(point.Y);
+            WriteXY(writer, point, isGeography);
         }
 
         // Write all Z values sequentially if present
@@ -874,6 +933,143 @@ public static partial class SqlServerSpatialNativeBinary
             writer.Write((byte)0x03);             // OpenGIS Type (0x03 = Polygon)
         }
     }
+
+    private static void SerializeGeometryCollection<T>(BinaryWriter writer, Geometry<T> geometry, bool hasZ, bool hasM, bool isGeography) where T : IPoint, new()
+    {
+        // Flatten the collection tree into the shared Points/Figures/Shapes arrays ([MS-SSCLRT] §2.1.4).
+        var points = new List<T>();
+        var figureAttributes = new List<byte>();
+        var figurePointOffsets = new List<int>();
+        var shapes = new List<(int parentOffset, int figureOffset, byte openGisType)>();
+
+        AppendShape(geometry, parentShapeIndex: -1, points, figureAttributes, figurePointOffsets, shapes, isGeography);
+
+        // Serialization properties (no P/L optimization for collections)
+        SerializationProp serializationProps = SerializationProp.V;
+        if (hasZ) serializationProps |= SerializationProp.Z;
+        if (hasM) serializationProps |= SerializationProp.M;
+        writer.Write((byte)serializationProps);
+
+        // Points
+        writer.Write(points.Count);
+        foreach (var point in points)
+            WriteXY(writer, point, isGeography);
+
+        if (hasZ)
+        {
+            foreach (var point in points)
+                WriteDouble(writer, point is IHasZ zPoint ? zPoint.Z : double.NaN);
+        }
+
+        if (hasM)
+        {
+            foreach (var point in points)
+                WriteDouble(writer, point is IHasM mPoint ? mPoint.M : double.NaN);
+        }
+
+        // Figures
+        writer.Write(figureAttributes.Count);
+        for (int i = 0; i < figureAttributes.Count; i++)
+        {
+            writer.Write(figureAttributes[i]);
+            writer.Write(figurePointOffsets[i]);
+        }
+
+        // Shapes
+        writer.Write(shapes.Count);
+        foreach (var shape in shapes)
+        {
+            writer.Write(shape.parentOffset);
+            writer.Write(shape.figureOffset);
+            writer.Write(shape.openGisType);
+        }
+    }
+
+    /// <summary>
+    /// Recursively appends a geometry (and its descendants) to the flat Points/Figures/Shapes buffers used by the
+    /// GeometryCollection serializer. The shape is added before its descendants so its Figure Offset correctly points
+    /// at the first figure of its subtree ([MS-SSCLRT] §2.1.4 / §3.1.4).
+    /// </summary>
+    private static void AppendShape<T>(
+        Geometry<T> geometry,
+        int parentShapeIndex,
+        List<T> points,
+        List<byte> figureAttributes,
+        List<int> figurePointOffsets,
+        List<(int parentOffset, int figureOffset, byte openGisType)> shapes,
+        bool isGeography) where T : IPoint, new()
+    {
+        int myIndex = shapes.Count;
+        byte openGisType = ToOpenGisType(geometry.Type);
+
+        // Figure Offset = index of the first figure this shape (or its subtree) will contribute.
+        shapes.Add((parentShapeIndex, figurePointOffsets.Count, openGisType));
+
+        switch (geometry.Type)
+        {
+            case GeometryType.Point:
+                figureAttributes.Add(0x01); // stroke
+                figurePointOffsets.Add(points.Count);
+                points.Add(geometry.Points[0]);
+                break;
+
+            case GeometryType.LineString:
+                figureAttributes.Add(0x01); // stroke
+                figurePointOffsets.Add(points.Count);
+                points.AddRange(geometry.Points);
+                break;
+
+            case GeometryType.Polygon:
+                for (int r = 0; r < geometry.Geometries.Count; r++)
+                {
+                    var ring = OrientRingForGeography(geometry.Geometries[r].Points, isExterior: r == 0, isGeography);
+                    figureAttributes.Add(r == 0 ? (byte)0x02 : (byte)0x00); // exterior / interior ring
+                    figurePointOffsets.Add(points.Count);
+                    AppendRingWithClosure(points, ring);
+                }
+                break;
+
+            case GeometryType.MultiPoint:
+            case GeometryType.MultiLineString:
+            case GeometryType.MultiPolygon:
+            case GeometryType.GeometryCollection:
+                foreach (var member in geometry.Geometries)
+                    AppendShape(member, myIndex, points, figureAttributes, figurePointOffsets, shapes, isGeography);
+                break;
+
+            default:
+                throw new NotSupportedException($"Serialization of {geometry.Type} inside a GeometryCollection is not supported.");
+        }
+    }
+
+    /// <summary>
+    /// Appends a polygon ring's points, adding the explicit closing point (first point repeated) the SQL Server
+    /// format requires when the ring is not already closed.
+    /// </summary>
+    private static void AppendRingWithClosure<T>(List<T> points, List<T> ring) where T : IPoint
+    {
+        points.AddRange(ring);
+
+        if (ring.Count > 0)
+        {
+            var first = ring[0];
+            var last = ring[ring.Count - 1];
+            if (!(first.X == last.X && first.Y == last.Y))
+                points.Add(first);
+        }
+    }
+
+    private static byte ToOpenGisType(GeometryType type) => type switch
+    {
+        GeometryType.Point => 0x01,
+        GeometryType.LineString => 0x02,
+        GeometryType.Polygon => 0x03,
+        GeometryType.MultiPoint => 0x04,
+        GeometryType.MultiLineString => 0x05,
+        GeometryType.MultiPolygon => 0x06,
+        GeometryType.GeometryCollection => 0x07,
+        _ => throw new NotSupportedException($"Geometry type {type} has no MS-SSCLRT OpenGIS type mapping.")
+    };
 
     private static void WriteDouble(BinaryWriter writer, double value)
     {

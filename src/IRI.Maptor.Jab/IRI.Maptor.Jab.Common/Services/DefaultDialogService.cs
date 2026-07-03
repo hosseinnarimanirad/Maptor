@@ -11,9 +11,11 @@ using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Jab.Controls.Dialogs;
 using IRI.Maptor.Sta.Common.Exceptions;
 using IRI.Maptor.Jab.Core.Localization;
+using IRI.Maptor.Jab.Common.Models.Print;
 using IRI.Maptor.Jab.Common.Models.Themes;
 using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 using IRI.Maptor.Jab.Core.Models.Security;
+using System.Windows.Media.Imaging;
 
 namespace IRI.Maptor.Jab.Common.Services;
 
@@ -779,6 +781,36 @@ public class DefaultDialogService : IDialogService
     #endregion
 
 
+    #region Print To PDF Dialog
+
+    /// <summary>
+    /// Shows the print-to-PDF options dialog (title, decorations, page setup, layout preview).
+    /// </summary>
+    /// <param name="ownerWindow">The owner window for the dialog, or null to use automatic resolution.</param>
+    /// <param name="mapThumbnailProvider">Async provider of the current-map thumbnail shown in the preview.</param>
+    /// <param name="initialOptions">Options to seed the dialog with (e.g. the last used ones).</param>
+    /// <returns>The selected options if user confirmed, or null if cancelled.</returns>
+    public Task<PrintToPdfDialogOptions?> ShowPrintToPdfDialogAsync(
+        object? ownerWindow,
+        Func<Task<BitmapSource?>>? mapThumbnailProvider = null,
+        PrintToPdfDialogOptions? initialOptions = null)
+    {
+        var viewModel = new PrintToPdfDialogViewModel(this, mapThumbnailProvider, initialOptions);
+
+        var dialog = new PrintToPdfDialogView();
+
+        return ShowCustomDialogAsync(
+            ownerWindow,
+            dialog,
+            viewModel,
+            vm => ((PrintToPdfDialogViewModel)vm).DialogResult == true
+                ? ((PrintToPdfDialogViewModel)vm).Result
+                : null,
+            vm => ((PrintToPdfDialogViewModel)vm).RequestClose = () => dialog.Close());
+    }
+
+    #endregion
+
     #region DXF, CSV, TSV, GeoJson Open Dialog
 
     /// <summary>
@@ -873,5 +905,3 @@ public class DefaultDialogService : IDialogService
             vm => ((DialogViewModelBase)vm).OnSetResult += (sender, e) => view.Close());
     }
 }
-
-

@@ -26,7 +26,17 @@ public static partial class SqlServerSpatialNativeBinary
         };
     }
 
-    public static IGeometry Deserialize(byte[] nativeBinary)
+    /// <summary>
+    /// Deserializes a SQL Server native binary (MS-SSCLRT) geometry/geography instance into an <see cref="IGeometry"/>.
+    /// </summary>
+    /// <param name="nativeBinary">The raw MS-SSCLRT bytes as stored by SQL Server (geometry or geography UDT).</param>
+    /// <param name="isGeography">
+    /// When true, the payload is interpreted as a SQL Server <c>geography</c> instance: each point is stored as
+    /// (Latitude, Longitude) per [MS-SSCLRT] §2.1.5, so coordinates are swapped into the (X = Longitude, Y = Latitude)
+    /// order used by <see cref="Geometry{T}"/>. When false (default), the payload is a <c>geometry</c> instance stored
+    /// as (X, Y).
+    /// </param>
+    public static IGeometry Deserialize(byte[] nativeBinary, bool isGeography = false)
     {
         if (nativeBinary.IsNullOrEmpty())
             return null;
@@ -35,7 +45,21 @@ public static partial class SqlServerSpatialNativeBinary
         {
             // Header: SRID + Version + Serialization Properties
             var srid = stream.ReadInt32();
+
+            // [MS-SSCLRT] §2.1.1: SRID -1 indicates a null instance; all other fields are omitted.
+            if (srid == -1)
+                return null;
+
             var version = stream.ReadByte();
+
+            // Only version 1 of the serialization format is supported. Version 2 (SQL Server 2012+) is only
+            // emitted for curves (CircularString/CompoundCurve/CurvePolygon), FullGlobe, or larger-than-a-hemisphere
+            // geographies ([MS-SSCLRT] §2.1.2/§2.1.4); those constructs are not representable here.
+            if (version != 1)
+                throw new NotSupportedException(
+                    $"SQL Server spatial serialization format version {version} is not supported (only version 1). " +
+                    "Version 2 is used for curved geometries, FullGlobe, or larger-than-hemisphere geographies.");
+
             var serializationPropsByte = stream.ReadByte();
             var serializationProps = SerializationPropHelper.ParseFlags(serializationPropsByte);
 
@@ -45,25 +69,59 @@ public static partial class SqlServerSpatialNativeBinary
             // Handle P flag case (optimized single point)
             if (serializationProps.HasFlag(SerializationProp.P))
             {
-                return DeserializeOptimizedPoint(stream, srid, hasZ: hasZ, hasM: hasM);
+                return DeserializeOptimizedPoint(stream, srid, hasZ: hasZ, hasM: hasM, isGeography: isGeography);
             }
 
             // Handle L flag case (optimized single line segment)
             if (serializationProps.HasFlag(SerializationProp.L))
             {
-                return DeserializeOptimizedLineString(stream, srid, hasZ: hasZ, hasM: hasM);
+                return DeserializeOptimizedLineString(stream, srid, hasZ: hasZ, hasM: hasM, isGeography: isGeography);
             }
 
             // Handle non-optimized case - need to determine geometry type from structure
-            return DeserializeNonOptimizedGeometry(stream, srid, hasZ: hasZ, hasM: hasM);
+            return DeserializeNonOptimizedGeometry(stream, srid, hasZ: hasZ, hasM: hasM, isGeography: isGeography);
         }
     }
 
-    private static IGeometry DeserializeOptimizedPoint(BinaryReader reader, int srid, bool hasZ, bool hasM)
+    /// <summary>
+    /// Deserializes a SQL Server native binary instance and returns it as a 2D <see cref="Geometry{Point}"/>.
+    /// This is the entry point used by the EF Core type mapping. Returns null for a null instance (SRID -1).
+    /// Throws <see cref="NotSupportedException"/> if the instance carries Z or M values, since those materialize
+    /// as <see cref="Geometry{PointZ}"/>/<see cref="Geometry{PointM}"/>/<see cref="Geometry{PointZM}"/> rather than
+    /// <see cref="Geometry{Point}"/>.
+    /// </summary>
+    public static Geometry<Point>? DeserializeGeometryPoint(byte[] nativeBinary, bool isGeography = false)
+    {
+        var geometry = Deserialize(nativeBinary, isGeography);
+
+        if (geometry == null)
+            return null;
+
+        if (geometry is Geometry<Point> point)
+            return point;
+
+        throw new NotSupportedException(
+            $"The spatial instance contains Z and/or M values (materialized as {geometry.GetType().Name}) and cannot be " +
+            "read as a 2D Geometry<Point>. Store the column as 2D data or read it via Deserialize(...) with the matching point type.");
+    }
+
+    /// <summary>
+    /// Reads a single coordinate pair, swapping latitude/longitude order for geography instances
+    /// ([MS-SSCLRT] §2.1.5: geography stores Latitude then Longitude; §2.1.6: geometry stores X then Y).
+    /// </summary>
+    private static (double x, double y) ReadXY(BinaryReader reader, bool isGeography)
+    {
+        var first = reader.ReadDouble();
+        var second = reader.ReadDouble();
+
+        // geography: first = Latitude (Y), second = Longitude (X)
+        return isGeography ? (second, first) : (first, second);
+    }
+
+    private static IGeometry DeserializeOptimizedPoint(BinaryReader reader, int srid, bool hasZ, bool hasM, bool isGeography)
     {
         // Read X, Y coordinates directly (P flag optimization)
-        var x = reader.ReadDouble();
-        var y = reader.ReadDouble();
+        var (x, y) = ReadXY(reader, isGeography);
 
         if (hasZ && hasM)
         {
@@ -89,13 +147,11 @@ public static partial class SqlServerSpatialNativeBinary
         return Geometry<Point>.Create([new Point(x, y)], GeometryType.Point, srid);
     }
 
-    private static IGeometry DeserializeOptimizedLineString(BinaryReader reader, int srid, bool hasZ, bool hasM)
+    private static IGeometry DeserializeOptimizedLineString(BinaryReader reader, int srid, bool hasZ, bool hasM, bool isGeography)
     {
         // Read 2 points directly (L flag optimization - single line segment)
-        var x1 = reader.ReadDouble();
-        var y1 = reader.ReadDouble();
-        var x2 = reader.ReadDouble();
-        var y2 = reader.ReadDouble();
+        var (x1, y1) = ReadXY(reader, isGeography);
+        var (x2, y2) = ReadXY(reader, isGeography);
 
         if (hasZ && hasM)
         {
@@ -145,7 +201,7 @@ public static partial class SqlServerSpatialNativeBinary
         return Geometry<Point>.Create(points2D, GeometryType.LineString, srid);
     }
 
-    private static IGeometry DeserializeNonOptimizedGeometry(BinaryReader reader, int srid, bool hasZ, bool hasM)
+    private static IGeometry DeserializeNonOptimizedGeometry(BinaryReader reader, int srid, bool hasZ, bool hasM, bool isGeography)
     {
         // Save position to read ahead for OpenGIS Type
         var position = reader.BaseStream.Position;
@@ -178,6 +234,7 @@ public static partial class SqlServerSpatialNativeBinary
                     4 => Geometry<Point>.CreateEmpty(GeometryType.MultiPoint, srid),
                     5 => Geometry<Point>.CreateEmpty(GeometryType.MultiLineString, srid),
                     6 => Geometry<Point>.CreateEmpty(GeometryType.MultiPolygon, srid),
+                    7 => Geometry<Point>.CreateEmpty(GeometryType.GeometryCollection, srid),
                     _ => throw new NotImplementedException($"Empty geometry type {openGisType} is not yet implemented")
                 };
             }
@@ -220,11 +277,12 @@ public static partial class SqlServerSpatialNativeBinary
             return openGisType switch
             {
                 //1 => DeserializeNonOptimizedPoint(reader, srid, SerializationProp.V), // Point - but should use P flag, handle anyway
-                2 => DeserializeLineString(reader, srid, hasZ, hasM), // LineString
-                3 => DeserializePolygon(reader, srid, hasZ, hasM), // Polygon
-                4 => DeserializeMultiPoint(reader, srid, hasZ, hasM), // MultiPoint
-                5 => DeserializeMultiLineString(reader, srid, hasZ, hasM), // MultiLineString
-                6 => DeserializeMultiPolygon(reader, srid, hasZ, hasM), // MultiPolygon
+                2 => DeserializeLineString(reader, srid, hasZ, hasM, isGeography), // LineString
+                3 => DeserializePolygon(reader, srid, hasZ, hasM, isGeography), // Polygon
+                4 => DeserializeMultiPoint(reader, srid, hasZ, hasM, isGeography), // MultiPoint
+                5 => DeserializeMultiLineString(reader, srid, hasZ, hasM, isGeography), // MultiLineString
+                6 => DeserializeMultiPolygon(reader, srid, hasZ, hasM, isGeography), // MultiPolygon
+                7 => DeserializeGeometryCollection(reader, srid, hasZ, hasM, isGeography), // GeometryCollection
                 _ => throw new NotImplementedException($"Geometry type {openGisType} is not yet implemented")
             };
         }
@@ -232,7 +290,7 @@ public static partial class SqlServerSpatialNativeBinary
         throw new InvalidDataException("Non-empty geometry must have at least one shape");
     }
 
-    private static IGeometry DeserializeLineString(BinaryReader reader, int srid, bool hasZ, bool hasM)
+    private static IGeometry DeserializeLineString(BinaryReader reader, int srid, bool hasZ, bool hasM, bool isGeography)
     {
         // Read Number of Points
         var pointCount = reader.ReadInt32();
@@ -261,8 +319,7 @@ public static partial class SqlServerSpatialNativeBinary
         var points = new List<IPoint>(pointCount);
         for (int i = 0; i < pointCount; i++)
         {
-            var x = reader.ReadDouble();
-            var y = reader.ReadDouble();
+            var (x, y) = ReadXY(reader, isGeography);
             points.Add(new Point(x, y));
         }
 
@@ -360,7 +417,7 @@ public static partial class SqlServerSpatialNativeBinary
         }
     }
 
-    private static IGeometry DeserializeMultiPoint(BinaryReader reader, int srid, bool hasZ, bool hasM)
+    private static IGeometry DeserializeMultiPoint(BinaryReader reader, int srid, bool hasZ, bool hasM, bool isGeography)
     {
         // Read Number of Points
         var pointCount = reader.ReadInt32();
@@ -389,8 +446,7 @@ public static partial class SqlServerSpatialNativeBinary
         var points = new List<IPoint>(pointCount);
         for (int i = 0; i < pointCount; i++)
         {
-            var x = reader.ReadDouble();
-            var y = reader.ReadDouble();
+            var (x, y) = ReadXY(reader, isGeography);
             points.Add(new Point(x, y));
         }
 
@@ -555,7 +611,7 @@ public static partial class SqlServerSpatialNativeBinary
     //    throw new NotImplementedException("Non-optimized non-empty point deserialization is not yet implemented");
     //}
 
-    private static IGeometry DeserializeMultiLineString(BinaryReader reader, int srid, bool hasZ, bool hasM)
+    private static IGeometry DeserializeMultiLineString(BinaryReader reader, int srid, bool hasZ, bool hasM, bool isGeography)
     {
         // Read Number of Points (total across all LineStrings)
         var pointCount = reader.ReadInt32();
@@ -584,8 +640,7 @@ public static partial class SqlServerSpatialNativeBinary
         var points = new List<IPoint>(pointCount);
         for (int i = 0; i < pointCount; i++)
         {
-            var x = reader.ReadDouble();
-            var y = reader.ReadDouble();
+            var (x, y) = ReadXY(reader, isGeography);
             points.Add(new Point(x, y));
         }
 
@@ -748,7 +803,7 @@ public static partial class SqlServerSpatialNativeBinary
         }
     }
 
-    private static IGeometry DeserializePolygon(BinaryReader reader, int srid, bool hasZ, bool hasM)
+    private static IGeometry DeserializePolygon(BinaryReader reader, int srid, bool hasZ, bool hasM, bool isGeography)
     {
         // Read Number of Points (total across all rings)
         var pointCount = reader.ReadInt32();
@@ -777,8 +832,7 @@ public static partial class SqlServerSpatialNativeBinary
         var points = new List<IPoint>(pointCount);
         for (int i = 0; i < pointCount; i++)
         {
-            var x = reader.ReadDouble();
-            var y = reader.ReadDouble();
+            var (x, y) = ReadXY(reader, isGeography);
             points.Add(new Point(x, y));
         }
 
@@ -956,7 +1010,7 @@ public static partial class SqlServerSpatialNativeBinary
         }
     }
 
-    private static IGeometry DeserializeMultiPolygon(BinaryReader reader, int srid, bool hasZ, bool hasM)
+    private static IGeometry DeserializeMultiPolygon(BinaryReader reader, int srid, bool hasZ, bool hasM, bool isGeography)
     {
         // Read Number of Points (total across all rings of all polygons)
         var pointCount = reader.ReadInt32();
@@ -985,8 +1039,7 @@ public static partial class SqlServerSpatialNativeBinary
         var points = new List<IPoint>(pointCount);
         for (int i = 0; i < pointCount; i++)
         {
-            var x = reader.ReadDouble();
-            var y = reader.ReadDouble();
+            var (x, y) = ReadXY(reader, isGeography);
             points.Add(new Point(x, y));
         }
 
@@ -1216,5 +1269,213 @@ public static partial class SqlServerSpatialNativeBinary
         }
     }
 
+    /// <summary>
+    /// Deserializes a GeometryCollection (OpenGIS type 7, [MS-SSCLRT] §2.1.4 / example §3.1.4). The collection's
+    /// members share the whole structure's Points/Figures/Shapes arrays; the Shapes array forms a tree (each member
+    /// shape's Parent Offset points at the collection shape). The tree is walked recursively so members may themselves
+    /// be multi-geometries or nested collections.
+    /// </summary>
+    private static IGeometry DeserializeGeometryCollection(BinaryReader reader, int srid, bool hasZ, bool hasM, bool isGeography)
+    {
+        // Read Number of Points (total across all members)
+        var pointCount = reader.ReadInt32();
+
+        // Handle empty GeometryCollection
+        if (pointCount == 0)
+        {
+            reader.ReadInt32(); // Number of Figures (0)
+            var emptyShapeCount = reader.ReadInt32();
+            for (int i = 0; i < emptyShapeCount; i++)
+            {
+                reader.ReadInt32(); // Parent Offset
+                reader.ReadInt32(); // Figure Offset
+                reader.ReadByte();  // OpenGIS Type
+            }
+
+            return Geometry<Point>.CreateEmpty(GeometryType.GeometryCollection, srid);
+        }
+
+        // Read all X, Y pairs (swapped for geography), then Z values, then M values
+        var xs = new double[pointCount];
+        var ys = new double[pointCount];
+        for (int i = 0; i < pointCount; i++)
+        {
+            var (x, y) = ReadXY(reader, isGeography);
+            xs[i] = x;
+            ys[i] = y;
+        }
+
+        double[]? zs = null;
+        if (hasZ)
+        {
+            zs = new double[pointCount];
+            for (int i = 0; i < pointCount; i++)
+                zs[i] = reader.ReadDouble();
+        }
+
+        double[]? ms = null;
+        if (hasM)
+        {
+            ms = new double[pointCount];
+            for (int i = 0; i < pointCount; i++)
+                ms[i] = reader.ReadDouble();
+        }
+
+        // Read Figures (attribute is unused when reading; point offsets partition the Points sequence)
+        var figureCount = reader.ReadInt32();
+        var figurePointOffsets = new int[figureCount];
+        for (int i = 0; i < figureCount; i++)
+        {
+            reader.ReadByte();                     // Figure Attribute
+            figurePointOffsets[i] = reader.ReadInt32(); // Point Offset
+        }
+
+        // Read Shapes (parent offset, figure offset, OpenGIS type)
+        var shapeCount = reader.ReadInt32();
+        var shapeParentOffsets = new int[shapeCount];
+        var shapeFigureOffsets = new int[shapeCount];
+        var shapeOpenGisTypes = new byte[shapeCount];
+        for (int i = 0; i < shapeCount; i++)
+        {
+            shapeParentOffsets[i] = reader.ReadInt32();
+            shapeFigureOffsets[i] = reader.ReadInt32();
+            shapeOpenGisTypes[i] = reader.ReadByte();
+        }
+
+        var context = new ShapeTreeContext(pointCount, figureCount, figurePointOffsets, shapeParentOffsets, shapeFigureOffsets, shapeOpenGisTypes);
+
+        // The root (shape 0) is the collection itself. Build members with the point type implied by the Z/M flags.
+        if (hasZ && hasM)
+            return BuildShape(0, context, srid, i => new PointZM { X = xs[i], Y = ys[i], Z = zs![i], M = ms![i] });
+        else if (hasZ)
+            return BuildShape(0, context, srid, i => new PointZ { X = xs[i], Y = ys[i], Z = zs![i] });
+        else if (hasM)
+            return BuildShape(0, context, srid, i => new PointM { X = xs[i], Y = ys[i], M = ms![i] });
+        else
+            return BuildShape(0, context, srid, i => new Point(xs[i], ys[i]));
+    }
+
+    /// <summary>
+    /// Immutable view over a decoded MS-SSCLRT Points/Figures/Shapes structure, shared across the recursive
+    /// <see cref="BuildShape{T}"/> walk.
+    /// </summary>
+    private sealed class ShapeTreeContext
+    {
+        public ShapeTreeContext(int pointCount, int figureCount, int[] figurePointOffsets,
+            int[] shapeParentOffsets, int[] shapeFigureOffsets, byte[] shapeOpenGisTypes)
+        {
+            PointCount = pointCount;
+            FigureCount = figureCount;
+            FigurePointOffsets = figurePointOffsets;
+            ShapeParentOffsets = shapeParentOffsets;
+            ShapeFigureOffsets = shapeFigureOffsets;
+            ShapeOpenGisTypes = shapeOpenGisTypes;
+        }
+
+        public int PointCount { get; }
+        public int FigureCount { get; }
+        public int[] FigurePointOffsets { get; }
+        public int[] ShapeParentOffsets { get; }
+        public int[] ShapeFigureOffsets { get; }
+        public byte[] ShapeOpenGisTypes { get; }
+    }
+
+    /// <summary>
+    /// Recursively reconstructs the geometry rooted at <paramref name="shapeIndex"/> from a decoded shape tree.
+    /// </summary>
+    private static Geometry<T> BuildShape<T>(int shapeIndex, ShapeTreeContext ctx, int srid, Func<int, T> makePoint) where T : IPoint, new()
+    {
+        byte openGisType = ctx.ShapeOpenGisTypes[shapeIndex];
+
+        switch (openGisType)
+        {
+            case 1: // Point
+            {
+                var figureIndex = ctx.ShapeFigureOffsets[shapeIndex];
+                return Geometry<T>.Create(new List<T> { makePoint(ctx.FigurePointOffsets[figureIndex]) }, GeometryType.Point, srid);
+            }
+            case 2: // LineString
+            {
+                var figureIndex = ctx.ShapeFigureOffsets[shapeIndex];
+                return Geometry<T>.Create(GetFigurePoints(ctx, figureIndex, makePoint, stripClosingPoint: false), GeometryType.LineString, srid);
+            }
+            case 3: // Polygon
+            {
+                var (firstFigure, endFigure) = GetShapeFigureRange(ctx, shapeIndex);
+                var rings = new List<Geometry<T>>(endFigure - firstFigure);
+                for (int f = firstFigure; f < endFigure; f++)
+                    rings.Add(Geometry<T>.CreatePolygonRing(GetFigurePoints(ctx, f, makePoint, stripClosingPoint: true), srid));
+                return Geometry<T>.Create(rings, GeometryType.Polygon, srid);
+            }
+            case 4: // MultiPoint
+            case 5: // MultiLineString
+            case 6: // MultiPolygon
+            case 7: // GeometryCollection
+            {
+                var collectionType = openGisType switch
+                {
+                    4 => GeometryType.MultiPoint,
+                    5 => GeometryType.MultiLineString,
+                    6 => GeometryType.MultiPolygon,
+                    _ => GeometryType.GeometryCollection
+                };
+
+                var members = new List<Geometry<T>>();
+                for (int j = 0; j < ctx.ShapeParentOffsets.Length; j++)
+                {
+                    if (ctx.ShapeParentOffsets[j] == shapeIndex)
+                        members.Add(BuildShape(j, ctx, srid, makePoint));
+                }
+
+                return Geometry<T>.Create(members, collectionType, srid);
+            }
+            default:
+                throw new NotSupportedException($"OpenGIS type {openGisType} inside a GeometryCollection is not supported.");
+        }
+    }
+
+    /// <summary>
+    /// Returns the [firstFigure, endFigure) range of figures owned by a leaf shape. Figures are contiguous per leaf
+    /// and laid out in shape order, so the range ends at the next larger shape figure offset (or the total figure count).
+    /// </summary>
+    private static (int firstFigure, int endFigure) GetShapeFigureRange(ShapeTreeContext ctx, int shapeIndex)
+    {
+        int firstFigure = ctx.ShapeFigureOffsets[shapeIndex];
+        int endFigure = ctx.FigureCount;
+
+        for (int j = 0; j < ctx.ShapeFigureOffsets.Length; j++)
+        {
+            int offset = ctx.ShapeFigureOffsets[j];
+            if (offset > firstFigure && offset < endFigure)
+                endFigure = offset;
+        }
+
+        return (firstFigure, endFigure);
+    }
+
+    /// <summary>
+    /// Materializes the points of a single figure. Point offsets in the Figures array partition the Points sequence,
+    /// so a figure's points run to the next figure's offset (or the total point count).
+    /// </summary>
+    private static List<T> GetFigurePoints<T>(ShapeTreeContext ctx, int figureIndex, Func<int, T> makePoint, bool stripClosingPoint) where T : IPoint, new()
+    {
+        int start = ctx.FigurePointOffsets[figureIndex];
+        int end = (figureIndex + 1 < ctx.FigureCount) ? ctx.FigurePointOffsets[figureIndex + 1] : ctx.PointCount;
+
+        // Rings are stored closed (last point repeats the first); Geometry<T> keeps rings open, so drop the duplicate.
+        if (stripClosingPoint && end - start >= 2)
+        {
+            var first = makePoint(start);
+            var last = makePoint(end - 1);
+            if (first.X == last.X && first.Y == last.Y)
+                end--;
+        }
+
+        var points = new List<T>(end - start);
+        for (int k = start; k < end; k++)
+            points.Add(makePoint(k));
+
+        return points;
+    }
 
 }

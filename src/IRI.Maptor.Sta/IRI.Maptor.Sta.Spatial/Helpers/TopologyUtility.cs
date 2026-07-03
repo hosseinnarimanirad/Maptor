@@ -448,4 +448,81 @@ public class TopologyUtility
 
         return false;
     }
+
+    #region Point - Ring/Polygon Boundary
+
+    /// <summary>
+    /// Distance from a point to a line segment (perpendicular distance clamped to the segment).
+    /// </summary>
+    public static double GetPointToLineSegmentDistance<T>(T point, T segmentStart, T segmentEnd) where T : IPoint, new()
+    {
+        double dx = segmentEnd.X - segmentStart.X;
+        double dy = segmentEnd.Y - segmentStart.Y;
+
+        double squaredLength = dx * dx + dy * dy;
+
+        if (squaredLength == 0)
+            return SpatialUtility.GetEuclideanLength(point, segmentStart);
+
+        double t = ((point.X - segmentStart.X) * dx + (point.Y - segmentStart.Y) * dy) / squaredLength;
+
+        t = Math.Max(0, Math.Min(1, t));
+
+        double projectedX = segmentStart.X + t * dx;
+        double projectedY = segmentStart.Y + t * dy;
+
+        return Math.Sqrt((point.X - projectedX) * (point.X - projectedX) + (point.Y - projectedY) * (point.Y - projectedY));
+    }
+
+    /// <summary>
+    /// Distance-tolerant point-on-ring test. The ring is expected to be stored without the
+    /// repeated closing vertex; the closing segment is checked implicitly.
+    /// </summary>
+    public static bool IsPointOnRing<T>(Geometry<T> ring, T point, double tolerance = SpatialUtility.EpsilonDistance) where T : IPoint, new()
+    {
+        if (ring.IsNullOrEmpty() || point is null)
+            return false;
+
+        var points = ring.Points;
+        var numberOfPoints = points.Count;
+
+        if (ring.Type != GeometryType.LineString || numberOfPoints < 3)
+            throw new NotImplementedException("TopologyUtility > IsPointOnRing");
+
+        for (int i = 0; i < numberOfPoints; i++)
+        {
+            if (GetPointToLineSegmentDistance(point, points[i], points[(i + 1) % numberOfPoints]) < tolerance)
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Distance-tolerant test for a point lying on the boundary (any ring) of a polygon or multipolygon.
+    /// </summary>
+    public static bool IsPointOnPolygonBoundary<T>(Geometry<T> polygonOrMultiPolygon, T point, double tolerance = SpatialUtility.EpsilonDistance) where T : IPoint, new()
+    {
+        if (polygonOrMultiPolygon.IsNullOrEmpty() || point is null)
+            return false;
+
+        if (polygonOrMultiPolygon.Type == GeometryType.MultiPolygon)
+            return polygonOrMultiPolygon.Geometries.Any(g => IsPointOnPolygonBoundary(g, point, tolerance));
+
+        if (polygonOrMultiPolygon.Type != GeometryType.Polygon)
+            throw new NotImplementedException("TopologyUtility > IsPointOnPolygonBoundary");
+
+        return polygonOrMultiPolygon.Geometries.Any(ring => IsPointOnRing(ring, point, tolerance));
+    }
+
+    /// <summary>
+    /// OGC-style point-polygon intersection test: true when the point is in the interior
+    /// or on the boundary of the polygon (<see cref="IsPointInPolygon{T}"/> alone is strict-interior).
+    /// </summary>
+    public static bool IsPointInPolygonOrOnBoundary<T>(Geometry<T> polygonOrMultiPolygon, T point) where T : IPoint, new()
+    {
+        return IsPointInPolygon(polygonOrMultiPolygon, point) || IsPointOnPolygonBoundary(polygonOrMultiPolygon, point);
+    }
+
+    #endregion
 }

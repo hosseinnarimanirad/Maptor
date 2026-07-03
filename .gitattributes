@@ -1,8 +1,59 @@
 ###############################################################################
 # Set default behavior to normalize line endings to CRLF (Windows).
 # This matches the .editorconfig setting end_of_line = crlf
+# text=auto lets git auto-detect binary files and never line-ending-convert
+# them. Binary extensions are also pinned explicitly below as a safety net.
 ###############################################################################
-* text eol=crlf
+* text=auto eol=crlf
+
+###############################################################################
+# Binary files: never apply line-ending conversion (would corrupt them).
+###############################################################################
+*.ico      binary
+*.png      binary
+*.jpg      binary
+*.jpeg     binary
+*.gif      binary
+*.bmp      binary
+*.tif      binary
+*.tiff     binary
+*.ttf      binary
+*.otf      binary
+*.eot      binary
+*.woff     binary
+*.woff2    binary
+*.pdf      binary
+*.pfx      binary
+*.snk      binary
+*.dll      binary
+*.exe      binary
+*.zip      binary
+*.7z       binary
+*.gz       binary
+*.mbtiles  binary
+*.tpk      binary
+*.mvt      binary
+*.pbf      binary
+*.db       binary
+*.sqlite   binary
+*.gpkg     binary
+*.shp      binary
+*.shx      binary
+*.dbf      binary
+*.sbn      binary
+*.sbx      binary
+*.cur      binary
+*.ani      binary
+*.mdb      binary
+*.accdb    binary
+*.doc      binary
+*.docx     binary
+*.dot      binary
+*.dotx     binary
+*.xls      binary
+*.xlsx     binary
+*.ppt      binary
+*.pptx     binary
 
 ###############################################################################
 # Set default behavior for command prompt diff.

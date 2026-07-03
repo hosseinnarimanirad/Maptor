@@ -10,6 +10,8 @@ using System.Windows.Media.Imaging;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Ket.GdiPersistence;
+using IRI.Maptor.Ket.SqlitePersistence.MbTiles;
+using IRI.Maptor.Ket.SqlitePersistence.GeoPackage;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.Abstractions;
@@ -174,6 +176,48 @@ public class RasterLayer : BaseLayer
                     continue;
 
                 RasterLayer layer = new RasterLayer(this, LayerName, Type /*== LayerType.BaseMap, Type == LayerType.ImagePyramid*/, Opacity, boundingBox, image);
+
+                result.Add(layer);
+            }
+        }
+        else if (DataSource is MbTilesDataSource mbTilesDataSource)
+        {
+            var tiles = mbTilesDataSource.GetTiles(region.Transform(MapProjects.WebMercatorToGeodeticWgs84), mapScale);
+
+            foreach (var item in tiles)
+            {
+                if (item.Image is null)
+                    continue;
+
+                var boundingBox = item.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
+
+                var image = Helpers.ImageUtility.CreateBitmapImage(item.Image);
+
+                if (image is null)
+                    continue;
+
+                RasterLayer layer = new RasterLayer(this, LayerName, Type, Opacity, boundingBox, image);
+
+                result.Add(layer);
+            }
+        }
+        else if (DataSource is GeoPackageTileDataSource gpkgTileDataSource)
+        {
+            var tiles = gpkgTileDataSource.GetTiles(region.Transform(MapProjects.WebMercatorToGeodeticWgs84), mapScale);
+
+            foreach (var item in tiles)
+            {
+                if (item.Image is null)
+                    continue;
+
+                var boundingBox = item.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
+
+                var image = Helpers.ImageUtility.CreateBitmapImage(item.Image);
+
+                if (image is null)
+                    continue;
+
+                RasterLayer layer = new RasterLayer(this, LayerName, Type, Opacity, boundingBox, image);
 
                 result.Add(layer);
             }

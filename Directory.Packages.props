@@ -40,11 +40,11 @@
 
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="6.0.1" />
     <PackageVersion Include="Microsoft.Data.Sqlite.Core" Version="8.0.0" />
+    <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.6" />
     <PackageVersion Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.2" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite" Version="9.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="9.0.2" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
@@ -57,6 +57,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
 
+    <!-- Still referenced only by the pre-existing MakanNegarSaba migration files (to be re-scaffolded); no runtime use. -->
     <PackageVersion Include="NetTopologySuite" Version="2.5.0" />
     <PackageVersion Include="Npgsql" Version="9.0.2" />
 

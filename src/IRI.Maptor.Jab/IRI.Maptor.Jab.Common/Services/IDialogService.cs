@@ -1,6 +1,8 @@
 using System;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using System.Threading.Tasks;
+using IRI.Maptor.Jab.Common.Models.Print;
 using IRI.Maptor.Jab.Common.ViewModels.Dialogs;
 using IRI.Maptor.Sta.Common.Exceptions;
 using IRI.Maptor.Sta.Common.Enums;
@@ -96,6 +98,14 @@ public interface IDialogService
 
     Task<bool?> ShowDialogAsync(object? ownerWindow, Window view, DialogViewModelBase viewModel);
 
+
+    // ********************************************************************
+    //                          Print To PDF Dialog
+    // ********************************************************************
+    Task<PrintToPdfDialogOptions?> ShowPrintToPdfDialogAsync(
+        object? ownerWindow,
+        Func<Task<BitmapSource?>>? mapThumbnailProvider = null,
+        PrintToPdfDialogOptions? initialOptions = null);
 
     // ********************************************************************
     //                          DXF Open Dialog

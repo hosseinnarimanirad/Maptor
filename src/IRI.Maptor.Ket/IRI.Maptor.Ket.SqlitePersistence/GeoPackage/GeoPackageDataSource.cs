@@ -8,6 +8,8 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Persistence.Abstractions;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Spatial.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 namespace IRI.Maptor.Ket.SqlitePersistence.GeoPackage;
 
@@ -23,8 +25,11 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
     private GpkgGeometryColumn? _geometryColumn;
     private bool _disposed;
 
-    private int _srid;
-    public override int Srid { get; /*protected set;*/ }
+    private SrsBase? _sourceSrs;
+    private bool _hasSpatialIndex;
+
+    // Features are projected to Web Mercator before being returned, so the source reports 3857.
+    public override int Srid => SridHelper.WebMercator;
 
     public override string SourceAddress => $"GeoPackage Data Source: {_tableName}";
 
@@ -82,18 +87,26 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
         if (_geometryColumn == null)
             throw new InvalidOperationException($"No geometry column found for layer: {_tableName}");
 
-        // Set SRID
-        this._srid = _geometryColumn.SrsId;
+        // Resolve the source spatial reference so geometry can be projected to Web Mercator.
+        _sourceSrs = SrsBase.Create(_geometryColumn.SrsId);
 
-        // Set extent from metadata
-        WebMercatorExtent = new BoundingBox(
+        // The bbox query uses the R-tree; not every GeoPackage has one.
+        _hasSpatialIndex = _reader.HasSpatialIndex(_tableName, _geometryColumn.ColumnName);
+
+        // Set extent, projected from the file SRS to Web Mercator (matches ShapefileDataSource).
+        var fileExtent = new BoundingBox(
             _layerMetadata.MinX,
             _layerMetadata.MinY,
             _layerMetadata.MaxX,
             _layerMetadata.MaxY);
 
-        // Map geometry type
-        GeometryType = MapGeometryType(_geometryColumn.GeometryTypeName);
+        WebMercatorExtent = _sourceSrs == null
+            ? fileExtent
+            : fileExtent.Transform(p => p.Project(_sourceSrs, SrsBases.WebMercator));
+
+        // Map geometry type; default mixed/unknown ("GEOMETRY") to Polygon so the layer stays
+        // symbolizable (SpatialModelMode != None).
+        GeometryType = MapGeometryType(_geometryColumn.GeometryTypeName) ?? Sta.Common.Enums.GeometryType.Polygon;
 
         // Read a sample feature to get fields
         var sampleFeatures = _reader.ReadFeatures(_tableName);
@@ -112,47 +125,47 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
     /// </summary>
     public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync()
     {
-        return await GetAsFeatureSetAsync(Geometry<Point>.Empty);
+        var features = await _reader.ReadFeaturesAsync(_tableName);
+        return ToWebMercator(FeatureSet<Point>.Create(_tableName, features));
     }
 
     /// <summary>
-    /// Gets features as a FeatureSet asynchronously
+    /// Gets features intersecting the given geometry (in Web Mercator) as a FeatureSet.
     /// </summary>
     public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(Geometry<Point>? geometry)
     {
         if (geometry == null || geometry.IsNullOrEmpty())
-        {
-            var features = await _reader.ReadFeaturesAsync(_tableName);
-            return FeatureSet<Point>.Create(_tableName, features);
-        }
-        else
-        {
-            var bbox = geometry.GetBoundingBox();
-            var features = await _reader.ReadFeaturesAsync(_tableName, bbox);
+            return await GetAsFeatureSetAsync();
 
-            var filtered = features.Where(f =>
-                f.TheGeometry != null && !f.TheGeometry.IsNullOrEmpty() &&
-                f.TheGeometry.Intersects(geometry)).ToList();
+        // geometry is in Web Mercator; query the source-SRS rtree with its projected bbox.
+        var sourceBox = ToSourceBoundingBox(geometry.GetBoundingBox());
+        var features = await _reader.ReadFeaturesAsync(_tableName, sourceBox);
 
-            return FeatureSet<Point>.Create(_tableName, filtered);
-        }
+        var webMercator = ToWebMercator(FeatureSet<Point>.Create(_tableName, features));
+
+        var filtered = webMercator.Features.Where(f =>
+            f.TheGeometry != null && !f.TheGeometry.IsNullOrEmpty() &&
+            f.TheGeometry.Intersects(geometry)).ToList();
+
+        return FeatureSet<Point>.Create(_tableName, filtered);
     }
 
     /// <summary>
-    /// Gets features within a bounding box as a FeatureSet asynchronously
+    /// Gets features within a Web Mercator bounding box as a FeatureSet (projected to Web Mercator).
     /// </summary>
-    public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox boundingBox)
+    public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(BoundingBox webMercatorBoundingBox)
     {
-        var features = await _reader.ReadFeaturesAsync(_tableName, boundingBox);
-        return FeatureSet<Point>.Create(_tableName, features);
+        var sourceBox = ToSourceBoundingBox(webMercatorBoundingBox);
+        var features = await _reader.ReadFeaturesAsync(_tableName, sourceBox);
+        return ToWebMercator(FeatureSet<Point>.Create(_tableName, features));
     }
 
     /// <summary>
     /// Gets features as a FeatureSet asynchronously with map scale
     /// </summary>
-    public override async Task<FeatureSet<Point>> GetAsFeatureSetAsync(double mapScale, BoundingBox boundingBox)
+    public override Task<FeatureSet<Point>> GetAsFeatureSetAsync(double mapScale, BoundingBox webMercatorBoundingBox)
     {
-        return await GetAsFeatureSetAsync(boundingBox);
+        return GetAsFeatureSetAsync(webMercatorBoundingBox);
     }
 
     /// <summary>
@@ -162,21 +175,29 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
     {
         var allFeatures = await _reader.ReadFeaturesAsync(_tableName);
 
-        if (string.IsNullOrWhiteSpace(searchText))
-        {
-            return FeatureSet<Point>.Create(_tableName, allFeatures);
-        }
+        var matched = string.IsNullOrWhiteSpace(searchText)
+            ? allFeatures
+            : allFeatures.Where(f => f.Attributes != null && f.Attributes.Values.Any(v =>
+                v != null && v.ToString()?.Contains(searchText, StringComparison.OrdinalIgnoreCase) == true)).ToList();
 
-        var filtered = allFeatures.Where(f =>
-        {
-            if (f.Attributes == null)
-                return false;
+        return ToWebMercator(FeatureSet<Point>.Create(_tableName, matched));
+    }
 
-            return f.Attributes.Values.Any(v =>
-                v != null && v.ToString()?.Contains(searchText, StringComparison.OrdinalIgnoreCase) == true);
-        }).ToList();
+    /// <summary>Projects a source-SRS feature set to Web Mercator (identity when already 3857).</summary>
+    private FeatureSet<Point> ToWebMercator(FeatureSet<Point> featureSet)
+    {
+        if (featureSet == null || featureSet.HasNoGeometry())
+            return featureSet ?? FeatureSet<Point>.Empty;
 
-        return FeatureSet<Point>.Create(_tableName, filtered);
+        return featureSet.Project(SrsBases.WebMercator);
+    }
+
+    /// <summary>Transforms a Web Mercator bounding box to the source SRS for the rtree query.</summary>
+    private BoundingBox ToSourceBoundingBox(BoundingBox webMercatorBoundingBox)
+    {
+        return _sourceSrs == null
+            ? webMercatorBoundingBox
+            : webMercatorBoundingBox.Transform(p => p.Project(SrsBases.WebMercator, _sourceSrs));
     }
 
     /// <summary>

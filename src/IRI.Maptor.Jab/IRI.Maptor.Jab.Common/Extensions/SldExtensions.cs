@@ -79,7 +79,42 @@ public static class SldExtensions
         return result;
     }
 
-    private static ISymbolizer ParseSymbolizer(Symbolizer symbolizer)
+    /// <summary>
+    /// Parses every symbolizer of a single <see cref="Rule"/> and pairs each runtime
+    /// <see cref="ISymbolizer"/> with the source SLD <see cref="Symbolizer"/> it came from
+    /// (so callers can determine the geometry kind). Unlike <see cref="Parse(FeatureTypeStyle)"/>
+    /// this does NOT copy the rule filter or scale range onto the symbolizer — the legend
+    /// swatch renderer neutralizes those and displays them as text instead. Symbolizers that
+    /// are not yet supported (e.g. RasterSymbolizer) are skipped.
+    /// </summary>
+    public static List<(ISymbolizer symbolizer, Symbolizer sldSymbolizer)> ParseWithSource(this Rule rule)
+    {
+        var result = new List<(ISymbolizer, Symbolizer)>();
+
+        if (rule?.Symbolizers is null)
+            return result;
+
+        foreach (var sldSymbolizer in rule.Symbolizers)
+        {
+            ISymbolizer symbolizer;
+
+            try
+            {
+                symbolizer = ParseSymbolizer(sldSymbolizer);
+            }
+            catch (NotImplementedException)
+            {
+                // e.g. RasterSymbolizer — not renderable to a swatch yet
+                continue;
+            }
+
+            result.Add((symbolizer, sldSymbolizer));
+        }
+
+        return result;
+    }
+
+    internal static ISymbolizer ParseSymbolizer(Symbolizer symbolizer)
     {
         switch (symbolizer)
         {

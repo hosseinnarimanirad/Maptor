@@ -832,6 +832,8 @@
 
                         <!--palette control-->
                         <ToggleButton ClickMode="Release" DockPanel.Dock="Left" Name="palette" Margin="4 0 4 0" Padding="0" Cursor="Hand" Background="Transparent" VerticalAlignment="Center"
+                              IsChecked="{Binding IsSymbologyDetailsOpen, Mode=TwoWay}"
+                              ToolTip="Symbology details"
                               Width="16" Height="16" Visibility="{Binding HasMultiSymbolizers, Converter={StaticResource boolToVisibilityConverter}}">
                             <ToggleButton.Style>
                                 <Style TargetType="ToggleButton">
@@ -864,6 +866,91 @@
                                 </Style>
                             </ToggleButton.Style>
                         </ToggleButton>
+
+                        <!--symbology details popup (complex/multi-rule SLD)-->
+                        <Popup x:Name="symbologyDetailsPopup" StaysOpen="False" Placement="Right"
+                               PlacementTarget="{Binding ElementName=palette}"
+                               IsOpen="{Binding IsSymbologyDetailsOpen, Mode=TwoWay}"
+                               AllowsTransparency="True" HorizontalOffset="4" VerticalOffset="-10">
+                            <Popup.Effect>
+                                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.4" Color="Black" Direction="270"/>
+                            </Popup.Effect>
+                            <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="6" Padding="8"
+                                    MinWidth="200" MaxWidth="340" MaxHeight="420" FlowDirection="LeftToRight">
+                                <DockPanel>
+                                    <!--header: layer name + export button-->
+                                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,6">
+                                        <Button DockPanel.Dock="Right" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                                                Width="24" Height="24" Focusable="False"
+                                                Command="{Binding ExportSymbologyLegendCommand}"
+                                                ToolTip="Export legend as PNG">
+                                            <Viewbox Margin="4">
+                                                <iconPacks:PackIconMaterial Kind="ContentSaveOutline" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+                                            </Viewbox>
+                                        </Button>
+                                        <TextBlock Text="{Binding LayerName}" FontWeight="Bold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                    </DockPanel>
+
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                        <ItemsControl ItemsSource="{Binding SymbologyLegend.Groups}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Margin="0,1">
+                                                        <TextBlock Text="{Binding Header}" FontWeight="SemiBold" Margin="0,4,0,2" Foreground="{DynamicResource MahApps.Brushes.Accent}">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Header}" Value="{x:Null}">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                        <ItemsControl ItemsSource="{Binding Rows}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <DockPanel Margin="2,3">
+                                                                        <Image DockPanel.Dock="Left" Source="{Binding SwatchImage}" Width="32" Height="24"
+                                                                               Margin="0,0,8,0" Stretch="Uniform" VerticalAlignment="Center"
+                                                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                                                                        <StackPanel VerticalAlignment="Center">
+                                                                            <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
+                                                                            <TextBlock Text="{Binding FilterText}" FontSize="10" Foreground="Gray" TextWrapping="Wrap">
+                                                                                <TextBlock.Style>
+                                                                                    <Style TargetType="TextBlock">
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding FilterText}" Value="{x:Null}">
+                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </TextBlock.Style>
+                                                                            </TextBlock>
+                                                                            <TextBlock Text="{Binding ScaleText}" FontSize="10" Foreground="Gray">
+                                                                                <TextBlock.Style>
+                                                                                    <Style TargetType="TextBlock">
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding ScaleText}" Value="{x:Null}">
+                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </TextBlock.Style>
+                                                                            </TextBlock>
+                                                                        </StackPanel>
+                                                                    </DockPanel>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </DockPanel>
+                            </Border>
+                        </Popup>
 
                     </DockPanel>
 
