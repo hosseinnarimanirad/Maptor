@@ -303,52 +303,32 @@ public class Geometry_SpatialOperationsTest
         var sqlGeo2 = geo2.AsSqlGeometry();
         var sqlResult = sqlGeo1.STIntersection(sqlGeo2);
 
-        // Assert - Check if both detect intersection (for complex geometries, our implementation may be simplified)
+        // Assert - intersection detection must agree with SqlGeometry
         bool geometryDetectsIntersection = geo1.Intersects(geo2);
         bool sqlDetectsIntersection = sqlGeo1.STIntersects(sqlGeo2).IsTrue;
-        Assert.Equal(geometryDetectsIntersection, sqlDetectsIntersection);
+        Assert.Equal(sqlDetectsIntersection, geometryDetectsIntersection);
 
-        // Both should return results (or both empty)
-        // Note: Our simplified intersection implementation may return empty even when SqlGeometry returns a result
+        // Assert - both must agree on whether the intersection is empty
         bool geometryHasResult = !geometryResult.IsNullOrEmpty();
         bool sqlHasResult = !sqlResult.IsNullOrEmpty() && !sqlResult.STIsEmpty().IsTrue;
-        
-        // For simplified implementations, we only verify that if our implementation returns a result,
-        // SqlGeometry should also return a result (but not vice versa)
-        if (geometryHasResult)
-        {
-            Assert.True(sqlHasResult, "If Geometry<Point> returns intersection result, SqlGeometry should also return result");
-        }
+        Assert.Equal(sqlHasResult, geometryHasResult);
 
-        // Compare WKT representations if both have results
+        // Assert - the results must be spatially equal (point order / ring orientation independent);
+        // SqlGeometry results carry ~1e-13 floating point fuzz, so fall back to a tolerance-based
+        // mutual containment check when the exact STEquals fails
         if (geometryHasResult && sqlHasResult)
         {
-            var sqlResultGeometry = sqlResult.AsGeometry();
-            var geometryWkt = NormalizeWkt(geometryResult.AsWkt());
-            var sqlWkt = NormalizeWkt(sqlResult.AsWkt());
-            
-            // For MultiPoint, ordering may differ
-            if (geometryResult.Type == GeometryType.MultiPoint || sqlResultGeometry.Type == GeometryType.MultiPoint)
-            {
-                Assert.Equal(geometryResult.Type, sqlResultGeometry.Type);
-                if (geometryResult.Type == GeometryType.MultiPoint)
-                {
-                    Assert.Equal(geometryResult.NumberOfGeometries, sqlResultGeometry.NumberOfGeometries);
-                }
-            }
-            else
-            {
-                // For other types, compare normalized WKT
-                Assert.Equal(geometryWkt, sqlWkt);
-            }
-        }
-        else if (sqlDetectsIntersection && !geometryHasResult)
-        {
-            // Our simplified implementation returns empty, but SqlGeometry should have valid result
-            // Verify SqlGeometry returns a valid intersection
-            Assert.False(sqlResult.IsNullOrEmpty() || sqlResult.STIsEmpty().IsTrue);
-            var sqlWkt = sqlResult.AsWkt();
-            Assert.NotNull(sqlWkt);
+            var geometryResultAsSql = geometryResult.AsSqlGeometry();
+
+            const double tolerance = 1E-6;
+
+            bool spatiallyEqual = sqlResult.STEquals(geometryResultAsSql).IsTrue ||
+                                    (sqlResult.STBuffer(tolerance).STContains(geometryResultAsSql).IsTrue &&
+                                     geometryResultAsSql.STBuffer(tolerance).STContains(sqlResult).IsTrue);
+
+            Assert.True(
+                spatiallyEqual,
+                $"Expected intersection {sqlResult.AsWkt()} but got {geometryResult.AsWkt()}");
         }
     }
 
@@ -375,21 +355,7 @@ public class Geometry_SpatialOperationsTest
         var geo2 = Geometry<Point>.FromWkt(wkt2, TestSrid);
 
         // Act - Geometry<Point> union
-        Geometry<Point> geometryResult;
-        try
-        {
-            geometryResult = geo1.Union(geo2);
-        }
-        catch (NotImplementedException)
-        {
-            // Skip test if implementation is not complete
-            return;
-        }
-        catch (ArgumentNullException)
-        {
-            // Skip test if implementation has bugs
-            return;
-        }
+        var geometryResult = geo1.Union(geo2);
 
         // Act - SqlGeometry union
         var sqlGeo1 = geo1.AsSqlGeometry();
@@ -399,93 +365,43 @@ public class Geometry_SpatialOperationsTest
         // Assert - Both should return results (or both empty)
         bool geometryHasResult = !geometryResult.IsNullOrEmpty();
         bool sqlHasResult = !sqlResult.IsNullOrEmpty() && !sqlResult.STIsEmpty().IsTrue;
-        
-        Assert.Equal(geometryHasResult, sqlHasResult);
 
-        // Compare WKT representations if both have results
+        Assert.Equal(sqlHasResult, geometryHasResult);
+
         if (geometryHasResult && sqlHasResult)
         {
-            var sqlResultGeometry = sqlResult.AsGeometry();
-            string geometryWkt = null;
-            string sqlWkt = null;
-            
+            Microsoft.SqlServer.Types.SqlGeometry geometryResultAsSql;
+
             try
             {
-                geometryWkt = NormalizeWkt(geometryResult.AsWkt());
+                geometryResultAsSql = geometryResult.AsSqlGeometry();
             }
             catch (NotImplementedException)
             {
-                // AsWkt() may throw for unsupported geometry types (e.g., GeometryCollection)
-                // Just verify both have results
-                Assert.True(geometryResult.HasAnyPoint());
-                Assert.True(sqlResultGeometry.HasAnyPoint());
+                // GeometryCollection conversion may be unsupported; compare member counts instead
+                var sqlResultGeometry = sqlResult.AsGeometry();
+                Assert.Equal(sqlResultGeometry.Type, geometryResult.Type);
+                Assert.Equal(sqlResultGeometry.NumberOfGeometries, geometryResult.NumberOfGeometries);
                 return;
             }
-            
-            try
+
+            // spatial equality; the mutual buffer-containment fallback tolerates the documented
+            // representation difference for partially overlapping collinear linework
+            const double tolerance = 1E-6;
+
+            bool spatiallyEqual = sqlResult.STEquals(geometryResultAsSql).IsTrue ||
+                                    (sqlResult.STBuffer(tolerance).STContains(geometryResultAsSql).IsTrue &&
+                                     geometryResultAsSql.STBuffer(tolerance).STContains(sqlResult).IsTrue);
+
+            if (!spatiallyEqual)
             {
-                sqlWkt = NormalizeWkt(sqlResult.AsWkt());
-            }
-            catch
-            {
-                // If SQL WKT fails, just verify both have results
-                Assert.True(geometryResult.HasAnyPoint());
-                Assert.True(sqlResultGeometry.HasAnyPoint());
-                return;
-            }
-            
-            // For collections, point ordering may differ, so we check if they contain the same points
-            if (geometryResult.Type == GeometryType.MultiPoint || geometryResult.Type == GeometryType.MultiLineString ||
-                sqlResultGeometry.Type == GeometryType.MultiPoint || sqlResultGeometry.Type == GeometryType.MultiLineString)
-            {
-                // For MultiPoint/MultiLineString, verify both have same type
-                // Note: Our implementation may handle duplicates differently than SqlGeometry
-                if (geometryResult.Type == GeometryType.MultiPoint && sqlResultGeometry.Type == GeometryType.MultiPoint)
-                {
-                    // Both are MultiPoint - counts may differ due to duplicate handling
-                    // Our implementation may add duplicates while SQL removes them, or vice versa
-                    // Just verify both have points
-                    Assert.True(geometryResult.HasAnyPoint());
-                    Assert.True(sqlResultGeometry.HasAnyPoint());
-                }
-                else if (geometryResult.Type == GeometryType.MultiLineString && sqlResultGeometry.Type == GeometryType.MultiLineString)
-                {
-                    Assert.Equal(geometryResult.NumberOfGeometries, sqlResultGeometry.NumberOfGeometries);
-                }
-                else
-                {
-                    // Type mismatch (e.g., LineString vs MultiLineString) - just verify both have results
-                    Assert.True(geometryResult.HasAnyPoint());
-                    Assert.True(sqlResultGeometry.HasAnyPoint());
-                }
-            }
-            else if (geometryResult.Type == GeometryType.MultiPolygon || sqlResultGeometry.Type == GeometryType.MultiPolygon)
-            {
-                // For MultiPolygon, ordering may differ - just verify both have results
-                Assert.True(geometryResult.HasAnyPoint());
-                Assert.True(sqlResultGeometry.HasAnyPoint());
-            }
-            else if (geometryResult.Type == GeometryType.LineString || geometryResult.Type == GeometryType.MultiLineString ||
-                     sqlResultGeometry.Type == GeometryType.LineString || sqlResultGeometry.Type == GeometryType.MultiLineString)
-            {
-                // LineString vs LineString or MultiLineString - may have different types or reversed coordinates
-                // Our implementation may merge overlapping LineStrings into a single LineString
-                // while SqlGeometry keeps them as MultiLineString
-                // Just verify both have points
-                Assert.True(geometryResult.HasAnyPoint());
-                Assert.True(sqlResultGeometry.HasAnyPoint());
-            }
-            else if (geometryResult.Type == GeometryType.Polygon && sqlResultGeometry.Type == GeometryType.Polygon)
-            {
-                // Polygon coordinates may differ slightly due to floating point precision
-                // Just verify both are polygons with points
-                Assert.True(geometryResult.HasAnyPoint());
-                Assert.True(sqlResultGeometry.HasAnyPoint());
-            }
-            else
-            {
-                // For other types (Point), compare normalized WKT
-                Assert.Equal(geometryWkt, sqlWkt);
+                // AsWkt does not support GeometryCollection, so build the message defensively
+                string geometryWkt;
+
+                try { geometryWkt = geometryResult.AsWkt(); }
+                catch (NotImplementedException) { geometryWkt = geometryResultAsSql.ToString(); }
+
+                Assert.True(spatiallyEqual, $"Expected union {sqlResult.AsWkt()} but got {geometryWkt}");
             }
         }
     }
@@ -513,16 +429,7 @@ public class Geometry_SpatialOperationsTest
         var geo2 = Geometry<Point>.FromWkt(wkt2, TestSrid);
 
         // Act - Geometry<Point> difference
-        Geometry<Point> geometryResult;
-        try
-        {
-            geometryResult = geo1.Difference(geo2);
-        }
-        catch (NotImplementedException)
-        {
-            // Skip test if implementation is not complete
-            return;
-        }
+        var geometryResult = geo1.Difference(geo2);
 
         // Act - SqlGeometry difference
         var sqlGeo1 = geo1.AsSqlGeometry();
@@ -530,75 +437,30 @@ public class Geometry_SpatialOperationsTest
         var sqlResult = sqlGeo1.STDifference(sqlGeo2);
 
         // Assert - Both should return results (or both empty)
-        // Note: Our simplified difference implementation may return empty even when SqlGeometry returns a result
         bool geometryHasResult = !geometryResult.IsNullOrEmpty();
         bool sqlHasResult = !sqlResult.IsNullOrEmpty() && !sqlResult.STIsEmpty().IsTrue;
-        
-        // For simplified implementations, we only verify that if our implementation returns a result,
-        // SqlGeometry should also return a result (but not vice versa)
-        if (geometryHasResult)
-        {
-            Assert.True(sqlHasResult, "If Geometry<Point> returns difference result, SqlGeometry should also return result");
-        }
 
-        // Compare WKT representations if both have results
+        Assert.Equal(sqlHasResult, geometryHasResult);
+
         if (geometryHasResult && sqlHasResult)
         {
-            var sqlResultGeometry = sqlResult.AsGeometry();
-            string geometryWkt = null;
-            string sqlWkt = null;
-            
-            try
+            var geometryResultAsSql = geometryResult.AsSqlGeometry();
+
+            // spatial equality (point order / ring orientation independent, tolerant of fuzz)
+            const double tolerance = 1E-6;
+
+            bool spatiallyEqual = sqlResult.STEquals(geometryResultAsSql).IsTrue ||
+                                    (sqlResult.STBuffer(tolerance).STContains(geometryResultAsSql).IsTrue &&
+                                     geometryResultAsSql.STBuffer(tolerance).STContains(sqlResult).IsTrue);
+
+            if (!spatiallyEqual)
             {
-                geometryWkt = NormalizeWkt(geometryResult.AsWkt());
-            }
-            catch (NotImplementedException)
-            {
-                // AsWkt() may throw for unsupported geometry types
-                Assert.True(geometryResult.HasAnyPoint());
-                Assert.True(sqlResultGeometry.HasAnyPoint());
-                return;
-            }
-            
-            try
-            {
-                sqlWkt = NormalizeWkt(sqlResult.AsWkt());
-            }
-            catch
-            {
-                Assert.True(geometryResult.HasAnyPoint());
-                Assert.True(sqlResultGeometry.HasAnyPoint());
-                return;
-            }
-            
-            // For collections, point ordering may differ
-            if (geometryResult.Type == GeometryType.MultiPoint || geometryResult.Type == GeometryType.MultiLineString ||
-                sqlResultGeometry.Type == GeometryType.MultiPoint || sqlResultGeometry.Type == GeometryType.MultiLineString)
-            {
-                Assert.Equal(geometryResult.Type, sqlResultGeometry.Type);
-                Assert.Equal(geometryResult.NumberOfGeometries, sqlResultGeometry.NumberOfGeometries);
-            }
-            else if (geometryResult.Type == GeometryType.MultiPolygon || sqlResultGeometry.Type == GeometryType.MultiPolygon)
-            {
-                // MultiPolygon ordering may differ - just verify both have results
-                Assert.True(geometryResult.HasAnyPoint());
-                Assert.True(sqlResultGeometry.HasAnyPoint());
-            }
-            else if (geometryResult.Type == GeometryType.LineString && sqlResultGeometry.Type == GeometryType.LineString)
-            {
-                // LineString may have reversed coordinates
-                Assert.Equal(geometryResult.NumberOfPoints, sqlResultGeometry.NumberOfPoints);
-            }
-            else if (geometryResult.Type == GeometryType.Polygon && sqlResultGeometry.Type == GeometryType.Polygon)
-            {
-                // Polygon coordinates may differ due to floating point precision
-                Assert.True(geometryResult.HasAnyPoint());
-                Assert.True(sqlResultGeometry.HasAnyPoint());
-            }
-            else
-            {
-                // For other types, compare normalized WKT
-                Assert.Equal(geometryWkt, sqlWkt);
+                string geometryWkt;
+
+                try { geometryWkt = geometryResult.AsWkt(); }
+                catch (NotImplementedException) { geometryWkt = geometryResultAsSql.ToString(); }
+
+                Assert.True(spatiallyEqual, $"Expected difference {sqlResult.AsWkt()} but got {geometryWkt}");
             }
         }
     }
@@ -625,16 +487,7 @@ public class Geometry_SpatialOperationsTest
         var geo = Geometry<Point>.FromWkt(wkt, TestSrid);
 
         // Act - Geometry<Point> buffer
-        Geometry<Point> geometryResult;
-        try
-        {
-            geometryResult = geo.Buffer(distance);
-        }
-        catch (NotImplementedException)
-        {
-            // Skip test if implementation is not complete
-            return;
-        }
+        var geometryResult = geo.Buffer(distance);
 
         // Act - SqlGeometry buffer
         var sqlGeo = geo.AsSqlGeometry();
@@ -643,21 +496,26 @@ public class Geometry_SpatialOperationsTest
         // Assert - Both should return results (or both empty)
         bool geometryHasResult = !geometryResult.IsNullOrEmpty();
         bool sqlHasResult = !sqlResult.IsNullOrEmpty() && !sqlResult.STIsEmpty().IsTrue;
-        
-        Assert.Equal(geometryHasResult, sqlHasResult);
 
-        // Compare WKT representations if both have results
+        Assert.Equal(sqlHasResult, geometryHasResult);
+
         if (geometryHasResult && sqlHasResult)
         {
-            var geometryWkt = NormalizeWkt(geometryResult.AsWkt());
-            var sqlWkt = NormalizeWkt(sqlResult.AsWkt());
-            // Buffer results may have slight numerical differences, so we verify they're both polygons
-            // and have similar structure rather than exact WKT match
-            Assert.Equal(geometryResult.Type, sqlResult.AsGeometry().Type);
-            // For buffer operations, exact WKT comparison may fail due to floating point precision
-            // So we just verify both return valid polygon geometries
             Assert.True(geometryResult.IsPolygonOrMultiPolygon());
             Assert.True(sqlResult.AsGeometry().IsPolygonOrMultiPolygon());
+
+            // area parity with SQL Server STBuffer (both approximate circular arcs)
+            double sqlArea = sqlResult.STArea().Value;
+            double geometryArea = geometryResult.EuclideanArea;
+
+            Assert.True(
+                Math.Abs(geometryArea - sqlArea) / sqlArea < 0.02,
+                $"Buffer area {geometryArea} differs from SqlGeometry buffer area {sqlArea} by more than 2% for {wkt} (d={distance})");
+
+            // the buffer must contain the original geometry
+            Assert.True(
+                geometryResult.AsSqlGeometry().STBuffer(1E-6).STContains(sqlGeo).IsTrue,
+                $"Buffer does not contain the original geometry for {wkt} (d={distance})");
         }
     }
 
