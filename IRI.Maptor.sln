@@ -84,6 +84,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IRI.Maptor.Sta.GeoParquet",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IRI.Maptor.Jab.Core", "src\IRI.Maptor.Jab\IRI.Maptor.Jab.Core\IRI.Maptor.Jab.Core.csproj", "{CDACAA32-D7E2-426E-B945-B339460E5776}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IRI.Maptor.Ket.EfCorePersistence", "src\IRI.Maptor.Ket\IRI.Maptor.Ket.EfCorePersistence\IRI.Maptor.Ket.EfCorePersistence.csproj", "{610F1C33-16BE-48DF-BF9A-1C7D1C662B96}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IRI.Maptor.Ket.SqlitePersistence", "src\IRI.Maptor.Ket\IRI.Maptor.Ket.SqlitePersistence\IRI.Maptor.Ket.SqlitePersistence.csproj", "{8A2A4577-6EAB-4402-B024-1A3C5025774F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -324,6 +328,22 @@ Global
 		{CDACAA32-D7E2-426E-B945-B339460E5776}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CDACAA32-D7E2-426E-B945-B339460E5776}.Release|x86.ActiveCfg = Release|Any CPU
 		{CDACAA32-D7E2-426E-B945-B339460E5776}.Release|x86.Build.0 = Release|Any CPU
+		{610F1C33-16BE-48DF-BF9A-1C7D1C662B96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{610F1C33-16BE-48DF-BF9A-1C7D1C662B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{610F1C33-16BE-48DF-BF9A-1C7D1C662B96}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{610F1C33-16BE-48DF-BF9A-1C7D1C662B96}.Debug|x86.Build.0 = Debug|Any CPU
+		{610F1C33-16BE-48DF-BF9A-1C7D1C662B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{610F1C33-16BE-48DF-BF9A-1C7D1C662B96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{610F1C33-16BE-48DF-BF9A-1C7D1C662B96}.Release|x86.ActiveCfg = Release|Any CPU
+		{610F1C33-16BE-48DF-BF9A-1C7D1C662B96}.Release|x86.Build.0 = Release|Any CPU
+		{8A2A4577-6EAB-4402-B024-1A3C5025774F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A2A4577-6EAB-4402-B024-1A3C5025774F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A2A4577-6EAB-4402-B024-1A3C5025774F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8A2A4577-6EAB-4402-B024-1A3C5025774F}.Debug|x86.Build.0 = Debug|Any CPU
+		{8A2A4577-6EAB-4402-B024-1A3C5025774F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A2A4577-6EAB-4402-B024-1A3C5025774F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A2A4577-6EAB-4402-B024-1A3C5025774F}.Release|x86.ActiveCfg = Release|Any CPU
+		{8A2A4577-6EAB-4402-B024-1A3C5025774F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -359,6 +379,8 @@ Global
 		{4D3128F6-2207-4439-9268-A19CDEECD0E6} = {8D95B70E-B943-4D24-A90A-A811CD0E7497}
 		{9E34E14B-F17F-4A23-A3DC-A7CE9F5DF4B8} = {8D95B70E-B943-4D24-A90A-A811CD0E7497}
 		{CDACAA32-D7E2-426E-B945-B339460E5776} = {3464F76F-DC20-484F-8420-6E0B9DD8E031}
+		{610F1C33-16BE-48DF-BF9A-1C7D1C662B96} = {5FFC5712-E99B-4F5A-8E1F-F038505042E2}
+		{8A2A4577-6EAB-4402-B024-1A3C5025774F} = {5FFC5712-E99B-4F5A-8E1F-F038505042E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E2292D5F-9EDC-489F-BAE4-75BC33F646F6}
