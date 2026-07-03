@@ -236,6 +236,58 @@ public class MbTilesReader : IDisposable
     }
 
     /// <summary>
+    /// Gets the tile_data of an arbitrary tile (used to probe the tile format / vector layers).
+    /// Returns null when the database has no tiles.
+    /// </summary>
+    public byte[]? GetFirstTileData()
+    {
+        EnsureConnectionOpen();
+
+        using var command = _connection!.CreateCommand();
+        command.CommandText = "SELECT tile_data FROM tiles LIMIT 1";
+
+        var result = command.ExecuteScalar();
+        return result as byte[];
+    }
+
+    /// <summary>
+    /// Gets the tile_data of an arbitrary tile at the given zoom level (used to probe per-zoom
+    /// vector layers / geometry types). Returns null when that zoom has no tiles.
+    /// </summary>
+    public byte[]? GetFirstTileData(int zoom)
+    {
+        EnsureConnectionOpen();
+
+        using var command = _connection!.CreateCommand();
+        command.CommandText = "SELECT tile_data FROM tiles WHERE zoom_level = @zoom LIMIT 1";
+        command.Parameters.AddWithValue("@zoom", zoom);
+
+        var result = command.ExecuteScalar();
+        return result as byte[];
+    }
+
+    /// <summary>
+    /// Gets the tile column/row coverage at a zoom level (rows are TMS, as stored). Used to derive
+    /// a layer extent when the MBTiles file has no <c>bounds</c> metadata. Returns null if empty.
+    /// </summary>
+    public (int MinColumn, int MaxColumn, int MinRow, int MaxRow)? GetTileBounds(int zoom)
+    {
+        EnsureConnectionOpen();
+
+        using var command = _connection!.CreateCommand();
+        command.CommandText =
+            "SELECT min(tile_column), max(tile_column), min(tile_row), max(tile_row) FROM tiles WHERE zoom_level = @zoom";
+        command.Parameters.AddWithValue("@zoom", zoom);
+
+        using var reader = command.ExecuteReader();
+
+        if (!reader.Read() || reader.IsDBNull(0))
+            return null;
+
+        return (reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3));
+    }
+
+    /// <summary>
     /// Gets all available zoom levels
     /// </summary>
     public List<int> GetZoomLevels()
