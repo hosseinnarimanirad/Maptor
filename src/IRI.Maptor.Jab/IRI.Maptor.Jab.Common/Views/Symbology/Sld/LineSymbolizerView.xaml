@@ -16,6 +16,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
@@ -63,8 +64,13 @@
                  Text="{Binding DashArray, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  mahApp:TextBoxHelper.Watermark="{Binding [sldEditor_lineSymbolizer_dashArrayWatermark], Source={StaticResource Localization}}"/>
 
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding [sldEditor_common_geometryProperty], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
-        <TextBox Grid.Row="6" Grid.Column="1" Margin="4" 
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding [sldEditor_lineSymbolizer_dashOffset], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
+        <mahApp:NumericUpDown Grid.Row="6" Grid.Column="1" Margin="4"
+                              Value="{Binding DashOffset, Mode=TwoWay}"
+                              Minimum="0" Maximum="1000" Interval="0.5"/>
+
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="{Binding [sldEditor_common_geometryProperty], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
+        <TextBox Grid.Row="7" Grid.Column="1" Margin="4"
                  Text="{Binding GeometryPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </UserControl>

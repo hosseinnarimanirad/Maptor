@@ -2,8 +2,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
-using System.Xml.Serialization;
+using Microsoft.Win32;
 using IRI.Maptor.Jab.Core;
 using IRI.Maptor.Sta.Ogc.SLD;
 
@@ -68,12 +69,24 @@ public class SldEditorViewModel : Notifier
         }
     }
 
+    private string _xmlPreview;
+    public string XmlPreview
+    {
+        get => _xmlPreview;
+        set
+        {
+            _xmlPreview = value;
+            RaisePropertyChanged();
+        }
+    }
+
     public ICommand AddRuleCommand { get; }
     public ICommand RemoveRuleCommand { get; }
     public ICommand MoveRuleUpCommand { get; }
     public ICommand MoveRuleDownCommand { get; }
     public ICommand ImportSldCommand { get; }
     public ICommand ExportSldCommand { get; }
+    public ICommand RefreshPreviewCommand { get; }
 
     public SldEditorViewModel()
     {
@@ -81,8 +94,9 @@ public class SldEditorViewModel : Notifier
         RemoveRuleCommand = new RelayCommand(_ => RemoveRule(), _ => SelectedRule != null);
         MoveRuleUpCommand = new RelayCommand(_ => MoveRuleUp(), _ => SelectedRule != null && Rules.IndexOf(SelectedRule) > 0);
         MoveRuleDownCommand = new RelayCommand(_ => MoveRuleDown(), _ => SelectedRule != null && Rules.IndexOf(SelectedRule) < Rules.Count - 1);
-        ImportSldCommand = new RelayCommand(param => ImportSld(param as string));
-        ExportSldCommand = new RelayCommand(param => ExportSld(param as string));
+        ImportSldCommand = new RelayCommand(_ => ImportSld());
+        ExportSldCommand = new RelayCommand(_ => ExportSld());
+        RefreshPreviewCommand = new RelayCommand(_ => RefreshPreview());
 
         // Initialize with default values
         LayerName = "NewLayer";
@@ -195,46 +209,63 @@ public class SldEditorViewModel : Notifier
         }
     }
 
-    private void ImportSld(string filePath)
+    public void RefreshPreview()
     {
-        if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+        XmlPreview = SldHelper.Serialize(ToStyledLayerDescriptor()) ?? string.Empty;
+    }
+
+    private void ImportSld()
+    {
+        var dialog = new OpenFileDialog
+        {
+            Filter = "SLD files (*.sld;*.xml)|*.sld;*.xml|All files (*.*)|*.*",
+            Title = "Import SLD"
+        };
+
+        if (dialog.ShowDialog() != true)
             return;
 
         try
         {
-            var serializer = new XmlSerializer(typeof(StyledLayerDescriptor));
-            using (var stream = File.OpenRead(filePath))
+            var sld = SldHelper.Parse(File.ReadAllText(dialog.FileName));
+            if (sld == null)
             {
-                var sld = (StyledLayerDescriptor)serializer.Deserialize(stream);
-                FromStyledLayerDescriptor(sld);
+                MessageBox.Show("The selected file could not be parsed as a valid SLD document.",
+                    "Import SLD", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
+
+            FromStyledLayerDescriptor(sld);
+            RefreshPreview();
         }
         catch (Exception ex)
         {
-            // Handle error - in production, show error dialog
-            System.Diagnostics.Debug.WriteLine($"Error importing SLD: {ex.Message}");
+            MessageBox.Show($"Error importing SLD: {ex.Message}",
+                "Import SLD", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
-    private void ExportSld(string filePath)
+    private void ExportSld()
     {
-        if (string.IsNullOrWhiteSpace(filePath))
+        var dialog = new SaveFileDialog
+        {
+            Filter = "SLD files (*.sld)|*.sld|XML files (*.xml)|*.xml|All files (*.*)|*.*",
+            Title = "Export SLD",
+            FileName = string.IsNullOrWhiteSpace(StyleName) ? "style.sld" : $"{StyleName}.sld"
+        };
+
+        if (dialog.ShowDialog() != true)
             return;
 
         try
         {
-            var sld = ToStyledLayerDescriptor();
-            var serializer = new XmlSerializer(typeof(StyledLayerDescriptor));
-
-            using (var stream = File.Create(filePath))
-            {
-                serializer.Serialize(stream, sld);
-            }
+            SldHelper.Save(dialog.FileName, ToStyledLayerDescriptor());
+            RefreshPreview();
         }
         catch (Exception ex)
         {
-            // Handle error - in production, show error dialog
-            System.Diagnostics.Debug.WriteLine($"Error exporting SLD: {ex.Message}");
+            MessageBox.Show($"Error exporting SLD: {ex.Message}",
+                "Export SLD", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

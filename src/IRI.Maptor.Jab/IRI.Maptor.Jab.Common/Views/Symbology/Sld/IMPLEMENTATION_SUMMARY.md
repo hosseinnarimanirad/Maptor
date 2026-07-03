@@ -91,8 +91,8 @@ Created 10 View components:
 
 6. **`SimpleFilterEditorView.xaml/.cs`**
    - Enable filter checkbox
-   - Filter description display (read-only)
-   - Note about advanced filter editing
+   - Editable single condition: property name, comparison operator, value
+   - Read-only computed description of the current filter
    - Grouped layout with enable/disable state
 
 #### Main Editors
@@ -171,7 +171,7 @@ Created 10 View components:
 ### Quick Start - Standalone Window
 
 ```csharp
-using IRI.Maptor.Jab.Common.View.Symbology.Sld;
+using IRI.Maptor.Jab.Controls.Symbology.Sld;
 
 // Open the SLD editor in a new window
 var editor = new SldEditorWindow();
@@ -181,7 +181,7 @@ editor.Show();
 ### Programmatic Creation
 
 ```csharp
-using IRI.Maptor.Jab.Common.ViewModel.Symbology.Sld;
+using IRI.Maptor.Jab.Common.ViewModels.Symbology;
 using System.Windows.Media;
 using IRI.Maptor.Sta.Ogc.SLD;
 
@@ -208,31 +208,22 @@ vm.Rules.Add(rule);
 var sld = vm.ToStyledLayerDescriptor();
 
 // Serialize to file
-var serializer = new System.Xml.Serialization.XmlSerializer(typeof(StyledLayerDescriptor));
-using (var stream = System.IO.File.Create("roads.sld"))
-{
-    serializer.Serialize(stream, sld);
-}
+SldHelper.Save("roads.sld", sld);
 ```
 
 ### Loading Existing SLD
 
 ```csharp
-using System.Xml.Serialization;
 using System.IO;
 using IRI.Maptor.Sta.Ogc.SLD;
 
 // Load SLD from file
-var serializer = new XmlSerializer(typeof(StyledLayerDescriptor));
-StyledLayerDescriptor sld;
-using (var stream = File.OpenRead("existing.sld"))
-{
-    sld = (StyledLayerDescriptor)serializer.Deserialize(stream);
-}
+StyledLayerDescriptor? sld = SldHelper.Parse(File.ReadAllText("existing.sld"));
 
 // Create editor and load SLD
 var vm = new SldEditorViewModel();
-vm.FromStyledLayerDescriptor(sld);
+if (sld != null)
+    vm.FromStyledLayerDescriptor(sld);
 
 // Show in window
 var window = new SldEditorWindow(vm);
@@ -243,7 +234,7 @@ window.Show();
 
 ```xml
 <Window xmlns:sld="clr-namespace:IRI.Maptor.Jab.Controls.Symbology.Sld"
-        xmlns:vm="clr-namespace:IRI.Maptor.Jab.Common.ViewModel.Symbology.Sld">
+        xmlns:vm="clr-namespace:IRI.Maptor.Jab.Common.ViewModels.Symbology;assembly=IRI.Maptor.Jab.Common">
     <Window.DataContext>
         <vm:SldEditorViewModel/>
     </Window.DataContext>
@@ -299,10 +290,9 @@ To verify the implementation:
 ## Limitations & Future Enhancements
 
 ### Current Limitations
-- **Filter Editor**: Only basic display, no visual filter builder
-- **Raster Symbolizer**: Not implemented (UI placeholder could be added)
+- **Filter Editor**: Single-condition only (property/operator/value); no nested AND/OR or spatial/like/between operators. More complex filters loaded from a file are preserved but not editable in the UI.
+- **Raster Symbolizer**: Opacity + color map editable; channel selection / contrast enhancement / shaded relief not exposed
 - **Label Placement**: Not exposed in UI (could be added to TextSymbolizer)
-- **XML Preview**: Placeholder only (real-time preview could be added)
 - **Graphic Fill/Stroke**: Not implemented (external graphics for fills/strokes)
 
 ### Suggested Enhancements

@@ -108,7 +108,7 @@ public class PointSymbolizerViewModel : SymbolizerViewModelBase
                     new CssParameter
                     {
                         Name = SldHelper.CssParameter_Fill,
-                        Value = $"#{FillColor.R:X2}{FillColor.G:X2}{FillColor.B:X2}"
+                        Value = SldColorHelper.ToHex(FillColor)
                     },
                     new CssParameter
                     {
@@ -124,7 +124,7 @@ public class PointSymbolizerViewModel : SymbolizerViewModelBase
                     new CssParameter
                     {
                         Name = SldHelper.CssParameter_Stroke,
-                        Value = $"#{StrokeColor.R:X2}{StrokeColor.G:X2}{StrokeColor.B:X2}"
+                        Value = SldColorHelper.ToHex(StrokeColor)
                     },
                     new CssParameter
                     {
@@ -175,7 +175,7 @@ public class PointSymbolizerViewModel : SymbolizerViewModelBase
             if (mark.Fill != null)
             {
                 var fillParam = mark.Fill.GetParameter(SldHelper.CssParameter_Fill);
-                if (fillParam != null && TryParseHexColor(fillParam.Value, out var fillColor))
+                if (fillParam != null && SldColorHelper.TryParseHexColor(fillParam.Value, out var fillColor))
                     FillColor = fillColor;
 
                 var fillOpacityParam = mark.Fill.GetParameter(SldHelper.CssParameter_FillOpacity);
@@ -186,7 +186,7 @@ public class PointSymbolizerViewModel : SymbolizerViewModelBase
             if (mark.Stroke != null)
             {
                 var strokeParam = mark.Stroke.GetParameter(SldHelper.CssParameter_Stroke);
-                if (strokeParam != null && TryParseHexColor(strokeParam.Value, out var strokeColor))
+                if (strokeParam != null && SldColorHelper.TryParseHexColor(strokeParam.Value, out var strokeColor))
                     StrokeColor = strokeColor;
 
                 var strokeWidthParam = mark.Stroke.GetParameter(SldHelper.CssParameter_StrokeWidth);
@@ -207,25 +207,6 @@ public class PointSymbolizerViewModel : SymbolizerViewModelBase
             if (pointSymbolizer.Graphic.Rotation.HasValue)
                 Rotation = pointSymbolizer.Graphic.Rotation.Value;
         }
-    }
-
-    private bool TryParseHexColor(string hex, out System.Windows.Media.Color color)
-    {
-        color = System.Windows.Media.Colors.Black;
-        if (string.IsNullOrWhiteSpace(hex))
-            return false;
-
-        hex = hex.TrimStart('#');
-        if (hex.Length == 6 &&
-            byte.TryParse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber, null, out var r) &&
-            byte.TryParse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber, null, out var g) &&
-            byte.TryParse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out var b))
-        {
-            color = System.Windows.Media.Color.FromRgb(r, g, b);
-            return true;
-        }
-
-        return false;
     }
 }
 

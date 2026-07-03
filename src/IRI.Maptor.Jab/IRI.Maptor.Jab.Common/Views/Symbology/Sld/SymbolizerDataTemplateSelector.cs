@@ -10,20 +10,24 @@ public class SymbolizerDataTemplateSelector : DataTemplateSelector
     public DataTemplate LineTemplate { get; set; }
     public DataTemplate PolygonTemplate { get; set; }
     public DataTemplate TextTemplate { get; set; }
+    public DataTemplate RasterTemplate { get; set; }
 
     public override DataTemplate SelectTemplate(object item, DependencyObject container)
     {
         if (item is PointSymbolizerViewModel)
             return PointTemplate;
-        
+
         if (item is LineSymbolizerViewModel)
             return LineTemplate;
-        
+
         if (item is PolygonSymbolizerViewModel)
             return PolygonTemplate;
-        
+
         if (item is TextSymbolizerViewModel)
             return TextTemplate;
+
+        if (item is RasterSymbolizerViewModel)
+            return RasterTemplate;
 
         return base.SelectTemplate(item, container);
     }

@@ -478,21 +478,41 @@ public class ColorMapEntry
     [XmlAttribute("color")]
     public string Color { get; set; }
 
-    // double? cannot be used because complexTypes (such as Nullable<T>)
-    // are not supported as XmlAttribute
+    // Nullable<T> is not supported as an XmlAttribute, so the wire form stays a
+    // string; the typed Opacity/Quantity accessors below expose real numbers.
     [XmlAttribute("opacity")]
-    public string Opacity { get; set; }
+    public string OpacityText { get; set; }
 
-    // double? cannot be used because complexTypes (such as Nullable<T>)
-    // are not supported as XmlAttribute
     [XmlAttribute("quantity")]
-    public string Quantity { get; set; }
+    public string QuantityText { get; set; }
 
     [XmlAttribute("label")]
     public string Label { get; set; }
 
-    //public bool ShouldSerializeOpacity() => Opacity.HasValue;
-    //public bool ShouldSerializeQuantity() => Quantity.HasValue;
+    [XmlIgnore]
+    public double? Opacity
+    {
+        get => ParseInvariant(OpacityText);
+        set => OpacityText = FormatInvariant(value);
+    }
+
+    [XmlIgnore]
+    public double? Quantity
+    {
+        get => ParseInvariant(QuantityText);
+        set => QuantityText = FormatInvariant(value);
+    }
+
+    private static double? ParseInvariant(string text) =>
+        double.TryParse(text, System.Globalization.NumberStyles.Any,
+            System.Globalization.CultureInfo.InvariantCulture, out var value)
+            ? value
+            : (double?)null;
+
+    private static string FormatInvariant(double? value) =>
+        value.HasValue
+            ? value.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)
+            : null;
 }
 
 public class ContrastEnhancement
@@ -532,86 +552,3 @@ public class ImageOutline
     [XmlElement("PolygonSymbolizer")]
     public PolygonSymbolizer PolygonSymbolizer { get; set; }
 }
-
-//// OGC Filter types (expanded scaffolding)
-//public class FilterType
-//{
-//    [XmlElement("PropertyIsEqualTo", Namespace = SldNamespaces.OGC)]
-//    public PropertyFilterBase PropertyIsEqualTo { get; set; }
-
-//    [XmlElement("PropertyIsLessThan", Namespace = SldNamespaces.OGC)]
-//    public PropertyFilterBase PropertyIsLessThan { get; set; }
-
-//    [XmlElement("PropertyIsNotEqualTo", Namespace = SldNamespaces.OGC)]
-//    public PropertyFilterBase PropertyIsNotEqualTo { get; set; }
-
-//    [XmlElement("PropertyIsLessThanOrEqualTo", Namespace = SldNamespaces.OGC)]
-//    public PropertyFilterBase PropertyIsLessThanOrEqualTo { get; set; }
-
-//    [XmlElement("PropertyIsGreaterThan", Namespace = SldNamespaces.OGC)]
-//    public PropertyFilterBase PropertyIsGreaterThan { get; set; }
-
-//    [XmlElement("PropertyIsGreaterThanOrEqualTo", Namespace = SldNamespaces.OGC)]
-//    public PropertyFilterBase PropertyIsGreaterThanOrEqualTo { get; set; }
-
-//    // Additional common filters
-//    [XmlElement("PropertyIsLike", Namespace = SldNamespaces.OGC)]
-//    public PropertyIsLikeFilter PropertyIsLike { get; set; }
-
-//    [XmlElement("PropertyIsNull", Namespace = SldNamespaces.OGC)]
-//    public PropertyIsNullFilter PropertyIsNull { get; set; }
-
-//    [XmlElement("PropertyIsBetween", Namespace = SldNamespaces.OGC)]
-//    public PropertyIsBetweenFilter PropertyIsBetween { get; set; }
-//}
-
-//public class PropertyFilterBase
-//{
-//    [XmlElement("PropertyName", Namespace = SldNamespaces.OGC)]
-//    public string PropertyName { get; set; }
-
-//    [XmlElement("Literal", Namespace = SldNamespaces.OGC)]
-//    public string Literal { get; set; }
-//}
-
-//public class PropertyIsLikeFilter
-//{
-//    [XmlAttribute("wildCard")]
-//    public string WildCard { get; set; } = "*";
-
-//    [XmlAttribute("singleChar")]
-//    public string SingleChar { get; set; } = "?";
-
-//    [XmlAttribute("escape")]
-//    public string Escape { get; set; } = "\\";
-
-//    [XmlElement("PropertyName", Namespace = SldNamespaces.OGC)]
-//    public string PropertyName { get; set; }
-
-//    [XmlElement("Literal", Namespace = SldNamespaces.OGC)]
-//    public string Literal { get; set; }
-//}
-
-//public class PropertyIsNullFilter
-//{
-//    [XmlElement("PropertyName", Namespace = SldNamespaces.OGC)]
-//    public string PropertyName { get; set; }
-//}
-
-//public class PropertyIsBetweenFilter
-//{
-//    [XmlElement("PropertyName", Namespace = SldNamespaces.OGC)]
-//    public string PropertyName { get; set; }
-
-//    [XmlElement("LowerBoundary", Namespace = SldNamespaces.OGC)]
-//    public BoundaryValue LowerBoundary { get; set; }
-
-//    [XmlElement("UpperBoundary", Namespace = SldNamespaces.OGC)]
-//    public BoundaryValue UpperBoundary { get; set; }
-//}
-
-//public class BoundaryValue
-//{
-//    [XmlElement("Literal", Namespace = SldNamespaces.OGC)]
-//    public string Literal { get; set; }
-//}

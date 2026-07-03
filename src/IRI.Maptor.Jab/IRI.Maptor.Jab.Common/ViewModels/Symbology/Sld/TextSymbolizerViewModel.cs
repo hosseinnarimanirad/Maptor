@@ -154,7 +154,7 @@ public class TextSymbolizerViewModel : SymbolizerViewModelBase
                 new CssParameter
                 {
                     Name = SldHelper.CssParameter_Fill,
-                    Value = $"#{FontColor.R:X2}{FontColor.G:X2}{FontColor.B:X2}"
+                    Value = SldColorHelper.ToHex(FontColor)
                 }
             }
         };
@@ -181,7 +181,7 @@ public class TextSymbolizerViewModel : SymbolizerViewModelBase
                         new CssParameter
                         {
                             Name = SldHelper.CssParameter_Fill,
-                            Value = $"#{HaloColor.R:X2}{HaloColor.G:X2}{HaloColor.B:X2}"
+                            Value = SldColorHelper.ToHex(HaloColor)
                         },
                         new CssParameter
                         {
@@ -231,7 +231,7 @@ public class TextSymbolizerViewModel : SymbolizerViewModelBase
         if (textSymbolizer.Fill != null)
         {
             var fillParam = textSymbolizer.Fill.GetParameter(SldHelper.CssParameter_Fill);
-            if (fillParam != null && TryParseHexColor(fillParam.Value, out var fontColor))
+            if (fillParam != null && SldColorHelper.TryParseHexColor(fillParam.Value, out var fontColor))
                 FontColor = fontColor;
         }
 
@@ -246,7 +246,7 @@ public class TextSymbolizerViewModel : SymbolizerViewModelBase
             if (textSymbolizer.Halo.Fill != null)
             {
                 var haloFillParam = textSymbolizer.Halo.Fill.GetParameter(SldHelper.CssParameter_Fill);
-                if (haloFillParam != null && TryParseHexColor(haloFillParam.Value, out var haloColor))
+                if (haloFillParam != null && SldColorHelper.TryParseHexColor(haloFillParam.Value, out var haloColor))
                     HaloColor = haloColor;
 
                 var haloOpacityParam = textSymbolizer.Halo.Fill.GetParameter(SldHelper.CssParameter_FillOpacity);
@@ -254,25 +254,6 @@ public class TextSymbolizerViewModel : SymbolizerViewModelBase
                     HaloOpacity = haloOpacityParam.DoubleValue.Value;
             }
         }
-    }
-
-    private bool TryParseHexColor(string hex, out System.Windows.Media.Color color)
-    {
-        color = System.Windows.Media.Colors.Black;
-        if (string.IsNullOrWhiteSpace(hex))
-            return false;
-
-        hex = hex.TrimStart('#');
-        if (hex.Length == 6 &&
-            byte.TryParse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber, null, out var r) &&
-            byte.TryParse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber, null, out var g) &&
-            byte.TryParse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out var b))
-        {
-            color = System.Windows.Media.Color.FromRgb(r, g, b);
-            return true;
-        }
-
-        return false;
     }
 }
 

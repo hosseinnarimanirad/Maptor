@@ -1,7 +1,10 @@
 ﻿using IRI.Maptor.Sta.Common.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace IRI.Maptor.Sta.Ogc.SLD;
 
@@ -123,5 +126,55 @@ public static class SldHelper
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// Serializes a <see cref="StyledLayerDescriptor"/> to an SLD XML string.
+    /// The namespace prefixes (sld/ogc/xlink/xsi) are emitted from the
+    /// declarations the root object carries. Returns null on failure.
+    /// </summary>
+    public static string? Serialize(StyledLayerDescriptor? sld, bool indented = true)
+    {
+        if (sld is null)
+            return null;
+
+        try
+        {
+            var settings = new XmlWriterSettings
+            {
+                Indent = indented,
+                IndentChars = "  ",
+                Encoding = Encoding.UTF8,
+            };
+
+            var serializer = new XmlSerializer(typeof(StyledLayerDescriptor));
+
+            using var stringWriter = new Utf8StringWriter();
+            using (var xmlWriter = XmlWriter.Create(stringWriter, settings))
+            {
+                serializer.Serialize(xmlWriter, sld);
+            }
+
+            return stringWriter.ToString();
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Serializes a <see cref="StyledLayerDescriptor"/> to an SLD file at <paramref name="path"/>.
+    /// </summary>
+    public static void Save(string path, StyledLayerDescriptor sld, bool indented = true)
+    {
+        XmlHelper.Serialize(path, sld, indented);
+    }
+
+    // StringWriter reports UTF-16 by default, which would put encoding="utf-16"
+    // in the XML declaration; force UTF-8 so the preview/output declaration is correct.
+    private sealed class Utf8StringWriter : StringWriter
+    {
+        public override Encoding Encoding => Encoding.UTF8;
     }
 }

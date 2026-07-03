@@ -5,15 +5,17 @@ This folder contains WPF UserControls and ViewModels for creating and editing OG
 ## Overview
 
 The SLD Editor provides a comprehensive user interface for defining and modifying SLD specifications with support for:
-- Point, Line, Polygon, and Text symbolizers
-- OGC filters for rule-based styling
+- Point, Line, Polygon, Text, and Raster symbolizers
+- Editable single-condition OGC filters for rule-based styling
 - Scale-dependent rendering (min/max scale denominators)
 - Color pickers and property editors
-- Import/Export SLD XML files
+- Live XML preview and Import/Export of SLD XML files
+
+> **Namespaces:** views live in `IRI.Maptor.Jab.Controls.Symbology.Sld`; view-models live in `IRI.Maptor.Jab.Common.ViewModels.Symbology`.
 
 ## Components
 
-### ViewModels (`ViewModel/Symbology/Sld/`)
+### ViewModels (`ViewModels/Symbology/Sld/`, namespace `IRI.Maptor.Jab.Common.ViewModels.Symbology`)
 
 #### Core ViewModels
 - **`SldEditorViewModel`** - Main ViewModel managing the entire SLD document
@@ -25,7 +27,7 @@ The SLD Editor provides a comprehensive user interface for defining and modifyin
 - **`RuleViewModel`** - Represents a single SLD Rule
   - Properties: Name, Title, Abstract
   - Scale range: MinScale, MaxScale
-  - Filter support: HasFilter, Filter, FilterDescription
+  - Filter support: HasFilter, FilterPropertyName, FilterOperator, FilterValue, FilterDescription
   - Contains collection of symbolizers
   - Commands for adding/removing symbolizers
 
@@ -55,14 +57,18 @@ All inherit from `SymbolizerViewModelBase`:
   - Font color
   - Optional halo (outline) with radius, color, and opacity
 
-### Views (`View/Symbology/Sld/`)
+- **`RasterSymbolizerViewModel`**
+  - Raster opacity
+  - Editable color map (color, quantity, label, per-entry opacity)
+
+### Views (`Views/Symbology/Sld/`)
 
 #### Main Views
 - **`SldEditorView`** - Main composite view showing the full editor
   - Style information panel (layer name, style name, title, abstract)
   - Rules list with toolbar
   - Tabbed interface for rule properties and symbolizers
-  - XML preview (placeholder)
+  - Live XML preview (regenerated when the tab is opened or refreshed)
 
 - **`SldEditorWindow`** - Standalone window wrapping `SldEditorView`
   - Toolbar with import/export buttons
@@ -73,10 +79,11 @@ All inherit from `SymbolizerViewModelBase`:
 - **`LineSymbolizerView`** - Edit line symbolizer properties
 - **`PolygonSymbolizerView`** - Edit polygon symbolizer properties
 - **`TextSymbolizerView`** - Edit text symbolizer properties (with scrolling support)
+- **`RasterSymbolizerView`** - Edit raster opacity and color-map entries
 
 #### Supporting Views
 - **`ScaleRangeEditorView`** - Edit min/max scale denominators
-- **`SimpleFilterEditorView`** - Basic filter editor (shows filter description, read-only)
+- **`SimpleFilterEditorView`** - Editable single-condition filter (property / operator / value)
 
 #### Utilities
 - **`SymbolizerDataTemplateSelector`** - Selects appropriate view based on symbolizer type
@@ -86,8 +93,8 @@ All inherit from `SymbolizerViewModelBase`:
 ### Basic Usage - Standalone Window
 
 ```csharp
-using IRI.Maptor.Jab.Common.View.Symbology.Sld;
-using IRI.Maptor.Jab.Common.ViewModel.Symbology.Sld;
+using IRI.Maptor.Jab.Controls.Symbology.Sld;   // Views (SldEditorWindow, SldEditorView, ...)
+using IRI.Maptor.Jab.Common.ViewModels.Symbology; // ViewModels (SldEditorViewModel, ...)
 
 // Create and show the SLD editor window
 var editor = new SldEditorWindow();
@@ -97,7 +104,7 @@ editor.Show();
 ### Programmatic SLD Creation
 
 ```csharp
-using IRI.Maptor.Jab.Common.ViewModel.Symbology.Sld;
+using IRI.Maptor.Jab.Common.ViewModels.Symbology;
 using IRI.Maptor.Sta.Ogc.SLD;
 
 // Create a new SLD editor
@@ -135,21 +142,15 @@ var sld = editor.ToStyledLayerDescriptor();
 
 ```csharp
 using System.IO;
-using System.Xml.Serialization;
 using IRI.Maptor.Sta.Ogc.SLD;
 
 // Deserialize existing SLD
-var serializer = new XmlSerializer(typeof(StyledLayerDescriptor));
-StyledLayerDescriptor sld;
-
-using (var stream = File.OpenRead("style.sld"))
-{
-    sld = (StyledLayerDescriptor)serializer.Deserialize(stream);
-}
+StyledLayerDescriptor? sld = SldHelper.Parse(File.ReadAllText("style.sld"));
 
 // Load into editor
 var editor = new SldEditorViewModel();
-editor.FromStyledLayerDescriptor(sld);
+if (sld != null)
+    editor.FromStyledLayerDescriptor(sld);
 
 // Show in window
 var window = new SldEditorWindow(editor);
@@ -187,17 +188,22 @@ window.Show();
 ✅ **TextSymbolizer**
 - Font properties (family, size, style, weight)
 - Text color
-- Halo effect for better readability
+- Halo effect (radius, color, opacity) for better readability
+
+✅ **RasterSymbolizer**
+- Raster opacity
+- Editable color map (color, quantity, label, per-entry opacity)
 
 ### Rule Features
 ✅ Scale-dependent rendering (min/max scale denominators)
-✅ OGC Filter support (basic display)
+✅ Editable single-condition OGC filter (property / operator / value); more complex loaded filters are preserved on round-trip
 ✅ Multiple symbolizers per rule
 ✅ Rule ordering (move up/down)
 
 ### File Operations
-✅ Export to SLD XML file
-✅ Import from SLD XML file
+✅ Export to SLD XML file (via `SldHelper.Save`)
+✅ Import from SLD XML file (via `SldHelper.Parse`)
+✅ Live XML preview (via `SldHelper.Serialize`)
 ✅ Proper XML serialization with namespaces
 
 ## Architecture
@@ -219,9 +225,8 @@ The components follow MVVM pattern:
 ## Future Enhancements
 
 Potential improvements:
-- Advanced filter builder UI
+- Advanced filter builder UI (nested AND/OR, spatial/like/between operators)
 - Label placement options editor
-- Raster symbolizer support
 - SLD validation and error reporting
 - Style preview/rendering
 - Import from other style formats
@@ -230,9 +235,9 @@ Potential improvements:
 ## Related Classes
 
 See also:
-- `IRI.Maptor.Sta.Ogc.SLD` namespace for the underlying data model
-- `IRI.Maptor.Sta.Ogc.FilterEncoding` for OGC filter classes
-- `IRI.Maptor.Jab.Common.ViewModels.ViewModelBase` for MVVM base classes
+- `IRI.Maptor.Sta.Ogc.SLD` namespace for the underlying data model (and `SldHelper` for read/write)
+- `IRI.Maptor.Sta.Ogc` for OGC filter classes (`OgcFilter`, `OgcPropertyIsEqualTo`, ...)
+- `IRI.Maptor.Jab.Core.Notifier` for the MVVM base class
 
 ## License
 

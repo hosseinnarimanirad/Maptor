@@ -21,6 +21,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"/>
@@ -87,12 +88,19 @@
 
             <TextBlock Grid.Row="9" Grid.Column="0" Text="{Binding [sldEditor_textSymbolizer_haloColor], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"
                        IsEnabled="{Binding EnableHalo}"/>
-            <mahApp:ColorPicker Grid.Row="9" Grid.Column="1" Margin="4" 
+            <mahApp:ColorPicker Grid.Row="9" Grid.Column="1" Margin="4"
                                 SelectedColor="{Binding HaloColor, Mode=TwoWay}"
                                 IsEnabled="{Binding EnableHalo}"/>
 
-            <TextBlock Grid.Row="10" Grid.Column="0" Text="{Binding [sldEditor_common_geometryProperty], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
-            <TextBox Grid.Row="10" Grid.Column="1" Margin="4" 
+            <TextBlock Grid.Row="10" Grid.Column="0" Text="{Binding [sldEditor_textSymbolizer_haloOpacity], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"
+                       IsEnabled="{Binding EnableHalo}"/>
+            <Slider Grid.Row="10" Grid.Column="1" Margin="4"
+                    Value="{Binding HaloOpacity, Mode=TwoWay}"
+                    Minimum="0" Maximum="1" TickFrequency="0.1" IsSnapToTickEnabled="True"
+                    IsEnabled="{Binding EnableHalo}"/>
+
+            <TextBlock Grid.Row="11" Grid.Column="0" Text="{Binding [sldEditor_common_geometryProperty], Source={StaticResource Localization}}" VerticalAlignment="Center" Margin="4"/>
+            <TextBox Grid.Row="11" Grid.Column="1" Margin="4"
                      Text="{Binding GeometryPropertyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
     </ScrollViewer>

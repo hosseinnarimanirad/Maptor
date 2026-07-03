@@ -92,7 +92,7 @@ public class LineSymbolizerViewModel : SymbolizerViewModelBase
             new CssParameter
             {
                 Name = SldHelper.CssParameter_Stroke,
-                Value = $"#{StrokeColor.R:X2}{StrokeColor.G:X2}{StrokeColor.B:X2}"
+                Value = SldColorHelper.ToHex(StrokeColor)
             },
             new CssParameter
             {
@@ -154,7 +154,7 @@ public class LineSymbolizerViewModel : SymbolizerViewModelBase
         GeometryPropertyName = lineSymbolizer.Geometry?.PropertyName;
 
         var strokeParam = lineSymbolizer.Stroke.GetParameter(SldHelper.CssParameter_Stroke);
-        if (strokeParam != null && TryParseHexColor(strokeParam.Value, out var strokeColor))
+        if (strokeParam != null && SldColorHelper.TryParseHexColor(strokeParam.Value, out var strokeColor))
             StrokeColor = strokeColor;
 
         var strokeWidthParam = lineSymbolizer.Stroke.GetParameter(SldHelper.CssParameter_StrokeWidth);
@@ -180,25 +180,6 @@ public class LineSymbolizerViewModel : SymbolizerViewModelBase
         var dashOffsetParam = lineSymbolizer.Stroke.GetParameter(SldHelper.CssParameter_StrokeDashOffset);
         if (dashOffsetParam?.DoubleValue.HasValue == true)
             DashOffset = dashOffsetParam.DoubleValue.Value;
-    }
-
-    private bool TryParseHexColor(string hex, out System.Windows.Media.Color color)
-    {
-        color = System.Windows.Media.Colors.Black;
-        if (string.IsNullOrWhiteSpace(hex))
-            return false;
-
-        hex = hex.TrimStart('#');
-        if (hex.Length == 6 &&
-            byte.TryParse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber, null, out var r) &&
-            byte.TryParse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber, null, out var g) &&
-            byte.TryParse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out var b))
-        {
-            color = System.Windows.Media.Color.FromRgb(r, g, b);
-            return true;
-        }
-
-        return false;
     }
 }
 

@@ -6,10 +6,11 @@
              xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls.Symbology.Sld"
-             mc:Ignorable="d" 
+             xmlns:converters="clr-namespace:IRI.Maptor.Jab.Common.Converters"
+             mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="900">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:NotNullToBoolConverter x:Key="NotNullToBool"/>
         
         <!-- DataTemplate for PointSymbolizer -->
         <DataTemplate x:Key="PointSymbolizerTemplate">
@@ -30,13 +31,19 @@
         <DataTemplate x:Key="TextSymbolizerTemplate">
             <maptor:TextSymbolizerView DataContext="{Binding}"/>
         </DataTemplate>
-        
+
+        <!-- DataTemplate for RasterSymbolizer -->
+        <DataTemplate x:Key="RasterSymbolizerTemplate">
+            <maptor:RasterSymbolizerView DataContext="{Binding}"/>
+        </DataTemplate>
+
         <!-- Symbolizer Type Selector -->
         <maptor:SymbolizerDataTemplateSelector x:Key="SymbolizerTemplateSelector"
             PointTemplate="{StaticResource PointSymbolizerTemplate}"
             LineTemplate="{StaticResource LineSymbolizerTemplate}"
             PolygonTemplate="{StaticResource PolygonSymbolizerTemplate}"
-            TextTemplate="{StaticResource TextSymbolizerTemplate}"/>
+            TextTemplate="{StaticResource TextSymbolizerTemplate}"
+            RasterTemplate="{StaticResource RasterSymbolizerTemplate}"/>
     </UserControl.Resources>
     
     <Grid>
@@ -120,8 +127,10 @@
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Background="LightGray"/>
 
             <!-- Rule Details -->
-            <TabControl Grid.Column="2" 
-                        IsEnabled="{Binding SelectedRule, Converter={StaticResource BoolToVis}}">
+            <TabControl Grid.Column="2"
+                        x:Name="RuleTabControl"
+                        SelectionChanged="OnTabChanged"
+                        IsEnabled="{Binding SelectedRule, Converter={StaticResource NotNullToBool}}">
                 
                 <!-- Rule Properties Tab -->
                 <TabItem Header="{Binding [sldEditor_common_ruleProperties], Source={StaticResource Localization}}">
@@ -189,9 +198,13 @@
                                     ToolTip="{Binding [sldEditor_common_addPolygonSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                                 <iconPacks:PackIconMaterial Kind="ShapePolygonPlus" />
                             </Button>
-                            <Button Command="{Binding SelectedRule.AddTextSymbolizerCommand}" 
+                            <Button Command="{Binding SelectedRule.AddTextSymbolizerCommand}"
                                     ToolTip="{Binding [sldEditor_common_addTextSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
                                 <iconPacks:PackIconMaterial Kind="FormatAnnotationPlus" />
+                            </Button>
+                            <Button Command="{Binding SelectedRule.AddRasterSymbolizerCommand}"
+                                    ToolTip="{Binding [sldEditor_common_addRasterSymbolizer], Source={StaticResource Localization}}" Width="32" Height="32" Margin="2">
+                                <iconPacks:PackIconMaterial Kind="Image" />
                             </Button>
                             <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="4,0"/>
                             <Button Command="{Binding SelectedRule.RemoveSymbolizerCommand}" 
@@ -220,7 +233,7 @@
                 </TabItem>
 
                 <!-- XML Preview Tab -->
-                <TabItem Header="{Binding [sldEditor_common_xmlPreview], Source={StaticResource Localization}}">
+                <TabItem x:Name="XmlPreviewTab" Header="{Binding [sldEditor_common_xmlPreview], Source={StaticResource Localization}}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -228,18 +241,19 @@
                         </Grid.RowDefinitions>
                         
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4">
-                            <Button Content="{Binding [sldEditor_common_exportToFile], Source={StaticResource Localization}}" Width="120" Margin="4"/>
-                            <Button Content="{Binding [sldEditor_common_importFromFile], Source={StaticResource Localization}}" Width="120" Margin="4"/>
+                            <Button Content="{Binding [sldEditor_common_refreshPreview], Source={StaticResource Localization}}" Command="{Binding RefreshPreviewCommand}" Width="120" Margin="4"/>
+                            <Button Content="{Binding [sldEditor_common_exportToFile], Source={StaticResource Localization}}" Command="{Binding ExportSldCommand}" Width="120" Margin="4"/>
+                            <Button Content="{Binding [sldEditor_common_importFromFile], Source={StaticResource Localization}}" Command="{Binding ImportSldCommand}" Width="120" Margin="4"/>
                         </StackPanel>
-                        
-                        <TextBox Grid.Row="1" 
-                                 Margin="4" 
+
+                        <TextBox Grid.Row="1"
+                                 Margin="4"
                                  IsReadOnly="True"
-                                 TextWrapping="Wrap"
+                                 TextWrapping="NoWrap"
                                  VerticalScrollBarVisibility="Auto"
                                  HorizontalScrollBarVisibility="Auto"
                                  FontFamily="Consolas"
-                                 Text="{Binding [sldEditor_common_xmlPreviewPlaceholder], Source={StaticResource Localization}}"/>
+                                 Text="{Binding XmlPreview, Mode=OneWay}"/>
                     </Grid>
                 </TabItem>
             </TabControl>
