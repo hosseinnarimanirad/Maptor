@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1632,5 +1632,35 @@
   </data>
   <data name="validation_msg_unknownError" xml:space="preserve">
     <value>Неизвестное исключение</value>
+  </data>
+  <data name="dialog_printPdf_title" xml:space="preserve">
+    <value>Печать в PDF</value>
+  </data>
+  <data name="dialog_printPdf_mapTitleWatermark" xml:space="preserve">
+    <value>Название карты...</value>
+  </data>
+  <data name="dialog_printPdf_includeDecorations" xml:space="preserve">
+    <value>Добавить элементы оформления карты</value>
+  </data>
+  <data name="dialog_printPdf_scaleBar" xml:space="preserve">
+    <value>Масштабная линейка</value>
+  </data>
+  <data name="dialog_printPdf_maptorLogo" xml:space="preserve">
+    <value>Значок Maptor</value>
+  </data>
+  <data name="dialog_printPdf_companyLogo" xml:space="preserve">
+    <value>Логотип компании (PNG)...</value>
+  </data>
+  <data name="dialog_printPdf_graticule" xml:space="preserve">
+    <value>Координатная сетка</value>
+  </data>
+  <data name="dialog_printPdf_landscape" xml:space="preserve">
+    <value>Альбомная</value>
+  </data>
+  <data name="dialog_printPdf_preview" xml:space="preserve">
+    <value>Предпросмотр</value>
+  </data>
+  <data name="dialog_printPdf_print" xml:space="preserve">
+    <value>Печать</value>
   </data>
 </root>

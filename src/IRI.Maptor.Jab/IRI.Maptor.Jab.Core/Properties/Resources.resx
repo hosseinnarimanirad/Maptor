@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1434,6 +1434,54 @@
   <data name="sldEditor_filter_simplifiedViewNote" xml:space="preserve">
     <value>Note: This is a simplified view. For complex filters, edit the XML directly or use a specialized filter builder.</value>
   </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>Add Raster Symbolizer</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>Dash Offset:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>Halo Opacity:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>Opacity:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>Color Map</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>Add Entry</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>Remove Entry</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>Opacity</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>Color-map entries map raster values (quantity) to colors.</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>Property:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>Operator:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>Value:</value>
+  </data>
   <data name="dialog_csvTsvOpen_geometryType" xml:space="preserve">
     <value>Geometry Type</value>
   </data>
@@ -1725,5 +1773,35 @@
   </data>
   <data name="cmd_drawingLegendItem_exportAsDxf" xml:space="preserve">
     <value>Export as Dxf</value>
+  </data>
+  <data name="dialog_printPdf_title" xml:space="preserve">
+    <value>Print to PDF</value>
+  </data>
+  <data name="dialog_printPdf_mapTitleWatermark" xml:space="preserve">
+    <value>Map title...</value>
+  </data>
+  <data name="dialog_printPdf_includeDecorations" xml:space="preserve">
+    <value>Include map decorations</value>
+  </data>
+  <data name="dialog_printPdf_scaleBar" xml:space="preserve">
+    <value>Scale bar</value>
+  </data>
+  <data name="dialog_printPdf_maptorLogo" xml:space="preserve">
+    <value>Maptor icon</value>
+  </data>
+  <data name="dialog_printPdf_companyLogo" xml:space="preserve">
+    <value>Company logo (PNG)...</value>
+  </data>
+  <data name="dialog_printPdf_graticule" xml:space="preserve">
+    <value>Lat/long grid</value>
+  </data>
+  <data name="dialog_printPdf_landscape" xml:space="preserve">
+    <value>Landscape</value>
+  </data>
+  <data name="dialog_printPdf_preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="dialog_printPdf_print" xml:space="preserve">
+    <value>Print</value>
   </data>
 </root>

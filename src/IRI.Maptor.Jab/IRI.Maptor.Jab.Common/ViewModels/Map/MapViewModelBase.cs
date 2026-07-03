@@ -34,15 +34,22 @@ using IRI.Maptor.Sta.Persistence.RasterDataSources;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 
 using IRI.Maptor.Ket.GdiPersistence;
+using IRI.Maptor.Ket.SqlitePersistence.MbTiles;
 
 using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Models;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Jab.Common.Models.Legend;
+using IRI.Maptor.Jab.Common.Models.Print;
 using IRI.Maptor.Jab.Common.ViewModels.Map;
 using IRI.Maptor.Jab.Controls.MapMarkers;
+using IRI.Maptor.Jab.Common.Cartography;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
+using IRI.Maptor.Ket.SqlitePersistence.GeoPackage;
 using IRI.Maptor.Jab.Common.ViewModels.CoordinateEditor;
+
+// Disambiguate: the GeoPackage namespace also declares a TileInfo; this file uses the Spatial one.
+using TileInfo = IRI.Maptor.Sta.Spatial.Model.TileInfo;
 using IRI.Maptor.Jab.Common.Models.Settings;
 using IRI.Maptor.Jab.Common.Localization;
 using IRI.Maptor.Jab.Common.Layers;
@@ -962,7 +969,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public bool IsZoomInMode
     {
-        get => MapAction == MapAction.ZoomIn; 
+        get => MapAction == MapAction.ZoomIn;
         set
         {
             if (value)
@@ -978,7 +985,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public bool IsZoomOutMode
     {
-        get => MapAction == MapAction.ZoomOut; 
+        get => MapAction == MapAction.ZoomOut;
         set
         {
             if (value)
@@ -994,7 +1001,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public bool IsZoomInRectangleMode
     {
-        get => MapAction == MapAction.ZoomInRectangle; 
+        get => MapAction == MapAction.ZoomInRectangle;
         set
         {
             if (value)
@@ -1058,7 +1065,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public bool IsDrawRectangleMode
     {
-        get => MapAction == MapAction.DrawRectangle; 
+        get => MapAction == MapAction.DrawRectangle;
         set
         {
             if (value)
@@ -3510,10 +3517,10 @@ public abstract class MapViewModelBase : ViewModelBase
         // session's final setup, so it survives a tool switch's teardown). Here we only set the title.
         SketchBar.SetMode(mode switch
         {
-            DrawMode.Point     => SketchBarMode.DrawPoint,
-            DrawMode.Polyline  => SketchBarMode.DrawPolyline,
+            DrawMode.Point => SketchBarMode.DrawPoint,
+            DrawMode.Polyline => SketchBarMode.DrawPolyline,
             DrawMode.Rectangle => SketchBarMode.DrawRectangle,
-            _                  => SketchBarMode.DrawPolygon,
+            _ => SketchBarMode.DrawPolygon,
         });
 
         options = options ?? MapSettings.DrawingOptions;
@@ -3695,7 +3702,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         var drawingItemLayer = DrawingItemLayer.CreateTextLayer("Text",
         [
-            new Locateable(geodeticPoint, AncherFunctionHandlers.BottomCenter){ Element = new TextboxMarker(){ DataContext = viewModel} }
+            new Locateable(geodeticPoint, AncherFunctionHandlers.BottomCenter) { Element = new TextboxMarker() { DataContext = viewModel } }
         ]);
 
         viewModel.RequestDelete = () => RemoveDrawingItem(drawingItemLayer);
@@ -3984,11 +3991,50 @@ public abstract class MapViewModelBase : ViewModelBase
         //}
     }
 
+    // Last-used print dialog selections, kept for the session so the dialog reopens pre-filled.
+    private PrintToPdfDialogOptions? _lastPrintToPdfOptions;
+
     public async Task PrintToPdfAsync(object owner, bool supportPdfLayers = true)
     {
         var boundingBox = PrintArea.IsNaN() ? CurrentExtent : PrintArea;
 
         var mapScale = MapScale;
+
+        // Show print options dialog (title, decorations, page setup)
+        var thumbnailExtent = boundingBox;
+
+        var printOptions = await DialogService.ShowPrintToPdfDialogAsync(
+            owner,
+            () => CaptureThumbnailAsync(thumbnailExtent, 320, 320),
+            _lastPrintToPdfOptions);
+
+        if (printOptions == null)
+            return;
+
+        _lastPrintToPdfOptions = printOptions;
+
+        var decorations = printOptions.IncludeDecorations ? PdfDecorationHelper.BuildDecorations(printOptions) : null;
+
+        // Create base PDF options; the plain (no decorations) export keeps the classic
+        // extent-shaped auto page, the decorated one uses the dialog's page setup.
+        var baseOptions = new PdfOptions
+        {
+            Title = string.IsNullOrWhiteSpace(printOptions.MapTitle) ? "Map Export" : printOptions.MapTitle,
+            Creator = "IRI.Maptor",
+            PageSize = PdfPageSize.Auto,
+            BoundingBoxPadding = 0.05 // 5% padding
+        };
+
+        if (decorations?.HasAny == true)
+        {
+            baseOptions.PageSize = printOptions.PageSize;
+            baseOptions.PageOrientation = printOptions.PageOrientation;
+            baseOptions.BoundingBoxPadding = 0;
+
+            // Expand the extent to the layout frame's aspect ratio, so tiles and features
+            // are fetched for everything the printed frame will show.
+            boundingBox = PdfWriter.ComputeDecoratedMapExtent(boundingBox, baseOptions, decorations);
+        }
 
         // Show save dialog
         var fileName = await DialogService.ShowSaveFileDialogAsync("*.pdf|*.pdf", owner);
@@ -4405,15 +4451,6 @@ public abstract class MapViewModelBase : ViewModelBase
             return;
         }
 
-        // Create base PDF options
-        var baseOptions = new PdfOptions
-        {
-            Title = "Map Export",
-            Creator = "IRI.Maptor",
-            PageSize = PdfPageSize.Auto,
-            BoundingBoxPadding = 0.05 // 5% padding
-        };
-
         // Generate PDF (pass both vector and raster layers)
         var pdfBytes = PdfWriter.WriteLayers(
             layerPdfDataList,
@@ -4421,7 +4458,8 @@ public abstract class MapViewModelBase : ViewModelBase
             mapScale,
             baseOptions,
             rasterLayerPdfDataList.Count > 0 ? rasterLayerPdfDataList : null,
-            supportPdfLayers);
+            supportPdfLayers,
+            decorations);
 
         // Save to file
         File.WriteAllBytes(fileName, pdfBytes);
@@ -5364,6 +5402,264 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
     /// <summary>
+    /// Opens an MBTiles tileset and adds it to the map as a group layer (one group per file).
+    /// Raster tilesets are added as a single raster sub-layer; vector (MVT/PBF) tilesets are added
+    /// as one vector sub-layer per <c>vector_layers</c> entry, each with default per-layer styling.
+    /// </summary>
+    public virtual async Task AddMBTiles(object owner)
+    {
+        try
+        {
+            IsBusy = true;
+
+            var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.MBTiles, owner);
+
+            if (!File.Exists(fileName))
+            {
+                IsBusy = false;
+
+                return;
+            }
+
+            if (IsVectorMbTiles(fileName))
+            {
+                AddVectorMBTiles(fileName);
+
+                return;
+            }
+
+            var dataSource = new MbTilesDataSource(fileName);
+
+            var name = string.IsNullOrWhiteSpace(dataSource.Metadata?.Name)
+                ? Path.GetFileNameWithoutExtension(fileName)
+                : dataSource.Metadata.Name;
+
+            var rasterLayer = new RasterLayer(
+                dataSource,
+                name,
+                LayerType.Raster,
+                1,
+                System.Windows.Visibility.Visible,
+                ScaleInterval.All);
+
+            var groupLayer = new GroupLayer(name);
+
+            groupLayer.AddSubLayer(rasterLayer);
+
+            AddLayer(groupLayer);
+        }
+        catch (Exception ex)
+        {
+            await ShowExceptionMessageAsync(ex);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    /// <summary>
+    /// Returns true when the MBTiles file stores vector (Mapbox Vector Tile) data, based on the
+    /// <c>format</c> metadata field.
+    /// </summary>
+    private static bool IsVectorMbTiles(string fileName)
+    {
+        using var reader = new MbTilesReader(fileName);
+
+        reader.Open();
+
+        var format = reader.Metadata?.Format;
+
+        return string.Equals(format, "pbf", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(format, "mvt", StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Builds a group layer for a vector MBTiles file: one <see cref="VectorLayer"/> per MVT layer,
+    /// all backed by a single shared tile provider so each physical tile is decoded once per extent.
+    /// </summary>
+    private void AddVectorMBTiles(string fileName)
+    {
+        var provider = new MbTilesVectorTileProvider(fileName);
+
+        var name = string.IsNullOrWhiteSpace(provider.Metadata?.Name)
+            ? Path.GetFileNameWithoutExtension(fileName)
+            : provider.Metadata!.Name;
+
+        var groupLayer = new GroupLayer(name);
+
+        foreach (var info in provider.VectorLayers)
+        {
+            var dataSource = new MbTilesVectorDataSource(provider, info);
+
+            var symbology = MbTilesVectorSymbology.For(info);
+
+            var vectorLayer = new VectorLayer(
+                info.Id,
+                dataSource,
+                symbology,
+                LayerType.VectorLayer,
+                RenderMode.Default,
+                RasterizationMethod.GdiPlus,
+                ScaleInterval.All);
+
+            groupLayer.AddSubLayer(vectorLayer);
+        }
+
+        AddLayer(groupLayer);
+    }
+
+    /// <summary>
+    /// Opens an OGC GeoPackage (.gpkg) and adds its content to the map: feature (vector) tables as
+    /// one group of vector layers and tile (raster) tables as another group.
+    /// </summary>
+    public virtual async Task AddGeoPackage(object owner)
+    {
+        try
+        {
+            IsBusy = true;
+
+            var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.GeoPackage, owner);
+
+            if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+            {
+                IsBusy = false;
+
+                return;
+            }
+
+            var (vectorLayers, tileLayers) = GetGeoPackageLayers(fileName);
+
+            if (vectorLayers.Count == 0 && tileLayers.Count == 0)
+            {
+                await ShowExceptionMessageAsync(
+                    new InvalidOperationException("The GeoPackage contains no vector or tile layers."));
+
+                return;
+            }
+
+            if (vectorLayers.Count > 0)
+                AddGeoPackageVectorLayers(fileName, vectorLayers);
+
+            if (tileLayers.Count > 0)
+                AddGeoPackageTileLayers(fileName, tileLayers);
+        }
+        catch (Exception ex)
+        {
+            await ShowExceptionMessageAsync(ex);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    /// <summary>
+    /// Reads the feature and tile table names from a GeoPackage without loading data.
+    /// </summary>
+    private (List<string> Vector, List<string> Tiles) GetGeoPackageLayers(string fileName)
+    {
+        var vectorLayers = new List<string>();
+        var tileLayers = new List<string>();
+
+        using (var vectorReader = new GpkgVectorReader(fileName))
+        {
+            vectorReader.Open();
+            vectorLayers = vectorReader.GetFeatureLayers()
+                .Where(l => !string.IsNullOrWhiteSpace(l.TableName))
+                .Select(l => l.TableName)
+                .ToList();
+        }
+
+        using (var tileReader = new GpkgTileReader(fileName))
+        {
+            tileReader.Open();
+            tileLayers = tileReader.GetTileLayers()
+                .Where(l => !string.IsNullOrWhiteSpace(l.TableName))
+                .Select(l => l.TableName)
+                .ToList();
+        }
+
+        return (vectorLayers, tileLayers);
+    }
+
+    /// <summary>
+    /// Adds one <see cref="VectorLayer"/> per GeoPackage feature table under a single group.
+    /// </summary>
+    private void AddGeoPackageVectorLayers(string fileName, List<string> layerNames)
+    {
+        var groupLayer = new GroupLayer($"{Path.GetFileNameWithoutExtension(fileName)} (Vector)");
+
+        foreach (var layerName in layerNames)
+        {
+            try
+            {
+                var dataSource = new GeoPackageDataSource(fileName, layerName);
+
+                var vectorLayer = new VectorLayer(
+                    layerName,
+                    dataSource,
+                    VisualParameters.CreateNew(0.9),
+                    LayerType.VectorLayer,
+                    RenderMode.Default,
+                    RasterizationMethod.GdiPlus,
+                    ScaleInterval.All,
+                    LegendViewModel.DefaultTocGroup)
+                {
+                    IsSearchable = true
+                };
+
+                groupLayer.AddSubLayer(vectorLayer);
+            }
+            catch (Exception ex)
+            {
+                // Skip a single problematic table instead of failing the whole file.
+                System.Diagnostics.Trace.WriteLine($"GeoPackage: skipped vector layer '{layerName}': {ex.Message}");
+            }
+        }
+
+        if (groupLayer.SubLayers.Count > 0)
+            AddLayer(groupLayer);
+    }
+
+    /// <summary>
+    /// Adds one <see cref="RasterLayer"/> per GeoPackage tile table under a single group.
+    /// </summary>
+    private void AddGeoPackageTileLayers(string fileName, List<string> layerNames)
+    {
+        var groupLayer = new GroupLayer($"{Path.GetFileNameWithoutExtension(fileName)} (Tiles)");
+
+        foreach (var layerName in layerNames)
+        {
+            try
+            {
+                var dataSource = new GeoPackageTileDataSource(fileName, layerName);
+
+                var name = string.IsNullOrWhiteSpace(dataSource.LayerMetadata?.Description)
+                    ? layerName
+                    : dataSource.LayerMetadata!.Description;
+
+                var rasterLayer = new RasterLayer(
+                    dataSource,
+                    name,
+                    LayerType.Raster,
+                    1,
+                    System.Windows.Visibility.Visible,
+                    ScaleInterval.All);
+
+                groupLayer.AddSubLayer(rasterLayer);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine($"GeoPackage: skipped tile layer '{layerName}': {ex.Message}");
+            }
+        }
+
+        if (groupLayer.SubLayers.Count > 0)
+            AddLayer(groupLayer);
+    }
+
+    /// <summary>
     /// <summary>
     /// Opens the CSV/TSV import dialog and adds the layer.
     /// </summary>
@@ -6004,6 +6300,36 @@ public abstract class MapViewModelBase : ViewModelBase
             }
 
             return _addZippedImagePyramidCommand;
+        }
+    }
+
+
+    private RelayCommand _addMBTilesCommand;
+    public RelayCommand AddMBTilesCommand
+    {
+        get
+        {
+            if (_addMBTilesCommand == null)
+            {
+                _addMBTilesCommand = new RelayCommand(async param => await AddMBTiles(param));
+            }
+
+            return _addMBTilesCommand;
+        }
+    }
+
+
+    private RelayCommand _addGeoPackageCommand;
+    public RelayCommand AddGeoPackageCommand
+    {
+        get
+        {
+            if (_addGeoPackageCommand == null)
+            {
+                _addGeoPackageCommand = new RelayCommand(async param => await AddGeoPackage(param));
+            }
+
+            return _addGeoPackageCommand;
         }
     }
 

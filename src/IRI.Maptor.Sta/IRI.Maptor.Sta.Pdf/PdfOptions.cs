@@ -159,6 +159,10 @@ public enum PdfPageSize
     /// </summary>
     A4,
     /// <summary>
+    /// A3 size (842 x 1191 points)
+    /// </summary>
+    A3,
+    /// <summary>
     /// Letter size (612 x 792 points)
     /// </summary>
     Letter,
@@ -182,4 +186,3 @@ public enum PdfPageOrientation
     /// </summary>
     Landscape
 }
-

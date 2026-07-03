@@ -52,6 +52,8 @@ public static class PdfWriter
     private const double POINTS_PER_INCH = 72.0;
     private const double A4_WIDTH = 595.0;  // A4 width in points
     private const double A4_HEIGHT = 842.0;  // A4 height in points
+    private const double A3_WIDTH = 842.0;  // A3 width in points
+    private const double A3_HEIGHT = 1191.0;  // A3 height in points
     private const double LETTER_WIDTH = 612.0;  // Letter width in points
     private const double LETTER_HEIGHT = 792.0;  // Letter height in points
 
@@ -67,12 +69,12 @@ public static class PdfWriter
 
         using var document = CreatePdfDocument(geometry, options);
         var page = document.AddPage();
-        
+
         // Calculate and set page size
         var (pageWidth, pageHeight) = CalculatePageSize(geometry, options);
         page.Width = pageWidth;
         page.Height = pageHeight;
-        
+
         if (!geometry.IsNullOrEmpty())
         {
             var gfx = XGraphics.FromPdfPage(page);
@@ -183,13 +185,13 @@ public static class PdfWriter
                 return (contentWidth, contentHeight);
 
             case PdfPageSize.A4:
-                return options.PageOrientation == PdfPageOrientation.Landscape 
-                    ? (A4_HEIGHT, A4_WIDTH) 
+                return options.PageOrientation == PdfPageOrientation.Landscape
+                    ? (A4_HEIGHT, A4_WIDTH)
                     : (A4_WIDTH, A4_HEIGHT);
 
             case PdfPageSize.Letter:
-                return options.PageOrientation == PdfPageOrientation.Landscape 
-                    ? (LETTER_HEIGHT, LETTER_WIDTH) 
+                return options.PageOrientation == PdfPageOrientation.Landscape
+                    ? (LETTER_HEIGHT, LETTER_WIDTH)
                     : (LETTER_WIDTH, LETTER_HEIGHT);
 
             case PdfPageSize.Custom:
@@ -251,7 +253,7 @@ public static class PdfWriter
         var pageHeight = page.Height;
 
         var bbox = geometry.GetBoundingBox();
-        
+
         // Handle invalid bounding box
         if (bbox.IsNaN() || !bbox.IsValid())
         {
@@ -500,7 +502,8 @@ public static class PdfWriter
         double mapScale,
         PdfOptions? baseOptions = null,
         List<RasterLayerPdfData>? rasterLayers = null,
-        bool supportPdfLayers = true)
+        bool supportPdfLayers = true,
+        PdfMapDecorations? decorations = null)
     {
         if (layers == null)
             layers = new List<LayerPdfData>();
@@ -514,62 +517,9 @@ public static class PdfWriter
 
         baseOptions ??= new PdfOptions();
 
-        // Calculate page size - use standard page size or calculate based on aspect ratio
-        double pageWidth, pageHeight;
-        
-        if (baseOptions.PageSize == PdfPageSize.Auto)
-        {
-            // Calculate page size based on map extent aspect ratio
-            var aspectRatio = mapExtent.Width / mapExtent.Height;
-            
-            // Use A4 as base, but adjust to match aspect ratio
-            var baseWidth = A4_WIDTH;
-            var baseHeight = A4_HEIGHT;
-            
-            if (aspectRatio > 1)
-            {
-                // Landscape orientation
-                pageWidth = Math.Max(baseWidth, baseHeight * aspectRatio);
-                pageHeight = Math.Max(baseHeight, baseWidth / aspectRatio);
-            }
-            else
-            {
-                // Portrait orientation
-                pageWidth = Math.Max(baseWidth, baseHeight * aspectRatio);
-                pageHeight = Math.Max(baseHeight, baseWidth / aspectRatio);
-            }
-            
-            // Ensure reasonable limits (PDF max is typically around 14,400 points)
-            pageWidth = Math.Min(pageWidth, 14400);
-            pageHeight = Math.Min(pageHeight, 14400);
-            
-            // Ensure minimum size
-            pageWidth = Math.Max(pageWidth, 100);
-            pageHeight = Math.Max(pageHeight, 100);
-        }
-        else
-        {
-            // Use standard page size
-            switch (baseOptions.PageSize)
-            {
-                case PdfPageSize.A4:
-                    pageWidth = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? A4_HEIGHT : A4_WIDTH;
-                    pageHeight = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? A4_WIDTH : A4_HEIGHT;
-                    break;
-                case PdfPageSize.Letter:
-                    pageWidth = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? LETTER_HEIGHT : LETTER_WIDTH;
-                    pageHeight = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? LETTER_WIDTH : LETTER_HEIGHT;
-                    break;
-                case PdfPageSize.Custom:
-                    pageWidth = baseOptions.CustomPageWidth ?? A4_WIDTH;
-                    pageHeight = baseOptions.CustomPageHeight ?? A4_HEIGHT;
-                    break;
-                default:
-                    pageWidth = A4_WIDTH;
-                    pageHeight = A4_HEIGHT;
-                    break;
-            }
-        }
+        var isDecorated = decorations?.HasAny == true;
+
+        var (pageWidth, pageHeight) = ComputeLayersPageSize(baseOptions, mapExtent, isDecorated);
 
         // Create PDF document
         var document = new PdfDocument();
@@ -585,6 +535,36 @@ public static class PdfWriter
 
         // Group layers into render units; each unit becomes one toggleable PDF layer.
         var units = BuildRenderUnits(layers, rasterLayers, GroupByLayerName);
+
+        // Decorated exports render the map into the layout's map frame (and clip to it);
+        // plain exports keep the classic full-bleed page.
+        PdfMapLayout layout = default;
+        MapPageTransform pageTransform;
+
+        if (isDecorated)
+        {
+            layout = PdfMapLayout.Create(pageWidth, pageHeight, decorations!);
+            var frame = layout.MapFrameRect;
+            pageTransform = MapPageTransform.Create(mapExtent, frame.X, frame.Y, frame.Width, frame.Height, baseOptions.BoundingBoxPadding, pageHeight);
+        }
+        else
+        {
+            pageTransform = MapPageTransform.CreateFullPage(mapExtent, pageWidth, pageHeight, baseOptions.BoundingBoxPadding);
+        }
+
+        void DrawClippedUnit(XGraphics target, RenderUnit unit)
+        {
+            if (isDecorated)
+            {
+                target.Save();
+                target.IntersectClip(layout.MapFrameRect);
+            }
+
+            DrawUnit(target, unit, pageTransform, baseOptions);
+
+            if (isDecorated)
+                target.Restore();
+        }
 
         if (supportPdfLayers)
         {
@@ -602,7 +582,7 @@ public static class PdfWriter
                 var existingContents = SnapshotContentStreams(page);
                 using (var layerGfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append))
                 {
-                    DrawUnit(layerGfx, unit, mapExtent, pageWidth, pageHeight, baseOptions);
+                    DrawClippedUnit(layerGfx, unit);
                 }
                 WrapNewContentStreamsWithOptionalContent(page, existingContents, propertyName);
             }
@@ -613,8 +593,16 @@ public static class PdfWriter
             using var gfx = XGraphics.FromPdfPage(page);
             foreach (var unit in units)
             {
-                DrawUnit(gfx, unit, mapExtent, pageWidth, pageHeight, baseOptions);
+                DrawClippedUnit(gfx, unit);
             }
+        }
+
+        if (isDecorated)
+        {
+            // Appended after (and outside) the per-layer OCG streams, so decorations stay
+            // visible whatever layers the viewer toggles off.
+            using var decorationGfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append);
+            PdfMapComposer.DrawDecorations(decorationGfx, layout, pageTransform, decorations!);
         }
 
         using var stream = new MemoryStream();
@@ -623,52 +611,107 @@ public static class PdfWriter
     }
 
     /// <summary>
+    /// Expands the extent so it fills the decorated layout's map frame edge-to-edge
+    /// (no letterboxing inside the neat line). Call it before fetching tiles/features
+    /// so the whole printed frame has content, and pass the result to WriteLayers.
+    /// </summary>
+    public static BoundingBox ComputeDecoratedMapExtent(BoundingBox mapExtent, PdfOptions options, PdfMapDecorations decorations)
+    {
+        var (pageWidth, pageHeight) = ComputeLayersPageSize(options, mapExtent, isDecorated: true);
+
+        var frame = PdfMapLayout.Create(pageWidth, pageHeight, decorations).MapFrameRect;
+
+        var frameAspect = frame.Width / frame.Height;
+        var extentAspect = mapExtent.Width / mapExtent.Height;
+
+        if (extentAspect < frameAspect)
+            return new BoundingBox(mapExtent.Center, mapExtent.Height * frameAspect, mapExtent.Height);
+
+        return new BoundingBox(mapExtent.Center, mapExtent.Width, mapExtent.Width / frameAspect);
+    }
+
+    /// <summary>
+    /// Page size for WriteLayers: standard sizes honor orientation; Auto derives the page
+    /// from the extent aspect ratio (disallowed for decorated exports, where the frame must
+    /// be predictable — it falls back to A4 oriented by the extent).
+    /// </summary>
+    private static (double PageWidth, double PageHeight) ComputeLayersPageSize(PdfOptions baseOptions, BoundingBox mapExtent, bool isDecorated)
+    {
+        double pageWidth, pageHeight;
+
+        if (baseOptions.PageSize == PdfPageSize.Auto && isDecorated)
+        {
+            var landscape = mapExtent.Width > mapExtent.Height;
+            pageWidth = landscape ? A4_HEIGHT : A4_WIDTH;
+            pageHeight = landscape ? A4_WIDTH : A4_HEIGHT;
+        }
+        else if (baseOptions.PageSize == PdfPageSize.Auto)
+        {
+            // Calculate page size based on map extent aspect ratio
+            var aspectRatio = mapExtent.Width / mapExtent.Height;
+
+            // Use A4 as base, but adjust to match aspect ratio
+            var baseWidth = A4_WIDTH;
+            var baseHeight = A4_HEIGHT;
+
+            pageWidth = Math.Max(baseWidth, baseHeight * aspectRatio);
+            pageHeight = Math.Max(baseHeight, baseWidth / aspectRatio);
+
+            // Ensure reasonable limits (PDF max is typically around 14,400 points)
+            pageWidth = Math.Min(pageWidth, 14400);
+            pageHeight = Math.Min(pageHeight, 14400);
+
+            // Ensure minimum size
+            pageWidth = Math.Max(pageWidth, 100);
+            pageHeight = Math.Max(pageHeight, 100);
+        }
+        else
+        {
+            // Use standard page size
+            switch (baseOptions.PageSize)
+            {
+                case PdfPageSize.A4:
+                    pageWidth = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? A4_HEIGHT : A4_WIDTH;
+                    pageHeight = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? A4_WIDTH : A4_HEIGHT;
+                    break;
+                case PdfPageSize.A3:
+                    pageWidth = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? A3_HEIGHT : A3_WIDTH;
+                    pageHeight = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? A3_WIDTH : A3_HEIGHT;
+                    break;
+                case PdfPageSize.Letter:
+                    pageWidth = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? LETTER_HEIGHT : LETTER_WIDTH;
+                    pageHeight = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? LETTER_WIDTH : LETTER_HEIGHT;
+                    break;
+                case PdfPageSize.Custom:
+                    pageWidth = baseOptions.CustomPageWidth ?? A4_WIDTH;
+                    pageHeight = baseOptions.CustomPageHeight ?? A4_HEIGHT;
+                    break;
+                default:
+                    pageWidth = A4_WIDTH;
+                    pageHeight = A4_HEIGHT;
+                    break;
+            }
+        }
+
+        return (pageWidth, pageHeight);
+    }
+
+    /// <summary>
     /// Writes geometry to PDF page using map extent transformation
     /// </summary>
     private static void WriteGeometryForLayer(
         XGraphics gfx,
         Geometry<Point> geometry,
-        BoundingBox mapExtent,
-        double pageWidth,
-        double pageHeight,
+        in MapPageTransform pageTransform,
         PdfOptions options)
     {
         if (geometry.IsNullOrEmpty())
             return;
 
-        // Calculate padding (as percentage of map extent)
-        var paddingX = mapExtent.Width * options.BoundingBoxPadding;
-        var paddingY = mapExtent.Height * options.BoundingBoxPadding;
-
-        // Calculate content dimensions with padding
-        var contentWidth = mapExtent.Width + (2 * paddingX);
-        var contentHeight = mapExtent.Height + (2 * paddingY);
-
-        if (contentWidth <= 0) contentWidth = 1;
-        if (contentHeight <= 0) contentHeight = 1;
-
-        // Calculate scale factors to fit content within page
-        var scaleX = pageWidth / contentWidth;
-        var scaleY = pageHeight / contentHeight;
-        var scale = Math.Min(scaleX, scaleY); // Maintain aspect ratio
-
-        // Calculate scaled dimensions
-        var scaledWidth = mapExtent.Width * scale;
-        var scaledHeight = mapExtent.Height * scale;
-        
-        // Calculate offset to center content on page (accounting for padding)
-        var offsetX = (pageWidth - scaledWidth) / 2.0;
-        var offsetY = (pageHeight - scaledHeight) / 2.0;
+        var transform = pageTransform;
 
         // Transform point from map coordinates to PDF coordinates
-        XPoint TransformPoint(Point point)
-        {
-            // Transform from map coordinates to scaled coordinates
-            var x = (point.X - mapExtent.XMin) * scale + offsetX;
-            // PDF uses bottom-left origin, so flip Y
-            var y = pageHeight - ((point.Y - mapExtent.YMin) * scale + offsetY);
-            return new XPoint(x, y);
-        }
+        XPoint TransformPoint(Point point) => transform.ToPage(point);
 
         // Write geometry based on type
         switch (geometry.Type)
@@ -720,7 +763,7 @@ public static class PdfWriter
                 {
                     foreach (var subGeometry in geometry.Geometries)
                     {
-                        WriteGeometryForLayer(gfx, subGeometry, mapExtent, pageWidth, pageHeight, options);
+                        WriteGeometryForLayer(gfx, subGeometry, pageTransform, options);
                     }
                 }
                 break;
@@ -815,55 +858,17 @@ public static class PdfWriter
     private static void WriteRasterTilesForLayer(
         XGraphics gfx,
         List<RasterTileData> tiles,
-        BoundingBox mapExtent,
-        double pageWidth,
-        double pageHeight,
+        in MapPageTransform pageTransform,
         PdfOptions baseOptions,
         double layerOpacity)
     {
         if (tiles == null || tiles.Count == 0)
             return;
 
-        // Calculate padding (as percentage of map extent)
-        var paddingX = mapExtent.Width * baseOptions.BoundingBoxPadding;
-        var paddingY = mapExtent.Height * baseOptions.BoundingBoxPadding;
-
-        // Calculate content dimensions with padding
-        var contentWidth = mapExtent.Width + (2 * paddingX);
-        var contentHeight = mapExtent.Height + (2 * paddingY);
-
-        if (contentWidth <= 0) contentWidth = 1;
-        if (contentHeight <= 0) contentHeight = 1;
-
-        // Calculate scale factors to fit content within page
-        var scaleX = pageWidth / contentWidth;
-        var scaleY = pageHeight / contentHeight;
-        var scale = Math.Min(scaleX, scaleY); // Maintain aspect ratio
-
-        // Calculate scaled dimensions
-        var scaledWidth = mapExtent.Width * scale;
-        var scaledHeight = mapExtent.Height * scale;
-        
-        // Calculate offset to center content on page (accounting for padding)
-        var offsetX = (pageWidth - scaledWidth) / 2.0;
-        var offsetY = (pageHeight - scaledHeight) / 2.0;
+        var transform = pageTransform;
 
         // Transform tile extent from map coordinates to PDF coordinates
-        XRect TransformExtent(BoundingBox tileExtent)
-        {
-            // Transform from map coordinates to scaled coordinates
-            var x1 = (tileExtent.XMin - mapExtent.XMin) * scale + offsetX;
-            var x2 = (tileExtent.XMax - mapExtent.XMin) * scale + offsetX;
-            // PDF uses bottom-left origin, so flip Y
-            var y1 = pageHeight - ((tileExtent.YMin - mapExtent.YMin) * scale + offsetY);
-            var y2 = pageHeight - ((tileExtent.YMax - mapExtent.YMin) * scale + offsetY);
-            
-            return new XRect(
-                Math.Min(x1, x2),
-                Math.Min(y1, y2),
-                Math.Abs(x2 - x1),
-                Math.Abs(y2 - y1));
-        }
+        XRect TransformExtent(BoundingBox tileExtent) => transform.ToPage(tileExtent);
 
         // Draw each tile
         foreach (var tile in tiles)
@@ -877,15 +882,15 @@ public static class PdfWriter
                 using var stream = new MemoryStream(tile.ImageBytes, 0, tile.ImageBytes.Length, false, true);
                 stream.Position = 0; // Reset position
                 var xImage = XImage.FromStream(() => stream);
-                
+
                 // Transform tile extent to PDF coordinates
                 var rect = TransformExtent(tile.WebMercatorExtent);
-                
+
                 // Apply opacity (note: PdfSharpCore doesn't directly support opacity in DrawImage,
                 // but we can use a workaround with XGraphicsState if needed)
                 // For now, draw the image - opacity is typically handled at the layer level
                 gfx.DrawImage(xImage, rect);
-                
+
                 xImage.Dispose();
             }
             catch (Exception)
@@ -991,9 +996,7 @@ public static class PdfWriter
     private static void DrawUnit(
         XGraphics target,
         RenderUnit unit,
-        BoundingBox mapExtent,
-        double pageWidth,
-        double pageHeight,
+        in MapPageTransform pageTransform,
         PdfOptions baseOptions)
     {
         // Rasters first (drawn beneath the vector features).
@@ -1003,7 +1006,7 @@ public static class PdfWriter
                 continue;
 
             var combinedOpacity = baseOptions.Opacity * rasterLayerData.Opacity;
-            WriteRasterTilesForLayer(target, rasterLayerData.Tiles, mapExtent, pageWidth, pageHeight, baseOptions, combinedOpacity);
+            WriteRasterTilesForLayer(target, rasterLayerData.Tiles, pageTransform, baseOptions, combinedOpacity);
         }
 
         // Then vector symbolizer entries, in their original order.
@@ -1020,7 +1023,6 @@ public static class PdfWriter
                 FillColor = layerData.Options.FillColor,
                 StrokeWidth = layerData.Options.StrokeWidth,
                 Opacity = combinedOpacity,
-                BoundingBoxPadding = baseOptions.BoundingBoxPadding, // Use base padding for transformation
                 PointCircleRadius = layerData.Options.PointCircleRadius
             };
 
@@ -1029,7 +1031,7 @@ public static class PdfWriter
                 if (feature?.TheGeometry == null || feature.TheGeometry.IsNullOrEmpty())
                     continue;
 
-                WriteGeometryForLayer(target, feature.TheGeometry, mapExtent, pageWidth, pageHeight, layerOptions);
+                WriteGeometryForLayer(target, feature.TheGeometry, pageTransform, layerOptions);
             }
         }
     }
@@ -1158,4 +1160,3 @@ public static class PdfWriter
 
 
 }
-

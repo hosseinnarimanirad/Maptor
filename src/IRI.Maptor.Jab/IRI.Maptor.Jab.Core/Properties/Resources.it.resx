@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1632,5 +1632,35 @@
   </data>
   <data name="validation_msg_unknownError" xml:space="preserve">
     <value>Eccezione sconosciuta</value>
+  </data>
+  <data name="dialog_printPdf_title" xml:space="preserve">
+    <value>Stampa in PDF</value>
+  </data>
+  <data name="dialog_printPdf_mapTitleWatermark" xml:space="preserve">
+    <value>Titolo della mappa...</value>
+  </data>
+  <data name="dialog_printPdf_includeDecorations" xml:space="preserve">
+    <value>Includi elementi decorativi della mappa</value>
+  </data>
+  <data name="dialog_printPdf_scaleBar" xml:space="preserve">
+    <value>Barra di scala</value>
+  </data>
+  <data name="dialog_printPdf_maptorLogo" xml:space="preserve">
+    <value>Icona Maptor</value>
+  </data>
+  <data name="dialog_printPdf_companyLogo" xml:space="preserve">
+    <value>Logo aziendale (PNG)...</value>
+  </data>
+  <data name="dialog_printPdf_graticule" xml:space="preserve">
+    <value>Griglia lat/long</value>
+  </data>
+  <data name="dialog_printPdf_landscape" xml:space="preserve">
+    <value>Orizzontale</value>
+  </data>
+  <data name="dialog_printPdf_preview" xml:space="preserve">
+    <value>Anteprima</value>
+  </data>
+  <data name="dialog_printPdf_print" xml:space="preserve">
+    <value>Stampa</value>
   </data>
 </root>

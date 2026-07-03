@@ -1,0 +1,203 @@
+<mahApp:MetroWindow x:Class="IRI.Maptor.Jab.Controls.Dialogs.PrintToPdfDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mahApp="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
+
+    Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
+    Title="{Binding [dialog_printPdf_title], Source={StaticResource Localization}}"
+    Width="720"
+    Height="560"
+    WindowStartupLocation="CenterOwner">
+
+    <mahApp:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/SecurityInputStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
+        </ResourceDictionary>
+    </mahApp:MetroWindow.Resources>
+    <mahApp:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}"/>
+        </DataTemplate>
+    </mahApp:MetroWindow.TitleTemplate>
+    <Grid Margin="4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Options -->
+        <StackPanel Grid.Column="0" Grid.Row="0">
+
+            <!-- Map title -->
+            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="32"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <iconPacks:PackIconMaterial Kind="FormatTitle" Style="{StaticResource securityIconMaterial}"/>
+                    <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                             mahApp:TextBoxHelper.Watermark="{Binding [dialog_printPdf_mapTitleWatermark], Source={StaticResource Localization}}"
+                             Text="{Binding MapTitle, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+            </Border>
+
+            <!-- Include decorations -->
+            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+                <CheckBox IsChecked="{Binding IncludeDecorations}" Margin="4"
+                          Content="{Binding [dialog_printPdf_includeDecorations], Source={StaticResource Localization}}"/>
+            </Border>
+
+            <!-- Decoration toggles -->
+            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}" IsEnabled="{Binding IncludeDecorations}">
+                <StackPanel Margin="4">
+                    <CheckBox IsChecked="{Binding ShowScaleBar}" Margin="0,2"
+                              Content="{Binding [dialog_printPdf_scaleBar], Source={StaticResource Localization}}"/>
+                    <CheckBox IsChecked="{Binding ShowMaptorLogo}" Margin="0,2"
+                              Content="{Binding [dialog_printPdf_maptorLogo], Source={StaticResource Localization}}"/>
+                    <CheckBox IsChecked="{Binding ShowGraticule}" Margin="0,2"
+                              Content="{Binding [dialog_printPdf_graticule], Source={StaticResource Localization}}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Company logo -->
+            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}" IsEnabled="{Binding IncludeDecorations}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="32"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <iconPacks:PackIconMaterial Kind="ImageOutline" Style="{StaticResource securityIconMaterial}"/>
+                    <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}" FlowDirection="LeftToRight"
+                             mahApp:TextBoxHelper.Watermark="{Binding [dialog_printPdf_companyLogo], Source={StaticResource Localization}}"
+                             Text="{Binding CompanyLogoPath, Mode=OneWay}" IsReadOnly="True"/>
+                    <Button Grid.Column="2" ToolTip="{Binding [dialog_common_browse], Source={StaticResource Localization}}"
+                            Command="{Binding BrowseLogoCommand}"
+                            Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                        <iconPacks:PackIconPhosphorIcons Kind="FileMagnifyingGlassFill"/>
+                    </Button>
+                    <Button Grid.Column="3" ToolTip="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
+                            Command="{Binding RemoveLogoCommand}"
+                            Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                        <iconPacks:PackIconMaterial Kind="FileRemoveOutline"/>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Page setup -->
+            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="32"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <iconPacks:PackIconMaterial Kind="FileDocumentOutline" Style="{StaticResource securityIconMaterial}"/>
+                    <ComboBox Grid.Column="1"
+                              ItemsSource="{Binding AvailablePageSizes}"
+                              Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
+                              SelectedItem="{Binding SelectedPageSize, Mode=TwoWay}"/>
+                    <CheckBox Grid.Column="2" Margin="8,0,4,0" IsChecked="{Binding IsLandscape}"
+                              Content="{Binding [dialog_printPdf_landscape], Source={StaticResource Localization}}"/>
+                </Grid>
+            </Border>
+        </StackPanel>
+
+        <!-- Preview -->
+        <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" FlowDirection="LeftToRight">
+            <StackPanel Margin="8" VerticalAlignment="Center">
+                <TextBlock Text="{Binding [dialog_printPdf_preview], Source={StaticResource Localization}}"
+                           Margin="0,0,0,6" FontSize="12" Foreground="{DynamicResource MahApps.Brushes.Gray2}"/>
+                <Border Background="White" BorderBrush="Gray" BorderThickness="1"
+                        Width="240" Height="{Binding PreviewPageHeight}">
+                    <DockPanel Margin="8">
+                        <!-- Title band -->
+                        <TextBlock DockPanel.Dock="Top" Text="{Binding MapTitle}" Foreground="Black"
+                                   FontWeight="Bold" TextAlignment="Center" TextTrimming="CharacterEllipsis"
+                                   Margin="0,0,0,4" MinHeight="16"
+                                   Visibility="{Binding IncludeDecorations, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+                        <!-- Footer band -->
+                        <Grid DockPanel.Dock="Bottom" Margin="0,4,0,0" MinHeight="14"
+                              Visibility="{Binding IncludeDecorations, Converter={StaticResource boolToVisibilityConverter}}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center"
+                                        Visibility="{Binding ShowScaleBar, Converter={StaticResource boolToVisibilityConverter}}">
+                                <Rectangle Width="12" Height="4" Fill="Black" Stroke="Black" StrokeThickness="0.5"/>
+                                <Rectangle Width="12" Height="4" Fill="White" Stroke="Black" StrokeThickness="0.5"/>
+                                <Rectangle Width="12" Height="4" Fill="Black" Stroke="Black" StrokeThickness="0.5"/>
+                                <Rectangle Width="12" Height="4" Fill="White" Stroke="Black" StrokeThickness="0.5"/>
+                            </StackPanel>
+                            <TextBlock Text="Maptor" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                       FontSize="9" FontWeight="Bold" Foreground="Black"
+                                       Visibility="{Binding ShowMaptorLogo, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        </Grid>
+
+                        <!-- Map frame -->
+                        <Grid>
+                            <Image Source="{Binding MapThumbnail}" Stretch="UniformToFill"/>
+                            <mahApp:ProgressRing IsActive="{Binding IsLoading}" Width="24" Height="24"/>
+                            <Grid Visibility="{Binding IncludeDecorations, Converter={StaticResource boolToVisibilityConverter}}">
+                                <Rectangle Visibility="{Binding ShowGraticule, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <Rectangle.Fill>
+                                        <DrawingBrush TileMode="Tile" Viewport="0,0,40,40" ViewportUnits="Absolute">
+                                            <DrawingBrush.Drawing>
+                                                <GeometryDrawing>
+                                                    <GeometryDrawing.Geometry>
+                                                        <GeometryGroup>
+                                                            <LineGeometry StartPoint="0,0" EndPoint="40,0"/>
+                                                            <LineGeometry StartPoint="0,0" EndPoint="0,40"/>
+                                                        </GeometryGroup>
+                                                    </GeometryDrawing.Geometry>
+                                                    <GeometryDrawing.Pen>
+                                                        <Pen Brush="#66808080" Thickness="1"/>
+                                                    </GeometryDrawing.Pen>
+                                                </GeometryDrawing>
+                                            </DrawingBrush.Drawing>
+                                        </DrawingBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                                <Border BorderBrush="Black" BorderThickness="1.5"/>
+                            </Grid>
+                        </Grid>
+                    </DockPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,0">
+            <Button IsCancel="True"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}"
+                    Command="{Binding CancelCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="CloseThick" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                               Text="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"/>
+                </StackPanel>
+            </Button>
+
+            <Button IsDefault="True"
+                    Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
+                    Command="{Binding PrintCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Printer" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}"/>
+                    <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.ButtonContent}"
+                               Text="{Binding [dialog_printPdf_print], Source={StaticResource Localization}}"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</mahApp:MetroWindow>

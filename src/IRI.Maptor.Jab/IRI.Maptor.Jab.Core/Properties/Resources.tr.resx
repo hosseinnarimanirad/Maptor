@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1632,5 +1632,35 @@
   </data>
   <data name="validation_msg_unknownError" xml:space="preserve">
     <value>Bilinmeyen İstisna</value>
+  </data>
+  <data name="dialog_printPdf_title" xml:space="preserve">
+    <value>PDF'ye yazdır</value>
+  </data>
+  <data name="dialog_printPdf_mapTitleWatermark" xml:space="preserve">
+    <value>Harita başlığı...</value>
+  </data>
+  <data name="dialog_printPdf_includeDecorations" xml:space="preserve">
+    <value>Harita süsleme öğelerini ekle</value>
+  </data>
+  <data name="dialog_printPdf_scaleBar" xml:space="preserve">
+    <value>Ölçek çubuğu</value>
+  </data>
+  <data name="dialog_printPdf_maptorLogo" xml:space="preserve">
+    <value>Maptor simgesi</value>
+  </data>
+  <data name="dialog_printPdf_companyLogo" xml:space="preserve">
+    <value>Şirket logosu (PNG)...</value>
+  </data>
+  <data name="dialog_printPdf_graticule" xml:space="preserve">
+    <value>Enlem/boylam ızgarası</value>
+  </data>
+  <data name="dialog_printPdf_landscape" xml:space="preserve">
+    <value>Yatay</value>
+  </data>
+  <data name="dialog_printPdf_preview" xml:space="preserve">
+    <value>Önizleme</value>
+  </data>
+  <data name="dialog_printPdf_print" xml:space="preserve">
+    <value>Yazdır</value>
   </data>
 </root>
