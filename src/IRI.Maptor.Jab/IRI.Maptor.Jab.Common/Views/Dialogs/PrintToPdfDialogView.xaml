@@ -8,7 +8,7 @@
     Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
     Title="{Binding [dialog_printPdf_title], Source={StaticResource Localization}}"
     Width="720"
-    Height="560"
+    Height="372"
     WindowStartupLocation="CenterOwner">
 
     <mahApp:MetroWindow.Resources>
@@ -60,7 +60,7 @@
             </Border>
 
             <!-- Decoration toggles -->
-            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}" IsEnabled="{Binding IncludeDecorations}">
+            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}" IsEnabled="{Binding IncludeDecorations}" Height="Auto">
                 <StackPanel Margin="4">
                     <CheckBox IsChecked="{Binding ShowScaleBar}" Margin="0,2"
                               Content="{Binding [dialog_printPdf_scaleBar], Source={StaticResource Localization}}"/>
@@ -98,83 +98,140 @@
             </Border>
 
             <!-- Page setup -->
-            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="32"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <iconPacks:PackIconMaterial Kind="FileDocumentOutline" Style="{StaticResource securityIconMaterial}"/>
-                    <ComboBox Grid.Column="1"
-                              ItemsSource="{Binding AvailablePageSizes}"
-                              Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
-                              SelectedItem="{Binding SelectedPageSize, Mode=TwoWay}"/>
-                    <CheckBox Grid.Column="2" Margin="8,0,4,0" IsChecked="{Binding IsLandscape}"
-                              Content="{Binding [dialog_printPdf_landscape], Source={StaticResource Localization}}"/>
-                </Grid>
+            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}" Height="auto">
+                <StackPanel>
+                    <CheckBox Margin="4,2" IsChecked="{Binding PreserveMapScale}"
+                              Content="{Binding [dialog_printPdf_keepScale], Source={StaticResource Localization}}"/>
+                    <Grid Margin="0,4,0,0" IsEnabled="{Binding IsPageSetupEnabled}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconMaterial Kind="FileDocumentOutline" Style="{StaticResource securityIconMaterial}"/>
+                        <ComboBox Grid.Column="1"
+                                  ItemsSource="{Binding AvailablePageSizes}"
+                                  Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
+                                  SelectedItem="{Binding SelectedPageSize, Mode=TwoWay}"/>
+                        <CheckBox Grid.Column="2" Margin="8,0,4,0" IsChecked="{Binding IsLandscape}"
+                                  Content="{Binding [dialog_printPdf_landscape], Source={StaticResource Localization}}"/>
+                    </Grid>
+                </StackPanel>
             </Border>
         </StackPanel>
 
         <!-- Preview -->
-        <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" FlowDirection="LeftToRight">
-            <StackPanel Margin="8" VerticalAlignment="Center">
-                <TextBlock Text="{Binding [dialog_printPdf_preview], Source={StaticResource Localization}}"
+        <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" FlowDirection="LeftToRight" Height="auto" VerticalAlignment="Stretch">
+            <Grid Margin="8" VerticalAlignment="Stretch" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="{Binding [dialog_printPdf_preview], Source={StaticResource Localization}}"
                            Margin="0,0,0,6" FontSize="12" Foreground="{DynamicResource MahApps.Brushes.Gray2}"/>
-                <Border Background="White" BorderBrush="Gray" BorderThickness="1"
+                <Border Grid.Row="1" Background="White" BorderBrush="Gray" BorderThickness="1"
                         Width="240" Height="{Binding PreviewPageHeight}">
-                    <DockPanel Margin="8">
-                        <!-- Title band -->
-                        <TextBlock DockPanel.Dock="Top" Text="{Binding MapTitle}" Foreground="Black"
-                                   FontWeight="Bold" TextAlignment="Center" TextTrimming="CharacterEllipsis"
-                                   Margin="0,0,0,4" MinHeight="16"
-                                   Visibility="{Binding IncludeDecorations, Converter={StaticResource boolToVisibilityConverter}}"/>
+                    <!-- Schematic 3-column sheet: legend | map (title + scale) | company info; date/scale/maptor row -->
+                    <Grid Margin="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                        <!-- Footer band -->
-                        <Grid DockPanel.Dock="Bottom" Margin="0,4,0,0" MinHeight="14"
-                              Visibility="{Binding IncludeDecorations, Converter={StaticResource boolToVisibilityConverter}}">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center"
-                                        Visibility="{Binding ShowScaleBar, Converter={StaticResource boolToVisibilityConverter}}">
-                                <Rectangle Width="12" Height="4" Fill="Black" Stroke="Black" StrokeThickness="0.5"/>
-                                <Rectangle Width="12" Height="4" Fill="White" Stroke="Black" StrokeThickness="0.5"/>
-                                <Rectangle Width="12" Height="4" Fill="Black" Stroke="Black" StrokeThickness="0.5"/>
-                                <Rectangle Width="12" Height="4" Fill="White" Stroke="Black" StrokeThickness="0.5"/>
+                        <!-- Columns -->
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.75*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="0.85*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- col1: reserved legend box -->
+                            <Border Grid.Column="0" BorderBrush="Black" BorderThickness="0.8"
+                                    Visibility="{Binding IncludeDecorations, Converter={StaticResource boolToVisibilityConverter}}">
+                                <DockPanel>
+                                    <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="0,0,0,0.8" Padding="2,1">
+                                        <TextBlock Text="{Binding [dialog_printPdf_legend], Source={StaticResource Localization}}"
+                                                   FontSize="8" Foreground="Black" TextTrimming="CharacterEllipsis"/>
+                                    </Border>
+                                    <Grid/>
+                                </DockPanel>
+                            </Border>
+
+                            <!-- col2: title box + map + centered scale -->
+                            <DockPanel Grid.Column="2">
+                                <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="0.8"
+                                        Padding="2,1" Margin="0,0,0,4" HorizontalAlignment="Center"
+                                        Visibility="{Binding IncludeDecorations, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <TextBlock Text="{Binding MapTitle}" Foreground="Black" FontWeight="Bold"
+                                               FontSize="8" TextAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                </Border>
+                                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center"
+                                            Margin="0,3,0,0"
+                                            Visibility="{Binding ShowScaleBar, Converter={StaticResource boolToVisibilityConverter}}">
+                                    <Rectangle Width="10" Height="4" Fill="Black" Stroke="Black" StrokeThickness="0.5"/>
+                                    <Rectangle Width="10" Height="4" Fill="White" Stroke="Black" StrokeThickness="0.5"/>
+                                    <Rectangle Width="10" Height="4" Fill="Black" Stroke="Black" StrokeThickness="0.5"/>
+                                    <Rectangle Width="10" Height="4" Fill="White" Stroke="Black" StrokeThickness="0.5"/>
+                                </StackPanel>
+                                <Grid>
+                                    <Image Source="{Binding MapThumbnail}" Stretch="UniformToFill"/>
+                                    <mahApp:ProgressRing IsActive="{Binding IsLoading}" Width="24" Height="24"/>
+                                    <Grid Visibility="{Binding IncludeDecorations, Converter={StaticResource boolToVisibilityConverter}}">
+                                        <Rectangle Visibility="{Binding ShowGraticule, Converter={StaticResource boolToVisibilityConverter}}">
+                                            <Rectangle.Fill>
+                                                <DrawingBrush TileMode="Tile" Viewport="0,0,40,40" ViewportUnits="Absolute">
+                                                    <DrawingBrush.Drawing>
+                                                        <GeometryDrawing>
+                                                            <GeometryDrawing.Geometry>
+                                                                <GeometryGroup>
+                                                                    <LineGeometry StartPoint="0,0" EndPoint="40,0"/>
+                                                                    <LineGeometry StartPoint="0,0" EndPoint="0,40"/>
+                                                                </GeometryGroup>
+                                                            </GeometryDrawing.Geometry>
+                                                            <GeometryDrawing.Pen>
+                                                                <Pen Brush="#66808080" Thickness="1"/>
+                                                            </GeometryDrawing.Pen>
+                                                        </GeometryDrawing>
+                                                    </DrawingBrush.Drawing>
+                                                </DrawingBrush>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <Border BorderBrush="Black" BorderThickness="1.5"/>
+                                    </Grid>
+                                </Grid>
+                            </DockPanel>
+
+                            <!-- col3: company logo + title + subtitle -->
+                            <StackPanel Grid.Column="4" HorizontalAlignment="Center"
+                                        Visibility="{Binding IncludeDecorations, Converter={StaticResource boolToVisibilityConverter}}">
+                                <Ellipse Width="20" Height="20" Stroke="Black" StrokeThickness="0.8" Margin="0,2,0,4"/>
+                                <Rectangle Width="40" Height="5" Fill="#99000000" Margin="0,0,0,3"/>
+                                <Rectangle Width="34" Height="4" Fill="#66000000"/>
                             </StackPanel>
-                            <TextBlock Text="Maptor" HorizontalAlignment="Right" VerticalAlignment="Center"
-                                       FontSize="9" FontWeight="Bold" Foreground="Black"
+                        </Grid>
+
+                        <!-- Bottom band: date (left) | scale (center) | Maptor (right) -->
+                        <Grid Grid.Row="1" Margin="0,4,0,0" MinHeight="12"
+                              Visibility="{Binding IncludeDecorations, Converter={StaticResource boolToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.75*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="0.85*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="00-00-00" VerticalAlignment="Center"
+                                       FontSize="7" Foreground="Black" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Grid.Column="4" Text="Maptor" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontSize="8" FontWeight="Bold" Foreground="Black"
                                        Visibility="{Binding ShowMaptorLogo, Converter={StaticResource boolToVisibilityConverter}}"/>
                         </Grid>
-
-                        <!-- Map frame -->
-                        <Grid>
-                            <Image Source="{Binding MapThumbnail}" Stretch="UniformToFill"/>
-                            <mahApp:ProgressRing IsActive="{Binding IsLoading}" Width="24" Height="24"/>
-                            <Grid Visibility="{Binding IncludeDecorations, Converter={StaticResource boolToVisibilityConverter}}">
-                                <Rectangle Visibility="{Binding ShowGraticule, Converter={StaticResource boolToVisibilityConverter}}">
-                                    <Rectangle.Fill>
-                                        <DrawingBrush TileMode="Tile" Viewport="0,0,40,40" ViewportUnits="Absolute">
-                                            <DrawingBrush.Drawing>
-                                                <GeometryDrawing>
-                                                    <GeometryDrawing.Geometry>
-                                                        <GeometryGroup>
-                                                            <LineGeometry StartPoint="0,0" EndPoint="40,0"/>
-                                                            <LineGeometry StartPoint="0,0" EndPoint="0,40"/>
-                                                        </GeometryGroup>
-                                                    </GeometryDrawing.Geometry>
-                                                    <GeometryDrawing.Pen>
-                                                        <Pen Brush="#66808080" Thickness="1"/>
-                                                    </GeometryDrawing.Pen>
-                                                </GeometryDrawing>
-                                            </DrawingBrush.Drawing>
-                                        </DrawingBrush>
-                                    </Rectangle.Fill>
-                                </Rectangle>
-                                <Border BorderBrush="Black" BorderThickness="1.5"/>
-                            </Grid>
-                        </Grid>
-                    </DockPanel>
+                    </Grid>
                 </Border>
-            </StackPanel>
+            </Grid>
         </Border>
 
         <!-- Buttons -->

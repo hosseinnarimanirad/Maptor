@@ -1648,6 +1648,9 @@
   <data name="dialog_printPdf_maptorLogo" xml:space="preserve">
     <value>Maptor图标</value>
   </data>
+  <data name="dialog_printPdf_legend" xml:space="preserve">
+    <value>图例</value>
+  </data>
   <data name="dialog_printPdf_companyLogo" xml:space="preserve">
     <value>公司徽标（PNG）...</value>
   </data>

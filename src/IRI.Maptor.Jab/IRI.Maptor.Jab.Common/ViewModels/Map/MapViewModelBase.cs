@@ -3994,6 +3994,17 @@ public abstract class MapViewModelBase : ViewModelBase
     // Last-used print dialog selections, kept for the session so the dialog reopens pre-filled.
     private PrintToPdfDialogOptions? _lastPrintToPdfOptions;
 
+    /// <summary>
+    /// Company title shown in the right column of the decorated print-to-PDF sheet. Provided in
+    /// code per app (not from user input); apps override to supply their organization name.
+    /// </summary>
+    public virtual string? PrintCompanyTitle => null;
+
+    /// <summary>
+    /// Company subtitle shown under <see cref="PrintCompanyTitle"/> on the print-to-PDF sheet.
+    /// </summary>
+    public virtual string? PrintCompanySubtitle => null;
+
     public async Task PrintToPdfAsync(object owner, bool supportPdfLayers = true)
     {
         var boundingBox = PrintArea.IsNaN() ? CurrentExtent : PrintArea;
@@ -4013,6 +4024,11 @@ public abstract class MapViewModelBase : ViewModelBase
 
         _lastPrintToPdfOptions = printOptions;
 
+        // Company title/subtitle are app-provided (not user input); inject them before building
+        // decorations so the shared helper renders them RTL-safe like the map title.
+        printOptions.CompanyTitle = PrintCompanyTitle;
+        printOptions.CompanySubtitle = PrintCompanySubtitle;
+
         var decorations = printOptions.IncludeDecorations ? PdfDecorationHelper.BuildDecorations(printOptions) : null;
 
         // Create base PDF options; the plain (no decorations) export keeps the classic
@@ -4031,8 +4047,17 @@ public abstract class MapViewModelBase : ViewModelBase
             baseOptions.PageOrientation = printOptions.PageOrientation;
             baseOptions.BoundingBoxPadding = 0;
 
+            // "Keep current map scale": size a custom page from the on-screen scale instead of
+            // rescaling the map to fit the selected preset.
+            if (printOptions.PreserveMapScale)
+            {
+                baseOptions.PreserveMapScale = true;
+                baseOptions.PreservedWebMercatorScale = mapScale;
+            }
+
             // Expand the extent to the layout frame's aspect ratio, so tiles and features
-            // are fetched for everything the printed frame will show.
+            // are fetched for everything the printed frame will show. (No-op in preserve-scale
+            // mode, where the page is sized from this exact extent.)
             boundingBox = PdfWriter.ComputeDecoratedMapExtent(boundingBox, baseOptions, decorations);
         }
 
@@ -4077,9 +4102,27 @@ public abstract class MapViewModelBase : ViewModelBase
                 // Iterate through ALL symbolizers in the layer
                 foreach (var symbolizer in layer.Symbolizers)
                 {
-                    // Skip LabelSymbolizer (labels not supported in vector PDF)
-                    if (symbolizer is LabelSymbolizer)
+                    // Labels: when the label symbolizer is enabled and visible at this scale, print
+                    // each feature's label as crisp vector glyphs at its on-screen anchor point.
+                    if (symbolizer is LabelSymbolizer labelSymbolizer)
+                    {
+                        if (labelSymbolizer.Param?.IsInScaleRangeAndSelected(1.0 / mapScale) != true)
+                            continue;
+
+                        var labels = BuildPdfLabels(allFeatures, labelSymbolizer);
+                        if (labels.Count > 0)
+                        {
+                            layerPdfDataList.Add(new PdfWriter.LayerPdfData
+                            {
+                                Features = new List<Feature<Point>>(),
+                                Labels = labels,
+                                ZIndex = layer.ZIndex,
+                                Opacity = layer.Opacity,
+                                LayerName = layer.LayerName
+                            });
+                        }
                         continue;
+                    }
 
                     // Check if symbolizer is in scale range
                     if (!symbolizer.IsInScaleRange(mapScale))
@@ -4511,13 +4554,85 @@ public abstract class MapViewModelBase : ViewModelBase
         options.StrokeWidth = visualParams.StrokeThickness;
         options.Opacity = visualParams.Opacity;
 
-        // Handle point symbol size for SimplePointSymbolizer
-        if (symbolizer is SimplePointSymbolizer pointSymbolizer)
+        // Point symbol: reproduce the on-screen marker (cross, square, icon, …). The shape lives
+        // on Param.PointSymbol (a SimplePointSymbolizer), not on the symbolizer itself.
+        var pointSymbol = visualParams.PointSymbol;
+        if (pointSymbol != null)
         {
-            options.PointCircleRadius = Math.Max(pointSymbolizer.SymbolWidth, pointSymbolizer.SymbolHeight) / 2.0;
+            // px (1/96") -> points (1/72") so the printed marker keeps its on-screen physical size.
+            const double pxToPoint = 72.0 / 96.0;
+            options.PointCircleRadius = Math.Max(pointSymbol.SymbolWidth, pointSymbol.SymbolHeight) / 2.0 * pxToPoint;
+            options.PointMarker = PdfDecorationHelper.BuildPointMarker(pointSymbol);
         }
 
         return options;
+    }
+
+    /// <summary>
+    /// Builds crisp vector labels for a layer's features, mirroring the on-screen label engine:
+    /// text from <c>Feature.Label</c> (using the symbolizer's configured attribute), anchor from
+    /// <c>Param.PositionFunc</c>, and font/color/RTL from the label symbolizer's visual parameters.
+    /// Identical label strings are shaped once and reused.
+    /// </summary>
+    private static List<PdfWriter.PdfFeatureLabel> BuildPdfLabels(List<Feature<Point>> features, LabelSymbolizer labelSymbolizer)
+    {
+        var result = new List<PdfWriter.PdfFeatureLabel>();
+
+        var param = labelSymbolizer.Param;
+        var positionFunc = param?.PositionFunc;
+        if (param == null || positionFunc == null)
+            return result;
+
+        var fontSizePx = param.FontSize > 0 ? param.FontSize : 12;
+        var fontFamily = param.FontFamily;
+        var isRtl = param.IsRtl;
+
+        RgbColor? color = null;
+        var foreground = param.Foreground?.AsSolidColor();
+        if (foreground.HasValue)
+            color = new RgbColor(foreground.Value.R, foreground.Value.G, foreground.Value.B, foreground.Value.A);
+
+        // Shape each distinct label string once; reuse the glyph outlines at every anchor.
+        var glyphCache = new Dictionary<string, PdfVectorLogo?>();
+
+        foreach (var feature in features)
+        {
+            if (feature?.TheGeometry == null || feature.TheGeometry.IsEmpty())
+                continue;
+
+            if (!string.IsNullOrWhiteSpace(labelSymbolizer.LabelAttribute))
+                feature.LabelAttribute = labelSymbolizer.LabelAttribute;
+
+            var text = feature.Label;
+            if (string.IsNullOrWhiteSpace(text))
+                continue;
+
+            if (!glyphCache.TryGetValue(text, out var glyphs))
+            {
+                glyphs = PdfDecorationHelper.RenderTextToVector(text, fontSizePx, fontFamily, isRtl);
+                glyphCache[text] = glyphs;
+            }
+
+            if (glyphs == null)
+                continue;
+
+            Point anchor;
+            try
+            {
+                anchor = positionFunc(feature.TheGeometry);
+            }
+            catch
+            {
+                continue;
+            }
+
+            if (anchor == null)
+                continue;
+
+            result.Add(new PdfWriter.PdfFeatureLabel { Glyphs = glyphs, Anchor = anchor, Color = color });
+        }
+
+        return result;
     }
 
     /// <summary>

@@ -54,6 +54,20 @@ public class PdfOptions
     public PdfPageOrientation PageOrientation { get; set; } = PdfPageOrientation.Portrait;
 
     /// <summary>
+    /// Map-export path only: when true, the page is sized to a custom size that holds the map
+    /// at its current on-screen scale (no rescaling to fit a preset). Requires
+    /// <see cref="PreservedWebMercatorScale"/>; <see cref="PageSize"/>/<see cref="PageOrientation"/>
+    /// are ignored while this is on.
+    /// </summary>
+    public bool PreserveMapScale { get; set; }
+
+    /// <summary>
+    /// Web-mercator scale (page-physical / mercator ratio) used to size the page when
+    /// <see cref="PreserveMapScale"/> is on. Typically the map viewer's current MapScale.
+    /// </summary>
+    public double? PreservedWebMercatorScale { get; set; }
+
+    /// <summary>
     /// Padding around bounding box (as percentage of bounding box size)
     /// </summary>
     public double BoundingBoxPadding { get; set; } = 0.05; // 5% padding
@@ -92,6 +106,12 @@ public class PdfOptions
     /// Radius for circle elements representing points
     /// </summary>
     public double PointCircleRadius { get; set; } = 3.0;
+
+    /// <summary>
+    /// Optional marker template stamped at each point feature (reproduces the on-screen symbol).
+    /// When null, points fall back to a circle of <see cref="PointCircleRadius"/>.
+    /// </summary>
+    public PdfPointMarker? PointMarker { get; set; }
 
     /// <summary>
     /// Default constructor with default values
@@ -154,22 +174,76 @@ public enum PdfPageSize
     /// Automatically calculate page size from geometry bounding box
     /// </summary>
     Auto,
-    /// <summary>
-    /// A4 size (595 x 842 points)
-    /// </summary>
-    A4,
-    /// <summary>
-    /// A3 size (842 x 1191 points)
-    /// </summary>
+    /// <summary>ISO A0 (2384 x 3370 points)</summary>
+    A0,
+    /// <summary>ISO A1 (1684 x 2384 points)</summary>
+    A1,
+    /// <summary>ISO A2 (1191 x 1684 points)</summary>
+    A2,
+    /// <summary>ISO A3 (842 x 1191 points)</summary>
     A3,
-    /// <summary>
-    /// Letter size (612 x 792 points)
-    /// </summary>
+    /// <summary>ISO A4 (595 x 842 points)</summary>
+    A4,
+    /// <summary>ISO A5 (420 x 595 points)</summary>
+    A5,
+    /// <summary>ISO B2 (1417 x 2004 points)</summary>
+    B2,
+    /// <summary>ISO B3 (1001 x 1417 points)</summary>
+    B3,
+    /// <summary>ISO B4 (709 x 1001 points)</summary>
+    B4,
+    /// <summary>US Letter (612 x 792 points)</summary>
     Letter,
+    /// <summary>US Legal (612 x 1008 points)</summary>
+    Legal,
+    /// <summary>US Tabloid / Ledger (792 x 1224 points)</summary>
+    Tabloid,
     /// <summary>
     /// Custom size (use CustomPageWidth and CustomPageHeight)
     /// </summary>
     Custom
+}
+
+/// <summary>
+/// Physical dimensions (in PDF points, 1/72 inch) of the standard <see cref="PdfPageSize"/>
+/// presets. A single source of truth so the writer and any UI stay in sync.
+/// </summary>
+public static class PdfPageDimensions
+{
+    // Portrait (width &lt; height) dimensions in points. 1 mm = 72/25.4 pt; 1 in = 72 pt.
+    private static readonly Dictionary<PdfPageSize, (double Width, double Height)> _portrait = new()
+    {
+        [PdfPageSize.A0] = (2384, 3370),
+        [PdfPageSize.A1] = (1684, 2384),
+        [PdfPageSize.A2] = (1191, 1684),
+        [PdfPageSize.A3] = (842, 1191),
+        [PdfPageSize.A4] = (595, 842),
+        [PdfPageSize.A5] = (420, 595),
+        [PdfPageSize.B2] = (1417, 2004),
+        [PdfPageSize.B3] = (1001, 1417),
+        [PdfPageSize.B4] = (709, 1001),
+        [PdfPageSize.Letter] = (612, 792),
+        [PdfPageSize.Legal] = (612, 1008),
+        [PdfPageSize.Tabloid] = (792, 1224),
+    };
+
+    /// <summary>
+    /// True for a preset that has fixed physical dimensions (everything except
+    /// <see cref="PdfPageSize.Auto"/> and <see cref="PdfPageSize.Custom"/>).
+    /// </summary>
+    public static bool IsFixed(PdfPageSize size) => _portrait.ContainsKey(size);
+
+    /// <summary>
+    /// Returns the preset's dimensions in points for the given orientation.
+    /// Falls back to A4 for non-fixed presets (Auto/Custom).
+    /// </summary>
+    public static (double Width, double Height) Get(PdfPageSize size, PdfPageOrientation orientation)
+    {
+        if (!_portrait.TryGetValue(size, out var dims))
+            dims = _portrait[PdfPageSize.A4];
+
+        return orientation == PdfPageOrientation.Landscape ? (dims.Height, dims.Width) : dims;
+    }
 }
 
 /// <summary>

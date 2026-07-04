@@ -1648,6 +1648,9 @@
   <data name="dialog_printPdf_maptorLogo" xml:space="preserve">
     <value>ئایکۆنی Maptor</value>
   </data>
+  <data name="dialog_printPdf_legend" xml:space="preserve">
+    <value>ڕێنمایی</value>
+  </data>
   <data name="dialog_printPdf_companyLogo" xml:space="preserve">
     <value>لۆگۆی کۆمپانیا (PNG)...</value>
   </data>

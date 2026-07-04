@@ -1648,6 +1648,9 @@
   <data name="dialog_printPdf_maptorLogo" xml:space="preserve">
     <value>Maptor आइकन</value>
   </data>
+  <data name="dialog_printPdf_legend" xml:space="preserve">
+    <value>लेजेंड</value>
+  </data>
   <data name="dialog_printPdf_companyLogo" xml:space="preserve">
     <value>कंपनी लोगो (PNG)...</value>
   </data>

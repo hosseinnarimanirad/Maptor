@@ -128,15 +128,9 @@ public static class GraticuleHelper
         var m = (totalSeconds % 3600) / 60;
         var s = totalSeconds % 60;
 
-        var label = FormattableString.Invariant($"{d}°");
-
-        if (m > 0 || s > 0)
-            label += FormattableString.Invariant($"{m:00}{DegreeHelper.minuteSign}");
-
-        if (s > 0)
-            label += FormattableString.Invariant($"{s:00}{DegreeHelper.secondSign}");
-
-        return label + hemisphere;
+        // Always show the full degree/minute/second pattern (zero parts included).
+        return FormattableString.Invariant(
+            $"{d}°{m:00}{DegreeHelper.minuteSign}{s:00}{DegreeHelper.secondSign}{hemisphere}");
     }
 }
 

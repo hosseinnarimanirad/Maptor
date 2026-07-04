@@ -27,6 +27,26 @@ public static class PdfWriter
         public int ZIndex { get; set; }
         public double Opacity { get; set; } = 1.0;
         public string LayerName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Feature labels to draw on top of this layer's geometry (crisp vector glyphs at a map-space
+        /// anchor). Null/empty means no labels. Kept in the layer's toggleable content group.
+        /// </summary>
+        public List<PdfFeatureLabel>? Labels { get; set; }
+    }
+
+    /// <summary>
+    /// A single feature label: pre-shaped vector glyph outlines drawn centered on a map-space anchor.
+    /// </summary>
+    public class PdfFeatureLabel
+    {
+        public PdfVectorLogo Glyphs { get; set; } = new();
+
+        /// <summary>Anchor point in map coordinates (same space as the geometry / map extent).</summary>
+        public Point Anchor { get; set; } = new(0, 0);
+
+        /// <summary>Text color; null draws black.</summary>
+        public IRI.Maptor.Sta.Spatial.IO.Dxf.RgbColor? Color { get; set; }
     }
 
     /// <summary>
@@ -50,12 +70,8 @@ public static class PdfWriter
         public string LayerName { get; set; } = string.Empty;
     }
     private const double POINTS_PER_INCH = 72.0;
-    private const double A4_WIDTH = 595.0;  // A4 width in points
-    private const double A4_HEIGHT = 842.0;  // A4 height in points
-    private const double A3_WIDTH = 842.0;  // A3 width in points
-    private const double A3_HEIGHT = 1191.0;  // A3 height in points
-    private const double LETTER_WIDTH = 612.0;  // Letter width in points
-    private const double LETTER_HEIGHT = 792.0;  // Letter height in points
+    private const double A4_WIDTH = 595.0;  // A4 width in points (Auto/Custom fallback base)
+    private const double A4_HEIGHT = 842.0;  // A4 height in points (Auto/Custom fallback base)
 
     /// <summary>
     /// Converts Geometry to PDF bytes
@@ -184,16 +200,6 @@ public static class PdfWriter
 
                 return (contentWidth, contentHeight);
 
-            case PdfPageSize.A4:
-                return options.PageOrientation == PdfPageOrientation.Landscape
-                    ? (A4_HEIGHT, A4_WIDTH)
-                    : (A4_WIDTH, A4_HEIGHT);
-
-            case PdfPageSize.Letter:
-                return options.PageOrientation == PdfPageOrientation.Landscape
-                    ? (LETTER_HEIGHT, LETTER_WIDTH)
-                    : (LETTER_WIDTH, LETTER_HEIGHT);
-
             case PdfPageSize.Custom:
                 if (options.CustomPageWidth.HasValue && options.CustomPageHeight.HasValue)
                 {
@@ -203,7 +209,8 @@ public static class PdfWriter
                 return (A4_WIDTH, A4_HEIGHT);
 
             default:
-                return (A4_WIDTH, A4_HEIGHT);
+                // Any fixed preset (A0…A5, B2…B4, Letter, Legal, Tabloid); Get falls back to A4.
+                return PdfPageDimensions.Get(options.PageSize, options.PageOrientation);
         }
     }
 
@@ -519,7 +526,7 @@ public static class PdfWriter
 
         var isDecorated = decorations?.HasAny == true;
 
-        var (pageWidth, pageHeight) = ComputeLayersPageSize(baseOptions, mapExtent, isDecorated);
+        var (pageWidth, pageHeight) = ComputeLayersPageSize(baseOptions, mapExtent, isDecorated, decorations);
 
         // Create PDF document
         var document = new PdfDocument();
@@ -566,6 +573,25 @@ public static class PdfWriter
                 target.Restore();
         }
 
+        // Graticule lines sit above the basemap but below all vector data: draw them just before
+        // the first vector-bearing unit (or after all rasters if there are none).
+        var drawGraticuleBelowData = isDecorated && decorations!.ShowGraticule;
+        var firstVectorUnitIndex = drawGraticuleBelowData
+            ? units.FindIndex(u => u.Vectors.Any(v => v.Features is { Count: > 0 }))
+            : -1;
+        var graticuleLinesDrawn = false;
+
+        void DrawGraticuleLinesOnce()
+        {
+            if (!drawGraticuleBelowData || graticuleLinesDrawn)
+                return;
+
+            graticuleLinesDrawn = true;
+
+            using var graticuleGfx = XGraphics.FromPdfPage(page, XGraphicsPdfPageOptions.Append);
+            PdfMapComposer.DrawGraticuleLines(graticuleGfx, layout.MapFrameRect, pageTransform, decorations!.GraticuleIntervalDegrees);
+        }
+
         if (supportPdfLayers)
         {
             // Draw each layer into its own appended content stream, then wrap that finalized
@@ -574,6 +600,9 @@ public static class PdfWriter
             // before the next, so its content stream is complete before we wrap its bytes.
             for (int i = 0; i < units.Count; i++)
             {
+                if (i == firstVectorUnitIndex)
+                    DrawGraticuleLinesOnce();
+
                 var unit = units[i];
 
                 var ocgRef = CreatePdfLayer(document, unit.LayerName);
@@ -591,11 +620,26 @@ public static class PdfWriter
         {
             // Non-layered path: draw everything directly on the page.
             using var gfx = XGraphics.FromPdfPage(page);
-            foreach (var unit in units)
+            for (int i = 0; i < units.Count; i++)
             {
-                DrawClippedUnit(gfx, unit);
+                if (i == firstVectorUnitIndex && drawGraticuleBelowData)
+                {
+                    PdfMapComposer.DrawGraticuleLines(gfx, layout.MapFrameRect, pageTransform, decorations!.GraticuleIntervalDegrees);
+                    graticuleLinesDrawn = true;
+                }
+
+                DrawClippedUnit(gfx, units[i]);
+            }
+
+            if (drawGraticuleBelowData && !graticuleLinesDrawn)
+            {
+                PdfMapComposer.DrawGraticuleLines(gfx, layout.MapFrameRect, pageTransform, decorations!.GraticuleIntervalDegrees);
+                graticuleLinesDrawn = true;
             }
         }
+
+        // No vector layers were present (only basemap): graticule still belongs above the tiles.
+        DrawGraticuleLinesOnce();
 
         if (isDecorated)
         {
@@ -617,7 +661,11 @@ public static class PdfWriter
     /// </summary>
     public static BoundingBox ComputeDecoratedMapExtent(BoundingBox mapExtent, PdfOptions options, PdfMapDecorations decorations)
     {
-        var (pageWidth, pageHeight) = ComputeLayersPageSize(options, mapExtent, isDecorated: true);
+        // Preserve-scale sizes the page from this exact extent, so there is nothing to expand.
+        if (options.PreserveMapScale && options.PreservedWebMercatorScale is > 0)
+            return mapExtent;
+
+        var (pageWidth, pageHeight) = ComputeLayersPageSize(options, mapExtent, isDecorated: true, decorations);
 
         var frame = PdfMapLayout.Create(pageWidth, pageHeight, decorations).MapFrameRect;
 
@@ -630,14 +678,51 @@ public static class PdfWriter
         return new BoundingBox(mapExtent.Center, mapExtent.Width, mapExtent.Width / frameAspect);
     }
 
+    // 1 PDF point (1/72 inch) expressed in meters — shared with PdfScaleBarHelper's scale math.
+    private const double MetersPerPoint = 0.0254 / 72.0;
+
+    // PdfSharp/Acrobat practical maximum page dimension (~200 inches).
+    private const double MaxPageDimensionPoints = 14400.0;
+
     /// <summary>
-    /// Page size for WriteLayers: standard sizes honor orientation; Auto derives the page
-    /// from the extent aspect ratio (disallowed for decorated exports, where the frame must
-    /// be predictable — it falls back to A4 oriented by the extent).
+    /// Sizes a custom page so the map is drawn at <paramref name="webMercatorScale"/> (the viewer's
+    /// on-screen scale) instead of being rescaled to fit a preset. Points-per-mercator-unit =
+    /// webMercatorScale / MetersPerPoint; the frame is extent × that, and the page adds the layout
+    /// chrome via <see cref="PdfMapLayout.PageSizeForFrame"/>. Orientation falls out of the extent.
     /// </summary>
-    private static (double PageWidth, double PageHeight) ComputeLayersPageSize(PdfOptions baseOptions, BoundingBox mapExtent, bool isDecorated)
+    internal static (double PageWidth, double PageHeight) ComputePreserveScalePageSize(BoundingBox extent, double webMercatorScale, PdfMapDecorations decorations)
+    {
+        var pointsPerMercatorUnit = webMercatorScale / MetersPerPoint;
+
+        var frameWidth = extent.Width * pointsPerMercatorUnit;
+        var frameHeight = extent.Height * pointsPerMercatorUnit;
+
+        var (pageWidth, pageHeight) = PdfMapLayout.PageSizeForFrame(frameWidth, frameHeight, decorations);
+
+        if (pageWidth > MaxPageDimensionPoints || pageHeight > MaxPageDimensionPoints)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"ComputePreserveScalePageSize: required page {pageWidth:F0}x{pageHeight:F0}pt exceeds {MaxPageDimensionPoints}pt; clamping (map scale not fully preserved).");
+            pageWidth = Math.Min(pageWidth, MaxPageDimensionPoints);
+            pageHeight = Math.Min(pageHeight, MaxPageDimensionPoints);
+        }
+
+        return (pageWidth, pageHeight);
+    }
+
+    /// <summary>
+    /// Page size for WriteLayers: preserve-scale sizes a custom page from the map scale; standard
+    /// sizes honor orientation; Auto derives the page from the extent aspect ratio (disallowed for
+    /// decorated exports, where the frame must be predictable — it falls back to A4 oriented by the extent).
+    /// </summary>
+    private static (double PageWidth, double PageHeight) ComputeLayersPageSize(PdfOptions baseOptions, BoundingBox mapExtent, bool isDecorated, PdfMapDecorations? decorations)
     {
         double pageWidth, pageHeight;
+
+        if (isDecorated && decorations != null && baseOptions.PreserveMapScale && baseOptions.PreservedWebMercatorScale is > 0)
+        {
+            return ComputePreserveScalePageSize(mapExtent, baseOptions.PreservedWebMercatorScale.Value, decorations);
+        }
 
         if (baseOptions.PageSize == PdfPageSize.Auto && isDecorated)
         {
@@ -665,32 +750,15 @@ public static class PdfWriter
             pageWidth = Math.Max(pageWidth, 100);
             pageHeight = Math.Max(pageHeight, 100);
         }
+        else if (baseOptions.PageSize == PdfPageSize.Custom)
+        {
+            pageWidth = baseOptions.CustomPageWidth ?? A4_WIDTH;
+            pageHeight = baseOptions.CustomPageHeight ?? A4_HEIGHT;
+        }
         else
         {
-            // Use standard page size
-            switch (baseOptions.PageSize)
-            {
-                case PdfPageSize.A4:
-                    pageWidth = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? A4_HEIGHT : A4_WIDTH;
-                    pageHeight = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? A4_WIDTH : A4_HEIGHT;
-                    break;
-                case PdfPageSize.A3:
-                    pageWidth = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? A3_HEIGHT : A3_WIDTH;
-                    pageHeight = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? A3_WIDTH : A3_HEIGHT;
-                    break;
-                case PdfPageSize.Letter:
-                    pageWidth = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? LETTER_HEIGHT : LETTER_WIDTH;
-                    pageHeight = baseOptions.PageOrientation == PdfPageOrientation.Landscape ? LETTER_WIDTH : LETTER_HEIGHT;
-                    break;
-                case PdfPageSize.Custom:
-                    pageWidth = baseOptions.CustomPageWidth ?? A4_WIDTH;
-                    pageHeight = baseOptions.CustomPageHeight ?? A4_HEIGHT;
-                    break;
-                default:
-                    pageWidth = A4_WIDTH;
-                    pageHeight = A4_HEIGHT;
-                    break;
-            }
+            // Any fixed preset (A0…A5, B2…B4, Letter, Legal, Tabloid); Get falls back to A4.
+            (pageWidth, pageHeight) = PdfPageDimensions.Get(baseOptions.PageSize, baseOptions.PageOrientation);
         }
 
         return (pageWidth, pageHeight);
@@ -777,6 +845,23 @@ public static class PdfWriter
 
         var point = geometry.Points[0];
         var pdfPoint = transform(point);
+
+        var marker = options.PointMarker;
+
+        // Reproduce the on-screen symbol when we have one; a fixed paper-size stamp centered on the point.
+        if (marker != null && marker.HasVector)
+        {
+            DrawVectorMarker(gfx, marker, pdfPoint, options);
+            return;
+        }
+
+        if (marker != null && marker.HasImage)
+        {
+            DrawImageMarker(gfx, marker, pdfPoint);
+            return;
+        }
+
+        // Fallback: a filled/outlined circle.
         var radius = options.PointCircleRadius;
 
         // Fill first, then outline. Skip whichever is transparent (never paint white).
@@ -790,6 +875,51 @@ public static class PdfWriter
         if (pen != null)
         {
             gfx.DrawEllipse(pen, pdfPoint.X - radius, pdfPoint.Y - radius, radius * 2, radius * 2);
+        }
+    }
+
+    private static void DrawVectorMarker(XGraphics gfx, PdfPointMarker marker, XPoint center, PdfOptions options)
+    {
+        var brush = GetBrush(options);
+        var pen = GetPen(options);
+
+        foreach (var figure in marker.Figures!)
+        {
+            if (figure.Points == null || figure.Points.Count < 2)
+                continue;
+
+            var pts = figure.Points.Select(p => new XPoint(center.X + p.X, center.Y + p.Y)).ToArray();
+
+            // Mirror on-screen DrawGeometry(brush, pen, ...): fill then stroke.
+            if (figure.IsClosed)
+            {
+                if (figure.IsFilled && brush != null)
+                    gfx.DrawPolygon(brush, pts, XFillMode.Alternate);
+
+                if (pen != null)
+                    gfx.DrawPolygon(pen, pts);
+            }
+            else if (pen != null)
+            {
+                gfx.DrawLines(pen, pts);
+            }
+        }
+    }
+
+    private static void DrawImageMarker(XGraphics gfx, PdfPointMarker marker, XPoint center)
+    {
+        try
+        {
+            using var stream = new MemoryStream(marker.ImagePngBytes!, 0, marker.ImagePngBytes!.Length, false, true);
+            var xImage = XImage.FromStream(() => stream);
+
+            gfx.DrawImage(xImage, center.X - marker.Width / 2.0, center.Y - marker.Height / 2.0, marker.Width, marker.Height);
+
+            xImage.Dispose();
+        }
+        catch (Exception)
+        {
+            // Unreadable marker image: skip rather than fail the export.
         }
     }
 
@@ -920,7 +1050,7 @@ public static class PdfWriter
 
         public bool HasContent =>
             Rasters.Any(r => r.Tiles != null && r.Tiles.Count > 0) ||
-            Vectors.Any(v => v.Features != null && v.Features.Count > 0);
+            Vectors.Any(v => (v.Features != null && v.Features.Count > 0) || (v.Labels != null && v.Labels.Count > 0));
     }
 
     /// <summary>
@@ -1012,26 +1142,46 @@ public static class PdfWriter
         // Then vector symbolizer entries, in their original order.
         foreach (var layerData in unit.Vectors)
         {
-            if (layerData.Features == null || layerData.Features.Count == 0)
+            var hasFeatures = layerData.Features is { Count: > 0 };
+            var hasLabels = layerData.Labels is { Count: > 0 };
+
+            if (!hasFeatures && !hasLabels)
                 continue;
 
             var combinedOpacity = baseOptions.Opacity * layerData.Opacity;
 
-            var layerOptions = new PdfOptions
+            if (hasFeatures)
             {
-                StrokeColor = layerData.Options.StrokeColor,
-                FillColor = layerData.Options.FillColor,
-                StrokeWidth = layerData.Options.StrokeWidth,
-                Opacity = combinedOpacity,
-                PointCircleRadius = layerData.Options.PointCircleRadius
-            };
+                var layerOptions = new PdfOptions
+                {
+                    StrokeColor = layerData.Options.StrokeColor,
+                    FillColor = layerData.Options.FillColor,
+                    StrokeWidth = layerData.Options.StrokeWidth,
+                    Opacity = combinedOpacity,
+                    PointCircleRadius = layerData.Options.PointCircleRadius,
+                    PointMarker = layerData.Options.PointMarker
+                };
 
-            foreach (var feature in layerData.Features)
+                foreach (var feature in layerData.Features)
+                {
+                    if (feature?.TheGeometry == null || feature.TheGeometry.IsNullOrEmpty())
+                        continue;
+
+                    WriteGeometryForLayer(target, feature.TheGeometry, pageTransform, layerOptions);
+                }
+            }
+
+            // Labels sit on top of this layer's geometry, at their transformed map-space anchors.
+            if (hasLabels)
             {
-                if (feature?.TheGeometry == null || feature.TheGeometry.IsNullOrEmpty())
-                    continue;
+                foreach (var label in layerData.Labels!)
+                {
+                    if (label?.Glyphs is not { IsValid: true } || label.Anchor == null)
+                        continue;
 
-                WriteGeometryForLayer(target, feature.TheGeometry, pageTransform, layerOptions);
+                    var anchor = pageTransform.ToPage(label.Anchor);
+                    PdfMapComposer.DrawFeatureLabel(target, label.Glyphs, anchor, label.Color);
+                }
             }
         }
     }

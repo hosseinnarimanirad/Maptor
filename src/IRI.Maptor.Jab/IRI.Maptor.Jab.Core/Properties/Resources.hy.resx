@@ -1648,6 +1648,9 @@
   <data name="dialog_printPdf_maptorLogo" xml:space="preserve">
     <value>Maptor պատկերանշան</value>
   </data>
+  <data name="dialog_printPdf_legend" xml:space="preserve">
+    <value>Լեգենդ</value>
+  </data>
   <data name="dialog_printPdf_companyLogo" xml:space="preserve">
     <value>Ընկերության լոգո (PNG)...</value>
   </data>

@@ -1789,6 +1789,9 @@
   <data name="dialog_printPdf_maptorLogo" xml:space="preserve">
     <value>Maptor icon</value>
   </data>
+  <data name="dialog_printPdf_legend" xml:space="preserve">
+    <value>Legend</value>
+  </data>
   <data name="dialog_printPdf_companyLogo" xml:space="preserve">
     <value>Company logo (PNG)...</value>
   </data>
@@ -1797,6 +1800,9 @@
   </data>
   <data name="dialog_printPdf_landscape" xml:space="preserve">
     <value>Landscape</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>Keep current map scale (fit page to map)</value>
   </data>
   <data name="dialog_printPdf_preview" xml:space="preserve">
     <value>Preview</value>

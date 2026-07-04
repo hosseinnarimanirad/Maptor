@@ -24,8 +24,8 @@ internal static class PdfScaleBarHelper
     public static (double BarWidthPoints, double GroundMeters, string Label) Choose(
         double pointsPerMercatorMeter,
         double cosCenterLatitude,
-        double minWidthPoints = 90,
-        double maxWidthPoints = 200)
+        double minWidthPoints = 80,
+        double maxWidthPoints = 220)
     {
         // ground meters represented by one page point
         var groundMetersPerPoint = cosCenterLatitude / pointsPerMercatorMeter;
@@ -33,13 +33,18 @@ internal static class PdfScaleBarHelper
         var minGround = minWidthPoints * groundMetersPerPoint;
         var maxGround = maxWidthPoints * groundMetersPerPoint;
 
-        var groundMeters = _roundLengthsMeters.FirstOrDefault(l => l >= minGround && l <= maxGround);
+        // Largest round length whose bar lands within the width window.
+        var groundMeters = _roundLengthsMeters.LastOrDefault(l => l >= minGround && l <= maxGround);
 
         if (groundMeters == 0)
         {
-            // Window missed the ladder (extreme scales): take the closest round length.
-            var target = Math.Sqrt(minGround * maxGround);
-            groundMeters = _roundLengthsMeters.OrderBy(l => Math.Abs(Math.Log(l / target))).First();
+            // No ladder value fits the window: take the largest that still fits maxWidth (so the
+            // bar never overflows the footer), else the smallest available. The bar width always
+            // equals GroundMeters / groundMetersPerPoint, so the printed length stays truthful.
+            groundMeters = _roundLengthsMeters.LastOrDefault(l => l <= maxGround);
+
+            if (groundMeters == 0)
+                groundMeters = _roundLengthsMeters[0];
         }
 
         var barWidthPoints = groundMeters / groundMetersPerPoint;

@@ -27,7 +27,24 @@ public class PrintToPdfDialogOptions
 
     public bool ShowGraticule { get; set; } = true;
 
+    /// <summary>
+    /// Company title shown in the right column, provided in code (not from dialog input);
+    /// <see cref="ViewModels.Map.MapViewModelBase.PrintCompanyTitle"/> populates it per app.
+    /// </summary>
+    public string? CompanyTitle { get; set; }
+
+    /// <summary>
+    /// Company subtitle shown under <see cref="CompanyTitle"/>, provided in code (not from dialog input).
+    /// </summary>
+    public string? CompanySubtitle { get; set; }
+
     public PdfPageSize PageSize { get; set; } = PdfPageSize.A4;
 
     public PdfPageOrientation PageOrientation { get; set; } = PdfPageOrientation.Landscape;
+
+    /// <summary>
+    /// When true, the export keeps the map's current on-screen scale by sizing a custom page,
+    /// instead of rescaling the map to fit <see cref="PageSize"/>. Page size/orientation are ignored.
+    /// </summary>
+    public bool PreserveMapScale { get; set; }
 }

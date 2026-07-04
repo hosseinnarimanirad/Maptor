@@ -67,7 +67,12 @@ public class PrintToPdfDialogViewModel : DialogViewModelBase
         set { _showGraticule = value; RaisePropertyChanged(); }
     }
 
-    public ObservableCollection<PdfPageSize> AvailablePageSizes { get; } = new() { PdfPageSize.A4, PdfPageSize.A3, PdfPageSize.Letter };
+    public ObservableCollection<PdfPageSize> AvailablePageSizes { get; } = new()
+    {
+        PdfPageSize.A5, PdfPageSize.A4, PdfPageSize.A3, PdfPageSize.A2, PdfPageSize.A1, PdfPageSize.A0,
+        PdfPageSize.B4, PdfPageSize.B3, PdfPageSize.B2,
+        PdfPageSize.Letter, PdfPageSize.Legal, PdfPageSize.Tabloid,
+    };
 
     private PdfPageSize _selectedPageSize = PdfPageSize.A4;
     public PdfPageSize SelectedPageSize
@@ -93,6 +98,24 @@ public class PrintToPdfDialogViewModel : DialogViewModelBase
         }
     }
 
+    private bool _preserveMapScale;
+    public bool PreserveMapScale
+    {
+        get => _preserveMapScale;
+        set
+        {
+            _preserveMapScale = value;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsPageSetupEnabled));
+        }
+    }
+
+    /// <summary>
+    /// Page-size / orientation pickers are disabled while <see cref="PreserveMapScale"/> is on,
+    /// since the page is then sized automatically from the map's current scale.
+    /// </summary>
+    public bool IsPageSetupEnabled => !PreserveMapScale;
+
     private BitmapSource? _mapThumbnail;
     public BitmapSource? MapThumbnail
     {
@@ -113,16 +136,11 @@ public class PrintToPdfDialogViewModel : DialogViewModelBase
     {
         get
         {
-            var (w, h) = SelectedPageSize switch
-            {
-                PdfPageSize.A3 => (842.0, 1191.0),
-                PdfPageSize.Letter => (612.0, 792.0),
-                _ => (595.0, 842.0),
-            };
+            var orientation = IsLandscape ? PdfPageOrientation.Landscape : PdfPageOrientation.Portrait;
+            var (w, h) = PdfPageDimensions.Get(SelectedPageSize, orientation);
 
-            var aspect = IsLandscape ? h / w : w / h;
-
-            return PreviewPageWidth / aspect;
+            // width is fixed in the preview; scale height to keep the page aspect ratio
+            return PreviewPageWidth * h / w;
         }
     }
 
@@ -148,6 +166,7 @@ public class PrintToPdfDialogViewModel : DialogViewModelBase
             ShowGraticule = initialOptions.ShowGraticule;
             SelectedPageSize = initialOptions.PageSize;
             IsLandscape = initialOptions.PageOrientation == PdfPageOrientation.Landscape;
+            PreserveMapScale = initialOptions.PreserveMapScale;
         }
 
         BrowseLogoCommand = new RelayCommand(async _ => await BrowseLogoAsync());
@@ -181,7 +200,7 @@ public class PrintToPdfDialogViewModel : DialogViewModelBase
 
     private async Task BrowseLogoAsync()
     {
-        var path = await DialogService.ShowOpenFileDialogAsync("*.png|*.png", null);
+        var path = await DialogService.ShowOpenFileDialogAsync("Image files|*.png;*.jpg;*.jpeg", null);
 
         if (!string.IsNullOrEmpty(path))
             CompanyLogoPath = path;
@@ -200,6 +219,7 @@ public class PrintToPdfDialogViewModel : DialogViewModelBase
             ShowGraticule = ShowGraticule,
             PageSize = SelectedPageSize,
             PageOrientation = IsLandscape ? PdfPageOrientation.Landscape : PdfPageOrientation.Portrait,
+            PreserveMapScale = PreserveMapScale,
         };
 
         DialogResult = true;

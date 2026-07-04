@@ -1648,6 +1648,9 @@
   <data name="dialog_printPdf_maptorLogo" xml:space="preserve">
     <value>آیکون Maptor</value>
   </data>
+  <data name="dialog_printPdf_legend" xml:space="preserve">
+    <value>راهنمای نقشه</value>
+  </data>
   <data name="dialog_printPdf_companyLogo" xml:space="preserve">
     <value>لوگوی شرکت (PNG)...</value>
   </data>
@@ -1656,6 +1659,9 @@
   </data>
   <data name="dialog_printPdf_landscape" xml:space="preserve">
     <value>افقی</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>حفظ مقیاس فعلی نقشه (تنظیم اندازه صفحه با نقشه)</value>
   </data>
   <data name="dialog_printPdf_preview" xml:space="preserve">
     <value>پیش‌نمایش</value>
