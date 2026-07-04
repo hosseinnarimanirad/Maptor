@@ -1,32 +1,22 @@
-# 🌍 GeoJson Support in Maptor
+# 🌍 GeoJSON Support in Maptor
 
-![GeoJson](https://img.shields.io/badge/GeoJson-RFC_7946_compliant-blue) 
+![GeoJson](https://img.shields.io/badge/GeoJSON-RFC_7946-blue)
 ![.NET](https://img.shields.io/badge/.NET-Standard_2.1-green)
 
-A .NET Standard implementation of GeoJson (RFC 7946) for spatial data interchange, supporting read/write operations, conversion to/from geometry types, and validation.
-
-![geo](https://github.com/user-attachments/assets/21ea02ee-f3a9-4fc7-bfe7-1f9c15977fd6)
+A .NET Standard implementation of GeoJSON (RFC 7946) for spatial data interchange: read and write features, and convert to/from the library's `Geometry<T>` types.
 
 ## ✨ Features
 
-- **Full GeoJSON Support**  
-  ✅ RFC 7946 compliant  
-  ✅ Geometry types: `Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`  
-  ✅ Feature collections with properties  
-  ✅ Polygon ring orientation validation (RFC 7946 Section 3.1.6)
-  
-- **Conversion Tools**  
-  🔄 GeoJSON ↔ Geometry  
-  🔄 GeoJSON ↔ ESRI Shapefile
+- Geometry types: `Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`
+- Feature and feature-collection (`FeatureCollection`) read/write
+- Conversion both ways: GeoJSON ⇄ `Geometry<Point>` / `Feature<Point>`
+- 2D, 3D (`Z`), and an optional 4D (`ZM`) extension on the model — note that measure (`M`) is **not** part of RFC 7946 output
 
 ## 🌍 Coordinate Reference System
 
-**Per RFC 7946 Section 4**, the coordinate reference system for all GeoJSON coordinates **MUST** be:
-- **World Geodetic System 1984 (WGS 84)** [WGS84] datum
-- Longitude and latitude units of decimal degrees
-- Equivalent to OGC URN: `urn:ogc:def:crs:OGC::CRS84`
+Per **RFC 7946 §4**, GeoJSON coordinates are WGS 84 (longitude, latitude in decimal degrees), equivalent to `urn:ogc:def:crs:OGC::CRS84`. An optional third position element is height in meters. Conversion methods take an `isLongitudeFirst` flag and an `srid` so you can adapt to non-default inputs.
 
-An OPTIONAL third-position element SHALL be the height in meters above or below the WGS 84 reference ellipsoid. In the absence of elevation values, applications sensitive to height or depth SHOULD interpret positions as being at local ground or sea level.
+Polygon rings follow the right-hand rule (RFC 7946 §3.1.6): exterior rings **counterclockwise**, holes **clockwise**, and every ring is closed (first position repeated as last). Maptor's `Geometry<Point>` uses the same orientation invariant.
 
 ### 4D Coordinate Support (Extension)
 
@@ -68,161 +58,80 @@ if (!isValid)
         Console.WriteLine(error);
 }
 ```
-  
+
 ## ⚙️ Installation
+
 ```bash
 dotnet add package IRI.Maptor.Sta.Spatial
 ```
 
 ## 🚀 Getting Started
 
-### Reading GeoJSON
+All types live in `IRI.Maptor.Sta.Spatial.GeoJsonFormat`; the geometry extension methods live in `IRI.Maptor.Extensions`.
 
-#### Read from File
+### Reading
+
 ```csharp
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 
-// Read features from a GeoJSON file
-var features = GeoJson.ReadFeatures("path/to/file.geojson");
+// Read features from a .geojson file
+IEnumerable<GeoJsonFeature> features = GeoJson.LoadFromFile("path/to/file.geojson");
 
-foreach (var feature in features)
-{
-    Console.WriteLine($"Feature Type: {feature.Type}");
-    Console.WriteLine($"Geometry Type: {feature.Geometry?.Type}");
-}
+// Deserialize a single geometry from a string
+IGeoJsonGeometry? point = GeoJson.DeserializeGeometry("{\"type\":\"Point\",\"coordinates\":[30,10]}");
+
+// Parse a FeatureCollection from a string
+GeoJsonFeatureSet featureSet = GeoJsonFeatureSet.Parse(featureCollectionJson);
 ```
 
-#### Deserialize from String
+### Writing
+
 ```csharp
-// Deserialize a GeoJSON geometry string
-var pointJson = "{\"type\": \"Point\", \"coordinates\": [30, 10]}";
-IGeoJsonGeometry point = GeoJson.Deserialize(pointJson);
-
-var multiPointJson = "{\"type\": \"MultiPoint\", \"coordinates\": [[10.1, 40.1], [40.1, 30.1], [20.1, 20.1], [30.1, 10.1]]}";
-IGeoJsonGeometry multiPoint = GeoJson.Deserialize(multiPointJson);
-
-var lineStringJson = "{\"type\": \"LineString\", \"coordinates\": [[30.1, 10.1], [10.1, 30.1], [40.1, 40.1]]}";
-IGeoJsonGeometry lineString = GeoJson.Deserialize(lineStringJson);
-
-// Parse FeatureCollection
-var featureCollectionJson = "{\"type\": \"FeatureCollection\", \"features\": [...]}";
-var featureSet = GeoJsonFeatureSet.Parse(featureCollectionJson);
-var features = featureSet.Features;
-```
-
-### Writing GeoJSON
-
-#### Write to File
-```csharp
-// Save features to a GeoJSON file
-var features = new List<GeoJsonFeature> { /* ... */ };
+// Write a list of features to a file
 GeoJson.SaveFeatures("output.geojson", features);
 
-// Or use FeatureSet
-var featureSet = new GeoJsonFeatureSet
-{
-    Features = features,
-    TotalFeatures = features.Count
-};
-featureSet.Save("output.geojson", indented: true);
+// Or save a feature set (async)
+var set = new GeoJsonFeatureSet { Features = features.ToList(), TotalFeatures = features.Count() };
+await set.SaveAsync("output.geojson", indented: true);
+
+// Serialize a single geometry to a string
+string json = point.Serialize(indented: true);
 ```
 
-#### Serialize to String
-```csharp
-// Serialize geometry to JSON string
-var geoJsonGeometry = GeoJson.Deserialize(pointJson);
-string jsonString = geoJsonGeometry.Serialize(indented: true);
-
-// Or serialize without indentation
-string compactJson = geoJsonGeometry.Serialize(indented: false);
-```
-
-### Converting GeoJSON to IGeometry
+### Converting GeoJSON → Geometry
 
 ```csharp
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Primitives;
 
-// Parse GeoJSON geometry to IGeometry
-var geoJsonPoint = GeoJson.Deserialize("{\"type\": \"Point\", \"coordinates\": [30, 10]}");
-IGeometry geometry = geoJsonPoint.Parse(isLongitudeFirst: true, srid: 4326);
+IGeoJsonGeometry geoJson = GeoJson.DeserializeGeometry("{\"type\":\"Point\",\"coordinates\":[30,10]}");
 
-// The returned geometry type depends on coordinate dimensions:
-// - 2D coordinates → Geometry<Point>
-// - 3D coordinates → Geometry<PointZ>
-// - 4D coordinates → Geometry<PointZM>
-
-// Access geometry properties
-if (geometry is Geometry<Point> pointGeometry)
-{
-    var points = pointGeometry.Points;
-    Console.WriteLine($"Number of points: {points.Count}");
-}
+// Returns Geometry<Point>, Geometry<PointZ>, or Geometry<PointZM> based on coordinate dimensions
+IGeometry geometry = geoJson.Parse(isLongitudeFirst: true, srid: 4326);
 ```
 
-### Converting IGeometry to GeoJSON
+### Converting Geometry → GeoJSON
 
 ```csharp
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Primitives;
 
-// Convert Geometry to GeoJSON
 var point = Geometry<Point>.Create(30, 10);
 IGeoJsonGeometry geoJsonPoint = point.AsGeoJson(isLongitudeFirst: true);
 
-// Serialize to JSON string
 string json = geoJsonPoint.Serialize(indented: true);
-
-// Convert other geometry types
-var lineString = new Geometry<Point>(
-    new List<Point> { new Point(30, 10), new Point(40, 20) },
-    GeometryType.LineString,
-    srid: 4326
-);
-IGeoJsonGeometry geoJsonLineString = lineString.AsGeoJson();
-
-// Convert with 3D coordinates
-var pointZ = new Geometry<PointZ>(
-    new List<PointZ> { new PointZ { X = 30, Y = 10, Z = 100 } },
-    GeometryType.Point,
-    srid: 4326
-);
-IGeoJsonGeometry geoJsonPointZ = pointZ.AsGeoJson();
 ```
 
-### Complete Example: Round-Trip Conversion
+> `AsGeoJson` covers `Point`/`MultiPoint`/`LineString`/`MultiLineString`/`Polygon`/`MultiPolygon`. `GeometryCollection` and curve geometries are not supported and throw `NotImplementedException`.
 
-```csharp
-// 1. Start with GeoJSON string
-var geoJsonString = "{\"type\": \"Polygon\", \"coordinates\": [[[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]]]}";
+## 📋 Format Details
 
-// 2. Deserialize to IGeoJsonGeometry
-IGeoJsonGeometry geoJson = GeoJson.Deserialize(geoJsonString);
-
-// 3. Validate ring orientations (RFC 7946 compliance)
-if (geoJson is GeoJsonPolygon polygon)
-{
-    var (isValid, errors) = polygon.ValidateRingOrientations();
-    if (!isValid)
-    {
-        Console.WriteLine("Ring orientation validation failed:");
-        foreach (var error in errors)
-            Console.WriteLine($"  - {error}");
-    }
-}
-
-// 4. Convert to IGeometry
-IGeometry geometry = geoJson.Parse(isLongitudeFirst: true, srid: 4326);
-
-// 5. Convert back to GeoJSON
-IGeoJsonGeometry geoJsonRoundTrip = geometry.AsGeoJson(isLongitudeFirst: true);
-
-// 6. Serialize back to string
-string roundTripJson = geoJsonRoundTrip.Serialize(indented: true);
-Console.WriteLine(roundTripJson);
-```
+| Aspect | GeoJSON in Maptor |
+|--------|-------------------|
+| **Coordinate system** | Spec mandates WGS 84 (`urn:ogc:def:crs:OGC::CRS84`), longitude/latitude in degrees. `Parse(isLongitudeFirst, srid)` lets you set axis order and SRID; Maptor does not reproject or enforce WGS 84. |
+| **Z / M** | Z (elevation) is part of the spec (3rd position element). M is a non-standard extension surfaced as `Geometry<PointZM>`; it is not part of RFC 7946 output. |
+| **Polygon rings** | Right-hand rule — exterior **CCW**, holes **CW** (same as `Geometry<Point>`). The writer repeats the first vertex as the last to close each ring. |
+| **Serialization** | System.Text.Json. Deserialize: `GeoJson.DeserializeGeometry`, `GeoJsonFeatureSet.Parse`, `GeoJson.LoadFromFile`. Serialize: `IGeoJsonGeometry.Serialize`, `GeoJson.SaveFeatures`, `GeoJsonFeatureSet.SaveAsync`. |
+| **Specification** | [GeoJSON — RFC 7946](https://datatracker.ietf.org/doc/html/rfc7946) |
 
 ## 📚 Documentation
 - [GeoJSON RFC 7946 Specification](https://datatracker.ietf.org/doc/html/rfc7946)
- 

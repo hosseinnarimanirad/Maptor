@@ -1,6 +1,6 @@
 # 🌍 Maptor Spatial Library
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/hosseinnarimanirad/Maptor/blob/master/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/hosseinnarimanirad/Maptor/blob/master/LICENSE.txt)
 [![Build](https://img.shields.io/github/actions/workflow/status/hosseinnarimanirad/Maptor/master-release.yml)](https://github.com/hosseinnarimanirad/Maptor/actions)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![.NET Standard](https://img.shields.io/badge/.NET%20Standard-2.1-blue.svg)](https://dotnet.microsoft.com/download/dotnet/8.0)
@@ -53,10 +53,10 @@ Console.Read();
 ## ✨ Key Features
 
 ### 🗺️ **Spatial Reference Systems**
-- **15+ predefined ellipsoids** (WGS84, GRS80, Clarke 1866, etc.)
+- **25+ predefined ellipsoids** (WGS84, GRS80, Clarke 1866, etc.)
 - **Coordinate transformations** (UTM, Mercator, WebMercator, Lambert, etc.)
 - **Custom SRID support** for specialized projections
-- **Geodetic calculations** with high precision
+- **Geodetic distance calculations** (ellipsoidal and spherical)
 
 ### 🔧 **Geometry Operations**
 - **Complete geometry types**: Points, Lines, Polygons, MultiPoints, MultiLines, MultiPolygons
@@ -71,9 +71,9 @@ Console.Read();
   - **Document formats**: PDF (vector graphics export)
   - **Columnar formats**: GeoParquet (efficient columnar geospatial data storage)
   - **SQL Server Native Binary**: Native spatial data format
-- **Raster support**: GeoTIFF (Worldfile), GRD file, custom raster formats
+- **Raster support**: GeoTIFF, world files, GRD files
 - **Terrain formats**: 
-  - **Cesium Terrain**: quantized-mesh-1.0 (adaptive triangle meshes) and heightmap-1.0 (regular grids) for 3D terrain visualization
+  - **Cesium Terrain (read)**: quantized-mesh-1.0 (adaptive triangle meshes) and heightmap-1.0 (regular grids)
 - **Tile formats**: 
   - **PMTiles**: Serverless tile archive format (vector and raster tiles)
   - **MBTiles**: SQLite-based tile storage for offline mapping
@@ -101,37 +101,46 @@ Console.Read();
 
 ## 🏗️ Architecture
 
-Maptor follows a modular architecture with clear separation of concerns:
+Maptor follows a modular architecture with clear separation of concerns — three tiers where dependencies flow downward (UI → infrastructure → core):
 
 ```
 Maptor/
-├── 📦 IRI.Maptor.Sta/          # Core spatial operations & algorithms (netstandard2.1)
-│   ├── Spatial                 # Geometry types, spatial algorithms
-│   │   ├── IO/                 # Format I/O (DXF, SVG, EPS, TopoJSON, PMTiles, CesiumTerrain, …)
-│   │   └── Analysis/           # Spatial analysis algorithms
-│   ├── SpatialReferenceSystem  # Coordinate systems & transformations
+├── 📦 IRI.Maptor.Sta/          # Core spatial libraries (netstandard2.1, UI-free)
+│   ├── Common                  # Foundational primitives & abstractions
+│   ├── Spatial                 # Geometry types, algorithms, indexes, format I/O
+│   │   └── IO/                 # GeoJSON, DXF, SVG, EPS, TopoJSON, PMTiles, GPX, …
+│   ├── SpatialReferenceSystem  # Ellipsoids, datums, projections, transformations
 │   ├── ShapefileFormat         # ESRI Shapefile I/O
-│   ├── Ogc                     # OGC standards (WFS, WMS, GML, KML, SLD, SFA)
+│   ├── Ogc                     # OGC standards (SFA WKT/WKB, GML, KML, WMS, WFS, SLD)
 │   ├── Graph                   # Graph algorithms
 │   ├── MachineLearning         # ML algorithms for spatial data
 │   ├── GeoParquet              # GeoParquet format support
-│   ├── Pdf                     # PDF vector format support
+│   ├── Pdf                     # Vector PDF map export
 │   ├── Security                # Security/cryptography primitives
-│   └── Persistence             # Persistence abstractions
-├── 🔧 IRI.Maptor.Ket/          # Infrastructure & persistence adapters (net8.0-windows)
-│   ├── SqlServerPersistence    # SQL Server integration
+│   ├── Persistence             # Persistence abstractions
+│   └── GsmGprs                 # SMS PDU & GSM modem support
+├── 🔧 IRI.Maptor.Ket/          # Infrastructure & persistence adapters (net8.0 / net8.0-windows)
+│   ├── SqlServerPersistence    # SQL Server Spatial integration
 │   ├── PostgreSqlPersistence   # PostGIS integration
-│   ├── SqlitePersistence       # SQLite/GeoPackage/MBTiles support
-│   ├── PersonalGdbPersistence  # Personal Geodatabase support
-│   ├── GdiPlus                 # Raster data handling
-│   └── WebApiPersistence       # Web API data sources
-├── 🖥️ IRI.Maptor.Jab/          # WPF UI components (net8.0-windows)
-│   └── Common                  # Map viewer, MVVM infrastructure, layers, symbology
-├── 🧩 IRI.Maptor.Bag/          # Higher-level building blocks
-│   ├── Geospatial
-│   └── SpatialDataManagement
-└── 🧪 Tests & Samples/         # Comprehensive test suite & examples
+│   ├── SqlitePersistence       # SQLite / GeoPackage / MBTiles
+│   ├── EfCorePersistence       # EF Core spatial mapping (NTS-free)
+│   ├── PersonalGdbPersistence  # ESRI Personal Geodatabase (.mdb)
+│   ├── WebApiPersistence       # Web API data sources
+│   ├── SqlServerSpatialExtension # SqlGeometry/SqlGeography conversions
+│   ├── GdiPlus                 # Raster & image processing (GDI+)
+│   └── WindowsBase             # Windows-specific services
+├── 🖥️ IRI.Maptor.Jab/          # UI & presentation (WPF)
+│   ├── Common                  # MapViewer control, MVVM, layers, symbology
+│   ├── Core                    # UI-independent core, tile services, localization
+│   └── IranRepo                # Iran-specific data repositories
+├── 🧪 tests/                   # xUnit test suite
+└── 💡 samples/                 # Sample applications
 ```
+
+**Tier guides** — a structured overview of every project in each tier:
+- 📦 [Core spatial libraries (Sta)](src/IRI.Maptor.Sta/README.md)
+- 🔧 [Infrastructure & persistence adapters (Ket)](src/IRI.Maptor.Ket/README.md)
+- 🖥️ [UI & presentation libraries (Jab)](src/IRI.Maptor.Jab/README.md)
 
 ---
 
@@ -146,20 +155,7 @@ Maptor/
 | [IRI.Maptor.Sta.Graph](https://www.nuget.org/packages/IRI.Maptor.Sta.Graph) | Graph Algorithms (BFS, DFS, Dijkstra, etc.) | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Graph.svg?style=flat-square) |
 | [IRI.Maptor.Jab.Common](https://www.nuget.org/packages/IRI.Maptor.Jab.Common) | WPF Map viewer and UI controls | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Jab.Common.svg?style=flat-square) |
 
-<details>
-<summary>▶ Show more packages</summary>
-
-| Package | Description | Version |
-|---------|-------------|---------|
-| [IRI.Maptor.Sta.Common](https://www.nuget.org/packages/IRI.Maptor.Sta.Common) | Foundational utilities and abstractions | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Common.svg?style=flat-square) |
-| [IRI.Maptor.Sta.MachineLearning](https://www.nuget.org/packages/IRI.Maptor.Sta.MachineLearning) | Clustering, Apriori, Logistic Regression | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.MachineLearning.svg?style=flat-square) |
-| [IRI.Maptor.Sta.Pdf](https://www.nuget.org/packages/IRI.Maptor.Sta.Pdf) | PDF vector format support | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Pdf.svg?style=flat-square) |
-| [IRI.Maptor.Sta.GeoParquet](https://www.nuget.org/packages/IRI.Maptor.Sta.GeoParquet) | GeoParquet columnar format support | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.GeoParquet.svg?style=flat-square) |
-| [IRI.Maptor.Ket.SqlServerPersistence](https://www.nuget.org/packages/IRI.Maptor.Ket.SqlServerPersistence) | SQL Server spatial integration | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.SqlServerPersistence.svg?style=flat-square) |
-| [IRI.Maptor.Ket.PostgreSqlPersistence](https://www.nuget.org/packages/IRI.Maptor.Ket.PostgreSqlPersistence) | PostGIS integration | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.PostgreSqlPersistence.svg?style=flat-square) |
-| [IRI.Maptor.Ket.SqlitePersistence](https://www.nuget.org/packages/IRI.Maptor.Ket.SqlitePersistence) | SQLite/GeoPackage/MBTiles support | ![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.SqlitePersistence.svg?style=flat-square) |
-
-</details>
+Every library project in the Sta, Ket, and Jab tiers is published to NuGet — see the per-tier package tables in the [Sta](src/IRI.Maptor.Sta/README.md), [Ket](src/IRI.Maptor.Ket/README.md), and [Jab](src/IRI.Maptor.Jab/README.md) guides.
 
 👉 [Browse all packages on NuGet.org](https://www.nuget.org/packages?q=IRI.Maptor)
 
@@ -219,13 +215,14 @@ dotnet build
 
 ### 2. Run Samples
 ```bash
-# WPF Sample Application
-cd samples/IRI.Maptor.Tag.SampleWpfApp
-dotnet run
+# WPF sample application
+dotnet run --project samples/IRI.Maptor.Tag.SampleWpfApp
 
-# Console Samples
-cd samples/IRI.Maptor.Tag.SampleCodes
-dotnet run
+# Console samples
+dotnet run --project samples/IRI.Maptor.Tag.SampleCodes
+
+# Full-featured WPF demo
+dotnet run --project samples/IRI.Maptor.MasterProjectWPF
 ```
 
 ### 3. Explore Documentation
@@ -237,9 +234,8 @@ dotnet run
 
 ## 🧪 Testing & Quality
 
-- **12,000+ C# files** across the solution
-- **Unit tests** for core functionality 
-- **Performance benchmarks** for some algorithms
+- **1,300+ C# files** across 28 projects
+- **Unit tests** for core functionality (xUnit, `tests/IRI.Maptor.Tst.Main`)
 - **Continuous integration** with GitHub Actions
 
 ---
@@ -259,21 +255,17 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) a
 
 ## 📈 Performance
 
-Maptor is designed for performance with:
-- **Optimized algorithms** for large datasets
-- **Spatial indexing** (KdTree, RTree) for fast queries
-- **Memory-efficient** streaming APIs
+- **Spatial indexing** (KdTree, RTree) for fast spatial queries
+- **Scale- and bounding-box-aware queries** in the database adapters, so only visible features are fetched
 - **Async/await** support for I/O operations
-- **Parallel processing** where applicable
 
 ---
 
 ## 🌍 Internationalization
 
-- **Multi-language support** with localization framework
-- **RTL language support** (Arabic, Persian, Hebrew)
-- **Regional data providers** (Iran-specific datasets)
-- **Cultural formatting** for numbers, dates, and coordinates
+- **Multi-language UI** — localization resources for 15 cultures, switchable at runtime
+- **RTL language support** (Persian, Arabic)
+- **Regional data providers** (Iran-specific datasets via `IRI.Maptor.Jab.IranRepo`)
 
 ---
 

@@ -1,33 +1,22 @@
 # 🗺️ TopoJSON Support in Maptor
 
-![TopoJSON](https://img.shields.io/badge/TopoJSON-Specification_compliant-blue)
+![TopoJSON](https://img.shields.io/badge/TopoJSON-supported-blue)
 ![.NET](https://img.shields.io/badge/.NET-Standard_2.1-green)
 
-A .NET Standard implementation of TopoJSON for compact representation of geographic data with shared topology, supporting read/write operations and conversion to/from Geometry types.
+A .NET Standard implementation of TopoJSON — a GeoJSON extension that encodes topology as shared line segments (**arcs**) to reduce redundancy and file size. Supports reading, writing, and conversion to/from the library's `Feature<Point>` types.
 
 ## ✨ Features
 
-- **Full TopoJSON Support**  
-  ✅ TopoJSON Specification compliant  
-  ✅ Geometry types: `Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`  
-  ✅ `GeometryCollection` is fully supported (parsed and written) 
-  ✅ Arc-based topology for eliminating redundancy
-  ✅ Quantization support for size reduction
-  ✅ **Power BI Shape Map ready** – writing a list of features produces a single `GeometryCollection
-  
-- **Conversion Tools**  
-  🔄 TopoJSON ↔ Geometry<Point>  
-  🔄 Automatic topology extraction  
-  🔄 Shared arc deduplication  
-  🔄 Properties dictionary automatically converted to proper .NET types (`int`, `double`, `string`, `bool`, etc.) 
+- Geometry types: `Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`, and `GeometryCollection`
+- Read TopoJSON → `Feature<Point>`; write `Feature<Point>` collections → TopoJSON
+- Arc-based encoding with delta encoding and arc deduplication
+- Optional quantization to shrink output
+- Feature properties are preserved and read back as .NET values
+- Writing a list of features produces a single `GeometryCollection` object (the shape Power BI's Shape Map visual expects)
 
 ## 📦 What is TopoJSON?
 
-TopoJSON is an extension of GeoJSON that encodes topology. Instead of representing geometries discretely, geometries in TopoJSON files are stitched together from shared line segments called **arcs**. This results in:
-
-- **Smaller file sizes** (often 80% smaller than GeoJSON)
-- **Topology preservation** (shared boundaries stay consistent)
-- **Efficient storage** (no coordinate duplication)
+Instead of storing each geometry's coordinates independently, TopoJSON stitches geometries together from shared arcs. Shared boundaries are stored once, which typically produces smaller files than the equivalent GeoJSON.
 
 ## ⚙️ Installation
 
@@ -37,159 +26,91 @@ dotnet add package IRI.Maptor.Sta.Spatial
 
 ## 🚀 Getting Started
 
-### Reading TopoJSON
+All types live in `IRI.Maptor.Sta.Spatial.IO.TopoJson`.
+
+### Reading
 
 ```csharp
 using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 
-// Read from file
-var topology = await TopoJson.ReadFromFileAsync("map.topojson");
+// From file (async) or from a string
+TopoJsonTopology topology = await TopoJson.ReadFromFileAsync("map.topojson");
+TopoJsonTopology fromString = TopoJson.Parse(File.ReadAllText("map.topojson"));
 
-// Parse from string
-string topoJsonString = File.ReadAllText("map.topojson");
-var topology = TopoJson.Parse(topoJsonString);
-
-// Convert to Features (with strongly typed properties)
-var features = TopoJson.ToFeature(topology, srid: 4326);
-foreach (var kvp in features)
-{
-    Console.WriteLine($"Feature '{kvp.Key}': {kvp.Value.TheGeometry.Type}");
-    if (kvp.Value.Attributes.ContainsKey("BranchId"))
-    {
-        int branchId = (int)kvp.Value.Attributes["BranchId"];
-        Console.WriteLine($"  BranchId: {branchId}");
-    }
-}
+// Convert to features (keyed by object name); properties come back as typed .NET values
+Dictionary<string, Feature<Point>> features = TopoJson.ToFeature(topology, srid: 4326);
 ```
 
-### Writing TopoJSON (Power BI compatible)
+### Writing
 
-When writing a list of features, the library automatically groups them into a single GeometryCollection – exactly what Power BI Shape Map expects.
+Writing a list of features groups them into a single `GeometryCollection`.
 
 ```csharp
-using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 
-// Create features with attributes
 var features = new List<Feature<Point>>();
-foreach (var region in regionsData)
-{
-    var geometry = Geometry<Point>.Create(region.Points, GeometryType.Polygon, 4326);
-    var attributes = new Dictionary<string, object>
-    {
-        ["Name"] = region.Name,
-        ["Population"] = region.Population,
-        ["IsCapital"] = region.IsCapital
-    };
-    features.Add(new Feature<Point>(geometry, attributes));
-}
+// ... populate features (each with a Geometry<Point> and an attributes dictionary)
 
-// Write to TopoJSON file (the output will contain a single "data" GeometryCollection)
-await TopoJson.WriteToFileAsync(features, "output.topojson", quantize: true, quantizationFactor: 10000, collectionName: "regions");
+await TopoJson.WriteToFileAsync(
+    features,
+    "output.topojson",
+    quantize: true,
+    quantizationFactor: 10000,
+    collectionName: "regions");
 ```
 
-### Converting Multiple Geometries with Shared Topology
-
-If you need to write raw geometries without attributes, use FromGeometries (which also groups them into a GeometryCollection):
+You can also build a topology yourself and write or serialize it separately:
 
 ```csharp
-var geometries = new Dictionary<string, Geometry<Point>>
-{
-    ["boundary"] = boundaryGeometry,
-    ["roads"] = roadsGeometry,
-    ["buildings"] = buildingsGeometry
-};
+TopoJsonTopology topology = TopoJsonConverter.FromFeatures(features, quantize: true, quantizationFactor: 10000);
 
-// TopoJSON will automatically detect and share common arcs
-var topology = TopoJson.FromGeometries(geometries, quantize: true);
-
-TopoJson.WriteToFile(topology, "map.topojson");
+await TopoJson.WriteToFileAsync(topology, "map.topojson");
+string json = TopoJson.Serialize(topology, indented: false);
 ```
 
 ## 📐 Quantization
 
-TopoJSON supports quantization to reduce file size further:
+Quantization snaps coordinates to an integer grid before delta-encoding arcs, trading precision for size. A higher factor keeps more precision; `quantize: false` writes exact (rounded to integer) coordinates.
 
 ```csharp
-// High precision (larger file)
-var topology1 = TopoJsonConverter.FromFeatures(features, quantize: true, quantizationFactor: 1000000);
-
-// Lower precision (smaller file)
-var topology2 = TopoJsonConverter.FromFeatures(features, quantize: true, quantizationFactor: 10000);
-
-// No quantization (exact coordinates)
-var topology3 = TopoJsonConverter.FromFeatures(features, quantize: false);
+var high = TopoJsonConverter.FromFeatures(features, quantize: true, quantizationFactor: 1_000_000);
+var low  = TopoJsonConverter.FromFeatures(features, quantize: true, quantizationFactor: 10_000);
+var none = TopoJsonConverter.FromFeatures(features, quantize: false);
 ```
 
-## 🔧 Advanced Usage
-
-### Working with Arcs
+## 🔧 Inspecting a Topology
 
 ```csharp
 var topology = await TopoJson.ReadFromFileAsync("map.topojson");
 
-Console.WriteLine($"Number of arcs: {topology.Arcs.Count}");
-Console.WriteLine($"Number of objects: {topology.Objects.Count}");
+Console.WriteLine($"Arcs: {topology.Arcs.Count}, Objects: {topology.Objects.Count}");
 
-// Inspect transform
-if (topology.Transform != null)
-{
-    Console.WriteLine($"Scale: [{topology.Transform.Scale[0]}, {topology.Transform.Scale[1]}]");
-    Console.WriteLine($"Translate: [{topology.Transform.Translate[0]}, {topology.Transform.Translate[1]}]");
-}
+if (topology.Transform is { } t)
+    Console.WriteLine($"Scale: [{t.Scale[0]}, {t.Scale[1]}]  Translate: [{t.Translate[0]}, {t.Translate[1]}]");
 
-// Inspect bounding box
 if (topology.BBox != null)
-{
     Console.WriteLine($"BBox: [{string.Join(", ", topology.BBox)}]");
-}
 ```
 
-### Serialization Options
+## 📋 Format Details
 
-```csharp
-// Compact JSON (no whitespace)
-var compactJson = TopoJson.Serialize(topology, indented: false);
-
-// Pretty-printed JSON
-var prettyJson = TopoJson.Serialize(topology, indented: true);
-```
-
-## 📊 File Size Comparison
-
-Example comparison for a typical geographic dataset:
-
-| Format | Size | Reduction |
-|--------|------|-----------|
-| GeoJSON (original) | 1.2 MB | - |
-| TopoJSON (no quantization) | 650 KB | 46% |
-| TopoJSON (quantized 10k) | 250 KB | 79% |
-| TopoJSON (quantized 1k) | 180 KB | 85% |
-
-## 🎯 Use Cases
-
-- **Power BI Shape Maps** – Write features directly to a format ready for the Shape Map visual (single `GeometryCollection`)
-- **Web mapping** - Reduce bandwidth for vector tiles
-- **Data archival** - Store geographic data efficiently
-- **Topology analysis** - Maintain shared boundaries
-- **Network analysis** - Road/river networks with shared segments
+| Aspect | TopoJSON in Maptor |
+|--------|--------------------|
+| **Coordinate system** | TopoJSON follows GeoJSON's WGS 84 convention but stores positions as (optionally quantized) numbers and carries no CRS field. Maptor uses `srid` (default `4326`) on read and does not reproject. |
+| **Z / M** | 2D only — Z and M are ignored. |
+| **Polygon rings** | Rings are closed on encode (first vertex repeated) and un-closed on decode. Winding is preserved as-is; the TopoJSON exterior-CW / hole-CCW convention is **not** enforced. |
+| **Serialization** | System.Text.Json. Deserialize: `TopoJson.Parse`, `TopoJson.ReadFromFileAsync`. Serialize: `TopoJson.Serialize`, `TopoJson.WriteToFileAsync`. |
+| **Specification** | [TopoJSON Specification](https://github.com/topojson/topojson-specification) |
 
 ## 🔗 Resources
 
 - [TopoJSON Specification](https://github.com/topojson/topojson-specification)
-- [TopoJSON Wiki](https://github.com/topojson/topojson/wiki)
 
-## 📝 Notes
+## 📝 Notes & Limitations
 
-- TopoJSON uses delta encoding for arcs (each coordinate is relative to the previous)
-- Negative arc indices indicate reversed direction
-- Points and MultiPoints don't use arcs (stored as absolute coordinates)
-- Quantization is lossy but often acceptable for visualization
-
-## 🐞 Known Limitations
-
-- Very large datasets (>100k arcs) may have slower conversion times
-- Topology simplification is not yet implemented (use pre-simplified geometries)
-- Only 2D coordinates are currently supported (Z and M are ignored)
-
+- Arcs use delta encoding; negative arc indices indicate a reversed direction. Points and MultiPoints are stored as absolute coordinates (no arcs).
+- Quantization is lossy; without quantization, coordinates are rounded to integers when no transform is applied.
+- Only 2D coordinates are handled — `Z` and `M` are ignored.
+- Encoding accepts `Feature<Point>` collections; encoding a top-level `GeometryCollection` geometry is not supported.
+- Arc deduplication matches arcs by endpoints and length rather than performing full topological shared-arc extraction.
