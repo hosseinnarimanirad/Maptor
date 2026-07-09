@@ -170,6 +170,12 @@ public partial class MapLegendView : NotifiableUserControl
             return;
         }
 
+        if (LegendViewModel is null)
+        {
+            e.Accepted = false;
+            return;
+        }
+
         e.Accepted = LegendViewModel.IsFilterPassedCached(item);
          
     }
