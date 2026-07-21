@@ -2,7 +2,9 @@
 
 An SLD 1.0.0 document is an XML rule tree that tells any OGC server — or client — how to draw a layer: `StyledLayerDescriptor` → `NamedLayer` → `UserStyle` → `FeatureTypeStyle` → `Rule` → symbolizers. Rule conditions reuse the project's Filter Encoding model (`OgcFilter`, from [../FilterEncoding](../FilterEncoding)).
 
-<img src="../images/sld.png" alt="SLD rule tree and rendered result" width="600">
+<p align="center">
+  <img src="../images/sld.png" alt="SLD rule tree and rendered result" width="600">
+</p>
 
 ## The object model
 

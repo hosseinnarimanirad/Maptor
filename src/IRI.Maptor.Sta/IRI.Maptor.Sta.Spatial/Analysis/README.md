@@ -6,7 +6,9 @@ The algorithm toolbox of `IRI.Maptor.Sta.Spatial`: triangulation and Voronoi dia
 
 `DelaunayTriangulation` is a Bowyer–Watson incremental insertion. Triangles come back as CCW vertex indices with per-edge neighbour links (`-1` on the convex hull), and the dual Voronoi diagram comes for free: every triangle's circumcenter is a Voronoi vertex, and hull cells stay open as infinite rays.
 
-<img src="../images/voronoi-delaunay-duality.png" alt="Delaunay–Voronoi duality" width="600">
+<p align="center">
+  <img src="../images/voronoi-delaunay-duality.png" alt="Delaunay–Voronoi duality" width="600">
+</p>
 
 ```csharp
 using IRI.Maptor.Sta.Common.Primitives;
@@ -25,7 +27,9 @@ var voronoi = triangulation.GetVoronoiDiagram();               // or VoronoiDiag
 
 `ComputationalGeometry.CreateConvexHull` is a Graham scan — sort by polar angle, keep only the left turns. It returns the hull vertices counter-clockwise; duplicates and collinear edge points are dropped.
 
-<img src="../images/convex-hull.png" alt="Convex hull vs bounding box" width="600">
+<p align="center">
+  <img src="../images/convex-hull.png" alt="Convex hull vs bounding box" width="600">
+</p>
 
 ```csharp
 List<Point> hull = ComputationalGeometry.CreateConvexHull(points);
@@ -58,7 +62,9 @@ var simplified = Simplifications.SimplifyByRamerDouglasPeucker(line.Points, para
 
 The `Topology/` enums (`PointPolygonRelation`, `LineLineRelation`, `PointCircleRelation`, …) name the answers; the predicates live in `TopologyUtility` (namespace `IRI.Maptor.Sta.Spatial.Helpers`). Point-in-polygon ships in both classic flavours:
 
-<img src="../images/point-in-polygon.png" alt="Point in polygon: ray casting vs winding number" width="600">
+<p align="center">
+  <img src="../images/point-in-polygon.png" alt="Point in polygon: ray casting vs winding number" width="600">
+</p>
 
 ```csharp
 using IRI.Maptor.Sta.Spatial.Helpers;
@@ -74,7 +80,9 @@ Also here: segment–segment intersection (`LineSegmentsIntersects`), point–se
 
 Hilbert, Z-order (Morton) and other curve orderings that linearize 2-D data while keeping neighbours close — the backbone of `SFCRTree` bulk-loading and locality-preserving sorts. See the dedicated [SFC README](SFC/README.md).
 
-<img src="../images/space-filling-curves.png" alt="Space-filling curves" width="600">
+<p align="center">
+  <img src="../images/space-filling-curves.png" alt="Space-filling curves" width="600">
+</p>
 
 ## Network
 

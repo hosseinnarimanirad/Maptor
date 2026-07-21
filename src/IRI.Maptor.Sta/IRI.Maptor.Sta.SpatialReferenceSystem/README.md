@@ -17,7 +17,9 @@ This library provides implementations of horizontal spatial reference systems as
 - **Orbital Coordinate Systems**
   - Orbital (OR)
     
-<img src="images/coordinate-systems.png" alt="Relationship between geocentric, topocentric, and 2D coordinate systems" width="600">
+<p align="center">
+  <img src="images/coordinate-systems.png" alt="Relationship between geocentric, topocentric, and 2D coordinate systems" width="600">
+</p>
 
 *Fig. 1: Relationship between geocentric, topocentric, and 2D coordinate systems*
 
@@ -33,7 +35,9 @@ Illustrated guides live next to the code:
 
 ### 1. Supported Map Projections & Horizontal Datums
 
-<img src="images/map-projections.png" alt="Cylindrical, conic, and azimuthal projection surfaces" width="600">
+<p align="center">
+  <img src="images/map-projections.png" alt="Cylindrical, conic, and azimuthal projection surfaces" width="600">
+</p>
 
 *Fig. 2: Projection surfaces — cylindrical, conic, and azimuthal*
 

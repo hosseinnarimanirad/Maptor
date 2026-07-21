@@ -12,7 +12,9 @@ All three algorithms here share one primitive — **relaxation**: if going throu
 
 Greedy: always settle the unsettled node with the smallest tentative distance. That promise only holds when no edge can be negative. This implementation works on a `Matrix` adjacency and uses a linear min-scan over the unsettled set.
 
-<img src="../images/dijkstra.png" alt="Dijkstra" width="600">
+<p align="center">
+  <img src="../images/dijkstra.png" alt="Dijkstra" width="600">
+</p>
 
 ```csharp
 var dijkstra = new DijkstraProblem(adjacencyMatrix);   // Matrix (Sta.Mathematics)
@@ -23,7 +25,9 @@ List<int> path = dijkstra.FindShortestPath(0, 4);      // node indexes
 
 No greed, just patience: relax **every** edge, `V−1` rounds (with an early exit when a round changes nothing). Negative weights are fine — and a V-th pass that still relaxes something proves a negative cycle.
 
-<img src="../images/bellman-ford.png" alt="Bellman-Ford" width="600">
+<p align="center">
+  <img src="../images/bellman-ford.png" alt="Bellman-Ford" width="600">
+</p>
 
 ```csharp
 var graph = new AdjacencyList<string, double>();
@@ -44,7 +48,9 @@ A `Matrix`-based twin, `BellmanFordMatrixProblem(matrix, sourceNodeIndex)`, mirr
 
 All pairs at once, by dynamic programming: let nodes join the set of allowed stopovers one at a time and keep the cheaper of "direct" vs "via k" — `d[i,j] = min(d[i,j], d[i,k] + d[k,j])`. A negative value on the diagonal means a negative cycle (the constructor throws).
 
-<img src="../images/floyd-warshall.png" alt="Floyd-Warshall" width="600">
+<p align="center">
+  <img src="../images/floyd-warshall.png" alt="Floyd-Warshall" width="600">
+</p>
 
 ```csharp
 var fw = new FloydWarshallProblem(adjacency);   // double[,]

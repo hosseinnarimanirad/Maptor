@@ -4,7 +4,9 @@ A **cut** splits a graph's nodes into two groups; its size is the number of edge
 
 `MinimumCut` implements **Karger's randomized contraction**: repeatedly pick a random edge (weighted by degree), merge its endpoints into a supernode, drop the self-loops, and recurse until only two supernodes remain. The edges that survived between them are a cut — and because a min-cut edge is picked with low probability at every step, it *tends* to be the minimum one.
 
-<img src="../images/min-cut.png" alt="Minimum Cut" width="600">
+<p align="center">
+  <img src="../images/min-cut.png" alt="Minimum Cut" width="600">
+</p>
 
 ```csharp
 var g = new AdjacencyList<string, int>();

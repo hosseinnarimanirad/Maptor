@@ -4,7 +4,9 @@
 
 The weight of the first merge you *refuse* is exactly that spacing, exposed as `ClusterSpacing`. A natural fit for spatial grouping: nodes are points, edge weights are distances.
 
-<img src="../images/greedy-clustering.png" alt="Greedy Clustering" width="600">
+<p align="center">
+  <img src="../images/greedy-clustering.png" alt="Greedy Clustering" width="600">
+</p>
 
 ```csharp
 // undirected graph whose edge weights are point-to-point distances
