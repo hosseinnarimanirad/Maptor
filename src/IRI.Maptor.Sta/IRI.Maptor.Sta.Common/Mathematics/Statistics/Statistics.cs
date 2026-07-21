@@ -7,10 +7,21 @@ namespace IRI.Maptor.Sta.Mathematics;
 
 public static class Statistics
 {
+    private static void ValidateNonEmpty(Matrix values, string paramName)
+    {
+        if (values is null)
+            throw new ArgumentNullException(paramName);
+
+        if (values.IsNull() || values.NumberOfColumns == 0 || values.NumberOfRows == 0)
+            throw new MaptorZeroSizeArrayException();
+    }
+
     #region Maximum
 
     public static double GetMax(Matrix values)
     {
+        ValidateNonEmpty(values, nameof(values));
+
         int width = values.NumberOfColumns;
 
         int height = values.NumberOfRows;
@@ -39,14 +50,14 @@ public static class Statistics
             throw new MaptorZeroSizeArrayException();
         }
         
-        double resultVlaue = values[0];
+        double resultValue = values[0];
 
         for (int i = 1; i < values.Length; i++)
         {
-            resultVlaue = Math.Max(resultVlaue, values[i]);
+            resultValue = Math.Max(resultValue, values[i]);
         }
 
-        return resultVlaue;
+        return resultValue;
 
     }
 
@@ -57,36 +68,56 @@ public static class Statistics
         if (values.IsNullOrEmpty())
             throw new MaptorZeroSizeArrayException();
 
-        int resultVlaue = values[0];
+        int resultValue = values[0];
 
         for (int i = 1; i < values.Length; i++)
         {
-            resultVlaue = Math.Max(resultVlaue, values[i]);
+            resultValue = Math.Max(resultValue, values[i]);
         }
 
-        return resultVlaue;
+        return resultValue;
 
+    }
+
+    public static double GetMax(List<double> values)
+    {
+        if (values.IsNullOrEmpty())
+            throw new MaptorZeroSizeArrayException();
+
+        double resultValue = values[0];
+
+        for (int i = 1; i < values.Count; i++)
+        {
+            resultValue = Math.Max(resultValue, values[i]);
+        }
+
+        return resultValue;
     }
 
     public static TValue GetMax<TObject, TValue>(IEnumerable<TObject> array, Func<TObject, TValue> mapFunction) where TValue : IComparable<TValue>
     {
-        IEnumerator<TObject> enumerator = array.GetEnumerator();
+        if (array is null)
+            throw new ArgumentNullException(nameof(array));
 
-        enumerator.MoveNext();
-
-        TValue result = mapFunction(enumerator.Current);
-
-        foreach (TObject item in array)
+        using (IEnumerator<TObject> enumerator = array.GetEnumerator())
         {
-            TValue temp = mapFunction(item);
+            if (!enumerator.MoveNext())
+                throw new MaptorZeroSizeArrayException();
 
-            if (result.CompareTo(temp) < 0)
+            TValue result = mapFunction(enumerator.Current);
+
+            while (enumerator.MoveNext())
             {
-                result = temp;
-            }
-        }
+                TValue temp = mapFunction(enumerator.Current);
 
-        return result;
+                if (result.CompareTo(temp) < 0)
+                {
+                    result = temp;
+                }
+            }
+
+            return result;
+        }
     }
 
     #endregion
@@ -95,6 +126,8 @@ public static class Statistics
 
     public static double GetMin(Matrix values)
     {
+        ValidateNonEmpty(values, nameof(values));
+
         int width = values.NumberOfColumns;
 
         int height = values.NumberOfRows;
@@ -120,17 +153,17 @@ public static class Statistics
         if (values.IsNullOrEmpty())
             throw new MaptorZeroSizeArrayException();
 
-        double resultVlaue = values[0];
+        double resultValue = values[0];
 
         for (int i = 1; i < values.Length; i++)
         {
 
-            if (resultVlaue > values[i])
-                resultVlaue = values[i];
+            if (resultValue > values[i])
+                resultValue = values[i];
 
         }
 
-        return resultVlaue;
+        return resultValue;
 
     }
 
@@ -139,15 +172,15 @@ public static class Statistics
         if (values.IsNullOrEmpty())
             throw new MaptorZeroSizeArrayException();
 
-        double resultVlaue = values[0];
+        double resultValue = values[0];
 
         for (int i = 1; i < values.Count; i++)
         {
-            if (resultVlaue > values[i])
-                resultVlaue = values[i];
+            if (resultValue > values[i])
+                resultValue = values[i];
         }
 
-        return resultVlaue;
+        return resultValue;
     }
 
     public static int GetMin(int[] values)
@@ -156,48 +189,45 @@ public static class Statistics
             throw new MaptorZeroSizeArrayException();
 
 
-        int resultVlaue = values[0];
+        int resultValue = values[0];
 
         for (int i = 1; i < values.Length; i++)
         {
 
-            if (resultVlaue > values[i])
-                resultVlaue = values[i];
+            if (resultValue > values[i])
+                resultValue = values[i];
 
         }
 
-        return resultVlaue;
+        return resultValue;
 
     }
 
     public static TValue GetMin<TObject, TValue>(IEnumerable<TObject> array, Func<TObject, TValue> mapFunction) where TValue : IComparable<TValue>
     {
-        IEnumerator<TObject> enumerator = array.GetEnumerator();
+        if (array is null)
+            throw new ArgumentNullException(nameof(array));
 
-        enumerator.MoveNext();
-
-        TValue result = mapFunction(enumerator.Current);
-
-        foreach (TObject item in array)
+        using (IEnumerator<TObject> enumerator = array.GetEnumerator())
         {
-            TValue temp = mapFunction(item);
+            if (!enumerator.MoveNext())
+                throw new MaptorZeroSizeArrayException();
 
-            if (result.CompareTo(temp) > 0)
+            TValue result = mapFunction(enumerator.Current);
+
+            while (enumerator.MoveNext())
             {
-                result = temp;
+                TValue temp = mapFunction(enumerator.Current);
+
+                if (result.CompareTo(temp) > 0)
+                {
+                    result = temp;
+                }
             }
+
+            return result;
         }
-
-        return result;
     }
-    #endregion
-
-    #region Median
-
-    #endregion
-
-    #region Mode
-
     #endregion
 
     #region Sum
@@ -218,7 +248,7 @@ public static class Statistics
         return result;
     }
 
-    private static double CalculateSum(List<double> values)
+    public static double CalculateSum(List<double> values)
     {
         if (values.IsNullOrEmpty())
             throw new MaptorZeroSizeArrayException();
@@ -236,11 +266,14 @@ public static class Statistics
 
     public static double CalculateSum(Matrix values)
     {
+        ValidateNonEmpty(values, nameof(values));
+
         double result = 0;
 
-        for (int i = 0; i < values.NumberOfRows; i++)
+        // column-outer iteration matches the matrix's column-array storage
+        for (int j = 0; j < values.NumberOfColumns; j++)
         {
-            for (int j = 0; j < values.NumberOfColumns; j++)
+            for (int i = 0; i < values.NumberOfRows; i++)
             {
                 result += values[i, j];
             }
@@ -271,10 +304,7 @@ public static class Statistics
 
     public static double CalculateMean(Matrix values)
     {
-        if (values is null)
-        {
-            throw new NotImplementedException();
-        }
+        ValidateNonEmpty(values, nameof(values));
 
         return Statistics.CalculateSum(values) / (values.NumberOfColumns * values.NumberOfRows);
     }
@@ -299,12 +329,9 @@ public static class Statistics
         return Math.Sqrt(Statistics.CalculateVariance(values, mode));
     }
 
-    public static double CalculateStandardDeviation(Matrix values)
+    public static double CalculateStandardDeviation(Matrix values, VarianceCalculationMode mode = VarianceCalculationMode.Population)
     {
-        if (values is null)
-            throw new MaptorZeroSizeArrayException();
-
-        return Math.Sqrt(Statistics.CalculateVariance(values));
+        return Math.Sqrt(Statistics.CalculateVariance(values, mode));
     }
 
     // ref for sample mode: https://stats.stackexchange.com/a/3934/289542
@@ -324,6 +351,9 @@ public static class Statistics
 
         if (mode == VarianceCalculationMode.Sample)
         {
+            if (values.Length < 2)
+                throw new ArgumentException("Sample variance requires at least two values.", nameof(values));
+
             return result / (values.Length - 1);
         }
         else if (mode == VarianceCalculationMode.Population)
@@ -332,7 +362,7 @@ public static class Statistics
         }
         else
         {
-            throw new NotImplementedException("Statistics > CalculateVariance");
+            throw new ArgumentOutOfRangeException(nameof(mode));
         }
 
     }
@@ -355,6 +385,9 @@ public static class Statistics
 
         if (mode == VarianceCalculationMode.Sample)
         {
+            if (values.Count < 2)
+                throw new ArgumentException("Sample variance requires at least two values.", nameof(values));
+
             return result / (values.Count - 1);
         }
         else if (mode == VarianceCalculationMode.Population)
@@ -363,29 +396,44 @@ public static class Statistics
         }
         else
         {
-            throw new NotImplementedException("Statistics > CalculateVariance");
+            throw new ArgumentOutOfRangeException(nameof(mode));
         }
     }
 
-    // do not consider sample mode
-    public static double CalculateVariance(Matrix values)
+    // matrix overloads default to Population mode to preserve historical behavior
+    public static double CalculateVariance(Matrix values, VarianceCalculationMode mode = VarianceCalculationMode.Population)
     {
-        if (values is null)
-            throw new MaptorZeroSizeArrayException();
+        ValidateNonEmpty(values, nameof(values));
 
         double result = 0;
 
         double mean = Statistics.CalculateMean(values);
 
-        for (int i = 0; i < values.NumberOfRows; i++)
+        for (int j = 0; j < values.NumberOfColumns; j++)
         {
-            for (int j = 0; j < values.NumberOfColumns; j++)
+            for (int i = 0; i < values.NumberOfRows; i++)
             {
                 result += (values[i, j] - mean) * (values[i, j] - mean);
             }
         }
 
-        return result / (values.NumberOfColumns * values.NumberOfRows);
+        int count = values.NumberOfColumns * values.NumberOfRows;
+
+        if (mode == VarianceCalculationMode.Sample)
+        {
+            if (count < 2)
+                throw new ArgumentException("Sample variance requires at least two values.", nameof(values));
+
+            return result / (count - 1);
+        }
+        else if (mode == VarianceCalculationMode.Population)
+        {
+            return result / count;
+        }
+        else
+        {
+            throw new ArgumentOutOfRangeException(nameof(mode));
+        }
     }
 
     #endregion
@@ -393,7 +441,7 @@ public static class Statistics
     #region Covariance & Correlation
 
 
-    public static double CalculateCovariance(double[] firstValues, double[] secondValues)
+    public static double CalculateCovariance(double[] firstValues, double[] secondValues, VarianceCalculationMode mode = VarianceCalculationMode.Sample)
     {
         if (firstValues.IsNullOrEmpty() || secondValues.IsNullOrEmpty())
             throw new MaptorZeroSizeArrayException();
@@ -402,7 +450,7 @@ public static class Statistics
 
         if (length != secondValues.Length)
         {
-            throw new NotImplementedException();
+            throw new ArgumentException("Arrays must have the same length.", nameof(secondValues));
         }
 
         double firstMean = Statistics.CalculateMean(firstValues);
@@ -416,17 +464,33 @@ public static class Statistics
             result += (firstValues[i] - firstMean) * (secondValues[i] - secondMean);
         }
 
-        return Math.Sqrt(result / length);
+        if (mode == VarianceCalculationMode.Sample)
+        {
+            if (length < 2)
+                throw new ArgumentException("Sample covariance requires at least two values.", nameof(firstValues));
+
+            return result / (length - 1);
+        }
+        else if (mode == VarianceCalculationMode.Population)
+        {
+            return result / length;
+        }
+        else
+        {
+            throw new ArgumentOutOfRangeException(nameof(mode));
+        }
     }
 
-    public static double CalculateCovariance(Matrix firstValues, Matrix secondValues)
+    // matrix overloads default to Population mode to preserve historical behavior
+    public static double CalculateCovariance(Matrix firstValues, Matrix secondValues, VarianceCalculationMode mode = VarianceCalculationMode.Population)
     {
-        if (firstValues is null || secondValues is null)
-            throw new MaptorZeroSizeArrayException();
+        ValidateNonEmpty(firstValues, nameof(firstValues));
+
+        ValidateNonEmpty(secondValues, nameof(secondValues));
 
         if (!Matrix.AreTheSameSize(firstValues, secondValues))
         {
-            throw new NotImplementedException();
+            throw new ArgumentException("Matrices must be the same size.", nameof(secondValues));
         }
 
         double result = 0;
@@ -435,31 +499,48 @@ public static class Statistics
 
         double secondMean = Statistics.CalculateMean(secondValues);
 
-        for (int i = 0; i < firstValues.NumberOfRows; i++)
+        for (int j = 0; j < firstValues.NumberOfColumns; j++)
         {
-            for (int j = 0; j < firstValues.NumberOfColumns; j++)
+            for (int i = 0; i < firstValues.NumberOfRows; i++)
             {
                 result += (firstValues[i, j] - firstMean) * (secondValues[i, j] - secondMean);
             }
         }
 
-        return result / (firstValues.NumberOfColumns * firstValues.NumberOfRows);
+        int count = firstValues.NumberOfColumns * firstValues.NumberOfRows;
+
+        if (mode == VarianceCalculationMode.Sample)
+        {
+            if (count < 2)
+                throw new ArgumentException("Sample covariance requires at least two values.", nameof(firstValues));
+
+            return result / (count - 1);
+        }
+        else if (mode == VarianceCalculationMode.Population)
+        {
+            return result / count;
+        }
+        else
+        {
+            throw new ArgumentOutOfRangeException(nameof(mode));
+        }
     }
 
-    public static Matrix CalculateVarianceCovariance(Matrix[] values)
+    // matrix overloads default to Population mode to preserve historical behavior
+    public static Matrix CalculateVarianceCovariance(Matrix[] values, VarianceCalculationMode mode = VarianceCalculationMode.Population)
     {
-        int numberOfArrays = values.Length;
-
-        if (numberOfArrays < 0)
+        if (values.IsNullOrEmpty())
         {
             throw new MaptorZeroSizeArrayException();
         }
+
+        int numberOfArrays = values.Length;
 
         for (int i = 0; i < numberOfArrays; i++)
         {
             if (!Matrix.AreTheSameSize(values[0], values[i]))
             {
-                throw new NotImplementedException();
+                throw new ArgumentException("Matrices must be the same size.", nameof(values));
             }
         }
 
@@ -475,11 +556,11 @@ public static class Statistics
                 }
                 else if (i == j)
                 {
-                    result[i, j] = CalculateVariance(values[i]);
+                    result[i, j] = CalculateVariance(values[i], mode);
                 }
                 else
                 {
-                    result[i, j] = CalculateCovariance(values[i], values[j]);
+                    result[i, j] = CalculateCovariance(values[i], values[j], mode);
                 }
             }
         }
@@ -487,27 +568,22 @@ public static class Statistics
         return result;
     }
 
-    public static Matrix CalculateVarianceCovariance(double[][] values)
+    public static Matrix CalculateVarianceCovariance(double[][] values, VarianceCalculationMode mode = VarianceCalculationMode.Sample)
     {
+        if (values.IsNullOrEmpty() || values[0].IsNullOrEmpty())
+        {
+            throw new MaptorZeroSizeArrayException();
+        }
+
         int numberOfArrays = values.Length;
 
-        if (numberOfArrays < 0)
-        {
-            throw new MaptorZeroSizeArrayException();
-        }
-
         int arrayLength = values[0].Length;
-
-        if (arrayLength < 0)
-        {
-            throw new MaptorZeroSizeArrayException();
-        }
 
         foreach (double[] item in values)
         {
             if (item.Length != arrayLength)
             {
-                throw new NotImplementedException();
+                throw new ArgumentException("Arrays must have the same length.", nameof(values));
             }
         }
 
@@ -523,11 +599,11 @@ public static class Statistics
                 }
                 else if (i == j)
                 {
-                    result[i, j] = CalculateVariance(values[i]);
+                    result[i, j] = CalculateVariance(values[i], mode);
                 }
                 else
                 {
-                    result[i, j] = CalculateCovariance(values[i], values[j]);
+                    result[i, j] = CalculateCovariance(values[i], values[j], mode);
                 }
             }
         }
@@ -535,20 +611,21 @@ public static class Statistics
         return result;
     }
 
+    // note: off-diagonal entries are NaN/Infinity when a series has zero variance
     public static Matrix CalculateCorrelation(Matrix[] values)
     {
-        int numberOfArrays = values.Length;
-
-        if (numberOfArrays < 0)
+        if (values.IsNullOrEmpty())
         {
             throw new MaptorZeroSizeArrayException();
         }
+
+        int numberOfArrays = values.Length;
 
         for (int i = 0; i < numberOfArrays; i++)
         {
             if (!Matrix.AreTheSameSize(values[0], values[i]))
             {
-                throw new NotImplementedException();
+                throw new ArgumentException("Matrices must be the same size.", nameof(values));
             }
         }
 
@@ -571,11 +648,11 @@ public static class Statistics
                 }
                 else if (i == j)
                 {
-                    result[i, j] = 1 / variances[i];
+                    result[i, j] = 1;
                 }
                 else
                 {
-                    result[i, j] = CalculateCovariance(values[i], values[j]) / (variances[i] * variances[j]);
+                    result[i, j] = CalculateCovariance(values[i], values[j]) / Math.Sqrt(variances[i] * variances[j]);
                 }
             }
         }
@@ -583,27 +660,23 @@ public static class Statistics
         return result;
     }
 
+    // note: off-diagonal entries are NaN/Infinity when a series has zero variance
     public static Matrix CalculateCorrelation(double[][] values)
     {
+        if (values.IsNullOrEmpty() || values[0].IsNullOrEmpty())
+        {
+            throw new MaptorZeroSizeArrayException();
+        }
+
         int numberOfArrays = values.Length;
 
-        if (numberOfArrays < 0)
-        {
-            throw new MaptorZeroSizeArrayException();
-        }
-
         int arrayLength = values[0].Length;
-
-        if (arrayLength < 0)
-        {
-            throw new MaptorZeroSizeArrayException();
-        }
 
         foreach (double[] item in values)
         {
             if (item.Length != arrayLength)
             {
-                throw new NotImplementedException();
+                throw new ArgumentException("Arrays must have the same length.", nameof(values));
             }
         }
 
@@ -626,21 +699,17 @@ public static class Statistics
                 }
                 else if (i == j)
                 {
-                    result[i, j] = 1 / variances[i];
+                    result[i, j] = 1;
                 }
                 else
                 {
-                    result[i, j] = CalculateCovariance(values[i], values[j]) / (variances[i] * variances[j]);
+                    result[i, j] = CalculateCovariance(values[i], values[j]) / Math.Sqrt(variances[i] * variances[j]);
                 }
             }
         }
 
         return result;
     }
-
-    #endregion
-
-    #region Other
 
     #endregion
 }

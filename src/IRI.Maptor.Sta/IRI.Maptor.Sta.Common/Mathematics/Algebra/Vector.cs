@@ -373,7 +373,8 @@ public class Vector
 
     public override int GetHashCode()
     {
-        return base.GetHashCode();
+        // Equals compares ToString() output, so the hash must be derived from it too
+        return this.ToString().GetHashCode();
     }
 
     #endregion
