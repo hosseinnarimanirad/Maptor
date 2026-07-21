@@ -17,13 +17,26 @@ This library provides implementations of horizontal spatial reference systems as
 - **Orbital Coordinate Systems**
   - Orbital (OR)
     
-![Screenshot 2025-05-16 132143](https://github.com/user-attachments/assets/c6666d03-2f31-4247-9d6b-43d88838e04c)
+![Relationship between geocentric, topocentric, and 2D coordinate systems](https://raw.githubusercontent.com/hosseinnarimanirad/Maptor/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/images/coordinate-systems.png)
 
 *Fig. 1: Relationship between geocentric, topocentric, and 2D coordinate systems*
+
+## 📚 Documentation
+
+Illustrated guides live next to the code:
+
+- [CoordinateSystems](CoordinateSystems/README.md) — the geocentric/topocentric systems of Fig. 1 (IT, CT, G, LA, LG, …) and how `Transformations` converts between them
+- [MapProjections](MapProjections/README.md) — UTM, Web Mercator, and the other implemented projections
+- [Models](Models/README.md) — reference ellipsoids and horizontal datums (`Ellipsoid`, `Ellipsoids`)
 
 ## ✨ Features
 
 ### 1. Supported Map Projections & Horizontal Datums
+
+![Cylindrical, conic, and azimuthal projection surfaces](https://raw.githubusercontent.com/hosseinnarimanirad/Maptor/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/images/map-projections.png)
+
+*Fig. 2: Projection surfaces — cylindrical, conic, and azimuthal*
+
 This library implements standard map projections and geodetic datums, including:
 - **Projections:**
   - Transverse Mercator (TM)
