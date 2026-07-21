@@ -18,6 +18,8 @@ A .NET Standard implementation of TopoJSON — a GeoJSON extension that encodes 
 
 Instead of storing each geometry's coordinates independently, TopoJSON stitches geometries together from shared arcs. Shared boundaries are stored once, which typically produces smaller files than the equivalent GeoJSON.
 
+![GeoJSON duplicates shared borders; TopoJSON stores each arc once](../../images/geojson-vs-topojson-arcs.png)
+
 ## ⚙️ Installation
 
 ```bash
