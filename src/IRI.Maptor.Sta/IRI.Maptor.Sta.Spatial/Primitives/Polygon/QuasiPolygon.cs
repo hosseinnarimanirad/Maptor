@@ -1,82 +1,82 @@
-﻿// besmellahe rahmane rahim
-// Allahomma ajjel le-valiyek al-faraj
+﻿//// besmellahe rahmane rahim
+//// Allahomma ajjel le-valiyek al-faraj
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+//using System;
+//using System.Collections.Generic;
+//using System.Text;
 
-namespace IRI.Maptor.Sta.Spatial.Primitives;
+//namespace IRI.Maptor.Sta.Spatial.Primitives;
 
-//Assumed to be CCW
-public class QuasiPolygon
-{
-    public List<int> Vertexes { get; set; }
+////Assumed to be CCW
+//public class QuasiPolygon
+//{
+//    public List<int> Vertexes { get; set; }
 
-    public List<int> neighbours;
+//    public List<int> neighbours;
 
-    public QuasiPolygon(List<int> vertexes)
-    {
-        Vertexes = vertexes;
+//    public QuasiPolygon(List<int> vertexes)
+//    {
+//        Vertexes = vertexes;
 
-        neighbours = new List<int>(vertexes.Count);
+//        neighbours = new List<int>(vertexes.Count);
 
-        for (int i = 0; i < neighbours.Count; i++)
-        {
-            neighbours[i] = -1;
-        }
-    }
+//        for (int i = 0; i < neighbours.Count; i++)
+//        {
+//            neighbours[i] = -1;
+//        }
+//    }
 
-    public QuasiPolygon(List<int> vertexes, List<int> neighbours)
-    {
-        if (vertexes.Count != neighbours.Count)
-        {
-            throw new NotImplementedException();
-        }
+//    public QuasiPolygon(List<int> vertexes, List<int> neighbours)
+//    {
+//        if (vertexes.Count != neighbours.Count)
+//        {
+//            throw new NotImplementedException();
+//        }
 
-        Vertexes = vertexes;
+//        Vertexes = vertexes;
 
-        this.neighbours = neighbours;
-    }
+//        this.neighbours = neighbours;
+//    }
 
-    public int Count
-    {
-        get { return Vertexes.Count; }
-    }
+//    public int Count
+//    {
+//        get { return Vertexes.Count; }
+//    }
 
-    public override string ToString()
-    {
-        if (Count < 0)
-        {
-            return string.Empty;
-        }
+//    public override string ToString()
+//    {
+//        if (Count < 0)
+//        {
+//            return string.Empty;
+//        }
 
-        StringBuilder result = new StringBuilder();
+//        StringBuilder result = new StringBuilder();
 
-        for (int i = 0; i < Vertexes.Count - 2; i++)
-        {
-            result.Append(string.Format("{0}, ", Vertexes[i]));
-        }
-        if (Vertexes.Count > 0)
-        {
-            result.Append(Vertexes[Vertexes.Count - 1]);
-        }
+//        for (int i = 0; i < Vertexes.Count - 2; i++)
+//        {
+//            result.Append(string.Format("{0}, ", Vertexes[i]));
+//        }
+//        if (Vertexes.Count > 0)
+//        {
+//            result.Append(Vertexes[Vertexes.Count - 1]);
+//        }
 
-        return result.ToString();
-    }
+//        return result.ToString();
+//    }
 
-    public override int GetHashCode()
-    {
-        return ToString().GetHashCode();
-    }
+//    public override int GetHashCode()
+//    {
+//        return ToString().GetHashCode();
+//    }
 
-    public override bool Equals(object obj)
-    {
-        if (obj.GetType() == typeof(QuasiPolygon))
-        {
-            return obj.GetHashCode() == GetHashCode();
-        }
+//    public override bool Equals(object obj)
+//    {
+//        if (obj.GetType() == typeof(QuasiPolygon))
+//        {
+//            return obj.GetHashCode() == GetHashCode();
+//        }
 
-        return false;
-    }
+//        return false;
+//    }
 
-}
+//}

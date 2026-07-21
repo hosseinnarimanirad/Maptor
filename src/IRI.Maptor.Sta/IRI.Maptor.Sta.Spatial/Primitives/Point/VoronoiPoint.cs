@@ -9,6 +9,7 @@ using System.Text;
 namespace IRI.Maptor.Sta.Spatial.Primitives;
 
 
+[Obsolete("Legacy type used only by DelaunayTriangulation_old. Use VoronoiDiagram (Analysis) instead.")]
 public class VoronoiPoint
 {
 
