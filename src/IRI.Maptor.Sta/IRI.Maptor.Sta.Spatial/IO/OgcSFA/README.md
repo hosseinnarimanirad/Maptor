@@ -8,7 +8,7 @@ OGC Simple Feature Access (ISO 19125) serialization for `Geometry<T>` — one ge
 | WKB | `Geometry<Point>.FromWkb` / `WkbReader.Parse` | `geometry.AsWkb()` |
 | SQL Server WKT | `SqlServerWktReader.Parse` | `geometry.AsSqlServerWkt()` |
 
-![Simple Feature geometry types](../../images/sfa-geometry-types.png)
+<img src="../../images/sfa-geometry-types.png" alt="Simple Feature geometry types" width="600">
 
 ## WKT — Well-Known Text
 
@@ -26,7 +26,7 @@ string wkt = geometry.AsWkt();   // "POINT Z (1 2 3)"
 
 The compact binary twin: one byte-order flag, a `uint32` geometry type, then raw `double` coordinates.
 
-![WKB anatomy of a point](../../images/wkb-anatomy.png)
+<img src="../../images/wkb-anatomy.png" alt="WKB anatomy of a point" width="600">
 
 ```csharp
 byte[] wkb = geometry.AsWkb();               // POINT: 21 bytes = order(1) + type(4) + x(8) + y(8)

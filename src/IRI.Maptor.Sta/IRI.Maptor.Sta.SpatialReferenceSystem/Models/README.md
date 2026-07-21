@@ -1,6 +1,6 @@
 # 🌏 Models — Reference Ellipsoids & Horizontal Datums
 
-![Reference ellipsoid](../images/ellipsoid.png)
+<img src="../images/ellipsoid.png" alt="Reference ellipsoid" width="600">
 
 A latitude/longitude pair means nothing on its own — it is always measured **on a chosen reference ellipsoid**: an ellipse of revolution that approximates the figure of the Earth. Two numbers pin the shape down: the **semi-major axis `a`** and the **flattening `f = (a − b) / a`** (usually given as `1/f`). Everything else — semi-minor axis `b`, first/second eccentricity `e²`, `e′²`, and the radii of curvature `N` (prime vertical) and `M` (meridian) — follows from them.
 
@@ -15,7 +15,7 @@ A latitude/longitude pair means nothing on its own — it is always measured **o
 
 ## ✅ Radii of curvature — M and N
 
-![Radii of curvature](../images/ellipsoid-curvature.png)
+<img src="../images/ellipsoid-curvature.png" alt="Radii of curvature" width="600">
 
 Unlike a sphere, an ellipsoid curves by a different amount in every direction at a given point. Two **normal sections** bound the range, and together they carry almost all of the geodetic math:
 

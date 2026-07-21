@@ -2,7 +2,7 @@
 
 A KMZ is a ZIP archive whose root document (`doc.kml`) travels together with the icons and images it references. The readers and writers here (namespace `IRI.Maptor.Sta.KmlFormat`) build on `KmlReader` / `KmlWriter`, so everything KML supports — features, styles, folders — works inside a KMZ too.
 
-![KML document and KMZ package](../images/kml-kmz.png)
+<img src="../images/kml-kmz.png" alt="KML document and KMZ package" width="600">
 
 ## Reading
 

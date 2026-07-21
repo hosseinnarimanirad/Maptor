@@ -6,7 +6,7 @@ How a graph is stored decides what is cheap and what is expensive. This library 
 
 `AdjacencyList<TNode, TWeight>` keeps **one linked list of outgoing edges per node** — internally a `SortedList<TNode, LinkedList<Connection<TNode, TWeight>>>`. Memory follows the edges that actually exist (`O(V + E)`), which makes it the right default for sparse graphs like road networks.
 
-![Adjacency list](../images/adjacency-list.png)
+<img src="../images/adjacency-list.png" alt="Adjacency list" width="600">
 
 ```csharp
 using IRI.Maptor.Sta.Graph;
@@ -24,7 +24,7 @@ var reversed  = g.Transpose();         // every edge flipped — used by SCC
 
 The matrix form is a `V × V` weight table: row = source, column = target, `∞` for a missing edge. Any edge lookup is `O(1)`, at the price of `O(V²)` space — best for small or dense graphs.
 
-![Adjacency matrix](../images/adjacency-matrix.png)
+<img src="../images/adjacency-matrix.png" alt="Adjacency matrix" width="600">
 
 The matrix-based solvers (`DijkstraProblem`, `BellmanFordMatrixProblem`, `FloydWarshallProblem`) consume this form directly, and `AdjacencyList` has a constructor that converts a matrix into a list:
 

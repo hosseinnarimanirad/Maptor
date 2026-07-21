@@ -6,7 +6,7 @@ Estimate a value between samples: every neighbour votes, nearer neighbours vote 
 
 `Idw.Calculate` weighs each sample by **1 / distance²** and returns the weighted average of the `Z` values. Samples farther than `maxDistance` are ignored; if none qualify, the result is `null` — IDW never invents data beyond its neighbours.
 
-![IDW interpolation](../../images/idw-interpolation.png)
+<img src="../../images/idw-interpolation.png" alt="IDW interpolation" width="600">
 
 ```csharp
 using IRI.Maptor.Sta.Common.Primitives;

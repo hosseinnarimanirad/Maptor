@@ -7,7 +7,7 @@ OGC's XML encoding for geometry. This folder speaks both widely deployed dialect
 | 2.1.2 | `<gml:outerBoundaryIs>` | `<gml:coordinates>` — comma joins x,y; space separates points |
 | 3.1.1 | `<gml:exterior>` | `<gml:pos>` / `<gml:posList>` — one flat space-separated list |
 
-![GML 2.1.2 vs 3.1.1](../images/gml.png)
+<img src="../images/gml.png" alt="GML 2.1.2 vs 3.1.1" width="600">
 
 ## Reading GML
 

@@ -17,7 +17,7 @@ This library provides implementations of horizontal spatial reference systems as
 - **Orbital Coordinate Systems**
   - Orbital (OR)
     
-![Relationship between geocentric, topocentric, and 2D coordinate systems](https://raw.githubusercontent.com/hosseinnarimanirad/Maptor/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/images/coordinate-systems.png)
+<img src="images/coordinate-systems.png" alt="Relationship between geocentric, topocentric, and 2D coordinate systems" width="600">
 
 *Fig. 1: Relationship between geocentric, topocentric, and 2D coordinate systems*
 
@@ -33,7 +33,7 @@ Illustrated guides live next to the code:
 
 ### 1. Supported Map Projections & Horizontal Datums
 
-![Cylindrical, conic, and azimuthal projection surfaces](https://raw.githubusercontent.com/hosseinnarimanirad/Maptor/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/images/map-projections.png)
+<img src="images/map-projections.png" alt="Cylindrical, conic, and azimuthal projection surfaces" width="600">
 
 *Fig. 2: Projection surfaces — cylindrical, conic, and azimuthal*
 

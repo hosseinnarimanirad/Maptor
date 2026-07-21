@@ -2,7 +2,7 @@
 
 A WMS server renders the map for you: `GetMap` returns finished pixels (PNG/JPEG), styled server-side. The subtlety is versioning — WMS 1.1.1 and 1.3.0 disagree about axis order for some coordinate reference systems, and this folder (namespace `IRI.Maptor.Sta.Ogc.WMS`) handles exactly that plus the typed capabilities model.
 
-![WMS vs WFS](../images/wms-wfs.png)
+<img src="../images/wms-wfs.png" alt="WMS vs WFS" width="600">
 
 ## The capabilities model
 

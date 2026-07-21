@@ -13,7 +13,7 @@ The heavy math lives in the static [`MapProjects`](../MapProjects.cs) class — 
 
 ## ✅ What is a map projection?
 
-![What is a map projection](images/map-projections.png)
+<img src="../images/map-projections.png" alt="What is a map projection" width="600">
 
 A sphere (or ellipsoid) cannot be flattened onto paper without distortion. Every projection therefore makes two choices:
 
@@ -51,7 +51,7 @@ Pick the property your map needs — that picks your projection: navigation and 
 
 ## ✅ Mercator
 
-![Mercator](images/mercator.png)
+<img src="../images/mercator.png" alt="Mercator" width="600">
 
 The conformal cylindrical projection (Gerardus Mercator, 1569). Meridians stay equally spaced while parallels spread apart as `y = a·ln tan(45° + φ/2)`, exactly matching the E–W stretch — so angles survive everywhere. Its killer feature: a **rhumb line** (a course of constant compass bearing) maps to a straight line, which made it *the* navigation chart for four centuries. The price: scale inflates by 1/cos(φ) and the poles sit at infinity.
 
@@ -66,7 +66,7 @@ var geo = mercator.ToGeodetic(xy);
 
 ## ✅ UTM — Universal Transverse Mercator
 
-![UTM](images/utm.png)
+<img src="../images/utm.png" alt="UTM" width="600">
 
 UTM slices the world into **60 zones of longitude, six degrees each** (`zone = floor(lon / 6) + 31`). Each zone gets its own Transverse Mercator projection centered on the zone's **central meridian**, scaled by **k₀ = 0.9996** so scale error balances across the zone, with a **false easting of 500 000 m** so every easting stays positive. The result: flat, metric coordinates with tiny distortion anywhere inside the zone.
 
@@ -90,7 +90,7 @@ Related helpers in `MapProjects`: `FindUtmZone(longitude)`, `CalculateCentralMer
 
 ## ✅ Web Mercator (EPSG:3857)
 
-![Web Mercator](images/web-mercator.png)
+<img src="../images/web-mercator.png" alt="Web Mercator" width="600">
 
 Web Mercator is the projection behind virtually all web tile maps (Google, OSM, Bing, …). It applies the **spherical** Mercator formulas to WGS84 geodetic coordinates ("auxiliary sphere") and **truncates the map at ±85.0511°** — precisely the latitude where the Mercator y equals π·a — so the whole world becomes a **square**.
 
@@ -112,7 +112,7 @@ var xy2 = MapProjects.GeodeticWgs84ToWebMercator(new Point(51.389, 35.689));
 
 ## ✅ Lambert Conformal Conic
 
-![Lambert Conformal Conic](images/lambert-conformal-conic.png)
+<img src="../images/lambert-conformal-conic.png" alt="Lambert Conformal Conic" width="600">
 
 Project onto a **cone** that cuts the globe at one or two **standard parallels**, then slit the cone and unroll it: parallels become concentric arcs, meridians straight lines converging on the apex. Scale is true (k = 1) on the standard parallels and grows away from them, so choosing φ₁ and φ₂ to bracket your region keeps distortion small — the classic conformal choice for **mid-latitude, east–west extents** (US state plane zones, and Iran's NIOC grid on the Clarke 1880 RGS datum).
 
@@ -135,7 +135,7 @@ var geo = lcc.ToGeodetic(xy);
 
 ## ✅ Cylindrical Equal-Area
 
-![Cylindrical Equal-Area](images/cylindrical-equal-area.png)
+<img src="../images/cylindrical-equal-area.png" alt="Cylindrical Equal-Area" width="600">
 
 Project each point **horizontally** out to the wrapping cylinder: `y = a·sin φ`. By Archimedes' hat-box theorem a sphere and its wrapping cylinder have equal area, so this preserves **areas exactly** — the anti-Mercator. Parallels compress toward the poles instead of spreading; shapes pay the price, stretching E–W and squashing N–S at high latitudes (a Tissot circle at 60° becomes twice as wide and half as tall — same area). Use it when areas must be honest: density, land-cover, and statistical maps.
 
