@@ -22,6 +22,18 @@ It supports **directed and undirected graphs**, **weighted graphs**, and impleme
 
 ---
 
+## ✅ Graph Representations
+
+A graph can be stored as an **adjacency list** — one linked list of `(target | weight)` cells per node, `O(V + E)` space, ideal for sparse graphs:
+
+![Adjacency list](images/adjacency-list.png)
+
+Or as an **adjacency matrix** — a `V × V` weight table with `O(1)` edge lookups, at the cost of `O(V²)` space:
+
+![Adjacency matrix](images/adjacency-matrix.png)
+
+---
+
 ## ✅ Installation
 
 Add the library to your .NET project:

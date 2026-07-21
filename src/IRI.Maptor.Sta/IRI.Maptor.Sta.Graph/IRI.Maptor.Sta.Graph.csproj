@@ -17,9 +17,11 @@
     <PackageTags>graph</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
-  
+
   <ItemGroup>
-    <Folder Include="MaximumFlow\" />
+    <Compile Remove="MaximumFlow\**" />
+    <EmbeddedResource Remove="MaximumFlow\**" />
+    <None Remove="MaximumFlow\**" />
   </ItemGroup>
 
   <ItemGroup>
