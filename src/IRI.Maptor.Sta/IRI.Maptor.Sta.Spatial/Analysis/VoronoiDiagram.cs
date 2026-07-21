@@ -1,319 +1,242 @@
-﻿// BESMELLAHE RAHMANE RAHIM
+// BESMELLAHE RAHMANE RAHIM
 // ALLAHOMMA AJJEL LE-VALIYEK AL-FARAJ
 
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Topology;
 using IRI.Maptor.Sta.Spatial.Helpers;
-using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Sta.Spatial.Analysis;
 
+/// <summary>
+/// Voronoi diagram of a set of 2D sites, built as the dual of the Delaunay triangulation.
+/// <see cref="Vertices"/>[i] is the circumcenter of <see cref="DelaunayTriangulation.Triangles"/>[i].
+/// Cells of sites on the convex hull are unbounded (<see cref="Cell.IsClosed"/> is false); their
+/// two infinite rays appear in <see cref="Edges"/> with <see cref="Edge.VertexB"/> == -1.
+/// </summary>
 public class VoronoiDiagram
 {
-    QuasiVoronoiCellCollection polygons;
-
-    PointCollection vertexes;
-
-    Point upperRight, lowerLeft;
-
-    public VoronoiDiagram(PointCollection points, Point upperRight, Point lowerLeft)
+    /// <summary>
+    /// One Voronoi edge: the perpendicular bisector segment (or ray) separating the cells of
+    /// <see cref="SiteA"/> and <see cref="SiteB"/>. When <see cref="VertexB"/> is -1 the edge is an
+    /// infinite ray starting at <see cref="VertexA"/> with unit direction (<see cref="DirectionX"/>, <see cref="DirectionY"/>).
+    /// </summary>
+    public readonly struct Edge
     {
+        public int SiteA { get; }
+        public int SiteB { get; }
 
-        vertexes = new PointCollection();
+        public int VertexA { get; }
+        public int VertexB { get; }
 
-        if (points.Equals(null))
+        public double DirectionX { get; }
+        public double DirectionY { get; }
+
+        public bool IsRay => VertexB == -1;
+
+        public Edge(int siteA, int siteB, int vertexA, int vertexB, double directionX = 0, double directionY = 0)
         {
-            throw new NotImplementedException();
-        }
+            SiteA = siteA; SiteB = siteB;
 
-        if (points.MaxX > upperRight.X || points.MaxY > upperRight.Y ||
-            points.MinX < lowerLeft.X || points.MinY < lowerLeft.Y)
-        {
-            throw new NotImplementedException();
-        }
+            VertexA = vertexA; VertexB = vertexB;
 
-        polygons = new QuasiVoronoiCellCollection();
-
-        Initialize(points[0], upperRight, lowerLeft);
-
-        for (int i = 1; i < points.Count; i++)
-        {
-            OccupyRegion(points[i]);
+            DirectionX = directionX; DirectionY = directionY;
         }
     }
 
-    private void Initialize(Point firstPrimaryPoint, Point upperRight, Point lowerLeft)
+    /// <summary>
+    /// The Voronoi cell of one site: its vertex indices in counter-clockwise order.
+    /// For hull sites the cell is unbounded: <see cref="IsClosed"/> is false and
+    /// <see cref="VertexIndices"/> is the finite chain between the two infinite rays.
+    /// Sites never referenced by the triangulation (duplicates, collinear input) get an empty cell.
+    /// </summary>
+    public sealed class Cell
     {
-        this.upperRight = upperRight;
+        public int SiteIndex { get; }
 
-        this.lowerLeft = lowerLeft;
+        public IReadOnlyList<int> VertexIndices { get; }
 
-        Point lowerRight = new Point(upperRight.X, lowerLeft.Y);
+        public bool IsClosed { get; }
 
-        Point upperLeft = new Point(lowerLeft.X, upperRight.Y);
+        internal Cell(int siteIndex, IReadOnlyList<int> vertexIndices, bool isClosed)
+        {
+            SiteIndex = siteIndex;
 
-        vertexes.Add(lowerLeft); vertexes.Add(lowerRight);
+            VertexIndices = vertexIndices;
 
-        vertexes.Add(upperRight); vertexes.Add(upperLeft);
-
-        QuasiVoronoiCell tempCell = new QuasiVoronoiCell(
-                                        firstPrimaryPoint,
-                                        new List<int>(
-                                            new int[] {
-                                                lowerLeft.GetHashCode(),
-                                                lowerRight.GetHashCode(),
-                                                upperRight.GetHashCode(),
-                                                upperLeft.GetHashCode()}));
-
-        tempCell.neighbours.AddRange(new int[] { -1, -1, -1, -1 });
-
-        polygons.Add(tempCell);
-
+            IsClosed = isClosed;
+        }
     }
 
-    private VoronoiCell FindCircumferencePolygon(Point point, out PointPolygonRelation relation)
+    public DelaunayTriangulation Triangulation { get; }
+
+    /// <summary>The input sites; same list (and indices) as <see cref="DelaunayTriangulation.Points"/>.</summary>
+    public IReadOnlyList<Point> Sites => Triangulation.Points;
+
+    /// <summary>Voronoi vertices: the circumcenter of each Delaunay triangle, index-aligned with <see cref="DelaunayTriangulation.Triangles"/>.</summary>
+    public IReadOnlyList<Point> Vertices { get; }
+
+    public IReadOnlyList<Edge> Edges { get; }
+
+    /// <summary>One cell per site, index-aligned with <see cref="Sites"/>.</summary>
+    public IReadOnlyList<Cell> Cells { get; }
+
+    private VoronoiDiagram(DelaunayTriangulation triangulation, List<Point> vertices, List<Edge> edges, List<Cell> cells)
     {
-        for (int i = 0; i < polygons.Count; i++)
+        Triangulation = triangulation;
+
+        Vertices = vertices;
+
+        Edges = edges;
+
+        Cells = cells;
+    }
+
+    public static VoronoiDiagram Create(IReadOnlyList<Point> sites)
+    {
+        return Create(DelaunayTriangulation.Create(sites));
+    }
+
+    public static VoronoiDiagram Create(DelaunayTriangulation triangulation)
+    {
+        if (triangulation is null)
+            throw new ArgumentNullException(nameof(triangulation));
+
+        var triangles = triangulation.Triangles;
+
+        var points = triangulation.Points;
+
+        var vertices = new List<Point>(triangles.Count);
+
+        foreach (var t in triangles)
         {
-            VoronoiCell result = GetPolygon(polygons[i].GetHashCode());
+            var center = TopologyUtility.CalculateCircumcenterCenterPoint(points[t.A], points[t.B], points[t.C]);
 
-            PointPolygonRelation tempValue = result.GetRelationTo(point);
+            vertices.Add(new Point(center.X, center.Y));
+        }
 
-            if (tempValue == PointPolygonRelation.Out)
+        return new VoronoiDiagram(triangulation, vertices, BuildEdges(triangulation), BuildCells(triangulation));
+    }
+
+    private static List<Edge> BuildEdges(DelaunayTriangulation triangulation)
+    {
+        var triangles = triangulation.Triangles;
+
+        var points = triangulation.Points;
+
+        var edges = new List<Edge>();
+
+        for (int i = 0; i < triangles.Count; i++)
+        {
+            var t = triangles[i];
+
+            AddEdge(edges, points, i, t.A, t.B, t.NeighbourAB);
+            AddEdge(edges, points, i, t.B, t.C, t.NeighbourBC);
+            AddEdge(edges, points, i, t.C, t.A, t.NeighbourCA);
+        }
+
+        return edges;
+    }
+
+    private static void AddEdge(List<Edge> edges, IReadOnlyList<Point> points, int triangleIndex, int u, int v, int neighbour)
+    {
+        if (neighbour == -1)
+        {
+            // hull edge: infinite ray along the perpendicular bisector of (u, v), pointing outward.
+            // (u, v) is CCW in the triangle, so the interior lies to its left and outward is to its right.
+            double dx = points[v].X - points[u].X;
+
+            double dy = points[v].Y - points[u].Y;
+
+            double length = Math.Sqrt(dx * dx + dy * dy);
+
+            edges.Add(new Edge(u, v, triangleIndex, -1, dy / length, -dx / length));
+        }
+        else if (neighbour > triangleIndex)
+        {
+            // interior Delaunay edge, emitted once (by the lower-indexed triangle)
+            edges.Add(new Edge(u, v, triangleIndex, neighbour));
+        }
+    }
+
+    private static List<Cell> BuildCells(DelaunayTriangulation triangulation)
+    {
+        var triangles = triangulation.Triangles;
+
+        int siteCount = triangulation.Points.Count;
+
+        // one incident triangle per site
+        var incident = new int[siteCount];
+
+        for (int i = 0; i < siteCount; i++)
+            incident[i] = -1;
+
+        for (int i = 0; i < triangles.Count; i++)
+        {
+            var t = triangles[i];
+
+            incident[t.A] = i; incident[t.B] = i; incident[t.C] = i;
+        }
+
+        var cells = new List<Cell>(siteCount);
+
+        for (int site = 0; site < siteCount; site++)
+        {
+            if (incident[site] == -1)
             {
+                cells.Add(new Cell(site, Array.Empty<int>(), isClosed: false));
+
                 continue;
             }
-            else
-            {
-                relation = tempValue;
 
-                return result;
+            // for hull sites, rewind clockwise to the first triangle of the fan
+            int start = incident[site];
+
+            int current = start;
+
+            for (int step = 0; step <= triangles.Count; step++)
+            {
+                int previous = PreviousClockwise(triangles[current], site);
+
+                if (previous == -1 || previous == start)
+                    break;
+
+                current = previous;
             }
-        }
 
-        throw new NotImplementedException();
-    }
+            // collect the fan counter-clockwise; circumcenters come out in CCW order around the site
+            var fan = new List<int>();
 
-    public VoronoiCell GetPolygon(int polygonCode)
-    {
-        PointCollection collection = new PointCollection();
+            int walker = current;
 
-        QuasiVoronoiCell temp = polygons.GetCell(polygonCode);
+            bool isClosed = false;
 
-        for (int i = 0; i < temp.Vertexes.Count; i++)
-        {
-            collection.Add(vertexes.GetPoint(temp.Vertexes[i]));
-        }
-
-        return new VoronoiCell(temp.PrimaryPoint, collection, temp.neighbours);
-    }
-
-    public void OccupyRegion(Point point)
-    {
-        PointPolygonRelation relation;
-
-        VoronoiCell polygon = FindCircumferencePolygon(point, out relation);
-
-        if (relation == PointPolygonRelation.In)
-        {
-            DivideTheRegionWithPointInTheRegion(polygon, point);
-        }
-        else if (relation == PointPolygonRelation.On)
-        {
-            if (polygon.HasThePoint(point))
+            for (int step = 0; step <= triangles.Count; step++)
             {
-                DivideTheRegionWithPointOnTheVertex(polygon, point);
-            }
-            else
-            {
-                DivideTheRegionWithPointOnTheEdge(polygon, point);
-            }
-        }
-    }
+                fan.Add(walker);
 
-    private void DivideTheRegionWithPointOnTheEdge(VoronoiCell polygon, Point point)
-    {
-        throw new NotImplementedException();
-    }
+                walker = NextCounterClockwise(triangles[walker], site);
 
-    private void DivideTheRegionWithPointOnTheVertex(VoronoiCell polygon, Point point)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void DivideTheRegionWithPointInTheRegion(VoronoiCell polygon, Point point)
-    {
-        Point midPoint = SpatialUtility.GetMidPoint(point, polygon.PrimaryPoint);
-
-        Point temPoint = new Point(midPoint.X + 10, midPoint.Y - 10 / SpatialUtility.GetSlope(point, polygon.PrimaryPoint));
-
-        List<int> edgeIndexes;
-
-        List<Point> newVertexes = polygon.Intersects(midPoint, temPoint, out edgeIndexes);
-
-        //20/12/2009
-        if (newVertexes.Count != 2)
-        {
-            throw new NotImplementedException();
-        }
-
-        List<int> affectedPolygons = GetAffectedPolygons(polygon, newVertexes, edgeIndexes);
-
-        List<int> ii = new List<int>();
-
-        for (int i = 0; i < affectedPolygons.Count; i++)
-        {
-            if (affectedPolygons[i] == -1)
-                continue;
-
-            List<Point> p2 = MakeUpPolygon(affectedPolygons[i], point);
-
-            foreach (Point item in p2)
-            {
-                if (!vertexes.Contains(item))
+                if (walker == current)
                 {
-                    vertexes.Add(item);
+                    isClosed = true;
+
+                    break;
                 }
-                if (!ii.Contains(item.GetHashCode()))
-                {
-                    ii.Add(item.GetHashCode());
-                }
+
+                if (walker == -1)
+                    break;
             }
+
+            cells.Add(new Cell(site, fan, isClosed));
         }
 
-        polygons.Add(new QuasiVoronoiCell(point, ii));
-        //20/12/2009
-
-        //check if neighbour exists!
-        //newVertexes is for check!
-        //int nextPolygon = MakeUpPolygon(polygon.Neighbours[edgeIndexes[0]], newVertexes[0], point);
+        return cells;
     }
 
-    private List<int> GetAffectedPolygons(VoronoiCell polygon, List<Point> newVertexes, List<int> edgeIndexes)
-    {
-        PointVectorRelation relation = TopologyUtility.GetPointVectorRelation(polygon.PrimaryPoint, newVertexes[0], newVertexes[1]);
+    // in a CCW triangle the sector at vertex s spans from its outgoing to its incoming edge;
+    // the CCW-next triangle around s is across the incoming edge, the CW-previous across the outgoing one
+    private static int NextCounterClockwise(DelaunayTriangulation.TriangleIndices t, int site)
+        => site == t.A ? t.NeighbourCA : site == t.B ? t.NeighbourAB : t.NeighbourBC;
 
-        if (relation == PointVectorRelation.LiesOnTheLine)
-        {
-            throw new NotImplementedException();
-        }
-
-        List<int> result = new List<int>();
-
-        bool condition = false;
-
-        for (int i = 0; i < polygon.Vertexes.Count; i++)
-        {
-            PointVectorRelation tempRelation = TopologyUtility.GetPointVectorRelation(polygon.Vertexes[i], newVertexes[0], newVertexes[1]);
-
-            if (tempRelation != relation)
-            {
-                if (tempRelation == PointVectorRelation.LiesOnTheLine)
-                {
-                    if (condition)
-                    {
-                        int temp = i - 1 >= 0 ? i - 1 : polygon.Vertexes.Count - 1;
-
-                        result.Add(polygon.Neighbours[temp]);
-                    }
-                }
-                else
-                {
-                    condition = true;
-
-                    int temp = i - 1 >= 0 ? i - 1 : polygon.Vertexes.Count - 1;
-
-                    result.Add(polygon.Neighbours[temp]);
-                }
-            }
-        }
-
-        return result;
-    }
-
-    private List<Point> MakeUpPolygon(int polygonCode, Point point)
-    {
-        VoronoiCell polygon = GetPolygon(polygonCode);
-
-        Point midPoint = SpatialUtility.GetMidPoint(point, polygon.PrimaryPoint);
-
-        Point temPoint = new Point(midPoint.X + 10, midPoint.Y - 10 / SpatialUtility.GetSlope(point, polygon.PrimaryPoint));
-
-        List<int> edgeIndexes;
-
-        List<Point> newVertexes = polygon.Intersects(midPoint, temPoint, out edgeIndexes);
-
-        if (newVertexes.Count == 1)
-        {
-            return newVertexes;
-        }
-
-        if (newVertexes.Count != 2)
-        {
-            throw new NotImplementedException();
-        }
-
-        VoronoiCell first = new VoronoiCell(polygon.PrimaryPoint);
-
-        first.Vertexes.Add(newVertexes[1]);
-
-        first.Vertexes.Add(newVertexes[0]);
-
-        for (int i = edgeIndexes[0] + 1; i < edgeIndexes[1]; i++)
-        {
-            first.Vertexes.Add(polygon.Vertexes[i]);
-
-            first.Neighbours.Add(polygon.Neighbours[i - 1]);
-        }
-
-        VoronoiCell second = new VoronoiCell(polygon.PrimaryPoint);
-
-        for (int i = edgeIndexes[1] + 1; i < polygon.Vertexes.Count; i++)
-        {
-            second.Vertexes.Add(polygon.Vertexes[i]);
-
-            first.Neighbours.Add(polygon.Neighbours[i]);
-        }
-
-        for (int i = 0; i < edgeIndexes[0]; i++)
-        {
-            second.Vertexes.Add(polygon.Vertexes[i]);
-
-            first.Neighbours.Add(polygon.Neighbours[i]);
-        }
-
-        second.Vertexes.Add(newVertexes[0]);
-
-        second.Vertexes.Add(newVertexes[1]);
-
-        if (first.GetRelationTo(polygon.PrimaryPoint) == PointPolygonRelation.In)
-        {
-            polygon = first;
-        }
-        else
-        {
-            polygon = second;
-        }
-
-        return newVertexes;
-    }
-
-    private List<int> GetNeighbours(ConvexPolygon currentPolygon, Point commonPoint)
-    {
-        List<int> result = new List<int>();
-
-        foreach (int item in currentPolygon.Neighbours)
-        {
-            ConvexPolygon temp = GetPolygon(item);
-
-            if (temp.HasThePoint(commonPoint))
-            {
-                result.Add(item);
-            }
-        }
-
-        return result;
-    }
-
-
+    private static int PreviousClockwise(DelaunayTriangulation.TriangleIndices t, int site)
+        => site == t.A ? t.NeighbourAB : site == t.B ? t.NeighbourBC : t.NeighbourCA;
 }

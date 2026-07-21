@@ -1,64 +1,79 @@
-﻿// BESMELLAHE RAHMANE RAHIM
+// BESMELLAHE RAHMANE RAHIM
 // ALLAHOMMA AJJEL LE-VALIYEK AL-FARAJ
 
-using IRI.Maptor.Sta.DataStructures;
 using IRI.Maptor.Sta.Spatial.Topology;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.DataStructures.CustomStructures;
 using IRI.Maptor.Sta.Spatial.Helpers;
-using IRI.Maptor.Sta.Spatial.Primitives;
 
 namespace IRI.Maptor.Sta.Spatial.Analysis;
 
 public static class ComputationalGeometry
 {
-    public static PoinTriangleRelation GetPointTriangleRelation(Point sightlyPoint, Point firstVertex, Point secondVertex, Point thirdVertex)
+    /// <summary>
+    /// Computes the convex hull of the given points using a Graham scan.
+    /// Returns the hull vertices in counter-clockwise order, starting at the
+    /// lowest point (ties broken by lowest X). Duplicate input points are
+    /// ignored; collinear points interior to hull edges are excluded.
+    /// Degenerate inputs (0, 1 or 2 distinct points) are returned as-is.
+    /// </summary>
+    public static List<Point> CreateConvexHull(List<Point> points)
     {
-        int firstRelation = (int)TopologyUtility.GetPointVectorRelation(sightlyPoint, firstVertex, secondVertex);
+        if (points is null || points.Count == 0)
+            return new List<Point>();
 
-        int secondRelation = (int)TopologyUtility.GetPointVectorRelation(sightlyPoint, secondVertex, thirdVertex);
+        // dedup by coordinate value (Point overrides Equals/GetHashCode on X,Y)
+        var seen = new HashSet<Point>();
+        var distinct = new List<Point>(points.Count);
+        foreach (var p in points)
+            if (seen.Add(p))
+                distinct.Add(p);
 
-        int thirdRelation = (int)TopologyUtility.GetPointVectorRelation(sightlyPoint, thirdVertex, firstVertex);
+        if (distinct.Count <= 2)
+            return distinct.Select(p => new Point(p.X, p.Y)).ToList();
 
-        return (PoinTriangleRelation)(firstRelation * QuasiTriangle.firstEdgeWeight +
-                                        secondRelation * QuasiTriangle.secondEdgeWeight +
-                                        thirdRelation * QuasiTriangle.thirdEdgeWeight);
-    }
+        // pivot: min Y, ties by min X
+        int pivotIndex = 0;
+        for (int i = 1; i < distinct.Count; i++)
+            if (distinct[i].Y < distinct[pivotIndex].Y ||
+               (distinct[i].Y == distinct[pivotIndex].Y && distinct[i].X < distinct[pivotIndex].X))
+                pivotIndex = i;
 
-    public static PointCollection CreateConvexHull(PointCollection points)
-    {
-        int leftBoundIndex = points.LowerBoundIndex;
+        Point pivot = distinct[pivotIndex];
 
-        Point initialPoint = points[leftBoundIndex];
-
-        int length = points.Count;
-
-        IndexValue<double>[] unsortedPoints = new IndexValue<double>[length - 1];
-
+        // candidate indices (everything except the pivot)
+        int[] candidates = new int[distinct.Count - 1];
         int counter = 0;
+        for (int i = 0; i < distinct.Count; i++)
+            if (i != pivotIndex)
+                candidates[counter++] = i;
 
-        for (int i = 0; i < length; i++)
+        // ascending polar angle around the pivot; collinear ties nearest-first.
+        Array.Sort(candidates, (i, j) =>
         {
-            if (i == leftBoundIndex)
-                continue;
+            var pi = distinct[i];
+            var pj = distinct[j];
 
-            unsortedPoints[counter] = new IndexValue<double>(i,
-                                                            Math.Atan2(points[i].Y - initialPoint.Y,
-                                                            points[i].X - initialPoint.X));
-            counter++;
-        }
+            double cross = (pi.X - pivot.X) * (pj.Y - pivot.Y) - (pj.X - pivot.X) * (pi.Y - pivot.Y);
 
-        IndexValue<double>[] sortedPoints = SortAlgorithm.Heapsort(unsortedPoints, SortDirection.Descending);
+            if (cross > 0) return -1;   // pi has the smaller angle
+            if (cross < 0) return 1;
 
-        PointCollection result = new PointCollection();
+            double dxi = pi.X - pivot.X, dyi = pi.Y - pivot.Y;
+            double dxj = pj.X - pivot.X, dyj = pj.Y - pivot.Y;
 
-        result.Add(points[leftBoundIndex]);
+            double di = dxi * dxi + dyi * dyi;
+            double dj = dxj * dxj + dyj * dyj;
+
+            return di < dj ? -1 : (di > dj ? 1 : 0); // 0 unreachable after dedup
+        });
+
+        var result = new List<Point> { pivot };
 
         counter = 0;
 
-        while (counter < sortedPoints.Length)
+        while (counter < candidates.Length)
         {
-            Point tempPoint = points[sortedPoints[counter].Index];
+            Point tempPoint = distinct[candidates[counter]];
 
             if (result.Count < 2)
             {
@@ -77,125 +92,13 @@ public static class ComputationalGeometry
 
                 counter++;
             }
-            else if (pointSituation == PointVectorRelation.LiesRight)
+            else // LiesRight or LiesOnTheLine: top of stack is not a strict hull vertex
             {
                 result.RemoveAt(result.Count - 1);
             }
-            else
-            {
-                if (sortedPoints[counter].Value == sortedPoints[0].Value)
-                {
-                    //if (CalculateDistance(initialPoint, tempPoint) > CalculateDistance(initialPoint, result[result.Count - 1]))
-                    if (initialPoint.DistanceTo(tempPoint) > initialPoint.DistanceTo(result[result.Count - 1]))
-                    {
-                        result.Add(tempPoint);
-                    }
-
-                    counter++;
-                }
-                else if (sortedPoints[counter].Value == sortedPoints[length - 2].Value)
-                {
-                    //if (CalculateDistance(initialPoint, tempPoint) < CalculateDistance(initialPoint, result[result.Count - 1]))
-                    if (initialPoint.DistanceTo(tempPoint) < initialPoint.DistanceTo(result[result.Count - 1]))
-                    {
-                        result.Add(tempPoint);
-                    }
-
-                    counter++;
-                }
-                else
-                {
-                    result.RemoveAt(result.Count - 1);
-                }
-            }
         }
 
-        return result;
-    }
-
-    public static List<int> GetConvexHullVertexes(PointCollection points)
-    {
-        int leftBoundIndex = points.LowerBoundIndex;
-
-        Point initialPoint = points[leftBoundIndex];
-
-        int length = points.Count;
-
-        IndexValue<double>[] list = new IndexValue<double>[length - 1];
-
-        int counter = 0;
-
-        for (int i = 0; i < length; i++)
-        {
-            if (i == leftBoundIndex)
-                continue;
-
-            list[counter] = new IndexValue<double>(i,
-                                                            Math.Atan2(points[i].Y - initialPoint.Y,
-                                                            points[i].X - initialPoint.X));
-            counter++;
-        }
-
-        list = SortAlgorithm.Heapsort(list, SortDirection.Descending);
-
-        List<int> result = new List<int>();
-
-        result.Add(leftBoundIndex);
-
-        counter = 0;
-
-        while (counter < list.Length)
-        {
-            Point tempPoint = points[list[counter].Index];
-
-            if (result.Count < 2)
-            {
-                result.Add(list[counter].Index);
-
-                counter++;
-
-                continue;
-            }
-
-            PointVectorRelation pointSituation = TopologyUtility.GetPointVectorRelation(tempPoint,
-                                                                                    points[result[result.Count - 2]],
-                                                                                    points[result[result.Count - 1]]);
-
-            if (pointSituation == PointVectorRelation.LiesLeft)
-            {
-                result.Add(list[counter].Index);
-
-                counter++;
-            }
-            else if (pointSituation == PointVectorRelation.LiesRight)
-            {
-                result.RemoveAt(result.Count - 1);
-            }
-            else
-            {
-                if (list[counter].Value == list[0].Value &&
-                    //CalculateDistance(initialPoint, tempPoint) > CalculateDistance(initialPoint, points[result[result.Count - 1]]))
-                    initialPoint.DistanceTo(tempPoint) > initialPoint.DistanceTo(points[result[result.Count - 1]]))
-                {
-                    result.Add(list[counter].Index);
-
-                    counter++;
-                }
-                else if (list[counter].Value == list[length - 2].Value &&
-                    //CalculateDistance(initialPoint, tempPoint) < CalculateDistance(initialPoint, points[result[result.Count - 1]]))
-                    initialPoint.DistanceTo(tempPoint) < initialPoint.DistanceTo(points[result[result.Count - 1]]))
-                {
-                    result.Add(list[counter].Index);
-
-                    counter++;
-                }
-                else
-                {
-                    result.RemoveAt(result.Count - 1);
-                }
-            }
-        }
-
-        return result;
+        // fresh copies: Point is mutable; never alias caller-owned instances
+        return result.Select(p => new Point(p.X, p.Y)).ToList();
     }
 }

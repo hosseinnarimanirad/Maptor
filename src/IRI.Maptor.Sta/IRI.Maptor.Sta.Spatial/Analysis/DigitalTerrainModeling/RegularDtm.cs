@@ -34,13 +34,13 @@ public class RegularDtm
 
     public int NumberOfColumns => values.NumberOfColumns;
 
-    public AttributedPoint LowerLeft => GetPoint(NumberOfRows - 1, 0);
+    public PointM LowerLeft => GetPoint(NumberOfRows - 1, 0);
 
-    public AttributedPoint LoweRight => GetPoint(NumberOfRows - 1, NumberOfColumns - 1);
+    public PointM LoweRight => GetPoint(NumberOfRows - 1, NumberOfColumns - 1);
 
-    public AttributedPoint UpperLeft => GetPoint(0, 0);
+    public PointM UpperLeft => GetPoint(0, 0);
 
-    public AttributedPoint UppeRight => GetPoint(0, NumberOfColumns - 1);
+    public PointM UppeRight => GetPoint(0, NumberOfColumns - 1);
 
     public Matrix Values => values;
 
@@ -52,7 +52,7 @@ public class RegularDtm
 
     public double MaX => MinX + NumberOfColumns * CellWidth;
 
-    public AttributedPoint this[int row, int column] => GetPoint(column, row);
+    public PointM this[int row, int column] => GetPoint(column, row);
 
     #endregion
 
@@ -85,11 +85,11 @@ public class RegularDtm
 
     #region Methods
 
-    public AttributedPoint GetPoint(int row, int column)
+    public PointM GetPoint(int row, int column)
     {
-        return new AttributedPoint(lowerLeftCoordinate.X + column * CellWidth,
-                                    lowerLeftCoordinate.Y + (NumberOfRows - 1 - row) * CellHeight,
-                                    values[row, column]);
+        return new PointM(lowerLeftCoordinate.X + column * CellWidth,
+                            lowerLeftCoordinate.Y + (NumberOfRows - 1 - row) * CellHeight,
+                            values[row, column]);
     }
 
     public RegularDtm Subtract(RegularDtm dtm)
@@ -249,7 +249,7 @@ public class RegularDtm
     /// </summary>
     /// <param name="numberOfPoints"></param>
     /// <returns></returns>
-    public AttributedPointCollection SelectPointsBaesdOnCAG(int numberOfPoints)
+    public List<PointM> SelectPointsBaesdOnCAG(int numberOfPoints)
     {
         int numberOfRow = NumberOfRows;
 
@@ -274,9 +274,12 @@ public class RegularDtm
             }
         }
 
-        IndexValue<double>[] sortedSignificanceValues = SortAlgorithm.Heapsort(significanceValues, SortDirection.Ascending);
+        // most significant points first
+        Array.Sort(significanceValues, (a, b) => b.Value.CompareTo(a.Value));
 
-        AttributedPointCollection irregularPoints = new AttributedPointCollection();
+        IndexValue<double>[] sortedSignificanceValues = significanceValues;
+
+        List<PointM> irregularPoints = new List<PointM>();
 
         for (int i = 0; i < numberOfPoints; i++)
         {
@@ -301,18 +304,18 @@ public class RegularDtm
 
     public IrregularDtm ToIrregularDtmBaesdOnCAG(int numberOfPoints)
     {
-        AttributedPointCollection irregularPoints = SelectPointsBaesdOnCAG(numberOfPoints);
+        List<PointM> irregularPoints = SelectPointsBaesdOnCAG(numberOfPoints);
 
         return new IrregularDtm(irregularPoints);
     }
 
-    public AttributedPointCollection SelectPointsBasedOnLi(double threshold)
+    public List<PointM> SelectPointsBasedOnLi(double threshold)
     {
         int numberOfRow = NumberOfRows;
 
         int numberOfColumns = NumberOfColumns;
 
-        AttributedPointCollection irregularPoints = new AttributedPointCollection();
+        List<PointM> irregularPoints = new List<PointM>();
 
         Matrix values = this.values.Clone();
 
@@ -353,7 +356,7 @@ public class RegularDtm
 
     public IrregularDtm ToIrregularDtmBasedOnLi(double threshold)
     {
-        AttributedPointCollection irregularPoints = SelectPointsBasedOnLi(threshold);
+        List<PointM> irregularPoints = SelectPointsBasedOnLi(threshold);
 
         return new IrregularDtm(irregularPoints);
     }

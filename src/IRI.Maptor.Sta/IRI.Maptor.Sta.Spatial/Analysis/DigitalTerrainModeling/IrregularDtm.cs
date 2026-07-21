@@ -10,79 +10,88 @@ namespace IRI.Maptor.Sta.Spatial.DigitalTerrainModeling;
 [Serializable]
 public class IrregularDtm
 {
-    public AttributedPointCollection collection;
+    public List<PointM> collection;
 
     public DelaunayTriangulation triangulation;
 
-    QuasiTriangle currenTriangle;
+    int currentTriangleIndex;
 
     public int NumberOfPoints
     {
         get { return collection.Count; }
     }
 
-    public IrregularDtm(AttributedPointCollection collection)
+    public IrregularDtm(List<PointM> collection)
     {
         this.collection = collection;
 
-        //PointCollection c = new PointCollection();
+        triangulation = DelaunayTriangulation.Create(GetPoints(collection));
 
-        //for (int i = 0; i < collection.Count; i++)
-        //{
-        //    c.Add(new Point(collection[i].X, collection[i].Y));
-        //}
-
-        triangulation = new DelaunayTriangulation(this.collection);
-
-        currenTriangle = triangulation.triangles[0];
+        currentTriangleIndex = 0;
     }
 
     public IrregularDtm(double[] east, double[] north, double[] value)
     {
-        try
+        if (east.Length != north.Length || east.Length != value.Length)
         {
-
-            collection = new AttributedPointCollection(new List<double>(east),
-                                                            new List<double>(north),
-                                                            new List<double>(value));
-
-            triangulation = new DelaunayTriangulation(collection);
-
-            currenTriangle = triangulation.triangles[0];
+            throw new ArgumentException("east, north and value must have the same length.");
         }
-        catch (Exception ex)
+
+        collection = new List<PointM>(east.Length);
+
+        for (int i = 0; i < east.Length; i++)
         {
-            throw ex;
+            collection.Add(new PointM(east[i], north[i], value[i]));
         }
+
+        triangulation = DelaunayTriangulation.Create(GetPoints(collection));
+
+        currentTriangleIndex = 0;
+    }
+
+    private static List<Point> GetPoints(List<PointM> collection)
+    {
+        var result = new List<Point>(collection.Count);
+
+        for (int i = 0; i < collection.Count; i++)
+        {
+            result.Add(new Point(collection[i].X, collection[i].Y));
+        }
+
+        return result;
     }
 
     public double Interpolate(Point point)
     {
-        if (collection.Contains(point))
-        {
-            return collection[collection.IndexOf(point)].Value;
-        }
+        int triangleIndex = triangulation.FindContainingTriangle(point, currentTriangleIndex);
 
-        Triangle triangle = triangulation.GetTriangle(point, ref currenTriangle);
-
-        if (triangle == null)
+        if (triangleIndex == -1)
         {
-            currenTriangle = triangulation.triangles[0];
+            currentTriangleIndex = 0;
 
             return double.NaN;
         }
 
-        double firstValue = collection.GetValue(triangle.FirstPoint);
+        currentTriangleIndex = triangleIndex;
 
-        double secondValue = collection.GetValue(triangle.SecondPoint);
+        var t = triangulation.Triangles[triangleIndex];
 
-        double thirdValue = collection.GetValue(triangle.ThirdPoint);
+        // collection indices align with triangulation.Points indices (points were added in the same order)
+        Point firstPoint = triangulation.Points[t.A];
+        Point secondPoint = triangulation.Points[t.B];
+        Point thirdPoint = triangulation.Points[t.C];
 
-        double dx1 = triangle.SecondPoint.X - triangle.FirstPoint.X;
-        double dy1 = triangle.SecondPoint.Y - triangle.FirstPoint.Y;
+        double firstValue = collection[t.A].M;
+
+        double secondValue = collection[t.B].M;
+
+        double thirdValue = collection[t.C].M;
+
+        double dx1 = secondPoint.X - firstPoint.X;
+        double dy1 = secondPoint.Y - firstPoint.Y;
         double dz1 = secondValue - firstValue;
-        double dx2 = triangle.ThirdPoint.X - triangle.FirstPoint.X;
-        double dy2 = triangle.ThirdPoint.Y - triangle.FirstPoint.Y;
+        double dx2 = thirdPoint.X - firstPoint.X;
+        double dy2 = thirdPoint.Y - firstPoint.Y;
         double dz2 = thirdValue - firstValue;
 
         double a = dy1 * dz2 - dy2 * dz1;
@@ -91,23 +100,37 @@ public class IrregularDtm
 
         double c = dx1 * dy2 - dx2 * dy1;
 
-        double d = a * triangle.FirstPoint.X + b * triangle.FirstPoint.Y + c * firstValue;
+        double d = a * firstPoint.X + b * firstPoint.Y + c * firstValue;
 
         return 1 / c * (d - a * point.X - b * point.Y);
     }
 
-    public AttributedPoint GetValue(int index)
+    public PointM GetValue(int index)
     {
         return collection[index];
     }
 
+    // when duplicate coordinates exist, the last occurrence wins
+    private double GetValue(Point point)
+    {
+        for (int i = collection.Count - 1; i >= 0; i--)
+        {
+            if (collection[i].X == point.X && collection[i].Y == point.Y)
+            {
+                return collection[i].M;
+            }
+        }
+
+        throw new ArgumentException("The point is not part of the collection.", nameof(point));
+    }
+
     public double CalculateSlope(Triangle triangle)
     {
-        double firstValue = collection.GetValue(triangle.FirstPoint);
+        double firstValue = GetValue(triangle.FirstPoint);
 
-        double secondValue = collection.GetValue(triangle.SecondPoint);
+        double secondValue = GetValue(triangle.SecondPoint);
 
-        double thirdValue = collection.GetValue(triangle.ThirdPoint);
+        double thirdValue = GetValue(triangle.ThirdPoint);
 
         double dx1 = triangle.SecondPoint.X - triangle.FirstPoint.X;
         double dy1 = triangle.SecondPoint.Y - triangle.FirstPoint.Y;
@@ -127,11 +150,11 @@ public class IrregularDtm
 
     public double CalculateAspect(Triangle triangle)
     {
-        double firstValue = collection.GetValue(triangle.FirstPoint);
+        double firstValue = GetValue(triangle.FirstPoint);
 
-        double secondValue = collection.GetValue(triangle.SecondPoint);
+        double secondValue = GetValue(triangle.SecondPoint);
 
-        double thirdValue = collection.GetValue(triangle.ThirdPoint);
+        double thirdValue = GetValue(triangle.ThirdPoint);
 
         double dx1 = triangle.SecondPoint.X - triangle.FirstPoint.X;
         double dy1 = triangle.SecondPoint.Y - triangle.FirstPoint.Y;
@@ -156,28 +179,24 @@ public class IrregularDtm
 
     public double CalculateVolume(double baseHeight)
     {
-        if (triangulation.triangles.Count < 1)
+        if (triangulation.Triangles.Count < 1)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("The triangulation is empty.");
         }
 
         double result = 0;
 
-        foreach (QuasiTriangle item in triangulation.triangles)
+        for (int i = 0; i < triangulation.Triangles.Count; i++)
         {
-            Point first = collection.GetPoint(item.First);
+            var item = triangulation.Triangles[i];
 
-            Point second = collection.GetPoint(item.Second);
+            Triangle temp = triangulation.GetTriangle(i);
 
-            Point third = collection.GetPoint(item.Third);
+            double firstValue = collection[item.A].M;
 
-            Triangle temp = new Triangle(first, second, third);
+            double secondValue = collection[item.B].M;
 
-            double firstValue = collection.GetValue(temp.FirstPoint);
-
-            double secondValue = collection.GetValue(temp.SecondPoint);
-
-            double thirdValue = collection.GetValue(temp.ThirdPoint);
+            double thirdValue = collection[item.C].M;
 
             result += temp.CalculateArea() * (firstValue + secondValue + thirdValue) / 3;
         }
@@ -185,7 +204,7 @@ public class IrregularDtm
         return result;
     }
 
-    public AttributedPoint LowerLeft
+    public PointM LowerLeft
     {
         get
         {
@@ -207,11 +226,11 @@ public class IrregularDtm
                 }
             }
 
-            return new AttributedPoint(x, y, collection[index].Value);
+            return new PointM(x, y, collection[index].M);
         }
     }
 
-    public AttributedPoint UpperRight
+    public PointM UpperRight
     {
         get
         {
@@ -233,13 +252,8 @@ public class IrregularDtm
                 }
             }
 
-            return new AttributedPoint(x, y, collection[index].Value);
+            return new PointM(x, y, collection[index].M);
         }
-    }
-
-    public PointCollection GetPointCollection()
-    {
-        return collection;
     }
 
     public RegularDtm ToRegularDtm(double cellSize)
@@ -249,9 +263,9 @@ public class IrregularDtm
 
     public RegularDtm ToRegularDtm(double cellWidth, double cellHeight)
     {
-        double minX = collection.MinX; double maX = collection.MaxX;
+        double minX = collection.Min(p => p.X); double maX = collection.Max(p => p.X);
 
-        double minY = collection.MinY; double maxY = collection.MaxY;
+        double minY = collection.Min(p => p.Y); double maxY = collection.Max(p => p.Y);
 
         int numberOfColumns = (int)Math.Ceiling((maX - minX + 1) / cellWidth);
 

@@ -1,1181 +1,451 @@
-﻿// BESMELLAHE RAHMANE RAHIM
+// BESMELLAHE RAHMANE RAHIM
 // ALLAHOMMA AJJEL LE-VALIYEK AL-FARAJ
 
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Spatial.Topology;
-using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Primitives;
-
 
 namespace IRI.Maptor.Sta.Spatial.Analysis;
 
+/// <summary>
+/// Delaunay triangulation of a set of 2D points (Bowyer–Watson incremental insertion).
+/// Vertices are referenced by their index into <see cref="Points"/>, which preserves the
+/// order of the input list. Exact duplicate points are skipped during insertion (triangles
+/// always reference the first occurrence). If all points are collinear, <see cref="Triangles"/>
+/// is empty.
+/// </summary>
 public class DelaunayTriangulation
 {
-    PointCollection points;
-
-    int lowerLeftIndex, upperLeftIndex, upperRightIndex, lowerRightIndex;
-
-    public QuasiTriangleCollection triangles;
-
-
-    public DelaunayTriangulation(PointCollection points)
+    /// <summary>
+    /// One triangle of the result: CCW vertex indices into <see cref="Points"/> and, per edge,
+    /// the index of the adjacent triangle in <see cref="Triangles"/> (-1 on the convex hull).
+    /// </summary>
+    public readonly struct TriangleIndices
     {
+        public int A { get; }
+        public int B { get; }
+        public int C { get; }
+
+        public int NeighbourAB { get; }
+        public int NeighbourBC { get; }
+        public int NeighbourCA { get; }
+
+        public TriangleIndices(int a, int b, int c, int neighbourAB, int neighbourBC, int neighbourCA)
+        {
+            A = a; B = b; C = c;
+
+            NeighbourAB = neighbourAB; NeighbourBC = neighbourBC; NeighbourCA = neighbourCA;
+        }
+
+        public bool HasVertex(int pointIndex) => A == pointIndex || B == pointIndex || C == pointIndex;
+
+        public override string ToString() => $"{A} {B} {C}";
+    }
+
+    private readonly List<Point> _points;
+
+    private readonly List<TriangleIndices> _triangles;
+
+    /// <summary>The input points, in their original order (duplicates included, but never referenced by triangles).</summary>
+    public IReadOnlyList<Point> Points => _points;
+
+    /// <summary>The Delaunay triangles; all vertex triples are counter-clockwise.</summary>
+    public IReadOnlyList<TriangleIndices> Triangles => _triangles;
+
+    private DelaunayTriangulation(List<Point> points, List<TriangleIndices> triangles)
+    {
+        _points = points;
+
+        _triangles = triangles;
+    }
+
+    public static DelaunayTriangulation Create(IReadOnlyList<Point> points)
+    {
+        if (points is null)
+            throw new ArgumentNullException(nameof(points));
+
         if (points.Count < 3)
-            throw new NotImplementedException();
+            throw new ArgumentException("At least three points are required.", nameof(points));
 
-        InitializeMembers(points);
+        var copy = new List<Point>(points.Count);
 
-        CreateBigTriangles();
-
-        for (int i = 0; i < points.Count - 4; i++)
+        foreach (var point in points)
         {
-            List<int> queue;
+            if (point is null || point.IsNaN())
+                throw new ArgumentException("Points must not be null or NaN.", nameof(points));
 
-            List<QuasiTriangle> temp = TraceTriangle(points[i], out queue);
-
-            if (temp != null)
-            {
-                if (temp.Count == 1)
-                {
-                    TrisectTriangle(temp[0], points[i]);
-                }
-                else if (temp.Count == 2)
-                {
-                    DivideTriangles(temp, points[i]);
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            copy.Add(new Point(point.X, point.Y));
         }
 
-        RemoveBigTriangles();
+        return new DelaunayTriangulation(copy, Build(copy));
     }
 
-    private void InitializeMembers(PointCollection points)
+    public Triangle GetTriangle(int triangleIndex)
     {
-        this.points = points;
+        var t = _triangles[triangleIndex];
 
-        triangles = new QuasiTriangleCollection();
+        return new Triangle(_points[t.A], _points[t.B], _points[t.C]);
     }
 
-    //Modified
-    private void CreateBigTriangles()
+    /// <summary>
+    /// Walks from <paramref name="startTriangleIndex"/> to the triangle containing
+    /// <paramref name="point"/> (interior, edge, or vertex). Returns -1 when the point
+    /// lies outside the convex hull or the triangulation is empty.
+    /// </summary>
+    public int FindContainingTriangle(Point point, int startTriangleIndex = 0)
     {
-        double height = points.MaxY - points.MinY;
+        if (_triangles.Count == 0)
+            return -1;
 
-        double width = points.MaxX - points.MinX;
+        int current = (startTriangleIndex >= 0 && startTriangleIndex < _triangles.Count) ? startTriangleIndex : 0;
 
-        int scale = 1000;
+        int maxSteps = 4 * _triangles.Count + 16;
 
-        Point lowerLeft = new Point(points.MinX - scale * width, points.MinY - scale * height);
-
-        Point upperLeft = new Point(points.MinX - scale * width, points.MaxY + scale * height);
-
-        Point upperRight = new Point(points.MaxX + scale * width, points.MaxY + scale * height);
-
-        Point lowerRight = new Point(points.MaxX + scale * width, points.MinY - scale * height);
-
-        points.Add(lowerLeft); points.Add(upperLeft);
-
-        points.Add(upperRight); points.Add(lowerRight);
-
-        lowerLeftIndex = points[points.Count - 4].GetHashCode();
-
-        upperLeftIndex = points[points.Count - 3].GetHashCode();
-
-        upperRightIndex = points[points.Count - 2].GetHashCode();
-
-        lowerRightIndex = points[points.Count - 1].GetHashCode();
-
-        QuasiTriangle firstBigTriangle = new QuasiTriangle(lowerRightIndex, upperRightIndex, lowerLeftIndex, triangles.GetNewCode());
-
-        QuasiTriangle secondBigTriangle = new QuasiTriangle(upperRightIndex, upperLeftIndex, lowerLeftIndex, triangles.GetNewCode() + 1);
-
-        firstBigTriangle.SecondThirdNeighbour = secondBigTriangle.GetHashCode();
-
-        secondBigTriangle.ThirdFirstNeighbour = firstBigTriangle.GetHashCode();
-
-        triangles.Add(firstBigTriangle);
-
-        triangles.Add(secondBigTriangle);
-    }
-
-    private void TrisectTriangle(QuasiTriangle temp, Point point)
-    {
-        QuasiTriangle firsTriangle = MakeCCWTriangle(temp.First, temp.Second, point.GetHashCode(), triangles.GetNewCode());
-
-        triangles.Add(firsTriangle);
-
-        QuasiTriangle secondTriangle = MakeCCWTriangle(temp.Second, temp.Third, point.GetHashCode(), triangles.GetNewCode());
-
-        triangles.Add(secondTriangle);
-
-        QuasiTriangle thirdTriangle = MakeCCWTriangle(temp.Third, temp.First, point.GetHashCode(), triangles.GetNewCode());
-
-        triangles.Add(thirdTriangle);
-
-        UpdateRelation(firsTriangle.GetHashCode(), secondTriangle.GetHashCode());
-
-        UpdateRelation(firsTriangle.GetHashCode(), thirdTriangle.GetHashCode());
-
-        UpdateRelation(secondTriangle.GetHashCode(), thirdTriangle.GetHashCode());
-
-        if (temp.FirstSecondNeighbour != -1)
+        for (int step = 0; step < maxSteps; step++)
         {
-            UpdateRelation(temp.FirstSecondNeighbour, firsTriangle.GetHashCode());
+            var t = _triangles[current];
 
-            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
+            Point a = _points[t.A], b = _points[t.B], c = _points[t.C];
 
-            QuasiEdge edge = new QuasiEdge(temp.First, temp.Second);
+            double oab = Orient(a, b, point, out double eab);
+            double obc = Orient(b, c, point, out double ebc);
+            double oca = Orient(c, a, point, out double eca);
 
-            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(edge, firsTriangle));
+            if (oab >= -eab && obc >= -ebc && oca >= -eca)
+                return current;
 
-            CheckForSwapEdge(ref stack);
-        }
-        if (temp.SecondThirdNeighbour != -1)
-        {
-            UpdateRelation(temp.SecondThirdNeighbour, secondTriangle.GetHashCode());
+            int next = -1;
 
-            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
+            double worst = 0;
 
-            QuasiEdge edge = new QuasiEdge(temp.Second, temp.Third);
+            // cross the most-violated edge that has a neighbour
+            if (oab < -eab && t.NeighbourAB != -1 && oab < worst) { worst = oab; next = t.NeighbourAB; }
+            if (obc < -ebc && t.NeighbourBC != -1 && obc < worst) { worst = obc; next = t.NeighbourBC; }
+            if (oca < -eca && t.NeighbourCA != -1 && oca < worst) { worst = oca; next = t.NeighbourCA; }
 
-            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(edge, secondTriangle));
+            if (next == -1)
+                return -1; // every violated edge is a hull edge; the domain is convex, so the point is outside
 
-            CheckForSwapEdge(ref stack);
-        }
-        if (temp.ThirdFirstNeighbour != -1)
-        {
-            UpdateRelation(temp.ThirdFirstNeighbour, thirdTriangle.GetHashCode());
-
-            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
-
-            QuasiEdge edge = new QuasiEdge(temp.Third, temp.First);
-
-            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(edge, thirdTriangle));
-
-            CheckForSwapEdge(ref stack);
+            current = next;
         }
 
-        triangles.RemoveByCode(temp.GetHashCode());
-
-    }
-
-    private void DivideTriangles(List<QuasiTriangle> trianglePair, Point point)
-    {
-        if (trianglePair[0] == null)
+        // walk did not converge (numerical cycling); fall back to a linear scan
+        for (int i = 0; i < _triangles.Count; i++)
         {
-            throw new NotImplementedException();
-        }
-        else if (trianglePair[1] == null)
-        {
-            DichotomizeTriangle(trianglePair[0], point);
-        }
-        else
-        {
-            DichotomizeTriangles(trianglePair[0], trianglePair[1], point);
-        }
+            var t = _triangles[i];
 
-    }
+            Point a = _points[t.A], b = _points[t.B], c = _points[t.C];
 
-    private void DichotomizeTriangle(QuasiTriangle triangle, Point point)
-    {
-        PoinTriangleRelation relation = GetPointTriangleRelation(triangle, point);
-
-        QuasiEdge edge;
-
-        if (relation == PoinTriangleRelation.OnFirstEdge)
-        {
-            edge = new QuasiEdge(triangle.First, triangle.Second);
-        }
-        else if (relation == PoinTriangleRelation.OnSecondEdge)
-        {
-            edge = new QuasiEdge(triangle.Second, triangle.Third);
-        }
-        else if (relation == PoinTriangleRelation.OnThirdEdge)
-        {
-            edge = new QuasiEdge(triangle.Third, triangle.First);
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
-
-        DichotomizeTriangle(triangle, edge, point);
-    }
-
-    private void DichotomizeTriangles(QuasiTriangle firstTrianglePair, QuasiTriangle secondTrianglePair, Point point)
-    {
-        PoinTriangleRelation relation = GetPointTriangleRelation(firstTrianglePair, point);
-
-        QuasiEdge edge;
-
-        if (relation == PoinTriangleRelation.OnFirstEdge)
-        {
-            edge = new QuasiEdge(firstTrianglePair.First, firstTrianglePair.Second);
-        }
-        else if (relation == PoinTriangleRelation.OnSecondEdge)
-        {
-            edge = new QuasiEdge(firstTrianglePair.Second, firstTrianglePair.Third);
-        }
-        else if (relation == PoinTriangleRelation.OnThirdEdge)
-        {
-            edge = new QuasiEdge(firstTrianglePair.Third, firstTrianglePair.First);
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
-
-        DichotomizeTriangles(firstTrianglePair, secondTrianglePair, edge, point);
-
-    }
-
-    private void DichotomizeTriangle(QuasiTriangle triangle, QuasiEdge edge, Point point)
-    {
-        int thirdPointCode = triangle.GetThirdPoint(edge);
-
-        QuasiTriangle firstPart = MakeCCWTriangle(thirdPointCode, point.GetHashCode(), edge.First, triangles.GetNewCode());
-
-        QuasiEdge firstEdge = new QuasiEdge(thirdPointCode, edge.First);
-
-        int firstNeigbour = triangle.GetNeighbour(firstEdge);
-
-        triangles.Add(firstPart);
-
-        QuasiTriangle secondPart = MakeCCWTriangle(thirdPointCode, point.GetHashCode(), edge.Second, triangles.GetNewCode());
-
-        QuasiEdge secondEdge = new QuasiEdge(thirdPointCode, edge.Second);
-
-        int secondNeigbour = triangle.GetNeighbour(secondEdge);
-
-        triangles.Add(secondPart);
-
-        UpdateRelation(firstPart.GetHashCode(), secondPart.GetHashCode());
-
-        if (firstNeigbour != -1)
-        {
-            UpdateRelation(firstNeigbour, firstPart.GetHashCode());
-
-            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
-
-            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(firstEdge, firstPart));
-
-            CheckForSwapEdge(ref stack);
-        }
-
-        if (secondNeigbour != -1)
-        {
-            UpdateRelation(secondNeigbour, secondPart.GetHashCode());
-
-            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
-
-            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(secondEdge, secondPart));
-
-            CheckForSwapEdge(ref stack);
-
-        }
-
-        triangles.RemoveByCode(triangle.GetHashCode());
-
-    }
-
-    private void DichotomizeTriangles(QuasiTriangle firstTrianglePair, QuasiTriangle secondTrianglePair, QuasiEdge edge, Point point)
-    {
-        int firstThirdPointCode = firstTrianglePair.GetThirdPoint(edge); int secondThirdPointCode = secondTrianglePair.GetThirdPoint(edge);
-
-        QuasiTriangle firstPart = MakeCCWTriangle(firstThirdPointCode, point.GetHashCode(), edge.First, triangles.GetNewCode());
-
-        triangles.Add(firstPart);
-
-        QuasiTriangle secondPart = MakeCCWTriangle(firstThirdPointCode, point.GetHashCode(), edge.Second, triangles.GetNewCode());
-
-        triangles.Add(secondPart);
-
-        QuasiTriangle thirdPart = MakeCCWTriangle(secondThirdPointCode, point.GetHashCode(), edge.First, triangles.GetNewCode());
-
-        triangles.Add(thirdPart);
-
-        QuasiTriangle fourthPart = MakeCCWTriangle(secondThirdPointCode, point.GetHashCode(), edge.Second, triangles.GetNewCode());
-
-        triangles.Add(fourthPart);
-
-        QuasiEdge firstEdge = new QuasiEdge(firstThirdPointCode, edge.First); QuasiEdge secondEdge = new QuasiEdge(firstThirdPointCode, edge.Second);
-
-        QuasiEdge thirdEdge = new QuasiEdge(secondThirdPointCode, edge.First); QuasiEdge fourthEdge = new QuasiEdge(secondThirdPointCode, edge.Second);
-
-        int firstNeigbour = firstTrianglePair.GetNeighbour(firstEdge); int secondNeigbour = firstTrianglePair.GetNeighbour(secondEdge);
-
-        int thirdNeigbour = secondTrianglePair.GetNeighbour(thirdEdge); int fourthNeigbour = secondTrianglePair.GetNeighbour(fourthEdge);
-
-        //triangles.Add(firstPart); triangles.Add(secondPart);
-
-        //triangles.Add(thirdPart); triangles.Add(fourthPart);
-
-        UpdateRelation(firstPart.GetHashCode(), secondPart.GetHashCode()); UpdateRelation(firstPart.GetHashCode(), thirdPart.GetHashCode());
-
-        UpdateRelation(secondPart.GetHashCode(), fourthPart.GetHashCode()); UpdateRelation(fourthPart.GetHashCode(), thirdPart.GetHashCode());
-
-        if (firstNeigbour != -1)
-        {
-            UpdateRelation(firstNeigbour, firstPart.GetHashCode());
-
-            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
-
-            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(firstEdge, firstPart));
-
-            CheckForSwapEdge(ref stack);
-        }
-        if (secondNeigbour != -1)
-        {
-            UpdateRelation(secondNeigbour, secondPart.GetHashCode());
-
-            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
-
-            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(secondEdge, secondPart));
-
-            CheckForSwapEdge(ref stack);
-        }
-        if (thirdNeigbour != -1)
-        {
-            UpdateRelation(thirdNeigbour, thirdPart.GetHashCode());
-
-            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
-
-            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(thirdEdge, thirdPart));
-
-            CheckForSwapEdge(ref stack);
-        }
-        if (fourthNeigbour != -1)
-        {
-            UpdateRelation(fourthNeigbour, fourthPart.GetHashCode());
-
-            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
-
-            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(fourthEdge, fourthPart));
-
-            CheckForSwapEdge(ref stack);
-        }
-
-        triangles.RemoveByCode(firstTrianglePair.GetHashCode());
-
-        triangles.RemoveByCode(secondTrianglePair.GetHashCode());
-    }
-
-    private void CheckForSwapEdge(ref Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack)
-    {
-        if (stack.Count == 0)
-            return;
-
-        KeyValuePair<QuasiEdge, QuasiTriangle> currentValue = stack.Pop();
-
-        QuasiTriangle currenTriangle = currentValue.Value;
-
-        QuasiEdge currentEdge = currentValue.Key;
-
-        QuasiTriangle neigbour = triangles.GetTriangle(GetNeighbour(currenTriangle, currentEdge));
-
-        //if (neigbour != null)
-        //{
-
-        Point neighbourFarPoint = points.GetPoint(GetNeighbourFarPoint(currenTriangle, neigbour));
-
-        if (TopologyUtility.GetPointCircleRelation(neighbourFarPoint,
-                                                    points.GetPoint(currenTriangle.First),
-                                                    points.GetPoint(currenTriangle.Second),
-                                                    points.GetPoint(currenTriangle.Third)) == PointCircleRelation.In)
-        {
-            int thirdPoint = currenTriangle.GetThirdPoint(currentEdge);
-
-            QuasiTriangle firstPart = MakeCCWTriangle(currentEdge.First, thirdPoint, neighbourFarPoint.GetHashCode(), triangles.GetNewCode());
-
-            triangles.Add(firstPart);
-
-            QuasiTriangle secondPart = MakeCCWTriangle(currentEdge.Second, thirdPoint, neighbourFarPoint.GetHashCode(), triangles.GetNewCode());
-
-            triangles.Add(secondPart);
-
-            UpdateRelation(firstPart.GetHashCode(), secondPart.GetHashCode());
-
-            UpdateRelation(firstPart.GetHashCode(), currenTriangle.GetNeighbour(new QuasiEdge(currentEdge.First, thirdPoint)));
-
-            UpdateRelation(secondPart.GetHashCode(), currenTriangle.GetNeighbour(new QuasiEdge(currentEdge.Second, thirdPoint)));
-
-            int neighbour1, neighbour2;
-
-            GetOtherNeighbours(currenTriangle.GetHashCode(), neigbour.GetHashCode(), out neighbour1, out neighbour2);
-
-            if (neighbour1 != -1)
-            {
-                if (AreNeighbour(firstPart, triangles.GetTriangle(neighbour1)) && AreNeighbour(secondPart, triangles.GetTriangle(neighbour1)))
-                {
-                    throw new NotImplementedException();
-                }
-                if (AreNeighbour(firstPart, triangles.GetTriangle(neighbour1)))
-                {
-                    UpdateRelation(firstPart.GetHashCode(), neighbour1);
-
-                    stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(GetCommonEdge(firstPart, triangles.GetTriangle(neighbour1)), firstPart));
-                }
-                else if (AreNeighbour(secondPart, triangles.GetTriangle(neighbour1)))
-                {
-                    UpdateRelation(secondPart.GetHashCode(), neighbour1);
-
-                    stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(GetCommonEdge(secondPart, triangles.GetTriangle(neighbour1)), secondPart));
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-            if (neighbour2 != -1)
-            {
-                if (AreNeighbour(firstPart, triangles.GetTriangle(neighbour2)) && AreNeighbour(secondPart, triangles.GetTriangle(neighbour2)))
-                {
-                    throw new NotImplementedException();
-                }
-                if (AreNeighbour(firstPart, triangles.GetTriangle(neighbour2)))
-                {
-                    UpdateRelation(firstPart.GetHashCode(), neighbour2);
-
-                    stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(GetCommonEdge(firstPart, triangles.GetTriangle(neighbour2)), firstPart));
-                }
-                else if (AreNeighbour(secondPart, triangles.GetTriangle(neighbour2)))
-                {
-                    UpdateRelation(secondPart.GetHashCode(), neighbour2);
-
-                    stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(GetCommonEdge(secondPart, triangles.GetTriangle(neighbour2)), secondPart));
-                }
-
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
-            triangles.RemoveByCode(neigbour.GetHashCode());
-
-            triangles.RemoveByCode(currenTriangle.GetHashCode());
-        }
-        else if (TopologyUtility.GetPointCircleRelation(neighbourFarPoint,
-                                                    points.GetPoint(currenTriangle.First),
-                                                    points.GetPoint(currenTriangle.Second),
-                                                    points.GetPoint(currenTriangle.Third)) == PointCircleRelation.On)
-        {
-            int thirdPointCode = currenTriangle.GetThirdPoint(currentEdge);
-
-            Point thirdPoint = points.GetPoint(thirdPointCode);
-
-            Point secondPoint = points.GetPoint(currentEdge.Second);
-
-            Point firstPoint = points.GetPoint(currentEdge.First);
-
-            Triangle triangle1 = new Triangle(firstPoint, secondPoint, thirdPoint);
-
-            Triangle triangle2 = new Triangle(firstPoint, secondPoint, neighbourFarPoint);
-
-            Triangle triangle3 = new Triangle(thirdPoint, firstPoint, neighbourFarPoint);
-
-            Triangle triangle4 = new Triangle(thirdPoint, secondPoint, neighbourFarPoint);
-
-            double[] firstSetAngle = new double[] { triangle1.FirstAngle, triangle1.SecondAngle, triangle1.ThirdAngle,
-                                                        triangle2.FirstAngle, triangle2.SecondAngle, triangle2.ThirdAngle};
-
-            double[] secondSetAngle = new double[] { triangle3.FirstAngle, triangle3.SecondAngle, triangle3.ThirdAngle,
-                                                        triangle4.FirstAngle, triangle4.SecondAngle, triangle4.ThirdAngle};
-
-            if (IRI.Maptor.Sta.Mathematics.Statistics.GetMax(firstSetAngle) > IRI.Maptor.Sta.Mathematics.Statistics.GetMax(secondSetAngle) &&
-                IRI.Maptor.Sta.Mathematics.Statistics.GetMin(firstSetAngle) < IRI.Maptor.Sta.Mathematics.Statistics.GetMin(secondSetAngle))
-            {
-
-                bool condition1 = TopologyUtility.GetPointCircleRelation(secondPoint, thirdPoint, firstPoint, neighbourFarPoint) == PointCircleRelation.In;
-
-                bool condition2 = TopologyUtility.GetPointCircleRelation(firstPoint, thirdPoint, secondPoint, neighbourFarPoint) == PointCircleRelation.In;
-
-                if (!condition1 && !condition2)
-                {
-                    QuasiTriangle firstPart = MakeCCWTriangle(currentEdge.First, thirdPointCode, neighbourFarPoint.GetHashCode(), triangles.GetNewCode());
-
-                    triangles.Add(firstPart);
-
-                    QuasiTriangle secondPart = MakeCCWTriangle(currentEdge.Second, thirdPointCode, neighbourFarPoint.GetHashCode(), triangles.GetNewCode());
-
-                    triangles.Add(secondPart);
-
-                    UpdateRelation(firstPart.GetHashCode(), secondPart.GetHashCode());
-
-                    UpdateRelation(firstPart.GetHashCode(), currenTriangle.GetNeighbour(new QuasiEdge(currentEdge.First, thirdPointCode)));
-
-                    UpdateRelation(secondPart.GetHashCode(), currenTriangle.GetNeighbour(new QuasiEdge(currentEdge.Second, thirdPointCode)));
-
-                    int neighbour1, neighbour2;
-
-                    GetOtherNeighbours(currenTriangle.GetHashCode(), neigbour.GetHashCode(), out neighbour1, out neighbour2);
-
-                    if (neighbour1 != -1)
-                    {
-                        if (AreNeighbour(firstPart, triangles.GetTriangle(neighbour1)) && AreNeighbour(secondPart, triangles.GetTriangle(neighbour1)))
-                        {
-                            throw new NotImplementedException();
-                        }
-                        if (AreNeighbour(firstPart, triangles.GetTriangle(neighbour1)))
-                        {
-                            UpdateRelation(firstPart.GetHashCode(), neighbour1);
-
-                            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(GetCommonEdge(firstPart, triangles.GetTriangle(neighbour1)), firstPart));
-                        }
-                        else if (AreNeighbour(secondPart, triangles.GetTriangle(neighbour1)))
-                        {
-                            UpdateRelation(secondPart.GetHashCode(), neighbour1);
-
-                            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(GetCommonEdge(secondPart, triangles.GetTriangle(neighbour1)), secondPart));
-                        }
-                        else
-                        {
-                            throw new NotImplementedException();
-                        }
-                    }
-                    if (neighbour2 != -1)
-                    {
-                        if (AreNeighbour(firstPart, triangles.GetTriangle(neighbour2)) && AreNeighbour(secondPart, triangles.GetTriangle(neighbour2)))
-                        {
-                            throw new NotImplementedException();
-                        }
-                        if (AreNeighbour(firstPart, triangles.GetTriangle(neighbour2)))
-                        {
-                            UpdateRelation(firstPart.GetHashCode(), neighbour2);
-
-                            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(GetCommonEdge(firstPart, triangles.GetTriangle(neighbour2)), firstPart));
-                        }
-                        else if (AreNeighbour(secondPart, triangles.GetTriangle(neighbour2)))
-                        {
-                            UpdateRelation(secondPart.GetHashCode(), neighbour2);
-
-                            stack.Push(new KeyValuePair<QuasiEdge, QuasiTriangle>(GetCommonEdge(secondPart, triangles.GetTriangle(neighbour2)), secondPart));
-                        }
-
-                        else
-                        {
-                            throw new NotImplementedException();
-                        }
-                    }
-
-                    triangles.RemoveByCode(neigbour.GetHashCode());
-
-                    triangles.RemoveByCode(currenTriangle.GetHashCode());
-                }
-            }
-        }
-
-        CheckForSwapEdge(ref stack);
-    }
-
-    private void RemoveBigTriangles()
-    {
-        for (int i = triangles.Count - 1; i >= 0; i--)
-        {
-            if (triangles[i].HasThePoint(lowerLeftIndex) ||
-                    triangles[i].HasThePoint(upperLeftIndex) ||
-                    triangles[i].HasThePoint(upperRightIndex) ||
-                    triangles[i].HasThePoint(lowerRightIndex))
-            {
-
-                if (triangles[i].FirstSecondNeighbour != -1)
-                {
-                    UpdateNeighbour(triangles[i].FirstSecondNeighbour, triangles[i].GetHashCode(), -1);
-                }
-                if (triangles[i].SecondThirdNeighbour != -1)
-                {
-                    UpdateNeighbour(triangles[i].SecondThirdNeighbour, triangles[i].GetHashCode(), -1);
-                }
-                if (triangles[i].ThirdFirstNeighbour != -1)
-                {
-                    UpdateNeighbour(triangles[i].ThirdFirstNeighbour, triangles[i].GetHashCode(), -1);
-                }
-
-                triangles.RemoveAt(i);
-            }
-
-        }
-
-        points.RemoveByCode(lowerLeftIndex); points.RemoveByCode(upperLeftIndex);
-
-        points.RemoveByCode(upperRightIndex); points.RemoveByCode(lowerRightIndex);
-    }
-
-    private void UpdateRelation(int firstTriangleCode, int secondTriangleCode)
-    {
-        if (firstTriangleCode == -1 || secondTriangleCode == -1)
-            return;
-
-        QuasiTriangle triangle1 = triangles.GetTriangle(firstTriangleCode);
-
-        QuasiTriangle triangle2 = triangles.GetTriangle(secondTriangleCode);
-
-        TriangleRelation relation = triangle1.GetRelationTo(triangle2);
-
-        switch (relation)
-        {
-            case TriangleRelation.FirstSecondNeighbour:
-
-                triangle1.FirstSecondNeighbour = secondTriangleCode;
-
-                break;
-
-            case TriangleRelation.SecondThirdNeighbour:
-
-                triangle1.SecondThirdNeighbour = secondTriangleCode;
-
-                break;
-
-            case TriangleRelation.ThirdFirstNeighbour:
-
-                triangle1.ThirdFirstNeighbour = secondTriangleCode;
-
-                break;
-
-            default:
-                throw new NotImplementedException();
-        }
-
-        relation = triangle2.GetRelationTo(triangle1);
-
-        switch (relation)
-        {
-            case TriangleRelation.FirstSecondNeighbour:
-
-                triangle2.FirstSecondNeighbour = firstTriangleCode;
-
-                break;
-
-            case TriangleRelation.SecondThirdNeighbour:
-
-                triangle2.SecondThirdNeighbour = firstTriangleCode;
-
-                break;
-
-            case TriangleRelation.ThirdFirstNeighbour:
-
-                triangle2.ThirdFirstNeighbour = firstTriangleCode;
-
-                break;
-
-            default:
-                throw new NotImplementedException();
-        }
-    }
-
-
-    public Triangle GeTriangle(int triangleCode)
-    {
-        QuasiTriangle temp = triangles.GetTriangle(triangleCode);
-
-        return new Triangle(points.GetPoint(temp.First),
-                                points.GetPoint(temp.Second),
-                                points.GetPoint(temp.Third));
-    }
-
-    public Triangle GetTriangle(Point point, ref QuasiTriangle starTriangle)
-    {
-        QuasiTriangle triangle = GetContainingTriangle(point, starTriangle);
-
-        starTriangle = triangle;
-
-        if (triangle == null)
-        {
-            return null;
-        }
-        else
-        {
-            return new Triangle(points.GetPoint(triangle.First),
-                                points.GetPoint(triangle.Second),
-                                points.GetPoint(triangle.Third));
-        }
-    }
-
-    //public Triangle SearchTriangle(Point point, ref QuasiTriangle starTriangle)
-    //{
-    //    PoinTriangleRelation relation = GetPointTriangleRelation(starTriangle, point);
-
-    //    if (relation != PoinTriangleRelation.In &&
-    //            relation != PoinTriangleRelation.OnFirstEdge &&
-    //            relation != PoinTriangleRelation.OnSecondEdge &&
-    //            relation != PoinTriangleRelation.OnThirdEdge)
-    //    {
-    //        starTriangle = SearchTriangle(point);
-    //    }
-
-    //    if (starTriangle == null)
-    //    {
-    //        return null;
-    //    }
-    //    else
-    //    {
-    //        return new Triangle(points.GetPoint(starTriangle.First),
-    //                                      points.GetPoint(starTriangle.Second),
-    //                                      points.GetPoint(starTriangle.Third));
-    //    }
-    //}
-
-    private List<QuasiTriangle> TraceTriangle(Point point, out List<int> triangleQueue)
-    {
-        triangleQueue = new List<int>();
-
-        QuasiTriangle temp = triangles[0];
-
-        List<QuasiTriangle> result = new List<QuasiTriangle>();
-
-        int counter = 0;
-
-        while (true)
-        {
-            if (counter > triangles.Count)
-            {
-                return null;
-            }
-            triangleQueue.Add(temp.GetHashCode());
-
-            if (temp.HasThePoint(point.GetHashCode()))
-            {
-                return null;
-            }
-
-            PoinTriangleRelation relation = GetPointTriangleRelation(temp, point);
-
-            if (relation == PoinTriangleRelation.OnFirstEdge)
-            {
-                result.Add(temp);
-
-                result.Add(triangles.GetTriangle(temp.FirstSecondNeighbour));
-
-                return result;
-            }
-            if (relation == PoinTriangleRelation.OnSecondEdge)
-            {
-                result.Add(temp);
-
-                result.Add(triangles.GetTriangle(temp.SecondThirdNeighbour));
-
-                return result;
-            }
-            if (relation == PoinTriangleRelation.OnThirdEdge)
-            {
-                result.Add(temp);
-
-                result.Add(triangles.GetTriangle(temp.ThirdFirstNeighbour));
-
-                return result;
-            }
-            else if (relation == PoinTriangleRelation.In)
-            {
-                result.Add(temp);
-
-                return result;
-            }
-            else if (relation == PoinTriangleRelation.AlongFirstEdgeNegative ||
-                        relation == PoinTriangleRelation.BehindFirstVertex)
-            {
-                temp = WalkToNeighbour(temp, 2, 0, 1);
-            }
-            else if (relation == PoinTriangleRelation.AlongFirstEdgePositive ||
-                        relation == PoinTriangleRelation.BehindSecondVertex)
-            {
-                temp = WalkToNeighbour(temp, 1, 0, 2);
-            }
-            else if (relation == PoinTriangleRelation.AlongSecondEdgeNegative)
-            {
-                temp = WalkToNeighbour(temp, 0, 1, 2);
-            }
-            else if (relation == PoinTriangleRelation.AlongSecondEdgePositive ||
-                        relation == PoinTriangleRelation.BehindThirdVertex)
-            {
-                temp = WalkToNeighbour(temp, 2, 1, 0);
-            }
-            else if (relation == PoinTriangleRelation.AlongThirdEdgeNegative)
-            {
-                temp = WalkToNeighbour(temp, 1, 2, 0);
-            }
-            else if (relation == PoinTriangleRelation.AlongThirdEdgePositive)
-            {
-                temp = WalkToNeighbour(temp, 0, 2, 1);
-            }
-            else if (relation == PoinTriangleRelation.RightOfFirstEdge)
-            {
-                temp = WalkToNeighbour(temp, 0, 1, 2);
-            }
-            else if (relation == PoinTriangleRelation.RightOfSecondEdge)
-            {
-                temp = WalkToNeighbour(temp, 1, 2, 0);
-            }
-            else if (relation == PoinTriangleRelation.RightOfThirdEdge)
-            {
-                temp = WalkToNeighbour(temp, 2, 0, 1);
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-
-            counter++;
-        }
-    }
-
-    /* On the vertex
-    //public List<QuasiTriangle> GetTrianglesWith(Point vertex)
-    //{
-    //    List<QuasiTriangle> result = new List<QuasiTriangle>();
-
-    //    int pointCode = vertex.GetHashCode();
-
-    //    foreach (QuasiTriangle item in triangles)
-    //    {
-    //        if (item.HasThePoint(pointCode))
-    //        {
-    //            result.Add(item);
-    //        }
-    //    }
-
-    //    return result;
-    //}
-    */
-
-    //Linear Search
-    private QuasiTriangle SearchTriangle(Point point)
-    {
-        foreach (QuasiTriangle item in triangles)
-        {
-            PoinTriangleRelation relation = GetPointTriangleRelation(item, point);
-
-            if (relation == PoinTriangleRelation.In ||
-                relation == PoinTriangleRelation.OnFirstEdge ||
-                relation == PoinTriangleRelation.OnSecondEdge ||
-                relation == PoinTriangleRelation.OnThirdEdge)
-            {
-                return item;
-            }
-        }
-
-        return null;
-    }
-
-    //Containing: In, On the edge, On the vertex
-    private QuasiTriangle GetContainingTriangle(Point point, QuasiTriangle starTriangle)
-    {
-        QuasiTriangle temp = starTriangle;
-
-        int counter = 0;
-
-        while (true)
-        {
-            if (counter > triangles.Count)
-            {
-                return null;
-            }
-
-            if (temp.HasThePoint(point.GetHashCode()))
-            {
-                return temp;
-            }
-
-            PoinTriangleRelation relation = GetPointTriangleRelation(temp, point);
-
-            if (relation == PoinTriangleRelation.OnFirstEdge)
-            {
-                return temp;
-            }
-            if (relation == PoinTriangleRelation.OnSecondEdge)
-            {
-                return temp;
-            }
-            if (relation == PoinTriangleRelation.OnThirdEdge)
-            {
-                return temp;
-            }
-            else if (relation == PoinTriangleRelation.In)
-            {
-                return temp;
-            }
-            else if (relation == PoinTriangleRelation.AlongFirstEdgeNegative ||
-                        relation == PoinTriangleRelation.BehindFirstVertex)
-            {
-                temp = WalkToNeighbour(temp, 2, 0, 1);
-            }
-            else if (relation == PoinTriangleRelation.AlongFirstEdgePositive ||
-                        relation == PoinTriangleRelation.BehindSecondVertex)
-            {
-                temp = WalkToNeighbour(temp, 1, 0, 2);
-            }
-            else if (relation == PoinTriangleRelation.AlongSecondEdgeNegative)
-            {
-                temp = WalkToNeighbour(temp, 0, 1, 2);
-            }
-            else if (relation == PoinTriangleRelation.AlongSecondEdgePositive ||
-                        relation == PoinTriangleRelation.BehindThirdVertex)
-            {
-                temp = WalkToNeighbour(temp, 2, 1, 0);
-            }
-            else if (relation == PoinTriangleRelation.AlongThirdEdgeNegative)
-            {
-                temp = WalkToNeighbour(temp, 1, 2, 0);
-            }
-            else if (relation == PoinTriangleRelation.AlongThirdEdgePositive)
-            {
-                temp = WalkToNeighbour(temp, 0, 2, 1);
-            }
-            else if (relation == PoinTriangleRelation.RightOfFirstEdge)
-            {
-                temp = WalkToNeighbour(temp, 0, 1, 2);
-            }
-            else if (relation == PoinTriangleRelation.RightOfSecondEdge)
-            {
-                temp = WalkToNeighbour(temp, 1, 2, 0);
-            }
-            else if (relation == PoinTriangleRelation.RightOfThirdEdge)
-            {
-                temp = WalkToNeighbour(temp, 2, 0, 1);
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-
-            counter++;
-        }
-    }
-
-    private QuasiTriangle WalkToNeighbour(QuasiTriangle current, byte firstPriority, byte secondPriority, byte thirdPriority)
-    {
-        int[] neighbours = current.OrderedNeighbours;
-
-        if (neighbours[firstPriority] != -1)
-        {
-            return triangles.GetTriangle(neighbours[firstPriority]);
-        }
-        else if (neighbours[secondPriority] != -1)
-        {
-            return triangles.GetTriangle(neighbours[secondPriority]);
-        }
-        else if (neighbours[thirdPriority] != -1)
-        {
-            return triangles.GetTriangle(neighbours[thirdPriority]);
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
-    private int GetNeighbourFarPoint(QuasiTriangle current, QuasiTriangle neighbour)
-    {
-        bool hasFirstPoint = current.HasThePoint(neighbour.First);
-
-        bool hasSecondPoint = current.HasThePoint(neighbour.Second);
-
-        bool hasThirdPoint = current.HasThePoint(neighbour.Third);
-
-        if (hasFirstPoint && hasSecondPoint && !hasThirdPoint)
-        {
-            return neighbour.Third;
-        }
-        else if (hasFirstPoint && !hasSecondPoint && hasThirdPoint)
-        {
-            return neighbour.Second;
-        }
-        else if (!hasFirstPoint && hasSecondPoint && hasThirdPoint)
-        {
-            return neighbour.First;
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    private QuasiEdge GetCommonEdge(QuasiTriangle current, QuasiTriangle neighbour)
-    {
-        bool hasFirstPoint = neighbour.HasThePoint(current.First);
-
-        bool hasSecondPoint = neighbour.HasThePoint(current.Second);
-
-        bool hasThirdPoint = neighbour.HasThePoint(current.Third);
-
-        if (hasFirstPoint && hasSecondPoint && !hasThirdPoint)
-        {
-            return new QuasiEdge(current.First, current.Second);
-        }
-        else if (hasFirstPoint && !hasSecondPoint && hasThirdPoint)
-        {
-            return new QuasiEdge(current.First, current.Third);
-        }
-        else if (!hasFirstPoint && hasSecondPoint && hasThirdPoint)
-        {
-            return new QuasiEdge(current.Second, current.Third);
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    private int GetNeighbour(QuasiTriangle current, QuasiEdge commonEdge)
-    {
-        if (current.FirstSecondNeighbour != -1)
-        {
-            if (GetCommonEdge(current, triangles.GetTriangle(current.FirstSecondNeighbour)).Equals(commonEdge))
-            {
-                return current.FirstSecondNeighbour;
-            }
-        }
-        if (current.SecondThirdNeighbour != -1)
-        {
-            if (GetCommonEdge(current, triangles.GetTriangle(current.SecondThirdNeighbour)).Equals(commonEdge))
-            {
-                return current.SecondThirdNeighbour;
-            }
-        }
-        if (current.ThirdFirstNeighbour != -1)
-        {
-            if (GetCommonEdge(current, triangles.GetTriangle(current.ThirdFirstNeighbour)).Equals(commonEdge))
-            {
-                return current.ThirdFirstNeighbour;
-            }
+            if (Orient(a, b, point, out double eab) >= -eab &&
+                Orient(b, c, point, out double ebc) >= -ebc &&
+                Orient(c, a, point, out double eca) >= -eca)
+                return i;
         }
 
         return -1;
-
     }
 
-    private void GetOtherNeighbours(int currentTriangle, int neighbour, out int neighbour1, out int neighbour2)
+    #region Construction (Bowyer–Watson)
+
+    private sealed class WorkTri
     {
-        QuasiTriangle tempTriangle = triangles.GetTriangle(neighbour);
+        public int A, B, C;                 // CCW vertex indices
 
-        neighbour1 = tempTriangle.FirstSecondNeighbour != currentTriangle ? tempTriangle.FirstSecondNeighbour : tempTriangle.ThirdFirstNeighbour;
+        public int NAB = -1, NBC = -1, NCA = -1; // neighbour triangle ids, -1 = none
 
-        neighbour2 = tempTriangle.SecondThirdNeighbour != currentTriangle ? tempTriangle.SecondThirdNeighbour : tempTriangle.ThirdFirstNeighbour;
+        public bool Alive = true;
     }
 
-    private bool AreNeighbour(QuasiTriangle firsTriangle, QuasiTriangle secondTriangle)
+    private static List<TriangleIndices> Build(List<Point> inputPoints)
     {
-        TriangleRelation relation = firsTriangle.GetRelationTo(secondTriangle);
+        int n = inputPoints.Count;
 
-        return relation == TriangleRelation.FirstSecondNeighbour ||
-                relation == TriangleRelation.SecondThirdNeighbour ||
-                relation == TriangleRelation.ThirdFirstNeighbour;
+        var pts = new List<Point>(n + 3);
+
+        pts.AddRange(inputPoints);
+
+        AddSuperTriangleVertices(pts);
+
+        var tris = new List<WorkTri> { new WorkTri { A = n, B = n + 1, C = n + 2 } };
+
+        var seen = new Dictionary<(double, double), int>(n);
+
+        int hint = 0;
+
+        var cavity = new List<int>();
+
+        var inCavity = new HashSet<int>();
+
+        var pending = new Stack<int>();
+
+        var boundary = new List<(int U, int V, int Outer, int Dead)>();
+
+        var newTriByFirst = new Dictionary<int, int>();
+
+        var newTriBySecond = new Dictionary<int, int>();
+
+        for (int i = 0; i < n; i++)
+        {
+            Point p = pts[i];
+
+            if (!seen.TryAdd((p.X, p.Y), i))
+                continue; // exact duplicate; triangles keep referencing the first occurrence
+
+            int seed = Locate(tris, pts, p, hint);
+
+            if (seed == -1)
+                throw new InvalidOperationException("Delaunay point location failed; the input may be numerically degenerate.");
+
+            // grow the cavity: all triangles whose circumcircle contains p, connected to the seed
+            cavity.Clear(); inCavity.Clear();
+
+            pending.Push(seed); inCavity.Add(seed);
+
+            while (pending.Count > 0)
+            {
+                int id = pending.Pop();
+
+                cavity.Add(id);
+
+                var t = tris[id];
+
+                void VisitNeighbour(int nb)
+                {
+                    if (nb != -1 && !inCavity.Contains(nb) && InCircumcircle(tris[nb], pts, p))
+                    {
+                        inCavity.Add(nb);
+
+                        pending.Push(nb);
+                    }
+                }
+
+                VisitNeighbour(t.NAB); VisitNeighbour(t.NBC); VisitNeighbour(t.NCA);
+            }
+
+            // collect the boundary of the cavity (directed edges keep the cavity, and p, on their left)
+            boundary.Clear();
+
+            foreach (int id in cavity)
+            {
+                var t = tris[id];
+
+                if (t.NAB == -1 || !inCavity.Contains(t.NAB)) boundary.Add((t.A, t.B, t.NAB, id));
+                if (t.NBC == -1 || !inCavity.Contains(t.NBC)) boundary.Add((t.B, t.C, t.NBC, id));
+                if (t.NCA == -1 || !inCavity.Contains(t.NCA)) boundary.Add((t.C, t.A, t.NCA, id));
+            }
+
+            foreach (int id in cavity)
+                tris[id].Alive = false;
+
+            // fan p to every boundary edge and stitch the fan together
+            newTriByFirst.Clear(); newTriBySecond.Clear();
+
+            foreach (var (u, v, outer, dead) in boundary)
+            {
+                int id = tris.Count;
+
+                tris.Add(new WorkTri { A = u, B = v, C = i, NAB = outer });
+
+                if (outer != -1)
+                    ReplaceNeighbour(tris[outer], dead, id);
+
+                newTriByFirst[u] = id;
+
+                newTriBySecond[v] = id;
+            }
+
+            foreach (var (u, v, _, _) in boundary)
+            {
+                int id = newTriByFirst[u];
+
+                tris[id].NBC = newTriByFirst.TryGetValue(v, out int next) ? next : -1;
+
+                tris[id].NCA = newTriBySecond.TryGetValue(u, out int previous) ? previous : -1;
+            }
+
+            hint = tris.Count - 1;
+        }
+
+        return Compact(tris, n);
     }
 
-    private void UpdateNeighbour(int triangleCode, int oldNeighbour, int newNeigbour)
+    private static void AddSuperTriangleVertices(List<Point> pts)
     {
-        QuasiTriangle tempValue = triangles.GetTriangle(triangleCode);
+        double minX = pts[0].X, maxX = pts[0].X, minY = pts[0].Y, maxY = pts[0].Y;
 
-        if (tempValue.FirstSecondNeighbour == oldNeighbour)
+        foreach (var p in pts)
         {
-            tempValue.FirstSecondNeighbour = newNeigbour;
+            if (p.X < minX) minX = p.X;
+            if (p.X > maxX) maxX = p.X;
+            if (p.Y < minY) minY = p.Y;
+            if (p.Y > maxY) maxY = p.Y;
         }
-        else if (tempValue.SecondThirdNeighbour == oldNeighbour)
-        {
-            tempValue.SecondThirdNeighbour = newNeigbour;
-        }
-        else if (tempValue.ThirdFirstNeighbour == oldNeighbour)
-        {
-            tempValue.ThirdFirstNeighbour = newNeigbour;
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
+
+        double cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+
+        double size = 100 * Math.Max(Math.Max(maxX - minX, maxY - minY), 1e-6);
+
+        // large CCW triangle comfortably containing the bounding box
+        pts.Add(new Point(cx - 3 * size, cy - size));
+        pts.Add(new Point(cx + 3 * size, cy - size));
+        pts.Add(new Point(cx, cy + 3 * size));
     }
 
-    private PoinTriangleRelation GetPointTriangleRelation(QuasiTriangle triangle, Point point)
+    private static int Locate(List<WorkTri> tris, List<Point> pts, Point p, int hint)
     {
-        Point firstVertex = points.GetPoint(triangle.First);
+        int current = (hint >= 0 && hint < tris.Count && tris[hint].Alive) ? hint : FindAnyAlive(tris);
 
-        Point secondVertex = points.GetPoint(triangle.Second);
+        int maxSteps = 4 * tris.Count + 16;
 
-        Point thirdVertex = points.GetPoint(triangle.Third);
+        for (int step = 0; current != -1 && step < maxSteps; step++)
+        {
+            var t = tris[current];
 
-        int relation1 = (int)TopologyUtility.GetPointVectorRelation(point, firstVertex, secondVertex);
+            Point a = pts[t.A], b = pts[t.B], c = pts[t.C];
 
-        int relation2 = (int)TopologyUtility.GetPointVectorRelation(point, secondVertex, thirdVertex);
+            double oab = Orient(a, b, p, out double eab);
+            double obc = Orient(b, c, p, out double ebc);
+            double oca = Orient(c, a, p, out double eca);
 
-        int relation3 = (int)TopologyUtility.GetPointVectorRelation(point, thirdVertex, firstVertex);
+            if (oab >= -eab && obc >= -ebc && oca >= -eca)
+                return current;
 
-        return (PoinTriangleRelation)(relation1 * QuasiTriangle.firstEdgeWeight +
-                                        relation2 * QuasiTriangle.secondEdgeWeight +
-                                        relation3 * QuasiTriangle.thirdEdgeWeight);
+            int next = -1;
+
+            double worst = 0;
+
+            if (oab < -eab && t.NAB != -1 && oab < worst) { worst = oab; next = t.NAB; }
+            if (obc < -ebc && t.NBC != -1 && obc < worst) { worst = obc; next = t.NBC; }
+            if (oca < -eca && t.NCA != -1 && oca < worst) { worst = oca; next = t.NCA; }
+
+            if (next == -1)
+                break;
+
+            current = next;
+        }
+
+        // fallback: linear scan over the alive triangles
+        for (int i = 0; i < tris.Count; i++)
+        {
+            var t = tris[i];
+
+            if (!t.Alive)
+                continue;
+
+            Point a = pts[t.A], b = pts[t.B], c = pts[t.C];
+
+            if (Orient(a, b, p, out double eab) >= -eab &&
+                Orient(b, c, p, out double ebc) >= -ebc &&
+                Orient(c, a, p, out double eca) >= -eca)
+                return i;
+        }
+
+        return -1;
     }
 
-    private QuasiTriangle MakeCCWTriangle(int firstPointCode, int secondPointCode, int thirdPointCode, int code)
+    private static int FindAnyAlive(List<WorkTri> tris)
     {
-        PointVectorRelation relation = TopologyUtility.GetPointVectorRelation(points.GetPoint(thirdPointCode),
-                                                           points.GetPoint(firstPointCode),
-                                                           points.GetPoint(secondPointCode));
+        for (int i = tris.Count - 1; i >= 0; i--)
+        {
+            if (tris[i].Alive)
+                return i;
+        }
 
-        if (relation == PointVectorRelation.LiesOnTheLine)
-        {
-            return null;
-        }
-        else if (relation == PointVectorRelation.LiesLeft)
-        {
-            return new QuasiTriangle(firstPointCode, secondPointCode, thirdPointCode, code);
-        }
-        else if (relation == PointVectorRelation.LiesRight)
-        {
-            return new QuasiTriangle(firstPointCode, thirdPointCode, secondPointCode, code);
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
+        return -1;
     }
 
+    private static void ReplaceNeighbour(WorkTri triangle, int oldNeighbour, int newNeighbour)
+    {
+        if (triangle.NAB == oldNeighbour) triangle.NAB = newNeighbour;
+        else if (triangle.NBC == oldNeighbour) triangle.NBC = newNeighbour;
+        else if (triangle.NCA == oldNeighbour) triangle.NCA = newNeighbour;
+        else throw new InvalidOperationException("Inconsistent triangle adjacency.");
+    }
+
+    private static List<TriangleIndices> Compact(List<WorkTri> tris, int pointCount)
+    {
+        var map = new int[tris.Count];
+
+        var keptIds = new List<int>();
+
+        for (int i = 0; i < tris.Count; i++)
+        {
+            var t = tris[i];
+
+            bool keep = t.Alive && t.A < pointCount && t.B < pointCount && t.C < pointCount;
+
+            map[i] = keep ? keptIds.Count : -1;
+
+            if (keep)
+                keptIds.Add(i);
+        }
+
+        var result = new List<TriangleIndices>(keptIds.Count);
+
+        foreach (int id in keptIds)
+        {
+            var t = tris[id];
+
+            result.Add(new TriangleIndices(
+                t.A, t.B, t.C,
+                t.NAB == -1 ? -1 : map[t.NAB],
+                t.NBC == -1 ? -1 : map[t.NBC],
+                t.NCA == -1 ? -1 : map[t.NCA]));
+        }
+
+        return result;
+    }
+
+    #endregion
+
+    #region Predicates
+
+    /// <summary>
+    /// Twice the signed area of (a, b, p): positive when p lies left of the directed line a→b.
+    /// <paramref name="errorBound"/> is the magnitude below which the sign is unreliable.
+    /// </summary>
+    private static double Orient(Point a, Point b, Point p, out double errorBound)
+    {
+        double l = (b.X - a.X) * (p.Y - a.Y);
+
+        double r = (b.Y - a.Y) * (p.X - a.X);
+
+        errorBound = 1e-12 * (Math.Abs(l) + Math.Abs(r));
+
+        return l - r;
+    }
+
+    private static bool InCircumcircle(WorkTri t, List<Point> pts, Point p)
+    {
+        Point a = pts[t.A], b = pts[t.B], c = pts[t.C];
+
+        double adx = a.X - p.X, ady = a.Y - p.Y;
+        double bdx = b.X - p.X, bdy = b.Y - p.Y;
+        double cdx = c.X - p.X, cdy = c.Y - p.Y;
+
+        double aLift = adx * adx + ady * ady;
+        double bLift = bdx * bdx + bdy * bdy;
+        double cLift = cdx * cdx + cdy * cdy;
+
+        double t1 = aLift * (bdx * cdy - cdx * bdy);
+        double t2 = bLift * (adx * cdy - cdx * ady);
+        double t3 = cLift * (adx * bdy - bdx * ady);
+
+        double det = t1 - t2 + t3;
+
+        double errorBound = 1e-12 * (Math.Abs(t1) + Math.Abs(t2) + Math.Abs(t3));
+
+        // det > 0 <=> p strictly inside the circumcircle of the CCW triangle (a, b, c)
+        return det > errorBound;
+    }
+
+    #endregion
 
     #region Voronoi
 
-    public VoronoiPointCollection GetVoronoiDiagram(double minX, double minY, double maX, double maxY)
+    /// <summary>The Voronoi diagram dual to this triangulation. See <see cref="VoronoiDiagram"/>.</summary>
+    public VoronoiDiagram GetVoronoiDiagram()
     {
-        VoronoiPointCollection result = new VoronoiPointCollection();
-
-        Dictionary<int, int> temp = new Dictionary<int, int>();
-
-        foreach (QuasiTriangle item in triangles)
-        {
-            var center = TopologyUtility.CalculateCircumcenterCenterPoint(points.GetPoint(item.First),
-                                                                                    points.GetPoint(item.Second),
-                                                                                    points.GetPoint(item.Third));
-
-            VoronoiPoint point = new VoronoiPoint(item.GetHashCode(), new Point() { X = center.X, Y = center.Y });
-
-            result.Add(point);
-
-            temp.Add(item.GetHashCode(), point.GetHashCode());
-        }
-
-        for (int i = 0; i < triangles.Count; i++)
-        {
-            if (triangles[i].FirstSecondNeighbour != -1)
-            {
-                result[i].NeigboursCode.Add(temp[triangles[i].FirstSecondNeighbour]);
-            }
-            if (triangles[i].SecondThirdNeighbour != -1)
-            {
-                result[i].NeigboursCode.Add(temp[triangles[i].SecondThirdNeighbour]);
-            }
-            if (triangles[i].ThirdFirstNeighbour != -1)
-            {
-                result[i].NeigboursCode.Add(temp[triangles[i].ThirdFirstNeighbour]);
-            }
-        }
-
-        //result = RefineBoundary(result, minX, minY, maX, maxY);
-
-        return result;
+        return VoronoiDiagram.Create(this);
     }
 
     #endregion
