@@ -1,5 +1,5 @@
-﻿using IRI.Maptor.Sta.DataStructures;
-using IRI.Maptor.Sta.Mathematics;
+﻿using IRI.Maptor.Sta.Mathematics;
+using System;
 using System.Linq;
 
 namespace IRI.Maptor.Sta.MachineLearning;
@@ -15,7 +15,9 @@ public static class GeneralStatistics
 
         var length = values.Length;
 
-        var sortedValues = SortAlgorithm.MergeSort<double>(values, (a, b) => a.CompareTo(b));
+        var sortedValues = (double[])values.Clone();
+
+        Array.Sort(sortedValues);
 
         var result = new StatisticsSummary();
 

@@ -1,202 +1,54 @@
-# Differences Between OGC WKT and SQL Server WKT
+# Simple Features: WKT & WKB
 
-This document explains the key differences between **OGC WKT** (Well-Known Text) and **SQL Server WKT** formats, and how this library handles both formats.
+OGC Simple Feature Access (ISO 19125) serialization for `Geometry<T>` — one geometry model, three encodings:
 
-## Overview
+| Encoding | Read | Write |
+|---|---|---|
+| OGC WKT | `WktReader.Parse` | `geometry.AsWkt()` |
+| WKB | `Geometry<Point>.FromWkb` / `WkbReader.Parse` | `geometry.AsWkb()` |
+| SQL Server WKT | `SqlServerWktReader.Parse` | `geometry.AsSqlServerWkt()` |
 
-The library provides separate readers and writers for OGC WKT and SQL Server WKT formats:
-- **OGC WKT**: `WktReader` and `WktWriter` - Compliant with OGC Simple Feature Access (SFA) specification
-- **SQL Server WKT**: `SqlServerWktReader` and `SqlServerWktWriter` - Compatible with Microsoft SQL Server's geometry format
+![Simple Feature geometry types](../../images/sfa-geometry-types.png)
 
-## Key Differences
+## WKT — Well-Known Text
 
-### 1. Dimension Suffixes
-
-**OGC WKT** uses explicit dimension suffixes after the geometry type name:
-- `POINT Z (1 2 3)` - 3D point with Z coordinate
-- `POINT M (1 2 100)` - Point with M (measure) coordinate
-- `POINT ZM (1 2 3 100)` - 4D point with both Z and M coordinates
-- `LINESTRING Z (0 0 0, 1 1 1, 2 2 2)` - 3D linestring
-
-**SQL Server WKT** does not use dimension suffixes. Dimension is inferred from the coordinate count:
-- `POINT (1 2)` - 2D point (2 coordinates)
-- `POINT (1 2 3)` - 3D point (3 coordinates, assumed Z)
-- `POINT (1 2 100)` - Point with M coordinate (3 coordinates, assumed M)
-- `POINT (1 2 3 100)` - 4D point (4 coordinates, assumed ZM)
-- `LINESTRING (0 0 0, 1 1 1, 2 2 2)` - 3D linestring
-
-**Example Comparison:**
-
-| OGC WKT                       | SQL Server WKT              |
-|-------------------------------|-----------------------------|
-| `POINT Z (1 2 3)`             | `POINT (1 2 3)`             |
-| `POINT M (1 2 100)`           | `POINT (1 2 100)`           |
-| `POINT ZM (1 2 3 100)`        | `POINT (1 2 3 100)`         |
-| `LINESTRING Z (0 0 0, 1 1 1)` | `LINESTRING (0 0 0, 1 1 1)` |
-
-### 2. Dimension Detection
-
-**OGC WKT Reader:**
-- Detects dimension from the type suffix (`Z`, `M`, `ZM`)
-- Removes the suffix to get the base geometry type
-- Validates that coordinates match the declared dimension
-
-**SQL Server WKT Reader:**
-- Detects dimension by examining the first coordinate set
-- 2 coordinates = 2D
-- 3 coordinates = 3D (assumed Z)
-- 4 coordinates = 4D (assumed ZM)
-- No suffix removal needed
-
-### 3. MULTIPOINT Format
-
-**OGC WKT** requires nested parentheses for MULTIPOINT:
-```
-MULTIPOINT (((1 2)), ((3 4)), ((5 6)))
-```
-
-**SQL Server WKT** allows a simpler format:
-```
-MULTIPOINT ((1 2), (3 4), (5 6))
-```
-
-The SQL Server reader supports both formats for compatibility.
- 
-
-## Usage Examples
-
-### Reading OGC WKT
+`WktReader` parses OGC-compliant WKT, including the `Z` / `M` / `ZM` dimension suffixes; `AsWkt()` writes it back.
 
 ```csharp
 using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 
-// OGC format with explicit dimension suffix
-string ogcWkt = "POINT Z (1 2 3)";
-var geometry = WktReader.Parse(ogcWkt);
+var geometry = WktReader.Parse("POINT Z (1 2 3)", srid: 4326);
 
-// Convert to OGC WKT string
-string output = geometry.AsWkt(); // Returns: "POINT Z (1 2 3)"
+string wkt = geometry.AsWkt();   // "POINT Z (1 2 3)"
 ```
 
-### Reading SQL Server WKT
+## WKB — Well-Known Binary
+
+The compact binary twin: one byte-order flag, a `uint32` geometry type, then raw `double` coordinates.
+
+![WKB anatomy of a point](../../images/wkb-anatomy.png)
 
 ```csharp
-using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
+byte[] wkb = geometry.AsWkb();               // POINT: 21 bytes = order(1) + type(4) + x(8) + y(8)
 
-// SQL Server format without dimension suffix
-string sqlWkt = "POINT (1 2 3)";
-var geometry = SqlServerWktReader.Parse(sqlWkt);
-
-// Convert to SQL Server WKT string
-string output = geometry.AsSqlServerWkt(); // Returns: "POINT (1 2 3)"
+var restored = Geometry<Point>.FromWkb(wkb, srid: 4326);
 ```
 
-### Converting Between Formats
+Byte-level layout of every geometry type: [WKB_Binary_Structure.md](WKB_Binary_Structure.md).
+
+## The SQL Server dialect
+
+SQL Server writes WKT **without** dimension suffixes — the dimension is inferred from the coordinate count (`POINT (1 2 3)` instead of OGC's `POINT Z (1 2 3)`). `SqlServerWktReader` / `AsSqlServerWkt()` speak that dialect, so converting is a read in one and a write in the other:
 
 ```csharp
-// Read SQL Server format
-var geometry = SqlServerWktReader.Parse("POINT (1 2 3)");
+var g = SqlServerWktReader.Parse("POINT (1 2 3)");
 
-// Write as OGC format
-string ogcFormat = geometry.AsWkt(); // Returns: "POINT Z (1 2 3)"
-
-// Write as SQL Server format
-string sqlFormat = geometry.AsSqlServerWkt(); // Returns: "POINT (1 2 3)"
+string ogc = g.AsWkt();            // "POINT Z (1 2 3)"
+string sql = g.AsSqlServerWkt();   // "POINT (1 2 3)"
 ```
 
-## Complete Examples
+Full comparison (dimension detection, MULTIPOINT nesting, when to use which): [WKT_SqlServer_Differences.md](WKT_SqlServer_Differences.md).
 
-### Point Examples
+## The OGC object model
 
-**OGC WKT:**
-```
-POINT (1 2)                    // 2D
-POINT Z (1 2 3)                // 3D with Z
-POINT M (1 2 100)              // 2D with M
-POINT ZM (1 2 3 100)           // 4D with Z and M
-```
-
-**SQL Server WKT:**
-```
-POINT (1 2)                    // 2D
-POINT (1 2 3)                  // 3D (assumed Z)
-POINT (1 2 100)                // 3D (assumed M)
-POINT (1 2 3 100)              // 4D (assumed ZM)
-```
-
-### LineString Examples
-
-**OGC WKT:**
-```
-LINESTRING (1 1, 2 2, 3 3)
-LINESTRING Z (0 0 0, 1 1 1, 2 2 2)
-LINESTRING ZM (0 0 0 0, 1 1 1 1, 2 2 2 2)
-```
-
-**SQL Server WKT:**
-```
-LINESTRING (1 1, 2 2, 3 3)
-LINESTRING (0 0 0, 1 1 1, 2 2 2)
-LINESTRING (0 0 0 0, 1 1 1 1, 2 2 2 2)
-```
-
-### Polygon Examples
-
-**OGC WKT:**
-```
-POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))
-POLYGON Z ((0 0 0, 10 0 0, 10 10 0, 0 10 0, 0 0 0))
-```
-
-**SQL Server WKT:**
-```
-POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))
-POLYGON ((0 0 0, 10 0 0, 10 10 0, 0 10 0, 0 0 0))
-```
-
-### MultiPoint Examples
-
-**OGC WKT:**
-```
-MULTIPOINT (((1 2)), ((3 4)), ((5 6)))
-MULTIPOINT Z (((0 0 0), (1 1 1), (2 2 2)))
-```
-
-**SQL Server WKT:**
-```
-MULTIPOINT ((1 2), (3 4), (5 6))
-MULTIPOINT ((0 0 0), (1 1 1), (2 2 2))
-```
-
-## When to Use Which Format
-
-### Use OGC WKT When:
-- Interoperating with other GIS systems (PostGIS, GeoServer, etc.)
-- Following OGC standards strictly
-- You need explicit dimension declaration
-- Working with external APIs that expect OGC format
-
-### Use SQL Server WKT When:
-- Interacting with Microsoft SQL Server spatial data
-- Using SQL Server's `STGeomFromText()` or `STGeomFromWKT()` functions
-- Reading geometry data directly from SQL Server
-- You prefer a more compact format without dimension suffixes
-
-## Implementation Details
-
-## Related Classes
-
-- `WktReader` - Parses OGC-compliant WKT strings
-- `WktWriter` - Writes OGC-compliant WKT strings (via `Geometry<T>.AsWkt()`)
-- `SqlServerWktReader` - Parses SQL Server WKT strings
-- `SqlServerWktWriter` - Writes SQL Server WKT strings (via `Geometry<T>.AsSqlServerWkt()`)
-- `WktHelpers` - Shared helper methods for both formats
-
-## References
-
-- [OGC Simple Feature Access Specification](https://www.ogc.org/standards/sfa)
-- [SQL Server Spatial Data Types](https://docs.microsoft.com/en-us/sql/relational-databases/spatial/spatial-data-types-overview)
-- [SQL Server Geometry Data Type](https://docs.microsoft.com/en-us/sql/t-sql/spatial-geometry/spatial-types-geometry-transact-sql)
-
-
-
+The interchange types the WKB layer is built around — `OgcPoint`, `OgcLineString`, `OgcPolygon`, the `Multi*` classes and the `WkbGeometryType` enum — live in the `IRI.Maptor.Sta.Ogc.SFA` namespace of the [IRI.Maptor.Sta.Ogc](../../../IRI.Maptor.Sta.Ogc/SFA) project.

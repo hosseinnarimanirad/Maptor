@@ -262,9 +262,22 @@ __pycache__/
 /IRI.KetCore/IRI.Bas.SqlSpatialLoader/SqlServerTypes/x64/SqlServerTypesBefore14Backup.zip
 /IRI.Tst/IRI.Tst.MainTestProject/Assets/PersonalGdb/Test.mdb
 /IRI.Tst/IRI.Tst.MainTestProject/Assets/PersonalGdb/Test.ldb
-/assets/
+/assets/*
+!/assets/images/
 /tools
 /scripts
 /CLAUDE.md
 /MaptorMobile.zip
 /tests/IRI.Maptor.Tst.Main/Assets
+
+# Secrets must never be committed. Connection strings, JWT signing keys and the integrity key belong
+# in user-secrets (dotnet user-secrets) or environment variables. The tracked appsettings.json files
+# are deliberately empty; these are the local and deployment variants that would otherwise collect
+# real credentials.
+appsettings.Local.json
+appsettings.*.Local.json
+appsettings.Production.json
+appsettings.Staging.json
+secrets.json
+.env
+.env.*

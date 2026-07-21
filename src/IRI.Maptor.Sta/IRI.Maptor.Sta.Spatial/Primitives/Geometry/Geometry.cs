@@ -4239,12 +4239,14 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     public Geometry<T>? GetConvexHull()
     {
-        var points = this.GetAllPoints();
-        var xList = points.Select(p => p.X).ToList();
-        var yList = points.Select(p => p.Y).ToList();
-        var result = ComputationalGeometry.CreateConvexHull(new PointCollection(xList, yList));
+        var points = this.GetAllPoints().Select(p => new Point(p.X, p.Y)).ToList();
 
-        return Create(result.Select(r => new T() { X = r.X, Y = r.Y }).ToList(), GeometryType.Polygon, this.Srid);
+        var hull = ComputationalGeometry.CreateConvexHull(points);
+
+        if (hull.Count == 0)
+            return CreateEmpty(GeometryType.Polygon, this.Srid);
+
+        return Create(hull.Select(r => new T() { X = r.X, Y = r.Y }).ToList(), GeometryType.Polygon, this.Srid);
     }
 
     public Geometry<T> GetBoundary()

@@ -1573,114 +1573,6 @@ namespace IRI.Maptor.Jab.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Company logo (PNG)....
-        /// </summary>
-        public static string dialog_printPdf_companyLogo {
-            get {
-                return ResourceManager.GetString("dialog_printPdf_companyLogo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Lat/long grid.
-        /// </summary>
-        public static string dialog_printPdf_graticule {
-            get {
-                return ResourceManager.GetString("dialog_printPdf_graticule", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Include map decorations.
-        /// </summary>
-        public static string dialog_printPdf_includeDecorations {
-            get {
-                return ResourceManager.GetString("dialog_printPdf_includeDecorations", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Keep current map scale (fit page to map).
-        /// </summary>
-        public static string dialog_printPdf_keepScale {
-            get {
-                return ResourceManager.GetString("dialog_printPdf_keepScale", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Landscape.
-        /// </summary>
-        public static string dialog_printPdf_landscape {
-            get {
-                return ResourceManager.GetString("dialog_printPdf_landscape", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Legend.
-        /// </summary>
-        public static string dialog_printPdf_legend {
-            get {
-                return ResourceManager.GetString("dialog_printPdf_legend", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Map title....
-        /// </summary>
-        public static string dialog_printPdf_mapTitleWatermark {
-            get {
-                return ResourceManager.GetString("dialog_printPdf_mapTitleWatermark", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Maptor icon.
-        /// </summary>
-        public static string dialog_printPdf_maptorLogo {
-            get {
-                return ResourceManager.GetString("dialog_printPdf_maptorLogo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Preview.
-        /// </summary>
-        public static string dialog_printPdf_preview {
-            get {
-                return ResourceManager.GetString("dialog_printPdf_preview", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Print.
-        /// </summary>
-        public static string dialog_printPdf_print {
-            get {
-                return ResourceManager.GetString("dialog_printPdf_print", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Scale bar.
-        /// </summary>
-        public static string dialog_printPdf_scaleBar {
-            get {
-                return ResourceManager.GetString("dialog_printPdf_scaleBar", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Print to PDF.
-        /// </summary>
-        public static string dialog_printPdf_title {
-            get {
-                return ResourceManager.GetString("dialog_printPdf_title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string dialog_savefile_title {
@@ -2905,15 +2797,6 @@ namespace IRI.Maptor.Jab.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User Name.
-        /// </summary>
-        public static string manageAccount_userName {
-            get {
-                return ResourceManager.GetString("manageAccount_userName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Height.
         /// </summary>
         public static string map_coordinatePanel_height {
@@ -3643,15 +3526,6 @@ namespace IRI.Maptor.Jab.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add Raster Symbolizer.
-        /// </summary>
-        public static string sldEditor_common_addRasterSymbolizer {
-            get {
-                return ResourceManager.GetString("sldEditor_common_addRasterSymbolizer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Add Rule.
         /// </summary>
         public static string sldEditor_common_addRule {
@@ -3837,15 +3711,6 @@ namespace IRI.Maptor.Jab.Core.Properties {
         public static string sldEditor_common_name {
             get {
                 return ResourceManager.GetString("sldEditor_common_name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Refresh.
-        /// </summary>
-        public static string sldEditor_common_refreshPreview {
-            get {
-                return ResourceManager.GetString("sldEditor_common_refreshPreview", resourceCulture);
             }
         }
         
@@ -4039,38 +3904,11 @@ namespace IRI.Maptor.Jab.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Operator:.
-        /// </summary>
-        public static string sldEditor_filter_operator {
-            get {
-                return ResourceManager.GetString("sldEditor_filter_operator", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Property:.
-        /// </summary>
-        public static string sldEditor_filter_property {
-            get {
-                return ResourceManager.GetString("sldEditor_filter_property", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Note: This is a simplified view. For complex filters, edit the XML directly or use a specialized filter builder..
         /// </summary>
         public static string sldEditor_filter_simplifiedViewNote {
             get {
                 return ResourceManager.GetString("sldEditor_filter_simplifiedViewNote", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Value:.
-        /// </summary>
-        public static string sldEditor_filter_value {
-            get {
-                return ResourceManager.GetString("sldEditor_filter_value", resourceCulture);
             }
         }
         
@@ -4089,15 +3927,6 @@ namespace IRI.Maptor.Jab.Core.Properties {
         public static string sldEditor_lineSymbolizer_dashArrayWatermark {
             get {
                 return ResourceManager.GetString("sldEditor_lineSymbolizer_dashArrayWatermark", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Dash Offset:.
-        /// </summary>
-        public static string sldEditor_lineSymbolizer_dashOffset {
-            get {
-                return ResourceManager.GetString("sldEditor_lineSymbolizer_dashOffset", resourceCulture);
             }
         }
         
@@ -4125,87 +3954,6 @@ namespace IRI.Maptor.Jab.Core.Properties {
         public static string sldEditor_pointSymbolizer_size {
             get {
                 return ResourceManager.GetString("sldEditor_pointSymbolizer_size", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add Entry.
-        /// </summary>
-        public static string sldEditor_raster_addEntry {
-            get {
-                return ResourceManager.GetString("sldEditor_raster_addEntry", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Color.
-        /// </summary>
-        public static string sldEditor_raster_color {
-            get {
-                return ResourceManager.GetString("sldEditor_raster_color", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Color Map.
-        /// </summary>
-        public static string sldEditor_raster_colorMap {
-            get {
-                return ResourceManager.GetString("sldEditor_raster_colorMap", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Opacity.
-        /// </summary>
-        public static string sldEditor_raster_entryOpacity {
-            get {
-                return ResourceManager.GetString("sldEditor_raster_entryOpacity", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Label.
-        /// </summary>
-        public static string sldEditor_raster_label {
-            get {
-                return ResourceManager.GetString("sldEditor_raster_label", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Color-map entries map raster values (quantity) to colors..
-        /// </summary>
-        public static string sldEditor_raster_note {
-            get {
-                return ResourceManager.GetString("sldEditor_raster_note", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Opacity:.
-        /// </summary>
-        public static string sldEditor_raster_opacity {
-            get {
-                return ResourceManager.GetString("sldEditor_raster_opacity", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Quantity.
-        /// </summary>
-        public static string sldEditor_raster_quantity {
-            get {
-                return ResourceManager.GetString("sldEditor_raster_quantity", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remove Entry.
-        /// </summary>
-        public static string sldEditor_raster_removeEntry {
-            get {
-                return ResourceManager.GetString("sldEditor_raster_removeEntry", resourceCulture);
             }
         }
         
@@ -4305,15 +4053,6 @@ namespace IRI.Maptor.Jab.Core.Properties {
         public static string sldEditor_textSymbolizer_haloColor {
             get {
                 return ResourceManager.GetString("sldEditor_textSymbolizer_haloColor", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Halo Opacity:.
-        /// </summary>
-        public static string sldEditor_textSymbolizer_haloOpacity {
-            get {
-                return ResourceManager.GetString("sldEditor_textSymbolizer_haloOpacity", resourceCulture);
             }
         }
         
@@ -5034,6 +4773,15 @@ namespace IRI.Maptor.Jab.Core.Properties {
         public static string validation_msg_unknownError {
             get {
                 return ResourceManager.GetString("validation_msg_unknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Name.
+        /// </summary>
+        public static string manageAccount_userName {
+            get {
+                return ResourceManager.GetString("manageAccount_userName", resourceCulture);
             }
         }
     }

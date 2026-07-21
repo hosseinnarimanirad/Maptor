@@ -10,9 +10,9 @@ public static class IrregularDtmExtensions
 {
     public static System.Drawing.Bitmap DrawSlopeMap(this IrregularDtm dtm, int scale)
     {
-        if (dtm.triangulation.triangles.Count < 1)
+        if (dtm.triangulation.Triangles.Count < 1)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("The triangulation is empty.");
         }
 
         double minX = dtm.LowerLeft.X; double minY = dtm.LowerLeft.Y;
@@ -25,13 +25,13 @@ public static class IrregularDtmExtensions
 
         System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(result);
 
-        foreach (QuasiTriangle item in dtm.triangulation.triangles)
+        foreach (var item in dtm.triangulation.Triangles)
         {
-            Point first = dtm.collection.GetPoint(item.First);
+            Point first = dtm.triangulation.Points[item.A];
 
-            Point second = dtm.collection.GetPoint(item.Second);
+            Point second = dtm.triangulation.Points[item.B];
 
-            Point third = dtm.collection.GetPoint(item.Third);
+            Point third = dtm.triangulation.Points[item.C];
 
             Triangle temp = new Triangle(first, second, third);
 
@@ -55,9 +55,9 @@ public static class IrregularDtmExtensions
 
     public static System.Drawing.Bitmap DrawAspectMap(this IrregularDtm dtm, int scale)
     {
-        if (dtm.triangulation.triangles.Count < 1)
+        if (dtm.triangulation.Triangles.Count < 1)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("The triangulation is empty.");
         }
 
         double minX = dtm.LowerLeft.X; double minY = dtm.LowerLeft.Y;
@@ -70,13 +70,13 @@ public static class IrregularDtmExtensions
 
         System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(result);
 
-        foreach (QuasiTriangle item in dtm.triangulation.triangles)
+        foreach (var item in dtm.triangulation.Triangles)
         {
-            Point first = dtm.collection.GetPoint(item.First);
+            Point first = dtm.triangulation.Points[item.A];
 
-            Point second = dtm.collection.GetPoint(item.Second);
+            Point second = dtm.triangulation.Points[item.B];
 
-            Point third = dtm.collection.GetPoint(item.Third);
+            Point third = dtm.triangulation.Points[item.C];
 
             Triangle temp = new Triangle(first, second, third);
 

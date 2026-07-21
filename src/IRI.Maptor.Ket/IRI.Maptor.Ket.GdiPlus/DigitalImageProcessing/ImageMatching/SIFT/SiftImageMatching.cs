@@ -1,7 +1,6 @@
 ﻿// besmellahe rahmane rahim
 // Allahomma ajjel le-valiyek al-faraj
 
-using IRI.Maptor.Sta.DataStructures;
 using IRI.Maptor.Sta.DataStructures.CustomStructures;
 
 namespace IRI.Maptor.Ket.DigitalImageProcessing.ImageMatching;
@@ -19,9 +18,18 @@ public class SiftImageMatching
     {
         List<IndexValue<double>> values = CalculateSimilariry(image, threshold);
 
-        SortAlgorithm.Heapsort<IndexValue<double>>(ref values, SortDirection.Ascending);
+        // best (highest-similarity) match
+        var best = values[0];
 
-        return values[0].Index;
+        for (int i = 1; i < values.Count; i++)
+        {
+            if (values[i].Value > best.Value)
+            {
+                best = values[i];
+            }
+        }
+
+        return best.Index;
     }
 
     //Lowe use threshold = 0.8
@@ -46,25 +54,36 @@ public class SiftImageMatching
 
         for (int i = 0; i < targetImage.Count; i++)
         {
-            IndexValue<double>[] temp = new IndexValue<double>[referenceImage.Count];
+            // Lowe's ratio test only needs the two smallest angles; a single
+            // scan avoids sorting the whole array per target descriptor
+            var best = new IndexValue<double>(-1, double.PositiveInfinity);
+            var secondBest = new IndexValue<double>(-1, double.PositiveInfinity);
 
             for (int j = 0; j < referenceImage.Count; j++)
             {
-                temp[j] = new IndexValue<double>(j, Descriptor.CalculateAngle(referenceImage[j], targetImage[i]));
+                double angle = Descriptor.CalculateAngle(referenceImage[j], targetImage[i]);
+
+                if (double.IsNaN(angle))
+                {
+                    throw new NotImplementedException();
+                }
+
+                if (angle < best.Value)
+                {
+                    secondBest = best;
+
+                    best = new IndexValue<double>(j, angle);
+                }
+                else if (angle < secondBest.Value)
+                {
+                    secondBest = new IndexValue<double>(j, angle);
+                }
             }
 
-            SortAlgorithm.Heapsort<IndexValue<double>>(ref temp, SortDirection.Descending);
-
-            if (temp[0].Value.Equals(double.NaN))
+            if (best.Value / secondBest.Value < threshold)
             {
-                throw new NotImplementedException();
+                result.Add(i, best.Index);
             }
-
-            if (temp[0].Value / temp[1].Value < threshold)
-            {
-                result.Add(i, temp[0].Index);
-            }
-            
         }
 
         return result;
