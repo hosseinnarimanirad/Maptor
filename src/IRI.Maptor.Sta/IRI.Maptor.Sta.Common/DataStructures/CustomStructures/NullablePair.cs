@@ -51,6 +51,6 @@ public struct NullabePair<TFirst, TSecond>
 
     public override int GetHashCode()
     {
-        return base.GetHashCode();
+        return HashCode.Combine(First, Second);
     }
 }

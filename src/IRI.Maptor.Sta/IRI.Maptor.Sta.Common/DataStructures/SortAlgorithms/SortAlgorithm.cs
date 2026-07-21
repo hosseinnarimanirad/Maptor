@@ -1,4 +1,4 @@
-﻿// besmellahe rahmane rahim
+// besmellahe rahmane rahim
 // Allahomma ajjel le-valiyek al-faraj
 
 using System;
@@ -13,6 +13,8 @@ public static class SortAlgorithm
     {
         for (int i = 0; i < array.Length - 1; i++)
         {
+            bool swapped = false;
+
             for (int j = 0; j < array.Length - i - 1; j++)
             {
                 if (comparer(array[j], array[j + 1]) > 0)
@@ -22,25 +24,28 @@ public static class SortAlgorithm
                     array[j] = array[j + 1];
 
                     array[j + 1] = temp;
+
+                    swapped = true;
                 }
             }
+
+            if (!swapped)
+                break;
         }
     }
 
     public static T[] Heapsort<T>(T[] array, SortDirection direction) where T : IComparable<T>
     {
-        IBinaryHeap<T> heap;
-
-        if (direction == SortDirection.Ascending)
-        {
-            heap = new MaxBinaryHeap<T>(array);
-        }
-        else
-        {
-            heap = new MinBinaryHeap<T>(array);
-        }
-
         T[] result = new T[array.Length];
+
+        if (array.Length <= 1)
+        {
+            Array.Copy(array, result, array.Length);
+
+            return result;
+        }
+
+        IBinaryHeap<T> heap = CreateHeap(array, direction);
 
         int counter = 0;
 
@@ -56,16 +61,10 @@ public static class SortAlgorithm
 
     public static void Heapsort<T>(ref T[] array, SortDirection direction) where T : IComparable<T>
     {
-        IBinaryHeap<T> heap;
+        if (array.Length <= 1)
+            return;
 
-        if (direction == SortDirection.Ascending)
-        {
-            heap = new MaxBinaryHeap<T>(array);
-        }
-        else
-        {
-            heap = new MinBinaryHeap<T>(array);
-        }
+        IBinaryHeap<T> heap = CreateHeap(array, direction);
 
         int counter = 0;
 
@@ -79,16 +78,10 @@ public static class SortAlgorithm
 
     public static void Heapsort<T>(ref List<T> array, SortDirection direction) where T : IComparable<T>
     {
-        IBinaryHeap<T> heap;
+        if (array.Count <= 1)
+            return;
 
-        if (direction == SortDirection.Ascending)
-        {
-            heap = new MaxBinaryHeap<T>(array.ToArray());
-        }
-        else
-        {
-            heap = new MinBinaryHeap<T>(array.ToArray());
-        }
+        IBinaryHeap<T> heap = CreateHeap(array.ToArray(), direction);
 
         int counter = 0;
 
@@ -100,182 +93,158 @@ public static class SortAlgorithm
         }
     }
 
+    private static IBinaryHeap<T> CreateHeap<T>(T[] array, SortDirection direction) where T : IComparable<T>
+    {
+        // a min-heap releases smallest-first, which yields ascending output
+        if (direction == SortDirection.Ascending)
+        {
+            return new MinBinaryHeap<T>(array);
+        }
+        else
+        {
+            return new MaxBinaryHeap<T>(array);
+        }
+    }
+
     /// <summary>
-    /// 
+    /// Sorts in ascending comparer order and returns the result as a new array.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="array"></param>
-    /// <param name="comparer">the resulting integer must be -1, 0, or 1</param>
+    /// <param name="comparer">any negative/zero/positive result is honored</param>
     /// <returns></returns>
     public static T[] Heapsort<T>(T[] array, Func<T, T, int> comparer)
     {
-        BinaryHeap<T> heap = new BinaryHeap<T>(array, comparer);
-
         T[] result = new T[array.Length];
 
-        int counter = 0;
+        if (array.Length <= 1)
+        {
+            Array.Copy(array, result, array.Length);
+
+            return result;
+        }
+
+        BinaryHeap<T> heap = new BinaryHeap<T>(array, comparer);
+
+        // the heap releases largest-first; filling from the end yields ascending order
+        int counter = array.Length - 1;
 
         while (heap.Length != 0)
         {
             result[counter] = heap.ReleaseValue();
 
-            counter++;
+            counter--;
         }
 
         return result;
     }
 
-
-
-    //******STANFORD: First H.W.
+    /// <summary>
+    /// Sorts in ascending comparer order and returns the result as a new
+    /// array; the input array is not modified. Stable.
+    /// </summary>
     public static T[] MergeSort<T>(T[] array, Func<T, T, int> comparer)
     {
-        if (array.Length <= 1)
+        T[] result = new T[array.Length];
+
+        Array.Copy(array, result, array.Length);
+
+        if (result.Length > 1)
         {
-            return array;
-        }
-        else
-        {
-            T[] tempFirstArray = new T[array.Length / 2];
-
-            T[] tempSecondArray = new T[array.Length / 2 + array.Length % 2];
-
-            Array.Copy(array, 0, tempFirstArray, 0, tempFirstArray.Length);
-
-            Array.Copy(array, tempFirstArray.Length, tempSecondArray, 0, tempSecondArray.Length);
-
-            T[] firstArray = MergeSort(tempFirstArray, comparer);
-
-            T[] secondArray = MergeSort(tempSecondArray, comparer);
-
-            return MergeArrayProperly(firstArray, secondArray, comparer);
-        }
-    }
-
-    private static T[] MergeArrayProperly<T>(T[] firstArray, T[] secondArray, Func<T, T, int> comparer)
-    {
-        T[] result = new T[firstArray.Length + secondArray.Length];
-
-        int firstIndex = 0, secondIndex = 0;
-
-        for (int i = 0; i < result.Length; i++)
-        {
-            if (comparer(firstArray[firstIndex], secondArray[secondIndex]) > 0)
-            {
-                result[i] = secondArray[secondIndex];
-
-                secondIndex++;
-
-                if (secondIndex == secondArray.Length)
-                {
-                    Array.Copy(firstArray, firstIndex, result, i + 1, firstArray.Length - firstIndex);
-
-                    break;
-                }
-            }
-            else
-            {
-                result[i] = firstArray[firstIndex];
-
-                firstIndex++;
-
-                if (firstIndex == firstArray.Length)
-                {
-                    Array.Copy(secondArray, secondIndex, result, i + 1, secondArray.Length - secondIndex);
-
-                    break;
-                }
-            }
+            MergeSortCore(result, new T[result.Length], 0, result.Length, comparer);
         }
 
         return result;
     }
 
-    private static T[] CountInversionAndSort<T>(T[] array, Func<T, T, int> comparer, ref long count)
+    /// <summary>
+    /// Counts the pairs (i, j) with i &lt; j and array[i] &gt; array[j]
+    /// according to the comparer; the input array is not modified.
+    /// </summary>
+    public static long CountInversions<T>(T[] array, Func<T, T, int> comparer)
     {
         if (array.Length <= 1)
-        {
+            return 0;
 
-            return array;
-        }
-        else
-        {
-            T[] tempFirstArray = new T[array.Length / 2];
+        T[] copy = new T[array.Length];
 
-            T[] tempSecondArray = new T[array.Length / 2 + array.Length % 2];
+        Array.Copy(array, copy, array.Length);
 
-            Array.Copy(array, 0, tempFirstArray, 0, tempFirstArray.Length);
-
-            Array.Copy(array, tempFirstArray.Length, tempSecondArray, 0, tempSecondArray.Length);
-
-            T[] firstArray = CountInversionAndSort(tempFirstArray, comparer, ref count);
-
-            T[] secondArray = CountInversionAndSort(tempSecondArray, comparer, ref count);
-
-            return MergeArrayProperly(firstArray, secondArray, comparer, ref count);
-        }
+        return MergeSortCore(copy, new T[copy.Length], 0, copy.Length, comparer);
     }
 
-    private static T[] MergeArrayProperly<T>(T[] firstArray, T[] secondArray, Func<T, T, int> comparer, ref long count)
+    /// <summary>
+    /// Sorts array[start..end) using a shared scratch buffer and returns the
+    /// number of inversions in the range.
+    /// </summary>
+    private static long MergeSortCore<T>(T[] array, T[] scratch, int start, int end, Func<T, T, int> comparer)
     {
+        if (end - start <= 1)
+            return 0;
 
-        T[] result = new T[firstArray.Length + secondArray.Length];
+        int middle = start + (end - start) / 2;
 
-        int firstIndex = 0, secondIndex = 0;
+        long count = MergeSortCore(array, scratch, start, middle, comparer)
+                   + MergeSortCore(array, scratch, middle, end, comparer);
 
-        for (int i = 0; i < result.Length; i++)
+        int left = start, right = middle, target = start;
+
+        while (left < middle && right < end)
         {
-            if (comparer(firstArray[firstIndex], secondArray[secondIndex]) > 0)
+            // taking from the left run on ties keeps the sort stable
+            if (comparer(array[left], array[right]) <= 0)
             {
-                count += firstArray.Length - firstIndex;
-
-                result[i] = secondArray[secondIndex];
-
-                secondIndex++;
-
-                if (secondIndex == secondArray.Length)
-                {
-                    Array.Copy(firstArray, firstIndex, result, i + 1, firstArray.Length - firstIndex);
-
-                    break;
-                }
+                scratch[target++] = array[left++];
             }
             else
             {
-                result[i] = firstArray[firstIndex];
+                count += middle - left;
 
-                firstIndex++;
-
-                if (firstIndex == firstArray.Length)
-                {
-                    Array.Copy(secondArray, secondIndex, result, i + 1, secondArray.Length - secondIndex);
-
-                    break;
-                }
+                scratch[target++] = array[right++];
             }
         }
 
-        return result;
+        while (left < middle)
+        {
+            scratch[target++] = array[left++];
+        }
+
+        while (right < end)
+        {
+            scratch[target++] = array[right++];
+        }
+
+        Array.Copy(scratch, start, array, start, end - start);
+
+        return count;
     }
 
-    //******STANFORD: Second H.W.
     public static void QuickSort<T>(T[] array, Func<T, T, int> comparer)
     {
-        long count = 0;
-        QuickSort(array, comparer, 0, array.Length - 1, ref count);
+        QuickSort(array, comparer, 0, array.Length - 1);
     }
 
-    private static void QuickSort<T>(T[] array, Func<T, T, int> comparer, int startIndex, int endIndex, ref long count)
+    private static void QuickSort<T>(T[] array, Func<T, T, int> comparer, int startIndex, int endIndex)
     {
-        if (startIndex > endIndex) return;
+        // recurse into the smaller partition and loop on the larger one, so
+        // the stack depth stays O(log n) even for adversarial inputs
+        while (startIndex < endIndex)
+        {
+            int q = PartitionWithMedianElement(array, comparer, startIndex, endIndex);
 
-        count = count + (endIndex - startIndex + 1) - 1;
+            if (q - startIndex < endIndex - q)
+            {
+                QuickSort(array, comparer, startIndex, q - 1);
 
-        int q = PartitionWithMedianElement(array, comparer, startIndex, endIndex);
+                startIndex = q + 1;
+            }
+            else
+            {
+                QuickSort(array, comparer, q + 1, endIndex);
 
-        QuickSort(array, comparer, startIndex, q - 1, ref count);
-
-        QuickSort(array, comparer, q + 1, endIndex, ref count);
+                endIndex = q - 1;
+            }
+        }
     }
 
     private static int PartitionWithFirstElement<T>(T[] array, Func<T, T, int> comparer, int startIndex, int endIndex)
@@ -302,78 +271,43 @@ public static class SortAlgorithm
         return i - 1;
     }
 
-    //private static int PartitionWithLastElement<T>(T[] array, Func<T, T, int> comparer, int startIndex, int endIndex)
-    //{
-    //    T pivot = array[endIndex];
-
-    //    int i = startIndex;
-
-    //    for (int j = startIndex; j <= (endIndex - 1); j++)
-    //    {
-    //        if (comparer(array[j], pivot) < 0)
-    //        {
-    //            T temp = array[j];
-    //            array[j] = array[i];
-    //            array[i] = temp;
-    //            i++;
-    //        }
-    //    }
-
-    //    T temp02 = array[endIndex];
-    //    array[endIndex] = array[i];
-    //    array[i] = temp02;
-
-    //    return i;
-    //}
-
-    private static int PartitionWithLastElement<T>(T[] array, Func<T, T, int> comparer, int startIndex, int endIndex)
-    {
-        T temp02 = array[endIndex];
-        array[endIndex] = array[startIndex];
-        array[startIndex] = temp02;
-        return PartitionWithFirstElement(array, comparer, startIndex, endIndex);
-    }
-
     private static int PartitionWithMedianElement<T>(T[] array, Func<T, T, int> comparer, int startIndex, int endIndex)
     {
+        int middleIndex = startIndex + (endIndex - startIndex) / 2;
+
         T first = array[startIndex];
-        T middle = array[(int)Math.Floor((endIndex + startIndex) / 2.0)];
+        T middle = array[middleIndex];
         T last = array[endIndex];
+
         int index;
 
-        if (comparer(first, middle) <= 0 && comparer(middle, last) <= 0)
+        if (comparer(first, middle) <= 0)
         {
-            index = (int)Math.Floor((endIndex + startIndex) / 2.0);
-        }
-        else if (comparer(first, last) <= 0 && comparer(last, middle) <= 0)
-        {
-            index = endIndex;
-        }
-        else if (comparer(middle, first) <= 0 && comparer(first, last) <= 0)
-        {
-            index = startIndex;
-        }
-        else if (comparer(middle, last) <= 0 && comparer(last, first) <= 0)
-        {
-            index = endIndex;
-        }
-        else if (comparer(last, first) <= 0 && comparer(first, middle) <= 0)
-        {
-            index = startIndex;
-        }
-        else if (comparer(last, middle) <= 0 && comparer(middle, first) <= 0)
-        {
-            index = (int)Math.Floor((endIndex + startIndex) / 2.0);
+            if (comparer(middle, last) <= 0)
+            {
+                index = middleIndex;
+            }
+            else
+            {
+                index = comparer(first, last) <= 0 ? endIndex : startIndex;
+            }
         }
         else
         {
-            throw new NotImplementedException();
+            if (comparer(first, last) <= 0)
+            {
+                index = startIndex;
+            }
+            else
+            {
+                index = comparer(middle, last) <= 0 ? endIndex : middleIndex;
+            }
         }
+
         T temp02 = array[index];
         array[index] = array[startIndex];
         array[startIndex] = temp02;
+
         return PartitionWithFirstElement(array, comparer, startIndex, endIndex);
     }
-
-
 }

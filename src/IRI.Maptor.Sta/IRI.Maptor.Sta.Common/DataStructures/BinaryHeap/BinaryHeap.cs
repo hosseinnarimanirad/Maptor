@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Linq;
 
 namespace IRI.Maptor.Sta.DataStructures;
 
@@ -21,102 +20,34 @@ public class BinaryHeap<T>
 
     public BinaryHeap(T[] array, Func<T, T, int> comparer)
     {
-        pointer = 0;
+        this.comparer = comparer;
 
         values = new T[array.Length];
 
-        values[pointer] = array[0];
+        Array.Copy(array, values, array.Length);
 
-        pointer++;
+        pointer = array.Length;
 
-        this.comparer = comparer;
-
-        while (pointer < array.Length)
+        for (int i = pointer / 2 - 1; i >= 0; i--)
         {
-            this.Add(array[pointer]);
+            SiftDown(i);
         }
-    }
-
-    private void Add(T value)
-    {
-        values[pointer] = value;
-
-        int bubbleIndex = this.pointer;
-
-        while (bubbleIndex != 0)
-        {
-            int parentIndex = (int)Math.Floor((bubbleIndex - 1) / 2.0);
-
-            if (comparer(values[bubbleIndex], values[parentIndex]) > 0)
-            {
-                T temp = values[parentIndex];
-
-                values[parentIndex] = values[bubbleIndex];
-
-                values[bubbleIndex] = temp;
-
-                bubbleIndex = parentIndex;
-            }
-            else
-                break;
-        }
-
-        this.pointer++;
     }
 
     public T ReleaseValue()
     {
-        this.pointer--;
+        if (pointer == 0)
+            throw new InvalidOperationException("the heap is empty");
 
-        T result = this.values[0];
+        T result = values[0];
 
-        this.values[0] = this.values[this.pointer];
+        pointer--;
 
-        int index, swapIndex;
+        values[0] = values[pointer];
 
-        swapIndex = 0;
+        values[pointer] = default!;
 
-        do
-        {
-            index = swapIndex;
-
-            if ((pointer - 1) >= 2 * index + 2)
-            {
-                if (comparer(values[index], values[2 * index + 2]) < 0 ||
-                   comparer(values[index], values[2 * index + 1]) < 0)
-                {
-                    if (comparer(values[2 * index + 2], values[2 * index + 1]) > 0)
-                    {
-                        swapIndex = 2 * index + 2;
-                    }
-                    else
-                    {
-                        swapIndex = 2 * index + 1;
-                    }
-                }
-                if (comparer(values[swapIndex], values[2 * index + 1]) < 0)
-                {
-                    swapIndex = 2 * index + 1;
-                }
-            }
-            else if ((pointer - 1) >= 2 * index + 1)
-            {
-                if (comparer(values[index], values[2 * index + 1]) < 0)
-                {
-                    swapIndex = 2 * index + 1;
-                }
-            }
-
-            if (index != swapIndex)
-            {
-                T temp = values[index];
-
-                values[index] = values[swapIndex];
-
-                values[swapIndex] = temp;
-            }
-
-        } while (index != swapIndex);
+        SiftDown(0);
 
         return result;
     }
@@ -124,5 +55,34 @@ public class BinaryHeap<T>
     public T SeekValue()
     {
         return this.values[0];
+    }
+
+    private void SiftDown(int index)
+    {
+        while (true)
+        {
+            int left = 2 * index + 1;
+
+            if (left >= pointer)
+                return;
+
+            int child = left;
+
+            int right = left + 1;
+
+            if (right < pointer && comparer(values[right], values[left]) > 0)
+                child = right;
+
+            if (comparer(values[child], values[index]) <= 0)
+                return;
+
+            T temp = values[index];
+
+            values[index] = values[child];
+
+            values[child] = temp;
+
+            index = child;
+        }
     }
 }

@@ -61,6 +61,6 @@ public struct Triple<TFirst, TSecond, TThird>
 
     public override int GetHashCode()
     {
-        return base.GetHashCode();
+        return HashCode.Combine(First, Second, Third);
     }
 }
