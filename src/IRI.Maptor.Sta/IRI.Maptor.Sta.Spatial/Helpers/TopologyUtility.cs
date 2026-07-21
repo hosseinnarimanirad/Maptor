@@ -85,13 +85,14 @@ public class TopologyUtility
     /// <param name="sightlyPoint"></param>
     /// <param name="startVertex"></param>
     /// <param name="endVertex"></param>
+    /// <param name="tolerance">Maximum absolute cross-product value still classified as LiesOnTheLine; 0 (default) means exact.</param>
     /// <returns></returns>
-    public static PointVectorRelation GetPointVectorRelation<T>(T sightlyPoint, T startVertex, T endVertex) where T : IPoint, new()
+    public static PointVectorRelation GetPointVectorRelation<T>(T sightlyPoint, T startVertex, T endVertex, double tolerance = 0) where T : IPoint, new()
     {
         double tempValue = (startVertex.X - sightlyPoint.X) * (endVertex.Y - sightlyPoint.Y) -
                             (endVertex.X - sightlyPoint.X) * (startVertex.Y - sightlyPoint.Y);
 
-        if (Math.Abs(tempValue) < double.Epsilon)
+        if (Math.Abs(tempValue) <= tolerance)
         {
             return PointVectorRelation.LiesOnTheLine;
         }
@@ -106,6 +107,19 @@ public class TopologyUtility
 
         return PointVectorRelation.LiesOnTheLine;
     }
+
+    //public static PoinTriangleRelation GetPointTriangleRelation(Point sightlyPoint, Point firstVertex, Point secondVertex, Point thirdVertex)
+    //{
+    //    int firstRelation = (int)TopologyUtility.GetPointVectorRelation(sightlyPoint, firstVertex, secondVertex);
+
+    //    int secondRelation = (int)TopologyUtility.GetPointVectorRelation(sightlyPoint, secondVertex, thirdVertex);
+
+    //    int thirdRelation = (int)TopologyUtility.GetPointVectorRelation(sightlyPoint, thirdVertex, firstVertex);
+
+    //    return (PoinTriangleRelation)(firstRelation * QuasiTriangle.firstEdgeWeight +
+    //                                    secondRelation * QuasiTriangle.secondEdgeWeight +
+    //                                    thirdRelation * QuasiTriangle.thirdEdgeWeight);
+    //}
 
     public static bool PointIntersectsLineSegment<T>(T sightlyPoint, T startVertex, T endVertex) where T : IPoint, new()
     {
