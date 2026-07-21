@@ -99,7 +99,7 @@ public class Point : IPoint
 
     public override int GetHashCode()
     {
-        return base.GetHashCode();
+        return HashCode.Combine(X, Y);
     }
 
 

@@ -47,6 +47,23 @@ public class PointZ : Point, IHasZ
         return this.X == point.X && this.Y == point.Y;
     }
 
+    public override bool Equals(object obj)
+    {
+        if (obj?.GetType() == typeof(PointZ))
+        {
+            PointZ temp = (PointZ)obj;
+
+            return temp.X == this.X && temp.Y == this.Y && temp.Z == this.Z;
+        }
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y, Z);
+    }
+
     public override string AsDelimited(char delimiter, int precision, bool useThousandSeparator)
     {
         var xFormatted = FormatHelper.FormatWithPrecision(X, precision, useThousandSeparator);

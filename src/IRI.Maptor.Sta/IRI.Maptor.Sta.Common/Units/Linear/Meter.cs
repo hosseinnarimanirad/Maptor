@@ -48,7 +48,7 @@ public class Meter : LinearUnit
 
     public override int GetHashCode()
     {
-        return base.GetHashCode();
+        return Value.GetHashCode();
     }
 
     public override string ToString()

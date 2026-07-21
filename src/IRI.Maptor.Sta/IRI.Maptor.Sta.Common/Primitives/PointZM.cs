@@ -54,6 +54,23 @@ public class PointZM : IPoint, IHasZ, IHasM
 
     }
 
+    public override bool Equals(object obj)
+    {
+        if (obj?.GetType() == typeof(PointZM))
+        {
+            PointZM temp = (PointZM)obj;
+
+            return temp.X == this.X && temp.Y == this.Y && temp.Z == this.Z && temp.M == this.M;
+        }
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y, Z, M);
+    }
+
     public static double GetDistance(PointZM first, PointZM second)
     {
         return Math.Sqrt((first.X - second.X) * (first.X - second.X) +

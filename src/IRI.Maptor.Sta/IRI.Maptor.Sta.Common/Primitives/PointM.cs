@@ -11,6 +11,15 @@ public class PointM : Point, IHasM
 {
     public double M { get; set; }
 
+    public PointM()
+    {
+    }
+
+    public PointM(double x, double y, double m) : base(x, y)
+    {
+        M = m;
+    }
+
     public override byte[]? AsWkb()
     {
         if (IsNaN())
@@ -44,6 +53,23 @@ public class PointM : Point, IHasM
             return false;
 
         return this.X == point.X && this.Y == point.Y;
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj?.GetType() == typeof(PointM))
+        {
+            PointM temp = (PointM)obj;
+
+            return temp.X == this.X && temp.Y == this.Y && temp.M == this.M;
+        }
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y, M);
     }
 
     public override string AsDelimited(char delimiter, int precision, bool useThousandSeparator)

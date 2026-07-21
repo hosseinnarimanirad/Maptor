@@ -35,7 +35,7 @@ public class Chain : LinearUnit
 
     public override int GetHashCode()
     {
-        return base.GetHashCode();
+        return Value.GetHashCode();
     }
 
     public override string ToString()
