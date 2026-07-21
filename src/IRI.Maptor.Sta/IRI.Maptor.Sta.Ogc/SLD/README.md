@@ -1,41 +1,36 @@
-# SLD (Styled Layer Descriptor) C# Classes
+# SLD — Styled Layer Descriptor
 
-This library provides C# classes that implement the **OGC SLD 1.0.0** specification, enabling you to create, read, and manipulate Styled Layer Descriptors in .NET.
+An SLD 1.0.0 document is an XML rule tree that tells any OGC server — or client — how to draw a layer: `StyledLayerDescriptor` → `NamedLayer` → `UserStyle` → `FeatureTypeStyle` → `Rule` → symbolizers. Rule conditions reuse the project's Filter Encoding model (`OgcFilter`, from [../FilterEncoding](../FilterEncoding)).
 
----
+![SLD rule tree and rendered result](../images/sld.png)
 
-## ✅ Features
-- Full support for core SLD 1.0.0 structures:
-  - `StyledLayerDescriptor`, `NamedLayer`, `UserStyle`, `FeatureTypeStyle`, `Rule`
-  - `PointSymbolizer`, `LineSymbolizer`, `PolygonSymbolizer`, `TextSymbolizer`, `RasterSymbolizer`, and related styling elements
-- Reuses the project's Filter Encoding classes (`OgcFilter`) for the `<ogc:Filter>` inside a `Rule`
-- XML serialization and deserialization using `System.Xml.Serialization`
-- Handles namespaces for SLD, OGC filters, and XLink references
+## The object model
 
----
+The classes (namespace `IRI.Maptor.Sta.Ogc.SLD`) mirror the spec: `PointSymbolizer`, `LineSymbolizer`, `PolygonSymbolizer`, `TextSymbolizer` and `RasterSymbolizer` are built from `Fill`, `Stroke`, `Font` and `Mark`, each carrying its settings as a list of `CssParameter` values (with enums `SldFontStyle`, `SldFontWeight`, `SldStrokeLineCap`, `SldStrokeLineJoin` for the fixed vocabularies). A `Rule` adds the `ogc:Filter` condition and min/max scale denominators.
 
-## ✅ How to Use
-
-`SldHelper` (namespace `IRI.Maptor.Sta.Ogc.SLD`) provides the read/write entry points.
-
-### 1. Read an SLD document
 ```csharp
-string xml = File.ReadAllText("example.sld");
-StyledLayerDescriptor? sld = SldHelper.Parse(xml); // null if the XML is not a valid SLD
+using IRI.Maptor.Sta.Ogc.SLD;
+
+var rule = sld.NamedLayers[0].UserStyles[0].FeatureTypeStyles[0].Rules[0];
+// rule.Filter                 — the OgcFilter condition, e.g. pop > 1M
+// rule.ElseFilter             — marks the fallback ("otherwise") rule
+// rule.MinScaleDenominator    — visibility scale range (with Max…)
+// rule.Symbolizers            — polymorphic list: Point/Line/Polygon/Text/RasterSymbolizer
 ```
 
-### 2. Write an SLD document
-```csharp
-// To a string (e.g. for a preview):
-string? xml = SldHelper.Serialize(sld, indented: true);
+## Reading and writing
 
-// Directly to a file:
-SldHelper.Save("example.sld", sld);
+`SldHelper` provides the entry points; parsing returns `null` when the XML isn't a valid SLD.
+
+```csharp
+StyledLayerDescriptor? sld = SldHelper.Parse(File.ReadAllText("example.sld"));
+
+string? xml = SldHelper.Serialize(sld, indented: true);   // to a string
+SldHelper.Save("example.sld", sld);                       // straight to a file
 ```
 
-The namespace prefixes (`sld`, `ogc`, `xlink`, `xsi`) are emitted automatically from the
-declarations `StyledLayerDescriptor` carries, so no `XmlSerializerNamespaces` is required.
+The namespace prefixes (`sld`, `ogc`, `xlink`, `xsi`) are emitted automatically from the declarations `StyledLayerDescriptor` carries, so no `XmlSerializerNamespaces` setup is required.
 
+## References
 
-## ✅ References
-- [OGC Styled Layer Descriptor Specification 1.0.0](https://portal.ogc.org/files/?artifact_id=1188) 
+- [OGC Styled Layer Descriptor Specification 1.0.0](https://portal.ogc.org/files/?artifact_id=1188)

@@ -49,24 +49,21 @@ dotnet add package IRI.Maptor.Sta.Ogc
 ## Quick Start
 
 ```csharp
-// Parse WKT
-using IRI.Maptor.Sta.Ogc.SFA;
+// Parse GML into the native geometry model
+using IRI.Maptor.Sta.Ogc.GML;
 
-var geometry = WktParser.Parse("POINT (51.5074 -0.1278)");
-Console.WriteLine($"Type: {geometry.Type}, X: {geometry.Points[0].X}");
+var geometry = Gml3Reader.Parse(gmlXml, srid: 4326);
+Console.WriteLine($"Type: {geometry.Type}");
 
-// Build a WMS GetMap URL
+// Parse a WMS BBOX with the right axis order for the version/CRS pair
 using IRI.Maptor.Sta.Ogc.WMS;
 
-var url = WmsHelper.BuildGetMapUrl(
-    serviceUrl: "https://example.com/wms",
-    layers:     "world:countries",
-    bbox:       "-180,-90,180,90",
-    srs:        "EPSG:4326",
-    width:      800, height: 400,
-    format:     "image/png");
-Console.WriteLine(url);
+var bbx = WmsHelper.ParseCrs(WmsConstants.version130, WmsConstants.Epsg4326,
+                             "35.5,50.8,35.9,51.6");
+// WMS 1.3.0 + EPSG:4326 is lat,lon — ParseCrs swaps it back to x/y
 ```
+
+WKT/WKB parsing (`WktReader`, `WkbReader`) lives in the companion package `IRI.Maptor.Sta.Spatial` (`IRI.Maptor.Sta.Spatial.IO.OgcSFA` namespace); this package carries the OGC geometry object model (`IRI.Maptor.Sta.Ogc.SFA`).
 
 ---
 
