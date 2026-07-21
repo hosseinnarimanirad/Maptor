@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using IRI.Maptor.Sta.Common.Helpers;
+﻿using IRI.Maptor.Sta.Common.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,21 +9,29 @@ namespace IRI.Maptor.Jab.Common.Helpers;
 
 public static class ScalebarHelper
 {
+    // consecutive ratios must stay <= 2.5 (max/min scalebar width ratio),
+    // otherwise ChooseRoundScale finds no fitting length for some scales
     private static readonly List<double> _roundLengths =
         new List<double>()
         {
-            5,          10,         20,         // meters
-            50,         100,        200,        // meters
-            500,        1_000,      2_000,      // meters (2 km)
-            5_000,      10_000,     20_000,     // 5k, 10k, 20k
-            50_000,     100_000,    200_000,    // 50k, 100k, 200k
-            500_000,    1_000_000,  2_000_000   // 500k, 1000k, 2000k
+            0.1,        0.2,        0.5,        // meters
+            1,          2,          5,          // meters
+            10,         20,         50,         // meters
+            100,        200,        500,        // meters
+            1_000,      2_000,      5_000,      // 1k, 2k, 5k
+            10_000,     20_000,     50_000,     // 10k, 20k, 50k
+            100_000,    200_000,    500_000,    // 100k, 200k, 500k
+            1_000_000,  2_000_000,  5_000_000,  // 1000k, 2000k, 5000k
+            10_000_000, 20_000_000              // 10000k, 20000k
         };
 
     public static double GetUnitDistance(double dpiX) => ConversionHelper.InchToMeterFactor / dpiX;
 
     public static double ChooseRoundScale(double mapScale, double unitDistance)
     {
+        if (mapScale <= 0 || double.IsInfinity(mapScale) || double.IsNaN(mapScale))
+            return 0;
+
         var minScalebarWidth = 100; // in pixels
         var maxScalebarWidth = 250; // in pixels
 
@@ -39,7 +46,7 @@ public static class ScalebarHelper
 
     public static double GetScalebarLength(double mapLength, double mapScale, double unitDistance)
     {
-        return (mapLength * mapScale) / unitDistance; ;
+        return (mapLength * mapScale) / unitDistance;
     }
 
     public static string GetGroundLengthLabel(double groundLengthInMeter)

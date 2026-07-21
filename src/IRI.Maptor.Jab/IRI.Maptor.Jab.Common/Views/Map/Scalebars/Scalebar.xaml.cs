@@ -1,7 +1,6 @@
 using System.Windows;
 
 using IRI.Maptor.Jab.Controls;
-using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Jab.Common.Helpers;
 
 namespace IRI.Maptor.Jab.Controls;
@@ -12,6 +11,13 @@ public partial class Scalebar : NotifiableUserControl
     public Scalebar()
     {
         InitializeComponent();
+
+        // the value may have been set before the control had a PresentationSource
+        this.Loaded += (sender, e) =>
+        {
+            if (CurrentScale > 0)
+                SetScale(CurrentScale);
+        };
     }
 
     public void SetScale(double mapScale)
@@ -21,45 +27,22 @@ public partial class Scalebar : NotifiableUserControl
         if (source == null)
             return;
 
-        if (double.IsInfinity(mapScale) || double.IsNaN(mapScale))
+        if (mapScale <= 0 || double.IsInfinity(mapScale) || double.IsNaN(mapScale))
             return;
 
         double dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
-        double unitDistance = ConversionHelper.InchToMeterFactor / dpiX; //(1.0 / dpiX) * 1200.0 / (3937.0 * 12.0);
+        double unitDistance = ScalebarHelper.GetUnitDistance(dpiX);
 
-        //var minScalebarWidth = 100;
-        //var maxScalebarWidth = 250;
-
-        //var minScreenLengthInMeter = minScalebarWidth * unitDistance;
-        //var maxScreenLengthInMeter = maxScalebarWidth * unitDistance;
-
-        //var minGroundLengthInMeter = minScreenLengthInMeter * mapScale;
-        //var maxGroundLengthInMeter = maxScreenLengthInMeter * mapScale;
-
-        //var selectedLength = _roundLengths.FirstOrDefault(l => l >= minGroundLengthInMeter && l <= maxGroundLengthInMeter);
+        this.CurrentScaleText = IRI.Maptor.Jab.Core.Localization.LocalizationManager.GetLocalizedNumberString($"1:{(1 / mapScale):N0}");
 
         var selectedLength = ScalebarHelper.ChooseRoundScale(mapScale, unitDistance);
 
         if (selectedLength == 0)
             return;
 
-        //this.ScaleBarLength = (selectedLength / mapScale) / unitDistance;
         this.ScaleBarLength = ScalebarHelper.GetScalebarLength(selectedLength, mapScale, unitDistance);
 
-        //RaisePropertyChanged(nameof(ScaleBarLength));
-
-
-        //double groundLengthInMeter = /*screenLengthInMeter*/minScreenLengthInMeter * mapScale;
-        var groundLengthInMeter = selectedLength;
-
-        this.GroundLength = (groundLengthInMeter / 1000.0 >= 1) ?
-            string.Format("{0:f0} km", groundLengthInMeter / 1000) :
-            string.Format("{0} m", groundLengthInMeter);
-
-        //this.Min = (groundLengthInMeter / 1000.0 > 1) ? "0 km" : "0 m";
-
-        //RaisePropertyChanged(nameof(GroundLength)); 
-        this.CurrentScaleText = IRI.Maptor.Jab.Core.Localization.LocalizationManager.GetLocalizedNumberString($"1:{(1 / mapScale):N0}");
+        this.GroundLength = ScalebarHelper.GetGroundLengthLabel(selectedLength);
     }
 
 
