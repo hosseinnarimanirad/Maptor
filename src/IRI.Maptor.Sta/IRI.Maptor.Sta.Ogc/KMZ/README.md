@@ -36,3 +36,6 @@ KmzWriter.AddResourceFromFile("london.kmz", "images/icon.png", @"C:\assets\icon.
 Extension methods in `IRI.Maptor.Extensions` shorten the common case: `geometry.SaveAsKmz("london.kmz", "London")` (plus `SaveAsKmzAsync`, and overloads for geometry lists and `KmlFeature` lists).
 
 For document structure, styling and validation, see [../KML/README.md](../KML/README.md).
+
+---
+[Back to IRI.Maptor.Sta.Ogc](../README.md)

@@ -1,103 +1,68 @@
-# 🌐 IRI.Maptor.Sta.SpatialReferenceSystem
+# IRI.Maptor.Sta.SpatialReferenceSystem
 
-**A .NET library for advanced spatial reference systems (SRS), geodetic transformations, and map projections**
+[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.SpatialReferenceSystem?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Sta.SpatialReferenceSystem/)
+[![Target](https://img.shields.io/badge/netstandard2.1-512BD4)](https://learn.microsoft.com/dotnet/standard/net-standard)
 
-This library provides implementations of horizontal spatial reference systems as defined in geodesy, supporting three primary categories:
+Spatial reference systems, geodetic transformations, and map projections for the Maptor stack. Implements the horizontal coordinate systems of geodesy — terrestrial (conventional/instantaneous terrestrial, geodetic, local geodetic, local astronomic), celestial (apparent place, right ascension, horizontal angle), and orbital — together with the transformations between them and the common map projections.
 
-- **Terrestrial Coordinate Systems**
-  - Conventional Terrestrial (CT or AT)
-  - Instantaneous Terrestrial (IT)
-  - Geodetic (G)
-  - Local Geodetic (LG)
-  - Local Astronomic
-- **Celestial Coordinate Systems**
-  - Apparent Places (AP)
-  - Right Ascension (RA)
-  - Horizontal Angle (HA)
-- **Orbital Coordinate Systems**
-  - Orbital (OR)
-    
-<p align="center">
-  <img src="images/coordinate-systems.png" alt="Relationship between geocentric, topocentric, and 2D coordinate systems" width="600">
-</p>
+## Installation
 
-*Fig. 1: Relationship between geocentric, topocentric, and 2D coordinate systems*
-
-## 📚 Documentation
-
-Illustrated guides live next to the code:
-
-- [CoordinateSystems](CoordinateSystems/README.md) — the geocentric/topocentric systems of Fig. 1 (IT, CT, G, LA, LG, …) and how `Transformations` converts between them
-- [MapProjections](MapProjections/README.md) — UTM, Web Mercator, and the other implemented projections
-- [Models](Models/README.md) — reference ellipsoids and horizontal datums (`Ellipsoid`, `Ellipsoids`)
-
-## ✨ Features
-
-### 1. Supported Map Projections & Horizontal Datums
-
-<p align="center">
-  <img src="images/map-projections.png" alt="Cylindrical, conic, and azimuthal projection surfaces" width="600">
-</p>
-
-*Fig. 2: Projection surfaces — cylindrical, conic, and azimuthal*
-
-This library implements standard map projections and geodetic datums, including:
-- **Projections:**
-  - Transverse Mercator (TM)
-  - Universal Transverse Mercator (UTM)
-  - Web Mercator (Auxiliary Sphere)
-  - Cylindrical Equal-Area
-  - Albers Equal-Area Conic (1- and 2-parallel variants)
-  - Lambert Conformal Conic (1- and 2-parallel variants)
-- **Horizontal Datums:**
-  - 30+ predefined ellipsoids (WGS84, GRS80, Clarke 1866, etc.)
-  - Custom ellipsoid support via semi-major/minor axis parameters
-
-### 2. Coordinate System Transformations
-Transformation between different spatial reference systems are available including:
-- CT <-> IT
-- CT <-> G
-- G1 <-> G2 (transform Geodetic system with different ellipsoids)
-- CT <-> LA
-- G <-> LG
-- LA <-> LG
-- LA <-> HA
-- HA <-> AP
-- IT <-> AP
-- OR <-> AP
-
-## 🚀 Getting Started
-
-### Basic Usage
-
-Convert WGS84 to AT:
-
-```csharp
-// Arrange
-var wgs84Ellipsoid = Ellipsoids.WGS84;
-double latitudeInDegrees = 35.123456;
-double longitudeInDegrees = 51.123456;
-    
-var originalGeodeticPoint = new IRI.Maptor.Sta.Common.Primitives.Point(longitudeInDegrees, latitudeInDegrees);
-
-// Act - Test geodetic to Cartesian conversion
-var cartesianFromTransform = Transformations.ToCartesian(originalGeodeticPoint, wgs84Ellipsoid);
-
-var cartesianFromGeodeticPoint = new GeodeticPoint<Meter, Degree>(
-    wgs84Ellipsoid, 
-    new Meter(0),
-    new Degree(longitudeInDegrees),
-    new Degree(latitudeInDegrees))
-    .ToCartesian<Meter>();
-
-// Assert - Both Cartesian conversion methods should produce same result
-Assert.Equal(cartesianFromGeodeticPoint.X.Value, cartesianFromTransform.X, 9);
-Assert.Equal(cartesianFromGeodeticPoint.Y.Value, cartesianFromTransform.Y, 9);
-Assert.Equal(cartesianFromGeodeticPoint.Z.Value, cartesianFromTransform.Z, 9);
+```bash
+dotnet add package IRI.Maptor.Sta.SpatialReferenceSystem
 ```
 
+## Features
+
+- Map projections: Mercator, Web Mercator, Transverse Mercator, UTM, cylindrical equal-area, Lambert conformal conic (1- and 2-parallel), and Albers equal-area conic (function form in `MapProjects`)
+- Reference ellipsoids: predefined models (WGS84, GRS80, Clarke 1866/1880, Bessel 1841, International 1924, …) plus custom ellipsoids via semi-major/semi-minor axis parameters
+- Coordinate system transformations (`Transformations`): geodetic to geocentric Cartesian and back, datum change between ellipsoids (`ChangeDatum`), average/instantaneous terrestrial, local astronomic and local geodetic, horizontal angle, apparent place, and orbital conversions
+- Typed geodetic points (`GeodeticPoint<TLinear, TAngular>`) built on the unit types of `IRI.Maptor.Sta.Common`
+- Ready-made SRS definitions (`SrsBases`: `GeodeticWgs84`, `WebMercator`, UTM zones, Lambert variants) and SRID helpers (`SridHelper`: 4326, 3857, 102100)
+
+## Usage
+
+Convert a geodetic position to geocentric Cartesian coordinates:
+
+```csharp
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+
+var wgs84 = Ellipsoids.WGS84;
+
+var geodetic = new Point(51.123456, 35.123456);   // longitude, latitude in degrees
+
+var cartesian = Transformations.ToCartesian(geodetic, wgs84);
+```
+
+Project geodetic coordinates to Mercator:
+
+```csharp
+using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+
+var projected = MapProjects.GeodeticToMercator(new Point(51.4, 35.7));
+```
+
+Work with typed geodetic points:
+
+```csharp
+using IRI.Maptor.Sta.Metrics;
+using IRI.Maptor.Sta.SpatialReferenceSystem;
+
+var point = new GeodeticPoint<Meter, Degree>(
+    Ellipsoids.WGS84,
+    new Meter(0),
+    new Degree(51.123456),
+    new Degree(35.123456));
+
+var cartesian = point.ToCartesian<Meter>();
+```
+
+## See also
+
+- [Coordinate systems](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/CoordinateSystems/README.md) — the geocentric/topocentric systems and how `Transformations` converts between them
+- [Map projections](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/MapProjections/README.md) — UTM, Web Mercator, and the other implemented projections
+- [Models](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem/Models/README.md) — reference ellipsoids and horizontal datums
+
 ---
-
-📦 **NuGet**: [IRI.Maptor.Sta.SpatialReferenceSystem](https://www.nuget.org/packages/IRI.Maptor.Sta.SpatialReferenceSystem)
-
-🐞 **Report Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+[NuGet package](https://www.nuget.org/packages/IRI.Maptor.Sta.SpatialReferenceSystem/) · [Report issues](https://github.com/hosseinnarimanirad/Maptor/issues) · [Back to IRI.Maptor.Sta](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/README.md)

@@ -1,56 +1,9 @@
 # IRI.Maptor.Sta.Spatial
 
-[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Spatial.svg?style=flat-square)](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
-[![.NET Standard](https://img.shields.io/badge/.NET%20Standard-2.1-blue)](https://docs.microsoft.com/en-us/dotnet/standard/net-standard)
+[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Spatial?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial/)
+[![Target](https://img.shields.io/badge/netstandard2.1-512BD4)](https://learn.microsoft.com/dotnet/standard/net-standard)
 
-The core spatial engine of the Maptor library. Provides geometry types, spatial algorithms, advanced data structures, and a wide range of format I/O — all targeting **.NET Standard 2.1** with no UI dependencies.
-
----
-
-## Features
-
-### Geometry Types
-- **Full OGC geometry model**: `Point`, `LineString`, `Polygon`, `MultiPoint`, `MultiLineString`, `MultiPolygon`, `GeometryCollection`
-- Typed generics (`Geometry<TPoint>`) that carry coordinate system information
-- Geometry operations: union, intersection, difference, buffer, simplification
-
-### Spatial Analysis
-- **Delaunay triangulation** and **Voronoi diagrams**
-- **Computational geometry**: convex hull, visibility, polygon decomposition
-- **Simplification**: Douglas-Peucker, Visvalingam-Whyatt
-- **Digital terrain modeling**: contour generation, TIN, slope/aspect
-- **Interpolation**: IDW and other spatial interpolation methods
-- **Shape characteristics**: compactness, shape index metrics
-- **Area statistics** and topology analysis
-- **Space-filling curves (SFC)**: Hilbert and Z-order (Morton) curve indexing
-
-### Spatial Indexing & Data Structures
-- **KdTree** — k-d tree for nearest-neighbour queries
-- **RTree** — R-tree for range/window queries
-- **Map indexes** — grid-based tile indexing
-
-### Format I/O
-
-| Format | Read | Write | Notes |
-|---|---|---|---|
-| GeoJSON | ✔ | ✔ | RFC 7946 compliant |
-| WKT / WKB (OGC SFA) | ✔ | ✔ | ISO/OGC compliant |
-| Shapefile (SHP/DBF/SHX/PRJ) | via `Sta.ShapefileFormat` | — | |
-| TopoJSON | ✔ | ✔ | Topology encoding + quantization |
-| KML / KMZ | via `Sta.Ogc` | via `Sta.Ogc` | |
-| DXF | ✔ | ✔ | AutoCAD interchange with styling |
-| SVG | ✔ | ✔ | Round-trip coordinate preservation |
-| EPS | ✔ | ✔ | Round-trip coordinate preservation |
-| GeoTIFF / Worldfile | ✔ | — | Georeferenced raster |
-| GPX | ✔ | ✔ | GPS tracks, routes, waypoints |
-| GRD | ✔ | — | Grid raster format |
-| PMTiles | ✔ | ✔ | Serverless tile archive (v3) |
-| Cesium Terrain | ✔ | — | `quantized-mesh-1.0` and `heightmap-1.0`; writing not yet implemented |
-| SQL Server Native Binary | ✔ | ✔ | MS-SSCLRT spatial binary |
-| ESRI JSON | ✔ | — | ArcGIS REST JSON geometry |
-| PRJ | ✔ | — | ESRI projection WKT |
-
----
+The core spatial engine of the Maptor stack. Provides the `Geometry<T>` model, spatial analysis algorithms, spatial indexes, and a wide range of geospatial format I/O — all UI-free and netstandard2.1-compatible.
 
 ## Installation
 
@@ -58,74 +11,69 @@ The core spatial engine of the Maptor library. Provides geometry types, spatial 
 dotnet add package IRI.Maptor.Sta.Spatial
 ```
 
----
+## Features
 
-## Quick Start
+- OGC geometry model via `Geometry<T>`: point, linestring, polygon, their multi-variants, and geometry collections, with WKT/WKB round-trip (`FromWkt`, `FromWkb`)
+- Feature model: `Feature<T>` and `FeatureSet<T>` with fields and change tracking
+- Spatial analysis: Delaunay triangulation, Voronoi diagrams, convex hull, area statistics, topology helpers, and shape characteristics metrics
+- Line simplification: Ramer-Douglas-Peucker, Visvalingam-Whyatt, and other point-reduction methods, plus simplification quality metrics
+- Digital terrain modeling: regular (grid) and irregular (TIN) DTMs
+- Spatial interpolation: inverse distance weighting (IDW)
+- Space-filling curves: Hilbert and Z-order (Morton) point ordering
+- Spatial indexes: k-d tree (plain and balanced), R-tree, and space-filling-curve R-tree
+- Map sheet/tile indexes for geodetic and UTM grids
+- Format I/O (see table below)
+
+## Format I/O
+
+| Format | Read | Write | Notes |
+|---|---|---|---|
+| GeoJSON | Yes | Yes | Geometries, features, feature sets |
+| WKT / WKB (OGC SFA) | Yes | Yes | |
+| TopoJSON | Yes | Yes | Topology encoding and quantization |
+| DXF | Yes | Yes | AutoCAD interchange with styling |
+| SVG | Yes | Yes | |
+| EPS | Yes | Yes | |
+| GPX | Yes | Yes | Waypoints, routes, tracks |
+| PMTiles | Yes | Yes | Serverless tile archive (v3) |
+| SQL Server native binary | Yes | Yes | MS-SSCLRT spatial binary |
+| Vector tiles (MVT) | Yes | No | |
+| Cesium terrain | Yes | No | `quantized-mesh-1.0` and `heightmap-1.0`; writing not implemented |
+| GeoTIFF | Yes | No | Georeferenced raster |
+| GRD | Yes | No | Grid raster format |
+| ESRI JSON | Yes | No | ArcGIS REST JSON geometry |
+| PRJ | Yes | No | ESRI projection WKT |
+
+Shapefiles are handled by the companion package `IRI.Maptor.Sta.ShapefileFormat`; KML/KMZ by `IRI.Maptor.Sta.Ogc`; MBTiles/GeoPackage by `IRI.Maptor.Ket.SqlitePersistence`.
+
+## Usage
 
 ```csharp
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Extensions;
 
-// Create a line between two points
-var london   = new Point(51.5074, -0.1278);
-var newYork  = new Point(40.7128, -74.0060);
-var line = Geometry<Point>.CreatePointOrLineString(new List<Point> { london, newYork }, SridHelper.GeodeticWGS84);
+var points = new List<Point> { new Point(51.33, 35.70), new Point(51.42, 35.75) };
 
-// Measure distance
-Console.WriteLine($"Ellipsoidal: {line.GetEllipsoidalLength():N1} km");
-Console.WriteLine($"  Spherical: {line.GetSphericalLength():N1} km");
+// note: (List<T> points, int srid) is the only valid overload
+var line = Geometry<Point>.CreatePointOrLineString(points, srid: 4326);
 
-// Export to GeoJSON
-Console.WriteLine(line.AsGeoJson().Serialize(indented: true));
+// per-segment lengths on the ellipsoid
+double meters = SpatialUtility.GetEllipsoidalLength(points[0], points[1]);
+
+// export to GeoJSON
+string geoJson = line.AsGeoJson().Serialize(indented: true);
+
+// WKT round-trip
+var parsed = Geometry<Point>.FromWkt("POINT (51.39 35.69)", 4326);
 ```
+
+## See also
+
+- [Analysis](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/Analysis/README.md) · [Digital terrain modeling](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/Analysis/DigitalTerrainModeling/README.md) · [Interpolation](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/Analysis/Interpolation/README.md) · [Space-filling curves](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/Analysis/SFC/README.md)
+- [Advanced structures (KdTree, RTree)](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/AdvancedStructures/README.md)
+- IO formats: [GeoJSON](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/GeoJsonFormat/README.md) · [WKT/WKB](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/OgcSFA/README.md) · [TopoJSON](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/TopoJson/README.md) · [DXF](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/Dxf/README.md) · [SVG](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/Svg/README.md) · [EPS](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/Eps/README.md) · [PMTiles](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/PmTiles/README.md) · [Vector tiles](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/VectorTiles/README.md) · [Cesium terrain](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/CesiumTerrain/README.md) · [SQL Server native binary](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/SqlServerNativeBinary/README.md) · [ESRI JSON](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial/IO/EsriJson/README.md)
 
 ---
-
-## Project Structure
-
-```
-Sta.Spatial/
-├── Primitives/           # Geometry<T> and base spatial types
-├── GeometryOperations/   # Boolean ops, buffering, overlays
-├── Analysis/
-│   ├── ComputationalGeometry.cs
-│   ├── DelaunayTriangulation.cs
-│   ├── VoronoiDiagram.cs
-│   ├── Simplification/   # Douglas-Peucker, Visvalingam-Whyatt
-│   ├── Topology/
-│   ├── Interpolation/
-│   ├── DigitalTerrainModeling/
-│   ├── ShapeCharacteristics/
-│   └── SFC/              # Space-filling curve indexing
-├── AdvancedStructures/   # KdTree, RTree
-├── MapIndexes/           # Tile/grid index helpers
-├── IO/
-│   ├── GeoJsonFormat/
-│   ├── OgcSFA/           # WKT / WKB
-│   ├── TopoJson/
-│   ├── Dxf/
-│   ├── Svg/
-│   ├── Eps/
-│   ├── GeoTiff/
-│   ├── Gpx/
-│   ├── Grd/
-│   ├── PmTiles/
-│   ├── CesiumTerrain/
-│   ├── SqlServerNativeBinary/
-│   ├── EsriJson/
-│   ├── Worldfile/
-│   └── Prj/
-├── Extensions/           # Extension methods on geometry types
-├── Helpers/
-├── Models/
-├── Dtos/
-└── Services/
-```
-
----
-
-📦 **NuGet**: [IRI.Maptor.Sta.Spatial](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
-
-🐞 **Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+[NuGet package](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial/) · [Report issues](https://github.com/hosseinnarimanirad/Maptor/issues) · [Back to IRI.Maptor.Sta](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/README.md)

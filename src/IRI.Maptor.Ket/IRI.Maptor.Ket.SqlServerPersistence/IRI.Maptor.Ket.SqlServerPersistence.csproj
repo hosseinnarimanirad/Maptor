@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Ket/IRI.Maptor.Ket.SqlServerPersistence</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

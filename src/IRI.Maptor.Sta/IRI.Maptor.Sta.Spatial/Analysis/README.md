@@ -1,8 +1,8 @@
-# Spatial Analysis
+# Spatial analysis
 
 The algorithm toolbox of `IRI.Maptor.Sta.Spatial`: triangulation and Voronoi diagrams, convex hulls, line simplification, topology predicates, space-filling curves, and network building — all on plain geometry types, no UI dependencies.
 
-## Delaunay Triangulation & Voronoi Diagrams
+## Delaunay triangulation & Voronoi diagrams
 
 `DelaunayTriangulation` is a Bowyer–Watson incremental insertion. Triangles come back as CCW vertex indices with per-edge neighbour links (`-1` on the convex hull), and the dual Voronoi diagram comes for free: every triangle's circumcenter is a Voronoi vertex, and hull cells stay open as infinite rays.
 
@@ -23,16 +23,29 @@ var voronoi = triangulation.GetVoronoiDiagram();               // or VoronoiDiag
 // voronoi.Cells (IsClosed = false on the hull), voronoi.Edges (rays have VertexB == -1)
 ```
 
-## Convex Hull
+## Convex hull
 
-`ComputationalGeometry.CreateConvexHull` is a Graham scan — sort by polar angle, keep only the left turns. It returns the hull vertices counter-clockwise; duplicates and collinear edge points are dropped.
+The convex hull is the smallest convex polygon that contains every point of a set — stretch a rubber band around the points and let it snap tight: it hooks onto the outermost points and skips everything inside. Where a bounding box spends two corners enclosing plenty of dead space, the hull is the tightest convex fence the data admits — the natural answer to "what area does this dataset actually cover?".
+
+`ComputationalGeometry.CreateConvexHull` is a Graham scan — sort by polar angle around the lowest point, keep only the left turns, O(n log n). It returns the hull vertices counter-clockwise; duplicates and collinear edge points are dropped.
 
 <p align="center">
   <img src="../images/convex-hull.png" alt="Convex hull vs bounding box" width="600">
 </p>
 
 ```csharp
+// a crescent of points: an outer arc plus a few strays inside it
+var points = new List<Point>
+{
+    new Point(0, -10), new Point(-7, -7), new Point(-10, 0),   // outer arc …
+    new Point(-7, 7),  new Point(0, 10),  new Point(7, 7),
+    new Point(-5, 0),  new Point(-3.5, 3.5),                   // … inner strays
+    new Point(0, 5),   new Point(3, 3),
+};
+
 List<Point> hull = ComputationalGeometry.CreateConvexHull(points);
+// → the six outer-arc points, counter-clockwise; the rubber band bridges
+//   straight across between (7, 7) and (0, -10), and the inner strays vanish
 
 var hullPolygon = geometry.GetConvexHull();   // same thing on any Geometry<T>
 ```
@@ -76,7 +89,7 @@ bool inPoly  = TopologyUtility.IsPointInPolygon(polygonOrMultiPolygon, point);
 
 Also here: segment–segment intersection (`LineSegmentsIntersects`), point–segment distance, the point/circumcircle test (`GetPointCircleRelation`), and left/right-of-vector classification (`GetPointVectorRelation`, with an optional `tolerance`).
 
-## Space-Filling Curves (SFC)
+## Space-filling curves (SFC)
 
 Hilbert, Z-order (Morton) and other curve orderings that linearize 2-D data while keeping neighbours close — the backbone of `SFCRTree` bulk-loading and locality-preserving sorts. See the dedicated [SFC README](SFC/README.md).
 
@@ -98,7 +111,7 @@ var components = network.GetConnectedComponents();  // disconnected islands
 var graph      = network.ToAdjacencyList();         // → Sta.Graph: Dijkstra, BFS, …
 ```
 
-## Statistics & Shape Characteristics
+## Statistics & shape characteristics
 
 `AreaStatistics` summarizes the area distribution of a set of `Geometry<Point>` polygons (mean, standard deviation, histogram, CSV export). The `CharacteristicsMeasure` enum names McMaster's displacement measures (PCC, PDD, PCLL, …) computed by the simplification metrics above.
 
@@ -109,6 +122,8 @@ var graph      = network.ToAdjacencyList();         // → Sta.Graph: Dijkstra, 
 
 ---
 
-📦 **NuGet**: [IRI.Maptor.Sta.Spatial](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
+**NuGet**: [IRI.Maptor.Sta.Spatial](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
 
-🐞 **Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+**Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+
+[Back to IRI.Maptor.Sta.Spatial](../README.md)

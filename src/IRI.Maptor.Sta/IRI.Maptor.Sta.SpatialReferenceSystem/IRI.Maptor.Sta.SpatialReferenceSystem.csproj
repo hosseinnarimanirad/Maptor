@@ -13,7 +13,7 @@
     <Authors>Hossein Narimani Rad</Authors>
     <Company>Maptor</Company>
     <Description>A .NET standard library to transform various spatial reference systems</Description>
-    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.SpatialReferenceSystem</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>geometry;GIS;spatial;Ellipsoid;WGS84;UTM;Mercator;latitude;longitude</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>

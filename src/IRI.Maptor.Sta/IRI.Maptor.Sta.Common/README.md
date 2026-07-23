@@ -1,116 +1,64 @@
 # IRI.Maptor.Sta.Common
 
-The **IRI.Maptor.Sta.Common** project is the foundational building block of the **Maptor GIS library suite**. It provides core abstractions, utility classes, mathematical models, data structures, and essential helpers required by higher-level Maptor components. This library ensures consistency and reusability across all GIS-related modules.
+[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Common?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Sta.Common/)
+[![Target](https://img.shields.io/badge/netstandard2.1-512BD4)](https://learn.microsoft.com/dotnet/standard/net-standard)
 
----
+The foundational package of the Maptor GIS stack. It provides the core geometric primitives, abstractions, data structures, mathematics, unit types, and helper utilities that every other `IRI.Maptor.*` package builds on.
 
-## 🔍 Overview
+## Installation
 
-This library focuses on:
-
-* **Core interfaces and abstractions** for domain-driven design (e.g., `IIdentifiable`, `IPoint`)
-* **Mathematical operations** including linear algebra and statistics
-* **Advanced data structures** (trees, heaps, disjoint sets)
-* **Unit and measurement conversions** (linear, angular)
-* **Extensions and helpers** for strings, numbers, collections, and I/O
-* **Service models** for integration with external APIs (Google, Bing, Here, Mapzen)
-
-It acts as the **backbone for Maptor**, ensuring other projects share a unified and optimized base.
-
----
-
-## ✨ Features
-
-* **Abstractions** for geometric and domain models
-* **Encodings** (Base64 URL, Persian DOS)
-* **Enums and attribute utilities**
-* **Rich set of data structures**: binary heaps, trees, interval trees, red-black trees, disjoint sets
-* **Helpers** for I/O, JSON, XML, HTTP, security, randomness
-* **Mathematics**: matrices, vectors, eigenvalues, chi-square, statistics models
-* **Unit conversions** for angles and lengths (meters, feet, miles, etc.)
-* **Extensions** for `string`, `DateTime`, `IEnumerable`, `int`, `double`, etc.
-* **External service contracts** for routing, geolocation, and dictionary services
-
----
-
-## 📚 Installation
-
-Install via **NuGet**:
-
-```powershell
-Install-Package IRI.Maptor.Sta.Common
+```bash
+dotnet add package IRI.Maptor.Sta.Common
 ```
 
-Targets **.NET Standard 2.1** — compatible with .NET 5+ and .NET Core 3.x.
+## Features
 
----
+- Geometric primitives: `Point`, `PointM`, `PointZ`, `PointZM`, `BoundingBox`, `LineSegment`, `PointCollection`
+- Core abstractions, enums, attributes, and JSON converters shared across the stack
+- Data structures: binary heaps (min/max), binary search tree, red-black tree, interval tree, order-statistic tree, B-tree, disjoint set, sort algorithms
+- Mathematics: `Matrix`, `Vector`, and eigenvalue/eigenvector computation (`IRI.Maptor.Sta.Mathematics`), plus statistics models
+- Linear and angular unit types with conversions: `Meter`, `Foot`, `Mile`, `Yard`, `Inch`, `Rod`, `Chain`, `Degree`, `Radian`, `Grade` (`IRI.Maptor.Sta.Metrics`)
+- Encodings: Base64 URL encoding and Persian DOS code page conversion
+- Helpers for I/O, JSON/XML, HTTP transport, hex strings, zip archives, randomness, and secure strings
+- Extension methods for common BCL types (strings, numbers, dates, collections)
+- Response/contract models for external map services (Google, Bing, Here, Mapzen)
 
-## 🔄 Example Usage
+## Usage
 
-### Working with Points and Bounding Boxes:
+Working with bounding boxes:
 
 ```csharp
 using IRI.Maptor.Sta.Common.Primitives;
 
-var pointA = new Point(10.5, 20.3);
-var pointB = new Point(12.7, 22.1);
+var bbox = new BoundingBox(xMin: 50.8, yMin: 35.5, xMax: 51.6, yMax: 35.9);
 
-var bbox = new BoundingBox(pointA, pointB);
-Console.WriteLine($"Bounding Box: {bbox}");
+Console.WriteLine(bbox.Center);   // (51.2, 35.7)
+Console.WriteLine(bbox.Width);    // 0.8
+
+var merged = bbox.Add(new BoundingBox(50.0, 35.0, 51.0, 36.0));
+var grown  = bbox.Expand(1.1);    // scale around the center
 ```
 
-### Using Unit Conversions:
+Converting between linear units:
 
 ```csharp
-using IRI.Maptor.Sta.Common.Units.Linear;
+using IRI.Maptor.Sta.Metrics;
 
-double meters = 1000;
-var miles = new Mile(meters);
-Console.WriteLine($"{meters} meters = {miles.Value} miles");
+var distance = new Meter(1609.344);
+var miles = (Mile)distance;       // explicit conversion between unit types
 ```
 
----
+Basic linear algebra:
 
-## 🛠 Project Structure
+```csharp
+using IRI.Maptor.Sta.Mathematics;
 
-```
-Common/
-  Abstractions/        # Core interfaces (IHasM, IIdentifiable, IRepository, etc.)
-  Attributes/          # Custom attributes like FieldAttribute
-  Encodings/           # Encoding utilities (Base64Url, Persian DOS)
-  Enums/               # Enum definitions for geometry and spatial relations
-  Exceptions/          # Custom exceptions
-  JsonConverters/      # JSON converters for specialized types
-  Randoms/             # Random generators
-Contracts/
-  Google/, Bing/, Here/, Mapzen/ # API response models
-DataStructures/
-  BinaryHeap/, Trees/, SortAlgorithms/ # Advanced structures
-Extensions/            # Extension methods for core types
-Helpers/               # Utility classes for I/O, HTTP, security, etc.
-Mathematics/           # Linear algebra, statistics, optimization
-Models/                # Domain models (GeoreferencedImage, ValueObject)
-Primitives/            # Geometric primitives (Point, LineSegment, BoundingBox)
-Services/              # Service models and helpers (Oxford API, DateTime services)
-Units/                 # Unit conversion systems (Linear, Angular)
+var m = new Matrix(new double[,] { { 1, 2 }, { 3, 4 } });
 ```
 
----
+## See also
 
-## 💪 Why Use This Library?
-
-* Provides **solid foundations** for building GIS and spatial applications
-* Eliminates repetitive code with **rich utility support**
-* Ensures **high performance** via optimized algorithms and structures
+- [Algebra: Matrix and Vector](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Common/Mathematics/Algebra/README.md)
 
 ---
-
-## 👥 Contributing
-
-Contributions are welcome! Please fork the repository, create a feature branch, and submit a pull request.
-
----
-
-## ⚖️ License
-
-This project is licensed under the **MIT License**.
+[NuGet package](https://www.nuget.org/packages/IRI.Maptor.Sta.Common/) · [Report issues](https://github.com/hosseinnarimanirad/Maptor/issues) · [Back to IRI.Maptor.Sta](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/README.md)

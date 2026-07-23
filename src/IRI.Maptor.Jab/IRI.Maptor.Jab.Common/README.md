@@ -1,62 +1,65 @@
-# 🗺️ IRI.Maptor.Jab.Common
+# IRI.Maptor.Jab.Common
 
-A WPF-first utility library that underpins the **Maptor** ecosystem. It provides MVVM building blocks, a rich set of WPF converters/behaviors, cartography primitives and rendering strategies, layer abstractions for vectors/rasters/tiles, map-marker controls, localization helpers, and small Office (OpenXML) utilities.
+[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Jab.Common?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Jab.Common/)
+[![Target](https://img.shields.io/badge/net8.0--windows-512BD4)](https://dotnet.microsoft.com/download/dotnet/8.0)
 
-> Target Framework: **.NET 8.0 (Windows)** with **UseWPF** and **UseWindowsForms** enabled.
+The WPF UI tier of the Maptor stack. It hosts the central `MapViewer` control together with the
+MVVM infrastructure, layer model, cartography primitives, map-marker controls, and WPF resource
+dictionaries that Maptor-based desktop applications build on. Targets .NET 8.0 on Windows with
+both WPF and Windows Forms enabled.
 
----
+## Installation
 
-## ✨ Highlights
- 
-  ✅**MVVM infrastructure:** `Notifier`, `ViewModelBase`, and `RelayCommand` cut down on boilerplate.  
-  ✅**Dialog abstraction:** `IDialogService` + dialog view-models (e.g., `ChangePasswordDialogViewModel`).  
-  ✅**Converters & Behaviors:** Dozens of ready-to-use WPF converters and a few behaviors/animations.  
-  ✅**Cartography primitives:** `VisualParameters`, symbolizers, color scales, and render strategies.  
-  ✅**Layers:** `ILayer` + concrete layers such as `FeatureLayer`, `RasterLayer`, `GridLayer`, `GroupLayer`, etc.  
-  ✅**Tile services:** `TileMapProvider` + `TileMapProviderFactory` for Google/Bing/OSM/etc. URL generation.  
-  ✅**Map markers:** A set of WPF `UserControl`s (image/shape/label markers) to annotate maps.  
-  ✅**Localization:** `LocalizationManager` and resource-key patterns used across presenters and services.  
-  ✅**Office helpers:** Minimal Excel/Word helpers using OpenXML.  
+```bash
+dotnet add package IRI.Maptor.Jab.Common
+```
 
----
- 
+Requires Windows (WPF). Alternatively, add `IRI.Maptor.Jab.Common.csproj` to your solution and
+reference it from your WPF app.
 
-## ⚙️ Installation
+## Features
 
-Use one of the following:
+- `MapViewer` control (`IRI.Maptor.Jab.Controls` XAML namespace) with companion views: sketch bar,
+  geometry editor, coordinate panel, go-to (geodetic/projected), map extent panel, legends, and
+  scalebar.
+- MVVM building blocks: `ViewModelBase`, `RelayCommand`, and the abstract `MapViewModelBase` that
+  drives the map, plus the `IDialogService` dialog abstraction.
+- Layer model: `BaseLayer` and concrete layers such as `FeatureLayer`, `VectorLayer`,
+  `RasterLayer`, `TileServiceLayer`, `GridLayer`, `GroupLayer`, `DrawingLayer`,
+  `EditableFeatureLayer`, and `ClusteredPointLayer`.
+- Cartography primitives: `VisualParameters`, symbologies, and rendering helpers.
+- Map markers: WPF user controls for location, label, photo, and textbox markers.
+- Localization: RTL-aware language switching (`LanguageCombo`, WPF binding extensions) on top of
+  the `LocalizationManager` in IRI.Maptor.Jab.Core.
+- WPF assets: resource dictionaries for converters, colors, fonts, and animations.
+- Office helpers: minimal Excel/Word export utilities built on OpenXML.
 
-1. **NuGet** (if published for this project):  
-   ```bash
-   dotnet add package IRI.Maptor.Jab.Common
-   ```
+## Usage
 
-2. **Project reference (local source)**: add the `IRI.Maptor.Jab.Common.csproj` to your solution and reference it from your WPF app.
+Place a `MapViewer` in a window and initialize it with a presenter derived from
+`MapViewModelBase`:
 
-> **Requires Windows** (WPF). .NET 8 SDK recommended.
+```xml
+<Window xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls;assembly=IRI.Maptor.Jab.Common" ...>
+    <maptor:MapViewer x:Name="map" />
+</Window>
+```
 
---- 
+```csharp
+var presenter = new AppViewModel(); // your class derived from MapViewModelBase
 
-## 📂 Folder Map
+await MapInitializationHelper.InitializeMapAsync(this.map, this, presenter);
 
-- **Abstractions** – `IDialogService`, `IMapMarker`.
-- **Assets** – Converters, commands, brushes, animations, fonts, images; plus `IRI.*.xaml` resource dictionaries.
-- **Cartography** – Color scales, symbolizers, renderers (GDI, WriteableBitmap, DrawingVisual), helpers.
-- **Common** – Small cross-cutting code (enums, etc.).
-- **Extensions** – Extension methods (colors, geometry, pens, points, rectangles…).
-- **Helpers** – Utilities for images, printing, raster handling, legends, simplification…
-- **Layers** – `ILayer`, `BaseLayer`, and concrete layers (feature, grid, raster, tile-service, etc.).
-- **Localization** – Keys and the localization manager glue.
-- **Model** – Visual, label, map, security models; table commands; recursive collections; etc.
-- **OfficeFormats** – Minimal Excel/Word helpers via OpenXML.
-- **Presenters** – Base presenter and map/legend/symbology/coordinate-panel presenters + dialog VMs.
-- **TileServices** – Provider factory, URL building, cache flags, and type enums.
-- **View** – WPF map-markers and options controls.
+this.DataContext = presenter;
+```
 
----
+See the sample application for a complete window with measurement, drawing, legends, and basemap
+selection: https://github.com/hosseinnarimanirad/Maptor/blob/master/samples/IRI.Maptor.Tag.SampleWpfApp/README.md
 
-## 💻 Bring the resources into your app
+### Bring the resources into your app
 
-Merge the built-in resource dictionaries to unlock colors, fonts, converters, and animations.
+Merge the built-in resource dictionaries to unlock the package's colors, fonts, converters, and
+animations:
 
 ```xml
 <!-- App.xaml -->
@@ -66,7 +69,6 @@ Merge the built-in resource dictionaries to unlock colors, fonts, converters, an
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- Animations, Colors, Fonts, Converters from this package -->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Fonts.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Colors.xaml"/>
@@ -76,6 +78,22 @@ Merge the built-in resource dictionaries to unlock colors, fonts, converters, an
 </Application>
 ```
 
-Now you can use converters by key (e.g. `boolToVisibilityConverter`, `stringToColorConverter`, `byteArrayToImageConverter`, etc.).
+Converters are then available by key, e.g. `boolToVisibilityConverter` and
+`stringToColorConverter`. An `IRI.Maptor.Animations.xaml` dictionary is also available.
+
+## Dependencies
+
+- Windows only: .NET 8.0 (`net8.0-windows`) with WPF and Windows Forms.
+- Builds on the Maptor Sta packages (Spatial, SpatialReferenceSystem, ShapefileFormat, Ogc, ...)
+  and IRI.Maptor.Jab.Core (tile providers, localization store).
+- Third-party: MahApps.Metro (+ icon packs), WriteableBitmapEx, Microsoft.Xaml.Behaviors.Wpf,
+  DataGridExtensions, DocumentFormat.OpenXml, Stateless.
+
+## See also
+
+- [SLD symbology editor](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Jab/IRI.Maptor.Jab.Common/Views/Symbology/Sld/README.md)
 
 ---
+[NuGet package](https://www.nuget.org/packages/IRI.Maptor.Jab.Common/) ·
+[Report issues](https://github.com/hosseinnarimanirad/Maptor/issues) ·
+[Back to IRI.Maptor.Jab](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Jab/README.md)

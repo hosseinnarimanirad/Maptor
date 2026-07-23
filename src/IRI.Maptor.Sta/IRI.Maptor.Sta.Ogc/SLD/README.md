@@ -36,3 +36,6 @@ The namespace prefixes (`sld`, `ogc`, `xlink`, `xsi`) are emitted automatically 
 ## References
 
 - [OGC Styled Layer Descriptor Specification 1.0.0](https://portal.ogc.org/files/?artifact_id=1188)
+
+---
+[Back to IRI.Maptor.Sta.Ogc](../README.md)

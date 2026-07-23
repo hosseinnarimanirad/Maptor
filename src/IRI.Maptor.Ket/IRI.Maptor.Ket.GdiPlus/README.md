@@ -1,28 +1,11 @@
 # IRI.Maptor.Ket.GdiPlus
 
-[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.GdiPlus.svg?style=flat-square)](https://www.nuget.org/packages/IRI.Maptor.Ket.GdiPlus)
-[![.NET](https://img.shields.io/badge/.NET-8.0--windows-blue)](https://dotnet.microsoft.com/download/dotnet/8.0)
+[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.GdiPlus?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Ket.GdiPlus/)
+[![Target](https://img.shields.io/badge/net8.0--windows-512BD4)](https://dotnet.microsoft.com/download/dotnet/8.0)
 
-A **.NET 8 (Windows)** library that bridges GDI+/System.Drawing with the Maptor spatial stack — providing georeferenced raster I/O, digital image processing, and satellite imagery helpers.
-
----
-
-## Features
-
-### Raster / Geo-tagged Image I/O
-- `GeoRasterFileDataSource` — load georeferenced raster files (GeoTIFF, Worldfile) as a spatial data source
-- `ClusteredGeoTaggedImageSource` — data source for clustered sets of geo-tagged images
-
-### Digital Image Processing
-- `ImageHelper` / `DoubleBitmap` — GDI+ bitmap utilities with high-precision pixel access
-- Pixel value types: `ArgbValues`, `ByteArgbValues`, `RgbValues`, `ByteRgbValues`
-- `ImageMatrix` — matrix representation of raster data for numerical processing
-- `Conversion` — helpers for converting between image formats and numeric arrays
-- `SpatialDomainEnhancement` — spatial filtering (e.g. sharpening, smoothing)
-- `ImageMatching` — image similarity / template matching
-- `RemoteSensing` — satellite and aerial imagery analysis utilities
-
----
+Bridges GDI+/System.Drawing with the Maptor spatial stack — georeferenced raster data sources
+(worldfile-based), EXIF geotag reading/writing, and digital image processing utilities used by the
+Maptor desktop applications.
 
 ## Installation
 
@@ -30,36 +13,42 @@ A **.NET 8 (Windows)** library that bridges GDI+/System.Drawing with the Maptor 
 dotnet add package IRI.Maptor.Ket.GdiPlus
 ```
 
-> Requires Windows (uses `System.Drawing.Common` / GDI+).
+Requires Windows (uses `System.Drawing` / GDI+).
+
+## Features
+
+- `GeoRasterFileDataSource` — raster data source for worldfile-georeferenced images
+- `ClusteredGeoTaggedImageSource` — data source for clustered sets of geo-tagged images
+- `WorldfileManager` / `WorldfilePyramid` — read/write ESRI worldfiles and build worldfile-based tile pyramids
+- `ImageHelper` — EXIF geotag read/write (`GetLatitude`, `GetLongitude`, `GetAltitude`, `SaveGeoTagInfo`), bitmap-matrix conversion, image differencing and confusion-matrix comparison, bitmap overlay
+- `DoubleBitmap` — high-precision pixel access over GDI+ bitmaps
+- Pixel value types (`ArgbValues`, `ByteArgbValues`, `RgbValues`, `ByteRgbValues`) and `Conversion` helpers between images and numeric arrays
+- `ImageMatrix` — matrix representation of raster data for numerical processing
+- Spatial-domain enhancement: `GaussianConvolution`, `RadiometricEnhancement`, `GeometricEnhancement`
+- SIFT image matching (`ScaleInvariantFeatureTransform`, `SiftImageMatching`)
+- Remote sensing: principal component transformation
+
+## Usage
+
+```csharp
+using IRI.Maptor.Ket.GdiPlus.Helpers;
+using IRI.Maptor.Ket.GdiPlus.WorldfileFormat;
+
+// load a worldfile-georeferenced image
+var geoImage = await WorldfileManager.ReadWorldfileAsync(@"c:\data\map.png", srid: 4326);
+
+// read the EXIF geotag of a photo
+using var bitmap = new System.Drawing.Bitmap(@"c:\photos\p1.jpg");
+double? latitude = ImageHelper.GetLatitude(bitmap);
+double? longitude = ImageHelper.GetLongitude(bitmap);
+```
+
+## Limitations
+
+- Windows only (`System.Drawing.Common` / GDI+).
+- Georeferencing is worldfile-based; embedded GeoTIFF tags are not read.
 
 ---
-
-## Project Structure
-
-```
-Ket.GdiPlus/
-├── IO/
-│   ├── GeoRasterFileDataSource.cs
-│   └── ClusteredGeoTaggedImageSource.cs
-├── DigitalImageProcessing/
-│   ├── ImageHelper.cs
-│   ├── DoubleBitmap.cs
-│   ├── ImageMatrix.cs
-│   ├── ImageMatching/
-│   ├── RemoteSensing/
-│   └── SpatialDomainEnhancement/
-├── Model/
-│   ├── ArgbValues.cs
-│   ├── ByteArgbValues.cs
-│   ├── RgbValues.cs
-│   ├── ByteRgbValues.cs
-│   └── Conversion.cs
-├── Persistence/
-└── Extensions/
-```
-
----
-
-📦 **NuGet**: [IRI.Maptor.Ket.GdiPlus](https://www.nuget.org/packages/IRI.Maptor.Ket.GdiPlus)
-
-🐞 **Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+[NuGet package](https://www.nuget.org/packages/IRI.Maptor.Ket.GdiPlus/) ·
+[Report issues](https://github.com/hosseinnarimanirad/Maptor/issues) ·
+[Back to IRI.Maptor.Ket](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Ket/README.md)

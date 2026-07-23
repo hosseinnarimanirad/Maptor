@@ -14,7 +14,7 @@
     <Authors>Hossein Narimani Rad</Authors>
     <Company>Maptor</Company>
     <Description>A .NET standard library containing primitive data structures and types</Description>
-    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/IRI.Maptor.Sta/IRI.Maptor.Sta.Common</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Common</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>GIS;spatial</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>

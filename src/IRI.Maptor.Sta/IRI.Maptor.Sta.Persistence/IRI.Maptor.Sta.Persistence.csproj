@@ -12,7 +12,7 @@
     <Authors>Hossein Narimani Rad</Authors>
     <Company>Maptor</Company>
     <Description>A .NET standard library containing primitive types to work with persistence laysers</Description>
-    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/IRI.Maptor.Sta/IRI.Maptor.Sta.Persistence</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Persistence</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>GIS;spatial;persistence</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>

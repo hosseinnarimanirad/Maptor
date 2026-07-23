@@ -1,32 +1,9 @@
 # IRI.Maptor.Sta.Persistence
 
-[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Persistence.svg?style=flat-square)](https://www.nuget.org/packages/IRI.Maptor.Sta.Persistence)
-[![.NET Standard](https://img.shields.io/badge/.NET%20Standard-2.1-blue)](https://docs.microsoft.com/en-us/dotnet/standard/net-standard)
+[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Persistence?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Sta.Persistence/)
+[![Target](https://img.shields.io/badge/netstandard2.1-512BD4)](https://learn.microsoft.com/dotnet/standard/net-standard)
 
-A .NET Standard 2.1 library of **persistence abstractions** for the Maptor GIS stack. Defines the interfaces and base types that concrete persistence adapters (SQL Server, PostGIS, SQLite, etc.) implement in the `IRI.Maptor.Ket.*` packages.
-
----
-
-## Key Abstractions
-
-| Type | Description |
-|---|---|
-| `IDataSource` | Root data-source interface |
-| `IVectorDataSource` | Read-only vector (feature) data source |
-| `IEditableVectorDataSource` | Vector data source with write support |
-| `IRasterDataSource` | Raster/image data source |
-| `VectorDataSource` | Base implementation for vector sources |
-| `RasterDataSource` | Base implementation for raster sources |
-| `BaseDataSource` | Common base for all data sources |
-| `ConnectedFeatureSet` | Feature set tied to a live data source |
-| `DataSourceType` | Enum of supported backend types |
-
-### Specialised base types
-- **`MemorySources/`** — in-memory vector/raster data sources for testing and in-process data
-- **`RasterDataSources/`** — base types for tile-based raster sources
-- **`ScaleDependentDataSources/`** — data sources that vary content by map scale
-
----
+Persistence abstractions for the Maptor GIS stack. Defines the data-source interfaces and base types that concrete adapters (SQL Server, PostgreSQL, SQLite, personal GDB, web API) implement in the `IRI.Maptor.Ket.*` packages, and ships ready-to-use in-memory and file-backed data sources.
 
 ## Installation
 
@@ -34,32 +11,44 @@ A .NET Standard 2.1 library of **persistence abstractions** for the Maptor GIS s
 dotnet add package IRI.Maptor.Sta.Persistence
 ```
 
----
+## Features
 
-## Project Structure
+- Core abstractions: `IDataSource`, `IVectorDataSource` (async feature queries by bounding box, geometry, or map scale), `IEditableVectorDataSource`, `IRasterDataSource`
+- Base implementations: `BaseDataSource`, `VectorDataSource`, `RasterDataSource`
+- In-memory vector sources built on `MemoryDataSource`, with file-backed variants for GeoJSON, shapefile, GPX, KML/KMZ, DXF, TopoJSON, ESRI JSON, and plain text/JSON lists
+- Raster sources: image pyramids (plain and zipped) and online/offline Google-style tile sources
+- Scale-dependent data sources that switch content by map scale (`MemoryScaleDependentDataSource`)
+- `ConnectedFeatureSet` model and the `DataSourceType` enum of supported backends
 
-```
-Sta.Persistence/
-├── Abstractions/
-│   ├── IDataSource.cs
-│   ├── IVectorDataSource.cs
-│   ├── IEditableVectorDataSource.cs
-│   └── IRasterDataSource.cs
-├── DataSources/
-│   ├── BaseDataSource.cs
-│   ├── VectorDataSource.cs
-│   ├── RasterDataSource.cs
-│   ├── MemorySources/
-│   ├── RasterDataSources/
-│   └── ScaleDependentDataSources/
-├── Model/
-├── Infrastructure/
-├── DataSourceType.cs
-└── ConnectedFeatureSet.cs
+## Usage
+
+Load a GeoJSON file as an editable in-memory data source:
+
+```csharp
+using IRI.Maptor.Sta.Persistence.DataSources;
+
+var source = await GeoJsonDataSource.CreateFromFileAsync(
+    "parcels.geojson", isLongitudeFirst: true, sourceSrid: 4326);
+
+var featureSet = await source.GetAsFeatureSetAsync();
 ```
 
+Query any vector source through the shared abstraction:
+
+```csharp
+using IRI.Maptor.Sta.Persistence.Abstractions;
+
+async Task PrintCountAsync(IVectorDataSource source, BoundingBox extent)
+{
+    var features = await source.GetAsFeatureSetAsync(extent);
+    Console.WriteLine(features.Features.Count);
+}
+```
+
+## Dependencies
+
+- `IRI.Maptor.Sta.Common`, `IRI.Maptor.Sta.Spatial`, `IRI.Maptor.Sta.SpatialReferenceSystem`
+- `IRI.Maptor.Sta.Ogc`, `IRI.Maptor.Sta.ShapefileFormat` (file-backed data sources)
+
 ---
-
-📦 **NuGet**: [IRI.Maptor.Sta.Persistence](https://www.nuget.org/packages/IRI.Maptor.Sta.Persistence)
-
-🐞 **Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+[NuGet package](https://www.nuget.org/packages/IRI.Maptor.Sta.Persistence/) · [Report issues](https://github.com/hosseinnarimanirad/Maptor/issues) · [Back to IRI.Maptor.Sta](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/README.md)

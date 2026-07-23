@@ -1,38 +1,31 @@
-# 🌍 GeoJSON Support in Maptor
-
-![GeoJson](https://img.shields.io/badge/GeoJSON-RFC_7946-blue)
-![.NET](https://img.shields.io/badge/.NET-Standard_2.1-green)
+# GeoJSON
 
 A .NET Standard implementation of GeoJSON (RFC 7946) for spatial data interchange: read and write features, and convert to/from the library's `Geometry<T>` types.
 
-## ✨ Features
+## Supported capabilities
 
-- Geometry types: `Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`
-- Feature and feature-collection (`FeatureCollection`) read/write
-- Conversion both ways: GeoJSON ⇄ `Geometry<Point>` / `Feature<Point>`
-- 2D, 3D (`Z`), and an optional 4D (`ZM`) extension on the model — note that measure (`M`) is **not** part of RFC 7946 output
+| Capability | Supported |
+|---|---|
+| Read | Yes — `GeoJson.DeserializeGeometry`, `GeoJson.LoadFromFile`, `GeoJsonFeatureSet.Parse` / `LoadAsync` |
+| Write | Yes — `IGeoJsonGeometry.Serialize`, `GeoJson.SaveFeatures`, `GeoJsonFeatureSet.SaveAsync` |
+| Z coordinates | Yes (3rd position element, per RFC 7946) |
+| M coordinates | Yes, as a non-standard 4D extension (`Geometry<PointZM>`) |
+| GeometryCollection | No — conversion throws |
 
-## 🌍 Coordinate Reference System
+Geometry types: `Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon`, `MultiPolygon`, plus `Feature` and `FeatureCollection`.
+
+## Coordinate reference system
 
 Per **RFC 7946 §4**, GeoJSON coordinates are WGS 84 (longitude, latitude in decimal degrees), equivalent to `urn:ogc:def:crs:OGC::CRS84`. An optional third position element is height in meters. Conversion methods take an `isLongitudeFirst` flag and an `srid` so you can adapt to non-default inputs.
 
-Polygon rings follow the right-hand rule (RFC 7946 §3.1.6): exterior rings **counterclockwise**, holes **clockwise**, and every ring is closed (first position repeated as last). Maptor's `Geometry<Point>` uses the same orientation invariant.
-
-### 4D Coordinate Support (Extension)
+### 4D coordinate support (extension)
 
 This implementation supports 4D coordinates (`PointZM` with measure) as an **extension beyond RFC 7946**. While RFC 7946 Section 3.1.1 states that implementations SHOULD NOT extend position arrays beyond 3 elements, this library provides 4D support for compatibility with systems that require measure values. This is provided as extra functionality and is not part of the GeoJSON standard.
 
-### Polygon Rings (RFC 7946 Section 3.1.6)
+### Polygon rings (RFC 7946 section 3.1.6)
 
-Polygon rings have specific requirements:
+Rings **MUST** be closed — the first and last positions contain identical values:
 
-#### Ring Closure
-**Per RFC 7946 Section 3.1.6**, polygon rings **MUST** be closed:
-- The first and last positions are equivalent
-- They **MUST** contain identical values
-- Their representation **SHOULD** also be identical
-
-Example of a valid closed ring:
 ```json
 {
   "type": "Polygon",
@@ -41,16 +34,11 @@ Example of a valid closed ring:
   ]
 }
 ```
-Note that the first coordinate `[30, 10]` is repeated as the last coordinate to close the ring.
 
-#### Ring Orientation
-Polygon rings **MUST** follow the right-hand rule:
-- **External rings** (first ring): **counterclockwise** orientation
-- **Internal rings** (holes): **clockwise** orientation
+Rings **MUST** follow the right-hand rule: external rings **counterclockwise**, holes **clockwise**. Maptor's `Geometry<Point>` uses the same orientation invariant, and `GeoJsonPolygon` / `GeoJsonMultiPolygon` provide a validation method:
 
-The library provides validation methods to check ring orientations:
 ```csharp
-var polygon = GeoJson.Deserialize(polygonJson) as GeoJsonPolygon;
+var polygon = GeoJson.DeserializeGeometry(polygonJson) as GeoJsonPolygon;
 var (isValid, errors) = polygon.ValidateRingOrientations();
 if (!isValid)
 {
@@ -59,13 +47,7 @@ if (!isValid)
 }
 ```
 
-## ⚙️ Installation
-
-```bash
-dotnet add package IRI.Maptor.Sta.Spatial
-```
-
-## 🚀 Getting Started
+## Usage
 
 All types live in `IRI.Maptor.Sta.Spatial.GeoJsonFormat`; the geometry extension methods live in `IRI.Maptor.Extensions`.
 
@@ -98,7 +80,7 @@ await set.SaveAsync("output.geojson", indented: true);
 string json = point.Serialize(indented: true);
 ```
 
-### Converting GeoJSON → Geometry
+### Converting GeoJSON to geometry
 
 ```csharp
 using IRI.Maptor.Sta.Spatial.Primitives;
@@ -109,7 +91,7 @@ IGeoJsonGeometry geoJson = GeoJson.DeserializeGeometry("{\"type\":\"Point\",\"co
 IGeometry geometry = geoJson.Parse(isLongitudeFirst: true, srid: 4326);
 ```
 
-### Converting Geometry → GeoJSON
+### Converting geometry to GeoJSON
 
 ```csharp
 using IRI.Maptor.Extensions;
@@ -121,9 +103,7 @@ IGeoJsonGeometry geoJsonPoint = point.AsGeoJson(isLongitudeFirst: true);
 string json = geoJsonPoint.Serialize(indented: true);
 ```
 
-> `AsGeoJson` covers `Point`/`MultiPoint`/`LineString`/`MultiLineString`/`Polygon`/`MultiPolygon`. `GeometryCollection` and curve geometries are not supported and throw `NotImplementedException`.
-
-## 📋 Format Details
+## Format details
 
 | Aspect | GeoJSON in Maptor |
 |--------|-------------------|
@@ -133,5 +113,10 @@ string json = geoJsonPoint.Serialize(indented: true);
 | **Serialization** | System.Text.Json. Deserialize: `GeoJson.DeserializeGeometry`, `GeoJsonFeatureSet.Parse`, `GeoJson.LoadFromFile`. Serialize: `IGeoJsonGeometry.Serialize`, `GeoJson.SaveFeatures`, `GeoJsonFeatureSet.SaveAsync`. |
 | **Specification** | [GeoJSON — RFC 7946](https://datatracker.ietf.org/doc/html/rfc7946) |
 
-## 📚 Documentation
-- [GeoJSON RFC 7946 Specification](https://datatracker.ietf.org/doc/html/rfc7946)
+## Limitations
+
+- `AsGeoJson` covers `Point`/`MultiPoint`/`LineString`/`MultiLineString`/`Polygon`/`MultiPolygon`. `GeometryCollection` and curve geometries are not supported and throw.
+- Measure (`M`) values are a 4D extension and are not part of standard RFC 7946 output.
+
+---
+[Back to IRI.Maptor.Sta.Spatial](../../README.md)

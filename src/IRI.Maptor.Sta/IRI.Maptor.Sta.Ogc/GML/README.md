@@ -40,3 +40,6 @@ string downgraded = Gml2Writer.AsGml2(Gml3Reader.Parse(gml3Xml, srid: 4326));
 ## Generated schema models
 
 For schema-level XML work (building documents element by element rather than from geometries), the folders `v2.1.2/` and `v3.1.1/` carry the generated object models — `PointType`, `LineStringType`, `PolygonType`, `MultiPolygonType`, `CoordinatesType` and friends — under the `IRI.Maptor.Sta.Ogc.GML.v212` and `.v313` namespaces.
+
+---
+[Back to IRI.Maptor.Sta.Ogc](../README.md)

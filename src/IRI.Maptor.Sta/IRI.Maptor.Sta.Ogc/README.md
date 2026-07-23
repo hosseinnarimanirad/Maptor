@@ -1,42 +1,9 @@
 # IRI.Maptor.Sta.Ogc
 
-[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Ogc.svg?style=flat-square)](https://www.nuget.org/packages/IRI.Maptor.Sta.Ogc)
-[![.NET Standard](https://img.shields.io/badge/.NET%20Standard-2.1-blue)](https://docs.microsoft.com/en-us/dotnet/standard/net-standard)
+[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.Ogc?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Sta.Ogc/)
+[![Target](https://img.shields.io/badge/netstandard2.1-512BD4)](https://learn.microsoft.com/dotnet/standard/net-standard)
 
-OGC standards implementation for the Maptor library. Provides parsers, serializers, and client helpers for the major Open Geospatial Consortium specifications — all targeting **.NET Standard 2.1**.
-
----
-
-## Standards Covered
-
-### SFA — Simple Features Access (WKT / WKB)
-- Read and write **Well-Known Text (WKT)** and **Well-Known Binary (WKB)** according to OGC SFA and ISO 19125.
-- Supports all standard geometry types: Point, LineString, Polygon, Multi*, GeometryCollection.
-
-### GML — Geography Markup Language
-- Parser and serializer for **GML 2** and **GML 3** XML representations.
-- Converts between GML elements and native `Geometry<T>` objects.
-
-### KML / KMZ — Keyhole Markup Language
-- Read and write **KML** (OGC KML 2.2) files.
-- **KMZ** support (zipped KML with embedded assets).
-- Preserves placemark names, descriptions, and style references.
-
-### WMS — Web Map Service
-- Client helpers for building **WMS 1.1 / 1.3** `GetMap`, `GetCapabilities`, and `GetFeatureInfo` request URLs.
-
-### WFS — Web Feature Service
-- Client helpers for constructing **WFS 1.0 / 1.1 / 2.0** `GetFeature` and `DescribeFeatureType` requests.
-- GML feature response parsing.
-
-### SLD — Styled Layer Descriptor
-- Read and write **SLD 1.0 / 1.1** XML documents.
-- Maps SLD rules to the library's `VisualParameters` / symbolizer model for rendering.
-
-### Filter Encoding
-- OGC Filter Encoding 1.1 expression model used by WFS/SLD.
-
----
+Open Geospatial Consortium (OGC) standards support for the Maptor stack: parsers, writers, and object models for KML/KMZ, GML, WMS, WFS, SLD, Filter Encoding, and the Simple Features Access geometry model.
 
 ## Installation
 
@@ -44,18 +11,40 @@ OGC standards implementation for the Maptor library. Provides parsers, serialize
 dotnet add package IRI.Maptor.Sta.Ogc
 ```
 
----
+## Features
 
-## Quick Start
+- KML 2.2 read and write (`KmlReader`, `KmlWriter`) plus KMZ archives (`KmzReader`, `KmzWriter`), with style building (`KmlStyleBuilder`) and document validation (`KmlValidator`)
+- GML 2.1.2 and 3.1.1 readers and writers (`Gml2Reader`/`Gml2Writer`, `Gml3Reader`/`Gml3Writer`) converting between GML XML and the native `IGeometry` model
+- WMS 1.1.1/1.3.0 `GetCapabilities` document model (`WmsGetCapabilities`) and BBOX/CRS parsing with correct axis order per version (`WmsHelper.ParseCrs`)
+- WFS 1.1.0 schema object model (`WFSv110`)
+- SLD 1.0.0 object model with parse/serialize/save helpers (`SldHelper`)
+- OGC Filter Encoding expression model
+- Simple Features Access (SFA) geometry object model (`IOgcGeometry`, `OgcLineString`, `OgcLinearRing`, …)
+
+Note: WKT/WKB parsing (`WktReader`, `WkbReader`) lives in the companion package `IRI.Maptor.Sta.Spatial` (`IRI.Maptor.Sta.Spatial.IO.OgcSFA` namespace); this package carries the OGC geometry object model.
+
+## Usage
+
+Read KML/KMZ — note the namespace is `IRI.Maptor.Sta.KmlFormat`, not `IRI.Maptor.Sta.Ogc.KML`:
 
 ```csharp
-// Parse GML into the native geometry model
+using IRI.Maptor.Sta.KmlFormat;
+
+var geometries = KmlReader.ReadFromFile("places.kml", targetSrid: 4326);
+var fromKmz = KmzReader.ReadFromFile("archive.kmz");
+```
+
+Parse GML into the native geometry model:
+
+```csharp
 using IRI.Maptor.Sta.Ogc.GML;
 
 var geometry = Gml3Reader.Parse(gmlXml, srid: 4326);
-Console.WriteLine($"Type: {geometry.Type}");
+```
 
-// Parse a WMS BBOX with the right axis order for the version/CRS pair
+Parse a WMS BBOX with the right axis order for the version/CRS pair:
+
+```csharp
 using IRI.Maptor.Sta.Ogc.WMS;
 
 var bbx = WmsHelper.ParseCrs(WmsConstants.version130, WmsConstants.Epsg4326,
@@ -63,28 +52,14 @@ var bbx = WmsHelper.ParseCrs(WmsConstants.version130, WmsConstants.Epsg4326,
 // WMS 1.3.0 + EPSG:4326 is lat,lon — ParseCrs swaps it back to x/y
 ```
 
-WKT/WKB parsing (`WktReader`, `WkbReader`) lives in the companion package `IRI.Maptor.Sta.Spatial` (`IRI.Maptor.Sta.Spatial.IO.OgcSFA` namespace); this package carries the OGC geometry object model (`IRI.Maptor.Sta.Ogc.SFA`).
+## See also
+
+- [KML](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/KML/README.md)
+- [KMZ](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/KMZ/README.md)
+- [GML](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/GML/README.md)
+- [WMS](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/WMS/README.md)
+- [WFS](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/WFS/README.md)
+- [SLD](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc/SLD/README.md)
 
 ---
-
-## Project Structure
-
-```
-Sta.Ogc/
-├── Common/           # Shared OGC types and helpers
-├── Extensions/       # Extension methods
-├── FilterEncoding/   # OGC Filter Encoding 1.1 model
-├── GML/              # GML 2 / GML 3 parser & serializer
-├── KML/              # KML 2.2 reader / writer
-├── KMZ/              # KMZ (zipped KML) support
-├── SFA/              # WKT / WKB (Simple Features Access)
-├── SLD/              # Styled Layer Descriptor reader / writer
-├── WFS/              # WFS request builder & response parser
-└── WMS/              # WMS request URL builder
-```
-
----
-
-📦 **NuGet**: [IRI.Maptor.Sta.Ogc](https://www.nuget.org/packages/IRI.Maptor.Sta.Ogc)
-
-🐞 **Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+[NuGet package](https://www.nuget.org/packages/IRI.Maptor.Sta.Ogc/) · [Report issues](https://github.com/hosseinnarimanirad/Maptor/issues) · [Back to IRI.Maptor.Sta](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/README.md)

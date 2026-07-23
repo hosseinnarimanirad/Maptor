@@ -1,4 +1,4 @@
-# Minimum Cut
+# Minimum cut
 
 A **cut** splits a graph's nodes into two groups; its size is the number of edges crossing between them. The minimum cut is the cheapest way to disconnect the graph — how many roads must close before a region splits in two.
 
@@ -21,3 +21,6 @@ int cut = MinimumCut.GetMinCut(g);   // edge count of the final 2-node graph
 ```
 
 > **Note** — the algorithm is randomized and `GetMinCut` runs a *single* contraction trial, so one call can return a larger-than-minimum cut. Run it several times and keep the smallest answer to boost confidence.
+
+---
+[Back to IRI.Maptor.Sta.Graph](../README.md)

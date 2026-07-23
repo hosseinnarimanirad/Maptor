@@ -70,3 +70,6 @@ string report = KmlValidator.GenerateValidationReport(kmlContent);
 The strongly typed KML 2.2 models under `Generated/` (`IRI.Maptor.Sta.KmlFormat.Primitives`, `.Atom`, `.Xal`, `.Gx`) are produced with [XmlSchemaClassGenerator](https://github.com/mganss/XmlSchemaClassGenerator) from `tools\schema\kml22.local.xsd`; the validator consumes the compiled schemas embedded from `Schemas/`. Full API inventory and implementation notes: [KML_IMPLEMENTATION_SUMMARY.md](KML_IMPLEMENTATION_SUMMARY.md).
 
 For KML packed in a zip with its icons and images, see [../KMZ/README.md](../KMZ/README.md).
+
+---
+[Back to IRI.Maptor.Sta.Ogc](../README.md)

@@ -1,4 +1,4 @@
-# Minimum Spanning Tree
+# Minimum spanning tree
 
 Connect every node of an undirected weighted graph with the least total edge weight. Two greedy strategies get there — and provably reach the same optimum:
 
@@ -28,3 +28,6 @@ var mstPrim = prim.GetMinimumSpanningTree();
 ```
 
 Both return the MST as an undirected `AdjacencyList` (each tree edge stored in both directions). For the sample graph above the MST is `{A–C, B–D, B–C}` with total weight 6.
+
+---
+[Back to IRI.Maptor.Sta.Graph](../README.md)

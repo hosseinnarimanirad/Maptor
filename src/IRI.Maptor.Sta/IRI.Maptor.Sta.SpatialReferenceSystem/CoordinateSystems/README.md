@@ -1,4 +1,4 @@
-# 📐 Coordinate Systems
+# Coordinate systems
 
 This folder implements the coordinate systems used in geodesy, following the classical classification below:
 
@@ -18,7 +18,7 @@ This folder implements the coordinate systems used in geodesy, following the cla
 - **Celestial / orbital systems**: **AP** — Apparent Places (related to IT through GAST), **OR** — Orbital
 - **Mappings** take geodetic coordinates to **2D coordinate systems** — implemented in [`MapProjections`](../MapProjections/README.md)
 
-## ✅ Systems in this folder
+## Systems in this folder
 
 Each subfolder follows the same four-file pattern: the coordinate-system class, a strongly-typed `…Point` class, and their two interfaces. Points are generic over measurement units (e.g. `Meter`/`Degree`) from `IRI.Maptor.Sta.Metrics`.
 
@@ -32,7 +32,7 @@ Each subfolder follows the same four-file pattern: the coordinate-system class, 
 | `Curvilinear.Ellipsoidal/Curvilinear.Astronomical` | HorizontalAngle, VerticalAngle | Astronomical (plumb-line) coordinates — LA, AP, HA |
 | `Curvilinear.Geodetic` | Latitude, Longitude, Height + `Datum` | **The** geodetic system (G) — lat/lon/height on an ellipsoid |
 
-## 🚀 Basic usage
+## Basic usage
 
 `GeodeticPoint<TLinear, TAngular>` is the workhorse: a φ/λ/h position bound to a datum ([`Ellipsoids`](../Models/README.md)), convertible to geocentric Cartesian:
 
@@ -49,7 +49,7 @@ var point = new GeodeticPoint<Meter, Degree>(
 var cartesian = point.ToCartesian<Meter>();   // geocentric X, Y, Z
 ```
 
-## ✅ Converting between systems
+## Converting between systems
 
 The static [`Transformations`](../Transformations.cs) class implements the arrows of Fig. 1:
 
@@ -68,4 +68,4 @@ The static [`Transformations`](../Transformations.cs) class implements the arrow
 
 ---
 
-📖 Back to the [project README](../README.md)
+[Back to IRI.Maptor.Sta.SpatialReferenceSystem](../README.md)

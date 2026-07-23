@@ -30,3 +30,6 @@ Each `FeatureTypeType` also carries its `WGS84BoundingBox`, supported `OutputFor
 
 - **Responses** — a `GetFeature` reply is GML: parse the member geometries with `Gml3Reader.Parse` from [../GML/README.md](../GML/README.md).
 - **Filters** — the `<ogc:Filter>` expressions inside a query come from the shared Filter Encoding model (`OgcFilter`, `OgcBBOX`, `OgcPropertyIsEqualTo`, …) in [../FilterEncoding](../FilterEncoding).
+
+---
+[Back to IRI.Maptor.Sta.Ogc](../README.md)

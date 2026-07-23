@@ -1,19 +1,11 @@
 # IRI.Maptor.Ket.WindowsBase
 
-[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.WindowsBase.svg?style=flat-square)](https://www.nuget.org/packages/IRI.Maptor.Ket.WindowsBase)
-[![.NET](https://img.shields.io/badge/.NET-8.0--windows-blue)](https://dotnet.microsoft.com/download/dotnet/8.0)
+[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.WindowsBase?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Ket.WindowsBase/)
+[![Target](https://img.shields.io/badge/net8.0--windows-512BD4)](https://dotnet.microsoft.com/download/dotnet/8.0)
 
-A **.NET 8 (Windows)** utility library providing Windows-specific helpers used by the Maptor desktop applications — hardware detection, geolocation services, and Wi-Fi network access.
-
----
-
-## Features
-
-- **`HardwareHelper`** — query local hardware information (e.g. machine ID, hardware fingerprinting used for licensing)
-- **`GoogleMapsGeolocation`** — geolocate the device using the Google Maps Geolocation API (Wi-Fi / cell-tower based)
-- **`ManagedNativeWifi`** (third-party) — managed wrapper around the Windows Native Wi-Fi API for scanning nearby access points; used as input for geolocation
-
----
+Windows-specific helpers used by the Maptor desktop applications — hardware information queries,
+Wi-Fi-based geolocation via the Google Maps Geolocation API, and a bundled managed wrapper around
+the Windows Native Wi-Fi API.
 
 ## Installation
 
@@ -21,25 +13,33 @@ A **.NET 8 (Windows)** utility library providing Windows-specific helpers used b
 dotnet add package IRI.Maptor.Ket.WindowsBase
 ```
 
-> Requires Windows — depends on Windows Native Wi-Fi API and Windows hardware APIs.
+Requires Windows — depends on the Windows Native Wi-Fi API and WMI.
+
+## Features
+
+- `HardwareHelper` — WMI-based hardware information: processor id, HDD serial number, MAC address, mainboard and BIOS details, physical memory, CPU clock speed, default IP gateway
+- `GoogleMapsGeolocationService` — geolocate the device with the Google Maps Geolocation API, using nearby Wi-Fi access points scanned via the bundled `ManagedNativeWifi` wrapper (or a caller-supplied access-point list)
+- `ManagedNativeWifi` (bundled third-party component) — managed wrapper around the Windows Native Wi-Fi API for enumerating interfaces, networks, and BSS entries
+
+## Usage
+
+```csharp
+using IRI.Maptor.Ket.WindowsBase.Services.Google;
+
+// hardware identifiers (WMI)
+string mac = HardwareHelper.GetMACAddress();
+string cpuId = HardwareHelper.GetProcessorId();
+
+// Wi-Fi based geolocation (scans nearby access points automatically)
+var response = await GoogleMapsGeolocationService.GetLocationAsync(googleApiKey);
+```
+
+## Dependencies
+
+- `ManagedNativeWifi` is vendored under `ThirdPartyLibraries/` and ships inside this package; no separate NuGet dependency is required.
+- `GoogleMapsGeolocationService` requires a Google Maps Geolocation API key.
 
 ---
-
-## Project Structure
-
-```
-Ket.WindowsBase/
-├── Helpers/
-│   └── HardwareHelper.cs
-├── Services/
-│   └── Google/
-│       └── GoogleMapsGeolocation.cs
-└── ThirdPartyLibraries/
-    └── ManagedNativeWifi/   # Third-party: Windows Native Wi-Fi API wrapper
-```
-
----
-
-📦 **NuGet**: [IRI.Maptor.Ket.WindowsBase](https://www.nuget.org/packages/IRI.Maptor.Ket.WindowsBase)
-
-🐞 **Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+[NuGet package](https://www.nuget.org/packages/IRI.Maptor.Ket.WindowsBase/) ·
+[Report issues](https://github.com/hosseinnarimanirad/Maptor/issues) ·
+[Back to IRI.Maptor.Ket](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Ket/README.md)

@@ -1,4 +1,4 @@
-# Greedy Clustering
+# Greedy clustering
 
 **Max-spacing k-clustering** — Kruskal's MST construction, stopped early. Every node starts as its own cluster; a `BinaryHeap` keeps handing over the closest pair of nodes, and if they sit in different clusters, the clusters merge (single linkage: the distance between two clusters is the distance of their closest pair). Stop when `k` clusters remain — greedy provably maximizes the spacing between them.
 
@@ -27,3 +27,6 @@ double spacing = clustering.ClusterSpacing;
 ```
 
 A second overload, `Cluster(threshold, criteriaFunc, weightFunc)`, merges while a weight-vs-threshold predicate holds instead of counting clusters — useful when you know "merge anything closer than X meters" rather than the number of groups.
+
+---
+[Back to IRI.Maptor.Sta.Graph](../README.md)

@@ -13,7 +13,7 @@
     <Authors>Hossein Narimani Rad</Authors>
     <Company>Maptor</Company>
     <Description>A .NET standard library to work with spatial types, structures and algorithms (GeoJson, Geometry, KdTree, RTree, Delaunay, Simplification, etc.)</Description>
-    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Spatial</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>geometry;GIS;spatial;GeoJson;map;KdTree;RTree;Delaunay;Generalization</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>

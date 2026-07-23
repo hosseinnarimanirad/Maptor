@@ -1,33 +1,29 @@
-# Maptor Spatial Library - Sample WPF Application
- 
+# Maptor sample WPF application
+
 <img width="884" height="592" alt="image" src="https://github.com/user-attachments/assets/94218afd-f706-4cc8-b819-73f260d2b147" />
 
-A demonstration of building a fully-functional GIS application with minimal code using the Maptor spatial library.
+A demonstration of building a functional GIS application with minimal code using the Maptor
+spatial library: a `MapViewer` with tile basemaps (selectable provider), measurement tools
+(length and area), drawing tools (point, polyline, polygon, text), go-to navigation, layer and
+drawing legends, shapefile loading, an attribute table, a scalebar, a coordinate panel, and
+RTL-aware language switching.
 
-## Features
+## How to run
 
-- 🗺️ **Interactive Map Display** with multiple layer support
-- 📏 **Measurement Tools** for distance and area
-- ✏️ **Drawing Tools** (points, lines, polygons)
-- 🔍 **GoTo Location** navigation
-- 👁️ **Layer Management** (visibility control, ordering)
-- 🔄 **Coordinate System Transformations**
-- 🖱️ **Mouse Coordinate Tracking**
+Prerequisites: .NET 8 SDK on Windows (WPF); Visual Studio 2022 recommended.
 
-## Getting Started
-
-### Prerequisites
-- .NET 8 or later
-- Visual Studio 2019 or newer
-
-### Installation
 1. Clone the repository:
 
-```bash
+   ```bash
    git clone https://github.com/hosseinnarimanirad/Maptor.git
-```
-2. Open the solution file:
-```IRI.Maptor.Tag/IRI.Maptor.Tag.SampleWpfApp/SampleWpfApp.sln```
-3. Restore NuGet packages
-4. Build and run the application
- 
+   ```
+
+2. Open the root solution `IRI.Maptor.sln` and set `IRI.Maptor.Tag.SampleWpfApp` as the startup
+   project, or run the project directly:
+
+   ```powershell
+   dotnet run --project samples\IRI.Maptor.Tag.SampleWpfApp
+   ```
+
+---
+[Back to the solution README](../../README.md)

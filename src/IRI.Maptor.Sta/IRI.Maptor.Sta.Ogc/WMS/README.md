@@ -29,3 +29,6 @@ var bbx = WmsHelper.ParseCrs(WmsConstants.version130, WmsConstants.Epsg4326,
                              "35.5,50.8,35.9,51.6");
 // 1.3.0 + EPSG:4326 is lat,lon — ParseCrs swaps it back to x/y for you
 ```
+
+---
+[Back to IRI.Maptor.Sta.Ogc](../README.md)

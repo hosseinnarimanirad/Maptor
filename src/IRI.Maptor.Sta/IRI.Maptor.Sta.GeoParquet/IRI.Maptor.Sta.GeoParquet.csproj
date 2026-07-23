@@ -13,7 +13,7 @@
     <Authors>Hossein Narimani Rad</Authors>
     <Company>Maptor</Company>
     <Description>A .NET standard library for GeoParquet format support (read/write geospatial vector data in Parquet format)</Description>
-    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/IRI.Maptor.Sta/IRI.Maptor.Sta.GeoParquet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.GeoParquet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>geometry;GIS;spatial;GeoParquet;Parquet;geospatial</PackageTags>
   </PropertyGroup>

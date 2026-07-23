@@ -1,64 +1,68 @@
-[![NuGet Version](https://img.shields.io/nuget/v/IRI.Maptor.Sta.ShapefileFormat?color=blue&logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Sta.ShapefileFormat/)
-[![License](https://img.shields.io/github/license/hosseinnarimanirad/Maptor)](LICENSE)
-[![.NET Standard](https://img.shields.io/badge/.NET%20Standard-2.1-blue)](https://docs.microsoft.com/en-us/dotnet/standard/net-standard)
+# IRI.Maptor.Sta.ShapefileFormat
 
-A comprehensive .NET Standard 2.1 library for reading, writing, and converting ESRI Shapefile formats with advanced geometry support, international character encoding, and coordinate system transformations.
+[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Sta.ShapefileFormat?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Sta.ShapefileFormat/)
+[![Target](https://img.shields.io/badge/netstandard2.1-512BD4)](https://learn.microsoft.com/dotnet/standard/net-standard)
 
-## ✨ Features
+ESRI shapefile read and write support for the Maptor stack: SHP geometry, SHX index, DBF attributes with code-page-aware text decoding, PRJ coordinate system files, and reprojection on load or save.
 
-### 📁 Supported File Formats
-- ✔️ **SHP** - Geometry storage with full ESRI specification compliance
-- ✔️ **DBF** - Attribute data with advanced encoding support
-- ✔️ **SHX** - Shape index for fast spatial queries
-- ✔️ **PRJ** - Projection and coordinate system information
-- ✔️ **CPG** - Code page detection for character encoding
+## Installation
 
-### 🔷 Geometry Types
-| Point Types | Polyline Types | Polygon Types | Multipoint Types |
-|------------|---------------|--------------|-----------------|
-| Point      | Polyline      | Polygon      | Multipoint      |
-| PointM     | PolylineM     | PolygonM     | MultipointM     |
-| PointZ     | PolylineZ     | PolygonZ     | MultipointZ     |
-
-### 🌍 Advanced Capabilities
-- **Format Conversion**: Seamless conversion between ESRI types and standard formats:
-  - **WKT** (Well-Known Text)
-  - **WKB** (Well-Known Binary)
-  - **GeoJSON** support
-- **Internationalization**: Advanced DBF file encoding support for global character sets
-- **Performance**: Memory-efficient streaming API for large files
-- **Type Safety**: Strongly-typed attribute data handling with custom mapping
-- **Coordinate Systems**: Full projection and coordinate transformation support
-- **Spatial Indexing**: Built-in spatial indexing for fast spatial queries
-
-## ⚙️ Installation
-
-### Package Manager
-```bash
-Install-Package IRI.Maptor.Sta.ShapefileFormat
-```
-
-### .NET CLI
 ```bash
 dotnet add package IRI.Maptor.Sta.ShapefileFormat
 ```
 
-### PackageReference
-```xml
-<PackageReference Include="IRI.Maptor.Sta.ShapefileFormat" />
-```
+## Features
 
-## 💻 Usage
-### Reading a Shapefile
+- Read shapefiles as raw ESRI shapes (`Shapefile.ReadShapes`/`ReadShapesAsync`) or as attributed features (`Shapefile.ReadAsFeature`/`ReadAsFeatureAsync` returning `Feature<Point>`)
+- All ESRI shape types: `Point`, `Polyline`, `Polygon`, `MultiPoint` plus their M and Z variants
+- Write shapefiles from ESRI shapes, `Feature<Point>` lists, or GeoJSON features (`Shapefile.Save`, `SaveAsShapefile`)
+- DBF attribute reading/writing with configurable encodings, FoxPro code-page detection, `.cpg` file support, and optional Persian (Farsi) character correction
+- PRJ support: `TryReadPrjFile`/`TryGetSrs` on read, `SaveAsPrj` on write
+- Reprojection: `Project`, `ProjectAsync`, and `ProjectAndSaveAsShapefile` between spatial reference systems (`SrsBase`)
+- SHX index reading and writing
+- Conversion helpers to the native geometry model (`AsGeometry`), SQL Server WKT (`AsSqlServerWkt`), and GeoJSON
+
+## Usage
+
+Read a shapefile:
 
 ```csharp
 using IRI.Maptor.Sta.ShapefileFormat;
 
-var esriShapes = await Shapefile.ReadShapesAsync("path/to/file.shp");
+// raw ESRI shapes
+var shapes = await Shapefile.ReadShapesAsync("data/parcels.shp");
 
-foreach (var shape in esriShapes)
+foreach (var shape in shapes)
 {
-    Console.WriteLine($"Geometry: {shape.AsSqlServerWkt()}");            
+    Console.WriteLine(shape.AsSqlServerWkt());
 }
+
+// as features with DBF attributes
+var features = Shapefile.ReadAsFeature("data/parcels.shp", defaultSrid: 4326);
 ```
 
+Write features back to a shapefile:
+
+```csharp
+using IRI.Maptor.Sta.ShapefileFormat;
+
+Shapefile.SaveAsShapefile("output/result.shp", features);
+```
+
+Reproject a shapefile on save:
+
+```csharp
+using IRI.Maptor.Sta.ShapefileFormat;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+
+Shapefile.ProjectAndSaveAsShapefile(
+    "data/parcels.shp", "output/parcels-mercator.shp",
+    SrsBases.WebMercator, overwrite: true);
+```
+
+## Dependencies
+
+- `IRI.Maptor.Sta.Common`, `IRI.Maptor.Sta.Ogc`, `IRI.Maptor.Sta.Spatial`
+
+---
+[NuGet package](https://www.nuget.org/packages/IRI.Maptor.Sta.ShapefileFormat/) · [Report issues](https://github.com/hosseinnarimanirad/Maptor/issues) · [Back to IRI.Maptor.Sta](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Sta/README.md)

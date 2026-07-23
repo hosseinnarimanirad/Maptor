@@ -1,8 +1,8 @@
-# Graph Representation
+# Graph representation
 
 How a graph is stored decides what is cheap and what is expensive. This library offers both classic representations.
 
-## Adjacency List
+## Adjacency list
 
 `AdjacencyList<TNode, TWeight>` keeps **one linked list of outgoing edges per node** — internally a `SortedList<TNode, LinkedList<Connection<TNode, TWeight>>>`. Memory follows the edges that actually exist (`O(V + E)`), which makes it the right default for sparse graphs like road networks.
 
@@ -22,7 +22,7 @@ var neighbors = g.GetConnections("A"); // A's outgoing (target | weight) cells
 var reversed  = g.Transpose();         // every edge flipped — used by SCC
 ```
 
-## Adjacency Matrix
+## Adjacency matrix
 
 The matrix form is a `V × V` weight table: row = source, column = target, `∞` for a missing edge. Any edge lookup is `O(1)`, at the price of `O(V²)` space — best for small or dense graphs.
 
@@ -42,3 +42,6 @@ var fromMatrix = new AdjacencyList<string, double>(nodes, adjacencyMatrix);
 - `Connection<TNode, TWeight>` — a directed half-edge: target node + weight.
 - `Edge<TNode, TWeight>` — a full edge: source node + its `Connection`.
 - `DirectedAcyclicGraph<TNode, TWeight>` — an `AdjacencyList` subclass for DAGs.
+
+---
+[Back to IRI.Maptor.Sta.Graph](../README.md)

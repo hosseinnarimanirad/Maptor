@@ -1,4 +1,4 @@
-# 🗺️ Map Projections
+# Map projections
 
 Map projections convert geodetic coordinates (latitude φ, longitude λ on a reference ellipsoid) into planar x/y coordinates and back. Every projection in this folder derives from [`MapProjectionBase`](MapProjectionBase.cs) (which extends [`SrsBase`](SrsBase.cs)) and shares the same API:
 
@@ -11,7 +11,7 @@ var    Ellipsoid     // the underlying horizontal datum
 
 The heavy math lives in the static [`MapProjects`](../MapProjects.cs) class — the projection classes are thin, parameterized wrappers around it.
 
-## ✅ What is a map projection?
+## What is a map projection?
 
 <p align="center">
   <img src="../images/map-projections.png" alt="What is a map projection" width="600">
@@ -37,7 +37,7 @@ A sphere (or ellipsoid) cannot be flattened onto paper without distortion. Every
 
 Pick the property your map needs — that picks your projection: navigation and local surveying want conformal; density and statistics maps want equal-area.
 
-## ✅ Implemented projections
+## Implemented projections
 
 | Class | Kind | Notes |
 |-------|------|-------|
@@ -51,7 +51,7 @@ Pick the property your map needs — that picks your projection: navigation and 
 
 ---
 
-## ✅ Mercator
+## Mercator
 
 <p align="center">
   <img src="../images/mercator.png" alt="Mercator" width="600">
@@ -68,7 +68,7 @@ var geo = mercator.ToGeodetic(xy);
 
 ---
 
-## ✅ UTM — Universal Transverse Mercator
+## UTM — Universal Transverse Mercator
 
 <p align="center">
   <img src="../images/utm.png" alt="UTM" width="600">
@@ -94,7 +94,7 @@ Related helpers in `MapProjects`: `FindUtmZone(longitude)`, `CalculateCentralMer
 
 ---
 
-## ✅ Web Mercator (EPSG:3857)
+## Web Mercator (EPSG:3857)
 
 <p align="center">
   <img src="../images/web-mercator.png" alt="Web Mercator" width="600">
@@ -118,7 +118,7 @@ var xy2 = MapProjects.GeodeticWgs84ToWebMercator(new Point(51.389, 35.689));
 
 ---
 
-## ✅ Lambert Conformal Conic
+## Lambert Conformal Conic
 
 <p align="center">
   <img src="../images/lambert-conformal-conic.png" alt="Lambert Conformal Conic" width="600">
@@ -143,7 +143,7 @@ var geo = lcc.ToGeodetic(xy);
 
 ---
 
-## ✅ Cylindrical Equal-Area
+## Cylindrical Equal-Area
 
 <p align="center">
   <img src="../images/cylindrical-equal-area.png" alt="Cylindrical Equal-Area" width="600">
@@ -160,4 +160,4 @@ var geo = cea.ToGeodetic(xy);
 
 ---
 
-📖 Back to the [project README](../README.md) · datums and ellipsoids are documented in [Models](../Models/README.md).
+[Back to IRI.Maptor.Sta.SpatialReferenceSystem](../README.md) · datums and ellipsoids are documented in [Models](../Models/README.md).

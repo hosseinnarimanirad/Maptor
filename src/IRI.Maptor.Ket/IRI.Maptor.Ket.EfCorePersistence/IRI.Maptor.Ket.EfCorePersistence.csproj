@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Ket/IRI.Maptor.Ket.EfCorePersistence</RepositoryUrl>
     <Description>Shared EF Core persistence support for materializing SQL Server geometry/geography columns directly into IRI.Maptor Geometry&lt;Point&gt;, replacing NetTopologySuite. Reusable across desktop (WPF) and service applications.</Description>
   </PropertyGroup>
 

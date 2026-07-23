@@ -12,7 +12,7 @@
     <Authors>Hossein Narimani Rad</Authors>
     <Company>Maptor</Company>
     <Description>A .NET standard library to work with gsm gprs</Description>
-    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/IRI.Maptor.Sta/IRI.Maptor.Sta.GsmGprs</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.GsmGprs</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>gsm</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>

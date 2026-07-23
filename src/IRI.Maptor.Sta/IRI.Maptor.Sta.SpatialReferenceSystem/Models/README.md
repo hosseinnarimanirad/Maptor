@@ -1,4 +1,4 @@
-# 🌏 Models — Reference Ellipsoids & Horizontal Datums
+# Ellipsoids and datums
 
 <p align="center">
   <img src="../images/ellipsoid.png" alt="Reference ellipsoid" width="600">
@@ -6,7 +6,7 @@
 
 A latitude/longitude pair means nothing on its own — it is always measured **on a chosen reference ellipsoid**: an ellipse of revolution that approximates the figure of the Earth. Two numbers pin the shape down: the **semi-major axis `a`** and the **flattening `f = (a − b) / a`** (usually given as `1/f`). Everything else — semi-minor axis `b`, first/second eccentricity `e²`, `e′²`, and the radii of curvature `N` (prime vertical) and `M` (meridian) — follows from them.
 
-## ✅ `Ellipsoid<TLinear, TAngular>`
+## `Ellipsoid<TLinear, TAngular>`
 
 [`Ellipsoid.cs`](Ellipsoid.cs) is a generic struct (typed by linear unit, e.g. `Meter`, and angular unit, e.g. `Degree`) implementing [`IEllipsoid`](IEllipsoid.cs). It exposes:
 
@@ -15,7 +15,7 @@ A latitude/longitude pair means nothing on its own — it is always measured **o
 - **Datum definition** — `DatumTranslation` (a `Cartesian3DPoint` shift of the ellipsoid center) and `DatumMisalignment` (an [`OrientationParameter`](OrientationParameter.cs): rotations ω, φ, κ), which position a regional datum relative to the geocentric frame
 - **Identity** — `Name`, `EsriName`, `Srid` (EPSG code)
 
-## ✅ Radii of curvature — M and N
+## Radii of curvature — M and N
 
 <p align="center">
   <img src="../images/ellipsoid-curvature.png" alt="Radii of curvature" width="600">
@@ -41,7 +41,7 @@ double meters = n.Value;                              // ≈ 6 385 415 m
 double nAtLat = wgs84.CalculateN(35.689);
 ```
 
-## ✅ Predefined ellipsoids: `Ellipsoids`
+## Predefined ellipsoids: `Ellipsoids`
 
 [`Ellipsoids.cs`](Ellipsoids.cs) provides ready-made instances (`Ellipsoid<Meter, Degree>`). Notable ones:
 
@@ -61,7 +61,7 @@ double nAtLat = wgs84.CalculateN(35.689);
 
 `Ellipsoids.WGS84` is a cached singleton; treat it as the default datum throughout the library.
 
-## 🚀 Custom ellipsoid
+## Custom ellipsoid
 
 ```csharp
 using IRI.Maptor.Sta.Metrics;
@@ -82,4 +82,4 @@ To transform geodetic coordinates between two datums (G1 ↔ G2), use `Transform
 
 ---
 
-📖 Back to the [project README](../README.md) · projections that consume these datums are documented in [MapProjections](../MapProjections/README.md).
+[Back to IRI.Maptor.Sta.SpatialReferenceSystem](../README.md) · projections that consume these datums are documented in [MapProjections](../MapProjections/README.md).

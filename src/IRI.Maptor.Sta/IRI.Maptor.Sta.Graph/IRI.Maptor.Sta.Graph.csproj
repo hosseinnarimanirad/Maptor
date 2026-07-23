@@ -12,7 +12,7 @@
     <Authors>Hossein Narimani Rad</Authors>
     <Company>Maptor</Company>
     <Description>A .NET standard library containing primitive graph structures and algorithms</Description>
-    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/IRI.Maptor.Sta/IRI.Maptor.Sta.Graph</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Graph</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>graph</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>

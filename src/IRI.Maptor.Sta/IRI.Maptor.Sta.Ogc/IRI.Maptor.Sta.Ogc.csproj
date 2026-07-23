@@ -14,7 +14,7 @@
     <Authors>Hossein Narimani Rad</Authors>
     <Company>Maptor</Company>
     <Description>A .NET standard library containing OGC standards such as SFA, SLD, WFS, WMS, GML, KML</Description>
-    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Ogc</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>GIS;spatial;OGC;GML;SLD;WMS;WFS</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>

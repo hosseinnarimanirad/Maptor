@@ -1,29 +1,12 @@
 # IRI.Maptor.Ket.SqlServerSpatialExtension
 
-[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.SqlServerSpatialExtension.svg?style=flat-square)](https://www.nuget.org/packages/IRI.Maptor.Ket.SqlServerSpatialExtension)
-[![.NET](https://img.shields.io/badge/.NET-8.0-blue)](https://dotnet.microsoft.com/download/dotnet/8.0)
+[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.SqlServerSpatialExtension?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Ket.SqlServerSpatialExtension/)
+[![Target](https://img.shields.io/badge/net8.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/8.0)
 
-A **.NET 8** library of extension methods and helpers for working with **SQL Server spatial types** (`SqlGeometry`, `SqlGeography`) alongside the Maptor geometry model.
-
----
-
-## Features
-
-### Extension Methods
-- `SqlGeometryExtensions` — convert `SqlGeometry` ↔ `Geometry<Point>`, extract coordinates, test topology
-- `SqlGeographyExtensions` — convert `SqlGeography` ↔ `Geometry<Point>`
-- `GeometryExtensions` — convert Maptor `Geometry<Point>` → `SqlGeometry` / `SqlGeography`
-- `BoundingBoxExtensions` — convert Maptor `BoundingBox` ↔ SQL Server envelope
-- `FeatureExtensions` — convert Maptor `Feature` objects to/from SQL Server spatial rows
-- `GeoJsonExtensions` — convert GeoJSON ↔ `SqlGeometry`
-- `GmlExtensions` — convert GML ↔ `SqlGeometry`
-- `GpxExtensions` — convert GPX tracks ↔ `SqlGeometry`
-- `ShapefileExtension` — convert ESRI Shapefile geometries ↔ `SqlGeometry`
-
-### Utilities
-- `SqlSpatialHelper` / `SqlSpatialUtility` — general helpers (well-known binary, bounding boxes, spatial reference IDs)
-
----
+Extension methods and helpers for working with SQL Server spatial types (`SqlGeometry`,
+`SqlGeography`) alongside the Maptor geometry model — conversions to `Geometry<Point>`, GeoJSON,
+GML, and helpers for building SQL Server spatial values from other formats. All extension methods
+live in the `IRI.Maptor.Extensions` namespace.
 
 ## Installation
 
@@ -31,8 +14,35 @@ A **.NET 8** library of extension methods and helpers for working with **SQL Ser
 dotnet add package IRI.Maptor.Ket.SqlServerSpatialExtension
 ```
 
+## Features
+
+- `SqlGeometryExtensions` — convert `SqlGeometry` to Maptor `Geometry<Point>` (`AsGeometry`), export GeoJSON (`AsGeoJson`), tile helpers (`TileInfo.AsSqlGeometry`), and WKT/projection utilities
+- `SqlGeographyExtensions` — point extraction (`AsPoint`), reprojection to `SqlGeometry` (`Project`, `GeodeticWgs84ToWebMercator`, ...), GeoJSON and WKT export
+- `GeometryExtensions` — geodesic area (`GetTrueArea`), `IPoint` to `SqlGeography`, OpenGIS geometry-type mapping
+- `BoundingBoxExtensions` — Maptor `BoundingBox` to `SqlGeometry` envelope
+- `FeatureExtensions` — `List<Feature<Point>>` to `DataTable`
+- `GeoJsonExtensions` — GeoJSON geometry to `SqlGeometry` / `SqlGeography` (and back via `AsGeoJson`)
+- `GmlExtensions` — `SqlGeometry` to GML3 (`AsGml3`) and GML3 parsing (`ParseGML3`)
+- `GpxExtensions` — GPX waypoints, track points, segments, and tracks to `SqlGeography`
+- `ShapefileExtension` — ESRI Shapefile shapes to `SqlGeometry`
+- `SqlSpatialHelper` / `SqlSpatialUtility` — WKT and Esri JSON parsing, empty-geometry builders, bounding boxes from envelopes, union, and point-collection/linestring construction
+
+## Usage
+
+```csharp
+using IRI.Maptor.Extensions;
+
+// SqlGeometry -> Maptor geometry
+Geometry<Point> geometry = sqlGeometry.AsGeometry();
+
+// SqlGeometry -> GeoJSON
+var geoJson = sqlGeometry.AsGeoJson();
+
+// Maptor bounding box -> SqlGeometry envelope
+SqlGeometry envelope = boundingBox.AsSqlGeometry(srid: 3857);
+```
+
 ---
-
-📦 **NuGet**: [IRI.Maptor.Ket.SqlServerSpatialExtension](https://www.nuget.org/packages/IRI.Maptor.Ket.SqlServerSpatialExtension)
-
-🐞 **Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+[NuGet package](https://www.nuget.org/packages/IRI.Maptor.Ket.SqlServerSpatialExtension/) ·
+[Report issues](https://github.com/hosseinnarimanirad/Maptor/issues) ·
+[Back to IRI.Maptor.Ket](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Ket/README.md)

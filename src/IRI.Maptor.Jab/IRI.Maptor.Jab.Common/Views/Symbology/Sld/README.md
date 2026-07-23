@@ -1,4 +1,4 @@
-# OGC SLD (Styled Layer Descriptor) Editor UI Components
+# SLD editor UI components
 
 This folder contains WPF UserControls and ViewModels for creating and editing OGC SLD 1.0.0 styles.
 
@@ -63,7 +63,7 @@ All inherit from `SymbolizerViewModelBase`:
 
 ### Views (`Views/Symbology/Sld/`)
 
-#### Main Views
+#### Main views
 - **`SldEditorView`** - Main composite view showing the full editor
   - Style information panel (layer name, style name, title, abstract)
   - Rules list with toolbar
@@ -74,23 +74,23 @@ All inherit from `SymbolizerViewModelBase`:
   - Toolbar with import/export buttons
   - Status bar showing rule count and selection
 
-#### Symbolizer Editors
+#### Symbolizer editors
 - **`PointSymbolizerView`** - Edit point symbolizer properties
 - **`LineSymbolizerView`** - Edit line symbolizer properties
 - **`PolygonSymbolizerView`** - Edit polygon symbolizer properties
 - **`TextSymbolizerView`** - Edit text symbolizer properties (with scrolling support)
 - **`RasterSymbolizerView`** - Edit raster opacity and color-map entries
 
-#### Supporting Views
+#### Supporting views
 - **`ScaleRangeEditorView`** - Edit min/max scale denominators
 - **`SimpleFilterEditorView`** - Editable single-condition filter (property / operator / value)
 
 #### Utilities
 - **`SymbolizerDataTemplateSelector`** - Selects appropriate view based on symbolizer type
 
-## Usage Examples
+## Usage examples
 
-### Basic Usage - Standalone Window
+### Basic usage - standalone window
 
 ```csharp
 using IRI.Maptor.Jab.Controls.Symbology.Sld;   // Views (SldEditorWindow, SldEditorView, ...)
@@ -101,7 +101,7 @@ var editor = new SldEditorWindow();
 editor.Show();
 ```
 
-### Programmatic SLD Creation
+### Programmatic SLD creation
 
 ```csharp
 using IRI.Maptor.Jab.Common.ViewModels.Symbology;
@@ -138,7 +138,7 @@ editor.Rules.Add(rule);
 var sld = editor.ToStyledLayerDescriptor();
 ```
 
-### Loading Existing SLD
+### Loading existing SLD
 
 ```csharp
 using System.IO;
@@ -157,7 +157,7 @@ var window = new SldEditorWindow(editor);
 window.Show();
 ```
 
-### Embedding in Your Application
+### Embedding in your application
 
 ```xml
 <!-- In your XAML -->
@@ -170,41 +170,41 @@ window.Show();
 
 ## Features
 
-### Supported Symbolizers
-✅ **PointSymbolizer**
+### Supported symbolizers
+**PointSymbolizer**
 - Well-known marks with fill and stroke
 - Size and rotation
 - Opacity control
 
-✅ **LineSymbolizer**
+**LineSymbolizer**
 - Stroke properties (color, width, opacity)
 - Line caps and joins
 - Dash patterns
 
-✅ **PolygonSymbolizer**
+**PolygonSymbolizer**
 - Fill and stroke properties
 - Line caps and joins
 
-✅ **TextSymbolizer**
+**TextSymbolizer**
 - Font properties (family, size, style, weight)
 - Text color
 - Halo effect (radius, color, opacity) for better readability
 
-✅ **RasterSymbolizer**
+**RasterSymbolizer**
 - Raster opacity
 - Editable color map (color, quantity, label, per-entry opacity)
 
-### Rule Features
-✅ Scale-dependent rendering (min/max scale denominators)
-✅ Editable single-condition OGC filter (property / operator / value); more complex loaded filters are preserved on round-trip
-✅ Multiple symbolizers per rule
-✅ Rule ordering (move up/down)
+### Rule features
+- Scale-dependent rendering (min/max scale denominators)
+- Editable single-condition OGC filter (property / operator / value); more complex loaded filters are preserved on round-trip
+- Multiple symbolizers per rule
+- Rule ordering (move up/down)
 
-### File Operations
-✅ Export to SLD XML file (via `SldHelper.Save`)
-✅ Import from SLD XML file (via `SldHelper.Parse`)
-✅ Live XML preview (via `SldHelper.Serialize`)
-✅ Proper XML serialization with namespaces
+### File operations
+- Export to SLD XML file (via `SldHelper.Save`)
+- Import from SLD XML file (via `SldHelper.Parse`)
+- Live XML preview (via `SldHelper.Serialize`)
+- Proper XML serialization with namespaces
 
 ## Architecture
 
@@ -222,7 +222,7 @@ The components follow MVVM pattern:
 - `MahApps.Metro` - UI controls (ColorPicker, NumericUpDown, etc.)
 - `MahApps.Metro.IconPacks.Modern` - Icons
 
-## Future Enhancements
+## Future enhancements
 
 Potential improvements:
 - Advanced filter builder UI (nested AND/OR, spatial/like/between operators)
@@ -232,14 +232,13 @@ Potential improvements:
 - Import from other style formats
 - Style library/templates
 
-## Related Classes
+## Related classes
 
 See also:
 - `IRI.Maptor.Sta.Ogc.SLD` namespace for the underlying data model (and `SldHelper` for read/write)
 - `IRI.Maptor.Sta.Ogc` for OGC filter classes (`OgcFilter`, `OgcPropertyIsEqualTo`, ...)
 - `IRI.Maptor.Jab.Core.Notifier` for the MVVM base class
 
-## License
-
-Part of the IRI.Maptor framework.
+---
+[Back to IRI.Maptor.Jab.Common](../../../README.md)
 

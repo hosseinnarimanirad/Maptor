@@ -1,21 +1,12 @@
 # IRI.Maptor.Ket.WebApiPersistence
 
-[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.WebApiPersistence.svg?style=flat-square)](https://www.nuget.org/packages/IRI.Maptor.Ket.WebApiPersistence)
-[![.NET](https://img.shields.io/badge/.NET-8.0-blue)](https://dotnet.microsoft.com/download/dotnet/8.0)
+[![NuGet](https://img.shields.io/nuget/v/IRI.Maptor.Ket.WebApiPersistence?logo=nuget)](https://www.nuget.org/packages/IRI.Maptor.Ket.WebApiPersistence/)
+[![Target](https://img.shields.io/badge/net8.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/8.0)
 
-A **.NET 8** persistence adapter that loads spatial features from an **HTTP Web API** endpoint — implements the Maptor data-source interfaces so remote feature services can be used as map layers without changing the calling code.
-
----
-
-## Features
-
-- `WebApiDataSource` — implements `IVectorDataSource` by fetching features from an HTTP endpoint (JSON/GeoJSON response)
-- `WebApiInfrastructure` — HTTP client management, base URL configuration, error handling
-- `WebApiSourceParameter` — strongly-typed parameters (base URL, layer name, query options)
-- `ListFeaturesQueryParams` — query parameter model for feature list requests (bounding box, scale, filters)
-- Bounding-box spatial filtering passed as query parameters to the server
-
----
+Persistence adapter that loads spatial features from an HTTP Web API endpoint into an in-memory
+Maptor data source, so remote feature services can be used as editable map layers without changing
+the calling code. Edits are tracked locally and pushed back to a sync endpoint with optimistic
+concurrency handling.
 
 ## Installation
 
@@ -23,20 +14,34 @@ A **.NET 8** persistence adapter that loads spatial features from an **HTTP Web 
 dotnet add package IRI.Maptor.Ket.WebApiPersistence
 ```
 
----
+## Features
 
-## Project Structure
+- `WebApiDataSource` — extends `MemoryDataSource` (an editable in-memory vector source); `LoadAsync` fetches a JSON feature-set DTO from the configured list endpoint
+- Change tracking and sync: `SaveChangesAsync` pushes added/updated/deleted features to the sync endpoint, applies server-assigned ids and row versions, and throws `ConcurrencyConflictException` on conflicts
+- Optional server-side geometry filter: `LoadAsync(Geometry<Point>)` sends the filter geometry as hex-encoded WKB
+- In-memory attribute text search (`SearchAsync`)
+- Bearer-token and custom-header authentication via `WebApiSourceParameter` (list URL, sync URL, SRID, id column)
+- `WebApiInfrastructure` — static HTTP helpers: `GetFeaturesAsync`, `SaveChangesAsync`, `AddFeatureAsync`, `UpdateFeatureAsync`, `DeleteFeatureAsync`
+- `ListFeaturesQueryParams` — explicit query model for the list endpoint (`GeometryWkbHex`, `SearchText`)
 
+## Usage
+
+```csharp
+using IRI.Maptor.Ket.WebApiPersistence;
+
+var source = new WebApiDataSource(
+    listUrl: "https://example.com/api/features/list",
+    syncUrl: "https://example.com/api/features/sync",
+    bearerToken: token);
+
+// load features from the list endpoint
+await source.LoadAsync();
+
+// ... edit features through the data source, then push the changes:
+await source.SaveChangesAsync();
 ```
-Ket.WebApiPersistence/
-├── WebApiDataSource.cs        # IVectorDataSource implementation
-├── WebApiInfrastructure.cs    # HTTP client & base URL helpers
-├── WebApiSourceParameter.cs   # Connection/endpoint parameters
-└── ListFeaturesQueryParams.cs # Query parameter model
-```
 
 ---
-
-📦 **NuGet**: [IRI.Maptor.Ket.WebApiPersistence](https://www.nuget.org/packages/IRI.Maptor.Ket.WebApiPersistence)
-
-🐞 **Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+[NuGet package](https://www.nuget.org/packages/IRI.Maptor.Ket.WebApiPersistence/) ·
+[Report issues](https://github.com/hosseinnarimanirad/Maptor/issues) ·
+[Back to IRI.Maptor.Ket](https://github.com/hosseinnarimanirad/Maptor/blob/master/src/IRI.Maptor.Ket/README.md)

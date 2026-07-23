@@ -1,4 +1,4 @@
-# Digital Terrain Modeling
+# Digital terrain modeling
 
 Two representations of a surface, convertible in both directions: `RegularDtm` (a grid DEM over a `Matrix`) and `IrregularDtm` (a TIN built on Delaunay triangulation).
 
@@ -43,6 +43,8 @@ var grid = tin.ToRegularDtm(cellSize: 10);             // TIN → raster
 
 ---
 
-📦 **NuGet**: [IRI.Maptor.Sta.Spatial](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
+**NuGet**: [IRI.Maptor.Sta.Spatial](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
 
-🐞 **Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+**Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+
+[Back to Spatial analysis](../README.md)

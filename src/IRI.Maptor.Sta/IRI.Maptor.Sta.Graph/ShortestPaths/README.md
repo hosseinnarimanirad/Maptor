@@ -1,4 +1,4 @@
-# Shortest Paths
+# Shortest paths
 
 All three algorithms here share one primitive — **relaxation**: if going through `u` is cheaper (`d[u] + w < d[v]`), lower `d[v]` and repoint its predecessor. They differ only in *when* they relax, which decides what weights they tolerate and what they cost.
 
@@ -56,3 +56,6 @@ All pairs at once, by dynamic programming: let nodes join the set of allowed sto
 var fw = new FloydWarshallProblem(adjacency);   // double[,]
 double dist = fw.shortestPaths[i, j];           // any pair, O(1) read
 ```
+
+---
+[Back to IRI.Maptor.Sta.Graph](../README.md)

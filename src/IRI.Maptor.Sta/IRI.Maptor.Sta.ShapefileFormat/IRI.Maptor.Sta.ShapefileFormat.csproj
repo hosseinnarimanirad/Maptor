@@ -17,7 +17,7 @@
     <Company>Maptor</Company>
     <Copyright>Maptor</Copyright>
     <Description>A .NET standard library to read/write shapefile (*.shp, *.shx, *.dbf, *.prj)</Description>
-    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/IRI.Maptor.Sta/IRI.Maptor.Sta.ShapefileFormat</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.ShapefileFormat</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>shapefile;GIS;spatial;dbf</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>

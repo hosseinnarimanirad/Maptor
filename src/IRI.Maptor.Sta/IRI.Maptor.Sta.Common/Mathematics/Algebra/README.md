@@ -1,4 +1,4 @@
-# Mathematics / Algebra
+# Linear algebra
 
 Dense linear algebra primitives for the Maptor suite. The central type is `Matrix`
 (real, dense, `double`-based), used across the library for coordinate
@@ -107,3 +107,6 @@ eigenvalue–eigenvector pairing, tolerance boundaries, and exception types:
 ```bash
 dotnet test tests/IRI.Maptor.Tst.Main/IRI.Maptor.Tst.Main.csproj --filter "FullyQualifiedName~MatrixTest"
 ```
+
+---
+[Back to IRI.Maptor.Sta.Common](../../README.md)

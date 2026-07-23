@@ -1,18 +1,26 @@
-# Simple Features: WKT & WKB
+# WKT and WKB (OGC Simple Features)
 
-OGC Simple Feature Access (ISO 19125) serialization for `Geometry<T>` — one geometry model, three encodings:
+OGC Simple Feature Access (ISO 19125) serialization for `Geometry<T>` — one geometry model, three encodings: OGC Well-Known Text, Well-Known Binary, and SQL Server's WKT dialect.
 
-| Encoding | Read | Write |
-|---|---|---|
-| OGC WKT | `WktReader.Parse` | `geometry.AsWkt()` |
-| WKB | `Geometry<Point>.FromWkb` / `WkbReader.Parse` | `geometry.AsWkb()` |
-| SQL Server WKT | `SqlServerWktReader.Parse` | `geometry.AsSqlServerWkt()` |
+## Supported capabilities
+
+| Capability | Supported |
+|---|---|
+| OGC WKT read | Yes — `WktReader.Parse` |
+| OGC WKT write | Yes — `geometry.AsWkt()` |
+| WKB read | Yes — `Geometry<T>.FromWkb` / `WkbReader.Parse` |
+| WKB write | Yes — `geometry.AsWkb()` |
+| SQL Server WKT read | Yes — `SqlServerWktReader.Parse` |
+| SQL Server WKT write | Yes — `geometry.AsSqlServerWkt()` |
+| Z / M / ZM dimensions | Yes (WKT dimension suffixes) |
 
 <p align="center">
   <img src="../../images/sfa-geometry-types.png" alt="Simple Feature geometry types" width="600">
 </p>
 
-## WKT — Well-Known Text
+## Usage
+
+### WKT — Well-Known Text
 
 `WktReader` parses OGC-compliant WKT, including the `Z` / `M` / `ZM` dimension suffixes; `AsWkt()` writes it back.
 
@@ -24,7 +32,7 @@ var geometry = WktReader.Parse("POINT Z (1 2 3)", srid: 4326);
 string wkt = geometry.AsWkt();   // "POINT Z (1 2 3)"
 ```
 
-## WKB — Well-Known Binary
+### WKB — Well-Known Binary
 
 The compact binary twin: one byte-order flag, a `uint32` geometry type, then raw `double` coordinates.
 
@@ -40,7 +48,7 @@ var restored = Geometry<Point>.FromWkb(wkb, srid: 4326);
 
 Byte-level layout of every geometry type: [WKB_Binary_Structure.md](WKB_Binary_Structure.md).
 
-## The SQL Server dialect
+### The SQL Server dialect
 
 SQL Server writes WKT **without** dimension suffixes — the dimension is inferred from the coordinate count (`POINT (1 2 3)` instead of OGC's `POINT Z (1 2 3)`). `SqlServerWktReader` / `AsSqlServerWkt()` speak that dialect, so converting is a read in one and a write in the other:
 
@@ -56,3 +64,6 @@ Full comparison (dimension detection, MULTIPOINT nesting, when to use which): [W
 ## The OGC object model
 
 The interchange types the WKB layer is built around — `OgcPoint`, `OgcLineString`, `OgcPolygon`, the `Multi*` classes and the `WkbGeometryType` enum — live in the `IRI.Maptor.Sta.Ogc.SFA` namespace of the [IRI.Maptor.Sta.Ogc](../../../IRI.Maptor.Sta.Ogc/SFA) project.
+
+---
+[Back to IRI.Maptor.Sta.Spatial](../../README.md)

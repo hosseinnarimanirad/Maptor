@@ -1,26 +1,19 @@
-# 🧩 Mapbox Vector Tiles (MVT) in Maptor
-
-![MVT](https://img.shields.io/badge/MVT-2.1_decode-blue)
-![.NET](https://img.shields.io/badge/.NET-Standard_2.1-green)
+# Mapbox vector tiles
 
 A dependency-free reader for Mapbox Vector Tiles (`.mvt` / `.pbf`). It decodes the protobuf tile into layers and features, and converts feature geometry into the library's `Geometry<Point>` in Web Mercator (EPSG:3857).
 
-> **Read-only.** This module decodes MVT tiles; it does not encode/write them.
+## Supported capabilities
 
-## ✨ Features
+| Capability | Supported |
+|---|---|
+| Read | Yes — `MvtTileReader.Decode`, `MvtGeometryDecoder.ToGeometry` |
+| Write | No — there is no encoder |
+| Gzip decompression | Yes — `MvtDecompressionHelper.Decompress` (auto-detects the gzip magic bytes) |
+| Z / M coordinates | No — 2D only |
 
-- Self-contained protobuf decoding — no external protobuf dependency
-- Transparent gzip handling (auto-detects the gzip magic bytes)
-- Layers, features, attributes, and geometry kind (point / linestring / polygon)
-- Tile-local → Web Mercator transform, then decode to `Geometry<Point>`
+The protobuf decoding is self-contained (`MvtProtoReader`) — no external protobuf dependency. Layers, features, attributes, and geometry kind (point / linestring / polygon) are all surfaced on the decoded model.
 
-## ⚙️ Installation
-
-```bash
-dotnet add package IRI.Maptor.Sta.Spatial
-```
-
-## 🚀 Getting Started
+## Usage
 
 Types live in `IRI.Maptor.Sta.Spatial.IO.VectorTiles`. The typical pipeline is: decompress → decode → build a per-layer transform → convert each feature.
 
@@ -56,7 +49,7 @@ foreach (MvtLayer layer in tile.Layers)
 }
 ```
 
-## 🧱 Model
+## Model
 
 - `MvtTile` — `Layers`
 - `MvtLayer` — `Name`, `Version`, `Extent` (default 4096), `Features`
@@ -64,7 +57,7 @@ foreach (MvtLayer layer in tile.Layers)
 
 `MvtGeometryDecoder.ToGeometry` turns the raw command stream into `Geometry<Point>` (point → `Point`/`MultiPoint`, line → `LineString`/`MultiLineString`, polygon → `Polygon`/`MultiPolygon`).
 
-## 📋 Format Details
+## Format details
 
 | Aspect | MVT in Maptor |
 |--------|---------------|
@@ -74,8 +67,11 @@ foreach (MvtLayer layer in tile.Layers)
 | **Serialization** | Protobuf wire format (not JSON/XML). **Decode-only**: `MvtTileReader.Decode(byte[])` (with `MvtDecompressionHelper.Decompress` for gzip). There is no encoder. |
 | **Specification** | [Mapbox Vector Tile Specification (v2.1)](https://github.com/mapbox/vector-tile-spec/tree/master/2.1) |
 
-## 📝 Notes
+## Limitations
 
-- The transform emits Web Mercator coordinates, so pass `srid: 3857` (or a matching SRID) to `ToGeometry`.
-- `zoom`, `tileColumn` (X), and `tileRow` (Y) identify the tile; `Extent` comes from each layer (usually 4096).
+- Read-only: this module decodes MVT tiles; it does not encode/write them.
+- The built-in transform emits Web Mercator coordinates only; supply your own `Func<int, int, Point>` for other target systems.
 - `MvtTileReader.Decode` takes an already-decompressed `byte[]`; call `MvtDecompressionHelper.Decompress` first when the source may be gzipped.
+
+---
+[Back to IRI.Maptor.Sta.Spatial](../../README.md)

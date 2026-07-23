@@ -1,8 +1,8 @@
-# Spatial Interpolation
+# Spatial interpolation
 
 Rain gauges, elevation benchmarks, pollution sensors — measurements come as scattered points, but the question is usually about the gap between them. Interpolation estimates a value between samples: every neighbour votes, nearer neighbours vote harder.
 
-## Inverse Distance Weighting (IDW)
+## Inverse distance weighting (IDW)
 
 IDW answers like an election. `Idw.Calculate` weighs each sample by **1 / distance²** and returns the weighted average of the `Z` values — the nearer a sample, the harder it votes. Two rules keep it honest:
 
@@ -40,6 +40,8 @@ Interpolating from a TIN instead (planar, per-triangle) lives in [DigitalTerrain
 
 ---
 
-📦 **NuGet**: [IRI.Maptor.Sta.Spatial](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
+**NuGet**: [IRI.Maptor.Sta.Spatial](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
 
-🐞 **Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+**Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+
+[Back to Spatial analysis](../README.md)

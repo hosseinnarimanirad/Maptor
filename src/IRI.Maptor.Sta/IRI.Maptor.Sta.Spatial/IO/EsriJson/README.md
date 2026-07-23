@@ -1,29 +1,23 @@
-# 🗂️ Esri JSON Support in Maptor
-
-![Esri JSON](https://img.shields.io/badge/Esri_JSON-ArcGIS-blue)
-![.NET](https://img.shields.io/badge/.NET-Standard_2.1-green)
+# Esri JSON
 
 A .NET Standard implementation of the Esri JSON geometry/feature format used by the ArcGIS REST API. Read and write Esri JSON, and convert to/from the library's `Geometry<T>` and `FeatureSet<Point>` types.
 
-## ✨ Features
+## Supported capabilities
 
-- Geometry types: point (`esriGeometryPoint`), multipoint (`esriGeometryMultipoint`), polyline (`esriGeometryPolyline`), polygon (`esriGeometryPolygon`)
-- Feature sets with fields, attributes, and spatial reference (`wkid` / `latestWkid`)
-- Conversion both ways: Esri JSON ⇄ `FeatureSet<Point>` and `Geometry<T>` ⇄ `EsriJsonGeometry`
-- Optional `Z` / `M` on geometry (features are read as `Feature<Point>`, i.e. flattened to X/Y)
-- WKT output for a geometry via `AsWkt()`
+| Capability | Supported |
+|---|---|
+| Read | Yes — `EsriJsonGeometry.Parse`, `EsriJsonFeatureSet.Parse` / `Load` |
+| Write | Yes — `EsriJsonGeometry.ToString`, `EsriJsonFeatureSet.Save` |
+| Z / M coordinates | Yes on geometry (`hasZ` / `hasM`); features flatten to X/Y |
+| Envelope geometry | No — `esriGeometryEnvelope` is in the type enum but conversion throws |
 
-## ⚙️ Installation
+Geometry types: point (`esriGeometryPoint`), multipoint (`esriGeometryMultipoint`), polyline (`esriGeometryPolyline`), polygon (`esriGeometryPolygon`). Feature sets carry fields, attributes, and spatial reference (`wkid` / `latestWkid`). A geometry can also be written as WKT via `AsWkt()`.
 
-```bash
-dotnet add package IRI.Maptor.Sta.Spatial
-```
-
-## 🚀 Getting Started
+## Usage
 
 Types live in `IRI.Maptor.Sta.Spatial.IO.EsriJson`; the `Geometry<T>` extension lives in `IRI.Maptor.Extensions`.
 
-### Feature Sets
+### Feature sets
 
 ```csharp
 using IRI.Maptor.Sta.Spatial.IO.EsriJson;
@@ -59,22 +53,21 @@ string json = esri.ToString();   // Esri JSON
 string wkt  = esri.AsWkt();       // WKT
 ```
 
-## 🌐 Spatial Reference
-
-`EsriJsonSpatialReference` carries `Wkid`, `LatestWkid`, `VcsWkid`, and `LatestVcsWkid`. On read, the SRID is resolved as `LatestWkid ?? Wkid`; on write from a `FeatureSet<Point>`, `LatestWkid` is set from the feature set's SRID.
-
-## 📋 Format Details
+## Format details
 
 | Aspect | Esri JSON in Maptor |
 |--------|---------------------|
-| **Coordinate system** | Esri JSON carries an explicit `spatialReference` (`wkid` / `latestWkid`) and supports any CRS. Maptor preserves it; SRID resolves as `latestWkid ?? wkid`. `EsriJsonFeature.AsFeature(srid, targetSrs)` can optionally project to another SRS. |
+| **Coordinate system** | Esri JSON carries an explicit `spatialReference` (`wkid` / `latestWkid`) and supports any CRS. Maptor preserves it; SRID resolves as `latestWkid ?? wkid`. `EsriJsonFeature.AsFeature(srid, targetSrs)` can optionally project to another SRS. On write from a `FeatureSet<Point>`, `LatestWkid` is set from the feature set's SRID. |
 | **Z / M** | The geometry model has `hasZ` / `hasM`; `EsriJsonGeometry.Parse(srid)` returns `Geometry<PointZM/PointZ/Point>` accordingly. Reading a full feature via `AsFeature` flattens to `Geometry<Point>` (X/Y). |
 | **Polygon rings** | Esri's convention is the **opposite** of GeoJSON — exterior rings **clockwise**, holes **counterclockwise**, closed (first = last). The writer reverses `Geometry<Point>` winding to match Esri's order. |
 | **Serialization** | System.Text.Json (camelCase). Deserialize: `EsriJsonGeometry.Parse`, `EsriJsonFeatureSet.Parse` / `Load`. Serialize: `EsriJsonGeometry.ToString`, `EsriJsonFeatureSet.Save`. |
 | **Specification** | [ArcGIS REST API — Geometry objects](https://developers.arcgis.com/rest/services-reference/enterprise/geometry-objects/) |
 
-## 📝 Notes & Limitations
+## Limitations
 
 - Polygon `Rings` and polyline `Paths` follow the Esri convention; multiple rings/paths become `MultiPolygon`/`MultiLineString`.
 - `esriGeometryEnvelope` is defined in the type enum but is **not** converted (it throws).
 - `EsriJsonFeatureSet.Save(...)` writes to a file; there is no method that returns the full feature-set JSON as a string. A single geometry's Esri JSON is available via `EsriJsonGeometry.ToString()`.
+
+---
+[Back to IRI.Maptor.Sta.Spatial](../../README.md)

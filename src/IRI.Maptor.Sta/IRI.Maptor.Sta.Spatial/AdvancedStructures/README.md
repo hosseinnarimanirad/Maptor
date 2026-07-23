@@ -1,4 +1,4 @@
-# Advanced Structures
+# Advanced structures
 
 Spatial indexes and point clustering: a spatial query shouldn't touch every feature — these structures carve space so lookups skip almost everything.
 
@@ -51,6 +51,8 @@ var centers = KdTreePointClusters<Point>.GetClusterCenters(points, Point.NaN, ra
 
 ---
 
-📦 **NuGet**: [IRI.Maptor.Sta.Spatial](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
+**NuGet**: [IRI.Maptor.Sta.Spatial](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
 
-🐞 **Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+**Issues**: [GitHub Issues](https://github.com/hosseinnarimanirad/Maptor/issues)
+
+[Back to IRI.Maptor.Sta.Spatial](../README.md)

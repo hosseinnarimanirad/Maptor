@@ -12,7 +12,7 @@
     <Authors>Hossein Narimani Rad</Authors>
     <Company>Maptor</Company>
     <Description>A .NET standard library containing primitive types for hashing, cryptrography, etc.</Description>
-    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/IRI.Maptor.Sta/IRI.Maptor.Sta.Security</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Security</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>cryptrography</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
