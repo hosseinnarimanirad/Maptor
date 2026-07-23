@@ -3,7 +3,7 @@
 Spatial indexes and point clustering: a spatial query shouldn't touch every feature — these structures carve space so lookups skip almost everything.
 
 <p align="center">
-  <img src="../images/kdtree-vs-rtree.png" alt="KdTree vs RTree" width="600">
+  <img src="../images/kdtree-vs-rtree.png" alt="KdTree vs RTree" width="800">
 </p>
 
 ## KdTree & BalancedKdTree
@@ -33,7 +33,7 @@ var withinToleranceRange = tree.FindNeighbours(new Point(51.4, 35.7), distance: 
 `SFCRTree` bulk-loads the same structure along a **space-filling curve**: leaves are packed in curve order, so map-neighbours stay disk-neighbours. Pick the ordering with a comparer — `SFCRTree.HilbertComparer`, `ZOrderingComparer`, `GrayComparer`, `PeanoComparer` and friends.
 
 <p align="center">
-  <img src="../images/space-filling-curves.png" alt="Space-filling curves preserve locality" width="600">
+  <img src="../images/space-filling-curves.png" alt="Space-filling curves preserve locality" width="800">
 </p>
 
 > Both R-tree flavours are early-stage implementations (marked untested in source) — the k-d trees are the battle-tested pair.

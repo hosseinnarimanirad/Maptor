@@ -7,7 +7,7 @@ Two traversal orders, two different superpowers: BFS finds shortest hop-count pa
 `BreadthFirstSearch<TNode, TWeight>` explores the graph **level by level** from a start node. A queue drives the frontier: nodes go white → gray when enqueued, gray → black when dequeued, and every node gets `level = parent's level + 1`. The tree the traversal leaves behind (`SearchResult`) is the shortest-path tree in edge count.
 
 <p align="center">
-  <img src="../images/bfs.png" alt="Breadth-First Search" width="600">
+  <img src="../images/bfs.png" alt="Breadth-First Search" width="800">
 </p>
 
 ```csharp
@@ -23,7 +23,7 @@ var tree     = bfs.SearchResult;      // the BFS tree as an AdjacencyList
 `DepthFirstSearch<TNode, TWeight>` goes **deep before wide**, stamping each node with a discovery and a finish time. The stamps nest like parentheses, and each non-tree edge gets classified — `Tree`, `Back`, `Forward` or `Cross`. One back edge is enough to prove a cycle; on a DAG, reading finish times backwards yields a topological sort.
 
 <p align="center">
-  <img src="../images/dfs.png" alt="Depth-First Search" width="600">
+  <img src="../images/dfs.png" alt="Depth-First Search" width="800">
 </p>
 
 ```csharp
@@ -41,7 +41,7 @@ var byTime  = dfs.GetSortedNodes(SortType.BasedOnFinishTime);
 A strongly connected component is a set of nodes that can **all reach each other**. Collapsing each SCC to a single point always leaves a cycle-free component graph (a DAG). The implementation is Kosaraju's algorithm — two DFS passes around a `Transpose()`:
 
 <p align="center">
-  <img src="../images/strongly-connected-components.png" alt="Strongly Connected Components" width="600">
+  <img src="../images/strongly-connected-components.png" alt="Strongly Connected Components" width="800">
 </p>
 
 ```csharp

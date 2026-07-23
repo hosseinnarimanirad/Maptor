@@ -10,7 +10,7 @@ IDW answers like an election. `Idw.Calculate` weighs each sample by **1 / distan
 - **It can't go beyond its inputs** — the estimate always stays between the smallest and largest `Z` in range, so it never predicts a peak above the highest sample. On the interpolated surface, extreme samples become bullseyes (right panel below).
 
 <p align="center">
-  <img src="../../images/idw-interpolation.png" alt="IDW interpolation" width="600">
+  <img src="../../images/idw-interpolation.png" alt="IDW interpolation" width="800">
 </p>
 
 ```csharp

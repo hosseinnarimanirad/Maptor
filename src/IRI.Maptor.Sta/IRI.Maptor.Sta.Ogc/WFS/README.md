@@ -3,7 +3,7 @@
 Where WMS returns a picture of the map, WFS returns the features themselves — GML geometries with their attributes, styled by the client. This folder is the **generated object model** for WFS 1.1.0 capabilities and requests (namespace `IRI.Maptor.Sta.Ogc.WFS.v110`); there is no HTTP client here — bring your own transport and deserialize the responses.
 
 <p align="center">
-  <img src="../images/wms-wfs.png" alt="WMS vs WFS" width="600">
+  <img src="../images/wms-wfs.png" alt="WMS vs WFS" width="800">
 </p>
 
 ## The capabilities model

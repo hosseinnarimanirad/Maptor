@@ -15,7 +15,13 @@ OGC Simple Feature Access (ISO 19125) serialization for `Geometry<T>` — one ge
 | Z / M / ZM dimensions | Yes (WKT dimension suffixes) |
 
 <p align="center">
-  <img src="../../images/sfa-geometry-types.png" alt="Simple Feature geometry types" width="600">
+  <img src="../../images/sfa-geometry-types.png" alt="Simple Feature geometry types" width="800">
+</p>
+
+A polygon's rings carry two different meanings: an interior ring is a hole in the same polygon, while a second exterior ring is a separate part of a MultiPolygon.
+
+<p align="center">
+  <img src="../../images/sfa-polygon-hole-multipolygon.png" alt="Polygon with a hole vs MultiPolygon parts" width="800">
 </p>
 
 ## Usage
@@ -37,7 +43,7 @@ string wkt = geometry.AsWkt();   // "POINT Z (1 2 3)"
 The compact binary twin: one byte-order flag, a `uint32` geometry type, then raw `double` coordinates.
 
 <p align="center">
-  <img src="../../images/wkb-anatomy.png" alt="WKB anatomy of a point" width="600">
+  <img src="../../images/wkb-anatomy.png" alt="WKB anatomy of a point" width="800">
 </p>
 
 ```csharp

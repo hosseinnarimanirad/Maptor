@@ -8,7 +8,7 @@ OGC's XML encoding for geometry. This folder speaks both widely deployed dialect
 | 3.1.1 | `<gml:exterior>` | `<gml:pos>` / `<gml:posList>` — one flat space-separated list |
 
 <p align="center">
-  <img src="../images/gml.png" alt="GML 2.1.2 vs 3.1.1" width="600">
+  <img src="../images/gml.png" alt="GML 2.1.2 vs 3.1.1" width="800">
 </p>
 
 ## Reading GML

@@ -8,7 +8,7 @@ Connect every node of an undirected weighted graph with the least total edge wei
 Both implementations share a LinkedList trick as their union-find: two endpoints are in the same component exactly when their `LinkedListNode.List` is the same list; merging clusters is splicing one list into the other.
 
 <p align="center">
-  <img src="../images/minimum-spanning-tree.png" alt="Minimum Spanning Tree" width="600">
+  <img src="../images/minimum-spanning-tree.png" alt="Minimum Spanning Tree" width="800">
 </p>
 
 ```csharp

@@ -3,7 +3,7 @@
 This folder implements the coordinate systems used in geodesy, following the classical classification below:
 
 <p align="center">
-  <img src="../images/coordinate-systems.png" alt="Relationship between geocentric, topocentric, and 2D coordinate systems" width="600">
+  <img src="../images/coordinate-systems.png" alt="Relationship between geocentric, topocentric, and 2D coordinate systems" width="800">
 </p>
 
 *Fig. 1: Relationship between geocentric, topocentric, and 2D coordinate systems*

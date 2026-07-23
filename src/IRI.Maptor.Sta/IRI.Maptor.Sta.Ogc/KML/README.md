@@ -3,7 +3,7 @@
 OGC KML 2.2: a tree of placemarks, folders and shared styles for the globe. All classes live in the `IRI.Maptor.Sta.KmlFormat` namespace (not `Sta.Ogc.KML`), and KML's convention is WGS84 (SRID 4326) throughout.
 
 <p align="center">
-  <img src="../images/kml-kmz.png" alt="KML document and KMZ package" width="600">
+  <img src="../images/kml-kmz.png" alt="KML document and KMZ package" width="800">
 </p>
 
 ## Reading

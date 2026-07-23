@@ -7,7 +7,7 @@ The algorithm toolbox of `IRI.Maptor.Sta.Spatial`: triangulation and Voronoi dia
 `DelaunayTriangulation` is a Bowyer–Watson incremental insertion. Triangles come back as CCW vertex indices with per-edge neighbour links (`-1` on the convex hull), and the dual Voronoi diagram comes for free: every triangle's circumcenter is a Voronoi vertex, and hull cells stay open as infinite rays.
 
 <p align="center">
-  <img src="../images/voronoi-delaunay-duality.png" alt="Delaunay–Voronoi duality" width="600">
+  <img src="../images/voronoi-delaunay-duality.png" alt="Delaunay–Voronoi duality" width="800">
 </p>
 
 ```csharp
@@ -30,7 +30,7 @@ The convex hull is the smallest convex polygon that contains every point of a se
 `ComputationalGeometry.CreateConvexHull` is a Graham scan — sort by polar angle around the lowest point, keep only the left turns, O(n log n). It returns the hull vertices counter-clockwise; duplicates and collinear edge points are dropped.
 
 <p align="center">
-  <img src="../images/convex-hull.png" alt="Convex hull vs bounding box" width="600">
+  <img src="../images/convex-hull.png" alt="Convex hull vs bounding box" width="800">
 </p>
 
 ```csharp
@@ -76,7 +76,7 @@ var simplified = Simplifications.SimplifyByRamerDouglasPeucker(line.Points, para
 The `Topology/` enums (`PointPolygonRelation`, `LineLineRelation`, `PointCircleRelation`, …) name the answers; the predicates live in `TopologyUtility` (namespace `IRI.Maptor.Sta.Spatial.Helpers`). Point-in-polygon ships in both classic flavours:
 
 <p align="center">
-  <img src="../images/point-in-polygon.png" alt="Point in polygon: ray casting vs winding number" width="600">
+  <img src="../images/point-in-polygon.png" alt="Point in polygon: ray casting vs winding number" width="800">
 </p>
 
 ```csharp
@@ -94,7 +94,7 @@ Also here: segment–segment intersection (`LineSegmentsIntersects`), point–se
 Hilbert, Z-order (Morton) and other curve orderings that linearize 2-D data while keeping neighbours close — the backbone of `SFCRTree` bulk-loading and locality-preserving sorts. See the dedicated [SFC README](SFC/README.md).
 
 <p align="center">
-  <img src="../images/space-filling-curves.png" alt="Space-filling curves" width="600">
+  <img src="../images/space-filling-curves.png" alt="Space-filling curves" width="800">
 </p>
 
 ## Network

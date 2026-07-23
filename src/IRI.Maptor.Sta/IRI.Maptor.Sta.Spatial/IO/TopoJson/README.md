@@ -18,7 +18,7 @@ Geometry types: `Point`, `MultiPoint`, `LineString`, `MultiLineString`, `Polygon
 Instead of storing each geometry's coordinates independently, TopoJSON stitches geometries together from shared arcs. Shared boundaries are stored once, which typically produces smaller files than the equivalent GeoJSON.
 
 <p align="center">
-  <img src="../../images/geojson-vs-topojson-arcs.png" alt="GeoJSON duplicates shared borders; TopoJSON stores each arc once" width="600">
+  <img src="../../images/geojson-vs-topojson-arcs.png" alt="GeoJSON duplicates shared borders; TopoJSON stores each arc once" width="800">
 </p>
 
 ## Usage
