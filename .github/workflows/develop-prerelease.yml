@@ -52,15 +52,15 @@ jobs:
 
     - name: Build
       run: |
+        $noWarn = "${{ env.NOWARN_CODES }}".Replace(';', '%3B')
         $prefixes = "${{ env.PROJECT_PREFIXES }}".Split(' ')
         foreach ($prefix in $prefixes) {
           Get-ChildItem -Path ./src -Recurse -Filter "${prefix}*.csproj" | ForEach-Object {
             dotnet build $_.FullName `
               --configuration Release `
               --no-restore `
-              /p:NoWarn=$"{{ env.NOWARN_CODES }}" `
+              /p:NoWarn=$noWarn `
               /p:WarningLevel=0 `
-              /p:GenerateDocumentationFile=false `
               --verbosity minimal
           }
         }
