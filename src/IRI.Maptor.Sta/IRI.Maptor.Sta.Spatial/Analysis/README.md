@@ -34,18 +34,18 @@ The convex hull is the smallest convex polygon that contains every point of a se
 </p>
 
 ```csharp
-// a crescent of points: an outer arc plus a few strays inside it
+// a five-pointed star: five outer tips plus five inner notch points
 var points = new List<Point>
 {
-    new Point(0, -10), new Point(-7, -7), new Point(-10, 0),   // outer arc …
-    new Point(-7, 7),  new Point(0, 10),  new Point(7, 7),
-    new Point(-5, 0),  new Point(-3.5, 3.5),                   // … inner strays
-    new Point(0, 5),   new Point(3, 3),
+    new Point(0, 10),     new Point(-9.5, 3.1),  new Point(-5.9, -8.1),  // outer tips …
+    new Point(5.9, -8.1), new Point(9.5, 3.1),
+    new Point(-2.4, 3.2), new Point(-3.8, -1.2), new Point(0, -4),       // … inner notches
+    new Point(3.8, -1.2), new Point(2.4, 3.2),
 };
 
 List<Point> hull = ComputationalGeometry.CreateConvexHull(points);
-// → the six outer-arc points, counter-clockwise; the rubber band bridges
-//   straight across between (7, 7) and (0, -10), and the inner strays vanish
+// → the five tips, counter-clockwise — a pentagon; the rubber band bridges
+//   every notch straight across, and the inner star vertices vanish
 
 var hullPolygon = geometry.GetConvexHull();   // same thing on any Geometry<T>
 ```
