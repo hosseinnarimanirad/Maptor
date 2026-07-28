@@ -12,7 +12,7 @@ public class RedBlackNode<T> where T : IComparable
 
     public T Key { get; set; }
 
-    private RedBlackNode<T> _leftChild, _rigthChild;
+    private RedBlackNode<T> _leftChild, _rightChild;
 
     public RedBlackNode<T> LeftChild
     {
@@ -29,15 +29,15 @@ public class RedBlackNode<T> where T : IComparable
         }
     }
 
-    public RedBlackNode<T> RigthChild
+    public RedBlackNode<T> RightChild
     {
-        get { return this._rigthChild; }
+        get { return this._rightChild; }
 
         set
         {
             if (value != null)
             {
-                this._rigthChild = value;
+                this._rightChild = value;
 
                 value.Parent = this;
             }
@@ -61,15 +61,15 @@ public class RedBlackNode<T> where T : IComparable
 
         this.LeftChild = nilNode;
 
-        this.RigthChild = nilNode;
+        this.RightChild = nilNode;
     }
 
     public override string ToString()
     {
-        return string.Format("Key = '{0}', Color = '{3}', Left = '{1}', Rigth = '{2}'",
+        return string.Format("Key = '{0}', Color = '{3}', Left = '{1}', Right = '{2}'",
             Key.ToString(),
             LeftChild == null ? string.Empty : LeftChild.Key.ToString(),
-            RigthChild == null ? string.Empty : RigthChild.Key.ToString(),
+            RightChild == null ? string.Empty : RightChild.Key.ToString(),
             this.Color.ToString());
     }
 }

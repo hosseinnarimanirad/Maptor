@@ -21,7 +21,7 @@ public class OrderStatisticNode<T> where T : IComparable
 
     public T Key { get; set; }
 
-    private OrderStatisticNode<T> leftChild, rigthChild;
+    private OrderStatisticNode<T> leftChild, rightChild;
 
     public OrderStatisticNode<T> LeftChild
     {
@@ -38,15 +38,15 @@ public class OrderStatisticNode<T> where T : IComparable
         }
     }
 
-    public OrderStatisticNode<T> RigthChild
+    public OrderStatisticNode<T> RightChild
     {
-        get { return this.rigthChild; }
+        get { return this.rightChild; }
 
         set
         {
             if (value != null)
             {
-                this.rigthChild = value;
+                this.rightChild = value;
 
                 value.Parent = this;
             }
@@ -72,15 +72,15 @@ public class OrderStatisticNode<T> where T : IComparable
 
         this.LeftChild = nilNode;
 
-        this.RigthChild = nilNode;
+        this.RightChild = nilNode;
     }
 
     public override string ToString()
     {
-        return string.Format("Key = '{0}', Color = '{3}', Left = '{1}', Rigth = '{2}', Size = '{4}'",
+        return string.Format("Key = '{0}', Color = '{3}', Left = '{1}', Right = '{2}', Size = '{4}'",
             Key.ToString(),
             LeftChild == null ? string.Empty : LeftChild.Key.ToString(),
-            RigthChild == null ? string.Empty : RigthChild.Key.ToString(),
+            RightChild == null ? string.Empty : RightChild.Key.ToString(),
             this.Color.ToString(),
             Size);
     }

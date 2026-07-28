@@ -42,13 +42,13 @@ public class BinarySearchTree<T> where T : IComparable
         }
         else
         {
-            if (parent.RigthChild != null)
+            if (parent.RightChild != null)
             {
-                Add(parent.RigthChild, childValue);
+                Add(parent.RightChild, childValue);
             }
             else
             {
-                parent.RigthChild = new BinarySearchNode<T>(childValue) { Parent = parent };
+                parent.RightChild = new BinarySearchNode<T>(childValue) { Parent = parent };
             }
         }
     }
@@ -100,9 +100,9 @@ public class BinarySearchTree<T> where T : IComparable
 
         treeWalk.Add(node.Key);
 
-        if (node.RigthChild != null)
+        if (node.RightChild != null)
         {
-            GetInorderTreeWalk(node.RigthChild);
+            GetInorderTreeWalk(node.RightChild);
         }
     }
 
@@ -115,9 +115,9 @@ public class BinarySearchTree<T> where T : IComparable
             GetPreorderTreeWalk(node.LeftChild);
         }
 
-        if (node.RigthChild != null)
+        if (node.RightChild != null)
         {
-            GetPreorderTreeWalk(node.RigthChild);
+            GetPreorderTreeWalk(node.RightChild);
         }
     }
 
@@ -128,9 +128,9 @@ public class BinarySearchTree<T> where T : IComparable
             GetPostorderTreeWalk(node.LeftChild);
         }
 
-        if (node.RigthChild != null)
+        if (node.RightChild != null)
         {
-            GetPostorderTreeWalk(node.RigthChild);
+            GetPostorderTreeWalk(node.RightChild);
         }
 
         treeWalk.Add(node.Key);

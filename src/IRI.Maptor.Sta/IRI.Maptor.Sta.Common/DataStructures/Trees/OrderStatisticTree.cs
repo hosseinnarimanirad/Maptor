@@ -35,7 +35,7 @@ public class OrderStatisticTree<T> where T : IComparable
         }
         else
         {
-            return Select(subtreeRoot.RigthChild, i - r);
+            return Select(subtreeRoot.RightChild, i - r);
         }
     }
 
@@ -47,7 +47,7 @@ public class OrderStatisticTree<T> where T : IComparable
 
         while (!object.ReferenceEquals(this.Root, temp))
         {
-            if (object.ReferenceEquals(temp, temp.Parent.RigthChild))
+            if (object.ReferenceEquals(temp, temp.Parent.RightChild))
             {
                 r += temp.Parent.LeftChild.Size + 1;
             }
@@ -68,7 +68,7 @@ public class OrderStatisticTree<T> where T : IComparable
 
         this.Root = new OrderStatisticNode<T>(values[0], NodeColor.Black);
         //this.Parent.LeftChild = nilNode;
-        //this.Parent.RigthChild = nilNode;
+        //this.Parent.RightChild = nilNode;
 
         for (int i = 1; i < values.Length; i++)
         {
@@ -76,7 +76,7 @@ public class OrderStatisticTree<T> where T : IComparable
 
             //node.LeftChild = nilNode;
 
-            //node.RigthChild = nilNode;
+            //node.RightChild = nilNode;
 
             Add(this.Root, node);
 
@@ -101,13 +101,13 @@ public class OrderStatisticTree<T> where T : IComparable
         }
         else
         {
-            if (parent.RigthChild != OrderStatisticNode<T>.nilNode)
+            if (parent.RightChild != OrderStatisticNode<T>.nilNode)
             {
-                Add(parent.RigthChild, node);
+                Add(parent.RightChild, node);
             }
             else
             {
-                parent.RigthChild = node;
+                parent.RightChild = node;
             }
         }
     }
@@ -120,7 +120,7 @@ public class OrderStatisticTree<T> where T : IComparable
 
         //node.LeftChild = nilNode;
 
-        //node.RigthChild = nilNode;
+        //node.RightChild = nilNode;
 
         Add(this.Root, node);
 
@@ -133,7 +133,7 @@ public class OrderStatisticTree<T> where T : IComparable
         {
             if (object.ReferenceEquals(node.Parent, node.Parent.Parent.LeftChild))
             {
-                OrderStatisticNode<T> y = node.Parent.Parent.RigthChild;
+                OrderStatisticNode<T> y = node.Parent.Parent.RightChild;
 
                 if (y.Color == NodeColor.Red)
                 {
@@ -145,7 +145,7 @@ public class OrderStatisticTree<T> where T : IComparable
 
                     node = node.Parent.Parent;
                 }
-                else if (object.ReferenceEquals(node, node.Parent.RigthChild))
+                else if (object.ReferenceEquals(node, node.Parent.RightChild))
                 {
                     node = node.Parent;
 
@@ -157,10 +157,10 @@ public class OrderStatisticTree<T> where T : IComparable
 
                     node.Parent.Parent.Color = NodeColor.Red;
 
-                    RigthRotate(node.Parent.Parent);
+                    RightRotate(node.Parent.Parent);
                 }
             }
-            else if (object.ReferenceEquals(node.Parent, node.Parent.Parent.RigthChild))
+            else if (object.ReferenceEquals(node.Parent, node.Parent.Parent.RightChild))
             {
                 OrderStatisticNode<T> y = node.Parent.Parent.LeftChild;
 
@@ -178,7 +178,7 @@ public class OrderStatisticTree<T> where T : IComparable
                 {
                     node = node.Parent;
 
-                    RigthRotate(node);
+                    RightRotate(node);
                 }
                 else
                 {
@@ -200,45 +200,45 @@ public class OrderStatisticTree<T> where T : IComparable
 
     public void LeftRotate(OrderStatisticNode<T> node)
     {
-        if (node.LeftChild == null || node.RigthChild == null)
+        if (node.LeftChild == null || node.RightChild == null)
         {
             throw new NotImplementedException();
         }
 
-        OrderStatisticNode<T> rigthChild = node.RigthChild;
+        OrderStatisticNode<T> rightChild = node.RightChild;
 
-        node.RigthChild = rigthChild.LeftChild;
+        node.RightChild = rightChild.LeftChild;
 
         if (node.Parent == null)
         {
-            this.Root = rigthChild;
+            this.Root = rightChild;
         }
         else if (object.ReferenceEquals(node, node.Parent.LeftChild))
         {
-            node.Parent.LeftChild = rigthChild;
+            node.Parent.LeftChild = rightChild;
         }
         else
         {
-            node.Parent.RigthChild = rigthChild;
+            node.Parent.RightChild = rightChild;
         }
 
-        rigthChild.LeftChild = node;
+        rightChild.LeftChild = node;
 
-        rigthChild.Size = node.Size;
+        rightChild.Size = node.Size;
 
-        node.Size = node.LeftChild.Size + node.RigthChild.Size + 1;
+        node.Size = node.LeftChild.Size + node.RightChild.Size + 1;
     }
 
-    public void RigthRotate(OrderStatisticNode<T> node)
+    public void RightRotate(OrderStatisticNode<T> node)
     {
-        if (node.LeftChild == null || node.RigthChild == null)
+        if (node.LeftChild == null || node.RightChild == null)
         {
             throw new NotImplementedException();
         }
 
         OrderStatisticNode<T> leftChild = node.LeftChild;
 
-        node.LeftChild = leftChild.RigthChild;
+        node.LeftChild = leftChild.RightChild;
 
         if (node.Parent == null)
         {
@@ -250,13 +250,13 @@ public class OrderStatisticTree<T> where T : IComparable
         }
         else
         {
-            node.Parent.RigthChild = leftChild;
+            node.Parent.RightChild = leftChild;
         }
 
-        leftChild.RigthChild = node;
+        leftChild.RightChild = node;
 
         leftChild.Size = node.Size;
 
-        node.Size = node.LeftChild.Size + node.RigthChild.Size + 1;
+        node.Size = node.LeftChild.Size + node.RightChild.Size + 1;
     }
 }

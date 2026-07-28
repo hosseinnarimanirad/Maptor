@@ -40,13 +40,13 @@ public class IntervalTree<T> where T : IComparable
         }
         else
         {
-            if (parent.RigthChild != nilNode)
+            if (parent.RightChild != nilNode)
             {
-                Add(parent.RigthChild, node);
+                Add(parent.RightChild, node);
             }
             else
             {
-                parent.RigthChild = node;
+                parent.RightChild = node;
             }
         }
     }
@@ -68,7 +68,7 @@ public class IntervalTree<T> where T : IComparable
         {
             if (object.ReferenceEquals(node.Parent, node.Parent.Parent.LeftChild))
             {
-                IntervalTreeNode<T> y = node.Parent.Parent.RigthChild;
+                IntervalTreeNode<T> y = node.Parent.Parent.RightChild;
 
                 if (y.Color == NodeColor.Red)
                 {
@@ -80,7 +80,7 @@ public class IntervalTree<T> where T : IComparable
 
                     node = node.Parent.Parent;
                 }
-                else if (object.ReferenceEquals(node, node.Parent.RigthChild))
+                else if (object.ReferenceEquals(node, node.Parent.RightChild))
                 {
                     node = node.Parent;
 
@@ -92,10 +92,10 @@ public class IntervalTree<T> where T : IComparable
 
                     node.Parent.Parent.Color = NodeColor.Red;
 
-                    RigthRotate(node.Parent.Parent);
+                    RightRotate(node.Parent.Parent);
                 }
             }
-            else if (object.ReferenceEquals(node.Parent, node.Parent.Parent.RigthChild))
+            else if (object.ReferenceEquals(node.Parent, node.Parent.Parent.RightChild))
             {
                 IntervalTreeNode<T> y = node.Parent.Parent.LeftChild;
 
@@ -113,7 +113,7 @@ public class IntervalTree<T> where T : IComparable
                 {
                     node = node.Parent;
 
-                    RigthRotate(node);
+                    RightRotate(node);
                 }
                 else
                 {
@@ -135,46 +135,46 @@ public class IntervalTree<T> where T : IComparable
 
     public void LeftRotate(IntervalTreeNode<T> node)
     {
-        if (node.LeftChild == null || node.RigthChild == null)
+        if (node.LeftChild == null || node.RightChild == null)
         {
             throw new NotImplementedException();
         }
 
-        IntervalTreeNode<T> rigthChild = node.RigthChild;
+        IntervalTreeNode<T> rightChild = node.RightChild;
 
-        node.RigthChild = rigthChild.LeftChild;
+        node.RightChild = rightChild.LeftChild;
 
         if (node.Parent == null)
         {
-            this.Root = rigthChild;
+            this.Root = rightChild;
         }
         else if (object.ReferenceEquals(node, node.Parent.LeftChild))
         {
-            node.Parent.LeftChild = rigthChild;
+            node.Parent.LeftChild = rightChild;
         }
         else
         {
-            node.Parent.RigthChild = rigthChild;
+            node.Parent.RightChild = rightChild;
         }
 
-        rigthChild.LeftChild = node;
+        rightChild.LeftChild = node;
 
         //
-        //rigthChild.Max = this.Max(rigthChild.High, rigthChild.LeftChild.Max, rigthChild.RigthChild.Max);
+        //rightChild.Max = this.Max(rightChild.High, rightChild.LeftChild.Max, rightChild.RightChild.Max);
 
-        //node.Max = this.Max(node.High, node.LeftChild.High, node.RigthChild.High);
+        //node.Max = this.Max(node.High, node.LeftChild.High, node.RightChild.High);
     }
 
-    public void RigthRotate(IntervalTreeNode<T> node)
+    public void RightRotate(IntervalTreeNode<T> node)
     {
-        if (node.LeftChild == null || node.RigthChild == null)
+        if (node.LeftChild == null || node.RightChild == null)
         {
             throw new NotImplementedException();
         }
 
         IntervalTreeNode<T> leftChild = node.LeftChild;
 
-        node.LeftChild = leftChild.RigthChild;
+        node.LeftChild = leftChild.RightChild;
 
         if (node.Parent == null)
         {
@@ -186,15 +186,15 @@ public class IntervalTree<T> where T : IComparable
         }
         else
         {
-            node.Parent.RigthChild = leftChild;
+            node.Parent.RightChild = leftChild;
         }
 
-        leftChild.RigthChild = node;
+        leftChild.RightChild = node;
 
         ////
-        //leftChild.Max = this.Max(leftChild.High, leftChild.LeftChild.Max, leftChild.RigthChild.Max);
+        //leftChild.Max = this.Max(leftChild.High, leftChild.LeftChild.Max, leftChild.RightChild.Max);
 
-        //node.Max = this.Max(node.High, node.LeftChild.High, node.RigthChild.High);
+        //node.Max = this.Max(node.High, node.LeftChild.High, node.RightChild.High);
     }
 
     private T Max(T first, T second, T third)
@@ -224,7 +224,7 @@ public class IntervalTree<T> where T : IComparable
             }
             else
             {
-                parentNode = parentNode.RigthChild;
+                parentNode = parentNode.RightChild;
             }
         }
 

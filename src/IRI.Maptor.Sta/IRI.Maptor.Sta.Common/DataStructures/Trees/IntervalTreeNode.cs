@@ -16,7 +16,7 @@ public class IntervalTreeNode<T> where T : IComparable
 
     public T Max { get; set; }
 
-    private IntervalTreeNode<T> leftChild, rigthChild;
+    private IntervalTreeNode<T> leftChild, rightChild;
 
     public IntervalTreeNode<T> LeftChild
     {
@@ -38,15 +38,15 @@ public class IntervalTreeNode<T> where T : IComparable
         }
     }
 
-    public IntervalTreeNode<T> RigthChild
+    public IntervalTreeNode<T> RightChild
     {
-        get { return this.rigthChild; }
+        get { return this.rightChild; }
 
         set
         {
             if (value != null)
             {
-                this.rigthChild = value;
+                this.rightChild = value;
 
                 value.Parent = this;
 
@@ -83,18 +83,18 @@ public class IntervalTreeNode<T> where T : IComparable
 
         this.LeftChild = nilNode;
 
-        this.RigthChild = nilNode;
+        this.RightChild = nilNode;
     }
 
     public override string ToString()
     {
-        return string.Format("[{0},{1}], Max = '{2}', Color = '{3}', Left = [{4}], Rigth = [{5}]",
+        return string.Format("[{0},{1}], Max = '{2}', Color = '{3}', Left = [{4}], Right = [{5}]",
             Low.ToString(),
             High.ToString(),
             Max.ToString(),
             this.Color.ToString(),
             LeftChild == null ? string.Empty : string.Format("{0},{1}", LeftChild.Low.ToString(), LeftChild.High.ToString()),
-            RigthChild == null ? string.Empty : string.Format("{0},{1}", RigthChild.Low.ToString(), RigthChild.High.ToString())
+            RightChild == null ? string.Empty : string.Format("{0},{1}", RightChild.Low.ToString(), RightChild.High.ToString())
             );
     }
 }

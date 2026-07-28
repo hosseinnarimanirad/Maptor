@@ -40,7 +40,7 @@ public class RedBlackTree<T> where T : IComparable
 
         this.Root = new RedBlackNode<T>(values[0], NodeColor.Black);
         //this.Root.LeftChild = nilNode;
-        //this.Root.RigthChild = nilNode;
+        //this.Root.RightChild = nilNode;
 
         for (int i = 1; i < values.Length; i++)
         {
@@ -48,7 +48,7 @@ public class RedBlackTree<T> where T : IComparable
 
             //node.LeftChild = nilNode;
 
-            //node.RigthChild = nilNode;
+            //node.RightChild = nilNode;
 
             Add(this.Root, node);
 
@@ -71,13 +71,13 @@ public class RedBlackTree<T> where T : IComparable
         }
         else
         {
-            if (parent.RigthChild != nilNode)
+            if (parent.RightChild != nilNode)
             {
-                Add(parent.RigthChild, node);
+                Add(parent.RightChild, node);
             }
             else
             {
-                parent.RigthChild = node;
+                parent.RightChild = node;
             }
         }
     }
@@ -99,7 +99,7 @@ public class RedBlackTree<T> where T : IComparable
         {
             if (object.ReferenceEquals(node.Parent, node.Parent.Parent.LeftChild))
             {
-                RedBlackNode<T> y = node.Parent.Parent.RigthChild;
+                RedBlackNode<T> y = node.Parent.Parent.RightChild;
 
                 if (y.Color == NodeColor.Red)
                 {
@@ -111,7 +111,7 @@ public class RedBlackTree<T> where T : IComparable
 
                     node = node.Parent.Parent;
                 }
-                else if (object.ReferenceEquals(node, node.Parent.RigthChild))
+                else if (object.ReferenceEquals(node, node.Parent.RightChild))
                 {
                     node = node.Parent;
 
@@ -123,10 +123,10 @@ public class RedBlackTree<T> where T : IComparable
 
                     node.Parent.Parent.Color = NodeColor.Red;
 
-                    RigthRotate(node.Parent.Parent);
+                    RightRotate(node.Parent.Parent);
                 }
             }
-            else if (object.ReferenceEquals(node.Parent, node.Parent.Parent.RigthChild))
+            else if (object.ReferenceEquals(node.Parent, node.Parent.Parent.RightChild))
             {
                 RedBlackNode<T> y = node.Parent.Parent.LeftChild;
 
@@ -144,7 +144,7 @@ public class RedBlackTree<T> where T : IComparable
                 {
                     node = node.Parent;
 
-                    RigthRotate(node);
+                    RightRotate(node);
                 }
                 else
                 {
@@ -166,41 +166,41 @@ public class RedBlackTree<T> where T : IComparable
 
     public void LeftRotate(RedBlackNode<T> node)
     {
-        if (node.LeftChild == null || node.RigthChild == null)
+        if (node.LeftChild == null || node.RightChild == null)
         {
             throw new NotImplementedException();
         }
 
-        RedBlackNode<T> rigthChild = node.RigthChild;
+        RedBlackNode<T> rightChild = node.RightChild;
 
-        node.RigthChild = rigthChild.LeftChild;
+        node.RightChild = rightChild.LeftChild;
 
         if (node.Parent == null)
         {
-            this.Root = rigthChild;
+            this.Root = rightChild;
         }
         else if (object.ReferenceEquals(node, node.Parent.LeftChild))
         {
-            node.Parent.LeftChild = rigthChild;
+            node.Parent.LeftChild = rightChild;
         }
         else
         {
-            node.Parent.RigthChild = rigthChild;
+            node.Parent.RightChild = rightChild;
         }
 
-        rigthChild.LeftChild = node;
+        rightChild.LeftChild = node;
     }
 
-    public void RigthRotate(RedBlackNode<T> node)
+    public void RightRotate(RedBlackNode<T> node)
     {
-        if (node.LeftChild == null || node.RigthChild == null)
+        if (node.LeftChild == null || node.RightChild == null)
         {
             throw new NotImplementedException();
         }
 
         RedBlackNode<T> leftChild = node.LeftChild;
 
-        node.LeftChild = leftChild.RigthChild;
+        node.LeftChild = leftChild.RightChild;
 
         if (node.Parent == null)
         {
@@ -212,9 +212,9 @@ public class RedBlackTree<T> where T : IComparable
         }
         else
         {
-            node.Parent.RigthChild = leftChild;
+            node.Parent.RightChild = leftChild;
         }
 
-        leftChild.RigthChild = node;
+        leftChild.RightChild = node;
     }
 }

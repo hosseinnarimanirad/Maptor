@@ -280,9 +280,9 @@ public class RasterLayer : BaseLayer
         {
             System.Windows.Point topLeft = item.Extent.TopLeft.AsWpfPoint();
 
-            System.Windows.Point bottomRigth = item.Extent.BottomRight.AsWpfPoint();
+            System.Windows.Point bottomRight = item.Extent.BottomRight.AsWpfPoint();
 
-            RectangleGeometry geometry = new RectangleGeometry(new Rect(topLeft, bottomRigth), 0, 0);
+            RectangleGeometry geometry = new RectangleGeometry(new Rect(topLeft, bottomRight), 0, 0);
 
             geometry.Transform = viewTransform;
 

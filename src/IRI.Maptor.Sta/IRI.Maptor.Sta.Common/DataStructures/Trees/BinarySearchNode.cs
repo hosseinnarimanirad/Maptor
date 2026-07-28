@@ -25,7 +25,7 @@ public class BinarySearchNode<T> where T : IComparable
         }
     }
 
-    public BinarySearchNode<T> RigthChild
+    public BinarySearchNode<T> RightChild
     {
         get { return this._rightChild; }
 
@@ -57,10 +57,10 @@ public class BinarySearchNode<T> where T : IComparable
 
     public override string ToString()
     {
-        return string.Format("Key = '{0}', Left = '{1}', Rigth = '{2}'",
+        return string.Format("Key = '{0}', Left = '{1}', Right = '{2}'",
             Key.ToString(),
             LeftChild == null ? string.Empty : LeftChild.Key.ToString(),
-            RigthChild == null ? string.Empty : RigthChild.Key.ToString());
+            RightChild == null ? string.Empty : RightChild.Key.ToString());
     }
 
 }

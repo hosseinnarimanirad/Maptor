@@ -22,9 +22,9 @@ internal static class TreeOperation
     {
         BinarySearchNode<T> result = node;
 
-        while (result.RigthChild != null)
+        while (result.RightChild != null)
         {
-            result = result.RigthChild;
+            result = result.RightChild;
         }
 
         return result;
@@ -32,14 +32,14 @@ internal static class TreeOperation
 
     public static BinarySearchNode<T> GetSuccessor<T>(BinarySearchNode<T> node) where T : IComparable
     {
-        if (node.RigthChild != null)
+        if (node.RightChild != null)
         {
-            return TreeOperation.GetMinimum(node.RigthChild);
+            return TreeOperation.GetMinimum(node.RightChild);
         }
 
         BinarySearchNode<T> result = node.Parent;
 
-        while (result != null && result.RigthChild == node)
+        while (result != null && result.RightChild == node)
         {
             node = result;
 
@@ -78,9 +78,9 @@ internal static class TreeOperation
         {
             return LookFor(rootNode.LeftChild, value);
         }
-        else if (rootNode.Key.CompareTo(value) < 0 && rootNode.RigthChild != null)
+        else if (rootNode.Key.CompareTo(value) < 0 && rootNode.RightChild != null)
         {
-            return LookFor(rootNode.RigthChild, value);
+            return LookFor(rootNode.RightChild, value);
         }
 
         return null;
@@ -97,9 +97,9 @@ internal static class TreeOperation
         {
             return LookFor(rootNode.LeftChild, node);
         }
-        else if (rootNode.Key.CompareTo(node.Key) < 0 && rootNode.RigthChild != null)
+        else if (rootNode.Key.CompareTo(node.Key) < 0 && rootNode.RightChild != null)
         {
-            return LookFor(rootNode.RigthChild, node);
+            return LookFor(rootNode.RightChild, node);
         }
 
         return null;
