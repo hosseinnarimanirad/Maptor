@@ -21,6 +21,10 @@ dotnet add package IRI.Maptor.Ket.WebApiPersistence
 - Optional server-side geometry filter: `LoadAsync(Geometry<Point>)` sends the filter geometry as hex-encoded WKB
 - In-memory attribute text search (`SearchAsync`)
 - Bearer-token and custom-header authentication via `WebApiSourceParameter` (list URL, sync URL, SRID, id column)
+- Optional shared `HttpClient` (`WebApiSourceParameter.HttpClient`) so many sources reuse pooled
+  connections and the client's handler policies (TLS, certificate validation, proxy) instead of a
+  throwaway client per request; loads are throttled library-wide and retried on transient failures,
+  and a failed load surfaces as `HasError` rather than an empty layer
 - `WebApiInfrastructure` — static HTTP helpers: `GetFeaturesAsync`, `SaveChangesAsync`, `AddFeatureAsync`, `UpdateFeatureAsync`, `DeleteFeatureAsync`
 - `ListFeaturesQueryParams` — explicit query model for the list endpoint (`GeometryWkbHex`, `SearchText`)
 
@@ -29,10 +33,16 @@ dotnet add package IRI.Maptor.Ket.WebApiPersistence
 ```csharp
 using IRI.Maptor.Ket.WebApiPersistence;
 
-var source = new WebApiDataSource(
+var source = new WebApiDataSource(new WebApiSourceParameter(
     listUrl: "https://example.com/api/features/list",
     syncUrl: "https://example.com/api/features/sync",
-    bearerToken: token);
+    bearerToken: token)
+{
+    // Optional but recommended when creating many sources: share one long-lived client so
+    // connections are pooled (no TLS handshake per layer) and its TLS/proxy policies apply.
+    // With a shared client, a null bearerToken uses the client's default Authorization header.
+    HttpClient = sharedClient,
+});
 
 // load features from the list endpoint
 await source.LoadAsync();

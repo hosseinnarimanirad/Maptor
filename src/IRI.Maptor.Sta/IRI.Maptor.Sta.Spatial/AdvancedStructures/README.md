@@ -6,9 +6,15 @@ Spatial indexes and point clustering: a spatial query shouldn't touch every feat
   <img src="../images/kdtree-vs-rtree.png" alt="KdTree vs RTree" width="800">
 </p>
 
-## KdTree & BalancedKdTree
+| Folder | Structures | Index what | Status |
+|---|---|---|---|
+| [**KdTrees**](KdTrees/README.md) | `KdTree<T>`, `BalancedKdTree<T>` | points | production — both queries verified against a brute-force scan |
+| [**RTrees**](RTrees/README.md) | `RTree`, `SFCRTree` | bounding boxes — lines, polygons, anything with extent | early-stage — builds the index, no queries yet |
+| **GeoStatistics** | `PointClusters<T>`, `KdTreePointClusters<T>` | groups of points | production |
 
-`KdTree<T>` slices space in half at every node, cycling through the supplied comparers by depth (x, then y, then x again…). `BalancedKdTree<T>` is the production variant — red-black balancing keeps the tree shallow under any insertion order, every node caches its subtree's bounding box, and it answers the two classic queries: **nearest neighbour** and **all neighbours within a radius**.
+## [K-d trees →](KdTrees/README.md)
+
+Split space in half at every node, alternating axes. `BalancedKdTree<T>` is the one to reach for: red-black balancing keeps it shallow under any insertion order, every node caches its subtree's bounding box, and it answers both classic queries.
 
 ```csharp
 using IRI.Maptor.Sta.Common.Primitives;
@@ -22,21 +28,24 @@ var comparers = new List<Func<Point, Point, int>>
 
 var tree = new BalancedKdTree<Point>(points, comparers, Point.NaN, p => p);
 
-var nearest    = tree.FindNearestNeighbour(new Point(51.4, 35.7));
+var nearest              = tree.FindNearestNeighbour(new Point(51.4, 35.7));
 var withinToleranceRange = tree.FindNeighbours(new Point(51.4, 35.7), distance: 0.05);
 ```
 
-## RTree & SFCRTree
+Insertion order is the catch — sorted input degenerates a plain k-d tree into a linked list. Ranking points along a Hilbert curve fixes it: [Hilbert-balanced k-d tree](KdTrees/HilbertBalancedKdTree.md).
 
-`RTree` groups nearby `Rectangle`s and wraps them in nested bounding boxes, B-tree style — a query prunes whole subtrees at once. New keys descend into the child whose box needs the **least area enlargement**.
+## [R-trees →](RTrees/README.md)
 
-`SFCRTree` bulk-loads the same structure along a **space-filling curve**: leaves are packed in curve order, so map-neighbours stay disk-neighbours. Pick the ordering with a comparer — `SFCRTree.HilbertComparer`, `ZOrderingComparer`, `GrayComparer`, `PeanoComparer` and friends.
+Group nearby `Rectangle`s into nested bounding boxes, B-tree style, so a query can discard whole subtrees at once — and, unlike a k-d tree, index features that have extent rather than just points.
 
-<p align="center">
-  <img src="../images/space-filling-curves.png" alt="Space-filling curves preserve locality" width="800">
-</p>
+```csharp
+using IRI.Maptor.Sta.Spatial.AdvancedStructures;
 
-> Both R-tree flavours are early-stage implementations (marked untested in source) — the k-d trees are the battle-tested pair.
+var tree = new RTree(boxes, minimumDegree: 2);           // least-enlargement descent
+
+// or pack leaves in space-filling-curve order, so map neighbours stay disk neighbours
+var packed = new SFCRTree(boxes, SFCRTree.HilbertComparer, minimumDegree: 4);
+```
 
 ## GeoStatistics — point clustering
 
@@ -48,6 +57,14 @@ using IRI.Maptor.Sta.Spatial.AdvancedStructures;
 // thin out a dense point set: one center per 0.01°-radius cluster
 var centers = KdTreePointClusters<Point>.GetClusterCenters(points, Point.NaN, radius: 0.01);
 ```
+
+> `GetClusterCenters` builds on `BalancedKdTree.FindNeighbours`, so every point within `radius` of a chosen center is absorbed into that center's cluster.
+
+## Reference
+
+Space-filling curves underpin both the balanced k-d tree's ordering and `SFCRTree`'s leaf packing:
+
+> Narimani Rad, H., & Karimipour, F. (2021). *Representation and generation of space-filling curves: a higher-order functional approach.* Journal of Spatial Science, 66(3), 459–479. [doi:10.1080/14498596.2019.1668870](https://doi.org/10.1080/14498596.2019.1668870)
 
 ---
 

@@ -20,6 +20,9 @@ dotnet add package IRI.Maptor.Ket.EfCorePersistence
 - Provider plugin for the SQL Server EF Core provider: `UseMaptorGeometry()` replaces `UseNetTopologySuite()`
 - Reads/writes `geometry` and `geography` columns (points, lines, polygons, multi-* and geometry collections; 2D)
 - `SqlServerMaptorGeometryTypeMapping` — the `RelationalTypeMapping` for `Geometry<Point>`
+- `SqlServerSpatialPassThroughTypeMapping` — pass-through mapping for spatial columns in models compiled
+  from migration snapshots/designers (`SqlBytes` provider-typed, or legacy NetTopologySuite `Geometry`),
+  so `dotnet ef migrations add`/`remove` keep working after switching from `UseNetTopologySuite()`
 - `SqlServerMaptorGeometryTypeMappingSourcePlugin` / `SqlServerMaptorGeometryOptionsExtension` — provider wiring
 - `MaptorGeometryValueComparer` — reusable change-tracking comparer (SRID + WKB)
 - `ConfigureMaptorGeometry()` convention and per-property `IsGeography()` / `IsGeometry()` configuration

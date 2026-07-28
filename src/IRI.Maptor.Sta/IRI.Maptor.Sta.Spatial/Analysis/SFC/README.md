@@ -48,6 +48,12 @@ dotnet add package IRI.Maptor.Sta.Spatial
   </div>
 </div>
 
+## Reference
+
+The representation and generation scheme this implementation is built on — curves defined by base movement functions and sub-region transforms, composed as higher-order functions:
+
+> Narimani Rad, H., & Karimipour, F. (2021). *Representation and generation of space-filling curves: a higher-order functional approach.* Journal of Spatial Science, 66(3), 459–479. [doi:10.1080/14498596.2019.1668870](https://doi.org/10.1080/14498596.2019.1668870)
+
 ---
 
 **NuGet**: [IRI.Maptor.Sta.Spatial](https://www.nuget.org/packages/IRI.Maptor.Sta.Spatial)
