@@ -6,7 +6,7 @@ namespace IRI.Maptor.Sta.Persistence.Infrastructure;
 
 //Remember; 
 //What about e.g. decimal(5,2)
-//What about geometies and geographies
+//What about geometries and geographies
 public abstract class DataSourceInfrastructure
 {
     protected Dictionary<Type, string> _typeMapping;

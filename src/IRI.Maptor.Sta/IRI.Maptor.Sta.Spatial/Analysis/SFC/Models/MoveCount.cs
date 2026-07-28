@@ -23,7 +23,7 @@ public struct MoveCount
         return move(point, step);
     }
 
-    public MoveCount Trasnform(Transform transform)
+    public MoveCount Transform(Transform transform)
     {
         return new MoveCount(transform(move), count);
     }

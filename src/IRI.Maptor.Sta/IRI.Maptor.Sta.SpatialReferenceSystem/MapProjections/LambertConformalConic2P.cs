@@ -96,9 +96,9 @@ public class LambertConformalConic2P : MapProjectionBase
 
         double zeta = Math.PI / 2.0 - 2.0 * Math.Atan(t);
 
-        double teta = Math.Atan(x / (rho0 - y));
+        double theta = Math.Atan(x / (rho0 - y));
 
-        double lambda = (teta / this.n) * 180.0 / Math.PI + this._centralMeridian;
+        double lambda = (theta / this.n) * 180.0 / Math.PI + this._centralMeridian;
 
         double tempPhi = Math.PI / 2.0 - 2 * Math.Atan(t);
 
@@ -142,9 +142,9 @@ public class LambertConformalConic2P : MapProjectionBase
         double zeta = Math.PI / 2.0 - 2.0 * Math.Atan(t);
 
         //Here x is deltaY and (rho0 - y) is deltaX
-        double teta = Math.Atan2(x, (rho0 - y));
+        double theta = Math.Atan2(x, (rho0 - y));
 
-        double lambda = (teta / this.n) * 180.0 / Math.PI + this._centralMeridian;
+        double lambda = (theta / this.n) * 180.0 / Math.PI + this._centralMeridian;
 
         double e2 = e * e;
         double e4 = e2 * e2;

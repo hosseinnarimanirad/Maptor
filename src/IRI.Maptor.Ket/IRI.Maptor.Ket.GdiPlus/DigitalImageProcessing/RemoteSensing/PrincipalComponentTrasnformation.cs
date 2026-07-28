@@ -8,7 +8,7 @@ using IRI.Maptor.Sta.Mathematics;
 
 namespace IRI.Maptor.Ket.DigitalImageProcessing;
 
-public static class PrincipalComponentTrasnformation
+public static class PrincipalComponentTransformation
 {
 
     public static Matrix GetTransformationMatrix(Matrix[] bands)

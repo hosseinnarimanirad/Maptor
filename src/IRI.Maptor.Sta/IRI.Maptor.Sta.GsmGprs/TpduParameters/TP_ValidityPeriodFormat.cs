@@ -13,7 +13,7 @@ namespace IRI.Maptor.Sta.GsmGprs.TpduParameters;
 //0       0:      TP-VP field not present
 //1       0:      TP-VP field present and integer represented (relative)
 //0       1:      Spare
-//1       1:      TP-VP field present and semi-octet representd (absolute)
+//1       1:      TP-VP field present and semi-octet represented (absolute)
 
 //*********************GSM 03.40v5.8.1 Release 1996*********************
 //

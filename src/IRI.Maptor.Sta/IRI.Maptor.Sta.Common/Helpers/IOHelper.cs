@@ -115,11 +115,11 @@ public static class IOHelper
 
         foreach (var line in lines)
         {
-            var splitted = line.Split(delimited);
+            var split = line.Split(delimited);
 
-            var x = double.Parse(splitted[0]);
+            var x = double.Parse(split[0]);
 
-            var y = double.Parse(splitted[1]);
+            var y = double.Parse(split[1]);
 
             result.Add(new Point(x, y));
         }

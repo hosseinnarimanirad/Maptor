@@ -16,17 +16,17 @@ namespace IRI.Maptor.Sta.Spatial.Services.Waze;
 
 public static class WazeService
 {
-    public static Response<WazeGeoRssResult> GetRss(BoundingBox geographicBound, long _epoc = -1)
+    public static Response<WazeGeoRssResult> GetRss(BoundingBox geographicBound, long _epoch = -1)
     {
 
         //https://www.waze.com/row-rtserver/web/TGeoRSS?ma=600&mj=100&mu=100&left=51.263646841049194&right=51.328981161117554&bottom=35.72281242757668&top=35.74842331753895&_=1520571802973
 
         var time = DateTime.UtcNow - DateTimeExtensions.JulianDate;
 
-        long epoc = ((long)time.TotalSeconds) * (long)1000;
-        epoc = _epoc > 0 ? _epoc : epoc;
-        //epoc = 1520571803066;
-        var url = $"https://www.waze.com/row-rtserver/web/TGeoRSS?ma=600&mj=1&mu=400&left={geographicBound.XMin}&right={geographicBound.XMax}&bottom={geographicBound.YMin}&top={geographicBound.YMax}&_={epoc}";
+        long epoch = ((long)time.TotalSeconds) * (long)1000;
+        epoch = _epoch > 0 ? _epoch : epoch;
+        //epoch = 1520571803066;
+        var url = $"https://www.waze.com/row-rtserver/web/TGeoRSS?ma=600&mj=1&mu=400&left={geographicBound.XMin}&right={geographicBound.XMax}&bottom={geographicBound.YMin}&top={geographicBound.YMax}&_={epoch}";
 
         //var result = await IRI.Maptor.Sta.Common.Helpers.NetHelper.HttpGetAsync<WazeGeoRssResult>(url);
         try

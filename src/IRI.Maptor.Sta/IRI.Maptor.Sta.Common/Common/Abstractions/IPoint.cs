@@ -1,6 +1,6 @@
 ﻿using IRI.Maptor.Sta.Common.Primitives;
 
-namespace IRI.Maptor.Sta.Common.Abstrations;
+namespace IRI.Maptor.Sta.Common.Abstractions;
 
 public interface IPoint
 {

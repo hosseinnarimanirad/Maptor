@@ -13,7 +13,7 @@ public class SmsDeliver
     //GSM 03.40, Version 5.8.1
     //
     //
-    //Basic Elemnts of the SMS-Deliver Type:
+    //Basic Elements of the SMS-Deliver Type:
     //
     //ABBR.     REFERENCE                   PROVISION   REPRESENTATION
     //-----     ---------                   ---------   --------------
@@ -33,7 +33,7 @@ public class SmsDeliver
     //Is formatted according to the formatting rules of address fields.
 
     //----------------TP-PID------------------//
-    //consist of one octet, and the bits in the octet are used as folloews:
+    //consist of one octet, and the bits in the octet are used as follows:
     //MORE ON P.42, GSM 03.40
 
 
@@ -72,7 +72,7 @@ public class SmsDeliver
     //
     //end of first octet
 
-    private int m_MessageReferece = 0;
+    private int m_MessageReference = 0;
 
 
     private string pduCode;
@@ -88,7 +88,7 @@ public class SmsDeliver
         //            (int)m_UserDataHeaderIndicator +
         //            (int)m_ReplyPath).ToString("X2");
 
-        //result += ((int)m_MessageReferece).ToString("X2");
+        //result += ((int)m_MessageReference).ToString("X2");
 
         //result += destinationNumber.ToString();
 

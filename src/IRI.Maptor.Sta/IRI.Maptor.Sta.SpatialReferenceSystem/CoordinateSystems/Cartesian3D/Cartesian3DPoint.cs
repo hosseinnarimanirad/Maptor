@@ -199,7 +199,7 @@ public struct Cartesian3DPoint<T> : ICartesian3DPoint
         return new GeodeticPoint<TLinear, TAngular>(ellipsoid, height, tempValue.Angle, (new Radian(latitudeTempValue2, longitudinalRange)));
     }
 
-    public EllipsoidalPoint<TLinear, TAngular> ToEllipsoial<TLinear, TAngular>(IEllipsoid ellipsoid, AngleRange horizontalRange)
+    public EllipsoidalPoint<TLinear, TAngular> ToEllipsoidal<TLinear, TAngular>(IEllipsoid ellipsoid, AngleRange horizontalRange)
         where TLinear : LinearUnit, new()
         where TAngular : AngularUnit, new()
     {

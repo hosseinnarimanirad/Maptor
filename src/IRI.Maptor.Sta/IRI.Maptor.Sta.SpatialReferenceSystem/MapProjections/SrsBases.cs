@@ -58,7 +58,7 @@ public static class SrsBases
            falseNorthing: 1166200.0,
            scaleFactor: 1);
 
-        LccNiocWithClarcke1880Rgs = new LambertConformalConic2P(
+        LccNiocWithClarke1880Rgs = new LambertConformalConic2P(
             ellipsoid: Ellipsoids.Clarke1880Rgs,
             standardParallel1: 29.655083333333333333333333333333,
             standardParallel2: 35.314694444444444444444444444444,
@@ -90,7 +90,7 @@ public static class SrsBases
 
     public static LambertConformalConic2P LccNiocWithWgs84 { get; private set; }
      
-    public static LambertConformalConic2P LccNiocWithClarcke1880Rgs { get; private set; }
+    public static LambertConformalConic2P LccNiocWithClarke1880Rgs { get; private set; }
 
     public static LambertConformalConic2P LccNahrawan { get; private set; }
 

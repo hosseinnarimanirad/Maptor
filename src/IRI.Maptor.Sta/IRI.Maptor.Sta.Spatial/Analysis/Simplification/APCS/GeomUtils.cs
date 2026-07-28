@@ -1,4 +1,4 @@
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Sta.Spatial.Analysis;
@@ -262,7 +262,7 @@ public class GeomUtils<T> where T : IPoint, new()
     }
 
     // calculate steiner point (E) PlacementAP_EAmin
-    public static Tuple<T, double, int> CalcualteNewPoint(T pA, T pB, T pC, T pD)
+    public static Tuple<T, double, int> CalculateNewPoint(T pA, T pB, T pC, T pD)
     {
         if (pA.Equals(pD))
         {

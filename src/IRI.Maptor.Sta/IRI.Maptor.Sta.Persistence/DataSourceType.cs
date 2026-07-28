@@ -14,6 +14,6 @@ public enum DataSourceType
     PersonalGdb = 5,
     SQLServer = 6,
 
-    // depricated
+    // deprecated
     SQLCompact = 7,
 }

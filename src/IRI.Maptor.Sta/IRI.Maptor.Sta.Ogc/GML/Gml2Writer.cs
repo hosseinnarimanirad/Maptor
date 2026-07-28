@@ -8,7 +8,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Ogc.GML.v212;

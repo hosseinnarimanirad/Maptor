@@ -9,7 +9,7 @@ namespace IRI.Maptor.Sta.Mathematics;
 public class NumberOfElementsException : Exception
 {
 
-    public NumberOfElementsException() : base("Uncorrect number of elements") { }
+    public NumberOfElementsException() : base("Incorrect number of elements") { }
     public NumberOfElementsException(string message) : base(message) { }
     public NumberOfElementsException(string message, Exception inner) : base(message, inner) { }
     //protected NumberOfElementsException(
@@ -61,7 +61,7 @@ public class IllegalInputException : Exception
 public class UnequalMatrixSizeException : Exception
 {
 
-    public UnequalMatrixSizeException() : base("Matrixes must be the same size") { }
+    public UnequalMatrixSizeException() : base("Matrices must be the same size") { }
     public UnequalMatrixSizeException(string message) : base(message) { }
     public UnequalMatrixSizeException(string message, Exception inner) : base(message, inner) { }
     //protected UnequalMatrixSizeException(

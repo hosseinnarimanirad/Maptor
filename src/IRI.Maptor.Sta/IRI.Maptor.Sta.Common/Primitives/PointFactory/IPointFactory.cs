@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Sta.Common.Abstrations;
+﻿using IRI.Maptor.Sta.Common.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Text;

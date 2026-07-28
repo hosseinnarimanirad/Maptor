@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using WpfPoint = System.Windows.Point;
 using IRI.Maptor.Sta.Common.Enums;
 

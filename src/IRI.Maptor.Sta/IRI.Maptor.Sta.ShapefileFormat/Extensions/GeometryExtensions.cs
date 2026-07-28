@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
@@ -67,7 +67,7 @@ public static class GeometryExtensions
         }
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static EsriPoint PointToEsriPoint<T>(Geometry<T> point, int srid, Func<T, T> mapFunction) where T : IPoint, new()
     {
         if (mapFunction is null)
@@ -76,16 +76,16 @@ public static class GeometryExtensions
         }
         else
         {
-            var transferedPoint = mapFunction(point.AsPoint());
+            var transferredPoint = mapFunction(point.AsPoint());
 
-            return new EsriPoint(transferedPoint.X, transferedPoint.Y, srid);
+            return new EsriPoint(transferredPoint.X, transferredPoint.Y, srid);
         }
         //var esriPoint = point.AsEsriPoint(srid);
 
         //return mapFunction == null ? esriPoint : mapFunction(point.AsPoint());
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static EsriMultiPoint MultiPointToEsriMultiPoint<T>(Geometry<T> multiPoint, int srid, Func<T, T> mapFunction) where T : IPoint, new()
     {
         if (multiPoint.IsNullOrEmpty())

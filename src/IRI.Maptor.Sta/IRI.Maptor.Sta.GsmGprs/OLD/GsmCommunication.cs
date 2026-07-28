@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace IRI.Maptor.Ket.IO.Gsm;
 
-public class GsmComunication
+public class GsmCommunication
 {
     #region AT Commands
 
@@ -24,7 +24,7 @@ public class GsmComunication
     //To send a SMS, the AT command to use is AT+CMGS ..
     //  AT+CMGS="+yyyyy" <Enter>
     //> Your SMS text message here <Ctrl-Z>
-    //The "+yyyyy" is your receipent's mobile number. Next, we will look at receiving SMS via AT commands.
+    //The "+yyyyy" is your recipient's mobile number. Next, we will look at receiving SMS via AT commands.
 
 
     //****** Receiving SMS using AT commands ******//
@@ -40,7 +40,7 @@ public class GsmComunication
     //Your computer (DTE) will have to continuously monitor the COM serial port, read and parse 
     //the message.
 
-    //b) Notification - when a SMS is recieved, the host computer ( DTE ) will be notified of 
+    //b) Notification - when a SMS is received, the host computer ( DTE ) will be notified of 
     //the new message. The computer will then have to read the message from the indicated memory 
     //location and clear the memory location.
 
@@ -76,10 +76,10 @@ public class GsmComunication
         get { return this.port.PortName; }
     }
 
-    public GsmComunication(string portName, int baudRate, int dataBits)
+    public GsmCommunication(string portName, int baudRate, int dataBits)
         : this(portName, baudRate, dataBits, 300, 300) { }
 
-    public GsmComunication(string portName, int baudRate, int dataBits, int readTimeout, int writeTimeout)
+    public GsmCommunication(string portName, int baudRate, int dataBits, int readTimeout, int writeTimeout)
     {
         receiveNow = new AutoResetEvent(false);
 

@@ -24,7 +24,7 @@ public class OgcFilter
     [XmlElement("Or", typeof(OgcOr))]
     [XmlElement("Not", typeof(OgcNot))]
 
-    [XmlElement("Equals", typeof(OgcEqualsSpatialy))]
+    [XmlElement("Equals", typeof(OgcEqualsSpatially))]
     [XmlElement("Disjoint", typeof(OgcDisjoint))]
     [XmlElement("Touches", typeof(OgcTouches))]
     [XmlElement("Within", typeof(OgcWithin))]

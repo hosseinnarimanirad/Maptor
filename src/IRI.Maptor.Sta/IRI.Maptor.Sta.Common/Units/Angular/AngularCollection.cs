@@ -304,14 +304,14 @@ public class AngularCollection<T> : IAngularCollection where T : AngularUnit, ne
 
     public AngularCollection<TNewAngleArrayType> ChangeTo<TNewAngleArrayType>() where TNewAngleArrayType : AngularUnit, new()
     {
-        double[] tmepValues = new double[this.Length];
+        double[] tempValues = new double[this.Length];
 
         for (int i = 0; i < this.Length; i++)
         {
-            tmepValues[i] = this[i].ChangeTo<TNewAngleArrayType>().Value;
+            tempValues[i] = this[i].ChangeTo<TNewAngleArrayType>().Value;
         }
 
-        return new AngularCollection<TNewAngleArrayType>(tmepValues, this.Range);
+        return new AngularCollection<TNewAngleArrayType>(tempValues, this.Range);
     }
 
     #endregion

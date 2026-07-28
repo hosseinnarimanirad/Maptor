@@ -219,7 +219,7 @@ public static class DateTimeExtensions
 
     public static readonly DateTime JulianDate = new DateTime(1970, 1, 1, 0, 0, 0);
 
-    public static string GetPersianEllapsedDateCoarse(this DateTime dateTime)
+    public static string GetPersianElapsedDateCoarse(this DateTime dateTime)
     {
         var interval = DateTime.Now - dateTime;
 
@@ -267,7 +267,7 @@ public static class DateTimeExtensions
         return result.LatinNumbersToFarsiNumbers();
     }
 
-    public static string GetPersianEllapsedDateNormal(this DateTime dateTime)
+    public static string GetPersianElapsedDateNormal(this DateTime dateTime)
     {
         var interval = DateTime.Now - dateTime;
 
@@ -305,7 +305,7 @@ public static class DateTimeExtensions
         return result.LatinNumbersToFarsiNumbers();
     }
 
-    public static string GetPersianEllapsedTimeFine(this DateTime dateTime)
+    public static string GetPersianElapsedTimeFine(this DateTime dateTime)
     {
         var duration = DateTime.Now - dateTime;
 

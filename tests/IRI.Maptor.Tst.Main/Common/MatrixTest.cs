@@ -434,7 +434,7 @@ public class MatrixTest
     {
         var m = new Matrix(new double[,] { { 2, 1 }, { 1, 2 } });
 
-        var eig = (double[])m.GetEigenvaluesEigenvectors().Eigenvlaues.Clone();
+        var eig = (double[])m.GetEigenvaluesEigenvectors().Eigenvalues.Clone();
         Array.Sort(eig);
 
         Assert.Equal(1.0, eig[0], 6);
@@ -448,7 +448,7 @@ public class MatrixTest
 
         var result = m.GetEigenvaluesEigenvectors();
 
-        var sorted = (double[])result.Eigenvlaues.Clone();
+        var sorted = (double[])result.Eigenvalues.Clone();
         Array.Sort(sorted);
 
         Assert.Equal(1.0, sorted[0], 6);
@@ -464,7 +464,7 @@ public class MatrixTest
             var av = m * v;
 
             for (int j = 0; j < 3; j++)
-                Assert.Equal(result.Eigenvlaues[i] * v[j, 0], av[j, 0], 6);
+                Assert.Equal(result.Eigenvalues[i] * v[j, 0], av[j, 0], 6);
         }
     }
 
@@ -473,7 +473,7 @@ public class MatrixTest
     {
         var m = new Matrix(new double[,] { { 4, 1, 1 }, { 1, 3, 0 }, { 1, 0, 2 } });
 
-        var eig = m.GetEigenvaluesEigenvectors().Eigenvlaues;
+        var eig = m.GetEigenvaluesEigenvectors().Eigenvalues;
 
         Assert.Equal(m.Trace, eig[0] + eig[1] + eig[2], 6);
         Assert.Equal(m.Determinant, eig[0] * eig[1] * eig[2], 6);

@@ -342,7 +342,7 @@ static class BaseTransformations
  
 public static class BaseConversionHelper
 {
-    //Lengthes are in bytes
+    //Lengths are in bytes
 
     private const int Int32Length = 4;
 

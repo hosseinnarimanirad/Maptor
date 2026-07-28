@@ -71,15 +71,15 @@ public static class ChiSquare
 
                 var ithClassCount = classCounts[currentClass.Class];
 
-                var expectedFrequecny = (ithAttributeCount * ithClassCount) / (double)totalNumber;
+                var expectedFrequency = (ithAttributeCount * ithClassCount) / (double)totalNumber;
 
-                if (expectedFrequecny == 0 && observedFrequency == expectedFrequecny)
+                if (expectedFrequency == 0 && observedFrequency == expectedFrequency)
                 {
                     continue;
                 }
                 else
                 {
-                    result += ((observedFrequency - expectedFrequecny) * (observedFrequency - expectedFrequecny)) / expectedFrequecny;
+                    result += ((observedFrequency - expectedFrequency) * (observedFrequency - expectedFrequency)) / expectedFrequency;
                 }
             }
         }

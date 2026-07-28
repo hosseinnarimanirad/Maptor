@@ -16,7 +16,7 @@ var dem = new RegularDtm(elevations, cellSize: 30, lowerLeft: new Point(500000, 
 
 var slope  = dem.GetSlopeMatrix();
 var aspect = dem.GetAspectMatrix();
-var change = dem.Differece(otherDem);          // elevation change of the same region
+var change = dem.Difference(otherDem);          // elevation change of the same region
 
 dem.SaveAsGRD("dem.grd", noDataValue: -9999);
 ```
@@ -24,7 +24,7 @@ dem.SaveAsGRD("dem.grd", noDataValue: -9999);
 Grid → TIN goes through **significant-point selection**: keep only the cells that carry the surface shape, then triangulate.
 
 ```csharp
-var tinByCag = dem.ToIrregularDtmBaesdOnCAG(numberOfPoints: 500); // Chen & Guevara 1987
+var tinByCag = dem.ToIrregularDtmBasedOnCAG(numberOfPoints: 500); // Chen & Guevara 1987
 var tinByLi  = dem.ToIrregularDtmBasedOnLi(threshold: 2.0);       // second-difference threshold
 ```
 

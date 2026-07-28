@@ -1,5 +1,5 @@
 ﻿using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 
 namespace IRI.Maptor.Sta.Spatial.Analysis;
 

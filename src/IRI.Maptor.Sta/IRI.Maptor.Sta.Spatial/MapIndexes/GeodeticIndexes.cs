@@ -334,7 +334,7 @@ public static class GeodeticIndexes
     //    return UtmSheet.Create2kUtmBlock(longitude, latitude, utmzone);
     //    //var utmPoint = MapProjects.GeodeticToUTM(new Point(longitude, latitude), Ellipsoids.WGS84, utmZone);
 
-    //    //if (!_2kUtmBoudingBox.Intersects(utmPoint))
+    //    //if (!_2kUtmBoundingBox.Intersects(utmPoint))
     //    //{
     //    //    return null;
     //    //}
@@ -352,12 +352,12 @@ public static class GeodeticIndexes
     //{
     //    var utmPoint = MapProjects.GeodeticToUTM(new Point(longitude, latitude), Ellipsoids.WGS84, utmZone);
 
-    //    if (!_2kUtmBoudingBox.Intersects(utmPoint))
+    //    if (!_2kUtmBoundingBox.Intersects(utmPoint))
     //    {
     //        return null;
     //    }
 
-    //    var blockColumnRow = CalculateRowColumn(_2kUtmBoudingBox, utmPoint, _2kUtmBlockWidth, _2kUtmBlockHeight);
+    //    var blockColumnRow = CalculateRowColumn(_2kUtmBoundingBox, utmPoint, _2kUtmBlockWidth, _2kUtmBlockHeight);
 
     //    var blockBound = CalculateUtm2kBlockBoundingBox((int)blockColumnRow.Y, (int)blockColumnRow.X);
 
@@ -510,15 +510,15 @@ public static class GeodeticIndexes
 
         int endLongitude = (int)Math.Ceiling(geographicIntersectRegion.XMax / indexWidth);
 
-        int startLatitdue = (int)Math.Floor(geographicIntersectRegion.YMin / indexHeight);
+        int startLatitude = (int)Math.Floor(geographicIntersectRegion.YMin / indexHeight);
 
-        int endLatitdue = (int)Math.Ceiling(geographicIntersectRegion.YMax / indexHeight);
+        int endLatitude = (int)Math.Ceiling(geographicIntersectRegion.YMax / indexHeight);
 
         List<GeodeticSheet> result = new List<GeodeticSheet>();
 
         for (int i = startLongitude; i < endLongitude; i++)
         {
-            for (int j = startLatitdue; j < endLatitdue; j++)
+            for (int j = startLatitude; j < endLatitude; j++)
             {
                 var sheetName = namingFunc(i * indexWidth, j * indexHeight);
 
@@ -544,15 +544,15 @@ public static class GeodeticIndexes
 
         //var endLongitude = (int)Math.Ceiling(geographicIntersectRegion.XMax / _nioc250kWidth);
 
-        //var startLatitdue = (int)Math.Floor(geographicIntersectRegion.YMin / _nioc250kHeight);
+        //var startLatitude = (int)Math.Floor(geographicIntersectRegion.YMin / _nioc250kHeight);
 
-        //var endLatitdue = (int)Math.Floor(geographicIntersectRegion.YMax / _nioc250kHeight);
+        //var endLatitude = (int)Math.Floor(geographicIntersectRegion.YMax / _nioc250kHeight);
 
         //List<BoundingBox> result = new List<BoundingBox>();
 
         //for (int i = startLongitude; i < endLongitude; i++)
         //{
-        //    for (int j = startLatitdue; j < endLatitdue; j++)
+        //    for (int j = startLatitude; j < endLatitude; j++)
         //    {
         //        result.Add(new BoundingBox(i, j, i + _nioc250kWidth, j + _nioc250kHeight));
         //    }
@@ -592,15 +592,15 @@ public static class GeodeticIndexes
 
         int endLongitude = (int)Math.Ceiling(geographicIntersectRegion.XMax / indexWidth);
 
-        int startLatitdue = (int)Math.Floor(geographicIntersectRegion.YMin / indexHeight);
+        int startLatitude = (int)Math.Floor(geographicIntersectRegion.YMin / indexHeight);
 
-        int endLatitdue = (int)Math.Ceiling(geographicIntersectRegion.YMax / indexHeight);
+        int endLatitude = (int)Math.Ceiling(geographicIntersectRegion.YMax / indexHeight);
 
         List<BoundingBox> result = new List<BoundingBox>();
 
         for (int i = startLongitude; i < endLongitude; i++)
         {
-            for (int j = startLatitdue; j < endLatitdue; j++)
+            for (int j = startLatitude; j < endLatitude; j++)
             {
                 result.Add(new BoundingBox(i * indexWidth, j * indexHeight, (i + 1) * indexWidth, (j + 1) * indexHeight));
             }
@@ -648,9 +648,9 @@ public static class GeodeticIndexes
 
         int endLongitude = (int)Math.Ceiling(geographicIntersectRegion.XMax / indexWidth);
 
-        int startLatitdue = (int)Math.Floor(geographicIntersectRegion.YMin / indexHeight);
+        int startLatitude = (int)Math.Floor(geographicIntersectRegion.YMin / indexHeight);
 
-        int endLatitdue = (int)Math.Ceiling(geographicIntersectRegion.YMax / indexHeight);
+        int endLatitude = (int)Math.Ceiling(geographicIntersectRegion.YMax / indexHeight);
 
         List<Geometry<Point>> result = new List<Geometry<Point>>();
 
@@ -663,7 +663,7 @@ public static class GeodeticIndexes
             result.Add(Geometry<Point>.Create(new List<Point>() { p1, p2 }, GeometryType.LineString, SridHelper.GeodeticWGS84));
         }
 
-        for (int j = startLatitdue; j < endLatitdue; j++)
+        for (int j = startLatitude; j < endLatitude; j++)
         {
             var p1 = new Point(geographicIntersectRegion.XMin, j * indexHeight);
 
@@ -727,15 +727,15 @@ public static class GeodeticIndexes
 
         int endLongitude = (int)Math.Ceiling(geographicIntersectRegion.XMax / indexWidth);
 
-        int startLatitdue = (int)Math.Floor(geographicIntersectRegion.YMin / indexHeight);
+        int startLatitude = (int)Math.Floor(geographicIntersectRegion.YMin / indexHeight);
 
-        int endLatitdue = (int)Math.Ceiling(geographicIntersectRegion.YMax / indexHeight);
+        int endLatitude = (int)Math.Ceiling(geographicIntersectRegion.YMax / indexHeight);
 
         List<T> result = new List<T>();
 
         for (int i = startLongitude; i < endLongitude; i++)
         {
-            for (int j = startLatitdue; j < endLatitdue; j++)
+            for (int j = startLatitude; j < endLatitude; j++)
             {
                 result.Add(generateFunc(i * indexWidth, j * indexHeight));
             }

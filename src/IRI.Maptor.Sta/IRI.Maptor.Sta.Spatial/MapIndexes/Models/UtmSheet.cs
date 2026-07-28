@@ -19,7 +19,7 @@ public class UtmSheet : IGeometryAware<Point>
     {
         get
         {
-            var geodeticExtent = UtmExtent.TransofrmBy4Point(p => MapProjects.UTMToGeodetic(p, UtmZone));
+            var geodeticExtent = UtmExtent.TransformBy4Point(p => MapProjects.UTMToGeodetic(p, UtmZone));
 
             return geodeticExtent.Transform(MapProjects.GeodeticWgs84ToWebMercator, SridHelper.WebMercator);
         }
@@ -37,7 +37,7 @@ public class UtmSheet : IGeometryAware<Point>
     //{
     //    get
     //    {
-    //        return UtmExtent.TransofrmBy4Point(p => MapProjects.UTMToGeodetic(p, UtmZone));
+    //        return UtmExtent.TransformBy4Point(p => MapProjects.UTMToGeodetic(p, UtmZone));
     //        //return UtmExtent.Transform(p => MapProjects.UTMToGeodetic(p, UtmZone)).AsGeometry(SridHelper.GeodeticWGS84);
     //    }
     //}
@@ -115,12 +115,12 @@ public class UtmSheet : IGeometryAware<Point>
     {
         var utmPoint = MapProjects.GeodeticToUTM(new Point(longitude, latitude), Ellipsoids.WGS84, utmZone);
 
-        if (!UtmIndexes._2kUtmBoudingBox.Intersects(utmPoint))
+        if (!UtmIndexes._2kUtmBoundingBox.Intersects(utmPoint))
         {
             return null;
         }
 
-        var rowColumn = CalculateRowColumn(UtmIndexes._2kUtmBoudingBox, utmPoint, UtmIndexes._2kUtmBlockWidth, UtmIndexes._2kUtmBlockHeight);
+        var rowColumn = CalculateRowColumn(UtmIndexes._2kUtmBoundingBox, utmPoint, UtmIndexes._2kUtmBlockWidth, UtmIndexes._2kUtmBlockHeight);
 
         return Create2kBlock(rowColumn.Row, rowColumn.Column, utmZone);
     }
@@ -129,7 +129,7 @@ public class UtmSheet : IGeometryAware<Point>
     {
         var utmPoint = MapProjects.GeodeticToUTM(new Point(longitude, latitude), Ellipsoids.WGS84, utmZone);
 
-        if (!UtmIndexes._2kUtmBoudingBox.Intersects(utmPoint))
+        if (!UtmIndexes._2kUtmBoundingBox.Intersects(utmPoint))
         {
             return null;
         }
@@ -145,7 +145,7 @@ public class UtmSheet : IGeometryAware<Point>
     {
         var utmPoint = MapProjects.GeodeticToUTM(new Point(longitude, latitude), Ellipsoids.WGS84, utmZone);
 
-        if (!UtmIndexes._2kUtmBoudingBox.Intersects(utmPoint))
+        if (!UtmIndexes._2kUtmBoundingBox.Intersects(utmPoint))
         {
             return null;
         }
@@ -161,7 +161,7 @@ public class UtmSheet : IGeometryAware<Point>
     {
         var utmPoint = MapProjects.GeodeticToUTM(new Point(longitude, latitude), Ellipsoids.WGS84, utmZone);
 
-        if (!UtmIndexes._2kUtmBoudingBox.Intersects(utmPoint))
+        if (!UtmIndexes._2kUtmBoundingBox.Intersects(utmPoint))
         {
             return null;
         }

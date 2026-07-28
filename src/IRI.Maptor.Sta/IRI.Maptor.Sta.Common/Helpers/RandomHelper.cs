@@ -108,7 +108,7 @@ public class RandomHelper
     }
 
     /// <summary>
-    /// Get a random doulbe value between 0 and maximum (inclusive)
+    /// Get a random double value between 0 and maximum (inclusive)
     /// </summary>
     /// <param name="maximum">Inclusive maximum</param>
     /// <returns></returns>

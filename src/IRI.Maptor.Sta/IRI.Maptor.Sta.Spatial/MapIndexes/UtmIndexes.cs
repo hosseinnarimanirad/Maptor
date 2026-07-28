@@ -15,7 +15,7 @@ public static class UtmIndexes
     internal const double _2kUtmYmin = 2752800;
     internal const double _2kUtmYmax = 4432800;
 
-    internal static readonly BoundingBox _2kUtmBoudingBox;
+    internal static readonly BoundingBox _2kUtmBoundingBox;
 
     internal const double _2kUtmBlockWidth = 32000;
     internal const double _2kUtmBlockHeight = 24000;
@@ -31,7 +31,7 @@ public static class UtmIndexes
 
     static UtmIndexes()
     {
-        _2kUtmBoudingBox = new BoundingBox(_2kUtmXmin, _2kUtmYmin, _2kUtmXmax, _2kUtmYmax);
+        _2kUtmBoundingBox = new BoundingBox(_2kUtmXmin, _2kUtmYmin, _2kUtmXmax, _2kUtmYmax);
     }
 
     //private static string Get2kBlockSheetName(double minUtmX, double maxUtmY)
@@ -43,9 +43,9 @@ public static class UtmIndexes
     //    //.
     //    //70
     //    //****************************
-    //    var column = ((int)Math.Round((minUtmX - _2kUtmBoudingBox.XMin) / _2kUtmBlockWidth)).Number2String(true);
+    //    var column = ((int)Math.Round((minUtmX - _2kUtmBoundingBox.XMin) / _2kUtmBlockWidth)).Number2String(true);
 
-    //    var row = Math.Round((_2kUtmBoudingBox.YMax - maxUtmY) / _2kUtmBlockHeight);
+    //    var row = Math.Round((_2kUtmBoundingBox.YMax - maxUtmY) / _2kUtmBlockHeight);
 
     //    return $"{column}{row.ToString("00")}";
     //}
@@ -76,7 +76,7 @@ public static class UtmIndexes
 
     private static List<UtmSheet> GetIndexSheets(BoundingBox geographicIntersectRegion, double utmWidth, double utmHeight, UtmIndexType type, int utmZone)
     {
-        var geoBound = BoundingBoxExtensions.UtmMbbToGeodeticWgs84Mbb(_2kUtmBoudingBox, utmZone)
+        var geoBound = BoundingBoxExtensions.UtmMbbToGeodeticWgs84Mbb(_2kUtmBoundingBox, utmZone)
                          .Intersect(geographicIntersectRegion);
 
         List<UtmSheet> result = new List<UtmSheet>();
@@ -85,7 +85,7 @@ public static class UtmIndexes
             return result;
 
         var utmBound = geoBound.GeodeticWgs84MbbToUtmMbb(utmZone)
-                        .Intersect(_2kUtmBoudingBox);
+                        .Intersect(_2kUtmBoundingBox);
 
         if (utmBound.IsNaN())
             return result;
@@ -147,13 +147,13 @@ public static class UtmIndexes
 
         List<Geometry<Point>> result = new List<Geometry<Point>>();
 
-        var geoBound = BoundingBoxExtensions.UtmMbbToGeodeticWgs84Mbb(_2kUtmBoudingBox, utmZone)
+        var geoBound = BoundingBoxExtensions.UtmMbbToGeodeticWgs84Mbb(_2kUtmBoundingBox, utmZone)
                           .Intersect(geographicIntersectRegion);
 
         if (geoBound.IsNaN())
             return result;
 
-        var utmBound = geoBound.GeodeticWgs84MbbToUtmMbb(utmZone).Intersect(_2kUtmBoudingBox);
+        var utmBound = geoBound.GeodeticWgs84MbbToUtmMbb(utmZone).Intersect(_2kUtmBoundingBox);
 
         if (utmBound.IsNaN())
             return result;

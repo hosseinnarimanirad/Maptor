@@ -1,5 +1,5 @@
 using IRI.Maptor.Extensions;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -132,7 +132,7 @@ public class FeatureSet<T> where T : IPoint, new()
 
 
 
-    // todo: add geometry type, srid, ... checkes
+    // todo: add geometry type, srid, ... checks
 
     public bool HasPendingChanges() => GetCurrentChanges().Any();
 
@@ -336,7 +336,7 @@ public class FeatureSet<T> where T : IPoint, new()
             var targetSrs = SridHelper.AsSrsBase(effectiveTargetSrid);
 
             if (targetSrs is null)
-                throw new NotImplementedException($"FeatureSetOfT > SaveAsDelimited > unknwon srid {targetSrid.Value}");
+                throw new NotImplementedException($"FeatureSetOfT > SaveAsDelimited > unknown srid {targetSrid.Value}");
 
             targetFeatures = this.Project(targetSrs).Features;
         }

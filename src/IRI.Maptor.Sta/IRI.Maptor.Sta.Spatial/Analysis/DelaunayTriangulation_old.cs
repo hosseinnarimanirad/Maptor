@@ -246,7 +246,7 @@
 
 //        QuasiEdge firstEdge = new QuasiEdge(thirdPointCode, edge.First);
 
-//        int firstNeigbour = triangle.GetNeighbour(firstEdge);
+//        int firstNeighbour = triangle.GetNeighbour(firstEdge);
 
 //        triangles.Add(firstPart);
 
@@ -254,15 +254,15 @@
 
 //        QuasiEdge secondEdge = new QuasiEdge(thirdPointCode, edge.Second);
 
-//        int secondNeigbour = triangle.GetNeighbour(secondEdge);
+//        int secondNeighbour = triangle.GetNeighbour(secondEdge);
 
 //        triangles.Add(secondPart);
 
 //        UpdateRelation(firstPart.GetHashCode(), secondPart.GetHashCode());
 
-//        if (firstNeigbour != -1)
+//        if (firstNeighbour != -1)
 //        {
-//            UpdateRelation(firstNeigbour, firstPart.GetHashCode());
+//            UpdateRelation(firstNeighbour, firstPart.GetHashCode());
 
 //            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
 
@@ -271,9 +271,9 @@
 //            CheckForSwapEdge(ref stack);
 //        }
 
-//        if (secondNeigbour != -1)
+//        if (secondNeighbour != -1)
 //        {
-//            UpdateRelation(secondNeigbour, secondPart.GetHashCode());
+//            UpdateRelation(secondNeighbour, secondPart.GetHashCode());
 
 //            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
 
@@ -311,9 +311,9 @@
 
 //        QuasiEdge thirdEdge = new QuasiEdge(secondThirdPointCode, edge.First); QuasiEdge fourthEdge = new QuasiEdge(secondThirdPointCode, edge.Second);
 
-//        int firstNeigbour = firstTrianglePair.GetNeighbour(firstEdge); int secondNeigbour = firstTrianglePair.GetNeighbour(secondEdge);
+//        int firstNeighbour = firstTrianglePair.GetNeighbour(firstEdge); int secondNeighbour = firstTrianglePair.GetNeighbour(secondEdge);
 
-//        int thirdNeigbour = secondTrianglePair.GetNeighbour(thirdEdge); int fourthNeigbour = secondTrianglePair.GetNeighbour(fourthEdge);
+//        int thirdNeighbour = secondTrianglePair.GetNeighbour(thirdEdge); int fourthNeighbour = secondTrianglePair.GetNeighbour(fourthEdge);
 
 //        //triangles.Add(firstPart); triangles.Add(secondPart);
 
@@ -323,9 +323,9 @@
 
 //        UpdateRelation(secondPart.GetHashCode(), fourthPart.GetHashCode()); UpdateRelation(fourthPart.GetHashCode(), thirdPart.GetHashCode());
 
-//        if (firstNeigbour != -1)
+//        if (firstNeighbour != -1)
 //        {
-//            UpdateRelation(firstNeigbour, firstPart.GetHashCode());
+//            UpdateRelation(firstNeighbour, firstPart.GetHashCode());
 
 //            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
 
@@ -333,9 +333,9 @@
 
 //            CheckForSwapEdge(ref stack);
 //        }
-//        if (secondNeigbour != -1)
+//        if (secondNeighbour != -1)
 //        {
-//            UpdateRelation(secondNeigbour, secondPart.GetHashCode());
+//            UpdateRelation(secondNeighbour, secondPart.GetHashCode());
 
 //            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
 
@@ -343,9 +343,9 @@
 
 //            CheckForSwapEdge(ref stack);
 //        }
-//        if (thirdNeigbour != -1)
+//        if (thirdNeighbour != -1)
 //        {
-//            UpdateRelation(thirdNeigbour, thirdPart.GetHashCode());
+//            UpdateRelation(thirdNeighbour, thirdPart.GetHashCode());
 
 //            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
 
@@ -353,9 +353,9 @@
 
 //            CheckForSwapEdge(ref stack);
 //        }
-//        if (fourthNeigbour != -1)
+//        if (fourthNeighbour != -1)
 //        {
-//            UpdateRelation(fourthNeigbour, fourthPart.GetHashCode());
+//            UpdateRelation(fourthNeighbour, fourthPart.GetHashCode());
 
 //            Stack<KeyValuePair<QuasiEdge, QuasiTriangle>> stack = new Stack<KeyValuePair<QuasiEdge, QuasiTriangle>>();
 
@@ -376,23 +376,23 @@
 
 //        KeyValuePair<QuasiEdge, QuasiTriangle> currentValue = stack.Pop();
 
-//        QuasiTriangle currenTriangle = currentValue.Value;
+//        QuasiTriangle currentTriangle = currentValue.Value;
 
 //        QuasiEdge currentEdge = currentValue.Key;
 
-//        QuasiTriangle neigbour = triangles.GetTriangle(GetNeighbour(currenTriangle, currentEdge));
+//        QuasiTriangle neighbour = triangles.GetTriangle(GetNeighbour(currentTriangle, currentEdge));
 
-//        //if (neigbour != null)
+//        //if (neighbour != null)
 //        //{
 
-//        Point neighbourFarPoint = points.GetPoint(GetNeighbourFarPoint(currenTriangle, neigbour));
+//        Point neighbourFarPoint = points.GetPoint(GetNeighbourFarPoint(currentTriangle, neighbour));
 
 //        if (TopologyUtility.GetPointCircleRelation(neighbourFarPoint,
-//                                                    points.GetPoint(currenTriangle.First),
-//                                                    points.GetPoint(currenTriangle.Second),
-//                                                    points.GetPoint(currenTriangle.Third)) == PointCircleRelation.In)
+//                                                    points.GetPoint(currentTriangle.First),
+//                                                    points.GetPoint(currentTriangle.Second),
+//                                                    points.GetPoint(currentTriangle.Third)) == PointCircleRelation.In)
 //        {
-//            int thirdPoint = currenTriangle.GetThirdPoint(currentEdge);
+//            int thirdPoint = currentTriangle.GetThirdPoint(currentEdge);
 
 //            QuasiTriangle firstPart = MakeCCWTriangle(currentEdge.First, thirdPoint, neighbourFarPoint.GetHashCode(), triangles.GetNewCode());
 
@@ -404,13 +404,13 @@
 
 //            UpdateRelation(firstPart.GetHashCode(), secondPart.GetHashCode());
 
-//            UpdateRelation(firstPart.GetHashCode(), currenTriangle.GetNeighbour(new QuasiEdge(currentEdge.First, thirdPoint)));
+//            UpdateRelation(firstPart.GetHashCode(), currentTriangle.GetNeighbour(new QuasiEdge(currentEdge.First, thirdPoint)));
 
-//            UpdateRelation(secondPart.GetHashCode(), currenTriangle.GetNeighbour(new QuasiEdge(currentEdge.Second, thirdPoint)));
+//            UpdateRelation(secondPart.GetHashCode(), currentTriangle.GetNeighbour(new QuasiEdge(currentEdge.Second, thirdPoint)));
 
 //            int neighbour1, neighbour2;
 
-//            GetOtherNeighbours(currenTriangle.GetHashCode(), neigbour.GetHashCode(), out neighbour1, out neighbour2);
+//            GetOtherNeighbours(currentTriangle.GetHashCode(), neighbour.GetHashCode(), out neighbour1, out neighbour2);
 
 //            if (neighbour1 != -1)
 //            {
@@ -460,16 +460,16 @@
 //                }
 //            }
 
-//            triangles.RemoveByCode(neigbour.GetHashCode());
+//            triangles.RemoveByCode(neighbour.GetHashCode());
 
-//            triangles.RemoveByCode(currenTriangle.GetHashCode());
+//            triangles.RemoveByCode(currentTriangle.GetHashCode());
 //        }
 //        else if (TopologyUtility.GetPointCircleRelation(neighbourFarPoint,
-//                                                    points.GetPoint(currenTriangle.First),
-//                                                    points.GetPoint(currenTriangle.Second),
-//                                                    points.GetPoint(currenTriangle.Third)) == PointCircleRelation.On)
+//                                                    points.GetPoint(currentTriangle.First),
+//                                                    points.GetPoint(currentTriangle.Second),
+//                                                    points.GetPoint(currentTriangle.Third)) == PointCircleRelation.On)
 //        {
-//            int thirdPointCode = currenTriangle.GetThirdPoint(currentEdge);
+//            int thirdPointCode = currentTriangle.GetThirdPoint(currentEdge);
 
 //            Point thirdPoint = points.GetPoint(thirdPointCode);
 
@@ -511,13 +511,13 @@
 
 //                    UpdateRelation(firstPart.GetHashCode(), secondPart.GetHashCode());
 
-//                    UpdateRelation(firstPart.GetHashCode(), currenTriangle.GetNeighbour(new QuasiEdge(currentEdge.First, thirdPointCode)));
+//                    UpdateRelation(firstPart.GetHashCode(), currentTriangle.GetNeighbour(new QuasiEdge(currentEdge.First, thirdPointCode)));
 
-//                    UpdateRelation(secondPart.GetHashCode(), currenTriangle.GetNeighbour(new QuasiEdge(currentEdge.Second, thirdPointCode)));
+//                    UpdateRelation(secondPart.GetHashCode(), currentTriangle.GetNeighbour(new QuasiEdge(currentEdge.Second, thirdPointCode)));
 
 //                    int neighbour1, neighbour2;
 
-//                    GetOtherNeighbours(currenTriangle.GetHashCode(), neigbour.GetHashCode(), out neighbour1, out neighbour2);
+//                    GetOtherNeighbours(currentTriangle.GetHashCode(), neighbour.GetHashCode(), out neighbour1, out neighbour2);
 
 //                    if (neighbour1 != -1)
 //                    {
@@ -567,9 +567,9 @@
 //                        }
 //                    }
 
-//                    triangles.RemoveByCode(neigbour.GetHashCode());
+//                    triangles.RemoveByCode(neighbour.GetHashCode());
 
-//                    triangles.RemoveByCode(currenTriangle.GetHashCode());
+//                    triangles.RemoveByCode(currentTriangle.GetHashCode());
 //                }
 //            }
 //        }
@@ -1071,21 +1071,21 @@
 //                relation == TriangleRelation.ThirdFirstNeighbour;
 //    }
 
-//    private void UpdateNeighbour(int triangleCode, int oldNeighbour, int newNeigbour)
+//    private void UpdateNeighbour(int triangleCode, int oldNeighbour, int newNeighbour)
 //    {
 //        QuasiTriangle tempValue = triangles.GetTriangle(triangleCode);
 
 //        if (tempValue.FirstSecondNeighbour == oldNeighbour)
 //        {
-//            tempValue.FirstSecondNeighbour = newNeigbour;
+//            tempValue.FirstSecondNeighbour = newNeighbour;
 //        }
 //        else if (tempValue.SecondThirdNeighbour == oldNeighbour)
 //        {
-//            tempValue.SecondThirdNeighbour = newNeigbour;
+//            tempValue.SecondThirdNeighbour = newNeighbour;
 //        }
 //        else if (tempValue.ThirdFirstNeighbour == oldNeighbour)
 //        {
-//            tempValue.ThirdFirstNeighbour = newNeigbour;
+//            tempValue.ThirdFirstNeighbour = newNeighbour;
 //        }
 //        else
 //        {
@@ -1162,15 +1162,15 @@
 //        {
 //            if (triangles[i].FirstSecondNeighbour != -1)
 //            {
-//                result[i].NeigboursCode.Add(temp[triangles[i].FirstSecondNeighbour]);
+//                result[i].NeighboursCode.Add(temp[triangles[i].FirstSecondNeighbour]);
 //            }
 //            if (triangles[i].SecondThirdNeighbour != -1)
 //            {
-//                result[i].NeigboursCode.Add(temp[triangles[i].SecondThirdNeighbour]);
+//                result[i].NeighboursCode.Add(temp[triangles[i].SecondThirdNeighbour]);
 //            }
 //            if (triangles[i].ThirdFirstNeighbour != -1)
 //            {
-//                result[i].NeigboursCode.Add(temp[triangles[i].ThirdFirstNeighbour]);
+//                result[i].NeighboursCode.Add(temp[triangles[i].ThirdFirstNeighbour]);
 //            }
 //        }
 

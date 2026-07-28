@@ -69,7 +69,7 @@ public static class SimplificationHelper
 
             ProcessVisualQuality(file, writer, writeFolder);
 
-            File.AppendAllLines(logFile, new List<string>() { $"Finished At: {DateTime.Now.ToLongTimeString()}; Ellapsed: {watch.ElapsedMilliseconds / 1000.0:N0000} (s) - ({fileName})" });
+            File.AppendAllLines(logFile, new List<string>() { $"Finished At: {DateTime.Now.ToLongTimeString()}; Elapsed: {watch.ElapsedMilliseconds / 1000.0:N0000} (s) - ({fileName})" });
         }
 
         writer.Close();

@@ -1,6 +1,6 @@
 ﻿using System.Security.Principal;
 
-namespace IRI.Maptor.Sta.Common.Abstrations;
+namespace IRI.Maptor.Sta.Common.Abstractions;
 
 public interface ISecurityRepository
 {

@@ -1,6 +1,6 @@
 using IRI.Maptor.Sta.Metrics;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 
 namespace IRI.Maptor.Sta.SpatialReferenceSystem;
 
@@ -404,7 +404,7 @@ public static class MapProjects
         return MercatorToGeodetic(WebMercatorToMercatorWgs84(webMercator));
     }
 
-    // todo: inverstigate needed. is the output of this method geodetic wgs84 (long,lat) or geocentric?
+    // todo: investigate needed. is the output of this method geodetic wgs84 (long,lat) or geocentric?
     public static TPoint WebMercatorToGeodeticWgs84<TPoint>(TPoint webMercator) where TPoint : IPoint, new()
     {
         var a = Ellipsoids.WGS84.SemiMajorAxis.Value;
@@ -540,7 +540,7 @@ public static class MapProjects
     public static TPoint GeodeticToTransverseMercator<TPoint>(TPoint geodeticPoint, Ellipsoid<Meter, Degree> ellipsoid) where TPoint : IPoint, new()
     {
         //'Phi : Geodetic Latitude, in degree
-        //'Lambda : Geodeti Longitude in degree
+        //'Lambda : Geodetic Longitude in degree
 
         double a = ellipsoid.SemiMajorAxis.Value;
 
@@ -617,7 +617,7 @@ public static class MapProjects
     public static TPoint[] GeodeticToTransverseMercator<TPoint>(TPoint[] geodeticPoints, Ellipsoid<Meter, Degree> ellipsoid) where TPoint : IPoint, new()
     {
         //'Phi : Geodetic Latitude, in degree
-        //'Lambda : Geodeti Longitude in degree
+        //'Lambda : Geodetic Longitude in degree
 
         int numberOfPoints = geodeticPoints.Length;
 
@@ -634,7 +634,7 @@ public static class MapProjects
     public static double[][] GeodeticToTransverseMercator(double[] longitudes, double[] latitudes, Ellipsoid<Meter, Degree> ellipsoid)
     {
         //'Phi : Geodetic Latitude, in degree
-        //'Lambda : Geodeti Longitude in degree
+        //'Lambda : Geodetic Longitude in degree
 
         if (longitudes.Length != latitudes.Length) return null;
 
@@ -757,7 +757,7 @@ public static class MapProjects
     public static TPoint[] TransverseMercatorToGeodetic<TPoint>(TPoint[] tmPoints, Ellipsoid<Meter, Degree> ellipsoid) where TPoint : IPoint, new()
     {
         //'Phi : Geodetic Latitude, in degree
-        //'Lambda : Geodeti Longitude in degree
+        //'Lambda : Geodetic Longitude in degree
 
         int numberOfPoints = tmPoints.Length;
 
@@ -841,9 +841,9 @@ public static class MapProjects
 
     public static TPoint GeodeticToUTM<TPoint>(TPoint geodeticPoint, Ellipsoid<Meter, Degree> ellipsoid, int zone, bool isNorthHemisphere = true) where TPoint : IPoint, new()
     {
-        int centralMeredian = CalculateCentralMeridian(zone);
+        int centralMeridian = CalculateCentralMeridian(zone);
 
-        double tempLongitude = geodeticPoint.X - centralMeredian;
+        double tempLongitude = geodeticPoint.X - centralMeridian;
 
         Point result = GeodeticToTransverseMercator(new Point(tempLongitude, geodeticPoint.Y), ellipsoid);
 
@@ -865,9 +865,9 @@ public static class MapProjects
         int zone = FindUtmZone(geodeticPoint.X);
 
         return GeodeticToUTM(geodeticPoint, ellipsoid, zone, isNorthHemisphere);
-        //int centralMeredian = CalculateCentralMeridian(zone);
+        //int centralMeridian = CalculateCentralMeridian(zone);
 
-        //double tempLongitude = geodeticPoint.X - centralMeredian;
+        //double tempLongitude = geodeticPoint.X - centralMeridian;
 
         //Point result = GeodeticToTransverseMercator(new Point(tempLongitude, geodeticPoint.Y), ellipsoid);
 
@@ -902,7 +902,7 @@ public static class MapProjects
     public static double[][] GeodeticToUTM(double[] longitude, double[] latitude, Ellipsoid<Meter, Degree> ellipsoid, double centralLongitude)
     {
         //'Phi : Geodetic Latitude, in degree
-        //'Lambda : Geodeti Longitude in degree
+        //'Lambda : Geodetic Longitude in degree
         //centralLongitude: must be in degree
 
         if (longitude.Length != latitude.Length)
@@ -1125,7 +1125,7 @@ public static class MapProjects
     }
 
 
-    public static TPoint CylindricalEqualAreaToGeodetic<TPoint>(TPoint ceaPoint, Ellipsoid<Meter, Degree> ellipsoid, double centeralLongitude = 0, double standardLatitude = 0) where TPoint : IPoint, new()
+    public static TPoint CylindricalEqualAreaToGeodetic<TPoint>(TPoint ceaPoint, Ellipsoid<Meter, Degree> ellipsoid, double centralLongitude = 0, double standardLatitude = 0) where TPoint : IPoint, new()
     {
         double e = ellipsoid.FirstEccentricity;
 
@@ -1138,11 +1138,11 @@ public static class MapProjects
             1.0 / (2.0 * e) *
             Math.Log((1.0 - e) / (1.0 + e)));
 
-        double longitude = centeralLongitude + ceaPoint.X / (ellipsoid.SemiMajorAxis.Value * k0) * radianToDegreeRatio /*180 / Math.PI*/;
+        double longitude = centralLongitude + ceaPoint.X / (ellipsoid.SemiMajorAxis.Value * k0) * radianToDegreeRatio /*180 / Math.PI*/;
 
         double beta = Math.Asin(2 * ceaPoint.Y * k0 / (ellipsoid.SemiMajorAxis.Value * qAtPole));
 
-        double deltaLambda = (centeralLongitude - longitude) * degreeToRadianRatio;
+        double deltaLambda = (centralLongitude - longitude) * degreeToRadianRatio;
 
         double qC = qAtPole * Math.Sin(beta);
 
@@ -1166,7 +1166,7 @@ public static class MapProjects
         return result;
     }
 
-    public static double[][] CylindricalEqualAreaToGeodetic(double[] x, double[] y, Ellipsoid<Meter, Degree> ellipsoid, double centeralLongitude = 0, double standardLatitude = 0)
+    public static double[][] CylindricalEqualAreaToGeodetic(double[] x, double[] y, Ellipsoid<Meter, Degree> ellipsoid, double centralLongitude = 0, double standardLatitude = 0)
     {
         //'Phi : Geodetic Latitude, in degree
         //'Lambda : Geodetic Longitude in degree
@@ -1196,11 +1196,11 @@ public static class MapProjects
 
         for (int i = 0; i < x.Length; i++)
         {
-            longitude[i] = centeralLongitude + x[i] / (ellipsoid.SemiMajorAxis.Value * k0) * radianToDegreeRatio /*180 / Math.PI*/;
+            longitude[i] = centralLongitude + x[i] / (ellipsoid.SemiMajorAxis.Value * k0) * radianToDegreeRatio /*180 / Math.PI*/;
 
             double beta = Math.Asin(2 * y[i] * k0 / (ellipsoid.SemiMajorAxis.Value * qAtPole));
 
-            double deltaLambda = (centeralLongitude - longitude[i]) * degreeToRadianRatio;
+            double deltaLambda = (centralLongitude - longitude[i]) * degreeToRadianRatio;
 
             //double betaC = Math.Atan(Math.Tan(beta) / Math.Cos(deltaLambda));
 
@@ -1380,7 +1380,7 @@ public static class MapProjects
     }
 
     /// <summary>
-    /// Calcualte the grid factor = UTM Scale Factor * Elevation Factor
+    /// Calculate the grid factor = UTM Scale Factor * Elevation Factor
     /// </summary>
     /// <param name="geodeticPoint">lambda, phi</param>
     /// <param name="h">Elevation above the ellipsoid</param>
@@ -1392,7 +1392,7 @@ public static class MapProjects
     }
 
     /// <summary>
-    /// Calcualte the grid factor = UTM Scale Factor * Elevation Factor based on WGS84
+    /// Calculate the grid factor = UTM Scale Factor * Elevation Factor based on WGS84
     /// </summary>
     /// <param name="geodeticPoint">lambda, phi</param>
     /// <returns></returns>

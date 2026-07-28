@@ -11,7 +11,7 @@ internal class ShxReader
 {
     MainFileHeader mainHeader;
 
-    List<int> Offsets, ContentLengthes;
+    List<int> Offsets, ContentLengths;
 
     public MainFileHeader MainHeader
     {
@@ -38,7 +38,7 @@ internal class ShxReader
 
         offset = Offsets[recordNumber];
 
-        contentLength = ContentLengthes[recordNumber];
+        contentLength = ContentLengths[recordNumber];
     }
 
     public ShxReader(string shxFileName)
@@ -50,7 +50,7 @@ internal class ShxReader
 
         this.Offsets = new List<int>();
 
-        this.ContentLengthes = new List<int>();
+        this.ContentLengths = new List<int>();
 
         System.IO.FileStream stream = new System.IO.FileStream(shxFileName, System.IO.FileMode.Open);
 
@@ -68,7 +68,7 @@ internal class ShxReader
 
             temp = reader.ReadBytes(ShapeConstants.IntegerSize); Array.Reverse(temp);
 
-            this.ContentLengthes.Add(System.BitConverter.ToInt32(temp, 0));
+            this.ContentLengths.Add(System.BitConverter.ToInt32(temp, 0));
         }
 
         reader.Close();

@@ -51,7 +51,7 @@ public static class SldHelper
 
     /// <summary>
     /// Encodes a dash pattern as a series of numbers separated by spaces. 
-    /// Odd-indexed numbers (first, third, etc) determine the length in pxiels 
+    /// Odd-indexed numbers (first, third, etc) determine the length in pixels 
     /// to draw the line, and even-indexed numbers (second, fourth, etc) 
     /// determine the length in pixels to blank out the line. Default is an 
     /// unbroken line. Starting from version 2.1 dash arrays can be combined 

@@ -321,7 +321,7 @@ public class LambertConformalConic2PTests
         // Arrange: Use predefined NIOC LCC projection with Clarke 1880 (RGS)
         // Parameters: φ₁=29.655°N, φ₂=35.315°N, λ₀=45°E, φ₀=32.5°N
         // False Easting: 1,500,000m, False Northing: 1,166,200m, Scale Factor: 0.9987864078
-        var niocLccProjection = SrsBases.LccNiocWithClarcke1880Rgs;
+        var niocLccProjection = SrsBases.LccNiocWithClarke1880Rgs;
         const int inversePrecision = 6; // ±0.000001 degrees for round-trip accuracy
 
         var inputWgs84 = new Point(wgs84Longitude, wgs84Latitude);

@@ -19,7 +19,7 @@
     <converters:CoordinateDimensionToZVisibilityConverter x:Key="coordinateDimensionToZVisibilityConverter"/>
     <converters:CoordinateDisplayConverter x:Key="coordinateDisplayConverter"/>
    
-    <converters:DateTimeToPersianEllapsedDateCoarseConverter x:Key="dateTimeToPersianEllapsedDateCoarseConverter"/>
+    <converters:DateTimeToPersianElapsedDateCoarseConverter x:Key="dateTimeToPersianElapsedDateCoarseConverter"/>
     <converters:DoubleToDoubleInverseConverter x:Key="doubleInverseConverter"/>
     <converters:DoubleToMarginTopConverter x:Key="doubleToMarginTopConverter"/>
     <converters:DoubleToReducedDoubleByPercentConverter x:Key="doubleToReducedDoubleByPercentConverter"/>

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using IRI.Maptor.Sta.Mathematics;
 using IRI.Maptor.Sta.Spatial.Analysis;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 
 namespace IRI.Maptor.Sta.MachineLearning;
 

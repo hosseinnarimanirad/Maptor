@@ -16,7 +16,7 @@ public enum LinearMode
     Yard,// 3foot,36inhcs,
     Foot,//1200/3937meter
     Inch,
-    Rod,//198inchs,
+    Rod,//198 inches,
     Chain//66feet,4rods
 
 }

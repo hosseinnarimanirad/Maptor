@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace IRI.Maptor.Sta.Common.Abstrations;
+namespace IRI.Maptor.Sta.Common.Abstractions;
 
-public interface ILocateable
+public interface ILocatable
 {
     Point Location { get; set; }
 }

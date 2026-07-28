@@ -133,7 +133,7 @@ public struct MainFileHeader
         this.m_MMax = IRI.Maptor.Sta.Common.Helpers.StreamHelper.LittleEndianOrderedBytesToDouble(values, ShapeConstants.MMaxOffset);
     }
 
-    internal MainFileHeader(int fileLength, EsriShapeType type, BoundingBox minimumnBoundingBox)
+    internal MainFileHeader(int fileLength, EsriShapeType type, BoundingBox minimumBoundingBox)
     {
         this.m_Version = 9994;
 
@@ -141,13 +141,13 @@ public struct MainFileHeader
 
         this.m_ShapeType = (int)type;
 
-        this.m_XMin = minimumnBoundingBox.XMin;
+        this.m_XMin = minimumBoundingBox.XMin;
 
-        this.m_YMin = minimumnBoundingBox.YMin;
+        this.m_YMin = minimumBoundingBox.YMin;
 
-        this.m_XMax = minimumnBoundingBox.XMax;
+        this.m_XMax = minimumBoundingBox.XMax;
 
-        this.m_YMax = minimumnBoundingBox.YMax;
+        this.m_YMax = minimumBoundingBox.YMax;
 
         this.m_ZMax = 0;
 

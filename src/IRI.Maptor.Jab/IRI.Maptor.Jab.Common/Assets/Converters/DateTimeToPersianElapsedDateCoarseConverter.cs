@@ -5,7 +5,7 @@ using IRI.Maptor.Extensions;
 
 namespace IRI.Maptor.Jab.Common.Converters;
 
-public class DateTimeToPersianEllapsedDateCoarseConverter : IValueConverter
+public class DateTimeToPersianElapsedDateCoarseConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
@@ -16,7 +16,7 @@ public class DateTimeToPersianEllapsedDateCoarseConverter : IValueConverter
 
         var dateTime = (DateTime)value;
 
-        return dateTime.GetPersianEllapsedDateCoarse();
+        return dateTime.GetPersianElapsedDateCoarse();
 
     }
 

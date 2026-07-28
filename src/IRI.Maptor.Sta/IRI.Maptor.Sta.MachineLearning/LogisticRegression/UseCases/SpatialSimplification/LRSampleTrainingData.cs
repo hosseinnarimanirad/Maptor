@@ -7,11 +7,11 @@
 //{
 //    public class LRSampleTrainingData
 //    {
-//        List<LRSimplificationParameters<Point>> zeroAgnleSamples = new List<LRSimplificationParameters<Point>>();
+//        List<LRSimplificationParameters<Point>> zeroAngleSamples = new List<LRSimplificationParameters<Point>>();
 
 //        public LRSampleTrainingData()
 //        {
-//            zeroAgnleSamples = new List<LRSimplificationParameters<Point>>()
+//            zeroAngleSamples = new List<LRSimplificationParameters<Point>>()
 //            {
 //                new LRSimplificationParameters<Point>()
 //                {

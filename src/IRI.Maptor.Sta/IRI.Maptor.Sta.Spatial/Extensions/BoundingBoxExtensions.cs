@@ -1,7 +1,7 @@
 ﻿using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Topology;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Common.Enums;
@@ -17,7 +17,7 @@ public static class BoundingBoxExtensions
 
         var isNorthHemisphere = boundingBox.Center.Y > 0;
 
-        return boundingBox.TransofrmBy8Point(p => MapProjects.GeodeticToUTM(p, Ellipsoids.WGS84, zone.Value, isNorthHemisphere));
+        return boundingBox.TransformBy8Point(p => MapProjects.GeodeticToUTM(p, Ellipsoids.WGS84, zone.Value, isNorthHemisphere));
     }
 
     public static BoundingBox GeodeticWgs84MbbToUtmMbb(this BoundingBox boundingBox, int? zone = null)
@@ -27,7 +27,7 @@ public static class BoundingBoxExtensions
 
     public static Geometry<Point> UtmMbbToGeodeticWgs84Geometry(this BoundingBox boundingBox, int zone)
     {
-        return boundingBox.TransofrmBy8Point(p => MapProjects.UTMToGeodetic(p, zone));
+        return boundingBox.TransformBy8Point(p => MapProjects.UTMToGeodetic(p, zone));
     }
 
     public static BoundingBox UtmMbbToGeodeticWgs84Mbb(this BoundingBox boundingBox, int zone)
@@ -38,7 +38,7 @@ public static class BoundingBoxExtensions
     public static BoundingBox WebMercatorToGeodeticWgs84Mbb(this BoundingBox boundingBox) => boundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84);
 
 
-    public static Geometry<Point> TransofrmBy4Point(this BoundingBox boundingBox, Func<Point, Point> func)
+    public static Geometry<Point> TransformBy4Point(this BoundingBox boundingBox, Func<Point, Point> func)
     {
         var p1 = func(boundingBox.BottomLeft);
 
@@ -51,7 +51,7 @@ public static class BoundingBoxExtensions
         return Geometry<Point>.Create(new List<Point>() { p1, p3, p5, p7 }, GeometryType.Polygon, 0);
     }
 
-    public static Geometry<Point> TransofrmBy8Point(this BoundingBox boundingBox, Func<Point, Point> func)
+    public static Geometry<Point> TransformBy8Point(this BoundingBox boundingBox, Func<Point, Point> func)
     {
         var p1 = func(boundingBox.BottomLeft);
 

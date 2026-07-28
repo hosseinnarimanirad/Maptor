@@ -74,7 +74,7 @@ public partial class MTF : UserControl
 
     public int TransformCount { get { return this.transforms.Count; } }
 
-    public Transform GetTrasnform(int index)
+    public Transform GetTransform(int index)
     {
         return this.transforms[index];
     }

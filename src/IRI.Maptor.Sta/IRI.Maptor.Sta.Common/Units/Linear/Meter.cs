@@ -11,7 +11,7 @@ public class Meter : LinearUnit
 {
     #region Fields&Properties
 
-    //private LinearPrefix m_Prefex;
+    //private LinearPrefix m_Prefix;
 
     public override LinearMode Mode
     {
@@ -21,7 +21,7 @@ public class Meter : LinearUnit
     //public LinearPrefix Prefix
     //{
 
-    //    get { return this.m_Prefex; }
+    //    get { return this.m_Prefix; }
 
     //    set { ChangePrefix(value); }
     //}

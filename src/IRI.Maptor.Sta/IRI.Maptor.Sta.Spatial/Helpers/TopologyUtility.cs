@@ -3,7 +3,7 @@ using IRI.Maptor.Sta.Mathematics;
 using IRI.Maptor.Sta.Spatial.Topology;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Enums;
 
@@ -390,16 +390,16 @@ public class TopologyUtility
         else if (polygonOrMultiPolygon.Type != GeometryType.Polygon)
             throw new NotImplementedException("TopologyUtility > IsPointInPolygon");
 
-        var inOutterRing = IsPointInRing(polygonOrMultiPolygon.Geometries[0], point);
+        var inOuterRing = IsPointInRing(polygonOrMultiPolygon.Geometries[0], point);
 
-        if (inOutterRing && polygonOrMultiPolygon.Geometries.Count > 1)
+        if (inOuterRing && polygonOrMultiPolygon.Geometries.Count > 1)
         {
             var inInnerRings = polygonOrMultiPolygon.Geometries.Skip(1).Any(g => IsPointInRing(g, point));
 
             return !inInnerRings;
         }
 
-        return inOutterRing;
+        return inOuterRing;
     }
 
     public static bool IsPointOnLineString<T>(Geometry<T> lineString, T point) where T : IPoint, new()
@@ -414,9 +414,9 @@ public class TopologyUtility
 
         var boundingBox = lineString.GetBoundingBox();
 
-        var doesEncomapss = boundingBox.Covers(point);
+        var doesEncompass = boundingBox.Covers(point);
 
-        if (!doesEncomapss)
+        if (!doesEncompass)
             return false;
 
         for (int i = 0; i < numberOfPoints - 1; i++)

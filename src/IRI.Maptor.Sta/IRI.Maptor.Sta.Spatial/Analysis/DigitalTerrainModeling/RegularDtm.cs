@@ -94,12 +94,12 @@ public class RegularDtm
 
     public RegularDtm Subtract(RegularDtm dtm)
     {
-        Matrix resultValues = Differece(dtm);
+        Matrix resultValues = Difference(dtm);
 
         return new RegularDtm(resultValues, CellWidth, CellHeight, new Point(MinX, MinY));
     }
 
-    public Matrix Differece(RegularDtm dtm)
+    public Matrix Difference(RegularDtm dtm)
     {
         if (!AreTheSameRegion(dtm))
         {
@@ -249,7 +249,7 @@ public class RegularDtm
     /// </summary>
     /// <param name="numberOfPoints"></param>
     /// <returns></returns>
-    public List<PointM> SelectPointsBaesdOnCAG(int numberOfPoints)
+    public List<PointM> SelectPointsBasedOnCAG(int numberOfPoints)
     {
         int numberOfRow = NumberOfRows;
 
@@ -302,9 +302,9 @@ public class RegularDtm
         return irregularPoints;
     }
 
-    public IrregularDtm ToIrregularDtmBaesdOnCAG(int numberOfPoints)
+    public IrregularDtm ToIrregularDtmBasedOnCAG(int numberOfPoints)
     {
-        List<PointM> irregularPoints = SelectPointsBaesdOnCAG(numberOfPoints);
+        List<PointM> irregularPoints = SelectPointsBasedOnCAG(numberOfPoints);
 
         return new IrregularDtm(irregularPoints);
     }

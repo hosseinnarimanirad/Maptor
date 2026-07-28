@@ -125,15 +125,15 @@ public struct GeodeticPoint<TLinear, TAngular> : IGeodeticPoint
 
         double tempSemiMajor = Datum.SemiMajorAxis.ChangeTo<T>().Value;
 
-        //double tempOrigionX = this.AssociatedEllipsoid.Origion.X.ChangeTo<T>().Value;
+        //double tempOriginX = this.AssociatedEllipsoid.Origin.X.ChangeTo<T>().Value;
 
-        //double tempOrigionY = this.AssociatedEllipsoid.Origion.Y.ChangeTo<T>().Value;
+        //double tempOriginY = this.AssociatedEllipsoid.Origin.Y.ChangeTo<T>().Value;
 
-        //double tempOrigionZ = this.AssociatedEllipsoid.Origion.Z.ChangeTo<T>().Value;
+        //double tempOriginZ = this.AssociatedEllipsoid.Origin.Z.ChangeTo<T>().Value;
 
         //Matrix rotationMatrix = Transformation.CalculateEulerElementMatrix(AssociatedEllipsoid.Omega, AssociatedEllipsoid.Phi, AssociatedEllipsoid.Kappa);
 
-        //Matrix transferMatrix = new Matrix(new double[][] { new double[] { tempOrigionX, tempOrigionY, tempOrigionZ } });
+        //Matrix transferMatrix = new Matrix(new double[][] { new double[] { tempOriginX, tempOriginY, tempOriginZ } });
 
         double tempHeight = this.Height.ChangeTo<T>().Value;
 

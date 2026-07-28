@@ -11,7 +11,7 @@ public enum SmscNumberFormat
     Local = 81
 }
 
-public enum DataCodingSheme
+public enum DataCodingScheme
 {
     Alphabet = 0,
     UCS2 = 8
@@ -232,23 +232,23 @@ public class PduDecoding
 
         //
         //length of des number
-        int deslength = int.Parse(pduCode.Substring(position, 2), System.Globalization.NumberStyles.HexNumber);
+        int destLength = int.Parse(pduCode.Substring(position, 2), System.Globalization.NumberStyles.HexNumber);
 
-        deslength += deslength % 2;
+        destLength += destLength % 2;
 
         //ignore international or national 91,81
         position += 4;
 
         string desNumber = string.Empty;
 
-        for (int i = 0; i < deslength; i += 2)
+        for (int i = 0; i < destLength; i += 2)
         {
             desNumber += pduCode[position + i + 1];
 
             desNumber += pduCode[position + i];
         }
 
-        position += deslength;
+        position += destLength;
 
         this.TP_PID = byte.Parse(pduCode.Substring(position, 2), System.Globalization.NumberStyles.HexNumber);
 
@@ -319,7 +319,7 @@ public class ShortTextMessage
     public string DestinationNumber;
     public SmscNumberFormat ServiceCenterNumberFormat = SmscNumberFormat.International;
     public SmscNumberFormat DestinationNumberFormat = SmscNumberFormat.International;
-    public DataCodingSheme DataCodingSheme;
+    public DataCodingScheme DataCodingScheme;
     public StatusReportRequest Report;
     public ValidPeriod Period;
     public string message;
@@ -332,17 +332,17 @@ public class ShortTextMessage
     public byte TP_PID;
     public byte TP_UDL;
 
-    //public DataCodingSheme GetDataCodingSheme(string message)
+    //public DataCodingScheme GetDataCodingScheme(string message)
     //{
     //    for (int i = 0; i < message.Length; i++)
     //    {
     //        if (((int)message[i]) < 0 || ((int)message[i]) > 255)
     //        {
-    //            return MainProject.DataCodingSheme.UCS2;
+    //            return MainProject.DataCodingScheme.UCS2;
     //        }
     //    }
 
-    //    return MainProject.DataCodingSheme.Alphabet;
+    //    return MainProject.DataCodingScheme.Alphabet;
     //}
 
     //public string Message
@@ -353,19 +353,19 @@ public class ShortTextMessage
 
     public int MessageLength
     {
-        get { return 0; }//this.DataCodingSheme == MainProject.DataCodingSheme.Alphabet ? message.Length : message.Length * 2; }
+        get { return 0; }//this.DataCodingScheme == MainProject.DataCodingScheme.Alphabet ? message.Length : message.Length * 2; }
     }
 
     public string GetPDUCode()
     {
-        if (this.DataCodingSheme ==0)//) MainProject.DataCodingSheme.Alphabet)
+        if (this.DataCodingScheme ==0)//) MainProject.DataCodingScheme.Alphabet)
         {
             if (this.message.Length > 160)
             {
                 throw new NotImplementedException();
             }
         }
-        else if (this.DataCodingSheme ==0)// MainProject.DataCodingSheme.UCS2)
+        else if (this.DataCodingScheme ==0)// MainProject.DataCodingScheme.UCS2)
         {
             if (this.message.Length > 70)
             {
@@ -383,7 +383,7 @@ public class ShortTextMessage
 
         result += TP_PID.ToString("X2");
 
-        result += ((int)DataCodingSheme).ToString("X2");
+        result += ((int)DataCodingScheme).ToString("X2");
 
         result += ((int)Period).ToString("X2");
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace IRI.Maptor.Sta.Common.Abstrations;
+namespace IRI.Maptor.Sta.Common.Abstractions;
 
 public interface IIdentifiable
 {

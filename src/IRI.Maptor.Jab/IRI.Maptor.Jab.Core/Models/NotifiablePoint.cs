@@ -1,6 +1,6 @@
 ﻿using System;
 using IRI.Maptor.Jab.Core;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 

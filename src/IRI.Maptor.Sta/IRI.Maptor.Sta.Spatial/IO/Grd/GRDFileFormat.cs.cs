@@ -44,7 +44,7 @@ public class GRDFileFormat
         }
         catch
         {
-            throw new Exception("Error while openning grd file");
+            throw new Exception("Error while opening grd file");
         }
         finally
         {

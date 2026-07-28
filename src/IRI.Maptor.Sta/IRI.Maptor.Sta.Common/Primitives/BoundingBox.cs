@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Extensions;
 
 
@@ -49,11 +49,11 @@ public struct BoundingBox
     public Point TopRight => new Point(xMax, YMax);
 
     [JsonIgnore]
-    //The system is asumed to be right handed
+    //The system is assumed to be right handed
     public Point TopLeft => new Point(XMin, YMax);
 
     [JsonIgnore]
-    //The system is asumed to be right handed
+    //The system is assumed to be right handed
     public Point BottomRight => new Point(XMax, YMin);
 
     [JsonIgnore]

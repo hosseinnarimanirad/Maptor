@@ -2,14 +2,14 @@
 using IRI.Maptor.Sta.Mathematics;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Extensions;
 
 namespace IRI.Maptor.Sta.Spatial.Analysis;
 
 public static class Simplifications
 {
-    public static List<T> SimplifyByAdditiveAreaPlus<T>(List<T> pointList, SimplificationParameters paramters) where T : IPoint
+    public static List<T> SimplifyByAdditiveAreaPlus<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
         if (pointList.IsNullOrEmpty())
             return new List<T>();
@@ -35,7 +35,7 @@ public static class Simplifications
 
             tempArea += area;
 
-            if (Math.Abs(tempArea) > paramters.AreaThreshold || areaCheck2 > paramters.AreaThreshold || (area * totalAreaCoef > 0))
+            if (Math.Abs(tempArea) > parameters.AreaThreshold || areaCheck2 > parameters.AreaThreshold || (area * totalAreaCoef > 0))
             {
                 tempArea = 0;
 
@@ -68,7 +68,7 @@ public static class Simplifications
     /// <param name="pointList"></param>
     /// <param name="threshold">Must be between 0 and 1</param>
     /// <returns></returns>
-    public static List<T> SimplifyByCumulativeAngle<T>(List<T> pointList, SimplificationParameters paramters) where T : IPoint
+    public static List<T> SimplifyByCumulativeAngle<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
         if (pointList.IsNullOrEmpty())
             return new List<T>();
@@ -86,7 +86,7 @@ public static class Simplifications
         {
             var angle = SpatialUtility.GetSquareCosineOfAngle(pointList[firstIndex], pointList[secondIndex], pointList[thirdIndex]);
 
-            if (angle < 0 || angle < paramters.AngleThreshold)
+            if (angle < 0 || angle < parameters.AngleThreshold)
             {
                 filtered.Add(secondIndex);
 
@@ -98,7 +98,7 @@ public static class Simplifications
             thirdIndex = thirdIndex + 1;
         }
 
-        if (paramters.Retain3Points && filtered.Count == 1)
+        if (parameters.Retain3Points && filtered.Count == 1)
         {
             filtered.Add(pointList.Count() / 2);
         }
@@ -116,7 +116,7 @@ public static class Simplifications
     /// <param name="pointList"></param>
     /// <param name="anglethreshold">Must be between 0 and 1</param>
     /// <returns></returns>
-    public static List<T> SimplifyByCumulativeAngleArea<T>(List<T> pointList, SimplificationParameters paramters) where T : IPoint
+    public static List<T> SimplifyByCumulativeAngleArea<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
         if (pointList.IsNullOrEmpty())
             return new List<T>();
@@ -143,7 +143,7 @@ public static class Simplifications
 
             //if (Math.Abs(angle) < threshold)
             //{
-            if ((angle < 0 || angle < paramters.AngleThreshold.Value) || tempArea > paramters.AreaThreshold.Value)
+            if ((angle < 0 || angle < parameters.AngleThreshold.Value) || tempArea > parameters.AreaThreshold.Value)
             {
                 filtered.Add(secondIndex);
 
@@ -158,7 +158,7 @@ public static class Simplifications
             thirdIndex = thirdIndex + 1;
         }
 
-        if (paramters.Retain3Points && filtered.Count == 1)
+        if (parameters.Retain3Points && filtered.Count == 1)
         {
             filtered.Add(pointList.Count() / 2);
         }
@@ -220,7 +220,7 @@ public static class Simplifications
     // ***********************************************************************************************
     // ref: Tobler, W. R. (1966). Numerical map generalization: Department of Geography, University of
     //      Michigan Ann Arbour, MI, USA
-    public static List<T> SimplifyByAngle<T>(List<T> pointList, SimplificationParameters paramters) where T : IPoint
+    public static List<T> SimplifyByAngle<T>(List<T> pointList, SimplificationParameters parameters) where T : IPoint
     {
         if (pointList.IsNullOrEmpty())
             return new List<T>();
@@ -238,7 +238,7 @@ public static class Simplifications
         }
 
         //When i.Item2 ~ 1 it means points are on a line
-        var filter1 = angles.Where(i => i.angle < paramters.AngleThreshold).Select(i => i.index).ToList();
+        var filter1 = angles.Where(i => i.angle < parameters.AngleThreshold).Select(i => i.index).ToList();
 
         filter1.Insert(0, 0);
 
@@ -763,19 +763,19 @@ public static class Simplifications
                 {
                     //if ( isRing || i > 0)
                     //{
-                    //    // (i-1, i, i+2): i+2 is used insted of i+1 because i+1 is going to be removed
+                    //    // (i-1, i, i+2): i+2 is used instead of i+1 because i+1 is going to be removed
                     //    var firstIndex = i - 1 < 0 ? pointCount - 1 : i - 1;
                     //    areas[firstIndex] = SpatialUtility.GetUnsignedTriangleArea(pList[firstIndex], pList[i], pList[(i + 2) % pointCount]);
                     //}
                     //if (isRing || i < areas.Count - 1)
                     //{
-                    //    // (i, i+2, i+3): i is used insted of i+1 because i+1 is going to be removed
+                    //    // (i, i+2, i+3): i is used instead of i+1 because i+1 is going to be removed
                     //    areas[(i + 1) % areaCount] = SpatialUtility.GetUnsignedTriangleArea(pList[i], pList[(i + 2) % pointCount], pList[(i + 3) % pointCount]);
                     //}
 
                     if (i > 0)
                     {
-                        // (i-1, i, i+2): i+2 is used insted of i+1 because i+1 is going to be removed
+                        // (i-1, i, i+2): i+2 is used instead of i+1 because i+1 is going to be removed
                         var firstIndex = i - 1 < 0 ? pointCount - 1 : i - 1;
 
                         //if (i > areas.Count - 1) { }
@@ -790,7 +790,7 @@ public static class Simplifications
                         //if ((i + 1) % areaCount > areas.Count - 1) { }
                         //if ((i + 3) % pointCount > pList.Count - 1) { }
 
-                        // (i, i+2, i+3): i is used insted of i+1 because i+1 is going to be removed
+                        // (i, i+2, i+3): i is used instead of i+1 because i+1 is going to be removed
                         areas[(i + 1) % areaCount] = SpatialUtility.GetUnsignedEuclideanArea(pList[i], pList[(i + 2) % pointCount], pList[(i + 3) % pointCount]);
                     }
 
@@ -1261,15 +1261,15 @@ public static class Simplifications
 
     #region Private Methods
 
-    private static List<T> DivideForDouglasPeucker<T>(List<T> pointList, SimplificationParameters paramters, int divideIndex) where T : IPoint, new()
+    private static List<T> DivideForDouglasPeucker<T>(List<T> pointList, SimplificationParameters parameters, int divideIndex) where T : IPoint, new()
     {
         var leftList = pointList.Take(divideIndex + 1).ToList();
 
-        List<T> result = SimplifyByRamerDouglasPeucker(leftList, paramters);
+        List<T> result = SimplifyByRamerDouglasPeucker(leftList, parameters);
 
         var rightList = pointList.Skip(divideIndex).ToList();
 
-        var rightResult = SimplifyByRamerDouglasPeucker(rightList, paramters);
+        var rightResult = SimplifyByRamerDouglasPeucker(rightList, parameters);
 
         result.AddRange(rightResult.Skip(1));
 

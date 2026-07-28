@@ -37,12 +37,12 @@ public class Result
 
     public override string ToString()
     {
-        return $"{word}\n {string.Join(System.Environment.NewLine, lexicalEntries.Select((i, index) => $"  {i.GetPhonotic()} {i.lexicalCategory} :\n{i.ToString()}"))}";
+        return $"{word}\n {string.Join(System.Environment.NewLine, lexicalEntries.Select((i, index) => $"  {i.GetPhonetic()} {i.lexicalCategory} :\n{i.ToString()}"))}";
     }
 
     public string AsFlatString()
     {
-        return $"{word}\n {string.Join(System.Environment.NewLine, lexicalEntries.Select(i => $"{i.GetPhonotic()} {i.lexicalCategory} :\n{i.AsFlatString()}"))}";
+        return $"{word}\n {string.Join(System.Environment.NewLine, lexicalEntries.Select(i => $"{i.GetPhonetic()} {i.lexicalCategory} :\n{i.AsFlatString()}"))}";
     }
 }
 
@@ -56,15 +56,15 @@ public class Lexicalentry
 
     public override string ToString()
     {
-        return string.Join(System.Environment.NewLine, entries.Select((i, index) => $"\tentries({index}) {i.GetPhonotic()}:\n {i.ToString()}"));
+        return string.Join(System.Environment.NewLine, entries.Select((i, index) => $"\tentries({index}) {i.GetPhonetic()}:\n {i.ToString()}"));
     }
 
     public string AsFlatString()
     {
-        return string.Join(System.Environment.NewLine, entries.Select(i => $"{i.GetPhonotic()}{i.AsFlatString()}"));
+        return string.Join(System.Environment.NewLine, entries.Select(i => $"{i.GetPhonetic()}{i.AsFlatString()}"));
     }
 
-    public string GetPhonotic()
+    public string GetPhonetic()
     {
         if (pronunciations == null)
         {
@@ -96,7 +96,7 @@ public class Entry
     }
 
 
-    public string GetPhonotic()
+    public string GetPhonetic()
     {
         if (pronunciations == null)
         {

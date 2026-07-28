@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Ogc.GML;
 using IRI.Maptor.Sta.Spatial.Primitives;

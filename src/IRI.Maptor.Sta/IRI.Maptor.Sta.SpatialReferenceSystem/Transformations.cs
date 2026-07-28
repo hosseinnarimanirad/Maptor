@@ -5,7 +5,7 @@ using IRI.Maptor.Sta.Metrics;
 using IRI.Maptor.Sta.Mathematics;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem.Models;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 
 namespace IRI.Maptor.Sta.SpatialReferenceSystem;
 
@@ -193,7 +193,7 @@ public static class Transformations
         where TLinear : LinearUnit, new()
         where TAngular : AngularUnit, new()
     {
-        //check if cartesian is not Right Handed, do the appropreate task!
+        //check if cartesian is not Right Handed, do the appropriate task!
 
         ICartesian3D shiftedCoordinate = averageTerrestrial.Shift(ellipsoid.DatumTranslation);
 
@@ -223,15 +223,15 @@ public static class Transformations
         //check if not geodetic is Right Handed
         Cartesian3DPoint<T> semiGeodetic = geodetic.ToCartesian<T>();
 
-        double tempOrigionX = geodetic.Datum.DatumTranslation.X.ChangeTo<T>().Value;
+        double tempOriginX = geodetic.Datum.DatumTranslation.X.ChangeTo<T>().Value;
 
-        double tempOrigionY = geodetic.Datum.DatumTranslation.Y.ChangeTo<T>().Value;
+        double tempOriginY = geodetic.Datum.DatumTranslation.Y.ChangeTo<T>().Value;
 
-        double tempOrigionZ = geodetic.Datum.DatumTranslation.Z.ChangeTo<T>().Value;
+        double tempOriginZ = geodetic.Datum.DatumTranslation.Z.ChangeTo<T>().Value;
 
         Matrix rotationMatrix = Transformations.CalculateEulerElementMatrix(geodetic.Datum.DatumMisalignment);
 
-        Matrix transferMatrix = new Matrix(new double[][] { new double[] { tempOrigionX, tempOrigionY, tempOrigionZ } });
+        Matrix transferMatrix = new Matrix(new double[][] { new double[] { tempOriginX, tempOriginY, tempOriginZ } });
 
         Matrix tempSemiGeodetic = new Matrix(new double[][]{new double[]{semiGeodetic.X.Value,
                                                                             semiGeodetic.Y.Value,
@@ -493,13 +493,13 @@ public static class Transformations
     public static Cartesian3D<T> LocalAstronomicToLocalGeodetic<T>(ICartesian3D localAstronomic,
                                                                     AngularUnit initialAstronomicAzimuth,
                                                                     AngularUnit initialGeodeticAzimuth,
-                                                                    AngularUnit kessi,
+                                                                    AngularUnit xi,
                                                                     AngularUnit eta)
         where T : LinearUnit, new()
     {
         Matrix rZ = CalculateRotationMatrixAroundZ(initialAstronomicAzimuth.Subtract(initialGeodeticAzimuth));
 
-        Matrix rY = CalculateRotationMatrixAroundY(kessi.Negate());
+        Matrix rY = CalculateRotationMatrixAroundY(xi.Negate());
 
         Matrix rX = CalculateRotationMatrixAroundX(eta);
 
@@ -508,13 +508,13 @@ public static class Transformations
 
     public static Cartesian3D<T> LocalAstronomicToLocalGeodetic<T>(ICartesian3D localAstronomic,
                                                                    AngularUnit deltaAzimuth,
-                                                                   AngularUnit kessi,
+                                                                   AngularUnit xi,
                                                                    AngularUnit eta)
        where T : LinearUnit, new()
     {
         Matrix rZ = CalculateRotationMatrixAroundZ(deltaAzimuth);
 
-        Matrix rY = CalculateRotationMatrixAroundY(kessi.Negate());
+        Matrix rY = CalculateRotationMatrixAroundY(xi.Negate());
 
         Matrix rX = CalculateRotationMatrixAroundX(eta);
 
@@ -525,13 +525,13 @@ public static class Transformations
     public static Cartesian3D<T> LocalGeodeticToLocalAstronomic<T>(ICartesian3D localGeodetic,
                                                                    AngularUnit initialAstronomicAzimuth,
                                                                    AngularUnit initialGeodeticAzimuth,
-                                                                   AngularUnit kessi,
+                                                                   AngularUnit xi,
                                                                    AngularUnit eta)
        where T : LinearUnit, new()
     {
         Matrix rZ = CalculateRotationMatrixAroundZ((initialAstronomicAzimuth.Subtract(initialGeodeticAzimuth)).Negate());
 
-        Matrix rY = CalculateRotationMatrixAroundY(kessi);
+        Matrix rY = CalculateRotationMatrixAroundY(xi);
 
         Matrix rX = CalculateRotationMatrixAroundX(eta.Negate());
 
@@ -540,13 +540,13 @@ public static class Transformations
 
     public static Cartesian3D<T> LocalGeodeticToLocalAstronomic<T>(ICartesian3D localGeodetic,
                                                                    AngularUnit deltaAzimuth,
-                                                                   AngularUnit kessi,
+                                                                   AngularUnit xi,
                                                                    AngularUnit eta)
        where T : LinearUnit, new()
     {
         Matrix rZ = CalculateRotationMatrixAroundZ(deltaAzimuth.Negate());
 
-        Matrix rY = CalculateRotationMatrixAroundY(kessi);
+        Matrix rY = CalculateRotationMatrixAroundY(xi);
 
         Matrix rX = CalculateRotationMatrixAroundX(eta.Negate());
 
@@ -587,25 +587,25 @@ public static class Transformations
 
     #region HA, AP
 
-    public static Astronomical<T> ApparentPlaceToHorizontalAngle<T>(IAstronomical apparentPlace, AngularUnit localApparentSideralTime)
+    public static Astronomical<T> ApparentPlaceToHorizontalAngle<T>(IAstronomical apparentPlace, AngularUnit localApparentSiderealTime)
         where T : AngularUnit, new()
     {
 
         ICartesian3D tempCoordinate = apparentPlace.ToCartesian<Meter>();
 
-        Matrix rZ = CalculateRotationMatrixAroundZ(localApparentSideralTime);
+        Matrix rZ = CalculateRotationMatrixAroundZ(localApparentSiderealTime);
 
         Matrix reflection = CalculateReflectionMatrix();
 
         return tempCoordinate.Rotate(reflection * rZ).ToAstronomicForm<T>(apparentPlace.HorizontalAngleRange);
     }
 
-    public static Astronomical<T> HorizontalAngleToApparentPlace<T>(IAstronomical horizontalAngle, AngularUnit localApparentSideralTime)
+    public static Astronomical<T> HorizontalAngleToApparentPlace<T>(IAstronomical horizontalAngle, AngularUnit localApparentSiderealTime)
         where T : AngularUnit, new()
     {
         ICartesian3D tempCoordinate = horizontalAngle.ToCartesian<Meter>();
 
-        Matrix rZ = CalculateRotationMatrixAroundZ(localApparentSideralTime.Negate());
+        Matrix rZ = CalculateRotationMatrixAroundZ(localApparentSiderealTime.Negate());
 
         Matrix reflection = CalculateReflectionMatrix();
 
@@ -616,22 +616,22 @@ public static class Transformations
 
     #region IT, AP
 
-    public static Cartesian3D<TLinear> ApparentPlaceToInstantaneous<TLinear>(IAstronomical apparentPlace, AngularUnit greenwichApparentSideralTime)
+    public static Cartesian3D<TLinear> ApparentPlaceToInstantaneous<TLinear>(IAstronomical apparentPlace, AngularUnit greenwichApparentSiderealTime)
         where TLinear : LinearUnit, new()
     {
         ICartesian3D tempCoordinate = apparentPlace.ToCartesian<TLinear>();
 
-        Matrix rZ = CalculateRotationMatrixAroundZ(greenwichApparentSideralTime);
+        Matrix rZ = CalculateRotationMatrixAroundZ(greenwichApparentSiderealTime);
 
         return (Cartesian3D<TLinear>)tempCoordinate.Rotate(rZ);
     }
 
     public static Astronomical<TAngular> InstantaneousToApparentPlace<TAngular>(ICartesian3D InstantaneousTerrestrial,
-                                                                                    AngularUnit greenwichApparentSideralTime,
+                                                                                    AngularUnit greenwichApparentSiderealTime,
                                                                                     AngleRange horizontalAngleRange)
         where TAngular : AngularUnit, new()
     {
-        Matrix rZ = CalculateRotationMatrixAroundZ(greenwichApparentSideralTime.Negate());
+        Matrix rZ = CalculateRotationMatrixAroundZ(greenwichApparentSiderealTime.Negate());
 
         return InstantaneousTerrestrial.Rotate(rZ).ToAstronomicForm<TAngular>(horizontalAngleRange);
     }

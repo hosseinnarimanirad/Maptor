@@ -1,4 +1,4 @@
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 
 public class VertexRelation<T> where T : IPoint
 {

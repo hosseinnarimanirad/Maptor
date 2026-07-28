@@ -4,7 +4,7 @@ using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Spatial.Analysis.Network;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Spatial.AdvancedStructures;
@@ -611,7 +611,7 @@ public static class Sta_GeometryExtensions
     public static List<Geometry<Point>> Simplify(
       this IEnumerable<Geometry<Point>> geometries,
       SimplificationType type,
-      SimplificationParameters paramters,
+      SimplificationParameters parameters,
       bool reduceToPoint = true)
     {
         try
@@ -623,11 +623,11 @@ public static class Sta_GeometryExtensions
 
             foreach (var geometry in geometries)
             {
-                var simplified = geometry.Simplify(type, paramters);
+                var simplified = geometry.Simplify(type, parameters);
 
                 if (!simplified.IsNullOrEmpty())
                 {
-                    result.Add(geometry.Simplify(type, paramters));
+                    result.Add(geometry.Simplify(type, parameters));
                 }
             }
 
@@ -639,7 +639,7 @@ public static class Sta_GeometryExtensions
                     //{
                     var length = result[g].GetEuclideanLength();
 
-                    if (length < paramters.DistanceThreshold)
+                    if (length < parameters.DistanceThreshold)
                     {
                         //result[g] = result[g].STPointOnSurface();
                         result[g] = result[g].GetLastPoint().AsGeometry(result[g].Srid);
@@ -651,7 +651,7 @@ public static class Sta_GeometryExtensions
                     //}
                 }
 
-                result = result.RemoveOverlappingPoints(paramters.DistanceThreshold!.Value);
+                result = result.RemoveOverlappingPoints(parameters.DistanceThreshold!.Value);
             }
 
             return result;

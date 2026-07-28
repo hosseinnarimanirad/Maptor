@@ -110,7 +110,7 @@ public class AdjacencyList<TNode, TWeight> : IEnumerable<TNode>
         {
             for (int j = 0; j < numberOfNodes; j++)
             {
-                this.AddDirectedEdgeUnsafly(nodes[i], nodes[j], adjacencyMatrix[i, j]);
+                this.AddDirectedEdgeUnsafely(nodes[i], nodes[j], adjacencyMatrix[i, j]);
             }
         }
     }
@@ -238,7 +238,7 @@ public class AdjacencyList<TNode, TWeight> : IEnumerable<TNode>
     /// <param name="weight">The weight of the edge.</param>
     /// <exception cref="ArgumentNullException">Thrown when firstNode or secondNode is null.</exception>
     /// <exception cref="KeyNotFoundException">Thrown when firstNode does not exist in the graph.</exception>
-    public void AddDirectedEdgeUnsafly(TNode firstNode, TNode secondNode, TWeight weight)
+    public void AddDirectedEdgeUnsafely(TNode firstNode, TNode secondNode, TWeight weight)
     {
         if (firstNode == null)
             throw new ArgumentNullException(nameof(firstNode));

@@ -25,7 +25,7 @@ using IRI.Maptor.Sta.Common.Exceptions;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
@@ -3591,7 +3591,7 @@ public abstract class MapViewModelBase : ViewModelBase
     //*****************************************RightClickOptions*****************************************************
     #region RightClickOptions
 
-    protected void RegisterRightClickMapOptions(System.Windows.FrameworkElement view, ILocateable dataContext)
+    protected void RegisterRightClickMapOptions(System.Windows.FrameworkElement view, ILocatable dataContext)
     {
         RequestRegisterMapOptions?.Invoke(new MapOptionsEventArgs<System.Windows.FrameworkElement>(view, dataContext));
     }

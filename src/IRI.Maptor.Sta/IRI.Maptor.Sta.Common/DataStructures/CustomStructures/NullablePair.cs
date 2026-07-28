@@ -7,7 +7,7 @@ using System.Text;
 
 namespace IRI.Maptor.Sta.DataStructures.CustomStructures;
 
-public struct NullabePair<TFirst, TSecond>
+public struct NullablePair<TFirst, TSecond>
 {
     private TFirst m_First;
 
@@ -25,7 +25,7 @@ public struct NullabePair<TFirst, TSecond>
         set { this.m_Second = value; }
     }
 
-    public NullabePair(TFirst first, TSecond second)
+    public NullablePair(TFirst first, TSecond second)
     {
         this.m_First = first;
 

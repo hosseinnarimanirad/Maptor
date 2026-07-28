@@ -62,7 +62,7 @@ public struct EigenvaluesEigenvectors
         get { return this.m_Eigenvectors; }
     }
 
-    public double[] Eigenvlaues
+    public double[] Eigenvalues
     {
         get { return this.m_Eigenvalues; }
     }

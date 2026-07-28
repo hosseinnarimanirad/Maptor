@@ -3,7 +3,7 @@ using IRI.Maptor.Sta.Common.Common.JsonConverters;
 using IRI.Maptor.Sta.Common.Primitives;
 using System.Text.Json.Serialization;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using System.Security.Cryptography;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;

@@ -3,7 +3,7 @@ using System.Text.Json.Nodes;
 
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Enums;
@@ -265,11 +265,11 @@ public static class GeoJson
         if (points.Count < 3)
             return true; // Not enough points for a valid ring
 
-        var isClockwize = SpatialUtility.IsClockwise(points);
+        var isClockwise = SpatialUtility.IsClockwise(points);
 
         // External rings must be counterclockwise (positive area)
         // Internal rings must be clockwise (negative area)
-        return isExternalRing ^ isClockwize;
+        return isExternalRing ^ isClockwise;
     }
 
     /// <summary>

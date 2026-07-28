@@ -40,7 +40,7 @@ public static class DbfFile
     //        //Truncate Scenario
     //        truncatedString = new string(value.TakeWhile((c, i) => encoding.GetByteCount(value.Substring(0, i + 1)) < length).ToArray());
 
-    //        System.Diagnostics.Trace.WriteLine("Truncation occured in writing the dbf file");
+    //        System.Diagnostics.Trace.WriteLine("Truncation occurred in writing the dbf file");
     //        System.Diagnostics.Trace.WriteLine($"Original String: {value}");
     //        System.Diagnostics.Trace.WriteLine($"Truncated String: {truncatedString}");
     //        System.Diagnostics.Trace.WriteLine($"Lost String: {value.Replace(truncatedString, string.Empty)}");
@@ -229,10 +229,10 @@ public static class DbfFile
 
             for (int j = 0; j < fields.Count; j++)
             {
-                int fieldLenth = fields[j].Length;
+                int fieldLength = fields[j].Length;
 
-                //values[j] = MapFunction[columns[j].Type](recordReader.ReadBytes(fieldLenth));
-                values.Add(fields[j].Name, _mapFunctions[fields[j].Type](recordReader.ReadBytes(fieldLenth)));
+                //values[j] = MapFunction[columns[j].Type](recordReader.ReadBytes(fieldLength));
+                values.Add(fields[j].Name, _mapFunctions[fields[j].Type](recordReader.ReadBytes(fieldLength)));
             }
 
             recordReader.Close();
@@ -410,9 +410,9 @@ public static class DbfFile
 
             for (int j = 0; j < columns.Count; j++)
             {
-                int fieldLenth = columns[j].Length;
+                int fieldLength = columns[j].Length;
 
-                values[j] = _mapFunctions[columns[j].Type](recordReader.ReadBytes(fieldLenth));
+                values[j] = _mapFunctions[columns[j].Type](recordReader.ReadBytes(fieldLength));
             }
 
             recordReader.Close();
@@ -622,7 +622,7 @@ public static class DbfFile
     //}
 
 
-    public static void Write(string dbfFileName, List<Dictionary<string, object>> attributes, Encoding encoding, bool overwirte = false)
+    public static void Write(string dbfFileName, List<Dictionary<string, object>> attributes, Encoding encoding, bool overwrite = false)
     {
         if (attributes == null || attributes.Count < 1)
         {
@@ -645,7 +645,7 @@ public static class DbfFile
         //make schema and mappings
         var mapping = MakeDbfFieldsAndMaps(attributes);
 
-        Write(dbfFileName, attributes, mapping, encoding, overwirte);
+        Write(dbfFileName, attributes, mapping, encoding, overwrite);
     }
 
     // 1400.02.03-comment
@@ -924,9 +924,9 @@ public static class DbfFile
 
             for (int j = 0; j < columns.Count; j++)
             {
-                int fieldLenth = columns[j].Length;
+                int fieldLength = columns[j].Length;
 
-                values[j] = mapFunctions[columns[j].Type](recordReader.ReadBytes(fieldLenth));
+                values[j] = mapFunctions[columns[j].Type](recordReader.ReadBytes(fieldLength));
             }
 
             recordReader.Close();

@@ -105,7 +105,7 @@ public partial class RasterSfcWindow : Window
 
         for (int i = 0; i < this.currentMTF.TransformCount; i++)
         {
-            this.dictionary[this.currentMTF.GetTrasnform(i)].IsChecked = true;
+            this.dictionary[this.currentMTF.GetTransform(i)].IsChecked = true;
         }
 
 

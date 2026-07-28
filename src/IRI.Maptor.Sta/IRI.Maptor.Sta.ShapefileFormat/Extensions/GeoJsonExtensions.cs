@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
@@ -72,7 +72,7 @@ public static class GeoJsonExtensions
         }
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static EsriPoint ToEsriPoint(GeoJsonPoint geometry, bool isLongitudeFirst, int srid, Func<IPoint, IPoint> mapFunction)
     {
         var point = geometry.AsEsriPoint(isLongitudeFirst, srid);
@@ -80,7 +80,7 @@ public static class GeoJsonExtensions
         return mapFunction == null ? point : (EsriPoint)mapFunction(point);
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static EsriMultiPoint ToEsriMultiPoint(GeoJsonMultiPoint geometry, bool isLongitudeFirst, int srid, Func<IPoint, IPoint> mapFunction)
     {
         if (geometry.IsNullOrEmpty())

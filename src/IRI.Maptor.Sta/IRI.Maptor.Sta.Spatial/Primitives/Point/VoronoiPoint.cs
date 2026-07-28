@@ -36,10 +36,10 @@ public class VoronoiPoint
 
         Y = position.Y;
 
-        NeigboursCode = new List<int>();
+        NeighboursCode = new List<int>();
     }
 
-    public List<int> NeigboursCode;
+    public List<int> NeighboursCode;
 
     public override string ToString()
     {
@@ -47,7 +47,7 @@ public class VoronoiPoint
 
         //temp.Append(string.Format("X:{0}, Y:{1}, Neighbours:", X.ToString(), Y.ToString()));
 
-        //foreach (int item in NeigboursCode)
+        //foreach (int item in NeighboursCode)
         //{
         //    temp.Append(string.Format(", {0}", item.ToString()));
         //}
@@ -57,8 +57,8 @@ public class VoronoiPoint
         return string.Format("X:{0}, Y:{1}, Triangle{2}:", X.ToString(), Y.ToString(), TriangleCode);
     }
 
-    // dar soorate neveshtane hamsayeha dat methode ToString()
-    // ba tagire hamsayeha hascode nogata ham avaz mishavad!
+    // dar soorate neveshtane hamsayeha dat method ToString()
+    // ba tagire hamsayeha hashcode nogata ham avaz mishavad!
     public override int GetHashCode()
     {
         return ToString().GetHashCode();

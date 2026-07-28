@@ -237,7 +237,7 @@ public static class DbfFieldMappings
             //Truncate Scenario
             truncatedString = new string(value.TakeWhile((c, i) => encoding.GetByteCount(value.Substring(0, i + 1)) < length).ToArray());
 
-            System.Diagnostics.Trace.WriteLine("Truncation occured in writing the dbf file");
+            System.Diagnostics.Trace.WriteLine("Truncation occurred in writing the dbf file");
             System.Diagnostics.Trace.WriteLine($"Original String: {value}");
             System.Diagnostics.Trace.WriteLine($"Truncated String: {truncatedString}");
             System.Diagnostics.Trace.WriteLine($"Lost String: {value.Replace(truncatedString, string.Empty)}");

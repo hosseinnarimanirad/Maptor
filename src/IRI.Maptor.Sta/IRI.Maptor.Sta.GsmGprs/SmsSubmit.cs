@@ -9,7 +9,7 @@ public class SmsSubmit
     //*********************GSM 03.40v5.8.1 Release 1996*********************
     //
     //
-    //Basic Elemnts of the SMS-Submit Type:
+    //Basic Elements of the SMS-Submit Type:
     //
     //ABBR.     REFERENCE                   PROVISION   REPRESENTATION
     //-----     ---------                   ---------   --------------
@@ -57,7 +57,7 @@ public class SmsSubmit
     //Is formatted according to the formatting rules of address fields.
 
     //----------------TP-PID------------------//
-    //consist of one octet, and the bits in the octet are used as folloews:
+    //consist of one octet, and the bits in the octet are used as follows:
     //MORE ON P.42, GSM 03.40
 
 
@@ -78,7 +78,7 @@ public class SmsSubmit
     private TP_ReplyPath m_ReplyPath = TP_ReplyPath.ReplyPathNotSet;
     //end of first octet
 
-    private int m_MessageReferece = 0;
+    private int m_MessageReference = 0;
 
     private AddressField.Address DestinationAddress;
 
@@ -105,7 +105,7 @@ public class SmsSubmit
                     (int)m_UserDataHeaderIndicator +
                     (int)m_ReplyPath).ToString("X2");
 
-        result += ((int)m_MessageReferece).ToString("X2");
+        result += ((int)m_MessageReference).ToString("X2");
 
         result += destinationNumber.ToString();
 

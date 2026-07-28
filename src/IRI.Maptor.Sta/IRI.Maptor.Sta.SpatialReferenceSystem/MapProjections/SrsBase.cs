@@ -1,4 +1,4 @@
-﻿using IRI.Maptor.Sta.Common.Abstrations;
+﻿using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Common.Primitives;
 using Ellipsoid = IRI.Maptor.Sta.SpatialReferenceSystem.Ellipsoid<IRI.Maptor.Sta.Metrics.Meter, IRI.Maptor.Sta.Metrics.Degree>;
 

@@ -94,7 +94,7 @@ namespace IRI.Maptor.Sta.Spatial.Services.Google
             var code = context.Request.QueryString.Get("code");
             var incoming_state = context.Request.QueryString.Get("state");
 
-            // Compares the receieved state to the expected value, to ensure that
+            // Compares the received state to the expected value, to ensure that
             // this app made the request which resulted in authorization.
             if (incoming_state != state)
             {

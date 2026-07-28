@@ -40,10 +40,10 @@ public class WorldfileMatrix16bit : Worldfile
         }
     }
 
-    public Int16 this[int rowNumber, int columNumber]
+    public Int16 this[int rowNumber, int columnNumber]
     {
-        get => this._values[rowNumber, columNumber];
-        set => this._values[rowNumber, columNumber] = value;
+        get => this._values[rowNumber, columnNumber];
+        set => this._values[rowNumber, columnNumber] = value;
     }
 
 

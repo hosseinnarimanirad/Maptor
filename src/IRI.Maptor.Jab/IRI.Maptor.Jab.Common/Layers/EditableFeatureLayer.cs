@@ -16,7 +16,7 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Jab.Common.ViewModels;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Jab.Controls.MapOptions;
 using IRI.Maptor.Jab.Controls.MapMarkers;
@@ -127,7 +127,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     #region Actions
 
-    public Action<FrameworkElement, MouseButtonEventArgs, ILocateable>? RequestRightClickOptions;
+    public Action<FrameworkElement, MouseButtonEventArgs, ILocatable>? RequestRightClickOptions;
 
     public Action? RequestRemoveRightClickOptions;
 

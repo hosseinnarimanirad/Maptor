@@ -195,7 +195,7 @@ public class Triangle
                         (semiPerimeter - thirdFirstLength));
     }
 
-    public double CalculatePrimeter()
+    public double CalculatePerimeter()
     {
         //double firstSecondLength = this.FirstPoint.CalculateDistance(this.SecondPoint);
 
@@ -346,10 +346,10 @@ public class Triangle
 
         double c = FirstSecondSide;
 
-        double primeter = a + b + c;
+        double perimeter = a + b + c;
 
-        return new Point((a * FirstPoint.X + b * SecondPoint.X + c * ThirdPoint.X) / primeter,
-                            (a * FirstPoint.Y + b * SecondPoint.Y + c * ThirdPoint.Y) / primeter);
+        return new Point((a * FirstPoint.X + b * SecondPoint.X + c * ThirdPoint.X) / perimeter,
+                            (a * FirstPoint.Y + b * SecondPoint.Y + c * ThirdPoint.Y) / perimeter);
     }
     //((a2 + b2 − c2)(a2  − b2 + c2):(a2 + b2  − c2)( − a2 + b2 + c2):(a2 − b2 + c2)( − a2 + b2 + c2)).
 

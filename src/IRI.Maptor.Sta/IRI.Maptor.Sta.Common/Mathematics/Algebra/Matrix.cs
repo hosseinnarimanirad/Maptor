@@ -20,11 +20,11 @@ public class Matrix
     // arrays, while the double[,] constructor takes rows ([row, column])
     protected double[][] Element = [];
 
-    public double this[int rowNumber, int columNumber]
+    public double this[int rowNumber, int columnNumber]
     {
-        get { return this.GetValue(rowNumber, columNumber); }
+        get { return this.GetValue(rowNumber, columnNumber); }
 
-        set { this.SetValue(rowNumber, columNumber, value); }
+        set { this.SetValue(rowNumber, columnNumber, value); }
     }
 
     public int NumberOfRows => this.Element[0].Length;
@@ -35,7 +35,7 @@ public class Matrix
 
     public double Determinant => CalculateDeterminant();
 
-    public double SumOfElements => CalculateSumOfElemets();
+    public double SumOfElements => CalculateSumOfElements();
 
     #endregion
 
@@ -277,16 +277,16 @@ public class Matrix
       
     /// <summary>
     /// Returns the (n-1)x(n-1) submatrix obtained by removing row
-    /// <paramref name="rowNumber"/> and column <paramref name="columNumber"/>.
+    /// <paramref name="rowNumber"/> and column <paramref name="columnNumber"/>.
     /// The source matrix is not modified.
     /// </summary>
-    public Matrix CofactorMatrixOf(int rowNumber, int columNumber)
+    public Matrix CofactorMatrixOf(int rowNumber, int columnNumber)
     {
         int rows = this.NumberOfRows;
 
         int columns = this.NumberOfColumns;
 
-        if (rows <= rowNumber || columns <= columNumber)
+        if (rows <= rowNumber || columns <= columnNumber)
         {
             throw new OutOfBoundIndexException();
         }
@@ -297,7 +297,7 @@ public class Matrix
 
         for (int c = 0; c < columns; c++)
         {
-            if (c == columNumber) continue;
+            if (c == columnNumber) continue;
 
             double[] sourceColumn = Element[c];
 
@@ -795,7 +795,7 @@ public class Matrix
         return result;
     }
 
-    private double CalculateSumOfElemets()
+    private double CalculateSumOfElements()
     {
         int rows = this.NumberOfRows;
 
@@ -815,7 +815,7 @@ public class Matrix
         return result;
     }
 
-    public double CalculateSumOfNonDiagonalElemets()
+    public double CalculateSumOfNonDiagonalElements()
     {
         int rows = this.NumberOfRows;
 
@@ -1179,51 +1179,51 @@ public class Matrix
         return true;
     }
 
-    private double GetValue(int rowNumber, int columNumber)
+    private double GetValue(int rowNumber, int columnNumber)
     {
-        if (rowNumber > this.NumberOfRows || columNumber > this.NumberOfColumns ||
-                rowNumber < 0 || columNumber < 0)
+        if (rowNumber > this.NumberOfRows || columnNumber > this.NumberOfColumns ||
+                rowNumber < 0 || columnNumber < 0)
         {
             throw new OutOfBoundIndexException();
         }
         else
         {
-            return Element[columNumber][rowNumber];
+            return Element[columnNumber][rowNumber];
         }
     }
 
-    private void SetValue(int rowNumber, int columNumber, double value)
+    private void SetValue(int rowNumber, int columnNumber, double value)
     {
-        if (rowNumber > this.NumberOfRows || columNumber > this.NumberOfColumns ||
-                rowNumber < 0 || columNumber < 0)
+        if (rowNumber > this.NumberOfRows || columnNumber > this.NumberOfColumns ||
+                rowNumber < 0 || columnNumber < 0)
         {
             throw new OutOfBoundIndexException();
         }
         else
         {
-            this.Element[columNumber][rowNumber] = value;
+            this.Element[columnNumber][rowNumber] = value;
         }
     }
 
-    private bool IsOutOfRange(int rowNumber, int columNumber)
+    private bool IsOutOfRange(int rowNumber, int columnNumber)
     {
         return rowNumber >= this.NumberOfRows ||
-                columNumber >= this.NumberOfColumns ||
+                columnNumber >= this.NumberOfColumns ||
                 rowNumber < 0 ||
-                columNumber < 0;
+                columnNumber < 0;
     }
 
     // single value means adjacent cells are all zero
-    public bool AreAllAdjacentCellsZero(int rowNumber, int columNumber)
+    public bool AreAllAdjacentCellsZero(int rowNumber, int columnNumber)
     {
         for (int i = rowNumber - 1; i <= rowNumber + 1; i++)
         {
-            for (int j = columNumber - 1; j <= columNumber + 1; j++)
+            for (int j = columnNumber - 1; j <= columnNumber + 1; j++)
             {
                 if (IsOutOfRange(i, j))
                     continue;
 
-                if (i == rowNumber && j == columNumber)
+                if (i == rowNumber && j == columnNumber)
                     continue;
 
                 if (this[i, j] != 0)
@@ -1281,7 +1281,7 @@ public class Matrix
 
         EigenvaluesEigenvectors result = GetEigenvaluesEigenvectors();
 
-        return result.Eigenvlaues;
+        return result.Eigenvalues;
     }
 
     /// <summary>

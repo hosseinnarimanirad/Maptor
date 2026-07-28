@@ -1,13 +1,13 @@
 using System;
 
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Jab.Core;
 
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
 
-public class MapOptionsViewModel : Notifier, ILocateable
+public class MapOptionsViewModel : Notifier, ILocatable
 {
     private Point _point = Point.NaN;
 

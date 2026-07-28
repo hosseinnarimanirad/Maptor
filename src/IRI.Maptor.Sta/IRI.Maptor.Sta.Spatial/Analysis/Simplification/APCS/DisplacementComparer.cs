@@ -1,7 +1,7 @@
 using IRI.Maptor.Sta.Common.Primitives;
 using System.Collections.Generic;
 using System;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 
 namespace IRI.Maptor.Sta.Spatial.Analysis;
 

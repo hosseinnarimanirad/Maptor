@@ -24,7 +24,7 @@ public class StatisticsSummary
         return $"Min: {Min:N2}, Max: {Max:N2}, Mean: {Mean:N2}, FirstQuartile: {FirstQuartile:N2}, SecondQuartile (Median): {Median:N2}, ThirdQuartile: {ThirdQuartile:N2}";
     }
 
-    public string AsCsvLine(string seperator, string numberFormat)
+    public string AsCsvLine(string separator, string numberFormat)
     {
         var result = new List<string>()
         {
@@ -36,6 +36,6 @@ public class StatisticsSummary
             ThirdQuartile.ToString(numberFormat),            
         };
 
-        return string.Join(seperator, result);
+        return string.Join(separator, result);
     }
 }

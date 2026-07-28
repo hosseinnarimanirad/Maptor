@@ -12,7 +12,7 @@ using IRI.Maptor.Jab.Common.Events;
 using IRI.Maptor.Jab.Common.Helpers;
 using IRI.Maptor.Jab.Common.ViewModels;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Controls.MapMarkers;
 using IRI.Maptor.Jab.Common.Cartography.Symbologies;
@@ -75,7 +75,7 @@ public class PolyBezierLayer : SymbolizableLayer
 
     public Action<PolyBezierLayer> RequestRefresh;
 
-    public Action<System.Windows.FrameworkElement, MouseButtonEventArgs, ILocateable> RequestRightClickOptions;
+    public Action<System.Windows.FrameworkElement, MouseButtonEventArgs, ILocatable> RequestRightClickOptions;
 
     public Action RequestRemoveRightClickOptions;
 

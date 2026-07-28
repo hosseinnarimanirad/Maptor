@@ -104,7 +104,7 @@ public class Spherical<TLinear, TAngular> : ISpherical
         : this(radius, horizontalAngle, verticalAngle, AxisType.RightHanded) { }
 
     public Spherical(ILinearCollection radius, IAngularCollection horizontalAngle, IAngularCollection verticalAngle, AxisType handedness)
-        : this("Shperical", radius, horizontalAngle, verticalAngle, handedness) { }
+        : this("Spherical", radius, horizontalAngle, verticalAngle, handedness) { }
 
     public Spherical(string name, ILinearCollection radius, IAngularCollection horizontalAngle, IAngularCollection verticalAngle, AxisType handedness)
     {

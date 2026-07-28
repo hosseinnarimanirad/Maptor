@@ -216,7 +216,7 @@ public class IntervalTree<T> where T : IComparable
 
     private IntervalTreeNode<T> Search(IntervalTreeNode<T> parentNode, T lowValue, T highValue)
     {
-        while (!object.Equals(parentNode, nilNode) && !AreOverlaping(parentNode, lowValue, highValue))
+        while (!object.Equals(parentNode, nilNode) && !AreOverlapping(parentNode, lowValue, highValue))
         {
             if (!object.ReferenceEquals(nilNode, parentNode.LeftChild) && parentNode.LeftChild.Max.CompareTo(lowValue) >= 0)
             {
@@ -231,7 +231,7 @@ public class IntervalTree<T> where T : IComparable
         return object.ReferenceEquals(parentNode, nilNode) ? null : parentNode;
     }
 
-    private bool AreOverlaping(IntervalTreeNode<T> interval, T low, T high)
+    private bool AreOverlapping(IntervalTreeNode<T> interval, T low, T high)
     {
         return interval.Low.CompareTo(high) < 0 && low.CompareTo(interval.High) < 0;
     }

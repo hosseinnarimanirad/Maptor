@@ -173,7 +173,7 @@ public static class RasterHelper
             }
 
             stopwatch.Stop();
-            var ellapsedtime = stopwatch.ElapsedMilliseconds;
+            var elapsedtime = stopwatch.ElapsedMilliseconds;
             stopwatch.Restart();
 
             return new GeoReferencedImage(ImageUtility.AsByteArray(result), boundingBox.Transform(MapProjects.WebMercatorToGeodeticWgs84));
@@ -234,13 +234,13 @@ public static class RasterHelper
             }
         }
         stopwatch.Stop();
-        var ellapsedtime = stopwatch.ElapsedMilliseconds;
+        var elapsedtime = stopwatch.ElapsedMilliseconds;
         stopwatch.Restart();
 
 
         result = Conversion.RgbToColorImage(new RgbValues(red, green, blue));
         stopwatch.Stop();
-        var ellapsedtime2 = stopwatch.ElapsedMilliseconds;
+        var elapsedtime2 = stopwatch.ElapsedMilliseconds;
         result.Save("result.bmp");
 
     }
@@ -290,7 +290,7 @@ public static class RasterHelper
         }
 
         stopwatch.Stop();
-        var ellapsedtime = stopwatch.ElapsedMilliseconds;
+        var elapsedtime = stopwatch.ElapsedMilliseconds;
         stopwatch.Restart();
 
         bitmap.Save("result2.bmp");

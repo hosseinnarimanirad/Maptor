@@ -67,7 +67,7 @@ public class EsriPrjTreeNode
 
         Values = new List<string>() { title ?? $"GCS_{ellipsoid.EsriName}" };
 
-        //esri write zero for Inverse Flattening of shperes!
+        //esri write zero for Inverse Flattening of spheres!
         var inverseFlattening = double.IsInfinity(ellipsoid.InverseFlattening) ? 0 : ellipsoid.InverseFlattening;
 
         var spheroid = new EsriPrjTreeNode(EsriPrjFile._spheroid, ellipsoid.EsriName, ellipsoid.SemiMajorAxis.Value.AsExactString(), inverseFlattening.AsExactString());
@@ -168,13 +168,13 @@ public class EsriPrjTreeNode
             }
         }
 
-        var zeroLevelBrakets = brackets.Where(i => i.Level == 0).ToList();
+        var zeroLevelBrackets = brackets.Where(i => i.Level == 0).ToList();
 
         List<Tuple<int, int>> ranges = new List<Tuple<int, int>>();
 
-        for (int i = 0; i < zeroLevelBrakets.Count / 2; i++)
+        for (int i = 0; i < zeroLevelBrackets.Count / 2; i++)
         {
-            ranges.Add(new Tuple<int, int>(zeroLevelBrakets[2 * i].Index, zeroLevelBrakets[2 * i + 1].Index));
+            ranges.Add(new Tuple<int, int>(zeroLevelBrackets[2 * i].Index, zeroLevelBrackets[2 * i + 1].Index));
         }
 
         return ranges.Select(i => input.Substring(i.Item1 + 1, i.Item2 - i.Item1 - 1)).ToList();

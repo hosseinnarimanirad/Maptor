@@ -5,7 +5,7 @@ using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.Spatial.Helpers;
@@ -19,7 +19,7 @@ public static class SpatialUtility
     #region Length
 
     /// <summary>
-    /// return square (^2) of the Euclidian distance between two
+    /// return square (^2) of the Euclidean distance between two
     /// </summary>
     /// <param name="first"></param>
     /// <param name="second"></param>
@@ -34,7 +34,7 @@ public static class SpatialUtility
     }
 
     /// <summary>
-    /// Euclidian distance
+    /// Euclidean distance
     /// </summary>
     /// <param name="first"></param>
     /// <param name="second"></param>

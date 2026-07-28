@@ -90,8 +90,8 @@ public static class OgcFilterExtensions
             case OgcCrosses ogcCrosses:
                 return ParseFilter(ogcCrosses);
 
-            case OgcEqualsSpatialy ogcEqualsSpatialy:
-                return ParseFilter(ogcEqualsSpatialy);
+            case OgcEqualsSpatially ogcEqualsSpatially:
+                return ParseFilter(ogcEqualsSpatially);
 
             case OgcDWithin ogcDWithin:
                 return ParseFilter(ogcDWithin);
@@ -423,7 +423,7 @@ public static class OgcFilterExtensions
         return f => true; // Placeholder: returns true for all features
     }
 
-    private static Func<Feature<Point>, bool> ParseFilter(this OgcEqualsSpatialy predicate)
+    private static Func<Feature<Point>, bool> ParseFilter(this OgcEqualsSpatially predicate)
     {
         // TODO: Implement Equals (spatial) filter
         // Requires parsing GML geometry from predicate.Expressions

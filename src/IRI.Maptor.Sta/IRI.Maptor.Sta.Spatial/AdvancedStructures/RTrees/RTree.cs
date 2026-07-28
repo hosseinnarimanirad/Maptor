@@ -19,13 +19,13 @@ public class RTree
 
         foreach (Rectangle item in rectangles)
         {
-            double areaEnlargment = item.GetEnlargementArea(rectangle);// temp.GetArea() - rectangles[i].GetArea();
+            double areaEnlargement = item.GetEnlargementArea(rectangle);// temp.GetArea() - rectangles[i].GetArea();
 
-            if (areaEnlargment < tempValue)
+            if (areaEnlargement < tempValue)
             {
                 result = i;
 
-                tempValue = areaEnlargment;
+                tempValue = areaEnlargement;
             }
             i++;
         }
@@ -184,13 +184,13 @@ public class RTree
                 {
                     double firstEnlargement = firstNode.Boundary.GetEnlargementArea(y.GetPointer(i).Boundary);
 
-                    double secondEnlaregement = secondNode.Boundary.GetEnlargementArea(y.GetPointer(i).Boundary);
+                    double secondEnlargement = secondNode.Boundary.GetEnlargementArea(y.GetPointer(i).Boundary);
 
-                    if (firstEnlargement < secondEnlaregement)
+                    if (firstEnlargement < secondEnlargement)
                     {
                         firstNode.AddPointer(y.GetPointer(i));
                     }
-                    else if (firstEnlargement > secondEnlaregement)
+                    else if (firstEnlargement > secondEnlargement)
                     {
                         secondNode.AddPointer(y.GetPointer(i));
                     }

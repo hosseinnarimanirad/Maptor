@@ -200,15 +200,15 @@ public class Ellipsoidal<TLinear, TAngular> : IEllipsoidal
 
         double tempSemiMajor = Datum.SemiMajorAxis.Value;
 
-        //double tempOrigionX = this.AssociatedEllipsoid.Origion.X.Value;
+        //double tempOriginX = this.AssociatedEllipsoid.Origin.X.Value;
 
-        //double tempOrigionY = this.AssociatedEllipsoid.Origion.Y.Value;
+        //double tempOriginY = this.AssociatedEllipsoid.Origin.Y.Value;
 
-        //double tempOrigionZ = this.AssociatedEllipsoid.Origion.Z.Value;
+        //double tempOriginZ = this.AssociatedEllipsoid.Origin.Z.Value;
 
         //Matrix rotationMatrix = Transformation.CalculateEulerElementMatrix(AssociatedEllipsoid.Omega, AssociatedEllipsoid.Phi, AssociatedEllipsoid.Kappa);
 
-        //Matrix transferMatrix = new Matrix(new double[][] { new double[] { tempOrigionX, tempOrigionY, tempOrigionZ } });
+        //Matrix transferMatrix = new Matrix(new double[][] { new double[] { tempOriginX, tempOriginY, tempOriginZ } });
 
         for (int i = 0; i < this.NumberOfPoints; i++)
         {

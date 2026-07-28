@@ -1,6 +1,6 @@
 ﻿using Microsoft.SqlServer.Types;
 
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.ShapefileFormat;
 using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Ket.SqlServerSpatialExtension.Helpers;

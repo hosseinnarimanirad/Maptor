@@ -11,7 +11,7 @@ public static class WebMercatorUtility
 {
     // 1401.03.16
     // There are 3 space
-    // GROUND; WEB MECATOR MAP; SCREEN
+    // GROUND; WEB MERCATOR MAP; SCREEN
     // 
     private const int ImageSize = 256;
 

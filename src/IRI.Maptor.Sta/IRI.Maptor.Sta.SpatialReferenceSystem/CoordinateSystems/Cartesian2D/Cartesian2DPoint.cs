@@ -16,7 +16,7 @@ public struct Cartesian2DPoint<T> : ICartesian2DPoint
 
     private LinearUnit m_Y;
 
-    private static readonly int auxilaryValue1 = 1, auxilaryValue2 = 4;
+    private static readonly int auxiliaryValue1 = 1, auxiliaryValue2 = 4;
 
     #endregion
 
@@ -84,8 +84,8 @@ public struct Cartesian2DPoint<T> : ICartesian2DPoint
 
     public static CoordinateRegion GetRegion(double x, double y)
     {
-        return (CoordinateRegion)((int)Math.Pow(2, Math.Sign(x) + auxilaryValue1) |
-                                    (int)Math.Pow(2, Math.Sign(y) + auxilaryValue2));
+        return (CoordinateRegion)((int)Math.Pow(2, Math.Sign(x) + auxiliaryValue1) |
+                                    (int)Math.Pow(2, Math.Sign(y) + auxiliaryValue2));
     }
 
     public PolarPoint<TRadius, TAngle> ToPolar<TRadius, TAngle>(AngleRange range)

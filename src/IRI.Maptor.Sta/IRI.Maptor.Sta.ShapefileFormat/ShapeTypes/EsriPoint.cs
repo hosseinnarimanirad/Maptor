@@ -3,7 +3,7 @@
 
 using IRI.Maptor.Sta.Common.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
@@ -111,7 +111,7 @@ public class EsriPoint : EsriShapeBase, IPoint
     }
      
     /// <summary>
-    /// Returs Kml representation of the point. Note: Point must be in Lat/Long System
+    /// Returns Kml representation of the point. Note: Point must be in Lat/Long System
     /// </summary>
     /// <returns></returns>
     public override IRI.Maptor.Sta.KmlFormat.Primitives.PlacemarkType AsPlacemark(Func<Point, Point> projectToGeodeticFunc = null, byte[] color = null)

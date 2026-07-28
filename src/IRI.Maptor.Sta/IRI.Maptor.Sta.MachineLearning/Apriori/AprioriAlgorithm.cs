@@ -9,13 +9,13 @@ namespace IRI.Maptor.Sta.MachineLearning
     {
         public static (List<TBasket> outBaskets, List<Itemset> outItemsets) DoStep<TBasket>(
             List<TBasket> baskets,
-            List<Itemset> frequenctItemsets,
+            List<Itemset> frequentItemsets,
             Func<TBasket, IEnumerable<string>> func,
             Action<TBasket, int> removeItemAtFunc,
             int n,
             int minSupport)
         {
-            var distinctItemsets = new HashSet<string>(frequenctItemsets.SelectMany(s => s.SortedTuple));
+            var distinctItemsets = new HashSet<string>(frequentItemsets.SelectMany(s => s.SortedTuple));
 
             foreach (var basket in baskets)
             {
@@ -31,9 +31,9 @@ namespace IRI.Maptor.Sta.MachineLearning
                 }
             }
 
-            var frequentItemsets = baskets.Where(a => func(a).Any()).ToList();
+            var nonEmptyBaskets = baskets.Where(a => func(a).Any()).ToList();
 
-            return CreateFrequentItemSet(frequentItemsets, n, func, minSupport);
+            return CreateFrequentItemSet(nonEmptyBaskets, n, func, minSupport);
         }
 
         public static (List<TBasket> articles, List<Itemset> itemsets) CreateFrequentItemSet<TBasket>(List<TBasket> articles, int n, Func<TBasket, IEnumerable<string>> func, int minSupport)

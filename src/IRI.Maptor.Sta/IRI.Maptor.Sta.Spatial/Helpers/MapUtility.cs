@@ -4,13 +4,13 @@ namespace IRI.Maptor.Sta.Spatial.Helpers;
 
 public class MapUtility
 {
-    public static Func<Point, Point> GetMapToScreen(BoundingBox mapExtent, double screenWidth, double screeenHeight)
+    public static Func<Point, Point> GetMapToScreen(BoundingBox mapExtent, double screenWidth, double screenHeight)
     {
         double scaleX = screenWidth / mapExtent.Width;
 
-        double scaleY = screeenHeight / mapExtent.Height;
+        double scaleY = screenHeight / mapExtent.Height;
 
-        return p => new Point((p.X - mapExtent.XMin) * scaleX, screeenHeight - (p.Y - mapExtent.YMin) * scaleY);
+        return p => new Point((p.X - mapExtent.XMin) * scaleX, screenHeight - (p.Y - mapExtent.YMin) * scaleY);
     }
 
 }

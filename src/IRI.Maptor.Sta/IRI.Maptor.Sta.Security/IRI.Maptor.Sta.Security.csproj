@@ -11,10 +11,10 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Hossein Narimani Rad</Authors>
     <Company>Maptor</Company>
-    <Description>A .NET standard library containing primitive types for hashing, cryptrography, etc.</Description>
+    <Description>A .NET standard library containing primitive types for hashing, cryptography, etc.</Description>
     <RepositoryUrl>https://github.com/hosseinnarimanirad/Maptor/tree/master/src/IRI.Maptor.Sta/IRI.Maptor.Sta.Security</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>cryptrography</PackageTags>
+    <PackageTags>cryptography</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

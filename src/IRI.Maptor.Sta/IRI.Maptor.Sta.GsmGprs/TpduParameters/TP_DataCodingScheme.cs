@@ -47,9 +47,9 @@ public struct TP_DataCodingScheme
 
     private string octetRepresentation;
 
-    public TP_DataCodingScheme(int[] binaryRepresentaion)
+    public TP_DataCodingScheme(int[] binaryRepresentation)
     {
-        this.value = binaryRepresentaion;
+        this.value = binaryRepresentation;
 
         this.integerRepresentation = BaseConversionHelper.BinaryToDecimal(this.value);
 

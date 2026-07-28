@@ -10,7 +10,7 @@ namespace IRI.Maptor.Sta.Ogc;
 public abstract class SpatialOperator : OgcFilterBase { }
 
 [XmlType("Equals", Namespace = SldNamespaces.FES)]
-public class OgcEqualsSpatialy : SpatialOperator
+public class OgcEqualsSpatially : SpatialOperator
 {
     [XmlElement("expression")]
     public List<OgcExpression> Expressions { get; set; } = new List<OgcExpression>();

@@ -398,15 +398,15 @@ public class Cartesian3D<T> : ICartesian3D
 
         double e2TempValue = ellipsoid.FirstEccentricity * ellipsoid.FirstEccentricity;
 
-        //double tempOrigionX = ellipsoid.Origion.X.ChangeTo<TLinear>().Value;
+        //double tempOriginX = ellipsoid.Origin.X.ChangeTo<TLinear>().Value;
 
-        //double tempOrigionY = ellipsoid.Origion.Y.ChangeTo<TLinear>().Value;
+        //double tempOriginY = ellipsoid.Origin.Y.ChangeTo<TLinear>().Value;
 
-        //double tempOrigionZ = ellipsoid.Origion.Z.ChangeTo<TLinear>().Value;
+        //double tempOriginZ = ellipsoid.Origin.Z.ChangeTo<TLinear>().Value;
 
         //Matrix rotationMatrix = (Transformation.CalculateEulerElementMatrix(ellipsoid.Omega, ellipsoid.Phi, ellipsoid.Kappa)).Transpose();
 
-        //Matrix transferMatrix = new Matrix(new double[][] { new double[] { tempOrigionX, tempOrigionY, tempOrigionZ } });
+        //Matrix transferMatrix = new Matrix(new double[][] { new double[] { tempOriginX, tempOriginY, tempOriginZ } });
 
         for (int i = 0; i < this.NumberOfPoints; i++)
         {
@@ -495,15 +495,15 @@ public class Cartesian3D<T> : ICartesian3D
 
         double e2TempValue = ellipsoid.FirstEccentricity * ellipsoid.FirstEccentricity;
 
-        //double tempOrigionX = ellipsoid.Origion.X.ChangeTo<TLinear>().Value;
+        //double tempOriginX = ellipsoid.Origin.X.ChangeTo<TLinear>().Value;
 
-        //double tempOrigionY = ellipsoid.Origion.Y.ChangeTo<TLinear>().Value;
+        //double tempOriginY = ellipsoid.Origin.Y.ChangeTo<TLinear>().Value;
 
-        //double tempOrigionZ = ellipsoid.Origion.Z.ChangeTo<TLinear>().Value;
+        //double tempOriginZ = ellipsoid.Origin.Z.ChangeTo<TLinear>().Value;
 
         //Matrix rotationMatrix = (Transformation.CalculateEulerElementMatrix(ellipsoid.Omega, ellipsoid.Phi, ellipsoid.Kappa)).Transpose();
 
-        //Matrix transferMatrix = new Matrix(new double[][] { new double[] { tempOrigionX, tempOrigionY, tempOrigionZ } });
+        //Matrix transferMatrix = new Matrix(new double[][] { new double[] { tempOriginX, tempOriginY, tempOriginZ } });
 
         for (int i = 0; i < this.NumberOfPoints; i++)
         {

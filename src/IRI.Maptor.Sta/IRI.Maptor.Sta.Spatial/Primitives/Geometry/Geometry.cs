@@ -4,7 +4,7 @@ using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Spatial.IO.OgcSFA;
 using IRI.Maptor.Sta.Common.Primitives;
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
@@ -255,13 +255,13 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
             case GeometryType.Polygon:
             case GeometryType.MultiLineString:
-                var preceedingPartsPoints = Geometries?.Where((g, index) => index < partIndex).Select(g => g.TotalNumberOfPoints).DefaultIfEmpty(0).Sum() ?? 0;
-                return pointAddress.LocalPointIndex + preceedingPartsPoints;
+                var precedingPartsPoints = Geometries?.Where((g, index) => index < partIndex).Select(g => g.TotalNumberOfPoints).DefaultIfEmpty(0).Sum() ?? 0;
+                return pointAddress.LocalPointIndex + precedingPartsPoints;
 
             case GeometryType.MultiPolygon:
-                var preceedingPolygonPoints = Geometries?.Where((g, index) => index < polygonIndex!.Value).Select(g => g.TotalNumberOfPoints).DefaultIfEmpty(0).Sum() ?? 0;
-                var preceedingRingsPoints = Geometries[polygonIndex!.Value].Geometries?.Where((g, index) => index < partIndex).Select(g => g.TotalNumberOfPoints).DefaultIfEmpty(0).Sum() ?? 0;
-                return pointAddress.LocalPointIndex + preceedingRingsPoints + preceedingPolygonPoints;
+                var precedingPolygonPoints = Geometries?.Where((g, index) => index < polygonIndex!.Value).Select(g => g.TotalNumberOfPoints).DefaultIfEmpty(0).Sum() ?? 0;
+                var precedingRingsPoints = Geometries[polygonIndex!.Value].Geometries?.Where((g, index) => index < partIndex).Select(g => g.TotalNumberOfPoints).DefaultIfEmpty(0).Sum() ?? 0;
+                return pointAddress.LocalPointIndex + precedingRingsPoints + precedingPolygonPoints;
 
             case GeometryType.GeometryCollection:
             case GeometryType.CircularString:
@@ -679,7 +679,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
             case GeometryType.CompoundCurve:
             case GeometryType.CurvePolygon:
             case GeometryType.GeometryCollection:
-                System.Diagnostics.Debug.WriteLine($"****WARNNING: Geometry.cs -> Filter method invalid geometry type");
+                System.Diagnostics.Debug.WriteLine($"****WARNING: Geometry.cs -> Filter method invalid geometry type");
                 return Geometry<T>.Empty;
 
             case GeometryType.MultiPoint:
@@ -3628,7 +3628,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     // 1401.03.15
     /// <summary>
-    /// SD for Simplificed Segment Lengths / SD for Original Segment Lengths
+    /// SD for Simplified Segment Lengths / SD for Original Segment Lengths
     /// </summary>
     /// <param name="simplified"></param>
     /// <returns></returns>
@@ -4297,7 +4297,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
             for (int i = 0; i < this.Geometries.Count; i++)
             {
-                // Only the first outter ring is CCW
+                // Only the first outer ring is CCW
                 var shouldBeClockwise = i != 0;
 
                 var points = this.Geometries[i]?.Points;
@@ -4650,7 +4650,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
     {
         var ring = CreatePolygonRing(points, srid);
 
-        // outter ring must be CCW
+        // outer ring must be CCW
         if (ring.Points != null && SpatialUtility.IsClockwise(ring.Points))
         {
             ring.Points.Reverse();
@@ -4813,7 +4813,7 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
             if (isMasterRing)
             {
-                // outter ring must be CCW
+                // outer ring must be CCW
                 if (fixOrientation && SpatialUtility.IsClockwise(currentRing.Points))
                 {
                     currentRing.Reverse();
@@ -5124,16 +5124,16 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     //    double result = 0;
 
-    //    var wgs84Pionts = this.Points.Select(toWgs84Geodetic).ToList();
+    //    var wgs84Points = this.Points.Select(toWgs84Geodetic).ToList();
 
-    //    for (int i = 0; i < wgs84Pionts.Count - 1; i++)
+    //    for (int i = 0; i < wgs84Points.Count - 1; i++)
     //    {
-    //        result += SpatialUtility.GetSphericalLength(wgs84Pionts[i], wgs84Pionts[i + 1]);
+    //        result += SpatialUtility.GetSphericalLength(wgs84Points[i], wgs84Points[i + 1]);
     //    }
 
     //    if (isRing)
     //    {
-    //        result += SpatialUtility.GetSphericalLength(wgs84Pionts[this.Points.Count - 1], wgs84Pionts[0]);
+    //        result += SpatialUtility.GetSphericalLength(wgs84Points[this.Points.Count - 1], wgs84Points[0]);
     //    }
 
     //    return result;
@@ -5178,16 +5178,16 @@ public class Geometry<T> : IGeometry where T : IPoint, new()
 
     //    double result = 0;
 
-    //    var wgs84Pionts = this.Points.Select(toWgs84Geodetic).ToList();
+    //    var wgs84Points = this.Points.Select(toWgs84Geodetic).ToList();
 
-    //    for (int i = 0; i < wgs84Pionts.Count - 1; i++)
+    //    for (int i = 0; i < wgs84Points.Count - 1; i++)
     //    {
-    //        result += SpatialUtility.GetEllipsoidalLength(wgs84Pionts[i], wgs84Pionts[i + 1]);
+    //        result += SpatialUtility.GetEllipsoidalLength(wgs84Points[i], wgs84Points[i + 1]);
     //    }
 
     //    if (isRing)
     //    {
-    //        result += SpatialUtility.GetEllipsoidalLength(wgs84Pionts[this.Points.Count - 1], wgs84Pionts[0]);
+    //        result += SpatialUtility.GetEllipsoidalLength(wgs84Points[this.Points.Count - 1], wgs84Points[0]);
     //    }
 
     //    return result;

@@ -1,4 +1,4 @@
-using IRI.Maptor.Sta.Common.Abstrations;
+using IRI.Maptor.Sta.Common.Abstractions;
 using IRI.Maptor.Sta.Common.Primitives;
 
 namespace IRI.Maptor.Sta.Spatial.Analysis;
@@ -45,7 +45,7 @@ public static class ApscSimplification<T> where T : IPoint, new()
         if (A != -1 && B != -1 && C != -1 && D != -1)
         {
             // Compute collapse point E and associated displacement error
-            var result = GeomUtils<T>.CalcualteNewPoint(XY[A], XY[B], XY[C], XY[D]);
+            var result = GeomUtils<T>.CalculateNewPoint(XY[A], XY[B], XY[C], XY[D]);
             var pE = result.Item1;
             var displacement = result.Item2;
             var overlapEndpt = result.Item3;
@@ -298,7 +298,7 @@ public static class ApscSimplification<T> where T : IPoint, new()
 
         private void UpdateMeasures()
         {
-            var temp = GeomUtils<T>.CalcualteNewPoint(A, B, C, D);
+            var temp = GeomUtils<T>.CalculateNewPoint(A, B, C, D);
 
             this.E = temp.Item1;
             this.Epsilon = temp.Item2;
