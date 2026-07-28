@@ -81,13 +81,6 @@ public class KdTreePointClusters<T> where T : IPoint
 
     private void MakeNewGroup(T center)
     {
-        //this.Groups.Add(new Group<T>(center));
-        if (double.IsNaN(center.X + center.Y) || double.IsInfinity(center.X + center.Y))
-        {
-
-
-        }
-
         this.Groups.Insert(new Group<T>(center));
     }
 
@@ -104,59 +97,36 @@ public class KdTreePointClusters<T> where T : IPoint
 
     public static List<T> GetClusterCenters(List<T> points, T nilValue, double radius)
     {
-        try
+        if (!(points?.Count > 0))
+            return new List<T>();
+
+        Func<T, T, int> xWise = (p1, p2) => p1.X.CompareTo(p2.X);
+        Func<T, T, int> yWise = (p1, p2) => p1.Y.CompareTo(p2.Y);
+        Func<T, T, int>[] funcs = { xWise, yWise };
+
+        var kdtree = new BalancedKdTree<T>(points, funcs.ToList(), nilValue, i => i);
+
+        HashSet<T> set = new HashSet<T>();
+
+        List<T> result = new List<T>();
+
+        for (int i = 0; i < points.Count; i++)
         {
-
-            //var result = new KdTreePointClusters<T>();
-            Func<T, T, int> xWise = (p1, p2) => p1.X.CompareTo(p2.X);
-            Func<T, T, int> yWise = (p1, p2) => p1.Y.CompareTo(p2.Y);
-            Func<T, T, int>[] funcs = { xWise, yWise };
-
-            HashSet<T> set = new HashSet<T>();
-
-            var kdtree = new BalancedKdTree<T>(points, funcs.ToList(), nilValue, i => i);
-
-            if (!(points?.Count > 0))
-                return new List<T>();
-
-            List<T> result = new List<T>();
-
-            for (int i = 0; i < points.Count; i++)
+            if (set.Contains(points[i]))
             {
-                try
-                {
-
-                    if (set.Contains(points[i]))
-                    {
-                        continue;
-                    }
-
-                    result.Add(points[i]);
-
-                    var neighbours = kdtree.FindNeighbours(points[i], radius);
-
-                    set.Add(points[i]);
-
-                    set.UnionWith(neighbours);
-                    //for (int j = 0; j < neighbours?.Count; j++)
-                    //{
-                    //    set.Add(neighbours[j]);
-                    //}
-
-                }
-                catch (Exception)
-                {
-                    return new List<T>();
-                }
+                continue;
             }
 
-            return result;
+            result.Add(points[i]);
 
+            var neighbours = kdtree.FindNeighbours(points[i], radius);
+
+            set.Add(points[i]);
+
+            set.UnionWith(neighbours);
         }
-        catch (Exception)
-        {
-            return new List<T>();
-        }
+
+        return result;
     }
 
 
