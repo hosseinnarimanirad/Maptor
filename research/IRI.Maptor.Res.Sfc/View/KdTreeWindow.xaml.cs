@@ -145,15 +145,15 @@ public partial class KdTreeWindow : Window
             }
 
         }
-        if (node.RigthChild != null)
+        if (node.RightChild != null)
         {
             if (xBased)
             {
-                Draw(canvas, node.RigthChild, level + 1, y1, y2, node.Point.X, x2, ref height);
+                Draw(canvas, node.RightChild, level + 1, y1, y2, node.Point.X, x2, ref height);
             }
             else
             {
-                Draw(canvas, node.RigthChild, level + 1, node.Point.Y, y2, x1, x2, ref height);
+                Draw(canvas, node.RightChild, level + 1, node.Point.Y, y2, x1, x2, ref height);
             }
         }
 
