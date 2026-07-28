@@ -14,7 +14,10 @@ public static class JsonHelper
         NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.AllowNamedFloatingPointLiterals,
         WriteIndented = false,
         // default; can be overridden per call
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        // Servers configured with JsonStringEnumConverter send enums as names (e.g. "Local");
+        // this reads both names and numbers, so responses parse either way.
+        Converters = { new JsonStringEnumConverter() }
     };
 
 

@@ -7,25 +7,37 @@ namespace IRI.Maptor.Ket.WebApiPersistence;
 public static class WebApiInfrastructure
 {
     /// <summary>
-    /// Gets features from the API endpoint with optional query parameters.
+    /// Gets features from the API endpoint with optional query parameters. The full response is
+    /// returned so callers can distinguish a genuinely empty result from a failed request. When
+    /// <paramref name="httpClient"/> is provided, its pooled connections are reused (see
+    /// <see cref="WebApiSourceParameter.HttpClient"/>); otherwise a throwaway client is built per call.
     /// </summary>
-    public static async Task<FeatureSetDto?> GetFeaturesAsync(
+    public static async Task<Response<FeatureSetDto>> GetFeaturesAsync(
         //string baseUrl,
         string endpoint,
         ListFeaturesQueryParams? queryParams = null,
         string? bearerToken = null,
         Dictionary<string, string>? headers = null,
+        HttpClient? httpClient = null,
         CancellationToken cancellationToken = default)
     {
         var url = BuildUrl(/*baseUrl, */endpoint, queryParams);
 
-        var response = await HttpTransport.GetAsync<FeatureSetDto>(
+        if (httpClient != null)
+        {
+            return await HttpTransport.GetAsync<FeatureSetDto>(
+                httpClient,
+                url,
+                bearer: bearerToken,
+                headers: headers,
+                cancellationToken: cancellationToken);
+        }
+
+        return await HttpTransport.GetAsync<FeatureSetDto>(
             url,
             bearer: bearerToken,
             headers: headers,
             cancellationToken: cancellationToken);
-
-        return response.HasNotNullResult() ? response.Result : null;
     }
 
     /// <summary>
@@ -35,15 +47,19 @@ public static class WebApiInfrastructure
         string endpoint,
         FeatureSetChangesDto dto,
         string? bearerToken = null,
-        Dictionary<string, string>? headers = null)
+        Dictionary<string, string>? headers = null,
+        HttpClient? httpClient = null)
     {
-        //var response = await HttpTransport.PutAsync<SyncResultDto>(
-        //    endpoint,
-        //    dto,
-        //    bearer: bearerToken,
-        //    headers: headers);
+        if (httpClient != null)
+        {
+            return await HttpTransport.PutAsync<SyncResultDto>(
+                httpClient,
+                endpoint,
+                dto,
+                bearer: bearerToken,
+                headers: headers);
+        }
 
-        //return response.HasNotNullResult() ? response.Result : null;
         return await HttpTransport.PutAsync<SyncResultDto>(
             endpoint,
             dto,

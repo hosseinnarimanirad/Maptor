@@ -82,6 +82,47 @@ public static class HttpTransport
         return await SendWithClientAsync<T>(client, HttpMethod.Post, address, content, cancellationToken);
     }
 
+    /// <summary>
+    /// GET on a caller-provided (typically long-lived, shared) client, so connections are pooled and
+    /// reused instead of paying a new TCP+TLS handshake per request as the address-based overload does.
+    /// Bearer/headers, when given, are set on the request message only — the shared client's defaults
+    /// are never mutated, and a null bearer leaves the client's default Authorization in effect.
+    /// </summary>
+    public static async Task<Response<T>> GetAsync<T>(
+        HttpClient client,
+        string address,
+        string? bearer = null,
+        Dictionary<string, string>? headers = null,
+        CancellationToken cancellationToken = default) where T : class
+    {
+        if (client == null)
+        {
+            return ResponseFactory.CreateError<T>("HttpClient cannot be null.");
+        }
+
+        return await SendWithClientAsync<T>(client, HttpMethod.Get, address, null, cancellationToken, bearer, headers);
+    }
+
+    /// <summary>
+    /// PUT on a caller-provided shared client. See the client-based <see cref="GetAsync{T}(HttpClient, string, string?, Dictionary{string, string}?, CancellationToken)"/> for semantics.
+    /// </summary>
+    public static async Task<Response<T>> PutAsync<T>(
+        HttpClient client,
+        string address,
+        object? data,
+        string? bearer = null,
+        Dictionary<string, string>? headers = null,
+        CancellationToken cancellationToken = default) where T : class
+    {
+        if (client == null)
+        {
+            return ResponseFactory.CreateError<T>("HttpClient cannot be null.");
+        }
+
+        using var content = CreateJsonContent(data, Encoding.UTF8, ContentTypeJson);
+        return await SendWithClientAsync<T>(client, HttpMethod.Put, address, content, cancellationToken, bearer, headers);
+    }
+
     public static async Task<Response<T>> PutAsync<T>(
         string address,
         object? data,
@@ -161,7 +202,9 @@ public static class HttpTransport
         HttpMethod method,
         string address,
         HttpContent? content,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        string? bearer = null,
+        Dictionary<string, string>? headers = null)
     {
         if (!TryBuildUri(client, address, out var uri, out var error))
         {
@@ -169,6 +212,27 @@ public static class HttpTransport
         }
 
         using var request = new HttpRequestMessage(method, uri) { Content = content };
+
+        // Per-request headers only — a shared client's defaults must never be mutated. A request-level
+        // Authorization overrides the client default; a null bearer leaves the client default in effect.
+        if (!string.IsNullOrWhiteSpace(bearer))
+        {
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearer.Trim());
+        }
+
+        if (headers != null)
+        {
+            foreach (var header in headers)
+            {
+                if (string.IsNullOrWhiteSpace(header.Key))
+                {
+                    continue;
+                }
+
+                request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+        }
+
         return await SendCoreAsync<T>(client, request, cancellationToken);
     }
 

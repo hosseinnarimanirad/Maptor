@@ -19,6 +19,18 @@ public class WebApiDataSource : MemoryDataSource
     //private const string _listEndPoint = "LIST";
     //private const string _updateEndPoint = "UPDATE";
 
+    /// <summary>
+    /// Library-wide gate on concurrent list downloads. A map typically fires LoadAsync for every
+    /// layer at once (fire-and-forget per layer); unthrottled, that is dozens of simultaneous
+    /// requests — and behind constrained proxies the surplus TLS handshakes are the ones that get
+    /// dropped. Kept below typical MaxConnectionsPerServer values so interactive calls sharing the
+    /// same HttpClient still find a free connection.
+    /// </summary>
+    private static readonly SemaphoreSlim _loadGate = new(4);
+
+    /// <summary>Delays before the retry attempts of a failed list download.</summary>
+    private static readonly TimeSpan[] _retryDelays = { TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(1500) };
+
     protected WebApiSourceParameter _parameters;
 
     public override string SourceAddress => $"WebApi: {_parameters?.ListUrl ?? string.Empty}";
@@ -73,13 +85,7 @@ public class WebApiDataSource : MemoryDataSource
             //    ? _parameters.CustomListPath.TrimStart('/')
             //    : _listEndPoint;
 
-            var featureSetDto = await WebApiInfrastructure.GetFeaturesAsync(
-                //_parameters.BaseUrl,
-                _parameters.ListUrl,
-                queryParams,
-                _parameters.BearerToken,
-                _parameters.Headers,
-                cancellationToken);
+            var featureSetDto = await FetchFeaturesAsync(queryParams, cancellationToken);
 
             if (featureSetDto == null || featureSetDto.Features == null || featureSetDto.Features.Count == 0)
             {
@@ -120,6 +126,54 @@ public class WebApiDataSource : MemoryDataSource
         }
     }
 
+
+    /// <summary>
+    /// Downloads the feature set with throttling and retry. The gate keeps a burst of per-layer
+    /// loads from opening more simultaneous connections than the transport can sustain; transient
+    /// failures (e.g. a dropped TLS handshake behind a proxy) are retried. A still-failing request
+    /// throws, so the caller records HasError instead of a silently empty layer; a successful
+    /// empty response returns null and remains a valid empty layer.
+    /// </summary>
+    private async Task<FeatureSetDto?> FetchFeaturesAsync(ListFeaturesQueryParams? queryParams, CancellationToken cancellationToken)
+    {
+        await _loadGate.WaitAsync(cancellationToken);
+
+        try
+        {
+            string? lastError = null;
+
+            for (int attempt = 0; ; attempt++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var response = await WebApiInfrastructure.GetFeaturesAsync(
+                    _parameters.ListUrl,
+                    queryParams,
+                    _parameters.BearerToken,
+                    _parameters.Headers,
+                    _parameters.HttpClient,
+                    cancellationToken);
+
+                if (response.IsSuccess)
+                    return response.Result;
+
+                lastError = response.Error?.Detail ?? response.Error?.Title;
+
+                // Only transport-level failures (no HTTP response, StatusCode 0) are worth
+                // retrying; an HTTP status (401, 404, 500, …) will not change on its own.
+                if (response.StatusCode != 0 || attempt >= _retryDelays.Length)
+                    break;
+
+                await Task.Delay(_retryDelays[attempt], cancellationToken);
+            }
+
+            throw new Exception($"Loading features failed for '{_parameters.ListUrl}': {lastError}");
+        }
+        finally
+        {
+            _loadGate.Release();
+        }
+    }
 
     /// <summary>
     /// Loads features from the list endpoint with an optional server-side geometry filter.
@@ -180,7 +234,8 @@ public class WebApiDataSource : MemoryDataSource
                 _parameters.SyncUrl,
                 dto,
                 _parameters.BearerToken,
-                _parameters.Headers);
+                _parameters.Headers,
+                _parameters.HttpClient);
 
             if (response.IsSuccess)
             {

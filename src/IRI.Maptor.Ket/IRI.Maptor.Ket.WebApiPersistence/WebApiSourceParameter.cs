@@ -4,6 +4,16 @@ namespace IRI.Maptor.Ket.WebApiPersistence;
 
 public class WebApiSourceParameter
 {
+    /// <summary>
+    /// Optional shared <see cref="System.Net.Http.HttpClient"/> for all requests of this source.
+    /// When set, connections are pooled and reused across layers (one TLS handshake per pooled
+    /// connection instead of one per request) and the client's handler policies (TLS versions,
+    /// certificate validation, proxy, connection limits) apply. When null, each request builds a
+    /// throwaway client (legacy behavior). With a shared client, a null <see cref="BearerToken"/>
+    /// means the client's default Authorization header is used.
+    /// </summary>
+    public HttpClient? HttpClient { get; set; }
+
     public string? BearerToken { get; set; }
 
     public Dictionary<string, string>? Headers { get; set; }
