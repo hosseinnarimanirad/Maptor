@@ -11,6 +11,7 @@ format. Ships in the [IRI.Maptor.Sta.Spatial](../../README.md) package; WPF inte
 | Capability | Supported | Implemented in |
 |---|---|---|
 | Read (DXF → geometries) | Yes | `DxfReader.Read`/`ReadFromFile`, preview via `GetPreviewAsync` |
+| Read with CAD context (layer/entity/color/annotation) | Yes | `DxfReader.ReadFeatures`/`ReadFeaturesFromFile` → `DxfFeature` |
 | Write (geometries → DXF) | Yes | `DxfWriter.Write`/`WriteToFile`/`WriteToFileAsync`, `ToDxf`/`SaveAsDxfAsync` extensions |
 | Styling (true color, transparency, line width) | Yes (write) | `DxfColorInfo`, `RgbColor` |
 | CRS embedding/detection (ESRI WKT) | Yes | `DxfWriter` (XRECORD), `DxfReader` (SRID auto-detection) |
@@ -30,7 +31,34 @@ List<Geometry<Point>> geometries = await DxfReader.ReadFromFile(@"C:\input\plan.
 
 // Read from an in-memory DXF string.
 List<Geometry<Point>> fromString = DxfReader.Read(dxfContent, defaultSrid: 4326);
+
+// Read with CAD context: source DXF layer, entity type, resolved color, annotation flag.
+List<DxfFeature> features = await DxfReader.ReadFeaturesFromFile(@"C:\input\plan.dxf", defaultSrid: null);
 ```
+
+### CAD context and annotation separation (`ReadFeatures`)
+
+`Read` returns bare geometries; `ReadFeatures` wraps each one in a `DxfFeature` carrying the CAD
+context needed to treat a DXF as GIS data:
+
+- **`DxfLayerName`** — the DXF layer of the source entity (group 8).
+- **`EntityType`** — the DXF entity name (`LINE`, `LWPOLYLINE`, `INSERT`, `TEXT`, …).
+- **`Color`** — resolved to `#RRGGBB`: entity true color (420) wins, then an explicit ACI color
+  (62, converted through the standard AutoCAD palette via `DxfAciColor`), then the color of the
+  entity's layer from the LAYER table (ByLayer/ByBlock/absent).
+- **`Text`** — the content of `TEXT`/`MTEXT`/`ATTRIB` entities.
+- **`IsAnnotation`** — `true` for drawing decoration as opposed to real-world features:
+  `TEXT`/`MTEXT`/`ATTRIB` (as Points), `LEADER` (as LineString), `DIMENSION` (its anonymous block
+  expanded), `SOLID`/`TRACE` (arrowheads), `3DFACE` (3D visualization facets), `HATCH` (fill
+  boundaries), `WIPEOUT` (masking frames), `INSERT` of anonymous (`*`-prefixed) blocks — which
+  includes dynamic-block instances (`*U…`) and Civil 3D label blocks — and anything on the
+  `DEFPOINTS` layer. Callers use this flag to route annotation into separate layers
+  (e.g. `-Polyline-other`, `-Polygon-other`) so the main point/line/polygon layers hold only
+  real features.
+
+Polygon-with-hole reassembly pools real and annotation rings **separately** (an arrowhead inside a
+parcel never becomes a hole of the parcel), and each reassembled polygon keeps the CAD context of
+the entity that contributed its exterior ring.
 
 ### SRID precedence
 
@@ -58,14 +86,62 @@ IReadOnlyList<Point> samples = preview.SamplePoints;
 |---|---|---|
 | `POINT` | Point | |
 | `LINE` | LineString | Two points (start/end) |
-| `LWPOLYLINE` | LineString or Polygon | Polygon when closed (flag 70 = 1) and ≥ 3 points |
+| `LWPOLYLINE` | LineString or Polygon | Polygon when the closed flag (70, bit 0) is set and ≥ 3 points |
 | `POLYLINE` / `VERTEX` | LineString or Polygon | Polygon when the closed flag (bit 0) is set |
 | `CIRCLE` | Polygon | Approximated with 32 segments |
 | `ARC` | LineString | Approximated with 32 segments |
-| *(other)* | — | Unknown entities are skipped |
+| `ELLIPSE` | Polygon or LineString | Polygon for a full ellipse, LineString for an elliptical arc; 32 segments |
+| `SPLINE` | LineString or Polygon | Fit points used directly when present, otherwise de Boor sampling of the (rational) B-spline; Polygon when the closed flag is set |
+| `SOLID` / `TRACE` | Polygon | Zigzag corner order (1,2,4,3) reassembled into a ring; triangles supported; always annotation |
+| `3DFACE` | Polygon | XY projection of the face; always annotation (3D visualization facet, not a mapped feature) |
+| `INSERT` | Point + expanded block geometry | See *Block references* below |
+| `TEXT` / `MTEXT` / `ATTRIB` | Point | Insertion point; text content in `DxfFeature.Text`; always annotation |
+| `LEADER` | LineString | Callout/arrow path from its WCS vertices; always annotation |
+| `DIMENSION` | expanded block geometry | The anonymous `*D` block (group 2) is expanded in place; always annotation |
+| `HATCH` | Polygon | Boundary paths (polyline paths with bulges flattened; edge paths with line edges and sampled arc edges); always annotation |
+| `WIPEOUT` | Polygon | Masking frame from the clip boundary (image space → world via insertion + U/V vectors); always annotation |
+| *(other)* | — | Unknown entities (MLEADER, RAY, XLINE, …) are skipped |
+
+The closed flag is tested bitwise: AutoCAD commonly writes `70 = 129` (closed + plinegen), which is
+just as closed as `70 = 1`. If a closed polyline repeats its first vertex as its last, the duplicate
+is dropped, because `CreatePolygonOrMultiPolygon` expects rings whose closing point is not repeated.
 
 Closed rings are reassembled into polygons-with-holes / multipolygons via
 `Geometry<Point>.CreatePolygonOrMultiPolygon`.
+
+### Block references (INSERT)
+
+The BLOCKS section is parsed into block definitions, and every `INSERT` in the ENTITIES section is
+expanded: the referenced block's geometry is translated by the block base point, scaled (41/42),
+rotated (50), and placed at the insertion point — nested block references are expanded recursively
+(depth cap 8, resolution memoized per block name), and MINSERT column/row arrays (70/71/44/45) are
+repeated on their grid.
+
+Each `INSERT` contributes:
+
+1. a **Point** feature at its insertion location — matching how ArcMap populates its CAD point
+   feature class from block references (symbol positions: lamps, poles, …); and
+2. the expanded block geometry, merged into at most one multi-part feature per geometry class
+   (MultiPoint / MultiLineString / MultiPolygon). A block reference is one symbol, so its internals
+   stay one feature instead of flooding the layer — and a symbol's concentric rings become sibling
+   polygon parts rather than being pulled into the file-wide polygon/hole reassembly.
+
+An `INSERT` referencing an undefined block still emits its insertion Point.
+
+### Object Coordinate System (extrusion direction)
+
+Planar DXF entities (`LWPOLYLINE`, 2D `POLYLINE`, `CIRCLE`, `ARC`, `SOLID`, `INSERT`) store their
+coordinates in an Object Coordinate System defined by the extrusion direction (group codes
+`210`/`220`/`230`, default `(0,0,1)`). The common non-default case is `(0,0,-1)` — a plane mirrored
+about the Y axis, which AutoCAD emits for arcs and polylines drawn clockwise or through a mirror
+operation. `DxfReader` negates the X of such entities to bring them back into world coordinates;
+ignoring this puts them at `-x` instead of `x`, which for projected data (e.g. UTM eastings) throws
+the layer extent hundreds of kilometres wide and makes the real features collapse to a sub-pixel
+speck when the map zooms to the layer.
+
+True-3D entities (`POINT`, `LINE`, `ELLIPSE`, `SPLINE`, `3DFACE`) store WCS coordinates and are
+never mirrored. Entities with an arbitrary (tilted) extrusion axis are read as-is; the full
+Arbitrary Axis Algorithm is not implemented.
 
 ## Writing
 

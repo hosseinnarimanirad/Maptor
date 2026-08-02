@@ -545,7 +545,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
     private BoundingBox _printArea = BoundingBox.NaN;
 
-    // in map coordinates. determinse the area used for save as png
+    // in map coordinates. determines the area used for save as png
     public BoundingBox PrintArea
     {
         get { return _printArea; }
@@ -1792,7 +1792,7 @@ public abstract class MapViewModelBase : ViewModelBase
                     return;
                 }
 
-                //Referesh
+                //Refresh
                 if (selectedLayer.ShowSelectedOnMap)
                 {
                     await ShowSelectedFeatures(selectedLayer.GetSelectedFeatures(), selectedLayer?.AssociatedLayer?.DefaultSymbology?.StrokeThickness);
@@ -2772,7 +2772,7 @@ public abstract class MapViewModelBase : ViewModelBase
         RemoveSelectedLayers(layersToBeRemoved);
     }
 
-    //1397.08.17: potentionally error prone, do not consider removing SelectedLayers associated with the input criteria
+    //1397.08.17: potentially error prone, do not consider removing SelectedLayers associated with the input criteria
     public void Clear(Predicate<LayerTag> criteria, bool remove, bool forceRemove = false, bool keepEmptyParentGroup = false)
     {
         RequestClearLayerByTag?.Invoke(criteria, remove, forceRemove, keepEmptyParentGroup);
@@ -3702,7 +3702,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         var drawingItemLayer = DrawingItemLayer.CreateTextLayer("Text",
         [
-            new Locateable(geodeticPoint, AncherFunctionHandlers.BottomCenter) { Element = new TextboxMarker() { DataContext = viewModel } }
+            new Locateable(geodeticPoint, AnchorFunctionHandlers.BottomCenter) { Element = new TextboxMarker() { DataContext = viewModel } }
         ]);
 
         viewModel.RequestDelete = () => RemoveDrawingItem(drawingItemLayer);
@@ -5313,16 +5313,16 @@ public abstract class MapViewModelBase : ViewModelBase
                 throw new MaptorFileNotFoundException(fileName);
             //throw new System.IO.FileNotFoundException($"DXF file '{fileName}' was not found.", fileName);
 
-            var geometries = await DxfReader.ReadFromFile(fileName, sourceSrid);
+            var dxfFeatures = await DxfReader.ReadFeaturesFromFile(fileName, sourceSrid);
 
-            if (geometries.IsNullOrEmpty())
+            if (dxfFeatures.IsNullOrEmpty())
             {
                 throw MaptorEmptyFileException.Instance;
                 //await DialogService.ShowMessageAsync("هیچ عارضه‌ای در فایل DXF یافت نشد.", _error, owner);
                 //return;
             }
 
-            if (geometries.Any(g => g.Srid == 0))
+            if (dxfFeatures.Any(f => f.Geometry.Srid == 0))
             {
                 throw MaptorDxfSrsNotFoundException.Instance;
                 //await DialogService.ShowMessageAsync("سیستم مختصات DXF یافت نشد.", _error, owner);
@@ -5331,14 +5331,32 @@ public abstract class MapViewModelBase : ViewModelBase
 
             // Group by geometry category (Point/Polyline/Polygon) so single- and multi-part of the
             // same kind (e.g. Polygon + MultiPolygon) merge into one sub-layer, like KML/KMZ.
-            var groups = geometries.GroupBy(g => g.Type.GetCategory()).ToList();
+            // CAD annotation (text, dimensions, arrows, ...) goes to separate "-other" sub-layers:
+            // the plain sub-layers then hold only real-world features.
+            var groups = dxfFeatures
+                .GroupBy(f => (Category: f.Geometry.Type.GetCategory(), f.IsAnnotation))
+                .OrderBy(g => g.Key.IsAnnotation)
+                .ThenBy(g => g.Key.Category)
+                .ToList();
 
             // create the parent group layer
             GroupLayer groupLayer = new GroupLayer(Path.GetFileNameWithoutExtension(fileName));
 
             foreach (var group in groups)
             {
-                var features = group.Select(g => g.AsFeature()).ToList();
+                var features = group.Select(f =>
+                {
+                    var feature = f.Geometry.AsFeature(); // Area, Length
+
+                    feature.Attributes["DxfLayer"] = f.DxfLayerName;
+                    feature.Attributes["Entity"] = f.EntityType;
+                    feature.Attributes["Color"] = f.Color ?? string.Empty;
+
+                    if (!string.IsNullOrEmpty(f.Text))
+                        feature.Attributes["Text"] = f.Text;
+
+                    return feature;
+                }).ToList();
 
                 if (features.IsNullOrEmpty())
                 {
@@ -5355,7 +5373,11 @@ public abstract class MapViewModelBase : ViewModelBase
 
                 var symbolizers = new List<ISymbolizer> { SimpleSymbolizer.Create(null, BrushHelper.PickBrush(), 3, 1) };
 
-                var vectorLayer = new VectorLayer($"{Path.GetFileNameWithoutExtension(fileName)}-{group.Key}",
+                var layerName = group.Key.IsAnnotation
+                    ? $"{Path.GetFileNameWithoutExtension(fileName)}-{group.Key.Category}-other"
+                    : $"{Path.GetFileNameWithoutExtension(fileName)}-{group.Key.Category}";
+
+                var vectorLayer = new VectorLayer(layerName,
                                     dataSource,
                                     symbolizers,
                                     LayerType.VectorLayer,
@@ -5364,7 +5386,8 @@ public abstract class MapViewModelBase : ViewModelBase
                                     ScaleInterval.All,
                                     LegendViewModel.DefaultTocGroup)
                 {
-                    IsSearchable = true
+                    // annotation ("-other") layers are display-only CAD decoration
+                    IsSearchable = !group.Key.IsAnnotation
                 };
 
                 groupLayer.AddSubLayer(vectorLayer);
