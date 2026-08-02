@@ -135,9 +135,20 @@ public static class SldExtensions
         }
     }
 
+    /// <summary>
+    /// Baseline <see cref="VisualParameters"/> for SLD parsing. SLD treats an omitted
+    /// Fill/Stroke as "not painted", so start from transparent/none instead of
+    /// <see cref="VisualParameters.CreateNew()"/> — its random brushes leak into map
+    /// rendering and mislead the <c>ParseToSld</c> round-trip (a leftover opaque random
+    /// fill makes a line symbolizer look like a polygon).
+    /// </summary>
+    private static VisualParameters CreateNeutralParameters(Brush? fill = null, Brush? stroke = null, double strokeThickness = 1)
+        => new VisualParameters(fill ?? Brushes.Transparent, stroke, strokeThickness, opacity: 1);
+
     private static ISymbolizer Parse(LineSymbolizer lineSymbolizer)
     {
-        var visualParameters = VisualParameters.CreateNew();
+        // SLD default stroke: black, width 1 (kept when the symbolizer carries no Stroke element).
+        var visualParameters = CreateNeutralParameters(stroke: new SolidColorBrush(Colors.Black));
 
         visualParameters.Build(lineSymbolizer.Stroke);
 
@@ -162,7 +173,7 @@ public static class SldExtensions
 
     private static ISymbolizer Parse(PolygonSymbolizer polygonSymbolizer)
     {
-        var visualParameters = VisualParameters.CreateNew();
+        var visualParameters = CreateNeutralParameters();
 
         visualParameters.Build(polygonSymbolizer.Stroke);
 
@@ -193,13 +204,16 @@ public static class SldExtensions
 
     public static ISymbolizer Parse(PointSymbolizer pointSymbolizer)
     {
-        var visualParameters = VisualParameters.CreateNew();
+        // SLD default mark: gray fill with a black outline.
+        var visualParameters = CreateNeutralParameters(
+            fill: new SolidColorBrush(Color.FromRgb(0x80, 0x80, 0x80)),
+            stroke: new SolidColorBrush(Colors.Black));
 
         if (pointSymbolizer.Graphic is null)
-            return new SimpleSymbolizer(visualParameters);
+            return CreateDefaultPointSimpleSymbolizer(visualParameters);
 
         if (pointSymbolizer.Graphic.Marks.IsNullOrEmpty())
-            return new SimpleSymbolizer(visualParameters);
+            return CreateDefaultPointSimpleSymbolizer(visualParameters);
 
         // todo
         var opacity = pointSymbolizer.Graphic.Opacity ?? SldConstants.DefaultGraphicOpacity;
@@ -211,7 +225,7 @@ public static class SldExtensions
         var mark = pointSymbolizer.Graphic.Marks.FirstOrDefault();
 
         if (mark is null)
-            return new SimpleSymbolizer(visualParameters);
+            return CreateDefaultPointSimpleSymbolizer(visualParameters);
 
         visualParameters.Build(mark.Stroke);
         visualParameters.Build(mark.Fill);
@@ -219,6 +233,18 @@ public static class SldExtensions
         System.Windows.Media.Geometry? geometry = mark.ParseToGeometry(size, size);
 
         visualParameters.PointSymbol = new SimplePointSymbolizer(size) { GeometrySymbol = geometry };
+
+        return new SimpleSymbolizer(visualParameters);
+    }
+
+    /// <summary>
+    /// Fallback for a PointSymbolizer without a usable Graphic/Mark: a default-size circle
+    /// symbol. A non-null <see cref="VisualParameters.PointSymbol"/> is required by the GDI
+    /// point renderer (it dereferences SymbolWidth/SymbolHeight).
+    /// </summary>
+    private static ISymbolizer CreateDefaultPointSimpleSymbolizer(VisualParameters visualParameters)
+    {
+        visualParameters.PointSymbol = new SimplePointSymbolizer(8);
 
         return new SimpleSymbolizer(visualParameters);
     }
@@ -347,7 +373,13 @@ public static class SldExtensions
 
     #endregion
 
-    public static StyledLayerDescriptor ParseToSld(this IEnumerable<ISymbolizer> symbolizers)
+    /// <summary>
+    /// Rebuilds a (synthetic) SLD from runtime symbolizers. <paramref name="spatialModelMode"/>
+    /// is the owning layer's geometry kind; when provided it decides line/polygon/point directly
+    /// instead of guessing from the fill's alpha (a guess that misfires whenever a line symbolizer
+    /// carries a leftover opaque fill).
+    /// </summary>
+    public static StyledLayerDescriptor ParseToSld(this IEnumerable<ISymbolizer> symbolizers, IRI.Maptor.Jab.Core.SpatialModelMode? spatialModelMode = null)
     {
         var sld = new StyledLayerDescriptor
         {
@@ -374,7 +406,7 @@ public static class SldExtensions
         {
             foreach (var symbolizer in symbolizers)
             {
-                var sldSymbolizer = ToSldSymbolizer(symbolizer);
+                var sldSymbolizer = ToSldSymbolizer(symbolizer, spatialModelMode);
 
                 if (sldSymbolizer is null)
                     continue;
@@ -395,7 +427,7 @@ public static class SldExtensions
         return sld;
     }
 
-    private static Symbolizer? ToSldSymbolizer(ISymbolizer symbolizer)
+    private static Symbolizer? ToSldSymbolizer(ISymbolizer symbolizer, IRI.Maptor.Jab.Core.SpatialModelMode? spatialModelMode = null)
     {
         if (symbolizer is null)
             return null;
@@ -407,18 +439,38 @@ public static class SldExtensions
             return ToPointSymbolizer(pointSymbolizer);
 
         if (symbolizer is SimpleSymbolizer simpleSymbolizer)
-            return ToSimpleSymbolizer(simpleSymbolizer);
+            return ToSimpleSymbolizer(simpleSymbolizer, spatialModelMode);
 
         return null;
     }
 
-    private static Symbolizer ToSimpleSymbolizer(SimpleSymbolizer symbolizer)
+    private static Symbolizer ToSimpleSymbolizer(SimpleSymbolizer symbolizer, IRI.Maptor.Jab.Core.SpatialModelMode? spatialModelMode = null)
     {
-        var param = symbolizer.Param ?? VisualParameters.CreateNew();
+        var param = symbolizer.Param ?? CreateNeutralParameters();
 
         var hasPointSymbol = param.PointSymbol?.GeometrySymbol != null || param.PointSymbol?.ImageSymbol != null || param.PointSymbol?.ImageSymbolGdiPlus != null;
         if (hasPointSymbol)
             return ToPointSymbolizer(param);
+
+        // The layer's geometry kind is authoritative when known.
+        switch (spatialModelMode)
+        {
+            case IRI.Maptor.Jab.Core.SpatialModelMode.Point:
+                return ToPointSymbolizer(param);
+
+            case IRI.Maptor.Jab.Core.SpatialModelMode.Polygon:
+                return new PolygonSymbolizer
+                {
+                    Fill = CreateFill(param.Fill),
+                    Stroke = CreateStroke(param)
+                };
+
+            case IRI.Maptor.Jab.Core.SpatialModelMode.Polyline:
+                return new LineSymbolizer
+                {
+                    Stroke = CreateStroke(param)
+                };
+        }
 
         var hasFill = (param.Fill as SolidColorBrush)?.Color.A > 0;
         if (hasFill)
@@ -439,7 +491,9 @@ public static class SldExtensions
     private static PointSymbolizer ToPointSymbolizer(SimplePointSymbolizer pointSymbolizer)
     {
         var pointSize = (int)Math.Max(1, Math.Round(Math.Max(pointSymbolizer.SymbolWidth, pointSymbolizer.SymbolHeight)));
-        var defaultParam = VisualParameters.CreateNew();
+        var defaultParam = CreateNeutralParameters(
+            fill: new SolidColorBrush(Color.FromRgb(0x80, 0x80, 0x80)),
+            stroke: new SolidColorBrush(Colors.Black));
         return ToPointSymbolizer(defaultParam, pointSize);
     }
 

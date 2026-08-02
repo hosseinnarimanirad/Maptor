@@ -34,26 +34,31 @@ internal static class LegendSwatchFactory
         if (parsed.Count == 0)
             return CreateBlank(w, h);
 
-        // Prefer a geometry (line/polygon/point) symbolizer for the swatch; fall back to text.
-        var primary = parsed.FirstOrDefault(p => p.sldSymbolizer is not TextSymbolizer);
+        // Prefer the geometry (line/polygon/point) symbolizers for the swatch; fall back to text.
+        // A rule may stack several (e.g. a wide casing line under a narrow core line), so all of
+        // them are composited in order rather than only the first.
+        var geometryPairs = parsed.Where(p => p.sldSymbolizer is not TextSymbolizer && p.symbolizer is not null).ToList();
 
-        if (primary.symbolizer is null)
+        if (geometryPairs.Count == 0)
         {
             var textPair = parsed.FirstOrDefault(p => p.sldSymbolizer is TextSymbolizer);
             return CreateTextSwatch(textPair.symbolizer as LabelSymbolizer, w, h, options);
         }
 
-        // Neutralize filter + scale so the synthetic (attribute-less) feature is never dropped.
-        primary.symbolizer.IsFilterPassed = _ => true;
-        primary.symbolizer.MinScaleDenominator = null;
-        primary.symbolizer.MaxScaleDenominator = null;
+        foreach (var pair in geometryPairs)
+        {
+            // Neutralize filter + scale so the synthetic (attribute-less) feature is never dropped.
+            pair.symbolizer.IsFilterPassed = _ => true;
+            pair.symbolizer.MinScaleDenominator = null;
+            pair.symbolizer.MaxScaleDenominator = null;
+        }
 
-        var feature = CreateSyntheticFeature(primary.sldSymbolizer, w, h, options.SwatchPadding);
+        var feature = CreateSyntheticFeature(geometryPairs[0].sldSymbolizer, w, h, options.SwatchPadding);
 
         if (feature is null)
             return CreateBlank(w, h);
 
-        var bitmap = new GdiBitmapRenderStrategy(new List<ISymbolizer> { primary.symbolizer })
+        var bitmap = new GdiBitmapRenderStrategy(geometryPairs.Select(p => p.symbolizer).ToList())
             .AsGdiBitmap(new List<Feature<Point>> { feature }, mapScale: 1.0, w, h);
 
         return bitmap ?? CreateBlank(w, h);

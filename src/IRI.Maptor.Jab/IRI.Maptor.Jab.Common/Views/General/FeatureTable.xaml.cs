@@ -32,6 +32,12 @@ public partial class FeatureTable : UserControl
 
     private bool _editingFeature = false;
 
+    // true while this control is applying the view-model selection to the grid
+    private bool _syncingSelection = false;
+
+    // true while a grid selection change is being pushed into the view-model
+    private bool _updatingHighlightFromGrid = false;
+
     private SelectedLayer? _currentLayer;
 
     private INotifyCollectionChanged? _currentFeaturesCollection;
@@ -87,17 +93,26 @@ public partial class FeatureTable : UserControl
     {
         try
         {
+            var item = e.Row?.Item as Feature<Point>;
+
+            if (item is null || _pendingAttributes is null)
+                return;
+
             if (e.EditAction == DataGridEditAction.Commit)
             {
-                var item = e.Row?.Item as Feature<Point>;
-
-                if (item is null || _pendingAttributes is null)
-                    return;
-
                 if (DictionaryHelper.AreAttributesEqual(_pendingAttributes, item.Attributes))
                     return;
 
                 Presenter?.UpdateAttributes(item, _pendingAttributes);
+            }
+            else
+            {
+                // the column bindings use UpdateSourceTrigger=PropertyChanged, so the
+                // dictionary already holds the typed value; put the old values back
+                foreach (var kvp in _pendingAttributes)
+                    item.Attributes[kvp.Key] = kvp.Value;
+
+                Presenter?.RefreshFeatureInView(item);
             }
         }
         finally
@@ -130,11 +145,23 @@ public partial class FeatureTable : UserControl
 
     private void grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        if (_syncingSelection)
+            return;
+
         var selected = grid.SelectedItems?.Count > 0
-            ? grid.SelectedItems.Cast<Feature<Point>>()
+            ? grid.SelectedItems.Cast<Feature<Point>>().ToList()
             : Enumerable.Empty<Feature<Point>>();
 
-        this.Presenter?.UpdateHighlightedFeatures(selected);
+        _updatingHighlightFromGrid = true;
+
+        try
+        {
+            this.Presenter?.UpdateHighlightedFeatures(selected);
+        }
+        finally
+        {
+            _updatingHighlightFromGrid = false;
+        }
     }
 
     //private void grid_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => DataGridDictionaryBehavior.Regenerate(sender);
@@ -318,6 +345,9 @@ public partial class FeatureTable : UserControl
         if (_currentLayer is INotifyPropertyChanged inpc)
             inpc.PropertyChanged -= Layer_PropertyChanged;
 
+        if (_currentLayer != null)
+            _currentLayer.RequestClearRowSelection = null;
+
         UnsubscribeFromFeaturesCollection();
         _currentLayer = null;
     }
@@ -329,6 +359,8 @@ public partial class FeatureTable : UserControl
         // Listen for replacement of the entire Features collection
         if (layer is INotifyPropertyChanged inpc)
             inpc.PropertyChanged += Layer_PropertyChanged;
+
+        layer.RequestClearRowSelection = () => grid.UnselectAll();
 
         // Subscribe to the current Features collection
         SubscribeToFeaturesCollection(layer.Features);
@@ -357,6 +389,35 @@ public partial class FeatureTable : UserControl
         {
             // The entire collection was replaced – re‑subscribe
             SubscribeToFeaturesCollection(_currentLayer.Features);
+        }
+        else if (e.PropertyName == nameof(SelectedLayer.HighlightedFeatures) && !_updatingHighlightFromGrid)
+        {
+            // Selection changed on the view-model side (page refresh restore,
+            // map identify, ...) – mirror it onto the grid
+            ApplyVmSelectionToGrid();
+        }
+    }
+
+    private void ApplyVmSelectionToGrid()
+    {
+        if (_currentLayer?.HighlightedFeatures is null)
+            return;
+
+        _syncingSelection = true;
+
+        try
+        {
+            grid.SelectedItems.Clear();
+
+            foreach (var feature in _currentLayer.HighlightedFeatures)
+            {
+                if (grid.Items.Contains(feature))
+                    grid.SelectedItems.Add(feature);
+            }
+        }
+        finally
+        {
+            _syncingSelection = false;
         }
     }
 

@@ -39,6 +39,7 @@ public class SelectedLayer : Notifier
         {
             _features = value;
             RaisePropertyChanged();
+            RefreshPagingView();
         }
     }
 
@@ -115,6 +116,9 @@ public class SelectedLayer : Notifier
 
     public Action? RequestRemoveSelectedLayer { get; set; }
 
+    // wired by FeatureTable so the view can drop the DataGrid row selection
+    public Action? RequestClearRowSelection { get; set; }
+
     public Action<ILayer>? RequestRefreshLayer { get; set; }
 
     public Func<DomainException, Task>? RequestShowErrorMessageAsync { get; set; }
@@ -129,6 +133,9 @@ public class SelectedLayer : Notifier
         AssociatedLayer = layer;
 
         Fields = fields;
+
+        // the field initializer bypasses the property setter, so subscribe here
+        _highlightedFeatures.CollectionChanged += highlightedFeatures_CollectionChanged;
     }
 
     private async void highlightedFeatures_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -149,6 +156,8 @@ public class SelectedLayer : Notifier
 
     public void UpdateSelectedFeatures(IEnumerable<Feature<Point>> items)
     {
+        _currentPageIndex = 0;
+
         Features = new ObservableCollection<Feature<Point>>(items);
     }
 
@@ -164,7 +173,10 @@ public class SelectedLayer : Notifier
             AssociatedLayer.NumberOfSelectedFeatures = enumerable.Count();
         }
 
-        await RequestFeaturesChangedAsync?.Invoke(enumerable.Where(i => i.Status != FeatureStatus.Removed && i.Status != FeatureStatus.CanceledNew), strokeThickness);
+        if (RequestFeaturesChangedAsync is null)
+            return;
+
+        await RequestFeaturesChangedAsync.Invoke(enumerable.Where(i => i.Status != FeatureStatus.Removed && i.Status != FeatureStatus.CanceledNew), strokeThickness);
     }
 
     public async Task RefreshHighlightedFeaturesOnMap(IEnumerable<Feature<Point>> enumerable)
@@ -177,18 +189,134 @@ public class SelectedLayer : Notifier
 
     public void RefreshFeatureInView(Feature<Point> feature)
     {
-        if (Features is null)
-            return;
+        RefreshPageDeferred();
+    }
 
-        var idx = Features?.IndexOf(feature) ?? -1;
+    #region Data Grid Paging
 
-        if (idx >= 0)
+    private ObservableCollection<int> _availablePageSizes = new ObservableCollection<int> { 50, 100, 200, 500 };
+    public ObservableCollection<int> AvailablePageSizes
+    {
+        get => _availablePageSizes;
+        set
         {
-            Features!.RemoveAt(idx);
-
-            Features.Insert(idx, feature);
+            _availablePageSizes = value ?? new ObservableCollection<int> { 50, 100, 200, 500 };
+            RaisePropertyChanged();
         }
     }
+
+    private int _selectedPageSize = 100;
+    public int SelectedPageSize
+    {
+        get => _selectedPageSize;
+        set
+        {
+            if (value < 1)
+                return;
+
+            _selectedPageSize = value;
+            RaisePropertyChanged();
+            RefreshPagingView();
+        }
+    }
+
+    private int _currentPageIndex = 0;
+    public int CurrentPageIndex
+    {
+        get => _currentPageIndex;
+        set
+        {
+            if (value < 0 || (TotalPages > 0 && value >= TotalPages))
+                return;
+
+            if (_currentPageIndex == value)
+                return;
+
+            _currentPageIndex = value;
+
+            // navigating to another page drops the row selection so that
+            // delete/edit never target rows that are no longer visible
+            RefreshPagingView(preserveSelection: false);
+        }
+    }
+
+    public int CurrentPageNumber => TotalPages == 0 ? 0 : CurrentPageIndex + 1;
+
+    public int TotalPages => Features is null || Features.Count == 0
+                                ? 0
+                                : (int)Math.Ceiling(Features.Count / (double)SelectedPageSize);
+
+    public ObservableCollection<Feature<Point>> CurrentPageFeatures
+    {
+        get
+        {
+            if (Features is null || Features.Count == 0)
+                return new ObservableCollection<Feature<Point>>();
+
+            return new ObservableCollection<Feature<Point>>(Features.Skip(CurrentPageIndex * SelectedPageSize).Take(SelectedPageSize));
+        }
+    }
+
+    private bool _pageRefreshPending;
+
+    // Coalesces refresh requests and defers them past any in-progress DataGrid edit
+    // transaction; rebinding the page mid-transaction throws InvalidOperationException.
+    private void RefreshPageDeferred()
+    {
+        if (_pageRefreshPending)
+            return;
+
+        _pageRefreshPending = true;
+
+        var app = System.Windows.Application.Current;
+
+        if (app?.Dispatcher == null || app.Dispatcher.HasShutdownStarted || app.Dispatcher.HasShutdownFinished)
+        {
+            _pageRefreshPending = false;
+            RefreshPagingView();
+            return;
+        }
+
+        app.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            _pageRefreshPending = false;
+            RefreshPagingView();
+        }), System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    private void RefreshPagingView(bool preserveSelection = true)
+    {
+        // snapshot before rebinding: replacing the grid's ItemsSource clears its
+        // selection, which flows back into HighlightedFeatures
+        var snapshot = preserveSelection ? HighlightedFeatures?.ToList() : null;
+
+        if (TotalPages > 0 && _currentPageIndex >= TotalPages)
+            _currentPageIndex = TotalPages - 1;
+
+        if (_currentPageIndex < 0)
+            _currentPageIndex = 0;
+
+        RaisePropertyChanged(nameof(CurrentPageFeatures));
+        RaisePropertyChanged(nameof(CurrentPageIndex));
+        RaisePropertyChanged(nameof(CurrentPageNumber));
+        RaisePropertyChanged(nameof(TotalPages));
+        RaisePropertyChanged(nameof(CountOfSelectedFeatures));
+
+        var page = CurrentPageFeatures;
+
+        var restored = snapshot?.Where(f => page.Contains(f)).ToList() ?? new List<Feature<Point>>();
+
+        var current = HighlightedFeatures;
+
+        var isSame = current != null && current.Count == restored.Count && restored.All(current.Contains);
+
+        if (!isSame)
+            UpdateHighlightedFeatures(restored);
+
+        CommandManager.InvalidateRequerySuggested();
+    }
+
+    #endregion
 
     public IEnumerable<Feature<Point>> GetSelectedFeatures(bool includeRemoved = false)
     {
@@ -211,6 +339,8 @@ public class SelectedLayer : Notifier
         // in order to update the RowHeader icon
         RefreshFeatureInView(feature);
 
+        NotifyAll();
+
         return true;
     }
 
@@ -229,6 +359,8 @@ public class SelectedLayer : Notifier
 
         // in order to update the RowHeader icon
         RefreshFeatureInView(feature);
+
+        NotifyAll();
     }
 
 
@@ -261,14 +393,10 @@ public class SelectedLayer : Notifier
         if (feature.Status == FeatureStatus.Updated && feature.OldVersion != null)
         {
             dataSource.UndoChanges(feature);
-
-            RefreshFeatureInView(feature);
         }
         else if (feature.Status == FeatureStatus.Removed)
         {
             dataSource.UndoChanges(feature);
-
-            RefreshFeatureInView(feature);
         }
         else if (feature.Status == FeatureStatus.New)
         {
@@ -278,6 +406,8 @@ public class SelectedLayer : Notifier
 
             HighlightedFeatures?.Remove(feature);
         }
+
+        RefreshFeatureInView(feature);
     }
 
     private void NotifyAll()
@@ -320,7 +450,7 @@ public class SelectedLayer : Notifier
         if (this.AssociatedLayer.IsBusy)
             return false;
 
-        return HighlightedFeatures?.Count >= 1;
+        return HighlightedFeatures?.Any(f => f.Status != FeatureStatus.Removed && f.Status != FeatureStatus.CanceledNew) == true;
     }
 
     private bool CanExecuteEditFeature()
@@ -360,62 +490,84 @@ public class SelectedLayer : Notifier
 
     private async Task AddAsync()
     {
-        var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
-
-        if (dataSource is null)
-            return;
-
-        var vectorDataSource = AssociatedLayer?.DataSource as VectorDataSource;
-        var geometryType = vectorDataSource?.GeometryType ?? GeometryType.Point;
-        //var srid = AssociatedLayer?.DataSource?.Srid ?? 0;
-
-        // todo
-        // this should be changed to draw geometry using the layers type
-        //var emptyGeometry = Geometry<Point>.CreateEmpty(geometryType, srid);
-        var geometry = await RequestDrawAsync(geometryType);
-
-        if (geometry is null)
-            return;
-
-        var attributes = new Dictionary<string, object>();
-
-        if (Fields != null)
+        try
         {
-            foreach (var field in Fields)
-                attributes[field.Name] = field.GetDefaultValue();
+            var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
+
+            if (dataSource is null || RequestDrawAsync is null)
+                return;
+
+            var vectorDataSource = AssociatedLayer?.DataSource as VectorDataSource;
+            var geometryType = vectorDataSource?.GeometryType ?? GeometryType.Point;
+            //var srid = AssociatedLayer?.DataSource?.Srid ?? 0;
+
+            // todo
+            // this should be changed to draw geometry using the layers type
+            //var emptyGeometry = Geometry<Point>.CreateEmpty(geometryType, srid);
+            var geometry = await RequestDrawAsync(geometryType);
+
+            if (geometry is null)
+                return;
+
+            this.AssociatedLayer!.IsBusy = true;
+
+            var attributes = new Dictionary<string, object>();
+
+            if (Fields != null)
+            {
+                foreach (var field in Fields)
+                    attributes[field.Name] = field.GetDefaultValue();
+            }
+
+            var newId = dataSource.GetNewId();// (Features?.Select(f => f.Id).DefaultIfEmpty(0).Max() ?? 0) + 1;
+
+            var newFeature = new Feature<Point>(geometry, attributes)
+            {
+                Id = newId
+            };
+
+            newFeature.MarkAsNew();
+
+            dataSource.Add(newFeature);
+
+            Features ??= new ObservableCollection<Feature<Point>>();
+
+            Features.Add(newFeature);
+
+            // make the new row visible: it is appended at the end, on the last page
+            if (TotalPages > 0 && CurrentPageIndex != TotalPages - 1)
+                CurrentPageIndex = TotalPages - 1;
+            else
+                RefreshPagingView();
+
+            NotifyAll();
+
+            if (ShowSelectedOnMap)
+                await RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
+
+            RequestRefreshLayer?.Invoke(AssociatedLayer);
+
+            //RequestEdit?.Invoke(newFeature);
         }
-
-        var newId = dataSource.GetNewId();// (Features?.Select(f => f.Id).DefaultIfEmpty(0).Max() ?? 0) + 1;
-
-        var newFeature = new Feature<Point>(geometry, attributes)
+        catch (DomainException ex)
         {
-            Id = newId
-        };
-
-        newFeature.MarkAsNew();
-
-        dataSource.Add(newFeature);
-
-        Features ??= new ObservableCollection<Feature<Point>>();
-
-        Features.Add(newFeature);
-
-        NotifyAll();
-
-        if (ShowSelectedOnMap)
-            await RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
-
-        RequestRefreshLayer?.Invoke(AssociatedLayer);
-
-        //RequestEdit?.Invoke(newFeature);
+            await _dialogService.ShowErrorMessage(ex);
+        }
+        catch (Exception ex)
+        {
+            await _dialogService.ShowErrorMessage(new MaptorUnknownException(ex.Message));
+        }
+        finally
+        {
+            if (this.AssociatedLayer != null)
+                this.AssociatedLayer.IsBusy = false;
+        }
     }
 
     private async Task DeleteAsync()
     {
         try
         {
-            System.Diagnostics.Trace.WriteLine("#********************************** DeleteAsync **********************************");
-
             var message = IRI.Maptor.Jab.Core.Properties.Resources.dialog_msg_confirmDeleteFeatures;
 
             if (await _dialogService.ShowYesNoDialogAsync(message) == false)
@@ -425,73 +577,53 @@ public class SelectedLayer : Notifier
 
             var dataSource = AssociatedLayer?.DataSource as IEditableVectorDataSource;
 
-            if (dataSource is null || HighlightedFeatures?.Count < 1)
+            if (dataSource is null || HighlightedFeatures is null || HighlightedFeatures.Count < 1)
                 return;
 
-            var toRemove = HighlightedFeatures.ToList();
-
-            System.Diagnostics.Trace.WriteLine("#DeleteAsync  before remove from datasource");
+            var toRemove = HighlightedFeatures.Where(f => f.Status != FeatureStatus.Removed && f.Status != FeatureStatus.CanceledNew).ToList();
 
             foreach (var feature in toRemove)
             {
                 dataSource.Remove(feature);
-                //RefreshFeatureInView(feature);
+
+                // deleting a not-yet-saved feature cancels it entirely; drop its row too
+                if (feature.Status == FeatureStatus.CanceledNew)
+                    Features?.Remove(feature);
             }
 
-            System.Diagnostics.Trace.WriteLine("#DeleteAsync  after remove from datasource");
+            if (RequestClearRowSelection != null)
+                RequestClearRowSelection.Invoke();
+            else
+                HighlightedFeatures.Clear();
 
-            await DispatcherInvokeAsync(() =>
-            {
-                if (Features != null)
-                {
-                    var view = System.Windows.Data.CollectionViewSource.GetDefaultView(Features);
-                    view?.Refresh();
-                }
-            });
-
-            System.Diagnostics.Trace.WriteLine("#DeleteAsync  after DispatcherInvokeAsync");
-
-            HighlightedFeatures.Clear();
-
-            System.Diagnostics.Trace.WriteLine("#DeleteAsync  after HighlightedFeatures.Clear");
-
-            //foreach (var feature in toRemove)
-            //    HighlightedFeatures.Remove(feature);
+            RefreshPagingView();
 
             NotifyAll();
 
-            System.Diagnostics.Trace.WriteLine("#DeleteAsync  after NotifyAll");
-
             RequestRefreshLayer?.Invoke(AssociatedLayer);
 
-            System.Diagnostics.Trace.WriteLine("#DeleteAsync  after RequestRefreshLayer");
-
             await RefreshSelectedFeaturesOnMap(GetSelectedFeatures(), AssociatedLayer?.DefaultSymbology?.StrokeThickness);
-
-            System.Diagnostics.Trace.WriteLine("#DeleteAsync  after RefreshSelectedFeaturesOnMap");
-
         }
         catch (DomainException ex)
         {
             await _dialogService.ShowErrorMessage(ex);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            
+            await _dialogService.ShowErrorMessage(new MaptorUnknownException(ex.Message));
         }
         finally
-        { 
+        {
             this.AssociatedLayer.IsBusy = false;
         }
-         
     }
 
     private async Task EditAsync()
     {
         var feature = IsSingleValueHighlighted ? HighlightedFeatures!.First() : null;
 
-        if (feature != null)
-            await RequestEditAsync?.Invoke(feature);
+        if (feature != null && RequestEditAsync != null)
+            await RequestEditAsync.Invoke(feature);
 
         NotifyAll();
     }
@@ -539,14 +671,16 @@ public class SelectedLayer : Notifier
             // Marshal grid refresh to UI thread; HTTP completion may have resumed on a background thread
             await DispatcherInvokeAsync(() =>
             {
-                var toBeRemoved = Features.Where(f => f.Status == FeatureStatus.Removed).ToList();
-
-                foreach (var item in toBeRemoved)
-                    Features.Remove(item);
-
-                // Replace collection to force DataGrid to re-bind; features now have Status=Unchanged
                 if (Features != null)
-                    Features = new ObservableCollection<Feature<Point>>(Features);
+                {
+                    var toBeRemoved = Features.Where(f => f.Status == FeatureStatus.Removed || f.Status == FeatureStatus.CanceledNew).ToList();
+
+                    foreach (var item in toBeRemoved)
+                        Features.Remove(item);
+                }
+
+                // rebind the visible page; features now have Status=Unchanged
+                RefreshPagingView();
 
                 NotifyAll();
             });
@@ -665,7 +799,7 @@ public class SelectedLayer : Notifier
                 {
                     if (IsSingleValueHighlighted && HighlightedFeatures?.FirstOrDefault() is Feature<Point> feature)
                         RequestViewChanges?.Invoke(feature);
-                });
+                }, param => CanViewChanges);
             }
             return _viewChangesCommand;
         }
@@ -683,6 +817,20 @@ public class SelectedLayer : Notifier
             return _zoomToCommand;
         }
     }
+
+
+    private RelayCommand? _goToNextPageCommand;
+    public RelayCommand GoToNextPageCommand =>
+        _goToNextPageCommand ??= new RelayCommand(
+            param => CurrentPageIndex++,
+            param => CurrentPageIndex < TotalPages - 1);
+
+
+    private RelayCommand? _goToPreviousPageCommand;
+    public RelayCommand GoToPreviousPageCommand =>
+        _goToPreviousPageCommand ??= new RelayCommand(
+            param => CurrentPageIndex--,
+            param => CurrentPageIndex > 0);
 
 
     #endregion

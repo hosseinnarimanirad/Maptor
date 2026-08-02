@@ -92,7 +92,7 @@
                         x:Name="grid" telerik:StyleManager.Theme="Office2019" SelectionMode="Extended" SelectionChanged="grid_SelectionChanged"
                         RowEditEnded="grid_RowEditEnded" MouseDoubleClick="grid_MouseDoubleClick">-->
         <DataGrid x:Name="grid"
-                    ItemsSource="{Binding Features}"
+                    ItemsSource="{Binding CurrentPageFeatures}"
                     IsReadOnly="{Binding ElementName=root, Path=CanUserEditAttribute, Converter={StaticResource notConverter}}"
                     CanUserAddRows="False"
                     AutoGenerateColumns="False"
@@ -169,11 +169,36 @@
                        DockPanel.Dock="Left" Margin="4">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{1} - {0}">
-                        <Binding ElementName="grid" Path="Items.Count" Converter="{StaticResource localizedNumberConverter}"/>
-                        <Binding ElementName="grid" Path="SelectedItems.Count" Converter="{StaticResource localizedNumberConverter}"/>
+                        <Binding Path="CountOfSelectedFeatures" Converter="{StaticResource localizedNumberConverter}"/>
+                        <Binding Path="HighlightedFeatures.Count" Converter="{StaticResource localizedNumberConverter}"/>
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
+
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                   Command="{Binding GoToPreviousPageCommand}"
+                   ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPage], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
+            </Button>
+            <ComboBox ItemsSource="{Binding AvailablePageSizes}"
+                      SelectedItem="{Binding SelectedPageSize, Mode=TwoWay}"
+                      Width="60" Margin="4,0" VerticalAlignment="Center"
+                      FlowDirection="LeftToRight"/>
+         
+            <TextBlock VerticalAlignment="Center" Margin="4,0" FontFamily="{StaticResource iranSans}">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0}/{1}">
+                        <Binding Path="CurrentPageNumber" Converter="{StaticResource localizedNumberConverter}"/>
+                        <Binding Path="TotalPages" Converter="{StaticResource localizedNumberConverter}"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    Command="{Binding GoToNextPageCommand}"
+                    ToolTip="{Binding [geometryDetails_currentPoint_goToNextPage], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
+            </Button>
+            
             <Button Command="{Binding AddCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                     ToolTip="{Binding [featureTable_addNew], Source={StaticResource Localization}}"
@@ -188,7 +213,6 @@
             </Button>
             <Button Command="{Binding EditCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                    IsEnabled="{Binding IsSingleValueHighlighted}"
                     ToolTip="{Binding [featureTable_editGeometry], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}"
                     Padding="0">
@@ -196,7 +220,6 @@
             </Button>
             <Button Command="{Binding UndoChangesCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                    IsEnabled="{Binding CanUndo}"
                     ToolTip="{Binding [featureTable_undo], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="UndoVariant" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
@@ -209,7 +232,6 @@
             </Button>
             <Button Command="{Binding ViewChangesCommand}"
                     Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                    IsEnabled="{Binding CanViewChanges}"
                     ToolTip="{Binding [featureChanges_viewChanges], Source={StaticResource Localization}}"
                     Visibility="{Binding ElementName=root, Path=CanUserEditGeometry, Converter={StaticResource boolToVisibilityConverter}}">
                 <iconPacks:PackIconMaterial Kind="History" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>

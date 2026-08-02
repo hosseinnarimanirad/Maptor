@@ -141,7 +141,12 @@ public class DrawingItemLayer : VectorLayer
 
         var symbolizers = sld.ParseToSymbolizers();
 
-        return Create(featureName, geoJsonFeature.AsFeature(true, SrsBases.WebMercator), symbolizers)!;
+        var layer = Create(featureName, geoJsonFeature.AsFeature(true, SrsBases.WebMercator), symbolizers)!;
+
+        if (layer is not null)
+            layer.SourceSld = sld;
+
+        return layer!;
     }
 
     public static DrawingItemLayer? Create(string layerName, Feature<Point> feature, IEnumerable<ISymbolizer> symbolizers)

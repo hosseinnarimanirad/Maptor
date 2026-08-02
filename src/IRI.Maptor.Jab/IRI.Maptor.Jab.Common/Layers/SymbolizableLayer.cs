@@ -74,9 +74,29 @@ public abstract class SymbolizableLayer : BaseLayer
         return feature.Transform(mapToScreen).Features.ToList();
     }
 
+    private StyledLayerDescriptor? _sourceSld;
+
+    /// <summary>
+    /// The original SLD this layer's symbolizers were parsed from, when the layer was styled
+    /// from one (deserialized drawing item, server-provided layer style, ...). Kept because the
+    /// runtime <see cref="ISymbolizer"/>s cannot be losslessly converted back to SLD — rule
+    /// names/titles, filters and mark shapes are lost — so the symbology-details legend prefers
+    /// this over the <see cref="GetSld"/> round-trip.
+    /// </summary>
+    public StyledLayerDescriptor? SourceSld
+    {
+        get => _sourceSld;
+        set
+        {
+            _sourceSld = value;
+            _symbologyLegend = null;
+            RaisePropertyChanged(nameof(SymbologyLegend));
+        }
+    }
+
     public StyledLayerDescriptor GetSld()
     {
-        return Symbolizers.ParseToSld();
+        return Symbolizers.ParseToSld(SpatialModelMode);
     }
 
     #region Symbology details (complex-SLD legend)
@@ -101,9 +121,11 @@ public abstract class SymbolizableLayer : BaseLayer
 
     /// <summary>
     /// Lazily-built legend model (per-rule swatch + filter/scale text) for the details panel.
+    /// Built from the original <see cref="SourceSld"/> when available (lossless: keeps rule
+    /// titles, filters and mark shapes); otherwise from the <see cref="GetSld"/> round-trip.
     /// Rebuilt whenever the symbolizers change (see <see cref="SetSymbolizer"/>).
     /// </summary>
-    public SymbologyLegend SymbologyLegend => _symbologyLegend ??= SldLegendBuilder.Build(GetSld());
+    public SymbologyLegend SymbologyLegend => _symbologyLegend ??= SldLegendBuilder.Build(SourceSld ?? GetSld());
 
     private RelayCommand? _exportSymbologyLegendCommand;
 
@@ -121,9 +143,10 @@ public abstract class SymbolizableLayer : BaseLayer
 
         if (dialog.ShowDialog() == true)
         {
-            // GetSld() yields a single synthetic style, so its group header is not meaningful here.
-            var options = new SldLegendOptions { ShowGroupHeaders = false };
-            SldLegendPngRenderer.RenderToFile(GetSld(), dialog.FileName, options);
+            // A synthetic GetSld() yields a single style whose group header is not meaningful;
+            // the original SourceSld carries real style titles worth showing.
+            var options = new SldLegendOptions { ShowGroupHeaders = SourceSld is not null };
+            SldLegendPngRenderer.RenderToFile(SourceSld ?? GetSld(), dialog.FileName, options);
         }
     }
 
