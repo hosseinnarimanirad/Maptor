@@ -10,12 +10,12 @@ using System.Xml.Serialization;
 namespace IRI.Maptor.Ket.DigitalImageProcessing.ImageMatching;
 
 [Serializable()]
-public struct Exterma
+public struct Extremum
 {
     
     private double m_ScaleLevel;
     
-    private double m_BlureLevel;
+    private double m_BlurLevel;
     
     private double m_Row;
 
@@ -23,11 +23,11 @@ public struct Exterma
 
     private double m_Sigma;
 
-    public Exterma(double scaleLevel, double blureLevel, double column, double row, double sigma)
+    public Extremum(double scaleLevel, double blurLevel, double column, double row, double sigma)
     {
         this.m_ScaleLevel = scaleLevel;
 
-        this.m_BlureLevel = blureLevel;
+        this.m_BlurLevel = blurLevel;
 
         this.m_Row = row;
 
@@ -42,11 +42,11 @@ public struct Exterma
         set { m_ScaleLevel = value; }
     }
    
-    public double BlureLevel
+    public double BlurLevel
     {
-        get { return m_BlureLevel; }
+        get { return m_BlurLevel; }
 
-        set { m_BlureLevel = value; }
+        set { m_BlurLevel = value; }
     }
     
     public double Row
@@ -71,7 +71,7 @@ public struct Exterma
 
     public override string ToString()
     {
-        return string.Format("scale:{0}, blure:{1}, x:{2} y:{3}, sigma:{4}", ScaleLevel, BlureLevel, Column, Row, Sigma);
+        return string.Format("scale:{0}, blur:{1}, x:{2} y:{3}, sigma:{4}", ScaleLevel, BlurLevel, Column, Row, Sigma);
     }
 
 }

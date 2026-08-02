@@ -8,7 +8,7 @@ public static class MapProjects
 {
     #region Helper Functions
 
-    internal static double _MaxConvertableToIsometricLatitude = 90;
+    internal static double _MaxConvertibleToIsometricLatitude = 90;
 
     //phi = 90 => q=271
     internal static double _MaxAllowableIsometricLatitude = 271;
@@ -26,9 +26,9 @@ public static class MapProjects
     public static double GeodeticLatitudeToIsometricLatitude(double latitude, double firstEccentricity)
     {
         //Limit the latitude value
-        if (Math.Abs(latitude) > _MaxConvertableToIsometricLatitude)
+        if (Math.Abs(latitude) > _MaxConvertibleToIsometricLatitude)
         {
-            latitude = _MaxConvertableToIsometricLatitude * (latitude < 0 ? -1 : 1);
+            latitude = _MaxConvertibleToIsometricLatitude * (latitude < 0 ? -1 : 1);
         }
 
         double angleInRadian = latitude * degreeToRadianRatio /*Math.PI / 180*/;

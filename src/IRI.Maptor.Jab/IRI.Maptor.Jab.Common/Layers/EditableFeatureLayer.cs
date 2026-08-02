@@ -65,7 +65,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     // Edge Length
     private SpecialPointLayer _edgeLabelLayer;
 
-    // Vertext Coordinates 
+    // Vertex Coordinates 
     private SpecialPointLayer _primaryVerticesLabelLayer;
 
 
@@ -138,7 +138,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     public Action<EditableFeatureLayer>? RequestShowGeometryDetails;
 
     // todo: check if duplicate
-    //public Action<EditableFeatureLayer>? RquestShowCoordinates;
+    //public Action<EditableFeatureLayer>? RequestShowCoordinates;
 
     // drawing
     public event EventHandler? OnRequestFinishDrawing;
@@ -208,7 +208,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
     {
         Options = options ?? EditableFeatureLayerOptions.CreateDefault();
 
-        Options.RequestHandleMeasureVisibilityChanged = UpdateEdgeLables;
+        Options.RequestHandleMeasureVisibilityChanged = UpdateEdgeLabels;
         System.Diagnostics.Trace.WriteLine("RequestHandleMeasureVisibilityChanged called #2");
 
         LayerName = name;
@@ -415,7 +415,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             _primaryVerticesLayer.Items.Add(item);
         }
 
-        UpdateEdgeLables();
+        UpdateEdgeLabels();
 
         // Notify that Locateables have been reconstructed
         LocateablesReconstructed?.Invoke();
@@ -430,7 +430,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     //1397.08.26
     //why this methods calls multiple time. enable break point to see why
-    private void UpdateEdgeLables()
+    private void UpdateEdgeLabels()
     {
         _edgeLabelLayer.Items.Clear();
 
@@ -467,7 +467,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
             var offset = _screenToMap(20);
 
-            _edgeLabelLayer.Items.Add(new Locateable(AncherFunctionHandlers.BottomCenter)
+            _edgeLabelLayer.Items.Add(new Locateable(AnchorFunctionHandlers.BottomCenter)
             {
                 Element = element,
                 X = point.X + offset,
@@ -622,7 +622,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         var element = /*Options*/this.MakePrimaryVertex();
 
-        var locateable = new Locateable(AncherFunctionHandlers.CenterCenter)
+        var locateable = new Locateable(AnchorFunctionHandlers.CenterCenter)
         {
             Element = element,
             X = webMercatorPoint.X,
@@ -686,7 +686,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
             webMercatorPoint.X = locateable.X;
             webMercatorPoint.Y = locateable.Y;
 
-            UpdateEdgeLables();
+            UpdateEdgeLabels();
 
             UpdateCoordinate(locateable);
         };
@@ -713,7 +713,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         //var element = new View.MapMarkers.Circle(.6);
         var element = /*Options*/this.MakeSecondaryVertex();
 
-        var locateable = new Locateable(AncherFunctionHandlers.CenterCenter) { Element = element, X = webMercatorPoint.X, Y = webMercatorPoint.Y };
+        var locateable = new Locateable(AnchorFunctionHandlers.CenterCenter) { Element = element, X = webMercatorPoint.X, Y = webMercatorPoint.Y };
 
         MouseButtonEventHandler leftDown = (sender, e) =>
         {
@@ -770,7 +770,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
                 var element = new CoordinateMarker(locateable, displayMode);
 
-                var auxLocateable = new Locateable(AncherFunctionHandlers.CenterLeft) { Element = element, X = point.X, Y = point.Y, Id = locateable.Id };
+                var auxLocateable = new Locateable(AnchorFunctionHandlers.CenterLeft) { Element = element, X = point.X, Y = point.Y, Id = locateable.Id };
 
                 _primaryVerticesLabelLayer.Items.Add(auxLocateable);
             }
@@ -1126,7 +1126,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
         //var offset = _screenToMap(15);
 
-        return new Locateable(AncherFunctionHandlers.BottomCenter) { Element = element, X = edge.Middle.X, Y = edge.Middle.Y };
+        return new Locateable(AnchorFunctionHandlers.BottomCenter) { Element = element, X = edge.Middle.X, Y = edge.Middle.Y };
     }
 
     #endregion
@@ -1141,44 +1141,44 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     public string AreaLabel => UnitHelper.GetAreaLabel(SpatialUtility.GetEllipsoidalArea(_webMercatorGeometry, MapProjects.WebMercatorToGeodeticWgs84));
 
-    public string LengthLabel => UnitHelper.GetLengthLabel(GetGeodeticWgs84Geometery().GetEllipsoidalLength(/*MapProjects.WebMercatorToGeodeticWgs84*/));
+    public string LengthLabel => UnitHelper.GetLengthLabel(GetGeodeticWgs84Geometry().GetEllipsoidalLength(/*MapProjects.WebMercatorToGeodeticWgs84*/));
 
 
-    public double ScaleFactor => MapProjects.CalculateUTMScaleFactor(GetGeodeticWgs84Geometery().GetCentroidPlus().AsPoint());
+    public double ScaleFactor => MapProjects.CalculateUTMScaleFactor(GetGeodeticWgs84Geometry().GetCentroidPlus().AsPoint());
 
 
     public double EuclideanLengthInUtm => GetUtmGeometry().GetEuclideanLength();
 
     public double EuclideanLengthInUtm_Refined => EuclideanLengthInUtm * (1.0 / ScaleFactor) * (1.0 + Height / WebMercatorUtility.EarthRadius);
 
-    public double SphericalLength => GetGeodeticWgs84Geometery().GetSphericalLength();
+    public double SphericalLength => GetGeodeticWgs84Geometry().GetSphericalLength();
 
-    public double EllipsoidalLength => GetGeodeticWgs84Geometery().GetEllipsoidalLength();
+    public double EllipsoidalLength => GetGeodeticWgs84Geometry().GetEllipsoidalLength();
 
     public double GroundLength => EllipsoidalLength * (1.0 + Height / WebMercatorUtility.EarthRadius);
 
 
     public double EuclideanArea => GetUtmGeometry().EuclideanArea;
 
-    public double EllipsoidalArea => SpatialUtility.GetEllipsoidalArea(GetGeodeticWgs84Geometery());
+    public double EllipsoidalArea => SpatialUtility.GetEllipsoidalArea(GetGeodeticWgs84Geometry());
 
-    public double AuthalicSphereArea => SpatialUtility.GetAreaOnAuthalicSphere(GetGeodeticWgs84Geometery());
+    public double AuthalicSphereArea => SpatialUtility.GetAreaOnAuthalicSphere(GetGeodeticWgs84Geometry());
 
-    public double KarneyArea => SpatialUtility.GetKarneyArea(GetGeodeticWgs84Geometery());
+    public double KarneyArea => SpatialUtility.GetKarneyArea(GetGeodeticWgs84Geometry());
 
     //public double GroundArea => EllipsoidalArea * (1.0 + 2 * Height / WebMercatorUtility.EarthRadius);
-    public double GroundArea => SpatialUtility.GetGroundArea(GetGeodeticWgs84Geometery(), Height);
+    public double GroundArea => SpatialUtility.GetGroundArea(GetGeodeticWgs84Geometry(), Height);
 
     #endregion
 
 
     #region Public Methods
 
-    public Geometry GetGeodeticWgs84Geometery() => _webMercatorGeometry.Transform(MapProjects.WebMercatorToGeodeticWgs84, SridHelper.GeodeticWGS84);
+    public Geometry GetGeodeticWgs84Geometry() => _webMercatorGeometry.Transform(MapProjects.WebMercatorToGeodeticWgs84, SridHelper.GeodeticWGS84);
 
     public Geometry GetUtmGeometry()
     {
-        var geography = GetGeodeticWgs84Geometery();
+        var geography = GetGeodeticWgs84Geometry();
 
         var boundary = geography.GetBoundingBox();
 
@@ -1202,9 +1202,9 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
 
     public SpecialPointLayer GetMidVertices() => _midVerticesLayer;
 
-    public SpecialPointLayer GetEdgeLengthes()
+    public SpecialPointLayer GetEdgeLengths()
     {
-        UpdateEdgeLables();
+        UpdateEdgeLabels();
 
         return _edgeLabelLayer;
     }

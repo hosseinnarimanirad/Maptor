@@ -137,11 +137,11 @@ public class TileMapProvider : ValueObjectNotifier, IDisposable
         return new TileMapProvider(type, providerResourceKey, mapTypeResourceKey, thumbnail, thumbnail72);
     }
 
-    public static TileMapProvider CreateLocalNetwork(BaseMapType type, string providerResourceKey, string mapTypeResourceKey, byte[]? thumbnail, byte[]? thumbnail72, Func<TileInfo, string> interanetUrlFunc)
+    public static TileMapProvider CreateLocalNetwork(BaseMapType type, string providerResourceKey, string mapTypeResourceKey, byte[]? thumbnail, byte[]? thumbnail72, Func<TileInfo, string> intranetUrlFunc)
     {
         return new TileMapProvider(type, providerResourceKey, mapTypeResourceKey, thumbnail, thumbnail72, TileMapAccessMode.LocalNetwork)
         {
-            _urlStrategy = new TileServiceUrlStrategy_LocalNetwork(interanetUrlFunc),
+            _urlStrategy = new TileServiceUrlStrategy_LocalNetwork(intranetUrlFunc),
         };
     }
 

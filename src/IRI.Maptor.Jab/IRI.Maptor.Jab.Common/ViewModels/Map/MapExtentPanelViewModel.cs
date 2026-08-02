@@ -73,13 +73,13 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
      
     //public string CurrentPointGroundResolution => FormattableString.Invariant($"{Map.CurrentPointGroundResolution:N2}");
      
-    private bool _useGroundScaleForSandardScales = true;
-    public bool UseGroundScaleForSandardScales
+    private bool _useGroundScaleForStandardScales = true;
+    public bool UseGroundScaleForStandardScales
     {
-        get { return _useGroundScaleForSandardScales; }
+        get { return _useGroundScaleForStandardScales; }
         set
         {
-            _useGroundScaleForSandardScales = value;
+            _useGroundScaleForStandardScales = value;
             RaisePropertyChanged();
         }
     }
@@ -292,7 +292,7 @@ public sealed class MapExtentPanelViewModel : Notifier, IDisposable
 
                     double lat = wgs?.Y ?? 0;
 
-                    var webMercatorScale = UseGroundScaleForSandardScales ? Math.Cos(lat * Math.PI / 180.0) * item.Model.Scale : item.Model.Scale;
+                    var webMercatorScale = UseGroundScaleForStandardScales ? Math.Cos(lat * Math.PI / 180.0) * item.Model.Scale : item.Model.Scale;
 
                     Map.Zoom(webMercatorScale, center);
                 }

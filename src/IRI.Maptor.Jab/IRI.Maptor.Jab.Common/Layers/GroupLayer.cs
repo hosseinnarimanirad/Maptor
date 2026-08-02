@@ -46,7 +46,7 @@ public class GroupLayer : BaseLayer
             //this.SubLayers.Add(layer);
         }
 
-        UpdateAllChildsVisible();
+        UpdateAllChildrenVisible();
     }
 
     public override string ToString()

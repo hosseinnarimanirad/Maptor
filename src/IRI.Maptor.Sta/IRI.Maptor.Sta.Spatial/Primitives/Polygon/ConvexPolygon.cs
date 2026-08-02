@@ -13,15 +13,15 @@
 //public class ConvexPolygon
 //{
 //    //Points are in ccw form
-//    public PointCollection Vertexes { get; set; }
+//    public PointCollection Vertices { get; set; }
 
 //    public List<int> Neighbours { get; set; }
 
-//    public ConvexPolygon(PointCollection vertexes)
+//    public ConvexPolygon(PointCollection vertices)
 //    {
-//        Vertexes = vertexes;
+//        Vertices = vertices;
 
-//        Neighbours = new List<int>(vertexes.Count);
+//        Neighbours = new List<int>(vertices.Count);
 
 //        for (int i = 0; i < Neighbours.Count; i++)
 //        {
@@ -29,21 +29,21 @@
 //        }
 //    }
 
-//    public ConvexPolygon(PointCollection vertexes, List<int> neighbours)
+//    public ConvexPolygon(PointCollection vertices, List<int> neighbours)
 //    {
-//        if (vertexes.Count != neighbours.Count)
+//        if (vertices.Count != neighbours.Count)
 //        {
 //            throw new NotImplementedException();
 //        }
 
-//        Vertexes = vertexes;
+//        Vertices = vertices;
 
 //        Neighbours = neighbours;
 //    }
 
 //    public int Count
 //    {
-//        get { return Vertexes.Count; }
+//        get { return Vertices.Count; }
 //    }
 
 //    //private void VertexAdded()
@@ -60,12 +60,12 @@
 
 //        StringBuilder result = new StringBuilder();
 
-//        for (int i = 0; i < Vertexes.Count - 1; i++)
+//        for (int i = 0; i < Vertices.Count - 1; i++)
 //        {
-//            result.Append(string.Format("{0}, ", Vertexes[i].ToString()));
+//            result.Append(string.Format("{0}, ", Vertices[i].ToString()));
 //        }
 
-//        result.Append(Vertexes[Vertexes.Count - 1].ToString());
+//        result.Append(Vertices[Vertices.Count - 1].ToString());
 
 //        return result.ToString();
 //    }
@@ -100,8 +100,8 @@
 //        {
 //            int j = (i + 1) % count;
 
-//            //tempValue += ComputationalGeometry.CalculateDistance(Vertexes[i], Vertexes[j]);
-//            tempValue += Vertexes[i].DistanceTo(Vertexes[j]);
+//            //tempValue += ComputationalGeometry.CalculateDistance(Vertices[i], Vertices[j]);
+//            tempValue += Vertices[i].DistanceTo(Vertices[j]);
 //        }
 
 //        return tempValue;
@@ -119,7 +119,7 @@
 //        {
 //            int j = (i + 1) % count;
 
-//            relation[i] = TopologyUtility.GetPointVectorRelation(point, Vertexes[i], Vertexes[j]);
+//            relation[i] = TopologyUtility.GetPointVectorRelation(point, Vertices[i], Vertices[j]);
 
 //            tempValue += (int)relation[i];
 
@@ -142,7 +142,7 @@
 
 //    public bool HasThePoint(Point point)
 //    {
-//        foreach (Point item in Vertexes)
+//        foreach (Point item in Vertices)
 //        {
 //            if (item.Equals(point))
 //            {
@@ -157,13 +157,13 @@
 //    {
 //        double result = 0;
 
-//        int count = Vertexes.Count;
+//        int count = Vertices.Count;
 
 //        for (int i = 0; i < count; i++)
 //        {
 //            int j = (i + 1) % count;
 
-//            result += Vertexes[i].X * Vertexes[j].Y - Vertexes[j].X * Vertexes[i].Y;
+//            result += Vertices[i].X * Vertices[j].Y - Vertices[j].X * Vertices[i].Y;
 //        }
 
 //        //Polygon is counterClockWise
@@ -181,7 +181,7 @@
 
 //        edgeIndexes = new List<int>();
 
-//        int count = Vertexes.Count;
+//        int count = Vertices.Count;
 
 //        for (int i = 0; i < count; i++)
 //        {
@@ -189,12 +189,12 @@
 
 //            Point intersection;
 
-//            LineLineSegmentRelation relation = TopologyUtility.LineSegmentsIntersects(firstPointLine, secondPointLine, Vertexes[i], Vertexes[j], out intersection);
+//            LineLineSegmentRelation relation = TopologyUtility.LineSegmentsIntersects(firstPointLine, secondPointLine, Vertices[i], Vertices[j], out intersection);
 
 //            if (relation == LineLineSegmentRelation.Intersect)
 //            {
 //                //check if intersection is not the vertex!
-//                if (!result.Contains(intersection) && !intersection.AreTheSame(Vertexes[i], 10))
+//                if (!result.Contains(intersection) && !intersection.AreTheSame(Vertices[i], 10))
 //                {
 //                    result.Add(intersection);
 
@@ -203,9 +203,9 @@
 //            }
 //            else if (relation == LineLineSegmentRelation.Coinciding)
 //            {
-//                if (!result.Contains(Vertexes[j]))
+//                if (!result.Contains(Vertices[j]))
 //                {
-//                    result.Add(Vertexes[j]);
+//                    result.Add(Vertices[j]);
 
 //                    edgeIndexes.Add(i);
 //                }

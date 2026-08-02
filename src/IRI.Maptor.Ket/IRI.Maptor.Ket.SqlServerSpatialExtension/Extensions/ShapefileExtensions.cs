@@ -8,7 +8,7 @@ using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 
 namespace IRI.Maptor.Extensions;
 
-public static class ShapefileExtention
+public static class ShapefileExtensions
 {
     private static bool AreConsistent(EsriShapeType esriType, OpenGisGeometryType ogcType)
     {
@@ -38,7 +38,7 @@ public static class ShapefileExtention
     }
 
     /// <summary>
-    /// Removes Extera Geometries with inconsistent types (based on esriType argument)
+    /// Removes Extra Geometries with inconsistent types (based on esriType argument)
     /// </summary>
     /// <param name="esriType"></param>
     /// <param name="geometry"></param>

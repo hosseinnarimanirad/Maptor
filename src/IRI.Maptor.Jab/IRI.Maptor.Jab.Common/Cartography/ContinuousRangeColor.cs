@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace IRI.Maptor.Jab.Common.Cartography;
  
-public class ContinousRangeColor
+public class ContinuousRangeColor
 {
     public double MinValue { get; }
 
@@ -17,7 +17,7 @@ public class ContinousRangeColor
 
     public List<ColorInterpolation> Interpolations { get; private set; }
 
-    public ContinousRangeColor(List<double> values, List<Color> colors)
+    public ContinuousRangeColor(List<double> values, List<Color> colors)
     {
         if (values.Count - 1 != colors.Count)
         {

@@ -211,9 +211,9 @@ public class LayerSettings_VectorExportViewModel : ViewModelBase
             UtmZone = utmZoneInfo.zone!.Value;
             IsNorthHemisphere = utmZoneInfo.isNorthHemisphere!.Value;
 
-            var hemishpereNote = utmZoneInfo.isNorthHemisphere == true ? "N" : "S";
+            var hemisphereNote = utmZoneInfo.isNorthHemisphere == true ? "N" : "S";
 
-            SourceLayerSrs = new SrsOption() { IsUtm = true, FixedSrid = srid, DisplayName = $"UTM Zone {utmZoneInfo.zone} ({hemishpereNote})" };
+            SourceLayerSrs = new SrsOption() { IsUtm = true, FixedSrid = srid, DisplayName = $"UTM Zone {utmZoneInfo.zone} ({hemisphereNote})" };
         }
         else
         {

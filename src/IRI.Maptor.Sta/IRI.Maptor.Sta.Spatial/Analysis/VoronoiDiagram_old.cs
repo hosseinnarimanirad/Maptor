@@ -13,14 +13,14 @@
 //{
 //    QuasiVoronoiCellCollection polygons;
 
-//    PointCollection vertexes;
+//    PointCollection vertices;
 
 //    Point upperRight, lowerLeft;
 
 //    public VoronoiDiagram_old(PointCollection points, Point upperRight, Point lowerLeft)
 //    {
 
-//        vertexes = new PointCollection();
+//        vertices = new PointCollection();
 
 //        if (points.Equals(null))
 //        {
@@ -53,9 +53,9 @@
 
 //        Point upperLeft = new Point(lowerLeft.X, upperRight.Y);
 
-//        vertexes.Add(lowerLeft); vertexes.Add(lowerRight);
+//        vertices.Add(lowerLeft); vertices.Add(lowerRight);
 
-//        vertexes.Add(upperRight); vertexes.Add(upperLeft);
+//        vertices.Add(upperRight); vertices.Add(upperLeft);
 
 //        QuasiVoronoiCell tempCell = new QuasiVoronoiCell(
 //                                        firstPrimaryPoint,
@@ -101,9 +101,9 @@
 
 //        QuasiVoronoiCell temp = polygons.GetCell(polygonCode);
 
-//        for (int i = 0; i < temp.Vertexes.Count; i++)
+//        for (int i = 0; i < temp.Vertices.Count; i++)
 //        {
-//            collection.Add(vertexes.GetPoint(temp.Vertexes[i]));
+//            collection.Add(vertices.GetPoint(temp.Vertices[i]));
 //        }
 
 //        return new VoronoiCell(temp.PrimaryPoint, collection, temp.neighbours);
@@ -150,15 +150,15 @@
 
 //        List<int> edgeIndexes;
 
-//        List<Point> newVertexes = polygon.Intersects(midPoint, temPoint, out edgeIndexes);
+//        List<Point> newVertices = polygon.Intersects(midPoint, temPoint, out edgeIndexes);
 
 //        //20/12/2009
-//        if (newVertexes.Count != 2)
+//        if (newVertices.Count != 2)
 //        {
 //            throw new NotImplementedException();
 //        }
 
-//        List<int> affectedPolygons = GetAffectedPolygons(polygon, newVertexes, edgeIndexes);
+//        List<int> affectedPolygons = GetAffectedPolygons(polygon, newVertices, edgeIndexes);
 
 //        List<int> ii = new List<int>();
 
@@ -171,9 +171,9 @@
 
 //            foreach (Point item in p2)
 //            {
-//                if (!vertexes.Contains(item))
+//                if (!vertices.Contains(item))
 //                {
-//                    vertexes.Add(item);
+//                    vertices.Add(item);
 //                }
 //                if (!ii.Contains(item.GetHashCode()))
 //                {
@@ -186,13 +186,13 @@
 //        //20/12/2009
 
 //        //check if neighbour exists!
-//        //newVertexes is for check!
-//        //int nextPolygon = MakeUpPolygon(polygon.Neighbours[edgeIndexes[0]], newVertexes[0], point);
+//        //newVertices is for check!
+//        //int nextPolygon = MakeUpPolygon(polygon.Neighbours[edgeIndexes[0]], newVertices[0], point);
 //    }
 
-//    private List<int> GetAffectedPolygons(VoronoiCell polygon, List<Point> newVertexes, List<int> edgeIndexes)
+//    private List<int> GetAffectedPolygons(VoronoiCell polygon, List<Point> newVertices, List<int> edgeIndexes)
 //    {
-//        PointVectorRelation relation = TopologyUtility.GetPointVectorRelation(polygon.PrimaryPoint, newVertexes[0], newVertexes[1]);
+//        PointVectorRelation relation = TopologyUtility.GetPointVectorRelation(polygon.PrimaryPoint, newVertices[0], newVertices[1]);
 
 //        if (relation == PointVectorRelation.LiesOnTheLine)
 //        {
@@ -203,9 +203,9 @@
 
 //        bool condition = false;
 
-//        for (int i = 0; i < polygon.Vertexes.Count; i++)
+//        for (int i = 0; i < polygon.Vertices.Count; i++)
 //        {
-//            PointVectorRelation tempRelation = TopologyUtility.GetPointVectorRelation(polygon.Vertexes[i], newVertexes[0], newVertexes[1]);
+//            PointVectorRelation tempRelation = TopologyUtility.GetPointVectorRelation(polygon.Vertices[i], newVertices[0], newVertices[1]);
 
 //            if (tempRelation != relation)
 //            {
@@ -213,7 +213,7 @@
 //                {
 //                    if (condition)
 //                    {
-//                        int temp = i - 1 >= 0 ? i - 1 : polygon.Vertexes.Count - 1;
+//                        int temp = i - 1 >= 0 ? i - 1 : polygon.Vertices.Count - 1;
 
 //                        result.Add(polygon.Neighbours[temp]);
 //                    }
@@ -222,7 +222,7 @@
 //                {
 //                    condition = true;
 
-//                    int temp = i - 1 >= 0 ? i - 1 : polygon.Vertexes.Count - 1;
+//                    int temp = i - 1 >= 0 ? i - 1 : polygon.Vertices.Count - 1;
 
 //                    result.Add(polygon.Neighbours[temp]);
 //                }
@@ -242,50 +242,50 @@
 
 //        List<int> edgeIndexes;
 
-//        List<Point> newVertexes = polygon.Intersects(midPoint, temPoint, out edgeIndexes);
+//        List<Point> newVertices = polygon.Intersects(midPoint, temPoint, out edgeIndexes);
 
-//        if (newVertexes.Count == 1)
+//        if (newVertices.Count == 1)
 //        {
-//            return newVertexes;
+//            return newVertices;
 //        }
 
-//        if (newVertexes.Count != 2)
+//        if (newVertices.Count != 2)
 //        {
 //            throw new NotImplementedException();
 //        }
 
 //        VoronoiCell first = new VoronoiCell(polygon.PrimaryPoint);
 
-//        first.Vertexes.Add(newVertexes[1]);
+//        first.Vertices.Add(newVertices[1]);
 
-//        first.Vertexes.Add(newVertexes[0]);
+//        first.Vertices.Add(newVertices[0]);
 
 //        for (int i = edgeIndexes[0] + 1; i < edgeIndexes[1]; i++)
 //        {
-//            first.Vertexes.Add(polygon.Vertexes[i]);
+//            first.Vertices.Add(polygon.Vertices[i]);
 
 //            first.Neighbours.Add(polygon.Neighbours[i - 1]);
 //        }
 
 //        VoronoiCell second = new VoronoiCell(polygon.PrimaryPoint);
 
-//        for (int i = edgeIndexes[1] + 1; i < polygon.Vertexes.Count; i++)
+//        for (int i = edgeIndexes[1] + 1; i < polygon.Vertices.Count; i++)
 //        {
-//            second.Vertexes.Add(polygon.Vertexes[i]);
+//            second.Vertices.Add(polygon.Vertices[i]);
 
 //            first.Neighbours.Add(polygon.Neighbours[i]);
 //        }
 
 //        for (int i = 0; i < edgeIndexes[0]; i++)
 //        {
-//            second.Vertexes.Add(polygon.Vertexes[i]);
+//            second.Vertices.Add(polygon.Vertices[i]);
 
 //            first.Neighbours.Add(polygon.Neighbours[i]);
 //        }
 
-//        second.Vertexes.Add(newVertexes[0]);
+//        second.Vertices.Add(newVertices[0]);
 
-//        second.Vertexes.Add(newVertexes[1]);
+//        second.Vertices.Add(newVertices[1]);
 
 //        if (first.GetRelationTo(polygon.PrimaryPoint) == PointPolygonRelation.In)
 //        {
@@ -296,7 +296,7 @@
 //            polygon = second;
 //        }
 
-//        return newVertexes;
+//        return newVertices;
 //    }
 
 //    private List<int> GetNeighbours(ConvexPolygon currentPolygon, Point commonPoint)

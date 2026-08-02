@@ -1023,7 +1023,7 @@ public partial class MapViewer : NotifiableUserControl
         {
             var path = layer.GetMainPath();
 
-            AddPanablePathToMapView(path);
+            AddPannablePathToMapView(path);
 
             Canvas.SetZIndex(path, layer.ZIndex);
 
@@ -1033,7 +1033,7 @@ public partial class MapViewer : NotifiableUserControl
 
             controlPath.Visibility = layer.IsControlsShown ? Visibility.Visible : Visibility.Collapsed;
 
-            AddPanablePathToMapView(controlPath);
+            AddPannablePathToMapView(controlPath);
 
             //98.01.20
             //Canvas.SetZIndex(controlPath, layer.ZIndex + 1);
@@ -1146,7 +1146,7 @@ public partial class MapViewer : NotifiableUserControl
         }
         else if (layer is TileServiceLayer)
         {
-            //their Rendering property must be Tiled and catched by the first `if`
+            //their Rendering property must be Tiled and caught by the first `if`
             throw new NotImplementedException();
 
             //They are handled when UpdateTileInfos is fired
@@ -1479,7 +1479,7 @@ public partial class MapViewer : NotifiableUserControl
 
         //if (layer.Options.IsMeasureVisible)
         //{
-        AddComplexLayer(layer.GetEdgeLengthes(), true);
+        AddComplexLayer(layer.GetEdgeLengths(), true);
         //}
 
         AddComplexLayer(layer.GetPrimaryVerticesLabels(), true);
@@ -1695,9 +1695,9 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    //POTENTIALLY ERROR PROUNE; Check if exceptions are catched correctly; 
-    //POTENTIALLY ERROR PROUNE; Captured Variables
-    //IMPROVEMENT; use vector approach for light vector layers insted of "AddLayerAsDrawing"
+    //POTENTIALLY ERROR PRONE; Check if exceptions are caught correctly; 
+    //POTENTIALLY ERROR PRONE; Captured Variables
+    //IMPROVEMENT; use vector approach for light vector layers instead of "AddLayerAsDrawing"
     public void Refresh(bool isNewExtent)
     {
         if (this.CurrentTileInfos == null)
@@ -1756,7 +1756,7 @@ public partial class MapViewer : NotifiableUserControl
     FrameworkElement currentMoveableItem;
 
 
-    //POTENTIALLY ERROR PROUNE; What if the Element has no scaletransform
+    //POTENTIALLY ERROR PRONE; What if the Element has no scaletransform
     private void AddComplexLayer(SpecialPointLayer specialPointLayer, bool withAnimation = true)
     {
         specialPointLayer.HandleCollectionChanged = (e) =>
@@ -1816,11 +1816,11 @@ public partial class MapViewer : NotifiableUserControl
         var height = double.IsNaN(element.Height) ? element.ActualHeight : element.Height;
         var width = double.IsNaN(element.Width) ? element.ActualWidth : element.Width;
 
-        var screenLocation = item.AncherFunction(MapToScreen(new Point(item.X, item.Y)), width, height);
+        var screenLocation = item.AnchorFunction(MapToScreen(new Point(item.X, item.Y)), width, height);
 
         if (height != 0 && width != 0)
         {
-            var tempPoint = item.AncherFunction(new Point(0, 0), width, height);
+            var tempPoint = item.AnchorFunction(new Point(0, 0), width, height);
 
             element.RenderTransformOrigin = new Point(-tempPoint.X / width, -tempPoint.Y / height);
         }
@@ -2026,7 +2026,7 @@ public partial class MapViewer : NotifiableUserControl
         locateable?.RaiseMouseUpEvent();
     }
 
-    //POTENTIALLY ERROR PROUNE; What if the Element has no scaletransform
+    //POTENTIALLY ERROR PRONE; What if the Element has no scaletransform
     private void Item_OnPositionChanged(object? sender, EventArgs e)
     {
         var item = sender as Locateable;
@@ -2036,7 +2036,7 @@ public partial class MapViewer : NotifiableUserControl
         var width = double.IsNaN(element.Width) ? element.ActualWidth : element.Width;
         var height = double.IsNaN(element.Height) ? element.ActualHeight : element.Height;
 
-        var screenLocation = item.AncherFunction(MapToScreen(new Point(item.X, item.Y)), width, height);
+        var screenLocation = item.AnchorFunction(MapToScreen(new Point(item.X, item.Y)), width, height);
 
         ((TransformGroup)(element.RenderTransform)).Children[2] = (new TranslateTransform(screenLocation.X, screenLocation.Y));
 
@@ -2046,7 +2046,7 @@ public partial class MapViewer : NotifiableUserControl
     #endregion
 
     #region Others
-    //POTENTIALLY ERROR PROUNE; not sure everything is considered or not
+    //POTENTIALLY ERROR PRONE; not sure everything is considered or not
     private void ResetMapViewEvents()
     {
         // End the current mode-level interaction session (pan/zoom/etc.)
@@ -2295,13 +2295,13 @@ public partial class MapViewer : NotifiableUserControl
         Clear(new Predicate<LayerTag>(tag => tag.Layer == layer), remove, forceRemove, keepEmptyParentGroup);
 
         //in the case of image pyramids, the actual layer will not be remove
-        //"tag.AncestorLayerId == layer?.Id" is not a layer in layerManagemnr
+        //"tag.AncestorLayerId == layer?.Id" is not a layer in layerManager
         //so _layerManager.Remove(layer, forceRemove) removes it from map layers and
         //ClearLayerByAncestor(layer) removes if from canvas
         ClearLayerByAncestor(layer);
 
         //97.08.17
-        //In the case of DrawingLayer, it is not directly added to children of MapViewr
+        //In the case of DrawingLayer, it is not directly added to children of MapViewer
         //so in order to remove it, it should be done here
         if (remove)
         {
@@ -2345,7 +2345,7 @@ public partial class MapViewer : NotifiableUserControl
 
             ClearLayer((ILayer)layer.GetMidVertices(), remove: true, forceRemove: false);
 
-            ClearLayer((ILayer)layer.GetEdgeLengthes(), remove: true, forceRemove: false);
+            ClearLayer((ILayer)layer.GetEdgeLengths(), remove: true, forceRemove: false);
 
             ClearLayer(layer.GetPrimaryVerticesLabels(), remove: true, forceRemove: false);
         }
@@ -3201,7 +3201,7 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    //Consider removeing checking Tag is LayerTag, All childrens should have a LayerTag as Tag
+    //Consider removing checking Tag is LayerTag, All children should have a LayerTag as Tag
     private List<Path> Find(TileInfo tile)
     {
         List<Path> result = new List<Path>();
@@ -3729,7 +3729,7 @@ public partial class MapViewer : NotifiableUserControl
 
         this.panTransform.Y = this.mapView.ActualHeight / 2.0 - layerPoint.Y;
 
-        //94.09.24: zoomTranform.ScaleX value may be at an animation!
+        //94.09.24: zoomTransform.ScaleX value may be at an animation!
         //double scale = this.zoomTransform.ScaleX * deltaZoom;
         double scale = this._theScreenScale * deltaZoom;
         //
@@ -4991,7 +4991,7 @@ public partial class MapViewer : NotifiableUserControl
 
         this.ClearLayer(measureLayer, remove: true, forceRemove: true);
 
-        var measureLocatable = new Locateable(new sb.Point(0, 0), AncherFunctionHandlers.BottomCenter)
+        var measureLocatable = new Locateable(new sb.Point(0, 0), AnchorFunctionHandlers.BottomCenter)
         {
             Element = new IRI.Maptor.Jab.Controls.MapMarkers.LabelMarker(string.Empty)
         };
@@ -5090,9 +5090,9 @@ public partial class MapViewer : NotifiableUserControl
     #endregion
 
 
-    #region Panable Path
+    #region Pannable Path
 
-    private void AddPanablePathToMapView(Path path)
+    private void AddPannablePathToMapView(Path path)
     {
         if (!this.mapView.Children.Contains(path))
         {
@@ -5164,9 +5164,9 @@ public partial class MapViewer : NotifiableUserControl
 
                         AddComplexLayer(layer.GetControlPointLayer());
 
-                        AddPanablePathToMapView(layer.GetMainPath());
+                        AddPannablePathToMapView(layer.GetMainPath());
 
-                        AddPanablePathToMapView(layer.GetControlPath());
+                        AddPannablePathToMapView(layer.GetControlPath());
                     }
                     else
                     {

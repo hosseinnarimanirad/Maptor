@@ -20,14 +20,14 @@ public static class TileMapProviderFactory
     }
 
     private static readonly string baseMapUri = "IRI.Maptor.Jab.Core.Assets.Images.BaseMaps";
-    //this can be used in the case of interanet network without internet connection. samples:
-    //this.AddProvider(TileMapProviderFactory.CreateInteranetProvider("localGoogle", "roadMap", t => $@"http://v-gisserver2/Google/Road/{t.ZoomLevel}/gm_{t.ColumnNumber}_{t.RowNumber}_{t.ZoomLevel}.png"));
-    // this.AddProvider(TileMapProviderFactory.CreateInteranetProvider("localGoogle", "terrainMap", t => $@"http://v-gisserver2/Google/TerrainWithRoad/{t.ZoomLevel}/gtr_{t.ColumnNumber}_{t.RowNumber}_{t.ZoomLevel}.jpg"));
-    // this.AddProvider(TileMapProviderFactory.CreateInteranetProvider("localGoogle", "satelliteMap", t => $@"http://v-gisserver2/Google/Satellite/{t.ZoomLevel}/gs_{t.ColumnNumber}_{t.RowNumber}_{t.ZoomLevel}.jpg"));
-    // this.AddProvider(TileMapProviderFactory.CreateInteranetProvider("localGoogle", "hybridMap", t => $@"http://v-gisserver2/Google/Satellite/{t.ZoomLevel}/gs_{t.ColumnNumber}_{t.RowNumber}_{t.ZoomLevel}.jpg"));
-    public static TileMapProvider CreateInteranetProvider(BaseMapType type, string providerName, string subTitle, Func<TileInfo, string> interanetUrlFunc)
+    //this can be used in the case of intranet network without internet connection. samples:
+    //this.AddProvider(TileMapProviderFactory.CreateIntranetProvider("localGoogle", "roadMap", t => $@"http://v-gisserver2/Google/Road/{t.ZoomLevel}/gm_{t.ColumnNumber}_{t.RowNumber}_{t.ZoomLevel}.png"));
+    // this.AddProvider(TileMapProviderFactory.CreateIntranetProvider("localGoogle", "terrainMap", t => $@"http://v-gisserver2/Google/TerrainWithRoad/{t.ZoomLevel}/gtr_{t.ColumnNumber}_{t.RowNumber}_{t.ZoomLevel}.jpg"));
+    // this.AddProvider(TileMapProviderFactory.CreateIntranetProvider("localGoogle", "satelliteMap", t => $@"http://v-gisserver2/Google/Satellite/{t.ZoomLevel}/gs_{t.ColumnNumber}_{t.RowNumber}_{t.ZoomLevel}.jpg"));
+    // this.AddProvider(TileMapProviderFactory.CreateIntranetProvider("localGoogle", "hybridMap", t => $@"http://v-gisserver2/Google/Satellite/{t.ZoomLevel}/gs_{t.ColumnNumber}_{t.RowNumber}_{t.ZoomLevel}.jpg"));
+    public static TileMapProvider CreateIntranetProvider(BaseMapType type, string providerName, string subTitle, Func<TileInfo, string> intranetUrlFunc)
     {
-        return TileMapProvider.CreateLocalNetwork(type, providerName, subTitle, null, null, interanetUrlFunc);
+        return TileMapProvider.CreateLocalNetwork(type, providerName, subTitle, null, null, intranetUrlFunc);
     }
 
     #region Bing
@@ -151,7 +151,7 @@ public static class TileMapProviderFactory
                     BaseMapType.Google_Traffic,
                     nameof(tile_provider_google),
                     nameof(tile_mapType_traffic),
-                    //tile => MakeGoogleTerafficUrl(tile, GetServer()),
+                    //tile => MakeGoogleTrafficUrl(tile, GetServer()),
                     ReadEmbeddedImage($"{baseMapUri}/googleTerrain.png"),
                     ReadEmbeddedImage($"{baseMapUri}/72/googleTraffic72.jpg"));
 
@@ -465,14 +465,14 @@ public static class TileMapProviderFactory
     }
 
 
-    private static TileMapProvider? _stamentWatercolor;
+    private static TileMapProvider? _stamenWatercolor;
     public static TileMapProvider StamenWatercolor
     {
         get
         {
-            if (_stamentWatercolor is null)
+            if (_stamenWatercolor is null)
             {
-                _stamentWatercolor = TileMapProvider.Create(
+                _stamenWatercolor = TileMapProvider.Create(
                     BaseMapType.OSM_StamenWatercolor,
                     nameof(tile_provider_osm),
                     nameof(tile_mapType_watercolor),
@@ -481,7 +481,7 @@ public static class TileMapProviderFactory
                     ReadEmbeddedImage($"{baseMapUri}/stamenWatercolor.jpg"));
             }
 
-            return _stamentWatercolor;
+            return _stamenWatercolor;
         }
     }
 

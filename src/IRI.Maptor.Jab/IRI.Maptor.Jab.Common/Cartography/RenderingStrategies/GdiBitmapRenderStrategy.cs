@@ -50,6 +50,8 @@ public class GdiBitmapRenderStrategy : RenderStrategy
 
         using (Drawing.Graphics graphics = Drawing.Graphics.FromImage(image))
         {
+            graphics.SmoothingMode = Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
             foreach (var symbolizer in _symbolizers)
             {
                 // check scale
@@ -241,14 +243,16 @@ public class GdiBitmapRenderStrategy : RenderStrategy
             points[i] = new Drawing.PointF((float)parsedPoint.X, (float)parsedPoint.Y);
         }
 
-        if (pen != null)
-        {
-            graphics.DrawPolygon(pen, points);
-        }
-
+        // Fill first, then outline — the other way round the fill paints over
+        // the inner half of the stroke.
         if (brush != null)
         {
             graphics.FillPolygon(brush, points);
+        }
+
+        if (pen != null)
+        {
+            graphics.DrawPolygon(pen, points);
         }
     }
 

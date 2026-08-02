@@ -28,7 +28,7 @@ public class Locateable : Notifier
     /// </summary>
     internal Action? OnDetach;
 
-    public AncherFunctionHandler AncherFunction;
+    public AnchorFunctionHandler AnchorFunction;
 
 
     public Guid Id { get; set; }
@@ -132,21 +132,21 @@ public class Locateable : Notifier
 
     }
 
-    public Locateable(AncherFunctionHandler? ancherFunction = null)
+    public Locateable(AnchorFunctionHandler? anchorFunction = null)
     {
-        if (ancherFunction == null)
+        if (anchorFunction == null)
         {
-            AncherFunction = AncherFunctionHandlers.CenterCenter;
+            AnchorFunction = AnchorFunctionHandlers.CenterCenter;
         }
         else
         {
-            AncherFunction = ancherFunction;
+            AnchorFunction = anchorFunction;
         }
 
         _location = new WpfPoint(0, 0);
     }
 
-    public Locateable(Point wgs84GeodeticPosition, AncherFunctionHandler? ancherFunction = null) : this(ancherFunction)
+    public Locateable(Point wgs84GeodeticPosition, AnchorFunctionHandler? anchorFunction = null) : this(anchorFunction)
     {
         var webMercator = MapProjects.GeodeticWgs84ToWebMercator(wgs84GeodeticPosition);
 
@@ -210,7 +210,7 @@ public class Locateable : Notifier
         OnDetach = null;
     }
 
-    public static Locateable CreateFromWebMercatorPoint(Point webMercatorPoint, AncherFunctionHandler? ancherFunctionHandler = null)
+    public static Locateable CreateFromWebMercatorPoint(Point webMercatorPoint, AnchorFunctionHandler? anchorFunctionHandler = null)
     {
         return new Locateable()
         {

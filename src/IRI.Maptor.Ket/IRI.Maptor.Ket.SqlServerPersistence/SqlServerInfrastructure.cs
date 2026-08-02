@@ -10,7 +10,7 @@ namespace IRI.Maptor.Ket.SqlServerPersistence;
 
 //Remember; 
 //What about e.g. decimal(5,2)
-//What about geometies and geographies
+//What about geometries and geographies
 public class SqlServerInfrastructure : DataSourceInfrastructure
 {
     public SqlServerInfrastructure()

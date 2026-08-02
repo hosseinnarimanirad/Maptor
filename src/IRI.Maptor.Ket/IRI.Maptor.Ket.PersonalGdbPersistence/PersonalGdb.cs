@@ -13,7 +13,7 @@ using IRI.Maptor.Ket.PersonalGdbPersistence.Write;
 
 namespace IRI.Maptor.Ket.PersonalGdbPersistence;
 
-// Write-side companion of PersoanlGdbDataSource: creates ArcGIS-compatible personal
+// Write-side companion of PersonalGdbDataSource: creates ArcGIS-compatible personal
 // geodatabases (.mdb) and feature classes, and inserts features.
 //
 // Usage: var gdb = PersonalGdb.CreateEmpty(path);

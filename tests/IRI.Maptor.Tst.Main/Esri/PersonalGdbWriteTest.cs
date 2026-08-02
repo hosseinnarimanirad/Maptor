@@ -60,7 +60,7 @@ public class PersonalGdbWriteTest
             Assert.Equal(points[0].TheGeometry!.AsEsriShape()!.WriteContentsToByte(), pointBlobs[0]);
 
             // read back through the existing data source: features, attributes, extent
-            var dataSource = new PersoanlGdbDataSource(mdbFile, "PointFc", "PointFc");
+            var dataSource = new PersonalGdbDataSource(mdbFile, "PointFc", "PointFc");
 
             var featureSet = dataSource.GetAsFeatureSetAsync((Geometry<Point>?)null).Result;
 

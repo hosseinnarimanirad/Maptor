@@ -14,7 +14,7 @@
                 <SolidColorBrush x:Key="darkGrayBrush" Color="{StaticResource darkGrayColor}"/>
 
                 <Color x:Key="lightGrayColor">#CCCCCC</Color>
-                <SolidColorBrush x:Key="lightGrayBursh" Color="{StaticResource lightGrayColor}"/>
+                <SolidColorBrush x:Key="lightGrayBrush" Color="{StaticResource lightGrayColor}"/>
 
 
                 <Style TargetType="Button" >
@@ -43,7 +43,7 @@
                                         <ColorAnimation To="{Binding Path=ButtonHighlight.Color, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                                                     Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" Duration="0:0:.2" AccelerationRatio=".8" />
                                         
-                                                    <ColorAnimation To="{DynamicResource AccenctColorBrush}" AutoReverse="False" RepeatBehavior="1x"
+                                                    <ColorAnimation To="{DynamicResource AccentColorBrush}" AutoReverse="False" RepeatBehavior="1x"
                                                                     Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)" Duration="0:0:.2" AccelerationRatio=".8" />
                                                 </Storyboard>
                                             </BeginStoryboard>
@@ -144,7 +144,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding Path=Title, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
-        <ComboBox Grid.Column="1" VerticalAlignment="Center" IsEditable="True" BorderBrush="{StaticResource lightGrayBursh}" MinWidth="200"
+        <ComboBox Grid.Column="1" VerticalAlignment="Center" IsEditable="True" BorderBrush="{StaticResource lightGrayBrush}" MinWidth="200"
                   Text="{Binding CurrentText, Mode=TwoWay}"
                   ItemsSource="{Binding DataContext.AllItems, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                   SelectedItem="{Binding DataContext.CurrentSelectedItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
@@ -177,7 +177,7 @@
                      Visibility="{Binding IsAndOrVisible,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
 
         <StackPanel Grid.Row="1" Grid.ColumnSpan="6" Margin="4">
-            <Border Height="1" Background="{StaticResource lightGrayBursh}" HorizontalAlignment="Stretch" Margin="4"/>
+            <Border Height="1" Background="{StaticResource lightGrayBrush}" HorizontalAlignment="Stretch" Margin="4"/>
             <ItemsControl ItemsSource="{Binding DataContext.SelectedItems, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

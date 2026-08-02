@@ -60,8 +60,8 @@ public class LayerManager : Notifier
             wpfLayer.OnVisibilityChanged += RefreshLayerVisibility;
         }
 
-        layer.OnLayerInitilized -= Layer_OnLayerInitilized;
-        layer.OnLayerInitilized += Layer_OnLayerInitilized;
+        layer.OnLayerInitialized -= Layer_OnLayerInitialized;
+        layer.OnLayerInitialized += Layer_OnLayerInitialized;
 
         UpdateIsInRange(layer, inverseMapScale);
 
@@ -165,14 +165,14 @@ public class LayerManager : Notifier
                 layers.Remove(layer);
             }
 
-            // in the case of chaning symbology layer is removed and
-            // added agian. this behavior cause problem with dxf files
-            // after change symbology they cannot apear because their
+            // in the case of changing symbology layer is removed and
+            // added again. this behavior cause problem with dxf files
+            // after change symbology they cannot appear because their
             // group layer has been removed
             if (keepEmptyParentGroup)
                 continue;
 
-            // remove group layer if all childs have been removed.
+            // remove group layer if all children have been removed.
             // e.g. in the case of DXF group layer.
             if (layer.IsGroupLayer && layer.SubLayers.Count == 0)
             {
@@ -362,5 +362,5 @@ public class LayerManager : Notifier
 
     private void RefreshLayerVisibility(object sender, EventArgs e) => RequestRefreshVisibility?.Invoke(sender as IRI.Maptor.Jab.Common.Layers.BaseLayer);
 
-    private void Layer_OnLayerInitilized(object? sender, ILayer e) => RequestRefreshVisibility?.Invoke(sender as IRI.Maptor.Jab.Common.Layers.BaseLayer);
+    private void Layer_OnLayerInitialized(object? sender, ILayer e) => RequestRefreshVisibility?.Invoke(sender as IRI.Maptor.Jab.Common.Layers.BaseLayer);
 }

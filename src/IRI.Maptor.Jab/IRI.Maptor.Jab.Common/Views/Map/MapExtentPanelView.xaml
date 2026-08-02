@@ -237,9 +237,9 @@
                         <mahApp:ToggleSwitch Grid.Row="1" Grid.ColumnSpan="2"
                                              Style="{StaticResource IRI.Maptor.Styles.ToggleSwitch.Small}"
                                              Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
-                                             IsOn="{Binding UseGroundScaleForSandardScales}"
-                                             OnContent="{Binding [mapExtent_gotoScale_useGroundScaleForSandardScales], Source={StaticResource Localization}}"
-                                             OffContent="{Binding [mapExtent_gotoScale_useWebMercatorScaleForSandardScales], Source={StaticResource Localization}}"/>
+                                             IsOn="{Binding UseGroundScaleForStandardScales}"
+                                             OnContent="{Binding [mapExtent_gotoScale_useGroundScaleForStandardScales], Source={StaticResource Localization}}"
+                                             OffContent="{Binding [mapExtent_gotoScale_useWebMercatorScaleForStandardScales], Source={StaticResource Localization}}"/>
                         <Border Grid.Row="2" Grid.Column="0" CornerRadius="4" Background="{DynamicResource MahApps.Brushes.ControlBackground}">
                             <ComboBox Grid.Row="1" Grid.Column="0"
                                         ItemsSource="{Binding ScaleItemsView}" Foreground="Black"

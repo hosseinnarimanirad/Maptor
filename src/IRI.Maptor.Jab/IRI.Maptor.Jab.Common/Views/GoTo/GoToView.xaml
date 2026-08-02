@@ -20,7 +20,7 @@
                 <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding SubTitle}" HorizontalAlignment="Center" FontSize="11"
                            Visibility="{Binding HasSubTitle, Converter={StaticResource boolToVisibilityConverter}}"/>
                 <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="12" Foreground="White" Text="{Binding Title}" Grid.RowSpan="2"
-                           FontFamily="Seoge UI"/>
+                           FontFamily="Segoe UI"/>
             </Grid>
         </DataTemplate>
     </UserControl.Resources>

@@ -20,7 +20,7 @@ public static class PrintHelper
             //get scale of the print wrt to screen of WPF visual
             double scale = Math.Min(capabilities.PageImageableArea.ExtentWidth / visual.ActualWidth, capabilities.PageImageableArea.ExtentHeight / visual.ActualHeight);
 
-            var oldTransfomr = visual.LayoutTransform?.Clone();
+            var oldTransform = visual.LayoutTransform?.Clone();
 
             if (applyRtl)
             {
@@ -44,7 +44,7 @@ public static class PrintHelper
             //now print the visual to printer to fit on the one page.
             printDlg.PrintVisual(visual, "A1");
 
-            visual.LayoutTransform = oldTransfomr;
+            visual.LayoutTransform = oldTransform;
         }
     }
 

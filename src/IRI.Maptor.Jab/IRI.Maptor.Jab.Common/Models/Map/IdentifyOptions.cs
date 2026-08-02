@@ -8,7 +8,7 @@ namespace IRI.Maptor.Jab.Common.Models;
 
 public class IdentifyOptions
 {
-    // ignore unvisible layers or not in identify
+    // ignore invisible layers or not in identify
     public bool IncludeInvisibleLayers { get; set; } = true;
 
     // ignore layers which are not in scale range or not

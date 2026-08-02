@@ -323,7 +323,7 @@ public static class SqlGeographyExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static GeoJsonLineString SqlLineStringToGeoJsonPolyline(this SqlGeography geometry, bool isLongitudeFirst)
     {
         //This check is required
@@ -343,7 +343,7 @@ public static class SqlGeographyExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static GeoJsonMultiLineString SqlMultiLineStringToGeoJsonPolyline(this SqlGeography geometry, bool isLongitudeFirst)
     {
         //This check is required
@@ -370,7 +370,7 @@ public static class SqlGeographyExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     //todo: 1399.08.19; this method must be checked
     private static GeoJsonPolygon SqlPolygonToGeoJsonPolygon(this SqlGeography geometry, bool isLongitudeFirst)
     {
@@ -405,7 +405,7 @@ public static class SqlGeographyExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static GeoJsonMultiPolygon SqlMultiPolygonToGeoJsonMultiPolygon(this SqlGeography geometry, bool isLongitudeFirst)
     {
         //This check is required

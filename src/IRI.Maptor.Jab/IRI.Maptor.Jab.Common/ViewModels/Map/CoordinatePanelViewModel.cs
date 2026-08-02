@@ -56,7 +56,7 @@ public class CoordinatePanelViewModel : Notifier
         }
     }
 
-    //public string GetCurrentPosstionString(Sta.Common.Primitives.Point geodeticPoint)
+    //public string GetCurrentPositionString(Sta.Common.Primitives.Point geodeticPoint)
     //{
     //    return SelectedItem?.GetPositionString(geodeticPoint);
     //}

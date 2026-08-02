@@ -7,7 +7,7 @@
             <SolidColorBrush x:Key="darkGrayBrush" Color="{StaticResource darkGrayColor}"/>  
             
             <Color x:Key="lightGrayColor">#CCCCCC</Color>
-            <SolidColorBrush x:Key="lightGrayBursh" Color="{StaticResource lightGrayColor}"/>
+            <SolidColorBrush x:Key="lightGrayBrush" Color="{StaticResource lightGrayColor}"/>
 
             <Color x:Key="darkBlueColor">#34495E</Color>
             <SolidColorBrush x:Key="darkBlueBrush" Color="{StaticResource darkBlueColor}"/>
@@ -25,7 +25,7 @@
 
         </ResourceDictionary>
     </UserControl.Resources>
-    <!--<StackPanel Orientation="Horizontal" Background="{StaticResource lightGrayBursh}" Height="20" >
+    <!--<StackPanel Orientation="Horizontal" Background="{StaticResource lightGrayBrush}" Height="20" >
         <StackPanel.Resources>
             <Style TargetType="Button" >
                 <Setter Property="VerticalAlignment" Value="Center"/>
@@ -78,7 +78,7 @@
 
 
     </StackPanel>-->
-    <StackPanel Orientation="Horizontal" Background="{StaticResource lightGrayBursh}" Height="20" >
+    <StackPanel Orientation="Horizontal" Background="{StaticResource lightGrayBrush}" Height="20" >
         <StackPanel.Resources>
             <Style TargetType="Button" >
                 <Setter Property="VerticalAlignment" Value="Center"/>

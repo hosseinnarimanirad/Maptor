@@ -36,7 +36,7 @@ public class ImageMatrix
 
     //public byte SumOfElements
     //{
-    //    get { return CalculateSumOfElemts(); }
+    //    get { return CalculateSumOfElements(); }
     //}
 
     #endregion
@@ -457,7 +457,7 @@ public class ImageMatrix
 
     //}
 
-    //private byte CalculateSumOfElemts()
+    //private byte CalculateSumOfElements()
     //{
     //    byte result = 0;
 

@@ -67,7 +67,7 @@ public static class MapInitializationHelper
         ownerWindow.DataContext = presenter;
 
 
-        // initiliaze the map
+        // initialize the map
         // setting initial extent, zoom options, ...
 
         return presenter;

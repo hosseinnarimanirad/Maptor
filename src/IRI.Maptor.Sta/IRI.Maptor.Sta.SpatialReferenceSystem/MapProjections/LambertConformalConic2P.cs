@@ -71,9 +71,9 @@ public class LambertConformalConic2P : MapProjectionBase
     protected double GeodeticLatitudeToT(double latitude, double firstEccentricity)
     {
         //Limit the latitude value
-        if (Math.Abs(latitude) > MapProjects._MaxConvertableToIsometricLatitude)
+        if (Math.Abs(latitude) > MapProjects._MaxConvertibleToIsometricLatitude)
         {
-            latitude = MapProjects._MaxConvertableToIsometricLatitude * (latitude < 0 ? -1 : 1);
+            latitude = MapProjects._MaxConvertibleToIsometricLatitude * (latitude < 0 ? -1 : 1);
         }
 
         double angleInRadian = latitude * Math.PI / 180;

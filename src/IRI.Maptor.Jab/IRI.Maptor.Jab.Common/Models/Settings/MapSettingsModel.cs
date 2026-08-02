@@ -166,7 +166,7 @@ public class MapSettingsModel : Notifier, IMapSettings
 
     #region Identify
 
-    // ignore unvisible layers or not in identify
+    // ignore invisible layers or not in identify
     public bool Identify_IncludeInvisibleLayers
     {
         get => _settings.Identify_IncludeInvisibleLayers;

@@ -78,14 +78,14 @@ public static class ImageHelper
         uint secondsDenominator = BitConverter.ToUInt32(propItem.Value, 20);
         double seconds = secondsNumerator / (double)secondsDenominator;
 
-        double coorditate = degrees + (minutes / 60d) + (seconds / 3600d);
+        double coordinate = degrees + (minutes / 60d) + (seconds / 3600d);
 
         string gpsRef = Encoding.ASCII.GetString(new byte[1] { propItemRef.Value[0] }); //N, S, E, or W
 
         if (gpsRef == "S" || gpsRef == "W")
-            coorditate = 0 - coorditate;
+            coordinate = 0 - coordinate;
 
-        return coorditate;
+        return coordinate;
     }
      
     public static Size GetSize(string fileName)

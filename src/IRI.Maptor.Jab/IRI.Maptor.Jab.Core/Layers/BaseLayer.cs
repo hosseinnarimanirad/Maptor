@@ -418,29 +418,29 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-    private bool? _allChildsVisible;
-    public bool? AllChildsVisible
+    private bool? _allChildrenVisible;
+    public bool? AllChildrenVisible
     {
-        get { return _allChildsVisible; }
+        get { return _allChildrenVisible; }
         set
         {
-            if (_allChildsVisible == value)
+            if (_allChildrenVisible == value)
                 return;
 
             if (value is null && GetAllChildVisible() != value)
-                _allChildsVisible = false;
+                _allChildrenVisible = false;
             else
-                _allChildsVisible = value;
+                _allChildrenVisible = value;
 
             RaisePropertyChanged();
 
             if (!IsGroupLayer)
                 return;
 
-            if (_allChildsVisible is null)
+            if (_allChildrenVisible is null)
                 return;
 
-            SetIsVisible(_allChildsVisible == true);
+            SetIsVisible(_allChildrenVisible == true);
         }
     }
 
@@ -456,7 +456,7 @@ public abstract class BaseLayer : Notifier, ILayer
             return null;
     }
 
-    public void UpdateAllChildsVisible() => AllChildsVisible = GetAllChildVisible();
+    public void UpdateAllChildrenVisible() => AllChildrenVisible = GetAllChildVisible();
 
     protected virtual void SetIsVisible(bool isVisible)
     {
@@ -467,7 +467,7 @@ public abstract class BaseLayer : Notifier, ILayer
         }
 
         if (Parent is not null)
-            Parent.UpdateAllChildsVisible();
+            Parent.UpdateAllChildrenVisible();
 
         OnIsVisibleChanged(isVisible);
     }
@@ -569,14 +569,14 @@ public abstract class BaseLayer : Notifier, ILayer
         }
     }
 
-    private event EventHandler<ILayer>? _onLayerInitilized;
-    public event EventHandler<ILayer> OnLayerInitilized
+    private event EventHandler<ILayer>? _onLayerInitialized;
+    public event EventHandler<ILayer> OnLayerInitialized
     {
-        remove { _onLayerInitilized -= value; }
+        remove { _onLayerInitialized -= value; }
         add
         {
-            if (_onLayerInitilized == null)
-                _onLayerInitilized += value;
+            if (_onLayerInitialized == null)
+                _onLayerInitialized += value;
         }
     }
 

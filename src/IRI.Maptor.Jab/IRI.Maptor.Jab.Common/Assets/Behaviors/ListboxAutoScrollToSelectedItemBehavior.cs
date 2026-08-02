@@ -7,7 +7,7 @@
 //    public class ListboxAutoScrollToSelectedItemBehavior : Behavior<ListBox>
 //    {
 //        /// <summary>
-//        ///  When Beahvior is attached
+//        ///  When Behavior is attached
 //        /// </summary>
 //        protected override void OnAttached()
 //        {

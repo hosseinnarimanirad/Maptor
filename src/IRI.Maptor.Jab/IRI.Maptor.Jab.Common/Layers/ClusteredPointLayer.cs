@@ -42,7 +42,7 @@ public class ClusteredPointLayer : BaseLayer
         {
             var locatable = new Locateable();
 
-            locatable.AncherFunction = AncherFunctionHandlers.CenterCenter;
+            locatable.AnchorFunction = AnchorFunctionHandlers.CenterCenter;
 
             locatable.X = imageGroup.Center.WebMercatorLocation.X;
 

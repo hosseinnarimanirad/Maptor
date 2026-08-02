@@ -20,143 +20,143 @@ public class TextboxMarkerViewModel : Notifier
     public const string IranSansFontName = "IRANSans";
     private const string TimesNewRoman = "TimesNewRoman";
 
-    private double _formating_FontSize = 14.0;
-    public double Formating_FontSize
+    private double _formatting_FontSize = 14.0;
+    public double Formatting_FontSize
     {
-        get { return _formating_FontSize; }
+        get { return _formatting_FontSize; }
         set
         {
-            _formating_FontSize = value;
+            _formatting_FontSize = value;
             RaisePropertyChanged();
         }
     }
 
-    private string _formating_FontFamilyName = IranSansFontName;// IranSansFontName;
-    public string Formating_FontFamilyName
+    private string _formatting_FontFamilyName = IranSansFontName;// IranSansFontName;
+    public string Formatting_FontFamilyName
     {
-        get { return _formating_FontFamilyName; }
+        get { return _formatting_FontFamilyName; }
         set
         {
-            if (_formating_FontFamilyName == value)
+            if (_formatting_FontFamilyName == value)
                 return;
 
-            _formating_FontFamilyName = value;
+            _formatting_FontFamilyName = value;
             RaisePropertyChanged();
 
-            if (string.Equals(_formating_FontFamilyName, IranSansFontName, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(_formatting_FontFamilyName, IranSansFontName, StringComparison.OrdinalIgnoreCase))
             {
-                Formating_FontFamily = IriFonts.IranSans;
+                Formatting_FontFamily = IriFonts.IranSans;
                 return;
             }
 
             try
             {
-                Formating_FontFamily = new System.Windows.Media.FontFamily(_formating_FontFamilyName);
+                Formatting_FontFamily = new System.Windows.Media.FontFamily(_formatting_FontFamilyName);
             }
             catch
             {
-                Formating_FontFamily = IriFonts.IranSans;
+                Formatting_FontFamily = IriFonts.IranSans;
             }
         }
     }
 
-    private FontFamily _formating_FontFamily;
-    public FontFamily Formating_FontFamily
+    private FontFamily _formatting_FontFamily;
+    public FontFamily Formatting_FontFamily
     {
-        get { return _formating_FontFamily; }
+        get { return _formatting_FontFamily; }
         set
         {
-            _formating_FontFamily = value;
+            _formatting_FontFamily = value;
             RaisePropertyChanged();
         }
     }
 
-    private bool _formating_IsBold;
-    public bool Formating_IsBold
+    private bool _formatting_IsBold;
+    public bool Formatting_IsBold
     {
-        get { return _formating_IsBold; }
+        get { return _formatting_IsBold; }
         set
         {
-            _formating_IsBold = value;
+            _formatting_IsBold = value;
             RaisePropertyChanged();
         }
     }
 
-    private bool _formating_IsItalic;
-    public bool Formating_IsItalic
+    private bool _formatting_IsItalic;
+    public bool Formatting_IsItalic
     {
-        get { return _formating_IsItalic; }
+        get { return _formatting_IsItalic; }
         set
         {
-            _formating_IsItalic = value;
+            _formatting_IsItalic = value;
             RaisePropertyChanged();
         }
     }
 
-    private bool _formating_IsUnderline;
-    public bool Formating_IsUnderline
+    private bool _formatting_IsUnderline;
+    public bool Formatting_IsUnderline
     {
-        get { return _formating_IsUnderline; }
+        get { return _formatting_IsUnderline; }
         set
         {
-            _formating_IsUnderline = value;
-            RaisePropertyChanged();
-        }
-    }
-
-
-    private System.Windows.TextAlignment _formating_Alignment;
-    public System.Windows.TextAlignment Formating_Alignment
-    {
-        get { return _formating_Alignment; }
-        set
-        {
-            _formating_Alignment = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    private System.Windows.FlowDirection _formating_FlowDirection = FlowDirection.RightToLeft;
-    public System.Windows.FlowDirection Formating_FlowDirection
-    {
-        get { return _formating_FlowDirection; }
-        set
-        {
-            _formating_FlowDirection = value;
+            _formatting_IsUnderline = value;
             RaisePropertyChanged();
         }
     }
 
 
-    private bool _formating_LeftAligned;
-    public bool Formating_LeftAligned
+    private System.Windows.TextAlignment _formatting_Alignment;
+    public System.Windows.TextAlignment Formatting_Alignment
     {
-        get { return _formating_LeftAligned; }
+        get { return _formatting_Alignment; }
         set
         {
-            _formating_LeftAligned = value;
+            _formatting_Alignment = value;
             RaisePropertyChanged();
         }
     }
 
-    private bool _formating_RightAligned;
-    public bool Formating_RightAligned
+    private System.Windows.FlowDirection _formatting_FlowDirection = FlowDirection.RightToLeft;
+    public System.Windows.FlowDirection Formatting_FlowDirection
     {
-        get { return _formating_RightAligned; }
+        get { return _formatting_FlowDirection; }
         set
         {
-            _formating_RightAligned = value;
+            _formatting_FlowDirection = value;
             RaisePropertyChanged();
         }
     }
 
-    private bool _formating_CenterAligned;
-    public bool Formating_CenterAligned
+
+    private bool _formatting_LeftAligned;
+    public bool Formatting_LeftAligned
     {
-        get { return _formating_CenterAligned; }
+        get { return _formatting_LeftAligned; }
         set
         {
-            _formating_CenterAligned = value;
+            _formatting_LeftAligned = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private bool _formatting_RightAligned;
+    public bool Formatting_RightAligned
+    {
+        get { return _formatting_RightAligned; }
+        set
+        {
+            _formatting_RightAligned = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    private bool _formatting_CenterAligned;
+    public bool Formatting_CenterAligned
+    {
+        get { return _formatting_CenterAligned; }
+        set
+        {
+            _formatting_CenterAligned = value;
             RaisePropertyChanged();
         }
     }
@@ -216,7 +216,7 @@ public class TextboxMarkerViewModel : Notifier
 
     public TextboxMarkerViewModel()
     {
-        Formating_FontFamilyName = IranSansFontName;
+        Formatting_FontFamilyName = IranSansFontName;
 
     }
 
@@ -285,33 +285,33 @@ public class TextboxMarkerViewModel : Notifier
 
     public void IncreaseFontSize()
     {
-        var currentSize = Formating_FontSize;
+        var currentSize = Formatting_FontSize;
 
         var largerSizes = FontSizeOptions.Where(s => s > currentSize).ToArray();
 
         if (largerSizes.Length > 0)
         {
-            Formating_FontSize = largerSizes[0];
+            Formatting_FontSize = largerSizes[0];
         }
         else if (currentSize < FontSizeOptions.Max())
         {
-            Formating_FontSize = Math.Min(currentSize + 1, FontSizeOptions.Max());
+            Formatting_FontSize = Math.Min(currentSize + 1, FontSizeOptions.Max());
         }
     }
 
     public void DecreaseFontSize()
     {
-        var currentSize = Formating_FontSize;
+        var currentSize = Formatting_FontSize;
 
         var smallerSizes = FontSizeOptions.Where(s => s < currentSize).ToArray();
 
         if (smallerSizes.Length > 0)
         {
-            Formating_FontSize = smallerSizes[smallerSizes.Length - 1];
+            Formatting_FontSize = smallerSizes[smallerSizes.Length - 1];
         }
         else if (currentSize > FontSizeOptions.Min())
         {
-            Formating_FontSize = Math.Max(currentSize - 1, FontSizeOptions.Min());
+            Formatting_FontSize = Math.Max(currentSize - 1, FontSizeOptions.Min());
         }
     }
 

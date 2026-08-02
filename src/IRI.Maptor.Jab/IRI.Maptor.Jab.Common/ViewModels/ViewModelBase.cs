@@ -52,7 +52,7 @@ public class ViewModelBase : Notifier
         //LocalizationManager.Instance.FlowDirectionChanged += Instance_FlowDirectionChanged;
     }
 
-    public void RedirectRequestesTo(ViewModelBase presenter)
+    public void RedirectRequestsTo(ViewModelBase presenter)
     {
         if (presenter == this)
         {

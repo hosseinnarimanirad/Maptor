@@ -140,7 +140,7 @@ public static class RasterHelper
             var rangeValue = maxValue - minValue;
             var midValue = rangeValue / 2.0 + minValue;
 
-            //ContinousRangeColor ranges = new ContinousRangeColor(values, colors);
+            //ContinuousRangeColor ranges = new ContinuousRangeColor(values, colors);
             //DiscreteRangeColor ranges = new DiscreteRangeColor(values, colors);
 
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
@@ -208,7 +208,7 @@ public static class RasterHelper
         var rangeValue = maxValue - minValue;
         var midValue = rangeValue / 2.0 + minValue;
 
-        //ContinousRangeColor ranges = new ContinousRangeColor(values, colors);
+        //ContinuousRangeColor ranges = new ContinuousRangeColor(values, colors);
         DiscreteRangeColor ranges = new DiscreteRangeColor(values, colors);
 
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
@@ -265,7 +265,7 @@ public static class RasterHelper
         var rangeValue = maxValue - minValue;
         var midValue = rangeValue / 2.0 + minValue;
 
-        //ContinousRangeColor ranges = new ContinousRangeColor(values, colors);
+        //ContinuousRangeColor ranges = new ContinuousRangeColor(values, colors);
         DiscreteRangeColor ranges = new DiscreteRangeColor(values, colors);
 
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();

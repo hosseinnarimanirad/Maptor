@@ -212,7 +212,7 @@ public class GoToViewModel : Notifier
                 Icon = globeMarkup,
             },
             new HamburgerGoToMenuItem(new GoToMapProjectView(), SpatialReferenceType.UTM){
-                Title = "Uiversal Transverse Mercator",
+                Title = "Universal Transverse Mercator",
                 SubTitle ="UTM",
                 Tooltip ="UTM",
                 Icon = mapTreasureMarkup,

@@ -460,7 +460,7 @@ public class GeometryDetailsViewModel : Notifier
         RaisePropertyChanged(nameof(Dimension));
 
         // Get geometry in WGS84 geodetic for calculations
-        Geometry<Point>? geodeticGeometry = _editableFeatureLayer.GetGeodeticWgs84Geometery();
+        Geometry<Point>? geodeticGeometry = _editableFeatureLayer.GetGeodeticWgs84Geometry();
         if (geodeticGeometry == null)
         {
             ClearAllProperties();

@@ -267,7 +267,7 @@ public static class HardwareHelper
         }
         return MemSlots.ToString();
     }
-    //Get CPU Temprature.
+    //Get CPU Temperature.
     /// <summary>
     /// method for retrieving the CPU Manufacturer
     /// using the WMI class
@@ -276,7 +276,7 @@ public static class HardwareHelper
     public static string GetCPUManufacturer()
     {
         string cpuMan = String.Empty;
-        //create an instance of the Managemnet class with the
+        //create an instance of the Management class with the
         //Win32_Processor class
         ManagementClass mgmt = new ManagementClass("Win32_Processor");
         //create a ManagementObjectCollection to loop through
@@ -301,7 +301,7 @@ public static class HardwareHelper
     public static int GetCPUCurrentClockSpeed()
     {
         int cpuClockSpeed = 0;
-        //create an instance of the Managemnet class with the
+        //create an instance of the Management class with the
         //Win32_Processor class
         ManagementClass mgmt = new ManagementClass("Win32_Processor");
         //create a ManagementObjectCollection to loop through

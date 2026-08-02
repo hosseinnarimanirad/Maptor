@@ -32,7 +32,7 @@ public static class PersonalGdbInfrastructure
     };
 
     // Resolved once, thread-safely: GetConnectionString can be called concurrently because
-    // PersoanlGdbDataSource runs reads via Task.Run.
+    // PersonalGdbDataSource runs reads via Task.Run.
     private static readonly Lazy<string> _aceProvider = new(ResolveAceProvider);
 
     private static readonly System.Text.RegularExpressions.Regex _esriSchemaNamespaceRegex =
@@ -285,7 +285,7 @@ public static class PersonalGdbInfrastructure
                 return "bit";
 
             case 14:  // adDecimal (Exact numeric, precision/scale) (DBTYPE_DECIMAL).
-                //return $"decimal({preceision}, {scale})";
+                //return $"decimal({precision}, {scale})";
                 return $"decimal";
 
             case 16:  // adTinyInt (1-byte signed integer, -128 to 127) (DBTYPE_I1).
@@ -307,7 +307,7 @@ public static class PersonalGdbInfrastructure
                 return "decimal(38, 0)"; // SQL Server lacks unsigned bigint
 
             case 131: // adNumeric (Exact numeric, deprecated alias for adDecimal) (DBTYPE_NUMERIC).
-                //return $"decimal({preceision}, {scale})";
+                //return $"decimal({precision}, {scale})";
                 return $"decimal";
 
             // Date/Time Types
@@ -319,7 +319,7 @@ public static class PersonalGdbInfrastructure
                 return "time";
 
             case 135: // adDBTimeStamp (DateTime, yyyymmddhhmmss)
-                //return datePreceision > 0 ? $"datetime2{datePreceision}" : "datetime2";
+                //return datePrecision > 0 ? $"datetime2{datePrecision}" : "datetime2";
                 return "datetime2";
 
             //// String Types          

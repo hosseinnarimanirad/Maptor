@@ -11,9 +11,9 @@ namespace IRI.Maptor.Ket.DigitalImageProcessing.ImageMatching;
 
 public class ScaleInvariantFeatureTransform
 {
-    public Extermas extermas;
+    public Extrema extrema;
 
-    //public Extermas exactExtermas;
+    //public Extrema exactExtrema;
 
     public List<KeyPoint> keypoints;
 
@@ -33,12 +33,12 @@ public class ScaleInvariantFeatureTransform
 
     public List<Vector> vectors;
 
-    public int depthOfBlure, depthOfScale;
+    public int depthOfBlur, depthOfScale;
 
     public double originalStandardDeviation, edgeThreshold;
 
     //OK 29/11/2009
-    public ScaleInvariantFeatureTransform(Matrix originalImage, int depthOfScale, int depthOfBlure, double originalStandardDeviation, double edgeThreshold)
+    public ScaleInvariantFeatureTransform(Matrix originalImage, int depthOfScale, int depthOfBlur, double originalStandardDeviation, double edgeThreshold)
     {
         scaleSpace = new List<Matrix>();
 
@@ -49,7 +49,7 @@ public class ScaleInvariantFeatureTransform
         //n
         this.depthOfScale = depthOfScale;
         //s
-        this.depthOfBlure = depthOfBlure;
+        this.depthOfBlur = depthOfBlur;
 
         this.originalStandardDeviation = originalStandardDeviation;
         //r=10 Loe
@@ -74,7 +74,7 @@ public class ScaleInvariantFeatureTransform
         for (int n = 0; n < depthOfScale; n++)
         {
             //We need s + 3 images in each octave. [David Lowe 2004]
-            for (int s = 0; s < depthOfBlure + 3; s++)
+            for (int s = 0; s < depthOfBlur + 3; s++)
             {
                 if (s == 0)
                 {
@@ -94,7 +94,7 @@ public class ScaleInvariantFeatureTransform
             // index of image in the current octave (has the twice 
             // scale of first image in the current octave) to be
             // half, 
-            int tempIndex = n * (this.depthOfBlure + 3) + depthOfBlure;
+            int tempIndex = n * (this.depthOfBlur + 3) + depthOfBlur;
 
             tempMatrix = IRI.Maptor.Ket.DigitalImageProcessing.GeometricEnhancement.HalveTheSize(scaleSpace[tempIndex]);
 
@@ -109,7 +109,7 @@ public class ScaleInvariantFeatureTransform
 
         for (int n = 0; n < depthOfScale; n++)
         {
-            for (int s = 1; s < depthOfBlure + 3; s++)
+            for (int s = 1; s < depthOfBlur + 3; s++)
             {
                 // D(x,y,sigma) = L(x,y,k*sigma) - L(x,y,sigma) [David Lowe. 2004]
                 doGs.Add(scaleSpace[GetImageIndex(n, s)] - scaleSpace[GetImageIndex(n, s - 1)]);
@@ -125,14 +125,14 @@ public class ScaleInvariantFeatureTransform
     }
 
     //OK, 04/13/2009
-    public void FindExtermas()
+    public void FindExtrema()
     {
-        this.extermas = new Extermas();
+        this.extrema = new Extrema();
 
         for (int n = 0; n < depthOfScale; n++)
         {
-            // depth of blure baraye DoG ha = depth of blure L ha - 1
-            for (int s = 1; s < (depthOfBlure + 3 - 1) - 1; s++)
+            // depth of blur baraye DoG ha = depth of blur L ha - 1
+            for (int s = 1; s < (depthOfBlur + 3 - 1) - 1; s++)
             {
                 int index = GetDoGIndex(n, s);
 
@@ -165,7 +165,7 @@ public class ScaleInvariantFeatureTransform
                         {
                             double standarDeviation = CalculateSigma(n, s);
 
-                            this.extermas.Add(n, s, col, row, standarDeviation);
+                            this.extrema.Add(n, s, col, row, standarDeviation);
                         }
                     }
                 }
@@ -175,28 +175,28 @@ public class ScaleInvariantFeatureTransform
     }
 
     //Checked 06/04/2010
-    public void FindExactExtermas()
+    public void FindExactExtrema()
     {
-        for (int t = extermas.Count - 1; t >= 0; t--)
+        for (int t = extrema.Count - 1; t >= 0; t--)
         {
-            //Note: depthOfBlure + 3 has been noticed
-            int doGIndex = GetDoGIndex((int)extermas[t].ScaleLevel, (int)extermas[t].BlureLevel);
+            //Note: depthOfBlur + 3 has been noticed
+            int doGIndex = GetDoGIndex((int)extrema[t].ScaleLevel, (int)extrema[t].BlurLevel);
 
-            int n = (int)extermas[t].ScaleLevel;
+            int n = (int)extrema[t].ScaleLevel;
 
             //y-->row, x-->column
-            int row = (int)extermas[t].Row; int column = (int)extermas[t].Column;
+            int row = (int)extrema[t].Row; int column = (int)extrema[t].Column;
 
             double dx, dy, dsigma;
 
             int controlValue = 0;
 
-            FindExtermaDisplacementAt(doGIndex, row, column, out dx, out dy, out dsigma);
+            FindExtremumDisplacementAt(doGIndex, row, column, out dx, out dy, out dsigma);
 
             //check if the displacement is more than one pixel far
             if (dx * dx + dy * dy > 2.0)
             {
-                this.extermas.Remove(t);
+                this.extrema.Remove(t);
 
                 continue;
             }
@@ -212,7 +212,7 @@ public class ScaleInvariantFeatureTransform
                 doGIndex += ((int)Math.Floor(Math.Abs(dsigma) / 0.5) * (dsigma > 0 ? 1 : -1));
 
                 //jahate ta akse yeki be akhar va aval!
-                if (doGIndex + 1 >= (this.depthOfBlure + 3 - 1) * (n + 1) || doGIndex - 1 < (this.depthOfBlure + 3 - 1) * n || column < 15 || row < 15
+                if (doGIndex + 1 >= (this.depthOfBlur + 3 - 1) * (n + 1) || doGIndex - 1 < (this.depthOfBlur + 3 - 1) * n || column < 15 || row < 15
                         || column > doGs[doGIndex].NumberOfColumns - 15 || row > doGs[doGIndex].NumberOfRows - 15)
                 {
                     controlValue = 100;
@@ -224,31 +224,31 @@ public class ScaleInvariantFeatureTransform
                     break;
                 }
 
-                FindExtermaDisplacementAt(doGIndex, row, column, out dx, out dy, out dsigma);
+                FindExtremumDisplacementAt(doGIndex, row, column, out dx, out dy, out dsigma);
             }
             if (controlValue != 100)
             {
-                //int blureLevel = doGIndex - (this.depthOfBlure + 3 - 1) * (int)extermas[t].ScaleLevel;
-                int blureLevel = doGIndex - (this.depthOfBlure + 3 - 1) * n;
+                //int blurLevel = doGIndex - (this.depthOfBlur + 3 - 1) * (int)extrema[t].ScaleLevel;
+                int blurLevel = doGIndex - (this.depthOfBlur + 3 - 1) * n;
 
-                double standarDeviation = CalculateSigma(n, blureLevel);
+                double standarDeviation = CalculateSigma(n, blurLevel);
 
-                this.extermas[t] = new Exterma(n, blureLevel, column, row, standarDeviation);
+                this.extrema[t] = new Extremum(n, blurLevel, column, row, standarDeviation);
 
-                if (IsLowContrastExterma(doGIndex, row, column, dx, dy, dsigma))
+                if (IsLowContrastExtremum(doGIndex, row, column, dx, dy, dsigma))
                 {
-                    this.extermas.Remove(t);
+                    this.extrema.Remove(t);
                 }
             }
             else
             {
-                this.extermas.Remove(t);
+                this.extrema.Remove(t);
             }
         }
     }
 
     //Checked 06/04/2010
-    private bool IsLowContrastExterma(int doGIndex, int row, int column, double dx, double dy, double dsigma)
+    private bool IsLowContrastExtremum(int doGIndex, int row, int column, double dx, double dy, double dsigma)
     {
         double max = doGMax[doGIndex];
 
@@ -273,7 +273,7 @@ public class ScaleInvariantFeatureTransform
     }
 
     //Modified 06/04/2010
-    public void FindExtermaDisplacementAt(int doGIndex, int row, int column, out double dx, out double dy, out double dsigma)
+    public void FindExtremumDisplacementAt(int doGIndex, int row, int column, out double dx, out double dy, out double dsigma)
     {
         //double dX = 0.5 * (doGs[doGIndex][row, column + 1] - doGs[doGIndex][row, column - 1]);
 
@@ -342,11 +342,11 @@ public class ScaleInvariantFeatureTransform
     {
         double threshold = ((this.edgeThreshold + 1.0) * (this.edgeThreshold + 1.0)) / this.edgeThreshold;
 
-        for (int t = this.extermas.Count - 1; t >= 0; t--)
+        for (int t = this.extrema.Count - 1; t >= 0; t--)
         {
-            int doGIndex = GetDoGIndex((int)extermas[t].ScaleLevel, (int)extermas[t].BlureLevel);
+            int doGIndex = GetDoGIndex((int)extrema[t].ScaleLevel, (int)extrema[t].BlurLevel);
 
-            int row = (int)extermas[t].Row; int column = (int)extermas[t].Column;
+            int row = (int)extrema[t].Row; int column = (int)extrema[t].Column;
 
             double max = doGMax[doGIndex];
 
@@ -372,7 +372,7 @@ public class ScaleInvariantFeatureTransform
             //
             if ((dXX * dYY - dXY * dXY) < 0)
             {
-                this.extermas.Remove(t);
+                this.extrema.Remove(t);
             }
             //
 
@@ -381,7 +381,7 @@ public class ScaleInvariantFeatureTransform
             // true
             else if (Math.Abs(((dXX + dYY) * (dXX + dYY)) / (dXX * dYY - dXY * dXY)) > threshold)
             {
-                this.extermas.Remove(t);
+                this.extrema.Remove(t);
             }
         }
     }
@@ -391,17 +391,17 @@ public class ScaleInvariantFeatureTransform
     {
         this.keypoints = new List<KeyPoint>();
 
-        for (int t = 0; t < extermas.Count; t++)
+        for (int t = 0; t < extrema.Count; t++)
         {
-            int scale = (int)extermas[t].ScaleLevel;
+            int scale = (int)extrema[t].ScaleLevel;
 
-            int blure = (int)extermas[t].BlureLevel;
+            int blur = (int)extrema[t].BlurLevel;
 
-            int ImageIndex = GetImageIndex(scale, blure);
+            int ImageIndex = GetImageIndex(scale, blur);
 
-            int row = (int)extermas[t].Row;
+            int row = (int)extrema[t].Row;
 
-            int column = (int)extermas[t].Column;
+            int column = (int)extrema[t].Column;
 
             //Matrix magnitude = new Matrix(17, 17);
 
@@ -411,7 +411,7 @@ public class ScaleInvariantFeatureTransform
 
             double[] histogram = new double[36];
 
-            double sigma = extermas[t].Sigma * 1.5;
+            double sigma = extrema[t].Sigma * 1.5;
 
             double sigma2 = sigma * sigma;
 
@@ -451,16 +451,16 @@ public class ScaleInvariantFeatureTransform
 
                     double resultAngle = -result[1, 0] / (2 * result[0, 0]);
 
-                    double resultMagnetude = result[0, 0] * resultAngle * resultAngle + result[1, 0] * resultAngle + result[2, 0];
+                    double resultMagnitude = result[0, 0] * resultAngle * resultAngle + result[1, 0] * resultAngle + result[2, 0];
 
                     if (resultAngle < 0 || resultAngle > 2 * Math.PI)
                     {
                         resultAngle = (item) * 10 + 5;
 
-                        resultMagnetude = histogram[item];
+                        resultMagnitude = histogram[item];
                     }
 
-                    this.keypoints.Add(new KeyPoint(t, resultAngle * Math.PI / 180, resultMagnetude));
+                    this.keypoints.Add(new KeyPoint(t, resultAngle * Math.PI / 180, resultMagnitude));
                 }
                 else
                 {
@@ -476,17 +476,17 @@ public class ScaleInvariantFeatureTransform
 
         for (int k = this.keypoints.Count - 1; k >= 0; k--)
         {
-            int t = this.keypoints[k].ExtermaIndex;
+            int t = this.keypoints[k].ExtremumIndex;
 
-            int scale = (int)extermas[t].ScaleLevel;
+            int scale = (int)extrema[t].ScaleLevel;
 
-            int blure = (int)extermas[t].BlureLevel;
+            int blur = (int)extrema[t].BlurLevel;
 
-            int index = GetImageIndex(scale, blure);
+            int index = GetImageIndex(scale, blur);
 
-            int row = (int)extermas[t].Row;
+            int row = (int)extrema[t].Row;
 
-            int column = (int)extermas[t].Column;
+            int column = (int)extrema[t].Column;
 
             double rotationAngle = keypoints[k].Orientation;
 
@@ -545,7 +545,7 @@ public class ScaleInvariantFeatureTransform
                 tempResult.AddRange(item.ToArray());
             }
 
-            Descriptor descriptor = new Descriptor(this.extermas[t], this.keypoints[k], tempResult.ToArray());
+            Descriptor descriptor = new Descriptor(this.extrema[t], this.keypoints[k], tempResult.ToArray());
 
             if (descriptor.Norm != 0)
             {
@@ -555,7 +555,7 @@ public class ScaleInvariantFeatureTransform
             {
                 this.keypoints.RemoveAt(k);
 
-                //this.extermas.Remove(k);
+                //this.extrema.Remove(k);
             }
             //this.descriptors.Add();
         }
@@ -722,22 +722,22 @@ public class ScaleInvariantFeatureTransform
 
     //scaleLevel = octave number
     //OK, 03/12/2009
-    private double CalculateSigma(int scaleLevel, int blureLevel)
+    private double CalculateSigma(int scaleLevel, int blurLevel)
     {
         //sigma0 * 2^k/s * 2^n
-        return originalStandardDeviation * Math.Pow(2.0, (double)blureLevel / (double)depthOfBlure) * Math.Pow(2.0, scaleLevel);
+        return originalStandardDeviation * Math.Pow(2.0, (double)blurLevel / (double)depthOfBlur) * Math.Pow(2.0, scaleLevel);
     }
 
     //OK, 03/12/2009
-    private int GetDoGIndex(int scaleLevel, int blureLevel)
+    private int GetDoGIndex(int scaleLevel, int blurLevel)
     {
-        return (depthOfBlure + 3 - 1) * scaleLevel + blureLevel;
+        return (depthOfBlur + 3 - 1) * scaleLevel + blurLevel;
     }
 
     //OK, 03/12/2009
-    private int GetImageIndex(int scaleLevel, int blureLevel)
+    private int GetImageIndex(int scaleLevel, int blurLevel)
     {
-        return (depthOfBlure + 3) * scaleLevel + blureLevel;
+        return (depthOfBlur + 3) * scaleLevel + blurLevel;
     }
 
     #endregion

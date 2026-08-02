@@ -87,16 +87,16 @@
 //        {
 //            System.Diagnostics.Debug.WriteLine(string.Empty);
 
-//            SimplificationParamters param = new SimplificationParamters { AngleThreshold = 0.98 };
+//            SimplificationParameters param = new SimplificationParameters { AngleThreshold = 0.98 };
 
 //            var threshold = WebMercatorUtility.CalculateGroundResolution(i, 0);
 
 //            param.DistanceThreshold = threshold;
 //            param.AreaThreshold = threshold * threshold;
 
-//            var geometries = originalGeometries.Simplify(SimplificationType.CumulativeAreaAngle, new SimplificationParamters() { AngleThreshold = 0.98 }, true);
+//            var geometries = originalGeometries.Simplify(SimplificationType.CumulativeAreaAngle, new SimplificationParameters() { AngleThreshold = 0.98 }, true);
 
-//            geometries = geometries.Simplify(SimplificationType.CumulativeTriangleRoutine, new SimplificationParamters() { AngleThreshold = 0.98 }, true);
+//            geometries = geometries.Simplify(SimplificationType.CumulativeTriangleRoutine, new SimplificationParameters() { AngleThreshold = 0.98 }, true);
 
 //            CopyToSqlServer(_pyramidParameters.TableName, geometries, i - 1);
 //        }

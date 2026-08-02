@@ -18,7 +18,7 @@
 
                 <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
 
-                <!--the whole toolds toggle button-->
+                <!--the whole tools toggle button-->
                 <Style TargetType="ToggleButton">
                     <Setter Property="BorderThickness" Value="4,0,0,0"/>
                     <Setter Property="BorderBrush" Value="Transparent"/>

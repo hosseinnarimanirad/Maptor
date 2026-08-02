@@ -56,7 +56,7 @@ public partial class ImageViewer : UserControl
         return screenScale * unitDistance;
     }
 
-    public System.Windows.Point ScreenToIntermidiate(System.Windows.Point point)
+    public System.Windows.Point ScreenToIntermediate(System.Windows.Point point)
     {
         return this.viewTransform.Inverse.Transform(point);
     }
@@ -76,7 +76,7 @@ public partial class ImageViewer : UserControl
     //    return new System.Windows.Point(result[0][0], result[1][0]);
     //}
 
-    public System.Windows.Point IntermidiateToScreen(System.Windows.Point point)
+    public System.Windows.Point IntermediateToScreen(System.Windows.Point point)
     {
         return this.viewTransform.Transform(point);
     }

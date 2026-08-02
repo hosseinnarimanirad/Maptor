@@ -11,7 +11,7 @@ using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Ket.PersonalGdbPersistence;
 
-public class PersoanlGdbDataSource : VectorDataSource
+public class PersonalGdbDataSource : VectorDataSource
 {
     protected BoundingBox _webMercatorExtent = BoundingBox.NaN;
 
@@ -66,7 +66,7 @@ public class PersoanlGdbDataSource : VectorDataSource
 
     public string SearchColumn { get; set; }
 
-    public PersoanlGdbDataSource(
+    public PersonalGdbDataSource(
         string mdbFileName,
         string tableName,
         string tableDisplayName,
@@ -318,7 +318,7 @@ public class PersoanlGdbDataSource : VectorDataSource
                         }
                         catch (Exception ex)
                         {
-                            //throw new NotImplementedException("PersoanlGdbDataSource > Select");
+                            //throw new NotImplementedException("PersonalGdbDataSource > Select");
                         }
                     }
                 }

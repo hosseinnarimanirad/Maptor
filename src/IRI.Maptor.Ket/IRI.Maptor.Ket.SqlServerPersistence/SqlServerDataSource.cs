@@ -298,7 +298,7 @@ public class SqlServerDataSource : VectorDataSource, IEditableVectorDataSource
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="whereClause">Do not include the "WHERE", e.g. coulumn01 = someValue</param>
+    /// <param name="whereClause">Do not include the "WHERE", e.g. column01 = someValue</param>
     /// <returns></returns>
     public List<Geometry<Point>> GetGeometries(string whereClause)
     {

@@ -176,7 +176,7 @@ public static class ImageUtility
         return image;
     }
 
-    public static void MergeAndSave(string fileName, List<DrawingVisual> drawingVisuals, int imageWidth, int imageHeight, BitmapEncoder? preferedEncoder = null)
+    public static void MergeAndSave(string fileName, List<DrawingVisual> drawingVisuals, int imageWidth, int imageHeight, BitmapEncoder? preferredEncoder = null)
     {
         if (imageWidth == 0 || imageHeight == 0)
             return;
@@ -192,17 +192,17 @@ public static class ImageUtility
 
         //image.Freeze();
 
-        Save(fileName, image, preferedEncoder);
+        Save(fileName, image, preferredEncoder);
     }
 
-    public static void Save(string fileName, RenderTargetBitmap? image, BitmapEncoder? preferedEncoder = null)
+    public static void Save(string fileName, RenderTargetBitmap? image, BitmapEncoder? preferredEncoder = null)
     {
         if (image is null)
             return;
 
         var frame = BitmapFrame.Create(image);
 
-        BitmapEncoder encoder = preferedEncoder ?? new PngBitmapEncoder();
+        BitmapEncoder encoder = preferredEncoder ?? new PngBitmapEncoder();
 
         encoder.Frames.Add(frame);
 
@@ -418,7 +418,7 @@ public static class ImageUtility
             return;
         }
 
-        //var sizeoff = System.Drawing.Image.GetPixelFormatSize(System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+        //var sizeof = System.Drawing.Image.GetPixelFormatSize(System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
         var minX = tiles.Min(t => t.ColumnNumber);
 

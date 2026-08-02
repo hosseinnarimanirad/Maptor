@@ -3,9 +3,9 @@
 
 namespace IRI.Maptor.Jab.Controls.MapMarkers;
  
-public partial class RectangeMarker : MapMarker
+public partial class RectangleMarker : MapMarker
 {
-    public RectangeMarker()
+    public RectangleMarker()
     {
         InitializeComponent();
     }

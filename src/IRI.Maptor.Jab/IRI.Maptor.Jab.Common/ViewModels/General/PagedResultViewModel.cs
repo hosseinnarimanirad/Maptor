@@ -14,7 +14,7 @@ public class PagedResultViewModel<T> : Notifier
         DataSource = dataSource;
     }
 
-    public void Referesh(IEnumerable<T> dataSource)
+    public void Refresh(IEnumerable<T> dataSource)
     {
         DataSource = dataSource;
     }

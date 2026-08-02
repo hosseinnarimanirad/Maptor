@@ -60,7 +60,7 @@
                     </StackPanel>
                 </Button>
                 <TextBlock Text="{Binding DataSource.SourceAddress}" HorizontalAlignment="Stretch" Width="auto"
-                           FlowDirection="LeftToRight" FontFamily="Seoge UI "/>
+                           FlowDirection="LeftToRight" FontFamily="Segoe UI "/>
             </DockPanel>
         </Border>
 

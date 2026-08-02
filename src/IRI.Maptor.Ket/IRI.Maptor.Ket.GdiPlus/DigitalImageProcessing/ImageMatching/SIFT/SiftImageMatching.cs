@@ -16,7 +16,7 @@ public class SiftImageMatching
 
     public int FindMatch(ImageDescriptors image, double threshold)
     {
-        List<IndexValue<double>> values = CalculateSimilariry(image, threshold);
+        List<IndexValue<double>> values = CalculateSimilarity(image, threshold);
 
         // best (highest-similarity) match
         var best = values[0];
@@ -33,7 +33,7 @@ public class SiftImageMatching
     }
 
     //Lowe use threshold = 0.8
-    public List<IndexValue<double>> CalculateSimilariry(ImageDescriptors image, double threshold)
+    public List<IndexValue<double>> CalculateSimilarity(ImageDescriptors image, double threshold)
     {
         List<IndexValue<double>> values = new List<IndexValue<double>>();
 

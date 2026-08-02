@@ -14,7 +14,7 @@
 //using IRI.Maptor.Extensions;
 //using IRI.Maptor.Ket.SpatialExtensions;
 
-//namespace IRI.Maptor.Jab.Common.Convertor
+//namespace IRI.Maptor.Jab.Common.Converter
 //{
 //    public class SqlSpatialToOpenTKBitmap
 //    {

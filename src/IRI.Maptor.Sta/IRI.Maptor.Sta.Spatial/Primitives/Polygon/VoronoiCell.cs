@@ -24,21 +24,21 @@
 //        PrimaryPoint = primaryPoint;
 //    }
 
-//    public VoronoiCell(Point primaryPoint, PointCollection vertexes)
-//        : base(vertexes)
+//    public VoronoiCell(Point primaryPoint, PointCollection vertices)
+//        : base(vertices)
 //    {
 //        PrimaryPoint = primaryPoint;
 //    }
 
-//    public VoronoiCell(Point primaryPoint, PointCollection vertexes, List<int> neighbours)
-//        : base(vertexes, neighbours)
+//    public VoronoiCell(Point primaryPoint, PointCollection vertices, List<int> neighbours)
+//        : base(vertices, neighbours)
 //    {
 //        PrimaryPoint = primaryPoint;
 //    }
 
 //    public override string ToString()
 //    {
-//        return string.Format("Primary Point:{0}, Vertexes:{1}", PrimaryPoint.ToString(), base.ToString());
+//        return string.Format("Primary Point:{0}, Vertices:{1}", PrimaryPoint.ToString(), base.ToString());
 //    }
 
 //    public override int GetHashCode()
@@ -68,18 +68,18 @@
 
 //        for (int i = edgeIndexes[0] + 1; i < edgeIndexes[1]; i++)
 //        {
-//            temp1.Add(Vertexes[i]);
+//            temp1.Add(Vertices[i]);
 //        }
 
 //        temp1.Add(intersections[1]);
 
 //        temp2.Add(intersections[1]);
 
-//        for (int i = edgeIndexes[1] + 1; i < edgeIndexes[0] + Vertexes.Count - 1 - edgeIndexes[1]; i++)
+//        for (int i = edgeIndexes[1] + 1; i < edgeIndexes[0] + Vertices.Count - 1 - edgeIndexes[1]; i++)
 //        {
-//            int j = (i + 1) % Vertexes.Count;
+//            int j = (i + 1) % Vertices.Count;
 
-//            temp2.Add(Vertexes[j]);
+//            temp2.Add(Vertices[j]);
 //        }
 
 //        temp2.Add(intersections[0]);

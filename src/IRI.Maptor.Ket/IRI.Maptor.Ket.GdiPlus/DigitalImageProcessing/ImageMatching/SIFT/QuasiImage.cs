@@ -10,11 +10,11 @@ using System.Xml.Serialization;
 namespace IRI.Maptor.Ket.DigitalImageProcessing.ImageMatching;
 
 
-public class QusiImage
+public class QuasiImage
 {
     private Matrix m_Values;
 
-    private int m_Scale, m_Blure;
+    private int m_Scale, m_Blur;
 
     private double m_Sigma;
 
@@ -35,11 +35,11 @@ public class QusiImage
         set { this.m_Scale = value; }
     }
 
-    public int Blure
+    public int Blur
     {
-        get { return this.m_Blure; }
+        get { return this.m_Blur; }
 
-        set { this.m_Blure = value; }
+        set { this.m_Blur = value; }
     }
 
     public double Sigma
@@ -72,7 +72,7 @@ public class QusiImage
         }
     }
 
-    public QusiImage(Matrix values, int scale, int blure, double sigma)
+    public QuasiImage(Matrix values, int scale, int blur, double sigma)
     {
         if (values == null)
         {
@@ -81,7 +81,7 @@ public class QusiImage
 
         this.m_Scale = scale;
 
-        this.m_Blure = blure;
+        this.m_Blur = blur;
 
         this.m_Sigma = sigma;
 

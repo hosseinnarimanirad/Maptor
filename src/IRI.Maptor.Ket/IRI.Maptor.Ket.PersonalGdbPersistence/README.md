@@ -17,7 +17,7 @@ dotnet add package IRI.Maptor.Ket.PersonalGdbPersistence
 
 ## Features
 
-- `PersoanlGdbDataSource` — Maptor vector data source (`IVectorDataSource`) over Personal GDB feature classes
+- `PersonalGdbDataSource` — Maptor vector data source (`IVectorDataSource`) over Personal GDB feature classes
 - `PersonalGdbInfrastructure` — connection and schema helpers (open `.mdb`, list feature classes, read geometries and attributes)
 - `PersonalGdb` — write support: create new geodatabases, create feature classes, and insert features (ArcGIS-compatible output)
 - Geometry is read from the Personal GDB binary format and converted to native `Geometry<Point>` objects

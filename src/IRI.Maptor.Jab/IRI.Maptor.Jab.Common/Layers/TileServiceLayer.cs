@@ -133,7 +133,7 @@ public class TileServiceLayer : BaseLayer
             {
                 result = await DownloadTileAsync(tile, proxy);
 
-                //Do not save imageNotFounds
+                //Do not save imageNotFound
                 if (result.IsValid)
                 {
                     await _cache.SaveAsync(result, tile);
@@ -200,7 +200,7 @@ public class TileServiceLayer : BaseLayer
             {
                 result = await DownloadTileAsync(tile, client);
 
-                //Do not save imageNotFounds
+                //Do not save imageNotFound
                 if (result.IsValid)
                 {
                     await _cache.SaveAsync(result, tile);

@@ -17,20 +17,20 @@
 //        get { return primaryPoint; }
 //    }
 
-//    public QuasiVoronoiCell(Point primaryPoint, List<int> vertexes)
-//        : base(vertexes)
+//    public QuasiVoronoiCell(Point primaryPoint, List<int> vertices)
+//        : base(vertices)
 //    {
 //        this.primaryPoint = primaryPoint;
 //    }
 
-//    public QuasiVoronoiCell(Point primaryPoint, List<int> vertexes, List<int> neighbours)
-//        : base(vertexes, neighbours)
+//    public QuasiVoronoiCell(Point primaryPoint, List<int> vertices, List<int> neighbours)
+//        : base(vertices, neighbours)
 //    {
 //        this.primaryPoint = primaryPoint;
 //    }
 
 //    public override string ToString()
 //    {
-//        return string.Format("Primary Point:{0}, Vertexes:{1}", PrimaryPoint.ToString(), base.ToString());
+//        return string.Format("Primary Point:{0}, Vertices:{1}", PrimaryPoint.ToString(), base.ToString());
 //    }
 //}

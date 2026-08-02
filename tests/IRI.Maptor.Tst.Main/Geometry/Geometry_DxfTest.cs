@@ -413,5 +413,594 @@ public class Geometry_DxfTest
     }
 
     #endregion
+
+    #region Block/INSERT Expansion Tests
+
+    private static string BuildDxf(string[] blocksSection, string[] entitiesSection)
+    {
+        var lines = new List<string>();
+
+        if (blocksSection.Length > 0)
+        {
+            lines.AddRange(new[] { "0", "SECTION", "2", "BLOCKS" });
+            lines.AddRange(blocksSection);
+            lines.AddRange(new[] { "0", "ENDSEC" });
+        }
+
+        lines.AddRange(new[] { "0", "SECTION", "2", "ENTITIES" });
+        lines.AddRange(entitiesSection);
+        lines.AddRange(new[] { "0", "ENDSEC", "0", "EOF" });
+
+        return string.Join("\n", lines);
+    }
+
+    [Fact]
+    public void Read_Insert_ShouldEmitInsertionPointAndTransformedBlockGeometry()
+    {
+        // Block SYM: a unit line from (0,0) to (1,0); inserted twice:
+        // once translated to (10,20), once at (5,5) scaled ×2 and rotated 90°
+        var dxf = BuildDxf(
+            blocksSection: new[]
+            {
+                "0", "BLOCK", "2", "SYM", "10", "0", "20", "0",
+                "0", "LINE", "10", "0", "20", "0", "11", "1", "21", "0",
+                "0", "ENDBLK"
+            },
+            entitiesSection: new[]
+            {
+                "0", "INSERT", "2", "SYM", "10", "10", "20", "20",
+                "0", "INSERT", "2", "SYM", "10", "5", "20", "5", "41", "2", "42", "2", "50", "90"
+            });
+
+        var geometries = DxfReader.Read(dxf, defaultSrid: 0);
+
+        var points = geometries.Where(g => g.Type == GeometryType.Point).ToList();
+        var lineStrings = geometries.Where(g => g.Type == GeometryType.LineString).ToList();
+
+        Assert.Equal(2, points.Count);
+        Assert.Equal(2, lineStrings.Count);
+
+        // Insertion points
+        Assert.Equal(10, points[0].Points[0].X, precision: 9);
+        Assert.Equal(20, points[0].Points[0].Y, precision: 9);
+        Assert.Equal(5, points[1].Points[0].X, precision: 9);
+        Assert.Equal(5, points[1].Points[0].Y, precision: 9);
+
+        // Translated copy: (10,20) → (11,20)
+        Assert.Equal(10, lineStrings[0].Points[0].X, precision: 9);
+        Assert.Equal(20, lineStrings[0].Points[0].Y, precision: 9);
+        Assert.Equal(11, lineStrings[0].Points[1].X, precision: 9);
+        Assert.Equal(20, lineStrings[0].Points[1].Y, precision: 9);
+
+        // Scaled ×2 then rotated 90°: (0,0)-(2,0) → (0,0)-(0,2), translated to (5,5)-(5,7)
+        Assert.Equal(5, lineStrings[1].Points[0].X, precision: 9);
+        Assert.Equal(5, lineStrings[1].Points[0].Y, precision: 9);
+        Assert.Equal(5, lineStrings[1].Points[1].X, precision: 9);
+        Assert.Equal(7, lineStrings[1].Points[1].Y, precision: 9);
+    }
+
+    [Fact]
+    public void Read_NestedInsert_ShouldComposeTransforms()
+    {
+        // Block INNER holds a line (0,0)-(1,0); block OUTER inserts INNER at (10,0);
+        // the drawing inserts OUTER at (100,0) → expect the line at (110,0)-(111,0)
+        var dxf = BuildDxf(
+            blocksSection: new[]
+            {
+                "0", "BLOCK", "2", "INNER", "10", "0", "20", "0",
+                "0", "LINE", "10", "0", "20", "0", "11", "1", "21", "0",
+                "0", "ENDBLK",
+                "0", "BLOCK", "2", "OUTER", "10", "0", "20", "0",
+                "0", "INSERT", "2", "INNER", "10", "10", "20", "0",
+                "0", "ENDBLK"
+            },
+            entitiesSection: new[]
+            {
+                "0", "INSERT", "2", "OUTER", "10", "100", "20", "0"
+            });
+
+        var geometries = DxfReader.Read(dxf, defaultSrid: 0);
+
+        var lineString = Assert.Single(geometries, g => g.Type == GeometryType.LineString);
+        Assert.Equal(110, lineString.Points[0].X, precision: 9);
+        Assert.Equal(0, lineString.Points[0].Y, precision: 9);
+        Assert.Equal(111, lineString.Points[1].X, precision: 9);
+        Assert.Equal(0, lineString.Points[1].Y, precision: 9);
+    }
+
+    [Fact]
+    public void Read_InsertOfUnknownBlock_ShouldStillEmitInsertionPoint()
+    {
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[] { "0", "INSERT", "2", "MISSING", "10", "3", "20", "4" });
+
+        var geometries = DxfReader.Read(dxf, defaultSrid: 0);
+
+        var point = Assert.Single(geometries, g => g.Type == GeometryType.Point);
+        Assert.Equal(3, point.Points[0].X, precision: 9);
+        Assert.Equal(4, point.Points[0].Y, precision: 9);
+    }
+
+    #endregion
+
+    #region Ellipse, Spline and Solid Tests
+
+    [Fact]
+    public void Read_FullEllipse_ShouldProducePolygon()
+    {
+        // Center (0,0), major axis vector (2,0), ratio 0.5 → semi-axes 2 and 1
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "ELLIPSE", "10", "0", "20", "0", "11", "2", "21", "0",
+                "40", "0.5", "41", "0", "42", "6.283185307179586"
+            });
+
+        var geometries = DxfReader.Read(dxf, defaultSrid: 0);
+
+        var polygon = Assert.Single(geometries, g => g.Type == GeometryType.Polygon);
+
+        var boundingBox = polygon.GetBoundingBox();
+        Assert.Equal(-2, boundingBox.XMin, precision: 6);
+        Assert.Equal(2, boundingBox.XMax, precision: 6);
+        Assert.Equal(-1, boundingBox.YMin, precision: 6);
+        Assert.Equal(1, boundingBox.YMax, precision: 6);
+    }
+
+    [Fact]
+    public void Read_EllipticalArc_ShouldProduceLineString()
+    {
+        // Upper half (parameters 0..π) of the same ellipse: from (2,0) to (-2,0)
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "ELLIPSE", "10", "0", "20", "0", "11", "2", "21", "0",
+                "40", "0.5", "41", "0", "42", "3.141592653589793"
+            });
+
+        var geometries = DxfReader.Read(dxf, defaultSrid: 0);
+
+        var lineString = Assert.Single(geometries, g => g.Type == GeometryType.LineString);
+        Assert.Equal(2, lineString.Points[0].X, precision: 6);
+        Assert.Equal(0, lineString.Points[0].Y, precision: 6);
+        Assert.Equal(-2, lineString.Points[lineString.Points.Count - 1].X, precision: 6);
+        Assert.Equal(0, lineString.Points[lineString.Points.Count - 1].Y, precision: 6);
+    }
+
+    [Fact]
+    public void Read_SplineWithFitPoints_ShouldProduceLineStringThroughThem()
+    {
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "SPLINE", "71", "3",
+                "11", "0", "21", "0",
+                "11", "1", "21", "1",
+                "11", "2", "21", "0"
+            });
+
+        var geometries = DxfReader.Read(dxf, defaultSrid: 0);
+
+        var lineString = Assert.Single(geometries, g => g.Type == GeometryType.LineString);
+        Assert.Equal(3, lineString.Points.Count);
+        Assert.Equal(1, lineString.Points[1].X, precision: 9);
+        Assert.Equal(1, lineString.Points[1].Y, precision: 9);
+    }
+
+    [Fact]
+    public void Read_SplineWithControlPoints_ShouldApproximateCurve()
+    {
+        // Degree-2 Bézier (clamped knot vector) with control points (0,0), (1,2), (2,0):
+        // the curve starts at (0,0), ends at (2,0) and peaks at (1,1)
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "SPLINE", "71", "2",
+                "40", "0", "40", "0", "40", "0", "40", "1", "40", "1", "40", "1",
+                "10", "0", "20", "0",
+                "10", "1", "20", "2",
+                "10", "2", "20", "0"
+            });
+
+        var geometries = DxfReader.Read(dxf, defaultSrid: 0);
+
+        var lineString = Assert.Single(geometries, g => g.Type == GeometryType.LineString);
+        Assert.True(lineString.Points.Count >= 32);
+
+        Assert.Equal(0, lineString.Points[0].X, precision: 6);
+        Assert.Equal(0, lineString.Points[0].Y, precision: 6);
+        Assert.Equal(2, lineString.Points[lineString.Points.Count - 1].X, precision: 6);
+        Assert.Equal(0, lineString.Points[lineString.Points.Count - 1].Y, precision: 6);
+
+        // Curve maximum at the midpoint: B(0.5) = (1, 1)
+        var maxY = lineString.Points.Max(p => p.Y);
+        Assert.Equal(1, maxY, precision: 6);
+    }
+
+    private static string BuildDxfWithTables(string[] tablesSection, string[] blocksSection, string[] entitiesSection)
+    {
+        var lines = new List<string>();
+
+        if (tablesSection.Length > 0)
+        {
+            lines.AddRange(new[] { "0", "SECTION", "2", "TABLES" });
+            lines.AddRange(tablesSection);
+            lines.AddRange(new[] { "0", "ENDSEC" });
+        }
+
+        return string.Join("\n", lines) + (lines.Count > 0 ? "\n" : "") + BuildDxf(blocksSection, entitiesSection);
+    }
+
+    #region DxfFeature (CAD Context and Annotation Separation) Tests
+
+    [Fact]
+    public void ReadFeatures_ShouldExposeLayerEntityTypeAndAciColor()
+    {
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "LINE", "8", "Roads", "62", "1", "10", "0", "20", "0", "11", "1", "21", "1"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        var feature = Assert.Single(features);
+        Assert.Equal("LINE", feature.EntityType);
+        Assert.Equal("Roads", feature.DxfLayerName);
+        Assert.Equal("#FF0000", feature.Color);
+        Assert.False(feature.IsAnnotation);
+    }
+
+    [Fact]
+    public void ReadFeatures_WithoutEntityColor_ShouldFallBackToLayerColor()
+    {
+        var dxf = BuildDxfWithTables(
+            tablesSection: new[]
+            {
+                "0", "TABLE", "2", "LAYER",
+                "0", "LAYER", "2", "Parcels", "62", "3",
+                "0", "ENDTAB"
+            },
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "LWPOLYLINE", "8", "Parcels", "90", "4", "70", "1",
+                "10", "0", "20", "0",
+                "10", "1", "20", "0",
+                "10", "1", "20", "1",
+                "10", "0", "20", "1"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        var feature = Assert.Single(features);
+        Assert.Equal(GeometryType.Polygon, feature.Geometry.Type);
+        Assert.Equal("#00FF00", feature.Color); // ACI 3 = green, inherited from the layer
+    }
+
+    [Fact]
+    public void ReadFeatures_TrueColor_ShouldWinOverAciColor()
+    {
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "LINE", "62", "1", "420", "255", "10", "0", "20", "0", "11", "1", "21", "1"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        Assert.Equal("#0000FF", Assert.Single(features).Color);
+    }
+
+    [Fact]
+    public void ReadFeatures_SolidAndText_ShouldBeAnnotation_LineShouldNot()
+    {
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "LINE", "10", "0", "20", "0", "11", "5", "21", "5",
+                "0", "SOLID", "10", "0", "20", "0", "11", "1", "21", "0", "12", "0", "22", "1", "13", "1", "23", "1",
+                "0", "TEXT", "10", "2", "20", "3", "1", "Parcel 12"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        Assert.Equal(3, features.Count);
+
+        var line = Assert.Single(features, f => f.EntityType == "LINE");
+        Assert.False(line.IsAnnotation);
+
+        var solid = Assert.Single(features, f => f.EntityType == "SOLID");
+        Assert.True(solid.IsAnnotation);
+        Assert.Equal(GeometryType.Polygon, solid.Geometry.Type);
+
+        var text = Assert.Single(features, f => f.EntityType == "TEXT");
+        Assert.True(text.IsAnnotation);
+        Assert.Equal(GeometryType.Point, text.Geometry.Type);
+        Assert.Equal("Parcel 12", text.Text);
+        Assert.Equal(2, text.Geometry.Points[0].X, precision: 9);
+        Assert.Equal(3, text.Geometry.Points[0].Y, precision: 9);
+    }
+
+    [Fact]
+    public void ReadFeatures_AnnotationPolygonInsideRealPolygon_ShouldNotBecomeHole()
+    {
+        // A SOLID arrowhead sits inside a real parcel: it must stay a separate annotation
+        // polygon instead of being swallowed as a hole of the parcel.
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "LWPOLYLINE", "90", "4", "70", "1",
+                "10", "0", "20", "0",
+                "10", "10", "20", "0",
+                "10", "10", "20", "10",
+                "10", "0", "20", "10",
+                "0", "SOLID", "10", "2", "20", "2", "11", "3", "21", "2", "12", "2", "22", "3", "13", "3", "23", "3"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        Assert.Equal(2, features.Count);
+
+        var parcel = Assert.Single(features, f => !f.IsAnnotation);
+        Assert.Equal(GeometryType.Polygon, parcel.Geometry.Type);
+        Assert.Single(parcel.Geometry.Geometries); // no hole
+
+        var arrow = Assert.Single(features, f => f.IsAnnotation);
+        Assert.Equal(GeometryType.Polygon, arrow.Geometry.Type);
+    }
+
+    [Fact]
+    public void ReadFeatures_PolygonWithHole_ShouldKeepOwnerContext()
+    {
+        // Outer square (layer Parcels) with a triangular hole drawn as a second closed polyline:
+        // the reassembled polygon keeps the CAD context of its exterior ring's entity.
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "LWPOLYLINE", "8", "Parcels", "62", "1", "90", "4", "70", "1",
+                "10", "0", "20", "0",
+                "10", "10", "20", "0",
+                "10", "10", "20", "10",
+                "10", "0", "20", "10",
+                "0", "LWPOLYLINE", "8", "Holes", "90", "3", "70", "1",
+                "10", "2", "20", "2",
+                "10", "3", "20", "2",
+                "10", "2", "20", "3"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        var feature = Assert.Single(features);
+        Assert.Equal(GeometryType.Polygon, feature.Geometry.Type);
+        Assert.Equal(2, feature.Geometry.Geometries.Count); // outer ring + hole
+        Assert.Equal("Parcels", feature.DxfLayerName);
+        Assert.Equal("#FF0000", feature.Color);
+    }
+
+    [Fact]
+    public void ReadFeatures_InsertOfAnonymousBlock_ShouldBeAnnotation()
+    {
+        var dxf = BuildDxf(
+            blocksSection: new[]
+            {
+                "0", "BLOCK", "2", "*D1", "10", "0", "20", "0",
+                "0", "LINE", "10", "0", "20", "0", "11", "1", "21", "0",
+                "0", "ENDBLK",
+                "0", "BLOCK", "2", "SYM", "10", "0", "20", "0",
+                "0", "LINE", "10", "0", "20", "0", "11", "1", "21", "0",
+                "0", "ENDBLK"
+            },
+            entitiesSection: new[]
+            {
+                "0", "INSERT", "2", "*D1", "10", "0", "20", "0",
+                "0", "INSERT", "2", "SYM", "10", "5", "20", "5"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        Assert.Equal(4, features.Count); // 2 × (insertion point + expanded line)
+        Assert.All(features, f => Assert.Equal("INSERT", f.EntityType));
+        Assert.Equal(2, features.Count(f => f.IsAnnotation));
+        Assert.Equal(2, features.Count(f => !f.IsAnnotation));
+    }
+
+    [Fact]
+    public void ReadFeatures_Dimension_ShouldExpandItsBlockAsAnnotation()
+    {
+        var dxf = BuildDxf(
+            blocksSection: new[]
+            {
+                "0", "BLOCK", "2", "*D5", "10", "0", "20", "0",
+                "0", "LINE", "10", "0", "20", "0", "11", "4", "21", "0",
+                "0", "ENDBLK"
+            },
+            entitiesSection: new[]
+            {
+                "0", "DIMENSION", "8", "Dims", "2", "*D5", "10", "0", "20", "0"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        var feature = Assert.Single(features);
+        Assert.Equal("DIMENSION", feature.EntityType);
+        Assert.Equal("Dims", feature.DxfLayerName);
+        Assert.True(feature.IsAnnotation);
+        Assert.Equal(GeometryType.LineString, feature.Geometry.Type);
+        Assert.Equal(4, feature.Geometry.Points[1].X, precision: 9);
+    }
+
+    [Fact]
+    public void ReadFeatures_EntityOnDefpointsLayer_ShouldBeAnnotation()
+    {
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "POINT", "8", "Defpoints", "10", "1", "20", "1"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        Assert.True(Assert.Single(features).IsAnnotation);
+    }
+
+    [Theory]
+    [InlineData(1, "#FF0000")]   // red
+    [InlineData(5, "#0000FF")]   // blue
+    [InlineData(7, "#FFFFFF")]   // white/black
+    [InlineData(11, "#FFAAAA")]  // muted light red
+    [InlineData(253, "#ADADAD")] // gray ramp
+    public void DxfAciColor_ToHex_ShouldMatchStandardPalette(int aci, string expectedHex)
+    {
+        Assert.Equal(expectedHex, DxfAciColor.ToHex(aci));
+    }
+
+    [Fact]
+    public void ReadFeatures_3dFace_ShouldBeAnnotationPolygon()
+    {
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "3DFACE",
+                "10", "0", "20", "0",
+                "11", "1", "21", "0",
+                "12", "1", "22", "1",
+                "13", "0", "23", "1"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        var feature = Assert.Single(features);
+        Assert.Equal("3DFACE", feature.EntityType);
+        Assert.True(feature.IsAnnotation);
+        Assert.Equal(GeometryType.Polygon, feature.Geometry.Type);
+    }
+
+    [Fact]
+    public void ReadFeatures_HatchWithLineEdgeBoundary_ShouldProduceAnnotationPolygon()
+    {
+        // One edge-type boundary path (92 = 1) with 4 line edges tracing the unit square.
+        // The leading 10/20 elevation point and the trailing seed point must be ignored.
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "HATCH", "8", "Bridge", "10", "0.0", "20", "0.0", "2", "STEEL", "70", "0", "91", "1",
+                "92", "1", "93", "4",
+                "72", "1", "10", "0", "20", "0", "11", "1", "21", "0",
+                "72", "1", "10", "1", "20", "0", "11", "1", "21", "1",
+                "72", "1", "10", "1", "20", "1", "11", "0", "21", "1",
+                "72", "1", "10", "0", "20", "1", "11", "0", "21", "0",
+                "97", "0",
+                "98", "1", "10", "0.5", "20", "0.5"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        var feature = Assert.Single(features);
+        Assert.Equal("HATCH", feature.EntityType);
+        Assert.Equal("Bridge", feature.DxfLayerName);
+        Assert.True(feature.IsAnnotation);
+        Assert.Equal(GeometryType.Polygon, feature.Geometry.Type);
+        Assert.Equal(4, feature.Geometry.TotalNumberOfPoints); // the seed point is not a vertex
+        Assert.Equal(1, feature.Geometry.EuclideanArea, precision: 6);
+    }
+
+    [Fact]
+    public void ReadFeatures_HatchWithPolylineBoundary_ShouldProduceAnnotationPolygon()
+    {
+        // One polyline-type boundary path (92 bit 1 set): 72 = has-bulge flag, 73 = closed, 93 = vertex count
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "HATCH", "10", "0.0", "20", "0.0", "91", "1",
+                "92", "7", "72", "0", "73", "1", "93", "3",
+                "10", "0", "20", "0",
+                "10", "2", "20", "0",
+                "10", "0", "20", "2",
+                "97", "0"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        var feature = Assert.Single(features);
+        Assert.Equal(GeometryType.Polygon, feature.Geometry.Type);
+        Assert.Equal(3, feature.Geometry.TotalNumberOfPoints);
+        Assert.Equal(2, feature.Geometry.EuclideanArea, precision: 6);
+    }
+
+    [Fact]
+    public void ReadFeatures_Wipeout_ShouldTransformClipBoundaryToWorld()
+    {
+        // Insertion (100,200), U = (10,0), V = (0,10), full-frame clip boundary
+        // (unit square centered at origin, +Y down) → world square (100,200)-(110,210)
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "WIPEOUT",
+                "10", "100", "20", "200",
+                "11", "10", "21", "0",
+                "12", "0", "22", "10",
+                "71", "2", "91", "4",
+                "14", "-0.5", "24", "-0.5",
+                "14", "0.5", "24", "-0.5",
+                "14", "0.5", "24", "0.5",
+                "14", "-0.5", "24", "0.5"
+            });
+
+        var features = DxfReader.ReadFeatures(dxf, defaultSrid: 0);
+
+        var feature = Assert.Single(features);
+        Assert.Equal("WIPEOUT", feature.EntityType);
+        Assert.True(feature.IsAnnotation);
+        Assert.Equal(GeometryType.Polygon, feature.Geometry.Type);
+
+        var boundingBox = feature.Geometry.GetBoundingBox();
+        Assert.Equal(100, boundingBox.XMin, precision: 6);
+        Assert.Equal(110, boundingBox.XMax, precision: 6);
+        Assert.Equal(200, boundingBox.YMin, precision: 6);
+        Assert.Equal(210, boundingBox.YMax, precision: 6);
+        Assert.Equal(100, feature.Geometry.EuclideanArea, precision: 6);
+    }
+
+    #endregion
+
+    [Fact]
+    public void Read_Solid_ShouldReorderZigzagCornersIntoPolygon()
+    {
+        // SOLID corners in DXF zigzag order: (0,0), (1,0), (0,1), (1,1) is the unit square
+        var dxf = BuildDxf(
+            blocksSection: Array.Empty<string>(),
+            entitiesSection: new[]
+            {
+                "0", "SOLID",
+                "10", "0", "20", "0",
+                "11", "1", "21", "0",
+                "12", "0", "22", "1",
+                "13", "1", "23", "1"
+            });
+
+        var geometries = DxfReader.Read(dxf, defaultSrid: 0);
+
+        var polygon = Assert.Single(geometries, g => g.Type == GeometryType.Polygon);
+        Assert.Equal(4, polygon.TotalNumberOfPoints);
+        Assert.Equal(1, polygon.EuclideanArea, precision: 6);
+    }
+
+    #endregion
 }
 

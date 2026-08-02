@@ -82,7 +82,7 @@
                 <TextBlock Text="{Binding [dialog_export_sourceSrs], Source={StaticResource Localization}, StringFormat={}{0}:}" FontWeight="Bold" VerticalAlignment="Center" Margin="4"/>
 
                 <TextBlock Text="{Binding SourceLayerSrs.DisplayName}"
-                           FontFamily="Seoge UI"
+                           FontFamily="Segoe UI"
                            FlowDirection="LeftToRight" FontWeight="Normal" VerticalAlignment="Center" Margin="4"/>
             </StackPanel>
         </Border>

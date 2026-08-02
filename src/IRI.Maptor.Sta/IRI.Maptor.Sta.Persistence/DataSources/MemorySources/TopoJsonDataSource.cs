@@ -27,7 +27,7 @@ public class TopoJsonDataSource : MemoryDataSource
     //// GeoJSON. It defines the order of elements for a position as x, y, z.
     //// For geographic coordinates (using the WGS84 datum), this translates
     //// to longitude, latitude, altitude but for the sake of flexibility we
-    //// my support reordering of esting/northing in future
+    //// my support reordering of easting/northing in future
     // ************************************************************************
     //private readonly bool _isLongitudeFirst;
 

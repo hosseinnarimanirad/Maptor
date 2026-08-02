@@ -239,13 +239,13 @@
                         </ToggleButton.Style>
                     </ToggleButton>
 
-                    <!--all childs visible-->
+                    <!--all children visible-->
                     <CheckBox DockPanel.Dock="Left"
                                Margin="2,0"
                                VerticalAlignment="Center"
                                Padding="0"
                                Cursor="Hand"
-                               IsChecked="{Binding AllChildsVisible, Mode=TwoWay}"
+                               IsChecked="{Binding AllChildrenVisible, Mode=TwoWay}"
                                IsThreeState="True">
                         <!--Visibility="{Binding IsBusy, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"-->
                         <CheckBox.Visibility>
@@ -432,7 +432,7 @@
                            IsEnabled="{Binding IsInScaleRange}"
                            Visibility="{Binding Path=ShowLayerColors, RelativeSource={RelativeSource AncestorType=maptor:NotifiableUserControl}, Converter={StaticResource boolToVisibilityConverter}}"/>
 
-                        <!--layer visiblity checkbox-->
+                        <!--layer visibility checkbox-->
                         <CheckBox DockPanel.Dock="Left" Margin="2,0" VerticalAlignment="Center" Padding="0"
                           IsChecked="{Binding Visibility, Mode=TwoWay, Converter={StaticResource visibilityToBoolConverter}}"
                           IsEnabled="{Binding IsInScaleRange}">

@@ -53,12 +53,12 @@ namespace IRI.Maptor.Jab.Controls.Security
 
         public string UserNameOrEmail
         {
-            get { return (string)GetValue(UsreNameProperty); }
-            set { SetValue(UsreNameProperty, value); }
+            get { return (string)GetValue(UserNameProperty); }
+            set { SetValue(UserNameProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for UsreName.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty UsreNameProperty =
+        // Using a DependencyProperty as the backing store for UserName.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty UserNameProperty =
             DependencyProperty.Register(nameof(UserNameOrEmail), typeof(string), typeof(UserPasswordInputView), new PropertyMetadata(string.Empty));
          
     }

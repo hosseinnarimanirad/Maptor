@@ -36,9 +36,9 @@ public partial class CoordinatePanelView : NotifiableUserControl
 
 
     /// <summary>
-    /// Sets the x,y coordinates from elipsoidal mercatar. elipsoid: WGS84
+    /// Sets the x,y coordinates from ellipsoidal mercator. ellipsoid: WGS84
     /// </summary>
-    /// <param name="mecatorX"></param>
+    /// <param name="mercatorX"></param>
     /// <param name="mercatorY"></param>
     public void SetCoordinates(Point geodeticPoint)
     {

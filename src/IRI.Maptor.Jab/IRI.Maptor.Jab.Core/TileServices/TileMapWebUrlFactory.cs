@@ -64,7 +64,7 @@ public static class TileMapWebUrlFactory
     private static string MakeGoogleHybridUrl(TileInfo tile, string server) => $@"http://mt{server}.google.com/vt/lyrs=y@901000000&hl=en&x={tile.ColumnNumber}&y={tile.RowNumber}&z={tile.ZoomLevel}&s=Gal";
 
     //https://mt1.google.com/vt/lyrs=m,traffic&x={x}&y={y}&z={z}
-    private static string MakeGoogleTerafficUrl(TileInfo tile, string server) => $@"http://mt{server}.google.com/vt/lyrs=m,traffic&x={tile.ColumnNumber}&y={tile.RowNumber}&z={tile.ZoomLevel}";
+    private static string MakeGoogleTrafficUrl(TileInfo tile, string server) => $@"http://mt{server}.google.com/vt/lyrs=m,traffic&x={tile.ColumnNumber}&y={tile.RowNumber}&z={tile.ZoomLevel}";
 
 
     //blackwhite
@@ -113,7 +113,7 @@ public static class TileMapWebUrlFactory
     //server: 1, 2, 3, 4
     private static string MakeMapyWinterUrl(TileInfo tile) => $@"https://m{GetServer(1, 4)}.mapserver.mapy.cz/winter-m/{tile.ZoomLevel}-{tile.ColumnNumber}-{tile.RowNumber}";
 
-    private static string MakeMapyTouristUrl(TileInfo tile) => $@"https://m{GetServer(1, 4)}.mapserver.mapy.cz/turist-m/{tile.ZoomLevel}-{tile.ColumnNumber}-{tile.RowNumber}";
+    private static string MakeMapyTouristUrl(TileInfo tile) => $@"https://m{GetServer(1, 4)}.mapserver.mapy.cz/tourist-m/{tile.ZoomLevel}-{tile.ColumnNumber}-{tile.RowNumber}";
 
     //http://c.tile.stamen.com/watercolor/${z}/${x}/${y}.jpg 
     private static string MakeStamenWatercolorUrl(TileInfo tile) => $@"http://{GetServerCharacter()}.tile.stamen.com/watercolor/{tile.ZoomLevel}/{tile.ColumnNumber}/{tile.RowNumber}.jpg";
@@ -131,7 +131,7 @@ public static class TileMapWebUrlFactory
 
     #region Carto
 
-    //@2x parameter say image should be twise in size
+    //@2x parameter say image should be twice in size
     //servers: a, b, c, d
     //https://cartodb-basemaps-c.global.ssl.fastly.net/light_all/14/10525/6444@2x.png
 
@@ -194,7 +194,7 @@ public static class TileMapWebUrlFactory
             // GOOGLE
             (nameof(tile_provider_google), nameof(tile_mapType_cleanGrey)) => MakeGoogleCleanGreyUrl,
             (nameof(tile_provider_google), nameof(tile_mapType_blackWhite)) => MakeGoogleBlackWhiteUrl,
-            (nameof(tile_provider_google), nameof(tile_mapType_traffic)) => tile => MakeGoogleTerafficUrl(tile, GetServer()),
+            (nameof(tile_provider_google), nameof(tile_mapType_traffic)) => tile => MakeGoogleTrafficUrl(tile, GetServer()),
             (nameof(tile_provider_google), nameof(tile_mapType_satellite)) => tile => MakeGoogleSatelliteUrl(tile, GetServer()),
             (nameof(tile_provider_google), nameof(tile_mapType_hybrid)) => tile => MakeGoogleHybridUrl(tile, GetServer()),
             (nameof(tile_provider_google), nameof(tile_mapType_roadMap)) => tile => MakeGoogleRoadMapUrl(tile, GetServer()),

@@ -145,27 +145,27 @@ public static class CryptoRSAHelper
         var bytesPlainTextData = System.Text.Encoding.Unicode.GetBytes(plainTextData);
 
         //apply pkcs#1.5 padding and encrypt our data 
-        var bytesCypherText = csp.Encrypt(bytesPlainTextData, false);
+        var bytesCipherText = csp.Encrypt(bytesPlainTextData, false);
 
-        //we might want a string representation of our cypher text... base64 will do
-        var cypherText = Convert.ToBase64String(bytesCypherText);
+        //we might want a string representation of our cipher text... base64 will do
+        var cipherText = Convert.ToBase64String(bytesCipherText);
 
 
         /*
          * some transmission / storage / retrieval
          * 
-         * and we want to decrypt our cypherText
+         * and we want to decrypt our cipherText
          */
 
         //first, get our bytes back from the base64 string ...
-        bytesCypherText = Convert.FromBase64String(cypherText);
+        bytesCipherText = Convert.FromBase64String(cipherText);
 
         //we want to decrypt, therefore we need a csp and load our private key
         csp = new RSACryptoServiceProvider();
         csp.ImportParameters(privKey);
 
         //decrypt and strip pkcs#1.5 padding
-        bytesPlainTextData = csp.Decrypt(bytesCypherText, false);
+        bytesPlainTextData = csp.Decrypt(bytesCipherText, false);
 
         //get our original plainText back...
         plainTextData = System.Text.Encoding.Unicode.GetString(bytesPlainTextData);

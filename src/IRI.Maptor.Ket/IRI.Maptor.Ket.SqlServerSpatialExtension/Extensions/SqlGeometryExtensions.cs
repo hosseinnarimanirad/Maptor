@@ -397,7 +397,7 @@ public static class SqlGeometryExtensions
     public static Geometry<Point> AsGeometry(this SqlGeometry geometry)
     {
         // old
-        //This check is not required bacause it is already checked at evey ExtractXXXX function
+        //This check is not required because it is already checked at every ExtractXXXX function
         //this is specially for MultiXXX types. What is multipolygon was not Empty but first GeometryN of it was empty
 
         // 1399.12.27
@@ -659,7 +659,7 @@ public static class SqlGeometryExtensions
         }
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static EsriPoint SqlPointToEsriPoint(SqlGeometry geometry, Func<IPoint, IPoint> mapFunction)
     {
         var point = geometry.AsEsriPoint();
@@ -667,7 +667,7 @@ public static class SqlGeometryExtensions
         return mapFunction == null ? point : (EsriPoint)mapFunction(point);
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static EsriMultiPoint SqlMultiPointToEsriMultiPoint(SqlGeometry geometry, Func<IPoint, IPoint> mapFunction)
     {
         if (geometry.IsNullOrEmpty() || geometry.STNumGeometries().IsNull)
@@ -870,7 +870,7 @@ public static class SqlGeometryExtensions
         return result;
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static EsriJsonGeometry SqlPointToEsriJsonPoint(this SqlGeometry geometry)
     {
         //This check is required
@@ -889,7 +889,7 @@ public static class SqlGeometryExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static EsriJsonGeometry SqlMultiPointToEsriJsonMultiPoint(this SqlGeometry geometry)
     {
         //This check is required
@@ -917,7 +917,7 @@ public static class SqlGeometryExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static EsriJsonGeometry SqlLineStringToEsriJsonPolyline(this SqlGeometry geometry)
     {
         //This check is required
@@ -938,7 +938,7 @@ public static class SqlGeometryExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static EsriJsonGeometry SqlMultiLineStringToEsriJsonPolyline(this SqlGeometry geometry)
     {
         //This check is required
@@ -966,7 +966,7 @@ public static class SqlGeometryExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     //todo: 1399.08.19; this method is not OK, look at SqlGeometry To Geometry
     private static EsriJsonGeometry SqlPolygonToEsriJsonPolygon(this SqlGeometry geometry)
     {
@@ -988,7 +988,7 @@ public static class SqlGeometryExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static EsriJsonGeometry SqlMultiPolygonToEsriJsonMultiPolygon(this SqlGeometry geometry)
     {
         //This check is required
@@ -1097,7 +1097,7 @@ public static class SqlGeometryExtensions
         return result.ToString();
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static string SqlLineStringToPathMarkup(this SqlGeometry geometry, double decimals)
     {
         //This check is required
@@ -1107,7 +1107,7 @@ public static class SqlGeometryExtensions
         return LineStringOrRingToPathMarkup(geometry, decimals);
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static string SqlMultiLineStringToPathMarkup(this SqlGeometry geometry, double decimals)
     {
         //This check is required
@@ -1126,7 +1126,7 @@ public static class SqlGeometryExtensions
         return result.ToString();
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     //todo: 1399.08.19; this method is not OK, look at SqlGeometry To Geometry
     private static string SqlPolygonToPathMarkup(this SqlGeometry geometry, double decimals)
     {
@@ -1147,7 +1147,7 @@ public static class SqlGeometryExtensions
         return result.ToString();
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static string SqlMultiPolygonToPathMarkup(this SqlGeometry geometry, double decimals)
     {
         //This check is required
@@ -1283,7 +1283,7 @@ public static class SqlGeometryExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static GeoJsonLineString SqlLineStringToGeoJsonPolyline(this SqlGeometry geometry, bool isXFirst)
     {
         //This check is required
@@ -1303,7 +1303,7 @@ public static class SqlGeometryExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static GeoJsonMultiLineString SqlMultiLineStringToGeoJsonPolyline(this SqlGeometry geometry, bool isXFirst)
     {
         //This check is required
@@ -1330,7 +1330,7 @@ public static class SqlGeometryExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static GeoJsonPolygon SqlPolygonToGeoJsonPolygon(this SqlGeometry geometry, bool isXFirst)
     {
         //This check is required
@@ -1372,7 +1372,7 @@ public static class SqlGeometryExtensions
         };
     }
 
-    //Not supportig Z and M Values
+    //Not supporting Z and M Values
     private static GeoJsonMultiPolygon SqlMultiPolygonToGeoJsonMultiPolygon(this SqlGeometry geometry, bool isXFirst)
     {
         //This check is required

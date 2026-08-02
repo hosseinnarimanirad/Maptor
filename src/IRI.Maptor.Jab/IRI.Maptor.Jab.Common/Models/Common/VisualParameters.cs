@@ -471,7 +471,7 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
         return new VisualParameters(Fill, Stroke, StrokeThickness, Opacity, IsSelected);
     }
 
-    // todo: check if necassary to apply the opacity
+    // todo: check if necessary to apply the opacity
     public Pen? GetWpfPen()
     {
         var result = Stroke != null ? new Pen(Stroke, StrokeThickness) : null;

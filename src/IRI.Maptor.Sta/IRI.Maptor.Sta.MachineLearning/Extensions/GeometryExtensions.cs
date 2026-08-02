@@ -13,9 +13,9 @@ public static class GeometryExtensions
         this Geometry<T> geometry,
         LogisticSimplification<T> model,
         Func<T, T> toScreenMap,
-        bool retain3Poins) where T : IPoint, new()
+        bool retain3Points) where T : IPoint, new()
     {
-        Func<List<T>, List<T>> filter = pList => pList.SimplifyByLogisticRegression(model, toScreenMap, retain3Poins);
+        Func<List<T>, List<T>> filter = pList => pList.SimplifyByLogisticRegression(model, toScreenMap, retain3Points);
 
         var temp = geometry.FilterPoints(filter);
 

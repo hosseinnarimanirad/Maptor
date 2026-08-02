@@ -13,6 +13,6 @@ public enum MapStatus
     Editing,
     //Measuring,
     //Rendering,
-    //Paning,
+    //Panning,
     //Zooming,
 }

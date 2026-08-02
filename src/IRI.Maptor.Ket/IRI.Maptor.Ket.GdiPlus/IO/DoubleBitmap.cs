@@ -60,7 +60,7 @@ public static class DoubleBitmap
         return result;
     }
 
-    public static void DrawBreaksAbsolutly(ref Bitmap image, ArrayList x, ArrayList y)
+    public static void DrawBreaksAbsolutely(ref Bitmap image, ArrayList x, ArrayList y)
     {
 
         Graphics graphic = Graphics.FromImage(image);

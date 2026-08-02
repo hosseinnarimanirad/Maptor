@@ -88,9 +88,9 @@ namespace IRI.Maptor.Jab.Core.Models
 
         }
 
-        public DegreeMinuteSecondModel(double deciamalDegree)
+        public DegreeMinuteSecondModel(double decimalDegree)
         {
-            Value = deciamalDegree;
+            Value = decimalDegree;
         }
 
         public double GetDegreeValue()

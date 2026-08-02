@@ -37,9 +37,9 @@ public class SimpleSymbolizer : SymbolizerBase
 
     public static SimpleSymbolizer Create(Brush? fill, Brush? stroke, double strokeThickness, double opacity, bool isOn = true)
     {
-        var visualParamters = new VisualParameters(fill, stroke, strokeThickness, opacity, isOn);
+        var visualParameters = new VisualParameters(fill, stroke, strokeThickness, opacity, isOn);
 
-        return new SimpleSymbolizer(visualParamters);
+        return new SimpleSymbolizer(visualParameters);
     }
 
     public static SimpleSymbolizer Create(Color? fill, Color? stroke = null, double strokeThickness = 1, double opacity = 1, bool isOn = true)

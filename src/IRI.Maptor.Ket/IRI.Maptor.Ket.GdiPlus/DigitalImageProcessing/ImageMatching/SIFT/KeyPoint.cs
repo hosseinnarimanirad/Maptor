@@ -12,20 +12,20 @@ namespace IRI.Maptor.Ket.DigitalImageProcessing.ImageMatching;
 [Serializable()]
 public struct KeyPoint
 {
-    public int ExtermaIndex;
+    public int ExtremumIndex;
 
     public double Orientation;
 
     public double Magnitude;
 
-    public KeyPoint(int extermaIndex, double orientation, double magnitude)
+    public KeyPoint(int extremumIndex, double orientation, double magnitude)
     {
         if (orientation < 0 || orientation > Math.PI * 2)
         {
             throw new NotImplementedException();
         }
 
-        this.ExtermaIndex = extermaIndex;
+        this.ExtremumIndex = extremumIndex;
 
         this.Orientation = orientation;
 

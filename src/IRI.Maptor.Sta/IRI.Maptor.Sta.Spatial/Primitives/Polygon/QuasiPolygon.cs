@@ -10,15 +10,15 @@
 ////Assumed to be CCW
 //public class QuasiPolygon
 //{
-//    public List<int> Vertexes { get; set; }
+//    public List<int> Vertices { get; set; }
 
 //    public List<int> neighbours;
 
-//    public QuasiPolygon(List<int> vertexes)
+//    public QuasiPolygon(List<int> vertices)
 //    {
-//        Vertexes = vertexes;
+//        Vertices = vertices;
 
-//        neighbours = new List<int>(vertexes.Count);
+//        neighbours = new List<int>(vertices.Count);
 
 //        for (int i = 0; i < neighbours.Count; i++)
 //        {
@@ -26,21 +26,21 @@
 //        }
 //    }
 
-//    public QuasiPolygon(List<int> vertexes, List<int> neighbours)
+//    public QuasiPolygon(List<int> vertices, List<int> neighbours)
 //    {
-//        if (vertexes.Count != neighbours.Count)
+//        if (vertices.Count != neighbours.Count)
 //        {
 //            throw new NotImplementedException();
 //        }
 
-//        Vertexes = vertexes;
+//        Vertices = vertices;
 
 //        this.neighbours = neighbours;
 //    }
 
 //    public int Count
 //    {
-//        get { return Vertexes.Count; }
+//        get { return Vertices.Count; }
 //    }
 
 //    public override string ToString()
@@ -52,13 +52,13 @@
 
 //        StringBuilder result = new StringBuilder();
 
-//        for (int i = 0; i < Vertexes.Count - 2; i++)
+//        for (int i = 0; i < Vertices.Count - 2; i++)
 //        {
-//            result.Append(string.Format("{0}, ", Vertexes[i]));
+//            result.Append(string.Format("{0}, ", Vertices[i]));
 //        }
-//        if (Vertexes.Count > 0)
+//        if (Vertices.Count > 0)
 //        {
-//            result.Append(Vertexes[Vertexes.Count - 1]);
+//            result.Append(Vertices[Vertices.Count - 1]);
 //        }
 
 //        return result.ToString();

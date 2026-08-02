@@ -13,7 +13,7 @@ namespace IRI.Maptor.Ket.DigitalImageProcessing.ImageMatching;
 public struct Descriptor
 {
 
-    public Exterma exterma;
+    public Extremum extremum;
 
     public double Orientation;
 
@@ -29,14 +29,14 @@ public struct Descriptor
         get { return this.m_Norm; }
     }
 
-    public Descriptor(Exterma exterma, KeyPoint keyPoint, double[] vector)
+    public Descriptor(Extremum extremum, KeyPoint keyPoint, double[] vector)
     {
         if (vector.Length != 128)
         {
             throw new NotImplementedException();
         }
 
-        this.exterma = exterma;
+        this.extremum = extremum;
 
         this.Orientation = keyPoint.Orientation;
 
@@ -46,10 +46,10 @@ public struct Descriptor
 
         this.m_Norm = 0;
 
-        this.m_Norm = Math.Sqrt(Descriptor.InnearMultiplication(this, this));
+        this.m_Norm = Math.Sqrt(Descriptor.InnerMultiplication(this, this));
     }
 
-    public static double InnearMultiplication(Descriptor first, Descriptor second)
+    public static double InnerMultiplication(Descriptor first, Descriptor second)
     {
         double result =
             first.vector[0] * second.vector[0] + first.vector[1] * second.vector[1] + first.vector[2] * second.vector[2] + first.vector[3] * second.vector[3] + first.vector[4] * second.vector[4] +
@@ -81,7 +81,7 @@ public struct Descriptor
         return result;
     }
 
-    public static double InnearMultiplicationSlow(Descriptor first, Descriptor second)
+    public static double InnerMultiplicationSlow(Descriptor first, Descriptor second)
     {
         double result = 0;
 
@@ -95,14 +95,14 @@ public struct Descriptor
 
     public static double CalculateAngle(Descriptor first, Descriptor second)
     {
-        return Math.Acos(Math.Round(Descriptor.InnearMultiplication(first, second) / (first.Norm * second.Norm), 15));
+        return Math.Acos(Math.Round(Descriptor.InnerMultiplication(first, second) / (first.Norm * second.Norm), 15));
     }
 
     public static double CalculateDistance(Descriptor first, Descriptor second)
     {
-        double dy = first.exterma.Row - second.exterma.Row;
+        double dy = first.extremum.Row - second.extremum.Row;
 
-        double dx = first.exterma.Column - second.exterma.Column;
+        double dx = first.extremum.Column - second.extremum.Column;
 
         return Math.Sqrt(dx * dx + dy * dy);
     }

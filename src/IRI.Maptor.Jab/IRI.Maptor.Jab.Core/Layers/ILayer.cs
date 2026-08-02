@@ -36,7 +36,7 @@ public interface ILayer : INotifyPropertyChanged
 
     bool IsGroupLayer { get; set; }
 
-    bool? AllChildsVisible { get; set; }
+    bool? AllChildrenVisible { get; set; }
 
     ILayer? Parent { get; set; }
 
@@ -81,7 +81,7 @@ public interface ILayer : INotifyPropertyChanged
 
     Action<ILayer>? RequestRefreshWhenDataLoaded { get; set; }
 
-    event EventHandler<ILayer> OnLayerInitilized;
+    event EventHandler<ILayer> OnLayerInitialized;
 
     bool CanRenderLayer(double mapScale);
 
@@ -100,5 +100,5 @@ public interface ILayer : INotifyPropertyChanged
     bool CanMoveLayerUp { get; set; }
     bool CanMoveLayerDown { get; set; }
 
-    void UpdateAllChildsVisible();
+    void UpdateAllChildrenVisible();
 }

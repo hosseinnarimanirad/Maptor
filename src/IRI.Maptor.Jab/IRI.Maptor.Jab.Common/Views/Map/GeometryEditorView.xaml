@@ -376,7 +376,7 @@
                   HeadersVisibility="Column" AlternationCount="2000000000"
                   SelectionMode="Single" Height="200"  
                   SelectionUnit="FullRow"
-                  FontFamily="Seoge UI">
+                  FontFamily="Segoe UI">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="Auto" MinWidth="40">
                     <DataGridTemplateColumn.HeaderTemplate>
