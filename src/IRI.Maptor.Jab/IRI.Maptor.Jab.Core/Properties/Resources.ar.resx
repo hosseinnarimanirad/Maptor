@@ -1000,10 +1000,10 @@
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>الانتقال إلى المقياس (في المركز)</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>استخدام مقياس الأرض للمقاييس القياسية</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>استخدام مقياس WebMercator للمقاييس القياسية</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
@@ -1031,7 +1031,7 @@
     <value>تكبير إلى الجزء الحالي</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
+    <value>نسخ إحداثيات النقطة الحالية</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>حذف النقطة الحالية</value>
@@ -1457,7 +1457,7 @@
     <value>منطقة</value>
   </data>
   <data name="srs_utmZone_full" xml:space="preserve">
-    <value>UTM Zone</value>
+    <value>منطقة UTM</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>ويب مركاتور</value>
@@ -1547,7 +1547,7 @@
     <value>مظلم</value>
   </data>
   <data name="tile_mapType_hikeBike" xml:space="preserve">
-    <value>HikeBike</value>
+    <value>المشي والدراجة</value>
   </data>
   <data name="tile_mapType_hybrid" xml:space="preserve">
     <value>هجين</value>
@@ -1665,5 +1665,56 @@
   </data>
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>طباعة</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>تحديث</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>إضافة رمز راستر</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>إزاحة الشرطة:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>تعتيم الهالة:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>التعتيم:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>خريطة الألوان</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>إضافة إدخال</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>إزالة الإدخال</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>اللون</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>التسمية</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>التعتيم</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>تربط إدخالات خريطة الألوان قيم الراستر (الكمية) بالألوان.</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>الخاصية:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>المعامل:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>القيمة:</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>الاحتفاظ بمقياس الخريطة الحالي (ملاءمة الصفحة للخريطة)</value>
   </data>
 </root>

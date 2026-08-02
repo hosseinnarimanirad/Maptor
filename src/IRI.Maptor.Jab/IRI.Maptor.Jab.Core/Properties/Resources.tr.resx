@@ -377,7 +377,7 @@
     <value>Hayır</value>
   </data>
   <data name="dialog_common_ok" xml:space="preserve">
-    <value>OK</value>
+    <value>Tamam</value>
   </data>
   <data name="dialog_common_prettyJson" xml:space="preserve">
     <value>Düzenli Json</value>
@@ -1000,10 +1000,10 @@
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>Ölçeğe git (merkezde)</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>Standart ölçekler için zemin ölçeğini kullan</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>Standart ölçekler için webmercator ölçeğini kullan</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
@@ -1031,7 +1031,7 @@
     <value>Geçerli parçayı yakınlaştır</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
+    <value>Geçerli noktanın koordinatını kopyala</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>Geçerli noktayı sil</value>
@@ -1457,7 +1457,7 @@
     <value>Alan</value>
   </data>
   <data name="srs_utmZone_full" xml:space="preserve">
-    <value>UTM Zone</value>
+    <value>UTM Dilimi</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>Web Mercatörü</value>
@@ -1665,5 +1665,56 @@
   </data>
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>Yazdır</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>Yenile</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>Raster Sembolleştirici Ekle</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>Çizgi Kaydırması:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>Hale Opaklığı:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>Opaklık:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>Renk Haritası</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>Girdi Ekle</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>Girdiyi Kaldır</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>Renk</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>Miktar</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>Etiket</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>Opaklık</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>Renk haritası girdileri raster değerlerini (miktar) renklerle eşleştirir.</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>Özellik:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>Operatör:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>Değer:</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>Geçerli harita ölçeğini koru (sayfayı haritaya sığdır)</value>
   </data>
 </root>

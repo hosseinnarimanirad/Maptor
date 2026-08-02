@@ -644,7 +644,7 @@
     <value>Stato</value>
   </data>
   <data name="featureChanges_title" xml:space="preserve">
-    <value>Modifiche dell&amp;amp;amp;amp;amp;amp;amp;apos;entità</value>
+    <value>Modifiche dell'entità</value>
   </data>
   <data name="featureChanges_viewChanges" xml:space="preserve">
     <value>Visualizza modifiche</value>
@@ -842,7 +842,7 @@
     <value>Nota: le coordinate sono nel formato longitudine e latitudine</value>
   </data>
   <data name="input_drawFeatureOnMap" xml:space="preserve">
-    <value>Disegna l&amp;amp;amp;amp;apos;elemento sulla mappa</value>
+    <value>Disegna l'elemento sulla mappa</value>
   </data>
   <data name="input_geodetic" xml:space="preserve">
     <value>Geodetico</value>
@@ -1000,10 +1000,10 @@
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>Vai alla scala (al centro)</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>Usa la scala al suolo per le scale standard</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>Usa la scala webmercator per le scale standard</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
@@ -1031,7 +1031,7 @@
     <value>Zoom sulla parte corrente</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
+    <value>Copia la coordinata del punto corrente</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>Elimina il punto corrente</value>
@@ -1139,7 +1139,7 @@
     <value>Termina la parte del disegno</value>
   </data>
   <data name="map_draw_newDrawing" xml:space="preserve">
-    <value>Fare clic sull&amp;amp;amp;amp;apos;ultimo punto per terminare il disegno.</value>
+    <value>Fare clic sull'ultimo punto per terminare il disegno.</value>
   </data>
   <data name="map_scalebar_content" xml:space="preserve">
     <value>SCALA</value>
@@ -1241,7 +1241,7 @@
     <value>Colore di riempimento:</value>
   </data>
   <data name="sldEditor_common_fillOpacity" xml:space="preserve">
-    <value>Riempi l&amp;amp;amp;amp;apos;opacità:</value>
+    <value>Riempi l'opacità:</value>
   </data>
   <data name="sldEditor_common_filter" xml:space="preserve">
     <value>Filtro</value>
@@ -1331,7 +1331,7 @@
     <value>Anteprima XML</value>
   </data>
   <data name="sldEditor_common_xmlPreviewPlaceholder" xml:space="preserve">
-    <value>L&amp;amp;amp;amp;apos;anteprima XML verrà visualizzata qui</value>
+    <value>L'anteprima XML verrà visualizzata qui</value>
   </data>
   <data name="sldEditor_filter_enableFilter" xml:space="preserve">
     <value>Abilita filtro</value>
@@ -1343,7 +1343,7 @@
     <value>Impostazioni filtro</value>
   </data>
   <data name="sldEditor_filter_simplifiedViewNote" xml:space="preserve">
-    <value>Nota: questa è una visualizzazione semplificata. Per filtri complessi, modifica direttamente l&amp;amp;amp;amp;apos;XML o utilizza un generatore di filtri specializzato.</value>
+    <value>Nota: questa è una visualizzazione semplificata. Per filtri complessi, modifica direttamente l'XML o utilizza un generatore di filtri specializzato.</value>
   </data>
   <data name="sldEditor_lineSymbolizer_dashArray" xml:space="preserve">
     <value>Matrice di trattini:</value>
@@ -1394,7 +1394,7 @@
     <value>Colore alone:</value>
   </data>
   <data name="sldEditor_textSymbolizer_haloRadius" xml:space="preserve">
-    <value>Raggio dell&amp;amp;amp;amp;apos;alone:</value>
+    <value>Raggio dell'alone:</value>
   </data>
   <data name="sldEditor_textSymbolizer_labelProperty" xml:space="preserve">
     <value>Proprietà etichetta:</value>
@@ -1457,7 +1457,7 @@
     <value>Zona</value>
   </data>
   <data name="srs_utmZone_full" xml:space="preserve">
-    <value>UTM Zone</value>
+    <value>Zona UTM</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>Web Mercatore</value>
@@ -1665,5 +1665,56 @@
   </data>
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>Stampa</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>Aggiorna</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>Aggiungi simbolizzatore raster</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>Sfasamento trattini:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>Opacità alone:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>Opacità:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>Mappa dei colori</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>Aggiungi voce</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>Rimuovi voce</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>Colore</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>Etichetta</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>Opacità</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>Le voci della mappa dei colori associano i valori raster (quantità) ai colori.</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>Proprietà:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>Operatore:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>Valore:</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>Mantieni la scala attuale della mappa (adatta la pagina alla mappa)</value>
   </data>
 </root>

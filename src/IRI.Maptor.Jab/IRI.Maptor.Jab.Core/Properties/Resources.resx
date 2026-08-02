@@ -873,16 +873,16 @@
     <value>Mercator</value>
   </data>
   <data name="srs_tmSubTitle" xml:space="preserve">
-    <value>Transeverse Mercator</value>
+    <value>Transverse Mercator</value>
   </data>
   <data name="srs_tmTitle" xml:space="preserve">
-    <value>Transeverse Mercator</value>
+    <value>Transverse Mercator</value>
   </data>
   <data name="srs_utmSubTitle" xml:space="preserve">
     <value>UTM</value>
   </data>
   <data name="srs_utmTitle" xml:space="preserve">
-    <value>Universal Transeverse Mercator (UTM)</value>
+    <value>Universal Transverse Mercator (UTM)</value>
   </data>
   <data name="srs_utmZone" xml:space="preserve">
     <value>Zone</value>
@@ -1570,10 +1570,10 @@
   <data name="mapExtent_currentView_inverseMapScale" xml:space="preserve">
     <value>Map Scale (WebMercator):</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>Use ground scale for standard scales</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>Use webmercator scale for standard scales</value>
   </data>
   <data name="mapExtent_currentView_inverseMapScaleNearestGoogleZoomLevelCurrentPoint" xml:space="preserve">

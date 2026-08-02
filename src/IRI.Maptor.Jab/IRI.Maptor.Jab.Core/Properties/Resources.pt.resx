@@ -1000,10 +1000,10 @@
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>Ir para escala (no centro)</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>Usar escala no terreno para escalas padrão</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>Usar escala webmercator para escalas padrão</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
@@ -1031,7 +1031,7 @@
     <value>Zoom na parte atual</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
+    <value>Copiar a coordenada do ponto atual</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>Excluir ponto atual</value>
@@ -1457,7 +1457,7 @@
     <value>Zona</value>
   </data>
   <data name="srs_utmZone_full" xml:space="preserve">
-    <value>UTM Zone</value>
+    <value>Zona UTM</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>Web Mercator</value>
@@ -1665,5 +1665,56 @@
   </data>
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>Imprimir</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>Atualizar</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>Adicionar Simbolizador Raster</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>Deslocamento do traço:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>Opacidade do halo:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>Opacidade:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>Mapa de cores</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>Adicionar entrada</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>Remover entrada</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>Cor</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>Quantidade</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>Rótulo</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>Opacidade</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>As entradas do mapa de cores associam valores raster (quantidade) a cores.</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>Propriedade:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>Operador:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>Valor:</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>Manter a escala atual do mapa (ajustar a página ao mapa)</value>
   </data>
 </root>

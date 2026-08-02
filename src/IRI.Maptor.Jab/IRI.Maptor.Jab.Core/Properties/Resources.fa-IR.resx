@@ -59,7 +59,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="cmd_contextMenu_copy" xml:space="preserve">
-    <value>Copy</value>
+    <value>کپی</value>
   </data>
   <data name="cmd_contextMenu_cut" xml:space="preserve">
     <value>برش</value>
@@ -1000,10 +1000,10 @@
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>برو به مقیاس (مرکز نقشه)</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>اعمال مقیاس زمینی برای مقیاس‌های استاندارد</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>اعمال مقیاس وب‌مرکاتور برای مقیاس‌های استاندارد</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
@@ -1445,7 +1445,7 @@
     <value>مرکاتور عرضی</value>
   </data>
   <data name="srs_tmTitle" xml:space="preserve">
-    <value>سیستم تصویر Transeverse Mercator</value>
+    <value>سیستم تصویر Transverse Mercator</value>
   </data>
   <data name="srs_utmSubTitle" xml:space="preserve">
     <value>UTM</value>
@@ -1668,5 +1668,53 @@
   </data>
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>چاپ</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>تازه‌سازی</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>افزودن نمادساز رستری</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>افست خط‌چین:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>شفافیت هاله:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>شفافیت:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>نقشه رنگ</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>افزودن مدخل</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>حذف مدخل</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>رنگ</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>کمیت</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>برچسب</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>شفافیت</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>مدخل‌های نقشه رنگ، مقادیر رستری (کمیت) را به رنگ‌ها نگاشت می‌کنند.</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>ویژگی:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>عملگر:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>مقدار:</value>
   </data>
 </root>

@@ -2952,18 +2952,18 @@ namespace IRI.Maptor.Jab.Core.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Use ground scale for standard scales.
         /// </summary>
-        public static string mapExtent_gotoScale_useGroundScaleForSandardScales {
+        public static string mapExtent_gotoScale_useGroundScaleForStandardScales {
             get {
-                return ResourceManager.GetString("mapExtent_gotoScale_useGroundScaleForSandardScales", resourceCulture);
+                return ResourceManager.GetString("mapExtent_gotoScale_useGroundScaleForStandardScales", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Use webmercator scale for standard scales.
         /// </summary>
-        public static string mapExtent_gotoScale_useWebMercatorScaleForSandardScales {
+        public static string mapExtent_gotoScale_useWebMercatorScaleForStandardScales {
             get {
-                return ResourceManager.GetString("mapExtent_gotoScale_useWebMercatorScaleForSandardScales", resourceCulture);
+                return ResourceManager.GetString("mapExtent_gotoScale_useWebMercatorScaleForStandardScales", resourceCulture);
             }
         }
         
@@ -4201,7 +4201,7 @@ namespace IRI.Maptor.Jab.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Transeverse Mercator.
+        ///   Looks up a localized string similar to Transverse Mercator.
         /// </summary>
         public static string srs_tmSubTitle {
             get {
@@ -4210,7 +4210,7 @@ namespace IRI.Maptor.Jab.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Transeverse Mercator.
+        ///   Looks up a localized string similar to Transverse Mercator.
         /// </summary>
         public static string srs_tmTitle {
             get {
@@ -4228,7 +4228,7 @@ namespace IRI.Maptor.Jab.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Universal Transeverse Mercator (UTM).
+        ///   Looks up a localized string similar to Universal Transverse Mercator (UTM).
         /// </summary>
         public static string srs_utmTitle {
             get {

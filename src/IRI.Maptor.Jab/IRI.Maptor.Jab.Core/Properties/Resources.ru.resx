@@ -377,7 +377,7 @@
     <value>Нет</value>
   </data>
   <data name="dialog_common_ok" xml:space="preserve">
-    <value>OK</value>
+    <value>ОК</value>
   </data>
   <data name="dialog_common_prettyJson" xml:space="preserve">
     <value>Форматированный Json</value>
@@ -1000,10 +1000,10 @@
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>Перейти к масштабу (по центру)</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>Использовать масштаб на местности для стандартных масштабов</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>Использовать масштаб webmercator для стандартных масштабов</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
@@ -1031,7 +1031,7 @@
     <value>Приблизить к текущей части</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
+    <value>Копировать координату текущей точки</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>Удалить текущую точку</value>
@@ -1457,7 +1457,7 @@
     <value>Зона</value>
   </data>
   <data name="srs_utmZone_full" xml:space="preserve">
-    <value>UTM Zone</value>
+    <value>Зона UTM</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>Веб-Меркатор</value>
@@ -1665,5 +1665,56 @@
   </data>
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>Печать</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>Добавить растровый символизатор</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>Смещение штрихов:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>Непрозрачность ореола:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>Непрозрачность:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>Цветовая карта</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>Добавить запись</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>Удалить запись</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>Цвет</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>Величина</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>Метка</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>Непрозрачность</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>Записи цветовой карты сопоставляют растровые значения (величину) с цветами.</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>Свойство:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>Оператор:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>Значение:</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>Сохранить текущий масштаб карты (подогнать страницу под карту)</value>
   </data>
 </root>

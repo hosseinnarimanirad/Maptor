@@ -377,7 +377,7 @@
     <value>否</value>
   </data>
   <data name="dialog_common_ok" xml:space="preserve">
-    <value>OK</value>
+    <value>确定</value>
   </data>
   <data name="dialog_common_prettyJson" xml:space="preserve">
     <value>美化 Json</value>
@@ -1000,10 +1000,10 @@
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>转到比例尺 (以中心为准)</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>标准比例尺使用地面比例尺</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>标准比例尺使用 webmercator 比例尺</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
@@ -1031,7 +1031,7 @@
     <value>缩放至当前部分</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;amp;amp;apos;s coordinate</value>
+    <value>复制当前点的坐标</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>删除当前点</value>
@@ -1457,7 +1457,7 @@
     <value>区</value>
   </data>
   <data name="srs_utmZone_full" xml:space="preserve">
-    <value>UTM Zone</value>
+    <value>UTM 分带</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>网络墨卡托</value>
@@ -1665,5 +1665,56 @@
   </data>
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>打印</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>添加栅格符号</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>虚线偏移：</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>光环不透明度：</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>不透明度：</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>颜色映射</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>添加条目</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>删除条目</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>颜色</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>数量</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>标签</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>不透明度</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>颜色映射条目将栅格值（数量）映射为颜色。</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>属性：</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>运算符：</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>值：</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>保持当前地图比例（使页面适应地图）</value>
   </data>
 </root>

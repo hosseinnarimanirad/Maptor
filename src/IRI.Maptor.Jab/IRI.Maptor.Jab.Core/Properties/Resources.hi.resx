@@ -377,7 +377,7 @@
     <value>नहीं</value>
   </data>
   <data name="dialog_common_ok" xml:space="preserve">
-    <value>OK</value>
+    <value>ठीक है</value>
   </data>
   <data name="dialog_common_prettyJson" xml:space="preserve">
     <value>सुंदर JSON</value>
@@ -1000,10 +1000,10 @@
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>स्केल पर जाएँ (केंद्र पर)</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>मानक स्केल के लिए ग्राउंड स्केल उपयोग करें</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>मानक स्केल के लिए webmercator स्केल उपयोग करें</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
@@ -1031,7 +1031,7 @@
     <value>वर्तमान भाग पर ज़ूम करें</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;amp;amp;apos;s coordinate</value>
+    <value>वर्तमान बिंदु का निर्देशांक कॉपी करें</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>वर्तमान बिंदु हटाएँ</value>
@@ -1457,7 +1457,7 @@
     <value>जोन</value>
   </data>
   <data name="srs_utmZone_full" xml:space="preserve">
-    <value>UTM Zone</value>
+    <value>UTM ज़ोन</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>वेब मर्केटर</value>
@@ -1665,5 +1665,56 @@
   </data>
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>प्रिंट</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>ताज़ा करें</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>रास्टर प्रतीक चिन्ह जोड़ें</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>डैश ऑफसेट:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>हेलो अपारदर्शिता:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>अपारदर्शिता:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>रंग मानचित्र</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>प्रविष्टि जोड़ें</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>प्रविष्टि हटाएँ</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>रंग</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>मात्रा</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>लेबल</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>अपारदर्शिता</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>रंग मानचित्र प्रविष्टियाँ रास्टर मानों (मात्रा) को रंगों से मैप करती हैं।</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>गुण:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>संकारक:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>मान:</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>वर्तमान मानचित्र स्केल बनाए रखें (पृष्ठ को मानचित्र के अनुसार फिट करें)</value>
   </data>
 </root>

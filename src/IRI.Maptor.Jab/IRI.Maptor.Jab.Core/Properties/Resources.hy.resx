@@ -377,7 +377,7 @@
     <value>Ոչ</value>
   </data>
   <data name="dialog_common_ok" xml:space="preserve">
-    <value>OK</value>
+    <value>Լավ</value>
   </data>
   <data name="dialog_common_prettyJson" xml:space="preserve">
     <value>Ընթեռնելի Json</value>
@@ -1000,10 +1000,10 @@
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>Անցնել մասշտաբին (կենտրոնում)</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>Ստանդարտ մասշտաբների համար օգտագործել գետնի մասշտաբ</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>Ստանդարտ մասշտաբների համար օգտագործել webmercator մասշտաբ</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
@@ -1031,7 +1031,7 @@
     <value>Մեծացնել ընթացիկ մասին</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
+    <value>Պատճենել ընթացիկ կետի կոորդինատը</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>Ջնջել ընթացիկ կետը</value>
@@ -1457,13 +1457,13 @@
     <value>Գոտի</value>
   </data>
   <data name="srs_utmZone_full" xml:space="preserve">
-    <value>UTM Zone</value>
+    <value>UTM գոտի</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
-    <value>Web Mercator</value>
+    <value>Վեբ Մերկատոր</value>
   </data>
   <data name="srs_webMercatorTitle" xml:space="preserve">
-    <value>Web Mercator</value>
+    <value>Վեբ Մերկատոր</value>
   </data>
   <data name="theme_color_amber" xml:space="preserve">
     <value>Սաթ</value>
@@ -1538,7 +1538,7 @@
     <value>Սև Սպիտակ</value>
   </data>
   <data name="tile_mapType_cleanGrey" xml:space="preserve">
-    <value>CleanGrey</value>
+    <value>Մաքուր մոխրագույն</value>
   </data>
   <data name="tile_mapType_comic" xml:space="preserve">
     <value>Կատակերգություն</value>
@@ -1665,5 +1665,56 @@
   </data>
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>Տպել</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>Թարմացնել</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>Ավելացնել ռաստերային սիմվոլիզատոր</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>Գծիկների շեղում:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>Հալոյի անթափանցելիություն:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>Անթափանցելիություն:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>Գույների քարտեզ</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>Ավելացնել գրառում</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>Հեռացնել գրառումը</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>Գույն</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>Քանակ</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>Պիտակ</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>Անթափանցելիություն</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>Գույների քարտեզի գրառումները ռաստերային արժեքները (քանակը) համապատասխանեցնում են գույներին.</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>Հատկություն:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>Օպերատոր:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>Արժեք:</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>Պահպանել քարտեզի ընթացիկ մասշտաբը (էջը հարմարեցնել քարտեզին)</value>
   </data>
 </root>

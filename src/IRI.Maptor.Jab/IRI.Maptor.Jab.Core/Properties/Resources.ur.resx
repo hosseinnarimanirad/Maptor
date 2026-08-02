@@ -377,7 +377,7 @@
     <value>نہیں</value>
   </data>
   <data name="dialog_common_ok" xml:space="preserve">
-    <value>OK</value>
+    <value>ٹھیک ہے</value>
   </data>
   <data name="dialog_common_prettyJson" xml:space="preserve">
     <value>صاف ستھرا Json</value>
@@ -1000,10 +1000,10 @@
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>اسکیل تک جائیں (مرکز پر)</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>معیاری اسکیلز کے لیے زمینی اسکیل استعمال کریں</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>معیاری اسکیلز کے لیے webmercator اسکیل استعمال کریں</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
@@ -1031,7 +1031,7 @@
     <value>موجودہ حصے پر زوم کریں۔</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;amp;amp;apos;s coordinate</value>
+    <value>موجودہ نقطے کا کوآرڈینیٹ کاپی کریں</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>موجودہ نقطہ کو حذف کریں۔</value>
@@ -1457,7 +1457,7 @@
     <value>زون</value>
   </data>
   <data name="srs_utmZone_full" xml:space="preserve">
-    <value>UTM Zone</value>
+    <value>UTM زون</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>ویب مرکٹر</value>
@@ -1665,5 +1665,56 @@
   </data>
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>پرنٹ</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>تازہ کریں</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>راسٹر سمبولائزر شامل کریں۔</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>ڈیش آفسیٹ:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>ہالو کا دھندلاپن:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>دھندلاپن:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>رنگوں کا نقشہ</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>اندراج شامل کریں۔</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>اندراج کو ہٹا دیں۔</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>رنگ</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>مقدار</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>لیبل</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>دھندلاپن</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>رنگوں کے نقشے کے اندراجات راسٹر اقدار (مقدار) کو رنگوں سے جوڑتے ہیں۔</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>خاصیت:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>آپریٹر:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>قدر:</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>نقشے کا موجودہ پیمانہ برقرار رکھیں (صفحہ کو نقشے کے مطابق فٹ کریں)</value>
   </data>
 </root>

@@ -1000,10 +1000,10 @@
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>Miqyasa keç (mərkəzdə)</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>Standart miqyaslar üçün yer miqyasından istifadə et</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>Standart miqyaslar üçün webmercator miqyasından istifadə et</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
@@ -1031,7 +1031,7 @@
     <value>Cari hissəyə yaxınlaşdırın</value>
   </data>
   <data name="mapPanel_currentPoint_copyCoordinate" xml:space="preserve">
-    <value>Copy current point&amp;amp;amp;amp;amp;amp;amp;apos;s coordinate</value>
+    <value>Cari nöqtənin koordinatını kopyala</value>
   </data>
   <data name="mapPanel_currentPoint_delete" xml:space="preserve">
     <value>Cari nöqtəni silin</value>
@@ -1373,7 +1373,7 @@
     <value>İsteğe bağlı - Minimum olaraq boş buraxın</value>
   </data>
   <data name="sldEditor_textSymbolizer_enableHalo" xml:space="preserve">
-    <value>Halo&amp;amp;amp;amp;apos;yu aktivləşdirin (Mətn Konturu)</value>
+    <value>Halo'yu aktivləşdirin (Mətn Konturu)</value>
   </data>
   <data name="sldEditor_textSymbolizer_fontColor" xml:space="preserve">
     <value>Şrift Rəngi:</value>
@@ -1457,7 +1457,7 @@
     <value>Zona</value>
   </data>
   <data name="srs_utmZone_full" xml:space="preserve">
-    <value>UTM Zone</value>
+    <value>UTM Zonası</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>Veb Mercator</value>
@@ -1665,5 +1665,56 @@
   </data>
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>Çap</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>Yenilə</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>Rastr Simbolizatoru əlavə edin</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>Tire sürüşməsi:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>Halo qeyri-şəffaflığı:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>Qeyri-şəffaflıq:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>Rəng xəritəsi</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>Yazı əlavə edin</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>Yazını silin</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>Rəng</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>Miqdar</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>Etiket</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>Qeyri-şəffaflıq</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>Rəng xəritəsi yazıları rastr dəyərlərini (miqdar) rənglərə uyğunlaşdırır.</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>Xüsusiyyət:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>Operator:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>Dəyər:</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>Cari xəritə miqyasını saxla (səhifəni xəritəyə uyğunlaşdır)</value>
   </data>
 </root>

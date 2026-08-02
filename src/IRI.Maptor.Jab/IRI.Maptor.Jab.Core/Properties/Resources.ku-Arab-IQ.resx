@@ -377,7 +377,7 @@
     <value>نەخێر</value>
   </data>
   <data name="dialog_common_ok" xml:space="preserve">
-    <value>OK</value>
+    <value>باشە</value>
   </data>
   <data name="dialog_common_prettyJson" xml:space="preserve">
     <value>Json ڕێکخراو</value>
@@ -1000,10 +1000,10 @@
   <data name="mapExtent_gotoScale_title" xml:space="preserve">
     <value>بڕۆ بۆ پێوانە (لە ناوەند)</value>
   </data>
-  <data name="mapExtent_gotoScale_useGroundScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useGroundScaleForStandardScales" xml:space="preserve">
     <value>بەکارهێنانی پێوانەی زەوی بۆ پێوانە ستانداردەکان</value>
   </data>
-  <data name="mapExtent_gotoScale_useWebMercatorScaleForSandardScales" xml:space="preserve">
+  <data name="mapExtent_gotoScale_useWebMercatorScaleForStandardScales" xml:space="preserve">
     <value>بەکارهێنانی پێوانەی webmercator بۆ پێوانە ستانداردەکان</value>
   </data>
   <data name="mapExtent_new_addNew" xml:space="preserve">
@@ -1457,7 +1457,7 @@
     <value>ناوچە</value>
   </data>
   <data name="srs_utmZone_full" xml:space="preserve">
-    <value>UTM Zone</value>
+    <value>زۆنی UTM</value>
   </data>
   <data name="srs_webMercatorSubTitle" xml:space="preserve">
     <value>مێرکاتۆری وێب</value>
@@ -1665,5 +1665,56 @@
   </data>
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>چاپکردن</value>
+  </data>
+  <data name="sldEditor_common_refreshPreview" xml:space="preserve">
+    <value>نوێکردنەوە</value>
+  </data>
+  <data name="sldEditor_common_addRasterSymbolizer" xml:space="preserve">
+    <value>زیادکردنی سیمبۆلایزەری ڕاستەر</value>
+  </data>
+  <data name="sldEditor_lineSymbolizer_dashOffset" xml:space="preserve">
+    <value>لادانی داش:</value>
+  </data>
+  <data name="sldEditor_textSymbolizer_haloOpacity" xml:space="preserve">
+    <value>ناڕوونی هالۆ:</value>
+  </data>
+  <data name="sldEditor_raster_opacity" xml:space="preserve">
+    <value>ناڕوونی:</value>
+  </data>
+  <data name="sldEditor_raster_colorMap" xml:space="preserve">
+    <value>نەخشەی ڕەنگ</value>
+  </data>
+  <data name="sldEditor_raster_addEntry" xml:space="preserve">
+    <value>زیادکردنی تۆمار</value>
+  </data>
+  <data name="sldEditor_raster_removeEntry" xml:space="preserve">
+    <value>تۆمار لاببە</value>
+  </data>
+  <data name="sldEditor_raster_color" xml:space="preserve">
+    <value>ڕەنگ</value>
+  </data>
+  <data name="sldEditor_raster_quantity" xml:space="preserve">
+    <value>بڕ</value>
+  </data>
+  <data name="sldEditor_raster_label" xml:space="preserve">
+    <value>لیبێڵ</value>
+  </data>
+  <data name="sldEditor_raster_entryOpacity" xml:space="preserve">
+    <value>ناڕوونی</value>
+  </data>
+  <data name="sldEditor_raster_note" xml:space="preserve">
+    <value>تۆمارەکانی نەخشەی ڕەنگ نرخە ڕاستەرەکان (بڕ) بۆ ڕەنگەکان دەگوێزنەوە.</value>
+  </data>
+  <data name="sldEditor_filter_property" xml:space="preserve">
+    <value>تایبەتمەندی:</value>
+  </data>
+  <data name="sldEditor_filter_operator" xml:space="preserve">
+    <value>ئۆپەراتۆر:</value>
+  </data>
+  <data name="sldEditor_filter_value" xml:space="preserve">
+    <value>نرخ:</value>
+  </data>
+  <data name="dialog_printPdf_keepScale" xml:space="preserve">
+    <value>پاراستنی پێوەری ئێستای نەخشە (لاپەڕە بگونجێنە لەگەڵ نەخشە)</value>
   </data>
 </root>
