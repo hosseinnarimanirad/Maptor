@@ -44,8 +44,9 @@ public static class PdfDecorationHelper
             ShowScaleBar = options.ShowScaleBar,
             ShowGraticule = options.ShowGraticule,
             LabelFontBytes = LoadLabelFontBytes(),
-            // The legend column is reserved (bordered box + header) even though legend
-            // items are not drawn yet, so the three-column sheet keeps its standard shape.
+            // The legend column always shows (bordered box + header), so the three-column
+            // sheet keeps its standard shape; its rows are filled later by PdfLegendHelper
+            // once the printed layers are known.
             ShowLegendColumn = true,
             RightToLeft = isRtl,
             UsePersianDigits = isPersian,
@@ -251,7 +252,7 @@ public static class PdfDecorationHelper
     /// comes out correct — and we flatten the fill geometry to polygon figures (same technique as
     /// <see cref="BuildMakanNegarVectorLogo"/>). Returns null if the text yields no geometry.
     /// </summary>
-    public static PdfVectorLogo? RenderTextToVector(string text, double fontSizePx, FontFamily? fontFamily = null, bool? forceRightToLeft = null)
+    public static PdfVectorLogo? RenderTextToVector(string text, double fontSizePx, FontFamily? fontFamily = null, bool? forceRightToLeft = null, double? maxWidthPx = null, int maxLines = 1)
     {
         try
         {
@@ -270,6 +271,16 @@ public static class PdfDecorationHelper
                 fontSizePx,
                 Brushes.Black,
                 1.0);
+
+            // Bounded mode: wrap long text within maxWidthPx up to maxLines, then trim the last
+            // line with an ellipsis — instead of producing one arbitrarily wide line the PDF
+            // side would have to shrink to fit.
+            if (maxWidthPx is > 0)
+            {
+                formatted.MaxTextWidth = maxWidthPx.Value;
+                formatted.MaxLineCount = Math.Max(1, maxLines);
+                formatted.Trimming = TextTrimming.CharacterEllipsis;
+            }
 
             var geometry = formatted.BuildGeometry(new System.Windows.Point(0, 0));
             var flattened = geometry.GetFlattenedPathGeometry();

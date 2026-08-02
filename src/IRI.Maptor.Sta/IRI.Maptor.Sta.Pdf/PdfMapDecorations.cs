@@ -94,8 +94,8 @@ public class PdfMapDecorations
     public PdfVectorLogo? CompanySubtitleVector { get; set; }
 
     /// <summary>
-    /// Reserve the left (legend) column with a bordered box + header. Legend items
-    /// are not drawn yet; this just carves out the standard three-column layout.
+    /// Reserve the left (legend) column with a bordered box + header; the body is
+    /// filled from <see cref="LegendGroups"/> (empty box when no groups are set).
     /// </summary>
     public bool ShowLegendColumn { get; set; }
 
@@ -108,6 +108,14 @@ public class PdfMapDecorations
     /// "Legend" header as filled vector glyph outlines (preferred — crisp, RTL-safe).
     /// </summary>
     public PdfVectorLogo? LegendHeaderVector { get; set; }
+
+    /// <summary>
+    /// Legend body content: one group per visible layer (topmost first), each with its
+    /// rule rows. Drawn under the legend header when <see cref="ShowLegendColumn"/> is set.
+    /// </summary>
+    public List<PdfLegendGroup> LegendGroups { get; set; } = new();
+
+    public bool HasLegendEntries => LegendGroups.Count > 0;
 
     /// <summary>
     /// Export date/time text (Latin digits) in the bottom-left cell; null to omit.

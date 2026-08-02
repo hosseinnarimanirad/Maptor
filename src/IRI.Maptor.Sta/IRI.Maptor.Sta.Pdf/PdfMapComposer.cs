@@ -44,9 +44,9 @@ internal static class PdfMapComposer
         if (layout.HasTitleBox)
             DrawTitleBox(gfx, layout.TitleBoxRect, decorations, labelFamily, unicode);
 
-        // Legend column (left in LTR, right in RTL): reserved box (header + empty body for now).
+        // Legend column (left in LTR, right in RTL): bordered box with header + legend rows.
         if (layout.HasLegendColumn)
-            DrawLegendColumn(gfx, layout.LegendColumnRect, decorations);
+            DrawLegendColumn(gfx, layout.LegendColumnRect, decorations, labelFont);
 
         // Company column: logo, then company title + subtitle.
         if (layout.HasCompanyColumn)
@@ -343,11 +343,61 @@ internal static class PdfMapComposer
         }
     }
 
+    private const double LegendPad = PdfLegendMetrics.ColumnPadding;
+    private const double LegendSwatchW = PdfLegendMetrics.SwatchWidth;
+    private const double LegendSwatchH = 15;
+    private const double LegendSwatchTextGap = PdfLegendMetrics.SwatchTextGap;
+    private const double LegendRowGap = 2;
+    private const double LegendGroupGap = 5;                          // extra gap above each layer block
+    private const double LegendColGap = PdfLegendMetrics.SubColumnGap;
+    private const double LegendMinShrink = 0.55;     // below this rows stay readable no longer; clip and show "+N"
+    private const double LegendTailHeight = 10;      // reserved for the "+N" clipped-rows indicator
+
     /// <summary>
-    /// Draws the reserved legend column: a bordered box with a header at the top and an
-    /// (intentionally) empty body. Legend items are added in a later step.
+    /// One flattened legend line: a layer-name header (no swatch), a rule row (swatch + title),
+    /// or a simple-symbology layer collapsed to swatch + layer name. Each carries both text
+    /// variants — wrapped for one-column and for two-column flow — so the chosen flow always
+    /// draws text that already fits its width.
     /// </summary>
-    private static void DrawLegendColumn(XGraphics gfx, XRect column, PdfMapDecorations decorations)
+    private sealed class LegendItem
+    {
+        public PdfVectorLogo? Vector { get; set; }
+
+        public PdfVectorLogo? VectorNarrow { get; set; }
+
+        public PdfLegendSwatch? SwatchVector { get; set; }
+
+        public byte[]? Swatch { get; set; }
+
+        public bool HasSwatch => SwatchVector is { IsValid: true } || Swatch is { Length: > 0 };
+
+        /// <summary>A rule row (counted by the "+N" tail) rather than a layer-name header.</summary>
+        public bool IsRow { get; set; }
+
+        /// <summary>First line of a layer block — gets the group gap above it.</summary>
+        public bool StartsGroup { get; set; }
+
+        /// <summary>The text variant matching the current flow (falls back to the wide one).</summary>
+        public PdfVectorLogo? TextFor(bool narrow) => narrow ? VectorNarrow ?? Vector : Vector;
+    }
+
+    /// <summary>
+    /// The uniform scale legend text is drawn at. The WPF side renders every title at the same
+    /// pixel size and wraps/ellipsizes it to the paper width it will actually get, so this is a
+    /// constant — all layers print at one font size instead of being shrunk to fit. The width
+    /// term is only a guard against a mismatched (unwrapped) vector.
+    /// </summary>
+    private static double LegendTextScale(PdfVectorLogo vector, double textW) =>
+        Math.Min(PdfLegendMetrics.PxToPoint, textW / vector.SourceWidth);
+
+    /// <summary>
+    /// Draws the legend column: a bordered box with a header at the top and the legend groups
+    /// (layer name + swatch/title rule rows) stacked below. When the natural content height
+    /// exceeds the column, the rows first re-flow into two narrower columns, then shrink
+    /// uniformly down to <see cref="LegendMinShrink"/>; whatever still doesn't fit is clipped
+    /// and summarized as a "+N" tail line.
+    /// </summary>
+    private static void DrawLegendColumn(XGraphics gfx, XRect column, PdfMapDecorations decorations, XFont labelFont)
     {
         if (column.Width <= 0 || column.Height <= 0)
             return;
@@ -371,6 +421,362 @@ internal static class PdfMapComposer
         var dividerY = column.Top + headerHeight;
         if (dividerY < column.Bottom)
             gfx.DrawLine(pen, column.Left, dividerY, column.Right, dividerY);
+
+        // Body: the legend groups.
+        var bodyTop = dividerY + LegendPad;
+        var bodyBottom = column.Bottom - LegendPad;
+        var availW = column.Width - 2 * LegendPad;
+        var availH = bodyBottom - bodyTop;
+
+        if (!decorations.HasLegendEntries || availH < 8 || availW < LegendSwatchW + LegendSwatchTextGap + 4)
+            return;
+
+        var items = FlattenLegendItems(decorations);
+
+        if (items.Count == 0)
+            return;
+
+        // Fit strategy: single column at natural size; overflow re-flows into two narrower
+        // columns (using the narrow-wrapped titles); still too tall shrinks uniformly;
+        // whatever remains is clipped with "+N".
+        var columns = 1;
+        var narrow = false;
+        var swatchW = LegendSwatchW;
+        var swatchH = LegendSwatchH;
+        var colW = availW;
+        var natural = MeasureLegendStack(items, colW, swatchW, swatchH, narrow);
+        var capacity = availH;
+
+        if (natural > capacity)
+        {
+            columns = 2;
+            narrow = true;
+            colW = (availW - LegendColGap) / 2;
+            natural = MeasureLegendStack(items, colW, swatchW, swatchH, narrow);
+            capacity = 2 * availH;
+        }
+
+        if (natural <= 0)
+            return;
+
+        // Shrink factor: heights and gaps scale down together; widths stay as laid out.
+        var f = natural <= capacity ? 1.0 : Math.Max(LegendMinShrink, capacity / natural);
+        var tailReserve = natural * f > capacity ? LegendTailHeight : 0;
+
+        // RTL mirrors everything: columns fill right-to-left, the swatch sits on the right
+        // of its row and text is right-aligned.
+        var rtl = decorations.RightToLeft;
+        var hAlign = rtl ? XStringAlignment.Far : XStringAlignment.Near;
+
+        double ColumnLeft(int c)
+        {
+            var offset = c * (colW + LegendColGap);
+            return rtl ? column.Right - LegendPad - colW - offset : column.Left + LegendPad + offset;
+        }
+
+        // Draw pass: flow top-down, spilling into the next column; stop when out of columns.
+        var col = 0;
+        var y = bodyTop;
+        var index = 0;
+
+        for (; index < items.Count; index++)
+        {
+            var item = items[index];
+            var itemH = MeasureLegendItem(item, colW, swatchW, swatchH, narrow) * f;
+
+            if (itemH <= 0)
+                continue;
+
+            if (y > bodyTop && item.StartsGroup)
+                y += LegendGroupGap * f;
+
+            var limit = col == columns - 1 ? bodyBottom - tailReserve : bodyBottom;
+
+            if (y + itemH > limit)
+            {
+                col++;
+
+                if (col >= columns)
+                    break;
+
+                y = bodyTop;
+                limit = col == columns - 1 ? bodyBottom - tailReserve : bodyBottom;
+
+                if (y + itemH > limit)
+                    break;
+            }
+
+            var colLeft = ColumnLeft(col);
+
+            if (item.HasSwatch)
+            {
+                var swatchX = rtl ? colLeft + colW - swatchW : colLeft;
+                var textLeft = rtl ? colLeft : colLeft + swatchW + LegendSwatchTextGap;
+                var labelW = colW - swatchW - LegendSwatchTextGap;
+                var swatchCell = new XRect(swatchX, y + (itemH - swatchH * f) / 2, swatchW, swatchH * f);
+
+                if (item.SwatchVector is { IsValid: true } vectorSwatch)
+                    DrawLegendSwatch(gfx, swatchCell, vectorSwatch);
+                else if (item.Swatch is { Length: > 0 } swatchBytes)
+                    DrawImageContainedInBox(gfx, swatchBytes, swatchCell);
+
+                if (item.TextFor(narrow) is { IsValid: true } label)
+                {
+                    var labelH = label.SourceHeight * LegendTextScale(label, labelW) * f;
+                    DrawVectorText(gfx, label, textLeft, y + (itemH - labelH) / 2, labelW, labelH, hAlign);
+                }
+            }
+            else if (item.TextFor(narrow) is { IsValid: true } text)
+            {
+                var textH = text.SourceHeight * LegendTextScale(text, colW) * f;
+                DrawVectorText(gfx, text, colLeft, y + (itemH - textH) / 2, colW, textH, hAlign);
+            }
+
+            y += itemH + LegendRowGap * f;
+        }
+
+        // "+N" tail for the rows that didn't fit (numeric only — no localization key needed).
+        var clippedRows = 0;
+
+        for (; index < items.Count; index++)
+        {
+            // Count the clipped rule rows; a pure layer-name header is not a row of its own.
+            if (items[index].IsRow)
+                clippedRows++;
+        }
+
+        if (clippedRows > 0)
+        {
+            var tailFormat = new XStringFormat
+            {
+                Alignment = hAlign,
+                LineAlignment = XLineAlignment.Center,
+            };
+
+            gfx.DrawString(
+                Localize($"+{clippedRows}", decorations.UsePersianDigits),
+                labelFont,
+                XBrushes.Black,
+                new XRect(ColumnLeft(columns - 1), bodyBottom - LegendTailHeight, colW, LegendTailHeight),
+                tailFormat);
+        }
+    }
+
+    /// <summary>
+    /// Flattens the legend groups into drawable lines. A group with a header yields the header
+    /// line plus one line per rule row; a headerless single-entry group (simple symbology) yields
+    /// one swatch + layer-name line.
+    /// </summary>
+    private static List<LegendItem> FlattenLegendItems(PdfMapDecorations decorations)
+    {
+        var items = new List<LegendItem>();
+
+        foreach (var group in decorations.LegendGroups)
+        {
+            var first = items.Count;
+
+            if (group.HeaderVector is { IsValid: true })
+                items.Add(new LegendItem { Vector = group.HeaderVector, VectorNarrow = group.HeaderVectorNarrow });
+
+            foreach (var entry in group.Entries)
+            {
+                items.Add(new LegendItem
+                {
+                    Vector = entry.LabelVector,
+                    VectorNarrow = entry.LabelVectorNarrow,
+                    SwatchVector = entry.SwatchVector,
+                    Swatch = entry.SwatchPngBytes,
+                    IsRow = true,
+                });
+            }
+
+            if (items.Count > first)
+                items[first].StartsGroup = true;
+        }
+
+        return items;
+    }
+
+    /// <summary>
+    /// Natural (unshrunk) height of a legend line: the swatch cell or the text block drawn at
+    /// the uniform legend text scale, whichever is taller.
+    /// </summary>
+    private static double MeasureLegendItem(LegendItem item, double colW, double swatchW, double swatchH, bool narrow)
+    {
+        var hasSwatch = item.HasSwatch;
+        var textW = hasSwatch ? colW - swatchW - LegendSwatchTextGap : colW;
+
+        double textH = 0;
+
+        if (item.TextFor(narrow) is { IsValid: true } vector && textW > 0)
+            textH = vector.SourceHeight * LegendTextScale(vector, textW);
+
+        return Math.Max(hasSwatch ? swatchH : 0, textH);
+    }
+
+    /// <summary>
+    /// Draws a legend symbol as vector art inside the swatch cell: a stroked line, a filled and
+    /// outlined rectangle, or a centered point marker — mirroring how the map itself draws the
+    /// same symbolizer, so the swatch stays crisp at any zoom level.
+    /// </summary>
+    private static void DrawLegendSwatch(XGraphics gfx, XRect cell, PdfLegendSwatch swatch)
+    {
+        if (cell.Width <= 0 || cell.Height <= 0)
+            return;
+
+        foreach (var part in swatch.Parts)
+        {
+            // Never let a heavy on-screen stroke swallow the small swatch cell.
+            var width = Math.Max(0.2, Math.Min(part.StrokeWidth, cell.Height * 0.6));
+
+            // Mirror PdfWriter's GetPen/GetBrush so a swatch matches the drawn map exactly:
+            // an unspecified stroke still outlines in black; an explicitly transparent one
+            // (and a transparent fill) is never painted.
+            var pen = part.Stroke is { } stroke
+                ? ToSwatchColor(stroke, part.Opacity) is { } strokeColor ? new XPen(strokeColor, width) : null
+                : new XPen(XColors.Black, width);
+
+            var brush = ToSwatchColor(part.Fill, part.Opacity) is { } fillColor ? new XSolidBrush(fillColor) : null;
+
+            switch (part.Shape)
+            {
+                case PdfLegendSwatchShape.Line:
+                {
+                    if (pen == null)
+                        break;
+
+                    // A shallow mid dip reveals joins/caps, like the on-screen sample.
+                    var midY = cell.Top + cell.Height / 2;
+                    var dip = Math.Min(2.0, cell.Height * 0.15);
+                    var inset = Math.Min(1.5, cell.Width * 0.1);
+
+                    gfx.DrawLines(pen, new[]
+                    {
+                        new XPoint(cell.Left + inset, midY),
+                        new XPoint(cell.Left + cell.Width / 2, midY - dip),
+                        new XPoint(cell.Right - inset, midY),
+                    });
+
+                    break;
+                }
+
+                case PdfLegendSwatchShape.Polygon:
+                {
+                    // Inset so a thick outline stays inside the cell.
+                    var inset = Math.Min(width / 2 + 0.5, Math.Min(cell.Width, cell.Height) / 3);
+                    var box = new XRect(cell.Left + inset, cell.Top + inset,
+                        Math.Max(0.5, cell.Width - 2 * inset), Math.Max(0.5, cell.Height - 2 * inset));
+
+                    if (brush != null)
+                        gfx.DrawRectangle(brush, box);
+
+                    if (pen != null)
+                        gfx.DrawRectangle(pen, box);
+
+                    break;
+                }
+
+                case PdfLegendSwatchShape.Point:
+                {
+                    var center = new XPoint(cell.Left + cell.Width / 2, cell.Top + cell.Height / 2);
+
+                    if (part.Marker is { HasVector: true } marker)
+                    {
+                        DrawLegendMarkerFigures(gfx, marker, center, brush, pen, cell);
+                    }
+                    else if (part.Marker is { HasImage: true } imageMarker)
+                    {
+                        var side = Math.Min(cell.Height, cell.Width);
+                        DrawImageContainedInBox(gfx, imageMarker.ImagePngBytes!,
+                            new XRect(center.X - side / 2, center.Y - side / 2, side, side));
+                    }
+                    else
+                    {
+                        var radius = Math.Max(1.0, Math.Min(part.PointRadius, Math.Min(cell.Width, cell.Height) / 2 - width / 2));
+
+                        if (brush != null)
+                            gfx.DrawEllipse(brush, center.X - radius, center.Y - radius, radius * 2, radius * 2);
+
+                        if (pen != null)
+                            gfx.DrawEllipse(pen, center.X - radius, center.Y - radius, radius * 2, radius * 2);
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Draws a point marker's vector figures centered in the cell, scaled down if the on-screen
+    /// symbol is larger than the swatch. Mirrors the map's marker drawing (fill, then stroke).
+    /// </summary>
+    private static void DrawLegendMarkerFigures(XGraphics gfx, PdfPointMarker marker, XPoint center, XBrush? brush, XPen? pen, XRect cell)
+    {
+        var extent = 0.0;
+
+        foreach (var figure in marker.Figures!)
+        {
+            foreach (var point in figure.Points)
+                extent = Math.Max(extent, Math.Max(Math.Abs(point.X), Math.Abs(point.Y)));
+        }
+
+        // Marker points are centered on the origin, so extent is its half-size.
+        var limit = Math.Min(cell.Width, cell.Height) / 2;
+        var scale = extent > limit && extent > 0 ? limit / extent : 1.0;
+
+        foreach (var figure in marker.Figures!)
+        {
+            if (figure.Points == null || figure.Points.Count < 2)
+                continue;
+
+            var pts = figure.Points
+                .Select(p => new XPoint(center.X + p.X * scale, center.Y + p.Y * scale))
+                .ToArray();
+
+            if (figure.IsClosed)
+            {
+                if (figure.IsFilled && brush != null)
+                    gfx.DrawPolygon(brush, pts, XFillMode.Alternate);
+
+                if (pen != null)
+                    gfx.DrawPolygon(pen, pts);
+            }
+            else if (pen != null)
+            {
+                gfx.DrawLines(pen, pts);
+            }
+        }
+    }
+
+    /// <summary>Folds the part's opacity into the color's alpha (same rule as PdfOptions).</summary>
+    private static XColor? ToSwatchColor(IRI.Maptor.Sta.Spatial.IO.Dxf.RgbColor? color, double opacity)
+    {
+        if (color is not { } c || c.A <= 0)
+            return null;
+
+        var alpha = (byte)Math.Round(c.A * Math.Max(0.0, Math.Min(1.0, opacity)));
+
+        return alpha <= 0 ? null : XColor.FromArgb(alpha, c.R, c.G, c.B);
+    }
+
+    /// <summary>Total stacked height of all lines (plus gaps) at natural size, single flow.</summary>
+    private static double MeasureLegendStack(List<LegendItem> items, double colW, double swatchW, double swatchH, bool narrow)
+    {
+        double total = 0;
+
+        for (var i = 0; i < items.Count; i++)
+        {
+            if (i > 0 && items[i].StartsGroup)
+                total += LegendGroupGap;
+
+            var itemH = MeasureLegendItem(items[i], colW, swatchW, swatchH, narrow);
+
+            if (itemH > 0)
+                total += itemH + LegendRowGap;
+        }
+
+        return total;
     }
 
     /// <summary>

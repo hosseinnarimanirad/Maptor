@@ -4079,6 +4079,21 @@ public abstract class MapViewModelBase : ViewModelBase
             .OrderBy(l => l.ZIndex)
             .ToList();
 
+        // Fill the legend column with the printed layers' symbology (topmost layer first);
+        // a legend failure must never kill the export.
+        if (decorations is { ShowLegendColumn: true })
+        {
+            try
+            {
+                decorations.LegendGroups = PdfLegendHelper.BuildLegendGroups(
+                    Enumerable.Reverse(allVisibleInScaleLayers), mapScale);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"PrintToPdfAsync legend build failed: {ex.Message}");
+            }
+        }
+
         // Collect layer data with features and symbology
         var layerPdfDataList = new List<PdfWriter.LayerPdfData>();
 

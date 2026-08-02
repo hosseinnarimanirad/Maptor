@@ -92,7 +92,8 @@ File.WriteAllBytes("map.pdf", pdf);
 ## Limitations
 
 - Text is Latin-only — PdfSharpCore has no bidi/RTL shaping. For Persian/Arabic titles, supply a pre-rendered `TitlePngBytes` image.
-- Legend and north arrow decorations are not implemented.
+- The north arrow decoration is not implemented.
+- The legend column is fixed-width; content flows one column, then two, then shrinks (to a minimum) and is finally clipped with a "+N" indicator. Legend symbols are drawn as vector art (`PdfLegendSwatch`) and stay crisp at any zoom; a raster swatch is only used as a fallback for symbology the vector path can't express.
 - Raster/tile opacity is not applied to drawn images (a PdfSharpCore `DrawImage` limitation); vector opacity works.
 - `PdfOptions.PointMarker` only takes effect on the `WriteLayers` map-export path; the simple `ToPdf`/`Write` path always draws a circle of `PointCircleRadius`.
 - `PdfOptions.CoordinatePrecision` is currently unused (no coordinate rounding is applied).

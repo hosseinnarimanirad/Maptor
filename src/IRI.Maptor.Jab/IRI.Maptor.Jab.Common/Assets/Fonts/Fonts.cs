@@ -9,7 +9,10 @@ namespace IRI.Maptor.Jab.Common.Assets.Fonts;
 
 public static class IriFonts
 {
-    private static FontFamily _iranSans = new FontFamily(new Uri(@"pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Fonts/IRANSans.ttf#IRANSans", UriKind.Absolute), "IRANSans");
+    // The "./#family" form resolves the packaged ttf relative to the base URI. A bare family
+    // name here would be treated as a SYSTEM font lookup — silently falling back to the default
+    // font on machines where IRANSans is not installed.
+    private static FontFamily _iranSans = new FontFamily(new Uri(@"pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Fonts/", UriKind.Absolute), "./#IRANSans");
 
     public static FontFamily IranSans
     {

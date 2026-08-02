@@ -6,7 +6,7 @@ namespace IRI.Maptor.Sta.Pdf;
 /// Page-space layout rectangles (top-left origin, points) for a decorated map export laid out
 /// as a standard three-column map sheet:
 /// <list type="bullet">
-/// <item>left column — reserved legend box (bordered header, empty body for now);</item>
+/// <item>left column — legend box (bordered header, layer/rule rows below);</item>
 /// <item>center column — the map, with the title in a small bordered box on top;</item>
 /// <item>right column — company logo, then company title and subtitle;</item>
 /// <item>bottom band — export date/time (left), scale bar (centered under the map), Maptor logo (right).</item>
@@ -18,10 +18,14 @@ internal readonly struct PdfMapLayout
     public const double OuterMargin = 28;
 
     /// <summary>Reserved width of the left (legend) column.</summary>
-    public const double LegendColumnWidth = 120;
+    public const double LegendColumnWidth = PdfLegendMetrics.ColumnWidth;
 
-    /// <summary>Reserved width of the right (company info) column.</summary>
-    public const double CompanyColumnWidth = 132;
+    /// <summary>
+    /// Reserved width of the right (company info) column. Sized to the 64 pt logo box plus
+    /// padding — the column holds only a logo and two short lines, so extra width is dead space
+    /// better given to the legend.
+    /// </summary>
+    public const double CompanyColumnWidth = 88;
 
     /// <summary>Horizontal gap between a side column and the center column.</summary>
     public const double ColumnGap = 12;
