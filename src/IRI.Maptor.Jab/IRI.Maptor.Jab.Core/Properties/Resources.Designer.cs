@@ -1904,7 +1904,106 @@ namespace IRI.Maptor.Jab.Core.Properties {
                 return ResourceManager.GetString("featureTable_editGeometry", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Clear Filter.
+        /// </summary>
+        public static string featureTable_filter_clear {
+            get {
+                return ResourceManager.GetString("featureTable_filter_clear", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Clear All Filters.
+        /// </summary>
+        public static string featureTable_filter_clearAll {
+            get {
+                return ResourceManager.GetString("featureTable_filter_clearAll", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Clear All.
+        /// </summary>
+        public static string featureTable_filter_clearAllValues {
+            get {
+                return ResourceManager.GetString("featureTable_filter_clearAllValues", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to (Empty).
+        /// </summary>
+        public static string featureTable_filter_empty {
+            get {
+                return ResourceManager.GetString("featureTable_filter_empty", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Filter.
+        /// </summary>
+        public static string featureTable_filter_filter {
+            get {
+                return ResourceManager.GetString("featureTable_filter_filter", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to From.
+        /// </summary>
+        public static string featureTable_filter_from {
+            get {
+                return ResourceManager.GetString("featureTable_filter_from", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Operator.
+        /// </summary>
+        public static string featureTable_filter_operator {
+            get {
+                return ResourceManager.GetString("featureTable_filter_operator", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string featureTable_filter_search {
+            get {
+                return ResourceManager.GetString("featureTable_filter_search", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Select All.
+        /// </summary>
+        public static string featureTable_filter_selectAllValues {
+            get {
+                return ResourceManager.GetString("featureTable_filter_selectAllValues", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to To.
+        /// </summary>
+        public static string featureTable_filter_to {
+            get {
+                return ResourceManager.GetString("featureTable_filter_to", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        public static string featureTable_filter_value {
+            get {
+                return ResourceManager.GetString("featureTable_filter_value", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to hour.
         /// </summary>
@@ -1931,7 +2030,16 @@ namespace IRI.Maptor.Jab.Core.Properties {
                 return ResourceManager.GetString("featureTable_saveChanges", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Sort.
+        /// </summary>
+        public static string featureTable_sort_toggle {
+            get {
+                return ResourceManager.GetString("featureTable_sort_toggle", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Undo changes.
         /// </summary>

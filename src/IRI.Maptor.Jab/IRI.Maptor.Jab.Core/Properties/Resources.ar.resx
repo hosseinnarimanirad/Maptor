@@ -1717,4 +1717,40 @@
   <data name="dialog_printPdf_keepScale" xml:space="preserve">
     <value>الاحتفاظ بمقياس الخريطة الحالي (ملاءمة الصفحة للخريطة)</value>
   </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>تصفية</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>مسح التصفية</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>مسح كل عوامل التصفية</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>تحديد الكل</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>إلغاء تحديد الكل</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>بحث</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(فارغ)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>المعامل</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>القيمة</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>من</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>إلى</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>فرز</value>
+  </data>
 </root>

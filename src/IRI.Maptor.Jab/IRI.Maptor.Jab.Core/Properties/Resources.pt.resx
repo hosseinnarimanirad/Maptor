@@ -1717,4 +1717,40 @@
   <data name="dialog_printPdf_keepScale" xml:space="preserve">
     <value>Manter a escala atual do mapa (ajustar a página ao mapa)</value>
   </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>Filtro</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>Limpar filtro</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>Limpar todos os filtros</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>Selecionar tudo</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>Desmarcar tudo</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>Pesquisar</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(Vazio)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>Operador</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>De</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>Até</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>Ordenar</value>
+  </data>
 </root>

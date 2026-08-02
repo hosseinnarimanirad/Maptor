@@ -16,6 +16,7 @@ using IRI.Maptor.Jab.Common.Services;
 using System.Windows.Input;
 using IRI.Maptor.Jab.Core.Layers;
 using IRI.Maptor.Jab.Core;
+using IRI.Maptor.Jab.Common.Models.Filters;
 
 namespace IRI.Maptor.Jab.Common.Models;
 
@@ -136,6 +137,21 @@ public class SelectedLayer : Notifier
 
         // the field initializer bypasses the property setter, so subscribe here
         _highlightedFeatures.CollectionChanged += highlightedFeatures_CollectionChanged;
+
+        FilterManager = new FeatureTableFilterManager(fields, () => Features ?? Enumerable.Empty<Feature<Point>>());
+
+        FilterManager.FilterChanged += OnFilterOrSortChanged;
+
+        FilterManager.SortChanged += OnFilterOrSortChanged;
+    }
+
+    public FeatureTableFilterManager FilterManager { get; }
+
+    private void OnFilterOrSortChanged()
+    {
+        _currentPageIndex = 0;
+
+        RefreshPageDeferred();
     }
 
     private async void highlightedFeatures_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -157,6 +173,10 @@ public class SelectedLayer : Notifier
     public void UpdateSelectedFeatures(IEnumerable<Feature<Point>> items)
     {
         _currentPageIndex = 0;
+
+        // a new selection is a new dataset; stale filters would silently blank the grid
+        FilterManager.ClearAll(raiseEvent: false);
+        FilterManager.ClearSort();
 
         Features = new ObservableCollection<Feature<Point>>(items);
     }
@@ -242,18 +262,40 @@ public class SelectedLayer : Notifier
 
     public int CurrentPageNumber => TotalPages == 0 ? 0 : CurrentPageIndex + 1;
 
-    public int TotalPages => Features is null || Features.Count == 0
+    public int TotalPages => ViewFeatures.Count == 0
                                 ? 0
-                                : (int)Math.Ceiling(Features.Count / (double)SelectedPageSize);
+                                : (int)Math.Ceiling(ViewFeatures.Count / (double)SelectedPageSize);
+
+    private IReadOnlyList<Feature<Point>>? _viewFeatures;
+
+    /// <summary>Features after applying the column filters and sort; the paging source.</summary>
+    public IReadOnlyList<Feature<Point>> ViewFeatures => _viewFeatures ??= ComputeViewFeatures();
+
+    private IReadOnlyList<Feature<Point>> ComputeViewFeatures()
+    {
+        if (Features is null || Features.Count == 0)
+            return Array.Empty<Feature<Point>>();
+
+        IEnumerable<Feature<Point>> result = Features;
+
+        if (FilterManager.HasActiveFilter)
+            result = result.Where(FilterManager.Matches);
+
+        result = FilterManager.ApplySort(result);
+
+        return ReferenceEquals(result, Features) ? Features : result.ToList();
+    }
+
+    public int CountOfFilteredFeatures => ViewFeatures.Count;
 
     public ObservableCollection<Feature<Point>> CurrentPageFeatures
     {
         get
         {
-            if (Features is null || Features.Count == 0)
+            if (ViewFeatures.Count == 0)
                 return new ObservableCollection<Feature<Point>>();
 
-            return new ObservableCollection<Feature<Point>>(Features.Skip(CurrentPageIndex * SelectedPageSize).Take(SelectedPageSize));
+            return new ObservableCollection<Feature<Point>>(ViewFeatures.Skip(CurrentPageIndex * SelectedPageSize).Take(SelectedPageSize));
         }
     }
 
@@ -286,6 +328,8 @@ public class SelectedLayer : Notifier
 
     private void RefreshPagingView(bool preserveSelection = true)
     {
+        _viewFeatures = null;
+
         // snapshot before rebinding: replacing the grid's ItemsSource clears its
         // selection, which flows back into HighlightedFeatures
         var snapshot = preserveSelection ? HighlightedFeatures?.ToList() : null;
@@ -301,6 +345,7 @@ public class SelectedLayer : Notifier
         RaisePropertyChanged(nameof(CurrentPageNumber));
         RaisePropertyChanged(nameof(TotalPages));
         RaisePropertyChanged(nameof(CountOfSelectedFeatures));
+        RaisePropertyChanged(nameof(CountOfFilteredFeatures));
 
         var page = CurrentPageFeatures;
 
@@ -533,6 +578,16 @@ public class SelectedLayer : Notifier
             Features ??= new ObservableCollection<Feature<Point>>();
 
             Features.Add(newFeature);
+
+            // an active filter could hide the just-added row, and an active sort would not
+            // place it on the last page; clear both so it is guaranteed visible
+            if (FilterManager.HasActiveFilter)
+                FilterManager.ClearAll(raiseEvent: false);
+
+            FilterManager.ClearSort();
+
+            // TotalPages below must see the added feature
+            _viewFeatures = null;
 
             // make the new row visible: it is appended at the end, on the last page
             if (TotalPages > 0 && CurrentPageIndex != TotalPages - 1)

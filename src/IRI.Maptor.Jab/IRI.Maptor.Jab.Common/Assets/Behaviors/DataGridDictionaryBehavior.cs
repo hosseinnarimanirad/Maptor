@@ -189,7 +189,22 @@ public static class DataGridDictionaryBehavior
             }
 
             if (column != null)
+            {
                 column.IsReadOnly = isColumnReadOnly;
+
+                // sorting/filtering are handled at the view-model level over the full
+                // (unpaged) feature list; the DataGrid only ever sees the current page
+                column.CanUserSort = false;
+
+                var filterVm = presenter.FilterManager?.GetFilter(field.Name);
+
+                if (filterVm != null &&
+                    grid.TryFindResource("FeatureTableColumnHeaderTemplate") is DataTemplate headerTemplate)
+                {
+                    column.Header = filterVm;
+                    column.HeaderTemplate = headerTemplate;
+                }
+            }
 
             grid.Columns.Add(column);
         }

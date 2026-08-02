@@ -1717,4 +1717,40 @@
   <data name="dialog_printPdf_keepScale" xml:space="preserve">
     <value>Сохранить текущий масштаб карты (подогнать страницу под карту)</value>
   </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>Фильтр</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>Очистить фильтр</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>Очистить все фильтры</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>Выбрать все</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>Снять выделение</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(Пусто)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>Оператор</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>С</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>По</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>Сортировка</value>
+  </data>
 </root>

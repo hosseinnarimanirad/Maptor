@@ -1717,4 +1717,40 @@
   <data name="dialog_printPdf_keepScale" xml:space="preserve">
     <value>Cari xəritə miqyasını saxla (səhifəni xəritəyə uyğunlaşdır)</value>
   </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>Filtr</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>Filtri təmizlə</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>Bütün filtrləri təmizlə</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>Hamısını seç</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>Hamısını ləğv et</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>Axtarış</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(Boş)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>Operator</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>Dəyər</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>Başlanğıc</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>Son</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>Sıralama</value>
+  </data>
 </root>

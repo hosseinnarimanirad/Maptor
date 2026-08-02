@@ -1810,4 +1810,40 @@
   <data name="dialog_printPdf_print" xml:space="preserve">
     <value>Print</value>
   </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>Clear Filter</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>Clear All Filters</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(Empty)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>Operator</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>Sort</value>
+  </data>
 </root>

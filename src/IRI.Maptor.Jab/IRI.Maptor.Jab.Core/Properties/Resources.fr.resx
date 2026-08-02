@@ -1717,4 +1717,40 @@
   <data name="dialog_printPdf_keepScale" xml:space="preserve">
     <value>Conserver l'échelle actuelle de la carte (ajuster la page à la carte)</value>
   </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>Filtre</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>Effacer le filtre</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>Effacer tous les filtres</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>Tout sélectionner</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>Tout désélectionner</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(Vide)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>Opérateur</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>Valeur</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>De</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>À</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>Trier</value>
+  </data>
 </root>

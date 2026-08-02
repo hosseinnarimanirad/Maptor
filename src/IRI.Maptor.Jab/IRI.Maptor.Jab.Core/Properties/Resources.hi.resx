@@ -1717,4 +1717,40 @@
   <data name="dialog_printPdf_keepScale" xml:space="preserve">
     <value>वर्तमान मानचित्र स्केल बनाए रखें (पृष्ठ को मानचित्र के अनुसार फिट करें)</value>
   </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>फ़िल्टर</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>फ़िल्टर हटाएँ</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>सभी फ़िल्टर हटाएँ</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>सभी चुनें</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>सभी अचयनित करें</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>खोजें</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(खाली)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>ऑपरेटर</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>मान</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>से</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>तक</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>क्रमबद्ध करें</value>
+  </data>
 </root>

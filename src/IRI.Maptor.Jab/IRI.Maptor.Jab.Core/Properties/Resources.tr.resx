@@ -1717,4 +1717,40 @@
   <data name="dialog_printPdf_keepScale" xml:space="preserve">
     <value>Geçerli harita ölçeğini koru (sayfayı haritaya sığdır)</value>
   </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>Filtre</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>Filtreyi temizle</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>Tüm filtreleri temizle</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>Tümünü seç</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>Tüm seçimleri kaldır</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>Ara</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(Boş)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>Operatör</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>Değer</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>Başlangıç</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>Bitiş</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>Sırala</value>
+  </data>
 </root>

@@ -1717,4 +1717,40 @@
   <data name="dialog_printPdf_keepScale" xml:space="preserve">
     <value>نقشے کا موجودہ پیمانہ برقرار رکھیں (صفحہ کو نقشے کے مطابق فٹ کریں)</value>
   </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>فلٹر</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>فلٹر صاف کریں</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>تمام فلٹرز صاف کریں</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>سب منتخب کریں</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>تمام انتخاب ہٹائیں</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>تلاش</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(خالی)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>آپریٹر</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>قدر</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>سے</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>تک</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>ترتیب دیں</value>
+  </data>
 </root>

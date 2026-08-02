@@ -35,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DataGridExtensions" />
     <PackageReference Include="DocumentFormat.OpenXml" />
     <PackageReference Include="Microsoft.Data.SqlClient" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" />

@@ -1717,4 +1717,40 @@
   <data name="dialog_printPdf_keepScale" xml:space="preserve">
     <value>保持当前地图比例（使页面适应地图）</value>
   </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>筛选</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>清除筛选</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>清除所有筛选</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>全选</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>取消全选</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(空)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>运算符</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>从</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>至</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>排序</value>
+  </data>
 </root>

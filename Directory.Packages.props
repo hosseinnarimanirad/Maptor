@@ -8,7 +8,6 @@
   <ItemGroup>
     <PackageVersion Include="Microsoft.SqlServer.Types" Version="160.1000.6" />
 
-    <PackageVersion Include="DataGridExtensions" Version="2.6.0" />
     <PackageVersion Include="DocumentFormat.OpenXml" Version="2.18.0" />
 
     <PackageVersion Include="Dapper" Version="2.0.123" />

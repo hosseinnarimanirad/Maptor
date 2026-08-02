@@ -4,8 +4,7 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:model="clr-namespace:IRI.Maptor.Jab.Common.Models"
              xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
-             xmlns:local ="clr-namespace:IRI.Maptor.Jab.Common.Behaviors" 
-             xmlns:dgx="urn:tom-englert.de/DataGridExtensions"
+             xmlns:local ="clr-namespace:IRI.Maptor.Jab.Common.Behaviors"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              Background="Transparent">
     <UserControl.Resources>
@@ -15,6 +14,7 @@
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/Controls.All.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/IRI.Maptor.Converters.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Common;component/Assets/Styles/FeatureTableFilters.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <DataTemplate DataType="{x:Type model:FeatureTableToggleCommand}">
@@ -109,7 +109,6 @@
                     CellEditEnding="grid_CellEditEnding" 
                     MouseDoubleClick="grid_MouseDoubleClick"
                     DataContextChanged="grid_DataContextChanged"
-                    dgx:DataGridFilter.IsAutoFilterEnabled="True" 
                     local:DataGridDictionaryBehavior.GenerateColumnsFromDictionary="True">
             <DataGrid.RowHeaderTemplate>
                 <DataTemplate>
@@ -164,16 +163,33 @@
         </DataGrid>
         <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" LastChildFill="False">
             <!--Visibility="{Binding ElementName=root, Path=IsMouseOver, Converter={StaticResource boolToVisibilityConverter}}">--> 
-            <TextBlock MinWidth="50"
-                       VerticalAlignment="Center" FontFamily="{StaticResource iranSans}"
-                       DockPanel.Dock="Left" Margin="4">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="{}{1} - {0}">
-                        <Binding Path="CountOfSelectedFeatures" Converter="{StaticResource localizedNumberConverter}"/>
-                        <Binding Path="HighlightedFeatures.Count" Converter="{StaticResource localizedNumberConverter}"/>
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                <TextBlock MinWidth="50"
+                           VerticalAlignment="Center" FontFamily="{StaticResource iranSans}"
+                           Margin="4">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{1} - {0}">
+                            <Binding Path="CountOfFilteredFeatures" Converter="{StaticResource localizedNumberConverter}"/>
+                            <Binding Path="HighlightedFeatures.Count" Converter="{StaticResource localizedNumberConverter}"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock VerticalAlignment="Center" FontFamily="{StaticResource iranSans}"
+                           Margin="0,4,4,4"
+                           Visibility="{Binding FilterManager.HasActiveFilter, Converter={StaticResource boolToVisibilityConverter}}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}/ {0}">
+                            <Binding Path="CountOfSelectedFeatures" Converter="{StaticResource localizedNumberConverter}"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                        Command="{Binding FilterManager.ClearAllFiltersCommand}"
+                        ToolTip="{Binding [featureTable_filter_clearAll], Source={StaticResource Localization}}"
+                        Visibility="{Binding FilterManager.HasActiveFilter, Converter={StaticResource boolToVisibilityConverter}}">
+                    <iconPacks:PackIconMaterial Kind="FilterOff" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+                </Button>
+            </StackPanel>
 
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                    Command="{Binding GoToPreviousPageCommand}"

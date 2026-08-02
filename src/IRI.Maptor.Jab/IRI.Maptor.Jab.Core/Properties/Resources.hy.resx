@@ -1717,4 +1717,40 @@
   <data name="dialog_printPdf_keepScale" xml:space="preserve">
     <value>Պահպանել քարտեզի ընթացիկ մասշտաբը (էջը հարմարեցնել քարտեզին)</value>
   </data>
+  <data name="featureTable_filter_filter" xml:space="preserve">
+    <value>Զտիչ</value>
+  </data>
+  <data name="featureTable_filter_clear" xml:space="preserve">
+    <value>Մաքրել զտիչը</value>
+  </data>
+  <data name="featureTable_filter_clearAll" xml:space="preserve">
+    <value>Մաքրել բոլոր զտիչները</value>
+  </data>
+  <data name="featureTable_filter_selectAllValues" xml:space="preserve">
+    <value>Ընտրել բոլորը</value>
+  </data>
+  <data name="featureTable_filter_clearAllValues" xml:space="preserve">
+    <value>Մաքրել բոլորը</value>
+  </data>
+  <data name="featureTable_filter_search" xml:space="preserve">
+    <value>Որոնում</value>
+  </data>
+  <data name="featureTable_filter_empty" xml:space="preserve">
+    <value>(Դատարկ)</value>
+  </data>
+  <data name="featureTable_filter_operator" xml:space="preserve">
+    <value>Օպերատոր</value>
+  </data>
+  <data name="featureTable_filter_value" xml:space="preserve">
+    <value>Արժեք</value>
+  </data>
+  <data name="featureTable_filter_from" xml:space="preserve">
+    <value>Սկսած</value>
+  </data>
+  <data name="featureTable_filter_to" xml:space="preserve">
+    <value>Մինչև</value>
+  </data>
+  <data name="featureTable_sort_toggle" xml:space="preserve">
+    <value>Դասավորել</value>
+  </data>
 </root>

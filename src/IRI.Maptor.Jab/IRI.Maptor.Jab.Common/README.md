@@ -87,7 +87,7 @@ Converters are then available by key, e.g. `boolToVisibilityConverter` and
 - Builds on the Maptor Sta packages (Spatial, SpatialReferenceSystem, ShapefileFormat, Ogc, ...)
   and IRI.Maptor.Jab.Core (tile providers, localization store).
 - Third-party: MahApps.Metro (+ icon packs), WriteableBitmapEx, Microsoft.Xaml.Behaviors.Wpf,
-  DataGridExtensions, DocumentFormat.OpenXml, Stateless.
+  DocumentFormat.OpenXml, Stateless.
 
 ## See also
 
