@@ -88,25 +88,34 @@ public static class KmlValidator
         }
 
         // Validate XML structure
-        if (!ValidateXmlStructure(kmlString, errors))
+        if (!ValidateXmlStructure(kmlString, errors, warnings, out var document))
         {
             return false;
         }
 
         if (validationOptions.ValidateSchema)
         {
-            ValidateAgainstSchema(kmlString, errors, warnings);
-
-            if (!validationOptions.BestEffort && errors.Count > 0)
+            // The embedded schemas only describe namespace-qualified KML; running them against a
+            // namespace-less document produces one "no schema information" warning per element
+            // instead of useful diagnostics, so skip the pass and say so once.
+            if (string.IsNullOrEmpty(ResolveKmlNamespace(document).NamespaceName))
             {
-                return false;
+                warnings.Add("Schema validation skipped: the document does not declare the KML namespace.");
+            }
+            else
+            {
+                ValidateAgainstSchema(kmlString, errors, warnings);
+
+                if (!validationOptions.BestEffort && errors.Count > 0)
+                {
+                    return false;
+                }
             }
         }
 
-        // Parse and validate KML content
+        // Validate KML content
         try
         {
-            var document = XDocument.Parse(kmlString);
             ValidateKmlContent(document, errors, warnings);
         }
         catch (Exception ex)
@@ -239,26 +248,51 @@ public static class KmlValidator
         }
     }
 
-    private static bool ValidateXmlStructure(string xmlString, List<string> errors)
+    /// <summary>
+    /// Returns the namespace element lookups must use for this document — the root element's own
+    /// namespace, which is <see cref="XNamespace.None"/> for a namespace-less <c>&lt;kml&gt;</c> root.
+    /// </summary>
+    private static XNamespace ResolveKmlNamespace(XDocument document)
     {
+        return document.Root?.Name.Namespace ?? XNamespace.Get(KmlNamespace);
+    }
+
+    private static bool ValidateXmlStructure(string xmlString, List<string> errors, List<string> warnings, out XDocument document)
+    {
+        document = null!;
+
         try
         {
             var doc = XDocument.Parse(xmlString);
 
-            // Check for KML namespace
-            if (doc.Root?.Name.NamespaceName != KmlNamespace)
+            if (doc.Root == null)
             {
-                errors.Add($"Invalid KML namespace. Expected: {KmlNamespace}, Found: {doc.Root?.Name.NamespaceName}");
+                errors.Add("KML document root is null");
                 return false;
             }
 
             // Check root element is 'kml'
-            if (doc.Root?.Name.LocalName != "kml")
+            if (doc.Root.Name.LocalName != "kml")
             {
-                errors.Add($"Root element must be 'kml', found: {doc.Root?.Name.LocalName}");
+                errors.Add($"Root element must be 'kml', found: {doc.Root.Name.LocalName}");
                 return false;
             }
 
+            // Check for KML namespace. A missing declaration is common in legacy exports and the
+            // reader handles it, so it is a warning; a different namespace is still an error.
+            var namespaceName = doc.Root.Name.NamespaceName;
+
+            if (string.IsNullOrEmpty(namespaceName))
+            {
+                warnings.Add($"KML namespace is not declared on the root element. Expected: {KmlNamespace}");
+            }
+            else if (namespaceName != KmlNamespace)
+            {
+                errors.Add($"Invalid KML namespace. Expected: {KmlNamespace}, Found: {namespaceName}");
+                return false;
+            }
+
+            document = doc;
             return true;
         }
         catch (XmlException ex)
@@ -276,7 +310,7 @@ public static class KmlValidator
             return;
         }
 
-        XNamespace kml = KmlNamespace;
+        XNamespace kml = ResolveKmlNamespace(document);
 
         // Find all Placemarks
         var placemarks = document.Descendants(kml + "Placemark");

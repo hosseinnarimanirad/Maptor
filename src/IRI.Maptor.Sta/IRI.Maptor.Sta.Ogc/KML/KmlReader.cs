@@ -24,15 +24,15 @@ public static class KmlReader
     private const string KmlNamespace = "http://www.opengis.net/kml/2.2";
     private const string XmlSchemaInstanceNamespace = "http://www.w3.org/2001/XMLSchema-instance";
 
+    /// <summary>
+    /// Returns the namespace element lookups must use for this document: the root element's own
+    /// namespace, whatever it is. A namespace-less <c>&lt;kml&gt;</c> root (produced by ArcMap and
+    /// other legacy exporters) resolves to <see cref="XNamespace.None"/> — substituting the KML 2.2
+    /// namespace there would make every lookup miss and yield an empty, silently-wrong result.
+    /// </summary>
     private static XNamespace ResolveKmlNamespace(XDocument document)
     {
-        var rootNamespace = document.Root?.Name.Namespace;
-        if (rootNamespace != null && !string.IsNullOrEmpty(rootNamespace.NamespaceName))
-        {
-            return rootNamespace;
-        }
-
-        return KmlNamespace;
+        return document.Root?.Name.Namespace ?? KmlNamespace;
     }
 
     #region Public Methods
