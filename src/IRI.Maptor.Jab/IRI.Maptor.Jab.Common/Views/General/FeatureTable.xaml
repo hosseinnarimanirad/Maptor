@@ -192,6 +192,11 @@
             </StackPanel>
 
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                   Command="{Binding GoToFirstPageCommand}"
+                   ToolTip="{Binding [featureTable_goToFirstPage], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoublePrevious}"/>
+            </Button>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                    Command="{Binding GoToPreviousPageCommand}"
                    ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPage], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious}"/>
@@ -213,6 +218,11 @@
                     Command="{Binding GoToNextPageCommand}"
                     ToolTip="{Binding [geometryDetails_currentPoint_goToNextPage], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronNext}"/>
+            </Button>
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                    Command="{Binding GoToLastPageCommand}"
+                    ToolTip="{Binding [featureTable_goToLastPage], Source={StaticResource Localization}}">
+                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoubleNext}"/>
             </Button>
             
             <Button Command="{Binding AddCommand}"

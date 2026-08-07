@@ -60,7 +60,10 @@ public class TextboxMarkerViewModel : Notifier
         }
     }
 
-    private FontFamily _formatting_FontFamily;
+    // initialized together with _formatting_FontFamilyName: the name setter's equality
+    // guard skips re-deriving the family when the name is assigned its own initial value
+    // (as the constructor does), so a null here would leave the TextBox on the default font
+    private FontFamily _formatting_FontFamily = IriFonts.IranSans;
     public FontFamily Formatting_FontFamily
     {
         get { return _formatting_FontFamily; }

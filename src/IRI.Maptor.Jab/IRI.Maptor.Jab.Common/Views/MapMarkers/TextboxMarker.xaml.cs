@@ -19,8 +19,13 @@ public partial class TextboxMarker : MapMarker
 
     private readonly DispatcherTimer _popupCloseTimer = new() { Interval = TimeSpan.FromMilliseconds(250) };
 
-    
-     
+    /// <summary>
+    /// One-shot: focus the text box the next time the marker loads. Set by the create-text
+    /// flow so the user can type immediately; it clears itself, so the re-adds that every
+    /// map refresh performs never steal focus back.
+    /// </summary>
+    public bool FocusTextBoxOnLoad { get; set; }
+
     public TextboxMarker()
     {
         InitializeComponent();
@@ -31,6 +36,18 @@ public partial class TextboxMarker : MapMarker
         };
         Loaded += (_, _) =>
         {
+            if (FocusTextBoxOnLoad)
+            {
+                FocusTextBoxOnLoad = false;
+
+                // deferred: focusing inline during Loaded is unreliable while the element
+                // is still being connected to the canvas
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    labelBox.Focus();
+                    Keyboard.Focus(labelBox);
+                }), DispatcherPriority.Input);
+            }
             //UpdateAlignmentButtons();
             //UpdateRTLButtons();
             formatPopup.Opened += OnPopupOpened;
