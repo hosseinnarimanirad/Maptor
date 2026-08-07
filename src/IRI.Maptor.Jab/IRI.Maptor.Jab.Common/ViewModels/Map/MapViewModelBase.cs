@@ -57,7 +57,9 @@ using IRI.Maptor.Jab.Common.Services;
 using IRI.Maptor.Jab.Core;
 using IRI.Maptor.Jab.Core.Layers;
 using IRI.Maptor.Jab.Core.Models;
+using IRI.Maptor.Jab.Core.Models.Project;
 using IRI.Maptor.Jab.Core.Data;
+using IRI.Maptor.Jab.Common.Services.Project;
 using IRI.Maptor.Jab.Core.TileServices;
 
 namespace IRI.Maptor.Jab.Common.ViewModels;
@@ -459,10 +461,14 @@ public abstract class MapViewModelBase : ViewModelBase
                                     .OrderByDescending(l => l.TocOrder)
                                     .ToList();
 
-        foreach (var item in orderedLayers)
+        // index is tracked rather than looked up: IndexOf inside the loop made this quadratic,
+        // and it runs once per layer added
+        for (int index = 0; index < orderedLayers.Count; index++)
         {
-            item.CanMoveLayerDown = orderedLayers.IndexOf(item) < orderedLayers.Count - 1;
-            item.CanMoveLayerUp = orderedLayers.IndexOf(item) > 0;
+            var item = orderedLayers[index];
+
+            item.CanMoveLayerDown = index < orderedLayers.Count - 1;
+            item.CanMoveLayerUp = index > 0;
 
             if (item.IsGroupLayer)
             {
@@ -880,6 +886,14 @@ public abstract class MapViewModelBase : ViewModelBase
     public int NearestGoogleZoomLevel => WebMercatorUtility.GetZoomLevel(this.MapScale);
 
     /// <summary>
+    /// The google zoom level tiles are requested at: <see cref="NearestGoogleZoomLevel"/> capped at
+    /// <see cref="IMapSettings.MaxTileZoomLevel"/>, matching the live map so exports and thumbnails
+    /// do not ask the provider for a level it has no imagery for. The readouts keep using the
+    /// uncapped <see cref="NearestGoogleZoomLevel"/>.
+    /// </summary>
+    public int TileZoomLevel => Math.Min(NearestGoogleZoomLevel, MapSettings?.MaxTileZoomLevel ?? NearestGoogleZoomLevel);
+
+    /// <summary>
     /// Web Mercator scale for the nearest google zoom level
     /// </summary>
     public double MapScale_NearestGoogleZoomLevel => WebMercatorUtility.CalculateMapScale(NearestGoogleZoomLevel, 0);
@@ -1230,6 +1244,8 @@ public abstract class MapViewModelBase : ViewModelBase
     public bool PreviousExtentEnabled => CurrentExtentIndex < MapExtentHistory.Count - 1;
 
     public int ExtentHistoryLength => MapExtentHistory.Count;
+
+    public int MaxExtentHistoryLength = 31;
 
     private int _currentExtentIndex = 0;
     public int CurrentExtentIndex
@@ -1586,6 +1602,20 @@ public abstract class MapViewModelBase : ViewModelBase
     public Action<IPoint> RequestAddPointToNewDrawing;
 
     public Action<ILayer>? RequestUpdateZIndex;
+
+    /// <summary>
+    /// Applies the given layers' current ZIndex to their canvas elements in a single pass.
+    /// Prefer this over several <see cref="RequestUpdateZIndex"/> calls: each of those
+    /// scans every canvas child (all tiles included) once per layer.
+    /// </summary>
+    public Action<IEnumerable<ILayer>>? RequestUpdateZIndexes;
+
+    /// <summary>
+    /// Re-derives every layer's ZIndex from its current TocOrder and pushes it to the canvas.
+    /// Used when TocOrder is assigned directly instead of through a move up/down,
+    /// e.g. when restoring layer order from a project file.
+    /// </summary>
+    public Action? RequestRearrangeLayerOrders;
 
 
     public Action<Locateable?, int> RequestSelectedLocatableChanged;
@@ -2418,12 +2448,7 @@ public abstract class MapViewModelBase : ViewModelBase
         if (newFirstIndex == -1 || newSecondIndex == -1)
             throw new InvalidOperationException("One of the items was not found in the collection.");
 
-        // Swap the ZIndex values
-        var tempZIndex = first.ZIndex;
-
-        first.ZIndex = second.ZIndex;
-
-        second.ZIndex = tempZIndex;
+        SwapOrderValues(first, second);
 
         DrawingItems.Move(newFirstIndex, newSecondIndex);
         // consider
@@ -2436,9 +2461,7 @@ public abstract class MapViewModelBase : ViewModelBase
         //second.CanMoveLayerDown = CanMoveDownForDrawingItem(second);
         //second.CanMoveLayerUp = CanMoveUpForDrawingItem(second);
 
-        RequestUpdateZIndex?.Invoke(first);
-
-        RequestUpdateZIndex?.Invoke(second);
+        RequestUpdateZIndexes?.Invoke([first, second]);
 
         //Refresh(isNewExtent: false);
 
@@ -2581,7 +2604,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    public async Task MoveLayerDown(IList<ILayer> layers, ILayer layer)
+    public Task MoveLayerDown(IList<ILayer> layers, ILayer layer)
     {
         var nextLayer = layers.OrderByDescending(l => l.TocOrder)
                                 .FirstOrDefault(l => LegendViewModel.IsFilterPassed(l) && l.CanReorderInToc && l.TocOrder < layer.TocOrder);
@@ -2590,11 +2613,13 @@ public abstract class MapViewModelBase : ViewModelBase
         //var nextLayer = GetNextTocReorderableLayer(layers, currentIndex, asc: true);
 
         if (nextLayer is null)
-            return;
+            return Task.CompletedTask;
 
-        await SwapLayerOrders(layer, nextLayer/*layers[nextIndex]*/);
+        SwapLayerOrders(layer, nextLayer/*layers[nextIndex]*/);
 
         UpdateLayerCanMoveUpDown(layers, layer.TocGroup);
+
+        return Task.CompletedTask;
     }
 
 
@@ -2623,7 +2648,7 @@ public abstract class MapViewModelBase : ViewModelBase
         }
     }
 
-    public async Task MoveLayerUp(IList<ILayer> layers, ILayer layer)
+    public Task MoveLayerUp(IList<ILayer> layers, ILayer layer)
     {
         var nextLayer = layers.OrderBy(l => l.TocOrder).FirstOrDefault(l => LegendViewModel.IsFilterPassed(l) && l.CanReorderInToc && l.TocOrder > layer.TocOrder);
         //var nextIndex = currentIndex - 1;
@@ -2631,15 +2656,31 @@ public abstract class MapViewModelBase : ViewModelBase
         //var nextLayer = GetNextTocReorderableLayer(layers, currentIndex, asc: false);
 
         if (nextLayer is null)
-            return;
+            return Task.CompletedTask;
 
-        await SwapLayerOrders(layer, nextLayer/*layers[nextIndex]*/);
+        SwapLayerOrders(layer, nextLayer/*layers[nextIndex]*/);
 
         UpdateLayerCanMoveUpDown(layers, layer.TocGroup);
 
+        return Task.CompletedTask;
     }
 
-    private async Task SwapLayerOrders(ILayer first, ILayer second)
+    private void SwapLayerOrders(ILayer first, ILayer second)
+    {
+        SwapOrderValues(first, second);
+
+        // no legend refresh: the root legend view and the per-group sub-layer views
+        // live-sort on TocOrder, so both rows already moved when SwapOrderValues ran
+
+        RequestUpdateZIndexes?.Invoke([first, second]);
+    }
+
+    /// <summary>
+    /// Swaps both ordering fields of the two layers. TocOrder is the authoritative order:
+    /// ArrangeZIndex re-derives every ZIndex from it on each refresh, so swapping ZIndex
+    /// alone is reverted by the next pan/zoom/layer-add.
+    /// </summary>
+    private static void SwapOrderValues(ILayer first, ILayer second)
     {
         var tempTocOrder = first.TocOrder;
         first.TocOrder = second.TocOrder;
@@ -2648,20 +2689,114 @@ public abstract class MapViewModelBase : ViewModelBase
         var tempZIndex = first.ZIndex;
         first.ZIndex = second.ZIndex;
         second.ZIndex = tempZIndex;
+    }
 
-        //first.LayerName = $"{first.LayerName}: {first.TocOrder}";
-        //second.LayerName = $"{second.LayerName}: {second.TocOrder}";
+    /// <summary>
+    /// Drag-and-drop reorder: places <paramref name="dragged"/> directly above or below
+    /// <paramref name="target"/> within the same parent scope (root layers, a group's
+    /// sub-layers, or the drawing-items panel). The participants' existing TocOrder values
+    /// are redistributed over the new arrangement, so layers outside the scope keep both
+    /// their values and their relative order.
+    /// </summary>
+    public void ReorderLayerByDrag(ILayer? dragged, ILayer? target, bool insertAbove)
+    {
+        if (dragged is null || target is null || ReferenceEquals(dragged, target))
+            return;
 
-        if (LegendViewModel.RequestRefreshView is not null)
+        // within-parent reordering only; re-parenting is deliberately out of scope
+        if (!ReferenceEquals(dragged.Parent, target.Parent))
+            return;
+
+        if (dragged is DrawingItemLayer draggedItem && target is DrawingItemLayer targetItem)
         {
-            await LegendViewModel.RequestRefreshView.Invoke();
+            ReorderDrawingItemByDrag(draggedItem, targetItem, insertAbove);
+            return;
         }
 
-        RequestUpdateZIndex?.Invoke(first);
+        if (!dragged.CanReorderInToc || !target.CanReorderInToc)
+            return;
 
-        RequestUpdateZIndex?.Invoke(second);
+        var participants = (dragged.Parent is null
+                ? Layers.Where(l => l.Parent is null)
+                : dragged.Parent.SubLayers.AsEnumerable())
+            .Where(l => l.CanReorderInToc && l.TocGroup == dragged.TocGroup)
+            .ToList();
 
-        //Refresh(isNewExtent: false);
+        if (!ApplyDragArrangement(participants, dragged, target, insertAbove))
+            return;
+
+        UpdateLayerCanMoveUpDown(participants, dragged.TocGroup);
+
+        // re-derive every ZIndex from the new TocOrders and push them to the canvas in one pass
+        RequestRearrangeLayerOrders?.Invoke();
+    }
+
+    private void ReorderDrawingItemByDrag(DrawingItemLayer dragged, DrawingItemLayer target, bool insertAbove)
+    {
+        var oldIndex = DrawingItems.IndexOf(dragged);
+        var targetIndex = DrawingItems.IndexOf(target);
+
+        if (oldIndex < 0 || targetIndex < 0)
+            return;
+
+        var newIndex = insertAbove ? targetIndex : targetIndex + 1;
+
+        if (newIndex > oldIndex)
+            newIndex--;
+
+        if (newIndex == oldIndex)
+            return;
+
+        // panel order (index 0 on top) mirrors TocOrder descending — keep both in sync,
+        // like SwapDrawingItems does for the chevron path. The Move also raises the
+        // CollectionChanged that refreshes the per-item CanMoveLayerUp/Down flags.
+        var values = DrawingItems.Select(d => d.TocOrder).OrderByDescending(v => v).ToList();
+
+        DrawingItems.Move(oldIndex, newIndex);
+
+        for (int i = 0; i < DrawingItems.Count; i++)
+        {
+            if (DrawingItems[i].TocOrder != values[i])
+                DrawingItems[i].TocOrder = values[i];
+        }
+
+        RequestRearrangeLayerOrders?.Invoke();
+    }
+
+    /// <summary>
+    /// Rearranges <paramref name="participants"/> (TOC order, highest TocOrder on top) so
+    /// <paramref name="dragged"/> sits above/below <paramref name="target"/>, redistributing
+    /// the participants' own TocOrder values. Returns false when nothing changed.
+    /// </summary>
+    private static bool ApplyDragArrangement(List<ILayer> participants, ILayer dragged, ILayer target, bool insertAbove)
+    {
+        if (!participants.Contains(dragged) || !participants.Contains(target))
+            return false;
+
+        var arranged = participants.OrderByDescending(l => l.TocOrder).ToList();
+
+        var values = arranged.Select(l => l.TocOrder).ToList();
+
+        arranged.Remove(dragged);
+
+        var insertIndex = arranged.IndexOf(target) + (insertAbove ? 0 : 1);
+
+        arranged.Insert(insertIndex, dragged);
+
+        var changed = false;
+
+        for (int i = 0; i < arranged.Count; i++)
+        {
+            // skipping unchanged values keeps live sorting from reshuffling untouched rows
+            // (the TocOrder setter raises PropertyChanged unconditionally)
+            if (arranged[i].TocOrder != values[i])
+            {
+                arranged[i].TocOrder = values[i];
+                changed = true;
+            }
+        }
+
+        return changed;
     }
 
     public void UpdateBaseMapOpacity(double opacity)
@@ -2812,7 +2947,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         CurrentExtentIndex = 0;
 
-        if (ExtentHistoryLength > 11)
+        if (ExtentHistoryLength > MaxExtentHistoryLength)
             MapExtentHistory.RemoveAt(lastExtentIndex);
     }
 
@@ -3702,7 +3837,7 @@ public abstract class MapViewModelBase : ViewModelBase
 
         var drawingItemLayer = DrawingItemLayer.CreateTextLayer("Text",
         [
-            new Locateable(geodeticPoint, AnchorFunctionHandlers.BottomCenter) { Element = new TextboxMarker() { DataContext = viewModel } }
+            new Locateable(geodeticPoint, AnchorFunctionHandlers.BottomCenter) { Element = new TextboxMarker() { DataContext = viewModel, FocusTextBoxOnLoad = true } }
         ]);
 
         viewModel.RequestDelete = () => RemoveDrawingItem(drawingItemLayer);
@@ -3814,7 +3949,7 @@ public abstract class MapViewModelBase : ViewModelBase
             switch (item)
             {
                 case TileServiceLayer tsl:
-                    visuals.Add(tsl.AsDrawingVisual(boundingBox, NearestGoogleZoomLevel, imageWidth, imageHeight));
+                    visuals.Add(tsl.AsDrawingVisual(boundingBox, TileZoomLevel, imageWidth, imageHeight));
                     break;
 
                 case VectorLayer vectorLayer:
@@ -3841,7 +3976,7 @@ public abstract class MapViewModelBase : ViewModelBase
         if (extent.IsNaN() || !extent.IsValid())
             return null;
 
-        int zoomLevel = NearestGoogleZoomLevel;
+        int zoomLevel = TileZoomLevel;
 
         var tiles = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(extent, zoomLevel);
 
@@ -4799,6 +4934,151 @@ public abstract class MapViewModelBase : ViewModelBase
     }
 
 
+    //*****************************************Project File**********************************************************
+    #region Project
+
+    private const string _projectFileFilter = "Maptor Project (*." + MapProjectFile.Extension + ")|*." + MapProjectFile.Extension;
+
+    private string? _currentProjectFilePath;
+
+    /// <summary>
+    /// Full path of the currently open project file, or null when no project is open.
+    /// </summary>
+    public string? CurrentProjectFilePath
+    {
+        get => _currentProjectFilePath;
+        private set
+        {
+            _currentProjectFilePath = value;
+            RaisePropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// Hook for applications to append app-specific data (e.g. server layer overrides)
+    /// to the project before it is written to disk.
+    /// </summary>
+    protected virtual void OnSaveProject(MapProject project) { }
+
+    /// <summary>
+    /// Hook for applications to consume app-specific data after a loaded project
+    /// has been applied to the map.
+    /// </summary>
+    protected virtual Task OnProjectLoadedAsync(MapProject project) => Task.CompletedTask;
+
+    public async Task SaveProjectAsync(object? owner)
+    {
+        if (string.IsNullOrWhiteSpace(CurrentProjectFilePath))
+            await SaveProjectAsAsync(owner);
+        else
+            await SaveProjectToAsync(CurrentProjectFilePath!);
+    }
+
+    public async Task SaveProjectAsAsync(object? owner)
+    {
+        var suggestedName = string.IsNullOrWhiteSpace(CurrentProjectFilePath)
+            ? $"project.{MapProjectFile.Extension}"
+            : Path.GetFileName(CurrentProjectFilePath);
+
+        var fileName = await DialogService.ShowSaveFileDialogAsync(_projectFileFilter, owner, suggestedName);
+
+        if (string.IsNullOrWhiteSpace(fileName))
+            return;
+
+        await SaveProjectToAsync(fileName!);
+    }
+
+    public async Task SaveProjectToAsync(string fileName)
+    {
+        try
+        {
+            IsBusy = true;
+
+            var project = new MapProjectService(this).BuildProject(fileName);
+
+            OnSaveProject(project);
+
+            MapProjectFile.Save(fileName, project);
+
+            CurrentProjectFilePath = fileName;
+        }
+        catch (Exception ex)
+        {
+            await ShowExceptionMessageAsync(ex);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    public async Task OpenProjectAsync(object? owner)
+    {
+        var fileName = await DialogService.ShowOpenFileDialogAsync(_projectFileFilter, owner);
+
+        if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+            return;
+
+        var confirmed = await DialogService.ShowYesNoDialogAsync(IRI.Maptor.Jab.Core.Properties.Resources.msg_project_confirmReplace, owner);
+
+        if (confirmed != true)
+            return;
+
+        await OpenProjectFromAsync(fileName!, owner);
+    }
+
+    public async Task OpenProjectFromAsync(string fileName, object? owner = null)
+    {
+        try
+        {
+            IsBusy = true;
+
+            var project = MapProjectFile.Load(fileName);
+
+            if (project is null || project.FormatVersion > MapProjectFile.SupportedFormatVersion)
+            {
+                await DialogService.ShowMessageAsync(IRI.Maptor.Jab.Core.Properties.Resources.msg_project_unsupportedVersion, null, owner);
+
+                return;
+            }
+
+            var result = await new MapProjectService(this).ApplyAsync(project, fileName);
+
+            await OnProjectLoadedAsync(project);
+
+            CurrentProjectFilePath = fileName;
+
+            if (result.SkippedLayers.Count > 0)
+            {
+                var message = string.Format(
+                    IRI.Maptor.Jab.Core.Properties.Resources.msg_project_skippedLayers,
+                    string.Join(", ", result.SkippedLayers));
+
+                await DialogService.ShowMessageAsync(message, null, owner);
+            }
+        }
+        catch (Exception ex)
+        {
+            await ShowExceptionMessageAsync(ex);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private RelayCommand? _saveProjectCommand;
+    public RelayCommand SaveProjectCommand => _saveProjectCommand ??= new RelayCommand(async param => await SaveProjectAsync(param));
+
+    private RelayCommand? _saveProjectAsCommand;
+    public RelayCommand SaveProjectAsCommand => _saveProjectAsCommand ??= new RelayCommand(async param => await SaveProjectAsAsync(param));
+
+    private RelayCommand? _openProjectCommand;
+    public RelayCommand OpenProjectCommand => _openProjectCommand ??= new RelayCommand(async param => await OpenProjectAsync(param));
+
+    #endregion
+
+
 
     //*****************************************File Formats *********************************************************
     #region Shapefile/Worldfile/GeoJson/KML/KMZ/Csv/Tsv/ZippedImagePyramid/etc.
@@ -5513,18 +5793,28 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public virtual async Task AddZippedImagePyramid(object owner)
     {
+        IsBusy = true;
+
+        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.ZippedImagePyramid/*"Image Pyramid file|*.pyrmd"*/, owner);
+
+        if (!File.Exists(fileName))
+        {
+            IsBusy = false;
+
+            return;
+        }
+
+        await AddZippedImagePyramid(fileName);
+    }
+
+    public async Task AddZippedImagePyramid(string fileName)
+    {
         try
         {
             IsBusy = true;
 
-            var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.ZippedImagePyramid/*"Image Pyramid file|*.pyrmd"*/, owner);
-
-            if (!File.Exists(fileName))
-            {
-                IsBusy = false;
-
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+                throw new MaptorFileNotFoundException(fileName);
 
             var rasterLayer = new RasterLayer(new ZippedImagePyramidDataSource(fileName),
                 Path.GetFileNameWithoutExtension(fileName),
@@ -5535,18 +5825,9 @@ public abstract class MapViewModelBase : ViewModelBase
 
             AddLayer(rasterLayer);
         }
-        //catch (IOException)
-        //{
-        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        //}
-        //catch (UnauthorizedAccessException)
-        //{
-        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        //}
         catch (Exception ex)
         {
             await ShowExceptionMessageAsync(ex);
-            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
@@ -5561,18 +5842,28 @@ public abstract class MapViewModelBase : ViewModelBase
     /// </summary>
     public virtual async Task AddMBTiles(object owner)
     {
+        IsBusy = true;
+
+        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.MBTiles, owner);
+
+        if (!File.Exists(fileName))
+        {
+            IsBusy = false;
+
+            return;
+        }
+
+        await AddMBTiles(fileName);
+    }
+
+    public async Task AddMBTiles(string fileName)
+    {
         try
         {
             IsBusy = true;
 
-            var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.MBTiles, owner);
-
-            if (!File.Exists(fileName))
-            {
-                IsBusy = false;
-
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+                throw new MaptorFileNotFoundException(fileName);
 
             if (IsVectorMbTiles(fileName))
             {
@@ -5668,18 +5959,28 @@ public abstract class MapViewModelBase : ViewModelBase
     /// </summary>
     public virtual async Task AddGeoPackage(object owner)
     {
+        IsBusy = true;
+
+        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.GeoPackage, owner);
+
+        if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
+        {
+            IsBusy = false;
+
+            return;
+        }
+
+        await AddGeoPackage(fileName);
+    }
+
+    public async Task AddGeoPackage(string fileName)
+    {
         try
         {
             IsBusy = true;
 
-            var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.GeoPackage, owner);
-
             if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
-            {
-                IsBusy = false;
-
-                return;
-            }
+                throw new MaptorFileNotFoundException(fileName);
 
             var (vectorLayers, tileLayers) = GetGeoPackageLayers(fileName);
 
@@ -5818,54 +6119,78 @@ public abstract class MapViewModelBase : ViewModelBase
     /// </summary>
     public virtual async Task AddDelimitedTextFile(object owner, bool initialIsCsv)
     {
+        IsBusy = true;
+
+        var result = await DialogService.ShowCsvTsvOpenDialogAsync(ownerWindow: null, initialIsCsv: initialIsCsv, initialSrid: null);
+
+        if (result == null || string.IsNullOrWhiteSpace(result.RawText))
+        {
+            IsBusy = false;
+            return;
+        }
+
+        await AddDelimitedTextFile(
+            result.IsFileSelected ? result.FilePath : null,
+            result.RawText,
+            result.IsCsv,
+            result.SelectedSrid,
+            result.IsLongitudeFirst,
+            result.UseFirstLineAsHeader,
+            result.GeometryType);
+    }
+
+    public async Task AddDelimitedTextFile(
+        string? filePath,
+        string? rawText,
+        bool isCsv,
+        int sourceSrid,
+        bool isLongitudeFirst,
+        bool useFirstLineAsHeader,
+        GeometryType geometryType)
+    {
         try
         {
             IsBusy = true;
 
-            var result = await DialogService.ShowCsvTsvOpenDialogAsync(ownerWindow: null, initialIsCsv: initialIsCsv, initialSrid: null);
+            var isFileSelected = !string.IsNullOrWhiteSpace(filePath);
 
-            if (result == null || string.IsNullOrWhiteSpace(result.RawText))
-            {
-                IsBusy = false;
+            if (isFileSelected && !File.Exists(filePath))
+                throw new MaptorFileNotFoundException(filePath!);
+
+            if (!isFileSelected && string.IsNullOrWhiteSpace(rawText))
                 return;
-            }
 
-            DataSourceKind dataSourceKind = result.IsCsv ? DataSourceKind.Csv : DataSourceKind.Tsv;
+            DataSourceKind dataSourceKind = isCsv ? DataSourceKind.Csv : DataSourceKind.Tsv;
 
             TextDataSource dataSource;
 
-            if (result.IsFileSelected)
+            if (isFileSelected)
             {
                 dataSource = await TextDataSource.CreateFromFileAsync(
-                                        result.FilePath!,
-                                        result.GeometryType,
+                                        filePath!,
+                                        geometryType,
                                         dataSourceKind,
-                                        result.SelectedSrid,
-                                        result.IsLongitudeFirst,
-                                        result.UseFirstLineAsHeader);
+                                        sourceSrid,
+                                        isLongitudeFirst,
+                                        useFirstLineAsHeader);
             }
             else
             {
                 dataSource = await TextDataSource.CreateFromTextAsync(
-                                        result.RawText,
-                                        result.GeometryType,
+                                        rawText!,
+                                        geometryType,
                                         dataSourceKind,
-                                        result.SelectedSrid,
-                                        result.IsLongitudeFirst,
-                                        result.UseFirstLineAsHeader);
+                                        sourceSrid,
+                                        isLongitudeFirst,
+                                        useFirstLineAsHeader);
             }
-
-
-            //MemoryDataSource dataSource = result.IsCsv
-            //? await CsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader)
-            //: await TsvDataSource.CreateFromTextAsync(result.RawText, result.SelectedSrid, result.IsLongitudeFirst, result.GeometryType, result.UseFirstLineAsHeader);
 
             if (dataSource == null)
                 return;
 
-            var layerName = !string.IsNullOrEmpty(result.FilePath)
-                ? Path.GetFileNameWithoutExtension(result.FilePath)
-                : (result.IsCsv ? "CSV Import" : "TSV Import");
+            var layerName = !string.IsNullOrEmpty(filePath)
+                ? Path.GetFileNameWithoutExtension(filePath)
+                : (isCsv ? "CSV Import" : "TSV Import");
 
             AddLayer(new VectorLayer(
                             layerName,
@@ -5878,18 +6203,9 @@ public abstract class MapViewModelBase : ViewModelBase
                             LegendViewModel.DefaultTocGroup)
             { IsSearchable = true });
         }
-        //catch (IOException)
-        //{
-        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        //}
-        //catch (UnauthorizedAccessException)
-        //{
-        //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
-        //}
         catch (Exception ex)
         {
             await ShowExceptionMessageAsync(ex);
-            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
@@ -5899,24 +6215,43 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public virtual async Task AddGeoJson(object owner)
     {
+        IsBusy = true;
+
+        var result = await DialogService.ShowGeoJsonTopoJsonOpenDialogAsync(owner, isGeoJson: true, null);
+
+        if (result == null || string.IsNullOrWhiteSpace(result.RawJson))
+        {
+            IsBusy = false;
+            return;
+        }
+
+        await AddGeoJson(
+            result.IsFileSelected ? result.FilePath : null,
+            result.RawJson,
+            result.IsLongitudeFirst,
+            result.SelectedSrid);
+    }
+
+    public async Task AddGeoJson(string? filePath, string? rawJson, bool isLongitudeFirst, int sourceSrid)
+    {
         try
         {
             IsBusy = true;
 
-            var result = await DialogService.ShowGeoJsonTopoJsonOpenDialogAsync(owner, isGeoJson: true, null);
+            var isFileSelected = !string.IsNullOrWhiteSpace(filePath);
 
-            if (result == null || string.IsNullOrWhiteSpace(result.RawJson))
-            {
-                IsBusy = false;
+            if (isFileSelected && !File.Exists(filePath))
+                throw new MaptorFileNotFoundException(filePath!);
+
+            if (!isFileSelected && string.IsNullOrWhiteSpace(rawJson))
                 return;
-            }
 
-            MemoryDataSource dataSource = result.IsFileSelected
-                ? await GeoJsonDataSource.CreateFromFileAsync(result.FilePath!, result.IsLongitudeFirst, result.SelectedSrid)
-                : await GeoJsonDataSource.CreateFromTextAsync(result.RawJson, result.IsLongitudeFirst, result.SelectedSrid);
+            MemoryDataSource dataSource = isFileSelected
+                ? await GeoJsonDataSource.CreateFromFileAsync(filePath!, isLongitudeFirst, sourceSrid)
+                : await GeoJsonDataSource.CreateFromTextAsync(rawJson!, isLongitudeFirst, sourceSrid);
 
-            var layerName = !string.IsNullOrEmpty(result.FilePath)
-                ? Path.GetFileNameWithoutExtension(result.FilePath)
+            var layerName = !string.IsNullOrEmpty(filePath)
+                ? Path.GetFileNameWithoutExtension(filePath)
                 : "GeoJSON Import";
 
             AddLayer(new VectorLayer(layerName, dataSource,
@@ -5933,7 +6268,6 @@ public abstract class MapViewModelBase : ViewModelBase
         catch (Exception ex)
         {
             await ShowExceptionMessageAsync(ex);
-            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
@@ -5971,24 +6305,42 @@ public abstract class MapViewModelBase : ViewModelBase
 
     public virtual async Task AddTopoJson(object owner)
     {
+        IsBusy = true;
+
+        var result = await DialogService.ShowGeoJsonTopoJsonOpenDialogAsync(owner, isGeoJson: false, null);
+
+        if (result == null || string.IsNullOrWhiteSpace(result.RawJson))
+        {
+            IsBusy = false;
+            return;
+        }
+
+        await AddTopoJson(
+            result.IsFileSelected ? result.FilePath : null,
+            result.RawJson,
+            result.SelectedSrid);
+    }
+
+    public async Task AddTopoJson(string? filePath, string? rawJson, int sourceSrid)
+    {
         try
         {
             IsBusy = true;
 
-            var result = await DialogService.ShowGeoJsonTopoJsonOpenDialogAsync(owner, isGeoJson: false, null);
+            var isFileSelected = !string.IsNullOrWhiteSpace(filePath);
 
-            if (result == null || string.IsNullOrWhiteSpace(result.RawJson))
-            {
-                IsBusy = false;
+            if (isFileSelected && !File.Exists(filePath))
+                throw new MaptorFileNotFoundException(filePath!);
+
+            if (!isFileSelected && string.IsNullOrWhiteSpace(rawJson))
                 return;
-            }
 
-            MemoryDataSource dataSource = result.IsFileSelected
-                ? await TopoJsonDataSource.CreateFromFileAsync(result.FilePath!, result.SelectedSrid)
-                : await TopoJsonDataSource.CreateFromTextAsync(result.RawJson, result.SelectedSrid);
+            MemoryDataSource dataSource = isFileSelected
+                ? await TopoJsonDataSource.CreateFromFileAsync(filePath!, sourceSrid)
+                : await TopoJsonDataSource.CreateFromTextAsync(rawJson!, sourceSrid);
 
-            var layerName = !string.IsNullOrEmpty(result.FilePath)
-                ? Path.GetFileNameWithoutExtension(result.FilePath)
+            var layerName = !string.IsNullOrEmpty(filePath)
+                ? Path.GetFileNameWithoutExtension(filePath)
                 : "TopoJSON Import";
 
             AddLayer(new VectorLayer(layerName, dataSource,
@@ -6005,7 +6357,6 @@ public abstract class MapViewModelBase : ViewModelBase
         catch (Exception ex)
         {
             await ShowExceptionMessageAsync(ex);
-            //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
         }
         finally
         {
@@ -6904,35 +7255,112 @@ public abstract class MapViewModelBase : ViewModelBase
                 {
                     try
                     {
-                        var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.Csv/*"*.csv|*.csv"*/, param);
+                        IsBusy = true;
 
-                        if (string.IsNullOrWhiteSpace(fileName))
+                        var result = await DialogService.ShowCsvTsvOpenDialogAsync(ownerWindow: null, initialIsCsv: true, initialSrid: null);
+
+                        if (result == null || string.IsNullOrWhiteSpace(result.RawText))
+                        {
+                            IsBusy = false;
+                            return;
+                        }
+
+                        DataSourceKind dataSourceKind = result.IsCsv ? DataSourceKind.Csv : DataSourceKind.Tsv;
+
+                        TextDataSource dataSource;
+
+                        if (result.IsFileSelected)
+                        {
+                            dataSource = await TextDataSource.CreateFromFileAsync(
+                                                    result.FilePath!,
+                                                    result.GeometryType,
+                                                    dataSourceKind,
+                                                    result.SelectedSrid,
+                                                    result.IsLongitudeFirst,
+                                                    result.UseFirstLineAsHeader);
+                        }
+                        else
+                        {
+                            dataSource = await TextDataSource.CreateFromTextAsync(
+                                                    result.RawText,
+                                                    result.GeometryType,
+                                                    dataSourceKind,
+                                                    result.SelectedSrid,
+                                                    result.IsLongitudeFirst,
+                                                    result.UseFirstLineAsHeader);
+                        }
+
+                        if (dataSource == null)
                             return;
 
-                        var wgsPoints = IOHelper.ReadAllPoints(fileName, IOHelper.CsvDelimiterChar);
+                        var layerName = !string.IsNullOrEmpty(result.FilePath)
+                            ? Path.GetFileNameWithoutExtension(result.FilePath)
+                            : (result.IsCsv ? "CSV Import" : "TSV Import");
 
-                        if (wgsPoints.IsNullOrEmpty())
+                        var geometry = await dataSource.GetAsFeatureSetAsync();
+
+                        if (geometry == null || geometry.Features.IsNullOrEmpty())
                             return;
 
-                        var webMercatorPoints = wgsPoints.Select(p => p.Project(SrsBases.GeodeticWgs84, SrsBases.WebMercator)).ToList();
+                        if (geometry.GeometryType == GeometryType.Point)
+                        {
+                            var points = geometry.Features.Select(f => f.TheGeometry).ToList();
 
-                        var geometry = Geometry<Point>.CreatePointOrLineStringOrPolygon(webMercatorPoints, SridHelper.WebMercator);
+                            if (points.Count > 1)
+                            {
+                                AddDrawingItem(Geometry<Point>.Create(points, GeometryType.MultiPoint, geometry.Srid), layerName);
+                            }
+                            else
+                            {
+                                AddDrawingItem(points.First(), layerName);
+                            }
 
-                        AddDrawingItem(geometry, Path.GetFileNameWithoutExtension(fileName)/*, null, int.MinValue*//*, dataSource*/);
+                        }
+                        else
+                        {
+                            AddDrawingItem(geometry.Features?.FirstOrDefault()?.TheGeometry, layerName);
+                        }
                     }
                     //catch (IOException)
                     //{
-                    //    await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
                     //}
                     //catch (UnauthorizedAccessException)
                     //{
-                    //    await DialogService.ShowMessageAsync(_fileLockedError, _error, param);
+                    //    await DialogService.ShowMessageAsync(_fileLockedError, _error, owner);
                     //}
                     catch (Exception ex)
                     {
                         await ShowExceptionMessageAsync(ex);
-                        //await DialogService.ShowMessageAsync(ex.Message, _error, param);
+                        //await DialogService.ShowMessageAsync(ex.Message, _error, owner);
                     }
+                    finally
+                    {
+                        IsBusy = false;
+                    }
+
+                    //try
+                    //{
+                    //    var fileName = await DialogService.ShowOpenFileDialogAsync(DataSourceKind.Csv/*"*.csv|*.csv"*/, param);
+
+                    //    if (string.IsNullOrWhiteSpace(fileName))
+                    //        return;
+
+                    //    var wgsPoints = IOHelper.ReadAllPoints(fileName, IOHelper.CsvDelimiterChar);
+
+                    //    if (wgsPoints.IsNullOrEmpty())
+                    //        return;
+
+                    //    var webMercatorPoints = wgsPoints.Select(p => p.Project(SrsBases.GeodeticWgs84, SrsBases.WebMercator)).ToList();
+
+                    //    var geometry = Geometry<Point>.CreatePointOrLineStringOrPolygon(webMercatorPoints, SridHelper.WebMercator);
+
+                    //    AddDrawingItem(geometry, Path.GetFileNameWithoutExtension(fileName));
+                    //} 
+                    //catch (Exception ex)
+                    //{
+                    //    await ShowExceptionMessageAsync(ex); 
+                    //}
                 });
             }
 

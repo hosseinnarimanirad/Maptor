@@ -606,23 +606,10 @@
                     ToolTip="{Binding [geometryDetails_currentPoint_copyCoordinate], Source={StaticResource Localization}}">
                 <iconPacks:PackIconMaterial Kind="ContentCopy"/>
             </Button>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
+            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
                       Command="{Binding GoToPreviousPageCommand}"  
                       ToolTip="{Binding [geometryDetails_currentPoint_goToPreviousPage], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial>
-                    <iconPacks:PackIconMaterial.Style>
-                        <Style TargetType="iconPacks:PackIconMaterial"
-                                BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}">
-                            <Setter Property="Kind" Value="ChevronDoubleLeft"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Source={x:Static localization:LocalizationManager.Instance}, Path=CurrentFlowDirection}"
-                                            Value="{x:Static FlowDirection.RightToLeft}">
-                                    <Setter Property="Kind" Value="ChevronDoubleRight"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </iconPacks:PackIconMaterial.Style>
-                </iconPacks:PackIconMaterial>
+                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoublePrevious}"/>
             </Button>
 
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}"
@@ -654,20 +641,7 @@
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" 
                      Command="{Binding GoToNextPageCommand}"
                      ToolTip="{Binding [geometryDetails_currentPoint_goToNextPage], Source={StaticResource Localization}}">
-                <iconPacks:PackIconMaterial>
-                    <iconPacks:PackIconMaterial.Style>
-                        <Style TargetType="iconPacks:PackIconMaterial"
-                                BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}">
-                            <Setter Property="Kind" Value="ChevronDoubleRight"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Source={x:Static localization:LocalizationManager.Instance}, Path=CurrentFlowDirection}"
-                         Value="{x:Static FlowDirection.RightToLeft}">
-                                    <Setter Property="Kind" Value="ChevronDoubleLeft"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </iconPacks:PackIconMaterial.Style>
-                </iconPacks:PackIconMaterial>
+                <iconPacks:PackIconMaterial Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ChevronDoubleNext}"/>
             </Button>
         </StackPanel>
 

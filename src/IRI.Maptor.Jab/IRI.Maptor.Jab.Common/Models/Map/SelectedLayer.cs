@@ -888,6 +888,20 @@ public class SelectedLayer : Notifier
             param => CurrentPageIndex > 0);
 
 
+    private RelayCommand? _goToFirstPageCommand;
+    public RelayCommand GoToFirstPageCommand =>
+        _goToFirstPageCommand ??= new RelayCommand(
+            param => CurrentPageIndex = 0,
+            param => CurrentPageIndex > 0);
+
+
+    private RelayCommand? _goToLastPageCommand;
+    public RelayCommand GoToLastPageCommand =>
+        _goToLastPageCommand ??= new RelayCommand(
+            param => CurrentPageIndex = TotalPages - 1,
+            param => CurrentPageIndex < TotalPages - 1);
+
+
     #endregion
 
     /// <summary>

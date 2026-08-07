@@ -41,6 +41,21 @@ public class MapSettingsModel : Notifier, IMapSettings
         }
     }
 
+    /// <summary>
+    /// How many zoom steps span one google zoom level. 1 snaps every step to a google zoom level;
+    /// higher values insert evenly spaced mid levels for a softer zoom.
+    /// </summary>
+    public int ZoomStepsPerGoogleLevel
+    {
+        get => _settings.ZoomStepsPerGoogleLevel;
+        set
+        {
+            _settings.ZoomStepsPerGoogleLevel = Math.Clamp(value, 1, 8);
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsGoogleZoomLevelsEnabled));
+        }
+    }
+
     //public Action<bool>? FireIsGoogleZoomLevelsEnabledChanged;
     public bool IsGoogleZoomLevelsEnabled
     {
@@ -49,9 +64,20 @@ public class MapSettingsModel : Notifier, IMapSettings
         {
             _settings.IsGoogleZoomLevelsEnabled = value;
             RaisePropertyChanged();
+            RaisePropertyChanged(nameof(ZoomStepsPerGoogleLevel));
             //this.FireIsGoogleZoomLevelsEnabledChanged?.Invoke(value);
         }
     }
+
+    /// <summary>
+    /// Lowest and highest google zoom level either bound may be set to. Matches
+    /// <see cref="IRI.Maptor.Sta.Spatial.Helpers.WebMercatorUtility"/>, whose zoom scale table
+    /// covers levels 1..24; the previous 2..22 window made the default MinGoogleZoomLevel of 1
+    /// unreachable through this model.
+    /// </summary>
+    public const int LowestGoogleZoomLevel = 1;
+
+    public const int HighestGoogleZoomLevel = 24;
 
     //public Action<int>? FireMinGoogleZoomLevelChanged;
     //private int _minGoogleZoomLevel = 1;
@@ -63,7 +89,7 @@ public class MapSettingsModel : Notifier, IMapSettings
             if (value > MaxGoogleZoomLevel)
                 return;
 
-            _settings.MinGoogleZoomLevel = Math.Clamp(value, 2, 22);
+            _settings.MinGoogleZoomLevel = Math.Clamp(value, LowestGoogleZoomLevel, HighestGoogleZoomLevel);
             RaisePropertyChanged();
             //this.FireMinGoogleZoomLevelChanged?.Invoke(value);
         }
@@ -79,9 +105,23 @@ public class MapSettingsModel : Notifier, IMapSettings
             if (value < MinGoogleZoomLevel)
                 return;
 
-            _settings.MaxGoogleZoomLevel = Math.Clamp(value, 2, 22);
+            _settings.MaxGoogleZoomLevel = Math.Clamp(value, LowestGoogleZoomLevel, HighestGoogleZoomLevel);
             RaisePropertyChanged();
             //this.FireMaxGoogleZoomLevelChanged?.Invoke(value);
+        }
+    }
+
+    /// <summary>
+    /// Highest google zoom level tiles are requested at; zooming past it upscales the tiles the
+    /// provider does have instead of blanking the base map.
+    /// </summary>
+    public int MaxTileZoomLevel
+    {
+        get => _settings.MaxTileZoomLevel;
+        set
+        {
+            _settings.MaxTileZoomLevel = Math.Clamp(value, LowestGoogleZoomLevel, HighestGoogleZoomLevel);
+            RaisePropertyChanged();
         }
     }
 

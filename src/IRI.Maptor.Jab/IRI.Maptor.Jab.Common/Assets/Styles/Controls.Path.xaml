@@ -86,6 +86,30 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.ChevronDoublePrevious"
+           TargetType="iconPacks:PackIconMaterial"
+           BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}">
+        <Setter Property="Kind" Value="ChevronDoubleLeft"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Source={x:Static localization:LocalizationManager.Instance}, Path=CurrentFlowDirection}"
+                         Value="RightToLeft">
+                <Setter Property="Kind" Value="ChevronDoubleRight"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.ChevronDoubleNext"
+           TargetType="iconPacks:PackIconMaterial"
+           BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}">
+        <Setter Property="Kind" Value="ChevronDoubleRight"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Source={x:Static localization:LocalizationManager.Instance}, Path=CurrentFlowDirection}"
+                         Value="RightToLeft">
+                <Setter Property="Kind" Value="ChevronDoubleLeft"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <!--PackIcon inside a light circle button-->
     <Style x:Key="IRI.Maptor.Styles.PackIconPhosphorIcons.CircleLightButtonContent"
            TargetType="iconPacks:PackIconPhosphorIcons">

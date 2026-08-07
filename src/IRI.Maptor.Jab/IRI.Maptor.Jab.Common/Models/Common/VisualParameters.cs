@@ -491,6 +491,58 @@ public class VisualParameters : /*DependencyObject,*/ INotifyPropertyChanged
 
     public System.Drawing.Pen? GetGdiPlusPen() => GetWpfPen().AsGdiPen();
 
+    /// <summary>
+    /// Freezes the wpf visuals held here so a renderer running on a thread pool thread may read
+    /// them: an unfrozen <see cref="Freezable"/> has thread affinity and throws on access from
+    /// any other thread. Returns false when something could not be frozen, in which case the
+    /// caller must keep rendering on the ui thread.
+    /// <para>
+    /// Safe to do in place because symbology is replaced wholesale (SymbolizableLayer's
+    /// SetSymbolizer / ReplaceSymbolizers) rather than mutated through these brushes.
+    /// </para>
+    /// </summary>
+    public bool TryFreezeVisuals()
+    {
+        // FontFamily is deliberately absent: it is not a Freezable, and the only thing the
+        // renderer reads from it (FamilyNames) is a plain CLR property, not a dependency
+        // property, so it carries no thread affinity to shed.
+        //
+        // DashStyle matters even though the pen itself is built on the worker: GetWpfPen()
+        // assigns this instance to the pen and AsGdiPen then reads its Dashes there. The
+        // static DashStyles.* are pre-frozen, but an SLD stroke-dasharray produces a fresh
+        // unfrozen one. GeometrySymbol is read by the point renderer the same way
+        // (GeometryHelper.Transform walks its figures; read-only, so freezing is safe).
+        return TryFreeze(Fill)
+            && TryFreeze(Stroke)
+            && TryFreeze(Foreground)
+            && TryFreeze(Background)
+            && TryFreeze(DashStyle)
+            && TryFreeze(PointSymbol?.GeometrySymbol);
+    }
+
+    private static bool TryFreeze(Freezable? freezable)
+    {
+        if (freezable is null || freezable.IsFrozen)
+            return true;
+
+        if (!freezable.CanFreeze)
+            return false;
+
+        try
+        {
+            freezable.Freeze();
+
+            return true;
+        }
+        catch (InvalidOperationException)
+        {
+            // Freeze() notifies every object this freezable is attached to; if one of those
+            // is owned by another thread, that notification throws. Falling back to the
+            // ui-thread render is always correct.
+            return false;
+        }
+    }
+
     public System.Drawing.Brush? GetGdiPlusFillBrush(double? opacity = null) => Fill?.AsGdiBrush(opacity);
 
 

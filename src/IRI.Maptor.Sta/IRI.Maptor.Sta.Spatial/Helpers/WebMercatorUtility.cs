@@ -223,6 +223,59 @@ public static class WebMercatorUtility
         return Math.Log(Math.Cos(latitude * Math.PI / 180.0) * EarthCircumference * ConversionHelper.MeterToPixelFactor / ImageSize * mapScale, 2);
     }
 
+    /// <summary>
+    /// The continuous (fractional) google zoom level of a map scale. Unlike <see cref="GetZoomLevel"/>
+    /// the result is not rounded, so a scale halfway between level 13 and 14 returns 13.5.
+    /// </summary>
+    /// <param name="mapScale"></param>
+    /// <param name="latitude">in degree</param>
+    /// <returns></returns>
+    public static double GetFractionalZoomLevel(double mapScale, double latitude = 0)
+    {
+        return GetLevel(mapScale, latitude);
+    }
+
+    /// <summary>
+    /// The inverse of <see cref="GetFractionalZoomLevel"/>; the map scale at a fractional zoom level.
+    /// </summary>
+    /// <param name="level">fractional google zoom level</param>
+    /// <param name="latitude">in degree</param>
+    /// <returns></returns>
+    public static double GetMapScaleAtFractionalLevel(double level, double latitude = 0)
+    {
+        return Math.Pow(2, level) * ImageSize /
+            (Math.Cos(latitude * Math.PI / 180.0) * EarthCircumference * ConversionHelper.MeterToPixelFactor);
+    }
+
+    /// <summary>
+    /// The next grid aligned fractional zoom level, where the grid subdivides each google zoom level
+    /// into <paramref name="stepsPerLevel"/> equal steps. 1 means snapping to the google zoom levels
+    /// themselves; higher values insert evenly spaced mid levels.
+    /// The result is always the adjacent grid line, so a level that is off the grid (as a zoom to a
+    /// region leaves behind) snaps onto the grid on the first step.
+    /// </summary>
+    /// <param name="currentLevel">current fractional google zoom level</param>
+    /// <param name="zoomIn">true to move to the next level up, false for the next level down</param>
+    /// <param name="stepsPerLevel">number of steps spanning one google zoom level</param>
+    /// <returns></returns>
+    public static double GetSteppedZoomLevel(double currentLevel, bool zoomIn, int stepsPerLevel)
+    {
+        var steps = Math.Max(1, stepsPerLevel);
+
+        // position on the subdivided grid; grid lines are at integer values
+        var gridPosition = currentLevel * steps;
+
+        // the epsilon guards floating point noise: without it a level that sits a hair below a grid
+        // line (26.9999999 for level 13.5 at 2 steps) would "advance" onto the line it is already on
+        const double epsilon = 1e-6;
+
+        var target = zoomIn ?
+            Math.Floor(gridPosition + epsilon) + 1 :
+            Math.Ceiling(gridPosition - epsilon) - 1;
+
+        return target / steps;
+    }
+
 
     #region Application Level
 

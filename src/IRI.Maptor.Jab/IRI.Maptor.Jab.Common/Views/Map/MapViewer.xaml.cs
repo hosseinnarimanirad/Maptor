@@ -314,9 +314,37 @@ public partial class MapViewer : NotifiableUserControl
     /// </summary>
     public int NearestGoogleZoomLevel => WebMercatorUtility.GetZoomLevel(this.MapScale);
 
+    /// <summary>
+    /// The google zoom level tiles are requested at, which is <see cref="NearestGoogleZoomLevel"/>
+    /// capped at <see cref="IMapSettings.MaxTileZoomLevel"/>. Zooming deeper than the cap keeps
+    /// requesting the capped level and lets those tiles scale up, instead of asking the provider
+    /// for a level it has no imagery for and blanking the base map.
+    /// <para>
+    /// Base map tiles cost nothing to upscale - they are an ImageBrush stretched over the tile
+    /// extent by wpf. Tiled vector layers rasterize at screen resolution rather than at 256 px, so
+    /// they stay crisp above the cap and simply render as fewer, larger tiles.
+    /// </para>
+    /// <para>
+    /// Deliberately not the same as <see cref="NearestGoogleZoomLevel"/>, which stays the true
+    /// level and is what the scale readouts show.
+    /// </para>
+    /// </summary>
+    public int TileZoomLevel
+    {
+        get
+        {
+            // UpdateTileInfos can run from the OnZoomChanged handler before Register assigns the presenter
+            var maxTileZoomLevel = _presenter?.MapSettings?.MaxTileZoomLevel;
+
+            return maxTileZoomLevel is null
+                ? NearestGoogleZoomLevel
+                : Math.Min(NearestGoogleZoomLevel, maxTileZoomLevel.Value);
+        }
+    }
+
     private void UpdateTileInfos()
     {
-        this.CurrentTileInfos = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(this.CurrentExtent, this.NearestGoogleZoomLevel);
+        this.CurrentTileInfos = WebMercatorUtility.WebMercatorBoundingBoxToGoogleTileRegions(this.CurrentExtent, this.TileZoomLevel);
     }
 
     private List<TileInfo> _currentTileInfos;
@@ -424,6 +452,9 @@ public partial class MapViewer : NotifiableUserControl
         };
 
         this.RegisterRightClickOptions();
+
+        this.mapView.PreviewMouseDown -= MapView_PreviewMouseDownForTextMarkerFocus;
+        this.mapView.PreviewMouseDown += MapView_PreviewMouseDownForTextMarkerFocus;
 
         _layerManager.RequestRefreshVisibility = RefreshLayerVisibility;
 
@@ -574,20 +605,28 @@ public partial class MapViewer : NotifiableUserControl
 
         //presenter.RequestCurrentZoomLevel = () => { return this.CurrentZoomLevel; };
 
-        this.OnMapMouseMove += (sender, e) => { presenter.FireMouseMove(this.CurrentPoint); };
+        // -=/+= named handlers rather than += lambdas: Register runs again whenever
+        // presenter.RegisterAction fires (the re-login path), and with += alone every one of these
+        // fired once per past registration while each superseded presenter stayed pinned by its
+        // closure. The handlers read _presenter at fire time, so re-registering with a different
+        // presenter routes to the new one.
+        this.OnMapMouseMove -= MapViewer_OnMapMouseMove;
+        this.OnMapMouseMove += MapViewer_OnMapMouseMove;
 
-        this.OnZoomChanged += (sender, e) => { presenter.FireZoomChanged(this.MapScale); };
+        this.OnZoomChanged -= MapViewer_OnZoomChanged;
+        this.OnZoomChanged += MapViewer_OnZoomChanged;
 
-        this.OnExtentChanged += (sender, e) => { presenter.FireMapExtentChanged(this.CurrentExtent, e); };
+        this.OnExtentChanged -= MapViewer_OnExtentChanged;
+        this.OnExtentChanged += MapViewer_OnExtentChanged;
 
-        this.MouseUp += (sender, e) => { presenter.FireMapMouseUp(this.CurrentPoint); };
+        this.MouseUp -= MapViewer_MouseUp;
+        this.MouseUp += MapViewer_MouseUp;
 
-        this.CurrentEditingPointChanged += (sender, e) =>
-        {
-            presenter.UpdateCurrentEditingPoint(e.Point.AsPoint());
-        };
+        this.CurrentEditingPointChanged -= MapViewer_CurrentEditingPointChanged;
+        this.CurrentEditingPointChanged += MapViewer_CurrentEditingPointChanged;
 
-        this.OnMapStatusChanged += (sender, e) => presenter.MapStatus = e.Status;
+        this.OnMapStatusChanged -= MapViewer_OnMapStatusChanged;
+        this.OnMapStatusChanged += MapViewer_OnMapStatusChanged;
 
         //this.OnMapActionChanged += (sender, e) => presenter.MapAction = e.Action;
 
@@ -613,7 +652,7 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestFlashPoint = Flash;
 
-        presenter.RequestZoomToExtent = (boundingBox, isExactExtent, isNewExtent, callback) => { this.ZoomToExtent(boundingBox, false, isExactExtent, isNewExtent, callback); };
+        presenter.RequestZoomToExtent = (boundingBox, isExactExtent, isNewExtent, callback) => { _ = this.ZoomToExtent(boundingBox, false, isExactExtent, isNewExtent, callback); };
 
         presenter.RequestAddPointToNewDrawing = p =>
         {
@@ -621,6 +660,15 @@ public partial class MapViewer : NotifiableUserControl
         };
 
         presenter.RequestUpdateZIndex = l => UpdateZIndex(l);
+
+        presenter.RequestUpdateZIndexes = layers => UpdateZIndexes(layers);
+
+        presenter.RequestRearrangeLayerOrders = () =>
+        {
+            _layerManager.RearrangeZIndexes();
+
+            UpdateZIndexes(_layerManager.GetOrderedLayers());
+        };
 
         presenter.RequestGetDrawingAsync = (mode, continuousDrawing) => GetDrawingAsync(mode, continuousDrawing);
 
@@ -701,7 +749,8 @@ public partial class MapViewer : NotifiableUserControl
 
         presenter.RequestZoomToFeature = this.ZoomToFeature;
 
-        presenter.RequestShowGeometryComparison = this.ShowGeometryComparison;
+        // wrapped rather than assigned as a method group: the delegate is an Action, the method now returns Task
+        presenter.RequestShowGeometryComparison = (oldGeometry, newGeometry) => _ = this.ShowGeometryComparison(oldGeometry, newGeometry);
         presenter.RequestClearGeometryComparison = this.ClearGeometryComparison;
         presenter.RequestShowFeatureChangesDialog = this.ShowFeatureChangesDialog;
 
@@ -731,34 +780,8 @@ public partial class MapViewer : NotifiableUserControl
             return null;
         };
 
-        var zoomToExtentAction = new Action<EnvelopeMarkupLabelTriple>(a =>
-        {
-            //this.ZoomToExtent(IriProvinces93WmEnvelopes.ToBoundingBox(a.Province));
-            this.ZoomToExtent(a.WebMercatorExtent);
-        });
-
-        presenter.PredefinedExtents.CollectionChanged += (sender, e) =>
-        {
-            var newItems = e.NewItems?.Cast<EnvelopeMarkupLabelTriple>()?.ToList();
-
-            if (!newItems.IsNullOrEmpty())
-            {
-                foreach (var item in newItems)
-                {
-                    item.RequestRaiseSelected = zoomToExtentAction;
-                }
-            }
-
-            var oldItems = e.OldItems?.Cast<EnvelopeMarkupLabelTriple>()?.ToList();
-
-            if (!oldItems.IsNullOrEmpty())
-            {
-                foreach (var item in oldItems)
-                {
-                    item.RequestRaiseSelected = null;
-                }
-            }
-        };
+        presenter.PredefinedExtents.CollectionChanged -= PredefinedExtents_CollectionChanged;
+        presenter.PredefinedExtents.CollectionChanged += PredefinedExtents_CollectionChanged;
 
         var ostanha = EnvelopeMarkupLabelTriple.GetProvinces93Wm();
 
@@ -769,6 +792,15 @@ public partial class MapViewer : NotifiableUserControl
         //});
 
         var predefinedExtents = provinces is null ? ostanha : ostanha.Where(o => o.Province.HasValue && provinces.Contains(o.Province.Value)).ToList();
+
+        // Register can run again against the same presenter, which otherwise appends a second copy
+        // of every province and bookmark. Reset does not report OldItems, so detach before clearing.
+        foreach (var item in presenter.PredefinedExtents)
+        {
+            item.RequestRaiseSelected = null;
+        }
+
+        presenter.PredefinedExtents.Clear();
 
         foreach (var item in predefinedExtents)
         {
@@ -791,9 +823,53 @@ public partial class MapViewer : NotifiableUserControl
         ActivatePanMode();
     }
 
+    // Presenter-facing event handlers. Named rather than lambdas so Register can -=/+= them and stay
+    // idempotent; they read _presenter at fire time so they never pin a superseded presenter.
+    private void MapViewer_OnMapMouseMove(object sender, MouseEventArgs e)
+        => _presenter?.FireMouseMove(this.CurrentPoint);
+
+    private void MapViewer_OnZoomChanged(object sender, ZoomEventArgs e)
+        => _presenter?.FireZoomChanged(this.MapScale);
+
+    private void MapViewer_OnExtentChanged(object sender, bool e)
+        => _presenter?.FireMapExtentChanged(this.CurrentExtent, e);
+
+    private void MapViewer_MouseUp(object sender, MouseButtonEventArgs e)
+        => _presenter?.FireMapMouseUp(this.CurrentPoint);
+
+    private void MapViewer_CurrentEditingPointChanged(object sender, PointEventArgs e)
+        => _presenter?.UpdateCurrentEditingPoint(e.Point.AsPoint());
+
+    private void MapViewer_OnMapStatusChanged(object sender, MapStatusEventArgs e)
+    {
+        if (_presenter != null)
+            _presenter.MapStatus = e.Status;
+    }
+
+    private void ZoomToPredefinedExtent(EnvelopeMarkupLabelTriple extent)
+        => this.ZoomToExtent(extent.WebMercatorExtent);
+
     private void PredefinedExtents_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
+        var newItems = e.NewItems?.Cast<EnvelopeMarkupLabelTriple>()?.ToList();
 
+        if (!newItems.IsNullOrEmpty())
+        {
+            foreach (var item in newItems)
+            {
+                item.RequestRaiseSelected = ZoomToPredefinedExtent;
+            }
+        }
+
+        var oldItems = e.OldItems?.Cast<EnvelopeMarkupLabelTriple>()?.ToList();
+
+        if (!oldItems.IsNullOrEmpty())
+        {
+            foreach (var item in oldItems)
+            {
+                item.RequestRaiseSelected = null;
+            }
+        }
     }
 
     #region Conversions
@@ -826,6 +902,31 @@ public partial class MapViewer : NotifiableUserControl
         }
 
         return _unitDistance.Value;
+    }
+
+    /// <summary>
+    /// Per monitor dpi: dragging the window to a monitor with a different dpi changes the physical
+    /// size of a pixel, so the cached <see cref="GetUnitDistance"/> value has to be dropped.
+    /// Keeping it silently corrupted every ToScreenScale/ToMapScale conversion, the reported map
+    /// scale and every measurement for as long as the control lived.
+    /// </summary>
+    protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
+    {
+        base.OnDpiChanged(oldDpi, newDpi);
+
+        _unitDistance = null;
+
+        // this can fire before the control has been laid out; there is nothing to recompute yet and
+        // GetUnitDistance picks the new dpi up on its next call anyway
+        if (this.mapView.ActualWidth <= 0 || this.mapView.ActualHeight <= 0)
+            return;
+
+        // MapScale is derived from ScreenScale through the pixel size, so it genuinely changed.
+        // Raising OnZoomChanged is how that whole derived set (MapScale, NearestGoogleZoomLevel,
+        // tile infos, layer scale ranges) is recomputed everywhere else.
+        this.OnZoomChanged?.Invoke(null, ZoomEventArgs.EmptyArg);
+
+        Refresh(isNewExtent: true);
     }
 
     public double PixelSize => GetUnitDistance();
@@ -974,6 +1075,30 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
+    /// <summary>
+    /// Applies the current ZIndex of every given layer to its canvas elements in a single
+    /// scan of the children, instead of one scan per layer. Elements tagged with a layer
+    /// outside the set keep their z-index untouched — notably the inner SpecialPointLayer
+    /// elements of complex items, whose z-index is set at add time only; a blanket sweep
+    /// over all tagged elements would overwrite their always-on-top value.
+    /// </summary>
+    private void UpdateZIndexes(IEnumerable<ILayer> layers)
+    {
+        var targets = new HashSet<ILayer>(layers);
+
+        for (int i = 0; i < this.mapView.Children.Count; i++)
+        {
+            var child = this.mapView.Children[i];
+
+            var tag = ((FrameworkElement)child).Tag as LayerTag;
+
+            if (tag?.Layer is not null && targets.Contains(tag.Layer))
+            {
+                Canvas.SetZIndex(child, tag.Layer.ZIndex);
+            }
+        }
+    }
+
     public void RemoveLayer(ILayer layer)
     {
         this._layerManager.Remove(layer, forceRemove: true, keepEmptyParentGroup: false);
@@ -1079,8 +1204,16 @@ public partial class MapViewer : NotifiableUserControl
                 AddComplexLayer((layer as ClusteredPointLayer).GetLayer(mapScale));
             };
 
-            Task.Run(() => this.jobs.Add(new Job(new LayerTag(mapScale) { LayerType = LayerType.Complex, Tile = null },
-                Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null))));
+            Task.Run(() =>
+            {
+                var operation = Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null);
+
+                // jobs is also enumerated/removed under this lock on the ui thread
+                lock (locker)
+                {
+                    this.jobs.Add(new Job(new LayerTag(mapScale) { LayerType = LayerType.Complex, Tile = null }, operation));
+                }
+            });
         }
         // لایه‌ای که عارضه زمان
         // انجام عملیات ترسیم 
@@ -1116,10 +1249,14 @@ public partial class MapViewer : NotifiableUserControl
             var extent = this.CurrentExtent;
 
             Task.Run(() =>
-               this.jobs.Add(new Job(
-                  new LayerTag(mapScale) { LayerType = LayerType.VectorLayer, BoundingBox = extent },
-                  Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null)))
-              );
+            {
+                var operation = Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null);
+
+                lock (locker)
+                {
+                    this.jobs.Add(new Job(new LayerTag(mapScale) { LayerType = LayerType.VectorLayer, BoundingBox = extent }, operation));
+                }
+            });
         }
         else if (layer.Type == LayerType.Complex /*|| layer.Type == LayerType.MoveableItem*/)
         {
@@ -1140,8 +1277,14 @@ public partial class MapViewer : NotifiableUserControl
                 Action action = () => AddComplexLayer(specialPointLayer);
 
                 Task.Run(() =>
-                  this.jobs.Add(new Job(new LayerTag(mapScale) { LayerType = LayerType.Complex, Tile = null },
-                      Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null))));
+                {
+                    var operation = Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null);
+
+                    lock (locker)
+                    {
+                        this.jobs.Add(new Job(new LayerTag(mapScale) { LayerType = LayerType.Complex, Tile = null }, operation));
+                    }
+                });
             }
         }
         else if (layer is TileServiceLayer)
@@ -1166,10 +1309,14 @@ public partial class MapViewer : NotifiableUserControl
             var extent = this.CurrentExtent;
 
             Task.Run(() =>
-               this.jobs.Add(new Job(
-                  new LayerTag(mapScale) { LayerType = LayerType.VectorLayer, BoundingBox = extent },
-                  Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null)))
-              );
+            {
+                var operation = Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null);
+
+                lock (locker)
+                {
+                    this.jobs.Add(new Job(new LayerTag(mapScale) { LayerType = LayerType.VectorLayer, BoundingBox = extent }, operation));
+                }
+            });
 
         }
         else if (layer.Type != LayerType.Label)
@@ -1193,17 +1340,21 @@ public partial class MapViewer : NotifiableUserControl
                         return;
                     }
 
-                    AddLayer((RasterLayer)layer, extent);
+                    _ = AddLayer((RasterLayer)layer, extent);
 
                     //Remove Old base maps
                     ClearOutOfExtent(false);
                 };
 
                 Task.Run(() =>
-                      this.jobs.Add(new Job(
-                         new LayerTag(mapScale) { LayerType = layer.Type, BoundingBox = extent },
-                         Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null)))
-                        );
+                {
+                    var operation = Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null);
+
+                    lock (locker)
+                    {
+                        this.jobs.Add(new Job(new LayerTag(mapScale) { LayerType = layer.Type, BoundingBox = extent }, operation));
+                    }
+                });
             }
         }
         else
@@ -1275,12 +1426,68 @@ public partial class MapViewer : NotifiableUserControl
 
         Task.Run(() =>
         {
-            this.jobs.Add(new Job(
-                new LayerTag(mapScale) { LayerType = layer.Type, BoundingBox = extent },
-                Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null)));
+            var operation = Dispatcher.BeginInvoke(action, DispatcherPriority.Background, null);
+
+            lock (locker)
+            {
+                this.jobs.Add(new Job(new LayerTag(mapScale) { LayerType = layer.Type, BoundingBox = extent }, operation));
+            }
         });
     }
 
+
+    // Bumped by ClearNonTiled / ClearTiled. Rasterization now runs off the ui thread, so
+    // AddNonTiledLayer and AddTiledLayerAsync genuinely suspend and a render that was already
+    // in flight when the canvas was wiped would otherwise append a stale, duplicate path.
+    // The MapScale/CurrentExtent checks alone do not cover this: Refresh(false) re-renders at
+    // the very same scale and extent (symbology change, visibility toggle, layer overrides).
+    private int _nonTiledGeneration;
+
+    private int _tiledGeneration;
+
+    /// <summary>
+    /// Projects the feature set to screen coordinates and rasterizes it, off the ui thread when
+    /// the strategy allows it (see <see cref="RenderStrategy.CanRenderOffUiThread"/>).
+    /// <para>
+    /// Everything ui-affine must already be captured by the caller: <paramref name="mapToScreen"/>
+    /// is a plain <see cref="Matrix"/> taken from <c>viewTransform.Value</c> rather than the live
+    /// TransformGroup, and the screen size is passed in - so the worker never touches a
+    /// DispatcherObject. This is what keeps the per-vertex projection, the GDI+ drawing and the
+    /// png encode inside <see cref="ImageUtility.CreateBitmapImage(System.Drawing.Bitmap, System.Drawing.Imaging.ImageFormat)"/>
+    /// off the ui thread.
+    /// </para>
+    /// </summary>
+    private static Task<ImageBrush?> RenderToBrushAsync(
+        RenderStrategy strategy,
+        FeatureSet<sb.Point> featureSet,
+        Matrix mapToScreen,
+        double offsetX,
+        double offsetY,
+        int? newSrid,
+        double mapScale,
+        double screenWidth,
+        double screenHeight)
+    {
+        ImageBrush? Render()
+        {
+            Func<sb.Point, sb.Point> transform = p =>
+            {
+                var screen = mapToScreen.Transform(new Point(p.X - offsetX, p.Y - offsetY));
+
+                return new sb.Point(screen.X, screen.Y);
+            };
+
+            var features = featureSet.Transform(transform, newSrid).Features;
+
+            return strategy.Render(features, mapScale, screenWidth, screenHeight);
+        }
+
+        // TryPrepareForOffUiThread has to run here, on the ui thread, before any worker touches
+        // the symbolizers' brushes
+        var offUiThread = strategy.CanRenderOffUiThread && strategy.TryPrepareForOffUiThread();
+
+        return offUiThread ? Task.Run(Render) : Task.FromResult(Render());
+    }
 
     //This method should be improved. it is not working well
     private async Task AddTiledLayerAsync(VectorLayer layer, TileInfo tile)
@@ -1289,14 +1496,18 @@ public partial class MapViewer : NotifiableUserControl
 
         var totalExtent = this.CurrentExtent;
 
-        var _vt = viewTransform.Clone();
+        var generation = _tiledGeneration;
+
+        // plain Matrix rather than a TransformGroup clone: the render runs on a thread pool
+        // thread and a TransformGroup is a DispatcherObject
+        var _vt = viewTransform.Value;
 
         var layerTile = layer.TileManager.Find(tile);
 
         if (layerTile is null || layerTile.IsProcessing)
             return;
 
-        if (tile.ZoomLevel != this.NearestGoogleZoomLevel)
+        if (tile.ZoomLevel != this.TileZoomLevel)
         {
             layerTile.IsProcessing = false;
             return;
@@ -1304,57 +1515,58 @@ public partial class MapViewer : NotifiableUserControl
 
         layerTile.IsProcessing = true;
 
-        var feature = await (layer.DataSource as IVectorDataSource)!.GetAsFeatureSetAsync(mapScale, tile.WebMercatorExtent);
-
-        if (feature is null || feature.Features.IsNullOrEmpty())
-            return;
-
-        if (tile.ZoomLevel != this.NearestGoogleZoomLevel || MapScale != mapScale)
+        try
         {
-            layerTile.IsProcessing = false;
-            return;
-        }
+            var feature = await (layer.DataSource as IVectorDataSource)!.GetAsFeatureSetAsync(mapScale, tile.WebMercatorExtent);
 
-        double tileScreenWidth = MapToScreen(tile.WebMercatorExtent.Width);
+            if (feature is null || feature.Features.IsNullOrEmpty())
+                return;
 
-        double tileScreenHeight = MapToScreen(tile.WebMercatorExtent.Height);
+            if (tile.ZoomLevel != this.TileZoomLevel || MapScale != mapScale)
+                return;
 
-        var area = ParseToRectangleGeometry(tile.WebMercatorExtent);
+            double tileScreenWidth = MapToScreen(tile.WebMercatorExtent.Width);
 
-        var shiftX = tile.WebMercatorExtent.TopLeft.X - totalExtent.TopLeft.X;
-        var shiftY = tile.WebMercatorExtent.TopLeft.Y - totalExtent.TopLeft.Y;
+            double tileScreenHeight = MapToScreen(tile.WebMercatorExtent.Height);
 
-        Func<sb.Point, sb.Point> transform = p => _vt.Transform(new Point(p.X - shiftX, p.Y - shiftY)).AsPoint();
+            var area = ParseToRectangleGeometry(tile.WebMercatorExtent);
 
-        var features = feature.Transform(transform, null).Features;
+            var shiftX = tile.WebMercatorExtent.TopLeft.X - totalExtent.TopLeft.X;
+            var shiftY = tile.WebMercatorExtent.TopLeft.Y - totalExtent.TopLeft.Y;
 
-        var renderingStrategy = RenderStrategyContext.Create(layer);
+            var renderingStrategy = RenderStrategyContext.Create(layer);
 
-        var imageBrush = renderingStrategy.Render(features, mapScale, tileScreenWidth, tileScreenHeight);
+            var imageBrush = await RenderToBrushAsync(
+                renderingStrategy, feature, _vt, shiftX, shiftY, null, mapScale, tileScreenWidth, tileScreenHeight);
 
-        if (tile.ZoomLevel != this.NearestGoogleZoomLevel)
-        {
-            Debug.Print($"MapViewer; {DateTime.Now.ToLongTimeString()}; AddTiledLayerAsync Layer escaped! ZoomLevel Conflict 3 {layer.LayerName} - {tile.ToShortString()} expected zoomLevel:{this.NearestGoogleZoomLevel}");
-            return;
-        }
-
-        if (imageBrush != null)
-        {
-            Path path = new Path()
+            if (tile.ZoomLevel != this.TileZoomLevel || generation != _tiledGeneration)
             {
-                Data = area,
-                Tag = new LayerTag(mapScale) { Layer = layer, IsTiled = true, IsDrawn = true, IsNew = true, Tile = tile.Clone() },
-                Fill = imageBrush
-            };
+                Debug.Print($"MapViewer; {DateTime.Now.ToLongTimeString()}; AddTiledLayerAsync Layer escaped! ZoomLevel Conflict 3 {layer.LayerName} - {tile.ToShortString()} expected zoomLevel:{this.TileZoomLevel}");
+                return;
+            }
 
-            layer.Element = path;
+            if (imageBrush != null)
+            {
+                Path path = new Path()
+                {
+                    Data = area,
+                    Tag = new LayerTag(mapScale) { Layer = layer, IsTiled = true, IsDrawn = true, IsNew = true, Tile = tile.Clone() },
+                    Fill = imageBrush
+                };
 
-            this.mapView.Children.Add(path);
+                layer.Element = path;
 
-            Canvas.SetZIndex(path, layer.ZIndex);
+                this.mapView.Children.Add(path);
+
+                Canvas.SetZIndex(path, layer.ZIndex);
+            }
         }
-
-        layerTile.IsProcessing = false;
+        finally
+        {
+            // every exit has to clear this: the guard above skips a tile whose IsProcessing is
+            // still set, so an early return used to leave that tile permanently unrenderable
+            layerTile.IsProcessing = false;
+        }
     }
 
 
@@ -1370,6 +1582,8 @@ public partial class MapViewer : NotifiableUserControl
 
             var mapScale = this.MapScale;
 
+            var generation = _nonTiledGeneration;
+
             var feature = await (layer.DataSource as IVectorDataSource)!.GetAsFeatureSetAsync(mapScale, extent);
 
             if (feature is null || feature.Features.IsNullOrEmpty())
@@ -1378,19 +1592,25 @@ public partial class MapViewer : NotifiableUserControl
             if (this.MapScale != mapScale || this.CurrentExtent != extent)
                 return;
 
-            var area = ParseToRectangleGeometry(extent);
+            // capture everything ui-affine before the render leaves the dispatcher: a plain
+            // Matrix instead of this.MapToScreen (which reads the live TransformGroup) and the
+            // canvas size instead of ActualWidth/ActualHeight
+            var mapToScreen = this.viewTransform.Value;
 
-            Func<sb.Point, sb.Point> transform = p => this.MapToScreen(p.AsWpfPoint()).AsPoint();
+            var screenWidth = this.mapView.ActualWidth;
 
-            var features = feature.Transform(transform).Features;
-
+            var screenHeight = this.mapView.ActualHeight;
 
             var renderingStrategy = RenderStrategyContext.Create(layer);
 
-            var imageBrush = renderingStrategy.Render(features, mapScale, this.mapView.ActualWidth, this.mapView.ActualHeight);
+            var imageBrush = await RenderToBrushAsync(
+                renderingStrategy, feature, mapToScreen, 0, 0, 0, mapScale, screenWidth, screenHeight);
 
-            if (imageBrush is null || this.MapScale != mapScale || this.CurrentExtent != extent)
+            if (imageBrush is null || this.MapScale != mapScale || this.CurrentExtent != extent || generation != _nonTiledGeneration)
                 return;
+
+            // built on the ui thread: it attaches the live viewTransform
+            var area = ParseToRectangleGeometry(extent);
 
             Path path = new Path()
             {
@@ -1407,7 +1627,10 @@ public partial class MapViewer : NotifiableUserControl
         }
         catch (Exception ex)
         {
-
+            // still swallowed so one bad layer cannot take the whole map down, but no longer
+            // silent: a layer that fails here simply does not draw, which is otherwise
+            // indistinguishable from an empty layer
+            Debug.Print($"MapViewer; {DateTime.Now.ToLongTimeString()}; AddNonTiledLayer failed for {layer?.LayerName}: {ex}");
         }
     }
 
@@ -1487,7 +1710,7 @@ public partial class MapViewer : NotifiableUserControl
 
 
 
-    private async void AddLayer(RasterLayer layer, sb.BoundingBox boundingBox)
+    private async Task AddLayer(RasterLayer layer, sb.BoundingBox boundingBox)
     {
         var paths = await layer.ParseToPath(boundingBox, this.viewTransform, this.MapScale, GetUnitDistance());
 
@@ -1511,13 +1734,13 @@ public partial class MapViewer : NotifiableUserControl
             if (_presenter == null)
                 return;
 
-            if (tile.ZoomLevel != NearestGoogleZoomLevel || !layer.HasTheSameMapProvider(_presenter.SelectedMapProvider))
+            if (tile.ZoomLevel != TileZoomLevel || !layer.HasTheSameMapProvider(_presenter.SelectedMapProvider))
                 return;
 
             // 1401.11.07
             var geoImage = await layer.GetTileAsync(tile, _presenter.HttpClient);
 
-            if (tile.ZoomLevel != NearestGoogleZoomLevel || !layer.HasTheSameMapProvider(this._presenter.SelectedMapProvider))
+            if (tile.ZoomLevel != TileZoomLevel || !layer.HasTheSameMapProvider(this._presenter.SelectedMapProvider))
                 return;
 
             var webMercatorExtent = geoImage.GeodeticWgs84BoundingBox.Transform(MapProjects.GeodeticWgs84ToWebMercator);
@@ -1594,7 +1817,10 @@ public partial class MapViewer : NotifiableUserControl
         }
         catch (Exception ex)
         {
-            MessageBox.Show("AddLayerAsync " + ex.Message);
+            // still swallowed so one bad tile cannot take the whole map down, but no longer modal:
+            // this runs once per failing tile, including during shutdown and sign-out churn, where a
+            // message box per tile is unusable
+            Debug.Print($"MapViewer; {DateTime.Now.ToLongTimeString()}; AddLayerAsync(RasterLayer) failed: {ex}");
         }
     }
 
@@ -1666,13 +1892,15 @@ public partial class MapViewer : NotifiableUserControl
 
         Task.Run(() =>
         {
-            //lock (locker)
-            //{
-            this.jobs.Add(
-                    new Job(
-                        new LayerTag(mapScale) { LayerType = LayerType.None, Tile = tile },
-                        Dispatcher.BeginInvoke(action, DispatcherPriority.Background)));
-            //}
+            var operation = Dispatcher.BeginInvoke(action, DispatcherPriority.Background);
+
+            // jobs is enumerated and Remove'd under this lock on the ui thread
+            // (StopUnnecessaryJobs, ExtentManager_OnTilesRemoved); adding from a pool
+            // thread without it corrupts the list and races the abort pass
+            lock (locker)
+            {
+                this.jobs.Add(new Job(new LayerTag(mapScale) { LayerType = LayerType.None, Tile = tile }, operation));
+            }
         });
 
     }
@@ -1756,6 +1984,10 @@ public partial class MapViewer : NotifiableUserControl
     FrameworkElement currentMoveableItem;
 
 
+    // above this many items in one batch, per-item add/flash animations are skipped:
+    // every animated element costs its own WPF animation clock for the duration
+    private const int MaxItemsWithAnimation = 50;
+
     //POTENTIALLY ERROR PRONE; What if the Element has no scaletransform
     private void AddComplexLayer(SpecialPointLayer specialPointLayer, bool withAnimation = true)
     {
@@ -1764,9 +1996,15 @@ public partial class MapViewer : NotifiableUserControl
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    foreach (var item in e.NewItems)
                     {
-                        AddComplexLayerItem(specialPointLayer, (Locateable)item, withAnimation);
+                        var canvasChildren = new HashSet<UIElement>(this.mapView.Children.Cast<UIElement>());
+
+                        var animateBatch = e.NewItems.Count <= MaxItemsWithAnimation;
+
+                        foreach (var item in e.NewItems)
+                        {
+                            AddComplexLayerItem(specialPointLayer, (Locateable)item, withAnimation, canvasChildren, animateBatch);
+                        }
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
@@ -1790,23 +2028,33 @@ public partial class MapViewer : NotifiableUserControl
             }
         };
 
-        var items = specialPointLayer.Items.Where(i => this.CurrentExtent.Intersects(new sb.Point(i.X, i.Y))).ToList();
+        // read once rather than per item; CurrentExtent is a computed property
+        var currentExtent = this.CurrentExtent;
+
+        var items = specialPointLayer.Items.Where(i => currentExtent.Intersects(new sb.Point(i.X, i.Y))).ToList();
+
+        // membership test hoisted to a set; Children.Contains is a linear scan per item
+        var canvasChildren = new HashSet<UIElement>(this.mapView.Children.Cast<UIElement>());
+
+        // animateBatch only suppresses the opacity animation for large batches; it must NOT
+        // change which add-branch runs — the two branches apply different z-index policies
+        var animateBatch = items.Count <= MaxItemsWithAnimation;
 
         foreach (var item in items)
         {
-            AddComplexLayerItem(specialPointLayer, item, withAnimation);
+            AddComplexLayerItem(specialPointLayer, item, withAnimation, canvasChildren, animateBatch);
         }
     }
 
     //POTENTIALLY ERROR PRONOUN
-    private void AddComplexLayerItem(SpecialPointLayer specialPointLayer, Locateable item, bool withAnimation = true)
+    private void AddComplexLayerItem(SpecialPointLayer specialPointLayer, Locateable item, bool withAnimation, HashSet<UIElement> canvasChildren, bool animateBatch = true)
     {
         item.OnPositionChanged -= Item_OnPositionChanged;
         item.OnPositionChanged += Item_OnPositionChanged;
 
         var element = item.Element;
 
-        if (this.mapView.Children.Contains(element))
+        if (canvasChildren.Contains(element))
             return;
 
         //element.Opacity = specialPointLayer.Opacity;
@@ -1815,6 +2063,16 @@ public partial class MapViewer : NotifiableUserControl
 
         var height = double.IsNaN(element.Height) ? element.ActualHeight : element.Height;
         var width = double.IsNaN(element.Width) ? element.ActualWidth : element.Width;
+
+        // fresh elements without explicit Width/Height have had no layout pass yet
+        // (ActualWidth/Height are 0), so anchor/origin would compute from zeros
+        if (width == 0 || height == 0)
+        {
+            element.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+            if (width == 0) width = element.DesiredSize.Width;
+            if (height == 0) height = element.DesiredSize.Height;
+        }
 
         var screenLocation = item.AnchorFunction(MapToScreen(new Point(item.X, item.Y)), width, height);
 
@@ -1848,13 +2106,15 @@ public partial class MapViewer : NotifiableUserControl
 
         var scaleTransform = ((TransformGroup)(element.RenderTransform)).Children.First();
 
+        var positionTransform = new TranslateTransform(screenLocation.X, screenLocation.Y);
+
         ((TransformGroup)(element.RenderTransform)).Children.Clear();
 
         ((TransformGroup)(element.RenderTransform)).Children.Add(scaleTransform);
 
         ((TransformGroup)(element.RenderTransform)).Children.Add(this.panTransformForPoints);
 
-        ((TransformGroup)(element.RenderTransform)).Children.Add(new TranslateTransform(screenLocation.X, screenLocation.Y));
+        ((TransformGroup)(element.RenderTransform)).Children.Add(positionTransform);
 
         //What about other types: RightClickOption, GridAndGraticule
         //if (specialPointLayer.Type == LayerType.MoveableItem)
@@ -1867,10 +2127,17 @@ public partial class MapViewer : NotifiableUserControl
                 LayerType = specialPointLayer.Type,
                 // in the case specialPointLayer is used in DrawingItemLayer to handle proper remove of element from canvas
                 AncestorLayerId = specialPointLayer.ParentLayerId,
+                PositionTransform = positionTransform,
+                Locateable = item,
             };
 
             element.MouseLeftButtonDown -= Element_MouseDownForMoveableItem;
             element.MouseLeftButtonDown += Element_MouseDownForMoveableItem;
+
+            // movable elements can change size while on the map (a TextboxMarker growing as
+            // the user types); the anchored position must follow, see Element_SizeChangedForAnchor
+            element.SizeChanged -= Element_SizeChangedForAnchor;
+            element.SizeChanged += Element_SizeChangedForAnchor;
         }
         else if (specialPointLayer.Type == LayerType.Complex || specialPointLayer.Type == LayerType.EditableItem)
         {
@@ -1879,7 +2146,9 @@ public partial class MapViewer : NotifiableUserControl
                 Layer = specialPointLayer,
                 IsTiled = false,
                 LayerType = specialPointLayer.Type,
-                AncestorLayerId = specialPointLayer.ParentLayerId
+                AncestorLayerId = specialPointLayer.ParentLayerId,
+                PositionTransform = positionTransform,
+                Locateable = item,
             };
         }
         else
@@ -1889,14 +2158,13 @@ public partial class MapViewer : NotifiableUserControl
 
         if (withAnimation)
         {
-            AddToCanvasWithAnimation(element, element.Opacity, specialPointLayer);
+            AddToCanvasWithAnimation(element, element.Opacity, specialPointLayer, canvasChildren, animateBatch);
         }
         else
         {
-            if (this.mapView.Children.Contains(element))
-                return;
-
             this.mapView.Children.Add(element);
+
+            canvasChildren.Add(element);
 
             if (specialPointLayer.AlwaysTop)
             {
@@ -1906,20 +2174,10 @@ public partial class MapViewer : NotifiableUserControl
         }
     }
 
-    private void AddToCanvasWithAnimation(FrameworkElement element, double finalOpacity, SpecialPointLayer specialPointLayer)
+    private void AddToCanvasWithAnimation(FrameworkElement element, double finalOpacity, SpecialPointLayer specialPointLayer, HashSet<UIElement> canvasChildren, bool animate = true)
     {
-        if (this.mapView.Children.Contains(element))
+        if (!canvasChildren.Add(element))
             return;
-
-        DoubleAnimation animation = new DoubleAnimation()
-        {
-            From = 0,
-            To = finalOpacity,
-            Duration = new Duration(TimeSpan.FromMilliseconds(1000)),
-            FillBehavior = FillBehavior.Stop,
-            AccelerationRatio = .2,
-            DecelerationRatio = .2
-        };
 
         this.mapView.Children.Add(element);
 
@@ -1932,19 +2190,53 @@ public partial class MapViewer : NotifiableUserControl
             Canvas.SetZIndex(element, specialPointLayer.ZIndex);
         }
 
+        // large batches skip only the opacity animation (one clock per element); the add and
+        // z-index logic above must stay identical to the animated case
+        if (!animate)
+            return;
+
+        DoubleAnimation animation = new DoubleAnimation()
+        {
+            From = 0,
+            To = finalOpacity,
+            Duration = new Duration(TimeSpan.FromMilliseconds(1000)),
+            FillBehavior = FillBehavior.Stop,
+            AccelerationRatio = .2,
+            DecelerationRatio = .2
+        };
+
         element.BeginAnimation(OpacityProperty, animation);
     }
 
 
     public void Element_MouseDownForMoveableItem(object sender, MouseButtonEventArgs e)
     {
+        var element = sender as FrameworkElement;
+
+        // a marker's popup (e.g. the TextboxMarker format popup) is a logical child, so its
+        // mouse events bubble here — but popup content lives in its own visual tree
+        // (PopupRoot). Only clicks on the element's own surface may start a move session;
+        // a popup click starting one left itemIsMoving stuck and dragged the marker around.
+        // Swallow the event (Handled) so it cannot bubble on into the map's click-or-pan
+        // gesture either — a popup press must never register as a map press.
+        if (GetNearestVisual(e.OriginalSource) is Visual sourceVisual
+            && !ReferenceEquals(sourceVisual, element)
+            && element?.IsAncestorOf(sourceVisual) == false)
+        {
+            e.Handled = true;
+            return;
+        }
+
         e.Handled = true;
 
         itemIsMoving = true;
 
-        var element = sender as FrameworkElement;
-
         this.currentMoveableItem = element;
+
+        // if anything else steals the capture mid-session (a combo dropdown in a popup, a
+        // context menu), end the session instead of leaving the move handler attached
+        this.mapView.LostMouseCapture -= MapView_LostMouseCaptureForMoveableItem;
+        this.mapView.LostMouseCapture += MapView_LostMouseCaptureForMoveableItem;
 
         this.mapView.CaptureMouse();
 
@@ -1964,6 +2256,14 @@ public partial class MapViewer : NotifiableUserControl
 
     public void Element_MouseMoveForMoveableItem(object sender, MouseEventArgs e)
     {
+        // capture can be lost without our cleanup running; never keep dragging while the
+        // button is up
+        if (e.LeftButton != MouseButtonState.Pressed)
+        {
+            EndMoveableItemSession();
+            return;
+        }
+
         Point currentMouseLocation = (e.GetPosition(this.mapView));
 
         var currentMapLocation = ScreenToMap(currentMouseLocation);
@@ -2015,22 +2315,116 @@ public partial class MapViewer : NotifiableUserControl
 
         }
 
-        this.mapView.MouseMove -= Element_MouseMoveForMoveableItem;
-
-        this.mapView.MouseUp -= Element_MouseUpForMoveableItem;
-
-        itemIsMoving = false;
+        EndMoveableItemSession();
 
         this.mapView.ReleaseMouseCapture();
 
         locateable?.RaiseMouseUpEvent();
     }
 
+    private void EndMoveableItemSession()
+    {
+        this.mapView.MouseMove -= Element_MouseMoveForMoveableItem;
+        this.mapView.MouseUp -= Element_MouseUpForMoveableItem;
+        this.mapView.LostMouseCapture -= MapView_LostMouseCaptureForMoveableItem;
+
+        itemIsMoving = false;
+    }
+
+    private void MapView_LostMouseCaptureForMoveableItem(object sender, MouseEventArgs e)
+        => EndMoveableItemSession();
+
+    // OriginalSource can be a ContentElement (e.g. a text Run) that is not a Visual;
+    // climb the logical tree until a Visual is found so IsAncestorOf can be used
+    private static Visual? GetNearestVisual(object? source)
+    {
+        var node = source as DependencyObject;
+
+        while (node is not null && node is not Visual)
+        {
+            node = LogicalTreeHelper.GetParent(node);
+        }
+
+        return node as Visual;
+    }
+
+    // a focused text-on-map TextBox keeps keyboard focus when the user clicks the map
+    // itself (the canvas is not a focus scope), so the caret never goes away; dropping
+    // focus here also commits the Text binding, which updates on LostFocus.
+    // Clicks on the marker's own format popup never reach this handler (the popup is its
+    // own top-level visual tree), so the popup keeps working while the text is focused.
+    private void MapView_PreviewMouseDownForTextMarkerFocus(object sender, MouseButtonEventArgs e)
+    {
+        if (Keyboard.FocusedElement is not DependencyObject focused)
+            return;
+
+        var focusedMarker = FindAncestor<TextboxMarker>(focused);
+
+        if (focusedMarker is null)
+            return;
+
+        if (e.OriginalSource is DependencyObject source && IsSelfOrDescendantOf(source, focusedMarker))
+            return;
+
+        Keyboard.ClearFocus();
+    }
+
+    private static T? FindAncestor<T>(DependencyObject? node) where T : DependencyObject
+    {
+        while (node is not null)
+        {
+            if (node is T match)
+                return match;
+
+            node = GetVisualOrLogicalParent(node);
+        }
+
+        return null;
+    }
+
+    private static bool IsSelfOrDescendantOf(DependencyObject? node, DependencyObject ancestor)
+    {
+        while (node is not null)
+        {
+            if (ReferenceEquals(node, ancestor))
+                return true;
+
+            node = GetVisualOrLogicalParent(node);
+        }
+
+        return false;
+    }
+
+    // logical parent first: popup content's visual tree dead-ends at its own PopupRoot,
+    // but its logical chain (child → Popup → marker) crosses the boundary; template
+    // internals and ContentElements have no logical parent and fall back to the visual tree
+    private static DependencyObject? GetVisualOrLogicalParent(DependencyObject node)
+        => LogicalTreeHelper.GetParent(node)
+            ?? (node is Visual or System.Windows.Media.Media3D.Visual3D ? VisualTreeHelper.GetParent(node) : null);
+
     //POTENTIALLY ERROR PRONE; What if the Element has no scaletransform
     private void Item_OnPositionChanged(object? sender, EventArgs e)
     {
-        var item = sender as Locateable;
+        if (sender is not Locateable item)
+            return;
 
+        UpdateAnchoredPosition(item);
+    }
+
+    // the anchor offset depends on the element's size (e.g. BottomCenter shifts by width/2
+    // and height), so when a TextboxMarker grows as the user types, the stored position must
+    // be recomputed — otherwise the next reposition (move, window resize) jumps by the delta
+    private void Element_SizeChangedForAnchor(object sender, SizeChangedEventArgs e)
+    {
+        if (sender is not FrameworkElement element)
+            return;
+
+        if ((element.Tag as LayerTag)?.Locateable is Locateable item)
+            UpdateAnchoredPosition(item);
+    }
+
+    private void UpdateAnchoredPosition(Locateable item)
+    {
         var element = item.Element;
 
         var width = double.IsNaN(element.Width) ? element.ActualWidth : element.Width;
@@ -2038,8 +2432,13 @@ public partial class MapViewer : NotifiableUserControl
 
         var screenLocation = item.AnchorFunction(MapToScreen(new Point(item.X, item.Y)), width, height);
 
-        ((TransformGroup)(element.RenderTransform)).Children[2] = (new TranslateTransform(screenLocation.X, screenLocation.Y));
-
+        // the transform stored by AddComplexLayerItem; indexing the TransformGroup is
+        // fragile because other code appends to the same group pattern
+        if ((element.Tag as LayerTag)?.PositionTransform is TranslateTransform positionTransform)
+        {
+            positionTransform.X = screenLocation.X;
+            positionTransform.Y = screenLocation.Y;
+        }
     }
 
 
@@ -2169,9 +2568,18 @@ public partial class MapViewer : NotifiableUserControl
                     continue;
                 }
 
-                //Do not cancel processing tiles when mouse up for pan
-                //if (this.jobs[i].Tag.Tile != null && this.CurrentTileInfos.Contains(jobs[i].Tag.Tile) && jobs[i].Tag.Scale == this.MapScale)
-                if (this.CurrentTileInfos.Contains(currentJob.Tag.Tile) && currentJob.Tag.Scale == this.MapScale)
+                // A tile job stays valid across free-scale zooming as long as its tile is
+                // still wanted: tiles depend only on the zoom level, and the drawn Path is
+                // positioned by the live viewTransform. The previous exact MapScale test
+                // aborted every pending tile job on each wheel tick, and ExtentManager never
+                // re-reports a tile it has already recorded as added (Update() diffs against
+                // _currentTiles) - so fast zooming left permanent holes in the basemap until
+                // a pan made the tile leave and re-enter the extent.
+                // Jobs without a Tile (the non-tiled layer renders) are still always aborted;
+                // the Refresh that triggered this abort re-queues them right after.
+                if (currentJob.Tag.Tile != null
+                    && this.CurrentTileInfos?.Contains(currentJob.Tag.Tile) == true
+                    && currentJob.Tag.Tile.ZoomLevel == this.TileZoomLevel)
                     continue;
 
                 //Debug.WriteLine($"Job Stopped [@StopUnnecessaryJobs]; tile: {currentJob.Tag.Tile?.ToShortString()} jobScale:{currentJob.Tag.Scale} expectedScale:{MapScale}");
@@ -2185,48 +2593,59 @@ public partial class MapViewer : NotifiableUserControl
 
     private void ClearOutOfExtent(bool justTiled)
     {
+        // computed property (matrix inversion + 2 transforms); it does not depend on Children, so
+        // read it once instead of up to 5 times per child on every pan/zoom
+        var currentExtent = this.CurrentExtent;
+
+        var tileZoomLevel = this.TileZoomLevel;
+
         for (int i = this.mapView.Children.Count - 1; i >= 0; i--)
         {
-            //Complex layer items may not be Path, so use FrameworkElement
-            var tag = (LayerTag)((FrameworkElement)this.mapView.Children[i]).Tag;
+            //Complex layer items may not be Path, so use FrameworkElement.
+            // A child with a missing or foreign Tag is skipped instead of throwing: this runs
+            // inside ExtentManager.Update, so an exception here propagates through the
+            // CurrentTileInfos setter and aborts the zoom mid-update, leaving the tile
+            // bookkeeping mutated but never refreshed.
+            if (this.mapView.Children[i] is not FrameworkElement { Tag: LayerTag tag })
+                continue;
 
             if (justTiled && !tag.IsTiled)
                 continue;
 
-            if (tag.Tile != null && (tag.Tile.ZoomLevel != this.NearestGoogleZoomLevel || !this.CurrentTileInfos.Contains(tag.Tile)))
+            if (tag.Tile != null && (tag.Tile.ZoomLevel != tileZoomLevel || !this.CurrentTileInfos.Contains(tag.Tile)))
             {
                 this.mapView.Children.RemoveAt(i);
 
                 continue;
             }
 
-            if (this.CurrentTileInfos.Contains(tag.Tile) && tag.Tile.ZoomLevel == this.NearestGoogleZoomLevel)// && tag.Scale == this.MapScale)
+            if (this.CurrentTileInfos.Contains(tag.Tile) && tag.Tile.ZoomLevel == tileZoomLevel)// && tag.Scale == this.MapScale)
                 continue;
 
             //Why checking both layer type and extent?
-            if (tag.LayerType == LayerType.Raster && this.CurrentExtent.Intersects(tag.Layer.Extent))
+            if (tag.LayerType == LayerType.Raster && currentExtent.Intersects(tag.Layer.Extent))
                 continue;
 
             //Why checking both layer type and extent?
-            if (tag.LayerType == LayerType.ImagePyramid && this.CurrentExtent.Intersects(tag.Layer.Extent))
+            if (tag.LayerType == LayerType.ImagePyramid && currentExtent.Intersects(tag.Layer.Extent))
                 continue;
 
 
             //1397.04.02 why not checking this first?
             //if (( tag.LayerType.HasFlag(LayerType.Feature) ||   tag.LayerType.HasFlag(LayerType.VectorLayer)) &&
             if ((tag.LayerType == LayerType.VectorLayer) &&
-                this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
+                currentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
                 continue;
 
-            //if (tag.LayerType.HasFlag(LayerType.Drawing) && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
+            //if (tag.LayerType.HasFlag(LayerType.Drawing) && currentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
             //    continue;
 
-            //if (tag.LayerType.HasFlag(LayerType.MoveableItem) && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
+            //if (tag.LayerType.HasFlag(LayerType.MoveableItem) && currentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
             //    continue;
-            if (tag.LayerType == LayerType.Drawing && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
+            if (tag.LayerType == LayerType.Drawing && currentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
                 continue;
 
-            if (tag.LayerType == LayerType.Complex /*LayerType.MoveableItem*/ && this.CurrentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
+            if (tag.LayerType == LayerType.Complex /*LayerType.MoveableItem*/ && currentExtent.Intersects(tag?.Layer?.Extent ?? sb.BoundingBox.NaN))
                 continue;
 
 
@@ -2236,11 +2655,15 @@ public partial class MapViewer : NotifiableUserControl
 
     public void ClearNonTiled()
     {
+        _nonTiledGeneration++;
+
         Clear(tag => !tag.IsTiled && tag.LayerType != LayerType.BaseMap, remove: false, forceRemove: false);
     }
 
     public void ClearTiled()
     {
+        _tiledGeneration++;
+
         Clear(tag => tag.IsTiled, remove: false, forceRemove: false);
     }
 
@@ -2248,7 +2671,9 @@ public partial class MapViewer : NotifiableUserControl
     {
         for (int i = this.mapView.Children.Count - 1; i >= 0; i--)
         {
-            var tag = ((LayerTag)((FrameworkElement)(this.mapView.Children[i])).Tag);
+            // one child with a missing or foreign Tag must not abandon the rest of the scan
+            if (this.mapView.Children[i] is not FrameworkElement { Tag: LayerTag tag })
+                continue;
 
             if (criteria(tag))
             {
@@ -2267,14 +2692,12 @@ public partial class MapViewer : NotifiableUserControl
         for (int i = this.mapView.Children.Count - 1; i >= 0; i--)
         {
             //Complex layer items may not be Path, so use FrameworkElement
-            var tag = ((LayerTag)((FrameworkElement)(this.mapView.Children[i])).Tag);
+            if (this.mapView.Children[i] is not FrameworkElement { Tag: LayerTag tag })
+                continue;
 
-            if (tag?.Layer != null)
+            if (tag.Layer != null && criteria(tag.Layer))
             {
-                if (criteria(tag.Layer))
-                {
-                    this.mapView.Children.RemoveAt(i);
-                }
+                this.mapView.Children.RemoveAt(i);
             }
         }
 
@@ -2553,9 +2976,13 @@ public partial class MapViewer : NotifiableUserControl
         if (points == null)
             return;
 
+        // each flash costs three animation clocks (opacity + scale X/Y) with 5x repeat;
+        // above the threshold, add the markers static — same end state, no pulsing
+        var withAnimation = points.Count <= MaxItemsWithAnimation;
+
         foreach (var item in points)
         {
-            AddFlash(item);
+            AddFlash(item, withAnimation);
         }
     }
 
@@ -2567,7 +2994,7 @@ public partial class MapViewer : NotifiableUserControl
         AddFlash(mapPoint);
     }
 
-    private void AddFlash(IRI.Maptor.Sta.Common.Primitives.Point mapPoint)
+    private void AddFlash(IRI.Maptor.Sta.Common.Primitives.Point mapPoint, bool withAnimation = true)
     {
         if (mapPoint == null || mapPoint.IsNaN())
         {
@@ -2599,6 +3026,9 @@ public partial class MapViewer : NotifiableUserControl
         this.mapView.Children.Add(path);
 
         Canvas.SetZIndex(path, int.MaxValue);
+
+        if (!withAnimation)
+            return;
 
         DoubleAnimation animation = new DoubleAnimation()
         {
@@ -2873,7 +3303,13 @@ public partial class MapViewer : NotifiableUserControl
 
             _onAnyMove?.Invoke(mapPt);
 
-            if (e.LeftButton == MouseButtonState.Pressed && !_v.itemIsMoving)
+            // _leftButtonDownObserved: same orphan-press rule as OnMouseUp. A press consumed
+            // elsewhere (a combo in a marker's popup, the marker itself) never updated
+            // prevMouseLocation, so treating its moves as a pan applies a bogus offset from
+            // the stale location — panning the map and leaving panTransformForPoints
+            // desynced (no pan-end Refresh either, since the matching MouseUp is consumed
+            // too): every complex element added afterwards showed shifted by that offset.
+            if (e.LeftButton == MouseButtonState.Pressed && _leftButtonDownObserved && !_v.itemIsMoving)
             {
                 double dx = loc.X - _v.prevMouseLocation.X;
                 double dy = loc.Y - _v.prevMouseLocation.Y;
@@ -3128,7 +3564,7 @@ public partial class MapViewer : NotifiableUserControl
 
         foreach (var item in e.Arg)
         {
-            if (item.ZoomLevel != this.NearestGoogleZoomLevel)
+            if (item.ZoomLevel != this.TileZoomLevel)
                 continue;
 
             if (!CurrentTileInfos.Contains(item))
@@ -3192,7 +3628,8 @@ public partial class MapViewer : NotifiableUserControl
 
                 if (tag != null && tag.LayerType != LayerType.BaseMap)
                 {
-                    if (tag.Tile.Equals(tile))
+                    // Tile is null on every non-tile element, so it cannot be dereferenced blindly
+                    if (tag.Tile?.Equals(tile) == true)
                     {
                         this.mapView.Children.RemoveAt(i);
                     }
@@ -3226,61 +3663,68 @@ public partial class MapViewer : NotifiableUserControl
     //It has animation
     public void Pan(double xOffset, double yOffset, Action? callback = null)
     {
-        ClearLayer(LayerType.AnimatingItem, false);
+        // fire and forget: faults surface as UnobservedTaskException rather than killing the
+        // process the way an async void continuation on the dispatcher would
+        _ = PanCoreAsync(xOffset, yOffset, callback);
+    }
 
-        counterValue = 4;
-        counter = 0;
+    private async Task PanCoreAsync(double xOffset, double yOffset, Action? callback)
+    {
+        ClearLayer(LayerType.AnimatingItem, false);
 
         if (double.IsNaN(xOffset + yOffset))
             return;
 
-        if (Math.Abs(xOffset) > 2 || Math.Abs(yOffset) > 2)
+        if (Math.Abs(xOffset) <= 2 && Math.Abs(yOffset) <= 2)
         {
-
-            DoubleAnimation animation = new DoubleAnimation()
+            if (callback != null)
             {
-                Duration = new Duration(TimeSpan.FromMilliseconds(100)),
-                FillBehavior = FillBehavior.Stop
-            };
+                _ = Dispatcher.BeginInvoke(callback, DispatcherPriority.Background, null);
+            }
 
-            animation.Completed += new EventHandler(delegate (object o, EventArgs e)
-                                    {
-                                        if (++counter != counterValue)
-                                            return;
+            return;
+        }
 
-                                        UpdateTileInfos();
+        try
+        {
+            var duration = new Duration(TimeSpan.FromMilliseconds(100));
 
-                                        Refresh(isNewExtent: true);
+            var fillBehavior = FillBehavior.Stop;
 
-                                        if (callback != null)
-                                            _ = Dispatcher.BeginInvoke(callback, DispatcherPriority.Background, null);
+            // one DoubleAnimation per target property: they must be distinct instances so each
+            // completion is awaited on its own, instead of one shared instance whose single
+            // Completed handler was counted with fields also used by ZoomToExtent
+            var animationPanX = new DoubleAnimation(this.panTransform.X + xOffset * 1.0 / this.zoomTransform.ScaleX, duration, fillBehavior);
+            var t1 = AnimateAsync(() => { this.panTransform.BeginAnimation(TranslateTransform.XProperty, animationPanX); }, animationPanX);
 
-                                        this.counterValue = -1;
-                                    });
+            var animationPanY = new DoubleAnimation(this.panTransform.Y + yOffset * 1.0 / this.zoomTransform.ScaleY, duration, fillBehavior);
+            var t2 = AnimateAsync(() => { this.panTransform.BeginAnimation(TranslateTransform.YProperty, animationPanY); }, animationPanY);
 
-            animation.To = this.panTransform.X + xOffset * 1.0 / this.zoomTransform.ScaleX;
-            this.panTransform.BeginAnimation(TranslateTransform.XProperty, animation);
+            var animationPanPX = new DoubleAnimation(this.panTransformForPoints.X + xOffset, duration, fillBehavior);
+            var t3 = AnimateAsync(() => { this.panTransformForPoints.BeginAnimation(TranslateTransform.XProperty, animationPanPX); }, animationPanPX);
 
-            animation.To = this.panTransform.Y + yOffset * 1.0 / this.zoomTransform.ScaleY;
-            this.panTransform.BeginAnimation(TranslateTransform.YProperty, animation);
-
-            animation.To = this.panTransformForPoints.X + xOffset;
-            this.panTransformForPoints.BeginAnimation(TranslateTransform.XProperty, animation);
-
-            animation.To = this.panTransformForPoints.Y + yOffset;
-            this.panTransformForPoints.BeginAnimation(TranslateTransform.YProperty, animation);
+            var animationPanPY = new DoubleAnimation(this.panTransformForPoints.Y + yOffset, duration, fillBehavior);
+            var t4 = AnimateAsync(() => { this.panTransformForPoints.BeginAnimation(TranslateTransform.YProperty, animationPanPY); }, animationPanPY);
 
             this.panTransform.X += xOffset * 1.0 / this.zoomTransform.ScaleX;
             this.panTransform.Y += yOffset * 1.0 / this.zoomTransform.ScaleY;
             this.panTransformForPoints.X = this.panTransformForPoints.X + xOffset;
             this.panTransformForPoints.Y = this.panTransformForPoints.Y + yOffset;
+
+            await Task.WhenAll(t1, t2, t3, t4);
         }
-        else
+        catch (Exception ex)
         {
-            if (callback != null)
-            {
-                Dispatcher.BeginInvoke(callback, System.Windows.Threading.DispatcherPriority.Background, null);
-            }
+            Debug.Print($"MapViewer; {DateTime.Now.ToLongTimeString()}; Pan animation failed: {ex}");
+        }
+
+        UpdateTileInfos();
+
+        Refresh(isNewExtent: true);
+
+        if (callback != null)
+        {
+            _ = Dispatcher.BeginInvoke(callback, DispatcherPriority.Background, null);
         }
     }
 
@@ -3301,8 +3745,6 @@ public partial class MapViewer : NotifiableUserControl
     #region Zoom
 
     Point firstZoomBound;
-
-    int counter; int counterValue;
 
     Rectangle zoomRectangle = null;
 
@@ -3339,7 +3781,7 @@ public partial class MapViewer : NotifiableUserControl
 
     public void FullExtent()
     {
-        ZoomToExtent(this._layerManager.CalculateMapExtent(), false);
+        _ = ZoomToExtent(this._layerManager.CalculateMapExtent(), false);
     }
 
     public void ZoomIn()
@@ -3445,14 +3887,14 @@ public partial class MapViewer : NotifiableUserControl
         if (e.ChangedButton != MouseButton.Left)
             return;
 
-        ZoomToExtent(boundingBox, true);
+        _ = ZoomToExtent(boundingBox, true);
     }
 
     private void mapView_MouseUpForZoomOut(object sender, MouseButtonEventArgs e)
     {
         Point canvasPosition = e.GetPosition(this.mapView);
 
-        ZoomToPoint(canvasPosition, .75);
+        ZoomInPlaceAtWindowPoint(false, canvasPosition);
     }
 
 
@@ -3481,7 +3923,7 @@ public partial class MapViewer : NotifiableUserControl
         sb.BoundingBox boundingBox =
             new sb.BoundingBox(mapCenter.X - width / 2.0, mapCenter.Y - height / 2.0, mapCenter.X + width / 2.0, mapCenter.Y + height / 2.0);
 
-        ZoomToExtent(boundingBox, false, true, true, callback, withAnimation);
+        _ = ZoomToExtent(boundingBox, false, true, true, callback, withAnimation);
     }
 
     private void ZoomToFeature(Geometry<sb.Point> geometry)
@@ -3503,7 +3945,7 @@ public partial class MapViewer : NotifiableUserControl
 
     public void ZoomToExtent(sb.BoundingBox boundingBox)
     {
-        ZoomToExtent(boundingBox, false, true);
+        _ = ZoomToExtent(boundingBox, false, true);
     }
 
     /// <summary>
@@ -3540,22 +3982,11 @@ public partial class MapViewer : NotifiableUserControl
         if (this.mapView.ActualWidth <= 0 || this.mapView.ActualHeight <= 0)
             return;
 
-        double newScreenScale;
+        double newScreenScale = GetSteppedScreenScale(zoomIn);
 
-        if (_presenter.MapSettings.IsGoogleZoomLevelsEnabled)
-        {
-            int newZoomLevel = zoomIn
-                ? WebMercatorUtility.GetNextZoomLevel(NearestGoogleZoomLevel)
-                : WebMercatorUtility.GetPreviousZoomLevel(NearestGoogleZoomLevel);
-
-            newZoomLevel = CheckGoogleZoomLevel(newZoomLevel);
-
-            newScreenScale = ToScreenScale(WebMercatorUtility.GetGoogleMapScale(newZoomLevel));
-        }
-        else
-        {
-            newScreenScale = this.ScreenScale * (zoomIn ? 1.5 : (1.0 / 1.5));
-        }
+        // already sitting on the Min/Max zoom level bound; don't churn the transform or refresh tiles
+        if (newScreenScale <= 0 || Math.Abs(newScreenScale / this.ScreenScale - 1.0) < 1e-9)
+            return;
 
         double cx = this.mapView.ActualWidth / 2.0;
         double cy = this.mapView.ActualHeight / 2.0;
@@ -3584,20 +4015,17 @@ public partial class MapViewer : NotifiableUserControl
     }
 
     //It has animation
-    private async void ZoomToExtent(sb.BoundingBox mapBoundingBox, bool canChangeToPointZoom, bool isExactExtent = true, bool isNewExtent = true, Action? callback = null, bool withAnimation = true)
+    private async Task ZoomToExtent(sb.BoundingBox mapBoundingBox, bool canChangeToPointZoom, bool isExactExtent = true, bool isNewExtent = true, Action? callback = null, bool withAnimation = true)
     {
         if (mapBoundingBox.IsNaN()/* double.IsNaN(mapBoundingBox.Width + mapBoundingBox.Height)*/)
             return;
 
         var mapCenter = mapBoundingBox.Center;
 
+        // the bounding box collapsed to a point, so treat it as a click: take a single zoom step
         if (mapBoundingBox.Width + mapBoundingBox.Height < minBoundingBoxSize)
         {
-            int newZoomLevel = WebMercatorUtility.GetNextZoomLevel(NearestGoogleZoomLevel);
-
-            var wgs84Center = MapProjects.WebMercatorToGeodeticWgs84(mapCenter);
-
-            this.ZoomAndCenter(WebMercatorUtility.GetGoogleMapScale(newZoomLevel, wgs84Center.Y), mapCenter, callback);
+            this.ZoomAndCenter(ToMapScale(GetSteppedScreenScale(zoomIn: true)), mapCenter, callback);
 
             return;
         }
@@ -3608,16 +4036,13 @@ public partial class MapViewer : NotifiableUserControl
 
         ClearLayer(LayerType.EditableItem, false);
 
-        counter = 0;
-
+        // a drag rectangle this small is a click, so take a single zoom step at the clicked point
         if (mapBoundingBox.GetDiagonalLength() < 15 && canChangeToPointZoom)
         {
-            ZoomToPoint(MapToScreen(mapBoundingBox.TopLeft.AsWpfPoint()), 1.25);
+            ZoomInPlaceAtWindowPoint(true, MapToScreen(mapBoundingBox.TopLeft.AsWpfPoint()));
 
             return;
         }
-
-        counterValue = 8;
 
         //Point intermediateExtentCenter = new Point((mapBoundingBox.Left + mapBoundingBox.Right) / 2.0,
         //                                            (mapBoundingBox.Top + mapBoundingBox.Bottom) / 2.0);
@@ -3627,24 +4052,14 @@ public partial class MapViewer : NotifiableUserControl
 
         Point screenExtentCenter = MapToScreen(intermediateExtentCenter);
 
-        double scale = double.NaN;
-
-        //if (IsGoogleZoomLevelsEnabled)
-        //{
-        //    var newZoomLevel = WebMercatorUtility.EstimateZoomLevel(mapBoundingBox, this.mapView.ActualWidth, this.mapView.ActualHeight);
-
-        //    var mapScale = WebMercatorUtility.GetGoogleMapScale(newZoomLevel);
-
-        //    scale = ToScreenScale(mapScale);
-        //}
-        //else
-        //{
         double xScale = (isExactExtent ? this.mapView.ActualWidth : this.mapView.ActualWidth - 20) / mapBoundingBox.Width;
 
         double yScale = (isExactExtent ? this.mapView.ActualHeight : this.mapView.ActualHeight - 20) / mapBoundingBox.Height;
 
-        scale = xScale > yScale ? yScale : xScale;
-        //}
+        // free scale: zooming to a region frames the box itself and is deliberately not snapped to
+        // the zoom step grid. It is only bounded, so a tiny box cannot zoom past the levels that
+        // have tiles.
+        double scale = ClampScreenScale(xScale > yScale ? yScale : xScale);
 
         if (double.IsNaN(scale))
             return;
@@ -3689,7 +4104,10 @@ public partial class MapViewer : NotifiableUserControl
             }
             catch (Exception ex)
             {
-                throw;
+                // must not rethrow: this used to propagate out of an async void continuation on the
+                // dispatcher, which is an uncatchable process kill. The transforms are hard-set
+                // below regardless, so a failed animation degrades to an instant jump.
+                Debug.Print($"MapViewer; {DateTime.Now.ToLongTimeString()}; ZoomToExtent animation failed: {ex}");
             }
         }
 
@@ -3721,34 +4139,6 @@ public partial class MapViewer : NotifiableUserControl
 
     }
 
-    private void ZoomToPoint(Point windowPoint, double deltaZoom)
-    {
-        Point layerPoint = this.viewTransform.Inverse.Transform(windowPoint);
-
-        this.panTransform.X = this.mapView.ActualWidth / 2.0 - layerPoint.X;
-
-        this.panTransform.Y = this.mapView.ActualHeight / 2.0 - layerPoint.Y;
-
-        //94.09.24: zoomTransform.ScaleX value may be at an animation!
-        //double scale = this.zoomTransform.ScaleX * deltaZoom;
-        double scale = this._theScreenScale * deltaZoom;
-        //
-        this.zoomTransform.CenterX = this.mapView.ActualWidth / 2.0;
-
-        this.zoomTransform.CenterY = this.mapView.ActualHeight / 2.0;
-
-        this.zoomTransform.ScaleX = scale * baseScaleX;
-
-        this.zoomTransform.ScaleY = scale * baseScaleY;
-
-        this._theScreenScale = scale * baseScaleX;
-
-        this.OnZoomChanged?.Invoke(null, ZoomEventArgs.EmptyArg);
-
-        Refresh(isNewExtent: true);
-    }
-
-
     private Task AnimateAsync(Action action, DoubleAnimation animation)
     {
         TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
@@ -3758,6 +4148,44 @@ public partial class MapViewer : NotifiableUserControl
         action();
 
         return tcs.Task;
+    }
+
+    /// <summary>
+    /// Bounds a screen scale to Min/MaxGoogleZoomLevel *without* snapping it to the step grid.
+    /// Zooming to a region keeps its free scale; it just cannot run past the levels the basemap
+    /// has tiles for, where the pan/zoom transforms also start losing double precision.
+    /// </summary>
+    private double ClampScreenScale(double screenScale)
+    {
+        if (screenScale <= 0 || double.IsNaN(screenScale))
+            return screenScale;
+
+        var level = WebMercatorUtility.GetFractionalZoomLevel(ToMapScale(screenScale));
+
+        var clampedLevel = Math.Clamp(level, _presenter.MapSettings.MinGoogleZoomLevel, _presenter.MapSettings.MaxGoogleZoomLevel);
+
+        if (Math.Abs(clampedLevel - level) < 1e-9)
+            return screenScale;
+
+        return ToScreenScale(WebMercatorUtility.GetMapScaleAtFractionalLevel(clampedLevel));
+    }
+
+    /// <summary>
+    /// The screen scale one configured zoom step away from the current one. The step grid subdivides
+    /// each google zoom level into <see cref="IMapSettings.ZoomStepsPerGoogleLevel"/> equal steps, so
+    /// 1 snaps every step to a google zoom level and higher values give a softer zoom. A scale that is
+    /// off the grid (as a zoom to a region leaves behind) snaps onto the grid on the first step.
+    /// The result is clamped to Min/MaxGoogleZoomLevel.
+    /// </summary>
+    private double GetSteppedScreenScale(bool zoomIn)
+    {
+        var currentLevel = WebMercatorUtility.GetFractionalZoomLevel(this.MapScale);
+
+        var newLevel = WebMercatorUtility.GetSteppedZoomLevel(currentLevel, zoomIn, _presenter.MapSettings.ZoomStepsPerGoogleLevel);
+
+        newLevel = Math.Clamp(newLevel, _presenter.MapSettings.MinGoogleZoomLevel, _presenter.MapSettings.MaxGoogleZoomLevel);
+
+        return ToScreenScale(WebMercatorUtility.GetMapScaleAtFractionalLevel(newLevel));
     }
 
     private int CheckGoogleZoomLevel(int googleZoomLevel)
@@ -3789,7 +4217,7 @@ public partial class MapViewer : NotifiableUserControl
         var vm = new IRI.Maptor.Jab.Common.ViewModels.Map.FeatureChangesViewModel(feature, fields);
         vm.RequestZoomToFeature = g => this.ZoomToFeature(g);
         vm.RequestShowGeometryComparison = (oldGeo, newGeo) => _presenter.RequestShowGeometryComparison?.Invoke(oldGeo, newGeo);
-        vm.RequestZoomToExtent = (bbox, isExact, isNew, callback) => this.ZoomToExtent(bbox, false, isExact, isNew, callback);
+        vm.RequestZoomToExtent = (bbox, isExact, isNew, callback) => _ = this.ZoomToExtent(bbox, false, isExact, isNew, callback);
 
         var dialog = new FeatureChangesDialogView
         {
@@ -3800,7 +4228,7 @@ public partial class MapViewer : NotifiableUserControl
         dialog.ShowDialog();
     }
 
-    private async void ShowGeometryComparison(Geometry<sb.Point>? oldGeometry, Geometry<sb.Point>? newGeometry)
+    private async Task ShowGeometryComparison(Geometry<sb.Point>? oldGeometry, Geometry<sb.Point>? newGeometry)
     {
         ClearGeometryComparison();
 
@@ -4083,7 +4511,9 @@ public partial class MapViewer : NotifiableUserControl
             cts.Dispose(); // dispose after cancellation
             //_drawingCancellationToken = null;
 
-        }, useSynchronizationContext: false);
+            // removes from mapView.Children and clears layers, so it must run on the ui thread
+            // however the cancel was raised (same reason as the Measure token below)
+        }, useSynchronizationContext: true);
 
         if (this.drawMode == DrawMode.Rectangle)
         {
@@ -4597,7 +5027,9 @@ public partial class MapViewer : NotifiableUserControl
             tcs.TrySetCanceled();
             // Dispose the token after cancellation (safe because it won't be used again)
             cts.Dispose();
-        }, useSynchronizationContext: false);
+
+            // gesture.End() detaches mouse handlers from mapView, so this must run on the ui thread
+        }, useSynchronizationContext: true);
 
         _selectPointGesture.Begin();
 
@@ -4773,7 +5205,8 @@ public partial class MapViewer : NotifiableUserControl
             CurrentEditingLayer = null;
             cts.Dispose();
 
-        }, useSynchronizationContext: false);
+            // removes the editable feature layer from the visual tree, so it must run on the ui thread
+        }, useSynchronizationContext: true);
 
         return tcs.Task;
     }
@@ -5205,6 +5638,9 @@ public partial class MapViewer : NotifiableUserControl
 
             cts.Dispose();
 
+            // deliberately false, unlike the drawing/select-point/editing/measure tokens: this
+            // callback touches no visual tree and no layer, only thread safe state, so there is
+            // nothing to marshal
         }, useSynchronizationContext: false);
 
         var drawingResult = await GetDrawingAsync(DrawMode.Polyline);

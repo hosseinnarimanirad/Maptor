@@ -42,7 +42,12 @@
                       HorizontalAlignment="Center"
                       Stretch="Uniform"/>
             </Border>
-            <TextBlock Text="{Binding Message}" Margin="4,4" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"/>
+            <!-- European = render the message verbatim. Without this, a Persian thread culture makes
+                 WPF redraw Latin digits as Persian and '.' as U+066B at render time (an IP such as
+                 103.98.215.183 then reads as 103/98/215/183), and no bidi control character defeats
+                 it. Callers that want Persian digits put them in the string (GetLocalizedNumberString
+                 / LatinNumbersToFarsiNumbers), as the rest of the codebase already does. -->
+            <TextBlock Text="{Binding Message}" NumberSubstitution.Substitution="European" Margin="4,4" VerticalAlignment="Center" MaxWidth="500" TextWrapping="Wrap"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Margin="8">
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"                   
