@@ -46,6 +46,30 @@ public abstract class SymbolizableLayer : BaseLayer
         RaisePropertyChanged(nameof(SymbologyLegend));
     }
 
+    /// <summary>
+    /// Replaces all symbolizers at once (e.g. when restoring saved symbology).
+    /// The optional <paramref name="sourceSld"/> becomes the new <see cref="SourceSld"/>.
+    /// </summary>
+    public void ReplaceSymbolizers(IEnumerable<ISymbolizer> symbolizers, StyledLayerDescriptor? sourceSld = null)
+    {
+        _symbolizers.Clear();
+        _visualParameters.Clear();
+
+        foreach (var symbolizer in symbolizers)
+        {
+            if (symbolizer.Param is not null)
+                _visualParameters.Add(symbolizer.Param);
+
+            _symbolizers.Add(symbolizer);
+        }
+
+        SourceSld = sourceSld;
+
+        RaisePropertyChanged(nameof(HasMultiSymbolizers));
+        RaisePropertyChanged(nameof(DefaultSymbology));
+        RaisePropertyChanged(nameof(SymbologyLegend));
+    }
+
     public override bool HasMultiSymbolizers => Symbolizers?.Count(s => s is not LabelSymbolizer) > 1;
 
     public VisualParameters? DefaultSymbology => _visualParameters?.FirstOrDefault(/*s => !s.HasLabelParameters*/ );
@@ -113,6 +137,15 @@ public abstract class SymbolizableLayer : BaseLayer
         set
         {
             _isSymbologyDetailsOpen = value;
+
+            if (value)
+            {
+                // The data source's fields (and their aliases) may load after the legend was first
+                // built and cached — rebuild on open so filter captions pick up the aliases.
+                _symbologyLegend = null;
+                RaisePropertyChanged(nameof(SymbologyLegend));
+            }
+
             RaisePropertyChanged();
         }
     }
@@ -125,7 +158,41 @@ public abstract class SymbolizableLayer : BaseLayer
     /// titles, filters and mark shapes); otherwise from the <see cref="GetSld"/> round-trip.
     /// Rebuilt whenever the symbolizers change (see <see cref="SetSymbolizer"/>).
     /// </summary>
-    public SymbologyLegend SymbologyLegend => _symbologyLegend ??= SldLegendBuilder.Build(SourceSld ?? GetSld());
+    public SymbologyLegend SymbologyLegend => _symbologyLegend ??=
+        SldLegendBuilder.Build(SourceSld ?? GetSld(), new SldLegendOptions { FieldAliasResolver = CreateFieldAliasResolver() });
+
+    /// <summary>The layer's attribute fields, when known; drives filter-text aliases in the legend.</summary>
+    public virtual List<Field>? GetFields() => null;
+
+    /// <summary>
+    /// Field-name → alias lookup over <see cref="GetFields"/> (case-insensitive), or null when the
+    /// layer has no fields or no field carries a real alias (an alias equal to the name is a filler).
+    /// </summary>
+    private Func<string, string?>? CreateFieldAliasResolver()
+    {
+        var fields = GetFields();
+
+        if (fields is null || fields.Count == 0)
+            return null;
+
+        var aliasByName = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var field in fields)
+        {
+            if (string.IsNullOrWhiteSpace(field.Name) || string.IsNullOrWhiteSpace(field.Alias))
+                continue;
+
+            if (string.Equals(field.Name, field.Alias, StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            aliasByName.TryAdd(field.Name, field.Alias!);
+        }
+
+        if (aliasByName.Count == 0)
+            return null;
+
+        return name => aliasByName.TryGetValue(name, out var alias) ? alias : null;
+    }
 
     private RelayCommand? _exportSymbologyLegendCommand;
 
@@ -143,9 +210,13 @@ public abstract class SymbolizableLayer : BaseLayer
 
         if (dialog.ShowDialog() == true)
         {
-            // A synthetic GetSld() yields a single style whose group header is not meaningful;
-            // the original SourceSld carries real style titles worth showing.
-            var options = new SldLegendOptions { ShowGroupHeaders = SourceSld is not null };
+            // Style titles are SLD internals users don't need; the layer name is the legend title.
+            var options = new SldLegendOptions
+            {
+                Title = LayerName,
+                ShowGroupHeaders = false,
+                FieldAliasResolver = CreateFieldAliasResolver()
+            };
             SldLegendPngRenderer.RenderToFile(SourceSld ?? GetSld(), dialog.FileName, options);
         }
     }

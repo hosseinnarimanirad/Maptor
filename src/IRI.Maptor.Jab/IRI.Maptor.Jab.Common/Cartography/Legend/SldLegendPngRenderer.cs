@@ -102,6 +102,9 @@ public static class SldLegendPngRenderer
         if (legend?.Groups is null)
             return lines;
 
+        if (!string.IsNullOrWhiteSpace(options.Title))
+            lines.Add(new Line { IsHeader = true, HeaderText = options.Title });
+
         foreach (var group in legend.Groups)
         {
             if (options.ShowGroupHeaders && !string.IsNullOrWhiteSpace(group.Header))
@@ -232,8 +235,8 @@ public static class SldLegendPngRenderer
     {
         var parts = new List<string>();
 
-        if (options.ShowFilterText && !string.IsNullOrWhiteSpace(row.FilterText))
-            parts.Add(row.FilterText!);
+        if (options.ShowFieldText && !string.IsNullOrWhiteSpace(row.FieldText))
+            parts.Add(row.FieldText!);
 
         if (options.ShowScaleText && !string.IsNullOrWhiteSpace(row.ScaleText))
             parts.Add(row.ScaleText!);

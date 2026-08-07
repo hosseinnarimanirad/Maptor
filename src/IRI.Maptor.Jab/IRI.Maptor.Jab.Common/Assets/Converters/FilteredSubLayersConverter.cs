@@ -68,6 +68,16 @@ public class FilteredSubLayersConverter : IMultiValueConverter
         {
             view.SortDescriptions.Clear();
             view.SortDescriptions.Add(new SortDescription("TocOrder", ListSortDirection.Descending));
+
+            // live sorting, so a sub-layer reorder repositions the row the moment its
+            // TocOrder changes; without it the swap is only visible after a full refresh
+            // of the root legend view
+            if (view is ICollectionViewLiveShaping { CanChangeLiveSorting: true } liveShaping)
+            {
+                liveShaping.LiveSortingProperties.Clear();
+                liveShaping.LiveSortingProperties.Add("TocOrder");
+                liveShaping.IsLiveSorting = true;
+            }
         }
 
         return view;

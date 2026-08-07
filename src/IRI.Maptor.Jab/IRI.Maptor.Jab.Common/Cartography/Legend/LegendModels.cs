@@ -44,8 +44,12 @@ public class LegendRuleRow
 {
     public string Title { get; set; } = string.Empty;
 
-    /// <summary>Readable rule filter (e.g. "type = primary"); null when the rule has no filter.</summary>
-    public string? FilterText { get; set; }
+    /// <summary>
+    /// Display label(s) of the field(s) the rule's filter references — "name (alias)" when the
+    /// alias is known, the raw field name otherwise (e.g. "stan_tower (نوع دکل)"); null when the
+    /// rule has no filter.
+    /// </summary>
+    public string? FieldText { get; set; }
 
     /// <summary>Readable rule scale range (e.g. "1:1k–1:500k"); null when unbounded.</summary>
     public string? ScaleText { get; set; }

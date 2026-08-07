@@ -1,3 +1,5 @@
+using System;
+
 using Drawing = System.Drawing;
 
 namespace IRI.Maptor.Jab.Common.Cartography.Legend;
@@ -35,17 +37,26 @@ public class SldLegendOptions
 
     public Drawing.Color TextColor { get; set; } = Drawing.Color.Black;
 
+    /// <summary>Legend title (typically the layer name) drawn at the top of the composed PNG; null for none.</summary>
+    public string? Title { get; set; }
+
     /// <summary>Draw a bold group header (layer / style title) above each group of rules.</summary>
     public bool ShowGroupHeaders { get; set; } = true;
 
-    /// <summary>Append a readable rendering of the rule filter (e.g. "type = primary").</summary>
-    public bool ShowFilterText { get; set; } = true;
+    /// <summary>Append the display label of the rule filter's field(s) (e.g. "نوع دکل").</summary>
+    public bool ShowFieldText { get; set; } = true;
 
     /// <summary>Append a readable rendering of the rule scale range (e.g. "1:1k–1:500k").</summary>
     public bool ShowScaleText { get; set; } = true;
 
     /// <summary>Right-to-left layout for Persian / Arabic labels.</summary>
     public bool IsRtl { get; set; } = false;
+
+    /// <summary>
+    /// Maps a filter field name to its display alias (e.g. "utnomi_volt" → "ولتاژ نامی طراحی");
+    /// return null for fields without an alias, so the raw name is kept.
+    /// </summary>
+    public Func<string, string?>? FieldAliasResolver { get; set; }
 
     public static SldLegendOptions Default => new();
 }
