@@ -730,6 +730,12 @@
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>पिछले पृष्ठ पर जाएँ</value>
   </data>
+  <data name="featureTable_goToFirstPage" xml:space="preserve">
+    <value>पहले पृष्ठ पर जाएँ</value>
+  </data>
+  <data name="featureTable_goToLastPage" xml:space="preserve">
+    <value>अंतिम पृष्ठ पर जाएँ</value>
+  </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
     <value>पिछले बिंदु पर जाएँ</value>
   </data>
@@ -1752,5 +1758,23 @@
   </data>
   <data name="featureTable_sort_toggle" xml:space="preserve">
     <value>क्रमबद्ध करें</value>
+  </data>
+  <data name="cmd_general_openProject" xml:space="preserve">
+    <value>प्रोजेक्ट खोलें</value>
+  </data>
+  <data name="cmd_general_saveProject" xml:space="preserve">
+    <value>प्रोजेक्ट सहेजें</value>
+  </data>
+  <data name="cmd_general_saveProjectAs" xml:space="preserve">
+    <value>प्रोजेक्ट इस रूप में सहेजें</value>
+  </data>
+  <data name="msg_project_confirmReplace" xml:space="preserve">
+    <value>प्रोजेक्ट खोलने पर वर्तमान परतें और आरेखण बदल जाएँगे। जारी रखें?</value>
+  </data>
+  <data name="msg_project_skippedLayers" xml:space="preserve">
+    <value>निम्न आइटम छोड़ दिए गए क्योंकि उनकी स्रोत फ़ाइलें नहीं मिलीं: {0}</value>
+  </data>
+  <data name="msg_project_unsupportedVersion" xml:space="preserve">
+    <value>यह प्रोजेक्ट फ़ाइल नए संस्करण से बनाई गई है और खोली नहीं जा सकती।</value>
   </data>
 </root>

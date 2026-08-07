@@ -730,6 +730,12 @@
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>بڕۆ بۆ لاپەڕەی پێشوو</value>
   </data>
+  <data name="featureTable_goToFirstPage" xml:space="preserve">
+    <value>بڕۆ بۆ لاپەڕەی یەکەم</value>
+  </data>
+  <data name="featureTable_goToLastPage" xml:space="preserve">
+    <value>بڕۆ بۆ لاپەڕەی کۆتایی</value>
+  </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
     <value>بڕۆ بۆ خالی پێشوو</value>
   </data>
@@ -1752,5 +1758,23 @@
   </data>
   <data name="featureTable_sort_toggle" xml:space="preserve">
     <value>ڕیزکردن</value>
+  </data>
+  <data name="cmd_general_openProject" xml:space="preserve">
+    <value>کردنەوەی پڕۆژە</value>
+  </data>
+  <data name="cmd_general_saveProject" xml:space="preserve">
+    <value>پاشەکەوتکردنی پڕۆژە</value>
+  </data>
+  <data name="cmd_general_saveProjectAs" xml:space="preserve">
+    <value>پاشەکەوتکردنی پڕۆژە وەک</value>
+  </data>
+  <data name="msg_project_confirmReplace" xml:space="preserve">
+    <value>بە کردنەوەی پڕۆژە، چین و وێنەکێشانە ئێستاکان دەگۆڕدرێن. بەردەوام دەبیت؟</value>
+  </data>
+  <data name="msg_project_skippedLayers" xml:space="preserve">
+    <value>ئەم بڕگانەی خوارەوە پەڕێنران چونکە فایلە سەرچاوەکانیان نەدۆزرانەوە: {0}</value>
+  </data>
+  <data name="msg_project_unsupportedVersion" xml:space="preserve">
+    <value>ئەم فایلی پڕۆژەیە بە وەشانێکی نوێتر دروستکراوە و ناکرێت بکرێتەوە.</value>
   </data>
 </root>

@@ -730,6 +730,12 @@
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>Əvvəlki səhifəyə keç</value>
   </data>
+  <data name="featureTable_goToFirstPage" xml:space="preserve">
+    <value>İlk səhifəyə keç</value>
+  </data>
+  <data name="featureTable_goToLastPage" xml:space="preserve">
+    <value>Son səhifəyə keç</value>
+  </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
     <value>Əvvəlki nöqtəyə keçin</value>
   </data>
@@ -1752,5 +1758,23 @@
   </data>
   <data name="featureTable_sort_toggle" xml:space="preserve">
     <value>Sıralama</value>
+  </data>
+  <data name="cmd_general_openProject" xml:space="preserve">
+    <value>Layihəni aç</value>
+  </data>
+  <data name="cmd_general_saveProject" xml:space="preserve">
+    <value>Layihəni saxla</value>
+  </data>
+  <data name="cmd_general_saveProjectAs" xml:space="preserve">
+    <value>Layihəni fərqli saxla</value>
+  </data>
+  <data name="msg_project_confirmReplace" xml:space="preserve">
+    <value>Layihəni açmaq mövcud lay və çəkilişləri əvəz edəcək. Davam edilsin?</value>
+  </data>
+  <data name="msg_project_skippedLayers" xml:space="preserve">
+    <value>Mənbə faylları tapılmadığı üçün aşağıdakı elementlər ötürüldü: {0}</value>
+  </data>
+  <data name="msg_project_unsupportedVersion" xml:space="preserve">
+    <value>Bu layihə faylı daha yeni versiya ilə yaradılıb və açıla bilməz.</value>
   </data>
 </root>

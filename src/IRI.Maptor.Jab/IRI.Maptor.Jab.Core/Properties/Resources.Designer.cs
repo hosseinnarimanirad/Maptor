@@ -383,6 +383,60 @@ namespace IRI.Maptor.Jab.Core.Properties {
                 return ResourceManager.GetString("cmd_general_identify", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Open Project.
+        /// </summary>
+        public static string cmd_general_openProject {
+            get {
+                return ResourceManager.GetString("cmd_general_openProject", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Save Project.
+        /// </summary>
+        public static string cmd_general_saveProject {
+            get {
+                return ResourceManager.GetString("cmd_general_saveProject", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Save Project As.
+        /// </summary>
+        public static string cmd_general_saveProjectAs {
+            get {
+                return ResourceManager.GetString("cmd_general_saveProjectAs", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Opening a project replaces the current layers and drawing items. Continue?.
+        /// </summary>
+        public static string msg_project_confirmReplace {
+            get {
+                return ResourceManager.GetString("msg_project_confirmReplace", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The following items were skipped because their source files were not found: {0}.
+        /// </summary>
+        public static string msg_project_skippedLayers {
+            get {
+                return ResourceManager.GetString("msg_project_skippedLayers", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to This project file was created by a newer version and cannot be opened..
+        /// </summary>
+        public static string msg_project_unsupportedVersion {
+            get {
+                return ResourceManager.GetString("msg_project_unsupportedVersion", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Measure area.
@@ -2001,6 +2055,24 @@ namespace IRI.Maptor.Jab.Core.Properties {
         public static string featureTable_filter_value {
             get {
                 return ResourceManager.GetString("featureTable_filter_value", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Go to First Page.
+        /// </summary>
+        public static string featureTable_goToFirstPage {
+            get {
+                return ResourceManager.GetString("featureTable_goToFirstPage", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Go to Last Page.
+        /// </summary>
+        public static string featureTable_goToLastPage {
+            get {
+                return ResourceManager.GetString("featureTable_goToLastPage", resourceCulture);
             }
         }
 

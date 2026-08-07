@@ -730,6 +730,12 @@
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>الانتقال إلى الصفحة السابقة</value>
   </data>
+  <data name="featureTable_goToFirstPage" xml:space="preserve">
+    <value>الانتقال إلى الصفحة الأولى</value>
+  </data>
+  <data name="featureTable_goToLastPage" xml:space="preserve">
+    <value>الانتقال إلى الصفحة الأخيرة</value>
+  </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
     <value>انتقل إلى النقطة السابقة</value>
   </data>
@@ -1752,5 +1758,23 @@
   </data>
   <data name="featureTable_sort_toggle" xml:space="preserve">
     <value>فرز</value>
+  </data>
+  <data name="cmd_general_openProject" xml:space="preserve">
+    <value>فتح المشروع</value>
+  </data>
+  <data name="cmd_general_saveProject" xml:space="preserve">
+    <value>حفظ المشروع</value>
+  </data>
+  <data name="cmd_general_saveProjectAs" xml:space="preserve">
+    <value>حفظ المشروع باسم</value>
+  </data>
+  <data name="msg_project_confirmReplace" xml:space="preserve">
+    <value>سيؤدي فتح المشروع إلى استبدال الطبقات والرسومات الحالية. هل تريد المتابعة؟</value>
+  </data>
+  <data name="msg_project_skippedLayers" xml:space="preserve">
+    <value>تم تجاهل العناصر التالية لعدم العثور على ملفاتها المصدر: {0}</value>
+  </data>
+  <data name="msg_project_unsupportedVersion" xml:space="preserve">
+    <value>تم إنشاء ملف المشروع هذا بإصدار أحدث ولا يمكن فتحه.</value>
   </data>
 </root>

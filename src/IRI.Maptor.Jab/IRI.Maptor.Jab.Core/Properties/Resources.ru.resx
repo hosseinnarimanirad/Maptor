@@ -730,6 +730,12 @@
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>Перейти на предыдущую страницу</value>
   </data>
+  <data name="featureTable_goToFirstPage" xml:space="preserve">
+    <value>Перейти на первую страницу</value>
+  </data>
+  <data name="featureTable_goToLastPage" xml:space="preserve">
+    <value>Перейти на последнюю страницу</value>
+  </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
     <value>Перейти к предыдущему пункту</value>
   </data>
@@ -1752,5 +1758,23 @@
   </data>
   <data name="featureTable_sort_toggle" xml:space="preserve">
     <value>Сортировка</value>
+  </data>
+  <data name="cmd_general_openProject" xml:space="preserve">
+    <value>Открыть проект</value>
+  </data>
+  <data name="cmd_general_saveProject" xml:space="preserve">
+    <value>Сохранить проект</value>
+  </data>
+  <data name="cmd_general_saveProjectAs" xml:space="preserve">
+    <value>Сохранить проект как</value>
+  </data>
+  <data name="msg_project_confirmReplace" xml:space="preserve">
+    <value>Открытие проекта заменит текущие слои и рисунки. Продолжить?</value>
+  </data>
+  <data name="msg_project_skippedLayers" xml:space="preserve">
+    <value>Следующие элементы были пропущены, так как их исходные файлы не найдены: {0}</value>
+  </data>
+  <data name="msg_project_unsupportedVersion" xml:space="preserve">
+    <value>Этот файл проекта создан более новой версией и не может быть открыт.</value>
   </data>
 </root>

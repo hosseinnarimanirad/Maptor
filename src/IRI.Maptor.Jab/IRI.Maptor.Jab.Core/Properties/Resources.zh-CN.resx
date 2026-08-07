@@ -730,6 +730,12 @@
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>转到上一页</value>
   </data>
+  <data name="featureTable_goToFirstPage" xml:space="preserve">
+    <value>转到第一页</value>
+  </data>
+  <data name="featureTable_goToLastPage" xml:space="preserve">
+    <value>转到最后一页</value>
+  </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
     <value>转到上一点</value>
   </data>
@@ -1752,5 +1758,23 @@
   </data>
   <data name="featureTable_sort_toggle" xml:space="preserve">
     <value>排序</value>
+  </data>
+  <data name="cmd_general_openProject" xml:space="preserve">
+    <value>打开项目</value>
+  </data>
+  <data name="cmd_general_saveProject" xml:space="preserve">
+    <value>保存项目</value>
+  </data>
+  <data name="cmd_general_saveProjectAs" xml:space="preserve">
+    <value>项目另存为</value>
+  </data>
+  <data name="msg_project_confirmReplace" xml:space="preserve">
+    <value>打开项目将替换当前图层和绘图。是否继续？</value>
+  </data>
+  <data name="msg_project_skippedLayers" xml:space="preserve">
+    <value>以下项目因未找到源文件而被跳过：{0}</value>
+  </data>
+  <data name="msg_project_unsupportedVersion" xml:space="preserve">
+    <value>此项目文件由较新版本创建，无法打开。</value>
   </data>
 </root>

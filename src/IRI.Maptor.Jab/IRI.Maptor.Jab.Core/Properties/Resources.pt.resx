@@ -730,6 +730,12 @@
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>Ir para a Página Anterior</value>
   </data>
+  <data name="featureTable_goToFirstPage" xml:space="preserve">
+    <value>Ir para a Primeira Página</value>
+  </data>
+  <data name="featureTable_goToLastPage" xml:space="preserve">
+    <value>Ir para a Última Página</value>
+  </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
     <value>Ir para o ponto anterior</value>
   </data>
@@ -1752,5 +1758,23 @@
   </data>
   <data name="featureTable_sort_toggle" xml:space="preserve">
     <value>Ordenar</value>
+  </data>
+  <data name="cmd_general_openProject" xml:space="preserve">
+    <value>Abrir projeto</value>
+  </data>
+  <data name="cmd_general_saveProject" xml:space="preserve">
+    <value>Salvar projeto</value>
+  </data>
+  <data name="cmd_general_saveProjectAs" xml:space="preserve">
+    <value>Salvar projeto como</value>
+  </data>
+  <data name="msg_project_confirmReplace" xml:space="preserve">
+    <value>Abrir um projeto substituirá as camadas e desenhos atuais. Continuar?</value>
+  </data>
+  <data name="msg_project_skippedLayers" xml:space="preserve">
+    <value>Os seguintes itens foram ignorados porque seus arquivos de origem não foram encontrados: {0}</value>
+  </data>
+  <data name="msg_project_unsupportedVersion" xml:space="preserve">
+    <value>Este arquivo de projeto foi criado com uma versão mais recente e não pode ser aberto.</value>
   </data>
 </root>

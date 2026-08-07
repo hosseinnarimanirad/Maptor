@@ -730,6 +730,12 @@
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>پچھلے صفحے پر جائیں</value>
   </data>
+  <data name="featureTable_goToFirstPage" xml:space="preserve">
+    <value>پہلے صفحے پر جائیں</value>
+  </data>
+  <data name="featureTable_goToLastPage" xml:space="preserve">
+    <value>آخری صفحے پر جائیں</value>
+  </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
     <value>پچھلے پوائنٹ پر جائیں۔</value>
   </data>
@@ -1752,5 +1758,23 @@
   </data>
   <data name="featureTable_sort_toggle" xml:space="preserve">
     <value>ترتیب دیں</value>
+  </data>
+  <data name="cmd_general_openProject" xml:space="preserve">
+    <value>پروجیکٹ کھولیں</value>
+  </data>
+  <data name="cmd_general_saveProject" xml:space="preserve">
+    <value>پروجیکٹ محفوظ کریں</value>
+  </data>
+  <data name="cmd_general_saveProjectAs" xml:space="preserve">
+    <value>پروجیکٹ اس نام سے محفوظ کریں</value>
+  </data>
+  <data name="msg_project_confirmReplace" xml:space="preserve">
+    <value>پروجیکٹ کھولنے سے موجودہ پرتیں اور ڈرائنگز تبدیل ہو جائیں گی۔ جاری رکھیں؟</value>
+  </data>
+  <data name="msg_project_skippedLayers" xml:space="preserve">
+    <value>درج ذیل اشیاء چھوڑ دی گئیں کیونکہ ان کی ماخذ فائلیں نہیں ملیں: {0}</value>
+  </data>
+  <data name="msg_project_unsupportedVersion" xml:space="preserve">
+    <value>یہ پروجیکٹ فائل نئے ورژن سے بنائی گئی ہے اور کھولی نہیں جا سکتی۔</value>
   </data>
 </root>

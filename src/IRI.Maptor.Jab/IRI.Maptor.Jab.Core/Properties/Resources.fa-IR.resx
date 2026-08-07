@@ -730,6 +730,12 @@
   <data name="geometryDetails_currentPoint_goToPreviousPage" xml:space="preserve">
     <value>رفتن به صفحه قبلی</value>
   </data>
+  <data name="featureTable_goToFirstPage" xml:space="preserve">
+    <value>رفتن به صفحه اول</value>
+  </data>
+  <data name="featureTable_goToLastPage" xml:space="preserve">
+    <value>رفتن به صفحه آخر</value>
+  </data>
   <data name="geometryDetails_currentPoint_goToPreviousPoint" xml:space="preserve">
     <value>رفتن به نقطه قبلی</value>
   </data>
@@ -1752,5 +1758,23 @@
   </data>
   <data name="featureTable_sort_toggle" xml:space="preserve">
     <value>مرتب‌سازی</value>
+  </data>
+  <data name="cmd_general_openProject" xml:space="preserve">
+    <value>باز کردن پروژه</value>
+  </data>
+  <data name="cmd_general_saveProject" xml:space="preserve">
+    <value>ذخیره پروژه</value>
+  </data>
+  <data name="cmd_general_saveProjectAs" xml:space="preserve">
+    <value>ذخیره پروژه با نام</value>
+  </data>
+  <data name="msg_project_confirmReplace" xml:space="preserve">
+    <value>با باز کردن پروژه، لایه‌ها و ترسیم‌های فعلی جایگزین می‌شوند. ادامه می‌دهید؟</value>
+  </data>
+  <data name="msg_project_skippedLayers" xml:space="preserve">
+    <value>موارد زیر به دلیل یافت نشدن فایل منبع نادیده گرفته شدند: {0}</value>
+  </data>
+  <data name="msg_project_unsupportedVersion" xml:space="preserve">
+    <value>این فایل پروژه با نسخه جدیدتری ایجاد شده و قابل باز کردن نیست.</value>
   </data>
 </root>
