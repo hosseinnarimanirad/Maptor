@@ -8,6 +8,8 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Spatial.IO.Dxf;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 using System.Security.Cryptography;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
@@ -18,7 +20,7 @@ public class DxfDataSource : MemoryDataSource
 
     private readonly int _sourceSrid;
 
-    public override string SourceAddress => $"Dxf file: {_fileName}";
+    public override SourceLocation? Location => new FileLocation { Path = _fileName };
 
     public override DataSourceKind DataSourceKind => DataSourceKind.Dxf;
 

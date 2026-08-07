@@ -1,7 +1,10 @@
 using IRI.Maptor.Sta.Common.Model;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Persistence.DataSources;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Ket.SqlitePersistence.MbTiles;
@@ -21,7 +24,9 @@ public class MbTilesDataSource : RasterDataSource, IDisposable
 
     //public int Srid => SridHelper.WebMercator;
 
-    public override string SourceAddress => $"MbTiles: {_filePath}";
+    public override DataSourceKind DataSourceKind => DataSourceKind.MBTiles;
+
+    public override SourceLocation? Location => new FileLocation { Path = _filePath };
 
     public MbTilesMetadata? Metadata => _reader.Metadata;
 

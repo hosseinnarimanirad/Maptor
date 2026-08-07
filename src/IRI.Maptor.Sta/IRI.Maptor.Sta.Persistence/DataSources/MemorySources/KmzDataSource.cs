@@ -11,6 +11,8 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.KmlFormat;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
@@ -21,7 +23,7 @@ public class KmzDataSource : MemoryDataSource
 {
     private readonly string _fileName;
 
-    public override string SourceAddress => $"Kmz file: {_fileName}";
+    public override SourceLocation? Location => new FileLocation { Path = _fileName };
 
     public override DataSourceKind DataSourceKind => DataSourceKind.Kmz;
 

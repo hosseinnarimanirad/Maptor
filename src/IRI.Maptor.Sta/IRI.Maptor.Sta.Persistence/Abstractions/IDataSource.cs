@@ -13,6 +13,13 @@ public interface IDataSource
     /// </summary>
     DataSourceKind DataSourceKind { get; }
 
+    /// <summary>
+    /// Where this data source's data comes from (file, directory, web service, ...),
+    /// or null for sources that cannot be re-opened from an address
+    /// (in-memory, raw-text, derived).
+    /// </summary>
+    SourceLocation? Location { get; }
+
     BoundingBox WebMercatorExtent { get; }
 
     int Srid { get; }

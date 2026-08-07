@@ -11,6 +11,8 @@ using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 using System.IO;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.Spatial.IO.EsriJson;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
@@ -22,7 +24,7 @@ public class EsriJsonDataSource : MemoryDataSource
 
     public override int OriginalSrid => _sourceSrid;
 
-    public override string SourceAddress => $"Esri Json file: {_fileName}";
+    public override SourceLocation? Location => string.IsNullOrEmpty(_fileName) ? null : new FileLocation { Path = _fileName };
 
     public override DataSourceKind DataSourceKind => DataSourceKind.EsriJson;
 

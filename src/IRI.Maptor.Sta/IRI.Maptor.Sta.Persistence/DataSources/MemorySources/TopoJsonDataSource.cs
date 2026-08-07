@@ -10,6 +10,8 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.IO.TopoJson;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
@@ -31,18 +33,28 @@ public class TopoJsonDataSource : MemoryDataSource
     // ************************************************************************
     //private readonly bool _isLongitudeFirst;
 
+    private readonly string? _rawJson;
+
     public override int OriginalSrid => _sourceSrid;
 
-    public override string SourceAddress => $"TopoJson file: {_fileName}";
+    public override SourceLocation? Location => string.IsNullOrEmpty(_fileName) ? null : new FileLocation { Path = _fileName };
 
     public override DataSourceKind DataSourceKind => DataSourceKind.TopoJson;
 
-    private TopoJsonDataSource(string fileName, List<Feature<Point>> features, int sourceSrid)
+    /// <summary>
+    /// Original pasted JSON when created via <see cref="CreateFromTextAsync"/>;
+    /// null for file-backed sources.
+    /// </summary>
+    public string? RawJson => _rawJson;
+
+    private TopoJsonDataSource(string fileName, List<Feature<Point>> features, int sourceSrid, string? rawJson)
         : base(features, resetIds: true, kind: DataSourceKind.TopoJson)
     {
         _fileName = fileName ?? string.Empty;
 
         _sourceSrid = sourceSrid;
+
+        _rawJson = rawJson;
     }
 
     public override string ToString() => $"{nameof(TopoJsonDataSource)}";
@@ -70,7 +82,7 @@ public class TopoJsonDataSource : MemoryDataSource
             throw new FileNotFoundException($"TopoJSON file not found: {fileName}", fileName);
 
         var jsonString = await File.ReadAllTextAsync(fileName);
-        return CreateFromJson(jsonString, fileName, sourceSrid);
+        return CreateFromJson(jsonString, fileName, sourceSrid, rawJson: null);
     }
 
     /// <summary>
@@ -81,11 +93,11 @@ public class TopoJsonDataSource : MemoryDataSource
         if (string.IsNullOrWhiteSpace(jsonText))
             throw new ArgumentException("JSON text cannot be empty.", nameof(jsonText));
 
-        var ds = CreateFromJson(jsonText, string.Empty, sourceSrid);
+        var ds = CreateFromJson(jsonText, string.Empty, sourceSrid, rawJson: jsonText);
         return Task.FromResult(ds);
     }
 
-    private static TopoJsonDataSource CreateFromJson(string jsonString, string fileName, int sourceSrid)
+    private static TopoJsonDataSource CreateFromJson(string jsonString, string fileName, int sourceSrid, string? rawJson)
     {
         if (sourceSrid == 0)
             throw new NotImplementedException("TopoJsonDataSource > CreateFromJson > srid cannot be 0!");
@@ -118,6 +130,6 @@ public class TopoJsonDataSource : MemoryDataSource
                 ? "No features found in the TopoJSON text."
                 : $"No features found in TopoJSON file: {fileName}");
 
-        return new TopoJsonDataSource(fileName ?? string.Empty, features, sourceSrid);
+        return new TopoJsonDataSource(fileName ?? string.Empty, features, sourceSrid, rawJson);
     }
 }

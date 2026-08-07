@@ -3,6 +3,8 @@ using IRI.Maptor.Sta.Common.Model;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 
 namespace IRI.Maptor.Ket.GdiPersistence;
 
@@ -19,7 +21,7 @@ public class GeoRasterFileDataSource : RasterDataSource
     private DataSourceKind _dataSourceKind = DataSourceKind.Worldfile;
     public override DataSourceKind DataSourceKind => _dataSourceKind;
 
-    public override string SourceAddress => _imageFileName ?? string.Empty;
+    public override SourceLocation? Location => string.IsNullOrEmpty(_imageFileName) ? null : new FileLocation { Path = _imageFileName };
 
     public GeoRasterFileDataSource()
     {

@@ -40,8 +40,12 @@ public sealed class MbTilesVectorTileProvider : IDisposable
 
     public BoundingBox WebMercatorExtent { get; }
 
+    public string FilePath { get; }
+
     public MbTilesVectorTileProvider(string filePath, int cacheCapacity = 64)
     {
+        FilePath = filePath;
+
         _cacheCapacity = Math.Max(1, cacheCapacity);
 
         _reader = new MbTilesReader(filePath);

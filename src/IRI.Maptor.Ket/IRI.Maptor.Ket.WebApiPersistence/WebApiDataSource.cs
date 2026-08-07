@@ -6,6 +6,8 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.Persistence.DataSources;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 using IRI.Maptor.Sta.Common.Exceptions;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Spatial.Dtos;
@@ -33,7 +35,9 @@ public class WebApiDataSource : MemoryDataSource
 
     protected WebApiSourceParameter _parameters;
 
-    public override string SourceAddress => $"WebApi: {_parameters?.ListUrl ?? string.Empty}";
+    public override SourceLocation? Location => _parameters is null
+        ? null
+        : new WebServiceLocation { ListUrl = _parameters.ListUrl, SyncUrl = _parameters.SyncUrl };
 
     public string? IdColumnName { get; set; }
 

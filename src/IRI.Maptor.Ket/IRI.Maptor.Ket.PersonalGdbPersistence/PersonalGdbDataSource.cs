@@ -6,6 +6,8 @@ using IRI.Maptor.Sta.PersonalGdb;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Persistence.DataSources;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 using IRI.Maptor.Ket.PersonalGdbPersistence.Model;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
@@ -63,6 +65,8 @@ public class PersonalGdbDataSource : VectorDataSource
 
 
     public override string SourceAddress => _mdbFileName;
+
+    public override SourceLocation? Location => new FileLocation { Path = _mdbFileName, TableName = _tableName };
 
     public string SearchColumn { get; set; }
 

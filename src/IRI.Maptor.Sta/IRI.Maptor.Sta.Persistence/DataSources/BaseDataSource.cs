@@ -1,6 +1,7 @@
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -34,7 +35,22 @@ public abstract class BaseDataSource : IDataSource
     // saving to the file
     public virtual int OriginalSrid => Srid;
 
-    public abstract string SourceAddress { get; }
+    /// <summary>
+    /// Human-readable description of where the data comes from, for display purposes
+    /// (e.g. layer settings). Derived from <see cref="DataSourceKind"/> and
+    /// <see cref="Location"/>; override only when the default formatting does not fit.
+    /// </summary>
+    public virtual string SourceAddress => Location switch
+    {
+        FileLocation file when !string.IsNullOrEmpty(file.TableName) => $"{DataSourceKind}: {file.Path} ({file.TableName})",
+        FileLocation file => $"{DataSourceKind}: {file.Path}",
+        DirectoryLocation dir => $"{DataSourceKind}: {dir.Path}",
+        WebServiceLocation web => $"{DataSourceKind}: {web.ListUrl}",
+        GrpcLocation grpc => $"{DataSourceKind}: {grpc.Endpoint}",
+        _ => DataSourceKind.ToString(),
+    };
+
+    public virtual SourceLocation? Location => null;
 
     #region Status Flags
 

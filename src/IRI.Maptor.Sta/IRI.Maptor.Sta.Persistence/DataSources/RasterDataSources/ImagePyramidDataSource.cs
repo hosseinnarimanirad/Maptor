@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 
 using IRI.Maptor.Sta.Common.Model;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 
 namespace IRI.Maptor.Sta.Persistence.RasterDataSources;
 
@@ -12,6 +14,8 @@ public class ImagePyramidDataSource : OfflineGoogleMapDataSource
     private string _directory;
 
     public override string SourceAddress => $"Image pyramid: {_directory}";
+
+    public override SourceLocation? Location => new DirectoryLocation { Path = _directory };
 
     public ImagePyramidDataSource(string directory, Func<int, int, int, string>? makeFileName = null) : base(new List<ImageSource>())
     {

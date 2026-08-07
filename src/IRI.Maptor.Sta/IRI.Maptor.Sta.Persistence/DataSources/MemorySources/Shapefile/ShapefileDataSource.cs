@@ -15,12 +15,14 @@ using IRI.Maptor.Sta.ShapefileFormat.EsriType;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
 using IRI.Maptor.Sta.ShapefileFormat.ShapeTypes.Abstractions;
 using IRI.Maptor.Sta.Common.Enums;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
 public class ShapefileDataSource : MemoryDataSource
 {
-    public override string SourceAddress => $"Shapefile: {_shapefileName}";
+    public override SourceLocation? Location => new FileLocation { Path = _shapefileName };
 
     public override DataSourceKind DataSourceKind => DataSourceKind.Shapefile;
 

@@ -9,6 +9,8 @@ using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
@@ -19,7 +21,7 @@ public class KmlDataSource : MemoryDataSource
 {
     private readonly string _fileName;
 
-    public override string SourceAddress => $"Kml file: {_fileName}";
+    public override SourceLocation? Location => new FileLocation { Path = _fileName };
 
     public override DataSourceKind DataSourceKind => DataSourceKind.Kml;
 

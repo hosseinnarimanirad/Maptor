@@ -6,6 +6,7 @@ using IRI.Maptor.Extensions;
 using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
@@ -20,6 +21,7 @@ namespace IRI.Maptor.Ket.SqlitePersistence.GeoPackage;
 public class GeoPackageDataSource : VectorDataSource, IDisposable
 {
     private readonly GpkgVectorReader _reader;
+    private readonly string _filePath;
     private readonly string _tableName;
     private GpkgLayerMetadata? _layerMetadata;
     private GpkgGeometryColumn? _geometryColumn;
@@ -31,7 +33,9 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
     // Features are projected to Web Mercator before being returned, so the source reports 3857.
     public override int Srid => SridHelper.WebMercator;
 
-    public override string SourceAddress => $"GeoPackage Data Source: {_tableName}";
+    public override DataSourceKind DataSourceKind => DataSourceKind.GeoPackage;
+
+    public override SourceLocation? Location => new FileLocation { Path = _filePath, TableName = _tableName };
 
     /// <summary>
     /// Gets the layer metadata
@@ -53,6 +57,7 @@ public class GeoPackageDataSource : VectorDataSource, IDisposable
         : base(new List<Field>())
     {
         _reader = new GpkgVectorReader(filePath);
+        _filePath = filePath;
         _tableName = tableName;
 
         if (openImmediately)

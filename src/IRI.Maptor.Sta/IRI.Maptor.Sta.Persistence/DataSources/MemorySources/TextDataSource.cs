@@ -12,6 +12,8 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
@@ -26,17 +28,38 @@ public class TextDataSource : MemoryDataSource
 
     private readonly bool _useFirstLineAsHeader;
 
-    public override string SourceAddress => $"{DataSourceKind} file: {_fileName}";
+    private readonly bool _isLongitudeFirst;
+
+    private readonly GeometryType _targetGeometryType;
+
+    private readonly string? _rawText;
+
+    public override SourceLocation? Location => string.IsNullOrEmpty(_fileName) ? null : new FileLocation { Path = _fileName };
 
     public override DataSourceKind DataSourceKind => _dataSourceKind/*DataSourceKind.Csv*/;
 
     public override int OriginalSrid => _sourceSrid;
 
+    public bool UseFirstLineAsHeader => _useFirstLineAsHeader;
+
+    public bool IsLongitudeFirst => _isLongitudeFirst;
+
+    public GeometryType TargetGeometryType => _targetGeometryType;
+
+    /// <summary>
+    /// Original pasted text when created via <see cref="CreateFromTextAsync"/>;
+    /// null for file-backed sources.
+    /// </summary>
+    public string? RawText => _rawText;
+
     private TextDataSource(string fileName,
                             List<Feature<Point>> features,
                             int sourceSrid,
                             bool useFirstLineAsHeader,
-                            DataSourceKind dataSourceKind)
+                            DataSourceKind dataSourceKind,
+                            bool isLongitudeFirst,
+                            GeometryType targetGeometryType,
+                            string? rawText)
         : base(features, resetIds: true, kind: dataSourceKind)
     {
         if (dataSourceKind != DataSourceKind.Csv && dataSourceKind != DataSourceKind.Tsv)
@@ -49,6 +72,12 @@ public class TextDataSource : MemoryDataSource
         _useFirstLineAsHeader = useFirstLineAsHeader;
 
         _sourceSrid = sourceSrid;
+
+        _isLongitudeFirst = isLongitudeFirst;
+
+        _targetGeometryType = targetGeometryType;
+
+        _rawText = rawText;
     }
 
     public override string ToString() => $"{nameof(TextDataSource)}";
@@ -127,7 +156,7 @@ public class TextDataSource : MemoryDataSource
         if (features.Count == 0)
             throw new InvalidOperationException($"No features found in CSV/TSV file: {fileName}");
 
-        return new TextDataSource(fileName, features, sourceSrid, useFirstLineAsHeader, dataSourceKind);
+        return new TextDataSource(fileName, features, sourceSrid, useFirstLineAsHeader, dataSourceKind, isLongitudeFirst, type, rawText: null);
     }
 
     /// <summary>
@@ -156,7 +185,7 @@ public class TextDataSource : MemoryDataSource
         if (features.Count == 0)
             throw new InvalidOperationException("No valid features found in the text.");
 
-        return Task.FromResult(new TextDataSource(string.Empty, features, sourceSrid, useFirstLineAsHeader, dataSourceKind));
+        return Task.FromResult(new TextDataSource(string.Empty, features, sourceSrid, useFirstLineAsHeader, dataSourceKind, isLongitudeFirst, type, rawText: text));
     }
 
     //public static async Task<TextDataSource> Create(CsvTsvOpenDialogResult)

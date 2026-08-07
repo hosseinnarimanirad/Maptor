@@ -8,7 +8,10 @@ using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.IO.VectorTiles;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Persistence.DataSources;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 
 namespace IRI.Maptor.Ket.SqlitePersistence.MbTiles;
@@ -30,7 +33,9 @@ public class MbTilesVectorDataSource : VectorDataSource
 
     public override int Srid => SridHelper.WebMercator;
 
-    public override string SourceAddress => $"MbTilesVector: {_layerName}";
+    public override DataSourceKind DataSourceKind => DataSourceKind.MBTiles;
+
+    public override SourceLocation? Location => new FileLocation { Path = _provider.FilePath, TableName = _layerName };
 
     public MbTilesVectorDataSource(MbTilesVectorTileProvider provider, MvtVectorLayerInfo info)
         : base(info.Fields ?? new List<Field>())

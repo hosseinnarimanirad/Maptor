@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using IRI.Maptor.Sta.Common.Model;
 using IRI.Maptor.Sta.Common.Primitives;
+using IRI.Maptor.Sta.Common.Enums;
 using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 using IRI.Maptor.Sta.Persistence.DataSources;
 using IRI.Maptor.Sta.Spatial.Helpers;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
@@ -17,6 +19,7 @@ namespace IRI.Maptor.Ket.SqlitePersistence.GeoPackage;
 public class GeoPackageTileDataSource : RasterDataSource, IDisposable
 {
     private readonly GpkgTileReader _reader;
+    private readonly string _filePath;
     private readonly string _tableName;
     private GpkgLayerMetadata? _layerMetadata;
     private GpkgTileMatrixSet? _tileMatrixSet;
@@ -28,7 +31,9 @@ public class GeoPackageTileDataSource : RasterDataSource, IDisposable
 
     //public int Srid => SridHelper.WebMercator;
 
-    public override string SourceAddress => $"GeoPackage Tile Data Source: {_tableName}";
+    public override DataSourceKind DataSourceKind => DataSourceKind.GeoPackage;
+
+    public override SourceLocation? Location => new FileLocation { Path = _filePath, TableName = _tableName };
 
     /// <summary>
     /// Gets the layer metadata
@@ -49,6 +54,7 @@ public class GeoPackageTileDataSource : RasterDataSource, IDisposable
     public GeoPackageTileDataSource(string filePath, string tableName, bool openImmediately = true)
     {
         _reader = new GpkgTileReader(filePath);
+        _filePath = filePath;
         _tableName = tableName;
 
         if (openImmediately)

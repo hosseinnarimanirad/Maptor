@@ -11,6 +11,8 @@ using IRI.Maptor.Sta.Spatial.Primitives;
 using IRI.Maptor.Sta.Spatial.GeoJsonFormat;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 
 namespace IRI.Maptor.Sta.Persistence.DataSources;
 
@@ -23,15 +25,31 @@ public class GeoJsonDataSource : MemoryDataSource
 
     private readonly bool _isLongitudeFirst;
 
-    public override string SourceAddress => $"GeoJson file: {_fileName}";
+    private readonly int _sourceSrid;
+
+    private readonly string? _rawJson;
+
+    public override SourceLocation? Location => string.IsNullOrEmpty(_fileName) ? null : new FileLocation { Path = _fileName };
 
     public override DataSourceKind DataSourceKind => DataSourceKind.GeoJson;
 
-    private GeoJsonDataSource(string fileName, List<Feature<Point>> features, bool isLongitudeFirst = true)
+    public override int OriginalSrid => _sourceSrid;
+
+    public bool IsLongitudeFirst => _isLongitudeFirst;
+
+    /// <summary>
+    /// Original pasted JSON when created via <see cref="CreateFromTextAsync"/>;
+    /// null for file-backed sources.
+    /// </summary>
+    public string? RawJson => _rawJson;
+
+    private GeoJsonDataSource(string fileName, List<Feature<Point>> features, bool isLongitudeFirst, int sourceSrid, string? rawJson)
         : base(features, resetIds: true, kind: DataSourceKind.GeoJson)
     {
         _fileName = fileName ?? string.Empty;
         _isLongitudeFirst = isLongitudeFirst;
+        _sourceSrid = sourceSrid;
+        _rawJson = rawJson;
     }
 
     public override string ToString() => $"{nameof(GeoJsonDataSource)}";
@@ -58,7 +76,7 @@ public class GeoJsonDataSource : MemoryDataSource
 
         var jsonString = await File.ReadAllTextAsync(fileName);
 
-        return CreateFromJson(jsonString, fileName, isLongitudeFirst, sourceSrid);
+        return CreateFromJson(jsonString, fileName, isLongitudeFirst, sourceSrid, rawJson: null);
     }
 
     /// <summary>
@@ -69,12 +87,12 @@ public class GeoJsonDataSource : MemoryDataSource
         if (string.IsNullOrWhiteSpace(jsonText))
             throw new ArgumentException("JSON text cannot be empty.", nameof(jsonText));
 
-        var ds = CreateFromJson(jsonText, string.Empty, isLongitudeFirst, sourceSrid);
+        var ds = CreateFromJson(jsonText, string.Empty, isLongitudeFirst, sourceSrid, rawJson: jsonText);
 
         return Task.FromResult(ds);
     }
 
-    private static GeoJsonDataSource CreateFromJson(string jsonString, string fileName, bool isLongitudeFirst, int sourceSrid)
+    private static GeoJsonDataSource CreateFromJson(string jsonString, string fileName, bool isLongitudeFirst, int sourceSrid, string? rawJson)
     {
         var featureSet = GeoJsonFeatureSet.Parse(jsonString);
 
@@ -87,6 +105,6 @@ public class GeoJsonDataSource : MemoryDataSource
                 ? "No features found in the JSON text."
                 : $"No features found in GeoJSON file: {fileName}");
 
-        return new GeoJsonDataSource(fileName ?? string.Empty, features, isLongitudeFirst);
+        return new GeoJsonDataSource(fileName ?? string.Empty, features, isLongitudeFirst, sourceSrid, rawJson);
     }
 }

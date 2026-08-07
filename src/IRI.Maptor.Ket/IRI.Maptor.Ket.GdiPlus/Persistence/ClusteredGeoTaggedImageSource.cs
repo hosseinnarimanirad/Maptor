@@ -6,6 +6,8 @@ using IRI.Maptor.Ket.GdiPlus.Model;
 using IRI.Maptor.Sta.Common.Primitives;
 using IRI.Maptor.Sta.Spatial.Analysis;
 using IRI.Maptor.Sta.Persistence.DataSources;
+using IRI.Maptor.Sta.Persistence.Abstractions;
+using IRI.Maptor.Sta.Persistence.Model;
 
 namespace IRI.Maptor.Ket.GdiPersistence;
 
@@ -30,7 +32,10 @@ public class ClusteredGeoTaggedImageSource : RasterDataSource
         }
     }
 
-    public override string SourceAddress => ImageDirectory; 
+    public override string SourceAddress => ImageDirectory;
+
+    public override SourceLocation? Location => new DirectoryLocation { Path = _imageDirectory };
+
 
     private ClusteredGeoTaggedImageSource(string imageDirectory)
     {
