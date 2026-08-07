@@ -536,7 +536,7 @@ public class VectorLayer : SymbolizableLayer
         return await _vectorDataSource.GetAsFeatureSetAsync(geometry);
     }
 
-    public List<Field>? GetFields() => _vectorDataSource?.Fields;
+    public override List<Field>? GetFields() => _vectorDataSource?.Fields;
 
     #endregion
 

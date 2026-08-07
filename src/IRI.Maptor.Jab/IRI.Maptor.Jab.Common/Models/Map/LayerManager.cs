@@ -223,18 +223,22 @@ public class LayerManager : Notifier
         {
             var maxToc = layers.Select(l => l.TocOrder).DefaultIfEmpty(0).Max();
 
+            // no explicit legend refresh: the legend views live-sort on TocOrder, so this
+            // assignment repositions the row on its own. The old per-add full refresh made
+            // an N-layer import (e.g. DXF) rebuild the whole TOC N times.
             layer.TocOrder = maxToc + 1;
-
-            if (legendViewModel?.RequestRefreshView is not null)
-            {
-                legendViewModel.RequestRefreshView.Invoke();
-            }
         }
 
         // add this code so when adding new layers (e.g. DXF)
         // its move up/down buttons have correct enabled/disabled value
         RequestUpdateLayerTocOrder?.Invoke(layers, layer.TocGroup);
     }
+
+    /// <summary>
+    /// Re-derives ZIndex from the current TocOrder values. Needed after TocOrder is set
+    /// directly rather than through a move up/down (e.g. restoring a project file).
+    /// </summary>
+    public void RearrangeZIndexes() => ArrangeZIndex();
 
     private void ArrangeZIndex()
     {
@@ -289,16 +293,26 @@ public class LayerManager : Notifier
                                     .ThenBy(i => i.Type == LayerType.Selection)
                                     .ThenBy(i => i.Type == LayerType.Highlight)
                                     .ThenBy(i => i.Type == LayerType.GroupLayer)
-                                    .ThenBy(i => i.ZIndex);
+                                    .ThenBy(i => i.ZIndex)
+                                    // materialize: newLayers is enumerated inside the All() below
+                                    // (once per element of CurrentLayers) and again further down,
+                                    // and a lazy IOrderedEnumerable re-runs this whole sort every
+                                    // time. Refresh calls this on every wheel notch and pan.
+                                    .ToList();
 
-        var toBeRemovedLayers = CurrentLayers.Where(i => i.RenderMode == rendering && newLayers.All(l => l.LayerId != i.LayerId)).ToList();
+        var newLayerIds = newLayers.Select(l => l.LayerId).ToHashSet();
+
+        var toBeRemovedLayers = CurrentLayers.Where(i => i.RenderMode == rendering && !newLayerIds.Contains(i.LayerId)).ToList();
 
         for (int i = 0; i < toBeRemovedLayers.Count; i++)
         {
             CurrentLayers.Remove(toBeRemovedLayers[i]);
         }
 
-        var toBeAdded = newLayers.Where(i => i.RenderMode == rendering && CurrentLayers.All(l => l.LayerId != i.LayerId)).ToList();
+        // built after the removals above, so it reflects what is actually still on the map
+        var currentLayerIds = CurrentLayers.Select(l => l.LayerId).ToHashSet();
+
+        var toBeAdded = newLayers.Where(i => i.RenderMode == rendering && !currentLayerIds.Contains(i.LayerId)).ToList();
 
         for (int i = 0; i < toBeAdded.Count; i++)
         {

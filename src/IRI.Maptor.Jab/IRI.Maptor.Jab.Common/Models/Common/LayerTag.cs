@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Media;
 using IRI.Maptor.Jab.Core;
 using IRI.Maptor.Jab.Core.Layers;
 using IRI.Maptor.Sta.Common.Primitives;
@@ -78,4 +79,12 @@ public class LayerTag
     }
 
     public Guid AncestorLayerId { get; set; }
+
+    // set for complex-layer items: the screen-position transform inside the element's
+    // TransformGroup, so position updates don't rely on the transform's index in the group
+    public TranslateTransform PositionTransform { get; set; }
+
+    // set for complex-layer items: the Locateable this element belongs to, so handlers
+    // whose sender is the element (e.g. SizeChanged) can recompute the anchored position
+    public Locateable Locateable { get; set; }
 }

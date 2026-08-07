@@ -145,36 +145,35 @@
                     Margin="2" CornerRadius="4">
                 <DockPanel Margin="4" HorizontalAlignment="Center" FlowDirection="LeftToRight">
                     <Button Command="{Binding MoveDrawingItemUpCommand}"
-                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                        ToolTip="{Binding [cmd_drawingLegend_moveUp], Source={StaticResource Localization}}" 
-                        IsEnabled="{Binding CanMoveDrawingItemUp}">
+                            Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            ToolTip="{Binding [cmd_drawingLegend_moveUp], Source={StaticResource Localization}}" 
+                            IsEnabled="{Binding CanMoveDrawingItemUp}">
                         <iconPacks:PackIconMaterial Kind="ArrangeBringForward" />
                     </Button>
                     <Button Command="{Binding MoveDrawingItemDownCommand}"
-                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                        ToolTip="{Binding [cmd_drawingLegend_moveDown], Source={StaticResource Localization}}"                  
-                        IsEnabled="{Binding CanMoveDrawingItemDown}">
+                            Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
+                            ToolTip="{Binding [cmd_drawingLegend_moveDown], Source={StaticResource Localization}}"                  
+                            IsEnabled="{Binding CanMoveDrawingItemDown}">
                         <iconPacks:PackIconMaterial Kind="ArrangeSendBackward" />
                     </Button>
                     <Button Command="{Binding SaveDrawingItemFileCommand}"
-                          Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
-                          ToolTip="{Binding [cmd_drawingLegend_saveAll], Source={StaticResource Localization}}">
+                            Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
+                            ToolTip="{Binding [cmd_drawingLegend_saveAll], Source={StaticResource Localization}}">
                         <iconPacks:PackIconMaterial Kind="ContentSaveAll"/>
                     </Button>
-
+                    <Button Command="{Binding OpenDrawingItemFileCommand}"
+                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
+                                ToolTip="{Binding [cmd_drawingLegend_openAll], Source={StaticResource Localization}}">
+                        <iconPacks:PackIconMaterial Kind="FileMultiple" />
+                    </Button>
+                    
                     <Expander Style="{StaticResource toggleHorizontalExpander}"
                             IsExpanded="{Binding ElementName=root, Path=SelectedExpanderIndex, Converter={StaticResource indexToBoolConverter}, ConverterParameter=1}">
                         <Expander.Header>
                             <iconPacks:PackIconMaterial Kind="FilePlusOutline" Foreground="White"/>
                         </Expander.Header>
                         <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center" >
-
-                            <Button Command="{Binding OpenDrawingItemFileCommand}"
-                                Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
-                                ToolTip="{Binding [cmd_drawingLegend_openAll], Source={StaticResource Localization}}">
-                                <iconPacks:PackIconMaterial Kind="FileMultiple" />
-                            </Button>
-
+ 
                             <Button Command="{Binding AddGeoJsonToDrawingItemsCommand}"
                                 Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"                                
                                 ToolTip="{Binding [cmd_general_addGeoJson], Source={StaticResource Localization}}">
