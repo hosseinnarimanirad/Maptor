@@ -1253,7 +1253,7 @@ public class EditableFeatureLayer : SymbolizableLayer, IDisposable
         {
             return AddVertex(webMercatorPoint, _webMercatorGeometry, _vertices);
         }
-        else if (polygonIndex != null)
+        else if (polygonIndex >= 0)
         {
             return AddVertex(webMercatorPoint,
                             _webMercatorGeometry.Geometries[polygonIndex.Value].Geometries[partIndex],

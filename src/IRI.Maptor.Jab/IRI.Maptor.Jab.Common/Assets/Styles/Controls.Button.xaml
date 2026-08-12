@@ -170,6 +170,31 @@
         <Setter Property="FontSize" Value="16"/>
     </Style>
 
+    <!--compact button styles: inline actions inside dense forms/lists, where a 32px button dominates the row-->
+    <Style x:Key="IRI.Maptor.Styles.Button.Primary.Small"
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.Button.Primary}">
+
+        <Setter Property="Height" Value="24"/>
+        <Setter Property="MinHeight" Value="24"/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="Padding" Value="8,0"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.Button.Secondary.Small"
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.Button.Secondary}">
+
+        <Setter Property="Height" Value="24"/>
+        <Setter Property="MinHeight" Value="24"/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="Padding" Value="8,0"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
     <!--dialog button styles-->
     <Style x:Key="IRI.Maptor.Styles.Button.Dialogs.Primary"
            TargetType="{x:Type Button}"

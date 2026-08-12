@@ -62,6 +62,15 @@
         <Setter Property="Margin" Value="0,0,8,0"/>
     </Style>
 
+    <!--icon for IRI.Maptor.Styles.Button.*.Small-->
+    <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.ButtonContent.Small"
+           TargetType="iconPacks:PackIconMaterial"
+           BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.ButtonContent}">
+        <Setter Property="Width" Value="12"/>
+        <Setter Property="Height" Value="12"/>
+        <Setter Property="Margin" Value="0,0,5,0"/>
+    </Style>
+
     <Style x:Key="IRI.Maptor.Styles.PackIconMaterial.ChevronPrevious"
            TargetType="iconPacks:PackIconMaterial"
            BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}">

@@ -1853,6 +1853,8 @@ public partial class MapViewer : NotifiableUserControl
 
         Action action = async () =>
         {
+            var tasks = new List<Task>();
+
             foreach (ILayer item in infos)
             {
                 if (!item.CanRenderLayer(mapScale))
@@ -1875,11 +1877,11 @@ public partial class MapViewer : NotifiableUserControl
                     {
                         vectorLayer.TileManager.TryAdd(tile);
 
-                        await AddTiledLayerAsync(vectorLayer, tile);
+                        tasks.Add(AddTiledLayerAsync(vectorLayer, tile));
                     }
                     else if (item is TileServiceLayer tileServiceLayer)
                     {
-                        await AddTileServiceLayerAsync(tileServiceLayer, tile);
+                        tasks.Add(AddTileServiceLayerAsync(tileServiceLayer, tile));
                     }
                     else
                     {
@@ -1887,6 +1889,18 @@ public partial class MapViewer : NotifiableUserControl
                         throw new NotImplementedException();
                     }
                 }
+            }
+
+            // Await all layers for this tile together instead of one-by-one so a slow
+            // basemap download cannot block tiled vector layers from rendering (see
+            // docs/future improvements/mapviewer-slow-network-tile-blocking.md, Step A).
+            try
+            {
+                await Task.WhenAll(tasks);
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"MapViewer; {DateTime.Now.ToLongTimeString()}; RefreshTiles WhenAll failed: {ex}");
             }
         };
 
