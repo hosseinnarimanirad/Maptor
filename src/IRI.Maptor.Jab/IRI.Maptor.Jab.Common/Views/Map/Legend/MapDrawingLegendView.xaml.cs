@@ -39,11 +39,7 @@ public partial class MapDrawingLegendView : NotifiableUserControl
     public bool ShowTools
     {
         get { return (bool)GetValue(ShowToolsProperty); }
-        set
-        {
-            SetValue(ShowToolsProperty, value);
-            RaisePropertyChanged(nameof(ShowTools));
-        }
+        set { SetValue(ShowToolsProperty, value); }
     }
     public static readonly DependencyProperty ShowToolsProperty =
         DependencyProperty.Register(nameof(ShowTools), typeof(bool), typeof(MapDrawingLegendView), new PropertyMetadata(true));

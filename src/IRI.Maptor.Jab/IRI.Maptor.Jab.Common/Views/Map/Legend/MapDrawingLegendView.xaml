@@ -3,8 +3,7 @@
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:maptor="clr-namespace:IRI.Maptor.Jab.Controls" 
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-                xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                xmlns:maptorJab="clr-namespace:IRI.Maptor.Jab.Common"
+                xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" 
                 xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
                 mc:Ignorable="d" x:Name="root" >
@@ -18,8 +17,10 @@
 
                 <Style TargetType="{x:Type iconPacks:PackIconMaterial}" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
 
-                <!--the whole tools toggle button-->
-                <Style TargetType="ToggleButton">
+                <!--The selector behind each drawing item in the list below. Keyed rather than implicit:
+                    as an implicit style it also reached every unstyled ToggleButton inside MapLegendItemView,
+                    which sits in the ItemTemplate and so resolves resources through this dictionary.-->
+                <Style x:Key="drawingItemSelector" TargetType="ToggleButton">
                     <Setter Property="BorderThickness" Value="4,0,0,0"/>
                     <Setter Property="BorderBrush" Value="Transparent"/>
                     <Setter Property="Cursor" Value="Hand"/>
@@ -27,7 +28,10 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="ToggleButton">
                                 <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
-                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
+                                    
+                                    <ContentPresenter
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
                                 </Border>
                             </ControlTemplate>
                         </Setter.Value>
@@ -54,12 +58,21 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="Expander">
-                                <Border x:Name="expanderBorder" 
-                                    Background="White"
-                                    Margin="0" Padding="0" CornerRadius="18">
+                                <!--Height 38 = 1px border + 36 content + 1px border. The content buttons are
+                                    32x32 with Margin=2, so they need exactly 36; anything less clips them.
+                                    Padding is left-only because the trailing button's own 2px margin already
+                                    supplies the right inset, which keeps the collapsed pill a true 38x38 circle.-->
+                                <Border x:Name="expanderBorder"
+                                    Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                                    BorderThickness="1"
+                                    BorderBrush="{DynamicResource MahApps.Brushes.Accent2}"
+                                    Margin="0" Height="38" Padding="2,0,0,0" CornerRadius="19">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="6" ShadowDepth="1" Direction="270" Opacity="0.18" Color="Black"/>
+                                    </Border.Effect>
                                     <StackPanel Orientation="Horizontal" Margin="0">
                                         <ToggleButton x:Name="HeaderSite"
-                                                      Margin="0" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"                                   
+                                                      Margin="0,0,2,0" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleDark}"                                   
                                                       Width="32" Height="32"
                                                       IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                                             <!--<ToggleButton.Style >
@@ -91,42 +104,102 @@
                                                                     Foreground="{DynamicResource MahApps.Brushes.Highlight}" Opacity="1"
                                                                     Visibility="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType=Expander}, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=False}"/>-->
 
-                                        <ContentPresenter x:Name="ExpandSite"
-                                              ContentSource="Content"
-                                              Margin="0"
-                                              RenderTransformOrigin="0,0.5"
+                                        <!--The separator lives inside this host rather than beside it so that it
+                                            scales and fades with the content instead of occupying 1px while collapsed.
+                                            LayoutTransform (not RenderTransform) so the outer StackPanel/DockPanel
+                                            reflow as ScaleX grows: no reserved gap, no clipping needed.
+                                            ScaleX is animated 0<->1 by the IsExpanded trigger below.-->
+                                        <StackPanel x:Name="ExpandHost"
+                                              Orientation="Horizontal"
+                                              Opacity="0"
                                               Visibility="Collapsed">
-                                        </ContentPresenter>
+                                            <StackPanel.LayoutTransform>
+                                                <ScaleTransform ScaleX="0"/>
+                                            </StackPanel.LayoutTransform>
+
+                                            <Border Width="1" Margin="0,7"
+                                                    Background="{DynamicResource MahApps.Brushes.Accent2}"/>
+
+                                            <ContentPresenter x:Name="ExpandSite"
+                                                  ContentSource="Content"
+                                                  Margin="0"/>
+                                        </StackPanel>
 
                                     </StackPanel>
                                 </Border>
 
                                 <ControlTemplate.Triggers>
+                                    <!--Visibility is driven by the storyboards below, not by a Setter: a Setter
+                                        would snap the content away at the start of the collapse. It still has to
+                                        be set, though - a zero-scaled ExpandHost has no size but stays tab-focusable.
+                                        Collapse is deliberately faster than expand so that swapping between the two
+                                        expanders shrinks before it grows, which keeps the centred DockPanel steady.-->
                                     <Trigger Property="IsExpanded" Value="True">
-                                        <Setter TargetName="ExpandSite" Property="Visibility" Value="Visible"/>
                                         <Setter TargetName="HeaderSite" Property="Background" Value="{DynamicResource MahApps.Brushes.Highlight }"/>
-                                    </Trigger>
 
-                                    <Trigger Property="IsExpanded" Value="False">
-                                        <Setter TargetName="ExpandSite" Property="Visibility" Value="Collapsed"/>
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandHost"
+                                                                                   Storyboard.TargetProperty="Visibility">
+                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}"/>
+                                                    </ObjectAnimationUsingKeyFrames>
+                                                    <DoubleAnimation Storyboard.TargetName="ExpandHost"
+                                                                     Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(ScaleTransform.ScaleX)"
+                                                                     To="1" Duration="0:0:0.22">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseOut"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                    <DoubleAnimation Storyboard.TargetName="ExpandHost"
+                                                                     Storyboard.TargetProperty="Opacity"
+                                                                     To="1" Duration="0:0:0.22"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+
+                                        <Trigger.ExitActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <!--The 0:0:0 Visible frame is required: with only the closing
+                                                        frame, the animation reports the base value (Collapsed) for
+                                                        the whole run and the content vanishes instantly.-->
+                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpandHost"
+                                                                                   Storyboard.TargetProperty="Visibility">
+                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}"/>
+                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.14" Value="{x:Static Visibility.Collapsed}"/>
+                                                    </ObjectAnimationUsingKeyFrames>
+                                                    <DoubleAnimation Storyboard.TargetName="ExpandHost"
+                                                                     Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(ScaleTransform.ScaleX)"
+                                                                     To="0" Duration="0:0:0.14">
+                                                        <DoubleAnimation.EasingFunction>
+                                                            <CubicEase EasingMode="EaseIn"/>
+                                                        </DoubleAnimation.EasingFunction>
+                                                    </DoubleAnimation>
+                                                    <DoubleAnimation Storyboard.TargetName="ExpandHost"
+                                                                     Storyboard.TargetProperty="Opacity"
+                                                                     To="0" Duration="0:0:0.14"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.ExitActions>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
                 </Style>
-                <Style TargetType="Path" x:Key="buttonPath">
+                <!--<Style TargetType="Path" x:Key="buttonPath">
                     <Setter Property="Stretch" Value="Uniform"/>
                     <Setter Property="Fill" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
                     <Setter Property="Width" Value="18"/>
                     <Setter Property="Height" Value="18"/>
                     <Setter Property="FlowDirection" Value="LeftToRight"/>
-                </Style>
+                </Style>-->
 
 
-                <Style x:Key="circleButtonDarkOverride" TargetType="{x:Type Button}" BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" >
+                <!--<Style x:Key="circleButtonDarkOverride" TargetType="{x:Type Button}" BasedOn="{StaticResource IRI.Maptor.Styles.Button.CircleDark}" >
                     <Setter Property="Margin" Value="1"/>
-                </Style>
+                </Style>-->
 
                 <Style TargetType="ScrollBar" BasedOn="{StaticResource  IRI.Maptor.Styles.ScrollBar}"/>
 
@@ -143,8 +216,8 @@
                         Visibility="{Binding ElementName=root, Path=ShowTools, Converter={StaticResource boolToVisibilityConverter}}">
             <Border Background="{DynamicResource MahApps.Brushes.Accent3}"
                     Margin="2" CornerRadius="4">
-                <DockPanel Margin="4" HorizontalAlignment="Center" FlowDirection="LeftToRight">
-                    <Button Command="{Binding MoveDrawingItemUpCommand}"
+                <DockPanel Margin="4" HorizontalAlignment="Left" >
+                    <!--<Button Command="{Binding MoveDrawingItemUpCommand}"
                             Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                             ToolTip="{Binding [cmd_drawingLegend_moveUp], Source={StaticResource Localization}}" 
                             IsEnabled="{Binding CanMoveDrawingItemUp}">
@@ -155,7 +228,7 @@
                             ToolTip="{Binding [cmd_drawingLegend_moveDown], Source={StaticResource Localization}}"                  
                             IsEnabled="{Binding CanMoveDrawingItemDown}">
                         <iconPacks:PackIconMaterial Kind="ArrangeSendBackward" />
-                    </Button>
+                    </Button>-->
                     <Button Command="{Binding SaveDrawingItemFileCommand}"
                             Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"  
                             ToolTip="{Binding [cmd_drawingLegend_saveAll], Source={StaticResource Localization}}">
@@ -170,7 +243,7 @@
                     <Expander Style="{StaticResource toggleHorizontalExpander}"
                             IsExpanded="{Binding ElementName=root, Path=SelectedExpanderIndex, Converter={StaticResource indexToBoolConverter}, ConverterParameter=1}">
                         <Expander.Header>
-                            <iconPacks:PackIconMaterial Kind="FilePlusOutline" Foreground="White"/>
+                            <iconPacks:PackIconMaterial Kind="FilePlusOutline" Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
                         </Expander.Header>
                         <StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Center" >
  
@@ -195,7 +268,7 @@
                     <Expander Style="{StaticResource toggleHorizontalExpander}"  
                             IsExpanded="{Binding ElementName=root, Path=SelectedExpanderIndex, Converter={StaticResource indexToBoolConverter}, ConverterParameter=2}">
                         <Expander.Header>
-                            <iconPacks:PackIconMaterial Kind="PencilPlus" Foreground="White"/>
+                            <iconPacks:PackIconMaterial Kind="PencilPlus" Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
                         </Expander.Header>
                         <StackPanel Orientation="Horizontal">
                             <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
@@ -207,23 +280,23 @@
                             <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                 IsChecked="{Binding IsDrawPolylineMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_drawPolyline], Source={StaticResource Localization}}">
-                                <iconPacks:Material Kind="VectorPolylinePlus"/>
+                                <iconPacks:PackIconMaterial Kind="VectorPolylinePlus"/>
                             </ToggleButton>
                             <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                 IsChecked="{Binding IsDrawRectangleMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_drawRectangle], Source={StaticResource Localization}}">
-                                <iconPacks:Material Kind="ShapeRectanglePlus"/>
+                                <iconPacks:PackIconMaterial Kind="ShapeRectanglePlus"/>
                             </ToggleButton>
 
                             <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                 IsChecked="{Binding IsDrawPolygonMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_drawPolygon], Source={StaticResource Localization}}">
-                                <iconPacks:Material Kind="ShapePolygonPlus"/>
+                                <iconPacks:PackIconMaterial Kind="ShapePolygonPlus"/>
                             </ToggleButton>
                             <ToggleButton Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                 IsChecked="{Binding IsDrawTextMode, Mode=TwoWay}"
                                 ToolTip="{Binding [cmd_general_addTextToMap], Source={StaticResource Localization}}">
-                                <iconPacks:Material Kind="FormatAnnotationPlus"/>
+                                <iconPacks:PackIconMaterial Kind="FormatAnnotationPlus"/>
                             </ToggleButton>
                         </StackPanel>
                     </Expander>
@@ -252,11 +325,11 @@
                     <Setter Property="IsSelected" Value="{Binding IsSelectedInToc, Mode=TwoWay}" />
                 </Style>
             </ListBox.ItemContainerStyle>
-            <ListBox.ItemsPanel>
+            <!--<ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel/>
                 </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
+            </ListBox.ItemsPanel>-->
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <!--GroupName="{Binding ElementName=root, Path=GroupName}"-->
@@ -266,14 +339,14 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <!--<TextBlock Grid.Column="0" Text="{Binding ZIndex}" Margin="4"/>-->
-                        <RadioButton Grid.Column="1" Style="{StaticResource {x:Type ToggleButton}}"
+                        <RadioButton Grid.Column="1" Style="{StaticResource drawingItemSelector}"
                                  DataContext="{Binding }"
                                  IsChecked="{Binding IsSelectedInToc, Mode=TwoWay}">
                             <maptor:MapLegendItemView ShowReloadData="False" ShowMoreOptions="False"                                                 
                                                 Symbology="{Binding DefaultSymbology}"  
                                                 IsEditable="True" Commands="{Binding Commands}" 
                                                 IsChecked="{Binding IsSelectedInToc}"
-                                                TitleFontSize="{Binding ElementName=root, Path=TitleFontSize}"/>
+                                                TitleFontSize="{Binding RelativeSource={RelativeSource AncestorType=maptor:MapDrawingLegendView}, Path=TitleFontSize}"/>
                         </RadioButton>
 
                     </Grid>

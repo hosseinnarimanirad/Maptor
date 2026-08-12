@@ -64,10 +64,10 @@
                                 mahApp:TextBoxHelper.SelectAllOnFocus="True" Value="{Binding Symbology.StrokeThickness, Mode=TwoWay}"/>
 
         <StackPanel Grid.Row="2" Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding CloseCommand}">
+            <Button IsCancel="True" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding CloseCommand}">
                 <iconPacks:PackIconMaterial Kind="CloseThick" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
-            <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding ApplyCommand}">
+            <Button IsDefault="True" Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}" Command="{Binding ApplyCommand}">
                 <iconPacks:PackIconMaterial Kind="CheckBold" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
             </Button>
         </StackPanel>
