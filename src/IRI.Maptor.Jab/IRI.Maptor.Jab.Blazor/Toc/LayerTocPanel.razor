@@ -112,7 +112,8 @@
                                  Depth="0"
                                  ZoomLevel="@ZoomLevel"
                                  MatchedIds="@_matchedIds"
-                                 NodeChanged="HandleNodeChangedAsync" />
+                                 NodeChanged="HandleNodeChangedAsync"
+                                 TableRequested="@TableRequested" />
                 }
             </div>
         }
@@ -143,6 +144,10 @@
 
     [Parameter]
     public EventCallback OnRetry { get; set; }
+
+    /// <summary>Forwarded to every row; leaving it unwired hides the per-layer table button.</summary>
+    [Parameter]
+    public EventCallback<TocLayerNode> TableRequested { get; set; }
 
     /// <summary>Optional; the collapse affordance is only rendered when a host handles it.</summary>
     [Parameter]

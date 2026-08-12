@@ -1,0 +1,103 @@
+.feature-table__state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    font-size: 0.82rem;
+    color: var(--mud-palette-text-secondary);
+}
+
+.feature-table__state--error {
+    color: var(--mud-palette-error);
+}
+
+.feature-table__toolbar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.15rem 0.6rem;
+    border-block-end: 1px solid var(--mud-palette-divider);
+}
+
+.feature-table__filter {
+    flex: 0 1 18rem;
+    min-width: 0;
+    font-size: 0.78rem;
+}
+
+.feature-table__summary {
+    margin-inline-start: auto;
+    font-size: 0.72rem;
+    color: var(--mud-palette-text-secondary);
+    white-space: nowrap;
+}
+
+/* The only scrolling element in the panel. Virtualize measures against this, so it must be the
+   thing with a bounded height — hence flex:1 with min-height:0 rather than a fixed value. */
+.feature-table__scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+}
+
+.feature-table__grid {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    white-space: nowrap;
+}
+
+.feature-table__grid thead th {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+    padding: 0.4rem 0.6rem;
+    text-align: start;
+    font-weight: 600;
+    background: var(--mud-palette-background-gray);
+    border-block-end: 1px solid var(--mud-palette-divider);
+}
+
+.feature-table__sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.feature-table__sortable:hover {
+    background: var(--mud-palette-action-default-hover);
+}
+
+.feature-table__header {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.feature-table__grid td {
+    padding: 0 0.6rem;
+    border-block-end: 1px solid var(--mud-palette-divider);
+    max-width: 18rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Must match FeatureTableGrid.RowHeightPixels, or Virtualize's scroll height drifts from reality. */
+.feature-table__row {
+    height: 34px;
+    cursor: pointer;
+}
+
+.feature-table__row:hover {
+    background: var(--mud-palette-action-default-hover);
+}
+
+.feature-table__row--selected {
+    background: var(--mud-palette-primary-hover);
+}
+
+.feature-table__index {
+    width: 3.5rem;
+    color: var(--mud-palette-text-secondary);
+}

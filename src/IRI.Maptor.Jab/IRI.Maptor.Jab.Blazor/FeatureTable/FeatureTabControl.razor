@@ -1,0 +1,121 @@
+@* Docked attribute-table panel: a tab per opened layer, one grid showing at a time.
+
+   The tab strip is hand-rolled rather than built on MudTabs because each tab needs its own close
+   button and the active tab is owned by the host (opening a layer's table from the TOC must switch
+   to it), which is a fight with a component that wants to own its own selection. *@
+
+@using IRI.Maptor.Sta.Common.Primitives
+@using IRI.Maptor.Sta.Spatial.Primitives
+
+@if (Tabs.Count > 0)
+{
+    <section class="feature-table" aria-label="جدول اطلاعات لایه‌ها">
+        <header class="feature-table__strip">
+            <div class="feature-table__tabs" role="tablist">
+                @foreach (var tab in Tabs)
+                {
+                    <div class="feature-table__tab @(tab.LayerId == ActiveLayerId ? "feature-table__tab--active" : null)"
+                         role="tab"
+                         aria-selected="@(tab.LayerId == ActiveLayerId ? "true" : "false")"
+                         @onclick="@(() => ActiveLayerIdChanged.InvokeAsync(tab.LayerId))">
+
+                        <span class="feature-table__tab-title" title="@tab.Title">@tab.Title</span>
+
+                        @if (tab.IsLoading)
+                        {
+                            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Small" />
+                        }
+                        else if (tab.Features is not null)
+                        {
+                            <span class="feature-table__tab-count">@ToPersianDigits(tab.Features.Features.Count)</span>
+                        }
+
+                        @* stopPropagation so closing a background tab does not also activate it. *@
+                        <button type="button"
+                                class="feature-table__tab-close"
+                                title="بستن جدول"
+                                @onclick="@(() => TabClosed.InvokeAsync(tab.LayerId))"
+                                @onclick:stopPropagation="true">
+                            <MudIcon Icon="@Icons.Material.Rounded.Close" Size="Size.Small" />
+                        </button>
+                    </div>
+                }
+            </div>
+
+            <div class="feature-table__actions">
+                @if (ActiveTab is { } active && active.Features is { } features && features.Features.Count > 0)
+                {
+                    <MudIconButton Icon="@Icons.Material.Rounded.ZoomOutMap"
+                                   Size="Size.Small"
+                                   title="بزرگ‌نمایی روی کل لایه"
+                                   OnClick="@(() => LayerZoomRequested.InvokeAsync(active))" />
+                }
+
+                <MudIconButton Icon="@Icons.Material.Rounded.CloseFullscreen"
+                               Size="Size.Small"
+                               title="بستن همه‌ی جدول‌ها"
+                               OnClick="AllTabsClosed" />
+            </div>
+        </header>
+
+        @* Keyed on the active layer so switching tabs rebuilds the grid rather than reusing the
+           previous tab's virtualized scroll state against a different feature list. *@
+        @if (ActiveTab is { } activeTab)
+        {
+            <FeatureTableGrid @key="activeTab.LayerId"
+                              Tab="activeTab"
+                              SelectedFeature="SelectedFeature"
+                              FeatureSelected="FeatureSelected"
+                              FeatureActivated="FeatureActivated" />
+        }
+    </section>
+}
+
+@code {
+    [Parameter]
+    public IReadOnlyList<FeatureTableTab> Tabs { get; set; } = [];
+
+    [Parameter]
+    public string? ActiveLayerId { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ActiveLayerIdChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<string> TabClosed { get; set; }
+
+    [Parameter]
+    public EventCallback AllTabsClosed { get; set; }
+
+    [Parameter]
+    public Feature<Point>? SelectedFeature { get; set; }
+
+    [Parameter]
+    public EventCallback<Feature<Point>> FeatureSelected { get; set; }
+
+    [Parameter]
+    public EventCallback<Feature<Point>> FeatureActivated { get; set; }
+
+    /// <summary>Frame the whole layer, as opposed to one row.</summary>
+    [Parameter]
+    public EventCallback<FeatureTableTab> LayerZoomRequested { get; set; }
+
+    private FeatureTableTab? ActiveTab =>
+        Tabs.FirstOrDefault(tab => tab.LayerId == ActiveLayerId) ?? Tabs.FirstOrDefault();
+
+    private static string ToPersianDigits(int value)
+    {
+        var text = value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+        Span<char> buffer = stackalloc char[text.Length];
+
+        for (var i = 0; i < text.Length; i++)
+        {
+            buffer[i] = text[i] is >= '0' and <= '9'
+                ? (char)(text[i] - '0' + '۰')
+                : text[i];
+        }
+
+        return new string(buffer);
+    }
+}

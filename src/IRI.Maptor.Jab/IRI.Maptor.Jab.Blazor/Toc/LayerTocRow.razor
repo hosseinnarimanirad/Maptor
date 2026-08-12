@@ -68,6 +68,16 @@
                 </MudTooltip>
             }
 
+            @if (TableRequested.HasDelegate)
+            {
+                <button type="button"
+                        class="toc-row__tune-toggle"
+                        title="جدول اطلاعات"
+                        @onclick="@(() => TableRequested.InvokeAsync(Node))">
+                    <MudIcon Icon="@Icons.Material.Rounded.TableRows" Size="Size.Small" />
+                </button>
+            }
+
             <button type="button"
                     class="toc-row__tune-toggle @(_isTuning ? "toc-row__tune-toggle--on" : null)"
                     title="شفافیت لایه"
@@ -102,7 +112,8 @@
                          Depth="@(Depth + 1)"
                          ZoomLevel="@ZoomLevel"
                          MatchedIds="@MatchedIds"
-                         NodeChanged="@NodeChanged" />
+                         NodeChanged="@NodeChanged"
+                         TableRequested="@TableRequested" />
         }
     }
 }
@@ -126,6 +137,13 @@
 
     [Parameter]
     public EventCallback<TocLayerNode> NodeChanged { get; set; }
+
+    /// <summary>
+    /// Raised when the user asks to see a layer's attribute table. Optional — the button is only
+    /// rendered when a host has wired this up, so a client with no table panel shows no dead action.
+    /// </summary>
+    [Parameter]
+    public EventCallback<TocLayerNode> TableRequested { get; set; }
 
     private bool _isTuning;
 

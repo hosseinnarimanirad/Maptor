@@ -1,0 +1,95 @@
+/* The panel owns its own height and never grows with its content — the grid inside scrolls
+   instead, so a layer with ten thousand rows takes exactly as much of the window as one with ten. */
+.feature-table {
+    display: flex;
+    flex-direction: column;
+    /* flex:1 fills the host's docked row; min-width:0 is what lets the tab strip scroll instead of
+       forcing the panel wider than the window. */
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    background: var(--mud-palette-surface);
+    border-block-start: 1px solid var(--mud-palette-divider);
+}
+
+.feature-table__strip {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-inline: 0.5rem;
+    border-block-end: 1px solid var(--mud-palette-divider);
+    background: var(--mud-palette-background-gray);
+}
+
+/* Scrolls horizontally rather than wrapping: a wrapped strip would change the panel's height and
+   push the map around every time a tab is opened. */
+.feature-table__tabs {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    gap: 0.25rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.feature-table__tab {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex: 0 0 auto;
+    max-width: 16rem;
+    padding: 0.35rem 0.5rem;
+    cursor: pointer;
+    border-block-end: 2px solid transparent;
+    font-size: 0.8rem;
+    color: var(--mud-palette-text-secondary);
+}
+
+.feature-table__tab:hover {
+    background: var(--mud-palette-action-default-hover);
+}
+
+.feature-table__tab--active {
+    border-block-end-color: var(--mud-palette-primary);
+    color: var(--mud-palette-text-primary);
+    font-weight: 600;
+}
+
+.feature-table__tab-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.feature-table__tab-count {
+    flex: 0 0 auto;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: var(--mud-palette-action-default-hover);
+    font-size: 0.68rem;
+}
+
+.feature-table__tab-close {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.6;
+}
+
+.feature-table__tab-close:hover {
+    opacity: 1;
+}
+
+.feature-table__actions {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+}
