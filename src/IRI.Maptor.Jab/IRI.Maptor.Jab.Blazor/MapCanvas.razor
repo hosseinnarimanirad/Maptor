@@ -1,0 +1,10 @@
+<div class="jab-map-canvas">
+    <canvas @ref="_canvasRef"
+            @onpointerdown="OnPointerDown"
+            @onpointermove="OnPointerMove"
+            @onpointerup="OnPointerUp"
+            @onpointerleave="OnPointerUp"
+            @onwheel="OnWheel" @onwheel:preventDefault="true"
+            style="touch-action:none;">
+    </canvas>
+</div>

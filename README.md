@@ -28,7 +28,8 @@ IRI.Maptor.sln
 ├── tests/                # xUnit test suite
 ├── samples/              # sample WPF and console applications
 ├── research/             # algorithm research prototypes
-└── docs/                 # tutorials and the README style guide
+└── docs/                 # tutorials, the README style guide, and "future improvements/"
+                          # (one .md per planned improvement or feature, ready to implement)
 ```
 
 Three library tiers where dependencies flow downward (Jab UI → Ket infrastructure → Sta core):

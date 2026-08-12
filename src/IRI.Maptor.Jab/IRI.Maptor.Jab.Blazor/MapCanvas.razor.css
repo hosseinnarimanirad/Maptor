@@ -1,0 +1,16 @@
+.jab-map-canvas {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background: #dbe4e6;
+}
+
+.jab-map-canvas canvas {
+    display: block;
+    cursor: grab;
+}
+
+.jab-map-canvas canvas:active {
+    cursor: grabbing;
+}

@@ -49,6 +49,9 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
     <PackageVersion Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="8.0.28" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.28" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.28" />
     <PackageVersion Include="System.DirectoryServices.Protocols" Version="8.0.0" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />

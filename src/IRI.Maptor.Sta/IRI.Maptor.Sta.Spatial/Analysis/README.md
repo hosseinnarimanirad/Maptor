@@ -89,6 +89,72 @@ bool inPoly  = TopologyUtility.IsPointInPolygon(polygonOrMultiPolygon, point);
 
 Also here: segment–segment intersection (`LineSegmentsIntersects`), point–segment distance, the point/circumcircle test (`GetPointCircleRelation`), and left/right-of-vector classification (`GetPointVectorRelation`, with an optional `tolerance`).
 
+## Point-in-polygon across spatial reference systems
+
+Everything above assumes both operands live in the same SRS. When they don't — a point layer in one system, a polygon layer in another — the *direction* you reproject decides whether the answers are true:
+
+> Run the containment test in the **polygon layer's SRS**: reproject the **point layer** into the polygon's SRS, never the polygon into the point's. A point reprojects exactly; a polygon does not.
+
+<p align="center">
+  <img src="../images/point-in-polygon-srs.png" alt="Point in polygon across SRS: reprojecting the polygon bends its edges; reprojecting the points is exact" width="800">
+</p>
+
+### The tempting optimization
+
+Given points in SRS A and polygons in SRS B, the cheap way to reconcile them is to transform the **polygons** into A and test there: a handful of features with a few hundred vertices, against a point layer that may hold millions of rows. The cost argument is real. The result is wrong.
+
+### Why moving the polygon breaks the answer
+
+A polygon is stored as **vertices plus implied straight edges**. Reprojection transforms only the vertices; each edge is then redrawn as a straight chord between the transformed endpoints in the target SRS.
+
+But a straight line in one SRS is not a straight line in another. Any non-linear transform — geographic to projected, or between two projections — maps a straight segment to a **curve**. The redrawn chord therefore deviates from the true image of the boundary:
+
+- the deviation is **zero at the vertices** and largest at the **middle of each edge**;
+- it grows with **edge length** — long, sparse edges are the worst case — and with the **curvature of the transform** in that area.
+
+Every point sitting in the sliver between the chord and the true curve is assigned to the **wrong polygon**, which is precisely the near-border population a count is most sensitive to.
+
+A point, by contrast, is dimensionless: it has no edges to redraw. Reprojection maps one coordinate pair to one coordinate pair, exactly (up to negligible numeric error). Move the points and nothing is distorted — the test then runs against the polygon **where its edges are authoritative**, the SRS its geometry was authored in.
+
+### What the figure shows
+
+Three regions with long shared borders and 350 points, under a simulated non-linear transform:
+
+- **Left — reproject the polygon.** Vertices land true, but the solid chord edges drift off the dashed true boundary, and **25 points** (the × marks) fall in the wrong region.
+- **Right — reproject the points.** The same data in the polygon's SRS: edges straight and authoritative, every point mapped exactly, every count true.
+
+Note the treacherous detail in the left card's labels. Although 25 individual points are misassigned, the per-region totals barely move — **83 vs 85, 168 vs 169, 99 vs 96** — because flips across each border go in *both* directions and largely cancel. Aggregate counts can look entirely plausible while the individual answers are wrong, so a "the totals look about right" spot-check will not catch this bug.
+
+### Doing it right
+
+Transform the point layer with the projections in [`IRI.Maptor.Sta.SpatialReferenceSystem`](../../IRI.Maptor.Sta.SpatialReferenceSystem/MapProjections/README.md), then count with the point-in-ring predicates above — in the polygon's SRS:
+
+```csharp
+using IRI.Maptor.Sta.Spatial.Helpers;
+using IRI.Maptor.Sta.SpatialReferenceSystem.MapProjections;
+
+// polygons authored in UTM zone 39N; points arriving as WGS84 lon/lat
+var utm = UTM.CreateForZone(39);
+var ringBoundingBox = ring.GetBoundingBox();      // reused across every test
+
+int count = geodeticPoints
+    .Select(p => utm.FromGeodetic(p))                                     // move the POINTS …
+    .Count(p => TopologyUtility.IsPointInRing(ring, p, ringBoundingBox));  // … then test there
+```
+
+### It is a rule about dimension
+
+Nothing here is specific to polygons, or to which layer you consider primary. Any predicate that mixes points with shaped geometry follows the same logic: reproject the dimensionless operand into the SRS of the one whose shape carries meaning.
+
+Asking **which transmission towers sit on a power line** is the same problem one dimension down. The line is vertices plus implied straight spans; reprojecting it redraws every span as a chord that bows away from the true path, and towers genuinely on the line fall off it — worst at mid-span, exactly where the long crossings are. Move the **towers** into the **power line's** SRS and test there.
+
+### Nuances and edge cases
+
+- **If you truly must move the polygon** — you need it in the other SRS anyway — **densify** its edges first: insert intermediate vertices along each segment, then reproject. Shorter segments mean smaller chords, which bounds the error; it is still an approximation. Moving the points is exact.
+- **The one exception.** If the two SRS are related by a purely **affine** transform, straight lines stay straight and either direction works. In practice any projection change is non-linear, so treat the rule as universal.
+- **Authoritativeness.** The result is correct *with respect to the SRS the polygon was authored in*. If a boundary is legally defined by geodesics on the ellipsoid rather than by its stored projected geometry, the authoritative form is the geodesic one — the rule generalizes to "test containment where the boundary definition is authoritative".
+- **Performance.** Transforming millions of points does cost more than transforming a few polygons; that is the whole temptation. The cost is linear and parallelizes cleanly, and correctness is worth it.
+
 ## Space-filling curves (SFC)
 
 Hilbert, Z-order (Morton) and other curve orderings that linearize 2-D data while keeping neighbours close — the backbone of `SFCRTree` bulk-loading and locality-preserving sorts. See the dedicated [SFC README](SFC/README.md).
