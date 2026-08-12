@@ -1777,4 +1777,34 @@
   <data name="msg_project_unsupportedVersion" xml:space="preserve">
     <value>此项目文件由较新版本创建，无法打开。</value>
   </data>
+  <data name="dialog_common_sectionCoordinateSystem" xml:space="preserve">
+    <value>坐标系</value>
+  </data>
+  <data name="dialog_common_sectionOptions" xml:space="preserve">
+    <value>选项</value>
+  </data>
+  <data name="dialog_common_sectionData" xml:space="preserve">
+    <value>数据</value>
+  </data>
+  <data name="dialog_printPdf_sectionDecorations" xml:space="preserve">
+    <value>修饰元素</value>
+  </data>
+  <data name="dialog_printPdf_sectionPage" xml:space="preserve">
+    <value>页面设置</value>
+  </data>
+  <data name="dialog_geometryDetails_alsoZones" xml:space="preserve">
+    <value>（另有：{0}）</value>
+  </data>
+  <data name="dialog_common_validationNoData" xml:space="preserve">
+    <value>请先粘贴数据或选择文件</value>
+  </data>
+  <data name="dialog_common_validationNoFile" xml:space="preserve">
+    <value>请先选择文件</value>
+  </data>
+  <data name="dialog_common_validationNoSrs" xml:space="preserve">
+    <value>请选择坐标系</value>
+  </data>
+  <data name="dialog_common_validationUtmZone" xml:space="preserve">
+    <value>UTM 带号必须在 1 到 60 之间</value>
+  </data>
 </root>

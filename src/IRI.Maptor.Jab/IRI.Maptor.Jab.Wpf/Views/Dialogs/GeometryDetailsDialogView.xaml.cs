@@ -24,41 +24,16 @@ public partial class GeometryDetailsDialogView : MetroWindow
 
     //private IDialogService DialogService { get; }
 
-    public static readonly DependencyProperty DialogTitleProperty =
-        DependencyProperty.Register(
-            nameof(DialogTitle),
-            typeof(string),
-            typeof(GeometryDetailsDialogView),
-            new PropertyMetadata("Geometry Details"));
-
-    public string DialogTitle
-    {
-        get => (string)GetValue(DialogTitleProperty);
-        set => SetValue(DialogTitleProperty, value);
-    }
-
     //private GeometryDetailsViewModel? ViewModel { get; set; }
 
 
 
 
-    private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        if (sender is DataGridRow row && row.DataContext is NotifiablePoint pointInfo)
-        {
-            var point = new IRI.Maptor.Sta.Common.Primitives.Point(pointInfo.X, pointInfo.Y);
-            //RequestZoomToPoint?.Invoke(point);
-        }
-    }
-
-
     public GeometryDetailsDialogView(/*EditableFeatureLayer editableFeatureLayer, IDialogService dialogService*/)
     {
         InitializeComponent();
-        LocalizationManager.Instance.LanguageChanged += OnLanguageChanged;
 
-        // Set initial title
-        UpdateTitle();
+        // Title is bound in XAML like every other dialog; no manual language handling here.
 
         //this.EditableFeatureLayer = editableFeatureLayer;
 
@@ -88,17 +63,6 @@ public partial class GeometryDetailsDialogView : MetroWindow
     private void ViewModel_RequestClose()
     {
         this.Close();
-    }
-
-    private void UpdateTitle()
-    {
-        DialogTitle = LocalizationManager.Instance["dialog_geometryDetails_title"] ?? "Geometry Details";
-        Title = DialogTitle;
-    }
-
-    private void OnLanguageChanged()
-    {
-        UpdateTitle();
     }
 }
 

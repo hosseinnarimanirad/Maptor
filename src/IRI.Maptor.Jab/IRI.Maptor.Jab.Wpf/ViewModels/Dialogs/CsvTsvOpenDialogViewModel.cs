@@ -9,6 +9,7 @@ using IRI.Maptor.Jab.Wpf.Services;
 using IRI.Maptor.Sta.SpatialReferenceSystem;
 using IRI.Maptor.Jab.Wpf.Models.DxfOpenDialog;
 using IRI.Maptor.Sta.Common.Exceptions;
+using IRI.Maptor.Jab.Core.Localization;
 
 namespace IRI.Maptor.Jab.Wpf.ViewModels.Dialogs;
 
@@ -86,7 +87,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
         {
             _rawText = value ?? string.Empty;
             RaisePropertyChanged();
-            RaisePropertyChanged(nameof(CanOpen));
+            RaisePropertyChanged(nameof(ValidationMessage));
         }
     }
 
@@ -103,6 +104,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(IsUtmSelected));
             RaisePropertyChanged(nameof(EffectiveSelectedSrid));
+            RaisePropertyChanged(nameof(ValidationMessage));
         }
     }
 
@@ -125,6 +127,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
             _utmZone = Math.Clamp(value, 1, 60);
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(EffectiveSelectedSrid));
+            RaisePropertyChanged(nameof(ValidationMessage));
         }
     }
 
@@ -136,6 +139,7 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
             _utmHemisphereNorth = value;
             RaisePropertyChanged();
             RaisePropertyChanged(nameof(EffectiveSelectedSrid));
+            RaisePropertyChanged(nameof(ValidationMessage));
         }
     }
 
@@ -247,16 +251,28 @@ public class CsvTsvOpenDialogViewModel : DialogViewModelBase
 
     private bool CanOpen()
     {
-        if (string.IsNullOrWhiteSpace(RawText))
-            return false;
+        return ValidationMessage is null;
+    }
 
-        if (EffectiveSelectedSrid <= 0)
-            return false;
+    /// <summary>
+    /// Why Open is disabled, or null when it is enabled. Shown in the dialog footer so the
+    /// user is not left guessing at a greyed-out button.
+    /// </summary>
+    public string? ValidationMessage
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(RawText))
+                return LocalizationManager.Instance["dialog_common_validationNoData"];
 
-        if (IsUtmSelected && (UtmZone < 1 || UtmZone > 60))
-            return false;
+            if (EffectiveSelectedSrid <= 0)
+                return LocalizationManager.Instance["dialog_common_validationNoSrs"];
 
-        return true;
+            if (IsUtmSelected && (UtmZone < 1 || UtmZone > 60))
+                return LocalizationManager.Instance["dialog_common_validationUtmZone"];
+
+            return null;
+        }
     }
 
     private void RemoveSelectedFile()

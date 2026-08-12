@@ -9,16 +9,11 @@
     xmlns:presenters="clr-namespace:IRI.Maptor.Jab.Wpf.ViewModels.CoordinateEditor"
 
     Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
-    Title="{Binding DialogTitle, RelativeSource={RelativeSource AncestorType=mahApp:MetroWindow}}"          
-    SizeToContent="Height"
-    MaxWidth="750"
-    ShowMaxRestoreButton="True"  
+    Title="{Binding [dialog_geometryDetails_title], Source={StaticResource Localization}}"
+    SizeToContent="Manual" ResizeMode="CanResizeWithGrip"
+    Width="750" Height="620" MinWidth="600" MinHeight="420" MaxWidth="1100"
+    ShowMaxRestoreButton="True"
     WindowStartupLocation="CenterOwner" >
-    <mahApp:MetroWindow.TitleTemplate>
-        <DataTemplate>
-            <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}" />
-        </DataTemplate>
-    </mahApp:MetroWindow.TitleTemplate>
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -29,10 +24,17 @@
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
 
-    <StackPanel Margin="4">
+    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.DialogContent}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel>
 
         <!-- Basic Information Section -->
-        <GroupBox Grid.Row="0" Margin="0,0,0,0" Padding="4">
+        <GroupBox Margin="0,0,0,0" Padding="4">
             <GroupBox.Header>
                 <TextBlock Text="{Binding [dialog_geometryDetails_basicInfo], Source={StaticResource Localization}}"
                            Style="{StaticResource IRI.Maptor.Styles.TextBlock.HeaderTitle}"/>
@@ -85,8 +87,9 @@
                                Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                Visibility="{Binding SpansMultipleUtmZones, Converter={StaticResource boolToVisibilityConverter}}">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="(همچنین: {0})">
+                            <MultiBinding Converter="{StaticResource localizedFormatConverter}">
                                 <Binding Path="UtmZones" Converter="{StaticResource collectionToStringConverter}"/>
+                                <Binding Path="[dialog_geometryDetails_alsoZones]" Source="{StaticResource Localization}"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
@@ -98,8 +101,8 @@
         <Expander Grid.Row="1" Margin="0,0,0,8" Padding="8"
                       IsExpanded="True">
             <Expander.Header>
-                <TextBlock Text="{Binding [dialog_geometryDetails_editCoordinates], Source={StaticResource Localization}}" Foreground="White"
-               Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" Margin="0" Cursor="Hand"/>
+                <TextBlock Text="{Binding [dialog_geometryDetails_editCoordinates], Source={StaticResource Localization}}"
+               Style="{StaticResource IRI.Maptor.Styles.TextBlock.HeaderTitle}" Margin="0" Cursor="Hand"/>
             </Expander.Header>
             <ContentControl Content="{Binding GeometryEditor}">
                 <ContentControl.Resources>
@@ -113,8 +116,8 @@
         <!-- Format Display Section -->
         <Expander Grid.Row="2" Margin="0,0,0,8" Padding="0" IsExpanded="False">
             <Expander.Header>
-                <TextBlock Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}}" Foreground="White"
-                            Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" Margin="0" Cursor="Hand"/>
+                <TextBlock Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}}"
+                            Style="{StaticResource IRI.Maptor.Styles.TextBlock.HeaderTitle}" Margin="0" Cursor="Hand"/>
             </Expander.Header>
             <StackPanel>
                 <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Margin="2" CornerRadius="4">
@@ -138,36 +141,27 @@
                         </Button>
                     </StackPanel>
                 </Border>
-                <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" FlowDirection="LeftToRight" 
+                <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" FlowDirection="LeftToRight"
                               VerticalScrollBarVisibility="Auto" MaxHeight="150" Margin="0" HorizontalAlignment="Stretch">
-                    <TextBlock Text="{Binding StringRepresentation}" HorizontalAlignment="Stretch" Background="#EEEEEE"
-                               TextWrapping="Wrap" Padding="4" MaxWidth="720" Margin="0,4"
+                    <TextBlock Text="{Binding StringRepresentation}" HorizontalAlignment="Stretch"
+                               Background="{DynamicResource MahApps.Brushes.Gray9}"
+                               TextWrapping="Wrap" Padding="4" Margin="0,4"
                                FontFamily="Consolas" FontSize="11"/>
                 </ScrollViewer>
             </StackPanel>
         </Expander>
 
-        <!-- Save/Cancel Buttons -->
-        <!--<StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
-            <Button ToolTip="{Binding [dialog_common_cancel], Source={StaticResource Localization}}" 
-                        Command="{Binding CancelEditingCommand}" Margin="4" 
-                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
-                <iconPacks:PackIconMaterial Kind="CloseThick"/>
-            </Button>
-            <Button ToolTip="{Binding [dialog_common_save], Source={StaticResource Localization}}" 
-                        Command="{Binding SaveGeometryCommand}" Margin="4"  
-                        Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
-                <iconPacks:PackIconMaterial Kind="CheckBold"/>
-            </Button>
-        </StackPanel>-->
+        </StackPanel>
+        </ScrollViewer>
 
-        <dialogs:DialogFooterView SecondaryText="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
+        <dialogs:DialogFooterView Grid.Row="1"
+                                  SecondaryText="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
                                   SecondaryCommand="{Binding CancelEditingCommand}"
                                   PrimaryText="{Binding [dialog_common_save], Source={StaticResource Localization}}"
                                   PrimaryIconKind="CheckBold"
                                   PrimaryCommand="{Binding SaveGeometryCommand}"/>
 
-    </StackPanel>
+    </Grid>
 
 </mahApp:MetroWindow>
 

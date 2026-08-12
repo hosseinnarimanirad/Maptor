@@ -8,98 +8,126 @@
     xmlns:localization="clr-namespace:IRI.Maptor.Jab.Core.Localization;assembly=IRI.Maptor.Jab.Core"
     xmlns:dialogs="clr-namespace:IRI.Maptor.Jab.Controls.Dialogs"
 
-    Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"              
+    Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
     Title="{Binding [dialog_themeSelection_windowTitle], Source={StaticResource Localization}}"
-                     
+    SizeToContent="Manual" ResizeMode="CanResizeWithGrip"
+    Width="620" Height="540" MinWidth="520" MinHeight="400" MaxWidth="900"
+    FocusManager.FocusedElement="{Binding ElementName=ThemesItemsControl}"
     WindowStartupLocation="CenterOwner"  >
-    <mahApp:MetroWindow.TitleTemplate>
-        <DataTemplate>
-            <TextBlock Text="{TemplateBinding Content}"
-                       Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}"
-                       />
-        </DataTemplate>
-    </mahApp:MetroWindow.TitleTemplate>
+
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
-            <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
-            
 
-            <!-- DataTemplate for theme items -->
+            <!-- A theme tile: the accent colour it applies, plus its name. The bare colour
+                 squares this replaced gave no clue which theme was which. -->
             <DataTemplate x:Key="ThemeItemTemplate">
                 <Button Command="{Binding DataContext.SelectThemeCommand, RelativeSource={RelativeSource AncestorType=mahApp:MetroWindow}}"
                     CommandParameter="{Binding}"
-                    VerticalAlignment="Center"
-                    Width="50" Height="50"
-                    Margin="0"
+                    Width="112" Height="82"
+                    Margin="0,0,8,8"
                     Padding="0"
                     Cursor="Hand"
                     BorderThickness="0"
+                    ToolTip="{Binding DisplayName}"
+                    AutomationProperties.Name="{Binding DisplayName}"
                     Background="Transparent">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border x:Name="ThemeBorder" Background="{Binding AccentColor}" CornerRadius="0">
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="BorderBrush" Value="Transparent"/>
-                                        <Setter Property="BorderThickness" Value="5"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                                                <Setter Property="BorderThickness" Value="5"/>
-                                            </DataTrigger>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
-                                                <Setter Property="BorderThickness" Value="5"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
-                                <Border.ToolTip>
-                                    <TextBlock Text="{Binding DisplayName}" FontSize="12"/>
-                                </Border.ToolTip>
-                            </Border>
+                            <Grid>
+                                <Border x:Name="tile" CornerRadius="6" BorderThickness="2"
+                                        BorderBrush="Transparent"
+                                        Background="{DynamicResource MahApps.Brushes.Gray10}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Border Grid.Row="0" Margin="4,4,4,0" CornerRadius="4"
+                                                Background="{Binding AccentColor}"/>
+
+                                        <TextBlock Grid.Row="1" Text="{Binding DisplayName}"
+                                                   Style="{StaticResource IRI.Maptor.Styles.TextBlock}"
+                                                   FontSize="11" Margin="4,3,4,5"
+                                                   TextAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- tick on the applied theme; the border alone was easy to miss -->
+                                <Border x:Name="check" Width="20" Height="20" CornerRadius="10"
+                                        Margin="0,7,7,0"
+                                        HorizontalAlignment="Right" VerticalAlignment="Top"
+                                        Visibility="Collapsed"
+                                        Background="{DynamicResource MahApps.Brushes.Accent}">
+                                    <iconPacks:PackIconMaterial Kind="Check" Width="12" Height="12"
+                                                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"/>
+                                </Border>
+
+                                <!-- keyboard focus ring: without it, tabbing the tiles is invisible -->
+                                <Rectangle x:Name="FocusRing" Visibility="Collapsed"
+                                           RadiusX="6" RadiusY="6"
+                                           Stroke="{DynamicResource MahApps.Brushes.ThemeForeground}"
+                                           StrokeThickness="2" StrokeDashArray="2 2"
+                                           SnapsToDevicePixels="True"/>
+                            </Grid>
+
+                            <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                    <Setter TargetName="tile" Property="BorderBrush"
+                                            Value="{DynamicResource MahApps.Brushes.Accent}"/>
+                                    <Setter TargetName="check" Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="tile" Property="BorderBrush"
+                                            Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter TargetName="FocusRing" Property="Visibility" Value="Visible"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
             </DataTemplate>
-        </ResourceDictionary>        
+        </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
 
-    <Grid Margin="0" MinWidth="550">
+    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.DialogContent}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Separator Margin="0"/>
+        <TextBlock Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                   Margin="0,0,0,6"
+                   Text="{Binding [dialog_themeSelection_title], Source={StaticResource Localization}}"/>
 
-        <GroupBox Grid.Row="1" Margin="0">
-            <GroupBox.Header>
-                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.HeaderTitle}"
-                           Text="{Binding [dialog_themeSelection_title], Source={StaticResource Localization}}"/>
-            </GroupBox.Header>
-
-            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="400" Grid.Row="1" Margin="4">
+        <Border Grid.Row="1" CornerRadius="6" BorderThickness="1"
+                BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
+                Background="{DynamicResource MahApps.Brushes.ThemeBackground}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                          Padding="10,10,2,2">
                 <ItemsControl x:Name="ThemesItemsControl" FlowDirection="LeftToRight"
                               ItemsSource="{Binding AvailableThemes}"
                               ItemTemplate="{StaticResource ThemeItemTemplate}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Columns="11" Rows="2"/>
+                            <!--wraps to whatever the theme count is, instead of a hardcoded 11x2-->
+                            <WrapPanel Orientation="Horizontal"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
             </ScrollViewer>
-        </GroupBox>
+        </Border>
 
-        <dialogs:DialogFooterView Grid.Row="4"
+        <dialogs:DialogFooterView Grid.Row="2"
                                   SecondaryText="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
                                   SecondaryCommand="{Binding CancelCommand}"
                                   PrimaryText="{Binding [dialog_common_save], Source={StaticResource Localization}}"

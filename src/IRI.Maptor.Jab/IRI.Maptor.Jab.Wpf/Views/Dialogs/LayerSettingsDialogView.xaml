@@ -15,24 +15,15 @@
     MaxWidth="700"
     MinWidth="400"
     Height="450" Width="650"
+    FocusManager.FocusedElement="{Binding ElementName=settingsTabControl}"
     WindowStartupLocation="CenterOwner">
 
-    <!--GlowBrush="{DynamicResource MahApps.Brushes.Highlight}"
-        FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"
-        WindowStartupLocation="CenterOwner"
-        ShowCloseButton="True"
-        ShowMinButton="False" 
-        WindowStyle="ToolWindow"   ResizeMode="NoResize">-->
+    <!--custom title bar: the standard one from the shared style plus the layer name-->
     <mahApp:MetroWindow.TitleTemplate>
         <DataTemplate>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{TemplateBinding Content}"
                            Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}"/>
-                <!--TextTrimming="CharacterEllipsis"
-                        VerticalAlignment="Center"
-                        Margin="8 0 8 0"
-                        FontFamily="{StaticResource iranSans}"
-                        FontWeight="Bold" />-->
                 <TextBlock Margin="0" FontWeight="Normal"
                     Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}"
                     Text="{Binding DataContext.Layer.LayerName, RelativeSource={RelativeSource AncestorType=mahApp:MetroWindow},StringFormat={}({0})}"/>
@@ -61,8 +52,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <!--<Rectangle Height="30" VerticalAlignment="Top" Fill="{DynamicResource MahApps.Brushes.ThemeBackground}" />-->
-        <TabControl Grid.Row="0" Margin="1" Style="{StaticResource MahApps.Styles.TabControl}"
+        <TabControl Grid.Row="0" x:Name="settingsTabControl" Margin="1" Style="{StaticResource MahApps.Styles.TabControl}"
                     >
             <TabControl.Resources>
                 <!--the whole tabheader part's color-->

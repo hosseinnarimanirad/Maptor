@@ -11,13 +11,8 @@
                 d:DataContext="{d:DesignInstance Type=viewModel:DialogViewModel, IsDesignTimeCreatable=True}"
                 Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
                 ShowCloseButton="False" MinWidth="400"
+                Title="{Binding [dialog_common_confirmTitle], Source={StaticResource Localization}}"
                 WindowStartupLocation="CenterOwner">
-    <mahApp:MetroWindow.TitleTemplate>
-        <DataTemplate>
-            <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}"
-                       Text="{Binding [dialog_common_confirmTitle], Source={StaticResource Localization}}"/>
-        </DataTemplate>
-    </mahApp:MetroWindow.TitleTemplate>
     <Grid Margin="8" >
         <Grid.Resources>
             <ResourceDictionary>
@@ -40,7 +35,6 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <!--<StackPanel Orientation="Horizontal" Margin="4,0"  >-->
         <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" Margin="4" Height="40" Width="40" 
                     BorderThickness="3" CornerRadius="20" HorizontalAlignment="Center" VerticalAlignment="Center">
             <iconPacks:PackIconMaterial Kind="InformationSymbol" Foreground="{DynamicResource MahApps.Brushes.Accent}" />

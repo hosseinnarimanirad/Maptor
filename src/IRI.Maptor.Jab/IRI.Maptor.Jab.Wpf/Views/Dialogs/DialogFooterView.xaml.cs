@@ -89,6 +89,45 @@ public partial class DialogFooterView : UserControl
 
 
     /// <summary>
+    /// Optional status line shown opposite the buttons (e.g. "3 users loaded").
+    /// </summary>
+    public string? StatusText
+    {
+        get { return (string?)GetValue(StatusTextProperty); }
+        set { SetValue(StatusTextProperty, value); }
+    }
+
+    public static readonly DependencyProperty StatusTextProperty =
+        DependencyProperty.Register(nameof(StatusText), typeof(string), typeof(DialogFooterView), new PropertyMetadata(null));
+
+
+    /// <summary>
+    /// Only needed when the command itself carries no CanExecute.
+    /// </summary>
+    public bool IsPrimaryEnabled
+    {
+        get { return (bool)GetValue(IsPrimaryEnabledProperty); }
+        set { SetValue(IsPrimaryEnabledProperty, value); }
+    }
+
+    public static readonly DependencyProperty IsPrimaryEnabledProperty =
+        DependencyProperty.Register(nameof(IsPrimaryEnabled), typeof(bool), typeof(DialogFooterView), new PropertyMetadata(true));
+
+
+    /// <summary>
+    /// Only needed when the command itself carries no CanExecute.
+    /// </summary>
+    public bool IsSecondaryEnabled
+    {
+        get { return (bool)GetValue(IsSecondaryEnabledProperty); }
+        set { SetValue(IsSecondaryEnabledProperty, value); }
+    }
+
+    public static readonly DependencyProperty IsSecondaryEnabledProperty =
+        DependencyProperty.Register(nameof(IsSecondaryEnabled), typeof(bool), typeof(DialogFooterView), new PropertyMetadata(true));
+
+
+    /// <summary>
     /// False for dialogs whose only action is Close (nothing to cancel).
     /// </summary>
     public bool ShowSecondary

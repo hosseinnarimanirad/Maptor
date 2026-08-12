@@ -1,38 +1,27 @@
 using System;
 using System.Globalization;
 using System.Windows.Data;
-using IRI.Maptor.Jab.Core.Localization;
 
 namespace IRI.Maptor.Jab.Wpf.Converters;
 
+/// <summary>
+/// Formats a value with a format string that is itself localized, which a plain
+/// Binding cannot do (StringFormat is not bindable).
+/// values[0] = the value, values[1] = the format string, e.g. "(also: {0})".
+/// </summary>
 public class LocalizedFormatConverter : IMultiValueConverter
 {
-    public string FormatKey { get; set; } = string.Empty;
-
-    public object? Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
-        var formatKey = parameter as string ?? FormatKey;
-        
-        if (string.IsNullOrEmpty(formatKey))
-        {
+        if (values is null || values.Length < 2)
             return string.Empty;
-        }
 
-        var formatString = LocalizationManager.Instance[formatKey];
-        
-        if (string.IsNullOrEmpty(formatString))
-        {
-            return $"#{formatKey}";
-        }
+        var format = values[1] as string;
 
-        try
-        {
-            return string.Format(formatString, values);
-        }
-        catch
-        {
-            return formatString;
-        }
+        if (string.IsNullOrEmpty(format))
+            return values[0]?.ToString() ?? string.Empty;
+
+        return string.Format(culture, format, values[0]);
     }
 
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -40,4 +29,3 @@ public class LocalizedFormatConverter : IMultiValueConverter
         throw new NotImplementedException();
     }
 }
-

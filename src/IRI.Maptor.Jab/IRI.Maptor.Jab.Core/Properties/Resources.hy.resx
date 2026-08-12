@@ -1777,4 +1777,34 @@
   <data name="msg_project_unsupportedVersion" xml:space="preserve">
     <value>Այս նախագծի ֆայլը ստեղծվել է ավելի նոր տարբերակով և հնարավոր չէ բացել:</value>
   </data>
+  <data name="dialog_common_sectionCoordinateSystem" xml:space="preserve">
+    <value>Կոորդինատային համակարգ</value>
+  </data>
+  <data name="dialog_common_sectionOptions" xml:space="preserve">
+    <value>Ընտրանքներ</value>
+  </data>
+  <data name="dialog_common_sectionData" xml:space="preserve">
+    <value>Տվյալներ</value>
+  </data>
+  <data name="dialog_printPdf_sectionDecorations" xml:space="preserve">
+    <value>Ձևավորումներ</value>
+  </data>
+  <data name="dialog_printPdf_sectionPage" xml:space="preserve">
+    <value>Էջի կարգավորում</value>
+  </data>
+  <data name="dialog_geometryDetails_alsoZones" xml:space="preserve">
+    <value>(նաև՝ {0})</value>
+  </data>
+  <data name="dialog_common_validationNoData" xml:space="preserve">
+    <value>Նախ տեղադրեք տվյալները կամ ընտրեք ֆայլ</value>
+  </data>
+  <data name="dialog_common_validationNoFile" xml:space="preserve">
+    <value>Նախ ընտրեք ֆայլ</value>
+  </data>
+  <data name="dialog_common_validationNoSrs" xml:space="preserve">
+    <value>Ընտրեք կոորդինատային համակարգ</value>
+  </data>
+  <data name="dialog_common_validationUtmZone" xml:space="preserve">
+    <value>UTM գոտին պետք է լինի 1-ի և 60-ի միջև</value>
+  </data>
 </root>

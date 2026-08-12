@@ -1777,4 +1777,34 @@
   <data name="msg_project_unsupportedVersion" xml:space="preserve">
     <value>Questo file di progetto è stato creato con una versione più recente e non può essere aperto.</value>
   </data>
+  <data name="dialog_common_sectionCoordinateSystem" xml:space="preserve">
+    <value>Sistema di coordinate</value>
+  </data>
+  <data name="dialog_common_sectionOptions" xml:space="preserve">
+    <value>Opzioni</value>
+  </data>
+  <data name="dialog_common_sectionData" xml:space="preserve">
+    <value>Dati</value>
+  </data>
+  <data name="dialog_printPdf_sectionDecorations" xml:space="preserve">
+    <value>Decorazioni</value>
+  </data>
+  <data name="dialog_printPdf_sectionPage" xml:space="preserve">
+    <value>Imposta pagina</value>
+  </data>
+  <data name="dialog_geometryDetails_alsoZones" xml:space="preserve">
+    <value>(anche: {0})</value>
+  </data>
+  <data name="dialog_common_validationNoData" xml:space="preserve">
+    <value>Incolla i dati o scegli prima un file</value>
+  </data>
+  <data name="dialog_common_validationNoFile" xml:space="preserve">
+    <value>Scegli prima un file</value>
+  </data>
+  <data name="dialog_common_validationNoSrs" xml:space="preserve">
+    <value>Scegli un sistema di coordinate</value>
+  </data>
+  <data name="dialog_common_validationUtmZone" xml:space="preserve">
+    <value>La zona UTM deve essere compresa tra 1 e 60</value>
+  </data>
 </root>

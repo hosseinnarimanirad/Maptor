@@ -12,11 +12,7 @@ public partial class FeatureChangesDialogView : MetroWindow
     {
         InitializeComponent();
 
-        var loc = LocalizationManager.Instance;
-
-        BindingOperations.SetBinding(this, TitleProperty, new Binding("[featureChanges_title]") { Source = loc });
-
-        BindingOperations.SetBinding(this, FlowDirectionProperty, new Binding("CurrentFlowDirection") { Source = loc });
+        // Title and FlowDirection are bound in XAML / by the shared dialog style.
     }
 
     // Close-only footer: no Cancel button to carry IsCancel, so Esc is handled here.

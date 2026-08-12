@@ -11,13 +11,12 @@
                     Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
                     WindowTransitionsEnabled="False"
                     ShowIconOnTitleBar="False"
-                    Title="{Binding ElementName=root, Path=Ltxt_dialog_symbology_title}">
+                    FocusManager.FocusedElement="{Binding ElementName=fillColorPicker}"
+                    Title="{Binding [dialog_symbology_title], Source={StaticResource Localization}}">
     <maptor:LocalizedMetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/IRI.Maptor.Converters.xaml"/>
-                <!--<ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.Button.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.ToggleButton.xaml"/>-->
                 <ResourceDictionary Source="pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Controls.All.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
@@ -35,7 +34,7 @@
             <ColumnDefinition Width="Auto" MinWidth="30"/>
             <ColumnDefinition Width="90"/>
         </Grid.ColumnDefinitions>
-        <mahApp:ColorPicker Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="4" FlowDirection="LeftToRight" Width="230"
+        <mahApp:ColorPicker Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" x:Name="fillColorPicker" Margin="4" FlowDirection="LeftToRight" Width="230"
                             SelectedColor="{Binding Symbology.Fill, Mode=TwoWay, Converter={StaticResource solidColorBrushToColorConverter}}"
                             mahApp:TextBoxHelper.ClearTextButton="True"
                             mahApp:TextBoxHelper.Watermark="{Binding [dialog_symbology_fill], Source={StaticResource Localization}}"

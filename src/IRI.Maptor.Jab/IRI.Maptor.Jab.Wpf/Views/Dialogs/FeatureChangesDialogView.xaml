@@ -8,20 +8,15 @@
     xmlns:dialogs="clr-namespace:IRI.Maptor.Jab.Controls.Dialogs"
 
     Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
-    Title=""
-    SizeToContent="Height"
-    MaxWidth="700"
+    Title="{Binding [featureChanges_title], Source={StaticResource Localization}}"
+    SizeToContent="Manual" ResizeMode="CanResizeWithGrip"
+    Width="700" Height="560" MinWidth="560" MinHeight="400" MaxWidth="1100"
     ShowMaxRestoreButton="True"
     WindowStartupLocation="CenterOwner">
     <mahApp:MetroWindow.Resources>
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
     </mahApp:MetroWindow.Resources>
 
-    <mahApp:MetroWindow.TitleTemplate>
-        <DataTemplate>
-            <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}" />
-        </DataTemplate>
-    </mahApp:MetroWindow.TitleTemplate>
 
     <Grid Margin="4">
         <Grid.RowDefinitions>

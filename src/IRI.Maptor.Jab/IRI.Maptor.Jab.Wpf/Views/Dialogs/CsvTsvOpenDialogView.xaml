@@ -8,7 +8,10 @@
     xmlns:maptorEnums="clr-namespace:IRI.Maptor.Sta.Common.Enums;assembly=IRI.Maptor.Sta.Common"
 
     Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
-    Title="{Binding [dialog_csvTsvOpen_title], Source={StaticResource Localization}}"    
+    Title="{Binding [dialog_csvTsvOpen_title], Source={StaticResource Localization}}"
+    SizeToContent="Manual" ResizeMode="CanResizeWithGrip"
+    Width="560" Height="640" MinWidth="500" MinHeight="480" MaxWidth="900"
+    FocusManager.FocusedElement="{Binding ElementName=browseButton}"
     WindowStartupLocation="CenterOwner">
     <mahApp:MetroWindow.Resources>
         <ResourceDictionary>
@@ -22,13 +25,12 @@
 
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
-    <mahApp:MetroWindow.TitleTemplate>
-        <DataTemplate>
-            <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}"/>
-        </DataTemplate>
-    </mahApp:MetroWindow.TitleTemplate>
-    <Grid Margin="4">
+    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.DialogContent}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -39,8 +41,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <TextBlock Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                   Text="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"/>
+
         <!-- File -->
-        <Border Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+        <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -49,17 +54,19 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconMaterial Kind="File" Style="{StaticResource securityIconMaterial}"/>
-                <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}" 
+                <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal.En}"
                          mahApp:TextBoxHelper.Watermark="{Binding [dialog_common_fileWatermark], Source={StaticResource Localization}}"
                          Text="{Binding FilePath, Mode=OneWay}" IsReadOnly="True"/>
-                <Button Grid.Column="2"
+                <Button Grid.Column="2" x:Name="browseButton"
                         ToolTip="{Binding [dialog_common_browse], Source={StaticResource Localization}}"
+                        AutomationProperties.Name="{Binding [dialog_common_browse], Source={StaticResource Localization}}"
                         Command="{Binding BrowseCommand}"
                         Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
                     <iconPacks:PackIconMaterial Kind="FileSearchOutline"/>
                 </Button>
                 <Button Grid.Column="3"
                          ToolTip="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
+                         AutomationProperties.Name="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
                          Command="{Binding RemoveFileCommand}"
                          Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                          >
@@ -70,7 +77,7 @@
         </Border>
 
         <!-- Format: (CSV / TSV) | Geometry Type: (POINT/LINE/POLYGON) -->
-        <Border Grid.Row="1" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
@@ -93,17 +100,20 @@
                 <StackPanel Grid.Column="4" Orientation="Horizontal" >
                     <RadioButton GroupName="T" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                 IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.Polygon}}"
-                                ToolTip="{Binding [common_geometryType_point], Source={StaticResource Localization}}">
+                                ToolTip="{Binding [common_geometryType_polygon], Source={StaticResource Localization}}"
+                                AutomationProperties.Name="{Binding [common_geometryType_polygon], Source={StaticResource Localization}}">
                         <iconPacks:PackIconPhosphorIcons Kind="Polygon"/>
                     </RadioButton>
                     <RadioButton GroupName="T" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                  IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.LineString}}"
-                                 ToolTip="{Binding [common_geometryType_polyline], Source={StaticResource Localization}}">
+                                 ToolTip="{Binding [common_geometryType_polyline], Source={StaticResource Localization}}"
+                                 AutomationProperties.Name="{Binding [common_geometryType_polyline], Source={StaticResource Localization}}">
                         <iconPacks:PackIconPhosphorIcons Kind="LineSegments"/>
                     </RadioButton>
                     <RadioButton GroupName="T" Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}"
                                  IsChecked="{Binding SelectedGeometryMode, Converter={StaticResource enumToBoolConverter}, ConverterParameter={x:Static maptorEnums:GeometryType.Point}}"
-                                 ToolTip="{Binding [common_geometryType_polygon], Source={StaticResource Localization}}">
+                                 ToolTip="{Binding [common_geometryType_point], Source={StaticResource Localization}}"
+                                 AutomationProperties.Name="{Binding [common_geometryType_point], Source={StaticResource Localization}}">
                         <Viewbox>
                             <iconPacks:PackIconPhosphorIcons Kind="DotOutlineThin" Margin="20" Padding="0"/>
                         </Viewbox>
@@ -112,24 +122,27 @@
             </Grid>
         </Border>
 
+        <TextBlock Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                   Text="{Binding [dialog_common_sectionCoordinateSystem], Source={StaticResource Localization}}"/>
+
         <!-- Spatial Reference -->
-        <Border Grid.Row="2" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+        <Border Grid.Row="4" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <iconPacks:PackIconPhosphorIcons Kind="Globe" Style="{StaticResource securityIconPhosphor}"/>
-                <ComboBox Grid.Column="1" 
+                <ComboBox Grid.Column="1"
                           ItemsSource="{Binding AvailableSrsOptions}"
-                          DisplayMemberPath="DisplayName"                           
+                          DisplayMemberPath="DisplayName"
                           SelectedItem="{Binding SelectedSrsOption, Mode=TwoWay}"
                           Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"/>
             </Grid>
         </Border>
 
         <!-- UTM Zone (visible when UTM selected) -->
-        <Border Grid.Row="3" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
+        <Border Grid.Row="5" Style="{StaticResource IRI.Maptor.Styles.Border.Card}"
                 Visibility="{Binding IsUtmSelected, Converter={StaticResource boolToVisibilityConverter}}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
@@ -161,9 +174,10 @@
                 </TextBlock>
                 <ToggleButton Grid.Column="3" IsChecked="{Binding IsNorthHemisphere, Mode=TwoWay}"
                               Style="{StaticResource IRI.Maptor.Styles.ToggleButton.CircleLight}" FlowDirection="LeftToRight"
-                              ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
+                              ToolTip="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}"
+                              AutomationProperties.Name="{Binding [dialog_dxfOpen_hemisphereTooltip], Source={StaticResource Localization}}">
                     <iconPacks:PackIconPhosphorIcons Kind="CircleHalfFill" RenderTransformOrigin="0.5,0.5"
-                                                    Margin="0" Width="24" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                    Margin="0" Width="24" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <iconPacks:PackIconPhosphorIcons.Style>
                             <Style TargetType="iconPacks:PackIconPhosphorIcons" BasedOn="{StaticResource securityIconPhosphor}">
                                 <Setter Property="RenderTransform">
@@ -188,53 +202,44 @@
             </Grid>
         </Border>
 
-        <!-- Options: Use first line as header, X,Y vs Y,X -->
-        <Border Grid.Row="4" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+        <TextBlock Grid.Row="6" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                   Text="{Binding [dialog_common_sectionOptions], Source={StaticResource Localization}}"/>
+
+        <!-- Options: X,Y vs Y,X -->
+        <Border Grid.Row="7" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
-                           VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold" Visibility="Collapsed"/>
                 <iconPacks:PackIconPhosphorIcons Kind="ListNumbers" Style="{StaticResource securityIconPhosphor}"/>
                 <TextBlock Text="{Binding [dialog_common_xyOrder], Source={StaticResource Localization}}"
                             VerticalAlignment="Center" Margin="8,0,0,0" FontWeight="Bold"/>
                 <CheckBox Content="{Binding [dialog_common_eastingFirst], Source={StaticResource Localization}}"
                             IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}"
                           Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"/>
-                <!--<RadioButton Content="X,Y" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay}" Margin="4,0" VerticalAlignment="Center"
-                            ToolTip="{Binding [dialog_csvTsvOpen_orderXY], Source={StaticResource Localization}}"/>
-                <RadioButton Content="Y,X" IsChecked="{Binding IsLongitudeFirst, Mode=TwoWay, Converter={StaticResource notConverter}}" Margin="4,0" VerticalAlignment="Center"
-                            ToolTip="{Binding [dialog_csvTsvOpen_orderYX], Source={StaticResource Localization}}"/>-->
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="5" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
+        <Border Grid.Row="8" Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
             <CheckBox Content="{Binding [dialog_csvTsvOpen_useFirstLineAsHeader], Source={StaticResource Localization}}"
                       Style="{StaticResource IRI.Maptor.Styles.CheckBox.Normal}"
                         IsChecked="{Binding UseFirstLineAsHeader, Mode=TwoWay}" />
         </Border>
 
+        <TextBlock Grid.Row="9" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                   Text="{Binding [dialog_common_sectionData], Source={StaticResource Localization}}"/>
+
         <!-- Data: paste or preview (top 50 lines) -->
-        <Grid Grid.Row="6">
-            <TextBlock                
-                     Text="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"
-                     IsHitTestVisible="False"
-                     VerticalAlignment="Top" Padding="4"
-                     Margin="8,0,0,0" 
-                     Visibility="{Binding ElementName=previewTextbox, Path=Text, Converter={StaticResource stringNullOrEmptyToVisibilityConverter}}"
-                     Foreground="Gray"/>
-
-            <TextBox x:Name="previewTextbox" Grid.Row="5" Margin="4,0" MinHeight="150" MaxHeight="250" HorizontalAlignment="Stretch"
-                    Background="Transparent"
-                    Style="{StaticResource IRI.Maptor.Styles.TextBox}"
-                    Text="{Binding RawText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    TextWrapping="NoWrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
-                    HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
-                    Padding="4" FlowDirection="LeftToRight"
-                    IsReadOnly="{Binding IsRawTextReadOnly}"/>
-
-        </Grid>
+        <TextBox x:Name="previewTextbox" Grid.Row="10" Margin="4,0" HorizontalAlignment="Stretch"
+                Background="Transparent"
+                Style="{StaticResource IRI.Maptor.Styles.TextBox}"
+                mahApp:TextBoxHelper.Watermark="{Binding [dialog_csvTsvOpen_pasteWatermark], Source={StaticResource Localization}}"
+                Text="{Binding RawText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                TextWrapping="NoWrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12"
+                Padding="4" FlowDirection="LeftToRight"
+                IsReadOnly="{Binding IsRawTextReadOnly}"/>
 
         <!-- Buttons -->
-        <dialogs:DialogFooterView Grid.Row="7"
+        <dialogs:DialogFooterView Grid.Row="11"
+                                  StatusText="{Binding ValidationMessage}"
                                   SecondaryText="{Binding [dialog_common_cancel], Source={StaticResource Localization}}"
                                   SecondaryCommand="{Binding CancelCommand}"
                                   PrimaryText="{Binding [common_open], Source={StaticResource Localization}}"

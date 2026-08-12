@@ -1777,4 +1777,34 @@
   <data name="msg_project_unsupportedVersion" xml:space="preserve">
     <value>Bu layihə faylı daha yeni versiya ilə yaradılıb və açıla bilməz.</value>
   </data>
+  <data name="dialog_common_sectionCoordinateSystem" xml:space="preserve">
+    <value>Koordinat sistemi</value>
+  </data>
+  <data name="dialog_common_sectionOptions" xml:space="preserve">
+    <value>Seçimlər</value>
+  </data>
+  <data name="dialog_common_sectionData" xml:space="preserve">
+    <value>Məlumat</value>
+  </data>
+  <data name="dialog_printPdf_sectionDecorations" xml:space="preserve">
+    <value>Bəzəklər</value>
+  </data>
+  <data name="dialog_printPdf_sectionPage" xml:space="preserve">
+    <value>Səhifə quraşdırması</value>
+  </data>
+  <data name="dialog_geometryDetails_alsoZones" xml:space="preserve">
+    <value>(həmçinin: {0})</value>
+  </data>
+  <data name="dialog_common_validationNoData" xml:space="preserve">
+    <value>Əvvəlcə məlumat yapışdırın və ya fayl seçin</value>
+  </data>
+  <data name="dialog_common_validationNoFile" xml:space="preserve">
+    <value>Əvvəlcə fayl seçin</value>
+  </data>
+  <data name="dialog_common_validationNoSrs" xml:space="preserve">
+    <value>Koordinat sistemini seçin</value>
+  </data>
+  <data name="dialog_common_validationUtmZone" xml:space="preserve">
+    <value>UTM zonası 1 ilə 60 arasında olmalıdır</value>
+  </data>
 </root>

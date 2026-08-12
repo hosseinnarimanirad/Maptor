@@ -11,13 +11,9 @@
                     Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
                              
                     Title="{Binding [dialog_goto_title], Source={StaticResource Localization}}"
+                    FocusManager.FocusedElement="{Binding ElementName=mainView}"
                     WindowStartupLocation="CenterOwner">
                     <!--Title="{Binding ElementName=root, Path=Ltxt_dialog_goto_title}"-->                    
-    <maptor:LocalizedMetroWindow.TitleTemplate>
-        <DataTemplate>
-            <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}"/>
-        </DataTemplate>
-    </maptor:LocalizedMetroWindow.TitleTemplate>
     <maptor:LocalizedMetroWindow.Resources>
         <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
     </maptor:LocalizedMetroWindow.Resources>

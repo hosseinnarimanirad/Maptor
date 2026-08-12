@@ -1777,4 +1777,34 @@
   <data name="msg_project_unsupportedVersion" xml:space="preserve">
     <value>ئەم فایلی پڕۆژەیە بە وەشانێکی نوێتر دروستکراوە و ناکرێت بکرێتەوە.</value>
   </data>
+  <data name="dialog_common_sectionCoordinateSystem" xml:space="preserve">
+    <value>سیستەمی کۆردینات</value>
+  </data>
+  <data name="dialog_common_sectionOptions" xml:space="preserve">
+    <value>هەڵبژاردەکان</value>
+  </data>
+  <data name="dialog_common_sectionData" xml:space="preserve">
+    <value>داتا</value>
+  </data>
+  <data name="dialog_printPdf_sectionDecorations" xml:space="preserve">
+    <value>ڕازاندنەوەکان</value>
+  </data>
+  <data name="dialog_printPdf_sectionPage" xml:space="preserve">
+    <value>ڕێکخستنی لاپەڕە</value>
+  </data>
+  <data name="dialog_geometryDetails_alsoZones" xml:space="preserve">
+    <value>(هەروەها: {0})</value>
+  </data>
+  <data name="dialog_common_validationNoData" xml:space="preserve">
+    <value>سەرەتا داتا بلکێنە یان فایلێک هەڵبژێرە</value>
+  </data>
+  <data name="dialog_common_validationNoFile" xml:space="preserve">
+    <value>سەرەتا فایلێک هەڵبژێرە</value>
+  </data>
+  <data name="dialog_common_validationNoSrs" xml:space="preserve">
+    <value>سیستەمی کۆردینات هەڵبژێرە</value>
+  </data>
+  <data name="dialog_common_validationUtmZone" xml:space="preserve">
+    <value>زۆنی UTM دەبێت لە نێوان ١ و ٦٠ بێت</value>
+  </data>
 </root>

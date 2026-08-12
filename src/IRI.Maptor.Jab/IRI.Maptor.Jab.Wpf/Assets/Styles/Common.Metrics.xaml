@@ -7,10 +7,8 @@
     <!--padding around a dialog's content area-->
     <Thickness x:Key="IRI.Maptor.Styles.Thickness.DialogContent">8</Thickness>
 
-    <!--gap below a section (header + its rows) before the next section-->
-    <Thickness x:Key="IRI.Maptor.Styles.Thickness.SectionGap">0,0,0,8</Thickness>
-
-    <!--gap between rows inside one section-->
+    <!--gap between rows inside one section. Section separation itself comes from
+        IRI.Maptor.Styles.TextBlock.SectionHeader's own top margin.-->
     <Thickness x:Key="IRI.Maptor.Styles.Thickness.RowGap">0,4</Thickness>
 
     <!--gap above the action-button row, see IRI.Maptor.Styles.Border.DialogFooter-->

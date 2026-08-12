@@ -55,6 +55,7 @@
 
     <converters:LatinDigitsToFarsiDigitsConverter x:Key="latinDigitsToFarsiDigitsConverter"/>
     <converters:LocalizedNumberConverter x:Key="localizedNumberConverter"/>
+    <converters:LocalizedFormatConverter x:Key="localizedFormatConverter"/>
 
     <converters:MultiBooleanToBooleanConverter x:Key="multiBooleanToBooleanConverter"/>
     <converters:MultiBooleanToVisibilityConverter x:Key="multiBooleanToVisibilityConverter"/>

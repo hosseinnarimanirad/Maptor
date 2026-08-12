@@ -1777,4 +1777,34 @@
   <data name="msg_project_unsupportedVersion" xml:space="preserve">
     <value>यह प्रोजेक्ट फ़ाइल नए संस्करण से बनाई गई है और खोली नहीं जा सकती।</value>
   </data>
+  <data name="dialog_common_sectionCoordinateSystem" xml:space="preserve">
+    <value>निर्देशांक प्रणाली</value>
+  </data>
+  <data name="dialog_common_sectionOptions" xml:space="preserve">
+    <value>विकल्प</value>
+  </data>
+  <data name="dialog_common_sectionData" xml:space="preserve">
+    <value>डेटा</value>
+  </data>
+  <data name="dialog_printPdf_sectionDecorations" xml:space="preserve">
+    <value>सजावट</value>
+  </data>
+  <data name="dialog_printPdf_sectionPage" xml:space="preserve">
+    <value>पृष्ठ सेटअप</value>
+  </data>
+  <data name="dialog_geometryDetails_alsoZones" xml:space="preserve">
+    <value>(साथ ही: {0})</value>
+  </data>
+  <data name="dialog_common_validationNoData" xml:space="preserve">
+    <value>पहले डेटा पेस्ट करें या फ़ाइल चुनें</value>
+  </data>
+  <data name="dialog_common_validationNoFile" xml:space="preserve">
+    <value>पहले एक फ़ाइल चुनें</value>
+  </data>
+  <data name="dialog_common_validationNoSrs" xml:space="preserve">
+    <value>निर्देशांक प्रणाली चुनें</value>
+  </data>
+  <data name="dialog_common_validationUtmZone" xml:space="preserve">
+    <value>UTM ज़ोन 1 और 60 के बीच होना चाहिए</value>
+  </data>
 </root>

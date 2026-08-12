@@ -1777,4 +1777,34 @@
   <data name="msg_project_unsupportedVersion" xml:space="preserve">
     <value>این فایل پروژه با نسخه جدیدتری ایجاد شده و قابل باز کردن نیست.</value>
   </data>
+  <data name="dialog_common_sectionCoordinateSystem" xml:space="preserve">
+    <value>سیستم مختصات</value>
+  </data>
+  <data name="dialog_common_sectionOptions" xml:space="preserve">
+    <value>گزینه‌ها</value>
+  </data>
+  <data name="dialog_common_sectionData" xml:space="preserve">
+    <value>داده‌ها</value>
+  </data>
+  <data name="dialog_printPdf_sectionDecorations" xml:space="preserve">
+    <value>تزئینات نقشه</value>
+  </data>
+  <data name="dialog_printPdf_sectionPage" xml:space="preserve">
+    <value>تنظیمات صفحه</value>
+  </data>
+  <data name="dialog_geometryDetails_alsoZones" xml:space="preserve">
+    <value>(همچنین: {0})</value>
+  </data>
+  <data name="dialog_common_validationNoData" xml:space="preserve">
+    <value>ابتدا داده را جای‌گذاری کنید یا فایلی انتخاب کنید</value>
+  </data>
+  <data name="dialog_common_validationNoFile" xml:space="preserve">
+    <value>ابتدا یک فایل انتخاب کنید</value>
+  </data>
+  <data name="dialog_common_validationNoSrs" xml:space="preserve">
+    <value>سیستم مختصات را انتخاب کنید</value>
+  </data>
+  <data name="dialog_common_validationUtmZone" xml:space="preserve">
+    <value>زون UTM باید بین ۱ تا ۶۰ باشد</value>
+  </data>
 </root>

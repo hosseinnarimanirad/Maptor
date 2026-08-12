@@ -40,10 +40,14 @@
                     <ContentControl Grid.Row="0" Content="{Binding }"/>
                     <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Margin="8">
                         <Button Command="{Binding ElementName=window, Path=DataContext.PanToCommand}"
+                                ToolTip="{Binding [dialog_goto_panTo], Source={StaticResource Localization}}"
+                                AutomationProperties.Name="{Binding [dialog_goto_panTo], Source={StaticResource Localization}}"
                                 Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
                             <iconPacks:PackIconMaterial Kind="HandBackRight" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                         </Button>
                         <Button Command="{Binding ElementName=window, Path=DataContext.ZoomToCommand}"
+                                ToolTip="{Binding [dialog_goto_zoomTo], Source={StaticResource Localization}}"
+                                AutomationProperties.Name="{Binding [dialog_goto_zoomTo], Source={StaticResource Localization}}"
                                 Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
                             <iconPacks:PackIconMaterial Kind="MagnifyExpand" Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
                         </Button>

@@ -8,8 +8,9 @@
 
     Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
     Title="{Binding [dialog_printPdf_title], Source={StaticResource Localization}}"
-    Width="720"
-    Height="372"
+    SizeToContent="Manual" ResizeMode="CanResizeWithGrip"
+    Width="760" Height="560" MinWidth="700" MinHeight="480" MaxWidth="1100"
+    FocusManager.FocusedElement="{Binding ElementName=mapTitleTextBox}"
     WindowStartupLocation="CenterOwner">
 
     <mahApp:MetroWindow.Resources>
@@ -22,12 +23,7 @@
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
-    <mahApp:MetroWindow.TitleTemplate>
-        <DataTemplate>
-            <TextBlock Text="{TemplateBinding Content}" Style="{StaticResource IRI.Maptor.Styles.TextBlock.WindowTitle}"/>
-        </DataTemplate>
-    </mahApp:MetroWindow.TitleTemplate>
-    <Grid Margin="4">
+    <Grid Margin="{StaticResource IRI.Maptor.Styles.Thickness.DialogContent}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
@@ -48,11 +44,14 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <iconPacks:PackIconMaterial Kind="FormatTitle" Style="{StaticResource securityIconMaterial}"/>
-                    <TextBox Grid.Column="1" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
+                    <TextBox Grid.Column="1" x:Name="mapTitleTextBox" Style="{StaticResource IRI.Maptor.Styles.TextBox.Normal}"
                              mahApp:TextBoxHelper.Watermark="{Binding [dialog_printPdf_mapTitleWatermark], Source={StaticResource Localization}}"
                              Text="{Binding MapTitle, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </Border>
+
+            <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                       Text="{Binding [dialog_printPdf_sectionDecorations], Source={StaticResource Localization}}"/>
 
             <!-- Include decorations -->
             <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
@@ -61,7 +60,7 @@
             </Border>
 
             <!-- Decoration toggles -->
-            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}" IsEnabled="{Binding IncludeDecorations}" Height="Auto">
+            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}" IsEnabled="{Binding IncludeDecorations}">
                 <StackPanel Margin="4">
                     <CheckBox IsChecked="{Binding ShowScaleBar}" Margin="0,2"
                               Content="{Binding [dialog_printPdf_scaleBar], Source={StaticResource Localization}}"/>
@@ -86,11 +85,13 @@
                              mahApp:TextBoxHelper.Watermark="{Binding [dialog_printPdf_companyLogo], Source={StaticResource Localization}}"
                              Text="{Binding CompanyLogoPath, Mode=OneWay}" IsReadOnly="True"/>
                     <Button Grid.Column="2" ToolTip="{Binding [dialog_common_browse], Source={StaticResource Localization}}"
+                            AutomationProperties.Name="{Binding [dialog_common_browse], Source={StaticResource Localization}}"
                             Command="{Binding BrowseLogoCommand}"
                             Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
                         <iconPacks:PackIconPhosphorIcons Kind="FileMagnifyingGlassFill"/>
                     </Button>
                     <Button Grid.Column="3" ToolTip="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
+                            AutomationProperties.Name="{Binding [dialog_common_removeFile], Source={StaticResource Localization}}"
                             Command="{Binding RemoveLogoCommand}"
                             Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
                         <iconPacks:PackIconMaterial Kind="FileRemoveOutline"/>
@@ -98,8 +99,11 @@
                 </Grid>
             </Border>
 
+            <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                       Text="{Binding [dialog_printPdf_sectionPage], Source={StaticResource Localization}}"/>
+
             <!-- Page setup -->
-            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}" Height="auto">
+            <Border Style="{StaticResource IRI.Maptor.Styles.Border.Card}">
                 <StackPanel>
                     <CheckBox Margin="4,2" IsChecked="{Binding PreserveMapScale}"
                               Content="{Binding [dialog_printPdf_keepScale], Source={StaticResource Localization}}"/>
@@ -122,14 +126,18 @@
         </StackPanel>
 
         <!-- Preview -->
-        <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" FlowDirection="LeftToRight" Height="auto" VerticalAlignment="Stretch">
+        <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.Border.Card}" FlowDirection="LeftToRight" VerticalAlignment="Stretch">
             <Grid Margin="8" VerticalAlignment="Stretch" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="{Binding [dialog_printPdf_preview], Source={StaticResource Localization}}"
-                           Margin="0,0,0,6" FontSize="12" Foreground="{DynamicResource MahApps.Brushes.Gray2}"/>
+                <TextBlock Grid.Row="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                           Margin="0,0,0,6"
+                           Text="{Binding [dialog_printPdf_preview], Source={StaticResource Localization}}"/>
+                <!-- Everything below is a scale model of the printed sheet, so the black/white
+                     literals are deliberate: they must NOT follow the UI theme, or a dark theme
+                     would show a black "page" that misrepresents the PDF output. -->
                 <Border Grid.Row="1" Background="White" BorderBrush="Gray" BorderThickness="1"
                         Width="240" Height="{Binding PreviewPageHeight}">
                     <!-- Schematic 3-column sheet: legend | map (title + scale) | company info; date/scale/maptor row -->

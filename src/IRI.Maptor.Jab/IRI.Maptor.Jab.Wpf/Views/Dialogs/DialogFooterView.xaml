@@ -14,12 +14,15 @@
     </UserControl.Resources>
 
     <Border Style="{StaticResource IRI.Maptor.Styles.Border.DialogFooter}">
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+        <DockPanel LastChildFill="True">
+
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
 
             <!--IsCancel is bound to ShowSecondary so a hidden button never claims Esc:
                 on a modeless window that would try to set DialogResult and throw.-->
             <Button Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Secondary}"
                     Command="{Binding SecondaryCommand, ElementName=root}"
+                    IsEnabled="{Binding IsSecondaryEnabled, ElementName=root}"
                     IsCancel="{Binding ShowSecondary, ElementName=root}"
                     Visibility="{Binding ShowSecondary, ElementName=root, Converter={StaticResource boolToVisibilityConverter}}">
                 <StackPanel Orientation="Horizontal">
@@ -34,6 +37,7 @@
                     Click="OnPrimaryButtonClick"
                     Style="{StaticResource IRI.Maptor.Styles.Button.Dialogs.Primary}"
                     Command="{Binding PrimaryCommand, ElementName=root}"
+                    IsEnabled="{Binding IsPrimaryEnabled, ElementName=root}"
                     CommandParameter="{Binding PrimaryCommandParameter, ElementName=root}">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="{Binding PrimaryIconKind, ElementName=root}"
@@ -42,6 +46,15 @@
                                Text="{Binding PrimaryText, ElementName=root}"/>
                 </StackPanel>
             </Button>
-        </StackPanel>
+            </StackPanel>
+
+            <!--optional status line, opposite the buttons. Stays empty (and invisible)
+                for dialogs that do not set StatusText.-->
+            <TextBlock Text="{Binding StatusText, ElementName=root}"
+                       Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
+                       Foreground="{DynamicResource MahApps.Brushes.Gray3}"
+                       VerticalAlignment="Center"
+                       TextTrimming="CharacterEllipsis"/>
+        </DockPanel>
     </Border>
 </UserControl>

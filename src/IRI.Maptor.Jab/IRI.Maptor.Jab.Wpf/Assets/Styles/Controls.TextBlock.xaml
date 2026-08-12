@@ -27,12 +27,23 @@
         <Setter Property="FontSize" Value="14"/>
     </Style>
 
+    <!--sits on the accent-filled GroupBox/Expander header-->
     <Style x:Key="IRI.Maptor.Styles.TextBlock.HeaderTitle"
            TargetType="TextBlock"
            BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
         <Setter Property="Margin" Value="4"/>
         <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <!--groups the card rows of a dialog into labelled sections-->
+    <Style x:Key="IRI.Maptor.Styles.TextBlock.SectionHeader"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
+        <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Margin" Value="8,10,8,2"/>
     </Style>
 
     <!--Form-->

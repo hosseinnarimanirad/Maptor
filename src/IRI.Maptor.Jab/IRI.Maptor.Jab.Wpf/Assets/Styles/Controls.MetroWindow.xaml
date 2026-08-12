@@ -12,27 +12,15 @@
 
     <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
-    <Style x:Key="IRI.Maptor.Styles.MetroWindow.Dialog"
+    <!--Culture-aware window basics: flow direction, Persian font and the standard title bar.
+        For windows that are not dialogs (About, Update) and therefore keep their own chrome
+        but must still follow the selected language. Dialogs get all of this via
+        IRI.Maptor.Styles.MetroWindow.Dialog below.-->
+    <Style x:Key="IRI.Maptor.Styles.MetroWindow.Localized"
            TargetType="{x:Type mahApp:MetroWindow}">
-        <Setter Property="MinWidth" Value="500"/>
-        <Setter Property="MaxWidth" Value="550"/>
-        <Setter Property="SizeToContent" Value="WidthAndHeight"/>
-
-        <Setter Property="GlowBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
         <Setter Property="FlowDirection" Value="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization}}"/>
-        <Setter Property="Padding" Value="10"/>
-        <!--this property cannot be set in styles-->
-        <!--<Setter Property="WindowStartupLocation" Value="CenterOwner"/>-->
 
-        <Setter Property="ShowInTaskbar" Value="False"/>
-        <Setter Property="ShowCloseButton" Value="True"/>
-        <Setter Property="ShowMinButton" Value="False"/>
-        <Setter Property="ShowMaxRestoreButton" Value="False"/>
-        <Setter Property="ShowTitleBar" Value="True"/>
-        <Setter Property="WindowStyle" Value="ThreeDBorderWindow"/>
-        <Setter Property="ResizeMode" Value="NoResize"/>
-
-        <!--default title bar. A dialog that needs more than the plain title (LayerSettings
+        <!--default title bar. A window that needs more than the plain title (LayerSettings
             appends the layer name) still declares its own TitleTemplate, which wins.-->
         <Setter Property="TitleTemplate">
             <Setter.Value>
@@ -48,5 +36,26 @@
                 <Setter Property="FontFamily" Value="{DynamicResource iranSans}"/>
             </DataTrigger>
         </Style.Triggers>
+    </Style>
+
+    <Style x:Key="IRI.Maptor.Styles.MetroWindow.Dialog"
+           TargetType="{x:Type mahApp:MetroWindow}"
+           BasedOn="{StaticResource IRI.Maptor.Styles.MetroWindow.Localized}">
+        <Setter Property="MinWidth" Value="500"/>
+        <Setter Property="MaxWidth" Value="550"/>
+        <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+
+        <Setter Property="GlowBrush" Value="{DynamicResource MahApps.Brushes.Highlight}"/>
+        <Setter Property="Padding" Value="10"/>
+        <!--this property cannot be set in styles-->
+        <!--<Setter Property="WindowStartupLocation" Value="CenterOwner"/>-->
+
+        <Setter Property="ShowInTaskbar" Value="False"/>
+        <Setter Property="ShowCloseButton" Value="True"/>
+        <Setter Property="ShowMinButton" Value="False"/>
+        <Setter Property="ShowMaxRestoreButton" Value="False"/>
+        <Setter Property="ShowTitleBar" Value="True"/>
+        <Setter Property="WindowStyle" Value="ThreeDBorderWindow"/>
+        <Setter Property="ResizeMode" Value="NoResize"/>
     </Style>
 </ResourceDictionary>

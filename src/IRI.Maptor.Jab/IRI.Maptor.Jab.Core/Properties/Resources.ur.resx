@@ -1777,4 +1777,34 @@
   <data name="msg_project_unsupportedVersion" xml:space="preserve">
     <value>یہ پروجیکٹ فائل نئے ورژن سے بنائی گئی ہے اور کھولی نہیں جا سکتی۔</value>
   </data>
+  <data name="dialog_common_sectionCoordinateSystem" xml:space="preserve">
+    <value>کوآرڈینیٹ سسٹم</value>
+  </data>
+  <data name="dialog_common_sectionOptions" xml:space="preserve">
+    <value>اختیارات</value>
+  </data>
+  <data name="dialog_common_sectionData" xml:space="preserve">
+    <value>ڈیٹا</value>
+  </data>
+  <data name="dialog_printPdf_sectionDecorations" xml:space="preserve">
+    <value>آرائش</value>
+  </data>
+  <data name="dialog_printPdf_sectionPage" xml:space="preserve">
+    <value>صفحہ ترتیب</value>
+  </data>
+  <data name="dialog_geometryDetails_alsoZones" xml:space="preserve">
+    <value>(نیز: {0})</value>
+  </data>
+  <data name="dialog_common_validationNoData" xml:space="preserve">
+    <value>پہلے ڈیٹا پیسٹ کریں یا فائل منتخب کریں</value>
+  </data>
+  <data name="dialog_common_validationNoFile" xml:space="preserve">
+    <value>پہلے ایک فائل منتخب کریں</value>
+  </data>
+  <data name="dialog_common_validationNoSrs" xml:space="preserve">
+    <value>کوآرڈینیٹ سسٹم منتخب کریں</value>
+  </data>
+  <data name="dialog_common_validationUtmZone" xml:space="preserve">
+    <value>UTM زون 1 اور 60 کے درمیان ہونا چاہیے</value>
+  </data>
 </root>
