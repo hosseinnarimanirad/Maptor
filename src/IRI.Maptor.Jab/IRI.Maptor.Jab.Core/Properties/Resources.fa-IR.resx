@@ -1807,4 +1807,13 @@
   <data name="dialog_common_validationUtmZone" xml:space="preserve">
     <value>زون UTM باید بین ۱ تا ۶۰ باشد</value>
   </data>
+  <data name="theme_mode_title" xml:space="preserve">
+    <value>ظاهر برنامه</value>
+  </data>
+  <data name="theme_mode_light" xml:space="preserve">
+    <value>روشن</value>
+  </data>
+  <data name="theme_mode_dark" xml:space="preserve">
+    <value>تیره</value>
+  </data>
 </root>

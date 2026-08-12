@@ -1807,4 +1807,13 @@
   <data name="dialog_common_validationUtmZone" xml:space="preserve">
     <value>زۆنی UTM دەبێت لە نێوان ١ و ٦٠ بێت</value>
   </data>
+  <data name="theme_mode_title" xml:space="preserve">
+    <value>ڕووکار</value>
+  </data>
+  <data name="theme_mode_light" xml:space="preserve">
+    <value>ڕووناک</value>
+  </data>
+  <data name="theme_mode_dark" xml:space="preserve">
+    <value>تاریک</value>
+  </data>
 </root>

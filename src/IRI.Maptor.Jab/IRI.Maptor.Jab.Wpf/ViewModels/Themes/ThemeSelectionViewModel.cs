@@ -10,19 +10,58 @@ namespace IRI.Maptor.Jab.Wpf.ViewModels.Themes;
 public class ThemeSelectionViewModel : Notifier
 {
     private readonly MahAppsThemeColor? _originalTheme;
+    private readonly ThemeMode? _originalMode;
     private readonly GeneralSettingsModel _generalSettings;
     private readonly Action<bool> _requestClose;
 
     private MahAppsThemeColor _selectedTheme;
-    private string _selectedThemeDisplayName = "Amber";
+    private ThemeMode _selectedMode;
 
     public ThemeSelectionViewModel(GeneralSettingsModel generalSettings, Action<bool> requestClose)
-    { 
+    {
         _originalTheme = generalSettings?.MahAppsTheme;
+        _originalMode = generalSettings?.MahAppsThemeMode;
         _generalSettings = generalSettings ?? throw new ArgumentNullException(nameof(generalSettings));
         _requestClose = requestClose ?? throw new ArgumentNullException(nameof(requestClose));
 
+        _selectedMode = generalSettings?.MahAppsThemeMode ?? ThemeMode.Light;
+
         LoadThemes(generalSettings?.MahAppsTheme);
+    }
+
+    /// <summary>
+    /// Light or dark. Applied live like the accent, so the whole app previews the change
+    /// while the dialog is open; Cancel puts both back.
+    /// </summary>
+    public ThemeMode SelectedMode
+    {
+        get => _selectedMode;
+        set
+        {
+            if (_selectedMode == value)
+                return;
+
+            _selectedMode = value;
+
+            // the tiles paint their preview from this, so keep every item in step
+            foreach (var theme in AvailableThemes)
+                theme.Mode = value;
+
+            _generalSettings.MahAppsThemeMode = value;
+            ThemeHelper.ApplyTheme(SelectedTheme, value);
+
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsDarkMode));
+        }
+    }
+
+    /// <summary>
+    /// Two-way friendly view of <see cref="SelectedMode"/> for a toggle switch.
+    /// </summary>
+    public bool IsDarkMode
+    {
+        get => SelectedMode == ThemeMode.Dark;
+        set => SelectedMode = value ? ThemeMode.Dark : ThemeMode.Light;
     }
 
     public ObservableCollection<ThemeInfoModel> AvailableThemes { get; } = new();
@@ -44,6 +83,7 @@ public class ThemeSelectionViewModel : Notifier
         foreach (var theme in ThemeHelper.AvailableThemes)
         {
             theme.IsSelected = theme.Color == currentTheme;
+            theme.Mode = _selectedMode;
         }
 
         AvailableThemes.Clear();
@@ -75,9 +115,9 @@ public class ThemeSelectionViewModel : Notifier
                             t.IsSelected = t.Color == theme.Color;
                         }
 
-                        SelectedTheme = theme.Color; 
+                        SelectedTheme = theme.Color;
                         _generalSettings.MahAppsTheme = SelectedTheme;
-                        ThemeHelper.ApplyTheme(theme.Color);
+                        ThemeHelper.ApplyTheme(theme.Color, SelectedMode);
                     }
                 });
             }
@@ -114,7 +154,8 @@ public class ThemeSelectionViewModel : Notifier
                 _cancelCommand = new RelayCommand(_ =>
                 {
                     _generalSettings.MahAppsTheme = _originalTheme;
-                    ThemeHelper.ApplyTheme(_originalTheme);
+                    _generalSettings.MahAppsThemeMode = _originalMode;
+                    ThemeHelper.ApplyTheme(_originalTheme, _originalMode);
                     _requestClose(false);
                 });
             }

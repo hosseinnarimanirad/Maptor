@@ -1807,4 +1807,13 @@
   <data name="dialog_common_validationUtmZone" xml:space="preserve">
     <value>Зона UTM должна быть от 1 до 60</value>
   </data>
+  <data name="theme_mode_title" xml:space="preserve">
+    <value>Оформление</value>
+  </data>
+  <data name="theme_mode_light" xml:space="preserve">
+    <value>Светлая</value>
+  </data>
+  <data name="theme_mode_dark" xml:space="preserve">
+    <value>Тёмная</value>
+  </data>
 </root>

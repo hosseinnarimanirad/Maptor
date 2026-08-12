@@ -24,28 +24,11 @@
             <converters:LocalizedFormatConverter x:Key="localizedFormatConverter"/>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
 
-            <!-- Conditional font styles for Persian localization -->
-            <Style x:Key="persianHeaderTextBlockStyle" TargetType="TextBlock">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsPersian, Source={StaticResource Localization}}" Value="True">
-                        <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-            <Style x:Key="persianPolygonTextBlockStyle" TargetType="TextBlock">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsPersian, Source={StaticResource Localization}}" Value="True">
-                        <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-            <Style x:Key="persianPartsTextBlockStyle" TargetType="TextBlock">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsPersian, Source={StaticResource Localization}}" Value="True">
-                        <Setter Property="FontFamily" Value="{StaticResource iranSans}"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+            <!-- One Persian-font style; there used to be three byte-identical copies
+                 (header / polygon / parts). IRI.Maptor.Styles.TextBlock already carries the
+                 same IsPersian trigger, so this only adds the vertical centring. -->
+            <Style x:Key="editorTextBlockStyle" TargetType="TextBlock"
+                   BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}"/>
         </ResourceDictionary>
     </maptor:NotifiableUserControl.Resources>
     <Grid Margin="0" >
@@ -58,12 +41,11 @@
         </Grid.RowDefinitions>
 
         <!--Polygon section-->
-        <Border Grid.Row="0" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,0,0,1"
+        <Border Grid.Row="0" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,0,0,1"
                 FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
-            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="4"
-                        >
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4">
                 <TextBlock Text="{Binding [geometryDetails_polygon_title], Source={StaticResource Localization}}"
-                           FontWeight="Bold" Margin="0,4,10,4" VerticalAlignment="Center" Style="{StaticResource persianPolygonTextBlockStyle}"/>
+                           FontWeight="Bold" Margin="0,4,10,4" VerticalAlignment="Center" Style="{StaticResource editorTextBlockStyle}"/>
                 <StackPanel Orientation="Horizontal" >
                     <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                         Command="{Binding GoToPreviousPolygonCommand}"
@@ -95,7 +77,7 @@
                     <TextBlock VerticalAlignment="Center" 
                          TextBlock.TextAlignment="Right" Margin="0,0,8,0">
                         <TextBlock.Style>
-                            <Style TargetType="TextBlock" BasedOn="{StaticResource persianPolygonTextBlockStyle}">
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource editorTextBlockStyle}">
                                 <Setter Property="Text">
                                     <Setter.Value>
                                         <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_polygons_format">
@@ -114,17 +96,17 @@
                     </TextBlock>
                     <TextBlock VerticalAlignment="Center" FontStyle="Italic" Margin="0,0,0,0">
                         <TextBlock.Style>
-                            <Style TargetType="TextBlock" BasedOn="{StaticResource persianPolygonTextBlockStyle}">
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource editorTextBlockStyle}">
                                 <Setter Property="Text" Value=""/>
-                                <Setter Property="Foreground" Value="Green"/>
+                                <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Valid}"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentPolygonIsValid}" Value="True">
                                         <Setter Property="Text" Value="{Binding [geometryDetails_polygons_valid], Source={StaticResource Localization}}"/>
-                                        <Setter Property="Foreground" Value="Green"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Valid}"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding CurrentPolygonIsValid, FallbackValue=False}" Value="False">
                                         <Setter Property="Text" Value="{Binding [geometryDetails_polygons_invalid], Source={StaticResource Localization}}"/>
-                                        <Setter Property="Foreground" Value="Red"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Invalid}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -135,9 +117,10 @@
         </Border>
         <!-- Geometry parts -->
 
-        <StackPanel Grid.Row="1" DockPanel.Dock="Right" Orientation="Horizontal" Margin="4" 
-                    FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
-            <TextBlock Text="{Binding [geometryDetails_parts_title], Source={StaticResource Localization}}" VerticalAlignment="Center" FontWeight="Bold" Margin="0,4,10,4" Style="{StaticResource persianPartsTextBlockStyle}"/>
+        <Border Grid.Row="1" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,0,0,1"
+                FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="4">
+            <TextBlock Text="{Binding [geometryDetails_parts_title], Source={StaticResource Localization}}" VerticalAlignment="Center" FontWeight="Bold" Margin="0,4,10,4" Style="{StaticResource editorTextBlockStyle}"/>
             <StackPanel Orientation="Horizontal" >
                 <Button Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
                             Command="{Binding GoToPreviousPartCommand}"
@@ -169,7 +152,7 @@
                 <TextBlock VerticalAlignment="Center" 
                                     TextBlock.TextAlignment="Right" Margin="0,0,8,0">
                     <TextBlock.Style>
-                        <Style TargetType="TextBlock" BasedOn="{StaticResource persianPartsTextBlockStyle}">
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource editorTextBlockStyle}">
                             <Setter Property="Text">
                                 <Setter.Value>
                                     <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_parts_format">
@@ -188,17 +171,17 @@
                 </TextBlock>
                 <TextBlock VerticalAlignment="Center" FontStyle="Italic" Margin="0,0,0,0">
                     <TextBlock.Style>
-                        <Style TargetType="TextBlock" BasedOn="{StaticResource persianPartsTextBlockStyle}">
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource editorTextBlockStyle}">
                             <Setter Property="Text" Value=""/>
-                            <Setter Property="Foreground" Value="Green"/>
+                            <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Valid}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding CurrentPartIsValid}" Value="True">
                                     <Setter Property="Text" Value="{Binding [geometryDetails_parts_valid], Source={StaticResource Localization}}"/>
-                                    <Setter Property="Foreground" Value="Green"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Valid}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding CurrentPartIsValid}" Value="False">
                                     <Setter Property="Text" Value="{Binding [geometryDetails_parts_invalid], Source={StaticResource Localization}}"/>
-                                    <Setter Property="Foreground" Value="Red"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource IRI.Maptor.Brushes.Invalid}"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -208,10 +191,11 @@
             <iconPacks:PackIconMaterial Kind="{Binding GeometryType, Converter={StaticResource geometryTypeToMaterialIconConverter}, FallbackValue=Null}"
                                         Style="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}" Foreground="{DynamicResource MahApps.Brushes.Accent}"
                                         Width="18" Height="18"/>
-        </StackPanel>
+            </StackPanel>
+        </Border>
 
         <!-- SRS Selection and Current Point Editor Section -->
-        <Border Grid.Row="2" BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="0,1,0,0" Padding="0" Margin="0,0,0,4"
+        <Border Grid.Row="2" BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,0,0,0" Padding="0" Margin="0,0,0,4"
                 FlowDirection="{Binding Path=CurrentFlowDirection, Source={StaticResource Localization} }">
             <Grid >
                 <StackPanel Margin="0">
@@ -260,7 +244,7 @@
                         </StackPanel>
                     </Border>
                     <!-- SRS Info TextBlock -->
-                    <TextBlock VerticalAlignment="Center" Margin="8,4,8,0" FontStyle="Italic" Foreground="Gray" FontSize="11"  
+                    <TextBlock VerticalAlignment="Center" Margin="8,4,8,0" FontStyle="Italic" Foreground="{DynamicResource MahApps.Brushes.Gray3}" FontSize="11"  
                                >
                         <TextBlock.Text>
                             <MultiBinding Converter="{StaticResource localizedFormatConverter}" ConverterParameter="geometryDetails_options_srsInfoFormat">
@@ -281,9 +265,9 @@
                        StaysOpen="False"
                        PopupAnimation="Slide"
                        AllowsTransparency="True">
-                    <Border Background="White" 
-                            BorderBrush="{DynamicResource MahApps.Brushes.Accent}" 
-                            BorderThickness="1" 
+                    <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                            BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
+                            BorderThickness="1"
                             Padding="8"
                             CornerRadius="4">
                         <Border.Effect>
@@ -344,7 +328,7 @@
                                                       Style="{StaticResource IRI.Maptor.Styles.NumericUpDown.Small}"/>
                             </StackPanel>
                             <!-- Grid Options Section -->
-                            <Border BorderBrush="LightGray" BorderThickness="0,1,0,0" Margin="0,8,0,4"/>
+                            <Border BorderBrush="{DynamicResource MahApps.Brushes.Gray8}" BorderThickness="0,1,0,0" Margin="0,8,0,4"/>
                             <TextBlock Text="{Binding [geometryDetails_options_gridOptions], Source={StaticResource Localization}}" FontWeight="Bold" Margin="0,0,0,8"/>
 
                             <CheckBox Content="{Binding [geometryDetails_options_showInnerAngle], Source={StaticResource Localization}}" 
@@ -374,19 +358,19 @@
                   IsReadOnly="True"
                   Style="{DynamicResource MahApps.Styles.DataGrid}" CanUserReorderColumns="True"
                   HeadersVisibility="Column" AlternationCount="2000000000"
-                  SelectionMode="Single" Height="200"  
+                  SelectionMode="Single" MinHeight="160" 
                   SelectionUnit="FullRow"
                   FontFamily="Segoe UI">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Width="Auto" MinWidth="40">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_number], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_number], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0"  Foreground="DimGray">
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2,0" Foreground="{DynamicResource MahApps.Brushes.Gray3}">
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{StaticResource pointNumberConverter}">
                                         <Binding Path="DataContext.CurrentPageIndex" RelativeSource="{RelativeSource AncestorType=DataGrid}"/>
@@ -402,7 +386,7 @@
                 <DataGridTemplateColumn Width="*" MinWidth="100">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_x], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_x], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
@@ -425,7 +409,7 @@
                 <DataGridTemplateColumn Width="*" MinWidth="100">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_y], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_y], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
@@ -451,7 +435,7 @@
                                          Visibility="{Binding DataContext.ShowZColumn, RelativeSource={RelativeSource AncestorType=DataGrid}, Converter={StaticResource boolToVisibilityConverter}}">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_z], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_z], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
@@ -465,7 +449,7 @@
                 <DataGridTemplateColumn Width="*" MinWidth="120">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_distanceToNext], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_distanceToNext], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
@@ -485,7 +469,7 @@
                 <DataGridTemplateColumn Width="*" MinWidth="120">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_azimuthToNext], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_azimuthToNext], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
@@ -505,7 +489,7 @@
                 <DataGridTemplateColumn Width="*" MinWidth="120">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_azimuthToPrevious], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_azimuthToPrevious], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
@@ -525,7 +509,7 @@
                 <DataGridTemplateColumn Width="*" MinWidth="120">
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_vertexAngle], Source={StaticResource Localization}}" Style="{StaticResource persianHeaderTextBlockStyle}"/>
+                            <TextBlock Text="{Binding [geometryDetails_coordinateGrid_vertexAngle], Source={StaticResource Localization}}" Style="{StaticResource editorTextBlockStyle}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
@@ -549,7 +533,7 @@
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}"/>
-                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}"/>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent3}"/>

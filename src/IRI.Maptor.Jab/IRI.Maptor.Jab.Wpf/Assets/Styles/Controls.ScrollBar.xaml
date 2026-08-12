@@ -194,6 +194,7 @@
         </Style.Triggers>
     </Style>
 
+    <!--گونه‌ی پهن با دکمه‌های جهت، برای فهرست‌های شناور-->
     <Style x:Key="IRI.Maptor.Styles.ScrollBar" TargetType="{x:Type ScrollBar}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -210,5 +211,10 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <!--App-wide default. Without this every ScrollViewer that did not opt in by hand fell back
+        to the stock WPF/MahApps scrollbar, so dialogs looked unlike the panels that did opt in.
+        A control that wants the wide arrow variant still sets IRI.Maptor.Styles.ScrollBar locally.-->
+    <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource IRI.Maptor.Styles.ScrollBar.Slim}"/>
 
 </ResourceDictionary>

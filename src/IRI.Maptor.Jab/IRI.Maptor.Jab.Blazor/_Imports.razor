@@ -1,4 +1,9 @@
 @using Microsoft.AspNetCore.Components.Web
+@* Virtualize lives in its own namespace, not in Components.Web. Without this the tag resolves to
+   nothing, Razor emits it as literal markup, and the only symptom is that the item context
+   variable "does not exist in the current context". *@
+@using Microsoft.AspNetCore.Components.Web.Virtualization
 @using MudBlazor
 @using IRI.Maptor.Jab.Blazor
 @using IRI.Maptor.Jab.Blazor.Toc
+@using IRI.Maptor.Jab.Blazor.FeatureTable

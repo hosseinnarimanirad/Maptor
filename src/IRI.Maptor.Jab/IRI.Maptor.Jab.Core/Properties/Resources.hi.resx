@@ -1807,4 +1807,13 @@
   <data name="dialog_common_validationUtmZone" xml:space="preserve">
     <value>UTM ज़ोन 1 और 60 के बीच होना चाहिए</value>
   </data>
+  <data name="theme_mode_title" xml:space="preserve">
+    <value>रूप</value>
+  </data>
+  <data name="theme_mode_light" xml:space="preserve">
+    <value>हल्का</value>
+  </data>
+  <data name="theme_mode_dark" xml:space="preserve">
+    <value>गहरा</value>
+  </data>
 </root>

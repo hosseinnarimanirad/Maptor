@@ -1,0 +1,18 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Semantic status palette, LIGHT variant. The MahApps themes carry an accent and a grey
+        ramp but no valid/invalid pair, so these are deliberate literals. ThemeHelper.ApplyTheme
+        swaps this dictionary for Status.Dark.xaml, which defines exactly the same keys.
+        Consume with DynamicResource, never StaticResource, or the swap will not reach you.-->
+
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Valid"        Color="#1B7F4B"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Valid.Fill"   Color="#E4F2EA"/>
+
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Invalid"      Color="#B3261E"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Invalid.Fill" Color="#FAE9E8"/>
+
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Muted"        Color="#5F6368"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Muted.Fill"   Color="#ECECEE"/>
+
+</ResourceDictionary>

@@ -1807,4 +1807,13 @@
   <data name="dialog_common_validationUtmZone" xml:space="preserve">
     <value>A zona UTM deve estar entre 1 e 60</value>
   </data>
+  <data name="theme_mode_title" xml:space="preserve">
+    <value>Aparência</value>
+  </data>
+  <data name="theme_mode_light" xml:space="preserve">
+    <value>Claro</value>
+  </data>
+  <data name="theme_mode_dark" xml:space="preserve">
+    <value>Escuro</value>
+  </data>
 </root>

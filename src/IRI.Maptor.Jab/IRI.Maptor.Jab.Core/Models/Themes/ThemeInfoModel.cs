@@ -21,7 +21,28 @@ public class ThemeInfoModel : Notifier, IDisposable
 
     public MahAppsThemeColor Color { get; }
 
-    public ThemeMode Mode { get; }
+    private ThemeMode _mode;
+
+    /// <summary>
+    /// Light or dark. Settable so the theme picker can re-render its previews when the
+    /// user flips the appearance switch, without rebuilding the whole list.
+    /// </summary>
+    public ThemeMode Mode
+    {
+        get => _mode;
+        set
+        {
+            if (_mode == value)
+                return;
+
+            _mode = value;
+            RaisePropertyChanged();
+            RaisePropertyChanged(nameof(IsDark));
+            RaisePropertyChanged(nameof(ThemeName));
+        }
+    }
+
+    public bool IsDark => Mode == ThemeMode.Dark;
 
 
     private bool _isSelected;

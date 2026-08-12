@@ -28,5 +28,11 @@ public class GeneralSettings : IGeneralSettings
 
     public MahAppsThemeColor? MahAppsTheme { get; set; } = MahAppsThemeColor.Amber;
 
+    /// <summary>
+    /// Light or dark. Nullable so settings files written before dark mode existed
+    /// deserialize to null and fall back to Light.
+    /// </summary>
+    public ThemeMode? MahAppsThemeMode { get; set; } = ThemeMode.Light;
+
     public static GeneralSettings Default => new GeneralSettings();
 }

@@ -11,7 +11,7 @@
     Style="{StaticResource IRI.Maptor.Styles.MetroWindow.Dialog}"
     Title="{Binding [dialog_geometryDetails_title], Source={StaticResource Localization}}"
     SizeToContent="Manual" ResizeMode="CanResizeWithGrip"
-    Width="750" Height="620" MinWidth="600" MinHeight="420" MaxWidth="1100"
+    Width="780" Height="640" MinWidth="620" MinHeight="440" MaxWidth="1200"
     ShowMaxRestoreButton="True"
     WindowStartupLocation="CenterOwner" >
     <mahApp:MetroWindow.Resources>
@@ -21,6 +21,33 @@
             </ResourceDictionary.MergedDictionaries>
             <ObjectDataProvider x:Key="Localization" ObjectInstance="{x:Static localization:LocalizationManager.Instance}"/>
             <Style TargetType="iconPacks:PackIconMaterial" BasedOn="{StaticResource IRI.Maptor.Styles.PackIconMaterial.CircleLightButtonContent}"/>
+
+            <!--A metric tile. The five figures used to sit in one 10-column row of
+                "label: value" pairs, which crowded badly once the labels were translated.-->
+            <Style x:Key="GeometryStatCard" TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.ThemeBackground}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray8}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="CornerRadius" Value="6"/>
+                <Setter Property="Padding" Value="10,7"/>
+                <Setter Property="Margin" Value="0,0,8,0"/>
+            </Style>
+
+            <Style x:Key="GeometryStatLabel" TargetType="TextBlock"
+                   BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
+                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Gray3}"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            </Style>
+
+            <Style x:Key="GeometryStatValue" TargetType="TextBlock"
+                   BasedOn="{StaticResource IRI.Maptor.Styles.TextBlock}">
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Margin" Value="0,2,0,0"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+            </Style>
+
         </ResourceDictionary>
     </mahApp:MetroWindow.Resources>
 
@@ -31,127 +58,134 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel>
-
-        <!-- Basic Information Section -->
-        <GroupBox Margin="0,0,0,0" Padding="4">
-            <GroupBox.Header>
-                <TextBlock Text="{Binding [dialog_geometryDetails_basicInfo], Source={StaticResource Localization}}"
-                           Style="{StaticResource IRI.Maptor.Styles.TextBlock.HeaderTitle}"/>
-            </GroupBox.Header>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/> 
-                </Grid.RowDefinitions>
-
-                <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
-                           Text="{Binding [dialog_geometryDetails_geometryType], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" 
-                           Text="{Binding GeometryType}" 
-                           FontWeight="Bold" Margin="4" VerticalAlignment="Center"/>
-
-                <TextBlock Grid.Row="0" Grid.Column="2" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
-                           Text="{Binding [dialog_geometryDetails_dimension], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
-                <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding Dimension}" 
-                           FontWeight="Bold" Margin="4" VerticalAlignment="Center"/>
-
-                <TextBlock Grid.Row="0" Grid.Column="4" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
-                           Text="{Binding [dialog_geometryDetails_numberOfPoints], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
-                <TextBlock Grid.Row="0" Grid.Column="5" Text="{Binding NumberOfPoints, Converter={StaticResource localizedNumberConverter}}" 
-                           Margin="4" VerticalAlignment="Center"/>
-
-                <TextBlock Grid.Row="0" Grid.Column="6" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}" 
-                           Text="{Binding [dialog_geometryDetails_numberOfGeometries], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
-                <TextBlock Grid.Row="0" Grid.Column="7" Text="{Binding NumberOfGeometries, Converter={StaticResource localizedNumberConverter}}" 
-                           Margin="4" VerticalAlignment="Center"/>
-
-                <TextBlock Grid.Row="0" Grid.Column="8" Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
-                           Text="{Binding [srs_utmZone_full], Source={StaticResource Localization}, StringFormat='{}{0}:'}" />
-                <StackPanel Grid.Row="0" Grid.Column="9" Orientation="Horizontal" Margin="4">
-                    <TextBlock Text="{Binding UtmZone, TargetNullValue='N/A'}" 
-                               FontWeight="Bold" VerticalAlignment="Center"/>
-                    <TextBlock Margin="8,0,0,0" VerticalAlignment="Center"
-                               Foreground="{DynamicResource MahApps.Brushes.Accent}"
-                               Visibility="{Binding SpansMultipleUtmZones, Converter={StaticResource boolToVisibilityConverter}}">
-                        <TextBlock.Text>
-                            <MultiBinding Converter="{StaticResource localizedFormatConverter}">
-                                <Binding Path="UtmZones" Converter="{StaticResource collectionToStringConverter}"/>
-                                <Binding Path="[dialog_geometryDetails_alsoZones]" Source="{StaticResource Localization}"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                </StackPanel>
-            </Grid>
-        </GroupBox>
-
-        <!-- Geometry Editor Section -->
-        <Expander Grid.Row="1" Margin="0,0,0,8" Padding="8"
-                      IsExpanded="True">
-            <Expander.Header>
-                <TextBlock Text="{Binding [dialog_geometryDetails_editCoordinates], Source={StaticResource Localization}}"
-               Style="{StaticResource IRI.Maptor.Styles.TextBlock.HeaderTitle}" Margin="0" Cursor="Hand"/>
-            </Expander.Header>
-            <ContentControl Content="{Binding GeometryEditor}">
-                <ContentControl.Resources>
-                    <DataTemplate DataType="{x:Type presenters:GeometryEditorViewModel}">
-                        <maptor:GeometryEditorView/>
-                    </DataTemplate>
-                </ContentControl.Resources>
-            </ContentControl>
-        </Expander>
-
-        <!-- Format Display Section -->
-        <Expander Grid.Row="2" Margin="0,0,0,8" Padding="0" IsExpanded="False">
-            <Expander.Header>
-                <TextBlock Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}}"
-                            Style="{StaticResource IRI.Maptor.Styles.TextBlock.HeaderTitle}" Margin="0" Cursor="Hand"/>
-            </Expander.Header>
             <StackPanel>
-                <Border Background="{DynamicResource MahApps.Brushes.Accent4}" Margin="2" CornerRadius="4">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Grid.Row="0" Grid.Column="0"
-                                    Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}, StringFormat='{}{0}:'}" 
-                                    Margin="4" VerticalAlignment="Center"/>
-                        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding AvailableFormats}"
-                                   Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"  
-                                   SelectedItem="{Binding SelectedFormat, Mode=TwoWay}"/>
-                        <Button Grid.Row="0" Grid.Column="2" 
-                                 ToolTip="{Binding [dialog_geometryDetails_export], Source={StaticResource Localization}}"  
-                                 Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}"
-                                 Visibility="Collapsed">
-                            <iconPacks:PackIconMaterial Kind="ContentSave"/>
-                        </Button>
-                        <Button Grid.Row="0" Grid.Column="3" Command="{Binding CopySelectedFormat}"
-                               ToolTip="{Binding [dialog_geometryDetails_copy], Source={StaticResource Localization}}"  
-                               Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
-                            <iconPacks:PackIconMaterial Kind="ContentCopy"/>
-                        </Button>
-                    </StackPanel>
-                </Border>
-                <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" FlowDirection="LeftToRight"
-                              VerticalScrollBarVisibility="Auto" MaxHeight="150" Margin="0" HorizontalAlignment="Stretch">
-                    <TextBlock Text="{Binding StringRepresentation}" HorizontalAlignment="Stretch"
-                               Background="{DynamicResource MahApps.Brushes.Gray9}"
-                               TextWrapping="Wrap" Padding="4" Margin="0,4"
-                               FontFamily="Consolas" FontSize="11"/>
-                </ScrollViewer>
-            </StackPanel>
-        </Expander>
 
-        </StackPanel>
+                <TextBlock Style="{StaticResource IRI.Maptor.Styles.TextBlock.SectionHeader}"
+                           Margin="2,0,2,6"
+                           Text="{Binding [dialog_geometryDetails_basicInfo], Source={StaticResource Localization}}"/>
+
+                <!-- Summary: one tile per figure -->
+                <UniformGrid Columns="5" Margin="0,0,0,12">
+                    <Border Style="{StaticResource GeometryStatCard}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource GeometryStatLabel}"
+                                       Text="{Binding [dialog_geometryDetails_geometryType], Source={StaticResource Localization}}"/>
+                            <TextBlock Style="{StaticResource GeometryStatValue}"
+                                       Text="{Binding GeometryType}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource GeometryStatCard}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource GeometryStatLabel}"
+                                       Text="{Binding [dialog_geometryDetails_dimension], Source={StaticResource Localization}}"/>
+                            <TextBlock Style="{StaticResource GeometryStatValue}"
+                                       Text="{Binding Dimension}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource GeometryStatCard}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource GeometryStatLabel}"
+                                       Text="{Binding [dialog_geometryDetails_numberOfPoints], Source={StaticResource Localization}}"/>
+                            <TextBlock Style="{StaticResource GeometryStatValue}"
+                                       Text="{Binding NumberOfPoints, Converter={StaticResource localizedNumberConverter}}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource GeometryStatCard}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource GeometryStatLabel}"
+                                       Text="{Binding [dialog_geometryDetails_numberOfGeometries], Source={StaticResource Localization}}"/>
+                            <TextBlock Style="{StaticResource GeometryStatValue}"
+                                       Text="{Binding NumberOfGeometries, Converter={StaticResource localizedNumberConverter}}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource GeometryStatCard}" Margin="0">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource GeometryStatLabel}"
+                                       Text="{Binding [srs_utmZone_full], Source={StaticResource Localization}}"/>
+                            <TextBlock Style="{StaticResource GeometryStatValue}"
+                                       Text="{Binding UtmZone, TargetNullValue='N/A'}"/>
+                            <!-- the other zones this geometry crosses -->
+                            <TextBlock FontSize="11" Margin="0,1,0,0"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                       Visibility="{Binding SpansMultipleUtmZones, Converter={StaticResource boolToVisibilityConverter}}">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource localizedFormatConverter}">
+                                        <Binding Path="UtmZones" Converter="{StaticResource collectionToStringConverter}"/>
+                                        <Binding Path="[dialog_geometryDetails_alsoZones]" Source="{StaticResource Localization}"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <!-- Geometry Editor Section -->
+                <Expander Style="{StaticResource IRI.Maptor.Styles.Expander.Section}" IsExpanded="True">
+                    <Expander.Header>
+                        <TextBlock Text="{Binding [dialog_geometryDetails_editCoordinates], Source={StaticResource Localization}}"
+                                   Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal.Bold}" Margin="0"/>
+                    </Expander.Header>
+                    <ContentControl Content="{Binding GeometryEditor}">
+                        <ContentControl.Resources>
+                            <DataTemplate DataType="{x:Type presenters:GeometryEditorViewModel}">
+                                <maptor:GeometryEditorView/>
+                            </DataTemplate>
+                        </ContentControl.Resources>
+                    </ContentControl>
+                </Expander>
+
+                <!-- Format Display Section -->
+                <Expander Style="{StaticResource IRI.Maptor.Styles.Expander.Section}" IsExpanded="False">
+                    <Expander.Header>
+                        <TextBlock Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}}"
+                                   Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal.Bold}" Margin="0"/>
+                    </Expander.Header>
+                    <StackPanel>
+                        <!-- toolbar: which representation, and copy it -->
+                        <DockPanel Margin="0,0,0,8">
+                            <Button DockPanel.Dock="Right" Command="{Binding CopySelectedFormat}"
+                                    ToolTip="{Binding [dialog_geometryDetails_copy], Source={StaticResource Localization}}"
+                                    AutomationProperties.Name="{Binding [dialog_geometryDetails_copy], Source={StaticResource Localization}}"
+                                    Style="{StaticResource IRI.Maptor.Styles.Button.CircleLight}">
+                                <iconPacks:PackIconMaterial Kind="ContentCopy"/>
+                            </Button>
+
+                            <TextBlock DockPanel.Dock="Left"
+                                       Style="{StaticResource IRI.Maptor.Styles.TextBlock.Normal}"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding [dialog_geometryDetails_format], Source={StaticResource Localization}, StringFormat='{}{0}:'}"/>
+
+                            <ComboBox ItemsSource="{Binding AvailableFormats}"
+                                      Style="{StaticResource IRI.Maptor.Styles.ComboBox.Normal.Latin}"
+                                      VerticalAlignment="Center" Margin="4,0"
+                                      SelectedItem="{Binding SelectedFormat, Mode=TwoWay}"/>
+                        </DockPanel>
+
+                        <!-- the representation itself: read-only but selectable, so it can be
+                             copied by hand as well as with the button -->
+                        <Border CornerRadius="4" BorderThickness="1"
+                                BorderBrush="{DynamicResource MahApps.Brushes.Gray8}"
+                                Background="{DynamicResource MahApps.Brushes.Gray9}"
+                                MaxHeight="170">
+                            <TextBox Text="{Binding StringRepresentation, Mode=OneWay}"
+                                     IsReadOnly="True"
+                                     FlowDirection="LeftToRight"
+                                     Background="Transparent" BorderThickness="0"
+                                     TextWrapping="Wrap" AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     HorizontalScrollBarVisibility="Disabled"
+                                     Padding="8,6"
+                                     FontFamily="Consolas" FontSize="11"/>
+                        </Border>
+                    </StackPanel>
+                </Expander>
+
+            </StackPanel>
         </ScrollViewer>
 
         <dialogs:DialogFooterView Grid.Row="1"
@@ -164,4 +198,3 @@
     </Grid>
 
 </mahApp:MetroWindow>
-

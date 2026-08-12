@@ -168,7 +168,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            <Style TargetType="ScrollBar" BasedOn="{StaticResource  IRI.Maptor.Styles.ScrollBar}"/>
         </ResourceDictionary>
     </maptor:NotifiableUserControl.Resources>
     <Grid >

@@ -30,4 +30,6 @@ public interface IGeneralSettings
 
     MahAppsThemeColor? MahAppsTheme { get; set; }
 
+    ThemeMode? MahAppsThemeMode { get; set; }
+
 }

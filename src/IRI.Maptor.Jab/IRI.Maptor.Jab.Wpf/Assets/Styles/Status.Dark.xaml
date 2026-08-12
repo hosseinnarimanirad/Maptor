@@ -1,0 +1,18 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Semantic status palette, DARK variant. Same keys as Status.Light.xaml; ThemeHelper
+        swaps between the two. The foregrounds are lifted well above the light-mode values
+        because #1B7F4B / #B3261E have almost no contrast against a dark surface, and the
+        fills are deep tints rather than pastels for the same reason.-->
+
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Valid"        Color="#4CC38A"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Valid.Fill"   Color="#1E3B2C"/>
+
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Invalid"      Color="#F2777A"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Invalid.Fill" Color="#3F2222"/>
+
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Muted"        Color="#9AA0A6"/>
+    <SolidColorBrush x:Key="IRI.Maptor.Brushes.Muted.Fill"   Color="#2E2E31"/>
+
+</ResourceDictionary>

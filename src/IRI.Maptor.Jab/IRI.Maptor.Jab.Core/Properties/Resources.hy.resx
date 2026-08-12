@@ -1807,4 +1807,13 @@
   <data name="dialog_common_validationUtmZone" xml:space="preserve">
     <value>UTM գոտին պետք է լինի 1-ի և 60-ի միջև</value>
   </data>
+  <data name="theme_mode_title" xml:space="preserve">
+    <value>Տեսք</value>
+  </data>
+  <data name="theme_mode_light" xml:space="preserve">
+    <value>Բաց</value>
+  </data>
+  <data name="theme_mode_dark" xml:space="preserve">
+    <value>Մուգ</value>
+  </data>
 </root>

@@ -68,9 +68,10 @@ public static class ThemeHelper
     /// Applies a MahApps theme to the application
     /// </summary>
     /// <param name="themeName">Theme name in format "Light.Amber" or "Dark.Cobalt"</param>
-    public static void ApplyTheme(MahAppsThemeColor? color)
+    public static void ApplyTheme(MahAppsThemeColor? color, ThemeMode? mode = null)
     {
         color ??= MahAppsThemeColor.Amber;
+        mode ??= ThemeMode.Light;
 
         try
         {
@@ -82,7 +83,10 @@ public static class ThemeHelper
             //    return;
             //}
 
-            var baseTheme = "Light"; //parts[0]; // "Light" or "Dark"
+            // "Light" or "Dark". MahApps and Fluent both ship a dictionary per
+            // mode x accent, generated from one template, so the brush key set is
+            // identical either way and styles built on MahApps tokens follow along.
+            var baseTheme = mode.ToString();
             var accent = color.ToString();//parts[1]; // "Amber", "Cobalt", etc.
 
             // Build theme resource dictionary path
@@ -140,6 +144,29 @@ public static class ThemeHelper
             {
                 // Fluent theme is optional, continue if it fails
             }
+
+            // Our own semantic status palette (valid / invalid / muted). MahApps has no such
+            // colours, so it cannot follow the theme on its own and is swapped here.
+            try
+            {
+                var statusToRemove = mergedDictionaries
+                    .OfType<ResourceDictionary>()
+                    .Where(rd => rd.Source != null &&
+                                rd.Source.ToString().Contains("/Assets/Styles/Status."))
+                    .ToList();
+
+                foreach (var dict in statusToRemove)
+                {
+                    mergedDictionaries.Remove(dict);
+                }
+
+                var statusPath = $"pack://application:,,,/IRI.Maptor.Jab.Wpf;component/Assets/Styles/Status.{baseTheme}.xaml";
+                mergedDictionaries.Add(new ResourceDictionary { Source = new Uri(statusPath, UriKind.Absolute) });
+            }
+            catch
+            {
+                // status palette is optional, continue if it fails
+            }
         }
         catch (Exception ex)
         {
@@ -147,7 +174,7 @@ public static class ThemeHelper
             // Try fallback to default theme
             try
             {
-                ApplyTheme(MahAppsThemeColor.Amber /*"Light.Amber"*/);
+                ApplyTheme(MahAppsThemeColor.Amber, ThemeMode.Light);
             }
             catch
             {

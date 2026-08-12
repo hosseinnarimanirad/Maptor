@@ -1900,4 +1900,13 @@
   <data name="dialog_common_validationUtmZone" xml:space="preserve">
     <value>UTM zone must be between 1 and 60</value>
   </data>
+  <data name="theme_mode_title" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="theme_mode_light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="theme_mode_dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
 </root>

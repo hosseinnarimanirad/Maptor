@@ -120,6 +120,16 @@ public class GeneralSettingsModel : Notifier, IGeneralSettings
         }
     }
 
+    public ThemeMode? MahAppsThemeMode
+    {
+        get => _settings.MahAppsThemeMode;
+        set
+        {
+            _settings.MahAppsThemeMode = value;
+            RaisePropertyChanged();
+        }
+    }
+
 
     public GeneralSettingsModel(IGeneralSettings settings)
     {
